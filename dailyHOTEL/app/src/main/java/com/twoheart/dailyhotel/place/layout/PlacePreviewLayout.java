@@ -55,6 +55,10 @@ public class PlacePreviewLayout extends BaseLayout implements View.OnClickListen
         void onMapClick();
 
         void onPlaceDetailClick();
+
+        void onHideAnimation();
+
+        void onCloseClick();
     }
 
     public PlacePreviewLayout(Context context, OnBaseEventListener listener)
@@ -162,6 +166,18 @@ public class PlacePreviewLayout extends BaseLayout implements View.OnClickListen
     {
         // 이름
         mPlaceNameTextView.setText(placeName);
+    }
+
+    /**
+     * 위시 업데이트 시에 reviewCount가 필요한 이유는 레이아웃이 연관되어있다.
+     * @param reviewCount
+     * @param wishCount
+     * @param myWish
+     */
+    public void updateWishInformation(int reviewCount, int wishCount, boolean myWish)
+    {
+        updateMoreInformation(reviewCount, wishCount);
+        updateBottomLayout(myWish);
     }
 
     protected void updateImageLayout(List<ImageInformation> imageInformationList)
@@ -357,7 +373,7 @@ public class PlacePreviewLayout extends BaseLayout implements View.OnClickListen
                 wishAnimatorSet.removeAllListeners();
 
                 mWishPopupLayout.setVisibility(View.INVISIBLE);
-                mOnEventListener.finish();
+                hidePopAnimation();
             }
 
             @Override
@@ -420,7 +436,7 @@ public class PlacePreviewLayout extends BaseLayout implements View.OnClickListen
                 wishAnimatorSet.removeAllListeners();
 
                 mWishPopupLayout.setVisibility(View.INVISIBLE);
-                mOnEventListener.finish();
+                hidePopAnimation();
             }
 
             @Override
@@ -448,7 +464,7 @@ public class PlacePreviewLayout extends BaseLayout implements View.OnClickListen
                 break;
 
             case R.id.closeView:
-                mOnEventListener.finish();
+                ((OnEventListener) mOnEventListener).onCloseClick();
                 break;
 
             case R.id.wishTextView:
@@ -509,5 +525,58 @@ public class PlacePreviewLayout extends BaseLayout implements View.OnClickListen
         });
 
         objectAnimator.start();
+    }
+
+    public void hidePopAnimation()
+    {
+        if (mRootView == null)
+        {
+            return;
+        }
+
+        ObjectAnimator scaleObjectAnimator = ObjectAnimator.ofPropertyValuesHolder(mRootView //
+            , PropertyValuesHolder.ofFloat("scaleX", 1.0f, 0.7f) //
+            , PropertyValuesHolder.ofFloat("scaleY", 1.0f, 0.7f));
+
+        ObjectAnimator alphaObjectAnimator = ObjectAnimator.ofFloat(mRootView, "alpha", 1.0f, 0.0f);
+
+        AnimatorSet animatorSet = new AnimatorSet();
+        animatorSet.playTogether(scaleObjectAnimator, alphaObjectAnimator);
+
+        animatorSet.setDuration(200);
+        animatorSet.setInterpolator(new AccelerateDecelerateInterpolator());
+
+        animatorSet.addListener(new Animator.AnimatorListener()
+        {
+            @Override
+            public void onAnimationStart(Animator animation)
+            {
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation)
+            {
+                animatorSet.removeAllListeners();
+
+                mRootView.setScaleX(0.7f);
+                mRootView.setScaleY(0.7f);
+
+                ((OnEventListener) mOnEventListener).onHideAnimation();
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation)
+            {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation)
+            {
+
+            }
+        });
+
+        animatorSet.start();
     }
 }
