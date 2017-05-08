@@ -524,7 +524,12 @@ public class MainActivity extends BaseActivity implements Constants, BaseMenuNav
                     default:
                         if (mMainFragmentManager != null)
                         {
-                            mMainFragmentManager.getCurrentFragment().onActivityResult(requestCode, resultCode, data);
+                            Fragment fragment = mMainFragmentManager.getCurrentFragment();
+
+                            if (fragment != null)
+                            {
+                                fragment.onActivityResult(requestCode, resultCode, data);
+                            }
                         }
                         break;
                 }
