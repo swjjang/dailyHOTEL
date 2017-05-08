@@ -197,8 +197,8 @@ public class HomeLayout extends BaseBlurLayout
 
         if (ScreenUtils.getScreenWidth(mContext) < 720)
         {
-            TextView stayDoTextView = (TextView) mScrollButtonLayout.findViewById(R.id.stayDoTextView);
-            TextView gourmetDoTextView = (TextView) mScrollButtonLayout.findViewById(R.id.gourmetDoTextView);
+            TextView stayDoTextView = (TextView) mActionButtonLayout.findViewById(R.id.stayDoTextView);
+            TextView gourmetDoTextView = (TextView) mActionButtonLayout.findViewById(R.id.gourmetDoTextView);
 
             stayDoTextView.setText(R.string.label_home_stay_menu_description_low_resolution);
             gourmetDoTextView.setText(R.string.label_home_gourmet_menu_description_low_resolution);
