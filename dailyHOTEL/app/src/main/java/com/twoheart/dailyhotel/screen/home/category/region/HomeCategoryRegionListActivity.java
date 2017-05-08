@@ -77,27 +77,6 @@ public class HomeCategoryRegionListActivity extends BaseActivity
         // 지역로딩시에 백버튼 누르면 종료되도록 수정
         setLockUICancelable(true);
         initLayout();
-
-        try
-        {
-            Map<String, String> params = new HashMap<>();
-
-            if (DailyHotel.isLogin() == false)
-            {
-                params.put(AnalyticsManager.KeyType.IS_SIGNED, AnalyticsManager.ValueType.GUEST);
-            } else
-            {
-                params.put(AnalyticsManager.KeyType.IS_SIGNED, AnalyticsManager.ValueType.MEMBER);
-            }
-
-            params.put(AnalyticsManager.KeyType.PLACE_TYPE, AnalyticsManager.ValueType.STAY);
-            params.put(AnalyticsManager.KeyType.CATEGORY, getResources().getString(mDailyCategoryType.getCodeResId()));
-
-            AnalyticsManager.getInstance(this).recordScreen(this, AnalyticsManager.Screen.DAILYHOTEL_LIST_REGION_DOMESTIC, null, params);
-        } catch (Exception e)
-        {
-
-        }
     }
 
     private void initLayout()
@@ -171,8 +150,26 @@ public class HomeCategoryRegionListActivity extends BaseActivity
         mViewPager.clearOnPageChangeListeners();
         mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
 
-        //        AnalyticsManager.getInstance(HomeCategoryRegionListActivity.this) //
-        //            .recordScreen(this, AnalyticsManager.Screen.DAILYGOURMET_LIST_REGION_DOMESTIC, null);
+        try
+        {
+            Map<String, String> params = new HashMap<>();
+
+            if (DailyHotel.isLogin() == false)
+            {
+                params.put(AnalyticsManager.KeyType.IS_SIGNED, AnalyticsManager.ValueType.GUEST);
+            } else
+            {
+                params.put(AnalyticsManager.KeyType.IS_SIGNED, AnalyticsManager.ValueType.MEMBER);
+            }
+
+            params.put(AnalyticsManager.KeyType.PLACE_TYPE, AnalyticsManager.ValueType.STAY);
+            params.put(AnalyticsManager.KeyType.CATEGORY, getResources().getString(mDailyCategoryType.getCodeResId()));
+
+            AnalyticsManager.getInstance(this).recordScreen(this, AnalyticsManager.Screen.DAILYHOTEL_LIST_REGION_DOMESTIC, null, params);
+        } catch (Exception e)
+        {
+
+        }
     }
 
     @Override

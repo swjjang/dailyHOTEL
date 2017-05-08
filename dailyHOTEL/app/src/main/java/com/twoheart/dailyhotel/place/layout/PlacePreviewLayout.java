@@ -170,6 +170,7 @@ public class PlacePreviewLayout extends BaseLayout implements View.OnClickListen
 
     /**
      * 위시 업데이트 시에 reviewCount가 필요한 이유는 레이아웃이 연관되어있다.
+     *
      * @param reviewCount
      * @param wishCount
      * @param myWish

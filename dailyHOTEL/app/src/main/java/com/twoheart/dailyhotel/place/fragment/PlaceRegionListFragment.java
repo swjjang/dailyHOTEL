@@ -36,6 +36,7 @@ public abstract class PlaceRegionListFragment extends BaseFragment
     private Province mSelectedProvince;
 
     private PlaceRegionListActivity.Region mRegion;
+    protected String mCategoryCode;
 
     private View mTermsOfLocationView;
     protected BaseActivity mBaseActivity;
@@ -139,10 +140,11 @@ public abstract class PlaceRegionListFragment extends BaseFragment
         selectedPreviousArea(mSelectedProvince, arrayList);
     }
 
-    public void setInformation(PlaceRegionListActivity.Region region, Province province)
+    public void setInformation(PlaceRegionListActivity.Region region, Province province, String categoryCode)
     {
         mRegion = region;
         mSelectedProvince = province;
+        mCategoryCode = categoryCode;
     }
 
     public void setOnPlaceRegionListFragmentListener(OnPlaceRegionListFragment listener)

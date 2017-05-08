@@ -91,4 +91,19 @@ public class VersionUtils
 
         return version;
     }
+
+    public static boolean isSamsungModel()
+    {
+        final String SAMSUNG = "samsung";
+
+        if (SAMSUNG.equalsIgnoreCase(Build.BRAND) == true//
+            || SAMSUNG.equalsIgnoreCase(Build.MANUFACTURER) == true)
+        {
+            return true;
+        } else
+        {
+            return false;
+        }
+    }
+
 }
