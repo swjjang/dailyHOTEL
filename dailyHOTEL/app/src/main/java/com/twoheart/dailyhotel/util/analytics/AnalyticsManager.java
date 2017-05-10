@@ -1349,6 +1349,7 @@ public class AnalyticsManager
         public static final String MEMBER = "member";
         public static final String GUEST = "guest";
         public static final String DETAIL = "detailview";
+        @Deprecated
         public static final String HOTEL = "hotel";
         public static final String STAY = "stay";
         public static final String GOURMET = "gourmet";
