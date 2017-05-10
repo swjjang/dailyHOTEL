@@ -38,7 +38,7 @@ public class HomeCategoryLayout extends RelativeLayout
         DailyCategoryType.STAY_BOUTIQUE, //
         DailyCategoryType.STAY_PENSION, //
         DailyCategoryType.STAY_RESORT, //
-        DailyCategoryType.STAY_AROUND_SEARCH};
+        DailyCategoryType.STAY_NEARBY};
 
     private Context mContext;
     private RelativeLayout mLayout;

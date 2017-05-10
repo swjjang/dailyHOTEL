@@ -17,6 +17,7 @@ import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.widget.DailyToast;
 import com.google.android.gms.maps.model.LatLng;
+import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.Category;
@@ -43,7 +44,6 @@ import com.twoheart.dailyhotel.screen.hotel.filter.StayCalendarActivity;
 import com.twoheart.dailyhotel.screen.hotel.filter.StayCurationActivity;
 import com.twoheart.dailyhotel.screen.hotel.list.StayListAdapter;
 import com.twoheart.dailyhotel.screen.hotel.list.StayListFragment;
-import com.twoheart.dailyhotel.screen.hotel.list.StayMainActivity;
 import com.twoheart.dailyhotel.screen.hotel.preview.StayPreviewActivity;
 import com.twoheart.dailyhotel.screen.search.SearchActivity;
 import com.twoheart.dailyhotel.screen.search.stay.result.StaySearchResultActivity;
@@ -60,7 +60,9 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.TimeZone;
 
 import retrofit2.Call;
@@ -100,7 +102,7 @@ public class StayCategoryListActivity extends PlaceMainActivity
         mStayCuration = new StayCuration();
 
         if (mDailyCategoryType == null //
-            || DailyCategoryType.STAY_AROUND_SEARCH == mDailyCategoryType //
+            || DailyCategoryType.STAY_NEARBY == mDailyCategoryType //
             || DailyCategoryType.NONE == mDailyCategoryType)
         {
             Util.restartApp(this);
@@ -453,60 +455,87 @@ public class StayCategoryListActivity extends PlaceMainActivity
     // GA 주석 처리
     void recordAnalyticsStayList(String screen)
     {
-        //        if (AnalyticsManager.Screen.DAILYHOTEL_LIST_MAP.equalsIgnoreCase(screen) == false //
-        //            && AnalyticsManager.Screen.DAILYHOTEL_LIST.equalsIgnoreCase(screen) == false)
-        //        {
-        //            return;
-        //        }
-        //
-        //        StayBookingDay stayBookingDay = mStayCuration.getStayBookingDay();
-        //        Map<String, String> params = new HashMap<>();
-        //
-        //        try
-        //        {
-        //            params.put(AnalyticsManager.KeyType.CHECK_IN, stayBookingDay.getCheckInDay("yyyy-MM-dd"));
-        //            params.put(AnalyticsManager.KeyType.CHECK_OUT, stayBookingDay.getCheckOutDay("yyyy-MM-dd"));
-        //            params.put(AnalyticsManager.KeyType.LENGTH_OF_STAY, Integer.toString(stayBookingDay.getNights()));
-        //
-        //            if (DailyHotel.isLogin() == false)
-        //            {
-        //                params.put(AnalyticsManager.KeyType.IS_SIGNED, AnalyticsManager.ValueType.GUEST);
-        //            } else
-        //            {
-        //                params.put(AnalyticsManager.KeyType.IS_SIGNED, AnalyticsManager.ValueType.MEMBER);
-        //            }
-        //
-        //            params.put(AnalyticsManager.KeyType.PLACE_TYPE, AnalyticsManager.ValueType.HOTEL);
-        //            params.put(AnalyticsManager.KeyType.PLACE_HIT_TYPE, AnalyticsManager.ValueType.HOTEL);
-        //            params.put(AnalyticsManager.KeyType.CATEGORY, mStayCuration.getCategory().code);
-        //            params.put(AnalyticsManager.KeyType.FILTER, mStayCuration.getCurationOption().toAdjustString());
-        //
-        //            Province province = mStayCuration.getProvince();
-        //
-        //            if (province == null)
-        //            {
-        //                Util.restartApp(this);
-        //                return;
-        //            }
-        //
-        //            if (province instanceof Area)
-        //            {
-        //                Area area = (Area) province;
-        //                params.put(AnalyticsManager.KeyType.COUNTRY, area.getProvince().isOverseas ? AnalyticsManager.ValueType.OVERSEAS : AnalyticsManager.ValueType.DOMESTIC);
-        //                params.put(AnalyticsManager.KeyType.PROVINCE, area.getProvince().name);
-        //                params.put(AnalyticsManager.KeyType.DISTRICT, area.name);
-        //            } else if (province != null)
-        //            {
-        //                params.put(AnalyticsManager.KeyType.COUNTRY, province.isOverseas ? AnalyticsManager.ValueType.OVERSEAS : AnalyticsManager.ValueType.DOMESTIC);
-        //                params.put(AnalyticsManager.KeyType.PROVINCE, province.name);
-        //                params.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.ALL_LOCALE_KR);
-        //            }
-        //
-        //            AnalyticsManager.getInstance(this).recordScreen(this, screen, null, params);
-        //        } catch (Exception e)
-        //        {
-        //            ExLog.e(e.toString());
-        //        }
+        if (AnalyticsManager.Screen.DAILYHOTEL_LIST_MAP.equalsIgnoreCase(screen) == false //
+            && AnalyticsManager.Screen.DAILYHOTEL_LIST.equalsIgnoreCase(screen) == false)
+        {
+            return;
+        }
+
+        StayBookingDay stayBookingDay = mStayCuration.getStayBookingDay();
+        Map<String, String> params = new HashMap<>();
+
+        try
+        {
+            params.put(AnalyticsManager.KeyType.CHECK_IN, stayBookingDay.getCheckInDay("yyyy-MM-dd"));
+            params.put(AnalyticsManager.KeyType.CHECK_OUT, stayBookingDay.getCheckOutDay("yyyy-MM-dd"));
+            params.put(AnalyticsManager.KeyType.LENGTH_OF_STAY, Integer.toString(stayBookingDay.getNights()));
+
+            if (DailyHotel.isLogin() == false)
+            {
+                params.put(AnalyticsManager.KeyType.IS_SIGNED, AnalyticsManager.ValueType.GUEST);
+            } else
+            {
+                params.put(AnalyticsManager.KeyType.IS_SIGNED, AnalyticsManager.ValueType.MEMBER);
+            }
+
+            params.put(AnalyticsManager.KeyType.PLACE_TYPE, AnalyticsManager.ValueType.STAY);
+            params.put(AnalyticsManager.KeyType.PLACE_HIT_TYPE, AnalyticsManager.ValueType.STAY);
+            params.put(AnalyticsManager.KeyType.CATEGORY, mStayCuration.getCategory().code);
+            params.put(AnalyticsManager.KeyType.FILTER, mStayCuration.getCurationOption().toAdjustString());
+
+            Province province = mStayCuration.getProvince();
+
+            if (province == null)
+            {
+                Util.restartApp(this);
+                return;
+            }
+
+            if (province instanceof Area)
+            {
+                Area area = (Area) province;
+                params.put(AnalyticsManager.KeyType.COUNTRY, area.getProvince().isOverseas ? AnalyticsManager.ValueType.OVERSEAS : AnalyticsManager.ValueType.DOMESTIC);
+                params.put(AnalyticsManager.KeyType.PROVINCE, area.getProvince().name);
+                params.put(AnalyticsManager.KeyType.DISTRICT, area.name);
+            } else if (province != null)
+            {
+                params.put(AnalyticsManager.KeyType.COUNTRY, province.isOverseas ? AnalyticsManager.ValueType.OVERSEAS : AnalyticsManager.ValueType.DOMESTIC);
+                params.put(AnalyticsManager.KeyType.PROVINCE, province.name);
+                params.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.ALL_LOCALE_KR);
+            }
+
+            AnalyticsManager.getInstance(this).recordScreen(this, screen, null, params);
+            // 숏컷 리스트 진입용 GA Screen 중복 발송
+
+            String shortcutScreen = "";
+            switch (mDailyCategoryType)
+            {
+                case STAY_HOTEL:
+                    shortcutScreen = AnalyticsManager.Screen.STAY_LIST_SHORTCUT_HOTEL;
+                    break;
+                case STAY_BOUTIQUE:
+                    shortcutScreen = AnalyticsManager.Screen.STAY_LIST_SHORTCUT_BOUTIQUE;
+                    break;
+                case STAY_PENSION:
+                    shortcutScreen = AnalyticsManager.Screen.STAY_LIST_SHORTCUT_PENSION;
+                    break;
+                case STAY_RESORT:
+                    shortcutScreen = AnalyticsManager.Screen.STAY_LIST_SHORTCUT_RESORT;
+                    break;
+                case STAY_NEARBY:
+                    shortcutScreen = AnalyticsManager.Screen.STAY_LIST_SHORTCUT_NEARBY;
+                    break;
+            }
+
+            if (DailyTextUtils.isTextEmpty(shortcutScreen) == false)
+            {
+                AnalyticsManager.getInstance(this).recordScreen(this, shortcutScreen, null, params);
+            }
+
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+        }
     }
 
     @Override

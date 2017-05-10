@@ -686,6 +686,13 @@ public class AnalyticsManager
 
         // True VR
         public static final String TRUE_VR = "true_vr";
+
+        // HOME - Stay Category
+        public static final String STAY_LIST_SHORTCUT_HOTEL = "stay_list_shortcut_hotel";
+        public static final String STAY_LIST_SHORTCUT_BOUTIQUE = "stay_list_shortcut_boutique";
+        public static final String STAY_LIST_SHORTCUT_PENSION = "stay_list_shortcut_pension";
+        public static final String STAY_LIST_SHORTCUT_RESORT = "stay_list_shortcut_resort";
+        public static final String STAY_LIST_SHORTCUT_NEARBY = "stay_list_shortcut_nearby";
     }
 
     public static class Action

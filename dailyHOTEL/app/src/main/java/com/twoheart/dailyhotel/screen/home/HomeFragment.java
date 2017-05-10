@@ -1405,7 +1405,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
         @Override
         public void onCategoryItemClick(DailyCategoryType categoryType)
         {
-            if (DailyCategoryType.STAY_AROUND_SEARCH == categoryType)
+            if (DailyCategoryType.STAY_NEARBY == categoryType)
             {
                 if (lockUiComponentAndIsLockUiComponent() == true)
                 {
