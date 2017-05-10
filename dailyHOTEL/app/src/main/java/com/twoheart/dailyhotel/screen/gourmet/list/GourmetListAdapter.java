@@ -226,7 +226,7 @@ public class GourmetListAdapter extends PlaceListAdapter
             }
 
             holder.distanceTextView.setVisibility(View.VISIBLE);
-            holder.distanceTextView.setText("(거리:" + new DecimalFormat("#.#").format(gourmet.distance) + "km)");
+            holder.distanceTextView.setText(mContext.getString(R.string.label_distance_km, new DecimalFormat("#.#").format(gourmet.distance)));
         } else
         {
             holder.dot1View.setVisibility(View.GONE);
