@@ -1356,7 +1356,6 @@ public class HotelPaymentActivity extends PlacePaymentActivity
             params.put(AnalyticsManager.KeyType.GRADE, stayPaymentInformation.grade.getName(HotelPaymentActivity.this));
             params.put(AnalyticsManager.KeyType.DBENEFIT, stayPaymentInformation.isDBenefit ? "yes" : "no");
             params.put(AnalyticsManager.KeyType.ADDRESS, stayPaymentInformation.address);
-            params.put(AnalyticsManager.KeyType.HOTEL_CATEGORY, mCategoryCode);
             params.put(AnalyticsManager.KeyType.CATEGORY, mCategoryCode);
             params.put(AnalyticsManager.KeyType.REGISTERED_SIMPLE_CARD, mSelectedCreditCard != null ? "y" : "n");
             params.put(AnalyticsManager.KeyType.NRD, stayPaymentInformation.getSaleRoomInformation().isNRD ? "y" : "n");
@@ -1488,7 +1487,6 @@ public class HotelPaymentActivity extends PlacePaymentActivity
 
             params.put(AnalyticsManager.KeyType.PAYMENT_TYPE, stayPaymentInformation.paymentType.getName());
             params.put(AnalyticsManager.KeyType.ADDRESS, stayPaymentInformation.address);
-            params.put(AnalyticsManager.KeyType.HOTEL_CATEGORY, mCategoryCode);
             params.put(AnalyticsManager.KeyType.CATEGORY, mCategoryCode);
 
             if (mProvince == null)

@@ -89,7 +89,7 @@ public class AppboyManager extends BaseAnalyticsManager
             AppboyProperties appboyProperties = new AppboyProperties();
 
             appboyProperties.addProperty(AnalyticsManager.KeyType.USER_IDX, getUserIndex());
-            appboyProperties.addProperty(AnalyticsManager.KeyType.STAY_CATEGORY, params.get(AnalyticsManager.KeyType.HOTEL_CATEGORY));
+            appboyProperties.addProperty(AnalyticsManager.KeyType.STAY_CATEGORY, params.get(AnalyticsManager.KeyType.CATEGORY));
             appboyProperties.addProperty(AnalyticsManager.KeyType.STAY_NAME, params.get(AnalyticsManager.KeyType.NAME));
             appboyProperties.addProperty(AnalyticsManager.KeyType.PROVINCE, params.get(AnalyticsManager.KeyType.PROVINCE));
             appboyProperties.addProperty(AnalyticsManager.KeyType.DISTRICT, params.get(AnalyticsManager.KeyType.DISTRICT));
@@ -364,7 +364,7 @@ public class AppboyManager extends BaseAnalyticsManager
             AppboyProperties appboyProperties = new AppboyProperties();
 
             appboyProperties.addProperty(AnalyticsManager.KeyType.USER_IDX, getUserIndex());
-            appboyProperties.addProperty(AnalyticsManager.KeyType.STAY_CATEGORY, params.get(AnalyticsManager.KeyType.HOTEL_CATEGORY));
+            appboyProperties.addProperty(AnalyticsManager.KeyType.STAY_CATEGORY, params.get(AnalyticsManager.KeyType.CATEGORY));
             appboyProperties.addProperty(AnalyticsManager.KeyType.STAY_NAME, params.get(AnalyticsManager.KeyType.NAME));
             appboyProperties.addProperty(AnalyticsManager.KeyType.PROVINCE, params.get(AnalyticsManager.KeyType.PROVINCE));
             appboyProperties.addProperty(AnalyticsManager.KeyType.DISTRICT, params.get(AnalyticsManager.KeyType.DISTRICT));
@@ -615,7 +615,7 @@ public class AppboyManager extends BaseAnalyticsManager
         String placeName = params.get(AnalyticsManager.KeyType.NAME);
 
         appboyProperties.addProperty(AnalyticsManager.KeyType.USER_IDX, getUserIndex());
-        appboyProperties.addProperty(AnalyticsManager.KeyType.STAY_CATEGORY, params.get(AnalyticsManager.KeyType.HOTEL_CATEGORY));
+        appboyProperties.addProperty(AnalyticsManager.KeyType.STAY_CATEGORY, params.get(AnalyticsManager.KeyType.CATEGORY));
         appboyProperties.addProperty(AnalyticsManager.KeyType.STAY_NAME, placeName);
         appboyProperties.addProperty(AnalyticsManager.KeyType.PROVINCE, params.get(AnalyticsManager.KeyType.PROVINCE));
         appboyProperties.addProperty(AnalyticsManager.KeyType.DISTRICT, params.get(AnalyticsManager.KeyType.DISTRICT));
@@ -905,7 +905,7 @@ public class AppboyManager extends BaseAnalyticsManager
         String placeName = params.get(AnalyticsManager.KeyType.NAME);
 
         appboyProperties.addProperty(AnalyticsManager.KeyType.USER_IDX, getUserIndex());
-        appboyProperties.addProperty(AnalyticsManager.KeyType.STAY_CATEGORY, params.get(AnalyticsManager.KeyType.HOTEL_CATEGORY));
+        appboyProperties.addProperty(AnalyticsManager.KeyType.STAY_CATEGORY, params.get(AnalyticsManager.KeyType.CATEGORY));
         appboyProperties.addProperty(AnalyticsManager.KeyType.STAY_NAME, placeName);
         appboyProperties.addProperty(AnalyticsManager.KeyType.PROVINCE, params.get(AnalyticsManager.KeyType.PROVINCE));
         appboyProperties.addProperty(AnalyticsManager.KeyType.DISTRICT, params.get(AnalyticsManager.KeyType.DISTRICT));

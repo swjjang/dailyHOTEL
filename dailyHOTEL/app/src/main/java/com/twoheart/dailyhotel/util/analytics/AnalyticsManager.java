@@ -1256,6 +1256,7 @@ public class AnalyticsManager
         public static final String DBENEFIT = "dBenefit";
         public static final String CATEGORY = "category";
         public static final String ADDRESS = "address";
+        @Deprecated
         public static final String HOTEL_CATEGORY = "hotelCategory";
         public static final String NRD = "nrd";
         public static final String PROVINCE = "province ";

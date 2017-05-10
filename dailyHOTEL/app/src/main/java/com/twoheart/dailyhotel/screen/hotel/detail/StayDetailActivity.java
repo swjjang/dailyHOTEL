@@ -1191,11 +1191,9 @@ public class StayDetailActivity extends PlaceDetailActivity
 
             if (DailyTextUtils.isTextEmpty(stayDetailParams.category) == true) //
             {
-                params.put(AnalyticsManager.KeyType.HOTEL_CATEGORY, AnalyticsManager.ValueType.EMPTY);
                 params.put(AnalyticsManager.KeyType.CATEGORY, AnalyticsManager.ValueType.EMPTY);
             } else
             {
-                params.put(AnalyticsManager.KeyType.HOTEL_CATEGORY, stayDetailParams.category);
                 params.put(AnalyticsManager.KeyType.CATEGORY, stayDetailParams.category);
             }
 
@@ -1262,7 +1260,7 @@ public class StayDetailActivity extends PlaceDetailActivity
             params.put(AnalyticsManager.KeyType.NAME, stayDetailParams.name);
             params.put(AnalyticsManager.KeyType.QUANTITY, Integer.toString(nights));
             params.put(AnalyticsManager.KeyType.PLACE_INDEX, Integer.toString(stayDetail.index));
-            params.put(AnalyticsManager.KeyType.HOTEL_CATEGORY, stayDetailParams.category);
+            params.put(AnalyticsManager.KeyType.CATEGORY, stayDetailParams.category);
 
             if (mProvince == null)
             {
