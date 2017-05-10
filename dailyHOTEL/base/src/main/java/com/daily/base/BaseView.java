@@ -138,33 +138,37 @@ public abstract class BaseView<T1 extends OnBaseEventListener, T2 extends ViewDa
     }
 
     @Override
-    public void showSimpleDialog(String title, String msg, String positive, View.OnClickListener positiveListener, DialogInterface.OnCancelListener cancelListener)
+    public void showSimpleDialog(String title, String msg, String positive, View.OnClickListener positiveListener//
+        , DialogInterface.OnCancelListener cancelListener)
     {
         showSimpleDialog(title, msg, positive, null, positiveListener, null, cancelListener, null, true);
     }
 
     @Override
-    public void showSimpleDialog(String title, String msg, String positive, View.OnClickListener positiveListener, DialogInterface.OnDismissListener dismissListener)
+    public void showSimpleDialog(String title, String msg, String positive, View.OnClickListener positiveListener//
+        , DialogInterface.OnDismissListener dismissListener)
     {
         showSimpleDialog(title, msg, positive, null, positiveListener, null, null, dismissListener, true);
     }
 
     @Override
-    public void showSimpleDialog(String title, String msg, String positive, String negative, View.OnClickListener positiveListener, View.OnClickListener negativeListener)
+    public void showSimpleDialog(String title, String msg, String positive, String negative//
+        , View.OnClickListener positiveListener, View.OnClickListener negativeListener)
     {
         showSimpleDialog(title, msg, positive, negative, positiveListener, negativeListener, null, null, true);
     }
 
     @Override
-    public void showSimpleDialog(String title, String msg, String positive, String negative, View.OnClickListener positiveListener, View.OnClickListener negativeListener, boolean isCancelable)
+    public void showSimpleDialog(String title, String msg, String positive, String negative//
+        , View.OnClickListener positiveListener, View.OnClickListener negativeListener, boolean isCancelable)
     {
         showSimpleDialog(title, msg, positive, negative, positiveListener, negativeListener, null, null, isCancelable);
     }
 
     @Override
-    public void showSimpleDialog(String titleText, String msg, String positive, String negative, final View.OnClickListener positiveListener, final View.OnClickListener negativeListener, DialogInterface.OnCancelListener cancelListener, //
-                                 DialogInterface.OnDismissListener dismissListener, //
-                                 boolean isCancelable)
+    public void showSimpleDialog(String titleText, String msg, String positive, String negative//
+        , final View.OnClickListener positiveListener, final View.OnClickListener negativeListener, DialogInterface.OnCancelListener cancelListener, //
+                                 DialogInterface.OnDismissListener dismissListener, boolean isCancelable)
     {
         if (mActivity.isFinishing() == true)
         {

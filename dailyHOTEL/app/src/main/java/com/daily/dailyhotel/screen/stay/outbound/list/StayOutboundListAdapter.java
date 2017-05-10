@@ -210,10 +210,10 @@ public class StayOutboundListAdapter extends RecyclerView.Adapter<RecyclerView.V
 
         StayOutbound stayOutbound = listItem.getItem();
 
-        // 가격
         holder.dataBinding.addressTextView.setText(stayOutbound.locationDescription);
         holder.dataBinding.nameTextView.setText(stayOutbound.name);
 
+        // 가격
         if (stayOutbound.nightlyRateKrw <= 0 || stayOutbound.nightlyRateKrw <= stayOutbound.nightlyRateKrw)
         {
             holder.dataBinding.priceTextView.setVisibility(View.INVISIBLE);

@@ -406,12 +406,36 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
     }
 
     @Override
+    public void onStayClick()
+    {
+        if(lock() == true)
+        {
+            return;
+        }
+
+
+
+    }
+
+    @Override
+    public void onStayLongClick()
+    {
+        
+    }
+
+    @Override
     public void onScrollList(int listSize, int lastVisibleItemPosition)
     {
         if (lastVisibleItemPosition > listSize / 3)
         {
             onAddList();
         }
+    }
+
+    @Override
+    public void onMapReady()
+    {
+
     }
 
     private void onCommonDateTime(@NonNull CommonDateTime commonDateTime)
