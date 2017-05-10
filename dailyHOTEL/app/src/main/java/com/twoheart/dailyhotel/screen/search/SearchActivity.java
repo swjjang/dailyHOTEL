@@ -516,7 +516,7 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
                     StayBookingDay stayBookingDay = (StayBookingDay) placeBookingDay;
                     params.put(AnalyticsManager.KeyType.CHECK_IN, stayBookingDay.getCheckInDay("yyyy-MM-dd"));
                     params.put(AnalyticsManager.KeyType.CHECK_OUT, stayBookingDay.getCheckOutDay("yyyy-MM-dd"));
-                    placeValueType = AnalyticsManager.ValueType.HOTEL;
+                    placeValueType = AnalyticsManager.ValueType.STAY;
                     break;
 
                 case FNB:

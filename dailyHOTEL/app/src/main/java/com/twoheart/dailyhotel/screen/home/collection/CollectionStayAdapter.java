@@ -235,7 +235,7 @@ public class CollectionStayAdapter extends PlaceListAdapter
         //        if (mShowDistanceIgnoreSort == true || getSortType() == Constants.SortType.DISTANCE)
         //        {
         //            holder.distanceTextView.setVisibility(View.VISIBLE);
-        //            holder.distanceTextView.setText("(거리:" + new DecimalFormat("#.#").format(stay.distance) + "km)");
+        //            holder.distanceTextView.setText(mContext.getString(R.string.label_distance_km, new DecimalFormat("#.#").format(stay.distance)));
         //        } else
         //        {
         holder.dot1View.setVisibility(View.GONE);

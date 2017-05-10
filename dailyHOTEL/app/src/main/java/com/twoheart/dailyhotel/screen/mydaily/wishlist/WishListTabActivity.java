@@ -420,7 +420,7 @@ public class WishListTabActivity extends BaseActivity
             AnalyticsManager.getInstance(WishListTabActivity.this).recordEvent(//
                 AnalyticsManager.Category.NAVIGATION_, //
                 AnalyticsManager.Action.WISHLIST_TAB_CHANGE, //
-                tab.getPosition() == 1 ? AnalyticsManager.ValueType.GOURMET : AnalyticsManager.ValueType.HOTEL, null);
+                tab.getPosition() == 1 ? AnalyticsManager.ValueType.GOURMET : AnalyticsManager.ValueType.STAY, null);
         }
 
         @Override

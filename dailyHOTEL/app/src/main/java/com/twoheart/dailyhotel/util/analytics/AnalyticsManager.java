@@ -686,6 +686,13 @@ public class AnalyticsManager
 
         // True VR
         public static final String TRUE_VR = "true_vr";
+
+        // HOME - Stay Category
+        public static final String STAY_LIST_SHORTCUT_HOTEL = "stay_list_shortcut_hotel";
+        public static final String STAY_LIST_SHORTCUT_BOUTIQUE = "stay_list_shortcut_boutique";
+        public static final String STAY_LIST_SHORTCUT_PENSION = "stay_list_shortcut_pension";
+        public static final String STAY_LIST_SHORTCUT_RESORT = "stay_list_shortcut_resort";
+        public static final String STAY_LIST_SHORTCUT_NEARBY = "stay_list_shortcut_nearby";
     }
 
     public static class Action
@@ -1249,6 +1256,7 @@ public class AnalyticsManager
         public static final String DBENEFIT = "dBenefit";
         public static final String CATEGORY = "category";
         public static final String ADDRESS = "address";
+        @Deprecated
         public static final String HOTEL_CATEGORY = "hotelCategory";
         public static final String NRD = "nrd";
         public static final String PROVINCE = "province ";
@@ -1342,6 +1350,7 @@ public class AnalyticsManager
         public static final String MEMBER = "member";
         public static final String GUEST = "guest";
         public static final String DETAIL = "detailview";
+        @Deprecated
         public static final String HOTEL = "hotel";
         public static final String STAY = "stay";
         public static final String GOURMET = "gourmet";
