@@ -225,19 +225,22 @@ public class Util implements Constants
 
     public static boolean isUsedMultiTransition()
     {
-        if (VersionUtils.isOverAPI21() == true)
-        {
-            if (VersionUtils.isOverAPI24() == true && VersionUtils.isSamsungModel() == true)
-            {
-                return false;
-            } else
-            {
-                return true;
-            }
-        } else
-        {
-            return false;
-        }
+        return VersionUtils.isOverAPI21() == true && VersionUtils.isOverAPI24() == false;
+
+        //        if (VersionUtils.isOverAPI21() == true)
+        //        {
+        //            if (VersionUtils.isOverAPI24() == true && VersionUtils.isSamsungModel() == true)
+        //            {
+        //                return false;
+        //            } else
+        //            {
+        //                return true;
+        //            }
+        //
+        //        } else
+        //        {
+        //            return false;
+        //        }
     }
 
     public static boolean isTelephonyEnabled(Context context)
