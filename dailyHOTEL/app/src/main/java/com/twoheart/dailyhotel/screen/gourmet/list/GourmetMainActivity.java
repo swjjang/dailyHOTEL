@@ -8,7 +8,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityOptionsCompat;
-import android.support.v4.app.SharedElementCallback;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Toast;
@@ -16,7 +15,6 @@ import android.widget.Toast;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.widget.DailyToast;
-import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.android.gms.maps.model.LatLng;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
@@ -939,23 +937,23 @@ public class GourmetMainActivity extends PlaceMainActivity
 
                     if (Util.isUsedMultiTransition() == true)
                     {
-                        setExitSharedElementCallback(new SharedElementCallback()
-                        {
-                            @Override
-                            public void onSharedElementEnd(List<String> sharedElementNames, List<View> sharedElements, List<View> sharedElementSnapshots)
-                            {
-                                super.onSharedElementEnd(sharedElementNames, sharedElements, sharedElementSnapshots);
-
-                                for (View view : sharedElements)
-                                {
-                                    if (view instanceof SimpleDraweeView)
-                                    {
-                                        view.setVisibility(View.VISIBLE);
-                                        break;
-                                    }
-                                }
-                            }
-                        });
+                        //                        setExitSharedElementCallback(new SharedElementCallback()
+                        //                        {
+                        //                            @Override
+                        //                            public void onSharedElementEnd(List<String> sharedElementNames, List<View> sharedElements, List<View> sharedElementSnapshots)
+                        //                            {
+                        //                                super.onSharedElementEnd(sharedElementNames, sharedElements, sharedElementSnapshots);
+                        //
+                        //                                for (View view : sharedElements)
+                        //                                {
+                        //                                    if (view instanceof SimpleDraweeView)
+                        //                                    {
+                        //                                        view.setVisibility(View.VISIBLE);
+                        //                                        break;
+                        //                                    }
+                        //                                }
+                        //                            }
+                        //                        });
 
                         Intent intent = GourmetDetailActivity.newInstance(GourmetMainActivity.this, //
                             mGourmetCuration.getGourmetBookingDay(), province, gourmet, listCount, true);
