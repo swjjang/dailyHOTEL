@@ -3,6 +3,7 @@ package com.daily.dailyhotel.screen.stay.outbound.list;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 
@@ -22,13 +23,14 @@ import com.daily.dailyhotel.parcel.SuggestParcel;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
 import com.daily.dailyhotel.repository.remote.StayOutboundRemoteImpl;
 import com.daily.dailyhotel.screen.common.calendar.StayCalendarActivity;
-import com.daily.dailyhotel.screen.stay.outbound.list.map.StayOutboundMapFragment;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 
@@ -42,7 +44,8 @@ import io.reactivex.schedulers.Schedulers;
  * Created by sheldon
  * Clean Architecture
  */
-public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutboundListActivity, StayOutboundListViewInterface> implements StayOutboundListView.OnEventListener
+public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutboundListActivity, StayOutboundListViewInterface> //
+    implements StayOutboundListView.OnEventListener
 {
     private static final int REQUEST_CODE_CALENDAR = 10000;
     private static final int DAYS_OF_MAXCOUNT = 90;
@@ -57,8 +60,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
 
     private Suggest mSuggest;
     private Persons mPersons;
-
-    private StayOutboundMapFragment mStayOutboundMapFragment;
+    private List<StayOutbound> mStayOutboundList;
 
     // 리스트 요청시에 다음이 있는지에 대한 인자들
     private String mCacheKey, mCacheLocation;
@@ -364,55 +366,49 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
     @Override
     public void onFilterClick()
     {
-        if(lock() == true)
+        if (lock() == true)
         {
             return;
         }
     }
 
     @Override
-    public void onMapClick()
+    public void onViewTypeClick()
     {
-        if(lock() == true || mViewState == ViewState.MAP)
+        if (lock() == true || getActivity() == null)
         {
             return;
         }
 
-        mViewState = ViewState.MAP;
-
-        if(mStayOutboundMapFragment == null)
+        switch (mViewState)
         {
-            mStayOutboundMapFragment = new StayOutboundMapFragment();
-            getActivity().addFragment(getViewInterface().getMapLayoutResourceId(), mStayOutboundMapFragment, "MAP");
-        }
-    }
+            // 현재 리스트 화면인 경우
+            case LIST:
+            {
+                mViewState = ViewState.MAP;
 
-    @Override
-    public void onListClick()
-    {
-        if(lock() == true || mViewState == ViewState.LIST)
-        {
-            return;
-        }
+                getViewInterface().showMapLayout(getActivity().getSupportFragmentManager());
+                break;
+            }
 
-        mViewState = ViewState.LIST;
+            // 현재 맵화면인 경우
+            case MAP:
+            {
+                mViewState = ViewState.LIST;
 
-        if(mStayOutboundMapFragment != null)
-        {
-            getActivity().removeFragment(mStayOutboundMapFragment);
-            getViewInterface().removeAllMapLayout();
-            mStayOutboundMapFragment = null;
+                getViewInterface().hideMapLayout(getActivity().getSupportFragmentManager());
+                break;
+            }
         }
     }
 
     @Override
     public void onStayClick()
     {
-        if(lock() == true)
+        if (lock() == true)
         {
             return;
         }
-
 
 
     }
@@ -420,7 +416,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
     @Override
     public void onStayLongClick()
     {
-        
+
     }
 
     @Override
@@ -434,6 +430,64 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
 
     @Override
     public void onMapReady()
+    {
+        getViewInterface().setStayOutboundMakeMarker(mStayOutboundList);
+    }
+
+    @Override
+    public void onMarkerClick(StayOutbound stayOutbound)
+    {
+        if (stayOutbound == null || mStayOutboundList == null)
+        {
+            return;
+        }
+
+        addCompositeDisposable(Observable.just(stayOutbound).subscribeOn(Schedulers.io()).map(new Function<StayOutbound, List<StayOutbound>>()
+        {
+            @Override
+            public List<StayOutbound> apply(@io.reactivex.annotations.NonNull StayOutbound stayOutbound) throws Exception
+            {
+                Comparator<StayOutbound> comparator = new Comparator<StayOutbound>()
+                {
+                    public int compare(StayOutbound stayOutbound1, StayOutbound stayOutbound2)
+                    {
+                        float[] results1 = new float[3];
+                        Location.distanceBetween(stayOutbound.latitude, stayOutbound.longitude, stayOutbound1.latitude, stayOutbound1.longitude, results1);
+
+                        float[] results2 = new float[3];
+                        Location.distanceBetween(stayOutbound.latitude, stayOutbound.longitude, stayOutbound2.latitude, stayOutbound2.longitude, results2);
+
+                        return Float.compare(results1[0], results2[0]);
+                    }
+                };
+
+                Collections.sort(mStayOutboundList, comparator);
+
+                return mStayOutboundList;
+            }
+        }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<List<StayOutbound>>()
+        {
+            @Override
+            public void accept(@io.reactivex.annotations.NonNull List<StayOutbound> stayOutboundList) throws Exception
+            {
+                getViewInterface().setStayOutboundMapViewPagerList(getActivity(), stayOutboundList);
+            }
+        }));
+    }
+
+    @Override
+    public void onMarkersCompleted()
+    {
+        if (getViewInterface() == null)
+        {
+            return;
+        }
+
+
+    }
+
+    @Override
+    public void onMapClick()
     {
 
     }
@@ -453,6 +507,19 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
         if (stayOutbounds == null)
         {
             return;
+        }
+
+        if (DailyTextUtils.isTextEmpty(mCacheKey, mCacheLocation) == true)
+        {
+            mStayOutboundList = stayOutbounds.getStayOutbound();
+        } else
+        {
+            mStayOutboundList.addAll(stayOutbounds.getStayOutbound());
+        }
+
+        if (mViewState == ViewState.MAP)
+        {
+            mStayOutboundMapFragment.setStayOutboundList(mStayOutboundList);
         }
 
         addCompositeDisposable(Observable.just(stayOutbounds).subscribeOn(Schedulers.io()).map(new Function<StayOutbounds, List<ListItem>>()
@@ -611,5 +678,11 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
     {
         mCacheKey = null;
         mCacheLocation = null;
+
+        if (mStayOutboundList != null)
+        {
+            mStayOutboundList.clear();
+            mStayOutboundList = null;
+        }
     }
 }

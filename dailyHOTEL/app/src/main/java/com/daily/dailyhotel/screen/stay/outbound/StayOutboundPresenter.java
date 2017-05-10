@@ -242,7 +242,7 @@ public class StayOutboundPresenter extends BaseExceptionPresenter<StayOutboundAc
         {
             getViewInterface().setRecentlySuggestsVisibility(false);
             getViewInterface().setSuggestsVisibility(true);
-            getViewInterface().setToolbarMenuEnable(true);
+            getViewInterface().setToolbarMenuEnable(false);
 
             addCompositeDisposable(mSuggestRemoteImpl.getSuggestsByStayOutBound(keyword)//
                 .delaySubscription(500, TimeUnit.MILLISECONDS).subscribe(suggests -> onSuggests(suggests), throwable -> onSuggests(null)));
@@ -261,6 +261,7 @@ public class StayOutboundPresenter extends BaseExceptionPresenter<StayOutboundAc
 
         // 검색어에 해당 내용을 넣어준다.
         getViewInterface().setSuggest(suggest);
+        getViewInterface().setToolbarMenuEnable(true);
     }
 
     @Override

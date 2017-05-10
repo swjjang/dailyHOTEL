@@ -64,13 +64,15 @@ public class StayOutboundMapFragment extends com.google.android.gms.maps.Support
 
     private OnEventListener mOnEventListener;
 
-    public interface OnEventListener extends OnBaseEventListener
+    public interface OnEventListener
     {
         void onMapReady();
 
         void onMarkerClick(StayOutbound stayOutbound);
 
         void onMarkersCompleted();
+
+        void onMapClick();
     }
 
     public StayOutboundMapFragment()
@@ -168,7 +170,16 @@ public class StayOutboundMapFragment extends com.google.android.gms.maps.Support
     @Override
     public void onMapClick(LatLng latLng)
     {
+        if (mSelectedMarker != null)
+        {
+            mSelectedMarker.setVisible(false);
+            mSelectedMarker.setTag(null);
+        }
 
+        if(mOnEventListener != null)
+        {
+            ((OnEventListener) mOnEventListener).onMapClick();
+        }
     }
 
     @Override
@@ -229,6 +240,11 @@ public class StayOutboundMapFragment extends com.google.android.gms.maps.Support
         return true;
     }
 
+    public void setOnEventListener(OnEventListener listener)
+    {
+        mOnEventListener = listener;
+    }
+
     public void setStayOutboundList(List<StayOutbound> stayOutboundList)
     {
         if (mGoogleMap == null || stayOutboundList == null || stayOutboundList.size() == 0)
@@ -236,12 +252,26 @@ public class StayOutboundMapFragment extends com.google.android.gms.maps.Support
             return;
         }
 
-        makeMarker(true, stayOutboundList, (StayOutbound) mSelectedMarker.getTag());
+        makeMarker(stayOutboundList, (StayOutbound) mSelectedMarker.getTag(), true);
     }
 
     public void setSelectedMarker(double latitude, double longitude)
     {
-//        mClusterManager.getMarkerCollection()
+        if (mClusterManager == null)
+        {
+            return;
+        }
+
+        for (Marker marker : mClusterManager.getMarkerCollection().getMarkers())
+        {
+            LatLng latLng = marker.getPosition();
+
+            if (latitude == latLng.latitude && longitude == latLng.longitude)
+            {
+                mSelectedMarker = marker;
+                break;
+            }
+        }
     }
 
     /**
@@ -249,7 +279,7 @@ public class StayOutboundMapFragment extends com.google.android.gms.maps.Support
      */
     private void relocationZoomControl()
     {
-        if (isFinishing() == true)
+        if (isFinishing() == true || getView() == null)
         {
             return;
         }
@@ -274,7 +304,7 @@ public class StayOutboundMapFragment extends com.google.android.gms.maps.Support
 
     private void relocationMyLocation()
     {
-        if (isFinishing() == true)
+        if (isFinishing() == true || getView() == null)
         {
             return;
         }
@@ -288,7 +318,7 @@ public class StayOutboundMapFragment extends com.google.android.gms.maps.Support
         }
     }
 
-    private void makeMarker(boolean refreshAll, List<StayOutbound> stayOutboundList, StayOutbound selectedStayOutbound)
+    private void makeMarker(List<StayOutbound> stayOutboundList, StayOutbound selectedStayOutbound, boolean refreshAll)
     {
         if (isFinishing() == true || mGoogleMap == null)
         {
@@ -512,7 +542,10 @@ public class StayOutboundMapFragment extends com.google.android.gms.maps.Support
         // 마커의 order을 상단으로 옮긴다.
         mSelectedMarker.showInfoWindow();
 
-        ((OnEventListener) mOnEventListener).onMarkerClick(stayOutboundClusterItem.getStayOutbound());
+        if(mOnEventListener != null)
+        {
+            ((OnEventListener) mOnEventListener).onMarkerClick(stayOutboundClusterItem.getStayOutbound());
+        }
     }
 
     private void moveCameraBounds(final LatLngBounds bounds, int placeCount)

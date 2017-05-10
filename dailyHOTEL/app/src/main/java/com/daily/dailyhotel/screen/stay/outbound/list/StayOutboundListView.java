@@ -18,7 +18,6 @@ import com.daily.dailyhotel.entity.ListItem;
 import com.daily.dailyhotel.entity.StayOutbound;
 import com.daily.dailyhotel.screen.stay.outbound.list.map.StayOutboundMapFragment;
 import com.daily.dailyhotel.screen.stay.outbound.list.map.StayOutboundMapViewPagerAdapter;
-import com.google.android.gms.maps.model.LatLng;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ActivityStayOutboundSearchResultDataBinding;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
@@ -28,7 +27,7 @@ import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 import java.util.List;
 
 public class StayOutboundListView extends BaseView<StayOutboundListView.OnEventListener, ActivityStayOutboundSearchResultDataBinding>//
-    implements StayOutboundListViewInterface, ViewPager.OnPageChangeListener
+    implements StayOutboundListViewInterface, ViewPager.OnPageChangeListener, View.OnClickListener, StayOutboundMapFragment.OnEventListener
 {
     private static final int VIEWPAGER_HEIGHT_DP = 120;
     private static final int VIEWPAGER_TOP_N_BOTTOM_PADDING_DP = 10;
@@ -48,9 +47,7 @@ public class StayOutboundListView extends BaseView<StayOutboundListView.OnEventL
 
         void onFilterClick();
 
-        void onMapClick();
-
-        void onListClick();
+        void onViewTypeClick();
 
         void onStayClick();
 
@@ -58,7 +55,14 @@ public class StayOutboundListView extends BaseView<StayOutboundListView.OnEventL
 
         void onScrollList(int listSize, int lastVisibleItemPosition);
 
+        // Map Event
         void onMapReady();
+
+        void onMarkerClick(StayOutbound stayOutbound);
+
+        void onMarkersCompleted();
+
+        void onMapClick();
     }
 
     public StayOutboundListView(BaseActivity baseActivity, StayOutboundListView.OnEventListener listener)
@@ -112,6 +116,9 @@ public class StayOutboundListView extends BaseView<StayOutboundListView.OnEventL
                 }
             }
         });
+
+        viewDataBinding.viewTypeOptionImageView.setOnClickListener(this);
+        viewDataBinding.filterOptionImageView.setOnClickListener(this);
     }
 
     @Override
@@ -171,6 +178,17 @@ public class StayOutboundListView extends BaseView<StayOutboundListView.OnEventL
     }
 
     @Override
+    public void setStayOutboundMakeMarker(List<StayOutbound> stayOutboundList)
+    {
+        if(mStayOutboundMapFragment == null || stayOutboundList == null)
+        {
+            return;
+        }
+
+        mStayOutboundMapFragment.setStayOutboundList(stayOutboundList);
+    }
+
+    @Override
     public void setStayOutboundMapViewPagerList(Context context, List<StayOutbound> stayOutboundList)
     {
         if (context == null)
@@ -211,12 +229,6 @@ public class StayOutboundListView extends BaseView<StayOutboundListView.OnEventL
     }
 
     @Override
-    public void removeAllMapLayout()
-    {
-
-    }
-
-    @Override
     public void setMapOptionLayout(boolean enabled)
     {
 
@@ -244,6 +256,7 @@ public class StayOutboundListView extends BaseView<StayOutboundListView.OnEventL
         if (mStayOutboundMapFragment == null)
         {
             mStayOutboundMapFragment = new StayOutboundMapFragment();
+            mStayOutboundMapFragment.setOnEventListener(this);
         }
 
         fragmentManager.beginTransaction().add(getViewDataBinding().mapLayout.getId(), mStayOutboundMapFragment, "MAP").commitAllowingStateLoss();
@@ -282,6 +295,18 @@ public class StayOutboundListView extends BaseView<StayOutboundListView.OnEventL
     }
 
     @Override
+    public void setMapViewPagerVisibility(boolean visibility)
+    {
+        if(mViewPager == null)
+        {
+            return;
+        }
+
+        mViewPager.bringToFront();
+        mViewPager.setVisibility(visibility == true ? View.VISIBLE : View.INVISIBLE);
+    }
+
+    @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels)
     {
     }
@@ -306,6 +331,205 @@ public class StayOutboundListView extends BaseView<StayOutboundListView.OnEventL
     public void onPageScrollStateChanged(int state)
     {
 
+    }
+
+    @Override
+    public void onClick(View v)
+    {
+        switch (v.getId())
+        {
+            case R.id.viewTypeOptionImageView:
+                getEventListener().onViewTypeClick();
+                break;
+
+
+            case R.id.filterOptionImageView:
+                getEventListener().onFilterClick();
+                break;
+        }
+    }
+
+    @Override
+    public void onMapReady()
+    {
+        getEventListener().onMapReady();
+    }
+
+    @Override
+    public void onMarkerClick(StayOutbound stayOutbound)
+    {
+        getEventListener().onMarkerClick(stayOutbound);
+    }
+
+    @Override
+    public void onMarkersCompleted()
+    {
+        getEventListener().onMarkersCompleted();
+    }
+
+    @Override
+    public void onMapClick()
+    {
+        getEventListener().onMapClick();
+    }
+
+    public void showViewPagerAnimation()
+    {
+        if (mAnimationState == Constants.ANIMATION_STATE.START && mAnimationStatus == Constants.ANIMATION_STATUS.SHOW)
+        {
+            return;
+        }
+
+        if (mValueAnimator != null && mValueAnimator.isRunning() == true)
+        {
+            mValueAnimator.cancel();
+        }
+
+        if (mViewPager.getVisibility() == View.VISIBLE)
+        {
+            return;
+        }
+
+        mValueAnimator = ValueAnimator.ofInt(0, 100);
+        mValueAnimator.setDuration(ANIMATION_DELAY);
+        mValueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener()
+        {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation)
+            {
+                int value = (Integer) animation.getAnimatedValue();
+                int height = ScreenUtils.dpToPx(mBaseActivity, (VIEWPAGER_HEIGHT_DP - VIEWPAGER_TOP_N_BOTTOM_PADDING_DP));
+                float translationY = height - height * value / 100;
+
+                setMenuBarLayoutTranslationY(translationY);
+            }
+        });
+
+        mValueAnimator.addListener(new Animator.AnimatorListener()
+        {
+            @Override
+            public void onAnimationStart(Animator animation)
+            {
+                //                setMenuBarLayoutEnabled(false);
+
+                mViewPager.setVisibility(View.VISIBLE);
+                mViewPager.setTranslationY(ScreenUtils.dpToPx(mBaseActivity, (VIEWPAGER_HEIGHT_DP - VIEWPAGER_TOP_N_BOTTOM_PADDING_DP)));
+
+                mAnimationState = Constants.ANIMATION_STATE.START;
+                mAnimationStatus = Constants.ANIMATION_STATUS.SHOW;
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation)
+            {
+                mValueAnimator.removeAllListeners();
+                mValueAnimator.removeAllUpdateListeners();
+                mValueAnimator = null;
+
+                if (mAnimationState != Constants.ANIMATION_STATE.CANCEL)
+                {
+                    mAnimationStatus = Constants.ANIMATION_STATUS.SHOW_END;
+                    mAnimationState = Constants.ANIMATION_STATE.END;
+                }
+
+                //                setMenuBarLayoutEnabled(true);
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation)
+            {
+                mAnimationState = Constants.ANIMATION_STATE.CANCEL;
+
+                //                setMenuBarLayoutEnabled(true);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation)
+            {
+
+            }
+        });
+
+        mValueAnimator.start();
+    }
+
+    public void hideViewPagerAnimation()
+    {
+        if (mAnimationState == Constants.ANIMATION_STATE.START && mAnimationStatus == Constants.ANIMATION_STATUS.HIDE)
+        {
+            return;
+        }
+
+        if (mViewPager.getVisibility() != View.VISIBLE)
+        {
+            return;
+        }
+
+        if (mValueAnimator != null && mValueAnimator.isRunning() == true)
+        {
+            mValueAnimator.cancel();
+        }
+
+        mValueAnimator = ValueAnimator.ofInt(0, 100);
+        mValueAnimator.setDuration(ANIMATION_DELAY);
+        mValueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener()
+        {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation)
+            {
+                int value = (Integer) animation.getAnimatedValue();
+                int height = ScreenUtils.dpToPx(mBaseActivity, (VIEWPAGER_HEIGHT_DP - VIEWPAGER_TOP_N_BOTTOM_PADDING_DP));
+                float translationY = height * value / 100;
+
+                setMenuBarLayoutTranslationY(translationY);
+            }
+        });
+
+        mValueAnimator.addListener(new Animator.AnimatorListener()
+        {
+            @Override
+            public void onAnimationStart(Animator animation)
+            {
+                mAnimationState = Constants.ANIMATION_STATE.START;
+                mAnimationStatus = Constants.ANIMATION_STATUS.HIDE;
+
+                setMenuBarLayoutTranslationY(0);
+
+                //                setMenuBarLayoutEnabled(false);
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation)
+            {
+                mValueAnimator.removeAllListeners();
+                mValueAnimator.removeAllUpdateListeners();
+                mValueAnimator = null;
+
+                if (mAnimationState != Constants.ANIMATION_STATE.CANCEL)
+                {
+                    mAnimationStatus = Constants.ANIMATION_STATUS.HIDE_END;
+                    mAnimationState = Constants.ANIMATION_STATE.END;
+                }
+
+                mViewPager.setVisibility(View.INVISIBLE);
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation)
+            {
+                mAnimationState = Constants.ANIMATION_STATE.CANCEL;
+
+                mViewPager.setVisibility(View.INVISIBLE);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation)
+            {
+
+            }
+        });
+
+        mValueAnimator.start();
     }
 
     private void initToolbar(ActivityStayOutboundSearchResultDataBinding viewDataBinding)

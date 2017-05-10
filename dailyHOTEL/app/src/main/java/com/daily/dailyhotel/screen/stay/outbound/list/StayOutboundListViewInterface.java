@@ -19,11 +19,11 @@ public interface StayOutboundListViewInterface extends BaseViewInterface
 
     void addStayOutboundList(List<ListItem> listItemList);
 
+    void setStayOutboundMakeMarker(List<StayOutbound> stayOutboundList);
+
     void setStayOutboundMapViewPagerList(Context context, List<StayOutbound> stayOutboundList);
 
     int getMapLayoutResourceId();
-
-    void removeAllMapLayout();
 
     void setMapOptionLayout(boolean enabled);
 
@@ -33,4 +33,10 @@ public interface StayOutboundListViewInterface extends BaseViewInterface
     void showMapLayout(FragmentManager fragmentManager);
 
     void hideMapLayout(FragmentManager fragmentManager);
+
+    void setMapViewPagerVisibility(boolean visibility);
+
+    void showViewPagerAnimation();
+
+    void hideViewPagerAnimation();
 }
