@@ -27,7 +27,7 @@ public interface StayOutboundListViewInterface extends BaseViewInterface
 
     void setMapOptionLayout(boolean enabled);
 
-    void setFilterOptonLayout(boolean enabled);
+    void setFilterOptionLayout(boolean enabled);
 
     // 원래 Fragment는 Activity에서 등록이 되어야 하는데 SupportMapFragment는 View로 취급하기로 한다.
     void showMapLayout(FragmentManager fragmentManager);

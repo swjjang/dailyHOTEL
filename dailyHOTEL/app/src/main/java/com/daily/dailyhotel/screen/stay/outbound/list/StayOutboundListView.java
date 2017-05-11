@@ -240,7 +240,7 @@ public class StayOutboundListView extends BaseView<StayOutboundListView.OnEventL
     }
 
     @Override
-    public void setFilterOptonLayout(boolean enabled)
+    public void setFilterOptionLayout(boolean enabled)
     {
 
     }
