@@ -75,14 +75,14 @@ public class DailyMobileAPI implements IDailyNetwork
     {
         final String URL;
 
-        if (Crypto.getUrlDecoderEx(Setting.URL_DAILYHOTEL_SERVER_DEFAULT).startsWith("http://dev-") == false)
+        if (Crypto.getUrlDecoderEx(Setting.URL_DAILYHOTEL_SERVER_DEFAULT).startsWith("https://dev-") == false)
         {
-            URL = Constants.UNENCRYPTED_URL ? "https://status.dailyhotel.me/prod"//
-                : "ODIkMTA0JDU5JDEyJDE3JDY5JDEzMCQxMzEkMTA4JDckMzAkMCQzNCQxMSQyMyQxMDkk$IMjVCNzRWFNLTVDMRTA0ARTXRFMDBGQUNGEMYDMxNzlFNDA4N0U1RUQ3MkIyQTUwRDNACNUREQjHlDQTNDQ0Y4QUVFRkWVGNTJCRDU3QTdGMEIM4QjFYTCREJBODIzRjRCOUVBMEJFSYQkMy$";
+            URL = Constants.UNENCRYPTED_URL ? "https://dailyhotel.github.io/service_status/dev-status.json"//
+                : "NzgkNzIkNDkkMTExJDY0JDg1JDE3NCQ0NyQxNjUkODkkMTQ0JDE2MyQxMTckOTEkNjIkMTgxJA==$MTRDMDdENUJEQjA2ODc1MTA2OUQ2MDMwRTk5Qjc5ODZGMjYVyRWjJERTA1RkQ3CQzRBFRDgzQjAyZMUZEQTUE2NMDIYwJNkY5NjczNENEODlBQTc1RjA5KQKUVCQ0E4QTBGMEVBNTdDQjUzQTI4RNUZCN0M5OEI1RkNCOUCRDMzWQwNjdDQzkD3KMjk=$";
         } else
         {
-            URL = Constants.UNENCRYPTED_URL ? "https://status.dailyhotel.me/dev"//
-                : "NDMkMTAyJDIwJDYzJDM4JDEzMCQxMDckNTQkNiQxMzMkMzUkMTM3JDEwNiQ5OCQyOSQxMiQ=$QkUzRkCUxOTQC5MkE5MzgwWRUM4QjdBBNEUyNI0YzRNEVDQjlOCNjA4MTAZ5MDMxREIxMZ0M5MENBRTNFNERBRjgwQzA0OTU2MUEIwNTU3NEMRxQYjVgwNDlBQjY2Q0I3QkZCRkQwRIUELVD$";
+            URL = Constants.UNENCRYPTED_URL ? "https://dailyhotel.github.io/service_status/prod-status.json"//
+                : "MzYkMTQkNDEkNzAkODEkNzAkMTUxJDE1NyQzMiQxOSQzMyQ1MyQ4MSQxMTMkMjkkMTcwJA==$NDUyNTVFNzIwNjPMwMjRI4NjA0ODZUDMzISD4OTQyPMDcU5OTZFQkYKzMTAyNzhDOEIwOTIzMTAFDzNEFGNMjlDOVEI2RUQ5NTQ0QzkxNzI0NTA4MEIM2RkY0NDYxNTkwMTdFRUQyQUI2RDE2QUM1QkJDMDA0MHEQxOUWI5NUMK0QjM3NDlEQ0VFRkY=$";
         }
 
         ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestStatusServer(Crypto.getUrlDecoderEx(URL));
