@@ -54,11 +54,13 @@ public class StayOutboundListView extends BaseView<StayOutboundListView.OnEventL
 
         void onViewTypeClick();
 
-        void onStayClick();
+        void onStayClick(View view, StayOutbound stayOutbound);
 
         void onStayLongClick();
 
         void onScrollList(int listSize, int lastVisibleItemPosition);
+
+        void onViewPagerClose();
 
         // Map Event
         void onMapReady();
@@ -166,6 +168,32 @@ public class StayOutboundListView extends BaseView<StayOutboundListView.OnEventL
         if (mStayOutboundListAdapter == null)
         {
             mStayOutboundListAdapter = new StayOutboundListAdapter(getContext(), null);
+            mStayOutboundListAdapter.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View view)
+                {
+                    int position = getViewDataBinding().recyclerView.getChildAdapterPosition(view);
+                    if (position < 0)
+                    {
+                        return;
+                    }
+
+                    ListItem listItem = mStayOutboundListAdapter.getItem(position);
+
+                    if (listItem.mType == listItem.TYPE_ENTRY)
+                    {
+                        getEventListener().onStayClick(view, listItem.getItem());
+                    }
+                }
+            }, new View.OnLongClickListener()
+            {
+                @Override
+                public boolean onLongClick(View v)
+                {
+                    return false;
+                }
+            });
             getViewDataBinding().recyclerView.setAdapter(mStayOutboundListAdapter);
         }
 
@@ -218,12 +246,11 @@ public class StayOutboundListView extends BaseView<StayOutboundListView.OnEventL
 
                 }
             });
-
-            mViewPager.setAdapter(mViewPagerAdapter);
         }
 
         mViewPagerAdapter.clear();
         mViewPagerAdapter.setData(stayOutboundList);
+        mViewPager.setAdapter(mViewPagerAdapter);
         mViewPagerAdapter.notifyDataSetChanged();
     }
 
@@ -234,13 +261,65 @@ public class StayOutboundListView extends BaseView<StayOutboundListView.OnEventL
     }
 
     @Override
-    public void setMapOptionLayout(boolean enabled)
+    public void setViewTypeOptionLayout(boolean enabled)
     {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
 
+        if (enabled == true)
+        {
+            getViewDataBinding().viewTypeOptionImageView.getBackground().setAlpha(255);
+        } else
+        {
+            getViewDataBinding().viewTypeOptionImageView.getBackground().setAlpha(102);
+        }
+
+        getViewDataBinding().viewTypeOptionImageView.setEnabled(enabled);
     }
 
     @Override
     public void setFilterOptionLayout(boolean enabled)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        if (enabled == true)
+        {
+            getViewDataBinding().filterOptionImageView.getBackground().setAlpha(255);
+        } else
+        {
+            getViewDataBinding().filterOptionImageView.getBackground().setAlpha(102);
+        }
+
+        getViewDataBinding().filterOptionImageView.setEnabled(enabled);
+    }
+
+    @Override
+    public void setViewTypeOptionImage(StayOutboundListPresenter.ViewState viewState)
+    {
+        if (viewState == null || getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        switch (viewState)
+        {
+            case LIST:
+                getViewDataBinding().viewTypeOptionImageView.setBackgroundResource(R.drawable.fab_01_map);
+                break;
+
+            case MAP:
+                getViewDataBinding().viewTypeOptionImageView.setBackgroundResource(R.drawable.fab_02_list);
+                break;
+        }
+    }
+
+    @Override
+    public void setFilterOptionImage(boolean onOff)
     {
 
     }
@@ -355,7 +434,7 @@ public class StayOutboundListView extends BaseView<StayOutboundListView.OnEventL
 
         if (stayOutbound != null)
         {
-            mStayOutboundMapFragment.setSelectedMarker(stayOutbound.latitude, stayOutbound.longitude);
+            mStayOutboundMapFragment.setSelectedMarker(stayOutbound);
         }
     }
 

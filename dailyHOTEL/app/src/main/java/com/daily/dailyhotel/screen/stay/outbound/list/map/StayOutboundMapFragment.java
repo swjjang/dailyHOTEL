@@ -263,9 +263,9 @@ public class StayOutboundMapFragment extends com.google.android.gms.maps.Support
         }
     }
 
-    public void setSelectedMarker(double latitude, double longitude)
+    public void setSelectedMarker(StayOutbound stayOutbound)
     {
-        if (mClusterManager == null)
+        if (mClusterManager == null || stayOutbound == null)
         {
             return;
         }
@@ -274,9 +274,41 @@ public class StayOutboundMapFragment extends com.google.android.gms.maps.Support
         {
             LatLng latLng = marker.getPosition();
 
-            if (latitude == latLng.latitude && longitude == latLng.longitude)
+            if (stayOutbound.latitude == latLng.latitude && stayOutbound.longitude == latLng.longitude)
             {
-                mSelectedMarker = marker;
+                PlaceRenderer placeRenderer = new PlaceRenderer(getContext(), stayOutbound.nightlyRateKrw, R.drawable.bg_hotel_price_special1);
+                BitmapDescriptor icon = placeRenderer.getBitmap(true);
+
+                if (icon == null)
+                {
+                    mSelectedMarker.setVisible(false);
+                } else
+                {
+                    mSelectedMarker.setVisible(true);
+                    mSelectedMarker.setPosition(marker.getPosition());
+                    mSelectedMarker.setIcon(icon);
+                }
+
+                if (VersionUtils.isOverAPI21() == true)
+                {
+                    mGoogleMap.setOnCameraIdleListener(new GoogleMap.OnCameraIdleListener()
+                    {
+                        @Override
+                        public void onCameraIdle()
+                        {
+                            mGoogleMap.setOnCameraIdleListener(mClusterManager);
+                        }
+                    });
+                    mGoogleMap.animateCamera(CameraUpdateFactory.newLatLng(mSelectedMarker.getPosition()));
+                } else
+                {
+                    mGoogleMap.moveCamera(CameraUpdateFactory.newLatLng(mSelectedMarker.getPosition()));
+                }
+
+                mSelectedMarker.setTag(stayOutbound);
+
+                // 마커의 order을 상단으로 옮긴다.
+                mSelectedMarker.showInfoWindow();
                 break;
             }
         }

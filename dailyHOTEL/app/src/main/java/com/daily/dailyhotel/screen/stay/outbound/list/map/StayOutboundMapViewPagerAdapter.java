@@ -54,7 +54,7 @@ public class StayOutboundMapViewPagerAdapter extends PagerAdapter
         dataBinding.nameTextView.setText(stayOutbound.name);
 
         // 가격
-        if (stayOutbound.nightlyRateKrw <= 0 || stayOutbound.nightlyRateKrw <= stayOutbound.nightlyRateKrw)
+        if (stayOutbound.nightlyRateKrw <= 0)
         {
             dataBinding.priceTextView.setVisibility(View.INVISIBLE);
             dataBinding.priceTextView.setText(null);
@@ -72,10 +72,10 @@ public class StayOutboundMapViewPagerAdapter extends PagerAdapter
         // 1박인 경우 전체가격과 1박가격이 같다.
         if (stayOutbound.nightlyRateKrw == stayOutbound.totalKrw)
         {
-            dataBinding.averageTextView.setVisibility(View.VISIBLE);
+            dataBinding.averageTextView.setVisibility(View.GONE);
         } else
         {
-            dataBinding.averageTextView.setVisibility(View.GONE);
+            dataBinding.averageTextView.setVisibility(View.VISIBLE);
         }
 
         // grade

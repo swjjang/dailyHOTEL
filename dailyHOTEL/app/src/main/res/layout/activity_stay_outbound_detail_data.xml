@@ -14,17 +14,17 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <com.twoheart.dailyhotel.widget.DailyLoopViewPager
-                android:id="@+id/imageLoopViewPager"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-
             <com.facebook.drawee.view.SimpleDraweeView
                 android:id="@+id/transImageView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:adjustViewBounds="true"
                 fresco:actualImageScaleType="centerCrop"/>
+
+            <com.twoheart.dailyhotel.widget.DailyLoopViewPager
+                android:id="@+id/imageLoopViewPager"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
 
             <View
                 android:id="@+id/transGradientView"

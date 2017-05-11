@@ -34,8 +34,7 @@ public class StayOutboundDetailActivity extends BaseActivity<StayOutboundDetailP
     static final String INTENT_EXTRA_DATA_CHECKOUT = "checkOut";
     static final String INTENT_EXTRA_DATA_NUMBER_OF_ADULTS = "numberOfAdults";
     static final String INTENT_EXTRA_DATA_CHILD_LIST = "childList";
-
-    private boolean mIsUsedMultiTransition;
+    static final String INTENT_EXTRA_DATA_MULTITRANSITION = "multiTransition";
 
     /**
      * @param stayIndex
@@ -46,7 +45,8 @@ public class StayOutboundDetailActivity extends BaseActivity<StayOutboundDetailP
      * @param childList
      * @return
      */
-    public static Intent newInstance(Context context, int stayIndex, String checkInDateTime, String checkOutDateTime, int numberOfAdults, ArrayList<String> childList)
+    public static Intent newInstance(Context context, int stayIndex, String checkInDateTime, String checkOutDateTime
+        , int numberOfAdults, ArrayList<String> childList, boolean mIsUsedMultiTransition)
     {
         Intent intent = new Intent(context, StayOutboundDetailActivity.class);
         intent.putExtra(INTENT_EXTRA_DATA_STAY_INDEX, stayIndex);
@@ -54,6 +54,7 @@ public class StayOutboundDetailActivity extends BaseActivity<StayOutboundDetailP
         intent.putExtra(INTENT_EXTRA_DATA_CHECKOUT, checkOutDateTime);
         intent.putExtra(INTENT_EXTRA_DATA_NUMBER_OF_ADULTS, numberOfAdults);
         intent.putExtra(INTENT_EXTRA_DATA_CHILD_LIST, childList);
+        intent.putExtra(INTENT_EXTRA_DATA_MULTITRANSITION, mIsUsedMultiTransition);
         return intent;
     }
 
@@ -73,8 +74,6 @@ public class StayOutboundDetailActivity extends BaseActivity<StayOutboundDetailP
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-
-        getPresenter().startAsync(getSharedElementTransition());
     }
 
     @NonNull
@@ -88,103 +87,5 @@ public class StayOutboundDetailActivity extends BaseActivity<StayOutboundDetailP
     public void finish()
     {
         super.finish();
-
-        if (mIsUsedMultiTransition == false)
-        {
-            overridePendingTransition(R.anim.hold, R.anim.slide_out_right);
-        }
-    }
-
-    @TargetApi(value = 21)
-    private Observable<Boolean> getSharedElementTransition()
-    {
-        Observable<Boolean> observable;
-
-        if (mIsUsedMultiTransition == true)
-        {
-            TransitionSet inTransitionSet = DraweeTransition.createTransitionSet(ScalingUtils.ScaleType.CENTER_CROP, ScalingUtils.ScaleType.CENTER_CROP);
-            Transition inTextTransition = new TextTransition(getResources().getColor(R.color.white), getResources().getColor(R.color.default_text_c323232)//
-                , 17, 18, new LinearInterpolator());
-            inTextTransition.addTarget(getString(R.string.transition_place_name));
-            inTransitionSet.addTransition(inTextTransition);
-
-            Transition inBottomAlphaTransition = new AlphaTransition(1.0f, 0.0f, new LinearInterpolator());
-            inBottomAlphaTransition.addTarget(getString(R.string.transition_gradient_bottom_view));
-            inTransitionSet.addTransition(inBottomAlphaTransition);
-
-            Transition inTopAlphaTransition = new AlphaTransition(0.0f, 1.0f, new LinearInterpolator());
-            inTopAlphaTransition.addTarget(getString(R.string.transition_gradient_top_view));
-            inTransitionSet.addTransition(inTopAlphaTransition);
-
-            getWindow().setSharedElementEnterTransition(inTransitionSet);
-
-            TransitionSet outTransitionSet = DraweeTransition.createTransitionSet(ScalingUtils.ScaleType.CENTER_CROP, ScalingUtils.ScaleType.CENTER_CROP);
-            Transition outTextTransition = new TextTransition(getResources().getColor(R.color.default_text_c323232), getResources().getColor(R.color.white)//
-                , 18, 17, new LinearInterpolator());
-            outTextTransition.addTarget(getString(R.string.transition_place_name));
-            outTransitionSet.addTransition(outTextTransition);
-
-            Transition outBottomAlphaTransition = new AlphaTransition(0.0f, 1.0f, new LinearInterpolator());
-            outBottomAlphaTransition.addTarget(getString(R.string.transition_gradient_bottom_view));
-            outTransitionSet.addTransition(outBottomAlphaTransition);
-
-            Transition outTopAlphaTransition = new AlphaTransition(1.0f, 0.0f, new LinearInterpolator());
-            outTopAlphaTransition.addTarget(getString(R.string.transition_gradient_top_view));
-            outTransitionSet.addTransition(outTopAlphaTransition);
-
-            outTransitionSet.setDuration(200);
-
-            getWindow().setSharedElementReturnTransition(outTransitionSet);
-
-            observable = new Observable<Boolean>()
-            {
-                @Override
-                protected void subscribeActual(Observer<? super Boolean> observer)
-                {
-                    getWindow().getSharedElementEnterTransition().addListener(new Transition.TransitionListener()
-                    {
-                        @Override
-                        public void onTransitionStart(Transition transition)
-                        {
-                        }
-
-                        @Override
-                        public void onTransitionEnd(Transition transition)
-                        {
-                            observer.onNext(true);
-                            observer.onComplete();
-                        }
-
-                        @Override
-                        public void onTransitionCancel(Transition transition)
-                        {
-                        }
-
-                        @Override
-                        public void onTransitionPause(Transition transition)
-                        {
-                        }
-
-                        @Override
-                        public void onTransitionResume(Transition transition)
-                        {
-                        }
-                    });
-                }
-            };
-        } else
-        {
-            observable = new Observable<Boolean>()
-            {
-                @Override
-                protected void subscribeActual(Observer<? super Boolean> observer)
-                {
-                    observer.onNext(true);
-                    observer.onComplete();
-                }
-            };
-        }
-
-        return observable;
     }
 }

@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.view.View;
 
 import com.daily.base.BaseActivity;
 import com.daily.base.BaseAnalyticsInterface;
@@ -23,8 +24,10 @@ import com.daily.dailyhotel.parcel.SuggestParcel;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
 import com.daily.dailyhotel.repository.remote.StayOutboundRemoteImpl;
 import com.daily.dailyhotel.screen.common.calendar.StayCalendarActivity;
+import com.daily.dailyhotel.screen.stay.outbound.detail.StayOutboundDetailActivity;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.DailyCalendar;
+import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import java.util.ArrayList;
@@ -426,14 +429,26 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
     }
 
     @Override
-    public void onStayClick()
+    public void onStayClick(View view, StayOutbound stayOutbound)
     {
         if (lock() == true)
         {
             return;
         }
 
-
+        if (Util.isUsedMultiTransition() == true)
+        {
+            startActivityForResult(StayOutboundDetailActivity.newInstance(getActivity(), stayOutbound.index//
+                , mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
+                , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
+                , mPersons.numberOfAdults, mPersons.getChildList(), true), StayOutboundListActivity.REQUEST_CODE_STAYOUTBOUND_DETAIL);
+        } else
+        {
+            startActivityForResult(StayOutboundDetailActivity.newInstance(getActivity(), stayOutbound.index//
+                , mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
+                , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
+                , mPersons.numberOfAdults, mPersons.getChildList(), false), StayOutboundListActivity.REQUEST_CODE_STAYOUTBOUND_DETAIL);
+        }
     }
 
     @Override
@@ -449,6 +464,12 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
         {
             onAddList();
         }
+    }
+
+    @Override
+    public void onViewPagerClose()
+    {
+
     }
 
     @Override
@@ -515,7 +536,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
     @Override
     public void onMapClick()
     {
-
+        getViewInterface().setMapViewPagerVisibility(false);
     }
 
     private void onCommonDateTime(@NonNull CommonDateTime commonDateTime)

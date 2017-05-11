@@ -1,10 +1,16 @@
 package com.daily.dailyhotel.repository.remote.model;
 
+import android.util.SparseArray;
+
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 import com.daily.dailyhotel.entity.StayOutboundDetail;
+import com.daily.dailyhotel.entity.StayOutboundRoom;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @JsonObject
 public class StayOutboundDetailData
@@ -14,6 +20,9 @@ public class StayOutboundDetailData
 
     @JsonField(name = "name")
     public String name;
+
+    @JsonField(name = "nameEng")
+    public String nameEng;
 
     @JsonField(name = "address")
     public String address;
@@ -30,44 +39,14 @@ public class StayOutboundDetailData
     @JsonField(name = "longitude")
     public double longitude;
 
-    @JsonField(name = "checkInTime")
-    public String checkInTime;
+    @JsonField(name = "details")
+    public Map<String, List<String>> details;
 
-    @JsonField(name = "checkOutTime")
-    public String checkOutTime;
+    @JsonField(name = "rooms")
+    public List<RoomData> rooms;
 
-    @JsonField(name = "areaInformation")
-    public String areaInformation;
-
-    @JsonField(name = "propertyDescription")
-    public String propertyDescription;
-
-    @JsonField(name = "hotelPolicy")
-    public String hotelPolicy;
-
-    @JsonField(name = "roomInformation")
-    public String roomInformation;
-
-    @JsonField(name = "checkInInstructions")
-    public String checkInInstructions;
-
-    @JsonField(name = "specialCheckInInstructions")
-    public String specialCheckInInstructions;
-
-    @JsonField(name = "diningDescription")
-    public String diningDescription;
-
-    @JsonField(name = "roomDetailDescription")
-    public String roomDetailDescription;
-
-    @JsonField(name = "renovationsDescription")
-    public String renovationsDescription;
-
-    @JsonField(name = "dailyHotelDetailImages")
-    public List<ImageData> dailyHotelDetailImages;
-
-    @JsonField(name = "dailyHotelDetailPropertyAmenities")
-    public List<AmenityData> dailyHotelDetailPropertyAmenities;
+    @JsonField(name = "amenities")
+    public List<AmenityData> amenities;
 
     public StayOutboundDetailData()
     {
@@ -77,6 +56,35 @@ public class StayOutboundDetailData
     public StayOutboundDetail getStayOutboundDetail()
     {
         StayOutboundDetail stayOutboundDetail = new StayOutboundDetail();
+        stayOutboundDetail.index = hotelId;
+        stayOutboundDetail.name = name;
+        stayOutboundDetail.nameEng = nameEng;
+        stayOutboundDetail.address = address;
+        stayOutboundDetail.hotelRating = hotelRating;
+        stayOutboundDetail.tripAdvisorRating = tripAdvisorRating;
+        stayOutboundDetail.latitude = latitude;
+        stayOutboundDetail.longitude = longitude;
+        stayOutboundDetail.details = details;
+
+        if (rooms != null && rooms.size() > 0)
+        {
+            List<StayOutboundRoom> stayOutboundRoomList = new ArrayList<>(rooms.size());
+
+            for (RoomData roomData : rooms)
+            {
+                stayOutboundRoomList.add(roomData.getStayOutboundRoom());
+            }
+        }
+
+        if (amenities != null && amenities.size() > 0)
+        {
+            SparseArray<String> mAmenitySparseArray= new SparseArray<>(amenities.size());
+
+            for (AmenityData amenityData : amenities)
+            {
+                mAmenitySparseArray.append(amenityData.amenityId, amenityData.amenity);
+            }
+        }
 
         return stayOutboundDetail;
     }
@@ -84,18 +92,100 @@ public class StayOutboundDetailData
     @JsonObject
     static class ImageData
     {
-        @JsonField(name = "name")
-        public String name;
-
         @JsonField(name = "caption")
         public String caption;
 
-        @JsonField(name = "url")
-        public String url;
+        @JsonField(name = "imageMap")
+        public ImageMapData imageMap;
 
         public ImageData()
         {
 
+        }
+    }
+
+    @JsonObject
+    static class ImageMapData
+    {
+        @JsonField(name = "small")
+        public String small;
+
+        @JsonField(name = "big")
+        public String big;
+
+        @JsonField(name = "medium")
+        public String medium;
+
+        public ImageMapData()
+        {
+
+        }
+    }
+
+    @JsonObject
+    static class RoomData
+    {
+        @JsonField(name = "rateKey")
+        public int rateKey;
+
+        @JsonField(name = "roomTypeCode")
+        public String roomTypeCode;
+
+        @JsonField(name = "rateCode")
+        public String rateCode;
+
+        @JsonField(name = "roomName")
+        public String roomName;
+
+        @JsonField(name = "baseKrw")
+        public String baseKrw;
+
+        @JsonField(name = "totalKrw")
+        public String totalKrw;
+
+        @JsonField(name = "baseNightlyKrw")
+        public String baseNightlyKrw;
+
+        @JsonField(name = "nightlyKrw")
+        public String nightlyKrw;
+
+        @JsonField(name = "promotion")
+        public boolean promotion;
+
+        @JsonField(name = "nonRefundable")
+        public boolean nonRefundable;
+
+        @JsonField(name = "nonRefundableDescription")
+        public String nonRefundableDescription;
+
+        @JsonField(name = "bedTypeName")
+        public String bedTypeName;
+
+        @JsonField(name = "valueAddName")
+        public int valueAddName;
+
+        public RoomData()
+        {
+
+        }
+
+        public StayOutboundRoom getStayOutboundRoom()
+        {
+            StayOutboundRoom stayOutboundRoom = new StayOutboundRoom();
+            stayOutboundRoom.rateKey = rateKey;
+            stayOutboundRoom.roomTypeCode = roomTypeCode;
+            stayOutboundRoom.roomName = roomName;
+            stayOutboundRoom.baseKrw = baseKrw;
+            stayOutboundRoom.totalKrw = totalKrw;
+            stayOutboundRoom.baseNightlyKrw = baseNightlyKrw;
+            stayOutboundRoom.nightlyKrw = nightlyKrw;
+            stayOutboundRoom.promotion = promotion;
+            stayOutboundRoom.nonRefundable = nonRefundable;
+            stayOutboundRoom.nonRefundableDescription = nonRefundableDescription;
+            stayOutboundRoom.bedTypeName = bedTypeName;
+            stayOutboundRoom.valueAddName = valueAddName;
+
+            return stayOutboundRoom;
         }
     }
 
@@ -106,42 +196,9 @@ public class StayOutboundDetailData
         public int amenityId;
 
         @JsonField(name = "amenity")
-        public int amenity;
+        public String amenity;
 
         public AmenityData()
-        {
-
-        }
-    }
-
-    @JsonObject
-    static class RoomData
-    {
-        @JsonField(name = "hotelId")
-        public int hotelId;
-
-        @JsonField(name = "hotelName")
-        public String hotelName;
-
-        @JsonField(name = "roomTypeCode")
-        public String roomTypeCode;
-
-        @JsonField(name = "smokingPreferences")
-        public String smokingPreferences;
-
-        @JsonField(name = "quotedOccupancy")
-        public int quotedOccupancy;
-
-        @JsonField(name = "rateOccupancyPerRoom")
-        public int rateOccupancyPerRoom;
-
-        @JsonField(name = "description")
-        public String description;
-
-        @JsonField(name = "nonRefundable")
-        public boolean nonRefundable;
-
-        public RoomData()
         {
 
         }

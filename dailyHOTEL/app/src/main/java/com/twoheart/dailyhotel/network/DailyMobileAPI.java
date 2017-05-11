@@ -1303,7 +1303,7 @@ public class DailyMobileAPI implements IDailyNetwork
             : "MzAkODEkNDckNjgkNDAkMzkkODckMSQ4OSQyOCQxNCQzMiQ4JDEkMzckNTUk$QAGkRCM0ZGGMkM1MBzkyQTBEOEMxRDgL1OGUWENFMUM3MEWZJEOURDMOEAM1NjY1RjE2MEVDQjc4RTSA5MzQxQjQ2Rjk1VMMHUEyRg==$";
 
         final String API = Constants.UNENCRYPTED_URL ? "api/v1/outbound/hotels/{hotelId}"//
-            : "";
+            : "MjIkOTkkMTA0JDEyOCQyMyQ0NiQyNSQ0MCQyNCQxMTYkMTMkMjckNjQkNDkkMCQ5MyQ=$FMUFFOEQzM0Y4NL0E5NkQ2ODVLPUPDzQkY0MzVBNTA5REUQzQTAI1FRjhDRDQ5MDJGJQzRDRThCQzBBREVEMjdCOEQ4NDIMwQjA4NEY5NkU4NTEQ1Q0OVDRjlDVQTUyRjQ4MjhCNEY5QQjNF$";
 
         Map<String, String> urlParams = new HashMap<>();
         urlParams.put("{hotelId}", Integer.toString(index));

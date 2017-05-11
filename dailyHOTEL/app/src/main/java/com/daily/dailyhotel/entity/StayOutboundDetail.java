@@ -1,40 +1,25 @@
 package com.daily.dailyhotel.entity;
 
+import android.util.SparseArray;
+
 import java.util.List;
+import java.util.Map;
 
 public class StayOutboundDetail
 {
-    int index;
-    String address;
-    String amenitiesDescription;
-    String areaInformation;
-    String businessAmenitiesDescription;
-
-    String checkInInstructions;
-    String checkInTime;
-    String checkOutTime;
-    String city;
-    String countryCode;
+    public int index;
+    public String name;
+    public String nameEng;
+    public String address;
+    public int hotelRating;
+    public String tripAdvisorRating;
+    public double latitude;
+    public double longitude;
+    public Map<String, List<String>> details;
 
     List<StayOutboundDetailImage> mImageList;
-    List<StayProduct> mProductList;
-
-    String hotelPolicy;
-    int hotelRating;
-    String hotelRatingDisplay;
-    double latitude;
-    double longitude;
-    String name;
-    int numberOfFloors;
-    int numberOfRooms;
-    String locationDescription;
-    String propertyDescription;
-    String propertyInformation;
-    String renovationsDescription;
-    String roomDetailDescription;
-    String roomInformation;
-    String specialCheckInInstructions;
-    String tripAdvisorRating;
+    List<StayOutboundRoom> mRoomInformationList;
+    SparseArray<String> mAmenitySparseArray;
 
     public StayOutboundDetail()
     {
