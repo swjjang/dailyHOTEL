@@ -55,6 +55,7 @@ import com.twoheart.dailyhotel.screen.mydaily.wishlist.WishListTabActivity;
 import com.twoheart.dailyhotel.screen.search.SearchActivity;
 import com.twoheart.dailyhotel.screen.search.stay.result.StaySearchResultActivity;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
 import com.twoheart.dailyhotel.util.DailyExternalDeepLink;
 import com.twoheart.dailyhotel.util.DailyLocationFactory;
@@ -63,8 +64,10 @@ import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.TimeZone;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
@@ -272,7 +275,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
 
                         try
                         {
-                            Intent intent = StayCategoryListActivity.newInstance(mBaseActivity, categoryType, null);
+                            Intent intent = StayCategoryListActivity.newInstance(mBaseActivity, categoryType);
                             startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_STAY);
                         } catch (Exception e)
                         {
@@ -407,6 +410,36 @@ public class HomeFragment extends BaseMenuNavigationFragment
                 {
                     mBaseActivity.showSimpleDialog(null, getString(R.string.message_stamp_finish_stamp), getString(R.string.dialog_btn_text_confirm), null);
                 }
+            } else if (externalDeepLink.isShortcutList() == true)
+            {
+                String categoryCode = externalDeepLink.getCategoryCode();
+                if (DailyTextUtils.isTextEmpty(categoryCode) == false)
+                {
+                    DailyCategoryType dailyCategoryType;
+
+                    if (categoryCode.equalsIgnoreCase(DailyCategoryType.STAY_NEARBY.getCodeString(mBaseActivity)) == true)
+                    {
+                        dailyCategoryType = DailyCategoryType.STAY_NEARBY;
+                    } else if (categoryCode.equalsIgnoreCase(DailyCategoryType.STAY_HOTEL.getCodeString(mBaseActivity)) == true)
+                    {
+                        dailyCategoryType = DailyCategoryType.STAY_HOTEL;
+                    } else if (categoryCode.equalsIgnoreCase(DailyCategoryType.STAY_BOUTIQUE.getCodeString(mBaseActivity)) == true)
+                    {
+                        dailyCategoryType = DailyCategoryType.STAY_BOUTIQUE;
+                    } else if (categoryCode.equalsIgnoreCase(DailyCategoryType.STAY_PENSION.getCodeString(mBaseActivity)) == true)
+                    {
+                        dailyCategoryType = DailyCategoryType.STAY_PENSION;
+                    } else if (categoryCode.equalsIgnoreCase(DailyCategoryType.STAY_RESORT.getCodeString(mBaseActivity)) == true)
+                    {
+                        dailyCategoryType = DailyCategoryType.STAY_RESORT;
+                    } else
+                    {
+                        dailyCategoryType = DailyCategoryType.NONE;
+                    }
+
+                    onStayCategoryClick(dailyCategoryType, externalDeepLink);
+                }
+
             }
         } else
         {
@@ -967,6 +1000,108 @@ public class HomeFragment extends BaseMenuNavigationFragment
         }
     }
 
+    private void onStayCategoryClick(DailyCategoryType dailyCategoryType, DailyExternalDeepLink dailyExternalDeepLink)
+    {
+        if (dailyCategoryType == null || DailyCategoryType.NONE.equals(dailyCategoryType) == true)
+        {
+            return;
+        }
+
+        if (DailyCategoryType.STAY_NEARBY == dailyCategoryType)
+        {
+            if (lockUiComponentAndIsLockUiComponent() == true)
+            {
+                return;
+            }
+
+            Intent intent = PermissionManagerActivity.newInstance(mBaseActivity //
+                , PermissionManagerActivity.PermissionType.ACCESS_FINE_LOCATION);
+            startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_PERMISSION_MANAGER);
+
+            if (dailyExternalDeepLink == null)
+            {
+                try
+                {
+                    AnalyticsManager.getInstance(mBaseActivity).recordEvent(//
+                        AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.HOME_SHORTCUT_CLICK,//
+                        AnalyticsManager.Label.NEAR_BY, null);
+                } catch (Exception e)
+                {
+                    ExLog.d(e.toString());
+                }
+            }
+            return;
+        }
+
+        try
+        {
+            StayBookingDay stayBookingDay = new StayBookingDay();
+
+            String checkInDay = mTodayDateTime.dailyDateTime;
+            int nights = 1;
+
+            if (dailyExternalDeepLink != null)
+            {
+                String date = dailyExternalDeepLink.getDate();
+
+                if (DailyTextUtils.isTextEmpty(date) == false)
+                {
+                    Date checkInDate = DailyCalendar.convertDate(date, "yyyyMMdd", TimeZone.getTimeZone("GMT+09:00"));
+                    checkInDay = DailyCalendar.format(checkInDate, DailyCalendar.ISO_8601_FORMAT);
+                }
+
+                try
+                {
+                    nights = Integer.parseInt(dailyExternalDeepLink.getNights());
+                } catch (Exception e)
+                {
+                    ExLog.d(e.toString());
+                } finally
+                {
+                    if (nights <= 0)
+                    {
+                        nights = 1;
+                    }
+                }
+            }
+
+            stayBookingDay.setCheckInDay(checkInDay);
+            stayBookingDay.setCheckOutDay(checkInDay, nights);
+
+            mBaseActivity.startActivityForResult( //
+                HomeCategoryRegionListActivity.newInstance(mBaseActivity, dailyCategoryType, stayBookingDay //
+                    , dailyExternalDeepLink != null ? dailyExternalDeepLink.getDeepLink() : null) //
+                , Constants.CODE_REQUEST_ACTIVITY_REGIONLIST);
+
+            String label = "";
+            switch (dailyCategoryType)
+            {
+                case STAY_HOTEL:
+                    label = AnalyticsManager.Label.HOTEL;
+                    break;
+                case STAY_BOUTIQUE:
+                    label = AnalyticsManager.Label.BOUTIQUE;
+                    break;
+                case STAY_PENSION:
+                    label = AnalyticsManager.Label.PENSION;
+                    break;
+                case STAY_RESORT:
+                    label = AnalyticsManager.Label.RESORT;
+                    break;
+            }
+
+            if (dailyExternalDeepLink == null)
+            {
+                AnalyticsManager.getInstance(mBaseActivity).recordEvent(//
+                    AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.HOME_SHORTCUT_CLICK,//
+                    label, null);
+            }
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+        }
+    }
+
     @Override
     public void setOnScrollChangedListener(BaseMenuNavigationFragment.OnScreenScrollChangeListener listener)
     {
@@ -1405,63 +1540,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
         @Override
         public void onCategoryItemClick(DailyCategoryType categoryType)
         {
-            if (DailyCategoryType.STAY_NEARBY == categoryType)
-            {
-                if (lockUiComponentAndIsLockUiComponent() == true)
-                {
-                    return;
-                }
-
-                Intent intent = PermissionManagerActivity.newInstance(mBaseActivity //
-                    , PermissionManagerActivity.PermissionType.ACCESS_FINE_LOCATION);
-                startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_PERMISSION_MANAGER);
-
-                try
-                {
-                    AnalyticsManager.getInstance(mBaseActivity).recordEvent(//
-                        AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.HOME_SHORTCUT_CLICK,//
-                        AnalyticsManager.Label.NEAR_BY, null);
-                } catch (Exception e)
-                {
-                    ExLog.d(e.toString());
-                }
-                return;
-            }
-
-            try
-            {
-                StayBookingDay stayBookingDay = new StayBookingDay();
-                stayBookingDay.setCheckInDay(mTodayDateTime.dailyDateTime);
-                stayBookingDay.setCheckOutDay(mTodayDateTime.dailyDateTime, 1);
-
-                mBaseActivity.startActivityForResult( //
-                    HomeCategoryRegionListActivity.newInstance(mBaseActivity, categoryType, stayBookingDay) //
-                    , Constants.CODE_REQUEST_ACTIVITY_REGIONLIST);
-
-                String label = "";
-                switch (categoryType)
-                {
-                    case STAY_HOTEL:
-                        label = AnalyticsManager.Label.HOTEL;
-                        break;
-                    case STAY_BOUTIQUE:
-                        label = AnalyticsManager.Label.BOUTIQUE;
-                        break;
-                    case STAY_PENSION:
-                        label = AnalyticsManager.Label.PENSION;
-                        break;
-                    case STAY_RESORT:
-                        label = AnalyticsManager.Label.RESORT;
-                        break;
-                }
-
-                AnalyticsManager.getInstance(mBaseActivity).recordEvent(//
-                    AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.HOME_SHORTCUT_CLICK,//
-                    label, null);
-            } catch (Exception e)
-            {
-                ExLog.e(e.toString());
-            }
+            onStayCategoryClick(categoryType, null);
         }
 
         @Override

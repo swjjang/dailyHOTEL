@@ -1,8 +1,10 @@
 package com.twoheart.dailyhotel.model;
 
+import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.daily.base.util.ExLog;
 import com.twoheart.dailyhotel.R;
 
 /**
@@ -24,7 +26,7 @@ public enum DailyCategoryType implements Parcelable
     // 신규 홈 카테고리 버튼 용 카테고리
     STAY_RESORT(R.string.label_home_category_resort, R.string.code_home_category_resort, R.drawable.ic_home_shortcut_04_resort),
     // 신규 홈 카테고리 버튼 용 카테고리 - 홈 화면 전용
-    STAY_NEARBY(R.string.label_home_category_around_search, 0, R.drawable.ic_home_shortcut_nearby),
+    STAY_NEARBY(R.string.label_home_category_stay_nearby, R.string.code_home_category_nearby, R.drawable.ic_home_shortcut_nearby),
     // 신규 홈 카테고리 빈 뷰 생성용 - 홈화면 전용
     NONE(0, 0, 0);
 
@@ -45,6 +47,26 @@ public enum DailyCategoryType implements Parcelable
     public int getImageResId()
     {
         return mImageResId;
+    }
+
+    public String getCodeString(Context context)
+    {
+        if (context == null)
+        {
+            return "";
+        }
+
+        String codeString = "";
+        try
+        {
+            codeString = context.getResources().getString(mCodeResId);
+        } catch (Exception e)
+        {
+            ExLog.w(e.getMessage());
+            codeString = "";
+        }
+
+        return codeString;
     }
 
     DailyCategoryType(int nameResId, int codeResId, int imageResId)

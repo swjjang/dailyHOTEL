@@ -75,17 +75,11 @@ public class StayCategoryListActivity extends PlaceMainActivity
 {
     private StayCuration mStayCuration;
     private DailyCategoryType mDailyCategoryType;
-    private DailyDeepLink mDailyDeepLink;
 
-    public static Intent newInstance(Context context, DailyCategoryType categoryType, String deepLink)
+    public static Intent newInstance(Context context, DailyCategoryType categoryType)
     {
         Intent intent = new Intent(context, StayCategoryListActivity.class);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_DAILY_CATEGORY_TYPE, (Parcelable) categoryType);
-
-        if (DailyTextUtils.isTextEmpty(deepLink) == false)
-        {
-            intent.putExtra(Constants.NAME_INTENT_EXTRA_DATA_DEEPLINK, deepLink);
-        }
 
         return intent;
     }
@@ -112,16 +106,6 @@ public class StayCategoryListActivity extends PlaceMainActivity
         String name = getResources().getString(mDailyCategoryType.getNameResId());
         String code = getResources().getString(mDailyCategoryType.getCodeResId());
         mStayCuration.setCategory(new Category(name, code));
-
-        initDeepLink(intent);
-    }
-
-    @Override
-    protected void onNewIntent(Intent intent)
-    {
-        super.onNewIntent(intent);
-
-        initDeepLink(intent);
     }
 
     private void initIntent(Intent intent)
@@ -136,22 +120,6 @@ public class StayCategoryListActivity extends PlaceMainActivity
         if (mDailyCategoryType == null)
         {
             mDailyCategoryType = DailyCategoryType.NONE;
-        }
-    }
-
-    private void initDeepLink(Intent intent)
-    {
-        if (intent == null || intent.hasExtra(Constants.NAME_INTENT_EXTRA_DATA_DEEPLINK) == false)
-        {
-            return;
-        }
-
-        try
-        {
-            mDailyDeepLink = DailyDeepLink.getNewInstance(Uri.parse(intent.getStringExtra(Constants.NAME_INTENT_EXTRA_DATA_DEEPLINK)));
-        } catch (Exception e)
-        {
-            mDailyDeepLink = null;
         }
     }
 
@@ -713,7 +681,8 @@ public class StayCategoryListActivity extends PlaceMainActivity
             }
 
             startActivityForResult(HomeCategoryRegionListActivity.newInstance( //
-                StayCategoryListActivity.this, mDailyCategoryType, mStayCuration.getStayBookingDay()) //
+                StayCategoryListActivity.this, mDailyCategoryType, mStayCuration.getStayBookingDay() //
+                , null) //
                 , Constants.CODE_REQUEST_ACTIVITY_REGIONLIST);
 
             switch (mViewType)
@@ -830,18 +799,9 @@ public class StayCategoryListActivity extends PlaceMainActivity
                     }
                 }
 
-                if (mDailyDeepLink != null && mDailyDeepLink.isValidateLink() == true //
-                    && processDeepLinkByDateTime(StayCategoryListActivity.this, mTodayDateTime, mDailyDeepLink) == true)
-                {
+                ((StayCategoryListLayout) mPlaceMainLayout).setToolbarDateText(mStayCuration.getStayBookingDay());
 
-                } else
-                {
-                    ((StayCategoryListLayout) mPlaceMainLayout).setToolbarDateText(mStayCuration.getStayBookingDay());
-
-                    // 이벤트 영역의 경우 사용하지 않음으로 주석처리
-                    //                    mPlaceMainNetworkController.requestEventBanner();
-                    mPlaceMainNetworkController.requestRegionList();
-                }
+                mPlaceMainNetworkController.requestRegionList();
             } catch (Exception e)
             {
                 onError(e);
@@ -885,19 +845,12 @@ public class StayCategoryListActivity extends PlaceMainActivity
 
             mStayCuration.setProvince(selectedProvince);
 
-            if (mDailyDeepLink != null && mDailyDeepLink.isValidateLink() == true //
-                && processDeepLinkByRegionList(StayCategoryListActivity.this, provinceList, areaList, mTodayDateTime, mDailyDeepLink) == true)
-            {
+            ArrayList<Category> categoryList = new ArrayList<>();
+            categoryList.add(mStayCuration.getCategory());
 
-            } else
-            {
-                ArrayList<Category> categoryList = new ArrayList<>();
-                categoryList.add(mStayCuration.getCategory());
-
-                mPlaceMainLayout.setToolbarRegionText(selectedProvince.name);
-                mPlaceMainLayout.setCategoryTabLayout(getSupportFragmentManager(), categoryList, //
-                    mStayCuration.getCategory(), mStayListFragmentListener);
-            }
+            mPlaceMainLayout.setToolbarRegionText(selectedProvince.name);
+            mPlaceMainLayout.setCategoryTabLayout(getSupportFragmentManager(), categoryList, //
+                mStayCuration.getCategory(), mStayListFragmentListener);
         }
 
         @Override
@@ -928,78 +881,6 @@ public class StayCategoryListActivity extends PlaceMainActivity
         public void onErrorResponse(Call call, Response response)
         {
             StayCategoryListActivity.this.onErrorResponse(call, response);
-        }
-
-        private boolean processDeepLinkByDateTime(BaseActivity baseActivity, TodayDateTime todayDateTime, DailyDeepLink dailyDeepLink)
-        {
-            if (dailyDeepLink == null)
-            {
-                return false;
-            }
-
-            if (dailyDeepLink.isExternalDeepLink() == true)
-            {
-                DailyExternalDeepLink externalDeepLink = (DailyExternalDeepLink) dailyDeepLink;
-
-                if (externalDeepLink.isHotelDetailView() == true)
-                {
-                    unLockUI();
-
-                    return moveDeepLinkDetail(baseActivity, todayDateTime, dailyDeepLink);
-                } else if (externalDeepLink.isHotelSearchView() == true)
-                {
-                    unLockUI();
-
-                    return moveDeepLinkSearch(baseActivity, todayDateTime, dailyDeepLink);
-                } else if (externalDeepLink.isHotelSearchResultView() == true)
-                {
-                    unLockUI();
-
-                    return moveDeepLinkSearchResult(baseActivity, todayDateTime, dailyDeepLink);
-                } else
-                {
-                    // 더이상 진입은 없다.
-                    if (externalDeepLink.isHotelListView() == false)
-                    {
-                        externalDeepLink.clear();
-                    }
-                }
-            } else
-            {
-
-            }
-
-            return false;
-        }
-
-        private boolean processDeepLinkByRegionList(BaseActivity baseActivity //
-            , List<Province> provinceList, List<Area> areaList, TodayDateTime todayDateTime //
-            , DailyDeepLink dailyDeepLink)
-        {
-            if (dailyDeepLink == null)
-            {
-                return false;
-            }
-
-            if (dailyDeepLink.isExternalDeepLink() == true)
-            {
-                DailyExternalDeepLink externalDeepLink = (DailyExternalDeepLink) dailyDeepLink;
-
-                if (externalDeepLink.isHotelListView() == true)
-                {
-                    unLockUI();
-
-                    return moveDeepLinkStayList(provinceList, areaList, todayDateTime, externalDeepLink);
-                } else
-                {
-                    externalDeepLink.clear();
-                }
-            } else
-            {
-
-            }
-
-            return false;
         }
 
         private Province searchLastRegion(BaseActivity baseActivity, //
