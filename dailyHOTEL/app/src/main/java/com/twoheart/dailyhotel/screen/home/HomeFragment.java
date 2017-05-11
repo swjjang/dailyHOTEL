@@ -407,6 +407,39 @@ public class HomeFragment extends BaseMenuNavigationFragment
                 {
                     mBaseActivity.showSimpleDialog(null, getString(R.string.message_stamp_finish_stamp), getString(R.string.dialog_btn_text_confirm), null);
                 }
+            } else if (externalDeepLink.isShortcutList() == true)
+            {
+                String categoryCode = externalDeepLink.getCategoryCode();
+                if (DailyTextUtils.isTextEmpty(categoryCode) == false)
+                {
+                    DailyCategoryType dailyCategoryType = null;
+
+                    if (categoryCode.equalsIgnoreCase(DailyCategoryType.STAY_HOTEL.getCodeString(mBaseActivity)) == true)
+                    {
+                        dailyCategoryType = DailyCategoryType.STAY_HOTEL;
+                    } else if (categoryCode.equalsIgnoreCase(DailyCategoryType.STAY_BOUTIQUE.getCodeString(mBaseActivity)) == true)
+                    {
+                        dailyCategoryType = DailyCategoryType.STAY_BOUTIQUE;
+                    } else if (categoryCode.equalsIgnoreCase(DailyCategoryType.STAY_PENSION.getCodeString(mBaseActivity)) == true)
+                    {
+                        dailyCategoryType = DailyCategoryType.STAY_PENSION;
+                    } else if (categoryCode.equalsIgnoreCase(DailyCategoryType.STAY_RESORT.getCodeString(mBaseActivity)) == true)
+                    {
+                        dailyCategoryType = DailyCategoryType.STAY_RESORT;
+                    }
+
+                    if (dailyCategoryType != null)
+                    {
+                        try
+                        {
+                            Intent intent = StayCategoryListActivity.newInstance(mBaseActivity, dailyCategoryType, dailyDeepLink.getDeepLink());
+                            startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_STAY);
+                        } catch (Exception e)
+                        {
+                            ExLog.e(e.toString());
+                        }
+                    }
+                }
             }
         } else
         {
@@ -415,6 +448,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
 
         dailyDeepLink.clear();
     }
+
 
     private void requestMessageData()
     {
@@ -1401,6 +1435,11 @@ public class HomeFragment extends BaseMenuNavigationFragment
         @Override
         public void onCategoryItemClick(DailyCategoryType categoryType)
         {
+            if (categoryType == null || DailyCategoryType.NONE.equals(categoryType) == true)
+            {
+                return;
+            }
+
             if (DailyCategoryType.STAY_NEARBY == categoryType)
             {
                 if (lockUiComponentAndIsLockUiComponent() == true)
@@ -1421,14 +1460,18 @@ public class HomeFragment extends BaseMenuNavigationFragment
                 {
                     ExLog.d(e.toString());
                 }
+
                 return;
             }
 
             try
             {
                 StayBookingDay stayBookingDay = new StayBookingDay();
-                stayBookingDay.setCheckInDay(mTodayDateTime.dailyDateTime);
-                stayBookingDay.setCheckOutDay(mTodayDateTime.dailyDateTime, 1);
+
+                String checkInDay = mTodayDateTime.dailyDateTime;
+                int nights = 1;
+                stayBookingDay.setCheckInDay(checkInDay);
+                stayBookingDay.setCheckOutDay(checkInDay, nights);
 
                 mBaseActivity.startActivityForResult( //
                     HomeCategoryRegionListActivity.newInstance(mBaseActivity, categoryType, stayBookingDay) //
@@ -1451,9 +1494,9 @@ public class HomeFragment extends BaseMenuNavigationFragment
                         break;
                 }
 
-                AnalyticsManager.getInstance(mBaseActivity).recordEvent(//
-                    AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.HOME_SHORTCUT_CLICK,//
-                    label, null);
+                    AnalyticsManager.getInstance(mBaseActivity).recordEvent(//
+                        AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.HOME_SHORTCUT_CLICK,//
+                        label, null);
             } catch (Exception e)
             {
                 ExLog.e(e.toString());

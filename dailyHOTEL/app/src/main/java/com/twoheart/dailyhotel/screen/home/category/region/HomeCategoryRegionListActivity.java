@@ -57,6 +57,7 @@ public class HomeCategoryRegionListActivity extends BaseActivity
         Intent intent = new Intent(context, HomeCategoryRegionListActivity.class);
         intent.putExtra(Constants.NAME_INTENT_EXTRA_DATA_DAILY_CATEGORY_TYPE, (Parcelable) categoryType);
         intent.putExtra(Constants.NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, stayBookingDay);
+
         return intent;
     }
 

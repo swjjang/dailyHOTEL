@@ -123,9 +123,11 @@ public class DailyExternalDeepLink extends DailyDeepLink
 
     private static final String PARAM_V15_VR = "vr"; // vr
 
+    private static final String PARAM_V16_STAY_SHORTCUT_LIST = "scl"; // 스테이 숏컷 리스트
+
 
     private static final int MINIMUM_VERSION_CODE = 2;
-    private static final int MAXIMUM_VERSION_CODE = 15;
+    private static final int MAXIMUM_VERSION_CODE = 16;
 
     private int mVersionCode;
 
@@ -162,6 +164,23 @@ public class DailyExternalDeepLink extends DailyDeepLink
         super.clear();
 
         mVersionCode = 0;
+    }
+
+    ///////////////////////////////////////////////////////////////////////////////////
+    // Version 16
+    ///////////////////////////////////////////////////////////////////////////////////
+
+    public boolean isShortcutList()
+    {
+        String view = getView();
+
+        if (mVersionCode >= 16)
+        {
+            return PARAM_V16_STAY_SHORTCUT_LIST.equalsIgnoreCase(view);
+        } else
+        {
+            return false;
+        }
     }
 
     ///////////////////////////////////////////////////////////////////////////////////

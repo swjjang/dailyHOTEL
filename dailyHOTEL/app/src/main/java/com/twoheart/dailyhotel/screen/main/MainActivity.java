@@ -1191,6 +1191,7 @@ public class MainActivity extends BaseActivity implements Constants, BaseMenuNav
                         || externalDeepLink.isRecentlyWatchGourmetView() == true//
                         || externalDeepLink.isWishListHotelView() == true//
                         || externalDeepLink.isWishListGourmetView() == true//
+                        || externalDeepLink.isShortcutList() == true//
                         )
                     {
                         mMainFragmentManager.select(false, MainFragmentManager.INDEX_HOME_FRAGMENT, true, bundle);

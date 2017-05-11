@@ -164,7 +164,6 @@ public class HomeCategoryRegionListFragment extends BaseFragment
         return regionViewItemList.get(0).getProvince();
     }
 
-
     //////////////////////////////////////////////
 
     private HomeCategoryRegionListLayout.OnEventListener mOnEventListener = new HomeCategoryRegionListLayout.OnEventListener()
