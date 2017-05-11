@@ -8,6 +8,7 @@ import android.view.View;
 import android.webkit.JavascriptInterface;
 import android.widget.TextView;
 
+import com.crashlytics.android.Crashlytics;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.widget.DailyWebView;
@@ -262,6 +263,12 @@ public class TrueVRActivity extends WebViewActivity implements View.OnClickListe
                                     break;
 
                                 case "FAILED_TO_LOAD_PLAYER":
+                                    if(Constants.DEBUG == false)
+                                    {
+                                        TrueVRParams trueVRParams = mTrueVRParamsList.get(mCurrentPage);
+                                        Crashlytics.logException(new Exception("Failed load True VR : " + trueVRParams.name + ", " + trueVRParams.url));
+                                    }
+
                                     showSimpleDialog(null, getString(R.string.message_truevr_failed_load_truevr), getString(R.string.dialog_btn_text_confirm), null//
                                         , new DialogInterface.OnDismissListener()
                                         {
