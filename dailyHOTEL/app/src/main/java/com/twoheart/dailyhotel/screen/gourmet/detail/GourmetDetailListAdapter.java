@@ -113,27 +113,27 @@ public class GourmetDetailListAdapter extends BaseAdapter
         if (mDetailViews[0] == null)
         {
             mDetailViews[0] = layoutInflater.inflate(R.layout.list_row_detail01, parent, false);
+            getEmptyView(mDetailViews[0]);
         }
 
-        getEmptyView(mDetailViews[0]);
         linearLayout.addView(mDetailViews[0]);
 
         // 레스토랑 등급과 이름.
         if (mDetailViews[1] == null)
         {
             mDetailViews[1] = layoutInflater.inflate(R.layout.list_row_gourmet_detail02, parent, false);
+            getTitleView(mDetailViews[1], mGourmetDetail);
         }
 
-        getTitleView(mDetailViews[1], mGourmetDetail);
         linearLayout.addView(mDetailViews[1]);
 
         // 주소 및 맵
         if (mDetailViews[2] == null)
         {
             mDetailViews[2] = layoutInflater.inflate(R.layout.list_row_detail03, parent, false);
+            getAddressView(mDetailViews[2], mGourmetDetail);
         }
 
-        getAddressView(mDetailViews[2], mGourmetDetail);
         linearLayout.addView(mDetailViews[2]);
 
         List<GourmetDetail.Pictogram> pictogramList = mGourmetDetail.getPictogramList();
@@ -143,9 +143,9 @@ public class GourmetDetailListAdapter extends BaseAdapter
             if (mDetailViews[3] == null)
             {
                 mDetailViews[3] = layoutInflater.inflate(R.layout.list_row_detail_pictogram, parent, false);
+                getAmenitiesView(mDetailViews[3], mGourmetDetail);
             }
 
-            getAmenitiesView(mDetailViews[3], mGourmetDetail);
             linearLayout.addView(mDetailViews[3]);
         }
 
@@ -155,9 +155,9 @@ public class GourmetDetailListAdapter extends BaseAdapter
             if (mDetailViews[4] == null)
             {
                 mDetailViews[4] = layoutInflater.inflate(R.layout.list_row_detail_benefit, parent, false);
+                getBenefitView(layoutInflater, mDetailViews[4], mGourmetDetail);
             }
 
-            getBenefitView(layoutInflater, mDetailViews[4], mGourmetDetail);
             linearLayout.addView(mDetailViews[4]);
         } else
         {
@@ -173,18 +173,18 @@ public class GourmetDetailListAdapter extends BaseAdapter
         if (mDetailViews[5] == null)
         {
             mDetailViews[5] = layoutInflater.inflate(R.layout.list_row_detail04, parent, false);
+            getInformationView(layoutInflater, (ViewGroup) mDetailViews[5], mGourmetDetail);
         }
 
-        getInformationView(layoutInflater, (ViewGroup) mDetailViews[5], mGourmetDetail);
         linearLayout.addView(mDetailViews[5]);
 
         // 문의 하기
         if (mDetailViews[6] == null)
         {
             mDetailViews[6] = layoutInflater.inflate(R.layout.list_row_detail07, parent, false);
+            getConciergeView(mDetailViews[6]);
         }
 
-        getConciergeView(mDetailViews[6]);
         linearLayout.addView(mDetailViews[6]);
 
         return linearLayout;

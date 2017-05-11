@@ -115,27 +115,27 @@ public class StayDetailListAdapter extends BaseAdapter
         if (mDetailViews[0] == null)
         {
             mDetailViews[0] = layoutInflater.inflate(R.layout.list_row_detail01, parent, false);
+            getDetail00View(mDetailViews[0]);
         }
 
-        getDetail00View(mDetailViews[0]);
         linearLayout.addView(mDetailViews[0]);
 
         // 호텔 등급과 이름.
         if (mDetailViews[1] == null)
         {
             mDetailViews[1] = layoutInflater.inflate(R.layout.list_row_stay_detail02, parent, false);
+            getTitleView(mDetailViews[1], mStayDetail);
         }
 
-        getTitleView(mDetailViews[1], mStayDetail);
         linearLayout.addView(mDetailViews[1]);
 
         // 주소 및 맵
         if (mDetailViews[2] == null)
         {
             mDetailViews[2] = layoutInflater.inflate(R.layout.list_row_detail03, parent, false);
+            getAddressView(mDetailViews[2], mStayDetail);
         }
 
-        getAddressView(mDetailViews[2], mStayDetail);
         linearLayout.addView(mDetailViews[2]);
 
         List<StayDetail.Pictogram> pictogramList = mStayDetail.getPictogramList();
@@ -145,9 +145,9 @@ public class StayDetailListAdapter extends BaseAdapter
             if (mDetailViews[3] == null)
             {
                 mDetailViews[3] = layoutInflater.inflate(R.layout.list_row_detail_pictogram, parent, false);
+                getAmenitiesView(mDetailViews[3], mStayDetail);
             }
 
-            getAmenitiesView(mDetailViews[3], mStayDetail);
             linearLayout.addView(mDetailViews[3]);
         }
 
@@ -157,9 +157,9 @@ public class StayDetailListAdapter extends BaseAdapter
             if (mDetailViews[4] == null)
             {
                 mDetailViews[4] = layoutInflater.inflate(R.layout.list_row_detail_benefit, parent, false);
+                getDetailBenefitView(layoutInflater, mDetailViews[4], mStayDetail);
             }
 
-            getDetailBenefitView(layoutInflater, mDetailViews[4], mStayDetail);
             linearLayout.addView(mDetailViews[4]);
         } else
         {
@@ -175,18 +175,18 @@ public class StayDetailListAdapter extends BaseAdapter
         if (mDetailViews[5] == null)
         {
             mDetailViews[5] = layoutInflater.inflate(R.layout.list_row_detail04, parent, false);
+            getInformationView(layoutInflater, (ViewGroup) mDetailViews[5], mStayDetail);
         }
 
-        getInformationView(layoutInflater, (ViewGroup) mDetailViews[5], mStayDetail);
         linearLayout.addView(mDetailViews[5]);
 
         // 카카오톡 문의
         if (mDetailViews[6] == null)
         {
             mDetailViews[6] = layoutInflater.inflate(R.layout.list_row_detail07, parent, false);
+            getConciergeView(mDetailViews[6]);
         }
 
-        getConciergeView(mDetailViews[6]);
         linearLayout.addView(mDetailViews[6]);
 
         return linearLayout;
