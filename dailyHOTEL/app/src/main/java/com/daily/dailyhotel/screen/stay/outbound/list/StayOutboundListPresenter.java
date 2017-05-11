@@ -230,6 +230,27 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
     @Override
     public boolean onBackPressed()
     {
+        if (mViewState == ViewState.MAP)
+        {
+            try
+            {
+                if (getViewInterface().isMapViewPagerVisibility() == true)
+                {
+                    getViewInterface().setMapViewPagerVisibility(false);
+                } else
+                {
+                    onViewTypeClick();
+                }
+            } catch (Exception e)
+            {
+                ExLog.d(e.toString());
+
+                onViewTypeClick();
+            }
+
+            return true;
+        }
+
         return super.onBackPressed();
     }
 
@@ -519,7 +540,8 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
 
         if (mViewState == ViewState.MAP)
         {
-            mStayOutboundMapFragment.setStayOutboundList(mStayOutboundList);
+            getViewInterface().setStayOutboundMakeMarker(mStayOutboundList);
+            getViewInterface().setStayOutboundMapViewPagerList(getActivity(), mStayOutboundList);
         }
 
         addCompositeDisposable(Observable.just(stayOutbounds).subscribeOn(Schedulers.io()).map(new Function<StayOutbounds, List<ListItem>>()

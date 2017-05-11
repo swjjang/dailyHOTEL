@@ -252,7 +252,7 @@ public class StayOutboundListAdapter extends RecyclerView.Adapter<RecyclerView.V
         holder.dataBinding.gradeTextView.setText(Integer.toString(stayOutbound.rating));
         holder.dataBinding.gradeTextView.setBackgroundResource(Stay.Grade.special.getColorResId());
 
-        Util.requestImageResize(mContext, holder.dataBinding.imageView, stayOutbound.thumbNailUrl);
+        Util.requestImageResize(mContext, holder.dataBinding.imageView, stayOutbound.imageUrl);
 
         if (DailyTextUtils.isTextEmpty(stayOutbound.promoDescription) == false)
         {

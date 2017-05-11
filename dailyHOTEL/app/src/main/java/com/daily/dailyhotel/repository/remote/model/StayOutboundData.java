@@ -46,8 +46,8 @@ public class StayOutboundData
     @JsonField(name = "nightlyBaseRateKrw")
     public String nightlyBaseRateKrw;
 
-    @JsonField(name = "thumbNailUrl")
-    public String thumbNailUrl;
+    @JsonField(name = "imageMap")
+    public ImageMapData imageMap;
 
     public StayOutboundData()
     {
@@ -74,8 +74,27 @@ public class StayOutboundData
         stayOutbound.nightlyRateKrw = Integer.parseInt(nightlyRateKrw);
         stayOutbound.nightlyBaseRateKrw = Integer.parseInt(nightlyBaseRateKrw);
         stayOutbound.totalKrw = Integer.parseInt(totalKrw);
-        stayOutbound.thumbNailUrl = thumbNailUrl;
+
+        stayOutbound.imageUrl = imageMap.medium;
 
         return stayOutbound;
+    }
+
+    @JsonObject
+    static class ImageMapData
+    {
+        @JsonField(name = "small")
+        public String small;
+
+        @JsonField(name = "big")
+        public String big;
+
+        @JsonField(name = "medium")
+        public String medium;
+
+        public ImageMapData()
+        {
+
+        }
     }
 }

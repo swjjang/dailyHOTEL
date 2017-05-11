@@ -81,7 +81,7 @@ public class StayOutboundMapViewPagerAdapter extends PagerAdapter
         dataBinding.gradeTextView.setText(Integer.toString(stayOutbound.rating));
         dataBinding.gradeTextView.setBackgroundResource(Stay.Grade.special.getColorResId());
 
-        Util.requestImageResize(mContext, dataBinding.simpleDraweeView, stayOutbound.thumbNailUrl);
+        Util.requestImageResize(mContext, dataBinding.simpleDraweeView, stayOutbound.imageUrl);
 
         if (DailyTextUtils.isTextEmpty(stayOutbound.promoDescription) == false)
         {

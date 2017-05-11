@@ -1,5 +1,7 @@
 package com.daily.dailyhotel.screen.stay.outbound.list;
 
+import android.animation.Animator;
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
@@ -29,6 +31,7 @@ import java.util.List;
 public class StayOutboundListView extends BaseView<StayOutboundListView.OnEventListener, ActivityStayOutboundSearchResultDataBinding>//
     implements StayOutboundListViewInterface, ViewPager.OnPageChangeListener, View.OnClickListener, StayOutboundMapFragment.OnEventListener
 {
+    private static final int ANIMATION_DELAY = 200;
     private static final int VIEWPAGER_HEIGHT_DP = 120;
     private static final int VIEWPAGER_TOP_N_BOTTOM_PADDING_DP = 10;
     private static final int VIEWPAGER_LEFT_N_RIGHT_PADDING_DP = 15;
@@ -40,6 +43,8 @@ public class StayOutboundListView extends BaseView<StayOutboundListView.OnEventL
     private StayOutboundMapFragment mStayOutboundMapFragment;
     private DailyOverScrollViewPager mViewPager;
     private StayOutboundMapViewPagerAdapter mViewPagerAdapter;
+
+    private ValueAnimator mValueAnimator;
 
     public interface OnEventListener extends OnBaseEventListener
     {
@@ -180,7 +185,7 @@ public class StayOutboundListView extends BaseView<StayOutboundListView.OnEventL
     @Override
     public void setStayOutboundMakeMarker(List<StayOutbound> stayOutboundList)
     {
-        if(mStayOutboundMapFragment == null || stayOutboundList == null)
+        if (mStayOutboundMapFragment == null || stayOutboundList == null)
         {
             return;
         }
@@ -297,13 +302,37 @@ public class StayOutboundListView extends BaseView<StayOutboundListView.OnEventL
     @Override
     public void setMapViewPagerVisibility(boolean visibility)
     {
-        if(mViewPager == null)
+        if (mViewPager == null)
         {
             return;
         }
 
         mViewPager.bringToFront();
-        mViewPager.setVisibility(visibility == true ? View.VISIBLE : View.INVISIBLE);
+
+        if (visibility == true)
+        {
+            if (mViewPager.getVisibility() != View.VISIBLE)
+            {
+                showViewPagerAnimation();
+            }
+        } else
+        {
+            if (mViewPager.getVisibility() == View.VISIBLE)
+            {
+                hideViewPagerAnimation();
+            }
+        }
+    }
+
+    @Override
+    public boolean isMapViewPagerVisibility()
+    {
+        if (mViewPager == null)
+        {
+            return false;
+        }
+
+        return mViewPager.getVisibility() == View.VISIBLE;
     }
 
     @Override
@@ -373,16 +402,11 @@ public class StayOutboundListView extends BaseView<StayOutboundListView.OnEventL
         getEventListener().onMapClick();
     }
 
-    public void showViewPagerAnimation()
+    private void showViewPagerAnimation()
     {
-        if (mAnimationState == Constants.ANIMATION_STATE.START && mAnimationStatus == Constants.ANIMATION_STATUS.SHOW)
-        {
-            return;
-        }
-
         if (mValueAnimator != null && mValueAnimator.isRunning() == true)
         {
-            mValueAnimator.cancel();
+            return;
         }
 
         if (mViewPager.getVisibility() == View.VISIBLE)
@@ -398,7 +422,7 @@ public class StayOutboundListView extends BaseView<StayOutboundListView.OnEventL
             public void onAnimationUpdate(ValueAnimator animation)
             {
                 int value = (Integer) animation.getAnimatedValue();
-                int height = ScreenUtils.dpToPx(mBaseActivity, (VIEWPAGER_HEIGHT_DP - VIEWPAGER_TOP_N_BOTTOM_PADDING_DP));
+                int height = ScreenUtils.dpToPx(getContext(), (VIEWPAGER_HEIGHT_DP - VIEWPAGER_TOP_N_BOTTOM_PADDING_DP));
                 float translationY = height - height * value / 100;
 
                 setMenuBarLayoutTranslationY(translationY);
@@ -410,13 +434,8 @@ public class StayOutboundListView extends BaseView<StayOutboundListView.OnEventL
             @Override
             public void onAnimationStart(Animator animation)
             {
-                //                setMenuBarLayoutEnabled(false);
-
                 mViewPager.setVisibility(View.VISIBLE);
-                mViewPager.setTranslationY(ScreenUtils.dpToPx(mBaseActivity, (VIEWPAGER_HEIGHT_DP - VIEWPAGER_TOP_N_BOTTOM_PADDING_DP)));
-
-                mAnimationState = Constants.ANIMATION_STATE.START;
-                mAnimationStatus = Constants.ANIMATION_STATUS.SHOW;
+                mViewPager.setTranslationY(ScreenUtils.dpToPx(getContext(), (VIEWPAGER_HEIGHT_DP - VIEWPAGER_TOP_N_BOTTOM_PADDING_DP)));
             }
 
             @Override
@@ -425,22 +444,11 @@ public class StayOutboundListView extends BaseView<StayOutboundListView.OnEventL
                 mValueAnimator.removeAllListeners();
                 mValueAnimator.removeAllUpdateListeners();
                 mValueAnimator = null;
-
-                if (mAnimationState != Constants.ANIMATION_STATE.CANCEL)
-                {
-                    mAnimationStatus = Constants.ANIMATION_STATUS.SHOW_END;
-                    mAnimationState = Constants.ANIMATION_STATE.END;
-                }
-
-                //                setMenuBarLayoutEnabled(true);
             }
 
             @Override
             public void onAnimationCancel(Animator animation)
             {
-                mAnimationState = Constants.ANIMATION_STATE.CANCEL;
-
-                //                setMenuBarLayoutEnabled(true);
             }
 
             @Override
@@ -453,9 +461,9 @@ public class StayOutboundListView extends BaseView<StayOutboundListView.OnEventL
         mValueAnimator.start();
     }
 
-    public void hideViewPagerAnimation()
+    private void hideViewPagerAnimation()
     {
-        if (mAnimationState == Constants.ANIMATION_STATE.START && mAnimationStatus == Constants.ANIMATION_STATUS.HIDE)
+        if (mValueAnimator != null && mValueAnimator.isRunning() == true)
         {
             return;
         }
@@ -463,11 +471,6 @@ public class StayOutboundListView extends BaseView<StayOutboundListView.OnEventL
         if (mViewPager.getVisibility() != View.VISIBLE)
         {
             return;
-        }
-
-        if (mValueAnimator != null && mValueAnimator.isRunning() == true)
-        {
-            mValueAnimator.cancel();
         }
 
         mValueAnimator = ValueAnimator.ofInt(0, 100);
@@ -478,7 +481,7 @@ public class StayOutboundListView extends BaseView<StayOutboundListView.OnEventL
             public void onAnimationUpdate(ValueAnimator animation)
             {
                 int value = (Integer) animation.getAnimatedValue();
-                int height = ScreenUtils.dpToPx(mBaseActivity, (VIEWPAGER_HEIGHT_DP - VIEWPAGER_TOP_N_BOTTOM_PADDING_DP));
+                int height = ScreenUtils.dpToPx(getContext(), (VIEWPAGER_HEIGHT_DP - VIEWPAGER_TOP_N_BOTTOM_PADDING_DP));
                 float translationY = height * value / 100;
 
                 setMenuBarLayoutTranslationY(translationY);
@@ -490,9 +493,6 @@ public class StayOutboundListView extends BaseView<StayOutboundListView.OnEventL
             @Override
             public void onAnimationStart(Animator animation)
             {
-                mAnimationState = Constants.ANIMATION_STATE.START;
-                mAnimationStatus = Constants.ANIMATION_STATUS.HIDE;
-
                 setMenuBarLayoutTranslationY(0);
 
                 //                setMenuBarLayoutEnabled(false);
@@ -505,21 +505,12 @@ public class StayOutboundListView extends BaseView<StayOutboundListView.OnEventL
                 mValueAnimator.removeAllUpdateListeners();
                 mValueAnimator = null;
 
-                if (mAnimationState != Constants.ANIMATION_STATE.CANCEL)
-                {
-                    mAnimationStatus = Constants.ANIMATION_STATUS.HIDE_END;
-                    mAnimationState = Constants.ANIMATION_STATE.END;
-                }
-
                 mViewPager.setVisibility(View.INVISIBLE);
             }
 
             @Override
             public void onAnimationCancel(Animator animation)
             {
-                mAnimationState = Constants.ANIMATION_STATE.CANCEL;
-
-                mViewPager.setVisibility(View.INVISIBLE);
             }
 
             @Override
@@ -542,6 +533,30 @@ public class StayOutboundListView extends BaseView<StayOutboundListView.OnEventL
         mDailyToolbarLayout = new DailyToolbarLayout(getContext(), viewDataBinding.toolbar);
         mDailyToolbarLayout.initToolbar(null//
             , v -> getEventListener().onBackClick());
+    }
+
+    public void setMenuBarLayoutTranslationY(float dy)
+    {
+        if (getViewDataBinding() == null || mViewPager == null)
+        {
+            return;
+        }
+
+        getViewDataBinding().bottomOptionLayout.setTranslationY(dy - ScreenUtils.dpToPx(getContext(), (VIEWPAGER_HEIGHT_DP - VIEWPAGER_TOP_N_BOTTOM_PADDING_DP)));
+        mViewPager.setTranslationY(dy);
+    }
+
+    public void resetMenuBarLayoutTranslation()
+    {
+        if (getViewDataBinding() == null || mViewPager == null)
+        {
+            return;
+        }
+
+        getViewDataBinding().bottomOptionLayout.setTranslationY(0);
+
+        mViewPager.setVisibility(View.INVISIBLE);
+        mViewPager.setTranslationY(0);
     }
 
     private DailyOverScrollViewPager addMapViewPager(Context context, ViewGroup viewGroup)

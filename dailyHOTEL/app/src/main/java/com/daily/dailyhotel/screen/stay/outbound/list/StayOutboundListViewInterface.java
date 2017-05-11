@@ -36,7 +36,5 @@ public interface StayOutboundListViewInterface extends BaseViewInterface
 
     void setMapViewPagerVisibility(boolean visibility);
 
-    void showViewPagerAnimation();
-
-    void hideViewPagerAnimation();
+    boolean isMapViewPagerVisibility();
 }
