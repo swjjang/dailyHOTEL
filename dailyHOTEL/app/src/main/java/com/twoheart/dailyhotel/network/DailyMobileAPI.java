@@ -76,12 +76,12 @@ public class DailyMobileAPI implements IDailyNetwork
 
         if (Constants.DEBUG == true)
         {
-            URL = Constants.UNENCRYPTED_URL ? "https://dailyhotel.github.io/service_status/dev-status.json"//
-                : "MTAzJDgzJDYkOTckMTExJDE1MiQzOSQ0NSQxNzEkMzAkMTMxJDE2OSQxOSQxNjQkMTExJDYxJA==$QjEzMTRFFOUQxQTI1MzDQwNjFFRDg1MTERGRDFDNDTM2OUUZ3NjdBOTU0QTE4EOTQ4QTQxMEUwOTY4OTJEN0Y3RkRTFQjdGQzVBOUMAwNkQ4MEQLPwRjgY4NzNDQjI0NkQ0RTBGEMzFGNThFNjRGRkFEMEExMzUCwQUNBRNUQ4RkYQ4OTID3MzBDRDA=$";
+            URL = Constants.UNENCRYPTED_URL ? "https://dev-status.dailyhotel.kr"//
+                : "MyQyMCQ5MSQxMTMkMTAwJDM1JDE3JDY5JDEyMCQxMDkkMTI4JDEyNyQyMCQxNCQxMjQkMiQ=$MTPEYxOTU1NTBBOFTQ5YREYFZCNzlCMEVENjNFNLUUwREY4N0IzRkFDN0M0NjIxRTFGNDk5MR0M2M0QzNjU0MUEyMDlFRDdDQOkYzQTAyMUkNDNjRMzMkJEOEHNBYBODgxRGDKg4RkMzRjc0$";
         } else
         {
-            URL = Constants.UNENCRYPTED_URL ? "https://dailyhotel.github.io/service_status/prod-status.json"//
-                : "NTkkNjkkMTI3JDEyJDExMiQxMDIkMyQ5NCQxMiQ1MSQyOCQxNjYkMTIzJDExNCQxNzIkNjUk$QTVDBRjc4Q0NCERRURFM0M4MTFBQB0MxM0EwQTBBOTJDQjg4NUQyMM0MxNkNFMUJRJFQzk2MEREMODMwQUFEMERCMkU5MEQ1RTIBFQzg4NjZUEMzBGNL0JGNA0I3NZUM1NDgyQUFDMLjFBRjc0RjA0QURBOTBGMkQ0MDYxOTZRCMjPhCQUUxODYzRDc=$";
+            URL = Constants.UNENCRYPTED_URL ? "https://prod-status.dailyhotel.kr"//
+                : "NTQkMTEzJDU4JDc2JDExMiQxMiQzNyQxMzMkMTIkMzUkNDAkMTM3JDExMiQxMjkkMyQ0NyQ=$M0QF2MDM1NjIzGARUYwNEQ0RjczNjQ2OTRGNMTA1GHMDc5RJjNBOEJCOTYxNjLNDOEDgzQjZFNDQxQkI3NDKJEODQyNUU5RTNDQTEwOTZGRkEwNEIwCN0JDMLDc1ANTgzRDKk1MkRCRTUSI3$";
         }
 
         ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestStatusServer(Crypto.getUrlDecoderEx(URL));
