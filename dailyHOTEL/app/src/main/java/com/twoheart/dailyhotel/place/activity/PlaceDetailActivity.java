@@ -173,6 +173,12 @@ public abstract class PlaceDetailActivity extends BaseActivity
     }
 
     @Override
+    public void onConfigurationChanged(Configuration newConfig)
+    {
+        super.onConfigurationChanged(newConfig);
+    }
+
+    @Override
     protected void onResume()
     {
         if (mPlaceDetailLayout != null)
