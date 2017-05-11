@@ -440,7 +440,7 @@ public class StayDetailActivity extends PlaceDetailActivity
                 @Override
                 public void onTransitionEnd(Transition transition)
                 {
-                    mPlaceDetailLayout.setTransImageVisibility(false);
+                    mPlaceDetailLayout.setTransVisibility(View.INVISIBLE);
                     mPlaceDetailLayout.setDefaultImage(mDefaultImageUrl);
 
                     // 딥링크가 아닌 경우에는 시간을 요청할 필요는 없다. 어떻게 할지 고민중

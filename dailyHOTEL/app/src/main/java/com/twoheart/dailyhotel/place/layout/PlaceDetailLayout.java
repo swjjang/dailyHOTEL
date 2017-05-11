@@ -78,7 +78,7 @@ public abstract class PlaceDetailLayout extends BaseLayout
 
     protected com.facebook.drawee.view.SimpleDraweeView mTransSimpleDraweeView;
     protected TextView mTransTotalGradeTextView, mTransPlaceNameTextView;
-    protected View mTransTitleLayout, mTransGradientView;
+    protected View mTransTitleLayout, mTransGradientBottomView, mTransGradientTopView;
 
     protected DailyTextView mWishButtonTextView;
     protected DailyTextView mWishPopupTextView;
@@ -149,8 +149,8 @@ public abstract class PlaceDetailLayout extends BaseLayout
     protected void initLayout(View view)
     {
         mTransSimpleDraweeView = (com.facebook.drawee.view.SimpleDraweeView) view.findViewById(R.id.transImageView);
-        mTransGradientView = view.findViewById(R.id.transGradientView);
-        View transGradientTopView = view.findViewById(R.id.transGradientTopView);
+        mTransGradientBottomView = view.findViewById(R.id.transGradientView);
+        mTransGradientTopView = view.findViewById(R.id.transGradientTopView);
 
         mTransTitleLayout = view.findViewById(R.id.transTitleLayout);
         mTransTotalGradeTextView = (TextView) mTransTitleLayout.findViewById(R.id.transGradeTextView);
@@ -175,7 +175,7 @@ public abstract class PlaceDetailLayout extends BaseLayout
             }
         });
 
-        mViewPager = (DailyLoopViewPager) view.findViewById(R.id.defaulLoopViewPager);
+        mViewPager = (DailyLoopViewPager) view.findViewById(R.id.defaultLoopViewPager);
 
         mImageAdapter = new PlaceDetailImageViewPagerAdapter(mContext);
         mViewPager.setAdapter(mImageAdapter);
@@ -218,20 +218,20 @@ public abstract class PlaceDetailLayout extends BaseLayout
     {
         if (enabled == true)
         {
-            setTransImageVisibility(true);
+            setTransVisibility(View.VISIBLE);
             mTransTitleLayout.setVisibility(View.VISIBLE);
 
             mTransSimpleDraweeView.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, getImageLayoutHeight(mContext)));
             mTransSimpleDraweeView.setTransitionName(mContext.getString(R.string.transition_place_image));
 
-            mTransGradientView.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, getImageLayoutHeight(mContext)));
-            mTransGradientView.setTransitionName(mContext.getString(R.string.transition_gradient_bottom_view));
-            mTransGradientView.setBackground(makeShaderFactory());
+            mTransGradientBottomView.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, getImageLayoutHeight(mContext)));
+            mTransGradientBottomView.setTransitionName(mContext.getString(R.string.transition_gradient_bottom_view));
+            mTransGradientBottomView.setBackground(makeShaderFactory());
 
-            mTransTitleLayout.setTransitionName(mContext.getString(R.string.transition_gradient_top_view));
+            mTransGradientTopView.setTransitionName(mContext.getString(R.string.transition_gradient_top_view));
         } else
         {
-            setTransImageVisibility(false);
+            setTransVisibility(View.GONE);
             mTransTitleLayout.setVisibility(View.GONE);
         }
     }
@@ -240,7 +240,7 @@ public abstract class PlaceDetailLayout extends BaseLayout
     {
         // 그라디에이션 만들기.
         final int colors[] = {Color.parseColor("#ED000000"), Color.parseColor("#E8000000"), Color.parseColor("#E2000000"), Color.parseColor("#66000000"), Color.parseColor("#00000000")};
-        final float positions[] = {0.0f, 0.01f, 0.02f, 0.17f, 0.38f};
+        final float positions[] = {0.0f, 0.01f, 0.02f, 0.17f, 0.60f};
 
         PaintDrawable paintDrawable = new PaintDrawable();
         paintDrawable.setShape(new RectShape());
@@ -283,15 +283,16 @@ public abstract class PlaceDetailLayout extends BaseLayout
         return scrollY == 0;
     }
 
-    public void setTransImageVisibility(boolean isVisibility)
+    public void setTransVisibility(int visibility)
     {
-        mTransSimpleDraweeView.setVisibility(isVisibility == true ? View.VISIBLE : View.INVISIBLE);
-        mTransGradientView.setVisibility(isVisibility == true ? View.VISIBLE : View.INVISIBLE);
+        mTransSimpleDraweeView.setVisibility(visibility);
+        mTransGradientBottomView.setVisibility(visibility);
+        mTransGradientTopView.setVisibility(visibility);
     }
 
     public void setTransBottomGradientBackground(int resId)
     {
-        mTransGradientView.setBackgroundResource(resId);
+        mTransGradientBottomView.setBackgroundResource(resId);
     }
 
     public void setTransImageView(String url)

@@ -38,6 +38,7 @@ public class PlaceDetailImageViewPagerAdapter extends PagerAdapter
 
         if (mImageInformationList == null || mImageInformationList.size() == 0 || position < 0)
         {
+            imageView.setBackgroundResource(R.color.default_background);
             imageView.getHierarchy().setActualImageScaleType(ScalingUtils.ScaleType.CENTER_CROP);
             imageView.setTag(imageView.getId(), position);
             imageView.getHierarchy().setPlaceholderImage(R.drawable.layerlist_placeholder);
@@ -50,6 +51,7 @@ public class PlaceDetailImageViewPagerAdapter extends PagerAdapter
 
         if (position < mImageInformationList.size())
         {
+            imageView.setBackgroundResource(R.color.default_background);
             imageView.getHierarchy().setActualImageScaleType(ScalingUtils.ScaleType.CENTER_CROP);
             imageView.setTag(imageView.getId(), position);
             imageView.getHierarchy().setPlaceholderImage(R.drawable.layerlist_placeholder);

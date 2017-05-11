@@ -9,7 +9,6 @@ import com.daily.dailyhotel.repository.remote.model.StayOutboundsData;
 import com.daily.dailyhotel.repository.remote.model.SuggestsData;
 import com.daily.dailyhotel.repository.remote.model.UserBenefitData;
 import com.daily.dailyhotel.repository.remote.model.UserData;
-import com.twoheart.dailyhotel.Setting;
 import com.twoheart.dailyhotel.model.Keyword;
 import com.twoheart.dailyhotel.network.dto.BaseDto;
 import com.twoheart.dailyhotel.network.dto.BaseListDto;
@@ -78,14 +77,14 @@ public class DailyMobileAPI implements IDailyNetwork
     {
         final String URL;
 
-        if (Crypto.getUrlDecoderEx(Setting.URL_DAILYHOTEL_SERVER_DEFAULT).startsWith("http://dev-") == false)
+        if (Constants.DEBUG == true)
         {
-            URL = Constants.UNENCRYPTED_URL ? "https://status.dailyhotel.me/prod"//
-                : "ODIkMTA0JDU5JDEyJDE3JDY5JDEzMCQxMzEkMTA4JDckMzAkMCQzNCQxMSQyMyQxMDkk$IMjVCNzRWFNLTVDMRTA0ARTXRFMDBGQUNGEMYDMxNzlFNDA4N0U1RUQ3MkIyQTUwRDNACNUREQjHlDQTNDQ0Y4QUVFRkWVGNTJCRDU3QTdGMEIM4QjFYTCREJBODIzRjRCOUVBMEJFSYQkMy$";
+            URL = Constants.UNENCRYPTED_URL ? "https://dailyhotel.github.io/service_status/dev-status.json"//
+                : "MTAzJDgzJDYkOTckMTExJDE1MiQzOSQ0NSQxNzEkMzAkMTMxJDE2OSQxOSQxNjQkMTExJDYxJA==$QjEzMTRFFOUQxQTI1MzDQwNjFFRDg1MTERGRDFDNDTM2OUUZ3NjdBOTU0QTE4EOTQ4QTQxMEUwOTY4OTJEN0Y3RkRTFQjdGQzVBOUMAwNkQ4MEQLPwRjgY4NzNDQjI0NkQ0RTBGEMzFGNThFNjRGRkFEMEExMzUCwQUNBRNUQ4RkYQ4OTID3MzBDRDA=$";
         } else
         {
-            URL = Constants.UNENCRYPTED_URL ? "https://status.dailyhotel.me/dev"//
-                : "NDMkMTAyJDIwJDYzJDM4JDEzMCQxMDckNTQkNiQxMzMkMzUkMTM3JDEwNiQ5OCQyOSQxMiQ=$QkUzRkCUxOTQC5MkE5MzgwWRUM4QjdBBNEUyNI0YzRNEVDQjlOCNjA4MTAZ5MDMxREIxMZ0M5MENBRTNFNERBRjgwQzA0OTU2MUEIwNTU3NEMRxQYjVgwNDlBQjY2Q0I3QkZCRkQwRIUELVD$";
+            URL = Constants.UNENCRYPTED_URL ? "https://dailyhotel.github.io/service_status/prod-status.json"//
+                : "NTkkNjkkMTI3JDEyJDExMiQxMDIkMyQ5NCQxMiQ1MSQyOCQxNjYkMTIzJDExNCQxNzIkNjUk$QTVDBRjc4Q0NCERRURFM0M4MTFBQB0MxM0EwQTBBOTJDQjg4NUQyMM0MxNkNFMUJRJFQzk2MEREMODMwQUFEMERCMkU5MEQ1RTIBFQzg4NjZUEMzBGNL0JGNA0I3NZUM1NDgyQUFDMLjFBRjc0RjA0QURBOTBGMkQ0MDYxOTZRCMjPhCQUUxODYzRDc=$";
         }
 
         ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestStatusServer(Crypto.getUrlDecoderEx(URL));

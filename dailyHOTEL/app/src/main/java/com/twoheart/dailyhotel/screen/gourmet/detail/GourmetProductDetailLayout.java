@@ -74,7 +74,7 @@ public class GourmetProductDetailLayout extends BaseLayout
         // 이미지 ViewPage 넣기.
         mDailyLineIndicator = (DailyLineIndicator) mDefaultImageLayout.findViewById(R.id.viewpagerIndicator);
 
-        mViewPager = (DailyLoopViewPager) mDefaultImageLayout.findViewById(R.id.defaulLoopViewPager);
+        mViewPager = (DailyLoopViewPager) mDefaultImageLayout.findViewById(R.id.defaultLoopViewPager);
 
         mImageAdapter = new GourmetProductDetailImagePagerAdapter(mContext);
         mViewPager.setAdapter(mImageAdapter);
