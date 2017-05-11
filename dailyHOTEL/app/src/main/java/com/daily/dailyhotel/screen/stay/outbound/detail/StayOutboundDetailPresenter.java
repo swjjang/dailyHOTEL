@@ -93,6 +93,13 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
         {
             mIsUsedMultiTransition = intent.getBooleanExtra(StayOutboundDetailActivity.INTENT_EXTRA_DATA_MULTITRANSITION, false);
 
+            mStayIndex = intent.getIntExtra(StayOutboundDetailActivity.INTENT_EXTRA_DATA_STAY_INDEX, -1);
+
+            if (mStayIndex == -1)
+            {
+                return false;
+            }
+
             String checkInDateTime = intent.getStringExtra(StayOutboundDetailActivity.INTENT_EXTRA_DATA_CHECKIN);
             String checkOutDateTime = intent.getStringExtra(StayOutboundDetailActivity.INTENT_EXTRA_DATA_CHECKOUT);
 
@@ -302,7 +309,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
     {
         Observable<Boolean> observable;
 
-        if (mIsUsedMultiTransition == true)
+        if (mIsUsedMultiTransition == false)
         {
             TransitionSet inTransitionSet = DraweeTransition.createTransitionSet(ScalingUtils.ScaleType.CENTER_CROP, ScalingUtils.ScaleType.CENTER_CROP);
             Transition inTextTransition = new TextTransition(getActivity().getResources().getColor(R.color.white), getActivity().getResources().getColor(R.color.default_text_c323232)//
