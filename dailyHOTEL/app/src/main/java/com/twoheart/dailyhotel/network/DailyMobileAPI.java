@@ -5,7 +5,6 @@ import android.content.Context;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.dailyhotel.repository.remote.model.UserBenefitData;
 import com.daily.dailyhotel.repository.remote.model.UserData;
-import com.twoheart.dailyhotel.Setting;
 import com.twoheart.dailyhotel.model.Keyword;
 import com.twoheart.dailyhotel.network.dto.BaseDto;
 import com.twoheart.dailyhotel.network.dto.BaseListDto;
@@ -75,14 +74,14 @@ public class DailyMobileAPI implements IDailyNetwork
     {
         final String URL;
 
-        if (Crypto.getUrlDecoderEx(Setting.URL_DAILYHOTEL_SERVER_DEFAULT).startsWith("https://dev-") == false)
+        if (Constants.DEBUG == true)
         {
             URL = Constants.UNENCRYPTED_URL ? "https://dailyhotel.github.io/service_status/dev-status.json"//
-                : "NzgkNzIkNDkkMTExJDY0JDg1JDE3NCQ0NyQxNjUkODkkMTQ0JDE2MyQxMTckOTEkNjIkMTgxJA==$MTRDMDdENUJEQjA2ODc1MTA2OUQ2MDMwRTk5Qjc5ODZGMjYVyRWjJERTA1RkQ3CQzRBFRDgzQjAyZMUZEQTUE2NMDIYwJNkY5NjczNENEODlBQTc1RjA5KQKUVCQ0E4QTBGMEVBNTdDQjUzQTI4RNUZCN0M5OEI1RkNCOUCRDMzWQwNjdDQzkD3KMjk=$";
+                : "MTAzJDgzJDYkOTckMTExJDE1MiQzOSQ0NSQxNzEkMzAkMTMxJDE2OSQxOSQxNjQkMTExJDYxJA==$QjEzMTRFFOUQxQTI1MzDQwNjFFRDg1MTERGRDFDNDTM2OUUZ3NjdBOTU0QTE4EOTQ4QTQxMEUwOTY4OTJEN0Y3RkRTFQjdGQzVBOUMAwNkQ4MEQLPwRjgY4NzNDQjI0NkQ0RTBGEMzFGNThFNjRGRkFEMEExMzUCwQUNBRNUQ4RkYQ4OTID3MzBDRDA=$";
         } else
         {
             URL = Constants.UNENCRYPTED_URL ? "https://dailyhotel.github.io/service_status/prod-status.json"//
-                : "MzYkMTQkNDEkNzAkODEkNzAkMTUxJDE1NyQzMiQxOSQzMyQ1MyQ4MSQxMTMkMjkkMTcwJA==$NDUyNTVFNzIwNjPMwMjRI4NjA0ODZUDMzISD4OTQyPMDcU5OTZFQkYKzMTAyNzhDOEIwOTIzMTAFDzNEFGNMjlDOVEI2RUQ5NTQ0QzkxNzI0NTA4MEIM2RkY0NDYxNTkwMTdFRUQyQUI2RDE2QUM1QkJDMDA0MHEQxOUWI5NUMK0QjM3NDlEQ0VFRkY=$";
+                : "NTkkNjkkMTI3JDEyJDExMiQxMDIkMyQ5NCQxMiQ1MSQyOCQxNjYkMTIzJDExNCQxNzIkNjUk$QTVDBRjc4Q0NCERRURFM0M4MTFBQB0MxM0EwQTBBOTJDQjg4NUQyMM0MxNkNFMUJRJFQzk2MEREMODMwQUFEMERCMkU5MEQ1RTIBFQzg4NjZUEMzBGNL0JGNA0I3NZUM1NDgyQUFDMLjFBRjc0RjA0QURBOTBGMkQ0MDYxOTZRCMjPhCQUUxODYzRDc=$";
         }
 
         ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestStatusServer(Crypto.getUrlDecoderEx(URL));
