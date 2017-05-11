@@ -82,7 +82,7 @@
                 android:visibility="gone">
 
                 <com.daily.base.widget.DailyTextView
-                    android:id="@+id/positiveTextView"
+                    android:id="@+id/confirmTextView"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@drawable/selector_dialog_button_positive"
