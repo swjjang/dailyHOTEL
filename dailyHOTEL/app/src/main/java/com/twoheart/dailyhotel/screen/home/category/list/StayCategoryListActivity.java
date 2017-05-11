@@ -16,14 +16,12 @@ import android.widget.Toast;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.widget.DailyToast;
-import com.google.android.gms.maps.model.LatLng;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.Category;
 import com.twoheart.dailyhotel.model.DailyCategoryType;
 import com.twoheart.dailyhotel.model.EventBanner;
-import com.twoheart.dailyhotel.model.Keyword;
 import com.twoheart.dailyhotel.model.PlaceCuration;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.Province;
@@ -75,11 +73,17 @@ public class StayCategoryListActivity extends PlaceMainActivity
 {
     private StayCuration mStayCuration;
     private DailyCategoryType mDailyCategoryType;
+    private DailyDeepLink mDailyDeepLink;
 
-    public static Intent newInstance(Context context, DailyCategoryType categoryType)
+    public static Intent newInstance(Context context, DailyCategoryType categoryType, String deepLink)
     {
         Intent intent = new Intent(context, StayCategoryListActivity.class);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_DAILY_CATEGORY_TYPE, (Parcelable) categoryType);
+
+        if (DailyTextUtils.isTextEmpty(deepLink) == false)
+        {
+            intent.putExtra(Constants.NAME_INTENT_EXTRA_DATA_DEEPLINK, deepLink);
+        }
 
         return intent;
     }
@@ -106,6 +110,16 @@ public class StayCategoryListActivity extends PlaceMainActivity
         String name = getResources().getString(mDailyCategoryType.getNameResId());
         String code = getResources().getString(mDailyCategoryType.getCodeResId());
         mStayCuration.setCategory(new Category(name, code));
+
+        initDeepLink(intent);
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent)
+    {
+        super.onNewIntent(intent);
+
+        initDeepLink(intent);
     }
 
     private void initIntent(Intent intent)
@@ -120,6 +134,22 @@ public class StayCategoryListActivity extends PlaceMainActivity
         if (mDailyCategoryType == null)
         {
             mDailyCategoryType = DailyCategoryType.NONE;
+        }
+    }
+
+    private void initDeepLink(Intent intent)
+    {
+        if (intent == null || intent.hasExtra(Constants.NAME_INTENT_EXTRA_DATA_DEEPLINK) == false)
+        {
+            return;
+        }
+
+        try
+        {
+            mDailyDeepLink = DailyDeepLink.getNewInstance(Uri.parse(intent.getStringExtra(Constants.NAME_INTENT_EXTRA_DATA_DEEPLINK)));
+        } catch (Exception e)
+        {
+            mDailyDeepLink = null;
         }
     }
 
@@ -681,8 +711,7 @@ public class StayCategoryListActivity extends PlaceMainActivity
             }
 
             startActivityForResult(HomeCategoryRegionListActivity.newInstance( //
-                StayCategoryListActivity.this, mDailyCategoryType, mStayCuration.getStayBookingDay() //
-                , null) //
+                StayCategoryListActivity.this, mDailyCategoryType, mStayCuration.getStayBookingDay()) //
                 , Constants.CODE_REQUEST_ACTIVITY_REGIONLIST);
 
             switch (mViewType)
@@ -773,7 +802,6 @@ public class StayCategoryListActivity extends PlaceMainActivity
                     stayBookingDay.setCheckInDay(mTodayDateTime.dailyDateTime);
                     stayBookingDay.setCheckOutDay(mTodayDateTime.dailyDateTime, 1);
 
-                    mStayCuration.setStayBookingDay(stayBookingDay);
                 } else
                 {
                     // 예외 처리로 보고 있는 체크인/체크아웃 날짜가 지나 간경우 다음 날로 변경해준다.
@@ -799,9 +827,12 @@ public class StayCategoryListActivity extends PlaceMainActivity
                     }
                 }
 
+                mStayCuration.setStayBookingDay(stayBookingDay);
+
                 ((StayCategoryListLayout) mPlaceMainLayout).setToolbarDateText(mStayCuration.getStayBookingDay());
 
                 mPlaceMainNetworkController.requestRegionList();
+
             } catch (Exception e)
             {
                 onError(e);
@@ -812,9 +843,7 @@ public class StayCategoryListActivity extends PlaceMainActivity
         @Override
         public void onEventBanner(List<EventBanner> eventBannerList)
         {
-            //            StayEventBannerManager.getInstance().setList(eventBannerList);
-            //
-            //            mPlaceMainNetworkController.requestRegionList();
+
         }
 
         @Override
@@ -845,12 +874,19 @@ public class StayCategoryListActivity extends PlaceMainActivity
 
             mStayCuration.setProvince(selectedProvince);
 
-            ArrayList<Category> categoryList = new ArrayList<>();
-            categoryList.add(mStayCuration.getCategory());
+            if (mDailyDeepLink != null && mDailyDeepLink.isValidateLink() == true //
+                && processDeepLinkByRegionList(StayCategoryListActivity.this, provinceList, areaList, mTodayDateTime, mDailyDeepLink) == true)
+            {
 
-            mPlaceMainLayout.setToolbarRegionText(selectedProvince.name);
-            mPlaceMainLayout.setCategoryTabLayout(getSupportFragmentManager(), categoryList, //
-                mStayCuration.getCategory(), mStayListFragmentListener);
+            } else
+            {
+                ArrayList<Category> categoryList = new ArrayList<>();
+                categoryList.add(mStayCuration.getCategory());
+
+                mPlaceMainLayout.setToolbarRegionText(selectedProvince.name);
+                mPlaceMainLayout.setCategoryTabLayout(getSupportFragmentManager(), categoryList, //
+                    mStayCuration.getCategory(), mStayListFragmentListener);
+            }
         }
 
         @Override
@@ -881,6 +917,36 @@ public class StayCategoryListActivity extends PlaceMainActivity
         public void onErrorResponse(Call call, Response response)
         {
             StayCategoryListActivity.this.onErrorResponse(call, response);
+        }
+
+        private boolean processDeepLinkByRegionList(BaseActivity baseActivity //
+            , List<Province> provinceList, List<Area> areaList, TodayDateTime todayDateTime //
+            , DailyDeepLink dailyDeepLink)
+        {
+            if (dailyDeepLink == null)
+            {
+                return false;
+            }
+
+            if (dailyDeepLink.isExternalDeepLink() == true)
+            {
+                DailyExternalDeepLink externalDeepLink = (DailyExternalDeepLink) dailyDeepLink;
+
+                if (externalDeepLink.isShortcutList() == true)
+                {
+                    unLockUI();
+
+                    return moveDeepLinkShortcutList(provinceList, areaList, todayDateTime, externalDeepLink);
+                } else
+                {
+                    externalDeepLink.clear();
+                }
+            } else
+            {
+
+            }
+
+            return false;
         }
 
         private Province searchLastRegion(BaseActivity baseActivity, //
@@ -1190,83 +1256,6 @@ public class StayCategoryListActivity extends PlaceMainActivity
     // Deep Link - 해당 경우는 고려하지 않아도 되나 임시로 넣어 둠
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
-    boolean moveDeepLinkDetail(BaseActivity baseActivity, TodayDateTime todayDateTime, DailyDeepLink dailyDeepLink)
-    {
-        if (dailyDeepLink == null)
-        {
-            return false;
-        }
-
-        try
-        {
-            if (dailyDeepLink.isExternalDeepLink() == true)
-            {
-                DailyExternalDeepLink externalDeepLink = (DailyExternalDeepLink) dailyDeepLink;
-
-                // 신규 타입의 화면이동
-                int hotelIndex = Integer.parseInt(externalDeepLink.getIndex());
-                int nights = 1;
-
-                try
-                {
-                    nights = Integer.parseInt(externalDeepLink.getNights());
-                } catch (Exception e)
-                {
-                    ExLog.d(e.toString());
-                } finally
-                {
-                    if (nights <= 0)
-                    {
-                        nights = 1;
-                    }
-                }
-
-                String date = externalDeepLink.getDate();
-                int datePlus = externalDeepLink.getDatePlus();
-                boolean isShowCalendar = externalDeepLink.isShowCalendar();
-                int ticketIndex = externalDeepLink.getOpenTicketIndex();
-
-                StayBookingDay stayBookingDay = new StayBookingDay();
-
-                if (DailyTextUtils.isTextEmpty(date) == false)
-                {
-                    Date checkInDate = DailyCalendar.convertDate(date, "yyyyMMdd", TimeZone.getTimeZone("GMT+09:00"));
-                    stayBookingDay.setCheckInDay(DailyCalendar.format(checkInDate, DailyCalendar.ISO_8601_FORMAT));
-                } else if (datePlus >= 0)
-                {
-                    stayBookingDay.setCheckInDay(todayDateTime.dailyDateTime, datePlus);
-                } else
-                {
-                    stayBookingDay.setCheckInDay(todayDateTime.dailyDateTime);
-                }
-
-                stayBookingDay.setCheckOutDay(stayBookingDay.getCheckInDay(DailyCalendar.ISO_8601_FORMAT), nights);
-
-                mStayCuration.setStayBookingDay(stayBookingDay);
-
-                // DeepLink 로 들어오지 않으면 isShowVR false
-                Intent intent = StayDetailActivity.newInstance(baseActivity, stayBookingDay, hotelIndex, ticketIndex, isShowCalendar, false, false);
-                baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL);
-
-                overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
-
-                mIsDeepLink = true;
-            } else
-            {
-
-            }
-        } catch (Exception e)
-        {
-            ExLog.e(e.toString());
-            return false;
-        } finally
-        {
-            dailyDeepLink.clear();
-        }
-
-        return true;
-    }
-
     private Province searchDeeLinkRegion(int provinceIndex, int areaIndex, boolean isOverseas, //
                                          List<Province> provinceList, List<Area> areaList)
     {
@@ -1319,184 +1308,7 @@ public class StayCategoryListActivity extends PlaceMainActivity
         return selectedProvince;
     }
 
-    boolean moveDeepLinkSearch(BaseActivity baseActivity, TodayDateTime todayDateTime, DailyDeepLink dailyDeepLink)
-    {
-        if (dailyDeepLink == null)
-        {
-            return false;
-        }
-
-        try
-        {
-            if (dailyDeepLink.isExternalDeepLink() == true)
-            {
-                DailyExternalDeepLink externalDeepLink = (DailyExternalDeepLink) dailyDeepLink;
-
-                String date = externalDeepLink.getDate();
-                int datePlus = externalDeepLink.getDatePlus();
-                String word = externalDeepLink.getSearchWord();
-
-                int nights = 1;
-
-                try
-                {
-                    nights = Integer.parseInt(externalDeepLink.getNights());
-                } catch (Exception e)
-                {
-                    ExLog.d(e.toString());
-                } finally
-                {
-                    if (nights <= 0)
-                    {
-                        nights = 1;
-                    }
-                }
-
-                StayBookingDay stayBookingDay = new StayBookingDay();
-
-                if (DailyTextUtils.isTextEmpty(date) == false)
-                {
-                    Date checkInDate = DailyCalendar.convertDate(date, "yyyyMMdd", TimeZone.getTimeZone("GMT+09:00"));
-                    stayBookingDay.setCheckInDay(DailyCalendar.format(checkInDate, DailyCalendar.ISO_8601_FORMAT));
-                } else if (datePlus >= 0)
-                {
-                    stayBookingDay.setCheckInDay(todayDateTime.dailyDateTime, datePlus);
-                } else
-                {
-                    stayBookingDay.setCheckInDay(todayDateTime.dailyDateTime);
-                }
-
-                stayBookingDay.setCheckOutDay(stayBookingDay.getCheckInDay(DailyCalendar.ISO_8601_FORMAT), nights);
-
-                mStayCuration.setStayBookingDay(stayBookingDay);
-
-                Intent intent = SearchActivity.newInstance(baseActivity, PlaceType.HOTEL, stayBookingDay, word);
-                baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SEARCH);
-
-                mIsDeepLink = true;
-            } else
-            {
-
-            }
-        } catch (Exception e)
-        {
-            ExLog.e(e.toString());
-            return false;
-        } finally
-        {
-            dailyDeepLink.clear();
-        }
-
-        return true;
-    }
-
-    boolean moveDeepLinkSearchResult(BaseActivity baseActivity, TodayDateTime todayDateTime, DailyDeepLink dailyDeepLink)
-    {
-        if (dailyDeepLink == null)
-        {
-            return false;
-        }
-
-        try
-        {
-            if (dailyDeepLink.isExternalDeepLink() == true)
-            {
-                DailyExternalDeepLink externalDeepLink = (DailyExternalDeepLink) dailyDeepLink;
-
-                String word = externalDeepLink.getSearchWord();
-                DailyExternalDeepLink.SearchType searchType = externalDeepLink.getSearchLocationType();
-                LatLng latLng = externalDeepLink.getLatLng();
-                double radius = externalDeepLink.getRadius();
-
-                String date = externalDeepLink.getDate();
-                int datePlus = externalDeepLink.getDatePlus();
-                int nights = 1;
-
-                try
-                {
-                    nights = Integer.parseInt(externalDeepLink.getNights());
-                } catch (Exception e)
-                {
-                    ExLog.d(e.toString());
-                } finally
-                {
-                    if (nights <= 0)
-                    {
-                        nights = 1;
-                    }
-                }
-
-                try
-                {
-                    StayBookingDay stayBookingDay = new StayBookingDay();
-
-                    if (DailyTextUtils.isTextEmpty(date) == false)
-                    {
-                        Date checkInDate = DailyCalendar.convertDate(date, "yyyyMMdd", TimeZone.getTimeZone("GMT+09:00"));
-                        stayBookingDay.setCheckInDay(DailyCalendar.format(checkInDate, DailyCalendar.ISO_8601_FORMAT));
-                    } else if (datePlus >= 0)
-                    {
-                        stayBookingDay.setCheckInDay(todayDateTime.dailyDateTime, datePlus);
-                    } else
-                    {
-                        stayBookingDay.setCheckInDay(todayDateTime.dailyDateTime);
-                    }
-
-                    stayBookingDay.setCheckOutDay(stayBookingDay.getCheckInDay(DailyCalendar.ISO_8601_FORMAT), nights);
-
-                    mStayCuration.setStayBookingDay(stayBookingDay);
-
-                    switch (searchType)
-                    {
-                        case LOCATION:
-                        {
-                            if (latLng != null)
-                            {
-                                Intent intent = StaySearchResultActivity.newInstance(baseActivity, todayDateTime, stayBookingDay, latLng, radius, true);
-                                baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SEARCH_RESULT);
-                            } else
-                            {
-                                return false;
-                            }
-                            break;
-                        }
-
-                        default:
-                            if (DailyTextUtils.isTextEmpty(word) == false)
-                            {
-                                Intent intent = StaySearchResultActivity.newInstance(baseActivity, todayDateTime, stayBookingDay, new Keyword(0, word), SearchType.SEARCHES);
-                                baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SEARCH_RESULT);
-                            } else
-                            {
-                                return false;
-                            }
-                            break;
-                    }
-
-                    mIsDeepLink = true;
-                } catch (Exception e)
-                {
-                    ExLog.e(e.toString());
-
-                    return false;
-                }
-            } else
-            {
-
-            }
-        } catch (Exception e)
-        {
-            ExLog.e(e.toString());
-            return false;
-        } finally
-        {
-            dailyDeepLink.clear();
-        }
-
-        return true;
-    }
-
-    boolean moveDeepLinkStayList(List<Province> provinceList, List<Area> areaList//
+    boolean moveDeepLinkShortcutList(List<Province> provinceList, List<Area> areaList//
         , TodayDateTime todayDateTime, DailyDeepLink dailyDeepLink)
     {
         if (dailyDeepLink == null)
@@ -1512,12 +1324,6 @@ public class StayCategoryListActivity extends PlaceMainActivity
 
                 String categoryCode = externalDeepLink.getCategoryCode();
                 String date = externalDeepLink.getDate();
-                int datePlus = externalDeepLink.getDatePlus();
-
-                StayCurationOption stayCurationOption = (StayCurationOption) mStayCuration.getCurationOption();
-                stayCurationOption.setSortType(externalDeepLink.getSorting());
-
-                mPlaceMainLayout.setOptionFilterSelected(stayCurationOption.isDefaultFilter() == false);
 
                 int nights = 1;
                 int provinceIndex;
@@ -1553,10 +1359,8 @@ public class StayCategoryListActivity extends PlaceMainActivity
                     areaIndex = -1;
                 }
 
-                boolean isOverseas = externalDeepLink.getIsOverseas();
-
                 // 지역이 있는 경우 지역을 디폴트로 잡아주어야 한다
-                Province selectedProvince = searchDeeLinkRegion(provinceIndex, areaIndex, isOverseas, provinceList, areaList);
+                Province selectedProvince = searchDeeLinkRegion(provinceIndex, areaIndex, false, provinceList, areaList);
 
                 if (selectedProvince == null)
                 {
@@ -1564,6 +1368,8 @@ public class StayCategoryListActivity extends PlaceMainActivity
                 }
 
                 mStayCuration.setProvince(selectedProvince);
+
+                DailyPreference.getInstance(StayCategoryListActivity.this).setDailyRegion(mDailyCategoryType, Util.getDailyRegionJSONObject(selectedProvince));
 
                 mPlaceMainLayout.setToolbarRegionText(selectedProvince.name);
 
@@ -1586,9 +1392,6 @@ public class StayCategoryListActivity extends PlaceMainActivity
                 {
                     Date checkInDate = DailyCalendar.convertDate(date, "yyyyMMdd", TimeZone.getTimeZone("GMT+09:00"));
                     stayBookingDay.setCheckInDay(DailyCalendar.format(checkInDate, DailyCalendar.ISO_8601_FORMAT));
-                } else if (datePlus >= 0)
-                {
-                    stayBookingDay.setCheckInDay(todayDateTime.dailyDateTime, datePlus);
                 } else
                 {
                     stayBookingDay.setCheckInDay(todayDateTime.dailyDateTime);
@@ -1600,7 +1403,12 @@ public class StayCategoryListActivity extends PlaceMainActivity
 
                 ((StayCategoryListLayout) mPlaceMainLayout).setToolbarDateText(stayBookingDay);
 
-                mPlaceMainNetworkController.requestRegionList();
+                ArrayList<Category> categoryList = new ArrayList<>();
+                categoryList.add(mStayCuration.getCategory());
+
+                mPlaceMainLayout.setToolbarRegionText(selectedProvince.name);
+                mPlaceMainLayout.setCategoryTabLayout(getSupportFragmentManager(), categoryList, //
+                    mStayCuration.getCategory(), mStayListFragmentListener);
             } else
             {
 

@@ -4,20 +4,17 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.design.widget.TabLayout;
 import android.view.View;
 import android.widget.Toast;
 
-import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.widget.DailyToast;
 import com.daily.base.widget.DailyViewPager;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.DailyCategoryType;
 import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.RegionViewItem;
@@ -26,8 +23,6 @@ import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.screen.common.PermissionManagerActivity;
 import com.twoheart.dailyhotel.screen.search.SearchActivity;
 import com.twoheart.dailyhotel.util.Constants;
-import com.twoheart.dailyhotel.util.DailyDeepLink;
-import com.twoheart.dailyhotel.util.DailyExternalDeepLink;
 import com.twoheart.dailyhotel.util.DailyLocationFactory;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.Util;
@@ -56,19 +51,13 @@ public class HomeCategoryRegionListActivity extends BaseActivity
 
     private HomeCategoryRegionListNetworkController mNetworkController;
 
-    private DailyDeepLink mDailyDeepLink;
-
     public static Intent newInstance(Context context //
-        , DailyCategoryType categoryType, StayBookingDay stayBookingDay, String deepLink)
+        , DailyCategoryType categoryType, StayBookingDay stayBookingDay)
     {
         Intent intent = new Intent(context, HomeCategoryRegionListActivity.class);
         intent.putExtra(Constants.NAME_INTENT_EXTRA_DATA_DAILY_CATEGORY_TYPE, (Parcelable) categoryType);
         intent.putExtra(Constants.NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, stayBookingDay);
 
-        if (DailyTextUtils.isTextEmpty(deepLink) == false)
-        {
-            intent.putExtra(Constants.NAME_INTENT_EXTRA_DATA_DEEPLINK, deepLink);
-        }
         return intent;
     }
 
@@ -85,20 +74,10 @@ public class HomeCategoryRegionListActivity extends BaseActivity
         setContentView(R.layout.activity_region_list);
 
         initIntent(getIntent());
-        initDeepLink(getIntent());
-
 
         // 지역로딩시에 백버튼 누르면 종료되도록 수정
         setLockUICancelable(true);
         initLayout();
-    }
-
-    @Override
-    protected void onNewIntent(Intent intent)
-    {
-        super.onNewIntent(intent);
-
-        initDeepLink(intent);
     }
 
     private void initLayout()
@@ -121,22 +100,6 @@ public class HomeCategoryRegionListActivity extends BaseActivity
     {
         mDailyCategoryType = intent.getParcelableExtra(Constants.NAME_INTENT_EXTRA_DATA_DAILY_CATEGORY_TYPE);
         mStayBookingDay = intent.getParcelableExtra(Constants.NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY);
-    }
-
-    private void initDeepLink(Intent intent)
-    {
-        if (intent == null || intent.hasExtra(Constants.NAME_INTENT_EXTRA_DATA_DEEPLINK) == false)
-        {
-            return;
-        }
-
-        try
-        {
-            mDailyDeepLink = DailyDeepLink.getNewInstance(Uri.parse(intent.getStringExtra(Constants.NAME_INTENT_EXTRA_DATA_DEEPLINK)));
-        } catch (Exception e)
-        {
-            mDailyDeepLink = null;
-        }
     }
 
     private void initTabLayout(TabLayout tabLayout)
@@ -432,132 +395,6 @@ public class HomeCategoryRegionListActivity extends BaseActivity
         return (HomeCategoryRegionListFragment) mFragmentPagerAdapter.getItem(0);
     }
 
-    private boolean processDeepLinkByStayCategoryList(BaseActivity baseActivity, List<RegionViewItem> regionViewList, DailyDeepLink dailyDeepLink)
-    {
-        if (dailyDeepLink == null)
-        {
-            return false;
-        }
-
-        if (dailyDeepLink.isExternalDeepLink() == true)
-        {
-            DailyExternalDeepLink externalDeepLink = (DailyExternalDeepLink) dailyDeepLink;
-
-            if (externalDeepLink.isShortcutList() == true)
-            {
-                unLockUI();
-
-                return moveDeepLinkStayCategoryList(baseActivity, regionViewList, dailyDeepLink);
-            }
-        }
-
-        dailyDeepLink.clear();
-
-        return false;
-    }
-
-    private boolean moveDeepLinkStayCategoryList(BaseActivity baseActivity, List<RegionViewItem> regionViewList, DailyDeepLink dailyDeepLink)
-    {
-        if (dailyDeepLink == null)
-        {
-            return false;
-        }
-
-        try
-        {
-            if (dailyDeepLink.isExternalDeepLink() == true)
-            {
-                DailyExternalDeepLink externalDeepLink = (DailyExternalDeepLink) dailyDeepLink;
-
-                String categoryCode = externalDeepLink.getCategoryCode();
-
-                if (DailyTextUtils.isTextEmpty(categoryCode) == true)
-                {
-                    return false;
-                }
-
-                int provinceIndex;
-                int areaIndex;
-
-                try
-                {
-                    provinceIndex = Integer.parseInt(externalDeepLink.getProvinceIndex());
-                } catch (Exception e)
-                {
-                    provinceIndex = -1;
-                }
-
-                try
-                {
-                    areaIndex = Integer.parseInt(externalDeepLink.getAreaIndex());
-                } catch (Exception e)
-                {
-                    areaIndex = -1;
-                }
-
-                Province province = searchDeepLinkProvince(regionViewList, provinceIndex, areaIndex);
-                mOnFragmentListener.onRegionClick(province);
-            }
-        } catch (Exception e)
-        {
-            ExLog.e(e.toString());
-            return false;
-        } finally
-        {
-            dailyDeepLink.clear();
-        }
-
-        return true;
-    }
-
-    private Province searchDeepLinkProvince(List<RegionViewItem> regionViewItemList, int provinceIndex, int areaIndex)
-    {
-        if (regionViewItemList == null || regionViewItemList.size() == 0 || provinceIndex < 0)
-        {
-            return null;
-        }
-
-        for (RegionViewItem regionViewItem : regionViewItemList)
-        {
-            Province province = regionViewItem.getProvince();
-
-            if (province.index == provinceIndex)
-            {
-                if (areaIndex < 0)
-                {
-                    // 전체 지역 선택 상태
-                    return province;
-                }
-
-                ArrayList<Area[]> areasList = regionViewItem.getAreaList();
-                if (areasList == null || areasList.size() == 0)
-                {
-                    // 해당 지역의 소지역이 없을때
-                    return province;
-                }
-
-                for (Area[] areas : areasList)
-                {
-                    if (areas == null || areas.length == 0)
-                    {
-                        continue;
-                    }
-
-                    for (Area area : areas)
-                    {
-                        if (area.index == areaIndex)
-                        {
-                            return area;
-                        }
-                    }
-                }
-            }
-        }
-
-        // 다 찾아도 맞는게 없으면 리스트의 처음 대지역을 리턴
-        return regionViewItemList.get(0).getProvince();
-    }
-
     private HomeCategoryRegionListFragment.OnFragmentListener mOnFragmentListener = new HomeCategoryRegionListFragment.OnFragmentListener()
     {
         private void recordEvent(Province province)
@@ -666,17 +503,10 @@ public class HomeCategoryRegionListActivity extends BaseActivity
         @Override
         public void onRegionListResponse(List<RegionViewItem> regionViewList, List<RegionViewItem> subwayViewList)
         {
-            if (mDailyDeepLink != null && mDailyDeepLink.isValidateLink() == true //
-                && processDeepLinkByStayCategoryList(HomeCategoryRegionListActivity.this, regionViewList, mDailyDeepLink) == true)
-            {
+            ArrayList<HomeCategoryRegionListFragment> arrayList = mFragmentPagerAdapter.getFragmentList();
 
-            } else
-            {
-                ArrayList<HomeCategoryRegionListFragment> arrayList = mFragmentPagerAdapter.getFragmentList();
-
-                arrayList.get(0).setRegionViewList(HomeCategoryRegionListActivity.this, regionViewList //
-                    , DailyPreference.getInstance(HomeCategoryRegionListActivity.this).isAgreeTermsOfLocation());
-            }
+            arrayList.get(0).setRegionViewList(HomeCategoryRegionListActivity.this, regionViewList //
+                , DailyPreference.getInstance(HomeCategoryRegionListActivity.this).isAgreeTermsOfLocation());
 
             unLockUI();
         }
