@@ -258,6 +258,8 @@ public class StayOutboundListView extends BaseView<StayOutboundListView.OnEventL
             return;
         }
 
+        getViewDataBinding().mapLayout.setVisibility(View.VISIBLE);
+
         if (mStayOutboundMapFragment == null)
         {
             mStayOutboundMapFragment = new StayOutboundMapFragment();
@@ -297,6 +299,7 @@ public class StayOutboundListView extends BaseView<StayOutboundListView.OnEventL
         fragmentManager.beginTransaction().remove(mStayOutboundMapFragment).commitAllowingStateLoss();
 
         getViewDataBinding().mapLayout.removeAllViews();
+        getViewDataBinding().mapLayout.setVisibility(View.GONE);
     }
 
     @Override

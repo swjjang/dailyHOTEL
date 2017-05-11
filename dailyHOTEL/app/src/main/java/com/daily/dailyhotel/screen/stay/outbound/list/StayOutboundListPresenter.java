@@ -66,7 +66,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
     private String mCacheKey, mCacheLocation;
     private boolean mMoreResultsAvailable;
 
-    private ViewState mViewState;
+    private ViewState mViewState = ViewState.LIST;
 
     enum ViewState
     {
@@ -406,6 +406,8 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
             // 현재 리스트 화면인 경우
             case LIST:
             {
+                screenLock(true);
+
                 mViewState = ViewState.MAP;
 
                 getViewInterface().showMapLayout(getActivity().getSupportFragmentManager());
@@ -453,6 +455,8 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
     public void onMapReady()
     {
         getViewInterface().setStayOutboundMakeMarker(mStayOutboundList);
+
+
     }
 
     @Override
@@ -492,6 +496,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
             public void accept(@io.reactivex.annotations.NonNull List<StayOutbound> stayOutboundList) throws Exception
             {
                 getViewInterface().setStayOutboundMapViewPagerList(getActivity(), stayOutboundList);
+                getViewInterface().setMapViewPagerVisibility(true);
             }
         }));
     }
@@ -504,7 +509,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
             return;
         }
 
-
+        unLockAll();
     }
 
     @Override

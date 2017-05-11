@@ -14,7 +14,8 @@ public class StayOutbound
     public int nightlyRateKrw;
     public int nightlyBaseRateKrw;
     public int totalKrw;
-    public String imageUrl;
+    public String hdpiImageUrl;
+    public String xxhdpiImageUrl;
 
 
     public StayOutbound()

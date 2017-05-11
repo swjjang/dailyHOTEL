@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.daily.base.util.DailyTextUtils;
+import com.daily.base.util.ScreenUtils;
 import com.daily.dailyhotel.entity.StayOutbound;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ViewpagerColumnStayDataBinding;
@@ -81,7 +82,7 @@ public class StayOutboundMapViewPagerAdapter extends PagerAdapter
         dataBinding.gradeTextView.setText(Integer.toString(stayOutbound.rating));
         dataBinding.gradeTextView.setBackgroundResource(Stay.Grade.special.getColorResId());
 
-        Util.requestImageResize(mContext, dataBinding.simpleDraweeView, stayOutbound.imageUrl);
+        Util.requestImageResize(mContext, dataBinding.simpleDraweeView, stayOutbound.hdpiImageUrl);
 
         if (DailyTextUtils.isTextEmpty(stayOutbound.promoDescription) == false)
         {

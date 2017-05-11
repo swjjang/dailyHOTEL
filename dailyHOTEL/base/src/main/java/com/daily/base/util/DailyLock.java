@@ -1,6 +1,7 @@
 package com.daily.base.util;
 
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.graphics.PorterDuff;
 import android.os.Handler;
 import android.os.Message;
@@ -108,9 +109,9 @@ public class DailyLock
                     return;
                 }
 
-                if (mDialog != null || isShow() == true)
+                if (isShow() == true)
                 {
-                    mDialog.cancel();
+                    close();
                 }
             }
         };
@@ -127,11 +128,22 @@ public class DailyLock
             mDialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
             mDialog.setCancelable(false);
 
+            mDialog.setOnCancelListener(new DialogInterface.OnCancelListener()
+            {
+                @Override
+                public void onCancel(DialogInterface dialog)
+                {
+                    hide();
+
+                    mActivity.onLockProgressBackPressed();
+                }
+            });
+
             mDialog.setOnKeyListener((dialog, keyCode, event) ->
             {
                 if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_UP && !event.isCanceled())
                 {
-                    mActivity.onBackPressed();
+                    mActivity.onLockProgressBackPressed();
                 }
 
                 return false;
@@ -183,16 +195,16 @@ public class DailyLock
         void hide()
         {
             mHandler.removeMessages(0);
-            mHandler.sendEmptyMessageDelayed(0, 300);
+            mHandler.sendEmptyMessageDelayed(0, 200);
         }
 
         void close()
         {
             mHandler.removeMessages(0);
 
-            if (mDialog != null)
+            if (isShow() == true)
             {
-                mDialog.cancel();
+                mDialog.dismiss();
             }
 
             mDialog = null;

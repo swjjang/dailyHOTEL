@@ -156,6 +156,22 @@ public abstract class BaseActivity<T1 extends BasePresenter> extends AppCompatAc
     }
 
     /**
+     * DailyLock에서 사용하는 메소드
+     */
+    public void onLockProgressBackPressed()
+    {
+        onBackPressed();
+
+        //        if (this instanceof PlaceDetailActivity == true)
+        //        {
+        //
+        //        } else if (this instanceof MainActivity == false && isFinishing() == false)
+        //        {
+        //            finish();
+        //        }
+    }
+
+    /**
      * Fragment 컨테이너의 표시되는 Fragment를 변경할 때 Fragment 컨테이너에 적재된 Fragment들을 정리한다.
      */
     private void clearFragmentBackStack()

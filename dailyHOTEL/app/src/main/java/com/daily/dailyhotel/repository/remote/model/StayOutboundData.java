@@ -75,7 +75,8 @@ public class StayOutboundData
         stayOutbound.nightlyBaseRateKrw = Integer.parseInt(nightlyBaseRateKrw);
         stayOutbound.totalKrw = Integer.parseInt(totalKrw);
 
-        stayOutbound.imageUrl = imageMap.medium;
+        stayOutbound.hdpiImageUrl = imageMap.medium;
+        stayOutbound.xxhdpiImageUrl = imageMap.big;
 
         return stayOutbound;
     }

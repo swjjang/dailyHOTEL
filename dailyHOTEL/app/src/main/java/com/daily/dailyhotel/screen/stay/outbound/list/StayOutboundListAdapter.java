@@ -234,10 +234,10 @@ public class StayOutboundListAdapter extends RecyclerView.Adapter<RecyclerView.V
         // 1박인 경우 전체가격과 1박가격이 같다.
         if (stayOutbound.nightlyRateKrw == stayOutbound.totalKrw)
         {
-            holder.dataBinding.averageTextView.setVisibility(View.VISIBLE);
+            holder.dataBinding.averageTextView.setVisibility(View.GONE);
         } else
         {
-            holder.dataBinding.averageTextView.setVisibility(View.GONE);
+            holder.dataBinding.averageTextView.setVisibility(View.VISIBLE);
         }
 
         if (VersionUtils.isOverAPI16() == true)
@@ -252,7 +252,13 @@ public class StayOutboundListAdapter extends RecyclerView.Adapter<RecyclerView.V
         holder.dataBinding.gradeTextView.setText(Integer.toString(stayOutbound.rating));
         holder.dataBinding.gradeTextView.setBackgroundResource(Stay.Grade.special.getColorResId());
 
-        Util.requestImageResize(mContext, holder.dataBinding.imageView, stayOutbound.imageUrl);
+        if(ScreenUtils.getScreenWidth(mContext) >= 1000)
+        {
+            Util.requestImageResize(mContext, holder.dataBinding.imageView, stayOutbound.xxhdpiImageUrl);
+        } else
+        {
+            Util.requestImageResize(mContext, holder.dataBinding.imageView, stayOutbound.hdpiImageUrl);
+        }
 
         if (DailyTextUtils.isTextEmpty(stayOutbound.promoDescription) == false)
         {

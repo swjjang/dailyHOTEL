@@ -114,12 +114,6 @@
             android:layout_below="@+id/personsLayout"
             android:visibility="invisible">
 
-            <FrameLayout
-                android:id="@+id/mapLayout"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:visibility="gone"/>
-
             <android.support.v4.widget.SwipeRefreshLayout
                 android:id="@+id/swipeRefreshLayout"
                 android:layout_width="match_parent"
@@ -131,6 +125,12 @@
                     android:layout_height="match_parent"
                     android:scrollbars="vertical"/>
             </android.support.v4.widget.SwipeRefreshLayout>
+
+            <FrameLayout
+                android:id="@+id/mapLayout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone"/>
 
             <LinearLayout
                 android:id="@+id/bottomOptionLayout"
