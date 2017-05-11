@@ -84,8 +84,7 @@
                     android:maxLines="1"
                     android:singleLine="true"
                     android:textColor="@color/default_text_c929292"
-                    android:textSize="12dp"
-                    android:transitionName="@string/transition_subtitle"/>
+                    android:textSize="12dp"/>
 
                 <View
                     android:layout_width="match_parent"
@@ -150,8 +149,7 @@
                 android:minHeight="29dp"
                 android:singleLine="true"
                 android:textColor="@color/default_text_c323232"
-                android:textSize="18dp"
-                android:transitionName="@string/transition_title"/>
+                android:textSize="18dp"/>
         </RelativeLayout>
 
         <ImageView

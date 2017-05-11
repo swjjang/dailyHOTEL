@@ -28,21 +28,21 @@
                 android:layout_height="wrap_content">
 
                 <com.twoheart.dailyhotel.widget.DailyLoopViewPager
-                    android:id="@+id/defaulLoopViewPager"
+                    android:id="@+id/defaultLoopViewPager"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"/>
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="60dp"
-                    android:layout_alignBottom="@id/defaulLoopViewPager"
+                    android:layout_alignBottom="@id/defaultLoopViewPager"
                     android:background="@drawable/img_detail_bottom_gradient"/>
 
                 <View
                     android:id="@+id/viewPagerBottomLine"
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:layout_below="@id/defaulLoopViewPager"/>
+                    android:layout_below="@id/defaultLoopViewPager"/>
 
                 <com.twoheart.dailyhotel.widget.DailyLineIndicator
                     android:id="@+id/viewpagerIndicator"
