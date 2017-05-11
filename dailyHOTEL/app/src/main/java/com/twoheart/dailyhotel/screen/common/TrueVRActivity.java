@@ -8,6 +8,7 @@ import android.view.View;
 import android.webkit.JavascriptInterface;
 import android.widget.TextView;
 
+import com.crashlytics.android.Crashlytics;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.widget.DailyWebView;
