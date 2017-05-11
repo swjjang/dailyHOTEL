@@ -3,9 +3,11 @@ package com.twoheart.dailyhotel.screen.home.collection;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.app.SharedElementCallback;
 import android.view.View;
 
 import com.daily.base.util.ExLog;
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.time.PlaceBookingDay;
@@ -221,6 +223,24 @@ public class CollectionStayActivity extends CollectionBaseActivity
 
             if (mIsUsedMultiTransition == true)
             {
+                setExitSharedElementCallback(new SharedElementCallback()
+                {
+                    @Override
+                    public void onSharedElementEnd(List<String> sharedElementNames, List<View> sharedElements, List<View> sharedElementSnapshots)
+                    {
+                        super.onSharedElementEnd(sharedElementNames, sharedElements, sharedElementSnapshots);
+
+                        for (View view : sharedElements)
+                        {
+                            if (view instanceof SimpleDraweeView)
+                            {
+                                view.setVisibility(View.VISIBLE);
+                                break;
+                            }
+                        }
+                    }
+                });
+
                 Intent intent = StayDetailActivity.newInstance(CollectionStayActivity.this, (StayBookingDay) mPlaceBookingDay, recommendationStay, count, true);
 
                 View simpleDraweeView = view.findViewById(R.id.imageView);

@@ -293,7 +293,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
 
                 if (mPlaceDetailLayout.isListScrollTop() == true)
                 {
-                    mPlaceDetailLayout.setTransImageVisibility(true);
+                    mPlaceDetailLayout.setTransVisibility(View.VISIBLE);
                 } else
                 {
                     mPlaceDetailLayout.setListScrollTop();
@@ -303,7 +303,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
                         @Override
                         public void run()
                         {
-                            mPlaceDetailLayout.setTransImageVisibility(true);
+                            mPlaceDetailLayout.setTransVisibility(View.VISIBLE);
                             PlaceDetailActivity.super.onBackPressed();
                         }
                     }, 100);

@@ -7,6 +7,7 @@ import android.location.Location;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.app.SharedElementCallback;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Toast;
@@ -14,6 +15,7 @@ import android.widget.Toast;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.widget.DailyToast;
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.android.gms.maps.model.LatLng;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Area;
@@ -43,6 +45,7 @@ import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import retrofit2.Call;
@@ -763,23 +766,23 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
 
             if (Util.isUsedMultiTransition() == true)
             {
-                //                setExitSharedElementCallback(new SharedElementCallback()
-                //                {
-                //                    @Override
-                //                    public void onSharedElementEnd(List<String> sharedElementNames, List<View> sharedElements, List<View> sharedElementSnapshots)
-                //                    {
-                //                        super.onSharedElementEnd(sharedElementNames, sharedElements, sharedElementSnapshots);
-                //
-                //                        for (View view : sharedElements)
-                //                        {
-                //                            if (view instanceof SimpleDraweeView)
-                //                            {
-                //                                view.setVisibility(View.VISIBLE);
-                //                                break;
-                //                            }
-                //                        }
-                //                    }
-                //                });
+                setExitSharedElementCallback(new SharedElementCallback()
+                {
+                    @Override
+                    public void onSharedElementEnd(List<String> sharedElementNames, List<View> sharedElements, List<View> sharedElementSnapshots)
+                    {
+                        super.onSharedElementEnd(sharedElementNames, sharedElements, sharedElementSnapshots);
+
+                        for (View view : sharedElements)
+                        {
+                            if (view instanceof SimpleDraweeView)
+                            {
+                                view.setVisibility(View.VISIBLE);
+                                break;
+                            }
+                        }
+                    }
+                });
 
                 Intent intent = GourmetDetailActivity.newInstance(GourmetSearchResultActivity.this,//
                     mGourmetSearchCuration.getGourmetBookingDay(), gourmet, listCount, true);
