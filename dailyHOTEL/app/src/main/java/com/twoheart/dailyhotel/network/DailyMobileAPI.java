@@ -1233,4 +1233,15 @@ public class DailyMobileAPI implements IDailyNetwork
         executorCallbackCall.setTag(tag);
         executorCallbackCall.enqueue((retrofit2.Callback<BaseDto<PlaceReviewScores>>) listener);
     }
+
+    @Override
+    public void requestLocalPlus(String tag, String dateCheckIn, int stays, int provinceIdx, int areaIdx, String category, Object listener)
+    {
+        final String URL = Constants.UNENCRYPTED_URL ? "api/v3/hotels/sales/local-plus" //
+            : "NjYkNjckMjgkMjQkMzIkNzYkNjIkMjEkNTQkODAkNjYkMTQkNTMkODgkODAkNzQk$MDQzOThGREU2NzXZGMjFGNJjhFWRTg5AOEYI1MTIxRUZBNTdFQUU4FNESRCRDkyRkRNCVQTNCNTzZXlBQZ0RRKDNEYGxRjZBN0VFMQ==$";
+
+        ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestLocalPlus(Crypto.getUrlDecoderEx(URL), dateCheckIn, stays, provinceIdx, areaIdx, category);
+        executorCallbackCall.setTag(tag);
+        executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
+    }
 }
