@@ -41,7 +41,7 @@ public abstract class PlaceSearchResultActivity extends BaseActivity
     public static final String INTENT_EXTRA_DATA_IS_DEEPLINK = "isDeepLink";
     public static final String INTENT_EXTRA_DATA_CALL_BY_SCREEN = "callByScreen";
 
-    protected static final double DEFAULT_SEARCH_RADIUS = 3d;
+    protected static final double DEFAULT_SEARCH_RADIUS = 10d;
 
     protected ViewType mViewType = ViewType.LIST;
 
