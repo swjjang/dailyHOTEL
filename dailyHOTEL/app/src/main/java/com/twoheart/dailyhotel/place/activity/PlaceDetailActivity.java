@@ -173,12 +173,6 @@ public abstract class PlaceDetailActivity extends BaseActivity
     }
 
     @Override
-    public void onConfigurationChanged(Configuration newConfig)
-    {
-        super.onConfigurationChanged(newConfig);
-    }
-
-    @Override
     protected void onResume()
     {
         if (mPlaceDetailLayout != null)
@@ -221,28 +215,11 @@ public abstract class PlaceDetailActivity extends BaseActivity
     }
 
     @Override
-    protected void onSaveInstanceState(Bundle outState)
-    {
-        //        if (outState != null)
-        //        {
-        //            outState.putParcelable(Constants.NAME_INTENT_EXTRA_DATA_INTENT, getIntent());
-        //        }
-
-
-        super.onSaveInstanceState(outState);
-    }
-
-    @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState)
     {
         super.onRestoreInstanceState(savedInstanceState);
 
-        //        if (savedInstanceState != null)
-        //        {
-        //            Intent intent = savedInstanceState.getParcelable(Constants.NAME_INTENT_EXTRA_DATA_INTENT);
-        //
-        //            setIntent(intent);
-        //        }
+        Util.restartApp(this);
     }
 
     /**
