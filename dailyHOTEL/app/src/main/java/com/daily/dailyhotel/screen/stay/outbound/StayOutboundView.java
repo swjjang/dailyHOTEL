@@ -135,7 +135,7 @@ public class StayOutboundView extends BaseView<StayOutboundView.OnEventListener,
                 dailyTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 12);
 
                 // 해당 구분 내용인 경우
-                if (suggest.id == null)
+                if (suggest.id == 0)
                 {
                     dailyTextView.setText(suggest.name);
                 } else

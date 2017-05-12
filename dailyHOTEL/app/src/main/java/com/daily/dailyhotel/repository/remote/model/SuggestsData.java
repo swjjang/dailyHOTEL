@@ -84,7 +84,7 @@ public class SuggestsData
 
         List<Suggest> list = new ArrayList<>();
 
-        list.add(new Suggest(null, title));
+        list.add(new Suggest(0, title));
 
         int size = Math.min(suggestDataList.size(), maxCount);
 

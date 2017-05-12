@@ -16,7 +16,7 @@ public class StayOutboundData
     @JsonField(name = "engName")
     public String engName;
 
-    @JsonField(name = "grade")
+    @JsonField(name = "hotelRating")
     public int hotelRating;
 
     @JsonField(name = "hotelRatingDisplay")

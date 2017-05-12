@@ -252,7 +252,7 @@ public class StayOutboundListAdapter extends RecyclerView.Adapter<RecyclerView.V
         holder.dataBinding.gradeTextView.setText(Integer.toString(stayOutbound.rating));
         holder.dataBinding.gradeTextView.setBackgroundResource(Stay.Grade.special.getColorResId());
 
-        if(ScreenUtils.getScreenWidth(mContext) >= 1000)
+        if(ScreenUtils.getScreenWidth(mContext) >= ScreenUtils.DEFAULT_STAYOUTBOUND_XXHDPI_WIDTH)
         {
             Util.requestImageResize(mContext, holder.dataBinding.imageView, stayOutbound.xxhdpiImageUrl);
         } else

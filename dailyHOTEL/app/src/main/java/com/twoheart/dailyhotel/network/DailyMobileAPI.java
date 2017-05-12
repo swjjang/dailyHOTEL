@@ -1296,6 +1296,22 @@ public class DailyMobileAPI implements IDailyNetwork
     }
 
     public Observable<BaseDto<StayOutboundsData>> getStayOutBoundList(String arrivalDate, String departureDate//
+        , int numberOfAdults, int numberOfChildren, String childAges, int numberOfRooms, long geographyId, String geographyType//
+        , int numberOfResults, String cacheKey, String cacheLocation, String apiExperience, String locale, String sort)
+    {
+        final String URL = Constants.UNENCRYPTED_URL ? "https://dev-silo.dailyhotel.me/"//
+            : "MzAkODEkNDckNjgkNDAkMzkkODckMSQ4OSQyOCQxNCQzMiQ4JDEkMzckNTUk$QAGkRCM0ZGGMkM1MBzkyQTBEOEMxRDgL1OGUWENFMUM3MEWZJEOURDMOEAM1NjY1RjE2MEVDQjc4RTSA5MzQxQjQ2Rjk1VMMHUEyRg==$";
+
+        final String API = Constants.UNENCRYPTED_URL ? "api/v1/outbound/geographicalid-find-hotels"//
+            : "MzYkMTYkMTAzJDkxJDE4JDUxJDMyJDEkMTE3JDc0JDExMSQxMjkkMzQkMTIyJDEwJDExNCQ=$QLjEzMUYzQHUYzNjlDJNFjIxNkI3NUU0ODCXY2MTY5VRjA4MUY2RkJELODlGQTcwRkI3NkIzODZGJMDBFM0I1Qzg4MDY2QzVFMWUEwQkNGNUQ1NXUVPI3NEExQWzWY3QzQ1QzOE1NUVEREFC$";
+
+        return mDailyMobileService.getStayOutBoundList(Crypto.getUrlDecoderEx(URL) + Crypto.getUrlDecoderEx(API)//
+            , arrivalDate, departureDate, numberOfAdults, numberOfChildren, childAges, numberOfRooms//
+            , geographyId, geographyType, numberOfResults, cacheKey, cacheLocation, apiExperience, locale, sort)//
+            .subscribeOn(Schedulers.io());
+    }
+
+    public Observable<BaseDto<StayOutboundsData>> getStayOutBoundList(String arrivalDate, String departureDate//
         , int numberOfAdults, int numberOfChildren, String childAges, int numberOfRooms//
         , double latitude, double longitude, int searchRadius, String searchRadiusUnit//
         , int numberOfResults, String cacheKey, String cacheLocation, String apiExperience, String locale//
@@ -1305,8 +1321,8 @@ public class DailyMobileAPI implements IDailyNetwork
         final String URL = Constants.UNENCRYPTED_URL ? "https://dev-silo.dailyhotel.me/"//
             : "MzAkODEkNDckNjgkNDAkMzkkODckMSQ4OSQyOCQxNCQzMiQ4JDEkMzckNTUk$QAGkRCM0ZGGMkM1MBzkyQTBEOEMxRDgL1OGUWENFMUM3MEWZJEOURDMOEAM1NjY1RjE2MEVDQjc4RTSA5MzQxQjQ2Rjk1VMMHUEyRg==$";
 
-        final String API = Constants.UNENCRYPTED_URL ? "api/v1/outbound/hotels"//
-            : "NDYkNDckNjckNDAkNzckODUkNDYkMTgkMjYkODckNzMkMzAkMTckNjgkMzkkMTAwJA==$MTlGQkQ3NkNFMENFNVjIk2NjVEMDjkxSQzA4QkMV2NEVEGQkVEQZzVSdCNzI1NEFDOUQwGMUE2OTTGI3NTVBMWkYzMjJNCYRjcyQWw==$";
+        final String API = Constants.UNENCRYPTED_URL ? "api/v1/outbound/geographical-find-hotels"//
+            : "NTgkMjIkMTA5JDYyJDY5JDE0JDEwNSQ4MCQ2NiQ2OCQxMjEkODMkODIkMTM1JDEkMTQyJA==$OJDYxRkJEMTY2OERYzQ0ZCQjWFERTY2OUNEQkQ0RUNBODlCNEJBQjkzRjI4Q0HRBGNjAYP4RkOI5NTA2MkZUFNDMjgzQTAyNzExRkVBOUM0QUJDAQUREMjdQEMEFAEOEMxNzk3QzDU5MjVDE$";
 
         return mDailyMobileService.getStayOutBoundList(Crypto.getUrlDecoderEx(URL) + Crypto.getUrlDecoderEx(API)//
             , filterIncludeSurrounding, filterMaxStarRating, filterMinStarRating//

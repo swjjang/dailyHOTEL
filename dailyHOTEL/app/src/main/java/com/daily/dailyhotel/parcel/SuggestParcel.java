@@ -33,11 +33,12 @@ public class SuggestParcel implements Parcelable
     @Override
     public void writeToParcel(Parcel dest, int flags)
     {
-        dest.writeString(mSuggest.id);
+        dest.writeLong(mSuggest.id);
         dest.writeString(mSuggest.name);
         dest.writeString(mSuggest.city);
         dest.writeString(mSuggest.country);
         dest.writeString(mSuggest.countryCode);
+        dest.writeString(mSuggest.categoryKey);
         dest.writeString(mSuggest.display);
         dest.writeDouble(mSuggest.latitude);
         dest.writeDouble(mSuggest.longitude);
@@ -47,11 +48,12 @@ public class SuggestParcel implements Parcelable
     {
         mSuggest = new Suggest();
 
-        mSuggest.id = in.readString();
+        mSuggest.id = in.readLong();
         mSuggest.name = in.readString();
         mSuggest.city = in.readString();
         mSuggest.country = in.readString();
         mSuggest.countryCode = in.readString();
+        mSuggest.categoryKey = in.readString();
         mSuggest.display = in.readString();
         mSuggest.latitude = in.readDouble();
         mSuggest.longitude = in.readDouble();

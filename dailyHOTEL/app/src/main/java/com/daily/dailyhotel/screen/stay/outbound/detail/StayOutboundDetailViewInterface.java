@@ -10,9 +10,11 @@ public interface StayOutboundDetailViewInterface extends BaseViewInterface
 {
     void showRoomList();
 
-    void hideRoomList();
+    void hideRoomList(boolean animation);
 
     void setStayDetail(StayBookDateTime stayBookDateTime, StayOutboundDetail stayOutboundDetail);
 
     Observable<Boolean> getSharedElementTransition();
+
+    void setInitializedImage(String url);
 }

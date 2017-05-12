@@ -2,9 +2,9 @@ package com.daily.dailyhotel.entity;
 
 public class StayOutboundDetailImage
 {
-    String caption;
-    String hdpiImageUrl;
-    String xxhdpiImageUrl;
+    public String caption;
+    public String hdpiImageUrl;
+    public String xxhdpiImageUrl;
 
     public StayOutboundDetailImage()
     {

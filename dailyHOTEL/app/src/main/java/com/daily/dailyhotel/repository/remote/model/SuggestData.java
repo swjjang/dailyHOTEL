@@ -8,7 +8,7 @@ import com.daily.dailyhotel.entity.Suggest;
 public class SuggestData
 {
     @JsonField(name = "id")
-    public String id;
+    public long id;
 
     @JsonField(name = "name")
     public String name;
@@ -23,7 +23,7 @@ public class SuggestData
     public String city;
 
     @JsonField(name = "categoryKey")
-    public int categoryKey;
+    public String categoryKey;
 
     @JsonField(name = "countryCode")
     public String countryCode;
@@ -50,6 +50,7 @@ public class SuggestData
         suggest.city = city;
         suggest.country = country;
         suggest.countryCode = countryCode;
+        suggest.categoryKey = categoryKey;
         suggest.display = display;
         suggest.latitude = lat;
         suggest.longitude = lng;

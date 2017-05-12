@@ -12,6 +12,7 @@ import com.daily.base.BaseActivity;
 import com.daily.base.BaseAnalyticsInterface;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
+import com.daily.base.util.ScreenUtils;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
 import com.daily.dailyhotel.entity.CommonDateTime;
 import com.daily.dailyhotel.entity.ListItem;
@@ -186,7 +187,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
     @Override
     public void onIntentAfter()
     {
-        if (DailyTextUtils.isTextEmpty(mSuggest.id) == true)
+        if (mSuggest.id == 0)
         {
             // 키워드 검색인 경우
             getViewInterface().setToolbarTitle(mSuggest.city);
@@ -312,7 +313,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
 
         Observable<StayOutbounds> observable;
 
-        if (DailyTextUtils.isTextEmpty(mSuggest.id) == true)
+        if (mSuggest.id == 0)
         {
             // 키워드 검색인 경우
             observable = mStayOutboundRemoteImpl.getStayOutBoundList(mStayBookDateTime, null//
@@ -321,7 +322,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
         {
             // Suggest 검색인 경우
             observable = mStayOutboundRemoteImpl.getStayOutBoundList(mStayBookDateTime//
-                , mSuggest.countryCode, mSuggest.city, mPersons, mCacheKey, mCacheLocation);
+                , mSuggest.id, mSuggest.categoryKey, mPersons, mCacheKey, mCacheLocation);
         }
 
         addCompositeDisposable(Observable.zip(mCommonRemoteImpl.getCommonDateTime(), observable//
@@ -431,20 +432,33 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
     @Override
     public void onStayClick(View view, StayOutbound stayOutbound)
     {
-        if (lock() == true)
+        if (lock() == true || stayOutbound == null)
         {
             return;
         }
 
+        String imageUrl;
+        if(ScreenUtils.getScreenWidth(getActivity()) >= ScreenUtils.DEFAULT_STAYOUTBOUND_XXHDPI_WIDTH)
+        {
+            imageUrl = stayOutbound.xxhdpiImageUrl;
+        } else
+        {
+            imageUrl = stayOutbound.hdpiImageUrl;
+        }
+
         if (Util.isUsedMultiTransition() == true)
         {
+
+
             startActivityForResult(StayOutboundDetailActivity.newInstance(getActivity(), stayOutbound.index//
+                , stayOutbound.name, imageUrl//
                 , mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
                 , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
-                , mPersons.numberOfAdults, mPersons.getChildList(), true), StayOutboundListActivity.REQUEST_CODE_STAYOUTBOUND_DETAIL);
+                , mPersons.numberOfAdults, mPersons.getChildList(), false), StayOutboundListActivity.REQUEST_CODE_STAYOUTBOUND_DETAIL);
         } else
         {
             startActivityForResult(StayOutboundDetailActivity.newInstance(getActivity(), stayOutbound.index//
+                , stayOutbound.name, imageUrl//
                 , mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
                 , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
                 , mPersons.numberOfAdults, mPersons.getChildList(), false), StayOutboundListActivity.REQUEST_CODE_STAYOUTBOUND_DETAIL);
@@ -690,7 +704,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
 
         Observable<StayOutbounds> observable;
 
-        if (DailyTextUtils.isTextEmpty(mSuggest.id) == true)
+        if (mSuggest.id == 0)
         {
             // 키워드 검색인 경우
             observable = mStayOutboundRemoteImpl.getStayOutBoundList(mStayBookDateTime, null//
@@ -699,7 +713,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
         {
             // Suggest 검색인 경우
             observable = mStayOutboundRemoteImpl.getStayOutBoundList(mStayBookDateTime//
-                , mSuggest.countryCode, mSuggest.city, mPersons, mCacheKey, mCacheLocation);
+                , mSuggest.id, mSuggest.categoryKey, mPersons, mCacheKey, mCacheLocation);
         }
 
         addCompositeDisposable(observable.subscribe(stayOutbounds ->

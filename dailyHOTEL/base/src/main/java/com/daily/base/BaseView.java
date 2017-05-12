@@ -3,6 +3,7 @@ package com.daily.base;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.res.ColorStateList;
 import android.databinding.DataBindingUtil;
 import android.databinding.ViewDataBinding;
 import android.graphics.drawable.ColorDrawable;
@@ -94,6 +95,11 @@ public abstract class BaseView<T1 extends OnBaseEventListener, T2 extends ViewDa
     protected int getColor(int resId)
     {
         return mActivity.getResources().getColor(resId);
+    }
+
+    protected ColorStateList getColorStateList(int resId)
+    {
+        return mActivity.getResources().getColorStateList(resId);
     }
 
     protected String getString(int resId)

@@ -19,6 +19,8 @@ import android.view.WindowManager;
 
 public class ScreenUtils
 {
+    public static int DEFAULT_STAYOUTBOUND_XXHDPI_WIDTH = 1000;
+
     public static int dpToPx(Context context, double dp)
     {
         float scale = context.getResources().getDisplayMetrics().density;

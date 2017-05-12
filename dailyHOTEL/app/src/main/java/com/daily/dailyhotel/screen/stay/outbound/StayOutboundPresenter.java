@@ -231,7 +231,7 @@ public class StayOutboundPresenter extends BaseExceptionPresenter<StayOutboundAc
             mSuggest = new Suggest();
         }
 
-        mSuggest.id = null;
+        mSuggest.id = 0;
         mSuggest.city = keyword;
 
         if (DailyTextUtils.isTextEmpty(keyword) == true)
@@ -277,7 +277,7 @@ public class StayOutboundPresenter extends BaseExceptionPresenter<StayOutboundAc
 
         Intent intent;
 
-        if (DailyTextUtils.isTextEmpty(mSuggest.id) == true)
+        if (mSuggest.id == 0)
         {
             // 키워드 검색인 경우
             intent = StayOutboundListActivity.newInstance(getActivity(), mSuggest.city//

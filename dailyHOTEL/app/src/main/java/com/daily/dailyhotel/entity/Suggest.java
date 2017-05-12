@@ -4,11 +4,12 @@ import com.daily.base.util.DailyTextUtils;
 
 public class Suggest
 {
-    public String id;
+    public long id;
     public String name;
     public String city;
     public String country;
     public String countryCode;
+    public String categoryKey;
     public String display;
     public double latitude;
     public double longitude;
@@ -18,7 +19,7 @@ public class Suggest
 
     }
 
-    public Suggest(String id, String name)
+    public Suggest(long id, String name)
     {
         this.id = id;
         this.name = name;
@@ -28,10 +29,7 @@ public class Suggest
     {
         Suggest suggest = new Suggest();
 
-        if (DailyTextUtils.isTextEmpty(id) == false)
-        {
-            suggest.id = new String(id);
-        }
+        suggest.id = id;
 
         if (DailyTextUtils.isTextEmpty(name) == false)
         {
@@ -51,6 +49,11 @@ public class Suggest
         if (DailyTextUtils.isTextEmpty(countryCode) == false)
         {
             suggest.countryCode = new String(countryCode);
+        }
+
+        if (DailyTextUtils.isTextEmpty(categoryKey) == false)
+        {
+            suggest.categoryKey = new String(categoryKey);
         }
 
         if (DailyTextUtils.isTextEmpty(display) == false)

@@ -30,10 +30,14 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
     private StayOutboundRemoteImpl mStayOutboundRemoteImpl;
 
     private int mStayIndex;
+    private String mStayName;
+    private String mImageUrl;
     private StayBookDateTime mStayBookDateTime;
     private Persons mPersons;
 
     private boolean mIsUsedMultiTransition;
+    private boolean mIsDeepLink;
+
 
     public interface StayOutboundDetailAnalyticsInterface extends BaseAnalyticsInterface
     {
@@ -80,9 +84,11 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
         if (intent.hasExtra(BaseActivity.INTENT_EXTRA_DATA_DEEPLINK) == true)
         {
             mIsUsedMultiTransition = false;
+            mIsDeepLink = false;
         } else
         {
             mIsUsedMultiTransition = intent.getBooleanExtra(StayOutboundDetailActivity.INTENT_EXTRA_DATA_MULTITRANSITION, false);
+            mIsDeepLink = true;
 
             mStayIndex = intent.getIntExtra(StayOutboundDetailActivity.INTENT_EXTRA_DATA_STAY_INDEX, -1);
 
@@ -90,6 +96,9 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
             {
                 return false;
             }
+
+            mStayName = intent.getStringExtra(StayOutboundDetailActivity.INTENT_EXTRA_DATA_STAY_NAME);
+            mImageUrl = intent.getStringExtra(StayOutboundDetailActivity.INTENT_EXTRA_DATA_URL);
 
             String checkInDateTime = intent.getStringExtra(StayOutboundDetailActivity.INTENT_EXTRA_DATA_CHECKIN);
             String checkOutDateTime = intent.getStringExtra(StayOutboundDetailActivity.INTENT_EXTRA_DATA_CHECKOUT);
@@ -115,6 +124,22 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
     @Override
     public void onIntentAfter()
     {
+        if (mIsDeepLink == false && mIsUsedMultiTransition == true)
+        {
+//            initTransLayout(placeName, imageUrl, grade, isFromMap);
+        } else
+        {
+            getViewInterface().setInitializedImage(mImageUrl);
+        }
+
+//        mPlaceDetailLayout.setStatusBarHeight(this);
+//        mPlaceDetailLayout.setIsUsedMultiTransitions(mIsUsedMultiTransition);
+
+//        setLockUICancelable(true);
+        getViewInterface().setToolbarTitle(mStayName);
+
+//        mOnEventListener.hideActionBar(false);
+
         if (mIsUsedMultiTransition == true)
         {
             addCompositeDisposable(mStayOutboundRemoteImpl.getStayOutBoundDetail(mStayIndex, mStayBookDateTime, mPersons).subscribe(new Consumer<StayOutboundDetail>()
@@ -127,8 +152,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
                         return;
                     }
 
-                    // 화면 업데이트.
-                    getViewInterface().setStayDetail(mStayBookDateTime, stayOutboundDetail);
+                    onStayOutboundDetail(stayOutboundDetail);
                 }
             }, new Consumer<Throwable>()
             {
@@ -158,7 +182,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
                         return;
                     }
 
-                    // 화면 업데이트.
+                    onStayOutboundDetail(stayOutboundDetail);
                 }
             }, new Consumer<Throwable>()
             {
@@ -322,5 +346,64 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
 
     }
 
+    @Override
+    public void onHideRoomListClick(boolean animation)
+    {
 
+    }
+
+    @Override
+    public void onShowRoomListClick()
+    {
+
+    }
+
+    private void onStayOutboundDetail(StayOutboundDetail stayOutboundDetail)
+    {
+        if(stayOutboundDetail == null)
+        {
+            return;
+        }
+
+        if (mIsDeepLink == true)
+        {
+            // 딥링크로 진입한 경우에는 카테고리 코드를 알수가 없다. - 2017.04.28 알 수 없음으로 안보내기로 함 아이폰도 안보내고 있음.
+            //            if (DailyTextUtils.isTextEmpty(stayDetailParams.category) == true)
+            //            {
+            //                stayDetailParams.category = stayDetailParams.getGrade().name();
+            //            }
+
+            getViewInterface().setToolbarTitle(stayOutboundDetail.name);
+        }
+
+        getViewInterface().setStayDetail(mStayBookDateTime, stayOutboundDetail);
+
+//        if (mCheckPrice == false)
+//        {
+//            mCheckPrice = true;
+//            checkStayRoom(mIsDeepLink, stayDetail, mViewPrice);
+//        }
+//
+//        // 딥링크로 메뉴 오픈 요청
+//        if (mIsDeepLink == true && mProductDetailIndex > 0 && stayDetail.getProductList().size() > 0)
+//        {
+//            if (mPlaceDetailLayout != null)
+//            {
+//                ((StayDetailLayout) mPlaceDetailLayout).showProductInformationLayout(mProductDetailIndex);
+//                mPlaceDetailLayout.hideWishButton();
+//            }
+//        }
+
+//            hideTrueViewMenu();
+//
+//            if (mIsShowVR == true)
+//            {
+//                unLockUI();
+//                showSimpleDialog(null, getString(R.string.message_truevr_not_support_hardware), getString(R.string.dialog_btn_text_confirm), null);
+//            }
+//        }
+
+//        mProductDetailIndex = 0;
+        mIsDeepLink = false;
+    }
 }

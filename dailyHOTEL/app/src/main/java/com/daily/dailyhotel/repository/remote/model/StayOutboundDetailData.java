@@ -8,6 +8,7 @@ import com.daily.dailyhotel.entity.StayOutboundDetail;
 import com.daily.dailyhotel.entity.StayOutboundRoom;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -29,7 +30,7 @@ public class StayOutboundDetailData
     @JsonField(name = "grade")
     public int hotelRating;
 
-    @JsonField(name = "ratingValue")
+    @JsonField(name = "tripAdvisorRating")
     public String tripAdvisorRating;
 
     @JsonField(name = "latitude")
@@ -39,7 +40,7 @@ public class StayOutboundDetailData
     public double longitude;
 
     @JsonField(name = "details")
-    public Map<String, List<String>> details;
+    public LinkedHashMap<String, List<String>> details;
 
     @JsonField(name = "rooms")
     public List<RoomData> rooms;
@@ -63,7 +64,7 @@ public class StayOutboundDetailData
         stayOutboundDetail.ratingValue = tripAdvisorRating;
         stayOutboundDetail.latitude = latitude;
         stayOutboundDetail.longitude = longitude;
-        stayOutboundDetail.details = details;
+        stayOutboundDetail.setInformationMap(details);
 
         if (rooms != null && rooms.size() > 0)
         {
@@ -73,16 +74,21 @@ public class StayOutboundDetailData
             {
                 stayOutboundRoomList.add(roomData.getStayOutboundRoom());
             }
+
+            stayOutboundDetail.setRoomList(stayOutboundRoomList);
         }
+
 
         if (amenities != null && amenities.size() > 0)
         {
-            SparseArray<String> mAmenitySparseArray= new SparseArray<>(amenities.size());
+            SparseArray<String> amenitySparseArray = new SparseArray<>(amenities.size());
 
             for (AmenityData amenityData : amenities)
             {
-                mAmenitySparseArray.append(amenityData.amenityId, amenityData.amenity);
+                amenitySparseArray.append(amenityData.amenityId, amenityData.amenity);
             }
+
+            stayOutboundDetail.setAmenityList(amenitySparseArray);
         }
 
         return stayOutboundDetail;

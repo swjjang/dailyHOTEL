@@ -30,6 +30,8 @@ import io.reactivex.Observer;
 public class StayOutboundDetailActivity extends BaseActivity<StayOutboundDetailPresenter>
 {
     static final String INTENT_EXTRA_DATA_STAY_INDEX = "stayIndex";
+    static final String INTENT_EXTRA_DATA_STAY_NAME = "stayName";
+    static final String INTENT_EXTRA_DATA_URL = "url";
     static final String INTENT_EXTRA_DATA_CHECKIN = "checkIn";
     static final String INTENT_EXTRA_DATA_CHECKOUT = "checkOut";
     static final String INTENT_EXTRA_DATA_NUMBER_OF_ADULTS = "numberOfAdults";
@@ -45,11 +47,14 @@ public class StayOutboundDetailActivity extends BaseActivity<StayOutboundDetailP
      * @param childList
      * @return
      */
-    public static Intent newInstance(Context context, int stayIndex, String checkInDateTime, String checkOutDateTime
+    public static Intent newInstance(Context context, int stayIndex, String stayName, String imageUrl//
+        , String checkInDateTime, String checkOutDateTime//
         , int numberOfAdults, ArrayList<String> childList, boolean mIsUsedMultiTransition)
     {
         Intent intent = new Intent(context, StayOutboundDetailActivity.class);
         intent.putExtra(INTENT_EXTRA_DATA_STAY_INDEX, stayIndex);
+        intent.putExtra(INTENT_EXTRA_DATA_STAY_NAME, stayName);
+        intent.putExtra(INTENT_EXTRA_DATA_URL, imageUrl);
         intent.putExtra(INTENT_EXTRA_DATA_CHECKIN, checkInDateTime);
         intent.putExtra(INTENT_EXTRA_DATA_CHECKOUT, checkOutDateTime);
         intent.putExtra(INTENT_EXTRA_DATA_NUMBER_OF_ADULTS, numberOfAdults);
