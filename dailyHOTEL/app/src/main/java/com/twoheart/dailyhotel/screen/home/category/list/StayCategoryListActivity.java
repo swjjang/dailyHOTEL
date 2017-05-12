@@ -1324,6 +1324,7 @@ public class StayCategoryListActivity extends PlaceMainActivity
 
                 String categoryCode = externalDeepLink.getCategoryCode();
                 String date = externalDeepLink.getDate();
+                int datePlus = externalDeepLink.getDatePlus();
 
                 int nights = 1;
                 int provinceIndex;
@@ -1392,6 +1393,9 @@ public class StayCategoryListActivity extends PlaceMainActivity
                 {
                     Date checkInDate = DailyCalendar.convertDate(date, "yyyyMMdd", TimeZone.getTimeZone("GMT+09:00"));
                     stayBookingDay.setCheckInDay(DailyCalendar.format(checkInDate, DailyCalendar.ISO_8601_FORMAT));
+                } else if (datePlus >= 0)
+                {
+                    stayBookingDay.setCheckInDay(todayDateTime.dailyDateTime, datePlus);
                 } else
                 {
                     stayBookingDay.setCheckInDay(todayDateTime.dailyDateTime);
