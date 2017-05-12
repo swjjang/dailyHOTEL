@@ -12,7 +12,7 @@ public class StayOutboundDetail
     public String nameEng;
     public String address;
     public int grade;
-    public String satisfaction;
+    public String ratingValue;
     public double latitude;
     public double longitude;
     public Map<String, List<String>> details;
