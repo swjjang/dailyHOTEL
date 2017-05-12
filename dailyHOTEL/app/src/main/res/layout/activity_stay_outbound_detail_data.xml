@@ -144,7 +144,15 @@
             android:layout_alignParentBottom="false"
             android:cacheColorHint="#00000000"
             android:fadingEdge="none"
-            android:fadingEdgeLength="0dp"/>
+            android:fadingEdgeLength="0dp">
+
+            <LinearLayout
+                android:id="@+id/scrollLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"/>
+
+        </android.support.v4.widget.NestedScrollView>
 
         <RelativeLayout
             android:layout_width="match_parent"

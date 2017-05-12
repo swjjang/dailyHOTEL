@@ -1,13 +1,9 @@
 package com.daily.dailyhotel.screen.stay.outbound.detail;
 
 
-import android.annotation.TargetApi;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.transition.Transition;
-import android.transition.TransitionSet;
-import android.view.animation.LinearInterpolator;
 
 import com.daily.base.BaseActivity;
 import com.daily.base.BaseAnalyticsInterface;
@@ -17,14 +13,9 @@ import com.daily.dailyhotel.entity.Persons;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayOutboundDetail;
 import com.daily.dailyhotel.repository.remote.StayOutboundRemoteImpl;
-import com.facebook.drawee.drawable.ScalingUtils;
-import com.facebook.drawee.view.DraweeTransition;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.widget.AlphaTransition;
-import com.twoheart.dailyhotel.widget.TextTransition;
 
 import io.reactivex.Observable;
-import io.reactivex.Observer;
 import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Consumer;
 
@@ -124,34 +115,61 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
     @Override
     public void onIntentAfter()
     {
-        Observable.zip(getSharedElementTransition(), mStayOutboundRemoteImpl.getStayOutBoundDetail(mStayIndex, mStayBookDateTime, mPersons), new BiFunction<Boolean, StayOutboundDetail, StayOutboundDetail>()
+        if (mIsUsedMultiTransition == true)
         {
-            @Override
-            public StayOutboundDetail apply(Boolean aBoolean, StayOutboundDetail stayOutboundDetail) throws Exception
+            addCompositeDisposable(mStayOutboundRemoteImpl.getStayOutBoundDetail(mStayIndex, mStayBookDateTime, mPersons).subscribe(new Consumer<StayOutboundDetail>()
             {
-                return stayOutboundDetail;
-            }
-        }).subscribe(new Consumer<StayOutboundDetail>()
-        {
-            @Override
-            public void accept(StayOutboundDetail stayOutboundDetail) throws Exception
-            {
-                if (stayOutboundDetail == null)
+                @Override
+                public void accept(StayOutboundDetail stayOutboundDetail) throws Exception
                 {
-                    return;
+                    if (stayOutboundDetail == null)
+                    {
+                        return;
+                    }
+
+                    // 화면 업데이트.
+                    getViewInterface().setStayDetail(stayOutboundDetail);
                 }
-
-                // 화면 업데이트.
-            }
-        }, new Consumer<Throwable>()
-        {
-            @Override
-            public void accept(Throwable throwable) throws Exception
+            }, new Consumer<Throwable>()
             {
+                @Override
+                public void accept(Throwable throwable) throws Exception
+                {
 
-                onHandleError(throwable);
-            }
-        });
+                    onHandleError(throwable);
+                }
+            }));
+        } else
+        {
+            addCompositeDisposable(Observable.zip(getViewInterface().getSharedElementTransition(), mStayOutboundRemoteImpl.getStayOutBoundDetail(mStayIndex, mStayBookDateTime, mPersons), new BiFunction<Boolean, StayOutboundDetail, StayOutboundDetail>()
+            {
+                @Override
+                public StayOutboundDetail apply(Boolean aBoolean, StayOutboundDetail stayOutboundDetail) throws Exception
+                {
+                    return stayOutboundDetail;
+                }
+            }).subscribe(new Consumer<StayOutboundDetail>()
+            {
+                @Override
+                public void accept(StayOutboundDetail stayOutboundDetail) throws Exception
+                {
+                    if (stayOutboundDetail == null)
+                    {
+                        return;
+                    }
+
+                    // 화면 업데이트.
+                }
+            }, new Consumer<Throwable>()
+            {
+                @Override
+                public void accept(Throwable throwable) throws Exception
+                {
+
+                    onHandleError(throwable);
+                }
+            }));
+        }
     }
 
     @Override
@@ -304,97 +322,5 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
 
     }
 
-    @TargetApi(value = 21)
-    private Observable<Boolean> getSharedElementTransition()
-    {
-        Observable<Boolean> observable;
-
-        if (mIsUsedMultiTransition == false)
-        {
-            TransitionSet inTransitionSet = DraweeTransition.createTransitionSet(ScalingUtils.ScaleType.CENTER_CROP, ScalingUtils.ScaleType.CENTER_CROP);
-            Transition inTextTransition = new TextTransition(getActivity().getResources().getColor(R.color.white), getActivity().getResources().getColor(R.color.default_text_c323232)//
-                , 17, 18, new LinearInterpolator());
-            inTextTransition.addTarget(getString(R.string.transition_place_name));
-            inTransitionSet.addTransition(inTextTransition);
-
-            Transition inBottomAlphaTransition = new AlphaTransition(1.0f, 0.0f, new LinearInterpolator());
-            inBottomAlphaTransition.addTarget(getString(R.string.transition_gradient_bottom_view));
-            inTransitionSet.addTransition(inBottomAlphaTransition);
-
-            Transition inTopAlphaTransition = new AlphaTransition(0.0f, 1.0f, new LinearInterpolator());
-            inTopAlphaTransition.addTarget(getString(R.string.transition_gradient_top_view));
-            inTransitionSet.addTransition(inTopAlphaTransition);
-
-            getActivity().getWindow().setSharedElementEnterTransition(inTransitionSet);
-
-            TransitionSet outTransitionSet = DraweeTransition.createTransitionSet(ScalingUtils.ScaleType.CENTER_CROP, ScalingUtils.ScaleType.CENTER_CROP);
-            Transition outTextTransition = new TextTransition(getActivity().getResources().getColor(R.color.default_text_c323232), getActivity().getResources().getColor(R.color.white)//
-                , 18, 17, new LinearInterpolator());
-            outTextTransition.addTarget(getString(R.string.transition_place_name));
-            outTransitionSet.addTransition(outTextTransition);
-
-            Transition outBottomAlphaTransition = new AlphaTransition(0.0f, 1.0f, new LinearInterpolator());
-            outBottomAlphaTransition.addTarget(getString(R.string.transition_gradient_bottom_view));
-            outTransitionSet.addTransition(outBottomAlphaTransition);
-
-            Transition outTopAlphaTransition = new AlphaTransition(1.0f, 0.0f, new LinearInterpolator());
-            outTopAlphaTransition.addTarget(getString(R.string.transition_gradient_top_view));
-            outTransitionSet.addTransition(outTopAlphaTransition);
-
-            outTransitionSet.setDuration(200);
-
-            getActivity().getWindow().setSharedElementReturnTransition(outTransitionSet);
-
-            observable = new Observable<Boolean>()
-            {
-                @Override
-                protected void subscribeActual(Observer<? super Boolean> observer)
-                {
-                    getActivity().getWindow().getSharedElementEnterTransition().addListener(new Transition.TransitionListener()
-                    {
-                        @Override
-                        public void onTransitionStart(Transition transition)
-                        {
-                        }
-
-                        @Override
-                        public void onTransitionEnd(Transition transition)
-                        {
-                            observer.onNext(true);
-                            observer.onComplete();
-                        }
-
-                        @Override
-                        public void onTransitionCancel(Transition transition)
-                        {
-                        }
-
-                        @Override
-                        public void onTransitionPause(Transition transition)
-                        {
-                        }
-
-                        @Override
-                        public void onTransitionResume(Transition transition)
-                        {
-                        }
-                    });
-                }
-            };
-        } else
-        {
-            observable = new Observable<Boolean>()
-            {
-                @Override
-                protected void subscribeActual(Observer<? super Boolean> observer)
-                {
-                    observer.onNext(true);
-                    observer.onComplete();
-                }
-            };
-        }
-
-        return observable;
-    }
 
 }
