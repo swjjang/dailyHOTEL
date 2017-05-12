@@ -56,9 +56,10 @@ public class StayDetailListAdapter extends BaseAdapter
         , StayDetailLayout.OnEventListener onEventListener//
         , View.OnTouchListener emptyViewOnTouchListener)
     {
+        mDetailViews = new View[NUMBER_OF_ROWSLIST];
+
         mContext = context;
         setData(stayBookingDay, stayDetail, placeReviewScores);
-        mDetailViews = new View[NUMBER_OF_ROWSLIST];
 
         mOnEventListener = onEventListener;
         mEmptyViewOnTouchListener = emptyViewOnTouchListener;
@@ -69,6 +70,14 @@ public class StayDetailListAdapter extends BaseAdapter
         mStayBookingDay = stayBookingDay;
         mStayDetail = stayDetail;
         mPlaceReviewScores = placeReviewScores;
+
+        if (mDetailViews != null)
+        {
+            for (int i = 0; i < NUMBER_OF_ROWSLIST; i++)
+            {
+                mDetailViews[i] = null;
+            }
+        }
     }
 
     @Override

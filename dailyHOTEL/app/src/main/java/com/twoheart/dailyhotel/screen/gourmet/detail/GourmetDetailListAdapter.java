@@ -49,9 +49,10 @@ public class GourmetDetailListAdapter extends BaseAdapter
         , GourmetDetailLayout.OnEventListener onEventListener//
         , View.OnTouchListener emptyViewOnTouchListener)
     {
+        mDetailViews = new View[NUMBER_OF_ROWSLIST];
+
         mContext = context;
         setData(gourmetBookingDay, gourmetDetail, placeReviewScores);
-        mDetailViews = new View[NUMBER_OF_ROWSLIST];
 
         mOnEventListener = onEventListener;
         mEmptyViewOnTouchListener = emptyViewOnTouchListener;
@@ -62,6 +63,14 @@ public class GourmetDetailListAdapter extends BaseAdapter
         mGourmetBookingDay = gourmetBookingDay;
         mGourmetDetail = gourmetDetail;
         mPlaceReviewScores = placeReviewScores;
+
+        if (mDetailViews != null)
+        {
+            for (int i = 0; i < NUMBER_OF_ROWSLIST; i++)
+            {
+                mDetailViews[i] = null;
+            }
+        }
     }
 
     @Override
