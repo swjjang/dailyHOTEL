@@ -11,8 +11,8 @@ public class StayOutboundDetail
     public String name;
     public String nameEng;
     public String address;
-    public int hotelRating;
-    public String tripAdvisorRating;
+    public int grade;
+    public String satisfaction;
     public double latitude;
     public double longitude;
     public Map<String, List<String>> details;

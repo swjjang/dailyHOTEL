@@ -1,20 +1,27 @@
 package com.daily.dailyhotel.screen.stay.outbound.detail;
 
 import android.annotation.TargetApi;
+import android.content.Context;
+import android.databinding.DataBindingUtil;
 import android.transition.Transition;
 import android.transition.TransitionSet;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.LinearInterpolator;
 
 import com.daily.base.BaseActivity;
 import com.daily.base.BaseView;
 import com.daily.base.OnBaseEventListener;
+import com.daily.base.util.ScreenUtils;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayOutboundDetail;
 import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.drawee.view.DraweeTransition;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ActivityStayOutboundDetailDataBinding;
+import com.twoheart.dailyhotel.databinding.LayoutStayOutboundDetail01DataBinding;
+import com.twoheart.dailyhotel.databinding.LayoutStayOutboundDetail02DataBinding;
 import com.twoheart.dailyhotel.widget.AlphaTransition;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 import com.twoheart.dailyhotel.widget.TextTransition;
@@ -22,7 +29,8 @@ import com.twoheart.dailyhotel.widget.TextTransition;
 import io.reactivex.Observable;
 import io.reactivex.Observer;
 
-public class StayOutboundDetailView extends BaseView<StayOutboundDetailView.OnEventListener, ActivityStayOutboundDetailDataBinding> implements StayOutboundDetailViewInterface, View.OnClickListener
+public class StayOutboundDetailView extends BaseView<StayOutboundDetailView.OnEventListener, ActivityStayOutboundDetailDataBinding>//
+    implements StayOutboundDetailViewInterface, View.OnClickListener
 {
     private DailyToolbarLayout mDailyToolbarLayout;
 
@@ -106,21 +114,27 @@ public class StayOutboundDetailView extends BaseView<StayOutboundDetailView.OnEv
 
         getViewDataBinding().scrollLayout.removeAllViews();
 
+        // 이미지 상단에 빈화면 넣기
+        LayoutStayOutboundDetail01DataBinding detail01DataBinding = DataBindingUtil.inflate(LayoutInflater.from(getContext())//
+            , R.layout.layout_stay_outbound_detail_01_data, getViewDataBinding().scrollLayout, true);
 
 
+        detail01DataBinding.imageEmptyView.getLayoutParams().height = getImageLayoutHeight(getContext());
+        detail01DataBinding.imageEmptyView.setClickable(true);
+        detail01DataBinding.imageEmptyView.setOnTouchListener(new View.OnTouchListener()
+        {
+            @Override
+            public boolean onTouch(View v, MotionEvent event)
+            {
+                return false;
+            }
+        });
 
+        LayoutStayOutboundDetail02DataBinding detail02DataBinding = DataBindingUtil.inflate(LayoutInflater.from(getContext())//
+            , R.layout.layout_stay_outbound_detail_02_data, getViewDataBinding().scrollLayout, true);
 
-
-
+        setTitleView(detail02DataBinding, stayBookDateTime, stayOutboundDetail);
 //
-//                // 빈화면
-//                if (mDetailViews[0] == null)
-//                {
-//                    mDetailViews[0] = layoutInflater.inflate(R.layout.list_row_detail01, parent, false);
-//                }
-//
-//                getDetail00View(mDetailViews[0]);
-//                linearLayout.addView(mDetailViews[0]);
 //
 //                // 호텔 등급과 이름.
 //                if (mDetailViews[1] == null)
@@ -270,4 +284,189 @@ public class StayOutboundDetailView extends BaseView<StayOutboundDetailView.OnEv
 
         return observable;
     }
+
+    public static int getImageLayoutHeight(Context context)
+    {
+        return ScreenUtils.getRatioHeightType4x3(ScreenUtils.getScreenWidth(context));
+    }
+
+    /**
+     * 호텔 등급 및 이름
+     *
+     * @param viewDataBinding
+     * @param stayBookDateTime
+     * @param stayOutboundDetail
+     */
+    private void setTitleView(LayoutStayOutboundDetail02DataBinding viewDataBinding, StayBookDateTime stayBookDateTime, StayOutboundDetail stayOutboundDetail)
+    {
+        if(viewDataBinding == null || stayBookDateTime == null || stayOutboundDetail == null)
+        {
+            return;
+        }
+
+        // 등급
+        viewDataBinding.gradeTextView.setVisibility(View.VISIBLE);
+        viewDataBinding.gradeTextView.setText(getString(R.string.label_stayoutbound_detail_grade, stayOutboundDetail.grade));
+
+        viewDataBinding.gradeTextView.setBackgroundResource(stayDetailParams.getGrade().getColorResId());
+
+        // 호텔명
+        TextView hotelNameTextView = (TextView) mHotelTitleLayout.findViewById(R.id.hotelNameTextView);
+        hotelNameTextView.setText(stayDetailParams.name);
+
+        // 만족도
+        TextView satisfactionView = (TextView) mHotelTitleLayout.findViewById(R.id.satisfactionView);
+
+        if (stayDetailParams.ratingValue == 0)
+        {
+            satisfactionView.setVisibility(View.GONE);
+        } else
+        {
+            satisfactionView.setVisibility(View.VISIBLE);
+            DecimalFormat decimalFormat = new DecimalFormat("###,##0");
+            satisfactionView.setText(mContext.getString(R.string.label_stay_detail_satisfaction, //
+                stayDetailParams.ratingValue, decimalFormat.format(stayDetailParams.ratingPersons)));
+        }
+
+        // 리뷰
+        TextView trueReviewTextView = (TextView) mHotelTitleLayout.findViewById(R.id.trueReviewTextView);
+
+        if (mPlaceReviewScores == null)
+        {
+            trueReviewTextView.setVisibility(View.GONE);
+        } else
+        {
+            setTrueReviewCount(mPlaceReviewScores.reviewScoreTotalCount);
+        }
+
+        // 할인 쿠폰
+        View couponLayout = view.findViewById(R.id.couponLayout);
+
+        if (stayDetail.hasCoupon == true)
+        {
+            couponLayout.setVisibility(View.VISIBLE);
+
+            View downloadCouponLayout = couponLayout.findViewById(R.id.downloadCouponLayout);
+
+            downloadCouponLayout.setOnClickListener(new OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    mOnEventListener.onDownloadCouponClick();
+                }
+            });
+        } else
+        {
+            couponLayout.setVisibility(View.GONE);
+        }
+
+        // Stamp
+        View stampLayout = view.findViewById(R.id.stampLayout);
+        View stampClickLayout = stampLayout.findViewById(R.id.stampClickLayout);
+
+        if (DailyPreference.getInstance(mContext).isRemoteConfigStampEnabled() == true)
+        {
+            // 테블릿 높이 수정 필요한지 확인
+            stampLayout.setVisibility(View.VISIBLE);
+
+            TextView stampMessage1TextView = (TextView) stampLayout.findViewById(R.id.stampMessage1TextView);
+            TextView stampMessage2TextView = (TextView) stampLayout.findViewById(R.id.stampMessage2TextView);
+            TextView stampMessage3TextView = (TextView) stampLayout.findViewById(R.id.stampMessage3TextView);
+
+            String message1 = DailyPreference.getInstance(mContext).getRemoteConfigStampStayDetailMessage1();
+            String message2 = DailyPreference.getInstance(mContext).getRemoteConfigStampStayDetailMessage2();
+
+            boolean message3Enabled = DailyPreference.getInstance(mContext).isRemoteConfigStampStayDetailMessage3Enabled();
+
+            stampMessage1TextView.setText(message1);
+            stampMessage2TextView.setText(message2);
+
+            if (message3Enabled == true)
+            {
+                String message3 = DailyPreference.getInstance(mContext).getRemoteConfigStampStayDetailMessage3();
+
+                SpannableString spannableString3 = new SpannableString(message3);
+                spannableString3.setSpan(new UnderlineSpan(), 0, spannableString3.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+                stampMessage3TextView.setVisibility(View.VISIBLE);
+                stampMessage3TextView.setText(spannableString3);
+
+                stampClickLayout.setOnClickListener(new OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        mOnEventListener.onStampClick();
+                    }
+                });
+            } else
+            {
+                stampMessage3TextView.setVisibility(View.GONE);
+                stampClickLayout.setOnClickListener(null);
+            }
+        } else
+        {
+            stampLayout.setVisibility(View.GONE);
+        }
+
+        // 날짜
+        View dateInformationLayout = view.findViewById(R.id.dateInformationLayout);
+        TextView checkInDayTextView = (TextView) dateInformationLayout.findViewById(R.id.checkinDayTextView);
+        TextView checkOutDayTextView = (TextView) dateInformationLayout.findViewById(R.id.checkoutDayTextView);
+        TextView nightsTextView = (TextView) dateInformationLayout.findViewById(R.id.nightsTextView);
+
+        // 체크인체크아웃 날짜
+        checkInDayTextView.setText(mStayBookingDay.getCheckInDay("yyyy.MM.dd(EEE)"));
+        checkOutDayTextView.setText(mStayBookingDay.getCheckOutDay("yyyy.MM.dd(EEE)"));
+
+        try
+        {
+            nightsTextView.setText(mContext.getString(R.string.label_nights, mStayBookingDay.getNights()));
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+        }
+
+        dateInformationLayout.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                if (mOnEventListener == null)
+                {
+                    return;
+                }
+
+                mOnEventListener.onCalendarClick();
+            }
+        });
+    }
+
+//    public void setTrueReviewCount(int count)
+//    {
+//        if (mHotelTitleLayout == null)
+//        {
+//            return;
+//        }
+//
+//        TextView trueReviewTextView = (TextView) mHotelTitleLayout.findViewById(R.id.trueReviewTextView);
+//
+//        if (count == 0)
+//        {
+//            trueReviewTextView.setVisibility(View.GONE);
+//        } else
+//        {
+//            trueReviewTextView.setVisibility(View.VISIBLE);
+//            trueReviewTextView.setText(mContext.getString(R.string.label_detail_view_review_go, count));
+//            trueReviewTextView.setOnClickListener(new OnClickListener()
+//            {
+//                @Override
+//                public void onClick(View v)
+//                {
+//                    mOnEventListener.onReviewClick();
+//                }
+//            });
+//        }
+//    }
 }

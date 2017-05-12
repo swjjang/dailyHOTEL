@@ -8,7 +8,6 @@ import com.daily.dailyhotel.entity.StayOutboundDetail;
 import com.daily.dailyhotel.entity.StayOutboundRoom;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -27,10 +26,10 @@ public class StayOutboundDetailData
     @JsonField(name = "address")
     public String address;
 
-    @JsonField(name = "hotelRating")
+    @JsonField(name = "grade")
     public int hotelRating;
 
-    @JsonField(name = "tripAdvisorRating")
+    @JsonField(name = "satisfaction")
     public String tripAdvisorRating;
 
     @JsonField(name = "latitude")
@@ -60,8 +59,8 @@ public class StayOutboundDetailData
         stayOutboundDetail.name = name;
         stayOutboundDetail.nameEng = nameEng;
         stayOutboundDetail.address = address;
-        stayOutboundDetail.hotelRating = hotelRating;
-        stayOutboundDetail.tripAdvisorRating = tripAdvisorRating;
+        stayOutboundDetail.grade = hotelRating;
+        stayOutboundDetail.satisfaction = tripAdvisorRating;
         stayOutboundDetail.latitude = latitude;
         stayOutboundDetail.longitude = longitude;
         stayOutboundDetail.details = details;

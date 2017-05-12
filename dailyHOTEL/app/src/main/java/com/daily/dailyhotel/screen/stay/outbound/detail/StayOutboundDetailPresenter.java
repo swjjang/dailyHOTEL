@@ -128,7 +128,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
                     }
 
                     // 화면 업데이트.
-                    getViewInterface().setStayDetail(stayOutboundDetail);
+                    getViewInterface().setStayDetail(mStayBookDateTime, stayOutboundDetail);
                 }
             }, new Consumer<Throwable>()
             {
