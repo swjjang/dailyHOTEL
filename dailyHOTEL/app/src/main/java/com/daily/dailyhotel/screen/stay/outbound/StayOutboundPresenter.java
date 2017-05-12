@@ -14,6 +14,7 @@ import com.daily.dailyhotel.base.BaseExceptionPresenter;
 import com.daily.dailyhotel.entity.CommonDateTime;
 import com.daily.dailyhotel.entity.Persons;
 import com.daily.dailyhotel.entity.StayBookDateTime;
+import com.daily.dailyhotel.entity.StayOutboundFilters;
 import com.daily.dailyhotel.entity.Suggest;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
 import com.daily.dailyhotel.repository.remote.SuggestRemoteImpl;
@@ -47,6 +48,8 @@ public class StayOutboundPresenter extends BaseExceptionPresenter<StayOutboundAc
 
     private Suggest mSuggest;
     private Persons mPersons;
+
+    private StayOutboundFilters mStayOutboundFilters;
 
     public interface StayOutboundAnalyticsInterface extends BaseAnalyticsInterface
     {

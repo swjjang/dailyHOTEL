@@ -1295,6 +1295,27 @@ public class DailyMobileAPI implements IDailyNetwork
             .subscribeOn(Schedulers.io());
     }
 
+    public Observable<BaseDto<StayOutboundsData>> getStayOutBoundList(String arrivalDate, String departureDate//
+        , int numberOfAdults, int numberOfChildren, String childAges, int numberOfRooms//
+        , double latitude, double longitude, int searchRadius, String searchRadiusUnit//
+        , int numberOfResults, String cacheKey, String cacheLocation, String apiExperience, String locale//
+        , boolean filterIncludeSurrounding, int filterMaxStarRating, int filterMinStarRating//
+        , String sort)
+    {
+        final String URL = Constants.UNENCRYPTED_URL ? "https://dev-silo.dailyhotel.me/"//
+            : "MzAkODEkNDckNjgkNDAkMzkkODckMSQ4OSQyOCQxNCQzMiQ4JDEkMzckNTUk$QAGkRCM0ZGGMkM1MBzkyQTBEOEMxRDgL1OGUWENFMUM3MEWZJEOURDMOEAM1NjY1RjE2MEVDQjc4RTSA5MzQxQjQ2Rjk1VMMHUEyRg==$";
+
+        final String API = Constants.UNENCRYPTED_URL ? "api/v1/outbound/hotels"//
+            : "NDYkNDckNjckNDAkNzckODUkNDYkMTgkMjYkODckNzMkMzAkMTckNjgkMzkkMTAwJA==$MTlGQkQ3NkNFMENFNVjIk2NjVEMDjkxSQzA4QkMV2NEVEGQkVEQZzVSdCNzI1NEFDOUQwGMUE2OTTGI3NTVBMWkYzMjJNCYRjcyQWw==$";
+
+        return mDailyMobileService.getStayOutBoundList(Crypto.getUrlDecoderEx(URL) + Crypto.getUrlDecoderEx(API)//
+            , filterIncludeSurrounding, filterMaxStarRating, filterMinStarRating//
+            , arrivalDate, departureDate, numberOfAdults, numberOfChildren, childAges, numberOfRooms//
+            , latitude, longitude, searchRadius, searchRadiusUnit//
+            , numberOfResults, cacheKey, cacheLocation, apiExperience, locale, sort)//
+            .subscribeOn(Schedulers.io());
+    }
+
     public Observable<BaseDto<StayOutboundDetailData>> getStayOutBoundDetail(int index, String arrivalDate, String departureDate//
         , int numberOfAdults, int numberOfChildren, String childAges, int numberOfRooms//
         , String apiExperience, String locale)

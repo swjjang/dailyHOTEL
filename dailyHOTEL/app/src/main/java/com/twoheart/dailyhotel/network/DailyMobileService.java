@@ -500,6 +500,30 @@ public interface DailyMobileService
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET()
+    Observable<BaseDto<StayOutboundsData>> getStayOutBoundList(@Url String mobileAPI//
+        , @Query(value = "filter.includeSurrounding") boolean filterIncludeSurrounding//
+        , @Query(value = "filter.maxStarRating") int filterMaxStarRating//
+        , @Query(value = "filter.minStarRating") int filterMinStarRating//
+        , @Query(value = "arrivalDate") String arrivalDate//
+        , @Query(value = "departureDate") String departureDate//
+        , @Query(value = "rooms[0].numberOfAdults") int numberOfAdults//
+        , @Query(value = "rooms[0].numberOfChildren") int numberOfChildren//
+        , @Query(value = "rooms[0].childAges") String childAges //
+        , @Query(value = "numberOfRooms") int numberOfRooms//
+        , @Query(value = "latitude") double latitude//
+        , @Query(value = "longitude") double longitude//
+        , @Query(value = "searchRadius") int searchRadius//
+        , @Query(value = "searchRadiusUnit") String searchRadiusUnit//
+        , @Query(value = "numberOfResults") int numberOfResults//
+        , @Query(value = "cacheKey") String cacheKey//
+        , @Query(value = "cacheLocation") String cacheLocation//
+        , @Query(value = "apiExperience") String apiExperience// 디폴트 인자들
+        , @Query(value = "locale") String locale// 디폴트 인자들
+        , @Query(value = "sort") String sort// 디폴트 인자들
+    );
+
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
+    @GET()
     Observable<BaseDto<StayOutboundDetailData>> getStayOutBoundDetail(@Url String mobileAPI//
         , @Query(value = "arrivalDate") String arrivalDate//
         , @Query(value = "departureDate") String departureDate//
