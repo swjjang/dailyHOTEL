@@ -1,5 +1,8 @@
 package com.daily.dailyhotel.screen.stay.outbound.detail;
 
+import android.animation.Animator;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.databinding.DataBindingUtil;
@@ -19,6 +22,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.LinearInterpolator;
 
 import com.daily.base.BaseActivity;
@@ -27,10 +31,12 @@ import com.daily.base.OnBaseEventListener;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
+import com.daily.base.util.VersionUtils;
 import com.daily.base.widget.DailyTextView;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayOutboundDetail;
 import com.daily.dailyhotel.entity.StayOutboundDetailImage;
+import com.daily.dailyhotel.entity.StayOutboundRoom;
 import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.drawee.view.DraweeTransition;
 import com.twoheart.dailyhotel.R;
@@ -61,15 +67,22 @@ import io.reactivex.Observer;
 public class StayOutboundDetailView extends BaseView<StayOutboundDetailView.OnEventListener, ActivityStayOutboundDetailDataBinding>//
     implements StayOutboundDetailViewInterface, View.OnClickListener, ViewPager.OnPageChangeListener
 {
+    private static final int ANIMATION_DEALY = 250;
+
     private DailyToolbarLayout mDailyToolbarLayout;
 
     private StayOutboundDetailImageViewPagerAdapter mImageViewPagerAdapter;
+    private StayOutboundDetailRoomListAdapter mRoomTypeListAdapter;
+
+    private AnimatorSet mRoomAnimatorSet;
 
     public interface OnEventListener extends OnBaseEventListener
     {
         void onShareClick();
 
         void onImageClick(int position);
+
+        void onImageSelected(int position);
 
         void onReviewClick();
 
@@ -91,7 +104,7 @@ public class StayOutboundDetailView extends BaseView<StayOutboundDetailView.OnEv
 
         void onHideRoomListClick(boolean animation);
 
-        void onShowRoomListClick();
+        void onActionButtonClick();
     }
 
     public StayOutboundDetailView(BaseActivity baseActivity, StayOutboundDetailView.OnEventListener listener)
@@ -161,25 +174,16 @@ public class StayOutboundDetailView extends BaseView<StayOutboundDetailView.OnEv
         //        setUpdateWishPopup(WishPopupState.GONE);
 
 
+        // 객실 초기화
         viewDataBinding.productTypeTextView.setText(R.string.act_hotel_search_room);
         viewDataBinding.productTypeTextView.setClickable(true);
-
         viewDataBinding.priceOptionLayout.setVisibility(View.GONE);
 
         viewDataBinding.productTypeRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         EdgeEffectColor.setEdgeGlowColor(viewDataBinding.productTypeRecyclerView, getColor(R.color.default_over_scroll_edge));
         viewDataBinding.productTypeLayout.setVisibility(View.INVISIBLE);
 
-        viewDataBinding.productTypeBackgroundView.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                getEventListener().onHideRoomListClick(true);
-            }
-        });
-
-        //        hideProductInformationLayout();
+        viewDataBinding.productTypeBackgroundView.setOnClickListener(this);
     }
 
     @Override
@@ -207,6 +211,14 @@ public class StayOutboundDetailView extends BaseView<StayOutboundDetailView.OnEv
             case R.id.shareView:
                 getEventListener().onShareClick();
                 break;
+
+            case R.id.productTypeBackgroundView:
+                getEventListener().onHideRoomListClick(true);
+                break;
+
+            case R.id.bookingTextView:
+                getEventListener().onActionButtonClick();
+                break;
         }
     }
 
@@ -219,7 +231,7 @@ public class StayOutboundDetailView extends BaseView<StayOutboundDetailView.OnEv
     @Override
     public void onPageSelected(int position)
     {
-
+        getEventListener().onImageSelected(position);
     }
 
     @Override
@@ -229,15 +241,177 @@ public class StayOutboundDetailView extends BaseView<StayOutboundDetailView.OnEv
     }
 
     @Override
-    public void showRoomList()
+    public Observable<Boolean> showRoomList(boolean animation)
     {
+        if (getViewDataBinding() == null && mRoomAnimatorSet != null && mRoomAnimatorSet.isRunning() == true)
+        {
+            return null;
+        }
 
+        Observable<Boolean> observable;
+
+        if (animation == true)
+        {
+            observable = new Observable<Boolean>()
+            {
+                @Override
+                protected void subscribeActual(Observer<? super Boolean> observer)
+                {
+                    final float fromAnimationY = getViewDataBinding().bottomLayout.getTop();
+
+                    // 리스트 높이 + 아이콘 높이(실제 화면에 들어나지 않기 때문에 높이가 정확하지 않아서 내부 높이를 더함)
+                    int height = getViewDataBinding().productTypeLayout.getHeight();
+                    int toolbarHeight = getContext().getResources().getDimensionPixelSize(R.dimen.toolbar_height);
+                    int maxHeight = getViewDataBinding().getRoot().getHeight() - getViewDataBinding().bottomLayout.getHeight() - toolbarHeight;
+
+                    float toAnimationY = fromAnimationY - Math.min(height, maxHeight);
+
+                    int startTransY = ScreenUtils.dpToPx(getContext(), height);
+                    getViewDataBinding().productTypeLayout.setTranslationY(startTransY);
+
+                    ObjectAnimator transObjectAnimator = ObjectAnimator.ofFloat(getViewDataBinding().productTypeLayout, "y", fromAnimationY, toAnimationY);
+                    ObjectAnimator alphaObjectAnimator = ObjectAnimator.ofFloat(getViewDataBinding().productTypeBackgroundView, "alpha", 0.0f, 1.0f);
+
+                    mRoomAnimatorSet = new AnimatorSet();
+                    mRoomAnimatorSet.playTogether(transObjectAnimator, alphaObjectAnimator);
+                    mRoomAnimatorSet.setInterpolator(new AccelerateDecelerateInterpolator());
+                    mRoomAnimatorSet.setDuration(ANIMATION_DEALY);
+
+                    mRoomAnimatorSet.addListener(new Animator.AnimatorListener()
+                    {
+                        @Override
+                        public void onAnimationStart(Animator animation)
+                        {
+                            getViewDataBinding().productTypeLayout.setVisibility(View.VISIBLE);
+                        }
+
+                        @Override
+                        public void onAnimationEnd(Animator animation)
+                        {
+                            mRoomAnimatorSet.removeAllListeners();
+                            mRoomAnimatorSet = null;
+
+                            observer.onNext(true);
+                            observer.onComplete();
+                        }
+
+                        @Override
+                        public void onAnimationCancel(Animator animation)
+                        {
+                        }
+
+                        @Override
+                        public void onAnimationRepeat(Animator animation)
+                        {
+
+                        }
+                    });
+
+                    mRoomAnimatorSet.start();
+                }
+            };
+        } else
+        {
+            observable = new Observable<Boolean>()
+            {
+                @Override
+                protected void subscribeActual(Observer<? super Boolean> observer)
+                {
+                    getViewDataBinding().productTypeBackgroundView.setVisibility(View.VISIBLE);
+                    getViewDataBinding().productTypeLayout.setVisibility(View.VISIBLE);
+
+                    observer.onNext(true);
+                    observer.onComplete();
+                }
+            };
+
+        }
+
+        return observable;
     }
 
     @Override
-    public void hideRoomList(boolean animation)
+    public Observable<Boolean> hideRoomList(boolean animation)
     {
+        if (getViewDataBinding() == null && mRoomAnimatorSet != null && mRoomAnimatorSet.isRunning() == true)
+        {
+            return null;
+        }
 
+        Observable<Boolean> observable;
+
+        if (animation == true)
+        {
+            observable = new Observable<Boolean>()
+            {
+                @Override
+                protected void subscribeActual(Observer<? super Boolean> observer)
+                {
+                    final float y = getViewDataBinding().productTypeLayout.getY();
+
+                    ObjectAnimator transObjectAnimator = ObjectAnimator.ofFloat(getViewDataBinding().productTypeLayout, "y", y, getViewDataBinding().bottomLayout.getTop());
+                    ObjectAnimator alphaObjectAnimator = ObjectAnimator.ofFloat(getViewDataBinding().productTypeBackgroundView, "alpha", 1.0f, 0.0f);
+
+                    mRoomAnimatorSet = new AnimatorSet();
+                    mRoomAnimatorSet.playTogether(transObjectAnimator, alphaObjectAnimator);
+                    mRoomAnimatorSet.setInterpolator(new AccelerateDecelerateInterpolator());
+                    mRoomAnimatorSet.setDuration(ANIMATION_DEALY);
+
+                    mRoomAnimatorSet.addListener(new Animator.AnimatorListener()
+                    {
+                        @Override
+                        public void onAnimationStart(Animator animation)
+                        {
+                        }
+
+                        @Override
+                        public void onAnimationEnd(Animator animation)
+                        {
+                            mRoomAnimatorSet.removeAllListeners();
+                            mRoomAnimatorSet = null;
+
+                            observer.onNext(true);
+                            observer.onComplete();
+                        }
+
+                        @Override
+                        public void onAnimationCancel(Animator animation)
+                        {
+                        }
+
+                        @Override
+                        public void onAnimationRepeat(Animator animation)
+                        {
+                        }
+                    });
+
+                    mRoomAnimatorSet.start();
+                }
+            };
+        } else
+        {
+            observable = new Observable<Boolean>()
+            {
+                @Override
+                protected void subscribeActual(Observer<? super Boolean> observer)
+                {
+                    getViewDataBinding().productTypeBackgroundView.setVisibility(View.GONE);
+
+                    if (VersionUtils.isOverAPI12() == true)
+                    {
+                        getViewDataBinding().productTypeLayout.setVisibility(View.INVISIBLE);
+                    } else
+                    {
+                        getViewDataBinding().productTypeLayout.setVisibility(View.GONE);
+                    }
+
+                    observer.onNext(true);
+                    observer.onComplete();
+                }
+            };
+        }
+
+        return observable;
     }
 
     @Override
@@ -283,6 +457,9 @@ public class StayOutboundDetailView extends BaseView<StayOutboundDetailView.OnEv
 
         // 카카오톡 문의
         setConciergeView(layoutInflater, getViewDataBinding().scrollLayout);
+
+        // 객실 세팅
+        setRoomList(stayBookDateTime, stayOutboundDetail.getRoomList());
     }
 
 
@@ -396,6 +573,67 @@ public class StayOutboundDetailView extends BaseView<StayOutboundDetailView.OnEv
         getViewDataBinding().viewpagerIndicator.setViewPager(getViewDataBinding().imageLoopViewPager);
     }
 
+    @Override
+    public void setBottomButtonLayout(int status)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        switch (status)
+        {
+            case StayOutboundDetailPresenter.STATUS_NONE:
+            {
+                getViewDataBinding().bookingTextView.setVisibility(View.VISIBLE);
+                getViewDataBinding().soldoutTextView.setVisibility(View.GONE);
+                getViewDataBinding().wishListButtonView.setVisibility(View.VISIBLE);
+                break;
+            }
+
+            case StayOutboundDetailPresenter.STATUS_ROOM_LIST:
+            {
+                getViewDataBinding().bookingTextView.setVisibility(View.VISIBLE);
+                getViewDataBinding().soldoutTextView.setVisibility(View.GONE);
+                getViewDataBinding().wishListButtonView.setVisibility(View.VISIBLE);
+
+                getViewDataBinding().bookingTextView.setText(R.string.act_hotel_search_room);
+                break;
+            }
+
+            case StayOutboundDetailPresenter.STATUS_BOOKING:
+            {
+                getViewDataBinding().bookingTextView.setVisibility(View.VISIBLE);
+                getViewDataBinding().soldoutTextView.setVisibility(View.GONE);
+                getViewDataBinding().wishListButtonView.setVisibility(View.VISIBLE);
+
+                getViewDataBinding().bookingTextView.setText(R.string.act_hotel_booking);
+                break;
+            }
+
+            case StayOutboundDetailPresenter.STATUS_SOLD_OUT:
+            {
+                getViewDataBinding().bookingTextView.setVisibility(View.GONE);
+                getViewDataBinding().soldoutTextView.setVisibility(View.VISIBLE);
+                getViewDataBinding().wishListButtonView.setVisibility(View.VISIBLE);
+                break;
+            }
+        }
+    }
+
+    @Override
+    public void setDetailImageCaption(String caption)
+    {
+        if (DailyTextUtils.isTextEmpty(caption) == false)
+        {
+            getViewDataBinding().descriptionTextView.setVisibility(View.VISIBLE);
+            getViewDataBinding().descriptionTextView.setText(caption);
+        } else
+        {
+            getViewDataBinding().descriptionTextView.setVisibility(View.INVISIBLE);
+        }
+    }
+
     private void initToolbar(ActivityStayOutboundDetailDataBinding viewDataBinding)
     {
         mDailyToolbarLayout = new DailyToolbarLayout(getContext(), viewDataBinding.toolbar.findViewById(R.id.toolbar));
@@ -430,6 +668,8 @@ public class StayOutboundDetailView extends BaseView<StayOutboundDetailView.OnEv
         {
             setViewPagerLineIndicatorVisible(true);
         }
+
+        setDetailImageCaption(imageList.get(0).caption);
 
         if (mImageViewPagerAdapter == null)
         {
@@ -794,6 +1034,80 @@ public class StayOutboundDetailView extends BaseView<StayOutboundDetailView.OnEv
         getViewDataBinding().viewpagerIndicator.setVisibility(visible ? View.VISIBLE : View.INVISIBLE);
     }
 
+    private void setRoomList(StayBookDateTime stayBookDateTime, List<StayOutboundRoom> roomList)
+    {
+        if (getViewDataBinding() == null || stayBookDateTime == null || roomList == null || roomList.size() == 0)
+        {
+            return;
+        }
+
+        final int nights;
+
+        try
+        {
+            nights = stayBookDateTime.getNights();
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+            return;
+        }
+
+        // 처음 세팅하는 경우 객실 타입 세팅
+        if (mRoomTypeListAdapter == null)
+        {
+            mRoomTypeListAdapter = new StayOutboundDetailRoomListAdapter(getContext(), roomList, new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    int position = getViewDataBinding().productTypeRecyclerView.getChildAdapterPosition(v);
+
+                    if (position < 0)
+                    {
+                        return;
+                    }
+
+                    mRoomTypeListAdapter.setSelected(position);
+                }
+            });
+        } else
+        {
+            // 재세팅 하는 경우
+            mRoomTypeListAdapter.addAll(roomList);
+            mRoomTypeListAdapter.setSelected(0);
+        }
+
+        ViewGroup.LayoutParams layoutParams = getViewDataBinding().productTypeRecyclerView.getLayoutParams();
+        layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+        getViewDataBinding().productTypeRecyclerView.setLayoutParams(layoutParams);
+        getViewDataBinding().productTypeRecyclerView.setAdapter(mRoomTypeListAdapter);
+
+        // 객실 개수로 높이를 재지정해준다.
+        final int productTitleBarHeight = ScreenUtils.dpToPx(getContext(), 52) + (nights > 1 ? ScreenUtils.dpToPx(getContext(), 40) : 0);
+
+        getViewDataBinding().productTypeRecyclerView.postDelayed(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                // 화면 높이 - 상단 타이틀 - 하단 버튼
+                final int maxHeight = getViewDataBinding().getRoot().getHeight() //
+                    - ScreenUtils.dpToPx(getContext(), 52) - ScreenUtils.dpToPx(getContext(), 64);
+
+                ViewGroup.LayoutParams layoutParams = getViewDataBinding().productTypeRecyclerView.getLayoutParams();
+
+                /* mProductTypeRecyclerView.getHeight() 를 사용하는 이유 - layoutParams.height 를 사용할 경우
+                   속성 값을 리턴 하여 WRAP_CONTENT 등의 값인 -2 등이 리턴 됨 */
+                int productLayoutHeight = getViewDataBinding().productTypeRecyclerView.getHeight() + productTitleBarHeight;
+
+                layoutParams.height = Math.min(maxHeight, productLayoutHeight) - productTitleBarHeight;
+                getViewDataBinding().productTypeRecyclerView.setLayoutParams(layoutParams);
+            }
+        }, 100);
+
+        getViewDataBinding().bookingTextView.setOnClickListener(this);
+    }
+
     private View.OnTouchListener mEmptyViewOnTouchListener = new View.OnTouchListener()
     {
         private int mMoveState;
@@ -810,6 +1124,8 @@ public class StayOutboundDetailView extends BaseView<StayOutboundDetailView.OnEv
                     mPrevY = event.getY();
 
                     mMoveState = 0;
+
+                    getViewDataBinding().nestedScrollView.setEnabled(false);
                     getViewDataBinding().nestedScrollView.setNestedScrollingEnabled(false);
 
                     try
@@ -846,6 +1162,7 @@ public class StayOutboundDetailView extends BaseView<StayOutboundDetailView.OnEv
                             getViewDataBinding().imageLoopViewPager.onTouchEvent(event);
                         }
 
+                        getViewDataBinding().nestedScrollView.setEnabled(true);
                         getViewDataBinding().nestedScrollView.setNestedScrollingEnabled(true);
                         break;
                     }
@@ -864,6 +1181,7 @@ public class StayOutboundDetailView extends BaseView<StayOutboundDetailView.OnEv
                         getViewDataBinding().imageLoopViewPager.onTouchEvent(event);
                     }
 
+                    getViewDataBinding().nestedScrollView.setEnabled(true);
                     getViewDataBinding().nestedScrollView.setNestedScrollingEnabled(true);
                     break;
                 }
@@ -896,6 +1214,8 @@ public class StayOutboundDetailView extends BaseView<StayOutboundDetailView.OnEv
                         {
                             // y축으로 이동한 경우.
                             mMoveState = 10;
+
+                            getViewDataBinding().nestedScrollView.setEnabled(true);
                             getViewDataBinding().nestedScrollView.setNestedScrollingEnabled(true);
                             return true;
                         }

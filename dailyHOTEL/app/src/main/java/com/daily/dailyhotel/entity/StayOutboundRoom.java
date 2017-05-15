@@ -10,11 +10,14 @@ public class StayOutboundRoom
     public String totalKrw;
     public String baseNightlyKrw;
     public String nightlyKrw;
+    public int quotedOccupancy;
+    public int rateOccupancyPerRoom;
     public boolean promotion;
+    public String promotionDescription;
     public boolean nonRefundable;
     public String nonRefundableDescription;
     public String bedTypeName;
-    public int valueAddName;
+    public String valueAddName;
 
     public StayOutboundRoom()
     {

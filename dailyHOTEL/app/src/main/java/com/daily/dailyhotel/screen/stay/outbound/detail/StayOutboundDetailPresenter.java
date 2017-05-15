@@ -1,19 +1,24 @@
 package com.daily.dailyhotel.screen.stay.outbound.detail;
 
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 
 import com.daily.base.BaseActivity;
 import com.daily.base.BaseAnalyticsInterface;
+import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
 import com.daily.dailyhotel.entity.Persons;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayOutboundDetail;
+import com.daily.dailyhotel.entity.StayOutboundRoom;
 import com.daily.dailyhotel.repository.remote.StayOutboundRemoteImpl;
 import com.twoheart.dailyhotel.R;
+
+import java.util.List;
 
 import io.reactivex.Observable;
 import io.reactivex.functions.BiFunction;
@@ -25,6 +30,14 @@ import io.reactivex.functions.Consumer;
  */
 public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutboundDetailActivity, StayOutboundDetailViewInterface> implements StayOutboundDetailView.OnEventListener
 {
+    public static final int STATUS_NONE = 0;
+    public static final int STATUS_ROOM_LIST = 1;
+    public static final int STATUS_BOOKING = 2;
+    public static final int STATUS_SOLD_OUT = 3;
+
+    public static final int PRICE_AVERAGE = 0;
+    public static final int PRICE_TOTAL = 1;
+
     private StayOutboundDetailAnalyticsInterface mAnalytics;
 
     private StayOutboundRemoteImpl mStayOutboundRemoteImpl;
@@ -33,11 +46,15 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
     private String mStayName;
     private String mImageUrl;
     private StayBookDateTime mStayBookDateTime;
+    private StayOutboundDetail mStayOutboundDetail;
     private Persons mPersons;
+
+    private int mStatus = STATUS_NONE;
+    private int mViewPriceType = PRICE_AVERAGE;
 
     private boolean mIsUsedMultiTransition;
     private boolean mIsDeepLink;
-
+    private boolean mCheckChangedPrice;
 
     public interface StayOutboundDetailAnalyticsInterface extends BaseAnalyticsInterface
     {
@@ -65,6 +82,12 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
         mStayOutboundRemoteImpl = new StayOutboundRemoteImpl(activity);
 
         mPersons = new Persons(Persons.DEFAULT_PERSONS, null);
+
+        setStatus(STATUS_NONE);
+
+        mViewPriceType = PRICE_AVERAGE;
+
+        addCompositeDisposable(getViewInterface().hideRoomList(false).subscribe());
     }
 
     @Override
@@ -126,19 +149,16 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
     {
         if (mIsDeepLink == false && mIsUsedMultiTransition == true)
         {
-//            initTransLayout(placeName, imageUrl, grade, isFromMap);
+            //            initTransLayout(placeName, imageUrl, grade, isFromMap);
         } else
         {
             getViewInterface().setInitializedImage(mImageUrl);
         }
 
-//        mPlaceDetailLayout.setStatusBarHeight(this);
-//        mPlaceDetailLayout.setIsUsedMultiTransitions(mIsUsedMultiTransition);
-
-//        setLockUICancelable(true);
+        //        setLockUICancelable(true);
         getViewInterface().setToolbarTitle(mStayName);
 
-//        mOnEventListener.hideActionBar(false);
+        //        mOnEventListener.hideActionBar(false);
 
         if (mIsUsedMultiTransition == true)
         {
@@ -299,6 +319,17 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
     }
 
     @Override
+    public void onImageSelected(int position)
+    {
+        if (mStayOutboundDetail == null)
+        {
+            return;
+        }
+
+        getViewInterface().setDetailImageCaption(mStayOutboundDetail.getImageList().get(position).caption);
+    }
+
+    @Override
     public void onReviewClick()
     {
 
@@ -355,21 +386,56 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
     @Override
     public void onHideRoomListClick(boolean animation)
     {
+        screenLock(false);
 
+        addCompositeDisposable(getViewInterface().hideRoomList(animation).subscribe(new Consumer<Boolean>()
+        {
+            @Override
+            public void accept(@io.reactivex.annotations.NonNull Boolean aBoolean) throws Exception
+            {
+                unLockAll();
+
+                setStatus(STATUS_ROOM_LIST);
+            }
+        }));
     }
 
     @Override
-    public void onShowRoomListClick()
+    public void onActionButtonClick()
     {
+        switch (mStatus)
+        {
+            case STATUS_BOOKING:
+                break;
 
+            case STATUS_ROOM_LIST:
+                screenLock(false);
+
+                addCompositeDisposable(getViewInterface().showRoomList(true).subscribe(new Consumer<Boolean>()
+                {
+                    @Override
+                    public void accept(@io.reactivex.annotations.NonNull Boolean aBoolean) throws Exception
+                    {
+                        unLockAll();
+
+                        setStatus(STATUS_BOOKING);
+                    }
+                }));
+                break;
+
+            default:
+                break;
+        }
     }
 
     private void onStayOutboundDetail(StayOutboundDetail stayOutboundDetail)
     {
-        if(stayOutboundDetail == null)
+        if (stayOutboundDetail == null)
         {
             return;
         }
+
+        mStayOutboundDetail = stayOutboundDetail;
 
         if (mIsDeepLink == true)
         {
@@ -384,32 +450,77 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
 
         getViewInterface().setStayDetail(mStayBookDateTime, stayOutboundDetail);
 
-//        if (mCheckPrice == false)
-//        {
-//            mCheckPrice = true;
-//            checkStayRoom(mIsDeepLink, stayDetail, mViewPrice);
-//        }
-//
-//        // 딥링크로 메뉴 오픈 요청
-//        if (mIsDeepLink == true && mProductDetailIndex > 0 && stayDetail.getProductList().size() > 0)
-//        {
-//            if (mPlaceDetailLayout != null)
-//            {
-//                ((StayDetailLayout) mPlaceDetailLayout).showProductInformationLayout(mProductDetailIndex);
-//                mPlaceDetailLayout.hideWishButton();
-//            }
-//        }
+        if (mCheckChangedPrice == false)
+        {
+            mCheckChangedPrice = true;
+            checkChangedPrice(mIsDeepLink, stayOutboundDetail, null);
+        }
 
-//            hideTrueViewMenu();
-//
-//            if (mIsShowVR == true)
-//            {
-//                unLockUI();
-//                showSimpleDialog(null, getString(R.string.message_truevr_not_support_hardware), getString(R.string.dialog_btn_text_confirm), null);
-//            }
-//        }
 
-//        mProductDetailIndex = 0;
+        setStatus(STATUS_ROOM_LIST);
+
+        //        mProductDetailIndex = 0;
         mIsDeepLink = false;
+    }
+
+    private void setStatus(int status)
+    {
+        mStatus = status;
+
+        getViewInterface().setBottomButtonLayout(status);
+    }
+
+    private void checkChangedPrice(boolean isDeepLink, StayOutboundDetail stayOutboundDetail, String listViewPrice)
+    {
+        if (stayOutboundDetail == null || DailyTextUtils.isTextEmpty(listViewPrice) == true)
+        {
+            return;
+        }
+
+        // 판매 완료 혹은 가격이 변동되었는지 조사한다
+        List<StayOutboundRoom> roomList = stayOutboundDetail.getRoomList();
+
+        if (roomList == null || roomList.size() == 0)
+        {
+            getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.message_stay_detail_sold_out)//
+                , getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
+                {
+                    @Override
+                    public void onDismiss(DialogInterface dialog)
+                    {
+                        //                        setResultCode(CODE_RESULT_ACTIVITY_REFRESH);
+                    }
+                });
+        } else
+        {
+            if (isDeepLink == false)
+            {
+                boolean hasPrice = false;
+
+                for (StayOutboundRoom room : roomList)
+                {
+                    if (listViewPrice == room.nightlyKrw)
+                    {
+                        hasPrice = true;
+                        break;
+                    }
+                }
+
+                if (hasPrice == false)
+                {
+                    //                    setResultCode(CODE_RESULT_ACTIVITY_REFRESH);
+
+                    getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.message_stay_detail_changed_price)//
+                        , getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
+                        {
+                            @Override
+                            public void onDismiss(DialogInterface dialog)
+                            {
+                                getViewInterface().showRoomList(false);
+                            }
+                        });
+                }
+            }
+        }
     }
 }

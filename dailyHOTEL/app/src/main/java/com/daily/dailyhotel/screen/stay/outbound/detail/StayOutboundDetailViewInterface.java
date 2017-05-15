@@ -8,13 +8,17 @@ import io.reactivex.Observable;
 
 public interface StayOutboundDetailViewInterface extends BaseViewInterface
 {
-    void showRoomList();
+    Observable<Boolean> showRoomList(boolean animation);
 
-    void hideRoomList(boolean animation);
+    Observable<Boolean> hideRoomList(boolean animation);
 
     void setStayDetail(StayBookDateTime stayBookDateTime, StayOutboundDetail stayOutboundDetail);
 
     Observable<Boolean> getSharedElementTransition();
 
     void setInitializedImage(String url);
+
+    void setBottomButtonLayout(int status);
+
+    void setDetailImageCaption(String caption);
 }

@@ -1267,7 +1267,10 @@
 
     <!-- Stay Out Bound Detail -->
     <string name="label_stayoutbound_detail_grade">%1$d 성급</string>
-    
+    <string name="label_stayoutbound_room_default_person">%1$d인 기준</string>
+    <string name="label_stayoutbound_room_max_person_free">최대 %1$d인</string>
+    <string name="label_stayoutbound_room_max_person_charge">최대 %1$d인(유료)</string>
+
 
     <!-- Preview -->
     <string name="label_preview_add_wish">위시리스트\n추가하기</string>
