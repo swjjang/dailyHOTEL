@@ -27,7 +27,6 @@ public class StayListFragment extends PlaceListFragment
 {
     protected StayCuration mStayCuration;
     private StayListLayout mStayListLayout;
-    private ArrayList<Stay> mLocalPlusList;
 
     public interface OnStayListFragmentListener extends OnPlaceListFragmentListener
     {
@@ -292,13 +291,6 @@ public class StayListFragment extends PlaceListFragment
         public void onStayList(ArrayList<Stay> list, int page)
         {
             StayListFragment.this.onStayList(list, page, true);
-        }
-
-        @Override
-        public void onLocalPlusList(ArrayList<Stay> list)
-        {
-            // TODO : 지역 플러스 리스트 처리
-            mLocalPlusList = list;
         }
 
         @Override

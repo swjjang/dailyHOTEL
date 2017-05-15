@@ -39,8 +39,6 @@ public class StayListNetworkController extends BaseNetworkController
     public interface OnNetworkControllerListener extends OnBaseNetworkControllerListener
     {
         void onStayList(ArrayList<Stay> list, int page);
-
-        void onLocalPlusList(ArrayList<Stay> list);
     }
 
     public StayListNetworkController(Context context, String networkTag, OnBaseNetworkControllerListener listener)
@@ -56,11 +54,6 @@ public class StayListNetworkController extends BaseNetworkController
         }
 
         DailyMobileAPI.getInstance(mContext).requestStayList(mNetworkTag, params.toParamsMap(), params.getBedTypeList(), params.getLuxuryList(), mStayListCallback);
-    }
-
-    public void requestLocalPlusList(String checkInDate, int nights, int provinceIndex, int areaIndex, String categoryCode)
-    {
-        DailyMobileAPI.getInstance(mContext).requestLocalPlus(mNetworkTag, checkInDate, nights, provinceIndex, areaIndex, categoryCode, mLocalPlusListCallback);
     }
 
     private ArrayList<Stay> makeStayList(JSONArray jsonArray, String imageUrl) throws JSONException
@@ -166,63 +159,6 @@ public class StayListNetworkController extends BaseNetworkController
         public void onFailure(Call<JSONObject> call, Throwable t)
         {
             mOnNetworkControllerListener.onError(call, t, false);
-        }
-    };
-
-    private retrofit2.Callback mLocalPlusListCallback = new retrofit2.Callback<JSONObject>()
-    {
-        @Override
-        public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
-        {
-            if (response != null && response.isSuccessful() && response.body() != null)
-            {
-                try
-                {
-                    JSONObject responseJSONObject = response.body();
-
-                    int msgCode = responseJSONObject.getInt("msgCode");
-                    if (msgCode == 100)
-                    {
-                        JSONObject dataJSONObject = responseJSONObject.getJSONObject("data");
-                        JSONArray hotelJSONArray = null;
-
-                        if (dataJSONObject.has("hotelSales") == true)
-                        {
-                            hotelJSONArray = dataJSONObject.getJSONArray("hotelSales");
-                        }
-
-                        String imageUrl;
-
-                        ArrayList<Stay> stayList;
-
-                        if (hotelJSONArray != null)
-                        {
-                            imageUrl = dataJSONObject.getString("imgUrl");
-                            stayList = makeStayList(hotelJSONArray, imageUrl);
-                        } else
-                        {
-                            stayList = new ArrayList<>();
-                        }
-
-                        ((OnNetworkControllerListener) mOnNetworkControllerListener).onLocalPlusList(stayList);
-                    } else
-                    {
-                        ((OnNetworkControllerListener) mOnNetworkControllerListener).onLocalPlusList(null);
-                    }
-                } catch (Exception e)
-                {
-                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onLocalPlusList(null);
-                }
-            } else
-            {
-                ((OnNetworkControllerListener) mOnNetworkControllerListener).onLocalPlusList(null);
-            }
-        }
-
-        @Override
-        public void onFailure(Call<JSONObject> call, Throwable t)
-        {
-            ((OnNetworkControllerListener) mOnNetworkControllerListener).onLocalPlusList(null);
         }
     };
 }
