@@ -14,6 +14,7 @@
     <string name="label_map">지도</string>
     <string name="label_list">목록</string>
     <string name="label_dailychoice">데일리초이스</string>
+    <string name="label_local_plus">지역 플러스</string>
     <string name="label_google_map">Google Map</string>
     <string name="label_hotel">호텔</string>
     <string name="label_stay">스테이</string>

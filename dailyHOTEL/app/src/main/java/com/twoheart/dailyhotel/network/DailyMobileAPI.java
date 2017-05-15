@@ -1217,6 +1217,17 @@ public class DailyMobileAPI implements IDailyNetwork
         executorCallbackCall.enqueue((retrofit2.Callback<BaseDto<PlaceReviewScores>>) listener);
     }
 
+    @Override
+    public void requestLocalPlus(String tag, Map<String, Object> queryMap, Object listener)
+    {
+        final String URL = Constants.UNENCRYPTED_URL ? "api/v3/hotels/sales/local-plus" //
+            : "NjYkNjckMjgkMjQkMzIkNzYkNjIkMjEkNTQkODAkNjYkMTQkNTMkODgkODAkNzQk$MDQzOThGREU2NzXZGMjFGNJjhFWRTg5AOEYI1MTIxRUZBNTdFQUU4FNESRCRDkyRkRNCVQTNCNTzZXlBQZ0RRKDNEYGxRjZBN0VFMQ==$";
+
+        ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestLocalPlus(Crypto.getUrlDecoderEx(URL), queryMap);
+        executorCallbackCall.setTag(tag);
+        executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
+    }
+
     /////////////////////////////////////////////////////////////////////////////////////////////////
     //
     // RxJava2 API

@@ -449,7 +449,7 @@ public class HomeCategoryRegionListActivity extends BaseActivity
                 //                DailyPreference.getInstance(HomeCategoryRegionListActivity.this) //
                 //                    .setDailyRegion(mDailyCategoryType, Util.getDailyRegionJSONObject(province));
                 //
-                //                Intent intent = StayCategoryListActivity.newInstance( //
+                //                Intent intent = StayCategoryTabActivity.newInstance( //
                 //                    HomeCategoryRegionListActivity.this, mDailyCategoryType, null);
                 //                startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_STAY);
 

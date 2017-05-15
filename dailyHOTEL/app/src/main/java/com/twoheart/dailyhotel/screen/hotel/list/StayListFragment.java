@@ -26,7 +26,7 @@ import retrofit2.Response;
 public class StayListFragment extends PlaceListFragment
 {
     protected StayCuration mStayCuration;
-    private StayListLayout mStayListLayout;
+    protected StayListLayout mStayListLayout;
 
     public interface OnStayListFragmentListener extends OnPlaceListFragmentListener
     {

@@ -168,6 +168,9 @@ public class DailyPreference
     private static final String KEY_REMOTE_CONFIG_UPDATE_FORCE = "343";
     private static final String KEY_REMOTE_CONFIG_OPERATION_LUNCH = "344";
 
+    // Boutique BM - Test
+    private static final String KEY_REMOTE_CONFIG_BOUTIQUE_BM = "350";
+
     /////////////////////////////////////////////////////////////////////////////////////////
     // New Key old --> v1
     /////////////////////////////////////////////////////////////////////////////////////////
@@ -1322,6 +1325,16 @@ public class DailyPreference
     public String getRemoteConfigOperationLunchTime()
     {
         return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_OPERATION_LUNCH, "11:50,13:00");
+    }
+
+    public void setRemoteConfigBoutiqueBMEnabled(boolean enabled)
+    {
+        setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_BOUTIQUE_BM, enabled);
+    }
+
+    public boolean isRemoteConfigBoutiqueBMEnabled()
+    {
+        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_BOUTIQUE_BM, false);
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////

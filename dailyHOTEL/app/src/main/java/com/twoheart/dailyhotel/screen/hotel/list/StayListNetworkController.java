@@ -56,6 +56,33 @@ public class StayListNetworkController extends BaseNetworkController
         DailyMobileAPI.getInstance(mContext).requestStayList(mNetworkTag, params.toParamsMap(), params.getBedTypeList(), params.getLuxuryList(), mStayListCallback);
     }
 
+    private ArrayList<Stay> makeStayList(JSONArray jsonArray, String imageUrl) throws JSONException
+    {
+        if (jsonArray == null)
+        {
+            return new ArrayList<>();
+        }
+
+        int length = jsonArray.length();
+        ArrayList<Stay> stayList = new ArrayList<>(length);
+        JSONObject jsonObject;
+        Stay stay;
+
+        for (int i = 0; i < length; i++)
+        {
+            jsonObject = jsonArray.getJSONObject(i);
+
+            stay = new Stay();
+
+            if (stay.setStay(jsonObject, imageUrl) == true)
+            {
+                stayList.add(stay); // 추가.
+            }
+        }
+
+        return stayList;
+    }
+
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // Listener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -132,33 +159,6 @@ public class StayListNetworkController extends BaseNetworkController
         public void onFailure(Call<JSONObject> call, Throwable t)
         {
             mOnNetworkControllerListener.onError(call, t, false);
-        }
-
-        private ArrayList<Stay> makeStayList(JSONArray jsonArray, String imageUrl) throws JSONException
-        {
-            if (jsonArray == null)
-            {
-                return new ArrayList<>();
-            }
-
-            int length = jsonArray.length();
-            ArrayList<Stay> stayList = new ArrayList<>(length);
-            JSONObject jsonObject;
-            Stay stay;
-
-            for (int i = 0; i < length; i++)
-            {
-                jsonObject = jsonArray.getJSONObject(i);
-
-                stay = new Stay();
-
-                if (stay.setStay(jsonObject, imageUrl) == true)
-                {
-                    stayList.add(stay); // 추가.
-                }
-            }
-
-            return stayList;
         }
     };
 }

@@ -441,6 +441,11 @@ public interface DailyMobileService
     Call<BaseDto<PlaceReviews>> requestPlaceReviews(@Path(value = "mobileAPI", encoded = true) String mobileAPI//
         , @Query("page") int page, @Query("limit") int limit, @Query("sortProperty") String sortProperty, @Query("sortDirection") String sortDirection);
 
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
+    @GET("{mobileAPI}")
+    Call<JSONObject> requestLocalPlus(@Path(value = "mobileAPI", encoded = true) String mobileAPI, //
+                                      @QueryMap Map<String, Object> queryMap);
+
     /////////////////////////////////////////////////////////////////////////////////////////////////
     //
     // RxJava2 API
