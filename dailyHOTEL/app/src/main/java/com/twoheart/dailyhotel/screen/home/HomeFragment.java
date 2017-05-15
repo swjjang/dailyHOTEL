@@ -38,7 +38,7 @@ import com.twoheart.dailyhotel.screen.event.EventWebActivity;
 import com.twoheart.dailyhotel.screen.gourmet.detail.GourmetDetailActivity;
 import com.twoheart.dailyhotel.screen.gourmet.list.GourmetMainActivity;
 import com.twoheart.dailyhotel.screen.gourmet.preview.GourmetPreviewActivity;
-import com.twoheart.dailyhotel.screen.home.category.list.StayCategoryListActivity;
+import com.twoheart.dailyhotel.screen.home.category.list.StayCategoryTabActivity;
 import com.twoheart.dailyhotel.screen.home.category.region.HomeCategoryRegionListActivity;
 import com.twoheart.dailyhotel.screen.home.collection.CollectionGourmetActivity;
 import com.twoheart.dailyhotel.screen.home.collection.CollectionStayActivity;
@@ -265,14 +265,14 @@ public class HomeFragment extends BaseMenuNavigationFragment
                         //                            @Override
                         //                            public void run()
                         //                            {
-                        //                                Intent intent = StayCategoryListActivity.newInstance(mBaseActivity, categoryType, null);
+                        //                                Intent intent = StayCategoryTabActivity.newInstance(mBaseActivity, categoryType, null);
                         //                                startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_STAY);
                         //                            }
                         //                        }, 50);
 
                         try
                         {
-                            Intent intent = StayCategoryListActivity.newInstance(mBaseActivity, categoryType, null);
+                            Intent intent = StayCategoryTabActivity.newInstance(mBaseActivity, categoryType, null);
                             startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_STAY);
                         } catch (Exception e)
                         {
@@ -432,7 +432,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
                     {
                         try
                         {
-                            Intent intent = StayCategoryListActivity.newInstance(mBaseActivity, dailyCategoryType, dailyDeepLink.getDeepLink());
+                            Intent intent = StayCategoryTabActivity.newInstance(mBaseActivity, dailyCategoryType, dailyDeepLink.getDeepLink());
                             startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_STAY);
                         } catch (Exception e)
                         {

@@ -22,9 +22,9 @@ import retrofit2.Response;
  * Created by android_sam on 2017. 4. 19..
  */
 
-public class StayCategoryListNetworkController extends PlaceMainNetworkController
+public class StayCategoryTabNetworkController extends PlaceMainNetworkController
 {
-    public StayCategoryListNetworkController(Context context, String networkTag, OnBaseNetworkControllerListener listener)
+    public StayCategoryTabNetworkController(Context context, String networkTag, OnBaseNetworkControllerListener listener)
     {
         super(context, networkTag, listener);
     }

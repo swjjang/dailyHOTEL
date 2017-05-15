@@ -19,11 +19,11 @@ import java.util.Locale;
  * Created by android_sam on 2017. 4. 19..
  */
 
-public class StayCategoryListLayout extends PlaceMainLayout
+public class StayCategoryTabLayout extends PlaceMainLayout
 {
     private String mTitleText;
 
-    public StayCategoryListLayout(Context context, String titleText, PlaceMainLayout.OnEventListener onEventListener)
+    public StayCategoryTabLayout(Context context, String titleText, PlaceMainLayout.OnEventListener onEventListener)
     {
         super(context, onEventListener);
 
