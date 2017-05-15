@@ -10,7 +10,6 @@ import com.twoheart.dailyhotel.model.time.StayBookingDay;
 import com.twoheart.dailyhotel.place.adapter.PlaceListFragmentPagerAdapter;
 import com.twoheart.dailyhotel.place.fragment.PlaceListFragment;
 import com.twoheart.dailyhotel.place.layout.PlaceMainLayout;
-import com.twoheart.dailyhotel.screen.hotel.list.StayListFragment;
 
 import java.util.ArrayList;
 import java.util.Locale;
@@ -37,14 +36,14 @@ public class StayCategoryTabLayout extends PlaceMainLayout
     {
         PlaceListFragmentPagerAdapter placeListFragmentPagerAdapter = new PlaceListFragmentPagerAdapter(fragmentManager);
 
-        ArrayList<StayListFragment> list = new ArrayList<>(count);
+        ArrayList<StayCategoryListFragment> list = new ArrayList<>(count);
 
         for (int i = 0; i < count; i++)
         {
-            StayListFragment stayListFragment = new StayListFragment();
-            stayListFragment.setPlaceOnListFragmentListener(listener);
-            stayListFragment.setBottomOptionLayout(bottomOptionLayout);
-            list.add(stayListFragment);
+            StayCategoryListFragment stayCategoryListFragment = new StayCategoryListFragment();
+            stayCategoryListFragment.setPlaceOnListFragmentListener(listener);
+            stayCategoryListFragment.setBottomOptionLayout(bottomOptionLayout);
+            list.add(stayCategoryListFragment);
         }
 
         placeListFragmentPagerAdapter.setPlaceFragmentList(list);

@@ -41,7 +41,6 @@ import com.twoheart.dailyhotel.screen.hotel.detail.StayDetailActivity;
 import com.twoheart.dailyhotel.screen.hotel.filter.StayCalendarActivity;
 import com.twoheart.dailyhotel.screen.hotel.filter.StayCurationActivity;
 import com.twoheart.dailyhotel.screen.hotel.list.StayListAdapter;
-import com.twoheart.dailyhotel.screen.hotel.list.StayListFragment;
 import com.twoheart.dailyhotel.screen.hotel.preview.StayPreviewActivity;
 import com.twoheart.dailyhotel.screen.search.SearchActivity;
 import com.twoheart.dailyhotel.screen.search.stay.result.StaySearchResultActivity;
@@ -227,7 +226,7 @@ public class StayCategoryTabActivity extends PlaceMainActivity
                 categoryList.add(mStayCuration.getCategory());
 
                 mPlaceMainLayout.setCategoryTabLayout(getSupportFragmentManager(), categoryList, //
-                    mStayCuration.getCategory(), mStayListFragmentListener);
+                    mStayCuration.getCategory(), mStayCategoryListFragmentListener);
             }
         } else if (resultCode == RESULT_CHANGED_DATE && data != null)
         {
@@ -276,7 +275,7 @@ public class StayCategoryTabActivity extends PlaceMainActivity
                 categoryList.add(mStayCuration.getCategory());
 
                 mPlaceMainLayout.setCategoryTabLayout(getSupportFragmentManager(), categoryList, //
-                    mStayCuration.getCategory(), mStayListFragmentListener);
+                    mStayCuration.getCategory(), mStayCategoryListFragmentListener);
             }
         } else if (resultCode == RESULT_ARROUND_SEARCH_LIST && data != null)
         {
@@ -552,7 +551,7 @@ public class StayCategoryTabActivity extends PlaceMainActivity
 
         lockUI();
 
-        StayListFragment currentFragment = (StayListFragment) mPlaceMainLayout.getCurrentPlaceListFragment();
+        StayCategoryListFragment currentFragment = (StayCategoryListFragment) mPlaceMainLayout.getCurrentPlaceListFragment();
 
         switch (mViewType)
         {
@@ -599,12 +598,12 @@ public class StayCategoryTabActivity extends PlaceMainActivity
     @Override
     protected void onPlaceDetailClickByLongPress(View view, PlaceViewItem placeViewItem, int listCount)
     {
-        if (view == null || placeViewItem == null || mStayListFragmentListener == null)
+        if (view == null || placeViewItem == null || mStayCategoryListFragmentListener == null)
         {
             return;
         }
 
-        mStayListFragmentListener.onStayClick(view, placeViewItem, listCount);
+        mStayCategoryListFragmentListener.onStayClick(view, placeViewItem, listCount);
     }
 
 
@@ -885,7 +884,7 @@ public class StayCategoryTabActivity extends PlaceMainActivity
 
                 mPlaceMainLayout.setToolbarRegionText(selectedProvince.name);
                 mPlaceMainLayout.setCategoryTabLayout(getSupportFragmentManager(), categoryList, //
-                    mStayCuration.getCategory(), mStayListFragmentListener);
+                    mStayCuration.getCategory(), mStayCategoryListFragmentListener);
             }
         }
 
@@ -996,7 +995,7 @@ public class StayCategoryTabActivity extends PlaceMainActivity
         }
     };
 
-    StayListFragment.OnStayListFragmentListener mStayListFragmentListener = new StayListFragment.OnStayListFragmentListener()
+    StayCategoryListFragment.OnStayListFragmentListener mStayCategoryListFragmentListener = new StayCategoryListFragment.OnStayListFragmentListener()
     {
         @Override
         public void onStayClick(View view, PlaceViewItem placeViewItem, int listCount)
@@ -1412,7 +1411,7 @@ public class StayCategoryTabActivity extends PlaceMainActivity
 
                 mPlaceMainLayout.setToolbarRegionText(selectedProvince.name);
                 mPlaceMainLayout.setCategoryTabLayout(getSupportFragmentManager(), categoryList, //
-                    mStayCuration.getCategory(), mStayListFragmentListener);
+                    mStayCuration.getCategory(), mStayCategoryListFragmentListener);
             } else
             {
 
