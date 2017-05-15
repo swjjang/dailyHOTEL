@@ -133,6 +133,7 @@ public class DailyRemoteConfig
         String androidText = mFirebaseRemoteConfig.getString("androidText");
         String androidHomeEventDefaultLink = mFirebaseRemoteConfig.getString("androidHomeEventDefaultLink");
         String androidStamp = mFirebaseRemoteConfig.getString("androidStamp");
+        String androidBoutiqueBM = mFirebaseRemoteConfig.getString("androidBoutiqueBM");
 
         if (Constants.DEBUG == true)
         {
@@ -146,6 +147,7 @@ public class DailyRemoteConfig
                 ExLog.d("androidText : " + new JSONObject(androidText).toString());
                 ExLog.d("androidHomeEventDefaultLink : " + new JSONObject(androidHomeEventDefaultLink).toString());
                 ExLog.d("androidStamp : " + new JSONObject(androidStamp).toString());
+                ExLog.d("androidBoutiqueBM : " + new JSONObject(androidBoutiqueBM).toString());
             } catch (Exception e)
             {
                 ExLog.d(e.toString());
@@ -198,6 +200,9 @@ public class DailyRemoteConfig
 
         // Stamp
         writeStamp(mContext, androidStamp);
+
+        // boutique BM - test BM
+        writeBoutiqueBM(mContext, androidBoutiqueBM);
 
         if (listener != null)
         {
@@ -508,6 +513,27 @@ public class DailyRemoteConfig
             String date3 = stampHistoryJSONArray.getString(1);
 
             DailyPreference.getInstance(context).setRemoteConfigStampDate(date1, date2, date3);
+
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+        }
+    }
+
+    void writeBoutiqueBM(final Context context, String androidBoutiqueBM)
+    {
+        if (context == null || DailyTextUtils.isTextEmpty(androidBoutiqueBM) == true)
+        {
+            return;
+        }
+
+        try
+        {
+            JSONObject jsonObject = new JSONObject(androidBoutiqueBM);
+
+            boolean enabled = jsonObject.getBoolean("enabled");
+
+            DailyPreference.getInstance(context).setRemoteConfigBoutiqueBMEnabled(enabled);
 
         } catch (Exception e)
         {

@@ -11,6 +11,7 @@ import com.twoheart.dailyhotel.model.time.StayBookingDay;
 import com.twoheart.dailyhotel.place.adapter.PlaceListFragmentPagerAdapter;
 import com.twoheart.dailyhotel.place.fragment.PlaceListFragment;
 import com.twoheart.dailyhotel.place.layout.PlaceMainLayout;
+import com.twoheart.dailyhotel.util.DailyPreference;
 
 import java.util.ArrayList;
 import java.util.Locale;
@@ -41,12 +42,15 @@ public class StayCategoryTabLayout extends PlaceMainLayout
 
         ArrayList<StayCategoryListFragment> list = new ArrayList<>(count);
 
+        boolean isBoutiqueBMEnabled = DailyPreference.getInstance(mContext).isRemoteConfigBoutiqueBMEnabled();
+
         for (int i = 0; i < count; i++)
         {
             StayCategoryListFragment stayCategoryListFragment = new StayCategoryListFragment();
             stayCategoryListFragment.setPlaceOnListFragmentListener(listener);
             stayCategoryListFragment.setBottomOptionLayout(bottomOptionLayout);
-            stayCategoryListFragment.setIsShowLocalPlus(DailyCategoryType.STAY_BOUTIQUE.equals(mDailyCategoryType) == true);
+            stayCategoryListFragment.setIsShowLocalPlus( //
+                isBoutiqueBMEnabled == true && DailyCategoryType.STAY_BOUTIQUE.equals(mDailyCategoryType) == true);
             list.add(stayCategoryListFragment);
         }
 
