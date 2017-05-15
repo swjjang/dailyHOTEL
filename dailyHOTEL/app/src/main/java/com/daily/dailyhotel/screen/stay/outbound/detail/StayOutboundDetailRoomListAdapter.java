@@ -111,7 +111,7 @@ public class StayOutboundDetailRoomListAdapter extends RecyclerView.Adapter<Recy
 
         if (mViewPriceType == StayDetailLayout.VIEW_TOTAL_PRICE)
         {
-            if (DailyTextUtils.isTextEmpty(stayOutboundRoom.baseKrw) == false)
+            if (stayOutboundRoom.promotion == true)
             {
                 try
                 {
@@ -134,7 +134,7 @@ public class StayOutboundDetailRoomListAdapter extends RecyclerView.Adapter<Recy
             }
         } else
         {
-            if (DailyTextUtils.isTextEmpty(stayOutboundRoom.baseNightlyKrw) == false)
+            if (stayOutboundRoom.promotion == true)
             {
                 try
                 {

@@ -64,12 +64,8 @@ public class StayOutboundData
         stayOutbound.rating = hotelRating;
         stayOutbound.latitude = latitude;
         stayOutbound.longitude = longitude;
-
-        if (promo == true)
-        {
-            stayOutbound.promoDescription = promoDescription;
-        }
-
+        stayOutbound.promo = promo;
+        stayOutbound.promoDescription = promoDescription;
         stayOutbound.locationDescription = locationDescription;
         stayOutbound.nightlyRateKrw = Integer.parseInt(nightlyRateKrw);
         stayOutbound.nightlyBaseRateKrw = Integer.parseInt(nightlyBaseRateKrw);

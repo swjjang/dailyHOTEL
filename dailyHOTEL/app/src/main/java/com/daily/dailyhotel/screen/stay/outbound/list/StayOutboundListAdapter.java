@@ -214,16 +214,15 @@ public class StayOutboundListAdapter extends RecyclerView.Adapter<RecyclerView.V
         holder.dataBinding.nameTextView.setText(stayOutbound.name);
 
         // 가격
-        if (stayOutbound.nightlyRateKrw <= 0)
+        if (stayOutbound.promo == true)
+        {
+            holder.dataBinding.priceTextView.setVisibility(View.VISIBLE);
+            holder.dataBinding.priceTextView.setText(DailyTextUtils.getPriceFormat(mContext, stayOutbound.nightlyBaseRateKrw, false));
+            holder.dataBinding.priceTextView.setPaintFlags(holder.dataBinding.priceTextView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+        } else
         {
             holder.dataBinding.priceTextView.setVisibility(View.INVISIBLE);
             holder.dataBinding.priceTextView.setText(null);
-        } else
-        {
-            holder.dataBinding.priceTextView.setVisibility(View.VISIBLE);
-
-            holder.dataBinding.priceTextView.setText(DailyTextUtils.getPriceFormat(mContext, stayOutbound.nightlyRateKrw, false));
-            holder.dataBinding.priceTextView.setPaintFlags(holder.dataBinding.priceTextView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
         }
 
         holder.dataBinding.discountPriceTextView.setText(DailyTextUtils.getPriceFormat(mContext, stayOutbound.nightlyRateKrw, false));
