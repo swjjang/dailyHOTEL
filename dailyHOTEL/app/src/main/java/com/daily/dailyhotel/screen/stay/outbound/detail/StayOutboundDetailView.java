@@ -107,14 +107,29 @@ public class StayOutboundDetailView extends BaseView<StayOutboundDetailView.OnEv
             return;
         }
 
-        mDailyToolbarLayout = new DailyToolbarLayout(getContext(), viewDataBinding.toolbar);
+        initToolbar(viewDataBinding);
 
         viewDataBinding.nestedScrollView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener()
         {
             @Override
-            public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY)
+            public void onScrollChange(NestedScrollView nestedScrollView, int scrollX, int scrollY, int oldScrollX, int oldScrollY)
             {
+                if (getViewDataBinding().scrollLayout.getChildCount() < 2)
+                {
+                    mDailyToolbarLayout.setToolbarVisibility(false, false);
+                    return;
+                }
 
+                View titleLayout = getViewDataBinding().scrollLayout.getChildAt(1);
+                final int TOOLBAR_HEIGHT = getContext().getResources().getDimensionPixelSize(R.dimen.toolbar_height);
+
+                if (titleLayout.getY() - TOOLBAR_HEIGHT > scrollY)
+                {
+                    mDailyToolbarLayout.setToolbarVisibility(false, true);
+                } else
+                {
+                    mDailyToolbarLayout.setToolbarVisibility(true, true);
+                }
             }
         });
 
@@ -381,10 +396,10 @@ public class StayOutboundDetailView extends BaseView<StayOutboundDetailView.OnEv
         getViewDataBinding().viewpagerIndicator.setViewPager(getViewDataBinding().imageLoopViewPager);
     }
 
-    private void initToolbar(ActivityStayOutboundDetailDataBinding viewDataBinding, String title)
+    private void initToolbar(ActivityStayOutboundDetailDataBinding viewDataBinding)
     {
-        mDailyToolbarLayout = new DailyToolbarLayout(getContext(), viewDataBinding.toolbar);
-        mDailyToolbarLayout.initToolbar(title, new View.OnClickListener()
+        mDailyToolbarLayout = new DailyToolbarLayout(getContext(), viewDataBinding.toolbar.findViewById(R.id.toolbar));
+        mDailyToolbarLayout.initToolbar(null, new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
@@ -395,6 +410,7 @@ public class StayOutboundDetailView extends BaseView<StayOutboundDetailView.OnEv
 
         mDailyToolbarLayout.setToolbarMenu(R.drawable.navibar_ic_share_01_black, -1);
         mDailyToolbarLayout.setToolbarMenuClickListener(this);
+        mDailyToolbarLayout.setToolbarVisibility(false, false);
 
         viewDataBinding.backView.setOnClickListener(this);
         viewDataBinding.shareView.setOnClickListener(this);
