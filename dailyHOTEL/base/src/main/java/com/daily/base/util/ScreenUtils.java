@@ -171,6 +171,11 @@ public class ScreenUtils
         return ScreenUtils.getScreenWidth(context) < 1440 ? lowResolutionImageUrl : defaultImageUrl;
     }
 
+    public static int getDetailScreenImageLayoutHeight(Context context)
+    {
+        return ScreenUtils.getRatioHeightType4x3(ScreenUtils.getScreenWidth(context));
+    }
+
     public static Bitmap takeScreenShot(@NonNull Activity activity)
     {
         if(activity == null)

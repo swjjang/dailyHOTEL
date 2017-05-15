@@ -84,11 +84,11 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
         if (intent.hasExtra(BaseActivity.INTENT_EXTRA_DATA_DEEPLINK) == true)
         {
             mIsUsedMultiTransition = false;
-            mIsDeepLink = false;
+            mIsDeepLink = true;
         } else
         {
             mIsUsedMultiTransition = intent.getBooleanExtra(StayOutboundDetailActivity.INTENT_EXTRA_DATA_MULTITRANSITION, false);
-            mIsDeepLink = true;
+            mIsDeepLink = false;
 
             mStayIndex = intent.getIntExtra(StayOutboundDetailActivity.INTENT_EXTRA_DATA_STAY_INDEX, -1);
 
@@ -142,7 +142,14 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
 
         if (mIsUsedMultiTransition == true)
         {
-            addCompositeDisposable(mStayOutboundRemoteImpl.getStayOutBoundDetail(mStayIndex, mStayBookDateTime, mPersons).subscribe(new Consumer<StayOutboundDetail>()
+            addCompositeDisposable(Observable.zip(getViewInterface().getSharedElementTransition(), mStayOutboundRemoteImpl.getStayOutBoundDetail(mStayIndex, mStayBookDateTime, mPersons), new BiFunction<Boolean, StayOutboundDetail, StayOutboundDetail>()
+            {
+                @Override
+                public StayOutboundDetail apply(Boolean aBoolean, StayOutboundDetail stayOutboundDetail) throws Exception
+                {
+                    return stayOutboundDetail;
+                }
+            }).subscribe(new Consumer<StayOutboundDetail>()
             {
                 @Override
                 public void accept(StayOutboundDetail stayOutboundDetail) throws Exception
@@ -165,14 +172,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
             }));
         } else
         {
-            addCompositeDisposable(Observable.zip(getViewInterface().getSharedElementTransition(), mStayOutboundRemoteImpl.getStayOutBoundDetail(mStayIndex, mStayBookDateTime, mPersons), new BiFunction<Boolean, StayOutboundDetail, StayOutboundDetail>()
-            {
-                @Override
-                public StayOutboundDetail apply(Boolean aBoolean, StayOutboundDetail stayOutboundDetail) throws Exception
-                {
-                    return stayOutboundDetail;
-                }
-            }).subscribe(new Consumer<StayOutboundDetail>()
+            addCompositeDisposable(mStayOutboundRemoteImpl.getStayOutBoundDetail(mStayIndex, mStayBookDateTime, mPersons).subscribe(new Consumer<StayOutboundDetail>()
             {
                 @Override
                 public void accept(StayOutboundDetail stayOutboundDetail) throws Exception
@@ -287,7 +287,13 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
     }
 
     @Override
-    public void onImageClick()
+    public void onShareClick()
+    {
+
+    }
+
+    @Override
+    public void onImageClick(int position)
     {
 
     }

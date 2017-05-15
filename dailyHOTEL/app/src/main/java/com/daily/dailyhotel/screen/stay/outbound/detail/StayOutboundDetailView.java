@@ -4,9 +4,11 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.graphics.Typeface;
+import android.support.v4.view.MotionEventCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
+import android.text.Html;
 import android.transition.Transition;
 import android.transition.TransitionSet;
 import android.util.SparseArray;
@@ -15,6 +17,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.view.animation.LinearInterpolator;
 
@@ -47,6 +50,7 @@ import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 import com.twoheart.dailyhotel.widget.TextTransition;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -63,7 +67,9 @@ public class StayOutboundDetailView extends BaseView<StayOutboundDetailView.OnEv
 
     public interface OnEventListener extends OnBaseEventListener
     {
-        void onImageClick();
+        void onShareClick();
+
+        void onImageClick(int position);
 
         void onReviewClick();
 
@@ -101,6 +107,8 @@ public class StayOutboundDetailView extends BaseView<StayOutboundDetailView.OnEv
             return;
         }
 
+        mDailyToolbarLayout = new DailyToolbarLayout(getContext(), viewDataBinding.toolbar);
+
         viewDataBinding.nestedScrollView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener()
         {
             @Override
@@ -116,13 +124,11 @@ public class StayOutboundDetailView extends BaseView<StayOutboundDetailView.OnEv
         viewDataBinding.imageLoopViewPager.setAdapter(mImageViewPagerAdapter);
         viewDataBinding.viewpagerIndicator.setViewPager(viewDataBinding.imageLoopViewPager);
 
-        viewDataBinding.trueVRTooltipView.setVisibility(View.GONE);
-
         viewDataBinding.imageLoopViewPager.setOnPageChangeListener(this);
         viewDataBinding.viewpagerIndicator.setOnPageChangeListener(this);
 
         ViewGroup.LayoutParams layoutParams = viewDataBinding.imageLoopViewPager.getLayoutParams();
-        layoutParams.height = getImageLayoutHeight(getContext());
+        layoutParams.height = ScreenUtils.getDetailScreenImageLayoutHeight(getContext());
         viewDataBinding.imageLoopViewPager.setLayoutParams(layoutParams);
 
         viewDataBinding.wishListButtonView.setTag(false);
@@ -176,7 +182,17 @@ public class StayOutboundDetailView extends BaseView<StayOutboundDetailView.OnEv
     @Override
     public void onClick(View v)
     {
+        switch (v.getId())
+        {
+            case R.id.backView:
+                getEventListener().onBackClick();
+                break;
 
+            case R.id.menu1View:
+            case R.id.shareView:
+                getEventListener().onShareClick();
+                break;
+        }
     }
 
     @Override
@@ -216,6 +232,8 @@ public class StayOutboundDetailView extends BaseView<StayOutboundDetailView.OnEv
         {
             return;
         }
+
+        setImageList(stayOutboundDetail.getImageList());
 
         getViewDataBinding().scrollLayout.removeAllViews();
 
@@ -363,13 +381,52 @@ public class StayOutboundDetailView extends BaseView<StayOutboundDetailView.OnEv
         getViewDataBinding().viewpagerIndicator.setViewPager(getViewDataBinding().imageLoopViewPager);
     }
 
-    public static int getImageLayoutHeight(Context context)
+    private void initToolbar(ActivityStayOutboundDetailDataBinding viewDataBinding, String title)
     {
-        return ScreenUtils.getRatioHeightType4x3(ScreenUtils.getScreenWidth(context));
+        mDailyToolbarLayout = new DailyToolbarLayout(getContext(), viewDataBinding.toolbar);
+        mDailyToolbarLayout.initToolbar(title, new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                getEventListener().onBackClick();
+            }
+        }, false);
+
+        mDailyToolbarLayout.setToolbarMenu(R.drawable.navibar_ic_share_01_black, -1);
+        mDailyToolbarLayout.setToolbarMenuClickListener(this);
+
+        viewDataBinding.backView.setOnClickListener(this);
+        viewDataBinding.shareView.setOnClickListener(this);
+    }
+
+    private void setImageList(List<StayOutboundDetailImage> imageList)
+    {
+        if (getViewDataBinding() == null || imageList == null)
+        {
+            return;
+        }
+
+        if (imageList.size() == 1)
+        {
+            setViewPagerLineIndicatorVisible(false);
+        } else
+        {
+            setViewPagerLineIndicatorVisible(true);
+        }
+
+        if (mImageViewPagerAdapter == null)
+        {
+            mImageViewPagerAdapter = new StayOutboundDetailImageViewPagerAdapter(getContext());
+        }
+
+        mImageViewPagerAdapter.setData(imageList);
+        getViewDataBinding().imageLoopViewPager.setAdapter(mImageViewPagerAdapter);
+        getViewDataBinding().viewpagerIndicator.setViewPager(getViewDataBinding().imageLoopViewPager);
+        mImageViewPagerAdapter.notifyDataSetChanged();
     }
 
     /**
-     *
      * @param layoutInflater
      * @param viewGroup
      */
@@ -381,19 +438,12 @@ public class StayOutboundDetailView extends BaseView<StayOutboundDetailView.OnEv
         }
 
         // 이미지 상단에 빈화면 넣기
-        LayoutStayOutboundDetail01DataBinding detail01DataBinding = DataBindingUtil.inflate(layoutInflater//
+        LayoutStayOutboundDetail01DataBinding viewDataBinding = DataBindingUtil.inflate(layoutInflater//
             , R.layout.layout_stay_outbound_detail_01_data, getViewDataBinding().scrollLayout, true);
 
-        detail01DataBinding.imageEmptyView.getLayoutParams().height = getImageLayoutHeight(getContext());
-        detail01DataBinding.imageEmptyView.setClickable(true);
-        detail01DataBinding.imageEmptyView.setOnTouchListener(new View.OnTouchListener()
-        {
-            @Override
-            public boolean onTouch(View v, MotionEvent event)
-            {
-                return false;
-            }
-        });
+        viewDataBinding.imageEmptyView.getLayoutParams().height = ScreenUtils.getDetailScreenImageLayoutHeight(getContext());
+        viewDataBinding.imageEmptyView.setClickable(true);
+        viewDataBinding.imageEmptyView.setOnTouchListener(mEmptyViewOnTouchListener);
     }
 
     /**
@@ -574,7 +624,18 @@ public class StayOutboundDetailView extends BaseView<StayOutboundDetailView.OnEv
         // 더보기가 존재하는 경우
         if (viewDataBinding.amenitiesGridLayout.getChildCount() < stringSparseArray.size())
         {
-            viewDataBinding.amenitiesGridLayout.addView(getAmenityView(getContext(), StayOutboundDetail.Amenity.MORE, hasNextLine));
+            viewDataBinding.amenitiesGridLayout.addView(getAmenityView(getContext(), StayOutboundDetail.Amenity.MORE, false));
+        }
+
+        int columnCount = viewDataBinding.amenitiesGridLayout.getChildCount() % GRID_COLUMN_COUNT;
+
+        if (columnCount != 0)
+        {
+            int addEmptyViewCount = GRID_COLUMN_COUNT - columnCount;
+            for (int i = 0; i < addEmptyViewCount; i++)
+            {
+                viewDataBinding.amenitiesGridLayout.addView(getAmenityView(getContext(), StayOutboundDetail.Amenity.NONE, false));
+            }
         }
     }
 
@@ -624,9 +685,11 @@ public class StayOutboundDetailView extends BaseView<StayOutboundDetailView.OnEv
         LayoutStayOutboundDetail04DataBinding viewDataBinding = DataBindingUtil.inflate(layoutInflater//
             , R.layout.layout_stay_outbound_detail_04_data, viewGroup, true);
 
-        while (informationMap.entrySet().iterator().hasNext() == true)
+        Iterator<Map.Entry<String, List<String>>> iterator = informationMap.entrySet().iterator();
+
+        while (iterator.hasNext() == true)
         {
-            Map.Entry<String, List<String>> entry = informationMap.entrySet().iterator().next();
+            Map.Entry<String, List<String>> entry = iterator.next();
 
             if (entry == null)
             {
@@ -663,7 +726,7 @@ public class StayOutboundDetailView extends BaseView<StayOutboundDetailView.OnEv
                 LayoutStayOutboundDetailInformationDataBinding detailInformationDataBinding = DataBindingUtil.inflate(layoutInflater//
                     , R.layout.layout_stay_outbound_detail_information_data, viewDataBinding.informationLayout, true);
 
-                detailInformationDataBinding.textView.setText(text);
+                detailInformationDataBinding.textView.setText(Html.fromHtml(text));
             }
         }
     }
@@ -714,4 +777,129 @@ public class StayOutboundDetailView extends BaseView<StayOutboundDetailView.OnEv
         getViewDataBinding().moreIconView.setVisibility(visible ? View.VISIBLE : View.INVISIBLE);
         getViewDataBinding().viewpagerIndicator.setVisibility(visible ? View.VISIBLE : View.INVISIBLE);
     }
+
+    private View.OnTouchListener mEmptyViewOnTouchListener = new View.OnTouchListener()
+    {
+        private int mMoveState;
+        private float mPrevX, mPrevY;
+
+        @Override
+        public boolean onTouch(View v, MotionEvent event)
+        {
+            switch (event.getAction() & MotionEventCompat.ACTION_MASK)
+            {
+                case MotionEvent.ACTION_DOWN:
+                {
+                    mPrevX = event.getX();
+                    mPrevY = event.getY();
+
+                    mMoveState = 0;
+                    getViewDataBinding().nestedScrollView.setNestedScrollingEnabled(false);
+
+                    try
+                    {
+                        getViewDataBinding().imageLoopViewPager.onTouchEvent(event);
+                    } catch (Exception e)
+                    {
+                    }
+                    break;
+                }
+
+                case MotionEvent.ACTION_UP:
+                {
+                    int touchSlop = ViewConfiguration.get(getContext()).getScaledTouchSlop();
+
+                    int x = (int) (mPrevX - event.getX());
+                    int y = (int) (mPrevY - event.getY());
+
+                    int distance = (int) Math.sqrt(x * x + y * y);
+
+                    if (distance < touchSlop)
+                    {
+                        getEventListener().onImageClick(getViewDataBinding().imageLoopViewPager.getCurrentItem());
+
+                        mMoveState = 0;
+
+                        try
+                        {
+                            getViewDataBinding().imageLoopViewPager.onTouchEvent(event);
+                        } catch (Exception e)
+                        {
+                            event.setAction(MotionEvent.ACTION_CANCEL);
+                            event.setLocation(getViewDataBinding().imageLoopViewPager.getScrollX(), getViewDataBinding().imageLoopViewPager.getScrollY());
+                            getViewDataBinding().imageLoopViewPager.onTouchEvent(event);
+                        }
+
+                        getViewDataBinding().nestedScrollView.setNestedScrollingEnabled(true);
+                        break;
+                    }
+                }
+                case MotionEvent.ACTION_CANCEL:
+                {
+                    mMoveState = 0;
+
+                    try
+                    {
+                        getViewDataBinding().imageLoopViewPager.onTouchEvent(event);
+                    } catch (Exception e)
+                    {
+                        event.setAction(MotionEvent.ACTION_CANCEL);
+                        event.setLocation(getViewDataBinding().imageLoopViewPager.getScrollX(), getViewDataBinding().imageLoopViewPager.getScrollY());
+                        getViewDataBinding().imageLoopViewPager.onTouchEvent(event);
+                    }
+
+                    getViewDataBinding().nestedScrollView.setNestedScrollingEnabled(true);
+                    break;
+                }
+
+                case MotionEvent.ACTION_MOVE:
+                {
+                    float x = event.getX();
+                    float y = event.getY();
+
+                    if (mMoveState == 0)
+                    {
+                        if (Math.abs(x - mPrevX) == Math.abs(y - mPrevY))
+                        {
+
+                        } else if (Math.abs(x - mPrevX) > Math.abs(y - mPrevY))
+                        {
+                            // x 축으로 이동한 경우.
+                            mMoveState = 100;
+
+                            try
+                            {
+                                getViewDataBinding().imageLoopViewPager.onTouchEvent(event);
+                            } catch (Exception e)
+                            {
+                                event.setAction(MotionEvent.ACTION_CANCEL);
+                                event.setLocation(getViewDataBinding().imageLoopViewPager.getScrollX(), getViewDataBinding().imageLoopViewPager.getScrollY());
+                                getViewDataBinding().imageLoopViewPager.onTouchEvent(event);
+                            }
+                        } else
+                        {
+                            // y축으로 이동한 경우.
+                            mMoveState = 10;
+                            getViewDataBinding().nestedScrollView.setNestedScrollingEnabled(true);
+                            return true;
+                        }
+                    } else if (mMoveState == 100)
+                    {
+                        try
+                        {
+                            getViewDataBinding().imageLoopViewPager.onTouchEvent(event);
+                        } catch (Exception e)
+                        {
+                            event.setAction(MotionEvent.ACTION_CANCEL);
+                            event.setLocation(getViewDataBinding().imageLoopViewPager.getScrollX(), getViewDataBinding().imageLoopViewPager.getScrollY());
+                            getViewDataBinding().imageLoopViewPager.onTouchEvent(event);
+                        }
+                    }
+                    break;
+                }
+            }
+
+            return false;
+        }
+    };
 }

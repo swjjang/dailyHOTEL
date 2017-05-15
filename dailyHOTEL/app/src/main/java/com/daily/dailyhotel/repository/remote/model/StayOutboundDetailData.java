@@ -5,12 +5,12 @@ import android.util.SparseArray;
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 import com.daily.dailyhotel.entity.StayOutboundDetail;
+import com.daily.dailyhotel.entity.StayOutboundDetailImage;
 import com.daily.dailyhotel.entity.StayOutboundRoom;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 @JsonObject
 public class StayOutboundDetailData
@@ -47,6 +47,9 @@ public class StayOutboundDetailData
 
     @JsonField(name = "amenities")
     public List<AmenityData> amenities;
+
+    @JsonField(name = "dailyHotelDetailImages")
+    public List<ImageData> dailyHotelDetailImages;
 
     public StayOutboundDetailData()
     {
@@ -91,6 +94,18 @@ public class StayOutboundDetailData
             stayOutboundDetail.setAmenityList(amenitySparseArray);
         }
 
+        if (dailyHotelDetailImages != null && dailyHotelDetailImages.size() > 0)
+        {
+            List<StayOutboundDetailImage> detailImageList = new ArrayList<>(dailyHotelDetailImages.size());
+
+            for (ImageData imageData : dailyHotelDetailImages)
+            {
+                detailImageList.add(imageData.getStayOutboundDetailImage());
+            }
+
+            stayOutboundDetail.setImageList(detailImageList);
+        }
+
         return stayOutboundDetail;
     }
 
@@ -106,6 +121,16 @@ public class StayOutboundDetailData
         public ImageData()
         {
 
+        }
+
+        public StayOutboundDetailImage getStayOutboundDetailImage()
+        {
+            StayOutboundDetailImage stayOutboundDetailImage = new StayOutboundDetailImage();
+            stayOutboundDetailImage.caption = caption;
+            stayOutboundDetailImage.hdpiImageUrl = imageMap.medium;
+            stayOutboundDetailImage.xxhdpiImageUrl = imageMap.big;
+
+            return stayOutboundDetailImage;
         }
     }
 

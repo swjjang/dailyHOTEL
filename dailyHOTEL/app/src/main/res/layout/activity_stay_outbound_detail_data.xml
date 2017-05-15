@@ -168,18 +168,6 @@
                 app:srcCompat="@drawable/navibar_ic_back_01_black"/>
 
             <ImageView
-                android:id="@+id/trueVRView"
-                android:layout_width="30dp"
-                android:layout_height="@dimen/toolbar_height"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="5dp"
-                android:layout_toLeftOf="@+id/shareView"
-                android:scaleType="center"
-                android:tint="@color/white"
-                android:visibility="gone"
-                app:srcCompat="@drawable/navibar_ic_treuvr"/>
-
-            <ImageView
                 android:id="@+id/shareView"
                 android:layout_width="30dp"
                 android:layout_height="@dimen/toolbar_height"
@@ -192,7 +180,9 @@
                 app:srcCompat="@drawable/navibar_ic_share_01_black"/>
         </RelativeLayout>
 
-        <include layout="@layout/toolbar_default_menu"/>
+        <include
+            android:id="@+id/toolbar"
+            layout="@layout/toolbar_default_menu"/>
 
         <View
             android:id="@+id/productTypeBackgroundView"
@@ -418,23 +408,5 @@
                     android:layout_weight="1.22"/>
             </LinearLayout>
         </ScrollView>
-
-        <FrameLayout
-            android:id="@+id/trueVRTooltipView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:visibility="gone">
-
-            <com.daily.base.widget.DailyTextView
-                android:layout_width="316dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="right"
-                android:layout_marginTop="32dp"
-                android:background="@drawable/tooltip_top_vr"
-                android:text="@string/label_preview_vr_guide"
-                android:textColor="@color/default_text_c323232"
-                android:textSize="13dp"
-                dailyFont:style="Medium"/>
-        </FrameLayout>
     </RelativeLayout>
 </layout>
