@@ -125,8 +125,8 @@ public class StayOutboundDetailView extends BaseView<StayOutboundDetailView.OnEv
         layoutParams.height = getImageLayoutHeight(getContext());
         viewDataBinding.imageLoopViewPager.setLayoutParams(layoutParams);
 
-        viewDataBinding.wishListBottonView.setTag(false);
-        viewDataBinding.wishListBottonView.setOnClickListener(new View.OnClickListener()
+        viewDataBinding.wishListButtonView.setTag(false);
+        viewDataBinding.wishListButtonView.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
@@ -222,19 +222,7 @@ public class StayOutboundDetailView extends BaseView<StayOutboundDetailView.OnEv
         LayoutInflater layoutInflater = LayoutInflater.from(getContext());
 
         // 이미지 상단에 빈화면 넣기
-        LayoutStayOutboundDetail01DataBinding detail01DataBinding = DataBindingUtil.inflate(layoutInflater//
-            , R.layout.layout_stay_outbound_detail_01_data, getViewDataBinding().scrollLayout, true);
-
-        detail01DataBinding.imageEmptyView.getLayoutParams().height = getImageLayoutHeight(getContext());
-        detail01DataBinding.imageEmptyView.setClickable(true);
-        detail01DataBinding.imageEmptyView.setOnTouchListener(new View.OnTouchListener()
-        {
-            @Override
-            public boolean onTouch(View v, MotionEvent event)
-            {
-                return false;
-            }
-        });
+        setEmptyView(layoutInflater, getViewDataBinding().scrollLayout);
 
         // 호텔 등급과 이름 / 체크인 체크아웃
         setTitleView(layoutInflater, getViewDataBinding().scrollLayout, stayBookDateTime, stayOutboundDetail);
@@ -378,6 +366,34 @@ public class StayOutboundDetailView extends BaseView<StayOutboundDetailView.OnEv
     public static int getImageLayoutHeight(Context context)
     {
         return ScreenUtils.getRatioHeightType4x3(ScreenUtils.getScreenWidth(context));
+    }
+
+    /**
+     *
+     * @param layoutInflater
+     * @param viewGroup
+     */
+    private void setEmptyView(LayoutInflater layoutInflater, ViewGroup viewGroup)
+    {
+        if (layoutInflater == null || viewGroup == null)
+        {
+            return;
+        }
+
+        // 이미지 상단에 빈화면 넣기
+        LayoutStayOutboundDetail01DataBinding detail01DataBinding = DataBindingUtil.inflate(layoutInflater//
+            , R.layout.layout_stay_outbound_detail_01_data, getViewDataBinding().scrollLayout, true);
+
+        detail01DataBinding.imageEmptyView.getLayoutParams().height = getImageLayoutHeight(getContext());
+        detail01DataBinding.imageEmptyView.setClickable(true);
+        detail01DataBinding.imageEmptyView.setOnTouchListener(new View.OnTouchListener()
+        {
+            @Override
+            public boolean onTouch(View v, MotionEvent event)
+            {
+                return false;
+            }
+        });
     }
 
     /**

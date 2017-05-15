@@ -198,7 +198,7 @@
             android:id="@+id/productTypeBackgroundView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/textView_textColor_shadow_soldout"
+            android:background="@color/black_a60"
             android:visibility="gone"/>
 
         <LinearLayout
@@ -331,7 +331,7 @@
                 android:background="@color/default_line_ce7e7e7"/>
 
             <com.daily.base.widget.DailyTextView
-                android:id="@+id/wishListBottonView"
+                android:id="@+id/wishListButtonView"
                 android:layout_width="48dp"
                 android:layout_height="44dp"
                 android:layout_marginLeft="10dp"
@@ -365,7 +365,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_margin="10dp"
-                android:layout_toRightOf="@id/wishListBottonView"
+                android:layout_toRightOf="@id/wishListButtonView"
                 android:background="@drawable/shape_button_disable"
                 android:gravity="center"
                 android:text="@string/act_hotel_soldout"
