@@ -24,6 +24,7 @@ import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.LinearInterpolator;
+import android.widget.RelativeLayout;
 
 import com.daily.base.BaseActivity;
 import com.daily.base.BaseView;
@@ -184,6 +185,7 @@ public class StayOutboundDetailView extends BaseView<StayOutboundDetailView.OnEv
         viewDataBinding.productTypeLayout.setVisibility(View.INVISIBLE);
 
         viewDataBinding.productTypeBackgroundView.setOnClickListener(this);
+        viewDataBinding.closeView.setOnClickListener(this);
     }
 
     @Override
@@ -212,6 +214,7 @@ public class StayOutboundDetailView extends BaseView<StayOutboundDetailView.OnEv
                 getEventListener().onShareClick();
                 break;
 
+            case R.id.closeView:
             case R.id.productTypeBackgroundView:
                 getEventListener().onHideRoomListClick(true);
                 break;
@@ -282,6 +285,7 @@ public class StayOutboundDetailView extends BaseView<StayOutboundDetailView.OnEv
                         @Override
                         public void onAnimationStart(Animator animation)
                         {
+                            getViewDataBinding().productTypeBackgroundView.setVisibility(View.VISIBLE);
                             getViewDataBinding().productTypeLayout.setVisibility(View.VISIBLE);
                         }
 
@@ -396,14 +400,7 @@ public class StayOutboundDetailView extends BaseView<StayOutboundDetailView.OnEv
                 protected void subscribeActual(Observer<? super Boolean> observer)
                 {
                     getViewDataBinding().productTypeBackgroundView.setVisibility(View.GONE);
-
-                    if (VersionUtils.isOverAPI12() == true)
-                    {
-                        getViewDataBinding().productTypeLayout.setVisibility(View.INVISIBLE);
-                    } else
-                    {
-                        getViewDataBinding().productTypeLayout.setVisibility(View.GONE);
-                    }
+                    getViewDataBinding().productTypeLayout.setVisibility(View.INVISIBLE);
 
                     observer.onNext(true);
                     observer.onComplete();
@@ -1083,25 +1080,27 @@ public class StayOutboundDetailView extends BaseView<StayOutboundDetailView.OnEv
         getViewDataBinding().productTypeRecyclerView.setAdapter(mRoomTypeListAdapter);
 
         // 객실 개수로 높이를 재지정해준다.
-        final int productTitleBarHeight = ScreenUtils.dpToPx(getContext(), 52) + (nights > 1 ? ScreenUtils.dpToPx(getContext(), 40) : 0);
-
         getViewDataBinding().productTypeRecyclerView.postDelayed(new Runnable()
         {
             @Override
             public void run()
             {
+                final int DEFAULT_TOP_MARGIN = ScreenUtils.dpToPx(getContext(), 52) + ScreenUtils.dpToPx(getContext(), 64);
+
                 // 화면 높이 - 상단 타이틀 - 하단 버튼
-                final int maxHeight = getViewDataBinding().getRoot().getHeight() //
-                    - ScreenUtils.dpToPx(getContext(), 52) - ScreenUtils.dpToPx(getContext(), 64);
+                final int maxHeight = getViewDataBinding().getRoot().getHeight() - DEFAULT_TOP_MARGIN;
 
-                ViewGroup.LayoutParams layoutParams = getViewDataBinding().productTypeRecyclerView.getLayoutParams();
+                int topMargin = 0;
 
-                /* mProductTypeRecyclerView.getHeight() 를 사용하는 이유 - layoutParams.height 를 사용할 경우
-                   속성 값을 리턴 하여 WRAP_CONTENT 등의 값인 -2 등이 리턴 됨 */
-                int productLayoutHeight = getViewDataBinding().productTypeRecyclerView.getHeight() + productTitleBarHeight;
+                if(getViewDataBinding().productTypeLayout.getHeight() > maxHeight)
+                {
+                    topMargin = DEFAULT_TOP_MARGIN;
+                }
 
-                layoutParams.height = Math.min(maxHeight, productLayoutHeight) - productTitleBarHeight;
-                getViewDataBinding().productTypeRecyclerView.setLayoutParams(layoutParams);
+                RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams)getViewDataBinding().productTypeLayout.getLayoutParams();
+                layoutParams.topMargin = DEFAULT_TOP_MARGIN;
+
+                getViewDataBinding().productTypeLayout.setLayoutParams(layoutParams);
             }
         }, 100);
 
