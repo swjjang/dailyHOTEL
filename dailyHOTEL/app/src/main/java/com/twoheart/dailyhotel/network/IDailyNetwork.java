@@ -567,5 +567,5 @@ public interface IDailyNetwork
 
     void requestPlaceReviewScores(String tag, String type, int itemIdx, Object listener);
 
-    void requestLocalPlus(String tag, String dateCheckIn, int stays, int provinceIdx, int areaIdx, String category, Object listener);
+    void requestLocalPlus(String tag, Map<String, Object> queryMap, Object listener);
 }

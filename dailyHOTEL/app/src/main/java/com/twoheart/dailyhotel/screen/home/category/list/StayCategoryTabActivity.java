@@ -175,7 +175,7 @@ public class StayCategoryTabActivity extends PlaceMainActivity
             titleText = "";
         }
 
-        return new StayCategoryTabLayout(this, titleText, mOnEventListener);
+        return new StayCategoryTabLayout(this, titleText, mDailyCategoryType, mOnEventListener);
     }
 
     @Override

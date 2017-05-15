@@ -15,6 +15,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Response;
@@ -47,9 +48,9 @@ public class StayCategoryListNetworkController extends BaseNetworkController
         DailyMobileAPI.getInstance(mContext).requestStayList(mNetworkTag, params.toParamsMap(), params.getBedTypeList(), params.getLuxuryList(), mStayListCallback);
     }
 
-    public void requestLocalPlusList(String checkInDate, int nights, int provinceIndex, int areaIndex, String categoryCode)
+    public void requestLocalPlusList(Map<String, Object> params)
     {
-        DailyMobileAPI.getInstance(mContext).requestLocalPlus(mNetworkTag, checkInDate, nights, provinceIndex, areaIndex, categoryCode, mLocalPlusListCallback);
+        DailyMobileAPI.getInstance(mContext).requestLocalPlus(mNetworkTag, params, mLocalPlusListCallback);
     }
 
     private ArrayList<Stay> makeStayList(JSONArray jsonArray, String imageUrl) throws JSONException

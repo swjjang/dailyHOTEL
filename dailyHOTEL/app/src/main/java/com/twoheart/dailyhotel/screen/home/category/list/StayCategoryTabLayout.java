@@ -6,6 +6,7 @@ import android.view.View;
 
 import com.daily.base.util.DailyTextUtils;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.model.DailyCategoryType;
 import com.twoheart.dailyhotel.model.time.StayBookingDay;
 import com.twoheart.dailyhotel.place.adapter.PlaceListFragmentPagerAdapter;
 import com.twoheart.dailyhotel.place.fragment.PlaceListFragment;
@@ -21,12 +22,14 @@ import java.util.Locale;
 public class StayCategoryTabLayout extends PlaceMainLayout
 {
     private String mTitleText;
+    private DailyCategoryType mDailyCategoryType;
 
-    public StayCategoryTabLayout(Context context, String titleText, PlaceMainLayout.OnEventListener onEventListener)
+    public StayCategoryTabLayout(Context context, String titleText, DailyCategoryType dailyCategoryType, PlaceMainLayout.OnEventListener onEventListener)
     {
         super(context, onEventListener);
 
         mTitleText = titleText;
+        mDailyCategoryType = dailyCategoryType;
     }
 
     @Override
@@ -43,6 +46,7 @@ public class StayCategoryTabLayout extends PlaceMainLayout
             StayCategoryListFragment stayCategoryListFragment = new StayCategoryListFragment();
             stayCategoryListFragment.setPlaceOnListFragmentListener(listener);
             stayCategoryListFragment.setBottomOptionLayout(bottomOptionLayout);
+            stayCategoryListFragment.setIsShowLocalPlus(DailyCategoryType.STAY_BOUTIQUE.equals(mDailyCategoryType) == true);
             list.add(stayCategoryListFragment);
         }
 
