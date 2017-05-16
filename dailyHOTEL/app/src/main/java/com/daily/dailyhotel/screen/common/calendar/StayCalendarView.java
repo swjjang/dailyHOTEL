@@ -13,6 +13,8 @@ import com.twoheart.dailyhotel.util.DailyCalendar;
 
 import java.util.ArrayList;
 
+import io.reactivex.Observable;
+
 public class StayCalendarView extends PlaceCalendarView<StayCalendarView.OnEventListener, ActivityCalendarDataBinding> implements StayCalendarViewInterface
 {
     @Override
@@ -73,15 +75,15 @@ public class StayCalendarView extends PlaceCalendarView<StayCalendarView.OnEvent
     }
 
     @Override
-    public void showAnimation()
+    public Observable<Boolean> showAnimation()
     {
-        super.showAnimation();
+        return super.showAnimation();
     }
 
     @Override
-    public void hideAnimation()
+    public Observable<Boolean> hideAnimation()
     {
-        super.hideAnimation();
+        return super.hideAnimation();
     }
 
     @Override

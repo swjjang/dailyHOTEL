@@ -35,6 +35,9 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import io.reactivex.Observable;
+import io.reactivex.Observer;
+
 public abstract class PlaceCalendarView<T1 extends PlaceCalendarView.OnEventListener, T2 extends ActivityCalendarDataBinding> extends BaseView<T1, T2> implements View.OnClickListener
 {
     private static final int ANIMATION_DELAY = 200;
@@ -44,9 +47,6 @@ public abstract class PlaceCalendarView<T1 extends PlaceCalendarView.OnEventList
 
     public interface OnEventListener extends OnBaseEventListener
     {
-        void onShowAnimationEnd();
-
-        void onHideAnimationEnd();
     }
 
     public PlaceCalendarView(BaseActivity baseActivity, T1 listener)
@@ -115,136 +115,146 @@ public abstract class PlaceCalendarView<T1 extends PlaceCalendarView.OnEventList
         }
     }
 
-    void showAnimation()
+    Observable<Boolean> showAnimation()
     {
-        if (getViewDataBinding() == null)
+        if (getViewDataBinding() == null || mAnimatorSet != null && mAnimatorSet.isStarted() == true)
         {
-            return;
+            return null;
         }
 
-        if (mAnimatorSet != null && mAnimatorSet.isStarted() == true)
-        {
-            return;
-        }
-
-        final View animationLayout = getViewDataBinding().animationLayout;
-        final float y = animationLayout.getBottom();
-
-        int height = animationLayout.getHeight();
-        animationLayout.setTranslationY(ScreenUtils.dpToPx(getContext(), height));
-
-        ObjectAnimator transAnimator = ObjectAnimator.ofFloat(animationLayout, "y", y, y - height);
-
-        mAnimatorSet = new AnimatorSet();
-        mAnimatorSet.play(transAnimator);
-        mAnimatorSet.setDuration(ANIMATION_DELAY);
-        mAnimatorSet.setInterpolator(new AccelerateDecelerateInterpolator());
-        mAnimatorSet.addListener(new Animator.AnimatorListener()
+        Observable<Boolean> observable = new Observable<Boolean>()
         {
             @Override
-            public void onAnimationStart(Animator animation)
+            protected void subscribeActual(Observer<? super Boolean> observer)
             {
-                setVisibility(true);
-            }
+                final View animationLayout = getViewDataBinding().animationLayout;
+                final float y = animationLayout.getBottom();
 
-            @Override
-            public void onAnimationEnd(Animator animation)
-            {
-                mAnimatorSet.removeAllListeners();
-                mAnimatorSet = null;
+                int height = animationLayout.getHeight();
+                animationLayout.setTranslationY(ScreenUtils.dpToPx(getContext(), height));
 
-                getEventListener().onShowAnimationEnd();
-            }
+                ObjectAnimator transAnimator = ObjectAnimator.ofFloat(animationLayout, "y", y, y - height);
 
-            @Override
-            public void onAnimationCancel(Animator animation)
-            {
-            }
-
-            @Override
-            public void onAnimationRepeat(Animator animation)
-            {
-
-            }
-        });
-
-        mAnimatorSet.start();
-    }
-
-    void hideAnimation()
-    {
-        if (getViewDataBinding() == null)
-        {
-            return;
-        }
-
-        if (mAnimatorSet != null && mAnimatorSet.isStarted() == true)
-        {
-            return;
-        }
-
-        final View animationLayout = getViewDataBinding().animationLayout;
-        final float y = animationLayout.getTop();
-
-        ObjectAnimator transAnimator = ObjectAnimator.ofFloat(animationLayout, "y", y, animationLayout.getBottom());
-        ObjectAnimator alphaAnimator = ObjectAnimator.ofFloat(getViewDataBinding().getRoot(), "alpha", 1f, 0f);
-
-        if (VersionUtils.isOverAPI21() == true)
-        {
-            alphaAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener()
-            {
-                @Override
-                public void onAnimationUpdate(ValueAnimator animation)
+                mAnimatorSet = new AnimatorSet();
+                mAnimatorSet.play(transAnimator);
+                mAnimatorSet.setDuration(ANIMATION_DELAY);
+                mAnimatorSet.setInterpolator(new AccelerateDecelerateInterpolator());
+                mAnimatorSet.addListener(new Animator.AnimatorListener()
                 {
-                    if (animation == null)
+                    @Override
+                    public void onAnimationStart(Animator animation)
                     {
-                        return;
+                        setVisibility(true);
                     }
 
-                    float value = (float) alphaAnimator.getAnimatedValue();
+                    @Override
+                    public void onAnimationEnd(Animator animation)
+                    {
+                        mAnimatorSet.removeAllListeners();
+                        mAnimatorSet = null;
 
-                    int color = (int) (0xab * value);
+                        observer.onNext(true);
+                        observer.onComplete();
+                    }
 
-                    setStatusBarColor((color << 24) & 0xff000000);
-                }
-            });
+                    @Override
+                    public void onAnimationCancel(Animator animation)
+                    {
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animator animation)
+                    {
+
+                    }
+                });
+
+                mAnimatorSet.start();
+            }
+        };
+
+        return observable;
+    }
+
+    Observable<Boolean> hideAnimation()
+    {
+        if (getViewDataBinding() == null || mAnimatorSet != null && mAnimatorSet.isStarted() == true)
+        {
+            return null;
         }
 
-        mAnimatorSet = new AnimatorSet();
-        mAnimatorSet.playTogether(transAnimator, alphaAnimator);
-        mAnimatorSet.setDuration(ANIMATION_DELAY);
-        mAnimatorSet.setInterpolator(new AccelerateDecelerateInterpolator());
-        mAnimatorSet.addListener(new Animator.AnimatorListener()
+        Observable<Boolean> observable = new Observable<Boolean>()
         {
             @Override
-            public void onAnimationStart(Animator animation)
+            protected void subscribeActual(Observer<? super Boolean> observer)
             {
+                final View animationLayout = getViewDataBinding().animationLayout;
+                final float y = animationLayout.getTop();
 
+                ObjectAnimator transAnimator = ObjectAnimator.ofFloat(animationLayout, "y", y, animationLayout.getBottom());
+                ObjectAnimator alphaAnimator = ObjectAnimator.ofFloat(getViewDataBinding().getRoot(), "alpha", 1f, 0f);
+
+                if (VersionUtils.isOverAPI21() == true)
+                {
+                    alphaAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener()
+                    {
+                        @Override
+                        public void onAnimationUpdate(ValueAnimator animation)
+                        {
+                            if (animation == null)
+                            {
+                                return;
+                            }
+
+                            float value = (float) alphaAnimator.getAnimatedValue();
+
+                            int color = (int) (0xab * value);
+
+                            setStatusBarColor((color << 24) & 0xff000000);
+                        }
+                    });
+                }
+
+                mAnimatorSet = new AnimatorSet();
+                mAnimatorSet.playTogether(transAnimator, alphaAnimator);
+                mAnimatorSet.setDuration(ANIMATION_DELAY);
+                mAnimatorSet.setInterpolator(new AccelerateDecelerateInterpolator());
+                mAnimatorSet.addListener(new Animator.AnimatorListener()
+                {
+                    @Override
+                    public void onAnimationStart(Animator animation)
+                    {
+
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animator animation)
+                    {
+                        mAnimatorSet.removeAllListeners();
+                        mAnimatorSet = null;
+
+                        observer.onNext(true);
+                        observer.onComplete();
+                    }
+
+                    @Override
+                    public void onAnimationCancel(Animator animation)
+                    {
+
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animator animation)
+                    {
+
+                    }
+                });
+
+                mAnimatorSet.start();
             }
+        };
 
-            @Override
-            public void onAnimationEnd(Animator animation)
-            {
-                mAnimatorSet.removeAllListeners();
-                mAnimatorSet = null;
-
-                getEventListener().onHideAnimationEnd();
-            }
-
-            @Override
-            public void onAnimationCancel(Animator animation)
-            {
-
-            }
-
-            @Override
-            public void onAnimationRepeat(Animator animation)
-            {
-
-            }
-        });
-
-        mAnimatorSet.start();
+        return observable;
     }
 
     void setVisibility(boolean visibility)

@@ -135,7 +135,7 @@ public class StayOutboundDetailView extends BaseView<StayOutboundDetailView.OnEv
                 }
 
                 View titleLayout = getViewDataBinding().scrollLayout.getChildAt(1);
-                final int TOOLBAR_HEIGHT = getContext().getResources().getDimensionPixelSize(R.dimen.toolbar_height);
+                final int TOOLBAR_HEIGHT = getDimensionPixelSize(R.dimen.toolbar_height);
 
                 if (titleLayout.getY() - TOOLBAR_HEIGHT > scrollY)
                 {
@@ -264,7 +264,7 @@ public class StayOutboundDetailView extends BaseView<StayOutboundDetailView.OnEv
 
                     // 리스트 높이 + 아이콘 높이(실제 화면에 들어나지 않기 때문에 높이가 정확하지 않아서 내부 높이를 더함)
                     int height = getViewDataBinding().productTypeLayout.getHeight();
-                    int toolbarHeight = getContext().getResources().getDimensionPixelSize(R.dimen.toolbar_height);
+                    int toolbarHeight = getDimensionPixelSize(R.dimen.toolbar_height);
                     int maxHeight = getViewDataBinding().getRoot().getHeight() - getViewDataBinding().bottomLayout.getHeight() - toolbarHeight;
 
                     float toAnimationY = fromAnimationY - Math.min(height, maxHeight);
@@ -373,6 +373,9 @@ public class StayOutboundDetailView extends BaseView<StayOutboundDetailView.OnEv
                         {
                             mRoomAnimatorSet.removeAllListeners();
                             mRoomAnimatorSet = null;
+
+                            getViewDataBinding().productTypeBackgroundView.setVisibility(View.GONE);
+                            getViewDataBinding().productTypeLayout.setVisibility(View.INVISIBLE);
 
                             observer.onNext(true);
                             observer.onComplete();
@@ -1065,6 +1068,7 @@ public class StayOutboundDetailView extends BaseView<StayOutboundDetailView.OnEv
                     }
 
                     mRoomTypeListAdapter.setSelected(position);
+                    mRoomTypeListAdapter.notifyDataSetChanged();
                 }
             });
         } else
@@ -1085,7 +1089,7 @@ public class StayOutboundDetailView extends BaseView<StayOutboundDetailView.OnEv
             @Override
             public void run()
             {
-                final int DEFAULT_TOP_MARGIN = ScreenUtils.dpToPx(getContext(), 52) + ScreenUtils.dpToPx(getContext(), 64);
+                final int DEFAULT_TOP_MARGIN = getDimensionPixelSize(R.dimen.toolbar_height);
 
                 // 화면 높이 - 상단 타이틀 - 하단 버튼
                 final int maxHeight = getViewDataBinding().getRoot().getHeight() - DEFAULT_TOP_MARGIN;

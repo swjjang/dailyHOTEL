@@ -123,6 +123,11 @@ public abstract class BaseView<T1 extends OnBaseEventListener, T2 extends ViewDa
         }
     }
 
+    protected int getDimensionPixelSize(int id)
+    {
+        return mActivity.getResources().getDimensionPixelSize(id);
+    }
+
     @Override
     public void hideSimpleDialog()
     {

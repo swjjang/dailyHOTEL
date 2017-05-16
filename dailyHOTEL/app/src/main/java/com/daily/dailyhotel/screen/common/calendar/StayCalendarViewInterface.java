@@ -6,13 +6,15 @@ import com.daily.base.BaseViewInterface;
 
 import java.util.ArrayList;
 
+import io.reactivex.Observable;
+
 public interface StayCalendarViewInterface extends BaseViewInterface
 {
     void makeCalendarView(ArrayList<Pair<String, PlaceCalendarPresenter.Day[]>> arrayList);
 
-    void showAnimation();
+    Observable<Boolean> showAnimation();
 
-    void hideAnimation();
+    Observable<Boolean> hideAnimation();
 
     void setVisibility(boolean visibility);
 

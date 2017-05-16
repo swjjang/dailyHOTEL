@@ -87,7 +87,12 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
 
         mViewPriceType = PRICE_AVERAGE;
 
-        addCompositeDisposable(getViewInterface().hideRoomList(false).subscribe());
+        Observable<Boolean> observable = getViewInterface().hideRoomList(false);
+
+        if (observable != null)
+        {
+            addCompositeDisposable(observable.subscribe());
+        }
     }
 
     @Override
@@ -261,6 +266,13 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
     @Override
     public boolean onBackPressed()
     {
+        switch (mStatus)
+        {
+            case STATUS_BOOKING:
+                onHideRoomListClick(true);
+                return true;
+        }
+
         return super.onBackPressed();
     }
 
@@ -386,18 +398,23 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
     @Override
     public void onHideRoomListClick(boolean animation)
     {
-        screenLock(false);
+        Observable<Boolean> observable = getViewInterface().hideRoomList(animation);
 
-        addCompositeDisposable(getViewInterface().hideRoomList(animation).subscribe(new Consumer<Boolean>()
+        if (observable != null)
         {
-            @Override
-            public void accept(@io.reactivex.annotations.NonNull Boolean aBoolean) throws Exception
-            {
-                unLockAll();
+            screenLock(false);
 
-                setStatus(STATUS_ROOM_LIST);
-            }
-        }));
+            addCompositeDisposable(observable.subscribe(new Consumer<Boolean>()
+            {
+                @Override
+                public void accept(@io.reactivex.annotations.NonNull Boolean aBoolean) throws Exception
+                {
+                    unLockAll();
+
+                    setStatus(STATUS_ROOM_LIST);
+                }
+            }));
+        }
     }
 
     @Override
@@ -411,16 +428,21 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
             case STATUS_ROOM_LIST:
                 screenLock(false);
 
-                addCompositeDisposable(getViewInterface().showRoomList(true).subscribe(new Consumer<Boolean>()
-                {
-                    @Override
-                    public void accept(@io.reactivex.annotations.NonNull Boolean aBoolean) throws Exception
-                    {
-                        unLockAll();
+                Observable<Boolean> observable = getViewInterface().showRoomList(true);
 
-                        setStatus(STATUS_BOOKING);
-                    }
-                }));
+                if (observable != null)
+                {
+                    addCompositeDisposable(observable.subscribe(new Consumer<Boolean>()
+                    {
+                        @Override
+                        public void accept(@io.reactivex.annotations.NonNull Boolean aBoolean) throws Exception
+                        {
+                            unLockAll();
+
+                            setStatus(STATUS_BOOKING);
+                        }
+                    }));
+                }
                 break;
 
             default:
@@ -516,7 +538,21 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
                             @Override
                             public void onDismiss(DialogInterface dialog)
                             {
-                                getViewInterface().showRoomList(false);
+                                Observable<Boolean> observable = getViewInterface().showRoomList(false);
+
+                                if (observable != null)
+                                {
+                                    screenLock(false);
+
+                                    addCompositeDisposable(observable.subscribe(new Consumer<Boolean>()
+                                    {
+                                        @Override
+                                        public void accept(@io.reactivex.annotations.NonNull Boolean aBoolean) throws Exception
+                                        {
+                                            unLockAll();
+                                        }
+                                    }));
+                                }
                             }
                         });
                 }

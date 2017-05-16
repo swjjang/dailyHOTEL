@@ -2,6 +2,7 @@ package com.daily.dailyhotel.screen.stay.outbound.detail;
 
 import android.content.Context;
 import android.databinding.DataBindingUtil;
+import android.graphics.Paint;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -164,6 +165,7 @@ public class StayOutboundDetailRoomListAdapter extends RecyclerView.Adapter<Recy
         } else
         {
             saleRoomInformationViewHolder.dataBinding.priceTextView.setVisibility(View.VISIBLE);
+            saleRoomInformationViewHolder.dataBinding.priceTextView.setPaintFlags(saleRoomInformationViewHolder.dataBinding.priceTextView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
             saleRoomInformationViewHolder.dataBinding.priceTextView.setText(price);
         }
 

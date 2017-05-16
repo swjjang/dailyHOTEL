@@ -22,8 +22,6 @@ import java.util.Locale;
 import java.util.concurrent.Callable;
 
 import io.reactivex.Observable;
-import io.reactivex.ObservableEmitter;
-import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.ObservableSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
@@ -163,7 +161,21 @@ public class StayCalendarPresenter extends PlaceCalendarPresenter<StayCalendarAc
 
                 if (mIsAnimation == true)
                 {
-                    getViewInterface().showAnimation();
+                    Observable<Boolean> observable = getViewInterface().showAnimation();
+
+                    if (observable != null)
+                    {
+                        screenLock(false);
+
+                        addCompositeDisposable(observable.subscribe(new Consumer<Boolean>()
+                        {
+                            @Override
+                            public void accept(@io.reactivex.annotations.NonNull Boolean aBoolean) throws Exception
+                            {
+                                unLockAll();
+                            }
+                        }));
+                    }
                 } else
                 {
                     getViewInterface().setVisibility(true);
@@ -227,9 +239,21 @@ public class StayCalendarPresenter extends PlaceCalendarPresenter<StayCalendarAc
     @Override
     public boolean onBackPressed()
     {
-        screenLock(false);
+        Observable<Boolean> observable = getViewInterface().hideAnimation();
 
-        getViewInterface().hideAnimation();
+        if (observable != null)
+        {
+            screenLock(false);
+
+            addCompositeDisposable(observable.subscribe(new Consumer<Boolean>()
+            {
+                @Override
+                public void accept(@io.reactivex.annotations.NonNull Boolean aBoolean) throws Exception
+                {
+                    getActivity().finish();
+                }
+            }));
+        }
 
         return true;
     }
@@ -386,18 +410,6 @@ public class StayCalendarPresenter extends PlaceCalendarPresenter<StayCalendarAc
 
         setResult(Activity.RESULT_OK, intent);
         onBackClick();
-    }
-
-    @Override
-    public void onShowAnimationEnd()
-    {
-        unLockAll();
-    }
-
-    @Override
-    public void onHideAnimationEnd()
-    {
-        getActivity().finish();
     }
 
     private void reset()
