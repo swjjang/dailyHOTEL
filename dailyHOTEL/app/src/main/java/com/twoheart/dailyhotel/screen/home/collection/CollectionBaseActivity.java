@@ -32,6 +32,10 @@ import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -72,6 +76,8 @@ public abstract class CollectionBaseActivity extends BaseActivity
     protected abstract String getSectionTitle(int count);
 
     protected abstract ArrayList<PlaceViewItem> makePlaceList(String imageBaseUrl, List<? extends RecommendationPlace> placeList);
+
+    protected abstract void onPlaceDetailClickByLongPress(View view, PlaceViewItem placeViewItem, int listCount);
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -299,6 +305,20 @@ public abstract class CollectionBaseActivity extends BaseActivity
 
             case CODE_REQUEST_ACTIVITY_CALENDAR:
                 onCalendarActivityResult(resultCode, data);
+                break;
+
+            case CODE_REQUEST_ACTIVITY_PREVIEW:
+                if (resultCode == Activity.RESULT_OK)
+                {
+                    Observable.create(new ObservableOnSubscribe<Object>()
+                    {
+                        @Override
+                        public void subscribe(ObservableEmitter<Object> e) throws Exception
+                        {
+                            onPlaceDetailClickByLongPress(mViewByLongPress, mPlaceViewItemByLongPress, mListCountByLongPress);
+                        }
+                    }).subscribeOn(AndroidSchedulers.mainThread()).subscribe();
+                }
                 break;
         }
     }
