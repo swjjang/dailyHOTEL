@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.net.SocketTimeoutException;
+import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -172,7 +174,9 @@ public class TagCancellableCallAdapterFactory extends CallAdapter.Factory
                         mQueuedCalls.remove(ExecutorCallbackCall.this);
                     }
 
-                    if (isCanceled() == false && mRetryCount++ < RETRY_COUNT)
+                    if (isCanceled() == false//
+                        && (t instanceof UnknownHostException || t instanceof SocketTimeoutException) //
+                        && mRetryCount++ < RETRY_COUNT)
                     {
                         call.clone().enqueue(this);
                         return;
