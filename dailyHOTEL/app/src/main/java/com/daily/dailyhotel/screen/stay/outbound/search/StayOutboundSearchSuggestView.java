@@ -1,4 +1,4 @@
-package com.daily.dailyhotel.screen.stay.outbound;
+package com.daily.dailyhotel.screen.stay.outbound.search;
 
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -16,7 +16,7 @@ import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
 import java.util.List;
 
-public class StayOutboundSearchView extends BaseView<StayOutboundSearchView.OnEventListener, ActivityStayOutboundSearchDataBinding> implements StayOutboundSearchViewInterface, View.OnClickListener
+public class StayOutboundSearchSuggestView extends BaseView<StayOutboundSearchSuggestView.OnEventListener, ActivityStayOutboundSearchDataBinding> implements StayOutboundSearchSuggestViewInterface, View.OnClickListener
 {
     private DailyToolbarLayout mDailyToolbarLayout;
 
@@ -25,13 +25,9 @@ public class StayOutboundSearchView extends BaseView<StayOutboundSearchView.OnEv
         void onRequestSuggests(String keyword);
 
         void onSuggestClick(Suggest suggest);
-
-        void onSearchKeyword();
-
-        void onCalendarClick();
     }
 
-    public StayOutboundSearchView(BaseActivity baseActivity, StayOutboundSearchView.OnEventListener listener)
+    public StayOutboundSearchSuggestView(BaseActivity baseActivity, StayOutboundSearchSuggestView.OnEventListener listener)
     {
         super(baseActivity, listener);
     }
@@ -60,40 +56,6 @@ public class StayOutboundSearchView extends BaseView<StayOutboundSearchView.OnEv
         }
 
         mDailyToolbarLayout.setToolbarTitle(title);
-    }
-
-    @Override
-    public void setCalendarText(String calendarText)
-    {
-        if (getViewDataBinding() == null)
-        {
-            return;
-        }
-
-        getViewDataBinding().calendarTextView.setText(calendarText);
-    }
-
-    @Override
-    public void setRecentlySuggests(List<Suggest> suggestList)
-    {
-
-    }
-
-    @Override
-    public void setRecentlySuggestsVisibility(boolean visibility)
-    {
-        if (getViewDataBinding() == null)
-        {
-            return;
-        }
-
-        if (visibility == true)
-        {
-            getViewDataBinding().recentSuggestsLayout.setVisibility(View.VISIBLE);
-        } else
-        {
-            getViewDataBinding().recentSuggestsLayout.setVisibility(View.GONE);
-        }
     }
 
     @Override
@@ -163,17 +125,6 @@ public class StayOutboundSearchView extends BaseView<StayOutboundSearchView.OnEv
     }
 
     @Override
-    public void setToolbarMenuEnable(boolean enable)
-    {
-        if (mDailyToolbarLayout == null)
-        {
-            return;
-        }
-
-        mDailyToolbarLayout.setToolbarMenuEnable(enable, enable);
-    }
-
-    @Override
     public void onClick(View v)
     {
         switch (v.getId())
@@ -190,15 +141,6 @@ public class StayOutboundSearchView extends BaseView<StayOutboundSearchView.OnEv
                 Suggest suggest = (Suggest) object;
 
                 getEventListener().onSuggestClick(suggest);
-                break;
-
-            case R.id.calendarTextView:
-                getEventListener().onCalendarClick();
-                break;
-
-            // 검색 하기
-            case R.id.menu1View:
-                getEventListener().onSearchKeyword();
                 break;
 
             case R.id.deleteKeywrodView:

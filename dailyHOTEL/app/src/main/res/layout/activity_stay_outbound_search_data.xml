@@ -16,7 +16,7 @@
             android:layout_height="wrap_content"
             android:background="@color/white">
 
-            <com.daily.base.widget.DailyEditText
+            <com.daily.base.widget.DailyTextView
                 android:id="@+id/keywrodEditText"
                 android:layout_width="match_parent"
                 android:layout_height="28dp"

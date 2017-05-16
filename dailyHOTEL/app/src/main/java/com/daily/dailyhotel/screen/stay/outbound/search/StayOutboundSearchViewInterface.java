@@ -1,4 +1,4 @@
-package com.daily.dailyhotel.screen.stay.outbound;
+package com.daily.dailyhotel.screen.stay.outbound.search;
 
 import com.daily.base.BaseViewInterface;
 import com.daily.dailyhotel.entity.Suggest;
@@ -8,8 +8,6 @@ import java.util.List;
 public interface StayOutboundSearchViewInterface extends BaseViewInterface
 {
     void setCalendarText(String calendarText);
-
-    void setRecentlySuggests(List<Suggest> suggestList);
 
     void setRecentlySuggestsVisibility(boolean visibility);
 

@@ -1,4 +1,4 @@
-package com.daily.dailyhotel.screen.stay.outbound;
+package com.daily.dailyhotel.screen.stay.outbound.search;
 
 
 import android.content.Context;
@@ -14,23 +14,11 @@ import com.twoheart.dailyhotel.R;
  * Created by sheldon
  * Clean Architecture
  */
-public class StayOutboundSearchActivity extends BaseActivity<StayOutboundSearchPresenter>
+public class StayOutboundSearchSuggestActivity extends BaseActivity<StayOutboundSearchSuggestPresenter>
 {
     public static Intent newInstance(Context context)
     {
-        Intent intent = new Intent(context, StayOutboundSearchActivity.class);
-        return intent;
-    }
-
-    public static Intent newInstance(Context context, String deepLink)
-    {
-        Intent intent = new Intent(context, StayOutboundSearchActivity.class);
-
-        if (DailyTextUtils.isTextEmpty(deepLink) == false)
-        {
-            intent.putExtra(INTENT_EXTRA_DATA_DEEPLINK, deepLink);
-        }
-
+        Intent intent = new Intent(context, StayOutboundSearchSuggestActivity.class);
         return intent;
     }
 
@@ -44,9 +32,9 @@ public class StayOutboundSearchActivity extends BaseActivity<StayOutboundSearchP
 
     @NonNull
     @Override
-    protected StayOutboundSearchPresenter createInstancePresenter()
+    protected StayOutboundSearchSuggestPresenter createInstancePresenter()
     {
-        return new StayOutboundSearchPresenter(this);
+        return new StayOutboundSearchSuggestPresenter(this);
     }
 
     @Override

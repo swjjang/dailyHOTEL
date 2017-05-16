@@ -1,4 +1,4 @@
-package com.daily.dailyhotel.screen.stay.outbound;
+package com.daily.dailyhotel.screen.stay.outbound.search;
 
 public class StayOutboundSearchAnalyticsImpl implements StayOutboundSearchPresenter.StayOutboundSearchAnalyticsInterface
 {

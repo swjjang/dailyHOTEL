@@ -11,7 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.daily.dailyhotel.screen.stay.outbound.StayOutboundSearchActivity;
+import com.daily.dailyhotel.screen.stay.outbound.search.StayOutboundSearchActivity;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.base.BaseMenuNavigationFragment;
