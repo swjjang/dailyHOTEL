@@ -188,6 +188,9 @@ public class StayOutboundDetailData
         @JsonField(name = "promotion")
         public boolean promotion;
 
+        @JsonField(name = "promotionDescription")
+        public String promotionDescription;
+
         @JsonField(name = "nonRefundable")
         public boolean nonRefundable;
 
@@ -218,6 +221,7 @@ public class StayOutboundDetailData
             stayOutboundRoom.quotedOccupancy = quotedOccupancy;
             stayOutboundRoom.rateOccupancyPerRoom = rateOccupancyPerRoom;
             stayOutboundRoom.promotion = promotion;
+            stayOutboundRoom.promotionDescription = promotionDescription;
             stayOutboundRoom.nonRefundable = nonRefundable;
             stayOutboundRoom.nonRefundableDescription = nonRefundableDescription;
             stayOutboundRoom.bedTypeName = bedTypeName;

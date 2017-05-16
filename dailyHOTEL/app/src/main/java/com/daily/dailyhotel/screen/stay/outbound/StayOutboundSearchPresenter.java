@@ -234,19 +234,15 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
         mSuggest.id = 0;
         mSuggest.city = keyword;
 
+        getViewInterface().setRecentlySuggestsVisibility(false);
+        getViewInterface().setSuggestsVisibility(true);
+        getViewInterface().setToolbarMenuEnable(false);
+
         if (DailyTextUtils.isTextEmpty(keyword) == true)
         {
-            getViewInterface().setRecentlySuggestsVisibility(true);
-            getViewInterface().setSuggestsVisibility(false);
-            getViewInterface().setToolbarMenuEnable(false);
-
             onSuggests(null);
         } else
         {
-            getViewInterface().setRecentlySuggestsVisibility(false);
-            getViewInterface().setSuggestsVisibility(true);
-            getViewInterface().setToolbarMenuEnable(false);
-
             addCompositeDisposable(mSuggestRemoteImpl.getSuggestsByStayOutBound(keyword)//
                 .delaySubscription(500, TimeUnit.MILLISECONDS).subscribe(suggests -> onSuggests(suggests), throwable -> onSuggests(null)));
         }

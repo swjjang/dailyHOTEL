@@ -123,66 +123,12 @@
             android:background="@color/default_line_ce7e7e7"/>
 
         <RelativeLayout
-            android:id="@+id/suggestsAroundLayout"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/toolbar_height"
-            android:layout_marginTop="9dp"
-            android:background="@color/white">
-
-            <ImageView
-                android:id="@+id/aroundIconView"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp"
-                app:srcCompat="@drawable/search_ic_01_surrounding"/>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginRight="15dp"
-                android:layout_toRightOf="@+id/aroundIconView"
-                android:gravity="center_vertical"
-                android:orientation="vertical">
-
-                <com.daily.base.widget.DailyTextView
-                    android:id="@+id/text01View"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/default_text_c323232"
-                    android:textSize="13dp"/>
-
-                <com.daily.base.widget.DailyTextView
-                    android:id="@+id/text02View"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="-2dp"
-                    android:text="@string/label_search_need_to_agree_termsoflocation"
-                    android:textColor="@color/search_hint_text"
-                    android:textSize="11dp"
-                    android:visibility="visible"/>
-            </LinearLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/default_line_cf0f0f0"/>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_alignParentBottom="true"
-                android:background="@color/default_line_cf0f0f0"/>
-        </RelativeLayout>
-
-        <RelativeLayout
             android:id="@+id/recentSuggestsLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:background="@color/white"
-            android:visibility="visible">
+            android:visibility="gone">
 
             <com.daily.base.widget.DailyTextView
                 android:layout_width="wrap_content"
