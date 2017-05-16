@@ -8,6 +8,7 @@ import com.crashlytics.android.Crashlytics;
 import com.daily.base.util.DailyTextUtils;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.Setting;
+import com.twoheart.dailyhotel.model.CreditCard;
 import com.twoheart.dailyhotel.model.DailyCategoryType;
 import com.twoheart.dailyhotel.model.PlacePaymentInformation;
 
@@ -1428,12 +1429,19 @@ public class DailyPreference
 
     public String getSelectedSimpleCard()
     {
-        return getValue(mPreferences, KEY_SELECTED_SIMPLE_CARD, null);
+        String value = getValue(mPreferences, KEY_SELECTED_SIMPLE_CARD, null);
+
+        if (DailyTextUtils.isTextEmpty(value) == false)
+        {
+            value = Crypto.urlDecrypt(value);
+        }
+
+        return value;
     }
 
-    public void setSelectedSimpleCard(String value)
+    public void setSelectedSimpleCard(CreditCard creditCard)
     {
-        setValue(mEditor, KEY_SELECTED_SIMPLE_CARD, value);
+        setValue(mEditor, KEY_SELECTED_SIMPLE_CARD, Crypto.urlEncrypt(creditCard.number.substring(9, 12) + creditCard.billingkey.substring(3, 7)));
     }
 
     // version - 2.0.4 로 강업 이후 삭제 필요 부분
