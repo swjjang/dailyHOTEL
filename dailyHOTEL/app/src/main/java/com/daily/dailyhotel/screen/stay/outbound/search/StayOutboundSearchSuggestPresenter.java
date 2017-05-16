@@ -6,27 +6,15 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 
-import com.daily.base.BaseActivity;
 import com.daily.base.BaseAnalyticsInterface;
 import com.daily.base.util.DailyTextUtils;
-import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
-import com.daily.dailyhotel.entity.CommonDateTime;
-import com.daily.dailyhotel.entity.Persons;
-import com.daily.dailyhotel.entity.StayBookDateTime;
-import com.daily.dailyhotel.entity.StayOutboundFilters;
 import com.daily.dailyhotel.entity.Suggest;
-import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
+import com.daily.dailyhotel.parcel.SuggestParcel;
 import com.daily.dailyhotel.repository.remote.SuggestRemoteImpl;
-import com.daily.dailyhotel.screen.common.calendar.StayCalendarActivity;
-import com.daily.dailyhotel.screen.stay.outbound.list.StayOutboundListActivity;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.util.DailyCalendar;
-import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
-import java.util.Calendar;
 import java.util.List;
-import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -61,7 +49,7 @@ public class StayOutboundSearchSuggestPresenter extends BaseExceptionPresenter<S
     {
         setContentView(R.layout.activity_stay_outbound_search_suggest_data);
 
-        setAnalytics(new StayOutboundSearchAnalyticsImpl());
+        setAnalytics(new StayOutboundSearchSuggestAnalyticsImpl());
 
         mSuggestRemoteImpl = new SuggestRemoteImpl(activity);
     }
@@ -86,7 +74,7 @@ public class StayOutboundSearchSuggestPresenter extends BaseExceptionPresenter<S
     @Override
     public void onPostCreate()
     {
-
+        getViewInterface().showKeyboard();
     }
 
     @Override
@@ -104,6 +92,7 @@ public class StayOutboundSearchSuggestPresenter extends BaseExceptionPresenter<S
     public void onResume()
     {
         super.onResume();
+
 
     }
 
@@ -195,7 +184,13 @@ public class StayOutboundSearchSuggestPresenter extends BaseExceptionPresenter<S
         mSuggest = suggest.getClone();
 
         // 검색어에 해당 내용을 넣어준다.
-        getViewInterface().setSuggest(suggest);
+        getViewInterface().setSuggest(suggest.display);
+
+        Intent intent = new Intent();
+        intent.putExtra(StayOutboundSearchSuggestActivity.INTENT_EXTRA_DATA_SUGGEST, new SuggestParcel(suggest));
+
+        setResult(Activity.RESULT_OK, intent);
+        onBackClick();
     }
 
     private void onSuggests(List<Suggest> suggestList)

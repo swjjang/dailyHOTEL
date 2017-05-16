@@ -69,6 +69,7 @@ public abstract class PlaceCalendarView<T1 extends PlaceCalendarView.OnEventList
 
         viewDataBinding.closeView.setOnClickListener(this);
         viewDataBinding.exitView.setOnClickListener(this);
+        viewDataBinding.confirmView.setOnClickListener(this);
     }
 
     @Override

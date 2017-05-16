@@ -136,7 +136,7 @@
                 dailyFont:style="Medium"/>
         </LinearLayout>
 
-        <android.support.v4.widget.NestedScrollView
+        <com.daily.base.widget.DailyNestedScrollView
             android:id="@+id/nestedScrollView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -152,7 +152,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"/>
 
-        </android.support.v4.widget.NestedScrollView>
+        </com.daily.base.widget.DailyNestedScrollView>
 
         <RelativeLayout
             android:layout_width="match_parent"

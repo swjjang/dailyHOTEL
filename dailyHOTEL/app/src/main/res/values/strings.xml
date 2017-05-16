@@ -902,6 +902,7 @@
     <string name="label_time_1721">17–21시</string>
     <string name="label_time_2106">21시 이후</string>
     <string name="label_searching">검색 중...</string>
+    <string name="label_view_result">결과 보기</string>
     <string name="label_business_center">비즈니스 센터</string>
     <string name="label_sauna">사우나</string>
     <string name="label_kids_play_room">키즈 플레이룸</string>

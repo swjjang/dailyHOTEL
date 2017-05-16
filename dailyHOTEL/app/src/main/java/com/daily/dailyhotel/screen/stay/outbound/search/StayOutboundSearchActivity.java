@@ -16,6 +16,9 @@ import com.twoheart.dailyhotel.R;
  */
 public class StayOutboundSearchActivity extends BaseActivity<StayOutboundSearchPresenter>
 {
+    static final int REQUEST_CODE_CALENDAR = 10000;
+    static final int REQUEST_CODE_SUGGEST = 10001;
+
     public static Intent newInstance(Context context)
     {
         Intent intent = new Intent(context, StayOutboundSearchActivity.class);

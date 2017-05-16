@@ -32,7 +32,6 @@ import com.daily.base.OnBaseEventListener;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
-import com.daily.base.util.VersionUtils;
 import com.daily.base.widget.DailyTextView;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayOutboundDetail;
@@ -1096,12 +1095,12 @@ public class StayOutboundDetailView extends BaseView<StayOutboundDetailView.OnEv
 
                 int topMargin = 0;
 
-                if(getViewDataBinding().productTypeLayout.getHeight() > maxHeight)
+                if (getViewDataBinding().productTypeLayout.getHeight() > maxHeight)
                 {
                     topMargin = DEFAULT_TOP_MARGIN;
                 }
 
-                RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams)getViewDataBinding().productTypeLayout.getLayoutParams();
+                RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) getViewDataBinding().productTypeLayout.getLayoutParams();
                 layoutParams.topMargin = DEFAULT_TOP_MARGIN;
 
                 getViewDataBinding().productTypeLayout.setLayoutParams(layoutParams);
@@ -1113,6 +1112,12 @@ public class StayOutboundDetailView extends BaseView<StayOutboundDetailView.OnEv
 
     private View.OnTouchListener mEmptyViewOnTouchListener = new View.OnTouchListener()
     {
+        private final int MOVE_STATE_NONE = 0;
+        private final int MOVE_STATE_SCROLL = 10;
+        private final int MOVE_STATE_VIEWPAGER = 100;
+
+        private final float MOVE_CALIBRATE_VALUE = 1.25f;
+
         private int mMoveState;
         private float mPrevX, mPrevY;
 
@@ -1126,10 +1131,9 @@ public class StayOutboundDetailView extends BaseView<StayOutboundDetailView.OnEv
                     mPrevX = event.getX();
                     mPrevY = event.getY();
 
-                    mMoveState = 0;
+                    mMoveState = MOVE_STATE_NONE;
 
-                    getViewDataBinding().nestedScrollView.setEnabled(false);
-                    getViewDataBinding().nestedScrollView.setNestedScrollingEnabled(false);
+                    getViewDataBinding().nestedScrollView.setScrollingEnabled(false);
 
                     try
                     {
@@ -1153,7 +1157,7 @@ public class StayOutboundDetailView extends BaseView<StayOutboundDetailView.OnEv
                     {
                         getEventListener().onImageClick(getViewDataBinding().imageLoopViewPager.getCurrentItem());
 
-                        mMoveState = 0;
+                        mMoveState = MOVE_STATE_NONE;
 
                         try
                         {
@@ -1165,14 +1169,13 @@ public class StayOutboundDetailView extends BaseView<StayOutboundDetailView.OnEv
                             getViewDataBinding().imageLoopViewPager.onTouchEvent(event);
                         }
 
-                        getViewDataBinding().nestedScrollView.setEnabled(true);
-                        getViewDataBinding().nestedScrollView.setNestedScrollingEnabled(true);
+                        getViewDataBinding().nestedScrollView.setScrollingEnabled(true);
                         break;
                     }
                 }
                 case MotionEvent.ACTION_CANCEL:
                 {
-                    mMoveState = 0;
+                    mMoveState = MOVE_STATE_NONE;
 
                     try
                     {
@@ -1184,8 +1187,7 @@ public class StayOutboundDetailView extends BaseView<StayOutboundDetailView.OnEv
                         getViewDataBinding().imageLoopViewPager.onTouchEvent(event);
                     }
 
-                    getViewDataBinding().nestedScrollView.setEnabled(true);
-                    getViewDataBinding().nestedScrollView.setNestedScrollingEnabled(true);
+                    getViewDataBinding().nestedScrollView.setScrollingEnabled(true);
                     break;
                 }
 
@@ -1194,16 +1196,40 @@ public class StayOutboundDetailView extends BaseView<StayOutboundDetailView.OnEv
                     float x = event.getX();
                     float y = event.getY();
 
-                    if (mMoveState == 0)
+                    switch (mMoveState)
                     {
-                        if (Math.abs(x - mPrevX) == Math.abs(y - mPrevY))
+                        case MOVE_STATE_NONE:
                         {
+                            if (Math.abs(x - mPrevX) == Math.abs(y - mPrevY))
+                            {
 
-                        } else if (Math.abs(x - mPrevX) > Math.abs(y - mPrevY))
+                            } else if (Math.abs(x - mPrevX) * MOVE_CALIBRATE_VALUE > Math.abs(y - mPrevY))
+                            {
+                                // x 축으로 이동한 경우.
+                                mMoveState = MOVE_STATE_VIEWPAGER;
+
+                                try
+                                {
+                                    getViewDataBinding().imageLoopViewPager.onTouchEvent(event);
+                                } catch (Exception e)
+                                {
+                                    event.setAction(MotionEvent.ACTION_CANCEL);
+                                    event.setLocation(getViewDataBinding().imageLoopViewPager.getScrollX(), getViewDataBinding().imageLoopViewPager.getScrollY());
+                                    getViewDataBinding().imageLoopViewPager.onTouchEvent(event);
+                                }
+                            } else
+                            {
+                                // y축으로 이동한 경우.
+                                mMoveState = MOVE_STATE_SCROLL;
+
+                                getViewDataBinding().nestedScrollView.setScrollingEnabled(true);
+                                return true;
+                            }
+                            break;
+                        }
+
+                        case MOVE_STATE_VIEWPAGER:
                         {
-                            // x 축으로 이동한 경우.
-                            mMoveState = 100;
-
                             try
                             {
                                 getViewDataBinding().imageLoopViewPager.onTouchEvent(event);
@@ -1213,26 +1239,8 @@ public class StayOutboundDetailView extends BaseView<StayOutboundDetailView.OnEv
                                 event.setLocation(getViewDataBinding().imageLoopViewPager.getScrollX(), getViewDataBinding().imageLoopViewPager.getScrollY());
                                 getViewDataBinding().imageLoopViewPager.onTouchEvent(event);
                             }
-                        } else
-                        {
-                            // y축으로 이동한 경우.
-                            mMoveState = 10;
-
-                            getViewDataBinding().nestedScrollView.setEnabled(true);
-                            getViewDataBinding().nestedScrollView.setNestedScrollingEnabled(true);
-                            return true;
                         }
-                    } else if (mMoveState == 100)
-                    {
-                        try
-                        {
-                            getViewDataBinding().imageLoopViewPager.onTouchEvent(event);
-                        } catch (Exception e)
-                        {
-                            event.setAction(MotionEvent.ACTION_CANCEL);
-                            event.setLocation(getViewDataBinding().imageLoopViewPager.getScrollX(), getViewDataBinding().imageLoopViewPager.getScrollY());
-                            getViewDataBinding().imageLoopViewPager.onTouchEvent(event);
-                        }
+                        break;
                     }
                     break;
                 }

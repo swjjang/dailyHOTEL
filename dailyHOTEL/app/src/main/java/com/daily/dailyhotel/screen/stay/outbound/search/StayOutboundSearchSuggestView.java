@@ -1,9 +1,11 @@
 package com.daily.dailyhotel.screen.stay.outbound.search;
 
+import android.content.Context;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.TypedValue;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 
 import com.daily.base.BaseActivity;
 import com.daily.base.BaseView;
@@ -11,12 +13,12 @@ import com.daily.base.OnBaseEventListener;
 import com.daily.base.widget.DailyTextView;
 import com.daily.dailyhotel.entity.Suggest;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.databinding.ActivityStayOutboundSearchDataBinding;
+import com.twoheart.dailyhotel.databinding.ActivityStayOutboundSearchSuggestDataBinding;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
 import java.util.List;
 
-public class StayOutboundSearchSuggestView extends BaseView<StayOutboundSearchSuggestView.OnEventListener, ActivityStayOutboundSearchDataBinding> implements StayOutboundSearchSuggestViewInterface, View.OnClickListener
+public class StayOutboundSearchSuggestView extends BaseView<StayOutboundSearchSuggestView.OnEventListener, ActivityStayOutboundSearchSuggestDataBinding> implements StayOutboundSearchSuggestViewInterface, View.OnClickListener
 {
     private DailyToolbarLayout mDailyToolbarLayout;
 
@@ -33,7 +35,7 @@ public class StayOutboundSearchSuggestView extends BaseView<StayOutboundSearchSu
     }
 
     @Override
-    protected void setContentView(final ActivityStayOutboundSearchDataBinding viewDataBinding)
+    protected void setContentView(final ActivityStayOutboundSearchSuggestDataBinding viewDataBinding)
     {
         if (viewDataBinding == null)
         {
@@ -42,9 +44,8 @@ public class StayOutboundSearchSuggestView extends BaseView<StayOutboundSearchSu
 
         initToolbar(viewDataBinding);
 
-        viewDataBinding.keywrodEditText.addTextChangedListener(mTextWatcher);
+        viewDataBinding.keywordEditText.addTextChangedListener(mTextWatcher);
         viewDataBinding.deleteKeywrodView.setOnClickListener(this);
-        viewDataBinding.calendarTextView.setOnClickListener(this);
     }
 
     @Override
@@ -111,17 +112,17 @@ public class StayOutboundSearchSuggestView extends BaseView<StayOutboundSearchSu
     }
 
     @Override
-    public void setSuggest(Suggest suggest)
+    public void setSuggest(String suggest)
     {
         if (getViewDataBinding() == null)
         {
             return;
         }
 
-        getViewDataBinding().keywrodEditText.removeTextChangedListener(mTextWatcher);
-        getViewDataBinding().keywrodEditText.setText(suggest.display);
-        getViewDataBinding().keywrodEditText.setSelection(getViewDataBinding().keywrodEditText.length());
-        getViewDataBinding().keywrodEditText.addTextChangedListener(mTextWatcher);
+        getViewDataBinding().keywordEditText.removeTextChangedListener(mTextWatcher);
+        getViewDataBinding().keywordEditText.setText(suggest);
+        getViewDataBinding().keywordEditText.setSelection(getViewDataBinding().keywordEditText.length());
+        getViewDataBinding().keywordEditText.addTextChangedListener(mTextWatcher);
     }
 
     @Override
@@ -144,12 +145,46 @@ public class StayOutboundSearchSuggestView extends BaseView<StayOutboundSearchSu
                 break;
 
             case R.id.deleteKeywrodView:
-                resetKeyword();
+                setSuggest(null);
                 break;
         }
     }
 
-    private void initToolbar(ActivityStayOutboundSearchDataBinding viewDataBinding)
+    @Override
+    public void showKeyboard()
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        getViewDataBinding().keywordEditText.setFocusable(true);
+        getViewDataBinding().keywordEditText.setFocusableInTouchMode(true);
+        getViewDataBinding().keywordEditText.requestFocus();
+        getViewDataBinding().keywordEditText.postDelayed(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                InputMethodManager inputMethodManager = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                inputMethodManager.showSoftInput(getViewDataBinding().keywordEditText, InputMethodManager.SHOW_IMPLICIT);
+            }
+        }, 500);
+    }
+
+    @Override
+    public void hideKeyboard()
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        InputMethodManager inputMethodManager = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(getViewDataBinding().keywordEditText.getWindowToken(), InputMethodManager.HIDE_IMPLICIT_ONLY);
+    }
+
+    private void initToolbar(ActivityStayOutboundSearchSuggestDataBinding viewDataBinding)
     {
         if (viewDataBinding == null)
         {
@@ -159,20 +194,6 @@ public class StayOutboundSearchSuggestView extends BaseView<StayOutboundSearchSu
         mDailyToolbarLayout = new DailyToolbarLayout(getContext(), viewDataBinding.toolbar.findViewById(R.id.toolbar));
         mDailyToolbarLayout.initToolbar(getString(R.string.label_search_stay_outbound)//
             , v -> getEventListener().onBackClick());
-
-        mDailyToolbarLayout.setToolbarMenu(getString(R.string.label_search), null);
-        mDailyToolbarLayout.setToolbarMenuEnable(false, false);
-        mDailyToolbarLayout.setToolbarMenuClickListener(this);
-    }
-
-    private void resetKeyword()
-    {
-        if (getViewDataBinding() == null)
-        {
-            return;
-        }
-
-        getViewDataBinding().keywrodEditText.setText(null);
     }
 
     private TextWatcher mTextWatcher = new TextWatcher()

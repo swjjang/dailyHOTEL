@@ -37,7 +37,7 @@ public class StayOutboundFilterPresenter extends BaseExceptionPresenter<StayOutb
     @Override
     public void constructorInitialize(StayOutboundFilterActivity activity)
     {
-        setContentView(R.layout.activity_stay_outbound_search_data);
+        setContentView(R.layout.activity_stay_outbound_filter_data);
 
         setAnalytics(new StayStayOutboundFilterAnalyticsImpl());
 
@@ -57,10 +57,6 @@ public class StayOutboundFilterPresenter extends BaseExceptionPresenter<StayOutb
         if (intent == null)
         {
             return true;
-        }
-
-        if (intent.hasExtra(BaseActivity.INTENT_EXTRA_DATA_DEEPLINK) == true)
-        {
         }
 
         return true;

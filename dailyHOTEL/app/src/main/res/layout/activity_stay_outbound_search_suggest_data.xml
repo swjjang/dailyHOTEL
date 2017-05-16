@@ -9,7 +9,7 @@
 
         <include
             android:id="@+id/toolbar"
-            layout="@layout/toolbar_default_menu_text"/>
+            layout="@layout/toolbar_default"/>
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -17,7 +17,7 @@
             android:background="@color/white">
 
             <com.daily.base.widget.DailyEditText
-                android:id="@+id/keywrodEditText"
+                android:id="@+id/keywordEditText"
                 android:layout_width="match_parent"
                 android:layout_height="28dp"
                 android:layout_margin="8dp"

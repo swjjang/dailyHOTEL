@@ -11,5 +11,9 @@ public interface StayOutboundSearchSuggestViewInterface extends BaseViewInterfac
 
     void setSuggests(List<Suggest> suggestList);
 
-    void setSuggest(Suggest suggest);
+    void setSuggest(String suggest);
+
+    void showKeyboard();
+
+    void hideKeyboard();
 }

@@ -16,8 +16,8 @@ import com.daily.dailyhotel.entity.Persons;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayOutboundFilters;
 import com.daily.dailyhotel.entity.Suggest;
+import com.daily.dailyhotel.parcel.SuggestParcel;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
-import com.daily.dailyhotel.repository.remote.SuggestRemoteImpl;
 import com.daily.dailyhotel.screen.common.calendar.StayCalendarActivity;
 import com.daily.dailyhotel.screen.stay.outbound.list.StayOutboundListActivity;
 import com.twoheart.dailyhotel.R;
@@ -25,9 +25,7 @@ import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import java.util.Calendar;
-import java.util.List;
 import java.util.Locale;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Created by sheldon
@@ -35,12 +33,10 @@ import java.util.concurrent.TimeUnit;
  */
 public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutboundSearchActivity, StayOutboundSearchViewInterface> implements StayOutboundSearchView.OnEventListener
 {
-    private static final int REQUEST_CODE_CALENDAR = 10000;
     private static final int DAYS_OF_MAXCOUNT = 90;
     private static final int NIGHTS_OF_MAXCOUNT = 28;
 
     private StayOutboundSearchAnalyticsInterface mAnalytics;
-    private SuggestRemoteImpl mSuggestRemoteImpl;
     private CommonRemoteImpl mCommonRemoteImpl;
 
     private CommonDateTime mCommonDateTime;
@@ -74,7 +70,6 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
 
         setAnalytics(new StayOutboundSearchAnalyticsImpl());
 
-        mSuggestRemoteImpl = new SuggestRemoteImpl(activity);
         mCommonRemoteImpl = new CommonRemoteImpl(activity);
 
         // 기본 성인 2명, 아동 0명
@@ -166,7 +161,7 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
 
         switch (requestCode)
         {
-            case REQUEST_CODE_CALENDAR:
+            case StayOutboundSearchActivity.REQUEST_CODE_CALENDAR:
             {
                 if (resultCode == Activity.RESULT_OK && data != null)
                 {
@@ -182,6 +177,25 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
                         }
 
                         onCalendarDateTime(checkInDateTime, checkOutDateTime);
+                    }
+                }
+                break;
+            }
+
+            case StayOutboundSearchActivity.REQUEST_CODE_SUGGEST:
+            {
+                if (resultCode == Activity.RESULT_OK && data != null)
+                {
+                    if (data.hasExtra(StayOutboundSearchSuggestActivity.INTENT_EXTRA_DATA_SUGGEST) == true)
+                    {
+                        SuggestParcel suggestParcel = data.getParcelableExtra(StayOutboundSearchSuggestActivity.INTENT_EXTRA_DATA_SUGGEST);
+
+                        if (suggestParcel != null)
+                        {
+                            onSuggests(suggestParcel.getSuggest());
+
+                            onCalendarClick();
+                        }
                     }
                 }
                 break;
@@ -222,45 +236,15 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
     }
 
     @Override
-    public void onRequestSuggests(String keyword)
+    public void onSuggestClick()
     {
-        clearCompositeDisposable();
-
-        if (mSuggest == null)
-        {
-            mSuggest = new Suggest();
-        }
-
-        mSuggest.id = 0;
-        mSuggest.city = keyword;
-
-        getViewInterface().setRecentlySuggestsVisibility(false);
-        getViewInterface().setSuggestsVisibility(true);
-        getViewInterface().setToolbarMenuEnable(false);
-
-        if (DailyTextUtils.isTextEmpty(keyword) == true)
-        {
-            onSuggests(null);
-        } else
-        {
-            addCompositeDisposable(mSuggestRemoteImpl.getSuggestsByStayOutBound(keyword)//
-                .delaySubscription(500, TimeUnit.MILLISECONDS).subscribe(suggests -> onSuggests(suggests), throwable -> onSuggests(null)));
-        }
-    }
-
-    @Override
-    public void onSuggestClick(Suggest suggest)
-    {
-        if (suggest == null)
+        if (lock() == true)
         {
             return;
         }
 
-        mSuggest = suggest.getClone();
-
-        // 검색어에 해당 내용을 넣어준다.
-        getViewInterface().setSuggest(suggest);
-        getViewInterface().setToolbarMenuEnable(true);
+        Intent intent = StayOutboundSearchSuggestActivity.newInstance(getActivity());
+        startActivityForResult(intent, StayOutboundSearchActivity.REQUEST_CODE_SUGGEST);
     }
 
     @Override
@@ -318,7 +302,7 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
                 , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
                 , startDateTime, endDateTime, NIGHTS_OF_MAXCOUNT, AnalyticsManager.ValueType.SEARCH, true, true);
 
-            startActivityForResult(intent, REQUEST_CODE_CALENDAR);
+            startActivityForResult(intent, StayOutboundSearchActivity.REQUEST_CODE_CALENDAR);
         } catch (Exception e)
         {
             ExLog.e(e.toString());
@@ -334,9 +318,6 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
             return;
         }
 
-        // 처음 날짜가 없는 경우에는 x일 이후로 보이게 한다
-        final int START_CHECK_IN_AFTER_DAY = 7;
-
         if (mStayBookDateTime == null)
         {
             mStayBookDateTime = new StayBookDateTime();
@@ -344,8 +325,8 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
 
         try
         {
-            mStayBookDateTime.setCheckInDateTime(commonDateTime.currentDateTime, START_CHECK_IN_AFTER_DAY);
-            mStayBookDateTime.setCheckOutDateTime(commonDateTime.currentDateTime, START_CHECK_IN_AFTER_DAY + 1);
+            mStayBookDateTime.setCheckInDateTime(commonDateTime.currentDateTime);
+            mStayBookDateTime.setCheckOutDateTime(commonDateTime.currentDateTime, 1);
         } catch (Exception e)
         {
             ExLog.e(e.toString());
@@ -439,8 +420,18 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
         onStayBookDateTime(mStayBookDateTime);
     }
 
-    private void onSuggests(List<Suggest> suggestList)
+    private void onSuggests(Suggest suggest)
     {
-        getViewInterface().setSuggests(suggestList);
+        mSuggest = suggest;
+
+        if (suggest != null)
+        {
+            getViewInterface().setSuggest(suggest.display);
+
+            if (suggest.id != 0)
+            {
+                getViewInterface().setToolbarMenuEnable(true);
+            }
+        }
     }
 }

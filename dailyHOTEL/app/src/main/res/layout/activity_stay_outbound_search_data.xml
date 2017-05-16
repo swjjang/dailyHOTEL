@@ -17,7 +17,7 @@
             android:background="@color/white">
 
             <com.daily.base.widget.DailyTextView
-                android:id="@+id/keywrodEditText"
+                android:id="@+id/suggestTextView"
                 android:layout_width="match_parent"
                 android:layout_height="28dp"
                 android:layout_marginLeft="8dp"
@@ -121,69 +121,6 @@
             android:layout_height="1dp"
             android:layout_alignParentBottom="true"
             android:background="@color/default_line_ce7e7e7"/>
-
-        <RelativeLayout
-            android:id="@+id/recentSuggestsLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:background="@color/white"
-            android:visibility="gone">
-
-            <com.daily.base.widget.DailyTextView
-                android:layout_width="wrap_content"
-                android:layout_height="36dp"
-                android:gravity="center_vertical"
-                android:paddingLeft="15dp"
-                android:text="@string/label_search_recentsearches"
-                android:textColor="@color/search_hint_text"/>
-
-            <com.daily.base.widget.DailyTextView
-                android:id="@+id/deleteRecentSuggestsView"
-                android:layout_width="wrap_content"
-                android:layout_height="36dp"
-                android:layout_alignParentRight="true"
-                android:gravity="center_vertical"
-                android:paddingRight="15dp"
-                android:text="@string/label_search_deleteall"
-                android:textColor="@drawable/selector_search_deleteall_textcolor"/>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1px"
-                android:layout_below="@+id/deleteRecentSuggestsView"
-                android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp"
-                android:background="@color/default_line_cdcdcdd"/>
-
-            <com.daily.base.widget.DailyScrollView
-                android:id="@+id/recentSuggestsScrollLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/deleteRecentSuggestsView"
-                android:fadingEdge="none">
-
-                <LinearLayout
-                    android:id="@+id/recentSuggestsContentsLayout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="15dp"
-                    android:layout_marginRight="15dp"
-                    android:orientation="vertical"/>
-            </com.daily.base.widget.DailyScrollView>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/default_line_cf0f0f0"/>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_alignParentBottom="false"
-                android:layout_below="@+id/recentSuggestsScrollLayout"
-                android:background="@color/default_line_cf0f0f0"/>
-        </RelativeLayout>
 
         <com.daily.base.widget.DailyScrollView
             android:id="@+id/suggestsScrollLayout"
