@@ -11,7 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.daily.dailyhotel.screen.stay.outbound.StayOutboundActivity;
+import com.daily.dailyhotel.screen.stay.outbound.StayOutboundSearchActivity;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.base.BaseMenuNavigationFragment;
@@ -190,7 +190,7 @@ public class InformationFragment extends BaseMenuNavigationFragment implements C
 
             BaseActivity baseActivity = (BaseActivity) getActivity();
 
-            baseActivity.startActivity(StayOutboundActivity.newInstance(baseActivity));
+            baseActivity.startActivity(StayOutboundSearchActivity.newInstance(baseActivity));
             //            baseActivity.startActivityForResult(AboutActivity.newInstance(baseActivity), Constants.CODE_REQUEST_ACTIVITY_ABOUT);
 
             AnalyticsManager.getInstance(baseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION//

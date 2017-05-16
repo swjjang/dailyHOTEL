@@ -58,7 +58,7 @@ public abstract class PlaceCalendarView<T1 extends PlaceCalendarView.OnEventList
     }
 
     @Override
-    protected void initLayout(final ActivityCalendarDataBinding viewDataBinding)
+    protected void setContentView(ActivityCalendarDataBinding viewDataBinding)
     {
         if (viewDataBinding == null)
         {

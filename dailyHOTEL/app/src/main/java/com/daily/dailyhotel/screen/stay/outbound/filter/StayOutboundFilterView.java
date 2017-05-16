@@ -21,7 +21,7 @@ public class StayOutboundFilterView extends BaseView<StayOutboundFilterView.OnEv
     }
 
     @Override
-    protected void initLayout(final ActivityStayOutboundFilterDataBinding viewDataBinding)
+    protected void setContentView(final ActivityStayOutboundFilterDataBinding viewDataBinding)
     {
         if (viewDataBinding == null)
         {

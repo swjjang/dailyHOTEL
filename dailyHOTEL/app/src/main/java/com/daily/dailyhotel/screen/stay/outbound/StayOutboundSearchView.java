@@ -1,6 +1,5 @@
 package com.daily.dailyhotel.screen.stay.outbound;
 
-import android.content.Context;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.TypedValue;
@@ -9,16 +8,15 @@ import android.view.View;
 import com.daily.base.BaseActivity;
 import com.daily.base.BaseView;
 import com.daily.base.OnBaseEventListener;
-import com.daily.base.util.ScreenUtils;
 import com.daily.base.widget.DailyTextView;
 import com.daily.dailyhotel.entity.Suggest;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.databinding.ActivityStayOutboundDataBinding;
+import com.twoheart.dailyhotel.databinding.ActivityStayOutboundSearchDataBinding;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
 import java.util.List;
 
-public class StayOutboundView extends BaseView<StayOutboundView.OnEventListener, ActivityStayOutboundDataBinding> implements StayOutboundViewInterface, View.OnClickListener
+public class StayOutboundSearchView extends BaseView<StayOutboundSearchView.OnEventListener, ActivityStayOutboundSearchDataBinding> implements StayOutboundSearchViewInterface, View.OnClickListener
 {
     private DailyToolbarLayout mDailyToolbarLayout;
 
@@ -33,13 +31,13 @@ public class StayOutboundView extends BaseView<StayOutboundView.OnEventListener,
         void onCalendarClick();
     }
 
-    public StayOutboundView(BaseActivity baseActivity, StayOutboundView.OnEventListener listener)
+    public StayOutboundSearchView(BaseActivity baseActivity, StayOutboundSearchView.OnEventListener listener)
     {
         super(baseActivity, listener);
     }
 
     @Override
-    protected void initLayout(final ActivityStayOutboundDataBinding viewDataBinding)
+    protected void setContentView(final ActivityStayOutboundSearchDataBinding viewDataBinding)
     {
         if (viewDataBinding == null)
         {
@@ -209,7 +207,7 @@ public class StayOutboundView extends BaseView<StayOutboundView.OnEventListener,
         }
     }
 
-    private void initToolbar(ActivityStayOutboundDataBinding viewDataBinding)
+    private void initToolbar(ActivityStayOutboundSearchDataBinding viewDataBinding)
     {
         if (viewDataBinding == null)
         {

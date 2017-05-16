@@ -1,5 +1,6 @@
 package com.daily.base;
 
+import android.annotation.TargetApi;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -8,6 +9,7 @@ import android.databinding.DataBindingUtil;
 import android.databinding.ViewDataBinding;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,7 +31,7 @@ public abstract class BaseView<T1 extends OnBaseEventListener, T2 extends ViewDa
 
     private Dialog mDialog;
 
-    protected abstract void initLayout(T2 viewDataBinding);
+    protected abstract void setContentView(T2 viewDataBinding);
 
     public BaseView(BaseActivity activity, T1 listener)
     {
@@ -47,7 +49,7 @@ public abstract class BaseView<T1 extends OnBaseEventListener, T2 extends ViewDa
     {
         mViewDataBinding = DataBindingUtil.setContentView(mActivity, layoutResID);
 
-        initLayout(mViewDataBinding);
+        setContentView(mViewDataBinding);
     }
 
     @Override
@@ -55,7 +57,7 @@ public abstract class BaseView<T1 extends OnBaseEventListener, T2 extends ViewDa
     {
         mViewDataBinding = DataBindingUtil.inflate(LayoutInflater.from(mActivity), layoutResID, viewGroup, false);
 
-        initLayout(mViewDataBinding);
+        setContentView(mViewDataBinding);
     }
 
     protected void setVisibility(int visibility)

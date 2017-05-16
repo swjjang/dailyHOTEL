@@ -27,7 +27,7 @@ public abstract class PlaceCalendarPresenter<T1 extends BaseActivity, T2 extends
     }
 
     @Override
-    public void initialize(T1 activity)
+    public void constructorInitialize(T1 activity)
     {
 
     }

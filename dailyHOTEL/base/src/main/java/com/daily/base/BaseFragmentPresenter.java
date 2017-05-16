@@ -22,14 +22,14 @@ public abstract class BaseFragmentPresenter<T1 extends Fragment, T2 extends Base
 
         mOnViewInterface = createInstanceViewInterface();
 
-        initialize();
+        constructorInitialize();
     }
 
     protected abstract
     @NonNull
     T2 createInstanceViewInterface();
 
-    public abstract void initialize();
+    public abstract void constructorInitialize();
 
     public abstract void setAnalytics(BaseAnalyticsInterface analytics);
 

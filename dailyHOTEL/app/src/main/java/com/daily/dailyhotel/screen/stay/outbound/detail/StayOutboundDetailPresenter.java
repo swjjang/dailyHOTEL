@@ -73,7 +73,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
     }
 
     @Override
-    public void initialize(StayOutboundDetailActivity activity)
+    public void constructorInitialize(StayOutboundDetailActivity activity)
     {
         setContentView(R.layout.activity_stay_outbound_detail_data);
 
@@ -150,7 +150,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
     }
 
     @Override
-    public void onIntentAfter()
+    public void onPostCreate()
     {
         if (mIsDeepLink == false && mIsUsedMultiTransition == true)
         {

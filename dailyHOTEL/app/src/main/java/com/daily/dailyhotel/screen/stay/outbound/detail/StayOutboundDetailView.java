@@ -114,7 +114,7 @@ public class StayOutboundDetailView extends BaseView<StayOutboundDetailView.OnEv
     }
 
     @Override
-    protected void initLayout(final ActivityStayOutboundDetailDataBinding viewDataBinding)
+    protected void setContentView(final ActivityStayOutboundDetailDataBinding viewDataBinding)
     {
         if (viewDataBinding == null)
         {

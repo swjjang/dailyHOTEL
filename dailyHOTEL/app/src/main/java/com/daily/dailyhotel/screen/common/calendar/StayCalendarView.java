@@ -36,14 +36,14 @@ public class StayCalendarView extends PlaceCalendarView<StayCalendarView.OnEvent
     }
 
     @Override
-    protected void initLayout(final ActivityCalendarDataBinding viewDataBinding)
+    protected void setContentView(final ActivityCalendarDataBinding viewDataBinding)
     {
         if (viewDataBinding == null)
         {
             return;
         }
 
-        super.initLayout(viewDataBinding);
+        super.setContentView(viewDataBinding);
 
 
     }

@@ -39,7 +39,7 @@ public class ProfileView extends BaseView<ProfileView.OnEventListener, ActivityP
     }
 
     @Override
-    protected void initLayout(ActivityProfileDataBinding viewDataBinding)
+    protected void setContentView(ActivityProfileDataBinding viewDataBinding)
     {
         if (viewDataBinding == null)
         {

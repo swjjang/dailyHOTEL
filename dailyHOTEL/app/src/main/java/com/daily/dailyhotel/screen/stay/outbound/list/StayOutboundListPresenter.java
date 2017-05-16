@@ -95,7 +95,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
     }
 
     @Override
-    public void initialize(StayOutboundListActivity activity)
+    public void constructorInitialize(StayOutboundListActivity activity)
     {
         setContentView(R.layout.activity_stay_outbound_search_result_data);
 
@@ -185,7 +185,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
     }
 
     @Override
-    public void onIntentAfter()
+    public void onPostCreate()
     {
         if (mSuggest.id == 0)
         {

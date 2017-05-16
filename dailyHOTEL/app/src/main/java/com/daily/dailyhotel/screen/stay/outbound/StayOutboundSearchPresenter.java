@@ -33,13 +33,13 @@ import java.util.concurrent.TimeUnit;
  * Created by sheldon
  * Clean Architecture
  */
-public class StayOutboundPresenter extends BaseExceptionPresenter<StayOutboundActivity, StayOutboundViewInterface> implements StayOutboundView.OnEventListener
+public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutboundSearchActivity, StayOutboundSearchViewInterface> implements StayOutboundSearchView.OnEventListener
 {
     private static final int REQUEST_CODE_CALENDAR = 10000;
     private static final int DAYS_OF_MAXCOUNT = 90;
     private static final int NIGHTS_OF_MAXCOUNT = 28;
 
-    private StayOutboundAnalyticsInterface mAnalytics;
+    private StayOutboundSearchAnalyticsInterface mAnalytics;
     private SuggestRemoteImpl mSuggestRemoteImpl;
     private CommonRemoteImpl mCommonRemoteImpl;
 
@@ -51,28 +51,28 @@ public class StayOutboundPresenter extends BaseExceptionPresenter<StayOutboundAc
 
     private StayOutboundFilters mStayOutboundFilters;
 
-    public interface StayOutboundAnalyticsInterface extends BaseAnalyticsInterface
+    public interface StayOutboundSearchAnalyticsInterface extends BaseAnalyticsInterface
     {
     }
 
-    public StayOutboundPresenter(@NonNull StayOutboundActivity activity)
+    public StayOutboundSearchPresenter(@NonNull StayOutboundSearchActivity activity)
     {
         super(activity);
     }
 
     @NonNull
     @Override
-    protected StayOutboundViewInterface createInstanceViewInterface()
+    protected StayOutboundSearchViewInterface createInstanceViewInterface()
     {
-        return new StayOutboundView(getActivity(), this);
+        return new StayOutboundSearchView(getActivity(), this);
     }
 
     @Override
-    public void initialize(StayOutboundActivity activity)
+    public void constructorInitialize(StayOutboundSearchActivity activity)
     {
-        setContentView(R.layout.activity_stay_outbound_data);
+        setContentView(R.layout.activity_stay_outbound_search_data);
 
-        setAnalytics(new StayStayOutboundAnalyticsImpl());
+        setAnalytics(new StayOutboundSearchAnalyticsImpl());
 
         mSuggestRemoteImpl = new SuggestRemoteImpl(activity);
         mCommonRemoteImpl = new CommonRemoteImpl(activity);
@@ -86,7 +86,7 @@ public class StayOutboundPresenter extends BaseExceptionPresenter<StayOutboundAc
     @Override
     public void setAnalytics(BaseAnalyticsInterface analytics)
     {
-        mAnalytics = (StayOutboundAnalyticsInterface) analytics;
+        mAnalytics = (StayOutboundSearchAnalyticsInterface) analytics;
     }
 
     @Override
@@ -105,7 +105,7 @@ public class StayOutboundPresenter extends BaseExceptionPresenter<StayOutboundAc
     }
 
     @Override
-    public void onIntentAfter()
+    public void onPostCreate()
     {
 
     }

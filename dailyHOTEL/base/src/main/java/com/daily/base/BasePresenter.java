@@ -28,18 +28,18 @@ public abstract class BasePresenter<T1 extends BaseActivity, T2 extends BaseView
 
         mOnViewInterface = createInstanceViewInterface();
 
-        initialize(activity);
+        constructorInitialize(activity);
     }
 
     protected abstract
     @NonNull
     T2 createInstanceViewInterface();
 
-    public abstract void initialize(T1 activity);
+    public abstract void constructorInitialize(T1 activity);
 
     public abstract void setAnalytics(BaseAnalyticsInterface analytics);
 
-    public abstract void onIntentAfter();
+    public abstract void onPostCreate();
 
     protected abstract void onHandleError(Throwable throwable);
 

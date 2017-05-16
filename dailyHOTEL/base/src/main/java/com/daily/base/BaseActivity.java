@@ -33,7 +33,7 @@ public abstract class BaseActivity<T1 extends BasePresenter> extends AppCompatAc
             return;
         }
 
-        mPresenter.onIntentAfter();
+        mPresenter.onPostCreate();
     }
 
     protected abstract

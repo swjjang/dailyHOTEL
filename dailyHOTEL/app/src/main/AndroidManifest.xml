@@ -663,7 +663,7 @@
         <!--  com.daily.dailyhotel.... -->
 
         <activity
-            android:name="com.daily.dailyhotel.screen.stay.outbound.StayOutboundActivity"
+            android:name="com.daily.dailyhotel.screen.stay.outbound.StayOutboundSearchActivity"
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>

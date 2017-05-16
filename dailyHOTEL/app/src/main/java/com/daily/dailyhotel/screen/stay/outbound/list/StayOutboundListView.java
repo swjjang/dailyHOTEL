@@ -78,7 +78,7 @@ public class StayOutboundListView extends BaseView<StayOutboundListView.OnEventL
     }
 
     @Override
-    protected void initLayout(final ActivityStayOutboundSearchResultDataBinding viewDataBinding)
+    protected void setContentView(final ActivityStayOutboundSearchResultDataBinding viewDataBinding)
     {
         if (viewDataBinding == null)
         {

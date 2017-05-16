@@ -64,9 +64,9 @@ public class StayCalendarPresenter extends PlaceCalendarPresenter<StayCalendarAc
     }
 
     @Override
-    public void initialize(StayCalendarActivity activity)
+    public void constructorInitialize(StayCalendarActivity activity)
     {
-        super.initialize(activity);
+        super.constructorInitialize(activity);
 
         setContentView(R.layout.activity_calendar_data);
 
@@ -115,7 +115,7 @@ public class StayCalendarPresenter extends PlaceCalendarPresenter<StayCalendarAc
     }
 
     @Override
-    public void onIntentAfter()
+    public void onPostCreate()
     {
         screenLock(false);
 

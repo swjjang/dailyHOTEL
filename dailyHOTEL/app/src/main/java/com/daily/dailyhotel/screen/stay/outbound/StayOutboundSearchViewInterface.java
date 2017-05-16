@@ -5,7 +5,7 @@ import com.daily.dailyhotel.entity.Suggest;
 
 import java.util.List;
 
-public interface StayOutboundViewInterface extends BaseViewInterface
+public interface StayOutboundSearchViewInterface extends BaseViewInterface
 {
     void setCalendarText(String calendarText);
 

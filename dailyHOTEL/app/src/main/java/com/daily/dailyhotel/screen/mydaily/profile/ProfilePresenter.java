@@ -68,7 +68,7 @@ public class ProfilePresenter extends BaseExceptionPresenter<ProfileActivity, Pr
     }
 
     @Override
-    public void initialize(ProfileActivity activity)
+    public void constructorInitialize(ProfileActivity activity)
     {
         setContentView(R.layout.activity_profile_data);
 
@@ -100,7 +100,7 @@ public class ProfilePresenter extends BaseExceptionPresenter<ProfileActivity, Pr
     }
 
     @Override
-    public void onIntentAfter()
+    public void onPostCreate()
     {
 
     }

@@ -14,17 +14,17 @@ import com.twoheart.dailyhotel.R;
  * Created by sheldon
  * Clean Architecture
  */
-public class StayOutboundActivity extends BaseActivity<StayOutboundPresenter>
+public class StayOutboundSearchActivity extends BaseActivity<StayOutboundSearchPresenter>
 {
     public static Intent newInstance(Context context)
     {
-        Intent intent = new Intent(context, StayOutboundActivity.class);
+        Intent intent = new Intent(context, StayOutboundSearchActivity.class);
         return intent;
     }
 
     public static Intent newInstance(Context context, String deepLink)
     {
-        Intent intent = new Intent(context, StayOutboundActivity.class);
+        Intent intent = new Intent(context, StayOutboundSearchActivity.class);
 
         if (DailyTextUtils.isTextEmpty(deepLink) == false)
         {
@@ -44,9 +44,9 @@ public class StayOutboundActivity extends BaseActivity<StayOutboundPresenter>
 
     @NonNull
     @Override
-    protected StayOutboundPresenter createInstancePresenter()
+    protected StayOutboundSearchPresenter createInstancePresenter()
     {
-        return new StayOutboundPresenter(this);
+        return new StayOutboundSearchPresenter(this);
     }
 
     @Override
