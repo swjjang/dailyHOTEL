@@ -771,7 +771,7 @@ public abstract class PlacePaymentActivity extends BaseActivity
                                 {
                                     jsonObject = dataJSONArray.getJSONObject(i);
 
-                                    String value = jsonObject.getString("print_cardno").substring(9, 12) + jsonObject.getString("billkey").substring(3, 7);
+                                    String value = jsonObject.getString("print_cardno").replaceAll("\\*|-", "").substring(4) + jsonObject.getString("billkey").substring(3, 7);
 
                                     if (selectedSimpleCard.equalsIgnoreCase(jsonObject.getString("billkey")) == true)
                                     {
