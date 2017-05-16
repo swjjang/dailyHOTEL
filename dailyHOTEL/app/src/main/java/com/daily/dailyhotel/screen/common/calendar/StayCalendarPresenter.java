@@ -253,6 +253,9 @@ public class StayCalendarPresenter extends PlaceCalendarPresenter<StayCalendarAc
                     getActivity().finish();
                 }
             }));
+        } else
+        {
+            getActivity().finish();
         }
 
         return true;

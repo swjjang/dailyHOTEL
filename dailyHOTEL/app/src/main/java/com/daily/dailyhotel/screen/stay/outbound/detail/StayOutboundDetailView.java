@@ -853,9 +853,9 @@ public class StayOutboundDetailView extends BaseView<StayOutboundDetailView.OnEv
         }
 
         // 화면에서 정한 5개를 미리 보여주고 그외는 더보기로 보여준다.
-
-        final StayOutboundDetail.Amenity[] DEFAULT_AMENITYS = {StayOutboundDetail.Amenity.KIDS_PLAY_ROOM//
-            , StayOutboundDetail.Amenity.FITNESS, StayOutboundDetail.Amenity.SAUNA, StayOutboundDetail.Amenity.POOL, StayOutboundDetail.Amenity.FRONT24};
+        final StayOutboundDetail.Amenity[] DEFAULT_AMENITYS = {StayOutboundDetail.Amenity.POOL//
+            , StayOutboundDetail.Amenity.FITNESS, StayOutboundDetail.Amenity.FRONT24//
+            , StayOutboundDetail.Amenity.SAUNA, StayOutboundDetail.Amenity.KIDS_PLAY_ROOM};
         boolean hasNextLine = true;
 
         // 줄수가 2개 이상인지 검사
@@ -873,7 +873,7 @@ public class StayOutboundDetailView extends BaseView<StayOutboundDetailView.OnEv
         {
             if (stringSparseArray.get(amenity.getIndex(), null) != null)
             {
-                viewDataBinding.amenitiesGridLayout.addView(getAmenityView(getContext(), StayOutboundDetail.Amenity.KIDS_PLAY_ROOM, hasNextLine));
+                viewDataBinding.amenitiesGridLayout.addView(getAmenityView(getContext(), amenity, hasNextLine));
             }
         }
 

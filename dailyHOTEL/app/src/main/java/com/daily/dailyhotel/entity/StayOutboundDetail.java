@@ -72,12 +72,12 @@ public class StayOutboundDetail
 
     public enum Amenity
     {
-        KIDS_PLAY_ROOM(R.string.label_kids_play_room, R.drawable.f_ic_facilities_17, 1),
-        FITNESS(R.string.label_fitness, R.drawable.f_ic_facilities_07, 2),
-        SAUNA(R.string.label_sauna, R.drawable.f_ic_facilities_16, 3),
-        POOL(R.string.label_pool, R.drawable.f_ic_facilities_06, 4),
-        FRONT24(R.string.label_parking, R.drawable.f_ic_facilities_05, 5),
-        MORE(R.string.label_business_center, R.drawable.f_ic_facilities_15, -1),
+        POOL(R.string.label_pool, R.drawable.f_ic_facilities_06, 24),
+        FITNESS(R.string.label_fitness, R.drawable.f_ic_facilities_07, 2008),
+        FRONT24(R.string.label_front24, R.drawable.f_ic_facilities_05, 2063),
+        SAUNA(R.string.label_sauna, R.drawable.f_ic_facilities_16, 2135),
+        KIDS_PLAY_ROOM(R.string.label_kids_play_room, R.drawable.f_ic_facilities_17, 2186),
+        MORE(R.string.label_more, R.drawable.f_ic_facilities_15, -1),
         NONE(0, 0, 0);
 
         private int mNameResId;
