@@ -178,6 +178,17 @@ public class CollectionGourmetActivity extends CollectionBaseActivity
         return placeViewItemList;
     }
 
+    @Override
+    protected void onPlaceDetailClickByLongPress(View view, PlaceViewItem placeViewItem, int listCount)
+    {
+        if (view == null || placeViewItem == null)
+        {
+            return;
+        }
+
+        mOnEventListener.onPlaceClick(view, placeViewItem, listCount);
+    }
+
     private CollectionStayLayout.OnEventListener mOnEventListener = new CollectionBaseLayout.OnEventListener()
     {
         @Override
