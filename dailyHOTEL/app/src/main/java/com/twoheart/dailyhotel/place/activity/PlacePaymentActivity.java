@@ -35,7 +35,6 @@ import com.twoheart.dailyhotel.screen.mydaily.creditcard.CreditCardListActivity;
 import com.twoheart.dailyhotel.screen.mydaily.creditcard.RegisterCreditCardActivity;
 import com.twoheart.dailyhotel.screen.mydaily.member.InputMobileNumberDialogActivity;
 import com.twoheart.dailyhotel.screen.mydaily.member.LoginActivity;
-import com.twoheart.dailyhotel.util.Crypto;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.DailyUserPreference;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
@@ -761,7 +760,7 @@ public abstract class PlacePaymentActivity extends BaseActivity
                         {
                             JSONObject jsonObject = null;
 
-                            String selectedSimpleCard = Crypto.urlDecrypt(DailyPreference.getInstance(PlacePaymentActivity.this).getSelectedSimpleCard());
+                            String selectedSimpleCard = DailyPreference.getInstance(PlacePaymentActivity.this).getSelectedSimpleCard();
 
                             if (DailyTextUtils.isTextEmpty(selectedSimpleCard) == true)
                             {
@@ -772,7 +771,12 @@ public abstract class PlacePaymentActivity extends BaseActivity
                                 {
                                     jsonObject = dataJSONArray.getJSONObject(i);
 
+                                    String value = jsonObject.getString("print_cardno").substring(9, 12) + jsonObject.getString("billkey").substring(3, 7);
+
                                     if (selectedSimpleCard.equalsIgnoreCase(jsonObject.getString("billkey")) == true)
+                                    {
+                                        break;
+                                    } else if (selectedSimpleCard.equalsIgnoreCase(value) == true)
                                     {
                                         break;
                                     }
@@ -780,6 +784,7 @@ public abstract class PlacePaymentActivity extends BaseActivity
                             }
 
                             mSelectedCreditCard = new CreditCard(jsonObject.getString("card_name"), jsonObject.getString("print_cardno"), jsonObject.getString("billkey"), jsonObject.getString("cardcd"));
+                            DailyPreference.getInstance(PlacePaymentActivity.this).setSelectedSimpleCard(mSelectedCreditCard);
                         } else
                         {
                             boolean hasCreditCard = false;

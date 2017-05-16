@@ -383,7 +383,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
         if (paymentType == PlacePaymentInformation.PaymentType.EASY_CARD &&//
             creditCard != null && DailyTextUtils.isTextEmpty(creditCard.billingkey) == false)
         {
-            DailyPreference.getInstance(this).setSelectedSimpleCard(Crypto.urlEncrypt(creditCard.billingkey));
+            DailyPreference.getInstance(this).setSelectedSimpleCard(creditCard);
         }
 
         mOnEventListener.changedPaymentType(paymentType);
@@ -458,7 +458,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
         {
             try
             {
-                DailyPreference.getInstance(this).setSelectedSimpleCard(Crypto.urlEncrypt(mSelectedCreditCard.billingkey));
+                DailyPreference.getInstance(this).setSelectedSimpleCard(mSelectedCreditCard);
             } catch (Exception e)
             {
                 ExLog.d(e.toString());
