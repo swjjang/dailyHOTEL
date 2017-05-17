@@ -449,4 +449,8 @@ public interface DailyMobileService
     @GET("{mobileAPI}")
     Call<JSONObject> requestLocalPlus(@Path(value = "mobileAPI", encoded = true) String mobileAPI, //
                                       @QueryMap Map<String, Object> queryMap);
+
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
+    @GET("{mobileAPI}")
+    Call<JSONObject> requestStayCategoryRegions(@Path(value = "mobileAPI", encoded = true) String mobileAPI);
 }

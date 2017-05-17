@@ -28,8 +28,6 @@ public class HomeCategoryRegionListNetworkController extends BaseNetworkControll
 {
     private static final int CHILD_GRID_COLUMN = 2;
 
-
-
     public interface OnNetworkControllerListener extends OnBaseNetworkControllerListener
     {
         void onRegionListResponse(List<RegionViewItem> regionViewList, List<RegionViewItem> subwayViewList);
@@ -40,45 +38,33 @@ public class HomeCategoryRegionListNetworkController extends BaseNetworkControll
         super(context, networkTag, listener);
     }
 
-    public void requestRegionList()
+    public void requestRegionList(String categoryCode)
     {
-        DailyMobileAPI.getInstance(mContext).requestStayRegionList(mNetworkTag, mCategoryRegionListCallback);
+        DailyMobileAPI.getInstance(mContext).requestStayCategoryRegionList(mNetworkTag, categoryCode, mCategoryRegionListCallback);
     }
-
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
     /**
-     * @param domesticProvinceList in
-     * @param globalProvinceList   in
+     * @param provinceList in
      * @param areaList
-     * @param domesticRegionList   out
-     * @param globalRegionList     out
+     * @param regionViewItemList   out
      */
-    protected void makeRegionViewItemList(List<Province> domesticProvinceList, List<Province> globalProvinceList//
-        , ArrayList<Area> areaList, List<RegionViewItem> domesticRegionList, List<RegionViewItem> globalRegionList)
+    protected void makeRegionViewItemList(List<Province> provinceList //
+        , ArrayList<Area> areaList, List<RegionViewItem> regionViewItemList)
     {
-        if (domesticProvinceList == null || globalProvinceList == null || areaList == null || domesticRegionList == null || globalRegionList == null)
+        if (provinceList == null || areaList == null || regionViewItemList == null)
         {
             return;
         }
 
         // 국내
-        List<RegionViewItem> regionViewList1 = getRegionViewList(domesticProvinceList, areaList);
+        List<RegionViewItem> regionViewList = getRegionViewList(provinceList, areaList);
 
-        if (regionViewList1 != null)
+        if (regionViewList != null)
         {
-            domesticRegionList.clear();
-            domesticRegionList.addAll(regionViewList1);
-        }
-
-        // 해외
-        List<RegionViewItem> regionViewList2 = getRegionViewList(globalProvinceList, areaList);
-
-        if (regionViewList2 != null)
-        {
-            globalRegionList.clear();
-            globalRegionList.addAll(regionViewList2);
+            regionViewItemList.clear();
+            regionViewItemList.addAll(regionViewList);
         }
     }
 
@@ -120,6 +106,7 @@ public class HomeCategoryRegionListNetworkController extends BaseNetworkControll
                         totalArea.sequence = -1;
                         totalArea.isOverseas = province.isOverseas;
                         totalArea.setProvinceIndex(province.getProvinceIndex());
+                        totalArea.count = province.count;
 
                         areas[i++] = totalArea;
                     }
@@ -155,16 +142,16 @@ public class HomeCategoryRegionListNetworkController extends BaseNetworkControll
 
     /**
      * @param jsonArray
-     * @param imageUrl
-     * @param domesticProvinceList out
-     * @param globalProvinceList   out
+     * @return
      * @throws JSONException
      */
-    protected void makeProvinceList(JSONArray jsonArray, String imageUrl, List<Province> domesticProvinceList, List<Province> globalProvinceList) throws JSONException
+    protected ArrayList<Province> makeProvinceList(JSONArray jsonArray) throws JSONException
     {
-        if (domesticProvinceList == null || globalProvinceList == null)
+        ArrayList<Province> provinceList = new ArrayList<>();
+
+        if (provinceList == null)
         {
-            return;
+            return provinceList;
         }
 
         int length = jsonArray.length();
@@ -175,20 +162,15 @@ public class HomeCategoryRegionListNetworkController extends BaseNetworkControll
 
             try
             {
-                Province province = new Province(jsonObject, imageUrl);
-
-                if (province.isOverseas == true)
-                {
-                    globalProvinceList.add(province);
-                } else
-                {
-                    domesticProvinceList.add(province);
-                }
+                Province province = new Province(jsonObject, null); // imageUrl 의 경우 이제 사용하지 않음
+                provinceList.add(province);
             } catch (JSONException e)
             {
                 ExLog.d(e.toString());
             }
         }
+
+        return provinceList;
     }
 
     protected ArrayList<Area> makeAreaList(JSONArray jsonArray)
@@ -240,23 +222,17 @@ public class HomeCategoryRegionListNetworkController extends BaseNetworkControll
                     {
                         JSONObject dataJSONObject = responseJSONObject.getJSONObject("data");
 
-                        String imageUrl = dataJSONObject.getString("imgUrl");
+                        JSONArray provinceArray = dataJSONObject.getJSONArray("provinceList");
+                        ArrayList<Province> provinceList = makeProvinceList(provinceArray);
 
-                        List<Province> domesticProvinceList = new ArrayList<>();
-                        List<Province> globalProvinceList = new ArrayList<>();
-
-                        JSONArray provinceArray = dataJSONObject.getJSONArray("regionProvince");
-                        makeProvinceList(provinceArray, imageUrl, domesticProvinceList, globalProvinceList);
-
-                        JSONArray areaJSONArray = dataJSONObject.getJSONArray("regionArea");
+                        JSONArray areaJSONArray = dataJSONObject.getJSONArray("areaList");
                         ArrayList<Area> areaList = makeAreaList(areaJSONArray);
 
                         List<RegionViewItem> domesticRegionViewList = new ArrayList<>();
-                        List<RegionViewItem> globalRegionViewList = new ArrayList<>();
 
-                        makeRegionViewItemList(domesticProvinceList, globalProvinceList, areaList, domesticRegionViewList, globalRegionViewList);
+                        makeRegionViewItemList(provinceList, areaList, domesticRegionViewList);
 
-                        ((OnNetworkControllerListener) mOnNetworkControllerListener).onRegionListResponse(domesticRegionViewList, globalRegionViewList);
+                        ((OnNetworkControllerListener) mOnNetworkControllerListener).onRegionListResponse(domesticRegionViewList, null);
                     } else
                     {
                         String message = responseJSONObject.getString("msg");

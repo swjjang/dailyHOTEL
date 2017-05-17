@@ -363,15 +363,15 @@ public class HomeCategoryRegionListActivity extends BaseActivity
             , AnalyticsManager.Action.SEARCH_BUTTON_CLICK, label, null);
     }
 
-    private void requestRegionList()
+    private void requestRegionList(DailyCategoryType dailyCategoryType)
     {
-        if (mNetworkController == null)
+        if (mNetworkController == null || dailyCategoryType == null)
         {
             Util.restartApp(this);
             return;
         }
 
-        mNetworkController.requestRegionList();
+        mNetworkController.requestRegionList(dailyCategoryType.getCodeString(HomeCategoryRegionListActivity.this));
     }
 
     private void updateTermsOfLocationLayout()
@@ -433,7 +433,7 @@ public class HomeCategoryRegionListActivity extends BaseActivity
             if (currentHomeCategoryRegionListFragment == homeCategoryRegionListFragment)
             {
                 lockUI();
-                requestRegionList();
+                requestRegionList(mDailyCategoryType);
             }
         }
 
