@@ -143,7 +143,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
             }
 
             mPersons.numberOfAdults = intent.getIntExtra(StayOutboundDetailActivity.INTENT_EXTRA_DATA_NUMBER_OF_ADULTS, 2);
-            mPersons.setChildList(intent.getStringArrayListExtra(StayOutboundDetailActivity.INTENT_EXTRA_DATA_CHILD_LIST));
+            mPersons.setChildAgeList(intent.getStringArrayListExtra(StayOutboundDetailActivity.INTENT_EXTRA_DATA_CHILD_LIST));
         }
 
         return true;

@@ -20,10 +20,12 @@ import com.daily.dailyhotel.parcel.SuggestParcel;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
 import com.daily.dailyhotel.screen.common.calendar.StayCalendarActivity;
 import com.daily.dailyhotel.screen.stay.outbound.list.StayOutboundListActivity;
+import com.daily.dailyhotel.screen.stay.outbound.persons.SelectPersonsActivity;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
 
@@ -73,7 +75,7 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
         mCommonRemoteImpl = new CommonRemoteImpl(activity);
 
         // 기본 성인 2명, 아동 0명
-        mPersons = new Persons(Persons.DEFAULT_PERSONS, null);
+        onPersons(Persons.DEFAULT_PERSONS, null);
 
         setRefresh(true);
     }
@@ -200,6 +202,19 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
                 }
                 break;
             }
+
+            case StayOutboundSearchActivity.REQUEST_CODE_SELECT_PERSONS:
+            {
+                if (resultCode == Activity.RESULT_OK && data != null)
+                {
+                    if (data.hasExtra(SelectPersonsActivity.INTENT_EXTRA_DATA_NUMBER_OF_ADULTS) == true && data.hasExtra(SelectPersonsActivity.INTENT_EXTRA_DATA_CHILD_LIST) == true)
+                    {
+                        mPersons.numberOfAdults = data.getIntExtra(SelectPersonsActivity.INTENT_EXTRA_DATA_NUMBER_OF_ADULTS, Persons.DEFAULT_PERSONS);
+                        mPersons.setChildAgeList(data.getStringArrayListExtra(SelectPersonsActivity.INTENT_EXTRA_DATA_CHILD_LIST));
+                    }
+                }
+                break;
+            }
         }
     }
 
@@ -250,7 +265,7 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
     @Override
     public void onSearchKeyword()
     {
-        if (mSuggest == null)
+        if (mSuggest == null || mPersons == null)
         {
             return;
         }
@@ -263,14 +278,14 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
             intent = StayOutboundListActivity.newInstance(getActivity(), mSuggest.city//
                 , mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
                 , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
-                , mPersons.numberOfAdults, mPersons.getChildList());
+                , mPersons.numberOfAdults, mPersons.getChildAgeList());
         } else
         {
             // Suggest검색인 경우
             intent = StayOutboundListActivity.newInstance(getActivity(), mSuggest//
                 , mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
                 , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
-                , mPersons.numberOfAdults, mPersons.getChildList());
+                , mPersons.numberOfAdults, mPersons.getChildAgeList());
 
         }
 
@@ -309,6 +324,27 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
 
             unLock();
         }
+    }
+
+    @Override
+    public void onPersonsClick()
+    {
+        if (lock() == true)
+        {
+            return;
+        }
+
+        Intent intent;
+
+        if (mPersons == null)
+        {
+            intent = SelectPersonsActivity.newInstance(getActivity(), Persons.DEFAULT_PERSONS, null);
+        } else
+        {
+            intent = SelectPersonsActivity.newInstance(getActivity(), mPersons.numberOfAdults, mPersons.getChildAgeList());
+        }
+
+        startActivityForResult(intent, StayOutboundSearchActivity.REQUEST_CODE_SELECT_PERSONS);
     }
 
     private void setStayBookDefaultDateTime(CommonDateTime commonDateTime)
@@ -433,5 +469,18 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
                 getViewInterface().setToolbarMenuEnable(true);
             }
         }
+    }
+
+    private void onPersons(int numberOfAdults, ArrayList<String> childAgeList)
+    {
+        if (mPersons == null)
+        {
+            mPersons = new Persons(Persons.DEFAULT_PERSONS, null);
+        }
+
+        mPersons.numberOfAdults = numberOfAdults;
+        mPersons.setChildAgeList(childAgeList);
+
+
     }
 }

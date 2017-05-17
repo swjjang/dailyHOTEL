@@ -9,6 +9,7 @@ import com.daily.base.BaseActivity;
 import com.daily.base.BaseView;
 import com.daily.base.OnBaseEventListener;
 import com.daily.base.widget.DailyTextView;
+import com.daily.dailyhotel.entity.Persons;
 import com.daily.dailyhotel.entity.Suggest;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ActivityStayOutboundSearchDataBinding;
@@ -27,6 +28,8 @@ public class StayOutboundSearchView extends BaseView<StayOutboundSearchView.OnEv
         void onSearchKeyword();
 
         void onCalendarClick();
+
+        void onPersonsClick();
     }
 
     public StayOutboundSearchView(BaseActivity baseActivity, StayOutboundSearchView.OnEventListener listener)
@@ -47,6 +50,7 @@ public class StayOutboundSearchView extends BaseView<StayOutboundSearchView.OnEv
         viewDataBinding.suggestTextView.setOnClickListener(this);
         viewDataBinding.deleteKeywrodView.setOnClickListener(this);
         viewDataBinding.calendarTextView.setOnClickListener(this);
+        viewDataBinding.personTextView.setOnClickListener(this);
     }
 
     @Override
@@ -94,6 +98,12 @@ public class StayOutboundSearchView extends BaseView<StayOutboundSearchView.OnEv
     }
 
     @Override
+    public void setPersons(Persons persons)
+    {
+
+    }
+
+    @Override
     public void onClick(View v)
     {
         switch (v.getId())
@@ -104,6 +114,10 @@ public class StayOutboundSearchView extends BaseView<StayOutboundSearchView.OnEv
 
             case R.id.calendarTextView:
                 getEventListener().onCalendarClick();
+                break;
+
+            case R.id.personTextView:
+                getEventListener().onPersonsClick();
                 break;
 
             // 검색 하기

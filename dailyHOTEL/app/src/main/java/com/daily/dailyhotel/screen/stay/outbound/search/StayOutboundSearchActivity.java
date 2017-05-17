@@ -18,6 +18,7 @@ public class StayOutboundSearchActivity extends BaseActivity<StayOutboundSearchP
 {
     static final int REQUEST_CODE_CALENDAR = 10000;
     static final int REQUEST_CODE_SUGGEST = 10001;
+    static final int REQUEST_CODE_SELECT_PERSONS = 10002;
 
     public static Intent newInstance(Context context)
     {

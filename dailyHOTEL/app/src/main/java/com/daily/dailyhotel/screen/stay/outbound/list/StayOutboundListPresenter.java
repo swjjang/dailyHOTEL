@@ -155,7 +155,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
             }
 
             mPersons.numberOfAdults = intent.getIntExtra(StayOutboundListActivity.INTENT_EXTRA_DATA_NUMBER_OF_ADULTS, 2);
-            mPersons.setChildList(intent.getStringArrayListExtra(StayOutboundListActivity.INTENT_EXTRA_DATA_CHILD_LIST));
+            mPersons.setChildAgeList(intent.getStringArrayListExtra(StayOutboundListActivity.INTENT_EXTRA_DATA_CHILD_LIST));
 
         } else if (intent.hasExtra(StayOutboundListActivity.INTENT_EXTRA_DATA_KEYWORD) == true)
         {
@@ -179,7 +179,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
             }
 
             mPersons.numberOfAdults = intent.getIntExtra(StayOutboundListActivity.INTENT_EXTRA_DATA_NUMBER_OF_ADULTS, 2);
-            mPersons.setChildList(intent.getStringArrayListExtra(StayOutboundListActivity.INTENT_EXTRA_DATA_CHILD_LIST));
+            mPersons.setChildAgeList(intent.getStringArrayListExtra(StayOutboundListActivity.INTENT_EXTRA_DATA_CHILD_LIST));
         } else
         {
             return false;
@@ -490,14 +490,14 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
                 , stayOutbound.name, imageUrl//
                 , mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
                 , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
-                , mPersons.numberOfAdults, mPersons.getChildList(), false), StayOutboundListActivity.REQUEST_CODE_STAYOUTBOUND_DETAIL);
+                , mPersons.numberOfAdults, mPersons.getChildAgeList(), false), StayOutboundListActivity.REQUEST_CODE_STAYOUTBOUND_DETAIL);
         } else
         {
             startActivityForResult(StayOutboundDetailActivity.newInstance(getActivity(), stayOutbound.index//
                 , stayOutbound.name, imageUrl//
                 , mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
                 , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
-                , mPersons.numberOfAdults, mPersons.getChildList(), false), StayOutboundListActivity.REQUEST_CODE_STAYOUTBOUND_DETAIL);
+                , mPersons.numberOfAdults, mPersons.getChildAgeList(), false), StayOutboundListActivity.REQUEST_CODE_STAYOUTBOUND_DETAIL);
         }
     }
 

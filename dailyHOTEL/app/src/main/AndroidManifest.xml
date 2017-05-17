@@ -700,6 +700,13 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden"/>
 
+        <activity
+            android:name="com.daily.dailyhotel.screen.stay.outbound.persons.SelectPersonsActivity"
+            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/TransDialog"/>
+
         <!--  com.daily.dailyhotel.... -->
 
 

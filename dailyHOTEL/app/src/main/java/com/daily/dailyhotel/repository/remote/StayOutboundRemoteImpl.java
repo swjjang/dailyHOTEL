@@ -42,15 +42,15 @@ public class StayOutboundRemoteImpl implements StayOutboundInterface
         int numberOfChildren = 0;
         String childAges = null;
 
-        List<String> childList = persons.getChildList();
+        List<String> childAgeList = persons.getChildAgeList();
 
-        if (childList != null)
+        if (childAgeList != null)
         {
-            numberOfChildren = childList.size();
+            numberOfChildren = childAgeList.size();
 
             if (numberOfChildren > 0)
             {
-                for (String age : childList)
+                for (String age : childAgeList)
                 {
                     if (childAges == null)
                     {
@@ -107,15 +107,15 @@ public class StayOutboundRemoteImpl implements StayOutboundInterface
         double maxStarRating = 5.0;
         double minStarRating = 1.0;
 
-        List<String> childList = persons.getChildList();
+        List<String> childAgeList = persons.getChildAgeList();
 
-        if (childList != null)
+        if (childAgeList != null)
         {
-            numberOfChildren = childList.size();
+            numberOfChildren = childAgeList.size();
 
             if (numberOfChildren > 0)
             {
-                for (String age : childList)
+                for (String age : childAgeList)
                 {
                     if (childAges == null)
                     {
@@ -180,15 +180,15 @@ public class StayOutboundRemoteImpl implements StayOutboundInterface
         int numberOfChildren = 0;
         String childAges = null;
 
-        List<String> childList = persons.getChildList();
+        List<String> childAgeList = persons.getChildAgeList();
 
-        if (childList != null)
+        if (childAgeList != null)
         {
-            numberOfChildren = childList.size();
+            numberOfChildren = childAgeList.size();
 
             if (numberOfChildren > 0)
             {
-                for (String age : childList)
+                for (String age : childAgeList)
                 {
                     if (childAges == null)
                     {
@@ -240,15 +240,15 @@ public class StayOutboundRemoteImpl implements StayOutboundInterface
         int numberOfChildren = 0;
         String childAges = null;
 
-        List<String> childList = persons.getChildList();
+        List<String> childAgeList = persons.getChildAgeList();
 
-        if (childList != null)
+        if (childAgeList != null)
         {
-            numberOfChildren = childList.size();
+            numberOfChildren = childAgeList.size();
 
             if (numberOfChildren > 0)
             {
-                for (String age : childList)
+                for (String age : childAgeList)
                 {
                     if (childAges == null)
                     {

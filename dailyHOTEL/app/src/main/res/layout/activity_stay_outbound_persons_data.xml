@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:dailyFont="http://schemas.android.com/apk/res-auto">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/shape_fillrect_cbffffff_r2"
+        android:orientation="vertical"
+        android:paddingBottom="10dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingTop="24dp">
+
+        <com.daily.base.widget.DailyTextView
+            android:id="@+id/titleTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:gravity="center_horizontal"
+            android:text="@string/label_person_select_person"
+            android:textColor="@color/default_text_c323232"
+            android:textSize="17dp"
+            dailyFont:style="Medium"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="36dp"
+            android:layout_marginBottom="16dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:gravity="center_vertical"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp">
+
+            <com.daily.base.widget.DailyTextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.3"
+                android:text="@string/label_person_adult"
+                android:textColor="@color/default_text_c929292"
+                android:textSize="13dp"/>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.7"
+                android:gravity="right|center_vertical">
+
+                <ImageView
+                    android:id="@+id/adultCountMinus"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:src="@drawable/selector_payment_minus_button"/>
+
+                <com.daily.base.widget.DailyTextView
+                    android:id="@+id/adultCountTextView"
+                    android:layout_width="57dp"
+                    android:layout_height="25dp"
+                    android:background="@drawable/payment_ic_amount_bg"
+                    android:gravity="center"
+                    android:textColor="@color/default_text_c323232"
+                    android:textSize="13dp"/>
+
+                <ImageView
+                    android:id="@+id/adultCountPlus"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:src="@drawable/selector_payment_plus_button"/>
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="36dp"
+            android:layout_marginBottom="16dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:gravity="center_vertical"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp">
+
+            <com.daily.base.widget.DailyTextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.3"
+                android:text="@string/label_person_child"
+                android:textColor="@color/default_text_c929292"
+                android:textSize="13dp"/>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.7"
+                android:gravity="right|center_vertical">
+
+                <ImageView
+                    android:id="@+id/childCountMinus"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:src="@drawable/selector_payment_minus_button"/>
+
+                <com.daily.base.widget.DailyTextView
+                    android:id="@+id/childCountTextView"
+                    android:layout_width="57dp"
+                    android:layout_height="25dp"
+                    android:background="@drawable/payment_ic_amount_bg"
+                    android:gravity="center"
+                    android:textColor="@color/default_text_c323232"
+                    android:textSize="13dp"/>
+
+                <ImageView
+                    android:id="@+id/childCountPlus"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:src="@drawable/selector_payment_plus_button"/>
+            </LinearLayout>
+        </LinearLayout>
+
+        <View
+            android:id="@+id/divisionLineView"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/default_line_ce7e7e7"/>
+
+        <RelativeLayout
+            android:id="@+id/child1Layout"
+            android:layout_width="match_parent"
+            android:layout_height="36dp"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp">
+
+            <com.daily.base.widget.DailyTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:text="@string/label_person_age_of_child1"
+                android:textColor="@color/default_text_c929292"
+                android:textSize="13dp"/>
+
+            <LinearLayout
+                android:id="@+id/child1AgeLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:gravity="center_vertical|right">
+
+                <com.twoheart.dailyhotel.widget.DailyHintSpinner
+                    android:id="@+id/child1AgeSpinner"
+                    android:layout_width="95dp"
+                    android:layout_height="25dp"
+                    android:background="@drawable/payment_ic_amount_time_bg"
+                    android:paddingLeft="1px"
+                    android:paddingRight="1px"
+                    android:prompt="@string/label_select_category"
+                    android:spinnerMode="dropdown"/>
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/selector_booking_used_button"/>
+            </LinearLayout>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/child2Layout"
+            android:layout_width="match_parent"
+            android:layout_height="36dp"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp">
+
+            <com.daily.base.widget.DailyTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:text="@string/label_person_age_of_child1"
+                android:textColor="@color/default_text_c929292"
+                android:textSize="13dp"/>
+
+            <LinearLayout
+                android:id="@+id/child2AgeLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:gravity="center_vertical|right">
+
+                <com.twoheart.dailyhotel.widget.DailyHintSpinner
+                    android:id="@+id/child2AgeSpinner"
+                    android:layout_width="95dp"
+                    android:layout_height="25dp"
+                    android:background="@drawable/payment_ic_amount_time_bg"
+                    android:paddingLeft="1px"
+                    android:paddingRight="1px"
+                    android:prompt="@string/label_select_category"
+                    android:spinnerMode="dropdown"/>
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/selector_booking_used_button"/>
+            </LinearLayout>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/child3Layout"
+            android:layout_width="match_parent"
+            android:layout_height="36dp"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp">
+
+            <com.daily.base.widget.DailyTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:text="@string/label_person_age_of_child1"
+                android:textColor="@color/default_text_c929292"
+                android:textSize="13dp"/>
+
+            <LinearLayout
+                android:id="@+id/child3AgeLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:gravity="center_vertical|right">
+
+                <com.twoheart.dailyhotel.widget.DailyHintSpinner
+                    android:id="@+id/child3AgeSpinner"
+                    android:layout_width="95dp"
+                    android:layout_height="25dp"
+                    android:background="@drawable/payment_ic_amount_time_bg"
+                    android:paddingLeft="1px"
+                    android:paddingRight="1px"
+                    android:prompt="@string/label_select_category"
+                    android:spinnerMode="dropdown"/>
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/selector_booking_used_button"/>
+            </LinearLayout>
+        </RelativeLayout>
+
+
+        <LinearLayout
+            android:id="@+id/oneButtonLayout"
+            android:layout_width="match_parent"
+            android:layout_height="38dp"
+            android:layout_marginTop="8dp"
+            android:gravity="center_horizontal">
+
+            <com.daily.base.widget.DailyTextView
+                android:id="@+id/confirmTextView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/selector_dialog_button01"
+                android:gravity="center"
+                android:text="@string/label_person_confirm"
+                android:textColor="@drawable/selector_dialog_text_color01"
+                android:textSize="14dp"
+                dailyFont:style="Medium"/>
+        </LinearLayout>
+    </LinearLayout>
+</layout>

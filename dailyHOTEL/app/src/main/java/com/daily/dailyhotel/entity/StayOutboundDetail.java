@@ -70,11 +70,11 @@ public class StayOutboundDetail
 
     public enum Amenity
     {
+        SAUNA(R.drawable.f_ic_facilities_16, 2135),
         POOL(R.drawable.f_ic_facilities_06, 24),
+        KIDS_PLAY_ROOM(R.drawable.f_ic_facilities_17, 2186),
         FITNESS(R.drawable.f_ic_facilities_07, 2008),
         FRONT24(R.drawable.f_ic_facilities_05, 2063),
-        SAUNA(R.drawable.f_ic_facilities_16, 2135),
-        KIDS_PLAY_ROOM(R.drawable.f_ic_facilities_17, 2186),
         MORE(R.drawable.f_ic_facilities_15, -1),
         NONE(0, 0);
 

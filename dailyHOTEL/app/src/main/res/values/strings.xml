@@ -1266,6 +1266,16 @@
     <string name="message_detail_review_gourmet_explain">트루리뷰는 100% 직접 방문한 고객님이 남겨주신 리뷰입니다.</string>
 
     <!-- Stay Out Bound Search -->
+    <string name="label_person_select_person">투숙 인원 선택</string>
+    <string name="label_person_adult">성인</string>
+    <string name="label_person_child">아동</string>
+    <string name="label_person_age_of_child1">아동1의 나이</string>
+    <string name="label_person_age_of_child2">아동2의 나이</string>
+    <string name="label_person_age_of_child3">아동3의 나이</string>
+    <string name="label_person_confirm">선택 완료</string>
+    <string name="label_person_number_of_person">%1$d 명</string>
+    <string name="label_person_under_of_1_age">만 1세 미만</string>
+    <string name="label_person_child_age">만 %1$s세</string>
 
     <!-- Stay Out Bound List -->
 
@@ -1345,5 +1355,27 @@
         <item>\@me.com</item>
         <item>\@outlook.com</item>
         <item>\@qq.com</item>
+    </string-array>
+
+    <string-array name="child_age_array">
+        <item>선택</item>
+        <item>만 1세 미만</item>
+        <item>만 1세</item>
+        <item>만 2세</item>
+        <item>만 3세</item>
+        <item>만 4세</item>
+        <item>만 5세</item>
+        <item>만 6세</item>
+        <item>만 7세</item>
+        <item>만 8세</item>
+        <item>만 9세</item>
+        <item>만 10세</item>
+        <item>만 11세</item>
+        <item>만 12세</item>
+        <item>만 13세</item>
+        <item>만 14세</item>
+        <item>만 15세</item>
+        <item>만 16세</item>
+        <item>만 17세</item>
     </string-array>
 </resources>

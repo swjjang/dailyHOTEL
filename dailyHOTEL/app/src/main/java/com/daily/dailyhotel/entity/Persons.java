@@ -7,21 +7,21 @@ public class Persons
     public static final int DEFAULT_PERSONS = 2;
 
     public int numberOfAdults;
-    private ArrayList<String> mChildList;
+    private ArrayList<String> mChildAgeList;
 
-    public Persons(int numberOfAdults, ArrayList<String> childList)
+    public Persons(int numberOfAdults, ArrayList<String> childAgeList)
     {
         this.numberOfAdults = numberOfAdults;
-        setChildList(childList);
+        setChildAgeList(childAgeList);
     }
 
-    public void setChildList(ArrayList<String> childList)
+    public void setChildAgeList(ArrayList<String> childAgeList)
     {
-        mChildList = childList;
+        mChildAgeList = childAgeList;
     }
 
-    public ArrayList<String> getChildList()
+    public ArrayList<String> getChildAgeList()
     {
-        return mChildList;
+        return mChildAgeList;
     }
 }
