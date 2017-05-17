@@ -2,10 +2,7 @@ package com.daily.dailyhotel.entity;
 
 public class StayOutboundFilters
 {
-    public boolean includeSurrounding;
-    public int maxStarRating;
-    public int minStarRating;
-
+    public int rating;
     public SortType sortType;
 
     public enum SortType

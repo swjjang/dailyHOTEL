@@ -206,7 +206,7 @@ public class StayCalendarPresenter extends PlaceCalendarPresenter<StayCalendarAc
 
         if (isRefresh() == true)
         {
-            onRefresh();
+            onRefresh(true);
         }
     }
 
@@ -279,7 +279,7 @@ public class StayCalendarPresenter extends PlaceCalendarPresenter<StayCalendarAc
     }
 
     @Override
-    protected void onRefresh()
+    protected void onRefresh(boolean showProgress)
     {
         if (getActivity().isFinishing() == true)
         {

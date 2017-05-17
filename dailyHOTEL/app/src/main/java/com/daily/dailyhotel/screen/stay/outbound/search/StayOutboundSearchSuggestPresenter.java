@@ -84,7 +84,7 @@ public class StayOutboundSearchSuggestPresenter extends BaseExceptionPresenter<S
 
         if (isRefresh() == true)
         {
-            onRefresh();
+            onRefresh(true);
         }
     }
 
@@ -138,7 +138,7 @@ public class StayOutboundSearchSuggestPresenter extends BaseExceptionPresenter<S
     }
 
     @Override
-    protected void onRefresh()
+    protected void onRefresh(boolean showProgress)
     {
     }
 

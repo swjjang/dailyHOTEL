@@ -19,6 +19,7 @@ import com.daily.dailyhotel.entity.ListItem;
 import com.daily.dailyhotel.entity.Persons;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayOutbound;
+import com.daily.dailyhotel.entity.StayOutboundFilters;
 import com.daily.dailyhotel.entity.StayOutbounds;
 import com.daily.dailyhotel.entity.Suggest;
 import com.daily.dailyhotel.parcel.SuggestParcel;
@@ -26,6 +27,7 @@ import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
 import com.daily.dailyhotel.repository.remote.StayOutboundRemoteImpl;
 import com.daily.dailyhotel.screen.common.calendar.StayCalendarActivity;
 import com.daily.dailyhotel.screen.stay.outbound.detail.StayOutboundDetailActivity;
+import com.daily.dailyhotel.screen.stay.outbound.filter.StayOutboundFilterActivity;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.Util;
@@ -51,7 +53,6 @@ import io.reactivex.schedulers.Schedulers;
 public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutboundListActivity, StayOutboundListViewInterface> //
     implements StayOutboundListView.OnEventListener
 {
-    private static final int REQUEST_CODE_CALENDAR = 10000;
     private static final int DAYS_OF_MAXCOUNT = 90;
     private static final int NIGHTS_OF_MAXCOUNT = 28;
 
@@ -64,6 +65,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
 
     private Suggest mSuggest;
     private Persons mPersons;
+    private StayOutboundFilters mStayOutboundFilters;
     private List<StayOutbound> mStayOutboundList;
 
     // 리스트 요청시에 다음이 있는지에 대한 인자들
@@ -107,6 +109,8 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
         mCommonRemoteImpl = new CommonRemoteImpl(activity);
 
         mPersons = new Persons(Persons.DEFAULT_PERSONS, null);
+
+        onFilter(null, -1);
 
         setRefresh(true);
     }
@@ -208,7 +212,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
         if (isRefresh() == true)
         {
             clearCache();
-            onRefresh();
+            onRefresh(true);
         }
     }
 
@@ -277,7 +281,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
 
         switch (requestCode)
         {
-            case REQUEST_CODE_CALENDAR:
+            case StayOutboundListActivity.REQUEST_CODE_STAYOUTBOUND_CALENDAR:
             {
                 if (resultCode == Activity.RESULT_OK && data != null)
                 {
@@ -297,11 +301,29 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
                 }
                 break;
             }
+
+            case StayOutboundListActivity.REQUEST_CODE_STAYOUTBOUND_FILTER:
+            {
+                if (resultCode == Activity.RESULT_OK && data != null)
+                {
+                    if (data.hasExtra(StayOutboundFilterActivity.INTENT_EXTRA_DATA_SORT) == true//
+                        && data.hasExtra(StayOutboundFilterActivity.INTENT_EXTRA_DATA_RATING) == true)
+                    {
+                        StayOutboundFilters.SortType sortType = StayOutboundFilters.SortType.valueOf(data.getStringExtra(StayOutboundFilterActivity.INTENT_EXTRA_DATA_SORT));
+                        int rating = data.getIntExtra(StayOutboundFilterActivity.INTENT_EXTRA_DATA_RATING, -1);
+
+                        onFilter(sortType, rating);
+
+                        onRefreshAll(true);
+                    }
+                }
+                break;
+            }
         }
     }
 
     @Override
-    protected void onRefresh()
+    protected void onRefresh(boolean showProgress)
     {
         if (getActivity().isFinishing() == true)
         {
@@ -309,7 +331,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
         }
 
         setRefresh(false);
-        screenLock(true);
+        screenLock(showProgress);
 
         Observable<StayOutbounds> observable;
 
@@ -322,7 +344,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
         {
             // Suggest 검색인 경우
             observable = mStayOutboundRemoteImpl.getStayOutBoundList(mStayBookDateTime//
-                , mSuggest.id, mSuggest.categoryKey, mPersons, mCacheKey, mCacheLocation);
+                , mSuggest.id, mSuggest.categoryKey, mPersons, mStayOutboundFilters, mCacheKey, mCacheLocation);
         }
 
         addCompositeDisposable(Observable.zip(mCommonRemoteImpl.getCommonDateTime(), observable//
@@ -355,6 +377,13 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
     }
 
     @Override
+    public void onRefreshAll(boolean showProgress)
+    {
+        clearCache();
+        onRefresh(showProgress);
+    }
+
+    @Override
     public void onCalendarClick()
     {
         if (lock() == true || mStayBookDateTime == null)
@@ -379,7 +408,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
                 , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
                 , startDateTime, endDateTime, NIGHTS_OF_MAXCOUNT, AnalyticsManager.ValueType.SEARCH, true, true);
 
-            startActivityForResult(intent, REQUEST_CODE_CALENDAR);
+            startActivityForResult(intent, StayOutboundListActivity.REQUEST_CODE_STAYOUTBOUND_CALENDAR);
         } catch (Exception e)
         {
             ExLog.e(e.toString());
@@ -395,6 +424,9 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
         {
             return;
         }
+
+        Intent intent = StayOutboundFilterActivity.newInstance(getActivity(), mStayOutboundFilters);
+        startActivityForResult(intent, StayOutboundListActivity.REQUEST_CODE_STAYOUTBOUND_FILTER);
     }
 
     @Override
@@ -438,7 +470,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
         }
 
         String imageUrl;
-        if(ScreenUtils.getScreenWidth(getActivity()) >= ScreenUtils.DEFAULT_STAYOUTBOUND_XXHDPI_WIDTH)
+        if (ScreenUtils.getScreenWidth(getActivity()) >= ScreenUtils.DEFAULT_STAYOUTBOUND_XXHDPI_WIDTH)
         {
             imageUrl = stayOutbound.xxhdpiImageUrl;
         } else
@@ -572,6 +604,11 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
 
         if (DailyTextUtils.isTextEmpty(mCacheKey, mCacheLocation) == true)
         {
+            if(mStayOutboundList != null)
+            {
+                mStayOutboundList.clear();
+            }
+
             mStayOutboundList = stayOutbounds.getStayOutbound();
         } else
         {
@@ -651,6 +688,24 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
         onStayBookDateTime(mStayBookDateTime);
     }
 
+    private void onFilter(StayOutboundFilters.SortType sortType, int rating)
+    {
+        if (mStayOutboundFilters == null)
+        {
+            mStayOutboundFilters = new StayOutboundFilters();
+        }
+
+        if (sortType == null)
+        {
+            mStayOutboundFilters.sortType = StayOutboundFilters.SortType.RECOMMENDATION;
+        } else
+        {
+            mStayOutboundFilters.sortType = sortType;
+        }
+
+        mStayOutboundFilters.rating = rating;
+    }
+
     /**
      * @param checkInDateTime  ISO-8601
      * @param checkOutDateTime ISO-8601
@@ -713,7 +768,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
         {
             // Suggest 검색인 경우
             observable = mStayOutboundRemoteImpl.getStayOutBoundList(mStayBookDateTime//
-                , mSuggest.id, mSuggest.categoryKey, mPersons, mCacheKey, mCacheLocation);
+                , mSuggest.id, mSuggest.categoryKey, mPersons, mStayOutboundFilters, mCacheKey, mCacheLocation);
         }
 
         addCompositeDisposable(observable.subscribe(stayOutbounds ->

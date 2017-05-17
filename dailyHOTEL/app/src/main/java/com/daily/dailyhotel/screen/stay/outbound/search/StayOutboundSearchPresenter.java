@@ -112,7 +112,7 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
 
         if (isRefresh() == true)
         {
-            onRefresh();
+            onRefresh(true);
         }
     }
 
@@ -204,7 +204,7 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
     }
 
     @Override
-    protected void onRefresh()
+    protected void onRefresh(boolean showProgress)
     {
         if (getActivity().isFinishing() == true)
         {
@@ -212,7 +212,7 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
         }
 
         setRefresh(false);
-        screenLock(true);
+        screenLock(showProgress);
 
         addCompositeDisposable(mCommonRemoteImpl.getCommonDateTime()//
             .subscribe(commonDateTime ->

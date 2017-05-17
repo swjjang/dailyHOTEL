@@ -213,7 +213,7 @@ public class ProfilePresenter extends BaseExceptionPresenter<ProfileActivity, Pr
     }
 
     @Override
-    protected void onRefresh()
+    protected void onRefresh(boolean showProgress)
     {
 
     }

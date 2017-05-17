@@ -90,7 +90,7 @@ public class StayOutboundRemoteImpl implements StayOutboundInterface
 
     @Override
     public Observable<StayOutbounds> getStayOutBoundList(StayBookDateTime stayBookDateTime, long geographyId//
-        , String geographyType, Persons persons, String cacheKey, String cacheLocation)
+        , String geographyType, Persons persons, StayOutboundFilters stayOutboundFilters, String cacheKey, String cacheLocation)
     {
         final int numberOfRooms = 1;
         final int numberOfResults = 200;
@@ -98,11 +98,14 @@ public class StayOutboundRemoteImpl implements StayOutboundInterface
         /// 디폴트 인자들
         final String apiExperience = "PARTNER_MOBILE_APP";
         final String locale = "ko_KR";
-        final String sort = "DEFAULT";
+        String sort = "DEFAULT";
 
         int numberOfAdults = persons.numberOfAdults;
         int numberOfChildren = 0;
         String childAges = null;
+
+        double maxStarRating = 5.0;
+        double minStarRating = 1.0;
 
         List<String> childList = persons.getChildList();
 
@@ -125,10 +128,20 @@ public class StayOutboundRemoteImpl implements StayOutboundInterface
             }
         }
 
+        if (stayOutboundFilters != null)
+        {
+            sort = stayOutboundFilters.sortType.getValue();
+
+            if (stayOutboundFilters.rating > 0)
+            {
+                maxStarRating = minStarRating = stayOutboundFilters.rating;
+            }
+        }
+
         return DailyMobileAPI.getInstance(mContext).getStayOutBoundList(stayBookDateTime.getCheckInDateTime("yyyy-MM-dd")//
             , stayBookDateTime.getCheckOutDateTime("yyyy-MM-dd")//
-            , numberOfAdults, numberOfChildren, childAges, numberOfRooms, geographyId, geographyType//
-            , numberOfResults, cacheKey, cacheLocation, apiExperience, locale, sort).map((stayOutboundDataBaseDto) ->
+            , numberOfAdults, numberOfChildren, childAges, maxStarRating, minStarRating, numberOfRooms//
+            , geographyId, geographyType, numberOfResults, cacheKey, cacheLocation, apiExperience, locale, sort).map((stayOutboundDataBaseDto) ->
         {
             StayOutbounds stayOutbounds = null;
 

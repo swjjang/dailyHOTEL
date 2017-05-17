@@ -28,6 +28,8 @@ public class StayOutboundListActivity extends BaseActivity<StayOutboundListPrese
     static final String INTENT_EXTRA_DATA_CHILD_LIST = "childList";
 
     static final int REQUEST_CODE_STAYOUTBOUND_DETAIL = 10000;
+    static final int REQUEST_CODE_STAYOUTBOUND_CALENDAR = 10001;
+    static final int REQUEST_CODE_STAYOUTBOUND_FILTER = 10002;
 
     /**
      * @param context

@@ -82,7 +82,7 @@
                     </RelativeLayout>
 
                     <RadioGroup
-                        android:id="@+id/sortLayout"
+                        android:id="@+id/sortRadioGroup"
                         android:layout_width="match_parent"
                         android:layout_height="74dp"
                         android:orientation="horizontal"
@@ -169,7 +169,7 @@
                         android:layout_height="25dp"
                         android:background="@color/default_background_section_cf2f2f3"
                         android:gravity="center"
-                        android:text="@string/label_sort_by"
+                        android:text="@string/label_rating"
                         android:textColor="@color/default_text_c929292"
                         android:textSize="13dp"/>
 
@@ -187,7 +187,7 @@
                 </RelativeLayout>
 
                 <RadioGroup
-                    android:id="@+id/gradeLayout"
+                    android:id="@+id/ratingRadioGroup"
                     android:layout_width="match_parent"
                     android:layout_height="74dp"
                     android:orientation="horizontal"
@@ -195,7 +195,7 @@
                     android:paddingRight="10dp">
 
                     <com.daily.base.widget.DailyRadioButton
-                        android:id="@+id/grade1View"
+                        android:id="@+id/rating1View"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
@@ -203,13 +203,13 @@
                         android:button="@null"
                         android:gravity="center_horizontal"
                         android:paddingTop="12dp"
-                        android:text="@string/label_sort_by_rank"
+                        android:text="@string/label_filter_1_star_rate"
                         android:textColor="@color/selector_curation_textcolor"
                         android:textSize="11dp"
-                        app:drawableCompatTop="@drawable/f_ic_sort_06"/>
+                        app:drawableCompatTop="@drawable/f_ic_hotel_grade_01"/>
 
                     <com.daily.base.widget.DailyRadioButton
-                        android:id="@+id/grade2View"
+                        android:id="@+id/rating2View"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
@@ -217,13 +217,13 @@
                         android:button="@null"
                         android:gravity="center_horizontal"
                         android:paddingTop="12dp"
-                        android:text="@string/label_sort_by_distance"
+                        android:text="@string/label_filter_2_star_rate"
                         android:textColor="@color/selector_curation_textcolor"
                         android:textSize="11dp"
-                        app:drawableCompatTop="@drawable/f_ic_sort_02"/>
+                        app:drawableCompatTop="@drawable/f_ic_hotel_grade_02"/>
 
                     <com.daily.base.widget.DailyRadioButton
-                        android:id="@+id/grade3View"
+                        android:id="@+id/rating3View"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
@@ -231,13 +231,13 @@
                         android:button="@null"
                         android:gravity="center_horizontal"
                         android:paddingTop="12dp"
-                        android:text="@string/label_sort_by_low_price"
+                        android:text="@string/label_filter_3_star_rate"
                         android:textColor="@color/selector_curation_textcolor"
                         android:textSize="11dp"
-                        app:drawableCompatTop="@drawable/f_ic_sort_03"/>
+                        app:drawableCompatTop="@drawable/f_ic_hotel_grade_03"/>
 
                     <com.daily.base.widget.DailyRadioButton
-                        android:id="@+id/grade4View"
+                        android:id="@+id/rating4View"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
@@ -245,13 +245,13 @@
                         android:button="@null"
                         android:gravity="center_horizontal"
                         android:paddingTop="12dp"
-                        android:text="@string/label_sort_by_high_price"
+                        android:text="@string/label_filter_4_star_rate"
                         android:textColor="@color/selector_curation_textcolor"
                         android:textSize="11dp"
-                        app:drawableCompatTop="@drawable/f_ic_sort_04"/>
+                        app:drawableCompatTop="@drawable/f_ic_hotel_grade_04"/>
 
                     <com.daily.base.widget.DailyRadioButton
-                        android:id="@+id/grade5View"
+                        android:id="@+id/rating5View"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
@@ -259,10 +259,10 @@
                         android:button="@null"
                         android:gravity="center_horizontal"
                         android:paddingTop="12dp"
-                        android:text="@string/label_sort_by_satisfaction"
+                        android:text="@string/label_filter_5_star_rate"
                         android:textColor="@color/selector_curation_textcolor"
                         android:textSize="11dp"
-                        app:drawableCompatTop="@drawable/f_ic_sort_05"/>
+                        app:drawableCompatTop="@drawable/f_ic_hotel_grade_05"/>
                 </RadioGroup>
             </LinearLayout>
         </ScrollView>

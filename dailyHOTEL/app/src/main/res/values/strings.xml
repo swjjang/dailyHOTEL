@@ -867,6 +867,7 @@
     <string name="label_gourmet_filter_result_empty">0개의 레스토랑</string>
     <string name="label_reset">초기화</string>
     <string name="label_sort_by">정렬</string>
+    <string name="label_rating">등급</string>
     <string name="label_sort_by_distance">거리순</string>
     <string name="label_sort_by_low_price">낮은 가격순</string>
     <string name="label_sort_by_high_price">높은 가격순</string>
@@ -886,7 +887,6 @@
     <string name="label_fitness">피트니스</string>
     <string name="label_settime">시간설정</string>
     <string name="label_parking">주차가능</string>
-    <string name="label_front24">24시간 운영 프런트 데스크</string>
     <string name="label_unabled_parking">주차불가</string>
     <string name="label_allowed_pet">반려동물</string>
     <string name="label_allowed_barbecue">공동바베큐</string>
@@ -1268,6 +1268,13 @@
     <!-- Stay Out Bound Search -->
 
     <!-- Stay Out Bound List -->
+
+    <!-- Stay Out Bound Filter -->
+    <string name="label_filter_1_star_rate">1성급</string>
+    <string name="label_filter_2_star_rate">2성급</string>
+    <string name="label_filter_3_star_rate">3성급</string>
+    <string name="label_filter_4_star_rate">4성급</string>
+    <string name="label_filter_5_star_rate">5성급</string>
 
     <!-- Stay Out Bound Detail -->
     <string name="label_stayoutbound_detail_grade">%1$d 성급</string>

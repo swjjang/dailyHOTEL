@@ -22,7 +22,7 @@ public abstract class BaseExceptionPresenter<T1 extends BaseActivity, T2 extends
 {
     private boolean mIsRefresh;
 
-    protected abstract void onRefresh();
+    protected abstract void onRefresh(boolean showProgress);
 
     public BaseExceptionPresenter(@NonNull T1 activity)
     {

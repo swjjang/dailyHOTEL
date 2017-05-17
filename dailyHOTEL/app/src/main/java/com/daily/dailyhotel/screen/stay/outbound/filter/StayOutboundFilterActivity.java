@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 
 import com.daily.base.BaseActivity;
 import com.daily.base.util.DailyTextUtils;
+import com.daily.dailyhotel.entity.StayOutboundFilters;
 import com.twoheart.dailyhotel.R;
 
 /**
@@ -16,19 +17,17 @@ import com.twoheart.dailyhotel.R;
  */
 public class StayOutboundFilterActivity extends BaseActivity<StayOutboundFilterPresenter>
 {
-    public static Intent newInstance(Context context)
-    {
-        Intent intent = new Intent(context, StayOutboundFilterActivity.class);
-        return intent;
-    }
+    public static final String INTENT_EXTRA_DATA_SORT = "sort";
+    public static final String INTENT_EXTRA_DATA_RATING = "rating";
 
-    public static Intent newInstance(Context context, String deepLink)
+    public static Intent newInstance(Context context, StayOutboundFilters stayOutboundFilters)
     {
         Intent intent = new Intent(context, StayOutboundFilterActivity.class);
 
-        if (DailyTextUtils.isTextEmpty(deepLink) == false)
+        if(stayOutboundFilters != null)
         {
-            intent.putExtra(INTENT_EXTRA_DATA_DEEPLINK, deepLink);
+            intent.putExtra(INTENT_EXTRA_DATA_SORT, stayOutboundFilters.sortType.name());
+            intent.putExtra(INTENT_EXTRA_DATA_RATING, stayOutboundFilters.rating);
         }
 
         return intent;
@@ -37,7 +36,7 @@ public class StayOutboundFilterActivity extends BaseActivity<StayOutboundFilterP
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
-        overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
+        overridePendingTransition(R.anim.slide_in_bottom, R.anim.hold);
 
         super.onCreate(savedInstanceState);
     }
@@ -54,6 +53,6 @@ public class StayOutboundFilterActivity extends BaseActivity<StayOutboundFilterP
     {
         super.finish();
 
-        overridePendingTransition(R.anim.hold, R.anim.slide_out_right);
+        overridePendingTransition(R.anim.hold, R.anim.slide_out_bottom);
     }
 }

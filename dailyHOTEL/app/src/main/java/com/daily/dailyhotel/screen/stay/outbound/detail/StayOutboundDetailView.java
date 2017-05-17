@@ -872,14 +872,14 @@ public class StayOutboundDetailView extends BaseView<StayOutboundDetailView.OnEv
         {
             if (stringSparseArray.get(amenity.getIndex(), null) != null)
             {
-                viewDataBinding.amenitiesGridLayout.addView(getAmenityView(getContext(), amenity, hasNextLine));
+                viewDataBinding.amenitiesGridLayout.addView(getAmenityView(getContext(), amenity, stringSparseArray.get(amenity.getIndex()), hasNextLine));
             }
         }
 
         // 더보기가 존재하는 경우
         if (viewDataBinding.amenitiesGridLayout.getChildCount() < stringSparseArray.size())
         {
-            viewDataBinding.amenitiesGridLayout.addView(getAmenityView(getContext(), StayOutboundDetail.Amenity.MORE, false));
+            viewDataBinding.amenitiesGridLayout.addView(getAmenityView(getContext(), StayOutboundDetail.Amenity.MORE, getString(R.string.label_more), false));
         }
 
         int columnCount = viewDataBinding.amenitiesGridLayout.getChildCount() % GRID_COLUMN_COUNT;
@@ -889,19 +889,19 @@ public class StayOutboundDetailView extends BaseView<StayOutboundDetailView.OnEv
             int addEmptyViewCount = GRID_COLUMN_COUNT - columnCount;
             for (int i = 0; i < addEmptyViewCount; i++)
             {
-                viewDataBinding.amenitiesGridLayout.addView(getAmenityView(getContext(), StayOutboundDetail.Amenity.NONE, false));
+                viewDataBinding.amenitiesGridLayout.addView(getAmenityView(getContext(), StayOutboundDetail.Amenity.NONE, null, false));
             }
         }
     }
 
-    private DailyTextView getAmenityView(Context context, StayOutboundDetail.Amenity amenity, boolean hasNextLine)
+    private DailyTextView getAmenityView(Context context, StayOutboundDetail.Amenity amenity, String amenityName, boolean hasNextLine)
     {
         DailyTextView dailyTextView = new DailyTextView(context);
         dailyTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 11);
         dailyTextView.setGravity(Gravity.CENTER_HORIZONTAL);
         dailyTextView.setTypeface(dailyTextView.getTypeface(), Typeface.NORMAL);
         dailyTextView.setTextColor(getColorStateList(R.color.default_text_c323232));
-        dailyTextView.setText(amenity.getName(context));
+        dailyTextView.setText(amenityName);
         dailyTextView.setCompoundDrawablesWithIntrinsicBounds(0, amenity.getImageResId(), 0, 0);
         dailyTextView.setDrawableVectorTint(R.color.default_background_c454545);
 

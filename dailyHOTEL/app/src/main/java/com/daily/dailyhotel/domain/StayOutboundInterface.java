@@ -14,7 +14,7 @@ public interface StayOutboundInterface
         , String city, Persons persons, String cacheKey, String cacheLocation);
 
     Observable<StayOutbounds> getStayOutBoundList(StayBookDateTime stayBookDateTime, long geographyId//
-        , String geographyType, Persons persons, String cacheKey, String cacheLocation);
+        , String geographyType, Persons persons,  StayOutboundFilters stayOutboundFilters, String cacheKey, String cacheLocation);
 
     Observable<StayOutbounds> getStayOutBoundList(StayBookDateTime stayBookDateTime, String countryCode//
         , String city, double latitude, double longitude, int searchRadius, StayOutboundFilters filters//

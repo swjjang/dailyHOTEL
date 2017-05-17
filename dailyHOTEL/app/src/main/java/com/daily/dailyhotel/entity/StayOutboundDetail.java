@@ -1,13 +1,11 @@
 package com.daily.dailyhotel.entity;
 
-import android.content.Context;
 import android.util.SparseArray;
 
 import com.twoheart.dailyhotel.R;
 
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 public class StayOutboundDetail
 {
@@ -72,32 +70,21 @@ public class StayOutboundDetail
 
     public enum Amenity
     {
-        POOL(R.string.label_pool, R.drawable.f_ic_facilities_06, 24),
-        FITNESS(R.string.label_fitness, R.drawable.f_ic_facilities_07, 2008),
-        FRONT24(R.string.label_front24, R.drawable.f_ic_facilities_05, 2063),
-        SAUNA(R.string.label_sauna, R.drawable.f_ic_facilities_16, 2135),
-        KIDS_PLAY_ROOM(R.string.label_kids_play_room, R.drawable.f_ic_facilities_17, 2186),
-        MORE(R.string.label_more, R.drawable.f_ic_facilities_15, -1),
-        NONE(0, 0, 0);
+        POOL(R.drawable.f_ic_facilities_06, 24),
+        FITNESS(R.drawable.f_ic_facilities_07, 2008),
+        FRONT24(R.drawable.f_ic_facilities_05, 2063),
+        SAUNA(R.drawable.f_ic_facilities_16, 2135),
+        KIDS_PLAY_ROOM(R.drawable.f_ic_facilities_17, 2186),
+        MORE(R.drawable.f_ic_facilities_15, -1),
+        NONE(0, 0);
 
-        private int mNameResId;
         private int mImageResId;
         private int mIndex;
 
-        Amenity(int nameResId, int imageResId, int index)
+        Amenity(int imageResId, int index)
         {
-            mNameResId = nameResId;
             mImageResId = imageResId;
-        }
-
-        public String getName(Context context)
-        {
-            if (mNameResId == 0)
-            {
-                return null;
-            }
-
-            return context.getString(mNameResId);
+            mIndex = index;
         }
 
         public int getImageResId()

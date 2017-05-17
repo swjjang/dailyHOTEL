@@ -511,6 +511,8 @@ public interface DailyMobileService
         , @Query(value = "rooms[0].numberOfAdults") int numberOfAdults//
         , @Query(value = "rooms[0].numberOfChildren") int numberOfChildren//
         , @Query(value = "rooms[0].childAges") String childAges //
+        , @Query(value = "filter.maxStarRating") double maxStarRating //
+        , @Query(value = "filter.minStarRating") double minStarRating //
         , @Query(value = "numberOfRooms") int numberOfRooms//
         , @Query(value = "geographyId") long geographyId//
         , @Query(value = "geographyType") String geographyType//

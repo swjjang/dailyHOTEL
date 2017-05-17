@@ -54,17 +54,18 @@ public class StayOutboundMapViewPagerAdapter extends PagerAdapter
         dataBinding.nameTextView.setText(stayOutbound.name);
 
         // 가격
-        if (stayOutbound.nightlyRateKrw <= 0)
+        if (stayOutbound.promo == true)
+        {
+            dataBinding.priceTextView.setVisibility(View.VISIBLE);
+            dataBinding.priceTextView.setText(DailyTextUtils.getPriceFormat(mContext, stayOutbound.nightlyBaseRateKrw, false));
+            dataBinding.priceTextView.setPaintFlags(dataBinding.priceTextView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+        } else
         {
             dataBinding.priceTextView.setVisibility(View.INVISIBLE);
             dataBinding.priceTextView.setText(null);
-        } else
-        {
-            dataBinding.priceTextView.setVisibility(View.VISIBLE);
-
-            dataBinding.priceTextView.setText(DailyTextUtils.getPriceFormat(mContext, stayOutbound.nightlyRateKrw, false));
-            dataBinding.priceTextView.setPaintFlags(dataBinding.priceTextView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
         }
+
+        dataBinding.discountPriceTextView.setText(DailyTextUtils.getPriceFormat(mContext, stayOutbound.nightlyRateKrw, false));
 
         // 만족도
         dataBinding.satisfactionView.setVisibility(View.GONE);

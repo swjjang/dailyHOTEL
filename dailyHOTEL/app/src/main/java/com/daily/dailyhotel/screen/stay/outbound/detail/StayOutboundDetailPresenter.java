@@ -228,7 +228,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
 
         if (isRefresh() == true)
         {
-            onRefresh();
+            onRefresh(true);
         }
     }
 
@@ -299,15 +299,13 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
     }
 
     @Override
-    protected void onRefresh()
+    protected void onRefresh(boolean showProgress)
     {
         if (getActivity().isFinishing() == true)
         {
             return;
         }
 
-        setRefresh(false);
-        screenLock(true);
 
 
     }

@@ -5,6 +5,7 @@ import android.animation.ValueAnimator;
 import android.content.Context;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
@@ -48,6 +49,8 @@ public class StayOutboundListView extends BaseView<StayOutboundListView.OnEventL
 
     public interface OnEventListener extends OnBaseEventListener
     {
+        void onRefreshAll(boolean showProgress);
+
         void onCalendarClick();
 
         void onFilterClick();
@@ -86,6 +89,16 @@ public class StayOutboundListView extends BaseView<StayOutboundListView.OnEventL
         }
 
         initToolbar(viewDataBinding);
+
+        viewDataBinding.swipeRefreshLayout.setColorSchemeResources(R.color.dh_theme_color);
+        viewDataBinding.swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener()
+        {
+            @Override
+            public void onRefresh()
+            {
+                getEventListener().onRefreshAll(false);
+            }
+        });
 
         viewDataBinding.recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
         EdgeEffectColor.setEdgeGlowColor(viewDataBinding.recyclerView, getColor(R.color.default_over_scroll_edge));
