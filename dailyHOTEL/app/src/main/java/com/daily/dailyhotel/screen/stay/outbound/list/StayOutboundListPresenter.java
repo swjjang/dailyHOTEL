@@ -447,6 +447,8 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
                 mViewState = ViewState.MAP;
 
                 getViewInterface().showMapLayout(getActivity().getSupportFragmentManager());
+
+                getViewInterface().setViewTypeOptionImage(ViewState.MAP);
                 break;
             }
 
@@ -456,6 +458,8 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
                 mViewState = ViewState.LIST;
 
                 getViewInterface().hideMapLayout(getActivity().getSupportFragmentManager());
+
+                getViewInterface().setViewTypeOptionImage(ViewState.LIST);
                 break;
             }
         }
@@ -602,9 +606,13 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
             return;
         }
 
+        final boolean isAdded;
+
         if (DailyTextUtils.isTextEmpty(mCacheKey, mCacheLocation) == true)
         {
-            if(mStayOutboundList != null)
+            isAdded = false;
+
+            if (mStayOutboundList != null)
             {
                 mStayOutboundList.clear();
             }
@@ -612,6 +620,8 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
             mStayOutboundList = stayOutbounds.getStayOutbound();
         } else
         {
+            isAdded = true;
+
             mStayOutboundList.addAll(stayOutbounds.getStayOutbound());
         }
 
@@ -628,10 +638,12 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
             {
                 List<ListItem> listItemList = new ArrayList<>();
 
-                for (StayOutbound stayOutbound : stayOutbounds.getStayOutbound())
-                {
-                    listItemList.add(new ListItem(ListItem.TYPE_ENTRY, stayOutbound));
-                }
+                stayOutbounds.getStayOutbound().forEach((stayOutbound) -> listItemList.add(new ListItem(ListItem.TYPE_ENTRY, stayOutbound)));
+
+                //                for (StayOutbound stayOutbound : stayOutbounds.getStayOutbound())
+                //                {
+                //                    listItemList.add(new ListItem(ListItem.TYPE_ENTRY, stayOutbound));
+                //                }
 
                 if (listItemList.size() > 0)
                 {
@@ -654,7 +666,13 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
             @Override
             public void accept(List<ListItem> listItems) throws Exception
             {
-                getViewInterface().setStayOutboundList(listItems);
+                if (isAdded == false)
+                {
+                    getViewInterface().setStayOutboundList(listItems);
+                } else
+                {
+                    getViewInterface().addStayOutboundList(listItems);
+                }
             }
         }));
     }
@@ -704,6 +722,14 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
         }
 
         mStayOutboundFilters.rating = rating;
+
+        if (sortType == StayOutboundFilters.SortType.RECOMMENDATION && rating == -1)
+        {
+            getViewInterface().setFilterOptionImage(true);
+        } else
+        {
+            getViewInterface().setFilterOptionImage(false);
+        }
     }
 
     /**

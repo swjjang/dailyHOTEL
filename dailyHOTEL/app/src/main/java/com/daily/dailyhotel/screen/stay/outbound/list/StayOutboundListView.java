@@ -207,8 +207,9 @@ public class StayOutboundListView extends BaseView<StayOutboundListView.OnEventL
                     return false;
                 }
             });
-            getViewDataBinding().recyclerView.setAdapter(mStayOutboundListAdapter);
         }
+
+        getViewDataBinding().recyclerView.setAdapter(mStayOutboundListAdapter);
 
         getViewDataBinding().emptyLayout.setVisibility(View.GONE);
         getViewDataBinding().resultLayout.setVisibility(View.VISIBLE);
@@ -220,7 +221,16 @@ public class StayOutboundListView extends BaseView<StayOutboundListView.OnEventL
     @Override
     public void addStayOutboundList(List<ListItem> listItemList)
     {
+        if (getViewDataBinding() == null || mStayOutboundListAdapter == null || listItemList == null || listItemList.size() == 0)
+        {
+            return;
+        }
 
+        getViewDataBinding().emptyLayout.setVisibility(View.GONE);
+        getViewDataBinding().resultLayout.setVisibility(View.VISIBLE);
+
+        mStayOutboundListAdapter.addAll(listItemList);
+        mStayOutboundListAdapter.notifyDataSetChanged();
     }
 
     @Override

@@ -52,7 +52,7 @@
             android:background="@color/default_line_ce7e7e7"/>
 
         <com.daily.base.widget.DailyScrollView
-            android:id="@+id/suggestsScrollLayout"
+            android:id="@+id/suggestsScrollView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"

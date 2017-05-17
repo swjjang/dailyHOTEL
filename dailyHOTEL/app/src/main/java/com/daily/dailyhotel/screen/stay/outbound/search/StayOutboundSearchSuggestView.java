@@ -6,10 +6,13 @@ import android.text.TextWatcher;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ScrollView;
 
 import com.daily.base.BaseActivity;
 import com.daily.base.BaseView;
 import com.daily.base.OnBaseEventListener;
+import com.daily.base.util.ScreenUtils;
+import com.daily.base.widget.DailyScrollView;
 import com.daily.base.widget.DailyTextView;
 import com.daily.dailyhotel.entity.Suggest;
 import com.twoheart.dailyhotel.R;
@@ -17,6 +20,11 @@ import com.twoheart.dailyhotel.databinding.ActivityStayOutboundSearchSuggestData
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
+
+import io.reactivex.Observable;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.functions.Consumer;
 
 public class StayOutboundSearchSuggestView extends BaseView<StayOutboundSearchSuggestView.OnEventListener, ActivityStayOutboundSearchSuggestDataBinding> implements StayOutboundSearchSuggestViewInterface, View.OnClickListener
 {
@@ -46,6 +54,37 @@ public class StayOutboundSearchSuggestView extends BaseView<StayOutboundSearchSu
 
         viewDataBinding.keywordEditText.addTextChangedListener(mTextWatcher);
         viewDataBinding.deleteKeywrodView.setOnClickListener(this);
+        viewDataBinding.suggestsScrollView.setOnScrollChangedListener(new DailyScrollView.OnScrollChangedListener()
+        {
+            private int mDistance;
+            private boolean mIsHide;
+
+            @Override
+            public void onScrollChanged(ScrollView scrollView, int l, int t, int oldl, int oldt)
+            {
+                if (mIsHide == true)
+                {
+
+                } else
+                {
+                    if (scrollView.getHeight() < ScreenUtils.getScreenHeight(getContext()) / 2)
+                    {
+                        mDistance += (t - oldt);
+
+                        if (mDistance > ScreenUtils.dpToPx(getContext(), 41) == true)
+                        {
+                            mDistance = 0;
+                            mIsHide = true;
+
+                            InputMethodManager inputMethodManager = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                            inputMethodManager.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
+
+                            Observable.just(false).delaySubscription(1, TimeUnit.SECONDS).subscribe(isHide -> mIsHide = isHide);
+                        }
+                    }
+                }
+            }
+        });
     }
 
     @Override
@@ -69,10 +108,10 @@ public class StayOutboundSearchSuggestView extends BaseView<StayOutboundSearchSu
 
         if (visibility == true)
         {
-            getViewDataBinding().suggestsScrollLayout.setVisibility(View.VISIBLE);
+            getViewDataBinding().suggestsScrollView.setVisibility(View.VISIBLE);
         } else
         {
-            getViewDataBinding().suggestsScrollLayout.setVisibility(View.GONE);
+            getViewDataBinding().suggestsScrollView.setVisibility(View.GONE);
         }
     }
 

@@ -89,7 +89,7 @@ public class DailyLock
      */
     public void clear()
     {
-        mProgressBarDialog.close();
+        mProgressBarDialog.clear();
         unLock();
     }
 
@@ -206,6 +206,11 @@ public class DailyLock
             {
                 mDialog.dismiss();
             }
+        }
+
+        void clear()
+        {
+            close();
 
             mDialog = null;
         }

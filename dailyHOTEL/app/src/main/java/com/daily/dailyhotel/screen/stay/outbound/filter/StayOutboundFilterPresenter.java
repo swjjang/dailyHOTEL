@@ -189,10 +189,10 @@ public class StayOutboundFilterPresenter extends BaseExceptionPresenter<StayOutb
     public void onResultClick()
     {
         Intent intent = new Intent();
-        intent.putExtra(StayOutboundFilterActivity.INTENT_EXTRA_DATA_RATING, mStayOutboundFilters.sortType.name());
+        intent.putExtra(StayOutboundFilterActivity.INTENT_EXTRA_DATA_SORT, mStayOutboundFilters.sortType.name());
         intent.putExtra(StayOutboundFilterActivity.INTENT_EXTRA_DATA_RATING, mStayOutboundFilters.rating);
-        setResult(Activity.RESULT_OK, intent);
 
+        setResult(Activity.RESULT_OK, intent);
         onBackClick();
     }
 }
