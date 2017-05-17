@@ -1,0 +1,32 @@
+package com.daily.dailyhotel.screen.copy;
+
+import com.daily.base.BaseActivity;
+import com.daily.base.BaseView;
+import com.daily.base.OnBaseEventListener;
+import com.twoheart.dailyhotel.databinding.ActivityCopyDataBinding;
+
+public class CopyView extends BaseView<CopyView.OnEventListener, ActivityCopyDataBinding> implements CopyInterface
+{
+    public interface OnEventListener extends OnBaseEventListener
+    {
+    }
+
+    public CopyView(BaseActivity baseActivity, CopyView.OnEventListener listener)
+    {
+        super(baseActivity, listener);
+    }
+
+    @Override
+    protected void setContentView(final ActivityCopyDataBinding viewDataBinding)
+    {
+        if (viewDataBinding == null)
+        {
+            return;
+        }
+    }
+
+    @Override
+    public void setToolbarTitle(String title)
+    {
+    }
+}
