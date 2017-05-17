@@ -158,7 +158,7 @@ public class MainFragmentManager
 
     public void select(boolean isCallMenuBar, int index, boolean isRefresh, Bundle bundle)
     {
-        if (index != mIndexLastFragment || isRefresh == true)
+        if (index != mIndexLastFragment || isRefresh == true || (index != INDEX_ERROR_FRAGMENT && getCurrentFragment() instanceof ErrorFragment))
         {
             switch (index)
             {
