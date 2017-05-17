@@ -183,7 +183,7 @@ public class SelectPersonsPresenter extends BaseExceptionPresenter<SelectPersons
     public void onChildPlusClick()
     {
         final int MAX_NUMBER_OF_CHILDREN = 3;
-        final String DEFAULT_CHILD_AGE = "0";
+        final String DEFAULT_CHILD_AGE = "";
 
         if (mPersons.getChildAgeList() == null)
         {
@@ -213,23 +213,5 @@ public class SelectPersonsPresenter extends BaseExceptionPresenter<SelectPersons
             mPersons.getChildAgeList().remove(mPersons.getChildAgeList().size() - 1);
             getViewInterface().setChildAgeList(mPersons.getChildAgeList());
         }
-    }
-
-    @Override
-    public void onChild1AgeClick()
-    {
-
-    }
-
-    @Override
-    public void onChild2AgeClick()
-    {
-
-    }
-
-    @Override
-    public void onChild3AgeClick()
-    {
-
     }
 }
