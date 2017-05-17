@@ -85,19 +85,19 @@ public class SelectPersonsView extends BaseView<SelectPersonsView.OnEventListene
         mChildAgeArrayAdapter = new ChildAgeArrayAdapter[3];
 
         mChildAgeArrayAdapter[0] = new ChildAgeArrayAdapter(getContext()//
-            , R.layout.spinner_row_happytalk, (ArrayList<String>) Arrays.asList(getContext().getResources().getStringArray(R.array.child_age_array)));
+            , R.layout.spinner_row_happytalk, new ArrayList<>(Arrays.asList(getContext().getResources().getStringArray(R.array.child_age_array))));
 
         mChildAgeArrayAdapter[0].setDropDownViewResource(R.layout.spinner_dropdown_row_happytalk);
         viewDataBinding.child1AgeSpinner.setAdapter(mChildAgeArrayAdapter[0]);
 
         mChildAgeArrayAdapter[1] = new ChildAgeArrayAdapter(getContext()//
-            , R.layout.spinner_row_happytalk, (ArrayList<String>) Arrays.asList(getContext().getResources().getStringArray(R.array.child_age_array)));
+            , R.layout.spinner_row_happytalk, new ArrayList<>(Arrays.asList(getContext().getResources().getStringArray(R.array.child_age_array))));
 
         mChildAgeArrayAdapter[1].setDropDownViewResource(R.layout.spinner_dropdown_row_happytalk);
         viewDataBinding.child2AgeSpinner.setAdapter(mChildAgeArrayAdapter[1]);
 
         mChildAgeArrayAdapter[2] = new ChildAgeArrayAdapter(getContext()//
-            , R.layout.spinner_row_happytalk, (ArrayList<String>) Arrays.asList(getContext().getResources().getStringArray(R.array.child_age_array)));
+            , R.layout.spinner_row_happytalk, new ArrayList<>(Arrays.asList(getContext().getResources().getStringArray(R.array.child_age_array))));
 
         mChildAgeArrayAdapter[2].setDropDownViewResource(R.layout.spinner_dropdown_row_happytalk);
         viewDataBinding.child3AgeSpinner.setAdapter(mChildAgeArrayAdapter[2]);
