@@ -1,15 +1,13 @@
 package com.twoheart.dailyhotel.screen.home.category.list;
 
 import com.daily.base.util.DailyTextUtils;
-import com.daily.base.util.ExLog;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.Category;
 import com.twoheart.dailyhotel.model.Place;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.Stay;
-import com.twoheart.dailyhotel.model.StayParams;
+import com.twoheart.dailyhotel.model.StayCategoryParams;
 import com.twoheart.dailyhotel.model.time.StayBookingDay;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.layout.PlaceListLayout;
@@ -17,7 +15,6 @@ import com.twoheart.dailyhotel.screen.hotel.list.StayListFragment;
 import com.twoheart.dailyhotel.util.Util;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import retrofit2.Call;
@@ -83,7 +80,7 @@ public class StayCategoryListFragment extends StayListFragment
         } else
         {
             // 기본 리스트 요청
-            requestStayList(page);
+            requestStayCategoryList(page);
         }
 
     }
@@ -93,7 +90,7 @@ public class StayCategoryListFragment extends StayListFragment
         mIsShowLocalPlus = isShowLocalPlus;
     }
 
-    private void requestStayList(int page)
+    private void requestStayCategoryList(int page)
     {
         if (mStayCuration == null || mStayCuration.getCurationOption() == null//
             || mStayCuration.getCurationOption().getSortType() == null//
@@ -104,18 +101,18 @@ public class StayCategoryListFragment extends StayListFragment
             return;
         }
 
-        StayParams params = (StayParams) mStayCuration.toPlaceParams(page, PAGENATION_LIST_SIZE, true);
-        ((StayCategoryListNetworkController) mNetworkController).requestStayList(params);
+        StayCategoryParams params = (StayCategoryParams) mStayCuration.toPlaceParams(page, PAGENATION_LIST_SIZE, true);
+        ((StayCategoryListNetworkController) mNetworkController).requestStayCategoryList(params);
     }
 
     private void requestLocalPlusList(int page, StayBookingDay stayBookingDay, Province province)
     {
-        if (province == null || stayBookingDay == null)
-        {
-            unLockUI();
-            Util.restartApp(mBaseActivity);
-            return;
-        }
+//        if (province == null || stayBookingDay == null)
+//        {
+//            unLockUI();
+//            Util.restartApp(mBaseActivity);
+//            return;
+//        }
 
         if (mStayCuration == null || mStayCuration.getCurationOption() == null//
             || mStayCuration.getCurationOption().getSortType() == null//
@@ -126,39 +123,41 @@ public class StayCategoryListFragment extends StayListFragment
             return;
         }
 
-        HashMap<String, Object> hashMap = new HashMap<>();
+        StayCategoryParams params = (StayCategoryParams) mStayCuration.toPlaceParams(page, PAGENATION_LIST_SIZE, true);
 
-        int nights = 1;
-        int areaIdx = 0;
+//        HashMap<String, Object> hashMap = new HashMap<>();
+//
+//        int nights = 1;
+//        int areaIdx = 0;
+//
+//        String dateCheckIn = stayBookingDay.getCheckInDay("yyyy-MM-dd");
+//
+//        try
+//        {
+//            nights = stayBookingDay.getNights();
+//        } catch (Exception e)
+//        {
+//            ExLog.e(e.toString());
+//        }
+//
+//        int provinceIdx = province.getProvinceIndex();
+//
+//        if (province instanceof Area)
+//        {
+//            areaIdx = ((Area) province).index;
+//        }
+//
+//        hashMap.put("dateCheckIn", dateCheckIn);
+//        hashMap.put("stays", nights);
+//        hashMap.put("provinceIdx", provinceIdx);
+//        hashMap.put("category", mStayCuration.getCategory().code);
+//
+//        if (areaIdx != 0)
+//        {
+//            hashMap.put("areaIdx", areaIdx);
+//        }
 
-        String dateCheckIn = stayBookingDay.getCheckInDay("yyyy-MM-dd");
-
-        try
-        {
-            nights = stayBookingDay.getNights();
-        } catch (Exception e)
-        {
-            ExLog.e(e.toString());
-        }
-
-        int provinceIdx = province.getProvinceIndex();
-
-        if (province instanceof Area)
-        {
-            areaIdx = ((Area) province).index;
-        }
-
-        hashMap.put("dateCheckIn", dateCheckIn);
-        hashMap.put("stays", nights);
-        hashMap.put("provinceIdx", provinceIdx);
-        hashMap.put("category", mStayCuration.getCategory().code);
-
-        if (areaIdx != 0)
-        {
-            hashMap.put("areaIdx", areaIdx);
-        }
-
-        ((StayCategoryListNetworkController) mNetworkController).requestLocalPlusList(hashMap);
+        ((StayCategoryListNetworkController) mNetworkController).requestLocalPlusList(params);
     }
 
     /**
@@ -412,7 +411,7 @@ public class StayCategoryListFragment extends StayListFragment
 
             // 리퀘스트를 요청하기 이전에 초기 상태일때만 요청함으로 첫페이지 고정
             int page = mViewType == ViewType.LIST ? 1 : 0;
-            requestStayList(page);
+            requestStayCategoryList(page);
         }
 
         @Override

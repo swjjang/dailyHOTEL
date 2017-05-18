@@ -26,7 +26,7 @@ import com.twoheart.dailyhotel.model.PlaceCuration;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.Stay;
-import com.twoheart.dailyhotel.model.StayCuration;
+import com.twoheart.dailyhotel.model.StayCategoryCuration;
 import com.twoheart.dailyhotel.model.StayCurationOption;
 import com.twoheart.dailyhotel.model.time.StayBookingDay;
 import com.twoheart.dailyhotel.network.model.TodayDateTime;
@@ -70,7 +70,7 @@ import retrofit2.Response;
  */
 public class StayCategoryTabActivity extends PlaceMainActivity
 {
-    private StayCuration mStayCuration;
+    private StayCategoryCuration mStayCuration;
     private DailyCategoryType mDailyCategoryType;
     private DailyDeepLink mDailyDeepLink;
 
@@ -96,7 +96,7 @@ public class StayCategoryTabActivity extends PlaceMainActivity
 
         super.onCreate(savedInstanceState);
 
-        mStayCuration = new StayCuration();
+        mStayCuration = new StayCategoryCuration();
 
         if (mDailyCategoryType == null //
             || DailyCategoryType.STAY_NEARBY == mDailyCategoryType //
@@ -332,12 +332,12 @@ public class StayCategoryTabActivity extends PlaceMainActivity
         {
             PlaceCuration placeCuration = data.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PLACECURATION);
 
-            if ((placeCuration instanceof StayCuration) == false)
+            if ((placeCuration instanceof StayCategoryCuration) == false)
             {
                 return;
             }
 
-            StayCuration changedStayCuration = (StayCuration) placeCuration;
+            StayCategoryCuration changedStayCuration = (StayCategoryCuration) placeCuration;
             StayCurationOption changedStayCurationOption = (StayCurationOption) changedStayCuration.getCurationOption();
 
             mStayCuration.setCurationOption(changedStayCurationOption);
@@ -830,7 +830,7 @@ public class StayCategoryTabActivity extends PlaceMainActivity
 
                 ((StayCategoryTabLayout) mPlaceMainLayout).setToolbarDateText(mStayCuration.getStayBookingDay());
 
-                mPlaceMainNetworkController.requestRegionList();
+                mPlaceMainNetworkController.requestRegionList(mDailyCategoryType.getCodeString(StayCategoryTabActivity.this));
 
             } catch (Exception e)
             {
