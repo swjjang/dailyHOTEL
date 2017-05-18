@@ -40,6 +40,8 @@ public class DailyLocationFactory
     Drawable mMyLocationDrawable;
     BaseActivity mBaseActivity;
 
+    private int mProviderResultCount = 0;
+
     private Handler mHandler = new Handler()
     {
         public void handleMessage(android.os.Message msg)
@@ -52,6 +54,7 @@ public class DailyLocationFactory
             switch (msg.what)
             {
                 case 0:
+
                     stopLocationMeasure();
 
                     if (mLocationListener != null)
@@ -110,16 +113,24 @@ public class DailyLocationFactory
         @Override
         public void onReceive(Context context, Intent intent)
         {
-            String key = LocationManager.KEY_LOCATION_CHANGED;
-            Location location = (Location) intent.getExtras().get(key);
+            Location location = (Location) intent.getExtras().get(LocationManager.KEY_LOCATION_CHANGED);
 
             if (mLocationListener != null)
             {
                 if (location != null)
                 {
+                    stopLocationMeasure();
                     mLocationListener.onLocationChanged(location);
                 } else
                 {
+                    if (++mProviderResultCount > 1)
+                    {
+                        stopLocationMeasure();
+                    } else
+                    {
+                        return;
+                    }
+
                     mLocationListener.onFailed();
 
                     if (mBaseActivity != null)
@@ -129,10 +140,8 @@ public class DailyLocationFactory
                 }
             } else
             {
-                // ???
+                stopLocationMeasure();
             }
-
-            stopLocationMeasure();
         }
     };
 
@@ -225,9 +234,13 @@ public class DailyLocationFactory
 
         Location location = getLastBestLocation(mBaseActivity, 1000, System.currentTimeMillis() + TEN_MINUTES);
 
-        if (location != null && mLocationListener != null)
+        if (location != null)
         {
-            mLocationListener.onLocationChanged(location);
+            if (mLocationListener != null)
+            {
+                mLocationListener.onLocationChanged(location);
+            }
+
             stopLocationMeasure();
             return;
         }
@@ -331,6 +344,8 @@ public class DailyLocationFactory
 
     public void stopLocationMeasure()
     {
+        mProviderResultCount = 0;
+
         mHandler.removeMessages(0);
         mHandler.removeMessages(1);
         mHandler.removeMessages(2);
