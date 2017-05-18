@@ -1101,7 +1101,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
                     @Override
                     public void onState(View view, boolean checked)
                     {
-                        startActivityForResult(TrueVRActivity.newInstance(GourmetDetailActivity.this, mTrueVRParamsList//
+                        startActivityForResult(TrueVRActivity.newInstance(GourmetDetailActivity.this, mPlaceDetail.index, mTrueVRParamsList//
                             , PlaceType.FNB, ((GourmetDetail) mPlaceDetail).getGourmetDetailParmas().category), CODE_REQUEST_ACTIVITY_TRUEVIEW);
                     }
                 }, null, null, new OnCheckDialogStateListener()
@@ -1115,7 +1115,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
                 }, true);
         } else
         {
-            startActivityForResult(TrueVRActivity.newInstance(GourmetDetailActivity.this, mTrueVRParamsList//
+            startActivityForResult(TrueVRActivity.newInstance(GourmetDetailActivity.this, mPlaceDetail.index, mTrueVRParamsList//
                 , PlaceType.FNB, ((GourmetDetail) mPlaceDetail).getGourmetDetailParmas().category), CODE_REQUEST_ACTIVITY_TRUEVIEW);
         }
 

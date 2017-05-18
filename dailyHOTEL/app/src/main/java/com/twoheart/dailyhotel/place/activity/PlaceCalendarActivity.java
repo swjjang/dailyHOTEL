@@ -1,8 +1,12 @@
 package com.twoheart.dailyhotel.place.activity;
 
 import android.animation.Animator;
+import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
+import android.annotation.TargetApi;
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -11,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.widget.RelativeLayout;
@@ -59,8 +64,7 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
 
     ANIMATION_STATUS mAnimationStatus = ANIMATION_STATUS.HIDE_END;
     ANIMATION_STATE mAnimationState = ANIMATION_STATE.END;
-    ObjectAnimator mObjectAnimator;
-    private AlphaAnimation mAlphaAnimation;
+    AnimatorSet mAnimatorSet;
 
     private int[] mHolidays;
 
@@ -69,12 +73,8 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
     {
         super.onCreate(savedInstanceState);
 
-        if (VersionUtils.isOverAPI21() == true)
-        {
-            Window window = getWindow();
-            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            window.setStatusBarColor(getResources().getColor(R.color.black_a67));
-        }
+        // VersionUtils.isOverAPI21()
+        setStatusBarColor(getResources().getColor(R.color.black_a67));
 
         // 휴일 정보를 얻어온다.
         String calendarHolidays = DailyPreference.getInstance(this).getCalendarHolidays();
@@ -394,9 +394,9 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
         {
             final float y = mAnimationLayout.getBottom();
 
-            if (mObjectAnimator != null && mObjectAnimator.isRunning() == true)
+            if (mAnimatorSet != null && mAnimatorSet.isRunning() == true)
             {
-                mObjectAnimator.cancel();
+                mAnimatorSet.cancel();
             }
 
             // 리스트 높이 + 아이콘 높이(실제 화면에 들어나지 않기 때문에 높이가 정확하지 않아서 내부 높이를 더함)
@@ -404,10 +404,13 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
 
             mAnimationLayout.setTranslationY(ScreenUtils.dpToPx(this, height));
 
-            mObjectAnimator = ObjectAnimator.ofFloat(mAnimationLayout, "y", y, y - height);
-            mObjectAnimator.setDuration(ANIMATION_DELAY);
+            ObjectAnimator transAnimator = ObjectAnimator.ofFloat(mAnimationLayout, "y", y, y - height);
 
-            mObjectAnimator.addListener(new Animator.AnimatorListener()
+            mAnimatorSet = new AnimatorSet();
+            mAnimatorSet.play(transAnimator);
+            mAnimatorSet.setDuration(ANIMATION_DELAY);
+            mAnimatorSet.setInterpolator(new AccelerateDecelerateInterpolator());
+            mAnimatorSet.addListener(new Animator.AnimatorListener()
             {
                 @Override
                 public void onAnimationStart(Animator animation)
@@ -426,9 +429,8 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
                 @Override
                 public void onAnimationEnd(Animator animation)
                 {
-                    mObjectAnimator.removeAllListeners();
-                    mObjectAnimator.removeAllUpdateListeners();
-                    mObjectAnimator = null;
+                    mAnimatorSet.removeAllListeners();
+                    mAnimatorSet = null;
 
                     if (mAnimationState != ANIMATION_STATE.CANCEL)
                     {
@@ -454,9 +456,7 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
                 }
             });
 
-            mObjectAnimator.start();
-
-            //            showAnimationFadeOut();
+            mAnimatorSet.start();
         } else
         {
             if (mAnimationLayout != null && mAnimationLayout.getVisibility() != View.VISIBLE)
@@ -486,15 +486,41 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
         {
             final float y = mAnimationLayout.getTop();
 
-            if (mObjectAnimator != null && mObjectAnimator.isRunning() == true)
+            if (mAnimatorSet != null && mAnimatorSet.isRunning() == true)
             {
-                mObjectAnimator.cancel();
+                mAnimatorSet.cancel();
             }
 
-            mObjectAnimator = ObjectAnimator.ofFloat(mAnimationLayout, "y", y, mAnimationLayout.getBottom());
-            mObjectAnimator.setDuration(ANIMATION_DELAY);
+            ObjectAnimator transAnimator = ObjectAnimator.ofFloat(mAnimationLayout, "y", y, mAnimationLayout.getBottom());
+            ObjectAnimator alphaAnimator = ObjectAnimator.ofFloat(mBackgroundView, "alpha", 1f, 0f);
 
-            mObjectAnimator.addListener(new Animator.AnimatorListener()
+            if (VersionUtils.isOverAPI21() == true)
+            {
+                alphaAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener()
+                {
+                    @Override
+                    public void onAnimationUpdate(ValueAnimator animation)
+                    {
+                        if (animation == null)
+                        {
+                            return;
+                        }
+
+                        float value = (float) alphaAnimator.getAnimatedValue();
+
+                        int color = (int) (0xab * value);
+
+                        setStatusBarColor((color << 24) & 0xff000000);
+                    }
+                });
+            }
+
+            mAnimatorSet = new AnimatorSet();
+            mAnimatorSet.playTogether(transAnimator, alphaAnimator);
+            mAnimatorSet.setDuration(ANIMATION_DELAY);
+            mAnimatorSet.setInterpolator(new AccelerateDecelerateInterpolator());
+
+            mAnimatorSet.addListener(new Animator.AnimatorListener()
             {
                 @Override
                 public void onAnimationStart(Animator animation)
@@ -509,9 +535,13 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
                 @Override
                 public void onAnimationEnd(Animator animation)
                 {
-                    mObjectAnimator.removeAllListeners();
-                    mObjectAnimator.removeAllUpdateListeners();
-                    mObjectAnimator = null;
+                    if (VersionUtils.isOverAPI21() == true)
+                    {
+                        alphaAnimator.removeAllUpdateListeners();
+                    }
+
+                    mAnimatorSet.removeAllListeners();
+                    mAnimatorSet = null;
 
                     if (mAnimationState != ANIMATION_STATE.CANCEL)
                     {
@@ -540,9 +570,7 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
                 }
             });
 
-            mObjectAnimator.start();
-
-            showAnimationFadeIn();
+            mAnimatorSet.start();
         } else
         {
             mAnimationStatus = ANIMATION_STATUS.HIDE_END;
@@ -552,45 +580,15 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
         }
     }
 
-    /**
-     * 점점 밝아짐.
-     */
-    private void showAnimationFadeIn()
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    private void setStatusBarColor(int color)
     {
-        if (mAlphaAnimation != null)
+        if (VersionUtils.isOverAPI21() == true)
         {
-            if (mAlphaAnimation.hasEnded() == false)
-            {
-                mAlphaAnimation.cancel();
-            }
-
-            mAlphaAnimation = null;
+            Window window = getWindow();
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.setStatusBarColor(color);
         }
-
-        mAlphaAnimation = new AlphaAnimation(1.0f, 0.0f);
-        mAlphaAnimation.setDuration(ANIMATION_DELAY);
-        mAlphaAnimation.setFillBefore(true);
-        mAlphaAnimation.setFillAfter(true);
-
-        mAlphaAnimation.setAnimationListener(new Animation.AnimationListener()
-        {
-            @Override
-            public void onAnimationStart(Animation animation)
-            {
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation)
-            {
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation)
-            {
-            }
-        });
-
-        mBackgroundView.startAnimation(mAlphaAnimation);
     }
 
     protected static class Day

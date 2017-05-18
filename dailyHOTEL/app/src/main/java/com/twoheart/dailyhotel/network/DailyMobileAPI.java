@@ -1228,6 +1228,20 @@ public class DailyMobileAPI implements IDailyNetwork
         executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
     }
 
+    @Override
+    public void requestStayCategoryRegionList(String tag, String category, Object listener)
+    {
+        final String URL = Constants.UNENCRYPTED_URL ? "api/v4/hotels/category/{category}/regions"//
+            : "OTkkNTIkMTIyJDEzJDI3JDE0JDg2JDcwJDUyJDM5JDI3JDExOSQxMjUkODkkMTIwJDExMSQ=$QjAyMTQ1MUIzQKLkE0OTAzNUQ3MXjIhENTQwQjY1KQjZFQTIyMDFFRWDk0PQUZGNEUyMUZBODVI5QjcxMDg4ODU1OLEVZGRUU3MThGNTQ4OUJCGPMTQ4REVDMLEUJCMDENCQ0ZCWRDZFQUM4$";
+
+        Map<String, String> urlParams = new HashMap<>();
+        urlParams.put("{category}", category);
+
+        ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestStayCategoryRegions(Crypto.getUrlDecoderEx(URL, urlParams));
+        executorCallbackCall.setTag(tag);
+        executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
+    }
+
     /////////////////////////////////////////////////////////////////////////////////////////////////
     //
     // RxJava2 API

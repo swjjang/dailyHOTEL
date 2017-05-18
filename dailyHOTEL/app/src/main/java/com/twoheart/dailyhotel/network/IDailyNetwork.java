@@ -568,4 +568,6 @@ public interface IDailyNetwork
     void requestPlaceReviewScores(String tag, String type, int itemIdx, Object listener);
 
     void requestLocalPlus(String tag, Map<String, Object> queryMap, Object listener);
+
+    void requestStayCategoryRegionList(String tag, String category, Object listener);
 }

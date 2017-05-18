@@ -177,6 +177,20 @@ public abstract class WebViewActivity extends BaseActivity implements OnLongClic
         objectAnimator.start();
     }
 
+    public String getWebViewVersion()
+    {
+        if (mWebView == null)
+        {
+            return null;
+        }
+        String webViewVersion = mWebView.getSettings().getUserAgentString();
+
+        int startIndex = webViewVersion.indexOf("Chrome/") + "Chrome/".length();
+        int endIndex = webViewVersion.indexOf(" ", startIndex);
+
+        return webViewVersion.substring(startIndex, endIndex).trim();
+    }
+
     public class DailyHotelWebViewClient extends WebViewClient
     {
         public static final String INTENT_PROTOCOL_START = "intent:";

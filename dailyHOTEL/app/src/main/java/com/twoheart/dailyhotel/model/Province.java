@@ -22,6 +22,7 @@ public class Province implements Parcelable
     public boolean isOverseas;
     public String imageUrl;
     private List<Category> mCategoryList;
+    public int count; // Stay Category 에서 추가 됨
 
     public Province()
     {
@@ -94,6 +95,14 @@ public class Province implements Parcelable
         {
             mCategoryList.add(Category.ALL);
         }
+
+        if (jsonObject.has("count") == true)
+        {
+            count = jsonObject.getInt("count");
+        } else
+        {
+            count = 0;
+        }
     }
 
     public int getProvinceIndex()
@@ -116,6 +125,7 @@ public class Province implements Parcelable
         dest.writeInt(isOverseas ? 1 : 0);
         dest.writeString(imageUrl);
         dest.writeList(mCategoryList);
+        dest.writeInt(count);
     }
 
     protected void readFromParcel(Parcel in)
@@ -127,6 +137,7 @@ public class Province implements Parcelable
         isOverseas = in.readInt() == 1;
         imageUrl = in.readString();
         mCategoryList = in.readArrayList(Category.class.getClassLoader());
+        count = in.readInt();
     }
 
     @Override
