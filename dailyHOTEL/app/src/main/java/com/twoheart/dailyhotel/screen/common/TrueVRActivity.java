@@ -3,6 +3,7 @@ package com.twoheart.dailyhotel.screen.common;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.webkit.JavascriptInterface;
@@ -30,12 +31,14 @@ public class TrueVRActivity extends WebViewActivity implements View.OnClickListe
     private View mPrevView, mNextView;
     private View mWebViewLayout;
 
-
+    private int mPlaceIndex;
     private int mCurrentPage;
+    private PlaceType mPlaceType;
 
-    public static Intent newInstance(Context context, ArrayList<TrueVRParams> list, PlaceType placeType, String category)
+    public static Intent newInstance(Context context, int placeIndex, ArrayList<TrueVRParams> list, PlaceType placeType, String category)
     {
         Intent intent = new Intent(context, TrueVRActivity.class);
+        intent.putExtra(Constants.NAME_INTENT_EXTRA_DATA_PLACEIDX, placeIndex);
         intent.putExtra(Constants.NAME_INTENT_EXTRA_DATA_TRUEVIEW_LIST, list);
         intent.putExtra(Constants.NAME_INTENT_EXTRA_DATA_PLACETYPE, placeType.name());
         intent.putExtra(Constants.NAME_INTENT_EXTRA_DATA_CATEGORY, category);
@@ -56,8 +59,9 @@ public class TrueVRActivity extends WebViewActivity implements View.OnClickListe
             return;
         }
 
+        mPlaceIndex = intent.getIntExtra(Constants.NAME_INTENT_EXTRA_DATA_PLACEIDX, -1);
         mTrueVRParamsList = intent.getParcelableArrayListExtra(Constants.NAME_INTENT_EXTRA_DATA_TRUEVIEW_LIST);
-        PlaceType placeType = PlaceType.valueOf(intent.getStringExtra(Constants.NAME_INTENT_EXTRA_DATA_PLACETYPE));
+        mPlaceType = PlaceType.valueOf(intent.getStringExtra(Constants.NAME_INTENT_EXTRA_DATA_PLACETYPE));
         String category = intent.getStringExtra(Constants.NAME_INTENT_EXTRA_DATA_CATEGORY);
 
         if (mTrueVRParamsList == null || mTrueVRParamsList.size() == 0)
@@ -76,7 +80,7 @@ public class TrueVRActivity extends WebViewActivity implements View.OnClickListe
         {
             HashMap<String, String> params = new HashMap();
 
-            if (placeType == PlaceType.HOTEL)
+            if (mPlaceType == PlaceType.HOTEL)
             {
                 params.put(AnalyticsManager.KeyType.PLACE_TYPE, AnalyticsManager.ValueType.STAY);
             } else
@@ -251,6 +255,12 @@ public class TrueVRActivity extends WebViewActivity implements View.OnClickListe
                             switch (eventName)
                             {
                                 case "UNSUPPORTED_BROWSER":
+                                    if (Constants.DEBUG == false)
+                                    {
+                                        TrueVRParams trueVRParams = mTrueVRParamsList.get(mCurrentPage);
+                                        Crashlytics.logException(new Exception("Unsupported browser : " + Build.MODEL + ", " + getWebViewVersion()));
+                                    }
+
                                     showSimpleDialog(null, getString(R.string.message_truevr_not_support_hardware), getString(R.string.dialog_btn_text_confirm), null//
                                         , new DialogInterface.OnDismissListener()
                                         {
@@ -263,10 +273,10 @@ public class TrueVRActivity extends WebViewActivity implements View.OnClickListe
                                     break;
 
                                 case "FAILED_TO_LOAD_PLAYER":
-                                    if(Constants.DEBUG == false)
+                                    if (Constants.DEBUG == false)
                                     {
                                         TrueVRParams trueVRParams = mTrueVRParamsList.get(mCurrentPage);
-                                        Crashlytics.logException(new Exception("Failed load True VR : " + trueVRParams.name + ", " + trueVRParams.url));
+                                        Crashlytics.logException(new Exception("Failed load True VR : " + mPlaceType.name() + ", " + mPlaceIndex + ", " + trueVRParams.name + ", " + trueVRParams.url));
                                     }
 
                                     showSimpleDialog(null, getString(R.string.message_truevr_failed_load_truevr), getString(R.string.dialog_btn_text_confirm), null//
