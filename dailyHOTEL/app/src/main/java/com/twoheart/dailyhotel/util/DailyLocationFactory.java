@@ -123,6 +123,7 @@ public class DailyLocationFactory
                     mLocationListener.onLocationChanged(location);
                 } else
                 {
+                    // Provider를 2개 사용하는데 한개가 실패하더라도 기존에는 바로 종료했는데 2개가 다 될때까지 대기한다
                     if (++mProviderResultCount > 1)
                     {
                         stopLocationMeasure();
