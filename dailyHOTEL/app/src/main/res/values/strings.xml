@@ -1266,6 +1266,8 @@
     <string name="message_detail_review_gourmet_explain">트루리뷰는 100% 직접 방문한 고객님이 남겨주신 리뷰입니다.</string>
 
     <!-- Stay Out Bound Search -->
+    <string name="label_search_keyword_hint">호텔명 또는 지역명 입력</string>
+
     <string name="label_person_select_person">투숙 인원 선택</string>
     <string name="label_person_adult">성인</string>
     <string name="label_person_child">아동</string>
@@ -1276,6 +1278,7 @@
     <string name="label_person_number_of_person">%1$d 명</string>
     <string name="label_person_under_of_1_age">만 1세 미만</string>
     <string name="label_person_child_age">만 %1$s세</string>
+
 
     <!-- Stay Out Bound List -->
 

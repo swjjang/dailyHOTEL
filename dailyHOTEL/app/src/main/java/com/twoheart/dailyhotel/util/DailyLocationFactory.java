@@ -107,19 +107,32 @@ public class DailyLocationFactory
 
     protected BroadcastReceiver mSingleUpdateReceiver = new BroadcastReceiver()
     {
+        int providerCount = 0;
+
         @Override
         public void onReceive(Context context, Intent intent)
         {
-            String key = LocationManager.KEY_LOCATION_CHANGED;
-            Location location = (Location) intent.getExtras().get(key);
+            Location location = (Location) intent.getExtras().get(LocationManager.KEY_LOCATION_CHANGED);
 
             if (mLocationListener != null)
             {
                 if (location != null)
                 {
+                    providerCount = 0;
+
+                    stopLocationMeasure();
                     mLocationListener.onLocationChanged(location);
                 } else
                 {
+                    if (++providerCount > 1)
+                    {
+                        stopLocationMeasure();
+                    } else
+                    {
+                        return;
+                    }
+
+                    providerCount = 0;
                     mLocationListener.onFailed();
 
                     if (mBaseActivity != null)
@@ -129,10 +142,9 @@ public class DailyLocationFactory
                 }
             } else
             {
-                // ???
+                providerCount = 0;
+                stopLocationMeasure();
             }
-
-            stopLocationMeasure();
         }
     };
 

@@ -4,6 +4,8 @@ public class StayOutboundFilters
 {
     public int rating;
     public SortType sortType;
+    public double latitude;
+    public double longitude;
 
     public enum SortType
     {

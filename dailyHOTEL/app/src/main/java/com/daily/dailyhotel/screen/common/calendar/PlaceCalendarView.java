@@ -128,9 +128,8 @@ public abstract class PlaceCalendarView<T1 extends PlaceCalendarView.OnEventList
             @Override
             protected void subscribeActual(Observer<? super Boolean> observer)
             {
-                final View animationLayout = getViewDataBinding().animationLayout;
-                final float y = animationLayout.getBottom();
-
+                View animationLayout = getViewDataBinding().animationLayout;
+                float y = animationLayout.getBottom();
                 int height = animationLayout.getHeight();
                 animationLayout.setTranslationY(ScreenUtils.dpToPx(getContext(), height));
 
@@ -189,8 +188,8 @@ public abstract class PlaceCalendarView<T1 extends PlaceCalendarView.OnEventList
             @Override
             protected void subscribeActual(Observer<? super Boolean> observer)
             {
-                final View animationLayout = getViewDataBinding().animationLayout;
-                final float y = animationLayout.getTop();
+                View animationLayout = getViewDataBinding().animationLayout;
+                float y = animationLayout.getTop();
 
                 ObjectAnimator transAnimator = ObjectAnimator.ofFloat(animationLayout, "y", y, animationLayout.getBottom());
                 ObjectAnimator alphaAnimator = ObjectAnimator.ofFloat(getViewDataBinding().getRoot(), "alpha", 1f, 0f);
@@ -208,7 +207,6 @@ public abstract class PlaceCalendarView<T1 extends PlaceCalendarView.OnEventList
                             }
 
                             float value = (float) alphaAnimator.getAnimatedValue();
-
                             int color = (int) (0xab * value);
 
                             setStatusBarColor((color << 24) & 0xff000000);
@@ -231,6 +229,11 @@ public abstract class PlaceCalendarView<T1 extends PlaceCalendarView.OnEventList
                     @Override
                     public void onAnimationEnd(Animator animation)
                     {
+                        if (VersionUtils.isOverAPI21() == true)
+                        {
+                            alphaAnimator.removeAllUpdateListeners();
+                        }
+
                         mAnimatorSet.removeAllListeners();
                         mAnimatorSet = null;
 

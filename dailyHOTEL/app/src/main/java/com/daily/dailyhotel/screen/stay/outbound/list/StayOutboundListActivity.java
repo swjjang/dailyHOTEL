@@ -30,6 +30,8 @@ public class StayOutboundListActivity extends BaseActivity<StayOutboundListPrese
     static final int REQUEST_CODE_STAYOUTBOUND_DETAIL = 10000;
     static final int REQUEST_CODE_STAYOUTBOUND_CALENDAR = 10001;
     static final int REQUEST_CODE_STAYOUTBOUND_FILTER = 10002;
+    static final int REQUEST_CODE_STAYOUTBOUND_PERMISSION_MANAGER = 10003;
+    static final int REQUEST_CODE_STAYOUTBOUND_SETTING_LOCATION = 10004;
 
     /**
      * @param context

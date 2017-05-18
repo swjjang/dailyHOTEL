@@ -3,7 +3,7 @@ package com.daily.dailyhotel.repository.remote;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
-import com.daily.base.BaseException;
+import com.daily.base.exception.BaseException;
 import com.daily.dailyhotel.domain.ProfileInterface;
 import com.daily.dailyhotel.entity.User;
 import com.daily.dailyhotel.entity.UserBenefit;

@@ -1,6 +1,7 @@
 package com.daily.dailyhotel.screen.stay.outbound.list;
 
 import android.content.Context;
+import android.location.Location;
 import android.support.v4.app.FragmentManager;
 
 import com.daily.base.BaseViewInterface;
@@ -41,4 +42,6 @@ public interface StayOutboundListViewInterface extends BaseViewInterface
     void setMapViewPagerVisibility(boolean visibility);
 
     boolean isMapViewPagerVisibility();
+
+    void setMyLocation(Location location);
 }

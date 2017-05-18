@@ -3,7 +3,7 @@ package com.daily.dailyhotel.repository.remote;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
-import com.daily.base.BaseException;
+import com.daily.base.exception.BaseException;
 import com.daily.dailyhotel.domain.StayOutboundInterface;
 import com.daily.dailyhotel.entity.Persons;
 import com.daily.dailyhotel.entity.StayBookDateTime;
@@ -135,6 +135,34 @@ public class StayOutboundRemoteImpl implements StayOutboundInterface
             if (stayOutboundFilters.rating > 0)
             {
                 maxStarRating = minStarRating = stayOutboundFilters.rating;
+            }
+
+            if(stayOutboundFilters.sortType == StayOutboundFilters.SortType.DISTANCE)
+            {
+                return DailyMobileAPI.getInstance(mContext).getStayOutBoundList(stayBookDateTime.getCheckInDateTime("yyyy-MM-dd")//
+                    , stayBookDateTime.getCheckOutDateTime("yyyy-MM-dd")//
+                    , numberOfAdults, numberOfChildren, childAges, maxStarRating, minStarRating, numberOfRooms//
+                    , geographyId, geographyType, stayOutboundFilters.latitude, stayOutboundFilters.longitude//
+                    ,numberOfResults, cacheKey, cacheLocation, apiExperience, locale, sort).map((stayOutboundDataBaseDto) ->
+                {
+                    StayOutbounds stayOutbounds = null;
+
+                    if (stayOutboundDataBaseDto != null)
+                    {
+                        if (stayOutboundDataBaseDto.msgCode == 100 && stayOutboundDataBaseDto.data != null)
+                        {
+                            stayOutbounds = stayOutboundDataBaseDto.data.getStayOutboundList();
+                        } else
+                        {
+                            throw new BaseException(stayOutboundDataBaseDto.msgCode, stayOutboundDataBaseDto.msg);
+                        }
+                    } else
+                    {
+                        throw new BaseException(-1, null);
+                    }
+
+                    return stayOutbounds;
+                }).observeOn(AndroidSchedulers.mainThread());
             }
         }
 

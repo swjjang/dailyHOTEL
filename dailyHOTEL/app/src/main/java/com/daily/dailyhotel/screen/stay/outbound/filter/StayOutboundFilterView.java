@@ -14,8 +14,6 @@ import com.twoheart.dailyhotel.databinding.ActivityStayOutboundFilterDataBinding
 
 public class StayOutboundFilterView extends BaseView<StayOutboundFilterView.OnEventListener, ActivityStayOutboundFilterDataBinding> implements StayOutboundFilterViewInterface, View.OnClickListener, RadioGroup.OnCheckedChangeListener
 {
-
-
     public interface OnEventListener extends OnBaseEventListener
     {
         void onSortClick(StayOutboundFilters.SortType sortType);

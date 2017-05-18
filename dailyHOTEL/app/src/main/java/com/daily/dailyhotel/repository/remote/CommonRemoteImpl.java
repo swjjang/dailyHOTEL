@@ -3,7 +3,7 @@ package com.daily.dailyhotel.repository.remote;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
-import com.daily.base.BaseException;
+import com.daily.base.exception.BaseException;
 import com.daily.dailyhotel.domain.CommonInterface;
 import com.daily.dailyhotel.entity.CommonDateTime;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;

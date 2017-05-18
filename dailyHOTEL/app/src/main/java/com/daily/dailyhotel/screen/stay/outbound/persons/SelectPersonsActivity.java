@@ -32,8 +32,6 @@ public class SelectPersonsActivity extends BaseActivity<SelectPersonsPresenter>
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
-        overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
-
         super.onCreate(savedInstanceState);
     }
 
@@ -48,7 +46,5 @@ public class SelectPersonsActivity extends BaseActivity<SelectPersonsPresenter>
     public void finish()
     {
         super.finish();
-
-        overridePendingTransition(R.anim.hold, R.anim.slide_out_right);
     }
 }

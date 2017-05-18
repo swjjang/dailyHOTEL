@@ -1,4 +1,4 @@
-package com.daily.base;
+package com.daily.base.exception;
 
 public class BaseException extends Exception
 {

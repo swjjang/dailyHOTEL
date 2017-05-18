@@ -8,6 +8,7 @@ import android.view.View;
 import com.daily.base.BaseActivity;
 import com.daily.base.BaseView;
 import com.daily.base.OnBaseEventListener;
+import com.daily.base.util.DailyTextUtils;
 import com.daily.base.widget.DailyTextView;
 import com.daily.dailyhotel.entity.Persons;
 import com.daily.dailyhotel.entity.Suggest;
@@ -47,6 +48,8 @@ public class StayOutboundSearchView extends BaseView<StayOutboundSearchView.OnEv
 
         initToolbar(viewDataBinding);
 
+        viewDataBinding.deleteKeywrodView.setVisibility(View.INVISIBLE);
+
         viewDataBinding.suggestTextView.setOnClickListener(this);
         viewDataBinding.deleteKeywrodView.setOnClickListener(this);
         viewDataBinding.calendarTextView.setOnClickListener(this);
@@ -84,6 +87,14 @@ public class StayOutboundSearchView extends BaseView<StayOutboundSearchView.OnEv
         }
 
         getViewDataBinding().suggestTextView.setText(suggest);
+
+        if(DailyTextUtils.isTextEmpty(suggest) == true)
+        {
+            getViewDataBinding().deleteKeywrodView.setVisibility(View.INVISIBLE);
+        } else
+        {
+            getViewDataBinding().deleteKeywrodView.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override

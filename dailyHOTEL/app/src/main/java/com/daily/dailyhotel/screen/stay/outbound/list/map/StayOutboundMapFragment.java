@@ -14,7 +14,6 @@ import com.daily.base.util.VersionUtils;
 import com.daily.dailyhotel.entity.StayOutbound;
 import com.daily.dailyhotel.entity.StayOutboundClusterItem;
 import com.daily.dailyhotel.entity.StayOutboundClusterRenderer;
-import com.daily.dailyhotel.util.DailyLocationExFactory;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -50,7 +49,6 @@ public class StayOutboundMapFragment extends com.google.android.gms.maps.Support
     , ClusterManager.OnClusterClickListener<StayOutboundClusterItem>, ClusterManager.OnClusterItemClickListener<StayOutboundClusterItem>
 {
     private GoogleMap mGoogleMap;
-    private DailyLocationExFactory mDailyLocationExFactory;
 
     private View mMyLocationView;
 
@@ -72,6 +70,8 @@ public class StayOutboundMapFragment extends com.google.android.gms.maps.Support
         void onMarkersCompleted();
 
         void onMapClick();
+
+        void onMyLocationClick();
     }
 
     public StayOutboundMapFragment()
@@ -104,11 +104,6 @@ public class StayOutboundMapFragment extends com.google.android.gms.maps.Support
         {
             mGoogleMap.stopAnimation();
             mGoogleMap.clear();
-        }
-
-        if (mDailyLocationExFactory != null)
-        {
-            mDailyLocationExFactory.stopLocationMeasure();
         }
 
         if (mCompositeDisposable != null)
@@ -191,7 +186,15 @@ public class StayOutboundMapFragment extends com.google.android.gms.maps.Support
         {
             // Location View
             case 0x2:
+            {
+                if (mOnEventListener == null)
+                {
+                    return;
+                }
+
+                mOnEventListener.onMyLocationClick();
                 break;
+            }
         }
     }
 
@@ -314,6 +317,23 @@ public class StayOutboundMapFragment extends com.google.android.gms.maps.Support
         }
     }
 
+    public void setMyLocation(LatLng latLng, boolean isVisibleMarker)
+    {
+        if (mGoogleMap == null || latLng == null)
+        {
+            return;
+        }
+
+        if (mMyLocationMarker != null)
+        {
+            mMyLocationMarker.remove();
+            mMyLocationMarker = null;
+        }
+
+        mMyLocationMarker = mGoogleMap.addMarker(new MarkerOptions().position(latLng)//
+            .icon(new MyLocationMarker(getContext()).makeIcon()).visible(isVisibleMarker).anchor(0.5f, 0.5f).zIndex(1.0f));
+    }
+
     /**
      * 추후 UI추가 필요 구글맵 버전이 바뀌면 문제가 될수도 있음.
      */
@@ -387,7 +407,7 @@ public class StayOutboundMapFragment extends com.google.android.gms.maps.Support
         // 나의 위치 마커를 생성시켜 놓는다.
         if (myLatLng != null)
         {
-            setMyLocation(mGoogleMap, myLatLng, true);
+            setMyLocation(myLatLng, true);
 
             boundsBuilder.include(myLatLng);
         }
@@ -539,23 +559,6 @@ public class StayOutboundMapFragment extends com.google.android.gms.maps.Support
         }
 
         return stayOutboundArrangeList;
-    }
-
-    private void setMyLocation(GoogleMap googleMap, LatLng latLng, boolean isVisibleMarker)
-    {
-        if (googleMap == null || latLng == null)
-        {
-            return;
-        }
-
-        if (mMyLocationMarker != null)
-        {
-            mMyLocationMarker.remove();
-            mMyLocationMarker = null;
-        }
-
-        mMyLocationMarker = mGoogleMap.addMarker(new MarkerOptions().position(latLng)//
-            .icon(new MyLocationMarker(getContext()).makeIcon()).visible(isVisibleMarker).anchor(0.5f, 0.5f).zIndex(1.0f));
     }
 
     private void onMarkerClick(Context context, StayOutboundClusterItem stayOutboundClusterItem, Marker marker)

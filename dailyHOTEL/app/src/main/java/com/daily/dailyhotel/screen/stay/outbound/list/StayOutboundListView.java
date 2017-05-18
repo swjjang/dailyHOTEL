@@ -3,6 +3,7 @@ package com.daily.dailyhotel.screen.stay.outbound.list;
 import android.animation.Animator;
 import android.animation.ValueAnimator;
 import android.content.Context;
+import android.location.Location;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -21,6 +22,7 @@ import com.daily.dailyhotel.entity.ListItem;
 import com.daily.dailyhotel.entity.StayOutbound;
 import com.daily.dailyhotel.screen.stay.outbound.list.map.StayOutboundMapFragment;
 import com.daily.dailyhotel.screen.stay.outbound.list.map.StayOutboundMapViewPagerAdapter;
+import com.google.android.gms.maps.model.LatLng;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ActivityStayOutboundSearchResultDataBinding;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
@@ -73,6 +75,8 @@ public class StayOutboundListView extends BaseView<StayOutboundListView.OnEventL
         void onMarkersCompleted();
 
         void onMapClick();
+
+        void onMyLocationClick();
     }
 
     public StayOutboundListView(BaseActivity baseActivity, StayOutboundListView.OnEventListener listener)
@@ -344,7 +348,12 @@ public class StayOutboundListView extends BaseView<StayOutboundListView.OnEventL
     @Override
     public void setFilterOptionImage(boolean onOff)
     {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
 
+        getViewDataBinding().filterOptionImageView.setSelected(onOff);
     }
 
     /**
@@ -441,6 +450,17 @@ public class StayOutboundListView extends BaseView<StayOutboundListView.OnEventL
     }
 
     @Override
+    public void setMyLocation(Location location)
+    {
+        if (mStayOutboundMapFragment == null || location == null)
+        {
+            return;
+        }
+
+        mStayOutboundMapFragment.setMyLocation(new LatLng(location.getLatitude(), location.getLongitude()), true);
+    }
+
+    @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels)
     {
     }
@@ -505,6 +525,12 @@ public class StayOutboundListView extends BaseView<StayOutboundListView.OnEventL
     public void onMapClick()
     {
         getEventListener().onMapClick();
+    }
+
+    @Override
+    public void onMyLocationClick()
+    {
+        getEventListener().onMyLocationClick();
     }
 
     private void showViewPagerAnimation()

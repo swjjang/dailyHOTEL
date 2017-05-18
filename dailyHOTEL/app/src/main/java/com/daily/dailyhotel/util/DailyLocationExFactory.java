@@ -51,27 +51,39 @@ public class DailyLocationExFactory
 
     protected BroadcastReceiver mSingleUpdateReceiver = new BroadcastReceiver()
     {
+        int providerCount = 0;
+
         @Override
         public void onReceive(Context context, Intent intent)
         {
-            String key = LocationManager.KEY_LOCATION_CHANGED;
-            Location location = (Location) intent.getExtras().get(key);
+            Location location = (Location) intent.getExtras().get(LocationManager.KEY_LOCATION_CHANGED);
 
             if (mLocationListener != null)
             {
                 if (location != null)
                 {
+                    providerCount = 0;
+
+                    stopLocationMeasure();
                     mLocationListener.onLocationChanged(location);
                 } else
                 {
+                    if (++providerCount > 1)
+                    {
+                        stopLocationMeasure();
+                    } else
+                    {
+                        return;
+                    }
+
+                    providerCount = 0;
                     mLocationListener.onFailed();
                 }
             } else
             {
-                // ???
+                providerCount = 0;
+                stopLocationMeasure();
             }
-
-            stopLocationMeasure();
         }
     };
 
@@ -82,7 +94,7 @@ public class DailyLocationExFactory
         void onFailed();
     }
 
-    private DailyLocationExFactory()
+    public DailyLocationExFactory()
     {
     }
 
@@ -168,7 +180,7 @@ public class DailyLocationExFactory
         }
     }
 
-    public Location getLastBestLocation(Context context, int minDistance, long minTime)
+    private Location getLastBestLocation(Context context, int minDistance, long minTime)
     {
         Location bestResult = null;
         float bestAccuracy = Float.MAX_VALUE;
