@@ -40,6 +40,8 @@ public class DailyLocationFactory
     Drawable mMyLocationDrawable;
     BaseActivity mBaseActivity;
 
+    private int mProviderResultCount = 0;
+
     private Handler mHandler = new Handler()
     {
         public void handleMessage(android.os.Message msg)
@@ -52,6 +54,7 @@ public class DailyLocationFactory
             switch (msg.what)
             {
                 case 0:
+
                     stopLocationMeasure();
 
                     if (mLocationListener != null)
@@ -118,13 +121,12 @@ public class DailyLocationFactory
             {
                 if (location != null)
                 {
-                    providerCount = 0;
-
                     stopLocationMeasure();
                     mLocationListener.onLocationChanged(location);
                 } else
                 {
-                    if (++providerCount > 1)
+                    // Provider를 2개 사용하는데 한개가 실패하더라도 기존에는 바로 종료했는데 2개가 다 될때까지 대기한다
+                    if (++mProviderResultCount > 1)
                     {
                         stopLocationMeasure();
                     } else
@@ -132,7 +134,6 @@ public class DailyLocationFactory
                         return;
                     }
 
-                    providerCount = 0;
                     mLocationListener.onFailed();
 
                     if (mBaseActivity != null)
@@ -142,7 +143,6 @@ public class DailyLocationFactory
                 }
             } else
             {
-                providerCount = 0;
                 stopLocationMeasure();
             }
         }
@@ -237,9 +237,13 @@ public class DailyLocationFactory
 
         Location location = getLastBestLocation(mBaseActivity, 1000, System.currentTimeMillis() + TEN_MINUTES);
 
-        if (location != null && mLocationListener != null)
+        if (location != null)
         {
-            mLocationListener.onLocationChanged(location);
+            if (mLocationListener != null)
+            {
+                mLocationListener.onLocationChanged(location);
+            }
+
             stopLocationMeasure();
             return;
         }
@@ -343,6 +347,8 @@ public class DailyLocationFactory
 
     public void stopLocationMeasure()
     {
+        mProviderResultCount = 0;
+
         mHandler.removeMessages(0);
         mHandler.removeMessages(1);
         mHandler.removeMessages(2);

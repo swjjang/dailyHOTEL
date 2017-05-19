@@ -1242,6 +1242,25 @@ public class DailyMobileAPI implements IDailyNetwork
         executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
     }
 
+    @Override
+    public void requestStayCategoryList(String tag, String category, Map<String, Object> queryMap, List<String> bedTypeList, List<String> luxuryList, Object listener)
+    {
+        final String URL = Constants.UNENCRYPTED_URL ? "api/v4/hotels/category/{categoryAsPath}/sales"//
+            : "OTYkNjYkMzAkMTMkNzYkODEkNjQkNiQ0JDEyOSQ1OCQzMiQ3NCQxMTAkNDkkOTIk$MUFCENjEJEQThEOITdBNTZFOUJEMUUzOXUFJDQTI5ODM4RDU0AMTZEOUE0NjOZDMUZGNjJYwQjRGdBQjQ5QOzI1NZ0QzVRDMzNTdFREYwRjZENQkYFFRDQwREQxN0UyQjA2MzMyANTY0NTY3$";
+
+        Map<String, String> urlParams = new HashMap<>();
+        urlParams.put("{categoryAsPath}", category);
+
+        ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestStayList(Crypto.getUrlDecoderEx(URL, urlParams), queryMap, bedTypeList, luxuryList);
+        executorCallbackCall.setTag(tag);
+        executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
+    }
+
+
+
+
+
+
     /////////////////////////////////////////////////////////////////////////////////////////////////
     //
     // RxJava2 API
@@ -1322,7 +1341,7 @@ public class DailyMobileAPI implements IDailyNetwork
 
     public Observable<BaseDto<StayOutboundsData>> getStayOutBoundList(String arrivalDate, String departureDate//
         , int numberOfAdults, int numberOfChildren, String childAges, double maxStarRating, double minStarRating//
-        , int numberOfRooms, long geographyId, String geographyType,int numberOfResults//
+        , int numberOfRooms, long geographyId, String geographyType, int numberOfResults//
         , String cacheKey, String cacheLocation, String apiExperience, String locale, String sort)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "https://dev-silo.dailyhotel.me/"//

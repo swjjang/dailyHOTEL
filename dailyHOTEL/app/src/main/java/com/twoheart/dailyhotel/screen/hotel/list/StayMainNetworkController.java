@@ -38,6 +38,11 @@ public class StayMainNetworkController extends PlaceMainNetworkController
         DailyMobileAPI.getInstance(mContext).requestStayRegionList(mNetworkTag, mRegionListCallback);
     }
 
+    @Override
+    public void requestRegionList(String categoryCode)
+    {
+        // do nothing
+    }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////
     // NetworkActionListener

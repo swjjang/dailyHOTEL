@@ -40,6 +40,12 @@ public class GourmetMainNetworkController extends PlaceMainNetworkController
         DailyMobileAPI.getInstance(mContext).requestGourmetRegionList(mNetworkTag, mRegionListCallback);
     }
 
+    @Override
+    public void requestRegionList(String categoryCode)
+    {
+       // do nothing
+    }
+
     //////////////////////////////////////////////////////////////////////////////////////////////////////////
     // NetworkActionListener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////

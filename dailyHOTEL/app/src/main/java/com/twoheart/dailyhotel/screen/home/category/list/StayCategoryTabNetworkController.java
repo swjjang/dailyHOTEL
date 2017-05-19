@@ -38,14 +38,20 @@ public class StayCategoryTabNetworkController extends PlaceMainNetworkController
     @Override
     public void requestRegionList()
     {
-        DailyMobileAPI.getInstance(mContext).requestStayRegionList(mNetworkTag, mRegionListCallback);
+        // do nothing!
+    }
+
+    @Override
+    public void requestRegionList(String categoryCode)
+    {
+        DailyMobileAPI.getInstance(mContext).requestStayCategoryRegionList(mNetworkTag, categoryCode, mCategoryRegionListCallback);
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////
     // NetworkActionListener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private retrofit2.Callback mRegionListCallback = new retrofit2.Callback<JSONObject>()
+    private retrofit2.Callback mCategoryRegionListCallback = new retrofit2.Callback<JSONObject>()
     {
         @Override
         public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
@@ -61,10 +67,10 @@ public class StayCategoryTabNetworkController extends PlaceMainNetworkController
                     {
                         JSONObject dataJSONObject = responseJSONObject.getJSONObject("data");
 
-                        JSONArray provinceArray = dataJSONObject.getJSONArray("regionProvince");
+                        JSONArray provinceArray = dataJSONObject.getJSONArray("provinceList");
                         ArrayList<Province> provinceList = makeProvinceList(provinceArray);
 
-                        JSONArray areaJSONArray = dataJSONObject.getJSONArray("regionArea");
+                        JSONArray areaJSONArray = dataJSONObject.getJSONArray("areaList");
                         ArrayList<Area> areaList = makeAreaList(areaJSONArray);
 
                         ((OnNetworkControllerListener) mOnNetworkControllerListener).onRegionList(provinceList, areaList);
@@ -142,5 +148,4 @@ public class StayCategoryTabNetworkController extends PlaceMainNetworkController
             return areaList;
         }
     };
-
 }

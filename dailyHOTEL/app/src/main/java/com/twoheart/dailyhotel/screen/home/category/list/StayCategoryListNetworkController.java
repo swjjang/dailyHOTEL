@@ -4,7 +4,7 @@ import android.content.Context;
 
 import com.crashlytics.android.Crashlytics;
 import com.twoheart.dailyhotel.model.Stay;
-import com.twoheart.dailyhotel.model.StayParams;
+import com.twoheart.dailyhotel.model.StayCategoryParams;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
@@ -15,7 +15,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Response;
@@ -38,19 +37,22 @@ public class StayCategoryListNetworkController extends BaseNetworkController
         super(context, networkTag, listener);
     }
 
-    public void requestStayList(StayParams params)
+    public void requestStayCategoryList(StayCategoryParams params)
     {
         if (params == null)
         {
             return;
         }
 
-        DailyMobileAPI.getInstance(mContext).requestStayList(mNetworkTag, params.toParamsMap(), params.getBedTypeList(), params.getLuxuryList(), mStayListCallback);
+        DailyMobileAPI.getInstance(mContext).requestStayCategoryList(mNetworkTag //
+            , params.getCategoryCode(), params.toParamsMap() //
+            , params.getBedTypeList(), params.getLuxuryList(), mStayCategoryListCallback);
     }
 
-    public void requestLocalPlusList(Map<String, Object> params)
+    public void requestLocalPlusList(StayCategoryParams params)
     {
-        DailyMobileAPI.getInstance(mContext).requestLocalPlus(mNetworkTag, params, mLocalPlusListCallback);
+        DailyMobileAPI.getInstance(mContext).requestLocalPlus(mNetworkTag //
+            , params.toLocalPlusParamsMap(), mLocalPlusListCallback);
     }
 
     private ArrayList<Stay> makeStayList(JSONArray jsonArray, String imageUrl) throws JSONException
@@ -84,7 +86,7 @@ public class StayCategoryListNetworkController extends BaseNetworkController
     // Listener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private retrofit2.Callback mStayListCallback = new retrofit2.Callback<JSONObject>()
+    private retrofit2.Callback mStayCategoryListCallback = new retrofit2.Callback<JSONObject>()
     {
         @Override
         public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
