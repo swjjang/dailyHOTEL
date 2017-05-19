@@ -1204,6 +1204,7 @@
 
     <string name="label_home_category_stay_all">스테이</string>
     <string name="label_home_category_domestic_hotel">국내호텔</string>
+    <string name="label_home_category_overseas_hotel">해외호텔</string>
     <string name="label_home_category_boutique">부티끄</string>
     <string name="label_home_category_pension">펜션</string>
     <string name="label_home_category_resort">리조트</string>

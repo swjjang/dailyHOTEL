@@ -19,6 +19,7 @@ import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
 import com.daily.base.widget.DailyToast;
+import com.daily.dailyhotel.screen.stay.outbound.search.StayOutboundSearchActivity;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
@@ -1461,6 +1462,11 @@ public class HomeFragment extends BaseMenuNavigationFragment
                     ExLog.d(e.toString());
                 }
 
+                return;
+            } else if(categoryType == DailyCategoryType.STAY_OUTBOUND_HOTEL)
+            {
+                Intent intent = StayOutboundSearchActivity.newInstance(mBaseActivity);
+                startActivityForResult(intent, Constants.CODE_RESULT_ACTIVITY_STAY_OUTBOUND_SEARCH);
                 return;
             }
 
