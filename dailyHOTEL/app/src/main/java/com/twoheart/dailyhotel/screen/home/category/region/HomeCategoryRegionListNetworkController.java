@@ -46,9 +46,9 @@ public class HomeCategoryRegionListNetworkController extends BaseNetworkControll
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
     /**
-     * @param provinceList in
+     * @param provinceList       in
      * @param areaList
-     * @param regionViewItemList   out
+     * @param regionViewItemList out
      */
     protected void makeRegionViewItemList(List<Province> provinceList //
         , ArrayList<Area> areaList, List<RegionViewItem> regionViewItemList)

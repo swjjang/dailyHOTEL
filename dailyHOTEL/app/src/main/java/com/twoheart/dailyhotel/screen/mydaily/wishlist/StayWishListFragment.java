@@ -333,8 +333,11 @@ public class StayWishListFragment extends PlaceWishListFragment
                 AnalyticsManager.Action.WISHLIST_CLICKED, //
                 stay.name, null);
 
-            AnalyticsManager.getInstance(mBaseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION//
-                , AnalyticsManager.Action.STAY_ITEM_CLICK_TRUE_VR, Integer.toString(stay.index), null);
+            if (stay.truevr == true)
+            {
+                AnalyticsManager.getInstance(mBaseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                    , AnalyticsManager.Action.STAY_ITEM_CLICK_TRUE_VR, Integer.toString(stay.index), null);
+            }
         }
 
         @Override

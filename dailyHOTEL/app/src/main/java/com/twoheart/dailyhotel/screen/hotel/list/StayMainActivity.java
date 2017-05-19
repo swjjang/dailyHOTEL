@@ -167,14 +167,14 @@ public class StayMainActivity extends PlaceMainActivity
                 mPlaceMainLayout.setOptionFilterSelected(stayCurationOption.isDefaultFilter() == false);
 
                 // 기존에 설정된 지역과 다른 지역을 선택하면 해당 지역을 저장한다.
-//                String savedRegion = DailyPreference.getInstance(this).getSelectedRegion(PlaceType.HOTEL);
+                //                String savedRegion = DailyPreference.getInstance(this).getSelectedRegion(PlaceType.HOTEL);
 
                 JSONObject jsonObject = DailyPreference.getInstance(StayMainActivity.this).getDailyRegion(DailyCategoryType.STAY_ALL);
                 boolean isSameProvince = Util.isSameProvinceName(province, jsonObject);
                 if (isSameProvince == false)
                 {
-//                    DailyPreference.getInstance(this).setSelectedOverseaRegion(PlaceType.HOTEL, province.isOverseas);
-//                    DailyPreference.getInstance(this).setSelectedRegion(PlaceType.HOTEL, province.name);
+                    //                    DailyPreference.getInstance(this).setSelectedOverseaRegion(PlaceType.HOTEL, province.isOverseas);
+                    //                    DailyPreference.getInstance(this).setSelectedRegion(PlaceType.HOTEL, province.name);
                     DailyPreference.getInstance(StayMainActivity.this).setDailyRegion(DailyCategoryType.STAY_ALL, Util.getDailyRegionJSONObject(province));
 
                     String country = province.isOverseas ? AnalyticsManager.ValueType.OVERSEAS : AnalyticsManager.ValueType.DOMESTIC;
@@ -763,8 +763,8 @@ public class StayMainActivity extends PlaceMainActivity
                 {
                     if (province.getProvinceIndex() == provinceIndex)
                     {
-//                        DailyPreference.getInstance(StayMainActivity.this).setSelectedOverseaRegion(PlaceType.HOTEL, province.isOverseas);
-//                        DailyPreference.getInstance(StayMainActivity.this).setSelectedRegion(PlaceType.HOTEL, selectedProvince.name);
+                        //                        DailyPreference.getInstance(StayMainActivity.this).setSelectedOverseaRegion(PlaceType.HOTEL, province.isOverseas);
+                        //                        DailyPreference.getInstance(StayMainActivity.this).setSelectedRegion(PlaceType.HOTEL, selectedProvince.name);
                         DailyPreference.getInstance(StayMainActivity.this).setDailyRegion(DailyCategoryType.STAY_ALL, Util.getDailyRegionJSONObject(province));
 
                         String country = province.isOverseas ? AnalyticsManager.ValueType.OVERSEAS : AnalyticsManager.ValueType.DOMESTIC;
@@ -1077,8 +1077,12 @@ public class StayMainActivity extends PlaceMainActivity
                         AnalyticsManager.getInstance(StayMainActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
                             , AnalyticsManager.Action.STAY_ITEM_CLICK, Integer.toString(stay.index), null);
 
-                        AnalyticsManager.getInstance(StayMainActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
-                            , AnalyticsManager.Action.STAY_ITEM_CLICK_TRUE_VR, Integer.toString(stay.index), null);
+
+                        if (stay.truevr == true)
+                        {
+                            AnalyticsManager.getInstance(StayMainActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                                , AnalyticsManager.Action.STAY_ITEM_CLICK_TRUE_VR, Integer.toString(stay.index), null);
+                        }
                     }
                     break;
                 }

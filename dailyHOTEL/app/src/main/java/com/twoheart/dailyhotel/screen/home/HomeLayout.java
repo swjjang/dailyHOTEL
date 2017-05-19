@@ -1229,7 +1229,7 @@ public class HomeLayout extends BaseBlurLayout
 
             int maxLayoutTopMargin = ScreenUtils.dpToPx(mContext, 10d);
             int minLayoutTopMargin = 0;
-//            int minLayoutTopMargin = ScreenUtils.dpToPx(mContext, 0d);
+            //            int minLayoutTopMargin = ScreenUtils.dpToPx(mContext, 0d);
 
             View stayButtonLayout = mScrollButtonLayout.findViewById(R.id.stayButtonLayout);
             View gourmetButtonLayout = mScrollButtonLayout.findViewById(R.id.gourmetButtonLayout);

@@ -162,7 +162,8 @@ public abstract class PlacePaymentThankyouActivity extends BaseActivity implemen
         {
             waitingMessageLayout.setVisibility(View.VISIBLE);
             messageBottomView.setVisibility(View.GONE);
-        } else {
+        } else
+        {
             waitingMessageLayout.setVisibility(View.GONE);
             messageBottomView.setVisibility(View.VISIBLE);
         }

@@ -1494,9 +1494,9 @@ public class HomeFragment extends BaseMenuNavigationFragment
                         break;
                 }
 
-                    AnalyticsManager.getInstance(mBaseActivity).recordEvent(//
-                        AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.HOME_SHORTCUT_CLICK,//
-                        label, null);
+                AnalyticsManager.getInstance(mBaseActivity).recordEvent(//
+                    AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.HOME_SHORTCUT_CLICK,//
+                    label, null);
             } catch (Exception e)
             {
                 ExLog.e(e.toString());

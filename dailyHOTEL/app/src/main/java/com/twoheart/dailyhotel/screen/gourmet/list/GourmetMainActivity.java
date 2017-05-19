@@ -166,8 +166,8 @@ public class GourmetMainActivity extends PlaceMainActivity
                 {
                     DailyPreference.getInstance(this).setDailyRegion(DailyCategoryType.GOURMET_ALL, Util.getDailyRegionJSONObject(province));
 
-//                    DailyPreference.getInstance(this).setSelectedOverseaRegion(PlaceType.FNB, province.isOverseas);
-//                    DailyPreference.getInstance(this).setSelectedRegion(PlaceType.FNB, province.name);
+                    //                    DailyPreference.getInstance(this).setSelectedOverseaRegion(PlaceType.FNB, province.isOverseas);
+                    //                    DailyPreference.getInstance(this).setSelectedRegion(PlaceType.FNB, province.name);
 
                     String country = province.isOverseas ? AnalyticsManager.ValueType.OVERSEAS : AnalyticsManager.ValueType.DOMESTIC;
                     String realProvinceName = Util.getRealProvinceName(province);
@@ -684,8 +684,8 @@ public class GourmetMainActivity extends PlaceMainActivity
                 {
                     if (province.getProvinceIndex() == provinceIndex)
                     {
-//                        DailyPreference.getInstance(GourmetMainActivity.this).setSelectedOverseaRegion(PlaceType.FNB, province.isOverseas);
-//                        DailyPreference.getInstance(GourmetMainActivity.this).setSelectedRegion(PlaceType.FNB, selectedProvince.name);
+                        //                        DailyPreference.getInstance(GourmetMainActivity.this).setSelectedOverseaRegion(PlaceType.FNB, province.isOverseas);
+                        //                        DailyPreference.getInstance(GourmetMainActivity.this).setSelectedRegion(PlaceType.FNB, selectedProvince.name);
                         DailyPreference.getInstance(GourmetMainActivity.this).setDailyRegion(DailyCategoryType.GOURMET_ALL, Util.getDailyRegionJSONObject(province));
 
                         String country = province.isOverseas ? AnalyticsManager.ValueType.OVERSEAS : AnalyticsManager.ValueType.DOMESTIC;
@@ -922,14 +922,14 @@ public class GourmetMainActivity extends PlaceMainActivity
                     Gourmet gourmet = placeViewItem.getItem();
                     Province province = mGourmetCuration.getProvince();
 
-//                    String savedRegion = DailyPreference.getInstance(GourmetMainActivity.this).getSelectedRegion(PlaceType.FNB);
+                    //                    String savedRegion = DailyPreference.getInstance(GourmetMainActivity.this).getSelectedRegion(PlaceType.FNB);
 
                     JSONObject jsonObject = DailyPreference.getInstance(GourmetMainActivity.this).getDailyRegion(DailyCategoryType.GOURMET_ALL);
                     boolean isSameProvince = Util.isSameProvinceName(province, jsonObject);
                     if (isSameProvince == false)
                     {
-//                        DailyPreference.getInstance(GourmetMainActivity.this).setSelectedOverseaRegion(PlaceType.FNB, province.isOverseas);
-//                        DailyPreference.getInstance(GourmetMainActivity.this).setSelectedRegion(PlaceType.FNB, province.name);
+                        //                        DailyPreference.getInstance(GourmetMainActivity.this).setSelectedOverseaRegion(PlaceType.FNB, province.isOverseas);
+                        //                        DailyPreference.getInstance(GourmetMainActivity.this).setSelectedRegion(PlaceType.FNB, province.name);
                         DailyPreference.getInstance(GourmetMainActivity.this).setDailyRegion(DailyCategoryType.GOURMET_ALL, Util.getDailyRegionJSONObject(province));
 
                         String country = province.isOverseas ? AnalyticsManager.ValueType.OVERSEAS : AnalyticsManager.ValueType.DOMESTIC;

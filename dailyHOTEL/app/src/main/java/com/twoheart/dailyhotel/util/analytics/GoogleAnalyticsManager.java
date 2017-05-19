@@ -329,12 +329,11 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
             {
                 ExLog.d(TAG + "recordScreen : " + screenName + " | " + screenViewBuilder.build().toString());
             }
-        } else if (AnalyticsManager.Screen.STAY_LIST_SHORTCUT_HOTEL.equalsIgnoreCase(screenName) == true
-            || AnalyticsManager.Screen.STAY_LIST_SHORTCUT_BOUTIQUE.equalsIgnoreCase(screenName) == true
-            || AnalyticsManager.Screen.STAY_LIST_SHORTCUT_PENSION.equalsIgnoreCase(screenName) == true
-            || AnalyticsManager.Screen.STAY_LIST_SHORTCUT_RESORT.equalsIgnoreCase(screenName) == true
-            || AnalyticsManager.Screen.STAY_LIST_SHORTCUT_NEARBY.equalsIgnoreCase(screenName) == true
-            )
+        } else if (AnalyticsManager.Screen.STAY_LIST_SHORTCUT_HOTEL.equalsIgnoreCase(screenName) == true//
+            || AnalyticsManager.Screen.STAY_LIST_SHORTCUT_BOUTIQUE.equalsIgnoreCase(screenName) == true//
+            || AnalyticsManager.Screen.STAY_LIST_SHORTCUT_PENSION.equalsIgnoreCase(screenName) == true//
+            || AnalyticsManager.Screen.STAY_LIST_SHORTCUT_RESORT.equalsIgnoreCase(screenName) == true//
+            || AnalyticsManager.Screen.STAY_LIST_SHORTCUT_NEARBY.equalsIgnoreCase(screenName) == true)
         {
             HitBuilders.ScreenViewBuilder screenViewBuilder = new HitBuilders.ScreenViewBuilder();
 
