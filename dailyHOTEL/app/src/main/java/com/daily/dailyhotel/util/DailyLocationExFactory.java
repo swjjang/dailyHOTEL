@@ -31,6 +31,8 @@ public class DailyLocationExFactory
     LocationListenerEx mLocationListener;
     Context mContext;
 
+    private int mProviderCount;
+
     private Handler mHandler = new Handler()
     {
         public void handleMessage(android.os.Message msg)
@@ -51,8 +53,6 @@ public class DailyLocationExFactory
 
     protected BroadcastReceiver mSingleUpdateReceiver = new BroadcastReceiver()
     {
-        int providerCount = 0;
-
         @Override
         public void onReceive(Context context, Intent intent)
         {
@@ -62,13 +62,11 @@ public class DailyLocationExFactory
             {
                 if (location != null)
                 {
-                    providerCount = 0;
-
                     stopLocationMeasure();
                     mLocationListener.onLocationChanged(location);
                 } else
                 {
-                    if (++providerCount > 1)
+                    if (++mProviderCount > 1)
                     {
                         stopLocationMeasure();
                     } else
@@ -76,12 +74,10 @@ public class DailyLocationExFactory
                         return;
                     }
 
-                    providerCount = 0;
                     mLocationListener.onFailed();
                 }
             } else
             {
-                providerCount = 0;
                 stopLocationMeasure();
             }
         }
@@ -106,6 +102,7 @@ public class DailyLocationExFactory
         }
 
         mContext = context;
+        mProviderCount = 0;
 
         if (VersionUtils.isOverAPI23() == true)
         {
@@ -226,6 +223,8 @@ public class DailyLocationExFactory
 
     public void stopLocationMeasure()
     {
+        mProviderCount = 0;
+
         mHandler.removeMessages(0);
 
         if (mLocationManager != null)
