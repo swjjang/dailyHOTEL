@@ -321,7 +321,7 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
 
     public void setMyLocation(Location location, boolean isVisibleMarker)
     {
-        if (location == null)
+        if (location == null || mBaseActivity == null)
         {
             return;
         }
