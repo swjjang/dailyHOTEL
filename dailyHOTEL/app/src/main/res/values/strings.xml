@@ -1197,9 +1197,10 @@
     <string name="label_home_server_error_low_display_split_text">불러오지</string>
     <string name="label_home_retry_button_text">연결 재시도하기</string>
     <string name="label_home_category_title_text">스테이 바로가기</string>
+    <string name="label_home_category_nearby_stay_text">내 주변 스테이</string>
 
     <string name="label_home_category_stay_all">스테이</string>
-    <string name="label_home_category_hotel">호텔</string>
+    <string name="label_home_category_domestic_hotel">국내호텔</string>
     <string name="label_home_category_boutique">부티끄</string>
     <string name="label_home_category_pension">펜션</string>
     <string name="label_home_category_resort">리조트</string>

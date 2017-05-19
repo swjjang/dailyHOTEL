@@ -31,14 +31,16 @@ public class HomeCategoryLayout extends RelativeLayout
         void onItemClick(DailyCategoryType dailyCategoryType);
     }
 
-    private static final int MAX_COLUMN_COUNT = 5;
+    private static final int MAX_COLUMN_COUNT = 4;
     private static final int ANIMATION_DURATION = 200;
 
-    private static final DailyCategoryType[] sColumnList = {DailyCategoryType.STAY_HOTEL, //
+    private static final DailyCategoryType[] sColumnList = { //
+        DailyCategoryType.STAY_HOTEL, //
         DailyCategoryType.STAY_BOUTIQUE, //
         DailyCategoryType.STAY_PENSION, //
-        DailyCategoryType.STAY_RESORT, //
-        DailyCategoryType.STAY_NEARBY};
+        DailyCategoryType.STAY_RESORT};
+    //        DailyCategoryType.STAY_RESORT, //
+    //        DailyCategoryType.STAY_NEARBY};
 
     private Context mContext;
     private RelativeLayout mLayout;
@@ -87,6 +89,10 @@ public class HomeCategoryLayout extends RelativeLayout
             .inflate(R.layout.list_row_home_category_layout, this);
 
         mLayout.setBackgroundResource(R.color.white);
+
+        View nearbyStayView = mLayout.findViewById(R.id.homeCategoryNearByTextView);
+        nearbyStayView.setTag(DailyCategoryType.STAY_NEARBY);
+        nearbyStayView.setOnClickListener(mItemClickListener);
 
         mItemGridLayout = (android.support.v7.widget.GridLayout) mLayout.findViewById(R.id.categoryGridLayout);
         mItemGridLayout.setColumnCount(MAX_COLUMN_COUNT);
@@ -160,7 +166,7 @@ public class HomeCategoryLayout extends RelativeLayout
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
 
         //        ExLog.d("widthMeasureSpec : " + widthMeasureSpec + " , heightMeasureSpec : " + heightMeasureSpec);
-//        ExLog.d("getMeasuredWidth : " + getMeasuredWidth() + " , getMeasuredHeight : " + getMeasuredHeight());
+        //        ExLog.d("getMeasuredWidth : " + getMeasuredWidth() + " , getMeasuredHeight : " + getMeasuredHeight());
     }
 
     public void setCategoryEnabled(boolean isEnabled)
