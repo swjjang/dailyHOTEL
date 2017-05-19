@@ -144,7 +144,8 @@ public class PlaceRegionAnimatedExpandableListAdapter extends AnimatedExpandable
             layout.setTag(layout.getId(), groupPosition);
             layout.setEnabled(true);
 
-            countTextView.setText(Integer.toString(area.count));
+//            countTextView.setText(Integer.toString(area.count));
+            countTextView.setText(null);
 
             setNameTextViewMaxWidth(layout, nameTextView, countTextView);
             setAreaNameText(nameTextView, area.name);
