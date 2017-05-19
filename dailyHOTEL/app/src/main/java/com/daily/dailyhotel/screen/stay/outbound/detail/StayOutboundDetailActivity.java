@@ -49,7 +49,7 @@ public class StayOutboundDetailActivity extends BaseActivity<StayOutboundDetailP
      */
     public static Intent newInstance(Context context, int stayIndex, String stayName, String imageUrl//
         , String checkInDateTime, String checkOutDateTime//
-        , int numberOfAdults, ArrayList<String> childList, boolean mIsUsedMultiTransition)
+        , int numberOfAdults, ArrayList<Integer> childList, boolean mIsUsedMultiTransition)
     {
         Intent intent = new Intent(context, StayOutboundDetailActivity.class);
         intent.putExtra(INTENT_EXTRA_DATA_STAY_INDEX, stayIndex);

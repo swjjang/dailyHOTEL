@@ -11,7 +11,7 @@ import com.daily.base.BaseAnalyticsInterface;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
-import com.daily.dailyhotel.entity.Persons;
+import com.daily.dailyhotel.entity.People;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayOutboundDetail;
 import com.daily.dailyhotel.entity.StayOutboundRoom;
@@ -47,7 +47,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
     private String mImageUrl;
     private StayBookDateTime mStayBookDateTime;
     private StayOutboundDetail mStayOutboundDetail;
-    private Persons mPersons;
+    private People mPeople;
 
     private int mStatus = STATUS_NONE;
     private int mViewPriceType = PRICE_AVERAGE;
@@ -81,7 +81,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
 
         mStayOutboundRemoteImpl = new StayOutboundRemoteImpl(activity);
 
-        mPersons = new Persons(Persons.DEFAULT_PERSONS, null);
+        mPeople = new People(People.DEFAULT_ADULTS, null);
 
         setStatus(STATUS_NONE);
 
@@ -142,8 +142,8 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
                 return false;
             }
 
-            mPersons.numberOfAdults = intent.getIntExtra(StayOutboundDetailActivity.INTENT_EXTRA_DATA_NUMBER_OF_ADULTS, 2);
-            mPersons.setChildAgeList(intent.getStringArrayListExtra(StayOutboundDetailActivity.INTENT_EXTRA_DATA_CHILD_LIST));
+            mPeople.numberOfAdults = intent.getIntExtra(StayOutboundDetailActivity.INTENT_EXTRA_DATA_NUMBER_OF_ADULTS, 2);
+            mPeople.setChildAgeList(intent.getIntegerArrayListExtra(StayOutboundDetailActivity.INTENT_EXTRA_DATA_CHILD_LIST));
         }
 
         return true;
@@ -167,7 +167,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
 
         if (mIsUsedMultiTransition == true)
         {
-            addCompositeDisposable(Observable.zip(getViewInterface().getSharedElementTransition(), mStayOutboundRemoteImpl.getStayOutBoundDetail(mStayIndex, mStayBookDateTime, mPersons), new BiFunction<Boolean, StayOutboundDetail, StayOutboundDetail>()
+            addCompositeDisposable(Observable.zip(getViewInterface().getSharedElementTransition(), mStayOutboundRemoteImpl.getStayOutBoundDetail(mStayIndex, mStayBookDateTime, mPeople), new BiFunction<Boolean, StayOutboundDetail, StayOutboundDetail>()
             {
                 @Override
                 public StayOutboundDetail apply(Boolean aBoolean, StayOutboundDetail stayOutboundDetail) throws Exception
@@ -197,7 +197,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
             }));
         } else
         {
-            addCompositeDisposable(mStayOutboundRemoteImpl.getStayOutBoundDetail(mStayIndex, mStayBookDateTime, mPersons).subscribe(new Consumer<StayOutboundDetail>()
+            addCompositeDisposable(mStayOutboundRemoteImpl.getStayOutBoundDetail(mStayIndex, mStayBookDateTime, mPeople).subscribe(new Consumer<StayOutboundDetail>()
             {
                 @Override
                 public void accept(StayOutboundDetail stayOutboundDetail) throws Exception

@@ -8,7 +8,7 @@ import android.support.annotation.NonNull;
 import com.daily.base.BaseAnalyticsInterface;
 import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
-import com.daily.dailyhotel.entity.Persons;
+import com.daily.dailyhotel.entity.People;
 import com.twoheart.dailyhotel.R;
 
 import java.util.ArrayList;
@@ -17,34 +17,34 @@ import java.util.ArrayList;
  * Created by sheldon
  * Clean Architecture
  */
-public class SelectPersonsPresenter extends BaseExceptionPresenter<SelectPersonsActivity, SelectPersonsViewInterface> implements SelectPersonsView.OnEventListener
+public class SelectPeoplePresenter extends BaseExceptionPresenter<SelectPeopleActivity, SelectPeopleViewInterface> implements SelectPeopleView.OnEventListener
 {
-    private SelectPersonsAnalyticsInterface mAnalytics;
+    private SelectPeopleAnalyticsInterface mAnalytics;
 
-    private Persons mPersons;
+    private People mPeople;
 
-    public interface SelectPersonsAnalyticsInterface extends BaseAnalyticsInterface
+    public interface SelectPeopleAnalyticsInterface extends BaseAnalyticsInterface
     {
     }
 
-    public SelectPersonsPresenter(@NonNull SelectPersonsActivity activity)
+    public SelectPeoplePresenter(@NonNull SelectPeopleActivity activity)
     {
         super(activity);
     }
 
     @NonNull
     @Override
-    protected SelectPersonsViewInterface createInstanceViewInterface()
+    protected SelectPeopleViewInterface createInstanceViewInterface()
     {
-        return new SelectPersonsView(getActivity(), this);
+        return new SelectPeopleView(getActivity(), this);
     }
 
     @Override
-    public void constructorInitialize(SelectPersonsActivity activity)
+    public void constructorInitialize(SelectPeopleActivity activity)
     {
         setContentView(R.layout.activity_stay_outbound_persons_data);
 
-        setAnalytics(new SelectPersonsAnalyticsImpl());
+        setAnalytics(new SelectPeopleAnalyticsImpl());
 
         setRefresh(true);
     }
@@ -52,7 +52,7 @@ public class SelectPersonsPresenter extends BaseExceptionPresenter<SelectPersons
     @Override
     public void setAnalytics(BaseAnalyticsInterface analytics)
     {
-        mAnalytics = (SelectPersonsAnalyticsInterface) analytics;
+        mAnalytics = (SelectPeopleAnalyticsInterface) analytics;
     }
 
     @Override
@@ -63,13 +63,13 @@ public class SelectPersonsPresenter extends BaseExceptionPresenter<SelectPersons
             return true;
         }
 
-        if (mPersons == null)
+        if (mPeople == null)
         {
-            mPersons = new Persons(Persons.DEFAULT_PERSONS, null);
+            mPeople = new People(People.DEFAULT_ADULTS, null);
         }
 
-        mPersons.numberOfAdults = intent.getIntExtra(SelectPersonsActivity.INTENT_EXTRA_DATA_NUMBER_OF_ADULTS, Persons.DEFAULT_PERSONS);
-        mPersons.setChildAgeList(intent.getStringArrayListExtra(SelectPersonsActivity.INTENT_EXTRA_DATA_CHILD_LIST));
+        mPeople.numberOfAdults = intent.getIntExtra(SelectPeopleActivity.INTENT_EXTRA_DATA_NUMBER_OF_ADULTS, People.DEFAULT_ADULTS);
+        mPeople.setChildAgeList(intent.getIntegerArrayListExtra(SelectPeopleActivity.INTENT_EXTRA_DATA_CHILD_LIST));
 
         return true;
     }
@@ -77,7 +77,7 @@ public class SelectPersonsPresenter extends BaseExceptionPresenter<SelectPersons
     @Override
     public void onPostCreate()
     {
-        getViewInterface().setPersons(mPersons);
+        getViewInterface().setPeople(mPeople);
     }
 
     @Override
@@ -156,12 +156,12 @@ public class SelectPersonsPresenter extends BaseExceptionPresenter<SelectPersons
     {
         final int MAX_NUMBER_OF_ADULT = 8;
 
-        if (mPersons.numberOfAdults + 1 > MAX_NUMBER_OF_ADULT)
+        if (mPeople.numberOfAdults + 1 > MAX_NUMBER_OF_ADULT)
         {
             DailyToast.showToast(getActivity(), "최대 8명 까지만 가능합니다.", DailyToast.LENGTH_SHORT);
         } else
         {
-            getViewInterface().setAdultCount(++mPersons.numberOfAdults);
+            getViewInterface().setAdultCount(++mPeople.numberOfAdults);
         }
     }
 
@@ -170,12 +170,12 @@ public class SelectPersonsPresenter extends BaseExceptionPresenter<SelectPersons
     {
         final int MIN_NUMBER_OF_ADULT = 1;
 
-        if (mPersons.numberOfAdults - 1 < MIN_NUMBER_OF_ADULT)
+        if (mPeople.numberOfAdults - 1 < MIN_NUMBER_OF_ADULT)
         {
             DailyToast.showToast(getActivity(), "최소 1명 까지만 가능합니다.", DailyToast.LENGTH_SHORT);
         } else
         {
-            getViewInterface().setAdultCount(--mPersons.numberOfAdults);
+            getViewInterface().setAdultCount(--mPeople.numberOfAdults);
         }
     }
 
@@ -183,20 +183,20 @@ public class SelectPersonsPresenter extends BaseExceptionPresenter<SelectPersons
     public void onChildPlusClick()
     {
         final int MAX_NUMBER_OF_CHILDREN = 3;
-        final String DEFAULT_CHILD_AGE = "";
+        final int DEFAULT_CHILD_AGE = -1;
 
-        if (mPersons.getChildAgeList() == null)
+        if (mPeople.getChildAgeList() == null)
         {
-            mPersons.setChildAgeList(new ArrayList<>());
+            mPeople.setChildAgeList(new ArrayList<>());
         }
 
-        if (mPersons.getChildAgeList().size() + 1 > MAX_NUMBER_OF_CHILDREN)
+        if (mPeople.getChildAgeList().size() + 1 > MAX_NUMBER_OF_CHILDREN)
         {
             DailyToast.showToast(getActivity(), "최대 3명 까지만 가능합니다.", DailyToast.LENGTH_SHORT);
         } else
         {
-            mPersons.getChildAgeList().add(DEFAULT_CHILD_AGE);
-            getViewInterface().setChildAgeList(mPersons.getChildAgeList());
+            mPeople.getChildAgeList().add(DEFAULT_CHILD_AGE);
+            getViewInterface().setChildAgeList(mPeople.getChildAgeList());
         }
     }
 
@@ -205,13 +205,13 @@ public class SelectPersonsPresenter extends BaseExceptionPresenter<SelectPersons
     {
         final int MIN_NUMBER_OF_ADULT = 0;
 
-        if (mPersons.getChildAgeList().size() - 1 < MIN_NUMBER_OF_ADULT)
+        if (mPeople.getChildAgeList().size() - 1 < MIN_NUMBER_OF_ADULT)
         {
             DailyToast.showToast(getActivity(), "최소 0명 까지만 가능합니다.", DailyToast.LENGTH_SHORT);
         } else
         {
-            mPersons.getChildAgeList().remove(mPersons.getChildAgeList().size() - 1);
-            getViewInterface().setChildAgeList(mPersons.getChildAgeList());
+            mPeople.getChildAgeList().remove(mPeople.getChildAgeList().size() - 1);
+            getViewInterface().setChildAgeList(mPeople.getChildAgeList());
         }
     }
 }

@@ -2,7 +2,6 @@ package com.daily.dailyhotel.screen.stay.outbound.list;
 
 
 import android.app.Activity;
-import android.app.PendingIntent;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Location;
@@ -21,7 +20,7 @@ import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
 import com.daily.dailyhotel.entity.CommonDateTime;
 import com.daily.dailyhotel.entity.ListItem;
-import com.daily.dailyhotel.entity.Persons;
+import com.daily.dailyhotel.entity.People;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayOutbound;
 import com.daily.dailyhotel.entity.StayOutboundFilters;
@@ -72,7 +71,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
     private StayBookDateTime mStayBookDateTime;
 
     private Suggest mSuggest;
-    private Persons mPersons;
+    private People mPeople;
     private StayOutboundFilters mStayOutboundFilters;
     private List<StayOutbound> mStayOutboundList;
     private DailyLocationExFactory mDailyLocationExFactory;
@@ -117,7 +116,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
         mStayOutboundRemoteImpl = new StayOutboundRemoteImpl(activity);
         mCommonRemoteImpl = new CommonRemoteImpl(activity);
 
-        mPersons = new Persons(Persons.DEFAULT_PERSONS, null);
+        mPeople = new People(People.DEFAULT_ADULTS, null);
 
         onFilter(null, -1);
 
@@ -163,8 +162,8 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
                 return false;
             }
 
-            mPersons.numberOfAdults = intent.getIntExtra(StayOutboundListActivity.INTENT_EXTRA_DATA_NUMBER_OF_ADULTS, 2);
-            mPersons.setChildAgeList(intent.getStringArrayListExtra(StayOutboundListActivity.INTENT_EXTRA_DATA_CHILD_LIST));
+            mPeople.numberOfAdults = intent.getIntExtra(StayOutboundListActivity.INTENT_EXTRA_DATA_NUMBER_OF_ADULTS, 2);
+            mPeople.setChildAgeList(intent.getIntegerArrayListExtra(StayOutboundListActivity.INTENT_EXTRA_DATA_CHILD_LIST));
 
         } else if (intent.hasExtra(StayOutboundListActivity.INTENT_EXTRA_DATA_KEYWORD) == true)
         {
@@ -187,8 +186,8 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
                 return false;
             }
 
-            mPersons.numberOfAdults = intent.getIntExtra(StayOutboundListActivity.INTENT_EXTRA_DATA_NUMBER_OF_ADULTS, 2);
-            mPersons.setChildAgeList(intent.getStringArrayListExtra(StayOutboundListActivity.INTENT_EXTRA_DATA_CHILD_LIST));
+            mPeople.numberOfAdults = intent.getIntExtra(StayOutboundListActivity.INTENT_EXTRA_DATA_NUMBER_OF_ADULTS, 2);
+            mPeople.setChildAgeList(intent.getIntegerArrayListExtra(StayOutboundListActivity.INTENT_EXTRA_DATA_CHILD_LIST));
         } else
         {
             return false;
@@ -405,7 +404,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
         {
             // Suggest 검색인 경우
             observable = mStayOutboundRemoteImpl.getStayOutBoundList(mStayBookDateTime//
-                , mSuggest.id, mSuggest.categoryKey, mPersons, mStayOutboundFilters, mCacheKey, mCacheLocation);
+                , mSuggest.id, mSuggest.categoryKey, mPeople, mStayOutboundFilters, mCacheKey, mCacheLocation);
         }
 
         addCompositeDisposable(Observable.zip(mCommonRemoteImpl.getCommonDateTime(), observable//
@@ -551,14 +550,14 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
                 , stayOutbound.name, imageUrl//
                 , mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
                 , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
-                , mPersons.numberOfAdults, mPersons.getChildAgeList(), false), StayOutboundListActivity.REQUEST_CODE_STAYOUTBOUND_DETAIL);
+                , mPeople.numberOfAdults, mPeople.getChildAgeList(), false), StayOutboundListActivity.REQUEST_CODE_STAYOUTBOUND_DETAIL);
         } else
         {
             startActivityForResult(StayOutboundDetailActivity.newInstance(getActivity(), stayOutbound.index//
                 , stayOutbound.name, imageUrl//
                 , mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
                 , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
-                , mPersons.numberOfAdults, mPersons.getChildAgeList(), false), StayOutboundListActivity.REQUEST_CODE_STAYOUTBOUND_DETAIL);
+                , mPeople.numberOfAdults, mPeople.getChildAgeList(), false), StayOutboundListActivity.REQUEST_CODE_STAYOUTBOUND_DETAIL);
         }
     }
 
@@ -876,12 +875,12 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
         {
             // 키워드 검색인 경우
             observable = mStayOutboundRemoteImpl.getStayOutBoundList(mStayBookDateTime, null//
-                , mSuggest.city, mPersons, mCacheKey, mCacheLocation);
+                , mSuggest.city, mPeople, mCacheKey, mCacheLocation);
         } else
         {
             // Suggest 검색인 경우
             observable = mStayOutboundRemoteImpl.getStayOutBoundList(mStayBookDateTime//
-                , mSuggest.id, mSuggest.categoryKey, mPersons, mStayOutboundFilters, mCacheKey, mCacheLocation);
+                , mSuggest.id, mSuggest.categoryKey, mPeople, mStayOutboundFilters, mCacheKey, mCacheLocation);
         }
 
         addCompositeDisposable(observable.subscribe(stayOutbounds ->

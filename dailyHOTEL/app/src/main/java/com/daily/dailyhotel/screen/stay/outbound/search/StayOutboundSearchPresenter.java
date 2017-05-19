@@ -12,7 +12,7 @@ import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
 import com.daily.dailyhotel.entity.CommonDateTime;
-import com.daily.dailyhotel.entity.Persons;
+import com.daily.dailyhotel.entity.People;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayOutboundFilters;
 import com.daily.dailyhotel.entity.Suggest;
@@ -20,7 +20,7 @@ import com.daily.dailyhotel.parcel.SuggestParcel;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
 import com.daily.dailyhotel.screen.common.calendar.StayCalendarActivity;
 import com.daily.dailyhotel.screen.stay.outbound.list.StayOutboundListActivity;
-import com.daily.dailyhotel.screen.stay.outbound.persons.SelectPersonsActivity;
+import com.daily.dailyhotel.screen.stay.outbound.persons.SelectPeopleActivity;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
@@ -45,7 +45,7 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
     private StayBookDateTime mStayBookDateTime;
 
     private Suggest mSuggest;
-    private Persons mPersons;
+    private People mPeople;
 
     private StayOutboundFilters mStayOutboundFilters;
 
@@ -75,7 +75,7 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
         mCommonRemoteImpl = new CommonRemoteImpl(activity);
 
         // 기본 성인 2명, 아동 0명
-        onPersons(Persons.DEFAULT_PERSONS, null);
+        onPeople(People.DEFAULT_ADULTS, null);
 
         setRefresh(true);
     }
@@ -207,10 +207,10 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
             {
                 if (resultCode == Activity.RESULT_OK && data != null)
                 {
-                    if (data.hasExtra(SelectPersonsActivity.INTENT_EXTRA_DATA_NUMBER_OF_ADULTS) == true && data.hasExtra(SelectPersonsActivity.INTENT_EXTRA_DATA_CHILD_LIST) == true)
+                    if (data.hasExtra(SelectPeopleActivity.INTENT_EXTRA_DATA_NUMBER_OF_ADULTS) == true && data.hasExtra(SelectPeopleActivity.INTENT_EXTRA_DATA_CHILD_LIST) == true)
                     {
-                        mPersons.numberOfAdults = data.getIntExtra(SelectPersonsActivity.INTENT_EXTRA_DATA_NUMBER_OF_ADULTS, Persons.DEFAULT_PERSONS);
-                        mPersons.setChildAgeList(data.getStringArrayListExtra(SelectPersonsActivity.INTENT_EXTRA_DATA_CHILD_LIST));
+                        mPeople.numberOfAdults = data.getIntExtra(SelectPeopleActivity.INTENT_EXTRA_DATA_NUMBER_OF_ADULTS, People.DEFAULT_ADULTS);
+                        mPeople.setChildAgeList(data.getIntegerArrayListExtra(SelectPeopleActivity.INTENT_EXTRA_DATA_CHILD_LIST));
                     }
                 }
                 break;
@@ -265,7 +265,7 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
     @Override
     public void onSearchKeyword()
     {
-        if (mSuggest == null || mPersons == null)
+        if (mSuggest == null || mPeople == null)
         {
             return;
         }
@@ -278,14 +278,14 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
             intent = StayOutboundListActivity.newInstance(getActivity(), mSuggest.city//
                 , mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
                 , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
-                , mPersons.numberOfAdults, mPersons.getChildAgeList());
+                , mPeople.numberOfAdults, mPeople.getChildAgeList());
         } else
         {
             // Suggest검색인 경우
             intent = StayOutboundListActivity.newInstance(getActivity(), mSuggest//
                 , mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
                 , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
-                , mPersons.numberOfAdults, mPersons.getChildAgeList());
+                , mPeople.numberOfAdults, mPeople.getChildAgeList());
 
         }
 
@@ -336,12 +336,12 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
 
         Intent intent;
 
-        if (mPersons == null)
+        if (mPeople == null)
         {
-            intent = SelectPersonsActivity.newInstance(getActivity(), Persons.DEFAULT_PERSONS, null);
+            intent = SelectPeopleActivity.newInstance(getActivity(), People.DEFAULT_ADULTS, null);
         } else
         {
-            intent = SelectPersonsActivity.newInstance(getActivity(), mPersons.numberOfAdults, mPersons.getChildAgeList());
+            intent = SelectPeopleActivity.newInstance(getActivity(), mPeople.numberOfAdults, mPeople.getChildAgeList());
         }
 
         startActivityForResult(intent, StayOutboundSearchActivity.REQUEST_CODE_SELECT_PERSONS);
@@ -466,21 +466,21 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
 
             if (suggest.id != 0)
             {
-                getViewInterface().setToolbarMenuEnable(true);
+                getViewInterface().setSearchEnable(true);
             }
         }
     }
 
-    private void onPersons(int numberOfAdults, ArrayList<String> childAgeList)
+    private void onPeople(int numberOfAdults, ArrayList<Integer> childAgeList)
     {
-        if (mPersons == null)
+        if (mPeople == null)
         {
-            mPersons = new Persons(Persons.DEFAULT_PERSONS, null);
+            mPeople = new People(People.DEFAULT_ADULTS, null);
         }
 
-        mPersons.numberOfAdults = numberOfAdults;
-        mPersons.setChildAgeList(childAgeList);
+        mPeople.numberOfAdults = numberOfAdults;
+        mPeople.setChildAgeList(childAgeList);
 
-
+        getViewInterface().setPeople(mPeople);
     }
 }

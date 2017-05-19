@@ -27,7 +27,7 @@ public class StayOutboundSearchSuggestActivity extends BaseActivity<StayOutbound
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
-        overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
+        overridePendingTransition(R.anim.slide_in_bottom, R.anim.hold);
 
         super.onCreate(savedInstanceState);
     }
@@ -44,6 +44,6 @@ public class StayOutboundSearchSuggestActivity extends BaseActivity<StayOutbound
     {
         super.finish();
 
-        overridePendingTransition(R.anim.hold, R.anim.slide_out_right);
+        overridePendingTransition(R.anim.hold, R.anim.slide_out_bottom);
     }
 }

@@ -1,10 +1,7 @@
 package com.daily.dailyhotel.screen.stay.outbound.search;
 
 import com.daily.base.BaseViewInterface;
-import com.daily.dailyhotel.entity.Persons;
-import com.daily.dailyhotel.entity.Suggest;
-
-import java.util.List;
+import com.daily.dailyhotel.entity.People;
 
 public interface StayOutboundSearchViewInterface extends BaseViewInterface
 {
@@ -12,7 +9,7 @@ public interface StayOutboundSearchViewInterface extends BaseViewInterface
 
     void setSuggest(String suggest);
 
-    void setToolbarMenuEnable(boolean enable);
+    void setSearchEnable(boolean enable);
 
-    void setPersons(Persons persons);
+    void setPeople(People people);
 }

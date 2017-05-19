@@ -1,22 +1,16 @@
 package com.daily.dailyhotel.screen.stay.outbound.search;
 
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.util.TypedValue;
 import android.view.View;
 
 import com.daily.base.BaseActivity;
 import com.daily.base.BaseView;
 import com.daily.base.OnBaseEventListener;
-import com.daily.base.util.DailyTextUtils;
-import com.daily.base.widget.DailyTextView;
-import com.daily.dailyhotel.entity.Persons;
-import com.daily.dailyhotel.entity.Suggest;
+import com.daily.dailyhotel.entity.People;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ActivityStayOutboundSearchDataBinding;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
-import java.util.List;
+import java.util.ArrayList;
 
 public class StayOutboundSearchView extends BaseView<StayOutboundSearchView.OnEventListener, ActivityStayOutboundSearchDataBinding> implements StayOutboundSearchViewInterface, View.OnClickListener
 {
@@ -48,12 +42,9 @@ public class StayOutboundSearchView extends BaseView<StayOutboundSearchView.OnEv
 
         initToolbar(viewDataBinding);
 
-        viewDataBinding.deleteKeywrodView.setVisibility(View.INVISIBLE);
-
         viewDataBinding.suggestTextView.setOnClickListener(this);
-        viewDataBinding.deleteKeywrodView.setOnClickListener(this);
         viewDataBinding.calendarTextView.setOnClickListener(this);
-        viewDataBinding.personTextView.setOnClickListener(this);
+        viewDataBinding.peopleTextView.setOnClickListener(this);
     }
 
     @Override
@@ -87,31 +78,62 @@ public class StayOutboundSearchView extends BaseView<StayOutboundSearchView.OnEv
         }
 
         getViewDataBinding().suggestTextView.setText(suggest);
-
-        if(DailyTextUtils.isTextEmpty(suggest) == true)
-        {
-            getViewDataBinding().deleteKeywrodView.setVisibility(View.INVISIBLE);
-        } else
-        {
-            getViewDataBinding().deleteKeywrodView.setVisibility(View.VISIBLE);
-        }
     }
 
     @Override
-    public void setToolbarMenuEnable(boolean enable)
+    public void setSearchEnable(boolean enable)
     {
-        if (mDailyToolbarLayout == null)
+        if (getViewDataBinding() == null)
         {
             return;
         }
 
-        mDailyToolbarLayout.setToolbarMenuEnable(enable, enable);
+        getViewDataBinding().doSearchView.setEnabled(enable);
     }
 
     @Override
-    public void setPersons(Persons persons)
+    public void setPeople(People people)
     {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
 
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(getString(R.string.label_search_adult_count, people.numberOfAdults));
+
+        ArrayList<Integer> childAgeList = people.getChildAgeList();
+        int childCount;
+
+        if (childAgeList == null)
+        {
+            childCount = 0;
+        } else
+        {
+            childCount = childAgeList.size();
+        }
+
+        stringBuilder.append(", ");
+        stringBuilder.append(getString(R.string.label_search_child_count, childCount));
+
+        if (childCount > 0)
+        {
+            StringBuilder childrenAgeStringBuilder = new StringBuilder();
+            for (int childAge : childAgeList)
+            {
+                if (childAge == 0)
+                {
+                    childrenAgeStringBuilder.append(getString(R.string.label_search_under_of_1_age));
+                } else
+                {
+                    childrenAgeStringBuilder.append(getString(R.string.label_search_child_age, childAge));
+                }
+            }
+
+            stringBuilder.append(getString(R.string.label_search_children_age, childrenAgeStringBuilder.toString()));
+        }
+
+        getViewDataBinding().peopleTextView.setText(stringBuilder.toString());
     }
 
     @Override
@@ -127,17 +149,13 @@ public class StayOutboundSearchView extends BaseView<StayOutboundSearchView.OnEv
                 getEventListener().onCalendarClick();
                 break;
 
-            case R.id.personTextView:
+            case R.id.peopleTextView:
                 getEventListener().onPersonsClick();
                 break;
 
             // 검색 하기
-            case R.id.menu1View:
+            case R.id.doSearchView:
                 getEventListener().onSearchKeyword();
-                break;
-
-            case R.id.deleteKeywrodView:
-                setSuggest(null);
                 break;
         }
     }
@@ -152,9 +170,5 @@ public class StayOutboundSearchView extends BaseView<StayOutboundSearchView.OnEv
         mDailyToolbarLayout = new DailyToolbarLayout(getContext(), viewDataBinding.toolbar.findViewById(R.id.toolbar));
         mDailyToolbarLayout.initToolbar(getString(R.string.label_search_stay_outbound)//
             , v -> getEventListener().onBackClick());
-
-        mDailyToolbarLayout.setToolbarMenu(getString(R.string.label_search), null);
-        mDailyToolbarLayout.setToolbarMenuEnable(false, false);
-        mDailyToolbarLayout.setToolbarMenuClickListener(this);
     }
 }

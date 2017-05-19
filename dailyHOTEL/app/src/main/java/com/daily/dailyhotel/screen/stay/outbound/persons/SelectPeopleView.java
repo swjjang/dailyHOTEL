@@ -14,17 +14,16 @@ import android.widget.TextView;
 import com.daily.base.BaseActivity;
 import com.daily.base.BaseView;
 import com.daily.base.OnBaseEventListener;
-import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ScreenUtils;
-import com.daily.dailyhotel.entity.Persons;
+import com.daily.dailyhotel.entity.People;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ActivityStayOutboundPersonsDataBinding;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class SelectPersonsView extends BaseView<SelectPersonsView.OnEventListener, ActivityStayOutboundPersonsDataBinding> //
-    implements SelectPersonsViewInterface, View.OnClickListener
+public class SelectPeopleView extends BaseView<SelectPeopleView.OnEventListener, ActivityStayOutboundPersonsDataBinding> //
+    implements SelectPeopleViewInterface, View.OnClickListener
 {
     private ChildAgeArrayAdapter[] mChildAgeArrayAdapter;
 
@@ -39,7 +38,7 @@ public class SelectPersonsView extends BaseView<SelectPersonsView.OnEventListene
         void onChildMinusClick();
     }
 
-    public SelectPersonsView(BaseActivity baseActivity, SelectPersonsView.OnEventListener listener)
+    public SelectPeopleView(BaseActivity baseActivity, SelectPeopleView.OnEventListener listener)
     {
         super(baseActivity, listener);
     }
@@ -107,15 +106,15 @@ public class SelectPersonsView extends BaseView<SelectPersonsView.OnEventListene
     }
 
     @Override
-    public void setPersons(Persons persons)
+    public void setPeople(People people)
     {
-        if (getViewDataBinding() == null || persons == null)
+        if (getViewDataBinding() == null || people == null)
         {
             return;
         }
 
-        setAdultCount(persons.numberOfAdults);
-        setChildAgeList(persons.getChildAgeList());
+        setAdultCount(people.numberOfAdults);
+        setChildAgeList(people.getChildAgeList());
     }
 
     @Override
@@ -130,7 +129,7 @@ public class SelectPersonsView extends BaseView<SelectPersonsView.OnEventListene
     }
 
     @Override
-    public void setChildAgeList(ArrayList<String> childAgeList)
+    public void setChildAgeList(ArrayList<Integer> childAgeList)
     {
         if (getViewDataBinding() == null)
         {
@@ -156,25 +155,25 @@ public class SelectPersonsView extends BaseView<SelectPersonsView.OnEventListene
                 case 3:
                     getViewDataBinding().child3Layout.setVisibility(View.VISIBLE);
 
-                    if (DailyTextUtils.isTextEmpty(childAgeList.get(2)) == false)
+                    if (childAgeList.get(2) != -1)
                     {
-                        mChildAgeArrayAdapter[2].setSelectedPosition(Integer.valueOf(childAgeList.get(2)));
+                        mChildAgeArrayAdapter[2].setSelectedPosition(childAgeList.get(2));
                     }
 
                 case 2:
                     getViewDataBinding().child2Layout.setVisibility(View.VISIBLE);
 
-                    if (DailyTextUtils.isTextEmpty(childAgeList.get(1)) == false)
+                    if (childAgeList.get(1) != -1)
                     {
-                        mChildAgeArrayAdapter[1].setSelectedPosition(Integer.valueOf(childAgeList.get(1)));
+                        mChildAgeArrayAdapter[1].setSelectedPosition(childAgeList.get(1));
                     }
 
                 case 1:
                     getViewDataBinding().child1Layout.setVisibility(View.VISIBLE);
 
-                    if (DailyTextUtils.isTextEmpty(childAgeList.get(0)) == false)
+                    if (childAgeList.get(0) != -1)
                     {
-                        mChildAgeArrayAdapter[0].setSelectedPosition(Integer.valueOf(childAgeList.get(0)));
+                        mChildAgeArrayAdapter[0].setSelectedPosition(childAgeList.get(0));
                     }
                     break;
 

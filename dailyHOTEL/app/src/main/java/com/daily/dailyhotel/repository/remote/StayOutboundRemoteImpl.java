@@ -5,7 +5,7 @@ import android.support.annotation.NonNull;
 
 import com.daily.base.exception.BaseException;
 import com.daily.dailyhotel.domain.StayOutboundInterface;
-import com.daily.dailyhotel.entity.Persons;
+import com.daily.dailyhotel.entity.People;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayOutboundDetail;
 import com.daily.dailyhotel.entity.StayOutboundFilters;
@@ -28,7 +28,7 @@ public class StayOutboundRemoteImpl implements StayOutboundInterface
 
     @Override
     public Observable<StayOutbounds> getStayOutBoundList(StayBookDateTime stayBookDateTime, String countryCode//
-        , String city, Persons persons, String cacheKey, String cacheLocation)
+        , String city, People people, String cacheKey, String cacheLocation)
     {
         final int numberOfRooms = 1;
         final int numberOfResults = 200;
@@ -38,11 +38,11 @@ public class StayOutboundRemoteImpl implements StayOutboundInterface
         final String locale = "ko_KR";
         final String sort = "DEFAULT";
 
-        int numberOfAdults = persons.numberOfAdults;
+        int numberOfAdults = people.numberOfAdults;
         int numberOfChildren = 0;
         String childAges = null;
 
-        List<String> childAgeList = persons.getChildAgeList();
+        List<Integer> childAgeList = people.getChildAgeList();
 
         if (childAgeList != null)
         {
@@ -50,11 +50,11 @@ public class StayOutboundRemoteImpl implements StayOutboundInterface
 
             if (numberOfChildren > 0)
             {
-                for (String age : childAgeList)
+                for (int age : childAgeList)
                 {
                     if (childAges == null)
                     {
-                        childAges = age;
+                        childAges = Integer.toString(age);
                     } else
                     {
                         childAges += "," + age;
@@ -90,7 +90,7 @@ public class StayOutboundRemoteImpl implements StayOutboundInterface
 
     @Override
     public Observable<StayOutbounds> getStayOutBoundList(StayBookDateTime stayBookDateTime, long geographyId//
-        , String geographyType, Persons persons, StayOutboundFilters stayOutboundFilters, String cacheKey, String cacheLocation)
+        , String geographyType, People people, StayOutboundFilters stayOutboundFilters, String cacheKey, String cacheLocation)
     {
         final int numberOfRooms = 1;
         final int numberOfResults = 200;
@@ -100,14 +100,14 @@ public class StayOutboundRemoteImpl implements StayOutboundInterface
         final String locale = "ko_KR";
         String sort = "DEFAULT";
 
-        int numberOfAdults = persons.numberOfAdults;
+        int numberOfAdults = people.numberOfAdults;
         int numberOfChildren = 0;
         String childAges = null;
 
         double maxStarRating = 5.0;
         double minStarRating = 1.0;
 
-        List<String> childAgeList = persons.getChildAgeList();
+        List<Integer> childAgeList = people.getChildAgeList();
 
         if (childAgeList != null)
         {
@@ -115,11 +115,11 @@ public class StayOutboundRemoteImpl implements StayOutboundInterface
 
             if (numberOfChildren > 0)
             {
-                for (String age : childAgeList)
+                for (int age : childAgeList)
                 {
                     if (childAges == null)
                     {
-                        childAges = age;
+                        childAges = Integer.toString(age);
                     } else
                     {
                         childAges += "," + age;
@@ -194,7 +194,7 @@ public class StayOutboundRemoteImpl implements StayOutboundInterface
     @Override
     public Observable<StayOutbounds> getStayOutBoundList(StayBookDateTime stayBookDateTime, String countryCode//
         , String city, double latitude, double longitude, int searchRadius, StayOutboundFilters filters//
-        , Persons persons, String cacheKey, String cacheLocation)
+        , People people, String cacheKey, String cacheLocation)
     {
         final int numberOfRooms = 1;
         final int numberOfResults = 200;
@@ -204,11 +204,11 @@ public class StayOutboundRemoteImpl implements StayOutboundInterface
         final String locale = "ko_KR";
         final String sort = "DEFAULT";
 
-        int numberOfAdults = persons.numberOfAdults;
+        int numberOfAdults = people.numberOfAdults;
         int numberOfChildren = 0;
         String childAges = null;
 
-        List<String> childAgeList = persons.getChildAgeList();
+        List<Integer> childAgeList = people.getChildAgeList();
 
         if (childAgeList != null)
         {
@@ -216,11 +216,11 @@ public class StayOutboundRemoteImpl implements StayOutboundInterface
 
             if (numberOfChildren > 0)
             {
-                for (String age : childAgeList)
+                for (int age : childAgeList)
                 {
                     if (childAges == null)
                     {
-                        childAges = age;
+                        childAges = Integer.toString(age);
                     } else
                     {
                         childAges += "," + age;
@@ -255,7 +255,7 @@ public class StayOutboundRemoteImpl implements StayOutboundInterface
     }
 
     @Override
-    public Observable<StayOutboundDetail> getStayOutBoundDetail(int index, StayBookDateTime stayBookDateTime, Persons persons)
+    public Observable<StayOutboundDetail> getStayOutBoundDetail(int index, StayBookDateTime stayBookDateTime, People people)
     {
         final int numberOfRooms = 1;
         final int numberOfResults = 200;
@@ -264,11 +264,11 @@ public class StayOutboundRemoteImpl implements StayOutboundInterface
         final String apiExperience = "PARTNER_MOBILE_APP";
         final String locale = "ko_KR";
 
-        int numberOfAdults = persons.numberOfAdults;
+        int numberOfAdults = people.numberOfAdults;
         int numberOfChildren = 0;
         String childAges = null;
 
-        List<String> childAgeList = persons.getChildAgeList();
+        List<Integer> childAgeList = people.getChildAgeList();
 
         if (childAgeList != null)
         {
@@ -276,11 +276,11 @@ public class StayOutboundRemoteImpl implements StayOutboundInterface
 
             if (numberOfChildren > 0)
             {
-                for (String age : childAgeList)
+                for (int age : childAgeList)
                 {
                     if (childAges == null)
                     {
-                        childAges = age;
+                        childAges = Integer.toString(age);
                     } else
                     {
                         childAges += "," + age;

@@ -28,8 +28,6 @@ import io.reactivex.functions.Consumer;
 
 public class StayOutboundSearchSuggestView extends BaseView<StayOutboundSearchSuggestView.OnEventListener, ActivityStayOutboundSearchSuggestDataBinding> implements StayOutboundSearchSuggestViewInterface, View.OnClickListener
 {
-    private DailyToolbarLayout mDailyToolbarLayout;
-
     public interface OnEventListener extends OnBaseEventListener
     {
         void onRequestSuggests(String keyword);
@@ -53,7 +51,8 @@ public class StayOutboundSearchSuggestView extends BaseView<StayOutboundSearchSu
         initToolbar(viewDataBinding);
 
         viewDataBinding.keywordEditText.addTextChangedListener(mTextWatcher);
-        viewDataBinding.deleteKeywrodView.setOnClickListener(this);
+        viewDataBinding.deleteImageView.setVisibility(View.INVISIBLE);
+        viewDataBinding.deleteImageView.setOnClickListener(this);
         viewDataBinding.suggestsScrollView.setOnScrollChangedListener(new DailyScrollView.OnScrollChangedListener()
         {
             private int mDistance;
@@ -90,12 +89,6 @@ public class StayOutboundSearchSuggestView extends BaseView<StayOutboundSearchSu
     @Override
     public void setToolbarTitle(String title)
     {
-        if (mDailyToolbarLayout == null)
-        {
-            return;
-        }
-
-        mDailyToolbarLayout.setToolbarTitle(title);
     }
 
     @Override
@@ -183,7 +176,7 @@ public class StayOutboundSearchSuggestView extends BaseView<StayOutboundSearchSu
                 getEventListener().onSuggestClick(suggest);
                 break;
 
-            case R.id.deleteKeywrodView:
+            case R.id.deleteImageView:
                 setSuggest(null);
                 break;
         }
@@ -230,9 +223,6 @@ public class StayOutboundSearchSuggestView extends BaseView<StayOutboundSearchSu
             return;
         }
 
-        mDailyToolbarLayout = new DailyToolbarLayout(getContext(), viewDataBinding.toolbar.findViewById(R.id.toolbar));
-        mDailyToolbarLayout.initToolbar(getString(R.string.label_search_stay_outbound)//
-            , v -> getEventListener().onBackClick());
     }
 
     private TextWatcher mTextWatcher = new TextWatcher()
@@ -259,7 +249,7 @@ public class StayOutboundSearchSuggestView extends BaseView<StayOutboundSearchSu
 
             if (length == 0)
             {
-                getViewDataBinding().deleteKeywrodView.setVisibility(View.INVISIBLE);
+                getViewDataBinding().deleteImageView.setVisibility(View.INVISIBLE);
             } else
             {
                 if (length == 1 && editable.charAt(0) == ' ')
@@ -277,7 +267,7 @@ public class StayOutboundSearchSuggestView extends BaseView<StayOutboundSearchSu
                     return;
                 }
 
-                getViewDataBinding().deleteKeywrodView.setVisibility(View.VISIBLE);
+                getViewDataBinding().deleteImageView.setVisibility(View.VISIBLE);
             }
 
             getEventListener().onRequestSuggests(editable.toString());

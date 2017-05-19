@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 
 import com.daily.base.BaseActivity;
-import com.twoheart.dailyhotel.R;
 
 import java.util.ArrayList;
 
@@ -15,16 +14,16 @@ import java.util.ArrayList;
  * Created by sheldon
  * Clean Architecture
  */
-public class SelectPersonsActivity extends BaseActivity<SelectPersonsPresenter>
+public class SelectPeopleActivity extends BaseActivity<SelectPeoplePresenter>
 {
     public static final String INTENT_EXTRA_DATA_NUMBER_OF_ADULTS = "numberOfAdults";
     public static final String INTENT_EXTRA_DATA_CHILD_LIST = "childList";
 
-    public static Intent newInstance(Context context, int numberOfAdults, ArrayList<String> childList)
+    public static Intent newInstance(Context context, int numberOfAdults, ArrayList<Integer> childAgeList)
     {
-        Intent intent = new Intent(context, SelectPersonsActivity.class);
+        Intent intent = new Intent(context, SelectPeopleActivity.class);
         intent.putExtra(INTENT_EXTRA_DATA_NUMBER_OF_ADULTS, numberOfAdults);
-        intent.putExtra(INTENT_EXTRA_DATA_CHILD_LIST, childList);
+        intent.putExtra(INTENT_EXTRA_DATA_CHILD_LIST, childAgeList);
 
         return intent;
     }
@@ -37,9 +36,9 @@ public class SelectPersonsActivity extends BaseActivity<SelectPersonsPresenter>
 
     @NonNull
     @Override
-    protected SelectPersonsPresenter createInstancePresenter()
+    protected SelectPeoplePresenter createInstancePresenter()
     {
-        return new SelectPersonsPresenter(this);
+        return new SelectPeoplePresenter(this);
     }
 
     @Override
