@@ -48,8 +48,6 @@ public class StayOutboundSearchSuggestView extends BaseView<StayOutboundSearchSu
             return;
         }
 
-        initToolbar(viewDataBinding);
-
         viewDataBinding.keywordEditText.addTextChangedListener(mTextWatcher);
         viewDataBinding.deleteImageView.setVisibility(View.INVISIBLE);
         viewDataBinding.deleteImageView.setOnClickListener(this);
@@ -92,14 +90,14 @@ public class StayOutboundSearchSuggestView extends BaseView<StayOutboundSearchSu
     }
 
     @Override
-    public void setSuggestsVisibility(boolean visibility)
+    public void setSuggestsVisible(boolean visible)
     {
         if (getViewDataBinding() == null)
         {
             return;
         }
 
-        if (visibility == true)
+        if (visible == true)
         {
             getViewDataBinding().suggestsScrollView.setVisibility(View.VISIBLE);
         } else
@@ -140,6 +138,9 @@ public class StayOutboundSearchSuggestView extends BaseView<StayOutboundSearchSu
 
                 getViewDataBinding().suggestsContentsLayout.addView(dailyTextView);
             }
+        } else
+        {
+
         }
     }
 
@@ -216,13 +217,21 @@ public class StayOutboundSearchSuggestView extends BaseView<StayOutboundSearchSu
         inputMethodManager.hideSoftInputFromWindow(getViewDataBinding().keywordEditText.getWindowToken(), InputMethodManager.HIDE_IMPLICIT_ONLY);
     }
 
-    private void initToolbar(ActivityStayOutboundSearchSuggestDataBinding viewDataBinding)
+    @Override
+    public void setEmptySuggestsVisible(boolean visible)
     {
-        if (viewDataBinding == null)
+        if (getViewDataBinding() == null)
         {
             return;
         }
 
+        if (visible == true)
+        {
+            getViewDataBinding().emptyLayout.setVisibility(View.VISIBLE);
+        } else
+        {
+            getViewDataBinding().emptyLayout.setVisibility(View.GONE);
+        }
     }
 
     private TextWatcher mTextWatcher = new TextWatcher()

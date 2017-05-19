@@ -161,10 +161,11 @@ public class StayOutboundSearchSuggestPresenter extends BaseExceptionPresenter<S
         mSuggest.id = 0;
         mSuggest.city = keyword;
 
-        getViewInterface().setSuggestsVisibility(true);
-
         if (DailyTextUtils.isTextEmpty(keyword) == true)
         {
+            getViewInterface().setSuggestsVisible(false);
+            getViewInterface().setEmptySuggestsVisible(false);
+
             onSuggests(null);
         } else
         {
@@ -195,6 +196,16 @@ public class StayOutboundSearchSuggestPresenter extends BaseExceptionPresenter<S
 
     private void onSuggests(List<Suggest> suggestList)
     {
+        if (suggestList == null || suggestList.size() == 0)
+        {
+            getViewInterface().setSuggestsVisible(false);
+            getViewInterface().setEmptySuggestsVisible(true);
+        } else
+        {
+            getViewInterface().setSuggestsVisible(true);
+            getViewInterface().setEmptySuggestsVisible(false);
+        }
+
         getViewInterface().setSuggests(suggestList);
     }
 }

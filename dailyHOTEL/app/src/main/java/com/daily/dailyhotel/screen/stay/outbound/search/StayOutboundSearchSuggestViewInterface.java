@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface StayOutboundSearchSuggestViewInterface extends BaseViewInterface
 {
-    void setSuggestsVisibility(boolean visibility);
+    void setSuggestsVisible(boolean visible);
 
     void setSuggests(List<Suggest> suggestList);
 
@@ -16,4 +16,6 @@ public interface StayOutboundSearchSuggestViewInterface extends BaseViewInterfac
     void showKeyboard();
 
     void hideKeyboard();
+
+    void setEmptySuggestsVisible(boolean visible);
 }
