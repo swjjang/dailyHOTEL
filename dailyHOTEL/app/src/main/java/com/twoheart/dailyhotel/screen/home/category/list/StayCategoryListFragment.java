@@ -107,12 +107,12 @@ public class StayCategoryListFragment extends StayListFragment
 
     private void requestLocalPlusList(int page, StayBookingDay stayBookingDay, Province province)
     {
-//        if (province == null || stayBookingDay == null)
-//        {
-//            unLockUI();
-//            Util.restartApp(mBaseActivity);
-//            return;
-//        }
+        //        if (province == null || stayBookingDay == null)
+        //        {
+        //            unLockUI();
+        //            Util.restartApp(mBaseActivity);
+        //            return;
+        //        }
 
         if (mStayCuration == null || mStayCuration.getCurationOption() == null//
             || mStayCuration.getCurationOption().getSortType() == null//
@@ -125,37 +125,37 @@ public class StayCategoryListFragment extends StayListFragment
 
         StayCategoryParams params = (StayCategoryParams) mStayCuration.toPlaceParams(page, PAGENATION_LIST_SIZE, true);
 
-//        HashMap<String, Object> hashMap = new HashMap<>();
-//
-//        int nights = 1;
-//        int areaIdx = 0;
-//
-//        String dateCheckIn = stayBookingDay.getCheckInDay("yyyy-MM-dd");
-//
-//        try
-//        {
-//            nights = stayBookingDay.getNights();
-//        } catch (Exception e)
-//        {
-//            ExLog.e(e.toString());
-//        }
-//
-//        int provinceIdx = province.getProvinceIndex();
-//
-//        if (province instanceof Area)
-//        {
-//            areaIdx = ((Area) province).index;
-//        }
-//
-//        hashMap.put("dateCheckIn", dateCheckIn);
-//        hashMap.put("stays", nights);
-//        hashMap.put("provinceIdx", provinceIdx);
-//        hashMap.put("category", mStayCuration.getCategory().code);
-//
-//        if (areaIdx != 0)
-//        {
-//            hashMap.put("areaIdx", areaIdx);
-//        }
+        //        HashMap<String, Object> hashMap = new HashMap<>();
+        //
+        //        int nights = 1;
+        //        int areaIdx = 0;
+        //
+        //        String dateCheckIn = stayBookingDay.getCheckInDay("yyyy-MM-dd");
+        //
+        //        try
+        //        {
+        //            nights = stayBookingDay.getNights();
+        //        } catch (Exception e)
+        //        {
+        //            ExLog.e(e.toString());
+        //        }
+        //
+        //        int provinceIdx = province.getProvinceIndex();
+        //
+        //        if (province instanceof Area)
+        //        {
+        //            areaIdx = ((Area) province).index;
+        //        }
+        //
+        //        hashMap.put("dateCheckIn", dateCheckIn);
+        //        hashMap.put("stays", nights);
+        //        hashMap.put("provinceIdx", provinceIdx);
+        //        hashMap.put("category", mStayCuration.getCategory().code);
+        //
+        //        if (areaIdx != 0)
+        //        {
+        //            hashMap.put("areaIdx", areaIdx);
+        //        }
 
         ((StayCategoryListNetworkController) mNetworkController).requestLocalPlusList(params);
     }

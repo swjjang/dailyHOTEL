@@ -43,7 +43,7 @@ public class GourmetMainNetworkController extends PlaceMainNetworkController
     @Override
     public void requestRegionList(String categoryCode)
     {
-       // do nothing
+        // do nothing
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -18,7 +18,7 @@ public enum DailyCategoryType implements Parcelable
     // 기존 버튼 용 카테고리
     GOURMET_ALL(0, 0, 0),
     // 신규 홈 카테고리 버튼 용 카테고리
-    STAY_HOTEL(R.string.label_home_category_hotel, R.string.code_home_category_hotel, R.drawable.ic_home_shortcut_01_hotel),
+    STAY_HOTEL(R.string.label_home_category_domestic_hotel, R.string.code_home_category_hotel, R.drawable.ic_home_shortcut_01_hotel),
     // 신규 홈 카테고리 버튼 용 카테고리
     STAY_BOUTIQUE(R.string.label_home_category_boutique, R.string.code_home_category_boutique, R.drawable.ic_home_shortcut_02_boutique),
     // 신규 홈 카테고리 버튼 용 카테고리

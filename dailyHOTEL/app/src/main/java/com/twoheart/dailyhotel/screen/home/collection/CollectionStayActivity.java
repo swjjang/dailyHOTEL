@@ -288,8 +288,12 @@ public class CollectionStayActivity extends CollectionBaseActivity
                 AnalyticsManager.Category.HOME_RECOMMEND, Integer.toString(mRecommendationIndex),//
                 Integer.toString(recommendationStay.index), null);
 
-            AnalyticsManager.getInstance(CollectionStayActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
-                , AnalyticsManager.Action.STAY_ITEM_CLICK_TRUE_VR, Integer.toString(recommendationStay.index), null);
+
+            if (recommendationStay.truevr == true)
+            {
+                AnalyticsManager.getInstance(CollectionStayActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                    , AnalyticsManager.Action.STAY_ITEM_CLICK_TRUE_VR, Integer.toString(recommendationStay.index), null);
+            }
         }
 
         @Override
