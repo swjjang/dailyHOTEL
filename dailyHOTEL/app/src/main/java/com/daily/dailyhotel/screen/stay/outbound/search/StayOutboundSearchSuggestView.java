@@ -1,33 +1,41 @@
 package com.daily.dailyhotel.screen.stay.outbound.search;
 
 import android.content.Context;
+import android.databinding.DataBindingUtil;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
 import android.text.TextWatcher;
-import android.util.TypedValue;
+import android.text.style.StyleSpan;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.ScrollView;
 
 import com.daily.base.BaseActivity;
 import com.daily.base.BaseView;
 import com.daily.base.OnBaseEventListener;
+import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ScreenUtils;
-import com.daily.base.widget.DailyScrollView;
-import com.daily.base.widget.DailyTextView;
+import com.daily.dailyhotel.entity.ListItem;
 import com.daily.dailyhotel.entity.Suggest;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ActivityStayOutboundSearchSuggestDataBinding;
-import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
+import com.twoheart.dailyhotel.databinding.ListRowStayOutboundSuggestEntryDataBinding;
+import com.twoheart.dailyhotel.databinding.ListRowStayOutboundSuggestTitleDataBinding;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
-import io.reactivex.annotations.NonNull;
-import io.reactivex.functions.Consumer;
 
 public class StayOutboundSearchSuggestView extends BaseView<StayOutboundSearchSuggestView.OnEventListener, ActivityStayOutboundSearchSuggestDataBinding> implements StayOutboundSearchSuggestViewInterface, View.OnClickListener
 {
+    private SuggestListAdapter mSuggestListAdapter;
+
     public interface OnEventListener extends OnBaseEventListener
     {
         void onRequestSuggests(String keyword);
@@ -51,22 +59,34 @@ public class StayOutboundSearchSuggestView extends BaseView<StayOutboundSearchSu
         viewDataBinding.keywordEditText.addTextChangedListener(mTextWatcher);
         viewDataBinding.deleteImageView.setVisibility(View.INVISIBLE);
         viewDataBinding.deleteImageView.setOnClickListener(this);
-        viewDataBinding.suggestsScrollView.setOnScrollChangedListener(new DailyScrollView.OnScrollChangedListener()
+        viewDataBinding.suggestsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+        viewDataBinding.suggestsRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener()
         {
             private int mDistance;
             private boolean mIsHide;
+            private int mOldY;
 
             @Override
-            public void onScrollChanged(ScrollView scrollView, int l, int t, int oldl, int oldt)
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState)
+            {
+                if (newState != RecyclerView.SCROLL_STATE_DRAGGING)
+                {
+                    mOldY = 0;
+                }
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy)
             {
                 if (mIsHide == true)
                 {
-
+                    mOldY = 0;
                 } else
                 {
-                    if (scrollView.getHeight() < ScreenUtils.getScreenHeight(getContext()) / 2)
+                    if (recyclerView.getHeight() < ScreenUtils.getScreenHeight(getContext()) / 2)
                     {
-                        mDistance += (t - oldt);
+                        mDistance += (dy - mOldY);
+                        mOldY = dy;
 
                         if (mDistance > ScreenUtils.dpToPx(getContext(), 41) == true)
                         {
@@ -99,10 +119,10 @@ public class StayOutboundSearchSuggestView extends BaseView<StayOutboundSearchSu
 
         if (visible == true)
         {
-            getViewDataBinding().suggestsScrollView.setVisibility(View.VISIBLE);
+            getViewDataBinding().suggestsRecyclerView.setVisibility(View.VISIBLE);
         } else
         {
-            getViewDataBinding().suggestsScrollView.setVisibility(View.GONE);
+            getViewDataBinding().suggestsRecyclerView.setVisibility(View.GONE);
         }
     }
 
@@ -114,33 +134,43 @@ public class StayOutboundSearchSuggestView extends BaseView<StayOutboundSearchSu
             return;
         }
 
-        getViewDataBinding().suggestsContentsLayout.removeAllViews();
-
-        if (suggestList != null && suggestList.size() > 0)
+        if (mSuggestListAdapter == null)
         {
-            for (Suggest suggest : suggestList)
+            mSuggestListAdapter = new SuggestListAdapter(getContext(), new View.OnClickListener()
             {
-                DailyTextView dailyTextView = new DailyTextView(getContext());
-                dailyTextView.setId(R.id.textView);
-                dailyTextView.setTextColor(getColor(R.color.default_text_c323232));
-                dailyTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 12);
+                @Override
+                public void onClick(View v)
+                {
 
-                // 해당 구분 내용인 경우
-                if (suggest.id == 0)
-                {
-                    dailyTextView.setText(suggest.name);
-                } else
-                {
-                    dailyTextView.setText(suggest.display);
-                    dailyTextView.setTag(suggest);
-                    dailyTextView.setOnClickListener(this);
                 }
+            });
 
-                getViewDataBinding().suggestsContentsLayout.addView(dailyTextView);
-            }
+            getViewDataBinding().suggestsRecyclerView.setAdapter(mSuggestListAdapter);
+        }
+
+        if (suggestList == null || suggestList.size() == 0)
+        {
+            mSuggestListAdapter.setAll(null, null);
+            mSuggestListAdapter.notifyDataSetChanged();
         } else
         {
+            List<ListItem> listItemList = new ArrayList<>(suggestList.size());
 
+            for (Suggest suggest : suggestList)
+            {
+                if (suggest.id == 0)
+                {
+                    listItemList.add(new ListItem(ListItem.TYPE_SECTION, suggest));
+                } else
+                {
+                    listItemList.add(new ListItem(ListItem.TYPE_ENTRY, suggest));
+                }
+            }
+
+            // 마지막줄
+            listItemList.add(new ListItem(ListItem.TYPE_SECTION, new Suggest(0, null)));
+
+            mSuggestListAdapter.setAll(getViewDataBinding().keywordEditText.getText().toString(), listItemList);
         }
     }
 
@@ -179,6 +209,7 @@ public class StayOutboundSearchSuggestView extends BaseView<StayOutboundSearchSu
 
             case R.id.deleteImageView:
                 setSuggest(null);
+                setSuggests(null);
                 break;
         }
     }
@@ -282,4 +313,229 @@ public class StayOutboundSearchSuggestView extends BaseView<StayOutboundSearchSu
             getEventListener().onRequestSuggests(editable.toString());
         }
     };
+
+    class SuggestListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
+    {
+        private Context mContext;
+        private View.OnClickListener mOnClickListener;
+
+        private String mKeyword;
+        private List<ListItem> mSuggestList;
+
+        public SuggestListAdapter(Context context, View.OnClickListener listener)
+        {
+            mContext = context;
+            mOnClickListener = listener;
+
+            setAll(null, null);
+        }
+
+        @Override
+        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
+        {
+            switch (viewType)
+            {
+                case ListItem.TYPE_SECTION:
+                {
+                    ListRowStayOutboundSuggestTitleDataBinding dataBinding = DataBindingUtil.inflate(LayoutInflater.from(mContext), R.layout.list_row_stay_outbound_suggest_title_data, parent, false);
+
+                    TitleViewHolder titleViewHolder = new TitleViewHolder(dataBinding.getRoot());
+                    titleViewHolder.setViewDataBinding(dataBinding);
+
+                    return titleViewHolder;
+                }
+
+                case ListItem.TYPE_ENTRY:
+                {
+                    ListRowStayOutboundSuggestEntryDataBinding dataBinding = DataBindingUtil.inflate(LayoutInflater.from(mContext), R.layout.list_row_stay_outbound_suggest_entry_data, parent, false);
+
+                    EntryViewHolder entryViewHolder = new EntryViewHolder(dataBinding.getRoot());
+                    entryViewHolder.setViewDataBinding(dataBinding);
+
+                    return entryViewHolder;
+                }
+            }
+
+            return null;
+        }
+
+        @Override
+        public void onBindViewHolder(RecyclerView.ViewHolder holder, int position)
+        {
+            ListItem item = getItem(position);
+
+            if (item == null)
+            {
+                return;
+            }
+
+            switch (item.mType)
+            {
+                case ListItem.TYPE_SECTION:
+                    onBindViewHolder((TitleViewHolder) holder, item, position);
+                    break;
+
+                case ListItem.TYPE_ENTRY:
+                    onBindViewHolder((EntryViewHolder) holder, item, position);
+                    break;
+            }
+        }
+
+        @Override
+        public int getItemCount()
+        {
+            if (mSuggestList == null)
+            {
+                return 0;
+            } else
+            {
+                return mSuggestList.size();
+            }
+        }
+
+        @Override
+        public int getItemViewType(int position)
+        {
+            return mSuggestList.get(position).mType;
+        }
+
+        public void setAll(String keyword, List<ListItem> list)
+        {
+            mKeyword = keyword;
+
+            if (mSuggestList == null)
+            {
+                mSuggestList = new ArrayList<>();
+            }
+
+            mSuggestList.clear();
+
+            if (list != null && list.size() > 0)
+            {
+                mSuggestList.addAll(list);
+            }
+        }
+
+        public ListItem getItem(int position)
+        {
+            if (position < 0 || mSuggestList.size() <= position)
+            {
+                return null;
+            }
+
+            return mSuggestList.get(position);
+        }
+
+        private void onBindViewHolder(TitleViewHolder holder, ListItem item, int position)
+        {
+            if (position == 0)
+            {
+                holder.dataBinding.dividerView.setVisibility(View.GONE);
+            } else
+            {
+                holder.dataBinding.dividerView.setVisibility(View.VISIBLE);
+            }
+
+            Suggest suggest = item.getItem();
+
+            if (DailyTextUtils.isTextEmpty(suggest.name) == true)
+            {
+                holder.dataBinding.titleTextView.setVisibility(View.GONE);
+            } else
+            {
+                holder.dataBinding.titleTextView.setVisibility(View.VISIBLE);
+            }
+
+            holder.dataBinding.titleTextView.setText(suggest.name);
+        }
+
+        private void onBindViewHolder(EntryViewHolder holder, ListItem item, int position)
+        {
+            Suggest suggest = item.getItem();
+
+            SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(suggest.display);
+
+            if (DailyTextUtils.isTextEmpty(mKeyword) == false)
+            {
+                int fromIndex = 0;
+                do
+                {
+                    int startIndex = suggest.display.indexOf(mKeyword, fromIndex);
+
+                    if (startIndex < 0)
+                    {
+                        break;
+                    }
+
+                    int endIndex = startIndex + mKeyword.length();
+                    fromIndex = endIndex;
+
+                    spannableStringBuilder.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), //
+                        startIndex, endIndex, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                } while (true);
+            }
+
+            holder.dataBinding.textView.setText(spannableStringBuilder);
+
+            switch (suggest.categoryKey)
+            {
+                case "airport":
+                    holder.dataBinding.textView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.vector_ob_search_ic_04_airport, 0, 0, 0);
+                    break;
+
+                case "hotel":
+                    holder.dataBinding.textView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.vector_ob_search_ic_02_hotel, 0, 0, 0);
+                    break;
+
+                case "point":
+                    holder.dataBinding.textView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.vector_ob_search_ic_03_landmark, 0, 0, 0);
+                    break;
+
+                case "region":
+                    holder.dataBinding.textView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.vector_ob_search_ic_01_region, 0, 0, 0);
+                    break;
+
+                case "station":
+                    holder.dataBinding.textView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.vector_ob_search_ic_05_train, 0, 0, 0);
+                    break;
+
+                default:
+                    holder.dataBinding.textView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.vector_ob_search_ic_01_region, 0, 0, 0);
+                    break;
+            }
+        }
+
+        class TitleViewHolder extends RecyclerView.ViewHolder
+        {
+            ListRowStayOutboundSuggestTitleDataBinding dataBinding;
+
+            public TitleViewHolder(View view)
+            {
+                super(view);
+            }
+
+            public void setViewDataBinding(ListRowStayOutboundSuggestTitleDataBinding dataBinding)
+            {
+                this.dataBinding = dataBinding;
+            }
+        }
+
+        class EntryViewHolder extends RecyclerView.ViewHolder
+        {
+            ListRowStayOutboundSuggestEntryDataBinding dataBinding;
+
+            public EntryViewHolder(View view)
+            {
+                super(view);
+
+                view.setOnClickListener(mOnClickListener);
+            }
+
+            public void setViewDataBinding(ListRowStayOutboundSuggestEntryDataBinding dataBinding)
+            {
+                this.dataBinding = dataBinding;
+            }
+        }
+    }
+
 }

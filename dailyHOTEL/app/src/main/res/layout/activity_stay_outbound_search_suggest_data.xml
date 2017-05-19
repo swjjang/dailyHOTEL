@@ -56,21 +56,13 @@
                 android:background="@color/default_line_ce7e7e7"/>
         </RelativeLayout>
 
-        <com.daily.base.widget.DailyScrollView
-            android:id="@+id/suggestsScrollView"
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/suggestsRecyclerView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_below="@id/toolbar"
-            android:layout_marginTop="10dp"
-            android:fadingEdge="none"
-            android:visibility="gone">
-
-            <LinearLayout
-                android:id="@+id/suggestsContentsLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"/>
-        </com.daily.base.widget.DailyScrollView>
+            android:background="@color/white"
+            android:visibility="gone"/>
 
         <RelativeLayout
             android:id="@+id/emptyLayout"
