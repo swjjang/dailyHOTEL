@@ -1,35 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                xmlns:dailyFont="http://schemas.android.com/apk/res-auto">
+       xmlns:app="http://schemas.android.com/apk/res-auto"
+       xmlns:dailyFont="http://schemas.android.com/apk/res-auto">
 
     <RelativeLayout
         android:id="@+id/homeCategoryLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="5dp"
         >
 
         <com.daily.base.widget.DailyTextView
             android:id="@+id/homeCategoryTitleTextView"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="6dp"
+            android:layout_height="36dp"
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"
+            android:gravity="center_vertical"
             android:text="@string/label_home_category_title_text"
             android:textColor="@color/default_text_c929292"
             android:textSize="11dp"/>
+
+        <com.daily.base.widget.DailyTextView
+            android:id="@+id/homeCategoryNearByTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="36dp"
+            android:layout_alignBottom="@id/homeCategoryTitleTextView"
+            android:layout_alignParentRight="true"
+            android:layout_alignTop="@id/homeCategoryTitleTextView"
+            android:layout_marginRight="10dp"
+            android:drawablePadding="3dp"
+            android:gravity="center_vertical"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:text="@string/label_home_category_nearby_stay_text"
+            android:textColor="@color/default_text_c323232"
+            android:textSize="11dp"
+            app:drawableCompatLeft="@drawable/ic_home_shortcut_nearby"/>
 
         <View
             android:id="@+id/homeCategoryTitleBottomLine"
             android:layout_width="match_parent"
             android:layout_height="1px"
+            android:layout_below="@id/homeCategoryTitleTextView"
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"
-            android:layout_below="@id/homeCategoryTitleTextView"
             android:background="@color/default_line_cdcdcdd"/>
 
 
@@ -38,7 +53,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/homeCategoryTitleBottomLine"
-            app:columnCount="5"/>
+            app:columnCount="4"/>
 
     </RelativeLayout>
 
