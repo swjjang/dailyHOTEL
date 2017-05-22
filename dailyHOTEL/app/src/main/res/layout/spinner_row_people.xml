@@ -2,13 +2,10 @@
 <com.daily.base.widget.DailyTextView
     android:id="@+id/textView"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/payment_ic_amount_time_bg"
-    android:drawablePadding="2dp"
-    android:gravity="center_vertical"
-    android:paddingLeft="12dp"
-    android:paddingRight="12dp"
+    android:gravity="center"
+    android:paddingRight="25dp"
     android:textColor="@color/default_text_c323232"
     android:textSize="13dp"/>

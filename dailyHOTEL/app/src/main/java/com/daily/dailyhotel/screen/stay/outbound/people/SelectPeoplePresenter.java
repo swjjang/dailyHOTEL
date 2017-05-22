@@ -1,6 +1,7 @@
 package com.daily.dailyhotel.screen.stay.outbound.people;
 
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -183,7 +184,7 @@ public class SelectPeoplePresenter extends BaseExceptionPresenter<SelectPeopleAc
     public void onChildPlusClick()
     {
         final int MAX_NUMBER_OF_CHILDREN = 3;
-        final int DEFAULT_CHILD_AGE = -1;
+        final int DEFAULT_CHILD_AGE = 1;
 
         if (mPeople.getChildAgeList() == null)
         {
@@ -213,5 +214,66 @@ public class SelectPeoplePresenter extends BaseExceptionPresenter<SelectPeopleAc
             mPeople.getChildAgeList().remove(mPeople.getChildAgeList().size() - 1);
             getViewInterface().setChildAgeList(mPeople.getChildAgeList());
         }
+    }
+
+    @Override
+    public void onSelectedChild1AgeClick(int agePosition)
+    {
+        if (agePosition < 0 && mPeople.getChildAgeList().size() < 1)
+        {
+            return;
+        }
+
+        mPeople.getChildAgeList().set(0, agePosition);
+
+        getViewInterface().setChildAgeList(mPeople.getChildAgeList());
+    }
+
+    @Override
+    public void onSelectedChild2AgeClick(int agePosition)
+    {
+        if (agePosition < 0 && mPeople.getChildAgeList().size() < 2)
+        {
+            return;
+        }
+
+        mPeople.getChildAgeList().set(1, agePosition);
+
+        getViewInterface().setChildAgeList(mPeople.getChildAgeList());
+    }
+
+    @Override
+    public void onSelectedChild3AgeClick(int agePosition)
+    {
+        if (agePosition < 0 && mPeople.getChildAgeList().size() < 3)
+        {
+            return;
+        }
+
+        mPeople.getChildAgeList().set(2, agePosition);
+
+        getViewInterface().setChildAgeList(mPeople.getChildAgeList());
+    }
+
+    @Override
+    public void onCancelClick()
+    {
+        onBackClick();
+    }
+
+    @Override
+    public void onConfirmClick()
+    {
+        if (mPeople == null || lock() == true)
+        {
+            return;
+        }
+
+        Intent intent = new Intent();
+        intent.putExtra(SelectPeopleActivity.INTENT_EXTRA_DATA_NUMBER_OF_ADULTS, mPeople.numberOfAdults);
+        intent.putExtra(SelectPeopleActivity.INTENT_EXTRA_DATA_CHILD_LIST, mPeople.getChildAgeList());
+
+        setResult(Activity.RESULT_OK, intent);
+        onBackClick();
     }
 }

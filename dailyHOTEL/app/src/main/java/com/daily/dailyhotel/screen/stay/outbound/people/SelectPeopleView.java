@@ -7,6 +7,7 @@ import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
 import android.widget.TextView;
@@ -36,6 +37,16 @@ public class SelectPeopleView extends BaseView<SelectPeopleView.OnEventListener,
         void onChildPlusClick();
 
         void onChildMinusClick();
+
+        void onSelectedChild1AgeClick(int agePosition);
+
+        void onSelectedChild2AgeClick(int agePosition);
+
+        void onSelectedChild3AgeClick(int agePosition);
+
+        void onCancelClick();
+
+        void onConfirmClick();
     }
 
     public SelectPeopleView(BaseActivity baseActivity, SelectPeopleView.OnEventListener listener)
@@ -68,36 +79,68 @@ public class SelectPeopleView extends BaseView<SelectPeopleView.OnEventListener,
         viewDataBinding.adultCountPlus.setOnClickListener(this);
         viewDataBinding.childCountMinus.setOnClickListener(this);
         viewDataBinding.childCountPlus.setOnClickListener(this);
-        viewDataBinding.child1AgeLayout.setOnClickListener(this);
-        viewDataBinding.child2AgeLayout.setOnClickListener(this);
-        viewDataBinding.child3AgeLayout.setOnClickListener(this);
-
-        viewDataBinding.child1AgeSpinner.setHintLayout(R.layout.spinner_row_age_hint);
-        viewDataBinding.child2AgeSpinner.setHintLayout(R.layout.spinner_row_age_hint);
-        viewDataBinding.child3AgeSpinner.setHintLayout(R.layout.spinner_row_age_hint);
 
         mChildAgeArrayAdapter = new ChildAgeArrayAdapter[3];
 
-        ArrayList<String> arrayList = new ArrayList<>();
-        arrayList.add(getString(R.string.label_select_category));
-
-        mChildAgeArrayAdapter[0] = new ChildAgeArrayAdapter(getContext(), R.layout.spinner_row_people, arrayList);
-        mChildAgeArrayAdapter[0].clear();
-        mChildAgeArrayAdapter[0].addAll(new ArrayList<>(Arrays.asList(getContext().getResources().getStringArray(R.array.child_age_array))));
-        mChildAgeArrayAdapter[0].setDropDownViewResource(R.layout.spinner_dropdown_row_happytalk);
+        mChildAgeArrayAdapter[0] = new ChildAgeArrayAdapter(getContext(), R.layout.spinner_row_people, new ArrayList<>(Arrays.asList(getContext().getResources().getStringArray(R.array.child_age_array))));
+        mChildAgeArrayAdapter[0].setDropDownViewResource(R.layout.spinner_dropdown_row_people);
         viewDataBinding.child1AgeSpinner.setAdapter(mChildAgeArrayAdapter[0]);
 
-        mChildAgeArrayAdapter[1] = new ChildAgeArrayAdapter(getContext(), R.layout.spinner_row_people, arrayList);
-        mChildAgeArrayAdapter[1].clear();
-        mChildAgeArrayAdapter[1].addAll(new ArrayList<>(Arrays.asList(getContext().getResources().getStringArray(R.array.child_age_array))));
-        mChildAgeArrayAdapter[1].setDropDownViewResource(R.layout.spinner_dropdown_row_happytalk);
+        mChildAgeArrayAdapter[1] = new ChildAgeArrayAdapter(getContext(), R.layout.spinner_row_people, new ArrayList<>(Arrays.asList(getContext().getResources().getStringArray(R.array.child_age_array))));
+        mChildAgeArrayAdapter[1].setDropDownViewResource(R.layout.spinner_dropdown_row_people);
         viewDataBinding.child2AgeSpinner.setAdapter(mChildAgeArrayAdapter[1]);
 
-        mChildAgeArrayAdapter[2] = new ChildAgeArrayAdapter(getContext(), R.layout.spinner_row_people, arrayList);
-        mChildAgeArrayAdapter[2].clear();
-        mChildAgeArrayAdapter[2].addAll(new ArrayList<>(Arrays.asList(getContext().getResources().getStringArray(R.array.child_age_array))));
-        mChildAgeArrayAdapter[2].setDropDownViewResource(R.layout.spinner_dropdown_row_happytalk);
+        mChildAgeArrayAdapter[2] = new ChildAgeArrayAdapter(getContext(), R.layout.spinner_row_people, new ArrayList<>(Arrays.asList(getContext().getResources().getStringArray(R.array.child_age_array))));
+        mChildAgeArrayAdapter[2].setDropDownViewResource(R.layout.spinner_dropdown_row_people);
         viewDataBinding.child3AgeSpinner.setAdapter(mChildAgeArrayAdapter[2]);
+
+        viewDataBinding.child1AgeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
+        {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
+            {
+                getEventListener().onSelectedChild1AgeClick(position);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent)
+            {
+
+            }
+        });
+
+        viewDataBinding.child2AgeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
+        {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
+            {
+                getEventListener().onSelectedChild2AgeClick(position);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent)
+            {
+
+            }
+        });
+
+        viewDataBinding.child3AgeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
+        {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
+            {
+                getEventListener().onSelectedChild3AgeClick(position);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent)
+            {
+
+            }
+        });
+
+        viewDataBinding.negativeTextView.setOnClickListener(this);
+        viewDataBinding.positiveTextView.setOnClickListener(this);
     }
 
     @Override
@@ -175,11 +218,25 @@ public class SelectPeopleView extends BaseView<SelectPeopleView.OnEventListener,
                     return;
             }
 
+            int position;
             for (int i = 0; i < childSize; i++)
             {
-                if (childAgeList.get(i) != -1)
+                position = childAgeList.get(i);
+                mChildAgeArrayAdapter[i].setSelectedPosition(position);
+
+                switch (i)
                 {
-                    mChildAgeArrayAdapter[i].setSelectedPosition(childAgeList.get(i));
+                    case 0:
+                        getViewDataBinding().child1AgeSpinner.setSelection(position);
+                        break;
+
+                    case 1:
+                        getViewDataBinding().child2AgeSpinner.setSelection(position);
+                        break;
+
+                    case 2:
+                        getViewDataBinding().child3AgeSpinner.setSelection(position);
+                        break;
                 }
             }
         }
@@ -204,6 +261,14 @@ public class SelectPeopleView extends BaseView<SelectPeopleView.OnEventListener,
 
             case R.id.childCountPlus:
                 getEventListener().onChildPlusClick();
+                break;
+
+            case R.id.negativeTextView:
+                getEventListener().onCancelClick();
+                break;
+
+            case R.id.positiveTextView:
+                getEventListener().onConfirmClick();
                 break;
         }
     }
@@ -247,7 +312,6 @@ public class SelectPeopleView extends BaseView<SelectPeopleView.OnEventListener,
 
             TextView textView = (TextView) view;
             textView.setText(age);
-            textView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 15);
             textView.setSelected(mSelectedPosition == position);
 
             if (mSelectedPosition == position)

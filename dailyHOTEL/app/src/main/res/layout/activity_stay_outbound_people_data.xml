@@ -136,37 +136,32 @@
                 android:textColor="@color/default_text_c929292"
                 android:textSize="13dp"/>
 
-            <LinearLayout
-                android:id="@+id/child1AgeLayout"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+            <Spinner
+                android:id="@+id/child1AgeSpinner"
+                android:layout_width="107dp"
+                android:layout_height="25dp"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:gravity="center_vertical|right">
+                android:background="@drawable/payment_ic_amount_time_bg"
+                android:paddingLeft="1px"
+                android:paddingRight="1px"
+                android:prompt="@string/label_select_category"
+                android:spinnerMode="dropdown"/>
 
-                <com.twoheart.dailyhotel.widget.DailyHintSpinner
-                    android:id="@+id/child1AgeSpinner"
-                    android:layout_width="82dp"
-                    android:layout_height="25dp"
-                    android:background="@drawable/payment_ic_amount_time_bg"
-                    android:paddingLeft="1px"
-                    android:paddingRight="1px"
-                    android:prompt="@string/label_select_category"
-                    android:spinnerMode="dropdown"/>
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/selector_booking_used_button"/>
-            </LinearLayout>
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:src="@drawable/selector_booking_used_button"/>
         </RelativeLayout>
 
         <RelativeLayout
             android:id="@+id/child2Layout"
             android:layout_width="match_parent"
             android:layout_height="36dp"
-            android:paddingLeft="5dp"
             android:layout_marginTop="5dp"
+            android:paddingLeft="5dp"
             android:visibility="visible">
 
             <com.daily.base.widget.DailyTextView
@@ -177,37 +172,32 @@
                 android:textColor="@color/default_text_c929292"
                 android:textSize="13dp"/>
 
-            <LinearLayout
-                android:id="@+id/child2AgeLayout"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+            <Spinner
+                android:id="@+id/child2AgeSpinner"
+                android:layout_width="107dp"
+                android:layout_height="25dp"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:gravity="center_vertical|right">
+                android:background="@drawable/payment_ic_amount_time_bg"
+                android:paddingLeft="1px"
+                android:paddingRight="1px"
+                android:prompt="@string/label_select_category"
+                android:spinnerMode="dropdown"/>
 
-                <com.twoheart.dailyhotel.widget.DailyHintSpinner
-                    android:id="@+id/child2AgeSpinner"
-                    android:layout_width="82dp"
-                    android:layout_height="25dp"
-                    android:background="@drawable/payment_ic_amount_time_bg"
-                    android:paddingLeft="1px"
-                    android:paddingRight="1px"
-                    android:prompt="@string/label_select_category"
-                    android:spinnerMode="dropdown"/>
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/selector_booking_used_button"/>
-            </LinearLayout>
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:src="@drawable/selector_booking_used_button"/>
         </RelativeLayout>
 
         <RelativeLayout
             android:id="@+id/child3Layout"
             android:layout_width="match_parent"
             android:layout_height="36dp"
-            android:paddingLeft="5dp"
             android:layout_marginTop="5dp"
+            android:paddingLeft="5dp"
             android:visibility="visible">
 
             <com.daily.base.widget.DailyTextView
@@ -218,33 +208,27 @@
                 android:textColor="@color/default_text_c929292"
                 android:textSize="13dp"/>
 
-            <LinearLayout
-                android:id="@+id/child3AgeLayout"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+            <Spinner
+                android:id="@+id/child3AgeSpinner"
+                android:layout_width="107dp"
+                android:layout_height="25dp"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:gravity="center_vertical|right">
+                android:background="@drawable/payment_ic_amount_time_bg"
+                android:paddingLeft="1px"
+                android:paddingRight="1px"
+                android:prompt="@string/label_select_category"
+                android:spinnerMode="dropdown"/>
 
-                <com.twoheart.dailyhotel.widget.DailyHintSpinner
-                    android:id="@+id/child3AgeSpinner"
-                    android:layout_width="82dp"
-                    android:layout_height="25dp"
-                    android:background="@drawable/payment_ic_amount_time_bg"
-                    android:paddingLeft="1px"
-                    android:paddingRight="1px"
-                    android:prompt="@string/label_select_category"
-                    android:spinnerMode="dropdown"/>
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/selector_booking_used_button"/>
-            </LinearLayout>
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:src="@drawable/selector_booking_used_button"/>
         </RelativeLayout>
 
         <LinearLayout
-            android:id="@+id/twoButtonLayout"
             android:layout_width="match_parent"
             android:layout_height="38dp"
             android:layout_marginTop="24dp">

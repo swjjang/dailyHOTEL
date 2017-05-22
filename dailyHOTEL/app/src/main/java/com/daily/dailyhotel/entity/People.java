@@ -55,9 +55,18 @@ public class People
 
         if (childCount > 0)
         {
+            int childAge;
             StringBuilder childrenAgeStringBuilder = new StringBuilder();
-            for (int childAge : mChildAgeList)
+
+            for (int i = 0; i < childCount; i++)
             {
+                childAge = mChildAgeList.get(i);
+
+                if (i != 0)
+                {
+                    childrenAgeStringBuilder.append(", ");
+                }
+
                 if (childAge == 0)
                 {
                     childrenAgeStringBuilder.append(context.getString(R.string.label_search_under_of_1_age));
@@ -67,6 +76,7 @@ public class People
                 }
             }
 
+            stringBuilder.append(' ');
             stringBuilder.append(context.getString(R.string.label_search_children_age, childrenAgeStringBuilder.toString()));
         }
 
