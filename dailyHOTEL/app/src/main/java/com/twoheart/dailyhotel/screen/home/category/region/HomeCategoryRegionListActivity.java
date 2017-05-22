@@ -19,6 +19,7 @@ import com.twoheart.dailyhotel.model.DailyCategoryType;
 import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.RegionViewItem;
 import com.twoheart.dailyhotel.model.time.StayBookingDay;
+import com.twoheart.dailyhotel.place.activity.PlaceRegionListActivity;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.screen.common.PermissionManagerActivity;
 import com.twoheart.dailyhotel.screen.search.SearchActivity;
@@ -323,7 +324,9 @@ public class HomeCategoryRegionListActivity extends BaseActivity
                         try
                         {
                             HomeCategoryRegionListFragment homeCategoryRegionListFragment = getCurrentFragment();
-                            intent.putExtra(NAME_INTENT_EXTRA_DATA_RESULT, homeCategoryRegionListFragment.getResultName());
+                            intent.putExtra(NAME_INTENT_EXTRA_DATA_DAILY_CATEGORY_TYPE, homeCategoryRegionListFragment.getResultName());
+                            intent.putExtra(NAME_INTENT_EXTRA_DATA_RESULT, PlaceRegionListActivity.Region.DOMESTIC.name());
+                            intent.putExtra(NAME_INTENT_EXTRA_DATA_DAILY_CATEGORY_TYPE, (Parcelable) mDailyCategoryType);
                         } catch (Exception e)
                         {
                             ExLog.d(e.toString());

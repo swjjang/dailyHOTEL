@@ -40,6 +40,7 @@ import com.twoheart.dailyhotel.screen.gourmet.detail.GourmetDetailActivity;
 import com.twoheart.dailyhotel.screen.gourmet.list.GourmetMainActivity;
 import com.twoheart.dailyhotel.screen.gourmet.preview.GourmetPreviewActivity;
 import com.twoheart.dailyhotel.screen.home.category.list.StayCategoryTabActivity;
+import com.twoheart.dailyhotel.screen.home.category.nearby.StayCategoryNearByActivity;
 import com.twoheart.dailyhotel.screen.home.category.region.HomeCategoryRegionListActivity;
 import com.twoheart.dailyhotel.screen.home.collection.CollectionGourmetActivity;
 import com.twoheart.dailyhotel.screen.home.collection.CollectionStayActivity;
@@ -299,13 +300,16 @@ public class HomeFragment extends BaseMenuNavigationFragment
                         //                            callByScreen = AnalyticsManager.Screen.DAILYHOTEL_LIST_REGION_GLOBAL;
                         //                        }
 
+                        DailyCategoryType dailyCategoryType = data.getParcelableExtra(NAME_INTENT_EXTRA_DATA_DAILY_CATEGORY_TYPE);
+
                         try
                         {
                             StayBookingDay stayBookingDay = new StayBookingDay();
                             stayBookingDay.setCheckInDay(mTodayDateTime.dailyDateTime);
                             stayBookingDay.setCheckOutDay(mTodayDateTime.dailyDateTime, 1);
 
-                            Intent intent = StaySearchResultActivity.newInstance(mBaseActivity, mTodayDateTime, stayBookingDay, location, AnalyticsManager.Screen.HOME);
+                            Intent intent = StayCategoryNearByActivity.newInstance(mBaseActivity //
+                                , mTodayDateTime, stayBookingDay, location, dailyCategoryType, AnalyticsManager.Screen.HOME);
                             startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_SEARCH_RESULT);
                         } catch (Exception e)
                         {
