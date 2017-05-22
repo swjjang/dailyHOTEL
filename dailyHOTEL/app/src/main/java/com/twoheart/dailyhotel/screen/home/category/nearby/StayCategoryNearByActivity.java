@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.SharedElementCallback;
@@ -18,10 +19,10 @@ import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.widget.DailyToast;
 import com.facebook.drawee.view.SimpleDraweeView;
-import com.google.android.gms.maps.model.LatLng;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.Category;
+import com.twoheart.dailyhotel.model.DailyCategoryType;
 import com.twoheart.dailyhotel.model.Keyword;
 import com.twoheart.dailyhotel.model.PlaceCuration;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
@@ -29,7 +30,7 @@ import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.model.StayCuration;
 import com.twoheart.dailyhotel.model.StayCurationOption;
-import com.twoheart.dailyhotel.model.StaySearchCuration;
+import com.twoheart.dailyhotel.model.StayCategoryNearByCuration;
 import com.twoheart.dailyhotel.model.time.StayBookingDay;
 import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
@@ -65,11 +66,6 @@ public class StayCategoryNearByActivity extends BaseActivity
 {
     public static final String INTENT_EXTRA_DATA_KEYWORD = "keyword";
     public static final String INTENT_EXTRA_DATA_LOCATION = "location";
-    public static final String INTENT_EXTRA_DATA_SEARCHTYPE = "searchType";
-    public static final String INTENT_EXTRA_DATA_INPUTTEXT = "inputText";
-    public static final String INTENT_EXTRA_DATA_LATLNG = "latlng";
-    public static final String INTENT_EXTRA_DATA_RADIUS = "radius";
-    public static final String INTENT_EXTRA_DATA_IS_DEEPLINK = "isDeepLink";
     public static final String INTENT_EXTRA_DATA_CALL_BY_SCREEN = "callByScreen";
 
     protected static final double DEFAULT_SEARCH_RADIUS = 10d;
@@ -77,7 +73,6 @@ public class StayCategoryNearByActivity extends BaseActivity
     protected ViewType mViewType = ViewType.LIST;
 
     protected boolean mIsFixedLocation;
-    protected boolean mIsDeepLink;
     protected String mCallByScreen;
 
     protected int mSearchCount;
@@ -91,58 +86,25 @@ public class StayCategoryNearByActivity extends BaseActivity
 
     protected StayCategoryNearByLayout mStayCategoryNearByLayout;
 
+    private DailyCategoryType mDailyCategoryType;
+
     int mReceiveDataFlag; // 0 연동 전 , 1 데이터 리시브 상태, 2 로그 발송 상태
 
-    String mInputText;
     String mAddress;
 
-    SearchType mSearchType;
-    StaySearchCuration mStaySearchCuration;
+    StayCategoryNearByCuration mStayCategoryNearByCuration;
 
     private StayCategoryNearByNetworkController mNetworkController;
 
-//    public static Intent newInstance(Context context, TodayDateTime todayDateTime, StayBookingDay stayBookingDay, String inputText, Keyword keyword, SearchType searchType)
-//    {
-//        Intent intent = new Intent(context, StayCategoryNearByActivity.class);
-//        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, stayBookingDay);
-//        intent.putExtra(NAME_INTENT_EXTRA_DATA_TODAYDATETIME, todayDateTime);
-//        intent.putExtra(INTENT_EXTRA_DATA_KEYWORD, keyword);
-//        intent.putExtra(INTENT_EXTRA_DATA_SEARCHTYPE, searchType.name());
-//        intent.putExtra(INTENT_EXTRA_DATA_INPUTTEXT, inputText);
-//
-//        return intent;
-//    }
-//
-//    public static Intent newInstance(Context context, TodayDateTime todayDateTime, StayBookingDay stayBookingDay, LatLng latLng, double radius, boolean isDeepLink)
-//    {
-//        Intent intent = new Intent(context, StayCategoryNearByActivity.class);
-//        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, stayBookingDay);
-//        intent.putExtra(NAME_INTENT_EXTRA_DATA_TODAYDATETIME, todayDateTime);
-//        intent.putExtra(INTENT_EXTRA_DATA_LATLNG, latLng);
-//        intent.putExtra(INTENT_EXTRA_DATA_RADIUS, radius);
-//        intent.putExtra(INTENT_EXTRA_DATA_SEARCHTYPE, SearchType.LOCATION.name());
-//        intent.putExtra(INTENT_EXTRA_DATA_IS_DEEPLINK, isDeepLink);
-//
-//        return intent;
-//    }
-//
-//    public static Intent newInstance(Context context, TodayDateTime todayDateTime, StayBookingDay stayBookingDay, Keyword keyword, SearchType searchType)
-//    {
-//        return newInstance(context, todayDateTime, stayBookingDay, null, keyword, searchType);
-//    }
-//
-//    public static Intent newInstance(Context context, TodayDateTime todayDateTime, StayBookingDay stayBookingDay, String text)
-//    {
-//        return newInstance(context, todayDateTime, stayBookingDay, null, new Keyword(0, text), SearchType.SEARCHES);
-//    }
-
-    public static Intent newInstance(Context context, TodayDateTime todayDateTime, StayBookingDay stayBookingDay, Location location, String callByScreen)
+    public static Intent newInstance(Context context //
+        , TodayDateTime todayDateTime, StayBookingDay stayBookingDay //
+        , Location location, DailyCategoryType dailyCategoryType, String callByScreen)
     {
         Intent intent = new Intent(context, StayCategoryNearByActivity.class);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, stayBookingDay);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_TODAYDATETIME, todayDateTime);
         intent.putExtra(INTENT_EXTRA_DATA_LOCATION, location);
-        intent.putExtra(INTENT_EXTRA_DATA_SEARCHTYPE, SearchType.LOCATION.name());
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_DAILY_CATEGORY_TYPE, (Parcelable) dailyCategoryType);
         intent.putExtra(INTENT_EXTRA_DATA_CALL_BY_SCREEN, callByScreen);
 
         return intent;
@@ -155,7 +117,7 @@ public class StayCategoryNearByActivity extends BaseActivity
 
         super.onCreate(savedInstanceState);
 
-        mStayCategoryNearByLayout = getPlaceSearchResultLayout(this);
+        mStayCategoryNearByLayout = new StayCategoryNearByLayout(this, mOnEventListener);
 
         initIntent(getIntent());
 
@@ -167,20 +129,14 @@ public class StayCategoryNearByActivity extends BaseActivity
 
         mNetworkController = new StayCategoryNearByNetworkController(this, mNetworkTag, mOnNetworkControllerListener);
 
-        if (mSearchType == SearchType.LOCATION)
-        {
-            mStayCategoryNearByLayout.setViewTypeVisibility(true);
+        mStayCategoryNearByLayout.setViewTypeVisibility(true);
 
-            mNetworkController.requestAddress(mStaySearchCuration.getLocation());
-        } else
-        {
-            mStayCategoryNearByLayout.setViewTypeVisibility(false);
-        }
+        mNetworkController.requestAddress(mStayCategoryNearByCuration.getLocation());
 
-        // 기본적으로 시작시에 전체 카테고리를 넣는다.
         mStayCategoryNearByLayout.setCategoryTabLayoutVisibility(View.INVISIBLE);
         mStayCategoryNearByLayout.processListLayout();
-        mStayCategoryNearByLayout.setCategoryAllTabLayout(getSupportFragmentManager(), mOnStayListFragmentListener);
+
+        mStayCategoryNearByLayout.setCategoryTabLayout(getSupportFragmentManager(), mOnStayListFragmentListener);
     }
 
     @Override
@@ -341,11 +297,6 @@ public class StayCategoryNearByActivity extends BaseActivity
         }
     }
 
-    protected StayCategoryNearByLayout getPlaceSearchResultLayout(Context context)
-    {
-        return new StayCategoryNearByLayout(context, mOnEventListener);
-    }
-
     protected void onCalendarActivityResult(int resultCode, Intent data)
     {
         if (resultCode == Activity.RESULT_OK && data != null)
@@ -357,19 +308,18 @@ public class StayCategoryNearByActivity extends BaseActivity
                 return;
             }
 
-            mStaySearchCuration.setStayBookingDay(stayBookingDay);
+            mStayCategoryNearByCuration.setStayBookingDay(stayBookingDay);
 
-            ((StayCategoryNearByLayout) mStayCategoryNearByLayout).setCalendarText(stayBookingDay);
+            mStayCategoryNearByLayout.setCalendarText(stayBookingDay);
 
             // 날짜가 바뀌면 전체탭으로 이동하고 다시 재로딩.
-            mStaySearchCuration.getCurationOption().clear();
-            mStaySearchCuration.setCategory(Category.ALL);
+            mStayCategoryNearByCuration.getCurationOption().clear();
 
             mStayCategoryNearByLayout.setOptionFilterSelected(false);
             mStayCategoryNearByLayout.clearCategoryTab();
             mStayCategoryNearByLayout.setCategoryTabLayoutVisibility(View.INVISIBLE);
             mStayCategoryNearByLayout.processListLayout();
-            mStayCategoryNearByLayout.setCategoryAllTabLayout(getSupportFragmentManager(), mOnStayListFragmentListener);
+            mStayCategoryNearByLayout.setCategoryTabLayout(getSupportFragmentManager(), mOnStayListFragmentListener);
         }
     }
 
@@ -387,12 +337,12 @@ public class StayCategoryNearByActivity extends BaseActivity
             StayCuration changedStayCuration = (StayCuration) placeCuration;
             StayCurationOption changedStayCurationOption = (StayCurationOption) changedStayCuration.getCurationOption();
 
-            mStaySearchCuration.setCurationOption(changedStayCurationOption);
+            mStayCategoryNearByCuration.setCurationOption(changedStayCurationOption);
             mStayCategoryNearByLayout.setOptionFilterSelected(changedStayCurationOption.isDefaultFilter() == false);
 
             if (changedStayCurationOption.getSortType() == SortType.DISTANCE)
             {
-                mStaySearchCuration.setLocation(changedStayCuration.getLocation());
+                mStayCategoryNearByCuration.setLocation(changedStayCuration.getLocation());
 
                 searchMyLocation();
             } else
@@ -408,7 +358,7 @@ public class StayCategoryNearByActivity extends BaseActivity
 
     protected void onLocationFailed()
     {
-        StayCurationOption stayCurationOption = (StayCurationOption) mStaySearchCuration.getCurationOption();
+        StayCurationOption stayCurationOption = (StayCurationOption) mStayCategoryNearByCuration.getCurationOption();
 
         stayCurationOption.setSortType(SortType.DEFAULT);
         mStayCategoryNearByLayout.setOptionFilterSelected(stayCurationOption.isDefaultFilter() == false);
@@ -418,7 +368,7 @@ public class StayCategoryNearByActivity extends BaseActivity
 
     protected void onLocationProviderDisabled()
     {
-        StayCurationOption stayCurationOption = (StayCurationOption) mStaySearchCuration.getCurationOption();
+        StayCurationOption stayCurationOption = (StayCurationOption) mStayCategoryNearByCuration.getCurationOption();
 
         stayCurationOption.setSortType(SortType.DEFAULT);
         mStayCategoryNearByLayout.setOptionFilterSelected(stayCurationOption.isDefaultFilter() == false);
@@ -430,14 +380,14 @@ public class StayCategoryNearByActivity extends BaseActivity
     {
         if (location == null)
         {
-            mStaySearchCuration.getCurationOption().setSortType(SortType.DEFAULT);
+            mStayCategoryNearByCuration.getCurationOption().setSortType(SortType.DEFAULT);
             refreshCurrentFragment(true);
         } else
         {
-            mStaySearchCuration.setLocation(location);
+            mStayCategoryNearByCuration.setLocation(location);
 
             // 만약 sort type이 거리가 아니라면 다른 곳에서 변경 작업이 일어났음으로 갱신하지 않음
-            if (mStaySearchCuration.getCurationOption().getSortType() == SortType.DISTANCE)
+            if (mStayCategoryNearByCuration.getCurationOption().getSortType() == SortType.DISTANCE)
             {
                 refreshCurrentFragment(true);
             }
@@ -464,16 +414,27 @@ public class StayCategoryNearByActivity extends BaseActivity
             return;
         }
 
+        try
+        {
+            mDailyCategoryType = intent.getParcelableExtra(Constants.NAME_INTENT_EXTRA_DATA_DAILY_CATEGORY_TYPE);
+        } catch (Exception e)
+        {
+            Util.restartApp(this);
+            return;
+        }
+
+        if (mDailyCategoryType == null || DailyCategoryType.NONE == mDailyCategoryType)
+        {
+            finish();
+            return;
+        }
+
         Location location = null;
-        Keyword keyword = null;
         double radius = DEFAULT_SEARCH_RADIUS;
 
-        mStaySearchCuration = new StaySearchCuration();
+        mStayCategoryNearByCuration = new StayCategoryNearByCuration();
 
-        if (intent.hasExtra(INTENT_EXTRA_DATA_KEYWORD) == true)
-        {
-            keyword = intent.getParcelableExtra(INTENT_EXTRA_DATA_KEYWORD);
-        } else if (intent.hasExtra(INTENT_EXTRA_DATA_LOCATION) == true)
+        if (intent.hasExtra(INTENT_EXTRA_DATA_LOCATION) == true)
         {
             location = intent.getParcelableExtra(INTENT_EXTRA_DATA_LOCATION);
 
@@ -482,56 +443,33 @@ public class StayCategoryNearByActivity extends BaseActivity
                 mCallByScreen = intent.getStringExtra(INTENT_EXTRA_DATA_CALL_BY_SCREEN);
             }
 
-            mStaySearchCuration.getCurationOption().setDefaultSortType(SortType.DISTANCE);
-        } else if (intent.hasExtra(INTENT_EXTRA_DATA_LATLNG) == true)
-        {
-            LatLng latLng = intent.getParcelableExtra(INTENT_EXTRA_DATA_LATLNG);
-
-            if (intent.hasExtra(INTENT_EXTRA_DATA_RADIUS) == true)
-            {
-                radius = intent.getDoubleExtra(INTENT_EXTRA_DATA_RADIUS, DEFAULT_SEARCH_RADIUS);
-            }
-
-            mIsDeepLink = intent.getBooleanExtra(INTENT_EXTRA_DATA_IS_DEEPLINK, false);
-
-            location = new Location((String) null);
-            location.setLatitude(latLng.latitude);
-            location.setLongitude(latLng.longitude);
-
-            // 고정 위치로 진입한 경우
-            mIsFixedLocation = true;
-            mStaySearchCuration.getCurationOption().setDefaultSortType(SortType.DISTANCE);
+            mStayCategoryNearByCuration.getCurationOption().setDefaultSortType(SortType.DISTANCE);
         } else
         {
             finish();
             return;
         }
 
-        mSearchType = SearchType.valueOf(intent.getStringExtra(INTENT_EXTRA_DATA_SEARCHTYPE));
-        mInputText = intent.getStringExtra(INTENT_EXTRA_DATA_INPUTTEXT);
-
-        mStaySearchCuration.setKeyword(keyword);
-
         // 내주변 위치 검색으로 시작하는 경우에는 특정 반경과 거리순으로 시작해야한다.
-        if (mSearchType == SearchType.LOCATION)
-        {
-            mStaySearchCuration.getCurationOption().setSortType(SortType.DISTANCE);
-            mStaySearchCuration.setRadius(radius);
-        }
+        mStayCategoryNearByCuration.getCurationOption().setSortType(SortType.DISTANCE);
+        mStayCategoryNearByCuration.setRadius(radius);
 
-        mStaySearchCuration.setLocation(location);
-        mStaySearchCuration.setStayBookingDay(stayBookingDay);
+        mStayCategoryNearByCuration.setLocation(location);
+        mStayCategoryNearByCuration.setStayBookingDay(stayBookingDay);
+        mStayCategoryNearByCuration.setCategory( //
+            new Category(getResources().getString(mDailyCategoryType.getNameResId()) //
+                , getResources().getString(mDailyCategoryType.getCodeResId())));
     }
 
     protected void initLayout()
     {
-        if (mStaySearchCuration == null)
+        if (mStayCategoryNearByCuration == null)
         {
             finish();
             return;
         }
 
-        StayBookingDay stayBookingDay = mStaySearchCuration.getStayBookingDay();
+        StayBookingDay stayBookingDay = mStayCategoryNearByCuration.getStayBookingDay();
 
         if (stayBookingDay == null)
         {
@@ -540,21 +478,13 @@ public class StayCategoryNearByActivity extends BaseActivity
 
         try
         {
-            if (mSearchType == SearchType.LOCATION)
-            {
-                mStayCategoryNearByLayout.setToolbarTitle("");
+            mStayCategoryNearByLayout.setToolbarTitle("");
 
-                mStayCategoryNearByLayout.setSpinnerVisible(true);
-            } else
-            {
-                mStayCategoryNearByLayout.setToolbarTitle(mStaySearchCuration.getKeyword().name);
+            mStayCategoryNearByLayout.setSpinnerVisible(true);
 
-                mStayCategoryNearByLayout.setSpinnerVisible(false);
-            }
+            mStayCategoryNearByLayout.setSelectionSpinner(mStayCategoryNearByCuration.getRadius());
 
-            mStayCategoryNearByLayout.setSelectionSpinner(mStaySearchCuration.getRadius());
-
-            ((StayCategoryNearByLayout) mStayCategoryNearByLayout).setCalendarText(stayBookingDay);
+            mStayCategoryNearByLayout.setCalendarText(stayBookingDay);
 
         } catch (Exception e)
         {
@@ -564,12 +494,12 @@ public class StayCategoryNearByActivity extends BaseActivity
 
     protected Keyword getKeyword()
     {
-        return mStaySearchCuration.getKeyword();
+        return mStayCategoryNearByCuration.getKeyword();
     }
 
     protected PlaceCuration getPlaceCuration()
     {
-        return mStaySearchCuration;
+        return mStayCategoryNearByCuration;
     }
 
     protected void onPlaceDetailClickByLongPress(View view, PlaceViewItem placeViewItem, int listCount)
@@ -592,7 +522,7 @@ public class StayCategoryNearByActivity extends BaseActivity
 
         try
         {
-            StayBookingDay stayBookingDay = mStaySearchCuration.getStayBookingDay();
+            StayBookingDay stayBookingDay = mStayCategoryNearByCuration.getStayBookingDay();
             Map<String, String> params = new HashMap<>();
 
             params.put(AnalyticsManager.KeyType.CHECK_IN, stayBookingDay.getCheckInDay("yyyy-MM-dd"));
@@ -600,9 +530,9 @@ public class StayCategoryNearByActivity extends BaseActivity
 
             params.put(AnalyticsManager.KeyType.PLACE_TYPE, AnalyticsManager.ValueType.STAY);
             params.put(AnalyticsManager.KeyType.PLACE_HIT_TYPE, AnalyticsManager.ValueType.STAY);
-            params.put(AnalyticsManager.KeyType.CATEGORY, mStaySearchCuration.getCategory().code);
+            params.put(AnalyticsManager.KeyType.CATEGORY, mStayCategoryNearByCuration.getCategory().code);
 
-            Province province = mStaySearchCuration.getProvince();
+            Province province = mStayCategoryNearByCuration.getProvince();
             if (province instanceof Area)
             {
                 Area area = (Area) province;
@@ -618,7 +548,7 @@ public class StayCategoryNearByActivity extends BaseActivity
 
             AnalyticsManager.getInstance(StayCategoryNearByActivity.this).recordScreen(StayCategoryNearByActivity.this, screen, null, params);
 
-            if (mCallByScreen == AnalyticsManager.Screen.HOME && mSearchType == SearchType.LOCATION)
+            if (mCallByScreen == AnalyticsManager.Screen.HOME)
             {
                 AnalyticsManager.getInstance(StayCategoryNearByActivity.this) //
                     .recordScreen(StayCategoryNearByActivity.this, AnalyticsManager.Screen.STAY_LIST_SHORTCUT_NEARBY, null, params);
@@ -820,44 +750,9 @@ public class StayCategoryNearByActivity extends BaseActivity
         }
     }
 
-    protected void recordEventSearchResultByRecentKeyword(Keyword keyword, boolean isEmpty, Map<String, String> params)
-    {
-        String action = (isEmpty == true) ? AnalyticsManager.Action.RECENT_KEYWORD_NOT_FOUND : AnalyticsManager.Action.RECENT_KEYWORD;
-        params.put(AnalyticsManager.KeyType.SEARCH_PATH, AnalyticsManager.ValueType.RECENT);
-        params.put(AnalyticsManager.KeyType.SEARCH_WORD, keyword.name);
-        params.put(AnalyticsManager.KeyType.SEARCH_RESULT, keyword.name);
-
-        AnalyticsManager.getInstance(StayCategoryNearByActivity.this).recordEvent(AnalyticsManager.Category.SEARCH_//
-            , action, keyword.name, params);
-    }
-
-    protected void recordEventSearchResultByKeyword(Keyword keyword, boolean isEmpty, Map<String, String> params)
-    {
-        String action = (isEmpty == true) ? AnalyticsManager.Action.KEYWORD_NOT_FOUND : AnalyticsManager.Action.KEYWORD;
-
-        params.put(AnalyticsManager.KeyType.SEARCH_PATH, AnalyticsManager.ValueType.DIRECT);
-        params.put(AnalyticsManager.KeyType.SEARCH_WORD, keyword.name);
-        params.put(AnalyticsManager.KeyType.SEARCH_RESULT, keyword.name);
-
-        AnalyticsManager.getInstance(StayCategoryNearByActivity.this).recordEvent(AnalyticsManager.Category.SEARCH_//
-            , action, keyword.name, params);
-    }
-
-    protected void recordEventSearchResultByAutoSearch(Keyword keyword, String inputText, boolean isEmpty, Map<String, String> params)
-    {
-        String category = (isEmpty == true) ? AnalyticsManager.Category.AUTO_SEARCH_NOT_FOUND : AnalyticsManager.Category.AUTO_SEARCH;
-
-        params.put(AnalyticsManager.KeyType.SEARCH_PATH, AnalyticsManager.ValueType.AUTO);
-        params.put(AnalyticsManager.KeyType.SEARCH_WORD, inputText);
-        params.put(AnalyticsManager.KeyType.SEARCH_RESULT, keyword.name);
-
-        AnalyticsManager.getInstance(StayCategoryNearByActivity.this).recordEvent(category//
-            , keyword.name, inputText, params);
-    }
-
     protected void requestAnalyticsByCanceled()
     {
-        if (AnalyticsManager.Screen.HOME == mCallByScreen && SearchType.LOCATION == mSearchType)
+        if (AnalyticsManager.Screen.HOME == mCallByScreen)
         {
             AnalyticsManager.getInstance(this).recordEvent( //
                 AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.STAY_BACK_BUTTON_CLICK //
@@ -881,7 +776,7 @@ public class StayCategoryNearByActivity extends BaseActivity
         public void onCategoryTabSelected(TabLayout.Tab tab)
         {
             Category category = (Category) tab.getTag();
-            mStaySearchCuration.setCategory(category);
+            mStayCategoryNearByCuration.setCategory(category);
 
             mStayCategoryNearByLayout.setCurrentItem(tab.getPosition());
             mStayCategoryNearByLayout.showBottomLayout(false);
@@ -909,7 +804,7 @@ public class StayCategoryNearByActivity extends BaseActivity
                 return;
             }
 
-            StayBookingDay stayBookingDay = mStaySearchCuration.getStayBookingDay();
+            StayBookingDay stayBookingDay = mStayCategoryNearByCuration.getStayBookingDay();
 
             Intent intent = StayCalendarActivity.newInstance(StayCategoryNearByActivity.this, //
                 mTodayDateTime, stayBookingDay, AnalyticsManager.ValueType.SEARCH_RESULT, true, true);
@@ -972,8 +867,6 @@ public class StayCategoryNearByActivity extends BaseActivity
             {
                 boolean isCurrentFragment = (placeListFragment == currentFragment);
                 placeListFragment.setVisibility(mViewType, isCurrentFragment);
-
-                ((StayCategoryNearByListFragment) placeListFragment).setIsDeepLink(mIsDeepLink);
             }
 
             refreshCurrentFragment(false);
@@ -990,7 +883,7 @@ public class StayCategoryNearByActivity extends BaseActivity
             }
 
             Intent intent = StaySearchResultCurationActivity.newInstance(StayCategoryNearByActivity.this,//
-                mViewType, mSearchType, mStaySearchCuration, mIsFixedLocation);
+                mViewType, SearchType.LOCATION, mStayCategoryNearByCuration, mIsFixedLocation);
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAYCURATION);
 
             AnalyticsManager.getInstance(StayCategoryNearByActivity.this).recordEvent( //
@@ -1035,12 +928,12 @@ public class StayCategoryNearByActivity extends BaseActivity
         @Override
         public void onItemSelectedSpinner(double radius)
         {
-            if (mStaySearchCuration == null)
+            if (mStayCategoryNearByCuration == null)
             {
                 return;
             }
 
-            mStaySearchCuration.setRadius(radius);
+            mStayCategoryNearByCuration.setRadius(radius);
             refreshCurrentFragment(true);
 
             String action;
@@ -1061,10 +954,8 @@ public class StayCategoryNearByActivity extends BaseActivity
                 action = AnalyticsManager.Action.NEARBY_DISTANCE_05; // 0.5km
             }
 
-            String label = mSearchType == SearchType.LOCATION //
-                ? mAddress : mStaySearchCuration.getKeyword().name;
             AnalyticsManager.getInstance(StayCategoryNearByActivity.this) //
-                .recordEvent(AnalyticsManager.Category.NAVIGATION, action, label, null);
+                .recordEvent(AnalyticsManager.Category.NAVIGATION, action, mAddress, null);
         }
     };
 
@@ -1082,54 +973,51 @@ public class StayCategoryNearByActivity extends BaseActivity
                 return;
             }
 
-            if (SearchType.LOCATION == mSearchType)
+            synchronized (StayCategoryNearByActivity.this)
             {
-                synchronized (StayCategoryNearByActivity.this)
+                if (mReceiveDataFlag == 0)
                 {
-                    if (mReceiveDataFlag == 0)
+                    mReceiveDataFlag = 1;
+                } else if (mReceiveDataFlag == 1)
+                {
+                    ArrayList<PlaceListFragment> placeListFragmentList = mStayCategoryNearByLayout.getPlaceListFragment();
+                    if (placeListFragmentList != null || placeListFragmentList.size() > 0)
                     {
-                        mReceiveDataFlag = 1;
-                    } else if (mReceiveDataFlag == 1)
-                    {
-                        ArrayList<PlaceListFragment> placeListFragmentList = mStayCategoryNearByLayout.getPlaceListFragment();
-                        if (placeListFragmentList != null || placeListFragmentList.size() > 0)
+                        StayBookingDay stayBookingDay = mStayCategoryNearByCuration.getStayBookingDay();
+                        Map<String, String> params = new HashMap<>();
+
+                        try
                         {
-                            StayBookingDay stayBookingDay = mStaySearchCuration.getStayBookingDay();
-                            Map<String, String> params = new HashMap<>();
+                            params.put(AnalyticsManager.KeyType.CHECK_IN, stayBookingDay.getCheckInDay("yyyy-MM-dd"));
+                            params.put(AnalyticsManager.KeyType.CHECK_OUT, stayBookingDay.getCheckOutDay("yyyy-MM-dd"));
+                            params.put(AnalyticsManager.KeyType.LENGTH_OF_STAY, Integer.toString(stayBookingDay.getNights()));
 
-                            try
+                            params.put(AnalyticsManager.KeyType.PLACE_TYPE, AnalyticsManager.ValueType.STAY);
+                            params.put(AnalyticsManager.KeyType.PLACE_HIT_TYPE, AnalyticsManager.ValueType.STAY);
+                            params.put(AnalyticsManager.KeyType.CATEGORY, mStayCategoryNearByCuration.getCategory().code);
+
+                            Province province = mStayCategoryNearByCuration.getProvince();
+                            if (province instanceof Area)
                             {
-                                params.put(AnalyticsManager.KeyType.CHECK_IN, stayBookingDay.getCheckInDay("yyyy-MM-dd"));
-                                params.put(AnalyticsManager.KeyType.CHECK_OUT, stayBookingDay.getCheckOutDay("yyyy-MM-dd"));
-                                params.put(AnalyticsManager.KeyType.LENGTH_OF_STAY, Integer.toString(stayBookingDay.getNights()));
-
-                                params.put(AnalyticsManager.KeyType.PLACE_TYPE, AnalyticsManager.ValueType.STAY);
-                                params.put(AnalyticsManager.KeyType.PLACE_HIT_TYPE, AnalyticsManager.ValueType.STAY);
-                                params.put(AnalyticsManager.KeyType.CATEGORY, mStaySearchCuration.getCategory().code);
-
-                                Province province = mStaySearchCuration.getProvince();
-                                if (province instanceof Area)
-                                {
-                                    Area area = (Area) province;
-                                    params.put(AnalyticsManager.KeyType.COUNTRY, area.getProvince().isOverseas ? AnalyticsManager.ValueType.OVERSEAS : AnalyticsManager.ValueType.DOMESTIC);
-                                    params.put(AnalyticsManager.KeyType.PROVINCE, area.getProvince().name);
-                                    params.put(AnalyticsManager.KeyType.DISTRICT, area.name);
-                                } else if (province != null)
-                                {
-                                    params.put(AnalyticsManager.KeyType.COUNTRY, province.isOverseas ? AnalyticsManager.ValueType.OVERSEAS : AnalyticsManager.ValueType.DOMESTIC);
-                                    params.put(AnalyticsManager.KeyType.PROVINCE, province.name);
-                                    params.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.ALL_LOCALE_KR);
-                                }
-                                params.put(AnalyticsManager.KeyType.SEARCH_COUNT, Integer.toString(mSearchCount > mSearchMaxCount ? mSearchMaxCount : mSearchCount));
-                            } catch (Exception e)
+                                Area area = (Area) province;
+                                params.put(AnalyticsManager.KeyType.COUNTRY, area.getProvince().isOverseas ? AnalyticsManager.ValueType.OVERSEAS : AnalyticsManager.ValueType.DOMESTIC);
+                                params.put(AnalyticsManager.KeyType.PROVINCE, area.getProvince().name);
+                                params.put(AnalyticsManager.KeyType.DISTRICT, area.name);
+                            } else if (province != null)
                             {
-
+                                params.put(AnalyticsManager.KeyType.COUNTRY, province.isOverseas ? AnalyticsManager.ValueType.OVERSEAS : AnalyticsManager.ValueType.DOMESTIC);
+                                params.put(AnalyticsManager.KeyType.PROVINCE, province.name);
+                                params.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.ALL_LOCALE_KR);
                             }
+                            params.put(AnalyticsManager.KeyType.SEARCH_COUNT, Integer.toString(mSearchCount > mSearchMaxCount ? mSearchMaxCount : mSearchCount));
+                        } catch (Exception e)
+                        {
 
-                            int placeCount = placeListFragmentList.get(0).getPlaceCount();
-                            recordEventSearchResultByLocation(address, placeCount == 0, params);
-                            mReceiveDataFlag = 2;
                         }
+
+                        int placeCount = placeListFragmentList.get(0).getPlaceCount();
+                        recordEventSearchResultByLocation(address, placeCount == 0, params);
+                        mReceiveDataFlag = 2;
                     }
                 }
             }
@@ -1203,7 +1091,7 @@ public class StayCategoryNearByActivity extends BaseActivity
                 });
 
                 Intent intent = StayDetailActivity.newInstance(StayCategoryNearByActivity.this, //
-                    mStaySearchCuration.getStayBookingDay(), stay, listCount, true);
+                    mStayCategoryNearByCuration.getStayBookingDay(), stay, listCount, true);
 
                 View simpleDraweeView = view.findViewById(R.id.imageView);
                 View gradeTextView = view.findViewById(R.id.gradeTextView);
@@ -1229,7 +1117,7 @@ public class StayCategoryNearByActivity extends BaseActivity
             } else
             {
                 Intent intent = StayDetailActivity.newInstance(StayCategoryNearByActivity.this, //
-                    mStaySearchCuration.getStayBookingDay(), stay, listCount, false);
+                    mStayCategoryNearByCuration.getStayBookingDay(), stay, listCount, false);
 
                 startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL);
 
@@ -1260,7 +1148,7 @@ public class StayCategoryNearByActivity extends BaseActivity
             mPlaceViewItemByLongPress = placeViewItem;
             mListCountByLongPress = listCount;
 
-            Intent intent = StayPreviewActivity.newInstance(StayCategoryNearByActivity.this, mStaySearchCuration.getStayBookingDay(), stay);
+            Intent intent = StayPreviewActivity.newInstance(StayCategoryNearByActivity.this, mStayCategoryNearByCuration.getStayBookingDay(), stay);
 
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PREVIEW);
         }
@@ -1272,7 +1160,7 @@ public class StayCategoryNearByActivity extends BaseActivity
             {
                 mStayCategoryNearByLayout.setCategoryTabLayoutVisibility(View.VISIBLE);
                 mStayCategoryNearByLayout.processListLayout();
-                ((StayCategoryNearByLayout) mStayCategoryNearByLayout).addCategoryTabLayout(categoryList, mOnStayListFragmentListener);
+                mStayCategoryNearByLayout.addCategoryTabLayout(categoryList, mOnStayListFragmentListener);
             } else
             {
                 mStayCategoryNearByLayout.setCategoryTabLayoutVisibility(View.GONE);
@@ -1292,8 +1180,7 @@ public class StayCategoryNearByActivity extends BaseActivity
             if (currentPlaceListFragment == placeListFragment)
             {
                 currentPlaceListFragment.setVisibility(mViewType, true);
-                currentPlaceListFragment.setPlaceCuration(mStaySearchCuration);
-//                ((StayCategoryNearByListFragment) currentPlaceListFragment).setSearchType(mSearchType);
+                currentPlaceListFragment.setPlaceCuration(mStayCategoryNearByCuration);
                 currentPlaceListFragment.refreshList(true);
             } else
             {
@@ -1365,7 +1252,7 @@ public class StayCategoryNearByActivity extends BaseActivity
             }
 
             Intent intent = StaySearchResultCurationActivity.newInstance(StayCategoryNearByActivity.this, //
-                mViewType, mSearchType, mStaySearchCuration, mIsFixedLocation);
+                mViewType, SearchType.LOCATION, mStayCategoryNearByCuration, mIsFixedLocation);
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAYCURATION);
         }
 
@@ -1418,7 +1305,7 @@ public class StayCategoryNearByActivity extends BaseActivity
                 mStayCategoryNearByLayout.showListLayout();
             }
 
-            StayBookingDay stayBookingDay = mStaySearchCuration.getStayBookingDay();
+            StayBookingDay stayBookingDay = mStayCategoryNearByCuration.getStayBookingDay();
             Map<String, String> params = new HashMap<>();
             try
             {
@@ -1428,9 +1315,9 @@ public class StayCategoryNearByActivity extends BaseActivity
 
                 params.put(AnalyticsManager.KeyType.PLACE_TYPE, AnalyticsManager.ValueType.STAY);
                 params.put(AnalyticsManager.KeyType.PLACE_HIT_TYPE, AnalyticsManager.ValueType.STAY);
-                params.put(AnalyticsManager.KeyType.CATEGORY, mStaySearchCuration.getCategory().code);
+                params.put(AnalyticsManager.KeyType.CATEGORY, mStayCategoryNearByCuration.getCategory().code);
 
-                Province province = mStaySearchCuration.getProvince();
+                Province province = mStayCategoryNearByCuration.getProvince();
                 if (province instanceof Area)
                 {
                     Area area = (Area) province;
@@ -1449,30 +1336,16 @@ public class StayCategoryNearByActivity extends BaseActivity
 
             }
 
-            Keyword keyword = mStaySearchCuration.getKeyword();
-
-            if (mSearchType == SearchType.LOCATION)
+            synchronized (StayCategoryNearByActivity.this)
             {
-                synchronized (StayCategoryNearByActivity.this)
+                if (mReceiveDataFlag == 0)
                 {
-                    if (mReceiveDataFlag == 0)
-                    {
-                        mReceiveDataFlag = 1;
-                    } else
-                    {
-                        recordEventSearchResultByLocation(mAddress, isShow, params);
-                        mReceiveDataFlag = 2;
-                    }
+                    mReceiveDataFlag = 1;
+                } else
+                {
+                    recordEventSearchResultByLocation(mAddress, isShow, params);
+                    mReceiveDataFlag = 2;
                 }
-            } else if (mSearchType == SearchType.RECENT)
-            {
-                recordEventSearchResultByRecentKeyword(keyword, isShow, params);
-            } else if (mSearchType == SearchType.AUTOCOMPLETE)
-            {
-                recordEventSearchResultByAutoSearch(keyword, mInputText, isShow, params);
-            } else
-            {
-                recordEventSearchResultByKeyword(keyword, isShow, params);
             }
         }
 

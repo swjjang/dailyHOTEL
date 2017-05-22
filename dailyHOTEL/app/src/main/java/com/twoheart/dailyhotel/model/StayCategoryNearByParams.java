@@ -106,11 +106,6 @@ public class StayCategoryNearByParams extends StayParams
             hashMap.put("persons", persons);
         }
 
-        if (category != null && Category.ALL.code.equalsIgnoreCase(category.code) == false)
-        {
-            hashMap.put("category", category.code);
-        }
-
         if (page > 0)
         {
             hashMap.put("page", page);

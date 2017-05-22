@@ -299,13 +299,16 @@ public class HomeFragment extends BaseMenuNavigationFragment
                         //                            callByScreen = AnalyticsManager.Screen.DAILYHOTEL_LIST_REGION_GLOBAL;
                         //                        }
 
+                        DailyCategoryType dailyCategoryType = data.getParcelableExtra(NAME_INTENT_EXTRA_DATA_DAILY_CATEGORY_TYPE);
+
                         try
                         {
                             StayBookingDay stayBookingDay = new StayBookingDay();
                             stayBookingDay.setCheckInDay(mTodayDateTime.dailyDateTime);
                             stayBookingDay.setCheckOutDay(mTodayDateTime.dailyDateTime, 1);
 
-                            Intent intent = StayCategoryNearByActivity.newInstance(mBaseActivity, mTodayDateTime, stayBookingDay, location, AnalyticsManager.Screen.HOME);
+                            Intent intent = StayCategoryNearByActivity.newInstance(mBaseActivity //
+                                , mTodayDateTime, stayBookingDay, location, dailyCategoryType, AnalyticsManager.Screen.HOME);
                             startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_SEARCH_RESULT);
                         } catch (Exception e)
                         {

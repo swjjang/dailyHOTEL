@@ -326,6 +326,7 @@ public class HomeCategoryRegionListActivity extends BaseActivity
                             HomeCategoryRegionListFragment homeCategoryRegionListFragment = getCurrentFragment();
                             intent.putExtra(NAME_INTENT_EXTRA_DATA_DAILY_CATEGORY_TYPE, homeCategoryRegionListFragment.getResultName());
                             intent.putExtra(NAME_INTENT_EXTRA_DATA_RESULT, PlaceRegionListActivity.Region.DOMESTIC.name());
+                            intent.putExtra(NAME_INTENT_EXTRA_DATA_DAILY_CATEGORY_TYPE, (Parcelable) mDailyCategoryType);
                         } catch (Exception e)
                         {
                             ExLog.d(e.toString());

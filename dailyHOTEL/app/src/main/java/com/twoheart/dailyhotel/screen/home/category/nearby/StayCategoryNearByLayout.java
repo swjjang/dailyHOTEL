@@ -31,15 +31,11 @@ import com.twoheart.dailyhotel.place.fragment.PlaceListFragment;
 import com.twoheart.dailyhotel.screen.search.stay.result.StaySearchResultListFragment;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
-import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
 /**
  * Created by android_sam on 2017. 5. 19..
@@ -104,39 +100,21 @@ public class StayCategoryNearByLayout extends BaseBlurLayout implements View.OnC
         return R.drawable.no_hotel_ic;
     }
 
-    protected synchronized PlaceListFragmentPagerAdapter getPlaceListFragmentPagerAdapter(
-        FragmentManager fragmentManager, int count, View bottomOptionLayout //
+    private synchronized PlaceListFragmentPagerAdapter getPlaceListFragmentPagerAdapter(FragmentManager fragmentManager, View bottomOptionLayout //
         , PlaceListFragment.OnPlaceListFragmentListener listener)
     {
         PlaceListFragmentPagerAdapter placeListFragmentPagerAdapter = new PlaceListFragmentPagerAdapter(fragmentManager);
 
-        ArrayList<StaySearchResultListFragment> list = new ArrayList<>(count);
+        ArrayList<StayCategoryNearByListFragment> list = new ArrayList<>();
 
-        for (int i = 0; i < count; i++)
-        {
-            StaySearchResultListFragment staySearchResultListFragment = new StaySearchResultListFragment();
-            staySearchResultListFragment.setPlaceOnListFragmentListener(listener);
-            staySearchResultListFragment.setBottomOptionLayout(bottomOptionLayout);
-            list.add(staySearchResultListFragment);
-        }
+        StayCategoryNearByListFragment stayCategoryNearByListFragment = new StayCategoryNearByListFragment();
+        stayCategoryNearByListFragment.setPlaceOnListFragmentListener(listener);
+        stayCategoryNearByListFragment.setBottomOptionLayout(bottomOptionLayout);
+        list.add(stayCategoryNearByListFragment);
 
         placeListFragmentPagerAdapter.setPlaceFragmentList(list);
 
         return placeListFragmentPagerAdapter;
-    }
-
-    protected void onAnalyticsCategoryFlicking(String category)
-    {
-        Map<String, String> params = Collections.singletonMap(AnalyticsManager.KeyType.SCREEN, AnalyticsManager.Screen.SEARCH_RESULT);
-        AnalyticsManager.getInstance(mContext).recordEvent(AnalyticsManager.Category.NAVIGATION_//
-            , AnalyticsManager.Action.DAILY_HOTEL_CATEGORY_FLICKING, category, params);
-    }
-
-    protected void onAnalyticsCategoryClick(String category)
-    {
-        Map<String, String> params = Collections.singletonMap(AnalyticsManager.KeyType.SCREEN, AnalyticsManager.Screen.SEARCH_RESULT);
-        AnalyticsManager.getInstance(mContext).recordEvent(AnalyticsManager.Category.NAVIGATION_//
-            , AnalyticsManager.Action.HOTEL_CATEGORY_CLICKED, category, params);
     }
 
     @Override
@@ -157,24 +135,10 @@ public class StayCategoryNearByLayout extends BaseBlurLayout implements View.OnC
         mToolbar = view.findViewById(R.id.toolbar);
 
         View backView = mToolbar.findViewById(R.id.backImageView);
-        backView.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                ((StayCategoryNearByLayout.OnEventListener) mOnEventListener).finish(Activity.RESULT_CANCELED);
-            }
-        });
+        backView.setOnClickListener(v -> ((OnEventListener) mOnEventListener).finish(Activity.RESULT_CANCELED));
 
         View searchCancelView = mToolbar.findViewById(R.id.searchCancelView);
-        searchCancelView.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                ((StayCategoryNearByLayout.OnEventListener) mOnEventListener).finish(Constants.CODE_RESULT_ACTIVITY_HOME);
-            }
-        });
+        searchCancelView.setOnClickListener(v -> ((OnEventListener) mOnEventListener).finish(Constants.CODE_RESULT_ACTIVITY_HOME));
 
         View calendarLayout = view.findViewById(R.id.calendarLayout);
         calendarLayout.setOnClickListener(this);
@@ -267,46 +231,18 @@ public class StayCategoryNearByLayout extends BaseBlurLayout implements View.OnC
 
         emptyIconImageView.setImageResource(getEmptyIconResourceId());
 
-        changeDateView.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                ((StayCategoryNearByLayout.OnEventListener) mOnEventListener).onDateClick();
-            }
-        });
+        changeDateView.setOnClickListener(v -> ((OnEventListener) mOnEventListener).onDateClick());
 
-        researchView.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                ((StayCategoryNearByLayout.OnEventListener) mOnEventListener).research(Activity.RESULT_CANCELED);
-            }
-        });
+        researchView.setOnClickListener(v -> ((OnEventListener) mOnEventListener).research(Activity.RESULT_CANCELED));
 
         callTextView.setPaintFlags(callTextView.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
-        callTextView.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                ((StayCategoryNearByLayout.OnEventListener) mOnEventListener).onShowCallDialog();
-            }
-        });
+        callTextView.setOnClickListener(v -> ((OnEventListener) mOnEventListener).onShowCallDialog());
     }
 
     private void initOptionLayout(View view)
     {
         mBottomOptionLayout = view.findViewById(R.id.bottomOptionLayout);
-        mBottomOptionLayout.post(new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                mBottomOptionLayout.setTag(mViewPager.getBottom() - mBottomOptionLayout.getTop());
-            }
-        });
+        mBottomOptionLayout.post(() -> mBottomOptionLayout.setTag(mViewPager.getBottom() - mBottomOptionLayout.getTop()));
 
         // 하단 지도 필터
         mViewTypeOptionImageView = view.findViewById(R.id.viewTypeOptionImageView);
@@ -410,210 +346,17 @@ public class StayCategoryNearByLayout extends BaseBlurLayout implements View.OnC
         }
     }
 
-    public void setCategoryAllTabLayout(FragmentManager fragmentManager, PlaceListFragment.OnPlaceListFragmentListener listener)
+    public void setCategoryTabLayout(FragmentManager fragmentManager, PlaceListFragment.OnPlaceListFragmentListener listener)
     {
-        if (fragmentManager == null)
-        {
-            return;
-        }
-
-        setCategoryTabLayoutVisibility(View.INVISIBLE);
-
-        setMenuBarLayoutTranslationY(0);
-
         mCategoryTabLayout.removeAllTabs();
+        setCategoryTabLayoutVisibility(View.GONE);
 
-        TabLayout.Tab tab;
-        tab = mCategoryTabLayout.newTab();
-        tab.setText(Category.ALL.name);
-        tab.setTag(Category.ALL);
-        mCategoryTabLayout.addTab(tab);
+        mFragmentPagerAdapter = getPlaceListFragmentPagerAdapter(fragmentManager, mBottomOptionLayout, listener);
 
-        mFragmentPagerAdapter = getPlaceListFragmentPagerAdapter(fragmentManager, 1, mBottomOptionLayout, listener);
-        mViewPager.setOffscreenPageLimit(1);
         mViewPager.removeAllViews();
+        mViewPager.setOffscreenPageLimit(1);
         mViewPager.setAdapter(mFragmentPagerAdapter);
         mViewPager.clearOnPageChangeListeners();
-        mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(mCategoryTabLayout));
-        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener()
-        {
-            boolean isScrolling = false;
-            int prevPosition = -1;
-
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels)
-            {
-            }
-
-            @Override
-            public void onPageSelected(int position)
-            {
-                if (prevPosition != position)
-                {
-                    if (isScrolling == true)
-                    {
-                        isScrolling = false;
-
-                        onAnalyticsCategoryFlicking(mCategoryTabLayout.getTabAt(position).getText().toString());
-                    } else
-                    {
-                        onAnalyticsCategoryClick(mCategoryTabLayout.getTabAt(position).getText().toString());
-                    }
-                } else
-                {
-                    isScrolling = false;
-                }
-
-                prevPosition = position;
-
-                PlaceListFragment placeListFragment = getPlaceListFragment().get(position);
-
-                boolean isViewTypeEnabled = placeListFragment.getViewType() != Constants.ViewType.GONE;
-
-                setOptionViewTypeEnabled(isViewTypeEnabled);
-                setOptionFilterEnabled(isViewTypeEnabled || placeListFragment.isDefaultFilter() == false);
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state)
-            {
-                if (state == ViewPager.SCROLL_STATE_DRAGGING)
-                {
-                    isScrolling = true;
-                }
-            }
-        });
-
-        mCategoryTabLayout.setOnTabSelectedListener(mOnCategoryTabSelectedListener);
-
-        FontManager.apply(mCategoryTabLayout, FontManager.getInstance(mContext).getRegularTypeface());
-    }
-
-    public void setCategoryTabLayout(FragmentManager fragmentManager, List<Category> categoryList//
-        , Category selectedCategory, PlaceListFragment.OnPlaceListFragmentListener listener)
-    {
-        if (categoryList == null)
-        {
-            mCategoryTabLayout.removeAllTabs();
-            mCategoryTabLayout.setOnTabSelectedListener(null);
-            mViewPager.removeAllViews();
-            setCategoryTabLayoutVisibility(View.GONE);
-            return;
-        }
-
-        int size = categoryList.size();
-
-        if (size <= 2)
-        {
-            size = 1;
-            mCategoryTabLayout.removeAllTabs();
-            setCategoryTabLayoutVisibility(View.GONE);
-
-            mFragmentPagerAdapter = getPlaceListFragmentPagerAdapter(fragmentManager, size, mBottomOptionLayout, listener);
-
-            mViewPager.removeAllViews();
-            mViewPager.setOffscreenPageLimit(size);
-            mViewPager.setAdapter(mFragmentPagerAdapter);
-            mViewPager.clearOnPageChangeListeners();
-        } else
-        {
-            setCategoryTabLayoutVisibility(View.VISIBLE);
-
-            Category category;
-            TabLayout.Tab tab;
-            TabLayout.Tab selectedTab = null;
-
-            mCategoryTabLayout.removeAllTabs();
-
-            int position = 0;
-
-            for (int i = 0; i < size; i++)
-            {
-                category = categoryList.get(i);
-
-                tab = mCategoryTabLayout.newTab();
-                tab.setText(category.name);
-                tab.setTag(category);
-                mCategoryTabLayout.addTab(tab);
-
-                if (selectedCategory != null && category.code.equalsIgnoreCase(selectedCategory.code) == true)
-                {
-                    position = i;
-                    selectedTab = tab;
-                }
-            }
-
-            mFragmentPagerAdapter = getPlaceListFragmentPagerAdapter(fragmentManager, size, mBottomOptionLayout, listener);
-
-            mViewPager.removeAllViews();
-            mViewPager.setOffscreenPageLimit(size);
-
-            Class reflectionClass = ViewPager.class;
-
-            try
-            {
-                Field mCurItem = reflectionClass.getDeclaredField("mCurItem");
-                mCurItem.setAccessible(true);
-                mCurItem.setInt(mViewPager, position);
-            } catch (Exception e)
-            {
-                ExLog.d(e.toString());
-            }
-
-            mViewPager.setAdapter(mFragmentPagerAdapter);
-            mViewPager.clearOnPageChangeListeners();
-            mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(mCategoryTabLayout));
-            mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener()
-            {
-                boolean isScrolling = false;
-                int prevPosition = -1;
-
-                @Override
-                public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels)
-                {
-                }
-
-                @Override
-                public void onPageSelected(int position)
-                {
-                    if (prevPosition != position)
-                    {
-                        if (isScrolling == true)
-                        {
-                            isScrolling = false;
-
-                            onAnalyticsCategoryFlicking(mCategoryTabLayout.getTabAt(position).getText().toString());
-                        } else
-                        {
-                            onAnalyticsCategoryClick(mCategoryTabLayout.getTabAt(position).getText().toString());
-                        }
-                    } else
-                    {
-                        isScrolling = false;
-                    }
-
-                    prevPosition = position;
-                }
-
-                @Override
-                public void onPageScrollStateChanged(int state)
-                {
-                    if (state == ViewPager.SCROLL_STATE_DRAGGING)
-                    {
-                        isScrolling = true;
-                    }
-                }
-            });
-
-            if (selectedTab != null)
-            {
-                selectedTab.select();
-            }
-
-            mCategoryTabLayout.setOnTabSelectedListener(mOnCategoryTabSelectedListener);
-
-            FontManager.apply(mCategoryTabLayout, FontManager.getInstance(mContext).getRegularTypeface());
-        }
     }
 
     /**

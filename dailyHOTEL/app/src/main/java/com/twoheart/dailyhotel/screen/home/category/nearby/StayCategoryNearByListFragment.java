@@ -5,7 +5,7 @@ import com.twoheart.dailyhotel.model.Category;
 import com.twoheart.dailyhotel.model.PlaceCuration;
 import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.model.StayCategoryNearByParams;
-import com.twoheart.dailyhotel.model.StaySearchCuration;
+import com.twoheart.dailyhotel.model.StayCategoryNearByCuration;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.screen.hotel.list.StayListFragment;
 import com.twoheart.dailyhotel.screen.hotel.list.StayListLayout;
@@ -24,7 +24,6 @@ import retrofit2.Response;
 public class StayCategoryNearByListFragment extends StayListFragment
 {
     boolean mIsOptimizeCategory;
-    boolean mIsDeepLink;
 
     public interface OnStayCategoryNearByListFragmentListener extends OnStayListFragmentListener
     {
@@ -73,7 +72,7 @@ public class StayCategoryNearByListFragment extends StayListFragment
         if (mStayCuration == null || mStayCuration.getCurationOption() == null//
             || mStayCuration.getCurationOption().getSortType() == null//
             || (mStayCuration.getCurationOption().getSortType() == SortType.DISTANCE && mStayCuration.getLocation() == null) //
-            || (((StaySearchCuration) mStayCuration).getRadius() != 0d && mStayCuration.getLocation() == null))
+            || (((StayCategoryNearByCuration) mStayCuration).getRadius() != 0d && mStayCuration.getLocation() == null))
         {
             unLockUI();
             Util.restartApp(mBaseActivity); // 제거 할 것인지 고민 필요.
@@ -82,11 +81,6 @@ public class StayCategoryNearByListFragment extends StayListFragment
 
         StayCategoryNearByParams params = (StayCategoryNearByParams) mStayCuration.toPlaceParams(page, PAGENATION_LIST_SIZE, true);
         ((StayCategoryNearByListNetworkController) mNetworkController).requestStaySearchList(params);
-    }
-
-    public void setIsDeepLink(boolean isDeepLink)
-    {
-        mIsDeepLink = isDeepLink;
     }
 
     private StayCategoryNearByListNetworkController.OnNetworkControllerListener onNetworkControllerListener = new StayCategoryNearByListNetworkController.OnNetworkControllerListener()
@@ -113,7 +107,7 @@ public class StayCategoryNearByListFragment extends StayListFragment
 
             if (mViewType == ViewType.MAP)
             {
-                ((StayCategoryNearByListLayout) mPlaceListLayout).setMapMyLocation(mStayCuration.getLocation(), mIsDeepLink == false);
+                ((StayCategoryNearByListLayout) mPlaceListLayout).setMapMyLocation(mStayCuration.getLocation(), true);
             }
 
             if (page <= 1)
