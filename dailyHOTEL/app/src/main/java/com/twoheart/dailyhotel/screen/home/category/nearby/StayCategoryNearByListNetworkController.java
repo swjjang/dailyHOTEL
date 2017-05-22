@@ -3,10 +3,8 @@ package com.twoheart.dailyhotel.screen.home.category.nearby;
 import android.content.Context;
 
 import com.crashlytics.android.Crashlytics;
-import com.daily.base.util.DailyTextUtils;
-import com.twoheart.dailyhotel.model.Category;
 import com.twoheart.dailyhotel.model.Stay;
-import com.twoheart.dailyhotel.model.StaySearchParams;
+import com.twoheart.dailyhotel.model.StayCategoryNearByParams;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
@@ -17,7 +15,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Response;
@@ -30,7 +27,7 @@ public class StayCategoryNearByListNetworkController extends BaseNetworkControll
 {
     public interface OnNetworkControllerListener extends OnBaseNetworkControllerListener
     {
-        void onStayList(ArrayList<Stay> list, int page, int totalCount, int maxCount, List<Category> categoryList);
+        void onStayList(ArrayList<Stay> list, int page, int totalCount, int maxCount);
     }
 
     public StayCategoryNearByListNetworkController(Context context, String networkTag, OnBaseNetworkControllerListener listener)
@@ -38,21 +35,24 @@ public class StayCategoryNearByListNetworkController extends BaseNetworkControll
         super(context, networkTag, listener);
     }
 
-    public void requestStaySearchList(StaySearchParams params)
+    public void requestStaySearchList(StayCategoryNearByParams params)
     {
         if (params == null)
         {
             return;
         }
 
-        DailyMobileAPI.getInstance(mContext).requestStayList(mNetworkTag, params.toParamsMap(), params.getBedTypeList(), params.getLuxuryList(), mStayListCallback);
+      DailyMobileAPI.getInstance(mContext).requestStayCategoryList(mNetworkTag //
+            , params.getCategoryCode(), params.toParamsMap() //
+        , params.getBedTypeList(), params.getLuxuryList(), mStayCategoryListCallback);
+
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // Listener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private retrofit2.Callback mStayListCallback = new retrofit2.Callback<JSONObject>()
+    private retrofit2.Callback mStayCategoryListCallback = new retrofit2.Callback<JSONObject>()
     {
         @Override
         public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
@@ -79,40 +79,6 @@ public class StayCategoryNearByListNetworkController extends BaseNetworkControll
                         int page;
                         String imageUrl;
 
-                        // 카테고리 목록을 만든다
-                        ArrayList<Category> categoryList = new ArrayList<>();
-
-                        if (hotelJSONArray != null && hotelJSONArray.length() > 0)
-                        {
-                            JSONArray categoryJSONArray = null;
-
-                            if (dataJSONObject.isNull("categories") == false)
-                            {
-                                categoryJSONArray = dataJSONObject.getJSONArray("categories");
-                            }
-
-                            if (categoryJSONArray != null && categoryJSONArray.length() != 0)
-                            {
-                                int length = categoryJSONArray.length();
-                                JSONObject categoryJSONObject;
-
-                                for (int i = 0; i < length; i++)
-                                {
-                                    categoryJSONObject = categoryJSONArray.getJSONObject(i);
-
-                                    String name = categoryJSONObject.getString("name");
-                                    String code = categoryJSONObject.getString("alias");
-                                    int count = categoryJSONObject.getInt("count");
-
-                                    if (count > 0 && DailyTextUtils.isTextEmpty(name, code) == false)
-                                    {
-                                        categoryList.add(new Category(name, code));
-                                    }
-                                    totalCount += count;
-                                }
-                            }
-                        }
-
                         // 스테이 목록을 만든다.
                         ArrayList<Stay> stayList;
 
@@ -134,7 +100,7 @@ public class StayCategoryNearByListNetworkController extends BaseNetworkControll
                             page = 0;
                         }
 
-                        ((OnNetworkControllerListener) mOnNetworkControllerListener).onStayList(stayList, page, totalCount, maxCount, categoryList);
+                        ((OnNetworkControllerListener) mOnNetworkControllerListener).onStayList(stayList, page, totalCount, maxCount);
                     } else
                     {
                         String message = responseJSONObject.getString("msg");

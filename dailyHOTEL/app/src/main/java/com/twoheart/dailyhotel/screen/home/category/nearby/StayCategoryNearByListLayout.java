@@ -24,7 +24,6 @@ import java.util.ArrayList;
 public class StayCategoryNearByListLayout extends StayListLayout
 {
     private TextView mResultTextView;
-    private Constants.SearchType mSearchType;
 
     public StayCategoryNearByListLayout(Context context, OnEventListener eventListener)
     {
@@ -127,11 +126,6 @@ public class StayCategoryNearByListLayout extends StayListLayout
         mPlaceListMapFragment.setMyLocation(location, isVisible);
     }
 
-    public void setSearchType(Constants.SearchType searchType)
-    {
-        mSearchType = searchType;
-    }
-
     public void updateResultCount(Constants.ViewType viewType, int count, int maxCount)
     {
         if (mResultTextView == null)
@@ -166,10 +160,7 @@ public class StayCategoryNearByListLayout extends StayListLayout
     public void addResultList(FragmentManager fragmentManager, Constants.ViewType viewType, //
                               ArrayList<PlaceViewItem> list, Constants.SortType sortType, PlaceBookingDay placeBookingDay)
     {
-        if (mSearchType == Constants.SearchType.LOCATION)
-        {
-            mPlaceListAdapter.setShowDistanceIgnoreSort(true);
-        }
+        mPlaceListAdapter.setShowDistanceIgnoreSort(true);
 
         super.addResultList(fragmentManager, viewType, list, sortType, placeBookingDay);
     }

@@ -4,8 +4,8 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Category;
 import com.twoheart.dailyhotel.model.PlaceCuration;
 import com.twoheart.dailyhotel.model.Stay;
+import com.twoheart.dailyhotel.model.StayCategoryNearByParams;
 import com.twoheart.dailyhotel.model.StaySearchCuration;
-import com.twoheart.dailyhotel.model.StaySearchParams;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.screen.hotel.list.StayListFragment;
 import com.twoheart.dailyhotel.screen.hotel.list.StayListLayout;
@@ -25,7 +25,6 @@ public class StayCategoryNearByListFragment extends StayListFragment
 {
     boolean mIsOptimizeCategory;
     boolean mIsDeepLink;
-    private SearchType mSearchType;
 
     public interface OnStayCategoryNearByListFragmentListener extends OnStayListFragmentListener
     {
@@ -50,17 +49,10 @@ public class StayCategoryNearByListFragment extends StayListFragment
         return new StayCategoryNearByListLayout(mBaseActivity, mEventListener);
     }
 
-    public void setSearchType(SearchType searchType)
-    {
-        mSearchType = searchType;
-    }
-
     @Override
     public void setPlaceCuration(PlaceCuration curation)
     {
         super.setPlaceCuration(curation);
-
-        ((StayCategoryNearByListLayout) mPlaceListLayout).setSearchType(mSearchType);
     }
 
     @Override
@@ -88,7 +80,7 @@ public class StayCategoryNearByListFragment extends StayListFragment
             return;
         }
 
-        StaySearchParams params = (StaySearchParams) mStayCuration.toPlaceParams(page, PAGENATION_LIST_SIZE, true);
+        StayCategoryNearByParams params = (StayCategoryNearByParams) mStayCuration.toPlaceParams(page, PAGENATION_LIST_SIZE, true);
         ((StayCategoryNearByListNetworkController) mNetworkController).requestStaySearchList(params);
     }
 
@@ -100,15 +92,18 @@ public class StayCategoryNearByListFragment extends StayListFragment
     private StayCategoryNearByListNetworkController.OnNetworkControllerListener onNetworkControllerListener = new StayCategoryNearByListNetworkController.OnNetworkControllerListener()
     {
         @Override
-        public void onStayList(ArrayList<Stay> list, int page, int totalCount, int maxCount, List<Category> categoryList)
+        public void onStayList(ArrayList<Stay> list, int page, int totalCount, int maxCount)
         {
             // 첫페이지 호출시에 카테고리 목록 조절
             if (mIsOptimizeCategory == false)
             {
                 mIsOptimizeCategory = true;
 
-                if (page <= 1 && Category.ALL.code.equalsIgnoreCase(mStayCuration.getCategory().code) == true)
+                if (page <= 1)
                 {
+                    List<Category> categoryList = new ArrayList<>();
+                    categoryList.add(mStayCuration.getCategory());
+
                     ((OnStayCategoryNearByListFragmentListener) mOnPlaceListFragmentListener).onCategoryList(categoryList);
                     mOnPlaceListFragmentListener.onSearchCountUpdate(totalCount, maxCount);
                 }

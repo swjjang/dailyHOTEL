@@ -36,6 +36,7 @@ import com.twoheart.dailyhotel.place.fragment.PlaceListFragment;
 import com.twoheart.dailyhotel.place.fragment.PlaceMainActivity;
 import com.twoheart.dailyhotel.place.layout.PlaceMainLayout;
 import com.twoheart.dailyhotel.place.networkcontroller.PlaceMainNetworkController;
+import com.twoheart.dailyhotel.screen.home.category.nearby.StayCategoryNearByActivity;
 import com.twoheart.dailyhotel.screen.home.category.region.HomeCategoryRegionListActivity;
 import com.twoheart.dailyhotel.screen.hotel.detail.StayDetailActivity;
 import com.twoheart.dailyhotel.screen.hotel.filter.StayCalendarActivity;
@@ -43,7 +44,6 @@ import com.twoheart.dailyhotel.screen.hotel.filter.StayCurationActivity;
 import com.twoheart.dailyhotel.screen.hotel.list.StayListAdapter;
 import com.twoheart.dailyhotel.screen.hotel.preview.StayPreviewActivity;
 import com.twoheart.dailyhotel.screen.search.SearchActivity;
-import com.twoheart.dailyhotel.screen.search.stay.result.StaySearchResultActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
@@ -439,7 +439,7 @@ public class StayCategoryTabActivity extends PlaceMainActivity
 
         lockUI();
 
-        Intent intent = StaySearchResultActivity.newInstance(context, todayDateTime, stayBookingDay, location, callByScreen);
+        Intent intent = StayCategoryNearByActivity.newInstance(context, todayDateTime, stayBookingDay, location, callByScreen);
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SEARCH_RESULT);
     }
 
