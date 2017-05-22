@@ -11,9 +11,12 @@ import android.graphics.drawable.LayerDrawable;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v4.view.ViewPager;
 import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.PagerSnapHelper;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SnapHelper;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
@@ -31,6 +34,8 @@ import com.daily.base.util.ExLog;
 import com.daily.base.util.FontManager;
 import com.daily.base.util.ScreenUtils;
 import com.daily.base.widget.DailyTextView;
+import com.facebook.drawee.drawable.ScalingUtils;
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.deprecated.DeviceResolutionUtil;
 import com.twoheart.dailyhotel.model.DailyCategoryType;
@@ -41,14 +46,15 @@ import com.twoheart.dailyhotel.place.base.BaseBlurLayout;
 import com.twoheart.dailyhotel.place.base.BaseMenuNavigationFragment;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
 import com.twoheart.dailyhotel.util.DailyPreference;
+import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.CustomFontTypefaceSpan;
 import com.twoheart.dailyhotel.widget.DailyHomeScrollView;
-import com.twoheart.dailyhotel.widget.DailyLoopViewPager;
 
 import java.io.File;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by android_sam on 2017. 1. 11..
@@ -67,9 +73,9 @@ public class HomeLayout extends BaseBlurLayout
 
     Handler mEventHandler;
 
-    DailyLoopViewPager mEventViewPager;
+    RecyclerView mEventRecyclerView;
     private DailyTextView mEventCountTextView;
-    HomeEventImageViewPagerAdapter mEventViewPagerAdapter;
+    EventListAdapter mEventListAdapter;
 
     private View mActionButtonLayout;
     SwipeRefreshLayout mSwipeRefreshLayout;
@@ -281,13 +287,17 @@ public class HomeLayout extends BaseBlurLayout
         mEventAreaLayout = LayoutInflater.from(mContext).inflate(R.layout.list_row_home_event_layout, null);
         layout.addView(mEventAreaLayout);
 
-        mEventViewPager = (DailyLoopViewPager) mEventAreaLayout.findViewById(R.id.loopViewPager);
+        mEventRecyclerView = (RecyclerView) mEventAreaLayout.findViewById(R.id.loopRecyclerView);
         mEventCountTextView = (DailyTextView) mEventAreaLayout.findViewById(R.id.pagerCountTextView);
 
-        ViewGroup.LayoutParams params = mEventViewPager.getLayoutParams();
+        ViewGroup.LayoutParams params = mEventRecyclerView.getLayoutParams();
         params.height = getEventImageHeight(mContext);
-        mEventViewPager.setLayoutParams(params);
-        //        mEventViewPager.setSlideTime(4);
+        mEventRecyclerView.setLayoutParams(params);
+
+        SnapHelper helper = new PagerSnapHelper();
+        helper.attachToRecyclerView(mEventRecyclerView);
+
+        EdgeEffectColor.setEdgeGlowColor(mEventRecyclerView, mContext.getResources().getColor(R.color.default_over_scroll_edge));
 
         mEventHandler = new EventHandler(mEventAreaLayout);
     }
@@ -642,67 +652,60 @@ public class HomeLayout extends BaseBlurLayout
             list.add(defaultEvent);
         }
 
-        if (mEventViewPagerAdapter == null)
+        if (mEventListAdapter == null)
         {
-            mEventViewPagerAdapter = new HomeEventImageViewPagerAdapter(mContext, v ->
+            mEventListAdapter = new EventListAdapter(mContext, new View.OnClickListener()
             {
-                Object tag = v.getTag();
-                if (tag == null)
+                @Override
+                public void onClick(View v)
                 {
-                    ExLog.d("Tag is null");
-                    return;
-                }
-
-                if (tag instanceof Event)
-                {
-                    Event homeEvent = (Event) tag;
-                    String defaultImageUrl = homeEvent.defaultImageUrl;
-
-                    if (HomeEventImageViewPagerAdapter.DEFAULT_EVENT_IMAGE_URL.equalsIgnoreCase(defaultImageUrl) == true)
+                    Object tag = v.getTag();
+                    if (tag == null)
                     {
-                        // 기본 이미지 클릭 동작 없음
-                        ExLog.d("default Event Click");
-                    } else
+                        ExLog.d("Tag is null");
+                        return;
+                    }
+
+                    if (tag instanceof Event)
                     {
-                        ((OnEventListener) mOnEventListener).onEventItemClick(homeEvent);
+                        Event homeEvent = (Event) tag;
+                        String defaultImageUrl = homeEvent.defaultImageUrl;
+
+                        if (HomeEventImageViewPagerAdapter.DEFAULT_EVENT_IMAGE_URL.equalsIgnoreCase(defaultImageUrl) == true)
+                        {
+                            // 기본 이미지 클릭 동작 없음
+                            ExLog.d("default Event Click");
+                        } else
+                        {
+                            ((OnEventListener) mOnEventListener).onEventItemClick(homeEvent);
+                        }
                     }
                 }
             });
         }
 
-        mEventViewPagerAdapter.setData(list);
+        mEventListAdapter.setData(list);
 
         int defaultIndex = 0;
 
         if (defaultEvent == null //
             || HomeEventImageViewPagerAdapter.DEFAULT_EVENT_IMAGE_URL.equalsIgnoreCase(defaultEvent.defaultImageUrl) == false)
         {
-            setEventCountView(defaultIndex, mEventViewPagerAdapter.getCount());
+            setEventCountView(defaultIndex, mEventListAdapter.getRealCount());
         }
 
-        mEventViewPager.setOnPageChangeListener(null);
-        mEventViewPager.setAdapter(mEventViewPagerAdapter);
-        mEventViewPager.setCurrentItem(defaultIndex);
-        mEventViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener()
+        mEventRecyclerView.setAdapter(mEventListAdapter);
+
+        int firstPosition = (mEventListAdapter.getItemCount() / 2);
+        firstPosition = firstPosition + (mEventListAdapter.getRealCount() - (firstPosition % mEventListAdapter.getRealCount()));
+        mEventRecyclerView.scrollToPosition(firstPosition);
+
+        mEventRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener()
         {
             @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels)
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState)
             {
-            }
-
-            @Override
-            public void onPageSelected(int position)
-            {
-                int totalCount = mEventViewPagerAdapter.getCount();
-                setEventCountView(position, totalCount);
-
-                moveNextEventPosition(mEventViewPager, position);
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state)
-            {
-                if (state == DailyLoopViewPager.SCROLL_STATE_DRAGGING)
+                if (newState == RecyclerView.SCROLL_STATE_DRAGGING)
                 {
                     if (mEventHandler != null)
                     {
@@ -710,11 +713,21 @@ public class HomeLayout extends BaseBlurLayout
                     }
                 }
 
-                mSwipeRefreshLayout.setEnabled(DailyLoopViewPager.SCROLL_STATE_IDLE == state);
+                mSwipeRefreshLayout.setEnabled(RecyclerView.SCROLL_STATE_IDLE == newState);
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy)
+            {
+                int totalCount = mEventListAdapter.getRealCount();
+                LinearLayoutManager linearLayoutManager = (LinearLayoutManager) mEventRecyclerView.getLayoutManager();
+
+                setEventCountView(linearLayoutManager.findFirstVisibleItemPosition() % totalCount, totalCount);
+                moveNextEventPosition(recyclerView, linearLayoutManager.findFirstVisibleItemPosition());
             }
         });
 
-        moveNextEventPosition(mEventViewPager, defaultIndex);
+        moveNextEventPosition(mEventRecyclerView, defaultIndex);
     }
 
     void setEventCountView(int pageIndex, int totalCount)
@@ -1157,7 +1170,7 @@ public class HomeLayout extends BaseBlurLayout
         };
     }
 
-    void moveNextEventPosition(DailyLoopViewPager eventViewPager, int currentPosition)
+    void moveNextEventPosition(RecyclerView eventRecyclerView, int currentPosition)
     {
         if (mEventHandler == null)
         {
@@ -1169,7 +1182,7 @@ public class HomeLayout extends BaseBlurLayout
         Message message = new Message();
         message.what = 0;
         message.arg1 = currentPosition;
-        message.obj = eventViewPager;
+        message.obj = eventRecyclerView;
         mEventHandler.sendMessageDelayed(message, EVENT_VIEWPAGER_ANIMATION_DURATION);
     }
 
@@ -1190,13 +1203,13 @@ public class HomeLayout extends BaseBlurLayout
                 return;
             }
 
-            DailyLoopViewPager eventViewPager = (DailyLoopViewPager) msg.obj;
-            if (eventViewPager == null)
+            RecyclerView eventRecyclerView = (RecyclerView) msg.obj;
+            if (eventRecyclerView == null)
             {
                 return;
             }
 
-            eventViewPager.setCurrentItem(msg.arg1 + 1);
+            eventRecyclerView.smoothScrollToPosition(msg.arg1 + 1);
         }
     }
 
@@ -1324,4 +1337,113 @@ public class HomeLayout extends BaseBlurLayout
         }
     };
 
+    class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.SimpleDraweeViewHolder>
+    {
+        private static final String DEFAULT_EVENT_IMAGE_URL = "defaultImageUrl";
+
+        private List<Event> mHomeEventList;
+        private View.OnClickListener mOnClickListener;
+
+        public EventListAdapter(Context context, View.OnClickListener listener)
+        {
+            setData(null);
+
+            mOnClickListener = listener;
+        }
+
+        public void setData(List<Event> list)
+        {
+            if (mHomeEventList == null)
+            {
+                mHomeEventList = new ArrayList<>();
+            }
+
+            mHomeEventList.clear();
+
+            if (list != null && list.size() > 0)
+            {
+                mHomeEventList.addAll(list);
+            }
+        }
+
+        @Override
+        public SimpleDraweeViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
+        {
+            final int width = ScreenUtils.getScreenWidth(mContext);
+            final int height = ScreenUtils.getRatioHeightType16x9(width);
+
+            final SimpleDraweeView simpleDraweeView = new SimpleDraweeView(mContext);
+            ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(width, height);
+            simpleDraweeView.setLayoutParams(layoutParams);
+
+            return new SimpleDraweeViewHolder(simpleDraweeView);
+        }
+
+        @Override
+        public void onBindViewHolder(SimpleDraweeViewHolder holder, int position)
+        {
+            if (mHomeEventList == null || mHomeEventList.size() == 0 || position < 0)
+            {
+                holder.simpleDraweeView.getHierarchy().setActualImageScaleType(ScalingUtils.ScaleType.CENTER_CROP);
+                //            imageView.setTag(imageView.getId(), position);
+                holder.simpleDraweeView.setTag(null);
+                holder.simpleDraweeView.getHierarchy().setPlaceholderImage(R.drawable.layerlist_placeholder);
+
+                return;
+            }
+
+            if (position < getItemCount())
+            {
+                Event homeEvent = mHomeEventList.get(position % getRealCount());
+
+                holder.simpleDraweeView.getHierarchy().setActualImageScaleType(ScalingUtils.ScaleType.CENTER_CROP);
+                //            imageView.setTag(imageView.getId(), position);
+                holder.simpleDraweeView.setTag(homeEvent);
+                holder.simpleDraweeView.getHierarchy().setPlaceholderImage(R.drawable.layerlist_placeholder);
+
+                String url = ScreenUtils.getScreenWidth(mContext) < 1440 ? homeEvent.lowResolutionImageUrl : homeEvent.defaultImageUrl;
+                if (DEFAULT_EVENT_IMAGE_URL.equalsIgnoreCase(url) == true)
+                {
+                    // RemoteConfig 실패등의 상황에서 기본 layerlist_placeholder 만 노출
+                    holder.simpleDraweeView.setImageURI((String) null);
+                } else
+                {
+                    Util.requestImageResize(mContext, holder.simpleDraweeView, url);
+                }
+            } else
+            {
+                Util.restartApp(mContext);
+            }
+        }
+
+        @Override
+        public int getItemCount()
+        {
+            if (getRealCount() <= 1)
+            {
+                return getRealCount();
+            } else
+            {
+                return Integer.MAX_VALUE;
+            }
+        }
+
+        public int getRealCount()
+        {
+            return mHomeEventList.size();
+        }
+
+        class SimpleDraweeViewHolder extends RecyclerView.ViewHolder
+        {
+            SimpleDraweeView simpleDraweeView;
+
+            public SimpleDraweeViewHolder(View itemView)
+            {
+                super(itemView);
+
+                simpleDraweeView = (SimpleDraweeView) itemView;
+                itemView.setOnClickListener(mOnClickListener);
+            }
+        }
+    }
 }
