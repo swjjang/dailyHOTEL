@@ -90,23 +90,15 @@
                         android:textColor="@color/default_text_cc5c5c5"
                         android:textSize="14dp"/>
 
-                    <FrameLayout
+                    <com.daily.base.widget.DailyButton
                         android:id="@+id/nights02TextView"
                         android:layout_width="76dp"
                         android:layout_height="76dp"
-                        android:layout_marginLeft="5dp"
                         android:layout_marginRight="5dp"
-                        android:background="@drawable/ic_stamp_placeholder_02">
-
-                        <com.daily.base.widget.DailyTextView
-                            android:layout_width="76dp"
-                            android:layout_height="76dp"
-                            android:gravity="center"
-                            android:paddingTop="24dp"
-                            android:text="@string/label_stamp_2_nights"
-                            android:textColor="@color/default_text_cc5c5c5"
-                            android:textSize="12dp"/>
-                    </FrameLayout>
+                        android:background="@drawable/ic_stamp_placeholder_01"
+                        android:text="@string/label_stamp_2_nights"
+                        android:textColor="@color/default_text_cc5c5c5"
+                        android:textSize="14dp"/>
 
                     <com.daily.base.widget.DailyButton
                         android:id="@+id/nights03TextView"

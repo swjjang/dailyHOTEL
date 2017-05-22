@@ -1235,7 +1235,7 @@
     <string name="label_stamp_notification_on_setting">혜택 알림 받기 설정하기</string>
     <string name="label_stamp_view_booking_detail">예약내역 보기</string>
     <string name="label_stamp_1_nights">1박</string>
-    <string name="label_stamp_2_nights">쿠폰제공</string>
+    <string name="label_stamp_2_nights">2박</string>
     <string name="label_stamp_3_nights">3박</string>
     <string name="label_stamp_4_nights">4박</string>
     <string name="label_stamp_5_nights">1박무료</string>
