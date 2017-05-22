@@ -27,11 +27,12 @@ public class StayOutboundListActivity extends BaseActivity<StayOutboundListPrese
     static final String INTENT_EXTRA_DATA_NUMBER_OF_ADULTS = "numberOfAdults";
     static final String INTENT_EXTRA_DATA_CHILD_LIST = "childList";
 
-    static final int REQUEST_CODE_STAYOUTBOUND_DETAIL = 10000;
-    static final int REQUEST_CODE_STAYOUTBOUND_CALENDAR = 10001;
-    static final int REQUEST_CODE_STAYOUTBOUND_FILTER = 10002;
-    static final int REQUEST_CODE_STAYOUTBOUND_PERMISSION_MANAGER = 10003;
-    static final int REQUEST_CODE_STAYOUTBOUND_SETTING_LOCATION = 10004;
+    static final int REQUEST_CODE_DETAIL = 10000;
+    static final int REQUEST_CODE_CALENDAR = 10001;
+    static final int REQUEST_CODE_FILTER = 10002;
+    static final int REQUEST_CODE_PERMISSION_MANAGER = 10003;
+    static final int REQUEST_CODE_SETTING_LOCATION = 10004;
+    static final int REQUEST_CODE_PEOPLE = 10005;
 
     /**
      * @param context
@@ -39,7 +40,7 @@ public class StayOutboundListActivity extends BaseActivity<StayOutboundListPrese
      * @param checkInDateTime  ISO-8601
      * @param checkOutDateTime ISO-8601
      * @param numberOfAdults
-     * @param childList
+     * @param childAgeList
      * @return
      */
     public static Intent newInstance(Context context, Suggest suggest, String checkInDateTime, String checkOutDateTime, int numberOfAdults, ArrayList<Integer> childAgeList)

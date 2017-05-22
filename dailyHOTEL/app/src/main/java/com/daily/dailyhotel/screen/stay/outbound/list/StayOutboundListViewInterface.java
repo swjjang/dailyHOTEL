@@ -6,6 +6,7 @@ import android.support.v4.app.FragmentManager;
 
 import com.daily.base.BaseViewInterface;
 import com.daily.dailyhotel.entity.ListItem;
+import com.daily.dailyhotel.entity.People;
 import com.daily.dailyhotel.entity.StayOutbound;
 
 import java.util.List;
@@ -15,6 +16,8 @@ public interface StayOutboundListViewInterface extends BaseViewInterface
     void setToolbarTitle(String title);
 
     void setCalendarText(String calendarText);
+
+    void setPeopleText(String peopleText);
 
     void setStayOutboundList(List<ListItem> listItemList);
 

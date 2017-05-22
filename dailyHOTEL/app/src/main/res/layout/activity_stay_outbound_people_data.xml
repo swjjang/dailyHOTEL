@@ -20,7 +20,7 @@
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
             android:gravity="center_horizontal"
-            android:text="@string/label_person_select_person"
+            android:text="@string/label_people_select_person"
             android:textColor="@color/default_text_c323232"
             android:textSize="17dp"
             dailyFont:style="Medium"/>
@@ -30,16 +30,13 @@
             android:layout_height="36dp"
             android:layout_marginBottom="16dp"
             android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
-            android:gravity="center_vertical"
-            android:paddingLeft="15dp"
-            android:paddingRight="15dp">
+            android:gravity="center_vertical">
 
             <com.daily.base.widget.DailyTextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.3"
-                android:text="@string/label_person_adult"
+                android:text="@string/label_people_adult"
                 android:textColor="@color/default_text_c929292"
                 android:textSize="13dp"/>
 
@@ -75,18 +72,14 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="36dp"
-            android:layout_marginBottom="16dp"
             android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
-            android:gravity="center_vertical"
-            android:paddingLeft="15dp"
-            android:paddingRight="15dp">
+            android:gravity="center_vertical">
 
             <com.daily.base.widget.DailyTextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.3"
-                android:text="@string/label_person_child"
+                android:text="@string/label_people_child"
                 android:textColor="@color/default_text_c929292"
                 android:textSize="13dp"/>
 
@@ -123,20 +116,23 @@
             android:id="@+id/divisionLineView"
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/default_line_ce7e7e7"/>
+            android:layout_marginTop="10dp"
+            android:background="@color/default_line_cf0f0f0"
+            android:visibility="visible"/>
 
         <RelativeLayout
             android:id="@+id/child1Layout"
             android:layout_width="match_parent"
             android:layout_height="36dp"
-            android:paddingLeft="15dp"
-            android:paddingRight="15dp">
+            android:layout_marginTop="10dp"
+            android:paddingLeft="5dp"
+            android:visibility="visible">
 
             <com.daily.base.widget.DailyTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:text="@string/label_person_age_of_child1"
+                android:text="@string/label_people_age_of_child1"
                 android:textColor="@color/default_text_c929292"
                 android:textSize="13dp"/>
 
@@ -150,7 +146,7 @@
 
                 <com.twoheart.dailyhotel.widget.DailyHintSpinner
                     android:id="@+id/child1AgeSpinner"
-                    android:layout_width="95dp"
+                    android:layout_width="82dp"
                     android:layout_height="25dp"
                     android:background="@drawable/payment_ic_amount_time_bg"
                     android:paddingLeft="1px"
@@ -169,14 +165,15 @@
             android:id="@+id/child2Layout"
             android:layout_width="match_parent"
             android:layout_height="36dp"
-            android:paddingLeft="15dp"
-            android:paddingRight="15dp">
+            android:paddingLeft="5dp"
+            android:layout_marginTop="5dp"
+            android:visibility="visible">
 
             <com.daily.base.widget.DailyTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:text="@string/label_person_age_of_child1"
+                android:text="@string/label_people_age_of_child2"
                 android:textColor="@color/default_text_c929292"
                 android:textSize="13dp"/>
 
@@ -190,7 +187,7 @@
 
                 <com.twoheart.dailyhotel.widget.DailyHintSpinner
                     android:id="@+id/child2AgeSpinner"
-                    android:layout_width="95dp"
+                    android:layout_width="82dp"
                     android:layout_height="25dp"
                     android:background="@drawable/payment_ic_amount_time_bg"
                     android:paddingLeft="1px"
@@ -209,14 +206,15 @@
             android:id="@+id/child3Layout"
             android:layout_width="match_parent"
             android:layout_height="36dp"
-            android:paddingLeft="15dp"
-            android:paddingRight="15dp">
+            android:paddingLeft="5dp"
+            android:layout_marginTop="5dp"
+            android:visibility="visible">
 
             <com.daily.base.widget.DailyTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:text="@string/label_person_age_of_child1"
+                android:text="@string/label_people_age_of_child3"
                 android:textColor="@color/default_text_c929292"
                 android:textSize="13dp"/>
 
@@ -230,7 +228,7 @@
 
                 <com.twoheart.dailyhotel.widget.DailyHintSpinner
                     android:id="@+id/child3AgeSpinner"
-                    android:layout_width="95dp"
+                    android:layout_width="82dp"
                     android:layout_height="25dp"
                     android:background="@drawable/payment_ic_amount_time_bg"
                     android:paddingLeft="1px"
@@ -245,22 +243,37 @@
             </LinearLayout>
         </RelativeLayout>
 
-
         <LinearLayout
-            android:id="@+id/oneButtonLayout"
+            android:id="@+id/twoButtonLayout"
             android:layout_width="match_parent"
             android:layout_height="38dp"
-            android:layout_marginTop="8dp"
-            android:gravity="center_horizontal">
+            android:layout_marginTop="24dp">
 
             <com.daily.base.widget.DailyTextView
-                android:id="@+id/confirmTextView"
-                android:layout_width="match_parent"
+                android:id="@+id/negativeTextView"
+                android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:background="@drawable/selector_dialog_button01"
+                android:layout_weight="1"
+                android:background="@drawable/selector_dialog_button_negative"
                 android:gravity="center"
-                android:text="@string/label_person_confirm"
-                android:textColor="@drawable/selector_dialog_text_color01"
+                android:text="@string/dialog_btn_text_cancel"
+                android:textColor="@color/default_text_c323232"
+                android:textSize="14dp"
+                dailyFont:style="Medium"/>
+
+            <View
+                android:layout_width="10dp"
+                android:layout_height="match_parent"/>
+
+            <com.daily.base.widget.DailyTextView
+                android:id="@+id/positiveTextView"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/selector_dialog_button_positive"
+                android:gravity="center"
+                android:text="@string/label_people_confirm"
+                android:textColor="@drawable/selector_dialog_button_text_positive"
                 android:textSize="14dp"
                 dailyFont:style="Medium"/>
         </LinearLayout>

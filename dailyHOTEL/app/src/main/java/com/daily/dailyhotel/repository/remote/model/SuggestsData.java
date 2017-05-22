@@ -1,9 +1,12 @@
 package com.daily.dailyhotel.repository.remote.model;
 
+import android.content.Context;
+
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.dailyhotel.entity.Suggest;
+import com.twoheart.dailyhotel.R;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,41 +34,46 @@ public class SuggestsData
 
     }
 
-    public List<Suggest> getSuggestList()
+    public List<Suggest> getSuggestList(Context context)
     {
         final int SUGGEST_MAX_COUNT = 5;
 
         List<Suggest> list = new ArrayList<>();
 
-        List<Suggest> regionList = getSuggestList("도시/지역", region, SUGGEST_MAX_COUNT);
+        if(context == null)
+        {
+            return list;
+        }
+
+        List<Suggest> regionList = getSuggestList(context.getString(R.string.label_suggest_region), region, SUGGEST_MAX_COUNT);
 
         if (regionList != null)
         {
             list.addAll(regionList);
         }
 
-        List<Suggest> hotelList = getSuggestList("호텔", hotel, SUGGEST_MAX_COUNT);
+        List<Suggest> hotelList = getSuggestList(context.getString(R.string.label_suggest_hotel), hotel, SUGGEST_MAX_COUNT);
 
         if (hotelList != null)
         {
             list.addAll(hotelList);
         }
 
-        List<Suggest> pointList = getSuggestList("주요지점", point, SUGGEST_MAX_COUNT);
+        List<Suggest> pointList = getSuggestList(context.getString(R.string.label_suggest_point), point, SUGGEST_MAX_COUNT);
 
         if (pointList != null)
         {
             list.addAll(pointList);
         }
 
-        List<Suggest> airportList = getSuggestList("공항", airport, SUGGEST_MAX_COUNT);
+        List<Suggest> airportList = getSuggestList(context.getString(R.string.label_suggest_airport), airport, SUGGEST_MAX_COUNT);
 
         if (airportList != null)
         {
             list.addAll(airportList);
         }
 
-        List<Suggest> stationList = getSuggestList("역", station, SUGGEST_MAX_COUNT);
+        List<Suggest> stationList = getSuggestList(context.getString(R.string.label_suggest_station), station, SUGGEST_MAX_COUNT);
 
         if (stationList != null)
         {

@@ -2,11 +2,14 @@ package com.daily.dailyhotel.screen.common.calendar;
 
 import android.support.v4.util.Pair;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.daily.base.BaseActivity;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
+import com.daily.base.util.ScreenUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ActivityCalendarDataBinding;
 import com.twoheart.dailyhotel.util.DailyCalendar;
@@ -171,6 +174,28 @@ public class StayCalendarView extends PlaceCalendarView<StayCalendarView.OnEvent
     public void setConfirmText(String text)
     {
         super.setConfirmText(text);
+    }
+
+    @Override
+    public void setMarginTop(int marginTop)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        final int DEFAULT_HEIGHT = ScreenUtils.dpToPx(getContext(), 92);
+
+        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) getViewDataBinding().exitView.getLayoutParams();
+
+        if (layoutParams == null)
+        {
+            layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, DEFAULT_HEIGHT);
+        }
+
+        layoutParams.height = DEFAULT_HEIGHT + marginTop;
+
+        getViewDataBinding().exitView.setLayoutParams(layoutParams);
     }
 
     @Override

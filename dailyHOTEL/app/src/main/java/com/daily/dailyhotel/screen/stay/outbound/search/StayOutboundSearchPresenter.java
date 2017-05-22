@@ -10,6 +10,7 @@ import com.daily.base.BaseActivity;
 import com.daily.base.BaseAnalyticsInterface;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
+import com.daily.base.util.ScreenUtils;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
 import com.daily.dailyhotel.entity.CommonDateTime;
 import com.daily.dailyhotel.entity.People;
@@ -20,7 +21,7 @@ import com.daily.dailyhotel.parcel.SuggestParcel;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
 import com.daily.dailyhotel.screen.common.calendar.StayCalendarActivity;
 import com.daily.dailyhotel.screen.stay.outbound.list.StayOutboundListActivity;
-import com.daily.dailyhotel.screen.stay.outbound.persons.SelectPeopleActivity;
+import com.daily.dailyhotel.screen.stay.outbound.people.SelectPeopleActivity;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
@@ -76,6 +77,8 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
 
         // 기본 성인 2명, 아동 0명
         onPeople(People.DEFAULT_ADULTS, null);
+
+        getViewInterface().setSearchEnable(false);
 
         setRefresh(true);
     }
@@ -203,14 +206,16 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
                 break;
             }
 
-            case StayOutboundSearchActivity.REQUEST_CODE_SELECT_PERSONS:
+            case StayOutboundSearchActivity.REQUEST_CODE_PEOPLE:
             {
                 if (resultCode == Activity.RESULT_OK && data != null)
                 {
                     if (data.hasExtra(SelectPeopleActivity.INTENT_EXTRA_DATA_NUMBER_OF_ADULTS) == true && data.hasExtra(SelectPeopleActivity.INTENT_EXTRA_DATA_CHILD_LIST) == true)
                     {
-                        mPeople.numberOfAdults = data.getIntExtra(SelectPeopleActivity.INTENT_EXTRA_DATA_NUMBER_OF_ADULTS, People.DEFAULT_ADULTS);
-                        mPeople.setChildAgeList(data.getIntegerArrayListExtra(SelectPeopleActivity.INTENT_EXTRA_DATA_CHILD_LIST));
+                        int numberOfAdults = data.getIntExtra(SelectPeopleActivity.INTENT_EXTRA_DATA_NUMBER_OF_ADULTS, People.DEFAULT_ADULTS);
+                        ArrayList<Integer> arrayList = data.getIntegerArrayListExtra(SelectPeopleActivity.INTENT_EXTRA_DATA_CHILD_LIST);
+
+                        onPeople(numberOfAdults, arrayList);
                     }
                 }
                 break;
@@ -315,7 +320,7 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
             Intent intent = StayCalendarActivity.newInstance(getActivity()//
                 , mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
                 , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
-                , startDateTime, endDateTime, NIGHTS_OF_MAXCOUNT, AnalyticsManager.ValueType.SEARCH, true, true);
+                , startDateTime, endDateTime, NIGHTS_OF_MAXCOUNT, AnalyticsManager.ValueType.SEARCH, true, ScreenUtils.dpToPx(getActivity(), 77), true);
 
             startActivityForResult(intent, StayOutboundSearchActivity.REQUEST_CODE_CALENDAR);
         } catch (Exception e)
@@ -327,7 +332,7 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
     }
 
     @Override
-    public void onPersonsClick()
+    public void onPeopleClick()
     {
         if (lock() == true)
         {
@@ -344,7 +349,7 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
             intent = SelectPeopleActivity.newInstance(getActivity(), mPeople.numberOfAdults, mPeople.getChildAgeList());
         }
 
-        startActivityForResult(intent, StayOutboundSearchActivity.REQUEST_CODE_SELECT_PERSONS);
+        startActivityForResult(intent, StayOutboundSearchActivity.REQUEST_CODE_PEOPLE);
     }
 
     private void setStayBookDefaultDateTime(CommonDateTime commonDateTime)
@@ -481,6 +486,6 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
         mPeople.numberOfAdults = numberOfAdults;
         mPeople.setChildAgeList(childAgeList);
 
-        getViewInterface().setPeople(mPeople);
+        getViewInterface().setPeopleText(mPeople.toString(getActivity()));
     }
 }

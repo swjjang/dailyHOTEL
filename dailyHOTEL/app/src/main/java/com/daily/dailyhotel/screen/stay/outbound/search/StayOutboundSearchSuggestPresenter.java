@@ -182,7 +182,12 @@ public class StayOutboundSearchSuggestPresenter extends BaseExceptionPresenter<S
             return;
         }
 
-        mSuggest = suggest.getClone();
+        if (lock() == true)
+        {
+            return;
+        }
+
+        mSuggest = suggest;
 
         // 검색어에 해당 내용을 넣어준다.
         getViewInterface().setSuggest(suggest.display);

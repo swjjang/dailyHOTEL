@@ -33,7 +33,7 @@ public class SuggestRemoteImpl implements SuggestInterface
             {
                 if (suggestsDataBaseDto.msgCode == 100 && suggestsDataBaseDto.data != null)
                 {
-                    list = suggestsDataBaseDto.data.getSuggestList();
+                    list = suggestsDataBaseDto.data.getSuggestList(mContext);
                 } else
                 {
                     throw new BaseException(suggestsDataBaseDto.msgCode, suggestsDataBaseDto.msg);

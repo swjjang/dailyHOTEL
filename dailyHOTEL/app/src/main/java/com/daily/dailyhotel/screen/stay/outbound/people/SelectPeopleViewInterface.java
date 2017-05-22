@@ -1,4 +1,4 @@
-package com.daily.dailyhotel.screen.stay.outbound.persons;
+package com.daily.dailyhotel.screen.stay.outbound.people;
 
 import com.daily.base.BaseViewInterface;
 import com.daily.dailyhotel.entity.People;

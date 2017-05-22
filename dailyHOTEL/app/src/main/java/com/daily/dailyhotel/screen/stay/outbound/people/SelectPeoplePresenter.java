@@ -1,4 +1,4 @@
-package com.daily.dailyhotel.screen.stay.outbound.persons;
+package com.daily.dailyhotel.screen.stay.outbound.people;
 
 
 import android.content.Intent;
@@ -42,7 +42,7 @@ public class SelectPeoplePresenter extends BaseExceptionPresenter<SelectPeopleAc
     @Override
     public void constructorInitialize(SelectPeopleActivity activity)
     {
-        setContentView(R.layout.activity_stay_outbound_persons_data);
+        setContentView(R.layout.activity_stay_outbound_people_data);
 
         setAnalytics(new SelectPeopleAnalyticsImpl());
 

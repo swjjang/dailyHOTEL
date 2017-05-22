@@ -1,5 +1,9 @@
 package com.daily.dailyhotel.entity;
 
+import android.content.Context;
+
+import com.twoheart.dailyhotel.R;
+
 import java.util.ArrayList;
 
 public class People
@@ -23,5 +27,49 @@ public class People
     public ArrayList<Integer> getChildAgeList()
     {
         return mChildAgeList;
+    }
+
+    public String toString(Context context)
+    {
+        StringBuilder stringBuilder = new StringBuilder();
+
+        if (context == null)
+        {
+            return stringBuilder.toString();
+        }
+
+        stringBuilder.append(context.getString(R.string.label_search_adult_count, numberOfAdults));
+
+        int childCount;
+
+        if (mChildAgeList == null)
+        {
+            childCount = 0;
+        } else
+        {
+            childCount = mChildAgeList.size();
+        }
+
+        stringBuilder.append(", ");
+        stringBuilder.append(context.getString(R.string.label_search_child_count, childCount));
+
+        if (childCount > 0)
+        {
+            StringBuilder childrenAgeStringBuilder = new StringBuilder();
+            for (int childAge : mChildAgeList)
+            {
+                if (childAge == 0)
+                {
+                    childrenAgeStringBuilder.append(context.getString(R.string.label_search_under_of_1_age));
+                } else
+                {
+                    childrenAgeStringBuilder.append(context.getString(R.string.label_search_child_age, childAge));
+                }
+            }
+
+            stringBuilder.append(context.getString(R.string.label_search_children_age, childrenAgeStringBuilder.toString()));
+        }
+
+        return stringBuilder.toString();
     }
 }

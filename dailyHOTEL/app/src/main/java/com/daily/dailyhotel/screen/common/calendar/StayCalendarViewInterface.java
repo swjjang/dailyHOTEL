@@ -30,5 +30,7 @@ public interface StayCalendarViewInterface extends BaseViewInterface
 
     void setConfirmText(String text);
 
+    void setMarginTop(int marginTop);
+
     void reset();
 }

@@ -17,13 +17,14 @@ public class StayCalendarActivity extends BaseActivity<StayCalendarPresenter>
     static final String INTENT_EXTRA_DATA_NIGHTS_OF_MAXCOUNT = "nightsOfMaxCount";
     static final String INTENT_EXTRA_DATA_CALLBYSCREEN = "callByScreen";
     static final String INTENT_EXTRA_DATA_ISSELECTED = "isSelected";
+    static final String INTENT_EXTRA_DATA_MARGIN_TOP = "marginTop";
     static final String INTENT_EXTRA_DATA_ISANIMATION = "isAnimation";
 
     protected PlaceBookingDay mPlaceBookingDay;
 
     public static Intent newInstance(Context context, String checkInDateTime, String checkOutDateTime//
         , String startDateTime, String endDateTime, int nightsOfMaxCount//
-        , String callByScreen, boolean isSelected, boolean isAnimation)
+        , String callByScreen, boolean isSelected, int marginTop, boolean isAnimation)
     {
         Intent intent = new Intent(context, StayCalendarActivity.class);
         intent.putExtra(INTENT_EXTRA_DATA_CHECKIN_DATETIME, checkInDateTime);
@@ -33,6 +34,7 @@ public class StayCalendarActivity extends BaseActivity<StayCalendarPresenter>
         intent.putExtra(INTENT_EXTRA_DATA_NIGHTS_OF_MAXCOUNT, nightsOfMaxCount);
         intent.putExtra(INTENT_EXTRA_DATA_CALLBYSCREEN, callByScreen);
         intent.putExtra(INTENT_EXTRA_DATA_ISSELECTED, isSelected);
+        intent.putExtra(INTENT_EXTRA_DATA_MARGIN_TOP, marginTop);
         intent.putExtra(INTENT_EXTRA_DATA_ISANIMATION, isAnimation);
 
         return intent;

@@ -168,6 +168,17 @@ public class StayOutboundListView extends BaseView<StayOutboundListView.OnEventL
     }
 
     @Override
+    public void setPeopleText(String peopleText)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        getViewDataBinding().peopleTextView.setText(peopleText);
+    }
+
+    @Override
     public void setStayOutboundList(List<ListItem> listItemList)
     {
         if (getViewDataBinding() == null)

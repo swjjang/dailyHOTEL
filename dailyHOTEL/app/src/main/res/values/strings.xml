@@ -1276,15 +1276,21 @@
     <string name="label_search_child_age">%1$d세</string>
     <string name="label_search_under_of_1_age">1세 미만</string>
 
-    <string name="label_person_select_person">투숙 인원 선택</string>
-    <string name="label_person_adult">성인</string>
-    <string name="label_person_child">아동</string>
-    <string name="label_person_age_of_child1">아동1의 나이</string>
-    <string name="label_person_age_of_child2">아동2의 나이</string>
-    <string name="label_person_age_of_child3">아동3의 나이</string>
-    <string name="label_person_confirm">선택 완료</string>
-    <string name="label_person_number_of_person">%1$d 명</string>
-    <string name="label_person_under_of_1_age">만 1세 미만</string>
+    <string name="label_suggest_region">도시/지역</string>
+    <string name="label_suggest_hotel">호텔</string>
+    <string name="label_suggest_point">주요지점</string>
+    <string name="label_suggest_station">역</string>
+    <string name="label_suggest_airport">공항</string>
+
+    <string name="label_people_select_person">투숙 인원 선택</string>
+    <string name="label_people_adult">성인</string>
+    <string name="label_people_child">아동</string>
+    <string name="label_people_age_of_child1">아동1의 나이</string>
+    <string name="label_people_age_of_child2">아동2의 나이</string>
+    <string name="label_people_age_of_child3">아동3의 나이</string>
+    <string name="label_people_confirm">선택완료</string>
+    <string name="label_people_number_of_person">%1$d 명</string>
+    <string name="label_people_under_of_1_age">만 1세 미만</string>
 
 
     <!-- Stay Out Bound List -->

@@ -23,6 +23,7 @@ public class Suggest
     {
         this.id = id;
         this.name = name;
+        this.display = name;
     }
 
     public Suggest getClone()

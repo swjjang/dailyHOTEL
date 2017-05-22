@@ -56,6 +56,7 @@ public class StayOutboundSearchSuggestView extends BaseView<StayOutboundSearchSu
             return;
         }
 
+        viewDataBinding.backImageView.setOnClickListener(this);
         viewDataBinding.keywordEditText.addTextChangedListener(mTextWatcher);
         viewDataBinding.deleteImageView.setVisibility(View.INVISIBLE);
         viewDataBinding.deleteImageView.setOnClickListener(this);
@@ -141,7 +142,12 @@ public class StayOutboundSearchSuggestView extends BaseView<StayOutboundSearchSu
                 @Override
                 public void onClick(View v)
                 {
+                    Suggest suggest = (Suggest) v.getTag();
 
+                    if (suggest != null)
+                    {
+                        getEventListener().onSuggestClick(suggest);
+                    }
                 }
             });
 
@@ -193,6 +199,10 @@ public class StayOutboundSearchSuggestView extends BaseView<StayOutboundSearchSu
     {
         switch (v.getId())
         {
+            case R.id.backImageView:
+                getEventListener().onBackClick();
+                break;
+
             // 자동 완성 목록에서 특정 텍스트를 클릭하는 경우
             case R.id.textView:
                 Object object = v.getTag();
@@ -446,12 +456,14 @@ public class StayOutboundSearchSuggestView extends BaseView<StayOutboundSearchSu
                 holder.dataBinding.titleTextView.setVisibility(View.VISIBLE);
             }
 
-            holder.dataBinding.titleTextView.setText(suggest.name);
+            holder.dataBinding.titleTextView.setText(suggest.display);
         }
 
         private void onBindViewHolder(EntryViewHolder holder, ListItem item, int position)
         {
             Suggest suggest = item.getItem();
+
+            holder.itemView.getRootView().setTag(suggest);
 
             SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(suggest.display);
 

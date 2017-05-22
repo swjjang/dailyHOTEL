@@ -45,6 +45,7 @@ public class StayCalendarPresenter extends PlaceCalendarPresenter<StayCalendarAc
 
     private String mCallByScreen;
     private boolean mIsSelected;
+    private int mMarginTop;
     private boolean mIsAnimation;
 
     public interface StayCalendarPresenterAnalyticsInterface extends BaseAnalyticsInterface
@@ -102,6 +103,7 @@ public class StayCalendarPresenter extends PlaceCalendarPresenter<StayCalendarAc
 
             mCallByScreen = intent.getStringExtra(StayCalendarActivity.INTENT_EXTRA_DATA_CALLBYSCREEN);
             mIsSelected = intent.getBooleanExtra(StayCalendarActivity.INTENT_EXTRA_DATA_ISSELECTED, true);
+            mMarginTop = intent.getIntExtra(StayCalendarActivity.INTENT_EXTRA_DATA_MARGIN_TOP, 0);
             mIsAnimation = intent.getBooleanExtra(StayCalendarActivity.INTENT_EXTRA_DATA_ISANIMATION, false);
 
         } catch (Exception e)
@@ -118,6 +120,8 @@ public class StayCalendarPresenter extends PlaceCalendarPresenter<StayCalendarAc
     public void onPostCreate()
     {
         screenLock(false);
+
+        getViewInterface().setMarginTop(mMarginTop);
 
         addCompositeDisposable(Observable.defer(new Callable<ObservableSource<String>>()
         {

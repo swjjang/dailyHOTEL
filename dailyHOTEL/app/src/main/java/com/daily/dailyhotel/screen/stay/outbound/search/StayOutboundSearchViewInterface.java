@@ -11,5 +11,5 @@ public interface StayOutboundSearchViewInterface extends BaseViewInterface
 
     void setSearchEnable(boolean enable);
 
-    void setPeople(People people);
+    void setPeopleText(String peopleText);
 }

@@ -5,12 +5,10 @@ import android.view.View;
 import com.daily.base.BaseActivity;
 import com.daily.base.BaseView;
 import com.daily.base.OnBaseEventListener;
-import com.daily.dailyhotel.entity.People;
+import com.daily.base.util.DailyTextUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ActivityStayOutboundSearchDataBinding;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
-
-import java.util.ArrayList;
 
 public class StayOutboundSearchView extends BaseView<StayOutboundSearchView.OnEventListener, ActivityStayOutboundSearchDataBinding> implements StayOutboundSearchViewInterface, View.OnClickListener
 {
@@ -24,7 +22,7 @@ public class StayOutboundSearchView extends BaseView<StayOutboundSearchView.OnEv
 
         void onCalendarClick();
 
-        void onPersonsClick();
+        void onPeopleClick();
     }
 
     public StayOutboundSearchView(BaseActivity baseActivity, StayOutboundSearchView.OnEventListener listener)
@@ -45,6 +43,7 @@ public class StayOutboundSearchView extends BaseView<StayOutboundSearchView.OnEv
         viewDataBinding.suggestTextView.setOnClickListener(this);
         viewDataBinding.calendarTextView.setOnClickListener(this);
         viewDataBinding.peopleTextView.setOnClickListener(this);
+        viewDataBinding.doSearchView.setOnClickListener(this);
     }
 
     @Override
@@ -92,48 +91,14 @@ public class StayOutboundSearchView extends BaseView<StayOutboundSearchView.OnEv
     }
 
     @Override
-    public void setPeople(People people)
+    public void setPeopleText(String peopleText)
     {
-        if (getViewDataBinding() == null)
+        if (getViewDataBinding() == null || DailyTextUtils.isTextEmpty(peopleText) == true)
         {
             return;
         }
 
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(getString(R.string.label_search_adult_count, people.numberOfAdults));
-
-        ArrayList<Integer> childAgeList = people.getChildAgeList();
-        int childCount;
-
-        if (childAgeList == null)
-        {
-            childCount = 0;
-        } else
-        {
-            childCount = childAgeList.size();
-        }
-
-        stringBuilder.append(", ");
-        stringBuilder.append(getString(R.string.label_search_child_count, childCount));
-
-        if (childCount > 0)
-        {
-            StringBuilder childrenAgeStringBuilder = new StringBuilder();
-            for (int childAge : childAgeList)
-            {
-                if (childAge == 0)
-                {
-                    childrenAgeStringBuilder.append(getString(R.string.label_search_under_of_1_age));
-                } else
-                {
-                    childrenAgeStringBuilder.append(getString(R.string.label_search_child_age, childAge));
-                }
-            }
-
-            stringBuilder.append(getString(R.string.label_search_children_age, childrenAgeStringBuilder.toString()));
-        }
-
-        getViewDataBinding().peopleTextView.setText(stringBuilder.toString());
+        getViewDataBinding().peopleTextView.setText(peopleText);
     }
 
     @Override
@@ -150,7 +115,7 @@ public class StayOutboundSearchView extends BaseView<StayOutboundSearchView.OnEv
                 break;
 
             case R.id.peopleTextView:
-                getEventListener().onPersonsClick();
+                getEventListener().onPeopleClick();
                 break;
 
             // 검색 하기

@@ -32,6 +32,7 @@ import com.daily.dailyhotel.repository.remote.StayOutboundRemoteImpl;
 import com.daily.dailyhotel.screen.common.calendar.StayCalendarActivity;
 import com.daily.dailyhotel.screen.stay.outbound.detail.StayOutboundDetailActivity;
 import com.daily.dailyhotel.screen.stay.outbound.filter.StayOutboundFilterActivity;
+import com.daily.dailyhotel.screen.stay.outbound.people.SelectPeopleActivity;
 import com.daily.dailyhotel.util.DailyLocationExFactory;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.screen.common.PermissionManagerActivity;
@@ -116,7 +117,8 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
         mStayOutboundRemoteImpl = new StayOutboundRemoteImpl(activity);
         mCommonRemoteImpl = new CommonRemoteImpl(activity);
 
-        mPeople = new People(People.DEFAULT_ADULTS, null);
+        // 기본 성인 2명, 아동 0명
+        onPeople(People.DEFAULT_ADULTS, null);
 
         onFilter(null, -1);
 
@@ -162,8 +164,10 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
                 return false;
             }
 
-            mPeople.numberOfAdults = intent.getIntExtra(StayOutboundListActivity.INTENT_EXTRA_DATA_NUMBER_OF_ADULTS, 2);
-            mPeople.setChildAgeList(intent.getIntegerArrayListExtra(StayOutboundListActivity.INTENT_EXTRA_DATA_CHILD_LIST));
+            int numberOfAdults = intent.getIntExtra(StayOutboundListActivity.INTENT_EXTRA_DATA_NUMBER_OF_ADULTS, 2);
+            ArrayList<Integer> childAgeList = intent.getIntegerArrayListExtra(StayOutboundListActivity.INTENT_EXTRA_DATA_CHILD_LIST);
+
+            onPeople(numberOfAdults, childAgeList);
 
         } else if (intent.hasExtra(StayOutboundListActivity.INTENT_EXTRA_DATA_KEYWORD) == true)
         {
@@ -209,7 +213,8 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
             getViewInterface().setToolbarTitle(mSuggest.display);
         }
 
-        setCalendarText(mStayBookDateTime);
+        onStayBookDateTime(mStayBookDateTime);
+        onPeople(mPeople);
     }
 
     @Override
@@ -219,8 +224,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
 
         if (isRefresh() == true)
         {
-            clearCache();
-            onRefresh(true);
+            onRefreshAll(true);
         }
     }
 
@@ -294,7 +298,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
 
         switch (requestCode)
         {
-            case StayOutboundListActivity.REQUEST_CODE_STAYOUTBOUND_CALENDAR:
+            case StayOutboundListActivity.REQUEST_CODE_CALENDAR:
             {
                 if (resultCode == Activity.RESULT_OK && data != null)
                 {
@@ -315,7 +319,22 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
                 break;
             }
 
-            case StayOutboundListActivity.REQUEST_CODE_STAYOUTBOUND_FILTER:
+            case StayOutboundListActivity.REQUEST_CODE_PEOPLE:
+            {
+                if (resultCode == Activity.RESULT_OK && data != null)
+                {
+                    if (data.hasExtra(SelectPeopleActivity.INTENT_EXTRA_DATA_NUMBER_OF_ADULTS) == true && data.hasExtra(SelectPeopleActivity.INTENT_EXTRA_DATA_CHILD_LIST) == true)
+                    {
+                        int numberOfAdults = data.getIntExtra(SelectPeopleActivity.INTENT_EXTRA_DATA_NUMBER_OF_ADULTS, People.DEFAULT_ADULTS);
+                        ArrayList<Integer> childAgeList = data.getIntegerArrayListExtra(SelectPeopleActivity.INTENT_EXTRA_DATA_CHILD_LIST);
+
+                        onPeople(numberOfAdults, childAgeList);
+                    }
+                }
+                break;
+            }
+
+            case StayOutboundListActivity.REQUEST_CODE_FILTER:
             {
                 if (resultCode == Activity.RESULT_OK && data != null)
                 {
@@ -362,7 +381,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
                 break;
             }
 
-            case StayOutboundListActivity.REQUEST_CODE_STAYOUTBOUND_PERMISSION_MANAGER:
+            case StayOutboundListActivity.REQUEST_CODE_PERMISSION_MANAGER:
             {
                 switch (resultCode)
                 {
@@ -376,7 +395,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
                 break;
             }
 
-            case StayOutboundListActivity.REQUEST_CODE_STAYOUTBOUND_SETTING_LOCATION:
+            case StayOutboundListActivity.REQUEST_CODE_SETTING_LOCATION:
                 onMyLocationClick();
                 break;
         }
@@ -466,9 +485,9 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
             Intent intent = StayCalendarActivity.newInstance(getActivity()//
                 , mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
                 , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
-                , startDateTime, endDateTime, NIGHTS_OF_MAXCOUNT, AnalyticsManager.ValueType.SEARCH, true, true);
+                , startDateTime, endDateTime, NIGHTS_OF_MAXCOUNT, AnalyticsManager.ValueType.SEARCH, true, 0, true);
 
-            startActivityForResult(intent, StayOutboundListActivity.REQUEST_CODE_STAYOUTBOUND_CALENDAR);
+            startActivityForResult(intent, StayOutboundListActivity.REQUEST_CODE_CALENDAR);
         } catch (Exception e)
         {
             ExLog.e(e.toString());
@@ -486,7 +505,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
         }
 
         Intent intent = StayOutboundFilterActivity.newInstance(getActivity(), mStayOutboundFilters);
-        startActivityForResult(intent, StayOutboundListActivity.REQUEST_CODE_STAYOUTBOUND_FILTER);
+        startActivityForResult(intent, StayOutboundListActivity.REQUEST_CODE_FILTER);
     }
 
     @Override
@@ -550,14 +569,14 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
                 , stayOutbound.name, imageUrl//
                 , mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
                 , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
-                , mPeople.numberOfAdults, mPeople.getChildAgeList(), false), StayOutboundListActivity.REQUEST_CODE_STAYOUTBOUND_DETAIL);
+                , mPeople.numberOfAdults, mPeople.getChildAgeList(), false), StayOutboundListActivity.REQUEST_CODE_DETAIL);
         } else
         {
             startActivityForResult(StayOutboundDetailActivity.newInstance(getActivity(), stayOutbound.index//
                 , stayOutbound.name, imageUrl//
                 , mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
                 , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
-                , mPeople.numberOfAdults, mPeople.getChildAgeList(), false), StayOutboundListActivity.REQUEST_CODE_STAYOUTBOUND_DETAIL);
+                , mPeople.numberOfAdults, mPeople.getChildAgeList(), false), StayOutboundListActivity.REQUEST_CODE_DETAIL);
         }
     }
 
@@ -724,12 +743,13 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
             {
                 List<ListItem> listItemList = new ArrayList<>();
 
-                stayOutbounds.getStayOutbound().forEach((stayOutbound) -> listItemList.add(new ListItem(ListItem.TYPE_ENTRY, stayOutbound)));
+                // Android 에서는 forEach를 사용하면 런타임시에 문제가 발생할수 있음.
+                //                stayOutbounds.getStayOutbound().forEach((stayOutbound) -> listItemList.add(new ListItem(ListItem.TYPE_ENTRY, stayOutbound)));
 
-                //                for (StayOutbound stayOutbound : stayOutbounds.getStayOutbound())
-                //                {
-                //                    listItemList.add(new ListItem(ListItem.TYPE_ENTRY, stayOutbound));
-                //                }
+                for (StayOutbound stayOutbound : stayOutbounds.getStayOutbound())
+                {
+                    listItemList.add(new ListItem(ListItem.TYPE_ENTRY, stayOutbound));
+                }
 
                 if (listItemList.size() > 0)
                 {
@@ -763,24 +783,6 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
         }));
     }
 
-    private void setCalendarText(StayBookDateTime stayBookDateTime)
-    {
-        if (stayBookDateTime == null)
-        {
-            return;
-        }
-
-        try
-        {
-            getViewInterface().setCalendarText(String.format(Locale.KOREA, "%s - %s, %d박"//
-                , stayBookDateTime.getCheckInDateTime("yyyy.MM.dd(EEE)")//
-                , stayBookDateTime.getCheckOutDateTime("yyyy.MM.dd(EEE)"), stayBookDateTime.getNights()));
-        } catch (Exception e)
-        {
-            ExLog.e(e.toString());
-        }
-    }
-
     private void onCalendarDateTime(String checkInDateTime, String checkOutDateTime)
     {
         if (DailyTextUtils.isTextEmpty(checkInDateTime, checkOutDateTime) == true)
@@ -790,6 +792,29 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
 
         setStayBookDateTime(checkInDateTime, checkOutDateTime);
         onStayBookDateTime(mStayBookDateTime);
+    }
+
+    private void onPeople(People people)
+    {
+        if (mPeople == null)
+        {
+            mPeople = new People(People.DEFAULT_ADULTS, null);
+        }
+
+        getViewInterface().setPeopleText(mPeople.toString(getActivity()));
+    }
+
+    private void onPeople(int numberOfAdults, ArrayList<Integer> childAgeList)
+    {
+        if (mPeople == null)
+        {
+            mPeople = new People(People.DEFAULT_ADULTS, null);
+        }
+
+        mPeople.numberOfAdults = numberOfAdults;
+        mPeople.setChildAgeList(childAgeList);
+
+        onPeople(mPeople);
     }
 
     private void onFilter(StayOutboundFilters.SortType sortType, int rating)
@@ -968,7 +993,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
 
                         mDailyLocationExFactory.stopLocationMeasure();
 
-                        if(location == null)
+                        if (location == null)
                         {
                             observer.onError(new NullPointerException());
                         } else
@@ -986,11 +1011,11 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
             {
                 unLockAll();
 
-                if(throwable instanceof PermissionException)
+                if (throwable instanceof PermissionException)
                 {
                     Intent intent = PermissionManagerActivity.newInstance(getActivity(), PermissionManagerActivity.PermissionType.ACCESS_FINE_LOCATION);
-                    startActivityForResult(intent, StayOutboundListActivity.REQUEST_CODE_STAYOUTBOUND_PERMISSION_MANAGER);
-                } else if(throwable instanceof ProviderException)
+                    startActivityForResult(intent, StayOutboundListActivity.REQUEST_CODE_PERMISSION_MANAGER);
+                } else if (throwable instanceof ProviderException)
                 {
                     // 현재 GPS 설정이 꺼져있습니다 설정에서 바꾸어 주세요.
                     mDailyLocationExFactory.stopLocationMeasure();
@@ -1001,7 +1026,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
                         public void onClick(View v)
                         {
                             Intent intent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                            startActivityForResult(intent, StayOutboundListActivity.REQUEST_CODE_STAYOUTBOUND_SETTING_LOCATION);
+                            startActivityForResult(intent, StayOutboundListActivity.REQUEST_CODE_SETTING_LOCATION);
                         }
                     };
 
