@@ -3,9 +3,10 @@ package com.twoheart.dailyhotel.screen.home.category.nearby;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Category;
 import com.twoheart.dailyhotel.model.PlaceCuration;
+import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.Stay;
-import com.twoheart.dailyhotel.model.StayCategoryNearByParams;
 import com.twoheart.dailyhotel.model.StayCategoryNearByCuration;
+import com.twoheart.dailyhotel.model.StayCategoryNearByParams;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.screen.hotel.list.StayListFragment;
 import com.twoheart.dailyhotel.screen.hotel.list.StayListLayout;
@@ -81,6 +82,76 @@ public class StayCategoryNearByListFragment extends StayListFragment
 
         StayCategoryNearByParams params = (StayCategoryNearByParams) mStayCuration.toPlaceParams(page, PAGENATION_LIST_SIZE, true);
         ((StayCategoryNearByListNetworkController) mNetworkController).requestStaySearchList(params);
+    }
+
+    @Override
+    protected void onStayList(ArrayList<Stay> list, int page, boolean hasSection)
+    {
+        if (isFinishing() == true)
+        {
+            unLockUI();
+            return;
+        }
+
+        // 페이지가 전체데이터 이거나 첫페이지 이면 스크롤 탑
+        if (page <= 1)
+        {
+            mPlaceCount = 0;
+            mPlaceListLayout.clearList();
+        }
+
+        int listSize = list == null ? 0 : list.size();
+        if (listSize > 0)
+        {
+            mLoadMorePageIndex = page;
+            mIsLoadMoreFlag = true;
+        } else
+        {
+            mIsLoadMoreFlag = false;
+        }
+
+        mPlaceCount += listSize;
+
+        SortType sortType = mStayCuration.getCurationOption().getSortType();
+
+        ArrayList<PlaceViewItem> placeViewItems = makePlaceList(list, sortType, hasSection);
+
+        switch (mViewType)
+        {
+            case LIST:
+            {
+                mPlaceListLayout.addResultList(getChildFragmentManager(), mViewType, placeViewItems, sortType, mStayCuration.getStayBookingDay());
+
+                int size = mPlaceListLayout.getItemCount();
+                if (size == 0)
+                {
+                    setVisibility(ViewType.GONE, true);
+                }
+
+                mEventListener.onShowActivityEmptyView(size == 0);
+                break;
+            }
+
+            case MAP:
+            {
+                mPlaceListLayout.setList(getChildFragmentManager(), mViewType, placeViewItems, sortType, mStayCuration.getStayBookingDay());
+
+                int mapSize = mPlaceListLayout.getMapItemSize();
+                if (mapSize == 0)
+                {
+                    setVisibility(ViewType.GONE, true);
+                }
+
+                mEventListener.onShowActivityEmptyView(mapSize == 0);
+                break;
+            }
+
+            default:
+                break;
+        }
+
+        unLockUI();
+        mPlaceListLayout.setSwipeRefreshing(false);
     }
 
     private StayCategoryNearByListNetworkController.OnNetworkControllerListener onNetworkControllerListener = new StayCategoryNearByListNetworkController.OnNetworkControllerListener()

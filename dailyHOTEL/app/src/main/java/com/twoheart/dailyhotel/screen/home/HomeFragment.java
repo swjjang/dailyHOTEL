@@ -160,6 +160,8 @@ public class HomeFragment extends BaseMenuNavigationFragment
         if (mHomeLayout != null && mHomeLayout.getBlurVisibility() == true)
         {
             mHomeLayout.setBlurVisibility(mBaseActivity, false);
+
+            mHomeLayout.resumeNextEventPosition();
         } else
         {
             refreshList(true);
@@ -174,6 +176,11 @@ public class HomeFragment extends BaseMenuNavigationFragment
         super.onPause();
 
         mDontReload = true;
+
+        if (mHomeLayout != null)
+        {
+            mHomeLayout.clearNextEventPosition();
+        }
     }
 
     @Override
@@ -823,6 +830,11 @@ public class HomeFragment extends BaseMenuNavigationFragment
         if (mDontReload == true)
         {
             mDontReload = false;
+
+            if (mHomeLayout != null)
+            {
+                mHomeLayout.resumeNextEventPosition();
+            }
         } else
         {
             requestAllData(isShowLockUi);

@@ -14,7 +14,7 @@ import java.util.Map;
 /**
  * Created by android_sam on 2016. 7. 28..
  */
-public class StayCategoryNearByParams extends StayParams
+public class StayCategoryNearByParams extends StayCategoryParams
 {
     private String term;
     private double radius;
@@ -154,16 +154,6 @@ public class StayCategoryNearByParams extends StayParams
 
         //        ExLog.d("params : " + hashMap.toString());
         return hashMap;
-    }
-
-    public String getCategoryCode()
-    {
-        if (category != null && Category.ALL.code.equalsIgnoreCase(category.code) == false)
-        {
-            return category.code;
-        }
-
-        return null;
     }
 
     @Override

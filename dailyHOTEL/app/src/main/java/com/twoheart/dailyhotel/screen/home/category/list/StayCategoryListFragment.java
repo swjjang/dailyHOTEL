@@ -2,7 +2,6 @@ package com.twoheart.dailyhotel.screen.home.category.list;
 
 import com.daily.base.util.DailyTextUtils;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.Category;
 import com.twoheart.dailyhotel.model.Place;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.Province;
@@ -208,11 +207,7 @@ public class StayCategoryListFragment extends StayListFragment
                     setVisibility(ViewType.GONE, true);
                 }
 
-                Category category = mStayCuration.getCategory();
-                if (Category.ALL.code.equalsIgnoreCase(category.code))
-                {
-                    mEventListener.onShowActivityEmptyView(size == 0);
-                }
+                mEventListener.onShowActivityEmptyView(size == 0);
                 break;
             }
 
@@ -226,11 +221,7 @@ public class StayCategoryListFragment extends StayListFragment
                     setVisibility(ViewType.GONE, true);
                 }
 
-                Category category = mStayCuration.getCategory();
-                if (Category.ALL.code.equalsIgnoreCase(category.code))
-                {
-                    mEventListener.onShowActivityEmptyView(mapSize == 0);
-                }
+                mEventListener.onShowActivityEmptyView(mapSize == 0);
                 break;
             }
 
