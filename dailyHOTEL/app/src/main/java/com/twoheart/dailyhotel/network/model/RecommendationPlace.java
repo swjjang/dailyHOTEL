@@ -48,8 +48,14 @@ public abstract class RecommendationPlace
     @JsonField(name = "truevr")
     public boolean truevr;
 
+    @JsonField(name = "stickerIdx")
+    public Integer stickerIdx;
+
     @JsonIgnore
     public String imageUrl;
+
+    @JsonIgnore
+    public String stickerUrl;
 
     @JsonIgnore
     public int entryPosition;

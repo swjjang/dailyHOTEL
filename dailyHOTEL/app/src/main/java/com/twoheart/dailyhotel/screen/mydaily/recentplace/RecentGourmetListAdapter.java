@@ -2,6 +2,8 @@ package com.twoheart.dailyhotel.screen.mydaily.recentplace;
 
 import android.content.Context;
 import android.graphics.Paint;
+import android.graphics.drawable.Animatable;
+import android.net.Uri;
 import android.os.Vibrator;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -12,6 +14,10 @@ import android.widget.TextView;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ScreenUtils;
 import com.daily.base.util.VersionUtils;
+import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.drawee.controller.BaseControllerListener;
+import com.facebook.drawee.interfaces.DraweeController;
+import com.facebook.imagepipeline.image.ImageInfo;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Gourmet;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
@@ -168,6 +174,31 @@ public class RecentGourmetListAdapter extends RecentPlacesListAdapter
             holder.gradeView.setText(displayCategory);
         }
 
+        // 스티커
+        if (DailyTextUtils.isTextEmpty(gourmet.stickerUrl) == false)
+        {
+            holder.stickerSimpleDraweeView.setVisibility(View.VISIBLE);
+
+            DraweeController controller = Fresco.newDraweeControllerBuilder().setControllerListener(new BaseControllerListener<ImageInfo>()
+            {
+                @Override
+                public void onFinalImageSet(String id, ImageInfo imageInfo, Animatable animatable)
+                {
+                    ViewGroup.LayoutParams layoutParams = holder.stickerSimpleDraweeView.getLayoutParams();
+
+                    layoutParams.width = imageInfo.getWidth();
+                    layoutParams.height = imageInfo.getHeight();
+
+                    holder.stickerSimpleDraweeView.setLayoutParams(layoutParams);
+                }
+            }).setUri(Uri.parse(gourmet.stickerUrl)).build();
+
+            holder.stickerSimpleDraweeView.setController(controller);
+        } else
+        {
+            holder.stickerSimpleDraweeView.setVisibility(View.GONE);
+        }
+
         Util.requestImageResize(mContext, holder.gourmetImageView, gourmet.imageUrl);
 
         // SOLD OUT 표시
@@ -261,6 +292,7 @@ public class RecentGourmetListAdapter extends RecentPlacesListAdapter
     {
         View gradientView;
         com.facebook.drawee.view.SimpleDraweeView gourmetImageView;
+        com.facebook.drawee.view.SimpleDraweeView stickerSimpleDraweeView;
         TextView nameView;
         TextView priceView;
         TextView discountView;
@@ -287,6 +319,7 @@ public class RecentGourmetListAdapter extends RecentPlacesListAdapter
             dBenefitTextView = (TextView) dBenefitLayout.findViewById(R.id.dBenefitTextView);
             gradientView = itemView.findViewById(R.id.gradientView);
             gourmetImageView = (com.facebook.drawee.view.SimpleDraweeView) itemView.findViewById(R.id.imageView);
+            stickerSimpleDraweeView = (com.facebook.drawee.view.SimpleDraweeView) itemView.findViewById(R.id.stickerSimpleDraweeView);
             nameView = (TextView) itemView.findViewById(R.id.nameTextView);
             priceView = (TextView) itemView.findViewById(R.id.priceTextView);
             satisfactionView = (TextView) itemView.findViewById(R.id.satisfactionView);

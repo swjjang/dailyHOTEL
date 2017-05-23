@@ -127,7 +127,7 @@ public class StampLayout extends BaseLayout implements View.OnClickListener
     public void setNights(int nights)
     {
         DailyButton nights01TextView = (DailyButton) mRootView.findViewById(R.id.nights01TextView);
-        FrameLayout nights02TextView = (FrameLayout) mRootView.findViewById(R.id.nights02TextView);
+        DailyButton nights02TextView = (DailyButton) mRootView.findViewById(R.id.nights02TextView);
         DailyButton nights03TextView = (DailyButton) mRootView.findViewById(R.id.nights03TextView);
         DailyButton nights04TextView = (DailyButton) mRootView.findViewById(R.id.nights04TextView);
         FrameLayout nights05TextView = (FrameLayout) mRootView.findViewById(R.id.nights05TextView);
@@ -140,8 +140,8 @@ public class StampLayout extends BaseLayout implements View.OnClickListener
 
         if (nights >= 2)
         {
-            nights02TextView.removeAllViews();
             nights02TextView.setBackgroundResource(R.drawable.ic_stamp_achieved_02);
+            nights01TextView.setText(null);
         }
 
         if (nights >= 3)

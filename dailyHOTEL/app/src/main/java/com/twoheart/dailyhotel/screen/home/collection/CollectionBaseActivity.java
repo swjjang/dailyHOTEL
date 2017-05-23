@@ -23,6 +23,7 @@ import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.network.dto.BaseDto;
 import com.twoheart.dailyhotel.network.model.Recommendation;
 import com.twoheart.dailyhotel.network.model.RecommendationPlace;
+import com.twoheart.dailyhotel.network.model.Sticker;
 import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.DailyCalendar;
@@ -75,7 +76,7 @@ public abstract class CollectionBaseActivity extends BaseActivity
 
     protected abstract String getSectionTitle(int count);
 
-    protected abstract ArrayList<PlaceViewItem> makePlaceList(String imageBaseUrl, List<? extends RecommendationPlace> placeList);
+    protected abstract ArrayList<PlaceViewItem> makePlaceList(String imageBaseUrl, List<? extends RecommendationPlace> placeList, List<Sticker> stickerList);
 
     protected abstract void onPlaceDetailClickByLongPress(View view, PlaceViewItem placeViewItem, int listCount);
 
@@ -334,7 +335,7 @@ public abstract class CollectionBaseActivity extends BaseActivity
         requestRecommendationPlaceList(mPlaceBookingDay);
     }
 
-    protected void onPlaceList(String imageBaseUrl, Recommendation recommendation, ArrayList<? extends RecommendationPlace> list)
+    protected void onPlaceList(String imageBaseUrl, Recommendation recommendation, ArrayList<? extends RecommendationPlace> list, List<Sticker> stickerList)
     {
         if (isFinishing() == true)
         {
@@ -360,7 +361,7 @@ public abstract class CollectionBaseActivity extends BaseActivity
         {
             mCollectionBaseLayout.setData(null, mPlaceBookingDay);
 
-            ArrayList<PlaceViewItem> placeViewItems = makePlaceList(imageBaseUrl, null);
+            ArrayList<PlaceViewItem> placeViewItems = makePlaceList(imageBaseUrl, null, stickerList);
 
             mCollectionBaseLayout.setData(placeViewItems, mPlaceBookingDay);
 
@@ -374,7 +375,7 @@ public abstract class CollectionBaseActivity extends BaseActivity
             });
         } else
         {
-            ArrayList<PlaceViewItem> placeViewItems = makePlaceList(imageBaseUrl, list);
+            ArrayList<PlaceViewItem> placeViewItems = makePlaceList(imageBaseUrl, list, stickerList);
 
             mCollectionBaseLayout.setData(placeViewItems, mPlaceBookingDay);
 
