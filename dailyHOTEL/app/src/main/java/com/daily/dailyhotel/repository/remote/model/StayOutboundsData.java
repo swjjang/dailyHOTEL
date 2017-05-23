@@ -15,7 +15,7 @@ public class StayOutboundsData
     public int hotelId;
 
     @JsonField(name = "dailyHotels")
-    public List<StayOutboundData> dailyHotels;
+    public List<StayOutboundData> stayOutboundDataList;
 
     @JsonField(name = "cacheKey")
     public String cacheKey;
@@ -37,7 +37,7 @@ public class StayOutboundsData
 
         List<StayOutbound> stayOutboundList = new ArrayList<>();
 
-        for (StayOutboundData stayOutboundsData : dailyHotels)
+        for (StayOutboundData stayOutboundsData : stayOutboundDataList)
         {
             stayOutboundList.add(stayOutboundsData.getStayOutbound());
         }

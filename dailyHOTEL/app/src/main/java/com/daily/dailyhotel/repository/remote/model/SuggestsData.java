@@ -15,19 +15,19 @@ import java.util.List;
 public class SuggestsData
 {
     @JsonField(name = "station")
-    public List<SuggestData> station;
+    public List<SuggestData> stationSuggestDataList;
 
     @JsonField(name = "hotel")
-    public List<SuggestData> hotel;
+    public List<SuggestData> hotelSuggestDataList;
 
     @JsonField(name = "region")
-    public List<SuggestData> region;
+    public List<SuggestData> regionSuggestDataList;
 
     @JsonField(name = "point")
-    public List<SuggestData> point;
+    public List<SuggestData> pointSuggestDataList;
 
     @JsonField(name = "airport")
-    public List<SuggestData> airport;
+    public List<SuggestData> airportSuggestDataList;
 
     public SuggestsData()
     {
@@ -45,35 +45,35 @@ public class SuggestsData
             return list;
         }
 
-        List<Suggest> regionList = getSuggestList(context.getString(R.string.label_suggest_region), region, SUGGEST_MAX_COUNT);
+        List<Suggest> regionList = getSuggestList(context.getString(R.string.label_suggest_region), regionSuggestDataList, SUGGEST_MAX_COUNT);
 
         if (regionList != null)
         {
             list.addAll(regionList);
         }
 
-        List<Suggest> hotelList = getSuggestList(context.getString(R.string.label_suggest_hotel), hotel, SUGGEST_MAX_COUNT);
+        List<Suggest> hotelList = getSuggestList(context.getString(R.string.label_suggest_hotel), hotelSuggestDataList, SUGGEST_MAX_COUNT);
 
         if (hotelList != null)
         {
             list.addAll(hotelList);
         }
 
-        List<Suggest> pointList = getSuggestList(context.getString(R.string.label_suggest_point), point, SUGGEST_MAX_COUNT);
+        List<Suggest> pointList = getSuggestList(context.getString(R.string.label_suggest_point), pointSuggestDataList, SUGGEST_MAX_COUNT);
 
         if (pointList != null)
         {
             list.addAll(pointList);
         }
 
-        List<Suggest> airportList = getSuggestList(context.getString(R.string.label_suggest_airport), airport, SUGGEST_MAX_COUNT);
+        List<Suggest> airportList = getSuggestList(context.getString(R.string.label_suggest_airport), airportSuggestDataList, SUGGEST_MAX_COUNT);
 
         if (airportList != null)
         {
             list.addAll(airportList);
         }
 
-        List<Suggest> stationList = getSuggestList(context.getString(R.string.label_suggest_station), station, SUGGEST_MAX_COUNT);
+        List<Suggest> stationList = getSuggestList(context.getString(R.string.label_suggest_station), stationSuggestDataList, SUGGEST_MAX_COUNT);
 
         if (stationList != null)
         {

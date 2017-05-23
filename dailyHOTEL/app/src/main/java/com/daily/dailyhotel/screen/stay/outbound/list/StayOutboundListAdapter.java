@@ -16,18 +16,23 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.daily.base.util.DailyTextUtils;
-import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
 import com.daily.base.util.VersionUtils;
+import com.daily.dailyhotel.entity.ImageMap;
 import com.daily.dailyhotel.entity.ListItem;
 import com.daily.dailyhotel.entity.StayOutbound;
+import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.drawee.controller.BaseControllerListener;
+import com.facebook.drawee.controller.ControllerListener;
+import com.facebook.drawee.interfaces.DraweeController;
+import com.facebook.imagepipeline.image.ImageInfo;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ListRowFooterDataBinding;
 import com.twoheart.dailyhotel.databinding.ListRowLoadingDataBinding;
 import com.twoheart.dailyhotel.databinding.ListRowStayOutboundDataBinding;
 import com.twoheart.dailyhotel.model.Stay;
-import com.twoheart.dailyhotel.util.Util;
 
+import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -218,7 +223,7 @@ public class StayOutboundListAdapter extends RecyclerView.Adapter<RecyclerView.V
         if (stayOutbound.promo == true)
         {
             holder.dataBinding.priceTextView.setVisibility(View.VISIBLE);
-            holder.dataBinding.priceTextView.setText(DailyTextUtils.getPriceFormat(mContext, stayOutbound.nightlyBaseRateKrw, false));
+            holder.dataBinding.priceTextView.setText(DailyTextUtils.getPriceFormat(mContext, stayOutbound.nightlyBaseRate, false));
             holder.dataBinding.priceTextView.setPaintFlags(holder.dataBinding.priceTextView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
         } else
         {
@@ -226,13 +231,13 @@ public class StayOutboundListAdapter extends RecyclerView.Adapter<RecyclerView.V
             holder.dataBinding.priceTextView.setText(null);
         }
 
-        holder.dataBinding.discountPriceTextView.setText(DailyTextUtils.getPriceFormat(mContext, stayOutbound.nightlyRateKrw, false));
+        holder.dataBinding.discountPriceTextView.setText(DailyTextUtils.getPriceFormat(mContext, stayOutbound.nightlyRate, false));
 
         // 만족도
         holder.dataBinding.satisfactionView.setVisibility(View.GONE);
 
         // 1박인 경우 전체가격과 1박가격이 같다.
-        if (stayOutbound.nightlyRateKrw == stayOutbound.totalKrw)
+        if (stayOutbound.nightlyRate == stayOutbound.total)
         {
             holder.dataBinding.averageTextView.setVisibility(View.GONE);
         } else
@@ -252,22 +257,47 @@ public class StayOutboundListAdapter extends RecyclerView.Adapter<RecyclerView.V
         holder.dataBinding.gradeTextView.setText(Integer.toString(stayOutbound.rating));
         holder.dataBinding.gradeTextView.setBackgroundResource(Stay.Grade.special.getColorResId());
 
-        if(ScreenUtils.getScreenWidth(mContext) >= ScreenUtils.DEFAULT_STAYOUTBOUND_XXHDPI_WIDTH)
+        // Image
+        holder.dataBinding.imageView.getHierarchy().setPlaceholderImage(R.drawable.layerlist_placeholder);
+
+        ImageMap imageMap = stayOutbound.getImageMap();
+        String url;
+
+        if (ScreenUtils.getScreenWidth(mContext) >= ScreenUtils.DEFAULT_STAYOUTBOUND_XXHDPI_WIDTH)
         {
-            Util.requestImageResize(mContext, holder.dataBinding.imageView, stayOutbound.xxhdpiImageUrl);
+            url = imageMap.bigUrl;
         } else
         {
-            Util.requestImageResize(mContext, holder.dataBinding.imageView, stayOutbound.hdpiImageUrl);
+            url = imageMap.mediumUrl;
         }
 
-        if (DailyTextUtils.isTextEmpty(stayOutbound.promoDescription) == false)
+        ControllerListener controllerListener = new BaseControllerListener<ImageInfo>()
         {
-            holder.dataBinding.dBenefitLayout.setVisibility(View.VISIBLE);
-            holder.dataBinding.dBenefitTextView.setText(stayOutbound.promoDescription);
-        } else
-        {
-            holder.dataBinding.dBenefitLayout.setVisibility(View.GONE);
-        }
+            @Override
+            public void onFailure(String id, Throwable throwable)
+            {
+                if (throwable instanceof IOException == true)
+                {
+                    if (imageMap.bigUrl.equalsIgnoreCase(url) == true)
+                    {
+                        imageMap.bigUrl = null;
+                    } else if (imageMap.mediumUrl.equalsIgnoreCase(url) == true)
+                    {
+                        imageMap.mediumUrl = null;
+                    }
+
+                    holder.dataBinding.imageView.setImageURI(imageMap.smallUrl);
+                }
+            }
+        };
+
+        DraweeController draweeController = Fresco.newDraweeControllerBuilder()//
+            .setControllerListener(controllerListener).setUri(url).build();
+
+        holder.dataBinding.imageView.setController(draweeController);
+
+        // Promo 설명은 사용하지 않는다.
+        holder.dataBinding.promoLayout.setVisibility(View.GONE);
 
         if (mDistanceEnabled == true)
         {

@@ -40,16 +40,16 @@ public class StayOutboundDetailData
     public double longitude;
 
     @JsonField(name = "details")
-    public LinkedHashMap<String, List<String>> details;
+    public LinkedHashMap<String, List<String>> detailMap;
 
     @JsonField(name = "rooms")
-    public List<RoomData> rooms;
+    public List<RoomData> roomDataList;
 
     @JsonField(name = "amenities")
-    public List<AmenityData> amenities;
+    public List<AmenityData> amenityDataList;
 
     @JsonField(name = "dailyHotelDetailImages")
-    public List<ImageData> dailyHotelDetailImages;
+    public List<ImageData> imageDataList;
 
     public StayOutboundDetailData()
     {
@@ -67,13 +67,13 @@ public class StayOutboundDetailData
         stayOutboundDetail.ratingValue = tripAdvisorRating;
         stayOutboundDetail.latitude = latitude;
         stayOutboundDetail.longitude = longitude;
-        stayOutboundDetail.setInformationMap(details);
+        stayOutboundDetail.setInformationMap(detailMap);
 
-        if (rooms != null && rooms.size() > 0)
+        if (roomDataList != null && roomDataList.size() > 0)
         {
-            List<StayOutboundRoom> stayOutboundRoomList = new ArrayList<>(rooms.size());
+            List<StayOutboundRoom> stayOutboundRoomList = new ArrayList<>(roomDataList.size());
 
-            for (RoomData roomData : rooms)
+            for (RoomData roomData : roomDataList)
             {
                 stayOutboundRoomList.add(roomData.getStayOutboundRoom());
             }
@@ -82,11 +82,11 @@ public class StayOutboundDetailData
         }
 
 
-        if (amenities != null && amenities.size() > 0)
+        if (amenityDataList != null && amenityDataList.size() > 0)
         {
-            SparseArray<String> amenitySparseArray = new SparseArray<>(amenities.size());
+            SparseArray<String> amenitySparseArray = new SparseArray<>(amenityDataList.size());
 
-            for (AmenityData amenityData : amenities)
+            for (AmenityData amenityData : amenityDataList)
             {
                 amenitySparseArray.append(amenityData.amenityId, amenityData.amenity);
             }
@@ -94,11 +94,11 @@ public class StayOutboundDetailData
             stayOutboundDetail.setAmenityList(amenitySparseArray);
         }
 
-        if (dailyHotelDetailImages != null && dailyHotelDetailImages.size() > 0)
+        if (imageDataList != null && imageDataList.size() > 0)
         {
-            List<StayOutboundDetailImage> detailImageList = new ArrayList<>(dailyHotelDetailImages.size());
+            List<StayOutboundDetailImage> detailImageList = new ArrayList<>(imageDataList.size());
 
-            for (ImageData imageData : dailyHotelDetailImages)
+            for (ImageData imageData : imageDataList)
             {
                 detailImageList.add(imageData.getStayOutboundDetailImage());
             }

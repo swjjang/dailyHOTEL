@@ -552,17 +552,16 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
             return;
         }
 
-        String imageUrl;
+        String imageUrl = null;
         if (ScreenUtils.getScreenWidth(getActivity()) >= ScreenUtils.DEFAULT_STAYOUTBOUND_XXHDPI_WIDTH)
         {
-            imageUrl = stayOutbound.xxhdpiImageUrl;
         } else
         {
-            imageUrl = stayOutbound.hdpiImageUrl;
         }
 
         if (Util.isUsedMultiTransition() == true)
         {
+
 
 
             startActivityForResult(StayOutboundDetailActivity.newInstance(getActivity(), stayOutbound.index//

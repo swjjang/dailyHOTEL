@@ -4,23 +4,32 @@ public class StayOutbound
 {
     public int index;
     public String name;
-    public String engName;
+    public String nameEng;
     public int rating;
     public double latitude;
     public double longitude;
     public boolean promo;
-    public String promoDescription;
     public String locationDescription;
-    public double distance;
-    public int nightlyRateKrw;
-    public int nightlyBaseRateKrw;
-    public int totalKrw;
-    public String hdpiImageUrl;
-    public String xxhdpiImageUrl;
-
+    public String distance;
+    public int nightlyRate;
+    public int nightlyBaseRate;
+    public int total;
+    public ImageMap mImageMap;
+    public double tripAdvisorRating;
+    public int tripAdvisorReviewCount;
 
     public StayOutbound()
     {
 
+    }
+
+    public ImageMap getImageMap()
+    {
+        return mImageMap;
+    }
+
+    public void setImageMap(ImageMap imageMap)
+    {
+        mImageMap = imageMap;
     }
 }

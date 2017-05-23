@@ -38,7 +38,7 @@ public class StayOutboundClusterRenderer extends DefaultClusterRenderer<StayOutb
 
         StayOutbound stayOutbound = clusterItem.getStayOutbound();
 
-        PlaceRenderer placeRenderer = new PlaceRenderer(mContext, stayOutbound.nightlyRateKrw, R.drawable.bg_hotel_price_special1);
+        PlaceRenderer placeRenderer = new PlaceRenderer(mContext, stayOutbound.nightlyRate, R.drawable.bg_hotel_price_special1);
 
         BitmapDescriptor icon = placeRenderer.getBitmap(false);
 

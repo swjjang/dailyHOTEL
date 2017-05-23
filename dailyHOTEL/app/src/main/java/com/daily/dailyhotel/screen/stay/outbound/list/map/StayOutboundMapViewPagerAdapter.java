@@ -9,13 +9,21 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.daily.base.util.DailyTextUtils;
+import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
+import com.daily.dailyhotel.entity.ImageMap;
 import com.daily.dailyhotel.entity.StayOutbound;
+import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.drawee.controller.BaseControllerListener;
+import com.facebook.drawee.controller.ControllerListener;
+import com.facebook.drawee.interfaces.DraweeController;
+import com.facebook.imagepipeline.image.ImageInfo;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ViewpagerColumnStayDataBinding;
 import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.util.Util;
 
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -57,7 +65,7 @@ public class StayOutboundMapViewPagerAdapter extends PagerAdapter
         if (stayOutbound.promo == true)
         {
             dataBinding.priceTextView.setVisibility(View.VISIBLE);
-            dataBinding.priceTextView.setText(DailyTextUtils.getPriceFormat(mContext, stayOutbound.nightlyBaseRateKrw, false));
+            dataBinding.priceTextView.setText(DailyTextUtils.getPriceFormat(mContext, stayOutbound.nightlyBaseRate, false));
             dataBinding.priceTextView.setPaintFlags(dataBinding.priceTextView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
         } else
         {
@@ -65,13 +73,13 @@ public class StayOutboundMapViewPagerAdapter extends PagerAdapter
             dataBinding.priceTextView.setText(null);
         }
 
-        dataBinding.discountPriceTextView.setText(DailyTextUtils.getPriceFormat(mContext, stayOutbound.nightlyRateKrw, false));
+        dataBinding.discountPriceTextView.setText(DailyTextUtils.getPriceFormat(mContext, stayOutbound.nightlyRate, false));
 
         // 만족도
         dataBinding.satisfactionView.setVisibility(View.GONE);
 
         // 1박인 경우 전체가격과 1박가격이 같다.
-        if (stayOutbound.nightlyRateKrw == stayOutbound.totalKrw)
+        if (stayOutbound.nightlyRate == stayOutbound.total)
         {
             dataBinding.averageTextView.setVisibility(View.GONE);
         } else
@@ -83,16 +91,49 @@ public class StayOutboundMapViewPagerAdapter extends PagerAdapter
         dataBinding.gradeTextView.setText(Integer.toString(stayOutbound.rating));
         dataBinding.gradeTextView.setBackgroundResource(Stay.Grade.special.getColorResId());
 
-        Util.requestImageResize(mContext, dataBinding.simpleDraweeView, stayOutbound.hdpiImageUrl);
+        // Image
+        dataBinding.simpleDraweeView.getHierarchy().setPlaceholderImage(R.drawable.layerlist_placeholder);
 
-        if (DailyTextUtils.isTextEmpty(stayOutbound.promoDescription) == false)
+        ImageMap imageMap = stayOutbound.getImageMap();
+        String url;
+
+        if (ScreenUtils.getScreenWidth(mContext) >= ScreenUtils.DEFAULT_STAYOUTBOUND_XXHDPI_WIDTH)
         {
-            dataBinding.dBenefitLayout.setVisibility(View.VISIBLE);
-            dataBinding.dBenefitTextView.setText(stayOutbound.promoDescription);
+            url = imageMap.bigUrl;
         } else
         {
-            dataBinding.dBenefitLayout.setVisibility(View.GONE);
+            url = imageMap.mediumUrl;
         }
+
+        ControllerListener controllerListener = new BaseControllerListener<ImageInfo>()
+        {
+            @Override
+            public void onFailure(String id, Throwable throwable)
+            {
+                ExLog.d("pinkred : " + id + ", " + throwable.toString());
+
+                if (throwable instanceof FileNotFoundException == true)
+                {
+                    if (ScreenUtils.getScreenWidth(mContext) >= ScreenUtils.DEFAULT_STAYOUTBOUND_XXHDPI_WIDTH)
+                    {
+                        imageMap.bigUrl = null;
+                    } else
+                    {
+                        imageMap.mediumUrl = null;
+                    }
+
+                    dataBinding.simpleDraweeView.setImageURI(imageMap.smallUrl);
+                }
+            }
+        };
+
+        DraweeController draweeController = Fresco.newDraweeControllerBuilder()//
+            .setControllerListener(controllerListener).setUri(url).build();
+
+        dataBinding.simpleDraweeView.setController(draweeController);
+
+        // Promo 설명은 사용하지 않는다.
+        dataBinding.promoLayout.setVisibility(View.GONE);
 
         dataBinding.nameTextView.setSelected(true); // Android TextView marquee bug
 

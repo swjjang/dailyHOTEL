@@ -197,7 +197,7 @@
             dailyFont:style="DemiLight"/>
 
         <LinearLayout
-            android:id="@+id/dBenefitLayout"
+            android:id="@+id/promoLayout"
             android:layout_width="match_parent"
             android:layout_height="19dp"
             android:layout_marginLeft="11dp"
@@ -208,7 +208,7 @@
             android:visibility="gone">
 
             <com.daily.base.widget.DailyTextView
-                android:id="@+id/dBenefitTextView"
+                android:id="@+id/promoTextView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@drawable/notice"
