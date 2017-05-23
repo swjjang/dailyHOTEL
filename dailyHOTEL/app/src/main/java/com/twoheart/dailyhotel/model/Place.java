@@ -19,6 +19,8 @@ public abstract class Place implements Parcelable
     public String districtName;
     public int entryPosition;
     public boolean truevr;
+    public String stickerUrl;
+    public int stickerIndex;
 
     public Place()
     {
@@ -49,6 +51,8 @@ public abstract class Place implements Parcelable
         dest.writeString(districtName);
         dest.writeInt(entryPosition);
         dest.writeInt(truevr ? 1 : 0);
+        dest.writeString(stickerUrl);
+        dest.writeInt(stickerIndex);
     }
 
     protected void readFromParcel(Parcel in)
@@ -67,5 +71,7 @@ public abstract class Place implements Parcelable
         districtName = in.readString();
         entryPosition = in.readInt();
         truevr = in.readInt() == 1;
+        stickerUrl = in.readString();
+        stickerIndex = in.readInt();
     }
 }

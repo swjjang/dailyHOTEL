@@ -180,7 +180,6 @@
     </LinearLayout>
 
 
-
     <com.daily.base.widget.DailyTextView
         android:id="@+id/addressTextView"
         android:layout_width="match_parent"
@@ -221,6 +220,13 @@
             android:textColor="@color/white"
             android:textSize="11dp"/>
     </LinearLayout>
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/stickerSimpleDraweeView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="11dp"
+        android:visibility="gone"/>
 
     <ImageView
         android:id="@+id/soldoutView"

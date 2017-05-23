@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:background="@drawable/popup_bg_white_full"
-              android:orientation="vertical"
-              android:paddingBottom="10dp">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/popup_bg_white_full"
+                android:paddingBottom="10dp">
 
     <ImageView
+        android:id="@+id/imageView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
@@ -18,6 +18,7 @@
         android:id="@+id/titleTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@id/imageView"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
         android:layout_marginTop="24dp"
@@ -26,21 +27,36 @@
         android:textSize="17dp"
         dailyFont:style="Medium"/>
 
-    <com.daily.base.widget.DailyTextView
-        android:id="@+id/messageTextView"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
-        android:layout_marginTop="16dp"
-        android:gravity="center"
-        android:textColor="@color/default_text_c323232"
-        android:textSize="13dp"/>
+        android:layout_height="match_parent"
+        android:layout_above="@+id/oneButtonLayout"
+        android:layout_below="@id/titleTextView"
+        android:fadingEdge="none">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.daily.base.widget.DailyTextView
+                android:id="@+id/messageTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="16dp"
+                android:gravity="center"
+                android:textColor="@color/default_text_c323232"
+                android:textSize="13dp"/>
+        </LinearLayout>
+    </ScrollView>
 
     <LinearLayout
         android:id="@+id/oneButtonLayout"
         android:layout_width="match_parent"
         android:layout_height="38dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="15dp"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:layout_marginTop="24dp"
@@ -58,4 +74,4 @@
             android:textSize="14dp"
             dailyFont:style="Medium"/>
     </LinearLayout>
-</LinearLayout>
+</RelativeLayout>
