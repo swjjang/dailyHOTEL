@@ -28,7 +28,7 @@
                 android:background="@color/default_background_cf4f4f6"
                 android:drawablePadding="8dp"
                 android:gravity="center_vertical"
-                android:hint="@string/label_search_keyword_hint"
+                android:hint="@string/label_stay_outbound_search_keyword_hint"
                 android:maxLines="1"
                 android:paddingLeft="6dp"
                 android:paddingRight="9dp"

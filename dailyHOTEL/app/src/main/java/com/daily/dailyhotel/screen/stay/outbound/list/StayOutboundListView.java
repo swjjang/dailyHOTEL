@@ -55,6 +55,8 @@ public class StayOutboundListView extends BaseView<StayOutboundListView.OnEventL
 
         void onCalendarClick();
 
+        void onPeopleClick();
+
         void onFilterClick();
 
         void onViewTypeClick();
@@ -94,6 +96,8 @@ public class StayOutboundListView extends BaseView<StayOutboundListView.OnEventL
 
         initToolbar(viewDataBinding);
 
+        viewDataBinding.calendarTextView.setOnClickListener(this);
+        viewDataBinding.peopleTextView.setOnClickListener(this);
         viewDataBinding.swipeRefreshLayout.setColorSchemeResources(R.color.dh_theme_color);
         viewDataBinding.swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener()
         {
@@ -503,6 +507,14 @@ public class StayOutboundListView extends BaseView<StayOutboundListView.OnEventL
     {
         switch (v.getId())
         {
+            case R.id.calendarTextView:
+                getEventListener().onCalendarClick();
+                break;
+
+            case R.id.peopleTextView:
+                getEventListener().onPeopleClick();
+                break;
+
             case R.id.viewTypeOptionImageView:
                 getEventListener().onViewTypeClick();
                 break;

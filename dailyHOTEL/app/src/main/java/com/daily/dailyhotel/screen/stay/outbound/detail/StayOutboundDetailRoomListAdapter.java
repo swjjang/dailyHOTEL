@@ -178,12 +178,12 @@ public class StayOutboundDetailRoomListAdapter extends RecyclerView.Adapter<Recy
             personOption = null;
         } else if (stayOutboundRoom.quotedOccupancy == stayOutboundRoom.rateOccupancyPerRoom)
         {
-            personOption = mContext.getString(R.string.label_stayoutbound_room_max_person_free, stayOutboundRoom.quotedOccupancy)//
-                + "/" + mContext.getString(R.string.label_stayoutbound_room_max_person_free, stayOutboundRoom.rateOccupancyPerRoom);
+            personOption = mContext.getString(R.string.label_stay_outbound__room_max_person_free, stayOutboundRoom.quotedOccupancy)//
+                + "/" + mContext.getString(R.string.label_stay_outbound__room_max_person_free, stayOutboundRoom.rateOccupancyPerRoom);
         } else
         {
-            personOption = mContext.getString(R.string.label_stayoutbound_room_max_person_free, stayOutboundRoom.quotedOccupancy)//
-                + "/" + mContext.getString(R.string.label_stayoutbound_room_max_person_charge, stayOutboundRoom.rateOccupancyPerRoom);
+            personOption = mContext.getString(R.string.label_stay_outbound__room_max_person_free, stayOutboundRoom.quotedOccupancy)//
+                + "/" + mContext.getString(R.string.label_stay_outbound__room_max_person_charge, stayOutboundRoom.rateOccupancyPerRoom);
         }
 
         if (DailyTextUtils.isTextEmpty(personOption) == true)

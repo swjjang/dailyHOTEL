@@ -722,7 +722,7 @@ public class StayOutboundDetailView extends BaseView<StayOutboundDetailView.OnEv
 
         // 등급
         viewDataBinding.gradeTextView.setVisibility(View.VISIBLE);
-        viewDataBinding.gradeTextView.setText(getString(R.string.label_stayoutbound_detail_grade, stayOutboundDetail.grade));
+        viewDataBinding.gradeTextView.setText(getString(R.string.label_stay_outbound__detail_grade, stayOutboundDetail.grade));
         viewDataBinding.gradeTextView.setBackgroundResource(R.color.default_background_c929292);
 
         // 호텔명

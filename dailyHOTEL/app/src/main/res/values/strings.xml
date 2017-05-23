@@ -1270,18 +1270,20 @@
     <string name="message_detail_review_gourmet_explain">트루리뷰는 100% 직접 방문한 고객님이 남겨주신 리뷰입니다.</string>
 
     <!-- Stay Out Bound Search -->
-    <string name="label_search_keyword_hint">호텔명 또는 지역명 입력</string>
-    <string name="label_search_adult_count">성인 %1$d명</string>
-    <string name="label_search_child_count">아동 %1$d명</string>
-    <string name="label_search_children_age">(만 %1$s)</string>
-    <string name="label_search_child_age">%1$d세</string>
-    <string name="label_search_under_of_1_age">1세 미만</string>
+    <string name="label_stay_outbound_search_keyword_hint">호텔명 또는 지역명 입력</string>
+    <string name="label_stay_outbound_search_adult_count">성인 %1$d명</string>
+    <string name="label_stay_outbound_search_child_count">아동 %1$d명</string>
+    <string name="label_stay_outbound_search_children_age">(만 %1$s)</string>
+    <string name="label_stay_outbound_search_child_age">%1$d세</string>
+    <string name="label_stay_outbound_search_under_of_1_age">1세 미만</string>
 
-    <string name="label_suggest_region">도시/지역</string>
-    <string name="label_suggest_hotel">호텔</string>
-    <string name="label_suggest_point">주요지점</string>
-    <string name="label_suggest_station">역</string>
-    <string name="label_suggest_airport">공항</string>
+    <string name="label_stay_outbound_suggest_region">도시/지역</string>
+    <string name="label_stay_outbound_suggest_hotel">호텔</string>
+    <string name="label_stay_outbound_suggest_point">주요지점</string>
+    <string name="label_stay_outbound_suggest_station">역</string>
+    <string name="label_stay_outbound_suggest_airport">공항</string>
+
+    <string name="message_stay_outbound_suggest_empty_suggest">검색어를 변경하여 검색해 보세요.</string>
 
     <string name="label_people_select_person">투숙 인원 선택</string>
     <string name="label_people_adult">성인</string>
@@ -1295,20 +1297,23 @@
 
 
     <!-- Stay Out Bound List -->
-    <string name="label_suggest_empty_suggest">검색어를 변경하여 검색해 보세요.</string>
+    <string name="label_stay_outbound_list_adult_count">성인 %1$d</string>
+    <string name="label_stay_outbound_list_child_count">아동 %1$d</string>
+    <string name="label_stay_outbound_tripadvisor_rating">(평점 %1$s)</string>
 
     <!-- Stay Out Bound Filter -->
-    <string name="label_filter_1_star_rate">1성급</string>
-    <string name="label_filter_2_star_rate">2성급</string>
-    <string name="label_filter_3_star_rate">3성급</string>
-    <string name="label_filter_4_star_rate">4성급</string>
-    <string name="label_filter_5_star_rate">5성급</string>
+    <string name="label_stay_outbound_filter_1_star_rate">1성급</string>
+    <string name="label_stay_outbound_filter_2_star_rate">2성급</string>
+    <string name="label_stay_outbound_filter_3_star_rate">3성급</string>
+    <string name="label_stay_outbound_filter_4_star_rate">4성급</string>
+    <string name="label_stay_outbound_filter_5_star_rate">5성급</string>
+    <string name="label_stay_outbound_filter_x_star_rate">%1$d성급</string>
 
     <!-- Stay Out Bound Detail -->
-    <string name="label_stayoutbound_detail_grade">%1$d 성급</string>
-    <string name="label_stayoutbound_room_default_person">%1$d인 기준</string>
-    <string name="label_stayoutbound_room_max_person_free">최대 %1$d인</string>
-    <string name="label_stayoutbound_room_max_person_charge">최대 %1$d인(유료)</string>
+    <string name="label_stay_outbound__detail_grade">%1$d 성급</string>
+    <string name="label_stay_outbound__room_default_person">%1$d인 기준</string>
+    <string name="label_stay_outbound__room_max_person_free">최대 %1$d인</string>
+    <string name="label_stay_outbound__room_max_person_charge">최대 %1$d인(유료)</string>
 
 
     <!-- Preview -->

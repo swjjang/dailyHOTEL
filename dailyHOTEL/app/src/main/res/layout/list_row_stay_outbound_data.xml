@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
         xmlns:fresco="http://schemas.android.com/apk/res-auto">
 
@@ -28,22 +27,132 @@
             android:layout_height="match_parent"
             android:transitionName="@string/transition_gradient_bottom_view"/>
 
-        <com.daily.base.widget.DailyTextView
-            android:id="@+id/gradeTextView"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_above="@+id/nameTextView"
-            android:layout_alignParentLeft="true"
-            android:layout_marginBottom="5dp"
-            android:layout_marginLeft="12dp"
-            android:gravity="center"
-            android:paddingBottom="1px"
-            android:paddingLeft="5.5dp"
-            android:paddingRight="5.5dp"
-            android:paddingTop="2px"
-            android:textColor="@color/white"
-            android:textSize="11dp"
-            android:transitionName="@string/transition_place_grade"/>
+            android:layout_above="@+id/addressTextView"
+            android:layout_toLeftOf="@+id/priceTextView"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <com.daily.base.widget.DailyTextView
+                    android:id="@+id/gradeTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="12dp"
+                    android:background="@drawable/shape_rect_whitecolor"
+                    android:gravity="center"
+                    android:paddingBottom="1px"
+                    android:paddingLeft="6dp"
+                    android:paddingRight="6dp"
+                    android:paddingTop="2px"
+                    android:textColor="@color/white"
+                    android:textSize="11dp"
+                    android:transitionName="@string/transition_place_grade"/>
+
+                <RatingBar
+                    android:id="@+id/ratingBar"
+                    style="@style/StayOutboundRatingBar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="10dp"
+                    android:layout_marginLeft="6dp"
+                    android:numStars="5"
+                    android:stepSize="1.0"/>
+            </LinearLayout>
+
+            <com.daily.base.widget.DailyTextView
+                android:id="@+id/nameTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="4dp"
+                android:layout_marginLeft="11dp"
+                android:layout_marginRight="5dp"
+                android:ellipsize="end"
+                android:freezesText="true"
+                android:gravity="center_vertical"
+                android:singleLine="true"
+                android:textColor="@android:color/white"
+                android:textSize="17dp"
+                android:transitionName="@string/transition_place_name"
+                dailyFont:style="Medium"/>
+
+            <com.daily.base.widget.DailyTextView
+                android:id="@+id/nameEngTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="4dp"
+                android:layout_marginLeft="11dp"
+                android:layout_marginRight="5dp"
+                android:ellipsize="end"
+                android:freezesText="true"
+                android:gravity="center_vertical"
+                android:singleLine="true"
+                android:textColor="@android:color/white"
+                android:textSize="11dp"/>
+
+            <LinearLayout
+                android:id="@+id/tripAdvisorLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="3dp"
+                android:layout_marginLeft="11dp"
+                android:gravity="center_vertical"
+
+                android:orientation="horizontal"
+                android:visibility="visible">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/main_ic_widget_owl"/>
+
+                <RatingBar
+                    android:id="@+id/tripAdvisorRatingBar"
+                    style="@style/TripAdvisorRatingBar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="10dp"
+                    android:layout_marginLeft="2dp"
+                    android:numStars="5"
+                    android:stepSize="0.5"/>
+
+                <com.daily.base.widget.DailyTextView
+                    android:id="@+id/tripAdvisorRatingTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="3dp"
+                    android:ellipsize="end"
+                    android:freezesText="true"
+                    android:gravity="center_vertical"
+                    android:singleLine="true"
+                    android:textColor="@android:color/white"
+                    android:textSize="12dp"
+                    dailyFont:style="DemiLight"/>
+
+                <View
+                    android:id="@+id/dot1View"
+                    android:layout_width="3dp"
+                    android:layout_height="3dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:background="@drawable/shape_circle_bb3ffffff_r3"
+                    android:visibility="visible"/>
+
+                <com.daily.base.widget.DailyTextView
+                    android:id="@+id/distanceTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:textColor="@color/white"
+                    android:textSize="12dp"
+                    android:visibility="visible"
+                    dailyFont:style="DemiLight"/>
+            </LinearLayout>
+        </LinearLayout>
 
         <com.daily.base.widget.DailyTextView
             android:id="@+id/priceTextView"
@@ -57,98 +166,6 @@
             android:textColor="@color/white"
             android:textSize="12dp"
             dailyFont:style="DemiLight"/>
-
-        <com.daily.base.widget.DailyTextView
-            android:id="@+id/nameTextView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_above="@+id/informationLayout"
-            android:layout_alignParentLeft="true"
-            android:layout_marginBottom="4dp"
-            android:layout_marginLeft="11dp"
-            android:layout_marginRight="5dp"
-            android:layout_toLeftOf="@+id/discountPriceLayout"
-            android:ellipsize="end"
-            android:freezesText="true"
-            android:gravity="center_vertical"
-            android:singleLine="true"
-            android:textColor="@android:color/white"
-            android:textSize="17dp"
-            android:transitionName="@string/transition_place_name"
-            dailyFont:style="Medium"/>
-
-        <LinearLayout
-            android:id="@+id/informationLayout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_above="@+id/addressTextView"
-            android:layout_marginBottom="4dp"
-            android:layout_marginLeft="11dp"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
-
-            <com.daily.base.widget.DailyTextView
-                android:id="@+id/satisfactionView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:textColor="@color/white"
-                android:textSize="12dp"
-                android:visibility="gone"
-                dailyFont:style="DemiLight"/>
-
-            <View
-                android:id="@+id/dot1View"
-                android:layout_width="3dp"
-                android:layout_height="3dp"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
-                android:background="@drawable/shape_circle_bb3ffffff_r3"
-                android:visibility="gone"/>
-
-            <com.daily.base.widget.DailyTextView
-                android:id="@+id/distanceTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:textColor="@color/white"
-                android:textSize="12dp"
-                android:visibility="gone"
-                dailyFont:style="DemiLight"/>
-
-            <View
-                android:id="@+id/dot2View"
-                android:layout_width="3dp"
-                android:layout_height="3dp"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
-                android:background="@drawable/shape_circle_bb3ffffff_r3"
-                android:visibility="gone"/>
-
-            <LinearLayout
-                android:id="@+id/trueVRView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:visibility="gone">
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="-1dp"
-                    app:srcCompat="@drawable/main_ic_truevr"/>
-
-                <com.daily.base.widget.DailyTextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="2dp"
-                    android:text="@string/label_truevr"
-                    android:textColor="@color/white"
-                    android:textSize="12dp"
-                    dailyFont:style="DemiLight"/>
-            </LinearLayout>
-        </LinearLayout>
 
         <LinearLayout
             android:id="@+id/discountPriceLayout"

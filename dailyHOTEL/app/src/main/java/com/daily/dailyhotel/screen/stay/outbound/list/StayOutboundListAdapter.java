@@ -30,7 +30,6 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ListRowFooterDataBinding;
 import com.twoheart.dailyhotel.databinding.ListRowLoadingDataBinding;
 import com.twoheart.dailyhotel.databinding.ListRowStayOutboundDataBinding;
-import com.twoheart.dailyhotel.model.Stay;
 
 import java.io.IOException;
 import java.text.DecimalFormat;
@@ -131,7 +130,7 @@ public class StayOutboundListAdapter extends RecyclerView.Adapter<RecyclerView.V
     {
         // 그라디에이션 만들기.
         final int colors[] = {Color.parseColor("#ED000000"), Color.parseColor("#E8000000"), Color.parseColor("#E2000000"), Color.parseColor("#66000000"), Color.parseColor("#00000000")};
-        final float positions[] = {0.0f, 0.01f, 0.02f, 0.17f, 0.60f};
+        final float positions[] = {0.0f, 0.01f, 0.02f, 0.17f, 0.80f};
 
         mPaintDrawable = new PaintDrawable();
         mPaintDrawable.setShape(new RectShape());
@@ -218,6 +217,7 @@ public class StayOutboundListAdapter extends RecyclerView.Adapter<RecyclerView.V
 
         holder.dataBinding.addressTextView.setText(stayOutbound.locationDescription);
         holder.dataBinding.nameTextView.setText(stayOutbound.name);
+        holder.dataBinding.nameEngTextView.setText("(" + stayOutbound.nameEng + ")");
 
         // 가격
         if (stayOutbound.promo == true)
@@ -232,9 +232,6 @@ public class StayOutboundListAdapter extends RecyclerView.Adapter<RecyclerView.V
         }
 
         holder.dataBinding.discountPriceTextView.setText(DailyTextUtils.getPriceFormat(mContext, stayOutbound.nightlyRate, false));
-
-        // 만족도
-        holder.dataBinding.satisfactionView.setVisibility(View.GONE);
 
         // 1박인 경우 전체가격과 1박가격이 같다.
         if (stayOutbound.nightlyRate == stayOutbound.total)
@@ -254,8 +251,14 @@ public class StayOutboundListAdapter extends RecyclerView.Adapter<RecyclerView.V
         }
 
         // grade
-        holder.dataBinding.gradeTextView.setText(Integer.toString(stayOutbound.rating));
-        holder.dataBinding.gradeTextView.setBackgroundResource(Stay.Grade.special.getColorResId());
+        holder.dataBinding.gradeTextView.setText(mContext.getString(R.string.label_stay_outbound_filter_x_star_rate, (int)stayOutbound.rating));
+
+        // 별등급
+        holder.dataBinding.ratingBar.setRating(stayOutbound.rating);
+
+        // tripAdvisor
+        holder.dataBinding.tripAdvisorRatingBar.setRating((float) stayOutbound.tripAdvisorRating);
+        holder.dataBinding.tripAdvisorRatingTextView.setText(mContext.getString(R.string.label_stay_outbound_tripadvisor_rating, Float.toString(stayOutbound.tripAdvisorRating)));
 
         // Image
         holder.dataBinding.imageView.getHierarchy().setPlaceholderImage(R.drawable.layerlist_placeholder);
@@ -301,10 +304,10 @@ public class StayOutboundListAdapter extends RecyclerView.Adapter<RecyclerView.V
 
         if (mDistanceEnabled == true)
         {
-            if (holder.dataBinding.satisfactionView.getVisibility() == View.VISIBLE || holder.dataBinding.trueVRView.getVisibility() == View.VISIBLE)
-            {
-                holder.dataBinding.dot1View.setVisibility(View.VISIBLE);
-            } else
+//            if (holder.dataBinding.satisfactionView.getVisibility() == View.VISIBLE || holder.dataBinding.trueVRView.getVisibility() == View.VISIBLE)
+//            {
+//                holder.dataBinding.dot1View.setVisibility(View.VISIBLE);
+//            } else
             {
                 holder.dataBinding.dot1View.setVisibility(View.GONE);
             }
@@ -315,20 +318,6 @@ public class StayOutboundListAdapter extends RecyclerView.Adapter<RecyclerView.V
         {
             holder.dataBinding.dot1View.setVisibility(View.GONE);
             holder.dataBinding.distanceTextView.setVisibility(View.GONE);
-        }
-
-        // VR 여부
-        holder.dataBinding.dot2View.setVisibility(View.GONE);
-        holder.dataBinding.trueVRView.setVisibility(View.GONE);
-
-        if (holder.dataBinding.satisfactionView.getVisibility() == View.GONE//
-            && holder.dataBinding.trueVRView.getVisibility() == View.GONE//
-            && holder.dataBinding.distanceTextView.getVisibility() == View.GONE)
-        {
-            holder.dataBinding.informationLayout.setVisibility(View.GONE);
-        } else
-        {
-            holder.dataBinding.informationLayout.setVisibility(View.VISIBLE);
         }
     }
 

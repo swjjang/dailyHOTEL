@@ -497,6 +497,27 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
     }
 
     @Override
+    public void onPeopleClick()
+    {
+        if (lock() == true)
+        {
+            return;
+        }
+
+        Intent intent;
+
+        if (mPeople == null)
+        {
+            intent = SelectPeopleActivity.newInstance(getActivity(), People.DEFAULT_ADULTS, null);
+        } else
+        {
+            intent = SelectPeopleActivity.newInstance(getActivity(), mPeople.numberOfAdults, mPeople.getChildAgeList());
+        }
+
+        startActivityForResult(intent, StayOutboundListActivity.REQUEST_CODE_PEOPLE);
+    }
+
+    @Override
     public void onFilterClick()
     {
         if (lock() == true)
@@ -800,7 +821,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
             mPeople = new People(People.DEFAULT_ADULTS, null);
         }
 
-        getViewInterface().setPeopleText(mPeople.toString(getActivity()));
+        getViewInterface().setPeopleText(mPeople.toShortString(getActivity()));
     }
 
     private void onPeople(int numberOfAdults, ArrayList<Integer> childAgeList)
@@ -877,9 +898,9 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
 
         try
         {
-            getViewInterface().setCalendarText(String.format(Locale.KOREA, "%s - %s, %d박"//
-                , stayBookDateTime.getCheckInDateTime("yyyy.MM.dd(EEE)")//
-                , stayBookDateTime.getCheckOutDateTime("yyyy.MM.dd(EEE)"), stayBookDateTime.getNights()));
+            getViewInterface().setCalendarText(String.format(Locale.KOREA, "%s - %s"//
+                , stayBookDateTime.getCheckInDateTime("M.d(EEE)")//
+                , stayBookDateTime.getCheckOutDateTime("M.d(EEE)")));
         } catch (Exception e)
         {
             ExLog.e(e.toString());

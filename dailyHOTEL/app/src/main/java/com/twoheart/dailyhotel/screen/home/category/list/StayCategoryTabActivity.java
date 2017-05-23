@@ -1309,7 +1309,7 @@ public class StayCategoryTabActivity extends PlaceMainActivity
 
                 stayBookingDay.setCheckOutDay(stayBookingDay.getCheckInDay(DailyCalendar.ISO_8601_FORMAT), nights);
 
-                mStayCuration.setStayBookingDay(stayBookingDay);
+                mStayCategoryCuration.setStayBookingDay(stayBookingDay);
 
                 Intent intent = StayDetailActivity.newInstance(baseActivity, stayBookingDay, hotelIndex, ticketIndex, isShowCalendar, isShowVR, false);
                 baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL);

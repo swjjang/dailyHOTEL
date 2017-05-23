@@ -5,7 +5,7 @@ public class StayOutbound
     public int index;
     public String name;
     public String nameEng;
-    public int rating;
+    public float rating;
     public double latitude;
     public double longitude;
     public boolean promo;
@@ -15,7 +15,7 @@ public class StayOutbound
     public int nightlyBaseRate;
     public int total;
     public ImageMap mImageMap;
-    public double tripAdvisorRating;
+    public float tripAdvisorRating;
     public int tripAdvisorReviewCount;
 
     public StayOutbound()

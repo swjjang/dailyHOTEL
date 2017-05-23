@@ -38,7 +38,7 @@ public class People
             return stringBuilder.toString();
         }
 
-        stringBuilder.append(context.getString(R.string.label_search_adult_count, numberOfAdults));
+        stringBuilder.append(context.getString(R.string.label_stay_outbound_search_adult_count, numberOfAdults));
 
         int childCount;
 
@@ -51,7 +51,7 @@ public class People
         }
 
         stringBuilder.append(", ");
-        stringBuilder.append(context.getString(R.string.label_search_child_count, childCount));
+        stringBuilder.append(context.getString(R.string.label_stay_outbound_search_child_count, childCount));
 
         if (childCount > 0)
         {
@@ -69,16 +69,43 @@ public class People
 
                 if (childAge == 0)
                 {
-                    childrenAgeStringBuilder.append(context.getString(R.string.label_search_under_of_1_age));
+                    childrenAgeStringBuilder.append(context.getString(R.string.label_stay_outbound_search_under_of_1_age));
                 } else
                 {
-                    childrenAgeStringBuilder.append(context.getString(R.string.label_search_child_age, childAge));
+                    childrenAgeStringBuilder.append(context.getString(R.string.label_stay_outbound_search_child_age, childAge));
                 }
             }
 
             stringBuilder.append(' ');
-            stringBuilder.append(context.getString(R.string.label_search_children_age, childrenAgeStringBuilder.toString()));
+            stringBuilder.append(context.getString(R.string.label_stay_outbound_search_children_age, childrenAgeStringBuilder.toString()));
         }
+
+        return stringBuilder.toString();
+    }
+
+    public String toShortString(Context context)
+    {
+        StringBuilder stringBuilder = new StringBuilder();
+
+        if (context == null)
+        {
+            return stringBuilder.toString();
+        }
+
+        stringBuilder.append(context.getString(R.string.label_stay_outbound_list_adult_count, numberOfAdults));
+
+        int childCount;
+
+        if (mChildAgeList == null)
+        {
+            childCount = 0;
+        } else
+        {
+            childCount = mChildAgeList.size();
+        }
+
+        stringBuilder.append(", ");
+        stringBuilder.append(context.getString(R.string.label_stay_outbound_list_child_count, childCount));
 
         return stringBuilder.toString();
     }
