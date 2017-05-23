@@ -1,8 +1,10 @@
 package com.twoheart.dailyhotel.screen.mydaily.recentplace;
 
 import android.content.Context;
+import android.util.SparseArray;
 
 import com.crashlytics.android.Crashlytics;
+import com.daily.base.util.ScreenUtils;
 import com.twoheart.dailyhotel.model.Gourmet;
 import com.twoheart.dailyhotel.model.RecentGourmetParams;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
@@ -74,7 +76,7 @@ public class RecentGourmetListNetworkController extends BaseNetworkController
                         if (gourmetJSONArray != null)
                         {
                             imageUrl = dataJSONObject.getString("imgUrl");
-                            gourmetList = makeGourmetList(gourmetJSONArray, imageUrl);
+                            gourmetList = makeGourmetList(gourmetJSONArray, imageUrl, dataJSONObject.getJSONArray("stickers"));
                         } else
                         {
                             gourmetList = new ArrayList<>();
@@ -113,11 +115,44 @@ public class RecentGourmetListNetworkController extends BaseNetworkController
             mOnNetworkControllerListener.onError(call, t, false);
         }
 
-        private ArrayList<Gourmet> makeGourmetList(JSONArray jsonArray, String imageUrl) throws JSONException
+        private ArrayList<Gourmet> makeGourmetList(JSONArray jsonArray, String imageUrl, JSONArray stickerJSONArray) throws JSONException
         {
             if (jsonArray == null)
             {
                 return new ArrayList<>();
+            }
+
+            SparseArray<String> stickerSparseArray = new SparseArray<>();
+            if (stickerJSONArray != null && stickerJSONArray.length() > 0)
+            {
+                boolean isLowResource = false;
+
+                if (ScreenUtils.getScreenWidth(mContext) < 1440)
+                {
+                    isLowResource = true;
+                }
+
+                int length = stickerJSONArray.length();
+
+
+                for (int i = 0; i < length; i++)
+                {
+                    JSONObject jsonObject = stickerJSONArray.getJSONObject(i);
+
+                    int index = jsonObject.getInt("idx");
+
+                    String url;
+
+                    if (isLowResource == true)
+                    {
+                        url = jsonObject.getString("lowResolutionImageUrl");
+                    } else
+                    {
+                        url = jsonObject.getString("defaultImageUrl");
+                    }
+
+                    stickerSparseArray.append(index, url);
+                }
             }
 
             int length = jsonArray.length();
@@ -131,7 +166,7 @@ public class RecentGourmetListNetworkController extends BaseNetworkController
 
                 gourmet = new Gourmet();
 
-                if (gourmet.setData(jsonObject, imageUrl) == true)
+                if (gourmet.setData(jsonObject, imageUrl, stickerSparseArray) == true)
                 {
                     gourmetList.add(gourmet);
                 }

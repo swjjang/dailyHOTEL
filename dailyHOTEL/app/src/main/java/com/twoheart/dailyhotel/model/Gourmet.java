@@ -3,6 +3,7 @@ package com.twoheart.dailyhotel.model;
 import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.SparseArray;
 
 import com.daily.base.util.ExLog;
 import com.twoheart.dailyhotel.R;
@@ -60,7 +61,7 @@ public class Gourmet extends Place
         grade = (Grade) in.readSerializable();
     }
 
-    public boolean setData(JSONObject jsonObject, String imageUrl)
+    public boolean setData(JSONObject jsonObject, String imageUrl, SparseArray<String> stringSparseArray)
     {
         try
         {
@@ -108,6 +109,17 @@ public class Gourmet extends Place
             //            {
             //                truevr = jsonObject.getBoolean("truevr");
             //            }
+
+
+            if (jsonObject.has("stickerIdx") == true && jsonObject.isNull("stickerIdx") == false)
+            {
+                stickerIndex = jsonObject.getInt("stickerIdx");
+
+                if (stringSparseArray != null && stringSparseArray.size() > 0)
+                {
+                    stickerUrl = stringSparseArray.get(stickerIndex);
+                }
+            }
 
             truevr = false;
 
