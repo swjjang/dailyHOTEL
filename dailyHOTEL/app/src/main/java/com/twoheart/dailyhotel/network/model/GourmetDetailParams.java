@@ -91,6 +91,10 @@ public class GourmetDetailParams extends PlaceDetailParams<GourmetProduct>
     // 직접 접근 금지
     @JsonField(name = "tickets")
     public List<GourmetProduct> tickets;
+
+    @JsonField(name = "sticker")
+    public Sticker sticker;
+
     //
     //    // 직접 접근 금지
     //    // 주의 : Parcelable 후에 해당 값은 사라집니다.
@@ -253,6 +257,11 @@ public class GourmetDetailParams extends PlaceDetailParams<GourmetProduct>
         return tickets;
     }
 
+    public Sticker getSticker()
+    {
+        return sticker;
+    }
+
     @Override
     public void writeToParcel(Parcel dest, int flags)
     {
@@ -303,4 +312,17 @@ public class GourmetDetailParams extends PlaceDetailParams<GourmetProduct>
             return new GourmetDetailParams[size];
         }
     };
+
+    @JsonObject
+    public static class Sticker
+    {
+        @JsonField(name = "idx")
+        int index;
+
+        @JsonField(name = "defaultImageUrl")
+        String defaultImageUrl;
+
+        @JsonField(name = "lowResolutionImageUrl")
+        String lowResolutionImageUrl;
+    }
 }
