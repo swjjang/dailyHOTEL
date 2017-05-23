@@ -96,6 +96,13 @@
             android:layout_height="112dp"
             android:background="@drawable/img_detail_gradient"/>
 
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/stickerSimpleDraweeView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="52dp"
+            android:layout_marginLeft="15dp"
+            android:visibility="gone"/>
     </RelativeLayout>
 
     <LinearLayout

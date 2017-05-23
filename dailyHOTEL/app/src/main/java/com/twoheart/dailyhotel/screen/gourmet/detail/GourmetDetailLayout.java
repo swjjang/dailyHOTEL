@@ -1,9 +1,18 @@
 package com.twoheart.dailyhotel.screen.gourmet.detail;
 
 import android.content.Context;
+import android.graphics.drawable.Animatable;
+import android.net.Uri;
 import android.view.View;
+import android.view.ViewGroup;
 
 import com.daily.base.util.DailyTextUtils;
+import com.daily.base.util.ScreenUtils;
+import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.drawee.controller.BaseControllerListener;
+import com.facebook.drawee.interfaces.DraweeController;
+import com.facebook.drawee.view.SimpleDraweeView;
+import com.facebook.imagepipeline.image.ImageInfo;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.GourmetDetail;
 import com.twoheart.dailyhotel.model.time.GourmetBookingDay;
@@ -21,6 +30,7 @@ import java.util.List;
 public class GourmetDetailLayout extends PlaceDetailLayout
 {
     private GourmetDetailListAdapter mListAdapter;
+    private SimpleDraweeView mStickerSimpleDraweeView;
 
     public interface OnEventListener extends PlaceDetailLayout.OnEventListener
     {
@@ -32,6 +42,14 @@ public class GourmetDetailLayout extends PlaceDetailLayout
     public GourmetDetailLayout(Context context, OnBaseEventListener listener)
     {
         super(context, listener);
+    }
+
+    @Override
+    protected void initLayout(View view)
+    {
+        super.initLayout(view);
+
+        mStickerSimpleDraweeView = (SimpleDraweeView) view.findViewById(R.id.stickerSimpleDraweeView);
     }
 
     @Override
@@ -136,6 +154,8 @@ public class GourmetDetailLayout extends PlaceDetailLayout
             setTrueReviewCount(placeReviewScores.reviewScoreTotalCount);
         }
 
+        setSticker(gourmetDetailParams.getSticker());
+
         mListAdapter.notifyDataSetChanged();
     }
 
@@ -197,5 +217,47 @@ public class GourmetDetailLayout extends PlaceDetailLayout
                 break;
             }
         }
+    }
+
+    private void setSticker(GourmetDetailParams.Sticker sticker)
+    {
+        if (sticker == null)
+        {
+            mStickerSimpleDraweeView.setVisibility(View.GONE);
+            return;
+        }
+
+        String url;
+        if (ScreenUtils.getScreenWidth(mContext) < GourmetDetailParams.Sticker.DEFAULT_SCREEN_WIDTH)
+        {
+            url = sticker.lowResolutionImageUrl;
+        } else
+        {
+            url = sticker.defaultImageUrl;
+        }
+
+        if (DailyTextUtils.isTextEmpty(url) == true)
+        {
+            mStickerSimpleDraweeView.setVisibility(View.GONE);
+        } else
+        {
+            mStickerSimpleDraweeView.setVisibility(View.VISIBLE);
+        }
+
+        DraweeController controller = Fresco.newDraweeControllerBuilder().setControllerListener(new BaseControllerListener<ImageInfo>()
+        {
+            @Override
+            public void onFinalImageSet(String id, ImageInfo imageInfo, Animatable animatable)
+            {
+                ViewGroup.LayoutParams layoutParams = mStickerSimpleDraweeView.getLayoutParams();
+
+                layoutParams.width = imageInfo.getWidth();
+                layoutParams.height = imageInfo.getHeight();
+
+                mStickerSimpleDraweeView.setLayoutParams(layoutParams);
+            }
+        }).setUri(Uri.parse(url)).build();
+
+        mStickerSimpleDraweeView.setController(controller);
     }
 }

@@ -316,13 +316,16 @@ public class GourmetDetailParams extends PlaceDetailParams<GourmetProduct>
     @JsonObject
     public static class Sticker
     {
+        @JsonIgnore
+        public static final int DEFAULT_SCREEN_WIDTH = 1440;
+
         @JsonField(name = "idx")
-        int index;
+        public int index;
 
         @JsonField(name = "defaultImageUrl")
-        String defaultImageUrl;
+        public String defaultImageUrl;
 
         @JsonField(name = "lowResolutionImageUrl")
-        String lowResolutionImageUrl;
+        public String lowResolutionImageUrl;
     }
 }
