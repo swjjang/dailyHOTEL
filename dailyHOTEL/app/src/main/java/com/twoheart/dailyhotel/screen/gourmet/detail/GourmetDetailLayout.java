@@ -20,6 +20,7 @@ import com.twoheart.dailyhotel.network.model.GourmetDetailParams;
 import com.twoheart.dailyhotel.network.model.GourmetProduct;
 import com.twoheart.dailyhotel.network.model.ImageInformation;
 import com.twoheart.dailyhotel.network.model.PlaceReviewScores;
+import com.twoheart.dailyhotel.network.model.Sticker;
 import com.twoheart.dailyhotel.place.adapter.PlaceDetailImageViewPagerAdapter;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
 import com.twoheart.dailyhotel.place.layout.PlaceDetailLayout;
@@ -219,7 +220,7 @@ public class GourmetDetailLayout extends PlaceDetailLayout
         }
     }
 
-    private void setSticker(GourmetDetailParams.Sticker sticker)
+    private void setSticker(Sticker sticker)
     {
         if (sticker == null)
         {
@@ -228,7 +229,7 @@ public class GourmetDetailLayout extends PlaceDetailLayout
         }
 
         String url;
-        if (ScreenUtils.getScreenWidth(mContext) < GourmetDetailParams.Sticker.DEFAULT_SCREEN_WIDTH)
+        if (ScreenUtils.getScreenWidth(mContext) < Sticker.DEFAULT_SCREEN_WIDTH)
         {
             url = sticker.lowResolutionImageUrl;
         } else

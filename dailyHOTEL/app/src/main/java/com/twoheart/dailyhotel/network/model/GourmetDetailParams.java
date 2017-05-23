@@ -312,20 +312,4 @@ public class GourmetDetailParams extends PlaceDetailParams<GourmetProduct>
             return new GourmetDetailParams[size];
         }
     };
-
-    @JsonObject
-    public static class Sticker
-    {
-        @JsonIgnore
-        public static final int DEFAULT_SCREEN_WIDTH = 1440;
-
-        @JsonField(name = "idx")
-        public int index;
-
-        @JsonField(name = "defaultImageUrl")
-        public String defaultImageUrl;
-
-        @JsonField(name = "lowResolutionImageUrl")
-        public String lowResolutionImageUrl;
-    }
 }
