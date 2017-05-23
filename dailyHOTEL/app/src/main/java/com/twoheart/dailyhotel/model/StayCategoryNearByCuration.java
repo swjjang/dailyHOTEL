@@ -2,7 +2,7 @@ package com.twoheart.dailyhotel.model;
 
 import android.os.Parcel;
 
-public class StayCategoryNearByCuration extends StayCuration
+public class StayCategoryNearByCuration extends StayCategoryCuration
 {
     private Keyword mKeyword;
     private double mRadius;

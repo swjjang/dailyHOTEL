@@ -28,19 +28,19 @@ import com.twoheart.dailyhotel.model.PlaceCuration;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.Stay;
+import com.twoheart.dailyhotel.model.StayCategoryNearByCuration;
 import com.twoheart.dailyhotel.model.StayCuration;
 import com.twoheart.dailyhotel.model.StayCurationOption;
-import com.twoheart.dailyhotel.model.StayCategoryNearByCuration;
 import com.twoheart.dailyhotel.model.time.StayBookingDay;
 import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.fragment.PlaceListFragment;
 import com.twoheart.dailyhotel.screen.common.PermissionManagerActivity;
+import com.twoheart.dailyhotel.screen.home.category.filter.StayCategoryNearByCurationActivity;
 import com.twoheart.dailyhotel.screen.hotel.detail.StayDetailActivity;
 import com.twoheart.dailyhotel.screen.hotel.filter.StayCalendarActivity;
 import com.twoheart.dailyhotel.screen.hotel.list.StayListAdapter;
 import com.twoheart.dailyhotel.screen.hotel.preview.StayPreviewActivity;
-import com.twoheart.dailyhotel.screen.search.stay.result.StaySearchResultCurationActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyLocationFactory;
 import com.twoheart.dailyhotel.util.Util;
@@ -882,7 +882,7 @@ public class StayCategoryNearByActivity extends BaseActivity
                 return;
             }
 
-            Intent intent = StaySearchResultCurationActivity.newInstance(StayCategoryNearByActivity.this,//
+            Intent intent = StayCategoryNearByCurationActivity.newInstance(StayCategoryNearByActivity.this,//
                 mViewType, SearchType.LOCATION, mStayCategoryNearByCuration, mIsFixedLocation);
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAYCURATION);
 
@@ -1251,7 +1251,7 @@ public class StayCategoryNearByActivity extends BaseActivity
                 return;
             }
 
-            Intent intent = StaySearchResultCurationActivity.newInstance(StayCategoryNearByActivity.this, //
+            Intent intent = StayCategoryNearByCurationActivity.newInstance(StayCategoryNearByActivity.this, //
                 mViewType, SearchType.LOCATION, mStayCategoryNearByCuration, mIsFixedLocation);
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAYCURATION);
         }

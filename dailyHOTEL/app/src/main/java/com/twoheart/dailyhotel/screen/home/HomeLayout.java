@@ -686,12 +686,10 @@ public class HomeLayout extends BaseBlurLayout
 
         mEventListAdapter.setData(list);
 
-        int defaultIndex = 0;
-
         if (defaultEvent == null //
             || HomeEventImageViewPagerAdapter.DEFAULT_EVENT_IMAGE_URL.equalsIgnoreCase(defaultEvent.defaultImageUrl) == false)
         {
-            setEventCountView(defaultIndex, mEventListAdapter.getRealCount());
+            setEventCountView(0, mEventListAdapter.getRealCount());
         }
 
         mEventRecyclerView.setAdapter(mEventListAdapter);
@@ -700,34 +698,10 @@ public class HomeLayout extends BaseBlurLayout
         firstPosition = firstPosition + (mEventListAdapter.getRealCount() - (firstPosition % mEventListAdapter.getRealCount()));
         mEventRecyclerView.scrollToPosition(firstPosition);
 
-        mEventRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener()
-        {
-            @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState)
-            {
-                if (newState == RecyclerView.SCROLL_STATE_DRAGGING)
-                {
-                    if (mEventHandler != null)
-                    {
-                        mEventHandler.removeMessages(0);
-                    }
-                }
+        mEventRecyclerView.clearOnScrollListeners();
+        mEventRecyclerView.addOnScrollListener(mOnScrollListener);
 
-                mSwipeRefreshLayout.setEnabled(RecyclerView.SCROLL_STATE_IDLE == newState);
-            }
-
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy)
-            {
-                int totalCount = mEventListAdapter.getRealCount();
-                LinearLayoutManager linearLayoutManager = (LinearLayoutManager) mEventRecyclerView.getLayoutManager();
-
-                setEventCountView(linearLayoutManager.findFirstVisibleItemPosition() % totalCount, totalCount);
-                moveNextEventPosition(recyclerView, linearLayoutManager.findFirstVisibleItemPosition());
-            }
-        });
-
-        moveNextEventPosition(mEventRecyclerView, defaultIndex);
+        moveNextEventPosition(mEventRecyclerView, firstPosition);
     }
 
     void setEventCountView(int pageIndex, int totalCount)
@@ -769,6 +743,35 @@ public class HomeLayout extends BaseBlurLayout
                 mEventCountTextView.setText(spannableString);
             }
         }
+    }
+
+    public void clearNextEventPosition()
+    {
+        if (mEventHandler == null)
+        {
+            return;
+        }
+
+        mEventHandler.removeMessages(0);
+        mEventHandler = null;
+    }
+
+    public void resumeNextEventPosition()
+    {
+        if (mEventRecyclerView == null || mEventAreaLayout == null)
+        {
+            clearNextEventPosition();
+            return;
+        }
+
+        if (mEventHandler == null)
+        {
+            mEventHandler = new EventHandler(mEventAreaLayout);
+        }
+
+        LinearLayoutManager linearLayoutManager = (LinearLayoutManager) mEventRecyclerView.getLayoutManager();
+
+        moveNextEventPosition(mEventRecyclerView, linearLayoutManager.findFirstVisibleItemPosition());
     }
 
     public void hideMessageLayout()
@@ -1334,6 +1337,33 @@ public class HomeLayout extends BaseBlurLayout
             {
                 mTopButtonLayout.setVisibility(View.GONE);
             }
+        }
+    };
+
+    private RecyclerView.OnScrollListener mOnScrollListener = new RecyclerView.OnScrollListener()
+    {
+        @Override
+        public void onScrollStateChanged(RecyclerView recyclerView, int newState)
+        {
+            if (newState == RecyclerView.SCROLL_STATE_DRAGGING)
+            {
+                if (mEventHandler != null)
+                {
+                    mEventHandler.removeMessages(0);
+                }
+            }
+
+            mSwipeRefreshLayout.setEnabled(RecyclerView.SCROLL_STATE_IDLE == newState);
+        }
+
+        @Override
+        public void onScrolled(RecyclerView recyclerView, int dx, int dy)
+        {
+            int totalCount = mEventListAdapter.getRealCount();
+            LinearLayoutManager linearLayoutManager = (LinearLayoutManager) mEventRecyclerView.getLayoutManager();
+
+            setEventCountView(linearLayoutManager.findFirstVisibleItemPosition() % totalCount, totalCount);
+            moveNextEventPosition(recyclerView, linearLayoutManager.findFirstVisibleItemPosition());
         }
     };
 

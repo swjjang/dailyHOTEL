@@ -36,11 +36,11 @@ import com.twoheart.dailyhotel.place.fragment.PlaceListFragment;
 import com.twoheart.dailyhotel.place.fragment.PlaceMainActivity;
 import com.twoheart.dailyhotel.place.layout.PlaceMainLayout;
 import com.twoheart.dailyhotel.place.networkcontroller.PlaceMainNetworkController;
+import com.twoheart.dailyhotel.screen.home.category.filter.StayCategoryCurationActivity;
 import com.twoheart.dailyhotel.screen.home.category.nearby.StayCategoryNearByActivity;
 import com.twoheart.dailyhotel.screen.home.category.region.HomeCategoryRegionListActivity;
 import com.twoheart.dailyhotel.screen.hotel.detail.StayDetailActivity;
 import com.twoheart.dailyhotel.screen.hotel.filter.StayCalendarActivity;
-import com.twoheart.dailyhotel.screen.hotel.filter.StayCurationActivity;
 import com.twoheart.dailyhotel.screen.hotel.list.StayListAdapter;
 import com.twoheart.dailyhotel.screen.hotel.preview.StayPreviewActivity;
 import com.twoheart.dailyhotel.screen.search.SearchActivity;
@@ -70,7 +70,7 @@ import retrofit2.Response;
  */
 public class StayCategoryTabActivity extends PlaceMainActivity
 {
-    private StayCategoryCuration mStayCuration;
+    private StayCategoryCuration mStayCategoryCuration;
     private DailyCategoryType mDailyCategoryType;
     private DailyDeepLink mDailyDeepLink;
 
@@ -96,7 +96,7 @@ public class StayCategoryTabActivity extends PlaceMainActivity
 
         super.onCreate(savedInstanceState);
 
-        mStayCuration = new StayCategoryCuration();
+        mStayCategoryCuration = new StayCategoryCuration();
 
         if (mDailyCategoryType == null //
             || DailyCategoryType.STAY_NEARBY == mDailyCategoryType //
@@ -108,7 +108,7 @@ public class StayCategoryTabActivity extends PlaceMainActivity
 
         String name = getResources().getString(mDailyCategoryType.getNameResId());
         String code = getResources().getString(mDailyCategoryType.getCodeResId());
-        mStayCuration.setCategory(new Category(name, code));
+        mStayCategoryCuration.setCategory(new Category(name, code));
 
         initDeepLink(intent);
     }
@@ -192,18 +192,18 @@ public class StayCategoryTabActivity extends PlaceMainActivity
         {
             if (data.hasExtra(NAME_INTENT_EXTRA_DATA_PROVINCE) == true)
             {
-                StayCurationOption stayCurationOption = (StayCurationOption) mStayCuration.getCurationOption();
+                StayCurationOption stayCurationOption = (StayCurationOption) mStayCategoryCuration.getCurationOption();
                 stayCurationOption.clear();
 
                 Province province = data.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PROVINCE);
-                mStayCuration.setProvince(province);
+                mStayCategoryCuration.setProvince(province);
 
                 String categoryName = this.getResources().getString(mDailyCategoryType.getNameResId());
                 String categoryCode = this.getResources().getString(mDailyCategoryType.getCodeResId());
 
                 Category category = new Category(categoryName, categoryCode);
                 // subCategory 의 경우 category 를 preference에 저장 안함
-                mStayCuration.setCategory(category);
+                mStayCategoryCuration.setCategory(category);
 
                 mPlaceMainLayout.setToolbarRegionText(province.name);
                 mPlaceMainLayout.setOptionFilterSelected(stayCurationOption.isDefaultFilter() == false);
@@ -223,30 +223,30 @@ public class StayCategoryTabActivity extends PlaceMainActivity
                 }
 
                 ArrayList<Category> categoryList = new ArrayList<>();
-                categoryList.add(mStayCuration.getCategory());
+                categoryList.add(mStayCategoryCuration.getCategory());
 
                 mPlaceMainLayout.setCategoryTabLayout(getSupportFragmentManager(), categoryList, //
-                    mStayCuration.getCategory(), mStayCategoryListFragmentListener);
+                    mStayCategoryCuration.getCategory(), mStayCategoryListFragmentListener);
             }
         } else if (resultCode == RESULT_CHANGED_DATE && data != null)
         {
             // 날짜 선택 화면으로 이동한다.
             if (data.hasExtra(NAME_INTENT_EXTRA_DATA_PROVINCE) == true)
             {
-                StayCurationOption stayCurationOption = (StayCurationOption) mStayCuration.getCurationOption();
+                StayCurationOption stayCurationOption = (StayCurationOption) mStayCategoryCuration.getCurationOption();
                 stayCurationOption.clear();
 
                 Province province = data.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PROVINCE);
                 StayBookingDay stayBookingDay = data.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY);
 
-                mStayCuration.setProvince(province);
+                mStayCategoryCuration.setProvince(province);
 
                 String categoryName = this.getResources().getString(mDailyCategoryType.getNameResId());
                 String categoryCode = this.getResources().getString(mDailyCategoryType.getCodeResId());
 
                 Category category = new Category(categoryName, categoryCode);
                 // subCategory 의 경우 category 를 preference에 저장 안함
-                mStayCuration.setCategory(category);
+                mStayCategoryCuration.setCategory(category);
 
                 mPlaceMainLayout.setToolbarRegionText(province.name);
                 mPlaceMainLayout.setOptionFilterSelected(stayCurationOption.isDefaultFilter() == false);
@@ -265,17 +265,17 @@ public class StayCategoryTabActivity extends PlaceMainActivity
                     //                    AnalyticsManager.getInstance(this).onRegionChanged(country, realProvinceName);
                 }
 
-                mStayCuration.setStayBookingDay(stayBookingDay);
+                mStayCategoryCuration.setStayBookingDay(stayBookingDay);
 
                 ((StayCategoryTabLayout) mPlaceMainLayout).setToolbarDateText(stayBookingDay);
 
                 startCalendar(AnalyticsManager.Label.CHANGE_LOCATION, mTodayDateTime);
 
                 ArrayList<Category> categoryList = new ArrayList<>();
-                categoryList.add(mStayCuration.getCategory());
+                categoryList.add(mStayCategoryCuration.getCategory());
 
                 mPlaceMainLayout.setCategoryTabLayout(getSupportFragmentManager(), categoryList, //
-                    mStayCuration.getCategory(), mStayCategoryListFragmentListener);
+                    mStayCategoryCuration.getCategory(), mStayCategoryListFragmentListener);
             }
         } else if (resultCode == RESULT_ARROUND_SEARCH_LIST && data != null)
         {
@@ -283,7 +283,7 @@ public class StayCategoryTabActivity extends PlaceMainActivity
             if (data.hasExtra(NAME_INTENT_EXTRA_DATA_LOCATION) == true)
             {
                 Location location = data.getParcelableExtra(NAME_INTENT_EXTRA_DATA_LOCATION);
-                mStayCuration.setLocation(location);
+                mStayCategoryCuration.setLocation(location);
 
                 String region = data.getStringExtra(NAME_INTENT_EXTRA_DATA_RESULT);
                 String callByScreen = AnalyticsManager.Screen.DAILYHOTEL_LIST_REGION_DOMESTIC;
@@ -296,7 +296,7 @@ public class StayCategoryTabActivity extends PlaceMainActivity
                     callByScreen = AnalyticsManager.Screen.DAILYHOTEL_LIST_REGION_GLOBAL;
                 }
 
-                startAroundSearchResult(this, mTodayDateTime, mStayCuration.getStayBookingDay(), location, callByScreen);
+                startAroundSearchResult(this, mTodayDateTime, mStayCategoryCuration.getStayBookingDay(), location, callByScreen);
             }
         } else if (resultCode == CODE_RESULT_ACTIVITY_GO_HOME)
         {
@@ -317,7 +317,7 @@ public class StayCategoryTabActivity extends PlaceMainActivity
                 return;
             }
 
-            mStayCuration.setStayBookingDay(stayBookingDay);
+            mStayCategoryCuration.setStayBookingDay(stayBookingDay);
 
             ((StayCategoryTabLayout) mPlaceMainLayout).setToolbarDateText(stayBookingDay);
 
@@ -340,12 +340,12 @@ public class StayCategoryTabActivity extends PlaceMainActivity
             StayCategoryCuration changedStayCuration = (StayCategoryCuration) placeCuration;
             StayCurationOption changedStayCurationOption = (StayCurationOption) changedStayCuration.getCurationOption();
 
-            mStayCuration.setCurationOption(changedStayCurationOption);
+            mStayCategoryCuration.setCurationOption(changedStayCurationOption);
             mPlaceMainLayout.setOptionFilterSelected(changedStayCurationOption.isDefaultFilter() == false);
 
             if (changedStayCurationOption.getSortType() == SortType.DISTANCE)
             {
-                mStayCuration.setLocation(changedStayCuration.getLocation());
+                mStayCategoryCuration.setLocation(changedStayCuration.getLocation());
 
                 searchMyLocation();
             } else
@@ -362,7 +362,7 @@ public class StayCategoryTabActivity extends PlaceMainActivity
     @Override
     protected void onLocationFailed()
     {
-        StayCurationOption stayCurationOption = (StayCurationOption) mStayCuration.getCurationOption();
+        StayCurationOption stayCurationOption = (StayCurationOption) mStayCategoryCuration.getCurationOption();
 
         stayCurationOption.setSortType(SortType.DEFAULT);
         mPlaceMainLayout.setOptionFilterSelected(stayCurationOption.isDefaultFilter() == false);
@@ -373,7 +373,7 @@ public class StayCategoryTabActivity extends PlaceMainActivity
     @Override
     protected void onLocationProviderDisabled()
     {
-        StayCurationOption stayCurationOption = (StayCurationOption) mStayCuration.getCurationOption();
+        StayCurationOption stayCurationOption = (StayCurationOption) mStayCategoryCuration.getCurationOption();
 
         stayCurationOption.setSortType(SortType.DEFAULT);
         mPlaceMainLayout.setOptionFilterSelected(stayCurationOption.isDefaultFilter() == false);
@@ -384,14 +384,14 @@ public class StayCategoryTabActivity extends PlaceMainActivity
     @Override
     protected void onLocationChanged(Location location)
     {
-        StayCurationOption stayCurationOption = (StayCurationOption) mStayCuration.getCurationOption();
+        StayCurationOption stayCurationOption = (StayCurationOption) mStayCategoryCuration.getCurationOption();
 
         if (stayCurationOption.getSortType() == SortType.DISTANCE)
         {
             if (location == null)
             {
                 // 이전에 가지고 있던 데이터를 사용한다.
-                if (mStayCuration.getLocation() != null)
+                if (mStayCategoryCuration.getLocation() != null)
                 {
                     refreshCurrentFragment(true);
                 } else
@@ -403,7 +403,7 @@ public class StayCategoryTabActivity extends PlaceMainActivity
                 }
             } else
             {
-                mStayCuration.setLocation(location);
+                mStayCategoryCuration.setLocation(location);
                 refreshCurrentFragment(true);
             }
         }
@@ -416,7 +416,7 @@ public class StayCategoryTabActivity extends PlaceMainActivity
             return;
         }
 
-        Intent intent = StayCalendarActivity.newInstance(this, todayDateTime, mStayCuration.getStayBookingDay(), callByScreen, true, true);
+        Intent intent = StayCalendarActivity.newInstance(this, todayDateTime, mStayCategoryCuration.getStayBookingDay(), callByScreen, true, true);
 
         if (intent == null)
         {
@@ -447,7 +447,7 @@ public class StayCategoryTabActivity extends PlaceMainActivity
     @Override
     protected PlaceCuration getPlaceCuration()
     {
-        return mStayCuration;
+        return mStayCategoryCuration;
     }
 
     // GA 주석 처리
@@ -459,7 +459,7 @@ public class StayCategoryTabActivity extends PlaceMainActivity
             return;
         }
 
-        StayBookingDay stayBookingDay = mStayCuration.getStayBookingDay();
+        StayBookingDay stayBookingDay = mStayCategoryCuration.getStayBookingDay();
         Map<String, String> params = new HashMap<>();
 
         try
@@ -478,10 +478,10 @@ public class StayCategoryTabActivity extends PlaceMainActivity
 
             params.put(AnalyticsManager.KeyType.PLACE_TYPE, AnalyticsManager.ValueType.STAY);
             params.put(AnalyticsManager.KeyType.PLACE_HIT_TYPE, AnalyticsManager.ValueType.STAY);
-            params.put(AnalyticsManager.KeyType.CATEGORY, mStayCuration.getCategory().code);
-            params.put(AnalyticsManager.KeyType.FILTER, mStayCuration.getCurationOption().toAdjustString());
+            params.put(AnalyticsManager.KeyType.CATEGORY, mStayCategoryCuration.getCategory().code);
+            params.put(AnalyticsManager.KeyType.FILTER, mStayCategoryCuration.getCurationOption().toAdjustString());
 
-            Province province = mStayCuration.getProvince();
+            Province province = mStayCategoryCuration.getProvince();
 
             if (province == null)
             {
@@ -619,7 +619,7 @@ public class StayCategoryTabActivity extends PlaceMainActivity
         public void onCategoryTabSelected(TabLayout.Tab tab)
         {
             Category category = (Category) tab.getTag();
-            mStayCuration.setCategory(StayCategoryTabActivity.this, category);
+            mStayCategoryCuration.setCategory(StayCategoryTabActivity.this, category);
 
             mPlaceMainLayout.setCurrentItem(tab.getPosition());
 
@@ -641,7 +641,7 @@ public class StayCategoryTabActivity extends PlaceMainActivity
         @Override
         public void onSearchClick()
         {
-            Intent intent = SearchActivity.newInstance(StayCategoryTabActivity.this, PlaceType.HOTEL, mStayCuration.getStayBookingDay());
+            Intent intent = SearchActivity.newInstance(StayCategoryTabActivity.this, PlaceType.HOTEL, mStayCategoryCuration.getStayBookingDay());
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SEARCH);
 
             switch (mViewType)
@@ -711,7 +711,7 @@ public class StayCategoryTabActivity extends PlaceMainActivity
             }
 
             startActivityForResult(HomeCategoryRegionListActivity.newInstance( //
-                StayCategoryTabActivity.this, mDailyCategoryType, mStayCuration.getStayBookingDay()) //
+                StayCategoryTabActivity.this, mDailyCategoryType, mStayCategoryCuration.getStayBookingDay()) //
                 , Constants.CODE_REQUEST_ACTIVITY_REGIONLIST);
 
             switch (mViewType)
@@ -742,7 +742,7 @@ public class StayCategoryTabActivity extends PlaceMainActivity
                 return;
             }
 
-            Province province = mStayCuration.getProvince();
+            Province province = mStayCategoryCuration.getProvince();
 
             if (province == null)
             {
@@ -750,7 +750,7 @@ public class StayCategoryTabActivity extends PlaceMainActivity
                 return;
             }
 
-            Intent intent = StayCurationActivity.newInstance(StayCategoryTabActivity.this, mViewType, mStayCuration);
+            Intent intent = StayCategoryCurationActivity.newInstance(StayCategoryTabActivity.this, mViewType, mStayCategoryCuration);
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAYCURATION);
 
             String viewType = AnalyticsManager.Label.VIEWTYPE_LIST;
@@ -792,7 +792,7 @@ public class StayCategoryTabActivity extends PlaceMainActivity
 
             try
             {
-                StayBookingDay stayBookingDay = mStayCuration.getStayBookingDay();
+                StayBookingDay stayBookingDay = mStayCategoryCuration.getStayBookingDay();
 
                 // 체크인 시간이 설정되어 있지 않는 경우 기본값을 넣어준다.
                 if (stayBookingDay == null)
@@ -827,9 +827,9 @@ public class StayCategoryTabActivity extends PlaceMainActivity
                     }
                 }
 
-                mStayCuration.setStayBookingDay(stayBookingDay);
+                mStayCategoryCuration.setStayBookingDay(stayBookingDay);
 
-                ((StayCategoryTabLayout) mPlaceMainLayout).setToolbarDateText(mStayCuration.getStayBookingDay());
+                ((StayCategoryTabLayout) mPlaceMainLayout).setToolbarDateText(mStayCategoryCuration.getStayBookingDay());
 
                 mPlaceMainNetworkController.requestRegionList(mDailyCategoryType.getCodeString(StayCategoryTabActivity.this));
 
@@ -854,7 +854,7 @@ public class StayCategoryTabActivity extends PlaceMainActivity
                 return;
             }
 
-            Province selectedProvince = mStayCuration.getProvince();
+            Province selectedProvince = mStayCategoryCuration.getProvince();
 
             if (selectedProvince == null)
             {
@@ -872,7 +872,7 @@ public class StayCategoryTabActivity extends PlaceMainActivity
 
             DailyPreference.getInstance(StayCategoryTabActivity.this).setDailyRegion(mDailyCategoryType, Util.getDailyRegionJSONObject(selectedProvince));
 
-            mStayCuration.setProvince(selectedProvince);
+            mStayCategoryCuration.setProvince(selectedProvince);
 
             if (mDailyDeepLink != null && mDailyDeepLink.isValidateLink() == true //
                 && processDeepLinkByRegionList(StayCategoryTabActivity.this, provinceList, areaList, mTodayDateTime, mDailyDeepLink) == true)
@@ -881,11 +881,11 @@ public class StayCategoryTabActivity extends PlaceMainActivity
             } else
             {
                 ArrayList<Category> categoryList = new ArrayList<>();
-                categoryList.add(mStayCuration.getCategory());
+                categoryList.add(mStayCategoryCuration.getCategory());
 
                 mPlaceMainLayout.setToolbarRegionText(selectedProvince.name);
                 mPlaceMainLayout.setCategoryTabLayout(getSupportFragmentManager(), categoryList, //
-                    mStayCuration.getCategory(), mStayCategoryListFragmentListener);
+                    mStayCategoryCuration.getCategory(), mStayCategoryListFragmentListener);
             }
         }
 
@@ -1011,7 +1011,7 @@ public class StayCategoryTabActivity extends PlaceMainActivity
                 case PlaceViewItem.TYPE_ENTRY:
                 {
                     Stay stay = placeViewItem.getItem();
-                    Province province = mStayCuration.getProvince();
+                    Province province = mStayCategoryCuration.getProvince();
 
                     JSONObject lastRegionObject = DailyPreference.getInstance(StayCategoryTabActivity.this).getDailyRegion(mDailyCategoryType);
                     boolean isSameProvince = Util.isSameProvinceName(province, lastRegionObject);
@@ -1029,7 +1029,7 @@ public class StayCategoryTabActivity extends PlaceMainActivity
                     if (Util.isUsedMultiTransition() == true)
                     {
                         Intent intent = StayDetailActivity.newInstance(StayCategoryTabActivity.this, //
-                            mStayCuration.getStayBookingDay(), province, stay, listCount, true);
+                            mStayCategoryCuration.getStayBookingDay(), province, stay, listCount, true);
 
                         View simpleDraweeView = view.findViewById(R.id.imageView);
                         View gradeTextView = view.findViewById(R.id.gradeTextView);
@@ -1055,7 +1055,7 @@ public class StayCategoryTabActivity extends PlaceMainActivity
                     } else
                     {
                         Intent intent = StayDetailActivity.newInstance(StayCategoryTabActivity.this, //
-                            mStayCuration.getStayBookingDay(), province, stay, listCount, false);
+                            mStayCategoryCuration.getStayBookingDay(), province, stay, listCount, false);
 
                         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL);
 
@@ -1096,7 +1096,7 @@ public class StayCategoryTabActivity extends PlaceMainActivity
                     mListCountByLongPress = listCount;
 
                     Stay stay = placeViewItem.getItem();
-                    Intent intent = StayPreviewActivity.newInstance(StayCategoryTabActivity.this, mStayCuration.getStayBookingDay(), stay);
+                    Intent intent = StayPreviewActivity.newInstance(StayCategoryTabActivity.this, mStayCategoryCuration.getStayBookingDay(), stay);
 
                     startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PREVIEW);
                     break;
@@ -1121,7 +1121,7 @@ public class StayCategoryTabActivity extends PlaceMainActivity
             if (currentPlaceListFragment == placeListFragment)
             {
                 currentPlaceListFragment.setVisibility(mViewType, true);
-                currentPlaceListFragment.setPlaceCuration(mStayCuration);
+                currentPlaceListFragment.setPlaceCuration(mStayCategoryCuration);
                 currentPlaceListFragment.refreshList(true);
             } else
             {
@@ -1442,10 +1442,10 @@ public class StayCategoryTabActivity extends PlaceMainActivity
 
                 if (selectedProvince == null)
                 {
-                    selectedProvince = mStayCuration.getProvince();
+                    selectedProvince = mStayCategoryCuration.getProvince();
                 }
 
-                mStayCuration.setProvince(selectedProvince);
+                mStayCategoryCuration.setProvince(selectedProvince);
 
                 DailyPreference.getInstance(StayCategoryTabActivity.this).setDailyRegion(mDailyCategoryType, Util.getDailyRegionJSONObject(selectedProvince));
 
@@ -1458,7 +1458,7 @@ public class StayCategoryTabActivity extends PlaceMainActivity
                     {
                         if (category.code.equalsIgnoreCase(categoryCode) == true)
                         {
-                            mStayCuration.setCategory(StayCategoryTabActivity.this, category);
+                            mStayCategoryCuration.setCategory(StayCategoryTabActivity.this, category);
                             break;
                         }
                     }
@@ -1480,16 +1480,16 @@ public class StayCategoryTabActivity extends PlaceMainActivity
 
                 stayBookingDay.setCheckOutDay(stayBookingDay.getCheckInDay(DailyCalendar.ISO_8601_FORMAT), nights);
 
-                mStayCuration.setStayBookingDay(stayBookingDay);
+                mStayCategoryCuration.setStayBookingDay(stayBookingDay);
 
                 ((StayCategoryTabLayout) mPlaceMainLayout).setToolbarDateText(stayBookingDay);
 
                 ArrayList<Category> categoryList = new ArrayList<>();
-                categoryList.add(mStayCuration.getCategory());
+                categoryList.add(mStayCategoryCuration.getCategory());
 
                 mPlaceMainLayout.setToolbarRegionText(selectedProvince.name);
                 mPlaceMainLayout.setCategoryTabLayout(getSupportFragmentManager(), categoryList, //
-                    mStayCuration.getCategory(), mStayCategoryListFragmentListener);
+                    mStayCategoryCuration.getCategory(), mStayCategoryListFragmentListener);
             } else
             {
 
