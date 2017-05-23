@@ -16,4 +16,7 @@ public class RecommendationPlaceList<E>
 
     @JsonField(name = "imgUrl")
     public String imageBaseUrl;
+
+    @JsonField(name = "stickers")
+    public List<Sticker> stickers;
 }

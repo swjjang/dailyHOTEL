@@ -276,12 +276,20 @@ public class HappyTalkCategoryDialog extends BaseActivity
             {
                 if (url.startsWith("intent://"))
                 {
-                    String host = url.substring("intent://".length(), url.indexOf("#Intent"));
-                    int schemeIndex = url.indexOf("scheme=");
-                    String scheme = url.substring(schemeIndex + "scheme=".length(), url.indexOf(';', schemeIndex));
+                    try
+                    {
+                        String host = url.substring("intent://".length(), url.indexOf("#Intent"));
+                        int schemeIndex = url.indexOf("scheme=");
+                        String scheme = url.substring(schemeIndex + "scheme=".length(), url.indexOf(';', schemeIndex));
 
-                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(scheme + "://" + host));
-                    startActivity(intent);
+                        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(scheme + "://" + host));
+                        startActivity(intent);
+                    } catch (Exception e)
+                    {
+                        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(urlStringBuilder.toString()));
+                        startActivity(intent);
+                    }
+
                     finish();
                 } else
                 {

@@ -1304,7 +1304,7 @@
 
     <string-array name="company_email_postfix_array">
         <item>\@naver.com</item>
-        <item>\@hanmail.com</item>
+        <item>\@hanmail.net</item>
         <item>\@nate.com</item>
         <item>\@gmail.com</item>
         <item>\@daum.net</item>

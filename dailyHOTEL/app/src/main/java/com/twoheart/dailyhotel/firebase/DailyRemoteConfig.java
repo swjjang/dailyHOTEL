@@ -132,7 +132,7 @@ public class DailyRemoteConfig
         String androidSplashImageUpdateTime = mFirebaseRemoteConfig.getString("androidSplashImageUpdateTime");
         String androidText = mFirebaseRemoteConfig.getString("androidText");
         String androidHomeEventDefaultLink = mFirebaseRemoteConfig.getString("androidHomeEventDefaultLink");
-        String androidStamp = mFirebaseRemoteConfig.getString("androidStamp");
+        //        String androidStamp = mFirebaseRemoteConfig.getString("androidStamp");
         String androidBoutiqueBM = mFirebaseRemoteConfig.getString("androidBoutiqueBM");
 
         if (Constants.DEBUG == true)
@@ -146,7 +146,7 @@ public class DailyRemoteConfig
                 ExLog.d("androidSplashImageUpdateTime : " + new JSONObject(androidSplashImageUpdateTime).toString());
                 ExLog.d("androidText : " + new JSONObject(androidText).toString());
                 ExLog.d("androidHomeEventDefaultLink : " + new JSONObject(androidHomeEventDefaultLink).toString());
-                ExLog.d("androidStamp : " + new JSONObject(androidStamp).toString());
+                //                ExLog.d("androidStamp : " + new JSONObject(androidStamp).toString());
                 ExLog.d("androidBoutiqueBM : " + new JSONObject(androidBoutiqueBM).toString());
             } catch (Exception e)
             {
@@ -199,7 +199,7 @@ public class DailyRemoteConfig
         writeHomeEventDefaultLink(mContext, androidHomeEventDefaultLink);
 
         // Stamp
-        writeStamp(mContext, androidStamp);
+        //        writeStamp(mContext, androidStamp);
 
         // boutique BM - test BM
         writeBoutiqueBM(mContext, androidBoutiqueBM);

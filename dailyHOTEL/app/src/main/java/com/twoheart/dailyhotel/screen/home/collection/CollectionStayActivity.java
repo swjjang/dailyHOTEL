@@ -17,6 +17,7 @@ import com.twoheart.dailyhotel.network.dto.BaseDto;
 import com.twoheart.dailyhotel.network.model.RecommendationPlace;
 import com.twoheart.dailyhotel.network.model.RecommendationPlaceList;
 import com.twoheart.dailyhotel.network.model.RecommendationStay;
+import com.twoheart.dailyhotel.network.model.Sticker;
 import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.screen.hotel.detail.StayDetailActivity;
 import com.twoheart.dailyhotel.screen.hotel.filter.StayCalendarActivity;
@@ -172,7 +173,7 @@ public class CollectionStayActivity extends CollectionBaseActivity
     }
 
     @Override
-    protected ArrayList<PlaceViewItem> makePlaceList(String imageBaseUrl, List<? extends RecommendationPlace> placeList)
+    protected ArrayList<PlaceViewItem> makePlaceList(String imageBaseUrl, List<? extends RecommendationPlace> placeList, List<Sticker> stickerList)
     {
         ArrayList<PlaceViewItem> placeViewItemList = new ArrayList<>();
 
@@ -342,7 +343,7 @@ public class CollectionStayActivity extends CollectionBaseActivity
                             ArrayList<RecommendationStay> stayList = new ArrayList<>();
                             stayList.addAll(baseDto.data.items);
 
-                            onPlaceList(baseDto.data.imageBaseUrl, baseDto.data.recommendation, stayList);
+                            onPlaceList(baseDto.data.imageBaseUrl, baseDto.data.recommendation, stayList, baseDto.data.stickers);
                             break;
 
                         // 인트라넷에서 숨김처리가 된경우

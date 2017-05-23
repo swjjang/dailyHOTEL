@@ -4,9 +4,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.SharedElementCallback;
+import android.util.SparseArray;
 import android.view.View;
 
 import com.daily.base.util.ExLog;
+import com.daily.base.util.ScreenUtils;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
@@ -17,6 +19,7 @@ import com.twoheart.dailyhotel.network.dto.BaseDto;
 import com.twoheart.dailyhotel.network.model.RecommendationGourmet;
 import com.twoheart.dailyhotel.network.model.RecommendationPlace;
 import com.twoheart.dailyhotel.network.model.RecommendationPlaceList;
+import com.twoheart.dailyhotel.network.model.Sticker;
 import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.screen.gourmet.detail.GourmetDetailActivity;
 import com.twoheart.dailyhotel.screen.gourmet.filter.GourmetCalendarActivity;
@@ -148,7 +151,7 @@ public class CollectionGourmetActivity extends CollectionBaseActivity
     }
 
     @Override
-    protected ArrayList<PlaceViewItem> makePlaceList(String imageBaseUrl, List<? extends RecommendationPlace> placeList)
+    protected ArrayList<PlaceViewItem> makePlaceList(String imageBaseUrl, List<? extends RecommendationPlace> placeList, List<Sticker> stickerList)
     {
         ArrayList<PlaceViewItem> placeViewItemList = new ArrayList<>();
 
@@ -163,11 +166,45 @@ public class CollectionGourmetActivity extends CollectionBaseActivity
             // 개수 넣기
             //            placeViewItemList.add(new PlaceViewItem(PlaceViewItem.TYPE_SECTION, getSectionTitle(placeList.size())));
 
+            SparseArray<String> stickerSparseArray = new SparseArray<>();
+            if (stickerList != null && stickerList.size() > 0)
+            {
+                boolean isLowResource = false;
+
+                if (ScreenUtils.getScreenWidth(this) < Sticker.DEFAULT_SCREEN_WIDTH)
+                {
+                    isLowResource = true;
+                }
+
+                int length = stickerList.size();
+
+                for (Sticker sticker : stickerList)
+                {
+                    String url;
+
+                    if (isLowResource == true)
+                    {
+                        url = sticker.lowResolutionImageUrl;
+                    } else
+                    {
+                        url = sticker.defaultImageUrl;
+                    }
+
+                    stickerSparseArray.append(sticker.index, url);
+                }
+            }
+
             int entryPosition = 0;
 
             for (RecommendationPlace place : placeList)
             {
                 place.imageUrl = imageBaseUrl + place.imageUrl;
+
+                if (place.stickerIdx != null)
+                {
+                    place.stickerUrl = stickerSparseArray.get(place.stickerIdx);
+                }
+
                 place.entryPosition = entryPosition++;
                 placeViewItemList.add(new PlaceViewItem(PlaceViewItem.TYPE_ENTRY, place));
             }
@@ -308,7 +345,7 @@ public class CollectionGourmetActivity extends CollectionBaseActivity
                             ArrayList<RecommendationGourmet> gourmetList = new ArrayList<>();
                             gourmetList.addAll(baseDto.data.items);
 
-                            onPlaceList(baseDto.data.imageBaseUrl, baseDto.data.recommendation, gourmetList);
+                            onPlaceList(baseDto.data.imageBaseUrl, baseDto.data.recommendation, gourmetList, baseDto.data.stickers);
                             break;
 
                         // 인트라넷에서 숨김처리가 된경우
