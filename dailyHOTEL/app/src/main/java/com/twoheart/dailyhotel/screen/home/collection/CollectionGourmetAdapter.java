@@ -23,6 +23,7 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.time.PlaceBookingDay;
 import com.twoheart.dailyhotel.network.model.RecommendationGourmet;
+import com.twoheart.dailyhotel.network.model.Sticker;
 import com.twoheart.dailyhotel.place.adapter.PlaceListAdapter;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
@@ -225,8 +226,16 @@ public class CollectionGourmetAdapter extends PlaceListAdapter
                 {
                     ViewGroup.LayoutParams layoutParams = holder.stickerSimpleDraweeView.getLayoutParams();
 
-                    layoutParams.width = imageInfo.getWidth();
-                    layoutParams.height = imageInfo.getHeight();
+                    int screenWidth = ScreenUtils.getScreenWidth(mContext);
+                    if (screenWidth > Sticker.DEFAULT_SCREEN_WIDTH && screenWidth < Sticker.LARGE_SCREEN_WIDTH)
+                    {
+                        layoutParams.width = (int) (Sticker.MEDIUM_RATE * imageInfo.getWidth());
+                        layoutParams.height = (int) (Sticker.MEDIUM_RATE * imageInfo.getHeight());
+                    } else
+                    {
+                        layoutParams.width = imageInfo.getWidth();
+                        layoutParams.height = imageInfo.getHeight();
+                    }
 
                     holder.stickerSimpleDraweeView.setLayoutParams(layoutParams);
                 }

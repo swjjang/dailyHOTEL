@@ -8,7 +8,13 @@ import com.bluelinelabs.logansquare.annotation.JsonObject;
 public class Sticker
 {
     @JsonIgnore
-    public static final int DEFAULT_SCREEN_WIDTH = 1440;
+    public static final int DEFAULT_SCREEN_WIDTH = 720;
+
+    @JsonIgnore
+    public static final int LARGE_SCREEN_WIDTH = 1440;
+
+    @JsonIgnore
+    public static final float MEDIUM_RATE = 0.75f;
 
     @JsonField(name = "idx")
     public int index;

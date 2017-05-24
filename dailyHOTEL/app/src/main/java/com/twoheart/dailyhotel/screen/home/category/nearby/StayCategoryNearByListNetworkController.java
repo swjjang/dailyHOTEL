@@ -42,9 +42,9 @@ public class StayCategoryNearByListNetworkController extends BaseNetworkControll
             return;
         }
 
-      DailyMobileAPI.getInstance(mContext).requestStayCategoryList(mNetworkTag //
+        DailyMobileAPI.getInstance(mContext).requestStayCategoryList(mNetworkTag //
             , params.getCategoryCode(), params.toParamsMap() //
-        , params.getBedTypeList(), params.getLuxuryList(), mStayCategoryListCallback);
+            , params.getBedTypeList(), params.getLuxuryList(), mStayCategoryListCallback);
 
     }
 
