@@ -229,8 +229,8 @@ public class CollectionGourmetAdapter extends PlaceListAdapter
                     int screenWidth = ScreenUtils.getScreenWidth(mContext);
                     if (screenWidth > Sticker.DEFAULT_SCREEN_WIDTH && screenWidth < Sticker.LARGE_SCREEN_WIDTH)
                     {
-                        layoutParams.width = (int)(Sticker.MEDIUM_RATE * imageInfo.getWidth());
-                        layoutParams.height = (int)(Sticker.MEDIUM_RATE * imageInfo.getHeight());
+                        layoutParams.width = (int) (Sticker.MEDIUM_RATE * imageInfo.getWidth());
+                        layoutParams.height = (int) (Sticker.MEDIUM_RATE * imageInfo.getHeight());
                     } else
                     {
                         layoutParams.width = imageInfo.getWidth();
