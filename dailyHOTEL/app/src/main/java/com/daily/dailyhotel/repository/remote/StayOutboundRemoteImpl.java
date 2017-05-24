@@ -134,7 +134,8 @@ public class StayOutboundRemoteImpl implements StayOutboundInterface
 
             if (stayOutboundFilters.rating > 0)
             {
-                maxStarRating = minStarRating = stayOutboundFilters.rating;
+                minStarRating = stayOutboundFilters.rating;
+                maxStarRating = minStarRating + 0.5f;
             }
 
             if(stayOutboundFilters.sortType == StayOutboundFilters.SortType.DISTANCE)

@@ -47,4 +47,6 @@ public interface StayOutboundListViewInterface extends BaseViewInterface
     boolean isMapViewPagerVisibility();
 
     void setMyLocation(Location location);
+
+    void setRefreshing(boolean refreshing);
 }

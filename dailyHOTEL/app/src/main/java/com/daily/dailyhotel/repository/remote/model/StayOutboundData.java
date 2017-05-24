@@ -30,7 +30,7 @@ public class StayOutboundData
     public double longitude;
 
     @JsonField(name = "distance")
-    public String distance;
+    public double distance;
 
     @JsonField(name = "promo")
     public boolean promo;
@@ -65,6 +65,7 @@ public class StayOutboundData
         stayOutbound.rating = hotelRating;
         stayOutbound.latitude = latitude;
         stayOutbound.longitude = longitude;
+        stayOutbound.distance = distance;
         stayOutbound.promo = promo;
         stayOutbound.locationDescription = locationDescription;
         stayOutbound.nightlyRate = nightlyRate;

@@ -10,6 +10,7 @@ import android.webkit.WebView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.daily.base.util.ScreenUtils;
 import com.daily.base.widget.DailyScrollView;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.LauncherActivity;
@@ -159,7 +160,10 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
                 "xxhdpi 480dpi\n" +//
                 "xxxhdpi 640dpi";
 
-            debugTextView.setText(DailyPreference.getInstance(mContext).getBaseUrl() + "\n" + webViewVersion + "\n\nDPI : " + displayMetrics.densityDpi + dpiText);
+            debugTextView.setText(DailyPreference.getInstance(mContext).getBaseUrl() + "\n"//
+                + webViewVersion + "\n\nDPI : " + displayMetrics.densityDpi//
+                + String.format("(%d, %d)", ScreenUtils.getScreenWidth(mContext), ScreenUtils.getScreenHeight(mContext))//
+                + dpiText);
         } else
         {
             debugLayout.setVisibility(View.GONE);

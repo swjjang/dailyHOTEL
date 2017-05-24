@@ -190,6 +190,8 @@ public class StayOutboundListView extends BaseView<StayOutboundListView.OnEventL
             return;
         }
 
+        setRefreshing(false);
+
         if (listItemList.size() == 0)
         {
             getViewDataBinding().emptyLayout.setVisibility(View.VISIBLE);
@@ -240,7 +242,14 @@ public class StayOutboundListView extends BaseView<StayOutboundListView.OnEventL
     @Override
     public void addStayOutboundList(List<ListItem> listItemList)
     {
-        if (getViewDataBinding() == null || mStayOutboundListAdapter == null || listItemList == null || listItemList.size() == 0)
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        setRefreshing(false);
+
+        if (mStayOutboundListAdapter == null || listItemList == null || listItemList.size() == 0)
         {
             return;
         }
@@ -473,6 +482,17 @@ public class StayOutboundListView extends BaseView<StayOutboundListView.OnEventL
         }
 
         mStayOutboundMapFragment.setMyLocation(new LatLng(location.getLatitude(), location.getLongitude()), true);
+    }
+
+    @Override
+    public void setRefreshing(boolean refreshing)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        getViewDataBinding().swipeRefreshLayout.setRefreshing(refreshing);
     }
 
     @Override

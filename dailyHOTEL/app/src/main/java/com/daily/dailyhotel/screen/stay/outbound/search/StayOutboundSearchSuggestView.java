@@ -2,6 +2,7 @@ package com.daily.dailyhotel.screen.stay.outbound.search;
 
 import android.content.Context;
 import android.databinding.DataBindingUtil;
+import android.graphics.PorterDuff;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
@@ -103,6 +104,9 @@ public class StayOutboundSearchSuggestView extends BaseView<StayOutboundSearchSu
                 }
             }
         });
+
+        viewDataBinding.progressBar.getIndeterminateDrawable().setColorFilter(getColor(R.color.default_probressbar), PorterDuff.Mode.SRC_IN);
+        setProgressBarVisible(false);
     }
 
     @Override
@@ -272,6 +276,23 @@ public class StayOutboundSearchSuggestView extends BaseView<StayOutboundSearchSu
         } else
         {
             getViewDataBinding().emptyLayout.setVisibility(View.GONE);
+        }
+    }
+
+    @Override
+    public void setProgressBarVisible(boolean visible)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        if (visible == true)
+        {
+            getViewDataBinding().progressBarScrollView.setVisibility(View.VISIBLE);
+        } else
+        {
+            getViewDataBinding().progressBarScrollView.setVisibility(View.GONE);
         }
     }
 

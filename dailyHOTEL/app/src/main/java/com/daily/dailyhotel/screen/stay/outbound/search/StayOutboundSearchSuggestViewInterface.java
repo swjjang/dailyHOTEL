@@ -18,4 +18,6 @@ public interface StayOutboundSearchSuggestViewInterface extends BaseViewInterfac
     void hideKeyboard();
 
     void setEmptySuggestsVisible(boolean visible);
+
+    void setProgressBarVisible(boolean visible);
 }

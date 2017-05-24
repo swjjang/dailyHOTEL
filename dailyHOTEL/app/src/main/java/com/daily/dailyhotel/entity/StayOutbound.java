@@ -8,9 +8,9 @@ public class StayOutbound
     public float rating;
     public double latitude;
     public double longitude;
+    public double distance;
     public boolean promo;
     public String locationDescription;
-    public String distance;
     public int nightlyRate;
     public int nightlyBaseRate;
     public int total;

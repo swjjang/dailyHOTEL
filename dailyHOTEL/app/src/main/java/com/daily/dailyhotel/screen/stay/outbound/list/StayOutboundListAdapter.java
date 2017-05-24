@@ -14,6 +14,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ScreenUtils;
@@ -113,6 +114,12 @@ public class StayOutboundListAdapter extends RecyclerView.Adapter<RecyclerView.V
         }
 
         return mList.get(position);
+    }
+
+    @Override
+    public int getItemViewType(int position)
+    {
+        return mList.get(position).mType;
     }
 
     @Override
@@ -251,14 +258,31 @@ public class StayOutboundListAdapter extends RecyclerView.Adapter<RecyclerView.V
         }
 
         // grade
-        holder.dataBinding.gradeTextView.setText(mContext.getString(R.string.label_stay_outbound_filter_x_star_rate, (int)stayOutbound.rating));
+        holder.dataBinding.gradeTextView.setText(mContext.getString(R.string.label_stay_outbound_filter_x_star_rate, (int) stayOutbound.rating));
 
         // 별등급
         holder.dataBinding.ratingBar.setRating(stayOutbound.rating);
 
         // tripAdvisor
-        holder.dataBinding.tripAdvisorRatingBar.setRating((float) stayOutbound.tripAdvisorRating);
-        holder.dataBinding.tripAdvisorRatingTextView.setText(mContext.getString(R.string.label_stay_outbound_tripadvisor_rating, Float.toString(stayOutbound.tripAdvisorRating)));
+        if (stayOutbound.tripAdvisorRating == 0.0f)
+        {
+            holder.dataBinding.tripAdvisorImageView.setVisibility(View.GONE);
+            holder.dataBinding.tripAdvisorRatingBar.setVisibility(View.GONE);
+            holder.dataBinding.tripAdvisorRatingTextView.setVisibility(View.GONE);
+        } else
+        {
+            holder.dataBinding.tripAdvisorImageView.setVisibility(View.VISIBLE);
+            holder.dataBinding.tripAdvisorRatingBar.setVisibility(View.VISIBLE);
+            holder.dataBinding.tripAdvisorRatingTextView.setVisibility(View.VISIBLE);
+
+            holder.dataBinding.tripAdvisorRatingBar.setRating(stayOutbound.tripAdvisorRating);
+            holder.dataBinding.tripAdvisorRatingTextView.setText(mContext.getString(R.string.label_stay_outbound_tripadvisor_rating, Float.toString(stayOutbound.tripAdvisorRating)));
+
+            // 별등급이 기본이 5개 이기 때문에 빈공간에도 내용이 존재한다.
+            LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) holder.dataBinding.tripAdvisorRatingTextView.getLayoutParams();
+            layoutParams.leftMargin = ScreenUtils.dpToPx(mContext, 3) - ScreenUtils.dpToPx(mContext, (5 - (int) Math.ceil(stayOutbound.tripAdvisorRating)) * 10);
+            holder.dataBinding.tripAdvisorRatingTextView.setLayoutParams(layoutParams);
+        }
 
         // Image
         holder.dataBinding.imageView.getHierarchy().setPlaceholderImage(R.drawable.layerlist_placeholder);
@@ -268,10 +292,22 @@ public class StayOutboundListAdapter extends RecyclerView.Adapter<RecyclerView.V
 
         if (ScreenUtils.getScreenWidth(mContext) >= ScreenUtils.DEFAULT_STAYOUTBOUND_XXHDPI_WIDTH)
         {
-            url = imageMap.bigUrl;
+            if (DailyTextUtils.isTextEmpty(imageMap.bigUrl) == true)
+            {
+                url = imageMap.smallUrl;
+            } else
+            {
+                url = imageMap.bigUrl;
+            }
         } else
         {
-            url = imageMap.mediumUrl;
+            if (DailyTextUtils.isTextEmpty(imageMap.mediumUrl) == true)
+            {
+                url = imageMap.smallUrl;
+            } else
+            {
+                url = imageMap.mediumUrl;
+            }
         }
 
         ControllerListener controllerListener = new BaseControllerListener<ImageInfo>()
@@ -287,6 +323,10 @@ public class StayOutboundListAdapter extends RecyclerView.Adapter<RecyclerView.V
                     } else if (imageMap.mediumUrl.equalsIgnoreCase(url) == true)
                     {
                         imageMap.mediumUrl = null;
+                    } else
+                    {
+                        // 작은 이미지를 로딩했지만 실패하는 경우.
+                        return;
                     }
 
                     holder.dataBinding.imageView.setImageURI(imageMap.smallUrl);
@@ -304,16 +344,16 @@ public class StayOutboundListAdapter extends RecyclerView.Adapter<RecyclerView.V
 
         if (mDistanceEnabled == true)
         {
-//            if (holder.dataBinding.satisfactionView.getVisibility() == View.VISIBLE || holder.dataBinding.trueVRView.getVisibility() == View.VISIBLE)
-//            {
-//                holder.dataBinding.dot1View.setVisibility(View.VISIBLE);
-//            } else
+            if (holder.dataBinding.tripAdvisorImageView.getVisibility() == View.VISIBLE)
+            {
+                holder.dataBinding.dot1View.setVisibility(View.VISIBLE);
+            } else
             {
                 holder.dataBinding.dot1View.setVisibility(View.GONE);
             }
 
             holder.dataBinding.distanceTextView.setVisibility(View.VISIBLE);
-            holder.dataBinding.distanceTextView.setText("거리:" + new DecimalFormat("#.#").format(stayOutbound.distance) + "km");
+            holder.dataBinding.distanceTextView.setText(mContext.getString(R.string.label_distance_km, new DecimalFormat("#.#").format(stayOutbound.distance)));
         } else
         {
             holder.dataBinding.dot1View.setVisibility(View.GONE);

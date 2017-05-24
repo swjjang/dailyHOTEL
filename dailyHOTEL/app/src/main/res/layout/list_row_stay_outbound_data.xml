@@ -38,6 +38,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
+                android:layout_marginBottom="5dp"
                 android:orientation="horizontal">
 
                 <com.daily.base.widget.DailyTextView
@@ -62,7 +63,7 @@
                     android:layout_height="10dp"
                     android:layout_marginLeft="6dp"
                     android:numStars="5"
-                    android:stepSize="1.0"/>
+                    android:stepSize="0.5"/>
             </LinearLayout>
 
             <com.daily.base.widget.DailyTextView
@@ -75,6 +76,7 @@
                 android:ellipsize="end"
                 android:freezesText="true"
                 android:gravity="center_vertical"
+                android:maxLines="1"
                 android:singleLine="true"
                 android:textColor="@android:color/white"
                 android:textSize="17dp"
@@ -91,6 +93,7 @@
                 android:ellipsize="end"
                 android:freezesText="true"
                 android:gravity="center_vertical"
+                android:maxLines="1"
                 android:singleLine="true"
                 android:textColor="@android:color/white"
                 android:textSize="11dp"/>
@@ -107,6 +110,7 @@
                 android:visibility="visible">
 
                 <ImageView
+                    android:id="@+id/tripAdvisorImageView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/main_ic_widget_owl"/>
@@ -160,9 +164,7 @@
             android:layout_height="wrap_content"
             android:layout_above="@+id/discountPriceLayout"
             android:layout_alignParentRight="true"
-            android:layout_marginBottom="3dp"
             android:layout_marginRight="11dp"
-            android:gravity="center_vertical"
             android:textColor="@color/white"
             android:textSize="12dp"
             dailyFont:style="DemiLight"/>
@@ -173,7 +175,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true"
-            android:layout_marginBottom="11dp"
+            android:layout_marginBottom="10dp"
             android:layout_marginRight="11dp">
 
             <com.daily.base.widget.DailyTextView

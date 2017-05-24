@@ -44,6 +44,10 @@ public class StayOutboundsData
 
         stayOutbounds.setStayOutbound(stayOutboundList);
 
+        stayOutbounds.cacheKey = cacheKey;
+        stayOutbounds.cacheLocation = cacheLocation;
+        stayOutbounds.moreResultsAvailable = moreResultsAvailable;
+
         return stayOutbounds;
     }
 }
