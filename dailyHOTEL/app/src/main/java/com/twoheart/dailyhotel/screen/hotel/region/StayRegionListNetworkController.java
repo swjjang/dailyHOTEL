@@ -58,20 +58,18 @@ public class StayRegionListNetworkController extends PlaceRegionListNetworkContr
                         String imageUrl = dataJSONObject.getString("imgUrl");
 
                         List<Province> domesticProvinceList = new ArrayList<>();
-                        List<Province> globalProvinceList = new ArrayList<>();
 
                         JSONArray provinceArray = dataJSONObject.getJSONArray("regionProvince");
-                        makeProvinceList(provinceArray, imageUrl, domesticProvinceList, globalProvinceList);
+                        makeProvinceList(provinceArray, imageUrl, domesticProvinceList);
 
                         JSONArray areaJSONArray = dataJSONObject.getJSONArray("regionArea");
                         ArrayList<Area> areaList = makeAreaList(areaJSONArray);
 
                         List<RegionViewItem> domesticRegionViewList = new ArrayList<>();
-                        List<RegionViewItem> globalRegionViewList = new ArrayList<>();
 
-                        makeRegionViewItemList(domesticProvinceList, globalProvinceList, areaList, domesticRegionViewList, globalRegionViewList);
+                        makeRegionViewItemList(domesticProvinceList, areaList, domesticRegionViewList);
 
-                        mOnNetworkControllerListener.onRegionListResponse(domesticRegionViewList, globalRegionViewList);
+                        mOnNetworkControllerListener.onRegionListResponse(domesticRegionViewList);
                     } else
                     {
                         String message = responseJSONObject.getString("msg");

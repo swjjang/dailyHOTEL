@@ -6,32 +6,9 @@
 
     <include layout="@layout/toolbar_default_menu"/>
 
-    <android.support.design.widget.TabLayout
-        android:id="@+id/tabLayout"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:layout_below="@+id/toolbar"
-        android:background="@drawable/layerlist_fillrect_ule7e7e7_bffffff"
-        android:elevation="2dp"
-        app:tabGravity="fill"
-        app:tabIndicatorHeight="2dp"
-        app:tabMaxWidth="0dp"
-        app:tabSelectedTextColor="@color/default_text_cb70038"
-        app:tabTextAppearance="@style/PlaceTabLayoutTextAppearance"
-        app:tabTextColor="@color/default_text_c929292"/>
-
-    <View
-        android:id="@+id/tabUpperLine"
-        android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:elevation="2dp"
-        android:layout_below="@+id/toolbar"
-        android:background="@color/default_line_ce7e7e7"
-        android:visibility="gone"/>
-
     <com.daily.base.widget.DailyViewPager
         android:id="@+id/viewPager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/tabLayout"/>
+        android:layout_below="@+id/toolbar"/>
 </RelativeLayout>

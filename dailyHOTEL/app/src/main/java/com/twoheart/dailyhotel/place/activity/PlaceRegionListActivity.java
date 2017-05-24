@@ -23,11 +23,9 @@ public abstract class PlaceRegionListActivity extends BaseActivity
 
     protected abstract void initIntent(Intent intent);
 
-    protected abstract void initTabLayout(TabLayout tabLayout, View tabUpperLineView);
-
     protected abstract void initToolbar(View toolbar);
 
-    protected abstract void initViewPager(TabLayout tabLayout);
+    protected abstract void initViewPager();
 
     protected abstract void showSearch();
 
@@ -64,11 +62,7 @@ public abstract class PlaceRegionListActivity extends BaseActivity
     protected void initLayout()
     {
         initToolbar();
-
-        View tabUpperLine = findViewById(R.id.tabUpperLine);
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabLayout);
-        initTabLayout(tabLayout, tabUpperLine);
-        initViewPager(tabLayout);
+        initViewPager();
     }
 
     private void initToolbar()
