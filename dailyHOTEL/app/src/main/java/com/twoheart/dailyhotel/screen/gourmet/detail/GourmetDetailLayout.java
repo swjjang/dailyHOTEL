@@ -229,7 +229,7 @@ public class GourmetDetailLayout extends PlaceDetailLayout
         }
 
         String url;
-        if (ScreenUtils.getScreenWidth(mContext) < Sticker.DEFAULT_SCREEN_WIDTH)
+        if (ScreenUtils.getScreenWidth(mContext) <= Sticker.DEFAULT_SCREEN_WIDTH)
         {
             url = sticker.lowResolutionImageUrl;
         } else
@@ -252,8 +252,16 @@ public class GourmetDetailLayout extends PlaceDetailLayout
             {
                 ViewGroup.LayoutParams layoutParams = mStickerSimpleDraweeView.getLayoutParams();
 
-                layoutParams.width = imageInfo.getWidth();
-                layoutParams.height = imageInfo.getHeight();
+                int screenWidth = ScreenUtils.getScreenWidth(mContext);
+                if (screenWidth > Sticker.DEFAULT_SCREEN_WIDTH && screenWidth < Sticker.LARGE_SCREEN_WIDTH)
+                {
+                    layoutParams.width = (int) (Sticker.MEDIUM_RATE * imageInfo.getWidth());
+                    layoutParams.height = (int) (Sticker.MEDIUM_RATE * imageInfo.getHeight());
+                } else
+                {
+                    layoutParams.width = imageInfo.getWidth();
+                    layoutParams.height = imageInfo.getHeight();
+                }
 
                 mStickerSimpleDraweeView.setLayoutParams(layoutParams);
             }

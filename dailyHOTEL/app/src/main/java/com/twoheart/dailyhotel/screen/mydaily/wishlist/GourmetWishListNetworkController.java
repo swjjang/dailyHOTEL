@@ -8,7 +8,6 @@ import com.crashlytics.android.Crashlytics;
 import com.daily.base.util.ScreenUtils;
 import com.twoheart.dailyhotel.model.Gourmet;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
-import com.twoheart.dailyhotel.network.model.GourmetDetailParams;
 import com.twoheart.dailyhotel.network.model.Sticker;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
@@ -132,7 +131,7 @@ public class GourmetWishListNetworkController extends BaseNetworkController
             {
                 boolean isLowResource = false;
 
-                if (ScreenUtils.getScreenWidth(mContext) < Sticker.DEFAULT_SCREEN_WIDTH)
+                if (ScreenUtils.getScreenWidth(mContext) <= Sticker.DEFAULT_SCREEN_WIDTH)
                 {
                     isLowResource = true;
                 }

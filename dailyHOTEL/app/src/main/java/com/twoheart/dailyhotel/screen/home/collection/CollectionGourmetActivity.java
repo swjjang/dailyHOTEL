@@ -171,7 +171,7 @@ public class CollectionGourmetActivity extends CollectionBaseActivity
             {
                 boolean isLowResource = false;
 
-                if (ScreenUtils.getScreenWidth(this) < Sticker.DEFAULT_SCREEN_WIDTH)
+                if (ScreenUtils.getScreenWidth(this) <= Sticker.DEFAULT_SCREEN_WIDTH)
                 {
                     isLowResource = true;
                 }
