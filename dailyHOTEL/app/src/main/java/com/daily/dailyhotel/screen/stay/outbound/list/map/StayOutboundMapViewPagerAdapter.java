@@ -75,9 +75,6 @@ public class StayOutboundMapViewPagerAdapter extends PagerAdapter
 
         dataBinding.discountPriceTextView.setText(DailyTextUtils.getPriceFormat(mContext, stayOutbound.nightlyRate, false));
 
-        // 만족도
-        dataBinding.satisfactionView.setVisibility(View.GONE);
-
         // 1박인 경우 전체가격과 1박가격이 같다.
         if (stayOutbound.nightlyRate == stayOutbound.total)
         {
@@ -88,8 +85,8 @@ public class StayOutboundMapViewPagerAdapter extends PagerAdapter
         }
 
         // grade
-        dataBinding.gradeTextView.setText((int)stayOutbound.rating);
-        dataBinding.gradeTextView.setBackgroundResource(Stay.Grade.special.getColorResId());
+        dataBinding.gradeTextView.setText(mContext.getString(R.string.label_stay_outbound_filter_x_star_rate, (int) stayOutbound.rating));
+        dataBinding.ratingBar.setRating(stayOutbound.rating);
 
         // Image
         dataBinding.simpleDraweeView.getHierarchy().setPlaceholderImage(R.drawable.layerlist_placeholder);
@@ -131,9 +128,6 @@ public class StayOutboundMapViewPagerAdapter extends PagerAdapter
             .setControllerListener(controllerListener).setUri(url).build();
 
         dataBinding.simpleDraweeView.setController(draweeController);
-
-        // Promo 설명은 사용하지 않는다.
-        dataBinding.promoLayout.setVisibility(View.GONE);
 
         dataBinding.nameTextView.setSelected(true); // Android TextView marquee bug
 
