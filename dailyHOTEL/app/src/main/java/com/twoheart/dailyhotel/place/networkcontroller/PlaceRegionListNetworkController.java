@@ -139,7 +139,7 @@ public abstract class PlaceRegionListNetworkController
 
             try
             {
-                if (jsonObject.has("overseas") == true || jsonObject.getBoolean("overseas") == true)
+                if (jsonObject.has("overseas") == true && jsonObject.getBoolean("overseas") == true)
                 {
                     continue;
                 }
@@ -171,7 +171,7 @@ public abstract class PlaceRegionListNetworkController
 
                 try
                 {
-                    if (jsonObject.has("overseas") == true || jsonObject.getBoolean("overseas") == true)
+                    if (jsonObject.has("overseas") == true && jsonObject.getBoolean("overseas") == true)
                     {
                         continue;
                     }
