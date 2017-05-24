@@ -160,7 +160,7 @@ public class GourmetListNetworkController extends BaseNetworkController
             {
                 boolean isLowResource = false;
 
-                if (ScreenUtils.getScreenWidth(mContext) < Sticker.DEFAULT_SCREEN_WIDTH)
+                if (ScreenUtils.getScreenWidth(mContext) <= Sticker.DEFAULT_SCREEN_WIDTH)
                 {
                     isLowResource = true;
                 }
