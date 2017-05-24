@@ -334,6 +334,17 @@ public class StayOutboundMapFragment extends com.google.android.gms.maps.Support
             .icon(new MyLocationMarker(getContext()).makeIcon()).visible(isVisibleMarker).anchor(0.5f, 0.5f).zIndex(1.0f));
     }
 
+    public void hideSelectedMarker()
+    {
+        if(mSelectedMarker == null)
+        {
+            return;
+        }
+
+        mSelectedMarker.setVisible(false);
+        mSelectedMarker.setTag(null);
+    }
+
     /**
      * 추후 UI추가 필요 구글맵 버전이 바뀌면 문제가 될수도 있음.
      */

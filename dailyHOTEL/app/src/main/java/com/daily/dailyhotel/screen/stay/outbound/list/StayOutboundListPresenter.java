@@ -261,7 +261,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
             {
                 if (getViewInterface().isMapViewPagerVisibility() == true)
                 {
-                    getViewInterface().setMapViewPagerVisibility(false);
+                    getViewInterface().setMapViewPagerVisibility(true);
                 } else
                 {
                     onViewTypeClick();

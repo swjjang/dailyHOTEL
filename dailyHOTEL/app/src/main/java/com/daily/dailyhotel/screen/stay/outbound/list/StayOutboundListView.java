@@ -435,6 +435,8 @@ public class StayOutboundListView extends BaseView<StayOutboundListView.OnEventL
 
         getViewDataBinding().mapLayout.removeAllViews();
         getViewDataBinding().mapLayout.setVisibility(View.GONE);
+
+        resetMenuBarLayoutTranslation();
     }
 
     @Override
@@ -680,6 +682,7 @@ public class StayOutboundListView extends BaseView<StayOutboundListView.OnEventL
                 mValueAnimator = null;
 
                 mViewPager.setVisibility(View.INVISIBLE);
+                resetMenuBarLayoutTranslation();
             }
 
             @Override
