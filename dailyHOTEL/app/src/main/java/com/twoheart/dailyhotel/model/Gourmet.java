@@ -7,6 +7,10 @@ import android.util.SparseArray;
 
 import com.daily.base.util.ExLog;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.network.model.GourmetWishDetails;
+import com.twoheart.dailyhotel.network.model.GourmetWishItem;
+import com.twoheart.dailyhotel.network.model.Prices;
+import com.twoheart.dailyhotel.network.model.Sticker;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -148,6 +152,63 @@ public class Gourmet extends Place
                 dBenefitText = null;
             }
         } catch (JSONException e)
+        {
+            ExLog.d(e.toString());
+
+            return false;
+        }
+
+        return true;
+    }
+
+    public boolean setData(GourmetWishItem gourmetWishItem, String imageUrl, boolean isLowResource)
+    {
+        try
+        {
+            index = gourmetWishItem.index;
+            name = gourmetWishItem.title;
+
+            Prices prices = gourmetWishItem.prices;
+
+            price = prices == null ? 0 : prices.normalPrice;
+            discountPrice = prices == null ? 0 : prices.discountPrice;
+
+            addressSummary = gourmetWishItem.addrSummary;
+            grade = Grade.gourmet;
+            districtName = gourmetWishItem.regionName;
+
+            GourmetWishDetails gourmetWishDetails = gourmetWishItem.getDetails();
+
+            persons = gourmetWishDetails != null ? gourmetWishDetails.persons : 1;
+            category = gourmetWishDetails != null ? gourmetWishDetails.category : "";
+            subCategory = gourmetWishDetails != null ? gourmetWishDetails.subCategory : "";
+
+            satisfaction = gourmetWishItem.rating;
+
+            // 추후에 고메가 VR지원되면 보여지도록 한다.
+            //            if (jsonObject.has("truevr") == true)
+            //            {
+            //                truevr = jsonObject.getBoolean("truevr");
+            //            }
+            truevr = false;
+
+            Sticker sticker = gourmetWishDetails.sticker;
+            if (sticker != null)
+            {
+                stickerIndex = sticker.index;
+                stickerUrl = isLowResource == false ? sticker.defaultImageUrl : sticker.lowResolutionImageUrl;
+            }
+
+            try
+            {
+                this.imageUrl = imageUrl + gourmetWishItem.imageUrl;
+            } catch (Exception e)
+            {
+                ExLog.d(e.toString());
+            }
+
+            dBenefitText = null;
+        } catch (Exception e)
         {
             ExLog.d(e.toString());
 

@@ -11,11 +11,13 @@ import com.twoheart.dailyhotel.network.dto.BaseListDto;
 import com.twoheart.dailyhotel.network.factory.TagCancellableCallAdapterFactory.ExecutorCallbackCall;
 import com.twoheart.dailyhotel.network.model.Event;
 import com.twoheart.dailyhotel.network.model.GourmetDetailParams;
+import com.twoheart.dailyhotel.network.model.GourmetWishItem;
 import com.twoheart.dailyhotel.network.model.Holiday;
 import com.twoheart.dailyhotel.network.model.HomePlace;
 import com.twoheart.dailyhotel.network.model.HomePlaces;
 import com.twoheart.dailyhotel.network.model.PlaceReviewScores;
 import com.twoheart.dailyhotel.network.model.PlaceReviews;
+import com.twoheart.dailyhotel.network.model.PlaceWishItems;
 import com.twoheart.dailyhotel.network.model.Recommendation;
 import com.twoheart.dailyhotel.network.model.RecommendationGourmet;
 import com.twoheart.dailyhotel.network.model.RecommendationPlaceList;
@@ -23,6 +25,7 @@ import com.twoheart.dailyhotel.network.model.RecommendationStay;
 import com.twoheart.dailyhotel.network.model.Stamp;
 import com.twoheart.dailyhotel.network.model.Status;
 import com.twoheart.dailyhotel.network.model.StayDetailParams;
+import com.twoheart.dailyhotel.network.model.StayWishItem;
 import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.network.model.TrueVRParams;
 import com.twoheart.dailyhotel.screen.common.HappyTalkCategoryDialog;
@@ -931,17 +934,31 @@ public class DailyMobileAPI implements IDailyNetwork
     }
 
     @Override
-    public void requestWishList(String tag, String placeType, Object listener)
+    public void requestStayWishList(String tag, Object listener)
     {
-        final String URL = Constants.UNENCRYPTED_URL ? "api/v4/wishes/{type}"//
-            : "NiQzMSQ5JDM4JDkxJDQzJDg5JDc1JDQ3JDc1JDEkNTUkNjAkNTUkNDMkMjYk$MJjgzRDYY1IMzVDNTNERDQ3QzYA5RTEzQ0DI0NURYDM0RQRyRkSU4NzUxGWMDQzRMTU0OTYwRkVBRTQyQDTWUzODM3OURGNUYwIQg=F=$";
+        final String URL = Constants.UNENCRYPTED_URL ? "api/v5/wishes/{serviceType}"//
+            : "MTEkMzEkNDQkNDkkMTAkMzkkMjQkNjAkMTIkMzkkOTckOTgkNjckNTUkMTckNTYk$NTNDNkVEQjUVIWCMTNlGN0Q1QUSFCRjBGNEHM4QUQUyMMzY0RTCVDREYYDJGNzlGQGzBCMEERCMDFFOUFDNEJFOTI3MDZCODk2MA=GN=$";
 
         Map<String, String> urlParams = new HashMap<>();
-        urlParams.put("{type}", placeType);
+        urlParams.put("{serviceType}", "HOTEL");
 
-        ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestWishList(Crypto.getUrlDecoderEx(URL, urlParams));
+        ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestStayWishList(Crypto.getUrlDecoderEx(URL, urlParams));
         executorCallbackCall.setTag(tag);
-        executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
+        executorCallbackCall.enqueue((retrofit2.Callback<BaseDto<PlaceWishItems<StayWishItem>>>) listener);
+    }
+
+    @Override
+    public void requestGourmetWishList(String tag, Object listener)
+    {
+        final String URL = Constants.UNENCRYPTED_URL ? "api/v5/wishes/{serviceType}"//
+            : "MTEkMzEkNDQkNDkkMTAkMzkkMjQkNjAkMTIkMzkkOTckOTgkNjckNTUkMTckNTYk$NTNDNkVEQjUVIWCMTNlGN0Q1QUSFCRjBGNEHM4QUQUyMMzY0RTCVDREYYDJGNzlGQGzBCMEERCMDFFOUFDNEJFOTI3MDZCODk2MA=GN=$";
+
+        Map<String, String> urlParams = new HashMap<>();
+        urlParams.put("{serviceType}", "GOURMET");
+
+        ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestGourmetWishList(Crypto.getUrlDecoderEx(URL, urlParams));
+        executorCallbackCall.setTag(tag);
+        executorCallbackCall.enqueue((retrofit2.Callback<BaseDto<PlaceWishItems<GourmetWishItem>>>) listener);
     }
 
     @Override

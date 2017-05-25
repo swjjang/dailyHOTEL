@@ -517,7 +517,9 @@ public interface IDailyNetwork
 
     void requestWishListCount(String tag, Object listener);
 
-    void requestWishList(String tag, String placeType, Object listener);
+    void requestStayWishList(String tag, Object listener);
+
+    void requestGourmetWishList(String tag, Object listener);
 
     void requestAddWishList(String tag, String placeType, int placeIndex, Object listener);
 

@@ -6,6 +6,9 @@ import android.os.Parcelable;
 
 import com.daily.base.util.ExLog;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.network.model.Prices;
+import com.twoheart.dailyhotel.network.model.StayWishDetails;
+import com.twoheart.dailyhotel.network.model.StayWishItem;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -147,6 +150,47 @@ public class Stay extends Place
                 dBenefitText = null;
             }
         } catch (JSONException e)
+        {
+            ExLog.d(e.toString());
+            return false;
+        }
+
+        return true;
+    }
+
+    public boolean setStay(StayWishItem stayWishItem, String imageUrl)
+    {
+        try
+        {
+            name = stayWishItem.title;
+
+            Prices prices = stayWishItem.prices;
+
+            price = prices == null ? 0 : prices.normalPrice;
+            discountPrice = prices == null ? 0 : prices.discountPrice;
+
+            addressSummary = stayWishItem.addrSummary;
+
+            StayWishDetails stayWishDetails = stayWishItem.getDetails();
+
+            mGrade = stayWishDetails != null ? stayWishDetails.stayGrade : Grade.etc;
+
+            index = stayWishItem.index;
+            districtName = stayWishItem.regionName;
+            categoryCode = stayWishDetails != null ? stayWishDetails.category : "";
+            satisfaction = stayWishItem.rating;
+            truevr = stayWishDetails.isTrueVR;
+
+            try
+            {
+                this.imageUrl = imageUrl + stayWishItem.imageUrl;
+            } catch (Exception e)
+            {
+                ExLog.d(e.toString());
+            }
+
+            dBenefitText = null;
+        } catch (Exception e)
         {
             ExLog.d(e.toString());
             return false;

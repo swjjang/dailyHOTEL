@@ -1,7 +1,6 @@
 package com.twoheart.dailyhotel.screen.mydaily.wishlist;
 
 import android.content.Context;
-import android.graphics.Paint;
 import android.os.Vibrator;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -102,9 +101,6 @@ public class StayWishListAdapter extends PlaceWishListAdapter
     {
         final Stay stay = placeViewItem.getItem();
 
-        String strPrice = DailyTextUtils.getPriceFormat(mContext, stay.price, false);
-        String strDiscount = DailyTextUtils.getPriceFormat(mContext, stay.discountPrice, false);
-
         String address = stay.addressSummary;
 
         int barIndex = address.indexOf('|');
@@ -118,17 +114,8 @@ public class StayWishListAdapter extends PlaceWishListAdapter
 
         holder.hotelAddressView.setText(address);
         holder.hotelNameView.setText(stay.name);
-
-        if (stay.price <= 0 || stay.price <= stay.discountPrice)
-        {
-            holder.hotelPriceView.setVisibility(View.INVISIBLE);
-            holder.hotelPriceView.setText(null);
-        } else
-        {
-            holder.hotelPriceView.setVisibility(View.VISIBLE);
-            holder.hotelPriceView.setText(strPrice);
-            holder.hotelPriceView.setPaintFlags(holder.hotelPriceView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-        }
+        holder.hotelPriceView.setVisibility(View.INVISIBLE);
+        holder.hotelPriceView.setText(null);
 
         // 만족도
         if (stay.satisfaction > 0)
@@ -141,15 +128,9 @@ public class StayWishListAdapter extends PlaceWishListAdapter
             holder.satisfactionView.setVisibility(View.GONE);
         }
 
-        if (mNights > 1)
-        {
-            holder.averageView.setVisibility(View.VISIBLE);
-        } else
-        {
-            holder.averageView.setVisibility(View.GONE);
-        }
+        holder.averageView.setVisibility(View.GONE);
+        holder.hotelDiscountView.setVisibility(View.GONE);
 
-        holder.hotelDiscountView.setText(strDiscount);
         holder.hotelNameView.setSelected(true); // Android TextView marquee bug
 
         if (VersionUtils.isOverAPI16() == true)
