@@ -12,6 +12,7 @@ import com.twoheart.dailyhotel.Setting;
 import com.twoheart.dailyhotel.screen.common.WebViewActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Crypto;
+import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
@@ -73,8 +74,18 @@ public class CouponTermActivity extends WebViewActivity
             setWebView(Crypto.getUrlDecoderEx(URL_WEB_COMMON_COUPON_TERMS));
         } else
         {
+            String url;
+
+            if (Constants.DEBUG == true)
+            {
+                url = DailyPreference.getInstance(this).getBaseUrl();
+            } else
+            {
+                url = Crypto.getUrlDecoderEx(Setting.getServerUrl());
+            }
+
             // 현재 접속하는 서버가 실서버인 경우와 테스트 서버인 경우 쿠폰 이용약관 서버가 다름
-            if (Crypto.getUrlDecoderEx(Setting.URL_DAILYHOTEL_SERVER_DEFAULT).startsWith("http://dev-") == false)
+            if (url.startsWith("http://prod-") == true)
             {
                 setWebView(Crypto.getUrlDecoderEx(URL_WEB_EACH_COUPON_TERMS) + mCouponIdx);
             } else
