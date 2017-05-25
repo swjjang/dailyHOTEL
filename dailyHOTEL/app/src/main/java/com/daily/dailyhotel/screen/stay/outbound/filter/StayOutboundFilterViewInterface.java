@@ -8,4 +8,6 @@ public interface StayOutboundFilterViewInterface extends BaseViewInterface
     void setSort(StayOutboundFilters.SortType sortType);
 
     void setRating(int rating);
+
+    void setEnabledLines(boolean[] enabledLines);
 }

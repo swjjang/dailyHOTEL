@@ -93,23 +93,23 @@ public class StayOutboundFilterView extends BaseView<StayOutboundFilterView.OnEv
             {
                 switch (checkedId)
                 {
-                    case R.id.rankCheckView:
+                    case R.id.rankRadioButton:
                         getEventListener().onSortClick(StayOutboundFilters.SortType.RECOMMENDATION);
                         break;
 
-                    case R.id.distanceCheckView:
+                    case R.id.distanceRadioButton:
                         getEventListener().onSortClick(StayOutboundFilters.SortType.DISTANCE);
                         break;
 
-                    case R.id.lowPriceCheckView:
+                    case R.id.lowPriceRadioButton:
                         getEventListener().onSortClick(StayOutboundFilters.SortType.LOW_PRICE);
                         break;
 
-                    case R.id.highPriceCheckView:
+                    case R.id.highPriceRadioButton:
                         getEventListener().onSortClick(StayOutboundFilters.SortType.HIGH_PRICE);
                         break;
 
-                    case R.id.satisfactionCheckView:
+                    case R.id.satisfactionRadioButton:
                         getEventListener().onSortClick(StayOutboundFilters.SortType.SATISFACTION);
                         break;
                 }
@@ -120,23 +120,23 @@ public class StayOutboundFilterView extends BaseView<StayOutboundFilterView.OnEv
             {
                 switch (checkedId)
                 {
-                    case R.id.rating1View:
+                    case R.id.rating1RadioButton:
                         getEventListener().onRatingClick(1);
                         break;
 
-                    case R.id.rating2View:
+                    case R.id.rating2RadioButton:
                         getEventListener().onRatingClick(2);
                         break;
 
-                    case R.id.rating3View:
+                    case R.id.rating3RadioButton:
                         getEventListener().onRatingClick(3);
                         break;
 
-                    case R.id.rating4View:
+                    case R.id.rating4RadioButton:
                         getEventListener().onRatingClick(4);
                         break;
 
-                    case R.id.rating5View:
+                    case R.id.rating5RadioButton:
                         getEventListener().onRatingClick(5);
                         break;
                 }
@@ -156,23 +156,23 @@ public class StayOutboundFilterView extends BaseView<StayOutboundFilterView.OnEv
         switch (sortType)
         {
             case RECOMMENDATION:
-                getViewDataBinding().sortRadioGroup.check(getViewDataBinding().rankCheckView.getId());
+                getViewDataBinding().sortRadioGroup.check(getViewDataBinding().rankRadioButton.getId());
                 break;
 
             case DISTANCE:
-                getViewDataBinding().sortRadioGroup.check(getViewDataBinding().distanceCheckView.getId());
+                getViewDataBinding().sortRadioGroup.check(getViewDataBinding().distanceRadioButton.getId());
                 break;
 
             case LOW_PRICE:
-                getViewDataBinding().sortRadioGroup.check(getViewDataBinding().lowPriceCheckView.getId());
+                getViewDataBinding().sortRadioGroup.check(getViewDataBinding().lowPriceRadioButton.getId());
                 break;
 
             case HIGH_PRICE:
-                getViewDataBinding().sortRadioGroup.check(getViewDataBinding().highPriceCheckView.getId());
+                getViewDataBinding().sortRadioGroup.check(getViewDataBinding().highPriceRadioButton.getId());
                 break;
 
             case SATISFACTION:
-                getViewDataBinding().sortRadioGroup.check(getViewDataBinding().satisfactionCheckView.getId());
+                getViewDataBinding().sortRadioGroup.check(getViewDataBinding().satisfactionRadioButton.getId());
                 break;
         }
     }
@@ -188,24 +188,52 @@ public class StayOutboundFilterView extends BaseView<StayOutboundFilterView.OnEv
         switch (rating)
         {
             case 1:
-                getViewDataBinding().ratingRadioGroup.check(getViewDataBinding().rating1View.getId());
+                getViewDataBinding().ratingRadioGroup.check(getViewDataBinding().rating1RadioButton.getId());
                 break;
 
             case 2:
-                getViewDataBinding().ratingRadioGroup.check(getViewDataBinding().rating2View.getId());
+                getViewDataBinding().ratingRadioGroup.check(getViewDataBinding().rating2RadioButton.getId());
                 break;
 
             case 3:
-                getViewDataBinding().ratingRadioGroup.check(getViewDataBinding().rating3View.getId());
+                getViewDataBinding().ratingRadioGroup.check(getViewDataBinding().rating3RadioButton.getId());
                 break;
 
             case 4:
-                getViewDataBinding().ratingRadioGroup.check(getViewDataBinding().rating4View.getId());
+                getViewDataBinding().ratingRadioGroup.check(getViewDataBinding().rating4RadioButton.getId());
                 break;
 
             case 5:
-                getViewDataBinding().ratingRadioGroup.check(getViewDataBinding().rating5View.getId());
+                getViewDataBinding().ratingRadioGroup.check(getViewDataBinding().rating5RadioButton.getId());
                 break;
+        }
+    }
+
+    @Override
+    public void setEnabledLines(boolean[] enabledLines)
+    {
+        if (enabledLines == null)
+        {
+            return;
+        }
+
+        for (int i = 0; i < enabledLines.length; i++)
+        {
+            if (i == 0)
+            {
+                getViewDataBinding().rankRadioButton.setEnabled(enabledLines[i]);
+                getViewDataBinding().distanceRadioButton.setEnabled(enabledLines[i]);
+                getViewDataBinding().lowPriceRadioButton.setEnabled(enabledLines[i]);
+                getViewDataBinding().highPriceRadioButton.setEnabled(enabledLines[i]);
+                getViewDataBinding().satisfactionRadioButton.setEnabled(enabledLines[i]);
+            } else if (i == 1)
+            {
+                getViewDataBinding().rating1RadioButton.setEnabled(enabledLines[i]);
+                getViewDataBinding().rating2RadioButton.setEnabled(enabledLines[i]);
+                getViewDataBinding().rating3RadioButton.setEnabled(enabledLines[i]);
+                getViewDataBinding().rating4RadioButton.setEnabled(enabledLines[i]);
+                getViewDataBinding().rating5RadioButton.setEnabled(enabledLines[i]);
+            }
         }
     }
 }

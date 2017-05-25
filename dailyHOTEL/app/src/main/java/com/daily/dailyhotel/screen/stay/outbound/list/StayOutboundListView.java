@@ -147,6 +147,7 @@ public class StayOutboundListView extends BaseView<StayOutboundListView.OnEventL
 
         viewDataBinding.viewTypeOptionImageView.setOnClickListener(this);
         viewDataBinding.filterOptionImageView.setOnClickListener(this);
+        viewDataBinding.researchView.setOnClickListener(this);
     }
 
     @Override
@@ -183,7 +184,7 @@ public class StayOutboundListView extends BaseView<StayOutboundListView.OnEventL
     }
 
     @Override
-    public void setStayOutboundList(List<ListItem> listItemList)
+    public void setStayOutboundList(List<ListItem> listItemList, boolean isSortByDistance)
     {
         if (getViewDataBinding() == null)
         {
@@ -236,6 +237,7 @@ public class StayOutboundListView extends BaseView<StayOutboundListView.OnEventL
         getViewDataBinding().resultLayout.setVisibility(View.VISIBLE);
 
         mStayOutboundListAdapter.setAll(listItemList);
+        mStayOutboundListAdapter.setDistanceEnabled(isSortByDistance);
         mStayOutboundListAdapter.notifyDataSetChanged();
     }
 
@@ -257,6 +259,7 @@ public class StayOutboundListView extends BaseView<StayOutboundListView.OnEventL
         getViewDataBinding().emptyLayout.setVisibility(View.GONE);
         getViewDataBinding().resultLayout.setVisibility(View.VISIBLE);
 
+        mStayOutboundListAdapter.remove(mStayOutboundListAdapter.getItemCount() - 1);
         mStayOutboundListAdapter.addAll(listItemList);
         mStayOutboundListAdapter.notifyDataSetChanged();
     }
@@ -460,6 +463,11 @@ public class StayOutboundListView extends BaseView<StayOutboundListView.OnEventL
             if (mViewPager.getVisibility() == View.VISIBLE)
             {
                 hideViewPagerAnimation();
+
+                if (mStayOutboundMapFragment != null)
+                {
+                    mStayOutboundMapFragment.hideSelectedMarker();
+                }
             }
         }
     }
@@ -544,6 +552,10 @@ public class StayOutboundListView extends BaseView<StayOutboundListView.OnEventL
 
             case R.id.filterOptionImageView:
                 getEventListener().onFilterClick();
+                break;
+
+            case R.id.researchView:
+                getEventListener().onBackClick();
                 break;
         }
     }
@@ -714,26 +726,33 @@ public class StayOutboundListView extends BaseView<StayOutboundListView.OnEventL
 
     public void setMenuBarLayoutTranslationY(float dy)
     {
-        if (getViewDataBinding() == null || mViewPager == null)
+        if (getViewDataBinding() == null)
         {
             return;
         }
 
         getViewDataBinding().bottomOptionLayout.setTranslationY(dy - ScreenUtils.dpToPx(getContext(), (VIEWPAGER_HEIGHT_DP - VIEWPAGER_TOP_N_BOTTOM_PADDING_DP)));
-        mViewPager.setTranslationY(dy);
+
+        if (mViewPager != null)
+        {
+            mViewPager.setTranslationY(dy);
+        }
     }
 
     public void resetMenuBarLayoutTranslation()
     {
-        if (getViewDataBinding() == null || mViewPager == null)
+        if (getViewDataBinding() == null)
         {
             return;
         }
 
         getViewDataBinding().bottomOptionLayout.setTranslationY(0);
 
-        mViewPager.setVisibility(View.INVISIBLE);
-        mViewPager.setTranslationY(0);
+        if (mViewPager != null)
+        {
+            mViewPager.setVisibility(View.INVISIBLE);
+            mViewPager.setTranslationY(0);
+        }
     }
 
     private DailyOverScrollViewPager addMapViewPager(Context context, ViewGroup viewGroup)

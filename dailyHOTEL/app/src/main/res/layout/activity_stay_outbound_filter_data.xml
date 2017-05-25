@@ -90,7 +90,7 @@
                         android:paddingRight="10dp">
 
                         <com.daily.base.widget.DailyRadioButton
-                            android:id="@+id/rankCheckView"
+                            android:id="@+id/rankRadioButton"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_weight="1"
@@ -104,7 +104,7 @@
                             app:drawableCompatTop="@drawable/f_ic_sort_06"/>
 
                         <com.daily.base.widget.DailyRadioButton
-                            android:id="@+id/distanceCheckView"
+                            android:id="@+id/distanceRadioButton"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_weight="1"
@@ -118,7 +118,7 @@
                             app:drawableCompatTop="@drawable/f_ic_sort_02"/>
 
                         <com.daily.base.widget.DailyRadioButton
-                            android:id="@+id/lowPriceCheckView"
+                            android:id="@+id/lowPriceRadioButton"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_weight="1"
@@ -132,7 +132,7 @@
                             app:drawableCompatTop="@drawable/f_ic_sort_03"/>
 
                         <com.daily.base.widget.DailyRadioButton
-                            android:id="@+id/highPriceCheckView"
+                            android:id="@+id/highPriceRadioButton"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_weight="1"
@@ -146,7 +146,7 @@
                             app:drawableCompatTop="@drawable/f_ic_sort_04"/>
 
                         <com.daily.base.widget.DailyRadioButton
-                            android:id="@+id/satisfactionCheckView"
+                            android:id="@+id/satisfactionRadioButton"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_weight="1"
@@ -195,7 +195,7 @@
                     android:paddingRight="10dp">
 
                     <com.daily.base.widget.DailyRadioButton
-                        android:id="@+id/rating1View"
+                        android:id="@+id/rating1RadioButton"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
@@ -209,7 +209,7 @@
                         app:drawableCompatTop="@drawable/f_ic_hotel_grade_01"/>
 
                     <com.daily.base.widget.DailyRadioButton
-                        android:id="@+id/rating2View"
+                        android:id="@+id/rating2RadioButton"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
@@ -223,7 +223,7 @@
                         app:drawableCompatTop="@drawable/f_ic_hotel_grade_02"/>
 
                     <com.daily.base.widget.DailyRadioButton
-                        android:id="@+id/rating3View"
+                        android:id="@+id/rating3RadioButton"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
@@ -237,7 +237,7 @@
                         app:drawableCompatTop="@drawable/f_ic_hotel_grade_03"/>
 
                     <com.daily.base.widget.DailyRadioButton
-                        android:id="@+id/rating4View"
+                        android:id="@+id/rating4RadioButton"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
@@ -251,7 +251,7 @@
                         app:drawableCompatTop="@drawable/f_ic_hotel_grade_04"/>
 
                     <com.daily.base.widget.DailyRadioButton
-                        android:id="@+id/rating5View"
+                        android:id="@+id/rating5RadioButton"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_weight="1"

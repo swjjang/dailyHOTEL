@@ -261,7 +261,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
             {
                 if (getViewInterface().isMapViewPagerVisibility() == true)
                 {
-                    getViewInterface().setMapViewPagerVisibility(true);
+                    getViewInterface().setMapViewPagerVisibility(false);
                 } else
                 {
                     onViewTypeClick();
@@ -314,6 +314,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
                         }
 
                         onCalendarDateTime(checkInDateTime, checkOutDateTime);
+                        onRefreshAll(true);
                     }
                 }
                 break;
@@ -329,6 +330,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
                         ArrayList<Integer> childAgeList = data.getIntegerArrayListExtra(SelectPeopleActivity.INTENT_EXTRA_DATA_CHILD_LIST);
 
                         onPeople(numberOfAdults, childAgeList);
+                        onRefreshAll(true);
                     }
                 }
                 break;
@@ -528,8 +530,22 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
             return;
         }
 
-        Intent intent = StayOutboundFilterActivity.newInstance(getActivity(), mStayOutboundFilters);
-        startActivityForResult(intent, StayOutboundListActivity.REQUEST_CODE_FILTER);
+        switch (mViewState)
+        {
+            case LIST:
+            {
+                Intent intent = StayOutboundFilterActivity.newInstance(getActivity(), mStayOutboundFilters, true, true);
+                startActivityForResult(intent, StayOutboundListActivity.REQUEST_CODE_FILTER);
+                break;
+            }
+
+            case MAP:
+            {
+                Intent intent = StayOutboundFilterActivity.newInstance(getActivity(), mStayOutboundFilters, false, true);
+                startActivityForResult(intent, StayOutboundListActivity.REQUEST_CODE_FILTER);
+                break;
+            }
+        }
     }
 
     @Override
@@ -566,6 +582,8 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
                 break;
             }
         }
+
+        unLockAll();
     }
 
     @Override
@@ -797,7 +815,9 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
             {
                 if (isAdded == false)
                 {
-                    getViewInterface().setStayOutboundList(listItems);
+                    boolean isSortByDistance = mStayOutboundFilters != null && mStayOutboundFilters.sortType == StayOutboundFilters.SortType.DISTANCE;
+
+                    getViewInterface().setStayOutboundList(listItems, isSortByDistance);
                 } else
                 {
                     getViewInterface().addStayOutboundList(listItems);
@@ -857,7 +877,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
 
         mStayOutboundFilters.rating = rating;
 
-        if(sortType != StayOutboundFilters.SortType.DISTANCE)
+        if (sortType != StayOutboundFilters.SortType.DISTANCE)
         {
             mStayOutboundFilters.latitude = 0;
             mStayOutboundFilters.longitude = 0;

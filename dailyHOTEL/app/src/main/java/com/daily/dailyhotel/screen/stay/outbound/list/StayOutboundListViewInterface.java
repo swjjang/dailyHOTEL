@@ -19,7 +19,7 @@ public interface StayOutboundListViewInterface extends BaseViewInterface
 
     void setPeopleText(String peopleText);
 
-    void setStayOutboundList(List<ListItem> listItemList);
+    void setStayOutboundList(List<ListItem> listItemList, boolean isSortByDistance);
 
     void addStayOutboundList(List<ListItem> listItemList);
 

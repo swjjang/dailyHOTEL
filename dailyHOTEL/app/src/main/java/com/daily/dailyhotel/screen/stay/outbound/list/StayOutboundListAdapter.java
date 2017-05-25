@@ -106,6 +106,16 @@ public class StayOutboundListAdapter extends RecyclerView.Adapter<RecyclerView.V
         addAll(collection);
     }
 
+    public void remove(int position)
+    {
+        if (mList == null || mList.size() <= position)
+        {
+            return;
+        }
+
+        mList.remove(position);
+    }
+
     public ListItem getItem(int position)
     {
         if (position < 0 || mList.size() <= position)
