@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.webkit.WebView;
 
 import com.daily.base.util.DailyTextUtils;
+import com.twoheart.dailyhotel.Setting;
 import com.twoheart.dailyhotel.model.Customer;
 import com.twoheart.dailyhotel.model.GourmetPaymentInformation;
 import com.twoheart.dailyhotel.model.Guest;
@@ -13,8 +14,10 @@ import com.twoheart.dailyhotel.model.time.PlaceBookingDay;
 import com.twoheart.dailyhotel.network.IDailyNetwork;
 import com.twoheart.dailyhotel.network.model.GourmetProduct;
 import com.twoheart.dailyhotel.place.activity.PlacePaymentWebActivity;
+import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Crypto;
 import com.twoheart.dailyhotel.util.DailyCalendar;
+import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import okhttp3.FormBody;
@@ -131,8 +134,17 @@ public class GourmetPaymentWebActivity extends PlacePaymentWebActivity
                 break;
         }
 
-        String url = Crypto.getUrlDecoderEx(IDailyNetwork.URL_DAILYHOTEL_SERVER)//
-            + Crypto.getUrlDecoderEx(IDailyNetwork.URL_WEBAPI_FNB_PAYMENT_SESSION_COMMON);
+        String url;
+
+        if (Constants.DEBUG == true)
+        {
+            url = DailyPreference.getInstance(this).getBaseUrl()//
+                + Crypto.getUrlDecoderEx(IDailyNetwork.URL_WEBAPI_FNB_PAYMENT_SESSION_COMMON);
+        } else
+        {
+            url = Crypto.getUrlDecoderEx(Setting.getServerUrl())//
+                + Crypto.getUrlDecoderEx(IDailyNetwork.URL_WEBAPI_FNB_PAYMENT_SESSION_COMMON);
+        }
 
         WebViewPostAsyncTask webViewPostAsyncTask = new WebViewPostAsyncTask(webView, builder);
         webViewPostAsyncTask.execute(url);

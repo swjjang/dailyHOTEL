@@ -73,14 +73,7 @@ public class StayDetailNetworkController extends PlaceDetailNetworkController
                         case 5:
                         {
                             ((OnNetworkControllerListener) mOnNetworkControllerListener).onStayDetailInformation(stayDetailParams);
-
-                            if (DailyTextUtils.isTextEmpty(baseDto.msg) == false)
-                            {
-                                mOnNetworkControllerListener.onErrorPopupMessage(msgCode, baseDto.msg);
-                            } else
-                            {
-                                throw new NullPointerException("response == null");
-                            }
+                            mOnNetworkControllerListener.onErrorPopupMessage(msgCode, baseDto.msg);
                             break;
                         }
 

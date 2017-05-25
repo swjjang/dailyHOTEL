@@ -10,8 +10,6 @@ import java.util.Map;
 
 public interface IDailyNetwork
 {
-    String URL_DAILYHOTEL_SERVER = Setting.URL_DAILYHOTEL_SERVER_DEFAULT;
-
     // DailyHOTEL Reservation Controller WebAPI URL
     // api/hotel/v1/payment/session/common
     String URL_WEBAPI_HOTEL_V1_PAYMENT_SESSION_COMMON = Constants.UNENCRYPTED_URL ? "api/hotel/v1/payment/session/common" : "ODUkNDMkOCQxMDgkNDYkMjckNjEkOTYkMzEkNDckNTIkMTMkODUkOTEkNzkkMzUk$MkNCQ0MyQQjYzMN0U3OTlEQkREMjPU5MHThYDMEE1NjM2QzgKM2SRkZI1MkI3OTNGNJEExQzBEMkIzMzYBEQkY4SOTU2QJjk3NKjhFQTCM4MEQwRjg1RjFBOTDQ3MEZCNTJBOTAwRjI0ODZC$";

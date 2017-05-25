@@ -68,7 +68,6 @@ public class GourmetDetailNetworkController extends PlaceDetailNetworkController
                         case 5:
                         {
                             ((OnNetworkControllerListener) mOnNetworkControllerListener).onGourmetDetailInformation(baseDto.data);
-
                             mOnNetworkControllerListener.onErrorPopupMessage(baseDto.msgCode, baseDto.msg);
                             break;
                         }
