@@ -5075,9 +5075,9 @@ public class DailyMobileAPITest
             }
         };
 
-        DailyMobileAPI.getInstance(mContext).
-            requestWishList(mNetworkTag, "gourmet", gourmetWishListCallback);
-        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
+//        DailyMobileAPI.getInstance(mContext).
+//            requestWishList(mNetworkTag, "gourmet", gourmetWishListCallback);
+//        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
 
         mLock = new CountDownLatch(1);
 
@@ -5195,8 +5195,8 @@ public class DailyMobileAPITest
             }
         };
 
-        DailyMobileAPI.getInstance(mContext).requestWishList(mNetworkTag, "hotel", stayWishListCallback);
-        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
+//        DailyMobileAPI.getInstance(mContext).requestWishList(mNetworkTag, "hotel", stayWishListCallback);
+//        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
     }
 
     @Test

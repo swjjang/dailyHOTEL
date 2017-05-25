@@ -2,23 +2,25 @@ package com.twoheart.dailyhotel.screen.mydaily.wishlist;
 
 import android.content.Context;
 import android.net.Uri;
-import android.util.SparseArray;
 
 import com.crashlytics.android.Crashlytics;
+import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ScreenUtils;
 import com.twoheart.dailyhotel.model.Gourmet;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
-import com.twoheart.dailyhotel.network.model.GourmetDetailParams;
+import com.twoheart.dailyhotel.network.dto.BaseDto;
+import com.twoheart.dailyhotel.network.model.GourmetWishItem;
+import com.twoheart.dailyhotel.network.model.PlaceWishItems;
 import com.twoheart.dailyhotel.network.model.Sticker;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
 import com.twoheart.dailyhotel.util.Constants;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Response;
@@ -43,7 +45,7 @@ public class GourmetWishListNetworkController extends BaseNetworkController
 
     public void requestGourmetWishList()
     {
-        DailyMobileAPI.getInstance(mContext).requestWishList(mNetworkTag, "gourmet", mWishListCallback);
+        DailyMobileAPI.getInstance(mContext).requestGourmetWishList(mNetworkTag, mWishListCallback);
     }
 
     public void requestRemoveGourmetWishListItem(int placeIndex)
@@ -52,36 +54,42 @@ public class GourmetWishListNetworkController extends BaseNetworkController
             "gourmet", placeIndex, mRemoveWishListCallback);
     }
 
-    private retrofit2.Callback mWishListCallback = new retrofit2.Callback<JSONObject>()
+    private retrofit2.Callback mWishListCallback = new retrofit2.Callback<BaseDto<PlaceWishItems<GourmetWishItem>>>()
     {
         @Override
-        public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
+        public void onResponse(Call<BaseDto<PlaceWishItems<GourmetWishItem>>> call, Response<BaseDto<PlaceWishItems<GourmetWishItem>>> response)
         {
             if (response != null && response.isSuccessful() && response.body() != null)
             {
                 try
                 {
-                    JSONObject responseJSONObject = response.body();
+                    BaseDto<PlaceWishItems<GourmetWishItem>> baseDto = response.body();
 
-                    int msgCode = responseJSONObject.getInt("msgCode");
+                    int msgCode = baseDto.msgCode;
                     if (msgCode == 100)
                     {
-                        JSONObject dataJSONObject = responseJSONObject.getJSONObject("data");
-                        JSONArray gourmetJSONArray = null;
-
-                        if (dataJSONObject.has("gourmetSales") == true)
+                        PlaceWishItems<GourmetWishItem> placeWishItems = baseDto.data;
+                        if (placeWishItems == null)
                         {
-                            gourmetJSONArray = dataJSONObject.getJSONArray("gourmetSales");
+                            if (DailyTextUtils.isTextEmpty(baseDto.msg) == false)
+                            {
+                                mOnNetworkControllerListener.onErrorToastMessage(baseDto.msg);
+                            } else
+                            {
+                                throw new NullPointerException("response == null");
+                            }
+                            return;
                         }
 
-                        String imageUrl;
+                        String imageUrl = placeWishItems.imgUrl;
+
+                        List<GourmetWishItem> gourmetWishItemList = placeWishItems.items;
 
                         ArrayList<Gourmet> gourmetList;
 
-                        if (gourmetJSONArray != null)
+                        if (gourmetWishItemList != null)
                         {
-                            imageUrl = dataJSONObject.getString("imgUrl");
-                            gourmetList = makeGourmetList(gourmetJSONArray, imageUrl, dataJSONObject.getJSONArray("stickers"));
+                            gourmetList = makeGourmetList(gourmetWishItemList, imageUrl);
                         } else
                         {
                             gourmetList = new ArrayList<>();
@@ -90,7 +98,7 @@ public class GourmetWishListNetworkController extends BaseNetworkController
                         ((GourmetWishListNetworkController.OnNetworkControllerListener) mOnNetworkControllerListener).onGourmetWishList(gourmetList);
                     } else
                     {
-                        String message = responseJSONObject.getString("msg");
+                        String message = baseDto.msg;
 
                         if (Constants.DEBUG == false)
                         {
@@ -115,62 +123,37 @@ public class GourmetWishListNetworkController extends BaseNetworkController
         }
 
         @Override
-        public void onFailure(Call<JSONObject> call, Throwable t)
+        public void onFailure(Call<BaseDto<PlaceWishItems<GourmetWishItem>>> call, Throwable t)
         {
             mOnNetworkControllerListener.onError(call, t, false);
         }
 
-        private ArrayList<Gourmet> makeGourmetList(JSONArray jsonArray, String imageUrl, JSONArray stickerJSONArray) throws JSONException
+        private ArrayList<Gourmet> makeGourmetList(List<GourmetWishItem> gourmetWishItemList, String imageUrl) throws JSONException
         {
-            if (jsonArray == null)
+            if (gourmetWishItemList == null || gourmetWishItemList.size() == 0)
             {
                 return new ArrayList<>();
             }
 
-            SparseArray<String> stickerSparseArray = new SparseArray<>();
-            if (stickerJSONArray != null && stickerJSONArray.length() > 0)
-            {
-                boolean isLowResource = false;
-
-                if (ScreenUtils.getScreenWidth(mContext) < Sticker.DEFAULT_SCREEN_WIDTH)
-                {
-                    isLowResource = true;
-                }
-
-                int length = stickerJSONArray.length();
-
-                for (int i = 0; i < length; i++)
-                {
-                    JSONObject jsonObject = stickerJSONArray.getJSONObject(i);
-
-                    int index = jsonObject.getInt("idx");
-
-                    String url;
-
-                    if (isLowResource == true)
-                    {
-                        url = jsonObject.getString("lowResolutionImageUrl");
-                    } else
-                    {
-                        url = jsonObject.getString("defaultImageUrl");
-                    }
-
-                    stickerSparseArray.append(index, url);
-                }
-            }
-
-            int length = jsonArray.length();
+            int length = gourmetWishItemList.size();
             ArrayList<Gourmet> gourmetList = new ArrayList<>(length);
-            JSONObject jsonObject;
+            GourmetWishItem gourmetWishItem;
             Gourmet gourmet;
+
+            boolean isLowResource = false;
+
+            if (ScreenUtils.getScreenWidth(mContext) < Sticker.DEFAULT_SCREEN_WIDTH)
+            {
+                isLowResource = true;
+            }
 
             for (int i = 0; i < length; i++)
             {
-                jsonObject = jsonArray.getJSONObject(i);
+                gourmetWishItem = gourmetWishItemList.get(i);
 
                 gourmet = new Gourmet();
 
-                if (gourmet.setData(jsonObject, imageUrl, stickerSparseArray) == true)
+                if (gourmet.setData(gourmetWishItem, imageUrl, isLowResource) == true)
                 {
                     gourmetList.add(gourmet);
                 }
