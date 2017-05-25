@@ -30,8 +30,8 @@ public class StayOutboundDetailData
     @JsonField(name = "hotelRating")
     public int hotelRating;
 
-    @JsonField(name = "tripAdvisorRating")
-    public String tripAdvisorRating;
+    @JsonField(name = "tripAdvisor")
+    public TripAdvisorData tripAdvisorData;
 
     @JsonField(name = "latitude")
     public double latitude;
@@ -64,7 +64,13 @@ public class StayOutboundDetailData
         stayOutboundDetail.nameEng = nameEng;
         stayOutboundDetail.address = address;
         stayOutboundDetail.grade = hotelRating;
-        stayOutboundDetail.ratingValue = tripAdvisorRating;
+
+        if (tripAdvisorData != null)
+        {
+            stayOutboundDetail.tripAdvisorRating = tripAdvisorData.tripAdvisorRating;
+            stayOutboundDetail.tripAdvisorReviewCount = tripAdvisorData.tripAdvisorReviewCount;
+        }
+
         stayOutboundDetail.latitude = latitude;
         stayOutboundDetail.longitude = longitude;
         stayOutboundDetail.setInformationMap(detailMap);
@@ -127,28 +133,9 @@ public class StayOutboundDetailData
         {
             StayOutboundDetailImage stayOutboundDetailImage = new StayOutboundDetailImage();
             stayOutboundDetailImage.caption = caption;
-            stayOutboundDetailImage.hdpiImageUrl = imageMap.medium;
-            stayOutboundDetailImage.xxhdpiImageUrl = imageMap.big;
+            stayOutboundDetailImage.setImageMap(imageMap.getImageMap());
 
             return stayOutboundDetailImage;
-        }
-    }
-
-    @JsonObject
-    static class ImageMapData
-    {
-        @JsonField(name = "small")
-        public String small;
-
-        @JsonField(name = "big")
-        public String big;
-
-        @JsonField(name = "medium")
-        public String medium;
-
-        public ImageMapData()
-        {
-
         }
     }
 
@@ -167,17 +154,20 @@ public class StayOutboundDetailData
         @JsonField(name = "roomName")
         public String roomName;
 
-        @JsonField(name = "baseKrw")
-        public String baseKrw;
+        @JsonField(name = "roomBedTypeId")
+        public int roomBedTypeId;
 
-        @JsonField(name = "totalKrw")
-        public String totalKrw;
+        @JsonField(name = "base")
+        public String base;
 
-        @JsonField(name = "baseNightlyKrw")
-        public String baseNightlyKrw;
+        @JsonField(name = "total")
+        public String total;
 
-        @JsonField(name = "nightlyKrw")
-        public String nightlyKrw;
+        @JsonField(name = "baseNightly")
+        public String baseNightly;
+
+        @JsonField(name = "nightly")
+        public String nightly;
 
         @JsonField(name = "quotedOccupancy")
         public int quotedOccupancy;
@@ -197,9 +187,6 @@ public class StayOutboundDetailData
         @JsonField(name = "nonRefundableDescription")
         public String nonRefundableDescription;
 
-        @JsonField(name = "bedTypeName")
-        public String bedTypeName;
-
         @JsonField(name = "valueAddName")
         public String valueAddName;
 
@@ -213,18 +200,19 @@ public class StayOutboundDetailData
             StayOutboundRoom stayOutboundRoom = new StayOutboundRoom();
             stayOutboundRoom.rateKey = rateKey;
             stayOutboundRoom.roomTypeCode = roomTypeCode;
+            stayOutboundRoom.rateCode = rateCode;
             stayOutboundRoom.roomName = roomName;
-            stayOutboundRoom.baseKrw = baseKrw;
-            stayOutboundRoom.totalKrw = totalKrw;
-            stayOutboundRoom.baseNightlyKrw = baseNightlyKrw;
-            stayOutboundRoom.nightlyKrw = nightlyKrw;
+            stayOutboundRoom.roomBedTypeId = roomBedTypeId;
+            stayOutboundRoom.base = base;
+            stayOutboundRoom.total = total;
+            stayOutboundRoom.baseNightly = baseNightly;
+            stayOutboundRoom.nightly = nightly;
             stayOutboundRoom.quotedOccupancy = quotedOccupancy;
             stayOutboundRoom.rateOccupancyPerRoom = rateOccupancyPerRoom;
             stayOutboundRoom.promotion = promotion;
             stayOutboundRoom.promotionDescription = promotionDescription;
             stayOutboundRoom.nonRefundable = nonRefundable;
             stayOutboundRoom.nonRefundableDescription = nonRefundableDescription;
-            stayOutboundRoom.bedTypeName = bedTypeName;
             stayOutboundRoom.valueAddName = valueAddName;
 
             return stayOutboundRoom;

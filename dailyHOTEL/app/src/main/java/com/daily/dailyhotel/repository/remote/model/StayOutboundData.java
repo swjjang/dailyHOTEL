@@ -71,16 +71,7 @@ public class StayOutboundData
         stayOutbound.nightlyRate = nightlyRate;
         stayOutbound.nightlyBaseRate = nightlyBaseRate;
         stayOutbound.total = total;
-
-        ImageMap imageMap = null;
-
-        if (imageMapData != null)
-        {
-            imageMap = new ImageMap();
-            imageMap.smallUrl = imageMapData.small;
-            imageMap.mediumUrl = imageMapData.medium;
-            imageMap.bigUrl = imageMapData.big;
-        }
+        stayOutbound.setImageMap(imageMapData.getImageMap());
 
         if (tripAdvisorData != null)
         {
@@ -88,41 +79,6 @@ public class StayOutboundData
             stayOutbound.tripAdvisorReviewCount = tripAdvisorData.tripAdvisorReviewCount;
         }
 
-        stayOutbound.setImageMap(imageMap);
-
         return stayOutbound;
-    }
-
-    @JsonObject
-    static class ImageMapData
-    {
-        @JsonField(name = "small")
-        public String small;
-
-        @JsonField(name = "big")
-        public String big;
-
-        @JsonField(name = "medium")
-        public String medium;
-
-        public ImageMapData()
-        {
-
-        }
-    }
-
-    @JsonObject
-    static class TripAdvisorData
-    {
-        @JsonField(name = "tripAdvisorRating")
-        public float tripAdvisorRating;
-
-        @JsonField(name = "tripAdvisorReviewCount")
-        public int tripAdvisorReviewCount;
-
-        public TripAdvisorData()
-        {
-
-        }
     }
 }

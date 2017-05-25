@@ -116,7 +116,7 @@ public class StayOutboundDetailRoomListAdapter extends RecyclerView.Adapter<Recy
             {
                 try
                 {
-                    price = DailyTextUtils.getPriceFormat(mContext, Integer.parseInt(stayOutboundRoom.baseKrw), false);
+                    price = DailyTextUtils.getPriceFormat(mContext, Integer.parseInt(stayOutboundRoom.base), false);
                 } catch (Exception e)
                 {
                     price = null;
@@ -128,10 +128,10 @@ public class StayOutboundDetailRoomListAdapter extends RecyclerView.Adapter<Recy
 
             try
             {
-                discountPrice = DailyTextUtils.getPriceFormat(mContext, Integer.parseInt(stayOutboundRoom.totalKrw), false);
+                discountPrice = DailyTextUtils.getPriceFormat(mContext, Integer.parseInt(stayOutboundRoom.total), false);
             } catch (Exception e)
             {
-                discountPrice = stayOutboundRoom.totalKrw;
+                discountPrice = stayOutboundRoom.total;
             }
         } else
         {
@@ -139,7 +139,7 @@ public class StayOutboundDetailRoomListAdapter extends RecyclerView.Adapter<Recy
             {
                 try
                 {
-                    price = DailyTextUtils.getPriceFormat(mContext, Integer.parseInt(stayOutboundRoom.baseNightlyKrw), false);
+                    price = DailyTextUtils.getPriceFormat(mContext, Integer.parseInt(stayOutboundRoom.baseNightly), false);
                 } catch (Exception e)
                 {
                     price = null;
@@ -151,10 +151,10 @@ public class StayOutboundDetailRoomListAdapter extends RecyclerView.Adapter<Recy
 
             try
             {
-                discountPrice = DailyTextUtils.getPriceFormat(mContext, Integer.parseInt(stayOutboundRoom.nightlyKrw), false);
+                discountPrice = DailyTextUtils.getPriceFormat(mContext, Integer.parseInt(stayOutboundRoom.nightly), false);
             } catch (Exception e)
             {
-                discountPrice = stayOutboundRoom.nightlyKrw;
+                discountPrice = stayOutboundRoom.nightly;
             }
         }
 

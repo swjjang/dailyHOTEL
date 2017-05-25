@@ -1312,7 +1312,8 @@
     <string name="label_stay_outbound_filter_x_star_rate">%1$d성급</string>
 
     <!-- Stay Out Bound Detail -->
-    <string name="label_stay_outbound__detail_grade">%1$d 성급</string>
+    <string name="label_stay_outbound__detail_grade">%1$d성급</string>
+    <string name="label_stay_outbound__detail_check_in_out">체크인/체크아웃</string>
     <string name="label_stay_outbound__room_default_person">%1$d인 기준</string>
     <string name="label_stay_outbound__room_max_person_free">최대 %1$d인</string>
     <string name="label_stay_outbound__room_max_person_charge">최대 %1$d인(유료)</string>

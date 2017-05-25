@@ -33,6 +33,7 @@ import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
 import com.daily.base.widget.DailyTextView;
+import com.daily.dailyhotel.entity.ImageMap;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayOutboundDetail;
 import com.daily.dailyhotel.entity.StayOutboundDetailImage;
@@ -561,10 +562,14 @@ public class StayOutboundDetailView extends BaseView<StayOutboundDetailView.OnEv
             mImageViewPagerAdapter = new StayOutboundDetailImageViewPagerAdapter(getContext());
         }
 
-        List<StayOutboundDetailImage> imageList = new ArrayList<>();
         StayOutboundDetailImage detailImage = new StayOutboundDetailImage();
-        detailImage.hdpiImageUrl = url;
-        detailImage.xxhdpiImageUrl = url;
+        ImageMap imageMap = new ImageMap();
+        imageMap.smallUrl = url;
+        imageMap.mediumUrl = url;
+        imageMap.bigUrl = url;
+        detailImage.setImageMap(imageMap);
+
+        List<StayOutboundDetailImage> imageList = new ArrayList<>();
         imageList.add(detailImage);
 
         mImageViewPagerAdapter.setData(imageList);

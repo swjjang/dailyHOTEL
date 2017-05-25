@@ -14,7 +14,8 @@ public class StayOutboundDetail
     public String nameEng;
     public String address;
     public int grade;
-    public String ratingValue;
+    public float tripAdvisorRating;
+    public int tripAdvisorReviewCount;
     public double latitude;
     public double longitude;
 

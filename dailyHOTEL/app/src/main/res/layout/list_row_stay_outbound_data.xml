@@ -58,7 +58,7 @@
 
                 <RatingBar
                     android:id="@+id/ratingBar"
-                    style="@style/StayOutboundRatingBar"
+                    style="@style/StayOutboundRatingBarWhite"
                     android:layout_width="wrap_content"
                     android:layout_height="10dp"
                     android:layout_marginLeft="6dp"
@@ -104,8 +104,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="3dp"
                 android:layout_marginLeft="11dp"
-                android:gravity="center_vertical"
-
+                android:gravity="bottom"
                 android:orientation="horizontal"
                 android:visibility="visible">
 
