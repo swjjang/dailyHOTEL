@@ -1936,7 +1936,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
                         // 판매 마감시
                         if (msgCode == 5)
                         {
-                            showSimpleDialog(getString(R.string.dialog_notice2), message//
+                            showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.message_gourmet_detail_sold_out)//
                                 , getString(R.string.label_changing_date), new View.OnClickListener()
                                 {
                                     @Override
@@ -1956,7 +1956,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
                 // 판매 마감시
                 if (msgCode == 5)
                 {
-                    showSimpleDialog(getString(R.string.dialog_notice2), message//
+                    showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.message_gourmet_detail_sold_out)//
                         , getString(R.string.label_changing_date), new View.OnClickListener()
                         {
                             @Override
