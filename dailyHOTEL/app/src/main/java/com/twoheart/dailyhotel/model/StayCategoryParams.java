@@ -159,7 +159,7 @@ public class StayCategoryParams extends StayParams
 
         if (areaIdx != 0)
         {
-            hashMap.put("areaIdx", areaIdx);
+            hashMap.put("categoryAreaIdx", areaIdx);
         }
 
         return hashMap;
