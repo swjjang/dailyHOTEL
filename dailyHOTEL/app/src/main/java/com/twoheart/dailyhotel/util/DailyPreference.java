@@ -82,6 +82,8 @@ public class DailyPreference
     private static final String KEY_TRUE_VR_CHECK_DATA_GUIDE = "214";
     private static final String KEY_PREVIEW_GUIDE = "215";
 
+    private static final String KEY_STAY_OUTBOUND_SEARCH_CALENDAR = "216"; // 최초에 1회 캘린더 띄우기
+
     // ----> DailyPreference 로 이동
     private static final String KEY_AUTHORIZATION = "1000";
     // <-----
@@ -872,6 +874,16 @@ public class DailyPreference
     public int getCountPreviewGuide()
     {
         return getValue(mPreferences, KEY_PREVIEW_GUIDE, 0);
+    }
+
+    public void setShowStayOutboundSearchCalendar(boolean value)
+    {
+        setValue(mEditor, KEY_STAY_OUTBOUND_SEARCH_CALENDAR, value);
+    }
+
+    public boolean isShowStayOutboundSearchCalendar()
+    {
+        return getValue(mPreferences, KEY_STAY_OUTBOUND_SEARCH_CALENDAR, true);
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////

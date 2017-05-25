@@ -24,6 +24,7 @@ import com.daily.dailyhotel.screen.stay.outbound.list.StayOutboundListActivity;
 import com.daily.dailyhotel.screen.stay.outbound.people.SelectPeopleActivity;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.DailyCalendar;
+import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import java.util.ArrayList;
@@ -199,7 +200,11 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
                         {
                             onSuggests(suggestParcel.getSuggest());
 
-                            onCalendarClick();
+                            if (DailyPreference.getInstance(getActivity()).isShowStayOutboundSearchCalendar() == true)
+                            {
+                                DailyPreference.getInstance(getActivity()).setShowStayOutboundSearchCalendar(false);
+                                onCalendarClick();
+                            }
                         }
                     }
                 }
