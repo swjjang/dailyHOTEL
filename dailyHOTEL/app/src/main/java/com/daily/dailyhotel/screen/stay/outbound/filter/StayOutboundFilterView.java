@@ -206,6 +206,10 @@ public class StayOutboundFilterView extends BaseView<StayOutboundFilterView.OnEv
             case 5:
                 getViewDataBinding().ratingRadioGroup.check(getViewDataBinding().rating5RadioButton.getId());
                 break;
+
+            default:
+                getViewDataBinding().ratingRadioGroup.clearCheck();
+                break;
         }
     }
 

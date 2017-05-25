@@ -296,6 +296,9 @@ public class StayOutboundFilterPresenter extends BaseExceptionPresenter<StayOutb
 
         mStayOutboundFilters.sortType = StayOutboundFilters.SortType.RECOMMENDATION;
         mStayOutboundFilters.rating = -1;
+
+        getViewInterface().setSort(mStayOutboundFilters.sortType);
+        getViewInterface().setRating(mStayOutboundFilters.rating);
     }
 
     @Override
