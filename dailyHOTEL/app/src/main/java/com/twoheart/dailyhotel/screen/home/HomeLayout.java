@@ -698,8 +698,9 @@ public class HomeLayout extends BaseBlurLayout
         firstPosition = firstPosition + (mEventListAdapter.getRealCount() - (firstPosition % mEventListAdapter.getRealCount()));
         mEventRecyclerView.scrollToPosition(firstPosition);
 
-        mEventRecyclerView.clearOnScrollListeners();
-        mEventRecyclerView.addOnScrollListener(mOnScrollListener);
+        // PagerSnapHelper 내부에서 addOnScollListener 를 사용하여 이벤트 처리를 함으로 SnapHelper의 ScrollListener를 수정하지 않으면
+        // 스크롤 리스너가 여러번 add 될 수 있어 setOnScrollListener 사용
+        mEventRecyclerView.setOnScrollListener(mOnScrollListener);
 
         moveNextEventPosition(mEventRecyclerView, firstPosition);
     }
