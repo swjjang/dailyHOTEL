@@ -75,8 +75,8 @@ public class StayOutboundDetail
         POOL(R.drawable.f_ic_facilities_06, 24),
         KIDS_PLAY_ROOM(R.drawable.f_ic_facilities_17, 2186),
         FITNESS(R.drawable.f_ic_facilities_07, 2008),
-        FRONT24(R.drawable.f_ic_facilities_05, 2063),
-        MORE(R.drawable.f_ic_facilities_15, -1),
+        FRONT24(R.drawable.vector_f_ic_facilities_23, 2063),
+        MORE(0, -1),
         NONE(0, 0);
 
         private int mImageResId;

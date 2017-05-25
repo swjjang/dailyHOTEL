@@ -12,7 +12,6 @@ import com.daily.base.util.DailyTextUtils;
 import com.daily.dailyhotel.entity.StayOutboundRoom;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.LayoutStayOutboundDetailRoomDataBinding;
-import com.twoheart.dailyhotel.screen.hotel.detail.StayDetailLayout;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -24,7 +23,7 @@ public class StayOutboundDetailRoomListAdapter extends RecyclerView.Adapter<Recy
     private List<StayOutboundRoom> mStayRoomList;
     View.OnClickListener mOnClickListener;
     private int mSelectedPosition;
-    private int mViewPriceType;
+    private StayOutboundDetailPresenter.PriceType mPriceType;
 
     public StayOutboundDetailRoomListAdapter(Context context, List<StayOutboundRoom> arrayList, View.OnClickListener listener)
     {
@@ -32,7 +31,7 @@ public class StayOutboundDetailRoomListAdapter extends RecyclerView.Adapter<Recy
         mOnClickListener = listener;
 
         addAll(arrayList);
-        mViewPriceType = StayDetailLayout.VIEW_AVERAGE_PRICE;
+        mPriceType = StayOutboundDetailPresenter.PriceType.AVERAGE;
     }
 
     public void addAll(Collection<? extends StayOutboundRoom> collection)
@@ -66,9 +65,9 @@ public class StayOutboundDetailRoomListAdapter extends RecyclerView.Adapter<Recy
         return mStayRoomList.get(position);
     }
 
-    public void setChangedViewPrice(int type)
+    public void setPriceType(StayOutboundDetailPresenter.PriceType priceType)
     {
-        mViewPriceType = type;
+        mPriceType = priceType;
     }
 
     @Override
@@ -104,57 +103,63 @@ public class StayOutboundDetailRoomListAdapter extends RecyclerView.Adapter<Recy
             saleRoomInformationViewHolder.dataBinding.getRoot().setSelected(false);
         }
 
-        boolean isMaxLine = true;
-
         saleRoomInformationViewHolder.dataBinding.roomTypeTextView.setText(stayOutboundRoom.roomName);
 
         String price, discountPrice;
 
-        if (mViewPriceType == StayDetailLayout.VIEW_TOTAL_PRICE)
+        switch (mPriceType)
         {
-            if (stayOutboundRoom.promotion == true)
+            case TOTAL:
             {
-                try
+                if (stayOutboundRoom.promotion == true)
                 {
-                    price = DailyTextUtils.getPriceFormat(mContext, Integer.parseInt(stayOutboundRoom.base), false);
-                } catch (Exception e)
+                    try
+                    {
+                        price = DailyTextUtils.getPriceFormat(mContext, Integer.parseInt(stayOutboundRoom.base), false);
+                    } catch (Exception e)
+                    {
+                        price = null;
+                    }
+                } else
                 {
                     price = null;
                 }
-            } else
-            {
-                price = null;
-            }
 
-            try
-            {
-                discountPrice = DailyTextUtils.getPriceFormat(mContext, Integer.parseInt(stayOutboundRoom.total), false);
-            } catch (Exception e)
-            {
-                discountPrice = stayOutboundRoom.total;
-            }
-        } else
-        {
-            if (stayOutboundRoom.promotion == true)
-            {
                 try
                 {
-                    price = DailyTextUtils.getPriceFormat(mContext, Integer.parseInt(stayOutboundRoom.baseNightly), false);
+                    discountPrice = DailyTextUtils.getPriceFormat(mContext, Integer.parseInt(stayOutboundRoom.total), false);
                 } catch (Exception e)
+                {
+                    discountPrice = stayOutboundRoom.nightly;
+                }
+                break;
+            }
+
+            case AVERAGE:
+            default:
+            {
+                if (stayOutboundRoom.promotion == true)
+                {
+                    try
+                    {
+                        price = DailyTextUtils.getPriceFormat(mContext, Integer.parseInt(stayOutboundRoom.baseNightly), false);
+                    } catch (Exception e)
+                    {
+                        price = null;
+                    }
+                } else
                 {
                     price = null;
                 }
-            } else
-            {
-                price = null;
-            }
 
-            try
-            {
-                discountPrice = DailyTextUtils.getPriceFormat(mContext, Integer.parseInt(stayOutboundRoom.nightly), false);
-            } catch (Exception e)
-            {
-                discountPrice = stayOutboundRoom.nightly;
+                try
+                {
+                    discountPrice = DailyTextUtils.getPriceFormat(mContext, Integer.parseInt(stayOutboundRoom.nightly), false);
+                } catch (Exception e)
+                {
+                    discountPrice = stayOutboundRoom.total;
+                }
+                break;
             }
         }
 
@@ -178,18 +183,17 @@ public class StayOutboundDetailRoomListAdapter extends RecyclerView.Adapter<Recy
             personOption = null;
         } else if (stayOutboundRoom.quotedOccupancy == stayOutboundRoom.rateOccupancyPerRoom)
         {
-            personOption = mContext.getString(R.string.label_stay_outbound__room_max_person_free, stayOutboundRoom.quotedOccupancy)//
+            personOption = mContext.getString(R.string.label_stay_outbound__room_default_person, stayOutboundRoom.quotedOccupancy)//
                 + "/" + mContext.getString(R.string.label_stay_outbound__room_max_person_free, stayOutboundRoom.rateOccupancyPerRoom);
         } else
         {
-            personOption = mContext.getString(R.string.label_stay_outbound__room_max_person_free, stayOutboundRoom.quotedOccupancy)//
+            personOption = mContext.getString(R.string.label_stay_outbound__room_default_person, stayOutboundRoom.quotedOccupancy)//
                 + "/" + mContext.getString(R.string.label_stay_outbound__room_max_person_charge, stayOutboundRoom.rateOccupancyPerRoom);
         }
 
         if (DailyTextUtils.isTextEmpty(personOption) == true)
         {
             saleRoomInformationViewHolder.dataBinding.optionTextView.setVisibility(View.GONE);
-            isMaxLine = false;
         } else
         {
             saleRoomInformationViewHolder.dataBinding.optionTextView.setVisibility(View.VISIBLE);
@@ -199,30 +203,15 @@ public class StayOutboundDetailRoomListAdapter extends RecyclerView.Adapter<Recy
         if (DailyTextUtils.isTextEmpty(stayOutboundRoom.valueAddName) == true)
         {
             saleRoomInformationViewHolder.dataBinding.amenitiesTextView.setVisibility(View.GONE);
-            isMaxLine = false;
         } else
         {
             saleRoomInformationViewHolder.dataBinding.amenitiesTextView.setVisibility(View.VISIBLE);
             saleRoomInformationViewHolder.dataBinding.amenitiesTextView.setText(stayOutboundRoom.valueAddName);
-
-            float width = DailyTextUtils.getTextWidth(mContext, stayOutboundRoom.valueAddName //
-                , saleRoomInformationViewHolder.dataBinding.amenitiesTextView.getTextSize() //
-                , saleRoomInformationViewHolder.dataBinding.amenitiesTextView.getTypeface());
-
-            int viewWidth = saleRoomInformationViewHolder.dataBinding.amenitiesTextView.getWidth() //
-                - saleRoomInformationViewHolder.dataBinding.amenitiesTextView.getPaddingLeft() //
-                - saleRoomInformationViewHolder.dataBinding.amenitiesTextView.getPaddingRight();
-
-            if (width <= viewWidth)
-            {
-                isMaxLine = false;
-            }
         }
 
         if (DailyTextUtils.isTextEmpty(stayOutboundRoom.promotionDescription) == true)
         {
             saleRoomInformationViewHolder.dataBinding.benefitTextView.setVisibility(View.GONE);
-            isMaxLine = false;
         } else
         {
             saleRoomInformationViewHolder.dataBinding.benefitTextView.setVisibility(View.VISIBLE);
@@ -232,31 +221,11 @@ public class StayOutboundDetailRoomListAdapter extends RecyclerView.Adapter<Recy
         if (stayOutboundRoom.nonRefundable == false)
         {
             saleRoomInformationViewHolder.dataBinding.nrdTextView.setVisibility(View.GONE);
-            isMaxLine = false;
         } else
         {
             saleRoomInformationViewHolder.dataBinding.nrdTextView.setVisibility(View.VISIBLE);
+            saleRoomInformationViewHolder.dataBinding.nrdTextView.setText(stayOutboundRoom.nonRefundableDescription);
         }
-
-        int layoutHeight;
-        if (isMaxLine == true)
-        {
-            layoutHeight = mContext.getResources().getDimensionPixelSize(R.dimen.stay_detail_room_type_expand_height);
-        } else
-        {
-            layoutHeight = mContext.getResources().getDimensionPixelSize(R.dimen.stay_detail_room_type_default_height);
-        }
-
-        ViewGroup.LayoutParams params = saleRoomInformationViewHolder.dataBinding.getRoot().getLayoutParams();
-        if (params == null)
-        {
-            params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, layoutHeight);
-        } else
-        {
-            params.height = layoutHeight;
-        }
-
-        saleRoomInformationViewHolder.dataBinding.getRoot().setLayoutParams(params);
     }
 
     @Override

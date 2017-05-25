@@ -175,7 +175,7 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
 
             debugTextView.setText(DailyPreference.getInstance(mContext).getBaseUrl() + "\n"//
                 + webViewVersion + "\n\nDPI : " + displayMetrics.densityDpi//
-                + String.format("(%d, %d)", ScreenUtils.getScreenWidth(mContext), ScreenUtils.getScreenHeight(mContext))//
+                + String.format(Locale.KOREA, "(%d, %d)", ScreenUtils.getScreenWidth(mContext), ScreenUtils.getScreenHeight(mContext))//
                 + dpiText);
         } else
         {

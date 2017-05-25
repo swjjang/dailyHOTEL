@@ -9,9 +9,11 @@ import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ScreenUtils;
 import com.daily.dailyhotel.entity.ImageMap;
 import com.daily.dailyhotel.entity.StayOutboundDetailImage;
+import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.controller.BaseControllerListener;
 import com.facebook.drawee.controller.ControllerListener;
 import com.facebook.drawee.drawable.ScalingUtils;
+import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.imagepipeline.image.ImageInfo;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.layout.PlaceDetailLayout;
@@ -118,6 +120,11 @@ public class StayOutboundDetailImageViewPagerAdapter extends PagerAdapter
 
             ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(width, height);
             container.addView(imageView, 0, layoutParams);
+
+            DraweeController draweeController = Fresco.newDraweeControllerBuilder()//
+                    .setControllerListener(controllerListener).setUri(url).build();
+
+            imageView.setController(draweeController);
         } else
         {
             Util.restartApp(mContext);

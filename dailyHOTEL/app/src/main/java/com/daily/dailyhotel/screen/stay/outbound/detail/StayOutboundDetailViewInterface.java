@@ -1,6 +1,7 @@
 package com.daily.dailyhotel.screen.stay.outbound.detail;
 
 import com.daily.base.BaseViewInterface;
+import com.daily.dailyhotel.entity.People;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayOutboundDetail;
 
@@ -12,7 +13,7 @@ public interface StayOutboundDetailViewInterface extends BaseViewInterface
 
     Observable<Boolean> hideRoomList(boolean animation);
 
-    void setStayDetail(StayBookDateTime stayBookDateTime, StayOutboundDetail stayOutboundDetail);
+    void setStayDetail(StayBookDateTime stayBookDateTime, People people, StayOutboundDetail stayOutboundDetail);
 
     Observable<Boolean> getSharedElementTransition();
 
@@ -21,4 +22,6 @@ public interface StayOutboundDetailViewInterface extends BaseViewInterface
     void setBottomButtonLayout(int status);
 
     void setDetailImageCaption(String caption);
+
+    void setPriceType(StayOutboundDetailPresenter.PriceType priceType);
 }

@@ -7,6 +7,7 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.graphics.Typeface;
+import android.support.annotation.IdRes;
 import android.support.v4.view.MotionEventCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.NestedScrollView;
@@ -24,6 +25,8 @@ import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.LinearInterpolator;
+import android.widget.LinearLayout;
+import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 
 import com.daily.base.BaseActivity;
@@ -34,6 +37,7 @@ import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
 import com.daily.base.widget.DailyTextView;
 import com.daily.dailyhotel.entity.ImageMap;
+import com.daily.dailyhotel.entity.People;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayOutboundDetail;
 import com.daily.dailyhotel.entity.StayOutboundDetailImage;
@@ -48,6 +52,7 @@ import com.twoheart.dailyhotel.databinding.LayoutStayOutboundDetail03DataBinding
 import com.twoheart.dailyhotel.databinding.LayoutStayOutboundDetail04DataBinding;
 import com.twoheart.dailyhotel.databinding.LayoutStayOutboundDetail05DataBinding;
 import com.twoheart.dailyhotel.databinding.LayoutStayOutboundDetailAmenityDataBinding;
+import com.twoheart.dailyhotel.databinding.LayoutStayOutboundDetailAmenityMoreDataBinding;
 import com.twoheart.dailyhotel.databinding.LayoutStayOutboundDetailConcierageDataBinding;
 import com.twoheart.dailyhotel.databinding.LayoutStayOutboundDetailInformationDataBinding;
 import com.twoheart.dailyhotel.util.DailyPreference;
@@ -60,13 +65,14 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import io.reactivex.Observable;
 import io.reactivex.Observer;
 
 public class StayOutboundDetailView extends BaseView<StayOutboundDetailView.OnEventListener, ActivityStayOutboundDetailDataBinding>//
-    implements StayOutboundDetailViewInterface, View.OnClickListener, ViewPager.OnPageChangeListener
+    implements StayOutboundDetailViewInterface, View.OnClickListener, ViewPager.OnPageChangeListener, RadioGroup.OnCheckedChangeListener
 {
     private static final int ANIMATION_DEALY = 250;
 
@@ -89,8 +95,6 @@ public class StayOutboundDetailView extends BaseView<StayOutboundDetailView.OnEv
 
         void onCalendarClick();
 
-        void onDownloadCouponClick();
-
         void onMapClick();
 
         void onClipAddressClick(String address);
@@ -106,6 +110,10 @@ public class StayOutboundDetailView extends BaseView<StayOutboundDetailView.OnEv
         void onHideRoomListClick(boolean animation);
 
         void onActionButtonClick();
+
+        void onAmenityMoreClick();
+
+        void onPriceTypeClick(StayOutboundDetailPresenter.PriceType priceType);
     }
 
     public StayOutboundDetailView(BaseActivity baseActivity, StayOutboundDetailView.OnEventListener listener)
@@ -241,6 +249,21 @@ public class StayOutboundDetailView extends BaseView<StayOutboundDetailView.OnEv
     public void onPageScrollStateChanged(int state)
     {
 
+    }
+
+    @Override
+    public void onCheckedChanged(RadioGroup group, @IdRes int checkedId)
+    {
+        switch (checkedId)
+        {
+            case R.id.averageRadioButton:
+                getEventListener().onPriceTypeClick(StayOutboundDetailPresenter.PriceType.AVERAGE);
+                break;
+
+            case R.id.totalRadioButton:
+                getEventListener().onPriceTypeClick(StayOutboundDetailPresenter.PriceType.TOTAL);
+                break;
+        }
     }
 
     @Override
@@ -415,7 +438,7 @@ public class StayOutboundDetailView extends BaseView<StayOutboundDetailView.OnEv
     }
 
     @Override
-    public void setStayDetail(StayBookDateTime stayBookDateTime, StayOutboundDetail stayOutboundDetail)
+    public void setStayDetail(StayBookDateTime stayBookDateTime, People people, StayOutboundDetail stayOutboundDetail)
     {
         if (getViewDataBinding() == null || stayBookDateTime == null || stayOutboundDetail == null)
         {
@@ -432,7 +455,7 @@ public class StayOutboundDetailView extends BaseView<StayOutboundDetailView.OnEv
         setEmptyView(layoutInflater, getViewDataBinding().scrollLayout);
 
         // 호텔 등급과 이름 / 체크인 체크아웃
-        setTitleView(layoutInflater, getViewDataBinding().scrollLayout, stayBookDateTime, stayOutboundDetail);
+        setTitleView(layoutInflater, getViewDataBinding().scrollLayout, stayBookDateTime, people, stayOutboundDetail);
 
         // 주소 및 맵
         setAddressView(layoutInflater, getViewDataBinding().scrollLayout, stayBookDateTime, stayOutboundDetail);
@@ -457,6 +480,27 @@ public class StayOutboundDetailView extends BaseView<StayOutboundDetailView.OnEv
 
         // 카카오톡 문의
         setConciergeView(layoutInflater, getViewDataBinding().scrollLayout);
+
+        // 객실
+        try
+        {
+            if (stayBookDateTime.getNights() > 1)
+            {
+                getViewDataBinding().priceRadioGroup.check(R.id.averageRadioButton);
+                getViewDataBinding().priceOptionLayout.setVisibility(View.VISIBLE);
+                getViewDataBinding().priceRadioGroup.setOnCheckedChangeListener(this);
+            } else
+            {
+                getViewDataBinding().priceOptionLayout.setVisibility(View.GONE);
+                getViewDataBinding().priceRadioGroup.setOnCheckedChangeListener(null);
+            }
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+
+            getViewDataBinding().priceOptionLayout.setVisibility(View.GONE);
+            getViewDataBinding().priceRadioGroup.setOnCheckedChangeListener(null);
+        }
 
         // 객실 세팅
         setRoomList(stayBookDateTime, stayOutboundDetail.getRoomList());
@@ -638,6 +682,18 @@ public class StayOutboundDetailView extends BaseView<StayOutboundDetailView.OnEv
         }
     }
 
+    @Override
+    public void setPriceType(StayOutboundDetailPresenter.PriceType priceType)
+    {
+        if (mRoomTypeListAdapter == null)
+        {
+            return;
+        }
+
+        mRoomTypeListAdapter.setPriceType(priceType);
+        mRoomTypeListAdapter.notifyDataSetChanged();
+    }
+
     private void initToolbar(ActivityStayOutboundDetailDataBinding viewDataBinding)
     {
         mDailyToolbarLayout = new DailyToolbarLayout(getContext(), viewDataBinding.toolbar.findViewById(R.id.toolbar));
@@ -715,7 +771,7 @@ public class StayOutboundDetailView extends BaseView<StayOutboundDetailView.OnEv
      * @param stayOutboundDetail
      */
     private void setTitleView(LayoutInflater layoutInflater, ViewGroup viewGroup//
-        , StayBookDateTime stayBookDateTime, StayOutboundDetail stayOutboundDetail)
+        , StayBookDateTime stayBookDateTime, People people, StayOutboundDetail stayOutboundDetail)
     {
         if (layoutInflater == null || viewGroup == null || stayBookDateTime == null || stayOutboundDetail == null)
         {
@@ -732,33 +788,32 @@ public class StayOutboundDetailView extends BaseView<StayOutboundDetailView.OnEv
 
         // 호텔명
         viewDataBinding.nameTextView.setText(stayOutboundDetail.name);
+        viewDataBinding.nameEngTextView.setText("(" + stayOutboundDetail.nameEng + ")");
 
-        // 트립어드바이저
-        if (DailyTextUtils.isTextEmpty(stayOutboundDetail.ratingValue) == true)
+        // tripAdvisor
+        if (stayOutboundDetail.tripAdvisorRating == 0.0f)
         {
-            viewDataBinding.satisfactionView.setVisibility(View.GONE);
+            viewDataBinding.tripAdvisorLayout.setVisibility(View.GONE);
         } else
         {
-            viewDataBinding.satisfactionView.setVisibility(View.VISIBLE);
-            //            DecimalFormat decimalFormat = new DecimalFormat("###,##0");
-            //            viewDataBinding.satisfactionView.setText(getString(R.string.label_stay_detail_satisfaction, //
-            //                stayDetailParams.ratingValue, decimalFormat.format(stayDetailParams.ratingPersons)));
+            viewDataBinding.tripAdvisorLayout.setVisibility(View.VISIBLE);
+
+            viewDataBinding.tripAdvisorRatingBar.setRating(stayOutboundDetail.tripAdvisorRating);
+            viewDataBinding.tripAdvisorRatingTextView.setText(getString(R.string.label_stay_outbound_tripadvisor_rating, Float.toString(stayOutboundDetail.tripAdvisorRating)));
+
+            // 별등급이 기본이 5개 이기 때문에 빈공간에도 내용이 존재한다.
+            LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) viewDataBinding.tripAdvisorRatingTextView.getLayoutParams();
+            layoutParams.leftMargin = ScreenUtils.dpToPx(getContext(), 3) - ScreenUtils.dpToPx(getContext(), (5 - (int) Math.ceil(stayOutboundDetail.tripAdvisorRating)) * 10);
+            viewDataBinding.tripAdvisorRatingTextView.setLayoutParams(layoutParams);
         }
 
-        // 할인 쿠폰
-        viewDataBinding.couponLayout.setVisibility(View.GONE);
-
-        // Stamp
-        viewDataBinding.stampLayout.setVisibility(View.GONE);
-
-        // 날짜
-        // 체크인체크아웃 날짜
-        viewDataBinding.checkInDayTextView.setText(stayBookDateTime.getCheckInDateTime("yyyy.MM.dd(EEE)"));
-        viewDataBinding.checkOutDayTextView.setText(stayBookDateTime.getCheckOutDateTime("yyyy.MM.dd(EEE)"));
-
+        // 날짜, 인원
         try
         {
-            viewDataBinding.nightsTextView.setText(getString(R.string.label_nights, stayBookDateTime.getNights()));
+            String dateFormat = String.format(Locale.KOREA, "%s - %s, %s", stayBookDateTime.getCheckInDateTime("M.d(EEE)"), stayBookDateTime.getCheckOutDateTime("M.d(EEE)"), getString(R.string.label_nights, stayBookDateTime.getNights()));
+
+            viewDataBinding.dateTextView.setText(dateFormat);
+            viewDataBinding.peopleTextView.setText(people.toShortString(getContext()));
         } catch (Exception e)
         {
             ExLog.e(e.toString());
@@ -884,7 +939,16 @@ public class StayOutboundDetailView extends BaseView<StayOutboundDetailView.OnEv
         // 더보기가 존재하는 경우
         if (viewDataBinding.amenitiesGridLayout.getChildCount() < stringSparseArray.size())
         {
-            viewDataBinding.amenitiesGridLayout.addView(getAmenityView(getContext(), StayOutboundDetail.Amenity.MORE, getString(R.string.label_more), false));
+            View moreView = getAmenityMoreView(getContext(), layoutInflater, stringSparseArray.size(), false);
+            viewDataBinding.amenitiesGridLayout.addView(moreView);
+            moreView.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    getEventListener().onAmenityMoreClick();
+                }
+            });
         }
 
         int columnCount = viewDataBinding.amenitiesGridLayout.getChildCount() % GRID_COLUMN_COUNT;
@@ -926,6 +990,32 @@ public class StayOutboundDetailView extends BaseView<StayOutboundDetailView.OnEv
         dailyTextView.setLayoutParams(layoutParams);
 
         return dailyTextView;
+    }
+
+    private View getAmenityMoreView(Context context, LayoutInflater layoutInflater, int amenityCount, boolean hasNextLine)
+    {
+        LayoutStayOutboundDetailAmenityMoreDataBinding viewDataBinding = DataBindingUtil.inflate(layoutInflater//
+            , R.layout.layout_stay_outbound_detail_amenity_more_data, null, false);
+
+        viewDataBinding.moreTextView.setText("+" + amenityCount);
+
+        android.support.v7.widget.GridLayout.LayoutParams layoutParams = new android.support.v7.widget.GridLayout.LayoutParams();
+        layoutParams.width = 0;
+        layoutParams.height = ScreenUtils.dpToPx(context, 60);
+        layoutParams.setGravity(Gravity.CENTER_HORIZONTAL);
+        layoutParams.columnSpec = android.support.v7.widget.GridLayout.spec(Integer.MIN_VALUE, 1, 1.0f);
+
+        if (hasNextLine == true)
+        {
+            viewDataBinding.getRoot().setPadding(0, ScreenUtils.dpToPx(context, 10), 0, ScreenUtils.dpToPx(context, 15));
+        } else
+        {
+            viewDataBinding.getRoot().setPadding(0, ScreenUtils.dpToPx(context, 10), 0, ScreenUtils.dpToPx(context, 2));
+        }
+
+        viewDataBinding.getRoot().setLayoutParams(layoutParams);
+
+        return viewDataBinding.getRoot();
     }
 
     /**

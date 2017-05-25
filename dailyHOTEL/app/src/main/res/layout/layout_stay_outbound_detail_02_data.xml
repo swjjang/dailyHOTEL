@@ -80,9 +80,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="11dp"
-                android:gravity="bottom"
+                android:gravity="center_vertical"
                 android:orientation="horizontal"
-                android:visibility="visible">
+                android:visibility="gone">
 
                 <ImageView
                     android:id="@+id/tripAdvisorImageView"
@@ -115,67 +115,6 @@
 
         <include layout="@layout/view_separate_line_no_linear"/>
 
-        <LinearLayout
-            android:id="@+id/stampLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:visibility="gone">
-
-            <RelativeLayout
-                android:id="@+id/stampClickLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/white"
-                android:minHeight="87dp"
-                android:paddingLeft="15dp"
-                android:paddingRight="15dp">
-
-                <ImageView
-                    android:id="@+id/stampImageView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:src="@drawable/detail_ic_stamp"/>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="10dp"
-                    android:layout_toRightOf="@+id/stampImageView"
-                    android:orientation="vertical">
-
-                    <com.daily.base.widget.DailyTextView
-                        android:id="@+id/stampMessage1TextView"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/default_text_c323232"
-                        android:textSize="13dp"/>
-
-                    <com.daily.base.widget.DailyTextView
-                        android:id="@+id/stampMessage2TextView"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
-                        android:textColor="@color/default_text_c666666"
-                        android:textSize="12dp"/>
-
-                    <com.daily.base.widget.DailyTextView
-                        android:id="@+id/stampMessage3TextView"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
-                        android:text="@string/label_view_detail"
-                        android:textColor="@color/default_text_c929292"
-                        android:textSize="12dp"
-                        android:visibility="gone"/>
-                </LinearLayout>
-            </RelativeLayout>
-
-            <include layout="@layout/view_separate_line_no_linear"/>
-        </LinearLayout>
-
         <RelativeLayout
             android:id="@+id/dateLayout"
             android:layout_width="match_parent"
@@ -202,13 +141,13 @@
                         android:textSize="13dp"/>
 
                     <com.daily.base.widget.DailyTextView
-                        android:id="@+id/checkInDayTextView"
+                        android:id="@+id/dateTextView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="9dp"
                         android:drawablePadding="4dp"
                         android:textColor="@color/default_text_cb70038"
-                        android:textSize="15dp"
+                        android:textSize="13dp"
                         app:drawableCompatRight="@drawable/navibar_m_burg_ic_v"/>
                 </LinearLayout>
 
@@ -227,33 +166,21 @@
                     <com.daily.base.widget.DailyTextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/act_booking_chkout"
+                        android:text="@string/label_stay_outbound__detail_number_of_people"
                         android:textColor="@color/default_text_c929292"
                         android:textSize="13dp"/>
 
                     <com.daily.base.widget.DailyTextView
-                        android:id="@+id/checkOutDayTextView"
+                        android:id="@+id/peopleTextView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="9dp"
                         android:drawablePadding="4dp"
                         android:textColor="@color/default_text_cb70038"
-                        android:textSize="15dp"
+                        android:textSize="13dp"
                         app:drawableCompatRight="@drawable/navibar_m_burg_ic_v"/>
                 </LinearLayout>
             </LinearLayout>
-
-            <com.daily.base.widget.DailyTextView
-                android:id="@+id/nightsTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:background="@drawable/payment_overnight_ic_bg"
-                android:gravity="center"
-                android:paddingLeft="8dp"
-                android:paddingRight="8dp"
-                android:textColor="@color/default_text_c666666"
-                android:textSize="11dp"/>
         </RelativeLayout>
 
         <View

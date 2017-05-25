@@ -35,8 +35,11 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
     public static final int STATUS_BOOKING = 2;
     public static final int STATUS_SOLD_OUT = 3;
 
-    public static final int PRICE_AVERAGE = 0;
-    public static final int PRICE_TOTAL = 1;
+    public enum PriceType
+    {
+        AVERAGE,
+        TOTAL
+    }
 
     private StayOutboundDetailAnalyticsInterface mAnalytics;
 
@@ -50,7 +53,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
     private People mPeople;
 
     private int mStatus = STATUS_NONE;
-    private int mViewPriceType = PRICE_AVERAGE;
+    private PriceType mPriceType = PriceType.AVERAGE;
 
     private boolean mIsUsedMultiTransition;
     private boolean mIsDeepLink;
@@ -85,7 +88,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
 
         setStatus(STATUS_NONE);
 
-        mViewPriceType = PRICE_AVERAGE;
+        mPriceType = PriceType.AVERAGE;
 
         Observable<Boolean> observable = getViewInterface().hideRoomList(false);
 
@@ -307,7 +310,6 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
         }
 
 
-
     }
 
     @Override
@@ -347,12 +349,6 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
 
     @Override
     public void onCalendarClick()
-    {
-
-    }
-
-    @Override
-    public void onDownloadCouponClick()
     {
 
     }
@@ -448,6 +444,18 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
         }
     }
 
+    @Override
+    public void onAmenityMoreClick()
+    {
+
+    }
+
+    @Override
+    public void onPriceTypeClick(PriceType priceType)
+    {
+        getViewInterface().setPriceType(priceType);
+    }
+
     private void onStayOutboundDetail(StayOutboundDetail stayOutboundDetail)
     {
         if (stayOutboundDetail == null)
@@ -468,7 +476,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
             getViewInterface().setToolbarTitle(stayOutboundDetail.name);
         }
 
-        getViewInterface().setStayDetail(mStayBookDateTime, stayOutboundDetail);
+        getViewInterface().setStayDetail(mStayBookDateTime, mPeople, stayOutboundDetail);
 
         if (mCheckChangedPrice == false)
         {
