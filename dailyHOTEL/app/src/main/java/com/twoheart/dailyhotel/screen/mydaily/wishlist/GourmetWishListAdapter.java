@@ -1,7 +1,6 @@
 package com.twoheart.dailyhotel.screen.mydaily.wishlist;
 
 import android.content.Context;
-import android.graphics.Paint;
 import android.graphics.drawable.Animatable;
 import android.net.Uri;
 import android.os.Vibrator;
@@ -95,9 +94,6 @@ public class GourmetWishListAdapter extends PlaceWishListAdapter
     {
         final Gourmet gourmet = placeViewItem.getItem();
 
-        String strPrice = DailyTextUtils.getPriceFormat(mContext, gourmet.price, false);
-        String strDiscount = DailyTextUtils.getPriceFormat(mContext, gourmet.discountPrice, false);
-
         String address = gourmet.addressSummary;
 
         int barIndex = address.indexOf('|');
@@ -122,17 +118,8 @@ public class GourmetWishListAdapter extends PlaceWishListAdapter
             holder.personsTextView.setVisibility(View.GONE);
         }
 
-        if (gourmet.price <= 0 || gourmet.price <= gourmet.discountPrice)
-        {
-            holder.priceView.setVisibility(View.INVISIBLE);
-            holder.priceView.setText(null);
-        } else
-        {
-            holder.priceView.setVisibility(View.VISIBLE);
-
-            holder.priceView.setText(strPrice);
-            holder.priceView.setPaintFlags(holder.priceView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-        }
+        holder.priceView.setVisibility(View.INVISIBLE);
+        holder.priceView.setText(null);
 
         // 만족도
         if (gourmet.satisfaction > 0)
@@ -145,7 +132,7 @@ public class GourmetWishListAdapter extends PlaceWishListAdapter
             holder.satisfactionView.setVisibility(View.GONE);
         }
 
-        holder.discountView.setText(strDiscount);
+        holder.discountView.setVisibility(View.GONE);
         holder.nameView.setSelected(true); // Android TextView marquee bug
 
         if (VersionUtils.isOverAPI16() == true)

@@ -4,17 +4,21 @@ import android.content.Context;
 import android.net.Uri;
 
 import com.crashlytics.android.Crashlytics;
+import com.daily.base.util.DailyTextUtils;
 import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
+import com.twoheart.dailyhotel.network.dto.BaseDto;
+import com.twoheart.dailyhotel.network.model.PlaceWishItems;
+import com.twoheart.dailyhotel.network.model.StayWishItem;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
 import com.twoheart.dailyhotel.util.Constants;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Response;
@@ -39,7 +43,7 @@ public class StayWishListNetworkController extends BaseNetworkController
 
     public void requestStayWishList()
     {
-        DailyMobileAPI.getInstance(mContext).requestWishList(mNetworkTag, "hotel", mWishListCallback);
+        DailyMobileAPI.getInstance(mContext).requestStayWishList(mNetworkTag, mWishListCallback);
     }
 
     public void requestRemoveStayWishListItem(int placeIndex)
@@ -49,46 +53,50 @@ public class StayWishListNetworkController extends BaseNetworkController
     }
 
 
-    private retrofit2.Callback mWishListCallback = new retrofit2.Callback<JSONObject>()
+    private retrofit2.Callback mWishListCallback = new retrofit2.Callback<BaseDto<PlaceWishItems<StayWishItem>>>()
     {
         @Override
-        public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
+        public void onResponse(Call<BaseDto<PlaceWishItems<StayWishItem>>> call, Response<BaseDto<PlaceWishItems<StayWishItem>>> response)
         {
             if (response != null && response.isSuccessful() && response.body() != null)
             {
                 try
                 {
-                    JSONObject responseJSONObject = response.body();
+                    BaseDto<PlaceWishItems<StayWishItem>> baseDto = response.body();
 
-                    int msgCode = responseJSONObject.getInt("msgCode");
+                    int msgCode = baseDto.msgCode;
                     if (msgCode == 100)
                     {
-                        JSONObject dataJSONObject = responseJSONObject.getJSONObject("data");
-                        JSONArray hotelJSONArray = null;
-
-                        if (dataJSONObject.has("hotelSales") == true)
+                        PlaceWishItems<StayWishItem> placeWishItems = baseDto.data;
+                        if (placeWishItems == null)
                         {
-                            hotelJSONArray = dataJSONObject.getJSONArray("hotelSales");
+                            if (DailyTextUtils.isTextEmpty(baseDto.msg) == false)
+                            {
+                                mOnNetworkControllerListener.onErrorToastMessage(baseDto.msg);
+                            } else
+                            {
+                                throw new NullPointerException("response == null");
+                            }
+                            return;
                         }
 
-                        //                    int page;
-                        String imageUrl;
+                        String imageUrl = placeWishItems.imgUrl;
+
+                        List<StayWishItem> stayWishItemList = placeWishItems.items;
 
                         ArrayList<Stay> stayList;
 
-                        if (hotelJSONArray != null)
+                        if (stayWishItemList != null)
                         {
-                            imageUrl = dataJSONObject.getString("imgUrl");
-                            stayList = makeStayList(hotelJSONArray, imageUrl);
-                        } else
-                        {
+                            stayList = makeStayList(stayWishItemList, imageUrl);
+                        } else {
                             stayList = new ArrayList<>();
                         }
 
                         ((StayWishListNetworkController.OnNetworkControllerListener) mOnNetworkControllerListener).onStayWishList(stayList);
                     } else
                     {
-                        String message = responseJSONObject.getString("msg");
+                        String message = baseDto.msg;
 
                         if (Constants.DEBUG == false)
                         {
@@ -108,30 +116,30 @@ public class StayWishListNetworkController extends BaseNetworkController
         }
 
         @Override
-        public void onFailure(Call<JSONObject> call, Throwable t)
+        public void onFailure(Call<BaseDto<PlaceWishItems<StayWishItem>>> call, Throwable t)
         {
             mOnNetworkControllerListener.onError(call, t, false);
         }
 
-        private ArrayList<Stay> makeStayList(JSONArray jsonArray, String imageUrl) throws JSONException
+        private ArrayList<Stay> makeStayList(List<StayWishItem> stayWishItemList, String imageUrl) throws JSONException
         {
-            if (jsonArray == null)
+            if (stayWishItemList == null || stayWishItemList.size() == 0)
             {
                 return new ArrayList<>();
             }
 
-            int length = jsonArray.length();
+            int length = stayWishItemList.size();
             ArrayList<Stay> stayList = new ArrayList<>(length);
-            JSONObject jsonObject;
+            StayWishItem stayWishItem;
             Stay stay;
 
             for (int i = 0; i < length; i++)
             {
-                jsonObject = jsonArray.getJSONObject(i);
+                stayWishItem = stayWishItemList.get(i);
 
                 stay = new Stay();
 
-                if (stay.setStay(jsonObject, imageUrl) == true)
+                if (stay.setStay(stayWishItem, imageUrl) == true)
                 {
                     stayList.add(stay); // 추가.
                 }
