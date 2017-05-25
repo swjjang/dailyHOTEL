@@ -133,7 +133,7 @@ public class StayOutboundSearchView extends BaseView<StayOutboundSearchView.OnEv
         }
 
         mDailyToolbarLayout = new DailyToolbarLayout(getContext(), viewDataBinding.toolbar.findViewById(R.id.toolbar));
-        mDailyToolbarLayout.initToolbar(getString(R.string.label_search_stay_outbound), R.drawable.navibar_ic_x//
+        mDailyToolbarLayout.initToolbar(getString(R.string.label_stay_outbound_search), R.drawable.navibar_ic_x//
             , v -> getEventListener().onBackClick(), false);
     }
 }

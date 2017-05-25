@@ -93,7 +93,7 @@
     <string name="label_subway_station">지하철역</string>
     <string name="label_trueview">트루뷰</string>
     <string name="label_dont_again">다시보지 않기</string>
-    <string name="label_search_stay_outbound">데일리 해외호텔 검색</string>
+    <string name="label_search_stay_outbound">해외호텔 검색</string>
     <string name="label_do_booking">예약하기</string>
     <string name="label_changing_date">날짜 변경하기</string>
 
@@ -935,7 +935,7 @@
     <string name="label_view_myaround_gourmet">내 주변 레스토랑 보기</string>
     <string name="label_view_my_around_daily_category_format">내 주변 %1$s 보기</string>
     <string name="label_change_date">검색 날짜 변경하기</string>
-    <string name="label_search_need_to_agree_termsoflocation">위치기반서비스 이용약관 동의 필요</string>
+    <string name="label_search_need_to_agree_termsoflocation">위치서비스 약관 동의 필요</string>
     <string name="label_search_agree_termsoflocation">위치기반서비스 이용동의</string>
     <string name="label_search_hotel_hint">스테이명 또는 지역명 입력</string>
     <string name="label_search_gourmet_hint">레스토랑명 또는 지역명 입력</string>
@@ -1271,6 +1271,7 @@
     <string name="message_detail_review_gourmet_explain">트루리뷰는 100% 직접 방문한 고객님이 남겨주신 리뷰입니다.</string>
 
     <!-- Stay Out Bound Search -->
+    <string name="label_stay_outbound_search">데일리 해외호텔 검색</string>
     <string name="label_stay_outbound_search_keyword_hint">호텔명 또는 지역명 입력</string>
     <string name="label_stay_outbound_search_adult_count">성인 %1$d명</string>
     <string name="label_stay_outbound_search_child_count">아동 %1$d명</string>

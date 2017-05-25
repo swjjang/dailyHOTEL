@@ -41,6 +41,8 @@ public abstract class PlaceSearchFragment extends BaseFragment
 
     protected TodayDateTime mTodayDateTime;
 
+    protected abstract int getLayoutResourceId();
+
     protected abstract PlaceSearchLayout getPlaceSearchLayout(Context context);
 
     protected abstract PlaceSearchNetworkController getPlaceSearchNetworkController(Context context);
@@ -70,7 +72,7 @@ public abstract class PlaceSearchFragment extends BaseFragment
         mPlaceSearchLayout = getPlaceSearchLayout(mBaseActivity);
         mPlaceSearchNetworkController = getPlaceSearchNetworkController(mBaseActivity);
 
-        View view = mPlaceSearchLayout.onCreateView(R.layout.fragment_search, container);
+        View view = mPlaceSearchLayout.onCreateView(getLayoutResourceId(), container);
 
         initContents();
 
