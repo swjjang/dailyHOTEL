@@ -1003,7 +1003,14 @@ public class StayDetailActivity extends PlaceDetailActivity
         if (stayProductList == null || stayProductList.size() == 0)
         {
             showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.message_stay_detail_sold_out)//
-                , getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
+                , getString(R.string.label_changing_date), new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        mOnEventListener.onCalendarClick();
+                    }
+                }, new DialogInterface.OnDismissListener()
                 {
                     @Override
                     public void onDismiss(DialogInterface dialog)
@@ -2050,7 +2057,15 @@ public class StayDetailActivity extends PlaceDetailActivity
                         // 판매 마감시
                         if (msgCode == 5)
                         {
-                            StayDetailActivity.this.onErrorPopupMessage(msgCode, message, null);
+                            showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.message_stay_detail_sold_out)//
+                                , getString(R.string.label_changing_date), new View.OnClickListener()
+                                {
+                                    @Override
+                                    public void onClick(View v)
+                                    {
+                                        mOnEventListener.onCalendarClick();
+                                    }
+                                });
                         } else
                         {
                             StayDetailActivity.this.onErrorPopupMessage(msgCode, message);
@@ -2062,7 +2077,15 @@ public class StayDetailActivity extends PlaceDetailActivity
                 // 판매 마감시
                 if (msgCode == 5)
                 {
-                    StayDetailActivity.this.onErrorPopupMessage(msgCode, message, null);
+                    showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.message_stay_detail_sold_out)//
+                        , getString(R.string.label_changing_date), new View.OnClickListener()
+                        {
+                            @Override
+                            public void onClick(View v)
+                            {
+                                mOnEventListener.onCalendarClick();
+                            }
+                        });
                 } else
                 {
                     StayDetailActivity.this.onErrorPopupMessage(msgCode, message);

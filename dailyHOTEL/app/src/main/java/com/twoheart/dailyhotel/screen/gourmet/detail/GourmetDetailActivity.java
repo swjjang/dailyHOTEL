@@ -979,7 +979,14 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         if (gourmetProductList == null || gourmetProductList.size() == 0)
         {
             showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.message_gourmet_detail_sold_out)//
-                , getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
+                , getString(R.string.label_changing_date), new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        mOnEventListener.onCalendarClick();
+                    }
+                }, new DialogInterface.OnDismissListener()
                 {
                     @Override
                     public void onDismiss(DialogInterface dialog)
@@ -1929,7 +1936,15 @@ public class GourmetDetailActivity extends PlaceDetailActivity
                         // 판매 마감시
                         if (msgCode == 5)
                         {
-                            GourmetDetailActivity.this.onErrorPopupMessage(msgCode, message, null);
+                            showSimpleDialog(getString(R.string.dialog_notice2), message//
+                                , getString(R.string.label_changing_date), new View.OnClickListener()
+                                {
+                                    @Override
+                                    public void onClick(View v)
+                                    {
+                                        mOnEventListener.onCalendarClick();
+                                    }
+                                });
                         } else
                         {
                             GourmetDetailActivity.this.onErrorPopupMessage(msgCode, message);
@@ -1941,7 +1956,15 @@ public class GourmetDetailActivity extends PlaceDetailActivity
                 // 판매 마감시
                 if (msgCode == 5)
                 {
-                    GourmetDetailActivity.this.onErrorPopupMessage(msgCode, message, null);
+                    showSimpleDialog(getString(R.string.dialog_notice2), message//
+                        , getString(R.string.label_changing_date), new View.OnClickListener()
+                        {
+                            @Override
+                            public void onClick(View v)
+                            {
+                                mOnEventListener.onCalendarClick();
+                            }
+                        });
                 } else
                 {
                     GourmetDetailActivity.this.onErrorPopupMessage(msgCode, message);
