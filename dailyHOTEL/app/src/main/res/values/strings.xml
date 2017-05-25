@@ -95,6 +95,7 @@
     <string name="label_dont_again">다시보지 않기</string>
     <string name="label_search_stay_outbound">데일리 해외호텔 검색</string>
     <string name="label_do_booking">예약하기</string>
+    <string name="label_changing_date">날짜 변경하기</string>
 
     <string name="label_count_stay">%1$d개 스테이</string>
     <string name="label_count_gourmet">%1$d개 고메</string>
