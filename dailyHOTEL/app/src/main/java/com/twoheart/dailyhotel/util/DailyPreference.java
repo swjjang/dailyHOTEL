@@ -803,7 +803,7 @@ public class DailyPreference
 
     public String getBaseUrl()
     {
-        return getValue(mPreferences, KEY_BASE_URL, Crypto.getUrlDecoderEx(Setting.URL_DAILYHOTEL_SERVER_DEFAULT));
+        return getValue(mPreferences, KEY_BASE_URL, Crypto.getUrlDecoderEx(Setting.getServerUrl()));
     }
 
     public void setBaseUrl(String value)

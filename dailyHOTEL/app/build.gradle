@@ -94,6 +94,10 @@ android {
             applicationId "com.twoheart.dailyhotel"
             buildConfigField 'com.twoheart.dailyhotel.Setting.Stores', 'RELEASE_STORE', 'com.twoheart.dailyhotel.Setting.Stores.T_STORE'
         }
+        staging {
+            applicationId "com.twoheart.dailyhotel"
+            buildConfigField 'com.twoheart.dailyhotel.Setting.Stores', 'RELEASE_STORE', 'com.twoheart.dailyhotel.Setting.Stores.PLAY_STORE'
+        }
     }
 
     dexOptions {
@@ -212,7 +216,7 @@ dependencies {
 
     compile 'com.appboy:android-sdk-ui:2.0.+'
 
-    compile 'com.adjust.sdk:adjust-android:4.11.3'
+    compile 'com.adjust.sdk:adjust-android:4.11.4'
 
     compile('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {
         transitive = true;

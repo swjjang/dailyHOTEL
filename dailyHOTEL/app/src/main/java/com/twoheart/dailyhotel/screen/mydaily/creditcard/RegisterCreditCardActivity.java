@@ -15,10 +15,12 @@ import android.webkit.WebViewClient;
 import com.daily.base.util.DailyTextUtils;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.Setting;
 import com.twoheart.dailyhotel.network.IDailyNetwork;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Crypto;
+import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
@@ -70,7 +72,15 @@ public class RegisterCreditCardActivity extends BaseActivity implements Constant
             }
         }); // 롱클릭 에러 방지.
 
-        String url = Crypto.getUrlDecoderEx(IDailyNetwork.URL_DAILYHOTEL_SERVER) + Crypto.getUrlDecoderEx(IDailyNetwork.URL_REGISTER_CREDIT_CARD);
+        String url;
+
+        if (Constants.DEBUG == true)
+        {
+            url = DailyPreference.getInstance(this).getBaseUrl() + Crypto.getUrlDecoderEx(IDailyNetwork.URL_REGISTER_CREDIT_CARD);
+        } else
+        {
+            url = Crypto.getUrlDecoderEx(Setting.getServerUrl()) + Crypto.getUrlDecoderEx(IDailyNetwork.URL_REGISTER_CREDIT_CARD);
+        }
 
         Map<String, String> headerMap = new HashMap<>();
         headerMap.put("Os-Type", "android");

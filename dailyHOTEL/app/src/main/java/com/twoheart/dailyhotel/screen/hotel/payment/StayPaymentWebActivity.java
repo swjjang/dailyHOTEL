@@ -9,6 +9,7 @@ import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.widget.DailyToast;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.Setting;
 import com.twoheart.dailyhotel.model.Customer;
 import com.twoheart.dailyhotel.model.Guest;
 import com.twoheart.dailyhotel.model.PlacePaymentInformation;
@@ -18,7 +19,9 @@ import com.twoheart.dailyhotel.model.time.StayBookingDay;
 import com.twoheart.dailyhotel.network.IDailyNetwork;
 import com.twoheart.dailyhotel.network.model.StayProduct;
 import com.twoheart.dailyhotel.place.activity.PlacePaymentWebActivity;
+import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Crypto;
+import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import okhttp3.FormBody;
@@ -192,12 +195,20 @@ public class StayPaymentWebActivity extends PlacePaymentWebActivity
                 builder.add("arrival_transportation", "NO_PARKING");
             }
 
-            String url = Crypto.getUrlDecoderEx(IDailyNetwork.URL_DAILYHOTEL_SERVER)//
-                + Crypto.getUrlDecoderEx(IDailyNetwork.URL_WEBAPI_HOTEL_V1_PAYMENT_SESSION_COMMON);
+            String url;
+
+            if (Constants.DEBUG == true)
+            {
+                url = DailyPreference.getInstance(this).getBaseUrl()//
+                    + Crypto.getUrlDecoderEx(IDailyNetwork.URL_WEBAPI_HOTEL_V1_PAYMENT_SESSION_COMMON);
+            } else
+            {
+                url = Crypto.getUrlDecoderEx(Setting.getServerUrl())//
+                    + Crypto.getUrlDecoderEx(IDailyNetwork.URL_WEBAPI_HOTEL_V1_PAYMENT_SESSION_COMMON);
+            }
 
             WebViewPostAsyncTask webViewPostAsyncTask = new WebViewPostAsyncTask(webView, builder);
             webViewPostAsyncTask.execute(url);
-
         } catch (Exception e)
         {
             ExLog.e(e.toString());
