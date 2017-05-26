@@ -553,6 +553,8 @@ public class PlaceReviewLayout extends BaseLayout
             final int MAX_LINE = 10;
             final PlaceReview placeReview = placeViewItem.getItem();
 
+            reviewViewHolder.ratingTextView.setText(Float.toString(placeReview.avgScore));
+
             if (DailyTextUtils.isTextEmpty(placeReview.email) == true)
             {
                 placeReview.email = mContext.getString(R.string.label_customer);
@@ -566,6 +568,15 @@ public class PlaceReviewLayout extends BaseLayout
             } catch (Exception e)
             {
                 ExLog.d(e.toString());
+            }
+
+            // 첫번째 리뷰는 상단 패팅이 20dp이다.
+            if (position == 1)
+            {
+                reviewViewHolder.itemView.setPadding(ScreenUtils.dpToPx(mContext, 15), ScreenUtils.dpToPx(mContext, 20), ScreenUtils.dpToPx(mContext, 15), 0);
+            } else
+            {
+                reviewViewHolder.itemView.setPadding(ScreenUtils.dpToPx(mContext, 15), ScreenUtils.dpToPx(mContext, 24), ScreenUtils.dpToPx(mContext, 15), 0);
             }
 
             reviewViewHolder.reviewTextView.setText(placeReview.comment);
@@ -626,12 +637,103 @@ public class PlaceReviewLayout extends BaseLayout
                 }
             }
 
-            if (position == mTotalCount + 1)
+            // 댓글이 있는 경우
+            PlaceReview.ReviewReply reviewReply = placeReview.getReviewReply();
+
+            if (reviewReply == null)
             {
-                reviewViewHolder.underLineView.setVisibility(View.INVISIBLE);
+                if (position == mTotalCount)
+                {
+                    reviewViewHolder.underLineView.setVisibility(View.INVISIBLE);
+                } else
+                {
+                    reviewViewHolder.underLineView.setVisibility(View.VISIBLE);
+                }
+
+                reviewViewHolder.replayLayout.setVisibility(View.GONE);
+                reviewViewHolder.replierLayout.setVisibility(View.GONE);
+                reviewViewHolder.replierUnderLineView.setVisibility(View.GONE);
             } else
             {
-                reviewViewHolder.underLineView.setVisibility(View.VISIBLE);
+                reviewViewHolder.underLineView.setVisibility(View.GONE);
+                reviewViewHolder.replayLayout.setVisibility(View.VISIBLE);
+                reviewViewHolder.replierLayout.setVisibility(View.VISIBLE);
+
+                if (position == mTotalCount)
+                {
+                    reviewViewHolder.replierUnderLineView.setVisibility(View.INVISIBLE);
+                } else
+                {
+                    reviewViewHolder.replierUnderLineView.setVisibility(View.VISIBLE);
+                }
+
+                reviewViewHolder.replierTextView.setText(reviewReply.replier);
+
+                try
+                {
+                    reviewViewHolder.replayDateTextView.setText(DailyCalendar.convertDateFormatString(reviewReply.repliedAt, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd"));
+                } catch (Exception e)
+                {
+                    ExLog.d(e.toString());
+                }
+
+                reviewViewHolder.reviewReplayTextView.setText(reviewReply.reply);
+                reviewViewHolder.reviewReplayTextView.setTag(reviewReply.reply);
+
+                Paint replyPaint = reviewViewHolder.reviewReplayTextView.getPaint();
+
+                if (reviewReply.isMore == true)
+                {
+                    reviewViewHolder.reviewReplayTextView.setText((String) reviewViewHolder.reviewReplayTextView.getTag());
+                    reviewViewHolder.reviewReplayMoreReadTextView.setVisibility(View.GONE);
+                    reviewViewHolder.reviewReplayMoreReadTextView.setOnClickListener(null);
+                } else
+                {
+                    int textViewWidth = ScreenUtils.getScreenWidth(mContext) - ScreenUtils.dpToPx(mContext, 52);
+                    int widthMeasureSpec = View.MeasureSpec.makeMeasureSpec(textViewWidth, View.MeasureSpec.EXACTLY);
+                    int heightMeasureSpec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
+                    reviewViewHolder.reviewReplayTextView.measure(widthMeasureSpec, heightMeasureSpec);
+
+                    int lineCount = reviewViewHolder.reviewReplayTextView.getLineCount();
+
+                    if (lineCount > MAX_LINE)
+                    {
+                        reviewViewHolder.reviewReplayTextView.setText(reviewReply.reply.substring(0, reviewViewHolder.reviewReplayTextView.getLayout().getLineEnd(MAX_LINE - 1)));
+                        reviewViewHolder.reviewReplayTextView.measure(widthMeasureSpec, heightMeasureSpec);
+
+                        final String expandText = "...  더 읽어보기";
+
+                        StaticLayout layout = (StaticLayout) reviewViewHolder.reviewReplayTextView.getLayout();
+                        int lineStartIndex = reviewViewHolder.reviewReplayTextView.getLayout().getLineStart(MAX_LINE - 1);
+                        int lineEndIndex = reviewViewHolder.reviewReplayTextView.getLayout().getLineEnd(MAX_LINE - 1);
+
+                        String text = reviewReply.reply.substring(lineStartIndex, lineEndIndex);
+
+                        int length = text.length();
+                        float moreReadWidth = paint.measureText(expandText);
+
+                        int count = paint.breakText(text, true, textViewWidth - moreReadWidth, null);
+
+                        reviewViewHolder.reviewReplayTextView.setText(reviewReply.reply.substring(0, lineStartIndex + count) + "...");
+                        reviewViewHolder.reviewReplayMoreReadTextView.setVisibility(View.VISIBLE);
+                        reviewViewHolder.reviewReplayMoreReadTextView.setOnClickListener(new View.OnClickListener()
+                        {
+                            @Override
+                            public void onClick(View view)
+                            {
+                                reviewViewHolder.reviewReplayTextView.setText((String) reviewViewHolder.reviewReplayTextView.getTag());
+                                reviewViewHolder.reviewReplayMoreReadTextView.setVisibility(View.GONE);
+                                reviewViewHolder.reviewReplayMoreReadTextView.setOnClickListener(null);
+
+                                reviewReply.isMore = true;
+                            }
+                        });
+                    } else
+                    {
+                        reviewViewHolder.reviewReplayMoreReadTextView.setVisibility(View.GONE);
+                        reviewViewHolder.reviewReplayMoreReadTextView.setOnClickListener(null);
+                    }
+                }
             }
         }
 
@@ -714,22 +816,39 @@ public class PlaceReviewLayout extends BaseLayout
 
         private class ReviewViewHolder extends RecyclerView.ViewHolder
         {
+            TextView ratingTextView;
             TextView emailTextView;
             TextView dateTextView;
             TextView reviewTextView;
             TextView moreReadTextView;
-
             View underLineView;
+
+            View replayLayout;
+            View replierLayout;
+            TextView reviewReplayTextView;
+            TextView reviewReplayMoreReadTextView;
+            TextView replierTextView;
+            TextView replayDateTextView;
+            View replierUnderLineView;
 
             public ReviewViewHolder(View view)
             {
                 super(view);
 
                 emailTextView = (TextView) view.findViewById(R.id.emailTextView);
+                ratingTextView = (TextView) view.findViewById(R.id.ratingTextView);
                 dateTextView = (TextView) view.findViewById(R.id.dateTextView);
                 reviewTextView = (TextView) view.findViewById(R.id.reviewTextView);
                 moreReadTextView = (TextView) view.findViewById(R.id.moreReadTextView);
                 underLineView = view.findViewById(R.id.underLineView);
+
+                replayLayout = view.findViewById(R.id.replayLayout);
+                replierLayout = view.findViewById(R.id.replierLayout);
+                reviewReplayTextView = (TextView) view.findViewById(R.id.reviewReplayTextView);
+                reviewReplayMoreReadTextView = (TextView) view.findViewById(R.id.reviewReplayMoreReadTextView);
+                replierTextView = (TextView) view.findViewById(R.id.replierTextView);
+                replayDateTextView = (TextView) view.findViewById(R.id.replayDateTextView);
+                replierUnderLineView = view.findViewById(R.id.replierUnderLineView);
             }
         }
 
