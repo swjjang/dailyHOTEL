@@ -75,8 +75,7 @@ public class StayOutboundDetailRoomListAdapter extends RecyclerView.Adapter<Recy
     {
         LayoutStayOutboundDetailRoomDataBinding dataBinding = DataBindingUtil.inflate(LayoutInflater.from(mContext), R.layout.layout_stay_outbound_detail_room_data, parent, false);
 
-        SaleRoomInformationViewHolder viewHolder = new SaleRoomInformationViewHolder(dataBinding.getRoot());
-        viewHolder.setViewDataBinding(dataBinding);
+        SaleRoomInformationViewHolder viewHolder = new SaleRoomInformationViewHolder(dataBinding);
 
         return viewHolder;
     }
@@ -183,12 +182,12 @@ public class StayOutboundDetailRoomListAdapter extends RecyclerView.Adapter<Recy
             personOption = null;
         } else if (stayOutboundRoom.quotedOccupancy == stayOutboundRoom.rateOccupancyPerRoom)
         {
-            personOption = mContext.getString(R.string.label_stay_outbound__room_default_person, stayOutboundRoom.quotedOccupancy)//
-                + "/" + mContext.getString(R.string.label_stay_outbound__room_max_person_free, stayOutboundRoom.rateOccupancyPerRoom);
+            personOption = mContext.getString(R.string.label_stay_outbound_room_default_person, stayOutboundRoom.quotedOccupancy)//
+                + "/" + mContext.getString(R.string.label_stay_outbound_room_max_person_free, stayOutboundRoom.rateOccupancyPerRoom);
         } else
         {
-            personOption = mContext.getString(R.string.label_stay_outbound__room_default_person, stayOutboundRoom.quotedOccupancy)//
-                + "/" + mContext.getString(R.string.label_stay_outbound__room_max_person_charge, stayOutboundRoom.rateOccupancyPerRoom);
+            personOption = mContext.getString(R.string.label_stay_outbound_room_default_person, stayOutboundRoom.quotedOccupancy)//
+                + "/" + mContext.getString(R.string.label_stay_outbound_room_max_person_charge, stayOutboundRoom.rateOccupancyPerRoom);
         }
 
         if (DailyTextUtils.isTextEmpty(personOption) == true)
@@ -243,16 +242,11 @@ public class StayOutboundDetailRoomListAdapter extends RecyclerView.Adapter<Recy
     {
         LayoutStayOutboundDetailRoomDataBinding dataBinding;
 
-        public SaleRoomInformationViewHolder(View itemView)
+        public SaleRoomInformationViewHolder(LayoutStayOutboundDetailRoomDataBinding dataBinding)
         {
-            super(itemView);
+            super(dataBinding.getRoot());
 
-            itemView.setOnClickListener(mOnClickListener);
-        }
-
-        public void setViewDataBinding(LayoutStayOutboundDetailRoomDataBinding dataBinding)
-        {
-            this.dataBinding = dataBinding;
+            dataBinding.getRoot().setOnClickListener(mOnClickListener);
         }
     }
 }

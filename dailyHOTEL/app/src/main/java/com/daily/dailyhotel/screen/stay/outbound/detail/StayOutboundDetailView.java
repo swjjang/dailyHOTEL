@@ -4,6 +4,7 @@ import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.annotation.TargetApi;
+import android.app.Dialog;
 import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.graphics.Typeface;
@@ -46,6 +47,8 @@ import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.drawee.view.DraweeTransition;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ActivityStayOutboundDetailDataBinding;
+import com.twoheart.dailyhotel.databinding.DialogConciergeDataBinding;
+import com.twoheart.dailyhotel.databinding.DialogStayOutboundMapDataBinding;
 import com.twoheart.dailyhotel.databinding.LayoutStayOutboundDetail01DataBinding;
 import com.twoheart.dailyhotel.databinding.LayoutStayOutboundDetail02DataBinding;
 import com.twoheart.dailyhotel.databinding.LayoutStayOutboundDetail03DataBinding;
@@ -91,9 +94,9 @@ public class StayOutboundDetailView extends BaseView<StayOutboundDetailView.OnEv
 
         void onImageSelected(int position);
 
-        void onReviewClick();
-
         void onCalendarClick();
+
+        void onPeopleClick();
 
         void onMapClick();
 
@@ -101,11 +104,7 @@ public class StayOutboundDetailView extends BaseView<StayOutboundDetailView.OnEv
 
         void onNavigatorClick();
 
-        void onWishClick();
-
         void onConciergeClick();
-
-        void onBookingClick();
 
         void onHideRoomListClick(boolean animation);
 
@@ -114,6 +113,14 @@ public class StayOutboundDetailView extends BaseView<StayOutboundDetailView.OnEv
         void onAmenityMoreClick();
 
         void onPriceTypeClick(StayOutboundDetailPresenter.PriceType priceType);
+
+        void onConciergeFaqClick();
+
+        void onConciergeHappyTalkClick();
+
+        void onConciergeCallClick();
+
+        void onShareMapClick();
     }
 
     public StayOutboundDetailView(BaseActivity baseActivity, StayOutboundDetailView.OnEventListener listener)
@@ -168,21 +175,6 @@ public class StayOutboundDetailView extends BaseView<StayOutboundDetailView.OnEv
         layoutParams.height = ScreenUtils.getDetailScreenImageLayoutHeight(getContext());
         viewDataBinding.imageLoopViewPager.setLayoutParams(layoutParams);
 
-        viewDataBinding.wishListButtonView.setTag(false);
-        viewDataBinding.wishListButtonView.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                getEventListener().onWishClick();
-            }
-        });
-
-        //        setBookingStatus(STATUS_NONE);
-        //        showWishButton();
-        //        setUpdateWishPopup(WishPopupState.GONE);
-
-
         // 객실 초기화
         viewDataBinding.productTypeTextView.setText(R.string.act_hotel_search_room);
         viewDataBinding.productTypeTextView.setClickable(true);
@@ -225,6 +217,14 @@ public class StayOutboundDetailView extends BaseView<StayOutboundDetailView.OnEv
             case R.id.closeView:
             case R.id.productTypeBackgroundView:
                 getEventListener().onHideRoomListClick(true);
+                break;
+
+            case R.id.dateLayout:
+                getEventListener().onCalendarClick();
+                break;
+
+            case R.id.peopleLayout:
+                getEventListener().onPeopleClick();
                 break;
 
             case R.id.bookingTextView:
@@ -694,6 +694,93 @@ public class StayOutboundDetailView extends BaseView<StayOutboundDetailView.OnEv
         mRoomTypeListAdapter.notifyDataSetChanged();
     }
 
+    @Override
+    public void setPeopleText(String peopleText)
+    {
+
+    }
+
+    @Override
+    public void setCalendarText(String peopleText)
+    {
+
+    }
+
+    @Override
+    public void showConciergeDialog(Dialog.OnDismissListener listener)
+    {
+        DialogConciergeDataBinding dataBinding = DataBindingUtil.inflate(LayoutInflater.from(getContext()), R.layout.dialog_concierge_data, null, false);
+
+        // 버튼
+        dataBinding.contactUs02Layout.setVisibility(View.GONE);
+
+        dataBinding.contactUs01TextView.setText(R.string.frag_faqs);
+        dataBinding.contactUs01TextView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.popup_ic_ops_05_faq, 0, 0, 0);
+
+        dataBinding.contactUs01Layout.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                hideSimpleDialog();
+
+                getEventListener().onConciergeFaqClick();
+            }
+        });
+
+        dataBinding.kakaoDailyView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                hideSimpleDialog();
+
+                getEventListener().onConciergeHappyTalkClick();
+            }
+        });
+
+        dataBinding.callDailyView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                hideSimpleDialog();
+
+                getEventListener().onConciergeCallClick();
+            }
+        });
+
+        dataBinding.closeView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                hideSimpleDialog();
+            }
+        });
+
+        showSimpleDialog(dataBinding.getRoot(), null, listener, true);
+    }
+
+    @Override
+    public void showNavigatorDialog(Dialog.OnDismissListener listener)
+    {
+        DialogStayOutboundMapDataBinding dataBinding = DataBindingUtil.inflate(LayoutInflater.from(getContext()), R.layout.dialog_stay_outbound_map_data, null, false);
+
+        dataBinding.googleMapLayout.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                hideSimpleDialog();
+
+                getEventListener().onShareMapClick();
+            }
+        });
+
+        showSimpleDialog(dataBinding.getRoot(), null, listener, true);
+    }
+
     private void initToolbar(ActivityStayOutboundDetailDataBinding viewDataBinding)
     {
         mDailyToolbarLayout = new DailyToolbarLayout(getContext(), viewDataBinding.toolbar.findViewById(R.id.toolbar));
@@ -783,7 +870,7 @@ public class StayOutboundDetailView extends BaseView<StayOutboundDetailView.OnEv
 
         // 등급
         viewDataBinding.gradeTextView.setVisibility(View.VISIBLE);
-        viewDataBinding.gradeTextView.setText(getString(R.string.label_stay_outbound__detail_grade, stayOutboundDetail.grade));
+        viewDataBinding.gradeTextView.setText(getString(R.string.label_stay_outbound_detail_grade, stayOutboundDetail.grade));
         viewDataBinding.gradeTextView.setBackgroundResource(R.color.default_background_c929292);
 
         // 호텔명
@@ -819,14 +906,8 @@ public class StayOutboundDetailView extends BaseView<StayOutboundDetailView.OnEv
             ExLog.e(e.toString());
         }
 
-        viewDataBinding.dateLayout.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                getEventListener().onCalendarClick();
-            }
-        });
+        viewDataBinding.dateLayout.setOnClickListener(this);
+        viewDataBinding.peopleLayout.setOnClickListener(this);
     }
 
     /**
@@ -912,13 +993,13 @@ public class StayOutboundDetailView extends BaseView<StayOutboundDetailView.OnEv
         }
 
         // 화면에서 정한 5개를 미리 보여주고 그외는 더보기로 보여준다.
-        final StayOutboundDetail.Amenity[] DEFAULT_AMENITYS = {StayOutboundDetail.Amenity.POOL//
+        final StayOutboundDetail.Amenity[] DEFAULT_AMENITIES = {StayOutboundDetail.Amenity.POOL//
             , StayOutboundDetail.Amenity.FITNESS, StayOutboundDetail.Amenity.FRONT24//
             , StayOutboundDetail.Amenity.SAUNA, StayOutboundDetail.Amenity.KIDS_PLAY_ROOM};
         boolean hasNextLine = true;
 
         // 줄수가 2개 이상인지 검사
-        for (StayOutboundDetail.Amenity amenity : DEFAULT_AMENITYS)
+        for (StayOutboundDetail.Amenity amenity : DEFAULT_AMENITIES)
         {
             if (stringSparseArray.get(amenity.getIndex(), null) == null)
             {
@@ -928,7 +1009,7 @@ public class StayOutboundDetailView extends BaseView<StayOutboundDetailView.OnEv
         }
 
         // Amenity 추가
-        for (StayOutboundDetail.Amenity amenity : DEFAULT_AMENITYS)
+        for (StayOutboundDetail.Amenity amenity : DEFAULT_AMENITIES)
         {
             if (stringSparseArray.get(amenity.getIndex(), null) != null)
             {

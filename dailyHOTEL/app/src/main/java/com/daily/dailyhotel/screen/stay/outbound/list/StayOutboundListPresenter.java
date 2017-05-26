@@ -153,45 +153,14 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
             String checkInDateTime = intent.getStringExtra(StayOutboundListActivity.INTENT_EXTRA_DATA_CHECKIN);
             String checkOutDateTime = intent.getStringExtra(StayOutboundListActivity.INTENT_EXTRA_DATA_CHECKOUT);
 
-            try
-            {
-                mStayBookDateTime = new StayBookDateTime();
-                mStayBookDateTime.setCheckInDateTime(checkInDateTime);
-                mStayBookDateTime.setCheckOutDateTime(checkOutDateTime);
-            } catch (Exception e)
-            {
-                ExLog.e(e.toString());
-                return false;
-            }
+            setStayBookDateTime(checkInDateTime, checkOutDateTime);
 
             int numberOfAdults = intent.getIntExtra(StayOutboundListActivity.INTENT_EXTRA_DATA_NUMBER_OF_ADULTS, 2);
             ArrayList<Integer> childAgeList = intent.getIntegerArrayListExtra(StayOutboundListActivity.INTENT_EXTRA_DATA_CHILD_LIST);
 
             onPeople(numberOfAdults, childAgeList);
-
         } else if (intent.hasExtra(StayOutboundListActivity.INTENT_EXTRA_DATA_KEYWORD) == true)
         {
-            String keyword = intent.getStringExtra(StayOutboundListActivity.INTENT_EXTRA_DATA_KEYWORD);
-
-            mSuggest = new Suggest();
-            mSuggest.city = keyword;
-
-            String checkInDateTime = intent.getStringExtra(StayOutboundListActivity.INTENT_EXTRA_DATA_CHECKIN);
-            String checkOutDateTime = intent.getStringExtra(StayOutboundListActivity.INTENT_EXTRA_DATA_CHECKOUT);
-
-            try
-            {
-                mStayBookDateTime = new StayBookDateTime();
-                mStayBookDateTime.setCheckInDateTime(checkInDateTime);
-                mStayBookDateTime.setCheckOutDateTime(checkOutDateTime);
-            } catch (Exception e)
-            {
-                ExLog.e(e.toString());
-                return false;
-            }
-
-            mPeople.numberOfAdults = intent.getIntExtra(StayOutboundListActivity.INTENT_EXTRA_DATA_NUMBER_OF_ADULTS, 2);
-            mPeople.setChildAgeList(intent.getIntegerArrayListExtra(StayOutboundListActivity.INTENT_EXTRA_DATA_CHILD_LIST));
         } else
         {
             return false;
@@ -439,7 +408,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
             onStayOutbounds(stayOutbounds);
 
             getViewInterface().setRefreshing(false);
-            screenUnLock();
+            unLockAll();
         }, new Consumer<Throwable>()
         {
             @Override
@@ -490,7 +459,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
             Intent intent = StayCalendarActivity.newInstance(getActivity()//
                 , mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
                 , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
-                , startDateTime, endDateTime, NIGHTS_OF_MAXCOUNT, AnalyticsManager.ValueType.SEARCH, true, 0, true);
+                , startDateTime, endDateTime, NIGHTS_OF_MAXCOUNT, AnalyticsManager.ValueType.STAY, true, 0, true);
 
             startActivityForResult(intent, StayOutboundListActivity.REQUEST_CODE_CALENDAR);
         } catch (Exception e)
@@ -841,13 +810,20 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
     {
         if (mPeople == null)
         {
-            mPeople = new People(People.DEFAULT_ADULTS, null);
+            return;
         }
 
         getViewInterface().setPeopleText(mPeople.toShortString(getActivity()));
     }
 
     private void onPeople(int numberOfAdults, ArrayList<Integer> childAgeList)
+    {
+        setPeople(numberOfAdults, childAgeList);
+
+        onPeople(mPeople);
+    }
+
+    private void setPeople(int numberOfAdults, ArrayList<Integer> childAgeList)
     {
         if (mPeople == null)
         {
@@ -856,8 +832,6 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
 
         mPeople.numberOfAdults = numberOfAdults;
         mPeople.setChildAgeList(childAgeList);
-
-        onPeople(mPeople);
     }
 
     private void onFilter(StayOutboundFilters.SortType sortType, int rating)

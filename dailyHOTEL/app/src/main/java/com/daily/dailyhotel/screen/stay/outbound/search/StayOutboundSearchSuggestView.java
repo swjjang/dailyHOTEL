@@ -370,8 +370,7 @@ public class StayOutboundSearchSuggestView extends BaseView<StayOutboundSearchSu
                 {
                     ListRowStayOutboundSuggestTitleDataBinding dataBinding = DataBindingUtil.inflate(LayoutInflater.from(mContext), R.layout.list_row_stay_outbound_suggest_title_data, parent, false);
 
-                    TitleViewHolder titleViewHolder = new TitleViewHolder(dataBinding.getRoot());
-                    titleViewHolder.setViewDataBinding(dataBinding);
+                    TitleViewHolder titleViewHolder = new TitleViewHolder(dataBinding);
 
                     return titleViewHolder;
                 }
@@ -380,8 +379,7 @@ public class StayOutboundSearchSuggestView extends BaseView<StayOutboundSearchSu
                 {
                     ListRowStayOutboundSuggestEntryDataBinding dataBinding = DataBindingUtil.inflate(LayoutInflater.from(mContext), R.layout.list_row_stay_outbound_suggest_entry_data, parent, false);
 
-                    EntryViewHolder entryViewHolder = new EntryViewHolder(dataBinding.getRoot());
-                    entryViewHolder.setViewDataBinding(dataBinding);
+                    EntryViewHolder entryViewHolder = new EntryViewHolder(dataBinding);
 
                     return entryViewHolder;
                 }
@@ -542,13 +540,10 @@ public class StayOutboundSearchSuggestView extends BaseView<StayOutboundSearchSu
         {
             ListRowStayOutboundSuggestTitleDataBinding dataBinding;
 
-            public TitleViewHolder(View view)
+            public TitleViewHolder(ListRowStayOutboundSuggestTitleDataBinding dataBinding)
             {
-                super(view);
-            }
+                super(dataBinding.getRoot());
 
-            public void setViewDataBinding(ListRowStayOutboundSuggestTitleDataBinding dataBinding)
-            {
                 this.dataBinding = dataBinding;
             }
         }
@@ -557,18 +552,14 @@ public class StayOutboundSearchSuggestView extends BaseView<StayOutboundSearchSu
         {
             ListRowStayOutboundSuggestEntryDataBinding dataBinding;
 
-            public EntryViewHolder(View view)
+            public EntryViewHolder(ListRowStayOutboundSuggestEntryDataBinding dataBinding)
             {
-                super(view);
+                super(dataBinding.getRoot());
 
-                view.setOnClickListener(mOnClickListener);
-            }
-
-            public void setViewDataBinding(ListRowStayOutboundSuggestEntryDataBinding dataBinding)
-            {
                 this.dataBinding = dataBinding;
+
+                dataBinding.getRoot().setOnClickListener(mOnClickListener);
             }
         }
     }
-
 }

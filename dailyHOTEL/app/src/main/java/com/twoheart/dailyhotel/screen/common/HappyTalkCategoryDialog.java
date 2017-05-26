@@ -520,7 +520,7 @@ public class HappyTalkCategoryDialog extends BaseActivity
                 {
                     // 운영 안하는 시간 03:00:01 ~ 08:59:59 - 팝업 발생
 
-                    showNonOpteratingTimeDialog(new OnCallDialogListener()
+                    showNonOperatingTimeDialog(new OnCallDialogListener()
                     {
                         @Override
                         public void onShowDialog()

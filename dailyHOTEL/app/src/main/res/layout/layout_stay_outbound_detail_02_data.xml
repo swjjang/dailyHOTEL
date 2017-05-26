@@ -116,7 +116,6 @@
         <include layout="@layout/view_separate_line_no_linear"/>
 
         <RelativeLayout
-            android:id="@+id/dateLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/white">
@@ -127,6 +126,7 @@
                 android:orientation="horizontal">
 
                 <LinearLayout
+                    android:id="@+id/dateLayout"
                     android:layout_width="0dp"
                     android:layout_height="78dp"
                     android:layout_weight="1"
@@ -136,7 +136,7 @@
                     <com.daily.base.widget.DailyTextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/label_stay_outbound__detail_check_in_out"
+                        android:text="@string/label_stay_outbound_detail_check_in_out"
                         android:textColor="@color/default_text_c929292"
                         android:textSize="13dp"/>
 
@@ -157,6 +157,7 @@
                     android:background="@color/default_line_cf0f0f0"/>
 
                 <LinearLayout
+                    android:id="@+id/peopleLayout"
                     android:layout_width="0dp"
                     android:layout_height="78dp"
                     android:layout_weight="1"
@@ -166,7 +167,7 @@
                     <com.daily.base.widget.DailyTextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/label_stay_outbound__detail_number_of_people"
+                        android:text="@string/label_stay_outbound_detail_number_of_people"
                         android:textColor="@color/default_text_c929292"
                         android:textSize="13dp"/>
 

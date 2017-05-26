@@ -1,5 +1,7 @@
 package com.daily.dailyhotel.screen.stay.outbound.detail;
 
+import android.app.Dialog;
+
 import com.daily.base.BaseViewInterface;
 import com.daily.dailyhotel.entity.People;
 import com.daily.dailyhotel.entity.StayBookDateTime;
@@ -24,4 +26,12 @@ public interface StayOutboundDetailViewInterface extends BaseViewInterface
     void setDetailImageCaption(String caption);
 
     void setPriceType(StayOutboundDetailPresenter.PriceType priceType);
+
+    void setPeopleText(String peopleText);
+
+    void setCalendarText(String peopleText);
+
+    void showConciergeDialog(Dialog.OnDismissListener listener);
+
+    void showNavigatorDialog(Dialog.OnDismissListener listener);
 }

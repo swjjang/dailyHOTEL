@@ -1,6 +1,5 @@
 package com.daily.base;
 
-import android.annotation.TargetApi;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -9,7 +8,6 @@ import android.databinding.DataBindingUtil;
 import android.databinding.ViewDataBinding;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -135,9 +133,9 @@ public abstract class BaseView<T1 extends OnBaseEventListener, T2 extends ViewDa
     {
         if (mDialog != null)
         {
-            if (mDialog.isShowing())
+            if (mDialog.isShowing() == true)
             {
-                mDialog.cancel();
+                mDialog.dismiss();
             }
 
             mDialog = null;
@@ -281,6 +279,48 @@ public abstract class BaseView<T1 extends OnBaseEventListener, T2 extends ViewDa
         try
         {
             mDialog.setContentView(dataBinding.getRoot());
+
+            WindowManager.LayoutParams layoutParams = ScreenUtils.getDialogWidthLayoutParams(mActivity, mDialog);
+
+            mDialog.show();
+
+            mDialog.getWindow().setAttributes(layoutParams);
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+        }
+    }
+
+    protected void showSimpleDialog(View view, DialogInterface.OnCancelListener cancelListener//
+        , DialogInterface.OnDismissListener dismissListener, boolean isCancelable)
+    {
+        if (mActivity.isFinishing() == true | view == null)
+        {
+            return;
+        }
+
+        hideSimpleDialog();
+
+        LayoutInflater layoutInflater = (LayoutInflater) mActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+        mDialog = new Dialog(mActivity);
+        mDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        mDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        mDialog.setCanceledOnTouchOutside(isCancelable);
+
+        if (cancelListener != null)
+        {
+            mDialog.setOnCancelListener(cancelListener);
+        }
+
+        if (dismissListener != null)
+        {
+            mDialog.setOnDismissListener(dismissListener);
+        }
+
+        try
+        {
+            mDialog.setContentView(view);
 
             WindowManager.LayoutParams layoutParams = ScreenUtils.getDialogWidthLayoutParams(mActivity, mDialog);
 

@@ -1,28 +1,48 @@
 package com.daily.dailyhotel.screen.stay.outbound.detail;
 
 
+import android.app.Activity;
+import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.view.View;
 
 import com.daily.base.BaseActivity;
 import com.daily.base.BaseAnalyticsInterface;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
+import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
+import com.daily.dailyhotel.entity.CommonDateTime;
 import com.daily.dailyhotel.entity.People;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayOutboundDetail;
 import com.daily.dailyhotel.entity.StayOutboundRoom;
+import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
 import com.daily.dailyhotel.repository.remote.StayOutboundRemoteImpl;
+import com.daily.dailyhotel.screen.common.calendar.StayCalendarActivity;
+import com.daily.dailyhotel.screen.stay.outbound.people.SelectPeopleActivity;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.screen.common.HappyTalkCategoryDialog;
+import com.twoheart.dailyhotel.screen.common.ZoomMapActivity;
+import com.twoheart.dailyhotel.screen.information.FAQActivity;
+import com.twoheart.dailyhotel.util.DailyCalendar;
+import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 import io.reactivex.Observable;
 import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function3;
 
 /**
  * Created by sheldon
@@ -30,6 +50,9 @@ import io.reactivex.functions.Consumer;
  */
 public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutboundDetailActivity, StayOutboundDetailViewInterface> implements StayOutboundDetailView.OnEventListener
 {
+    private static final int DAYS_OF_MAXCOUNT = 90;
+    private static final int NIGHTS_OF_MAXCOUNT = 28;
+
     public static final int STATUS_NONE = 0;
     public static final int STATUS_ROOM_LIST = 1;
     public static final int STATUS_BOOKING = 2;
@@ -44,11 +67,13 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
     private StayOutboundDetailAnalyticsInterface mAnalytics;
 
     private StayOutboundRemoteImpl mStayOutboundRemoteImpl;
+    private CommonRemoteImpl mCommonRemoteImpl;
 
     private int mStayIndex;
     private String mStayName;
     private String mImageUrl;
     private StayBookDateTime mStayBookDateTime;
+    private CommonDateTime mCommonDateTime;
     private StayOutboundDetail mStayOutboundDetail;
     private People mPeople;
 
@@ -83,8 +108,9 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
         setAnalytics(new StayStayOutboundDetailAnalyticsImpl());
 
         mStayOutboundRemoteImpl = new StayOutboundRemoteImpl(activity);
+        mCommonRemoteImpl = new CommonRemoteImpl(activity);
 
-        mPeople = new People(People.DEFAULT_ADULTS, null);
+        setPeople(People.DEFAULT_ADULTS, null);
 
         setStatus(STATUS_NONE);
 
@@ -134,16 +160,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
             String checkInDateTime = intent.getStringExtra(StayOutboundDetailActivity.INTENT_EXTRA_DATA_CHECKIN);
             String checkOutDateTime = intent.getStringExtra(StayOutboundDetailActivity.INTENT_EXTRA_DATA_CHECKOUT);
 
-            try
-            {
-                mStayBookDateTime = new StayBookDateTime();
-                mStayBookDateTime.setCheckInDateTime(checkInDateTime);
-                mStayBookDateTime.setCheckOutDateTime(checkOutDateTime);
-            } catch (Exception e)
-            {
-                ExLog.e(e.toString());
-                return false;
-            }
+            setStayBookDateTime(checkInDateTime, checkOutDateTime);
 
             mPeople.numberOfAdults = intent.getIntExtra(StayOutboundDetailActivity.INTENT_EXTRA_DATA_NUMBER_OF_ADULTS, 2);
             mPeople.setChildAgeList(intent.getIntegerArrayListExtra(StayOutboundDetailActivity.INTENT_EXTRA_DATA_CHILD_LIST));
@@ -170,57 +187,65 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
 
         if (mIsUsedMultiTransition == true)
         {
-            addCompositeDisposable(Observable.zip(getViewInterface().getSharedElementTransition(), mStayOutboundRemoteImpl.getStayOutBoundDetail(mStayIndex, mStayBookDateTime, mPeople), new BiFunction<Boolean, StayOutboundDetail, StayOutboundDetail>()
-            {
-                @Override
-                public StayOutboundDetail apply(Boolean aBoolean, StayOutboundDetail stayOutboundDetail) throws Exception
+            addCompositeDisposable(Observable.zip(getViewInterface().getSharedElementTransition()//
+                , mCommonRemoteImpl.getCommonDateTime(), mStayOutboundRemoteImpl.getStayOutBoundDetail(mStayIndex, mStayBookDateTime, mPeople)//
+                , new Function3<Boolean, CommonDateTime, StayOutboundDetail, StayOutboundDetail>()
                 {
-                    return stayOutboundDetail;
-                }
-            }).subscribe(new Consumer<StayOutboundDetail>()
-            {
-                @Override
-                public void accept(StayOutboundDetail stayOutboundDetail) throws Exception
-                {
-                    if (stayOutboundDetail == null)
+                    @Override
+                    public StayOutboundDetail apply(@io.reactivex.annotations.NonNull Boolean aBoolean, @io.reactivex.annotations.NonNull CommonDateTime commonDateTime, @io.reactivex.annotations.NonNull StayOutboundDetail stayOutboundDetail) throws Exception
                     {
-                        return;
+                        onCommonDateTime(commonDateTime);
+                        return stayOutboundDetail;
                     }
-
+                }).subscribe(new Consumer<StayOutboundDetail>()
+            {
+                @Override
+                public void accept(@io.reactivex.annotations.NonNull StayOutboundDetail stayOutboundDetail) throws Exception
+                {
                     onStayOutboundDetail(stayOutboundDetail);
+
+                    unLockAll();
                 }
             }, new Consumer<Throwable>()
             {
                 @Override
-                public void accept(Throwable throwable) throws Exception
+                public void accept(@io.reactivex.annotations.NonNull Throwable throwable) throws Exception
                 {
-
                     onHandleError(throwable);
                 }
             }));
+
+            //            addCompositeDisposable(Observable.zip(getViewInterface().getSharedElementTransition(), mStayOutboundRemoteImpl.getStayOutBoundDetail(mStayIndex, mStayBookDateTime, mPeople), new BiFunction<Boolean, StayOutboundDetail, StayOutboundDetail>()
+            //            {
+            //                @Override
+            //                public StayOutboundDetail apply(Boolean aBoolean, StayOutboundDetail stayOutboundDetail) throws Exception
+            //                {
+            //                    return stayOutboundDetail;
+            //                }
+            //            }).subscribe(new Consumer<StayOutboundDetail>()
+            //            {
+            //                @Override
+            //                public void accept(StayOutboundDetail stayOutboundDetail) throws Exception
+            //                {
+            //                    if (stayOutboundDetail == null)
+            //                    {
+            //                        return;
+            //                    }
+            //
+            //                    onStayOutboundDetail(stayOutboundDetail);
+            //                }
+            //            }, new Consumer<Throwable>()
+            //            {
+            //                @Override
+            //                public void accept(Throwable throwable) throws Exception
+            //                {
+            //
+            //                    onHandleError(throwable);
+            //                }
+            //            }));
         } else
         {
-            addCompositeDisposable(mStayOutboundRemoteImpl.getStayOutBoundDetail(mStayIndex, mStayBookDateTime, mPeople).subscribe(new Consumer<StayOutboundDetail>()
-            {
-                @Override
-                public void accept(StayOutboundDetail stayOutboundDetail) throws Exception
-                {
-                    if (stayOutboundDetail == null)
-                    {
-                        return;
-                    }
-
-                    onStayOutboundDetail(stayOutboundDetail);
-                }
-            }, new Consumer<Throwable>()
-            {
-                @Override
-                public void accept(Throwable throwable) throws Exception
-                {
-
-                    onHandleError(throwable);
-                }
-            }));
+            onRefresh(true);
         }
     }
 
@@ -298,6 +323,43 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
 
         switch (requestCode)
         {
+            case StayOutboundDetailActivity.REQUEST_CODE_CALENDAR:
+            {
+                if (resultCode == Activity.RESULT_OK && data != null)
+                {
+                    if (data.hasExtra(StayCalendarActivity.INTENT_EXTRA_DATA_CHECKIN_DATETIME) == true//
+                        && data.hasExtra(StayCalendarActivity.INTENT_EXTRA_DATA_CHECKOUT_DATETIME) == true)
+                    {
+                        String checkInDateTime = data.getStringExtra(StayCalendarActivity.INTENT_EXTRA_DATA_CHECKIN_DATETIME);
+                        String checkOutDateTime = data.getStringExtra(StayCalendarActivity.INTENT_EXTRA_DATA_CHECKOUT_DATETIME);
+
+                        if (DailyTextUtils.isTextEmpty(checkInDateTime, checkOutDateTime) == true)
+                        {
+                            return;
+                        }
+
+                        onCalendarDateTime(checkInDateTime, checkOutDateTime);
+                        onRefresh(true);
+                    }
+                }
+                break;
+            }
+
+            case StayOutboundDetailActivity.REQUEST_CODE_PEOPLE:
+            {
+                if (resultCode == Activity.RESULT_OK && data != null)
+                {
+                    if (data.hasExtra(SelectPeopleActivity.INTENT_EXTRA_DATA_NUMBER_OF_ADULTS) == true && data.hasExtra(SelectPeopleActivity.INTENT_EXTRA_DATA_CHILD_LIST) == true)
+                    {
+                        int numberOfAdults = data.getIntExtra(SelectPeopleActivity.INTENT_EXTRA_DATA_NUMBER_OF_ADULTS, People.DEFAULT_ADULTS);
+                        ArrayList<Integer> childAgeList = data.getIntegerArrayListExtra(SelectPeopleActivity.INTENT_EXTRA_DATA_CHILD_LIST);
+
+                        onPeople(numberOfAdults, childAgeList);
+                        onRefresh(true);
+                    }
+                }
+                break;
+            }
         }
     }
 
@@ -309,7 +371,53 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
             return;
         }
 
+        setRefresh(false);
+        screenLock(showProgress);
 
+        addCompositeDisposable(Observable.zip(mCommonRemoteImpl.getCommonDateTime(), mStayOutboundRemoteImpl.getStayOutBoundDetail(mStayIndex, mStayBookDateTime, mPeople), new BiFunction<CommonDateTime, StayOutboundDetail, StayOutboundDetail>()
+        {
+            @Override
+            public StayOutboundDetail apply(@io.reactivex.annotations.NonNull CommonDateTime commonDateTime, @io.reactivex.annotations.NonNull StayOutboundDetail stayOutboundDetail) throws Exception
+            {
+                onCommonDateTime(commonDateTime);
+                return stayOutboundDetail;
+            }
+        }).subscribe(new Consumer<StayOutboundDetail>()
+        {
+            @Override
+            public void accept(@io.reactivex.annotations.NonNull StayOutboundDetail stayOutboundDetail) throws Exception
+            {
+                onStayOutboundDetail(stayOutboundDetail);
+
+                unLockAll();
+            }
+        }, new Consumer<Throwable>()
+        {
+            @Override
+            public void accept(@io.reactivex.annotations.NonNull Throwable throwable) throws Exception
+            {
+                onHandleError(throwable);
+            }
+        }));
+
+        //            addCompositeDisposable(mStayOutboundRemoteImpl.getStayOutBoundDetail(mStayIndex, mStayBookDateTime, mPeople).subscribe(new Consumer<StayOutboundDetail>()
+        //            {
+        //                @Override
+        //                public void accept(StayOutboundDetail stayOutboundDetail) throws Exception
+        //                {
+        //                    onStayOutboundDetail(stayOutboundDetail);
+        //
+        //                    unLockAll();
+        //                }
+        //            }, new Consumer<Throwable>()
+        //            {
+        //                @Override
+        //                public void accept(Throwable throwable) throws Exception
+        //                {
+        //
+        //
+        //                }
+        //            }));
     }
 
     @Override
@@ -342,51 +450,152 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
     }
 
     @Override
-    public void onReviewClick()
+    public void onCalendarClick()
     {
+        if (lock() == true || mStayBookDateTime == null)
+        {
+            return;
+        }
 
+        try
+        {
+            Calendar startCalendar = DailyCalendar.getInstance();
+            startCalendar.setTime(DailyCalendar.convertDate(mCommonDateTime.currentDateTime, DailyCalendar.ISO_8601_FORMAT));
+            startCalendar.add(Calendar.DAY_OF_MONTH, -1);
+
+            String startDateTime = DailyCalendar.format(startCalendar.getTime(), DailyCalendar.ISO_8601_FORMAT);
+
+            startCalendar.add(Calendar.DAY_OF_MONTH, DAYS_OF_MAXCOUNT);
+
+            String endDateTime = DailyCalendar.format(startCalendar.getTime(), DailyCalendar.ISO_8601_FORMAT);
+
+            Intent intent = StayCalendarActivity.newInstance(getActivity()//
+                , mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
+                , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
+                , startDateTime, endDateTime, NIGHTS_OF_MAXCOUNT, AnalyticsManager.ValueType.STAY, true, 0, true);
+
+            startActivityForResult(intent, StayOutboundDetailActivity.REQUEST_CODE_CALENDAR);
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+
+            unLock();
+        }
     }
 
     @Override
-    public void onCalendarClick()
+    public void onPeopleClick()
     {
+        if (lock() == true)
+        {
+            return;
+        }
 
+        Intent intent;
+
+        if (mPeople == null)
+        {
+            intent = SelectPeopleActivity.newInstance(getActivity(), People.DEFAULT_ADULTS, null);
+        } else
+        {
+            intent = SelectPeopleActivity.newInstance(getActivity(), mPeople.numberOfAdults, mPeople.getChildAgeList());
+        }
+
+        startActivityForResult(intent, StayOutboundDetailActivity.REQUEST_CODE_PEOPLE);
     }
 
     @Override
     public void onMapClick()
     {
+        if (Util.isInstallGooglePlayService(getActivity()) == true)
+        {
+            if (lock() == true || getActivity().isFinishing() == true)
+            {
+                return;
+            }
 
+            startActivity(ZoomMapActivity.newInstance(getActivity()//
+                , ZoomMapActivity.SourceType.HOTEL, mStayOutboundDetail.name, mStayOutboundDetail.address//
+                , mStayOutboundDetail.latitude, mStayOutboundDetail.longitude, true));
+        } else
+        {
+            getViewInterface().showSimpleDialog(getString(R.string.dialog_title_googleplayservice)//
+                , getString(R.string.dialog_msg_install_update_googleplayservice)//
+                , getString(R.string.dialog_btn_text_install), getString(R.string.dialog_btn_text_cancel), //
+                new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        try
+                        {
+                            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://play.google.com/store/apps/details?id=com.google.android.gms"));
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+                            intent.setPackage("com.android.vending");
+                            startActivity(intent);
+                        } catch (ActivityNotFoundException e)
+                        {
+                            try
+                            {
+                                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=com.google.android.gms"));
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+                                intent.setPackage("com.android.vending");
+                                startActivity(intent);
+                            } catch (ActivityNotFoundException f)
+                            {
+                                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://play.google.com/store/apps/details?id=com.google.android.gms"));
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+                                startActivity(intent);
+                            }
+                        }
+                    }
+                }, null, true);
+
+        }
     }
 
     @Override
     public void onClipAddressClick(String address)
     {
+        DailyTextUtils.clipText(getActivity(), address);
 
+        DailyToast.showToast(getActivity(), R.string.message_detail_copy_address, DailyToast.LENGTH_SHORT);
     }
 
     @Override
     public void onNavigatorClick()
     {
+        if (lock() == true || getActivity().isFinishing() == true)
+        {
+            return;
+        }
 
-    }
-
-    @Override
-    public void onWishClick()
-    {
-
+        getViewInterface().showNavigatorDialog(new DialogInterface.OnDismissListener()
+        {
+            @Override
+            public void onDismiss(DialogInterface dialog)
+            {
+                unLockAll();
+            }
+        });
     }
 
     @Override
     public void onConciergeClick()
     {
+        if (lock() == true)
+        {
+            return;
+        }
 
-    }
-
-    @Override
-    public void onBookingClick()
-    {
-
+        getViewInterface().showConciergeDialog(new DialogInterface.OnDismissListener()
+        {
+            @Override
+            public void onDismiss(DialogInterface dialog)
+            {
+                unLockAll();
+            }
+        });
     }
 
     @Override
@@ -456,6 +665,54 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
         getViewInterface().setPriceType(priceType);
     }
 
+    @Override
+    public void onConciergeFaqClick()
+    {
+        startActivity(FAQActivity.newInstance(getActivity()));
+    }
+
+    @Override
+    public void onConciergeHappyTalkClick()
+    {
+        if (mStayOutboundDetail == null)
+        {
+            return;
+        }
+
+        try
+        {
+            // 카카오톡 패키지 설치 여부
+            getActivity().getPackageManager().getPackageInfo("com.kakao.talk", PackageManager.GET_META_DATA);
+
+            startActivity(HappyTalkCategoryDialog.newInstance(getActivity(), HappyTalkCategoryDialog.CallScreen.SCREEN_STAY_DETAIL//
+                , mStayOutboundDetail.index, 0, mStayOutboundDetail.name));
+        } catch (Exception e)
+        {
+            getViewInterface().showSimpleDialog(null, getString(R.string.dialog_msg_not_installed_kakaotalk)//
+                , getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no)//
+                , new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        Util.installPackage(getActivity(), "com.kakao.talk");
+                    }
+                }, null);
+        }
+    }
+
+    @Override
+    public void onConciergeCallClick()
+    {
+        // 복잡.
+    }
+
+    @Override
+    public void onShareMapClick()
+    {
+        Util.shareGoogleMap(getActivity(), mStayOutboundDetail.name, Double.toString(mStayOutboundDetail.latitude), Double.toString(mStayOutboundDetail.longitude));
+    }
+
     private void onStayOutboundDetail(StayOutboundDetail stayOutboundDetail)
     {
         if (stayOutboundDetail == null)
@@ -496,6 +753,99 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
         mStatus = status;
 
         getViewInterface().setBottomButtonLayout(status);
+    }
+
+    private void onCommonDateTime(@NonNull CommonDateTime commonDateTime)
+    {
+        if (commonDateTime == null)
+        {
+            return;
+        }
+
+        mCommonDateTime = commonDateTime;
+    }
+
+    private void onCalendarDateTime(String checkInDateTime, String checkOutDateTime)
+    {
+        if (DailyTextUtils.isTextEmpty(checkInDateTime, checkOutDateTime) == true)
+        {
+            return;
+        }
+
+        setStayBookDateTime(checkInDateTime, checkOutDateTime);
+        onStayBookDateTime(mStayBookDateTime);
+    }
+
+    private void onPeople(People people)
+    {
+        if (mPeople == null)
+        {
+            return;
+        }
+
+        getViewInterface().setPeopleText(mPeople.toShortString(getActivity()));
+    }
+
+    private void onPeople(int numberOfAdults, ArrayList<Integer> childAgeList)
+    {
+        setPeople(numberOfAdults, childAgeList);
+
+        onPeople(mPeople);
+    }
+
+    /**
+     * @param checkInDateTime  ISO-8601
+     * @param checkOutDateTime ISO-8601
+     */
+    private void setStayBookDateTime(String checkInDateTime, String checkOutDateTime)
+    {
+        if (DailyTextUtils.isTextEmpty(checkInDateTime, checkOutDateTime) == true)
+        {
+            return;
+        }
+
+        if (mStayBookDateTime == null)
+        {
+            mStayBookDateTime = new StayBookDateTime();
+        }
+
+        try
+        {
+            mStayBookDateTime.setCheckInDateTime(checkInDateTime);
+            mStayBookDateTime.setCheckOutDateTime(checkOutDateTime);
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+        }
+    }
+
+    private void onStayBookDateTime(@NonNull StayBookDateTime stayBookDateTime)
+    {
+        if (stayBookDateTime == null)
+        {
+            return;
+        }
+
+        try
+        {
+            String dateFormat = String.format(Locale.KOREA, "%s - %s, %s", stayBookDateTime.getCheckInDateTime("M.d(EEE)"), stayBookDateTime.getCheckOutDateTime("M.d(EEE)"), getString(R.string.label_nights, stayBookDateTime.getNights()));
+
+            getViewInterface().setCalendarText(dateFormat);
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+        }
+    }
+
+    private void setPeople(int numberOfAdults, ArrayList<Integer> childAgeList)
+    {
+        if (mPeople == null)
+        {
+            mPeople = new People(People.DEFAULT_ADULTS, null);
+        }
+
+        mPeople.numberOfAdults = numberOfAdults;
+        mPeople.setChildAgeList(childAgeList);
     }
 
     private void checkChangedPrice(boolean isDeepLink, StayOutboundDetail stayOutboundDetail, String listViewPrice)

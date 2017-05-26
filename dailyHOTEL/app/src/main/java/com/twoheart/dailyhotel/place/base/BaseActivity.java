@@ -1222,7 +1222,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
             {
                 if (isInVaildOperatingTime == true)
                 {
-                    showNonOpteratingTimeDialog(listener);
+                    showNonOperatingTimeDialog(listener);
                 } else
                 {
                     View.OnClickListener positiveListener = new View.OnClickListener()
@@ -1311,7 +1311,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
         checkInValidOperatingTime(operatingTimeListener);
     }
 
-    public void showNonOpteratingTimeDialog(final OnCallDialogListener listener)
+    public void showNonOperatingTimeDialog(final OnCallDialogListener listener)
     {
         View.OnClickListener positiveListener = v ->
         {
@@ -1332,11 +1332,11 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
             }
         };
 
-        String[] hour = DailyPreference.getInstance(BaseActivity.this).getOperationTime().split("\\,");
+        String[] hour = DailyPreference.getInstance(this).getOperationTime().split("\\,");
         String startHour = hour[0];
         String endHour = hour[1];
 
-        String[] lunchTimes = DailyPreference.getInstance(BaseActivity.this).getRemoteConfigOperationLunchTime().split("\\,");
+        String[] lunchTimes = DailyPreference.getInstance(this).getRemoteConfigOperationLunchTime().split("\\,");
         String startLunchTime = lunchTimes[0];
         String endLunchTime = lunchTimes[1];
 

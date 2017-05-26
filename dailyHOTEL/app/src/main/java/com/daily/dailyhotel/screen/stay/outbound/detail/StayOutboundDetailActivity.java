@@ -29,6 +29,9 @@ import io.reactivex.Observer;
  */
 public class StayOutboundDetailActivity extends BaseActivity<StayOutboundDetailPresenter>
 {
+    static final int REQUEST_CODE_CALENDAR = 10000;
+    static final int REQUEST_CODE_PEOPLE = 10001;
+
     static final String INTENT_EXTRA_DATA_STAY_INDEX = "stayIndex";
     static final String INTENT_EXTRA_DATA_STAY_NAME = "stayName";
     static final String INTENT_EXTRA_DATA_URL = "url";

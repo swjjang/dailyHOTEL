@@ -2,6 +2,7 @@ package com.daily.dailyhotel.screen.stay.outbound.list;
 
 import android.content.Context;
 import android.databinding.DataBindingUtil;
+import android.databinding.ViewDataBinding;
 import android.graphics.Color;
 import android.graphics.LinearGradient;
 import android.graphics.Paint;
@@ -177,8 +178,7 @@ public class StayOutboundListAdapter extends RecyclerView.Adapter<RecyclerView.V
                     , ScreenUtils.getRatioHeightType16x9(ScreenUtils.getScreenWidth(mContext)));
                 dataBinding.getRoot().setLayoutParams(layoutParams);
 
-                StayViewHolder stayViewHolder = new StayViewHolder(dataBinding.getRoot());
-                stayViewHolder.setViewDataBinding(dataBinding);
+                StayViewHolder stayViewHolder = new StayViewHolder(dataBinding);
 
                 return stayViewHolder;
             }
@@ -187,7 +187,7 @@ public class StayOutboundListAdapter extends RecyclerView.Adapter<RecyclerView.V
             {
                 ListRowFooterDataBinding dataBinding = DataBindingUtil.inflate(LayoutInflater.from(mContext), R.layout.list_row_footer_data, parent, false);
 
-                BlankViewHolder blankViewHolder = new BlankViewHolder(dataBinding.getRoot());
+                BlankViewHolder blankViewHolder = new BlankViewHolder(dataBinding);
 
                 return blankViewHolder;
             }
@@ -196,7 +196,7 @@ public class StayOutboundListAdapter extends RecyclerView.Adapter<RecyclerView.V
             {
                 ListRowLoadingDataBinding dataBinding = DataBindingUtil.inflate(LayoutInflater.from(mContext), R.layout.list_row_loading_data, parent, false);
 
-                BlankViewHolder blankViewHolder = new BlankViewHolder(dataBinding.getRoot());
+                BlankViewHolder blankViewHolder = new BlankViewHolder(dataBinding);
 
                 return blankViewHolder;
             }
@@ -375,9 +375,11 @@ public class StayOutboundListAdapter extends RecyclerView.Adapter<RecyclerView.V
     {
         ListRowStayOutboundDataBinding dataBinding;
 
-        public StayViewHolder(View itemView)
+        public StayViewHolder(ListRowStayOutboundDataBinding dataBinding)
         {
-            super(itemView);
+            super(dataBinding.getRoot());
+
+            this.dataBinding = dataBinding;
 
             itemView.setOnClickListener(mOnClickListener);
             itemView.setOnLongClickListener(new View.OnLongClickListener()
@@ -398,18 +400,13 @@ public class StayOutboundListAdapter extends RecyclerView.Adapter<RecyclerView.V
                 }
             });
         }
-
-        public void setViewDataBinding(ListRowStayOutboundDataBinding dataBinding)
-        {
-            this.dataBinding = dataBinding;
-        }
     }
 
     protected class BlankViewHolder extends RecyclerView.ViewHolder
     {
-        public BlankViewHolder(View itemView)
+        public BlankViewHolder(ViewDataBinding dataBinding)
         {
-            super(itemView);
+            super(dataBinding.getRoot());
         }
     }
 }

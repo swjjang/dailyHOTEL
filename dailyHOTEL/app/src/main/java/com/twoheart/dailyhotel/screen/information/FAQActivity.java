@@ -3,6 +3,7 @@ package com.twoheart.dailyhotel.screen.information;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -25,6 +26,12 @@ import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
 public class FAQActivity extends WebViewActivity
 {
+    public static Intent newInstance(Context context)
+    {
+        Intent intent = new Intent(context, FAQActivity.class);
+        return intent;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
