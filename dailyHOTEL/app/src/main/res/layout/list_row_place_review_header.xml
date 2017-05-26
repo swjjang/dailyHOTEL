@@ -59,7 +59,7 @@
         android:background="@color/white"
         android:paddingLeft="15dp"
         android:paddingRight="15dp"
-        android:paddingTop="22dp"
+        android:paddingTop="24dp"
         android:textColor="@color/default_text_c323232"
         android:textSize="15dp"
         dailyFont:style="Medium"/>
