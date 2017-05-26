@@ -30,6 +30,7 @@ import com.daily.dailyhotel.screen.stay.outbound.detail.amenities.AmenityListAct
 import com.daily.dailyhotel.screen.stay.outbound.people.SelectPeopleActivity;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.screen.common.HappyTalkCategoryDialog;
+import com.twoheart.dailyhotel.screen.common.ImageDetailListActivity;
 import com.twoheart.dailyhotel.screen.common.ZoomMapActivity;
 import com.twoheart.dailyhotel.screen.information.FAQActivity;
 import com.twoheart.dailyhotel.util.DailyCalendar;
@@ -440,7 +441,20 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
     @Override
     public void onImageClick(int position)
     {
+        if (mStayOutboundDetail != null && mStayOutboundDetail.getImageList() != null//
+        || mStayOutboundDetail.getImageList().size() == 0 || lock() == true)
+        {
+            return;
+        }
 
+
+
+
+        Intent intent = ImageDetailListActivity.newInstance(getActivity(), PlaceType.HOTEL, stayDetailParams.name, imageInformationList, mCurrentImage);
+        startActivityForResult(intent, CODE_REQUEST_ACTIVITY_IMAGELIST);
+
+        AnalyticsManager.getInstance(StayDetailActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS,//
+            AnalyticsManager.Action.HOTEL_IMAGE_CLICKED, stayDetailParams.name, null);
     }
 
     @Override
@@ -661,7 +675,8 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
     @Override
     public void onAmenityMoreClick()
     {
-        if (mStayOutboundDetail == null || mStayOutboundDetail.getAmenityList().size() == 0 || lock() == true)
+        if (mStayOutboundDetail == null || mStayOutboundDetail.getAmenityList() == null//
+            || mStayOutboundDetail.getAmenityList().size() == 0 || lock() == true)
         {
             return;
         }
