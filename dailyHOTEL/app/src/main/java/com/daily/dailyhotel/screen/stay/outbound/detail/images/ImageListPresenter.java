@@ -7,7 +7,12 @@ import android.support.annotation.NonNull;
 
 import com.daily.base.BaseAnalyticsInterface;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
+import com.daily.dailyhotel.entity.StayOutboundDetailImage;
+import com.daily.dailyhotel.parcel.StayOutboundDetailImageParcel;
 import com.twoheart.dailyhotel.R;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by sheldon
@@ -16,6 +21,10 @@ import com.twoheart.dailyhotel.R;
 public class ImageListPresenter extends BaseExceptionPresenter<ImageListActivity, ImageListInterface> implements ImageListView.OnEventListener
 {
     private ImageListAnalyticsInterface mAnalytics;
+
+    private String mTitle;
+    private List<StayOutboundDetailImage> mImageList;
+    private int mIndex;
 
     public interface ImageListAnalyticsInterface extends BaseAnalyticsInterface
     {
@@ -36,7 +45,7 @@ public class ImageListPresenter extends BaseExceptionPresenter<ImageListActivity
     @Override
     public void constructorInitialize(ImageListActivity activity)
     {
-        setContentView(R.layout.activity_copy_data);
+        setContentView(R.layout.activity_stay_outbound_image_list_data);
 
         setAnalytics(new ImageListAnalyticsImpl());
 
@@ -57,12 +66,30 @@ public class ImageListPresenter extends BaseExceptionPresenter<ImageListActivity
             return true;
         }
 
+        mTitle = intent.getStringExtra(ImageListActivity.INTENT_EXTRA_DATA_TITLE);
+        ArrayList<StayOutboundDetailImageParcel> imageList = intent.getParcelableArrayListExtra(ImageListActivity.INTENT_EXTRA_DATA_IMAGE_LIST);
+
+        if (imageList == null || imageList.size() == 0)
+        {
+            return false;
+        }
+
+        mImageList = new ArrayList<>();
+
+        for (StayOutboundDetailImageParcel stayOutboundDetailImageParcel : imageList)
+        {
+            mImageList.add(stayOutboundDetailImageParcel.getStayOutboundDetailImage());
+        }
+
+        mIndex = intent.getIntExtra(ImageListActivity.INTENT_EXTRA_DATA_INDEX, 0);
+
         return true;
     }
 
     @Override
     public void onPostCreate()
     {
+        getViewInterface().setToolbarTitle(mTitle);
     }
 
     @Override

@@ -27,10 +27,10 @@ import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
 import com.daily.dailyhotel.repository.remote.StayOutboundRemoteImpl;
 import com.daily.dailyhotel.screen.common.calendar.StayCalendarActivity;
 import com.daily.dailyhotel.screen.stay.outbound.detail.amenities.AmenityListActivity;
+import com.daily.dailyhotel.screen.stay.outbound.detail.images.ImageListActivity;
 import com.daily.dailyhotel.screen.stay.outbound.people.SelectPeopleActivity;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.screen.common.HappyTalkCategoryDialog;
-import com.twoheart.dailyhotel.screen.common.ImageDetailListActivity;
 import com.twoheart.dailyhotel.screen.common.ZoomMapActivity;
 import com.twoheart.dailyhotel.screen.information.FAQActivity;
 import com.twoheart.dailyhotel.util.DailyCalendar;
@@ -442,19 +442,13 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
     public void onImageClick(int position)
     {
         if (mStayOutboundDetail != null && mStayOutboundDetail.getImageList() != null//
-        || mStayOutboundDetail.getImageList().size() == 0 || lock() == true)
+            || mStayOutboundDetail.getImageList().size() == 0 || lock() == true)
         {
             return;
         }
 
-
-
-
-        Intent intent = ImageDetailListActivity.newInstance(getActivity(), PlaceType.HOTEL, stayDetailParams.name, imageInformationList, mCurrentImage);
-        startActivityForResult(intent, CODE_REQUEST_ACTIVITY_IMAGELIST);
-
-        AnalyticsManager.getInstance(StayDetailActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS,//
-            AnalyticsManager.Action.HOTEL_IMAGE_CLICKED, stayDetailParams.name, null);
+        startActivityForResult(ImageListActivity.newInstance(getActivity(), mStayOutboundDetail.name//
+            , mStayOutboundDetail.getImageList(), position), StayOutboundDetailActivity.REQUEST_CODE_IMAGE_LIST);
     }
 
     @Override
