@@ -8,6 +8,7 @@ import android.os.Vibrator;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.daily.base.util.DailyTextUtils;
@@ -153,6 +154,9 @@ public class StayListAdapter extends PlaceListAdapter
         holder.hotelAddressView.setText(address);
         holder.hotelNameView.setText(stay.name);
 
+        boolean isVisiblePrice = false;
+        boolean isVisibleSatisfaction = false;
+
         if (stay.price <= 0 || stay.price <= stay.discountPrice)
         {
             holder.hotelPriceView.setVisibility(View.INVISIBLE);
@@ -162,6 +166,8 @@ public class StayListAdapter extends PlaceListAdapter
             holder.hotelPriceView.setVisibility(View.VISIBLE);
             holder.hotelPriceView.setText(strPrice);
             holder.hotelPriceView.setPaintFlags(holder.hotelPriceView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+
+            isVisiblePrice = true;
         }
 
         // 만족도
@@ -170,9 +176,25 @@ public class StayListAdapter extends PlaceListAdapter
             holder.satisfactionView.setVisibility(View.VISIBLE);
             holder.satisfactionView.setText(//
                 mContext.getResources().getString(R.string.label_list_satisfaction, stay.satisfaction));
+
+            isVisibleSatisfaction = true;
         } else
         {
             holder.satisfactionView.setVisibility(View.GONE);
+        }
+
+        RelativeLayout.LayoutParams hotelNameViewParams = (RelativeLayout.LayoutParams) holder.hotelNameView.getLayoutParams();
+
+        if (isVisiblePrice == true && isVisibleSatisfaction == false)
+        {
+            hotelNameViewParams.addRule(RelativeLayout.LEFT_OF, holder.hotelPriceView.getId());
+            hotelNameViewParams.rightMargin = ScreenUtils.dpToPx(mContext, 5d);
+            holder.hotelNameView.setLayoutParams(hotelNameViewParams);
+        } else
+        {
+            hotelNameViewParams.removeRule(RelativeLayout.LEFT_OF);
+            hotelNameViewParams.rightMargin = ScreenUtils.dpToPx(mContext, 11d);
+            holder.hotelNameView.setLayoutParams(hotelNameViewParams);
         }
 
         if (mNights > 1)
