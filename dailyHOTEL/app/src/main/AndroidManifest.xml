@@ -724,6 +724,13 @@
             android:screenOrientation="portrait"
             android:theme="@style/TransDialog"/>
 
+        <activity
+            android:name="com.daily.dailyhotel.screen.stay.outbound.detail.amenities.AmenityListActivity"
+            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"/>
+
+
         <!--  com.daily.dailyhotel.... -->
 
 

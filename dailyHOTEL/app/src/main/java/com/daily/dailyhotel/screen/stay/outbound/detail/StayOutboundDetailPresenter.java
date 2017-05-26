@@ -9,6 +9,7 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.util.SparseArray;
 import android.view.View;
 
 import com.daily.base.BaseActivity;
@@ -25,6 +26,7 @@ import com.daily.dailyhotel.entity.StayOutboundRoom;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
 import com.daily.dailyhotel.repository.remote.StayOutboundRemoteImpl;
 import com.daily.dailyhotel.screen.common.calendar.StayCalendarActivity;
+import com.daily.dailyhotel.screen.stay.outbound.detail.amenities.AmenityListActivity;
 import com.daily.dailyhotel.screen.stay.outbound.people.SelectPeopleActivity;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.screen.common.HappyTalkCategoryDialog;
@@ -360,6 +362,9 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
                 }
                 break;
             }
+
+            case StayOutboundDetailActivity.REQUEST_CODE_HAPPYTALK:
+                break;
         }
     }
 
@@ -514,9 +519,9 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
                 return;
             }
 
-            startActivity(ZoomMapActivity.newInstance(getActivity()//
+            startActivityForResult(ZoomMapActivity.newInstance(getActivity()//
                 , ZoomMapActivity.SourceType.HOTEL, mStayOutboundDetail.name, mStayOutboundDetail.address//
-                , mStayOutboundDetail.latitude, mStayOutboundDetail.longitude, true));
+                , mStayOutboundDetail.latitude, mStayOutboundDetail.longitude, true), StayOutboundDetailActivity.REQUEST_CODE_MAP);
         } else
         {
             getViewInterface().showSimpleDialog(getString(R.string.dialog_title_googleplayservice)//
@@ -656,7 +661,26 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
     @Override
     public void onAmenityMoreClick()
     {
+        if (mStayOutboundDetail == null || mStayOutboundDetail.getAmenityList().size() == 0 || lock() == true)
+        {
+            return;
+        }
 
+        SparseArray<String> amenitySparseArray = mStayOutboundDetail.getAmenityList();
+        int size = amenitySparseArray.size();
+        ArrayList<String> amenityList = new ArrayList<>(size);
+
+        for (int i = 0; i < size; i++)
+        {
+            String amenity = amenitySparseArray.get(amenitySparseArray.keyAt(i));
+
+            if (DailyTextUtils.isTextEmpty(amenity) == false)
+            {
+                amenityList.add(amenitySparseArray.get(amenitySparseArray.keyAt(i)));
+            }
+        }
+
+        startActivityForResult(AmenityListActivity.newInstance(getActivity(), amenityList), StayOutboundDetailActivity.REQUEST_CODE_AMENITY);
     }
 
     @Override
@@ -684,8 +708,8 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
             // 카카오톡 패키지 설치 여부
             getActivity().getPackageManager().getPackageInfo("com.kakao.talk", PackageManager.GET_META_DATA);
 
-            startActivity(HappyTalkCategoryDialog.newInstance(getActivity(), HappyTalkCategoryDialog.CallScreen.SCREEN_STAY_DETAIL//
-                , mStayOutboundDetail.index, 0, mStayOutboundDetail.name));
+            startActivityForResult(HappyTalkCategoryDialog.newInstance(getActivity(), HappyTalkCategoryDialog.CallScreen.SCREEN_STAY_DETAIL//
+                , mStayOutboundDetail.index, 0, mStayOutboundDetail.name), StayOutboundDetailActivity.REQUEST_CODE_HAPPYTALK);
         } catch (Exception e)
         {
             getViewInterface().showSimpleDialog(null, getString(R.string.dialog_msg_not_installed_kakaotalk)//
@@ -740,7 +764,6 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
             mCheckChangedPrice = true;
             checkChangedPrice(mIsDeepLink, stayOutboundDetail, null);
         }
-
 
         setStatus(STATUS_ROOM_LIST);
 

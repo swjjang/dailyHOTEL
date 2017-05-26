@@ -767,7 +767,7 @@ public class StayOutboundDetailView extends BaseView<StayOutboundDetailView.OnEv
     {
         DialogStayOutboundMapDataBinding dataBinding = DataBindingUtil.inflate(LayoutInflater.from(getContext()), R.layout.dialog_stay_outbound_map_data, null, false);
 
-        dataBinding.googleMapLayout.setOnClickListener(new View.OnClickListener()
+        dataBinding.googleMapTextView.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)

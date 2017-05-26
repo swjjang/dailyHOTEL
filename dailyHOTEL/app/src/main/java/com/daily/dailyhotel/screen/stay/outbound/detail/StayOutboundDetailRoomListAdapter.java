@@ -246,6 +246,8 @@ public class StayOutboundDetailRoomListAdapter extends RecyclerView.Adapter<Recy
         {
             super(dataBinding.getRoot());
 
+            this.dataBinding = dataBinding;
+
             dataBinding.getRoot().setOnClickListener(mOnClickListener);
         }
     }

@@ -14,6 +14,7 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.databinding.DataBindingUtil;
 import android.graphics.Bitmap.Config;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -52,6 +53,7 @@ import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.LauncherActivity;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.Setting;
+import com.twoheart.dailyhotel.databinding.DialogStayOutboundMapDataBinding;
 import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.Notice;
 import com.twoheart.dailyhotel.model.Province;
@@ -1188,12 +1190,11 @@ public class Util implements Constants
             });
         } else
         {
-            dialogView = layoutInflater.inflate(R.layout.view_searchmap_dialog_layout02, null, false);
+            DialogStayOutboundMapDataBinding dataBinding = DataBindingUtil.inflate(layoutInflater, R.layout.dialog_stay_outbound_map_data, null, false);
 
-            // 버튼
-            View googleMapLayout = dialogView.findViewById(R.id.googleMapLayout);
+            dialogView = dataBinding.getRoot();
 
-            googleMapLayout.setOnClickListener(new View.OnClickListener()
+            dataBinding.googleMapTextView.setOnClickListener(new View.OnClickListener()
             {
                 @Override
                 public void onClick(View v)
