@@ -217,6 +217,8 @@ public class PlaceRegionAnimatedExpandableListAdapter extends AnimatedExpandable
         return groupPosition;
     }
 
+    // 디자인 요청으로 사용안함
+    @Deprecated
     private String getInsertSpaceName(String name)
     {
         char[] nameChars = name.toCharArray();
@@ -266,7 +268,8 @@ public class PlaceRegionAnimatedExpandableListAdapter extends AnimatedExpandable
         View expandBottomLineView = convertView.findViewById(R.id.expandBottomLine);
         View collapseBottomLineView = convertView.findViewById(R.id.collapseBottomLine);
 
-        textView.setText(getInsertSpaceName(province.name));
+//        textView.setText(getInsertSpaceName(province.name));
+        textView.setText(province.name);
 
         boolean hasChildren = getRealChildrenCount(groupPosition) > 0;
 
