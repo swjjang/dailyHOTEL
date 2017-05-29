@@ -201,6 +201,51 @@ public class StayDetailActivity extends PlaceDetailActivity
     }
 
     /**
+     * 위시리스트에서 호출
+     *
+     * @param context
+     * @param stayBookingDay
+     * @param stay
+     * @param isUsedMultiTransition
+     * @return
+     */
+    public static Intent newInstance(Context context, StayBookingDay stayBookingDay, Stay stay, boolean isUsedMultiTransition)
+    {
+        if (stayBookingDay == null || stay == null)
+        {
+            return null;
+        }
+
+        Intent intent = new Intent(context, StayDetailActivity.class);
+
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, stayBookingDay);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_HOTELIDX, stay.index);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_HOTELNAME, stay.name);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_IMAGEURL, stay.imageUrl);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_CALENDAR_FLAG, false);
+
+        if (stay.discountPrice > 0)
+        {
+            intent.putExtra(NAME_INTENT_EXTRA_DATA_DISCOUNTPRICE, stay.discountPrice);
+        } else
+        {
+            intent.putExtra(NAME_INTENT_EXTRA_DATA_DISCOUNTPRICE, SKIP_CHECK_DISCOUNT_PRICE_VALUE);
+        }
+
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_ENTRY_INDEX, -1);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_LIST_COUNT, -1);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_DAILYCHOICE, false);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_GRADE, stay.getGrade().name());
+
+        String isShowOriginalPrice = "N";
+
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_SHOW_ORIGINALPRICE, isShowOriginalPrice);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_USED_MULTITRANSITIOIN, isUsedMultiTransition);
+
+        return intent;
+    }
+
+    /**
      * 홈에서 호출
      *
      * @param context
