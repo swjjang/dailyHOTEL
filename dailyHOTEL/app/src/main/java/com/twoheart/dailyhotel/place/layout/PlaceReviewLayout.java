@@ -8,7 +8,10 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
 import android.text.StaticLayout;
+import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -560,11 +563,17 @@ public class PlaceReviewLayout extends BaseLayout
                 placeReview.email = mContext.getString(R.string.label_customer);
             }
 
-            reviewViewHolder.emailTextView.setText(placeReview.email);
-
             try
             {
-                reviewViewHolder.dateTextView.setText(DailyCalendar.convertDateFormatString(placeReview.createdAt, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd"));
+                final String SEPARATOR = " | ";
+
+                SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(placeReview.email + SEPARATOR//
+                    + DailyCalendar.convertDateFormatString(placeReview.createdAt, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd"));
+
+                spannableStringBuilder.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.default_line_ce7e7e7)), //
+                    placeReview.email.length(), placeReview.email.length() + SEPARATOR.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+                reviewViewHolder.customerTextView.setText(spannableStringBuilder);
             } catch (Exception e)
             {
                 ExLog.d(e.toString());
@@ -651,13 +660,13 @@ public class PlaceReviewLayout extends BaseLayout
                 }
 
                 reviewViewHolder.replayLayout.setVisibility(View.GONE);
-                reviewViewHolder.replierLayout.setVisibility(View.GONE);
+                reviewViewHolder.replierTextView.setVisibility(View.GONE);
                 reviewViewHolder.replierUnderLineView.setVisibility(View.GONE);
             } else
             {
                 reviewViewHolder.underLineView.setVisibility(View.GONE);
                 reviewViewHolder.replayLayout.setVisibility(View.VISIBLE);
-                reviewViewHolder.replierLayout.setVisibility(View.VISIBLE);
+                reviewViewHolder.replierTextView.setVisibility(View.VISIBLE);
 
                 if (position == mTotalCount)
                 {
@@ -667,11 +676,17 @@ public class PlaceReviewLayout extends BaseLayout
                     reviewViewHolder.replierUnderLineView.setVisibility(View.VISIBLE);
                 }
 
-                reviewViewHolder.replierTextView.setText(reviewReply.replier);
-
                 try
                 {
-                    reviewViewHolder.replayDateTextView.setText(DailyCalendar.convertDateFormatString(reviewReply.repliedAt, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd"));
+                    final String SEPARATOR = " | ";
+
+                    SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(reviewReply.replier + SEPARATOR//
+                        + DailyCalendar.convertDateFormatString(reviewReply.repliedAt, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd"));
+
+                    spannableStringBuilder.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.default_line_ce7e7e7)), //
+                        reviewReply.replier.length(), reviewReply.replier.length() + SEPARATOR.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+                    reviewViewHolder.replierTextView.setText(spannableStringBuilder);
                 } catch (Exception e)
                 {
                     ExLog.d(e.toString());
@@ -817,37 +832,31 @@ public class PlaceReviewLayout extends BaseLayout
         private class ReviewViewHolder extends RecyclerView.ViewHolder
         {
             TextView ratingTextView;
-            TextView emailTextView;
-            TextView dateTextView;
+            TextView customerTextView;
             TextView reviewTextView;
             TextView moreReadTextView;
             View underLineView;
 
             View replayLayout;
-            View replierLayout;
             TextView reviewReplayTextView;
             TextView reviewReplayMoreReadTextView;
             TextView replierTextView;
-            TextView replayDateTextView;
             View replierUnderLineView;
 
             public ReviewViewHolder(View view)
             {
                 super(view);
 
-                emailTextView = (TextView) view.findViewById(R.id.emailTextView);
+                customerTextView = (TextView) view.findViewById(R.id.customerTextView);
                 ratingTextView = (TextView) view.findViewById(R.id.ratingTextView);
-                dateTextView = (TextView) view.findViewById(R.id.dateTextView);
                 reviewTextView = (TextView) view.findViewById(R.id.reviewTextView);
                 moreReadTextView = (TextView) view.findViewById(R.id.moreReadTextView);
                 underLineView = view.findViewById(R.id.underLineView);
 
                 replayLayout = view.findViewById(R.id.replayLayout);
-                replierLayout = view.findViewById(R.id.replierLayout);
                 reviewReplayTextView = (TextView) view.findViewById(R.id.reviewReplayTextView);
                 reviewReplayMoreReadTextView = (TextView) view.findViewById(R.id.reviewReplayMoreReadTextView);
                 replierTextView = (TextView) view.findViewById(R.id.replierTextView);
-                replayDateTextView = (TextView) view.findViewById(R.id.replayDateTextView);
                 replierUnderLineView = view.findViewById(R.id.replierUnderLineView);
             }
         }

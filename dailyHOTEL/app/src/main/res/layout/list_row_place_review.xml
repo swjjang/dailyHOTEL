@@ -52,26 +52,10 @@
             dailyFont:style="Bold"/>
 
         <com.daily.base.widget.DailyTextView
-            android:id="@+id/emailTextView"
+            android:id="@+id/customerTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="6dp"
-            android:textColor="@color/default_text_cc5c5c5"
-            android:textSize="11dp"
-            dailyFont:style="DemiLight"/>
-
-        <com.daily.base.widget.DailyTextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text=" | "
-            android:textColor="@color/default_line_ce7e7e7"
-            android:textSize="11dp"
-            dailyFont:style="DemiLight"/>
-
-        <com.daily.base.widget.DailyTextView
-            android:id="@+id/dateTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:textColor="@color/default_text_cc5c5c5"
             android:textSize="11dp"
             dailyFont:style="DemiLight"/>
@@ -118,39 +102,15 @@
             android:visibility="gone"/>
     </RelativeLayout>
 
-    <LinearLayout
-        android:id="@+id/replierLayout"
-        android:layout_width="match_parent"
+    <com.daily.base.widget.DailyTextView
+        android:id="@+id/replierTextView"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="22dp"
         android:layout_marginTop="9dp"
-        android:gravity="center_vertical"
-        android:orientation="horizontal">
-
-        <com.daily.base.widget.DailyTextView
-            android:id="@+id/replierTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/default_text_cc5c5c5"
-            android:textSize="11dp"
-            dailyFont:style="DemiLight"/>
-
-        <com.daily.base.widget.DailyTextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text=" | "
-            android:textColor="@color/default_line_ce7e7e7"
-            android:textSize="11dp"
-            dailyFont:style="DemiLight"/>
-
-        <com.daily.base.widget.DailyTextView
-            android:id="@+id/replayDateTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/default_text_cc5c5c5"
-            android:textSize="11dp"
-            dailyFont:style="DemiLight"/>
-    </LinearLayout>
+        android:textColor="@color/default_text_cc5c5c5"
+        android:textSize="11dp"
+        dailyFont:style="DemiLight"/>
 
     <View
         android:id="@+id/replierUnderLineView"
