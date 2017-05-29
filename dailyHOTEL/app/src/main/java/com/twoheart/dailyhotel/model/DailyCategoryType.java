@@ -28,7 +28,7 @@ public enum DailyCategoryType implements Parcelable
     // 신규 홈 카테고리 버튼 용 카테고리
     STAY_RESORT(R.string.label_home_category_resort, R.string.code_home_category_resort, R.drawable.ic_home_shortcut_04_resort),
     // 신규 홈 카테고리 버튼 용 카테고리 - 홈 화면 전용
-    STAY_NEARBY(R.string.label_home_category_stay_nearby, R.string.code_home_category_nearby, R.drawable.ic_home_shortcut_nearby),
+    STAY_NEARBY(R.string.label_home_category_stay_nearby, R.string.code_home_category_nearby, R.drawable.vector_home_shortcut_nearby),
     // 신규 홈 카테고리 빈 뷰 생성용 - 홈화면 전용
     NONE(0, 0, 0);
 
