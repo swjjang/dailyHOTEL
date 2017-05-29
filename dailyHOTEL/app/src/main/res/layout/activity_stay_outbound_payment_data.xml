@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:dailyFont="http://schemas.android.com/apk/res-auto">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <include
+            android:id="@+id/toolbar"
+            layout="@layout/toolbar_default_menu"/>
+
+        <ScrollView
+            android:id="@+id/scrollView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/toolbar"
+            android:background="@color/white"
+            android:fadingEdge="none">
+
+            <LinearLayout
+                android:id="@+id/scrollLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:orientation="vertical">
+
+                <!-- 1. 예약정보 확인 -->
+                <include
+                    layout="@layout/layout_booking_hotel_check_information"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="visible"/>
+
+                <!-- 2. 할인수단 선택 및 결제금액 -->
+                <include
+                    layout="@layout/layout_booking_discount_information"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+
+                <!-- 3. 결제 수단 -->
+                <include
+                    layout="@layout/layout_booking_hotel_select_payment"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+
+                <!-- 4. 취소 및 환불 규정 -->
+                <include
+                    layout="@layout/layout_booking_hotel_refund_policy"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+
+                <!-- 결제 버튼 -->
+                <RelativeLayout
+                    android:id="@+id/bottomLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="64dp"
+                    android:layout_alignParentBottom="true"
+                    android:background="@color/white">
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1px"
+                        android:background="@color/default_line_ce7e7e7"/>
+
+                    <com.daily.base.widget.DailyTextView
+                        android:id="@+id/doPaymentView"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_margin="10dp"
+                        android:background="@drawable/shape_fillrect_bb70038_r2"
+                        android:gravity="center"
+                        android:text="@string/act_booking_btn_pay"
+                        android:textColor="@color/white"
+                        android:textSize="17dp"
+                        dailyFont:style="Medium"/>
+                </RelativeLayout>
+            </LinearLayout>
+        </ScrollView>
+    </RelativeLayout>
+</layout>
