@@ -5,6 +5,7 @@ import android.animation.ValueAnimator;
 import android.content.Context;
 import android.location.Location;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.util.Pair;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -61,7 +62,7 @@ public class StayOutboundListView extends BaseView<StayOutboundListView.OnEventL
 
         void onViewTypeClick();
 
-        void onStayClick(View view, StayOutbound stayOutbound);
+        void onStayClick(android.support.v4.util.Pair[] pairs, StayOutbound stayOutbound);
 
         void onStayLongClick();
 
@@ -218,7 +219,18 @@ public class StayOutboundListView extends BaseView<StayOutboundListView.OnEventL
 
                     if (listItem.mType == listItem.TYPE_ENTRY)
                     {
-                        getEventListener().onStayClick(view, listItem.getItem());
+                        View simpleDraweeView = view.findViewById(R.id.imageView);
+                        View nameTextView = view.findViewById(R.id.nameTextView);
+                        View gradientTopView = view.findViewById(R.id.gradientTopView);
+                        View gradientBottomView = view.findViewById(R.id.gradientView);
+
+                        android.support.v4.util.Pair[] pairs = new Pair[4];
+                        pairs[0] = android.support.v4.util.Pair.create(simpleDraweeView, getString(R.string.transition_place_image));
+                        pairs[1] = android.support.v4.util.Pair.create(nameTextView, getString(R.string.transition_place_name));
+                        pairs[2] = android.support.v4.util.Pair.create(gradientTopView, getString(R.string.transition_gradient_top_view));
+                        pairs[3] = android.support.v4.util.Pair.create(gradientBottomView, getString(R.string.transition_gradient_bottom_view));
+
+                        getEventListener().onStayClick(pairs, listItem.getItem());
                     }
                 }
             }, new View.OnLongClickListener()

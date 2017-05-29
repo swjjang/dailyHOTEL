@@ -7,7 +7,14 @@ import android.annotation.TargetApi;
 import android.app.Dialog;
 import android.content.Context;
 import android.databinding.DataBindingUtil;
+import android.graphics.Color;
+import android.graphics.LinearGradient;
+import android.graphics.Shader;
 import android.graphics.Typeface;
+import android.graphics.drawable.PaintDrawable;
+import android.graphics.drawable.ShapeDrawable;
+import android.graphics.drawable.shapes.RectShape;
+import android.net.Uri;
 import android.support.annotation.IdRes;
 import android.support.v4.view.MotionEventCompat;
 import android.support.v4.view.ViewPager;
@@ -619,6 +626,77 @@ public class StayOutboundDetailView extends BaseView<StayOutboundDetailView.OnEv
         mImageViewPagerAdapter.setData(imageList);
         getViewDataBinding().imageLoopViewPager.setAdapter(mImageViewPagerAdapter);
         getViewDataBinding().viewpagerIndicator.setViewPager(getViewDataBinding().imageLoopViewPager);
+    }
+
+    @Override
+    public void setInitializedTransLayout(String name, String url, boolean callFromMap)
+    {
+        if (getViewDataBinding() == null || DailyTextUtils.isTextEmpty(name, url) == true)
+        {
+            return;
+        }
+
+        setInitializedImage(url);
+
+
+        getViewDataBinding().transImageView.setImageURI(Uri.parse(url));
+        getViewDataBinding().transNameTextView.setText(name);
+
+        if (callFromMap == true)
+        {
+            getViewDataBinding().transGradientView.setBackgroundResource(R.color.black_a28);
+        }
+
+        if (mImageViewPagerAdapter == null)
+        {
+            mImageViewPagerAdapter = new StayOutboundDetailImageViewPagerAdapter(getContext());
+        }
+
+        StayOutboundDetailImage detailImage = new StayOutboundDetailImage();
+        ImageMap imageMap = new ImageMap();
+        imageMap.smallUrl = url;
+        imageMap.mediumUrl = url;
+        imageMap.bigUrl = url;
+        detailImage.setImageMap(imageMap);
+
+        List<StayOutboundDetailImage> imageList = new ArrayList<>();
+        imageList.add(detailImage);
+
+        mImageViewPagerAdapter.setData(imageList);
+        getViewDataBinding().imageLoopViewPager.setAdapter(mImageViewPagerAdapter);
+        getViewDataBinding().viewpagerIndicator.setViewPager(getViewDataBinding().imageLoopViewPager);
+    }
+
+    @Override
+    public void setSharedElementTransitionEnabled(boolean enabled)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        if (enabled == true)
+        {
+            getViewDataBinding().transImageView.setVisibility(View.VISIBLE);
+            getViewDataBinding().transGradientView.setVisibility(View.VISIBLE);
+            getViewDataBinding().transGradientTopView.setVisibility(View.VISIBLE);
+            getViewDataBinding().transTitleLayout.setVisibility(View.VISIBLE);
+
+            getViewDataBinding().transImageView.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ScreenUtils.getDetailScreenImageLayoutHeight(getContext())));
+            getViewDataBinding().transImageView.setTransitionName(getString(R.string.transition_place_image));
+
+            getViewDataBinding().transGradientView.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ScreenUtils.getDetailScreenImageLayoutHeight(getContext())));
+            getViewDataBinding().transGradientView.setTransitionName(getString(R.string.transition_gradient_bottom_view));
+            getViewDataBinding().transGradientView.setBackground(makeShaderFactory());
+
+            getViewDataBinding().transGradientTopView.setTransitionName(getString(R.string.transition_gradient_top_view));
+        } else
+        {
+            getViewDataBinding().transImageView.setVisibility(View.GONE);
+            getViewDataBinding().transGradientView.setVisibility(View.GONE);
+            getViewDataBinding().transGradientTopView.setVisibility(View.GONE);
+            getViewDataBinding().transTitleLayout.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -1425,4 +1503,27 @@ public class StayOutboundDetailView extends BaseView<StayOutboundDetailView.OnEv
             return false;
         }
     };
+
+    private PaintDrawable makeShaderFactory()
+    {
+        // 그라디에이션 만들기.
+        final int colors[] = {Color.parseColor("#ED000000"), Color.parseColor("#E8000000"), Color.parseColor("#E2000000"), Color.parseColor("#66000000"), Color.parseColor("#00000000")};
+        final float positions[] = {0.0f, 0.01f, 0.02f, 0.17f, 0.60f};
+
+        PaintDrawable paintDrawable = new PaintDrawable();
+        paintDrawable.setShape(new RectShape());
+
+        ShapeDrawable.ShaderFactory sf = new ShapeDrawable.ShaderFactory()
+        {
+            @Override
+            public Shader resize(int width, int height)
+            {
+                return new LinearGradient(0, height, 0, 0, colors, positions, Shader.TileMode.CLAMP);
+            }
+        };
+
+        paintDrawable.setShaderFactory(sf);
+
+        return paintDrawable;
+    }
 }

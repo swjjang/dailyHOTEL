@@ -44,6 +44,7 @@ public class StayOutboundDetailActivity extends BaseActivity<StayOutboundDetailP
     static final String INTENT_EXTRA_DATA_NUMBER_OF_ADULTS = "numberOfAdults";
     static final String INTENT_EXTRA_DATA_CHILD_LIST = "childList";
     static final String INTENT_EXTRA_DATA_MULTITRANSITION = "multiTransition";
+    static final String INTENT_EXTRA_DATA_CALL_FROM_MAP = "callFromMap";
 
     /**
      * @param stayIndex
@@ -56,7 +57,7 @@ public class StayOutboundDetailActivity extends BaseActivity<StayOutboundDetailP
      */
     public static Intent newInstance(Context context, int stayIndex, String stayName, String imageUrl//
         , String checkInDateTime, String checkOutDateTime//
-        , int numberOfAdults, ArrayList<Integer> childList, boolean mIsUsedMultiTransition)
+        , int numberOfAdults, ArrayList<Integer> childList, boolean mIsUsedMultiTransition, boolean mCallFromMap)
     {
         Intent intent = new Intent(context, StayOutboundDetailActivity.class);
         intent.putExtra(INTENT_EXTRA_DATA_STAY_INDEX, stayIndex);
@@ -67,6 +68,7 @@ public class StayOutboundDetailActivity extends BaseActivity<StayOutboundDetailP
         intent.putExtra(INTENT_EXTRA_DATA_NUMBER_OF_ADULTS, numberOfAdults);
         intent.putExtra(INTENT_EXTRA_DATA_CHILD_LIST, childList);
         intent.putExtra(INTENT_EXTRA_DATA_MULTITRANSITION, mIsUsedMultiTransition);
+        intent.putExtra(INTENT_EXTRA_DATA_CALL_FROM_MAP, mCallFromMap);
         return intent;
     }
 

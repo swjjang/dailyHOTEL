@@ -7,6 +7,8 @@ import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.app.SharedElementCallback;
 import android.view.View;
 
 import com.daily.base.BaseActivity;
@@ -34,6 +36,7 @@ import com.daily.dailyhotel.screen.stay.outbound.detail.StayOutboundDetailActivi
 import com.daily.dailyhotel.screen.stay.outbound.filter.StayOutboundFilterActivity;
 import com.daily.dailyhotel.screen.stay.outbound.people.SelectPeopleActivity;
 import com.daily.dailyhotel.util.DailyLocationExFactory;
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.screen.common.PermissionManagerActivity;
 import com.twoheart.dailyhotel.util.DailyCalendar;
@@ -556,36 +559,70 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
     }
 
     @Override
-    public void onStayClick(View view, StayOutbound stayOutbound)
+    public void onStayClick(android.support.v4.util.Pair[] pair, StayOutbound stayOutbound)
     {
-        if (lock() == true || stayOutbound == null)
+        if (stayOutbound == null || lock() == true)
         {
             return;
         }
 
-        String imageUrl = null;
+        String imageUrl;
         if (ScreenUtils.getScreenWidth(getActivity()) >= ScreenUtils.DEFAULT_STAYOUTBOUND_XXHDPI_WIDTH)
         {
+            if (DailyTextUtils.isTextEmpty(stayOutbound.getImageMap().bigUrl) == false)
+            {
+                imageUrl = stayOutbound.getImageMap().bigUrl;
+            } else
+            {
+                imageUrl = stayOutbound.getImageMap().smallUrl;
+            }
         } else
         {
+            if (DailyTextUtils.isTextEmpty(stayOutbound.getImageMap().mediumUrl) == false)
+            {
+                imageUrl = stayOutbound.getImageMap().mediumUrl;
+            } else
+            {
+                imageUrl = stayOutbound.getImageMap().smallUrl;
+            }
         }
 
-        if (Util.isUsedMultiTransition() == true)
+        if (Util.isUsedMultiTransition() == true && pair != null)
         {
+            getActivity().setExitSharedElementCallback(new SharedElementCallback()
+            {
+                @Override
+                public void onSharedElementEnd(List<String> sharedElementNames, List<View> sharedElements, List<View> sharedElementSnapshots)
+                {
+                    super.onSharedElementEnd(sharedElementNames, sharedElements, sharedElementSnapshots);
 
+                    for (View view : sharedElements)
+                    {
+                        if (view instanceof SimpleDraweeView)
+                        {
+                            view.setVisibility(View.VISIBLE);
+                            break;
+                        }
+                    }
+                }
+            });
+
+            ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(), pair);
 
             startActivityForResult(StayOutboundDetailActivity.newInstance(getActivity(), stayOutbound.index//
                 , stayOutbound.name, imageUrl//
                 , mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
                 , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
-                , mPeople.numberOfAdults, mPeople.getChildAgeList(), false), StayOutboundListActivity.REQUEST_CODE_DETAIL);
+                , mPeople.numberOfAdults, mPeople.getChildAgeList(), true, mViewState == ViewState.MAP)//
+                , StayOutboundListActivity.REQUEST_CODE_DETAIL, options.toBundle());
         } else
         {
             startActivityForResult(StayOutboundDetailActivity.newInstance(getActivity(), stayOutbound.index//
                 , stayOutbound.name, imageUrl//
                 , mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
                 , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
-                , mPeople.numberOfAdults, mPeople.getChildAgeList(), false), StayOutboundListActivity.REQUEST_CODE_DETAIL);
+                , mPeople.numberOfAdults, mPeople.getChildAgeList(), false, mViewState == ViewState.MAP)//
+                , StayOutboundListActivity.REQUEST_CODE_DETAIL);
         }
     }
 

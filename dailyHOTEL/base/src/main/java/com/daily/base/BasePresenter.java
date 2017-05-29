@@ -1,9 +1,12 @@
 package com.daily.base;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 
 import com.daily.base.util.DailyLock;
 
@@ -140,6 +143,12 @@ public abstract class BasePresenter<T1 extends BaseActivity, T2 extends BaseView
     protected void startActivityForResult(Intent intent, int requestCode)
     {
         mActivity.startActivityForResult(intent, requestCode);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
+    protected void startActivityForResult(Intent intent, int requestCode, Bundle options)
+    {
+        mActivity.startActivityForResult(intent, requestCode, options);
     }
 
     protected void setResult(int resultCode)

@@ -83,7 +83,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
     private int mStatus = STATUS_NONE;
     private PriceType mPriceType = PriceType.AVERAGE;
 
-    private boolean mIsUsedMultiTransition;
+    private boolean mIsUsedMultiTransition, mCallFromMap;
     private boolean mIsDeepLink;
     private boolean mCheckChangedPrice;
 
@@ -148,6 +148,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
         } else
         {
             mIsUsedMultiTransition = intent.getBooleanExtra(StayOutboundDetailActivity.INTENT_EXTRA_DATA_MULTITRANSITION, false);
+            mCallFromMap = intent.getBooleanExtra(StayOutboundDetailActivity.INTENT_EXTRA_DATA_CALL_FROM_MAP, false);
             mIsDeepLink = false;
 
             mStayIndex = intent.getIntExtra(StayOutboundDetailActivity.INTENT_EXTRA_DATA_STAY_INDEX, -1);
@@ -177,19 +178,20 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
     {
         if (mIsDeepLink == false && mIsUsedMultiTransition == true)
         {
-            //            initTransLayout(placeName, imageUrl, grade, isFromMap);
+            getViewInterface().setSharedElementTransitionEnabled(true);
+            getViewInterface().setInitializedTransLayout(mStayName, mImageUrl, mCallFromMap);
         } else
         {
+            getViewInterface().setSharedElementTransitionEnabled(false);
             getViewInterface().setInitializedImage(mImageUrl);
         }
 
-        //        setLockUICancelable(true);
         getViewInterface().setToolbarTitle(mStayName);
-
-        //        mOnEventListener.hideActionBar(false);
 
         if (mIsUsedMultiTransition == true)
         {
+            screenLock(false);
+
             addCompositeDisposable(Observable.zip(getViewInterface().getSharedElementTransition()//
                 , mCommonRemoteImpl.getCommonDateTime(), mStayOutboundRemoteImpl.getStayOutBoundDetail(mStayIndex, mStayBookDateTime, mPeople)//
                 , new Function3<Boolean, CommonDateTime, StayOutboundDetail, StayOutboundDetail>()
@@ -217,35 +219,6 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
                     onHandleError(throwable);
                 }
             }));
-
-            //            addCompositeDisposable(Observable.zip(getViewInterface().getSharedElementTransition(), mStayOutboundRemoteImpl.getStayOutBoundDetail(mStayIndex, mStayBookDateTime, mPeople), new BiFunction<Boolean, StayOutboundDetail, StayOutboundDetail>()
-            //            {
-            //                @Override
-            //                public StayOutboundDetail apply(Boolean aBoolean, StayOutboundDetail stayOutboundDetail) throws Exception
-            //                {
-            //                    return stayOutboundDetail;
-            //                }
-            //            }).subscribe(new Consumer<StayOutboundDetail>()
-            //            {
-            //                @Override
-            //                public void accept(StayOutboundDetail stayOutboundDetail) throws Exception
-            //                {
-            //                    if (stayOutboundDetail == null)
-            //                    {
-            //                        return;
-            //                    }
-            //
-            //                    onStayOutboundDetail(stayOutboundDetail);
-            //                }
-            //            }, new Consumer<Throwable>()
-            //            {
-            //                @Override
-            //                public void accept(Throwable throwable) throws Exception
-            //                {
-            //
-            //                    onHandleError(throwable);
-            //                }
-            //            }));
         } else
         {
             onRefresh(true);
