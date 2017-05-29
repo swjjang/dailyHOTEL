@@ -3,7 +3,6 @@ package com.twoheart.dailyhotel.place.networkcontroller;
 import android.content.Context;
 
 import com.twoheart.dailyhotel.model.Area;
-import com.twoheart.dailyhotel.model.EventBanner;
 import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.network.dto.BaseDto;
@@ -22,12 +21,8 @@ public abstract class PlaceMainNetworkController extends BaseNetworkController
     {
         void onDateTime(TodayDateTime todayDateTime);
 
-        void onEventBanner(List<EventBanner> eventBannerList);
-
         void onRegionList(List<Province> provinceList, List<Area> areaList);
     }
-
-    public abstract void requestEventBanner();
 
     public abstract void requestRegionList();
 

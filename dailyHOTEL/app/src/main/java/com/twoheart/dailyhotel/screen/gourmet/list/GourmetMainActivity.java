@@ -637,21 +637,13 @@ public class GourmetMainActivity extends PlaceMainActivity
                 {
                     ((GourmetMainLayout) mPlaceMainLayout).setToolbarDateText(mGourmetCuration.getGourmetBookingDay());
 
-                    mPlaceMainNetworkController.requestEventBanner();
+                    mPlaceMainNetworkController.requestRegionList();
                 }
             } catch (Exception e)
             {
                 onError(e);
                 unLockUI();
             }
-        }
-
-        @Override
-        public void onEventBanner(List<EventBanner> eventBannerList)
-        {
-            GourmetEventBannerManager.getInstance().setList(eventBannerList);
-
-            mPlaceMainNetworkController.requestRegionList();
         }
 
         @Override

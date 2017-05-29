@@ -329,15 +329,6 @@ public interface IDailyNetwork
     void requestEventPageUrl(String tag, int eventIndex, String store, Object listener);
 
     /**
-     * 호텔 이벤트 배너 리스트를 얻어온다
-     *
-     * @param tag
-     * @param place
-     * @param listener
-     */
-    void requestEventBannerList(String tag, String place, Object listener);
-
-    /**
      * @param tag
      * @param phone
      * @param listener

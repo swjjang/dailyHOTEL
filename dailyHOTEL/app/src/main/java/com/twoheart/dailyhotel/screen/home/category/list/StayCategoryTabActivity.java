@@ -844,12 +844,6 @@ public class StayCategoryTabActivity extends PlaceMainActivity
         }
 
         @Override
-        public void onEventBanner(List<EventBanner> eventBannerList)
-        {
-
-        }
-
-        @Override
         public void onRegionList(List<Province> provinceList, List<Area> areaList)
         {
             if (isFinishing() == true || provinceList == null || areaList == null)
