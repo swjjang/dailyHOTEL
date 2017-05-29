@@ -565,7 +565,7 @@ public class PlaceReviewLayout extends BaseLayout
 
             try
             {
-                final String SEPARATOR = " | ";
+                final String SEPARATOR = " ㅣ ";
 
                 SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(placeReview.email + SEPARATOR//
                     + DailyCalendar.convertDateFormatString(placeReview.createdAt, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd"));
@@ -678,7 +678,7 @@ public class PlaceReviewLayout extends BaseLayout
 
                 try
                 {
-                    final String SEPARATOR = " | ";
+                    final String SEPARATOR = " ㅣ ";
 
                     SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(reviewReply.replier + SEPARATOR//
                         + DailyCalendar.convertDateFormatString(reviewReply.repliedAt, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd"));
