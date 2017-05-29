@@ -189,7 +189,7 @@ public class HomeCarouselAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             }
         });
 
-        if (Util.supportPeekNPop(mContext) == true)
+        if (Util.supportPreview(mContext) == true)
         {
             holder.itemView.setOnLongClickListener(new View.OnLongClickListener()
             {

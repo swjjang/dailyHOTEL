@@ -314,7 +314,7 @@ public class RecentStayListAdapter extends RecentPlacesListAdapter
                 }
             });
 
-            if (Util.supportPeekNPop(mContext) == true)
+            if (Util.supportPreview(mContext) == true)
             {
                 itemView.setOnLongClickListener(new View.OnLongClickListener()
                 {

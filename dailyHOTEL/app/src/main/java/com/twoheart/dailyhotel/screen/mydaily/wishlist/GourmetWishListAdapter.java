@@ -346,7 +346,7 @@ public class GourmetWishListAdapter extends PlaceWishListAdapter
                 }
             });
 
-            if (Util.supportPeekNPop(mContext) == true)
+            if (Util.supportPreview(mContext) == true)
             {
                 itemView.setOnLongClickListener(new View.OnLongClickListener()
                 {
