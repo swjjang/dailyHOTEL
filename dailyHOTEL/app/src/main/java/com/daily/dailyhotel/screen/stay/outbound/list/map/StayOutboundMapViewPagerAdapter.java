@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.daily.base.util.DailyTextUtils;
-import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
 import com.daily.dailyhotel.entity.ImageMap;
 import com.daily.dailyhotel.entity.StayOutbound;
@@ -20,10 +19,8 @@ import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.imagepipeline.image.ImageInfo;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ViewpagerColumnStayDataBinding;
-import com.twoheart.dailyhotel.model.Stay;
-import com.twoheart.dailyhotel.util.Util;
 
-import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -96,10 +93,22 @@ public class StayOutboundMapViewPagerAdapter extends PagerAdapter
 
         if (ScreenUtils.getScreenWidth(mContext) >= ScreenUtils.DEFAULT_STAYOUTBOUND_XXHDPI_WIDTH)
         {
-            url = imageMap.bigUrl;
+            if (DailyTextUtils.isTextEmpty(imageMap.bigUrl) == true)
+            {
+                url = imageMap.smallUrl;
+            } else
+            {
+                url = imageMap.bigUrl;
+            }
         } else
         {
-            url = imageMap.mediumUrl;
+            if (DailyTextUtils.isTextEmpty(imageMap.mediumUrl) == true)
+            {
+                url = imageMap.smallUrl;
+            } else
+            {
+                url = imageMap.mediumUrl;
+            }
         }
 
         ControllerListener controllerListener = new BaseControllerListener<ImageInfo>()
@@ -107,16 +116,18 @@ public class StayOutboundMapViewPagerAdapter extends PagerAdapter
             @Override
             public void onFailure(String id, Throwable throwable)
             {
-                ExLog.d("pinkred : " + id + ", " + throwable.toString());
-
-                if (throwable instanceof FileNotFoundException == true)
+                if (throwable instanceof IOException == true)
                 {
-                    if (ScreenUtils.getScreenWidth(mContext) >= ScreenUtils.DEFAULT_STAYOUTBOUND_XXHDPI_WIDTH)
+                    if (imageMap.bigUrl.equalsIgnoreCase(url) == true)
                     {
                         imageMap.bigUrl = null;
-                    } else
+                    } else if (imageMap.mediumUrl.equalsIgnoreCase(url) == true)
                     {
                         imageMap.mediumUrl = null;
+                    } else
+                    {
+                        // 작은 이미지를 로딩했지만 실패하는 경우.
+                        return;
                     }
 
                     dataBinding.simpleDraweeView.setImageURI(imageMap.smallUrl);
@@ -150,7 +161,7 @@ public class StayOutboundMapViewPagerAdapter extends PagerAdapter
             {
                 if (mOnPlaceMapViewPagerAdapterListener != null)
                 {
-                    mOnPlaceMapViewPagerAdapterListener.onStayClick(v, stayOutbound);
+                    mOnPlaceMapViewPagerAdapterListener.onStayClick(dataBinding.getRoot(), stayOutbound);
                 }
             }
         });

@@ -859,6 +859,17 @@ public class StayOutboundDetailView extends BaseView<StayOutboundDetailView.OnEv
         showSimpleDialog(dataBinding.getRoot(), null, listener, true);
     }
 
+    @Override
+    public void scrollTop()
+    {
+        if(getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        getViewDataBinding().nestedScrollView.fullScroll(View.FOCUS_UP);
+    }
+
     private void initToolbar(ActivityStayOutboundDetailDataBinding viewDataBinding)
     {
         mDailyToolbarLayout = new DailyToolbarLayout(getContext(), viewDataBinding.toolbar.findViewById(R.id.toolbar));

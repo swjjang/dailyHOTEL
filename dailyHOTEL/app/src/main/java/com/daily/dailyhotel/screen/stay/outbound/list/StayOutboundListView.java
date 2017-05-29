@@ -308,13 +308,24 @@ public class StayOutboundListView extends BaseView<StayOutboundListView.OnEventL
                 @Override
                 public void onStayClick(View view, StayOutbound stayOutbound)
                 {
+                    View simpleDraweeView = view.findViewById(R.id.simpleDraweeView);
+                    View nameTextView = view.findViewById(R.id.nameTextView);
+                    View gradientTopView = view.findViewById(R.id.gradientTopView);
+                    View gradientBottomView = view.findViewById(R.id.gradientView);
 
+                    android.support.v4.util.Pair[] pairs = new Pair[4];
+                    pairs[0] = android.support.v4.util.Pair.create(simpleDraweeView, getString(R.string.transition_place_image));
+                    pairs[1] = android.support.v4.util.Pair.create(nameTextView, getString(R.string.transition_place_name));
+                    pairs[2] = android.support.v4.util.Pair.create(gradientTopView, getString(R.string.transition_gradient_top_view));
+                    pairs[3] = android.support.v4.util.Pair.create(gradientBottomView, getString(R.string.transition_gradient_bottom_view));
+
+                    getEventListener().onStayClick(pairs, stayOutbound);
                 }
 
                 @Override
                 public void onCloseClick()
                 {
-
+                    onMapClick();
                 }
             });
         }

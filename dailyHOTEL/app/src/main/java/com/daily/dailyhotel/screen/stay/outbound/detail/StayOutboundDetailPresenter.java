@@ -41,11 +41,15 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
+import io.reactivex.Single;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function3;
+import io.reactivex.internal.schedulers.ComputationScheduler;
 
 /**
  * Created by sheldon
@@ -60,6 +64,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
     public static final int STATUS_ROOM_LIST = 1;
     public static final int STATUS_BOOKING = 2;
     public static final int STATUS_SOLD_OUT = 3;
+    public static final int STATUS_FINISH = 4;
 
     public enum PriceType
     {
@@ -275,6 +280,28 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
             case STATUS_BOOKING:
                 onHideRoomListClick(true);
                 return true;
+
+            case STATUS_FINISH:
+                break;
+
+            default:
+                setStatus(STATUS_FINISH);
+
+                if (mIsUsedMultiTransition == true)
+                {
+                    getViewInterface().scrollTop();
+
+                    Single.just(mIsUsedMultiTransition).delaySubscription(100, TimeUnit.MILLISECONDS, AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
+                    {
+                        @Override
+                        public void accept(@io.reactivex.annotations.NonNull Boolean aBoolean) throws Exception
+                        {
+                            getActivity().onBackPressed();
+                        }
+                    });
+
+                    return true;
+                }
         }
 
         return super.onBackPressed();
