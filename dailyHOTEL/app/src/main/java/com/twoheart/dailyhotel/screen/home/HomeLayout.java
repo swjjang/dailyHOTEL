@@ -90,6 +90,7 @@ public class HomeLayout extends BaseBlurLayout
     HomeCarouselLayout mRecentListLayout;
     HomeCarouselLayout mWishListLayout;
     HomeRecommendationLayout mHomeRecommendationLayout;
+    View mToolbarUnderLine;
 
     ObjectAnimator mErrorPopupAnimator;
 
@@ -185,6 +186,9 @@ public class HomeLayout extends BaseBlurLayout
 
         View searchView = view.findViewById(R.id.searchImageView);
         searchView.setOnClickListener(v -> ((OnEventListener) mOnEventListener).onSearchImageClick());
+
+        mToolbarUnderLine = view.findViewById(R.id.toolbarUnderline);
+        mToolbarUnderLine.setVisibility(View.GONE);
     }
 
     // 홈의 상단 고정 버튼 레이아웃
@@ -1237,59 +1241,102 @@ public class HomeLayout extends BaseBlurLayout
                 return;
             }
 
-            int startScrollY = mEventImageHeight / 100 * 85;
-            int endScrollY = mEventImageHeight / 100 * 98;
+            int buttonMargin = ScreenUtils.dpToPx(mContext, 10d);
 
-            int minValue = ScreenUtils.dpToPx(mContext, 5d);
-            int maxValue = ScreenUtils.dpToPx(mContext, 15d);
+            int startScrollY = mEventImageHeight;
+            int endScrollY = mEventImageHeight + buttonMargin;
+
+            int minHorizontalValue = ScreenUtils.dpToPx(mContext, 5d);
+            int maxHorizontalValue = ScreenUtils.dpToPx(mContext, 15d);
             int buttonLayoutAlpha = 255;
 
-            int maxLayoutTopBottomMargin = ScreenUtils.dpToPx(mContext, 15d);
-            int minLayoutTopBottomMargin = 0;
+            int minVerticalValue = 0;
+            int maxVerticalValue = minHorizontalValue;
+
+            int minGourmetImageValue = ScreenUtils.dpToPx(mContext, 7d);
+            int maxGourmetImageValue = ScreenUtils.dpToPx(mContext, 12d);
 
             View stayButtonLayout = mScrollButtonLayout.findViewById(R.id.stayButtonLayout);
             View gourmetButtonLayout = mScrollButtonLayout.findViewById(R.id.gourmetButtonLayout);
-            View productButtonLayout = mScrollButtonLayout.findViewById(R.id.productButtonLayout);
+            View gourmetButtonImageView = mScrollButtonLayout.findViewById(R.id.gourmetButtonImageView);
 
-            ViewGroup.MarginLayoutParams layoutParams = (ViewGroup.MarginLayoutParams) stayButtonLayout.getLayoutParams();
-
-            ViewGroup.MarginLayoutParams productButtonLayoutParams = (ViewGroup.MarginLayoutParams) productButtonLayout.getLayoutParams();
+            ViewGroup.MarginLayoutParams stayLayoutParams = (ViewGroup.MarginLayoutParams) stayButtonLayout.getLayoutParams();
+            ViewGroup.MarginLayoutParams gourmetLayoutParams = (ViewGroup.MarginLayoutParams) gourmetButtonLayout.getLayoutParams();
+            ViewGroup.MarginLayoutParams gourmetImageLayoutParams = (ViewGroup.MarginLayoutParams) gourmetButtonImageView.getLayoutParams();
 
             if (scrollY <= startScrollY)
             {
-                layoutParams.leftMargin = maxValue;
-                layoutParams.rightMargin = minValue;
+                stayLayoutParams.leftMargin = maxHorizontalValue;
+                stayLayoutParams.rightMargin = maxVerticalValue;
+                stayLayoutParams.topMargin = maxVerticalValue;
+                stayLayoutParams.bottomMargin = maxVerticalValue;
+
+                gourmetLayoutParams.leftMargin = maxVerticalValue;
+                gourmetLayoutParams.rightMargin = maxHorizontalValue;
+                gourmetLayoutParams.topMargin = maxVerticalValue;
+                gourmetLayoutParams.bottomMargin = maxVerticalValue;
+
+                gourmetImageLayoutParams.leftMargin = minGourmetImageValue;
+
                 buttonLayoutAlpha = 255;
 
-                productButtonLayoutParams.topMargin = maxLayoutTopBottomMargin;
             } else if (endScrollY < scrollY)
             {
-                layoutParams.leftMargin = minValue;
-                layoutParams.rightMargin = maxValue;
+                stayLayoutParams.leftMargin = minHorizontalValue;
+                stayLayoutParams.rightMargin = minVerticalValue;
+                stayLayoutParams.topMargin = minVerticalValue;
+                stayLayoutParams.bottomMargin = minVerticalValue;
+
+                gourmetLayoutParams.leftMargin = minVerticalValue;
+                gourmetLayoutParams.rightMargin = minHorizontalValue;
+                gourmetLayoutParams.topMargin = minVerticalValue;
+                gourmetLayoutParams.bottomMargin = minVerticalValue;
+
+                gourmetImageLayoutParams.leftMargin = maxGourmetImageValue;
+
                 buttonLayoutAlpha = 0;
 
-                productButtonLayoutParams.topMargin = minLayoutTopBottomMargin;
             } else
             {
                 double ratio = ((double) (scrollY - startScrollY) / (double) (endScrollY - startScrollY));
-                int gap = (int) ((maxValue - minValue) * ratio);
+                int horizontalGap = (int) ((maxHorizontalValue - minHorizontalValue) * ratio);
+                int verticalGap = (int) ((maxVerticalValue - minVerticalValue) * ratio);
+                int gourmetImageGap = (int) ((maxGourmetImageValue - minGourmetImageValue) * ratio);
 
-                layoutParams.leftMargin = maxValue - gap;
-                layoutParams.rightMargin = minValue + gap;
+                stayLayoutParams.leftMargin = maxHorizontalValue - horizontalGap;
+                stayLayoutParams.rightMargin = maxVerticalValue - verticalGap;
+                stayLayoutParams.topMargin = maxVerticalValue - verticalGap;
+                stayLayoutParams.bottomMargin = maxVerticalValue - verticalGap;
+
+                gourmetLayoutParams.leftMargin = maxVerticalValue - verticalGap;
+                gourmetLayoutParams.rightMargin = maxHorizontalValue - horizontalGap;
+                gourmetLayoutParams.topMargin = maxVerticalValue - verticalGap;
+                gourmetLayoutParams.bottomMargin = maxVerticalValue - verticalGap;
+
+                gourmetImageLayoutParams.leftMargin = minGourmetImageValue + gourmetImageGap;
 
                 buttonLayoutAlpha = 255 - (int) (255 * ratio);
 
-                productButtonLayoutParams.topMargin = maxLayoutTopBottomMargin - (int) ((maxLayoutTopBottomMargin - minLayoutTopBottomMargin) * ratio);
             }
 
-            stayButtonLayout.setLayoutParams(layoutParams);
+            stayButtonLayout.setLayoutParams(stayLayoutParams);
             stayButtonLayout.getBackground().setAlpha(buttonLayoutAlpha);
+
+            gourmetButtonLayout.setLayoutParams(gourmetLayoutParams);
             gourmetButtonLayout.getBackground().setAlpha(buttonLayoutAlpha);
 
-            productButtonLayout.setLayoutParams(productButtonLayoutParams);
+            gourmetButtonImageView.setLayoutParams(gourmetImageLayoutParams);
+
+            if (scrollY >= mEventImageHeight)
+            {
+                mToolbarUnderLine.setVisibility(View.VISIBLE);
+            } else
+            {
+                mToolbarUnderLine.setVisibility(View.GONE);
+            }
 
             // globalVisibleRect 로 동작시 android os 4.X 에서 화면을 벗어날때 rect.top 이 증가하는 이슈로 상단 뷰 크기를 고정으로 알아와서 적용!
-            if (scrollY >= mEventImageHeight)
+            if (scrollY >= mEventImageHeight + buttonMargin)
             {
                 // show
                 setActionButtonVisibility(View.VISIBLE);

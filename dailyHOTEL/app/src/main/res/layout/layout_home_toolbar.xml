@@ -40,4 +40,11 @@
         android:singleLine="true"
         android:textColor="@color/actionbar_title"
         android:textSize="18dp"/>
+
+    <View
+        android:id="@+id/toolbarUnderline"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/default_line_ce7e7e7"/>
 </RelativeLayout>

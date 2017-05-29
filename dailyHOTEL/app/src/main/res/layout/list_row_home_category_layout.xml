@@ -36,7 +36,7 @@
             android:text="@string/label_home_category_nearby_stay_text"
             android:textColor="@color/default_text_c323232"
             android:textSize="11dp"
-            app:drawableCompatLeft="@drawable/ic_home_shortcut_nearby"/>
+            app:drawableCompatLeft="@drawable/vector_home_shortcut_nearby"/>
 
         <View
             android:id="@+id/homeCategoryTitleBottomLine"

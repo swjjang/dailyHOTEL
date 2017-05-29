@@ -8,10 +8,10 @@
         android:layout_width="match_parent"
         android:layout_height="76dp">
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/default_line_ce7e7e7"/>
+        <!--<View-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="1dp"-->
+            <!--android:background="@color/default_line_ce7e7e7"/>-->
 
         <View
             android:id="@+id/verticalLine"
