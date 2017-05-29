@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
+import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.kakao.kakaolink.AppActionBuilder;
 import com.kakao.kakaolink.AppActionInfoBuilder;
 import com.kakao.kakaolink.KakaoLink;
@@ -87,6 +88,45 @@ public class KakaoLinkManager implements Constants
             ExLog.e(e.toString());
         }
     }
+
+    public void shareStayOutbound(String name, String hotelName, String address, int hotelIndex, String imageUrl, StayBookDateTime stayBookDateTime)
+    {
+        if(DailyTextUtils.isTextEmpty(name, hotelName, address) == true || stayBookDateTime == null)
+        {
+            return;
+        }
+
+        try
+        {
+            KakaoTalkLinkMessageBuilder messageBuilder = mKakaoLink.createKakaoTalkLinkMessageBuilder();
+
+            String checkInDay = stayBookDateTime.getCheckInDateTime("yyyyMMdd");
+            int nights = stayBookDateTime.getNights();
+            String schemeParams = String.format(Locale.KOREA, "vc=5&v=hd&i=%d&d=%s&n=%d", hotelIndex, checkInDay, nights);
+
+            messageBuilder.addAppButton(mContext.getString(R.string.kakao_btn_go_hotel), //
+                new AppActionBuilder().addActionInfo(AppActionInfoBuilder.createAndroidActionInfoBuilder().setExecuteParam(schemeParams).build())//
+                    .addActionInfo(AppActionInfoBuilder.createiOSActionInfoBuilder().setExecuteParam(schemeParams).build()).build());
+
+            String text = mContext.getString(R.string.kakao_btn_share_hotel, name, hotelName//
+                , stayBookDateTime.getCheckInDateTime("yyyy.MM.dd(EEE)"), stayBookDateTime.getCheckOutDateTime("yyyy.MM.dd(EEE)"), nights, nights + 1, address);
+
+            if (DailyTextUtils.isTextEmpty(imageUrl) == false)
+            {
+                int lastSlash = imageUrl.lastIndexOf('/');
+                String fileName = imageUrl.substring(lastSlash + 1);
+                messageBuilder.addImage(imageUrl.substring(0, lastSlash + 1) + URLEncoder.encode(fileName), 300, 200);
+            }
+
+            messageBuilder.addText(text);
+
+            mKakaoLink.sendMessage(messageBuilder, mContext);
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+        }
+    }
+
 
     public void shareBookingStay(String message, int stayIndex, String imageUrl, String checkInDate, int nights)
     {

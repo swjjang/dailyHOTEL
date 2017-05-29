@@ -16,9 +16,11 @@ import com.daily.base.BaseActivity;
 import com.daily.base.BaseAnalyticsInterface;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
+import com.daily.base.util.ScreenUtils;
 import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
 import com.daily.dailyhotel.entity.CommonDateTime;
+import com.daily.dailyhotel.entity.ImageMap;
 import com.daily.dailyhotel.entity.People;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayOutboundDetail;
@@ -34,6 +36,8 @@ import com.twoheart.dailyhotel.screen.common.HappyTalkCategoryDialog;
 import com.twoheart.dailyhotel.screen.common.ZoomMapActivity;
 import com.twoheart.dailyhotel.screen.information.FAQActivity;
 import com.twoheart.dailyhotel.util.DailyCalendar;
+import com.twoheart.dailyhotel.util.DailyUserPreference;
+import com.twoheart.dailyhotel.util.KakaoLinkManager;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
@@ -415,34 +419,16 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
                         {
                             onRefresh(true);
                         }
-                    }, new DialogInterface.OnDismissListener()
+                    }, new DialogInterface.OnCancelListener()
                     {
                         @Override
-                        public void onDismiss(DialogInterface dialog)
+                        public void onCancel(DialogInterface dialog)
                         {
+                            onBackClick();
                         }
                     });
             }
         }));
-
-        //            addCompositeDisposable(mStayOutboundRemoteImpl.getStayOutBoundDetail(mStayIndex, mStayBookDateTime, mPeople).subscribe(new Consumer<StayOutboundDetail>()
-        //            {
-        //                @Override
-        //                public void accept(StayOutboundDetail stayOutboundDetail) throws Exception
-        //                {
-        //                    onStayOutboundDetail(stayOutboundDetail);
-        //
-        //                    unLockAll();
-        //                }
-        //            }, new Consumer<Throwable>()
-        //            {
-        //                @Override
-        //                public void accept(Throwable throwable) throws Exception
-        //                {
-        //
-        //
-        //                }
-        //            }));
     }
 
     @Override
@@ -454,7 +440,123 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
     @Override
     public void onShareClick()
     {
+        if (lock() == true)
+        {
+            return;
+        }
 
+        getViewInterface().showShareDialog(new DialogInterface.OnDismissListener()
+        {
+            @Override
+            public void onDismiss(DialogInterface dialog)
+            {
+                unLockAll();
+            }
+        });
+    }
+
+    @Override
+    public void onShareKakaoClick()
+    {
+        if (mStayOutboundDetail == null || mStayBookDateTime == null)
+        {
+            return;
+        }
+
+        try
+        {
+            // 카카오톡 패키지 설치 여부
+            getActivity().getPackageManager().getPackageInfo("com.kakao.talk", PackageManager.GET_META_DATA);
+
+            String name = DailyUserPreference.getInstance(getActivity()).getName();
+
+            if (DailyTextUtils.isTextEmpty(name) == true)
+            {
+                name = getString(R.string.label_friend) + "가";
+            } else
+            {
+                name += "님이";
+            }
+
+            String imageUrl;
+
+            ImageMap imageMap = mStayOutboundDetail.getImageList().get(0).getImageMap();
+
+            if (ScreenUtils.getScreenWidth(getActivity()) >= ScreenUtils.DEFAULT_STAYOUTBOUND_XXHDPI_WIDTH)
+            {
+                if (DailyTextUtils.isTextEmpty(imageMap.bigUrl) == true)
+                {
+                    imageUrl = imageMap.smallUrl;
+                } else
+                {
+                    imageUrl = imageMap.bigUrl;
+                }
+            } else
+            {
+                if (DailyTextUtils.isTextEmpty(imageMap.mediumUrl) == true)
+                {
+                    imageUrl = imageMap.smallUrl;
+                } else
+                {
+                    imageUrl = imageMap.mediumUrl;
+                }
+            }
+
+            KakaoLinkManager.newInstance(getActivity()).shareStayOutbound(name//
+                , mStayOutboundDetail.name//
+                , mStayOutboundDetail.address//
+                , mStayOutboundDetail.index//
+                , imageUrl//
+                , mStayBookDateTime);
+        } catch (Exception e)
+        {
+            getViewInterface().showSimpleDialog(null, getString(R.string.dialog_msg_not_installed_kakaotalk)//
+                , getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no)//
+                , new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        Util.installPackage(getActivity(), "com.kakao.talk");
+                    }
+                }, null);
+        }
+    }
+
+    @Override
+    public void onShareSmsClick()
+    {
+        if (mStayOutboundDetail == null || mStayBookDateTime == null)
+        {
+            return;
+        }
+
+        try
+        {
+            String name = DailyUserPreference.getInstance(getActivity()).getName();
+
+            if (DailyTextUtils.isTextEmpty(name) == true)
+            {
+                name = getString(R.string.label_friend) + "가";
+            } else
+            {
+                name += "님이";
+            }
+
+            int nights = mStayBookDateTime.getNights();
+
+            String message = getString(R.string.message_detail_stay_share_sms//
+                , name, mStayOutboundDetail.name//
+                , mStayBookDateTime.getCheckInDateTime("yyyy.MM.dd(EEE)")//
+                , mStayBookDateTime.getCheckOutDateTime("yyyy.MM.dd(EEE)")//
+                , nights, nights + 1 //
+                , mStayOutboundDetail.address);
+
+            Util.sendSms(getActivity(), message);
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+        }
     }
 
     @Override

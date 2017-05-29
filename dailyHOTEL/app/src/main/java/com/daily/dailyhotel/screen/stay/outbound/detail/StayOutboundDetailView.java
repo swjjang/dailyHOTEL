@@ -55,6 +55,7 @@ import com.facebook.drawee.view.DraweeTransition;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ActivityStayOutboundDetailDataBinding;
 import com.twoheart.dailyhotel.databinding.DialogConciergeDataBinding;
+import com.twoheart.dailyhotel.databinding.DialogShareDataBinding;
 import com.twoheart.dailyhotel.databinding.DialogStayOutboundMapDataBinding;
 import com.twoheart.dailyhotel.databinding.LayoutStayOutboundDetail01DataBinding;
 import com.twoheart.dailyhotel.databinding.LayoutStayOutboundDetail02DataBinding;
@@ -96,6 +97,10 @@ public class StayOutboundDetailView extends BaseView<StayOutboundDetailView.OnEv
     public interface OnEventListener extends OnBaseEventListener
     {
         void onShareClick();
+
+        void onShareKakaoClick();
+
+        void onShareSmsClick();
 
         void onImageClick(int position);
 
@@ -860,9 +865,39 @@ public class StayOutboundDetailView extends BaseView<StayOutboundDetailView.OnEv
     }
 
     @Override
+    public void showShareDialog(Dialog.OnDismissListener listener)
+    {
+        DialogShareDataBinding dataBinding = DataBindingUtil.inflate(LayoutInflater.from(getContext()), R.layout.dialog_share_data, null, false);
+
+        dataBinding.kakaoShareView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                hideSimpleDialog();
+
+                getEventListener().onShareKakaoClick();
+            }
+        });
+
+        dataBinding.smsShareLayout.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                hideSimpleDialog();
+
+                getEventListener().onShareSmsClick();
+            }
+        });
+
+        showSimpleDialog(dataBinding.getRoot(), null, listener, true);
+    }
+
+    @Override
     public void scrollTop()
     {
-        if(getViewDataBinding() == null)
+        if (getViewDataBinding() == null)
         {
             return;
         }
