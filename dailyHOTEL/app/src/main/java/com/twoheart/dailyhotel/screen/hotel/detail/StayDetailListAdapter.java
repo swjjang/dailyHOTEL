@@ -637,11 +637,9 @@ public class StayDetailListAdapter extends BaseAdapter
                 viewGroup.addView(childGroup);
             }
 
-            String categoryString = stayDetail.getStayDetailParams().category;
             String gradeString = stayDetail.getStayDetailParams().getGrade().name();
-            String pensionString = mContext.getResources().getString(R.string.code_home_category_pension);
 
-            if (pensionString.equalsIgnoreCase(categoryString) == true //
+            if (Stay.Grade.fullvilla.name().equalsIgnoreCase(gradeString) == true //
                 || Stay.Grade.pension.name().equalsIgnoreCase(gradeString) == true)
             {
                 View pensionOnlyLayout = layoutInflater.inflate(R.layout.list_row_detail_pension_only, viewGroup, false);
