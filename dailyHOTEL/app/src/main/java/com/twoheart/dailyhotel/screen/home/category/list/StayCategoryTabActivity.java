@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.app.SharedElementCallback;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Toast;
@@ -16,6 +17,7 @@ import android.widget.Toast;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.widget.DailyToast;
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Area;
@@ -42,6 +44,7 @@ import com.twoheart.dailyhotel.screen.home.category.region.HomeCategoryRegionLis
 import com.twoheart.dailyhotel.screen.hotel.detail.StayDetailActivity;
 import com.twoheart.dailyhotel.screen.hotel.filter.StayCalendarActivity;
 import com.twoheart.dailyhotel.screen.hotel.list.StayListAdapter;
+import com.twoheart.dailyhotel.screen.hotel.list.StayMainActivity;
 import com.twoheart.dailyhotel.screen.hotel.preview.StayPreviewActivity;
 import com.twoheart.dailyhotel.screen.search.SearchActivity;
 import com.twoheart.dailyhotel.util.Constants;
@@ -1028,6 +1031,24 @@ public class StayCategoryTabActivity extends PlaceMainActivity
 
                     if (Util.isUsedMultiTransition() == true)
                     {
+                        setExitSharedElementCallback(new SharedElementCallback()
+                        {
+                            @Override
+                            public void onSharedElementEnd(List<String> sharedElementNames, List<View> sharedElements, List<View> sharedElementSnapshots)
+                            {
+                                super.onSharedElementEnd(sharedElementNames, sharedElements, sharedElementSnapshots);
+
+                                for (View view : sharedElements)
+                                {
+                                    if (view instanceof SimpleDraweeView)
+                                    {
+                                        view.setVisibility(View.VISIBLE);
+                                        break;
+                                    }
+                                }
+                            }
+                        });
+
                         Intent intent = StayDetailActivity.newInstance(StayCategoryTabActivity.this, //
                             mStayCategoryCuration.getStayBookingDay(), province, stay, listCount, true);
 
@@ -1064,8 +1085,15 @@ public class StayCategoryTabActivity extends PlaceMainActivity
 
                     if (mViewType == ViewType.LIST)
                     {
-                        //                        AnalyticsManager.getInstance(StaySubCategoryActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
-                        //                            , AnalyticsManager.Action.STAY_ITEM_CLICK, Integer.toString(stay.index), null);
+                        AnalyticsManager.getInstance(StayCategoryTabActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                            , AnalyticsManager.Action.STAY_ITEM_CLICK, Integer.toString(stay.index), null);
+
+
+                        if (stay.truevr == true)
+                        {
+                            AnalyticsManager.getInstance(StayCategoryTabActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                                , AnalyticsManager.Action.STAY_ITEM_CLICK_TRUE_VR, Integer.toString(stay.index), null);
+                        }
                     }
                     break;
                 }
