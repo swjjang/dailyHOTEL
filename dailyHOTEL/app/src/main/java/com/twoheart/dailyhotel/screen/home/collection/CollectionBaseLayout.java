@@ -118,7 +118,7 @@ public abstract class CollectionBaseLayout extends BaseBlurLayout
             mPlaceListAdapter.setTrueVREnabled(true);
         }
 
-        if (Util.supportPeekNPop(mContext) == true)
+        if (Util.supportPreview(mContext) == true)
         {
             mPlaceListAdapter.setOnLongClickListener(mOnItemLongClickListener);
         }
