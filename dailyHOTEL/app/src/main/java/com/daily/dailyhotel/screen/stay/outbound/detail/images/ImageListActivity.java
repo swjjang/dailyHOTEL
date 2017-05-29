@@ -26,7 +26,7 @@ public class ImageListActivity extends BaseActivity<ImageListPresenter>
 
     public static Intent newInstance(Context context, String title, List<StayOutboundDetailImage> arrayList, int index)
     {
-        Intent intent = new Intent(context, ImagesListActivity.class);
+        Intent intent = new Intent(context, ImageListActivity.class);
         intent.putExtra(INTENT_EXTRA_DATA_TITLE, title);
 
         ArrayList<StayOutboundDetailImageParcel> imageList = new ArrayList<>();
@@ -64,7 +64,5 @@ public class ImageListActivity extends BaseActivity<ImageListPresenter>
     public void finish()
     {
         super.finish();
-
-        overridePendingTransition(R.anim.hold, R.anim.slide_out_right);
     }
 }

@@ -441,7 +441,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
     @Override
     public void onImageClick(int position)
     {
-        if (mStayOutboundDetail != null && mStayOutboundDetail.getImageList() != null//
+        if (mStayOutboundDetail == null || mStayOutboundDetail.getImageList() == null//
             || mStayOutboundDetail.getImageList().size() == 0 || lock() == true)
         {
             return;
@@ -465,7 +465,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
     @Override
     public void onCalendarClick()
     {
-        if (lock() == true || mStayBookDateTime == null)
+        if (mStayBookDateTime == null || lock() == true)
         {
             return;
         }
@@ -522,7 +522,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
     {
         if (Util.isInstallGooglePlayService(getActivity()) == true)
         {
-            if (lock() == true || getActivity().isFinishing() == true)
+            if (getActivity().isFinishing() == true || lock() == true)
             {
                 return;
             }
@@ -578,7 +578,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
     @Override
     public void onNavigatorClick()
     {
-        if (lock() == true || getActivity().isFinishing() == true)
+        if (getActivity().isFinishing() == true || lock() == true)
         {
             return;
         }

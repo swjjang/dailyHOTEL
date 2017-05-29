@@ -25,6 +25,7 @@ public class ImageListPresenter extends BaseExceptionPresenter<ImageListActivity
     private String mTitle;
     private List<StayOutboundDetailImage> mImageList;
     private int mIndex;
+    private boolean mTouchMoving;
 
     public interface ImageListAnalyticsInterface extends BaseAnalyticsInterface
     {
@@ -90,6 +91,8 @@ public class ImageListPresenter extends BaseExceptionPresenter<ImageListActivity
     public void onPostCreate()
     {
         getViewInterface().setToolbarTitle(mTitle);
+
+        getViewInterface().setImageList(mImageList, mIndex);
     }
 
     @Override
@@ -121,6 +124,20 @@ public class ImageListPresenter extends BaseExceptionPresenter<ImageListActivity
     {
         // 꼭 호출해 주세요.
         super.onDestroy();
+    }
+
+    @Override
+    public void onFinish()
+    {
+        super.onFinish();
+
+        if (mTouchMoving == true)
+        {
+            getActivity().overridePendingTransition(R.anim.hold, R.anim.fade_out);
+        } else
+        {
+            getActivity().overridePendingTransition(R.anim.hold, R.anim.slide_out_bottom);
+        }
     }
 
     @Override
@@ -163,4 +180,9 @@ public class ImageListPresenter extends BaseExceptionPresenter<ImageListActivity
         getActivity().onBackPressed();
     }
 
+    @Override
+    public void onTouchMoving(boolean moving)
+    {
+        mTouchMoving = moving;
+    }
 }

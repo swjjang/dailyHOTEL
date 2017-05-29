@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface ImageListInterface extends BaseViewInterface
 {
-    void setImageList(List<StayOutboundDetailImage> imageList);
+    void setImageList(List<StayOutboundDetailImage> imageList, int position);
 }
