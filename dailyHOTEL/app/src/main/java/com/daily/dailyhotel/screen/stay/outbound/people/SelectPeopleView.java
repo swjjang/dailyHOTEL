@@ -3,7 +3,6 @@ package com.daily.dailyhotel.screen.stay.outbound.people;
 import android.app.Activity;
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -149,34 +148,62 @@ public class SelectPeopleView extends BaseView<SelectPeopleView.OnEventListener,
     }
 
     @Override
-    public void setPeople(People people)
+    public void setPeople(People people, int adultMin, int adultMax, int childMin, int childMax)
     {
         if (getViewDataBinding() == null || people == null)
         {
             return;
         }
 
-        setAdultCount(people.numberOfAdults);
-        setChildAgeList(people.getChildAgeList());
+        setAdultCount(people.numberOfAdults, adultMin, adultMax);
+        setChildAgeList(people.getChildAgeList(), childMin, childMax);
     }
 
     @Override
-    public void setAdultCount(int numberOfAdults)
+    public void setAdultCount(int numberOfAdults, int min, int max)
     {
         if (getViewDataBinding() == null)
         {
             return;
         }
 
+        if (numberOfAdults == min)
+        {
+            getViewDataBinding().adultCountMinus.setEnabled(false);
+            getViewDataBinding().adultCountPlus.setEnabled(true);
+        } else if (numberOfAdults == max)
+        {
+            getViewDataBinding().adultCountMinus.setEnabled(true);
+            getViewDataBinding().adultCountPlus.setEnabled(false);
+        } else
+        {
+            getViewDataBinding().adultCountMinus.setEnabled(true);
+            getViewDataBinding().adultCountPlus.setEnabled(true);
+        }
+
         getViewDataBinding().adultCountTextView.setText(getString(R.string.label_people_number_of_person, numberOfAdults));
     }
 
     @Override
-    public void setChildAgeList(ArrayList<Integer> childAgeList)
+    public void setChildAgeList(ArrayList<Integer> childAgeList, int min, int max)
     {
         if (getViewDataBinding() == null)
         {
             return;
+        }
+
+        if (childAgeList == null || childAgeList.size() == 0)
+        {
+            getViewDataBinding().childCountMinus.setEnabled(false);
+            getViewDataBinding().childCountPlus.setEnabled(true);
+        } else if (childAgeList.size() == max)
+        {
+            getViewDataBinding().childCountMinus.setEnabled(true);
+            getViewDataBinding().childCountPlus.setEnabled(false);
+        } else
+        {
+            getViewDataBinding().childCountMinus.setEnabled(true);
+            getViewDataBinding().childCountPlus.setEnabled(true);
         }
 
         if (childAgeList == null)
@@ -214,7 +241,7 @@ public class SelectPeopleView extends BaseView<SelectPeopleView.OnEventListener,
                     break;
 
                 default:
-                    setChildAgeList(null);
+                    setChildAgeList(null, -1, -1);
                     return;
             }
 

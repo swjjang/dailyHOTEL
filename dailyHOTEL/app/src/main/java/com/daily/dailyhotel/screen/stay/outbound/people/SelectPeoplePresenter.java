@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 
 import com.daily.base.BaseAnalyticsInterface;
-import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
 import com.daily.dailyhotel.entity.People;
 import com.twoheart.dailyhotel.R;
@@ -78,7 +77,7 @@ public class SelectPeoplePresenter extends BaseExceptionPresenter<SelectPeopleAc
     @Override
     public void onPostCreate()
     {
-        getViewInterface().setPeople(mPeople);
+        getViewInterface().setPeople(mPeople, People.DEFAULT_ADULT_MIN_COUNT, People.DEFAULT_ADULT_MAX_COUNT, People.DEFAULT_CHILD_MIN_COUNT, People.DEFAULT_CHILD_MAX_COUNT);
     }
 
     @Override
@@ -155,35 +154,37 @@ public class SelectPeoplePresenter extends BaseExceptionPresenter<SelectPeopleAc
     @Override
     public void onAdultPlusClick()
     {
-        final int MAX_NUMBER_OF_ADULT = 8;
-
-        if (mPeople.numberOfAdults + 1 > MAX_NUMBER_OF_ADULT)
+        if (lock() == true)
         {
-            DailyToast.showToast(getActivity(), "최대 8명 까지만 가능합니다.", DailyToast.LENGTH_SHORT);
-        } else
-        {
-            getViewInterface().setAdultCount(++mPeople.numberOfAdults);
+            return;
         }
+
+        getViewInterface().setAdultCount(++mPeople.numberOfAdults, People.DEFAULT_ADULT_MIN_COUNT, People.DEFAULT_ADULT_MAX_COUNT);
+
+        unLockAll();
     }
 
     @Override
     public void onAdultMinusClick()
     {
-        final int MIN_NUMBER_OF_ADULT = 1;
-
-        if (mPeople.numberOfAdults - 1 < MIN_NUMBER_OF_ADULT)
+        if (lock() == true)
         {
-            DailyToast.showToast(getActivity(), "최소 1명 까지만 가능합니다.", DailyToast.LENGTH_SHORT);
-        } else
-        {
-            getViewInterface().setAdultCount(--mPeople.numberOfAdults);
+            return;
         }
+
+        getViewInterface().setAdultCount(--mPeople.numberOfAdults, People.DEFAULT_ADULT_MIN_COUNT, People.DEFAULT_ADULT_MAX_COUNT);
+
+        unLockAll();
     }
 
     @Override
     public void onChildPlusClick()
     {
-        final int MAX_NUMBER_OF_CHILDREN = 3;
+        if (lock() == true)
+        {
+            return;
+        }
+
         final int DEFAULT_CHILD_AGE = 1;
 
         if (mPeople.getChildAgeList() == null)
@@ -191,29 +192,24 @@ public class SelectPeoplePresenter extends BaseExceptionPresenter<SelectPeopleAc
             mPeople.setChildAgeList(new ArrayList<>());
         }
 
-        if (mPeople.getChildAgeList().size() + 1 > MAX_NUMBER_OF_CHILDREN)
-        {
-            DailyToast.showToast(getActivity(), "최대 3명 까지만 가능합니다.", DailyToast.LENGTH_SHORT);
-        } else
-        {
-            mPeople.getChildAgeList().add(DEFAULT_CHILD_AGE);
-            getViewInterface().setChildAgeList(mPeople.getChildAgeList());
-        }
+        mPeople.getChildAgeList().add(DEFAULT_CHILD_AGE);
+        getViewInterface().setChildAgeList(mPeople.getChildAgeList(), People.DEFAULT_CHILD_MIN_COUNT, People.DEFAULT_CHILD_MAX_COUNT);
+
+        unLockAll();
     }
 
     @Override
     public void onChildMinusClick()
     {
-        final int MIN_NUMBER_OF_ADULT = 0;
-
-        if (mPeople.getChildAgeList().size() - 1 < MIN_NUMBER_OF_ADULT)
+        if (lock() == true)
         {
-            DailyToast.showToast(getActivity(), "최소 0명 까지만 가능합니다.", DailyToast.LENGTH_SHORT);
-        } else
-        {
-            mPeople.getChildAgeList().remove(mPeople.getChildAgeList().size() - 1);
-            getViewInterface().setChildAgeList(mPeople.getChildAgeList());
+            return;
         }
+
+        mPeople.getChildAgeList().remove(mPeople.getChildAgeList().size() - 1);
+        getViewInterface().setChildAgeList(mPeople.getChildAgeList(), People.DEFAULT_CHILD_MIN_COUNT, People.DEFAULT_CHILD_MAX_COUNT);
+
+        unLockAll();
     }
 
     @Override
@@ -226,7 +222,7 @@ public class SelectPeoplePresenter extends BaseExceptionPresenter<SelectPeopleAc
 
         mPeople.getChildAgeList().set(0, agePosition);
 
-        getViewInterface().setChildAgeList(mPeople.getChildAgeList());
+        getViewInterface().setChildAgeList(mPeople.getChildAgeList(), People.DEFAULT_CHILD_MIN_COUNT, People.DEFAULT_CHILD_MAX_COUNT);
     }
 
     @Override
@@ -239,7 +235,7 @@ public class SelectPeoplePresenter extends BaseExceptionPresenter<SelectPeopleAc
 
         mPeople.getChildAgeList().set(1, agePosition);
 
-        getViewInterface().setChildAgeList(mPeople.getChildAgeList());
+        getViewInterface().setChildAgeList(mPeople.getChildAgeList(), People.DEFAULT_CHILD_MIN_COUNT, People.DEFAULT_CHILD_MAX_COUNT);
     }
 
     @Override
@@ -252,7 +248,7 @@ public class SelectPeoplePresenter extends BaseExceptionPresenter<SelectPeopleAc
 
         mPeople.getChildAgeList().set(2, agePosition);
 
-        getViewInterface().setChildAgeList(mPeople.getChildAgeList());
+        getViewInterface().setChildAgeList(mPeople.getChildAgeList(), People.DEFAULT_CHILD_MIN_COUNT, People.DEFAULT_CHILD_MAX_COUNT);
     }
 
     @Override

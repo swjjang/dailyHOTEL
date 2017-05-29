@@ -7,9 +7,9 @@ import java.util.ArrayList;
 
 public interface SelectPeopleViewInterface extends BaseViewInterface
 {
-    void setPeople(People people);
+    void setPeople(People people, int adultMin, int adultMax, int childMin, int childMax);
 
-    void setAdultCount(int numberOfAdults);
+    void setAdultCount(int numberOfAdults, int min, int max);
 
-    void setChildAgeList(ArrayList<Integer> childAgeList);
+    void setChildAgeList(ArrayList<Integer> childAgeList, int min, int max);
 }
