@@ -8,11 +8,6 @@
         android:layout_width="match_parent"
         android:layout_height="76dp">
 
-        <!--<View-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="1dp"-->
-            <!--android:background="@color/default_line_ce7e7e7"/>-->
-
         <View
             android:id="@+id/verticalLine"
             android:layout_width="1dp"
@@ -20,111 +15,101 @@
             android:layout_centerInParent="true"
             android:background="@color/default_line_cf0f0f0"/>
 
-        <RelativeLayout
+        <LinearLayout
             android:id="@+id/stayButtonLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="4.5dp"
+            android:layout_marginTop="5dp"
             android:layout_toLeftOf="@id/verticalLine"
+            android:background="@drawable/home_category_btn"
             android:gravity="center_vertical"
-            android:paddingBottom="5dp"
-            android:paddingTop="5dp">
+            android:orientation="horizontal">
+
+            <com.daily.base.widget.DailyImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="7dp"
+                android:src="@drawable/ic_home_category_01_hotel"/>
 
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_alignParentRight="true"
+                android:id="@+id/stayButtonTextLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
-                android:layout_marginRight="14.5dp"
                 android:gravity="center_vertical"
-                android:orientation="horizontal">
+                android:orientation="vertical">
 
-                <com.daily.base.widget.DailyImageView
+                <com.daily.base.widget.DailyTextView
+                    android:id="@+id/stayTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="7dp"
-                    android:src="@drawable/ic_home_category_01_hotel"/>
+                    android:text="@string/label_home_stay_menu_title"
+                    android:textColor="@color/default_text_c323232"
+                    android:textSize="14dp"
+                    dailyFont:style="Medium"/>
 
-                <LinearLayout
-                    android:id="@+id/stayButtonTextLayout"
+                <com.daily.base.widget.DailyTextView
+                    android:id="@+id/stayDoTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
-                    android:gravity="center_vertical"
-                    android:orientation="vertical">
-
-                    <com.daily.base.widget.DailyTextView
-                        android:id="@+id/stayTextView"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/label_home_stay_menu_title"
-                        android:textColor="@color/default_text_c323232"
-                        android:textSize="14dp"
-                        dailyFont:style="Medium"/>
-
-                    <com.daily.base.widget.DailyTextView
-                        android:id="@+id/stayDoTextView"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="1dp"
-                        android:text="@string/label_home_stay_menu_description"
-                        android:textColor="@color/default_text_c929292"
-                        android:textSize="12dp"/>
-                </LinearLayout>
+                    android:layout_marginTop="1dp"
+                    android:text="@string/label_home_stay_menu_description"
+                    android:textColor="@color/default_text_c929292"
+                    android:textSize="12dp"/>
             </LinearLayout>
-        </RelativeLayout>
+        </LinearLayout>
 
-        <RelativeLayout
+        <LinearLayout
             android:id="@+id/gourmetButtonLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="4.5dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginTop="5dp"
             android:layout_toRightOf="@id/verticalLine"
+            android:background="@drawable/home_category_btn"
             android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:paddingBottom="5dp"
-            android:paddingTop="5dp">
+            android:orientation="horizontal">
+
+            <com.daily.base.widget.DailyImageView
+                android:id="@+id/gourmetButtonImageView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="7dp"
+                android:src="@drawable/ic_home_category_02_gourmet"/>
 
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="4.5dp"
-                android:layout_marginRight="15dp"
+                android:id="@+id/gourmetButtonTextLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
                 android:gravity="center_vertical"
-                android:orientation="horizontal">
+                android:orientation="vertical">
 
-                <com.daily.base.widget.DailyImageView
+                <com.daily.base.widget.DailyTextView
+                    android:id="@+id/gourmetTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="7dp"
-                    android:src="@drawable/ic_home_category_02_gourmet"/>
+                    android:text="@string/label_home_gourmet_menu_title"
+                    android:textColor="@color/default_text_c323232"
+                    android:textSize="14dp"
+                    dailyFont:style="Medium"/>
 
-                <LinearLayout
-                    android:id="@+id/gourmetButtonTextLayout"
+                <com.daily.base.widget.DailyTextView
+                    android:id="@+id/gourmetDoTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
-                    android:gravity="center_vertical"
-                    android:orientation="vertical">
-
-                    <com.daily.base.widget.DailyTextView
-                        android:id="@+id/gourmetTextView"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/label_home_gourmet_menu_title"
-                        android:textColor="@color/default_text_c323232"
-                        android:textSize="14dp"
-                        dailyFont:style="Medium"/>
-
-                    <com.daily.base.widget.DailyTextView
-                        android:id="@+id/gourmetDoTextView"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="1dp"
-                        android:text="@string/label_home_gourmet_menu_description"
-                        android:textColor="@color/default_text_c929292"
-                        android:textSize="12dp"/>
-                </LinearLayout>
+                    android:layout_marginTop="1dp"
+                    android:text="@string/label_home_gourmet_menu_description"
+                    android:textColor="@color/default_text_c929292"
+                    android:textSize="12dp"/>
             </LinearLayout>
-        </RelativeLayout>
+        </LinearLayout>
+
     </RelativeLayout>
 
     <View
