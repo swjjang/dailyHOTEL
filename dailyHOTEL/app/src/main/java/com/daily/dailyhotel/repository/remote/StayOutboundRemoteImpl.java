@@ -32,68 +32,6 @@ public class StayOutboundRemoteImpl implements StayOutboundInterface
     }
 
     @Override
-    public Observable<StayOutbounds> getStayOutBoundList(StayBookDateTime stayBookDateTime, String countryCode//
-        , String city, People people, String cacheKey, String cacheLocation)
-    {
-        final int numberOfRooms = 1;
-        final int numberOfResults = 200;
-
-        /// 디폴트 인자들
-        final String apiExperience = "PARTNER_MOBILE_APP";
-        final String locale = "ko_KR";
-        final String sort = "DEFAULT";
-
-        int numberOfAdults = people.numberOfAdults;
-        int numberOfChildren = 0;
-        String childAges = null;
-
-        List<Integer> childAgeList = people.getChildAgeList();
-
-        if (childAgeList != null)
-        {
-            numberOfChildren = childAgeList.size();
-
-            if (numberOfChildren > 0)
-            {
-                for (int age : childAgeList)
-                {
-                    if (childAges == null)
-                    {
-                        childAges = Integer.toString(age);
-                    } else
-                    {
-                        childAges += "," + age;
-                    }
-                }
-            }
-        }
-
-        return DailyMobileAPI.getInstance(mContext).getStayOutBoundList(stayBookDateTime.getCheckInDateTime("yyyy-MM-dd")//
-            , stayBookDateTime.getCheckOutDateTime("yyyy-MM-dd")//
-            , numberOfAdults, numberOfChildren, childAges, numberOfRooms, countryCode, city//
-            , numberOfResults, cacheKey, cacheLocation, apiExperience, locale, sort).map((stayOutboundDataBaseDto) ->
-        {
-            StayOutbounds stayOutbounds = null;
-
-            if (stayOutboundDataBaseDto != null)
-            {
-                if (stayOutboundDataBaseDto.msgCode == 100 && stayOutboundDataBaseDto.data != null)
-                {
-                    stayOutbounds = stayOutboundDataBaseDto.data.getStayOutboundList();
-                } else
-                {
-                    throw new BaseException(stayOutboundDataBaseDto.msgCode, stayOutboundDataBaseDto.msg);
-                }
-            } else
-            {
-                throw new BaseException(-1, null);
-            }
-
-            return stayOutbounds;
-        }).observeOn(AndroidSchedulers.mainThread());
-    }
-
-    @Override
     public Observable<StayOutbounds> getStayOutBoundList(StayBookDateTime stayBookDateTime, long geographyId//
         , String geographyType, People people, StayOutboundFilters stayOutboundFilters, String cacheKey, String cacheLocation)
     {

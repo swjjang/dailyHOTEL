@@ -10,9 +10,6 @@ import io.reactivex.Observable;
 
 public interface StayOutboundInterface
 {
-    Observable<StayOutbounds> getStayOutBoundList(StayBookDateTime stayBookDateTime, String countryCode//
-        , String city, People people, String cacheKey, String cacheLocation);
-
     Observable<StayOutbounds> getStayOutBoundList(StayBookDateTime stayBookDateTime, long geographyId//
         , String geographyType, People people, StayOutboundFilters stayOutboundFilters, String cacheKey, String cacheLocation);
 
