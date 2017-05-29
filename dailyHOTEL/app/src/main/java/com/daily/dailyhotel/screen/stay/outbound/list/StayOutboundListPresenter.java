@@ -421,6 +421,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
                 // 검색 결과 없는 것으로
 
                 getViewInterface().setRefreshing(false);
+                getViewInterface().setErrorScreenVisible(true);
                 onHandleError(throwable);
             }
         }));
@@ -738,6 +739,33 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
                 unLockAll();
             }
         }));
+    }
+
+    @Override
+    public void retryClick()
+    {
+        if (lock() == true)
+        {
+            return;
+        }
+
+        getViewInterface().setErrorScreenVisible(false);
+        onRefreshAll(true);
+    }
+
+    @Override
+    public void researchClick()
+    {
+        if (lock() == true)
+        {
+            return;
+        }
+
+        Intent intent = new Intent();
+        intent.putExtra(StayOutboundListActivity.INTENT_EXTRA_DATA_RESEARCH, true);
+
+        setResult(Activity.RESULT_OK, intent);
+        onBackClick();
     }
 
     private void onCommonDateTime(@NonNull CommonDateTime commonDateTime)

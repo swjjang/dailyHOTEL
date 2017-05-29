@@ -225,6 +225,19 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
                 }
                 break;
             }
+
+            case StayOutboundSearchActivity.REQUEST_CODE_LIST:
+            {
+                if (resultCode == Activity.RESULT_OK && data != null)
+                {
+                    if (data.hasExtra(StayOutboundListActivity.INTENT_EXTRA_DATA_RESEARCH) == true//
+                        && data.getBooleanExtra(StayOutboundListActivity.INTENT_EXTRA_DATA_RESEARCH, false) == true)
+                    {
+                        onSuggests(null);
+                    }
+                }
+                break;
+            }
         }
     }
 
@@ -299,7 +312,7 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
 
         }
 
-        startActivity(intent);
+        startActivityForResult(intent, StayOutboundSearchActivity.REQUEST_CODE_LIST);
     }
 
     @Override
@@ -478,6 +491,10 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
             {
                 getViewInterface().setSearchEnable(true);
             }
+        } else
+        {
+            getViewInterface().setSuggest(null);
+            getViewInterface().setSearchEnable(false);
         }
     }
 

@@ -80,6 +80,10 @@ public class StayOutboundListView extends BaseView<StayOutboundListView.OnEventL
         void onMapClick();
 
         void onMyLocationClick();
+
+        void retryClick();
+
+        void researchClick();
     }
 
     public StayOutboundListView(BaseActivity baseActivity, StayOutboundListView.OnEventListener listener)
@@ -149,6 +153,7 @@ public class StayOutboundListView extends BaseView<StayOutboundListView.OnEventL
         viewDataBinding.viewTypeOptionImageView.setOnClickListener(this);
         viewDataBinding.filterOptionImageView.setOnClickListener(this);
         viewDataBinding.researchView.setOnClickListener(this);
+        viewDataBinding.retryTextView.setOnClickListener(this);
     }
 
     @Override
@@ -518,6 +523,17 @@ public class StayOutboundListView extends BaseView<StayOutboundListView.OnEventL
     }
 
     @Override
+    public void setErrorScreenVisible(boolean visible)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        getViewDataBinding().errorLayout.setVisibility(visible == true ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels)
     {
     }
@@ -567,7 +583,11 @@ public class StayOutboundListView extends BaseView<StayOutboundListView.OnEventL
                 break;
 
             case R.id.researchView:
-                getEventListener().onBackClick();
+                getEventListener().researchClick();
+                break;
+
+            case R.id.retryTextView:
+                getEventListener().retryClick();
                 break;
         }
     }

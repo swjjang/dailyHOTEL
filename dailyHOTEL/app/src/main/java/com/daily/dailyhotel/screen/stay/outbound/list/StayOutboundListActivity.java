@@ -26,6 +26,7 @@ public class StayOutboundListActivity extends BaseActivity<StayOutboundListPrese
     static final String INTENT_EXTRA_DATA_KEYWORD = "keyword";
     static final String INTENT_EXTRA_DATA_NUMBER_OF_ADULTS = "numberOfAdults";
     static final String INTENT_EXTRA_DATA_CHILD_LIST = "childList";
+    public static final String INTENT_EXTRA_DATA_RESEARCH = "research";
 
     static final int REQUEST_CODE_DETAIL = 10000;
     static final int REQUEST_CODE_CALENDAR = 10001;

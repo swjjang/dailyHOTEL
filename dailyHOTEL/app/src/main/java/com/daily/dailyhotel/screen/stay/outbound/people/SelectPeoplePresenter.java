@@ -133,6 +133,10 @@ public class SelectPeoplePresenter extends BaseExceptionPresenter<SelectPeopleAc
     public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
         unLockAll();
+
+        switch(requestCode)
+        {
+        }
     }
 
     @Override

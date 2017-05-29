@@ -49,4 +49,6 @@ public interface StayOutboundListViewInterface extends BaseViewInterface
     void setMyLocation(Location location);
 
     void setRefreshing(boolean refreshing);
+
+    void setErrorScreenVisible(boolean visible);
 }
