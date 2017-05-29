@@ -47,13 +47,16 @@ public class HappyTalkCategoryDialog extends BaseActivity
     {
         SCREEN_STAY_DETAIL("호텔상세"),
         SCREEN_GOURMET_DETAIL("고메상세"),
+        SCREEN_STAY_OUTBOUND_DETAIL("해외호텔상세"),
         SCREEN_STAY_PAYMENT_WAIT("예약내역>입금대기"),
         SCREEN_GOURMET_PAYMENT_WAIT("예약내역>입금대기"),
         SCREEN_STAY_BOOKING("예약내역>문의"),
         SCREEN_GOURMET_BOOKING("예약내역>문의"),
+        SCREEN_STAY_OUTBOUND_BOOKING("해외호텔예약내역>문의"),
         SCREEN_FAQ("더보기>자주묻는질문"),
         SCREEN_CONTACT_US("더보기>문의하기"),
-        SCREEN_STAY_REFUND("예약내역>환불문의");
+        SCREEN_STAY_REFUND("예약내역>환불문의"),
+        SCREEN_STAY_OUTBOUND_REFUND("해외호텔예약내역>환불문의");
 
         private String mName;
 
