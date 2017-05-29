@@ -103,7 +103,7 @@
     <string name="label_parking_information">주차 정보 안내</string>
     <string name="label_view_detail">자세히 보기</string>
     <string name="label_truevr">트루VR</string>
-    <string name="label_distance_km">거리:%1$skm</string>
+    <string name="label_distance_km">거리 %1$skm</string>
 
     <string name="label_cardcd01">외환</string>
     <string name="label_cardcd03">롯데</string>
