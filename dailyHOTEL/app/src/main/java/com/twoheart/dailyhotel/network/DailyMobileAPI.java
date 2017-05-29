@@ -1390,12 +1390,7 @@ public class DailyMobileAPI implements IDailyNetwork
             .subscribeOn(Schedulers.io());
     }
 
-    public Observable<BaseDto<StayOutboundsData>> getStayOutBoundList(String arrivalDate, String departureDate//
-        , int numberOfAdults, int numberOfChildren, String childAges, int numberOfRooms//
-        , double latitude, double longitude, int searchRadius, String searchRadiusUnit//
-        , int numberOfResults, String cacheKey, String cacheLocation, String apiExperience, String locale//
-        , boolean filterIncludeSurrounding, int filterMaxStarRating, int filterMinStarRating//
-        , String sort)
+    public Observable<BaseDto<StayOutboundsData>> getStayOutBoundList(JSONObject jsonObject)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "https://dev-silo.dailyhotel.me/"//
             : "MzAkODEkNDckNjgkNDAkMzkkODckMSQ4OSQyOCQxNCQzMiQ4JDEkMzckNTUk$QAGkRCM0ZGGMkM1MBzkyQTBEOEMxRDgL1OGUWENFMUM3MEWZJEOURDMOEAM1NjY1RjE2MEVDQjc4RTSA5MzQxQjQ2Rjk1VMMHUEyRg==$";
@@ -1404,11 +1399,7 @@ public class DailyMobileAPI implements IDailyNetwork
             : "NTgkMjIkMTA5JDYyJDY5JDE0JDEwNSQ4MCQ2NiQ2OCQxMjEkODMkODIkMTM1JDEkMTQyJA==$OJDYxRkJEMTY2OERYzQ0ZCQjWFERTY2OUNEQkQ0RUNBODlCNEJBQjkzRjI4Q0HRBGNjAYP4RkOI5NTA2MkZUFNDMjgzQTAyNzExRkVBOUM0QUJDAQUREMjdQEMEFAEOEMxNzk3QzDU5MjVDE$";
 
         return mDailyMobileService.getStayOutBoundList(Crypto.getUrlDecoderEx(URL) + Crypto.getUrlDecoderEx(API)//
-            , filterIncludeSurrounding, filterMaxStarRating, filterMinStarRating//
-            , arrivalDate, departureDate, numberOfAdults, numberOfChildren, childAges, numberOfRooms//
-            , latitude, longitude, searchRadius, searchRadiusUnit//
-            , numberOfResults, cacheKey, cacheLocation, apiExperience, locale, sort)//
-            .subscribeOn(Schedulers.io());
+            , jsonObject).subscribeOn(Schedulers.io());
     }
 
     public Observable<BaseDto<StayOutboundDetailData>> getStayOutBoundDetail(int index, String arrivalDate, String departureDate//

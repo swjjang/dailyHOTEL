@@ -583,6 +583,10 @@ public interface DailyMobileService
     );
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
+    @POST()
+    Observable<BaseDto<StayOutboundsData>> getStayOutBoundList(@Url String mobileAPI, @Body JSONObject jsonObject);
+
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET()
     Observable<BaseDto<StayOutboundDetailData>> getStayOutBoundDetail(@Url String mobileAPI//
         , @Query(value = "arrivalDate") String arrivalDate//

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 
 import com.daily.base.exception.BaseException;
+import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.domain.StayOutboundInterface;
 import com.daily.dailyhotel.entity.People;
@@ -12,6 +13,9 @@ import com.daily.dailyhotel.entity.StayOutboundDetail;
 import com.daily.dailyhotel.entity.StayOutboundFilters;
 import com.daily.dailyhotel.entity.StayOutbounds;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.util.List;
 
@@ -89,152 +93,165 @@ public class StayOutboundRemoteImpl implements StayOutboundInterface
         }).observeOn(AndroidSchedulers.mainThread());
     }
 
+//    @Override
+//    public Observable<StayOutbounds> getStayOutBoundList(StayBookDateTime stayBookDateTime, long geographyId//
+//        , String geographyType, People people, StayOutboundFilters stayOutboundFilters, String cacheKey, String cacheLocation)
+//    {
+//        final int numberOfRooms = 1;
+//        final int numberOfResults = 200;
+//
+//        /// 디폴트 인자들
+//        final String apiExperience = "PARTNER_MOBILE_APP";
+//        final String locale = "ko_KR";
+//        String sort = "DEFAULT";
+//
+//        int numberOfAdults = people.numberOfAdults;
+//        int numberOfChildren = 0;
+//        String childAges = null;
+//
+//        double maxStarRating = 5.0;
+//        double minStarRating = 1.0;
+//
+//        List<Integer> childAgeList = people.getChildAgeList();
+//
+//        if (childAgeList != null)
+//        {
+//            numberOfChildren = childAgeList.size();
+//
+//            if (numberOfChildren > 0)
+//            {
+//                for (int age : childAgeList)
+//                {
+//                    if (childAges == null)
+//                    {
+//                        childAges = Integer.toString(age);
+//                    } else
+//                    {
+//                        childAges += "," + age;
+//                    }
+//                }
+//            }
+//        }
+//
+//        if (stayOutboundFilters != null)
+//        {
+//            sort = stayOutboundFilters.sortType.getValue();
+//
+//            if (stayOutboundFilters.rating > 0)
+//            {
+//                minStarRating = stayOutboundFilters.rating;
+//                maxStarRating = minStarRating + 0.5f;
+//            }
+//
+//            if (stayOutboundFilters.sortType == StayOutboundFilters.SortType.DISTANCE)
+//            {
+//                return DailyMobileAPI.getInstance(mContext).getStayOutBoundList(stayBookDateTime.getCheckInDateTime("yyyy-MM-dd")//
+//                    , stayBookDateTime.getCheckOutDateTime("yyyy-MM-dd")//
+//                    , numberOfAdults, numberOfChildren, childAges, maxStarRating, minStarRating, numberOfRooms//
+//                    , geographyId, geographyType, stayOutboundFilters.latitude, stayOutboundFilters.longitude//
+//                    , numberOfResults, cacheKey, cacheLocation, apiExperience, locale, sort).map((stayOutboundDataBaseDto) ->
+//                {
+//                    StayOutbounds stayOutbounds = null;
+//
+//                    if (stayOutboundDataBaseDto != null)
+//                    {
+//                        if (stayOutboundDataBaseDto.msgCode == 100 && stayOutboundDataBaseDto.data != null)
+//                        {
+//                            stayOutbounds = stayOutboundDataBaseDto.data.getStayOutboundList();
+//                        } else
+//                        {
+//                            throw new BaseException(stayOutboundDataBaseDto.msgCode, stayOutboundDataBaseDto.msg);
+//                        }
+//                    } else
+//                    {
+//                        throw new BaseException(-1, null);
+//                    }
+//
+//                    return stayOutbounds;
+//                }).observeOn(AndroidSchedulers.mainThread());
+//            }
+//        }
+//
+//        return DailyMobileAPI.getInstance(mContext).getStayOutBoundList(stayBookDateTime.getCheckInDateTime("yyyy-MM-dd")//
+//            , stayBookDateTime.getCheckOutDateTime("yyyy-MM-dd")//
+//            , numberOfAdults, numberOfChildren, childAges, maxStarRating, minStarRating, numberOfRooms//
+//            , geographyId, geographyType, numberOfResults, cacheKey, cacheLocation, apiExperience, locale, sort).map((stayOutboundDataBaseDto) ->
+//        {
+//            StayOutbounds stayOutbounds = null;
+//
+//            if (stayOutboundDataBaseDto != null)
+//            {
+//                if (stayOutboundDataBaseDto.msgCode == 100 && stayOutboundDataBaseDto.data != null)
+//                {
+//                    stayOutbounds = stayOutboundDataBaseDto.data.getStayOutboundList();
+//                } else
+//                {
+//                    throw new BaseException(stayOutboundDataBaseDto.msgCode, stayOutboundDataBaseDto.msg);
+//                }
+//            } else
+//            {
+//                throw new BaseException(-1, null);
+//            }
+//
+//            return stayOutbounds;
+//        }).observeOn(AndroidSchedulers.mainThread());
+//    }
+
     @Override
     public Observable<StayOutbounds> getStayOutBoundList(StayBookDateTime stayBookDateTime, long geographyId//
         , String geographyType, People people, StayOutboundFilters stayOutboundFilters, String cacheKey, String cacheLocation)
     {
+        JSONObject jsonObject = new JSONObject();
+
         final int numberOfRooms = 1;
         final int numberOfResults = 200;
 
         /// 디폴트 인자들
-        final String apiExperience = "PARTNER_MOBILE_APP";
-        final String locale = "ko_KR";
         String sort = "DEFAULT";
 
-        int numberOfAdults = people.numberOfAdults;
-        int numberOfChildren = 0;
-        String childAges = null;
-
-        double maxStarRating = 5.0;
-        double minStarRating = 1.0;
-
-        List<Integer> childAgeList = people.getChildAgeList();
-
-        if (childAgeList != null)
+        try
         {
-            numberOfChildren = childAgeList.size();
+            jsonObject.put("apiExperience", "PARTNER_MOBILE_APP");
+            jsonObject.put("locale", "ko_KR");
 
-            if (numberOfChildren > 0)
+            if (DailyTextUtils.isTextEmpty(cacheKey, cacheLocation) == false)
             {
-                for (int age : childAgeList)
+                jsonObject.put("cacheKey", cacheKey);
+                jsonObject.put("cacheLocation", cacheLocation);
+            }
+
+            jsonObject.put("arrivalDate", stayBookDateTime.getCheckInDateTime("yyyy-MM-dd"));
+            jsonObject.put("departureDate", stayBookDateTime.getCheckOutDateTime("yyyy-MM-dd"));
+
+            jsonObject.put("geographyId", geographyId);
+            jsonObject.put("geographyType", geographyType);
+
+            jsonObject.put("numberOfRooms", numberOfRooms);
+            jsonObject.put("numberOfResults", numberOfResults);
+
+            jsonObject.put("rooms", getRooms(new People[]{people}));
+            jsonObject.put("filter", getFilter(stayOutboundFilters));
+
+            if (stayOutboundFilters != null)
+            {
+                sort = stayOutboundFilters.sortType.getValue();
+
+                jsonObject.put("sort", sort);
+
+                if (stayOutboundFilters.sortType == StayOutboundFilters.SortType.DISTANCE)
                 {
-                    if (childAges == null)
-                    {
-                        childAges = Integer.toString(age);
-                    } else
-                    {
-                        childAges += "," + age;
-                    }
+                    jsonObject.put("latitude", stayOutboundFilters.latitude);
+                    jsonObject.put("longitude", stayOutboundFilters.longitude);
                 }
             }
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+
+            jsonObject = null;
         }
 
-        if (stayOutboundFilters != null)
-        {
-            sort = stayOutboundFilters.sortType.getValue();
-
-            if (stayOutboundFilters.rating > 0)
-            {
-                minStarRating = stayOutboundFilters.rating;
-                maxStarRating = minStarRating + 0.5f;
-            }
-
-            if(stayOutboundFilters.sortType == StayOutboundFilters.SortType.DISTANCE)
-            {
-                return DailyMobileAPI.getInstance(mContext).getStayOutBoundList(stayBookDateTime.getCheckInDateTime("yyyy-MM-dd")//
-                    , stayBookDateTime.getCheckOutDateTime("yyyy-MM-dd")//
-                    , numberOfAdults, numberOfChildren, childAges, maxStarRating, minStarRating, numberOfRooms//
-                    , geographyId, geographyType, stayOutboundFilters.latitude, stayOutboundFilters.longitude//
-                    ,numberOfResults, cacheKey, cacheLocation, apiExperience, locale, sort).map((stayOutboundDataBaseDto) ->
-                {
-                    StayOutbounds stayOutbounds = null;
-
-                    if (stayOutboundDataBaseDto != null)
-                    {
-                        if (stayOutboundDataBaseDto.msgCode == 100 && stayOutboundDataBaseDto.data != null)
-                        {
-                            stayOutbounds = stayOutboundDataBaseDto.data.getStayOutboundList();
-                        } else
-                        {
-                            throw new BaseException(stayOutboundDataBaseDto.msgCode, stayOutboundDataBaseDto.msg);
-                        }
-                    } else
-                    {
-                        throw new BaseException(-1, null);
-                    }
-
-                    return stayOutbounds;
-                }).observeOn(AndroidSchedulers.mainThread());
-            }
-        }
-
-        return DailyMobileAPI.getInstance(mContext).getStayOutBoundList(stayBookDateTime.getCheckInDateTime("yyyy-MM-dd")//
-            , stayBookDateTime.getCheckOutDateTime("yyyy-MM-dd")//
-            , numberOfAdults, numberOfChildren, childAges, maxStarRating, minStarRating, numberOfRooms//
-            , geographyId, geographyType, numberOfResults, cacheKey, cacheLocation, apiExperience, locale, sort).map((stayOutboundDataBaseDto) ->
-        {
-            StayOutbounds stayOutbounds = null;
-
-            if (stayOutboundDataBaseDto != null)
-            {
-                if (stayOutboundDataBaseDto.msgCode == 100 && stayOutboundDataBaseDto.data != null)
-                {
-                    stayOutbounds = stayOutboundDataBaseDto.data.getStayOutboundList();
-                } else
-                {
-                    throw new BaseException(stayOutboundDataBaseDto.msgCode, stayOutboundDataBaseDto.msg);
-                }
-            } else
-            {
-                throw new BaseException(-1, null);
-            }
-
-            return stayOutbounds;
-        }).observeOn(AndroidSchedulers.mainThread());
-    }
-
-    @Override
-    public Observable<StayOutbounds> getStayOutBoundList(StayBookDateTime stayBookDateTime, String countryCode//
-        , String city, double latitude, double longitude, int searchRadius, StayOutboundFilters filters//
-        , People people, String cacheKey, String cacheLocation)
-    {
-        final int numberOfRooms = 1;
-        final int numberOfResults = 200;
-
-        /// 디폴트 인자들
-        final String apiExperience = "PARTNER_MOBILE_APP";
-        final String locale = "ko_KR";
-        final String sort = "DEFAULT";
-
-        int numberOfAdults = people.numberOfAdults;
-        int numberOfChildren = 0;
-        String childAges = null;
-
-        List<Integer> childAgeList = people.getChildAgeList();
-
-        if (childAgeList != null)
-        {
-            numberOfChildren = childAgeList.size();
-
-            if (numberOfChildren > 0)
-            {
-                for (int age : childAgeList)
-                {
-                    if (childAges == null)
-                    {
-                        childAges = Integer.toString(age);
-                    } else
-                    {
-                        childAges += "," + age;
-                    }
-                }
-            }
-        }
-
-        return DailyMobileAPI.getInstance(mContext).getStayOutBoundList(stayBookDateTime.getCheckInDateTime("yyyy-MM-dd")//
-            , stayBookDateTime.getCheckOutDateTime("yyyy-MM-dd")//
-            , numberOfAdults, numberOfChildren, childAges, numberOfRooms, countryCode, city//
-            , numberOfResults, cacheKey, cacheLocation, apiExperience, locale, sort).map((stayOutboundDataBaseDto) ->
+        return DailyMobileAPI.getInstance(mContext).getStayOutBoundList(jsonObject).map((stayOutboundDataBaseDto) ->
         {
             StayOutbounds stayOutbounds = null;
 
@@ -314,5 +331,74 @@ public class StayOutboundRemoteImpl implements StayOutboundInterface
 
             return stayOutboundDetail;
         }).observeOn(AndroidSchedulers.mainThread());
+    }
+
+    private JSONArray getRooms(People[] peoples)
+    {
+        JSONArray roomJSONArray = new JSONArray();
+
+        if (peoples == null || peoples.length == 0)
+        {
+            return roomJSONArray;
+        }
+
+        try
+        {
+            for (People people : peoples)
+            {
+                JSONObject roomJSONObject = new JSONObject();
+                roomJSONObject.put("numberOfAdults", people.numberOfAdults);
+
+                List<Integer> childAgeList = people.getChildAgeList();
+
+                if (childAgeList != null && childAgeList.size() > 0)
+                {
+                    JSONArray childJSONArray = new JSONArray();
+
+                    for (int age : childAgeList)
+                    {
+                        childJSONArray.put(Integer.toString(age));
+                    }
+
+                    roomJSONObject.put("numberOfChildren", childAgeList.size());
+                    roomJSONObject.put("childAges", childJSONArray);
+                } else
+                {
+                    roomJSONObject.put("numberOfChildren", 0);
+                }
+
+                roomJSONArray.put(roomJSONObject);
+            }
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+        }
+
+        return roomJSONArray;
+    }
+
+    private JSONObject getFilter(StayOutboundFilters stayOutboundFilters)
+    {
+        JSONObject filterJSONObject = new JSONObject();
+
+        double maxStarRating = 5.0;
+        double minStarRating = 1.0;
+
+        if (stayOutboundFilters != null && stayOutboundFilters.rating > 0)
+        {
+            minStarRating = stayOutboundFilters.rating;
+            maxStarRating = minStarRating + 0.5f;
+        }
+
+        try
+        {
+            filterJSONObject.put("maxStarRating", maxStarRating);
+            filterJSONObject.put("minStarRating", minStarRating);
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+        }
+
+        return filterJSONObject;
     }
 }
