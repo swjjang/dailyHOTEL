@@ -1578,11 +1578,17 @@ public class StayDetailActivity extends PlaceDetailActivity
 
             DailyToast.showToast(StayDetailActivity.this, R.string.message_detail_copy_address, Toast.LENGTH_SHORT);
 
-            StayDetail stayDetail = (StayDetail) mPlaceDetail;
-            StayDetailParams stayDetailParams = stayDetail.getStayDetailParams();
+            try
+            {
+                StayDetail stayDetail = (StayDetail) mPlaceDetail;
+                StayDetailParams stayDetailParams = stayDetail.getStayDetailParams();
 
-            AnalyticsManager.getInstance(getApplicationContext()).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS, //
-                Action.HOTEL_DETAIL_ADDRESS_COPY_CLICKED, stayDetailParams.name, null);
+                AnalyticsManager.getInstance(getApplicationContext()).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS, //
+                    Action.HOTEL_DETAIL_ADDRESS_COPY_CLICKED, stayDetailParams.name, null);
+            }catch (Exception e)
+            {
+                ExLog.d(e.toString());
+            }
         }
 
         @Override
