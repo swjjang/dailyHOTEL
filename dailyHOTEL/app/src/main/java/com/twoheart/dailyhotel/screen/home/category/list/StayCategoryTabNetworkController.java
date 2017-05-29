@@ -30,12 +30,6 @@ public class StayCategoryTabNetworkController extends PlaceMainNetworkController
     }
 
     @Override
-    public void requestEventBanner()
-    {
-        // do nothing!
-    }
-
-    @Override
     public void requestRegionList()
     {
         // do nothing!

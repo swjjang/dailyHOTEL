@@ -716,21 +716,13 @@ public class StayMainActivity extends PlaceMainActivity
                 {
                     ((StayMainLayout) mPlaceMainLayout).setToolbarDateText(mStayCuration.getStayBookingDay());
 
-                    mPlaceMainNetworkController.requestEventBanner();
+                    mPlaceMainNetworkController.requestRegionList();
                 }
             } catch (Exception e)
             {
                 onError(e);
                 unLockUI();
             }
-        }
-
-        @Override
-        public void onEventBanner(List<EventBanner> eventBannerList)
-        {
-            StayEventBannerManager.getInstance().setList(eventBannerList);
-
-            mPlaceMainNetworkController.requestRegionList();
         }
 
         @Override

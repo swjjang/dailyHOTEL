@@ -3511,66 +3511,6 @@ public class DailyMobileAPITest
         mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
     }
 
-    @Ignore
-    public void requestEventBannerList() throws Exception
-    {
-        retrofit2.Callback networkCallback = new retrofit2.Callback<JSONObject>()
-        {
-            @Override
-            public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
-            {
-                try
-                {
-                    assertThat(response, notNullValue());
-                    assertThat(response.isSuccessful(), is(true));
-                    assertThat(response.body(), allOf(notNullValue(), isA(JSONObject.class)));
-
-                    JSONObject responseJSONObject = response.body();
-
-                    int msgCode = responseJSONObject.getInt("msgCode");
-                    assertThat(msgCode, is(100));
-
-                    JSONObject dataJSONObject = responseJSONObject.getJSONObject("data");
-                    assertThat(dataJSONObject, notNullValue());
-
-                    String baseUrl = dataJSONObject.getString("imgUrl");
-                    assertThat(baseUrl, isNotEmpty());
-
-                    JSONArray jsonArray = dataJSONObject.getJSONArray("eventBanner");
-                    assertThat(jsonArray, notNullValue());
-
-                    int length = jsonArray.length();
-                    for (int i = 0; i < length; i++)
-                    {
-                        EventBanner eventBanner = new EventBanner(jsonArray.getJSONObject(i), baseUrl);
-                        assertThat(eventBanner, notNullValue());
-                    }
-                } catch (Throwable t)
-                {
-                    addException(call, response, t);
-                } finally
-                {
-                    mLock.countDown();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<JSONObject> call, Throwable t)
-            {
-                addException(call, null, t);
-                mLock.countDown();
-            }
-        };
-
-        mLock = new CountDownLatch(1);
-        DailyMobileAPI.getInstance(mContext).requestEventBannerList(mNetworkTag, "gourmet", networkCallback);
-        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
-
-        mLock = new CountDownLatch(1);
-        DailyMobileAPI.getInstance(mContext).requestEventBannerList(mNetworkTag, "hotel", networkCallback);
-        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
-    }
-
     @Test
     public void requestDailyUserVerification() throws Exception
     {
