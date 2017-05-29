@@ -1319,6 +1319,8 @@
     <string name="label_stay_outbound_room_max_person_free">최대 %1$d인</string>
     <string name="label_stay_outbound_room_max_person_charge">최대 %1$d인(유료)</string>
     <string name="label_stay_outbound_amenities">편의시설</string>
+    <string name="message_stay_outbound_detail_sold_out">마지막 객실이 방금 판매 완료되었습니다.\n날짜를 변경하거나 다른 호텔을 확인해주세요.</string>
+    <string name="message_stay_outbound_detail_changed_price">업체 사정으로 해당 객실의 요금이\n변동되었습니다. 객실 금액을 한번 더\n확인해주세요.</string>
 
 
     <!-- Preview -->

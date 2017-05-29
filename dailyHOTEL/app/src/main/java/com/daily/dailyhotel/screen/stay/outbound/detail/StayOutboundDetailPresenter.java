@@ -49,7 +49,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function3;
-import io.reactivex.internal.schedulers.ComputationScheduler;
 
 /**
  * Created by sheldon
@@ -246,6 +245,10 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
     {
         super.onResume();
 
+        if (isRefresh() == true)
+        {
+            onRefresh(true);
+        }
     }
 
     @Override
@@ -342,7 +345,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
                         }
 
                         onCalendarDateTime(checkInDateTime, checkOutDateTime);
-                        onRefresh(true);
+                        setRefresh(true);
                     }
                 }
                 break;
@@ -358,7 +361,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
                         ArrayList<Integer> childAgeList = data.getIntegerArrayListExtra(SelectPeopleActivity.INTENT_EXTRA_DATA_CHILD_LIST);
 
                         onPeople(numberOfAdults, childAgeList);
-                        onRefresh(true);
+                        setRefresh(true);
                     }
                 }
                 break;
@@ -402,7 +405,23 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
             @Override
             public void accept(@io.reactivex.annotations.NonNull Throwable throwable) throws Exception
             {
-                onHandleError(throwable);
+                unLockAll();
+
+                getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.act_base_network_connect)//
+                    , getString(R.string.frag_error_btn), new View.OnClickListener()
+                    {
+                        @Override
+                        public void onClick(View v)
+                        {
+                            onRefresh(true);
+                        }
+                    }, new DialogInterface.OnDismissListener()
+                    {
+                        @Override
+                        public void onDismiss(DialogInterface dialog)
+                        {
+                        }
+                    });
             }
         }));
 
@@ -892,13 +911,15 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
 
         if (roomList == null || roomList.size() == 0)
         {
-            getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.message_stay_detail_sold_out)//
+            getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.message_stay_outbound_detail_sold_out)//
                 , getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
                 {
                     @Override
                     public void onDismiss(DialogInterface dialog)
                     {
-                        //                        setResultCode(CODE_RESULT_ACTIVITY_REFRESH);
+                        Intent intent = new Intent();
+                        intent.putExtra(StayOutboundDetailActivity.INTENT_EXTRA_DATA_REFRESH, true);
+                        setResult(Activity.RESULT_OK, intent);
                     }
                 });
         } else
@@ -918,9 +939,11 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
 
                 if (hasPrice == false)
                 {
-                    //                    setResultCode(CODE_RESULT_ACTIVITY_REFRESH);
+                    Intent intent = new Intent();
+                    intent.putExtra(StayOutboundDetailActivity.INTENT_EXTRA_DATA_REFRESH, true);
+                    setResult(Activity.RESULT_OK, intent);
 
-                    getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.message_stay_detail_changed_price)//
+                    getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.message_stay_outbound_detail_changed_price)//
                         , getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
                         {
                             @Override

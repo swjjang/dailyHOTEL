@@ -204,6 +204,11 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
     public void onResume()
     {
         super.onResume();
+
+        if (isRefresh() == true)
+        {
+            onRefreshAll(true);
+        }
     }
 
     @Override
@@ -286,7 +291,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
                         }
 
                         onCalendarDateTime(checkInDateTime, checkOutDateTime);
-                        onRefreshAll(true);
+                        setRefresh(true);
                     }
                 }
                 break;
@@ -302,7 +307,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
                         ArrayList<Integer> childAgeList = data.getIntegerArrayListExtra(SelectPeopleActivity.INTENT_EXTRA_DATA_CHILD_LIST);
 
                         onPeople(numberOfAdults, childAgeList);
-                        onRefreshAll(true);
+                        setRefresh(true);
                     }
                 }
                 break;
@@ -334,7 +339,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
                                         mStayOutboundFilters.latitude = location.getLatitude();
                                         mStayOutboundFilters.longitude = location.getLongitude();
 
-                                        onRefreshAll(true);
+                                        setRefresh(true);
                                     }
                                 }
                             }, new Consumer<Throwable>()
@@ -343,12 +348,12 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
                                 public void accept(@io.reactivex.annotations.NonNull Throwable throwable) throws Exception
                                 {
                                     onFilter(null, -1);
-                                    onRefreshAll(true);
+                                    setRefresh(true);
                                 }
                             }));
                         } else
                         {
-                            onRefreshAll(true);
+                            setRefresh(true);
                         }
                     }
                 }

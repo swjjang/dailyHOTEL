@@ -45,6 +45,7 @@ public class StayOutboundDetailActivity extends BaseActivity<StayOutboundDetailP
     static final String INTENT_EXTRA_DATA_CHILD_LIST = "childList";
     static final String INTENT_EXTRA_DATA_MULTITRANSITION = "multiTransition";
     static final String INTENT_EXTRA_DATA_CALL_FROM_MAP = "callFromMap";
+    static final String INTENT_EXTRA_DATA_REFRESH = "refresh";
 
     /**
      * @param stayIndex
