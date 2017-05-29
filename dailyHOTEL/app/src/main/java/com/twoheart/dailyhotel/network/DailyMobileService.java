@@ -587,15 +587,6 @@ public interface DailyMobileService
     Observable<BaseDto<StayOutboundsData>> getStayOutBoundList(@Url String mobileAPI, @Body JSONObject jsonObject);
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
-    @GET()
-    Observable<BaseDto<StayOutboundDetailData>> getStayOutBoundDetail(@Url String mobileAPI//
-        , @Query(value = "arrivalDate") String arrivalDate//
-        , @Query(value = "departureDate") String departureDate//
-        , @Query(value = "rooms[0].numberOfAdults") int numberOfAdults//
-        , @Query(value = "rooms[0].numberOfChildren") int numberOfChildren//
-        , @Query(value = "rooms[0].childAges") String childAges //
-        , @Query(value = "numberOfRooms") int numberOfRooms//
-        , @Query(value = "apiExperience") String apiExperience// 디폴트 인자들
-        , @Query(value = "locale") String locale// 디폴트 인자들
-    );
+    @POST()
+    Observable<BaseDto<StayOutboundDetailData>> getStayOutBoundDetail(@Url String mobileAPI, @Body JSONObject jsonObject);
 }

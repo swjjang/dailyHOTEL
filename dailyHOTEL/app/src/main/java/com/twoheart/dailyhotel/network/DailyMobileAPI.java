@@ -1274,10 +1274,6 @@ public class DailyMobileAPI implements IDailyNetwork
     }
 
 
-
-
-
-
     /////////////////////////////////////////////////////////////////////////////////////////////////
     //
     // RxJava2 API
@@ -1402,9 +1398,7 @@ public class DailyMobileAPI implements IDailyNetwork
             , jsonObject).subscribeOn(Schedulers.io());
     }
 
-    public Observable<BaseDto<StayOutboundDetailData>> getStayOutBoundDetail(int index, String arrivalDate, String departureDate//
-        , int numberOfAdults, int numberOfChildren, String childAges, int numberOfRooms//
-        , String apiExperience, String locale)
+    public Observable<BaseDto<StayOutboundDetailData>> getStayOutBoundDetail(int index, JSONObject jsonObject)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "https://dev-silo.dailyhotel.me/"//
             : "MzAkODEkNDckNjgkNDAkMzkkODckMSQ4OSQyOCQxNCQzMiQ4JDEkMzckNTUk$QAGkRCM0ZGGMkM1MBzkyQTBEOEMxRDgL1OGUWENFMUM3MEWZJEOURDMOEAM1NjY1RjE2MEVDQjc4RTSA5MzQxQjQ2Rjk1VMMHUEyRg==$";
@@ -1416,8 +1410,6 @@ public class DailyMobileAPI implements IDailyNetwork
         urlParams.put("{hotelId}", Integer.toString(index));
 
         return mDailyMobileService.getStayOutBoundDetail(Crypto.getUrlDecoderEx(URL) + Crypto.getUrlDecoderEx(API, urlParams)//
-            , arrivalDate, departureDate, numberOfAdults, numberOfChildren, childAges, numberOfRooms//
-            , apiExperience, locale)//
-            .subscribeOn(Schedulers.io());
+            , jsonObject).subscribeOn(Schedulers.io());
     }
 }

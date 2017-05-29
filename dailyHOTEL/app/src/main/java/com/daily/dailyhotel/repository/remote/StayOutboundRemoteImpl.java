@@ -93,110 +93,6 @@ public class StayOutboundRemoteImpl implements StayOutboundInterface
         }).observeOn(AndroidSchedulers.mainThread());
     }
 
-//    @Override
-//    public Observable<StayOutbounds> getStayOutBoundList(StayBookDateTime stayBookDateTime, long geographyId//
-//        , String geographyType, People people, StayOutboundFilters stayOutboundFilters, String cacheKey, String cacheLocation)
-//    {
-//        final int numberOfRooms = 1;
-//        final int numberOfResults = 200;
-//
-//        /// 디폴트 인자들
-//        final String apiExperience = "PARTNER_MOBILE_APP";
-//        final String locale = "ko_KR";
-//        String sort = "DEFAULT";
-//
-//        int numberOfAdults = people.numberOfAdults;
-//        int numberOfChildren = 0;
-//        String childAges = null;
-//
-//        double maxStarRating = 5.0;
-//        double minStarRating = 1.0;
-//
-//        List<Integer> childAgeList = people.getChildAgeList();
-//
-//        if (childAgeList != null)
-//        {
-//            numberOfChildren = childAgeList.size();
-//
-//            if (numberOfChildren > 0)
-//            {
-//                for (int age : childAgeList)
-//                {
-//                    if (childAges == null)
-//                    {
-//                        childAges = Integer.toString(age);
-//                    } else
-//                    {
-//                        childAges += "," + age;
-//                    }
-//                }
-//            }
-//        }
-//
-//        if (stayOutboundFilters != null)
-//        {
-//            sort = stayOutboundFilters.sortType.getValue();
-//
-//            if (stayOutboundFilters.rating > 0)
-//            {
-//                minStarRating = stayOutboundFilters.rating;
-//                maxStarRating = minStarRating + 0.5f;
-//            }
-//
-//            if (stayOutboundFilters.sortType == StayOutboundFilters.SortType.DISTANCE)
-//            {
-//                return DailyMobileAPI.getInstance(mContext).getStayOutBoundList(stayBookDateTime.getCheckInDateTime("yyyy-MM-dd")//
-//                    , stayBookDateTime.getCheckOutDateTime("yyyy-MM-dd")//
-//                    , numberOfAdults, numberOfChildren, childAges, maxStarRating, minStarRating, numberOfRooms//
-//                    , geographyId, geographyType, stayOutboundFilters.latitude, stayOutboundFilters.longitude//
-//                    , numberOfResults, cacheKey, cacheLocation, apiExperience, locale, sort).map((stayOutboundDataBaseDto) ->
-//                {
-//                    StayOutbounds stayOutbounds = null;
-//
-//                    if (stayOutboundDataBaseDto != null)
-//                    {
-//                        if (stayOutboundDataBaseDto.msgCode == 100 && stayOutboundDataBaseDto.data != null)
-//                        {
-//                            stayOutbounds = stayOutboundDataBaseDto.data.getStayOutboundList();
-//                        } else
-//                        {
-//                            throw new BaseException(stayOutboundDataBaseDto.msgCode, stayOutboundDataBaseDto.msg);
-//                        }
-//                    } else
-//                    {
-//                        throw new BaseException(-1, null);
-//                    }
-//
-//                    return stayOutbounds;
-//                }).observeOn(AndroidSchedulers.mainThread());
-//            }
-//        }
-//
-//        return DailyMobileAPI.getInstance(mContext).getStayOutBoundList(stayBookDateTime.getCheckInDateTime("yyyy-MM-dd")//
-//            , stayBookDateTime.getCheckOutDateTime("yyyy-MM-dd")//
-//            , numberOfAdults, numberOfChildren, childAges, maxStarRating, minStarRating, numberOfRooms//
-//            , geographyId, geographyType, numberOfResults, cacheKey, cacheLocation, apiExperience, locale, sort).map((stayOutboundDataBaseDto) ->
-//        {
-//            StayOutbounds stayOutbounds = null;
-//
-//            if (stayOutboundDataBaseDto != null)
-//            {
-//                if (stayOutboundDataBaseDto.msgCode == 100 && stayOutboundDataBaseDto.data != null)
-//                {
-//                    stayOutbounds = stayOutboundDataBaseDto.data.getStayOutboundList();
-//                } else
-//                {
-//                    throw new BaseException(stayOutboundDataBaseDto.msgCode, stayOutboundDataBaseDto.msg);
-//                }
-//            } else
-//            {
-//                throw new BaseException(-1, null);
-//            }
-//
-//            return stayOutbounds;
-//        }).observeOn(AndroidSchedulers.mainThread());
-//    }
-
     @Override
     public Observable<StayOutbounds> getStayOutBoundList(StayBookDateTime stayBookDateTime, long geographyId//
         , String geographyType, People people, StayOutboundFilters stayOutboundFilters, String cacheKey, String cacheLocation)
@@ -276,42 +172,28 @@ public class StayOutboundRemoteImpl implements StayOutboundInterface
     @Override
     public Observable<StayOutboundDetail> getStayOutBoundDetail(int index, StayBookDateTime stayBookDateTime, People people)
     {
+        JSONObject jsonObject = new JSONObject();
+
         final int numberOfRooms = 1;
-        final int numberOfResults = 200;
 
-        /// 디폴트 인자들
-        final String apiExperience = "PARTNER_MOBILE_APP";
-        final String locale = "ko_KR";
-
-        int numberOfAdults = people.numberOfAdults;
-        int numberOfChildren = 0;
-        String childAges = null;
-
-        List<Integer> childAgeList = people.getChildAgeList();
-
-        if (childAgeList != null)
+        try
         {
-            numberOfChildren = childAgeList.size();
+            jsonObject.put("apiExperience", "PARTNER_MOBILE_APP");
+            jsonObject.put("locale", "ko_KR");
 
-            if (numberOfChildren > 0)
-            {
-                for (int age : childAgeList)
-                {
-                    if (childAges == null)
-                    {
-                        childAges = Integer.toString(age);
-                    } else
-                    {
-                        childAges += "," + age;
-                    }
-                }
-            }
+            jsonObject.put("arrivalDate", stayBookDateTime.getCheckInDateTime("yyyy-MM-dd"));
+            jsonObject.put("departureDate", stayBookDateTime.getCheckOutDateTime("yyyy-MM-dd"));
+
+            jsonObject.put("numberOfRooms", numberOfRooms);
+            jsonObject.put("rooms", getRooms(new People[]{people}));
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+
+            jsonObject = null;
         }
 
-        return DailyMobileAPI.getInstance(mContext).getStayOutBoundDetail(index, stayBookDateTime.getCheckInDateTime("yyyy-MM-dd")//
-            , stayBookDateTime.getCheckOutDateTime("yyyy-MM-dd")//
-            , numberOfAdults, numberOfChildren, childAges, numberOfRooms//
-            , apiExperience, locale).map((stayOutboundDetailDataBaseDto) ->
+        return DailyMobileAPI.getInstance(mContext).getStayOutBoundDetail(index, jsonObject).map((stayOutboundDetailDataBaseDto) ->
         {
             StayOutboundDetail stayOutboundDetail = null;
 
@@ -365,6 +247,7 @@ public class StayOutboundRemoteImpl implements StayOutboundInterface
                 } else
                 {
                     roomJSONObject.put("numberOfChildren", 0);
+                    roomJSONObject.put("childAges", null);
                 }
 
                 roomJSONArray.put(roomJSONObject);
@@ -392,6 +275,7 @@ public class StayOutboundRemoteImpl implements StayOutboundInterface
 
         try
         {
+            filterJSONObject.put("includeSurrounding", false);
             filterJSONObject.put("maxStarRating", maxStarRating);
             filterJSONObject.put("minStarRating", minStarRating);
         } catch (Exception e)
