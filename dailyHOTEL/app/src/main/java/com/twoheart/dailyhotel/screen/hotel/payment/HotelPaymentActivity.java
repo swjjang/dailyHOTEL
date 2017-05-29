@@ -1281,30 +1281,30 @@ public class HotelPaymentActivity extends PlacePaymentActivity
         int closeHour = Integer.parseInt(DailyCalendar.convertDateFormatString(todayDateTime.closeDateTime, DailyCalendar.ISO_8601_FORMAT, "HH"));
         int currentHour = Integer.parseInt(DailyCalendar.convertDateFormatString(todayDateTime.currentDateTime, DailyCalendar.ISO_8601_FORMAT, "HH"));
 
-        // 당일인지 아닌지
+
+
         if (todayDateTime.dailyDateTime.equalsIgnoreCase(stayBookingDay.getCheckInDay(DailyCalendar.ISO_8601_FORMAT)) == true)
         {
-            if (currentHour >= openHour && currentHour < 18)
-            {
-                mPensionPopupMessageType = 1;
-            } else if (currentHour >= 18 || currentHour < closeHour)
-            {
+            // 서버시간과 같은 날
+            if (currentHour < openHour) {
+                // 당일이고 영업시간 전일때 (서버에서 새벽 3시 부터 당일로 주기 때문에 새벽 3시 체크 안함)
                 mPensionPopupMessageType = 2;
             } else
             {
-                mPensionPopupMessageType = 3;
+                // 당일이고 영엽시간 이후 일때 (서버에서 다음날 새벽 3시까지 당일로 주기 때문에 새벽 3시 체크 안함)
+                mPensionPopupMessageType = 1;
             }
         } else
         {
-            if (currentHour >= openHour && currentHour < 22)
+            // 사전 예약 일때
+            if (openHour <= currentHour && currentHour < 22)
             {
-                mPensionPopupMessageType = 10;
-            } else if (currentHour >= 22)
-            {
-                mPensionPopupMessageType = 11;
+                // 사전예약 이고 9시 부터 22시 전까지
+                mPensionPopupMessageType = 3;
             } else
             {
-                mPensionPopupMessageType = 12;
+                mPensionPopupMessageType = 4;
+                // 사전예약 이고 9시 이전이거나 22시 이후 일때
             }
         }
     }
@@ -1800,21 +1800,19 @@ public class HotelPaymentActivity extends PlacePaymentActivity
         switch (messageType)
         {
             case 1:
+                messageList[2] = R.string.dialog_msg_hotel_payment_message_pension_1; // 당일 9시 부터 다음날 새벽 3시
+                break;
+
             case 2:
-                messageList[2] = R.string.dialog_msg_hotel_payment_message09;
+                messageList[2] = R.string.dialog_msg_hotel_payment_message_pension_2; // 당일 새벽 3시 부터 다음날 9시까지
                 break;
 
             case 3:
-                messageList[2] = R.string.dialog_msg_hotel_payment_message11;
+                messageList[2] = R.string.dialog_msg_hotel_payment_message_pension_3; // 다음날 9시부터 22시 전까지
                 break;
 
-            case 10:
-                messageList[2] = R.string.dialog_msg_hotel_payment_message10;
-                break;
-
-            case 11:
-            case 12:
-                messageList[2] = R.string.dialog_msg_hotel_payment_message12;
+            case 4:
+                messageList[2] = R.string.dialog_msg_hotel_payment_message_pension_4; // 다음날 새벽 3시 부터 9시 이전 다음날 22시 부터
                 break;
 
             default:

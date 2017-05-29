@@ -1157,7 +1157,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
                         {
                             TodayDateTime todayDateTime = baseDto.data;
 
-                            Calendar todayCalendar = DailyCalendar.getInstance(todayDateTime.dailyDateTime, false);
+                            Calendar todayCalendar = DailyCalendar.getInstance(todayDateTime.currentDateTime, false);
                             int hour = todayCalendar.get(Calendar.HOUR_OF_DAY);
                             int minute = todayCalendar.get(Calendar.MINUTE);
 
