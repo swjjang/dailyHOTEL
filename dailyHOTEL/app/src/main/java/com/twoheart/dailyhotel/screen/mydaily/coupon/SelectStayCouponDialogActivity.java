@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.Window;
 
 import com.crashlytics.android.Crashlytics;
+import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Coupon;
@@ -95,6 +96,12 @@ public class SelectStayCouponDialogActivity extends BaseActivity
 
         mCallByScreen = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_CALL_BY_SCREEN);
         mStayBookingDay = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY);
+
+        if (DailyTextUtils.isTextEmpty(mCallByScreen) == true || mStayBookingDay == null)
+        {
+            Util.restartApp(this);
+            return;
+        }
 
         switch (mCallByScreen)
         {
