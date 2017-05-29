@@ -28,6 +28,7 @@ import com.daily.dailyhotel.entity.StayOutboundRoom;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
 import com.daily.dailyhotel.repository.remote.StayOutboundRemoteImpl;
 import com.daily.dailyhotel.screen.common.calendar.StayCalendarActivity;
+import com.daily.dailyhotel.screen.common.call.CallDialogActivity;
 import com.daily.dailyhotel.screen.stay.outbound.detail.amenities.AmenityListActivity;
 import com.daily.dailyhotel.screen.stay.outbound.detail.images.ImageListActivity;
 import com.daily.dailyhotel.screen.stay.outbound.people.SelectPeopleActivity;
@@ -373,6 +374,9 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
 
             case StayOutboundDetailActivity.REQUEST_CODE_HAPPYTALK:
                 break;
+
+            case StayOutboundDetailActivity.REQUEST_CODE_CALL:
+                break;
         }
     }
 
@@ -717,11 +721,6 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
     @Override
     public void onConciergeClick()
     {
-        if (lock() == true)
-        {
-            return;
-        }
-
         getViewInterface().showConciergeDialog(new DialogInterface.OnDismissListener()
         {
             @Override
@@ -858,7 +857,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
     @Override
     public void onConciergeCallClick()
     {
-        // 복잡.
+        startActivityForResult(CallDialogActivity.newInstance(getActivity()), StayOutboundDetailActivity.REQUEST_CODE_CALL);
     }
 
     @Override

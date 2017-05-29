@@ -45,7 +45,10 @@ public abstract class BaseView<T1 extends OnBaseEventListener, T2 extends ViewDa
     @Override
     public final void setContentView(int layoutResID)
     {
-        mViewDataBinding = DataBindingUtil.setContentView(mActivity, layoutResID);
+        if (layoutResID != 0)
+        {
+            mViewDataBinding = DataBindingUtil.setContentView(mActivity, layoutResID);
+        }
 
         setContentView(mViewDataBinding);
     }
