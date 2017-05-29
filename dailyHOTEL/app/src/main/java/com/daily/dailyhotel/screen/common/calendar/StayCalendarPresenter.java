@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.util.Pair;
+import android.util.SparseArray;
+import android.util.SparseIntArray;
 import android.view.View;
 
 import com.daily.base.BaseAnalyticsInterface;
@@ -135,18 +137,19 @@ public class StayCalendarPresenter extends PlaceCalendarPresenter<StayCalendarAc
             @Override
             public ArrayList<Pair<String, Day[]>> apply(String calendarHolidays) throws Exception
             {
-                int[] holidays = null;
+                SparseIntArray holidaySparseIntArray = null;
 
                 if (DailyTextUtils.isTextEmpty(calendarHolidays) == false)
                 {
                     String[] holidaysSplit = calendarHolidays.split("\\,");
-                    holidays = new int[holidaysSplit.length];
+                    holidaySparseIntArray = new SparseIntArray(holidaysSplit.length);
 
                     for (int i = 0; i < holidaysSplit.length; i++)
                     {
                         try
                         {
-                            holidays[i] = Integer.parseInt(holidaysSplit[i]);
+                            int holiday = Integer.parseInt(holidaysSplit[i]);
+                            holidaySparseIntArray.put(holiday, holiday);
                         } catch (NumberFormatException e)
                         {
                             ExLog.e(e.toString());
@@ -154,7 +157,7 @@ public class StayCalendarPresenter extends PlaceCalendarPresenter<StayCalendarAc
                     }
                 }
 
-                return makeCalendar(mStartDateTime, mEndDateTime, holidays);
+                return makeCalendar(mStartDateTime, mEndDateTime, holidaySparseIntArray);
             }
         }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<ArrayList<Pair<String, Day[]>>>()
         {

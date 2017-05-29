@@ -106,7 +106,7 @@ public abstract class PlaceCalendarView<T1 extends PlaceCalendarView.OnEventList
 
             View monthCalendarLayout = calendarDataBinding.getRoot();
 
-            if (i >= 0 && i < size)
+            if (i < size - 1)
             {
                 monthCalendarLayout.setPadding(monthCalendarLayout.getPaddingLeft(), monthCalendarLayout.getPaddingTop()//
                     , monthCalendarLayout.getPaddingRight(), monthCalendarLayout.getPaddingBottom() + ScreenUtils.dpToPx(getContext(), 30));
