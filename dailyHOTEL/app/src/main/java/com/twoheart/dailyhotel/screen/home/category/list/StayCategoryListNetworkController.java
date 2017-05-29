@@ -55,7 +55,7 @@ public class StayCategoryListNetworkController extends BaseNetworkController
             , params.toLocalPlusParamsMap(), mLocalPlusListCallback);
     }
 
-    private ArrayList<Stay> makeStayList(JSONArray jsonArray, String imageUrl) throws JSONException
+    private ArrayList<Stay> makeStayList(JSONArray jsonArray, String imageUrl, boolean isLocalPlus) throws JSONException
     {
         if (jsonArray == null)
         {
@@ -72,6 +72,7 @@ public class StayCategoryListNetworkController extends BaseNetworkController
             jsonObject = jsonArray.getJSONObject(i);
 
             stay = new Stay();
+            stay.isLocalPlus = isLocalPlus;
 
             if (stay.setStay(jsonObject, imageUrl) == true)
             {
@@ -116,7 +117,7 @@ public class StayCategoryListNetworkController extends BaseNetworkController
                         if (hotelJSONArray != null)
                         {
                             imageUrl = dataJSONObject.getString("imgUrl");
-                            stayList = makeStayList(hotelJSONArray, imageUrl);
+                            stayList = makeStayList(hotelJSONArray, imageUrl, false);
                         } else
                         {
                             stayList = new ArrayList<>();
@@ -190,7 +191,7 @@ public class StayCategoryListNetworkController extends BaseNetworkController
                         if (hotelJSONArray != null)
                         {
                             imageUrl = dataJSONObject.getString("imgUrl");
-                            stayList = makeStayList(hotelJSONArray, imageUrl);
+                            stayList = makeStayList(hotelJSONArray, imageUrl, true);
                         } else
                         {
                             stayList = new ArrayList<>();

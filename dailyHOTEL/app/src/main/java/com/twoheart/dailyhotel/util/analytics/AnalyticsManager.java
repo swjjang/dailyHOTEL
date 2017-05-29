@@ -976,6 +976,9 @@ public class AnalyticsManager
         // true vr
         public static final String STAY_ITEM_CLICK_TRUE_VR = "stay_item_click_true_vr";
         public static final String TRUE_VR_CLICK = "true_vr_click";
+
+        // boutique BM
+        public static final String STAY_ITEM_CLICK_BOUTIQUE_AD = "stay_item_click_boutique_ad";
     }
 
     public static class Category

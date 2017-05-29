@@ -23,6 +23,7 @@ public class Stay extends Place
     public double distance; // 정렬시에 보여주는 내용
     public String categoryCode;
     //    public String sday;
+    public boolean isLocalPlus;
 
     protected Grade mGrade;
 
@@ -51,6 +52,7 @@ public class Stay extends Place
         dest.writeString(dBenefitText);
         dest.writeString(categoryCode);
         //        dest.writeString(sday);
+        dest.writeInt(isLocalPlus == true ? 1 : 0);
     }
 
     protected void readFromParcel(Parcel in)
@@ -61,6 +63,7 @@ public class Stay extends Place
         dBenefitText = in.readString();
         categoryCode = in.readString();
         //        sday = in.readString();
+        isLocalPlus = in.readInt() == 1 ? true : false;
     }
 
     public Grade getGrade()
