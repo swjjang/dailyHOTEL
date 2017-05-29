@@ -1281,9 +1281,10 @@ public class HotelPaymentActivity extends PlacePaymentActivity
         int closeHour = Integer.parseInt(DailyCalendar.convertDateFormatString(todayDateTime.closeDateTime, DailyCalendar.ISO_8601_FORMAT, "HH"));
         int currentHour = Integer.parseInt(DailyCalendar.convertDateFormatString(todayDateTime.currentDateTime, DailyCalendar.ISO_8601_FORMAT, "HH"));
 
+        String todayDate = DailyCalendar.convertDateFormatString(todayDateTime.dailyDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyy-MM-dd");
+        String bookingDate = stayBookingDay.getCheckInDay("yyyy-MM-dd");
 
-
-        if (todayDateTime.dailyDateTime.equalsIgnoreCase(stayBookingDay.getCheckInDay(DailyCalendar.ISO_8601_FORMAT)) == true)
+        if (todayDate.equalsIgnoreCase(bookingDate) == true)
         {
             // 서버시간과 같은 날
             if (currentHour < openHour) {
