@@ -109,6 +109,11 @@ public class GourmetProductDetailLayout extends BaseLayout
 
     public void setInformation(GourmetDetail gourmetDetail, int productIndex)
     {
+        if (gourmetDetail == null)
+        {
+            return;
+        }
+
         GourmetProduct gourmetProduct = gourmetDetail.getProduct(productIndex);
 
         // 이미지 정보

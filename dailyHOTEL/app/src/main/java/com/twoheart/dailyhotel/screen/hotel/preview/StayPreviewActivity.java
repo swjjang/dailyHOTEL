@@ -147,7 +147,16 @@ public class StayPreviewActivity extends BaseActivity
 
         mViewPrice = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_DISCOUNTPRICE, 0);
         String placeName = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_PLACENAME);
-        Stay.Grade grade = Stay.Grade.valueOf(intent.getStringExtra(NAME_INTENT_EXTRA_DATA_GRADE));
+
+        Stay.Grade grade;
+
+        try
+        {
+            grade = Stay.Grade.valueOf(intent.getStringExtra(NAME_INTENT_EXTRA_DATA_GRADE));
+        } catch (Exception e)
+        {
+            grade = null;
+        }
 
         initLayout(placeName, grade);
 
@@ -195,13 +204,20 @@ public class StayPreviewActivity extends BaseActivity
 
     }
 
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState)
+    {
+        super.onRestoreInstanceState(savedInstanceState);
+
+        Util.restartApp(this);
+    }
+
     private void initLayout(String placeName, Stay.Grade grade)
     {
         setContentView(mPreviewLayout.onCreateView(R.layout.activity_place_preview));
 
         mPreviewLayout.setGrade(grade);
         mPreviewLayout.setPlaceName(placeName);
-
         mPreviewLayout.showPopAnimation();
     }
 

@@ -30,6 +30,8 @@ public class StayPreviewLayout extends PlacePreviewLayout implements View.OnClic
     {
         if (grade == null)
         {
+            mPlaceGradeTextView.setVisibility(View.INVISIBLE);
+            mPlaceSubGradeTextView.setVisibility(View.GONE);
             return;
         }
 
