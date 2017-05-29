@@ -299,7 +299,7 @@ public class GourmetWishListFragment extends PlaceWishListFragment
                 });
 
                 Intent intent = GourmetDetailActivity.newInstance(mBaseActivity, //
-                    (GourmetBookingDay) mPlaceBookingDay, gourmet, 0, true);
+                    (GourmetBookingDay) mPlaceBookingDay, gourmet, true);
 
                 View simpleDraweeView = view.findViewById(R.id.imageView);
                 View nameTextView = view.findViewById(R.id.nameTextView);
@@ -316,7 +316,7 @@ public class GourmetWishListFragment extends PlaceWishListFragment
             } else
             {
                 Intent intent = GourmetDetailActivity.newInstance(mBaseActivity, //
-                    (GourmetBookingDay) mPlaceBookingDay, gourmet, 0, false);
+                    (GourmetBookingDay) mPlaceBookingDay, gourmet, false);
 
                 mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMET_DETAIL);
 
