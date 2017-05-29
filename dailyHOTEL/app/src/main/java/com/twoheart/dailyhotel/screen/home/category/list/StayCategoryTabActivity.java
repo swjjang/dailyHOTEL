@@ -1094,6 +1094,12 @@ public class StayCategoryTabActivity extends PlaceMainActivity
                             AnalyticsManager.getInstance(StayCategoryTabActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
                                 , AnalyticsManager.Action.STAY_ITEM_CLICK_TRUE_VR, Integer.toString(stay.index), null);
                         }
+
+                        if (stay.isLocalPlus == true)
+                        {
+                            AnalyticsManager.getInstance(StayCategoryTabActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                                , AnalyticsManager.Action.STAY_ITEM_CLICK_BOUTIQUE_AD, Integer.toString(stay.index), null);
+                        }
                     }
                     break;
                 }

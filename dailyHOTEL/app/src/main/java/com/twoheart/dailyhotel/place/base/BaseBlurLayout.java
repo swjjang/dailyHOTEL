@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
 import com.facebook.imagepipeline.nativecode.NativeBlurFilter;
 import com.twoheart.dailyhotel.R;
@@ -63,7 +64,13 @@ public abstract class BaseBlurLayout extends BaseLayout
                     return null;
                 }
 
-                NativeBlurFilter.iterativeBoxBlur(bitmap, 2, 60);
+                try
+                {
+                    NativeBlurFilter.iterativeBoxBlur(bitmap, 2, 60);
+                } catch (Exception e)
+                {
+                    ExLog.d(e.toString());
+                }
 
                 return bitmap;
             }).observeOn(AndroidSchedulers.mainThread()).subscribe(bitmap ->

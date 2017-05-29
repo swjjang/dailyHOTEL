@@ -100,7 +100,7 @@ public abstract class PlaceMainActivity extends BaseActivity
             mPlaceMainNetworkController.requestDateTime();
         }
 
-        if (Util.supportPeekNPop(this) == true)
+        if (Util.supportPreview(this) == true)
         {
             if (mPlaceMainLayout.getBlurVisibility() == true)
             {

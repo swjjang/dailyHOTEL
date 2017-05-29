@@ -108,7 +108,7 @@ public abstract class PlaceListLayout extends BaseLayout
             mPlaceListAdapter.setTrueVREnabled(true);
         }
 
-        if (Util.supportPeekNPop(mContext) == true)
+        if (Util.supportPreview(mContext) == true)
         {
             mPlaceListAdapter.setOnLongClickListener(mOnItemLongClickListener);
         }
