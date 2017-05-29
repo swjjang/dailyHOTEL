@@ -185,7 +185,7 @@ public class SelectPeoplePresenter extends BaseExceptionPresenter<SelectPeopleAc
             return;
         }
 
-        final int DEFAULT_CHILD_AGE = 1;
+        final int DEFAULT_CHILD_AGE = 0;
 
         if (mPeople.getChildAgeList() == null)
         {
