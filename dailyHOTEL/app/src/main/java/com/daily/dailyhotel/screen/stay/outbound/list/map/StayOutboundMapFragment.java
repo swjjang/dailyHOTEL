@@ -336,7 +336,7 @@ public class StayOutboundMapFragment extends com.google.android.gms.maps.Support
 
     public void hideSelectedMarker()
     {
-        if(mSelectedMarker == null)
+        if (mSelectedMarker == null)
         {
             return;
         }

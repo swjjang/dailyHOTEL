@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 
 import com.daily.base.BaseActivity;
-import com.daily.base.util.DailyTextUtils;
 import com.daily.dailyhotel.entity.StayOutboundFilters;
 import com.twoheart.dailyhotel.R;
 
@@ -24,11 +23,11 @@ public class StayOutboundFilterActivity extends BaseActivity<StayOutboundFilterP
     static final int REQUEST_CODE_STAYOUTBOUND_PERMISSION_MANAGER = 10000;
     static final int REQUEST_CODE_STAYOUTBOUND_SETTING_LOCATION = 10001;
 
-    public static Intent newInstance(Context context, StayOutboundFilters stayOutboundFilters, boolean ... enabledLines)
+    public static Intent newInstance(Context context, StayOutboundFilters stayOutboundFilters, boolean... enabledLines)
     {
         Intent intent = new Intent(context, StayOutboundFilterActivity.class);
 
-        if(stayOutboundFilters != null)
+        if (stayOutboundFilters != null)
         {
             intent.putExtra(INTENT_EXTRA_DATA_SORT, stayOutboundFilters.sortType.name());
             intent.putExtra(INTENT_EXTRA_DATA_RATING, stayOutboundFilters.rating);

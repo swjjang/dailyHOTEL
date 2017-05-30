@@ -40,7 +40,7 @@ public class SuggestsData
 
         List<Suggest> list = new ArrayList<>();
 
-        if(context == null)
+        if (context == null)
         {
             return list;
         }

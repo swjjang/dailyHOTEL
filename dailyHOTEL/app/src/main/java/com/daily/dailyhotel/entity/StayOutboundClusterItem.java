@@ -2,7 +2,6 @@ package com.daily.dailyhotel.entity;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.clustering.ClusterItem;
-import com.twoheart.dailyhotel.model.Place;
 
 public class StayOutboundClusterItem implements ClusterItem
 {

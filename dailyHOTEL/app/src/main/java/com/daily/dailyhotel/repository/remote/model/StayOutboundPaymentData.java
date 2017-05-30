@@ -4,6 +4,8 @@ import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 import com.daily.dailyhotel.entity.StayOutboundPayment;
 
+import java.util.List;
+
 @JsonObject
 public class StayOutboundPaymentData
 {
@@ -28,11 +30,29 @@ public class StayOutboundPaymentData
     @JsonField(name = "nonRefundable")
     public boolean nonRefundable;
 
-    @JsonField(name = "nonRefundableDescription")
-    public String nonRefundableDescription;
+    @JsonField(name = "nonRefundableDescriptions")
+    public List<String> nonRefundableDescriptions;
 
     @JsonField(name = "total")
     public int total;
+
+    @JsonField(name = "totalUsd")
+    public double totalUsd;
+
+    @JsonField(name = "feeTotalAmountUsd")
+    public double feeTotalAmountUsd;
+
+    @JsonField(name = "rateKey")
+    public String rateKey;
+
+    @JsonField(name = "roomTypeCode")
+    public String roomTypeCode;
+
+    @JsonField(name = "rateCode")
+    public String rateCode;
+
+    @JsonField(name = "roomBedTypeId")
+    public int roomBedTypeId;
 
     public StayOutboundPaymentData()
     {
@@ -43,6 +63,20 @@ public class StayOutboundPaymentData
     {
         StayOutboundPayment stayOutboundPayment = new StayOutboundPayment();
 
+        stayOutboundPayment.stayIndex = hotelId;
+        stayOutboundPayment.availableRooms = availableRooms;
+        stayOutboundPayment.checkInDate = checkinDate;
+        stayOutboundPayment.checkInTime = checkinTime;
+        stayOutboundPayment.checkOutDate = checkoutDate;
+        stayOutboundPayment.checkOutTime = checkoutTime;
+        stayOutboundPayment.nonRefundable = nonRefundable;
+        stayOutboundPayment.setRefundDescriptionList(nonRefundableDescriptions);
+        stayOutboundPayment.totalPrice = total;
+        stayOutboundPayment.feeTotalAmountUsd = feeTotalAmountUsd;
+        stayOutboundPayment.rateKey = rateKey;
+        stayOutboundPayment.roomTypeCode = roomTypeCode;
+        stayOutboundPayment.rateCode = rateCode;
+        stayOutboundPayment.roomBedTypeId = roomBedTypeId;
 
         return stayOutboundPayment;
     }

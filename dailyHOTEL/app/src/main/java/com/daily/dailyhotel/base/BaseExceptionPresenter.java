@@ -4,9 +4,9 @@ import android.support.annotation.NonNull;
 
 import com.crashlytics.android.Crashlytics;
 import com.daily.base.BaseActivity;
-import com.daily.base.exception.BaseException;
 import com.daily.base.BasePresenter;
 import com.daily.base.BaseViewInterface;
+import com.daily.base.exception.BaseException;
 import com.daily.base.util.ExLog;
 import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.repository.local.ConfigLocalImpl;

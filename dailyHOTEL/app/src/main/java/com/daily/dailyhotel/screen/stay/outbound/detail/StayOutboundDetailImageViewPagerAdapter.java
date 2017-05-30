@@ -122,7 +122,7 @@ public class StayOutboundDetailImageViewPagerAdapter extends PagerAdapter
             container.addView(imageView, 0, layoutParams);
 
             DraweeController draweeController = Fresco.newDraweeControllerBuilder()//
-                    .setControllerListener(controllerListener).setUri(url).build();
+                .setControllerListener(controllerListener).setUri(url).build();
 
             imageView.setController(draweeController);
         } else

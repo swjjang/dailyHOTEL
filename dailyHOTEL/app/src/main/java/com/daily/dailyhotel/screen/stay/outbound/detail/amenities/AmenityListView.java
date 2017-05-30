@@ -71,7 +71,7 @@ public class AmenityListView extends BaseView<AmenityListView.OnEventListener, A
             return;
         }
 
-        if(mAmenityListAdapter == null)
+        if (mAmenityListAdapter == null)
         {
             mAmenityListAdapter = new AmenityListAdapter(getContext());
             getViewDataBinding().recyclerView.setAdapter(mAmenityListAdapter);

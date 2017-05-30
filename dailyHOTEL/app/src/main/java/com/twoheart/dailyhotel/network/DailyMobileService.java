@@ -8,6 +8,7 @@ import com.daily.dailyhotel.repository.remote.model.StayOutboundsData;
 import com.daily.dailyhotel.repository.remote.model.SuggestsData;
 import com.daily.dailyhotel.repository.remote.model.UserBenefitData;
 import com.daily.dailyhotel.repository.remote.model.UserData;
+import com.daily.dailyhotel.repository.remote.model.UserInformationData;
 import com.twoheart.dailyhotel.model.Keyword;
 import com.twoheart.dailyhotel.network.dto.BaseDto;
 import com.twoheart.dailyhotel.network.dto.BaseListDto;
@@ -599,4 +600,7 @@ public interface DailyMobileService
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @POST("{mobileAPI}")
     Observable<BaseListDto<CardData>> getSimpleCardList(@Path(value = "mobileAPI", encoded = true) String mobileAPI);
+
+    @GET("{mobileAPI}")
+    Observable<BaseDto<UserInformationData>> getUserInformationForPayment(@Path(value = "mobileAPI", encoded = true) String mobileAPI);
 }

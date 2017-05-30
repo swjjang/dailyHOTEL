@@ -91,7 +91,7 @@ public class KakaoLinkManager implements Constants
 
     public void shareStayOutbound(String name, String hotelName, String address, int hotelIndex, String imageUrl, StayBookDateTime stayBookDateTime)
     {
-        if(DailyTextUtils.isTextEmpty(name, hotelName, address) == true || stayBookDateTime == null)
+        if (DailyTextUtils.isTextEmpty(name, hotelName, address) == true || stayBookDateTime == null)
         {
             return;
         }

@@ -93,7 +93,7 @@ public class PaymentRemoteImpl implements PaymentInterface
 
                 if (cardDataBaseListDto != null)
                 {
-                    if (cardDataBaseListDto.msgCode == 100 && cardDataBaseListDto.data != null)
+                    if (cardDataBaseListDto.msgCode == 0 && cardDataBaseListDto.data != null)
                     {
                         for (CardData cardData : cardDataBaseListDto.data)
                         {

@@ -2,7 +2,6 @@ package com.twoheart.dailyhotel.screen.gourmet.region;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 

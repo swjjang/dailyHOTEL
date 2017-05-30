@@ -25,7 +25,9 @@ import com.daily.dailyhotel.entity.People;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayOutboundDetail;
 import com.daily.dailyhotel.entity.StayOutboundRoom;
+import com.daily.dailyhotel.entity.User;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
+import com.daily.dailyhotel.repository.remote.ProfileRemoteImpl;
 import com.daily.dailyhotel.repository.remote.StayOutboundRemoteImpl;
 import com.daily.dailyhotel.screen.common.calendar.StayCalendarActivity;
 import com.daily.dailyhotel.screen.common.call.CallDialogActivity;
@@ -33,10 +35,16 @@ import com.daily.dailyhotel.screen.stay.outbound.detail.amenities.AmenityListAct
 import com.daily.dailyhotel.screen.stay.outbound.detail.images.ImageListActivity;
 import com.daily.dailyhotel.screen.stay.outbound.payment.StayOutboundPaymentActivity;
 import com.daily.dailyhotel.screen.stay.outbound.people.SelectPeopleActivity;
+import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.model.Customer;
 import com.twoheart.dailyhotel.screen.common.HappyTalkCategoryDialog;
 import com.twoheart.dailyhotel.screen.common.ZoomMapActivity;
 import com.twoheart.dailyhotel.screen.information.FAQActivity;
+import com.twoheart.dailyhotel.screen.mydaily.member.AddProfileSocialActivity;
+import com.twoheart.dailyhotel.screen.mydaily.member.EditProfilePhoneActivity;
+import com.twoheart.dailyhotel.screen.mydaily.member.LoginActivity;
+import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyUserPreference;
 import com.twoheart.dailyhotel.util.KakaoLinkManager;
@@ -81,6 +89,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
 
     private StayOutboundRemoteImpl mStayOutboundRemoteImpl;
     private CommonRemoteImpl mCommonRemoteImpl;
+    private ProfileRemoteImpl mProfileRemoteImpl;
 
     private int mStayIndex;
     private String mStayName;
@@ -123,6 +132,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
 
         mStayOutboundRemoteImpl = new StayOutboundRemoteImpl(activity);
         mCommonRemoteImpl = new CommonRemoteImpl(activity);
+        mProfileRemoteImpl = new ProfileRemoteImpl(activity);
 
         setPeople(People.DEFAULT_ADULTS, null);
 
@@ -380,6 +390,17 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
                 break;
 
             case StayOutboundDetailActivity.REQUEST_CODE_CALL:
+                break;
+
+            case StayOutboundDetailActivity.REQUEST_CODE_PROFILE_UPDATE:
+            case StayOutboundDetailActivity.REQUEST_CODE_LOGIN:
+                if (resultCode == Activity.RESULT_OK)
+                {
+                    onActionButtonClick();
+                } else
+                {
+                    onHideRoomListClick(false);
+                }
                 break;
         }
     }
@@ -768,13 +789,78 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
                     return;
                 }
 
-                startActivityForResult(StayOutboundPaymentActivity.newInstance(getActivity(), mStayOutboundDetail.index//
-                    , mStayOutboundDetail.name//
-                    , mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
-                    , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
-                    , mPeople.numberOfAdults, mPeople.getChildAgeList()//
-                    , mSelectedRoom.roomName, mSelectedRoom.rateCode, mSelectedRoom.rateKey, mSelectedRoom.roomTypeCode)//
-                    , StayOutboundDetailActivity.REQUEST_CODE_PAYMENT);
+                if (DailyHotel.isLogin() == false)
+                {
+                    DailyToast.showToast(getActivity(), R.string.toast_msg_please_login, DailyToast.LENGTH_LONG);
+
+                    startActivityForResult(LoginActivity.newInstance(getActivity(), AnalyticsManager.Screen.DAILYHOTEL_DETAIL)//
+                        , StayOutboundDetailActivity.REQUEST_CODE_LOGIN);
+                } else
+                {
+                    addCompositeDisposable(mProfileRemoteImpl.getProfile().subscribe(new Consumer<User>()
+                    {
+                        @Override
+                        public void accept(@io.reactivex.annotations.NonNull User user) throws Exception
+                        {
+                            boolean isDailyUser = Constants.DAILY_USER.equalsIgnoreCase(user.userType);
+
+                            if (isDailyUser == true)
+                            {
+                                // 인증이 되어있지 않던가 기존에 인증이 되었는데 인증이 해지되었다.
+                                if (Util.isValidatePhoneNumber(user.phone) == false || (user.verified == true && user.phoneVerified == false))
+                                {
+                                    startActivityForResult(EditProfilePhoneActivity.newInstance(getActivity(), Integer.toString(user.index)//
+                                        , EditProfilePhoneActivity.Type.NEED_VERIFICATION_PHONENUMBER, user.phone)//
+                                        , StayOutboundDetailActivity.REQUEST_CODE_PROFILE_UPDATE);
+                                } else
+                                {
+                                    startActivityForResult(StayOutboundPaymentActivity.newInstance(getActivity(), mStayOutboundDetail.index//
+                                        , mStayOutboundDetail.name//
+                                        , mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
+                                        , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
+                                        , mPeople.numberOfAdults, mPeople.getChildAgeList()//
+                                        , mSelectedRoom.roomName, mSelectedRoom.rateCode, mSelectedRoom.rateKey, mSelectedRoom.roomTypeCode)//
+                                        , StayOutboundDetailActivity.REQUEST_CODE_PAYMENT);
+                                }
+                            } else
+                            {
+                                // 입력된 정보가 부족해.
+                                if (DailyTextUtils.isTextEmpty(user.email, user.phone, user.name) == true)
+                                {
+                                    Customer customer = new Customer();
+                                    customer.setEmail(user.email);
+                                    customer.setName(user.name);
+                                    customer.setPhone(user.phone);
+                                    customer.setUserIdx(Integer.toString(user.index));
+
+                                    startActivityForResult(AddProfileSocialActivity.newInstance(getActivity()//
+                                        , customer, user.birthday), StayOutboundDetailActivity.REQUEST_CODE_PROFILE_UPDATE);
+                                } else if (Util.isValidatePhoneNumber(user.phone) == false)
+                                {
+                                    startActivityForResult(EditProfilePhoneActivity.newInstance(getActivity(), Integer.toString(user.index)//
+                                        , EditProfilePhoneActivity.Type.WRONG_PHONENUMBER, user.phone)//
+                                        , StayOutboundDetailActivity.REQUEST_CODE_PROFILE_UPDATE);
+                                } else
+                                {
+                                    startActivityForResult(StayOutboundPaymentActivity.newInstance(getActivity(), mStayOutboundDetail.index//
+                                        , mStayOutboundDetail.name//
+                                        , mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
+                                        , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
+                                        , mPeople.numberOfAdults, mPeople.getChildAgeList()//
+                                        , mSelectedRoom.roomName, mSelectedRoom.rateCode, mSelectedRoom.rateKey, mSelectedRoom.roomTypeCode)//
+                                        , StayOutboundDetailActivity.REQUEST_CODE_PAYMENT);
+                                }
+                            }
+                        }
+                    }, new Consumer<Throwable>()
+                    {
+                        @Override
+                        public void accept(@io.reactivex.annotations.NonNull Throwable throwable) throws Exception
+                        {
+                            onHandleError(throwable);
+                        }
+                    }));
+                }
                 break;
 
             case STATUS_ROOM_LIST:
@@ -885,7 +971,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
     @Override
     public void onRoomClick(StayOutboundRoom stayOutboundRoom)
     {
-
+        mSelectedRoom = stayOutboundRoom;
     }
 
     private void onStayOutboundDetail(StayOutboundDetail stayOutboundDetail)
@@ -914,6 +1000,12 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
         {
             mCheckChangedPrice = true;
             checkChangedPrice(mIsDeepLink, stayOutboundDetail, null);
+        }
+
+        // 선택된 방이 없으면 처음 방으로 한다.
+        if (mSelectedRoom == null)
+        {
+            onRoomClick(stayOutboundDetail.getRoomList().get(0));
         }
 
         setStatus(STATUS_ROOM_LIST);

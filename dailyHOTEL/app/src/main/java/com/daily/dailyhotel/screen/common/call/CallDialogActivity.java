@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 
 import com.daily.base.BaseActivity;
-import com.twoheart.dailyhotel.R;
 
 /**
  * Created by sheldon

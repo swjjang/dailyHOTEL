@@ -11,6 +11,7 @@ import com.daily.dailyhotel.repository.remote.model.StayOutboundsData;
 import com.daily.dailyhotel.repository.remote.model.SuggestsData;
 import com.daily.dailyhotel.repository.remote.model.UserBenefitData;
 import com.daily.dailyhotel.repository.remote.model.UserData;
+import com.daily.dailyhotel.repository.remote.model.UserInformationData;
 import com.twoheart.dailyhotel.model.Keyword;
 import com.twoheart.dailyhotel.network.dto.BaseDto;
 import com.twoheart.dailyhotel.network.dto.BaseListDto;
@@ -1391,5 +1392,13 @@ public class DailyMobileAPI implements IDailyNetwork
             : "NDIkOCQ1NSQ4NyQ4NyQ4MCQxMzIkOTIkMTMwJDU2JDE2JDQyJDY4JDU5JDEzMCQ3MyQ=$QzdFNkE5NNjgzM0JIFMjZFRjlCQjY4OEQ3NkI5NDdDKRjUMxNDkzNTk1MTBWjkzQkE5NELNDNQ0RFOENGRDAwMGEE5MTE3UARDYFGQjEzMzMxRjVDMDA2MjVEQzBGMTgxREYJGNDMK3MTGI2$";
 
         return mDailyMobileService.getSimpleCardList(Crypto.getUrlDecoderEx(API)).subscribeOn(Schedulers.io());
+    }
+
+    public Observable<BaseDto<UserInformationData>> getUserInformationForPayment()
+    {
+        final String API = Constants.UNENCRYPTED_URL ? "api/user/information"//
+            : "NTQkNTMkNzckMTgkODIkODEkMTgkNjYkMzQkNTYkODIkNzYkNzQkMzckNTQkMjMk$ODAzNUVCRjAyNDIwMzPClCNATc5ODc2OEEzIN0JU1MjVCMUQwNEMzOTTY2NEMUSIzRDA5MjWAyNkRTBNQDE1NUZVPFNBUEMzQTFDMg==$";
+
+        return mDailyMobileService.getUserInformationForPayment(Crypto.getUrlDecoderEx(API)).subscribeOn(Schedulers.io());
     }
 }

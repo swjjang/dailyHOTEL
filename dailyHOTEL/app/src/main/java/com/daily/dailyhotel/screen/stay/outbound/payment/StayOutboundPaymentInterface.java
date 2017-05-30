@@ -1,20 +1,25 @@
 package com.daily.dailyhotel.screen.stay.outbound.payment;
 
+import android.text.SpannableString;
+
 import com.daily.base.BaseViewInterface;
 import com.daily.dailyhotel.entity.Card;
 import com.daily.dailyhotel.entity.People;
-import com.daily.dailyhotel.entity.StayOutboundPayment;
-import com.daily.dailyhotel.entity.User;
+import com.daily.dailyhotel.entity.UserInformation;
+
+import java.util.List;
 
 public interface StayOutboundPaymentInterface extends BaseViewInterface
 {
-    void setBooking(String checkInDate, String checkOutDate, int nights, String stayName, String roomType);
+    void setBooking(SpannableString checkInDate, SpannableString checkOutDate, int nights, String stayName, String roomType);
 
-    void setUser(User user, String firstName, String lastName, String phone, String email);
+    void setUserInformation(UserInformation userInformation, String firstName, String lastName, String phone, String email);
 
     void setPeople(People people);
 
-    void setStayOutboundPayment(int bonus, StayOutboundPayment stayOutboundPayment, int nights);
+    void setStayOutboundPayment(int bonus, int nights, int totalPrice, int discountPrice, int paymentPrice, double taxPrice);
 
     void setSimpleCard(Card card);
+
+    void setRefundDescriptionList(List<String> refundDescriptionList);
 }

@@ -7,8 +7,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 
 import com.daily.base.BaseActivity;
-import com.daily.dailyhotel.entity.People;
-import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.twoheart.dailyhotel.R;
 
 import java.util.ArrayList;
@@ -33,8 +31,7 @@ public class StayOutboundPaymentActivity extends BaseActivity<StayOutboundPaymen
 
 
     public static Intent newInstance(Context context, int stayIndex, String stayName//
-        , String checkInDateTime, String checkOutDateTime, int numberOfAdults, ArrayList<Integer> childAgeList
-        , String roomType, String rateCode, String rateKey, String roomTypeCode)
+        , String checkInDateTime, String checkOutDateTime, int numberOfAdults, ArrayList<Integer> childAgeList, String roomType, String rateCode, String rateKey, String roomTypeCode)
     {
         Intent intent = new Intent(context, StayOutboundPaymentActivity.class);
 

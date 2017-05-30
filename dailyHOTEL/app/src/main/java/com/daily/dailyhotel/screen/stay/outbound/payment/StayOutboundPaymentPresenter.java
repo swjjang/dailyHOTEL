@@ -4,21 +4,25 @@ package com.daily.dailyhotel.screen.stay.outbound.payment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.text.Spannable;
+import android.text.SpannableString;
 
 import com.daily.base.BaseAnalyticsInterface;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
+import com.daily.base.util.FontManager;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
 import com.daily.dailyhotel.entity.Card;
 import com.daily.dailyhotel.entity.People;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayOutboundPayment;
-import com.daily.dailyhotel.entity.User;
+import com.daily.dailyhotel.entity.UserInformation;
 import com.daily.dailyhotel.repository.remote.PaymentRemoteImpl;
 import com.daily.dailyhotel.repository.remote.ProfileRemoteImpl;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.DailyUserPreference;
+import com.twoheart.dailyhotel.widget.CustomFontTypefaceSpan;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,8 +49,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
     private String mRateCode, mRateKey, mRoomTypeCode;
     private StayOutboundPayment mStayOutboundPayment;
     private Card mSelectedCard;
-    private User mUser;
-
+    private UserInformation mUserInformation;
 
     public interface StayOutboundPaymentAnalyticsInterface extends BaseAnalyticsInterface
     {
@@ -72,6 +75,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
         setAnalytics(new StayOutboundPaymentAnalyticsImpl());
 
         mPaymentRemoteImpl = new PaymentRemoteImpl(activity);
+        mProfileRemoteImpl = new ProfileRemoteImpl(activity);
 
         setRefresh(true);
     }
@@ -195,11 +199,11 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
         Observable<StayOutboundPayment> observable;
 
         addCompositeDisposable(Observable.zip(mPaymentRemoteImpl.getStayOutBoundPayment(mStayBookDateTime, mStayIndex, mRateCode, mRateKey, mRoomTypeCode, mPeople)//
-            , mPaymentRemoteImpl.getSimpleCardList(), mProfileRemoteImpl.getProfile(), new Function3<StayOutboundPayment, List<Card>, User, Boolean>()
+            , mPaymentRemoteImpl.getSimpleCardList(), mProfileRemoteImpl.getUserInformation(), new Function3<StayOutboundPayment, List<Card>, UserInformation, Boolean>()
             {
                 @Override
                 public Boolean apply(@io.reactivex.annotations.NonNull StayOutboundPayment stayOutboundPayment//
-                    , @io.reactivex.annotations.NonNull List<Card> cardList, @io.reactivex.annotations.NonNull User user) throws Exception
+                    , @io.reactivex.annotations.NonNull List<Card> cardList, @io.reactivex.annotations.NonNull UserInformation userInformation) throws Exception
                 {
                     setStayOutboundPayment(stayOutboundPayment);
 
@@ -207,7 +211,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
                     setSelectedCard(selectedCard);
                     DailyPreference.getInstance(getActivity()).setSelectedCard(selectedCard);
 
-                    setUser(user);
+                    setUserInformation(userInformation);
 
                     return true;
                 }
@@ -216,9 +220,12 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
             @Override
             public void accept(@io.reactivex.annotations.NonNull Boolean aBoolean) throws Exception
             {
-                onPaymentInformation(mStayOutboundPayment);
-                onUserInformation(mUser);
+                onPaymentInformation(mStayOutboundPayment, mStayBookDateTime);
+                onUserInformation(mUserInformation, mPeople);
                 onSimpleCard(mSelectedCard);
+                onStayOutboundPayment(mUserInformation, mStayOutboundPayment, mStayBookDateTime);
+
+                unLockAll();
             }
         }, new Consumer<Throwable>()
         {
@@ -237,26 +244,85 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
         getActivity().onBackPressed();
     }
 
-
-    private void onPaymentInformation(StayOutboundPayment stayOutboundPayment)
+    @Override
+    public void onCallClick()
     {
-
 
     }
 
-    private void onUserInformation(User user)
+    private void onPaymentInformation(StayOutboundPayment stayOutboundPayment, StayBookDateTime stayBookDateTime)
     {
+        if (stayOutboundPayment == null || stayBookDateTime == null)
+        {
+            return;
+        }
+
+        final String DATE_FORMAT = "yyyy.MM.dd(EEE)";
+
+        try
+        {
+            String checkInTime = getString(R.string.label_stay_outbound_payment_hour, stayOutboundPayment.checkInTime.split(":")[0]);
+            String checkInDate = stayBookDateTime.getCheckInDateTime(DATE_FORMAT);
+
+            SpannableString checkInDateSpannableString = new SpannableString(checkInDate + " " + checkInTime);
+            checkInDateSpannableString.setSpan( //
+                new CustomFontTypefaceSpan(FontManager.getInstance(getActivity()).getBoldTypeface()),//
+                checkInDate.length(), checkInDate.length() + checkInTime.length() + 1,//
+                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+            String checkOutTime = getString(R.string.label_stay_outbound_payment_hour, stayOutboundPayment.checkOutTime.split(":")[0]);
+            String checkOutDate = stayBookDateTime.getCheckOutDateTime(DATE_FORMAT);
+
+            SpannableString checkOutDateSpannableString = new SpannableString(checkOutDate + " " + checkOutTime);
+            checkOutDateSpannableString.setSpan( //
+                new CustomFontTypefaceSpan(FontManager.getInstance(getActivity()).getBoldTypeface()),//
+                checkOutDate.length(), checkOutDate.length() + checkOutTime.length() + 1,//
+                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+            getViewInterface().setBooking(checkInDateSpannableString, checkOutDateSpannableString, mStayBookDateTime.getNights(), mStayName, mRoomType);
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+        }
+    }
+
+    private void onUserInformation(UserInformation userInformation, People people)
+    {
+        if (userInformation == null || people == null)
+        {
+            return;
+        }
+
         String firstName = DailyUserPreference.getInstance(getActivity()).getOverseasFirstName();
         String lastName = DailyUserPreference.getInstance(getActivity()).getOverseasLastName();
-        String email = DailyUserPreference.getInstance(getActivity()).getOverseasEmail();
         String phone = DailyUserPreference.getInstance(getActivity()).getOverseasPhone();
+        String email = DailyUserPreference.getInstance(getActivity()).getOverseasEmail();
 
+        getViewInterface().setUserInformation(userInformation, firstName, lastName, phone, email);
+        getViewInterface().setPeople(people);
     }
 
     private void onSimpleCard(Card card)
     {
+        getViewInterface().setSimpleCard(card);
+    }
 
+    private void onStayOutboundPayment(UserInformation userInformation, StayOutboundPayment stayOutboundPayment, StayBookDateTime stayBookDateTime)
+    {
+        if (userInformation == null || stayOutboundPayment == null || stayBookDateTime == null)
+        {
+            return;
+        }
 
+        try
+        {
+            getViewInterface().setStayOutboundPayment(userInformation.bonus, stayBookDateTime.getNights()//
+                , stayOutboundPayment.totalPrice, stayOutboundPayment.discountPrice//
+                , stayOutboundPayment.paymentPrice, stayOutboundPayment.feeTotalAmountUsd);
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+        }
     }
 
     private void setStayOutboundPayment(StayOutboundPayment stayOutboundPayment)
@@ -264,14 +330,14 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
         mStayOutboundPayment = stayOutboundPayment;
     }
 
-    private void setUser(User user)
+    private void setUserInformation(UserInformation userInformation)
     {
-        if (user == null)
+        if (userInformation == null)
         {
             return;
         }
 
-        mUser = user;
+        mUserInformation = userInformation;
     }
 
     private void setSelectedCard(Card card)

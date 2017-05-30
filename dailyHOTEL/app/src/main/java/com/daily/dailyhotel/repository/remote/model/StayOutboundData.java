@@ -2,7 +2,6 @@ package com.daily.dailyhotel.repository.remote.model;
 
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
-import com.daily.dailyhotel.entity.ImageMap;
 import com.daily.dailyhotel.entity.StayOutbound;
 
 @JsonObject

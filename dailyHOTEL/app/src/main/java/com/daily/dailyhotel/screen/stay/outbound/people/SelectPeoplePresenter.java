@@ -134,7 +134,7 @@ public class SelectPeoplePresenter extends BaseExceptionPresenter<SelectPeopleAc
     {
         unLockAll();
 
-        switch(requestCode)
+        switch (requestCode)
         {
         }
     }

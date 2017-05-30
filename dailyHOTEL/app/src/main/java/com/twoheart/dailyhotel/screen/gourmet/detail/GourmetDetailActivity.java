@@ -1248,7 +1248,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
             params.put(AnalyticsManager.KeyType.IS_SHOW_ORIGINAL_PRICE, gourmetDetail.isShowOriginalPrice);
             params.put(AnalyticsManager.KeyType.DAILYCHOICE, gourmetDetail.isDailyChoice ? "y" : "n");
             params.put(AnalyticsManager.KeyType.LENGTH_OF_STAY, "1");
-            params.put(AnalyticsManager.KeyType.NRD, gourmetDetailParams.sticker != null ?  "y" : "n");
+            params.put(AnalyticsManager.KeyType.NRD, gourmetDetailParams.sticker != null ? "y" : "n");
 
             AnalyticsManager.getInstance(this).recordScreen(this, screen, null, params);
         } catch (Exception e)

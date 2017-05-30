@@ -1,7 +1,6 @@
 package com.daily.dailyhotel.screen.stay.outbound.search;
 
 import com.daily.base.BaseViewInterface;
-import com.daily.dailyhotel.entity.People;
 
 public interface StayOutboundSearchViewInterface extends BaseViewInterface
 {

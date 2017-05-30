@@ -21,7 +21,6 @@ import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 public class TrueVRActivity extends WebViewActivity implements View.OnClickListener
 {

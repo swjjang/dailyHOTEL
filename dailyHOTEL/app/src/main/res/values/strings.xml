@@ -1329,6 +1329,7 @@
     <string name="label_stay_outbound_payment_first_name_hint">여권기재 영문 이름 입력</string>
     <string name="label_stay_outbound_payment_people">투숙인원</string>
     <string name="label_stay_outbound_payment_additional_tax">TAX (DUE AT HOTEL)</string>
+    <string name="label_stay_outbound_payment_hour">%1$s시</string>
     <string name="message_stay_outbound_payment_additional_tax">현지에서 별도로 지불해야 하는 세금입니다.</string>
 
 

@@ -1479,7 +1479,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
                 }
 
                 return;
-            } else if(categoryType == DailyCategoryType.STAY_OUTBOUND_HOTEL)
+            } else if (categoryType == DailyCategoryType.STAY_OUTBOUND_HOTEL)
             {
                 Intent intent = StayOutboundSearchActivity.newInstance(mBaseActivity);
                 startActivityForResult(intent, Constants.CODE_RESULT_ACTIVITY_STAY_OUTBOUND_SEARCH);
