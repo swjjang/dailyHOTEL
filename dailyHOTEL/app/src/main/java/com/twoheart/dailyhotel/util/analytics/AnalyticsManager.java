@@ -1338,6 +1338,7 @@ public class AnalyticsManager
         public static final String HOME_SCREEN = "home_screen";
         public static final String RECOMMEND_IDX = "recommend_idx";
         public static final String RECOMMEND_ITEM_IDX = "recommend_item_idx";
+        public static final String VIEW_TYPE = "view_type";
     }
 
     public static class ValueType

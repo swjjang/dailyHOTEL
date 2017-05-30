@@ -50,7 +50,9 @@ import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
 import com.twoheart.dailyhotel.util.DailyExternalDeepLink;
 import com.twoheart.dailyhotel.util.DailyPreference;
+import com.twoheart.dailyhotel.util.DailyUserPreference;
 import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.util.analytics.AdjustManager;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import org.json.JSONObject;
@@ -472,15 +474,39 @@ public class StayCategoryTabActivity extends PlaceMainActivity
             if (DailyHotel.isLogin() == false)
             {
                 params.put(AnalyticsManager.KeyType.IS_SIGNED, AnalyticsManager.ValueType.GUEST);
+                params.put(AnalyticsManager.KeyType.MEMBER_TYPE, AnalyticsManager.ValueType.EMPTY);
             } else
             {
                 params.put(AnalyticsManager.KeyType.IS_SIGNED, AnalyticsManager.ValueType.MEMBER);
+                switch (DailyUserPreference.getInstance(this).getType())
+                {
+                    case Constants.DAILY_USER:
+                        params.put(AnalyticsManager.KeyType.MEMBER_TYPE, AnalyticsManager.UserType.EMAIL);
+                        break;
+
+                    case Constants.KAKAO_USER:
+                        params.put(AnalyticsManager.KeyType.MEMBER_TYPE, AnalyticsManager.UserType.KAKAO);
+                        break;
+
+                    case Constants.FACEBOOK_USER:
+                        params.put(AnalyticsManager.KeyType.MEMBER_TYPE, AnalyticsManager.UserType.FACEBOOK);
+                        break;
+
+                    default:
+                        params.put(AnalyticsManager.KeyType.MEMBER_TYPE, AnalyticsManager.ValueType.EMPTY);
+                        break;
+                }
             }
 
             params.put(AnalyticsManager.KeyType.PLACE_TYPE, AnalyticsManager.ValueType.STAY);
             params.put(AnalyticsManager.KeyType.PLACE_HIT_TYPE, AnalyticsManager.ValueType.STAY);
             params.put(AnalyticsManager.KeyType.CATEGORY, mStayCategoryCuration.getCategory().code);
             params.put(AnalyticsManager.KeyType.FILTER, mStayCategoryCuration.getCurationOption().toAdjustString());
+            params.put(AnalyticsManager.KeyType.PUSH_NOTIFICATION, DailyUserPreference.getInstance(this).isBenefitAlarm() ? "on" : "off");
+
+            params.put(AnalyticsManager.KeyType.VIEW_TYPE //
+                , AnalyticsManager.Screen.DAILYHOTEL_LIST_MAP.equalsIgnoreCase(screen) == true //
+                ? AnalyticsManager.ValueType.MAP : AnalyticsManager.ValueType.LIST);
 
             Province province = mStayCategoryCuration.getProvince();
 

@@ -64,6 +64,8 @@ public class DailyPreference
 
     private static final String KEY_IS_VIEW_TRUEVR_TOOLTIP = "33";
 
+    private static final String KEY_IS_VIEW_STAY_CATEGORY_TOOLTIP = "34";
+
     //    private static final String KEY_STAY_LAST_VIEW_DATE = "108";
     //    private static final String KEY_GOURMET_LAST_VIEW_DATE = "109";
 
@@ -766,6 +768,16 @@ public class DailyPreference
     public boolean isTrueVRViewTooltip()
     {
         return getValue(mPreferences, KEY_IS_VIEW_TRUEVR_TOOLTIP, true);
+    }
+
+    public void setStayCategoryListTooltip(boolean value)
+    {
+        setValue(mEditor, KEY_IS_VIEW_STAY_CATEGORY_TOOLTIP, value);
+    }
+
+    public boolean isStayCategoryListTooltip()
+    {
+        return getValue(mPreferences, KEY_IS_VIEW_STAY_CATEGORY_TOOLTIP, false);
     }
 
     public void setIsRequestReview(boolean value)
