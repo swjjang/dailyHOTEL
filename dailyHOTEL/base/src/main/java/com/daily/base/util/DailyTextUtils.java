@@ -79,7 +79,7 @@ public class DailyTextUtils
 
     public static String getGlobalCurrency(Locale locale, double currency)
     {
-        NumberFormat numberFormat = NumberFormat.getInstance(locale);
+        NumberFormat numberFormat = NumberFormat.getCurrencyInstance(locale);
         numberFormat.setMaximumFractionDigits(2);
         numberFormat.setMinimumFractionDigits(2);
         numberFormat.setRoundingMode(RoundingMode.HALF_UP);

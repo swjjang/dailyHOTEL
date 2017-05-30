@@ -70,7 +70,12 @@ public class StayOutboundPaymentData
         stayOutboundPayment.checkOutDate = checkoutDate;
         stayOutboundPayment.checkOutTime = checkoutTime;
         stayOutboundPayment.nonRefundable = nonRefundable;
-        stayOutboundPayment.setRefundDescriptionList(nonRefundableDescriptions);
+
+        if (nonRefundable == true)
+        {
+            stayOutboundPayment.setRefundDescriptionList(nonRefundableDescriptions);
+        }
+
         stayOutboundPayment.totalPrice = total;
         stayOutboundPayment.feeTotalAmountUsd = feeTotalAmountUsd;
         stayOutboundPayment.rateKey = rateKey;

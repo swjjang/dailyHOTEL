@@ -5,6 +5,7 @@ import android.text.SpannableString;
 import com.daily.base.BaseViewInterface;
 import com.daily.dailyhotel.entity.Card;
 import com.daily.dailyhotel.entity.People;
+import com.daily.dailyhotel.entity.StayOutboundPayment;
 import com.daily.dailyhotel.entity.UserInformation;
 
 import java.util.List;
@@ -22,4 +23,10 @@ public interface StayOutboundPaymentInterface extends BaseViewInterface
     void setSimpleCard(Card card);
 
     void setRefundDescriptionList(List<String> refundDescriptionList);
+
+    void setMemoPaymentType(String memo);
+
+    void setPaymentTypeEnabled(StayOutboundPayment.PaymentType paymentType, boolean enabled);
+
+    void setPaymentType(StayOutboundPayment.PaymentType paymentType);
 }

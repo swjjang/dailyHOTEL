@@ -299,6 +299,7 @@
         </LinearLayout>
 
         <com.daily.base.widget.DailyTextView
+            android:id="@+id/additionalTaxMemoTextView"
             android:layout_width="match_parent"
             android:layout_height="36dp"
             android:drawablePadding="6dp"

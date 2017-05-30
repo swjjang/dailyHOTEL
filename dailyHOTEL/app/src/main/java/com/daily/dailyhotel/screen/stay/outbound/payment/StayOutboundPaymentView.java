@@ -108,8 +108,22 @@ public class StayOutboundPaymentView extends BaseView<StayOutboundPaymentView.On
 
         mBookingDataBinding.guestLastNameEditText.setText(lastName);
         mBookingDataBinding.guestFirstNameEditText.setText(firstName);
-        mBookingDataBinding.guestPhoneEditText.setText(phone);
-        mBookingDataBinding.guestEmailEditText.setText(email);
+
+        if (DailyTextUtils.isTextEmpty(phone) == true)
+        {
+            mBookingDataBinding.guestPhoneEditText.setText(userInformation.phone);
+        } else
+        {
+            mBookingDataBinding.guestPhoneEditText.setText(phone);
+        }
+
+        if (DailyTextUtils.isTextEmpty(email) == true)
+        {
+            mBookingDataBinding.guestEmailEditText.setText(userInformation.email);
+        } else
+        {
+            mBookingDataBinding.guestEmailEditText.setText(email);
+        }
     }
 
     @Override
@@ -148,7 +162,13 @@ public class StayOutboundPaymentView extends BaseView<StayOutboundPaymentView.On
 
         if (taxPrice > 0)
         {
+            mDiscountDataBinding.additionalTaxMemoTextView.setVisibility(View.VISIBLE);
+            mDiscountDataBinding.additionalTaxLayout.setVisibility(View.VISIBLE);
             mDiscountDataBinding.taxPriceTextView.setText(DailyTextUtils.getGlobalCurrency(Locale.US, taxPrice));
+        } else
+        {
+            mDiscountDataBinding.additionalTaxMemoTextView.setVisibility(View.GONE);
+            mDiscountDataBinding.additionalTaxLayout.setVisibility(View.GONE);
         }
     }
 
@@ -181,20 +201,111 @@ public class StayOutboundPaymentView extends BaseView<StayOutboundPaymentView.On
     {
         if (refundDescriptionList == null || refundDescriptionList.size() == 0)
         {
-            mRefundDataBinding.refundPolicyLayout.setVisibility(View.GONE);
+            mRefundDataBinding.getRoot().setVisibility(View.GONE);
         } else
         {
-            mRefundDataBinding.refundPolicyLayout.setVisibility(View.VISIBLE);
+            mRefundDataBinding.getRoot().setVisibility(View.VISIBLE);
+        }
+    }
+
+    @Override
+    public void setMemoPaymentType(String memo)
+    {
+        if (getViewDataBinding() == null || mPayDataBinding == null)
+        {
+            return;
         }
 
-
+        if (DailyTextUtils.isTextEmpty(memo) == true)
+        {
+            mPayDataBinding.guidePaymentMemoTextView.setVisibility(View.GONE);
+        } else
+        {
+            mPayDataBinding.guidePaymentMemoTextView.setVisibility(View.VISIBLE);
+            mPayDataBinding.guidePaymentMemoTextView.setText(memo);
+        }
     }
+
+
+    @Override
+    public void setPaymentTypeEnabled(StayOutboundPayment.PaymentType paymentType, boolean enabled)
+    {
+        if (getViewDataBinding() == null || mPayDataBinding == null)
+        {
+            return;
+        }
+
+        switch (paymentType)
+        {
+            case EASY_CARD:
+                setPaymentTypeEnabled(mPayDataBinding.disableSimpleCardView, enabled);
+                break;
+
+            case CARD:
+                setPaymentTypeEnabled(mPayDataBinding.disableCardView, enabled);
+                break;
+
+            case PHONE_PAY:
+                setPaymentTypeEnabled(mPayDataBinding.disablePhoneView, enabled);
+                break;
+        }
+    }
+
+    @Override
+    public void setPaymentType(StayOutboundPayment.PaymentType paymentType)
+    {
+        if (getViewDataBinding() == null || mPayDataBinding == null)
+        {
+            return;
+        }
+
+        if (paymentType == null)
+        {
+            ((View) mPayDataBinding.simpleCardLayout.getParent()).setSelected(false);
+            mPayDataBinding.simpleCardLayout.setSelected(false);
+            mPayDataBinding.cardLayout.setSelected(false);
+            mPayDataBinding.phoneLayout.setSelected(false);
+            return;
+        }
+
+        switch (paymentType)
+        {
+            case EASY_CARD:
+            {
+                ((View) mPayDataBinding.simpleCardLayout.getParent()).setSelected(true);
+                mPayDataBinding.simpleCardLayout.setSelected(true);
+                mPayDataBinding.cardLayout.setSelected(false);
+                mPayDataBinding.phoneLayout.setSelected(false);
+                break;
+            }
+
+            case CARD:
+            {
+                ((View) mPayDataBinding.simpleCardLayout.getParent()).setSelected(false);
+                mPayDataBinding.simpleCardLayout.setSelected(false);
+                mPayDataBinding.cardLayout.setSelected(true);
+                mPayDataBinding.phoneLayout.setSelected(false);
+                break;
+            }
+
+            case PHONE_PAY:
+            {
+                ((View) mPayDataBinding.simpleCardLayout.getParent()).setSelected(false);
+                mPayDataBinding.simpleCardLayout.setSelected(false);
+                mPayDataBinding.cardLayout.setSelected(false);
+                mPayDataBinding.phoneLayout.setSelected(true);
+                break;
+            }
+        }
+    }
+
 
     @Override
     public void onClick(View v)
     {
 
     }
+
 
     private void initToolbar(ActivityStayOutboundPaymentDataBinding viewDataBinding)
     {
@@ -306,29 +417,6 @@ public class StayOutboundPaymentView extends BaseView<StayOutboundPaymentView.On
         } else
         {
             mDiscountDataBinding.bonusTextView.setText(text);
-        }
-    }
-
-    private void setPaymentTypeEnabled(StayOutboundPayment.PaymentType paymentType, boolean enabled)
-    {
-        if (getViewDataBinding() == null || mPayDataBinding == null)
-        {
-            return;
-        }
-
-        switch (paymentType)
-        {
-            case EASY_CARD:
-                setPaymentTypeEnabled(mPayDataBinding.disableSimpleCardView, enabled);
-                break;
-
-            case CARD:
-                setPaymentTypeEnabled(mPayDataBinding.disableCardView, enabled);
-                break;
-
-            case PHONE_PAY:
-                setPaymentTypeEnabled(mPayDataBinding.disablePhoneView, enabled);
-                break;
         }
     }
 

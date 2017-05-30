@@ -294,7 +294,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.3"
-                    android:text="@string/label_stay_outbound_payment_last_name"
+                    android:text="@string/label_stay_outbound_payment_first_name"
                     android:textColor="@color/default_text_c929292"
                     android:textSize="13dp"/>
 

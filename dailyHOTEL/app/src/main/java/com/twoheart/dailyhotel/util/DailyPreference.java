@@ -177,6 +177,10 @@ public class DailyPreference
     // Boutique BM - Test
     private static final String KEY_REMOTE_CONFIG_BOUTIQUE_BM = "350";
 
+    private static final String KEY_REMOTE_CONFIG_STAY_OUTBOUND_PAYMENT_IS_SIMPLECARD_ENABLED = "360";
+    private static final String KEY_REMOTE_CONFIG_STAY_OUTBOUND_PAYMENT_IS_CARD_ENABLED = "361";
+    private static final String KEY_REMOTE_CONFIG_STAY_OUTBOUND_PAYMENT_IS_PHONE_ENABLED = "362";
+
     /////////////////////////////////////////////////////////////////////////////////////////
     // New Key old --> v1
     /////////////////////////////////////////////////////////////////////////////////////////
@@ -1361,6 +1365,35 @@ public class DailyPreference
     public boolean isRemoteConfigBoutiqueBMEnabled()
     {
         return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_BOUTIQUE_BM, false);
+    }
+
+    public boolean isRemoteConfigStayOutboundSimpleCardPaymentEnabled()
+    {
+        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_STAY_OUTBOUND_PAYMENT_IS_SIMPLECARD_ENABLED, true);
+    }
+
+    public void setRemoteConfigStayOutboundSimpleCardPaymentEnabled(boolean value)
+    {
+        setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_STAY_OUTBOUND_PAYMENT_IS_SIMPLECARD_ENABLED, value);
+    }
+
+    public boolean isRemoteConfigStayOutboundCardPaymentEnabled()
+    {
+        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_STAY_OUTBOUND_PAYMENT_IS_CARD_ENABLED, true);
+    }
+
+    public void setRemoteConfigStayOutboundCardPaymentEnabled(boolean value)
+    {
+        setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_STAY_OUTBOUND_PAYMENT_IS_CARD_ENABLED, value);
+    }
+    public boolean isRemoteConfigStayOutboundPhonePaymentEnabled()
+    {
+        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_STAY_OUTBOUND_PAYMENT_IS_PHONE_ENABLED, true);
+    }
+
+    public void setRemoteConfigStayOutboundPhonePaymentEnabled(boolean value)
+    {
+        setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_STAY_OUTBOUND_PAYMENT_IS_PHONE_ENABLED, value);
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////

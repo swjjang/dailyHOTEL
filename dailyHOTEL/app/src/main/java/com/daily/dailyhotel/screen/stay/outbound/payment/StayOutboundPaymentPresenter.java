@@ -50,6 +50,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
     private StayOutboundPayment mStayOutboundPayment;
     private Card mSelectedCard;
     private UserInformation mUserInformation;
+    private StayOutboundPayment.PaymentType mPaymentType;
 
     public interface StayOutboundPaymentAnalyticsInterface extends BaseAnalyticsInterface
     {
@@ -128,6 +129,12 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
     @Override
     public void onPostCreate()
     {
+        getViewInterface().setToolbarTitle(getString(R.string.actionbar_title_payment_activity));
+
+        // 리모트 컨피그에 있는 결제 타입
+        setAvailablePaymentType();
+
+
     }
 
     @Override
@@ -209,7 +216,6 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
 
                     Card selectedCard = getSelectedCard(cardList);
                     setSelectedCard(selectedCard);
-                    DailyPreference.getInstance(getActivity()).setSelectedCard(selectedCard);
 
                     setUserInformation(userInformation);
 
@@ -220,10 +226,11 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
             @Override
             public void accept(@io.reactivex.annotations.NonNull Boolean aBoolean) throws Exception
             {
-                onPaymentInformation(mStayOutboundPayment, mStayBookDateTime);
+                onBookingInformation(mStayOutboundPayment, mStayBookDateTime);
                 onUserInformation(mUserInformation, mPeople);
                 onSimpleCard(mSelectedCard);
                 onStayOutboundPayment(mUserInformation, mStayOutboundPayment, mStayBookDateTime);
+                onPaymentType(mPaymentType);
 
                 unLockAll();
             }
@@ -250,7 +257,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
 
     }
 
-    private void onPaymentInformation(StayOutboundPayment stayOutboundPayment, StayBookDateTime stayBookDateTime)
+    private void onBookingInformation(StayOutboundPayment stayOutboundPayment, StayBookDateTime stayBookDateTime)
     {
         if (stayOutboundPayment == null || stayBookDateTime == null)
         {
@@ -323,6 +330,8 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
         {
             ExLog.d(e.toString());
         }
+
+        getViewInterface().setRefundDescriptionList(stayOutboundPayment.getRefundDescriptionList());
     }
 
     private void setStayOutboundPayment(StayOutboundPayment stayOutboundPayment)
@@ -338,11 +347,6 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
         }
 
         mUserInformation = userInformation;
-    }
-
-    private void setSelectedCard(Card card)
-    {
-        mSelectedCard = card;
     }
 
     private void setStayBookDateTime(String checkInDateTime, String checkOutDateTime)
@@ -378,6 +382,26 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
         mPeople.setChildAgeList(childAgeList);
     }
 
+    private void onPaymentType(StayOutboundPayment.PaymentType paymentType)
+    {
+        getViewInterface().setPaymentType(paymentType);
+    }
+
+    private void setPaymentType(StayOutboundPayment.PaymentType paymentType)
+    {
+        mPaymentType = paymentType;
+    }
+
+    private void setSelectedCard(Card card)
+    {
+        mSelectedCard = card;
+
+        if (card != null && DailyTextUtils.isTextEmpty(card.billkey) == false)
+        {
+            DailyPreference.getInstance(getActivity()).setSelectedCard(card);
+        }
+    }
+
     private Card getSelectedCard(List<Card> cardList)
     {
         if (cardList == null || cardList.size() == 0)
@@ -407,6 +431,58 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
 
                 return cardList.get(0);
             }
+        }
+    }
+
+    private void setAvailablePaymentType()
+    {
+        boolean isSimpleCardPaymentEnabled = DailyPreference.getInstance(getActivity()).isRemoteConfigStayOutboundSimpleCardPaymentEnabled();
+        boolean isCardPaymentEnabled = DailyPreference.getInstance(getActivity()).isRemoteConfigStayOutboundCardPaymentEnabled();
+        boolean isPhonePaymentEnabled = DailyPreference.getInstance(getActivity()).isRemoteConfigStayOutboundPhonePaymentEnabled();
+
+        StringBuilder guideMemo = new StringBuilder();
+
+        if (isSimpleCardPaymentEnabled == false)
+        {
+            guideMemo.append(getString(R.string.label_simple_payment));
+            guideMemo.append(", ");
+        }
+
+        if (isCardPaymentEnabled == false)
+        {
+            guideMemo.append(getString(R.string.label_card_payment));
+            guideMemo.append(", ");
+        }
+
+        if (isPhonePaymentEnabled == false)
+        {
+            guideMemo.append(getString(R.string.act_booking_pay_mobile));
+            guideMemo.append(", ");
+        }
+
+        if (guideMemo.length() > 0)
+        {
+            guideMemo.setLength(guideMemo.length() - 2);
+
+            getViewInterface().setMemoPaymentType(getString(R.string.message_dont_support_payment_type, guideMemo.toString()));
+        } else
+        {
+            getViewInterface().setMemoPaymentType(null);
+        }
+
+        getViewInterface().setPaymentTypeEnabled(StayOutboundPayment.PaymentType.EASY_CARD, isSimpleCardPaymentEnabled);
+        getViewInterface().setPaymentTypeEnabled(StayOutboundPayment.PaymentType.CARD, isCardPaymentEnabled);
+        getViewInterface().setPaymentTypeEnabled(StayOutboundPayment.PaymentType.PHONE_PAY, isPhonePaymentEnabled);
+
+        if (isSimpleCardPaymentEnabled == true)
+        {
+            setPaymentType(StayOutboundPayment.PaymentType.EASY_CARD);
+        } else if (isCardPaymentEnabled == true)
+        {
+            setPaymentType(StayOutboundPayment.PaymentType.CARD);
+        } else if (isPhonePaymentEnabled == true)
+        {
+            setPaymentType(StayOutboundPayment.PaymentType.PHONE_PAY);
         }
     }
 }

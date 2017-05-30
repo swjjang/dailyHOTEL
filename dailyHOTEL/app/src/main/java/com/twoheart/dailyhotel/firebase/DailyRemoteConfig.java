@@ -304,6 +304,12 @@ public class DailyRemoteConfig
             DailyPreference.getInstance(context).setRemoteConfigGourmetCardPaymentEnabled(gourmetJSONObject.getBoolean("card"));
             DailyPreference.getInstance(context).setRemoteConfigGourmetPhonePaymentEnabled(gourmetJSONObject.getBoolean("phoneBill"));
             DailyPreference.getInstance(context).setRemoteConfigGourmetVirtualPaymentEnabled(gourmetJSONObject.getBoolean("virtualAccount"));
+
+            JSONObject stayOutboundJSONObject = jsonObject.getJSONObject("stayOutbound");
+
+            DailyPreference.getInstance(context).setRemoteConfigStayOutboundSimpleCardPaymentEnabled(stayOutboundJSONObject.getBoolean("easyCard"));
+            DailyPreference.getInstance(context).setRemoteConfigStayOutboundCardPaymentEnabled(stayOutboundJSONObject.getBoolean("card"));
+            DailyPreference.getInstance(context).setRemoteConfigStayOutboundPhonePaymentEnabled(stayOutboundJSONObject.getBoolean("phoneBill"));
         } catch (Exception e)
         {
             ExLog.e(e.toString());

@@ -46,7 +46,7 @@
             app:drawableCompatLeft="@drawable/info_ic_text_dot_black"/>
 
         <com.daily.base.widget.DailyTextView
-            android:id="@+id/guidePaymentMemoView"
+            android:id="@+id/guidePaymentMemoTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="15dp"
@@ -294,6 +294,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="55dp"
                 android:layout_marginLeft="1dp"
+                android:layout_marginBottom="1dp"
                 android:layout_marginRight="1dp"
                 android:background="@drawable/selector_select_paymnettype_background">
 
