@@ -143,7 +143,7 @@ public class StayOutboundDetailData
     static class RoomData
     {
         @JsonField(name = "rateKey")
-        public int rateKey;
+        public String rateKey;
 
         @JsonField(name = "roomTypeCode")
         public String roomTypeCode;

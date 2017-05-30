@@ -26,6 +26,7 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ActivityStayOutboundSearchSuggestDataBinding;
 import com.twoheart.dailyhotel.databinding.ListRowStayOutboundSuggestEntryDataBinding;
 import com.twoheart.dailyhotel.databinding.ListRowStayOutboundSuggestTitleDataBinding;
+import com.twoheart.dailyhotel.util.EdgeEffectColor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,6 +63,8 @@ public class StayOutboundSearchSuggestView extends BaseView<StayOutboundSearchSu
         viewDataBinding.deleteImageView.setVisibility(View.INVISIBLE);
         viewDataBinding.deleteImageView.setOnClickListener(this);
         viewDataBinding.suggestsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+        EdgeEffectColor.setEdgeGlowColor(viewDataBinding.suggestsRecyclerView, getColor(R.color.default_over_scroll_edge));
+
         viewDataBinding.suggestsRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener()
         {
             private int mDistance;

@@ -37,17 +37,14 @@ public class StayOutboundRemoteImpl implements StayOutboundInterface
     {
         JSONObject jsonObject = new JSONObject();
 
-        final int numberOfRooms = 1;
-        final int numberOfResults = 200;
+        final int NUMBER_OF_ROOMS = 1;
+        final int NUMBER_OF_RESULTS = 200;
 
         /// 디폴트 인자들
         String sort = "DEFAULT";
 
         try
         {
-            jsonObject.put("apiExperience", "PARTNER_MOBILE_APP");
-            jsonObject.put("locale", "ko_KR");
-
             if (DailyTextUtils.isTextEmpty(cacheKey, cacheLocation) == false)
             {
                 jsonObject.put("cacheKey", cacheKey);
@@ -60,8 +57,8 @@ public class StayOutboundRemoteImpl implements StayOutboundInterface
             jsonObject.put("geographyId", geographyId);
             jsonObject.put("geographyType", geographyType);
 
-            jsonObject.put("numberOfRooms", numberOfRooms);
-            jsonObject.put("numberOfResults", numberOfResults);
+            jsonObject.put("numberOfRooms", NUMBER_OF_ROOMS);
+            jsonObject.put("numberOfResults", NUMBER_OF_RESULTS);
 
             jsonObject.put("rooms", getRooms(new People[]{people}));
             jsonObject.put("filter", getFilter(stayOutboundFilters));
@@ -116,9 +113,6 @@ public class StayOutboundRemoteImpl implements StayOutboundInterface
 
         try
         {
-            jsonObject.put("apiExperience", "PARTNER_MOBILE_APP");
-            jsonObject.put("locale", "ko_KR");
-
             jsonObject.put("arrivalDate", stayBookDateTime.getCheckInDateTime("yyyy-MM-dd"));
             jsonObject.put("departureDate", stayBookDateTime.getCheckOutDateTime("yyyy-MM-dd"));
 

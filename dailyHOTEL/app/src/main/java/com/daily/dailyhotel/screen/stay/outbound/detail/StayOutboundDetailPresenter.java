@@ -31,6 +31,7 @@ import com.daily.dailyhotel.screen.common.calendar.StayCalendarActivity;
 import com.daily.dailyhotel.screen.common.call.CallDialogActivity;
 import com.daily.dailyhotel.screen.stay.outbound.detail.amenities.AmenityListActivity;
 import com.daily.dailyhotel.screen.stay.outbound.detail.images.ImageListActivity;
+import com.daily.dailyhotel.screen.stay.outbound.payment.StayOutboundPaymentActivity;
 import com.daily.dailyhotel.screen.stay.outbound.people.SelectPeopleActivity;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.screen.common.HappyTalkCategoryDialog;
@@ -88,6 +89,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
     private CommonDateTime mCommonDateTime;
     private StayOutboundDetail mStayOutboundDetail;
     private People mPeople;
+    private StayOutboundRoom mSelectedRoom;
 
     private int mStatus = STATUS_NONE;
     private PriceType mPriceType = PriceType.AVERAGE;
@@ -175,8 +177,10 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
 
             setStayBookDateTime(checkInDateTime, checkOutDateTime);
 
-            mPeople.numberOfAdults = intent.getIntExtra(StayOutboundDetailActivity.INTENT_EXTRA_DATA_NUMBER_OF_ADULTS, 2);
-            mPeople.setChildAgeList(intent.getIntegerArrayListExtra(StayOutboundDetailActivity.INTENT_EXTRA_DATA_CHILD_LIST));
+            int numberOfAdults = intent.getIntExtra(StayOutboundDetailActivity.INTENT_EXTRA_DATA_NUMBER_OF_ADULTS, 2);
+            ArrayList<Integer> childAgeList = intent.getIntegerArrayListExtra(StayOutboundDetailActivity.INTENT_EXTRA_DATA_CHILD_LIST);
+
+            setPeople(numberOfAdults, childAgeList);
         }
 
         return true;
@@ -759,6 +763,18 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
         switch (mStatus)
         {
             case STATUS_BOOKING:
+                if (mSelectedRoom == null || lock() == true)
+                {
+                    return;
+                }
+
+                startActivityForResult(StayOutboundPaymentActivity.newInstance(getActivity(), mStayOutboundDetail.index//
+                    , mStayOutboundDetail.name//
+                    , mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
+                    , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
+                    , mPeople.numberOfAdults, mPeople.getChildAgeList()//
+                    , mSelectedRoom.roomName, mSelectedRoom.rateCode, mSelectedRoom.rateKey, mSelectedRoom.roomTypeCode)//
+                    , StayOutboundDetailActivity.REQUEST_CODE_PAYMENT);
                 break;
 
             case STATUS_ROOM_LIST:
@@ -864,6 +880,12 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
     public void onShareMapClick()
     {
         Util.shareGoogleMap(getActivity(), mStayOutboundDetail.name, Double.toString(mStayOutboundDetail.latitude), Double.toString(mStayOutboundDetail.longitude));
+    }
+
+    @Override
+    public void onRoomClick(StayOutboundRoom stayOutboundRoom)
+    {
+
     }
 
     private void onStayOutboundDetail(StayOutboundDetail stayOutboundDetail)

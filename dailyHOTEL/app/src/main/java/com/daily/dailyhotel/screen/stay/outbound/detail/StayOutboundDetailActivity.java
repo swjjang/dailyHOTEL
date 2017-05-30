@@ -36,6 +36,7 @@ public class StayOutboundDetailActivity extends BaseActivity<StayOutboundDetailP
     static final int REQUEST_CODE_MAP = 10004;
     static final int REQUEST_CODE_IMAGE_LIST = 10005;
     static final int REQUEST_CODE_CALL = 10006;
+    static final int REQUEST_CODE_PAYMENT = 10007;
 
     static final String INTENT_EXTRA_DATA_STAY_INDEX = "stayIndex";
     static final String INTENT_EXTRA_DATA_STAY_NAME = "stayName";

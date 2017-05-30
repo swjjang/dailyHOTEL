@@ -24,7 +24,6 @@ public class ProfileRemoteImpl implements ProfileInterface
     @Override
     public Observable<User> getProfile()
     {
-        //        return DailyMobileAPI.getInstance(mContext).getUserProfile().map(new Function<BaseDto<UserData>, User>()
         return DailyMobileAPI.getInstance(mContext).getUserProfile().map((userDataBaseDto) ->
         {
             User user = null;

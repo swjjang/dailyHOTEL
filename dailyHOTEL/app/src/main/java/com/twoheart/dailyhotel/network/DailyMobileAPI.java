@@ -3,8 +3,10 @@ package com.twoheart.dailyhotel.network;
 import android.content.Context;
 
 import com.daily.base.util.DailyTextUtils;
+import com.daily.dailyhotel.repository.remote.model.CardData;
 import com.daily.dailyhotel.repository.remote.model.CommonDateTimeData;
 import com.daily.dailyhotel.repository.remote.model.StayOutboundDetailData;
+import com.daily.dailyhotel.repository.remote.model.StayOutboundPaymentData;
 import com.daily.dailyhotel.repository.remote.model.StayOutboundsData;
 import com.daily.dailyhotel.repository.remote.model.SuggestsData;
 import com.daily.dailyhotel.repository.remote.model.UserBenefitData;
@@ -1366,5 +1368,28 @@ public class DailyMobileAPI implements IDailyNetwork
 
         return mDailyMobileService.getStayOutBoundDetail(Crypto.getUrlDecoderEx(URL) + Crypto.getUrlDecoderEx(API, urlParams)//
             , jsonObject).subscribeOn(Schedulers.io());
+    }
+
+    public Observable<BaseDto<StayOutboundPaymentData>> getStayOutBoundPayment(int index, JSONObject jsonObject)
+    {
+        final String URL = Constants.UNENCRYPTED_URL ? "https://dev-silo.dailyhotel.me/"//
+            : "MzAkODEkNDckNjgkNDAkMzkkODckMSQ4OSQyOCQxNCQzMiQ4JDEkMzckNTUk$QAGkRCM0ZGGMkM1MBzkyQTBEOEMxRDgL1OGUWENFMUM3MEWZJEOURDMOEAM1NjY1RjE2MEVDQjc4RTSA5MzQxQjQ2Rjk1VMMHUEyRg==$";
+
+        final String API = Constants.UNENCRYPTED_URL ? "api/v1/outbound/hotels/{hotelId}/room-reservation-saleinfos"//
+            : "MTcxJDEzNSQxMzYkNTYkMzIkMjQkMTI3JDE3OCQ3MyQ2NyQ2MyQ0MCQxMzckNzgkMTgxJDEzOSQ=$RTM0Q0Q1ODFGQjVCOTc5QzlCGMUNGQzJBDRkI2QjSI5OTQyMjQyQ0ZBMjAwBNkMwYMkJCAMEIxMjCZQFQkQyQjVCRTJEQjBFNzIxMzBEMjZFMDk1N0QxOEY4QUUyNzg3NDgzJOTEyNGIDQ1ODRERBMkU4MzIwMTcyMTJDMTg3QjAyN0M2N0I1RZUUVA=$";
+
+        Map<String, String> urlParams = new HashMap<>();
+        urlParams.put("{hotelId}", Integer.toString(index));
+
+        return mDailyMobileService.getStayOutBoundPayment(Crypto.getUrlDecoderEx(URL) + Crypto.getUrlDecoderEx(API, urlParams)//
+            , jsonObject).subscribeOn(Schedulers.io());
+    }
+
+    public Observable<BaseListDto<CardData>> getSimpleCardList()
+    {
+        final String API = Constants.UNENCRYPTED_URL ? "api/user/session/billing/card/info"//
+            : "NDIkOCQ1NSQ4NyQ4NyQ4MCQxMzIkOTIkMTMwJDU2JDE2JDQyJDY4JDU5JDEzMCQ3MyQ=$QzdFNkE5NNjgzM0JIFMjZFRjlCQjY4OEQ3NkI5NDdDKRjUMxNDkzNTk1MTBWjkzQkE5NELNDNQ0RFOENGRDAwMGEE5MTE3UARDYFGQjEzMzMxRjVDMDA2MjVEQzBGMTgxREYJGNDMK3MTGI2$";
+
+        return mDailyMobileService.getSimpleCardList(Crypto.getUrlDecoderEx(API)).subscribeOn(Schedulers.io());
     }
 }

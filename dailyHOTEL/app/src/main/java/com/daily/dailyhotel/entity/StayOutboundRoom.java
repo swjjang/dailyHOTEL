@@ -2,7 +2,7 @@ package com.daily.dailyhotel.entity;
 
 public class StayOutboundRoom
 {
-    public int rateKey;
+    public String rateKey;
     public String roomTypeCode;
     public String rateCode;
     public int roomBedTypeId;

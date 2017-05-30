@@ -6,6 +6,7 @@ import android.content.SharedPreferences.Editor;
 
 import com.crashlytics.android.Crashlytics;
 import com.daily.base.util.DailyTextUtils;
+import com.daily.dailyhotel.entity.Card;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.Setting;
 import com.twoheart.dailyhotel.model.CreditCard;
@@ -1453,7 +1454,24 @@ public class DailyPreference
 
     public void setSelectedSimpleCard(CreditCard creditCard)
     {
-        setValue(mEditor, KEY_SELECTED_SIMPLE_CARD, Crypto.urlEncrypt(creditCard.number.replaceAll("\\*|-", "").substring(4) + creditCard.billingkey.substring(3, 7)));
+        if (creditCard == null)
+        {
+            setValue(mEditor, KEY_SELECTED_SIMPLE_CARD, null);
+        } else
+        {
+            setValue(mEditor, KEY_SELECTED_SIMPLE_CARD, Crypto.urlEncrypt(creditCard.number.replaceAll("\\*|-", "").substring(4) + creditCard.billingkey.substring(3, 7)));
+        }
+    }
+
+    public void setSelectedCard(Card card)
+    {
+        if (card == null)
+        {
+            setValue(mEditor, KEY_SELECTED_SIMPLE_CARD, null);
+        } else
+        {
+            setValue(mEditor, KEY_SELECTED_SIMPLE_CARD, Crypto.urlEncrypt(card.number.replaceAll("\\*|-", "").substring(4) + card.billkey.substring(3, 7)));
+        }
     }
 
     // version - 2.0.4 로 강업 이후 삭제 필요 부분

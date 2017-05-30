@@ -133,6 +133,8 @@ public class StayOutboundDetailView extends BaseView<StayOutboundDetailView.OnEv
         void onConciergeCallClick();
 
         void onShareMapClick();
+
+        void onRoomClick(StayOutboundRoom stayOutboundRoom);
     }
 
     public StayOutboundDetailView(BaseActivity baseActivity, StayOutboundDetailView.OnEventListener listener)
@@ -1366,6 +1368,7 @@ public class StayOutboundDetailView extends BaseView<StayOutboundDetailView.OnEv
                         return;
                     }
 
+                    getEventListener().onRoomClick(mRoomTypeListAdapter.getItem(position));
                     mRoomTypeListAdapter.setSelected(position);
                     mRoomTypeListAdapter.notifyDataSetChanged();
                 }

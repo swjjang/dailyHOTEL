@@ -28,9 +28,10 @@ public class DailyUserPreference
     private static final String KEY_AUTHORIZATION = "8";
 
     // Payment
-    private static final String KEY_OVERSEAS_NAME = "20";
     private static final String KEY_OVERSEAS_PHONE = "21";
     private static final String KEY_OVERSEAS_EMAIL = "22";
+    private static final String KEY_OVERSEAS_FIRST_NAME = "23";
+    private static final String KEY_OVERSEAS_LAST_NAME = "24";
 
     /////////////////////////////////////////////////////////////////////////////////////////
     // "dailyUser" Preference
@@ -177,9 +178,14 @@ public class DailyUserPreference
 
     /////////////////////////////////////////////////////////////////////////////////////////
 
-    public String getOverseasName()
+    public String getOverseasFirstName()
     {
-        return getValueDecrypt(mPreferences, KEY_OVERSEAS_NAME, null);
+        return getValueDecrypt(mPreferences, KEY_OVERSEAS_FIRST_NAME, null);
+    }
+
+    public String getOverseasLastName()
+    {
+        return getValueDecrypt(mPreferences, KEY_OVERSEAS_LAST_NAME, null);
     }
 
     public String getOverseasPhone()
@@ -192,11 +198,12 @@ public class DailyUserPreference
         return getValueDecrypt(mPreferences, KEY_OVERSEAS_EMAIL, null);
     }
 
-    public void setOverseasInformation(String name, String phone, String email)
+    public void setOverseasInformation(String firstName, String lastName, String phone, String email)
     {
         if (mEditor != null)
         {
-            mEditor.putString(KEY_OVERSEAS_NAME, name);
+            mEditor.putString(KEY_OVERSEAS_FIRST_NAME, firstName);
+            mEditor.putString(KEY_OVERSEAS_LAST_NAME, lastName);
             mEditor.putString(KEY_OVERSEAS_PHONE, phone);
             mEditor.putString(KEY_OVERSEAS_EMAIL, email);
             mEditor.apply();
@@ -303,7 +310,6 @@ public class DailyUserPreference
 
         String authorization = DailyPreference.getInstance(context).getAuthorization();
 
-        String overseasName = DailyPreference.getInstance(context).getOverseasName();
         String overseasPhone = DailyPreference.getInstance(context).getOverseasPhone();
         String overseasEmail = DailyPreference.getInstance(context).getOverseasEmail();
 
@@ -311,6 +317,6 @@ public class DailyUserPreference
         setBenefitAlarm(isBenefitAlarm);
         setExceedBonus(isExceedBonus);
         setAuthorization(authorization);
-        setOverseasInformation(overseasName, overseasPhone, overseasEmail);
+        setOverseasInformation(null, null, overseasPhone, overseasEmail);
     }
 }

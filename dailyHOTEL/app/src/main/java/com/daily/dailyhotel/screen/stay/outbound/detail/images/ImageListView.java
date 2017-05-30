@@ -28,6 +28,7 @@ import com.facebook.imagepipeline.image.ImageInfo;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ActivityStayOutboundImageListDataBinding;
 import com.twoheart.dailyhotel.databinding.ListRowImageDataBinding;
+import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.widget.DailyPlaceDetailListView;
 
 import java.io.IOException;
@@ -66,6 +67,8 @@ public class ImageListView extends BaseView<ImageListView.OnEventListener, Activ
         viewDataBinding.translationView.setClickable(true);
         viewDataBinding.translationView.setOnTouchListener(this);
         viewDataBinding.listView.setClickable(false);
+
+        EdgeEffectColor.setEdgeGlowColor(viewDataBinding.listView, getColor(R.color.default_over_scroll_edge));
     }
 
     @Override
