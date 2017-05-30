@@ -19,6 +19,7 @@ import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.widget.DailyToast;
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.Category;
@@ -43,6 +44,7 @@ import com.twoheart.dailyhotel.screen.hotel.list.StayListAdapter;
 import com.twoheart.dailyhotel.screen.hotel.preview.StayPreviewActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyLocationFactory;
+import com.twoheart.dailyhotel.util.DailyUserPreference;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
@@ -527,10 +529,44 @@ public class StayCategoryNearByActivity extends BaseActivity
 
             params.put(AnalyticsManager.KeyType.CHECK_IN, stayBookingDay.getCheckInDay("yyyy-MM-dd"));
             params.put(AnalyticsManager.KeyType.CHECK_OUT, stayBookingDay.getCheckOutDay("yyyy-MM-dd"));
+            params.put(AnalyticsManager.KeyType.LENGTH_OF_STAY, Integer.toString(stayBookingDay.getNights()));
+
+            if (DailyHotel.isLogin() == false)
+            {
+                params.put(AnalyticsManager.KeyType.IS_SIGNED, AnalyticsManager.ValueType.GUEST);
+                params.put(AnalyticsManager.KeyType.MEMBER_TYPE, AnalyticsManager.ValueType.EMPTY);
+            } else
+            {
+                params.put(AnalyticsManager.KeyType.IS_SIGNED, AnalyticsManager.ValueType.MEMBER);
+                switch (DailyUserPreference.getInstance(this).getType())
+                {
+                    case Constants.DAILY_USER:
+                        params.put(AnalyticsManager.KeyType.MEMBER_TYPE, AnalyticsManager.UserType.EMAIL);
+                        break;
+
+                    case Constants.KAKAO_USER:
+                        params.put(AnalyticsManager.KeyType.MEMBER_TYPE, AnalyticsManager.UserType.KAKAO);
+                        break;
+
+                    case Constants.FACEBOOK_USER:
+                        params.put(AnalyticsManager.KeyType.MEMBER_TYPE, AnalyticsManager.UserType.FACEBOOK);
+                        break;
+
+                    default:
+                        params.put(AnalyticsManager.KeyType.MEMBER_TYPE, AnalyticsManager.ValueType.EMPTY);
+                        break;
+                }
+            }
 
             params.put(AnalyticsManager.KeyType.PLACE_TYPE, AnalyticsManager.ValueType.STAY);
             params.put(AnalyticsManager.KeyType.PLACE_HIT_TYPE, AnalyticsManager.ValueType.STAY);
             params.put(AnalyticsManager.KeyType.CATEGORY, mStayCategoryNearByCuration.getCategory().code);
+            params.put(AnalyticsManager.KeyType.FILTER, mStayCategoryNearByCuration.getCurationOption().toAdjustString());
+            params.put(AnalyticsManager.KeyType.PUSH_NOTIFICATION, DailyUserPreference.getInstance(this).isBenefitAlarm() ? "on" : "off");
+
+            params.put(AnalyticsManager.KeyType.VIEW_TYPE //
+                , AnalyticsManager.Screen.DAILYHOTEL_LIST_MAP.equalsIgnoreCase(screen) == true //
+                    ? AnalyticsManager.ValueType.MAP : AnalyticsManager.ValueType.LIST);
 
             Province province = mStayCategoryNearByCuration.getProvince();
             if (province instanceof Area)
@@ -548,7 +584,7 @@ public class StayCategoryNearByActivity extends BaseActivity
 
             AnalyticsManager.getInstance(StayCategoryNearByActivity.this).recordScreen(StayCategoryNearByActivity.this, screen, null, params);
 
-            if (mCallByScreen == AnalyticsManager.Screen.HOME)
+            if (AnalyticsManager.Screen.HOME.equalsIgnoreCase(mCallByScreen) == true)
             {
                 AnalyticsManager.getInstance(StayCategoryNearByActivity.this) //
                     .recordScreen(StayCategoryNearByActivity.this, AnalyticsManager.Screen.STAY_LIST_SHORTCUT_NEARBY, null, params);

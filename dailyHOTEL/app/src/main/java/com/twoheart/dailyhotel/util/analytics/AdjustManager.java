@@ -355,13 +355,62 @@ public class AdjustManager extends BaseAnalyticsManager
         } else if (AnalyticsManager.Screen.HOME.equalsIgnoreCase(screenName) == true)
         {
             event = new DailyAdjustEvent(EventToken.VIEW_HOME);
+        } else if (AnalyticsManager.Screen.STAY_LIST_SHORTCUT_HOTEL.equalsIgnoreCase(screenName) == true //
+            || AnalyticsManager.Screen.STAY_LIST_SHORTCUT_BOUTIQUE.equalsIgnoreCase(screenName) == true //
+            || AnalyticsManager.Screen.STAY_LIST_SHORTCUT_PENSION.equalsIgnoreCase(screenName) == true //
+            || AnalyticsManager.Screen.STAY_LIST_SHORTCUT_RESORT.equalsIgnoreCase(screenName) == true //
+            || AnalyticsManager.Screen.STAY_LIST_SHORTCUT_NEARBY.equalsIgnoreCase(screenName) == true)
+        {
+            event = new DailyAdjustEvent(EventToken.SELECT_CATEGORY);
+
+            String placeType = params.get(AnalyticsManager.KeyType.PLACE_TYPE);
+            event.addPartnerParameter(Key.SERVICE, placeType);
+
+            String country = params.get(AnalyticsManager.KeyType.COUNTRY);
+            event.addPartnerParameter(AnalyticsManager.KeyType.COUNTRY, country);
+
+            String province = params.get(AnalyticsManager.KeyType.PROVINCE);
+            event.addPartnerParameter(AnalyticsManager.KeyType.PROVINCE, province);
+
+            String userType = params.get(AnalyticsManager.KeyType.IS_SIGNED);
+            event.addPartnerParameter(AnalyticsManager.KeyType.USER_TYPE, userType);
+
+            String memberType = params.get(AnalyticsManager.KeyType.MEMBER_TYPE);
+            event.addPartnerParameter(AnalyticsManager.KeyType.MEMBER_TYPE, memberType);
+
+            String pushNotification = params.get(AnalyticsManager.KeyType.PUSH_NOTIFICATION);
+            event.addPartnerParameter(AnalyticsManager.KeyType.PUSH_NOTIFICATION, pushNotification);
+
+            String area = params.get(AnalyticsManager.KeyType.DISTRICT);
+            event.addPartnerParameter(AnalyticsManager.KeyType.AREA, area);
+
+            String category = params.get(AnalyticsManager.KeyType.CATEGORY);
+            event.addPartnerParameter(AnalyticsManager.KeyType.CATEGORY, category);
+
+            String checkInDate = params.get(AnalyticsManager.KeyType.CHECK_IN);
+            event.addPartnerParameter(AnalyticsManager.KeyType.CHECK_IN_DATE, checkInDate);
+
+            String checkOutDate = params.get(AnalyticsManager.KeyType.CHECK_OUT);
+            event.addPartnerParameter(AnalyticsManager.KeyType.CHECK_OUT_DATE, checkOutDate);
+
+            String nights = params.get(AnalyticsManager.KeyType.LENGTH_OF_STAY);
+            event.addPartnerParameter(AnalyticsManager.KeyType.LENGTH_OF_STAY, nights);
+
+            String viewType = params.get(AnalyticsManager.KeyType.VIEW_TYPE);
+            event.addPartnerParameter(Key.VIEW, viewType);
+
+            if (DEBUG == true)
+            {
+                ExLog.d(TAG + "Screen : " + screenName + params.toString());
+            }
         }
 
-        if (event != null)
-        {
-            Adjust.trackEvent(event);
-        }
+        if(event !=null)
+
+    {
+        Adjust.trackEvent(event);
     }
+}
 
     @Override
     void recordEvent(String category, String action, String label, Map<String, String> params)
@@ -1208,144 +1257,145 @@ public class AdjustManager extends BaseAnalyticsManager
         return ynString;
     }
 
-    private class DailyAdjustEvent extends AdjustEvent
+private class DailyAdjustEvent extends AdjustEvent
+{
+    public DailyAdjustEvent(String eventToken)
     {
-        public DailyAdjustEvent(String eventToken)
+        super(eventToken);
+    }
+
+    @Override
+    public void setRevenue(double revenue, String currency)
+    {
+        super.setRevenue(revenue, currency);
+    }
+
+    @Override
+    public void addCallbackParameter(String key, String value)
+    {
+        if (DailyTextUtils.isTextEmpty(value) == true)
         {
-            super(eventToken);
+            value = "";
         }
 
-        @Override
-        public void setRevenue(double revenue, String currency)
+        super.addCallbackParameter(key, value);
+    }
+
+    @Override
+    public void addPartnerParameter(String key, String value)
+    {
+        if (DailyTextUtils.isTextEmpty(value) == true)
         {
-            super.setRevenue(revenue, currency);
+            value = "";
         }
 
-        @Override
-        public void addCallbackParameter(String key, String value)
-        {
-            if (DailyTextUtils.isTextEmpty(value) == true)
-            {
-                value = "";
-            }
+        super.addPartnerParameter(key, value);
+        super.addCallbackParameter(key, value);
+    }
 
-            super.addCallbackParameter(key, value);
+    public void addPartnerParameter(Map<String, String> paramMap)
+    {
+        if (paramMap == null || paramMap.size() == 0)
+        {
+            return;
         }
 
-        @Override
-        public void addPartnerParameter(String key, String value)
+        Iterator<Map.Entry<String, String>> iterator = paramMap.entrySet().iterator();
+        while (iterator.hasNext() == true)
         {
-            if (DailyTextUtils.isTextEmpty(value) == true)
-            {
-                value = "";
-            }
+            Map.Entry<String, String> entry = iterator.next();
 
-            super.addPartnerParameter(key, value);
-            super.addCallbackParameter(key, value);
-        }
-
-        public void addPartnerParameter(Map<String, String> paramMap)
-        {
-            if (paramMap == null || paramMap.size() == 0)
-            {
-                return;
-            }
-
-            Iterator<Map.Entry<String, String>> iterator = paramMap.entrySet().iterator();
-            while (iterator.hasNext() == true)
-            {
-                Map.Entry<String, String> entry = iterator.next();
-
-                addPartnerParameter(entry.getKey(), entry.getValue());
-            }
-        }
-
-        @Override
-        public void setOrderId(String orderId)
-        {
-            super.setOrderId(orderId);
-        }
-
-        @Override
-        public boolean isValid()
-        {
-            return super.isValid();
+            addPartnerParameter(entry.getKey(), entry.getValue());
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    //////////////////////////////////// Event Token ///////////////////////////////////////////////
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    protected static final class EventToken
+    @Override
+    public void setOrderId(String orderId)
     {
-        public static final String LAUNCH = "zglco7"; // 앱이 실행될 경우
-        public static final String SIGNUP = "o49cnd"; //회원가입을 하는 경우
-        public static final String SOCIAL_SIGNUP = "u9jtyd"; // 소셜 회원가입을 하는 경우
-        public static final String LOGIN = "abm00g"; //로그인을 할 경우
-        public static final String SOCIAL_LOGIN = "v3dnvq"; // 소셜 로그인을 할 경우
-        public static final String LOGOUT = "9wow7l"; // 로그아웃을 할 경우
-        public static final String PUSH_ON = "8n8r17"; // 팝업 또는 더보기에서 푸쉬를 켰을 경우
-        public static final String PUSH_OFF = "9w31iv"; // 팝업 또는 더보기에서 푸쉬를 껏을 경우
-        public static final String FRIEND_REFERRAL = "oqkwnd"; // 친구를 초대했을 경우
-        public static final String SOCIAL_SHARE = "ubu8fq"; // 공유버튼을 눌러 세부 공유  "보내기"버튼까지 눌렀을 경우
-        public static final String STAY_PURCHASE = "bqwrab"; // 스테이 결제가 완료되었을 때
-        public static final String GOURMET_PURCHASE = "bpmxez"; // 고메 결제가 완료되었을 때
-        public static final String PURCHASE_WITH_COUPON = "vtzvjn"; // 쿠폰을 사용하여 결제가 완료되었을 때
-        public static final String STAY_FIRST_PURCHASE = "9uxbuf"; // 스테이 처음 결제가 완료되었을 때
-        public static final String GOURMET_FIRST_PURCHASE = "qvbirj"; // 고메 처음 결제가 완료되었을 때
-        public static final String FIRST_PURCHASE_WITH_COUPON = "oqbhce"; // 쿠폰을 사용하여 첫 결제가 완료되었을 때
-        public static final String COUPON_REJECTED = "881sbf"; // 쿠폰이 거절되었을 때
-        public static final String SATISFACTION_SURVEY = "n5pe52"; // 만족도 평가 완료 시
-        public static final String VIEW_LIST = "qtgwuc"; // 리스트 화면이 노출될 때
-        public static final String VIEW_DETAIL = "8atmoj"; // 업장 디테일화면이 노출될 때
-        public static final String VIEW_BOOKING_INITIALISE = "4s8i0m"; // 결제화면이 노출될 때
-        public static final String SEARCH_RESULT = "szintj"; // 검색어를 입력하여 검색결과 화면이 노출될 때
-        public static final String WISH_LIST = "tnjqjp"; // 위시리스트
-        public static final String RECENT_VIEW = "kmmxda"; // 최근 본 업장
-        public static final String ADD_TO_WISH_LIST = "7z705c"; // 위시리스트에 추가버튼을 누를 때
-        public static final String DELETE_TO_WISH_LIST = "kkeukz"; // 위시리스트에 삭제버튼을 누를 때
-        public static final String VIEW_HOME = "mfjyoa"; // 홈 화면 진입 후 위시리스트와 최근 본 업장 결과를 가져온 때
+        super.setOrderId(orderId);
     }
 
-    private static final class Key
+    @Override
+    public boolean isValid()
     {
-        public static final String USER_INDEX = "user_id"; // Adjust에서는 user_id 로 넘긴다고 함 - 혼선가능성으로 키 이름만 변경!
-        public static final String SERVICE = "service";
-        public static final String USER_TYPE = "user_type";
-        public static final String MEMBER_TYPE = "member_type";
-        public static final String PUSH_NOTIFICATION = "push_notification";
-        public static final String PUSH_SETTING = "push_setting";
-        public static final String SHARE_METHOD = "share_method"; // 공유수단
-        public static final String PLACE_INDEX = "vendor_id"; // 업장 아이디
-        public static final String PLACE_NAME = "vendor_name"; // 업장 이름
-        public static final String RATING = "vendor_satisfaction"; // 만족도
-        public static final String IS_SHOW_ORIGINAL_PRICE = "discounted_price"; // 정가표시여부(y/n)
-        public static final String LIST_INDEX = "ranking"; // 리스트화면에서 디테일화면으로 들어온 노출순위
-        public static final String DBENEFIT = "d_benefit"; // 디베네핏 여부(y/n)
-        public static final String TICKET_INDEX = "product_id"; // sale reco idx
-        public static final String REGISTERED_SIMPLE_CARD = "card_registration"; // 간편결제 카드 등록 여부(y/n)
-        public static final String PAYMENT_TYPE = "payment_method"; // 결제수단(easycard / card / phonebill / virtualaccount)
-        public static final String COUPON = "coupon"; // 사용된 쿠폰
-        public static final String COUPON_CODE = "coupon_id"; // 사용된 쿠폰코드
-        public static final String COUPON_PRICE = "coupon_value"; // 사용된 쿠폰금액
-        public static final String BONUS_PRICE = "point_value"; // 사용한 포인트 금액
-        public static final String COUPON_REJECTED = "coupon_rejected"; // 쿠폰정보 및 거절 에러코드
-        public static final String VIEW = "view"; // 리스트 인지 맵인지
-        public static final String WISH_LIST_PLACE_INDEXES = "wish_lists"; // 위시리스트내 담은 업장(최근 5개)
-        public static final String RECENTVIEW_LIST_PLACE_INDEXES = "recentview_lists"; // 위시리스트내 담은 업장 개수
-        public static final String NUMBER_OF_WISH_LISTS = "number_of_wish_lists"; // 위시리스트내 담은 업장(최근 5개)
-        public static final String NUMBER_OF_RECENTVIEWS = "number_of_recentviews"; // 최근 본 업장 개수
+        return super.isValid();
     }
+}
 
-    private static final class UserType
-    {
-        public static final String GUEST = "guest";
-        public static final String MEMBER = "member";
-    }
+////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////// Event Token ///////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////
+protected static final class EventToken
+{
+    public static final String LAUNCH = "zglco7"; // 앱이 실행될 경우
+    public static final String SIGNUP = "o49cnd"; //회원가입을 하는 경우
+    public static final String SOCIAL_SIGNUP = "u9jtyd"; // 소셜 회원가입을 하는 경우
+    public static final String LOGIN = "abm00g"; //로그인을 할 경우
+    public static final String SOCIAL_LOGIN = "v3dnvq"; // 소셜 로그인을 할 경우
+    public static final String LOGOUT = "9wow7l"; // 로그아웃을 할 경우
+    public static final String PUSH_ON = "8n8r17"; // 팝업 또는 더보기에서 푸쉬를 켰을 경우
+    public static final String PUSH_OFF = "9w31iv"; // 팝업 또는 더보기에서 푸쉬를 껏을 경우
+    public static final String FRIEND_REFERRAL = "oqkwnd"; // 친구를 초대했을 경우
+    public static final String SOCIAL_SHARE = "ubu8fq"; // 공유버튼을 눌러 세부 공유  "보내기"버튼까지 눌렀을 경우
+    public static final String STAY_PURCHASE = "bqwrab"; // 스테이 결제가 완료되었을 때
+    public static final String GOURMET_PURCHASE = "bpmxez"; // 고메 결제가 완료되었을 때
+    public static final String PURCHASE_WITH_COUPON = "vtzvjn"; // 쿠폰을 사용하여 결제가 완료되었을 때
+    public static final String STAY_FIRST_PURCHASE = "9uxbuf"; // 스테이 처음 결제가 완료되었을 때
+    public static final String GOURMET_FIRST_PURCHASE = "qvbirj"; // 고메 처음 결제가 완료되었을 때
+    public static final String FIRST_PURCHASE_WITH_COUPON = "oqbhce"; // 쿠폰을 사용하여 첫 결제가 완료되었을 때
+    public static final String COUPON_REJECTED = "881sbf"; // 쿠폰이 거절되었을 때
+    public static final String SATISFACTION_SURVEY = "n5pe52"; // 만족도 평가 완료 시
+    public static final String VIEW_LIST = "qtgwuc"; // 리스트 화면이 노출될 때
+    public static final String VIEW_DETAIL = "8atmoj"; // 업장 디테일화면이 노출될 때
+    public static final String VIEW_BOOKING_INITIALISE = "4s8i0m"; // 결제화면이 노출될 때
+    public static final String SEARCH_RESULT = "szintj"; // 검색어를 입력하여 검색결과 화면이 노출될 때
+    public static final String WISH_LIST = "tnjqjp"; // 위시리스트
+    public static final String RECENT_VIEW = "kmmxda"; // 최근 본 업장
+    public static final String ADD_TO_WISH_LIST = "7z705c"; // 위시리스트에 추가버튼을 누를 때
+    public static final String DELETE_TO_WISH_LIST = "kkeukz"; // 위시리스트에 삭제버튼을 누를 때
+    public static final String VIEW_HOME = "mfjyoa"; // 홈 화면 진입 후 위시리스트와 최근 본 업장 결과를 가져온 때
+    public static final String SELECT_CATEGORY = "zdhpcy"; // 카테고리 선택 > 지역선택 완료 후 리스트 화면이 노출될 때
+}
 
-    private static final class OnOffType
-    {
-        public static final String ON = "on";
-        public static final String OFF = "off";
-    }
+private static final class Key
+{
+    public static final String USER_INDEX = "user_id"; // Adjust에서는 user_id 로 넘긴다고 함 - 혼선가능성으로 키 이름만 변경!
+    public static final String SERVICE = "service";
+    public static final String USER_TYPE = "user_type";
+    public static final String MEMBER_TYPE = "member_type";
+    public static final String PUSH_NOTIFICATION = "push_notification";
+    public static final String PUSH_SETTING = "push_setting";
+    public static final String SHARE_METHOD = "share_method"; // 공유수단
+    public static final String PLACE_INDEX = "vendor_id"; // 업장 아이디
+    public static final String PLACE_NAME = "vendor_name"; // 업장 이름
+    public static final String RATING = "vendor_satisfaction"; // 만족도
+    public static final String IS_SHOW_ORIGINAL_PRICE = "discounted_price"; // 정가표시여부(y/n)
+    public static final String LIST_INDEX = "ranking"; // 리스트화면에서 디테일화면으로 들어온 노출순위
+    public static final String DBENEFIT = "d_benefit"; // 디베네핏 여부(y/n)
+    public static final String TICKET_INDEX = "product_id"; // sale reco idx
+    public static final String REGISTERED_SIMPLE_CARD = "card_registration"; // 간편결제 카드 등록 여부(y/n)
+    public static final String PAYMENT_TYPE = "payment_method"; // 결제수단(easycard / card / phonebill / virtualaccount)
+    public static final String COUPON = "coupon"; // 사용된 쿠폰
+    public static final String COUPON_CODE = "coupon_id"; // 사용된 쿠폰코드
+    public static final String COUPON_PRICE = "coupon_value"; // 사용된 쿠폰금액
+    public static final String BONUS_PRICE = "point_value"; // 사용한 포인트 금액
+    public static final String COUPON_REJECTED = "coupon_rejected"; // 쿠폰정보 및 거절 에러코드
+    public static final String VIEW = "view"; // 리스트 인지 맵인지
+    public static final String WISH_LIST_PLACE_INDEXES = "wish_lists"; // 위시리스트내 담은 업장(최근 5개)
+    public static final String RECENTVIEW_LIST_PLACE_INDEXES = "recentview_lists"; // 위시리스트내 담은 업장 개수
+    public static final String NUMBER_OF_WISH_LISTS = "number_of_wish_lists"; // 위시리스트내 담은 업장(최근 5개)
+    public static final String NUMBER_OF_RECENTVIEWS = "number_of_recentviews"; // 최근 본 업장 개수
+}
+
+private static final class UserType
+{
+    public static final String GUEST = "guest";
+    public static final String MEMBER = "member";
+}
+
+private static final class OnOffType
+{
+    public static final String ON = "on";
+    public static final String OFF = "off";
+}
 }
