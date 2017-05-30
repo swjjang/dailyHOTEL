@@ -3,6 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:fresco="http://schemas.android.com/apk/res-auto"
+    xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -175,4 +176,24 @@
             android:layout_marginLeft="2dp"
             android:background="@drawable/selector_floatingactionview"/>
     </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/tooltipLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_horizontal"
+        android:paddingLeft="131dp"
+        android:visibility="gone">
+
+        <com.daily.base.widget.DailyTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="83dp"
+            android:background="@drawable/tooltip_top_date"
+            android:gravity="center"
+            android:text="@string/label_home_category_tooltip"
+            android:textColor="@color/default_text_c323232"
+            android:textSize="13dp"
+            dailyFont:style="Medium"/>
+    </RelativeLayout>
 </android.support.design.widget.CoordinatorLayout>
