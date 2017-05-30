@@ -1,8 +1,11 @@
 package com.twoheart.dailyhotel.screen.home.category.list;
 
+import android.animation.Animator;
+import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.support.v4.app.FragmentManager;
 import android.view.View;
+import android.view.animation.LinearInterpolator;
 
 import com.daily.base.util.DailyTextUtils;
 import com.twoheart.dailyhotel.R;
@@ -24,6 +27,7 @@ public class StayCategoryTabLayout extends PlaceMainLayout
 {
     private String mTitleText;
     private DailyCategoryType mDailyCategoryType;
+    private View mTooltipLayout;
 
     public StayCategoryTabLayout(Context context, String titleText, DailyCategoryType dailyCategoryType, PlaceMainLayout.OnEventListener onEventListener)
     {
@@ -31,6 +35,91 @@ public class StayCategoryTabLayout extends PlaceMainLayout
 
         mTitleText = titleText;
         mDailyCategoryType = dailyCategoryType;
+    }
+
+    @Override
+    protected void initLayout(View view)
+    {
+        super.initLayout(view);
+
+        mTooltipLayout = view.findViewById(R.id.tooltipLayout);
+
+        if (DailyPreference.getInstance(mContext).isStayCategoryListTooltip() == true)
+        {
+            mTooltipLayout.setVisibility(View.GONE);
+            return;
+        }
+
+        DailyPreference.getInstance(mContext).setStayCategoryListTooltip(true);
+        mTooltipLayout.setVisibility(View.VISIBLE);
+        mTooltipLayout.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                hideAnimationTooltip();
+            }
+        });
+
+        // 10초 후에 터치가 없으면 자동으로 사라짐.(기획서상 10초이지만 실제 보이기까지 여분의 시간을 넣음)
+        mTooltipLayout.postDelayed(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                if (mTooltipLayout.getVisibility() != View.GONE)
+                {
+                    hideAnimationTooltip();
+                }
+            }
+        }, 10000);
+    }
+
+    void hideAnimationTooltip()
+    {
+        if (mTooltipLayout.getTag() != null)
+        {
+            return;
+        }
+
+        final ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(mTooltipLayout, "alpha", 1.0f, 0.0f);
+
+        mTooltipLayout.setTag(objectAnimator);
+
+        objectAnimator.setInterpolator(new LinearInterpolator());
+        objectAnimator.setDuration(300);
+        objectAnimator.addListener(new Animator.AnimatorListener()
+        {
+            @Override
+            public void onAnimationStart(Animator animator)
+            {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animator)
+            {
+                objectAnimator.removeAllListeners();
+                objectAnimator.removeAllUpdateListeners();
+
+                mTooltipLayout.setTag(null);
+                mTooltipLayout.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animator)
+            {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animator)
+            {
+
+            }
+        });
+
+        objectAnimator.start();
     }
 
     @Override
