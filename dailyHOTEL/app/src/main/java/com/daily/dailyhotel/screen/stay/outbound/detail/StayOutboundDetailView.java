@@ -16,7 +16,6 @@ import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.RectShape;
 import android.net.Uri;
 import android.support.annotation.IdRes;
-import android.support.v4.view.MotionEventCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
@@ -29,7 +28,6 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.LinearInterpolator;
@@ -57,7 +55,6 @@ import com.twoheart.dailyhotel.databinding.ActivityStayOutboundDetailDataBinding
 import com.twoheart.dailyhotel.databinding.DialogConciergeDataBinding;
 import com.twoheart.dailyhotel.databinding.DialogShareDataBinding;
 import com.twoheart.dailyhotel.databinding.DialogStayOutboundMapDataBinding;
-import com.twoheart.dailyhotel.databinding.LayoutStayOutboundDetail01DataBinding;
 import com.twoheart.dailyhotel.databinding.LayoutStayOutboundDetail02DataBinding;
 import com.twoheart.dailyhotel.databinding.LayoutStayOutboundDetail03DataBinding;
 import com.twoheart.dailyhotel.databinding.LayoutStayOutboundDetail04DataBinding;
@@ -88,6 +85,8 @@ public class StayOutboundDetailView extends BaseDialogView<StayOutboundDetailVie
     private static final int ANIMATION_DEALY = 250;
 
     private DailyToolbarLayout mDailyToolbarLayout;
+
+    private StayOutboundDetailEmptyView mStayOutboundDetailEmptyView;
 
     private StayOutboundDetailImageViewPagerAdapter mImageViewPagerAdapter;
     private StayOutboundDetailRoomListAdapter mRoomTypeListAdapter;
@@ -466,7 +465,7 @@ public class StayOutboundDetailView extends BaseDialogView<StayOutboundDetailVie
         LayoutInflater layoutInflater = LayoutInflater.from(getContext());
 
         // 이미지 상단에 빈화면 넣기
-        setEmptyView(layoutInflater, getViewDataBinding().scrollLayout);
+        addEmptyView(getContext(), getViewDataBinding().scrollLayout);
 
         // 호텔 등급과 이름 / 체크인 체크아웃
         setTitleView(layoutInflater, getViewDataBinding().scrollLayout, stayBookDateTime, people, stayOutboundDetail);
@@ -956,23 +955,81 @@ public class StayOutboundDetailView extends BaseDialogView<StayOutboundDetailVie
     }
 
     /**
-     * @param layoutInflater
+     * @param context
      * @param viewGroup
      */
-    private void setEmptyView(LayoutInflater layoutInflater, ViewGroup viewGroup)
+    private void addEmptyView(Context context, ViewGroup viewGroup)
     {
-        if (layoutInflater == null || viewGroup == null)
+        if (context == null || viewGroup == null)
         {
             return;
         }
 
-        // 이미지 상단에 빈화면 넣기
-        LayoutStayOutboundDetail01DataBinding viewDataBinding = DataBindingUtil.inflate(layoutInflater//
-            , R.layout.layout_stay_outbound_detail_01_data, getViewDataBinding().scrollLayout, true);
+        mStayOutboundDetailEmptyView = new StayOutboundDetailEmptyView(context, new StayOutboundDetailEmptyView.OnEventListener()
+        {
+            @Override
+            public void onBackClick()
+            {
 
-        viewDataBinding.imageEmptyView.getLayoutParams().height = ScreenUtils.getDetailScreenImageLayoutHeight(getContext());
-        viewDataBinding.imageEmptyView.setClickable(true);
-        viewDataBinding.imageEmptyView.setOnTouchListener(mEmptyViewOnTouchListener);
+            }
+
+            @Override
+            public void onStopMove(MotionEvent event)
+            {
+                getViewDataBinding().nestedScrollView.setScrollingEnabled(false);
+
+                try
+                {
+                    getViewDataBinding().imageLoopViewPager.onTouchEvent(event);
+                } catch (Exception e)
+                {
+                }
+            }
+
+            @Override
+            public void onHorizontalMove(MotionEvent event)
+            {
+                try
+                {
+                    getViewDataBinding().imageLoopViewPager.onTouchEvent(event);
+                } catch (Exception e)
+                {
+                    event.setAction(MotionEvent.ACTION_CANCEL);
+                    event.setLocation(getViewDataBinding().imageLoopViewPager.getScrollX(), getViewDataBinding().imageLoopViewPager.getScrollY());
+                    getViewDataBinding().imageLoopViewPager.onTouchEvent(event);
+                }
+            }
+
+            @Override
+            public void onVerticalMove(MotionEvent event)
+            {
+                getViewDataBinding().nestedScrollView.setScrollingEnabled(true);
+            }
+
+            @Override
+            public void onCancelMove(MotionEvent event)
+            {
+                try
+                {
+                    getViewDataBinding().imageLoopViewPager.onTouchEvent(event);
+                } catch (Exception e)
+                {
+                    event.setAction(MotionEvent.ACTION_CANCEL);
+                    event.setLocation(getViewDataBinding().imageLoopViewPager.getScrollX(), getViewDataBinding().imageLoopViewPager.getScrollY());
+                    getViewDataBinding().imageLoopViewPager.onTouchEvent(event);
+                }
+
+                getViewDataBinding().nestedScrollView.setScrollingEnabled(true);
+            }
+
+            @Override
+            public void onImageClick()
+            {
+                getEventListener().onImageClick(getViewDataBinding().imageLoopViewPager.getCurrentItem());
+            }
+        });
+
+        mStayOutboundDetailEmptyView.setContentView(R.layout.layout_stay_outbound_detail_01_data, viewGroup, true);
     }
 
     /**
@@ -1413,145 +1470,6 @@ public class StayOutboundDetailView extends BaseDialogView<StayOutboundDetailVie
         getViewDataBinding().bookingTextView.setOnClickListener(this);
     }
 
-    private View.OnTouchListener mEmptyViewOnTouchListener = new View.OnTouchListener()
-    {
-        private final int MOVE_STATE_NONE = 0;
-        private final int MOVE_STATE_SCROLL = 10;
-        private final int MOVE_STATE_VIEWPAGER = 100;
-
-        private final float MOVE_CALIBRATE_VALUE = 1.25f;
-
-        private int mMoveState;
-        private float mPrevX, mPrevY;
-
-        @Override
-        public boolean onTouch(View v, MotionEvent event)
-        {
-            switch (event.getAction() & MotionEventCompat.ACTION_MASK)
-            {
-                case MotionEvent.ACTION_DOWN:
-                {
-                    mPrevX = event.getX();
-                    mPrevY = event.getY();
-
-                    mMoveState = MOVE_STATE_NONE;
-
-                    getViewDataBinding().nestedScrollView.setScrollingEnabled(false);
-
-                    try
-                    {
-                        getViewDataBinding().imageLoopViewPager.onTouchEvent(event);
-                    } catch (Exception e)
-                    {
-                    }
-                    break;
-                }
-
-                case MotionEvent.ACTION_UP:
-                {
-                    int touchSlop = ViewConfiguration.get(getContext()).getScaledTouchSlop();
-
-                    int x = (int) (mPrevX - event.getX());
-                    int y = (int) (mPrevY - event.getY());
-
-                    int distance = (int) Math.sqrt(x * x + y * y);
-
-                    if (distance < touchSlop)
-                    {
-                        getEventListener().onImageClick(getViewDataBinding().imageLoopViewPager.getCurrentItem());
-
-                        mMoveState = MOVE_STATE_NONE;
-
-                        try
-                        {
-                            getViewDataBinding().imageLoopViewPager.onTouchEvent(event);
-                        } catch (Exception e)
-                        {
-                            event.setAction(MotionEvent.ACTION_CANCEL);
-                            event.setLocation(getViewDataBinding().imageLoopViewPager.getScrollX(), getViewDataBinding().imageLoopViewPager.getScrollY());
-                            getViewDataBinding().imageLoopViewPager.onTouchEvent(event);
-                        }
-
-                        getViewDataBinding().nestedScrollView.setScrollingEnabled(true);
-                        break;
-                    }
-                }
-                case MotionEvent.ACTION_CANCEL:
-                {
-                    mMoveState = MOVE_STATE_NONE;
-
-                    try
-                    {
-                        getViewDataBinding().imageLoopViewPager.onTouchEvent(event);
-                    } catch (Exception e)
-                    {
-                        event.setAction(MotionEvent.ACTION_CANCEL);
-                        event.setLocation(getViewDataBinding().imageLoopViewPager.getScrollX(), getViewDataBinding().imageLoopViewPager.getScrollY());
-                        getViewDataBinding().imageLoopViewPager.onTouchEvent(event);
-                    }
-
-                    getViewDataBinding().nestedScrollView.setScrollingEnabled(true);
-                    break;
-                }
-
-                case MotionEvent.ACTION_MOVE:
-                {
-                    float x = event.getX();
-                    float y = event.getY();
-
-                    switch (mMoveState)
-                    {
-                        case MOVE_STATE_NONE:
-                        {
-                            if (Math.abs(x - mPrevX) == Math.abs(y - mPrevY))
-                            {
-
-                            } else if (Math.abs(x - mPrevX) * MOVE_CALIBRATE_VALUE > Math.abs(y - mPrevY))
-                            {
-                                // x 축으로 이동한 경우.
-                                mMoveState = MOVE_STATE_VIEWPAGER;
-
-                                try
-                                {
-                                    getViewDataBinding().imageLoopViewPager.onTouchEvent(event);
-                                } catch (Exception e)
-                                {
-                                    event.setAction(MotionEvent.ACTION_CANCEL);
-                                    event.setLocation(getViewDataBinding().imageLoopViewPager.getScrollX(), getViewDataBinding().imageLoopViewPager.getScrollY());
-                                    getViewDataBinding().imageLoopViewPager.onTouchEvent(event);
-                                }
-                            } else
-                            {
-                                // y축으로 이동한 경우.
-                                mMoveState = MOVE_STATE_SCROLL;
-
-                                getViewDataBinding().nestedScrollView.setScrollingEnabled(true);
-                                return true;
-                            }
-                            break;
-                        }
-
-                        case MOVE_STATE_VIEWPAGER:
-                        {
-                            try
-                            {
-                                getViewDataBinding().imageLoopViewPager.onTouchEvent(event);
-                            } catch (Exception e)
-                            {
-                                event.setAction(MotionEvent.ACTION_CANCEL);
-                                event.setLocation(getViewDataBinding().imageLoopViewPager.getScrollX(), getViewDataBinding().imageLoopViewPager.getScrollY());
-                                getViewDataBinding().imageLoopViewPager.onTouchEvent(event);
-                            }
-                        }
-                        break;
-                    }
-                    break;
-                }
-            }
-
-            return false;
-        }
-    };
 
     private PaintDrawable makeShaderFactory()
     {
@@ -1575,4 +1493,144 @@ public class StayOutboundDetailView extends BaseDialogView<StayOutboundDetailVie
 
         return paintDrawable;
     }
+
+    //    private View.OnTouchListener mEmptyViewOnTouchListener = new View.OnTouchListener()
+    //    {
+    //        private final int MOVE_STATE_NONE = 0;
+    //        private final int MOVE_STATE_SCROLL = 10;
+    //        private final int MOVE_STATE_VIEWPAGER = 100;
+    //
+    //        private final float MOVE_CALIBRATE_VALUE = 1.25f;
+    //
+    //        private int mMoveState;
+    //        private float mPrevX, mPrevY;
+    //
+    //        @Override
+    //        public boolean onTouch(View v, MotionEvent event)
+    //        {
+    //            switch (event.getAction() & MotionEventCompat.ACTION_MASK)
+    //            {
+    //                case MotionEvent.ACTION_DOWN:
+    //                {
+    //                    mPrevX = event.getX();
+    //                    mPrevY = event.getY();
+    //
+    //                    mMoveState = MOVE_STATE_NONE;
+    //
+    //                    getViewDataBinding().nestedScrollView.setScrollingEnabled(false);
+    //
+    //                    try
+    //                    {
+    //                        getViewDataBinding().imageLoopViewPager.onTouchEvent(event);
+    //                    } catch (Exception e)
+    //                    {
+    //                    }
+    //                    break;
+    //                }
+    //
+    //                case MotionEvent.ACTION_UP:
+    //                {
+    //                    int touchSlop = ViewConfiguration.get(getContext()).getScaledTouchSlop();
+    //
+    //                    int x = (int) (mPrevX - event.getX());
+    //                    int y = (int) (mPrevY - event.getY());
+    //
+    //                    int distance = (int) Math.sqrt(x * x + y * y);
+    //
+    //                    if (distance < touchSlop)
+    //                    {
+    //                        getEventListener().onImageClick(getViewDataBinding().imageLoopViewPager.getCurrentItem());
+    //
+    //                        mMoveState = MOVE_STATE_NONE;
+    //
+    //                        try
+    //                        {
+    //                            getViewDataBinding().imageLoopViewPager.onTouchEvent(event);
+    //                        } catch (Exception e)
+    //                        {
+    //                            event.setAction(MotionEvent.ACTION_CANCEL);
+    //                            event.setLocation(getViewDataBinding().imageLoopViewPager.getScrollX(), getViewDataBinding().imageLoopViewPager.getScrollY());
+    //                            getViewDataBinding().imageLoopViewPager.onTouchEvent(event);
+    //                        }
+    //
+    //                        getViewDataBinding().nestedScrollView.setScrollingEnabled(true);
+    //                        break;
+    //                    }
+    //                }
+    //                case MotionEvent.ACTION_CANCEL:
+    //                {
+    //                    mMoveState = MOVE_STATE_NONE;
+    //
+    //                    try
+    //                    {
+    //                        getViewDataBinding().imageLoopViewPager.onTouchEvent(event);
+    //                    } catch (Exception e)
+    //                    {
+    //                        event.setAction(MotionEvent.ACTION_CANCEL);
+    //                        event.setLocation(getViewDataBinding().imageLoopViewPager.getScrollX(), getViewDataBinding().imageLoopViewPager.getScrollY());
+    //                        getViewDataBinding().imageLoopViewPager.onTouchEvent(event);
+    //                    }
+    //
+    //                    getViewDataBinding().nestedScrollView.setScrollingEnabled(true);
+    //                    break;
+    //                }
+    //
+    //                case MotionEvent.ACTION_MOVE:
+    //                {
+    //                    float x = event.getX();
+    //                    float y = event.getY();
+    //
+    //                    switch (mMoveState)
+    //                    {
+    //                        case MOVE_STATE_NONE:
+    //                        {
+    //                            if (Math.abs(x - mPrevX) == Math.abs(y - mPrevY))
+    //                            {
+    //
+    //                            } else if (Math.abs(x - mPrevX) * MOVE_CALIBRATE_VALUE > Math.abs(y - mPrevY))
+    //                            {
+    //                                // x 축으로 이동한 경우.
+    //                                mMoveState = MOVE_STATE_VIEWPAGER;
+    //
+    //                                try
+    //                                {
+    //                                    getViewDataBinding().imageLoopViewPager.onTouchEvent(event);
+    //                                } catch (Exception e)
+    //                                {
+    //                                    event.setAction(MotionEvent.ACTION_CANCEL);
+    //                                    event.setLocation(getViewDataBinding().imageLoopViewPager.getScrollX(), getViewDataBinding().imageLoopViewPager.getScrollY());
+    //                                    getViewDataBinding().imageLoopViewPager.onTouchEvent(event);
+    //                                }
+    //                            } else
+    //                            {
+    //                                // y축으로 이동한 경우.
+    //                                mMoveState = MOVE_STATE_SCROLL;
+    //
+    //                                getViewDataBinding().nestedScrollView.setScrollingEnabled(true);
+    //                                return true;
+    //                            }
+    //                            break;
+    //                        }
+    //
+    //                        case MOVE_STATE_VIEWPAGER:
+    //                        {
+    //                            try
+    //                            {
+    //                                getViewDataBinding().imageLoopViewPager.onTouchEvent(event);
+    //                            } catch (Exception e)
+    //                            {
+    //                                event.setAction(MotionEvent.ACTION_CANCEL);
+    //                                event.setLocation(getViewDataBinding().imageLoopViewPager.getScrollX(), getViewDataBinding().imageLoopViewPager.getScrollY());
+    //                                getViewDataBinding().imageLoopViewPager.onTouchEvent(event);
+    //                            }
+    //                        }
+    //                        break;
+    //                    }
+    //                    break;
+    //                }
+    //            }
+    //
+    //            return false;
+    //        }
+    //    };
 }
