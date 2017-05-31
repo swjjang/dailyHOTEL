@@ -183,7 +183,7 @@ public class StayCategoryNearByCurationActivity extends StayCategoryCurationActi
             mLastParams = new StayCategoryNearByParams(stayCategoryCuration);
         } else
         {
-            ((StayCategoryNearByParams) mLastParams).setPlaceParams(stayCategoryCuration);
+            mLastParams.setPlaceParams(stayCategoryCuration);
         }
     }
 

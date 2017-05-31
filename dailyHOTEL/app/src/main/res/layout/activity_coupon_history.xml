@@ -27,7 +27,6 @@
             <com.daily.base.widget.DailyTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
                 android:drawablePadding="4dp"
                 app:drawableCompatTop="@drawable/more_ic_coupon_01"
                 android:text="@string/coupon_history_header_text"
