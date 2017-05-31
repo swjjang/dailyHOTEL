@@ -79,7 +79,7 @@ public class HomeLayout extends BaseBlurLayout
     EventListAdapter mEventListAdapter;
 
     private View mActionButtonLayout;
-    private ValueAnimator mActionButtonLayoutAnimator;
+    private ValueAnimator mScrollButtonLayoutAnimator;
     private int mActionButtonLayoutVisibility = View.GONE;
     SwipeRefreshLayout mSwipeRefreshLayout;
     DailyHomeScrollView mDailyHomeScrollView;
@@ -93,7 +93,6 @@ public class HomeLayout extends BaseBlurLayout
     HomeCarouselLayout mRecentListLayout;
     HomeCarouselLayout mWishListLayout;
     HomeRecommendationLayout mHomeRecommendationLayout;
-    View mToolbarUnderLine;
 
     ObjectAnimator mErrorPopupAnimator;
 
@@ -189,9 +188,6 @@ public class HomeLayout extends BaseBlurLayout
 
         View searchView = view.findViewById(R.id.searchImageView);
         searchView.setOnClickListener(v -> ((OnEventListener) mOnEventListener).onSearchImageClick());
-
-        mToolbarUnderLine = view.findViewById(R.id.toolbarUnderline);
-        mToolbarUnderLine.setVisibility(View.GONE);
     }
 
     // 홈의 상단 고정 버튼 레이아웃
@@ -1085,164 +1081,157 @@ public class HomeLayout extends BaseBlurLayout
         closeValueAnimator.start();
     }
 
-    public void clearActionButtonAnimation()
-    {
-        if (mActionButtonLayoutAnimator != null)
-        {
-            mActionButtonLayoutAnimator.cancel();
-            mActionButtonLayoutAnimator.removeAllUpdateListeners();
-            mActionButtonLayoutAnimator.removeAllListeners();
-            mActionButtonLayoutAnimator = null;
-        }
-    }
-
     public void setActionButtonVisibility(int visibility)
     {
-        clearActionButtonAnimation();
+        clearScrollButtonAnimation();
 
-        if (mActionButtonLayoutVisibility == visibility)
-        {
-            return;
-        }
+        //        if (mActionButtonLayoutVisibility == visibility)
+        //        {
+        //            return;
+        //        }
 
         mActionButtonLayoutVisibility = visibility;
 
         mActionButtonLayout.setVisibility(visibility);
     }
 
-    public void setActionButtonLayoutAnimation(final int visibility)
+    public void clearScrollButtonAnimation()
     {
+        if (mScrollButtonLayoutAnimator != null)
+        {
+            mScrollButtonLayoutAnimator.cancel();
+            mScrollButtonLayoutAnimator.removeAllUpdateListeners();
+            mScrollButtonLayoutAnimator.removeAllListeners();
+            mScrollButtonLayoutAnimator = null;
+        }
+    }
+
+    public void setScrollButtonLayoutAnimation(final int visibility)
+    {
+        if (mScrollButtonLayout == null)
+        {
+            return;
+        }
+
         if (mActionButtonLayoutVisibility == visibility)
         {
             return;
         }
 
+        clearScrollButtonAnimation();
+
         mActionButtonLayoutVisibility = visibility;
 
-        clearActionButtonAnimation();
+        final boolean isShow = visibility == View.VISIBLE;
 
-        float start = visibility == View.VISIBLE ? 1.0f : 0.0f;
-        float end = visibility == View.VISIBLE ? 0.0f : 1.0f;
+        float start = isShow == true ? 1.0f : 0.0f;
+        float end = isShow == true ? 0.0f : 1.0f;
 
-        mActionButtonLayoutAnimator = ValueAnimator.ofFloat(start, end);
+        View productLayout = mScrollButtonLayout.findViewById(R.id.productButtonLayout);
+        View stayButtonLayout = mScrollButtonLayout.findViewById(R.id.stayButtonLayout);
+        View stayButtonImageView = mScrollButtonLayout.findViewById(R.id.stayButtonImageView);
+        View gourmetButtonLayout = mScrollButtonLayout.findViewById(R.id.gourmetButtonLayout);
+        View gourmetButtonImageView = mScrollButtonLayout.findViewById(R.id.gourmetButtonImageView);
 
-        View stayButtonLayout = mActionButtonLayout.findViewById(R.id.stayButtonLayout);
-        View gourmetButtonLayout = mActionButtonLayout.findViewById(R.id.gourmetButtonLayout);
-        View gourmetButtonImageView = mActionButtonLayout.findViewById(R.id.gourmetButtonImageView);
-        View verticalLineView = mActionButtonLayout.findViewById(R.id.verticalLine);
-
+        ViewGroup.MarginLayoutParams productLayoutParams = (ViewGroup.MarginLayoutParams) productLayout.getLayoutParams();
         ViewGroup.MarginLayoutParams stayLayoutParams = (ViewGroup.MarginLayoutParams) stayButtonLayout.getLayoutParams();
+        ViewGroup.MarginLayoutParams stayImageLayoutParams = (ViewGroup.MarginLayoutParams) stayButtonImageView.getLayoutParams();
         ViewGroup.MarginLayoutParams gourmetLayoutParams = (ViewGroup.MarginLayoutParams) gourmetButtonLayout.getLayoutParams();
         ViewGroup.MarginLayoutParams gourmetImageLayoutParams = (ViewGroup.MarginLayoutParams) gourmetButtonImageView.getLayoutParams();
 
-        int horizontalInsideValue = ScreenUtils.dpToPx(mContext, 4.5d); // 각 버튼의 가로 안쪽 마진
+        int maxLayoutHeight = ScreenUtils.dpToPx(mContext, 96d);
+        int layoutVerticalPadding = ScreenUtils.dpToPx(mContext, 10d);
+        int gapLayoutHeightValue = layoutVerticalPadding * 2;
+        int minLayoutHeight = maxLayoutHeight - gapLayoutHeightValue;
+        int horizontalInsideValue = ScreenUtils.dpToPx(mContext, 5d); // 각 버튼의 가로 안쪽 마진
         int horizontalOutsideValue = ScreenUtils.dpToPx(mContext, 15d); // 각 버튼의 가로 바깥쪽 마진
         int verticalOutsideValue = ScreenUtils.dpToPx(mContext, 5d); // 각 버튼의 세로 마진
-        int maxAlpha = 255;
-        int minValue = 0; // 각버튼의 최소 마진
-        int maxGourmetImageLayoutValue = ScreenUtils.dpToPx(mContext, 11.5d);
-        int minGourmetImageLayoutValue = ScreenUtils.dpToPx(mContext, 7d);
-        int gapGourmetImageLayoutValue = maxGourmetImageLayoutValue - minGourmetImageLayoutValue;
+        int showImageLeftMargin = ScreenUtils.dpToPx(mContext, 12d);
+        int hideImageLeftMargin = ScreenUtils.dpToPx(mContext, 7d);
+        int animationImageLeftMargin = horizontalOutsideValue + hideImageLeftMargin;
 
-
-        mActionButtonLayoutAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener()
+        mScrollButtonLayoutAnimator = ValueAnimator.ofFloat(start, end);
+        mScrollButtonLayoutAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener()
         {
             @Override
             public void onAnimationUpdate(ValueAnimator animation)
             {
                 float ratio = (float) animation.getAnimatedValue();
+                int heightValue = minLayoutHeight + (int) (gapLayoutHeightValue * ratio);
+                int leftMarginValue = showImageLeftMargin + (int) ((animationImageLeftMargin - showImageLeftMargin) * ratio);
 
-                int insideValue = (int) (horizontalInsideValue * ratio);
-                int outsideValue = (int) (horizontalOutsideValue * ratio);
-                int verticalValue = (int) (verticalOutsideValue * ratio);
-                int alpha = (int) (maxAlpha * ratio);
-                int imageValue = (int) (gapGourmetImageLayoutValue * ratio);
+                productLayoutParams.height = heightValue;
+                stayImageLayoutParams.leftMargin = leftMarginValue;
 
-                gourmetImageLayoutParams.leftMargin = maxGourmetImageLayoutValue - imageValue;
-                gourmetButtonImageView.setLayoutParams(gourmetImageLayoutParams);
-
-                stayLayoutParams.leftMargin = outsideValue;
-                stayLayoutParams.rightMargin = insideValue;
-                stayLayoutParams.topMargin = verticalValue;
-                stayLayoutParams.bottomMargin = verticalValue;
-
-                gourmetLayoutParams.leftMargin = insideValue;
-                gourmetLayoutParams.rightMargin = outsideValue;
-                gourmetLayoutParams.topMargin = verticalValue;
-                gourmetLayoutParams.bottomMargin = verticalValue;
-
-                stayButtonLayout.setLayoutParams(stayLayoutParams);
-                stayButtonLayout.getBackground().setAlpha(alpha);
-
-                gourmetButtonLayout.setLayoutParams(gourmetLayoutParams);
-                gourmetButtonLayout.getBackground().setAlpha(alpha);
+                productLayout.setLayoutParams(productLayoutParams);
+                stayButtonImageView.setLayoutParams(stayImageLayoutParams);
             }
         });
 
-        mActionButtonLayoutAnimator.setDuration(ACTION_BUTTON_DURATION);
-        mActionButtonLayoutAnimator.addListener(new Animator.AnimatorListener()
+        mScrollButtonLayoutAnimator.setDuration(ACTION_BUTTON_DURATION);
+        mScrollButtonLayoutAnimator.addListener(new Animator.AnimatorListener()
         {
             @Override
             public void onAnimationStart(Animator animation)
             {
-                int insideValue = (int) (horizontalInsideValue * start);
-                int outsideValue = (int) (horizontalOutsideValue * start);
-                int verticalValue = (int) (verticalOutsideValue * start);
-                int alpha = (int) (maxAlpha * start);
+                mActionButtonLayout.setVisibility(View.GONE);
 
-                stayLayoutParams.leftMargin = outsideValue;
-                stayLayoutParams.rightMargin = insideValue;
-                stayLayoutParams.topMargin = verticalValue;
-                stayLayoutParams.bottomMargin = verticalValue;
+                stayButtonLayout.setBackgroundResource(0);
+                gourmetButtonLayout.setBackgroundResource(0);
 
-                gourmetLayoutParams.leftMargin = insideValue;
-                gourmetLayoutParams.rightMargin = outsideValue;
-                gourmetLayoutParams.topMargin = verticalValue;
-                gourmetLayoutParams.bottomMargin = verticalValue;
+                productLayout.setPadding(0, 0, 0, 0);
+                productLayoutParams.height = isShow == true ? maxLayoutHeight : minLayoutHeight;
 
+                stayLayoutParams.topMargin = 0;
+                stayLayoutParams.bottomMargin = 0;
+                stayLayoutParams.leftMargin = 0;
+                stayLayoutParams.rightMargin = 0;
+
+                gourmetLayoutParams.topMargin = 0;
+                gourmetLayoutParams.bottomMargin = 0;
+                gourmetLayoutParams.leftMargin = 0;
+                gourmetLayoutParams.rightMargin = 0;
+
+                stayImageLayoutParams.leftMargin = animationImageLeftMargin;
+                gourmetImageLayoutParams.leftMargin = showImageLeftMargin;
+
+                productLayout.setLayoutParams(productLayoutParams);
                 stayButtonLayout.setLayoutParams(stayLayoutParams);
-                stayButtonLayout.getBackground().setAlpha(alpha);
-
                 gourmetButtonLayout.setLayoutParams(gourmetLayoutParams);
-                gourmetButtonLayout.getBackground().setAlpha(alpha);
-
-                mActionButtonLayout.setVisibility(View.VISIBLE);
-
-                verticalLineView.getBackground().setAlpha(minValue);
-
-                gourmetImageLayoutParams.leftMargin = mActionButtonLayoutVisibility == View.VISIBLE ? minGourmetImageLayoutValue : maxGourmetImageLayoutValue;
+                stayButtonImageView.setLayoutParams(stayImageLayoutParams);
                 gourmetButtonImageView.setLayoutParams(gourmetImageLayoutParams);
             }
 
             @Override
             public void onAnimationEnd(Animator animation)
             {
-                int insideValue = (int) (horizontalInsideValue * end);
-                int outsideValue = (int) (horizontalOutsideValue * end);
-                int verticalValue = (int) (verticalOutsideValue * end);
-                int alpha = (int) (maxAlpha * end);
+                mActionButtonLayout.setVisibility(isShow == true ? View.VISIBLE : View.GONE);
 
-                stayLayoutParams.leftMargin = outsideValue;
-                stayLayoutParams.rightMargin = insideValue;
-                stayLayoutParams.topMargin = verticalValue;
-                stayLayoutParams.bottomMargin = verticalValue;
+                stayButtonLayout.setBackgroundResource(isShow == true ? 0 : R.drawable.home_category_btn);
+                gourmetButtonLayout.setBackgroundResource(isShow == true ? 0 : R.drawable.home_category_btn);
 
-                gourmetLayoutParams.leftMargin = insideValue;
-                gourmetLayoutParams.rightMargin = outsideValue;
-                gourmetLayoutParams.topMargin = verticalValue;
-                gourmetLayoutParams.bottomMargin = verticalValue;
+                int verticalPaddingValue = isShow == true ? 0 : layoutVerticalPadding;
+                productLayout.setPadding(0, verticalPaddingValue, 0, verticalPaddingValue);
+                productLayoutParams.height = isShow == true ? minLayoutHeight : maxLayoutHeight;
 
+                stayLayoutParams.topMargin = isShow == true ? 0 : verticalOutsideValue;
+                stayLayoutParams.bottomMargin = isShow == true ? 0 : verticalOutsideValue;
+                stayLayoutParams.leftMargin = isShow == true ? 0 : horizontalOutsideValue;
+                stayLayoutParams.rightMargin = isShow == true ? 0 : horizontalInsideValue;
+
+                gourmetLayoutParams.topMargin = isShow == true ? 0 : verticalOutsideValue;
+                gourmetLayoutParams.bottomMargin = isShow == true ? 0 : verticalOutsideValue;
+                gourmetLayoutParams.leftMargin = isShow == true ? 0 : horizontalInsideValue;
+                gourmetLayoutParams.rightMargin = isShow == true ? 0 : horizontalOutsideValue;
+
+                stayImageLayoutParams.leftMargin = isShow == true ? showImageLeftMargin : hideImageLeftMargin;
+                gourmetImageLayoutParams.leftMargin = isShow == true ? showImageLeftMargin : hideImageLeftMargin;
+
+                productLayout.setLayoutParams(productLayoutParams);
                 stayButtonLayout.setLayoutParams(stayLayoutParams);
-                stayButtonLayout.getBackground().setAlpha(alpha);
-
                 gourmetButtonLayout.setLayoutParams(gourmetLayoutParams);
-                gourmetButtonLayout.getBackground().setAlpha(alpha);
-
-                mActionButtonLayout.setVisibility(mActionButtonLayoutVisibility);
-
-                verticalLineView.getBackground().setAlpha(mActionButtonLayoutVisibility == View.VISIBLE ? maxAlpha : minValue);
-
-                gourmetImageLayoutParams.leftMargin = mActionButtonLayoutVisibility == View.VISIBLE ? maxGourmetImageLayoutValue : minGourmetImageLayoutValue;
+                stayButtonImageView.setLayoutParams(stayImageLayoutParams);
+                gourmetButtonImageView.setLayoutParams(gourmetImageLayoutParams);
             }
 
             @Override
@@ -1258,7 +1247,7 @@ public class HomeLayout extends BaseBlurLayout
             }
         });
 
-        mActionButtonLayoutAnimator.start();
+        mScrollButtonLayoutAnimator.start();
     }
 
     public void setRefreshing(boolean isRefreshing)
@@ -1309,7 +1298,14 @@ public class HomeLayout extends BaseBlurLayout
     {
         if (mDailyHomeScrollView != null && mDailyHomeScrollView.getChildCount() != 0)
         {
-            mDailyHomeScrollView.postDelayed(() -> mDailyHomeScrollView.fullScroll(View.FOCUS_UP), 50);
+            mDailyHomeScrollView.postDelayed(new Runnable()
+            {
+                @Override
+                public void run()
+                {
+                    mDailyHomeScrollView.fullScroll(View.FOCUS_UP);
+                }
+            }, 50);
         }
     }
 
@@ -1415,29 +1411,19 @@ public class HomeLayout extends BaseBlurLayout
                 return;
             }
 
-            int buttonMargin = ScreenUtils.dpToPx(mContext, 10d);
-
-            if (scrollY >= mEventImageHeight)
-            {
-                mToolbarUnderLine.setVisibility(View.VISIBLE);
-            } else
-            {
-                mToolbarUnderLine.setVisibility(View.GONE);
-            }
-
             // globalVisibleRect 로 동작시 android os 4.X 에서 화면을 벗어날때 rect.top 이 증가하는 이슈로 상단 뷰 크기를 고정으로 알아와서 적용!
-            if (scrollY >= mEventImageHeight + buttonMargin)
+            if (scrollY >= mEventImageHeight - 2)
             {
                 // show animation
-                setActionButtonLayoutAnimation(View.VISIBLE);
-            } else if (scrollY >= mEventImageHeight && scrollY < mEventImageHeight + buttonMargin)
-            {
-                // hide animation
-                setActionButtonLayoutAnimation(View.GONE);
+                setScrollButtonLayoutAnimation(View.VISIBLE);
+                //            } else if (scrollY >= mEventImageHeight - buttonLayoutHideGap || scrollY < mEventImageHeight)
+                //            {
             } else
             {
+                // hide animation
+                setScrollButtonLayoutAnimation(View.GONE);
                 // hide none animation
-                setActionButtonVisibility(View.GONE);
+                //                setActionButtonVisibility(View.GONE);
             }
 
             if (scrollY > 0)
