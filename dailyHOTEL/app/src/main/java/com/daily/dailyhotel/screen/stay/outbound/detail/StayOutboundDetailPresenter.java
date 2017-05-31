@@ -91,7 +91,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
     private CommonRemoteImpl mCommonRemoteImpl;
     private ProfileRemoteImpl mProfileRemoteImpl;
 
-    private int mStayIndex;
+    private int mStayIndex, mListPrice;
     private String mStayName;
     private String mImageUrl;
     private StayBookDateTime mStayBookDateTime;
@@ -181,6 +181,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
 
             mStayName = intent.getStringExtra(StayOutboundDetailActivity.INTENT_EXTRA_DATA_STAY_NAME);
             mImageUrl = intent.getStringExtra(StayOutboundDetailActivity.INTENT_EXTRA_DATA_URL);
+            mListPrice = intent.getIntExtra(StayOutboundDetailActivity.INTENT_EXTRA_DATA_LIST_PRICE, -1);
 
             String checkInDateTime = intent.getStringExtra(StayOutboundDetailActivity.INTENT_EXTRA_DATA_CHECKIN);
             String checkOutDateTime = intent.getStringExtra(StayOutboundDetailActivity.INTENT_EXTRA_DATA_CHECKOUT);
@@ -815,7 +816,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
                                 } else
                                 {
                                     startActivityForResult(StayOutboundPaymentActivity.newInstance(getActivity(), mStayOutboundDetail.index//
-                                        , mStayOutboundDetail.name//
+                                        , mStayOutboundDetail.name, mSelectedRoom.total//
                                         , mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
                                         , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
                                         , mPeople.numberOfAdults, mPeople.getChildAgeList()//
@@ -843,7 +844,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
                                 } else
                                 {
                                     startActivityForResult(StayOutboundPaymentActivity.newInstance(getActivity(), mStayOutboundDetail.index//
-                                        , mStayOutboundDetail.name//
+                                        , mStayOutboundDetail.name, mSelectedRoom.total//
                                         , mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
                                         , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
                                         , mPeople.numberOfAdults, mPeople.getChildAgeList()//
@@ -985,12 +986,6 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
 
         if (mIsDeepLink == true)
         {
-            // 딥링크로 진입한 경우에는 카테고리 코드를 알수가 없다. - 2017.04.28 알 수 없음으로 안보내기로 함 아이폰도 안보내고 있음.
-            //            if (DailyTextUtils.isTextEmpty(stayDetailParams.category) == true)
-            //            {
-            //                stayDetailParams.category = stayDetailParams.getGrade().name();
-            //            }
-
             getViewInterface().setToolbarTitle(stayOutboundDetail.name);
         }
 
@@ -999,7 +994,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
         if (mCheckChangedPrice == false)
         {
             mCheckChangedPrice = true;
-            checkChangedPrice(mIsDeepLink, stayOutboundDetail, null);
+            checkChangedPrice(mIsDeepLink, stayOutboundDetail, mListPrice);
         }
 
         // 선택된 방이 없으면 처음 방으로 한다.
@@ -1114,9 +1109,9 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
         mPeople.setChildAgeList(childAgeList);
     }
 
-    private void checkChangedPrice(boolean isDeepLink, StayOutboundDetail stayOutboundDetail, String listViewPrice)
+    private void checkChangedPrice(boolean isDeepLink, StayOutboundDetail stayOutboundDetail, int listViewPrice)
     {
-        if (stayOutboundDetail == null || DailyTextUtils.isTextEmpty(listViewPrice) == true)
+        if (stayOutboundDetail == null)
         {
             return;
         }
@@ -1143,12 +1138,18 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
             {
                 boolean hasPrice = false;
 
-                for (StayOutboundRoom room : roomList)
+                if(listViewPrice == -1)
                 {
-                    if (listViewPrice == room.nightly)
+                    hasPrice = true;
+                } else
+                {
+                    for (StayOutboundRoom room : roomList)
                     {
-                        hasPrice = true;
-                        break;
+                        if (listViewPrice == room.nightly)
+                        {
+                            hasPrice = true;
+                            break;
+                        }
                     }
                 }
 

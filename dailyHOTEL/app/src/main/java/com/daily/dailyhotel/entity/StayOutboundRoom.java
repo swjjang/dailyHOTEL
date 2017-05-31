@@ -7,10 +7,10 @@ public class StayOutboundRoom
     public String rateCode;
     public int roomBedTypeId;
     public String roomName;
-    public String base;
-    public String total;
-    public String baseNightly;
-    public String nightly;
+    public int base;
+    public int total;
+    public int baseNightly;
+    public int nightly;
     public int quotedOccupancy;
     public int rateOccupancyPerRoom;
     public boolean promotion;

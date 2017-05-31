@@ -112,25 +112,13 @@ public class StayOutboundDetailRoomListAdapter extends RecyclerView.Adapter<Recy
             {
                 if (stayOutboundRoom.promotion == true)
                 {
-                    try
-                    {
-                        price = DailyTextUtils.getPriceFormat(mContext, Integer.parseInt(stayOutboundRoom.base), false);
-                    } catch (Exception e)
-                    {
-                        price = null;
-                    }
+                    price = DailyTextUtils.getPriceFormat(mContext, stayOutboundRoom.base, false);
                 } else
                 {
                     price = null;
                 }
 
-                try
-                {
-                    discountPrice = DailyTextUtils.getPriceFormat(mContext, Integer.parseInt(stayOutboundRoom.total), false);
-                } catch (Exception e)
-                {
-                    discountPrice = stayOutboundRoom.nightly;
-                }
+                discountPrice = DailyTextUtils.getPriceFormat(mContext, stayOutboundRoom.total, false);
                 break;
             }
 
@@ -139,25 +127,13 @@ public class StayOutboundDetailRoomListAdapter extends RecyclerView.Adapter<Recy
             {
                 if (stayOutboundRoom.promotion == true)
                 {
-                    try
-                    {
-                        price = DailyTextUtils.getPriceFormat(mContext, Integer.parseInt(stayOutboundRoom.baseNightly), false);
-                    } catch (Exception e)
-                    {
-                        price = null;
-                    }
+                    price = DailyTextUtils.getPriceFormat(mContext, stayOutboundRoom.baseNightly, false);
                 } else
                 {
                     price = null;
                 }
 
-                try
-                {
-                    discountPrice = DailyTextUtils.getPriceFormat(mContext, Integer.parseInt(stayOutboundRoom.nightly), false);
-                } catch (Exception e)
-                {
-                    discountPrice = stayOutboundRoom.total;
-                }
+                discountPrice = DailyTextUtils.getPriceFormat(mContext, stayOutboundRoom.nightly, false);
                 break;
             }
         }

@@ -158,16 +158,16 @@ public class StayOutboundDetailData
         public int roomBedTypeId;
 
         @JsonField(name = "base")
-        public String base;
+        public int base;
 
         @JsonField(name = "total")
-        public String total;
+        public int total;
 
         @JsonField(name = "baseNightly")
-        public String baseNightly;
+        public int baseNightly;
 
         @JsonField(name = "nightly")
-        public String nightly;
+        public int nightly;
 
         @JsonField(name = "quotedOccupancy")
         public int quotedOccupancy;

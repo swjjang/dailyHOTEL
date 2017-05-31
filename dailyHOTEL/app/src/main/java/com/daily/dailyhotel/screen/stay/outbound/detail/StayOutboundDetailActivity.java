@@ -38,6 +38,7 @@ public class StayOutboundDetailActivity extends BaseActivity<StayOutboundDetailP
     static final String INTENT_EXTRA_DATA_MULTITRANSITION = "multiTransition";
     static final String INTENT_EXTRA_DATA_CALL_FROM_MAP = "callFromMap";
     static final String INTENT_EXTRA_DATA_REFRESH = "refresh";
+    static final String INTENT_EXTRA_DATA_LIST_PRICE = "listPrice";
 
     /**
      * @param stayIndex
@@ -49,13 +50,14 @@ public class StayOutboundDetailActivity extends BaseActivity<StayOutboundDetailP
      * @return
      */
     public static Intent newInstance(Context context, int stayIndex, String stayName, String imageUrl//
-        , String checkInDateTime, String checkOutDateTime//
+        , int listPrice, String checkInDateTime, String checkOutDateTime//
         , int numberOfAdults, ArrayList<Integer> childList, boolean mIsUsedMultiTransition, boolean mCallFromMap)
     {
         Intent intent = new Intent(context, StayOutboundDetailActivity.class);
         intent.putExtra(INTENT_EXTRA_DATA_STAY_INDEX, stayIndex);
         intent.putExtra(INTENT_EXTRA_DATA_STAY_NAME, stayName);
         intent.putExtra(INTENT_EXTRA_DATA_URL, imageUrl);
+        intent.putExtra(INTENT_EXTRA_DATA_LIST_PRICE, listPrice);
         intent.putExtra(INTENT_EXTRA_DATA_CHECKIN, checkInDateTime);
         intent.putExtra(INTENT_EXTRA_DATA_CHECKOUT, checkOutDateTime);
         intent.putExtra(INTENT_EXTRA_DATA_NUMBER_OF_ADULTS, numberOfAdults);

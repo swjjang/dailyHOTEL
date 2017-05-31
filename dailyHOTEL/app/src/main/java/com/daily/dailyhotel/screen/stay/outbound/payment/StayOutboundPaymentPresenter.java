@@ -43,7 +43,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
     private ProfileRemoteImpl mProfileRemoteImpl;
 
     private StayBookDateTime mStayBookDateTime;
-    private int mStayIndex;
+    private int mStayIndex, mRoomPrice;
     private People mPeople;
     private String mStayName, mRoomType;
     private String mRateCode, mRateKey, mRoomTypeCode;
@@ -103,6 +103,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
         }
 
         mStayName = intent.getStringExtra(StayOutboundPaymentActivity.INTENT_EXTRA_DATA_STAY_NAME);
+        mRoomPrice = intent.getIntExtra(StayOutboundPaymentActivity.INTENT_EXTRA_DATA_ROOM_PRICE, -1);
         mRoomType = intent.getStringExtra(StayOutboundPaymentActivity.INTENT_EXTRA_DATA_ROOM_TYPE);
         mRateCode = intent.getStringExtra(StayOutboundPaymentActivity.INTENT_EXTRA_DATA_RATE_CODE);
         mRateKey = intent.getStringExtra(StayOutboundPaymentActivity.INTENT_EXTRA_DATA_RATE_KEY);
@@ -231,6 +232,18 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
                 onSimpleCard(mSelectedCard);
                 onStayOutboundPayment(mUserInformation, mStayOutboundPayment, mStayBookDateTime);
                 onPaymentType(mPaymentType);
+
+                // 가격이 변동된 경우
+                if (mRoomPrice != mStayOutboundPayment.totalPrice)
+                {
+
+                }
+
+                // 솔드 아웃인 경우
+                if (mStayOutboundPayment.availableRooms == 0)
+                {
+
+                }
 
                 unLockAll();
             }
