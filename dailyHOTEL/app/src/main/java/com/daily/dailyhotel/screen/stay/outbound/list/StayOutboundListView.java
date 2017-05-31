@@ -16,7 +16,7 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
 import com.daily.base.BaseActivity;
-import com.daily.base.BaseView;
+import com.daily.base.BaseDialogView;
 import com.daily.base.OnBaseEventListener;
 import com.daily.base.util.ScreenUtils;
 import com.daily.dailyhotel.entity.ListItem;
@@ -32,7 +32,7 @@ import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
 import java.util.List;
 
-public class StayOutboundListView extends BaseView<StayOutboundListView.OnEventListener, ActivityStayOutboundSearchResultDataBinding>//
+public class StayOutboundListView extends BaseDialogView<StayOutboundListView.OnEventListener, ActivityStayOutboundSearchResultDataBinding>//
     implements StayOutboundListViewInterface, ViewPager.OnPageChangeListener, View.OnClickListener, StayOutboundMapFragment.OnEventListener
 {
     private static final int ANIMATION_DELAY = 200;

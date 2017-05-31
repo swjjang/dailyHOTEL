@@ -6,13 +6,13 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
 import com.daily.base.BaseActivity;
-import com.daily.base.BaseView;
+import com.daily.base.BaseDialogView;
 import com.daily.base.OnBaseEventListener;
 import com.daily.dailyhotel.entity.StayOutboundFilters;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ActivityStayOutboundFilterDataBinding;
 
-public class StayOutboundFilterView extends BaseView<StayOutboundFilterView.OnEventListener, ActivityStayOutboundFilterDataBinding> implements StayOutboundFilterViewInterface, View.OnClickListener, RadioGroup.OnCheckedChangeListener
+public class StayOutboundFilterView extends BaseDialogView<StayOutboundFilterView.OnEventListener, ActivityStayOutboundFilterDataBinding> implements StayOutboundFilterViewInterface, View.OnClickListener, RadioGroup.OnCheckedChangeListener
 {
     public interface OnEventListener extends OnBaseEventListener
     {

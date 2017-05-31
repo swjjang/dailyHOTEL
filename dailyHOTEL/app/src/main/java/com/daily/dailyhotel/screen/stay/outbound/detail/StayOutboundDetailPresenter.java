@@ -1138,7 +1138,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
             {
                 boolean hasPrice = false;
 
-                if(listViewPrice == -1)
+                if (listViewPrice == -1)
                 {
                     hasPrice = true;
                 } else

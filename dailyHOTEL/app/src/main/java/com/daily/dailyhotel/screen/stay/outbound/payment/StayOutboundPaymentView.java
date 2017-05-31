@@ -11,7 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.daily.base.BaseActivity;
-import com.daily.base.BaseView;
+import com.daily.base.BaseDialogView;
 import com.daily.base.OnBaseEventListener;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.dailyhotel.entity.Card;
@@ -31,7 +31,7 @@ import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 import java.util.List;
 import java.util.Locale;
 
-public class StayOutboundPaymentView extends BaseView<StayOutboundPaymentView.OnEventListener, ActivityStayOutboundPaymentDataBinding>//
+public class StayOutboundPaymentView extends BaseDialogView<StayOutboundPaymentView.OnEventListener, ActivityStayOutboundPaymentDataBinding>//
     implements StayOutboundPaymentInterface, View.OnClickListener
 {
     private DailyToolbarLayout mDailyToolbarLayout;

@@ -8,7 +8,7 @@ import android.support.v4.app.Fragment;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 
-public abstract class BaseFragmentPresenter<T1 extends Fragment, T2 extends BaseViewInterface> implements BaseFragmentInterface
+public abstract class BaseFragmentPresenter<T1 extends Fragment, T2 extends BaseDialogViewInterface> implements BaseFragmentInterface
 {
     private T1 mFragment;
 

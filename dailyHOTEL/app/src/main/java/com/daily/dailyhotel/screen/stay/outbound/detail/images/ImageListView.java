@@ -14,7 +14,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.daily.base.BaseActivity;
-import com.daily.base.BaseView;
+import com.daily.base.BaseDialogView;
 import com.daily.base.OnBaseEventListener;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ScreenUtils;
@@ -34,7 +34,7 @@ import com.twoheart.dailyhotel.widget.DailyPlaceDetailListView;
 import java.io.IOException;
 import java.util.List;
 
-public class ImageListView extends BaseView<ImageListView.OnEventListener, ActivityStayOutboundImageListDataBinding>//
+public class ImageListView extends BaseDialogView<ImageListView.OnEventListener, ActivityStayOutboundImageListDataBinding>//
     implements ImageListInterface, View.OnTouchListener
 {
     private float mY;

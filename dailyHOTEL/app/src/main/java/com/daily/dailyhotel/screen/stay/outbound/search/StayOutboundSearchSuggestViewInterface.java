@@ -1,11 +1,11 @@
 package com.daily.dailyhotel.screen.stay.outbound.search;
 
-import com.daily.base.BaseViewInterface;
+import com.daily.base.BaseDialogViewInterface;
 import com.daily.dailyhotel.entity.Suggest;
 
 import java.util.List;
 
-public interface StayOutboundSearchSuggestViewInterface extends BaseViewInterface
+public interface StayOutboundSearchSuggestViewInterface extends BaseDialogViewInterface
 {
     void setSuggestsVisible(boolean visible);
 

@@ -21,7 +21,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.daily.base.BaseActivity;
-import com.daily.base.BaseView;
+import com.daily.base.BaseDialogView;
 import com.daily.base.OnBaseEventListener;
 import com.daily.base.util.ScreenUtils;
 import com.daily.base.util.VersionUtils;
@@ -38,7 +38,7 @@ import java.util.List;
 import io.reactivex.Observable;
 import io.reactivex.Observer;
 
-public abstract class PlaceCalendarView<T1 extends PlaceCalendarView.OnEventListener, T2 extends ActivityCalendarDataBinding> extends BaseView<T1, T2> implements View.OnClickListener
+public abstract class PlaceCalendarView<T1 extends PlaceCalendarView.OnEventListener, T2 extends ActivityCalendarDataBinding> extends BaseDialogView<T1, T2> implements View.OnClickListener
 {
     private static final int ANIMATION_DELAY = 200;
     protected List<View> mDaysViewList;

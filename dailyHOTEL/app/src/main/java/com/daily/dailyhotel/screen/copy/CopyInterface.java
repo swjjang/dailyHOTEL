@@ -1,7 +1,7 @@
 package com.daily.dailyhotel.screen.copy;
 
-import com.daily.base.BaseViewInterface;
+import com.daily.base.BaseDialogViewInterface;
 
-public interface CopyInterface extends BaseViewInterface
+public interface CopyInterface extends BaseDialogViewInterface
 {
 }

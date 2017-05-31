@@ -30,9 +30,7 @@ public class StayOutboundPaymentActivity extends BaseActivity<StayOutboundPaymen
     static final String INTENT_EXTRA_DATA_ROOM_TYPE_CODE = "roomTypeCode";
 
 
-    public static Intent newInstance(Context context, int stayIndex, String stayName, int roomPrice
-        , String checkInDateTime, String checkOutDateTime, int numberOfAdults, ArrayList<Integer> childAgeList
-        , String roomType, String rateCode, String rateKey, String roomTypeCode)
+    public static Intent newInstance(Context context, int stayIndex, String stayName, int roomPrice, String checkInDateTime, String checkOutDateTime, int numberOfAdults, ArrayList<Integer> childAgeList, String roomType, String rateCode, String rateKey, String roomTypeCode)
     {
         Intent intent = new Intent(context, StayOutboundPaymentActivity.class);
 

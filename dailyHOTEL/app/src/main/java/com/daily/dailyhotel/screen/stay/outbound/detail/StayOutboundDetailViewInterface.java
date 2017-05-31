@@ -2,14 +2,14 @@ package com.daily.dailyhotel.screen.stay.outbound.detail;
 
 import android.app.Dialog;
 
-import com.daily.base.BaseViewInterface;
+import com.daily.base.BaseDialogViewInterface;
 import com.daily.dailyhotel.entity.People;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayOutboundDetail;
 
 import io.reactivex.Observable;
 
-public interface StayOutboundDetailViewInterface extends BaseViewInterface
+public interface StayOutboundDetailViewInterface extends BaseDialogViewInterface
 {
     Observable<Boolean> showRoomList(boolean animation);
 

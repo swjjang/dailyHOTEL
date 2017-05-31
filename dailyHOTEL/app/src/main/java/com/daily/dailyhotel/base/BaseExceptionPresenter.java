@@ -4,8 +4,8 @@ import android.support.annotation.NonNull;
 
 import com.crashlytics.android.Crashlytics;
 import com.daily.base.BaseActivity;
+import com.daily.base.BaseDialogViewInterface;
 import com.daily.base.BasePresenter;
-import com.daily.base.BaseViewInterface;
 import com.daily.base.exception.BaseException;
 import com.daily.base.util.ExLog;
 import com.daily.base.widget.DailyToast;
@@ -18,7 +18,7 @@ import com.twoheart.dailyhotel.util.Util;
 
 import retrofit2.HttpException;
 
-public abstract class BaseExceptionPresenter<T1 extends BaseActivity, T2 extends BaseViewInterface> extends BasePresenter<T1, T2>
+public abstract class BaseExceptionPresenter<T1 extends BaseActivity, T2 extends BaseDialogViewInterface> extends BasePresenter<T1, T2>
 {
     private boolean mIsRefresh;
 

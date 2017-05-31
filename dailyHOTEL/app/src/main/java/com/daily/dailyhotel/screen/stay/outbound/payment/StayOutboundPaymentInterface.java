@@ -2,7 +2,7 @@ package com.daily.dailyhotel.screen.stay.outbound.payment;
 
 import android.text.SpannableString;
 
-import com.daily.base.BaseViewInterface;
+import com.daily.base.BaseDialogViewInterface;
 import com.daily.dailyhotel.entity.Card;
 import com.daily.dailyhotel.entity.People;
 import com.daily.dailyhotel.entity.StayOutboundPayment;
@@ -10,7 +10,7 @@ import com.daily.dailyhotel.entity.UserInformation;
 
 import java.util.List;
 
-public interface StayOutboundPaymentInterface extends BaseViewInterface
+public interface StayOutboundPaymentInterface extends BaseDialogViewInterface
 {
     void setBooking(SpannableString checkInDate, SpannableString checkOutDate, int nights, String stayName, String roomType);
 

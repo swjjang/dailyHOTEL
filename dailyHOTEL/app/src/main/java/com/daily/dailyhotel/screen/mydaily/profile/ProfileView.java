@@ -3,7 +3,7 @@ package com.daily.dailyhotel.screen.mydaily.profile;
 import android.view.View;
 
 import com.daily.base.BaseActivity;
-import com.daily.base.BaseView;
+import com.daily.base.BaseDialogView;
 import com.daily.base.OnBaseEventListener;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
@@ -14,7 +14,7 @@ import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
-public class ProfileView extends BaseView<ProfileView.OnEventListener, ActivityProfileDataBinding> implements ProfileViewInterface
+public class ProfileView extends BaseDialogView<ProfileView.OnEventListener, ActivityProfileDataBinding> implements ProfileViewInterface
 {
     public interface OnEventListener extends OnBaseEventListener
     {

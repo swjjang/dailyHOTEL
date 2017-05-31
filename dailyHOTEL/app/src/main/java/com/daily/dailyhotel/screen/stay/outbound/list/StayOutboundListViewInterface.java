@@ -4,13 +4,13 @@ import android.content.Context;
 import android.location.Location;
 import android.support.v4.app.FragmentManager;
 
-import com.daily.base.BaseViewInterface;
+import com.daily.base.BaseDialogViewInterface;
 import com.daily.dailyhotel.entity.ListItem;
 import com.daily.dailyhotel.entity.StayOutbound;
 
 import java.util.List;
 
-public interface StayOutboundListViewInterface extends BaseViewInterface
+public interface StayOutboundListViewInterface extends BaseDialogViewInterface
 {
     void setToolbarTitle(String title);
 

@@ -5,11 +5,11 @@ import android.databinding.ViewDataBinding;
 import android.view.View;
 
 import com.daily.base.BaseActivity;
-import com.daily.base.BaseView;
+import com.daily.base.BaseDialogView;
 import com.daily.base.OnBaseEventListener;
 import com.twoheart.dailyhotel.R;
 
-public class CallDialogView extends BaseView<CallDialogView.OnEventListener, ViewDataBinding> implements CallDialogInterface
+public class CallDialogView extends BaseDialogView<CallDialogView.OnEventListener, ViewDataBinding> implements CallDialogInterface
 {
     public interface OnEventListener extends OnBaseEventListener
     {

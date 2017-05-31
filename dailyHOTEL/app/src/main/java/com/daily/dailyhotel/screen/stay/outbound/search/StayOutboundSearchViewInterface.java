@@ -1,8 +1,8 @@
 package com.daily.dailyhotel.screen.stay.outbound.search;
 
-import com.daily.base.BaseViewInterface;
+import com.daily.base.BaseDialogViewInterface;
 
-public interface StayOutboundSearchViewInterface extends BaseViewInterface
+public interface StayOutboundSearchViewInterface extends BaseDialogViewInterface
 {
     void setCalendarText(String calendarText);
 

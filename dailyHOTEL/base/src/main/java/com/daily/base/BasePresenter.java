@@ -13,7 +13,7 @@ import com.daily.base.util.DailyLock;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 
-public abstract class BasePresenter<T1 extends BaseActivity, T2 extends BaseViewInterface> implements BaseActivityInterface
+public abstract class BasePresenter<T1 extends BaseActivity, T2 extends BaseDialogViewInterface> implements BaseActivityInterface
 {
     private T1 mActivity;
 

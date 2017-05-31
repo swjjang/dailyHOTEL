@@ -1386,6 +1386,7 @@ public class DailyPreference
     {
         setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_STAY_OUTBOUND_PAYMENT_IS_CARD_ENABLED, value);
     }
+
     public boolean isRemoteConfigStayOutboundPhonePaymentEnabled()
     {
         return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_STAY_OUTBOUND_PAYMENT_IS_PHONE_ENABLED, true);

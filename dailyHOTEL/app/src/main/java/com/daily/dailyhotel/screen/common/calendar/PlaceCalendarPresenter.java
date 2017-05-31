@@ -6,7 +6,7 @@ import android.support.v4.util.Pair;
 import android.util.SparseIntArray;
 
 import com.daily.base.BaseActivity;
-import com.daily.base.BaseViewInterface;
+import com.daily.base.BaseDialogViewInterface;
 import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
 import com.twoheart.dailyhotel.util.DailyCalendar;
@@ -19,7 +19,7 @@ import java.util.Date;
  * Created by sheldon
  * Clean Architecture
  */
-public abstract class PlaceCalendarPresenter<T1 extends BaseActivity, T2 extends BaseViewInterface> extends BaseExceptionPresenter<T1, T2>
+public abstract class PlaceCalendarPresenter<T1 extends BaseActivity, T2 extends BaseDialogViewInterface> extends BaseExceptionPresenter<T1, T2>
 {
     public PlaceCalendarPresenter(@NonNull T1 activity)
     {

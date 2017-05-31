@@ -2,13 +2,13 @@ package com.daily.dailyhotel.screen.common.calendar;
 
 import android.support.v4.util.Pair;
 
-import com.daily.base.BaseViewInterface;
+import com.daily.base.BaseDialogViewInterface;
 
 import java.util.ArrayList;
 
 import io.reactivex.Observable;
 
-public interface StayCalendarViewInterface extends BaseViewInterface
+public interface StayCalendarViewInterface extends BaseDialogViewInterface
 {
     void makeCalendarView(ArrayList<Pair<String, PlaceCalendarPresenter.Day[]>> arrayList);
 

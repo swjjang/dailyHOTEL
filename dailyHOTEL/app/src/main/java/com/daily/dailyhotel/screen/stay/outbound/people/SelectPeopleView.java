@@ -12,7 +12,7 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.daily.base.BaseActivity;
-import com.daily.base.BaseView;
+import com.daily.base.BaseDialogView;
 import com.daily.base.OnBaseEventListener;
 import com.daily.base.util.ScreenUtils;
 import com.daily.dailyhotel.entity.People;
@@ -22,7 +22,7 @@ import com.twoheart.dailyhotel.databinding.ActivityStayOutboundPeopleDataBinding
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class SelectPeopleView extends BaseView<SelectPeopleView.OnEventListener, ActivityStayOutboundPeopleDataBinding> //
+public class SelectPeopleView extends BaseDialogView<SelectPeopleView.OnEventListener, ActivityStayOutboundPeopleDataBinding> //
     implements SelectPeopleViewInterface, View.OnClickListener
 {
     private ChildAgeArrayAdapter[] mChildAgeArrayAdapter;

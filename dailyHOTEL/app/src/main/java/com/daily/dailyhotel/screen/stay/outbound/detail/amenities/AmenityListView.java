@@ -9,7 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.daily.base.BaseActivity;
-import com.daily.base.BaseView;
+import com.daily.base.BaseDialogView;
 import com.daily.base.OnBaseEventListener;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ActivityAmenityListDataBinding;
@@ -19,7 +19,7 @@ import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AmenityListView extends BaseView<AmenityListView.OnEventListener, ActivityAmenityListDataBinding>//
+public class AmenityListView extends BaseDialogView<AmenityListView.OnEventListener, ActivityAmenityListDataBinding>//
     implements AmenityListInterface, View.OnClickListener
 {
     private AmenityListAdapter mAmenityListAdapter;
