@@ -788,7 +788,7 @@ public class StayCategoryNearByActivity extends BaseActivity
 
     protected void requestAnalyticsByCanceled()
     {
-        if (AnalyticsManager.Screen.HOME == mCallByScreen)
+        if (AnalyticsManager.Screen.HOME.equalsIgnoreCase(mCallByScreen) == true)
         {
             AnalyticsManager.getInstance(this).recordEvent( //
                 AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.STAY_BACK_BUTTON_CLICK //

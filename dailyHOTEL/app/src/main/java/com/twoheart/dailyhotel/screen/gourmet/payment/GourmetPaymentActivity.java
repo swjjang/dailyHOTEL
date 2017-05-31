@@ -157,7 +157,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
         GourmetPaymentInformation gourmetPaymentInformation = (GourmetPaymentInformation) mPaymentInformation;
 
         gourmetPaymentInformation.placeName = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_PLACENAME);
-        gourmetPaymentInformation.setTicket((GourmetProduct) intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PRODUCT));
+        gourmetPaymentInformation.setTicket(intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PRODUCT));
         mPlaceBookingDay = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY);
         mPlaceImageUrl = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_URL);
         gourmetPaymentInformation.placeIndex = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_GOURMETIDX, -1);

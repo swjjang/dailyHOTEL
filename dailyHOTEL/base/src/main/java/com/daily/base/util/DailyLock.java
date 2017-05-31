@@ -120,7 +120,7 @@ public class DailyLock
         {
             mActivity = activity;
 
-            mDialog = new Dialog(activity, R.style.TransDialog);
+            mDialog = new Dialog(activity, R.style.TransBaseDialog);
             mProgressBar = new ProgressBar(activity);
             mProgressBar.getIndeterminateDrawable().setColorFilter(activity.getResources().getColor(R.color.default_probressbar), PorterDuff.Mode.SRC_IN);
             ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);

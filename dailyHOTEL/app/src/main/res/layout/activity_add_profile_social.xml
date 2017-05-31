@@ -329,7 +329,6 @@
                 <com.daily.base.widget.DailyTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
                     android:layout_marginLeft="40dp"
                     android:layout_marginRight="10dp"
                     android:layout_marginTop="-6dp"
@@ -342,7 +341,6 @@
                 android:id="@+id/bottomLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
                 android:background="@color/white">
 
                 <com.daily.base.widget.DailyTextView

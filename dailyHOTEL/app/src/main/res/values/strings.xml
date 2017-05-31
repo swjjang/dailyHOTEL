@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="default_company_information">{\"name\":\"(주)데일리\",\"ceo\":\"신인식\",\"bizRegNumber\":\"144-81-15781\",\"itcRegNumber\":\"2016-서울강남-00726\",\"address1\":\"서울시 강남구 테헤란로 20길 20 삼정빌딩 10,11층\",\"phoneNumber1\":\"1800-9120\",\"fax1\":\"02-6455-9331\",\"privacyManager\":\"privacy.korea@dailyhotel.com\"}</string>
+    <string name="default_company_information">{\"name\":\"(주)데일리\",\"ceo\":\"신인식\",\"bizRegNumber\":\"144–81-15781\",\"itcRegNumber\":\"2016-서울강남-00726\",\"address1\":\"서울시 강남구 테헤란로 20길 20 삼정빌딩 10,11층\",\"phoneNumber1\":\"1800-9120\",\"fax1\":\"02-6455-9331\",\"privacyManager\":\"privacy.korea@dailyhotel.com\"}</string>
 
     <!-- Basic Infos -->
     <string name="app_name">DAILYHOTEL</string>
@@ -361,7 +361,7 @@
     <string name="dialog_msg_outofmemory">앱 실행에 필요한 메모리가 부족해 앱이 종료됩니다.\n메모리 정리 후 다시 실행해주세요.</string>
     <string name="dialog_msg_facebook_update">신속한 예약 진행을 위해 회원정보를 추가로 입력해주세요.</string>
     <string name="dialog_msg_none_gcmid">Google Play Service(업데이트 혹은 미설치)를 사용할 수 없어 결제 알림을 받지 못할 수 있습니다. 결제 후 예약 내역에서 확인해주세요.</string>
-    <string name="dialog_msg_internal_error">세션이 만료되었습니다. 종료 후 다시 시도해주세요.\n사용에 불편함이 있으시면 데일리 고객센터 1800-9120 문의해주세요.</string>
+    <string name="dialog_msg_internal_error">세션이 만료되었습니다. 종료 후 다시 시도해주세요.\n사용에 불편함이 있으시면 데일리 고객센터 1800–9120 문의해주세요.</string>
     <string name="dialog_msg_exfired_session">세션이 만료되어 로그아웃되었습니다.\n다시 로그인해주세요.</string>
     <string name="dialog_msg_already_agree_benefit_on">이미 데일리호텔이 드리는 혜택 알림 수신에 동의하였습니다.</string>
 
@@ -903,8 +903,8 @@
     <string name="label_time_1517">15–17시</string>
     <string name="label_time_1721">17–21시</string>
     <string name="label_time_2106">21시 이후</string>
-    <string name="label_searching">검색 중...</string>
     <string name="label_view_result">결과 보기</string>
+    <string name="label_searching">검색 중…</string>
     <string name="label_business_center">비즈니스 센터</string>
     <string name="label_sauna">사우나</string>
     <string name="label_kids_play_room">키즈 플레이룸</string>

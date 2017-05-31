@@ -189,7 +189,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
         mPaymentInformation = new StayPaymentInformation();
         StayPaymentInformation stayPaymentInformation = (StayPaymentInformation) mPaymentInformation;
 
-        stayPaymentInformation.setSaleRoomInformation((StayProduct) intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_SALEROOMINFORMATION));
+        stayPaymentInformation.setSaleRoomInformation(intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_SALEROOMINFORMATION));
         mPlaceBookingDay = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY);
         mPlaceImageUrl = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_URL);
         stayPaymentInformation.placeIndex = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_HOTELIDX, -1);
