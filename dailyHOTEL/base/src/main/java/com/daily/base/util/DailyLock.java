@@ -118,7 +118,7 @@ public class DailyLock
         {
             mActivity = activity;
 
-            mDialog = new Dialog(activity, R.style.TransDialog);
+            mDialog = new Dialog(activity, R.style.TransBaseDialog);
             mProgressBar = new ProgressBar(activity);
             ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             mDialog.addContentView(mProgressBar, params);
