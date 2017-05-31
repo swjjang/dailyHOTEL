@@ -24,7 +24,6 @@
             <com.daily.base.widget.DailyTextView
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
-                android:layout_below="@+id/emptyView"
                 android:background="@color/default_background"
                 android:gravity="center_vertical"
                 android:paddingLeft="15dp"

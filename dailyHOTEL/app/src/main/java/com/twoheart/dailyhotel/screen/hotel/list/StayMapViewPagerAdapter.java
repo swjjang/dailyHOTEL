@@ -56,7 +56,7 @@ public class StayMapViewPagerAdapter extends PlaceMapViewPagerAdapter
 
         PlaceViewItem item = mPlaceViewItemList.get(position);
 
-        makeLayout(view, item.<Stay>getItem());
+        makeLayout(view, item.getItem());
 
         container.addView(view, 0);
 
