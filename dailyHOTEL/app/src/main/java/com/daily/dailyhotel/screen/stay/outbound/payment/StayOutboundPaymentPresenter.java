@@ -21,6 +21,7 @@ import com.daily.dailyhotel.entity.StayOutboundPayment;
 import com.daily.dailyhotel.entity.UserInformation;
 import com.daily.dailyhotel.repository.remote.PaymentRemoteImpl;
 import com.daily.dailyhotel.repository.remote.ProfileRemoteImpl;
+import com.daily.dailyhotel.screen.common.call.CallDialogActivity;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.screen.mydaily.creditcard.CreditCardListActivity;
 import com.twoheart.dailyhotel.screen.mydaily.creditcard.RegisterCreditCardActivity;
@@ -358,7 +359,12 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
     @Override
     public void onCallClick()
     {
+        if (lock() == true)
+        {
+            return;
+        }
 
+        startActivityForResult(CallDialogActivity.newInstance(getActivity()), StayOutboundPaymentActivity.REQUEST_CODE_CALL);
     }
 
     @Override

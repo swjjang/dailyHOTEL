@@ -64,6 +64,7 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function3;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by sheldon
@@ -219,14 +220,8 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
         {
             screenLock(false);
 
-            Disposable disposable = Observable.interval(2, TimeUnit.MICROSECONDS).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Long>()
-            {
-                @Override
-                public void accept(@io.reactivex.annotations.NonNull Long aLong) throws Exception
-                {
-                    screenLock(true);
-                }
-            });
+            Disposable disposable = Observable.timer(2, TimeUnit.SECONDS).subscribeOn(Schedulers.newThread())//
+                .observeOn(AndroidSchedulers.mainThread()).subscribe(aLong -> screenLock(true));
 
             addCompositeDisposable(disposable);
 
