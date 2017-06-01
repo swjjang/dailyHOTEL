@@ -1534,17 +1534,13 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
                 AnalyticsManager.getInstance(GourmetPaymentActivity.this).recordEvent(AnalyticsManager.Category.GOURMET_BOOKINGS//
                     , AnalyticsManager.Action.EDIT_BUTTON_CLICKED, AnalyticsManager.Label.PAYMENT_CARD_REGISTRATION, null);
 
-                Intent intent = new Intent(GourmetPaymentActivity.this, RegisterCreditCardActivity.class);
-                startActivityForResult(intent, CODE_REQUEST_ACTIVITY_REGISTERCREDITCARD);
+                startActivityForResult(RegisterCreditCardActivity.newInstance(GourmetPaymentActivity.this), CODE_REQUEST_ACTIVITY_REGISTERCREDITCARD);
             } else
             {
+                startCreditCardList();
+
                 AnalyticsManager.getInstance(GourmetPaymentActivity.this).recordEvent(AnalyticsManager.Category.GOURMET_BOOKINGS//
                     , AnalyticsManager.Action.EDIT_BUTTON_CLICKED, AnalyticsManager.Label.PAYMENT_CARD_EDIT, null);
-
-                Intent intent = new Intent(GourmetPaymentActivity.this, CreditCardListActivity.class);
-                intent.setAction(Intent.ACTION_PICK);
-                intent.putExtra(NAME_INTENT_EXTRA_DATA_CREDITCARD, mSelectedCreditCard);
-                startActivityForResult(intent, CODE_REQUEST_ACTIVITY_CREDITCARD_MANAGER);
             }
         }
 

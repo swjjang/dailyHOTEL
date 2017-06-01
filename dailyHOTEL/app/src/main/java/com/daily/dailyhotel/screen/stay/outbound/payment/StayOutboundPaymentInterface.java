@@ -14,7 +14,9 @@ public interface StayOutboundPaymentInterface extends BaseDialogViewInterface
 {
     void setBooking(SpannableString checkInDate, SpannableString checkOutDate, int nights, String stayName, String roomType);
 
-    void setUserInformation(UserInformation userInformation, String firstName, String lastName, String phone, String email);
+    void setGuestInformation(String firstName, String lastName, String phone, String email);
+
+    void setGuestPhoneInformation(String phone);
 
     void setPeople(People people);
 

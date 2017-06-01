@@ -35,7 +35,7 @@ public class PaymentRemoteImpl implements PaymentInterface
 
     @Override
     public Observable<StayOutboundPayment> getStayOutBoundPayment(StayBookDateTime stayBookDateTime, int index//
-        , String rateCode, String rateKey, String roomTypeCode, People people)
+        , String rateCode, String rateKey, String roomTypeCode, int roomBedTypeId, People people)
     {
         JSONObject jsonObject = new JSONObject();
 
@@ -46,7 +46,7 @@ public class PaymentRemoteImpl implements PaymentInterface
             jsonObject.put("arrivalDate", stayBookDateTime.getCheckInDateTime("yyyy-MM-dd"));
             jsonObject.put("departureDate", stayBookDateTime.getCheckOutDateTime("yyyy-MM-dd"));
             jsonObject.put("numberOfRooms", NUMBER_OF_ROOMS);
-            jsonObject.put("rooms", getRooms(new People[]{people}));
+            jsonObject.put("rooms", getRooms(new People[]{people}, new int[]{roomBedTypeId}));
             jsonObject.put("rateCode", rateCode);
             jsonObject.put("rateKey", rateKey);
             jsonObject.put("roomTypeCode", roomTypeCode);
@@ -113,23 +113,28 @@ public class PaymentRemoteImpl implements PaymentInterface
         }).observeOn(AndroidSchedulers.mainThread());
     }
 
-    private JSONArray getRooms(People[] peoples)
+    private JSONArray getRooms(People[] peoples, int[] roomBedTypeIds)
     {
         JSONArray roomJSONArray = new JSONArray();
 
-        if (peoples == null || peoples.length == 0)
+        if (peoples == null || peoples.length == 0 || roomBedTypeIds == null || roomBedTypeIds.length == 0//
+            || peoples.length != roomBedTypeIds.length)
         {
             return roomJSONArray;
         }
 
         try
         {
-            for (People people : peoples)
+            int length = peoples.length;
+
+            for (int i = 0; i < length; i++)
             {
                 JSONObject roomJSONObject = new JSONObject();
-                roomJSONObject.put("numberOfAdults", people.numberOfAdults);
 
-                List<Integer> childAgeList = people.getChildAgeList();
+                roomJSONObject.put("numberOfAdults", peoples[i].numberOfAdults);
+                roomJSONObject.put("roomBedTypeId", roomBedTypeIds[i]);
+
+                List<Integer> childAgeList = peoples[i].getChildAgeList();
 
                 if (childAgeList != null && childAgeList.size() > 0)
                 {

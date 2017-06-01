@@ -6,6 +6,7 @@ import android.content.SharedPreferences.Editor;
 
 import com.crashlytics.android.Crashlytics;
 import com.daily.base.util.DailyTextUtils;
+import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.entity.Card;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.Setting;
@@ -14,6 +15,8 @@ import com.twoheart.dailyhotel.model.DailyCategoryType;
 import com.twoheart.dailyhotel.model.PlacePaymentInformation;
 
 import org.json.JSONObject;
+
+import io.reactivex.Observable;
 
 /**
  */
@@ -1516,7 +1519,7 @@ public class DailyPreference
             setValue(mEditor, KEY_SELECTED_SIMPLE_CARD, null);
         } else
         {
-            setValue(mEditor, KEY_SELECTED_SIMPLE_CARD, Crypto.urlEncrypt(card.number.replaceAll("\\*|-", "").substring(4) + card.billkey.substring(3, 7)));
+            setValue(mEditor, KEY_SELECTED_SIMPLE_CARD, Crypto.urlEncrypt(card.number.replaceAll("\\*|-", "").substring(4) + card.billKey.substring(3, 7)));
         }
     }
 

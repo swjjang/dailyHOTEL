@@ -17,6 +17,11 @@ import java.util.ArrayList;
  */
 public class StayOutboundPaymentActivity extends BaseActivity<StayOutboundPaymentPresenter>
 {
+    static final int REQUEST_CODE_CARDMANAGER = 10000;
+    static final int REQUEST_CODE_REGISTER_CARD = 10001;
+    static final int REQUEST_CODE_REGISTER_CARD_PAYMENT = 10002;
+    static final int REQUEST_CODE_REGISTER_PHONE_NUMBER = 10003;
+
     static final String INTENT_EXTRA_DATA_STAY_INDEX = "stayIndex";
     static final String INTENT_EXTRA_DATA_STAY_NAME = "stayName";
     static final String INTENT_EXTRA_DATA_ROOM_PRICE = "roomPrice";
@@ -28,9 +33,13 @@ public class StayOutboundPaymentActivity extends BaseActivity<StayOutboundPaymen
     static final String INTENT_EXTRA_DATA_RATE_CODE = "rateCode";
     static final String INTENT_EXTRA_DATA_RATE_KEY = "rateKey";
     static final String INTENT_EXTRA_DATA_ROOM_TYPE_CODE = "roomTypeCode";
+    static final String INTENT_EXTRA_DATA_ROOM_BED_TYPE_ID = "roomBedTypeId";
 
 
-    public static Intent newInstance(Context context, int stayIndex, String stayName, int roomPrice, String checkInDateTime, String checkOutDateTime, int numberOfAdults, ArrayList<Integer> childAgeList, String roomType, String rateCode, String rateKey, String roomTypeCode)
+    public static Intent newInstance(Context context, int stayIndex, String stayName, int roomPrice//
+        , String checkInDateTime, String checkOutDateTime, int numberOfAdults//
+        , ArrayList<Integer> childAgeList, String roomType//
+        , String rateCode, String rateKey, String roomTypeCode, int roomBedTypeId)
     {
         Intent intent = new Intent(context, StayOutboundPaymentActivity.class);
 
@@ -45,6 +54,7 @@ public class StayOutboundPaymentActivity extends BaseActivity<StayOutboundPaymen
         intent.putExtra(INTENT_EXTRA_DATA_RATE_CODE, rateCode);
         intent.putExtra(INTENT_EXTRA_DATA_RATE_KEY, rateKey);
         intent.putExtra(INTENT_EXTRA_DATA_ROOM_TYPE_CODE, roomTypeCode);
+        intent.putExtra(INTENT_EXTRA_DATA_ROOM_BED_TYPE_ID, roomBedTypeId);
 
         return intent;
     }

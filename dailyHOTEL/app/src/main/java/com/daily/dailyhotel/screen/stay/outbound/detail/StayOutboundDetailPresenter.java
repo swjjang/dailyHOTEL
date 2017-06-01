@@ -26,6 +26,7 @@ import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayOutboundDetail;
 import com.daily.dailyhotel.entity.StayOutboundRoom;
 import com.daily.dailyhotel.entity.User;
+import com.daily.dailyhotel.repository.local.ConfigLocalImpl;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
 import com.daily.dailyhotel.repository.remote.ProfileRemoteImpl;
 import com.daily.dailyhotel.repository.remote.StayOutboundRemoteImpl;
@@ -234,7 +235,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
                     @Override
                     public StayOutboundDetail apply(@io.reactivex.annotations.NonNull Boolean aBoolean, @io.reactivex.annotations.NonNull CommonDateTime commonDateTime, @io.reactivex.annotations.NonNull StayOutboundDetail stayOutboundDetail) throws Exception
                     {
-                        if (disposable.isDisposed() == false)
+                        if (disposable != null && disposable.isDisposed() == false)
                         {
                             disposable.dispose();
                         }
@@ -257,6 +258,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
                 public void accept(@io.reactivex.annotations.NonNull Throwable throwable) throws Exception
                 {
                     onHandleError(throwable);
+                    onBackClick();
                 }
             }));
         } else
@@ -838,7 +840,8 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
                                         , mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
                                         , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
                                         , mPeople.numberOfAdults, mPeople.getChildAgeList()//
-                                        , mSelectedRoom.roomName, mSelectedRoom.rateCode, mSelectedRoom.rateKey, mSelectedRoom.roomTypeCode)//
+                                        , mSelectedRoom.roomName, mSelectedRoom.rateCode, mSelectedRoom.rateKey//
+                                        , mSelectedRoom.roomTypeCode, mSelectedRoom.roomBedTypeId)//
                                         , StayOutboundDetailActivity.REQUEST_CODE_PAYMENT);
                                 }
                             } else
@@ -866,7 +869,8 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
                                         , mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
                                         , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
                                         , mPeople.numberOfAdults, mPeople.getChildAgeList()//
-                                        , mSelectedRoom.roomName, mSelectedRoom.rateCode, mSelectedRoom.rateKey, mSelectedRoom.roomTypeCode)//
+                                        , mSelectedRoom.roomName, mSelectedRoom.rateCode, mSelectedRoom.rateKey//
+                                        , mSelectedRoom.roomTypeCode, mSelectedRoom.roomBedTypeId)//
                                         , StayOutboundDetailActivity.REQUEST_CODE_PAYMENT);
                                 }
                             }

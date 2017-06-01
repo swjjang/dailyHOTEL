@@ -212,6 +212,10 @@ public interface Constants
     String NAME_INTENT_EXTRA_DATA_TRUEVR_LIST = "trueVRList";
     String NAME_INTENT_EXTRA_DATA_EMAIL = "email";
     String NAME_INTENT_EXTRA_DATA_VR_FLAG = "vrFlag";
+    String NAME_INTENT_EXTRA_DATA_CARD_NAME = "cardName";
+    String NAME_INTENT_EXTRA_DATA_CARD_BILLING_KEY = "cardBillingKey";
+    String NAME_INTENT_EXTRA_DATA_CARD_NUMBER = "cardNumber";
+    String NAME_INTENT_EXTRA_DATA_CARD_CD = "cardCd";
 
     // Push Type
     int PUSH_TYPE_NOTICE = 0;

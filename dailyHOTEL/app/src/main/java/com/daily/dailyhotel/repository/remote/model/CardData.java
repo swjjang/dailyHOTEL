@@ -29,7 +29,7 @@ public class CardData
         Card card = new Card();
         card.name = card_name;
         card.number = print_cardno;
-        card.billkey = billkey;
+        card.billKey = billkey;
         card.cd = cardcd;
 
         return card;

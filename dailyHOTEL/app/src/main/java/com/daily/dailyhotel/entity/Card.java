@@ -4,7 +4,7 @@ public class Card
 {
     public String name;
     public String number;
-    public String billkey;
+    public String billKey;
     public String cd;
 
     public Card()

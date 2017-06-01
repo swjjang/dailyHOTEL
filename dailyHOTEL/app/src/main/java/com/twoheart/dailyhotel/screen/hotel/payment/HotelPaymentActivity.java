@@ -1874,11 +1874,13 @@ public class HotelPaymentActivity extends PlacePaymentActivity
                 AnalyticsManager.getInstance(HotelPaymentActivity.this).recordEvent(AnalyticsManager.Category.GOURMET_BOOKINGS//
                     , AnalyticsManager.Action.EDIT_BUTTON_CLICKED, AnalyticsManager.Label.PAYMENT_CARD_REGISTRATION, null);
 
-                Intent intent = new Intent(HotelPaymentActivity.this, RegisterCreditCardActivity.class);
-                startActivityForResult(intent, CODE_REQUEST_ACTIVITY_REGISTERCREDITCARD);
+                startActivityForResult(RegisterCreditCardActivity.newInstance(HotelPaymentActivity.this), CODE_REQUEST_ACTIVITY_REGISTERCREDITCARD);
             } else
             {
                 startCreditCardList();
+
+                AnalyticsManager.getInstance(HotelPaymentActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS//
+                    , Action.EDIT_BUTTON_CLICKED, Label.PAYMENT_CARD_EDIT, null);
             }
         }
 

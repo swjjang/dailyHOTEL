@@ -26,13 +26,14 @@ import com.twoheart.dailyhotel.databinding.LayoutStayOutboundPaymentDiscountData
 import com.twoheart.dailyhotel.databinding.LayoutStayOutboundPaymentPayDataBinding;
 import com.twoheart.dailyhotel.databinding.LayoutStayOutboundPaymentRefundDataBinding;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
+import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
 import java.util.List;
 import java.util.Locale;
 
 public class StayOutboundPaymentView extends BaseDialogView<StayOutboundPaymentView.OnEventListener, ActivityStayOutboundPaymentDataBinding>//
-    implements StayOutboundPaymentInterface, View.OnClickListener
+    implements StayOutboundPaymentInterface, View.OnClickListener, View.OnFocusChangeListener
 {
     private DailyToolbarLayout mDailyToolbarLayout;
 
@@ -45,6 +46,18 @@ public class StayOutboundPaymentView extends BaseDialogView<StayOutboundPaymentV
     public interface OnEventListener extends OnBaseEventListener
     {
         void onCallClick();
+
+        void onBonusClick(boolean enabled);
+
+        void onCardManagerClick();
+
+        void onRegisterCardClick();
+
+        void onPaymentTypeClick(StayOutboundPayment.PaymentType paymentType);
+
+        void onPaymentClick();
+
+        void onPhoneNumberClick(String phoneNumber);
     }
 
     public StayOutboundPaymentView(BaseActivity baseActivity, StayOutboundPaymentView.OnEventListener listener)
@@ -99,7 +112,7 @@ public class StayOutboundPaymentView extends BaseDialogView<StayOutboundPaymentV
     }
 
     @Override
-    public void setUserInformation(UserInformation userInformation, String firstName, String lastName, String phone, String email)
+    public void setGuestInformation(String firstName, String lastName, String phone, String email)
     {
         if (getViewDataBinding() == null || mBookingDataBinding == null)
         {
@@ -109,20 +122,31 @@ public class StayOutboundPaymentView extends BaseDialogView<StayOutboundPaymentV
         mBookingDataBinding.guestLastNameEditText.setText(lastName);
         mBookingDataBinding.guestFirstNameEditText.setText(firstName);
 
-        if (DailyTextUtils.isTextEmpty(phone) == true)
+        if (DailyTextUtils.isTextEmpty(phone) == false)
         {
-            mBookingDataBinding.guestPhoneEditText.setText(userInformation.phone);
-        } else
-        {
-            mBookingDataBinding.guestPhoneEditText.setText(phone);
+            mBookingDataBinding.guestPhoneEditText.setText(Util.addHyphenMobileNumber(getContext(), phone));
         }
 
-        if (DailyTextUtils.isTextEmpty(email) == true)
-        {
-            mBookingDataBinding.guestEmailEditText.setText(userInformation.email);
-        } else
+        if (DailyTextUtils.isTextEmpty(email) == false)
         {
             mBookingDataBinding.guestEmailEditText.setText(email);
+        }
+    }
+
+    @Override
+    public void setGuestPhoneInformation(String phone)
+    {
+        if (getViewDataBinding() == null || mBookingDataBinding == null)
+        {
+            return;
+        }
+
+        if (DailyTextUtils.isTextEmpty(phone) == true)
+        {
+            mBookingDataBinding.guestPhoneEditText.setText(null);
+        } else
+        {
+            mBookingDataBinding.guestPhoneEditText.setText(Util.addHyphenMobileNumber(getContext(), phone));
         }
     }
 
@@ -303,9 +327,59 @@ public class StayOutboundPaymentView extends BaseDialogView<StayOutboundPaymentV
     @Override
     public void onClick(View v)
     {
+        switch (v.getId())
+        {
+            case R.id.fakeMobileEditView:
+            {
+                if (mBookingDataBinding.guestPhoneEditText.isSelected() == true)
+                {
+                    getEventListener().onPhoneNumberClick(mBookingDataBinding.guestPhoneEditText.getText().toString());
+                } else
+                {
+                    mBookingDataBinding.guestPhoneEditText.requestFocus();
+                    mBookingDataBinding.guestPhoneEditText.setSelected(true);
+                }
+                break;
+            }
 
+            case R.id.cardManagerLayout:
+                getEventListener().onCardManagerClick();
+                break;
+
+            case R.id.emptySimpleCardLayout:
+                getEventListener().onRegisterCardClick();
+                break;
+
+            case R.id.simpleCardLayout:
+                getEventListener().onPaymentTypeClick(StayOutboundPayment.PaymentType.EASY_CARD);
+                break;
+
+            case R.id.cardLayout:
+                getEventListener().onPaymentTypeClick(StayOutboundPayment.PaymentType.CARD);
+                break;
+
+            case R.id.phoneLayout:
+                getEventListener().onPaymentTypeClick(StayOutboundPayment.PaymentType.PHONE_PAY);
+                break;
+        }
     }
 
+    @Override
+    public void onFocusChange(View v, boolean hasFocus)
+    {
+        switch (v.getId())
+        {
+            case R.id.guestPhoneEditText:
+                if (hasFocus == true)
+                {
+                    getEventListener().onPhoneNumberClick(mBookingDataBinding.guestPhoneEditText.getText().toString());
+                } else
+                {
+                    mBookingDataBinding.guestPhoneEditText.setSelected(false);
+                }
+                break;
+        }
+    }
 
     private void initToolbar(ActivityStayOutboundPaymentDataBinding viewDataBinding)
     {
@@ -340,7 +414,10 @@ public class StayOutboundPaymentView extends BaseDialogView<StayOutboundPaymentV
         mBookingDataBinding = DataBindingUtil.inflate(LayoutInflater.from(context)//
             , R.layout.layout_stay_outbound_payment_booking_data, viewGroup, true);
 
+        mBookingDataBinding.guestPhoneEditText.setOnFocusChangeListener(this);
 
+        mBookingDataBinding.fakeMobileEditView.setFocusable(true);
+        mBookingDataBinding.fakeMobileEditView.setOnClickListener(this);
     }
 
     private void setDiscountLayout(Context context, ViewGroup viewGroup)
@@ -366,7 +443,12 @@ public class StayOutboundPaymentView extends BaseDialogView<StayOutboundPaymentV
         mPayDataBinding = DataBindingUtil.inflate(LayoutInflater.from(context)//
             , R.layout.layout_stay_outbound_payment_pay_data, viewGroup, true);
 
+        mPayDataBinding.cardManagerLayout.setOnClickListener(this);
+        mPayDataBinding.emptySimpleCardLayout.setOnClickListener(this);
 
+        mPayDataBinding.simpleCardLayout.setOnClickListener(this);
+        mPayDataBinding.cardLayout.setOnClickListener(this);
+        mPayDataBinding.phoneLayout.setOnClickListener(this);
     }
 
     private void setRefundLayout(Context context, ViewGroup viewGroup)
@@ -378,7 +460,6 @@ public class StayOutboundPaymentView extends BaseDialogView<StayOutboundPaymentV
 
         mRefundDataBinding = DataBindingUtil.inflate(LayoutInflater.from(context)//
             , R.layout.layout_stay_outbound_payment_refund_data, viewGroup, true);
-
 
     }
 
@@ -392,7 +473,7 @@ public class StayOutboundPaymentView extends BaseDialogView<StayOutboundPaymentV
         mButtonDataBinding = DataBindingUtil.inflate(LayoutInflater.from(context)//
             , R.layout.layout_stay_outbound_payment_button_data, viewGroup, true);
 
-
+        mButtonDataBinding.doPaymentView.setOnClickListener(this);
     }
 
     private void setBonus(int bonus)

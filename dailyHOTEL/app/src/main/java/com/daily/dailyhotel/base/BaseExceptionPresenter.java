@@ -49,13 +49,15 @@ public abstract class BaseExceptionPresenter<T1 extends BaseActivity, T2 extends
                 onHandleAuthorizedError();
             } else
             {
+                DailyToast.showToast(getActivity(), getString(R.string.act_base_network_connect), DailyToast.LENGTH_LONG);
+
                 if (Constants.DEBUG == false)
                 {
                     Crashlytics.log(httpException.response().raw().request().url().toString());
                     Crashlytics.logException(throwable);
                 } else
                 {
-                    ExLog.e(httpException.response().raw().request().url().toString());
+                    ExLog.e(httpException.response().raw().request().url().toString() + ", " + httpException.toString());
                 }
             }
         } else
@@ -75,7 +77,7 @@ public abstract class BaseExceptionPresenter<T1 extends BaseActivity, T2 extends
         }));
     }
 
-    private void restartExpiredSession()
+    protected void restartExpiredSession()
     {
         DailyToast.showToast(getActivity(), R.string.dialog_msg_session_expired, DailyToast.LENGTH_SHORT);
 

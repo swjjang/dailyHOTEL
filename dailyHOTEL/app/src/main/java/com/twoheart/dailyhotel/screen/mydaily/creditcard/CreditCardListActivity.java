@@ -1,6 +1,7 @@
 package com.twoheart.dailyhotel.screen.mydaily.creditcard;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -44,6 +45,24 @@ public class CreditCardListActivity extends BaseActivity
         void onItemClick(CreditCard card);
     }
 
+    public static Intent newInstance(Context context, String cardName, String cardNumber, String cardBillingKey, String cardCd)
+    {
+        Intent intent = new Intent(context, CreditCardListActivity.class);
+
+        intent.setAction(Intent.ACTION_PICK);
+        intent.putExtra(Constants.NAME_INTENT_EXTRA_DATA_CARD_NAME, cardName);
+        intent.putExtra(Constants.NAME_INTENT_EXTRA_DATA_CARD_NUMBER, cardNumber);
+        intent.putExtra(Constants.NAME_INTENT_EXTRA_DATA_CARD_BILLING_KEY, cardBillingKey);
+        intent.putExtra(Constants.NAME_INTENT_EXTRA_DATA_CARD_CD, cardCd);
+        return intent;
+    }
+
+    public static Intent newInstance(Context context)
+    {
+        Intent intent = new Intent(context, CreditCardListActivity.class);
+        return intent;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
@@ -58,7 +77,13 @@ public class CreditCardListActivity extends BaseActivity
         if (intent != null && Intent.ACTION_PICK.equalsIgnoreCase(intent.getAction()) == true)
         {
             mIsPickMode = true;
-            mSelectedCreditCard = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_CREDITCARD);
+
+            String cardName = intent.getStringExtra(Constants.NAME_INTENT_EXTRA_DATA_CARD_NAME);
+            String cardNumber = intent.getStringExtra(Constants.NAME_INTENT_EXTRA_DATA_CARD_NUMBER);
+            String cardBillingKey = intent.getStringExtra(Constants.NAME_INTENT_EXTRA_DATA_CARD_BILLING_KEY);
+            String cardCd = intent.getStringExtra(Constants.NAME_INTENT_EXTRA_DATA_CARD_CD);
+
+            mSelectedCreditCard = new CreditCard(cardName, cardNumber, cardBillingKey, cardCd);
         } else
         {
             mIsPickMode = false;
@@ -184,8 +209,7 @@ public class CreditCardListActivity extends BaseActivity
                 return;
             }
 
-            Intent intent = new Intent(CreditCardListActivity.this, RegisterCreditCardActivity.class);
-            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_REGISTERCREDITCARD);
+            startActivityForResult(RegisterCreditCardActivity.newInstance(CreditCardListActivity.this), CODE_REQUEST_ACTIVITY_REGISTERCREDITCARD);
 
             if (mCreditCardLayout != null)
             {
@@ -253,20 +277,26 @@ public class CreditCardListActivity extends BaseActivity
         @Override
         public void onItemClick(CreditCard card)
         {
-            if (mIsPickMode == true)
+            if (card == null || mIsPickMode == false)
             {
-                if (isLockUiComponent() == true)
-                {
-                    return;
-                }
-
-                lockUI();
-
-                Intent intent = new Intent();
-                intent.putExtra(Constants.NAME_INTENT_EXTRA_DATA_CREDITCARD, card);
-                setResult(Activity.RESULT_OK, intent);
-                finish();
+                return;
             }
+
+            if (isLockUiComponent() == true)
+            {
+                return;
+            }
+
+            lockUI();
+
+            Intent intent = new Intent();
+            intent.putExtra(Constants.NAME_INTENT_EXTRA_DATA_CARD_NAME, card.name);
+            intent.putExtra(Constants.NAME_INTENT_EXTRA_DATA_CARD_NUMBER, card.number);
+            intent.putExtra(Constants.NAME_INTENT_EXTRA_DATA_CARD_BILLING_KEY, card.billingkey);
+            intent.putExtra(Constants.NAME_INTENT_EXTRA_DATA_CARD_CD, card.cardcd);
+
+            setResult(Activity.RESULT_OK, intent);
+            finish();
         }
     };
 
