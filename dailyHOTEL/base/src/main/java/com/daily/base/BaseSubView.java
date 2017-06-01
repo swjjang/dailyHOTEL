@@ -13,7 +13,7 @@ import android.view.ViewGroup;
 
 import com.daily.base.util.VersionUtils;
 
-public abstract class BaseSubView<T1 extends OnBaseEventListener, T2 extends ViewDataBinding> implements BaseSubViewInterface
+public abstract class BaseSubView<T1 extends OnBaseSubEventListener, T2 extends ViewDataBinding> implements BaseSubViewInterface
 {
     private Context mContext;
     private T2 mViewDataBinding;

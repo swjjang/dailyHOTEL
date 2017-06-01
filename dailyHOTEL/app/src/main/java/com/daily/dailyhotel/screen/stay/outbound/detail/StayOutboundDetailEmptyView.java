@@ -8,6 +8,7 @@ import android.view.ViewConfiguration;
 
 import com.daily.base.BaseSubView;
 import com.daily.base.OnBaseEventListener;
+import com.daily.base.OnBaseSubEventListener;
 import com.daily.base.util.ScreenUtils;
 import com.twoheart.dailyhotel.databinding.LayoutStayOutboundDetail01DataBinding;
 
@@ -23,7 +24,7 @@ public class StayOutboundDetailEmptyView extends BaseSubView<StayOutboundDetailE
     private int mMoveState;
     private float mPrevX, mPrevY;
 
-    public interface OnEventListener extends OnBaseEventListener
+    public interface OnEventListener extends OnBaseSubEventListener
     {
         void onStopMove(MotionEvent event);
 

@@ -60,6 +60,7 @@ import java.util.concurrent.TimeUnit;
 import io.reactivex.Observable;
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function3;
@@ -216,13 +217,28 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
         {
             screenLock(false);
 
-            addCompositeDisposable(Observable.zip(getViewInterface().getSharedElementTransition()//
+            Observable<Boolean> observable = getViewInterface().getSharedElementTransition();
+            Disposable disposable = observable.delay(2, TimeUnit.SECONDS).subscribe(new Consumer<Boolean>()
+            {
+                @Override
+                public void accept(@io.reactivex.annotations.NonNull Boolean aBoolean) throws Exception
+                {
+                    screenLock(true);
+                }
+            });
+
+            addCompositeDisposable(Observable.zip(observable//
                 , mCommonRemoteImpl.getCommonDateTime(), mStayOutboundRemoteImpl.getStayOutBoundDetail(mStayIndex, mStayBookDateTime, mPeople)//
                 , new Function3<Boolean, CommonDateTime, StayOutboundDetail, StayOutboundDetail>()
                 {
                     @Override
                     public StayOutboundDetail apply(@io.reactivex.annotations.NonNull Boolean aBoolean, @io.reactivex.annotations.NonNull CommonDateTime commonDateTime, @io.reactivex.annotations.NonNull StayOutboundDetail stayOutboundDetail) throws Exception
                     {
+                        if (disposable.isDisposed() == false)
+                        {
+                            disposable.dispose();
+                        }
+
                         setCommonDateTime(commonDateTime);
                         return stayOutboundDetail;
                     }

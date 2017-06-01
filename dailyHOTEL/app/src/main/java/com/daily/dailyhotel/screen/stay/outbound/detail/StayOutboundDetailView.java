@@ -15,6 +15,7 @@ import android.graphics.drawable.PaintDrawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.RectShape;
 import android.net.Uri;
+import android.os.Build;
 import android.support.annotation.IdRes;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.NestedScrollView;
@@ -462,6 +463,8 @@ public class StayOutboundDetailView extends BaseDialogView<StayOutboundDetailVie
 
         getViewDataBinding().scrollLayout.removeAllViews();
 
+        mStayOutboundDetailEmptyView = null;
+
         LayoutInflater layoutInflater = LayoutInflater.from(getContext());
 
         // 이미지 상단에 빈화면 넣기
@@ -673,6 +676,7 @@ public class StayOutboundDetailView extends BaseDialogView<StayOutboundDetailVie
         getViewDataBinding().viewpagerIndicator.setViewPager(getViewDataBinding().imageLoopViewPager);
     }
 
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     @Override
     public void setSharedElementTransitionEnabled(boolean enabled)
     {
@@ -967,12 +971,6 @@ public class StayOutboundDetailView extends BaseDialogView<StayOutboundDetailVie
 
         mStayOutboundDetailEmptyView = new StayOutboundDetailEmptyView(context, new StayOutboundDetailEmptyView.OnEventListener()
         {
-            @Override
-            public void onBackClick()
-            {
-
-            }
-
             @Override
             public void onStopMove(MotionEvent event)
             {
