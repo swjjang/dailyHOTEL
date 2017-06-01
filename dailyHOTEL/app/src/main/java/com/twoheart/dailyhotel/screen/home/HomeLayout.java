@@ -81,6 +81,8 @@ public class HomeLayout extends BaseBlurLayout
     private View mActionButtonLayout;
     private ValueAnimator mScrollButtonLayoutAnimator;
     private int mActionButtonLayoutVisibility = View.GONE;
+    private int mSkipScrollAnimationGapValue;
+
     SwipeRefreshLayout mSwipeRefreshLayout;
     DailyHomeScrollView mDailyHomeScrollView;
     View mErrorPopupLayout;
@@ -581,6 +583,8 @@ public class HomeLayout extends BaseBlurLayout
 
     private void initNestedScrollLayout(View view)
     {
+        mSk = ScreenUtils.dpToPx(mContext, 20);
+
         mDailyHomeScrollView = (DailyHomeScrollView) view.findViewById(R.id.nestedScrollView);
         mDailyHomeScrollView.setOverScrollMode(View.OVER_SCROLL_NEVER);
         mDailyHomeScrollView.setOnScrollChangedListener(mScrollChangedListener);
@@ -1421,13 +1425,10 @@ public class HomeLayout extends BaseBlurLayout
             {
                 // show animation
                 setScrollButtonLayoutAnimation(View.VISIBLE);
-                //                setActionButtonVisibility(View.VISIBLE);
             } else if (scrollY > mEventImageHeight - ScreenUtils.dpToPx(mContext, 20) && scrollY < mEventImageHeight)
             {
                 // hide animation
                 setScrollButtonLayoutAnimation(View.GONE);
-                // hide none animation
-                //                                setActionButtonVisibility(View.GONE);
             } else
             {
                 // hide none animation
