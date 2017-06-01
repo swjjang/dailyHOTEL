@@ -970,7 +970,12 @@ public class StayCategoryNearByActivity extends BaseActivity
             }
 
             mStayCategoryNearByCuration.setRadius(radius);
-            refreshCurrentFragment(true);
+
+            if (mReceiveDataFlag < 2)
+            {
+                // 초기 로딩이 끝나지 않았음으로 리턴
+                return;
+            }
 
             try
             {
@@ -1020,57 +1025,62 @@ public class StayCategoryNearByActivity extends BaseActivity
                 return;
             }
 
+            mAddress = address;
+            mStayCategoryNearByLayout.setToolbarTitle(address);
+
             synchronized (StayCategoryNearByActivity.this)
             {
+                if (mReceiveDataFlag >= 2)
+                {
+                    return;
+                }
+
                 if (mReceiveDataFlag == 0)
                 {
                     mReceiveDataFlag = 1;
-                } else if (mReceiveDataFlag == 1)
+                    return;
+                }
+
+                ArrayList<PlaceListFragment> placeListFragmentList = mStayCategoryNearByLayout.getPlaceListFragment();
+                if (placeListFragmentList != null || placeListFragmentList.size() > 0)
                 {
-                    ArrayList<PlaceListFragment> placeListFragmentList = mStayCategoryNearByLayout.getPlaceListFragment();
-                    if (placeListFragmentList != null || placeListFragmentList.size() > 0)
+                    StayBookingDay stayBookingDay = mStayCategoryNearByCuration.getStayBookingDay();
+                    Map<String, String> params = new HashMap<>();
+
+                    try
                     {
-                        StayBookingDay stayBookingDay = mStayCategoryNearByCuration.getStayBookingDay();
-                        Map<String, String> params = new HashMap<>();
+                        params.put(AnalyticsManager.KeyType.CHECK_IN, stayBookingDay.getCheckInDay("yyyy-MM-dd"));
+                        params.put(AnalyticsManager.KeyType.CHECK_OUT, stayBookingDay.getCheckOutDay("yyyy-MM-dd"));
+                        params.put(AnalyticsManager.KeyType.LENGTH_OF_STAY, Integer.toString(stayBookingDay.getNights()));
 
-                        try
+                        params.put(AnalyticsManager.KeyType.PLACE_TYPE, AnalyticsManager.ValueType.STAY);
+                        params.put(AnalyticsManager.KeyType.PLACE_HIT_TYPE, AnalyticsManager.ValueType.STAY);
+                        params.put(AnalyticsManager.KeyType.CATEGORY, mStayCategoryNearByCuration.getCategory().code);
+
+                        Province province = mStayCategoryNearByCuration.getProvince();
+                        if (province instanceof Area)
                         {
-                            params.put(AnalyticsManager.KeyType.CHECK_IN, stayBookingDay.getCheckInDay("yyyy-MM-dd"));
-                            params.put(AnalyticsManager.KeyType.CHECK_OUT, stayBookingDay.getCheckOutDay("yyyy-MM-dd"));
-                            params.put(AnalyticsManager.KeyType.LENGTH_OF_STAY, Integer.toString(stayBookingDay.getNights()));
-
-                            params.put(AnalyticsManager.KeyType.PLACE_TYPE, AnalyticsManager.ValueType.STAY);
-                            params.put(AnalyticsManager.KeyType.PLACE_HIT_TYPE, AnalyticsManager.ValueType.STAY);
-                            params.put(AnalyticsManager.KeyType.CATEGORY, mStayCategoryNearByCuration.getCategory().code);
-
-                            Province province = mStayCategoryNearByCuration.getProvince();
-                            if (province instanceof Area)
-                            {
-                                Area area = (Area) province;
-                                params.put(AnalyticsManager.KeyType.COUNTRY, area.getProvince().isOverseas ? AnalyticsManager.ValueType.OVERSEAS : AnalyticsManager.ValueType.DOMESTIC);
-                                params.put(AnalyticsManager.KeyType.PROVINCE, area.getProvince().name);
-                                params.put(AnalyticsManager.KeyType.DISTRICT, area.name);
-                            } else if (province != null)
-                            {
-                                params.put(AnalyticsManager.KeyType.COUNTRY, province.isOverseas ? AnalyticsManager.ValueType.OVERSEAS : AnalyticsManager.ValueType.DOMESTIC);
-                                params.put(AnalyticsManager.KeyType.PROVINCE, province.name);
-                                params.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.ALL_LOCALE_KR);
-                            }
-                            params.put(AnalyticsManager.KeyType.SEARCH_COUNT, Integer.toString(mSearchCount > mSearchMaxCount ? mSearchMaxCount : mSearchCount));
-                        } catch (Exception e)
+                            Area area = (Area) province;
+                            params.put(AnalyticsManager.KeyType.COUNTRY, area.getProvince().isOverseas ? AnalyticsManager.ValueType.OVERSEAS : AnalyticsManager.ValueType.DOMESTIC);
+                            params.put(AnalyticsManager.KeyType.PROVINCE, area.getProvince().name);
+                            params.put(AnalyticsManager.KeyType.DISTRICT, area.name);
+                        } else if (province != null)
                         {
-
+                            params.put(AnalyticsManager.KeyType.COUNTRY, province.isOverseas ? AnalyticsManager.ValueType.OVERSEAS : AnalyticsManager.ValueType.DOMESTIC);
+                            params.put(AnalyticsManager.KeyType.PROVINCE, province.name);
+                            params.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.ALL_LOCALE_KR);
                         }
+                        params.put(AnalyticsManager.KeyType.SEARCH_COUNT, Integer.toString(mSearchCount > mSearchMaxCount ? mSearchMaxCount : mSearchCount));
+                    } catch (Exception e)
+                    {
 
-                        int placeCount = placeListFragmentList.get(0).getPlaceCount();
-                        recordEventSearchResultByLocation(address, placeCount == 0, params);
-                        mReceiveDataFlag = 2;
                     }
+
+                    int placeCount = placeListFragmentList.get(0).getPlaceCount();
+                    recordEventSearchResultByLocation(address, placeCount == 0, params);
+                    mReceiveDataFlag = 2;
                 }
             }
-
-            mAddress = address;
-            mStayCategoryNearByLayout.setToolbarTitle(address);
         }
 
         @Override
@@ -1388,7 +1398,7 @@ public class StayCategoryNearByActivity extends BaseActivity
                 if (mReceiveDataFlag == 0)
                 {
                     mReceiveDataFlag = 1;
-                } else
+                } else if (mReceiveDataFlag == 1)
                 {
                     recordEventSearchResultByLocation(mAddress, isShow, params);
                     mReceiveDataFlag = 2;
