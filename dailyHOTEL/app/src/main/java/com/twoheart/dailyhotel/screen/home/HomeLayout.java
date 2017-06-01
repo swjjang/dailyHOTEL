@@ -313,7 +313,7 @@ public class HomeLayout extends BaseBlurLayout
         }
 
         mScrollButtonLayout = LayoutInflater.from(mContext).inflate(R.layout.list_row_home_product_layout, null);
-
+        mScrollButtonLayout.setBackgroundResource(R.color.white);
         layout.addView(mScrollButtonLayout);
 
         View stayButton = mScrollButtonLayout.findViewById(R.id.stayButtonLayout);
@@ -1085,14 +1085,16 @@ public class HomeLayout extends BaseBlurLayout
     {
         clearScrollButtonAnimation();
 
-        //        if (mActionButtonLayoutVisibility == visibility)
-        //        {
-        //            return;
-        //        }
+        if (mActionButtonLayoutVisibility == visibility)
+        {
+            return;
+        }
 
         mActionButtonLayoutVisibility = visibility;
 
         mActionButtonLayout.setVisibility(visibility);
+        View scrollLayout = mScrollButtonLayout.findViewById(R.id.productButtonLayout);
+        scrollLayout.setVisibility(View.VISIBLE == visibility ? View.GONE : View.VISIBLE);
     }
 
     public void clearScrollButtonAnimation()
@@ -1108,6 +1110,7 @@ public class HomeLayout extends BaseBlurLayout
 
     public void setScrollButtonLayoutAnimation(final int visibility)
     {
+
         if (mScrollButtonLayout == null)
         {
             return;
@@ -1127,11 +1130,12 @@ public class HomeLayout extends BaseBlurLayout
         float start = isShow == true ? 1.0f : 0.0f;
         float end = isShow == true ? 0.0f : 1.0f;
 
-        View productLayout = mScrollButtonLayout.findViewById(R.id.productButtonLayout);
-        View stayButtonLayout = mScrollButtonLayout.findViewById(R.id.stayButtonLayout);
-        View stayButtonImageView = mScrollButtonLayout.findViewById(R.id.stayButtonImageView);
-        View gourmetButtonLayout = mScrollButtonLayout.findViewById(R.id.gourmetButtonLayout);
-        View gourmetButtonImageView = mScrollButtonLayout.findViewById(R.id.gourmetButtonImageView);
+        View scrollLayout = mScrollButtonLayout.findViewById(R.id.productButtonLayout);
+        View productLayout = mActionButtonLayout.findViewById(R.id.buttonLayout);
+        View stayButtonLayout = mActionButtonLayout.findViewById(R.id.stayButtonLayout);
+        View stayButtonImageView = mActionButtonLayout.findViewById(R.id.stayButtonImageView);
+        View gourmetButtonLayout = mActionButtonLayout.findViewById(R.id.gourmetButtonLayout);
+        View gourmetButtonImageView = mActionButtonLayout.findViewById(R.id.gourmetButtonImageView);
 
         ViewGroup.MarginLayoutParams productLayoutParams = (ViewGroup.MarginLayoutParams) productLayout.getLayoutParams();
         ViewGroup.MarginLayoutParams stayLayoutParams = (ViewGroup.MarginLayoutParams) stayButtonLayout.getLayoutParams();
@@ -1174,7 +1178,8 @@ public class HomeLayout extends BaseBlurLayout
             @Override
             public void onAnimationStart(Animator animation)
             {
-                mActionButtonLayout.setVisibility(View.GONE);
+                scrollLayout.setVisibility(View.INVISIBLE);
+                mActionButtonLayout.setVisibility(View.VISIBLE);
 
                 stayButtonLayout.setBackgroundResource(0);
                 gourmetButtonLayout.setBackgroundResource(0);
@@ -1205,6 +1210,7 @@ public class HomeLayout extends BaseBlurLayout
             @Override
             public void onAnimationEnd(Animator animation)
             {
+                scrollLayout.setVisibility(isShow == true ? View.INVISIBLE : View.VISIBLE);
                 mActionButtonLayout.setVisibility(isShow == true ? View.VISIBLE : View.GONE);
 
                 stayButtonLayout.setBackgroundResource(isShow == true ? 0 : R.drawable.home_category_btn);
@@ -1237,7 +1243,6 @@ public class HomeLayout extends BaseBlurLayout
             @Override
             public void onAnimationCancel(Animator animation)
             {
-
             }
 
             @Override
@@ -1412,18 +1417,21 @@ public class HomeLayout extends BaseBlurLayout
             }
 
             // globalVisibleRect 로 동작시 android os 4.X 에서 화면을 벗어날때 rect.top 이 증가하는 이슈로 상단 뷰 크기를 고정으로 알아와서 적용!
-            if (scrollY >= mEventImageHeight - 2)
+            if (scrollY >= mEventImageHeight)
             {
                 // show animation
                 setScrollButtonLayoutAnimation(View.VISIBLE);
-                //            } else if (scrollY >= mEventImageHeight - buttonLayoutHideGap || scrollY < mEventImageHeight)
-                //            {
-            } else
+                //                setActionButtonVisibility(View.VISIBLE);
+            } else if (scrollY > mEventImageHeight - ScreenUtils.dpToPx(mContext, 20) && scrollY < mEventImageHeight)
             {
                 // hide animation
                 setScrollButtonLayoutAnimation(View.GONE);
                 // hide none animation
-                //                setActionButtonVisibility(View.GONE);
+                //                                setActionButtonVisibility(View.GONE);
+            } else
+            {
+                // hide none animation
+                setActionButtonVisibility(View.GONE);
             }
 
             if (scrollY > 0)
