@@ -40,7 +40,7 @@ public class StayOutboundSearchSuggestView extends BaseDialogView<StayOutboundSe
 
     public interface OnEventListener extends OnBaseEventListener
     {
-        void onRequestSuggests(String keyword);
+        void onSearchSuggest(String keyword);
 
         void onSuggestClick(Suggest suggest);
     }
@@ -344,11 +344,11 @@ public class StayOutboundSearchSuggestView extends BaseDialogView<StayOutboundSe
                 getViewDataBinding().deleteImageView.setVisibility(View.VISIBLE);
             }
 
-            getEventListener().onRequestSuggests(editable.toString());
+            getEventListener().onSearchSuggest(editable.toString());
         }
     };
 
-    class SuggestListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
+    private class SuggestListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     {
         private Context mContext;
         private View.OnClickListener mOnClickListener;
@@ -513,23 +513,23 @@ public class StayOutboundSearchSuggestView extends BaseDialogView<StayOutboundSe
 
             switch (suggest.categoryKey)
             {
-                case "airport":
+                case Suggest.CATEGORY_AIRPORT:
                     holder.dataBinding.textView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.vector_ob_search_ic_04_airport, 0, 0, 0);
                     break;
 
-                case "hotel":
+                case Suggest.CATEGORY_HOTEL:
                     holder.dataBinding.textView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.vector_ob_search_ic_02_hotel, 0, 0, 0);
                     break;
 
-                case "point":
+                case Suggest.CATEGORY_POINT:
                     holder.dataBinding.textView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.vector_ob_search_ic_03_landmark, 0, 0, 0);
                     break;
 
-                case "region":
+                case Suggest.CATEGORY_REGION:
                     holder.dataBinding.textView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.vector_ob_search_ic_01_region, 0, 0, 0);
                     break;
 
-                case "station":
+                case Suggest.CATEGORY_STATION:
                     holder.dataBinding.textView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.vector_ob_search_ic_05_train, 0, 0, 0);
                     break;
 

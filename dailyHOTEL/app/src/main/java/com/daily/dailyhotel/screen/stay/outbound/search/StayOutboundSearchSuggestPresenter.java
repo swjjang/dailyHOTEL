@@ -149,7 +149,7 @@ public class StayOutboundSearchSuggestPresenter extends BaseExceptionPresenter<S
     }
 
     @Override
-    public void onRequestSuggests(String keyword)
+    public void onSearchSuggest(String keyword)
     {
         clearCompositeDisposable();
 
@@ -168,11 +168,11 @@ public class StayOutboundSearchSuggestPresenter extends BaseExceptionPresenter<S
         {
             getViewInterface().setSuggestsVisible(false);
 
-            onSuggests(null);
+            onSuggestList(null);
         } else
         {
             addCompositeDisposable(mSuggestRemoteImpl.getSuggestsByStayOutBound(keyword)//
-                .delaySubscription(500, TimeUnit.MILLISECONDS).subscribe(suggests -> onSuggests(suggests), throwable -> onSuggests(null)));
+                .delaySubscription(500, TimeUnit.MILLISECONDS).subscribe(suggests -> onSuggestList(suggests), throwable -> onSuggestList(null)));
         }
     }
 
@@ -201,7 +201,7 @@ public class StayOutboundSearchSuggestPresenter extends BaseExceptionPresenter<S
         onBackClick();
     }
 
-    private void onSuggests(List<Suggest> suggestList)
+    private void onSuggestList(List<Suggest> suggestList)
     {
         getViewInterface().setProgressBarVisible(false);
 

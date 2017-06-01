@@ -4,6 +4,12 @@ import com.daily.base.util.DailyTextUtils;
 
 public class Suggest
 {
+    public static final String CATEGORY_AIRPORT = "airport";
+    public static final String CATEGORY_HOTEL = "hotel";
+    public static final String CATEGORY_POINT = "point";
+    public static final String CATEGORY_REGION = "region";
+    public static final String CATEGORY_STATION = "station";
+
     public long id;
     public String name;
     public String city;

@@ -68,8 +68,10 @@ public class SelectPeoplePresenter extends BaseExceptionPresenter<SelectPeopleAc
             mPeople = new People(People.DEFAULT_ADULTS, null);
         }
 
-        mPeople.numberOfAdults = intent.getIntExtra(SelectPeopleActivity.INTENT_EXTRA_DATA_NUMBER_OF_ADULTS, People.DEFAULT_ADULTS);
-        mPeople.setChildAgeList(intent.getIntegerArrayListExtra(SelectPeopleActivity.INTENT_EXTRA_DATA_CHILD_LIST));
+        int numberOfAdults = intent.getIntExtra(SelectPeopleActivity.INTENT_EXTRA_DATA_NUMBER_OF_ADULTS, People.DEFAULT_ADULTS);
+        ArrayList<Integer> childAgeList = intent.getIntegerArrayListExtra(SelectPeopleActivity.INTENT_EXTRA_DATA_CHILD_LIST);
+
+        setPeople(numberOfAdults, childAgeList);
 
         return true;
     }
@@ -142,10 +144,6 @@ public class SelectPeoplePresenter extends BaseExceptionPresenter<SelectPeopleAc
     @Override
     protected void onRefresh(boolean showProgress)
     {
-        if (getActivity().isFinishing() == true)
-        {
-            return;
-        }
 
     }
 
@@ -163,7 +161,17 @@ public class SelectPeoplePresenter extends BaseExceptionPresenter<SelectPeopleAc
             return;
         }
 
-        getViewInterface().setAdultCount(++mPeople.numberOfAdults, People.DEFAULT_ADULT_MIN_COUNT, People.DEFAULT_ADULT_MAX_COUNT);
+        int numberOfAdults = mPeople.numberOfAdults;
+
+        if (++numberOfAdults > People.DEFAULT_ADULT_MAX_COUNT)
+        {
+            unLockAll();
+            return;
+        }
+
+        setAdultCount(numberOfAdults);
+
+        getViewInterface().setAdultCount(numberOfAdults, People.DEFAULT_ADULT_MIN_COUNT, People.DEFAULT_ADULT_MAX_COUNT);
 
         unLockAll();
     }
@@ -176,7 +184,17 @@ public class SelectPeoplePresenter extends BaseExceptionPresenter<SelectPeopleAc
             return;
         }
 
-        getViewInterface().setAdultCount(--mPeople.numberOfAdults, People.DEFAULT_ADULT_MIN_COUNT, People.DEFAULT_ADULT_MAX_COUNT);
+        int numberOfAdults = mPeople.numberOfAdults;
+
+        if (--numberOfAdults < People.DEFAULT_ADULT_MIN_COUNT)
+        {
+            unLockAll();
+            return;
+        }
+
+        setAdultCount(numberOfAdults);
+
+        getViewInterface().setAdultCount(numberOfAdults, People.DEFAULT_ADULT_MIN_COUNT, People.DEFAULT_ADULT_MAX_COUNT);
 
         unLockAll();
     }
@@ -191,13 +209,24 @@ public class SelectPeoplePresenter extends BaseExceptionPresenter<SelectPeopleAc
 
         final int DEFAULT_CHILD_AGE = 0;
 
-        if (mPeople.getChildAgeList() == null)
+        ArrayList<Integer> childAgeList = mPeople.getChildAgeList();
+
+        if (childAgeList == null)
         {
-            mPeople.setChildAgeList(new ArrayList<>());
+            childAgeList = new ArrayList<>();
         }
 
-        mPeople.getChildAgeList().add(DEFAULT_CHILD_AGE);
-        getViewInterface().setChildAgeList(mPeople.getChildAgeList(), People.DEFAULT_CHILD_MIN_COUNT, People.DEFAULT_CHILD_MAX_COUNT);
+        if (childAgeList.size() + 1 > People.DEFAULT_CHILD_MAX_COUNT)
+        {
+            unLockAll();
+            return;
+        }
+
+        childAgeList.add(DEFAULT_CHILD_AGE);
+
+        setChildList(childAgeList);
+
+        getViewInterface().setChildAgeList(childAgeList, People.DEFAULT_CHILD_MIN_COUNT, People.DEFAULT_CHILD_MAX_COUNT);
 
         unLockAll();
     }
@@ -210,7 +239,23 @@ public class SelectPeoplePresenter extends BaseExceptionPresenter<SelectPeopleAc
             return;
         }
 
-        mPeople.getChildAgeList().remove(mPeople.getChildAgeList().size() - 1);
+        ArrayList<Integer> childAgeList = mPeople.getChildAgeList();
+
+        if (childAgeList == null)
+        {
+            childAgeList = new ArrayList<>();
+        }
+
+        if (childAgeList.size() - 1 < People.DEFAULT_CHILD_MIN_COUNT)
+        {
+            unLockAll();
+            return;
+        }
+
+        childAgeList.remove(childAgeList.size() - 1);
+
+        setChildList(childAgeList);
+
         getViewInterface().setChildAgeList(mPeople.getChildAgeList(), People.DEFAULT_CHILD_MIN_COUNT, People.DEFAULT_CHILD_MAX_COUNT);
 
         unLockAll();
@@ -219,40 +264,67 @@ public class SelectPeoplePresenter extends BaseExceptionPresenter<SelectPeopleAc
     @Override
     public void onSelectedChild1AgeClick(int agePosition)
     {
-        if (agePosition < 0 && mPeople.getChildAgeList().size() < 1)
+        if (agePosition < 0)
         {
             return;
         }
 
-        mPeople.getChildAgeList().set(0, agePosition);
+        ArrayList<Integer> childAgeList = mPeople.getChildAgeList();
 
-        getViewInterface().setChildAgeList(mPeople.getChildAgeList(), People.DEFAULT_CHILD_MIN_COUNT, People.DEFAULT_CHILD_MAX_COUNT);
+        if (childAgeList == null || childAgeList.size() < 1)
+        {
+            return;
+        }
+
+        childAgeList.set(0, agePosition);
+
+        setChildList(childAgeList);
+
+        getViewInterface().setChildAgeList(childAgeList, People.DEFAULT_CHILD_MIN_COUNT, People.DEFAULT_CHILD_MAX_COUNT);
     }
 
     @Override
     public void onSelectedChild2AgeClick(int agePosition)
     {
-        if (agePosition < 0 && mPeople.getChildAgeList().size() < 2)
+        if (agePosition < 0)
         {
             return;
         }
 
-        mPeople.getChildAgeList().set(1, agePosition);
+        ArrayList<Integer> childAgeList = mPeople.getChildAgeList();
 
-        getViewInterface().setChildAgeList(mPeople.getChildAgeList(), People.DEFAULT_CHILD_MIN_COUNT, People.DEFAULT_CHILD_MAX_COUNT);
+        if (childAgeList == null || childAgeList.size() < 2)
+        {
+            return;
+        }
+
+        childAgeList.set(1, agePosition);
+
+        setChildList(childAgeList);
+
+        getViewInterface().setChildAgeList(childAgeList, People.DEFAULT_CHILD_MIN_COUNT, People.DEFAULT_CHILD_MAX_COUNT);
     }
 
     @Override
     public void onSelectedChild3AgeClick(int agePosition)
     {
-        if (agePosition < 0 && mPeople.getChildAgeList().size() < 3)
+        if (agePosition < 0)
         {
             return;
         }
 
-        mPeople.getChildAgeList().set(2, agePosition);
+        ArrayList<Integer> childAgeList = mPeople.getChildAgeList();
 
-        getViewInterface().setChildAgeList(mPeople.getChildAgeList(), People.DEFAULT_CHILD_MIN_COUNT, People.DEFAULT_CHILD_MAX_COUNT);
+        if (childAgeList == null || childAgeList.size() < 3)
+        {
+            return;
+        }
+
+        childAgeList.set(2, agePosition);
+
+        setChildList(childAgeList);
+
+        getViewInterface().setChildAgeList(childAgeList, People.DEFAULT_CHILD_MIN_COUNT, People.DEFAULT_CHILD_MAX_COUNT);
     }
 
     @Override
@@ -275,5 +347,36 @@ public class SelectPeoplePresenter extends BaseExceptionPresenter<SelectPeopleAc
 
         setResult(Activity.RESULT_OK, intent);
         onBackClick();
+    }
+
+    private void setPeople(int numberOfAdults, ArrayList<Integer> childAgeList)
+    {
+        if (mPeople == null)
+        {
+            mPeople = new People(People.DEFAULT_ADULTS, null);
+        }
+
+        setAdultCount(numberOfAdults);
+        setChildList(childAgeList);
+    }
+
+    private void setAdultCount(int numberOfAdults)
+    {
+        if (mPeople == null)
+        {
+            mPeople = new People(People.DEFAULT_ADULTS, null);
+        }
+
+        mPeople.numberOfAdults = numberOfAdults;
+    }
+
+    private void setChildList(ArrayList<Integer> childAgeList)
+    {
+        if (mPeople == null)
+        {
+            mPeople = new People(People.DEFAULT_ADULTS, null);
+        }
+
+        mPeople.setChildAgeList(childAgeList);
     }
 }
