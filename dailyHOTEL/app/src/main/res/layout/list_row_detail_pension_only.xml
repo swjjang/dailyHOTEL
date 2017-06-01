@@ -17,7 +17,7 @@
         <com.daily.base.widget.DailyTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="14dp"
+            android:layout_marginTop="16dp"
             android:text="@string/label_stay_detail_pension_only_title"
             android:textColor="@color/default_text_c323232"
             android:textSize="13dp"/>
@@ -25,7 +25,7 @@
         <com.daily.base.widget.DailyTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="2dp"
+            android:layout_marginTop="3dp"
             android:text="@string/label_stay_detail_pension_only_description"
             android:textColor="@color/default_text_c929292"
             android:textSize="10dp"/>

@@ -972,26 +972,37 @@ public class StayCategoryNearByActivity extends BaseActivity
             mStayCategoryNearByCuration.setRadius(radius);
             refreshCurrentFragment(true);
 
-            String action;
-            if (radius > 5)
+            try
             {
-                action = AnalyticsManager.Action.NEARBY_DISTANCE_10; // 10km
-            } else if (radius > 3)
+                String action;
+                if (radius > 5)
+                {
+                    action = AnalyticsManager.Action.NEARBY_DISTANCE_10; // 10km
+                } else if (radius > 3)
+                {
+                    action = AnalyticsManager.Action.NEARBY_DISTANCE_5; // 5km
+                } else if (radius > 1)
+                {
+                    action = AnalyticsManager.Action.NEARBY_DISTANCE_3; // 3km
+                } else if (radius > 0.5)
+                {
+                    action = AnalyticsManager.Action.NEARBY_DISTANCE_1; // 1km
+                } else
+                {
+                    action = AnalyticsManager.Action.NEARBY_DISTANCE_05; // 0.5km
+                }
+
+                AnalyticsManager.getInstance(StayCategoryNearByActivity.this) //
+                    .recordEvent(AnalyticsManager.Category.NAVIGATION, action, mAddress, null);
+            } catch (Exception e)
             {
-                action = AnalyticsManager.Action.NEARBY_DISTANCE_5; // 5km
-            } else if (radius > 1)
-            {
-                action = AnalyticsManager.Action.NEARBY_DISTANCE_3; // 3km
-            } else if (radius > 0.5)
-            {
-                action = AnalyticsManager.Action.NEARBY_DISTANCE_1; // 1km
-            } else
-            {
-                action = AnalyticsManager.Action.NEARBY_DISTANCE_05; // 0.5km
+                if (Constants.DEBUG == true)
+                {
+                    ExLog.d(e.getMessage());
+                }
             }
 
-            AnalyticsManager.getInstance(StayCategoryNearByActivity.this) //
-                .recordEvent(AnalyticsManager.Category.NAVIGATION, action, mAddress, null);
+            refreshCurrentFragment(true);
         }
     };
 

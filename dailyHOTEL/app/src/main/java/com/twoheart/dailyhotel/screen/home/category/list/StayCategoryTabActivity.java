@@ -159,7 +159,7 @@ public class StayCategoryTabActivity extends PlaceMainActivity
     {
         super.onDestroy();
 
-        String label = StayCategoryTabActivity.this.getResources().getString(mDailyCategoryType.getNameResId());
+        String label = StayCategoryTabActivity.this.getResources().getString(mDailyCategoryType.getCodeResId());
 
         AnalyticsManager.getInstance(StayCategoryTabActivity.this).recordEvent( //
             AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.STAY_BACK_BUTTON_CLICK, label, null);

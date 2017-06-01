@@ -611,9 +611,10 @@ public class StayDetailListAdapter extends BaseAdapter
             viewGroup.removeAllViews();
             boolean hasRefundPolicy = false;
 
+            ViewGroup childGroup = null;
             for (DetailInformation information : detailInformationList)
             {
-                ViewGroup childGroup = (ViewGroup) layoutInflater.inflate(R.layout.list_row_detail05, viewGroup, false);
+                childGroup = (ViewGroup) layoutInflater.inflate(R.layout.list_row_detail05, viewGroup, false);
 
                 makeInformationLayout(layoutInflater, childGroup, information, hasNRD);
 
@@ -628,7 +629,7 @@ public class StayDetailListAdapter extends BaseAdapter
             // 서버에서 타이틀이 취소및 환불 규정이 없는 경우가 발생하는 경우가 있어서 관련 내용 처리
             if (hasNRD == true && hasRefundPolicy == false)
             {
-                ViewGroup childGroup = (ViewGroup) layoutInflater.inflate(R.layout.list_row_detail05, viewGroup, false);
+                childGroup = (ViewGroup) layoutInflater.inflate(R.layout.list_row_detail05, viewGroup, false);
 
                 DetailInformation detailInformation = new DetailInformation(mContext.getString(R.string.label_detail_cancellation_refund_policy), null);
 
@@ -643,8 +644,19 @@ public class StayDetailListAdapter extends BaseAdapter
                 || Stay.Grade.pension.name().equalsIgnoreCase(gradeString) == true)
             {
                 View pensionOnlyLayout = layoutInflater.inflate(R.layout.list_row_detail_pension_only, viewGroup, false);
-                pensionOnlyLayout.setTranslationY(0 - ScreenUtils.dpToPx(mContext, 6)); // 상위 뷰의 하단 마진이.. 20dp 임으로 상단으로 6만큼 이동하게 되어 하위 마진을 6만큼 빼줌
                 viewGroup.addView(pensionOnlyLayout);
+
+                if (childGroup != null)
+                {
+                    View lastContentView = childGroup.findViewById(R.id.contentsList);
+                    if (lastContentView != null)
+                    {
+                        LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) lastContentView.getLayoutParams();
+                        layoutParams.bottomMargin = layoutParams.bottomMargin - ScreenUtils.dpToPx(mContext, 14d);
+                        lastContentView.setLayoutParams(layoutParams);
+                    }
+                }
+
             }
         }
 
