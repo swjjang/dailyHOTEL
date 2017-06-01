@@ -544,7 +544,6 @@ public class StayCategoryNearByLayout extends BaseBlurLayout implements View.OnC
             position = 0; // 0.5km
         }
 
-        mDistanceFilterAdapter.setSelection(position);
         mDistanceFilterSpinner.setSelection(position);
     }
 

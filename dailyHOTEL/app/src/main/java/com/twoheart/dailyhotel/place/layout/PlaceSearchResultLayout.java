@@ -651,7 +651,6 @@ public abstract class PlaceSearchResultLayout extends BaseBlurLayout implements 
             position = 0; // 0.5km
         }
 
-        mDistanceFilterAdapter.setSelection(position);
         mDistanceFilterSpinner.setSelection(position);
     }
 
