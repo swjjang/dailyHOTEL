@@ -123,7 +123,7 @@ public class HomeCategoryRegionListActivity extends BaseActivity
             getResources().getString(R.string.label_select_area_daily_category_format, categoryName) //
             , R.drawable.navibar_ic_x, v ->
             {
-                String label = HomeCategoryRegionListActivity.this.getResources().getString(mDailyCategoryType.getNameResId());
+                String label = HomeCategoryRegionListActivity.this.getResources().getString(mDailyCategoryType.getCodeResId());
 
                 HomeCategoryRegionListActivity.this.finish();
 
@@ -179,7 +179,7 @@ public class HomeCategoryRegionListActivity extends BaseActivity
     {
         setResult(RESULT_CANCELED);
 
-        String label = HomeCategoryRegionListActivity.this.getResources().getString(mDailyCategoryType.getNameResId());
+        String label = HomeCategoryRegionListActivity.this.getResources().getString(mDailyCategoryType.getCodeResId());
 
         AnalyticsManager.getInstance(HomeCategoryRegionListActivity.this).recordEvent( //
             AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.LOCATION_LIST_CLOSE, label, null);
