@@ -91,9 +91,9 @@ public abstract class PlaceSearchResultActivity extends BaseActivity
 
         super.onCreate(savedInstanceState);
 
-        mPlaceSearchResultLayout = getPlaceSearchResultLayout(this);
-
         initIntent(getIntent());
+
+        mPlaceSearchResultLayout = getPlaceSearchResultLayout(this);
 
         setContentView(mPlaceSearchResultLayout.onCreateView(R.layout.activity_search_result));
 

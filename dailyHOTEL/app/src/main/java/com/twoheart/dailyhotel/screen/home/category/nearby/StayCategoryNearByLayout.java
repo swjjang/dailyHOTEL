@@ -233,7 +233,7 @@ public class StayCategoryNearByLayout extends BaseBlurLayout implements View.OnC
 
         changeDateView.setOnClickListener(v -> ((OnEventListener) mOnEventListener).onDateClick());
 
-        researchView.setOnClickListener(v -> ((OnEventListener) mOnEventListener).research(Activity.RESULT_CANCELED));
+        researchView.setVisibility(View.GONE);
 
         callTextView.setPaintFlags(callTextView.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
         callTextView.setOnClickListener(v -> ((OnEventListener) mOnEventListener).onShowCallDialog());

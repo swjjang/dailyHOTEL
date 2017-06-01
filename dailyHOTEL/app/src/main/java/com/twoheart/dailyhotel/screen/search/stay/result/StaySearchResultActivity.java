@@ -54,6 +54,7 @@ import retrofit2.Response;
 
 public class StaySearchResultActivity extends PlaceSearchResultActivity
 {
+    private boolean mIsShortcut;
     int mReceiveDataFlag; // 0 연동 전 , 1 데이터 리시브 상태, 2 로그 발송 상태
 
     String mInputText;
@@ -139,7 +140,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
     @Override
     protected PlaceSearchResultLayout getPlaceSearchResultLayout(Context context)
     {
-        return new StaySearchResultLayout(context, mOnEventListener);
+        return new StaySearchResultLayout(context, mIsShortcut == true ? false : true, mOnEventListener);
     }
 
     @Override
@@ -282,6 +283,11 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
             if (intent.hasExtra(INTENT_EXTRA_DATA_CALL_BY_SCREEN) == true)
             {
                 mCallByScreen = intent.getStringExtra(INTENT_EXTRA_DATA_CALL_BY_SCREEN);
+            }
+
+            if (AnalyticsManager.Screen.HOME.equalsIgnoreCase(mCallByScreen) == true)
+            {
+                mIsShortcut = true;
             }
 
             mStaySearchCuration.getCurationOption().setDefaultSortType(SortType.DISTANCE);
@@ -464,7 +470,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
 
             AnalyticsManager.getInstance(StaySearchResultActivity.this).recordScreen(StaySearchResultActivity.this, screen, null, params);
 
-            if (AnalyticsManager.Screen.HOME.equalsIgnoreCase(mCallByScreen) == true && mSearchType == SearchType.LOCATION)
+            if (mIsShortcut == true)
             {
                 AnalyticsManager.getInstance(StaySearchResultActivity.this) //
                     .recordScreen(StaySearchResultActivity.this, AnalyticsManager.Screen.STAY_LIST_SHORTCUT_NEARBY, null, params);
