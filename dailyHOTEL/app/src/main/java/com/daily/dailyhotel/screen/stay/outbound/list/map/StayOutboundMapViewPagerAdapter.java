@@ -118,10 +118,10 @@ public class StayOutboundMapViewPagerAdapter extends PagerAdapter
             {
                 if (throwable instanceof IOException == true)
                 {
-                    if (imageMap.bigUrl.equalsIgnoreCase(url) == true)
+                    if (url.equalsIgnoreCase(imageMap.bigUrl) == true)
                     {
                         imageMap.bigUrl = null;
-                    } else if (imageMap.mediumUrl.equalsIgnoreCase(url) == true)
+                    } else if (url.equalsIgnoreCase(imageMap.mediumUrl) == true)
                     {
                         imageMap.mediumUrl = null;
                     } else

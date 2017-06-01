@@ -8,13 +8,14 @@ import java.util.ArrayList;
 
 public class People
 {
-    public static final int DEFAULT_ADULT_MIN_COUNT = 1;
-    public static final int DEFAULT_ADULT_MAX_COUNT = 8;
+    public static final int ADULT_MIN_COUNT = 1;
+    public static final int ADULT_MAX_COUNT = 8;
 
-    public static final int DEFAULT_CHILD_MIN_COUNT = 0;
-    public static final int DEFAULT_CHILD_MAX_COUNT = 3;
+    public static final int CHILD_MIN_COUNT = 0;
+    public static final int CHILD_MAX_COUNT = 3;
 
     public static final int DEFAULT_ADULTS = 2;
+    public static final int DEFAULT_CHILD_AGE = 0;
 
     public int numberOfAdults;
     private ArrayList<Integer> mChildAgeList;

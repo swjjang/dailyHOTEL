@@ -79,7 +79,7 @@ public class SelectPeoplePresenter extends BaseExceptionPresenter<SelectPeopleAc
     @Override
     public void onPostCreate()
     {
-        getViewInterface().setPeople(mPeople, People.DEFAULT_ADULT_MIN_COUNT, People.DEFAULT_ADULT_MAX_COUNT, People.DEFAULT_CHILD_MIN_COUNT, People.DEFAULT_CHILD_MAX_COUNT);
+        getViewInterface().setPeople(mPeople, People.ADULT_MIN_COUNT, People.ADULT_MAX_COUNT, People.CHILD_MIN_COUNT, People.CHILD_MAX_COUNT);
     }
 
     @Override
@@ -163,7 +163,7 @@ public class SelectPeoplePresenter extends BaseExceptionPresenter<SelectPeopleAc
 
         int numberOfAdults = mPeople.numberOfAdults;
 
-        if (++numberOfAdults > People.DEFAULT_ADULT_MAX_COUNT)
+        if (++numberOfAdults > People.ADULT_MAX_COUNT)
         {
             unLockAll();
             return;
@@ -171,7 +171,7 @@ public class SelectPeoplePresenter extends BaseExceptionPresenter<SelectPeopleAc
 
         setAdultCount(numberOfAdults);
 
-        getViewInterface().setAdultCount(numberOfAdults, People.DEFAULT_ADULT_MIN_COUNT, People.DEFAULT_ADULT_MAX_COUNT);
+        getViewInterface().setAdultCount(numberOfAdults, People.ADULT_MIN_COUNT, People.ADULT_MAX_COUNT);
 
         unLockAll();
     }
@@ -186,7 +186,7 @@ public class SelectPeoplePresenter extends BaseExceptionPresenter<SelectPeopleAc
 
         int numberOfAdults = mPeople.numberOfAdults;
 
-        if (--numberOfAdults < People.DEFAULT_ADULT_MIN_COUNT)
+        if (--numberOfAdults < People.ADULT_MIN_COUNT)
         {
             unLockAll();
             return;
@@ -194,7 +194,7 @@ public class SelectPeoplePresenter extends BaseExceptionPresenter<SelectPeopleAc
 
         setAdultCount(numberOfAdults);
 
-        getViewInterface().setAdultCount(numberOfAdults, People.DEFAULT_ADULT_MIN_COUNT, People.DEFAULT_ADULT_MAX_COUNT);
+        getViewInterface().setAdultCount(numberOfAdults, People.ADULT_MIN_COUNT, People.ADULT_MAX_COUNT);
 
         unLockAll();
     }
@@ -207,8 +207,6 @@ public class SelectPeoplePresenter extends BaseExceptionPresenter<SelectPeopleAc
             return;
         }
 
-        final int DEFAULT_CHILD_AGE = 0;
-
         ArrayList<Integer> childAgeList = mPeople.getChildAgeList();
 
         if (childAgeList == null)
@@ -216,17 +214,17 @@ public class SelectPeoplePresenter extends BaseExceptionPresenter<SelectPeopleAc
             childAgeList = new ArrayList<>();
         }
 
-        if (childAgeList.size() + 1 > People.DEFAULT_CHILD_MAX_COUNT)
+        if (childAgeList.size() + 1 > People.CHILD_MAX_COUNT)
         {
             unLockAll();
             return;
         }
 
-        childAgeList.add(DEFAULT_CHILD_AGE);
+        childAgeList.add(People.DEFAULT_CHILD_AGE);
 
         setChildList(childAgeList);
 
-        getViewInterface().setChildAgeList(childAgeList, People.DEFAULT_CHILD_MIN_COUNT, People.DEFAULT_CHILD_MAX_COUNT);
+        getViewInterface().setChildAgeList(childAgeList, People.CHILD_MIN_COUNT, People.CHILD_MAX_COUNT);
 
         unLockAll();
     }
@@ -246,7 +244,7 @@ public class SelectPeoplePresenter extends BaseExceptionPresenter<SelectPeopleAc
             childAgeList = new ArrayList<>();
         }
 
-        if (childAgeList.size() - 1 < People.DEFAULT_CHILD_MIN_COUNT)
+        if (childAgeList.size() - 1 < People.CHILD_MIN_COUNT)
         {
             unLockAll();
             return;
@@ -256,7 +254,7 @@ public class SelectPeoplePresenter extends BaseExceptionPresenter<SelectPeopleAc
 
         setChildList(childAgeList);
 
-        getViewInterface().setChildAgeList(mPeople.getChildAgeList(), People.DEFAULT_CHILD_MIN_COUNT, People.DEFAULT_CHILD_MAX_COUNT);
+        getViewInterface().setChildAgeList(mPeople.getChildAgeList(), People.CHILD_MIN_COUNT, People.CHILD_MAX_COUNT);
 
         unLockAll();
     }
@@ -280,7 +278,7 @@ public class SelectPeoplePresenter extends BaseExceptionPresenter<SelectPeopleAc
 
         setChildList(childAgeList);
 
-        getViewInterface().setChildAgeList(childAgeList, People.DEFAULT_CHILD_MIN_COUNT, People.DEFAULT_CHILD_MAX_COUNT);
+        getViewInterface().setChildAgeList(childAgeList, People.CHILD_MIN_COUNT, People.CHILD_MAX_COUNT);
     }
 
     @Override
@@ -302,7 +300,7 @@ public class SelectPeoplePresenter extends BaseExceptionPresenter<SelectPeopleAc
 
         setChildList(childAgeList);
 
-        getViewInterface().setChildAgeList(childAgeList, People.DEFAULT_CHILD_MIN_COUNT, People.DEFAULT_CHILD_MAX_COUNT);
+        getViewInterface().setChildAgeList(childAgeList, People.CHILD_MIN_COUNT, People.CHILD_MAX_COUNT);
     }
 
     @Override
@@ -324,7 +322,7 @@ public class SelectPeoplePresenter extends BaseExceptionPresenter<SelectPeopleAc
 
         setChildList(childAgeList);
 
-        getViewInterface().setChildAgeList(childAgeList, People.DEFAULT_CHILD_MIN_COUNT, People.DEFAULT_CHILD_MAX_COUNT);
+        getViewInterface().setChildAgeList(childAgeList, People.CHILD_MIN_COUNT, People.CHILD_MAX_COUNT);
     }
 
     @Override

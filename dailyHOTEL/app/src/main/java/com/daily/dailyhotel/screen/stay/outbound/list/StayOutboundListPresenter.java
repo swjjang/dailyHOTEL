@@ -1,10 +1,12 @@
 package com.daily.dailyhotel.screen.stay.outbound.list;
 
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Location;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityOptionsCompat;
@@ -82,7 +84,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
 
     // 리스트 요청시에 다음이 있는지에 대한 인자들
     private String mCacheKey, mCacheLocation;
-    private boolean mMoreResultsAvailable;
+    private boolean mMoreResultsAvailable, mMoreEnabled;
 
     private ViewState mViewState = ViewState.LIST;
 
@@ -120,10 +122,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
         mStayOutboundRemoteImpl = new StayOutboundRemoteImpl(activity);
         mCommonRemoteImpl = new CommonRemoteImpl(activity);
 
-        // 기본 성인 2명, 아동 0명
-        onPeople(People.DEFAULT_ADULTS, null);
-
-        onFilter(null, -1);
+        setFilter(StayOutboundFilters.SortType.RECOMMENDATION, -1);
 
         setRefresh(true);
     }
@@ -150,7 +149,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
 
             if (suggestParcel != null)
             {
-                mSuggest = suggestParcel.getSuggest();
+                setSuggest(suggestParcel.getSuggest());
             }
 
             String checkInDateTime = intent.getStringExtra(StayOutboundListActivity.INTENT_EXTRA_DATA_CHECKIN);
@@ -161,7 +160,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
             int numberOfAdults = intent.getIntExtra(StayOutboundListActivity.INTENT_EXTRA_DATA_NUMBER_OF_ADULTS, 2);
             ArrayList<Integer> childAgeList = intent.getIntegerArrayListExtra(StayOutboundListActivity.INTENT_EXTRA_DATA_CHILD_LIST);
 
-            onPeople(numberOfAdults, childAgeList);
+            setPeople(numberOfAdults, childAgeList);
         } else if (intent.hasExtra(StayOutboundListActivity.INTENT_EXTRA_DATA_KEYWORD) == true)
         {
         } else
@@ -185,8 +184,8 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
             getViewInterface().setToolbarTitle(mSuggest.display);
         }
 
-        onStayBookDateTime(mStayBookDateTime);
-        onPeople(mPeople);
+        notifyStayBookDateTimeChanged();
+        notifyPeopleChanged();
     }
 
     @Override
@@ -290,7 +289,8 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
                             return;
                         }
 
-                        onCalendarDateTime(checkInDateTime, checkOutDateTime);
+                        setStayBookDateTime(checkInDateTime, checkOutDateTime);
+                        notifyStayBookDateTimeChanged();
                         setRefresh(true);
                     }
                 }
@@ -306,7 +306,8 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
                         int numberOfAdults = data.getIntExtra(SelectPeopleActivity.INTENT_EXTRA_DATA_NUMBER_OF_ADULTS, People.DEFAULT_ADULTS);
                         ArrayList<Integer> childAgeList = data.getIntegerArrayListExtra(SelectPeopleActivity.INTENT_EXTRA_DATA_CHILD_LIST);
 
-                        onPeople(numberOfAdults, childAgeList);
+                        setPeople(numberOfAdults, childAgeList);
+                        notifyPeopleChanged();
                         setRefresh(true);
                     }
                 }
@@ -323,7 +324,8 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
                         StayOutboundFilters.SortType sortType = StayOutboundFilters.SortType.valueOf(data.getStringExtra(StayOutboundFilterActivity.INTENT_EXTRA_DATA_SORT));
                         int rating = data.getIntExtra(StayOutboundFilterActivity.INTENT_EXTRA_DATA_RATING, -1);
 
-                        onFilter(sortType, rating);
+                        setFilter(sortType, rating);
+                        notifyFilterChanged();
 
                         if (sortType != null && sortType == StayOutboundFilters.SortType.DISTANCE)
                         {
@@ -332,22 +334,18 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
                                 @Override
                                 public void accept(@io.reactivex.annotations.NonNull Location location) throws Exception
                                 {
-                                    unLockAll();
-
-                                    if (mStayOutboundFilters != null && location != null)
-                                    {
-                                        mStayOutboundFilters.latitude = location.getLatitude();
-                                        mStayOutboundFilters.longitude = location.getLongitude();
-
-                                        setRefresh(true);
-                                    }
+                                    setFilter(StayOutboundFilters.SortType.DISTANCE, location.getLatitude(), location.getLongitude());
+                                    notifyFilterChanged();
+                                    setRefresh(true);
                                 }
                             }, new Consumer<Throwable>()
                             {
                                 @Override
                                 public void accept(@io.reactivex.annotations.NonNull Throwable throwable) throws Exception
                                 {
-                                    onFilter(null, -1);
+                                    setFilter(StayOutboundFilters.SortType.RECOMMENDATION, -1);
+                                    notifyFilterChanged();
+
                                     setRefresh(true);
                                 }
                             }));
@@ -391,24 +389,12 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
         setRefresh(false);
         screenLock(showProgress);
 
-        Observable<StayOutbounds> observable;
-
-        if (mSuggest.id == 0)
-        {
-            // 키워드 검색인 경우
-            unLockAll();
-            return;
-        } else
-        {
-            // Suggest 검색인 경우
-            observable = mStayOutboundRemoteImpl.getStayOutBoundList(mStayBookDateTime//
-                , mSuggest.id, mSuggest.categoryKey, mPeople, mStayOutboundFilters, mCacheKey, mCacheLocation);
-        }
-
-        addCompositeDisposable(Observable.zip(mCommonRemoteImpl.getCommonDateTime(), observable//
+        addCompositeDisposable(Observable.zip(mCommonRemoteImpl.getCommonDateTime()//
+            , mStayOutboundRemoteImpl.getStayOutBoundList(mStayBookDateTime, mSuggest.id, mSuggest.categoryKey//
+                , mPeople, mStayOutboundFilters, mCacheKey, mCacheLocation)//
             , (commonDateTime, stayOutbounds) ->
             {
-                onCommonDateTime(commonDateTime);
+                setCommonDateTime(commonDateTime);
 
                 return stayOutbounds;
             }).subscribe(stayOutbounds ->
@@ -424,7 +410,6 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
             {
                 // 리스트를 호출하다가 에러가 난 경우 처리 방안
                 // 검색 결과 없는 것으로
-
                 getViewInterface().setRefreshing(false);
                 getViewInterface().setErrorScreenVisible(true);
                 onHandleError(throwable);
@@ -564,6 +549,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
         unLockAll();
     }
 
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     @Override
     public void onStayClick(android.support.v4.util.Pair[] pair, StayOutbound stayOutbound)
     {
@@ -639,11 +625,29 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
     }
 
     @Override
-    public void onScrollList(int listSize, int lastVisibleItemPosition)
+    public synchronized void onScrollList(int listSize, int lastVisibleItemPosition)
     {
-        if (mMoreResultsAvailable == true && lastVisibleItemPosition > listSize / 3)
+        if (mMoreEnabled == true && mMoreResultsAvailable == true && lastVisibleItemPosition > listSize / 3)
         {
-            onAddList();
+            mMoreEnabled = false;
+
+            addCompositeDisposable(mStayOutboundRemoteImpl.getStayOutBoundList(mStayBookDateTime, mSuggest.id, mSuggest.categoryKey//
+                , mPeople, mStayOutboundFilters, mCacheKey, mCacheLocation).subscribe(stayOutbounds ->
+            {
+                onStayOutbounds(stayOutbounds);
+
+                getViewInterface().setRefreshing(false);
+                unLockAll();
+            }, new Consumer<Throwable>()
+            {
+                @Override
+                public void accept(Throwable throwable) throws Exception
+                {
+                    unLockAll();
+
+                    mMoreEnabled = true;
+                }
+            }));
         }
     }
 
@@ -773,7 +777,19 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
         onBackClick();
     }
 
-    private void onCommonDateTime(@NonNull CommonDateTime commonDateTime)
+    private void setPeople(int numberOfAdults, ArrayList<Integer> childAgeList)
+    {
+        if (mPeople == null)
+        {
+            mPeople = new People(People.DEFAULT_ADULTS, null);
+        }
+
+        mPeople.numberOfAdults = numberOfAdults;
+        mPeople.setChildAgeList(childAgeList);
+    }
+
+
+    private void setCommonDateTime(@NonNull CommonDateTime commonDateTime)
     {
         if (commonDateTime == null)
         {
@@ -781,6 +797,81 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
         }
 
         mCommonDateTime = commonDateTime;
+    }
+
+    /**
+     * @param checkInDateTime  ISO-8601
+     * @param checkOutDateTime ISO-8601
+     */
+    private void setStayBookDateTime(String checkInDateTime, String checkOutDateTime)
+    {
+        if (DailyTextUtils.isTextEmpty(checkInDateTime, checkOutDateTime) == true)
+        {
+            return;
+        }
+
+        if (mStayBookDateTime == null)
+        {
+            mStayBookDateTime = new StayBookDateTime();
+        }
+
+        try
+        {
+            mStayBookDateTime.setCheckInDateTime(checkInDateTime);
+            mStayBookDateTime.setCheckOutDateTime(checkOutDateTime);
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+        }
+    }
+
+    private void setSuggest(Suggest suggest)
+    {
+        mSuggest = suggest;
+    }
+
+    private void setFilter(StayOutboundFilters.SortType sortType, int rating)
+    {
+        if (mStayOutboundFilters == null)
+        {
+            mStayOutboundFilters = new StayOutboundFilters();
+        }
+
+        if (sortType == null)
+        {
+            mStayOutboundFilters.sortType = StayOutboundFilters.SortType.RECOMMENDATION;
+        } else
+        {
+            mStayOutboundFilters.sortType = sortType;
+        }
+
+        mStayOutboundFilters.rating = rating;
+    }
+
+    private void setFilter(StayOutboundFilters.SortType sortType, double latitude, double longitude)
+    {
+        if (mStayOutboundFilters == null)
+        {
+            mStayOutboundFilters = new StayOutboundFilters();
+        }
+
+        if (sortType == null)
+        {
+            mStayOutboundFilters.sortType = StayOutboundFilters.SortType.RECOMMENDATION;
+        } else
+        {
+            mStayOutboundFilters.sortType = sortType;
+        }
+
+        if (sortType == StayOutboundFilters.SortType.DISTANCE)
+        {
+            mStayOutboundFilters.latitude = latitude;
+            mStayOutboundFilters.longitude = longitude;
+        } else
+        {
+            mStayOutboundFilters.latitude = 0;
+            mStayOutboundFilters.longitude = 0;
+        }
     }
 
     private void onStayOutbounds(StayOutbounds stayOutbounds)
@@ -844,6 +935,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
                 mCacheKey = stayOutbounds.cacheKey;
                 mCacheLocation = stayOutbounds.cacheLocation;
                 mMoreResultsAvailable = stayOutbounds.moreResultsAvailable;
+                mMoreEnabled = mMoreResultsAvailable;
 
                 return listItemList;
             }
@@ -865,18 +957,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
         }));
     }
 
-    private void onCalendarDateTime(String checkInDateTime, String checkOutDateTime)
-    {
-        if (DailyTextUtils.isTextEmpty(checkInDateTime, checkOutDateTime) == true)
-        {
-            return;
-        }
-
-        setStayBookDateTime(checkInDateTime, checkOutDateTime);
-        onStayBookDateTime(mStayBookDateTime);
-    }
-
-    private void onPeople(People people)
+    private void notifyPeopleChanged()
     {
         if (mPeople == null)
         {
@@ -886,45 +967,11 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
         getViewInterface().setPeopleText(mPeople.toShortString(getActivity()));
     }
 
-    private void onPeople(int numberOfAdults, ArrayList<Integer> childAgeList)
-    {
-        setPeople(numberOfAdults, childAgeList);
-
-        onPeople(mPeople);
-    }
-
-    private void setPeople(int numberOfAdults, ArrayList<Integer> childAgeList)
-    {
-        if (mPeople == null)
-        {
-            mPeople = new People(People.DEFAULT_ADULTS, null);
-        }
-
-        mPeople.numberOfAdults = numberOfAdults;
-        mPeople.setChildAgeList(childAgeList);
-    }
-
-    private void onFilter(StayOutboundFilters.SortType sortType, int rating)
+    private void notifyFilterChanged()
     {
         if (mStayOutboundFilters == null)
         {
-            mStayOutboundFilters = new StayOutboundFilters();
-        }
-
-        if (sortType == null)
-        {
-            mStayOutboundFilters.sortType = StayOutboundFilters.SortType.RECOMMENDATION;
-        } else
-        {
-            mStayOutboundFilters.sortType = sortType;
-        }
-
-        mStayOutboundFilters.rating = rating;
-
-        if (sortType != StayOutboundFilters.SortType.DISTANCE)
-        {
-            mStayOutboundFilters.latitude = 0;
-            mStayOutboundFilters.longitude = 0;
+            return;
         }
 
         if (mStayOutboundFilters.sortType == StayOutboundFilters.SortType.RECOMMENDATION && mStayOutboundFilters.rating == -1)
@@ -936,35 +983,9 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
         }
     }
 
-    /**
-     * @param checkInDateTime  ISO-8601
-     * @param checkOutDateTime ISO-8601
-     */
-    private void setStayBookDateTime(String checkInDateTime, String checkOutDateTime)
+    private void notifyStayBookDateTimeChanged()
     {
-        if (DailyTextUtils.isTextEmpty(checkInDateTime, checkOutDateTime) == true)
-        {
-            return;
-        }
-
         if (mStayBookDateTime == null)
-        {
-            mStayBookDateTime = new StayBookDateTime();
-        }
-
-        try
-        {
-            mStayBookDateTime.setCheckInDateTime(checkInDateTime);
-            mStayBookDateTime.setCheckOutDateTime(checkOutDateTime);
-        } catch (Exception e)
-        {
-            ExLog.e(e.toString());
-        }
-    }
-
-    private void onStayBookDateTime(@NonNull StayBookDateTime stayBookDateTime)
-    {
-        if (stayBookDateTime == null)
         {
             return;
         }
@@ -972,50 +993,12 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
         try
         {
             getViewInterface().setCalendarText(String.format(Locale.KOREA, "%s - %s"//
-                , stayBookDateTime.getCheckInDateTime("M.d(EEE)")//
-                , stayBookDateTime.getCheckOutDateTime("M.d(EEE)")));
+                , mStayBookDateTime.getCheckInDateTime("M.d(EEE)")//
+                , mStayBookDateTime.getCheckOutDateTime("M.d(EEE)")));
         } catch (Exception e)
         {
             ExLog.e(e.toString());
         }
-    }
-
-    private void onAddList()
-    {
-        if (getActivity().isFinishing() == true || lock() == true)
-        {
-            return;
-        }
-
-        Observable<StayOutbounds> observable;
-
-        if (mSuggest.id == 0)
-        {
-            // 키워드 검색인 경우
-            unLockAll();
-            return;
-        } else
-        {
-            // Suggest 검색인 경우
-            observable = mStayOutboundRemoteImpl.getStayOutBoundList(mStayBookDateTime//
-                , mSuggest.id, mSuggest.categoryKey, mPeople, mStayOutboundFilters, mCacheKey, mCacheLocation);
-        }
-
-        addCompositeDisposable(observable.subscribe(stayOutbounds ->
-        {
-            onStayOutbounds(stayOutbounds);
-            unLockAll();
-        }, new Consumer<Throwable>()
-        {
-            @Override
-            public void accept(Throwable throwable) throws Exception
-            {
-                // 리스트를 호출하다가 에러가 난 경우 처리 방안
-                // 검색 결과 없는 것으로
-
-                onHandleError(throwable);
-            }
-        }));
     }
 
     /**
@@ -1025,6 +1008,8 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
     {
         mCacheKey = null;
         mCacheLocation = null;
+        mMoreResultsAvailable = false;
+        mMoreEnabled = false;
 
         if (mStayOutboundList != null)
         {
