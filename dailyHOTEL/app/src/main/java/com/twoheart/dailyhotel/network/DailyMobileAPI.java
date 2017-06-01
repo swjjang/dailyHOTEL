@@ -524,17 +524,6 @@ public class DailyMobileAPI implements IDailyNetwork
     }
 
     @Override
-    public void requestEventPageUrl(String tag, int eventIndex, String store, Object listener)
-    {
-        final String URL = Constants.UNENCRYPTED_URL ? "api/daily/event/page"//
-            : "MTckNTUkNTUkMTYkMzEkNzQkNjQkNjIkNjMkODckNzkkNjkkMzckNjQkNjYkNDAk$N0I2N0FBQ0QwQ0U1KQLzI5NDk0REE5NRzM1N0LM4FRkNFQUI5MzQ5NkYyMUGQMyNUPYADBSCRKDU0NzZBMKDDM2QTZDM0UQwMTdDNQ==$";
-
-        ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestEventPageUrl(Crypto.getUrlDecoderEx(URL), eventIndex, store);
-        executorCallbackCall.setTag(tag);
-        executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
-    }
-
-    @Override
     public void requestDailyUserVerification(String tag, String phone, boolean force, Object listener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/v3/users/myself/phones/verification/start"//

@@ -219,28 +219,24 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
         {
             screenLock(false);
 
-            Observable<Boolean> observable = getViewInterface().getSharedElementTransition();
-            Disposable disposable = observable.delay(2, TimeUnit.SECONDS).subscribe(new Consumer<Boolean>()
+            Disposable disposable = Observable.interval(2, TimeUnit.MICROSECONDS).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Long>()
             {
                 @Override
-                public void accept(@io.reactivex.annotations.NonNull Boolean aBoolean) throws Exception
+                public void accept(@io.reactivex.annotations.NonNull Long aLong) throws Exception
                 {
                     screenLock(true);
                 }
             });
 
-            addCompositeDisposable(Observable.zip(observable//
+            addCompositeDisposable(disposable);
+
+            addCompositeDisposable(Observable.zip(getViewInterface().getSharedElementTransition()//
                 , mCommonRemoteImpl.getCommonDateTime(), mStayOutboundRemoteImpl.getStayOutBoundDetail(mStayIndex, mStayBookDateTime, mPeople)//
                 , new Function3<Boolean, CommonDateTime, StayOutboundDetail, StayOutboundDetail>()
                 {
                     @Override
                     public StayOutboundDetail apply(@io.reactivex.annotations.NonNull Boolean aBoolean, @io.reactivex.annotations.NonNull CommonDateTime commonDateTime, @io.reactivex.annotations.NonNull StayOutboundDetail stayOutboundDetail) throws Exception
                     {
-                        if (disposable != null && disposable.isDisposed() == false)
-                        {
-                            disposable.dispose();
-                        }
-
                         setCommonDateTime(commonDateTime);
                         return stayOutboundDetail;
                     }
@@ -250,6 +246,11 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
                 public void accept(@io.reactivex.annotations.NonNull StayOutboundDetail stayOutboundDetail) throws Exception
                 {
                     onStayOutboundDetail(stayOutboundDetail);
+
+                    if (disposable != null && disposable.isDisposed() == false)
+                    {
+                        disposable.dispose();
+                    }
 
                     unLockAll();
                 }
