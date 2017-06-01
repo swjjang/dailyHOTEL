@@ -6,14 +6,18 @@ import android.graphics.PorterDuff;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
+import android.text.InputFilter;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.TextWatcher;
 import android.text.style.StyleSpan;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.TextView;
 
 import com.daily.base.BaseActivity;
 import com.daily.base.BaseDialogView;
@@ -27,6 +31,7 @@ import com.twoheart.dailyhotel.databinding.ActivityStayOutboundSearchSuggestData
 import com.twoheart.dailyhotel.databinding.ListRowStayOutboundSuggestEntryDataBinding;
 import com.twoheart.dailyhotel.databinding.ListRowStayOutboundSuggestTitleDataBinding;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
+import com.twoheart.dailyhotel.util.StringFilter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,6 +62,33 @@ public class StayOutboundSearchSuggestView extends BaseDialogView<StayOutboundSe
         {
             return;
         }
+
+        StringFilter stringFilter = new StringFilter(getContext());
+        InputFilter[] allowSearchFilter = new InputFilter[2];
+        allowSearchFilter[0] = stringFilter.allowSearchFilter;
+        allowSearchFilter[1] = new InputFilter.LengthFilter(20);
+
+        viewDataBinding.keywordEditText.setFilters(allowSearchFilter);
+        viewDataBinding.keywordEditText.setImeOptions(EditorInfo.IME_ACTION_SEARCH);
+        viewDataBinding.keywordEditText.setOnEditorActionListener(new TextView.OnEditorActionListener()
+        {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event)
+            {
+                switch (actionId)
+                {
+                    case EditorInfo.IME_ACTION_SEARCH:
+                        if (DailyTextUtils.isTextEmpty(v.getText().toString()) == false)
+                        {
+                            getEventListener().onSearchSuggest(v.getText().toString());
+                        }
+                        return true;
+
+                    default:
+                        return false;
+                }
+            }
+        });
 
         viewDataBinding.backImageView.setOnClickListener(this);
         viewDataBinding.keywordEditText.addTextChangedListener(mTextWatcher);
