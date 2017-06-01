@@ -42,7 +42,7 @@ public class GourmetMapViewPagerAdapter extends PlaceMapViewPagerAdapter
 
         PlaceViewItem item = mPlaceViewItemList.get(position);
 
-        makeLayout(view, item.<Gourmet>getItem());
+        makeLayout(view, item.getItem());
 
         container.addView(view, 0);
 

@@ -369,7 +369,7 @@ public class StayPreviewActivity extends BaseActivity
                     name += "님이";
                 }
 
-                StayDetail stayDetail = (StayDetail) mPlaceDetail;
+                StayDetail stayDetail = mPlaceDetail;
 
                 if (stayDetail == null)
                 {
@@ -387,7 +387,7 @@ public class StayPreviewActivity extends BaseActivity
                     , stayDetailParams.address//
                     , stayDetail.index//
                     , stayDetailParams.getImageList().get(0).getImageUrl()//
-                    , (StayBookingDay) mPlaceBookingDay);
+                    , mPlaceBookingDay);
 
                 StayPreviewActivity.this.finish();
             } catch (Exception e)

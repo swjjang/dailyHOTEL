@@ -592,7 +592,7 @@ public class PlaceReviewLayout extends BaseLayout
                     reviewViewHolder.reviewTextView.setText(placeReview.comment.substring(0, reviewViewHolder.reviewTextView.getLayout().getLineEnd(MAX_LINE - 1)));
                     reviewViewHolder.reviewTextView.measure(widthMeasureSpec, heightMeasureSpec);
 
-                    final String expandText = "...  더 읽어보기";
+                    final String expandText = "…  더 읽어보기";
 
                     StaticLayout layout = (StaticLayout) reviewViewHolder.reviewTextView.getLayout();
                     int lineStartIndex = reviewViewHolder.reviewTextView.getLayout().getLineStart(MAX_LINE - 1);
@@ -605,7 +605,7 @@ public class PlaceReviewLayout extends BaseLayout
 
                     int count = paint.breakText(text, true, textViewWidth - moreReadWidth, null);
 
-                    reviewViewHolder.reviewTextView.setText(placeReview.comment.substring(0, lineStartIndex + count) + "...");
+                    reviewViewHolder.reviewTextView.setText(placeReview.comment.substring(0, lineStartIndex + count) + "…");
                     reviewViewHolder.moreReadTextView.setVisibility(View.VISIBLE);
                     reviewViewHolder.moreReadTextView.setOnClickListener(new View.OnClickListener()
                     {

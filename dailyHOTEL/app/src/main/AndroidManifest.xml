@@ -143,9 +143,13 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait">
 
-            <data
-                android:host="internal.dailyhotel.co.kr"
-                android:scheme="dailyhotel"/>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data
+                    android:host="internal.dailyhotel.co.kr"
+                    android:scheme="dailyhotel"/>
+            </intent-filter>
         </activity>
         <activity
             android:name=".screen.hotel.list.StayMainActivity"
@@ -235,8 +239,8 @@
             android:name=".screen.common.TrueVRActivity"
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
             android:launchMode="singleTop"
-            android:theme="@style/Theme.AppCompat.Fullscreen"
-            android:screenOrientation="landscape"/>
+            android:screenOrientation="landscape"
+            android:theme="@style/Theme.AppCompat.Fullscreen"/>
         <activity
             android:name=".screen.information.LifeStyleActivity"
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"

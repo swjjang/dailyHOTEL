@@ -1,6 +1,6 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <style name="TransDialog">
+    <style name="TransBaseDialog" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:windowFrame">@null</item>
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:windowIsFloating">true</item>

@@ -514,7 +514,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
     @Override
     protected void requestAnalyticsByCanceled()
     {
-        if (AnalyticsManager.Screen.HOME == mCallByScreen && SearchType.LOCATION == mSearchType)
+        if (AnalyticsManager.Screen.HOME.equalsIgnoreCase(mCallByScreen) == true && SearchType.LOCATION == mSearchType)
         {
             AnalyticsManager.getInstance(this).recordEvent( //
                 AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.STAY_BACK_BUTTON_CLICK //

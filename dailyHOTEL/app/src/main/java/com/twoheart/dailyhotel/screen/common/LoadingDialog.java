@@ -55,7 +55,7 @@ public class LoadingDialog
     {
         mActivity = activity;
 
-        mDialog = new Dialog(activity, R.style.TransDialog);
+        mDialog = new Dialog(activity, R.style.TransBaseDialog);
         mProgressBar = new ProgressBar(activity);
         mProgressBar.getIndeterminateDrawable().setColorFilter(activity.getResources().getColor(R.color.probressbar_default), PorterDuff.Mode.SRC_IN);
         LayoutParams params = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
