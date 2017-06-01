@@ -41,6 +41,7 @@ import com.twoheart.dailyhotel.util.Crypto;
 
 import org.json.JSONObject;
 
+import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

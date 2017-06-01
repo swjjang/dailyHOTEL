@@ -31,4 +31,8 @@ public interface StayOutboundPaymentInterface extends BaseDialogViewInterface
     void setPaymentTypeEnabled(StayOutboundPayment.PaymentType paymentType, boolean enabled);
 
     void setPaymentType(StayOutboundPayment.PaymentType paymentType);
+
+    void setBonusEnabled(boolean enabled);
+
+    void setBonusSelected(boolean selected);
 }

@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.text.Spannable;
 import android.text.SpannableString;
+import android.view.View;
 
 import com.daily.base.BaseAnalyticsInterface;
 import com.daily.base.util.DailyTextUtils;
@@ -58,6 +59,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
     private Card mSelectedCard;
     private Guest mGuest;
     private StayOutboundPayment.PaymentType mPaymentType;
+    private boolean mBonusSelected;
 
     public interface StayOutboundPaymentAnalyticsInterface extends BaseAnalyticsInterface
     {
@@ -143,7 +145,10 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
         // 리모트 컨피그에 있는 결제 타입
         checkAvailablePaymentType();
 
+        setBonusSelected(false);
 
+        notifyBonusSelectedChanged();
+        notifyBonusEnabledChanged();
     }
 
     @Override
@@ -321,6 +326,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
                 onBookingInformation(mStayOutboundPayment, mStayBookDateTime);
 
                 notifyGuestInformationChanged();
+                notifyBonusEnabledChanged();
                 notifyPaymentTypeChanged();
                 notifyEasyCardChanged();
                 notifyStayOutboundPaymentChanged();
@@ -370,7 +376,63 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
     @Override
     public void onBonusClick(boolean enabled)
     {
+        if (mGuest == null || mStayBookDateTime == null || lock() == true)
+        {
+            return;
+        }
 
+        if (enabled == true)
+        {
+            int discountPrice = mGuest.bonus;
+            int paymentPrice = mStayOutboundPayment.totalPrice;
+
+            if (discountPrice <= 0)
+            {
+                unLockAll();
+                return;
+            }
+
+            setBonusSelected(true);
+            notifyBonusSelectedChanged();
+
+            if (discountPrice < mStayOutboundPayment.totalPrice)
+            {
+                paymentPrice = mStayOutboundPayment.totalPrice - discountPrice;
+            } else
+            {
+                paymentPrice = 0;
+                discountPrice = mStayOutboundPayment.totalPrice;
+            }
+
+            try
+            {
+                setStayOutboundPayment(discountPrice, paymentPrice);
+
+                getViewInterface().setStayOutboundPayment(mGuest.bonus, mStayBookDateTime.getNights()//
+                    , mStayOutboundPayment.totalPrice, discountPrice, paymentPrice, mStayOutboundPayment.feeTotalAmountUsd);
+            } catch (Exception e)
+            {
+                ExLog.d(e.toString());
+            }
+        } else
+        {
+            // 적립금 삭제
+            getViewInterface().showSimpleDialog(null, getString(R.string.message_booking_cancel_bonus), getString(R.string.dialog_btn_text_yes), //
+                getString(R.string.dialog_btn_text_no), new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        setBonusSelected(false);
+                        setStayOutboundPayment(0, mStayOutboundPayment.totalPrice);
+
+                        notifyBonusSelectedChanged();
+                        notifyStayOutboundPaymentChanged();
+                    }
+                }, null);
+        }
+
+        unLockAll();
     }
 
     @Override
@@ -493,6 +555,17 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
         mStayOutboundPayment = stayOutboundPayment;
     }
 
+    private void setStayOutboundPayment(int discountPrice, int paymentPrice)
+    {
+        if (mStayOutboundPayment == null)
+        {
+            return;
+        }
+
+        mStayOutboundPayment.discountPrice = discountPrice;
+        mStayOutboundPayment.paymentPrice = paymentPrice;
+    }
+
     private void setGuestInformation(UserInformation userInformation)
     {
         if (userInformation == null)
@@ -589,6 +662,11 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
         }
     }
 
+    private void setBonusSelected(boolean selected)
+    {
+        mBonusSelected = selected;
+    }
+
     private void setSelectCard(String cardName, String cardNumber, String cardBillingKey, String cardCd)
     {
         if (DailyTextUtils.isTextEmpty(cardName, cardNumber, cardBillingKey, cardCd) == true)
@@ -640,6 +718,22 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
         }
 
         getViewInterface().setPaymentType(mPaymentType);
+    }
+
+    private void notifyBonusEnabledChanged()
+    {
+        if (mGuest == null)
+        {
+            getViewInterface().setBonusEnabled(false);
+        } else
+        {
+            getViewInterface().setBonusEnabled(mGuest.bonus > 0);
+        }
+    }
+
+    private void notifyBonusSelectedChanged()
+    {
+        getViewInterface().setBonusSelected(mBonusSelected);
     }
 
     private Card getSelectedCard(List<Card> cardList)

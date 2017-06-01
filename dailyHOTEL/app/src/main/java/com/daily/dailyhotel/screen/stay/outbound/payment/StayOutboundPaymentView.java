@@ -17,7 +17,6 @@ import com.daily.base.util.DailyTextUtils;
 import com.daily.dailyhotel.entity.Card;
 import com.daily.dailyhotel.entity.People;
 import com.daily.dailyhotel.entity.StayOutboundPayment;
-import com.daily.dailyhotel.entity.UserInformation;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ActivityStayOutboundPaymentDataBinding;
 import com.twoheart.dailyhotel.databinding.LayoutStayOutboundPaymentBookingDataBinding;
@@ -169,7 +168,7 @@ public class StayOutboundPaymentView extends BaseDialogView<StayOutboundPaymentV
             return;
         }
 
-        setBonus(bonus);
+        setBonus(bonus, discountPrice);
 
         if (nights > 1)
         {
@@ -181,7 +180,20 @@ public class StayOutboundPaymentView extends BaseDialogView<StayOutboundPaymentV
         }
 
         mDiscountDataBinding.originalPriceTextView.setText(DailyTextUtils.getPriceFormat(getContext(), totalPrice, false));
-        mDiscountDataBinding.discountPriceTextView.setText("-" + DailyTextUtils.getPriceFormat(getContext(), discountPrice, false));
+
+        if (discountPrice < 0)
+        {
+            discountPrice = 0;
+        }
+
+        if (discountPrice == 0)
+        {
+            mDiscountDataBinding.discountPriceTextView.setText(DailyTextUtils.getPriceFormat(getContext(), discountPrice, false));
+        } else
+        {
+            mDiscountDataBinding.discountPriceTextView.setText("-" + DailyTextUtils.getPriceFormat(getContext(), discountPrice, false));
+        }
+
         mDiscountDataBinding.totalPaymentPriceTextView.setText(DailyTextUtils.getPriceFormat(getContext(), paymentPrice, false));
 
         if (taxPrice > 0)
@@ -326,6 +338,46 @@ public class StayOutboundPaymentView extends BaseDialogView<StayOutboundPaymentV
         }
     }
 
+    @Override
+    public void setBonusEnabled(boolean enabled)
+    {
+        mDiscountDataBinding.bonusRadioButton.setEnabled(enabled);
+        mDiscountDataBinding.bonusLayout.setEnabled(enabled);
+        mDiscountDataBinding.usedBonusLayout.setEnabled(enabled);
+    }
+
+    @Override
+    public void setBonusSelected(boolean selected)
+    {
+        if (getViewDataBinding() == null || mDiscountDataBinding == null)
+        {
+            return;
+        }
+
+        //selected가 true enabled가 false일수는 없다.
+        if (mDiscountDataBinding.bonusLayout.isEnabled() == false)
+        {
+            return;
+        }
+
+        if (selected == true)
+        {
+            mDiscountDataBinding.bonusRadioButton.setSelected(true);
+            mDiscountDataBinding.bonusLayout.setSelected(true);
+            mDiscountDataBinding.bonusLayout.setOnClickListener(null);
+
+            mDiscountDataBinding.usedBonusLayout.setOnClickListener(this);
+            mDiscountDataBinding.usedBonusLayout.setSelected(true);
+        } else
+        {
+            mDiscountDataBinding.bonusRadioButton.setSelected(false);
+            mDiscountDataBinding.bonusLayout.setSelected(false);
+            mDiscountDataBinding.bonusLayout.setOnClickListener(this);
+
+            mDiscountDataBinding.usedBonusLayout.setOnClickListener(this);
+            mDiscountDataBinding.usedBonusLayout.setSelected(false);
+        }
+    }
 
     @Override
     public void onClick(View v)
@@ -364,6 +416,14 @@ public class StayOutboundPaymentView extends BaseDialogView<StayOutboundPaymentV
 
             case R.id.phoneLayout:
                 getEventListener().onPaymentTypeClick(StayOutboundPayment.PaymentType.PHONE_PAY);
+                break;
+
+            case R.id.usedBonusLayout:
+                getEventListener().onBonusClick(mDiscountDataBinding.bonusRadioButton.isSelected() == false);
+                break;
+
+            case R.id.bonusLayout:
+                getEventListener().onBonusClick(true);
                 break;
         }
     }
@@ -434,7 +494,8 @@ public class StayOutboundPaymentView extends BaseDialogView<StayOutboundPaymentV
         mDiscountDataBinding = DataBindingUtil.inflate(LayoutInflater.from(context)//
             , R.layout.layout_stay_outbound_payment_discount_data, viewGroup, true);
 
-
+        mDiscountDataBinding.bonusLayout.setOnClickListener(this);
+        mDiscountDataBinding.usedBonusLayout.setOnClickListener(this);
     }
 
     private void setPaymentLayout(Context context, ViewGroup viewGroup)
@@ -480,7 +541,7 @@ public class StayOutboundPaymentView extends BaseDialogView<StayOutboundPaymentV
         mButtonDataBinding.doPaymentView.setOnClickListener(this);
     }
 
-    private void setBonus(int bonus)
+    private void setBonus(int bonus, int discountPrice)
     {
         if (getViewDataBinding() == null || mDiscountDataBinding == null)
         {
@@ -502,6 +563,14 @@ public class StayOutboundPaymentView extends BaseDialogView<StayOutboundPaymentV
         } else
         {
             mDiscountDataBinding.bonusTextView.setText(text);
+        }
+
+        if (discountPrice > 0)
+        {
+            mDiscountDataBinding.usedBonusTextView.setText(DailyTextUtils.getPriceFormat(getContext(), discountPrice, false));
+        } else
+        {
+            mDiscountDataBinding.usedBonusTextView.setText(R.string.label_booking_used_bonus);
         }
     }
 

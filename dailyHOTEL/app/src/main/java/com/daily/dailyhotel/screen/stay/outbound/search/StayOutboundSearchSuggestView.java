@@ -63,12 +63,6 @@ public class StayOutboundSearchSuggestView extends BaseDialogView<StayOutboundSe
             return;
         }
 
-        StringFilter stringFilter = new StringFilter(getContext());
-        InputFilter[] allowSearchFilter = new InputFilter[2];
-        allowSearchFilter[0] = stringFilter.allowSearchFilter;
-        allowSearchFilter[1] = new InputFilter.LengthFilter(20);
-
-        viewDataBinding.keywordEditText.setFilters(allowSearchFilter);
         viewDataBinding.keywordEditText.setImeOptions(EditorInfo.IME_ACTION_SEARCH);
         viewDataBinding.keywordEditText.setOnEditorActionListener(new TextView.OnEditorActionListener()
         {
