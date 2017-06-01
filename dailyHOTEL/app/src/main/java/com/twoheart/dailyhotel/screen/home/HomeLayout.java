@@ -583,7 +583,7 @@ public class HomeLayout extends BaseBlurLayout
 
     private void initNestedScrollLayout(View view)
     {
-        mSk = ScreenUtils.dpToPx(mContext, 20);
+        mSkipScrollAnimationGapValue = ScreenUtils.dpToPx(mContext, 20);
 
         mDailyHomeScrollView = (DailyHomeScrollView) view.findViewById(R.id.nestedScrollView);
         mDailyHomeScrollView.setOverScrollMode(View.OVER_SCROLL_NEVER);
@@ -1425,7 +1425,7 @@ public class HomeLayout extends BaseBlurLayout
             {
                 // show animation
                 setScrollButtonLayoutAnimation(View.VISIBLE);
-            } else if (scrollY > mEventImageHeight - ScreenUtils.dpToPx(mContext, 20) && scrollY < mEventImageHeight)
+            } else if (scrollY > mEventImageHeight - mSkipScrollAnimationGapValue && scrollY < mEventImageHeight)
             {
                 // hide animation
                 setScrollButtonLayoutAnimation(View.GONE);
