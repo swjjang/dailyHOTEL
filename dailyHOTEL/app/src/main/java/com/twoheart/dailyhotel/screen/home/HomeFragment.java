@@ -165,8 +165,6 @@ public class HomeFragment extends BaseMenuNavigationFragment
         } else
         {
             refreshList(true);
-
-            sendHomeScreenAnalytics();
         }
     }
 
@@ -838,6 +836,8 @@ public class HomeFragment extends BaseMenuNavigationFragment
         } else
         {
             requestAllData(isShowLockUi);
+
+            sendHomeScreenAnalytics();
         }
     }
 
