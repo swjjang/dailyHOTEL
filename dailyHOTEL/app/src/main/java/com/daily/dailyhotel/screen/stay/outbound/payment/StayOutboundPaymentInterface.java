@@ -22,7 +22,7 @@ public interface StayOutboundPaymentInterface extends BaseDialogViewInterface
 
     void setStayOutboundPayment(int bonus, int nights, int totalPrice, int discountPrice, int paymentPrice, double taxPrice);
 
-    void setSimpleCard(Card card);
+    void setEasyCard(Card card);
 
     void setRefundDescriptionList(List<String> refundDescriptionList);
 

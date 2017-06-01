@@ -26,7 +26,6 @@ import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayOutboundDetail;
 import com.daily.dailyhotel.entity.StayOutboundRoom;
 import com.daily.dailyhotel.entity.User;
-import com.daily.dailyhotel.repository.local.ConfigLocalImpl;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
 import com.daily.dailyhotel.repository.remote.ProfileRemoteImpl;
 import com.daily.dailyhotel.repository.remote.StayOutboundRemoteImpl;
@@ -139,6 +138,8 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
         setPeople(People.DEFAULT_ADULTS, null);
 
         setStatus(STATUS_NONE);
+
+        setRefresh(false);
 
         mPriceType = PriceType.AVERAGE;
 
@@ -1048,14 +1049,19 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
         }
 
         // 선택된 방이 없으면 처음 방으로 한다.
-        if (mSelectedRoom == null)
+        if (mStayOutboundDetail.getRoomList() == null || mStayOutboundDetail.getRoomList().size() == 0)
         {
-            onRoomClick(stayOutboundDetail.getRoomList().get(0));
+            setStatus(STATUS_SOLD_OUT);
+        } else
+        {
+            if (mSelectedRoom == null)
+            {
+                onRoomClick(stayOutboundDetail.getRoomList().get(0));
+            }
+
+            setStatus(STATUS_ROOM_LIST);
         }
 
-        setStatus(STATUS_ROOM_LIST);
-
-        //        mProductDetailIndex = 0;
         mIsDeepLink = false;
     }
 
@@ -1170,21 +1176,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
                             @Override
                             public void onDismiss(DialogInterface dialog)
                             {
-                                Observable<Boolean> observable = getViewInterface().showRoomList(false);
-
-                                if (observable != null)
-                                {
-                                    screenLock(false);
-
-                                    addCompositeDisposable(observable.subscribe(new Consumer<Boolean>()
-                                    {
-                                        @Override
-                                        public void accept(@io.reactivex.annotations.NonNull Boolean aBoolean) throws Exception
-                                        {
-                                            unLockAll();
-                                        }
-                                    }));
-                                }
+                                onActionButtonClick();
                             }
                         });
                 }

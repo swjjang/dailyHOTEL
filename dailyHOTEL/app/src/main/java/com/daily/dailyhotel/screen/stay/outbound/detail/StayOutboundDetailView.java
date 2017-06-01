@@ -723,7 +723,7 @@ public class StayOutboundDetailView extends BaseDialogView<StayOutboundDetailVie
             {
                 getViewDataBinding().bookingTextView.setVisibility(View.VISIBLE);
                 getViewDataBinding().soldoutTextView.setVisibility(View.GONE);
-                getViewDataBinding().wishListButtonView.setVisibility(View.VISIBLE);
+                getViewDataBinding().wishListButtonView.setVisibility(View.GONE);
                 break;
             }
 
@@ -731,7 +731,7 @@ public class StayOutboundDetailView extends BaseDialogView<StayOutboundDetailVie
             {
                 getViewDataBinding().bookingTextView.setVisibility(View.VISIBLE);
                 getViewDataBinding().soldoutTextView.setVisibility(View.GONE);
-                getViewDataBinding().wishListButtonView.setVisibility(View.VISIBLE);
+                getViewDataBinding().wishListButtonView.setVisibility(View.GONE);
 
                 getViewDataBinding().bookingTextView.setText(R.string.act_hotel_search_room);
                 break;
@@ -741,7 +741,7 @@ public class StayOutboundDetailView extends BaseDialogView<StayOutboundDetailVie
             {
                 getViewDataBinding().bookingTextView.setVisibility(View.VISIBLE);
                 getViewDataBinding().soldoutTextView.setVisibility(View.GONE);
-                getViewDataBinding().wishListButtonView.setVisibility(View.VISIBLE);
+                getViewDataBinding().wishListButtonView.setVisibility(View.GONE);
 
                 getViewDataBinding().bookingTextView.setText(R.string.act_hotel_booking);
                 break;
@@ -751,7 +751,7 @@ public class StayOutboundDetailView extends BaseDialogView<StayOutboundDetailVie
             {
                 getViewDataBinding().bookingTextView.setVisibility(View.GONE);
                 getViewDataBinding().soldoutTextView.setVisibility(View.VISIBLE);
-                getViewDataBinding().wishListButtonView.setVisibility(View.VISIBLE);
+                getViewDataBinding().wishListButtonView.setVisibility(View.GONE);
                 break;
             }
         }
@@ -1491,144 +1491,4 @@ public class StayOutboundDetailView extends BaseDialogView<StayOutboundDetailVie
 
         return paintDrawable;
     }
-
-    //    private View.OnTouchListener mEmptyViewOnTouchListener = new View.OnTouchListener()
-    //    {
-    //        private final int MOVE_STATE_NONE = 0;
-    //        private final int MOVE_STATE_SCROLL = 10;
-    //        private final int MOVE_STATE_VIEWPAGER = 100;
-    //
-    //        private final float MOVE_CALIBRATE_VALUE = 1.25f;
-    //
-    //        private int mMoveState;
-    //        private float mPrevX, mPrevY;
-    //
-    //        @Override
-    //        public boolean onTouch(View v, MotionEvent event)
-    //        {
-    //            switch (event.getAction() & MotionEventCompat.ACTION_MASK)
-    //            {
-    //                case MotionEvent.ACTION_DOWN:
-    //                {
-    //                    mPrevX = event.getX();
-    //                    mPrevY = event.getY();
-    //
-    //                    mMoveState = MOVE_STATE_NONE;
-    //
-    //                    getViewDataBinding().nestedScrollView.setScrollingEnabled(false);
-    //
-    //                    try
-    //                    {
-    //                        getViewDataBinding().imageLoopViewPager.onTouchEvent(event);
-    //                    } catch (Exception e)
-    //                    {
-    //                    }
-    //                    break;
-    //                }
-    //
-    //                case MotionEvent.ACTION_UP:
-    //                {
-    //                    int touchSlop = ViewConfiguration.get(getContext()).getScaledTouchSlop();
-    //
-    //                    int x = (int) (mPrevX - event.getX());
-    //                    int y = (int) (mPrevY - event.getY());
-    //
-    //                    int distance = (int) Math.sqrt(x * x + y * y);
-    //
-    //                    if (distance < touchSlop)
-    //                    {
-    //                        getEventListener().onImageClick(getViewDataBinding().imageLoopViewPager.getCurrentItem());
-    //
-    //                        mMoveState = MOVE_STATE_NONE;
-    //
-    //                        try
-    //                        {
-    //                            getViewDataBinding().imageLoopViewPager.onTouchEvent(event);
-    //                        } catch (Exception e)
-    //                        {
-    //                            event.setAction(MotionEvent.ACTION_CANCEL);
-    //                            event.setLocation(getViewDataBinding().imageLoopViewPager.getScrollX(), getViewDataBinding().imageLoopViewPager.getScrollY());
-    //                            getViewDataBinding().imageLoopViewPager.onTouchEvent(event);
-    //                        }
-    //
-    //                        getViewDataBinding().nestedScrollView.setScrollingEnabled(true);
-    //                        break;
-    //                    }
-    //                }
-    //                case MotionEvent.ACTION_CANCEL:
-    //                {
-    //                    mMoveState = MOVE_STATE_NONE;
-    //
-    //                    try
-    //                    {
-    //                        getViewDataBinding().imageLoopViewPager.onTouchEvent(event);
-    //                    } catch (Exception e)
-    //                    {
-    //                        event.setAction(MotionEvent.ACTION_CANCEL);
-    //                        event.setLocation(getViewDataBinding().imageLoopViewPager.getScrollX(), getViewDataBinding().imageLoopViewPager.getScrollY());
-    //                        getViewDataBinding().imageLoopViewPager.onTouchEvent(event);
-    //                    }
-    //
-    //                    getViewDataBinding().nestedScrollView.setScrollingEnabled(true);
-    //                    break;
-    //                }
-    //
-    //                case MotionEvent.ACTION_MOVE:
-    //                {
-    //                    float x = event.getX();
-    //                    float y = event.getY();
-    //
-    //                    switch (mMoveState)
-    //                    {
-    //                        case MOVE_STATE_NONE:
-    //                        {
-    //                            if (Math.abs(x - mPrevX) == Math.abs(y - mPrevY))
-    //                            {
-    //
-    //                            } else if (Math.abs(x - mPrevX) * MOVE_CALIBRATE_VALUE > Math.abs(y - mPrevY))
-    //                            {
-    //                                // x 축으로 이동한 경우.
-    //                                mMoveState = MOVE_STATE_VIEWPAGER;
-    //
-    //                                try
-    //                                {
-    //                                    getViewDataBinding().imageLoopViewPager.onTouchEvent(event);
-    //                                } catch (Exception e)
-    //                                {
-    //                                    event.setAction(MotionEvent.ACTION_CANCEL);
-    //                                    event.setLocation(getViewDataBinding().imageLoopViewPager.getScrollX(), getViewDataBinding().imageLoopViewPager.getScrollY());
-    //                                    getViewDataBinding().imageLoopViewPager.onTouchEvent(event);
-    //                                }
-    //                            } else
-    //                            {
-    //                                // y축으로 이동한 경우.
-    //                                mMoveState = MOVE_STATE_SCROLL;
-    //
-    //                                getViewDataBinding().nestedScrollView.setScrollingEnabled(true);
-    //                                return true;
-    //                            }
-    //                            break;
-    //                        }
-    //
-    //                        case MOVE_STATE_VIEWPAGER:
-    //                        {
-    //                            try
-    //                            {
-    //                                getViewDataBinding().imageLoopViewPager.onTouchEvent(event);
-    //                            } catch (Exception e)
-    //                            {
-    //                                event.setAction(MotionEvent.ACTION_CANCEL);
-    //                                event.setLocation(getViewDataBinding().imageLoopViewPager.getScrollX(), getViewDataBinding().imageLoopViewPager.getScrollY());
-    //                                getViewDataBinding().imageLoopViewPager.onTouchEvent(event);
-    //                            }
-    //                        }
-    //                        break;
-    //                    }
-    //                    break;
-    //                }
-    //            }
-    //
-    //            return false;
-    //        }
-    //    };
 }

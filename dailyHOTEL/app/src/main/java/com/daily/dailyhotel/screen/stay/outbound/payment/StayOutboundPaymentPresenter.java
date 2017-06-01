@@ -214,9 +214,10 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
                     {
                         setSelectCard(cardName, cardNumber, cardBillingKey, cardCd);
                         setPaymentType(StayOutboundPayment.PaymentType.EASY_CARD);
-                        notifyPaymentTypeChanged();
                     }
                 }
+
+                checkEasyCardList();
                 break;
             }
 
@@ -235,7 +236,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
                             //                            DailyMobileAPI.getInstance(this).requestUserBillingCardList(mNetworkTag, mPaymentAfterRegisterCreditCardCallback);
                         } else
                         {
-                            //                            changedPaymentType(PlacePaymentInformation.PaymentType.EASY_CARD, null);
+                            checkEasyCardList();
                         }
                         return;
 
@@ -320,7 +321,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
 
                 notifyGuestInformationChanged();
                 notifyPaymentTypeChanged();
-                notifySimpleCardChanged(mSelectedCard);
+                notifyEasyCardChanged();
                 notifyStayOutboundPaymentChanged();
 
                 // 가격이 변동된 경우
@@ -456,10 +457,9 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
         }
     }
 
-
-    private void notifySimpleCardChanged(Card card)
+    private void notifyEasyCardChanged()
     {
-        getViewInterface().setSimpleCard(card);
+        getViewInterface().setEasyCard(mSelectedCard);
     }
 
     private void notifyStayOutboundPaymentChanged()
@@ -666,6 +666,39 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
                 return cardList.get(0);
             }
         }
+    }
+
+    private void checkEasyCardList()
+    {
+        screenLock(true);
+
+        addCompositeDisposable(mPaymentRemoteImpl.getSimpleCardList().subscribe(new Consumer<List<Card>>()
+        {
+            @Override
+            public void accept(@io.reactivex.annotations.NonNull List<Card> cardList) throws Exception
+            {
+                if (cardList.size() > 0)
+                {
+                    setPaymentType(StayOutboundPayment.PaymentType.EASY_CARD);
+                    setSelectCard(getSelectedCard(cardList));
+                } else
+                {
+                    setSelectCard(null);
+                }
+
+                notifyEasyCardChanged();
+                notifyPaymentTypeChanged();
+
+                unLockAll();
+            }
+        }, new Consumer<Throwable>()
+        {
+            @Override
+            public void accept(@io.reactivex.annotations.NonNull Throwable throwable) throws Exception
+            {
+                onHandleError(throwable);
+            }
+        }));
     }
 
     private void checkAvailablePaymentType()

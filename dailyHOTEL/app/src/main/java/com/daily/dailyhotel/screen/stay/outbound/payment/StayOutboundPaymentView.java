@@ -197,7 +197,7 @@ public class StayOutboundPaymentView extends BaseDialogView<StayOutboundPaymentV
     }
 
     @Override
-    public void setSimpleCard(Card card)
+    public void setEasyCard(Card card)
     {
         if (getViewDataBinding() == null || mPayDataBinding == null)
         {
@@ -209,6 +209,9 @@ public class StayOutboundPaymentView extends BaseDialogView<StayOutboundPaymentV
             mPayDataBinding.cardManagerLayout.setVisibility(View.GONE);
             mPayDataBinding.emptySimpleCardLayout.setVisibility(View.VISIBLE);
             mPayDataBinding.selectedSimpleCardLayout.setVisibility(View.GONE);
+
+            mPayDataBinding.logoTextView.setText(null);
+            mPayDataBinding.numberTextView.setText(null);
         } else
         {
             mPayDataBinding.cardManagerLayout.setVisibility(View.VISIBLE);
@@ -216,7 +219,7 @@ public class StayOutboundPaymentView extends BaseDialogView<StayOutboundPaymentV
             mPayDataBinding.selectedSimpleCardLayout.setVisibility(View.VISIBLE);
 
             mPayDataBinding.logoTextView.setText(card.name);
-            mPayDataBinding.simpleCardTextView.setText(card.number);
+            mPayDataBinding.numberTextView.setText(card.number);
         }
     }
 
@@ -351,6 +354,7 @@ public class StayOutboundPaymentView extends BaseDialogView<StayOutboundPaymentV
                 break;
 
             case R.id.simpleCardLayout:
+            case R.id.selectedSimpleCardLayout:
                 getEventListener().onPaymentTypeClick(StayOutboundPayment.PaymentType.EASY_CARD);
                 break;
 
@@ -445,8 +449,8 @@ public class StayOutboundPaymentView extends BaseDialogView<StayOutboundPaymentV
 
         mPayDataBinding.cardManagerLayout.setOnClickListener(this);
         mPayDataBinding.emptySimpleCardLayout.setOnClickListener(this);
-
         mPayDataBinding.simpleCardLayout.setOnClickListener(this);
+        mPayDataBinding.selectedSimpleCardLayout.setOnClickListener(this);
         mPayDataBinding.cardLayout.setOnClickListener(this);
         mPayDataBinding.phoneLayout.setOnClickListener(this);
     }
