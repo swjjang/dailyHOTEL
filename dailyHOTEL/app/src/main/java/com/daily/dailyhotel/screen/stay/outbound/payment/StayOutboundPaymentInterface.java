@@ -1,12 +1,12 @@
 package com.daily.dailyhotel.screen.stay.outbound.payment;
 
+import android.content.DialogInterface;
 import android.text.SpannableString;
 
 import com.daily.base.BaseDialogViewInterface;
 import com.daily.dailyhotel.entity.Card;
 import com.daily.dailyhotel.entity.People;
 import com.daily.dailyhotel.entity.StayOutboundPayment;
-import com.daily.dailyhotel.entity.UserInformation;
 
 import java.util.List;
 
@@ -20,7 +20,7 @@ public interface StayOutboundPaymentInterface extends BaseDialogViewInterface
 
     void setPeople(People people);
 
-    void setStayOutboundPayment(int bonus, int nights, int totalPrice, int discountPrice, int paymentPrice, double taxPrice);
+    void setStayOutboundPayment(int bonus, int nights, int totalPrice, int discountPrice, double taxPrice);
 
     void setEasyCard(Card card);
 
@@ -35,4 +35,6 @@ public interface StayOutboundPaymentInterface extends BaseDialogViewInterface
     void setBonusEnabled(boolean enabled);
 
     void setBonusSelected(boolean selected);
+
+    void showAgreeTermDialog(StayOutboundPayment.PaymentType paymentType, DialogInterface.OnCancelListener cancelListener);
 }

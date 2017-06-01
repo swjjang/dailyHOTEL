@@ -1238,7 +1238,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
             , Action.PAYMENT_CLICKED, label, null);
     }
 
-    private void onCheckOverlapSaty(boolean overlap)
+    private void onCheckOverlapStay(boolean overlap)
     {
         unLockUI();
 
@@ -2855,32 +2855,32 @@ public class HotelPaymentActivity extends PlacePaymentActivity
 
                         if (length == 0)
                         {
-                            onCheckOverlapSaty(false);
+                            onCheckOverlapStay(false);
                         } else
                         {
-                            onCheckOverlapSaty(checkOverlapBookingList(mTodayDateTime, dataJSONArray));
+                            onCheckOverlapStay(checkOverlapBookingList(mTodayDateTime, dataJSONArray));
                         }
                     } else
                     {
-                        onCheckOverlapSaty(false);
+                        onCheckOverlapStay(false);
                     }
                 } catch (Exception e)
                 {
-                    onCheckOverlapSaty(false);
+                    onCheckOverlapStay(false);
                 } finally
                 {
                     unLockUI();
                 }
             } else
             {
-                onCheckOverlapSaty(false);
+                onCheckOverlapStay(false);
             }
         }
 
         @Override
         public void onFailure(Call<JSONObject> call, Throwable t)
         {
-            onCheckOverlapSaty(false);
+            onCheckOverlapStay(false);
         }
 
         private boolean checkOverlapBookingList(TodayDateTime todayDateTime, JSONArray jsonArray) throws Exception

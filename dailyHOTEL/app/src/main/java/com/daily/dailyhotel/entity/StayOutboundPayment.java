@@ -14,7 +14,6 @@ public class StayOutboundPayment
     public List<String> nonRefundableDescription;
     public int totalPrice;
     public int discountPrice;
-    public int paymentPrice;
     public double feeTotalAmountUsd;
     public String rateKey;
     public String roomTypeCode;

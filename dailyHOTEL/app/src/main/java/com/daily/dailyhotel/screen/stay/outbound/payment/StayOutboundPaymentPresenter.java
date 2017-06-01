@@ -2,6 +2,7 @@ package com.daily.dailyhotel.screen.stay.outbound.payment;
 
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -238,8 +239,37 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
                     case Constants.CODE_RESULT_PAYMENT_BILLING_SUCCSESS:
                         if (requestCode == Constants.CODE_REQUEST_ACTIVITY_REGISTERCREDITCARD_AND_PAYMENT)
                         {
-                            // 신용카드 등록후에 바로 결제를 할경우.
-                            //                            DailyMobileAPI.getInstance(this).requestUserBillingCardList(mNetworkTag, mPaymentAfterRegisterCreditCardCallback);
+                            screenLock(true);
+
+                            addCompositeDisposable(mPaymentRemoteImpl.getSimpleCardList().subscribe(new Consumer<List<Card>>()
+                            {
+                                @Override
+                                public void accept(@io.reactivex.annotations.NonNull List<Card> cardList) throws Exception
+                                {
+                                    unLockAll();
+
+                                    if (cardList.size() > 0)
+                                    {
+                                        setPaymentType(StayOutboundPayment.PaymentType.EASY_CARD);
+                                        setSelectCard(getSelectedCard(cardList));
+
+                                        onPaymentClick();
+                                    } else
+                                    {
+                                        setSelectCard(null);
+                                    }
+
+                                    notifyEasyCardChanged();
+                                    notifyPaymentTypeChanged();
+                                }
+                            }, new Consumer<Throwable>()
+                            {
+                                @Override
+                                public void accept(@io.reactivex.annotations.NonNull Throwable throwable) throws Exception
+                                {
+                                    onHandleError(throwable);
+                                }
+                            }));
                         } else
                         {
                             checkEasyCardList();
@@ -384,7 +414,6 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
         if (enabled == true)
         {
             int discountPrice = mGuest.bonus;
-            int paymentPrice = mStayOutboundPayment.totalPrice;
 
             if (discountPrice <= 0)
             {
@@ -395,21 +424,17 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
             setBonusSelected(true);
             notifyBonusSelectedChanged();
 
-            if (discountPrice < mStayOutboundPayment.totalPrice)
+            if (discountPrice >= mStayOutboundPayment.totalPrice)
             {
-                paymentPrice = mStayOutboundPayment.totalPrice - discountPrice;
-            } else
-            {
-                paymentPrice = 0;
                 discountPrice = mStayOutboundPayment.totalPrice;
             }
 
             try
             {
-                setStayOutboundPayment(discountPrice, paymentPrice);
+                setStayOutboundPayment(discountPrice);
 
                 getViewInterface().setStayOutboundPayment(mGuest.bonus, mStayBookDateTime.getNights()//
-                    , mStayOutboundPayment.totalPrice, discountPrice, paymentPrice, mStayOutboundPayment.feeTotalAmountUsd);
+                    , mStayOutboundPayment.totalPrice, discountPrice, mStayOutboundPayment.feeTotalAmountUsd);
             } catch (Exception e)
             {
                 ExLog.d(e.toString());
@@ -424,7 +449,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
                     public void onClick(View v)
                     {
                         setBonusSelected(false);
-                        setStayOutboundPayment(0, mStayOutboundPayment.totalPrice);
+                        setStayOutboundPayment(0);
 
                         notifyBonusSelectedChanged();
                         notifyStayOutboundPaymentChanged();
@@ -474,7 +499,26 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
     @Override
     public void onPaymentClick()
     {
+        if (lock() == true)
+        {
+            return;
+        }
 
+        if(mPaymentType == StayOutboundPayment.PaymentType.EASY_CARD && mSelectedCard == null)
+        {
+            startActivityForResult(RegisterCreditCardActivity.newInstance(getActivity())//
+                , StayOutboundPaymentActivity.REQUEST_CODE_REGISTER_CARD_PAYMENT);
+        } else
+        {
+            getViewInterface().showAgreeTermDialog(mPaymentType, new DialogInterface.OnCancelListener()
+            {
+                @Override
+                public void onCancel(DialogInterface dialog)
+                {
+                    unLockAll();
+                }
+            });
+        }
     }
 
     @Override
@@ -487,6 +531,12 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
 
         startActivityForResult(InputMobileNumberDialogActivity.newInstance(getActivity(), phoneNumber)//
             , StayOutboundPaymentActivity.REQUEST_CODE_REGISTER_PHONE_NUMBER);
+    }
+
+    @Override
+    public void onAgreedPaymentClick()
+    {
+
     }
 
     private void onBookingInformation(StayOutboundPayment stayOutboundPayment, StayBookDateTime stayBookDateTime)
@@ -541,7 +591,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
         {
             getViewInterface().setStayOutboundPayment(mGuest.bonus, mStayBookDateTime.getNights()//
                 , mStayOutboundPayment.totalPrice, mStayOutboundPayment.discountPrice//
-                , mStayOutboundPayment.paymentPrice, mStayOutboundPayment.feeTotalAmountUsd);
+                , mStayOutboundPayment.feeTotalAmountUsd);
         } catch (Exception e)
         {
             ExLog.d(e.toString());
@@ -555,7 +605,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
         mStayOutboundPayment = stayOutboundPayment;
     }
 
-    private void setStayOutboundPayment(int discountPrice, int paymentPrice)
+    private void setStayOutboundPayment(int discountPrice)
     {
         if (mStayOutboundPayment == null)
         {
@@ -563,7 +613,6 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
         }
 
         mStayOutboundPayment.discountPrice = discountPrice;
-        mStayOutboundPayment.paymentPrice = paymentPrice;
     }
 
     private void setGuestInformation(UserInformation userInformation)

@@ -1,19 +1,29 @@
 package com.daily.dailyhotel.screen.stay.outbound.payment;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.databinding.DataBindingUtil;
+import android.support.v4.view.MotionEventCompat;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.style.ForegroundColorSpan;
+import android.text.style.StyleSpan;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.daily.base.BaseActivity;
 import com.daily.base.BaseDialogView;
 import com.daily.base.OnBaseEventListener;
 import com.daily.base.util.DailyTextUtils;
+import com.daily.base.util.ScreenUtils;
+import com.daily.base.widget.DailyScrollView;
 import com.daily.dailyhotel.entity.Card;
 import com.daily.dailyhotel.entity.People;
 import com.daily.dailyhotel.entity.StayOutboundPayment;
@@ -24,8 +34,10 @@ import com.twoheart.dailyhotel.databinding.LayoutStayOutboundPaymentButtonDataBi
 import com.twoheart.dailyhotel.databinding.LayoutStayOutboundPaymentDiscountDataBinding;
 import com.twoheart.dailyhotel.databinding.LayoutStayOutboundPaymentPayDataBinding;
 import com.twoheart.dailyhotel.databinding.LayoutStayOutboundPaymentRefundDataBinding;
+import com.twoheart.dailyhotel.screen.common.FinalCheckLayout;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.widget.DailySignatureView;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
 import java.util.List;
@@ -57,6 +69,8 @@ public class StayOutboundPaymentView extends BaseDialogView<StayOutboundPaymentV
         void onPaymentClick();
 
         void onPhoneNumberClick(String phoneNumber);
+
+        void onAgreedPaymentClick();
     }
 
     public StayOutboundPaymentView(BaseActivity baseActivity, StayOutboundPaymentView.OnEventListener listener)
@@ -161,7 +175,7 @@ public class StayOutboundPaymentView extends BaseDialogView<StayOutboundPaymentV
     }
 
     @Override
-    public void setStayOutboundPayment(int bonus, int nights, int totalPrice, int discountPrice, int paymentPrice, double taxPrice)
+    public void setStayOutboundPayment(int bonus, int nights, int totalPrice, int discountPrice, double taxPrice)
     {
         if (getViewDataBinding() == null || mDiscountDataBinding == null || nights == 0)
         {
@@ -194,7 +208,7 @@ public class StayOutboundPaymentView extends BaseDialogView<StayOutboundPaymentV
             mDiscountDataBinding.discountPriceTextView.setText("-" + DailyTextUtils.getPriceFormat(getContext(), discountPrice, false));
         }
 
-        mDiscountDataBinding.totalPaymentPriceTextView.setText(DailyTextUtils.getPriceFormat(getContext(), paymentPrice, false));
+        mDiscountDataBinding.totalPaymentPriceTextView.setText(DailyTextUtils.getPriceFormat(getContext(), totalPrice - discountPrice, false));
 
         if (taxPrice > 0)
         {
@@ -376,6 +390,44 @@ public class StayOutboundPaymentView extends BaseDialogView<StayOutboundPaymentV
 
             mDiscountDataBinding.usedBonusLayout.setOnClickListener(this);
             mDiscountDataBinding.usedBonusLayout.setSelected(false);
+        }
+    }
+
+    @Override
+    public void showAgreeTermDialog(StayOutboundPayment.PaymentType paymentType, DialogInterface.OnCancelListener cancelListener)
+    {
+        hideSimpleDialog();
+
+        switch (paymentType)
+        {
+            case EASY_CARD:
+            {
+                showSimpleDialog(getEasyPaymentAgreeLayout(), cancelListener//
+                    , new DialogInterface.OnDismissListener()
+                    {
+                        @Override
+                        public void onDismiss(DialogInterface dialog)
+                        {
+
+                        }
+                    }, true);
+                break;
+            }
+
+            case CARD:
+            case PHONE_PAY:
+                showSimpleDialog(getPaymentAgreeLayout(), cancelListener, new DialogInterface.OnDismissListener()
+                {
+                    @Override
+                    public void onDismiss(DialogInterface dialog)
+                    {
+
+                    }
+                }, true);
+                break;
+
+            default:
+                return;
         }
     }
 
@@ -629,6 +681,181 @@ public class StayOutboundPaymentView extends BaseDialogView<StayOutboundPaymentV
 
                 }
             });
+        }
+    }
+
+    protected ViewGroup getEasyPaymentAgreeLayout()
+    {
+        int[] messageResIds = new int[]{R.string.dialog_msg_hotel_payment_message01//
+            , R.string.message_stay_outbound_payment_agree_01//
+            , R.string.message_stay_outbound_payment_agree_02//
+            , R.string.message_stay_outbound_payment_agree_03//
+            , R.string.message_stay_outbound_payment_agree_04};
+
+        final FinalCheckLayout finalCheckLayout = new FinalCheckLayout(getContext());
+        finalCheckLayout.setMessages(messageResIds);
+
+        final TextView agreeSignatureTextView = (TextView) finalCheckLayout.findViewById(R.id.agreeSignatureTextView);
+        final View confirmTextView = finalCheckLayout.findViewById(R.id.confirmTextView);
+
+        confirmTextView.setEnabled(false);
+
+        // 화면이 작은 곳에서 스크롤 뷰가 들어가면서 발생하는 이슈
+        final DailyScrollView scrollLayout = (DailyScrollView) finalCheckLayout.findViewById(R.id.scrollLayout);
+
+        View dailySignatureView = finalCheckLayout.getDailySignatureView();
+
+        dailySignatureView.setOnTouchListener(new View.OnTouchListener()
+        {
+            @Override
+            public boolean onTouch(View v, MotionEvent event)
+            {
+                switch (event.getAction() & MotionEventCompat.ACTION_MASK)
+                {
+                    case MotionEvent.ACTION_DOWN:
+                    {
+                        scrollLayout.setScrollingEnabled(false);
+                        break;
+                    }
+
+                    case MotionEvent.ACTION_UP:
+                    case MotionEvent.ACTION_CANCEL:
+                    {
+                        scrollLayout.setScrollingEnabled(true);
+                        break;
+                    }
+                }
+
+                return false;
+            }
+        });
+
+        finalCheckLayout.setOnUserActionListener(new DailySignatureView.OnUserActionListener()
+        {
+            @Override
+            public void onConfirmSignature()
+            {
+                AlphaAnimation animation = new AlphaAnimation(1.0f, 0.0f);
+                animation.setDuration(500);
+                animation.setFillBefore(true);
+                animation.setFillAfter(true);
+
+                animation.setAnimationListener(new Animation.AnimationListener()
+                {
+                    @Override
+                    public void onAnimationStart(Animation animation)
+                    {
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animation animation)
+                    {
+                        agreeSignatureTextView.setAnimation(null);
+                        agreeSignatureTextView.setVisibility(View.GONE);
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animation animation)
+                    {
+                    }
+                });
+
+                agreeSignatureTextView.startAnimation(animation);
+
+                confirmTextView.setEnabled(true);
+                confirmTextView.setOnClickListener(new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        getEventListener().onAgreedPaymentClick();
+                    }
+                });
+            }
+        });
+
+        return finalCheckLayout;
+    }
+
+    private View getPaymentAgreeLayout()
+    {
+        int[] messageResIds = new int[]{R.string.dialog_msg_hotel_payment_message01//
+            , R.string.message_stay_outbound_payment_agree_01//
+            , R.string.message_stay_outbound_payment_agree_02//
+            , R.string.message_stay_outbound_payment_agree_03//
+            , R.string.message_stay_outbound_payment_agree_04};
+
+        View view = LayoutInflater.from(getContext()).inflate(R.layout.fragment_dialog_confirm_payment, null);
+        ViewGroup messageLayout = (ViewGroup) view.findViewById(R.id.messageLayout);
+
+        makeMessagesLayout(messageLayout, messageResIds);
+
+        View confirmTextView = view.findViewById(R.id.confirmTextView);
+
+        confirmTextView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                getEventListener().onAgreedPaymentClick();
+            }
+        });
+
+        return view;
+    }
+
+    private void makeMessagesLayout(ViewGroup viewGroup, int[] textResIds)
+    {
+        if (viewGroup == null || textResIds == null)
+        {
+            return;
+        }
+
+        int length = textResIds.length;
+
+        for (int i = 0; i < length; i++)
+        {
+            View messageRow = LayoutInflater.from(getContext()).inflate(R.layout.row_payment_agreedialog, viewGroup, false);
+
+            TextView messageTextView = (TextView) messageRow.findViewById(R.id.messageTextView);
+            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+
+            if (i == length - 1)
+            {
+                layoutParams.setMargins(ScreenUtils.dpToPx(getContext(), 5), 0, 0, 0);
+            } else
+            {
+                layoutParams.setMargins(ScreenUtils.dpToPx(getContext(), 5), 0, 0, ScreenUtils.dpToPx(getContext(), 10));
+            }
+
+            messageTextView.setLayoutParams(layoutParams);
+
+            String message = getString(textResIds[i]);
+
+            int startIndex = message.indexOf("<b>");
+
+            if (startIndex >= 0)
+            {
+                message = message.replaceAll("<b>", "");
+
+                int endIndex = message.indexOf("</b>");
+
+                message = message.replaceAll("</b>", "");
+
+                SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(message);
+
+                spannableStringBuilder.setSpan(new ForegroundColorSpan(getColor(R.color.dh_theme_color)), //
+                    startIndex, endIndex, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                spannableStringBuilder.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), //
+                    startIndex, endIndex, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+                messageTextView.setText(spannableStringBuilder);
+            } else
+            {
+                messageTextView.setText(message);
+            }
+
+            viewGroup.addView(messageRow);
         }
     }
 }
