@@ -176,7 +176,11 @@ public class DailyCalendar
         }
 
         setCalendarDateString(calendar, dateString);
-        calendar.add(Calendar.DAY_OF_MONTH, afterDay);
+
+        if (afterDay != 0)
+        {
+            calendar.add(Calendar.DAY_OF_MONTH, afterDay);
+        }
     }
 
     public static String format(Date date, final String format)

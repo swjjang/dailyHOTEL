@@ -77,9 +77,10 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
         mCommonRemoteImpl = new CommonRemoteImpl(activity);
 
         // 기본 성인 2명, 아동 0명
-        onPeople(People.DEFAULT_ADULTS, null);
+        setPeople(People.DEFAULT_ADULTS, null);
 
-        getViewInterface().setSearchEnable(false);
+        notifyPeopleChanged();
+        notifySuggestsChanged();
 
         setRefresh(true);
     }
@@ -182,7 +183,8 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
                             return;
                         }
 
-                        onCalendarDateTime(checkInDateTime, checkOutDateTime);
+                        setStayBookDateTime(checkInDateTime, 0, checkOutDateTime, 0);
+                        notifyStayBookDateTimeChanged();
                     }
                 }
                 break;
@@ -198,7 +200,8 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
 
                         if (suggestParcel != null)
                         {
-                            onSuggests(suggestParcel.getSuggest());
+                            setSuggest(suggestParcel.getSuggest());
+                            notifySuggestsChanged();
 
                             if (DailyPreference.getInstance(getActivity()).isShowStayOutboundSearchCalendar() == true)
                             {
@@ -220,7 +223,8 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
                         int numberOfAdults = data.getIntExtra(SelectPeopleActivity.INTENT_EXTRA_DATA_NUMBER_OF_ADULTS, People.DEFAULT_ADULTS);
                         ArrayList<Integer> arrayList = data.getIntegerArrayListExtra(SelectPeopleActivity.INTENT_EXTRA_DATA_CHILD_LIST);
 
-                        onPeople(numberOfAdults, arrayList);
+                        setPeople(numberOfAdults, arrayList);
+                        notifyPeopleChanged();
                     }
                 }
                 break;
@@ -233,7 +237,8 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
                     if (data.hasExtra(StayOutboundListActivity.INTENT_EXTRA_DATA_RESEARCH) == true//
                         && data.getBooleanExtra(StayOutboundListActivity.INTENT_EXTRA_DATA_RESEARCH, false) == true)
                     {
-                        onSuggests(null);
+                        setSuggest(null);
+                        notifySuggestsChanged();
                     }
                 }
                 break;
@@ -255,7 +260,9 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
         addCompositeDisposable(mCommonRemoteImpl.getCommonDateTime()//
             .subscribe(commonDateTime ->
             {
-                onCommonDateTime(commonDateTime);
+                setCommonDateTime(commonDateTime);
+                setStayBookDefaultDateTime(commonDateTime);
+                notifyStayBookDateTimeChanged();
 
                 screenUnLock();
             }, throwable ->
@@ -370,9 +377,32 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
         startActivityForResult(intent, StayOutboundSearchActivity.REQUEST_CODE_PEOPLE);
     }
 
+    private void setCommonDateTime(CommonDateTime commonDateTime)
+    {
+        mCommonDateTime = commonDateTime;
+    }
+
+    /**
+     * 주의 할점은 해외 호텔은 데일리 시간이 아닌 현재 시간으로 한다.
+     * @param commonDateTime
+     */
     private void setStayBookDefaultDateTime(CommonDateTime commonDateTime)
     {
         if (commonDateTime == null)
+        {
+            return;
+        }
+
+        setStayBookDateTime(commonDateTime.currentDateTime, 0, commonDateTime.currentDateTime, 1);
+    }
+
+    /**
+     * @param checkInDateTime  ISO-8601
+     * @param checkOutDateTime ISO-8601
+     */
+    private void setStayBookDateTime(String checkInDateTime, int checkInAfterDay, String checkOutDateTime, int checkOutAfterDay)
+    {
+        if (DailyTextUtils.isTextEmpty(checkInDateTime, checkOutDateTime) == true)
         {
             return;
         }
@@ -384,8 +414,21 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
 
         try
         {
-            mStayBookDateTime.setCheckInDateTime(commonDateTime.currentDateTime);
-            mStayBookDateTime.setCheckOutDateTime(commonDateTime.currentDateTime, 1);
+            if (checkInAfterDay == 0)
+            {
+                mStayBookDateTime.setCheckInDateTime(checkInDateTime);
+            } else
+            {
+                mStayBookDateTime.setCheckInDateTime(checkInDateTime, checkInAfterDay);
+            }
+
+            if (checkOutAfterDay == 0)
+            {
+                mStayBookDateTime.setCheckOutDateTime(checkOutDateTime);
+            } else
+            {
+                mStayBookDateTime.setCheckOutDateTime(checkOutDateTime, checkOutAfterDay);
+            }
         } catch (Exception e)
         {
             ExLog.e(e.toString());
@@ -395,35 +438,25 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
         }
     }
 
-    /**
-     * @param checkInDateTime  ISO-8601
-     * @param checkOutDateTime ISO-8601
-     */
-    private void setStayBookDateTime(String checkInDateTime, String checkOutDateTime)
+    private void setSuggest(Suggest suggest)
     {
-        if (DailyTextUtils.isTextEmpty(checkInDateTime, checkOutDateTime) == true)
-        {
-            return;
-        }
-
-        if (mStayBookDateTime == null)
-        {
-            mStayBookDateTime = new StayBookDateTime();
-        }
-
-        try
-        {
-            mStayBookDateTime.setCheckInDateTime(checkInDateTime);
-            mStayBookDateTime.setCheckOutDateTime(checkOutDateTime);
-        } catch (Exception e)
-        {
-            ExLog.e(e.toString());
-        }
+        mSuggest = suggest;
     }
 
-    private void onStayBookDateTime(@NonNull StayBookDateTime stayBookDateTime)
+    private void setPeople(int numberOfAdults, ArrayList<Integer> childAgeList)
     {
-        if (stayBookDateTime == null)
+        if (mPeople == null)
+        {
+            mPeople = new People(People.DEFAULT_ADULTS, null);
+        }
+
+        mPeople.numberOfAdults = numberOfAdults;
+        mPeople.setChildAgeList(childAgeList);
+    }
+
+    private void notifyStayBookDateTimeChanged()
+    {
+        if (mStayBookDateTime == null)
         {
             return;
         }
@@ -431,63 +464,21 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
         try
         {
             getViewInterface().setCalendarText(String.format(Locale.KOREA, "%s - %s, %d박"//
-                , stayBookDateTime.getCheckInDateTime("yyyy.MM.dd(EEE)")//
-                , stayBookDateTime.getCheckOutDateTime("yyyy.MM.dd(EEE)"), stayBookDateTime.getNights()));
+                , mStayBookDateTime.getCheckInDateTime("yyyy.MM.dd(EEE)")//
+                , mStayBookDateTime.getCheckOutDateTime("yyyy.MM.dd(EEE)"), mStayBookDateTime.getNights()));
         } catch (Exception e)
         {
             ExLog.e(e.toString());
         }
     }
 
-    private void onCalendarDateTime(String checkInDateTime, String checkOutDateTime)
+    private void notifySuggestsChanged()
     {
-        if (DailyTextUtils.isTextEmpty(checkInDateTime, checkOutDateTime) == true)
+        if (mSuggest != null)
         {
-            return;
-        }
+            getViewInterface().setSuggest(mSuggest.display);
 
-        setStayBookDateTime(checkInDateTime, checkOutDateTime);
-        onStayBookDateTime(mStayBookDateTime);
-    }
-
-    private void onCommonDateTime(@NonNull CommonDateTime commonDateTime)
-    {
-        if (commonDateTime == null)
-        {
-            return;
-        }
-
-        mCommonDateTime = commonDateTime;
-
-        if (mStayBookDateTime == null)
-        {
-            setStayBookDefaultDateTime(commonDateTime);
-        } else
-        {
-            try
-            {
-                // 예외 처리로 보고 있는 체크인/체크아웃 날짜가 지나 간경우 다음 날로 변경해준다.
-                mStayBookDateTime.verifyCommonDateTime(commonDateTime);
-            } catch (Exception e)
-            {
-                ExLog.e(e.toString());
-
-                setStayBookDefaultDateTime(commonDateTime);
-            }
-        }
-
-        onStayBookDateTime(mStayBookDateTime);
-    }
-
-    private void onSuggests(Suggest suggest)
-    {
-        mSuggest = suggest;
-
-        if (suggest != null)
-        {
-            getViewInterface().setSuggest(suggest.display);
-
-            if (suggest.id != 0)
+            if (mSuggest.id != 0)
             {
                 getViewInterface().setSearchEnable(true);
             }
@@ -498,15 +489,12 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
         }
     }
 
-    private void onPeople(int numberOfAdults, ArrayList<Integer> childAgeList)
+    private void notifyPeopleChanged()
     {
         if (mPeople == null)
         {
-            mPeople = new People(People.DEFAULT_ADULTS, null);
+            return;
         }
-
-        mPeople.numberOfAdults = numberOfAdults;
-        mPeople.setChildAgeList(childAgeList);
 
         getViewInterface().setPeopleText(mPeople.toString(getActivity()));
     }
