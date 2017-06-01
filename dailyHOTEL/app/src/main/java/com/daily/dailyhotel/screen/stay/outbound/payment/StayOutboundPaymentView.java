@@ -477,6 +477,10 @@ public class StayOutboundPaymentView extends BaseDialogView<StayOutboundPaymentV
             case R.id.bonusLayout:
                 getEventListener().onBonusClick(true);
                 break;
+
+            case R.id.doPaymentView:
+                getEventListener().onPaymentClick();
+                break;
         }
     }
 

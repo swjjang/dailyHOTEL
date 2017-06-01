@@ -237,7 +237,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
                 switch (resultCode)
                 {
                     case Constants.CODE_RESULT_PAYMENT_BILLING_SUCCSESS:
-                        if (requestCode == Constants.CODE_REQUEST_ACTIVITY_REGISTERCREDITCARD_AND_PAYMENT)
+                        if (requestCode == StayOutboundPaymentActivity.REQUEST_CODE_REGISTER_CARD_PAYMENT)
                         {
                             screenLock(true);
 
