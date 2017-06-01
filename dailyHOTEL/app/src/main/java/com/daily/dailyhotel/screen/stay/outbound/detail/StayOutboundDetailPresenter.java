@@ -223,7 +223,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
                     @Override
                     public StayOutboundDetail apply(@io.reactivex.annotations.NonNull Boolean aBoolean, @io.reactivex.annotations.NonNull CommonDateTime commonDateTime, @io.reactivex.annotations.NonNull StayOutboundDetail stayOutboundDetail) throws Exception
                     {
-                        onCommonDateTime(commonDateTime);
+                        setCommonDateTime(commonDateTime);
                         return stayOutboundDetail;
                     }
                 }).subscribe(new Consumer<StayOutboundDetail>()
@@ -364,7 +364,8 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
                             return;
                         }
 
-                        onCalendarDateTime(checkInDateTime, checkOutDateTime);
+                        setStayBookDateTime(checkInDateTime, checkOutDateTime);
+                        notifyStayBookDateTimeChanged();
                         setRefresh(true);
                     }
                 }
@@ -380,7 +381,8 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
                         int numberOfAdults = data.getIntExtra(SelectPeopleActivity.INTENT_EXTRA_DATA_NUMBER_OF_ADULTS, People.DEFAULT_ADULTS);
                         ArrayList<Integer> childAgeList = data.getIntegerArrayListExtra(SelectPeopleActivity.INTENT_EXTRA_DATA_CHILD_LIST);
 
-                        onPeople(numberOfAdults, childAgeList);
+                        setPeople(numberOfAdults, childAgeList);
+                        notifyPeopleChanged();
                         setRefresh(true);
                     }
                 }
@@ -422,7 +424,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
             @Override
             public StayOutboundDetail apply(@io.reactivex.annotations.NonNull CommonDateTime commonDateTime, @io.reactivex.annotations.NonNull StayOutboundDetail stayOutboundDetail) throws Exception
             {
-                onCommonDateTime(commonDateTime);
+                setCommonDateTime(commonDateTime);
                 return stayOutboundDetail;
             }
         }).subscribe(new Consumer<StayOutboundDetail>()
@@ -975,6 +977,34 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
         mSelectedRoom = stayOutboundRoom;
     }
 
+    private void setStatus(int status)
+    {
+        mStatus = status;
+
+        getViewInterface().setBottomButtonLayout(status);
+    }
+
+    private void setCommonDateTime(@NonNull CommonDateTime commonDateTime)
+    {
+        if (commonDateTime == null)
+        {
+            return;
+        }
+
+        mCommonDateTime = commonDateTime;
+    }
+
+    private void setPeople(int numberOfAdults, ArrayList<Integer> childAgeList)
+    {
+        if (mPeople == null)
+        {
+            mPeople = new People(People.DEFAULT_ADULTS, null);
+        }
+
+        mPeople.numberOfAdults = numberOfAdults;
+        mPeople.setChildAgeList(childAgeList);
+    }
+
     private void onStayOutboundDetail(StayOutboundDetail stayOutboundDetail)
     {
         if (stayOutboundDetail == null)
@@ -1009,51 +1039,6 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
         mIsDeepLink = false;
     }
 
-    private void setStatus(int status)
-    {
-        mStatus = status;
-
-        getViewInterface().setBottomButtonLayout(status);
-    }
-
-    private void onCommonDateTime(@NonNull CommonDateTime commonDateTime)
-    {
-        if (commonDateTime == null)
-        {
-            return;
-        }
-
-        mCommonDateTime = commonDateTime;
-    }
-
-    private void onCalendarDateTime(String checkInDateTime, String checkOutDateTime)
-    {
-        if (DailyTextUtils.isTextEmpty(checkInDateTime, checkOutDateTime) == true)
-        {
-            return;
-        }
-
-        setStayBookDateTime(checkInDateTime, checkOutDateTime);
-        onStayBookDateTime(mStayBookDateTime);
-    }
-
-    private void onPeople(People people)
-    {
-        if (mPeople == null)
-        {
-            return;
-        }
-
-        getViewInterface().setPeopleText(mPeople.toShortString(getActivity()));
-    }
-
-    private void onPeople(int numberOfAdults, ArrayList<Integer> childAgeList)
-    {
-        setPeople(numberOfAdults, childAgeList);
-
-        onPeople(mPeople);
-    }
-
     /**
      * @param checkInDateTime  ISO-8601
      * @param checkOutDateTime ISO-8601
@@ -1080,33 +1065,33 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
         }
     }
 
-    private void onStayBookDateTime(@NonNull StayBookDateTime stayBookDateTime)
+    private void notifyPeopleChanged()
     {
-        if (stayBookDateTime == null)
+        if (mPeople == null)
+        {
+            return;
+        }
+
+        getViewInterface().setPeopleText(mPeople.toShortString(getActivity()));
+    }
+
+    private void notifyStayBookDateTimeChanged()
+    {
+        if (mStayBookDateTime == null)
         {
             return;
         }
 
         try
         {
-            String dateFormat = String.format(Locale.KOREA, "%s - %s, %s", stayBookDateTime.getCheckInDateTime("M.d(EEE)"), stayBookDateTime.getCheckOutDateTime("M.d(EEE)"), getString(R.string.label_nights, stayBookDateTime.getNights()));
+            String dateFormat = String.format(Locale.KOREA, "%s - %s, %s", mStayBookDateTime.getCheckInDateTime("M.d(EEE)")//
+                , mStayBookDateTime.getCheckOutDateTime("M.d(EEE)"), getString(R.string.label_nights, mStayBookDateTime.getNights()));
 
             getViewInterface().setCalendarText(dateFormat);
         } catch (Exception e)
         {
             ExLog.e(e.toString());
         }
-    }
-
-    private void setPeople(int numberOfAdults, ArrayList<Integer> childAgeList)
-    {
-        if (mPeople == null)
-        {
-            mPeople = new People(People.DEFAULT_ADULTS, null);
-        }
-
-        mPeople.numberOfAdults = numberOfAdults;
-        mPeople.setChildAgeList(childAgeList);
     }
 
     private void checkChangedPrice(boolean isDeepLink, StayOutboundDetail stayOutboundDetail, int listViewPrice)
