@@ -282,10 +282,10 @@ public abstract class PlaceSearchResultLayout extends BaseBlurLayout implements 
         // disable opacity 40% - 0 ~ 255
         if (isTypeEnabled == true)
         {
-            mViewTypeOptionImageView.getBackground().setAlpha(255);
+            mViewTypeOptionImageView.setAlpha(1.0f);
         } else
         {
-            mViewTypeOptionImageView.getBackground().setAlpha(102);
+            mViewTypeOptionImageView.setAlpha(0.4f);
         }
 
         mViewTypeOptionImageView.setEnabled(isTypeEnabled);
@@ -296,10 +296,10 @@ public abstract class PlaceSearchResultLayout extends BaseBlurLayout implements 
         // disable opacity 40% - 0 ~ 255
         if (isFilterEnabled == true)
         {
-            mFilterOptionImageView.getBackground().setAlpha(255);
+            mFilterOptionImageView.setAlpha(1.0f);
         } else
         {
-            mFilterOptionImageView.getBackground().setAlpha(102);
+            mFilterOptionImageView.setAlpha(0.4f);
         }
 
         mFilterOptionImageView.setEnabled(isFilterEnabled);
