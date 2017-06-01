@@ -182,7 +182,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center_horizontal"
-        android:paddingLeft="131dp"
+        android:paddingLeft="130dp"
         android:visibility="gone">
 
         <com.daily.base.widget.DailyTextView

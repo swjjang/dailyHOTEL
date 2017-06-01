@@ -85,6 +85,8 @@ public abstract class PlaceSearchResultLayout extends BaseBlurLayout implements 
 
     protected abstract int getEmptyIconResourceId();
 
+    protected abstract boolean isResearchViewEnabled();
+
     protected abstract PlaceListFragmentPagerAdapter getPlaceListFragmentPagerAdapter(FragmentManager fragmentManager, int count, View bottomOptionLayout, PlaceListFragment.OnPlaceListFragmentListener listener);
 
     protected abstract void onAnalyticsCategoryFlicking(String category);
@@ -212,14 +214,21 @@ public abstract class PlaceSearchResultLayout extends BaseBlurLayout implements 
             }
         });
 
-        researchView.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
+        if (isResearchViewEnabled() == true) {
+            researchView.setVisibility(View.VISIBLE);
+            researchView.setOnClickListener(new View.OnClickListener()
             {
-                ((PlaceSearchResultLayout.OnEventListener) mOnEventListener).research(Activity.RESULT_CANCELED);
-            }
-        });
+                @Override
+                public void onClick(View v)
+                {
+                    ((PlaceSearchResultLayout.OnEventListener) mOnEventListener).research(Activity.RESULT_CANCELED);
+                }
+            });
+        } else
+        {
+            researchView.setVisibility(View.GONE);
+            researchView.setOnClickListener(null);
+        }
 
         callTextView.setPaintFlags(callTextView.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
         callTextView.setOnClickListener(new View.OnClickListener()

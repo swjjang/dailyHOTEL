@@ -37,6 +37,12 @@ public class GourmetSearchResultLayout extends PlaceSearchResultLayout
     }
 
     @Override
+    protected boolean isResearchViewEnabled()
+    {
+        return false;
+    }
+
+    @Override
     protected synchronized PlaceListFragmentPagerAdapter getPlaceListFragmentPagerAdapter(FragmentManager fragmentManager, int count, View bottomOptionLayout, PlaceListFragment.OnPlaceListFragmentListener listener)
     {
         PlaceListFragmentPagerAdapter placeListFragmentPagerAdapter = new PlaceListFragmentPagerAdapter(fragmentManager);
