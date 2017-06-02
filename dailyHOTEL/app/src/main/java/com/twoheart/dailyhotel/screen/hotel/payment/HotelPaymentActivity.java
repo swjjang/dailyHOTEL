@@ -56,6 +56,7 @@ import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyInternalDeepLink;
 import com.twoheart.dailyhotel.util.DailyPreference;
+import com.twoheart.dailyhotel.util.DailyUserPreference;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Action;
@@ -1945,10 +1946,10 @@ public class HotelPaymentActivity extends PlacePaymentActivity
                     return;
                 }
 
-                //                if (stayPaymentInformation.isOverSeas == true)
-                //                {
-                //                    DailyUserPreference.getInstance(HotelPaymentActivity.this).setOverseasInformation(guest.name, guest.phone, guest.email);
-                //                }
+                if (stayPaymentInformation.isOverSeas == true)
+                {
+                    DailyUserPreference.getInstance(HotelPaymentActivity.this).setOverseasInformation(guest.name, guest.phone, guest.email);
+                }
             }
 
             stayPaymentInformation.setGuest(guest);
@@ -2181,51 +2182,51 @@ public class HotelPaymentActivity extends PlacePaymentActivity
 
                     if (isOverseas == true)
                     {
-                        //                        if (guest == null)
-                        //                        {
-                        //                            guest = mHotelPaymentLayout.getGuest();
-                        //                        }
-                        //
-                        //                        if (guest == null)
-                        //                        {
-                        //                            guest = new Guest();
-                        //                        }
-                        //
-                        //                        String overseasName = DailyUserPreference.getInstance(HotelPaymentActivity.this).getOverseasName();
-                        //                        String overseasPhone = DailyUserPreference.getInstance(HotelPaymentActivity.this).getOverseasPhone();
-                        //                        String overseasEmail = DailyUserPreference.getInstance(HotelPaymentActivity.this).getOverseasEmail();
-                        //
-                        //                        guest.name = overseasName;
-                        //
-                        //                        if (DailyTextUtils.isTextEmpty(guest.phone) == true)
-                        //                        {
-                        //                            if (DailyTextUtils.isTextEmpty(overseasPhone) == false)
-                        //                            {
-                        //                                guest.phone = overseasPhone;
-                        //                            } else
-                        //                            {
-                        //                                guest.phone = phone;
-                        //                            }
-                        //                        }
-                        //
-                        //                        if (DailyTextUtils.isTextEmpty(guest.email) == true)
-                        //                        {
-                        //                            if (DailyTextUtils.isTextEmpty(overseasEmail) == false)
-                        //                            {
-                        //                                guest.email = overseasEmail;
-                        //                            } else
-                        //                            {
-                        //                                guest.email = email;
-                        //                            }
-                        //                        }
-                        //
-                        //                        if (DailyTextUtils.isNameCharacter(overseasName) == false)
-                        //                        {
-                        //                            guest.name = "";
-                        //                            mHotelPaymentLayout.requestGuestInformationFocus(UserInformationType.NAME);
-                        //                        }
-                        //
-                        //                        stayPaymentInformation.setGuest(guest);
+                        if (guest == null)
+                        {
+                            guest = mHotelPaymentLayout.getGuest();
+                        }
+
+                        if (guest == null)
+                        {
+                            guest = new Guest();
+                        }
+
+                        String overseasName = DailyUserPreference.getInstance(HotelPaymentActivity.this).getOverseasName();
+                        String overseasPhone = DailyUserPreference.getInstance(HotelPaymentActivity.this).getOverseasPhone();
+                        String overseasEmail = DailyUserPreference.getInstance(HotelPaymentActivity.this).getOverseasEmail();
+
+                        guest.name = overseasName;
+
+                        if (DailyTextUtils.isTextEmpty(guest.phone) == true)
+                        {
+                            if (DailyTextUtils.isTextEmpty(overseasPhone) == false)
+                            {
+                                guest.phone = overseasPhone;
+                            } else
+                            {
+                                guest.phone = phone;
+                            }
+                        }
+
+                        if (DailyTextUtils.isTextEmpty(guest.email) == true)
+                        {
+                            if (DailyTextUtils.isTextEmpty(overseasEmail) == false)
+                            {
+                                guest.email = overseasEmail;
+                            } else
+                            {
+                                guest.email = email;
+                            }
+                        }
+
+                        if (DailyTextUtils.isNameCharacter(overseasName) == false)
+                        {
+                            guest.name = "";
+                            mHotelPaymentLayout.requestGuestInformationFocus(UserInformationType.NAME);
+                        }
+
+                        stayPaymentInformation.setGuest(guest);
                     }
 
                     mHotelPaymentLayout.setUserInformation(buyer, isOverseas);
