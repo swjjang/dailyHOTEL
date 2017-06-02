@@ -5,6 +5,7 @@ import android.content.Context;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.dailyhotel.repository.remote.model.CardData;
 import com.daily.dailyhotel.repository.remote.model.CommonDateTimeData;
+import com.daily.dailyhotel.repository.remote.model.PaymentTypeEasyData;
 import com.daily.dailyhotel.repository.remote.model.StayOutboundDetailData;
 import com.daily.dailyhotel.repository.remote.model.StayOutboundPaymentData;
 import com.daily.dailyhotel.repository.remote.model.StayOutboundsData;
@@ -1390,5 +1391,20 @@ public class DailyMobileAPI implements IDailyNetwork
             : "NTQkNTMkNzckMTgkODIkODEkMTgkNjYkMzQkNTYkODIkNzYkNzQkMzckNTQkMjMk$ODAzNUVCRjAyNDIwMzPClCNATc5ODc2OEEzIN0JU1MjVCMUQwNEMzOTTY2NEMUSIzRDA5MjWAyNkRTBNQDE1NUZVPFNBUEMzQTFDMg==$";
 
         return mDailyMobileService.getUserInformationForPayment(Crypto.getUrlDecoderEx(API)).subscribeOn(Schedulers.io());
+    }
+
+    public Observable<BaseDto<PaymentTypeEasyData>> getPaymentTypeEasy(int index, JSONObject jsonObject)
+    {
+        final String URL = Constants.UNENCRYPTED_URL ? "https://dev-silo.dailyhotel.me/"//
+            : "MzAkODEkNDckNjgkNDAkMzkkODckMSQ4OSQyOCQxNCQzMiQ4JDEkMzckNTUk$QAGkRCM0ZGGMkM1MBzkyQTBEOEMxRDgL1OGUWENFMUM3MEWZJEOURDMOEAM1NjY1RjE2MEVDQjc4RTSA5MzQxQjQ2Rjk1VMMHUEyRg==$";
+
+        final String API = Constants.UNENCRYPTED_URL ? "api/v1/outbound/hotels/{hotelId}/room-reservation-payments"//
+            : "MTU1JDc4JDMzJDExNyQxNDQkMTUxJDEyMiQ1NyQxMjkkMTAxJDg5JDE2NCQyMyQxNTgkOTQkMTM2JA==$MTcwNzM1OEJBODI4MTIyNUYG4NkRDQ0ZDNOzI3REQxNDcyNEFGMTY0RkIxTQTA0QjMzMUM0MUZFODQwNzXc2RTk0NjAdGOIDEwRkIwN0EI2NzZGN0I0MjA1OEJMENUMHzRkMyPRDAM2MTMzQTEzMzU0RDTE3NzcXG5RjQ5OTWFIEMUUyNTFEODY5RkY=$";
+
+        Map<String, String> urlParams = new HashMap<>();
+        urlParams.put("{hotelId}", Integer.toString(index));
+
+        return mDailyMobileService.getPaymentTypeEasy(Crypto.getUrlDecoderEx(URL) + Crypto.getUrlDecoderEx(API, urlParams)//
+            , jsonObject).subscribeOn(Schedulers.io());
     }
 }

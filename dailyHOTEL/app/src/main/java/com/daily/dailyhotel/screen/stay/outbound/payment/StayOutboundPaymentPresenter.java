@@ -11,12 +11,15 @@ import android.text.SpannableString;
 import android.view.View;
 
 import com.daily.base.BaseAnalyticsInterface;
+import com.daily.base.exception.BaseException;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.util.FontManager;
+import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
 import com.daily.dailyhotel.entity.Card;
 import com.daily.dailyhotel.entity.Guest;
+import com.daily.dailyhotel.entity.PaymentTypeEasy;
 import com.daily.dailyhotel.entity.People;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayOutboundPayment;
@@ -224,7 +227,22 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
                     }
                 }
 
-                checkEasyCardList();
+                selectEasyCard(cardList ->
+                {
+                    if (cardList.size() > 0)
+                    {
+                        setPaymentType(StayOutboundPayment.PaymentType.EASY_CARD);
+                        setSelectCard(getSelectedCard(cardList));
+                    } else
+                    {
+                        setSelectCard(null);
+                    }
+
+                    notifyEasyCardChanged();
+                    notifyPaymentTypeChanged();
+
+                    unLockAll();
+                });
                 break;
             }
 
@@ -239,40 +257,42 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
                     case Constants.CODE_RESULT_PAYMENT_BILLING_SUCCSESS:
                         if (requestCode == StayOutboundPaymentActivity.REQUEST_CODE_REGISTER_CARD_PAYMENT)
                         {
-                            screenLock(true);
-
-                            addCompositeDisposable(mPaymentRemoteImpl.getSimpleCardList().subscribe(new Consumer<List<Card>>()
+                            selectEasyCard(cardList ->
                             {
-                                @Override
-                                public void accept(@io.reactivex.annotations.NonNull List<Card> cardList) throws Exception
+                                unLockAll();
+
+                                if (cardList.size() > 0)
                                 {
-                                    unLockAll();
+                                    setPaymentType(StayOutboundPayment.PaymentType.EASY_CARD);
+                                    setSelectCard(getSelectedCard(cardList));
 
-                                    if (cardList.size() > 0)
-                                    {
-                                        setPaymentType(StayOutboundPayment.PaymentType.EASY_CARD);
-                                        setSelectCard(getSelectedCard(cardList));
-
-                                        onPaymentClick();
-                                    } else
-                                    {
-                                        setSelectCard(null);
-                                    }
-
-                                    notifyEasyCardChanged();
-                                    notifyPaymentTypeChanged();
-                                }
-                            }, new Consumer<Throwable>()
-                            {
-                                @Override
-                                public void accept(@io.reactivex.annotations.NonNull Throwable throwable) throws Exception
+                                    onPaymentClick(mGuest.firstName, mGuest.lastName, mGuest.phone, mGuest.email);
+                                } else
                                 {
-                                    onHandleError(throwable);
+                                    setSelectCard(null);
                                 }
-                            }));
+
+                                notifyEasyCardChanged();
+                                notifyPaymentTypeChanged();
+                            });
                         } else
                         {
-                            checkEasyCardList();
+                            selectEasyCard(cardList ->
+                            {
+                                if (cardList.size() > 0)
+                                {
+                                    setPaymentType(StayOutboundPayment.PaymentType.EASY_CARD);
+                                    setSelectCard(getSelectedCard(cardList));
+                                } else
+                                {
+                                    setSelectCard(null);
+                                }
+
+                                notifyEasyCardChanged();
+                                notifyPaymentTypeChanged();
+
+                                unLockAll();
+                            });
                         }
                         return;
 
@@ -364,13 +384,22 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
                 // 가격이 변동된 경우
                 if (mRoomPrice != mStayOutboundPayment.totalPrice)
                 {
-
+                    getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.message_stay_payment_changed_price)//
+                        , getString(R.string.dialog_btn_text_confirm), null);
                 }
 
                 // 솔드 아웃인 경우
                 if (mStayOutboundPayment.availableRooms == 0)
                 {
-
+                    getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.message_stay_outbound_payment_sold_out)//
+                        , getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
+                        {
+                            @Override
+                            public void onDismiss(DialogInterface dialog)
+                            {
+                                onBackClick();
+                            }
+                        });
                 }
 
                 unLockAll();
@@ -380,8 +409,17 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
             @Override
             public void accept(@io.reactivex.annotations.NonNull Throwable throwable) throws Exception
             {
-                onHandleError(throwable);
-                onBackClick();
+                unLockAll();
+
+                getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.act_base_network_connect)//
+                    , getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
+                    {
+                        @Override
+                        public void onDismiss(DialogInterface dialog)
+                        {
+                            onBackClick();
+                        }
+                    });
             }
         }));
     }
@@ -497,20 +535,66 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
     }
 
     @Override
-    public void onPaymentClick()
+    public void onPaymentClick(String firstName, String lastName, String phone, String email)
     {
-        if (lock() == true)
+        if (mGuest == null || lock() == true)
         {
             return;
         }
 
-        if(mPaymentType == StayOutboundPayment.PaymentType.EASY_CARD && mSelectedCard == null)
+        mGuest.firstName = firstName;
+        mGuest.lastName = lastName;
+        mGuest.phone = phone;
+        mGuest.email = email;
+
+        if (DailyTextUtils.isTextEmpty(firstName, lastName) == true)
+        {
+            DailyToast.showToast(getActivity(), getString(R.string.message_stay_outbound_payment_empty_name), DailyToast.LENGTH_SHORT);
+
+            unLockAll();
+            return;
+        }
+
+        if (DailyTextUtils.isTextEmpty(phone) == true)
+        {
+            DailyToast.showToast(getActivity(), getString(R.string.toast_msg_please_input_contact), DailyToast.LENGTH_SHORT);
+
+            unLockAll();
+            return;
+        }
+
+        if (DailyTextUtils.isTextEmpty(email) == true)
+        {
+            DailyToast.showToast(getActivity(), getString(R.string.toast_msg_please_input_email), DailyToast.LENGTH_SHORT);
+
+            unLockAll();
+            return;
+        }
+
+        if (android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches() == false)
+        {
+            DailyToast.showToast(getActivity(), getString(R.string.toast_msg_wrong_email_address), DailyToast.LENGTH_SHORT);
+
+            unLockAll();
+            return;
+        }
+
+        if (mPaymentType == StayOutboundPayment.PaymentType.EASY_CARD && mSelectedCard == null)
         {
             startActivityForResult(RegisterCreditCardActivity.newInstance(getActivity())//
                 , StayOutboundPaymentActivity.REQUEST_CODE_REGISTER_CARD_PAYMENT);
         } else
         {
-            getViewInterface().showAgreeTermDialog(mPaymentType, new DialogInterface.OnCancelListener()
+            getViewInterface().showAgreeTermDialog(mPaymentType, new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    unLockAll();
+
+                    onAgreedPaymentClick();
+                }
+            }, new DialogInterface.OnCancelListener()
             {
                 @Override
                 public void onCancel(DialogInterface dialog)
@@ -533,10 +617,52 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
             , StayOutboundPaymentActivity.REQUEST_CODE_REGISTER_PHONE_NUMBER);
     }
 
-    @Override
-    public void onAgreedPaymentClick()
+    private void onAgreedPaymentClick()
     {
+        if (lock() == true)
+        {
+            return;
+        }
 
+        addCompositeDisposable(mPaymentRemoteImpl.getPaymentTypeEasy(mStayBookDateTime, mStayIndex//
+            , mRateCode, mRateKey, mRoomTypeCode, mRoomBedTypeId, mPeople//
+            , mBonusSelected, mGuest, mStayOutboundPayment.totalPrice).subscribe(new Consumer<PaymentTypeEasy>()
+        {
+            @Override
+            public void accept(@io.reactivex.annotations.NonNull PaymentTypeEasy paymentTypeEasy) throws Exception
+            {
+
+            }
+        }, new Consumer<Throwable>()
+        {
+            @Override
+            public void accept(@io.reactivex.annotations.NonNull Throwable throwable) throws Exception
+            {
+                unLockAll();
+
+                if (throwable instanceof BaseException)
+                {
+                    // 팝업 에러 보여주기
+                    BaseException baseException = (BaseException) throwable;
+
+                    switch (baseException.getCode())
+                    {
+
+                    }
+                } else
+                {
+                    getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.act_base_network_connect)//
+                        , getString(R.string.frag_error_btn), null, new DialogInterface.OnDismissListener()
+                        {
+                            @Override
+                            public void onDismiss(DialogInterface dialog)
+                            {
+                                onBackClick();
+                            }
+                        });
+                }
+            }
+        }));
     }
 
     private void onBookingInformation(StayOutboundPayment stayOutboundPayment, StayBookDateTime stayBookDateTime)
@@ -850,6 +976,20 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
         }));
     }
 
+    private void selectEasyCard(Consumer<List<Card>> consumer)
+    {
+        screenLock(true);
+
+        addCompositeDisposable(mPaymentRemoteImpl.getSimpleCardList().subscribe(consumer, new Consumer<Throwable>()
+        {
+            @Override
+            public void accept(@io.reactivex.annotations.NonNull Throwable throwable) throws Exception
+            {
+                onHandleError(throwable);
+            }
+        }));
+    }
+
     private void checkAvailablePaymentType()
     {
         boolean isSimpleCardPaymentEnabled = DailyPreference.getInstance(getActivity()).isRemoteConfigStayOutboundSimpleCardPaymentEnabled();
@@ -900,5 +1040,40 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
         {
             setPaymentType(StayOutboundPayment.PaymentType.PHONE_PAY);
         }
+    }
+
+    private void onPaymentError(BaseException baseException)
+    {
+        unLockAll();
+
+        if (baseException == null)
+        {
+            getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.act_base_network_connect)//
+                , getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
+                {
+                    @Override
+                    public void onDismiss(DialogInterface dialog)
+                    {
+                        onBackClick();
+                    }
+                });
+        }
+
+        String message = null;
+
+        switch (baseException.getCode())
+        {
+
+        }
+
+        getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2), message//
+            , getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
+            {
+                @Override
+                public void onDismiss(DialogInterface dialog)
+                {
+                    onBackClick();
+                }
+            });
     }
 }

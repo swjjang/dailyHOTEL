@@ -66,11 +66,9 @@ public class StayOutboundPaymentView extends BaseDialogView<StayOutboundPaymentV
 
         void onPaymentTypeClick(StayOutboundPayment.PaymentType paymentType);
 
-        void onPaymentClick();
+        void onPaymentClick(String firstName, String lastName, String phone, String email);
 
         void onPhoneNumberClick(String phoneNumber);
-
-        void onAgreedPaymentClick();
     }
 
     public StayOutboundPaymentView(BaseActivity baseActivity, StayOutboundPaymentView.OnEventListener listener)
@@ -394,7 +392,8 @@ public class StayOutboundPaymentView extends BaseDialogView<StayOutboundPaymentV
     }
 
     @Override
-    public void showAgreeTermDialog(StayOutboundPayment.PaymentType paymentType, DialogInterface.OnCancelListener cancelListener)
+    public void showAgreeTermDialog(StayOutboundPayment.PaymentType paymentType//
+        , View.OnClickListener onClickListener, DialogInterface.OnCancelListener cancelListener)
     {
         hideSimpleDialog();
 
@@ -402,28 +401,13 @@ public class StayOutboundPaymentView extends BaseDialogView<StayOutboundPaymentV
         {
             case EASY_CARD:
             {
-                showSimpleDialog(getEasyPaymentAgreeLayout(), cancelListener//
-                    , new DialogInterface.OnDismissListener()
-                    {
-                        @Override
-                        public void onDismiss(DialogInterface dialog)
-                        {
-
-                        }
-                    }, true);
+                showSimpleDialog(getEasyPaymentAgreeLayout(onClickListener), cancelListener, null, true);
                 break;
             }
 
             case CARD:
             case PHONE_PAY:
-                showSimpleDialog(getPaymentAgreeLayout(), cancelListener, new DialogInterface.OnDismissListener()
-                {
-                    @Override
-                    public void onDismiss(DialogInterface dialog)
-                    {
-
-                    }
-                }, true);
+                showSimpleDialog(getPaymentAgreeLayout(onClickListener), cancelListener, null, true);
                 break;
 
             default:
@@ -438,6 +422,11 @@ public class StayOutboundPaymentView extends BaseDialogView<StayOutboundPaymentV
         {
             case R.id.fakeMobileEditView:
             {
+                if (mBookingDataBinding == null)
+                {
+                    return;
+                }
+
                 if (mBookingDataBinding.guestPhoneEditText.isSelected() == true)
                 {
                     getEventListener().onPhoneNumberClick(mBookingDataBinding.guestPhoneEditText.getText().toString());
@@ -471,16 +460,34 @@ public class StayOutboundPaymentView extends BaseDialogView<StayOutboundPaymentV
                 break;
 
             case R.id.usedBonusLayout:
+            {
+                if (mDiscountDataBinding == null)
+                {
+                    return;
+                }
+
                 getEventListener().onBonusClick(mDiscountDataBinding.bonusRadioButton.isSelected() == false);
                 break;
+            }
 
             case R.id.bonusLayout:
                 getEventListener().onBonusClick(true);
                 break;
 
             case R.id.doPaymentView:
-                getEventListener().onPaymentClick();
+            {
+                if (mBookingDataBinding == null)
+                {
+                    return;
+                }
+
+                // 투숙자명, 연락처 이메일,
+                getEventListener().onPaymentClick(mBookingDataBinding.guestFirstNameEditText.getText().toString()//
+                    , mBookingDataBinding.guestLastNameEditText.getText().toString()//
+                    , mBookingDataBinding.guestPhoneEditText.getText().toString()//
+                    , mBookingDataBinding.guestEmailEditText.getText().toString());
                 break;
+            }
         }
     }
 
@@ -688,7 +695,7 @@ public class StayOutboundPaymentView extends BaseDialogView<StayOutboundPaymentV
         }
     }
 
-    protected ViewGroup getEasyPaymentAgreeLayout()
+    protected ViewGroup getEasyPaymentAgreeLayout(View.OnClickListener onClickListener)
     {
         int[] messageResIds = new int[]{R.string.dialog_msg_hotel_payment_message01//
             , R.string.message_stay_outbound_payment_agree_01//
@@ -767,21 +774,14 @@ public class StayOutboundPaymentView extends BaseDialogView<StayOutboundPaymentV
                 agreeSignatureTextView.startAnimation(animation);
 
                 confirmTextView.setEnabled(true);
-                confirmTextView.setOnClickListener(new View.OnClickListener()
-                {
-                    @Override
-                    public void onClick(View v)
-                    {
-                        getEventListener().onAgreedPaymentClick();
-                    }
-                });
+                confirmTextView.setOnClickListener(onClickListener);
             }
         });
 
         return finalCheckLayout;
     }
 
-    private View getPaymentAgreeLayout()
+    private View getPaymentAgreeLayout(View.OnClickListener onClickListener)
     {
         int[] messageResIds = new int[]{R.string.dialog_msg_hotel_payment_message01//
             , R.string.message_stay_outbound_payment_agree_01//
@@ -796,14 +796,7 @@ public class StayOutboundPaymentView extends BaseDialogView<StayOutboundPaymentV
 
         View confirmTextView = view.findViewById(R.id.confirmTextView);
 
-        confirmTextView.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                getEventListener().onAgreedPaymentClick();
-            }
-        });
+        confirmTextView.setOnClickListener(onClickListener);
 
         return view;
     }

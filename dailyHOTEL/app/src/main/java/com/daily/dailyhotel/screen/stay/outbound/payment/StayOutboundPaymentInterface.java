@@ -2,6 +2,7 @@ package com.daily.dailyhotel.screen.stay.outbound.payment;
 
 import android.content.DialogInterface;
 import android.text.SpannableString;
+import android.view.View;
 
 import com.daily.base.BaseDialogViewInterface;
 import com.daily.dailyhotel.entity.Card;
@@ -36,5 +37,8 @@ public interface StayOutboundPaymentInterface extends BaseDialogViewInterface
 
     void setBonusSelected(boolean selected);
 
-    void showAgreeTermDialog(StayOutboundPayment.PaymentType paymentType, DialogInterface.OnCancelListener cancelListener);
+    void showAgreeTermDialog(StayOutboundPayment.PaymentType paymentType//
+        , View.OnClickListener onClickListener, DialogInterface.OnCancelListener cancelListener);
+
+
 }
