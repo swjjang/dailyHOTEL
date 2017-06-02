@@ -4,8 +4,10 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
+import android.widget.AbsListView;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -63,6 +65,8 @@ public class HomeCategoryRegionListLayout extends BaseLayout
     {
         mListView = (DailyAnimatedExpandableListView) view.findViewById(R.id.listView);
         mListView.setOnGroupClickListener(mOnGroupClickListener);
+
+        mListView.addFooterView(getFooterView());
     }
 
     public PlaceRegionAnimatedExpandableListAdapter getAdapter()
@@ -84,6 +88,16 @@ public class HomeCategoryRegionListLayout extends BaseLayout
         updateTermsOfLocationView(isAgreed);
 
         return headerView;
+    }
+
+    private View getFooterView()
+    {
+        View footerView = new View(mContext);
+        footerView.setBackgroundResource(R.color.default_background);
+        AbsListView.LayoutParams footerLayoutParams = new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ScreenUtils.dpToPx(mContext, 10d));
+        footerView.setLayoutParams(footerLayoutParams);
+
+        return footerView;
     }
 
     public void updateTermsOfLocationView(boolean isAgreed)

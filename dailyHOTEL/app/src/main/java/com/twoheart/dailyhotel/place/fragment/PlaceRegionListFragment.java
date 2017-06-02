@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
+import android.widget.AbsListView;
 import android.widget.ExpandableListView;
 import android.widget.ExpandableListView.OnGroupClickListener;
 import android.widget.ImageView;
@@ -61,6 +62,7 @@ public abstract class PlaceRegionListFragment extends BaseFragment
 
         mListView = (DailyAnimatedExpandableListView) inflater.inflate(R.layout.fragment_region_list, container, false);
         mListView.setOnGroupClickListener(mOnGroupClickListener);
+        mListView.addFooterView(getFooterView());
 
         return mListView;
     }
@@ -101,6 +103,16 @@ public abstract class PlaceRegionListFragment extends BaseFragment
         updateTermsOfLocationView();
 
         return headerView;
+    }
+
+    private View getFooterView()
+    {
+        View footerView = new View(mBaseActivity);
+        footerView.setBackgroundResource(R.color.default_background);
+        AbsListView.LayoutParams footerLayoutParams = new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ScreenUtils.dpToPx(mBaseActivity, 10d));
+        footerView.setLayoutParams(footerLayoutParams);
+
+        return footerView;
     }
 
     public void updateTermsOfLocationView()
