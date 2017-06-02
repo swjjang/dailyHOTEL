@@ -174,10 +174,6 @@ public class StayOutboundListAdapter extends RecyclerView.Adapter<RecyclerView.V
             {
                 ListRowStayOutboundDataBinding dataBinding = DataBindingUtil.inflate(LayoutInflater.from(mContext), R.layout.list_row_stay_outbound_data, parent, false);
 
-                ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT//
-                    , ScreenUtils.getRatioHeightType16x9(ScreenUtils.getScreenWidth(mContext)));
-                dataBinding.getRoot().setLayoutParams(layoutParams);
-
                 StayViewHolder stayViewHolder = new StayViewHolder(dataBinding);
 
                 return stayViewHolder;
@@ -350,7 +346,7 @@ public class StayOutboundListAdapter extends RecyclerView.Adapter<RecyclerView.V
         holder.dataBinding.imageView.setController(draweeController);
 
         // Promo 설명은 사용하지 않는다.
-        holder.dataBinding.promoLayout.setVisibility(View.GONE);
+        holder.dataBinding.promoTextView.setVisibility(View.GONE);
 
         if (mDistanceEnabled == true)
         {
@@ -382,23 +378,23 @@ public class StayOutboundListAdapter extends RecyclerView.Adapter<RecyclerView.V
             this.dataBinding = dataBinding;
 
             itemView.setOnClickListener(mOnClickListener);
-            itemView.setOnLongClickListener(new View.OnLongClickListener()
-            {
-                @Override
-                public boolean onLongClick(View v)
-                {
-                    if (mOnLongClickListener == null)
-                    {
-                        return false;
-                    } else
-                    {
-                        Vibrator vibrator = (Vibrator) mContext.getSystemService(Context.VIBRATOR_SERVICE);
-                        vibrator.vibrate(70);
-
-                        return mOnLongClickListener.onLongClick(v);
-                    }
-                }
-            });
+//            itemView.setOnLongClickListener(new View.OnLongClickListener()
+//            {
+//                @Override
+//                public boolean onLongClick(View v)
+//                {
+//                    if (mOnLongClickListener == null)
+//                    {
+//                        return false;
+//                    } else
+//                    {
+//                        Vibrator vibrator = (Vibrator) mContext.getSystemService(Context.VIBRATOR_SERVICE);
+//                        vibrator.vibrate(70);
+//
+//                        return mOnLongClickListener.onLongClick(v);
+//                    }
+//                }
+//            });
         }
     }
 
