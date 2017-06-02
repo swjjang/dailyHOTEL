@@ -157,7 +157,7 @@
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
                 android:background="@drawable/shape_circle_bb3ffffff_r3"
-                android:visibility="visible"/>
+                android:visibility="gone"/>
 
             <com.daily.base.widget.DailyTextView
                 android:id="@+id/distanceTextView"
@@ -166,7 +166,7 @@
                 android:gravity="center_vertical"
                 android:textColor="@color/white"
                 android:textSize="12dp"
-                android:visibility="visible"
+                android:visibility="gone"
                 dailyFont:style="DemiLight"/>
         </LinearLayout>
 
