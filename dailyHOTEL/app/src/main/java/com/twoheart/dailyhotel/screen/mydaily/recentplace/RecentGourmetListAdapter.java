@@ -54,9 +54,6 @@ public class RecentGourmetListAdapter extends RecentPlacesListAdapter
             case PlaceViewItem.TYPE_ENTRY:
             {
                 View view = mInflater.inflate(R.layout.list_row_gourmet, parent, false);
-                ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT//
-                    , ScreenUtils.getRatioHeightType16x9(ScreenUtils.getScreenWidth(mContext)));
-                view.setLayoutParams(layoutParams);
 
                 return new GourmetViewHolder(view);
             }
@@ -221,11 +218,11 @@ public class RecentGourmetListAdapter extends RecentPlacesListAdapter
 
         if (DailyTextUtils.isTextEmpty(gourmet.dBenefitText) == false)
         {
-            holder.dBenefitLayout.setVisibility(View.VISIBLE);
+            holder.dBenefitTextView.setVisibility(View.VISIBLE);
             holder.dBenefitTextView.setText(gourmet.dBenefitText);
         } else
         {
-            holder.dBenefitLayout.setVisibility(View.GONE);
+            holder.dBenefitTextView.setVisibility(View.GONE);
         }
 
         if (mShowDistanceIgnoreSort == true || getSortType() == Constants.SortType.DISTANCE)
@@ -311,7 +308,6 @@ public class RecentGourmetListAdapter extends RecentPlacesListAdapter
         TextView satisfactionView;
         TextView personsTextView;
         TextView distanceTextView;
-        View dBenefitLayout;
         TextView dBenefitTextView;
         View deleteView;
         View informationLayout;
@@ -324,8 +320,7 @@ public class RecentGourmetListAdapter extends RecentPlacesListAdapter
         {
             super(itemView);
 
-            dBenefitLayout = itemView.findViewById(R.id.dBenefitLayout);
-            dBenefitTextView = (TextView) dBenefitLayout.findViewById(R.id.dBenefitTextView);
+            dBenefitTextView = (TextView) itemView.findViewById(R.id.dBenefitTextView);
             gradientView = itemView.findViewById(R.id.gradientView);
             gourmetImageView = (com.facebook.drawee.view.SimpleDraweeView) itemView.findViewById(R.id.imageView);
             stickerSimpleDraweeView = (com.facebook.drawee.view.SimpleDraweeView) itemView.findViewById(R.id.stickerSimpleDraweeView);
@@ -343,10 +338,6 @@ public class RecentGourmetListAdapter extends RecentPlacesListAdapter
             trueVRView = itemView.findViewById(R.id.trueVRView);
             dot1View = itemView.findViewById(R.id.dot1View);
             dot2View = itemView.findViewById(R.id.dot2View);
-
-            RelativeLayout.LayoutParams dBenefitLayoutParams = (RelativeLayout.LayoutParams) dBenefitLayout.getLayoutParams();
-            dBenefitLayoutParams.rightMargin = ScreenUtils.dpToPx(mContext, 4);
-            dBenefitLayout.setLayoutParams(dBenefitLayoutParams);
 
             itemView.setOnClickListener(new View.OnClickListener()
             {

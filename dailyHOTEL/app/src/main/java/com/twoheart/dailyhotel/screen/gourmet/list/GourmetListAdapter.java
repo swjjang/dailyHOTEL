@@ -60,8 +60,6 @@ public class GourmetListAdapter extends PlaceListAdapter
             case PlaceViewItem.TYPE_ENTRY:
             {
                 View view = mInflater.inflate(R.layout.list_row_gourmet, parent, false);
-                ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ScreenUtils.getRatioHeightType16x9(ScreenUtils.getScreenWidth(mContext)));
-                view.setLayoutParams(layoutParams);
 
                 return new GourmetViewHolder(view);
             }
@@ -248,11 +246,11 @@ public class GourmetListAdapter extends PlaceListAdapter
 
         if (DailyTextUtils.isTextEmpty(gourmet.dBenefitText) == false)
         {
-            holder.dBenefitLayout.setVisibility(View.VISIBLE);
+            holder.dBenefitTextView.setVisibility(View.VISIBLE);
             holder.dBenefitTextView.setText(gourmet.dBenefitText);
         } else
         {
-            holder.dBenefitLayout.setVisibility(View.GONE);
+            holder.dBenefitTextView.setVisibility(View.GONE);
         }
 
         if (mShowDistanceIgnoreSort == true || getSortType() == Constants.SortType.DISTANCE)
@@ -322,7 +320,6 @@ public class GourmetListAdapter extends PlaceListAdapter
         TextView satisfactionView;
         TextView personsTextView;
         TextView distanceTextView;
-        View dBenefitLayout;
         TextView dBenefitTextView;
         View informationLayout;
         View trueVRView;
@@ -333,8 +330,7 @@ public class GourmetListAdapter extends PlaceListAdapter
         {
             super(itemView);
 
-            dBenefitLayout = itemView.findViewById(R.id.dBenefitLayout);
-            dBenefitTextView = (TextView) dBenefitLayout.findViewById(R.id.dBenefitTextView);
+            dBenefitTextView = (TextView) itemView.findViewById(R.id.dBenefitTextView);
             gradientView = itemView.findViewById(R.id.gradientView);
             gourmetImageView = (com.facebook.drawee.view.SimpleDraweeView) itemView.findViewById(R.id.imageView);
             stickerSimpleDraweeView = (com.facebook.drawee.view.SimpleDraweeView) itemView.findViewById(R.id.stickerSimpleDraweeView);
