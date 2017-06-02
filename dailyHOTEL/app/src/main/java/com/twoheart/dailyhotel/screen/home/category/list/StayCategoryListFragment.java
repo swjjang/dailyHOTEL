@@ -4,10 +4,8 @@ import com.daily.base.util.DailyTextUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Place;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
-import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.model.StayCategoryParams;
-import com.twoheart.dailyhotel.model.time.StayBookingDay;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.layout.PlaceListLayout;
 import com.twoheart.dailyhotel.screen.hotel.list.StayListFragment;
@@ -62,20 +60,11 @@ public class StayCategoryListFragment extends StayListFragment
             mLocalPlusList = null;
         }
 
-        StayBookingDay stayBookingDay = mStayCuration.getStayBookingDay();
-        Province province = mStayCuration.getProvince();
-
-        if (province == null || stayBookingDay == null)
-        {
-            unLockUI();
-            Util.restartApp(mBaseActivity);
-            return;
-        }
-
-        if (mIsShowLocalPlus == true && page <= 1 && mStayCuration.getCurationOption().getSortType() == SortType.DEFAULT)
+        if (mIsShowLocalPlus == true && page <= 1 && ViewType.LIST == mViewType //
+            && mStayCuration.getCurationOption().getSortType() == SortType.DEFAULT)
         {
             // 광고 BM 사용 이고 페이지가 처음이면서 정렬이 Default 일때 광고 BM 요청
-            requestLocalPlusList(page, stayBookingDay, province);
+            requestLocalPlusList(page);
         } else
         {
             // 기본 리스트 요청
@@ -104,15 +93,8 @@ public class StayCategoryListFragment extends StayListFragment
         ((StayCategoryListNetworkController) mNetworkController).requestStayCategoryList(params);
     }
 
-    private void requestLocalPlusList(int page, StayBookingDay stayBookingDay, Province province)
+    private void requestLocalPlusList(int page)
     {
-        //        if (province == null || stayBookingDay == null)
-        //        {
-        //            unLockUI();
-        //            Util.restartApp(mBaseActivity);
-        //            return;
-        //        }
-
         if (mStayCuration == null || mStayCuration.getCurationOption() == null//
             || mStayCuration.getCurationOption().getSortType() == null//
             || (mStayCuration.getCurationOption().getSortType() == SortType.DISTANCE && mStayCuration.getLocation() == null))
@@ -123,38 +105,6 @@ public class StayCategoryListFragment extends StayListFragment
         }
 
         StayCategoryParams params = (StayCategoryParams) mStayCuration.toPlaceParams(page, PAGENATION_LIST_SIZE, true);
-
-        //        HashMap<String, Object> hashMap = new HashMap<>();
-        //
-        //        int nights = 1;
-        //        int areaIdx = 0;
-        //
-        //        String dateCheckIn = stayBookingDay.getCheckInDay("yyyy-MM-dd");
-        //
-        //        try
-        //        {
-        //            nights = stayBookingDay.getNights();
-        //        } catch (Exception e)
-        //        {
-        //            ExLog.e(e.toString());
-        //        }
-        //
-        //        int provinceIdx = province.getProvinceIndex();
-        //
-        //        if (province instanceof Area)
-        //        {
-        //            areaIdx = ((Area) province).index;
-        //        }
-        //
-        //        hashMap.put("dateCheckIn", dateCheckIn);
-        //        hashMap.put("stays", nights);
-        //        hashMap.put("provinceIdx", provinceIdx);
-        //        hashMap.put("category", mStayCuration.getCategory().code);
-        //
-        //        if (areaIdx != 0)
-        //        {
-        //            hashMap.put("areaIdx", areaIdx);
-        //        }
 
         ((StayCategoryListNetworkController) mNetworkController).requestLocalPlusList(params);
     }
@@ -193,7 +143,7 @@ public class StayCategoryListFragment extends StayListFragment
         }
 
         SortType sortType = mStayCuration.getCurationOption().getSortType();
-        ArrayList<PlaceViewItem> placeViewItems = makePlaceList(page, localPlusList, list, sortType, hasSection);
+        ArrayList<PlaceViewItem> placeViewItems = makePlaceList(page, localPlusList, list, sortType, mViewType, hasSection);
 
         switch (mViewType)
         {
@@ -262,13 +212,13 @@ public class StayCategoryListFragment extends StayListFragment
     }
 
     protected ArrayList<PlaceViewItem> makePlaceList(int page, List<? extends Place> localPlusList //
-        , List<? extends Place> placeList, SortType sortType, boolean hasSection)
+        , List<? extends Place> placeList, SortType sortType, ViewType viewType, boolean hasSection)
     {
         ArrayList<PlaceViewItem> placeViewItemList = new ArrayList<>();
 
         int entryPosition = 1;
 
-        if (page <= 1 && SortType.DEFAULT == sortType && localPlusList != null && hasSection == true)
+        if (page <= 1 && SortType.DEFAULT == sortType && localPlusList != null && hasSection == true && ViewType.LIST == viewType)
         {
             int localPlusListSize = localPlusList.size();
             entryPosition += localPlusListSize;
