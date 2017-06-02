@@ -211,7 +211,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
 
         switch (requestCode)
         {
-            case StayOutboundPaymentActivity.REQUEST_CODE_CARDMANAGER:
+            case StayOutboundPaymentActivity.REQUEST_CODE_CARD_MANAGER:
             {
                 if (resultCode == Activity.RESULT_OK && data != null)
                 {
@@ -508,7 +508,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
 
         startActivityForResult(CreditCardListActivity.newInstance(getActivity()//
             , mSelectedCard.name, mSelectedCard.number, mSelectedCard.billKey, mSelectedCard.cd)//
-            , StayOutboundPaymentActivity.REQUEST_CODE_CARDMANAGER);
+            , StayOutboundPaymentActivity.REQUEST_CODE_CARD_MANAGER);
     }
 
     @Override

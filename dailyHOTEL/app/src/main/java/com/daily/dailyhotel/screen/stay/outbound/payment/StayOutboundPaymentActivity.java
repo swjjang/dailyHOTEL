@@ -17,7 +17,7 @@ import java.util.ArrayList;
  */
 public class StayOutboundPaymentActivity extends BaseActivity<StayOutboundPaymentPresenter>
 {
-    static final int REQUEST_CODE_CARDMANAGER = 10000;
+    static final int REQUEST_CODE_CARD_MANAGER = 10000;
     static final int REQUEST_CODE_REGISTER_CARD = 10001;
     static final int REQUEST_CODE_REGISTER_CARD_PAYMENT = 10002;
     static final int REQUEST_CODE_REGISTER_PHONE_NUMBER = 10003;
