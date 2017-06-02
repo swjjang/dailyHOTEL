@@ -79,9 +79,6 @@ public class CollectionStayAdapter extends PlaceListAdapter
             {
                 View view = mInflater.inflate(R.layout.list_row_hotel, parent, false);
 
-                ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ScreenUtils.getRatioHeightType16x9(ScreenUtils.getScreenWidth(mContext)));
-                view.setLayoutParams(layoutParams);
-
                 return new HotelViewHolder(view);
             }
 
@@ -225,11 +222,11 @@ public class CollectionStayAdapter extends PlaceListAdapter
 
         if (DailyTextUtils.isTextEmpty(recommendationStay.benefit) == false)
         {
-            holder.dBenefitLayout.setVisibility(View.VISIBLE);
+            holder.dBenefitTextView.setVisibility(View.VISIBLE);
             holder.dBenefitTextView.setText(recommendationStay.benefit);
         } else
         {
-            holder.dBenefitLayout.setVisibility(View.GONE);
+            holder.dBenefitTextView.setVisibility(View.GONE);
         }
 
         //        if (mShowDistanceIgnoreSort == true || getSortType() == Constants.SortType.DISTANCE)
@@ -276,28 +273,27 @@ public class CollectionStayAdapter extends PlaceListAdapter
     {
         View gradientView;
         com.facebook.drawee.view.SimpleDraweeView hotelImageView;
-        TextView hotelNameView;
-        TextView hotelPriceView;
-        TextView hotelDiscountView;
-        View hotelSoldOutView;
-        TextView hotelAddressView;
-        TextView hotelGradeView;
-        TextView satisfactionView;
-        View averageView;
-        TextView distanceTextView;
-        View dBenefitLayout;
         TextView dBenefitTextView;
+        TextView hotelGradeView;
+        TextView hotelNameView;
         View informationLayout;
-        View trueVRView;
+        TextView satisfactionView;
         View dot1View;
+        TextView distanceTextView;
         View dot2View;
+        View trueVRView;
+        TextView hotelAddressView;
+        TextView hotelPriceView;
+        View averageView;
+        TextView hotelDiscountView;
+
+        View hotelSoldOutView;
 
         public HotelViewHolder(View itemView)
         {
             super(itemView);
 
-            dBenefitLayout = itemView.findViewById(R.id.dBenefitLayout);
-            dBenefitTextView = (TextView) dBenefitLayout.findViewById(R.id.dBenefitTextView);
+            dBenefitTextView = (TextView) itemView.findViewById(R.id.dBenefitTextView);
             gradientView = itemView.findViewById(R.id.gradientView);
             hotelImageView = (com.facebook.drawee.view.SimpleDraweeView) itemView.findViewById(R.id.imageView);
             hotelNameView = (TextView) itemView.findViewById(R.id.nameTextView);

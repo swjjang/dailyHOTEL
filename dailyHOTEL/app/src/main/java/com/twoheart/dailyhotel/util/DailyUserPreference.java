@@ -28,6 +28,7 @@ public class DailyUserPreference
     private static final String KEY_AUTHORIZATION = "8";
 
     // Payment
+    private static final String KEY_OVERSEAS_NAME = "20";
     private static final String KEY_OVERSEAS_PHONE = "21";
     private static final String KEY_OVERSEAS_EMAIL = "22";
     private static final String KEY_OVERSEAS_FIRST_NAME = "23";
@@ -178,6 +179,11 @@ public class DailyUserPreference
 
     /////////////////////////////////////////////////////////////////////////////////////////
 
+    public String getOverseasName()
+    {
+        return getValueDecrypt(mPreferences, KEY_OVERSEAS_NAME, null);
+    }
+
     public String getOverseasFirstName()
     {
         return getValueDecrypt(mPreferences, KEY_OVERSEAS_FIRST_NAME, null);
@@ -196,6 +202,17 @@ public class DailyUserPreference
     public String getOverseasEmail()
     {
         return getValueDecrypt(mPreferences, KEY_OVERSEAS_EMAIL, null);
+    }
+
+    public void setOverseasInformation(String name, String phone, String email)
+    {
+        if (mEditor != null)
+        {
+            mEditor.putString(KEY_OVERSEAS_NAME, name);
+            mEditor.putString(KEY_OVERSEAS_PHONE, phone);
+            mEditor.putString(KEY_OVERSEAS_EMAIL, email);
+            mEditor.apply();
+        }
     }
 
     public void setOverseasInformation(String firstName, String lastName, String phone, String email)
