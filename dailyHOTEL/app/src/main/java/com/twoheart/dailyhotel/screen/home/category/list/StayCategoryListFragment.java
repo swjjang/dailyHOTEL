@@ -61,7 +61,7 @@ public class StayCategoryListFragment extends StayListFragment
         }
 
         if (mIsShowLocalPlus == true && page <= 1 && ViewType.LIST == mViewType //
-            && mStayCuration.getCurationOption().getSortType() == SortType.DEFAULT)
+            && mStayCuration.getCurationOption().getSortType() == SortType.DEFAULT && isDefaultFilter() == true)
         {
             // 광고 BM 사용 이고 페이지가 처음이면서 정렬이 Default 일때 광고 BM 요청
             requestLocalPlusList(page);
@@ -218,7 +218,8 @@ public class StayCategoryListFragment extends StayListFragment
 
         int entryPosition = 1;
 
-        if (page <= 1 && SortType.DEFAULT == sortType && localPlusList != null && hasSection == true && ViewType.LIST == viewType)
+        if (page <= 1 && SortType.DEFAULT == sortType && localPlusList != null //
+            && hasSection == true && ViewType.LIST == viewType && isDefaultFilter() == true)
         {
             int localPlusListSize = localPlusList.size();
             entryPosition += localPlusListSize;
