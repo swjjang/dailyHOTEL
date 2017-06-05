@@ -47,8 +47,9 @@ public class StayDetailLayout extends PlaceDetailLayout implements RadioGroup.On
     public static final int VIEW_AVERAGE_PRICE = 0;
     public static final int VIEW_TOTAL_PRICE = 1;
 
-    private StayDetailListAdapter mListAdapter;
     StayProduct mSelectedStayProduct;
+
+    private StayDetailItemLayout mStayDetailItemLayout;
 
     StayDetailRoomTypeListAdapter mRoomTypeListAdapter;
     protected RecyclerView mProductTypeRecyclerView;
@@ -125,12 +126,12 @@ public class StayDetailLayout extends PlaceDetailLayout implements RadioGroup.On
     @Override
     protected View getTitleLayout()
     {
-        if (mListAdapter == null)
+        if (mStayDetailItemLayout == null)
         {
             return null;
         }
 
-        return mListAdapter.getTitleLayout();
+        return mStayDetailItemLayout.getTitleLayout();
     }
 
     public void setTitleText(Stay.Grade grade, String placeName)
@@ -183,14 +184,13 @@ public class StayDetailLayout extends PlaceDetailLayout implements RadioGroup.On
         setLineIndicatorVisible(imageInformationList.size() > 0);
         setImageInformation((imageInformationList.size() > 0) ? imageInformationList.get(0).description : null);
 
-        if (mListAdapter == null)
-        {
-            mListAdapter = new StayDetailListAdapter(mContext, stayBookingDay, stayDetail, placeReviewScores, (StayDetailLayout.OnEventListener) mOnEventListener, mEmptyViewOnTouchListener);
-            mListView.setAdapter(mListAdapter);
-        } else
-        {
-            mListAdapter.setData(stayBookingDay, stayDetail, placeReviewScores);
-        }
+        mStayDetailItemLayout = new StayDetailItemLayout(mContext);
+        mStayDetailItemLayout.setOnEventListener((StayDetailLayout.OnEventListener) mOnEventListener);
+        mStayDetailItemLayout.setEmptyViewOnTouchListener(mEmptyViewOnTouchListener);
+        mStayDetailItemLayout.setData(stayBookingDay, stayDetail, placeReviewScores);
+
+        mScrollView.removeAllViews();
+        mScrollView.addView(mStayDetailItemLayout);
 
         setCurrentImage(imagePosition);
 
@@ -261,17 +261,17 @@ public class StayDetailLayout extends PlaceDetailLayout implements RadioGroup.On
         {
             setTrueReviewCount(placeReviewScores.reviewScoreTotalCount);
         }
-
-        mListAdapter.notifyDataSetChanged();
     }
 
     @Override
     public void setTrueReviewCount(int count)
     {
-        if (mListAdapter != null)
+        if (mStayDetailItemLayout == null)
         {
-            mListAdapter.setTrueReviewCount(count);
+            return;
         }
+
+        mStayDetailItemLayout.setTrueReviewCount(count);
     }
 
     private void updateRoomTypeInformationLayout(StayBookingDay stayBookingDay, List<StayProduct> stayProductList)

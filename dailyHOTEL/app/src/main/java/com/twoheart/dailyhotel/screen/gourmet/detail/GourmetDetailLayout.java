@@ -30,8 +30,9 @@ import java.util.List;
 
 public class GourmetDetailLayout extends PlaceDetailLayout
 {
-    private GourmetDetailListAdapter mListAdapter;
     private SimpleDraweeView mStickerSimpleDraweeView;
+
+    private GourmetDetailItemLayout mGourmetDetailItemLayout;
 
     public interface OnEventListener extends PlaceDetailLayout.OnEventListener
     {
@@ -62,12 +63,12 @@ public class GourmetDetailLayout extends PlaceDetailLayout
     @Override
     protected View getTitleLayout()
     {
-        if (mListAdapter == null)
+        if (mGourmetDetailItemLayout == null)
         {
             return null;
         }
 
-        return mListAdapter.getTitleLayout();
+        return mGourmetDetailItemLayout.getTitleLayout();
     }
 
     public void setTitleText(String placeName)
@@ -106,15 +107,13 @@ public class GourmetDetailLayout extends PlaceDetailLayout
         setLineIndicatorVisible(imageInformationList.size() > 0);
         setImageInformation((imageInformationList.size() > 0) ? imageInformationList.get(0).description : null);
 
-        if (mListAdapter == null)
-        {
-            mListAdapter = new GourmetDetailListAdapter(mContext, gourmetBookingDay, (GourmetDetail) mPlaceDetail, placeReviewScores//
-                , (OnEventListener) mOnEventListener, mEmptyViewOnTouchListener);
-            mListView.setAdapter(mListAdapter);
-        } else
-        {
-            mListAdapter.setData(gourmetBookingDay, (GourmetDetail) mPlaceDetail, placeReviewScores);
-        }
+        mGourmetDetailItemLayout = new GourmetDetailItemLayout(mContext);
+        mGourmetDetailItemLayout.setOnEventListener((GourmetDetailLayout.OnEventListener) mOnEventListener);
+        mGourmetDetailItemLayout.setEmptyViewOnTouchListener(mEmptyViewOnTouchListener);
+        mGourmetDetailItemLayout.setData(gourmetBookingDay, (GourmetDetail) mPlaceDetail, placeReviewScores);
+
+        mScrollView.removeAllViews();
+        mScrollView.addView(mGourmetDetailItemLayout);
 
         setCurrentImage(imagePosition);
         showWishButton();
@@ -156,16 +155,14 @@ public class GourmetDetailLayout extends PlaceDetailLayout
         }
 
         setSticker(gourmetDetailParams.getSticker());
-
-        mListAdapter.notifyDataSetChanged();
     }
 
     @Override
     public void setTrueReviewCount(int count)
     {
-        if (mListAdapter != null)
+        if (mGourmetDetailItemLayout != null)
         {
-            mListAdapter.setTrueReviewCount(count);
+            mGourmetDetailItemLayout.setTrueReviewCount(count);
         }
     }
 
