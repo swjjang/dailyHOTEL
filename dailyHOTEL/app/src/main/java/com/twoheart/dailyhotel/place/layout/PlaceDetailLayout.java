@@ -25,10 +25,9 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.LinearInterpolator;
-import android.widget.AbsListView;
-import android.widget.AbsListView.OnScrollListener;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.daily.base.util.DailyTextUtils;
@@ -44,7 +43,7 @@ import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.DailyLineIndicator;
 import com.twoheart.dailyhotel.widget.DailyLoopViewPager;
-import com.twoheart.dailyhotel.widget.DailyPlaceDetailListView;
+import com.twoheart.dailyhotel.widget.DailyPlaceDetailScrollView;
 
 import java.util.ArrayList;
 
@@ -62,7 +61,8 @@ public abstract class PlaceDetailLayout extends BaseLayout
     protected DailyLineIndicator mDailyLineIndicator;
     protected View mMoreIconView;
 
-    protected DailyPlaceDetailListView mListView;
+    protected DailyPlaceDetailScrollView mScrollView;
+
     protected PlaceDetailImageViewPagerAdapter mImageAdapter;
     protected TextView mBookingTextView;
     protected TextView mSoldoutTextView;
@@ -156,8 +156,8 @@ public abstract class PlaceDetailLayout extends BaseLayout
         mTransTotalGradeTextView = (TextView) mTransTitleLayout.findViewById(R.id.transGradeTextView);
         mTransPlaceNameTextView = (TextView) mTransTitleLayout.findViewById(R.id.transNameTextView);
 
-        mListView = (DailyPlaceDetailListView) view.findViewById(R.id.placeListView);
-        mListView.setOnScrollListener(mOnScrollListener);
+        mScrollView = (DailyPlaceDetailScrollView) view.findViewById(R.id.placeScrollView);
+        mScrollView.setOnScrollChangedListener(mOnScrollChangedListener);
 
         // 이미지 ViewPage 넣기.
         mDailyLineIndicator = (DailyLineIndicator) view.findViewById(R.id.viewpagerIndicator);
@@ -259,28 +259,31 @@ public abstract class PlaceDetailLayout extends BaseLayout
         return paintDrawable;
     }
 
-    public void setListScrollTop()
+    public void setScrollViewTop()
     {
-        if (mListView == null || mListView.getChildCount() == 0)
+        if (mScrollView == null)
         {
             return;
         }
 
-        mListView.smoothScrollBy(0, 0);
-        mListView.setSelection(0);
+        mScrollView.postDelayed(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                mScrollView.fullScroll(View.FOCUS_UP);
+            }
+        }, 50);
     }
 
-    public boolean isListScrollTop()
+    public boolean isScrollViewTop()
     {
-        if (mListView == null || mListView.getChildCount() == 0)
+        if (mScrollView == null)
         {
             return true;
         }
 
-        View view = mListView.getChildAt(0);
-        int scrollY = -view.getTop() + mListView.getFirstVisiblePosition() * view.getHeight();
-
-        return scrollY == 0;
+        return mScrollView.getScrollY() == 0; // 임시
     }
 
     public void setTransVisibility(int visibility)
@@ -333,7 +336,7 @@ public abstract class PlaceDetailLayout extends BaseLayout
     {
         final Window window = activity.getWindow();
 
-        mListView.post(new Runnable()
+        mScrollView.post(new Runnable()
         {
             @Override
             public void run()
@@ -749,57 +752,26 @@ public abstract class PlaceDetailLayout extends BaseLayout
         }
     };
 
-    private OnScrollListener mOnScrollListener = new OnScrollListener()
+    private DailyPlaceDetailScrollView.OnScrollChangedListener mOnScrollChangedListener = new DailyPlaceDetailScrollView.OnScrollChangedListener()
     {
-        private Rect mTitleLayoutRect = new Rect();
-
         @Override
-        public void onScrollStateChanged(AbsListView view, int scrollState)
+        public void onScrollChanged(ScrollView scrollView, int l, int t, int oldl, int oldt)
         {
-        }
-
-        @Override
-        public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount)
-        {
-            if (view.getAdapter() == null || getBookingStatus() == STATUS_BOOKING)
+            if (getBookingStatus() == STATUS_BOOKING)
             {
                 return;
             }
-
-            if (firstVisibleItem > 1)
-            {
-                ((OnEventListener) mOnEventListener).showActionBar(false);
-                return;
-            }
-
-            if (mStatusBarHeight == 0)
-            {
-                return;
-            }
-
-            View titleLayout = getTitleLayout();
-
-            if (titleLayout == null)
-            {
-                return;
-            }
-
-            titleLayout.getGlobalVisibleRect(mTitleLayoutRect);
 
             final int TOOLBAR_HEIGHT = mContext.getResources().getDimensionPixelSize(R.dimen.toolbar_height);
 
-            if (mTitleLayoutRect.top == mTitleLayoutRect.right)
-            {
+            int viewpagerHeight = getImageLayoutHeight(mContext);
 
+            if (t >= viewpagerHeight - TOOLBAR_HEIGHT)
+            {
+                ((OnEventListener) mOnEventListener).showActionBar(true);
             } else
             {
-                if (mTitleLayoutRect.top <= mStatusBarHeight + TOOLBAR_HEIGHT)
-                {
-                    ((OnEventListener) mOnEventListener).showActionBar(true);
-                } else
-                {
-                    ((OnEventListener) mOnEventListener).hideActionBar(true);
-                }
+                ((OnEventListener) mOnEventListener).hideActionBar(true);
             }
         }
     };
@@ -820,7 +792,7 @@ public abstract class PlaceDetailLayout extends BaseLayout
                     mPrevY = event.getY();
 
                     mMoveState = 0;
-                    mListView.setScrollEnabled(false);
+                    mScrollView.setScrollEnabled(false);
 
                     try
                     {
@@ -856,7 +828,7 @@ public abstract class PlaceDetailLayout extends BaseLayout
                             mViewPager.onTouchEvent(event);
                         }
 
-                        mListView.setScrollEnabled(true);
+                        mScrollView.setScrollEnabled(true);
                         break;
                     }
                 }
@@ -874,7 +846,7 @@ public abstract class PlaceDetailLayout extends BaseLayout
                         mViewPager.onTouchEvent(event);
                     }
 
-                    mListView.setScrollEnabled(true);
+                    mScrollView.setScrollEnabled(true);
                     break;
                 }
 
@@ -906,7 +878,7 @@ public abstract class PlaceDetailLayout extends BaseLayout
                         {
                             // y축으로 이동한 경우.
                             mMoveState = 10;
-                            mListView.setScrollEnabled(true);
+                            mScrollView.setScrollEnabled(true);
                             return true;
                         }
                     } else if (mMoveState == 100)
