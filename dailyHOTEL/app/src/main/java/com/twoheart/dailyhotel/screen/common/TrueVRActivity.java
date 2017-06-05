@@ -216,7 +216,7 @@ public class TrueVRActivity extends WebViewActivity implements View.OnClickListe
     @Override
     public void onBackPressed()
     {
-        super.onBackPressed();
+        finish();
     }
 
     class CupixEventListener
