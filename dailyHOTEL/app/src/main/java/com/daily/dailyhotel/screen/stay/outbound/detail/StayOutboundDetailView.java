@@ -896,6 +896,15 @@ public class StayOutboundDetailView extends BaseDialogView<StayOutboundDetailVie
             }
         });
 
+        dataBinding.closeTextView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                hideSimpleDialog();
+            }
+        });
+
         showSimpleDialog(dataBinding.getRoot(), null, listener, true);
     }
 
