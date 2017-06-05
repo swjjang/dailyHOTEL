@@ -24,18 +24,18 @@
             android:textSize="17dp"
             dailyFont:style="Medium"/>
 
-        <com.daily.base.widget.DailyTextView
-            android:id="@+id/kakaoShareView"
-            android:layout_width="match_parent"
-            android:layout_height="62dp"
-            android:layout_marginTop="16dp"
-            android:drawablePadding="10dp"
-            android:gravity="center_vertical"
-            android:text="@string/label_share_kakao"
-            android:textColor="@color/default_text_kakao"
-            android:textSize="14dp"
-            app:drawableCompatLeft="@drawable/ic_detail_share_kakao"
-            dailyFont:style="Medium"/>
+        <!--<com.daily.base.widget.DailyTextView-->
+            <!--android:id="@+id/kakaoShareView"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="62dp"-->
+            <!--android:layout_marginTop="16dp"-->
+            <!--android:drawablePadding="10dp"-->
+            <!--android:gravity="center_vertical"-->
+            <!--android:text="@string/label_share_kakao"-->
+            <!--android:textColor="@color/default_text_kakao"-->
+            <!--android:textSize="14dp"-->
+            <!--app:drawableCompatLeft="@drawable/ic_detail_share_kakao"-->
+            <!--dailyFont:style="Medium"/>-->
 
         <LinearLayout
             android:id="@+id/smsShareLayout"
@@ -43,10 +43,10 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/default_line_cf0f0f0"/>
+            <!--<View-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="1dp"-->
+                <!--android:background="@color/default_line_cf0f0f0"/>-->
 
             <com.daily.base.widget.DailyTextView
                 android:id="@+id/smsShareView"

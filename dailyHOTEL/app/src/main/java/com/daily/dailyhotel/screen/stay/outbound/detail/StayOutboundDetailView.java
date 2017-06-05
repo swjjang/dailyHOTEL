@@ -874,16 +874,16 @@ public class StayOutboundDetailView extends BaseDialogView<StayOutboundDetailVie
     {
         DialogShareDataBinding dataBinding = DataBindingUtil.inflate(LayoutInflater.from(getContext()), R.layout.dialog_share_data, null, false);
 
-        dataBinding.kakaoShareView.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                hideSimpleDialog();
-
-                getEventListener().onShareKakaoClick();
-            }
-        });
+        //        dataBinding.kakaoShareView.setOnClickListener(new View.OnClickListener()
+        //        {
+        //            @Override
+        //            public void onClick(View v)
+        //            {
+        //                hideSimpleDialog();
+        //
+        //                getEventListener().onShareKakaoClick();
+        //            }
+        //        });
 
         dataBinding.smsShareLayout.setOnClickListener(new View.OnClickListener()
         {
