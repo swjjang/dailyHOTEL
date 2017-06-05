@@ -34,6 +34,7 @@ public class DailyInternalDeepLink extends DailyDeepLink
 
     private static final String STAY = "stay";
     private static final String GOURMET = "gourmet";
+    private static final String STAY_OUTBOUND = "stayOutBound";
 
     public DailyInternalDeepLink(Uri uri)
     {
@@ -194,13 +195,13 @@ public class DailyInternalDeepLink extends DailyDeepLink
         return getIntent(context, Uri.parse(stringBuilder.toString()));
     }
 
-    public static Intent getStayBookingDetailScreenLink(Context context, int reservationId)
+    public static Intent getStayOutBoundReservationDetailScreenLink(Context context, int reservationId)
     {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("dailyhotel://");
         stringBuilder.append(HOST_INTERNAL_DAILYHOTEL);
         stringBuilder.append("?v=" + VIEW_BOOKING_DETAIL);
-        stringBuilder.append("&pt=" + STAY);
+        stringBuilder.append("&pt=" + STAY_OUTBOUND);
         stringBuilder.append("&rid=" + reservationId);
 
         return getIntent(context, Uri.parse(stringBuilder.toString()));

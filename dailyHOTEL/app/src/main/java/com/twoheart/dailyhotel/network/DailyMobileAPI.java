@@ -6,6 +6,7 @@ import com.daily.base.util.DailyTextUtils;
 import com.daily.dailyhotel.repository.remote.model.CardData;
 import com.daily.dailyhotel.repository.remote.model.CommonDateTimeData;
 import com.daily.dailyhotel.repository.remote.model.PaymentTypeEasyData;
+import com.daily.dailyhotel.repository.remote.model.ReservationData;
 import com.daily.dailyhotel.repository.remote.model.StayOutboundDetailData;
 import com.daily.dailyhotel.repository.remote.model.StayOutboundPaymentData;
 import com.daily.dailyhotel.repository.remote.model.StayOutboundsData;
@@ -1406,5 +1407,24 @@ public class DailyMobileAPI implements IDailyNetwork
 
         return mDailyMobileService.getPaymentTypeEasy(Crypto.getUrlDecoderEx(URL) + Crypto.getUrlDecoderEx(API, urlParams)//
             , jsonObject).subscribeOn(Schedulers.io());
+    }
+
+    public Observable<BaseListDto<ReservationData>> getStayOutBoundReservationList()
+    {
+        final String URL = Constants.UNENCRYPTED_URL ? "https://dev-silo.dailyhotel.me/"//
+            : "MzAkODEkNDckNjgkNDAkMzkkODckMSQ4OSQyOCQxNCQzMiQ4JDEkMzckNTUk$QAGkRCM0ZGGMkM1MBzkyQTBEOEMxRDgL1OGUWENFMUM3MEWZJEOURDMOEAM1NjY1RjE2MEVDQjc4RTSA5MzQxQjQ2Rjk1VMMHUEyRg==$";
+
+        final String API = Constants.UNENCRYPTED_URL ? "api/v1/outbound/hotel-reservations"//
+            : "MTckMzAkNDUkNjMkMTAzJDExMSQ1JDAkNiQzJDEyJDEyMSQ5NiQxMzQkMzMkNTUk$ARUSFDMON0VCWNkYxMkZGQZkI0NDQ2N0QX2MYTNDMDQ0QUUxRDEDzMELRBNEEyMjY5NUI0XQjA1NEQ4RDQ3RTAzNjQ5QzJEOUUA5MzY5QUE2NkYA0Njg0NDZk5QjJgyNEE2NTAzNCkM0RjI5$";
+
+        return mDailyMobileService.getStayOutBoundReservationList(Crypto.getUrlDecoderEx(URL) + Crypto.getUrlDecoderEx(API)).subscribeOn(Schedulers.io());
+    }
+
+    public Observable<BaseListDto<ReservationData>> getReservationList()
+    {
+        final String API = Constants.UNENCRYPTED_URL ? "api/v5/reservations"//
+            : "NjMkNDQkMCQ2MiQ1NSQ5JDIzJDQxJDgwJDckNTkkMzYkMjAkMzgkNTMkOTQk$QOEFENTRQyWMjg4QTZCRIDE3MFjY5QkVCNjJEPSRkI1NjDJENThGKKM0VGMTExRCWjJFRDNEINTYY1MjRDQkEyDODA3ODMRyNUVEMQ==$";
+
+        return mDailyMobileService.getReservationList(Crypto.getUrlDecoderEx(API)).subscribeOn(Schedulers.io());
     }
 }

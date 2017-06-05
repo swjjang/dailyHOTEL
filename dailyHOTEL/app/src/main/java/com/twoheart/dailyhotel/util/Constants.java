@@ -22,7 +22,7 @@ public interface Constants
     enum PlaceType
     {
         HOTEL,
-        FNB // 절대로 바꾸면 안됨 서버에서 fnb로 내려옴
+        FNB, // 절대로 바꾸면 안됨 서버에서 fnb로 내려옴
     }
 
     enum ViewType
