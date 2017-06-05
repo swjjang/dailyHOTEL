@@ -274,12 +274,12 @@ public abstract class PlaceDetailActivity extends BaseActivity
                     return;
                 }
 
-                if (mPlaceDetailLayout.isListScrollTop() == true)
+                if (mPlaceDetailLayout.isScrollViewTop() == true)
                 {
                     mPlaceDetailLayout.setTransVisibility(View.VISIBLE);
                 } else
                 {
-                    mPlaceDetailLayout.setListScrollTop();
+                    mPlaceDetailLayout.setScrollViewTop();
 
                     mHandler.postDelayed(new Runnable()
                     {

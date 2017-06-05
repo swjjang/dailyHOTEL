@@ -142,16 +142,13 @@
             dailyFont:style="Medium"/>
     </LinearLayout>
 
-    <com.twoheart.dailyhotel.widget.DailyPlaceDetailListView
-        android:id="@+id/placeListView"
+    <com.twoheart.dailyhotel.widget.DailyPlaceDetailScrollView
+        android:id="@+id/placeScrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/bottomLayout"
         android:layout_alignParentBottom="false"
-        android:cacheColorHint="#00000000"
-        android:divider="@null"
-        android:fadingEdge="none"
-        android:fadingEdgeLength="0dp"/>
+        android:overScrollMode="never"/>
 
     <RelativeLayout
         android:layout_width="match_parent"
