@@ -36,7 +36,7 @@ public class PaymentRemoteImpl implements PaymentInterface
     }
 
     @Override
-    public Observable<StayOutboundPayment> getStayOutBoundPayment(StayBookDateTime stayBookDateTime, int index//
+    public Observable<StayOutboundPayment> getStayOutboundPayment(StayBookDateTime stayBookDateTime, int index//
         , String rateCode, String rateKey, String roomTypeCode, int roomBedTypeId, People people)
     {
         JSONObject jsonObject = new JSONObject();
@@ -59,7 +59,7 @@ public class PaymentRemoteImpl implements PaymentInterface
             jsonObject = null;
         }
 
-        return DailyMobileAPI.getInstance(mContext).getStayOutBoundPayment(index, jsonObject).map(stayOutboundPaymentDataBaseDto ->
+        return DailyMobileAPI.getInstance(mContext).getStayOutboundPayment(index, jsonObject).map(stayOutboundPaymentDataBaseDto ->
         {
             StayOutboundPayment stayOutboundPayment = null;
 
@@ -182,7 +182,7 @@ public class PaymentRemoteImpl implements PaymentInterface
         JSONObject jsonObject = new JSONObject();
 
         final int NUMBER_OF_ROOMS = 1;
-        final String PAYMENT_TYPE = "ONE_CLICK";
+        final String PAYMENT_TYPE = "BONUS";
 
         try
         {

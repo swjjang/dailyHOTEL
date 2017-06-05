@@ -23,7 +23,7 @@ public class SuggestRemoteImpl implements SuggestInterface
     }
 
     @Override
-    public Observable<List<Suggest>> getSuggestsByStayOutBound(String keyword)
+    public Observable<List<Suggest>> getSuggestsByStayOutbound(String keyword)
     {
         return DailyMobileAPI.getInstance(mContext).getSuggestsByStayOutbound(keyword).map((suggestsDataBaseDto) ->
         {

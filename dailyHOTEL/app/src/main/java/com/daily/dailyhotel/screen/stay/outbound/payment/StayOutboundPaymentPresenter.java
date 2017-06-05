@@ -19,6 +19,7 @@ import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
 import com.daily.dailyhotel.entity.Card;
 import com.daily.dailyhotel.entity.Guest;
+import com.daily.dailyhotel.entity.PaymentResult;
 import com.daily.dailyhotel.entity.People;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayOutboundPayment;
@@ -65,7 +66,6 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
     private Guest mGuest;
     private StayOutboundPayment.PaymentType mPaymentType;
     private boolean mBonusSelected;
-    private int mReservationId;
 
     public interface StayOutboundPaymentAnalyticsInterface extends BaseAnalyticsInterface
     {
@@ -356,7 +356,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
 
         Observable<StayOutboundPayment> observable;
 
-        addCompositeDisposable(Observable.zip(mPaymentRemoteImpl.getStayOutBoundPayment(mStayBookDateTime, mStayIndex//
+        addCompositeDisposable(Observable.zip(mPaymentRemoteImpl.getStayOutboundPayment(mStayBookDateTime, mStayIndex//
             , mRateCode, mRateKey, mRoomTypeCode, mRoomBedTypeId, mPeople)//
             , mPaymentRemoteImpl.getSimpleCardList(), mProfileRemoteImpl.getUserInformation()//
             , new Function3<StayOutboundPayment, List<Card>, UserInformation, Boolean>()
@@ -582,13 +582,11 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
             return;
         }
 
-        if (mPaymentType == StayOutboundPayment.PaymentType.EASY_CARD && mSelectedCard == null)
+        // 보너스로만 결제하는 경우
+        if (mBonusSelected == true && mStayOutboundPayment.totalPrice == mStayOutboundPayment.discountPrice)
         {
-            startActivityForResult(RegisterCreditCardActivity.newInstance(getActivity())//
-                , StayOutboundPaymentActivity.REQUEST_CODE_REGISTER_CARD_PAYMENT);
-        } else
-        {
-            getViewInterface().showAgreeTermDialog(mPaymentType, new View.OnClickListener()
+            // 보너스로만 결제할 경우에는 팝업이 기존의 카드 타입과 동일한다.
+            getViewInterface().showAgreeTermDialog(StayOutboundPayment.PaymentType.CARD, new View.OnClickListener()
             {
                 @Override
                 public void onClick(View v)
@@ -605,6 +603,32 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
                     unLockAll();
                 }
             });
+        } else
+        {
+            if (mPaymentType == StayOutboundPayment.PaymentType.EASY_CARD && mSelectedCard == null)
+            {
+                startActivityForResult(RegisterCreditCardActivity.newInstance(getActivity())//
+                    , StayOutboundPaymentActivity.REQUEST_CODE_REGISTER_CARD_PAYMENT);
+            } else
+            {
+                getViewInterface().showAgreeTermDialog(mPaymentType, new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        unLockAll();
+
+                        onAgreedPaymentClick();
+                    }
+                }, new DialogInterface.OnCancelListener()
+                {
+                    @Override
+                    public void onCancel(DialogInterface dialog)
+                    {
+                        unLockAll();
+                    }
+                });
+            }
         }
     }
 
@@ -627,51 +651,114 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
             return;
         }
 
-        // 테스트
-        startActivityForResult(StayOutboundThankYouActivity.newInstance(getActivity(), mStayIndex, mStayName, mImageUrl, mStayOutboundPayment.totalPrice//
-            , mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
-            , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
-            , mStayOutboundPayment.checkInTime, mStayOutboundPayment.checkOutTime, mRoomType, mReservationId), StayOutboundPaymentActivity.REQUEST_CODE_THANK_YOU);
+        if (mBonusSelected == true && mStayOutboundPayment.totalPrice == mStayOutboundPayment.discountPrice)
+        {
+            addCompositeDisposable(mPaymentRemoteImpl.getPaymentTypeBonus(mStayBookDateTime, mStayIndex//
+                , mRateCode, mRateKey, mRoomTypeCode, mRoomBedTypeId, mPeople//
+                , mBonusSelected, mGuest, mStayOutboundPayment.totalPrice).subscribe(new Consumer<PaymentResult>()
+            {
+                @Override
+                public void accept(@io.reactivex.annotations.NonNull PaymentResult paymentResult) throws Exception
+                {
+                    startActivityForResult(StayOutboundThankYouActivity.newInstance(getActivity(), mStayIndex, mStayName, mImageUrl, mStayOutboundPayment.totalPrice//
+                        , mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
+                        , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
+                        , mStayOutboundPayment.checkInTime, mStayOutboundPayment.checkOutTime, mRoomType, paymentResult.reservationId), StayOutboundPaymentActivity.REQUEST_CODE_THANK_YOU);
+                }
+            }, new Consumer<Throwable>()
+            {
+                @Override
+                public void accept(@io.reactivex.annotations.NonNull Throwable throwable) throws Exception
+                {
+                    unLockAll();
 
-        //        addCompositeDisposable(mPaymentRemoteImpl.getPaymentTypeEasy(mStayBookDateTime, mStayIndex//
-        //            , mRateCode, mRateKey, mRoomTypeCode, mRoomBedTypeId, mPeople//
-        //            , mBonusSelected, mGuest, mStayOutboundPayment.totalPrice).subscribe(new Consumer<PaymentTypeEasy>()
-        //        {
-        //            @Override
-        //            public void accept(@io.reactivex.annotations.NonNull PaymentTypeEasy paymentTypeEasy) throws Exception
-        //            {
-        //
-        //            }
-        //        }, new Consumer<Throwable>()
-        //        {
-        //            @Override
-        //            public void accept(@io.reactivex.annotations.NonNull Throwable throwable) throws Exception
-        //            {
-        //                unLockAll();
-        //
-        //                if (throwable instanceof BaseException)
-        //                {
-        //                    // 팝업 에러 보여주기
-        //                    BaseException baseException = (BaseException) throwable;
-        //
-        //                    switch (baseException.getCode())
-        //                    {
-        //
-        //                    }
-        //                } else
-        //                {
-        //                    getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.act_base_network_connect)//
-        //                        , getString(R.string.frag_error_btn), null, new DialogInterface.OnDismissListener()
-        //                        {
-        //                            @Override
-        //                            public void onDismiss(DialogInterface dialog)
-        //                            {
-        //                                onBackClick();
-        //                            }
-        //                        });
-        //                }
-        //            }
-        //        }));
+                    if (throwable instanceof BaseException)
+                    {
+                        // 팝업 에러 보여주기
+                        BaseException baseException = (BaseException) throwable;
+
+                        switch (baseException.getCode())
+                        {
+
+                        }
+                    } else
+                    {
+                        getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.act_base_network_connect)//
+                            , getString(R.string.frag_error_btn), null, new DialogInterface.OnDismissListener()
+                            {
+                                @Override
+                                public void onDismiss(DialogInterface dialog)
+                                {
+                                    onBackClick();
+                                }
+                            });
+                    }
+                }
+            }));
+        } else
+        {
+            switch (mPaymentType)
+            {
+                case EASY_CARD:
+                {
+                    addCompositeDisposable(mPaymentRemoteImpl.getPaymentTypeEasy(mStayBookDateTime, mStayIndex//
+                        , mRateCode, mRateKey, mRoomTypeCode, mRoomBedTypeId, mPeople//
+                        , mBonusSelected, mGuest, mStayOutboundPayment.totalPrice).subscribe(new Consumer<PaymentResult>()
+                    {
+                        @Override
+                        public void accept(@io.reactivex.annotations.NonNull PaymentResult paymentResult) throws Exception
+                        {
+                            startActivityForResult(StayOutboundThankYouActivity.newInstance(getActivity(), mStayIndex, mStayName, mImageUrl, mStayOutboundPayment.totalPrice//
+                                , mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
+                                , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
+                                , mStayOutboundPayment.checkInTime, mStayOutboundPayment.checkOutTime, mRoomType, paymentResult.reservationId), StayOutboundPaymentActivity.REQUEST_CODE_THANK_YOU);
+                        }
+                    }, new Consumer<Throwable>()
+                    {
+                        @Override
+                        public void accept(@io.reactivex.annotations.NonNull Throwable throwable) throws Exception
+                        {
+                            unLockAll();
+
+                            if (throwable instanceof BaseException)
+                            {
+                                // 팝업 에러 보여주기
+                                BaseException baseException = (BaseException) throwable;
+
+                                switch (baseException.getCode())
+                                {
+
+                                }
+                            } else
+                            {
+                                getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.act_base_network_connect)//
+                                    , getString(R.string.frag_error_btn), null, new DialogInterface.OnDismissListener()
+                                    {
+                                        @Override
+                                        public void onDismiss(DialogInterface dialog)
+                                        {
+                                            onBackClick();
+                                        }
+                                    });
+                            }
+                        }
+                    }));
+                    break;
+                }
+
+                case CARD:
+                    break;
+
+                case PHONE_PAY:
+
+                    // 테스트
+                    startActivityForResult(StayOutboundThankYouActivity.newInstance(getActivity(), mStayIndex, mStayName, mImageUrl, mStayOutboundPayment.totalPrice//
+                        , mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
+                        , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
+                        , mStayOutboundPayment.checkInTime, mStayOutboundPayment.checkOutTime, mRoomType, -1), StayOutboundPaymentActivity.REQUEST_CODE_THANK_YOU);
+                    break;
+            }
+        }
     }
 
     private void onBookingInformation(StayOutboundPayment stayOutboundPayment, StayBookDateTime stayBookDateTime)

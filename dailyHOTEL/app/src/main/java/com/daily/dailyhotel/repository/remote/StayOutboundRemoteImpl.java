@@ -32,7 +32,7 @@ public class StayOutboundRemoteImpl implements StayOutboundInterface
     }
 
     @Override
-    public Observable<StayOutbounds> getStayOutBoundList(StayBookDateTime stayBookDateTime, long geographyId//
+    public Observable<StayOutbounds> getStayOutboundList(StayBookDateTime stayBookDateTime, long geographyId//
         , String geographyType, People people, StayOutboundFilters stayOutboundFilters, String cacheKey, String cacheLocation)
     {
         JSONObject jsonObject = new JSONObject();
@@ -82,7 +82,7 @@ public class StayOutboundRemoteImpl implements StayOutboundInterface
             jsonObject = null;
         }
 
-        return DailyMobileAPI.getInstance(mContext).getStayOutBoundList(jsonObject).map((stayOutboundDataBaseDto) ->
+        return DailyMobileAPI.getInstance(mContext).getStayOutboundList(jsonObject).map((stayOutboundDataBaseDto) ->
         {
             StayOutbounds stayOutbounds = null;
 
@@ -105,7 +105,7 @@ public class StayOutboundRemoteImpl implements StayOutboundInterface
     }
 
     @Override
-    public Observable<StayOutboundDetail> getStayOutBoundDetail(int index, StayBookDateTime stayBookDateTime, People people)
+    public Observable<StayOutboundDetail> getStayOutboundDetail(int index, StayBookDateTime stayBookDateTime, People people)
     {
         JSONObject jsonObject = new JSONObject();
 
@@ -125,7 +125,7 @@ public class StayOutboundRemoteImpl implements StayOutboundInterface
             jsonObject = null;
         }
 
-        return DailyMobileAPI.getInstance(mContext).getStayOutBoundDetail(index, jsonObject).map((stayOutboundDetailDataBaseDto) ->
+        return DailyMobileAPI.getInstance(mContext).getStayOutboundDetail(index, jsonObject).map((stayOutboundDetailDataBaseDto) ->
         {
             StayOutboundDetail stayOutboundDetail = null;
 

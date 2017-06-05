@@ -258,7 +258,7 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements O
                 lockUI();
 
                 addCompositeDisposable(Observable.zip(mCommonRemoteImpl.getCommonDateTime()//
-                    , mReservationRemoteImpl.getReservationList(), mReservationRemoteImpl.getStayOutBoundReservationList()//
+                    , mReservationRemoteImpl.getReservationList(), mReservationRemoteImpl.getStayOutboundReservationList()//
                     , new Function3<CommonDateTime, List<Reservation>, List<Reservation>, List<ListItem>>()
                     {
                         @Override
@@ -1056,7 +1056,7 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements O
                         } else if ("gourmet".equalsIgnoreCase(internalDeepLink.getPlaceType()) == true)
                         {
                             placeType = Reservation.PlaceType.GOURMET;
-                        } else if ("stayOutBound".equalsIgnoreCase(internalDeepLink.getPlaceType()) == true)
+                        } else if ("stayOutbound".equalsIgnoreCase(internalDeepLink.getPlaceType()) == true)
                         {
                             placeType = Reservation.PlaceType.STAY_OUTBOUND;
                         }
@@ -1123,7 +1123,7 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements O
                         } else if ("gourmet".equalsIgnoreCase(externalDeepLink.getPlaceType()) == true)
                         {
                             placeType = Reservation.PlaceType.GOURMET;
-                        } else if ("stayOutBound".equalsIgnoreCase(externalDeepLink.getPlaceType()) == true)
+                        } else if ("stayOutbound".equalsIgnoreCase(externalDeepLink.getPlaceType()) == true)
                         {
                             placeType = Reservation.PlaceType.STAY_OUTBOUND;
                         }

@@ -502,7 +502,7 @@ public interface DailyMobileService
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET()
-    Observable<BaseDto<StayOutboundsData>> getStayOutBoundList(@Url String mobileAPI//
+    Observable<BaseDto<StayOutboundsData>> getStayOutboundList(@Url String mobileAPI//
         , @Query(value = "arrivalDate") String arrivalDate//
         , @Query(value = "departureDate") String departureDate//
         , @Query(value = "rooms[0].numberOfAdults") int numberOfAdults//
@@ -521,7 +521,7 @@ public interface DailyMobileService
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET()
-    Observable<BaseDto<StayOutboundsData>> getStayOutBoundList(@Url String mobileAPI//
+    Observable<BaseDto<StayOutboundsData>> getStayOutboundList(@Url String mobileAPI//
         , @Query(value = "arrivalDate") String arrivalDate//
         , @Query(value = "departureDate") String departureDate//
         , @Query(value = "rooms[0].numberOfAdults") int numberOfAdults//
@@ -542,7 +542,7 @@ public interface DailyMobileService
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET()
-    Observable<BaseDto<StayOutboundsData>> getStayOutBoundList(@Url String mobileAPI//
+    Observable<BaseDto<StayOutboundsData>> getStayOutboundList(@Url String mobileAPI//
         , @Query(value = "arrivalDate") String arrivalDate//
         , @Query(value = "departureDate") String departureDate//
         , @Query(value = "rooms[0].numberOfAdults") int numberOfAdults//
@@ -565,7 +565,7 @@ public interface DailyMobileService
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET()
-    Observable<BaseDto<StayOutboundsData>> getStayOutBoundList(@Url String mobileAPI//
+    Observable<BaseDto<StayOutboundsData>> getStayOutboundList(@Url String mobileAPI//
         , @Query(value = "filter.includeSurrounding") boolean filterIncludeSurrounding//
         , @Query(value = "filter.maxStarRating") int filterMaxStarRating//
         , @Query(value = "filter.minStarRating") int filterMinStarRating//
@@ -589,15 +589,15 @@ public interface DailyMobileService
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @POST()
-    Observable<BaseDto<StayOutboundsData>> getStayOutBoundList(@Url String mobileAPI, @Body JSONObject jsonObject);
+    Observable<BaseDto<StayOutboundsData>> getStayOutboundList(@Url String mobileAPI, @Body JSONObject jsonObject);
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @POST()
-    Observable<BaseDto<StayOutboundDetailData>> getStayOutBoundDetail(@Url String mobileAPI, @Body JSONObject jsonObject);
+    Observable<BaseDto<StayOutboundDetailData>> getStayOutboundDetail(@Url String mobileAPI, @Body JSONObject jsonObject);
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @POST()
-    Observable<BaseDto<StayOutboundPaymentData>> getStayOutBoundPayment(@Url String mobileAPI, @Body JSONObject jsonObject);
+    Observable<BaseDto<StayOutboundPaymentData>> getStayOutboundPayment(@Url String mobileAPI, @Body JSONObject jsonObject);
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @POST("{mobileAPI}")
@@ -616,7 +616,7 @@ public interface DailyMobileService
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET()
-    Observable<BaseListDto<ReservationData>> getStayOutBoundReservationList(@Url String mobileAPI);
+    Observable<BaseListDto<ReservationData>> getStayOutboundReservationList(@Url String mobileAPI);
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET("{mobileAPI}")

@@ -214,13 +214,23 @@ public class StayOutboundPaymentView extends BaseDialogView<StayOutboundPaymentV
             mDiscountDataBinding.discountPriceTextView.setText("-" + DailyTextUtils.getPriceFormat(getContext(), discountPrice, false));
         }
 
-        mDiscountDataBinding.totalPaymentPriceTextView.setText(DailyTextUtils.getPriceFormat(getContext(), totalPrice - discountPrice, false));
+        int paymentPrice = totalPrice - discountPrice;
+
+        mDiscountDataBinding.totalPaymentPriceTextView.setText(DailyTextUtils.getPriceFormat(getContext(), paymentPrice, false));
+
+        if (paymentPrice == 0)
+        {
+            setFreePaymentEnabled(true);
+        } else
+        {
+            setFreePaymentEnabled(false);
+        }
 
         if (taxPrice > 0)
         {
             mDiscountDataBinding.additionalTaxMemoTextView.setVisibility(View.VISIBLE);
             mDiscountDataBinding.additionalTaxLayout.setVisibility(View.VISIBLE);
-            mDiscountDataBinding.taxPriceTextView.setText(DailyTextUtils.getGlobalCurrency(Locale.US, taxPrice));
+            mDiscountDataBinding.taxPriceTextView.setText(DailyTextUtils.getGlobalCurrency(Locale.US, getString(R.string.label_currency_usd), taxPrice));
         } else
         {
             mDiscountDataBinding.additionalTaxMemoTextView.setVisibility(View.GONE);
@@ -642,6 +652,19 @@ public class StayOutboundPaymentView extends BaseDialogView<StayOutboundPaymentV
         } else
         {
             mDiscountDataBinding.usedBonusTextView.setText(R.string.label_booking_used_bonus);
+        }
+    }
+
+    private void setFreePaymentEnabled(boolean enabled)
+    {
+        if (enabled == true)
+        {
+            mPayDataBinding.freePaymentView.setVisibility(View.VISIBLE);
+            mPayDataBinding.paymentTypeInformationLayout.setVisibility(View.GONE);
+        } else
+        {
+            mPayDataBinding.freePaymentView.setVisibility(View.GONE);
+            mPayDataBinding.paymentTypeInformationLayout.setVisibility(View.VISIBLE);
         }
     }
 

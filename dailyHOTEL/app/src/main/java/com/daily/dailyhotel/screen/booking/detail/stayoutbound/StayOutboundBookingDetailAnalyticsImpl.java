@@ -1,0 +1,5 @@
+package com.daily.dailyhotel.screen.booking.detail.stayoutbound;
+
+public class StayOutboundBookingDetailAnalyticsImpl implements StayOutboundBookingDetailPresenter.StayOutboundBookingAnalyticsInterface
+{
+}

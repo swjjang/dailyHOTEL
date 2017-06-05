@@ -8,5 +8,5 @@ import io.reactivex.Observable;
 
 public interface SuggestInterface
 {
-    Observable<List<Suggest>> getSuggestsByStayOutBound(String keyword);
+    Observable<List<Suggest>> getSuggestsByStayOutbound(String keyword);
 }

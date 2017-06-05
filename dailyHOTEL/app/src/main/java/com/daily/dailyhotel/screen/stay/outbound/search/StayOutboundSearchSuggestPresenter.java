@@ -171,7 +171,7 @@ public class StayOutboundSearchSuggestPresenter extends BaseExceptionPresenter<S
             onSuggestList(null);
         } else
         {
-            addCompositeDisposable(mSuggestRemoteImpl.getSuggestsByStayOutBound(keyword)//
+            addCompositeDisposable(mSuggestRemoteImpl.getSuggestsByStayOutbound(keyword)//
                 .delaySubscription(500, TimeUnit.MILLISECONDS).subscribe(suggests -> onSuggestList(suggests), throwable -> onSuggestList(null)));
         }
     }

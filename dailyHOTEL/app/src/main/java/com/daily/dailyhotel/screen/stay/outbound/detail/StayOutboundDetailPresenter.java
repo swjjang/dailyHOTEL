@@ -227,7 +227,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
             addCompositeDisposable(disposable);
 
             addCompositeDisposable(Observable.zip(getViewInterface().getSharedElementTransition()//
-                , mCommonRemoteImpl.getCommonDateTime(), mStayOutboundRemoteImpl.getStayOutBoundDetail(mStayIndex, mStayBookDateTime, mPeople)//
+                , mCommonRemoteImpl.getCommonDateTime(), mStayOutboundRemoteImpl.getStayOutboundDetail(mStayIndex, mStayBookDateTime, mPeople)//
                 , new Function3<Boolean, CommonDateTime, StayOutboundDetail, StayOutboundDetail>()
                 {
                     @Override
@@ -435,7 +435,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
         setRefresh(false);
         screenLock(showProgress);
 
-        addCompositeDisposable(Observable.zip(mCommonRemoteImpl.getCommonDateTime(), mStayOutboundRemoteImpl.getStayOutBoundDetail(mStayIndex, mStayBookDateTime, mPeople), new BiFunction<CommonDateTime, StayOutboundDetail, StayOutboundDetail>()
+        addCompositeDisposable(Observable.zip(mCommonRemoteImpl.getCommonDateTime(), mStayOutboundRemoteImpl.getStayOutboundDetail(mStayIndex, mStayBookDateTime, mPeople), new BiFunction<CommonDateTime, StayOutboundDetail, StayOutboundDetail>()
         {
             @Override
             public StayOutboundDetail apply(@io.reactivex.annotations.NonNull CommonDateTime commonDateTime, @io.reactivex.annotations.NonNull StayOutboundDetail stayOutboundDetail) throws Exception

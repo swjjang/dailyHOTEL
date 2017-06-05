@@ -1319,7 +1319,7 @@ public class DailyMobileAPI implements IDailyNetwork
     // StayOutboundRemoteImpl
     /////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public Observable<BaseDto<StayOutboundsData>> getStayOutBoundList(String arrivalDate, String departureDate//
+    public Observable<BaseDto<StayOutboundsData>> getStayOutboundList(String arrivalDate, String departureDate//
         , int numberOfAdults, int numberOfChildren, String childAges, int numberOfRooms, String countryCode, String city//
         , int numberOfResults, String cacheKey, String cacheLocation, String apiExperience, String locale, String sort)
     {
@@ -1329,13 +1329,13 @@ public class DailyMobileAPI implements IDailyNetwork
         final String API = Constants.UNENCRYPTED_URL ? "api/v1/outbound/hotels"//
             : "NDYkNDckNjckNDAkNzckODUkNDYkMTgkMjYkODckNzMkMzAkMTckNjgkMzkkMTAwJA==$MTlGQkQ3NkNFMENFNVjIk2NjVEMDjkxSQzA4QkMV2NEVEGQkVEQZzVSdCNzI1NEFDOUQwGMUE2OTTGI3NTVBMWkYzMjJNCYRjcyQWw==$";
 
-        return mDailyMobileService.getStayOutBoundList(Crypto.getUrlDecoderEx(URL) + Crypto.getUrlDecoderEx(API)//
+        return mDailyMobileService.getStayOutboundList(Crypto.getUrlDecoderEx(URL) + Crypto.getUrlDecoderEx(API)//
             , arrivalDate, departureDate, numberOfAdults, numberOfChildren, childAges, numberOfRooms//
             , countryCode, city, numberOfResults, cacheKey, cacheLocation, apiExperience, locale, sort)//
             .subscribeOn(Schedulers.io());
     }
 
-    public Observable<BaseDto<StayOutboundsData>> getStayOutBoundList(JSONObject jsonObject)
+    public Observable<BaseDto<StayOutboundsData>> getStayOutboundList(JSONObject jsonObject)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "https://dev-silo.dailyhotel.me/"//
             : "MzAkODEkNDckNjgkNDAkMzkkODckMSQ4OSQyOCQxNCQzMiQ4JDEkMzckNTUk$QAGkRCM0ZGGMkM1MBzkyQTBEOEMxRDgL1OGUWENFMUM3MEWZJEOURDMOEAM1NjY1RjE2MEVDQjc4RTSA5MzQxQjQ2Rjk1VMMHUEyRg==$";
@@ -1343,11 +1343,11 @@ public class DailyMobileAPI implements IDailyNetwork
         final String API = Constants.UNENCRYPTED_URL ? "api/v1/outbound/geographicalid-find-hotels"//
             : "MzYkMTYkMTAzJDkxJDE4JDUxJDMyJDEkMTE3JDc0JDExMSQxMjkkMzQkMTIyJDEwJDExNCQ=$QLjEzMUYzQHUYzNjlDJNFjIxNkI3NUU0ODCXY2MTY5VRjA4MUY2RkJELODlGQTcwRkI3NkIzODZGJMDBFM0I1Qzg4MDY2QzVFMWUEwQkNGNUQ1NXUVPI3NEExQWzWY3QzQ1QzOE1NUVEREFC$";
 
-        return mDailyMobileService.getStayOutBoundList(Crypto.getUrlDecoderEx(URL) + Crypto.getUrlDecoderEx(API)//
+        return mDailyMobileService.getStayOutboundList(Crypto.getUrlDecoderEx(URL) + Crypto.getUrlDecoderEx(API)//
             , jsonObject).subscribeOn(Schedulers.io());
     }
 
-    public Observable<BaseDto<StayOutboundDetailData>> getStayOutBoundDetail(int index, JSONObject jsonObject)
+    public Observable<BaseDto<StayOutboundDetailData>> getStayOutboundDetail(int index, JSONObject jsonObject)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "https://dev-silo.dailyhotel.me/"//
             : "MzAkODEkNDckNjgkNDAkMzkkODckMSQ4OSQyOCQxNCQzMiQ4JDEkMzckNTUk$QAGkRCM0ZGGMkM1MBzkyQTBEOEMxRDgL1OGUWENFMUM3MEWZJEOURDMOEAM1NjY1RjE2MEVDQjc4RTSA5MzQxQjQ2Rjk1VMMHUEyRg==$";
@@ -1358,11 +1358,11 @@ public class DailyMobileAPI implements IDailyNetwork
         Map<String, String> urlParams = new HashMap<>();
         urlParams.put("{hotelId}", Integer.toString(index));
 
-        return mDailyMobileService.getStayOutBoundDetail(Crypto.getUrlDecoderEx(URL) + Crypto.getUrlDecoderEx(API, urlParams)//
+        return mDailyMobileService.getStayOutboundDetail(Crypto.getUrlDecoderEx(URL) + Crypto.getUrlDecoderEx(API, urlParams)//
             , jsonObject).subscribeOn(Schedulers.io());
     }
 
-    public Observable<BaseDto<StayOutboundPaymentData>> getStayOutBoundPayment(int index, JSONObject jsonObject)
+    public Observable<BaseDto<StayOutboundPaymentData>> getStayOutboundPayment(int index, JSONObject jsonObject)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "https://dev-silo.dailyhotel.me/"//
             : "MzAkODEkNDckNjgkNDAkMzkkODckMSQ4OSQyOCQxNCQzMiQ4JDEkMzckNTUk$QAGkRCM0ZGGMkM1MBzkyQTBEOEMxRDgL1OGUWENFMUM3MEWZJEOURDMOEAM1NjY1RjE2MEVDQjc4RTSA5MzQxQjQ2Rjk1VMMHUEyRg==$";
@@ -1373,7 +1373,7 @@ public class DailyMobileAPI implements IDailyNetwork
         Map<String, String> urlParams = new HashMap<>();
         urlParams.put("{hotelId}", Integer.toString(index));
 
-        return mDailyMobileService.getStayOutBoundPayment(Crypto.getUrlDecoderEx(URL) + Crypto.getUrlDecoderEx(API, urlParams)//
+        return mDailyMobileService.getStayOutboundPayment(Crypto.getUrlDecoderEx(URL) + Crypto.getUrlDecoderEx(API, urlParams)//
             , jsonObject).subscribeOn(Schedulers.io());
     }
 
@@ -1423,7 +1423,7 @@ public class DailyMobileAPI implements IDailyNetwork
             , jsonObject).subscribeOn(Schedulers.io());
     }
 
-    public Observable<BaseListDto<ReservationData>> getStayOutBoundReservationList()
+    public Observable<BaseListDto<ReservationData>> getStayOutboundReservationList()
     {
         final String URL = Constants.UNENCRYPTED_URL ? "https://dev-silo.dailyhotel.me/"//
             : "MzAkODEkNDckNjgkNDAkMzkkODckMSQ4OSQyOCQxNCQzMiQ4JDEkMzckNTUk$QAGkRCM0ZGGMkM1MBzkyQTBEOEMxRDgL1OGUWENFMUM3MEWZJEOURDMOEAM1NjY1RjE2MEVDQjc4RTSA5MzQxQjQ2Rjk1VMMHUEyRg==$";
@@ -1431,7 +1431,7 @@ public class DailyMobileAPI implements IDailyNetwork
         final String API = Constants.UNENCRYPTED_URL ? "api/v1/outbound/hotel-reservations"//
             : "MTckMzAkNDUkNjMkMTAzJDExMSQ1JDAkNiQzJDEyJDEyMSQ5NiQxMzQkMzMkNTUk$ARUSFDMON0VCWNkYxMkZGQZkI0NDQ2N0QX2MYTNDMDQ0QUUxRDEDzMELRBNEEyMjY5NUI0XQjA1NEQ4RDQ3RTAzNjQ5QzJEOUUA5MzY5QUE2NkYA0Njg0NDZk5QjJgyNEE2NTAzNCkM0RjI5$";
 
-        return mDailyMobileService.getStayOutBoundReservationList(Crypto.getUrlDecoderEx(URL) + Crypto.getUrlDecoderEx(API)).subscribeOn(Schedulers.io());
+        return mDailyMobileService.getStayOutboundReservationList(Crypto.getUrlDecoderEx(URL) + Crypto.getUrlDecoderEx(API)).subscribeOn(Schedulers.io());
     }
 
     public Observable<BaseListDto<ReservationData>> getReservationList()

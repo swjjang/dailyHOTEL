@@ -26,9 +26,9 @@ public class ReservationRemoteImpl implements ReservationInterface
     }
 
     @Override
-    public Observable<List<Reservation>> getStayOutBoundReservationList()
+    public Observable<List<Reservation>> getStayOutboundReservationList()
     {
-        return DailyMobileAPI.getInstance(mContext).getStayOutBoundReservationList().map(new Function<BaseListDto<ReservationData>, List<Reservation>>()
+        return DailyMobileAPI.getInstance(mContext).getStayOutboundReservationList().map(new Function<BaseListDto<ReservationData>, List<Reservation>>()
         {
             @Override
             public List<Reservation> apply(@io.reactivex.annotations.NonNull BaseListDto<ReservationData> reservationDataBaseListDto) throws Exception

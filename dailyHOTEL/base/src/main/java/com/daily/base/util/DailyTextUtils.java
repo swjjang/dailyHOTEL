@@ -77,14 +77,13 @@ public class DailyTextUtils
         }
     }
 
-    public static String getGlobalCurrency(Locale locale, double currency)
+    public static String getGlobalCurrency(Locale locale, String currencyCode, double price)
     {
-        NumberFormat numberFormat = NumberFormat.getCurrencyInstance(locale);
+        NumberFormat numberFormat = NumberFormat.getInstance(locale);
         numberFormat.setMaximumFractionDigits(2);
         numberFormat.setMinimumFractionDigits(2);
-        numberFormat.setRoundingMode(RoundingMode.HALF_UP);
 
-        return numberFormat.format(currency);
+        return currencyCode + " " + numberFormat.format(price);
     }
 
     /**
