@@ -8,14 +8,12 @@ import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.domain.PaymentInterface;
 import com.daily.dailyhotel.entity.Card;
 import com.daily.dailyhotel.entity.Guest;
-import com.daily.dailyhotel.entity.PaymentTypeEasy;
+import com.daily.dailyhotel.entity.PaymentResult;
 import com.daily.dailyhotel.entity.People;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayOutboundPayment;
 import com.daily.dailyhotel.repository.remote.model.CardData;
-import com.daily.dailyhotel.repository.remote.model.PaymentTypeEasyData;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
-import com.twoheart.dailyhotel.network.dto.BaseDto;
 import com.twoheart.dailyhotel.network.dto.BaseListDto;
 
 import org.json.JSONArray;
@@ -118,7 +116,7 @@ public class PaymentRemoteImpl implements PaymentInterface
     }
 
     @Override
-    public Observable<PaymentTypeEasy> getPaymentTypeEasy(StayBookDateTime stayBookDateTime, int index//
+    public Observable<PaymentResult> getPaymentTypeEasy(StayBookDateTime stayBookDateTime, int index//
         , String rateCode, String rateKey, String roomTypeCode, int roomBedTypeId, People people//
         , boolean usedBonus, Guest guest, int totalPrice)
     {
@@ -154,26 +152,85 @@ public class PaymentRemoteImpl implements PaymentInterface
             jsonObject = null;
         }
 
-        return DailyMobileAPI.getInstance(mContext).getPaymentTypeEasy(index, jsonObject).map(paymentTypeEasyDataBaseDto ->
+        return DailyMobileAPI.getInstance(mContext).getPaymentTypeEasy(index, jsonObject).map(paymentResultDataBaseDto ->
             {
-                PaymentTypeEasy paymentTypeEasy = null;
+                PaymentResult paymentResult = null;
 
-                if (paymentTypeEasyDataBaseDto != null)
+                if (paymentResultDataBaseDto != null)
                 {
-                    if (paymentTypeEasyDataBaseDto.msgCode == 100 && paymentTypeEasyDataBaseDto.data != null)
+                    if (paymentResultDataBaseDto.msgCode == 100 && paymentResultDataBaseDto.data != null)
                     {
-                        paymentTypeEasy = paymentTypeEasyDataBaseDto.data.getPaymentTypeEasy();
+                        paymentResult = paymentResultDataBaseDto.data.getPaymentTypeEasy();
                     } else
                     {
-                        throw new BaseException(paymentTypeEasyDataBaseDto.msgCode, paymentTypeEasyDataBaseDto.msg);
+                        throw new BaseException(paymentResultDataBaseDto.msgCode, paymentResultDataBaseDto.msg);
                     }
                 } else
                 {
                     throw new BaseException(-1, null);
                 }
 
-                return paymentTypeEasy;
+                return paymentResult;
             }).observeOn(AndroidSchedulers.mainThread());
+    }
+
+    @Override
+    public Observable<PaymentResult> getPaymentTypeBonus(StayBookDateTime stayBookDateTime, int index//
+        , String rateCode, String rateKey, String roomTypeCode, int roomBedTypeId, People people//
+        , boolean usedBonus, Guest guest, int totalPrice)
+    {
+        JSONObject jsonObject = new JSONObject();
+
+        final int NUMBER_OF_ROOMS = 1;
+        final String PAYMENT_TYPE = "ONE_CLICK";
+
+        try
+        {
+            jsonObject.put("arrivalDate", stayBookDateTime.getCheckInDateTime("yyyy-MM-dd"));
+            jsonObject.put("departureDate", stayBookDateTime.getCheckOutDateTime("yyyy-MM-dd"));
+            jsonObject.put("numberOfRooms", NUMBER_OF_ROOMS);
+            jsonObject.put("rooms", getRooms(new People[]{people}, new int[]{roomBedTypeId}));
+            jsonObject.put("rateCode", rateCode);
+            jsonObject.put("rateKey", rateKey);
+            jsonObject.put("roomTypeCode", roomTypeCode);
+
+            if (usedBonus == true)
+            {
+                jsonObject.put("bonusAmount", guest.bonus);
+            }
+
+            jsonObject.put("firstName", guest.firstName);
+            jsonObject.put("lastName", guest.lastName);
+            jsonObject.put("email", guest.email);
+            jsonObject.put("phoneNumber", guest.phone.replace("-", ""));
+            jsonObject.put("paymentType", PAYMENT_TYPE);
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+
+            jsonObject = null;
+        }
+
+        return DailyMobileAPI.getInstance(mContext).getPaymentTypeBonus(index, jsonObject).map(paymentResultDataBaseDto ->
+        {
+            PaymentResult paymentResult = null;
+
+            if (paymentResultDataBaseDto != null)
+            {
+                if (paymentResultDataBaseDto.msgCode == 100 && paymentResultDataBaseDto.data != null)
+                {
+                    paymentResult = paymentResultDataBaseDto.data.getPaymentTypeEasy();
+                } else
+                {
+                    throw new BaseException(paymentResultDataBaseDto.msgCode, paymentResultDataBaseDto.msg);
+                }
+            } else
+            {
+                throw new BaseException(-1, null);
+            }
+
+            return paymentResult;
+        }).observeOn(AndroidSchedulers.mainThread());
     }
 
     private JSONArray getRooms(People[] peoples, int[] roomBedTypeIds)

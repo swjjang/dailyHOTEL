@@ -5,7 +5,7 @@ import android.content.Context;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.dailyhotel.repository.remote.model.CardData;
 import com.daily.dailyhotel.repository.remote.model.CommonDateTimeData;
-import com.daily.dailyhotel.repository.remote.model.PaymentTypeEasyData;
+import com.daily.dailyhotel.repository.remote.model.PaymentResultData;
 import com.daily.dailyhotel.repository.remote.model.ReservationData;
 import com.daily.dailyhotel.repository.remote.model.StayOutboundDetailData;
 import com.daily.dailyhotel.repository.remote.model.StayOutboundPaymentData;
@@ -43,7 +43,6 @@ import com.twoheart.dailyhotel.util.Crypto;
 
 import org.json.JSONObject;
 
-import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -1394,7 +1393,7 @@ public class DailyMobileAPI implements IDailyNetwork
         return mDailyMobileService.getUserInformationForPayment(Crypto.getUrlDecoderEx(API)).subscribeOn(Schedulers.io());
     }
 
-    public Observable<BaseDto<PaymentTypeEasyData>> getPaymentTypeEasy(int index, JSONObject jsonObject)
+    public Observable<BaseDto<PaymentResultData>> getPaymentTypeEasy(int index, JSONObject jsonObject)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "https://dev-silo.dailyhotel.me/"//
             : "MzAkODEkNDckNjgkNDAkMzkkODckMSQ4OSQyOCQxNCQzMiQ4JDEkMzckNTUk$QAGkRCM0ZGGMkM1MBzkyQTBEOEMxRDgL1OGUWENFMUM3MEWZJEOURDMOEAM1NjY1RjE2MEVDQjc4RTSA5MzQxQjQ2Rjk1VMMHUEyRg==$";
@@ -1406,6 +1405,21 @@ public class DailyMobileAPI implements IDailyNetwork
         urlParams.put("{hotelId}", Integer.toString(index));
 
         return mDailyMobileService.getPaymentTypeEasy(Crypto.getUrlDecoderEx(URL) + Crypto.getUrlDecoderEx(API, urlParams)//
+            , jsonObject).subscribeOn(Schedulers.io());
+    }
+
+    public Observable<BaseDto<PaymentResultData>> getPaymentTypeBonus(int index, JSONObject jsonObject)
+    {
+        final String URL = Constants.UNENCRYPTED_URL ? "https://dev-silo.dailyhotel.me/"//
+            : "MzAkODEkNDckNjgkNDAkMzkkODckMSQ4OSQyOCQxNCQzMiQ4JDEkMzckNTUk$QAGkRCM0ZGGMkM1MBzkyQTBEOEMxRDgL1OGUWENFMUM3MEWZJEOURDMOEAM1NjY1RjE2MEVDQjc4RTSA5MzQxQjQ2Rjk1VMMHUEyRg==$";
+
+        final String API = Constants.UNENCRYPTED_URL ? "api/v1/outbound/hotels/{hotelId}/room-reservation-payments/point"//
+            : "MTQ1JDUkMTAyJDU2JDEwMiQ2JDE5OSQ3MiQxNTIkMTI0JDIwNSQyMDckMTkxJDE5NiQ1MCQ2NyQ=$MUZCRDJjEyNkVEODBGRkM0MTQzQjgwNzQyREE4RkQxOUJGQjRBNRkZGODIOyNTRGODQByNDQ2NAzQ3OEMyOUVCQjM3RTEzMTIzOTRDNzY4RRAURCNzFDOTk5ODk4NjRcxQzg2OEY0RkM0RjUxRjY5MkNDOQWDFDREQ3N0Q4NUQ3QzlBNTZBMzIxNEM0NjJGQkJM4RULZGOEU5OITEP5SN0E1ODZCNjdGQkMzQg==$";
+
+        Map<String, String> urlParams = new HashMap<>();
+        urlParams.put("{hotelId}", Integer.toString(index));
+
+        return mDailyMobileService.getPaymentTypeBonus(Crypto.getUrlDecoderEx(URL) + Crypto.getUrlDecoderEx(API, urlParams)//
             , jsonObject).subscribeOn(Schedulers.io());
     }
 

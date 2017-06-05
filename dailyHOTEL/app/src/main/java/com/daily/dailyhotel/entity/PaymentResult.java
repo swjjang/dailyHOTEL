@@ -1,11 +1,11 @@
 package com.daily.dailyhotel.entity;
 
-public class PaymentTypeEasy
+public class PaymentResult
 {
     public int reservationId;
     public String result;
 
-    public PaymentTypeEasy()
+    public PaymentResult()
     {
 
     }

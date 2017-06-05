@@ -1,12 +1,6 @@
 package com.daily.dailyhotel.domain;
 
-import com.daily.dailyhotel.entity.Card;
-import com.daily.dailyhotel.entity.Guest;
-import com.daily.dailyhotel.entity.PaymentTypeEasy;
-import com.daily.dailyhotel.entity.People;
 import com.daily.dailyhotel.entity.Reservation;
-import com.daily.dailyhotel.entity.StayBookDateTime;
-import com.daily.dailyhotel.entity.StayOutboundPayment;
 
 import java.util.List;
 

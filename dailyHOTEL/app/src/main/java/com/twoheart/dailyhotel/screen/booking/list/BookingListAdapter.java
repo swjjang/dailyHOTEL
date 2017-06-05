@@ -257,7 +257,7 @@ public class BookingListAdapter extends ArrayAdapter<Booking> implements PinnedS
                 {
                     if (mOnUserActionListener != null)
                     {
-                        mOnUserActionListener.delete(booking);
+//                        mOnUserActionListener.delete(booking);
                     }
                 }
             });
