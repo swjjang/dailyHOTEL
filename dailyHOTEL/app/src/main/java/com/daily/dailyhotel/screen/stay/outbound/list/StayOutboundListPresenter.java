@@ -152,8 +152,8 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
                 setSuggest(suggestParcel.getSuggest());
             }
 
-            String checkInDateTime = intent.getStringExtra(StayOutboundListActivity.INTENT_EXTRA_DATA_CHECKIN);
-            String checkOutDateTime = intent.getStringExtra(StayOutboundListActivity.INTENT_EXTRA_DATA_CHECKOUT);
+            String checkInDateTime = intent.getStringExtra(StayOutboundListActivity.INTENT_EXTRA_DATA_CHECK_IN);
+            String checkOutDateTime = intent.getStringExtra(StayOutboundListActivity.INTENT_EXTRA_DATA_CHECK_OUT);
 
             setStayBookDateTime(checkInDateTime, checkOutDateTime);
 

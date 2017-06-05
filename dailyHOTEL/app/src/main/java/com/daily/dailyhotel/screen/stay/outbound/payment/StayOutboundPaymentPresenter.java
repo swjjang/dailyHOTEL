@@ -19,7 +19,6 @@ import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
 import com.daily.dailyhotel.entity.Card;
 import com.daily.dailyhotel.entity.Guest;
-import com.daily.dailyhotel.entity.PaymentTypeEasy;
 import com.daily.dailyhotel.entity.People;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayOutboundPayment;
@@ -27,11 +26,13 @@ import com.daily.dailyhotel.entity.UserInformation;
 import com.daily.dailyhotel.repository.remote.PaymentRemoteImpl;
 import com.daily.dailyhotel.repository.remote.ProfileRemoteImpl;
 import com.daily.dailyhotel.screen.common.call.CallDialogActivity;
+import com.daily.dailyhotel.screen.stay.outbound.thankyou.StayOutboundThankYouActivity;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.screen.mydaily.creditcard.CreditCardListActivity;
 import com.twoheart.dailyhotel.screen.mydaily.creditcard.RegisterCreditCardActivity;
 import com.twoheart.dailyhotel.screen.mydaily.member.InputMobileNumberDialogActivity;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.DailyUserPreference;
 import com.twoheart.dailyhotel.widget.CustomFontTypefaceSpan;
@@ -57,13 +58,14 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
     private StayBookDateTime mStayBookDateTime;
     private int mStayIndex, mRoomPrice, mRoomBedTypeId;
     private People mPeople;
-    private String mStayName, mRoomType;
+    private String mStayName, mRoomType, mImageUrl;
     private String mRateCode, mRateKey, mRoomTypeCode;
     private StayOutboundPayment mStayOutboundPayment;
     private Card mSelectedCard;
     private Guest mGuest;
     private StayOutboundPayment.PaymentType mPaymentType;
     private boolean mBonusSelected;
+    private int mReservationId;
 
     public interface StayOutboundPaymentAnalyticsInterface extends BaseAnalyticsInterface
     {
@@ -116,6 +118,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
         }
 
         mStayName = intent.getStringExtra(StayOutboundPaymentActivity.INTENT_EXTRA_DATA_STAY_NAME);
+        mImageUrl = intent.getStringExtra(StayOutboundPaymentActivity.INTENT_EXTRA_DATA_IMAGE_URL);
         mRoomPrice = intent.getIntExtra(StayOutboundPaymentActivity.INTENT_EXTRA_DATA_ROOM_PRICE, -1);
         mRoomType = intent.getStringExtra(StayOutboundPaymentActivity.INTENT_EXTRA_DATA_ROOM_TYPE);
         mRateCode = intent.getStringExtra(StayOutboundPaymentActivity.INTENT_EXTRA_DATA_RATE_CODE);
@@ -128,8 +131,8 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
             return false;
         }
 
-        String checkInDateTime = intent.getStringExtra(StayOutboundPaymentActivity.INTENT_EXTRA_DATA_CHECKIN);
-        String checkOutDateTime = intent.getStringExtra(StayOutboundPaymentActivity.INTENT_EXTRA_DATA_CHECKOUT);
+        String checkInDateTime = intent.getStringExtra(StayOutboundPaymentActivity.INTENT_EXTRA_DATA_CHECK_IN);
+        String checkOutDateTime = intent.getStringExtra(StayOutboundPaymentActivity.INTENT_EXTRA_DATA_CHECK_OUT);
 
         setStayBookDateTime(checkInDateTime, checkOutDateTime);
 
@@ -624,45 +627,51 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
             return;
         }
 
-        addCompositeDisposable(mPaymentRemoteImpl.getPaymentTypeEasy(mStayBookDateTime, mStayIndex//
-            , mRateCode, mRateKey, mRoomTypeCode, mRoomBedTypeId, mPeople//
-            , mBonusSelected, mGuest, mStayOutboundPayment.totalPrice).subscribe(new Consumer<PaymentTypeEasy>()
-        {
-            @Override
-            public void accept(@io.reactivex.annotations.NonNull PaymentTypeEasy paymentTypeEasy) throws Exception
-            {
+        // 테스트
+        startActivityForResult(StayOutboundThankYouActivity.newInstance(getActivity(), mStayIndex, mStayName, mImageUrl, mStayOutboundPayment.totalPrice//
+            , mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
+            , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
+            , mStayOutboundPayment.checkInTime, mStayOutboundPayment.checkOutTime, mRoomType, mReservationId), StayOutboundPaymentActivity.REQUEST_CODE_THANK_YOU);
 
-            }
-        }, new Consumer<Throwable>()
-        {
-            @Override
-            public void accept(@io.reactivex.annotations.NonNull Throwable throwable) throws Exception
-            {
-                unLockAll();
-
-                if (throwable instanceof BaseException)
-                {
-                    // 팝업 에러 보여주기
-                    BaseException baseException = (BaseException) throwable;
-
-                    switch (baseException.getCode())
-                    {
-
-                    }
-                } else
-                {
-                    getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.act_base_network_connect)//
-                        , getString(R.string.frag_error_btn), null, new DialogInterface.OnDismissListener()
-                        {
-                            @Override
-                            public void onDismiss(DialogInterface dialog)
-                            {
-                                onBackClick();
-                            }
-                        });
-                }
-            }
-        }));
+        //        addCompositeDisposable(mPaymentRemoteImpl.getPaymentTypeEasy(mStayBookDateTime, mStayIndex//
+        //            , mRateCode, mRateKey, mRoomTypeCode, mRoomBedTypeId, mPeople//
+        //            , mBonusSelected, mGuest, mStayOutboundPayment.totalPrice).subscribe(new Consumer<PaymentTypeEasy>()
+        //        {
+        //            @Override
+        //            public void accept(@io.reactivex.annotations.NonNull PaymentTypeEasy paymentTypeEasy) throws Exception
+        //            {
+        //
+        //            }
+        //        }, new Consumer<Throwable>()
+        //        {
+        //            @Override
+        //            public void accept(@io.reactivex.annotations.NonNull Throwable throwable) throws Exception
+        //            {
+        //                unLockAll();
+        //
+        //                if (throwable instanceof BaseException)
+        //                {
+        //                    // 팝업 에러 보여주기
+        //                    BaseException baseException = (BaseException) throwable;
+        //
+        //                    switch (baseException.getCode())
+        //                    {
+        //
+        //                    }
+        //                } else
+        //                {
+        //                    getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.act_base_network_connect)//
+        //                        , getString(R.string.frag_error_btn), null, new DialogInterface.OnDismissListener()
+        //                        {
+        //                            @Override
+        //                            public void onDismiss(DialogInterface dialog)
+        //                            {
+        //                                onBackClick();
+        //                            }
+        //                        });
+        //                }
+        //            }
+        //        }));
     }
 
     private void onBookingInformation(StayOutboundPayment stayOutboundPayment, StayBookDateTime stayBookDateTime)
@@ -941,39 +950,6 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
                 return cardList.get(0);
             }
         }
-    }
-
-    private void checkEasyCardList()
-    {
-        screenLock(true);
-
-        addCompositeDisposable(mPaymentRemoteImpl.getSimpleCardList().subscribe(new Consumer<List<Card>>()
-        {
-            @Override
-            public void accept(@io.reactivex.annotations.NonNull List<Card> cardList) throws Exception
-            {
-                if (cardList.size() > 0)
-                {
-                    setPaymentType(StayOutboundPayment.PaymentType.EASY_CARD);
-                    setSelectCard(getSelectedCard(cardList));
-                } else
-                {
-                    setSelectCard(null);
-                }
-
-                notifyEasyCardChanged();
-                notifyPaymentTypeChanged();
-
-                unLockAll();
-            }
-        }, new Consumer<Throwable>()
-        {
-            @Override
-            public void accept(@io.reactivex.annotations.NonNull Throwable throwable) throws Exception
-            {
-                onHandleError(throwable);
-            }
-        }));
     }
 
     private void selectEasyCard(Consumer<List<Card>> consumer)

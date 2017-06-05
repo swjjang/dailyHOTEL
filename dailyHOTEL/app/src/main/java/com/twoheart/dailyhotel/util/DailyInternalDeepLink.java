@@ -26,6 +26,7 @@ public class DailyInternalDeepLink extends DailyDeepLink
     private static final String PARAM_CHECK_IN_TIME = "ci";
     private static final String PARAM_CHECK_OUT_TIME = "co";
     private static final String PARAM_VISIT_TIME = "vt";
+    private static final String PARAM_RESERVATION_ID = "rid";
 
     private static final String VIEW_BOOKING_DETAIL = "bd"; // 예약 상세화면
     private static final String VIEW_STAMP = "stamp"; // 스탬프.
@@ -124,6 +125,17 @@ public class DailyInternalDeepLink extends DailyDeepLink
         return mParamsMap.get(PARAM_VISIT_TIME);
     }
 
+    public int getReservatoinId()
+    {
+        try
+        {
+            return Integer.parseInt(mParamsMap.get(PARAM_RESERVATION_ID));
+        } catch (Exception e)
+        {
+            return -1;
+        }
+    }
+
     private boolean decodingLink(Uri uri)
     {
         mParamsMap.clear();
@@ -178,6 +190,18 @@ public class DailyInternalDeepLink extends DailyDeepLink
         stringBuilder.append("&pm=" + URLEncoder.encode(paymentType.name()));
         stringBuilder.append("&ci=" + URLEncoder.encode(checkInTime));
         stringBuilder.append("&co=" + URLEncoder.encode(checkOutTime));
+
+        return getIntent(context, Uri.parse(stringBuilder.toString()));
+    }
+
+    public static Intent getStayBookingDetailScreenLink(Context context, int reservationId)
+    {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("dailyhotel://");
+        stringBuilder.append(HOST_INTERNAL_DAILYHOTEL);
+        stringBuilder.append("?v=" + VIEW_BOOKING_DETAIL);
+        stringBuilder.append("&pt=" + STAY);
+        stringBuilder.append("&rid=" + reservationId);
 
         return getIntent(context, Uri.parse(stringBuilder.toString()));
     }

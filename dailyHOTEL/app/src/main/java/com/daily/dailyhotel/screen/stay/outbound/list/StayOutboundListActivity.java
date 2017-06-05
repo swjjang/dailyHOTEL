@@ -20,20 +20,20 @@ import java.util.ArrayList;
  */
 public class StayOutboundListActivity extends BaseActivity<StayOutboundListPresenter>
 {
-    static final String INTENT_EXTRA_DATA_SUGGEST = "suggest";
-    static final String INTENT_EXTRA_DATA_CHECKIN = "checkIn";
-    static final String INTENT_EXTRA_DATA_CHECKOUT = "checkOut";
-    static final String INTENT_EXTRA_DATA_KEYWORD = "keyword";
-    static final String INTENT_EXTRA_DATA_NUMBER_OF_ADULTS = "numberOfAdults";
-    static final String INTENT_EXTRA_DATA_CHILD_LIST = "childList";
-    public static final String INTENT_EXTRA_DATA_RESEARCH = "research";
-
     static final int REQUEST_CODE_DETAIL = 10000;
     static final int REQUEST_CODE_CALENDAR = 10001;
     static final int REQUEST_CODE_FILTER = 10002;
     static final int REQUEST_CODE_PERMISSION_MANAGER = 10003;
     static final int REQUEST_CODE_SETTING_LOCATION = 10004;
     static final int REQUEST_CODE_PEOPLE = 10005;
+
+    static final String INTENT_EXTRA_DATA_SUGGEST = "suggest";
+    static final String INTENT_EXTRA_DATA_CHECK_IN = "checkIn";
+    static final String INTENT_EXTRA_DATA_CHECK_OUT = "checkOut";
+    static final String INTENT_EXTRA_DATA_KEYWORD = "keyword";
+    static final String INTENT_EXTRA_DATA_NUMBER_OF_ADULTS = "numberOfAdults";
+    static final String INTENT_EXTRA_DATA_CHILD_LIST = "childList";
+    public static final String INTENT_EXTRA_DATA_RESEARCH = "research";
 
     /**
      * @param context
@@ -48,8 +48,8 @@ public class StayOutboundListActivity extends BaseActivity<StayOutboundListPrese
     {
         Intent intent = new Intent(context, StayOutboundListActivity.class);
         intent.putExtra(INTENT_EXTRA_DATA_SUGGEST, new SuggestParcel(suggest));
-        intent.putExtra(INTENT_EXTRA_DATA_CHECKIN, checkInDateTime);
-        intent.putExtra(INTENT_EXTRA_DATA_CHECKOUT, checkOutDateTime);
+        intent.putExtra(INTENT_EXTRA_DATA_CHECK_IN, checkInDateTime);
+        intent.putExtra(INTENT_EXTRA_DATA_CHECK_OUT, checkOutDateTime);
         intent.putExtra(INTENT_EXTRA_DATA_NUMBER_OF_ADULTS, numberOfAdults);
         intent.putExtra(INTENT_EXTRA_DATA_CHILD_LIST, childAgeList);
         return intent;
@@ -59,8 +59,8 @@ public class StayOutboundListActivity extends BaseActivity<StayOutboundListPrese
     {
         Intent intent = new Intent(context, StayOutboundListActivity.class);
         intent.putExtra(INTENT_EXTRA_DATA_KEYWORD, keyword);
-        intent.putExtra(INTENT_EXTRA_DATA_CHECKIN, checkInDateTime);
-        intent.putExtra(INTENT_EXTRA_DATA_CHECKOUT, checkOutDateTime);
+        intent.putExtra(INTENT_EXTRA_DATA_CHECK_IN, checkInDateTime);
+        intent.putExtra(INTENT_EXTRA_DATA_CHECK_OUT, checkOutDateTime);
         intent.putExtra(INTENT_EXTRA_DATA_NUMBER_OF_ADULTS, numberOfAdults);
         intent.putExtra(INTENT_EXTRA_DATA_CHILD_LIST, childAgeList);
         return intent;

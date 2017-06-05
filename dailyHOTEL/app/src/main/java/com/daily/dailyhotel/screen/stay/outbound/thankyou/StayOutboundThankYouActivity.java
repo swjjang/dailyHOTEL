@@ -9,8 +9,6 @@ import android.support.annotation.NonNull;
 import com.daily.base.BaseActivity;
 import com.twoheart.dailyhotel.R;
 
-import java.util.ArrayList;
-
 /**
  * Created by sheldon
  * Clean Architecture
@@ -21,17 +19,16 @@ public class StayOutboundThankYouActivity extends BaseActivity<StayOutboundThank
     static final String INTENT_EXTRA_DATA_IMAGE_URL = "imageUrl";
     static final String INTENT_EXTRA_DATA_STAY_NAME = "stayName";
     static final String INTENT_EXTRA_DATA_ROOM_PRICE = "roomPrice";
-    static final String INTENT_EXTRA_DATA_CHECKIN = "checkIn";
-    static final String INTENT_EXTRA_DATA_CHECKOUT = "checkOut";
-    static final String INTENT_EXTRA_DATA_CHECKIN_TIME = "checkInTime";
-    static final String INTENT_EXTRA_DATA_CHECKOUT_TIME = "checkOutTime";
-    static final String INTENT_EXTRA_DATA_NUMBER_OF_ADULTS = "numberOfAdults";
-    static final String INTENT_EXTRA_DATA_CHILD_LIST = "childList";
+    static final String INTENT_EXTRA_DATA_CHECK_IN = "checkIn";
+    static final String INTENT_EXTRA_DATA_CHECK_OUT = "checkOut";
+    static final String INTENT_EXTRA_DATA_CHECK_IN_TIME = "checkInTime";
+    static final String INTENT_EXTRA_DATA_CHECK_OUT_TIME = "checkOutTime";
     static final String INTENT_EXTRA_DATA_ROOM_TYPE = "roomType";
+    static final String INTENT_EXTRA_DATA_RESERVATION_ID = "reservationId";
 
     public static Intent newInstance(Context context, int stayIndex, String stayName, String imageUrl, int roomPrice//
-        , String checkInDateTime, String checkOutDateTime, String checkInTime, String checkOutTime, int numberOfAdults//
-        , ArrayList<Integer> childAgeList, String roomType)
+        , String checkInDateTime, String checkOutDateTime, String checkInTime, String checkOutTime//
+        , String roomType, int reservationId)
     {
         Intent intent = new Intent(context, StayOutboundThankYouActivity.class);
 
@@ -39,13 +36,12 @@ public class StayOutboundThankYouActivity extends BaseActivity<StayOutboundThank
         intent.putExtra(INTENT_EXTRA_DATA_STAY_NAME, stayName);
         intent.putExtra(INTENT_EXTRA_DATA_IMAGE_URL, imageUrl);
         intent.putExtra(INTENT_EXTRA_DATA_ROOM_PRICE, roomPrice);
-        intent.putExtra(INTENT_EXTRA_DATA_CHECKIN, checkInDateTime);
-        intent.putExtra(INTENT_EXTRA_DATA_CHECKOUT, checkOutDateTime);
-        intent.putExtra(INTENT_EXTRA_DATA_CHECKIN_TIME, checkInTime);
-        intent.putExtra(INTENT_EXTRA_DATA_CHECKOUT_TIME, checkOutTime);
-        intent.putExtra(INTENT_EXTRA_DATA_NUMBER_OF_ADULTS, numberOfAdults);
-        intent.putExtra(INTENT_EXTRA_DATA_CHILD_LIST, childAgeList);
+        intent.putExtra(INTENT_EXTRA_DATA_CHECK_IN, checkInDateTime);
+        intent.putExtra(INTENT_EXTRA_DATA_CHECK_OUT, checkOutDateTime);
+        intent.putExtra(INTENT_EXTRA_DATA_CHECK_IN_TIME, checkInTime);
+        intent.putExtra(INTENT_EXTRA_DATA_CHECK_OUT_TIME, checkOutTime);
         intent.putExtra(INTENT_EXTRA_DATA_ROOM_TYPE, roomType);
+        intent.putExtra(INTENT_EXTRA_DATA_RESERVATION_ID, reservationId);
 
         return intent;
     }

@@ -4,9 +4,11 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.databinding.DataBindingUtil;
 import android.support.v4.view.MotionEventCompat;
+import android.text.Editable;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
+import android.text.TextWatcher;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
 import android.view.LayoutInflater;
@@ -142,6 +144,12 @@ public class StayOutboundPaymentView extends BaseDialogView<StayOutboundPaymentV
         {
             mBookingDataBinding.guestEmailEditText.setText(email);
         }
+
+        mBookingDataBinding.guestFirstNameEditText.removeTextChangedListener(mFirstNameTextWatcher);
+        mBookingDataBinding.guestFirstNameEditText.addTextChangedListener(mFirstNameTextWatcher);
+
+        mBookingDataBinding.guestLastNameEditText.removeTextChangedListener(mLastNameTextWatcher);
+        mBookingDataBinding.guestLastNameEditText.addTextChangedListener(mLastNameTextWatcher);
     }
 
     @Override
@@ -855,4 +863,68 @@ public class StayOutboundPaymentView extends BaseDialogView<StayOutboundPaymentV
             viewGroup.addView(messageRow);
         }
     }
+
+    private TextWatcher mFirstNameTextWatcher = new TextWatcher()
+    {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after)
+        {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count)
+        {
+
+        }
+
+        @Override
+        public void afterTextChanged(Editable s)
+        {
+            if (mBookingDataBinding == null)
+            {
+                return;
+            }
+
+            if (s == null || s.length() == 0)
+            {
+                mBookingDataBinding.guestFirstNameHintEditText.setVisibility(View.VISIBLE);
+            } else
+            {
+                mBookingDataBinding.guestFirstNameHintEditText.setVisibility(View.GONE);
+            }
+        }
+    };
+
+    private TextWatcher mLastNameTextWatcher = new TextWatcher()
+    {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after)
+        {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count)
+        {
+
+        }
+
+        @Override
+        public void afterTextChanged(Editable s)
+        {
+            if (mBookingDataBinding == null)
+            {
+                return;
+            }
+
+            if (s == null || s.length() == 0)
+            {
+                mBookingDataBinding.guestLastNameHintEditText.setVisibility(View.VISIBLE);
+            } else
+            {
+                mBookingDataBinding.guestLastNameHintEditText.setVisibility(View.GONE);
+            }
+        }
+    };
 }

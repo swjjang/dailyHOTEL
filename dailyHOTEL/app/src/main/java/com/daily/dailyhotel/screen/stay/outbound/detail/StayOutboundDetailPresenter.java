@@ -24,6 +24,7 @@ import com.daily.dailyhotel.entity.ImageMap;
 import com.daily.dailyhotel.entity.People;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayOutboundDetail;
+import com.daily.dailyhotel.entity.StayOutboundDetailImage;
 import com.daily.dailyhotel.entity.StayOutboundRoom;
 import com.daily.dailyhotel.entity.User;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
@@ -187,8 +188,8 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
             mImageUrl = intent.getStringExtra(StayOutboundDetailActivity.INTENT_EXTRA_DATA_URL);
             mListPrice = intent.getIntExtra(StayOutboundDetailActivity.INTENT_EXTRA_DATA_LIST_PRICE, -1);
 
-            String checkInDateTime = intent.getStringExtra(StayOutboundDetailActivity.INTENT_EXTRA_DATA_CHECKIN);
-            String checkOutDateTime = intent.getStringExtra(StayOutboundDetailActivity.INTENT_EXTRA_DATA_CHECKOUT);
+            String checkInDateTime = intent.getStringExtra(StayOutboundDetailActivity.INTENT_EXTRA_DATA_CHECK_IN);
+            String checkOutDateTime = intent.getStringExtra(StayOutboundDetailActivity.INTENT_EXTRA_DATA_CHECK_OUT);
 
             setStayBookDateTime(checkInDateTime, checkOutDateTime);
 
@@ -833,7 +834,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
                                 } else
                                 {
                                     startActivityForResult(StayOutboundPaymentActivity.newInstance(getActivity(), mStayOutboundDetail.index//
-                                        , mStayOutboundDetail.name, mSelectedRoom.total//
+                                        , mStayOutboundDetail.name, mImageUrl, mSelectedRoom.total//
                                         , mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
                                         , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
                                         , mPeople.numberOfAdults, mPeople.getChildAgeList()//
@@ -862,7 +863,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
                                 } else
                                 {
                                     startActivityForResult(StayOutboundPaymentActivity.newInstance(getActivity(), mStayOutboundDetail.index//
-                                        , mStayOutboundDetail.name, mSelectedRoom.total//
+                                        , mStayOutboundDetail.name, mImageUrl, mSelectedRoom.total//
                                         , mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
                                         , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
                                         , mPeople.numberOfAdults, mPeople.getChildAgeList()//
@@ -1030,6 +1031,22 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
         }
 
         mStayOutboundDetail = stayOutboundDetail;
+
+        // 리스트에서 이미지가 큰사이즈가 없는 경우 상세에서도 해당 사이즈가 없기 때문에 고려해준다.
+        try
+        {
+            StayOutboundDetailImage stayOutboundDetailImage = stayOutboundDetail.getImageList().get(0);
+            ImageMap imageMap = stayOutboundDetailImage.getImageMap();
+
+            if(mImageUrl.equalsIgnoreCase(imageMap.smallUrl) == true)
+            {
+                imageMap.bigUrl = null;
+                imageMap.mediumUrl = null;
+            }
+        }catch (Exception e)
+        {
+            ExLog.e(e.toString());
+        }
 
         if (mIsDeepLink == true)
         {

@@ -735,33 +735,52 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements C
                                             placeType = PlaceType.FNB;
                                         }
 
-                                        PlacePaymentInformation.PaymentType paymentType = PlacePaymentInformation.PaymentType.valueOf(internalDeepLink.getPaymentType());
-                                        String placeName = internalDeepLink.getPlaceName();
-
-                                        int index = -1;
-
-                                        switch (placeType)
+                                        if(internalDeepLink.getReservatoinId() >= 0)
                                         {
-                                            case HOTEL:
-                                                String checkInTime = internalDeepLink.getCheckInTime();
-                                                String checkOutTime = internalDeepLink.getCheckOutTime();
+                                            int reservationId = internalDeepLink.getReservatoinId();
+                                            int size = bookingArrayList.size();
 
-                                                index = searchStayFromPaymentInformation(baseActivity//
-                                                    , placeName, paymentType, checkInTime, checkOutTime, bookingArrayList);
-                                                break;
+                                            for (int i = 0; i < size; i++)
+                                            {
+                                                Booking booking = bookingArrayList.get(i);
 
-                                            case FNB:
-                                                String visitTime = internalDeepLink.getVisitTime();
-
-                                                index = searchGourmetFromPaymentInformation(baseActivity//
-                                                    , placeName, paymentType, visitTime, bookingArrayList);
-                                                break;
-                                        }
-
-                                        if (index >= 0)
+                                                if(booking.reservationIndex == reservationId)
+                                                {
+                                                    unLockUI();
+                                                    mListView.performItemClick(null, i, 0);
+                                                    break;
+                                                }
+                                            }
+                                        } else
                                         {
-                                            unLockUI();
-                                            mListView.performItemClick(null, index, 0);
+                                            PlacePaymentInformation.PaymentType paymentType = PlacePaymentInformation.PaymentType.valueOf(internalDeepLink.getPaymentType());
+                                            String placeName = internalDeepLink.getPlaceName();
+
+                                            int index = -1;
+
+                                            switch (placeType)
+                                            {
+                                                case HOTEL:
+                                                    String checkInTime = internalDeepLink.getCheckInTime();
+                                                    String checkOutTime = internalDeepLink.getCheckOutTime();
+
+                                                    index = searchStayFromPaymentInformation(baseActivity//
+                                                        , placeName, paymentType, checkInTime, checkOutTime, bookingArrayList);
+                                                    break;
+
+                                                case FNB:
+                                                    String visitTime = internalDeepLink.getVisitTime();
+
+                                                    index = searchGourmetFromPaymentInformation(baseActivity//
+                                                        , placeName, paymentType, visitTime, bookingArrayList);
+                                                    break;
+                                            }
+
+                                            if (index >= 0)
+                                            {
+                                                unLockUI();
+                                                mListView.performItemClick(null, index, 0);
+                                            }
                                         }
                                     }
                                 } else

@@ -4,16 +4,19 @@ package com.daily.dailyhotel.screen.stay.outbound.thankyou;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.text.Spannable;
+import android.text.SpannableString;
 
 import com.daily.base.BaseAnalyticsInterface;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
+import com.daily.base.util.FontManager;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
-import com.daily.dailyhotel.entity.People;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.twoheart.dailyhotel.R;
-
-import java.util.ArrayList;
+import com.twoheart.dailyhotel.util.DailyInternalDeepLink;
+import com.twoheart.dailyhotel.util.DailyUserPreference;
+import com.twoheart.dailyhotel.widget.CustomFontTypefaceSpan;
 
 /**
  * Created by sheldon
@@ -23,14 +26,13 @@ public class StayOutboundThankYouPresenter extends BaseExceptionPresenter<StayOu
 {
     private StayOutboundThankYouAnalyticsInterface mAnalytics;
 
-    private int mStayIndex;
+    private int mStayIndex, mReservationId;
     private String mStayName;
     private String mImageUrl;
     private int mRoomPrice;
     private StayBookDateTime mStayBookDateTime;
     private String mCheckInTime;
     private String mCheckOutTime;
-    private People mPeople;
     private String mRoomType;
 
     public interface StayOutboundThankYouAnalyticsInterface extends BaseAnalyticsInterface
@@ -77,20 +79,16 @@ public class StayOutboundThankYouPresenter extends BaseExceptionPresenter<StayOu
         mStayName = intent.getStringExtra(StayOutboundThankYouActivity.INTENT_EXTRA_DATA_STAY_NAME);
         mImageUrl = intent.getStringExtra(StayOutboundThankYouActivity.INTENT_EXTRA_DATA_IMAGE_URL);
         mRoomPrice = intent.getIntExtra(StayOutboundThankYouActivity.INTENT_EXTRA_DATA_ROOM_PRICE, -1);
-        mCheckInTime = intent.getStringExtra(StayOutboundThankYouActivity.INTENT_EXTRA_DATA_CHECKIN);
-        mCheckOutTime = intent.getStringExtra(StayOutboundThankYouActivity.INTENT_EXTRA_DATA_CHECKOUT);
+        mCheckInTime = intent.getStringExtra(StayOutboundThankYouActivity.INTENT_EXTRA_DATA_CHECK_IN_TIME);
+        mCheckOutTime = intent.getStringExtra(StayOutboundThankYouActivity.INTENT_EXTRA_DATA_CHECK_OUT_TIME);
 
-        String checkInDateTime = intent.getStringExtra(StayOutboundThankYouActivity.INTENT_EXTRA_DATA_CHECKIN);
-        String checkOutDateTime = intent.getStringExtra(StayOutboundThankYouActivity.INTENT_EXTRA_DATA_CHECKOUT);
+        String checkInDateTime = intent.getStringExtra(StayOutboundThankYouActivity.INTENT_EXTRA_DATA_CHECK_IN);
+        String checkOutDateTime = intent.getStringExtra(StayOutboundThankYouActivity.INTENT_EXTRA_DATA_CHECK_OUT);
 
         setStayBookDateTime(checkInDateTime, checkOutDateTime);
 
-        int numberOfAdults = intent.getIntExtra(StayOutboundThankYouActivity.INTENT_EXTRA_DATA_NUMBER_OF_ADULTS, 2);
-        ArrayList<Integer> childAgeList = intent.getIntegerArrayListExtra(StayOutboundThankYouActivity.INTENT_EXTRA_DATA_CHILD_LIST);
-
-        setPeople(numberOfAdults, childAgeList);
-
         mRoomType = intent.getStringExtra(StayOutboundThankYouActivity.INTENT_EXTRA_DATA_ROOM_TYPE);
+        mReservationId = intent.getIntExtra(StayOutboundThankYouActivity.INTENT_EXTRA_DATA_RESERVATION_ID, -1);
 
         return true;
     }
@@ -98,6 +96,40 @@ public class StayOutboundThankYouPresenter extends BaseExceptionPresenter<StayOu
     @Override
     public void onPostCreate()
     {
+        getViewInterface().setImageUrl(mImageUrl);
+
+        String name = DailyUserPreference.getInstance(getActivity()).getName();
+        getViewInterface().setUserName(name);
+
+        final String DATE_FORMAT = "yyyy.MM.dd(EEE)";
+
+        try
+        {
+            String checkInTime = getString(R.string.label_stay_outbound_payment_hour, mCheckInTime.split(":")[0]);
+            String checkInDate = mStayBookDateTime.getCheckInDateTime(DATE_FORMAT);
+
+            SpannableString checkInDateSpannableString = new SpannableString(checkInDate + " " + checkInTime);
+            checkInDateSpannableString.setSpan( //
+                new CustomFontTypefaceSpan(FontManager.getInstance(getActivity()).getBoldTypeface()),//
+                checkInDate.length(), checkInDate.length() + checkInTime.length() + 1,//
+                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+            String checkOutTime = getString(R.string.label_stay_outbound_payment_hour, mCheckOutTime.split(":")[0]);
+            String checkOutDate = mStayBookDateTime.getCheckOutDateTime(DATE_FORMAT);
+
+            SpannableString checkOutDateSpannableString = new SpannableString(checkOutDate + " " + checkOutTime);
+            checkOutDateSpannableString.setSpan( //
+                new CustomFontTypefaceSpan(FontManager.getInstance(getActivity()).getBoldTypeface()),//
+                checkOutDate.length(), checkOutDate.length() + checkOutTime.length() + 1,//
+                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+            getViewInterface().setBooking(checkInDateSpannableString, checkOutDateSpannableString, mStayBookDateTime.getNights(), mStayName, mRoomType);
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+        }
+
+        getViewInterface().startAnimation();
     }
 
     @Override
@@ -134,6 +166,8 @@ public class StayOutboundThankYouPresenter extends BaseExceptionPresenter<StayOu
     @Override
     public boolean onBackPressed()
     {
+        startActivity(DailyInternalDeepLink.getStayBookingDetailScreenLink(getActivity(), mReservationId));
+
         return super.onBackPressed();
     }
 
@@ -191,16 +225,5 @@ public class StayOutboundThankYouPresenter extends BaseExceptionPresenter<StayOu
         {
             ExLog.e(e.toString());
         }
-    }
-
-    private void setPeople(int numberOfAdults, ArrayList<Integer> childAgeList)
-    {
-        if (mPeople == null)
-        {
-            mPeople = new People(People.DEFAULT_ADULTS, null);
-        }
-
-        mPeople.numberOfAdults = numberOfAdults;
-        mPeople.setChildAgeList(childAgeList);
     }
 }

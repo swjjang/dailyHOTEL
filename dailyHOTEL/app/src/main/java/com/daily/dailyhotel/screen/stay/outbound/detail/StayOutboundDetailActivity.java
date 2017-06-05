@@ -31,8 +31,8 @@ public class StayOutboundDetailActivity extends BaseActivity<StayOutboundDetailP
     static final String INTENT_EXTRA_DATA_STAY_INDEX = "stayIndex";
     static final String INTENT_EXTRA_DATA_STAY_NAME = "stayName";
     static final String INTENT_EXTRA_DATA_URL = "url";
-    static final String INTENT_EXTRA_DATA_CHECKIN = "checkIn";
-    static final String INTENT_EXTRA_DATA_CHECKOUT = "checkOut";
+    static final String INTENT_EXTRA_DATA_CHECK_IN = "checkIn";
+    static final String INTENT_EXTRA_DATA_CHECK_OUT = "checkOut";
     static final String INTENT_EXTRA_DATA_NUMBER_OF_ADULTS = "numberOfAdults";
     static final String INTENT_EXTRA_DATA_CHILD_LIST = "childList";
     static final String INTENT_EXTRA_DATA_MULTITRANSITION = "multiTransition";
@@ -58,8 +58,8 @@ public class StayOutboundDetailActivity extends BaseActivity<StayOutboundDetailP
         intent.putExtra(INTENT_EXTRA_DATA_STAY_NAME, stayName);
         intent.putExtra(INTENT_EXTRA_DATA_URL, imageUrl);
         intent.putExtra(INTENT_EXTRA_DATA_LIST_PRICE, listPrice);
-        intent.putExtra(INTENT_EXTRA_DATA_CHECKIN, checkInDateTime);
-        intent.putExtra(INTENT_EXTRA_DATA_CHECKOUT, checkOutDateTime);
+        intent.putExtra(INTENT_EXTRA_DATA_CHECK_IN, checkInDateTime);
+        intent.putExtra(INTENT_EXTRA_DATA_CHECK_OUT, checkOutDateTime);
         intent.putExtra(INTENT_EXTRA_DATA_NUMBER_OF_ADULTS, numberOfAdults);
         intent.putExtra(INTENT_EXTRA_DATA_CHILD_LIST, childList);
         intent.putExtra(INTENT_EXTRA_DATA_MULTITRANSITION, mIsUsedMultiTransition);
