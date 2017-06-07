@@ -1,9 +1,9 @@
 package com.twoheart.dailyhotel.network;
 
+import com.daily.dailyhotel.repository.remote.model.BookingData;
 import com.daily.dailyhotel.repository.remote.model.CardData;
 import com.daily.dailyhotel.repository.remote.model.CommonDateTimeData;
 import com.daily.dailyhotel.repository.remote.model.PaymentResultData;
-import com.daily.dailyhotel.repository.remote.model.ReservationData;
 import com.daily.dailyhotel.repository.remote.model.StayOutboundDetailData;
 import com.daily.dailyhotel.repository.remote.model.StayOutboundPaymentData;
 import com.daily.dailyhotel.repository.remote.model.StayOutboundsData;
@@ -616,9 +616,13 @@ public interface DailyMobileService
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET()
-    Observable<BaseListDto<ReservationData>> getStayOutboundReservationList(@Url String mobileAPI);
+    Observable<BaseListDto<BookingData>> getStayOutboundBookingList(@Url String mobileAPI);
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET("{mobileAPI}")
-    Observable<BaseListDto<ReservationData>> getReservationList(@Path(value = "mobileAPI", encoded = true) String mobileAPI);
+    Observable<BaseListDto<BookingData>> getBookingList(@Path(value = "mobileAPI", encoded = true) String mobileAPI);
+
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
+    @POST()
+    Observable<BaseDto> getStayOutboundHideBooking(@Url String mobileAPI);
 }

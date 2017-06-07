@@ -12,10 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.daily.base.util.DailyTextUtils;
-import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
-import com.daily.dailyhotel.entity.ListItem;
-import com.daily.dailyhotel.entity.Reservation;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Booking;
 import com.twoheart.dailyhotel.util.Constants;
@@ -25,23 +22,27 @@ import com.twoheart.dailyhotel.widget.PinnedSectionListView.PinnedSectionListAda
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import java.util.Locale;
+import java.util.TimeZone;
 
-public class ReservationListAdapter extends ArrayAdapter<ListItem> implements PinnedSectionListAdapter
+public class BookingListAdapter__ extends ArrayAdapter<Booking> implements PinnedSectionListAdapter
 {
     private final String BOOKING_DATE_FORMAT = "yyyy.MM.dd(EEE)";
-    private List<ListItem> mList;
+    private ArrayList<Booking> mBookingList;
     private Context mContext;
     BookingListFragment.OnUserActionListener mOnUserActionListener;
 
-    public ReservationListAdapter(Context context, int resourceId, ArrayList<ListItem> arrayList)
+    public BookingListAdapter__(Context context, int resourceId, ArrayList<Booking> items)
     {
-        super(context, resourceId, arrayList);
+        super(context, resourceId, items);
 
-        mList = new ArrayList<>();
+        if (mBookingList == null)
+        {
+            mBookingList = new ArrayList<>();
+        }
 
-        addAll(arrayList);
+        mBookingList.clear();
+        mBookingList.addAll(items);
 
         mContext = context;
     }
@@ -54,48 +55,58 @@ public class ReservationListAdapter extends ArrayAdapter<ListItem> implements Pi
     @Override
     public void clear()
     {
-        mList.clear();
+        if (mBookingList == null)
+        {
+            mBookingList = new ArrayList<>();
+        }
+
+        mBookingList.clear();
 
         super.clear();
     }
 
     @Override
-    public ListItem getItem(int position)
+    public Booking getItem(int position)
     {
-        if (mList == null)
+        if (mBookingList == null)
         {
             return null;
         }
 
-        return mList.get(position);
+        return mBookingList.get(position);
     }
 
     @Override
     public int getCount()
     {
-        if (mList == null)
+        if (mBookingList == null)
         {
             return 0;
         }
 
-        return mList.size();
+        return mBookingList.size();
     }
 
     @Override
-    public void addAll(Collection<? extends ListItem> collection)
+    public void addAll(Collection<? extends Booking> collection)
     {
         if (collection == null)
         {
             return;
         }
 
-        mList.addAll(collection);
+        if (mBookingList == null)
+        {
+            mBookingList = new ArrayList<>();
+        }
+
+        mBookingList.addAll(collection);
     }
 
     @Override
     public boolean isItemViewTypePinned(int viewType)
     {
-        return viewType == ListItem.TYPE_SECTION;
+        return viewType == Booking.TYPE_SECTION;
     }
 
     @Override
@@ -107,19 +118,19 @@ public class ReservationListAdapter extends ArrayAdapter<ListItem> implements Pi
     @Override
     public int getItemViewType(int position)
     {
-        return getItem(position).mType;
+        return getItem(position).type;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent)
     {
-        ListItem listItem = getItem(position);
+        Booking booking = getItem(position);
 
         if (convertView != null)
         {
             Integer tag = (Integer) convertView.getTag();
 
-            if (tag == null || tag != listItem.mType)
+            if (tag == null || tag != booking.type)
             {
                 convertView = null;
             }
@@ -136,9 +147,9 @@ public class ReservationListAdapter extends ArrayAdapter<ListItem> implements Pi
             }
         }
 
-        switch (listItem.mType)
+        switch (booking.type)
         {
-            case ListItem.TYPE_ENTRY:
+            case Booking.TYPE_ENTRY:
             {
                 if (convertView == null)
                 {
@@ -147,11 +158,11 @@ public class ReservationListAdapter extends ArrayAdapter<ListItem> implements Pi
                     convertView.setTag(Booking.TYPE_ENTRY);
                 }
 
-                convertView = getEntryView(convertView, listItem.getItem(), isLastPosition);
+                convertView = getEntryView(convertView, booking, isLastPosition);
                 break;
             }
 
-            case ListItem.TYPE_SECTION:
+            case Booking.TYPE_SECTION:
             {
                 if (convertView == null)
                 {
@@ -160,7 +171,7 @@ public class ReservationListAdapter extends ArrayAdapter<ListItem> implements Pi
                     convertView.setTag(Booking.TYPE_SECTION);
                 }
 
-                convertView = getSectionView(convertView, listItem.getItem());
+                convertView = getSectionView(convertView, booking);
                 break;
             }
         }
@@ -168,9 +179,9 @@ public class ReservationListAdapter extends ArrayAdapter<ListItem> implements Pi
         return convertView;
     }
 
-    private View getEntryView(View view, final Reservation reservation, boolean isLastPosition)
+    private View getEntryView(View view, final Booking booking, boolean isLastPosition)
     {
-        if (view == null || reservation == null)
+        if (view == null || booking == null)
         {
             return view;
         }
@@ -192,7 +203,7 @@ public class ReservationListAdapter extends ArrayAdapter<ListItem> implements Pi
 
         // 호텔 이미지
         com.facebook.drawee.view.SimpleDraweeView hotelImageView = (com.facebook.drawee.view.SimpleDraweeView) view.findViewById(R.id.hotelImage);
-        Util.requestImageResize(mContext, hotelImageView, reservation.imageUrl);
+        Util.requestImageResize(mContext, hotelImageView, booking.hotelImageUrl);
 
         TextView waitAccountTextView = (TextView) view.findViewById(R.id.waitAccountTextView);
         TextView name = (TextView) view.findViewById(R.id.placeNameTextView);
@@ -200,46 +211,37 @@ public class ReservationListAdapter extends ArrayAdapter<ListItem> implements Pi
         TextView nights = (TextView) view.findViewById(R.id.bookingNightsTextView);
         View deleteView = view.findViewById(R.id.deleteView);
 
-        name.setText(reservation.placeName);
+        name.setText(booking.placeName);
 
-        try
+        switch (booking.placeType)
         {
-            switch (reservation.placeType)
+            case HOTEL:
             {
-                case STAY:
-                {
-                    String period = String.format(Locale.KOREA, "%s - %s"//
-                        , DailyCalendar.convertDateFormatString(reservation.checkInDateTime, DailyCalendar.ISO_8601_FORMAT, BOOKING_DATE_FORMAT)//
-                        , DailyCalendar.convertDateFormatString(reservation.checkOutDateTime, DailyCalendar.ISO_8601_FORMAT, BOOKING_DATE_FORMAT));
+                String period = String.format(Locale.KOREA, "%s - %s"//
+                    , DailyCalendar.format(booking.checkinTime, BOOKING_DATE_FORMAT, TimeZone.getTimeZone("GMT+09:00"))//
+                    , DailyCalendar.format(booking.checkoutTime, BOOKING_DATE_FORMAT, TimeZone.getTimeZone("GMT+09:00")));
 
-                    day.setText(period);
+                day.setText(period);
 
-                    int nightsCount = DailyCalendar.compareDateDay(reservation.checkOutDateTime, reservation.checkInDateTime);
+                int nightsCount = (int) ((DailyCalendar.clearTField(booking.checkoutTime) - DailyCalendar.clearTField(booking.checkinTime)) / DailyCalendar.DAY_MILLISECOND);
 
-                    nights.setVisibility(View.VISIBLE);
-                    nights.setText(mContext.getString(R.string.label_nights, nightsCount));
-                    break;
-                }
-
-                case GOURMET:
-                {
-                    String period = DailyCalendar.convertDateFormatString(reservation.checkInDateTime, DailyCalendar.ISO_8601_FORMAT, BOOKING_DATE_FORMAT);
-
-                    day.setText(period);
-
-                    nights.setVisibility(View.GONE);
-                    break;
-                }
-
-                case STAY_OUTBOUND:
-                    break;
+                nights.setVisibility(View.VISIBLE);
+                nights.setText(mContext.getString(R.string.label_nights, nightsCount));
+                break;
             }
-        } catch (Exception e)
-        {
-            ExLog.e(e.toString());
+
+            case FNB:
+            {
+                String period = DailyCalendar.format(booking.checkinTime, BOOKING_DATE_FORMAT, TimeZone.getTimeZone("GMT+09:00"));
+
+                day.setText(period);
+
+                nights.setVisibility(View.GONE);
+                break;
+            }
         }
 
-        if (reservation.isUsed == true)
+        if (booking.isUsed == true)
         {
             setGrayScale(hotelImageView);
 
@@ -255,7 +257,7 @@ public class ReservationListAdapter extends ArrayAdapter<ListItem> implements Pi
                 {
                     if (mOnUserActionListener != null)
                     {
-                        mOnUserActionListener.delete(reservation);
+//                        mOnUserActionListener.delete(booking);
                     }
                 }
             });
@@ -263,53 +265,47 @@ public class ReservationListAdapter extends ArrayAdapter<ListItem> implements Pi
         {
             hotelImageView.clearColorFilter();
 
-            if (reservation.payType == Constants.CODE_PAY_TYPE_ACCOUNT_WAIT)
+            if (booking.payType == Constants.CODE_PAY_TYPE_ACCOUNT_WAIT)
             {
                 waitAccountTextView.setVisibility(View.VISIBLE);
-                waitAccountTextView.setText(reservation.comment);
+                waitAccountTextView.setText(booking.comment);
             } else
             {
-                if (reservation.readyForRefund == true)
+                if (booking.readyForRefund == true)
                 {
                     waitAccountTextView.setVisibility(View.GONE);
                 } else
                 {
                     String text;
 
-                    if (reservation.placeType == Reservation.PlaceType.STAY_OUTBOUND)
+                    if (booking.leftFromToDay == 0)
                     {
-                        text = null;
+                        // 당일
+                        switch (booking.placeType)
+                        {
+                            case HOTEL:
+                            {
+                                text = mContext.getString(R.string.frag_booking_today_type_stay);
+                                break;
+                            }
+
+                            case FNB:
+                            {
+                                text = mContext.getString(R.string.frag_booking_today_type_gourmet);
+                                break;
+                            }
+
+                            default:
+                                text = null;
+                                break;
+                        }
+                    } else if (booking.leftFromToDay > 0 && booking.leftFromToDay <= 3)
+                    {
+                        // 하루이상 남음
+                        text = mContext.getString(R.string.frag_booking_duedate_formet, booking.leftFromToDay);
                     } else
                     {
-                        if (reservation.remainingDays == 0)
-                        {
-                            // 당일
-                            switch (reservation.placeType)
-                            {
-                                case STAY:
-                                {
-                                    text = mContext.getString(R.string.frag_booking_today_type_stay);
-                                    break;
-                                }
-
-                                case GOURMET:
-                                {
-                                    text = mContext.getString(R.string.frag_booking_today_type_gourmet);
-                                    break;
-                                }
-
-                                default:
-                                    text = null;
-                                    break;
-                            }
-                        } else if (reservation.remainingDays > 0 && reservation.remainingDays <= 3)
-                        {
-                            // 하루이상 남음
-                            text = mContext.getString(R.string.frag_booking_duedate_formet, reservation.remainingDays);
-                        } else
-                        {
-                            text = null;
-                        }
+                        text = null;
                     }
 
                     if (DailyTextUtils.isTextEmpty(text) == true)

@@ -2,9 +2,9 @@ package com.daily.dailyhotel.entity;
 
 import com.twoheart.dailyhotel.util.Constants;
 
-public class Reservation
+public class Booking
 {
-    public int reservationIndex;
+    public int index;
     public String imageUrl;
     public int payType;
     public String placeName;
@@ -25,7 +25,7 @@ public class Reservation
         STAY_OUTBOUND
     }
 
-    public Reservation()
+    public Booking()
     {
 
     }

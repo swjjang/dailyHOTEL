@@ -168,7 +168,7 @@ public interface Constants
     String NAME_INTENT_EXTRA_DATA_TYPE = "type";
     String NAME_INTENT_EXTRA_DATA_ROOMINDEX = "roomIndex";
     String NAME_INTENT_EXTRA_DATA_PRODUCTINDEX = "prouctIndex";
-    String NAME_INTENT_EXTRA_DATA_RESERVATIONINDEX = "reservationIndex";
+    String NAME_INTENT_EXTRA_DATA_RESERVATIONINDEX = "index";
     String NAME_INTENT_EXTRA_DATA_CHECKINDATE = "checkInDate";
     String NAME_INTENT_EXTRA_DATA_CHECKOUTDATE = "checkOutDate";
     String NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY = "placeBookingDay";

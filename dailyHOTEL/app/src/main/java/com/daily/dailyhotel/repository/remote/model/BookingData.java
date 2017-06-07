@@ -2,12 +2,12 @@ package com.daily.dailyhotel.repository.remote.model;
 
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
-import com.daily.dailyhotel.entity.Reservation;
+import com.daily.dailyhotel.entity.Booking;
 
 import java.util.List;
 
 @JsonObject
-public class ReservationData
+public class BookingData
 {
     @JsonField(name = "reservationRecIdx")
     public int reservationRecIdx;
@@ -43,15 +43,15 @@ public class ReservationData
     public String imgDir;
 
 
-    public ReservationData()
+    public BookingData()
     {
 
     }
 
-    public Reservation getReservation()
+    public Booking getBooking()
     {
-        Reservation reservation = new Reservation();
+        Booking booking = new Booking();
 
-        return reservation;
+        return booking;
     }
 }

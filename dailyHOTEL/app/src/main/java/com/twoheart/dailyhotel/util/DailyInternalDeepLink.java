@@ -195,7 +195,7 @@ public class DailyInternalDeepLink extends DailyDeepLink
         return getIntent(context, Uri.parse(stringBuilder.toString()));
     }
 
-    public static Intent getStayOutboundReservationDetailScreenLink(Context context, int reservationId)
+    public static Intent getStayOutboundBookingDetailScreenLink(Context context, int reservationId)
     {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("dailyhotel://");

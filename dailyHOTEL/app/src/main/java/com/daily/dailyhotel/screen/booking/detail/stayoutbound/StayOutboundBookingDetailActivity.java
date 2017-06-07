@@ -15,7 +15,7 @@ import com.twoheart.dailyhotel.R;
  */
 public class StayOutboundBookingDetailActivity extends BaseActivity<StayOutboundBookingDetailPresenter>
 {
-    static final String INTENT_EXTRA_DATA_RESERVATION_INDEX = "reservationIndex";
+    static final String INTENT_EXTRA_DATA_RESERVATION_INDEX = "index";
     static final String INTENT_EXTRA_DATA_IMAGE_URL = "imageUrl";
 
     public static Intent newInstance(Context context, int reservationIndex, String imageUrl)

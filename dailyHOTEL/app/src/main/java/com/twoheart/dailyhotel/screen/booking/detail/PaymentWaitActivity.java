@@ -29,8 +29,8 @@ import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
 import com.daily.base.widget.DailyTextView;
 import com.daily.base.widget.DailyToast;
-import com.daily.dailyhotel.entity.Reservation;
-import com.daily.dailyhotel.parcel.ReservationParcel;
+import com.daily.dailyhotel.entity.Booking;
+import com.daily.dailyhotel.parcel.BookingParcel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
@@ -61,12 +61,12 @@ public class PaymentWaitActivity extends BaseActivity
     private ViewGroup mGuide1Layout;
     private View mBonusLayout, mCouponLayout;
 
-    private Reservation mReservation;
+    private Booking mBooking;
 
-    public static Intent newInstance(Context context, Reservation reservation)
+    public static Intent newInstance(Context context, Booking booking)
     {
         Intent intent = new Intent(context, PaymentWaitActivity.class);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_BOOKING, new ReservationParcel(reservation));
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_BOOKING, new BookingParcel(booking));
 
         return intent;
     }
@@ -78,20 +78,20 @@ public class PaymentWaitActivity extends BaseActivity
 
         Intent intent = getIntent();
 
-        ReservationParcel reservationParcel = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_BOOKING);
+        BookingParcel bookingParcel = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_BOOKING);
 
-        if (reservationParcel == null)
+        if (bookingParcel == null)
         {
             Util.restartApp(this);
             return;
         }
 
-        mReservation = reservationParcel.getReservation();
+        mBooking = bookingParcel.getBooking();
 
         setContentView(R.layout.activity_payment_wait);
 
         initToolbar();
-        initLayout(mReservation);
+        initLayout(mBooking);
     }
 
     @Override
@@ -99,7 +99,7 @@ public class PaymentWaitActivity extends BaseActivity
     {
         super.onStart();
 
-        switch (mReservation.placeType)
+        switch (mBooking.placeType)
         {
             case STAY:
                 AnalyticsManager.getInstance(this).recordScreen(this, AnalyticsManager.Screen.DAILYHOTEL_DEPOSITWAITING, null);
@@ -148,9 +148,9 @@ public class PaymentWaitActivity extends BaseActivity
             @Override
             public void onClick(View v)
             {
-                showCallDialog(mReservation.placeType);
+                showCallDialog(mBooking.placeType);
 
-                switch (mReservation.placeType)
+                switch (mBooking.placeType)
                 {
                     case STAY:
                         AnalyticsManager.getInstance(PaymentWaitActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
@@ -166,9 +166,9 @@ public class PaymentWaitActivity extends BaseActivity
         });
     }
 
-    private void initLayout(Reservation reservation)
+    private void initLayout(Booking booking)
     {
-        if (reservation == null)
+        if (booking == null)
         {
             return;
         }
@@ -206,27 +206,27 @@ public class PaymentWaitActivity extends BaseActivity
             }
         });
 
-        placeNameTextView.setText(reservation.placeName);
+        placeNameTextView.setText(booking.placeName);
 
         lockUI();
 
-        switch (reservation.placeType)
+        switch (booking.placeType)
         {
             case STAY:
             {
-                DailyMobileAPI.getInstance(this).requestDepositWaitDetailInformation(mNetworkTag, reservation.tid, mHotelReservationCallback);
+                DailyMobileAPI.getInstance(this).requestDepositWaitDetailInformation(mNetworkTag, booking.tid, mHotelReservationCallback);
                 break;
             }
 
             case GOURMET:
             {
-                DailyMobileAPI.getInstance(this).requestGourmetAccountInformation(mNetworkTag, reservation.tid, mFnBReservationCallback);
+                DailyMobileAPI.getInstance(this).requestGourmetAccountInformation(mNetworkTag, booking.tid, mFnBReservationCallback);
                 break;
             }
         }
     }
 
-    void showCallDialog(final Reservation.PlaceType placeType)
+    void showCallDialog(final Booking.PlaceType placeType)
     {
         if (isFinishing())
         {
@@ -537,18 +537,18 @@ public class PaymentWaitActivity extends BaseActivity
             AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.CALL_BUTTON_CLICKED,//
                 AnalyticsManager.Action.BOOKING_DETAIL, AnalyticsManager.Label.KAKAO, null);
 
-            switch (mReservation.placeType)
+            switch (mBooking.placeType)
             {
                 case STAY:
                     startActivityForResult(HappyTalkCategoryDialog.newInstance(this//
                         , HappyTalkCategoryDialog.CallScreen.SCREEN_STAY_PAYMENT_WAIT, 0//
-                        , mReservation.reservationIndex, mReservation.placeName), Constants.CODE_REQUEST_ACTIVITY_HAPPY_TALK);
+                        , mBooking.index, mBooking.placeName), Constants.CODE_REQUEST_ACTIVITY_HAPPY_TALK);
                     break;
 
                 case GOURMET:
                     startActivityForResult(HappyTalkCategoryDialog.newInstance(this//
                         , HappyTalkCategoryDialog.CallScreen.SCREEN_GOURMET_PAYMENT_WAIT, 0//
-                        , mReservation.reservationIndex, mReservation.placeName), Constants.CODE_REQUEST_ACTIVITY_HAPPY_TALK);
+                        , mBooking.index, mBooking.placeName), Constants.CODE_REQUEST_ACTIVITY_HAPPY_TALK);
                     break;
             }
         } catch (Exception e)

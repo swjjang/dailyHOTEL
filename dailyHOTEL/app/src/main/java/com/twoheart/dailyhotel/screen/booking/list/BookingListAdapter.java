@@ -12,9 +12,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.daily.base.util.DailyTextUtils;
+import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
+import com.daily.dailyhotel.entity.ListItem;
+import com.daily.dailyhotel.entity.Booking;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.Booking;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.Util;
@@ -22,27 +24,23 @@ import com.twoheart.dailyhotel.widget.PinnedSectionListView.PinnedSectionListAda
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Locale;
-import java.util.TimeZone;
 
-public class BookingListAdapter extends ArrayAdapter<Booking> implements PinnedSectionListAdapter
+public class BookingListAdapter extends ArrayAdapter<ListItem> implements PinnedSectionListAdapter
 {
     private final String BOOKING_DATE_FORMAT = "yyyy.MM.dd(EEE)";
-    private ArrayList<Booking> mBookingList;
+    private List<ListItem> mList;
     private Context mContext;
     BookingListFragment.OnUserActionListener mOnUserActionListener;
 
-    public BookingListAdapter(Context context, int resourceId, ArrayList<Booking> items)
+    public BookingListAdapter(Context context, int resourceId, ArrayList<ListItem> arrayList)
     {
-        super(context, resourceId, items);
+        super(context, resourceId, arrayList);
 
-        if (mBookingList == null)
-        {
-            mBookingList = new ArrayList<>();
-        }
+        mList = new ArrayList<>();
 
-        mBookingList.clear();
-        mBookingList.addAll(items);
+        addAll(arrayList);
 
         mContext = context;
     }
@@ -55,58 +53,48 @@ public class BookingListAdapter extends ArrayAdapter<Booking> implements PinnedS
     @Override
     public void clear()
     {
-        if (mBookingList == null)
-        {
-            mBookingList = new ArrayList<>();
-        }
-
-        mBookingList.clear();
+        mList.clear();
 
         super.clear();
     }
 
     @Override
-    public Booking getItem(int position)
+    public ListItem getItem(int position)
     {
-        if (mBookingList == null)
+        if (mList == null)
         {
             return null;
         }
 
-        return mBookingList.get(position);
+        return mList.get(position);
     }
 
     @Override
     public int getCount()
     {
-        if (mBookingList == null)
+        if (mList == null)
         {
             return 0;
         }
 
-        return mBookingList.size();
+        return mList.size();
     }
 
     @Override
-    public void addAll(Collection<? extends Booking> collection)
+    public void addAll(Collection<? extends ListItem> collection)
     {
         if (collection == null)
         {
             return;
         }
 
-        if (mBookingList == null)
-        {
-            mBookingList = new ArrayList<>();
-        }
-
-        mBookingList.addAll(collection);
+        mList.addAll(collection);
     }
 
     @Override
     public boolean isItemViewTypePinned(int viewType)
     {
-        return viewType == Booking.TYPE_SECTION;
+        return viewType == ListItem.TYPE_SECTION;
     }
 
     @Override
@@ -118,19 +106,19 @@ public class BookingListAdapter extends ArrayAdapter<Booking> implements PinnedS
     @Override
     public int getItemViewType(int position)
     {
-        return getItem(position).type;
+        return getItem(position).mType;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent)
     {
-        Booking booking = getItem(position);
+        ListItem listItem = getItem(position);
 
         if (convertView != null)
         {
             Integer tag = (Integer) convertView.getTag();
 
-            if (tag == null || tag != booking.type)
+            if (tag == null || tag != listItem.mType)
             {
                 convertView = null;
             }
@@ -147,31 +135,31 @@ public class BookingListAdapter extends ArrayAdapter<Booking> implements PinnedS
             }
         }
 
-        switch (booking.type)
+        switch (listItem.mType)
         {
-            case Booking.TYPE_ENTRY:
+            case ListItem.TYPE_ENTRY:
             {
                 if (convertView == null)
                 {
                     LayoutInflater layoutInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                     convertView = layoutInflater.inflate(R.layout.list_row_booking, parent, false);
-                    convertView.setTag(Booking.TYPE_ENTRY);
+                    convertView.setTag(com.twoheart.dailyhotel.model.Booking.TYPE_ENTRY);
                 }
 
-                convertView = getEntryView(convertView, booking, isLastPosition);
+                convertView = getEntryView(convertView, listItem.getItem(), isLastPosition);
                 break;
             }
 
-            case Booking.TYPE_SECTION:
+            case ListItem.TYPE_SECTION:
             {
                 if (convertView == null)
                 {
                     LayoutInflater layoutInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                     convertView = layoutInflater.inflate(R.layout.list_row_default_section, parent, false);
-                    convertView.setTag(Booking.TYPE_SECTION);
+                    convertView.setTag(com.twoheart.dailyhotel.model.Booking.TYPE_SECTION);
                 }
 
-                convertView = getSectionView(convertView, booking);
+                convertView = getSectionView(convertView, listItem.getItem());
                 break;
             }
         }
@@ -203,7 +191,7 @@ public class BookingListAdapter extends ArrayAdapter<Booking> implements PinnedS
 
         // 호텔 이미지
         com.facebook.drawee.view.SimpleDraweeView hotelImageView = (com.facebook.drawee.view.SimpleDraweeView) view.findViewById(R.id.hotelImage);
-        Util.requestImageResize(mContext, hotelImageView, booking.hotelImageUrl);
+        Util.requestImageResize(mContext, hotelImageView, booking.imageUrl);
 
         TextView waitAccountTextView = (TextView) view.findViewById(R.id.waitAccountTextView);
         TextView name = (TextView) view.findViewById(R.id.placeNameTextView);
@@ -213,32 +201,41 @@ public class BookingListAdapter extends ArrayAdapter<Booking> implements PinnedS
 
         name.setText(booking.placeName);
 
-        switch (booking.placeType)
+        try
         {
-            case HOTEL:
+            switch (booking.placeType)
             {
-                String period = String.format(Locale.KOREA, "%s - %s"//
-                    , DailyCalendar.format(booking.checkinTime, BOOKING_DATE_FORMAT, TimeZone.getTimeZone("GMT+09:00"))//
-                    , DailyCalendar.format(booking.checkoutTime, BOOKING_DATE_FORMAT, TimeZone.getTimeZone("GMT+09:00")));
+                case STAY:
+                {
+                    String period = String.format(Locale.KOREA, "%s - %s"//
+                        , DailyCalendar.convertDateFormatString(booking.checkInDateTime, DailyCalendar.ISO_8601_FORMAT, BOOKING_DATE_FORMAT)//
+                        , DailyCalendar.convertDateFormatString(booking.checkOutDateTime, DailyCalendar.ISO_8601_FORMAT, BOOKING_DATE_FORMAT));
 
-                day.setText(period);
+                    day.setText(period);
 
-                int nightsCount = (int) ((DailyCalendar.clearTField(booking.checkoutTime) - DailyCalendar.clearTField(booking.checkinTime)) / DailyCalendar.DAY_MILLISECOND);
+                    int nightsCount = DailyCalendar.compareDateDay(booking.checkOutDateTime, booking.checkInDateTime);
 
-                nights.setVisibility(View.VISIBLE);
-                nights.setText(mContext.getString(R.string.label_nights, nightsCount));
-                break;
+                    nights.setVisibility(View.VISIBLE);
+                    nights.setText(mContext.getString(R.string.label_nights, nightsCount));
+                    break;
+                }
+
+                case GOURMET:
+                {
+                    String period = DailyCalendar.convertDateFormatString(booking.checkInDateTime, DailyCalendar.ISO_8601_FORMAT, BOOKING_DATE_FORMAT);
+
+                    day.setText(period);
+
+                    nights.setVisibility(View.GONE);
+                    break;
+                }
+
+                case STAY_OUTBOUND:
+                    break;
             }
-
-            case FNB:
-            {
-                String period = DailyCalendar.format(booking.checkinTime, BOOKING_DATE_FORMAT, TimeZone.getTimeZone("GMT+09:00"));
-
-                day.setText(period);
-
-                nights.setVisibility(View.GONE);
-                break;
-            }
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
         }
 
         if (booking.isUsed == true)
@@ -257,7 +254,7 @@ public class BookingListAdapter extends ArrayAdapter<Booking> implements PinnedS
                 {
                     if (mOnUserActionListener != null)
                     {
-//                        mOnUserActionListener.delete(booking);
+                        mOnUserActionListener.delete(booking);
                     }
                 }
             });
@@ -278,34 +275,40 @@ public class BookingListAdapter extends ArrayAdapter<Booking> implements PinnedS
                 {
                     String text;
 
-                    if (booking.leftFromToDay == 0)
-                    {
-                        // 당일
-                        switch (booking.placeType)
-                        {
-                            case HOTEL:
-                            {
-                                text = mContext.getString(R.string.frag_booking_today_type_stay);
-                                break;
-                            }
-
-                            case FNB:
-                            {
-                                text = mContext.getString(R.string.frag_booking_today_type_gourmet);
-                                break;
-                            }
-
-                            default:
-                                text = null;
-                                break;
-                        }
-                    } else if (booking.leftFromToDay > 0 && booking.leftFromToDay <= 3)
-                    {
-                        // 하루이상 남음
-                        text = mContext.getString(R.string.frag_booking_duedate_formet, booking.leftFromToDay);
-                    } else
+                    if (booking.placeType == Booking.PlaceType.STAY_OUTBOUND)
                     {
                         text = null;
+                    } else
+                    {
+                        if (booking.remainingDays == 0)
+                        {
+                            // 당일
+                            switch (booking.placeType)
+                            {
+                                case STAY:
+                                {
+                                    text = mContext.getString(R.string.frag_booking_today_type_stay);
+                                    break;
+                                }
+
+                                case GOURMET:
+                                {
+                                    text = mContext.getString(R.string.frag_booking_today_type_gourmet);
+                                    break;
+                                }
+
+                                default:
+                                    text = null;
+                                    break;
+                            }
+                        } else if (booking.remainingDays > 0 && booking.remainingDays <= 3)
+                        {
+                            // 하루이상 남음
+                            text = mContext.getString(R.string.frag_booking_duedate_formet, booking.remainingDays);
+                        } else
+                        {
+                            text = null;
+                        }
                     }
 
                     if (DailyTextUtils.isTextEmpty(text) == true)
@@ -325,7 +328,7 @@ public class BookingListAdapter extends ArrayAdapter<Booking> implements PinnedS
         return view;
     }
 
-    private View getSectionView(View view, Booking booking)
+    private View getSectionView(View view, com.twoheart.dailyhotel.model.Booking booking)
     {
         if (view == null || booking == null)
         {

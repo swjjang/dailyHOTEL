@@ -166,7 +166,7 @@ public class StayOutboundThankYouPresenter extends BaseExceptionPresenter<StayOu
     @Override
     public boolean onBackPressed()
     {
-        startActivity(DailyInternalDeepLink.getStayOutboundReservationDetailScreenLink(getActivity(), mReservationId));
+        startActivity(DailyInternalDeepLink.getStayOutboundBookingDetailScreenLink(getActivity(), mReservationId));
 
         return super.onBackPressed();
     }

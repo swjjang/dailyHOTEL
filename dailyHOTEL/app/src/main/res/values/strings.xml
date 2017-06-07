@@ -1341,6 +1341,11 @@
     <string name="message_stay_outbound_payment_sold_out">마지막 객실이 방금 판매 완료되었습니다.\n날짜를 변경하거나 다른 호텔을 확인해주세요.</string>
     <string name="message_stay_outbound_payment_empty_name">해외 호텔 예약 시에는 투숙자를 영문 성함으로 입력해주세요.</string>
 
+
+    <!-- New Booking -->
+    <string name="message_booking_delete_booking">삭제 되었습니다.</string>
+
+
     <!-- Preview -->
     <string name="label_preview_add_wish">위시리스트\n추가하기</string>
     <string name="label_preview_remove_wish">위시리스트\n삭제하기</string>
