@@ -74,6 +74,7 @@ import io.reactivex.Observable;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function3;
 import retrofit2.Call;
@@ -320,7 +321,7 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements O
         Booking booking = listItem.getItem();
         Intent intent;
 
-        if (booking.payType == CODE_PAY_TYPE_CARD_COMPLETE || booking.payType == CODE_PAY_TYPE_ACCOUNT_COMPLETE)
+        if (booking.paymentType == Booking.PaymentType.CARD || booking.paymentType == Booking.PaymentType.VIRTUAL)
         {
             // 카드결제 완료 || 가상계좌 완료
 
@@ -328,7 +329,7 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements O
             {
                 releaseUiComponent();
             }
-        } else if (booking.payType == CODE_PAY_TYPE_ACCOUNT_WAIT)
+        } else if (booking.paymentType == Booking.PaymentType.VIRTUAL_WAIT)
         {
             // 가상계좌 입금대기
             intent = PaymentWaitActivity.newInstance(baseActivity, booking);
@@ -380,19 +381,53 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements O
     {
         lockUI();
 
+//        addCompositeDisposable(Observable.zip(mCommonRemoteImpl.getCommonDateTime()//
+//            , mBookingRemoteImpl.getBookingList(), mBookingRemoteImpl.getStayOutboundBookingList()//
+//            , new Function3<CommonDateTime, List<Booking>, List<Booking>, List<ListItem>>()
+//            {
+//                @Override
+//                public List<ListItem> apply(@NonNull CommonDateTime commonDateTime//
+//                    , @NonNull List<Booking> bookingList, @NonNull List<Booking> stayOutboundBookingList) throws Exception
+//                {
+//                    setCommonDateTime(commonDateTime);
+//
+//                    bookingList.addAll(stayOutboundBookingList);
+//
+//                    List<ListItem> listItemList = getBookingSortList(bookingList);
+//
+//                    return listItemList;
+//                }
+//            }).subscribe(new Consumer<List<ListItem>>()
+//        {
+//            @Override
+//            public void accept(@NonNull List<ListItem> listItemList) throws Exception
+//            {
+//                onBookingList(listItemList);
+//
+//                unLockUI();
+//            }
+//        }, new Consumer<Throwable>()
+//        {
+//            @Override
+//            public void accept(@NonNull Throwable throwable) throws Exception
+//            {
+//                onHandleError(throwable);
+//
+//                updateLayout(true, null);
+//            }
+//        }));
+
         addCompositeDisposable(Observable.zip(mCommonRemoteImpl.getCommonDateTime()//
-            , mBookingRemoteImpl.getBookingList(), mBookingRemoteImpl.getStayOutboundBookingList()//
-            , new Function3<CommonDateTime, List<Booking>, List<Booking>, List<ListItem>>()
+            , mBookingRemoteImpl.getStayOutboundBookingList()//
+            , new BiFunction<CommonDateTime, List<Booking>, List<ListItem>>()
             {
                 @Override
                 public List<ListItem> apply(@NonNull CommonDateTime commonDateTime//
-                    , @NonNull List<Booking> bookingList, @NonNull List<Booking> stayOutboundBookingList) throws Exception
+                    , @NonNull List<Booking> stayOutboundBookingList) throws Exception
                 {
                     setCommonDateTime(commonDateTime);
 
-                    bookingList.addAll(stayOutboundBookingList);
-
-                    List<ListItem> listItemList = getBookingSortList(bookingList);
+                    List<ListItem> listItemList = getBookingSortList(stayOutboundBookingList);
 
                     return listItemList;
                 }
@@ -510,7 +545,7 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements O
 
                 if (PlacePaymentInformation.PaymentType.VBANK == paymentType)
                 {
-                    if (booking.payType == CODE_PAY_TYPE_ACCOUNT_WAIT//
+                    if (booking.paymentType == Booking.PaymentType.VIRTUAL_WAIT//
                         && booking.placeName.equalsIgnoreCase(placeName)//
                         && booking.placeType == Booking.PlaceType.STAY//
                         && DailyCalendar.convertDateFormatString(booking.checkInDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd").equalsIgnoreCase(checkInDate) == true//
@@ -520,7 +555,7 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements O
                     }
                 } else
                 {
-                    if (booking.payType != CODE_PAY_TYPE_ACCOUNT_WAIT //
+                    if (booking.paymentType != Booking.PaymentType.VIRTUAL_WAIT //
                         && booking.readyForRefund == false//
                         && booking.placeName.equalsIgnoreCase(placeName)//
                         && booking.placeType == Booking.PlaceType.STAY//
@@ -576,7 +611,7 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements O
 
                 if (PlacePaymentInformation.PaymentType.VBANK == paymentType)
                 {
-                    if (booking.payType == CODE_PAY_TYPE_ACCOUNT_WAIT//
+                    if (booking.paymentType == Booking.PaymentType.VIRTUAL_WAIT//
                         && booking.placeName.equalsIgnoreCase(placeName)//
                         && booking.placeType == Booking.PlaceType.GOURMET//
                         && DailyCalendar.convertDateFormatString(booking.checkInDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd").equalsIgnoreCase(visitDate) == true)
@@ -585,7 +620,7 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements O
                     }
                 } else
                 {
-                    if (booking.payType != CODE_PAY_TYPE_ACCOUNT_WAIT//
+                    if (booking.paymentType != Booking.PaymentType.VIRTUAL_WAIT//
                         && booking.readyForRefund == false//
                         && booking.placeName.equalsIgnoreCase(placeName)//
                         && booking.placeType == Booking.PlaceType.GOURMET//
@@ -672,10 +707,10 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements O
                 waitRefundList.add(booking);
             } else
             {
-                switch (booking.payType)
+                switch (booking.paymentType)
                 {
-                    case CODE_PAY_TYPE_CARD_COMPLETE:
-                    case CODE_PAY_TYPE_ACCOUNT_COMPLETE:
+                    case CARD:
+                    case VIRTUAL:
                         booking.isUsed = DailyCalendar.compareDateDay(booking.checkOutDateTime, mCommonDateTime.currentDateTime) < 0;
 
                         if (booking.isUsed)
@@ -687,7 +722,7 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements O
                         }
                         break;
 
-                    case CODE_PAY_TYPE_ACCOUNT_WAIT:
+                    case VIRTUAL_WAIT:
                         depositWaitingList.add(booking);
                         break;
                 }

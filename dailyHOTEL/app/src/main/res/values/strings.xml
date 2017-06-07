@@ -1350,6 +1350,11 @@
     <!-- Stay Out Bound Booking Detail -->
     <string name="message_stay_outbound_booking_detail_current_time">날짜는 현지시간 기준입니다.</string>
 
+
+    <!-- Stay Out Bound Booking Receipt -->
+    <string name="label_stay_outbound_booking_hotel_name">호텔명</string>
+    <string name="label_stay_outbound_booking_night_room">%1$d일/%2$d객실</string>
+
     <!-- Preview -->
     <string name="label_preview_add_wish">위시리스트\n추가하기</string>
     <string name="label_preview_remove_wish">위시리스트\n삭제하기</string>

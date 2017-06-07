@@ -1,6 +1,7 @@
 package com.daily.dailyhotel.screen.booking.detail.stayoutbound;
 
 import android.app.Dialog;
+import android.location.Location;
 import android.text.SpannableString;
 
 import com.daily.base.BaseDialogViewInterface;
@@ -21,4 +22,8 @@ public interface StayOutboundBookingDetailInterface extends BaseDialogViewInterf
     void showNavigatorDialog(Dialog.OnDismissListener listener);
 
     void showConciergeDialog(Dialog.OnDismissListener listener);
+
+    void showShareDialog(Dialog.OnDismissListener listener);
+
+    void setMyLocation(Location location);
 }

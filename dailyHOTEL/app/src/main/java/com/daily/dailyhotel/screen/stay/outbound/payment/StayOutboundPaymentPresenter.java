@@ -684,7 +684,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
                     } else
                     {
                         getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.act_base_network_connect)//
-                            , getString(R.string.frag_error_btn), null, new DialogInterface.OnDismissListener()
+                            , getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
                             {
                                 @Override
                                 public void onDismiss(DialogInterface dialog)

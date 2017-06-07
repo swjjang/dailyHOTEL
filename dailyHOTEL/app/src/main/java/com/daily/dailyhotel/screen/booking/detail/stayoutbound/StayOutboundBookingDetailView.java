@@ -4,6 +4,7 @@ import android.animation.Animator;
 import android.animation.ValueAnimator;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.databinding.DataBindingUtil;
 import android.graphics.Point;
 import android.graphics.PointF;
@@ -40,6 +41,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ActivityStayOutboundBookingDetailDataBinding;
 import com.twoheart.dailyhotel.databinding.DialogConciergeDataBinding;
+import com.twoheart.dailyhotel.databinding.DialogShareDataBinding;
 import com.twoheart.dailyhotel.databinding.DialogStayOutboundMapDataBinding;
 import com.twoheart.dailyhotel.databinding.LayoutStayOutboundBookingDetail01DataBinding;
 import com.twoheart.dailyhotel.databinding.LayoutStayOutboundBookingDetail02DataBinding;
@@ -78,8 +80,6 @@ public class StayOutboundBookingDetailView extends BaseDialogView<StayOutboundBo
     {
         void onShareClick();
 
-        void onCallClick();
-
         void onMapLoaded();
 
         void onMapLoading();
@@ -94,8 +94,6 @@ public class StayOutboundBookingDetailView extends BaseDialogView<StayOutboundBo
 
         void onClipAddressClick();
 
-        void onSearchMapClick();
-
         void onMyLocationClick();
 
         void onIssuingReceiptClick();
@@ -105,6 +103,8 @@ public class StayOutboundBookingDetailView extends BaseDialogView<StayOutboundBo
         void onConciergeHappyTalkClick();
 
         void onConciergeCallClick();
+
+        void onShareSmsClick();
     }
 
     public StayOutboundBookingDetailView(BaseActivity baseActivity, StayOutboundBookingDetailView.OnEventListener listener)
@@ -452,6 +452,51 @@ public class StayOutboundBookingDetailView extends BaseDialogView<StayOutboundBo
     }
 
     @Override
+    public void showShareDialog(Dialog.OnDismissListener listener)
+    {
+        DialogShareDataBinding dataBinding = DataBindingUtil.inflate(LayoutInflater.from(getContext()), R.layout.dialog_share_data, null, false);
+
+        //        dataBinding.kakaoShareView.setOnClickListener(new View.OnClickListener()
+        //        {
+        //            @Override
+        //            public void onClick(View v)
+        //            {
+        //                hideSimpleDialog();
+        //
+        //                getEventListener().onShareKakaoClick();
+        //            }
+        //        });
+
+        dataBinding.smsShareLayout.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                hideSimpleDialog();
+
+                getEventListener().onShareSmsClick();
+            }
+        });
+
+        dataBinding.closeTextView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                hideSimpleDialog();
+            }
+        });
+
+        showSimpleDialog(dataBinding.getRoot(), null, listener, true);
+    }
+
+    @Override
+    public void setMyLocation(Location location)
+    {
+
+    }
+
+    @Override
     public void onClick(View v)
     {
         if (getViewDataBinding() == null)
@@ -500,7 +545,7 @@ public class StayOutboundBookingDetailView extends BaseDialogView<StayOutboundBo
                 break;
 
             case R.id.searchMapView:
-                getEventListener().onSearchMapClick();
+                getEventListener().onNavigatorClick();
                 break;
         }
     }
@@ -537,7 +582,7 @@ public class StayOutboundBookingDetailView extends BaseDialogView<StayOutboundBo
                 switch (v.getId())
                 {
                     case R.id.menu1View:
-                        getEventListener().onCallClick();
+                        getEventListener().onConciergeCallClick();
                         break;
 
                     case R.id.menu2View:

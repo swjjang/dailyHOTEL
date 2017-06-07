@@ -274,7 +274,7 @@ public class BookingListAdapter extends ArrayAdapter<ListItem> implements Pinned
         {
             hotelImageView.clearColorFilter();
 
-            if (booking.payType == Constants.CODE_PAY_TYPE_ACCOUNT_WAIT)
+            if (booking.paymentType == Booking.PaymentType.VIRTUAL_WAIT)
             {
                 waitAccountTextView.setVisibility(View.VISIBLE);
                 waitAccountTextView.setText(booking.comment);

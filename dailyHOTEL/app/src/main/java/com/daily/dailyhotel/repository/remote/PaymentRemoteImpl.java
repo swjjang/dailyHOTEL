@@ -145,6 +145,7 @@ public class PaymentRemoteImpl implements PaymentInterface
             jsonObject.put("email", guest.email);
             jsonObject.put("phoneNumber", guest.phone.replace("-", ""));
             jsonObject.put("paymentType", PAYMENT_TYPE);
+            jsonObject.put("total", totalPrice);
         } catch (Exception e)
         {
             ExLog.e(e.toString());
@@ -196,7 +197,9 @@ public class PaymentRemoteImpl implements PaymentInterface
 
             if (usedBonus == true)
             {
-                jsonObject.put("bonusAmount", guest.bonus);
+                int bonus = guest.bonus > totalPrice ? totalPrice : guest.bonus;
+
+                jsonObject.put("bonusAmount", bonus);
             }
 
             jsonObject.put("firstName", guest.firstName);
@@ -204,6 +207,7 @@ public class PaymentRemoteImpl implements PaymentInterface
             jsonObject.put("email", guest.email);
             jsonObject.put("phoneNumber", guest.phone.replace("-", ""));
             jsonObject.put("paymentType", PAYMENT_TYPE);
+            jsonObject.put("total", totalPrice);
         } catch (Exception e)
         {
             ExLog.e(e.toString());

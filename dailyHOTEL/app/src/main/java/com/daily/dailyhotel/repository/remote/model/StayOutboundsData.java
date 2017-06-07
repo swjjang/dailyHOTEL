@@ -11,9 +11,6 @@ import java.util.List;
 @JsonObject
 public class StayOutboundsData
 {
-    @JsonField(name = "hotelId")
-    public int hotelId;
-
     @JsonField(name = "dailyHotels")
     public List<StayOutboundData> stayOutboundDataList;
 

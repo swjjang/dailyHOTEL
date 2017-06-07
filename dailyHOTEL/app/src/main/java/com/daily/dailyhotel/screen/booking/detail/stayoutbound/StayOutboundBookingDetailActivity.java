@@ -20,6 +20,8 @@ public class StayOutboundBookingDetailActivity extends BaseActivity<StayOutbound
     static final int REQUEST_CODE_DETAIL = 10002;
     static final int REQUEST_CODE_CALL = 10003;
     static final int REQUEST_CODE_HAPPYTALK = 10004;
+    static final int REQUEST_CODE_PERMISSION_MANAGER = 10005;
+    static final int REQUEST_CODE_SETTING_LOCATION = 10006;
 
     static final String INTENT_EXTRA_DATA_RESERVATION_INDEX = "index";
     static final String INTENT_EXTRA_DATA_IMAGE_URL = "imageUrl";

@@ -1,9 +1,11 @@
 package com.daily.dailyhotel.screen.booking.detail.stayoutbound;
 
 
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.text.Spannable;
@@ -11,6 +13,8 @@ import android.text.SpannableString;
 import android.view.View;
 
 import com.daily.base.BaseAnalyticsInterface;
+import com.daily.base.exception.PermissionException;
+import com.daily.base.exception.ProviderException;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.util.FontManager;
@@ -23,18 +27,19 @@ import com.daily.dailyhotel.repository.remote.BookingRemoteImpl;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
 import com.daily.dailyhotel.screen.common.call.CallDialogActivity;
 import com.daily.dailyhotel.screen.stay.outbound.detail.StayOutboundDetailActivity;
+import com.daily.dailyhotel.util.DailyLocationExFactory;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.screen.booking.detail.hotel.IssuingReceiptActivity;
 import com.twoheart.dailyhotel.screen.common.HappyTalkCategoryDialog;
+import com.twoheart.dailyhotel.screen.common.PermissionManagerActivity;
 import com.twoheart.dailyhotel.screen.common.ZoomMapActivity;
 import com.twoheart.dailyhotel.util.DailyCalendar;
+import com.twoheart.dailyhotel.util.DailyUserPreference;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.CustomFontTypefaceSpan;
 
-import java.util.Date;
-import java.util.TimeZone;
-
 import io.reactivex.Observable;
+import io.reactivex.Observer;
 import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Consumer;
 
@@ -54,6 +59,8 @@ public class StayOutboundBookingDetailPresenter extends BaseExceptionPresenter<S
 
     private CommonDateTime mCommonDateTime;
     private StayOutboundBookingDetail mStayOutboundBookingDetail;
+
+    private DailyLocationExFactory mDailyLocationExFactory;
 
     public interface StayOutboundBookingAnalyticsInterface extends BaseAnalyticsInterface
     {
@@ -163,6 +170,27 @@ public class StayOutboundBookingDetailPresenter extends BaseExceptionPresenter<S
     public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
         unLockAll();
+
+        switch (requestCode)
+        {
+            case StayOutboundBookingDetailActivity.REQUEST_CODE_PERMISSION_MANAGER:
+            {
+                switch (resultCode)
+                {
+                    case Activity.RESULT_OK:
+                        onMyLocationClick();
+                        break;
+
+                    default:
+                        break;
+                }
+                break;
+            }
+
+            case StayOutboundBookingDetailActivity.REQUEST_CODE_SETTING_LOCATION:
+                onMyLocationClick();
+                break;
+        }
     }
 
     @Override
@@ -215,13 +243,19 @@ public class StayOutboundBookingDetailPresenter extends BaseExceptionPresenter<S
     @Override
     public void onShareClick()
     {
+        if (lock() == true)
+        {
+            return;
+        }
 
-    }
-
-    @Override
-    public void onCallClick()
-    {
-
+        getViewInterface().showShareDialog(new DialogInterface.OnDismissListener()
+        {
+            @Override
+            public void onDismiss(DialogInterface dialog)
+            {
+                unLockAll();
+            }
+        });
     }
 
     @Override
@@ -233,27 +267,7 @@ public class StayOutboundBookingDetailPresenter extends BaseExceptionPresenter<S
     @Override
     public void onMapLoading()
     {
-        if (lock() == true || mStayOutboundBookingDetail == null)
-        {
-            return;
-        }
-
-        try
-        {
-            String checkInDateTime = DailyCalendar.convertDateFormatString(mStayOutboundBookingDetail.checkInDate, "yyyy-MM-dd", DailyCalendar.ISO_8601_FORMAT);
-            String checkOutDateTime = DailyCalendar.convertDateFormatString(mStayOutboundBookingDetail.checkOutDate, "yyyy-MM-dd", DailyCalendar.ISO_8601_FORMAT);
-
-            People people = mStayOutboundBookingDetail.getPeople();
-
-            startActivityForResult(StayOutboundDetailActivity.newInstance(getActivity(), mStayOutboundBookingDetail.stayIndex//
-                , mStayOutboundBookingDetail.name, null, -1, checkInDateTime, checkOutDateTime//
-                , people.numberOfAdults, people.getChildAgeList(), false, true), StayOutboundBookingDetailActivity.REQUEST_CODE_DETAIL);
-
-            getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
-        } catch (Exception e)
-        {
-            ExLog.e(e.toString());
-        }
+        DailyToast.showToast(getActivity(), R.string.message_loading_map, DailyToast.LENGTH_SHORT);
     }
 
     @Override
@@ -280,7 +294,27 @@ public class StayOutboundBookingDetailPresenter extends BaseExceptionPresenter<S
     @Override
     public void onViewDetailClick()
     {
+        if (lock() == true || mStayOutboundBookingDetail == null)
+        {
+            return;
+        }
 
+        try
+        {
+            String checkInDateTime = DailyCalendar.convertDateFormatString(mStayOutboundBookingDetail.checkInDate, "yyyy-MM-dd", DailyCalendar.ISO_8601_FORMAT);
+            String checkOutDateTime = DailyCalendar.convertDateFormatString(mStayOutboundBookingDetail.checkOutDate, "yyyy-MM-dd", DailyCalendar.ISO_8601_FORMAT);
+
+            People people = mStayOutboundBookingDetail.getPeople();
+
+            startActivityForResult(StayOutboundDetailActivity.newInstance(getActivity(), mStayOutboundBookingDetail.stayIndex//
+                , mStayOutboundBookingDetail.name, null, -1, checkInDateTime, checkOutDateTime//
+                , people.numberOfAdults, people.getChildAgeList(), false, true), StayOutboundBookingDetailActivity.REQUEST_CODE_DETAIL);
+
+            getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+        }
     }
 
     @Override
@@ -345,15 +379,29 @@ public class StayOutboundBookingDetailPresenter extends BaseExceptionPresenter<S
     }
 
     @Override
-    public void onSearchMapClick()
-    {
-
-    }
-
-    @Override
     public void onMyLocationClick()
     {
+        if (lock() == true)
+        {
+            return;
+        }
 
+        addCompositeDisposable(searchMyLocation().subscribe(new Consumer<Location>()
+        {
+            @Override
+            public void accept(@io.reactivex.annotations.NonNull Location location) throws Exception
+            {
+                unLockAll();
+                getViewInterface().setMyLocation(location);
+            }
+        }, new Consumer<Throwable>()
+        {
+            @Override
+            public void accept(@io.reactivex.annotations.NonNull Throwable throwable) throws Exception
+            {
+                unLockAll();
+            }
+        }));
     }
 
     @Override
@@ -386,7 +434,7 @@ public class StayOutboundBookingDetailPresenter extends BaseExceptionPresenter<S
             // 카카오톡 패키지 설치 여부
             getActivity().getPackageManager().getPackageInfo("com.kakao.talk", PackageManager.GET_META_DATA);
 
-            startActivityForResult(HappyTalkCategoryDialog.newInstance(getActivity(), HappyTalkCategoryDialog.CallScreen.SCREEN_STAY_OUTBOUND_DETAIL//
+            startActivityForResult(HappyTalkCategoryDialog.newInstance(getActivity(), HappyTalkCategoryDialog.CallScreen.SCREEN_STAY_OUTBOUND_BOOKING//
                 , mStayOutboundBookingDetail.stayIndex, 0, mStayOutboundBookingDetail.name), StayOutboundBookingDetailActivity.REQUEST_CODE_HAPPYTALK);
         } catch (Exception e)
         {
@@ -407,6 +455,45 @@ public class StayOutboundBookingDetailPresenter extends BaseExceptionPresenter<S
     public void onConciergeCallClick()
     {
         startActivityForResult(CallDialogActivity.newInstance(getActivity()), StayOutboundBookingDetailActivity.REQUEST_CODE_CALL);
+    }
+
+    @Override
+    public void onShareSmsClick()
+    {
+        if (mStayOutboundBookingDetail == null || lock() == true)
+        {
+            return;
+        }
+
+        try
+        {
+            String name = DailyUserPreference.getInstance(getActivity()).getName();
+
+            if (DailyTextUtils.isTextEmpty(name) == true)
+            {
+                name = getString(R.string.label_friend) + "가";
+            } else
+            {
+                name += "님이";
+            }
+
+            final String DATE_FORMAT = "yyyy.MM.dd(EEE)";
+
+            String checkInDate = DailyCalendar.convertDateFormatString(mStayOutboundBookingDetail.checkInDate, "yyyy-MM-dd", DATE_FORMAT);
+            String checkOutDate = DailyCalendar.convertDateFormatString(mStayOutboundBookingDetail.checkOutDate, "yyyy-MM-dd", DATE_FORMAT);
+            int nights = DailyCalendar.compareDateDay(checkOutDate, checkInDate);
+
+            String message = getString(R.string.message_detail_stay_share_sms//
+                , name, mStayOutboundBookingDetail.name//
+                , checkInDate, checkOutDate//
+                , nights, nights + 1 //
+                , mStayOutboundBookingDetail.address);
+
+            Util.sendSms(getActivity(), message);
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+        }
     }
 
     private void setCommonDateTime(@NonNull CommonDateTime commonDateTime)
@@ -435,27 +522,25 @@ public class StayOutboundBookingDetailPresenter extends BaseExceptionPresenter<S
 
         try
         {
-            Date checkInDate = DailyCalendar.convertDate(stayOutboundBookingDetail.checkInDate, "yyyy-MM-dd", TimeZone.getTimeZone("GMT+09:00"));
             String checkInTime = getString(R.string.label_stay_outbound_payment_hour, stayOutboundBookingDetail.checkInTime.split(":")[0]);
-            String checkInDateString = DailyCalendar.format(checkInDate, DATE_FORMAT);
+            String checkInDate = DailyCalendar.convertDateFormatString(stayOutboundBookingDetail.checkInDate, "yyyy-MM-dd", DATE_FORMAT);
 
-            SpannableString checkInDateSpannableString = new SpannableString(checkInDateString + " " + checkInTime);
+            SpannableString checkInDateSpannableString = new SpannableString(checkInDate + " " + checkInTime);
             checkInDateSpannableString.setSpan( //
                 new CustomFontTypefaceSpan(FontManager.getInstance(getActivity()).getBoldTypeface()),//
-                checkInDateString.length(), checkInDateString.length() + checkInTime.length() + 1,//
+                checkInDate.length(), checkInDate.length() + checkInTime.length() + 1,//
                 Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
-            Date checkOutDate = DailyCalendar.convertDate(stayOutboundBookingDetail.checkOutDate, "yyyy-MM-dd", TimeZone.getTimeZone("GMT+09:00"));
             String checkOutTime = getString(R.string.label_stay_outbound_payment_hour, stayOutboundBookingDetail.checkOutTime.split(":")[0]);
-            String checkOutDateString = DailyCalendar.format(checkOutDate, DATE_FORMAT);
+            String checkOutDate = DailyCalendar.convertDateFormatString(stayOutboundBookingDetail.checkOutDate, "yyyy-MM-dd", DATE_FORMAT);
 
-            SpannableString checkOutDateSpannableString = new SpannableString(checkOutDateString + " " + checkOutTime);
+            SpannableString checkOutDateSpannableString = new SpannableString(checkOutDate + " " + checkOutTime);
             checkOutDateSpannableString.setSpan( //
                 new CustomFontTypefaceSpan(FontManager.getInstance(getActivity()).getBoldTypeface()),//
-                checkOutDateString.length(), checkOutDateString.length() + checkOutTime.length() + 1,//
+                checkOutDate.length(), checkOutDate.length() + checkOutTime.length() + 1,//
                 Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
-            int nights = DailyCalendar.compareDateDay(DailyCalendar.format(checkInDate, DailyCalendar.ISO_8601_FORMAT), DailyCalendar.format(checkOutDate, DailyCalendar.ISO_8601_FORMAT));
+            int nights = DailyCalendar.compareDateDay(checkOutDate, checkInDate);
             getViewInterface().setBookingDate(checkInDateSpannableString, checkOutDateSpannableString, nights);
         } catch (Exception e)
         {
@@ -486,5 +571,126 @@ public class StayOutboundBookingDetailPresenter extends BaseExceptionPresenter<S
                 return stayOutboundBookingDetail.STATUS_SURCHARGE_REFUND;
             }
         }
+    }
+
+    private Observable<Location> searchMyLocation()
+    {
+        if (mDailyLocationExFactory == null)
+        {
+            mDailyLocationExFactory = new DailyLocationExFactory();
+        }
+
+        return new Observable<Location>()
+        {
+            @Override
+            protected void subscribeActual(Observer<? super Location> observer)
+            {
+                mDailyLocationExFactory.startLocationMeasure(getActivity(), new DailyLocationExFactory.LocationListenerEx()
+                {
+                    @Override
+                    public void onRequirePermission()
+                    {
+                        observer.onError(new PermissionException());
+                    }
+
+                    @Override
+                    public void onFailed()
+                    {
+                        observer.onError(new Exception());
+                    }
+
+                    @Override
+                    public void onStatusChanged(String provider, int status, Bundle extras)
+                    {
+                        // TODO Auto-generated method stub
+
+                    }
+
+                    @Override
+                    public void onProviderEnabled(String provider)
+                    {
+                        // TODO Auto-generated method stub
+
+                    }
+
+                    @Override
+                    public void onProviderDisabled(String provider)
+                    {
+                        observer.onError(new ProviderException());
+                    }
+
+                    @Override
+                    public void onLocationChanged(Location location)
+                    {
+                        unLockAll();
+
+                        mDailyLocationExFactory.stopLocationMeasure();
+
+                        if (location == null)
+                        {
+                            observer.onError(new NullPointerException());
+                        } else
+                        {
+                            observer.onNext(location);
+                            observer.onComplete();
+                        }
+                    }
+                });
+            }
+        }.doOnError(new Consumer<Throwable>()
+        {
+            @Override
+            public void accept(@io.reactivex.annotations.NonNull Throwable throwable) throws Exception
+            {
+                unLockAll();
+
+                if (throwable instanceof PermissionException)
+                {
+                    Intent intent = PermissionManagerActivity.newInstance(getActivity(), PermissionManagerActivity.PermissionType.ACCESS_FINE_LOCATION);
+                    startActivityForResult(intent, StayOutboundBookingDetailActivity.REQUEST_CODE_PERMISSION_MANAGER);
+                } else if (throwable instanceof ProviderException)
+                {
+                    // 현재 GPS 설정이 꺼져있습니다 설정에서 바꾸어 주세요.
+                    mDailyLocationExFactory.stopLocationMeasure();
+
+                    View.OnClickListener positiveListener = new View.OnClickListener()//
+                    {
+                        @Override
+                        public void onClick(View v)
+                        {
+                            Intent intent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                            startActivityForResult(intent, StayOutboundBookingDetailActivity.REQUEST_CODE_SETTING_LOCATION);
+                        }
+                    };
+
+                    View.OnClickListener negativeListener = new View.OnClickListener()//
+                    {
+                        @Override
+                        public void onClick(View v)
+                        {
+                            DailyToast.showToast(getActivity(), R.string.message_failed_mylocation, DailyToast.LENGTH_SHORT);
+                        }
+                    };
+
+                    DialogInterface.OnCancelListener cancelListener = new DialogInterface.OnCancelListener()
+                    {
+                        @Override
+                        public void onCancel(DialogInterface dialog)
+                        {
+                            DailyToast.showToast(getActivity(), R.string.message_failed_mylocation, DailyToast.LENGTH_SHORT);
+                        }
+                    };
+
+                    getViewInterface().showSimpleDialog(//
+                        getString(R.string.dialog_title_used_gps), getString(R.string.dialog_msg_used_gps), //
+                        getString(R.string.dialog_btn_text_dosetting), //
+                        getString(R.string.dialog_btn_text_cancel), //
+                        positiveListener, negativeListener, cancelListener, null, true);
+                } else
+                {
+                    DailyToast.showToast(getActivity(), R.string.message_failed_mylocation, DailyToast.LENGTH_SHORT);
+                }
+            }
+        });
     }
 }
