@@ -68,6 +68,8 @@ public abstract class PlaceMainActivity extends BaseActivity
 
     protected abstract void onPlaceDetailClickByLongPress(View view, PlaceViewItem placeViewItem, int listCount);
 
+    protected abstract void onRegionClick();
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -282,6 +284,9 @@ public abstract class PlaceMainActivity extends BaseActivity
                 {
                     setResult(CODE_RESULT_ACTIVITY_GO_HOME);
                     finish();
+                } else if (resultCode == CODE_RESULT_ACTIVITY_GO_REGION_LIST)
+                {
+                    onRegionClick();
                 } else
                 {
                     if (mIsDeepLink == false)

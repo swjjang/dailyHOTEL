@@ -136,7 +136,7 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
     @Override
     protected PlaceSearchResultLayout getPlaceSearchResultLayout(Context context)
     {
-        return new GourmetSearchResultLayout(this, mOnEventListener);
+        return new GourmetSearchResultLayout(this, mCallByScreen, mOnEventListener);
     }
 
     @Override

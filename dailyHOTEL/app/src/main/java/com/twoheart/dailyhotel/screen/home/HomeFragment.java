@@ -252,6 +252,16 @@ public class HomeFragment extends BaseMenuNavigationFragment
                     mHomeLayout.setScrollTop();
 
                     forceRefreshing();
+                } else if (resultCode == Constants.CODE_RESULT_ACTIVITY_GO_SEARCH)
+                {
+                    onSearchClick();
+                } else if (resultCode == Constants.CODE_RESULT_ACTIVITY_GO_REGION_LIST)
+                {
+                    if (data != null && data.hasExtra(NAME_INTENT_EXTRA_DATA_DAILY_CATEGORY_TYPE) == true)
+                    {
+                        DailyCategoryType categoryType = data.getParcelableExtra(NAME_INTENT_EXTRA_DATA_DAILY_CATEGORY_TYPE);
+                        mOnEventListener.onCategoryItemClick(categoryType);
+                    }
                 }
                 break;
 
@@ -942,13 +952,13 @@ public class HomeFragment extends BaseMenuNavigationFragment
                     } else
                     {
                         // Location
-                        onSearch(location);
+                        onSearchLocation(location);
                     }
                 }
             });
     }
 
-    private void onSearch(Location location)
+    private void onSearchLocation(Location location)
     {
         if (mTodayDateTime == null)
         {
@@ -969,6 +979,35 @@ public class HomeFragment extends BaseMenuNavigationFragment
             ExLog.e(e.toString());
         }
 
+    }
+
+    private void onSearchClick()
+    {
+        if (mBaseActivity == null)
+        {
+            return;
+        }
+
+        if (isLockUiComponent() == true || mIsAttach == false)
+        {
+            return;
+        }
+
+        try
+        {
+            StayBookingDay stayBookingDay = new StayBookingDay();
+            stayBookingDay.setCheckInDay(mTodayDateTime.dailyDateTime);
+            stayBookingDay.setCheckOutDay(mTodayDateTime.dailyDateTime, 1);
+
+            mBaseActivity.startActivityForResult(SearchActivity.newInstance(mBaseActivity, mPlaceType, stayBookingDay), Constants.CODE_REQUEST_ACTIVITY_SEARCH);
+
+            AnalyticsManager.getInstance(mBaseActivity).recordEvent(//
+                AnalyticsManager.Category.SEARCH, AnalyticsManager.Action.SEARCH_BUTTON_CLICK,//
+                AnalyticsManager.Label.HOME, null);
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+        }
     }
 
     private void onStayClick(boolean isDeepLink, DailyDeepLink dailyDeepLink)
@@ -1063,31 +1102,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
         @Override
         public void onSearchImageClick()
         {
-            if (mBaseActivity == null)
-            {
-                return;
-            }
-
-            if (isLockUiComponent() == true || mIsAttach == false)
-            {
-                return;
-            }
-
-            try
-            {
-                StayBookingDay stayBookingDay = new StayBookingDay();
-                stayBookingDay.setCheckInDay(mTodayDateTime.dailyDateTime);
-                stayBookingDay.setCheckOutDay(mTodayDateTime.dailyDateTime, 1);
-
-                mBaseActivity.startActivityForResult(SearchActivity.newInstance(mBaseActivity, mPlaceType, stayBookingDay), Constants.CODE_REQUEST_ACTIVITY_SEARCH);
-
-                AnalyticsManager.getInstance(mBaseActivity).recordEvent(//
-                    AnalyticsManager.Category.SEARCH, AnalyticsManager.Action.SEARCH_BUTTON_CLICK,//
-                    AnalyticsManager.Label.HOME, null);
-            } catch (Exception e)
-            {
-                ExLog.e(e.toString());
-            }
+            onSearchClick();
         }
 
         @Override

@@ -528,6 +528,30 @@ public class StayMainActivity extends PlaceMainActivity
         mStayListFragmentListener.onStayClick(view, placeViewItem, listCount);
     }
 
+    @Override
+    protected void onRegionClick()
+    {
+        if (isFinishing() == true || lockUiComponentAndIsLockUiComponent() == true)
+        {
+            return;
+        }
+
+        Intent intent = StayRegionListActivity.newInstance(StayMainActivity.this, //
+            mStayCuration.getProvince(), mStayCuration.getStayBookingDay(), mStayCuration.getCategory().code);
+        startActivityForResult(intent, CODE_REQUEST_ACTIVITY_REGIONLIST);
+
+        switch (mViewType)
+        {
+            case LIST:
+                AnalyticsManager.getInstance(StayMainActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_, AnalyticsManager.Action.CHANGE_LOCATION, AnalyticsManager.Label._HOTEL_LIST, null);
+                break;
+
+            case MAP:
+                AnalyticsManager.getInstance(StayMainActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_, AnalyticsManager.Action.CHANGE_LOCATION, AnalyticsManager.Label._HOTEL_MAP, null);
+                break;
+        }
+    }
+
     //////////////////////////////////////////////////////////////////////////////////////////////////////////
     // Listener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -586,25 +610,7 @@ public class StayMainActivity extends PlaceMainActivity
         @Override
         public void onRegionClick()
         {
-            if (isFinishing() == true || lockUiComponentAndIsLockUiComponent() == true)
-            {
-                return;
-            }
-
-            Intent intent = StayRegionListActivity.newInstance(StayMainActivity.this, //
-                mStayCuration.getProvince(), mStayCuration.getStayBookingDay(), mStayCuration.getCategory().code);
-            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_REGIONLIST);
-
-            switch (mViewType)
-            {
-                case LIST:
-                    AnalyticsManager.getInstance(StayMainActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_, AnalyticsManager.Action.CHANGE_LOCATION, AnalyticsManager.Label._HOTEL_LIST, null);
-                    break;
-
-                case MAP:
-                    AnalyticsManager.getInstance(StayMainActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_, AnalyticsManager.Action.CHANGE_LOCATION, AnalyticsManager.Label._HOTEL_MAP, null);
-                    break;
-            }
+            StayMainActivity.this.onRegionClick();
         }
 
         @Override

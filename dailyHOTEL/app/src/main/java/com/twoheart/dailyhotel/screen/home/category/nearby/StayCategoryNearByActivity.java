@@ -12,6 +12,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.SharedElementCallback;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Toast;
 
@@ -180,6 +181,11 @@ public class StayCategoryNearByActivity extends BaseActivity
         {
             Intent intent = new Intent();
             intent.putExtra(INTENT_EXTRA_DATA_KEYWORD, getKeyword());
+            setResult(resultCode, intent);
+        } else if (Constants.CODE_RESULT_ACTIVITY_GO_REGION_LIST == resultCode)
+        {
+            Intent intent = new Intent();
+            intent.putExtra(NAME_INTENT_EXTRA_DATA_DAILY_CATEGORY_TYPE, (Parcelable) mDailyCategoryType);
             setResult(resultCode, intent);
         } else
         {
@@ -944,9 +950,14 @@ public class StayCategoryNearByActivity extends BaseActivity
         }
 
         @Override
-        public void research(int resultCode)
+        public void research()
         {
-            StayCategoryNearByActivity.this.finish(resultCode);
+            if (TextUtils.isEmpty(mCallByScreen) == true)
+            {
+                return;
+            }
+
+            StayCategoryNearByActivity.this.finish(Constants.CODE_RESULT_ACTIVITY_GO_REGION_LIST);
 
             AnalyticsManager.getInstance(StayCategoryNearByActivity.this).recordEvent(AnalyticsManager.Category.SEARCH_//
                 , AnalyticsManager.Action.SEARCH_RESULT_VIEW, AnalyticsManager.Label.SEARCH_AGAIN, null);

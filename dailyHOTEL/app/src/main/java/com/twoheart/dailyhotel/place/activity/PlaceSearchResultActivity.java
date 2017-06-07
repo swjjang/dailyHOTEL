@@ -145,7 +145,7 @@ public abstract class PlaceSearchResultActivity extends BaseActivity
             setResult(resultCode);
         }
 
-        if (resultCode == RESULT_CANCELED)
+        if (resultCode == RESULT_CANCELED || resultCode == CODE_RESULT_ACTIVITY_GO_SEARCH)
         {
             requestAnalyticsByCanceled();
         }
