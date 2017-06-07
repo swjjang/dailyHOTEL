@@ -13,6 +13,10 @@ public abstract class DailyDeepLink
     protected static final String HOST_DAILYHOTEL = "dailyhotel.co.kr";
     protected static final String HOST_KAKAOLINK = "kakaolink";
 
+    public static final String STAY = "stay";
+    public static final String GOURMET = "gourmet";
+    public static final String STAY_OUTBOUND = "stayOutbound";
+
     protected Uri mDeepLinkUri;
     protected Map<String, String> mParamsMap;
 

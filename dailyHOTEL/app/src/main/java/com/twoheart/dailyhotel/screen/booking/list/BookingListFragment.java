@@ -33,11 +33,13 @@ import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.entity.Booking;
 import com.daily.dailyhotel.entity.CommonDateTime;
 import com.daily.dailyhotel.entity.ListItem;
+import com.daily.dailyhotel.entity.User;
 import com.daily.dailyhotel.repository.local.ConfigLocalImpl;
 import com.daily.dailyhotel.repository.remote.BookingRemoteImpl;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
 import com.daily.dailyhotel.repository.remote.FacebookRemoteImpl;
 import com.daily.dailyhotel.repository.remote.KakaoRemoteImpl;
+import com.daily.dailyhotel.repository.remote.ProfileRemoteImpl;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.PlacePaymentInformation;
@@ -64,8 +66,9 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
-import java.util.TimeZone;
+import java.util.Map;
 
 import io.reactivex.Observable;
 import io.reactivex.annotations.NonNull;
@@ -93,9 +96,11 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements O
     private CommonDateTime mCommonDateTime;
     private DailyDeepLink mDailyDeepLink;
 
+    boolean mCheckVerify; // 인증이 해지되었는지 예약 리스트 진입시 한번만 체크한다.
 
     private CommonRemoteImpl mCommonRemoteImpl;
     private BookingRemoteImpl mBookingRemoteImpl;
+    private ProfileRemoteImpl mProfileRemoteImpl;
 
     private CompositeDisposable mCompositeDisposable = new CompositeDisposable();
 
@@ -111,6 +116,7 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements O
 
         mCommonRemoteImpl = new CommonRemoteImpl(getContext());
         mBookingRemoteImpl = new BookingRemoteImpl(getContext());
+        mProfileRemoteImpl = new ProfileRemoteImpl(getContext());
     }
 
     @Override
@@ -254,39 +260,7 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements O
                 mDontReload = false;
             } else
             {
-                lockUI();
-
-                addCompositeDisposable(Observable.zip(mCommonRemoteImpl.getCommonDateTime()//
-                    , mBookingRemoteImpl.getBookingList(), mBookingRemoteImpl.getStayOutboundBookingList()//
-                    , new Function3<CommonDateTime, List<Booking>, List<Booking>, List<ListItem>>()
-                    {
-                        @Override
-                        public List<ListItem> apply(@NonNull CommonDateTime commonDateTime//
-                            , @NonNull List<Booking> bookingList, @NonNull List<Booking> stayOutboundBookingList) throws Exception
-                        {
-                            setCommonDateTime(commonDateTime);
-
-                            bookingList.addAll(stayOutboundBookingList);
-
-                            List<ListItem> listItemList = getReservationList(bookingList);
-
-                            return listItemList;
-                        }
-                    }).subscribe(new Consumer<List<ListItem>>()
-                {
-                    @Override
-                    public void accept(@NonNull List<ListItem> listItemList) throws Exception
-                    {
-
-                    }
-                }, new Consumer<Throwable>()
-                {
-                    @Override
-                    public void accept(@NonNull Throwable throwable) throws Exception
-                    {
-
-                    }
-                }));
+                onRefresh();
             }
         }
     }
@@ -402,227 +376,108 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements O
         }
     }
 
-    private int searchListFromPaymentInformation(Context context, boolean isBankTransfer, ArrayList<com.twoheart.dailyhotel.model.Booking> bookingArrayList, String[] paymentInformation)
+    private void onRefresh()
     {
-        if (bookingArrayList == null || bookingArrayList.size() == 0 || paymentInformation == null)
-        {
-            DailyPreference.getInstance(context).clearPaymentInformation();
-            DailyPreference.getInstance(context).setVirtualAccountReadyFlag(-1);
-            return -1;
-        }
+        lockUI();
 
-        int size = bookingArrayList.size();
-
-        PlaceType placeType;
-        String placeName;
-        PlacePaymentInformation.PaymentType paymentType;
-        String checkInDate;
-        String checkOutDate;
-
-        try
-        {
-            placeType = PlaceType.valueOf(paymentInformation[0]);
-            placeName = paymentInformation[1];
-            paymentType = PlacePaymentInformation.PaymentType.valueOf(paymentInformation[2]);
-
-            switch (placeType)
+        addCompositeDisposable(Observable.zip(mCommonRemoteImpl.getCommonDateTime()//
+            , mBookingRemoteImpl.getBookingList(), mBookingRemoteImpl.getStayOutboundBookingList()//
+            , new Function3<CommonDateTime, List<Booking>, List<Booking>, List<ListItem>>()
             {
-                case HOTEL:
-                    // "yyyy-MM-dd'T'HH:mm:ssZZZZZ"
-                    checkInDate = DailyCalendar.convertDateFormatString(paymentInformation[3], DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd");
-                    checkOutDate = DailyCalendar.convertDateFormatString(paymentInformation[4], DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd");
+                @Override
+                public List<ListItem> apply(@NonNull CommonDateTime commonDateTime//
+                    , @NonNull List<Booking> bookingList, @NonNull List<Booking> stayOutboundBookingList) throws Exception
+                {
+                    setCommonDateTime(commonDateTime);
 
-                    for (int i = 0; i < size; i++)
-                    {
-                        com.twoheart.dailyhotel.model.Booking booking = bookingArrayList.get(i);
+                    bookingList.addAll(stayOutboundBookingList);
 
-                        if (isBankTransfer == true)
-                        {
-                            if (booking.type == com.twoheart.dailyhotel.model.Booking.TYPE_ENTRY && booking.payType == CODE_PAY_TYPE_ACCOUNT_WAIT//
-                                && booking.placeName.equalsIgnoreCase(placeName)//
-                                && booking.placeType == placeType//
-                                && DailyCalendar.format(booking.checkinTime, "yyyy.MM.dd", TimeZone.getTimeZone("GMT+09:00")).equalsIgnoreCase(checkInDate) == true//
-                                && DailyCalendar.format(booking.checkoutTime, "yyyy.MM.dd", TimeZone.getTimeZone("GMT+09:00")).equalsIgnoreCase(checkOutDate) == true)
-                            {
-                                return i;
-                            }
-                        } else
-                        {
-                            if (booking.type == com.twoheart.dailyhotel.model.Booking.TYPE_ENTRY && booking.payType != CODE_PAY_TYPE_ACCOUNT_WAIT //
-                                && booking.readyForRefund == false//
-                                && booking.placeName.equalsIgnoreCase(placeName)//
-                                && booking.placeType == placeType//
-                                && DailyCalendar.format(booking.checkinTime, "yyyy.MM.dd", TimeZone.getTimeZone("GMT+09:00")).equalsIgnoreCase(checkInDate) == true//
-                                && DailyCalendar.format(booking.checkoutTime, "yyyy.MM.dd", TimeZone.getTimeZone("GMT+09:00")).equalsIgnoreCase(checkOutDate) == true)
-                            {
-                                return i;
-                            }
-                        }
-                    }
-                    break;
+                    List<ListItem> listItemList = getBookingSortList(bookingList);
 
-                case FNB:
-                    // yyyy.MM.dd (EEE)
-                    checkInDate = paymentInformation[3].split(" ")[0];
+                    return listItemList;
+                }
+            }).subscribe(new Consumer<List<ListItem>>()
+        {
+            @Override
+            public void accept(@NonNull List<ListItem> listItemList) throws Exception
+            {
+                onBookingList(listItemList);
 
-                    for (int i = 0; i < size; i++)
-                    {
-                        com.twoheart.dailyhotel.model.Booking booking = bookingArrayList.get(i);
-
-                        if (isBankTransfer == true)
-                        {
-                            if (booking.type == com.twoheart.dailyhotel.model.Booking.TYPE_ENTRY && booking.payType == CODE_PAY_TYPE_ACCOUNT_WAIT//
-                                && booking.placeName.equalsIgnoreCase(placeName)//
-                                && booking.placeType == placeType//
-                                && DailyCalendar.format(booking.checkinTime, "yyyy.MM.dd", TimeZone.getTimeZone("GMT+09:00")).equalsIgnoreCase(checkInDate) == true)
-                            {
-                                return i;
-                            }
-                        } else
-                        {
-                            if (booking.type == com.twoheart.dailyhotel.model.Booking.TYPE_ENTRY && booking.payType != CODE_PAY_TYPE_ACCOUNT_WAIT//
-                                && booking.readyForRefund == false//
-                                && booking.placeName.equalsIgnoreCase(placeName)//
-                                && booking.placeType == placeType//
-                                && DailyCalendar.format(booking.checkinTime, "yyyy.MM.dd", TimeZone.getTimeZone("GMT+09:00")).equalsIgnoreCase(checkInDate) == true)
-                            {
-                                return i;
-                            }
-                        }
-                    }
-                    break;
+                unLockUI();
             }
-        } catch (Exception e)
+        }, new Consumer<Throwable>()
         {
-            ExLog.d(e.toString());
-        } finally
-        {
-            DailyPreference.getInstance(context).setVirtualAccountReadyFlag(-1);
-            DailyPreference.getInstance(context).clearPaymentInformation();
-        }
+            @Override
+            public void accept(@NonNull Throwable throwable) throws Exception
+            {
+                onHandleError(throwable);
 
-        return -1;
+                updateLayout(true, null);
+            }
+        }));
     }
 
-    private int searchGourmetFromPaymentInformation(Context context, String placeName//
-        , PlacePaymentInformation.PaymentType paymentType//
-        , String visitTime, ArrayList<com.twoheart.dailyhotel.model.Booking> bookingArrayList)
+    private void onBookingList(List<ListItem> listItemList)
     {
-        if (DailyTextUtils.isTextEmpty(placeName, visitTime) == true//
-            || bookingArrayList == null || bookingArrayList.size() == 0 || paymentType == null)
+        if (listItemList == null || listItemList.size() == 0)
         {
-            DailyPreference.getInstance(context).clearPaymentInformation();
-            DailyPreference.getInstance(context).setVirtualAccountReadyFlag(-1);
-            return -1;
+            updateLayout(true, null);
+
+            AnalyticsManager.getInstance(getActivity()).recordScreen(getActivity(), Screen.BOOKING_LIST_EMPTY, null);
+        } else
+        {
+            updateLayout(true, listItemList);
+
+            Map<String, String> analyticsParams = new HashMap<>();
+            analyticsParams.put(AnalyticsManager.KeyType.NUM_OF_BOOKING, Integer.toString(listItemList.size()));
+
+            AnalyticsManager.getInstance(getActivity()).recordScreen(getActivity(), Screen.BOOKING_LIST, null, analyticsParams);
         }
 
-        int size = bookingArrayList.size();
-
-        try
+        if (mDailyDeepLink != null && mDailyDeepLink.isValidateLink() == true)
         {
-            String visitDate = DailyCalendar.convertDateFormatString(visitTime, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd");
+            BaseActivity baseActivity = (BaseActivity) getActivity();
 
-            for (int i = 0; i < size; i++)
+            onDeepLink(baseActivity, listItemList);
+        } else
+        {
+            if (mCheckVerify == true)
             {
-                com.twoheart.dailyhotel.model.Booking booking = bookingArrayList.get(i);
+                return;
+            }
 
-                if (PlacePaymentInformation.PaymentType.VBANK == paymentType)
+            mCheckVerify = true;
+
+            addCompositeDisposable(mProfileRemoteImpl.getProfile().subscribe(new Consumer<User>()
+            {
+                @Override
+                public void accept(@NonNull User user) throws Exception
                 {
-                    if (booking.type == com.twoheart.dailyhotel.model.Booking.TYPE_ENTRY && booking.payType == CODE_PAY_TYPE_ACCOUNT_WAIT//
-                        && booking.placeName.equalsIgnoreCase(placeName)//
-                        && booking.placeType == PlaceType.FNB//
-                        && DailyCalendar.format(booking.checkinTime, "yyyy.MM.dd", TimeZone.getTimeZone("GMT+09:00")).equalsIgnoreCase(visitDate) == true)
+                    BaseActivity baseActivity = (BaseActivity) getActivity();
+
+                    // 인증 후 인증이 해지된 경우
+                    if (user.verified == true && user.phoneVerified == false && DailyPreference.getInstance(baseActivity).isVerification() == true)
                     {
-                        return i;
-                    }
-                } else
-                {
-                    if (booking.type == com.twoheart.dailyhotel.model.Booking.TYPE_ENTRY && booking.payType != CODE_PAY_TYPE_ACCOUNT_WAIT//
-                        && booking.readyForRefund == false//
-                        && booking.placeName.equalsIgnoreCase(placeName)//
-                        && booking.placeType == PlaceType.FNB//
-                        && DailyCalendar.format(booking.checkinTime, "yyyy.MM.dd", TimeZone.getTimeZone("GMT+09:00")).equalsIgnoreCase(visitDate) == true)
-                    {
-                        return i;
+                        baseActivity.showSimpleDialog(null, getString(R.string.message_invalid_verification), getString(R.string.dialog_btn_text_confirm), null);
+
+                        DailyPreference.getInstance(baseActivity).setVerification(false);
                     }
                 }
-            }
-        } catch (Exception e)
-        {
-            ExLog.d(e.toString());
-        } finally
-        {
-            DailyPreference.getInstance(context).setVirtualAccountReadyFlag(-1);
-            DailyPreference.getInstance(context).clearPaymentInformation();
+            }, new Consumer<Throwable>()
+            {
+                @Override
+                public void accept(@NonNull Throwable throwable) throws Exception
+                {
+                    // 실패시에 아무것도 하지 않음.
+                }
+            }));
         }
-
-        return -1;
     }
 
     private int searchStayFromPaymentInformation(Context context, String placeName//
         , PlacePaymentInformation.PaymentType paymentType//
         , String checkInTime, String checkOutTime//
-        , ArrayList<com.twoheart.dailyhotel.model.Booking> bookingArrayList)
-    {
-        if (DailyTextUtils.isTextEmpty(placeName, checkInTime, checkOutTime) == true//
-            || bookingArrayList == null || bookingArrayList.size() == 0 || paymentType == null)
-        {
-            DailyPreference.getInstance(context).clearPaymentInformation();
-            DailyPreference.getInstance(context).setVirtualAccountReadyFlag(-1);
-            return -1;
-        }
-
-        int size = bookingArrayList.size();
-
-        try
-        {
-            // "yyyy-MM-dd'T'HH:mm:ssZZZZZ"
-            String checkInDate = DailyCalendar.convertDateFormatString(checkInTime, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd");
-            String checkOutDate = DailyCalendar.convertDateFormatString(checkOutTime, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd");
-
-            for (int i = 0; i < size; i++)
-            {
-                com.twoheart.dailyhotel.model.Booking booking = bookingArrayList.get(i);
-
-                if (PlacePaymentInformation.PaymentType.VBANK == paymentType)
-                {
-                    if (booking.type == com.twoheart.dailyhotel.model.Booking.TYPE_ENTRY && booking.payType == CODE_PAY_TYPE_ACCOUNT_WAIT//
-                        && booking.placeName.equalsIgnoreCase(placeName)//
-                        && booking.placeType == PlaceType.HOTEL//
-                        && DailyCalendar.format(booking.checkinTime, "yyyy.MM.dd", TimeZone.getTimeZone("GMT+09:00")).equalsIgnoreCase(checkInDate) == true//
-                        && DailyCalendar.format(booking.checkoutTime, "yyyy.MM.dd", TimeZone.getTimeZone("GMT+09:00")).equalsIgnoreCase(checkOutDate) == true)
-                    {
-                        return i;
-                    }
-                } else
-                {
-                    if (booking.type == com.twoheart.dailyhotel.model.Booking.TYPE_ENTRY && booking.payType != CODE_PAY_TYPE_ACCOUNT_WAIT //
-                        && booking.readyForRefund == false//
-                        && booking.placeName.equalsIgnoreCase(placeName)//
-                        && booking.placeType == PlaceType.HOTEL//
-                        && DailyCalendar.format(booking.checkinTime, "yyyy.MM.dd", TimeZone.getTimeZone("GMT+09:00")).equalsIgnoreCase(checkInDate) == true//
-                        && DailyCalendar.format(booking.checkoutTime, "yyyy.MM.dd", TimeZone.getTimeZone("GMT+09:00")).equalsIgnoreCase(checkOutDate) == true)
-                    {
-                        return i;
-                    }
-                }
-            }
-        } catch (Exception e)
-        {
-            ExLog.d(e.toString());
-        } finally
-        {
-            DailyPreference.getInstance(context).setVirtualAccountReadyFlag(-1);
-            DailyPreference.getInstance(context).clearPaymentInformation();
-        }
-
-        return -1;
-    }
-
-    private int searchStayFromPaymentInformation(Context context, String placeName//
-        , PlacePaymentInformation.PaymentType paymentType//
-        , String checkInTime, String checkOutTime//
-        , List<Booking> bookingList)
+        , List<ListItem> bookingList)
     {
         if (DailyTextUtils.isTextEmpty(placeName, checkInTime, checkOutTime) == true//
             || bookingList == null || bookingList.size() == 0 || paymentType == null)
@@ -639,10 +494,19 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements O
             // "yyyy-MM-dd'T'HH:mm:ssZZZZZ"
             String checkInDate = DailyCalendar.convertDateFormatString(checkInTime, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd");
             String checkOutDate = DailyCalendar.convertDateFormatString(checkOutTime, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd");
+            ListItem listItem;
+            Booking booking;
 
             for (int i = 0; i < size; i++)
             {
-                Booking booking = bookingList.get(i);
+                listItem = bookingList.get(i);
+
+                if (listItem.mType != ListItem.TYPE_ENTRY)
+                {
+                    continue;
+                }
+
+                booking = listItem.getItem();
 
                 if (PlacePaymentInformation.PaymentType.VBANK == paymentType)
                 {
@@ -681,7 +545,7 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements O
 
     private int searchGourmetFromPaymentInformation(Context context, String placeName//
         , PlacePaymentInformation.PaymentType paymentType//
-        , String visitTime, List<Booking> bookingList)
+        , String visitTime, List<ListItem> bookingList)
     {
         if (DailyTextUtils.isTextEmpty(placeName, visitTime) == true//
             || bookingList == null || bookingList.size() == 0 || paymentType == null)
@@ -696,10 +560,19 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements O
         try
         {
             String visitDate = DailyCalendar.convertDateFormatString(visitTime, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd");
+            ListItem listItem;
+            Booking booking;
 
             for (int i = 0; i < size; i++)
             {
-                Booking booking = bookingList.get(i);
+                listItem = bookingList.get(i);
+
+                if (listItem.mType != ListItem.TYPE_ENTRY)
+                {
+                    continue;
+                }
+
+                booking = listItem.getItem();
 
                 if (PlacePaymentInformation.PaymentType.VBANK == paymentType)
                 {
@@ -777,7 +650,7 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements O
         }
     }
 
-    private List<ListItem> getReservationList(List<Booking> bookingList) throws Exception
+    private List<ListItem> getBookingSortList(List<Booking> bookingList) throws Exception
     {
         if (bookingList == null || bookingList.size() == 0)
         {
@@ -1011,13 +884,13 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements O
                                     baseActivity.showSimpleDialog(getString(R.string.dialog_notice2)//
                                         , getString(R.string.message_booking_delete_booking)//
                                         , getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
-                                    {
-                                        @Override
-                                        public void onDismiss(DialogInterface dialog)
                                         {
-                                            // 목록 재 호출
-                                        }
-                                    });
+                                            @Override
+                                            public void onDismiss(DialogInterface dialog)
+                                            {
+                                                onRefresh();
+                                            }
+                                        });
                                 }
                             }, new Consumer<Throwable>()
                             {
@@ -1026,7 +899,8 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements O
                                 {
                                     onHandleError(throwable);
                                 }
-                            })); break;
+                            }));
+                            break;
                     }
                 }
             };
@@ -1056,120 +930,153 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements O
         }
     };
 
-    private boolean onDeepLink(BaseActivity baseActivity, List<Booking> bookingList)
+    private boolean onDeepLink(BaseActivity baseActivity, List<ListItem> bookingList)
     {
         if (baseActivity == null || bookingList == null || bookingList.size() == 0)
         {
             return false;
         }
 
+        if (mDailyDeepLink == null || mDailyDeepLink.isValidateLink() == false)
+        {
+            return false;
+        }
+
         try
         {
-            if (mDailyDeepLink != null && mDailyDeepLink.isValidateLink() == true)
+            if (mDailyDeepLink.isInternalDeepLink() == true)
             {
-                if (mDailyDeepLink.isInternalDeepLink() == true)
+                DailyInternalDeepLink internalDeepLink = (DailyInternalDeepLink) mDailyDeepLink;
+
+                if (internalDeepLink.isBookingDetailView() == true)
                 {
-                    DailyInternalDeepLink internalDeepLink = (DailyInternalDeepLink) mDailyDeepLink;
+                    Booking.PlaceType placeType = null;
 
-                    if (internalDeepLink.isBookingDetailView() == true)
+                    switch (internalDeepLink.getPlaceType())
                     {
-                        Booking.PlaceType placeType = null;
-
-                        if ("stay".equalsIgnoreCase(internalDeepLink.getPlaceType()) == true)
-                        {
-                            placeType = Booking.PlaceType.STAY;
-                        } else if ("gourmet".equalsIgnoreCase(internalDeepLink.getPlaceType()) == true)
-                        {
+                        case DailyDeepLink.GOURMET:
                             placeType = Booking.PlaceType.GOURMET;
-                        } else if ("stayOutbound".equalsIgnoreCase(internalDeepLink.getPlaceType()) == true)
-                        {
+                            break;
+
+                        case DailyDeepLink.STAY:
+                            placeType = Booking.PlaceType.STAY;
+                            break;
+
+                        case DailyDeepLink.STAY_OUTBOUND:
                             placeType = Booking.PlaceType.STAY_OUTBOUND;
-                        }
+                            break;
 
-                        if (placeType == Booking.PlaceType.STAY_OUTBOUND)
+                        default:
+                            throw new NullPointerException("Booking.PlaceType placeType = null");
+                    }
+
+                    if (placeType == Booking.PlaceType.STAY_OUTBOUND)
+                    {
+                        int reservationId = internalDeepLink.getReservatoinId();
+                        int size = bookingList.size();
+                        ListItem listItem;
+                        Booking booking;
+
+                        for (int i = 0; i < size; i++)
                         {
-                            int reservationId = internalDeepLink.getReservatoinId();
-                            int size = bookingList.size();
+                            listItem = bookingList.get(i);
 
-                            for (int i = 0; i < size; i++)
+                            if (listItem.mType != ListItem.TYPE_ENTRY)
                             {
-                                Booking booking = bookingList.get(i);
-
-                                if (booking.index == reservationId)
-                                {
-                                    unLockUI();
-                                    mListView.performItemClick(null, i, 0);
-                                    break;
-                                }
-                            }
-                        } else
-                        {
-                            PlacePaymentInformation.PaymentType paymentType = PlacePaymentInformation.PaymentType.valueOf(internalDeepLink.getPaymentType());
-                            String placeName = internalDeepLink.getPlaceName();
-
-                            int index = -1;
-
-                            switch (placeType)
-                            {
-                                case STAY:
-                                    String checkInTime = internalDeepLink.getCheckInTime();
-                                    String checkOutTime = internalDeepLink.getCheckOutTime();
-
-                                    index = searchStayFromPaymentInformation(baseActivity//
-                                        , placeName, paymentType, checkInTime, checkOutTime, bookingList);
-                                    break;
-
-                                case GOURMET:
-                                    String visitTime = internalDeepLink.getVisitTime();
-
-                                    index = searchGourmetFromPaymentInformation(baseActivity//
-                                        , placeName, paymentType, visitTime, bookingList);
-                                    break;
+                                continue;
                             }
 
-                            if (index >= 0)
+                            booking = bookingList.get(i).getItem();
+
+                            if (booking.index == reservationId)
                             {
                                 unLockUI();
-                                mListView.performItemClick(null, index, 0);
+                                mListView.performItemClick(null, i, 0);
+                                break;
                             }
+                        }
+                    } else
+                    {
+                        PlacePaymentInformation.PaymentType paymentType = PlacePaymentInformation.PaymentType.valueOf(internalDeepLink.getPaymentType());
+                        String placeName = internalDeepLink.getPlaceName();
+
+                        int index = -1;
+
+                        switch (placeType)
+                        {
+                            case STAY:
+                                String checkInTime = internalDeepLink.getCheckInTime();
+                                String checkOutTime = internalDeepLink.getCheckOutTime();
+
+                                index = searchStayFromPaymentInformation(baseActivity//
+                                    , placeName, paymentType, checkInTime, checkOutTime, bookingList);
+                                break;
+
+                            case GOURMET:
+                                String visitTime = internalDeepLink.getVisitTime();
+
+                                index = searchGourmetFromPaymentInformation(baseActivity//
+                                    , placeName, paymentType, visitTime, bookingList);
+                                break;
+                        }
+
+                        if (index >= 0)
+                        {
+                            unLockUI();
+                            mListView.performItemClick(null, index, 0);
                         }
                     }
-                } else
+                }
+            } else
+            {
+                DailyExternalDeepLink externalDeepLink = (DailyExternalDeepLink) mDailyDeepLink;
+
+                if (externalDeepLink.isBookingDetailView() == true)
                 {
-                    DailyExternalDeepLink externalDeepLink = (DailyExternalDeepLink) mDailyDeepLink;
+                    Booking.PlaceType placeType = null;
 
-                    if (externalDeepLink.isBookingDetailView() == true)
+                    switch (externalDeepLink.getPlaceType())
                     {
-                        Booking.PlaceType placeType = null;
-
-                        if ("stay".equalsIgnoreCase(externalDeepLink.getPlaceType()) == true)
-                        {
-                            placeType = Booking.PlaceType.STAY;
-                        } else if ("gourmet".equalsIgnoreCase(externalDeepLink.getPlaceType()) == true)
-                        {
+                        case DailyDeepLink.GOURMET:
                             placeType = Booking.PlaceType.GOURMET;
-                        } else if ("stayOutbound".equalsIgnoreCase(externalDeepLink.getPlaceType()) == true)
-                        {
+                            break;
+
+                        case DailyDeepLink.STAY:
+                            placeType = Booking.PlaceType.STAY;
+                            break;
+
+                        case DailyDeepLink.STAY_OUTBOUND:
                             placeType = Booking.PlaceType.STAY_OUTBOUND;
-                        }
+                            break;
 
-                        final int reservationIndex = externalDeepLink.getReservationIndex();
+                        default:
+                            throw new NullPointerException("Booking.PlaceType placeType = null");
+                    }
 
-                        if (placeType != null)
+                    final int reservationIndex = externalDeepLink.getReservationIndex();
+
+                    if (placeType != null)
+                    {
+                        String imageUrl = null;
+                        Booking booking;
+
+                        for (ListItem listItem : bookingList)
                         {
-                            String imageUrl = null;
-
-                            for (Booking booking : bookingList)
+                            if (listItem.mType != ListItem.TYPE_ENTRY)
                             {
-                                if (booking.index == reservationIndex)
-                                {
-                                    imageUrl = booking.imageUrl;
-                                    break;
-                                }
+                                continue;
                             }
 
-                            startBookingDetail(baseActivity, placeType, reservationIndex, imageUrl, true);
+                            booking = listItem.getItem();
+
+                            if (booking.index == reservationIndex)
+                            {
+                                imageUrl = booking.imageUrl;
+                                break;
+                            }
                         }
+
+                        startBookingDetail(baseActivity, placeType, reservationIndex, imageUrl, true);
                     }
                 }
             }
@@ -1193,299 +1100,6 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements O
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // Listener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    //    retrofit2.Callback mReservationListCallback = new retrofit2.Callback<JSONObject>()
-    //    {
-    //        @Override
-    //        public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
-    //        {
-    //            BaseActivity baseActivity = (BaseActivity) getActivity();
-    //
-    //            if (baseActivity == null)
-    //            {
-    //                return;
-    //            }
-    //
-    //            if (response != null && response.isSuccessful() && response.body() != null)
-    //            {
-    //                try
-    //                {
-    //                    JSONObject responseJSONObject = response.body();
-    //
-    //                    int msgCode = responseJSONObject.getInt("msg_code");
-    //
-    //                    if (msgCode == 0)
-    //                    {
-    //                        JSONArray dataJSONArray = responseJSONObject.getJSONArray("data");
-    //                        int length = dataJSONArray.length();
-    //                        ArrayList<Booking> bookingArrayList = null;
-    //
-    //                        if (length == 0)
-    //                        {
-    //                            updateLayout(true, null);
-    //
-    //                            AnalyticsManager.getInstance(getActivity()).recordScreen(getActivity(), Screen.BOOKING_LIST_EMPTY, null);
-    //                        } else
-    //                        {
-    //                            bookingArrayList = makeBookingList(dataJSONArray);
-    //
-    //                            updateLayout(true, bookingArrayList);
-    //
-    //                            Map<String, String> analyticsParams = new HashMap<>();
-    //                            analyticsParams.put(AnalyticsManager.KeyType.NUM_OF_BOOKING, Integer.toString(length));
-    //
-    //                            AnalyticsManager.getInstance(getActivity()).recordScreen(getActivity(), Screen.BOOKING_LIST, null, analyticsParams);
-    //                        }
-    //
-    //                        try
-    //                        {
-    //                            if (mDailyDeepLink != null && mDailyDeepLink.isValidateLink() == true)
-    //                            {
-    //                                if (mDailyDeepLink.isInternalDeepLink() == true)
-    //                                {
-    //                                    DailyInternalDeepLink internalDeepLink = (DailyInternalDeepLink) mDailyDeepLink;
-    //
-    //                                    if (internalDeepLink.isBookingDetailView() == true && length != 0)
-    //                                    {
-    //                                        PlaceType placeType = null;
-    //
-    //                                        if ("stay".equalsIgnoreCase(internalDeepLink.getPlaceType()) == true)
-    //                                        {
-    //                                            placeType = PlaceType.HOTEL;
-    //                                        } else if ("gourmet".equalsIgnoreCase(internalDeepLink.getPlaceType()) == true)
-    //                                        {
-    //                                            placeType = PlaceType.FNB;
-    //                                        }
-    //
-    //                                        if (internalDeepLink.getReservatoinId() >= 0)
-    //                                        {
-    //                                            int reservationId = internalDeepLink.getReservatoinId();
-    //                                            int size = bookingArrayList.size();
-    //
-    //                                            for (int i = 0; i < size; i++)
-    //                                            {
-    //                                                Booking booking = bookingArrayList.get(i);
-    //
-    //                                                if (booking.index == reservationId)
-    //                                                {
-    //                                                    unLockUI();
-    //                                                    mListView.performItemClick(null, i, 0);
-    //                                                    break;
-    //                                                }
-    //                                            }
-    //                                        } else
-    //                                        {
-    //                                            PlacePaymentInformation.PaymentType paymentType = PlacePaymentInformation.PaymentType.valueOf(internalDeepLink.getPaymentType());
-    //                                            String placeName = internalDeepLink.getPlaceName();
-    //
-    //                                            int index = -1;
-    //
-    //                                            switch (placeType)
-    //                                            {
-    //                                                case HOTEL:
-    //                                                    String checkInTime = internalDeepLink.getCheckInTime();
-    //                                                    String checkOutTime = internalDeepLink.getCheckOutTime();
-    //
-    //                                                    index = searchStayFromPaymentInformation(baseActivity//
-    //                                                        , placeName, paymentType, checkInTime, checkOutTime, bookingArrayList);
-    //                                                    break;
-    //
-    //                                                case FNB:
-    //                                                    String visitTime = internalDeepLink.getVisitTime();
-    //
-    //                                                    index = searchGourmetFromPaymentInformation(baseActivity//
-    //                                                        , placeName, paymentType, visitTime, bookingArrayList);
-    //                                                    break;
-    //                                            }
-    //
-    //                                            if (index >= 0)
-    //                                            {
-    //                                                unLockUI();
-    //                                                mListView.performItemClick(null, index, 0);
-    //                                            }
-    //                                        }
-    //                                    }
-    //                                } else
-    //                                {
-    //                                    DailyExternalDeepLink externalDeepLink = (DailyExternalDeepLink) mDailyDeepLink;
-    //
-    //                                    if (externalDeepLink.isBookingDetailView() == true && length != 0)
-    //                                    {
-    //                                        PlaceType placeType = null;
-    //
-    //                                        if ("stay".equalsIgnoreCase(externalDeepLink.getPlaceType()) == true)
-    //                                        {
-    //                                            placeType = PlaceType.HOTEL;
-    //                                        } else if ("gourmet".equalsIgnoreCase(externalDeepLink.getPlaceType()) == true)
-    //                                        {
-    //                                            placeType = PlaceType.FNB;
-    //                                        }
-    //
-    //                                        final int index = externalDeepLink.getReservationIndex();
-    //
-    //                                        if (placeType != null)
-    //                                        {
-    //                                            String imageUrl = null;
-    //
-    //                                            for (Booking booking : bookingArrayList)
-    //                                            {
-    //                                                if (booking.index == index)
-    //                                                {
-    //                                                    imageUrl = booking.hotelImageUrl;
-    //                                                    break;
-    //                                                }
-    //                                            }
-    //
-    //                                            startBookingDetail(baseActivity, placeType, index, imageUrl, true);
-    //                                        }
-    //                                    }
-    //                                }
-    //                            }
-    //                        } catch (Exception e)
-    //                        {
-    //                            ExLog.e(e.toString());
-    //                        } finally
-    //                        {
-    //                            if (mDailyDeepLink != null)
-    //                            {
-    //                                mDailyDeepLink.clear();
-    //                            }
-    //                        }
-    //
-    //                        // 사용자 정보 요청.
-    //                        DailyMobileAPI.getInstance(baseActivity).requestUserProfile(mNetworkTag, mUserProfileCallback);
-    //                    } else
-    //                    {
-    //                        String msg = responseJSONObject.getString("msg");
-    //
-    //                        if (DailyTextUtils.isTextEmpty(msg) == false)
-    //                        {
-    //                            DailyToast.showToast(baseActivity, msg, Toast.LENGTH_SHORT);
-    //                        } else
-    //                        {
-    //                            DailyToast.showToast(baseActivity, R.string.act_base_network_connect, Toast.LENGTH_SHORT);
-    //                        }
-    //
-    //                        updateLayout(true, null);
-    //                    }
-    //                } catch (Exception e)
-    //                {
-    //                    updateLayout(true, null);
-    //
-    //                    onError(e);
-    //                } finally
-    //                {
-    //                    unLockUI();
-    //                }
-    //            } else
-    //            {
-    //                baseActivity.onErrorResponse(call, response);
-    //            }
-    //        }
-    //
-    //        @Override
-    //        public void onFailure(Call<JSONObject> call, Throwable t)
-    //        {
-    //            BaseActivity baseActivity = (BaseActivity) getActivity();
-    //
-    //            if (baseActivity == null)
-    //            {
-    //                return;
-    //            }
-    //
-    //            baseActivity.onError(t);
-    //        }
-    //
-    //        private ArrayList<Booking> makeBookingList(JSONArray jsonArray) throws Exception
-    //        {
-    //            //noinspection PrivateMemberAccessBetweenOuterAndInnerClass
-    //            if (jsonArray == null || jsonArray.length() == 0)
-    //            {
-    //                return null;
-    //            }
-    //
-    //            int length = jsonArray.length();
-    //
-    //            // 무료취소대기, 입금대기, 결제완료, 이용완료
-    //            ArrayList<Booking> waitRefundBookingList = new ArrayList<>();
-    //            ArrayList<Booking> waitBookingList = new ArrayList<>();
-    //            ArrayList<Booking> paymentBookingList = new ArrayList<>();
-    //            ArrayList<Booking> usedBookingList = new ArrayList<>();
-    //
-    //            long currentTime = 0;
-    //
-    //            for (int i = 0; i < length; i++)
-    //            {
-    //                JSONObject jsonObject = jsonArray.getJSONObject(i);
-    //
-    //                Booking booking = new Booking(jsonObject);
-    //
-    //                booking.leftFromToDay = (int) ((DailyCalendar.clearTField(booking.checkinTime) - DailyCalendar.clearTField(currentTime)) / DailyCalendar.DAY_MILLISECOND);
-    //
-    //                if (booking.readyForRefund == true)
-    //                {
-    //                    waitRefundBookingList.add(booking);
-    //                } else
-    //                {
-    //                    switch (booking.payType)
-    //                    {
-    //                        case CODE_PAY_TYPE_CARD_COMPLETE:
-    //                        case CODE_PAY_TYPE_ACCOUNT_COMPLETE:
-    //                            booking.isUsed = booking.checkoutTime < currentTime;
-    //
-    //                            if (booking.isUsed)
-    //                            {
-    //                                usedBookingList.add(booking);
-    //                            } else
-    //                            {
-    //                                paymentBookingList.add(booking);
-    //                            }
-    //                            break;
-    //
-    //                        case CODE_PAY_TYPE_ACCOUNT_WAIT:
-    //                            waitBookingList.add(booking);
-    //                            break;
-    //                    }
-    //                }
-    //            }
-    //
-    //            ArrayList<Booking> bookingArrayList = new ArrayList<>(length + 3);
-    //
-    //            // 무료취소대기가 있는 경우
-    //            if (waitRefundBookingList.size() > 0)
-    //            {
-    //                Booking sectionWaitRefund = new Booking(getString(R.string.frag_booking_wait_refund));
-    //                bookingArrayList.add(sectionWaitRefund);
-    //                bookingArrayList.addAll(waitRefundBookingList);
-    //            }
-    //
-    //            // 입금 대기가 있는 경우.
-    //            if (waitBookingList.size() > 0)
-    //            {
-    //                Booking sectionWait = new Booking(getString(R.string.frag_booking_wait_account));
-    //                bookingArrayList.add(sectionWait);
-    //                bookingArrayList.addAll(waitBookingList);
-    //            }
-    //
-    //            // 결제 완료가 있는 경우.
-    //            if (paymentBookingList.size() > 0)
-    //            {
-    //                Booking sectionPay = new Booking(getString(R.string.frag_booking_complete_payment));
-    //                bookingArrayList.add(sectionPay);
-    //                bookingArrayList.addAll(paymentBookingList);
-    //            }
-    //
-    //            // 이용 완료가 있는 경우.
-    //            if (usedBookingList.size() > 0)
-    //            {
-    //                Booking sectionUsed = new Booking(getString(R.string.frag_booking_use));
-    //                bookingArrayList.add(sectionUsed);
-    //                bookingArrayList.addAll(usedBookingList);
-    //            }
-    //
-    //            return bookingArrayList;
-    //        }
-    //    };
 
     retrofit2.Callback mReservationHiddenCallback = new retrofit2.Callback<JSONObject>()
     {
@@ -1540,8 +1154,7 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements O
                                     return;
                                 }
 
-                                lockUI();
-                                //                                DailyMobileAPI.getInstance(baseActivity).requestBookingList(mNetworkTag, mReservationListCallback);
+                                onRefresh();
                             }
                         };
                     } else
@@ -1558,8 +1171,7 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements O
                                     return;
                                 }
 
-                                lockUI();
-                                //                                DailyMobileAPI.getInstance(baseActivity).requestBookingList(mNetworkTag, mReservationListCallback);
+                                onRefresh();
                             }
                         };
                     }
@@ -1571,7 +1183,7 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements O
                             message = responseJSONObject.getString("msg");
                             DailyToast.showToast(baseActivity, message, Toast.LENGTH_SHORT);
 
-                            //                            DailyMobileAPI.getInstance(baseActivity).requestBookingList(mNetworkTag, mReservationListCallback);
+                            onRefresh();
                             break;
                         }
 
@@ -1585,7 +1197,7 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements O
                                 DailyToast.showToast(baseActivity, message, Toast.LENGTH_SHORT);
                             }
 
-                            //                            DailyMobileAPI.getInstance(baseActivity).requestBookingList(mNetworkTag, mReservationListCallback);
+                            onRefresh();
                             break;
                         }
 
@@ -1606,7 +1218,7 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements O
                                 baseActivity.showSimpleDialog(getString(R.string.dialog_notice2), message, getString(R.string.dialog_btn_text_confirm), onClickListener);
                             } else
                             {
-                                //                                DailyMobileAPI.getInstance(baseActivity).requestBookingList(mNetworkTag, mReservationListCallback);
+                                onRefresh();
                             }
                             break;
                         }
@@ -1615,7 +1227,7 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements O
                 {
                     onError(e);
 
-                    //                    DailyMobileAPI.getInstance(baseActivity).requestBookingList(mNetworkTag, mReservationListCallback);
+                    onRefresh();
                 }
             } else
             {
@@ -1636,62 +1248,6 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements O
             baseActivity.onError(t);
         }
     };
-
-    retrofit2.Callback mUserProfileCallback = new retrofit2.Callback<JSONObject>()
-    {
-        @Override
-        public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
-        {
-            BaseActivity baseActivity = (BaseActivity) getActivity();
-
-            if (baseActivity == null || baseActivity.isFinishing() == true)
-            {
-                return;
-            }
-
-            if (response != null && response.isSuccessful() && response.body() != null)
-            {
-                try
-                {
-                    JSONObject responseJSONObject = response.body();
-
-                    int msgCode = responseJSONObject.getInt("msgCode");
-
-                    if (msgCode == 100)
-                    {
-                        JSONObject jsonObject = responseJSONObject.getJSONObject("data");
-
-                        boolean isVerified = jsonObject.getBoolean("verified");
-                        boolean isPhoneVerified = jsonObject.getBoolean("phoneVerified");
-
-                        // 인증 후 인증이 해지된 경우
-                        if (isVerified == true && isPhoneVerified == false && DailyPreference.getInstance(baseActivity).isVerification() == true)
-                        {
-                            baseActivity.showSimpleDialog(null, getString(R.string.message_invalid_verification), getString(R.string.dialog_btn_text_confirm), null);
-
-                            DailyPreference.getInstance(baseActivity).setVerification(false);
-                        }
-                    } else
-                    {
-                        // 인증 해지를 위한 부분이라서 에러시 아무 조치를 취하지 않아도 됨.
-                    }
-                } catch (Exception e)
-                {
-                    onError(e);
-                }
-            } else
-            {
-                BookingListFragment.this.onErrorResponse(call, response);
-            }
-        }
-
-        @Override
-        public void onFailure(Call<JSONObject> call, Throwable t)
-        {
-            BookingListFragment.this.onError(t);
-        }
-    };
-
 
     ///////////////////////////////////////////////////////////////////////////////////////////////
     //

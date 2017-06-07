@@ -32,10 +32,6 @@ public class DailyInternalDeepLink extends DailyDeepLink
     private static final String VIEW_STAMP = "stamp"; // 스탬프.
     private static final String VIEW_HOME = "home"; // 홈.
 
-    private static final String STAY = "stay";
-    private static final String GOURMET = "gourmet";
-    private static final String STAY_OUTBOUND = "stayOutbound";
-
     public DailyInternalDeepLink(Uri uri)
     {
         super(uri);
