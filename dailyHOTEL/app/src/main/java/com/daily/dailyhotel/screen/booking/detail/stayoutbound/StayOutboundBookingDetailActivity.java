@@ -15,6 +15,12 @@ import com.twoheart.dailyhotel.R;
  */
 public class StayOutboundBookingDetailActivity extends BaseActivity<StayOutboundBookingDetailPresenter>
 {
+    static final int REQUEST_CODE_ISSUING_RECEIPT = 10000;
+    static final int REQUEST_CODE_ZOOMMAP = 10001;
+    static final int REQUEST_CODE_DETAIL = 10002;
+    static final int REQUEST_CODE_CALL = 10003;
+    static final int REQUEST_CODE_HAPPYTALK = 10004;
+
     static final String INTENT_EXTRA_DATA_RESERVATION_INDEX = "index";
     static final String INTENT_EXTRA_DATA_IMAGE_URL = "imageUrl";
 

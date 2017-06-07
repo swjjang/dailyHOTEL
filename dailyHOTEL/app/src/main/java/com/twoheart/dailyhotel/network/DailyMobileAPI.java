@@ -7,6 +7,7 @@ import com.daily.dailyhotel.repository.remote.model.BookingData;
 import com.daily.dailyhotel.repository.remote.model.CardData;
 import com.daily.dailyhotel.repository.remote.model.CommonDateTimeData;
 import com.daily.dailyhotel.repository.remote.model.PaymentResultData;
+import com.daily.dailyhotel.repository.remote.model.StayOutboundBookingDetailData;
 import com.daily.dailyhotel.repository.remote.model.StayOutboundDetailData;
 import com.daily.dailyhotel.repository.remote.model.StayOutboundPaymentData;
 import com.daily.dailyhotel.repository.remote.model.StayOutboundsData;
@@ -1455,12 +1456,26 @@ public class DailyMobileAPI implements IDailyNetwork
         final String URL = Constants.UNENCRYPTED_URL ? "https://dev-silo.dailyhotel.me/"//
             : "MzAkODEkNDckNjgkNDAkMzkkODckMSQ4OSQyOCQxNCQzMiQ4JDEkMzckNTUk$QAGkRCM0ZGGMkM1MBzkyQTBEOEMxRDgL1OGUWENFMUM3MEWZJEOURDMOEAM1NjY1RjE2MEVDQjc4RTSA5MzQxQjQ2Rjk1VMMHUEyRg==$";
 
-        final String API = Constants.UNENCRYPTED_URL ? "api/v1/outbound/hotel-reservations/{reservationIdx}/hide"//
-            : "MTEyJDUwJDE2JDExMyQxNDkkNTAkMTMzJDk4JDAkMTEyJDM5JDQwJDE0OCQxNzEkMTM3JDE0NiQ=$NNjgzRjlGMDU4QzI2PQTUyRDlCQzA1M0U0Nzc4OOHEIxMTZEOTkzNDDOI0MkQxNjBBNzc0MzREQjA1OURGODk2M0M1M0VBRERERkVMFNDE5ODU2NDhZGNTZXEBM0Y5Q0U3Mjc2OEZEGXRjA1RjQQ3RFjk4M0M3MJDdEOTFEQTBCQUTJERjZEQTM3QzQ=$";
+        final String API = Constants.UNENCRYPTED_URL ? "api/v1/outbound/hotel-reservations/{reservationId}/hide"//
+            : "";
 
         Map<String, String> urlParams = new HashMap<>();
-        urlParams.put("{reservationIdx}", Integer.toString(reservationIndex));
+        urlParams.put("{reservationId}", Integer.toString(reservationIndex));
 
         return mDailyMobileService.getStayOutboundHideBooking(Crypto.getUrlDecoderEx(URL) + Crypto.getUrlDecoderEx(API, urlParams)).subscribeOn(Schedulers.io());
+    }
+
+    public Observable<BaseDto<StayOutboundBookingDetailData>> getStayOutboundBookingDetail(int reservationIndex)
+    {
+        final String URL = Constants.UNENCRYPTED_URL ? "https://dev-silo.dailyhotel.me/"//
+            : "MzAkODEkNDckNjgkNDAkMzkkODckMSQ4OSQyOCQxNCQzMiQ4JDEkMzckNTUk$QAGkRCM0ZGGMkM1MBzkyQTBEOEMxRDgL1OGUWENFMUM3MEWZJEOURDMOEAM1NjY1RjE2MEVDQjc4RTSA5MzQxQjQ2Rjk1VMMHUEyRg==$";
+
+        final String API = Constants.UNENCRYPTED_URL ? "api/v1/outbound/hotel-reservations/{reservationId}"//
+            : "";
+
+        Map<String, String> urlParams = new HashMap<>();
+        urlParams.put("{reservationId}", Integer.toString(reservationIndex));
+
+        return mDailyMobileService.getStayOutboundBookingDetail(Crypto.getUrlDecoderEx(URL) + Crypto.getUrlDecoderEx(API, urlParams)).subscribeOn(Schedulers.io());
     }
 }

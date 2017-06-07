@@ -46,6 +46,15 @@ public class IssuingReceiptActivity extends BaseActivity
     private DailyToolbarLayout mDailyToolbarLayout;
     private View mBottomLayout;
 
+    public static Intent newInstance(Context context, int bookingIndex)
+    {
+        Intent intent = new Intent(context, IssuingReceiptActivity.class);
+
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_BOOKINGIDX, bookingIndex);
+
+        return intent;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {

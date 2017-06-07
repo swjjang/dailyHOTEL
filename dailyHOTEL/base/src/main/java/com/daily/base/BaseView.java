@@ -6,6 +6,7 @@ import android.databinding.DataBindingUtil;
 import android.databinding.ViewDataBinding;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -124,5 +125,10 @@ public abstract class BaseView<T1 extends OnBaseEventListener, T2 extends ViewDa
     BaseActivity getActivity()
     {
         return mActivity;
+    }
+
+    protected Fragment findFragmentById(int id)
+    {
+        return mActivity.getSupportFragmentManager().findFragmentById(id);
     }
 }

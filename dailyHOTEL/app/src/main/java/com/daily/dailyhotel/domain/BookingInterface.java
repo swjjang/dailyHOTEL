@@ -1,6 +1,7 @@
 package com.daily.dailyhotel.domain;
 
 import com.daily.dailyhotel.entity.Booking;
+import com.daily.dailyhotel.entity.StayOutboundBookingDetail;
 import com.twoheart.dailyhotel.network.dto.BaseDto;
 
 import java.util.List;
@@ -17,4 +18,6 @@ public interface BookingInterface
 
     // 예약 리스트
     Observable<Boolean> getStayOutboundHideBooking(int reservationIndex);
+
+    Observable<StayOutboundBookingDetail> getStayOutboundBookingDetail(int reservationIndex);
 }

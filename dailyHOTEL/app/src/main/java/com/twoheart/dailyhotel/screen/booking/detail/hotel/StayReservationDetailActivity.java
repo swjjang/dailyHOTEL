@@ -772,9 +772,7 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
                 return;
             }
 
-            Intent intent = new Intent(StayReservationDetailActivity.this, IssuingReceiptActivity.class);
-            intent.putExtra(NAME_INTENT_EXTRA_DATA_BOOKINGIDX, mReservationIndex);
-            startActivity(intent);
+            startActivity(IssuingReceiptActivity.newInstance(StayReservationDetailActivity.this, mReservationIndex));
         }
 
         @Override

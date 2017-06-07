@@ -79,7 +79,7 @@
                         android:textSize="13dp"/>
 
                     <com.daily.base.widget.DailyTextView
-                        android:id="@+id/checkinDayTextView"
+                        android:id="@+id/checkInDayTextView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
@@ -107,7 +107,7 @@
                         android:textSize="13dp"/>
 
                     <com.daily.base.widget.DailyTextView
-                        android:id="@+id/checkoutDayTextView"
+                        android:id="@+id/checkOutDayTextView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
@@ -243,7 +243,7 @@
             android:layout_marginTop="10dp"
             android:gravity="left|center_vertical"
             android:paddingLeft="15dp"
-            android:text="@string/label_booking_user_info"
+            android:text="@string/label_booking_guest_information"
             android:textColor="@color/default_text_c666666"
             android:textSize="13dp"
             dailyFont:style="Medium"/>
@@ -327,7 +327,6 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/visitTypeLayout"
             android:layout_width="match_parent"
             android:layout_height="36dp"
             android:layout_marginLeft="15dp"
@@ -336,16 +335,15 @@
             android:visibility="gone">
 
             <com.daily.base.widget.DailyTextView
-                android:id="@+id/visitTypeTitleTextView"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.3"
-                android:text="@string/label_how_to_visit"
+                android:text="@string/label_stay_outbound_payment_people"
                 android:textColor="@color/default_text_c929292"
                 android:textSize="13dp"/>
 
             <com.daily.base.widget.DailyTextView
-                android:id="@+id/visitTypeTextView"
+                android:id="@+id/peopleTextView"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.7"
@@ -353,30 +351,6 @@
                 android:lineSpacingExtra="-2dp"
                 android:textColor="@color/default_text_c323232"
                 android:textSize="13dp"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/guideVisitMemoLayout"
-            android:layout_width="match_parent"
-            android:layout_height="34dp"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
-            android:layout_marginTop="10dp"
-            android:visibility="gone">
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:srcCompat="@drawable/ic_payment_notice"/>
-
-            <com.daily.base.widget.DailyTextView
-                android:id="@+id/guideVisitMemoView"
-                android:layout_width="match_parent"
-                android:layout_height="34dp"
-                android:layout_marginLeft="5dp"
-                android:text="@string/message_visit_car_memo"
-                android:textColor="@color/default_text_c929292"
-                android:textSize="11dp"/>
         </LinearLayout>
         <!--</LinearLayout>-->
     </merge>

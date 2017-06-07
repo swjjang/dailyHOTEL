@@ -14,8 +14,8 @@ import android.widget.TextView;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
-import com.daily.dailyhotel.entity.ListItem;
 import com.daily.dailyhotel.entity.Booking;
+import com.daily.dailyhotel.entity.ListItem;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
@@ -231,7 +231,19 @@ public class BookingListAdapter extends ArrayAdapter<ListItem> implements Pinned
                 }
 
                 case STAY_OUTBOUND:
+                {
+                    String period = String.format(Locale.KOREA, "%s - %s"//
+                        , DailyCalendar.convertDateFormatString(booking.checkInDateTime, DailyCalendar.ISO_8601_FORMAT, BOOKING_DATE_FORMAT)//
+                        , DailyCalendar.convertDateFormatString(booking.checkOutDateTime, DailyCalendar.ISO_8601_FORMAT, BOOKING_DATE_FORMAT));
+
+                    day.setText(period);
+
+                    int nightsCount = DailyCalendar.compareDateDay(booking.checkOutDateTime, booking.checkInDateTime);
+
+                    nights.setVisibility(View.VISIBLE);
+                    nights.setText(mContext.getString(R.string.label_nights, nightsCount));
                     break;
+                }
             }
         } catch (Exception e)
         {
@@ -268,56 +280,62 @@ public class BookingListAdapter extends ArrayAdapter<ListItem> implements Pinned
                 waitAccountTextView.setText(booking.comment);
             } else
             {
-                if (booking.readyForRefund == true)
+                if (booking.placeType == Booking.PlaceType.STAY_OUTBOUND)
                 {
                     waitAccountTextView.setVisibility(View.GONE);
                 } else
                 {
-                    String text;
-
-                    if (booking.placeType == Booking.PlaceType.STAY_OUTBOUND)
-                    {
-                        text = null;
-                    } else
-                    {
-                        if (booking.remainingDays == 0)
-                        {
-                            // 당일
-                            switch (booking.placeType)
-                            {
-                                case STAY:
-                                {
-                                    text = mContext.getString(R.string.frag_booking_today_type_stay);
-                                    break;
-                                }
-
-                                case GOURMET:
-                                {
-                                    text = mContext.getString(R.string.frag_booking_today_type_gourmet);
-                                    break;
-                                }
-
-                                default:
-                                    text = null;
-                                    break;
-                            }
-                        } else if (booking.remainingDays > 0 && booking.remainingDays <= 3)
-                        {
-                            // 하루이상 남음
-                            text = mContext.getString(R.string.frag_booking_duedate_formet, booking.remainingDays);
-                        } else
-                        {
-                            text = null;
-                        }
-                    }
-
-                    if (DailyTextUtils.isTextEmpty(text) == true)
+                    if (booking.readyForRefund == true)
                     {
                         waitAccountTextView.setVisibility(View.GONE);
                     } else
                     {
-                        waitAccountTextView.setVisibility(View.VISIBLE);
-                        waitAccountTextView.setText(text);
+                        String text;
+
+                        if (booking.placeType == Booking.PlaceType.STAY_OUTBOUND)
+                        {
+                            text = null;
+                        } else
+                        {
+                            if (booking.remainingDays == 0)
+                            {
+                                // 당일
+                                switch (booking.placeType)
+                                {
+                                    case STAY:
+                                    {
+                                        text = mContext.getString(R.string.frag_booking_today_type_stay);
+                                        break;
+                                    }
+
+                                    case GOURMET:
+                                    {
+                                        text = mContext.getString(R.string.frag_booking_today_type_gourmet);
+                                        break;
+                                    }
+
+                                    default:
+                                        text = null;
+                                        break;
+                                }
+                            } else if (booking.remainingDays > 0 && booking.remainingDays <= 3)
+                            {
+                                // 하루이상 남음
+                                text = mContext.getString(R.string.frag_booking_duedate_formet, booking.remainingDays);
+                            } else
+                            {
+                                text = null;
+                            }
+                        }
+
+                        if (DailyTextUtils.isTextEmpty(text) == true)
+                        {
+                            waitAccountTextView.setVisibility(View.GONE);
+                        } else
+                        {
+                            waitAccountTextView.setVisibility(View.VISIBLE);
+                            waitAccountTextView.setText(text);
+                        }
                     }
                 }
             }
