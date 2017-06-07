@@ -15,9 +15,9 @@ import java.util.ArrayList;
 
 public class GourmetSearchResultLayout extends PlaceSearchResultLayout
 {
-    public GourmetSearchResultLayout(Context context, OnBaseEventListener listener)
+    public GourmetSearchResultLayout(Context context, String callByScreen, OnBaseEventListener listener)
     {
-        super(context, listener);
+        super(context, callByScreen, listener);
     }
 
     public void setCalendarText(GourmetBookingDay gourmetBookingDay)
@@ -34,12 +34,6 @@ public class GourmetSearchResultLayout extends PlaceSearchResultLayout
     protected int getEmptyIconResourceId()
     {
         return R.drawable.no_gourmet_ic;
-    }
-
-    @Override
-    protected boolean isResearchViewEnabled()
-    {
-        return false;
     }
 
     @Override

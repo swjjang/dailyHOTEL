@@ -83,7 +83,7 @@ public class StayCategoryNearByLayout extends BaseBlurLayout implements View.OnC
 
         void finish(int resultCode);
 
-        void research(int resultCode);
+        void research();
 
         void onShowCallDialog();
 
@@ -226,14 +226,22 @@ public class StayCategoryNearByLayout extends BaseBlurLayout implements View.OnC
     {
         ImageView emptyIconImageView = (ImageView) view.findViewById(R.id.emptyIconImageView);
         View changeDateView = view.findViewById(R.id.changeDateView);
-        View researchView = view.findViewById(R.id.researchView);
+        TextView researchView = (TextView) view.findViewById(R.id.researchView);
         TextView callTextView = (TextView) view.findViewById(R.id.callTextView);
 
         emptyIconImageView.setImageResource(getEmptyIconResourceId());
 
         changeDateView.setOnClickListener(v -> ((OnEventListener) mOnEventListener).onDateClick());
 
-        researchView.setVisibility(View.GONE);
+        researchView.setText(R.string.label_searchresult_change_region);
+        researchView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                ((OnEventListener) mOnEventListener).research();
+            }
+        });
 
         callTextView.setPaintFlags(callTextView.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
         callTextView.setOnClickListener(v -> ((OnEventListener) mOnEventListener).onShowCallDialog());

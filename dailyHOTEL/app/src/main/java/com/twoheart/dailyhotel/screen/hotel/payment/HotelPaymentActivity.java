@@ -258,7 +258,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
             return;
         }
 
-        lockUI();
+        lockUI(false);
 
         Guest guest = mHotelPaymentLayout.getGuest();
         Customer customer = paymentInformation.getCustomer();
@@ -344,7 +344,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
             return;
         }
 
-        lockUI();
+        lockUI(false);
 
         Guest guest = mHotelPaymentLayout.getGuest();
         Customer customer = paymentInformation.getCustomer();

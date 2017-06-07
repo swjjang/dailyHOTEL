@@ -223,7 +223,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
             return;
         }
 
-        lockUI();
+        lockUI(false);
 
         Guest guest = mGourmetPaymentLayout.getGuest();
         Customer customer = paymentInformation.getCustomer();
@@ -291,7 +291,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
             return;
         }
 
-        lockUI();
+        lockUI(false);
 
         Guest guest = mGourmetPaymentLayout.getGuest();
         Customer customer = paymentInformation.getCustomer();

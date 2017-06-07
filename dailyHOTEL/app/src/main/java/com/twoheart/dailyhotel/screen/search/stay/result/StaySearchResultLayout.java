@@ -26,13 +26,9 @@ import java.util.Map;
 
 public class StaySearchResultLayout extends PlaceSearchResultLayout
 {
-    private boolean mIsResearchViewEnabled;
-
-    public StaySearchResultLayout(Context context, boolean isResearchViewEnabled, OnBaseEventListener listener)
+    public StaySearchResultLayout(Context context, String callByScreen, OnBaseEventListener listener)
     {
-        super(context, listener);
-
-        mIsResearchViewEnabled = isResearchViewEnabled;
+        super(context, callByScreen, listener);
     }
 
     protected void setCalendarText(StayBookingDay stayBookingDay)
@@ -60,12 +56,6 @@ public class StaySearchResultLayout extends PlaceSearchResultLayout
     protected int getEmptyIconResourceId()
     {
         return R.drawable.no_hotel_ic;
-    }
-
-    @Override
-    protected boolean isResearchViewEnabled()
-    {
-        return mIsResearchViewEnabled;
     }
 
     @Override

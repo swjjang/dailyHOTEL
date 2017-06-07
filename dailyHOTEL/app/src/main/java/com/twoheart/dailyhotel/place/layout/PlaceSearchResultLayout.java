@@ -29,6 +29,7 @@ import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
 import com.twoheart.dailyhotel.place.fragment.PlaceListFragment;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -60,6 +61,8 @@ public abstract class PlaceSearchResultLayout extends BaseBlurLayout implements 
     private boolean mUpScrolling;
     ValueAnimator mValueAnimator;
 
+    protected String mCallByScreen;
+
     public interface OnEventListener extends OnBaseEventListener
     {
         void onCategoryTabSelected(TabLayout.Tab tab);
@@ -85,17 +88,17 @@ public abstract class PlaceSearchResultLayout extends BaseBlurLayout implements 
 
     protected abstract int getEmptyIconResourceId();
 
-    protected abstract boolean isResearchViewEnabled();
-
     protected abstract PlaceListFragmentPagerAdapter getPlaceListFragmentPagerAdapter(FragmentManager fragmentManager, int count, View bottomOptionLayout, PlaceListFragment.OnPlaceListFragmentListener listener);
 
     protected abstract void onAnalyticsCategoryFlicking(String category);
 
     protected abstract void onAnalyticsCategoryClick(String category);
 
-    public PlaceSearchResultLayout(Context context, OnBaseEventListener listener)
+    public PlaceSearchResultLayout(Context context, String callByScreen, OnBaseEventListener listener)
     {
         super(context, listener);
+
+        mCallByScreen = callByScreen;
     }
 
     @Override
@@ -200,7 +203,7 @@ public abstract class PlaceSearchResultLayout extends BaseBlurLayout implements 
     {
         ImageView emptyIconImageView = (ImageView) view.findViewById(R.id.emptyIconImageView);
         View changeDateView = view.findViewById(R.id.changeDateView);
-        View researchView = view.findViewById(R.id.researchView);
+        TextView researchView = (TextView) view.findViewById(R.id.researchView);
         TextView callTextView = (TextView) view.findViewById(R.id.callTextView);
 
         emptyIconImageView.setImageResource(getEmptyIconResourceId());
@@ -214,21 +217,35 @@ public abstract class PlaceSearchResultLayout extends BaseBlurLayout implements 
             }
         });
 
-        if (isResearchViewEnabled() == true) {
-            researchView.setVisibility(View.VISIBLE);
-            researchView.setOnClickListener(new View.OnClickListener()
-            {
-                @Override
-                public void onClick(View v)
-                {
-                    ((PlaceSearchResultLayout.OnEventListener) mOnEventListener).research(Activity.RESULT_CANCELED);
-                }
-            });
+        int researchResId;
+        if (AnalyticsManager.Screen.HOME.equalsIgnoreCase(mCallByScreen) == true
+            || AnalyticsManager.Screen.SEARCH_MAIN.equalsIgnoreCase(mCallByScreen) == true)
+        {
+            researchResId = R.string.label_searchresult_research;
         } else
         {
-            researchView.setVisibility(View.GONE);
-            researchView.setOnClickListener(null);
+            researchResId = R.string.label_searchresult_change_region;
         }
+
+        researchView.setText(researchResId);
+        researchView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                int resultCode;
+                if (AnalyticsManager.Screen.HOME.equalsIgnoreCase(mCallByScreen) == true
+                    || AnalyticsManager.Screen.SEARCH_MAIN.equalsIgnoreCase(mCallByScreen) == true)
+                {
+                    resultCode = Constants.CODE_RESULT_ACTIVITY_GO_SEARCH;
+                } else
+                {
+                    resultCode = Constants.CODE_RESULT_ACTIVITY_GO_REGION_LIST;
+                }
+
+                ((PlaceSearchResultLayout.OnEventListener) mOnEventListener).research(resultCode);
+            }
+        });
 
         callTextView.setPaintFlags(callTextView.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
         callTextView.setOnClickListener(new View.OnClickListener()

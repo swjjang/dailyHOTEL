@@ -531,26 +531,7 @@ public class StayCategoryTabActivity extends PlaceMainActivity
             AnalyticsManager.getInstance(this).recordScreen(this, screen, null, params);
             // 숏컷 리스트 진입용 GA Screen 중복 발송
 
-            String shortcutScreen = "";
-            switch (mDailyCategoryType)
-            {
-                case STAY_HOTEL:
-                    shortcutScreen = AnalyticsManager.Screen.STAY_LIST_SHORTCUT_HOTEL;
-                    break;
-                case STAY_BOUTIQUE:
-                    shortcutScreen = AnalyticsManager.Screen.STAY_LIST_SHORTCUT_BOUTIQUE;
-                    break;
-                case STAY_PENSION:
-                    shortcutScreen = AnalyticsManager.Screen.STAY_LIST_SHORTCUT_PENSION;
-                    break;
-                case STAY_RESORT:
-                    shortcutScreen = AnalyticsManager.Screen.STAY_LIST_SHORTCUT_RESORT;
-                    break;
-                case STAY_NEARBY:
-                    shortcutScreen = AnalyticsManager.Screen.STAY_LIST_SHORTCUT_NEARBY;
-                    break;
-            }
-
+            String shortcutScreen = getCallByScreen(mDailyCategoryType);
             if (DailyTextUtils.isTextEmpty(shortcutScreen) == false)
             {
                 AnalyticsManager.getInstance(this).recordScreen(this, shortcutScreen, null, params);
@@ -560,6 +541,36 @@ public class StayCategoryTabActivity extends PlaceMainActivity
         {
             ExLog.e(e.toString());
         }
+    }
+
+    private String getCallByScreen(DailyCategoryType dailyCategoryType)
+    {
+        if (dailyCategoryType == null)
+        {
+            return null;
+        }
+
+        String shortcutScreen = "";
+        switch (dailyCategoryType)
+        {
+            case STAY_HOTEL:
+                shortcutScreen = AnalyticsManager.Screen.STAY_LIST_SHORTCUT_HOTEL;
+                break;
+            case STAY_BOUTIQUE:
+                shortcutScreen = AnalyticsManager.Screen.STAY_LIST_SHORTCUT_BOUTIQUE;
+                break;
+            case STAY_PENSION:
+                shortcutScreen = AnalyticsManager.Screen.STAY_LIST_SHORTCUT_PENSION;
+                break;
+            case STAY_RESORT:
+                shortcutScreen = AnalyticsManager.Screen.STAY_LIST_SHORTCUT_RESORT;
+                break;
+            case STAY_NEARBY:
+                shortcutScreen = AnalyticsManager.Screen.STAY_LIST_SHORTCUT_NEARBY;
+                break;
+        }
+
+        return shortcutScreen;
     }
 
     @Override
@@ -633,6 +644,29 @@ public class StayCategoryTabActivity extends PlaceMainActivity
         mStayCategoryListFragmentListener.onStayClick(view, placeViewItem, listCount);
     }
 
+    @Override
+    protected void onRegionClick()
+    {
+        if (isFinishing() == true || lockUiComponentAndIsLockUiComponent() == true)
+        {
+            return;
+        }
+
+        startActivityForResult(HomeCategoryRegionListActivity.newInstance( //
+            StayCategoryTabActivity.this, mDailyCategoryType, mStayCategoryCuration.getStayBookingDay()) //
+            , Constants.CODE_REQUEST_ACTIVITY_REGIONLIST);
+
+        switch (mViewType)
+        {
+            case LIST:
+                //                    AnalyticsManager.getInstance(StaySubCategoryActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_, AnalyticsManager.Action.CHANGE_LOCATION, AnalyticsManager.Label._HOTEL_LIST, null);
+                break;
+
+            case MAP:
+                //                    AnalyticsManager.getInstance(StaySubCategoryActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_, AnalyticsManager.Action.CHANGE_LOCATION, AnalyticsManager.Label._HOTEL_MAP, null);
+                break;
+        }
+    }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////
     // Listener
@@ -731,25 +765,7 @@ public class StayCategoryTabActivity extends PlaceMainActivity
         @Override
         public void onRegionClick()
         {
-            if (isFinishing() == true || lockUiComponentAndIsLockUiComponent() == true)
-            {
-                return;
-            }
-
-            startActivityForResult(HomeCategoryRegionListActivity.newInstance( //
-                StayCategoryTabActivity.this, mDailyCategoryType, mStayCategoryCuration.getStayBookingDay()) //
-                , Constants.CODE_REQUEST_ACTIVITY_REGIONLIST);
-
-            switch (mViewType)
-            {
-                case LIST:
-                    //                    AnalyticsManager.getInstance(StaySubCategoryActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_, AnalyticsManager.Action.CHANGE_LOCATION, AnalyticsManager.Label._HOTEL_LIST, null);
-                    break;
-
-                case MAP:
-                    //                    AnalyticsManager.getInstance(StaySubCategoryActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_, AnalyticsManager.Action.CHANGE_LOCATION, AnalyticsManager.Label._HOTEL_MAP, null);
-                    break;
-            }
+            StayCategoryTabActivity.this.onRegionClick();
         }
 
         @Override

@@ -463,6 +463,31 @@ public class GourmetMainActivity extends PlaceMainActivity
         mOnPlaceListFragmentListener.onGourmetClick(view, placeViewItem, listCount);
     }
 
+    @Override
+    protected void onRegionClick()
+    {
+        if (isFinishing() == true || lockUiComponentAndIsLockUiComponent() == true)
+        {
+            return;
+        }
+
+        Province province = mGourmetCuration.getProvince();
+
+        Intent intent = GourmetRegionListActivity.newInstance(GourmetMainActivity.this, province, mGourmetCuration.getGourmetBookingDay());
+        startActivityForResult(intent, CODE_REQUEST_ACTIVITY_REGIONLIST);
+
+        switch (mViewType)
+        {
+            case LIST:
+                AnalyticsManager.getInstance(GourmetMainActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_, AnalyticsManager.Action.CHANGE_LOCATION, AnalyticsManager.Label._GOURMET_LIST_, null);
+                break;
+
+            case MAP:
+                AnalyticsManager.getInstance(GourmetMainActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_, AnalyticsManager.Action.CHANGE_LOCATION, AnalyticsManager.Label._GOURMET_MAP, null);
+                break;
+        }
+    }
+
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // EventListener
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -516,26 +541,7 @@ public class GourmetMainActivity extends PlaceMainActivity
         @Override
         public void onRegionClick()
         {
-            if (isFinishing() == true || lockUiComponentAndIsLockUiComponent() == true)
-            {
-                return;
-            }
-
-            Province province = mGourmetCuration.getProvince();
-
-            Intent intent = GourmetRegionListActivity.newInstance(GourmetMainActivity.this, province, mGourmetCuration.getGourmetBookingDay());
-            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_REGIONLIST);
-
-            switch (mViewType)
-            {
-                case LIST:
-                    AnalyticsManager.getInstance(GourmetMainActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_, AnalyticsManager.Action.CHANGE_LOCATION, AnalyticsManager.Label._GOURMET_LIST_, null);
-                    break;
-
-                case MAP:
-                    AnalyticsManager.getInstance(GourmetMainActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_, AnalyticsManager.Action.CHANGE_LOCATION, AnalyticsManager.Label._GOURMET_MAP, null);
-                    break;
-            }
+            GourmetMainActivity.this.onRegionClick();
         }
 
         @Override
