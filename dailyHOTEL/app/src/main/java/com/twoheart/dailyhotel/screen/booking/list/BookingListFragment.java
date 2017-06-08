@@ -43,6 +43,7 @@ import com.daily.dailyhotel.repository.remote.ProfileRemoteImpl;
 import com.daily.dailyhotel.screen.booking.detail.stayoutbound.StayOutboundBookingDetailActivity;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.model.PlacePaymentInformation;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.base.BaseMenuNavigationFragment;
@@ -453,7 +454,7 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
     }
 
     private int searchStayFromPaymentInformation(Context context, String placeName//
-        , String checkInTime, String checkOutTime//
+        , PlacePaymentInformation.PaymentType paymentType, String checkInTime, String checkOutTime//
         , List<ListItem> bookingList)
     {
         if (DailyTextUtils.isTextEmpty(placeName, checkInTime, checkOutTime) == true//
@@ -485,21 +486,27 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
 
                 booking = listItem.getItem();
 
-                if (booking.statusPayment == Booking.WAIT_PAYMENT//
-                    && booking.placeName.equalsIgnoreCase(placeName)//
-                    && booking.placeType == Booking.PlaceType.STAY//
-                    && booking.checkInDateTime.equalsIgnoreCase(checkInDate) == true//
-                    && booking.checkOutDateTime.equalsIgnoreCase(checkOutDate) == true)
+                if (PlacePaymentInformation.PaymentType.VBANK == paymentType)
                 {
-                    return i;
-                } else if (booking.statusPayment != Booking.WAIT_PAYMENT //
-                    && booking.readyForRefund == false//
-                    && booking.placeName.equalsIgnoreCase(placeName)//
-                    && booking.placeType == Booking.PlaceType.STAY//
-                    && booking.checkInDateTime.equalsIgnoreCase(checkInDate) == true//
-                    && booking.checkOutDateTime.equalsIgnoreCase(checkOutDate) == true)
+                    if (booking.statusPayment == Booking.WAIT_PAYMENT//
+                        && booking.placeName.equalsIgnoreCase(placeName)//
+                        && booking.placeType == Booking.PlaceType.STAY//
+                        && booking.checkInDateTime.equalsIgnoreCase(checkInDate) == true//
+                        && booking.checkOutDateTime.equalsIgnoreCase(checkOutDate) == true)
+                    {
+                        return i;
+                    }
+                } else
                 {
-                    return i;
+                    if (booking.statusPayment != Booking.WAIT_PAYMENT //
+                        && booking.readyForRefund == false//
+                        && booking.placeName.equalsIgnoreCase(placeName)//
+                        && booking.placeType == Booking.PlaceType.STAY//
+                        && booking.checkInDateTime.equalsIgnoreCase(checkInDate) == true//
+                        && booking.checkOutDateTime.equalsIgnoreCase(checkOutDate) == true)
+                    {
+                        return i;
+                    }
                 }
             }
         } catch (Exception e)
@@ -515,7 +522,7 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
     }
 
     private int searchGourmetFromPaymentInformation(Context context, String placeName//
-        , String visitTime, List<ListItem> bookingList)
+        , PlacePaymentInformation.PaymentType paymentType, String visitTime, List<ListItem> bookingList)
     {
         if (DailyTextUtils.isTextEmpty(placeName, visitTime) == true//
             || bookingList == null || bookingList.size() == 0)
@@ -544,19 +551,25 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
 
                 booking = listItem.getItem();
 
-                if (booking.statusPayment == Booking.WAIT_PAYMENT//
-                    && booking.placeName.equalsIgnoreCase(placeName)//
-                    && booking.placeType == Booking.PlaceType.GOURMET//
-                    && booking.checkInDateTime.equalsIgnoreCase(visitDate) == true)
+                if (PlacePaymentInformation.PaymentType.VBANK == paymentType)
                 {
-                    return i;
-                } else if (booking.statusPayment != Booking.WAIT_PAYMENT//
-                    && booking.readyForRefund == false//
-                    && booking.placeName.equalsIgnoreCase(placeName)//
-                    && booking.placeType == Booking.PlaceType.GOURMET//
-                    && booking.checkInDateTime.equalsIgnoreCase(visitDate) == true)
+                    if (booking.statusPayment == Booking.WAIT_PAYMENT//
+                        && booking.placeName.equalsIgnoreCase(placeName)//
+                        && booking.placeType == Booking.PlaceType.GOURMET//
+                        && booking.checkInDateTime.equalsIgnoreCase(visitDate) == true)
+                    {
+                        return i;
+                    }
+                } else
                 {
-                    return i;
+                    if (booking.statusPayment != Booking.WAIT_PAYMENT//
+                        && booking.readyForRefund == false//
+                        && booking.placeName.equalsIgnoreCase(placeName)//
+                        && booking.placeType == Booking.PlaceType.GOURMET//
+                        && booking.checkInDateTime.equalsIgnoreCase(visitDate) == true)
+                    {
+                        return i;
+                    }
                 }
             }
         } catch (Exception e)
@@ -1004,6 +1017,7 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
                         }
                     } else
                     {
+                        PlacePaymentInformation.PaymentType paymentType = PlacePaymentInformation.PaymentType.valueOf(internalDeepLink.getPaymentType());
                         String placeName = internalDeepLink.getPlaceName();
 
                         int index = -1;
@@ -1015,14 +1029,14 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
                                 String checkOutTime = internalDeepLink.getCheckOutTime();
 
                                 index = searchStayFromPaymentInformation(baseActivity//
-                                    , placeName, checkInTime, checkOutTime, bookingList);
+                                    , placeName, paymentType, checkInTime, checkOutTime, bookingList);
                                 break;
 
                             case GOURMET:
                                 String visitTime = internalDeepLink.getVisitTime();
 
                                 index = searchGourmetFromPaymentInformation(baseActivity//
-                                    , placeName, visitTime, bookingList);
+                                    , placeName, paymentType, visitTime, bookingList);
                                 break;
                         }
 
