@@ -72,10 +72,11 @@
                     android:layout_marginRight="10dp"
                     android:layout_toLeftOf="@id/copyAddressView"
                     android:freezesText="true"
+                    android:maxLines="3"
+                    android:ellipsize="end"
                     android:gravity="left|center_vertical"
                     android:textColor="@color/hoteldetail_title_text"
                     android:textSize="13dp"/>
-
             </RelativeLayout>
 
             <RelativeLayout

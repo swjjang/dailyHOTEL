@@ -29,7 +29,6 @@ public class StayOutboundBookingDetail
     private People mPeople;
 
     public boolean readyForRefund;
-    public String refundComment;
     public String refundPolicy;
 
     public String checkInDate;

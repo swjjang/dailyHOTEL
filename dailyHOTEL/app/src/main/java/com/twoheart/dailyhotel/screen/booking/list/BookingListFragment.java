@@ -338,6 +338,8 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
 
                     baseActivity.showSimpleDialog(getString(R.string.dialog_notice2), data.getStringExtra("msg"), getString(R.string.dialog_btn_text_confirm), null);
                 }
+
+                mDontReload = true;
                 break;
             }
 
@@ -348,7 +350,7 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
                     mDontReload = false;
                 } else
                 {
-
+                    mDontReload = true;
                 }
                 break;
             }
@@ -357,7 +359,7 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
 
     private void onRefresh()
     {
-        lockUI();
+        lockUIImmediately();
 
         addCompositeDisposable(Observable.zip(mCommonRemoteImpl.getCommonDateTime()//
             , mBookingRemoteImpl.getBookingList(), mBookingRemoteImpl.getStayOutboundBookingList()//

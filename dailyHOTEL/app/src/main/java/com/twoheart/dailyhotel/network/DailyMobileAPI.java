@@ -1462,7 +1462,7 @@ public class DailyMobileAPI implements IDailyNetwork
             : "MTY4JDg4JDc3JDU4JDE2NCQ3NiQxMjgkODckMTMzJDg3JDczJDEzNyQxNzckMTM1JDEwMyQxNyQ=$OUY1NDc3N0FDRTgzMNDk1MkVGQTQ3OTI5MzdBMUY1OTdBRTkwRkM0MzkwRTWhFNDZGMTMyNTBGDQTVYGRAkIxQUEyYENzIyFNzQwNTM2DNTgyMkM0ODcyQzY5QzhFOUQzRUI3EMzQDEzIOUYyOTU4RDU0QzUyMENEMzUwMjg0RTYwNOEQ1RjLk3QNUE=$";
 
         Map<String, String> urlParams = new HashMap<>();
-        urlParams.put("{reservationId}", Integer.toString(reservationIndex));
+        urlParams.put("{reservationIdx}", Integer.toString(reservationIndex));
 
         return mDailyMobileService.getStayOutboundBookingDetail(Crypto.getUrlDecoderEx(URL) + Crypto.getUrlDecoderEx(API, urlParams)).subscribeOn(Schedulers.io());
     }

@@ -26,4 +26,8 @@ public interface StayOutboundBookingDetailInterface extends BaseDialogViewInterf
     void showShareDialog(Dialog.OnDismissListener listener);
 
     void setMyLocation(Location location);
+
+    void setRefundPolicy(StayOutboundBookingDetail stayOutboundBookingDetail, String statusRefund);
+
+    boolean isExpandedMap();
 }

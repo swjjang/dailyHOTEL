@@ -83,7 +83,11 @@ public class StayOutboundBookingDetailView extends BaseDialogView<StayOutboundBo
 
         void onMapLoading();
 
-        void onMapClick(boolean isGoogleMap);
+        void onMapClick();
+
+        void onExpandMapClick();
+
+        void onCollapseMapClick();
 
         void onViewDetailClick();
 
@@ -102,6 +106,8 @@ public class StayOutboundBookingDetailView extends BaseDialogView<StayOutboundBo
         void onConciergeHappyTalkClick();
 
         void onConciergeCallClick();
+
+        void onShareKakaoClick();
 
         void onShareSmsClick();
     }
@@ -167,7 +173,13 @@ public class StayOutboundBookingDetailView extends BaseDialogView<StayOutboundBo
     @Override
     public void setBookingDetail(StayOutboundBookingDetail stayOutboundBookingDetail)
     {
+        setHeaderLayout(getContext(), stayOutboundBookingDetail);
 
+        setBookingInformation(getContext(), mBookingDetail01DataBinding, stayOutboundBookingDetail);
+
+        setGuestInformation(getContext(), mBookingDetail01DataBinding, stayOutboundBookingDetail);
+
+        setPaymentInformation(getContext(), mBookingDetail02DataBinding, stayOutboundBookingDetail);
     }
 
     @Override
@@ -235,8 +247,8 @@ public class StayOutboundBookingDetailView extends BaseDialogView<StayOutboundBo
                         valueAnimator.removeAllUpdateListeners();
                         valueAnimator.removeAllListeners();
 
-                        int height = (int) getViewDataBinding().mapExpandedView.getTag();
-                        getViewDataBinding().mapExpandedView.setPadding(0, 0, 0, (int) (getViewDataBinding().addressLayout.getY() - height));
+                        int height = (int) getViewDataBinding().fakeMapLayout.getTag();
+                        getViewDataBinding().fakeMapLayout.setPadding(0, 0, 0, (int) (getViewDataBinding().addressLayout.getY() - height));
 
                         mZoomControl.setVisibility(View.VISIBLE);
                         mMyLocationView.setVisibility(View.VISIBLE);
@@ -455,16 +467,16 @@ public class StayOutboundBookingDetailView extends BaseDialogView<StayOutboundBo
     {
         DialogShareDataBinding dataBinding = DataBindingUtil.inflate(LayoutInflater.from(getContext()), R.layout.dialog_share_data, null, false);
 
-        //        dataBinding.kakaoShareView.setOnClickListener(new View.OnClickListener()
-        //        {
-        //            @Override
-        //            public void onClick(View v)
-        //            {
-        //                hideSimpleDialog();
-        //
-        //                getEventListener().onShareKakaoClick();
-        //            }
-        //        });
+        dataBinding.kakaoShareView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                hideSimpleDialog();
+
+                getEventListener().onShareKakaoClick();
+            }
+        });
 
         dataBinding.smsShareLayout.setOnClickListener(new View.OnClickListener()
         {
@@ -496,6 +508,75 @@ public class StayOutboundBookingDetailView extends BaseDialogView<StayOutboundBo
     }
 
     @Override
+    public void setRefundPolicy(StayOutboundBookingDetail stayOutboundBookingDetail, String statusRefund)
+    {
+        if (mBookingDetail03DataBinding == null || stayOutboundBookingDetail == null)
+        {
+            return;
+        }
+
+        if (DailyTextUtils.isTextEmpty(stayOutboundBookingDetail.refundPolicy) == false)
+        {
+            mBookingDetail03DataBinding.refundPolicyTextView.setText(Html.fromHtml(stayOutboundBookingDetail.refundPolicy));
+        }
+
+        // 정책을 보여주지 않을 경우
+        if (stayOutboundBookingDetail.readyForRefund == false)
+        {
+            setRefundLayoutVisible(false);
+        } else
+        {
+            setRefundLayoutVisible(true);
+
+            switch (statusRefund)
+            {
+                case StayOutboundBookingDetail.STATUS_NO_CHARGE_REFUND:
+                {
+                    mBookingDetail03DataBinding.defaultRefundPolicyLayout.setVisibility(View.VISIBLE);
+                    mBookingDetail03DataBinding.waitRefundPolicyLayout.setVisibility(View.GONE);
+                    mBookingDetail03DataBinding.refundButtonLayout.setOnClickListener(this);
+                    mBookingDetail03DataBinding.buttonTextView.setText(R.string.label_request_free_refund);
+                    break;
+                }
+
+                case StayOutboundBookingDetail.STATUS_WAIT_REFUND:
+                {
+                    mBookingDetail03DataBinding.defaultRefundPolicyLayout.setVisibility(View.GONE);
+                    mBookingDetail03DataBinding.waitRefundPolicyLayout.setVisibility(View.VISIBLE);
+                    mBookingDetail03DataBinding.waitRefundPolicyTextView.setText(Html.fromHtml(getString(R.string.message_please_wait_refund01)));
+                    mBookingDetail03DataBinding.refundButtonLayout.setOnClickListener(this);
+                    mBookingDetail03DataBinding.buttonTextView.setText(R.string.label_contact_refund);
+                    break;
+                }
+
+                case StayOutboundBookingDetail.STATUS_SURCHARGE_REFUND:
+                {
+                    mBookingDetail03DataBinding.defaultRefundPolicyLayout.setVisibility(View.VISIBLE);
+                    mBookingDetail03DataBinding.waitRefundPolicyLayout.setVisibility(View.GONE);
+                    mBookingDetail03DataBinding.refundButtonLayout.setOnClickListener(this);
+                    mBookingDetail03DataBinding.buttonTextView.setText(R.string.label_contact_refund);
+                    break;
+                }
+
+                default:
+                {
+                    mBookingDetail03DataBinding.defaultRefundPolicyLayout.setVisibility(View.VISIBLE);
+                    mBookingDetail03DataBinding.waitRefundPolicyLayout.setVisibility(View.GONE);
+                    mBookingDetail03DataBinding.refundButtonLayout.setOnClickListener(null);
+                    mBookingDetail03DataBinding.refundButtonLayout.setVisibility(View.GONE);
+                    break;
+                }
+            }
+        }
+    }
+
+    @Override
+    public boolean isExpandedMap()
+    {
+        return getViewDataBinding().searchMapsLayout != null && getViewDataBinding().searchMapsLayout.getVisibility() != View.GONE;
+    }
+
+    @Override
     public void onClick(View v)
     {
         if (getViewDataBinding() == null)
@@ -511,14 +592,14 @@ public class StayOutboundBookingDetailView extends BaseDialogView<StayOutboundBo
                 {
                     if (mMapLoaded == true)
                     {
-                        getEventListener().onMapClick(true);
+                        getEventListener().onExpandMapClick();
                     } else
                     {
                         getEventListener().onMapLoading();
                     }
                 } else
                 {
-                    getEventListener().onMapClick(false);
+                    getEventListener().onMapClick();
                 }
                 break;
             }
@@ -604,7 +685,7 @@ public class StayOutboundBookingDetailView extends BaseDialogView<StayOutboundBo
             @Override
             public void onClick(View v)
             {
-                getEventListener().onBackClick();
+                getEventListener().onCollapseMapClick();
             }
         });
 
@@ -759,7 +840,7 @@ public class StayOutboundBookingDetailView extends BaseDialogView<StayOutboundBo
         dataBinding.peopleTextView.setText(stayOutboundBookingDetail.getPeople().toString(context));
     }
 
-    protected void setPaymentInformation(Context context, LayoutStayOutboundBookingDetail02DataBinding dataBinding, StayOutboundBookingDetail stayOutboundBookingDetail)
+    private void setPaymentInformation(Context context, LayoutStayOutboundBookingDetail02DataBinding dataBinding, StayOutboundBookingDetail stayOutboundBookingDetail)
     {
         if (context == null || dataBinding == null || stayOutboundBookingDetail == null)
         {
@@ -792,69 +873,7 @@ public class StayOutboundBookingDetailView extends BaseDialogView<StayOutboundBo
         dataBinding.buttonLayout.setOnClickListener(this);
     }
 
-    protected void setRefundPolicyLayout(Context context, StayOutboundBookingDetail stayOutboundBookingDetail, String statusRefund)
-    {
-        if (context == null || mBookingDetail03DataBinding == null || stayOutboundBookingDetail == null)
-        {
-            return;
-        }
-
-        if (DailyTextUtils.isTextEmpty(stayOutboundBookingDetail.refundComment) == false)
-        {
-            mBookingDetail03DataBinding.refundPolicyTextView.setText(Html.fromHtml(stayOutboundBookingDetail.refundComment));
-        }
-
-        // 정책을 보여주지 않을 경우
-        if (stayOutboundBookingDetail.readyForRefund == false)
-        {
-            setRefundLayoutVisible(false);
-        } else
-        {
-            setRefundLayoutVisible(true);
-
-            switch (statusRefund)
-            {
-                case StayOutboundBookingDetail.STATUS_NO_CHARGE_REFUND:
-                {
-                    mBookingDetail03DataBinding.defaultRefundPolicyLayout.setVisibility(View.VISIBLE);
-                    mBookingDetail03DataBinding.waitRefundPolicyLayout.setVisibility(View.GONE);
-                    mBookingDetail03DataBinding.refundButtonLayout.setOnClickListener(this);
-                    mBookingDetail03DataBinding.buttonTextView.setText(R.string.label_request_free_refund);
-                    break;
-                }
-
-                case StayOutboundBookingDetail.STATUS_WAIT_REFUND:
-                {
-                    mBookingDetail03DataBinding.defaultRefundPolicyLayout.setVisibility(View.GONE);
-                    mBookingDetail03DataBinding.waitRefundPolicyLayout.setVisibility(View.VISIBLE);
-                    mBookingDetail03DataBinding.waitRefundPolicyTextView.setText(Html.fromHtml(context.getString(R.string.message_please_wait_refund01)));
-                    mBookingDetail03DataBinding.refundButtonLayout.setOnClickListener(this);
-                    mBookingDetail03DataBinding.buttonTextView.setText(R.string.label_contact_refund);
-                    break;
-                }
-
-                case StayOutboundBookingDetail.STATUS_SURCHARGE_REFUND:
-                {
-                    mBookingDetail03DataBinding.defaultRefundPolicyLayout.setVisibility(View.VISIBLE);
-                    mBookingDetail03DataBinding.waitRefundPolicyLayout.setVisibility(View.GONE);
-                    mBookingDetail03DataBinding.refundButtonLayout.setOnClickListener(this);
-                    mBookingDetail03DataBinding.buttonTextView.setText(R.string.label_contact_refund);
-                    break;
-                }
-
-                default:
-                {
-                    mBookingDetail03DataBinding.defaultRefundPolicyLayout.setVisibility(View.VISIBLE);
-                    mBookingDetail03DataBinding.waitRefundPolicyLayout.setVisibility(View.GONE);
-                    mBookingDetail03DataBinding.refundButtonLayout.setOnClickListener(null);
-                    mBookingDetail03DataBinding.refundButtonLayout.setVisibility(View.GONE);
-                    break;
-                }
-            }
-        }
-    }
-
-    public void setRefundLayoutVisible(boolean visible)
+    private void setRefundLayoutVisible(boolean visible)
     {
         if (mBookingDetail03DataBinding == null)
         {
@@ -877,12 +896,7 @@ public class StayOutboundBookingDetailView extends BaseDialogView<StayOutboundBo
         }
     }
 
-    public boolean isExpandedMap()
-    {
-        return getViewDataBinding().searchMapsLayout != null && getViewDataBinding().searchMapsLayout.getVisibility() != View.GONE;
-    }
-
-    public void changeLocation(Location location)
+    private void changeLocation(Location location)
     {
         if (mGoogleMap == null)
         {

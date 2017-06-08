@@ -35,11 +35,13 @@ import com.twoheart.dailyhotel.screen.common.PermissionManagerActivity;
 import com.twoheart.dailyhotel.screen.common.ZoomMapActivity;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyUserPreference;
+import com.twoheart.dailyhotel.util.KakaoLinkManager;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.CustomFontTypefaceSpan;
 
 import io.reactivex.Observable;
 import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Consumer;
 
@@ -151,6 +153,12 @@ public class StayOutboundBookingDetailPresenter extends BaseExceptionPresenter<S
     @Override
     public boolean onBackPressed()
     {
+        if (mStayOutboundBookingDetail != null && getViewInterface().isExpandedMap() == true)
+        {
+            onCollapseMapClick();
+            return true;
+        }
+
         return super.onBackPressed();
     }
 
@@ -221,6 +229,8 @@ public class StayOutboundBookingDetailPresenter extends BaseExceptionPresenter<S
             public void accept(@io.reactivex.annotations.NonNull StayOutboundBookingDetail stayOutboundBookingDetail) throws Exception
             {
                 onStayOutboundBookingDetail(stayOutboundBookingDetail);
+
+                unLockAll();
             }
         }, new Consumer<Throwable>()
         {
@@ -271,30 +281,62 @@ public class StayOutboundBookingDetailPresenter extends BaseExceptionPresenter<S
     }
 
     @Override
-    public void onMapClick(boolean isGoogleMap)
+    public void onMapClick()
     {
-        if (lock() == true || mStayOutboundBookingDetail == null)
+        if (mStayOutboundBookingDetail == null || lock() == true)
         {
             return;
         }
 
-        if (isGoogleMap == false)
-        {
-            Intent intent = ZoomMapActivity.newInstance(getActivity()//
-                , ZoomMapActivity.SourceType.HOTEL_BOOKING, mStayOutboundBookingDetail.name, mStayOutboundBookingDetail.address//
-                , mStayOutboundBookingDetail.latitude, mStayOutboundBookingDetail.longitude, true);
+        Intent intent = ZoomMapActivity.newInstance(getActivity()//
+            , ZoomMapActivity.SourceType.HOTEL_BOOKING, mStayOutboundBookingDetail.name, mStayOutboundBookingDetail.address//
+            , mStayOutboundBookingDetail.latitude, mStayOutboundBookingDetail.longitude, true);
 
-            startActivityForResult(intent, StayOutboundBookingDetailActivity.REQUEST_CODE_ZOOMMAP);
-        } else
+        startActivityForResult(intent, StayOutboundBookingDetailActivity.REQUEST_CODE_ZOOMMAP);
+    }
+
+    @Override
+    public void onExpandMapClick()
+    {
+        if (mStayOutboundBookingDetail == null || lock() == true)
         {
-            getViewInterface().expandMap(mStayOutboundBookingDetail.latitude, mStayOutboundBookingDetail.longitude);
+            return;
         }
+
+        addCompositeDisposable(getViewInterface().expandMap(mStayOutboundBookingDetail.latitude, mStayOutboundBookingDetail.longitude)//
+            .subscribeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
+            {
+                @Override
+                public void accept(@io.reactivex.annotations.NonNull Boolean aBoolean) throws Exception
+                {
+                    unLockAll();
+                }
+            }));
+    }
+
+    @Override
+    public void onCollapseMapClick()
+    {
+        if (mStayOutboundBookingDetail == null || lock() == true)
+        {
+            return;
+        }
+
+        addCompositeDisposable(getViewInterface().collapseMap()//
+            .subscribeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
+            {
+                @Override
+                public void accept(@io.reactivex.annotations.NonNull Boolean aBoolean) throws Exception
+                {
+                    unLockAll();
+                }
+            }));
     }
 
     @Override
     public void onViewDetailClick()
     {
-        if (lock() == true || mStayOutboundBookingDetail == null)
+        if (mStayOutboundBookingDetail == null || lock() == true)
         {
             return;
         }
@@ -320,7 +362,7 @@ public class StayOutboundBookingDetailPresenter extends BaseExceptionPresenter<S
     @Override
     public void onNavigatorClick()
     {
-        if (getActivity().isFinishing() == true || lock() == true)
+        if (mStayOutboundBookingDetail == null || lock() == true)
         {
             return;
         }
@@ -338,7 +380,7 @@ public class StayOutboundBookingDetailPresenter extends BaseExceptionPresenter<S
     @Override
     public void onRefundClick()
     {
-        if (lock() == true)
+        if (mStayOutboundBookingDetail == null || lock() == true)
         {
             return;
         }
@@ -458,36 +500,82 @@ public class StayOutboundBookingDetailPresenter extends BaseExceptionPresenter<S
     }
 
     @Override
-    public void onShareSmsClick()
+    public void onShareKakaoClick()
     {
-        if (mStayOutboundBookingDetail == null || lock() == true)
+        if (mStayOutboundBookingDetail == null)
         {
             return;
         }
 
         try
         {
-            String name = DailyUserPreference.getInstance(getActivity()).getName();
+            // 카카오톡 패키지 설치 여부
+            getActivity().getPackageManager().getPackageInfo("com.kakao.talk", PackageManager.GET_META_DATA);
 
-            if (DailyTextUtils.isTextEmpty(name) == true)
-            {
-                name = getString(R.string.label_friend) + "가";
-            } else
-            {
-                name += "님이";
-            }
+            String userName = DailyUserPreference.getInstance(getActivity()).getName();
 
-            final String DATE_FORMAT = "yyyy.MM.dd(EEE)";
+            String checkInTime = getString(R.string.label_stay_outbound_payment_hour, mStayOutboundBookingDetail.checkInTime.split(":")[0]);
+            String checkInDate = DailyCalendar.convertDateFormatString(mStayOutboundBookingDetail.checkInDate, "yyyy-MM-dd", "yyyy-MM-dd(EEE)");
 
-            String checkInDate = DailyCalendar.convertDateFormatString(mStayOutboundBookingDetail.checkInDate, "yyyy-MM-dd", DATE_FORMAT);
-            String checkOutDate = DailyCalendar.convertDateFormatString(mStayOutboundBookingDetail.checkOutDate, "yyyy-MM-dd", DATE_FORMAT);
-            int nights = DailyCalendar.compareDateDay(checkOutDate, checkInDate);
+            String checkOutTime = getString(R.string.label_stay_outbound_payment_hour, mStayOutboundBookingDetail.checkOutTime.split(":")[0]);
+            String checkOutDate = DailyCalendar.convertDateFormatString(mStayOutboundBookingDetail.checkOutDate, "yyyy-MM-dd", "yyyy-MM-dd(EEE)");
 
-            String message = getString(R.string.message_detail_stay_share_sms//
-                , name, mStayOutboundBookingDetail.name//
-                , checkInDate, checkOutDate//
-                , nights, nights + 1 //
-                , mStayOutboundBookingDetail.address);
+            String message = getString(R.string.message_booking_stay_outbound_share_kakao, //
+                userName, mStayOutboundBookingDetail.name, mStayOutboundBookingDetail.guestLastName + " " + mStayOutboundBookingDetail.guestFirstName,//
+                DailyTextUtils.getPriceFormat(getActivity(), mStayOutboundBookingDetail.paymentPrice, false), //
+                mStayOutboundBookingDetail.roomName, checkInDate + " " + checkInTime,//
+                checkOutDate + " " + checkOutTime, //
+                mStayOutboundBookingDetail.address);
+
+            int nights = DailyCalendar.compareDateDay(DailyCalendar.convertDateFormatString(mStayOutboundBookingDetail.checkOutDate, "yyyy-MM-dd", DailyCalendar.ISO_8601_FORMAT)//
+                , DailyCalendar.convertDateFormatString(mStayOutboundBookingDetail.checkInDate, "yyyy-MM-dd", DailyCalendar.ISO_8601_FORMAT));
+
+            KakaoLinkManager.newInstance(getActivity()).shareBookingStayOutbound(message, mStayOutboundBookingDetail.stayIndex,//
+                mImageUrl, DailyCalendar.convertDateFormatString(mStayOutboundBookingDetail.checkInDate, "yyyy-MM-dd", "yyyyMMdd"), nights);
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+
+            getViewInterface().showSimpleDialog(null, getString(R.string.dialog_msg_not_installed_kakaotalk)//
+                , getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no)//
+                , new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        Util.installPackage(getActivity(), "com.kakao.talk");
+                    }
+                }, null);
+        }
+    }
+
+    @Override
+    public void onShareSmsClick()
+    {
+        if (mStayOutboundBookingDetail == null)
+        {
+            return;
+        }
+
+        try
+        {
+            String userName = DailyUserPreference.getInstance(getActivity()).getName();
+
+            String checkInTime = getString(R.string.label_stay_outbound_payment_hour, mStayOutboundBookingDetail.checkInTime.split(":")[0]);
+            String checkInDate = DailyCalendar.convertDateFormatString(mStayOutboundBookingDetail.checkInDate, "yyyy-MM-dd", "yyyy-MM-dd(EEE)");
+
+            String checkOutTime = getString(R.string.label_stay_outbound_payment_hour, mStayOutboundBookingDetail.checkOutTime.split(":")[0]);
+            String checkOutDate = DailyCalendar.convertDateFormatString(mStayOutboundBookingDetail.checkOutDate, "yyyy-MM-dd", "yyyy-MM-dd(EEE)");
+
+            int nights = DailyCalendar.compareDateDay(DailyCalendar.convertDateFormatString(mStayOutboundBookingDetail.checkOutDate, "yyyy-MM-dd", DailyCalendar.ISO_8601_FORMAT)//
+                , DailyCalendar.convertDateFormatString(mStayOutboundBookingDetail.checkInDate, "yyyy-MM-dd", DailyCalendar.ISO_8601_FORMAT));
+
+            String message = getString(R.string.message_booking_stay_share_sms, //
+                userName, mStayOutboundBookingDetail.name, mStayOutboundBookingDetail.guestLastName + " " + mStayOutboundBookingDetail.guestFirstName,//
+                DailyTextUtils.getPriceFormat(getActivity(), mStayOutboundBookingDetail.paymentPrice, false), //
+                mStayOutboundBookingDetail.roomName, checkInDate + " " + checkInTime,//
+                checkOutDate + " " + checkOutTime, //
+                mStayOutboundBookingDetail.address);
 
             Util.sendSms(getActivity(), message);
         } catch (Exception e)
@@ -540,7 +628,8 @@ public class StayOutboundBookingDetailPresenter extends BaseExceptionPresenter<S
                 checkOutDate.length(), checkOutDate.length() + checkOutTime.length() + 1,//
                 Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
-            int nights = DailyCalendar.compareDateDay(checkOutDate, checkInDate);
+            int nights = DailyCalendar.compareDateDay(DailyCalendar.convertDateFormatString(stayOutboundBookingDetail.checkOutDate, "yyyy-MM-dd", DailyCalendar.ISO_8601_FORMAT)//
+                , DailyCalendar.convertDateFormatString(stayOutboundBookingDetail.checkInDate, "yyyy-MM-dd", DailyCalendar.ISO_8601_FORMAT));
             getViewInterface().setBookingDate(checkInDateSpannableString, checkOutDateSpannableString, nights);
         } catch (Exception e)
         {
@@ -548,6 +637,8 @@ public class StayOutboundBookingDetailPresenter extends BaseExceptionPresenter<S
         }
 
         getViewInterface().setBookingDetail(stayOutboundBookingDetail);
+
+        getViewInterface().setRefundPolicy(stayOutboundBookingDetail, getRefundPolicyStatus(stayOutboundBookingDetail));
     }
 
     private String getRefundPolicyStatus(StayOutboundBookingDetail stayOutboundBookingDetail)

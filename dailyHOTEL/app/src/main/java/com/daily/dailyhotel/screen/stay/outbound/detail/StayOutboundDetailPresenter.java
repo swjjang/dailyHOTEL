@@ -593,7 +593,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
 
             int nights = mStayBookDateTime.getNights();
 
-            String message = getString(R.string.message_detail_stay_share_sms//
+            String message = getString(R.string.message_detail_stay_outbound_share_sms//
                 , name, mStayOutboundDetail.name//
                 , mStayBookDateTime.getCheckInDateTime("yyyy.MM.dd(EEE)")//
                 , mStayBookDateTime.getCheckOutDateTime("yyyy.MM.dd(EEE)")//

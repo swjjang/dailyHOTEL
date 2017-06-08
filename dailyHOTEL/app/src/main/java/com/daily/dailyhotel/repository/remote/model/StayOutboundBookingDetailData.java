@@ -2,6 +2,7 @@ package com.daily.dailyhotel.repository.remote.model;
 
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
+import com.daily.base.util.DailyTextUtils;
 import com.daily.dailyhotel.entity.People;
 import com.daily.dailyhotel.entity.StayOutboundBookingDetail;
 
@@ -22,17 +23,17 @@ public class StayOutboundBookingDetailData
     @JsonField(name = "hotelAddress")
     public String hotelAddress;
 
-    @JsonField(name = "checkInDate")
-    public String checkInDate;
+    @JsonField(name = "checkinDate")
+    public String checkinDate;
 
-    @JsonField(name = "checkInTime")
-    public String checkInTime;
+    @JsonField(name = "checkinTime")
+    public String checkinTime;
 
-    @JsonField(name = "checkOutDate")
-    public String checkOutDate;
+    @JsonField(name = "checkoutDate")
+    public String checkoutDate;
 
-    @JsonField(name = "checkOutTime")
-    public String checkOutTime;
+    @JsonField(name = "checkoutTime")
+    public String checkoutTime;
 
     @JsonField(name = "latitude")
     public double latitude;
@@ -116,15 +117,12 @@ public class StayOutboundBookingDetailData
         stayOutboundBookingDetail.totalPrice = total;
         stayOutboundBookingDetail.fee = fee;
         stayOutboundBookingDetail.setPeople(new People(numberOfAdults, childrenAges));
-
-        //        stayOutboundBookingDetail.readyForRefund;
-        stayOutboundBookingDetail.refundComment = cancelPolicyDescription;
-        //        stayOutboundBookingDetail.refundPolicy;
-
-        stayOutboundBookingDetail.checkInDate = checkInDate;
-        stayOutboundBookingDetail.checkInTime = checkInTime;
-        stayOutboundBookingDetail.checkOutDate = checkOutDate;
-        stayOutboundBookingDetail.checkOutTime = checkOutTime;
+        stayOutboundBookingDetail.readyForRefund = false;
+        stayOutboundBookingDetail.refundPolicy = cancelPolicyDescription;
+        stayOutboundBookingDetail.checkInDate = checkinDate;
+        stayOutboundBookingDetail.checkInTime = checkinTime;
+        stayOutboundBookingDetail.checkOutDate = checkoutDate;
+        stayOutboundBookingDetail.checkOutTime = checkoutTime;
         stayOutboundBookingDetail.aggregationId = aggregationId;
         stayOutboundBookingDetail.paymentType = StayOutboundBookingDetail.PaymentType.valueOf(paymentType);
         stayOutboundBookingDetail.paymentDate = paymentDate;
