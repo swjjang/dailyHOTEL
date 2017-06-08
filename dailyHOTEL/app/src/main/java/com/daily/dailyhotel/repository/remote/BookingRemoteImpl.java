@@ -13,6 +13,7 @@ import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.network.dto.BaseDto;
 import com.twoheart.dailyhotel.network.dto.BaseListDto;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.Observable;
@@ -36,7 +37,7 @@ public class BookingRemoteImpl implements BookingInterface
             @Override
             public List<Booking> apply(@io.reactivex.annotations.NonNull BaseListDto<BookingData> bookingDataBaseListDto) throws Exception
             {
-                List<Booking> bookingList = null;
+                List<Booking> bookingList = new ArrayList<Booking>();
 
                 if (bookingDataBaseListDto != null)
                 {
@@ -68,7 +69,7 @@ public class BookingRemoteImpl implements BookingInterface
             @Override
             public List<Booking> apply(@io.reactivex.annotations.NonNull BaseListDto<BookingData> bookingDataBaseListDto) throws Exception
             {
-                List<Booking> bookingList = null;
+                List<Booking> bookingList = new ArrayList<Booking>();
 
                 if (bookingDataBaseListDto != null)
                 {

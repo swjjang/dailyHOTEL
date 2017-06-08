@@ -35,7 +35,7 @@ public class BookingParcel implements Parcelable
     {
         dest.writeInt(mBooking.index);
         dest.writeString(mBooking.imageUrl);
-        dest.writeString(mBooking.paymentType.name());
+        dest.writeInt(mBooking.statusPayment);
         dest.writeString(mBooking.placeName);
         dest.writeString(mBooking.placeType.name());
         dest.writeString(mBooking.checkInDateTime);
@@ -53,7 +53,7 @@ public class BookingParcel implements Parcelable
 
         mBooking.index = in.readInt();
         mBooking.imageUrl = in.readString();
-        mBooking.paymentType = Booking.PaymentType.valueOf(in.readString());
+        mBooking.statusPayment = in.readInt();
         mBooking.placeName = in.readString();
         mBooking.placeType = Booking.PlaceType.valueOf(in.readString());
         mBooking.checkInDateTime = in.readString();
@@ -83,6 +83,5 @@ public class BookingParcel implements Parcelable
         {
             return new BookingParcel[size];
         }
-
     };
 }

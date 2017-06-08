@@ -1,43 +1,41 @@
 package com.twoheart.dailyhotel.screen.booking.list;
 
 import android.content.Context;
+import android.databinding.DataBindingUtil;
 import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
-import com.daily.base.util.ScreenUtils;
 import com.daily.dailyhotel.entity.Booking;
 import com.daily.dailyhotel.entity.ListItem;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.databinding.ListRowBookingDataBinding;
+import com.twoheart.dailyhotel.databinding.ListRowDefaultSectionDataBinding;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.Util;
-import com.twoheart.dailyhotel.widget.PinnedSectionListView.PinnedSectionListAdapter;
+import com.twoheart.dailyhotel.widget.PinnedSectionRecyclerView;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
 
-public class BookingListAdapter extends ArrayAdapter<ListItem> implements PinnedSectionListAdapter
+public class BookingListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements PinnedSectionRecyclerView.PinnedSectionListAdapter
 {
     private final String BOOKING_DATE_FORMAT = "yyyy.MM.dd(EEE)";
     private List<ListItem> mList;
     private Context mContext;
     BookingListFragment.OnUserActionListener mOnUserActionListener;
 
-    public BookingListAdapter(Context context, int resourceId, ArrayList<ListItem> arrayList)
+    public BookingListAdapter(Context context, ArrayList<ListItem> arrayList)
     {
-        super(context, resourceId, arrayList);
-
         mList = new ArrayList<>();
 
         addAll(arrayList);
@@ -50,15 +48,11 @@ public class BookingListAdapter extends ArrayAdapter<ListItem> implements Pinned
         mOnUserActionListener = listener;
     }
 
-    @Override
     public void clear()
     {
         mList.clear();
-
-        super.clear();
     }
 
-    @Override
     public ListItem getItem(int position)
     {
         if (mList == null)
@@ -69,18 +63,6 @@ public class BookingListAdapter extends ArrayAdapter<ListItem> implements Pinned
         return mList.get(position);
     }
 
-    @Override
-    public int getCount()
-    {
-        if (mList == null)
-        {
-            return 0;
-        }
-
-        return mList.size();
-    }
-
-    @Override
     public void addAll(Collection<? extends ListItem> collection)
     {
         if (collection == null)
@@ -98,9 +80,48 @@ public class BookingListAdapter extends ArrayAdapter<ListItem> implements Pinned
     }
 
     @Override
-    public int getViewTypeCount()
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
     {
-        return 2;
+        switch (viewType)
+        {
+            case ListItem.TYPE_ENTRY:
+            {
+                ListRowBookingDataBinding dataBinding = DataBindingUtil.inflate(LayoutInflater.from(mContext), R.layout.list_row_booking_data, parent, false);
+
+                return new BookingViewHolder(dataBinding);
+            }
+
+            case ListItem.TYPE_SECTION:
+            {
+                ListRowDefaultSectionDataBinding dataBinding = DataBindingUtil.inflate(LayoutInflater.from(mContext), R.layout.list_row_default_section_data, parent, false);
+
+                return new SectionViewHolder(dataBinding);
+            }
+        }
+
+        return null;
+    }
+
+    @Override
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position)
+    {
+        ListItem item = getItem(position);
+
+        if (item == null)
+        {
+            return;
+        }
+
+        switch (item.mType)
+        {
+            case ListItem.TYPE_ENTRY:
+                onBindViewHolder((BookingViewHolder) holder, item, position);
+                break;
+
+            case ListItem.TYPE_SECTION:
+                onBindViewHolder((SectionViewHolder) holder, item, position);
+                break;
+        }
     }
 
     @Override
@@ -110,73 +131,27 @@ public class BookingListAdapter extends ArrayAdapter<ListItem> implements Pinned
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent)
+    public int getItemCount()
     {
-        ListItem listItem = getItem(position);
-
-        if (convertView != null)
+        if (mList == null)
         {
-            Integer tag = (Integer) convertView.getTag();
-
-            if (tag == null || tag != listItem.mType)
-            {
-                convertView = null;
-            }
+            return 0;
         }
 
-        boolean isLastPosition = false;
-
-        int count = getCount();
-        if (count > 0)
-        {
-            if (count - 1 == position)
-            {
-                isLastPosition = true;
-            }
-        }
-
-        switch (listItem.mType)
-        {
-            case ListItem.TYPE_ENTRY:
-            {
-                if (convertView == null)
-                {
-                    LayoutInflater layoutInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                    convertView = layoutInflater.inflate(R.layout.list_row_booking, parent, false);
-                    convertView.setTag(com.twoheart.dailyhotel.model.Booking.TYPE_ENTRY);
-                }
-
-                convertView = getEntryView(convertView, listItem.getItem(), isLastPosition);
-                break;
-            }
-
-            case ListItem.TYPE_SECTION:
-            {
-                if (convertView == null)
-                {
-                    LayoutInflater layoutInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                    convertView = layoutInflater.inflate(R.layout.list_row_default_section, parent, false);
-                    convertView.setTag(com.twoheart.dailyhotel.model.Booking.TYPE_SECTION);
-                }
-
-                convertView = getSectionView(convertView, listItem.getItem());
-                break;
-            }
-        }
-
-        return convertView;
+        return mList.size();
     }
 
-    private View getEntryView(View view, final Booking booking, boolean isLastPosition)
+    private void onBindViewHolder(BookingViewHolder holder, ListItem listItem, int position)
     {
-        if (view == null || booking == null)
+        if (holder == null || listItem == null)
         {
-            return view;
+            return;
         }
 
-        View listItemLayout = view.findViewById(R.id.listItemLayout);
+        Booking booking = listItem.getItem();
+        boolean isLastPosition = getItemCount() - 1 == position;
 
-        LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) listItemLayout.getLayoutParams();
+        LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) holder.dataBinding.listItemLayout.getLayoutParams();
 
         if (isLastPosition == true)
         {
@@ -186,20 +161,12 @@ public class BookingListAdapter extends ArrayAdapter<ListItem> implements Pinned
             layoutParams.bottomMargin = 0;
         }
 
-        layoutParams.height = ScreenUtils.getRatioHeightType16x9(ScreenUtils.getScreenWidth(mContext));
-        listItemLayout.setLayoutParams(layoutParams);
+        holder.dataBinding.listItemLayout.setLayoutParams(layoutParams);
 
         // 호텔 이미지
-        com.facebook.drawee.view.SimpleDraweeView hotelImageView = (com.facebook.drawee.view.SimpleDraweeView) view.findViewById(R.id.hotelImage);
-        Util.requestImageResize(mContext, hotelImageView, booking.imageUrl);
+        Util.requestImageResize(mContext, holder.dataBinding.simpleDraweeView, booking.imageUrl);
 
-        TextView waitAccountTextView = (TextView) view.findViewById(R.id.waitAccountTextView);
-        TextView name = (TextView) view.findViewById(R.id.placeNameTextView);
-        TextView day = (TextView) view.findViewById(R.id.bookingDateTextView);
-        TextView nights = (TextView) view.findViewById(R.id.bookingNightsTextView);
-        View deleteView = view.findViewById(R.id.deleteView);
-
-        name.setText(booking.placeName);
+        holder.dataBinding.placeNameTextView.setText(booking.placeName);
 
         try
         {
@@ -208,40 +175,41 @@ public class BookingListAdapter extends ArrayAdapter<ListItem> implements Pinned
                 case STAY:
                 {
                     String period = String.format(Locale.KOREA, "%s - %s"//
-                        , DailyCalendar.convertDateFormatString(booking.checkInDateTime, DailyCalendar.ISO_8601_FORMAT, BOOKING_DATE_FORMAT)//
-                        , DailyCalendar.convertDateFormatString(booking.checkOutDateTime, DailyCalendar.ISO_8601_FORMAT, BOOKING_DATE_FORMAT));
+                        , DailyCalendar.convertDateFormatString(booking.checkInDateTime, "yyyy-MM-dd", BOOKING_DATE_FORMAT)//
+                        , DailyCalendar.convertDateFormatString(booking.checkOutDateTime, "yyyy-MM-dd", BOOKING_DATE_FORMAT));
 
-                    day.setText(period);
+                    holder.dataBinding.bookingDateTextView.setText(period);
 
-                    int nightsCount = DailyCalendar.compareDateDay(booking.checkOutDateTime, booking.checkInDateTime);
+                    int nights = DailyCalendar.compareDateDay(DailyCalendar.convertDateFormatString(booking.checkOutDateTime, "yyyy-MM-dd", DailyCalendar.ISO_8601_FORMAT)//
+                        , DailyCalendar.convertDateFormatString(booking.checkInDateTime, "yyyy-MM-dd", DailyCalendar.ISO_8601_FORMAT));
 
-                    nights.setVisibility(View.VISIBLE);
-                    nights.setText(mContext.getString(R.string.label_nights, nightsCount));
+                    holder.dataBinding.bookingNightsTextView.setVisibility(View.VISIBLE);
+                    holder.dataBinding.bookingNightsTextView.setText(mContext.getString(R.string.label_nights, nights));
                     break;
                 }
 
                 case GOURMET:
                 {
-                    String period = DailyCalendar.convertDateFormatString(booking.checkInDateTime, DailyCalendar.ISO_8601_FORMAT, BOOKING_DATE_FORMAT);
+                    String period = DailyCalendar.convertDateFormatString(booking.checkInDateTime, "yyyy-MM-dd", BOOKING_DATE_FORMAT);
 
-                    day.setText(period);
-
-                    nights.setVisibility(View.GONE);
+                    holder.dataBinding.bookingDateTextView.setText(period);
+                    holder.dataBinding.bookingNightsTextView.setVisibility(View.GONE);
                     break;
                 }
 
                 case STAY_OUTBOUND:
                 {
                     String period = String.format(Locale.KOREA, "%s - %s"//
-                        , DailyCalendar.convertDateFormatString(booking.checkInDateTime, DailyCalendar.ISO_8601_FORMAT, BOOKING_DATE_FORMAT)//
-                        , DailyCalendar.convertDateFormatString(booking.checkOutDateTime, DailyCalendar.ISO_8601_FORMAT, BOOKING_DATE_FORMAT));
+                        , DailyCalendar.convertDateFormatString(booking.checkInDateTime, "yyyy-MM-dd", BOOKING_DATE_FORMAT)//
+                        , DailyCalendar.convertDateFormatString(booking.checkOutDateTime, "yyyy-MM-dd", BOOKING_DATE_FORMAT));
 
-                    day.setText(period);
+                    holder.dataBinding.bookingDateTextView.setText(period);
 
-                    int nightsCount = DailyCalendar.compareDateDay(booking.checkOutDateTime, booking.checkInDateTime);
+                    int nights = DailyCalendar.compareDateDay(DailyCalendar.convertDateFormatString(booking.checkOutDateTime, "yyyy-MM-dd", DailyCalendar.ISO_8601_FORMAT)//
+                        , DailyCalendar.convertDateFormatString(booking.checkInDateTime, "yyyy-MM-dd", DailyCalendar.ISO_8601_FORMAT));
 
-                    nights.setVisibility(View.VISIBLE);
-                    nights.setText(mContext.getString(R.string.label_nights, nightsCount));
+                    holder.dataBinding.bookingNightsTextView.setVisibility(View.VISIBLE);
+                    holder.dataBinding.bookingNightsTextView.setText(mContext.getString(R.string.label_nights, nights));
                     break;
                 }
             }
@@ -252,42 +220,42 @@ public class BookingListAdapter extends ArrayAdapter<ListItem> implements Pinned
 
         if (booking.isUsed == true)
         {
-            setGrayScale(hotelImageView);
+            setGrayScale(holder.dataBinding.simpleDraweeView);
 
-            waitAccountTextView.setVisibility(View.GONE);
+            holder.dataBinding.waitAccountTextView.setVisibility(View.GONE);
 
-            deleteView.setVisibility(View.VISIBLE);
+            holder.dataBinding.deleteView.setVisibility(View.VISIBLE);
 
             // 삭제 버튼을 누를 경우;
-            deleteView.setOnClickListener(new View.OnClickListener()
+            holder.dataBinding.deleteView.setOnClickListener(new View.OnClickListener()
             {
                 @Override
                 public void onClick(View v)
                 {
                     if (mOnUserActionListener != null)
                     {
-                        mOnUserActionListener.delete(booking);
+                        mOnUserActionListener.onDeleteClick(booking);
                     }
                 }
             });
         } else
         {
-            hotelImageView.clearColorFilter();
+            holder.dataBinding.simpleDraweeView.clearColorFilter();
 
-            if (booking.paymentType == Booking.PaymentType.VIRTUAL_WAIT)
+            if (booking.statusPayment == Booking.WAIT_PAYMENT)
             {
-                waitAccountTextView.setVisibility(View.VISIBLE);
-                waitAccountTextView.setText(booking.comment);
+                holder.dataBinding.waitAccountTextView.setVisibility(View.VISIBLE);
+                holder.dataBinding.waitAccountTextView.setText(booking.comment);
             } else
             {
                 if (booking.placeType == Booking.PlaceType.STAY_OUTBOUND)
                 {
-                    waitAccountTextView.setVisibility(View.GONE);
+                    holder.dataBinding.waitAccountTextView.setVisibility(View.GONE);
                 } else
                 {
                     if (booking.readyForRefund == true)
                     {
-                        waitAccountTextView.setVisibility(View.GONE);
+                        holder.dataBinding.waitAccountTextView.setVisibility(View.GONE);
                     } else
                     {
                         String text;
@@ -330,34 +298,40 @@ public class BookingListAdapter extends ArrayAdapter<ListItem> implements Pinned
 
                         if (DailyTextUtils.isTextEmpty(text) == true)
                         {
-                            waitAccountTextView.setVisibility(View.GONE);
+                            holder.dataBinding.waitAccountTextView.setVisibility(View.GONE);
                         } else
                         {
-                            waitAccountTextView.setVisibility(View.VISIBLE);
-                            waitAccountTextView.setText(text);
+                            holder.dataBinding.waitAccountTextView.setVisibility(View.VISIBLE);
+                            holder.dataBinding.waitAccountTextView.setText(text);
                         }
                     }
                 }
             }
 
-            deleteView.setVisibility(View.GONE);
+            holder.dataBinding.deleteView.setVisibility(View.GONE);
         }
 
-        return view;
+        holder.dataBinding.getRoot().setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                if (mOnUserActionListener != null)
+                {
+                    mOnUserActionListener.onBookingClick(booking);
+                }
+            }
+        });
     }
 
-    private View getSectionView(View view, com.twoheart.dailyhotel.model.Booking booking)
+    private void onBindViewHolder(SectionViewHolder holder, ListItem listItem, int position)
     {
-        if (view == null || booking == null)
+        if (holder == null || listItem == null)
         {
-            return view;
+            return;
         }
 
-        TextView sectionName = (TextView) view.findViewById(R.id.sectionTextView);
-
-        sectionName.setText(booking.placeName);
-
-        return view;
+        holder.dataBinding.sectionTextView.setText(listItem.getItem());
     }
 
     private void setGrayScale(ImageView imageView)
@@ -368,5 +342,30 @@ public class BookingListAdapter extends ArrayAdapter<ListItem> implements Pinned
 
         ColorMatrixColorFilter colorFilter = new ColorMatrixColorFilter(matrix);
         imageView.setColorFilter(colorFilter);
+    }
+
+
+    private class BookingViewHolder extends RecyclerView.ViewHolder
+    {
+        ListRowBookingDataBinding dataBinding;
+
+        public BookingViewHolder(ListRowBookingDataBinding dataBinding)
+        {
+            super(dataBinding.getRoot());
+
+            this.dataBinding = dataBinding;
+        }
+    }
+
+    private class SectionViewHolder extends RecyclerView.ViewHolder
+    {
+        ListRowDefaultSectionDataBinding dataBinding;
+
+        public SectionViewHolder(ListRowDefaultSectionDataBinding dataBinding)
+        {
+            super(dataBinding.getRoot());
+
+            this.dataBinding = dataBinding;
+        }
     }
 }

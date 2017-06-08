@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <com.daily.base.widget.DailyTextView
+        android:id="@+id/sectionTextView"
+        android:layout_width="match_parent"
+        android:layout_height="25dp"
+        android:background="@color/default_background_section_c323232"
+        android:gravity="center_vertical"
+        android:paddingLeft="11dp"
+        android:textColor="@color/white"
+        android:textSize="13dp"/>
+</layout>

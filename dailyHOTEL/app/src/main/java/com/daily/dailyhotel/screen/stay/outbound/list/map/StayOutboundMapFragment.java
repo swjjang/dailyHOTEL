@@ -175,7 +175,7 @@ public class StayOutboundMapFragment extends com.google.android.gms.maps.Support
 
         if (mOnEventListener != null)
         {
-            ((OnEventListener) mOnEventListener).onMapClick();
+            mOnEventListener.onMapClick();
         }
     }
 
@@ -615,7 +615,7 @@ public class StayOutboundMapFragment extends com.google.android.gms.maps.Support
 
         if (mOnEventListener != null)
         {
-            ((OnEventListener) mOnEventListener).onMarkerClick(stayOutboundClusterItem.getStayOutbound());
+            mOnEventListener.onMarkerClick(stayOutboundClusterItem.getStayOutbound());
         }
     }
 

@@ -4,6 +4,7 @@ import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 import com.daily.dailyhotel.entity.Booking;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 
 @JsonObject
@@ -18,17 +19,17 @@ public class BookingData
     @JsonField(name = "name")
     public String name;
 
-    @JsonField(name = "checkinTime")
-    public String checkinTime;
+    @JsonField(name = "checkinDate")
+    public String checkinDate;
 
-    @JsonField(name = "checkoutTime")
-    public String checkoutTime;
+    @JsonField(name = "checkoutDate")
+    public String checkoutDate;
 
     @JsonField(name = "comment")
     public String comment;
 
-    @JsonField(name = "paymentType")
-    public String paymentType;
+    @JsonField(name = "payType")
+    public String payType;
 
     @JsonField(name = "type")
     public String type;
@@ -37,7 +38,7 @@ public class BookingData
     public boolean readyForRefund;
 
     @JsonField(name = "images")
-    public List<String> images;
+    public List<LinkedHashMap<String, String>> images;
 
     public BookingData()
     {
@@ -46,23 +47,29 @@ public class BookingData
 
     public Booking getBooking()
     {
+        final String COMPLETED_PAYMENT = "10";
+        final String WAIT_PAYMENT = "20";
+
         Booking booking = new Booking();
-        booking.imageUrl = images.get(0);
+        booking.placeName = name;
+        booking.index = reservationIdx;
 
-        switch(paymentType)
+        if (images != null && images.size() != 0)
         {
-            case "card":
-                booking.paymentType = Booking.PaymentType.CARD;
-                break;
+            booking.imageUrl = images.get(0).get("path");
+        }
 
-            case "phone":
-                booking.paymentType = Booking.PaymentType.PHONE;
-                break;
+        if (WAIT_PAYMENT.equalsIgnoreCase(payType) == true)
+        {
+            booking.statusPayment = Booking.WAIT_PAYMENT;
+        } else
+        {
+            booking.statusPayment = Booking.COMPLETED_PAYMENT;
         }
 
         switch (type)
         {
-            case "stay":
+            case "hotel":
                 booking.placeType = Booking.PlaceType.STAY;
                 break;
 
@@ -75,8 +82,8 @@ public class BookingData
                 break;
         }
 
-        booking.checkInDateTime = checkinTime;
-        booking.checkOutDateTime = checkoutTime;
+        booking.checkInDateTime = checkinDate;
+        booking.checkOutDateTime = checkoutDate;
         booking.readyForRefund = readyForRefund;
         booking.comment = comment;
         booking.tid = tid;

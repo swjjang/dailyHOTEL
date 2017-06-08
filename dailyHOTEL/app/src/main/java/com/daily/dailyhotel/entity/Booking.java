@@ -1,12 +1,13 @@
 package com.daily.dailyhotel.entity;
 
-import com.twoheart.dailyhotel.util.Constants;
-
 public class Booking
 {
+    public static final int COMPLETED_PAYMENT = 10;
+    public static final int WAIT_PAYMENT = 20;
+
     public int index;
     public String imageUrl;
-    public PaymentType paymentType;
+    public int statusPayment;
     public String placeName;
     public PlaceType placeType;
     public String checkInDateTime;
@@ -24,16 +25,6 @@ public class Booking
         STAY,
         GOURMET,
         STAY_OUTBOUND
-    }
-
-    public enum PaymentType
-    {
-        CARD,
-        VIRTUAL,
-        PHONE,
-        BONUS,
-        COUPON,
-        VIRTUAL_WAIT,
     }
 
     public Booking()

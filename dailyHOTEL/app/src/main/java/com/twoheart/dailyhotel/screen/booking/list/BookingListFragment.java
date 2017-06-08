@@ -16,12 +16,12 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
@@ -40,9 +40,9 @@ import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
 import com.daily.dailyhotel.repository.remote.FacebookRemoteImpl;
 import com.daily.dailyhotel.repository.remote.KakaoRemoteImpl;
 import com.daily.dailyhotel.repository.remote.ProfileRemoteImpl;
+import com.daily.dailyhotel.screen.booking.detail.stayoutbound.StayOutboundBookingDetailActivity;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.PlacePaymentInformation;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.base.BaseMenuNavigationFragment;
@@ -56,10 +56,11 @@ import com.twoheart.dailyhotel.util.DailyDeepLink;
 import com.twoheart.dailyhotel.util.DailyExternalDeepLink;
 import com.twoheart.dailyhotel.util.DailyInternalDeepLink;
 import com.twoheart.dailyhotel.util.DailyPreference;
+import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
-import com.twoheart.dailyhotel.widget.PinnedSectionListView;
+import com.twoheart.dailyhotel.widget.PinnedSectionRecyclerView;
 
 import org.json.JSONObject;
 
@@ -74,7 +75,6 @@ import io.reactivex.Observable;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function3;
 import retrofit2.Call;
@@ -86,11 +86,11 @@ import retrofit2.Response;
  *
  * @author jangjunho
  */
-public class BookingListFragment extends BaseMenuNavigationFragment implements OnItemClickListener, OnClickListener
+public class BookingListFragment extends BaseMenuNavigationFragment implements View.OnClickListener
 {
     private BookingListAdapter mAdapter;
     private RelativeLayout mEmptyLayout;
-    private PinnedSectionListView mListView;
+    private PinnedSectionRecyclerView mRecyclerView;
     private View mLoginView;
     boolean mDontReload;
 
@@ -107,7 +107,9 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements O
 
     public interface OnUserActionListener
     {
-        void delete(Booking booking);
+        void onDeleteClick(Booking booking);
+
+        void onBookingClick(Booking booking);
     }
 
     @Override
@@ -162,10 +164,33 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements O
 
     private void initLayout(View view)
     {
-        mListView = (PinnedSectionListView) view.findViewById(R.id.listview_booking);
-        mListView.setShadowVisible(false);
-        mListView.setTag("BookingListFragment");
-        mListView.setOnScrollChangedListener(mOnScreenScrollChangeListener);
+        mRecyclerView = (PinnedSectionRecyclerView) view.findViewById(R.id.bookingRecyclerView);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        EdgeEffectColor.setEdgeGlowColor(mRecyclerView, getContext().getResources().getColor(R.color.default_over_scroll_edge));
+        mRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener()
+        {
+            int mOldY;
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy)
+            {
+                if (mOnScreenScrollChangeListener != null && recyclerView.getChildCount() > 0)
+                {
+                    mOnScreenScrollChangeListener.onScrollChange(recyclerView, 0, dy, 0, mOldY);
+
+                    mOldY = dy;
+                }
+            }
+
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState)
+            {
+                if (newState == RecyclerView.SCROLL_STATE_IDLE)
+                {
+                    mOldY = 0;
+                }
+            }
+        });
 
         mEmptyLayout = (RelativeLayout) view.findViewById(R.id.emptyLayout);
         mLoginView = view.findViewById(R.id.loginView);
@@ -184,7 +209,7 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements O
 
         if (isSignin == false)
         {
-            mListView.setVisibility(View.GONE);
+            mRecyclerView.setVisibility(View.GONE);
             mEmptyLayout.setVisibility(View.VISIBLE);
         } else
         {
@@ -196,17 +221,16 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements O
                 }
 
                 //예약한 호텔이 없는 경우
-                mListView.setVisibility(View.GONE);
+                mRecyclerView.setVisibility(View.GONE);
                 mEmptyLayout.setVisibility(View.VISIBLE);
                 mLoginView.setVisibility(View.INVISIBLE);
             } else
             {
                 if (mAdapter == null)
                 {
-                    mAdapter = new BookingListAdapter(baseActivity, R.layout.list_row_booking, new ArrayList<>());
+                    mAdapter = new BookingListAdapter(baseActivity, new ArrayList<>());
                     mAdapter.setOnUserActionListener(mOnUserActionListener);
-                    mListView.setOnItemClickListener(BookingListFragment.this);
-                    mListView.setAdapter(mAdapter);
+                    mRecyclerView.setAdapter(mAdapter);
                 } else
                 {
                     mAdapter.clear();
@@ -215,7 +239,7 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements O
                 mAdapter.addAll(listItemList);
                 mAdapter.notifyDataSetChanged();
 
-                mListView.setVisibility(View.VISIBLE);
+                mRecyclerView.setVisibility(View.VISIBLE);
                 mEmptyLayout.setVisibility(View.GONE);
             }
         }
@@ -294,53 +318,6 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements O
     }
 
     @Override
-    public void onItemClick(AdapterView<?> parentView, View childView, int position, long id)
-    {
-        BaseActivity baseActivity = (BaseActivity) getActivity();
-
-        if (baseActivity == null)
-        {
-            return;
-        }
-
-        if (isLockUiComponent() == true)
-        {
-            return;
-        }
-
-        lockUiComponent();
-
-        ListItem listItem = mAdapter.getItem(position);
-
-        if (listItem.mType == ListItem.TYPE_SECTION)
-        {
-            releaseUiComponent();
-            return;
-        }
-
-        Booking booking = listItem.getItem();
-        Intent intent;
-
-        if (booking.paymentType == Booking.PaymentType.CARD || booking.paymentType == Booking.PaymentType.VIRTUAL)
-        {
-            // 카드결제 완료 || 가상계좌 완료
-
-            if (startBookingDetail(baseActivity, booking.placeType, booking.index, booking.imageUrl, false) == false)
-            {
-                releaseUiComponent();
-            }
-        } else if (booking.paymentType == Booking.PaymentType.VIRTUAL_WAIT)
-        {
-            // 가상계좌 입금대기
-            intent = PaymentWaitActivity.newInstance(baseActivity, booking);
-            baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_VIRTUAL_BOOKING_DETAIL);
-        } else
-        {
-            releaseUiComponent();
-        }
-    }
-
-    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
         unLockUI();
@@ -381,53 +358,19 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements O
     {
         lockUI();
 
-//        addCompositeDisposable(Observable.zip(mCommonRemoteImpl.getCommonDateTime()//
-//            , mBookingRemoteImpl.getBookingList(), mBookingRemoteImpl.getStayOutboundBookingList()//
-//            , new Function3<CommonDateTime, List<Booking>, List<Booking>, List<ListItem>>()
-//            {
-//                @Override
-//                public List<ListItem> apply(@NonNull CommonDateTime commonDateTime//
-//                    , @NonNull List<Booking> bookingList, @NonNull List<Booking> stayOutboundBookingList) throws Exception
-//                {
-//                    setCommonDateTime(commonDateTime);
-//
-//                    bookingList.addAll(stayOutboundBookingList);
-//
-//                    List<ListItem> listItemList = getBookingSortList(bookingList);
-//
-//                    return listItemList;
-//                }
-//            }).subscribe(new Consumer<List<ListItem>>()
-//        {
-//            @Override
-//            public void accept(@NonNull List<ListItem> listItemList) throws Exception
-//            {
-//                onBookingList(listItemList);
-//
-//                unLockUI();
-//            }
-//        }, new Consumer<Throwable>()
-//        {
-//            @Override
-//            public void accept(@NonNull Throwable throwable) throws Exception
-//            {
-//                onHandleError(throwable);
-//
-//                updateLayout(true, null);
-//            }
-//        }));
-
         addCompositeDisposable(Observable.zip(mCommonRemoteImpl.getCommonDateTime()//
-            , mBookingRemoteImpl.getStayOutboundBookingList()//
-            , new BiFunction<CommonDateTime, List<Booking>, List<ListItem>>()
+            , mBookingRemoteImpl.getBookingList(), mBookingRemoteImpl.getStayOutboundBookingList()//
+            , new Function3<CommonDateTime, List<Booking>, List<Booking>, List<ListItem>>()
             {
                 @Override
                 public List<ListItem> apply(@NonNull CommonDateTime commonDateTime//
-                    , @NonNull List<Booking> stayOutboundBookingList) throws Exception
+                    , @NonNull List<Booking> bookingList, @NonNull List<Booking> stayOutboundBookingList) throws Exception
                 {
                     setCommonDateTime(commonDateTime);
 
-                    List<ListItem> listItemList = getBookingSortList(stayOutboundBookingList);
+                    bookingList.addAll(stayOutboundBookingList);
+
+                    List<ListItem> listItemList = getBookingSortList(bookingList);
 
                     return listItemList;
                 }
@@ -510,12 +453,11 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements O
     }
 
     private int searchStayFromPaymentInformation(Context context, String placeName//
-        , PlacePaymentInformation.PaymentType paymentType//
         , String checkInTime, String checkOutTime//
         , List<ListItem> bookingList)
     {
         if (DailyTextUtils.isTextEmpty(placeName, checkInTime, checkOutTime) == true//
-            || bookingList == null || bookingList.size() == 0 || paymentType == null)
+            || bookingList == null || bookingList.size() == 0)
         {
             DailyPreference.getInstance(context).clearPaymentInformation();
             DailyPreference.getInstance(context).setVirtualAccountReadyFlag(-1);
@@ -527,8 +469,8 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements O
         try
         {
             // "yyyy-MM-dd'T'HH:mm:ssZZZZZ"
-            String checkInDate = DailyCalendar.convertDateFormatString(checkInTime, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd");
-            String checkOutDate = DailyCalendar.convertDateFormatString(checkOutTime, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd");
+            String checkInDate = DailyCalendar.convertDateFormatString(checkInTime, DailyCalendar.ISO_8601_FORMAT, "yyyy-MM-dd");
+            String checkOutDate = DailyCalendar.convertDateFormatString(checkOutTime, DailyCalendar.ISO_8601_FORMAT, "yyyy-MM-dd");
             ListItem listItem;
             Booking booking;
 
@@ -543,27 +485,21 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements O
 
                 booking = listItem.getItem();
 
-                if (PlacePaymentInformation.PaymentType.VBANK == paymentType)
+                if (booking.statusPayment == Booking.WAIT_PAYMENT//
+                    && booking.placeName.equalsIgnoreCase(placeName)//
+                    && booking.placeType == Booking.PlaceType.STAY//
+                    && booking.checkInDateTime.equalsIgnoreCase(checkInDate) == true//
+                    && booking.checkOutDateTime.equalsIgnoreCase(checkOutDate) == true)
                 {
-                    if (booking.paymentType == Booking.PaymentType.VIRTUAL_WAIT//
-                        && booking.placeName.equalsIgnoreCase(placeName)//
-                        && booking.placeType == Booking.PlaceType.STAY//
-                        && DailyCalendar.convertDateFormatString(booking.checkInDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd").equalsIgnoreCase(checkInDate) == true//
-                        && DailyCalendar.convertDateFormatString(booking.checkOutDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd").equalsIgnoreCase(checkOutDate) == true)
-                    {
-                        return i;
-                    }
-                } else
+                    return i;
+                } else if (booking.statusPayment != Booking.WAIT_PAYMENT //
+                    && booking.readyForRefund == false//
+                    && booking.placeName.equalsIgnoreCase(placeName)//
+                    && booking.placeType == Booking.PlaceType.STAY//
+                    && booking.checkInDateTime.equalsIgnoreCase(checkInDate) == true//
+                    && booking.checkOutDateTime.equalsIgnoreCase(checkOutDate) == true)
                 {
-                    if (booking.paymentType != Booking.PaymentType.VIRTUAL_WAIT //
-                        && booking.readyForRefund == false//
-                        && booking.placeName.equalsIgnoreCase(placeName)//
-                        && booking.placeType == Booking.PlaceType.STAY//
-                        && DailyCalendar.convertDateFormatString(booking.checkInDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd").equalsIgnoreCase(checkInDate) == true//
-                        && DailyCalendar.convertDateFormatString(booking.checkOutDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd").equalsIgnoreCase(checkOutDate) == true)
-                    {
-                        return i;
-                    }
+                    return i;
                 }
             }
         } catch (Exception e)
@@ -579,11 +515,10 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements O
     }
 
     private int searchGourmetFromPaymentInformation(Context context, String placeName//
-        , PlacePaymentInformation.PaymentType paymentType//
         , String visitTime, List<ListItem> bookingList)
     {
         if (DailyTextUtils.isTextEmpty(placeName, visitTime) == true//
-            || bookingList == null || bookingList.size() == 0 || paymentType == null)
+            || bookingList == null || bookingList.size() == 0)
         {
             DailyPreference.getInstance(context).clearPaymentInformation();
             DailyPreference.getInstance(context).setVirtualAccountReadyFlag(-1);
@@ -594,7 +529,7 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements O
 
         try
         {
-            String visitDate = DailyCalendar.convertDateFormatString(visitTime, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd");
+            String visitDate = DailyCalendar.convertDateFormatString(visitTime, DailyCalendar.ISO_8601_FORMAT, "yyyy-MM-dd");
             ListItem listItem;
             Booking booking;
 
@@ -609,25 +544,19 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements O
 
                 booking = listItem.getItem();
 
-                if (PlacePaymentInformation.PaymentType.VBANK == paymentType)
+                if (booking.statusPayment == Booking.WAIT_PAYMENT//
+                    && booking.placeName.equalsIgnoreCase(placeName)//
+                    && booking.placeType == Booking.PlaceType.GOURMET//
+                    && booking.checkInDateTime.equalsIgnoreCase(visitDate) == true)
                 {
-                    if (booking.paymentType == Booking.PaymentType.VIRTUAL_WAIT//
-                        && booking.placeName.equalsIgnoreCase(placeName)//
-                        && booking.placeType == Booking.PlaceType.GOURMET//
-                        && DailyCalendar.convertDateFormatString(booking.checkInDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd").equalsIgnoreCase(visitDate) == true)
-                    {
-                        return i;
-                    }
-                } else
+                    return i;
+                } else if (booking.statusPayment != Booking.WAIT_PAYMENT//
+                    && booking.readyForRefund == false//
+                    && booking.placeName.equalsIgnoreCase(placeName)//
+                    && booking.placeType == Booking.PlaceType.GOURMET//
+                    && booking.checkInDateTime.equalsIgnoreCase(visitDate) == true)
                 {
-                    if (booking.paymentType != Booking.PaymentType.VIRTUAL_WAIT//
-                        && booking.readyForRefund == false//
-                        && booking.placeName.equalsIgnoreCase(placeName)//
-                        && booking.placeType == Booking.PlaceType.GOURMET//
-                        && DailyCalendar.convertDateFormatString(booking.checkInDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd").equalsIgnoreCase(visitDate) == true)
-                    {
-                        return i;
-                    }
+                    return i;
                 }
             }
         } catch (Exception e)
@@ -656,6 +585,11 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements O
             case GOURMET:
                 intent = GourmetReservationDetailActivity.newInstance(baseActivity, reservationIndex, imageUrl, isDeepLink);
                 break;
+
+            case STAY_OUTBOUND:
+                intent = StayOutboundBookingDetailActivity.newInstance(baseActivity, reservationIndex, imageUrl);
+                break;
+
             default:
                 return false;
         }
@@ -669,19 +603,14 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements O
     public void setOnScrollChangedListener(BaseMenuNavigationFragment.OnScreenScrollChangeListener listener)
     {
         mOnScreenScrollChangeListener = listener;
-
-        if (mListView != null)
-        {
-            mListView.setOnScrollChangedListener(listener);
-        }
     }
 
     @Override
     public void scrollTop()
     {
-        if (mListView != null)
+        if (mRecyclerView != null)
         {
-            mListView.smoothScrollToPosition(0);
+            mRecyclerView.smoothScrollToPosition(0);
         }
     }
 
@@ -700,18 +629,19 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements O
 
         for (Booking booking : bookingList)
         {
-            booking.remainingDays = DailyCalendar.compareDateDay(booking.checkInDateTime, mCommonDateTime.currentDateTime);
+            booking.remainingDays = DailyCalendar.compareDateDay(DailyCalendar.convertDateFormatString(booking.checkInDateTime, "yyyy-MM-dd", DailyCalendar.ISO_8601_FORMAT)//
+                , mCommonDateTime.currentDateTime);
 
             if (booking.readyForRefund == true)
             {
                 waitRefundList.add(booking);
             } else
             {
-                switch (booking.paymentType)
+                switch (booking.statusPayment)
                 {
-                    case CARD:
-                    case VIRTUAL:
-                        booking.isUsed = DailyCalendar.compareDateDay(booking.checkOutDateTime, mCommonDateTime.currentDateTime) < 0;
+                    case Booking.COMPLETED_PAYMENT:
+                        booking.isUsed = DailyCalendar.compareDateDay(DailyCalendar.convertDateFormatString(booking.checkOutDateTime, "yyyy-MM-dd", DailyCalendar.ISO_8601_FORMAT)//
+                            , mCommonDateTime.currentDateTime) < 0;
 
                         if (booking.isUsed)
                         {
@@ -722,7 +652,7 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements O
                         }
                         break;
 
-                    case VIRTUAL_WAIT:
+                    case Booking.WAIT_PAYMENT:
                         depositWaitingList.add(booking);
                         break;
                 }
@@ -731,13 +661,14 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements O
 
         Comparator<Booking> ascComparator = new Comparator<Booking>()
         {
-            public int compare(Booking reservation1, Booking reservation2)
+            public int compare(Booking booking1, Booking booking2)
             {
                 int compareDay;
 
                 try
                 {
-                    compareDay = DailyCalendar.compareDateDay(reservation1.checkInDateTime, reservation2.checkInDateTime);
+                    compareDay = DailyCalendar.compareDateDay(DailyCalendar.convertDateFormatString(booking1.checkInDateTime, "yyyy-MM-dd", DailyCalendar.ISO_8601_FORMAT)//
+                        , DailyCalendar.convertDateFormatString(booking2.checkInDateTime, "yyyy-MM-dd", DailyCalendar.ISO_8601_FORMAT));
                 } catch (Exception e)
                 {
                     ExLog.e(e.toString());
@@ -747,18 +678,18 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements O
 
                 if (compareDay < 0)
                 {
-                    return 1;
+                    return -1;
                 } else if (compareDay > 0)
                 {
-                    return -1;
+                    return 1;
                 } else
                 {
-                    if (reservation1.index < reservation2.index)
-                    {
-                        return 1;
-                    } else
+                    if (booking1.index < booking2.index)
                     {
                         return -1;
+                    } else
+                    {
+                        return 1;
                     }
                 }
             }
@@ -766,13 +697,14 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements O
 
         Comparator<Booking> descComparator = new Comparator<Booking>()
         {
-            public int compare(Booking reservation1, Booking reservation2)
+            public int compare(Booking booking1, Booking booking2)
             {
                 int compareDay;
 
                 try
                 {
-                    compareDay = DailyCalendar.compareDateDay(reservation1.checkInDateTime, reservation2.checkInDateTime);
+                    compareDay = DailyCalendar.compareDateDay(DailyCalendar.convertDateFormatString(booking1.checkInDateTime, "yyyy-MM-dd", DailyCalendar.ISO_8601_FORMAT)//
+                        , DailyCalendar.convertDateFormatString(booking2.checkInDateTime, "yyyy-MM-dd", DailyCalendar.ISO_8601_FORMAT));
                 } catch (Exception e)
                 {
                     ExLog.e(e.toString());
@@ -782,18 +714,18 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements O
 
                 if (compareDay < 0)
                 {
-                    return -1;
+                    return 1;
                 } else if (compareDay > 0)
                 {
-                    return 1;
+                    return -1;
                 } else
                 {
-                    if (reservation1.index < reservation2.index)
-                    {
-                        return -1;
-                    } else
+                    if (booking1.index < booking2.index)
                     {
                         return 1;
+                    } else
+                    {
+                        return -1;
                     }
                 }
             }
@@ -851,7 +783,7 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements O
             ListItem sectionListItem = new ListItem(ListItem.TYPE_SECTION, getString(R.string.frag_booking_use));
             listItemList.add(sectionListItem);
 
-            for (Booking booking : beforeUseList)
+            for (Booking booking : afterUseList)
             {
                 listItemList.add(new ListItem(ListItem.TYPE_ENTRY, booking));
             }
@@ -872,7 +804,7 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements O
     private OnUserActionListener mOnUserActionListener = new OnUserActionListener()
     {
         @Override
-        public void delete(final Booking booking)
+        public void onDeleteClick(final Booking booking)
         {
             if (lockUiComponentAndIsLockUiComponent() == true)
             {
@@ -963,6 +895,46 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements O
                 }
             }, true);
         }
+
+        @Override
+        public void onBookingClick(Booking booking)
+        {
+            BaseActivity baseActivity = (BaseActivity) getActivity();
+
+            if (baseActivity == null || booking == null)
+            {
+                return;
+            }
+
+            if (isLockUiComponent() == true)
+            {
+                return;
+            }
+
+            lockUiComponent();
+
+            Intent intent;
+
+            switch (booking.statusPayment)
+            {
+                case Booking.COMPLETED_PAYMENT:
+                    if (startBookingDetail(baseActivity, booking.placeType, booking.index, booking.imageUrl, false) == false)
+                    {
+                        releaseUiComponent();
+                    }
+                    break;
+
+                case Booking.WAIT_PAYMENT:
+                    // 가상계좌 입금대기
+                    intent = PaymentWaitActivity.newInstance(baseActivity, booking);
+                    baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_VIRTUAL_BOOKING_DETAIL);
+                    break;
+
+                default:
+                    releaseUiComponent();
+                    break;
+            }
+        }
     };
 
     private boolean onDeepLink(BaseActivity baseActivity, List<ListItem> bookingList)
@@ -1026,13 +998,12 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements O
                             if (booking.index == reservationId)
                             {
                                 unLockUI();
-                                mListView.performItemClick(null, i, 0);
+                                mOnUserActionListener.onBookingClick(booking);
                                 break;
                             }
                         }
                     } else
                     {
-                        PlacePaymentInformation.PaymentType paymentType = PlacePaymentInformation.PaymentType.valueOf(internalDeepLink.getPaymentType());
                         String placeName = internalDeepLink.getPlaceName();
 
                         int index = -1;
@@ -1044,21 +1015,21 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements O
                                 String checkOutTime = internalDeepLink.getCheckOutTime();
 
                                 index = searchStayFromPaymentInformation(baseActivity//
-                                    , placeName, paymentType, checkInTime, checkOutTime, bookingList);
+                                    , placeName, checkInTime, checkOutTime, bookingList);
                                 break;
 
                             case GOURMET:
                                 String visitTime = internalDeepLink.getVisitTime();
 
                                 index = searchGourmetFromPaymentInformation(baseActivity//
-                                    , placeName, paymentType, visitTime, bookingList);
+                                    , placeName, visitTime, bookingList);
                                 break;
                         }
 
                         if (index >= 0)
                         {
                             unLockUI();
-                            mListView.performItemClick(null, index, 0);
+                            mOnUserActionListener.onBookingClick(bookingList.get(index).getItem());
                         }
                     }
                 }
