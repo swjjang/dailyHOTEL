@@ -1,10 +1,9 @@
-package com.daily.dailyhotel.screen.booking.detail.stayoutbound;
+package com.daily.dailyhotel.screen.booking.detail.stay.outbound;
 
 import android.animation.Animator;
 import android.animation.ValueAnimator;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.databinding.DataBindingUtil;
 import android.graphics.Point;
 import android.graphics.PointF;
@@ -775,7 +774,7 @@ public class StayOutboundBookingDetailView extends BaseDialogView<StayOutboundBo
             ExLog.d(e.toString());
         }
 
-        dataBinding.priceTextView.setText(DailyTextUtils.getPriceFormat(context, stayOutboundBookingDetail.total, false));
+        dataBinding.priceTextView.setText(DailyTextUtils.getPriceFormat(context, stayOutboundBookingDetail.totalPrice, false));
 
 
         if (stayOutboundBookingDetail.bonus > 0)
@@ -787,7 +786,7 @@ public class StayOutboundBookingDetailView extends BaseDialogView<StayOutboundBo
             dataBinding.bonusLayout.setVisibility(View.GONE);
         }
 
-        dataBinding.totalPriceTextView.setText(DailyTextUtils.getPriceFormat(context, stayOutboundBookingDetail.price, false));
+        dataBinding.totalPriceTextView.setText(DailyTextUtils.getPriceFormat(context, stayOutboundBookingDetail.paymentPrice, false));
 
         // 영수증 발급
         dataBinding.buttonLayout.setOnClickListener(this);
@@ -854,8 +853,6 @@ public class StayOutboundBookingDetailView extends BaseDialogView<StayOutboundBo
             }
         }
     }
-
-
 
     public void setRefundLayoutVisible(boolean visible)
     {

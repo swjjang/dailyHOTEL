@@ -1,4 +1,4 @@
-package com.daily.dailyhotel.screen.booking.detail.stayoutbound.refund;
+package com.daily.dailyhotel.screen.booking.detail.stay.outbound.receipt;
 
 
 import android.content.Context;
@@ -13,11 +13,11 @@ import com.twoheart.dailyhotel.R;
  * Created by sheldon
  * Clean Architecture
  */
-public class StayOutboundRefundActivity extends BaseActivity<StayOutboundRefundPresenter>
+public class StayOutboundReceiptActivity extends BaseActivity<StayOutboundReceiptPresenter>
 {
     public static Intent newInstance(Context context)
     {
-        Intent intent = new Intent(context, StayOutboundRefundActivity.class);
+        Intent intent = new Intent(context, StayOutboundReceiptActivity.class);
 
         return intent;
     }
@@ -32,9 +32,9 @@ public class StayOutboundRefundActivity extends BaseActivity<StayOutboundRefundP
 
     @NonNull
     @Override
-    protected StayOutboundRefundPresenter createInstancePresenter()
+    protected StayOutboundReceiptPresenter createInstancePresenter()
     {
-        return new StayOutboundRefundPresenter(this);
+        return new StayOutboundReceiptPresenter(this);
     }
 
     @Override

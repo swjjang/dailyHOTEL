@@ -1,4 +1,4 @@
-package com.daily.dailyhotel.screen.booking.detail.stayoutbound.receipt;
+package com.daily.dailyhotel.screen.booking.detail.stay.outbound.receipt;
 
 import android.view.View;
 import android.view.WindowManager;

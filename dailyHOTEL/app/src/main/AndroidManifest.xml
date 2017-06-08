@@ -760,6 +760,24 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
 
+        <activity
+            android:name="com.daily.dailyhotel.screen.booking.detail.stay.outbound.StayOutboundBookingDetailActivity"
+            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"/>
+
+        <activity
+            android:name="com.daily.dailyhotel.screen.booking.detail.stay.outbound.receipt.StayOutboundReceiptActivity"
+            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"/>
+
+        <activity
+            android:name="com.daily.dailyhotel.screen.booking.detail.stay.outbound.refund.StayOutboundRefundActivity"
+            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"/>
+
         <!--  com.daily.dailyhotel.... -->
 
 

@@ -1,4 +1,4 @@
-package com.daily.dailyhotel.screen.booking.detail.stayoutbound.refund;
+package com.daily.dailyhotel.screen.booking.detail.stay.outbound.receipt;
 
 
 import android.content.Intent;
@@ -13,32 +13,32 @@ import com.twoheart.dailyhotel.R;
  * Created by sheldon
  * Clean Architecture
  */
-public class StayOutboundRefundPresenter extends BaseExceptionPresenter<StayOutboundRefundActivity, StayOutboundRefundInterface> implements StayOutboundRefundView.OnEventListener
+public class StayOutboundReceiptPresenter extends BaseExceptionPresenter<StayOutboundReceiptActivity, StayOutboundReceiptInterface> implements StayOutboundReceiptView.OnEventListener
 {
-    private StayOutboundRefundAnalyticsInterface mAnalytics;
+    private CopyAnalyticsInterface mAnalytics;
 
-    public interface StayOutboundRefundAnalyticsInterface extends BaseAnalyticsInterface
+    public interface CopyAnalyticsInterface extends BaseAnalyticsInterface
     {
     }
 
-    public StayOutboundRefundPresenter(@NonNull StayOutboundRefundActivity activity)
+    public StayOutboundReceiptPresenter(@NonNull StayOutboundReceiptActivity activity)
     {
         super(activity);
     }
 
     @NonNull
     @Override
-    protected StayOutboundRefundInterface createInstanceViewInterface()
+    protected StayOutboundReceiptInterface createInstanceViewInterface()
     {
-        return new StayOutboundRefundView(getActivity(), this);
+        return new StayOutboundReceiptView(getActivity(), this);
     }
 
     @Override
-    public void constructorInitialize(StayOutboundRefundActivity activity)
+    public void constructorInitialize(StayOutboundReceiptActivity activity)
     {
-        setContentView(R.layout.activity_stay_outbound_refund_data);
+        setContentView(R.layout.activity_stay_outbound_receipt_data);
 
-        setAnalytics(new StayOutboundRefundAnalyticsImpl());
+        setAnalytics(new StayOutboundReceiptAnalyticsImpl());
 
         setRefresh(true);
     }
@@ -46,7 +46,7 @@ public class StayOutboundRefundPresenter extends BaseExceptionPresenter<StayOutb
     @Override
     public void setAnalytics(BaseAnalyticsInterface analytics)
     {
-        mAnalytics = (StayOutboundRefundAnalyticsInterface) analytics;
+        mAnalytics = (CopyAnalyticsInterface) analytics;
     }
 
     @Override

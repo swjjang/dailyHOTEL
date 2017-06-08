@@ -1,7 +1,5 @@
 package com.daily.dailyhotel.entity;
 
-import java.util.ArrayList;
-
 public class StayOutboundBookingDetail
 {
     public static final String STATUS_NO_CHARGE_REFUND = "NO_CHARGE_REFUND"; // 무료 환불
@@ -19,14 +17,14 @@ public class StayOutboundBookingDetail
     public String guestLastName;
     public String guestEmail;
     public String guestPhone;
-    public String paymentDate;
 
     public double latitude;
     public double longitude;
 
-    public int price;
+    public int paymentPrice;
     public int bonus;
-    public int total;
+    public int totalPrice;
+    public double fee;
 
     private People mPeople;
 
@@ -39,6 +37,22 @@ public class StayOutboundBookingDetail
     public String checkOutDate;
     public String checkOutTime;
 
+    public String aggregationId;
+    public PaymentType paymentType;
+    public String paymentDate;
+
+    public enum PaymentType
+    {
+        CREDIT_CARD,
+        VBANK,
+        MOBILE_PHONE,
+        BONUS,
+        COUPON,
+        ONE_CLICK,
+        CREDIT_INICIS,
+        CREDIT_KCP
+    }
+
     public StayOutboundBookingDetail()
     {
 
@@ -47,5 +61,10 @@ public class StayOutboundBookingDetail
     public People getPeople()
     {
         return mPeople;
+    }
+
+    public void setPeople(People people)
+    {
+        mPeople = people;
     }
 }

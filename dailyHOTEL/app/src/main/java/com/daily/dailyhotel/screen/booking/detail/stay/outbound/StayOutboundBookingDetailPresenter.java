@@ -1,4 +1,4 @@
-package com.daily.dailyhotel.screen.booking.detail.stayoutbound;
+package com.daily.dailyhotel.screen.booking.detail.stay.outbound;
 
 
 import android.app.Activity;

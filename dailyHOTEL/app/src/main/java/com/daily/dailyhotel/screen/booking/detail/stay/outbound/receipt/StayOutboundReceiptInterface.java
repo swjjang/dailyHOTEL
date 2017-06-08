@@ -1,4 +1,4 @@
-package com.daily.dailyhotel.screen.booking.detail.stayoutbound.receipt;
+package com.daily.dailyhotel.screen.booking.detail.stay.outbound.receipt;
 
 import com.daily.base.BaseDialogViewInterface;
 
