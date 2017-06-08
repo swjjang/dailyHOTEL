@@ -103,6 +103,10 @@ public class StayOutboundBookingDetailView extends BaseDialogView<StayOutboundBo
 
         void onShareMapClick();
 
+        void onConciergeClick();
+
+        void onConciergeFaqClick();
+
         void onConciergeHappyTalkClick();
 
         void onConciergeCallClick();
@@ -425,8 +429,21 @@ public class StayOutboundBookingDetailView extends BaseDialogView<StayOutboundBo
         DialogConciergeDataBinding dataBinding = DataBindingUtil.inflate(LayoutInflater.from(getContext()), R.layout.dialog_concierge_data, null, false);
 
         // 버튼
-        dataBinding.contactUs01Layout.setVisibility(View.GONE);
         dataBinding.contactUs02Layout.setVisibility(View.GONE);
+
+        dataBinding.contactUs01TextView.setText(R.string.frag_faqs);
+        dataBinding.contactUs01TextView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.popup_ic_ops_05_faq, 0, 0, 0);
+
+        dataBinding.contactUs01Layout.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                hideSimpleDialog();
+
+                getEventListener().onConciergeFaqClick();
+            }
+        });
 
         dataBinding.kakaoDailyView.setOnClickListener(new View.OnClickListener()
         {
@@ -662,7 +679,7 @@ public class StayOutboundBookingDetailView extends BaseDialogView<StayOutboundBo
                 switch (v.getId())
                 {
                     case R.id.menu1View:
-                        getEventListener().onConciergeCallClick();
+                        getEventListener().onConciergeClick();
                         break;
 
                     case R.id.menu2View:

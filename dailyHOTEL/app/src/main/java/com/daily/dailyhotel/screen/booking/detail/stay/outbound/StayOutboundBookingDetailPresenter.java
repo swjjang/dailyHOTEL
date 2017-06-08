@@ -33,6 +33,7 @@ import com.twoheart.dailyhotel.screen.booking.detail.hotel.IssuingReceiptActivit
 import com.twoheart.dailyhotel.screen.common.HappyTalkCategoryDialog;
 import com.twoheart.dailyhotel.screen.common.PermissionManagerActivity;
 import com.twoheart.dailyhotel.screen.common.ZoomMapActivity;
+import com.twoheart.dailyhotel.screen.information.FAQActivity;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyUserPreference;
 import com.twoheart.dailyhotel.util.KakaoLinkManager;
@@ -461,6 +462,25 @@ public class StayOutboundBookingDetailPresenter extends BaseExceptionPresenter<S
     public void onShareMapClick()
     {
         Util.shareGoogleMap(getActivity(), mStayOutboundBookingDetail.name, Double.toString(mStayOutboundBookingDetail.latitude), Double.toString(mStayOutboundBookingDetail.longitude));
+    }
+
+    @Override
+    public void onConciergeClick()
+    {
+        getViewInterface().showConciergeDialog(new DialogInterface.OnDismissListener()
+        {
+            @Override
+            public void onDismiss(DialogInterface dialog)
+            {
+                unLockAll();
+            }
+        });
+    }
+
+    @Override
+    public void onConciergeFaqClick()
+    {
+        startActivity(FAQActivity.newInstance(getActivity()));
     }
 
     @Override

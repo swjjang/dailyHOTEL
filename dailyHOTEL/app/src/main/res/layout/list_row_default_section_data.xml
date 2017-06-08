@@ -8,6 +8,8 @@
         android:background="@color/default_background_section_c323232"
         android:gravity="center_vertical"
         android:paddingLeft="11dp"
+        android:paddingTop="5dp"
+        android:paddingBottom="6dp"
         android:textColor="@color/white"
         android:textSize="13dp"/>
 </layout>
