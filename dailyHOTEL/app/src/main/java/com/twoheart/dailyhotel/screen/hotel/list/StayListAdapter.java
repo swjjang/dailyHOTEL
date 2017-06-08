@@ -192,7 +192,14 @@ public class StayListAdapter extends PlaceListAdapter
             holder.hotelNameView.setLayoutParams(hotelNameViewParams);
         } else
         {
-            hotelNameViewParams.removeRule(RelativeLayout.LEFT_OF);
+            if (VersionUtils.isOverAPI17() == true)
+            {
+                hotelNameViewParams.removeRule(RelativeLayout.LEFT_OF);
+            } else
+            {
+                hotelNameViewParams.addRule(RelativeLayout.LEFT_OF, 0);
+            }
+
             hotelNameViewParams.rightMargin = ScreenUtils.dpToPx(mContext, 11d);
             holder.hotelNameView.setLayoutParams(hotelNameViewParams);
         }
