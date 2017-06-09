@@ -427,6 +427,13 @@ public class AddProfileSocialActivity extends BaseActivity
                 }
             }
 
+            // 만 14세 이상
+            if(mAddProfileSocialLayout.isCheckedFourteen() == false)
+            {
+                DailyToast.showToast(AddProfileSocialActivity.this, R.string.toast_msg_terms_fourteen, Toast.LENGTH_SHORT);
+                return;
+            }
+
             // 동의 체크 확인
             if (mAddProfileSocialLayout.isCheckedTermsOfService() == false)
             {
