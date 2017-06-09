@@ -301,6 +301,8 @@ public class StampActivity extends BaseActivity
             {
                 mStampLayout.setStampHistoryEnabled(false);
             }
+
+            mStampLayout.setStampFreePassEnabled(stamp.freePass);
         }
 
         @Override

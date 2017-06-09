@@ -19,6 +19,8 @@ public class StampLayout extends BaseLayout implements View.OnClickListener
     private TextView mStampEventMessageTextView;
     private TextView mNightsTextView;
     private View mPushLayout, mStampHistoryTextView;
+    private View mFreePassLayout, mFreePassCouponLayout;
+    private TextView mFreePassCouponTextView;
 
     public interface OnEventListener extends OnBaseEventListener
     {
@@ -46,6 +48,10 @@ public class StampLayout extends BaseLayout implements View.OnClickListener
         mStampEventMessageTextView = (TextView) view.findViewById(R.id.stampEventMessageTextView);
 
         mPushLayout = view.findViewById(R.id.pushLayout);
+
+        mFreePassLayout = view.findViewById(R.id.freePassLayout);
+        mFreePassCouponLayout = mFreePassLayout.findViewById(R.id.freePassCouponLayout);
+        mFreePassCouponTextView = (TextView) mFreePassCouponLayout.findViewById(R.id.freePassCouponTextView);
 
         View stampMessageLayout = view.findViewById(R.id.stampMessageLayout);
         View pushMessageLayout = mPushLayout.findViewById(R.id.pushMessageLayout);
@@ -97,12 +103,14 @@ public class StampLayout extends BaseLayout implements View.OnClickListener
             loginView.setVisibility(View.GONE);
             mNightsTextView.setVisibility(View.VISIBLE);
             stampBottomLayout.setVisibility(View.VISIBLE);
+            mFreePassLayout.setVisibility(View.VISIBLE);
         } else
         {
             loginView.setVisibility(View.VISIBLE);
             loginView.setOnClickListener(this);
             mNightsTextView.setVisibility(View.GONE);
             stampBottomLayout.setVisibility(View.GONE);
+            mFreePassLayout.setVisibility(View.GONE);
         }
     }
 
@@ -130,7 +138,9 @@ public class StampLayout extends BaseLayout implements View.OnClickListener
         DailyButton nights02TextView = (DailyButton) mRootView.findViewById(R.id.nights02TextView);
         DailyButton nights03TextView = (DailyButton) mRootView.findViewById(R.id.nights03TextView);
         DailyButton nights04TextView = (DailyButton) mRootView.findViewById(R.id.nights04TextView);
-        FrameLayout nights05TextView = (FrameLayout) mRootView.findViewById(R.id.nights05TextView);
+        DailyButton nights05TextView = (DailyButton) mRootView.findViewById(R.id.nights05TextView);
+        DailyButton nights06TextView = (DailyButton) mRootView.findViewById(R.id.nights06TextView);
+        FrameLayout nights07TextView = (FrameLayout) mRootView.findViewById(R.id.nights07TextView);
 
         if (nights >= 1)
         {
@@ -158,8 +168,20 @@ public class StampLayout extends BaseLayout implements View.OnClickListener
 
         if (nights >= 5)
         {
-            nights05TextView.removeAllViews();
             nights05TextView.setBackgroundResource(R.drawable.ic_stamp_achieved_05);
+            nights05TextView.setText(null);
+        }
+
+        if (nights >= 6)
+        {
+            nights06TextView.setBackgroundResource(R.drawable.ic_stamp_achieved_06);
+            nights06TextView.setText(null);
+        }
+
+        if (nights >= 7)
+        {
+            nights07TextView.removeAllViews();
+            nights07TextView.setBackgroundResource(R.drawable.ic_stamp_achieved_07);
         }
 
         mNightsTextView.setText(mContext.getString(R.string.label_stamp_nights, nights));
@@ -190,6 +212,14 @@ public class StampLayout extends BaseLayout implements View.OnClickListener
                 mStampEventMessageTextView.setText(R.string.message_stamp_title_message5);
                 break;
 
+            case 6:
+                mStampEventMessageTextView.setText(R.string.message_stamp_title_message6);
+                break;
+
+            case 7:
+                mStampEventMessageTextView.setText(R.string.message_stamp_title_message7);
+                break;
+
             default:
                 mStampEventMessageTextView.setText(R.string.message_stamp_login);
                 break;
@@ -204,6 +234,24 @@ public class StampLayout extends BaseLayout implements View.OnClickListener
         }
 
         mStampHistoryTextView.setEnabled(enabled);
+    }
+
+    public void setStampFreePassEnabled(boolean enabled)
+    {
+        if (mFreePassCouponLayout == null)
+        {
+            return;
+        }
+
+        if (enabled == true)
+        {
+            mFreePassCouponLayout.setBackgroundResource(R.drawable.ic_stamp_coupon_active);
+            mFreePassCouponTextView.setText(R.string.label_stamp_completed_issuance);
+        } else
+        {
+            mFreePassCouponLayout.setBackgroundResource(R.drawable.ic_stamp_coupon_inactive);
+            mFreePassCouponTextView.setText(R.string.label_stamp_before_issuance);
+        }
     }
 
     @Override

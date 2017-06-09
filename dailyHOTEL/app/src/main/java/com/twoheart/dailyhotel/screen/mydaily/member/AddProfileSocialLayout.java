@@ -42,6 +42,7 @@ public class AddProfileSocialLayout extends BaseLayout implements OnClickListene
     private DailyAutoCompleteEditText mEmailEditText;
     DailyEditText mNameEditText, mBirthdayEditText, mRecommenderEditText;
     private CheckBox mAllAgreementCheckBox;
+    private CheckBox mFourteenCheckBox;
     private CheckBox mTermsOfServiceCheckBox;
     private CheckBox mTermsOfPrivacyCheckBox;
     private CheckBox mBenefitCheckBox;
@@ -186,11 +187,13 @@ public class AddProfileSocialLayout extends BaseLayout implements OnClickListene
     private void initLayoutCheckBox(View view)
     {
         mAllAgreementCheckBox = (CheckBox) view.findViewById(R.id.allAgreementCheckBox);
+        mFourteenCheckBox = (CheckBox) view.findViewById(R.id.fourteenCheckBox);
         mTermsOfPrivacyCheckBox = (CheckBox) view.findViewById(R.id.personalCheckBox);
         mTermsOfServiceCheckBox = (CheckBox) view.findViewById(R.id.termsCheckBox);
         mBenefitCheckBox = (CheckBox) view.findViewById(R.id.benefitCheckBox);
 
         mAllAgreementCheckBox.setOnClickListener(this);
+        mFourteenCheckBox.setOnClickListener(this);
         mTermsOfPrivacyCheckBox.setOnClickListener(this);
         mTermsOfServiceCheckBox.setOnClickListener(this);
         mBenefitCheckBox.setOnClickListener(this);
@@ -288,6 +291,7 @@ public class AddProfileSocialLayout extends BaseLayout implements OnClickListene
 
                 boolean isChecked = mAllAgreementCheckBox.isChecked();
 
+                mFourteenCheckBox.setChecked(isChecked);
                 mTermsOfServiceCheckBox.setChecked(isChecked);
                 mTermsOfPrivacyCheckBox.setChecked(isChecked);
 
@@ -298,6 +302,7 @@ public class AddProfileSocialLayout extends BaseLayout implements OnClickListene
                 break;
             }
 
+            case R.id.fourteenCheckBox:
             case R.id.personalCheckBox:
             case R.id.termsCheckBox:
             case R.id.benefitCheckBox:
@@ -307,7 +312,8 @@ public class AddProfileSocialLayout extends BaseLayout implements OnClickListene
 
                 if (mBenefitCheckBox.getVisibility() == View.VISIBLE)
                 {
-                    if (mTermsOfPrivacyCheckBox.isChecked() == true && mTermsOfServiceCheckBox.isChecked() == true && mBenefitCheckBox.isChecked() == true)
+                    if (mFourteenCheckBox.isChecked() == true && mTermsOfPrivacyCheckBox.isChecked() == true//
+                        && mTermsOfServiceCheckBox.isChecked() == true && mBenefitCheckBox.isChecked() == true)
                     {
                         mAllAgreementCheckBox.setChecked(true);
                     } else
@@ -316,7 +322,8 @@ public class AddProfileSocialLayout extends BaseLayout implements OnClickListene
                     }
                 } else
                 {
-                    if (mTermsOfPrivacyCheckBox.isChecked() == true && mTermsOfServiceCheckBox.isChecked() == true)
+                    if (mFourteenCheckBox.isChecked() == true && mTermsOfPrivacyCheckBox.isChecked() == true
+                        && mTermsOfServiceCheckBox.isChecked() == true)
                     {
                         mAllAgreementCheckBox.setChecked(true);
                     } else
@@ -405,6 +412,11 @@ public class AddProfileSocialLayout extends BaseLayout implements OnClickListene
         }
 
         mPhoneEditText.addTextChangedListener(mTextWatcher);
+    }
+
+    public boolean isCheckedFourteen()
+    {
+        return mFourteenCheckBox.isChecked();
     }
 
     public boolean isCheckedTermsOfService()

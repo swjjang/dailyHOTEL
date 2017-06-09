@@ -43,6 +43,7 @@ public class SignupStep1Layout extends BaseLayout implements OnClickListener, Vi
     private DailyEditText mBirthdayEditText, mConfirmPasswordEditText, mRecommenderEditText;
     private TextView mSignupBalloonsTextView;
     private CheckBox mAllAgreementCheckBox;
+    private CheckBox mFourteenCheckBox;
     private CheckBox mTermsOfServiceCheckBox;
     private CheckBox mTermsOfPrivacyCheckBox;
     private CheckBox mBenefitCheckBox;
@@ -237,6 +238,7 @@ public class SignupStep1Layout extends BaseLayout implements OnClickListener, Vi
     private void initLayoutCheckBox(View view)
     {
         mAllAgreementCheckBox = (CheckBox) view.findViewById(R.id.allAgreementCheckBox);
+        mFourteenCheckBox = (CheckBox) view.findViewById(R.id.fourteenCheckBox);
         mTermsOfPrivacyCheckBox = (CheckBox) view.findViewById(R.id.personalCheckBox);
         mTermsOfServiceCheckBox = (CheckBox) view.findViewById(R.id.termsCheckBox);
         mBenefitCheckBox = (CheckBox) view.findViewById(R.id.benefitCheckBox);
@@ -244,12 +246,14 @@ public class SignupStep1Layout extends BaseLayout implements OnClickListener, Vi
         if (VersionUtils.isOverAPI21() == false)
         {
             mAllAgreementCheckBox.setBackgroundResource(0);
+            mFourteenCheckBox.setBackgroundResource(0);
             mTermsOfPrivacyCheckBox.setBackgroundResource(0);
             mTermsOfServiceCheckBox.setBackgroundResource(0);
             mBenefitCheckBox.setBackgroundResource(0);
         }
 
         mAllAgreementCheckBox.setOnClickListener(this);
+        mFourteenCheckBox.setOnClickListener(this);
         mTermsOfPrivacyCheckBox.setOnClickListener(this);
         mTermsOfServiceCheckBox.setOnClickListener(this);
         mBenefitCheckBox.setOnClickListener(this);
@@ -261,6 +265,11 @@ public class SignupStep1Layout extends BaseLayout implements OnClickListener, Vi
         TextView personalContentView = (TextView) view.findViewById(R.id.personalContentView);
         personalContentView.setPaintFlags(personalContentView.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
         personalContentView.setOnClickListener(this);
+    }
+
+    public boolean isCheckedFourteen()
+    {
+        return mFourteenCheckBox.isChecked();
     }
 
     public boolean isCheckedTermsOfService()
@@ -369,12 +378,14 @@ public class SignupStep1Layout extends BaseLayout implements OnClickListener, Vi
 
                 boolean isChecked = mAllAgreementCheckBox.isChecked();
 
+                mFourteenCheckBox.setChecked(isChecked);
                 mTermsOfServiceCheckBox.setChecked(isChecked);
                 mTermsOfPrivacyCheckBox.setChecked(isChecked);
                 mBenefitCheckBox.setChecked(isChecked);
                 break;
             }
 
+            case R.id.fourteenCheckBox:
             case R.id.personalCheckBox:
             case R.id.termsCheckBox:
             case R.id.benefitCheckBox:
@@ -382,7 +393,8 @@ public class SignupStep1Layout extends BaseLayout implements OnClickListener, Vi
                 InputMethodManager inputMethodManager = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
                 inputMethodManager.hideSoftInputFromWindow(v.getApplicationWindowToken(), 0);
 
-                if (mTermsOfPrivacyCheckBox.isChecked() == true && mTermsOfServiceCheckBox.isChecked() == true && mBenefitCheckBox.isChecked() == true)
+                if (mFourteenCheckBox.isChecked() == true && mTermsOfPrivacyCheckBox.isChecked() == true//
+                    && mTermsOfServiceCheckBox.isChecked() == true && mBenefitCheckBox.isChecked() == true)
                 {
                     mAllAgreementCheckBox.setChecked(true);
                 } else
