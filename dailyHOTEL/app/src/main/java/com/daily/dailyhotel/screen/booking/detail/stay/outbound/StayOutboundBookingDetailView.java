@@ -7,13 +7,17 @@ import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.graphics.Point;
 import android.graphics.PointF;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.net.Uri;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.text.Html;
 import android.text.SpannableString;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 
@@ -55,15 +59,22 @@ import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
 import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
 import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.functions.Action;
+import io.reactivex.functions.Consumer;
 
 public class StayOutboundBookingDetailView extends BaseDialogView<StayOutboundBookingDetailView.OnEventListener, ActivityStayOutboundBookingDetailDataBinding>//
     implements StayOutboundBookingDetailInterface, View.OnClickListener
 {
     private DailyToolbarLayout mDailyToolbarLayout;
-    private View mMyLocationView, mZoomControl;
+    private ImageView mMyLocationView;
+    private Drawable mMyLocationDrawable;
+    private View mZoomControl;
     private MarkerOptions mMyLocationMarkerOptions;
     private Marker mMyLocationMarker, mPlaceLocationMarker;
     private GoogleMap mGoogleMap;
@@ -78,8 +89,6 @@ public class StayOutboundBookingDetailView extends BaseDialogView<StayOutboundBo
     public interface OnEventListener extends OnBaseEventListener
     {
         void onShareClick();
-
-        void onMapLoaded();
 
         void onMapLoading();
 
@@ -521,7 +530,32 @@ public class StayOutboundBookingDetailView extends BaseDialogView<StayOutboundBo
     @Override
     public void setMyLocation(Location location)
     {
+        if (mGoogleMap == null || location == null)
+        {
+            return;
+        }
 
+        if (mMyLocationMarkerOptions == null)
+        {
+            mMyLocationMarkerOptions = new MarkerOptions();
+            mMyLocationMarkerOptions.icon(new MyLocationMarker(getContext()).makeIcon());
+            mMyLocationMarkerOptions.anchor(0.5f, 0.5f);
+        }
+
+        if (mMyLocationMarker != null)
+        {
+            mMyLocationMarker.remove();
+        }
+
+        mMyLocationMarkerOptions.position(new LatLng(location.getLatitude(), location.getLongitude()));
+        mMyLocationMarker = mGoogleMap.addMarker(mMyLocationMarkerOptions);
+
+        LatLngBounds.Builder latLngBounds = new LatLngBounds.Builder();
+        latLngBounds.include(mPlaceLocationMarker.getPosition());
+        latLngBounds.include(mMyLocationMarker.getPosition());
+
+        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(latLngBounds.build(), ScreenUtils.dpToPx(getContext(), 50));
+        mGoogleMap.animateCamera(cameraUpdate);
     }
 
     @Override
@@ -591,6 +625,43 @@ public class StayOutboundBookingDetailView extends BaseDialogView<StayOutboundBo
     public boolean isExpandedMap()
     {
         return getViewDataBinding().searchMapsLayout != null && getViewDataBinding().searchMapsLayout.getVisibility() != View.GONE;
+    }
+
+    @Override
+    public Observable<Long> getLocationAnimation()
+    {
+        return Observable.interval(1, TimeUnit.SECONDS).observeOn(AndroidSchedulers.mainThread()).subscribeOn(AndroidSchedulers.mainThread()).doOnNext(new Consumer<Long>()
+        {
+            @Override
+            public void accept(@NonNull Long time) throws Exception
+            {
+                Drawable wrapDrawable = DrawableCompat.wrap(mMyLocationDrawable);
+
+                if (time % 2 == 0)
+                {
+                    wrapDrawable.setColorFilter(mMyLocationView.getContext().getResources().getColor(R.color.dh_theme_color), PorterDuff.Mode.MULTIPLY);
+                } else
+                {
+                    DrawableCompat.clearColorFilter(wrapDrawable);
+                }
+            }
+        }).doOnDispose(new Action()
+        {
+            @Override
+            public void run() throws Exception
+            {
+                Drawable wrapDrawable = DrawableCompat.wrap(mMyLocationDrawable);
+                wrapDrawable.clearColorFilter();
+            }
+        }).doOnComplete(new Action()
+        {
+            @Override
+            public void run() throws Exception
+            {
+                Drawable wrapDrawable = DrawableCompat.wrap(mMyLocationDrawable);
+                wrapDrawable.clearColorFilter();
+            }
+        });
     }
 
     @Override
@@ -913,39 +984,9 @@ public class StayOutboundBookingDetailView extends BaseDialogView<StayOutboundBo
         }
     }
 
-    private void changeLocation(Location location)
-    {
-        if (mGoogleMap == null)
-        {
-            return;
-        }
-
-        if (mMyLocationMarkerOptions == null)
-        {
-            mMyLocationMarkerOptions = new MarkerOptions();
-            mMyLocationMarkerOptions.icon(new MyLocationMarker(getContext()).makeIcon());
-            mMyLocationMarkerOptions.anchor(0.5f, 0.5f);
-        }
-
-        if (mMyLocationMarker != null)
-        {
-            mMyLocationMarker.remove();
-        }
-
-        mMyLocationMarkerOptions.position(new LatLng(location.getLatitude(), location.getLongitude()));
-        mMyLocationMarker = mGoogleMap.addMarker(mMyLocationMarkerOptions);
-
-        LatLngBounds.Builder latLngBounds = new LatLngBounds.Builder();
-        latLngBounds.include(mPlaceLocationMarker.getPosition());
-        latLngBounds.include(mMyLocationMarker.getPosition());
-
-        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(latLngBounds.build(), ScreenUtils.dpToPx(getContext(), 50));
-        mGoogleMap.animateCamera(cameraUpdate);
-    }
-
     private void relocationMyLocation(View view)
     {
-        mMyLocationView = view.findViewById(0x2);
+        mMyLocationView = (ImageView) view.findViewById(0x2);
 
         if (mMyLocationView != null)
         {
@@ -958,6 +999,8 @@ public class StayOutboundBookingDetailView extends BaseDialogView<StayOutboundBo
                     getEventListener().onMyLocationClick();
                 }
             });
+
+            mMyLocationDrawable = mMyLocationView.getDrawable();
         }
     }
 

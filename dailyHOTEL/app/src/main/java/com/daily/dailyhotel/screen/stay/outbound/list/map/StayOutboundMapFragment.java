@@ -1,11 +1,15 @@
 package com.daily.dailyhotel.screen.stay.outbound.list.map;
 
 import android.content.Context;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.Bundle;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.daily.base.util.ExLog;
@@ -35,22 +39,25 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.functions.Action;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
 public class StayOutboundMapFragment extends com.google.android.gms.maps.SupportMapFragment//
-    implements OnMapReadyCallback, GoogleMap.OnMapClickListener, View.OnClickListener//
+    implements OnMapReadyCallback, GoogleMap.OnMapClickListener//
     , ClusterManager.OnClusterClickListener<StayOutboundClusterItem>, ClusterManager.OnClusterItemClickListener<StayOutboundClusterItem>
 {
     private GoogleMap mGoogleMap;
 
-    private View mMyLocationView;
+    private ImageView mMyLocationView;
+    private Drawable mMyLocationDrawable;
 
     private Marker mMyLocationMarker, mSelectedMarker;
     private ClusterManager mClusterManager;
@@ -176,25 +183,6 @@ public class StayOutboundMapFragment extends com.google.android.gms.maps.Support
         if (mOnEventListener != null)
         {
             mOnEventListener.onMapClick();
-        }
-    }
-
-    @Override
-    public void onClick(View v)
-    {
-        switch (v.getId())
-        {
-            // Location View
-            case 0x2:
-            {
-                if (mOnEventListener == null)
-                {
-                    return;
-                }
-
-                mOnEventListener.onMyLocationClick();
-                break;
-            }
         }
     }
 
@@ -345,6 +333,42 @@ public class StayOutboundMapFragment extends com.google.android.gms.maps.Support
         mSelectedMarker.setTag(null);
     }
 
+    public Observable<Long> getLocationAnimation()
+    {
+        return Observable.interval(1, TimeUnit.SECONDS).observeOn(AndroidSchedulers.mainThread()).subscribeOn(AndroidSchedulers.mainThread()).doOnNext(new Consumer<Long>()
+        {
+            @Override
+            public void accept(@NonNull Long time) throws Exception
+            {
+                Drawable wrapDrawable = DrawableCompat.wrap(mMyLocationDrawable);
+
+                if (time % 2 == 0)
+                {
+                    wrapDrawable.setColorFilter(mMyLocationView.getContext().getResources().getColor(R.color.dh_theme_color), PorterDuff.Mode.MULTIPLY);
+                } else
+                {
+                    DrawableCompat.clearColorFilter(wrapDrawable);
+                }
+            }
+        }).doOnDispose(new Action()
+        {
+            @Override
+            public void run() throws Exception
+            {
+                Drawable wrapDrawable = DrawableCompat.wrap(mMyLocationDrawable);
+                wrapDrawable.clearColorFilter();
+            }
+        }).doOnComplete(new Action()
+        {
+            @Override
+            public void run() throws Exception
+            {
+                Drawable wrapDrawable = DrawableCompat.wrap(mMyLocationDrawable);
+                wrapDrawable.clearColorFilter();
+            }
+        });
+    }
+
     /**
      * 추후 UI추가 필요 구글맵 버전이 바뀌면 문제가 될수도 있음.
      */
@@ -380,12 +404,24 @@ public class StayOutboundMapFragment extends com.google.android.gms.maps.Support
             return;
         }
 
-        mMyLocationView = getView().findViewById(0x2);
+        mMyLocationView = (ImageView) getView().findViewById(0x2);
 
         if (mMyLocationView != null)
         {
             mMyLocationView.setVisibility(View.VISIBLE);
-            mMyLocationView.setOnClickListener(this);
+            mMyLocationView.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    if (mOnEventListener != null)
+                    {
+                        mOnEventListener.onMyLocationClick();
+                    }
+                }
+            });
+
+            mMyLocationDrawable = mMyLocationView.getDrawable();
         }
     }
 

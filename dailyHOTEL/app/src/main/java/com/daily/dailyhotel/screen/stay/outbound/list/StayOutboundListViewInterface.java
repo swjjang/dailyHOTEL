@@ -10,6 +10,8 @@ import com.daily.dailyhotel.entity.StayOutbound;
 
 import java.util.List;
 
+import io.reactivex.Observable;
+
 public interface StayOutboundListViewInterface extends BaseDialogViewInterface
 {
     void setToolbarTitle(String title);
@@ -50,4 +52,6 @@ public interface StayOutboundListViewInterface extends BaseDialogViewInterface
     void setRefreshing(boolean refreshing);
 
     void setErrorScreenVisible(boolean visible);
+
+    Observable<Long> getLocationAnimation();
 }

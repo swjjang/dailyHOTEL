@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.daily.base.util.ExLog;
@@ -78,7 +79,7 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
     ClusterManager<PlaceClusterItem> mClusterManager;
     PlaceClusterRenderer mPlaceClusterRenderer;
     Marker mSelectedMarker;
-    private View mMyLocationView;
+    private ImageView mMyLocationView;
     DailyOverScrollViewPager mViewPager;
 
     protected BaseActivity mBaseActivity;
@@ -395,7 +396,7 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
         }
 
         //noinspection ConstantConditions,ResourceType
-        mMyLocationView = getView().findViewById(0x2);
+        mMyLocationView = (ImageView) getView().findViewById(0x2);
 
         if (mMyLocationView != null)
         {

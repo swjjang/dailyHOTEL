@@ -15,6 +15,7 @@ import android.view.View;
 
 import com.daily.base.BaseActivity;
 import com.daily.base.BaseAnalyticsInterface;
+import com.daily.base.exception.DuplicateRunException;
 import com.daily.base.exception.PermissionException;
 import com.daily.base.exception.ProviderException;
 import com.daily.base.util.DailyTextUtils;
@@ -55,6 +56,8 @@ import java.util.Locale;
 import io.reactivex.Observable;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Action;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
@@ -329,26 +332,34 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
 
                         if (sortType != null && sortType == StayOutboundFilters.SortType.DISTANCE)
                         {
-                            addCompositeDisposable(searchMyLocation().subscribe(new Consumer<Location>()
-                            {
-                                @Override
-                                public void accept(@io.reactivex.annotations.NonNull Location location) throws Exception
-                                {
-                                    setFilter(StayOutboundFilters.SortType.DISTANCE, location.getLatitude(), location.getLongitude());
-                                    notifyFilterChanged();
-                                    setRefresh(true);
-                                }
-                            }, new Consumer<Throwable>()
-                            {
-                                @Override
-                                public void accept(@io.reactivex.annotations.NonNull Throwable throwable) throws Exception
-                                {
-                                    setFilter(StayOutboundFilters.SortType.RECOMMENDATION, -1);
-                                    notifyFilterChanged();
+                            Observable observable = searchMyLocation(null);
 
-                                    setRefresh(true);
-                                }
-                            }));
+                            if (observable != null)
+                            {
+                                lock();
+                                screenLock(true);
+
+                                addCompositeDisposable(observable.subscribe(new Consumer<Location>()
+                                {
+                                    @Override
+                                    public void accept(@io.reactivex.annotations.NonNull Location location) throws Exception
+                                    {
+                                        setFilter(StayOutboundFilters.SortType.DISTANCE, location.getLatitude(), location.getLongitude());
+                                        notifyFilterChanged();
+                                        setRefresh(true);
+                                    }
+                                }, new Consumer<Throwable>()
+                                {
+                                    @Override
+                                    public void accept(@io.reactivex.annotations.NonNull Throwable throwable) throws Exception
+                                    {
+                                        setFilter(StayOutboundFilters.SortType.RECOMMENDATION, -1);
+                                        notifyFilterChanged();
+
+                                        setRefresh(true);
+                                    }
+                                }));
+                            }
                         } else
                         {
                             setRefresh(true);
@@ -539,6 +550,8 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
             {
                 mViewState = ViewState.LIST;
 
+                clearCompositeDisposable();
+
                 getViewInterface().hideMapLayout(getActivity().getSupportFragmentManager());
 
                 getViewInterface().setViewTypeOptionImage(ViewState.LIST);
@@ -727,27 +740,32 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
     @Override
     public void onMyLocationClick()
     {
-        if (lock() == true)
+        Observable<Long> locationAnimationObservable = null;
+
+        if (mViewState == ViewState.MAP)
         {
-            return;
+            locationAnimationObservable = getViewInterface().getLocationAnimation();
         }
 
-        addCompositeDisposable(searchMyLocation().subscribe(new Consumer<Location>()
+        Observable observable = searchMyLocation(locationAnimationObservable);
+
+        if (observable != null)
         {
-            @Override
-            public void accept(@io.reactivex.annotations.NonNull Location location) throws Exception
+            addCompositeDisposable(observable.subscribe(new Consumer<Location>()
             {
-                unLockAll();
-                getViewInterface().setMyLocation(location);
-            }
-        }, new Consumer<Throwable>()
-        {
-            @Override
-            public void accept(@io.reactivex.annotations.NonNull Throwable throwable) throws Exception
+                @Override
+                public void accept(@io.reactivex.annotations.NonNull Location location) throws Exception
+                {
+                    getViewInterface().setMyLocation(location);
+                }
+            }, new Consumer<Throwable>()
             {
-                unLockAll();
-            }
-        }));
+                @Override
+                public void accept(@io.reactivex.annotations.NonNull Throwable throwable) throws Exception
+                {
+                }
+            }));
+        }
     }
 
     @Override
@@ -1018,11 +1036,26 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
         }
     }
 
-    private Observable<Location> searchMyLocation()
+    private Observable<Location> searchMyLocation(Observable locationAnimationObservable)
     {
         if (mDailyLocationExFactory == null)
         {
             mDailyLocationExFactory = new DailyLocationExFactory();
+        }
+
+        if (mDailyLocationExFactory.measuringLocation() == true)
+        {
+            return null;
+        }
+
+        Disposable locationAnimationDisposable;
+
+        if (locationAnimationObservable != null)
+        {
+            locationAnimationDisposable = locationAnimationObservable.subscribe();
+        } else
+        {
+            locationAnimationDisposable = null;
         }
 
         return new Observable<Location>()
@@ -1035,13 +1068,34 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
                     @Override
                     public void onRequirePermission()
                     {
+                        if (locationAnimationDisposable != null)
+                        {
+                            locationAnimationDisposable.dispose();
+                        }
+
                         observer.onError(new PermissionException());
                     }
 
                     @Override
                     public void onFailed()
                     {
+                        if (locationAnimationDisposable != null)
+                        {
+                            locationAnimationDisposable.dispose();
+                        }
+
                         observer.onError(new Exception());
+                    }
+
+                    @Override
+                    public void onAlreadyRun()
+                    {
+                        if (locationAnimationDisposable != null)
+                        {
+                            locationAnimationDisposable.dispose();
+                        }
+
+                        observer.onError(new DuplicateRunException());
                     }
 
                     @Override
@@ -1061,12 +1115,22 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
                     @Override
                     public void onProviderDisabled(String provider)
                     {
+                        if (locationAnimationDisposable != null)
+                        {
+                            locationAnimationDisposable.dispose();
+                        }
+
                         observer.onError(new ProviderException());
                     }
 
                     @Override
                     public void onLocationChanged(Location location)
                     {
+                        if (locationAnimationDisposable != null)
+                        {
+                            locationAnimationDisposable.dispose();
+                        }
+
                         unLockAll();
 
                         mDailyLocationExFactory.stopLocationMeasure();
@@ -1082,7 +1146,27 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
                     }
                 });
             }
-        }.doOnError(new Consumer<Throwable>()
+        }.doOnComplete(new Action()
+        {
+            @Override
+            public void run() throws Exception
+            {
+                if (locationAnimationDisposable != null)
+                {
+                    locationAnimationDisposable.dispose();
+                }
+            }
+        }).doOnDispose(new Action()
+        {
+            @Override
+            public void run() throws Exception
+            {
+                if (locationAnimationDisposable != null)
+                {
+                    locationAnimationDisposable.dispose();
+                }
+            }
+        }).doOnError(new Consumer<Throwable>()
         {
             @Override
             public void accept(@io.reactivex.annotations.NonNull Throwable throwable) throws Exception
@@ -1096,8 +1180,6 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
                 } else if (throwable instanceof ProviderException)
                 {
                     // 현재 GPS 설정이 꺼져있습니다 설정에서 바꾸어 주세요.
-                    mDailyLocationExFactory.stopLocationMeasure();
-
                     View.OnClickListener positiveListener = new View.OnClickListener()//
                     {
                         @Override
@@ -1131,6 +1213,9 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
                         getString(R.string.dialog_btn_text_dosetting), //
                         getString(R.string.dialog_btn_text_cancel), //
                         positiveListener, negativeListener, cancelListener, null, true);
+                } else if (throwable instanceof DuplicateRunException)
+                {
+
                 } else
                 {
                     DailyToast.showToast(getActivity(), R.string.message_failed_mylocation, DailyToast.LENGTH_SHORT);

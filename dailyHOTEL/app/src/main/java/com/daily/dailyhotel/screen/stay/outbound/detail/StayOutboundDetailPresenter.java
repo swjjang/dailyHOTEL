@@ -1038,12 +1038,12 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
             StayOutboundDetailImage stayOutboundDetailImage = stayOutboundDetail.getImageList().get(0);
             ImageMap imageMap = stayOutboundDetailImage.getImageMap();
 
-            if(mImageUrl.equalsIgnoreCase(imageMap.smallUrl) == true)
+            if (mImageUrl.equalsIgnoreCase(imageMap.smallUrl) == true)
             {
                 imageMap.bigUrl = null;
                 imageMap.mediumUrl = null;
             }
-        }catch (Exception e)
+        } catch (Exception e)
         {
             ExLog.e(e.toString());
         }

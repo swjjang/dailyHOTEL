@@ -154,25 +154,25 @@ public class PaymentRemoteImpl implements PaymentInterface
         }
 
         return DailyMobileAPI.getInstance(mContext).getPaymentTypeEasy(index, jsonObject).map(paymentResultDataBaseDto ->
-            {
-                PaymentResult paymentResult = null;
+        {
+            PaymentResult paymentResult = null;
 
-                if (paymentResultDataBaseDto != null)
+            if (paymentResultDataBaseDto != null)
+            {
+                if (paymentResultDataBaseDto.msgCode == 100 && paymentResultDataBaseDto.data != null)
                 {
-                    if (paymentResultDataBaseDto.msgCode == 100 && paymentResultDataBaseDto.data != null)
-                    {
-                        paymentResult = paymentResultDataBaseDto.data.getPaymentTypeEasy();
-                    } else
-                    {
-                        throw new BaseException(paymentResultDataBaseDto.msgCode, paymentResultDataBaseDto.msg);
-                    }
+                    paymentResult = paymentResultDataBaseDto.data.getPaymentTypeEasy();
                 } else
                 {
-                    throw new BaseException(-1, null);
+                    throw new BaseException(paymentResultDataBaseDto.msgCode, paymentResultDataBaseDto.msg);
                 }
+            } else
+            {
+                throw new BaseException(-1, null);
+            }
 
-                return paymentResult;
-            }).observeOn(AndroidSchedulers.mainThread());
+            return paymentResult;
+        }).observeOn(AndroidSchedulers.mainThread());
     }
 
     @Override

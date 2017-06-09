@@ -20,6 +20,7 @@ import java.util.List;
 
 public class DailyLocationExFactory
 {
+    private static final int DELAY_TIME = 15 * 1000;
     private static final int TWO_MINUTES = 1000 * 60 * 2;
     private static final int TEN_MINUTES = 1000 * 60 * 10;
     protected static final String SINGLE_LOCATION_UPDATE_ACTION = "com.daily.dailyhotel.SINGLE_LOCATION_UPDATE_ACTION";
@@ -88,10 +89,17 @@ public class DailyLocationExFactory
         void onRequirePermission();
 
         void onFailed();
+
+        void onAlreadyRun();
     }
 
     public DailyLocationExFactory()
     {
+    }
+
+    public boolean measuringLocation()
+    {
+        return mIsMeasuringLocation;
     }
 
     public void startLocationMeasure(Context context, LocationListenerEx listener)
@@ -112,13 +120,13 @@ public class DailyLocationExFactory
                 {
                     listener.onRequirePermission();
                 }
-
                 return;
             }
         }
 
         if (mIsMeasuringLocation)
         {
+            mLocationListener.onAlreadyRun();
             return;
         }
 
@@ -144,6 +152,8 @@ public class DailyLocationExFactory
             {
                 mLocationListener.onProviderDisabled(null);
             }
+
+            stopLocationMeasure();
             return;
         }
 
@@ -158,23 +168,13 @@ public class DailyLocationExFactory
             return;
         }
 
-        try
-        {
-            IntentFilter locIntentFilter = new IntentFilter(SINGLE_LOCATION_UPDATE_ACTION);
-            context.registerReceiver(mSingleUpdateReceiver, locIntentFilter);
-            mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, mUpdatePendingIntent);
-            mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, mUpdatePendingIntent);
+        IntentFilter locIntentFilter = new IntentFilter(SINGLE_LOCATION_UPDATE_ACTION);
+        context.registerReceiver(mSingleUpdateReceiver, locIntentFilter);
+        mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, mUpdatePendingIntent);
+        mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, mUpdatePendingIntent);
 
-            mHandler.removeMessages(0);
-            mHandler.sendEmptyMessageDelayed(0, 30 * 1000);
-        } catch (Exception e)
-        {
-            ExLog.d(e.toString());
-
-            mHandler.removeMessages(0);
-
-            stopLocationMeasure();
-        }
+        mHandler.removeMessages(0);
+        mHandler.sendEmptyMessageDelayed(0, DELAY_TIME);
     }
 
     private Location getLastBestLocation(Context context, int minDistance, long minTime)

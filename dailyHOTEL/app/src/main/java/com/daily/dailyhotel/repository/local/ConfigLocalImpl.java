@@ -3,7 +3,6 @@ package com.daily.dailyhotel.repository.local;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
-import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.domain.ConfigInterface;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.util.DailyPreference;

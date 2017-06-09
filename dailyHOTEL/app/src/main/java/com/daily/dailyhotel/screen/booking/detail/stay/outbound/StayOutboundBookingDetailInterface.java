@@ -30,4 +30,6 @@ public interface StayOutboundBookingDetailInterface extends BaseDialogViewInterf
     void setRefundPolicy(StayOutboundBookingDetail stayOutboundBookingDetail, String statusRefund);
 
     boolean isExpandedMap();
+
+    Observable<Long> getLocationAnimation();
 }

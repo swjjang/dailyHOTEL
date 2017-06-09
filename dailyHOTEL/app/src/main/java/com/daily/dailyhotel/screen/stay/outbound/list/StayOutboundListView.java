@@ -32,6 +32,8 @@ import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
 import java.util.List;
 
+import io.reactivex.Observable;
+
 public class StayOutboundListView extends BaseDialogView<StayOutboundListView.OnEventListener, ActivityStayOutboundSearchResultDataBinding>//
     implements StayOutboundListViewInterface, ViewPager.OnPageChangeListener, View.OnClickListener, StayOutboundMapFragment.OnEventListener
 {
@@ -542,6 +544,17 @@ public class StayOutboundListView extends BaseDialogView<StayOutboundListView.On
         }
 
         getViewDataBinding().errorLayout.setVisibility(visible == true ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
+    public Observable<Long> getLocationAnimation()
+    {
+        if (mStayOutboundMapFragment == null)
+        {
+            return null;
+        }
+
+        return mStayOutboundMapFragment.getLocationAnimation();
     }
 
     @Override

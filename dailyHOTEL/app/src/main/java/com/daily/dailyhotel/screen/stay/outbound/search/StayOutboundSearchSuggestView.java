@@ -6,7 +6,6 @@ import android.graphics.PorterDuff;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
-import android.text.InputFilter;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.TextWatcher;
@@ -31,7 +30,6 @@ import com.twoheart.dailyhotel.databinding.ActivityStayOutboundSearchSuggestData
 import com.twoheart.dailyhotel.databinding.ListRowStayOutboundSuggestEntryDataBinding;
 import com.twoheart.dailyhotel.databinding.ListRowStayOutboundSuggestTitleDataBinding;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
-import com.twoheart.dailyhotel.util.StringFilter;
 
 import java.util.ArrayList;
 import java.util.List;

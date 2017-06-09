@@ -384,6 +384,7 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
 
     /**
      * 주의 할점은 해외 호텔은 데일리 시간이 아닌 현재 시간으로 한다.
+     *
      * @param commonDateTime
      */
     private void setStayBookDefaultDateTime(CommonDateTime commonDateTime)

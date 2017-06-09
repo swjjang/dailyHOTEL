@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -39,7 +40,7 @@ import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 public class ZoomMapActivity extends BaseActivity
 {
     GoogleMap mGoogleMap;
-    private View mMyLocationView;
+    private ImageView mMyLocationView;
     MarkerOptions mMyLocationMarkerOptions;
     Marker mMyLocationMarker, mPlaceLocationMarker;
     private Handler mHandler = new Handler();
@@ -288,7 +289,7 @@ public class ZoomMapActivity extends BaseActivity
 
     void relocationMyLocation()
     {
-        mMyLocationView = findViewById(0x2);
+        mMyLocationView = (ImageView) findViewById(0x2);
 
         if (mMyLocationView != null)
         {

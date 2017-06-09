@@ -43,7 +43,6 @@ import com.twoheart.dailyhotel.network.model.GourmetProduct;
 import com.twoheart.dailyhotel.place.activity.PlacePaymentActivity;
 import com.twoheart.dailyhotel.screen.common.FinalCheckLayout;
 import com.twoheart.dailyhotel.screen.mydaily.coupon.SelectGourmetCouponDialogActivity;
-import com.twoheart.dailyhotel.screen.mydaily.creditcard.CreditCardListActivity;
 import com.twoheart.dailyhotel.screen.mydaily.creditcard.RegisterCreditCardActivity;
 import com.twoheart.dailyhotel.screen.mydaily.member.InputMobileNumberDialogActivity;
 import com.twoheart.dailyhotel.util.Constants;

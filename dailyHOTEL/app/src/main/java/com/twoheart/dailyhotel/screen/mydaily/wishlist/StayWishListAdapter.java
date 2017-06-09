@@ -5,11 +5,9 @@ import android.os.Vibrator;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.daily.base.util.DailyTextUtils;
-import com.daily.base.util.ScreenUtils;
 import com.daily.base.util.VersionUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.PlaceViewItem;

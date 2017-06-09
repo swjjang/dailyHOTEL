@@ -2,7 +2,6 @@ package com.daily.dailyhotel.domain;
 
 import com.daily.dailyhotel.entity.Booking;
 import com.daily.dailyhotel.entity.StayOutboundBookingDetail;
-import com.twoheart.dailyhotel.network.dto.BaseDto;
 
 import java.util.List;
 

@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationListener;
@@ -15,7 +16,8 @@ import android.location.LocationManager;
 import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.view.View;
+import android.support.v4.graphics.drawable.DrawableCompat;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.daily.base.util.ExLog;
@@ -28,6 +30,7 @@ import java.util.List;
 
 public class DailyLocationFactory
 {
+    private static final int DELAY_TIME = 15 * 1000;
     private static final int TWO_MINUTES = 1000 * 60 * 2;
     private static final int TEN_MINUTES = 1000 * 60 * 10;
     protected static final String SINGLE_LOCATION_UPDATE_ACTION = "com.twoheart.dailyhotel.places.SINGLE_LOCATION_UPDATE_ACTION";
@@ -36,7 +39,7 @@ public class DailyLocationFactory
     private LocationManager mLocationManager = null;
     private boolean mIsMeasuringLocation = false;
     LocationListenerEx mLocationListener;
-    View mMyLocationView;
+    ImageView mMyLocationView;
     Drawable mMyLocationDrawable;
     BaseActivity mBaseActivity;
 
@@ -70,9 +73,10 @@ public class DailyLocationFactory
 
                 case 1:
                 {
-                    if (mMyLocationView != null)
+                    if (mMyLocationDrawable != null)
                     {
-                        mMyLocationView.setBackgroundColor(mBaseActivity.getResources().getColor(R.color.dh_theme_color));
+                        Drawable wrapDrawable = DrawableCompat.wrap(mMyLocationDrawable);
+                        wrapDrawable.setColorFilter(mMyLocationView.getContext().getResources().getColor(R.color.dh_theme_color), PorterDuff.Mode.MULTIPLY);
                     }
 
                     sendEmptyMessageDelayed(2, 1000);
@@ -81,9 +85,10 @@ public class DailyLocationFactory
 
                 case 2:
                 {
-                    if (mMyLocationView != null)
+                    if (mMyLocationDrawable != null)
                     {
-                        mMyLocationView.setBackgroundDrawable(mMyLocationDrawable);
+                        Drawable wrapDrawable = DrawableCompat.wrap(mMyLocationDrawable);
+                        DrawableCompat.clearColorFilter(wrapDrawable);
                     }
 
                     sendEmptyMessageDelayed(1, 1000);
@@ -92,9 +97,10 @@ public class DailyLocationFactory
 
                 case 3:
                 {
-                    if (mMyLocationView != null)
+                    if (mMyLocationDrawable != null)
                     {
-                        mMyLocationView.setBackgroundDrawable(mMyLocationDrawable);
+                        Drawable wrapDrawable = DrawableCompat.wrap(mMyLocationDrawable);
+                        DrawableCompat.clearColorFilter(wrapDrawable);
                     }
                     break;
                 }
@@ -176,7 +182,7 @@ public class DailyLocationFactory
         mInstance = null;
     }
 
-    public void startLocationMeasure(Activity activity, View myLocation, LocationListenerEx listener)
+    public void startLocationMeasure(Activity activity, ImageView myLocation, LocationListenerEx listener)
     {
         if (activity == null)
         {
@@ -218,7 +224,7 @@ public class DailyLocationFactory
 
         if (mMyLocationView != null)
         {
-            mMyLocationDrawable = mMyLocationView.getBackground();
+            mMyLocationDrawable = mMyLocationView.getDrawable();
         }
 
         boolean isGpsProviderEnabled = mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
@@ -250,24 +256,16 @@ public class DailyLocationFactory
 
         mHandler.sendEmptyMessageDelayed(1, 1000);
 
-        try
-        {
-            IntentFilter locIntentFilter = new IntentFilter(SINGLE_LOCATION_UPDATE_ACTION);
-            mBaseActivity.registerReceiver(mSingleUpdateReceiver, locIntentFilter);
-            mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, mUpdatePendingIntent);
-            mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, mUpdatePendingIntent);
+        IntentFilter locIntentFilter = new IntentFilter(SINGLE_LOCATION_UPDATE_ACTION);
+        mBaseActivity.registerReceiver(mSingleUpdateReceiver, locIntentFilter);
+        mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, mUpdatePendingIntent);
+        mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, mUpdatePendingIntent);
 
-            mHandler.removeMessages(0);
-            mHandler.sendEmptyMessageDelayed(0, 15 * 1000);
-        } catch (Exception e)
-        {
-            ExLog.d(e.toString());
-
-            mHandler.sendEmptyMessage(4);
-        }
+        mHandler.removeMessages(0);
+        mHandler.sendEmptyMessageDelayed(0, DELAY_TIME);
     }
 
-    public void startLocationMeasure(Fragment fragment, View myLocation, LocationListenerEx listener)
+    public void startLocationMeasure(Fragment fragment, ImageView myLocation, LocationListenerEx listener)
     {
         startLocationMeasure(fragment.getActivity(), myLocation, listener);
     }

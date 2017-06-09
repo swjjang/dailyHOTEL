@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.daily.base.util.ExLog;
@@ -351,7 +352,7 @@ public abstract class PlaceReservationDetailActivity extends BaseActivity
         mPlaceBookingDetail.userName = userName;
     }
 
-    protected void searchMyLocation(View myLocationView)
+    protected void searchMyLocation(ImageView myLocationView)
     {
         lockUI();
 

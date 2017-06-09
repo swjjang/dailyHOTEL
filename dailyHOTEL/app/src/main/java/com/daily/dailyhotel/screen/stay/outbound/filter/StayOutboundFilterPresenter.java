@@ -252,32 +252,32 @@ public class StayOutboundFilterPresenter extends BaseExceptionPresenter<StayOutb
         mPrevSortType = mStayOutboundFilters.sortType;
         mStayOutboundFilters.sortType = sortType;
 
-        if (sortType == StayOutboundFilters.SortType.DISTANCE)
-        {
-            screenLock(true);
-
-            addCompositeDisposable(searchMyLocation().subscribe(new Consumer<Location>()
-            {
-                @Override
-                public void accept(@io.reactivex.annotations.NonNull Location location) throws Exception
-                {
-                    mStayOutboundFilters.sortType = StayOutboundFilters.SortType.DISTANCE;
-                }
-            }, new Consumer<Throwable>()
-            {
-                @Override
-                public void accept(@io.reactivex.annotations.NonNull Throwable throwable) throws Exception
-                {
-                    if (throwable instanceof PermissionException)
-                    {
-
-                    } else
-                    {
-                        onReverseSort();
-                    }
-                }
-            }));
-        }
+        //        if (sortType == StayOutboundFilters.SortType.DISTANCE)
+        //        {
+        //            screenLock(true);
+        //
+        //            addCompositeDisposable(searchMyLocation().subscribe(new Consumer<Location>()
+        //            {
+        //                @Override
+        //                public void accept(@io.reactivex.annotations.NonNull Location location) throws Exception
+        //                {
+        //                    mStayOutboundFilters.sortType = StayOutboundFilters.SortType.DISTANCE;
+        //                }
+        //            }, new Consumer<Throwable>()
+        //            {
+        //                @Override
+        //                public void accept(@io.reactivex.annotations.NonNull Throwable throwable) throws Exception
+        //                {
+        //                    if (throwable instanceof PermissionException)
+        //                    {
+        //
+        //                    } else
+        //                    {
+        //                        onReverseSort();
+        //                    }
+        //                }
+        //            }));
+        //        }
     }
 
     @Override
@@ -345,6 +345,13 @@ public class StayOutboundFilterPresenter extends BaseExceptionPresenter<StayOutb
                     }
 
                     @Override
+                    public void onAlreadyRun()
+                    {
+                        observer.onNext(null);
+                        observer.onComplete();
+                    }
+
+                    @Override
                     public void onStatusChanged(String provider, int status, Bundle extras)
                     {
                         // TODO Auto-generated method stub
@@ -396,8 +403,6 @@ public class StayOutboundFilterPresenter extends BaseExceptionPresenter<StayOutb
                 } else if (throwable instanceof ProviderException)
                 {
                     // 현재 GPS 설정이 꺼져있습니다 설정에서 바꾸어 주세요.
-                    mDailyLocationExFactory.stopLocationMeasure();
-
                     View.OnClickListener positiveListener = new View.OnClickListener()//
                     {
                         @Override
@@ -438,107 +443,4 @@ public class StayOutboundFilterPresenter extends BaseExceptionPresenter<StayOutb
             }
         });
     }
-
-    //    private void searchMyLocation()
-    //    {
-    //        if (mDailyLocationExFactory == null)
-    //        {
-    //            mDailyLocationExFactory = new DailyLocationExFactory();
-    //        }
-    //
-    //        mDailyLocationExFactory.startLocationMeasure(getActivity(), new DailyLocationExFactory.LocationListenerEx()
-    //        {
-    //            @Override
-    //            public void onRequirePermission()
-    //            {
-    //                unLockAll();
-    //
-    //                Intent intent = PermissionManagerActivity.newInstance(getActivity(), PermissionManagerActivity.PermissionType.ACCESS_FINE_LOCATION);
-    //                startActivityForResult(intent, StayOutboundFilterActivity.REQUEST_CODE_STAYOUTBOUND_PERMISSION_MANAGER);
-    //            }
-    //
-    //            @Override
-    //            public void onFailed()
-    //            {
-    //                unLockAll();
-    //
-    //                DailyToast.showToast(getActivity(), R.string.message_failed_mylocation, DailyToast.LENGTH_SHORT);
-    //            }
-    //
-    //            @Override
-    //            public void onLocationChanged(Location location)
-    //            {
-    //                unLockAll();
-    //
-    //                if (getActivity().isFinishing() == true)
-    //                {
-    //                    return;
-    //                }
-    //
-    //                mDailyLocationExFactory.stopLocationMeasure();
-    //
-    //                mStayOutboundFilters.sortType = StayOutboundFilters.SortType.DISTANCE;
-    //            }
-    //
-    //            @Override
-    //            public void onStatusChanged(String provider, int status, Bundle extras)
-    //            {
-    //
-    //            }
-    //
-    //            @Override
-    //            public void onProviderEnabled(String provider)
-    //            {
-    //
-    //            }
-    //
-    //            @Override
-    //            public void onProviderDisabled(String provider)
-    //            {
-    //                unLockAll();
-    //
-    //                if (getActivity().isFinishing() == true)
-    //                {
-    //                    return;
-    //                }
-    //
-    //                // 현재 GPS 설정이 꺼져있습니다 설정에서 바꾸어 주세요.
-    //                mDailyLocationExFactory.stopLocationMeasure();
-    //
-    //                View.OnClickListener positiveListener = new View.OnClickListener()//
-    //                {
-    //                    @Override
-    //                    public void onClick(View v)
-    //                    {
-    //                        Intent intent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-    //                        startActivityForResult(intent, StayOutboundFilterActivity.REQUEST_CODE_STAYOUTBOUND_SETTING_LOCATION);
-    //                    }
-    //                };
-    //
-    //                View.OnClickListener negativeListener = new View.OnClickListener()//
-    //                {
-    //                    @Override
-    //                    public void onClick(View v)
-    //                    {
-    //                        onFailed();
-    //                    }
-    //                };
-    //
-    //                DialogInterface.OnCancelListener cancelListener = new DialogInterface.OnCancelListener()
-    //                {
-    //                    @Override
-    //                    public void onCancel(DialogInterface dialog)
-    //                    {
-    //                        onFailed();
-    //                    }
-    //                };
-    //
-    //                getViewInterface().showSimpleDialog(//
-    //                    getString(R.string.dialog_title_used_gps), getString(R.string.dialog_msg_used_gps), //
-    //                    getString(R.string.dialog_btn_text_dosetting), //
-    //                    getString(R.string.dialog_btn_text_cancel), //
-    //                    positiveListener, negativeListener, cancelListener, null, true);
-    //            }
-    //        });
-    //    }
 }

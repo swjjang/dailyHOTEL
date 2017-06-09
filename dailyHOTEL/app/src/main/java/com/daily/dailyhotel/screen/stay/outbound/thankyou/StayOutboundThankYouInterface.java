@@ -3,7 +3,6 @@ package com.daily.dailyhotel.screen.stay.outbound.thankyou;
 import android.text.SpannableString;
 
 import com.daily.base.BaseDialogViewInterface;
-import com.daily.dailyhotel.entity.StayBookDateTime;
 
 public interface StayOutboundThankYouInterface extends BaseDialogViewInterface
 {
