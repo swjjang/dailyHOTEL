@@ -529,6 +529,22 @@ public class HomeLayout extends BaseBlurLayout
             verticalLine1.setVisibility(View.VISIBLE);
             verticalLine2.setVisibility(View.VISIBLE);
             verticalLine3.setVisibility(View.VISIBLE);
+
+            TextView protectYouthTermsTextView = (TextView) policyLayout.findViewById(R.id.protectYouthTermsTextView);
+            protectYouthTermsTextView.post(new Runnable()
+            {
+                @Override
+                public void run()
+                {
+                    if (protectYouthTermsTextView.getLineCount() > 1)
+                    {
+                        policyLayout.setOrientation(LinearLayout.VERTICAL);
+                        verticalLine1.setVisibility(View.GONE);
+                        verticalLine2.setVisibility(View.GONE);
+                        verticalLine3.setVisibility(View.GONE);
+                    }
+                }
+            });
         }
 
         String phone = DailyPreference.getInstance(mContext).getRemoteConfigCompanyPhoneNumber();
