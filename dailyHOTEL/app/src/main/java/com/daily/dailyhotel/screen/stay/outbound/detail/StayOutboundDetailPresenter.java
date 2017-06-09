@@ -259,7 +259,6 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
                 public void accept(@io.reactivex.annotations.NonNull Throwable throwable) throws Exception
                 {
                     onHandleError(throwable);
-                    onBackClick();
                 }
             }));
         } else
@@ -460,75 +459,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
             @Override
             public void accept(@io.reactivex.annotations.NonNull Throwable throwable) throws Exception
             {
-                unLockAll();
-
-                // 에러가 나는 경우 리스트로 복귀
-                if (throwable instanceof BaseException)
-                {
-                    // 팝업 에러 보여주기
-                    BaseException baseException = (BaseException) throwable;
-
-                    getViewInterface().showSimpleDialog(null, baseException.getMessage()//
-                        , getString(R.string.frag_error_btn), new View.OnClickListener()
-                        {
-                            @Override
-                            public void onClick(View v)
-                            {
-                                onRefresh(true);
-                            }
-                        }, new DialogInterface.OnCancelListener()
-                        {
-                            @Override
-                            public void onCancel(DialogInterface dialog)
-                            {
-                                if (getActivity().isFinishing() == true)
-                                {
-                                    return;
-                                }
-
-                                getActivity().onBackPressed();
-                            }
-                        });
-                } else if (throwable instanceof HttpException && ((HttpException) throwable).code() != BaseException.CODE_UNAUTHORIZED)
-                {
-                    retrofit2.HttpException httpException = (HttpException) throwable;
-
-                    getViewInterface().showSimpleDialog(null, getString(R.string.act_base_network_connect)//
-                        , getString(R.string.frag_error_btn), new View.OnClickListener()
-                        {
-                            @Override
-                            public void onClick(View v)
-                            {
-                                onRefresh(true);
-                            }
-                        }, new DialogInterface.OnCancelListener()
-                        {
-                            @Override
-                            public void onCancel(DialogInterface dialog)
-                            {
-                                if (getActivity().isFinishing() == true)
-                                {
-                                    return;
-                                }
-
-                                getActivity().onBackPressed();
-                            }
-                        });
-
-                    DailyToast.showToast(getActivity(), getString(R.string.act_base_network_connect), DailyToast.LENGTH_LONG);
-
-                    if (Constants.DEBUG == false)
-                    {
-                        Crashlytics.log(httpException.response().raw().request().url().toString());
-                        Crashlytics.logException(throwable);
-                    } else
-                    {
-                        ExLog.e(httpException.response().raw().request().url().toString() + ", " + httpException.toString());
-                    }
-                } else
-                {
-                    onHandleError(throwable);
-                }
+                onHandleError(throwable);
             }
         }));
     }
@@ -537,6 +468,80 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
     public void onBackClick()
     {
         getActivity().onBackPressed();
+    }
+
+    @Override
+    protected void onHandleError(Throwable throwable)
+    {
+        unLockAll();
+
+        // 에러가 나는 경우 리스트로 복귀
+        if (throwable instanceof BaseException)
+        {
+            // 팝업 에러 보여주기
+            BaseException baseException = (BaseException) throwable;
+
+            getViewInterface().showSimpleDialog(null, baseException.getMessage()//
+                , getString(R.string.frag_error_btn), new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        onRefresh(true);
+                    }
+                }, new DialogInterface.OnCancelListener()
+                {
+                    @Override
+                    public void onCancel(DialogInterface dialog)
+                    {
+                        if (getActivity().isFinishing() == true)
+                        {
+                            return;
+                        }
+
+                        getActivity().onBackPressed();
+                    }
+                });
+        } else if (throwable instanceof HttpException && ((HttpException) throwable).code() != BaseException.CODE_UNAUTHORIZED)
+        {
+            retrofit2.HttpException httpException = (HttpException) throwable;
+
+            getViewInterface().showSimpleDialog(null, getString(R.string.act_base_network_connect)//
+                , getString(R.string.frag_error_btn), new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        onRefresh(true);
+                    }
+                }, new DialogInterface.OnCancelListener()
+                {
+                    @Override
+                    public void onCancel(DialogInterface dialog)
+                    {
+                        if (getActivity().isFinishing() == true)
+                        {
+                            return;
+                        }
+
+                        getActivity().onBackPressed();
+                    }
+                });
+
+            DailyToast.showToast(getActivity(), getString(R.string.act_base_network_connect), DailyToast.LENGTH_LONG);
+
+            if (Constants.DEBUG == false)
+            {
+                Crashlytics.log(httpException.response().raw().request().url().toString());
+                Crashlytics.logException(throwable);
+            } else
+            {
+                ExLog.e(httpException.response().raw().request().url().toString() + ", " + httpException.toString());
+            }
+        } else
+        {
+            super.onHandleError(throwable);
+        }
     }
 
     @Override
