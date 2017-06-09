@@ -21,7 +21,7 @@ import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
 import java.util.List;
 
-public class StampHistoryLayout extends BaseLayout implements View.OnClickListener
+public class StampHistoryLayout extends BaseLayout
 {
     private LinearLayout mStampHistoryLayout;
 
@@ -142,6 +142,14 @@ public class StampHistoryLayout extends BaseLayout implements View.OnClickListen
             case 5:
                 stampImageView.setImageResource(R.drawable.ic_stamp_achieved_05);
                 break;
+
+            case 6:
+                stampImageView.setImageResource(R.drawable.ic_stamp_achieved_06);
+                break;
+
+            case 7:
+                stampImageView.setImageResource(R.drawable.ic_stamp_achieved_07);
+                break;
         }
 
         view.setOnClickListener(new View.OnClickListener()
@@ -154,13 +162,5 @@ public class StampHistoryLayout extends BaseLayout implements View.OnClickListen
         });
 
         return view;
-    }
-
-    @Override
-    public void onClick(View v)
-    {
-        switch (v.getId())
-        {
-        }
     }
 }

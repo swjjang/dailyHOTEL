@@ -61,14 +61,13 @@
                 android:layout_marginTop="10dp"
                 android:background="@drawable/shape_fillrect_lf0f0f0_bffffff_r20"
                 android:gravity="center"
-                android:text="0/5박"
                 android:textColor="@color/default_text_c929292"
                 android:textSize="13dp"
                 android:visibility="gone"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="210dp"
+                android:layout_height="276dp"
                 android:layout_margin="15dp"
                 android:background="@drawable/shape_fillrect_ldcdcdd_bf8f8f9_r6"
                 android:gravity="center"
@@ -99,22 +98,22 @@
                         android:text="@string/label_stamp_2_nights"
                         android:textColor="@color/default_text_cc5c5c5"
                         android:textSize="14dp"/>
-
-                    <com.daily.base.widget.DailyButton
-                        android:id="@+id/nights03TextView"
-                        android:layout_width="76dp"
-                        android:layout_height="76dp"
-                        android:layout_marginLeft="5dp"
-                        android:background="@drawable/ic_stamp_placeholder_01"
-                        android:text="@string/label_stamp_3_nights"
-                        android:textColor="@color/default_text_cc5c5c5"
-                        android:textSize="14dp"/>
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp">
+                    android:orientation="horizontal">
+
+                    <com.daily.base.widget.DailyButton
+                        android:id="@+id/nights03TextView"
+                        android:layout_width="76dp"
+                        android:layout_height="76dp"
+                        android:layout_marginRight="5dp"
+                        android:background="@drawable/ic_stamp_placeholder_01"
+                        android:text="@string/label_stamp_3_nights"
+                        android:textColor="@color/default_text_cc5c5c5"
+                        android:textSize="14dp"/>
 
                     <com.daily.base.widget.DailyButton
                         android:id="@+id/nights04TextView"
@@ -126,8 +125,33 @@
                         android:textColor="@color/default_text_cc5c5c5"
                         android:textSize="14dp"/>
 
-                    <FrameLayout
+                    <com.daily.base.widget.DailyButton
                         android:id="@+id/nights05TextView"
+                        android:layout_width="76dp"
+                        android:layout_height="76dp"
+                        android:layout_marginLeft="5dp"
+                        android:background="@drawable/ic_stamp_placeholder_01"
+                        android:text="@string/label_stamp_5_nights"
+                        android:textColor="@color/default_text_cc5c5c5"
+                        android:textSize="14dp"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <com.daily.base.widget.DailyButton
+                        android:id="@+id/nights06TextView"
+                        android:layout_width="76dp"
+                        android:layout_height="76dp"
+                        android:layout_marginRight="5dp"
+                        android:background="@drawable/ic_stamp_placeholder_01"
+                        android:text="@string/label_stamp_6_nights"
+                        android:textColor="@color/default_text_cc5c5c5"
+                        android:textSize="14dp"/>
+
+                    <FrameLayout
+                        android:id="@+id/nights07TextView"
                         android:layout_width="76dp"
                         android:layout_height="76dp"
                         android:layout_marginLeft="5dp"
@@ -138,12 +162,65 @@
                             android:layout_height="76dp"
                             android:gravity="center"
                             android:paddingTop="24dp"
-                            android:text="@string/label_stamp_5_nights"
+                            android:text="@string/label_stamp_7_nights"
                             android:textColor="@color/default_text_cc5c5c5"
                             android:textSize="12dp"/>
                     </FrameLayout>
                 </LinearLayout>
             </LinearLayout>
+
+            <RelativeLayout
+                android:id="@+id/freePassLayout"
+                android:layout_width="match_parent"
+                android:layout_height="72dp">
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/default_line_cf0f0f0"/>
+
+                <com.daily.base.widget.DailyTextView
+                    android:id="@+id/freePassTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="16dp"
+                    android:layout_toLeftOf="@+id/freePassCouponLayout"
+                    android:text="프리패스 발급 전 문구는\n공백포함 32자 까지 들어갑니다."
+                    android:textColor="@color/default_text_c666666"
+                    android:textSize="13dp"/>
+
+                <LinearLayout
+                    android:id="@+id/freePassCouponLayout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="15dp"
+                    android:background="@drawable/ic_stamp_coupon_inactive"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:paddingRight="26dp">
+
+                    <com.daily.base.widget.DailyTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/label_stamp_freepass"
+                        android:textColor="@color/default_text_c929292"
+                        android:textSize="13dp"
+                        dailyFont:style="Medium"/>
+
+                    <com.daily.base.widget.DailyTextView
+                        android:id="@+id/freePassCouponTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="1dp"
+                        android:text="@string/label_stamp_before_issuance"
+                        android:textColor="@color/default_text_c929292"
+                        android:textSize="11dp"/>
+                </LinearLayout>
+            </RelativeLayout>
 
             <include layout="@layout/view_separate_line_no_linear"/>
 
