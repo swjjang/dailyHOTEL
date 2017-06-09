@@ -276,10 +276,9 @@ public class DailyPreference
         int supportTrueVR = getTrueVRSupport();
 
         String allRecentPlaces = getAllRecentPlaces();
-
         String baseUrl = getBaseUrl();
-
         boolean isHomeTextMessageAreaEnable = isHomeTextMessageAreaEnabled();
+        int countPreviewGuide = getCountPreviewGuide();
 
         if (mEditor != null)
         {
@@ -291,12 +290,10 @@ public class DailyPreference
         setViewSearchTooltip(isShowSearchTooltip);
         setTrueVRViewTooltip(isShowTrueVRTooltip);
         setTrueVRSupport(supportTrueVR);
-
         setAllRecentPlaces(allRecentPlaces);
-
         setBaseUrl(baseUrl);
-
         setHomeTextMessageAreaEnabled(isHomeTextMessageAreaEnable);
+        setCountPreviewGuide(countPreviewGuide);
 
         DailyHotel.AUTHORIZATION = null;
     }
