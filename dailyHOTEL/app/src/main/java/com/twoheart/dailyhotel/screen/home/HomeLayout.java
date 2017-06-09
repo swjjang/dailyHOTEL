@@ -171,6 +171,46 @@ public class HomeLayout extends BaseBlurLayout
         initActionButtonLayout(view);
         initErrorPopupLayout(view);
         initHomeContentLayout(view);
+
+        updateButtonDoText();
+    }
+
+    /**
+     * G5, G6 등의 단말 자체에서 화면의 글자를 강제로 키웠을 경우 레이아웃이 넘치는 이슈 제거
+     */
+    private void updateButtonDoText()
+    {
+        if (mScrollButtonLayout == null)
+        {
+            return;
+        }
+
+        TextView stayDoTextView = (TextView) mScrollButtonLayout.findViewById(R.id.stayDoTextView);
+        TextView gourmetDoTextView = (TextView) mScrollButtonLayout.findViewById(R.id.gourmetDoTextView);
+
+        gourmetDoTextView.post(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                if (gourmetDoTextView.getLineCount() > 1)
+                {
+                    stayDoTextView.setText(R.string.label_home_stay_menu_description_low_resolution);
+                    gourmetDoTextView.setText(R.string.label_home_gourmet_menu_description_low_resolution);
+
+                    if (mActionButtonLayout == null)
+                    {
+                        return;
+                    }
+
+                    TextView actionStayDoTextView = (TextView) mActionButtonLayout.findViewById(R.id.stayDoTextView);
+                    TextView actionGourmetDoTextView = (TextView) mActionButtonLayout.findViewById(R.id.gourmetDoTextView);
+                    actionStayDoTextView.setText(R.string.label_home_stay_menu_description_low_resolution);
+                    actionGourmetDoTextView.setText(R.string.label_home_gourmet_menu_description_low_resolution);
+                }
+            }
+        });
+
     }
 
     private void initSwipeRefreshLayout(View view)
@@ -205,12 +245,11 @@ public class HomeLayout extends BaseBlurLayout
 
         View stayButton = mActionButtonLayout.findViewById(R.id.stayButtonLayout);
         View gourmetButton = mActionButtonLayout.findViewById(R.id.gourmetButtonLayout);
+        TextView stayDoTextView = (TextView) mActionButtonLayout.findViewById(R.id.stayDoTextView);
+        TextView gourmetDoTextView = (TextView) mActionButtonLayout.findViewById(R.id.gourmetDoTextView);
 
         if (ScreenUtils.getScreenWidth(mContext) < 720)
         {
-            TextView stayDoTextView = (TextView) mActionButtonLayout.findViewById(R.id.stayDoTextView);
-            TextView gourmetDoTextView = (TextView) mActionButtonLayout.findViewById(R.id.gourmetDoTextView);
-
             stayDoTextView.setText(R.string.label_home_stay_menu_description_low_resolution);
             gourmetDoTextView.setText(R.string.label_home_gourmet_menu_description_low_resolution);
         }
@@ -260,7 +299,6 @@ public class HomeLayout extends BaseBlurLayout
 
         errorTextView1.setText(errorText.substring(0, index).trim());
         errorTextView2.setText(errorText.substring(index + 1).trim());
-
 
         mErrorLayoutMinTranslationY = 0;
         mErrorLayoutMaxTranslationY = ScreenUtils.dpToPx(mContext, 93d) + 1;
@@ -325,11 +363,11 @@ public class HomeLayout extends BaseBlurLayout
 
         gourmetButton.setOnClickListener(v -> ((OnEventListener) mOnEventListener).onGourmetButtonClick());
 
+        TextView stayDoTextView = (TextView) mScrollButtonLayout.findViewById(R.id.stayDoTextView);
+        TextView gourmetDoTextView = (TextView) mScrollButtonLayout.findViewById(R.id.gourmetDoTextView);
+
         if (ScreenUtils.getScreenWidth(mContext) < 720)
         {
-            TextView stayDoTextView = (TextView) mScrollButtonLayout.findViewById(R.id.stayDoTextView);
-            TextView gourmetDoTextView = (TextView) mScrollButtonLayout.findViewById(R.id.gourmetDoTextView);
-
             stayDoTextView.setText(R.string.label_home_stay_menu_description_low_resolution);
             gourmetDoTextView.setText(R.string.label_home_gourmet_menu_description_low_resolution);
         }
