@@ -258,7 +258,7 @@ public class DailyLocationFactory
             mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, mUpdatePendingIntent);
 
             mHandler.removeMessages(0);
-            mHandler.sendEmptyMessageDelayed(0, 30 * 1000);
+            mHandler.sendEmptyMessageDelayed(0, 15 * 1000);
         } catch (Exception e)
         {
             ExLog.d(e.toString());
