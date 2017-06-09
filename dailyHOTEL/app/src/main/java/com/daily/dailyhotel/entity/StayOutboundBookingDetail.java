@@ -2,12 +2,6 @@ package com.daily.dailyhotel.entity;
 
 public class StayOutboundBookingDetail
 {
-    public static final String STATUS_NO_CHARGE_REFUND = "NO_CHARGE_REFUND"; // 무료 환불
-    public static final String STATUS_SURCHARGE_REFUND = "SURCHARGE_REFUND"; // 부분 환불
-    public static final String STATUS_NRD = "NRD";
-    public static final String STATUS_WAIT_REFUND = "WAIT_REFUND";
-    public static final String STATUS_NONE = "NONE";
-
     public int stayIndex;
     public int bookingIndex;
     public String name;
@@ -28,7 +22,7 @@ public class StayOutboundBookingDetail
 
     private People mPeople;
 
-    public boolean readyForRefund;
+    public RefundType refundStatus;
     public String refundPolicy;
 
     public String checkInDate;
@@ -50,6 +44,14 @@ public class StayOutboundBookingDetail
         ONE_CLICK,
         CREDIT_INICIS,
         CREDIT_KCP
+    }
+
+    public enum RefundType
+    {
+        FULL,
+        PARTIAL,
+        NRD,
+        OVER_DATE,
     }
 
     public StayOutboundBookingDetail()

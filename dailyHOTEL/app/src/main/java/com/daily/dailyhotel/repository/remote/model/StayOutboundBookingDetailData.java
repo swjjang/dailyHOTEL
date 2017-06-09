@@ -64,8 +64,8 @@ public class StayOutboundBookingDetailData
     @JsonField(name = "childrenAges")
     public ArrayList<Integer> childrenAges;
 
-    @JsonField(name = "readyForRefund")
-    public boolean readyForRefund;
+    @JsonField(name = "refundStatus")
+    public String refundStatus;
 
     @JsonField(name = "aggregationId")
     public String aggregationId;
@@ -116,7 +116,7 @@ public class StayOutboundBookingDetailData
         stayOutboundBookingDetail.totalPrice = total;
         stayOutboundBookingDetail.fee = fee;
         stayOutboundBookingDetail.setPeople(new People(numberOfAdults, childrenAges));
-        stayOutboundBookingDetail.readyForRefund = false;
+        stayOutboundBookingDetail.refundStatus = StayOutboundBookingDetail.RefundType.valueOf(refundStatus);
         stayOutboundBookingDetail.refundPolicy = cancelPolicyDescription;
         stayOutboundBookingDetail.checkInDate = checkinDate;
         stayOutboundBookingDetail.checkInTime = checkinTime;

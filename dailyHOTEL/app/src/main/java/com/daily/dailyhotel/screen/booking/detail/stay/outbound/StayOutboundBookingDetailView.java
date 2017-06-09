@@ -559,29 +559,26 @@ public class StayOutboundBookingDetailView extends BaseDialogView<StayOutboundBo
     }
 
     @Override
-    public void setRefundPolicy(StayOutboundBookingDetail stayOutboundBookingDetail, String statusRefund)
+    public void setRefundPolicy(StayOutboundBookingDetail stayOutboundBookingDetail)
     {
         if (mBookingDetail03DataBinding == null || stayOutboundBookingDetail == null)
         {
             return;
         }
 
-        if (DailyTextUtils.isTextEmpty(stayOutboundBookingDetail.refundPolicy) == false)
-        {
-            mBookingDetail03DataBinding.refundPolicyTextView.setText(Html.fromHtml(stayOutboundBookingDetail.refundPolicy));
-        }
-
         // 정책을 보여주지 않을 경우
-        if (stayOutboundBookingDetail.readyForRefund == false)
+        if (DailyTextUtils.isTextEmpty(stayOutboundBookingDetail.refundPolicy) == true)
         {
             setRefundLayoutVisible(false);
         } else
         {
+            mBookingDetail03DataBinding.refundPolicyTextView.setText(Html.fromHtml(stayOutboundBookingDetail.refundPolicy));
+
             setRefundLayoutVisible(true);
 
-            switch (statusRefund)
+            switch (stayOutboundBookingDetail.refundStatus)
             {
-                case StayOutboundBookingDetail.STATUS_NO_CHARGE_REFUND:
+                case FULL:
                 {
                     mBookingDetail03DataBinding.defaultRefundPolicyLayout.setVisibility(View.VISIBLE);
                     mBookingDetail03DataBinding.waitRefundPolicyLayout.setVisibility(View.GONE);
@@ -590,31 +587,24 @@ public class StayOutboundBookingDetailView extends BaseDialogView<StayOutboundBo
                     break;
                 }
 
-                case StayOutboundBookingDetail.STATUS_WAIT_REFUND:
-                {
-                    mBookingDetail03DataBinding.defaultRefundPolicyLayout.setVisibility(View.GONE);
-                    mBookingDetail03DataBinding.waitRefundPolicyLayout.setVisibility(View.VISIBLE);
-                    mBookingDetail03DataBinding.waitRefundPolicyTextView.setText(Html.fromHtml(getString(R.string.message_please_wait_refund01)));
-                    mBookingDetail03DataBinding.refundButtonLayout.setOnClickListener(this);
-                    mBookingDetail03DataBinding.buttonTextView.setText(R.string.label_contact_refund);
-                    break;
-                }
-
-                case StayOutboundBookingDetail.STATUS_SURCHARGE_REFUND:
+                case PARTIAL:
                 {
                     mBookingDetail03DataBinding.defaultRefundPolicyLayout.setVisibility(View.VISIBLE);
                     mBookingDetail03DataBinding.waitRefundPolicyLayout.setVisibility(View.GONE);
                     mBookingDetail03DataBinding.refundButtonLayout.setOnClickListener(this);
-                    mBookingDetail03DataBinding.buttonTextView.setText(R.string.label_contact_refund);
+                    mBookingDetail03DataBinding.buttonTextView.setText(R.string.label_contact_request_refund);
                     break;
                 }
 
+
+                case NRD:
+                case OVER_DATE:
                 default:
                 {
                     mBookingDetail03DataBinding.defaultRefundPolicyLayout.setVisibility(View.VISIBLE);
                     mBookingDetail03DataBinding.waitRefundPolicyLayout.setVisibility(View.GONE);
-                    mBookingDetail03DataBinding.refundButtonLayout.setOnClickListener(null);
-                    mBookingDetail03DataBinding.refundButtonLayout.setVisibility(View.GONE);
+                    mBookingDetail03DataBinding.refundButtonLayout.setOnClickListener(this);
+                    mBookingDetail03DataBinding.buttonTextView.setText(R.string.label_contact_refund);
                     break;
                 }
             }

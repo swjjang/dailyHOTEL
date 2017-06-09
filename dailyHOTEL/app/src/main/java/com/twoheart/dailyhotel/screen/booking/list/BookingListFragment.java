@@ -994,7 +994,7 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
 
                     if (placeType == Booking.PlaceType.STAY_OUTBOUND)
                     {
-                        int reservationId = internalDeepLink.getReservatoinId();
+                        int bookingIndex = internalDeepLink.getBookingIndex();
                         int size = bookingList.size();
                         ListItem listItem;
                         Booking booking;
@@ -1010,7 +1010,7 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
 
                             booking = bookingList.get(i).getItem();
 
-                            if (booking.index == reservationId)
+                            if (booking.index == bookingIndex)
                             {
                                 unLockUI();
                                 mOnUserActionListener.onBookingClick(booking);

@@ -591,6 +591,8 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
                 @Override
                 public void onClick(View v)
                 {
+                    getViewInterface().hideSimpleDialog();
+
                     unLockAll();
 
                     onAgreedPaymentClick();
@@ -616,6 +618,8 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
                     @Override
                     public void onClick(View v)
                     {
+                        getViewInterface().hideSimpleDialog();
+
                         unLockAll();
 
                         onAgreedPaymentClick();
@@ -650,6 +654,11 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
         {
             return;
         }
+
+        screenLock(true);
+
+        // 입력돈 내용을 저장한다.
+        DailyUserPreference.getInstance(getActivity()).setOverseasInformation(mGuest.firstName, mGuest.lastName, mGuest.phone, mGuest.email);
 
         if (mBonusSelected == true && mStayOutboundPayment.totalPrice == mStayOutboundPayment.discountPrice)
         {

@@ -1,5 +1,6 @@
 package com.daily.dailyhotel.base;
 
+import android.content.DialogInterface;
 import android.support.annotation.NonNull;
 
 import com.crashlytics.android.Crashlytics;
@@ -39,7 +40,19 @@ public abstract class BaseExceptionPresenter<T1 extends BaseActivity, T2 extends
             BaseException baseException = (BaseException) throwable;
 
             getViewInterface().showSimpleDialog(null, baseException.getMessage()//
-                , getString(R.string.dialog_btn_text_confirm), null, null, null, null, dialogInterface -> getActivity().onBackPressed(), true);
+                , getString(R.string.dialog_btn_text_confirm), null, null, null, null, new DialogInterface.OnDismissListener()
+                {
+                    @Override
+                    public void onDismiss(DialogInterface dialog)
+                    {
+                        if(getActivity().isFinishing() == true)
+                        {
+                            return;
+                        }
+
+                        getActivity().onBackPressed();
+                    }
+                }, true);
         } else if (throwable instanceof HttpException)
         {
             retrofit2.HttpException httpException = (HttpException) throwable;
@@ -63,6 +76,59 @@ public abstract class BaseExceptionPresenter<T1 extends BaseActivity, T2 extends
         } else
         {
             DailyToast.showToast(getActivity(), getString(R.string.act_base_network_connect), DailyToast.LENGTH_LONG);
+        }
+    }
+
+    protected void onHandleFinishError(Throwable throwable)
+    {
+        unLockAll();
+
+        if (throwable instanceof BaseException)
+        {
+            // 팝업 에러 보여주기
+            BaseException baseException = (BaseException) throwable;
+
+            getViewInterface().showSimpleDialog(null, baseException.getMessage()//
+                , getString(R.string.dialog_btn_text_confirm), null, null, null, null, new DialogInterface.OnDismissListener()
+                {
+                    @Override
+                    public void onDismiss(DialogInterface dialog)
+                    {
+                        if(getActivity().isFinishing() == true)
+                        {
+                            return;
+                        }
+
+                        getActivity().onBackPressed();
+                    }
+                }, true);
+        } else if (throwable instanceof HttpException)
+        {
+            retrofit2.HttpException httpException = (HttpException) throwable;
+
+            if (httpException.code() == BaseException.CODE_UNAUTHORIZED)
+            {
+                onHandleAuthorizedError();
+            } else
+            {
+                DailyToast.showToast(getActivity(), getString(R.string.act_base_network_connect), DailyToast.LENGTH_LONG);
+
+                if (Constants.DEBUG == false)
+                {
+                    Crashlytics.log(httpException.response().raw().request().url().toString());
+                    Crashlytics.logException(throwable);
+                } else
+                {
+                    ExLog.e(httpException.response().raw().request().url().toString() + ", " + httpException.toString());
+                }
+
+                getActivity().onBackPressed();
+            }
+        } else
+        {
+            DailyToast.showToast(getActivity(), getString(R.string.act_base_network_connect), DailyToast.LENGTH_LONG);
+
+            getActivity().onBackPressed();
         }
     }
 

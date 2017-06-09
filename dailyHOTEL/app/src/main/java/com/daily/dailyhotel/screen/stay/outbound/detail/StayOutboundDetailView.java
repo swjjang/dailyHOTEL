@@ -700,6 +700,7 @@ public class StayOutboundDetailView extends BaseDialogView<StayOutboundDetailVie
             getViewDataBinding().transGradientView.setBackground(makeShaderFactory());
 
             getViewDataBinding().transGradientTopView.setTransitionName(getString(R.string.transition_gradient_top_view));
+            getViewDataBinding().transNameTextView.setTransitionName(getString(R.string.transition_place_name));
         } else
         {
             getViewDataBinding().transImageView.setVisibility(View.GONE);

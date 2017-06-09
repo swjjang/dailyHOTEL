@@ -12,8 +12,10 @@ import android.support.annotation.NonNull;
 import android.util.SparseArray;
 import android.view.View;
 
+import com.crashlytics.android.Crashlytics;
 import com.daily.base.BaseActivity;
 import com.daily.base.BaseAnalyticsInterface;
+import com.daily.base.exception.BaseException;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
@@ -66,6 +68,7 @@ import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function3;
 import io.reactivex.schedulers.Schedulers;
+import retrofit2.HttpException;
 
 /**
  * Created by sheldon
@@ -459,22 +462,73 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
             {
                 unLockAll();
 
-                getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.act_base_network_connect)//
-                    , getString(R.string.frag_error_btn), new View.OnClickListener()
-                    {
-                        @Override
-                        public void onClick(View v)
+                // 에러가 나는 경우 리스트로 복귀
+                if (throwable instanceof BaseException)
+                {
+                    // 팝업 에러 보여주기
+                    BaseException baseException = (BaseException) throwable;
+
+                    getViewInterface().showSimpleDialog(null, baseException.getMessage()//
+                        , getString(R.string.frag_error_btn), new View.OnClickListener()
                         {
-                            onRefresh(true);
-                        }
-                    }, new DialogInterface.OnCancelListener()
-                    {
-                        @Override
-                        public void onCancel(DialogInterface dialog)
+                            @Override
+                            public void onClick(View v)
+                            {
+                                onRefresh(true);
+                            }
+                        }, new DialogInterface.OnCancelListener()
                         {
-                            onBackClick();
-                        }
-                    });
+                            @Override
+                            public void onCancel(DialogInterface dialog)
+                            {
+                                if (getActivity().isFinishing() == true)
+                                {
+                                    return;
+                                }
+
+                                getActivity().onBackPressed();
+                            }
+                        });
+                } else if (throwable instanceof HttpException && ((HttpException) throwable).code() != BaseException.CODE_UNAUTHORIZED)
+                {
+                    retrofit2.HttpException httpException = (HttpException) throwable;
+
+                    getViewInterface().showSimpleDialog(null, getString(R.string.act_base_network_connect)//
+                        , getString(R.string.frag_error_btn), new View.OnClickListener()
+                        {
+                            @Override
+                            public void onClick(View v)
+                            {
+                                onRefresh(true);
+                            }
+                        }, new DialogInterface.OnCancelListener()
+                        {
+                            @Override
+                            public void onCancel(DialogInterface dialog)
+                            {
+                                if (getActivity().isFinishing() == true)
+                                {
+                                    return;
+                                }
+
+                                getActivity().onBackPressed();
+                            }
+                        });
+
+                    DailyToast.showToast(getActivity(), getString(R.string.act_base_network_connect), DailyToast.LENGTH_LONG);
+
+                    if (Constants.DEBUG == false)
+                    {
+                        Crashlytics.log(httpException.response().raw().request().url().toString());
+                        Crashlytics.logException(throwable);
+                    } else
+                    {
+                        ExLog.e(httpException.response().raw().request().url().toString() + ", " + httpException.toString());
+                    }
+                } else
+                {
+                    onHandleError(throwable);
+                }
             }
         }));
     }
@@ -1043,6 +1097,9 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
                 imageMap.bigUrl = null;
                 imageMap.mediumUrl = null;
             }
+
+            // 땡큐 페이지에서 이미지를 못읽는 경우가 생겨서 작은 이미지로 수정
+            mImageUrl = imageMap.smallUrl;
         } catch (Exception e)
         {
             ExLog.e(e.toString());

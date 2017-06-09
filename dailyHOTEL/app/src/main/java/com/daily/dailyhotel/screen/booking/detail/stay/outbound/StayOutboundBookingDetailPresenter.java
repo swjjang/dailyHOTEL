@@ -12,7 +12,9 @@ import android.text.Spannable;
 import android.text.SpannableString;
 import android.view.View;
 
+import com.crashlytics.android.Crashlytics;
 import com.daily.base.BaseAnalyticsInterface;
+import com.daily.base.exception.BaseException;
 import com.daily.base.exception.DuplicateRunException;
 import com.daily.base.exception.PermissionException;
 import com.daily.base.exception.ProviderException;
@@ -35,6 +37,7 @@ import com.twoheart.dailyhotel.screen.common.HappyTalkCategoryDialog;
 import com.twoheart.dailyhotel.screen.common.PermissionManagerActivity;
 import com.twoheart.dailyhotel.screen.common.ZoomMapActivity;
 import com.twoheart.dailyhotel.screen.information.FAQActivity;
+import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyUserPreference;
 import com.twoheart.dailyhotel.util.KakaoLinkManager;
@@ -48,6 +51,7 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Action;
 import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Consumer;
+import retrofit2.HttpException;
 
 /**
  * Created by sheldon
@@ -246,9 +250,7 @@ public class StayOutboundBookingDetailPresenter extends BaseExceptionPresenter<S
             @Override
             public void accept(@io.reactivex.annotations.NonNull Throwable throwable) throws Exception
             {
-                // 에러가 나는 경우 리스트로 복귀
-                onHandleError(throwable);
-                onBackClick();
+                onHandleFinishError(throwable);
             }
         }));
     }
@@ -390,14 +392,23 @@ public class StayOutboundBookingDetailPresenter extends BaseExceptionPresenter<S
             return;
         }
 
-        switch (getRefundPolicyStatus(mStayOutboundBookingDetail))
+        switch (mStayOutboundBookingDetail.refundStatus)
         {
-            case StayOutboundBookingDetail.STATUS_NO_CHARGE_REFUND:
-            {
+            case FULL:
                 //                Intent intent = StayAutoRefundActivity.newInstance(StayReservationDetailActivity.this, stayBookingDetail);
                 //                startActivityForResult(intent, CODE_RESULT_ACTIVITY_STAY_AUTOREFUND);
                 break;
-            }
+
+            case PARTIAL:
+                //                Intent intent = StayAutoRefundActivity.newInstance(StayReservationDetailActivity.this, stayBookingDetail);
+                //                startActivityForResult(intent, CODE_RESULT_ACTIVITY_STAY_AUTOREFUND);
+                break;
+
+            case NRD:
+                break;
+
+            case OVER_DATE:
+                break;
 
             default:
                 getViewInterface().showConciergeDialog(new DialogInterface.OnDismissListener()
@@ -663,30 +674,7 @@ public class StayOutboundBookingDetailPresenter extends BaseExceptionPresenter<S
 
         getViewInterface().setBookingDetail(stayOutboundBookingDetail);
 
-        getViewInterface().setRefundPolicy(stayOutboundBookingDetail, getRefundPolicyStatus(stayOutboundBookingDetail));
-    }
-
-    private String getRefundPolicyStatus(StayOutboundBookingDetail stayOutboundBookingDetail)
-    {
-        if (stayOutboundBookingDetail == null)
-        {
-            return StayOutboundBookingDetail.STATUS_NONE;
-        }
-
-        // 환불 대기 상태
-        if (stayOutboundBookingDetail.readyForRefund == true)
-        {
-            return StayOutboundBookingDetail.STATUS_WAIT_REFUND;
-        } else
-        {
-            if (DailyTextUtils.isTextEmpty(stayOutboundBookingDetail.refundPolicy) == false)
-            {
-                return stayOutboundBookingDetail.refundPolicy;
-            } else
-            {
-                return stayOutboundBookingDetail.STATUS_SURCHARGE_REFUND;
-            }
-        }
+        getViewInterface().setRefundPolicy(stayOutboundBookingDetail);
     }
 
     private Observable<Location> searchMyLocation(Observable locationAnimationObservable)
