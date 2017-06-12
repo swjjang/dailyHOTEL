@@ -1,6 +1,5 @@
 package com.twoheart.dailyhotel.network;
 
-import com.twoheart.dailyhotel.Setting;
 import com.twoheart.dailyhotel.util.Constants;
 
 import org.json.JSONObject;

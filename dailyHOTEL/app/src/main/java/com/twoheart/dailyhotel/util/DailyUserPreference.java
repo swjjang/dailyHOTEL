@@ -196,9 +196,9 @@ public class DailyUserPreference
     {
         if (mEditor != null)
         {
-            mEditor.putString(KEY_OVERSEAS_NAME, name);
-            mEditor.putString(KEY_OVERSEAS_PHONE, phone);
-            mEditor.putString(KEY_OVERSEAS_EMAIL, email);
+            setValueEncrypt(mEditor, KEY_OVERSEAS_NAME, name);
+            setValueEncrypt(mEditor, KEY_OVERSEAS_PHONE, phone);
+            setValueEncrypt(mEditor, KEY_OVERSEAS_EMAIL, email);
             mEditor.apply();
         }
     }
@@ -252,11 +252,11 @@ public class DailyUserPreference
     {
         if (mEditor != null)
         {
-            mEditor.putString(KEY_TYPE, Crypto.urlEncrypt(type));
-            mEditor.putString(KEY_EMAIL, Crypto.urlEncrypt(email));
-            mEditor.putString(KEY_NAME, Crypto.urlEncrypt(name));
-            mEditor.putString(KEY_BIRTHDAY, Crypto.urlEncrypt(birthday));
-            mEditor.putString(KEY_RECOMMENDER, Crypto.urlEncrypt(recommender));
+            setValueEncrypt(mEditor, KEY_TYPE, type);
+            setValueEncrypt(mEditor, KEY_EMAIL, email);
+            setValueEncrypt(mEditor, KEY_NAME, name);
+            setValueEncrypt(mEditor, KEY_BIRTHDAY, birthday);
+            setValueEncrypt(mEditor, KEY_RECOMMENDER, recommender);
             mEditor.apply();
         }
     }

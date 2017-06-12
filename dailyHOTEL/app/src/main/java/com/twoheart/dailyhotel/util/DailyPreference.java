@@ -83,6 +83,7 @@ public class DailyPreference
     private static final String KEY_TRUE_VR_SUPPORT = "213";
     private static final String KEY_TRUE_VR_CHECK_DATA_GUIDE = "214";
     private static final String KEY_PREVIEW_GUIDE = "215";
+    private static final String KEY_APP_PERMISSIONS_GUIDE = "216";
 
     // ----> DailyPreference 로 이동
     private static final String KEY_AUTHORIZATION = "1000";
@@ -279,6 +280,7 @@ public class DailyPreference
         String baseUrl = getBaseUrl();
         boolean isHomeTextMessageAreaEnable = isHomeTextMessageAreaEnabled();
         int countPreviewGuide = getCountPreviewGuide();
+        boolean isShowAppPermissionsGuide = isShowAppPermissionsGuide();
 
         if (mEditor != null)
         {
@@ -294,6 +296,7 @@ public class DailyPreference
         setBaseUrl(baseUrl);
         setHomeTextMessageAreaEnabled(isHomeTextMessageAreaEnable);
         setCountPreviewGuide(countPreviewGuide);
+        setShowAppPermissionsGuide(isShowAppPermissionsGuide);
 
         DailyHotel.AUTHORIZATION = null;
     }
@@ -880,6 +883,16 @@ public class DailyPreference
     public int getCountPreviewGuide()
     {
         return getValue(mPreferences, KEY_PREVIEW_GUIDE, 0);
+    }
+
+    public void setShowAppPermissionsGuide(boolean value)
+    {
+        setValue(mEditor, KEY_APP_PERMISSIONS_GUIDE, value);
+    }
+
+    public boolean isShowAppPermissionsGuide()
+    {
+        return getValue(mPreferences, KEY_APP_PERMISSIONS_GUIDE, false);
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////

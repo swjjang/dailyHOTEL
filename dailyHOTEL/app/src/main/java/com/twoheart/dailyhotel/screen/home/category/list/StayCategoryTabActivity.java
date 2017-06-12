@@ -52,7 +52,6 @@ import com.twoheart.dailyhotel.util.DailyExternalDeepLink;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.DailyUserPreference;
 import com.twoheart.dailyhotel.util.Util;
-import com.twoheart.dailyhotel.util.analytics.AdjustManager;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import org.json.JSONObject;
@@ -506,7 +505,7 @@ public class StayCategoryTabActivity extends PlaceMainActivity
 
             params.put(AnalyticsManager.KeyType.VIEW_TYPE //
                 , AnalyticsManager.Screen.DAILYHOTEL_LIST_MAP.equalsIgnoreCase(screen) == true //
-                ? AnalyticsManager.ValueType.MAP : AnalyticsManager.ValueType.LIST);
+                    ? AnalyticsManager.ValueType.MAP : AnalyticsManager.ValueType.LIST);
 
             Province province = mStayCategoryCuration.getProvince();
 

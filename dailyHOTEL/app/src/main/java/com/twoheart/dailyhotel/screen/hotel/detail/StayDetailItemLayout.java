@@ -116,7 +116,7 @@ public class StayDetailItemLayout extends LinearLayout
     {
         removeAllViews();
 
-//        StayDetailParams stayDetailParams = mStayDetail.getStayDetailParams();
+        //        StayDetailParams stayDetailParams = mStayDetail.getStayDetailParams();
 
         // 빈화면
         View emptyView = getEmptyView(mLayoutInflater, mEmptyViewOnTouchListener);
@@ -183,6 +183,7 @@ public class StayDetailItemLayout extends LinearLayout
 
     /**
      * 이미지 영역 빈화면
+     *
      * @param layoutInflater
      * @return
      */
@@ -533,6 +534,7 @@ public class StayDetailItemLayout extends LinearLayout
 
     /**
      * 호텔 Benefit
+     *
      * @param layoutInflater
      * @param stayDetail
      * @return

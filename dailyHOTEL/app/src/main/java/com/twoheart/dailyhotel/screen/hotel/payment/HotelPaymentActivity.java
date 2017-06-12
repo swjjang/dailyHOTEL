@@ -1287,7 +1287,8 @@ public class HotelPaymentActivity extends PlacePaymentActivity
         if (todayDate.equalsIgnoreCase(bookingDate) == true)
         {
             // 서버시간과 같은 날
-            if (currentHour < openHour) {
+            if (currentHour < openHour)
+            {
                 // 당일이고 영업시간 전일때 (서버에서 새벽 3시 부터 당일로 주기 때문에 새벽 3시 체크 안함)
                 mPensionPopupMessageType = 2;
             } else

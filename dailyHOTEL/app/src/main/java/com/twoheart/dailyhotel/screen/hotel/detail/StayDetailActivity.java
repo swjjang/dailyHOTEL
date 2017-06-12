@@ -1585,7 +1585,7 @@ public class StayDetailActivity extends PlaceDetailActivity
 
                 AnalyticsManager.getInstance(getApplicationContext()).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS, //
                     Action.HOTEL_DETAIL_ADDRESS_COPY_CLICKED, stayDetailParams.name, null);
-            }catch (Exception e)
+            } catch (Exception e)
             {
                 ExLog.d(e.toString());
             }

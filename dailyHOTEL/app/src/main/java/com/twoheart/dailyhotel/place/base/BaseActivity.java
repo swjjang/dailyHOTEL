@@ -1222,7 +1222,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
             {
                 if (isInVaildOperatingTime == true)
                 {
-                    showNonOpteratingTimeDialog(listener);
+                    showNonOperatingTimeDialog(listener);
                 } else
                 {
                     View.OnClickListener positiveListener = new View.OnClickListener()
@@ -1311,7 +1311,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
         checkInValidOperatingTime(operatingTimeListener);
     }
 
-    public void showNonOpteratingTimeDialog(final OnCallDialogListener listener)
+    public void showNonOperatingTimeDialog(final OnCallDialogListener listener)
     {
         View.OnClickListener positiveListener = v ->
         {

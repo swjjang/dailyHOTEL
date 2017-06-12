@@ -1301,6 +1301,20 @@
     <string name="message_truevr_not_support">트루VR 정보가 없습니다.</string>
     <string name="message_truevr_failed_load_truevr"> 트루VR 로드 중 오류가 발생했습니다.\n잠시 후 다시 시도해주세요.</string>
 
+    <!-- 앱 사용 권한 안내 -->
+    <string name="label_app_permissions_guide_title">DAILY 앱 사용 권한 안내</string>
+    <string name="label_app_permissions_guide_necessary">필수적 접근 권한</string>
+    <string name="label_app_permissions_guide_necessary01">기기 및 앱 기록</string>
+    <string name="label_app_permissions_guide_necessary02">앱 오류 확인 및 사용성 개선</string>
+    <string name="label_app_permissions_guide_necessary03">2017.03.27부터 시행되는 정보통신망법령에 따라 꼭 필요한 항목만 필수 접근합니다.</string>
+
+    <string name="label_app_permissions_guide_select">선택적 접근 권한</string>
+    <string name="label_app_permissions_guide_select01">사용자 위치정보</string>
+    <string name="label_app_permissions_guide_select02">내 주변 스테이, 고메 검색(현재 위치)</string>
+    <string name="label_app_permissions_guide_select03">소셜로그인 사용</string>
+    <string name="label_app_permissions_guide_select04">소셜로그인, 공유(카카오톡, 페이스북)</string>
+    <string name="label_app_permissions_guide_select05">해당 기능을 이용하실 때 동의를 받으며,\n허용하지 않으셔도 서비스 이용이 가능합니다.</string>
+
     <string-array name="coupon_sort_array">
         <item>전체 쿠폰 보기</item>
         <item>스테이 쿠폰 보기</item>

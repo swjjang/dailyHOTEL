@@ -220,7 +220,7 @@ public class SignupStep1Activity extends BaseActivity
             }
 
             // 만 14세 이상
-            if(mSignupStep1Layout.isCheckedFourteen() == false)
+            if (mSignupStep1Layout.isCheckedFourteen() == false)
             {
                 DailyToast.showToast(SignupStep1Activity.this, R.string.toast_msg_terms_fourteen, Toast.LENGTH_SHORT);
                 return;

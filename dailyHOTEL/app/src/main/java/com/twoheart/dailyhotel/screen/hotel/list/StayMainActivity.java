@@ -23,7 +23,6 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.Category;
 import com.twoheart.dailyhotel.model.DailyCategoryType;
-import com.twoheart.dailyhotel.model.EventBanner;
 import com.twoheart.dailyhotel.model.Keyword;
 import com.twoheart.dailyhotel.model.PlaceCuration;
 import com.twoheart.dailyhotel.model.PlaceViewItem;

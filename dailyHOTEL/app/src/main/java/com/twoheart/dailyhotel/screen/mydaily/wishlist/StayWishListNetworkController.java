@@ -89,7 +89,8 @@ public class StayWishListNetworkController extends BaseNetworkController
                         if (stayWishItemList != null)
                         {
                             stayList = makeStayList(stayWishItemList, imageUrl);
-                        } else {
+                        } else
+                        {
                             stayList = new ArrayList<>();
                         }
 
