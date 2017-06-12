@@ -102,6 +102,12 @@ public class HomeCategoryRegionListActivity extends BaseActivity
 
     private void initToolbar(View toolbar)
     {
+        if (mDailyCategoryType == null)
+        {
+            Util.restartApp(this);
+            return;
+        }
+
         String categoryName = getResources().getString(mDailyCategoryType.getNameResId());
 
 
@@ -310,7 +316,6 @@ public class HomeCategoryRegionListActivity extends BaseActivity
                         try
                         {
                             HomeCategoryRegionListFragment homeCategoryRegionListFragment = getCurrentFragment();
-                            intent.putExtra(NAME_INTENT_EXTRA_DATA_DAILY_CATEGORY_TYPE, homeCategoryRegionListFragment.getResultName());
                             intent.putExtra(NAME_INTENT_EXTRA_DATA_RESULT, PlaceRegionListActivity.Region.DOMESTIC.name());
                             intent.putExtra(NAME_INTENT_EXTRA_DATA_DAILY_CATEGORY_TYPE, (Parcelable) mDailyCategoryType);
                         } catch (Exception e)

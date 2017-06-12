@@ -124,11 +124,6 @@ public class HomeCategoryRegionListFragment extends BaseFragment
         //        }
     }
 
-    public String getResultName()
-    {
-        return mDailyCategoryType == null ? DailyCategoryType.NONE.name() : mDailyCategoryType.name();
-    }
-
     private Province searchPreviousProvince(List<RegionViewItem> regionViewItemList, DailyCategoryType categoryType)
     {
         if (regionViewItemList == null || regionViewItemList.size() == 0)
