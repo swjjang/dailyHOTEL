@@ -1358,6 +1358,7 @@
 
     <!-- New Booking -->
     <string name="message_booking_delete_booking">삭제 되었습니다.</string>
+    <string name="message_booking_failed_delete_booking">삭제에 실패했습니다.\n잠시 후에 다시 시도해주십시요.</string>
 
 
     <!-- Stay Out Bound Booking Detail -->

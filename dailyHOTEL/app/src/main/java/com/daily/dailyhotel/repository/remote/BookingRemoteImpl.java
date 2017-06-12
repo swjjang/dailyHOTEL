@@ -8,6 +8,7 @@ import com.daily.dailyhotel.domain.BookingInterface;
 import com.daily.dailyhotel.entity.Booking;
 import com.daily.dailyhotel.entity.StayOutboundBookingDetail;
 import com.daily.dailyhotel.repository.remote.model.BookingData;
+import com.daily.dailyhotel.repository.remote.model.BookingHideData;
 import com.daily.dailyhotel.repository.remote.model.StayOutboundBookingDetailData;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.network.dto.BaseDto;
@@ -96,21 +97,21 @@ public class BookingRemoteImpl implements BookingInterface
     @Override
     public Observable<Boolean> getStayOutboundHideBooking(int reservationIndex)
     {
-        return DailyMobileAPI.getInstance(mContext).getStayOutboundHideBooking(reservationIndex).map(new Function<BaseDto, Boolean>()
+        return DailyMobileAPI.getInstance(mContext).getStayOutboundHideBooking(reservationIndex).map(new Function<BaseDto<BookingHideData>, Boolean>()
         {
             @Override
-            public Boolean apply(@io.reactivex.annotations.NonNull BaseDto baseDto) throws Exception
+            public Boolean apply(@io.reactivex.annotations.NonNull BaseDto<BookingHideData> bookingHideDataBaseDto) throws Exception
             {
                 boolean result = false;
 
-                if (baseDto != null)
+                if (bookingHideDataBaseDto != null)
                 {
-                    if (baseDto.msgCode == 100 && baseDto.data != null)
+                    if (bookingHideDataBaseDto.msgCode == 100 && bookingHideDataBaseDto.data != null)
                     {
                         result = true;
                     } else
                     {
-                        throw new BaseException(baseDto.msgCode, baseDto.msg);
+                        throw new BaseException(bookingHideDataBaseDto.msgCode, bookingHideDataBaseDto.msg);
                     }
                 } else
                 {
