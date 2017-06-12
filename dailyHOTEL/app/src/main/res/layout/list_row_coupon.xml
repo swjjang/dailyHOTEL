@@ -95,6 +95,13 @@
             android:gravity="top"
             android:orientation="horizontal">
 
+            <LinearLayout
+                android:id="@+id/dateTextLayout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
             <com.daily.base.widget.DailyTextView
                 android:id="@+id/expireTextView"
                 android:layout_width="wrap_content"
@@ -105,13 +112,14 @@
 
             <com.daily.base.widget.DailyTextView
                 android:id="@+id/dueDateTextView"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="17dp"
                 android:layout_marginLeft="2dp"
-                android:layout_weight="1"
                 android:gravity="center_vertical"
                 android:textColor="@color/coupon_red_wine_text"
                 android:textSize="11dp"/>
+            </LinearLayout>
+
 
             <ImageView
                 android:id="@+id/useableStayImageView"
