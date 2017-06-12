@@ -1,21 +1,23 @@
 package com.twoheart.dailyhotel.screen.mydaily.recentplace;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.SharedElementCallback;
-import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
+import com.daily.dailyhotel.util.RecentlyPlaceUtil;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Place;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
-import com.twoheart.dailyhotel.model.RecentPlaces;
 import com.twoheart.dailyhotel.model.RecentStayParams;
 import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.model.time.PlaceBookingDay;
@@ -113,8 +115,8 @@ public class RecentStayListFragment extends RecentPlacesListFragment
     {
         lockUI();
 
-        int count = mRecentPlaceList != null ? mRecentPlaceList.size() : 0;
-        if (count == 0)
+        String targetIndices = getPlaceIndexList();
+        if (DailyTextUtils.isTextEmpty(targetIndices) == true)
         {
             unLockUI();
 
@@ -127,7 +129,7 @@ public class RecentStayListFragment extends RecentPlacesListFragment
 
         RecentStayParams recentStayParams = new RecentStayParams();
         recentStayParams.setStayBookingDay((StayBookingDay) placeBookingDay);
-        recentStayParams.setTargetIndices(getPlaceIndexList());
+        recentStayParams.setTargetIndices(targetIndices);
 
         ((RecentStayListNetworkController) mNetworkController).requestRecentStayList(recentStayParams);
         //        DailyToast.showToast(mBaseActivity, "recent Stay", Toast.LENGTH_SHORT);
@@ -145,7 +147,7 @@ public class RecentStayListFragment extends RecentPlacesListFragment
                 return;
             }
 
-            sortList(mRecentPlaceList, list);
+            //            sortList(mRecentPlaceList, list); // TODO : 재 정렬 기능 추가 필요.
 
             ArrayList<PlaceViewItem> viewItemList = mListLayout.makePlaceViewItemList(list);
             mListLayout.setData(viewItemList, mPlaceBookingDay);
@@ -184,10 +186,11 @@ public class RecentStayListFragment extends RecentPlacesListFragment
 
     RecentPlacesListLayout.OnEventListener mEventListener = new RecentPlacesListLayout.OnEventListener()
     {
+        @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
         @Override
         public void onListItemClick(View view, int position)
         {
-            if (position < 0 || mRecentPlaceList.size() - 1 < position)
+            if (position < 0 || mListLayout.getItemCount() - 1 < position)
             {
                 return;
             }
@@ -255,7 +258,7 @@ public class RecentStayListFragment extends RecentPlacesListFragment
         @Override
         public void onListItemLongClick(View view, int position)
         {
-            if (position < 0 || mRecentPlaceList.size() - 1 < position)
+            if (position < 0 || mListLayout.getItemCount() - 1 < position)
             {
                 return;
             }
@@ -276,7 +279,7 @@ public class RecentStayListFragment extends RecentPlacesListFragment
         @Override
         public void onListItemDeleteClick(int position)
         {
-            if (position < 0 || mRecentPlaceList.size() - 1 < position)
+            if (position < 0 || mListLayout.getItemCount() - 1 < position)
             {
                 ExLog.d("position Error Stay");
                 return;
@@ -286,12 +289,10 @@ public class RecentStayListFragment extends RecentPlacesListFragment
             Place place = placeViewItem.getItem();
             ExLog.d("isRemove : " + (place != null));
 
-            Pair<Integer, String> deleteItem = new Pair<>(place.index, RecentPlaces.getServiceType(PlaceType.HOTEL));
-
-            mRecentPlaceList.remove(deleteItem);
+            RecentlyPlaceUtil.deleteRecentlyItemAsync(RecentlyPlaceUtil.SERVICE_TYPE_HOTEL, place.index);
 
             mListLayout.setData(mListLayout.getList(), mPlaceBookingDay);
-            mRecentPlaceListFragmentListener.onDeleteItemClick(deleteItem);
+            mRecentPlaceListFragmentListener.onDeleteItemClickAnalytics();
 
             AnalyticsManager.getInstance(mBaseActivity).recordEvent(//
                 AnalyticsManager.Category.NAVIGATION_, //

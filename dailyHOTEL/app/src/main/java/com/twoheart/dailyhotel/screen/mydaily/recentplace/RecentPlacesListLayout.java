@@ -148,6 +148,16 @@ public abstract class RecentPlacesListLayout extends BaseBlurLayout
         return mListAdapter != null ? mListAdapter.getList() : null;
     }
 
+    public int getItemCount()
+    {
+        if (mListAdapter == null)
+        {
+            return 0;
+        }
+
+        return mListAdapter.getItemCount();
+    }
+
     public int getRealItemCount()
     {
         int realCount = 0;

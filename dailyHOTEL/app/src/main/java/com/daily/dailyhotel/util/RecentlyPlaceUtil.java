@@ -17,7 +17,9 @@ import java.util.Date;
 
 import io.realm.Realm;
 import io.realm.RealmList;
+import io.realm.RealmQuery;
 import io.realm.RealmResults;
+import io.realm.Sort;
 
 /**
  * Created by android_sam on 2017. 6. 8..
@@ -25,6 +27,12 @@ import io.realm.RealmResults;
 
 public class RecentlyPlaceUtil
 {
+    public static final String SERVICE_TYPE_HOTEL = "HOTEL";
+    public static final String SERVICE_TYPE_OB_HOTEL = "OB_HOTEL";
+    public static final String SERVICE_TYPE_GOURMET = "GOURMET";
+    public static final String RECENT_PLACE_DELIMITER = ",";
+    public static final int MAX_RECENT_PLACE_COUNT = 30;
+
     public static void migrateRecentlyPlaces(Context context)
     {
         RecentPlaces recentPlaces = new RecentPlaces(context);
@@ -50,10 +58,10 @@ public class RecentlyPlaceUtil
             }
         }
 
-        setRecentlyRealmList(recentPlaces, realmObjectRealmList);
+        setRecentlyRealmListAsync(recentPlaces, realmObjectRealmList);
     }
 
-    private static void setRecentlyRealmList(RecentPlaces recentPlaces, RealmList<RecentlyRealmObject> list)
+    private static void setRecentlyRealmListAsync(RecentPlaces recentPlaces, RealmList<RecentlyRealmObject> list)
     {
         if (recentPlaces == null)
         {
@@ -146,7 +154,7 @@ public class RecentlyPlaceUtil
             maxSize = list.size();
         }
 
-        for (int i = 0 ; i < maxSize ; i++)
+        for (int i = 0; i < maxSize; i++)
         {
             RecentlyRealmObject realmObject = list.get(i);
 
@@ -166,4 +174,103 @@ public class RecentlyPlaceUtil
 
         return jsonArray;
     }
+
+    public static RealmResults<RecentlyRealmObject> getRecentlyTypeList(String... serviceTypes)
+    {
+        Realm realm = Realm.getDefaultInstance();
+        RealmQuery query = realm.where(RecentlyRealmObject.class);
+
+        if (serviceTypes != null)
+        {
+            if (serviceTypes.length > 1)
+            {
+                query.beginGroup();
+
+                for (int i = 0; i < serviceTypes.length; i++)
+                {
+                    if (i > 0)
+                    {
+                        query.or();
+                    }
+
+                    query.equalTo("serviceType", serviceTypes[i]);
+                }
+
+                query.endGroup();
+            } else
+            {
+                query.equalTo("serviceType", serviceTypes[0]);
+            }
+        }
+
+        RealmResults<RecentlyRealmObject> realmResults = query.findAllSorted("date", Sort.DESCENDING);
+        return realmResults;
+    }
+
+    public static RealmResults<RecentlyRealmObject> getRecentlyTypeList(Constants.PlaceType placeType)
+    {
+        return getRecentlyTypeList(getServiceType(placeType));
+    }
+
+    public static String[] getServiceType(Constants.PlaceType placeType)
+    {
+        if (Constants.PlaceType.HOTEL.equals(placeType) == true)
+        {
+            return new String[]{SERVICE_TYPE_HOTEL, SERVICE_TYPE_OB_HOTEL};
+        } else if (Constants.PlaceType.FNB.equals(placeType) == true)
+        {
+            return new String[]{SERVICE_TYPE_GOURMET};
+        } else
+        {
+            return null;
+        }
+    }
+
+    public static String getPlaceIndexList(Constants.PlaceType placeType, int maxSize)
+    {
+        RealmResults<RecentlyRealmObject> recentlyList = RecentlyPlaceUtil.getRecentlyTypeList(placeType);
+
+        if (recentlyList == null || recentlyList.size() == 0 || maxSize <= 0)
+        {
+            return "";
+        }
+
+        if (maxSize > recentlyList.size())
+        {
+            maxSize = recentlyList.size();
+        }
+
+        StringBuilder builder = new StringBuilder();
+
+        for (int i = 0; i < maxSize; i++)
+        {
+            RecentlyRealmObject realmObject = recentlyList.get(i);
+
+            if (i != 0)
+            {
+                builder.append(RECENT_PLACE_DELIMITER);
+            }
+
+            builder.append(realmObject.index);
+        }
+
+        return builder.toString();
+    }
+
+    public static void deleteRecentlyItemAsync(String serviceType, int index)
+    {
+        Realm realm = Realm.getDefaultInstance();
+        realm.executeTransactionAsync(new Realm.Transaction()
+        {
+            @Override
+            public void execute(Realm realm)
+            {
+                final RealmResults<RecentlyRealmObject> resultList = realm.where(RecentlyRealmObject.class) //
+                    .beginGroup().equalTo("serviceType", serviceType).equalTo("index", index).endGroup() //
+                    .findAll();
+                resultList.deleteAllFromRealm();
+            }
+        });
+    }
+
 }
