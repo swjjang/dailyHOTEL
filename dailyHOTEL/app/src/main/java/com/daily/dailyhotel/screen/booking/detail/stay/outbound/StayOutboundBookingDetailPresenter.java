@@ -26,6 +26,7 @@ import com.daily.dailyhotel.entity.People;
 import com.daily.dailyhotel.entity.StayOutboundBookingDetail;
 import com.daily.dailyhotel.repository.remote.BookingRemoteImpl;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
+import com.daily.dailyhotel.screen.booking.detail.stay.outbound.refund.StayOutboundRefundActivity;
 import com.daily.dailyhotel.screen.common.call.CallDialogActivity;
 import com.daily.dailyhotel.screen.stay.outbound.detail.StayOutboundDetailActivity;
 import com.daily.dailyhotel.util.DailyLocationExFactory;
@@ -60,7 +61,7 @@ public class StayOutboundBookingDetailPresenter extends BaseExceptionPresenter<S
     private CommonRemoteImpl mCommonRemoteImpl;
     private BookingRemoteImpl mBookingRemoteImpl;
 
-    private int mReservationIndex;
+    private int mBookingIndex;
     private String mImageUrl;
 
     private CommonDateTime mCommonDateTime;
@@ -111,7 +112,7 @@ public class StayOutboundBookingDetailPresenter extends BaseExceptionPresenter<S
             return true;
         }
 
-        mReservationIndex = intent.getIntExtra(StayOutboundBookingDetailActivity.INTENT_EXTRA_DATA_BOOKING_INDEX, -1);
+        mBookingIndex = intent.getIntExtra(StayOutboundBookingDetailActivity.INTENT_EXTRA_DATA_BOOKING_INDEX, -1);
         mImageUrl = intent.getStringExtra(StayOutboundBookingDetailActivity.INTENT_EXTRA_DATA_IMAGE_URL);
 
         return true;
@@ -221,7 +222,7 @@ public class StayOutboundBookingDetailPresenter extends BaseExceptionPresenter<S
         setRefresh(false);
         screenLock(showProgress);
 
-        addCompositeDisposable(Observable.zip(mCommonRemoteImpl.getCommonDateTime(), mBookingRemoteImpl.getStayOutboundBookingDetail(mReservationIndex)//
+        addCompositeDisposable(Observable.zip(mCommonRemoteImpl.getCommonDateTime(), mBookingRemoteImpl.getStayOutboundBookingDetail(mBookingIndex)//
             , new BiFunction<CommonDateTime, StayOutboundBookingDetail, StayOutboundBookingDetail>()
             {
 
@@ -391,13 +392,9 @@ public class StayOutboundBookingDetailPresenter extends BaseExceptionPresenter<S
         switch (mStayOutboundBookingDetail.refundStatus)
         {
             case FULL:
-                //                Intent intent = StayAutoRefundActivity.newInstance(StayReservationDetailActivity.this, stayBookingDetail);
-                //                startActivityForResult(intent, CODE_RESULT_ACTIVITY_STAY_AUTOREFUND);
-                break;
-
             case PARTIAL:
-                //                Intent intent = StayAutoRefundActivity.newInstance(StayReservationDetailActivity.this, stayBookingDetail);
-                //                startActivityForResult(intent, CODE_RESULT_ACTIVITY_STAY_AUTOREFUND);
+                startActivityForResult(StayOutboundRefundActivity.newInstance(getActivity(), mBookingIndex)//
+                    , StayOutboundBookingDetailActivity.REQUEST_CODE_REFUND);
                 break;
 
             case NRD:
@@ -467,7 +464,7 @@ public class StayOutboundBookingDetailPresenter extends BaseExceptionPresenter<S
             return;
         }
 
-        startActivityForResult(IssuingReceiptActivity.newInstance(getActivity(), mReservationIndex), StayOutboundBookingDetailActivity.REQUEST_CODE_ISSUING_RECEIPT);
+        startActivityForResult(IssuingReceiptActivity.newInstance(getActivity(), mBookingIndex), StayOutboundBookingDetailActivity.REQUEST_CODE_ISSUING_RECEIPT);
     }
 
     @Override
