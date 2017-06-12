@@ -322,8 +322,7 @@ public class AddProfileSocialLayout extends BaseLayout implements OnClickListene
                     }
                 } else
                 {
-                    if (mFourteenCheckBox.isChecked() == true && mTermsOfPrivacyCheckBox.isChecked() == true
-                        && mTermsOfServiceCheckBox.isChecked() == true)
+                    if (mFourteenCheckBox.isChecked() == true && mTermsOfPrivacyCheckBox.isChecked() == true && mTermsOfServiceCheckBox.isChecked() == true)
                     {
                         mAllAgreementCheckBox.setChecked(true);
                     } else

@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/popup_bg_white_full"
+    android:orientation="vertical"
+    android:paddingBottom="10dp"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp"
+    android:paddingTop="24dp">
+
+    <com.daily.base.widget.DailyTextView
+        android:id="@+id/titleTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:gravity="center_horizontal"
+        android:text="@string/label_app_permissions_guide_title"
+        android:textColor="@color/default_text_c323232"
+        android:textSize="17dp"
+        dailyFont:style="Medium"/>
+
+    <com.daily.base.widget.DailyTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/label_app_permissions_guide_necessary"
+        android:textColor="@color/default_text_c323232"
+        android:textSize="13dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="107dp"
+        android:layout_marginTop="6dp"
+        android:background="@color/default_background"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/imageView01"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="14dp"
+                app:srcCompat="@drawable/vector_popup_ic_access_01_phone"/>
+
+            <com.daily.base.widget.DailyTextView
+                android:id="@+id/textView01"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="12dp"
+                android:layout_toRightOf="@+id/imageView01"
+                android:text="@string/label_app_permissions_guide_necessary01"
+                android:textColor="@color/default_text_c323232"
+                android:textSize="13dp"
+                dailyFont:style="Medium"/>
+
+            <com.daily.base.widget.DailyTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/textView01"
+                android:layout_marginLeft="10dp"
+                android:layout_toRightOf="@+id/imageView01"
+                android:text="@string/label_app_permissions_guide_necessary02"
+                android:textColor="@color/default_text_c929292"
+                android:textSize="12dp"/>
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="12dp"
+            android:background="@color/default_line_cdcdcdd"/>
+
+        <com.daily.base.widget.DailyTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="8dp"
+            android:text="@string/label_app_permissions_guide_necessary03"
+            android:textColor="@color/default_text_c929292"
+            android:textSize="11dp"/>
+    </LinearLayout>
+
+    <com.daily.base.widget.DailyTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/label_app_permissions_guide_select"
+        android:textColor="@color/default_text_c323232"
+        android:textSize="13dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="155dp"
+        android:layout_marginTop="6dp"
+        android:background="@color/default_background"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/imageView02"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="14dp"
+                app:srcCompat="@drawable/vector_popup_ic_access_02_location"/>
+
+            <com.daily.base.widget.DailyTextView
+                android:id="@+id/textView02"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="12dp"
+                android:layout_toRightOf="@+id/imageView02"
+                android:text="@string/label_app_permissions_guide_select01"
+                android:textColor="@color/default_text_c323232"
+                android:textSize="13dp"
+                dailyFont:style="Medium"/>
+
+            <com.daily.base.widget.DailyTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/textView02"
+                android:layout_marginLeft="10dp"
+                android:layout_toRightOf="@+id/imageView02"
+                android:text="@string/label_app_permissions_guide_select02"
+                android:textColor="@color/default_text_c929292"
+                android:textSize="12dp"/>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp">
+
+            <ImageView
+                android:id="@+id/imageView03"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="14dp"
+                app:srcCompat="@drawable/vector_popup_ic_access_03_sns"/>
+
+            <com.daily.base.widget.DailyTextView
+                android:id="@+id/textView03"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="12dp"
+                android:layout_toRightOf="@+id/imageView03"
+                android:text="@string/label_app_permissions_guide_select03"
+                android:textColor="@color/default_text_c323232"
+                android:textSize="13dp"
+                dailyFont:style="Medium"/>
+
+            <com.daily.base.widget.DailyTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/textView03"
+                android:layout_marginLeft="10dp"
+                android:layout_toRightOf="@+id/imageView03"
+                android:text="@string/label_app_permissions_guide_select04"
+                android:textColor="@color/default_text_c929292"
+                android:textSize="12dp"/>
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="12dp"
+            android:background="@color/default_line_cdcdcdd"/>
+
+        <com.daily.base.widget.DailyTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="8dp"
+            android:text="@string/label_app_permissions_guide_select05"
+            android:textColor="@color/default_text_c929292"
+            android:textSize="11dp"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="38dp"
+        android:layout_marginTop="24dp"
+        android:gravity="center_horizontal">
+
+        <com.daily.base.widget.DailyTextView
+            android:id="@+id/confirmTextView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/selector_dialog_button01"
+            android:gravity="center"
+            android:text="@string/dialog_btn_text_confirm"
+            android:textColor="@drawable/selector_dialog_text_color01"
+            android:textSize="14dp"
+            dailyFont:style="Medium"/>
+    </LinearLayout>
+</LinearLayout>
