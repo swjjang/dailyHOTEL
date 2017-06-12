@@ -250,7 +250,7 @@ public class StayOutboundBookingDetailPresenter extends BaseExceptionPresenter<S
             @Override
             public void accept(@io.reactivex.annotations.NonNull Throwable throwable) throws Exception
             {
-                onHandleFinishError(throwable);
+                onHandleErrorAndFinish(throwable);
             }
         }));
     }
