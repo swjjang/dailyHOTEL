@@ -9,6 +9,7 @@ import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.util.FontManager;
 import com.daily.base.util.VersionUtils;
+import com.daily.dailyhotel.util.RecentlyPlaceUtil;
 import com.facebook.FacebookSdk;
 import com.kakao.auth.ApprovalType;
 import com.kakao.auth.AuthType;
@@ -28,6 +29,7 @@ import com.twoheart.dailyhotel.util.analytics.GoogleAnalyticsManager;
 import java.util.Locale;
 
 import io.fabric.sdk.android.Fabric;
+import io.realm.Realm;
 
 public class DailyHotel extends android.support.multidex.MultiDexApplication implements Constants
 {
@@ -112,6 +114,10 @@ public class DailyHotel extends android.support.multidex.MultiDexApplication imp
         }
 
         FontManager.getInstance(getApplicationContext());
+
+        Realm.init(this);
+
+        RecentlyPlaceUtil.migrateRecentlyPlaces(DailyHotel.this);
 
         registerActivityLifecycleCallbacks(new DailyActivityLifecycleCallbacks());
     }

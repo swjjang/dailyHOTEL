@@ -16,6 +16,7 @@ buildscript {
 
 apply plugin: 'io.fabric'
 apply plugin: 'me.tatarka.retrolambda'
+apply plugin: 'realm-android'
 
 repositories {
     jcenter()

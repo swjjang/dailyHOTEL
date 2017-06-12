@@ -19,13 +19,13 @@ import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
 import com.daily.base.widget.DailyToast;
+import com.daily.dailyhotel.repository.local.model.RecentlyRealmObject;
 import com.daily.dailyhotel.screen.stay.outbound.search.StayOutboundSearchActivity;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.DailyCategoryType;
 import com.twoheart.dailyhotel.model.Province;
-import com.twoheart.dailyhotel.model.RecentPlaces;
 import com.twoheart.dailyhotel.model.time.GourmetBookingDay;
 import com.twoheart.dailyhotel.model.time.StayBookingDay;
 import com.twoheart.dailyhotel.network.model.Event;
@@ -72,6 +72,9 @@ import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.realm.Realm;
+import io.realm.RealmResults;
+import io.realm.Sort;
 import retrofit2.Call;
 import retrofit2.Response;
 
@@ -810,8 +813,16 @@ public class HomeFragment extends BaseMenuNavigationFragment
 
     private void requestRecentList()
     {
-        RecentPlaces allRecentPlaces = new RecentPlaces(mBaseActivity);
-        mNetworkController.requestRecentList(allRecentPlaces.getParamList(MAX_REQUEST_SIZE));
+        Realm realm = Realm.getDefaultInstance();
+        realm.executeTransactionAsync(new Realm.Transaction()
+        {
+            @Override
+            public void execute(Realm realm)
+            {
+                RealmResults<RecentlyRealmObject> realmResults = realm.where(RecentlyRealmObject.class).findAllSorted("date", Sort.DESCENDING);
+                mNetworkController.requestRecentlyList(realmResults, MAX_REQUEST_SIZE);
+            }
+        });
     }
 
     public void forceRefreshing()

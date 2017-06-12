@@ -14,7 +14,7 @@ import java.util.Iterator;
 /**
  * Created by android_sam on 2016. 10. 11..
  */
-
+@Deprecated
 public class RecentPlaces
 {
     public static final int MAX_RECENT_PLACE_COUNT = 30;

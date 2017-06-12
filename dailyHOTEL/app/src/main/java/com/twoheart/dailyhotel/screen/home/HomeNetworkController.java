@@ -4,8 +4,9 @@ import android.content.Context;
 
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
+import com.daily.dailyhotel.repository.local.model.RecentlyRealmObject;
+import com.daily.dailyhotel.util.RecentlyPlaceUtil;
 import com.twoheart.dailyhotel.Setting;
-import com.twoheart.dailyhotel.model.HomeRecentParam;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.network.dto.BaseDto;
 import com.twoheart.dailyhotel.network.dto.BaseListDto;
@@ -23,6 +24,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+import io.realm.RealmResults;
 import retrofit2.Call;
 import retrofit2.Response;
 
@@ -75,17 +77,16 @@ public class HomeNetworkController extends BaseNetworkController
         DailyMobileAPI.getInstance(mContext).requestHomeWishList(mNetworkTag, mWishListCallBack);
     }
 
-    public void requestRecentList(ArrayList<HomeRecentParam> recentParamList)
+    public void requestRecentlyList(RealmResults<RecentlyRealmObject> recentlyResultList, int maxSize)
     {
         // 리스트가 비었을때 서버에 리퀘스트시 필수 값 없어 에러 발생, 하지만 해당 경우는 정상인 상태로 서버에 리퀘스트 하지 않음 - 아이폰 동일
-        if (recentParamList == null || recentParamList.size() == 0)
+        if (recentlyResultList == null || recentlyResultList.size() == 0)
         {
             ((HomeNetworkController.OnNetworkControllerListener) mOnNetworkControllerListener).onRecentList(null, false);
             return;
         }
 
-        JSONArray recentJsonArray = getRecentJsonArray(recentParamList);
-
+        JSONArray recentJsonArray = RecentlyPlaceUtil.getRecentlyJsonArray(recentlyResultList, maxSize);
         JSONObject recentJsonObject = new JSONObject();
         try
         {
@@ -101,34 +102,6 @@ public class HomeNetworkController extends BaseNetworkController
     public void requestRecommendationList()
     {
         DailyMobileAPI.getInstance(mContext).requestRecommendationList(mNetworkTag, mRecommendationCallback);
-    }
-
-    private JSONArray getRecentJsonArray(ArrayList<HomeRecentParam> list)
-    {
-        if (list == null || list.size() == 0)
-        {
-            return null;
-        }
-
-        JSONArray jsonArray = new JSONArray();
-
-        for (HomeRecentParam param : list)
-        {
-            JSONObject jsonObject = new JSONObject();
-
-            try
-            {
-                jsonObject.put("serviceType", param.serviceType);
-                jsonObject.put("idx", param.index);
-
-                jsonArray.put(jsonObject);
-            } catch (JSONException e)
-            {
-                ExLog.d(e.getMessage());
-            }
-        }
-
-        return jsonArray;
     }
 
     private retrofit2.Callback mDateTimeJsonCallback = new retrofit2.Callback<BaseDto<TodayDateTime>>()
