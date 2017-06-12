@@ -1,10 +1,12 @@
 package com.twoheart.dailyhotel.screen.search.stay.result;
 
 import android.content.Context;
+import android.graphics.Paint;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentManager;
 import android.view.View;
 
+import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.util.FontManager;
 import com.daily.base.util.ScreenUtils;
@@ -42,10 +44,41 @@ public class StaySearchResultLayout extends PlaceSearchResultLayout
         {
             int nights = stayBookingDay.getNights();
             String dateFormat = ScreenUtils.getScreenWidth(mContext) < 720 ? "yyyy.MM.dd" : "yyyy.MM.dd(EEE)";
-
-            setCalendarText(String.format(Locale.KOREA, "%s - %s, %d박"//
+            String date = String.format(Locale.KOREA, "%s - %s, %d박"//
                 , stayBookingDay.getCheckInDay(dateFormat)//
-                , stayBookingDay.getCheckOutDay(dateFormat), nights));
+                , stayBookingDay.getCheckOutDay(dateFormat), nights);
+
+            if (DailyTextUtils.isTextEmpty(date) == true)
+            {
+                setCalendarText(date);
+                return;
+            }
+
+            mCalendarTextView.post(new Runnable()
+            {
+                @Override
+                public void run()
+                {
+                    int width = mCalendarTextView.getWidth() - mCalendarTextView.getPaddingLeft() - mCalendarTextView.getPaddingRight();
+                    int textSize = date.length();
+
+                    Paint paint = mCalendarTextView.getPaint();
+                    int endPosition = paint.breakText(date, true, width, null);
+
+                    if (textSize > endPosition)
+                    {
+                        String newDateFormat = "yyyy.MM.dd";
+                        String newDate = String.format(Locale.KOREA, "%s - %s, %d박"//
+                            , stayBookingDay.getCheckInDay(newDateFormat)//
+                            , stayBookingDay.getCheckOutDay(newDateFormat), nights);
+
+                        setCalendarText(newDate);
+                    } else
+                    {
+                        setCalendarText(date);
+                    }
+                }
+            });
         } catch (Exception e)
         {
             ExLog.e(e.toString());

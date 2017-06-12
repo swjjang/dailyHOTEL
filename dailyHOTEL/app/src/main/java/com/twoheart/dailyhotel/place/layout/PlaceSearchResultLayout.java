@@ -40,7 +40,7 @@ public abstract class PlaceSearchResultLayout extends BaseBlurLayout implements 
     private static final int ANIMATION_DELAY = 200;
 
     private View mToolbar;
-    private TextView mCalendarTextView;
+    protected TextView mCalendarTextView;
     private View mEmptyLayout;
     private View mResultLayout;
 

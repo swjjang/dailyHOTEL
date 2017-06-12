@@ -10,11 +10,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.util.FontManager;
+import com.daily.base.util.ScreenUtils;
 import com.daily.base.widget.DailyTextView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Coupon;
@@ -145,6 +147,7 @@ public class CouponListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     {
         View rootView;
         View listItemLayout;
+        LinearLayout dateTextLayout;
         TextView couponPriceTextView;
         TextView descriptionTextView;
         TextView expireTextView;
@@ -162,6 +165,7 @@ public class CouponListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
             rootView = itemView;
             listItemLayout = itemView.findViewById(R.id.listItemLayout);
+            dateTextLayout = (LinearLayout) itemView.findViewById(R.id.dateTextLayout);
             couponPriceTextView = (TextView) itemView.findViewById(R.id.couponPriceTextView);
             descriptionTextView = (TextView) itemView.findViewById(R.id.descriptionTextView);
             expireTextView = (TextView) itemView.findViewById(R.id.expireTextView);
@@ -214,6 +218,20 @@ public class CouponListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             }
 
             dueDateTextView.setText(strDueDate);
+
+            dueDateTextView.post(new Runnable()
+            {
+                @Override
+                public void run()
+                {
+                    int lineCount = dueDateTextView.getLineCount();
+                    dateTextLayout.setOrientation(lineCount > 1 ? LinearLayout.VERTICAL : LinearLayout.HORIZONTAL);
+                    LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) dueDateTextView.getLayoutParams();
+                    layoutParams.topMargin = lineCount > 1 ? ScreenUtils.dpToPx(mContext, -2d) : 0;
+                    layoutParams.leftMargin = lineCount > 1 ? 0 : ScreenUtils.dpToPx(mContext, 2d);
+                    dueDateTextView.setLayoutParams(layoutParams);
+                }
+            });
 
             String lastLineText = "";
             boolean isEmptyStayFromTo = DailyTextUtils.isTextEmpty(coupon.stayFrom, coupon.stayTo);

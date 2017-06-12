@@ -1,11 +1,13 @@
 package com.twoheart.dailyhotel.screen.mydaily.coupon;
 
 import android.content.Context;
+import android.graphics.Paint;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.daily.base.util.DailyTextUtils;
@@ -131,9 +133,39 @@ public class CouponHistoryListAdapter extends RecyclerView.Adapter<CouponHistory
 
             builder.setLength(0);
         }
+        if (DailyTextUtils.isTextEmpty(strExpire) == false)
+        {
+            builder.insert(0, strExpire);
+        }
 
+        holder.expireTextView.post(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                Paint paint = holder.expireTextView.getPaint();
+                int width = holder.expireTextView.getMeasuredWidth() - holder.expireTextView.getPaddingRight() - holder.expireTextView.getPaddingLeft();
+                int textSize = builder.toString().length();
+                int endPosition = paint.breakText(builder.toString(), true, width, null);
 
-        holder.expireTextView.setText(strExpire + builder.toString());
+                LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) holder.expireTextView.getLayoutParams();
+
+                if (textSize > endPosition)
+                {
+                    String findText = " | ";
+                    int index = builder.indexOf(findText);
+                    builder.replace(index, index + findText.length(), "\n");
+                    holder.expireTextView.setLineSpacing(0, 0.8f);
+                    params.topMargin = ScreenUtils.dpToPx(mContext, 2d);
+                } else
+                {
+                    holder.expireTextView.setLineSpacing(0, 1f);
+                    params.topMargin = ScreenUtils.dpToPx(mContext, 4d);
+                }
+
+                holder.expireTextView.setText(builder.toString());
+            }
+        });
 
         holder.usableStayIcon.setImageResource(coupon.availableInStay == true ? R.drawable.ic_badge_hotel_on : R.drawable.ic_badge_hotel_off);
         holder.usableGourmetIcon.setImageResource(coupon.availableInGourmet == true ? R.drawable.ic_badge_gourmet_on : R.drawable.ic_badge_gourmet_off);
