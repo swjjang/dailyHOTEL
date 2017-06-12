@@ -95,9 +95,9 @@ public class BookingRemoteImpl implements BookingInterface
     }
 
     @Override
-    public Observable<Boolean> getStayOutboundHideBooking(int reservationIndex)
+    public Observable<Boolean> getStayOutboundHideBooking(int bookingIndex)
     {
-        return DailyMobileAPI.getInstance(mContext).getStayOutboundHideBooking(reservationIndex).map(new Function<BaseDto<BookingHideData>, Boolean>()
+        return DailyMobileAPI.getInstance(mContext).getStayOutboundHideBooking(bookingIndex).map(new Function<BaseDto<BookingHideData>, Boolean>()
         {
             @Override
             public Boolean apply(@io.reactivex.annotations.NonNull BaseDto<BookingHideData> bookingHideDataBaseDto) throws Exception
@@ -124,9 +124,9 @@ public class BookingRemoteImpl implements BookingInterface
     }
 
     @Override
-    public Observable<StayOutboundBookingDetail> getStayOutboundBookingDetail(int reservationIndex)
+    public Observable<StayOutboundBookingDetail> getStayOutboundBookingDetail(int bookingIndex)
     {
-        return DailyMobileAPI.getInstance(mContext).getStayOutboundBookingDetail(reservationIndex).map(new Function<BaseDto<StayOutboundBookingDetailData>, StayOutboundBookingDetail>()
+        return DailyMobileAPI.getInstance(mContext).getStayOutboundBookingDetail(bookingIndex).map(new Function<BaseDto<StayOutboundBookingDetailData>, StayOutboundBookingDetail>()
         {
             @Override
             public StayOutboundBookingDetail apply(@io.reactivex.annotations.NonNull BaseDto<StayOutboundBookingDetailData> stayOutboundBookingDetailDataBaseDto) throws Exception

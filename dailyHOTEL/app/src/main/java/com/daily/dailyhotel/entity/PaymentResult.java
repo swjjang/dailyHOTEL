@@ -2,7 +2,7 @@ package com.daily.dailyhotel.entity;
 
 public class PaymentResult
 {
-    public int reservationId;
+    public int bookingIndex;
     public String result;
 
     public PaymentResult()

@@ -672,7 +672,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
                     startActivityForResult(StayOutboundThankYouActivity.newInstance(getActivity(), mStayIndex, mStayName, mImageUrl, mStayOutboundPayment.totalPrice//
                         , mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
                         , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
-                        , mStayOutboundPayment.checkInTime, mStayOutboundPayment.checkOutTime, mRoomType, paymentResult.reservationId), StayOutboundPaymentActivity.REQUEST_CODE_THANK_YOU);
+                        , mStayOutboundPayment.checkInTime, mStayOutboundPayment.checkOutTime, mRoomType, paymentResult.bookingIndex), StayOutboundPaymentActivity.REQUEST_CODE_THANK_YOU);
                 }
             }, new Consumer<Throwable>()
             {
@@ -720,7 +720,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
                             startActivityForResult(StayOutboundThankYouActivity.newInstance(getActivity(), mStayIndex, mStayName, mImageUrl, mStayOutboundPayment.totalPrice//
                                 , mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
                                 , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
-                                , mStayOutboundPayment.checkInTime, mStayOutboundPayment.checkOutTime, mRoomType, paymentResult.reservationId), StayOutboundPaymentActivity.REQUEST_CODE_THANK_YOU);
+                                , mStayOutboundPayment.checkInTime, mStayOutboundPayment.checkOutTime, mRoomType, paymentResult.bookingIndex), StayOutboundPaymentActivity.REQUEST_CODE_THANK_YOU);
                         }
                     }, new Consumer<Throwable>()
                     {

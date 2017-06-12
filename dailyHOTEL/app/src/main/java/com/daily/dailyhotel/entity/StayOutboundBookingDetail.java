@@ -30,7 +30,6 @@ public class StayOutboundBookingDetail
     public String checkOutDate;
     public String checkOutTime;
 
-    public String aggregationId;
     public PaymentType paymentType;
     public String paymentDate;
 
