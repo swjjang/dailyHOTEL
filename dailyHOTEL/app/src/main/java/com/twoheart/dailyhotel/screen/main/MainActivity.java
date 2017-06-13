@@ -167,7 +167,7 @@ public class MainActivity extends BaseActivity implements Constants, BaseMenuNav
 
         initLayout();
 
-        if (VersionUtils.isOverAPI23() == true && DailyPreference.getInstance(this).isShowAppPermissionsGuide() == false)
+        if (DailyPreference.getInstance(this).isShowAppPermissionsGuide() == false)
         {
             showAppPermissionsGuideDialog(new View.OnClickListener()
             {
