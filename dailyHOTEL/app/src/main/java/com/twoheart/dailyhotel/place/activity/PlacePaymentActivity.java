@@ -767,19 +767,24 @@ public abstract class PlacePaymentActivity extends BaseActivity
                                 jsonObject = dataJSONArray.getJSONObject(0);
                             } else
                             {
+                                boolean findCard = false;
+
                                 for (int i = 0; i < length; i++)
                                 {
                                     jsonObject = dataJSONArray.getJSONObject(i);
 
-                                    String value = jsonObject.getString("print_cardno").replaceAll("\\*|-", "").substring(4) + jsonObject.getString("billkey").substring(3, 7);
+                                    String value = jsonObject.getString("print_cardno").replaceAll("\\*|-", "") + jsonObject.getString("billkey").substring(3, 7);
 
-                                    if (selectedSimpleCard.equalsIgnoreCase(jsonObject.getString("billkey")) == true)
+                                    if (selectedSimpleCard.equalsIgnoreCase(value) == true)
                                     {
-                                        break;
-                                    } else if (selectedSimpleCard.equalsIgnoreCase(value) == true)
-                                    {
+                                        findCard = true;
                                         break;
                                     }
+                                }
+
+                                if (findCard == false)
+                                {
+                                    jsonObject = dataJSONArray.getJSONObject(0);
                                 }
                             }
 

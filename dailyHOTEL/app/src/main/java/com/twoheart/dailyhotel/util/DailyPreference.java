@@ -1462,7 +1462,7 @@ public class DailyPreference
 
     public void setSelectedSimpleCard(CreditCard creditCard)
     {
-        setValue(mEditor, KEY_SELECTED_SIMPLE_CARD, Crypto.urlEncrypt(creditCard.number.replaceAll("\\*|-", "").substring(4) + creditCard.billingkey.substring(3, 7)));
+        setValue(mEditor, KEY_SELECTED_SIMPLE_CARD, Crypto.urlEncrypt(creditCard.number.replaceAll("\\*|-", "") + creditCard.billingkey.substring(3, 7)));
     }
 
     // version - 2.0.4 로 강업 이후 삭제 필요 부분
