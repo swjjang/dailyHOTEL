@@ -1480,7 +1480,7 @@ public class DailyMobileAPI implements IDailyNetwork
             : "MzAkODEkNDckNjgkNDAkMzkkODckMSQ4OSQyOCQxNCQzMiQ4JDEkMzckNTUk$QAGkRCM0ZGGMkM1MBzkyQTBEOEMxRDgL1OGUWENFMUM3MEWZJEOURDMOEAM1NjY1RjE2MEVDQjc4RTSA5MzQxQjQ2Rjk1VMMHUEyRg==$";
 
         final String API = Constants.UNENCRYPTED_URL ? "api/v1/outbound/hotel-reservations/{reservationIdx}/cancelinfos"//
-            : "";
+            : "MTEyJDY2JDExMCQxMjAkMjEkNTMkMTE2JDEyMiQxNSQxNjYkMzAkMTY3JDE1NSQzNSQ3MCQyMiQ=$MzRFOUM4N0ZCODAD4QTNDOHODA3RkE3QMjM4UOEY0RURCMDlDNEEyQTdFONjM3MEExQ0UxQIUSM4Qjc1NzY0MTQ1Nzc0NDgyRTQ2REZFRjU2NkRFNDgzNUjIyJEMzEwCNZEQ5RUMyMzg2Nzk1MjhDMUQ5RUE0QBzlEQzY0MTFGRDXEI3MzNGM0UxQzY=$";
 
         Map<String, String> urlParams = new HashMap<>();
         urlParams.put("{reservationIdx}", Integer.toString(bookingIndex));
@@ -1494,7 +1494,7 @@ public class DailyMobileAPI implements IDailyNetwork
             : "MzAkODEkNDckNjgkNDAkMzkkODckMSQ4OSQyOCQxNCQzMiQ4JDEkMzckNTUk$QAGkRCM0ZGGMkM1MBzkyQTBEOEMxRDgL1OGUWENFMUM3MEWZJEOURDMOEAM1NjY1RjE2MEVDQjc4RTSA5MzQxQjQ2Rjk1VMMHUEyRg==$";
 
         final String API = Constants.UNENCRYPTED_URL ? "api/v1/outbound/hotel-reservations/{reservationIdx}/cancel"//
-            : "";
+            : "NiQxMTIkMTMxJDY5JDg4JDE2MSQ4MiQxMDQkOTYkMjgkOSQzNiQ1OCQ3OSQxMzgkMTUyJA==$NjYxRTFE3DQTk4RkY3N0FEMjc0QjcW1OTgzNFDdGOTY3RTFEODMxRTM5QjCUxMjdBMzQ4MjFDKQjc0NBTY5NDgxEQjYyNzVAyN0ZCBNjI5RDczINzZENEQzNTcV1MTVBMjgwNTQ0OTQY3OBDhDMjIzNTJI3NzI0RkM3MTY5MjNBCRDlDNUQ0ODBDNjA=$";
 
         Map<String, String> urlParams = new HashMap<>();
         urlParams.put("{reservationIdx}", Integer.toString(bookingIndex));
