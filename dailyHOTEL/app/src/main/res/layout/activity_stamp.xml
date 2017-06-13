@@ -187,7 +187,7 @@
                     android:layout_marginLeft="15dp"
                     android:layout_marginRight="16dp"
                     android:layout_toLeftOf="@+id/freePassCouponLayout"
-                    android:text="프리패스 발급 전 문구는\n공백포함 32자 까지 들어갑니다."
+                    android:text="@string/message_stamp_before_issuance"
                     android:textColor="@color/default_text_c666666"
                     android:textSize="13dp"/>
 

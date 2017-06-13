@@ -2,8 +2,10 @@ package com.twoheart.dailyhotel.screen.main;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -12,8 +14,10 @@ import android.provider.Settings;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -67,6 +71,7 @@ public class MainActivity extends BaseActivity implements Constants, BaseMenuNav
     MainFragmentManager mMainFragmentManager;
     MenuBarLayout mMenuBarLayout;
     private Dialog mSettingNetworkDialog;
+    private Dialog mAppPermissionsGuideDialog;
     View mSplashLayout;
     private DailyDeepLink mDailyDeepLink;
 
@@ -162,10 +167,33 @@ public class MainActivity extends BaseActivity implements Constants, BaseMenuNav
 
         initLayout();
 
-        mNetworkController.requestCheckServer();
+        if (DailyPreference.getInstance(this).isShowAppPermissionsGuide() == false)
+        {
+            showAppPermissionsGuideDialog(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    DailyPreference.getInstance(MainActivity.this).setShowAppPermissionsGuide(true);
 
-        // 3초안에 메인화면이 뜨지 않으면 프로그래스바가 나온다
-        mDelayTimeHandler.sendEmptyMessageDelayed(0, 3000);
+                    if (mAppPermissionsGuideDialog != null && mAppPermissionsGuideDialog.isShowing() == true)
+                    {
+                        mAppPermissionsGuideDialog.dismiss();
+                    }
+
+                    mNetworkController.requestCheckServer();
+
+                    // 3초안에 메인화면이 뜨지 않으면 프로그래스바가 나온다
+                    mDelayTimeHandler.sendEmptyMessageDelayed(0, 3000);
+                }
+            }, null);
+        } else
+        {
+            mNetworkController.requestCheckServer();
+
+            // 3초안에 메인화면이 뜨지 않으면 프로그래스바가 나온다
+            mDelayTimeHandler.sendEmptyMessageDelayed(0, 3000);
+        }
 
         // 로그인한 유저와 로그인하지 않은 유저의 판단값이 다르다.
         if (DailyUserPreference.getInstance(this).isBenefitAlarm() == true)
@@ -582,6 +610,16 @@ public class MainActivity extends BaseActivity implements Constants, BaseMenuNav
             mSettingNetworkDialog = null;
         }
 
+        if (mAppPermissionsGuideDialog != null)
+        {
+            if (mAppPermissionsGuideDialog.isShowing() == true)
+            {
+                mAppPermissionsGuideDialog.dismiss();
+            }
+
+            mAppPermissionsGuideDialog = null;
+        }
+
         super.onDestroy();
     }
 
@@ -817,6 +855,42 @@ public class MainActivity extends BaseActivity implements Constants, BaseMenuNav
             mSettingNetworkDialog.show();
 
             mSettingNetworkDialog.getWindow().setAttributes(layoutParams);
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+        }
+    }
+
+    void showAppPermissionsGuideDialog(View.OnClickListener onClickListener, DialogInterface.OnCancelListener onCancelListener)
+    {
+        if (isFinishing())
+        {
+            return;
+        }
+
+        LayoutInflater layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View dialogView = layoutInflater.inflate(R.layout.view_dialog_app_permissions_guide, null, false);
+
+        mAppPermissionsGuideDialog = new Dialog(this);
+        mAppPermissionsGuideDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        mAppPermissionsGuideDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        mAppPermissionsGuideDialog.setCanceledOnTouchOutside(false);
+
+        mAppPermissionsGuideDialog.setCancelable(false);
+        mAppPermissionsGuideDialog.setOnCancelListener(onCancelListener);
+
+        View confirmTextView = dialogView.findViewById(R.id.confirmTextView);
+        confirmTextView.setOnClickListener(onClickListener);
+
+        try
+        {
+            mAppPermissionsGuideDialog.setContentView(dialogView);
+
+            WindowManager.LayoutParams layoutParams = ScreenUtils.getDialogWidthLayoutParams(this, mAppPermissionsGuideDialog);
+
+            mAppPermissionsGuideDialog.show();
+
+            mAppPermissionsGuideDialog.getWindow().setAttributes(layoutParams);
         } catch (Exception e)
         {
             ExLog.d(e.toString());

@@ -598,7 +598,7 @@ public class StayOutboundBookingDetailView extends BaseDialogView<StayOutboundBo
 
 
                 case NRD:
-                case OVER_DATE:
+                case TIMEOVER:
                 default:
                 {
                     mBookingDetail03DataBinding.defaultRefundPolicyLayout.setVisibility(View.VISIBLE);

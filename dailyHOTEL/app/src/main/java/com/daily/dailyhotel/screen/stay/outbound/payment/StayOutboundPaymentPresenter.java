@@ -672,7 +672,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
                     startActivityForResult(StayOutboundThankYouActivity.newInstance(getActivity(), mStayIndex, mStayName, mImageUrl, mStayOutboundPayment.totalPrice//
                         , mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
                         , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
-                        , mStayOutboundPayment.checkInTime, mStayOutboundPayment.checkOutTime, mRoomType, paymentResult.reservationId), StayOutboundPaymentActivity.REQUEST_CODE_THANK_YOU);
+                        , mStayOutboundPayment.checkInTime, mStayOutboundPayment.checkOutTime, mRoomType, paymentResult.bookingIndex), StayOutboundPaymentActivity.REQUEST_CODE_THANK_YOU);
                 }
             }, new Consumer<Throwable>()
             {
@@ -720,7 +720,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
                             startActivityForResult(StayOutboundThankYouActivity.newInstance(getActivity(), mStayIndex, mStayName, mImageUrl, mStayOutboundPayment.totalPrice//
                                 , mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
                                 , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
-                                , mStayOutboundPayment.checkInTime, mStayOutboundPayment.checkOutTime, mRoomType, paymentResult.reservationId), StayOutboundPaymentActivity.REQUEST_CODE_THANK_YOU);
+                                , mStayOutboundPayment.checkInTime, mStayOutboundPayment.checkOutTime, mRoomType, paymentResult.bookingIndex), StayOutboundPaymentActivity.REQUEST_CODE_THANK_YOU);
                         }
                     }, new Consumer<Throwable>()
                     {
@@ -938,7 +938,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
 
         if (card != null && DailyTextUtils.isTextEmpty(card.number, card.billKey) == false)
         {
-            DailyPreference.getInstance(getActivity()).setSelectedCard(card);
+            DailyPreference.getInstance(getActivity()).setFavoriteCard(card.number, card.billKey);
         }
     }
 
@@ -964,7 +964,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
         mSelectedCard.billKey = cardBillingKey;
         mSelectedCard.cd = cardCd;
 
-        DailyPreference.getInstance(getActivity()).setSelectedCard(mSelectedCard);
+        DailyPreference.getInstance(getActivity()).setFavoriteCard(mSelectedCard.number, mSelectedCard.billKey);
     }
 
     private void notifyGuestInformationChanged()
@@ -1024,7 +1024,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
         } else
         {
             // 기존에 저장된 카드 정보를 가져온다.
-            String selectedCard = DailyPreference.getInstance(getActivity()).getSelectedSimpleCard();
+            String selectedCard = DailyPreference.getInstance(getActivity()).getFavoriteCard();
 
             if (selectedCard == null)
             {
@@ -1033,7 +1033,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
             {
                 for (Card card : cardList)
                 {
-                    String value = card.number.replaceAll("\\*|-", "").substring(4) + card.billKey.substring(3, 7);
+                    String value = card.number.replaceAll("\\*|-", "") + card.billKey.substring(3, 7);
 
                     // 이전 버전 호환.
                     if (selectedCard.equalsIgnoreCase(card.billKey) == true//

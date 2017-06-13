@@ -462,9 +462,9 @@ public class HotelPaymentActivity extends PlacePaymentActivity
         mSelectedCreditCard = creditCard;
 
         if (paymentType == PlacePaymentInformation.PaymentType.EASY_CARD &&//
-            creditCard != null && DailyTextUtils.isTextEmpty(creditCard.billingkey) == false)
+            creditCard != null && DailyTextUtils.isTextEmpty(creditCard.number, creditCard.billingkey) == false)
         {
-            DailyPreference.getInstance(this).setSelectedSimpleCard(creditCard);
+            DailyPreference.getInstance(this).setFavoriteCard(creditCard.number, creditCard.billingkey);
         }
 
         mOnEventListener.changedPaymentType(paymentType);
@@ -559,7 +559,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
         {
             try
             {
-                DailyPreference.getInstance(this).setSelectedSimpleCard(mSelectedCreditCard);
+                DailyPreference.getInstance(this).setFavoriteCard(mSelectedCreditCard.number, mSelectedCreditCard.billingkey);
             } catch (Exception e)
             {
                 ExLog.d(e.toString());

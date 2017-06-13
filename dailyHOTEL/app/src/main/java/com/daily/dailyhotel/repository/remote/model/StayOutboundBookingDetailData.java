@@ -67,9 +67,6 @@ public class StayOutboundBookingDetailData
     @JsonField(name = "refundStatus")
     public String refundStatus;
 
-    @JsonField(name = "aggregationId")
-    public String aggregationId;
-
     @JsonField(name = "cancelPolicyDescription")
     public String cancelPolicyDescription;
 
@@ -122,7 +119,6 @@ public class StayOutboundBookingDetailData
         stayOutboundBookingDetail.checkInTime = checkinTime;
         stayOutboundBookingDetail.checkOutDate = checkoutDate;
         stayOutboundBookingDetail.checkOutTime = checkoutTime;
-        stayOutboundBookingDetail.aggregationId = aggregationId;
         stayOutboundBookingDetail.paymentType = StayOutboundBookingDetail.PaymentType.valueOf(paymentType);
         stayOutboundBookingDetail.paymentDate = paymentDate;
 

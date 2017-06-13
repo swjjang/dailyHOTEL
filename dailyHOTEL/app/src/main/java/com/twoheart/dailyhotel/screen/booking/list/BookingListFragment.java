@@ -861,10 +861,41 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
                             addCompositeDisposable(mBookingRemoteImpl.getStayOutboundHideBooking(booking.index).subscribe(new Consumer<Boolean>()
                             {
                                 @Override
-                                public void accept(@NonNull Boolean aBoolean) throws Exception
+                                public void accept(@NonNull Boolean result) throws Exception
+                                {
+                                    if (result == true)
+                                    {
+                                        baseActivity.showSimpleDialog(getString(R.string.dialog_notice2)//
+                                            , getString(R.string.message_booking_delete_booking)//
+                                            , getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
+                                            {
+                                                @Override
+                                                public void onDismiss(DialogInterface dialog)
+                                                {
+                                                    onRefresh();
+                                                }
+                                            });
+                                    } else
+                                    {
+                                        baseActivity.showSimpleDialog(getString(R.string.dialog_notice2)//
+                                            , getString(R.string.message_booking_failed_delete_booking)//
+                                            , getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
+                                            {
+                                                @Override
+                                                public void onDismiss(DialogInterface dialog)
+                                                {
+                                                    onRefresh();
+                                                }
+                                            });
+                                    }
+                                }
+                            }, new Consumer<Throwable>()
+                            {
+                                @Override
+                                public void accept(@NonNull Throwable throwable) throws Exception
                                 {
                                     baseActivity.showSimpleDialog(getString(R.string.dialog_notice2)//
-                                        , getString(R.string.message_booking_delete_booking)//
+                                        , getString(R.string.message_booking_failed_delete_booking)//
                                         , getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
                                         {
                                             @Override
@@ -873,13 +904,6 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
                                                 onRefresh();
                                             }
                                         });
-                                }
-                            }, new Consumer<Throwable>()
-                            {
-                                @Override
-                                public void accept(@NonNull Throwable throwable) throws Exception
-                                {
-                                    onHandleError(throwable);
                                 }
                             }));
                             break;

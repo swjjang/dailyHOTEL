@@ -79,7 +79,7 @@ public abstract class BaseExceptionPresenter<T1 extends BaseActivity, T2 extends
         }
     }
 
-    protected void onHandleFinishError(Throwable throwable)
+    protected void onHandleErrorAndFinish(Throwable throwable)
     {
         unLockAll();
 

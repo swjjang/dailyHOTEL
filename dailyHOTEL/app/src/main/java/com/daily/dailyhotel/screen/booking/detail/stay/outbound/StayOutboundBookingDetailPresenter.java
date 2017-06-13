@@ -12,9 +12,7 @@ import android.text.Spannable;
 import android.text.SpannableString;
 import android.view.View;
 
-import com.crashlytics.android.Crashlytics;
 import com.daily.base.BaseAnalyticsInterface;
-import com.daily.base.exception.BaseException;
 import com.daily.base.exception.DuplicateRunException;
 import com.daily.base.exception.PermissionException;
 import com.daily.base.exception.ProviderException;
@@ -28,6 +26,7 @@ import com.daily.dailyhotel.entity.People;
 import com.daily.dailyhotel.entity.StayOutboundBookingDetail;
 import com.daily.dailyhotel.repository.remote.BookingRemoteImpl;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
+import com.daily.dailyhotel.screen.booking.detail.stay.outbound.refund.StayOutboundRefundActivity;
 import com.daily.dailyhotel.screen.common.call.CallDialogActivity;
 import com.daily.dailyhotel.screen.stay.outbound.detail.StayOutboundDetailActivity;
 import com.daily.dailyhotel.util.DailyLocationExFactory;
@@ -37,7 +36,6 @@ import com.twoheart.dailyhotel.screen.common.HappyTalkCategoryDialog;
 import com.twoheart.dailyhotel.screen.common.PermissionManagerActivity;
 import com.twoheart.dailyhotel.screen.common.ZoomMapActivity;
 import com.twoheart.dailyhotel.screen.information.FAQActivity;
-import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyUserPreference;
 import com.twoheart.dailyhotel.util.KakaoLinkManager;
@@ -51,7 +49,6 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Action;
 import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Consumer;
-import retrofit2.HttpException;
 
 /**
  * Created by sheldon
@@ -64,7 +61,7 @@ public class StayOutboundBookingDetailPresenter extends BaseExceptionPresenter<S
     private CommonRemoteImpl mCommonRemoteImpl;
     private BookingRemoteImpl mBookingRemoteImpl;
 
-    private int mReservationIndex;
+    private int mBookingIndex;
     private String mImageUrl;
 
     private CommonDateTime mCommonDateTime;
@@ -115,7 +112,7 @@ public class StayOutboundBookingDetailPresenter extends BaseExceptionPresenter<S
             return true;
         }
 
-        mReservationIndex = intent.getIntExtra(StayOutboundBookingDetailActivity.INTENT_EXTRA_DATA_RESERVATION_INDEX, -1);
+        mBookingIndex = intent.getIntExtra(StayOutboundBookingDetailActivity.INTENT_EXTRA_DATA_BOOKING_INDEX, -1);
         mImageUrl = intent.getStringExtra(StayOutboundBookingDetailActivity.INTENT_EXTRA_DATA_IMAGE_URL);
 
         return true;
@@ -225,7 +222,7 @@ public class StayOutboundBookingDetailPresenter extends BaseExceptionPresenter<S
         setRefresh(false);
         screenLock(showProgress);
 
-        addCompositeDisposable(Observable.zip(mCommonRemoteImpl.getCommonDateTime(), mBookingRemoteImpl.getStayOutboundBookingDetail(mReservationIndex)//
+        addCompositeDisposable(Observable.zip(mCommonRemoteImpl.getCommonDateTime(), mBookingRemoteImpl.getStayOutboundBookingDetail(mBookingIndex)//
             , new BiFunction<CommonDateTime, StayOutboundBookingDetail, StayOutboundBookingDetail>()
             {
 
@@ -241,7 +238,7 @@ public class StayOutboundBookingDetailPresenter extends BaseExceptionPresenter<S
             @Override
             public void accept(@io.reactivex.annotations.NonNull StayOutboundBookingDetail stayOutboundBookingDetail) throws Exception
             {
-                onStayOutboundBookingDetail(stayOutboundBookingDetail);
+                notifyStayOutboundBookingDetailChanged();
 
                 unLockAll();
             }
@@ -250,7 +247,7 @@ public class StayOutboundBookingDetailPresenter extends BaseExceptionPresenter<S
             @Override
             public void accept(@io.reactivex.annotations.NonNull Throwable throwable) throws Exception
             {
-                onHandleFinishError(throwable);
+                onHandleErrorAndFinish(throwable);
             }
         }));
     }
@@ -395,32 +392,25 @@ public class StayOutboundBookingDetailPresenter extends BaseExceptionPresenter<S
         switch (mStayOutboundBookingDetail.refundStatus)
         {
             case FULL:
-                //                Intent intent = StayAutoRefundActivity.newInstance(StayReservationDetailActivity.this, stayBookingDetail);
-                //                startActivityForResult(intent, CODE_RESULT_ACTIVITY_STAY_AUTOREFUND);
-                break;
-
             case PARTIAL:
-                //                Intent intent = StayAutoRefundActivity.newInstance(StayReservationDetailActivity.this, stayBookingDetail);
-                //                startActivityForResult(intent, CODE_RESULT_ACTIVITY_STAY_AUTOREFUND);
+                startActivityForResult(StayOutboundRefundActivity.newInstance(getActivity(), mBookingIndex)//
+                    , StayOutboundBookingDetailActivity.REQUEST_CODE_REFUND);
                 break;
 
             case NRD:
-                break;
-
-            case OVER_DATE:
-                break;
-
+            case TIMEOVER:
             default:
                 getViewInterface().showConciergeDialog(new DialogInterface.OnDismissListener()
                 {
                     @Override
                     public void onDismiss(DialogInterface dialog)
                     {
-                        unLockAll();
                     }
                 });
                 break;
         }
+
+        unLockAll();
     }
 
     @Override
@@ -471,7 +461,7 @@ public class StayOutboundBookingDetailPresenter extends BaseExceptionPresenter<S
             return;
         }
 
-        startActivityForResult(IssuingReceiptActivity.newInstance(getActivity(), mReservationIndex), StayOutboundBookingDetailActivity.REQUEST_CODE_ISSUING_RECEIPT);
+        startActivityForResult(IssuingReceiptActivity.newInstance(getActivity(), mBookingIndex), StayOutboundBookingDetailActivity.REQUEST_CODE_ISSUING_RECEIPT);
     }
 
     @Override
@@ -635,9 +625,9 @@ public class StayOutboundBookingDetailPresenter extends BaseExceptionPresenter<S
         mStayOutboundBookingDetail = stayOutboundBookingDetail;
     }
 
-    private void onStayOutboundBookingDetail(StayOutboundBookingDetail stayOutboundBookingDetail)
+    private void notifyStayOutboundBookingDetailChanged()
     {
-        if (stayOutboundBookingDetail == null)
+        if (mStayOutboundBookingDetail == null)
         {
             return;
         }
@@ -646,8 +636,8 @@ public class StayOutboundBookingDetailPresenter extends BaseExceptionPresenter<S
 
         try
         {
-            String checkInTime = getString(R.string.label_stay_outbound_payment_hour, stayOutboundBookingDetail.checkInTime.split(":")[0]);
-            String checkInDate = DailyCalendar.convertDateFormatString(stayOutboundBookingDetail.checkInDate, "yyyy-MM-dd", DATE_FORMAT);
+            String checkInTime = getString(R.string.label_stay_outbound_payment_hour, mStayOutboundBookingDetail.checkInTime.split(":")[0]);
+            String checkInDate = DailyCalendar.convertDateFormatString(mStayOutboundBookingDetail.checkInDate, "yyyy-MM-dd", DATE_FORMAT);
 
             SpannableString checkInDateSpannableString = new SpannableString(checkInDate + " " + checkInTime);
             checkInDateSpannableString.setSpan( //
@@ -655,8 +645,8 @@ public class StayOutboundBookingDetailPresenter extends BaseExceptionPresenter<S
                 checkInDate.length(), checkInDate.length() + checkInTime.length() + 1,//
                 Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
-            String checkOutTime = getString(R.string.label_stay_outbound_payment_hour, stayOutboundBookingDetail.checkOutTime.split(":")[0]);
-            String checkOutDate = DailyCalendar.convertDateFormatString(stayOutboundBookingDetail.checkOutDate, "yyyy-MM-dd", DATE_FORMAT);
+            String checkOutTime = getString(R.string.label_stay_outbound_payment_hour, mStayOutboundBookingDetail.checkOutTime.split(":")[0]);
+            String checkOutDate = DailyCalendar.convertDateFormatString(mStayOutboundBookingDetail.checkOutDate, "yyyy-MM-dd", DATE_FORMAT);
 
             SpannableString checkOutDateSpannableString = new SpannableString(checkOutDate + " " + checkOutTime);
             checkOutDateSpannableString.setSpan( //
@@ -664,17 +654,17 @@ public class StayOutboundBookingDetailPresenter extends BaseExceptionPresenter<S
                 checkOutDate.length(), checkOutDate.length() + checkOutTime.length() + 1,//
                 Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
-            int nights = DailyCalendar.compareDateDay(DailyCalendar.convertDateFormatString(stayOutboundBookingDetail.checkOutDate, "yyyy-MM-dd", DailyCalendar.ISO_8601_FORMAT)//
-                , DailyCalendar.convertDateFormatString(stayOutboundBookingDetail.checkInDate, "yyyy-MM-dd", DailyCalendar.ISO_8601_FORMAT));
+            int nights = DailyCalendar.compareDateDay(DailyCalendar.convertDateFormatString(mStayOutboundBookingDetail.checkOutDate, "yyyy-MM-dd", DailyCalendar.ISO_8601_FORMAT)//
+                , DailyCalendar.convertDateFormatString(mStayOutboundBookingDetail.checkInDate, "yyyy-MM-dd", DailyCalendar.ISO_8601_FORMAT));
             getViewInterface().setBookingDate(checkInDateSpannableString, checkOutDateSpannableString, nights);
         } catch (Exception e)
         {
             ExLog.d(e.toString());
         }
 
-        getViewInterface().setBookingDetail(stayOutboundBookingDetail);
+        getViewInterface().setBookingDetail(mStayOutboundBookingDetail);
 
-        getViewInterface().setRefundPolicy(stayOutboundBookingDetail);
+        getViewInterface().setRefundPolicy(mStayOutboundBookingDetail);
     }
 
     private Observable<Location> searchMyLocation(Observable locationAnimationObservable)

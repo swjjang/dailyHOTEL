@@ -21,6 +21,7 @@ public class StampLayout extends BaseLayout implements View.OnClickListener
     private View mPushLayout, mStampHistoryTextView;
     private View mFreePassLayout, mFreePassCouponLayout;
     private TextView mFreePassCouponTextView;
+    private TextView mFreePassTextView;
 
     public interface OnEventListener extends OnBaseEventListener
     {
@@ -50,6 +51,7 @@ public class StampLayout extends BaseLayout implements View.OnClickListener
         mPushLayout = view.findViewById(R.id.pushLayout);
 
         mFreePassLayout = view.findViewById(R.id.freePassLayout);
+        mFreePassTextView = (TextView) view.findViewById(R.id.freePassTextView);
         mFreePassCouponLayout = mFreePassLayout.findViewById(R.id.freePassCouponLayout);
         mFreePassCouponTextView = (TextView) mFreePassCouponLayout.findViewById(R.id.freePassCouponTextView);
 
@@ -245,10 +247,12 @@ public class StampLayout extends BaseLayout implements View.OnClickListener
 
         if (enabled == true)
         {
+            mFreePassTextView.setText(R.string.message_stamp_completed_issuance);
             mFreePassCouponLayout.setBackgroundResource(R.drawable.ic_stamp_coupon_active);
             mFreePassCouponTextView.setText(R.string.label_stamp_completed_issuance);
         } else
         {
+            mFreePassTextView.setText(R.string.message_stamp_before_issuance);
             mFreePassCouponLayout.setBackgroundResource(R.drawable.ic_stamp_coupon_inactive);
             mFreePassCouponTextView.setText(R.string.label_stamp_before_issuance);
         }

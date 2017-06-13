@@ -84,6 +84,7 @@ public class DailyPreference
     private static final String KEY_TRUE_VR_SUPPORT = "213";
     private static final String KEY_TRUE_VR_CHECK_DATA_GUIDE = "214";
     private static final String KEY_PREVIEW_GUIDE = "215";
+    private static final String KEY_APP_PERMISSIONS_GUIDE = "216";
 
     private static final String KEY_STAY_OUTBOUND_SEARCH_CALENDAR = "216"; // 최초에 1회 캘린더 띄우기
 
@@ -287,6 +288,7 @@ public class DailyPreference
         String baseUrl = getBaseUrl();
         boolean isHomeTextMessageAreaEnable = isHomeTextMessageAreaEnabled();
         int countPreviewGuide = getCountPreviewGuide();
+        boolean isShowAppPermissionsGuide = isShowAppPermissionsGuide();
 
         if (mEditor != null)
         {
@@ -302,6 +304,7 @@ public class DailyPreference
         setBaseUrl(baseUrl);
         setHomeTextMessageAreaEnabled(isHomeTextMessageAreaEnable);
         setCountPreviewGuide(countPreviewGuide);
+        setShowAppPermissionsGuide(isShowAppPermissionsGuide);
 
         DailyHotel.AUTHORIZATION = null;
     }
@@ -890,6 +893,16 @@ public class DailyPreference
         return getValue(mPreferences, KEY_PREVIEW_GUIDE, 0);
     }
 
+    public void setShowAppPermissionsGuide(boolean value)
+    {
+        setValue(mEditor, KEY_APP_PERMISSIONS_GUIDE, value);
+    }
+
+    public boolean isShowAppPermissionsGuide()
+    {
+        return getValue(mPreferences, KEY_APP_PERMISSIONS_GUIDE, false);
+    }
+
     public void setShowStayOutboundSearchCalendar(boolean value)
     {
         setValue(mEditor, KEY_STAY_OUTBOUND_SEARCH_CALENDAR, value);
@@ -899,6 +912,8 @@ public class DailyPreference
     {
         return getValue(mPreferences, KEY_STAY_OUTBOUND_SEARCH_CALENDAR, true);
     }
+
+
 
     /////////////////////////////////////////////////////////////////////////////////////////
     // Remote Config Text
@@ -1483,7 +1498,7 @@ public class DailyPreference
         setValue(mEditor, KEY_NOTICE_NEW_REMOVE_LIST, value);
     }
 
-    public String getSelectedSimpleCard()
+    public String getFavoriteCard()
     {
         String value = getValue(mPreferences, KEY_SELECTED_SIMPLE_CARD, null);
 
@@ -1495,25 +1510,14 @@ public class DailyPreference
         return value;
     }
 
-    public void setSelectedSimpleCard(CreditCard creditCard)
+    public void setFavoriteCard(String number, String billingKey)
     {
-        if (creditCard == null)
+        if (DailyTextUtils.isTextEmpty(number, billingKey) == true)
         {
             setValue(mEditor, KEY_SELECTED_SIMPLE_CARD, null);
         } else
         {
-            setValue(mEditor, KEY_SELECTED_SIMPLE_CARD, Crypto.urlEncrypt(creditCard.number.replaceAll("\\*|-", "").substring(4) + creditCard.billingkey.substring(3, 7)));
-        }
-    }
-
-    public void setSelectedCard(Card card)
-    {
-        if (card == null)
-        {
-            setValue(mEditor, KEY_SELECTED_SIMPLE_CARD, null);
-        } else
-        {
-            setValue(mEditor, KEY_SELECTED_SIMPLE_CARD, Crypto.urlEncrypt(card.number.replaceAll("\\*|-", "").substring(4) + card.billKey.substring(3, 7)));
+            setValue(mEditor, KEY_SELECTED_SIMPLE_CARD, Crypto.urlEncrypt(number.replaceAll("\\*|-", "") + billingKey.substring(3, 7)));
         }
     }
 

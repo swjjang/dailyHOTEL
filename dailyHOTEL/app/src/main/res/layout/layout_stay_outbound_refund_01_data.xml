@@ -56,7 +56,7 @@
                         android:textSize="13dp"/>
 
                     <com.daily.base.widget.DailyTextView
-                        android:id="@+id/checkinDayTextView"
+                        android:id="@+id/checkInDayTextView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
@@ -84,7 +84,7 @@
                         android:textSize="13dp"/>
 
                     <com.daily.base.widget.DailyTextView
-                        android:id="@+id/checkoutDayTextView"
+                        android:id="@+id/checkOutDayTextView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"

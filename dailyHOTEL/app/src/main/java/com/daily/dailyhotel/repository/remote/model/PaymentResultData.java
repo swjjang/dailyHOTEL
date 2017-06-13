@@ -7,8 +7,8 @@ import com.daily.dailyhotel.entity.PaymentResult;
 @JsonObject
 public class PaymentResultData
 {
-    @JsonField(name = "reservationId")
-    public int reservationId;
+    @JsonField(name = "reservationIdx")
+    public int reservationIdx;
 
     @JsonField(name = "result")
     public String result;
@@ -21,7 +21,7 @@ public class PaymentResultData
     public PaymentResult getPaymentTypeEasy()
     {
         PaymentResult paymentResult = new PaymentResult();
-        paymentResult.reservationId = reservationId;
+        paymentResult.bookingIndex = reservationIdx;
         paymentResult.result = result;
         return paymentResult;
     }

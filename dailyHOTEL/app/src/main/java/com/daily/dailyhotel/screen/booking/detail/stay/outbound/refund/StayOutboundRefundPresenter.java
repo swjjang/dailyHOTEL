@@ -4,10 +4,20 @@ package com.daily.dailyhotel.screen.booking.detail.stay.outbound.refund;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.text.Spannable;
+import android.text.SpannableString;
 
 import com.daily.base.BaseAnalyticsInterface;
+import com.daily.base.util.ExLog;
+import com.daily.base.util.FontManager;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
+import com.daily.dailyhotel.entity.StayOutboundRefundDetail;
+import com.daily.dailyhotel.repository.remote.RefundRemoteImpl;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.util.DailyCalendar;
+import com.twoheart.dailyhotel.widget.CustomFontTypefaceSpan;
+
+import io.reactivex.functions.Consumer;
 
 /**
  * Created by sheldon
@@ -16,6 +26,11 @@ import com.twoheart.dailyhotel.R;
 public class StayOutboundRefundPresenter extends BaseExceptionPresenter<StayOutboundRefundActivity, StayOutboundRefundInterface> implements StayOutboundRefundView.OnEventListener
 {
     private StayOutboundRefundAnalyticsInterface mAnalytics;
+
+    private RefundRemoteImpl mRefundRemoteImpl;
+
+    private int mBookingIndex;
+    private StayOutboundRefundDetail mStayOutboundRefundDetail;
 
     public interface StayOutboundRefundAnalyticsInterface extends BaseAnalyticsInterface
     {
@@ -40,6 +55,8 @@ public class StayOutboundRefundPresenter extends BaseExceptionPresenter<StayOutb
 
         setAnalytics(new StayOutboundRefundAnalyticsImpl());
 
+        mRefundRemoteImpl = new RefundRemoteImpl(activity);
+
         setRefresh(true);
     }
 
@@ -55,6 +72,13 @@ public class StayOutboundRefundPresenter extends BaseExceptionPresenter<StayOutb
         if (intent == null)
         {
             return true;
+        }
+
+        mBookingIndex = intent.getIntExtra(StayOutboundRefundActivity.INTENT_EXTRA_DATA_BOOKING_INDEX, -1);
+
+        if (mBookingIndex < 0)
+        {
+            return false;
         }
 
         return true;
@@ -128,8 +152,25 @@ public class StayOutboundRefundPresenter extends BaseExceptionPresenter<StayOutb
             return;
         }
 
+        setRefresh(false);
+        screenLock(showProgress);
 
-
+        addCompositeDisposable(mRefundRemoteImpl.getStayOutboundRefundDetail(mBookingIndex).subscribe(new Consumer<StayOutboundRefundDetail>()
+        {
+            @Override
+            public void accept(@io.reactivex.annotations.NonNull StayOutboundRefundDetail stayOutboundRefundDetail) throws Exception
+            {
+                setStayOutboundRefundDetail(stayOutboundRefundDetail);
+                notifyStayOutboundBookingDetailChanged();
+            }
+        }, new Consumer<Throwable>()
+        {
+            @Override
+            public void accept(@io.reactivex.annotations.NonNull Throwable throwable) throws Exception
+            {
+                onHandleErrorAndFinish(throwable);
+            }
+        }));
     }
 
     @Override
@@ -138,4 +179,54 @@ public class StayOutboundRefundPresenter extends BaseExceptionPresenter<StayOutb
         getActivity().onBackPressed();
     }
 
+    @Override
+    public void onRefundClick()
+    {
+
+    }
+
+    private void setStayOutboundRefundDetail(StayOutboundRefundDetail stayOutboundRefundDetail)
+    {
+        mStayOutboundRefundDetail = stayOutboundRefundDetail;
+    }
+
+    private void notifyStayOutboundBookingDetailChanged()
+    {
+        if (mStayOutboundRefundDetail == null)
+        {
+            return;
+        }
+
+        final String DATE_FORMAT = "yyyy.MM.dd(EEE)";
+
+        try
+        {
+            String checkInTime = getString(R.string.label_stay_outbound_payment_hour, mStayOutboundRefundDetail.checkInTime.split(":")[0]);
+            String checkInDate = DailyCalendar.convertDateFormatString(mStayOutboundRefundDetail.checkInDate, "yyyy-MM-dd", DATE_FORMAT);
+
+            SpannableString checkInDateSpannableString = new SpannableString(checkInDate + " " + checkInTime);
+            checkInDateSpannableString.setSpan( //
+                new CustomFontTypefaceSpan(FontManager.getInstance(getActivity()).getBoldTypeface()),//
+                checkInDate.length(), checkInDate.length() + checkInTime.length() + 1,//
+                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+            String checkOutTime = getString(R.string.label_stay_outbound_payment_hour, mStayOutboundRefundDetail.checkOutTime.split(":")[0]);
+            String checkOutDate = DailyCalendar.convertDateFormatString(mStayOutboundRefundDetail.checkOutDate, "yyyy-MM-dd", DATE_FORMAT);
+
+            SpannableString checkOutDateSpannableString = new SpannableString(checkOutDate + " " + checkOutTime);
+            checkOutDateSpannableString.setSpan( //
+                new CustomFontTypefaceSpan(FontManager.getInstance(getActivity()).getBoldTypeface()),//
+                checkOutDate.length(), checkOutDate.length() + checkOutTime.length() + 1,//
+                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+            int nights = DailyCalendar.compareDateDay(DailyCalendar.convertDateFormatString(mStayOutboundRefundDetail.checkOutDate, "yyyy-MM-dd", DailyCalendar.ISO_8601_FORMAT)//
+                , DailyCalendar.convertDateFormatString(mStayOutboundRefundDetail.checkInDate, "yyyy-MM-dd", DailyCalendar.ISO_8601_FORMAT));
+            getViewInterface().setBookingDate(checkInDateSpannableString, checkOutDateSpannableString, nights);
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+        }
+
+        getViewInterface().setRefundDetail(mStayOutboundRefundDetail);
+    }
 }

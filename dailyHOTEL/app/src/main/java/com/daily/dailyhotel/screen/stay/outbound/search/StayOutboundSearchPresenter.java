@@ -267,10 +267,7 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
                 screenUnLock();
             }, throwable ->
             {
-                onHandleError(throwable);
-
-                // 처음 시작부터 정보를 못가져오면 종료시킨다.
-                onBackClick();
+                onHandleErrorAndFinish(throwable);
             }));
     }
 
@@ -435,7 +432,6 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
             ExLog.e(e.toString());
 
             onHandleError(e);
-            onBackClick();
         }
     }
 
