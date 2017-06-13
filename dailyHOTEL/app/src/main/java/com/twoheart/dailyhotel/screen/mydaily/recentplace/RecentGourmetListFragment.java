@@ -114,7 +114,7 @@ public class RecentGourmetListFragment extends RecentPlacesListFragment
     {
         lockUI();
 
-        String targetIndices = getPlaceIndexList();
+        String targetIndices = getPlaceIndexList(mServiceType);
         if (DailyTextUtils.isTextEmpty(targetIndices) == true)
         {
             unLockUI();
@@ -282,7 +282,7 @@ public class RecentGourmetListFragment extends RecentPlacesListFragment
             Place place = placeViewItem.getItem();
             ExLog.d("isRemove : " + (place != null));
 
-            RecentlyPlaceUtil.deleteRecentlyItemAsync(RecentlyPlaceUtil.SERVICE_TYPE_GOURMET, place.index);
+            RecentlyPlaceUtil.deleteRecentlyItemAsync(RecentlyPlaceUtil.ServiceType.GOURMET, place.index);
 
             mListLayout.setData(mListLayout.getList(), mPlaceBookingDay);
             mRecentPlaceListFragmentListener.onDeleteItemClickAnalytics();

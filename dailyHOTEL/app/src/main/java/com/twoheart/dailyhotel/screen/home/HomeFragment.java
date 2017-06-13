@@ -21,6 +21,7 @@ import com.daily.base.util.ScreenUtils;
 import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.repository.local.model.RecentlyRealmObject;
 import com.daily.dailyhotel.screen.stay.outbound.search.StayOutboundSearchActivity;
+import com.daily.dailyhotel.util.RecentlyPlaceUtil;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
@@ -74,7 +75,6 @@ import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.realm.Realm;
 import io.realm.RealmResults;
-import io.realm.Sort;
 import retrofit2.Call;
 import retrofit2.Response;
 
@@ -819,7 +819,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
             @Override
             public void execute(Realm realm)
             {
-                RealmResults<RecentlyRealmObject> realmResults = realm.where(RecentlyRealmObject.class).findAllSorted("date", Sort.DESCENDING);
+                RealmResults<RecentlyRealmObject> realmResults = RecentlyPlaceUtil.getRecentlyTypeList(RecentlyPlaceUtil.ServiceType.IB_STAY, RecentlyPlaceUtil.ServiceType.GOURMET);
                 mNetworkController.requestRecentlyList(realmResults, MAX_REQUEST_SIZE);
             }
         });

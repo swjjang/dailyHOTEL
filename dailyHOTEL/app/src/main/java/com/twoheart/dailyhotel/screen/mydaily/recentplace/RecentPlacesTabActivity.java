@@ -190,13 +190,13 @@ public class RecentPlacesTabActivity extends BaseActivity
         mFragmentList = new ArrayList<>();
 
         mRecentStayListFragment = new RecentStayListFragment();
-        mRecentStayListFragment.setPlaceType(PlaceType.HOTEL);
+        mRecentStayListFragment.setServiceType(RecentlyPlaceUtil.ServiceType.ALL_STAY);
         mRecentStayListFragment.setRecentPlaceListFragmentListener(mRecentPlaceListFragmentListener);
 
         mFragmentList.add(mRecentStayListFragment);
 
         mRecentGourmetListFragment = new RecentGourmetListFragment();
-        mRecentGourmetListFragment.setPlaceType(PlaceType.FNB);
+        mRecentGourmetListFragment.setServiceType(RecentlyPlaceUtil.ServiceType.GOURMET);
         mRecentGourmetListFragment.setRecentPlaceListFragmentListener(mRecentPlaceListFragmentListener);
 
         mFragmentList.add(mRecentGourmetListFragment);
@@ -365,21 +365,24 @@ public class RecentPlacesTabActivity extends BaseActivity
         }
     };
 
-    private RecentPlacesListFragment.OnRecentPlaceListFragmentListener mRecentPlaceListFragmentListener = new RecentPlacesListFragment.OnRecentPlaceListFragmentListener()
+    private RecentPlacesListFragment.OnRecentPlaceListFragmentListener mRecentPlaceListFragmentListener //
+        = new RecentPlacesListFragment.OnRecentPlaceListFragmentListener()
     {
         @Override
         public void onDeleteItemClickAnalytics()
         {
-            RealmResults<RecentlyRealmObject> resultList = RecentlyPlaceUtil.getRecentlyTypeList("");
+            RealmResults<RecentlyRealmObject> resultList = RecentlyPlaceUtil.getRecentlyTypeList(null);
 
             if (resultList == null || resultList.size() == 0)
             {
-                AnalyticsManager.getInstance(RecentPlacesTabActivity.this).recordScreen(RecentPlacesTabActivity.this, AnalyticsManager.Screen.MENU_RECENT_VIEW_EMPTY, null);
+                AnalyticsManager.getInstance(RecentPlacesTabActivity.this).recordScreen( //
+                    RecentPlacesTabActivity.this, AnalyticsManager.Screen.MENU_RECENT_VIEW_EMPTY, null);
             }
         }
     };
 
-    private RecentPlacesNetworkController.OnNetworkControllerListener mOnNetworkControllerListener = new RecentPlacesNetworkController.OnNetworkControllerListener()
+    private RecentPlacesNetworkController.OnNetworkControllerListener mOnNetworkControllerListener
+        = new RecentPlacesNetworkController.OnNetworkControllerListener() //
     {
         @Override
         public void onCommonDateTime(TodayDateTime todayDateTime)

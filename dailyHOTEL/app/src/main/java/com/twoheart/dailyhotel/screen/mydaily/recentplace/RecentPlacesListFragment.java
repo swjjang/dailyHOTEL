@@ -30,6 +30,7 @@ public abstract class RecentPlacesListFragment extends BaseFragment
     protected View mViewByLongPress;
     protected int mPositionByLongPress;
     protected PlaceType mPlaceType;
+    protected RecentlyPlaceUtil.ServiceType mServiceType;
 
     /**
      * 해당 데이터는 리퀘스트 및 저장 용도로만 사용해야 합니다. emptyList 의 판단은 listAdapter의 갯수 또는 서버 전달 데이터 갯수로 판단해야 합니다.
@@ -87,9 +88,9 @@ public abstract class RecentPlacesListFragment extends BaseFragment
         }
     }
 
-    public void setPlaceType(PlaceType placeType)
+    public void setServiceType(RecentlyPlaceUtil.ServiceType serviceType)
     {
-        mPlaceType = placeType;
+        mServiceType = serviceType;
     }
 
     public void setDontReload(boolean dontReload)
@@ -97,9 +98,9 @@ public abstract class RecentPlacesListFragment extends BaseFragment
         mDontReload = dontReload;
     }
 
-    public String getPlaceIndexList()
+    public String getPlaceIndexList(RecentlyPlaceUtil.ServiceType serviceType)
     {
-        return RecentlyPlaceUtil.getPlaceIndexList(mPlaceType, RecentlyPlaceUtil.MAX_RECENT_PLACE_COUNT);
+        return RecentlyPlaceUtil.getPlaceIndexList(serviceType, RecentlyPlaceUtil.MAX_RECENT_PLACE_COUNT);
     }
 
     //    public void sortList(final RealmResults<RecentlyRealmObject> expectedList, ArrayList<? extends Place> actual)

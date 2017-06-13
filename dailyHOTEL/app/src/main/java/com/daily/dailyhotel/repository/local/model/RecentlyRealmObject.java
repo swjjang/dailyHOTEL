@@ -14,7 +14,7 @@ public class RecentlyRealmObject extends RealmObject
     @PrimaryKey
     public int index;
     public String serviceType;
-    public Date date;
+    public Date date; // GMT+9 시간대 korea time
     public String name;
     public String englishName;
 //    public Province province;

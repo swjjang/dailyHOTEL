@@ -115,7 +115,46 @@ public class RecentStayListFragment extends RecentPlacesListFragment
     {
         lockUI();
 
-        String targetIndices = getPlaceIndexList();
+        boolean isInBound = false;
+        boolean isOutBound = false;
+        if (RecentlyPlaceUtil.ServiceType.ALL_STAY == mServiceType)
+        {
+            isInBound = true;
+            isOutBound = true;
+        } else if (RecentlyPlaceUtil.ServiceType.IB_STAY == mServiceType)
+        {
+            isInBound = true;
+        } else if (RecentlyPlaceUtil.ServiceType.OB_STAY == mServiceType)
+        {
+            isOutBound = true;
+        }
+
+        if (isInBound == false && isOutBound == false)
+        {
+            unLockUI();
+
+            if (mListLayout != null && isFinishing() == false)
+            {
+                mListLayout.setData(null, placeBookingDay);
+            }
+            return;
+        }
+
+        if (isInBound == true)
+        {
+            requestIBRecentlyList(placeBookingDay);
+        }
+
+        if (isOutBound == true)
+        {
+            // TODO : OUTBOUND request
+            requestOBRecentlyList(placeBookingDay);
+        }
+    }
+
+    private void requestIBRecentlyList(PlaceBookingDay placeBookingDay)
+    {
+        String targetIndices = getPlaceIndexList(RecentlyPlaceUtil.ServiceType.IB_STAY);
         if (DailyTextUtils.isTextEmpty(targetIndices) == true)
         {
             unLockUI();
@@ -133,6 +172,11 @@ public class RecentStayListFragment extends RecentPlacesListFragment
 
         ((RecentStayListNetworkController) mNetworkController).requestRecentStayList(recentStayParams);
         //        DailyToast.showToast(mBaseActivity, "recent Stay", Toast.LENGTH_SHORT);
+    }
+
+    private void requestOBRecentlyList(PlaceBookingDay placeBookingDay)
+    {
+        // TODO : OUTBOUND request
     }
 
     private RecentStayListNetworkController.OnNetworkControllerListener mOnNetworkControllerListener = new RecentStayListNetworkController.OnNetworkControllerListener()
@@ -289,7 +333,7 @@ public class RecentStayListFragment extends RecentPlacesListFragment
             Place place = placeViewItem.getItem();
             ExLog.d("isRemove : " + (place != null));
 
-            RecentlyPlaceUtil.deleteRecentlyItemAsync(RecentlyPlaceUtil.SERVICE_TYPE_HOTEL, place.index);
+            RecentlyPlaceUtil.deleteRecentlyItemAsync(RecentlyPlaceUtil.ServiceType.IB_STAY, place.index);
 
             mListLayout.setData(mListLayout.getList(), mPlaceBookingDay);
             mRecentPlaceListFragmentListener.onDeleteItemClickAnalytics();

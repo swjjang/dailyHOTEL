@@ -2,18 +2,20 @@ package com.daily.dailyhotel.util;
 
 import android.content.Context;
 
+import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.repository.local.model.RecentlyRealmObject;
 import com.twoheart.dailyhotel.model.HomeRecentParam;
 import com.twoheart.dailyhotel.model.RecentPlaces;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.DailyCalendar;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Calendar;
 
 import io.realm.Realm;
 import io.realm.RealmList;
@@ -27,11 +29,16 @@ import io.realm.Sort;
 
 public class RecentlyPlaceUtil
 {
-    public static final String SERVICE_TYPE_HOTEL = "HOTEL";
-    public static final String SERVICE_TYPE_OB_HOTEL = "OB_HOTEL";
-    public static final String SERVICE_TYPE_GOURMET = "GOURMET";
     public static final String RECENT_PLACE_DELIMITER = ",";
     public static final int MAX_RECENT_PLACE_COUNT = 30;
+
+    public enum ServiceType
+    {
+        IB_STAY,
+        GOURMET,
+        OB_STAY,
+        ALL_STAY
+    }
 
     public static void migrateRecentlyPlaces(Context context)
     {
@@ -125,10 +132,22 @@ public class RecentlyPlaceUtil
         {
             recentlyRealmObject = new RecentlyRealmObject();
             recentlyRealmObject.index = param.index;
-            recentlyRealmObject.serviceType = param.serviceType;
 
-            long savingTime = param.savingTime >= 0 ? param.savingTime : new Date().getTime();
-            recentlyRealmObject.date = new Date(savingTime);
+            if ("HOTEL".equalsIgnoreCase(param.serviceType) == true)
+            {
+                recentlyRealmObject.serviceType = RecentlyPlaceUtil.ServiceType.IB_STAY.name();
+            } else if ("GOURMET".equalsIgnoreCase(param.serviceType) == true)
+            {
+                recentlyRealmObject.serviceType = RecentlyPlaceUtil.ServiceType.GOURMET.name();
+            } else
+            {
+                // 지정 되지 않은 타입
+                return null;
+            }
+
+            // 기존 단말 저장 시간은 그냥 순서이므로 무시하고 다시 시간을 설정 함
+            Calendar calendar = DailyCalendar.getInstance();
+            recentlyRealmObject.date = calendar.getTime();
         } catch (Exception e)
         {
             if (Constants.DEBUG == true)
@@ -162,7 +181,21 @@ public class RecentlyPlaceUtil
 
             try
             {
-                jsonObject.put("serviceType", realmObject.serviceType);
+                String typeString = null;
+
+                ServiceType serviceType = ServiceType.valueOf(realmObject.serviceType);
+                if (ServiceType.IB_STAY == serviceType)
+                {
+                    typeString = "HOTEL";
+                } else if (ServiceType.GOURMET == serviceType)
+                {
+                    typeString = "GOURMET";
+                } else
+                {
+                    continue;
+                }
+
+                jsonObject.put("serviceType", typeString);
                 jsonObject.put("idx", realmObject.index);
 
                 jsonArray.put(jsonObject);
@@ -175,7 +208,7 @@ public class RecentlyPlaceUtil
         return jsonArray;
     }
 
-    public static RealmResults<RecentlyRealmObject> getRecentlyTypeList(String... serviceTypes)
+    public static RealmResults<RecentlyRealmObject> getRecentlyTypeList(ServiceType... serviceTypes)
     {
         Realm realm = Realm.getDefaultInstance();
         RealmQuery query = realm.where(RecentlyRealmObject.class);
@@ -193,13 +226,13 @@ public class RecentlyPlaceUtil
                         query.or();
                     }
 
-                    query.equalTo("serviceType", serviceTypes[i]);
+                    query.equalTo("serviceType", serviceTypes[i].name());
                 }
 
                 query.endGroup();
             } else
             {
-                query.equalTo("serviceType", serviceTypes[0]);
+                query.equalTo("serviceType", serviceTypes[0].name());
             }
         }
 
@@ -207,28 +240,9 @@ public class RecentlyPlaceUtil
         return realmResults;
     }
 
-    public static RealmResults<RecentlyRealmObject> getRecentlyTypeList(Constants.PlaceType placeType)
+    public static String getPlaceIndexList(ServiceType serviceType, int maxSize)
     {
-        return getRecentlyTypeList(getServiceType(placeType));
-    }
-
-    public static String[] getServiceType(Constants.PlaceType placeType)
-    {
-        if (Constants.PlaceType.HOTEL.equals(placeType) == true)
-        {
-            return new String[]{SERVICE_TYPE_HOTEL, SERVICE_TYPE_OB_HOTEL};
-        } else if (Constants.PlaceType.FNB.equals(placeType) == true)
-        {
-            return new String[]{SERVICE_TYPE_GOURMET};
-        } else
-        {
-            return null;
-        }
-    }
-
-    public static String getPlaceIndexList(Constants.PlaceType placeType, int maxSize)
-    {
-        RealmResults<RecentlyRealmObject> recentlyList = RecentlyPlaceUtil.getRecentlyTypeList(placeType);
+        RealmResults<RecentlyRealmObject> recentlyList = RecentlyPlaceUtil.getRecentlyTypeList(serviceType);
 
         if (recentlyList == null || recentlyList.size() == 0 || maxSize <= 0)
         {
@@ -257,7 +271,51 @@ public class RecentlyPlaceUtil
         return builder.toString();
     }
 
-    public static void deleteRecentlyItemAsync(String serviceType, int index)
+    public static void addRecentlyItemAsync(ServiceType serviceType, int index, String name //
+        , String englishName, String imageUrl, boolean isUpdateDate)
+    {
+        if (serviceType == null || index <= 0)
+        {
+            return;
+        }
+
+        RecentlyRealmObject realmObject = new RecentlyRealmObject();
+        realmObject.index = index;
+        realmObject.serviceType = serviceType.name();
+
+        if (DailyTextUtils.isTextEmpty(name) == false)
+        {
+            realmObject.name = name;
+        }
+
+        if (DailyTextUtils.isTextEmpty(englishName) == false)
+        {
+            realmObject.englishName = englishName;
+        }
+
+        if (DailyTextUtils.isTextEmpty(imageUrl) == false)
+        {
+            realmObject.imageUrl = imageUrl;
+        }
+
+        if (isUpdateDate == true)
+        {
+            Calendar calendar = DailyCalendar.getInstance();
+            realmObject.date = calendar.getTime();
+        }
+
+        Realm realm = Realm.getDefaultInstance();
+        realm.executeTransactionAsync(new Realm.Transaction()
+        {
+            @Override
+            public void execute(Realm realm)
+            {
+                realm.copyToRealmOrUpdate(realmObject);
+            }
+        });
+    }
+
+    public static void deleteRecentlyItemAsync(ServiceType serviceType, int index)
     {
         Realm realm = Realm.getDefaultInstance();
         realm.executeTransactionAsync(new Realm.Transaction()
@@ -266,7 +324,7 @@ public class RecentlyPlaceUtil
             public void execute(Realm realm)
             {
                 final RealmResults<RecentlyRealmObject> resultList = realm.where(RecentlyRealmObject.class) //
-                    .beginGroup().equalTo("serviceType", serviceType).equalTo("index", index).endGroup() //
+                    .beginGroup().equalTo("serviceType", serviceType.name()).equalTo("index", index).endGroup() //
                     .findAll();
                 resultList.deleteAllFromRealm();
             }
