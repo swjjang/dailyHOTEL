@@ -38,6 +38,7 @@ import com.daily.dailyhotel.screen.stay.outbound.detail.amenities.AmenityListAct
 import com.daily.dailyhotel.screen.stay.outbound.detail.images.ImageListActivity;
 import com.daily.dailyhotel.screen.stay.outbound.payment.StayOutboundPaymentActivity;
 import com.daily.dailyhotel.screen.stay.outbound.people.SelectPeopleActivity;
+import com.daily.dailyhotel.util.RecentlyPlaceUtil;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Customer;
@@ -219,6 +220,8 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
         }
 
         getViewInterface().setToolbarTitle(mStayName);
+
+        RecentlyPlaceUtil.addRecentlyItemAsync(RecentlyPlaceUtil.ServiceType.OB_STAY, mStayIndex, mStayName, null, mImageUrl, true);
 
         if (mIsUsedMultiTransition == true)
         {
