@@ -114,7 +114,7 @@ public class RecentGourmetListFragment extends RecentPlacesListFragment
     {
         lockUI();
 
-        String targetIndices = getPlaceIndexList(mServiceType);
+        String targetIndices = getTargetIndices(mServiceType);
         if (DailyTextUtils.isTextEmpty(targetIndices) == true)
         {
             unLockUI();
@@ -145,7 +145,7 @@ public class RecentGourmetListFragment extends RecentPlacesListFragment
                 return;
             }
 
-            //            sortList(mRecentPlaceList, list); // TODO : 재 정렬 기능 추가 필요.
+            sortList(RecentlyPlaceUtil.ServiceType.GOURMET, list);
 
             ArrayList<PlaceViewItem> viewItemList = mListLayout.makePlaceViewItemList(list);
 

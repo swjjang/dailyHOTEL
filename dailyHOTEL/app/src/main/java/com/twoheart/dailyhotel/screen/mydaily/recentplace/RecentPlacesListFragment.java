@@ -7,11 +7,16 @@ import android.view.ViewGroup;
 
 import com.daily.dailyhotel.util.RecentlyPlaceUtil;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.model.Place;
 import com.twoheart.dailyhotel.model.time.PlaceBookingDay;
 import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.base.BaseFragment;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 /**
  * Created by android_sam on 2016. 10. 10..
@@ -98,42 +103,33 @@ public abstract class RecentPlacesListFragment extends BaseFragment
         mDontReload = dontReload;
     }
 
-    public String getPlaceIndexList(RecentlyPlaceUtil.ServiceType serviceType)
+    public String getTargetIndices(RecentlyPlaceUtil.ServiceType serviceType)
     {
-        return RecentlyPlaceUtil.getPlaceIndexList(serviceType, RecentlyPlaceUtil.MAX_RECENT_PLACE_COUNT);
+        return RecentlyPlaceUtil.getTargetIndices(serviceType, RecentlyPlaceUtil.MAX_RECENT_PLACE_COUNT);
     }
 
-    //    public void sortList(final RealmResults<RecentlyRealmObject> expectedList, ArrayList<? extends Place> actual)
-    //    {
-    //        if (expectedList == null || expectedList.size() == 0)
-    //        {
-    //            return;
-    //        }
-    //
-    //        final String serviceType = expectedList.get(0).second;
-    //
-    //        if (actual != null && actual.size() > 0)
-    //        {
-    //            Collections.sort(actual, new Comparator<Place>()
-    //            {
-    //                @Override
-    //                public int compare(Place place1, Place place2)
-    //                {
-    //                    RecentlyRealmObject realmObject1 = new RecentlyRealmObject();
-    //                    realmObject1.index = place1.index;
-    //
-    //                    RecentlyRealmObject realmObject2 = new RecentlyRealmObject();
-    //                    realmObject2.index = place1.index;
-    //
-    //                    Pair<Integer, String> pair1 = new Pair<>(place1.index, serviceType);
-    //                    Pair<Integer, String> pair2 = new Pair<>(place2.index, serviceType);
-    //
-    //                    Integer position1 = expectedList.indexOf(place1.index);
-    //                    Integer position2 = expectedList.indexOf(place2.index);
-    //
-    //                    return position1.compareTo(position2);
-    //                }
-    //            });
-    //        }
-    //    }
+    public void sortList(RecentlyPlaceUtil.ServiceType serviceType, ArrayList<? extends Place> actualList)
+    {
+        if (actualList == null || actualList.size() == 0)
+        {
+            return;
+        }
+
+        ArrayList<Integer> expectedList = RecentlyPlaceUtil.getRecentlyIndexList(serviceType);
+        if (expectedList == null || expectedList.size() == 0)
+        {
+            return;
+        }
+
+        Collections.sort(actualList, new Comparator<Place>()
+        {
+            @Override
+            public int compare(Place place1, Place place2)
+            {
+                Integer position1 = expectedList.indexOf(place1.index);
+                Integer position2 = expectedList.indexOf(place2.index);
+                return position1.compareTo(position2);
+            }
+        });
+    }
 }

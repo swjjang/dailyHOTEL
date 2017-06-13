@@ -154,7 +154,7 @@ public class RecentStayListFragment extends RecentPlacesListFragment
 
     private void requestIBRecentlyList(PlaceBookingDay placeBookingDay)
     {
-        String targetIndices = getPlaceIndexList(RecentlyPlaceUtil.ServiceType.IB_STAY);
+        String targetIndices = getTargetIndices(RecentlyPlaceUtil.ServiceType.IB_STAY);
         if (DailyTextUtils.isTextEmpty(targetIndices) == true)
         {
             unLockUI();
@@ -191,7 +191,7 @@ public class RecentStayListFragment extends RecentPlacesListFragment
                 return;
             }
 
-            //            sortList(mRecentPlaceList, list); // TODO : 재 정렬 기능 추가 필요.
+            sortList(RecentlyPlaceUtil.ServiceType.IB_STAY, list);
 
             ArrayList<PlaceViewItem> viewItemList = mListLayout.makePlaceViewItemList(list);
             mListLayout.setData(viewItemList, mPlaceBookingDay);

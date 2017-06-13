@@ -243,7 +243,7 @@ public class RecentlyPlaceUtil
         return realmResults;
     }
 
-    public static String getPlaceIndexList(ServiceType serviceType, int maxSize)
+    public static String getTargetIndices(ServiceType serviceType, int maxSize)
     {
         RealmResults<RecentlyRealmObject> recentlyList = RecentlyPlaceUtil.getRecentlyTypeList(serviceType);
 
@@ -272,6 +272,24 @@ public class RecentlyPlaceUtil
         }
 
         return builder.toString();
+    }
+
+    public static ArrayList<Integer> getRecentlyIndexList(ServiceType serviceType)
+    {
+        RealmResults<RecentlyRealmObject> recentlyList = RecentlyPlaceUtil.getRecentlyTypeList(serviceType);
+
+        if (recentlyList == null || recentlyList.size() == 0)
+        {
+            return null;
+        }
+
+        ArrayList<Integer> indexList = new ArrayList<>();
+        for (RecentlyRealmObject realmObject : recentlyList)
+        {
+            indexList.add(realmObject.index);
+        }
+
+        return indexList;
     }
 
     public static void addRecentlyItemAsync(final ServiceType serviceType, int index, String name //
