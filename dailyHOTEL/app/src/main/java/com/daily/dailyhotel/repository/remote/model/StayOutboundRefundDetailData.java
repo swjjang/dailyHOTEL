@@ -43,8 +43,8 @@ public class StayOutboundRefundDetailData
     @JsonField(name = "refundStatus")
     public String refundStatus;
 
-    @JsonField(name = "cancelReasonTypes")
-    public List<CancelReasonType> cancelReasonTypes;
+    @JsonField(name = "reasons")
+    public List<ReasonType> reasons;
 
     @JsonField(name = "paymentType")
     public String paymentType;
@@ -88,9 +88,12 @@ public class StayOutboundRefundDetailData
 
         List<Pair<String, String>> cancelReasonTypeList = new ArrayList<>();
 
-        for (CancelReasonType cancelReasonType : cancelReasonTypes)
+        if(reasons != null)
         {
-            cancelReasonTypeList.add(new Pair(cancelReasonType.code, cancelReasonType.description));
+            for (ReasonType reasonType : reasons)
+            {
+                cancelReasonTypeList.add(new Pair(reasonType.key, reasonType.text));
+            }
         }
 
         stayOutboundRefundDetail.setCancelReasonTypeList(cancelReasonTypeList);
@@ -99,15 +102,15 @@ public class StayOutboundRefundDetailData
     }
 
     @JsonObject
-    static class CancelReasonType
+    static class ReasonType
     {
-        @JsonField(name = "code")
-        public String code;
+        @JsonField(name = "key")
+        public String key;
 
-        @JsonField(name = "description")
-        public String description;
+        @JsonField(name = "text")
+        public String text;
 
-        public CancelReasonType()
+        public ReasonType()
         {
 
         }

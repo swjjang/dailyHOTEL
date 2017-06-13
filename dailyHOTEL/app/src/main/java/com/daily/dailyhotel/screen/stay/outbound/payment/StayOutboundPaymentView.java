@@ -132,9 +132,6 @@ public class StayOutboundPaymentView extends BaseDialogView<StayOutboundPaymentV
             return;
         }
 
-        mBookingDataBinding.guestLastNameEditText.setText(lastName);
-        mBookingDataBinding.guestFirstNameEditText.setText(firstName);
-
         if (DailyTextUtils.isTextEmpty(phone) == false)
         {
             mBookingDataBinding.guestPhoneEditText.setText(Util.addHyphenMobileNumber(getContext(), phone));
@@ -150,6 +147,9 @@ public class StayOutboundPaymentView extends BaseDialogView<StayOutboundPaymentV
 
         mBookingDataBinding.guestLastNameEditText.removeTextChangedListener(mLastNameTextWatcher);
         mBookingDataBinding.guestLastNameEditText.addTextChangedListener(mLastNameTextWatcher);
+
+        mBookingDataBinding.guestLastNameEditText.setText(lastName);
+        mBookingDataBinding.guestFirstNameEditText.setText(firstName);
     }
 
     @Override

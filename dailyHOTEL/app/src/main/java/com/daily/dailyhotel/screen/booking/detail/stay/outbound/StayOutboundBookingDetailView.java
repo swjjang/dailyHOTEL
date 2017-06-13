@@ -409,7 +409,7 @@ public class StayOutboundBookingDetailView extends BaseDialogView<StayOutboundBo
         }
 
         mBookingDetail01DataBinding.checkInDayTextView.setText(checkInDate);
-        mBookingDetail01DataBinding.checkOutDayTextView.setText(checkInDate);
+        mBookingDetail01DataBinding.checkOutDayTextView.setText(checkOutDate);
         mBookingDetail01DataBinding.nightsTextView.setText(getString(R.string.label_nights, nights));
     }
 
