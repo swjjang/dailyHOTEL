@@ -1,7 +1,5 @@
 package com.daily.dailyhotel.repository.local.model;
 
-import java.util.Date;
-
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
@@ -14,7 +12,7 @@ public class RecentlyRealmObject extends RealmObject
     @PrimaryKey
     public int index;
     public String serviceType;
-    public Date date; // GMT+9 시간대 korea time
+    public long savingTime; // GMT+9 시간대 korea time
     public String name;
     public String englishName;
 //    public Province province;

@@ -149,7 +149,7 @@ public class RecentlyPlaceUtil
 
             // 기존 단말 저장 시간은 그냥 순서이므로 무시하고 다시 시간을 설정 함
             Calendar calendar = DailyCalendar.getInstance();
-            recentlyRealmObject.date = calendar.getTime();
+            recentlyRealmObject.savingTime = calendar.getTimeInMillis();
         } catch (Exception e)
         {
             if (Constants.DEBUG == true)
@@ -239,7 +239,7 @@ public class RecentlyPlaceUtil
             }
         }
 
-        RealmResults<RecentlyRealmObject> realmResults = query.findAllSorted("date", Sort.DESCENDING);
+        RealmResults<RecentlyRealmObject> realmResults = query.findAllSorted("savingTime", Sort.DESCENDING);
         return realmResults;
     }
 
@@ -274,7 +274,7 @@ public class RecentlyPlaceUtil
         return builder.toString();
     }
 
-    public static void addRecentlyItemAsync(ServiceType serviceType, int index, String name //
+    public static void addRecentlyItemAsync(final ServiceType serviceType, int index, String name //
         , String englishName, String imageUrl, boolean isUpdateDate)
     {
         if (serviceType == null || index <= 0)
@@ -304,7 +304,7 @@ public class RecentlyPlaceUtil
         if (isUpdateDate == true)
         {
             Calendar calendar = DailyCalendar.getInstance();
-            realmObject.date = calendar.getTime();
+            realmObject.savingTime = calendar.getTimeInMillis();
         }
 
         Realm realm = Realm.getDefaultInstance();
@@ -313,7 +313,26 @@ public class RecentlyPlaceUtil
             @Override
             public void execute(Realm realm)
             {
+                if (isUpdateDate == false)
+                {
+                    RecentlyRealmObject firstResultObject = realm.where(RecentlyRealmObject.class) //
+                        .beginGroup().equalTo("serviceType", serviceType.name()).equalTo("index", index).endGroup() //
+                        .findFirst();
+
+                    if (firstResultObject != null)
+                    {
+                        realmObject.savingTime = firstResultObject.savingTime;
+                    }
+                }
+
                 realm.copyToRealmOrUpdate(realmObject);
+            }
+        }, new Realm.Transaction.OnSuccess()
+        {
+            @Override
+            public void onSuccess()
+            {
+                maintainMaxRecentlyItem(serviceType);
             }
         });
     }
@@ -326,7 +345,7 @@ public class RecentlyPlaceUtil
             @Override
             public void execute(Realm realm)
             {
-                final RealmResults<RecentlyRealmObject> resultList = realm.where(RecentlyRealmObject.class) //
+                RealmResults<RecentlyRealmObject> resultList = realm.where(RecentlyRealmObject.class) //
                     .beginGroup().equalTo("serviceType", serviceType.name()).equalTo("index", index).endGroup() //
                     .findAll();
                 resultList.deleteAllFromRealm();
@@ -334,4 +353,37 @@ public class RecentlyPlaceUtil
         });
     }
 
+    private static void maintainMaxRecentlyItem(ServiceType serviceType)
+    {
+        RealmResults<RecentlyRealmObject> realmResults = RecentlyPlaceUtil.getRecentlyTypeList(serviceType);
+        if (realmResults == null)
+        {
+            return;
+        }
+
+        int size = realmResults.size();
+        if (size <= MAX_RECENT_PLACE_COUNT)
+        {
+            return;
+        }
+
+        // Date로 소팅하여 삭제 하고 싶으나 밀리세컨드 단위로 date를 저장하는 것이 아닌 string으로 저장되고 있는것으로 보임, 예상되는 리스트와 다른 결과가 내려와서 따로 처리 함
+        Integer[] deleteIndexArray = new Integer[size - MAX_RECENT_PLACE_COUNT];
+        for (int i = MAX_RECENT_PLACE_COUNT; i < size; i++)
+        {
+            deleteIndexArray[i - MAX_RECENT_PLACE_COUNT] = realmResults.get(i).index;
+        }
+
+        Realm realm = Realm.getDefaultInstance();
+        realm.executeTransactionAsync(new Realm.Transaction()
+        {
+            @Override
+            public void execute(Realm realm)
+            {
+                RealmResults<RecentlyRealmObject> deleteList = realm.where(RecentlyRealmObject.class) //
+                    .in("index", deleteIndexArray).findAllSorted("savingTime", Sort.DESCENDING);
+                deleteList.deleteAllFromRealm();
+            }
+        });
+    }
 }
