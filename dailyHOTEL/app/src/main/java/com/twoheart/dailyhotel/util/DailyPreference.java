@@ -1498,7 +1498,7 @@ public class DailyPreference
         setValue(mEditor, KEY_NOTICE_NEW_REMOVE_LIST, value);
     }
 
-    public String getSelectedSimpleCard()
+    public String getFavoriteCard()
     {
         String value = getValue(mPreferences, KEY_SELECTED_SIMPLE_CARD, null);
 
@@ -1510,25 +1510,14 @@ public class DailyPreference
         return value;
     }
 
-    public void setSelectedSimpleCard(CreditCard creditCard)
+    public void setFavoriteCard(String number, String billingKey)
     {
-        if (creditCard == null)
+        if (DailyTextUtils.isTextEmpty(number, billingKey) == true)
         {
             setValue(mEditor, KEY_SELECTED_SIMPLE_CARD, null);
         } else
         {
-            setValue(mEditor, KEY_SELECTED_SIMPLE_CARD, Crypto.urlEncrypt(creditCard.number.replaceAll("\\*|-", "").substring(4) + creditCard.billingkey.substring(3, 7)));
-        }
-    }
-
-    public void setSelectedCard(Card card)
-    {
-        if (card == null)
-        {
-            setValue(mEditor, KEY_SELECTED_SIMPLE_CARD, null);
-        } else
-        {
-            setValue(mEditor, KEY_SELECTED_SIMPLE_CARD, Crypto.urlEncrypt(card.number.replaceAll("\\*|-", "").substring(4) + card.billKey.substring(3, 7)));
+            setValue(mEditor, KEY_SELECTED_SIMPLE_CARD, Crypto.urlEncrypt(number.replaceAll("\\*|-", "") + billingKey.substring(3, 7)));
         }
     }
 
