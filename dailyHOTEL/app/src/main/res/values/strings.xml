@@ -1245,7 +1245,7 @@
 
     <!-- Stamp -->
     <string name="label_mydaily_stamp">1박 무료 프리패스 스탬프 모으기!</string>
-    <string name="label_stamp_mydaily_title">5박 모으면 1박 무료 프리패스</string>
+    <string name="label_stamp_mydaily_title">이것이 바로 데일리 7+1</string>
     <string name="label_stamp_history">스탬프 내역</string>
     <string name="label_stamp_terms">스탬프 유의사항</string>
     <string name="label_stamp_notification_on_setting">혜택 알림 받기 설정하기</string>
@@ -1261,24 +1261,26 @@
     <string name="label_stamp_freepass">프리패스</string>
     <string name="label_stamp_before_issuance">발급 전</string>
     <string name="label_stamp_completed_issuance">발급 완료</string>
-    <string name="label_stamp_event_title">5 + 1 스테이 프리패스 이벤트</string>
+    <string name="label_stamp_event_title">1박 무료 프리패스 스탬프 이벤트</string>
     <string name="label_stamphistory_date">스탬프 발행일: %1$s</string>
-    <string name="message_stamp_explanation1">여름 휴가 떠나고\n1박 무료 프리패스 쿠폰을 받으세요!</string>
-    <string name="message_stamp_explanation2">- 1박 무료 프리패스 쿠폰은 5박 평균 결제 금액에\n해당하는 쿠폰으로 드립니다.\n- 평균 1박당 총 결제 금액 5만원 이상 시 스탬프가 적립됩니다.</string>
+    <string name="message_stamp_explanation1">7박 모으고\n1박 무료 프리패스 쿠폰을 받으세요!</string>
+    <string name="message_stamp_explanation2">* 1박 무료 프리패스 쿠폰은 7박 평균 결제 금액에 해당하는 쿠폰으로 드립니다.\n* 평균 1박당 총 결제 금액 5만원 이상 시 스탬프가 적립됩니다.</string>
     <string name="message_stamp_explanation3">1박 무료 프리패스 스탬프 이벤트 자세히 보기</string>
     <string name="message_stamp_you_can_check_the_stamp_after_login">로그인 후 스탬프를 확인할 수 있습니다.\n로그인 할까요?</string>
     <string name="message_stamp_finish_stamp">종료된\n이벤트입니다.</string>
-    <string name="message_stamp_notification_on">5+1 스테이 프리패스 혜택을 알림으로 확인하세요!</string>
-    <string name="message_stamp_title_message0">스탬프를 모아 9월에 쓸 수 있는\n1박 무료 프리패스 쿠폰을 받으세요!</string>
-    <string name="message_stamp_title_message1">4박 더하면 9월에 쓸 수 있는\n1박 무료 프리패스가 기다리고 있어요!</string>
-    <string name="message_stamp_title_message2">9월에 쓸 수 있는 1박 무료 프리패스까지\n3박 남았어요!</string>
-    <string name="message_stamp_title_message3">9월에 쓸 수 있는 1박 무료 프리패스까지\n2박 남았어요!</string>
-    <string name="message_stamp_title_message4">드디어 다왔어요.\n두근두근 1박 무료 프리패스가 눈앞에!</string>
-    <string name="message_stamp_title_message5">1박 무료 프리패스 쿠폰 도착!\n다가올 9월에 원하는 호텔로 떠나보세요!</string>
-    <string name="message_stamp_title_message6">1박 무료 프리패스 쿠폰 도착!\n다가올 9월에 원하는 호텔로 떠나보세요!</string>
-    <string name="message_stamp_title_message7">1박 무료 프리패스 쿠폰 도착!\n다가올 9월에 원하는 호텔로 떠나보세요!</string>
+    <string name="message_stamp_notification_on">1박 무료 프리패스 혜택을 알림으로 확인하세요!</string>
+    <string name="message_stamp_title_message0">데일리 7+1 프리패스\n1박 무료 프리패스 쿠폰을 받으세요!</string>
+    <string name="message_stamp_title_message1">데일리 7+1 프리패스\n첫 스탬프 획득 축하해요!</string>
+    <string name="message_stamp_title_message2">데일리 7+1 프리패스\n벌써 두번째 스탬프예요!</string>
+    <string name="message_stamp_title_message3">데일리 7+1 프리패스\n이제 4박 남았어요!</string>
+    <string name="message_stamp_title_message4">데일리 7+1 프리패스\n절반 이상 모았어요!</string>
+    <string name="message_stamp_title_message5">데일리 7+1 프리패스\n드디어 2박 남았어요!</string>
+    <string name="message_stamp_title_message6">드디어 다왔어요.\n두근두근 1박 무료 프리패스가 눈앞에!</string>
+    <string name="message_stamp_title_message7">데일리 7+1 스탬프 완성!\n1박 무료 프리패스 쿠폰 도착!</string>
     <string name="message_stamp_login">회원가입하고 1박 무료 프리패스\n이벤트에 참여해보세요!</string>
     <string name="message_stamp_history_guide">최근 획득한 스탬프 순으로 제공됩니다.</string>
+    <string name="message_stamp_before_issuance">1박 무료 프리패스 쿠폰을\n기다려 주세요!</string>
+    <string name="message_stamp_completed_issuance">1박 무료 프리패스 쿠폰\n발급 완료!</string>
 
     <!-- True Review -->
     <string name="label_detail_review_count">%1$d개의 리뷰</string>
