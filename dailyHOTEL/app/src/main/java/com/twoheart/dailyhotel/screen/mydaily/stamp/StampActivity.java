@@ -93,6 +93,7 @@ public class StampActivity extends BaseActivity
             {
                 lockUI();
                 mNetworkController.requestUserStamps(false);
+                mNetworkController.requestIssuingCoupon();
             } else
             {
                 // 로그인 하지 않은 경우 멘트가 다름
@@ -301,8 +302,12 @@ public class StampActivity extends BaseActivity
             {
                 mStampLayout.setStampHistoryEnabled(false);
             }
+        }
 
-            mStampLayout.setStampFreePassEnabled(stamp.freePass);
+        @Override
+        public void onIssuingCoupon(boolean issuing)
+        {
+            mStampLayout.setStampFreePassEnabled(issuing);
         }
 
         @Override

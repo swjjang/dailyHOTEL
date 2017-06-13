@@ -4,7 +4,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 
 import com.daily.base.exception.BaseException;
-import com.daily.dailyhotel.domain.RefundInterface;
+import com.daily.dailyhotel.domain.StayOutboundRefundInterface;
 import com.daily.dailyhotel.entity.StayOutboundRefund;
 import com.daily.dailyhotel.entity.StayOutboundRefundDetail;
 import com.daily.dailyhotel.repository.remote.model.StayOutboundRefundData;
@@ -16,11 +16,11 @@ import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Function;
 
-public class RefundRemoteImpl implements RefundInterface
+public class StayOutboundRefundRemoteImpl implements StayOutboundRefundInterface
 {
     private Context mContext;
 
-    public RefundRemoteImpl(@NonNull Context context)
+    public StayOutboundRefundRemoteImpl(@NonNull Context context)
     {
         mContext = context;
     }

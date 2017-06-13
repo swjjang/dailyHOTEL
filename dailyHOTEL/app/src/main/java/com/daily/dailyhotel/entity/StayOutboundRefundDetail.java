@@ -33,4 +33,9 @@ public class StayOutboundRefundDetail
     {
         mCancelReasonTypes = cancelReasonTypeList;
     }
+
+    public List<Pair<String, String>> getCancelReasonTypeList()
+    {
+        return mCancelReasonTypes;
+    }
 }

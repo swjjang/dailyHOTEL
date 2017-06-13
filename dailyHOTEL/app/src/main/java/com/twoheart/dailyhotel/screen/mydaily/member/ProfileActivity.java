@@ -21,6 +21,7 @@ import com.daily.base.util.ExLog;
 import com.daily.base.widget.DailyToast;
 import com.facebook.login.LoginManager;
 import com.kakao.usermgmt.UserManagement;
+import com.kakao.usermgmt.callback.LogoutResponseCallback;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
@@ -338,7 +339,14 @@ public class ProfileActivity extends BaseActivity
 
                     try
                     {
-                        UserManagement.requestLogout(null);
+                        UserManagement.requestLogout(new LogoutResponseCallback()
+                        {
+                            @Override
+                            public void onCompleteLogout()
+                            {
+
+                            }
+                        });
                     } catch (Exception e)
                     {
                         ExLog.d(e.toString());

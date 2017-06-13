@@ -24,6 +24,8 @@ public class StampNetworkController extends BaseNetworkController
         void onBenefitAgreement(boolean isAgree, String updateDate);
 
         void onUserStamps(Stamp stamp);
+
+        void onIssuingCoupon(boolean issuing);
     }
 
     public StampNetworkController(Context context, String networkTag, OnBaseNetworkControllerListener listener)
@@ -34,6 +36,11 @@ public class StampNetworkController extends BaseNetworkController
     public void requestUserStamps(boolean details)
     {
         DailyMobileAPI.getInstance(mContext).requestUserStamps(mNetworkTag, details, mStampCallback);
+    }
+
+    public void requestIssuingCoupon()
+    {
+        DailyMobileAPI.getInstance(mContext).requestIssuingCoupon(mNetworkTag, mIssuingCouponCallback);
     }
 
     public void requestPushBenefit(boolean isAgree)
@@ -69,6 +76,55 @@ public class StampNetworkController extends BaseNetworkController
 
         @Override
         public void onFailure(Call<BaseDto<Stamp>> call, Throwable t)
+        {
+            mOnNetworkControllerListener.onError(call, t, false);
+        }
+    };
+
+    private retrofit2.Callback mIssuingCouponCallback = new retrofit2.Callback<JSONObject>()
+    {
+        @Override
+        public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
+        {
+            if (response != null && response.isSuccessful() && response.body() != null)
+            {
+                try
+                {
+                    JSONObject responseJSONObject = response.body();
+
+                    int msgCode = responseJSONObject.getInt("msgCode");
+
+                    if (msgCode == 100)
+                    {
+                        JSONObject dataJSONObject = responseJSONObject.getJSONObject("data");
+                        boolean existCoupons = dataJSONObject.getBoolean("existCoupons");
+
+                        ((OnNetworkControllerListener) mOnNetworkControllerListener).onIssuingCoupon(existCoupons);
+                    } else
+                    {
+                        String message = responseJSONObject.getString("msg");
+                        mOnNetworkControllerListener.onErrorPopupMessage(msgCode, message);
+                    }
+                } catch (ParseException e)
+                {
+                    if (Constants.DEBUG == false)
+                    {
+                        Crashlytics.log("Url: " + call.request().url().toString());
+                    }
+
+                    mOnNetworkControllerListener.onError(e);
+                } catch (Exception e)
+                {
+                    mOnNetworkControllerListener.onError(e);
+                }
+            } else
+            {
+                mOnNetworkControllerListener.onErrorResponse(call, response);
+            }
+        }
+
+        @Override
+        public void onFailure(Call<JSONObject> call, Throwable t)
         {
             mOnNetworkControllerListener.onError(call, t, false);
         }

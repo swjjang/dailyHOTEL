@@ -12,7 +12,7 @@ import com.daily.base.util.ExLog;
 import com.daily.base.util.FontManager;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
 import com.daily.dailyhotel.entity.StayOutboundRefundDetail;
-import com.daily.dailyhotel.repository.remote.RefundRemoteImpl;
+import com.daily.dailyhotel.repository.remote.StayOutboundRefundRemoteImpl;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.widget.CustomFontTypefaceSpan;
@@ -27,10 +27,13 @@ public class StayOutboundRefundPresenter extends BaseExceptionPresenter<StayOutb
 {
     private StayOutboundRefundAnalyticsInterface mAnalytics;
 
-    private RefundRemoteImpl mRefundRemoteImpl;
+    private StayOutboundRefundRemoteImpl mRefundRemoteImpl;
 
     private int mBookingIndex;
     private StayOutboundRefundDetail mStayOutboundRefundDetail;
+
+    private String mCancelKey;
+    private String mCancelMessage;
 
     public interface StayOutboundRefundAnalyticsInterface extends BaseAnalyticsInterface
     {
@@ -55,7 +58,7 @@ public class StayOutboundRefundPresenter extends BaseExceptionPresenter<StayOutb
 
         setAnalytics(new StayOutboundRefundAnalyticsImpl());
 
-        mRefundRemoteImpl = new RefundRemoteImpl(activity);
+        mRefundRemoteImpl = new StayOutboundRefundRemoteImpl(activity);
 
         setRefresh(true);
     }
@@ -162,6 +165,8 @@ public class StayOutboundRefundPresenter extends BaseExceptionPresenter<StayOutb
             {
                 setStayOutboundRefundDetail(stayOutboundRefundDetail);
                 notifyStayOutboundBookingDetailChanged();
+
+                unLockAll();
             }
         }, new Consumer<Throwable>()
         {
@@ -183,6 +188,19 @@ public class StayOutboundRefundPresenter extends BaseExceptionPresenter<StayOutb
     public void onRefundClick()
     {
 
+    }
+
+    @Override
+    public void onCancelReasonClick()
+    {
+        getViewInterface().showCancelDialog(mStayOutboundRefundDetail.getCancelReasonTypeList(), mCancelKey, mCancelMessage);
+    }
+
+    @Override
+    public void onCancelReasonClick(String key, String message)
+    {
+        mCancelKey = key;
+        mCancelMessage = message;
     }
 
     private void setStayOutboundRefundDetail(StayOutboundRefundDetail stayOutboundRefundDetail)

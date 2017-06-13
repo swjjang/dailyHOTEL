@@ -8,6 +8,8 @@ import com.daily.dailyhotel.repository.remote.model.BookingHideData;
 import com.daily.dailyhotel.repository.remote.model.CardData;
 import com.daily.dailyhotel.repository.remote.model.CommonDateTimeData;
 import com.daily.dailyhotel.repository.remote.model.PaymentResultData;
+import com.daily.dailyhotel.repository.remote.model.StayOutboundEmailReceiptData;
+import com.daily.dailyhotel.repository.remote.model.StayOutboundReceiptData;
 import com.daily.dailyhotel.repository.remote.model.StayOutboundRefundData;
 import com.daily.dailyhotel.repository.remote.model.StayOutboundBookingDetailData;
 import com.daily.dailyhotel.repository.remote.model.StayOutboundDetailData;
@@ -1191,6 +1193,16 @@ public class DailyMobileAPI implements IDailyNetwork
         executorCallbackCall.enqueue((retrofit2.Callback<BaseDto<Stamp>>) listener);
     }
 
+    public void requestIssuingCoupon(String tag, Object listener)
+    {
+        final String URL = Constants.UNENCRYPTED_URL ? "api/v4/users/stamps/coupons"//
+            : "NjIkMjAkNjYkODAkNDckNTgkMTkkODYkMjMkMjgkNCQ5MSQxOCQyNSQ4MSQxMCQ=$RERGPNDFDNDTA5Qjg0MKTZECMMVI0JEMM0FERjYzMEE0NTFGOThENkPJDODI3NUE0MQzAzMDXE4SMUEyMDBVDMEE1NF0EF0QNTNENQ==$";
+
+        ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestIssuingCoupon(Crypto.getUrlDecoderEx(URL));
+        executorCallbackCall.setTag(tag);
+        executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
+    }
+
     @Override
     public void requestPlaceReviews(String tag, String type, int itemIdx, int page, int limit, Object listener)
     {
@@ -1500,5 +1512,37 @@ public class DailyMobileAPI implements IDailyNetwork
         urlParams.put("{reservationIdx}", Integer.toString(bookingIndex));
 
         return mDailyMobileService.getStayOutboundRefund(Crypto.getUrlDecoderEx(URL) + Crypto.getUrlDecoderEx(API, urlParams)).subscribeOn(Schedulers.io());
+    }
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+    // ReceiptRemoteImpl
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public Observable<BaseDto<StayOutboundReceiptData>> getStayOutboundReceipt(int bookingIndex)
+    {
+        final String URL = Constants.UNENCRYPTED_URL ? "https://dev-silo.dailyhotel.me/"//
+            : "MzAkODEkNDckNjgkNDAkMzkkODckMSQ4OSQyOCQxNCQzMiQ4JDEkMzckNTUk$QAGkRCM0ZGGMkM1MBzkyQTBEOEMxRDgL1OGUWENFMUM3MEWZJEOURDMOEAM1NjY1RjE2MEVDQjc4RTSA5MzQxQjQ2Rjk1VMMHUEyRg==$";
+
+        final String API = Constants.UNENCRYPTED_URL ? "api/v1/outbound/reservations/{reservationIdx}/sales-receipt"//
+            : "MTM4JDE0NCQxNDckNzgkMTEzJDE1NSQ1NiQxNzYkNzYkOTgkMTQyJDE1NSQzMCQyJDE1MCQ5NCQ=$RjLI5NUVFQjcyQzUzRkQ3NEU4OTc3NTEc5NzlDNjg4RTI4OTgyMzZFNTcwBMzQ4NTY2NjU5N0NBNzMQ4MTHgzNEQzMkMxRVDg2NDlXCMjY3MjU5NUZDMTBDFQjZBODhFQzA4ODcwOTgzMjUyMLDNgwRPEUB0RZUMI4RjZUyODc4RTBERjlDRTc0RADI=$";
+
+        Map<String, String> urlParams = new HashMap<>();
+        urlParams.put("{reservationIdx}", Integer.toString(bookingIndex));
+
+        return mDailyMobileService.getStayOutboundReceipt(Crypto.getUrlDecoderEx(URL) + Crypto.getUrlDecoderEx(API, urlParams)).subscribeOn(Schedulers.io());
+    }
+
+    public Observable<BaseDto<StayOutboundEmailReceiptData>> getStayOutboundEmailReceipt(int bookingIndex)
+    {
+        final String URL = Constants.UNENCRYPTED_URL ? "https://dev-silo.dailyhotel.me/"//
+            : "MzAkODEkNDckNjgkNDAkMzkkODckMSQ4OSQyOCQxNCQzMiQ4JDEkMzckNTUk$QAGkRCM0ZGGMkM1MBzkyQTBEOEMxRDgL1OGUWENFMUM3MEWZJEOURDMOEAM1NjY1RjE2MEVDQjc4RTSA5MzQxQjQ2Rjk1VMMHUEyRg==$";
+
+        final String API = Constants.UNENCRYPTED_URL ? "api/v1/outbound/reservations/{reservationIdx}/sales-receipt/request"//
+            : "MTcxJDEzNCQxMDAkNzAkMzgkOTUkNTUkMTgzJDYzJDE2MCQyMTgkMjIkMTk1JDIwMyQxODUkMjA1JA==$ODgwNUIyMTY5NEU3QTUwRTCJENTQzMzg0NDA2MTHNGOTExMjg5MDZFMEUQ4MkY2MNUM4MTcyMkSEwREQ0NjdDMDdBOTMwMDYyOCDRBODE2SMUE4NDc0MEQ5Nzc1Mzg3OUVEM0Y1QjIwMTEc2MEMyRDdBMkNCRERFOMUQyNzRDMjAwREQzNDhVBOUJZFWMDYzRDMxDOUExN0RBDENTEzM0M1MDFCRDY1AQ0I0Qg==$";
+
+        Map<String, String> urlParams = new HashMap<>();
+        urlParams.put("{reservationIdx}", Integer.toString(bookingIndex));
+
+        return mDailyMobileService.getStayOutboundEmailReceipt(Crypto.getUrlDecoderEx(URL) + Crypto.getUrlDecoderEx(API, urlParams)).subscribeOn(Schedulers.io());
     }
 }
