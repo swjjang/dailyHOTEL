@@ -50,7 +50,7 @@ public class StayOutboundBookingDetail
         FULL,
         PARTIAL,
         NRD,
-        OVER_DATE,
+        TIMEOVER,
     }
 
     public StayOutboundBookingDetail()

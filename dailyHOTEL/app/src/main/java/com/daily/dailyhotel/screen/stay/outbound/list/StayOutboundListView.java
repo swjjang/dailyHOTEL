@@ -245,7 +245,8 @@ public class StayOutboundListView extends BaseDialogView<StayOutboundListView.On
                 @Override
                 public boolean onLongClick(View v)
                 {
-                    return false;
+                    getEventListener().onStayLongClick();
+                    return true;
                 }
             });
         }

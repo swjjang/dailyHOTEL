@@ -398,22 +398,19 @@ public class StayOutboundBookingDetailPresenter extends BaseExceptionPresenter<S
                 break;
 
             case NRD:
-                break;
-
-            case OVER_DATE:
-                break;
-
+            case TIMEOVER:
             default:
                 getViewInterface().showConciergeDialog(new DialogInterface.OnDismissListener()
                 {
                     @Override
                     public void onDismiss(DialogInterface dialog)
                     {
-                        unLockAll();
                     }
                 });
                 break;
         }
+
+        unLockAll();
     }
 
     @Override

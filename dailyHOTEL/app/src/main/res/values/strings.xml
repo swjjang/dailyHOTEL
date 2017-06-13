@@ -1319,6 +1319,7 @@
     <string name="label_stay_outbound_list_adult_count">성인 %1$d</string>
     <string name="label_stay_outbound_list_child_count">아동 %1$d</string>
     <string name="label_stay_outbound_tripadvisor_rating">(평점 %1$s)</string>
+    <string name="label_stay_outbound_preparing_preview">미리보기 준비중</string>
 
     <!-- Stay Out Bound Filter -->
     <string name="label_stay_outbound_filter_1_star_rate">1성급</string>
