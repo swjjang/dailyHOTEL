@@ -9,7 +9,7 @@ import java.util.List;
 
 import io.reactivex.Observable;
 
-public interface RefundInterface
+public interface StayOutboundRefundInterface
 {
     // Stay Outbound 환불 상세
     Observable<StayOutboundRefundDetail> getStayOutboundRefundDetail(int bookingIndex);

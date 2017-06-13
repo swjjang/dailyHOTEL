@@ -62,7 +62,7 @@ public class StayOutboundReceiptView extends BaseDialogView<StayOutboundReceiptV
         getViewDataBinding().guestTxtView.setText(stayOutboundReceipt.userName + " / " + Util.addHyphenMobileNumber(getContext(), stayOutboundReceipt.userPhone));
 
         // 체크인/아웃
-        getViewDataBinding().checkInOutTextView.setText(stayOutboundReceipt.checkInDateTime + " - " + stayOutboundReceipt.checkOutDateTime);
+        getViewDataBinding().checkInOutTextView.setText(stayOutboundReceipt.checkInDate + " - " + stayOutboundReceipt.checkOutDate);
 
         int nights = 1;
         int rooms = 1;
@@ -139,7 +139,7 @@ public class StayOutboundReceiptView extends BaseDialogView<StayOutboundReceiptV
         getViewDataBinding().registrationNoTextView.setText(getString(R.string.label_receipt_registeration_number, registrationNo));
 
         // 코멘트
-        getViewDataBinding().commentTextView.setText(stayOutboundReceipt.memo);
+        getViewDataBinding().commentTextView.setText(stayOutboundReceipt.comment);
 
         getViewDataBinding().receiptLayout.setOnClickListener(new View.OnClickListener()
         {
