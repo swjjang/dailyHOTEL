@@ -1,6 +1,7 @@
 package com.daily.dailyhotel.util;
 
 import android.content.Context;
+import android.support.annotation.Nullable;
 
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
@@ -37,7 +38,8 @@ public class RecentlyPlaceUtil
         IB_STAY,
         GOURMET,
         OB_STAY,
-        ALL_STAY
+        ALL_STAY,
+        ALL
     }
 
     public static void migrateRecentlyPlaces(Context context)
@@ -208,6 +210,7 @@ public class RecentlyPlaceUtil
         return jsonArray;
     }
 
+    @Nullable
     public static RealmResults<RecentlyRealmObject> getRecentlyTypeList(ServiceType... serviceTypes)
     {
         Realm realm = Realm.getDefaultInstance();
