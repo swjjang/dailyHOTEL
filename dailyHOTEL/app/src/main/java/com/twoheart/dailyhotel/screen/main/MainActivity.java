@@ -186,14 +186,7 @@ public class MainActivity extends BaseActivity implements Constants, BaseMenuNav
                     // 3초안에 메인화면이 뜨지 않으면 프로그래스바가 나온다
                     mDelayTimeHandler.sendEmptyMessageDelayed(0, 3000);
                 }
-            }, new DialogInterface.OnCancelListener()
-            {
-                @Override
-                public void onCancel(DialogInterface dialog)
-                {
-                    finish();
-                }
-            });
+            }, null);
         } else
         {
             mNetworkController.requestCheckServer();
@@ -883,7 +876,7 @@ public class MainActivity extends BaseActivity implements Constants, BaseMenuNav
         mAppPermissionsGuideDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
         mAppPermissionsGuideDialog.setCanceledOnTouchOutside(false);
 
-        mAppPermissionsGuideDialog.setCancelable(true);
+        mAppPermissionsGuideDialog.setCancelable(false);
         mAppPermissionsGuideDialog.setOnCancelListener(onCancelListener);
 
         View confirmTextView = dialogView.findViewById(R.id.confirmTextView);
