@@ -12,6 +12,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -29,6 +30,7 @@ import com.twoheart.dailyhotel.databinding.DialogStayOutboundRefundCancelDialogD
 import com.twoheart.dailyhotel.databinding.LayoutStayOutboundRefund01DataBinding;
 import com.twoheart.dailyhotel.databinding.LayoutStayOutboundRefund02DataBinding;
 import com.twoheart.dailyhotel.databinding.LayoutStayOutboundRefund03DataBinding;
+import com.twoheart.dailyhotel.databinding.LayoutStayOutboundRefundCancelReasonEtcDataBinding;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 
 import java.util.List;
@@ -47,7 +49,7 @@ public class StayOutboundRefundView extends BaseDialogView<StayOutboundRefundVie
 
         void onCancelReasonClick();
 
-        void onCancelReasonClick(int position, String message);
+        void onCancelReasonClick(String key, String message);
     }
 
     public StayOutboundRefundView(BaseActivity baseActivity, StayOutboundRefundView.OnEventListener listener)
@@ -84,7 +86,7 @@ public class StayOutboundRefundView extends BaseDialogView<StayOutboundRefundVie
     @Override
     public void onClick(View v)
     {
-        switch(v.getId())
+        switch (v.getId())
         {
             case R.id.selectReasonCancelView:
                 getEventListener().onCancelReasonClick();
@@ -117,131 +119,38 @@ public class StayOutboundRefundView extends BaseDialogView<StayOutboundRefundVie
         setPaymentInformation(getContext(), mRefund02DataBinding, stayOutboundRefundDetail);
     }
 
+    @Override
     public void showCancelDialog(List<Pair<String, String>> cancelList, String key, String message)
     {
-        if(cancelList == null || cancelList.size() == 0)
+        if (cancelList == null || cancelList.size() == 0)
         {
             return;
         }
 
         DialogStayOutboundRefundCancelDialogDataBinding dataBinding = DataBindingUtil.inflate(LayoutInflater.from(getContext()), R.layout.dialog_stay_outbound_refund_cancel_dialog_data, null, false);
 
-        int index = 0;
-
-        for(Pair<String, String> reason : cancelList)
-        {
-            DailyTextView dailyTextView = new DailyTextView(getContext());
-            dailyTextView.setTextColor(getColorStateList(R.drawable.selector_text_color_c323232_cb70038));
-            dailyTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 14);
-            dailyTextView.setText(reason.second);
-            dailyTextView.setTag(reason.first);
-            dataBinding.scrollLayout.addView(dailyTextView, index++, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ScreenUtils.dpToPx(getContext(), 45)));
-
-            View lineView = new View(getContext());
-            lineView.setBackgroundResource(R.color.default_line_cf0f0f0);
-            dataBinding.scrollLayout.addView(lineView, index++, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ScreenUtils.dpToPx(getContext(), 1)));
-        }
-
-
-        dataBinding.cancelRefundView01.setTag(1);
-        dataBinding.cancelRefundView02.setTag(2);
-        dataBinding.cancelRefundView03.setTag(3);
-        dataBinding.cancelRefundView04.setTag(4);
-        dataBinding.cancelRefundView05.setTag(5);
-        dataBinding.cancelRefundView06.setTag(6);
-        dataBinding.cancelRefundView07.setTag(7);
-
-        dataBinding.messageEditText.addTextChangedListener(new TextWatcher()
-        {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after)
-            {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count)
-            {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s)
-            {
-                dataBinding.messageCountTextView.setText(String.format(Locale.KOREA, "(%d/300자)", s.length()));
-            }
-        });
-
-        dataBinding.messageEditText.setText(message);
-        dataBinding.messageEditText.setSelection(dataBinding.messageEditText.length());
-
-        dataBinding.messageEditText.setOnTouchListener(new View.OnTouchListener()
-        {
-            @Override
-            public boolean onTouch(View v, MotionEvent event)
-            {
-                switch (event.getAction() & MotionEvent.ACTION_MASK)
-                {
-                    case MotionEvent.ACTION_DOWN:
-                        v.getParent().getParent().getParent().requestDisallowInterceptTouchEvent(true);
-                        break;
-
-                    case MotionEvent.ACTION_UP:
-                    case MotionEvent.ACTION_CANCEL:
-                        v.getParent().getParent().getParent().requestDisallowInterceptTouchEvent(false);
-                        break;
-                }
-                return false;
-            }
-        });
 
         View.OnClickListener onClickListener = new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
             {
-                switch (v.getId())
+                EditText messageEditText = (EditText) dataBinding.scrollLayout.findViewById(R.id.messageEditText);
+                View messageClickView = dataBinding.scrollLayout.findViewById(R.id.messageClickView);
+
+                if (messageEditText != null && messageClickView != null)
                 {
-                    case R.id.cancelRefundView01:
-                    case R.id.cancelRefundView02:
-                    case R.id.cancelRefundView03:
-                    case R.id.cancelRefundView04:
-                    case R.id.cancelRefundView05:
-                    case R.id.cancelRefundView06:
-                    {
-                        dataBinding.messageEditText.setText(null);
-                        dataBinding.messageClickView.setVisibility(View.VISIBLE);
-                        dataBinding.messageClickView.setOnClickListener(this);
+                    messageEditText.setText(null);
+                    messageClickView.setVisibility(View.VISIBLE);
+                    messageClickView.setOnClickListener(this);
 
-                        dataBinding.messageEditText.setCursorVisible(false);
+                    messageEditText.setCursorVisible(false);
 
-                        InputMethodManager inputMethodManager = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-                        inputMethodManager.hideSoftInputFromWindow(dataBinding.messageEditText.getWindowToken(), InputMethodManager.HIDE_IMPLICIT_ONLY);
-
-                        setSelected(v);
-                        break;
-                    }
-
-                    case R.id.cancelRefundView07:
-                    {
-                        dataBinding.messageClickView.setVisibility(View.GONE);
-                        dataBinding.messageClickView.setOnClickListener(null);
-
-                        dataBinding.messageEditText.setCursorVisible(true);
-
-                        InputMethodManager inputMethodManager = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-                        inputMethodManager.showSoftInput(dataBinding.messageEditText, InputMethodManager.SHOW_IMPLICIT);
-
-                        setSelected(v);
-
-                        dataBinding.scrollView.fullScroll(View.FOCUS_DOWN);
-                        break;
-                    }
-
-                    case R.id.messageClickView:
-                        dataBinding.cancelRefundView07.performClick();
-                        break;
+                    InputMethodManager inputMethodManager = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    inputMethodManager.hideSoftInputFromWindow(messageEditText.getWindowToken(), InputMethodManager.HIDE_IMPLICIT_ONLY);
                 }
+
+                setSelected(v);
             }
 
             private void setSelected(View view)
@@ -262,45 +171,143 @@ public class StayOutboundRefundView extends BaseDialogView<StayOutboundRefundVie
             }
         };
 
-        dataBinding.cancelRefundView01.setOnClickListener(onClickListener);
-        dataBinding.cancelRefundView02.setOnClickListener(onClickListener);
-        dataBinding.cancelRefundView03.setOnClickListener(onClickListener);
-        dataBinding.cancelRefundView04.setOnClickListener(onClickListener);
-        dataBinding.cancelRefundView05.setOnClickListener(onClickListener);
-        dataBinding.cancelRefundView06.setOnClickListener(onClickListener);
-        dataBinding.cancelRefundView07.setOnClickListener(onClickListener);
-
-        switch (position)
+        View.OnClickListener onOTHClickListener = new View.OnClickListener()
         {
-            case 1:
-                dataBinding.cancelRefundView01.performClick();
-                break;
-            case 2:
-                dataBinding.cancelRefundView02.performClick();
-                break;
-            case 3:
-                dataBinding.cancelRefundView03.performClick();
-                break;
-            case 4:
-                dataBinding.cancelRefundView04.performClick();
-                break;
-            case 5:
-                dataBinding.cancelRefundView05.performClick();
-                break;
-            case 6:
-                dataBinding.cancelRefundView06.performClick();
-                break;
-            case 7:
-                dataBinding.cancelRefundView07.performClick();
-                break;
+            @Override
+            public void onClick(View v)
+            {
+                EditText messageEditText = (EditText) dataBinding.scrollLayout.findViewById(R.id.messageEditText);
+                View messageClickView = dataBinding.scrollLayout.findViewById(R.id.messageClickView);
 
-            default:
-                dataBinding.messageClickView.setVisibility(View.VISIBLE);
-                dataBinding.messageClickView.setOnClickListener(onClickListener);
+                if (messageEditText != null && messageClickView != null)
+                {
+                    messageClickView.setVisibility(View.GONE);
+                    messageClickView.setOnClickListener(null);
 
-                dataBinding.messageEditText.setCursorVisible(false);
+                    messageEditText.setCursorVisible(true);
+
+                    InputMethodManager inputMethodManager = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    inputMethodManager.showSoftInput(messageEditText, InputMethodManager.SHOW_IMPLICIT);
+                }
+
+                setSelected(v);
+
+                dataBinding.scrollView.fullScroll(View.FOCUS_DOWN);
+            }
+
+            private void setSelected(View view)
+            {
+                Object tag = dataBinding.scrollLayout.getTag();
+
+                if (tag != null && tag instanceof DailyTextView == true)
+                {
+                    ((DailyTextView) tag).setSelected(false);
+                    ((DailyTextView) tag).setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+                }
+
+                dataBinding.scrollLayout.setTag(view);
+                view.setSelected(true);
+                ((DailyTextView) view).setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.card_btn_v_select, 0);
+
+                dataBinding.positiveTextView.setEnabled(true);
+            }
+        };
+
+        int index = 0;
+        final String OTH = "OTH";
+        DailyTextView dailyTextView;
+        LayoutStayOutboundRefundCancelReasonEtcDataBinding othDataBinding = null;
+
+        for (Pair<String, String> reason : cancelList)
+        {
+            // 기타가 존재하는 경우
+            if (OTH.equalsIgnoreCase(reason.first) == true)
+            {
+                othDataBinding = DataBindingUtil.inflate(LayoutInflater.from(getContext()), R.layout.layout_stay_outbound_refund_cancel_reason_etc_data, dataBinding.scrollLayout, true);
+                dailyTextView = othDataBinding.cancelReasonEtcView;
+
+                dailyTextView.setText(reason.second);
+                dailyTextView.setTag(reason.first);
+                dailyTextView.setOnClickListener(onOTHClickListener);
+
+                dataBinding.scrollLayout.addView(othDataBinding.getRoot(), index++, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+            } else
+            {
+                dailyTextView = new DailyTextView(getContext());
+                dailyTextView.setTextColor(getColorStateList(R.drawable.selector_text_color_c323232_cb70038));
+                dailyTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 14);
+                dailyTextView.setText(reason.second);
+                dailyTextView.setTag(reason.first);
+                dataBinding.scrollLayout.addView(dailyTextView, index++, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ScreenUtils.dpToPx(getContext(), 45)));
+
+                dailyTextView.setOnClickListener(onClickListener);
+
+                View lineView = new View(getContext());
+                lineView.setBackgroundResource(R.color.default_line_cf0f0f0);
+                dataBinding.scrollLayout.addView(lineView, index++, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ScreenUtils.dpToPx(getContext(), 1)));
+            }
+
+            if (DailyTextUtils.isTextEmpty(key) == false && key.equalsIgnoreCase(reason.first) == true)
+            {
+                dailyTextView.performClick();
+            }
+        }
+
+        if(othDataBinding != null)
+        {
+            if (DailyTextUtils.isTextEmpty(key) == true)
+            {
+                othDataBinding.messageClickView.setVisibility(View.VISIBLE);
+                othDataBinding.messageClickView.setOnClickListener(onClickListener);
+
+                othDataBinding.messageEditText.setCursorVisible(false);
                 dataBinding.positiveTextView.setEnabled(false);
-                break;
+            }
+
+            TextView messageCountTextView = othDataBinding.messageCountTextView;
+
+            othDataBinding.messageEditText.addTextChangedListener(new TextWatcher()
+            {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after)
+                {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count)
+                {
+
+                }
+
+                @Override
+                public void afterTextChanged(Editable s)
+                {
+                    messageCountTextView.setText(String.format(Locale.KOREA, "(%d/300자)", s.length()));
+                }
+            });
+
+            othDataBinding.messageEditText.setText(message);
+            othDataBinding.messageEditText.setSelection(othDataBinding.messageEditText.length());
+            othDataBinding.messageEditText.setOnTouchListener(new View.OnTouchListener()
+            {
+                @Override
+                public boolean onTouch(View v, MotionEvent event)
+                {
+                    switch (event.getAction() & MotionEvent.ACTION_MASK)
+                    {
+                        case MotionEvent.ACTION_DOWN:
+                            v.getParent().getParent().getParent().requestDisallowInterceptTouchEvent(true);
+                            break;
+
+                        case MotionEvent.ACTION_UP:
+                        case MotionEvent.ACTION_CANCEL:
+                            v.getParent().getParent().getParent().requestDisallowInterceptTouchEvent(false);
+                            break;
+                    }
+                    return false;
+                }
+            });
         }
 
         dataBinding.negativeTextView.setOnClickListener(new View.OnClickListener()
@@ -308,7 +315,7 @@ public class StayOutboundRefundView extends BaseDialogView<StayOutboundRefundVie
             @Override
             public void onClick(View v)
             {
-              hideSimpleDialog();
+                hideSimpleDialog();
             }
         });
 
@@ -319,14 +326,19 @@ public class StayOutboundRefundView extends BaseDialogView<StayOutboundRefundVie
             {
                 hideSimpleDialog();
 
-                TextView selectedView = (TextView) ((View) dataBinding.cancelRefundView01.getParent()).getTag();
+                TextView selectedView = (TextView) dataBinding.scrollLayout.getTag();
 
                 if (selectedView != null)
                 {
-                    String cancelReason = selectedView.getText().toString();
-                    String message = dataBinding.messageEditText.getText().toString().trim();
+                    EditText messageEditText = (EditText) dataBinding.scrollLayout.findViewById(R.id.messageEditText);
+                    String message = null;
 
-//                    getEventListener().onCancelReasonClick((Integer) selectedView.getTag(), cancelReason, message);
+                    if(messageEditText != null)
+                    {
+                        message = messageEditText.getText().toString().trim();
+                    }
+
+                    getEventListener().onCancelReasonClick((String) selectedView.getTag(), message);
                 }
             }
         });

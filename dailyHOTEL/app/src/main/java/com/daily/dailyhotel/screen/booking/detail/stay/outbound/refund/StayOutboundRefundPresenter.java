@@ -32,8 +32,8 @@ public class StayOutboundRefundPresenter extends BaseExceptionPresenter<StayOutb
     private int mBookingIndex;
     private StayOutboundRefundDetail mStayOutboundRefundDetail;
 
-    private int mSelectedCancelReason;
-    private String mCancelReasonMessage;
+    private String mCancelKey;
+    private String mCancelMessage;
 
     public interface StayOutboundRefundAnalyticsInterface extends BaseAnalyticsInterface
     {
@@ -193,13 +193,14 @@ public class StayOutboundRefundPresenter extends BaseExceptionPresenter<StayOutb
     @Override
     public void onCancelReasonClick()
     {
-        getViewInterface().showCancelDialog(mStayOutboundRefundDetail.getCancelReasonTypeList(), mSelectedCancelReason, mCancelReasonMessage);
+        getViewInterface().showCancelDialog(mStayOutboundRefundDetail.getCancelReasonTypeList(), mCancelKey, mCancelMessage);
     }
 
     @Override
-    public void onCancelReasonClick(int position, String message)
+    public void onCancelReasonClick(String key, String message)
     {
-
+        mCancelKey = key;
+        mCancelMessage = message;
     }
 
     private void setStayOutboundRefundDetail(StayOutboundRefundDetail stayOutboundRefundDetail)
