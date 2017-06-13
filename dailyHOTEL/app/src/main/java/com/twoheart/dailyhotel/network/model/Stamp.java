@@ -14,9 +14,6 @@ public class Stamp
     @JsonField(name = "count")
     public int count;
 
-    @JsonField(name = "freepass")
-    public boolean freePass;
-
     public Stamp()
     {
     }
