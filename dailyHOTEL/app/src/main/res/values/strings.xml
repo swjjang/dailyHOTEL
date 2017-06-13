@@ -1367,6 +1367,10 @@
     <!-- Stay Out Bound Booking Detail -->
     <string name="message_stay_outbound_booking_detail_current_time">날짜는 현지시간 기준입니다.</string>
 
+    <!-- Stay Out Bound Booking Refund -->
+    <string name="message_stay_outbound_refund_cancel_free">무료 취소를 진행할까요?</string>
+    <string name="message_stay_outbound_refund_partial_refund">무료취소 기간이 지나 취소 수수료가\n부과됩니다. 취소 하시겠습니까?</string>
+    <string name="message_stay_outbound_refund_select_a_reason_for_cancellation">취소 사유를 선택해주세요.</string>
 
     <!-- Stay Out Bound Booking Receipt -->
     <string name="label_stay_outbound_booking_hotel_name">호텔명</string>

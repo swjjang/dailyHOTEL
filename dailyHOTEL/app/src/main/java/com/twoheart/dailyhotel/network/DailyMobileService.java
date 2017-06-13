@@ -646,7 +646,10 @@ public interface DailyMobileService
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @POST()
-    Observable<BaseDto<StayOutboundRefundData>> getStayOutboundRefund(@Url String mobileAPI);
+    Observable<BaseDto<StayOutboundRefundData>> getStayOutboundRefund(@Url String mobileAPI//
+        , @Field("refundType") String refundType//
+        , @Field("cancelReasonType") String cancelReasonType//
+        , @Field("reasons") String reasons);
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET()

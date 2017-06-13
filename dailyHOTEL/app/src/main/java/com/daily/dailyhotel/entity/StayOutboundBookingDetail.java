@@ -47,10 +47,22 @@ public class StayOutboundBookingDetail
 
     public enum RefundType
     {
-        FULL,
-        PARTIAL,
-        NRD,
-        TIMEOVER,
+        FULL("FULL"),
+        PARTIAL("PARTIAL"),
+        NRD("NRD"),
+        TIMEOVER("TIMEOVER");
+
+        String mValue;
+
+        RefundType(String value)
+        {
+            mValue = value;
+        }
+
+        public String getValue()
+        {
+            return mValue;
+        }
     }
 
     public StayOutboundBookingDetail()

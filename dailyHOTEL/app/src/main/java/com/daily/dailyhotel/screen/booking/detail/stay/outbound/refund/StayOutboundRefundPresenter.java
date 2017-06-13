@@ -1,15 +1,19 @@
 package com.daily.dailyhotel.screen.booking.detail.stay.outbound.refund;
 
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.text.Spannable;
 import android.text.SpannableString;
+import android.view.View;
 
 import com.daily.base.BaseAnalyticsInterface;
+import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.util.FontManager;
+import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
 import com.daily.dailyhotel.entity.StayOutboundRefundDetail;
 import com.daily.dailyhotel.repository.remote.StayOutboundRefundRemoteImpl;
@@ -187,7 +191,96 @@ public class StayOutboundRefundPresenter extends BaseExceptionPresenter<StayOutb
     @Override
     public void onRefundClick()
     {
+        if (lock() == true)
+        {
+            return;
+        }
 
+        if (DailyTextUtils.isTextEmpty(mCancelKey) == true)
+        {
+            DailyToast.showToast(getActivity(), getString(R.string.message_stay_outbound_refund_select_a_reason_for_cancellation), DailyToast.LENGTH_SHORT);
+            unLockAll();
+            return;
+        }
+
+        switch (mStayOutboundRefundDetail.refundStatus)
+        {
+            case FULL:
+                getViewInterface().showSimpleDialog(null, getString(R.string.message_stay_outbound_refund_cancel_free)//
+                    , getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no), new View.OnClickListener()
+                    {
+                        @Override
+                        public void onClick(View v)
+                        {
+                            screenLock(true);
+
+                            addCompositeDisposable(mRefundRemoteImpl.getStayOutboundRefund(mBookingIndex, mStayOutboundRefundDetail.refundStatus.getValue(), mCancelKey, mCancelMessage).subscribe(new Consumer<String>()
+                            {
+                                @Override
+                                public void accept(@io.reactivex.annotations.NonNull String message) throws Exception
+                                {
+                                    getViewInterface().showSimpleDialog(null, message//
+                                        , getString(R.string.dialog_btn_text_yes), null, new DialogInterface.OnDismissListener()
+                                        {
+                                            @Override
+                                            public void onDismiss(DialogInterface dialog)
+                                            {
+                                                onBackClick();
+                                            }
+                                        });
+
+                                    unLockAll();
+                                }
+                            }, new Consumer<Throwable>()
+                            {
+                                @Override
+                                public void accept(@io.reactivex.annotations.NonNull Throwable throwable) throws Exception
+                                {
+                                    onHandleErrorAndFinish(throwable);
+                                }
+                            }));
+                        }
+                    }, null);
+                break;
+
+            case PARTIAL:
+                getViewInterface().showSimpleDialog(null, getString(R.string.message_stay_outbound_refund_partial_refund)//
+                    , getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no), new View.OnClickListener()
+                    {
+                        @Override
+                        public void onClick(View v)
+                        {
+                            screenLock(true);
+
+                            addCompositeDisposable(mRefundRemoteImpl.getStayOutboundRefund(mBookingIndex, mStayOutboundRefundDetail.refundStatus.getValue(), mCancelKey, mCancelMessage).subscribe(new Consumer<String>()
+                            {
+                                @Override
+                                public void accept(@io.reactivex.annotations.NonNull String message) throws Exception
+                                {
+                                    getViewInterface().showSimpleDialog(null, message//
+                                        , getString(R.string.dialog_btn_text_yes), null, new DialogInterface.OnDismissListener()
+                                        {
+                                            @Override
+                                            public void onDismiss(DialogInterface dialog)
+                                            {
+                                                onBackClick();
+                                            }
+                                        });
+
+                                    unLockAll();
+                                }
+                            }, new Consumer<Throwable>()
+                            {
+                                @Override
+                                public void accept(@io.reactivex.annotations.NonNull Throwable throwable) throws Exception
+                                {
+                                    onHandleErrorAndFinish(throwable);
+                                }
+                            }));
+                        }
+                    }, null);
+                break;
+        }
     }
 
     @Override
@@ -197,10 +290,17 @@ public class StayOutboundRefundPresenter extends BaseExceptionPresenter<StayOutb
     }
 
     @Override
-    public void onCancelReasonClick(String key, String message)
+    public void onCancelReasonClick(String key, String reasonText, String message)
     {
+        if (DailyTextUtils.isTextEmpty(key, reasonText) == true)
+        {
+            return;
+        }
+
         mCancelKey = key;
         mCancelMessage = message;
+
+        getViewInterface().setCancelReasonText(reasonText);
     }
 
     private void setStayOutboundRefundDetail(StayOutboundRefundDetail stayOutboundRefundDetail)

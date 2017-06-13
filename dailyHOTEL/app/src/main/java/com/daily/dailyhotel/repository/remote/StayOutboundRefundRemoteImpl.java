@@ -5,7 +5,6 @@ import android.support.annotation.NonNull;
 
 import com.daily.base.exception.BaseException;
 import com.daily.dailyhotel.domain.StayOutboundRefundInterface;
-import com.daily.dailyhotel.entity.StayOutboundRefund;
 import com.daily.dailyhotel.entity.StayOutboundRefundDetail;
 import com.daily.dailyhotel.repository.remote.model.StayOutboundRefundData;
 import com.daily.dailyhotel.repository.remote.model.StayOutboundRefundDetailData;
@@ -55,20 +54,20 @@ public class StayOutboundRefundRemoteImpl implements StayOutboundRefundInterface
     }
 
     @Override
-    public Observable<StayOutboundRefund> getStayOutboundRefund(int bookingIndex)
+    public Observable<String> getStayOutboundRefund(int bookingIndex, String refundType, String cancelReasonType, String reasons)
     {
-        return DailyMobileAPI.getInstance(mContext).getStayOutboundRefund(bookingIndex).map(new Function<BaseDto<StayOutboundRefundData>, StayOutboundRefund>()
+        return DailyMobileAPI.getInstance(mContext).getStayOutboundRefund(bookingIndex, refundType, cancelReasonType, reasons).map(new Function<BaseDto<StayOutboundRefundData>, String>()
         {
             @Override
-            public StayOutboundRefund apply(@io.reactivex.annotations.NonNull BaseDto<StayOutboundRefundData> stayOutboundRefundDataBaseDto) throws Exception
+            public String apply(@io.reactivex.annotations.NonNull BaseDto<StayOutboundRefundData> stayOutboundRefundDataBaseDto) throws Exception
             {
-                StayOutboundRefund stayOutboundRefund = null;
+                String message = null;
 
                 if (stayOutboundRefundDataBaseDto != null)
                 {
                     if (stayOutboundRefundDataBaseDto.msgCode == 100 && stayOutboundRefundDataBaseDto.data != null)
                     {
-                        stayOutboundRefund = stayOutboundRefundDataBaseDto.data.getStayOutboundRefund();
+                        message = stayOutboundRefundDataBaseDto.msg;
                     } else
                     {
                         throw new BaseException(stayOutboundRefundDataBaseDto.msgCode, stayOutboundRefundDataBaseDto.msg);
@@ -78,7 +77,7 @@ public class StayOutboundRefundRemoteImpl implements StayOutboundRefundInterface
                     throw new BaseException(-1, null);
                 }
 
-                return stayOutboundRefund;
+                return message;
             }
         }).observeOn(AndroidSchedulers.mainThread());
     }
