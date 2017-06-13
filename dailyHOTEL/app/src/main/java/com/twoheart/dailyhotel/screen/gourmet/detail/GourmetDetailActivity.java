@@ -26,7 +26,6 @@ import com.twoheart.dailyhotel.model.Gourmet;
 import com.twoheart.dailyhotel.model.GourmetDetail;
 import com.twoheart.dailyhotel.model.PlaceDetail;
 import com.twoheart.dailyhotel.model.Province;
-import com.twoheart.dailyhotel.model.RecentPlaces;
 import com.twoheart.dailyhotel.model.time.GourmetBookingDay;
 import com.twoheart.dailyhotel.model.time.PlaceBookingDay;
 import com.twoheart.dailyhotel.network.model.GourmetDetailParams;
@@ -357,6 +356,10 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         mPlaceDetail = createPlaceDetail(intent);
 
         // 최근 본 업장 저장
+//        RecentPlaces recentPlaces = new RecentPlaces(this);
+//        recentPlaces.add(PlaceType.FNB, mPlaceDetail.index);
+//        recentPlaces.savePreference();
+
         String placeName = null;
         if (intent.hasExtra(NAME_INTENT_EXTRA_DATA_PLACENAME) == true)
         {

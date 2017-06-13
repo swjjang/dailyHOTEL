@@ -367,12 +367,7 @@ public class RecentlyPlaceUtil
             return;
         }
 
-        // Date로 소팅하여 삭제 하고 싶으나 밀리세컨드 단위로 date를 저장하는 것이 아닌 string으로 저장되고 있는것으로 보임, 예상되는 리스트와 다른 결과가 내려와서 따로 처리 함
-        Integer[] deleteIndexArray = new Integer[size - MAX_RECENT_PLACE_COUNT];
-        for (int i = MAX_RECENT_PLACE_COUNT; i < size; i++)
-        {
-            deleteIndexArray[i - MAX_RECENT_PLACE_COUNT] = realmResults.get(i).index;
-        }
+        long deleteStartDate = realmResults.get(MAX_RECENT_PLACE_COUNT).savingTime;
 
         Realm realm = Realm.getDefaultInstance();
         realm.executeTransactionAsync(new Realm.Transaction()
@@ -381,7 +376,8 @@ public class RecentlyPlaceUtil
             public void execute(Realm realm)
             {
                 RealmResults<RecentlyRealmObject> deleteList = realm.where(RecentlyRealmObject.class) //
-                    .in("index", deleteIndexArray).findAllSorted("savingTime", Sort.DESCENDING);
+                    .beginGroup().equalTo("serviceType", serviceType.name()) //
+                    .lessThanOrEqualTo("savingTime", deleteStartDate).endGroup().findAllSorted("savingTime", Sort.DESCENDING);
                 deleteList.deleteAllFromRealm();
             }
         });

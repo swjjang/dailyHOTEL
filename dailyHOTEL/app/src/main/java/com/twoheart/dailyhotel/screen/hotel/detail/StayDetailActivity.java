@@ -357,6 +357,10 @@ public class StayDetailActivity extends PlaceDetailActivity
         mPlaceDetail = createPlaceDetail(intent);
 
         // 최근 본 업장 저장
+//        RecentPlaces recentPlaces = new RecentPlaces(this);
+//        recentPlaces.add(Constants.PlaceType.HOTEL, mPlaceDetail.index);
+//        recentPlaces.savePreference();
+
         String placeName = null;
         if (intent.hasExtra(NAME_INTENT_EXTRA_DATA_HOTELNAME) == true)
         {
