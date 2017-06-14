@@ -835,6 +835,8 @@ public class HomeFragment extends BaseMenuNavigationFragment
 
     private void requestRecentList()
     {
+
+
         addCompositeDisposable(mRecentlyRemoteImpl.getHomeRecentlyList(MAX_REQUEST_SIZE).subscribe(new Consumer<List<HomePlace>>()
         {
             @Override
@@ -1658,19 +1660,6 @@ public class HomeFragment extends BaseMenuNavigationFragment
             }
 
             mNetworkRunState = mNetworkRunState | IS_RUNNED_WISHLIST;
-
-            sendHomeBlockEventAnalytics();
-        }
-
-        @Override
-        public void onRecentList(ArrayList<HomePlace> list, boolean isError)
-        {
-            if (mHomeLayout != null)
-            {
-                mHomeLayout.setRecentListData(list, isError);
-            }
-
-            mNetworkRunState = mNetworkRunState | IS_RUNNED_RECENTLIST;
 
             sendHomeBlockEventAnalytics();
         }

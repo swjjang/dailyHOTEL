@@ -4,8 +4,6 @@ import android.content.Context;
 
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
-import com.daily.dailyhotel.repository.local.model.RecentlyRealmObject;
-import com.daily.dailyhotel.util.RecentlyPlaceUtil;
 import com.twoheart.dailyhotel.Setting;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.network.dto.BaseDto;
@@ -18,13 +16,8 @@ import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 
-import io.realm.RealmResults;
 import retrofit2.Call;
 import retrofit2.Response;
 
@@ -46,8 +39,6 @@ public class HomeNetworkController extends BaseNetworkController
         void onEventList(ArrayList<Event> list);
 
         void onWishList(ArrayList<HomePlace> list, boolean isError);
-
-        void onRecentList(ArrayList<HomePlace> list, boolean isError);
 
         void onRecommendationList(ArrayList<Recommendation> list, boolean isError);
     }
@@ -75,28 +66,6 @@ public class HomeNetworkController extends BaseNetworkController
     public void requestWishList()
     {
         DailyMobileAPI.getInstance(mContext).requestHomeWishList(mNetworkTag, mWishListCallBack);
-    }
-
-    public void requestRecentlyList(RealmResults<RecentlyRealmObject> recentlyResultList, int maxSize)
-    {
-        // 리스트가 비었을때 서버에 리퀘스트시 필수 값 없어 에러 발생, 하지만 해당 경우는 정상인 상태로 서버에 리퀘스트 하지 않음 - 아이폰 동일
-        if (recentlyResultList == null || recentlyResultList.size() == 0)
-        {
-            ((HomeNetworkController.OnNetworkControllerListener) mOnNetworkControllerListener).onRecentList(null, false);
-            return;
-        }
-
-        JSONArray recentJsonArray = RecentlyPlaceUtil.getRecentlyJsonArray(recentlyResultList, maxSize);
-        JSONObject recentJsonObject = new JSONObject();
-        try
-        {
-            recentJsonObject.put("keys", recentJsonArray);
-        } catch (JSONException e)
-        {
-            ExLog.d(e.getMessage());
-        }
-
-        DailyMobileAPI.getInstance(mContext).requestHomeRecentList(mNetworkTag, recentJsonObject, mRecentListCallBack);
     }
 
     public void requestRecommendationList()
@@ -264,56 +233,6 @@ public class HomeNetworkController extends BaseNetworkController
         {
             mOnNetworkControllerListener.onError(call, t, true);
             ((HomeNetworkController.OnNetworkControllerListener) mOnNetworkControllerListener).onWishList(null, true);
-        }
-    };
-
-    private retrofit2.Callback mRecentListCallBack = new retrofit2.Callback<BaseDto<HomePlaces>>()
-    {
-        @Override
-        public void onResponse(Call<BaseDto<HomePlaces>> call, Response<BaseDto<HomePlaces>> response)
-        {
-            if (response != null && response.isSuccessful() && response.body() != null)
-            {
-                try
-                {
-                    BaseDto<HomePlaces> baseDto = response.body();
-
-                    if (baseDto.msgCode == 100)
-                    {
-                        ArrayList<HomePlace> homePlaceList = new ArrayList<>();
-                        homePlaceList.addAll(baseDto.data.items);
-
-                        String imageBaseUrl = baseDto.data.imageBaseUrl;
-
-                        for (HomePlace recentItem : homePlaceList)
-                        {
-                            if (DailyTextUtils.isTextEmpty(recentItem.imageUrl) == false)
-                            {
-                                recentItem.imageUrl = imageBaseUrl + recentItem.imageUrl;
-                            }
-                        }
-
-                        ((HomeNetworkController.OnNetworkControllerListener) mOnNetworkControllerListener).onRecentList(homePlaceList, false);
-                    } else
-                    {
-                        ((HomeNetworkController.OnNetworkControllerListener) mOnNetworkControllerListener).onRecentList(null, true);
-                    }
-                } catch (Exception e)
-                {
-                    ExLog.e(e.toString());
-                    ((HomeNetworkController.OnNetworkControllerListener) mOnNetworkControllerListener).onRecentList(null, true);
-                }
-            } else
-            {
-                ((HomeNetworkController.OnNetworkControllerListener) mOnNetworkControllerListener).onRecentList(null, true);
-            }
-        }
-
-        @Override
-        public void onFailure(Call call, Throwable t)
-        {
-            mOnNetworkControllerListener.onError(call, t, true);
-            ((HomeNetworkController.OnNetworkControllerListener) mOnNetworkControllerListener).onRecentList(null, true);
         }
     };
 }
