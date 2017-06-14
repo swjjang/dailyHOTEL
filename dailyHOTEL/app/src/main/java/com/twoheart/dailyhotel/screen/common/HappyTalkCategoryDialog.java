@@ -164,7 +164,7 @@ public class HappyTalkCategoryDialog extends BaseActivity
         parseCategory(category, mainCategoryMap, subCategoryMap);
 
         // 환불인 경우 바로 연동한다.
-        if (mCallScreen == CallScreen.SCREEN_STAY_REFUND)
+        if (mCallScreen == CallScreen.SCREEN_STAY_REFUND || mCallScreen == CallScreen.SCREEN_STAY_OUTBOUND_REFUND)
         {
             final String STAY_PREFIX = "S_";
             final String STAY_REFUND = "64796";
@@ -484,6 +484,15 @@ public class HappyTalkCategoryDialog extends BaseActivity
 
                 case SCREEN_STAY_REFUND:
                     label = AnalyticsManager.Label.STAY_BOOKING_DETAIL_REFUND;
+                    break;
+
+                case SCREEN_STAY_OUTBOUND_BOOKING:
+                    break;
+
+                case SCREEN_STAY_OUTBOUND_DETAIL:
+                    break;
+
+                case SCREEN_STAY_OUTBOUND_REFUND:
                     break;
 
                 default:

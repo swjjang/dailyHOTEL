@@ -116,7 +116,7 @@ public class StayOutboundBookingDetailView extends BaseDialogView<StayOutboundBo
 
         void onConciergeFaqClick();
 
-        void onConciergeHappyTalkClick();
+        void onConciergeHappyTalkClick(boolean refund);
 
         void onConciergeCallClick();
 
@@ -461,7 +461,7 @@ public class StayOutboundBookingDetailView extends BaseDialogView<StayOutboundBo
             {
                 hideSimpleDialog();
 
-                getEventListener().onConciergeHappyTalkClick();
+                getEventListener().onConciergeHappyTalkClick(false);
             }
         });
 
@@ -652,6 +652,52 @@ public class StayOutboundBookingDetailView extends BaseDialogView<StayOutboundBo
                 wrapDrawable.clearColorFilter();
             }
         });
+    }
+
+    @Override
+    public void showRefundCallDialog(Dialog.OnDismissListener listener)
+    {
+        DialogConciergeDataBinding dataBinding = DataBindingUtil.inflate(LayoutInflater.from(getContext()), R.layout.dialog_concierge_data, null, false);
+
+        // 버튼
+        dataBinding.contactUs01Layout.setVisibility(View.GONE);
+        dataBinding.contactUs02Layout.setVisibility(View.GONE);
+
+        dataBinding.kakaoDailyView.setText(R.string.label_contact_refund_kakao);
+        dataBinding.callDailyView.setText(R.string.label_contact_refund_daily);
+
+        dataBinding.kakaoDailyView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                hideSimpleDialog();
+
+                getEventListener().onConciergeHappyTalkClick(false);
+            }
+        });
+
+        dataBinding.callDailyView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                hideSimpleDialog();
+
+                getEventListener().onConciergeCallClick();
+            }
+        });
+
+        dataBinding.closeView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                hideSimpleDialog();
+            }
+        });
+
+        showSimpleDialog(dataBinding.getRoot(), null, listener, true);
     }
 
     @Override
