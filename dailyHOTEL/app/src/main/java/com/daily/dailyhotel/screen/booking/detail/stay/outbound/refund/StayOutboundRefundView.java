@@ -121,7 +121,7 @@ public class StayOutboundRefundView extends BaseDialogView<StayOutboundRefundVie
     }
 
     @Override
-    public void showCancelDialog(List<Pair<String, String>> cancelList, String key, String message)
+    public void showCancelReasonListDialog(List<Pair<String, String>> cancelList, String key, String message)
     {
         if (cancelList == null || cancelList.size() == 0)
         {
@@ -130,7 +130,6 @@ public class StayOutboundRefundView extends BaseDialogView<StayOutboundRefundVie
 
         DialogStayOutboundRefundCancelDialogDataBinding dataBinding = DataBindingUtil.inflate(LayoutInflater.from(getContext()), R.layout.dialog_stay_outbound_refund_cancel_dialog_data, null, false);
 
-
         View.OnClickListener onClickListener = new View.OnClickListener()
         {
             @Override
@@ -138,12 +137,20 @@ public class StayOutboundRefundView extends BaseDialogView<StayOutboundRefundVie
             {
                 EditText messageEditText = (EditText) dataBinding.scrollLayout.findViewById(R.id.messageEditText);
                 View messageClickView = dataBinding.scrollLayout.findViewById(R.id.messageClickView);
+                View cancelReasonEtcView = dataBinding.scrollLayout.findViewById(R.id.cancelReasonEtcView);
 
                 if (messageEditText != null && messageClickView != null)
                 {
                     messageEditText.setText(null);
                     messageClickView.setVisibility(View.VISIBLE);
-                    messageClickView.setOnClickListener(this);
+                    messageClickView.setOnClickListener(new View.OnClickListener()
+                    {
+                        @Override
+                        public void onClick(View v)
+                        {
+                            cancelReasonEtcView.performClick();
+                        }
+                    });
 
                     messageEditText.setCursorVisible(false);
 
@@ -172,6 +179,7 @@ public class StayOutboundRefundView extends BaseDialogView<StayOutboundRefundVie
             }
         };
 
+        // 기타 클릭
         View.OnClickListener onOTHClickListener = new View.OnClickListener()
         {
             @Override
@@ -217,6 +225,7 @@ public class StayOutboundRefundView extends BaseDialogView<StayOutboundRefundVie
         int index = 0;
         final String OTH = "OTH";
         DailyTextView dailyTextView;
+        DailyTextView selectedDailyTextView = null;
         LayoutStayOutboundRefundCancelReasonEtcDataBinding othDataBinding = null;
 
         for (Pair<String, String> reason : cancelList)
@@ -230,6 +239,22 @@ public class StayOutboundRefundView extends BaseDialogView<StayOutboundRefundVie
                 dailyTextView.setText(reason.second);
                 dailyTextView.setTag(reason.first);
                 dailyTextView.setOnClickListener(onOTHClickListener);
+
+                othDataBinding.messageEditText.setText(message);
+                othDataBinding.messageClickView.setVisibility(View.VISIBLE);
+
+                TextView cancelReasonEtcView = othDataBinding.cancelReasonEtcView;
+
+                othDataBinding.messageClickView.setOnClickListener(new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        cancelReasonEtcView.performClick();
+                    }
+                });
+
+                othDataBinding.messageEditText.setCursorVisible(false);
 
                 index += 2;
             } else
@@ -251,11 +276,16 @@ public class StayOutboundRefundView extends BaseDialogView<StayOutboundRefundVie
 
             if (DailyTextUtils.isTextEmpty(key) == false && key.equalsIgnoreCase(reason.first) == true)
             {
-                dailyTextView.performClick();
+                selectedDailyTextView = dailyTextView;
             }
         }
 
-        if(othDataBinding != null)
+        if (selectedDailyTextView != null)
+        {
+            selectedDailyTextView.performClick();
+        }
+
+        if (othDataBinding != null)
         {
             if (DailyTextUtils.isTextEmpty(key) == true)
             {
@@ -335,7 +365,7 @@ public class StayOutboundRefundView extends BaseDialogView<StayOutboundRefundVie
                     EditText messageEditText = (EditText) dataBinding.scrollLayout.findViewById(R.id.messageEditText);
                     String message = null;
 
-                    if(messageEditText != null)
+                    if (messageEditText != null)
                     {
                         message = messageEditText.getText().toString().trim();
                     }
@@ -360,7 +390,7 @@ public class StayOutboundRefundView extends BaseDialogView<StayOutboundRefundVie
     @Override
     public void setCancelReasonText(String reason)
     {
-        if(mRefund03DataBinding == null)
+        if (mRefund03DataBinding == null)
         {
             return;
         }
