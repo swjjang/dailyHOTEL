@@ -1264,7 +1264,7 @@
     <string name="label_stamp_event_title">1박 무료 프리패스 스탬프 이벤트</string>
     <string name="label_stamphistory_date">스탬프 발행일: %1$s</string>
     <string name="message_stamp_explanation1">7박 모으고\n1박 무료 프리패스 쿠폰을 받으세요!</string>
-    <string name="message_stamp_explanation2">* 1박 무료 프리패스 쿠폰은 7박 평균 결제 금액에 해당하는 쿠폰으로 드립니다.\n* 1박당 총 결제 금액 5만원 이상 시 스탬프가 적립됩니다.</string>
+    <string name="message_stamp_explanation2">- 1박 무료 프리패스 쿠폰은 7박 평균 결제 금액에 해당하는 쿠폰으로 드립니다.\n- 1박당 총 결제 금액 5만원 이상 시 스탬프가 적립됩니다.</string>
     <string name="message_stamp_explanation3">1박 무료 프리패스 스탬프 이벤트 자세히 보기</string>
     <string name="message_stamp_you_can_check_the_stamp_after_login">로그인 후 스탬프를 확인할 수 있습니다.\n로그인 할까요?</string>
     <string name="message_stamp_finish_stamp">종료된\n이벤트입니다.</string>
@@ -1367,6 +1367,10 @@
     <!-- Stay Out Bound Booking Detail -->
     <string name="message_stay_outbound_booking_detail_current_time">날짜는 현지시간 기준입니다.</string>
 
+    <!-- Stay Out Bound Booking Refund -->
+    <string name="message_stay_outbound_refund_cancel_free">무료 취소를 진행할까요?</string>
+    <string name="message_stay_outbound_refund_partial_refund">무료취소 기간이 지나 취소 수수료가\n부과됩니다. 취소 하시겠습니까?</string>
+    <string name="message_stay_outbound_refund_select_a_reason_for_cancellation">취소 사유를 선택해주세요.</string>
 
     <!-- Stay Out Bound Booking Receipt -->
     <string name="label_stay_outbound_booking_hotel_name">호텔명</string>

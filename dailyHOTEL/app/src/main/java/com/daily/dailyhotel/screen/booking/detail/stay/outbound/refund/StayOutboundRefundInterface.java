@@ -15,4 +15,6 @@ public interface StayOutboundRefundInterface extends BaseDialogViewInterface
     void setRefundDetail(StayOutboundRefundDetail stayOutboundRefundDetail);
 
     void showCancelDialog(List<Pair<String, String>> cancelList, String key, String message);
+
+    void setCancelReasonText(String reason);
 }

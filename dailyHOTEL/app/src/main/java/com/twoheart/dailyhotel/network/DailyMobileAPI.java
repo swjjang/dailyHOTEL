@@ -1511,7 +1511,7 @@ public class DailyMobileAPI implements IDailyNetwork
         return mDailyMobileService.getStayOutboundRefundDetail(Crypto.getUrlDecoderEx(URL) + Crypto.getUrlDecoderEx(API, urlParams)).subscribeOn(Schedulers.io());
     }
 
-    public Observable<BaseDto<StayOutboundRefundData>> getStayOutboundRefund(int bookingIndex)
+    public Observable<BaseDto<StayOutboundRefundData>> getStayOutboundRefund(int bookingIndex, String refundType, String cancelReasonType, String reasons)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "https://dev-silo.dailyhotel.me/"//
             : "MzAkODEkNDckNjgkNDAkMzkkODckMSQ4OSQyOCQxNCQzMiQ4JDEkMzckNTUk$QAGkRCM0ZGGMkM1MBzkyQTBEOEMxRDgL1OGUWENFMUM3MEWZJEOURDMOEAM1NjY1RjE2MEVDQjc4RTSA5MzQxQjQ2Rjk1VMMHUEyRg==$";
@@ -1522,7 +1522,7 @@ public class DailyMobileAPI implements IDailyNetwork
         Map<String, String> urlParams = new HashMap<>();
         urlParams.put("{reservationIdx}", Integer.toString(bookingIndex));
 
-        return mDailyMobileService.getStayOutboundRefund(Crypto.getUrlDecoderEx(URL) + Crypto.getUrlDecoderEx(API, urlParams)).subscribeOn(Schedulers.io());
+        return mDailyMobileService.getStayOutboundRefund(Crypto.getUrlDecoderEx(URL) + Crypto.getUrlDecoderEx(API, urlParams), refundType, cancelReasonType, reasons).subscribeOn(Schedulers.io());
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////////////

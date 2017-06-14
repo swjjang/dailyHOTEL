@@ -2,8 +2,6 @@ package com.daily.dailyhotel.repository.remote.model;
 
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
-import com.daily.dailyhotel.entity.BookingHide;
-import com.daily.dailyhotel.entity.StayOutboundRefund;
 
 @JsonObject
 public class StayOutboundRefundData
@@ -14,12 +12,5 @@ public class StayOutboundRefundData
     public StayOutboundRefundData()
     {
 
-    }
-
-    public StayOutboundRefund getStayOutboundRefund()
-    {
-        StayOutboundRefund stayOutboundRefund = new StayOutboundRefund();
-
-        return stayOutboundRefund;
     }
 }

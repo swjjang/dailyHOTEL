@@ -7,6 +7,7 @@ import android.text.Editable;
 import android.text.SpannableString;
 import android.text.TextWatcher;
 import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -49,7 +50,7 @@ public class StayOutboundRefundView extends BaseDialogView<StayOutboundRefundVie
 
         void onCancelReasonClick();
 
-        void onCancelReasonClick(String key, String message);
+        void onCancelReasonClick(String key, String reasonText, String message);
     }
 
     public StayOutboundRefundView(BaseActivity baseActivity, StayOutboundRefundView.OnEventListener listener)
@@ -230,7 +231,7 @@ public class StayOutboundRefundView extends BaseDialogView<StayOutboundRefundVie
                 dailyTextView.setTag(reason.first);
                 dailyTextView.setOnClickListener(onOTHClickListener);
 
-                dataBinding.scrollLayout.addView(othDataBinding.getRoot(), index++, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                index += 2;
             } else
             {
                 dailyTextView = new DailyTextView(getContext());
@@ -238,6 +239,7 @@ public class StayOutboundRefundView extends BaseDialogView<StayOutboundRefundVie
                 dailyTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 14);
                 dailyTextView.setText(reason.second);
                 dailyTextView.setTag(reason.first);
+                dailyTextView.setGravity(Gravity.CENTER_VERTICAL);
                 dataBinding.scrollLayout.addView(dailyTextView, index++, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ScreenUtils.dpToPx(getContext(), 45)));
 
                 dailyTextView.setOnClickListener(onClickListener);
@@ -338,7 +340,7 @@ public class StayOutboundRefundView extends BaseDialogView<StayOutboundRefundVie
                         message = messageEditText.getText().toString().trim();
                     }
 
-                    getEventListener().onCancelReasonClick((String) selectedView.getTag(), message);
+                    getEventListener().onCancelReasonClick((String) selectedView.getTag(), selectedView.getText().toString(), message);
                 }
             }
         });
@@ -353,6 +355,17 @@ public class StayOutboundRefundView extends BaseDialogView<StayOutboundRefundVie
                 dataBinding.scrollView.scrollTo(0, 0);
             }
         });
+    }
+
+    @Override
+    public void setCancelReasonText(String reason)
+    {
+        if(mRefund03DataBinding == null)
+        {
+            return;
+        }
+
+        mRefund03DataBinding.selectReasonCancelView.setText(reason);
     }
 
     private void setBookingInformation(Context context, LayoutStayOutboundRefund01DataBinding dataBinding, StayOutboundRefundDetail stayOutboundRefundDetail)

@@ -7,7 +7,11 @@ import android.support.annotation.NonNull;
 
 import com.daily.base.BaseAnalyticsInterface;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
+import com.daily.dailyhotel.entity.StayOutboundReceipt;
+import com.daily.dailyhotel.repository.remote.StayOutboundReceiptRemoteImpl;
 import com.twoheart.dailyhotel.R;
+
+import io.reactivex.functions.Consumer;
 
 /**
  * Created by sheldon
@@ -16,6 +20,11 @@ import com.twoheart.dailyhotel.R;
 public class StayOutboundReceiptPresenter extends BaseExceptionPresenter<StayOutboundReceiptActivity, StayOutboundReceiptInterface> implements StayOutboundReceiptView.OnEventListener
 {
     private CopyAnalyticsInterface mAnalytics;
+
+    private StayOutboundReceiptRemoteImpl mStayOutboundReceiptRemoteImpl;
+    private int mBookingIndex;
+    private StayOutboundReceipt mStayOutboundReceipt;
+    private boolean mFullScreenEnabled;
 
     public interface CopyAnalyticsInterface extends BaseAnalyticsInterface
     {
@@ -40,6 +49,8 @@ public class StayOutboundReceiptPresenter extends BaseExceptionPresenter<StayOut
 
         setAnalytics(new StayOutboundReceiptAnalyticsImpl());
 
+        mStayOutboundReceiptRemoteImpl = new StayOutboundReceiptRemoteImpl(activity);
+
         setRefresh(true);
     }
 
@@ -55,6 +66,13 @@ public class StayOutboundReceiptPresenter extends BaseExceptionPresenter<StayOut
         if (intent == null)
         {
             return true;
+        }
+
+        mBookingIndex = intent.getIntExtra(StayOutboundReceiptActivity.INTENT_EXTRA_DATA_BOOKING_INDEX, -1);
+
+        if (mBookingIndex < 0)
+        {
+            return false;
         }
 
         return true;
@@ -128,6 +146,25 @@ public class StayOutboundReceiptPresenter extends BaseExceptionPresenter<StayOut
             return;
         }
 
+        setRefresh(false);
+        screenLock(showProgress);
+
+        addCompositeDisposable(mStayOutboundReceiptRemoteImpl.getStayOutboundReceipt(mBookingIndex).subscribe(new Consumer<StayOutboundReceipt>()
+        {
+            @Override
+            public void accept(@io.reactivex.annotations.NonNull StayOutboundReceipt stayOutboundReceipt) throws Exception
+            {
+                setStayOutboundReceipt(stayOutboundReceipt);
+                notifyStayOutboundReceiptChanged();
+            }
+        }, new Consumer<Throwable>()
+        {
+            @Override
+            public void accept(@io.reactivex.annotations.NonNull Throwable throwable) throws Exception
+            {
+                onHandleErrorAndFinish(throwable);
+            }
+        }));
     }
 
     @Override
@@ -136,4 +173,40 @@ public class StayOutboundReceiptPresenter extends BaseExceptionPresenter<StayOut
         getActivity().onBackPressed();
     }
 
+    @Override
+    public void onEmailClick()
+    {
+        addCompositeDisposable(mStayOutboundReceiptRemoteImpl.getStayOutboundEmailReceipt(mBookingIndex).subscribe(new Consumer<Boolean>()
+        {
+            @Override
+            public void accept(@io.reactivex.annotations.NonNull Boolean aBoolean) throws Exception
+            {
+
+            }
+        }, new Consumer<Throwable>()
+        {
+            @Override
+            public void accept(@io.reactivex.annotations.NonNull Throwable throwable) throws Exception
+            {
+
+            }
+        }));
+    }
+
+    @Override
+    public void onFullScreenClick()
+    {
+        mFullScreenEnabled = !mFullScreenEnabled;
+        getViewInterface().setFullScreenEnabled(mFullScreenEnabled);
+    }
+
+    private void setStayOutboundReceipt(StayOutboundReceipt stayOutboundReceipt)
+    {
+        mStayOutboundReceipt = stayOutboundReceipt;
+    }
+
+    private void notifyStayOutboundReceiptChanged()
+    {
+
+    }
 }

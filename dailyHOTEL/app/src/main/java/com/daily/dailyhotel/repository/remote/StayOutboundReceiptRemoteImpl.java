@@ -3,15 +3,9 @@ package com.daily.dailyhotel.repository.remote;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
-import com.daily.base.exception.BaseException;
 import com.daily.dailyhotel.domain.StayOutboundReceiptInterface;
-import com.daily.dailyhotel.domain.StayOutboundRefundInterface;
 import com.daily.dailyhotel.entity.StayOutboundReceipt;
-import com.daily.dailyhotel.entity.StayOutboundRefund;
-import com.daily.dailyhotel.entity.StayOutboundRefundDetail;
 import com.daily.dailyhotel.repository.remote.model.StayOutboundReceiptData;
-import com.daily.dailyhotel.repository.remote.model.StayOutboundRefundData;
-import com.daily.dailyhotel.repository.remote.model.StayOutboundRefundDetailData;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.network.dto.BaseDto;
 

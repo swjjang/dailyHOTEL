@@ -1,8 +1,6 @@
 package com.daily.dailyhotel.domain;
 
 import com.daily.dailyhotel.entity.StayOutboundReceipt;
-import com.daily.dailyhotel.entity.StayOutboundRefund;
-import com.daily.dailyhotel.entity.StayOutboundRefundDetail;
 
 import io.reactivex.Observable;
 

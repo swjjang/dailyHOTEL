@@ -17,10 +17,12 @@ import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 public class StayOutboundReceiptView extends BaseDialogView<StayOutboundReceiptView.OnEventListener, ActivityStayOutboundReceiptDataBinding> implements StayOutboundReceiptInterface
 {
     private DailyToolbarLayout mDailyToolbarLayout;
-    private boolean mFullScreen;
 
     public interface OnEventListener extends OnBaseEventListener
     {
+        void onEmailClick();
+
+        void onFullScreenClick();
     }
 
     public StayOutboundReceiptView(BaseActivity baseActivity, StayOutboundReceiptView.OnEventListener listener)
@@ -42,7 +44,8 @@ public class StayOutboundReceiptView extends BaseDialogView<StayOutboundReceiptV
     {
     }
 
-    private void setReceipt(StayOutboundReceipt stayOutboundReceipt)
+    @Override
+    public void setStayOutboundReceipt(StayOutboundReceipt stayOutboundReceipt)
     {
         if (getViewDataBinding() == null || stayOutboundReceipt == null)
         {
@@ -146,15 +149,15 @@ public class StayOutboundReceiptView extends BaseDialogView<StayOutboundReceiptV
             @Override
             public void onClick(View v)
             {
-                mFullScreen = !mFullScreen;
-                updateFullscreenStatus(mFullScreen);
+                getEventListener().onFullScreenClick();
             }
         });
     }
 
-    private void updateFullscreenStatus(boolean fullSreen)
+    @Override
+    public void setFullScreenEnabled(boolean enabled)
     {
-        if (fullSreen)
+        if (enabled)
         {
             mDailyToolbarLayout.setToolbarVisibility(false, false);
 
