@@ -12,7 +12,9 @@ import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayOutboundDetail;
 import com.daily.dailyhotel.entity.StayOutboundFilters;
 import com.daily.dailyhotel.entity.StayOutbounds;
+import com.daily.dailyhotel.repository.remote.model.StayOutboundsData;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
+import com.twoheart.dailyhotel.network.dto.BaseDto;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -21,6 +23,7 @@ import java.util.List;
 
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Function;
 
 public class StayOutboundRemoteImpl implements StayOutboundInterface
 {
@@ -82,25 +85,29 @@ public class StayOutboundRemoteImpl implements StayOutboundInterface
             jsonObject = null;
         }
 
-        return DailyMobileAPI.getInstance(mContext).getStayOutboundList(jsonObject).map((stayOutboundDataBaseDto) ->
+        return DailyMobileAPI.getInstance(mContext).getStayOutboundList(jsonObject).map(new Function<BaseDto<StayOutboundsData>, StayOutbounds>()
         {
-            StayOutbounds stayOutbounds = null;
-
-            if (stayOutboundDataBaseDto != null)
+            @Override
+            public StayOutbounds apply(@io.reactivex.annotations.NonNull BaseDto<StayOutboundsData> stayOutboundDataBaseDto) throws Exception
             {
-                if (stayOutboundDataBaseDto.msgCode == 100 && stayOutboundDataBaseDto.data != null)
+                StayOutbounds stayOutbounds = null;
+
+                if (stayOutboundDataBaseDto != null)
                 {
-                    stayOutbounds = stayOutboundDataBaseDto.data.getStayOutboundList();
+                    if (stayOutboundDataBaseDto.msgCode == 100 && stayOutboundDataBaseDto.data != null)
+                    {
+                        stayOutbounds = stayOutboundDataBaseDto.data.getStayOutboundList();
+                    } else
+                    {
+                        throw new BaseException(stayOutboundDataBaseDto.msgCode, stayOutboundDataBaseDto.msg);
+                    }
                 } else
                 {
-                    throw new BaseException(stayOutboundDataBaseDto.msgCode, stayOutboundDataBaseDto.msg);
+                    throw new BaseException(-1, null);
                 }
-            } else
-            {
-                throw new BaseException(-1, null);
-            }
 
-            return stayOutbounds;
+                return stayOutbounds;
+            }
         }).observeOn(AndroidSchedulers.mainThread());
     }
 

@@ -1362,17 +1362,6 @@ public class DailyMobileAPI implements IDailyNetwork
             , jsonObject).subscribeOn(Schedulers.io());
     }
 
-    public Observable<BaseDto<StayOutboundsData>> getStayOutboundRecentlyList(String hotelIds, int numberOfResults)
-    {
-        final String URL = Constants.UNENCRYPTED_URL ? "https://dev-silo.dailyhotel.me/"//
-            : "MzAkODEkNDckNjgkNDAkMzkkODckMSQ4OSQyOCQxNCQzMiQ4JDEkMzckNTUk$QAGkRCM0ZGGMkM1MBzkyQTBEOEMxRDgL1OGUWENFMUM3MEWZJEOURDMOEAM1NjY1RjE2MEVDQjc4RTSA5MzQxQjQ2Rjk1VMMHUEyRg==$";
-
-        final String API = Constants.UNENCRYPTED_URL ? "api/v1/outbound/id-find-static-hotels"//
-            : "MjMkMzAkODAkMTI4JDU1JDQ5JDEyJDEyNSQzNyQ3OCQ1NCQ1NyQzOCQ2NCQ3NyQxMzAk$MEJFNTFGNEY0RQTlCNTBGM0ZIGQUQ4MQjU1RjFCBCOERCQUFFODJTBNRUME0NHjdKBQjhBMTAwRjlPEQTFDFN0FDMzCNBREJFQkVGRDM4QTIxNzhDNzQ0RjFDOUYzMTlGMJDMBzOUUwMFDY1$";
-
-        return mDailyMobileService.getStayOutboundRecentlyList(Crypto.getUrlDecoderEx(URL) + Crypto.getUrlDecoderEx(API), hotelIds, numberOfResults, "NO_SORT");
-    }
-
     /////////////////////////////////////////////////////////////////////////////////////////////////
     // PaymentRemoteImpl
     /////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1555,5 +1544,20 @@ public class DailyMobileAPI implements IDailyNetwork
         urlParams.put("{reservationIdx}", Integer.toString(bookingIndex));
 
         return mDailyMobileService.getStayOutboundEmailReceipt(Crypto.getUrlDecoderEx(URL) + Crypto.getUrlDecoderEx(API, urlParams)).subscribeOn(Schedulers.io());
+    }
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+    // RecentlyRemoteImpl
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public Observable<BaseDto<StayOutboundsData>> getStayOutboundRecentlyList(String hotelIds, int numberOfResults)
+    {
+        final String URL = Constants.UNENCRYPTED_URL ? "https://dev-silo.dailyhotel.me/"//
+            : "MzAkODEkNDckNjgkNDAkMzkkODckMSQ4OSQyOCQxNCQzMiQ4JDEkMzckNTUk$QAGkRCM0ZGGMkM1MBzkyQTBEOEMxRDgL1OGUWENFMUM3MEWZJEOURDMOEAM1NjY1RjE2MEVDQjc4RTSA5MzQxQjQ2Rjk1VMMHUEyRg==$";
+
+        final String API = Constants.UNENCRYPTED_URL ? "api/v1/outbound/id-find-static-hotels"//
+            : "MjMkMzAkODAkMTI4JDU1JDQ5JDEyJDEyNSQzNyQ3OCQ1NCQ1NyQzOCQ2NCQ3NyQxMzAk$MEJFNTFGNEY0RQTlCNTBGM0ZIGQUQ4MQjU1RjFCBCOERCQUFFODJTBNRUME0NHjdKBQjhBMTAwRjlPEQTFDFN0FDMzCNBREJFQkVGRDM4QTIxNzhDNzQ0RjFDOUYzMTlGMJDMBzOUUwMFDY1$";
+
+        return mDailyMobileService.getStayOutboundRecentlyList(Crypto.getUrlDecoderEx(URL) + Crypto.getUrlDecoderEx(API), hotelIds, numberOfResults, "NO_SORT").subscribeOn(Schedulers.io());
     }
 }
