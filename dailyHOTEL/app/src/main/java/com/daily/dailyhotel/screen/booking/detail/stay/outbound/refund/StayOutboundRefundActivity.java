@@ -15,7 +15,7 @@ import com.twoheart.dailyhotel.R;
  */
 public class StayOutboundRefundActivity extends BaseActivity<StayOutboundRefundPresenter>
 {
-    static final String INTENT_EXTRA_DATA_BOOKING_INDEX = "index";
+    static final String INTENT_EXTRA_DATA_BOOKING_INDEX = "bookingIndex";
 
     public static Intent newInstance(Context context, int bookingIndex)
     {
