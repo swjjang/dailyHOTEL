@@ -1117,11 +1117,9 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
 
         getViewInterface().setStayDetail(mStayBookDateTime, mPeople, stayOutboundDetail);
 
-        if (mCheckChangedPrice == false)
-        {
-            mCheckChangedPrice = true;
-            checkChangedPrice(mIsDeepLink, stayOutboundDetail, mListPrice);
-        }
+        // 리스트 가격 변동은 진입시 한번 만 한다.
+        checkChangedPrice(mIsDeepLink, stayOutboundDetail, mListPrice, mCheckChangedPrice);
+        mCheckChangedPrice = true;
 
         // 선택된 방이 없으면 처음 방으로 한다.
         if (mStayOutboundDetail.getRoomList() == null || mStayOutboundDetail.getRoomList().size() == 0)
@@ -1195,7 +1193,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
         }
     }
 
-    private void checkChangedPrice(boolean isDeepLink, StayOutboundDetail stayOutboundDetail, int listViewPrice)
+    private void checkChangedPrice(boolean isDeepLink, StayOutboundDetail stayOutboundDetail, int listViewPrice, boolean compareListPrice)
     {
         if (stayOutboundDetail == null)
         {
@@ -1220,7 +1218,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
                 });
         } else
         {
-            if (isDeepLink == false)
+            if (isDeepLink == false && compareListPrice == true)
             {
                 boolean hasPrice = false;
 
