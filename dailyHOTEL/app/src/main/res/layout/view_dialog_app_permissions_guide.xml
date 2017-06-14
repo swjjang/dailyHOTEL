@@ -78,7 +78,7 @@
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="1dp"
+            android:layout_height="1px"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:layout_marginTop="12dp"
@@ -91,7 +91,7 @@
             android:layout_marginRight="10dp"
             android:layout_marginTop="8dp"
             android:text="@string/label_app_permissions_guide_necessary03"
-            android:textColor="@color/default_text_c929292"
+            android:textColor="@color/default_text_c323232"
             android:textSize="11dp"/>
     </LinearLayout>
 
@@ -185,7 +185,7 @@
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="1dp"
+            android:layout_height="1px"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:layout_marginTop="12dp"
@@ -198,7 +198,7 @@
             android:layout_marginRight="10dp"
             android:layout_marginTop="8dp"
             android:text="@string/label_app_permissions_guide_select05"
-            android:textColor="@color/default_text_c929292"
+            android:textColor="@color/default_text_c323232"
             android:textSize="11dp"/>
     </LinearLayout>
 
