@@ -496,7 +496,7 @@ public class HappyTalkCategoryDialog extends BaseActivity
         {
             try
             {
-                Calendar todayCalendar = DailyCalendar.getInstance(todayDateTime.dailyDateTime, false);
+                Calendar todayCalendar = DailyCalendar.getInstance(todayDateTime.currentDateTime, false);
                 int hour = todayCalendar.get(Calendar.HOUR_OF_DAY);
                 //                int minute = todayCalendar.get(Calendar.MINUTE);
 
