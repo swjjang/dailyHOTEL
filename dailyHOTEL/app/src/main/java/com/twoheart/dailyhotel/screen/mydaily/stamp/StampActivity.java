@@ -293,7 +293,15 @@ public class StampActivity extends BaseActivity
                 return;
             }
 
-            mStampLayout.setNights(stamp.count);
+            final int MAX_NIGHTS = 7;
+            int stampCount = stamp.count;
+
+            if (stampCount > MAX_NIGHTS)
+            {
+                stampCount = MAX_NIGHTS;
+            }
+
+            mStampLayout.setNights(stampCount);
 
             if (stamp.count > 0)
             {
