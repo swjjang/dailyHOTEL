@@ -67,7 +67,7 @@ public class StayOutboundRefundRemoteImpl implements StayOutboundRefundInterface
                 {
                     if (stayOutboundRefundDataBaseDto.msgCode == 100 && stayOutboundRefundDataBaseDto.data != null)
                     {
-                        message = stayOutboundRefundDataBaseDto.msg;
+                        message = stayOutboundRefundDataBaseDto.data.message;
                     } else
                     {
                         throw new BaseException(stayOutboundRefundDataBaseDto.msgCode, stayOutboundRefundDataBaseDto.msg);

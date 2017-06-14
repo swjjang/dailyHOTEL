@@ -241,10 +241,12 @@ public class StayOutboundRefundView extends BaseDialogView<StayOutboundRefundVie
                 dailyTextView.setOnClickListener(onOTHClickListener);
 
                 othDataBinding.messageEditText.setText(message);
-                othDataBinding.messageClickView.setVisibility(View.VISIBLE);
+                othDataBinding.messageEditText.setSelection(othDataBinding.messageEditText.length());
+                othDataBinding.messageEditText.setCursorVisible(false);
 
                 TextView cancelReasonEtcView = othDataBinding.cancelReasonEtcView;
 
+                othDataBinding.messageClickView.setVisibility(View.VISIBLE);
                 othDataBinding.messageClickView.setOnClickListener(new View.OnClickListener()
                 {
                     @Override
@@ -254,7 +256,48 @@ public class StayOutboundRefundView extends BaseDialogView<StayOutboundRefundVie
                     }
                 });
 
-                othDataBinding.messageEditText.setCursorVisible(false);
+                TextView messageCountTextView = othDataBinding.messageCountTextView;
+
+                othDataBinding.messageEditText.addTextChangedListener(new TextWatcher()
+                {
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after)
+                    {
+
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count)
+                    {
+
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable s)
+                    {
+                        messageCountTextView.setText(String.format(Locale.KOREA, "(%d/300자)", s.length()));
+                    }
+                });
+
+                othDataBinding.messageEditText.setOnTouchListener(new View.OnTouchListener()
+                {
+                    @Override
+                    public boolean onTouch(View v, MotionEvent event)
+                    {
+                        switch (event.getAction() & MotionEvent.ACTION_MASK)
+                        {
+                            case MotionEvent.ACTION_DOWN:
+                                v.getParent().getParent().getParent().requestDisallowInterceptTouchEvent(true);
+                                break;
+
+                            case MotionEvent.ACTION_UP:
+                            case MotionEvent.ACTION_CANCEL:
+                                v.getParent().getParent().getParent().requestDisallowInterceptTouchEvent(false);
+                                break;
+                        }
+                        return false;
+                    }
+                });
 
                 index += 2;
             } else
@@ -280,66 +323,12 @@ public class StayOutboundRefundView extends BaseDialogView<StayOutboundRefundVie
             }
         }
 
-        if (selectedDailyTextView != null)
+        if (selectedDailyTextView == null)
+        {
+            dataBinding.positiveTextView.setEnabled(false);
+        }else
         {
             selectedDailyTextView.performClick();
-        }
-
-        if (othDataBinding != null)
-        {
-            if (DailyTextUtils.isTextEmpty(key) == true)
-            {
-                othDataBinding.messageClickView.setVisibility(View.VISIBLE);
-                othDataBinding.messageClickView.setOnClickListener(onClickListener);
-
-                othDataBinding.messageEditText.setCursorVisible(false);
-                dataBinding.positiveTextView.setEnabled(false);
-            }
-
-            TextView messageCountTextView = othDataBinding.messageCountTextView;
-
-            othDataBinding.messageEditText.addTextChangedListener(new TextWatcher()
-            {
-                @Override
-                public void beforeTextChanged(CharSequence s, int start, int count, int after)
-                {
-
-                }
-
-                @Override
-                public void onTextChanged(CharSequence s, int start, int before, int count)
-                {
-
-                }
-
-                @Override
-                public void afterTextChanged(Editable s)
-                {
-                    messageCountTextView.setText(String.format(Locale.KOREA, "(%d/300자)", s.length()));
-                }
-            });
-
-            othDataBinding.messageEditText.setText(message);
-            othDataBinding.messageEditText.setSelection(othDataBinding.messageEditText.length());
-            othDataBinding.messageEditText.setOnTouchListener(new View.OnTouchListener()
-            {
-                @Override
-                public boolean onTouch(View v, MotionEvent event)
-                {
-                    switch (event.getAction() & MotionEvent.ACTION_MASK)
-                    {
-                        case MotionEvent.ACTION_DOWN:
-                            v.getParent().getParent().getParent().requestDisallowInterceptTouchEvent(true);
-                            break;
-
-                        case MotionEvent.ACTION_UP:
-                        case MotionEvent.ACTION_CANCEL:
-                            v.getParent().getParent().getParent().requestDisallowInterceptTouchEvent(false);
-                            break;
-                    }
-                    return false;
-                }
-            });
         }
 
         dataBinding.negativeTextView.setOnClickListener(new View.OnClickListener()

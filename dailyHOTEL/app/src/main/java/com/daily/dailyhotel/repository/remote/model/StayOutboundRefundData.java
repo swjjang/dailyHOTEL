@@ -9,6 +9,9 @@ public class StayOutboundRefundData
     @JsonField(name = "reservationIdx")
     public int reservationIdx;
 
+    @JsonField(name = "message")
+    public String message;
+
     public StayOutboundRefundData()
     {
 
