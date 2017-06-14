@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
+import com.daily.base.widget.DailyToast;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.CreditCard;
@@ -396,6 +397,7 @@ public class CreditCardListActivity extends BaseActivity
 
                     // TODO :  추후에 msgCode결과를 가지고 구분하는 코드가 필요할듯.
                     int msgCode = responseJSONObject.getInt("msg_code");
+                    String msg = responseJSONObject.getString("msg");
 
                     JSONObject dataJSONObject = responseJSONObject.getJSONObject("data");
 
@@ -411,6 +413,8 @@ public class CreditCardListActivity extends BaseActivity
                         // 성공
                         // credit card 요청
                         DailyMobileAPI.getInstance(CreditCardListActivity.this).requestUserBillingCardList(mNetworkTag, mCreditCardListCallback);
+
+                        DailyToast.showToast(CreditCardListActivity.this, msg, DailyToast.LENGTH_SHORT);
                     } else
                     {
                         unLockUI();
