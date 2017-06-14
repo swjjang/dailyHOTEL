@@ -8,4 +8,6 @@ public interface StayOutboundReceiptInterface extends BaseDialogViewInterface
     void setStayOutboundReceipt(StayOutboundReceipt stayOutboundReceipt);
 
     void setFullScreenEnabled(boolean enabled);
+
+    void showSendEmailDialog(String email);
 }

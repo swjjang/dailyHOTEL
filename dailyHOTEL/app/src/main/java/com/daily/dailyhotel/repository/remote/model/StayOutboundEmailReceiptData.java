@@ -9,6 +9,9 @@ public class StayOutboundEmailReceiptData
     @JsonField(name = "reservationIdx")
     public int reservationIdx;
 
+    @JsonField(name = "message")
+    public String message;
+
     public StayOutboundEmailReceiptData()
     {
 

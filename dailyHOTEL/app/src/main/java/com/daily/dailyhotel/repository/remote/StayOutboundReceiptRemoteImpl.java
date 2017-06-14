@@ -3,8 +3,10 @@ package com.daily.dailyhotel.repository.remote;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
+import com.daily.base.exception.BaseException;
 import com.daily.dailyhotel.domain.StayOutboundReceiptInterface;
 import com.daily.dailyhotel.entity.StayOutboundReceipt;
+import com.daily.dailyhotel.repository.remote.model.StayOutboundEmailReceiptData;
 import com.daily.dailyhotel.repository.remote.model.StayOutboundReceiptData;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.network.dto.BaseDto;
@@ -30,14 +32,53 @@ public class StayOutboundReceiptRemoteImpl implements StayOutboundReceiptInterfa
             @Override
             public StayOutboundReceipt apply(@io.reactivex.annotations.NonNull BaseDto<StayOutboundReceiptData> stayOutboundReceiptDataBaseDto) throws Exception
             {
-                return null;
+                StayOutboundReceipt stayOutboundReceipt = null;
+
+                if (stayOutboundReceiptDataBaseDto != null)
+                {
+                    if (stayOutboundReceiptDataBaseDto.msgCode == 100 && stayOutboundReceiptDataBaseDto.data != null)
+                    {
+                        stayOutboundReceipt = stayOutboundReceiptDataBaseDto.data.getStayOutboundReceipt();
+                    } else
+                    {
+                        throw new BaseException(stayOutboundReceiptDataBaseDto.msgCode, stayOutboundReceiptDataBaseDto.msg);
+                    }
+                } else
+                {
+                    throw new BaseException(-1, null);
+                }
+
+                return stayOutboundReceipt;
             }
         }).observeOn(AndroidSchedulers.mainThread());
     }
 
     @Override
-    public Observable<Boolean> getStayOutboundEmailReceipt(int bookingIndex)
+    public Observable<String> getStayOutboundEmailReceipt(int bookingIndex, String email)
     {
-        return null;
+        return DailyMobileAPI.getInstance(mContext).getStayOutboundEmailReceipt(bookingIndex, email).map(new Function<BaseDto<StayOutboundEmailReceiptData>, String>()
+        {
+            @Override
+            public String apply(@io.reactivex.annotations.NonNull BaseDto<StayOutboundEmailReceiptData> stayOutboundEmailReceiptDataBaseDto) throws Exception
+            {
+                String message = null;
+
+                if (stayOutboundEmailReceiptDataBaseDto != null)
+                {
+                    if (stayOutboundEmailReceiptDataBaseDto.msgCode == 100 && stayOutboundEmailReceiptDataBaseDto.data != null)
+                    {
+                        message = stayOutboundEmailReceiptDataBaseDto.data.message;
+                    } else
+                    {
+                        throw new BaseException(stayOutboundEmailReceiptDataBaseDto.msgCode, stayOutboundEmailReceiptDataBaseDto.msg);
+                    }
+                } else
+                {
+                    throw new BaseException(-1, null);
+                }
+
+                return message;
+            }
+        }).observeOn(AndroidSchedulers.mainThread());
     }
 }

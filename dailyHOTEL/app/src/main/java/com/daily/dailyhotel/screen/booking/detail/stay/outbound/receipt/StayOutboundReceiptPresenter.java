@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 
 import com.daily.base.BaseAnalyticsInterface;
+import com.daily.base.util.DailyTextUtils;
+import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
 import com.daily.dailyhotel.entity.StayOutboundReceipt;
 import com.daily.dailyhotel.repository.remote.StayOutboundReceiptRemoteImpl;
@@ -81,6 +83,7 @@ public class StayOutboundReceiptPresenter extends BaseExceptionPresenter<StayOut
     @Override
     public void onPostCreate()
     {
+        getViewInterface().setToolbarTitle(getString(R.string.frag_issuing_receipt));
     }
 
     @Override
@@ -156,6 +159,8 @@ public class StayOutboundReceiptPresenter extends BaseExceptionPresenter<StayOut
             {
                 setStayOutboundReceipt(stayOutboundReceipt);
                 notifyStayOutboundReceiptChanged();
+
+                unLockAll();
             }
         }, new Consumer<Throwable>()
         {
@@ -176,19 +181,44 @@ public class StayOutboundReceiptPresenter extends BaseExceptionPresenter<StayOut
     @Override
     public void onEmailClick()
     {
-        addCompositeDisposable(mStayOutboundReceiptRemoteImpl.getStayOutboundEmailReceipt(mBookingIndex).subscribe(new Consumer<Boolean>()
+        getViewInterface().showSendEmailDialog(mStayOutboundReceipt.userEmail);
+    }
+
+    @Override
+    public void onSendEmailClick(String email)
+    {
+        if (DailyTextUtils.isTextEmpty(email) == true)
+        {
+            DailyToast.showToast(getActivity(), R.string.toast_msg_please_input_email, DailyToast.LENGTH_SHORT);
+            return;
+        }
+
+        if (android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches() == false)
+        {
+            DailyToast.showToast(getActivity(), R.string.toast_msg_wrong_email_address, DailyToast.LENGTH_SHORT);
+            return;
+        }
+
+        if (lock() == true)
+        {
+            return;
+        }
+
+        addCompositeDisposable(mStayOutboundReceiptRemoteImpl.getStayOutboundEmailReceipt(mBookingIndex, email).subscribe(new Consumer<String>()
         {
             @Override
-            public void accept(@io.reactivex.annotations.NonNull Boolean aBoolean) throws Exception
+            public void accept(@io.reactivex.annotations.NonNull String result) throws Exception
             {
+                unLockAll();
 
+                getViewInterface().showSimpleDialog(null, result, getString(R.string.dialog_btn_text_confirm), null);
             }
         }, new Consumer<Throwable>()
         {
             @Override
             public void accept(@io.reactivex.annotations.NonNull Throwable throwable) throws Exception
             {
-
+                onHandleError(throwable);
             }
         }));
     }
@@ -207,6 +237,11 @@ public class StayOutboundReceiptPresenter extends BaseExceptionPresenter<StayOut
 
     private void notifyStayOutboundReceiptChanged()
     {
+        if (mStayOutboundReceipt == null)
+        {
+            return;
+        }
 
+        getViewInterface().setStayOutboundReceipt(mStayOutboundReceipt);
     }
 }
