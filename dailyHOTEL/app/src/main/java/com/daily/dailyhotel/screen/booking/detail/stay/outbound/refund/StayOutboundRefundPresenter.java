@@ -286,7 +286,7 @@ public class StayOutboundRefundPresenter extends BaseExceptionPresenter<StayOutb
     @Override
     public void onCancelReasonClick()
     {
-        getViewInterface().showCancelDialog(mStayOutboundRefundDetail.getCancelReasonTypeList(), mCancelKey, mCancelMessage);
+        getViewInterface().showCancelReasonListDialog(mStayOutboundRefundDetail.getCancelReasonTypeList(), mCancelKey, mCancelMessage);
     }
 
     @Override
