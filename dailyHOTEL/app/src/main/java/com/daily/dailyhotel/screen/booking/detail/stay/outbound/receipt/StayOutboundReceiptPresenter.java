@@ -176,7 +176,21 @@ public class StayOutboundReceiptPresenter extends BaseExceptionPresenter<StayOut
     @Override
     public void onEmailClick()
     {
-        addCompositeDisposable(mStayOutboundReceiptRemoteImpl.getStayOutboundEmailReceipt());
+        addCompositeDisposable(mStayOutboundReceiptRemoteImpl.getStayOutboundEmailReceipt(mBookingIndex).subscribe(new Consumer<Boolean>()
+        {
+            @Override
+            public void accept(@io.reactivex.annotations.NonNull Boolean aBoolean) throws Exception
+            {
+
+            }
+        }, new Consumer<Throwable>()
+        {
+            @Override
+            public void accept(@io.reactivex.annotations.NonNull Throwable throwable) throws Exception
+            {
+
+            }
+        }));
     }
 
     @Override
