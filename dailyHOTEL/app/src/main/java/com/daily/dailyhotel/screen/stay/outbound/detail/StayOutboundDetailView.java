@@ -1211,7 +1211,7 @@ public class StayOutboundDetailView extends BaseDialogView<StayOutboundDetailVie
         // 더보기가 존재하는 경우
         if (viewDataBinding.amenitiesGridLayout.getChildCount() < stringSparseArray.size())
         {
-            View moreView = getAmenityMoreView(getContext(), layoutInflater, stringSparseArray.size(), false);
+            View moreView = getAmenityMoreView(getContext(), layoutInflater, stringSparseArray.size() - viewDataBinding.amenitiesGridLayout.getChildCount(), false);
             viewDataBinding.amenitiesGridLayout.addView(moreView);
             moreView.setOnClickListener(new View.OnClickListener()
             {

@@ -863,6 +863,8 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
                                 @Override
                                 public void accept(@NonNull Boolean result) throws Exception
                                 {
+                                    unLockUI();
+
                                     if (result == true)
                                     {
                                         baseActivity.showSimpleDialog(getString(R.string.dialog_notice2)//
@@ -894,6 +896,8 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
                                 @Override
                                 public void accept(@NonNull Throwable throwable) throws Exception
                                 {
+                                    unLockUI();
+
                                     baseActivity.showSimpleDialog(getString(R.string.dialog_notice2)//
                                         , getString(R.string.message_booking_failed_delete_booking)//
                                         , getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()

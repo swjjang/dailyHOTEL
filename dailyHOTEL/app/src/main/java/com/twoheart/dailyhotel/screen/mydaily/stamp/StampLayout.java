@@ -153,7 +153,7 @@ public class StampLayout extends BaseLayout implements View.OnClickListener
         if (nights >= 2)
         {
             nights02TextView.setBackgroundResource(R.drawable.ic_stamp_achieved_02);
-            nights01TextView.setText(null);
+            nights02TextView.setText(null);
         }
 
         if (nights >= 3)
