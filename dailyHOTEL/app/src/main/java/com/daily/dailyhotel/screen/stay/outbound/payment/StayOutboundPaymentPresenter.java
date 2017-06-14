@@ -722,34 +722,30 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
                                 , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
                                 , mStayOutboundPayment.checkInTime, mStayOutboundPayment.checkOutTime, mRoomType, paymentResult.bookingIndex), StayOutboundPaymentActivity.REQUEST_CODE_THANK_YOU);
                         }
-                    }, new Consumer<Throwable>()
+                    }, throwable ->
                     {
-                        @Override
-                        public void accept(@io.reactivex.annotations.NonNull Throwable throwable) throws Exception
+                        unLockAll();
+
+                        if (throwable instanceof BaseException)
                         {
-                            unLockAll();
+                            // 팝업 에러 보여주기
+                            BaseException baseException = (BaseException) throwable;
 
-                            if (throwable instanceof BaseException)
+                            switch (baseException.getCode())
                             {
-                                // 팝업 에러 보여주기
-                                BaseException baseException = (BaseException) throwable;
 
-                                switch (baseException.getCode())
-                                {
-
-                                }
-                            } else
-                            {
-                                getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.act_base_network_connect)//
-                                    , getString(R.string.frag_error_btn), null, new DialogInterface.OnDismissListener()
-                                    {
-                                        @Override
-                                        public void onDismiss(DialogInterface dialog)
-                                        {
-                                            onBackClick();
-                                        }
-                                    });
                             }
+                        } else
+                        {
+                            getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.act_base_network_connect)//
+                                , getString(R.string.frag_error_btn), null, new DialogInterface.OnDismissListener()
+                                {
+                                    @Override
+                                    public void onDismiss(DialogInterface dialog)
+                                    {
+                                        onBackClick();
+                                    }
+                                });
                         }
                     }));
                     break;

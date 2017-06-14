@@ -24,6 +24,7 @@ import java.util.concurrent.Callable;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
+import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
@@ -158,10 +159,10 @@ public class StayCalendarPresenter extends PlaceCalendarPresenter<StayCalendarAc
 
                 return makeCalendar(mStartDateTime, mEndDateTime, holidaySparseIntArray);
             }
-        }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<ArrayList<Pair<String, Day[]>>>()
+        }).observeOn(AndroidSchedulers.mainThread()).flatMap(new Function<ArrayList<Pair<String, Day[]>>, Observable<Boolean>>()
         {
             @Override
-            public void accept(ArrayList<Pair<String, Day[]>> arrayList) throws Exception
+            public Observable<Boolean> apply(@io.reactivex.annotations.NonNull ArrayList<Pair<String, Day[]>> arrayList) throws Exception
             {
                 getViewInterface().makeCalendarView(arrayList);
 
@@ -173,19 +174,29 @@ public class StayCalendarPresenter extends PlaceCalendarPresenter<StayCalendarAc
                     {
                         screenLock(false);
 
-                        addCompositeDisposable(observable.subscribe(new Consumer<Boolean>()
-                        {
-                            @Override
-                            public void accept(@io.reactivex.annotations.NonNull Boolean aBoolean) throws Exception
-                            {
-                                unLockAll();
-                            }
-                        }));
+                        return observable;
                     }
                 } else
                 {
                     getViewInterface().setVisibility(true);
                 }
+
+                return new Observable<Boolean>()
+                {
+                    @Override
+                    protected void subscribeActual(Observer<? super Boolean> observer)
+                    {
+                        observer.onNext(true);
+                        observer.onComplete();
+                    }
+                };
+            }
+        }).subscribe(new Consumer<Boolean>()
+        {
+            @Override
+            public void accept(@io.reactivex.annotations.NonNull Boolean aBoolean) throws Exception
+            {
+                unLockAll();
 
                 if (mIsSelected == true)
                 {
