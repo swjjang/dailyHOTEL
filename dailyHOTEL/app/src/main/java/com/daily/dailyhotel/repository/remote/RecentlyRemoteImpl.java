@@ -18,6 +18,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.Observable;
@@ -102,6 +103,10 @@ public class RecentlyRemoteImpl implements RecentlyInterface
                     if (homePlacesBaseDto.msgCode == 100 && homePlacesBaseDto.data != null)
                     {
                         homePlaceList = homePlacesBaseDto.data.getHomePlaceList();
+                        if (homePlaceList == null || homePlaceList.size() == 0)
+                        {
+                           homePlaceList = new ArrayList<HomePlace>();
+                        }
                     } else
                     {
                         throw new BaseException(homePlacesBaseDto.msgCode, homePlacesBaseDto.msg);

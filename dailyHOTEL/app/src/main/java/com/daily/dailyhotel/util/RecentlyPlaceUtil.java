@@ -163,12 +163,25 @@ public class RecentlyPlaceUtil
 
     public static JSONArray getRecentlyJsonArray(RealmResults<RecentlyRealmObject> list, int maxSize)
     {
+        JSONArray jsonArray = new JSONArray();
+
         if (list == null || list.size() == 0 || maxSize == 0)
         {
-            return null;
-        }
+            // dummy Data 생성
+            JSONObject jsonObject = new JSONObject();
+            try
+            {
+                jsonObject.put("serviceType", "HOTEL");
+                jsonObject.put("idx", 0);
 
-        JSONArray jsonArray = new JSONArray();
+                jsonArray.put(jsonObject);
+            } catch (JSONException e)
+            {
+                ExLog.d(e.getMessage());
+            }
+
+            return jsonArray;
+        }
 
         if (maxSize > list.size())
         {

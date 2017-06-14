@@ -24,12 +24,10 @@ import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.entity.StayOutbound;
 import com.daily.dailyhotel.entity.StayOutbounds;
 import com.daily.dailyhotel.repository.local.ConfigLocalImpl;
-import com.daily.dailyhotel.repository.local.model.RecentlyRealmObject;
 import com.daily.dailyhotel.repository.remote.FacebookRemoteImpl;
 import com.daily.dailyhotel.repository.remote.KakaoRemoteImpl;
 import com.daily.dailyhotel.repository.remote.RecentlyRemoteImpl;
 import com.daily.dailyhotel.screen.stay.outbound.search.StayOutboundSearchActivity;
-import com.daily.dailyhotel.util.RecentlyPlaceUtil;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
@@ -85,7 +83,6 @@ import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
-import io.realm.RealmResults;
 import retrofit2.Call;
 import retrofit2.HttpException;
 import retrofit2.Response;
@@ -838,28 +835,22 @@ public class HomeFragment extends BaseMenuNavigationFragment
 
     private void requestRecentList()
     {
-        //        Realm realm = Realm.getDefaultInstance();
-        //        realm.executeTransactionAsync(new Realm.Transaction()
-        //        {
-        //            @Override
-        //            public void execute(Realm realm)
-        //            {
-        RealmResults<RecentlyRealmObject> realmResults = RecentlyPlaceUtil.getRecentlyTypeList(RecentlyPlaceUtil.ServiceType.IB_STAY, RecentlyPlaceUtil.ServiceType.GOURMET);
-        mNetworkController.requestRecentlyList(realmResults, MAX_REQUEST_SIZE);
-
         addCompositeDisposable(mRecentlyRemoteImpl.getHomeRecentlyList(MAX_REQUEST_SIZE).subscribe(new Consumer<List<HomePlace>>()
         {
             @Override
             public void accept(@NonNull List<HomePlace> homePlacesList) throws Exception
             {
                 ArrayList<HomePlace> list = new ArrayList<HomePlace>();
-                list.addAll(homePlacesList);
+                if (homePlacesList != null)
+                {
+                    list.addAll(homePlacesList);
+                }
 
-                //                mHomeLayout.setRecentListData(list, false);
-                //
-                //                mNetworkRunState = mNetworkRunState | IS_RUNNED_RECENTLIST;
-                //
-                //                sendHomeBlockEventAnalytics();
+                mHomeLayout.setRecentListData(list, false);
+
+                mNetworkRunState = mNetworkRunState | IS_RUNNED_RECENTLIST;
+
+                sendHomeBlockEventAnalytics();
             }
         }, new Consumer<Throwable>()
         {
@@ -890,10 +881,6 @@ public class HomeFragment extends BaseMenuNavigationFragment
                 // TODO : 실패시 할 행동 추가 필요.
             }
         }));
-
-
-        //            }
-        //        });
     }
 
     public void forceRefreshing()
@@ -1680,15 +1667,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
         {
             if (mHomeLayout != null)
             {
-                mBaseActivity.runOnUiThread(new Runnable()
-                {
-                    @Override
-                    public void run()
-                    {
-                        mHomeLayout.setRecentListData(list, isError);
-                    }
-                });
-
+                mHomeLayout.setRecentListData(list, isError);
             }
 
             mNetworkRunState = mNetworkRunState | IS_RUNNED_RECENTLIST;

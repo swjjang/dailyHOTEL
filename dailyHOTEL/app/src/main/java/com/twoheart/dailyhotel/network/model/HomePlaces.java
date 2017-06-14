@@ -20,8 +20,12 @@ public class HomePlaces
 
     public List<HomePlace> getHomePlaceList()
     {
-        List<HomePlace> homePlaceList = null;
-        homePlaceList.addAll(items);
+        if (items == null || items.size() == 0)
+        {
+            return null;
+        }
+
+        List<HomePlace> homePlaceList = items;
 
         for (HomePlace homeItem : homePlaceList)
         {
