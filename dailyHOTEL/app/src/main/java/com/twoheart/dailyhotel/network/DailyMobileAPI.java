@@ -8,12 +8,12 @@ import com.daily.dailyhotel.repository.remote.model.BookingHideData;
 import com.daily.dailyhotel.repository.remote.model.CardData;
 import com.daily.dailyhotel.repository.remote.model.CommonDateTimeData;
 import com.daily.dailyhotel.repository.remote.model.PaymentResultData;
-import com.daily.dailyhotel.repository.remote.model.StayOutboundEmailReceiptData;
-import com.daily.dailyhotel.repository.remote.model.StayOutboundReceiptData;
-import com.daily.dailyhotel.repository.remote.model.StayOutboundRefundData;
 import com.daily.dailyhotel.repository.remote.model.StayOutboundBookingDetailData;
 import com.daily.dailyhotel.repository.remote.model.StayOutboundDetailData;
+import com.daily.dailyhotel.repository.remote.model.StayOutboundEmailReceiptData;
 import com.daily.dailyhotel.repository.remote.model.StayOutboundPaymentData;
+import com.daily.dailyhotel.repository.remote.model.StayOutboundReceiptData;
+import com.daily.dailyhotel.repository.remote.model.StayOutboundRefundData;
 import com.daily.dailyhotel.repository.remote.model.StayOutboundRefundDetailData;
 import com.daily.dailyhotel.repository.remote.model.StayOutboundsData;
 import com.daily.dailyhotel.repository.remote.model.SuggestsData;
@@ -28,7 +28,6 @@ import com.twoheart.dailyhotel.network.model.Event;
 import com.twoheart.dailyhotel.network.model.GourmetDetailParams;
 import com.twoheart.dailyhotel.network.model.GourmetWishItem;
 import com.twoheart.dailyhotel.network.model.Holiday;
-import com.twoheart.dailyhotel.network.model.HomePlace;
 import com.twoheart.dailyhotel.network.model.HomePlaces;
 import com.twoheart.dailyhotel.network.model.PlaceReviewScores;
 import com.twoheart.dailyhotel.network.model.PlaceReviews;
@@ -1168,7 +1167,7 @@ public class DailyMobileAPI implements IDailyNetwork
 
         ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestHomeWishList(Crypto.getUrlDecoderEx(URL));
         executorCallbackCall.setTag(tag);
-        executorCallbackCall.enqueue((retrofit2.Callback<BaseDto<HomePlaces<HomePlace>>>) listener);
+        executorCallbackCall.enqueue((retrofit2.Callback<BaseDto<HomePlaces>>) listener);
     }
 
     @Override
@@ -1179,7 +1178,7 @@ public class DailyMobileAPI implements IDailyNetwork
 
         ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestHomeRecentList(Crypto.getUrlDecoderEx(URL), jsonObject);
         executorCallbackCall.setTag(tag);
-        executorCallbackCall.enqueue((retrofit2.Callback<BaseDto<HomePlaces<HomePlace>>>) listener);
+        executorCallbackCall.enqueue((retrofit2.Callback<BaseDto<HomePlaces>>) listener);
     }
 
     @Override
@@ -1559,5 +1558,13 @@ public class DailyMobileAPI implements IDailyNetwork
             : "MjMkMzAkODAkMTI4JDU1JDQ5JDEyJDEyNSQzNyQ3OCQ1NCQ1NyQzOCQ2NCQ3NyQxMzAk$MEJFNTFGNEY0RQTlCNTBGM0ZIGQUQ4MQjU1RjFCBCOERCQUFFODJTBNRUME0NHjdKBQjhBMTAwRjlPEQTFDFN0FDMzCNBREJFQkVGRDM4QTIxNzhDNzQ0RjFDOUYzMTlGMJDMBzOUUwMFDY1$";
 
         return mDailyMobileService.getStayOutboundRecentlyList(Crypto.getUrlDecoderEx(URL) + Crypto.getUrlDecoderEx(API), hotelIds, numberOfResults, "NO_SORT").subscribeOn(Schedulers.io());
+    }
+
+    public Observable<BaseDto<HomePlaces>> getHomeRecentList(JSONObject jsonObject)
+    {
+        final String URL = Constants.UNENCRYPTED_URL ? "api/v4/home/last-seen"//
+            : "MiQ1NiQ2MSQzOCQyJDExJDU0JDYzJDM2JDgxJDQ3JDU0JDYzJDMyJDEwMSQ0JA==$RTHFLRBRTE2NB0Q1QTU4MDdBNkQ4RkRFOLUIxQLUFCMBEI1QTUdCNjMyLQTZFDQUNEAFMMDUPxNEExQTY1MDVBZOUIxOUVDQzBGNQ=M=$";
+
+        return mDailyMobileService.getHomeRecentList(Crypto.getUrlDecoderEx(URL), jsonObject).subscribeOn(Schedulers.io());
     }
 }

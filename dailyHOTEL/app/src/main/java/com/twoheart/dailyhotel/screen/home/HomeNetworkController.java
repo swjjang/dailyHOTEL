@@ -217,16 +217,16 @@ public class HomeNetworkController extends BaseNetworkController
         }
     };
 
-    private retrofit2.Callback mWishListCallBack = new retrofit2.Callback<BaseDto<HomePlaces<HomePlace>>>()
+    private retrofit2.Callback mWishListCallBack = new retrofit2.Callback<BaseDto<HomePlaces>>()
     {
         @Override
-        public void onResponse(Call<BaseDto<HomePlaces<HomePlace>>> call, Response<BaseDto<HomePlaces<HomePlace>>> response)
+        public void onResponse(Call<BaseDto<HomePlaces>> call, Response<BaseDto<HomePlaces>> response)
         {
             if (response != null && response.isSuccessful() && response.body() != null)
             {
                 try
                 {
-                    BaseDto<HomePlaces<HomePlace>> baseDto = response.body();
+                    BaseDto<HomePlaces> baseDto = response.body();
 
                     if (baseDto.msgCode == 100)
                     {
@@ -267,16 +267,16 @@ public class HomeNetworkController extends BaseNetworkController
         }
     };
 
-    private retrofit2.Callback mRecentListCallBack = new retrofit2.Callback<BaseDto<HomePlaces<HomePlace>>>()
+    private retrofit2.Callback mRecentListCallBack = new retrofit2.Callback<BaseDto<HomePlaces>>()
     {
         @Override
-        public void onResponse(Call<BaseDto<HomePlaces<HomePlace>>> call, Response<BaseDto<HomePlaces<HomePlace>>> response)
+        public void onResponse(Call<BaseDto<HomePlaces>> call, Response<BaseDto<HomePlaces>> response)
         {
             if (response != null && response.isSuccessful() && response.body() != null)
             {
                 try
                 {
-                    BaseDto<HomePlaces<HomePlace>> baseDto = response.body();
+                    BaseDto<HomePlaces> baseDto = response.body();
 
                     if (baseDto.msgCode == 100)
                     {

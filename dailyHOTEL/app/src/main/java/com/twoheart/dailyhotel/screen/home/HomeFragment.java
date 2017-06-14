@@ -85,7 +85,6 @@ import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
-import io.realm.Realm;
 import io.realm.RealmResults;
 import retrofit2.Call;
 import retrofit2.HttpException;
@@ -839,35 +838,62 @@ public class HomeFragment extends BaseMenuNavigationFragment
 
     private void requestRecentList()
     {
-        Realm realm = Realm.getDefaultInstance();
-        realm.executeTransactionAsync(new Realm.Transaction()
+        //        Realm realm = Realm.getDefaultInstance();
+        //        realm.executeTransactionAsync(new Realm.Transaction()
+        //        {
+        //            @Override
+        //            public void execute(Realm realm)
+        //            {
+        RealmResults<RecentlyRealmObject> realmResults = RecentlyPlaceUtil.getRecentlyTypeList(RecentlyPlaceUtil.ServiceType.IB_STAY, RecentlyPlaceUtil.ServiceType.GOURMET);
+        mNetworkController.requestRecentlyList(realmResults, MAX_REQUEST_SIZE);
+
+        addCompositeDisposable(mRecentlyRemoteImpl.getHomeRecentlyList(MAX_REQUEST_SIZE).subscribe(new Consumer<List<HomePlace>>()
         {
             @Override
-            public void execute(Realm realm)
+            public void accept(@NonNull List<HomePlace> homePlacesList) throws Exception
             {
-                RealmResults<RecentlyRealmObject> realmResults = RecentlyPlaceUtil.getRecentlyTypeList(RecentlyPlaceUtil.ServiceType.IB_STAY, RecentlyPlaceUtil.ServiceType.GOURMET);
-                mNetworkController.requestRecentlyList(realmResults, MAX_REQUEST_SIZE);
+                ArrayList<HomePlace> list = new ArrayList<HomePlace>();
+                list.addAll(homePlacesList);
 
-                addCompositeDisposable(mRecentlyRemoteImpl.getStayOutboundRecentlyList(MAX_REQUEST_SIZE).subscribe(new Consumer<StayOutbounds>()
-                {
-                    @Override
-                    public void accept(@NonNull StayOutbounds stayOutbounds) throws Exception
-                    {
-                        List<StayOutbound> stayOutboundList = stayOutbounds.getStayOutbound();
-                        ExLog.d(stayOutboundList.toString());
-                    }
-                }, new Consumer<Throwable>()
-                {
-                    @Override
-                    public void accept(@NonNull Throwable throwable) throws Exception
-                    {
-                        // TODO : 실패시 할 행동 추가 필요.
-                    }
-                }));
-
-
+                //                mHomeLayout.setRecentListData(list, false);
+                //
+                //                mNetworkRunState = mNetworkRunState | IS_RUNNED_RECENTLIST;
+                //
+                //                sendHomeBlockEventAnalytics();
             }
-        });
+        }, new Consumer<Throwable>()
+        {
+            @Override
+            public void accept(@NonNull Throwable throwable) throws Exception
+            {
+                mHomeLayout.setRecentListData(null, true);
+
+                mNetworkRunState = mNetworkRunState | IS_RUNNED_RECENTLIST;
+
+                sendHomeBlockEventAnalytics();
+            }
+        }));
+
+        addCompositeDisposable(mRecentlyRemoteImpl.getStayOutboundRecentlyList(MAX_REQUEST_SIZE).subscribe(new Consumer<StayOutbounds>()
+        {
+            @Override
+            public void accept(@NonNull StayOutbounds stayOutbounds) throws Exception
+            {
+                List<StayOutbound> stayOutboundList = stayOutbounds.getStayOutbound();
+                ExLog.d(stayOutboundList.toString());
+            }
+        }, new Consumer<Throwable>()
+        {
+            @Override
+            public void accept(@NonNull Throwable throwable) throws Exception
+            {
+                // TODO : 실패시 할 행동 추가 필요.
+            }
+        }));
+
+
+        //            }
+        //        });
     }
 
     public void forceRefreshing()

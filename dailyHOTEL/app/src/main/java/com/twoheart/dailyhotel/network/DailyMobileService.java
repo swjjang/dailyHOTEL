@@ -5,12 +5,12 @@ import com.daily.dailyhotel.repository.remote.model.BookingHideData;
 import com.daily.dailyhotel.repository.remote.model.CardData;
 import com.daily.dailyhotel.repository.remote.model.CommonDateTimeData;
 import com.daily.dailyhotel.repository.remote.model.PaymentResultData;
-import com.daily.dailyhotel.repository.remote.model.StayOutboundEmailReceiptData;
-import com.daily.dailyhotel.repository.remote.model.StayOutboundReceiptData;
-import com.daily.dailyhotel.repository.remote.model.StayOutboundRefundData;
 import com.daily.dailyhotel.repository.remote.model.StayOutboundBookingDetailData;
 import com.daily.dailyhotel.repository.remote.model.StayOutboundDetailData;
+import com.daily.dailyhotel.repository.remote.model.StayOutboundEmailReceiptData;
 import com.daily.dailyhotel.repository.remote.model.StayOutboundPaymentData;
+import com.daily.dailyhotel.repository.remote.model.StayOutboundReceiptData;
+import com.daily.dailyhotel.repository.remote.model.StayOutboundRefundData;
 import com.daily.dailyhotel.repository.remote.model.StayOutboundRefundDetailData;
 import com.daily.dailyhotel.repository.remote.model.StayOutboundsData;
 import com.daily.dailyhotel.repository.remote.model.SuggestsData;
@@ -24,7 +24,6 @@ import com.twoheart.dailyhotel.network.model.Event;
 import com.twoheart.dailyhotel.network.model.GourmetDetailParams;
 import com.twoheart.dailyhotel.network.model.GourmetWishItem;
 import com.twoheart.dailyhotel.network.model.Holiday;
-import com.twoheart.dailyhotel.network.model.HomePlace;
 import com.twoheart.dailyhotel.network.model.HomePlaces;
 import com.twoheart.dailyhotel.network.model.PlaceReviewScores;
 import com.twoheart.dailyhotel.network.model.PlaceReviews;
@@ -438,11 +437,11 @@ public interface DailyMobileService
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET("{mobileAPI}")
-    Call<BaseDto<HomePlaces<HomePlace>>> requestHomeWishList(@Path(value = "mobileAPI", encoded = true) String mobileAPI);
+    Call<BaseDto<HomePlaces>> requestHomeWishList(@Path(value = "mobileAPI", encoded = true) String mobileAPI);
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @POST("{mobileAPI}")
-    Call<BaseDto<HomePlaces<HomePlace>>> requestHomeRecentList(@Path(value = "mobileAPI", encoded = true) String mobileAPI,//
+    Call<BaseDto<HomePlaces>> requestHomeRecentList(@Path(value = "mobileAPI", encoded = true) String mobileAPI,//
                                                                @Body JSONObject jsonObject);
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
@@ -616,6 +615,11 @@ public interface DailyMobileService
         , @Query(value = "numberOfResults") int numberOfResults//
         , @Query(value = "sort") String sort//
     );
+
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
+    @POST("{mobileAPI}")
+    Observable<BaseDto<HomePlaces>> getHomeRecentList(@Path(value = "mobileAPI", encoded = true) String mobileAPI,//
+                                                               @Body JSONObject jsonObject);
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @POST("{mobileAPI}")

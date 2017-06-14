@@ -1,6 +1,9 @@
 package com.daily.dailyhotel.domain;
 
 import com.daily.dailyhotel.entity.StayOutbounds;
+import com.twoheart.dailyhotel.network.model.HomePlace;
+
+import java.util.List;
 
 import io.reactivex.Observable;
 
@@ -11,4 +14,6 @@ import io.reactivex.Observable;
 public interface RecentlyInterface
 {
     Observable<StayOutbounds> getStayOutboundRecentlyList(int numberOfResults);
+
+    Observable<List<HomePlace>> getHomeRecentlyList(int maxSize);
 }

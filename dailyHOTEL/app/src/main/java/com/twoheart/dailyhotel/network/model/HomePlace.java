@@ -51,28 +51,32 @@ public class HomePlace
     {
         placeType = "GOURMET".equalsIgnoreCase(serviceType) == true ? Constants.PlaceType.FNB : Constants.PlaceType.HOTEL;
 
-        if (imgPathMain != null && imgPathMain.size() > 0)
+        if (imgPathMain == null || imgPathMain.size() == 0)
         {
-            Iterator<Map.Entry<String, Object>> iterator = imgPathMain.entrySet().iterator();
+            return;
+        }
 
-            if (iterator != null)
+        Iterator<Map.Entry<String, Object>> iterator = imgPathMain.entrySet().iterator();
+
+        if (iterator == null)
+        {
+            return;
+        }
+
+        while (iterator.hasNext())
+        {
+            Map.Entry<String, Object> entry = iterator.next();
+
+            Object value = entry.getValue();
+
+            if (value != null && value instanceof List)
             {
-                while (iterator.hasNext())
+                List list = ((List) value);
+
+                if (list.size() > 0)
                 {
-                    Map.Entry<String, Object> entry = iterator.next();
-
-                    Object value = entry.getValue();
-
-                    if (value != null && value instanceof List)
-                    {
-                        List list = ((List) value);
-
-                        if (list.size() > 0)
-                        {
-                            imageUrl = entry.getKey() + ((List) value).get(0);
-                            break;
-                        }
-                    }
+                    imageUrl = entry.getKey() + ((List) value).get(0);
+                    break;
                 }
             }
         }
