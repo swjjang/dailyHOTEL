@@ -80,14 +80,7 @@ public class HomeNetworkController extends BaseNetworkController
         // 리스트가 비었을때 서버에 리퀘스트시 필수 값 없어 에러 발생, 하지만 해당 경우는 정상인 상태로 서버에 리퀘스트 하지 않음 - 아이폰 동일
         if (recentParamList == null || recentParamList.size() == 0)
         {
-            new Thread(new Runnable()
-            {
-                @Override
-                public void run()
-                {
-                    ((HomeNetworkController.OnNetworkControllerListener) mOnNetworkControllerListener).onRecentList(null, false);
-                }
-            }).start();
+            ((HomeNetworkController.OnNetworkControllerListener) mOnNetworkControllerListener).onRecentList(null, false);
             return;
         }
 

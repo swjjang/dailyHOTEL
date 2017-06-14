@@ -1592,7 +1592,15 @@ public class HomeFragment extends BaseMenuNavigationFragment
         {
             if (mHomeLayout != null)
             {
-                mHomeLayout.setRecentListData(list, isError);
+                mBaseActivity.runOnUiThread(new Runnable()
+                {
+                    @Override
+                    public void run()
+                    {
+                        mHomeLayout.setRecentListData(list, isError);
+                    }
+                });
+
             }
 
             mNetworkRunState = mNetworkRunState | IS_RUNNED_RECENTLIST;
