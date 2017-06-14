@@ -73,7 +73,7 @@ public class BookingData
                 booking.placeType = Booking.PlaceType.STAY;
                 break;
 
-            case "gourmet":
+            case "fnb":
                 booking.placeType = Booking.PlaceType.GOURMET;
                 break;
 
