@@ -91,18 +91,32 @@ android {
         }
     }
 
+    flavorDimensions "STORE", "SERVER"
+
     productFlavors {
         googlePlayStore {
+            dimension "STORE"
             applicationId "com.twoheart.dailyhotel"
-            buildConfigField 'com.twoheart.dailyhotel.Setting.Stores', 'RELEASE_STORE', 'com.twoheart.dailyhotel.Setting.Stores.PLAY_STORE'
         }
+
         oneStore {
+            dimension "STORE"
             applicationId "com.twoheart.dailyhotel"
-            buildConfigField 'com.twoheart.dailyhotel.Setting.Stores', 'RELEASE_STORE', 'com.twoheart.dailyhotel.Setting.Stores.T_STORE'
         }
-        staging {
+
+        dev {
+            dimension "SERVER"
             applicationId "com.twoheart.dailyhotel"
-            buildConfigField 'com.twoheart.dailyhotel.Setting.Stores', 'RELEASE_STORE', 'com.twoheart.dailyhotel.Setting.Stores.PLAY_STORE'
+        }
+
+        stage {
+            dimension "SERVER"
+            applicationId "com.twoheart.dailyhotel"
+        }
+
+        prod {
+            dimension "SERVER"
+            applicationId "com.twoheart.dailyhotel"
         }
     }
 
@@ -126,22 +140,23 @@ android {
         simpleDateFormat.setTimeZone(TimeZone.getDefault());
 
         def apkName = "DH";
+        apkName += "-" + variant.flavorName;
 
-        if (variant.buildType.name == "release") {
-            apkName += "-Prod";
-        } else {
-            apkName += "-Dev";
-        }
-
-        def currentFlavor = variant.flavorName;
-
-        if (currentFlavor.equalsIgnoreCase("googleplaystore") == true) {
-            apkName += "-Play";
-        } else if (currentFlavor.equalsIgnoreCase("onestore") == true) {
-            apkName += "-Tstore";
-        } else {
-            apkName += "-" + variant.flavorName;
-        }
+//        if (variant.buildType.name == "release") {
+//            apkName += "-Prod";
+//        } else {
+//            apkName += "-Dev";
+//        }
+//
+//        def currentFlavor = variant.flavorName;
+//
+//        if (currentFlavor.equalsIgnoreCase("googleplaystore") == true) {
+//            apkName += "-Play";
+//        } else if (currentFlavor.equalsIgnoreCase("onestore") == true) {
+//            apkName += "-Tstore";
+//        } else {
+//            apkName += "-" + variant.flavorName;
+//        }
 
         if (variant.buildType.name == "release") {
 
@@ -241,13 +256,13 @@ dependencies {
     compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
     compile 'io.reactivex.rxjava2:rxjava:2.1.0'
 
-    compile 'com.google.android.gms:play-services-base:11.0.0'
-    compile 'com.google.android.gms:play-services-maps:11.0.0'
-    compile 'com.google.android.gms:play-services-location:11.0.0'
-    compile 'com.google.android.gms:play-services-gcm:11.0.0'
-    compile 'com.google.android.gms:play-services-analytics:11.0.0'
-    compile 'com.google.firebase:firebase-core:11.0.0'
-    compile 'com.google.firebase:firebase-config:11.0.0'
+    compile 'com.google.android.gms:play-services-base:11.0.1'
+    compile 'com.google.android.gms:play-services-maps:11.0.1'
+    compile 'com.google.android.gms:play-services-location:11.0.1'
+    compile 'com.google.android.gms:play-services-gcm:11.0.1'
+    compile 'com.google.android.gms:play-services-analytics:11.0.1'
+    compile 'com.google.firebase:firebase-core:11.0.1'
+    compile 'com.google.firebase:firebase-config:11.0.1'
 
     compile 'com.bluelinelabs:logansquare:1.3.7'
     annotationProcessor 'com.bluelinelabs:logansquare-compiler:1.3.7'

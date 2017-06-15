@@ -52,7 +52,7 @@ public class HomeNetworkController extends BaseNetworkController
     {
         String store;
 
-        if (Setting.RELEASE_STORE == Setting.Stores.PLAY_STORE)
+        if (Setting.getStore() == Setting.Stores.PLAY_STORE)
         {
             store = "GOOGLE";
         } else

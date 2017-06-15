@@ -267,7 +267,7 @@ public class SignupStep1Activity extends BaseActivity
                 mSignupParams.put("birthday", birthday);
             }
 
-            mSignupParams.put("market_type", Setting.RELEASE_STORE.getName());
+            mSignupParams.put("market_type", Setting.getStore().getName());
             mSignupParams.put("isAgreedBenefit", isBenefit == true ? "true" : "false");
 
             DailyMobileAPI.getInstance(SignupStep1Activity.this).requestSignupValidation(mNetworkTag, mSignupParams, mSignupValidationCallback);
