@@ -57,6 +57,11 @@ public class RecentlyRemoteImpl implements RecentlyInterface
                     if (stayOutboundsDataBaseDto.msgCode == 100 && stayOutboundsDataBaseDto.data != null)
                     {
                         stayOutbounds = stayOutboundsDataBaseDto.data.getStayOutboundList();
+
+                        if (stayOutbounds == null)
+                        {
+                            stayOutbounds = new StayOutbounds();
+                        }
                     } else
                     {
                         throw new BaseException(stayOutboundsDataBaseDto.msgCode, stayOutboundsDataBaseDto.msg);

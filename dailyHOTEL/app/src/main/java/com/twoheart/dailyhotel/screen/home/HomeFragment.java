@@ -21,6 +21,7 @@ import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
 import com.daily.base.widget.DailyToast;
+import com.daily.dailyhotel.entity.ImageMap;
 import com.daily.dailyhotel.entity.StayOutbound;
 import com.daily.dailyhotel.entity.StayOutbounds;
 import com.daily.dailyhotel.repository.local.ConfigLocalImpl;
@@ -82,6 +83,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Consumer;
 import retrofit2.Call;
 import retrofit2.HttpException;
@@ -835,7 +837,85 @@ public class HomeFragment extends BaseMenuNavigationFragment
 
     private void requestRecentList()
     {
+        addCompositeDisposable(Observable.zip(mRecentlyRemoteImpl.getHomeRecentlyList(MAX_REQUEST_SIZE) //
+            , mRecentlyRemoteImpl.getStayOutboundRecentlyList(MAX_REQUEST_SIZE) //
+            , new BiFunction<List<HomePlace>, StayOutbounds, List<HomePlace>>()
+            {
+                @Override
+                public List<HomePlace> apply(@NonNull List<HomePlace> homePlaces, @NonNull StayOutbounds stayOutbounds) throws Exception
+                {
+                    List<StayOutbound> stayOutboundList = stayOutbounds.getStayOutbound();
+                    if (stayOutboundList == null || stayOutboundList.size() == 0)
+                    {
+                        return homePlaces;
+                    }
 
+                    ArrayList<HomePlace> resultList = new ArrayList<HomePlace>();
+                    if (homePlaces != null)
+                    {
+                        resultList.addAll(homePlaces);
+                    }
+
+                    for (StayOutbound stayOutbound : stayOutboundList)
+                    {
+                        HomePlace homePlace = new HomePlace();
+//                        homePlace.index = stayOutbound.index;
+//                        homePlace.title = stayOutbound.name;
+//                        homePlace.serviceType = stayOutbound.name;
+//                        homePlace.regionName = stayOutbound.name;
+//                        homePlace.prices = stayOutbound.name;
+//                        homePlace.imgPathMain = stayOutbound.name;
+//                        homePlace.details = stayOutbound.name;
+//                        homePlace.placeType = stayOutbound.name;
+//                        homePlace.isSoldOut = stayOutbound.name;
+
+
+
+
+                        ImageMap imageMap = stayOutbound.getImageMap();
+                        String url;
+
+                        if (ScreenUtils.getScreenWidth(mBaseActivity) >= ScreenUtils.DEFAULT_STAYOUTBOUND_XXHDPI_WIDTH)
+                        {
+                            if (DailyTextUtils.isTextEmpty(imageMap.bigUrl) == true)
+                            {
+                                url = imageMap.smallUrl;
+                            } else
+                            {
+                                url = imageMap.bigUrl;
+                            }
+                        } else
+                        {
+                            if (DailyTextUtils.isTextEmpty(imageMap.mediumUrl) == true)
+                            {
+                                url = imageMap.smallUrl;
+                            } else
+                            {
+                                url = imageMap.mediumUrl;
+                            }
+                        }
+
+                        homePlace.imageUrl = url;
+                    }
+
+
+                    return null;
+                }
+            }).subscribe(new Consumer<List<HomePlace>>()
+        {
+            @Override
+            public void accept(@NonNull List<HomePlace> homePlaces) throws Exception
+            {
+
+            }
+        }, new Consumer<Throwable>()
+        {
+            @Override
+            public void accept(@NonNull Throwable throwable) throws Exception
+            {
+
+            }
+        }));
 
         addCompositeDisposable(mRecentlyRemoteImpl.getHomeRecentlyList(MAX_REQUEST_SIZE).subscribe(new Consumer<List<HomePlace>>()
         {
