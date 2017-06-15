@@ -254,10 +254,10 @@ public class StayOutboundListAdapter extends RecyclerView.Adapter<RecyclerView.V
 
         if (mNightsEnabled == true)
         {
-            holder.dataBinding.averageTextView.setVisibility(View.GONE);
+            holder.dataBinding.averageTextView.setVisibility(View.VISIBLE);
         } else
         {
-            holder.dataBinding.averageTextView.setVisibility(View.VISIBLE);
+            holder.dataBinding.averageTextView.setVisibility(View.GONE);
         }
 
         if (VersionUtils.isOverAPI16() == true)
