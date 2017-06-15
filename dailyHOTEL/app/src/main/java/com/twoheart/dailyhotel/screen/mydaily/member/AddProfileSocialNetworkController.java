@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.crashlytics.android.Crashlytics;
 import com.daily.base.util.DailyTextUtils;
+import com.twoheart.dailyhotel.model.Customer;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
@@ -22,11 +23,18 @@ public class AddProfileSocialNetworkController extends BaseNetworkController
     protected interface OnNetworkControllerListener extends OnBaseNetworkControllerListener
     {
         void onUpdateSocialUserInformation(String message, String agreedDate);
+
+        void onUserProfile(Customer customer, String birthday);
     }
 
     public AddProfileSocialNetworkController(Context context, String networkTag, OnBaseNetworkControllerListener listener)
     {
         super(context, networkTag, listener);
+    }
+
+    public void requestProfile()
+    {
+        DailyMobileAPI.getInstance(mContext).requestUserProfile(mNetworkTag, mUserProfileCallback);
     }
 
     public void requestUpdateSocialUserInformation(String userIndex, String phoneNumber, String email, String name, String recommender, String birthday, boolean isBenefit)
@@ -125,6 +133,58 @@ public class AddProfileSocialNetworkController extends BaseNetworkController
         public void onFailure(Call<JSONObject> call, Throwable t)
         {
             mOnNetworkControllerListener.onError(call, t, false);
+        }
+    };
+
+    private retrofit2.Callback mUserProfileCallback = new retrofit2.Callback<JSONObject>()
+    {
+        @Override
+        public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
+        {
+            if (response != null && response.isSuccessful() && response.body() != null)
+            {
+                try
+                {
+                    JSONObject responseJSONObject = response.body();
+
+                    int msgCode = responseJSONObject.getInt("msgCode");
+
+                    if (msgCode == 100)
+                    {
+                        JSONObject jsonObject = responseJSONObject.getJSONObject("data");
+
+                        Customer user = new Customer();
+                        user.setEmail(jsonObject.getString("email"));
+                        user.setName(jsonObject.getString("name"));
+                        user.setPhone(jsonObject.getString("phone"));
+                        user.setUserIdx(jsonObject.getString("userIdx"));
+
+                        String birthday = null;
+
+                        if (jsonObject.has("birthday") == true && jsonObject.isNull("birthday") == false)
+                        {
+                            birthday = jsonObject.getString("birthday");
+                        }
+
+                        ((OnNetworkControllerListener) mOnNetworkControllerListener).onUserProfile(user, birthday);
+                    } else
+                    {
+                        ((OnNetworkControllerListener) mOnNetworkControllerListener).onUserProfile(null, null);
+                    }
+                } catch (Exception e)
+                {
+                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onUserProfile(null, null);
+                }
+            } else
+            {
+                ((OnNetworkControllerListener) mOnNetworkControllerListener).onUserProfile(null, null);
+            }
+        }
+
+        @Override
+        public void onFailure(Call<JSONObject> call, Throwable t)
+        {
+            ((OnNetworkControllerListener) mOnNetworkControllerListener).onUserProfile(null, null);
         }
     };
 }
