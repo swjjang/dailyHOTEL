@@ -1229,7 +1229,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
                 {
                     for (StayOutboundRoom room : roomList)
                     {
-                        if (listViewPrice == room.nightly)
+                        if (listViewPrice == room.total)
                         {
                             hasPrice = true;
                             break;

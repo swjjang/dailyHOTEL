@@ -20,7 +20,7 @@ public interface StayOutboundListViewInterface extends BaseDialogViewInterface
 
     void setPeopleText(String peopleText);
 
-    void setStayOutboundList(List<ListItem> listItemList, boolean isSortByDistance);
+    void setStayOutboundList(List<ListItem> listItemList, boolean isSortByDistance, boolean isNights);
 
     void addStayOutboundList(List<ListItem> listItemList);
 

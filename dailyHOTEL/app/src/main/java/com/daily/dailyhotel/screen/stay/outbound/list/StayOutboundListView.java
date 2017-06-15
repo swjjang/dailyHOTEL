@@ -192,7 +192,7 @@ public class StayOutboundListView extends BaseDialogView<StayOutboundListView.On
     }
 
     @Override
-    public void setStayOutboundList(List<ListItem> listItemList, boolean isSortByDistance)
+    public void setStayOutboundList(List<ListItem> listItemList, boolean isSortByDistance, boolean isNights)
     {
         if (getViewDataBinding() == null)
         {
@@ -258,6 +258,7 @@ public class StayOutboundListView extends BaseDialogView<StayOutboundListView.On
 
         mStayOutboundListAdapter.setAll(listItemList);
         mStayOutboundListAdapter.setDistanceEnabled(isSortByDistance);
+        mStayOutboundListAdapter.setNightsEnabled(isNights);
         mStayOutboundListAdapter.notifyDataSetChanged();
     }
 
