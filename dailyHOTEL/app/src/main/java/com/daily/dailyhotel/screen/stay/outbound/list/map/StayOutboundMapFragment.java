@@ -118,6 +118,18 @@ public class StayOutboundMapFragment extends com.google.android.gms.maps.Support
             mCompositeDisposable.clear();
         }
 
+        if (mSelectedMarker != null)
+        {
+            mSelectedMarker.remove();
+            mSelectedMarker = null;
+        }
+
+        if (mMyLocationMarker != null)
+        {
+            mMyLocationMarker.remove();
+            mMyLocationMarker = null;
+        }
+
         super.onDestroyView();
     }
 
@@ -320,6 +332,16 @@ public class StayOutboundMapFragment extends com.google.android.gms.maps.Support
 
         mMyLocationMarker = mGoogleMap.addMarker(new MarkerOptions().position(latLng)//
             .icon(new MyLocationMarker(getContext()).makeIcon()).visible(isVisibleMarker).anchor(0.5f, 0.5f).zIndex(1.0f));
+
+        CameraPosition cameraPosition = new CameraPosition.Builder().target(latLng).zoom(13f).build();
+
+        if (VersionUtils.isOverAPI21() == true)
+        {
+            mGoogleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+        } else
+        {
+            mGoogleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+        }
     }
 
     public void hideSelectedMarker()

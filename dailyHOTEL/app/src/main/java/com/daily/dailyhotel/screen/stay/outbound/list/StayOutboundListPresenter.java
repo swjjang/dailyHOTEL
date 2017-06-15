@@ -557,11 +557,11 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
                 getViewInterface().hideMapLayout(getActivity().getSupportFragmentManager());
 
                 getViewInterface().setViewTypeOptionImage(ViewState.LIST);
+
+                unLockAll();
                 break;
             }
         }
-
-        unLockAll();
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
@@ -677,7 +677,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
     {
         getViewInterface().setStayOutboundMakeMarker(mStayOutboundList);
 
-
+        unLockAll();
     }
 
     @Override
