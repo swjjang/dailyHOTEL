@@ -80,7 +80,26 @@ public class AddProfileSocialActivity extends BaseActivity
 
         mCustomer = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_CUSTOMER);
 
+        if (mCustomer == null)
+        {
+            lockUI();
+            mAddProfileSocialNetworkController.requestProfile();
+            return;
+        }
+
         String birthday = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_BIRTHDAY);
+
+        initUserInformation(mCustomer, birthday);
+    }
+
+    private void initUserInformation(Customer customer, String birthday)
+    {
+        if (customer == null)
+        {
+            return;
+        }
+
+        mCustomer = customer;
         boolean hasBirthday = false;
 
         try
@@ -94,9 +113,9 @@ public class AddProfileSocialActivity extends BaseActivity
             ExLog.d(e.toString());
         }
 
-        mUserIdx = mCustomer.getUserIdx();
+        mUserIdx = customer.getUserIdx();
 
-        if (Util.isValidatePhoneNumber(mCustomer.getPhone()) == false)
+        if (Util.isValidatePhoneNumber(customer.getPhone()) == false)
         {
             mAddProfileSocialLayout.showPhoneLayout();
 
@@ -107,7 +126,7 @@ public class AddProfileSocialActivity extends BaseActivity
             mAddProfileSocialLayout.hidePhoneLayout();
         }
 
-        if (DailyTextUtils.isTextEmpty(mCustomer.getEmail()) == true)
+        if (DailyTextUtils.isTextEmpty(customer.getEmail()) == true)
         {
             mAddProfileSocialLayout.showEmailLayout();
         } else
@@ -116,7 +135,7 @@ public class AddProfileSocialActivity extends BaseActivity
         }
 
         mAddProfileSocialLayout.showNameLayout();
-        mAddProfileSocialLayout.setNameText(mCustomer.getName());
+        mAddProfileSocialLayout.setNameText(customer.getName());
 
         if (hasBirthday == true)
         {
@@ -496,6 +515,21 @@ public class AddProfileSocialActivity extends BaseActivity
             }
 
             AnalyticsManager.getInstance(AddProfileSocialActivity.this).setUserName(mAddProfileSocialLayout.getName());
+        }
+
+        @Override
+        public void onUserProfile(Customer customer, String birthday)
+        {
+            unLockUI();
+
+            if (customer == null)
+            {
+                DailyToast.showToast(AddProfileSocialActivity.this, getResources().getString(R.string.act_base_network_connect), Toast.LENGTH_LONG);
+                finish();
+                return;
+            }
+
+            initUserInformation(customer, birthday);
         }
 
         @Override

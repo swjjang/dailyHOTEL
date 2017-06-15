@@ -89,6 +89,12 @@ public class SelectGourmetCouponDialogActivity extends BaseActivity
 
         mCallByScreen = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_CALL_BY_SCREEN);
 
+        if (DailyTextUtils.isTextEmpty(mCallByScreen) == true)
+        {
+            Util.restartApp(this);
+            return;
+        }
+
         switch (mCallByScreen)
         {
             case AnalyticsManager.Screen.DAILYGOURMET_PAYMENT:
@@ -121,6 +127,14 @@ public class SelectGourmetCouponDialogActivity extends BaseActivity
     protected void onStart()
     {
         super.onStart();
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState)
+    {
+        super.onRestoreInstanceState(savedInstanceState);
+
+        Util.restartApp(this);
     }
 
     @Override

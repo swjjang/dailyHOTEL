@@ -93,7 +93,7 @@
                         android:id="@+id/nights02TextView"
                         android:layout_width="76dp"
                         android:layout_height="76dp"
-                        android:layout_marginRight="5dp"
+                        android:layout_marginLeft="5dp"
                         android:background="@drawable/ic_stamp_placeholder_01"
                         android:text="@string/label_stamp_2_nights"
                         android:textColor="@color/default_text_cc5c5c5"
@@ -120,6 +120,7 @@
                         android:layout_width="76dp"
                         android:layout_height="76dp"
                         android:layout_marginRight="5dp"
+                        android:layout_marginLeft="5dp"
                         android:background="@drawable/ic_stamp_placeholder_01"
                         android:text="@string/label_stamp_4_nights"
                         android:textColor="@color/default_text_cc5c5c5"
@@ -204,6 +205,7 @@
                     android:paddingRight="26dp">
 
                     <com.daily.base.widget.DailyTextView
+                        android:id="@+id/freePassCoupon01TextView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/label_stamp_freepass"
@@ -212,7 +214,7 @@
                         dailyFont:style="Medium"/>
 
                     <com.daily.base.widget.DailyTextView
-                        android:id="@+id/freePassCouponTextView"
+                        android:id="@+id/freePassCoupon02TextView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="1dp"
@@ -333,14 +335,15 @@
                 android:layout_height="wrap_content"
                 android:background="@color/default_background"
                 android:orientation="vertical"
-                android:paddingBottom="19dp"
-                android:paddingLeft="19dp"
+                android:paddingBottom="10dp"
+                android:paddingLeft="10dp"
                 android:paddingRight="10dp"
                 android:paddingTop="19dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="9dp">
 
                     <ImageView
                         android:layout_width="wrap_content"

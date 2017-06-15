@@ -107,6 +107,14 @@ public abstract class PlacePaymentThankyouActivity extends BaseActivity implemen
         networkController.requestUserTracking();
     }
 
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState)
+    {
+        super.onRestoreInstanceState(savedInstanceState);
+
+        Util.restartApp(this);
+    }
+
     private void initToolbar()
     {
         View closeView = findViewById(R.id.closeView);
