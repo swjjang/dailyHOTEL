@@ -214,7 +214,7 @@ public class MainNetworkController extends BaseNetworkController
                         String maxVersionName;
                         String minVersionName;
 
-                        switch (Setting.RELEASE_STORE)
+                        switch (Setting.getStore())
                         {
                             case T_STORE:
                                 maxVersionName = dataJSONObject.getString("tstoreMax");

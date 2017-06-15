@@ -912,7 +912,7 @@ public class EventWebActivity extends WebViewActivity implements Constants
             {
                 String marketUrl;
 
-                if (Setting.RELEASE_STORE == Setting.Stores.PLAY_STORE)
+                if (Setting.getStore() == Setting.Stores.PLAY_STORE)
                 {
                     marketUrl = String.format(Locale.KOREA, "https://play.google.com/store/apps/details?id=%s", packageName);
                     marketLaunch.setData(Uri.parse(marketUrl));

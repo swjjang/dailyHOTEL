@@ -4,8 +4,6 @@ import com.twoheart.dailyhotel.util.Constants;
 
 public class Setting
 {
-    public static Stores RELEASE_STORE = BuildConfig.RELEASE_STORE;
-
     // 스토어 선택.
     public enum Stores
     {
@@ -25,23 +23,33 @@ public class Setting
         }
     }
 
+    public static final Stores getStore()
+    {
+        switch(BuildConfig.FLAVOR_STORE)
+        {
+            case "googlePlayStore":
+                return Stores.PLAY_STORE;
+
+            case "oneStore":
+                return Stores.T_STORE;
+
+            default:
+                return Stores.PLAY_STORE;
+        }
+    }
+
     public static final String getServerUrl()
     {
-        switch (BuildConfig.BUILD_TYPE)
+        switch (BuildConfig.FLAVOR_SERVER)
         {
-            case "debug":
-            {
-                if ("staging".equalsIgnoreCase(BuildConfig.FLAVOR) == true)
-                {
-                    return URL_DAILYHOTEL_STAGE_SERVER_DEFAULT;
-                } else
-                {
-                    return URL_DAILYHOTEL_DEV_SERVER_DEFAULT;
-                }
-            }
+            case "dev":
+                return URL_DAILYHOTEL_DEV_SERVER_DEFAULT;
 
-            case "release":
+            case "prod":
                 return URL_DAILYHOTEL_PROD_SERVER_DEFAULT;
+
+            case "stage":
+                return URL_DAILYHOTEL_STAGE_SERVER_DEFAULT;
 
             default:
                 return URL_DAILYHOTEL_DEV_SERVER_DEFAULT;

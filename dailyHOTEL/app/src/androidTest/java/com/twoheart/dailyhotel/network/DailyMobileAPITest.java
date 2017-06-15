@@ -521,7 +521,7 @@ public class DailyMobileAPITest
                         String maxVersionName;
                         String minVersionName;
 
-                        switch (Setting.RELEASE_STORE)
+                        switch (Setting.getStore())
                         {
                             case T_STORE:
                                 maxVersionName = dataJSONObject.getString("tstoreMax");
@@ -535,8 +535,8 @@ public class DailyMobileAPITest
                                 break;
                         }
 
-                        assertThat(Setting.RELEASE_STORE.getName(), minVersionName, notNullValue());
-                        assertThat(Setting.RELEASE_STORE.getName(), maxVersionName, notNullValue());
+                        assertThat(Setting.getStore().getName(), minVersionName, notNullValue());
+                        assertThat(Setting.getStore().getName(), maxVersionName, notNullValue());
                     } else
                     {
                         String message = responseJSONObject.getString("msg");
@@ -3499,7 +3499,7 @@ public class DailyMobileAPITest
         };
 
         String store;
-        if (Setting.RELEASE_STORE == Setting.Stores.PLAY_STORE)
+        if (Setting.getStore() == Setting.Stores.PLAY_STORE)
         {
             store = "google";
         } else
@@ -3717,7 +3717,7 @@ public class DailyMobileAPITest
         //        }
 
         signUpParams.put("birthday", Const.TEST_USER_BIRTHDAY);
-        signUpParams.put("market_type", Setting.RELEASE_STORE.getName());
+        signUpParams.put("market_type", Setting.getStore().getName());
         signUpParams.put("isAgreedBenefit", Boolean.toString(Const.TEST_IS_AGREED_BENEFIT));
 
         DailyMobileAPI.getInstance(mContext).requestSignupValidation(mNetworkTag, signUpParams, networkCallback);
