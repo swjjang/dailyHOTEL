@@ -13,7 +13,6 @@ import android.renderscript.RenderScript;
 import android.renderscript.ScriptIntrinsicBlur;
 import android.support.annotation.NonNull;
 import android.util.DisplayMetrics;
-import android.view.Display;
 import android.view.View;
 import android.view.WindowManager;
 
@@ -171,7 +170,7 @@ public class ScreenUtils
 
     public static Bitmap takeScreenShot(@NonNull Activity activity)
     {
-        if(activity == null)
+        if (activity == null)
         {
             return null;
         }
@@ -185,12 +184,19 @@ public class ScreenUtils
 
         Rect frame = new Rect();
         activity.getWindow().getDecorView().getWindowVisibleDisplayFrame(frame);
-        int statusBarHeight = frame.top;
 
         Matrix matrix = new Matrix();
         matrix.setScale(0.4f, 0.4f);
-        Bitmap copySnapShot = Bitmap.createBitmap(snapShot, 0, statusBarHeight//
-            , ScreenUtils.getScreenWidth(activity), ScreenUtils.getScreenHeight(activity) - statusBarHeight, matrix, false);
+
+        Bitmap copySnapShot;
+        if (frame.top >= frame.height() - frame.top)
+        {
+            copySnapShot = Bitmap.createBitmap(snapShot, 0, 0, frame.width(), frame.height(), matrix, false);
+        } else
+        {
+            copySnapShot = Bitmap.createBitmap(snapShot, 0, frame.top, frame.width(), frame.height() - frame.top, matrix, false);
+        }
+
         view.setDrawingCacheEnabled(false);
         view.destroyDrawingCache();
         return copySnapShot;
@@ -198,7 +204,7 @@ public class ScreenUtils
 
     public static Bitmap fastblur(Context context, Bitmap snapShotBitmap, float radius)
     {
-        if(context == null || snapShotBitmap == null)
+        if (context == null || snapShotBitmap == null)
         {
             return null;
         }
