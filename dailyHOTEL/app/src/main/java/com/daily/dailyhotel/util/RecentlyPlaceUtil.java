@@ -5,9 +5,14 @@ import android.support.annotation.Nullable;
 
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
+import com.daily.base.util.ScreenUtils;
+import com.daily.dailyhotel.entity.ImageMap;
+import com.daily.dailyhotel.entity.StayOutbound;
+import com.daily.dailyhotel.entity.StayOutbounds;
 import com.daily.dailyhotel.repository.local.model.RecentlyRealmObject;
 import com.twoheart.dailyhotel.model.HomeRecentParam;
 import com.twoheart.dailyhotel.model.RecentPlaces;
+import com.twoheart.dailyhotel.network.model.HomePlace;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 
@@ -17,6 +22,9 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 import io.realm.Realm;
 import io.realm.RealmList;
@@ -32,14 +40,16 @@ public class RecentlyPlaceUtil
 {
     public static final String RECENT_PLACE_DELIMITER = ",";
     public static final int MAX_RECENT_PLACE_COUNT = 30;
+    public static final String SERVICE_TYPE_IB_STAY_NAME = "HOTEL";
+    public static final String SERVICE_TYPE_OB_STAY_NAME = "OB_STAY";
+    public static final String SERVICE_TYPE_GOURMET_NAME = "GOURMET";
 
     public enum ServiceType
     {
         IB_STAY,
         GOURMET,
         OB_STAY,
-        ALL_STAY,
-        ALL
+        ALL_STAY
     }
 
     public static void migrateRecentlyPlaces(Context context)
@@ -135,12 +145,15 @@ public class RecentlyPlaceUtil
             recentlyRealmObject = new RecentlyRealmObject();
             recentlyRealmObject.index = param.index;
 
-            if ("HOTEL".equalsIgnoreCase(param.serviceType) == true)
+            if (SERVICE_TYPE_IB_STAY_NAME.equalsIgnoreCase(param.serviceType) == true)
             {
-                recentlyRealmObject.serviceType = RecentlyPlaceUtil.ServiceType.IB_STAY.name();
-            } else if ("GOURMET".equalsIgnoreCase(param.serviceType) == true)
+                recentlyRealmObject.serviceType = ServiceType.IB_STAY.name();
+            } else if (SERVICE_TYPE_GOURMET_NAME.equalsIgnoreCase(param.serviceType) == true)
             {
-                recentlyRealmObject.serviceType = RecentlyPlaceUtil.ServiceType.GOURMET.name();
+                recentlyRealmObject.serviceType = ServiceType.GOURMET.name();
+            } else if (SERVICE_TYPE_OB_STAY_NAME.equalsIgnoreCase(param.serviceType) == true)
+            {
+                recentlyRealmObject.serviceType = ServiceType.OB_STAY.name();
             } else
             {
                 // 지정 되지 않은 타입
@@ -287,9 +300,9 @@ public class RecentlyPlaceUtil
         return builder.toString();
     }
 
-    public static ArrayList<Integer> getRecentlyIndexList(ServiceType serviceType)
+    public static ArrayList<Integer> getRecentlyIndexList(ServiceType... serviceTypes)
     {
-        RealmResults<RecentlyRealmObject> recentlyList = RecentlyPlaceUtil.getRecentlyTypeList(serviceType);
+        RealmResults<RecentlyRealmObject> recentlyList = RecentlyPlaceUtil.getRecentlyTypeList(serviceTypes);
 
         if (recentlyList == null || recentlyList.size() == 0)
         {
@@ -410,6 +423,110 @@ public class RecentlyPlaceUtil
                     .beginGroup().equalTo("serviceType", serviceType.name()) //
                     .lessThanOrEqualTo("savingTime", deleteStartDate).endGroup().findAllSorted("savingTime", Sort.DESCENDING);
                 deleteList.deleteAllFromRealm();
+            }
+        });
+    }
+
+    public static List<HomePlace> mergeHomePlaceList(Context context, List<HomePlace> homePlacesList, StayOutbounds stayOutbounds)
+    {
+        List<StayOutbound> stayOutboundList = stayOutbounds.getStayOutbound();
+        if (stayOutboundList == null || stayOutboundList.size() == 0)
+        {
+            return homePlacesList;
+        }
+
+        ArrayList<HomePlace> resultList = new ArrayList<HomePlace>();
+        if (homePlacesList != null)
+        {
+            resultList.addAll(homePlacesList);
+        }
+
+        for (StayOutbound stayOutbound : stayOutboundList)
+        {
+            resultList.add(convertHomePlace(context, stayOutbound));
+        }
+
+        // sort list
+        RecentlyPlaceUtil.sortHomePlaceList(resultList, (RecentlyPlaceUtil.ServiceType[]) null);
+
+        return resultList;
+    }
+
+    private static HomePlace convertHomePlace(Context context, StayOutbound stayOutbound)
+    {
+        if (context == null || stayOutbound == null)
+        {
+            return null;
+        }
+
+        HomePlace homePlace = null;
+
+        try
+        {
+            homePlace = new HomePlace();
+            homePlace.index = stayOutbound.index;
+            homePlace.title = stayOutbound.name;
+            homePlace.serviceType = RecentlyPlaceUtil.SERVICE_TYPE_OB_STAY_NAME;
+            homePlace.regionName = stayOutbound.locationDescription;
+            homePlace.prices = null;
+            homePlace.imgPathMain = null;
+            homePlace.details = null;
+            homePlace.placeType = null;
+            homePlace.isSoldOut = false;
+
+            ImageMap imageMap = stayOutbound.getImageMap();
+            String url;
+
+            if (ScreenUtils.getScreenWidth(context) >= ScreenUtils.DEFAULT_STAYOUTBOUND_XXHDPI_WIDTH)
+            {
+                if (DailyTextUtils.isTextEmpty(imageMap.bigUrl) == true)
+                {
+                    url = imageMap.smallUrl;
+                } else
+                {
+                    url = imageMap.bigUrl;
+                }
+            } else
+            {
+                if (DailyTextUtils.isTextEmpty(imageMap.mediumUrl) == true)
+                {
+                    url = imageMap.smallUrl;
+                } else
+                {
+                    url = imageMap.mediumUrl;
+                }
+            }
+
+            homePlace.imageUrl = url;
+        } catch (Exception e)
+        {
+            ExLog.d(stayOutbound.index + " , " + stayOutbound.name + " , " + e.toString());
+        }
+
+        return homePlace;
+    }
+
+    private static void sortHomePlaceList(ArrayList<HomePlace> actualList, RecentlyPlaceUtil.ServiceType... serviceTypes)
+    {
+        if (actualList == null || actualList.size() == 0)
+        {
+            return;
+        }
+
+        ArrayList<Integer> expectedList = RecentlyPlaceUtil.getRecentlyIndexList(serviceTypes);
+        if (expectedList == null || expectedList.size() == 0)
+        {
+            return;
+        }
+
+        Collections.sort(actualList, new Comparator<HomePlace>()
+        {
+            @Override
+            public int compare(HomePlace place1, HomePlace place2)
+            {
+                Integer position1 = expectedList.indexOf(place1.index);
+                Integer position2 = expectedList.indexOf(place2.index);
+                return position1.compareTo(position2);
             }
         });
     }

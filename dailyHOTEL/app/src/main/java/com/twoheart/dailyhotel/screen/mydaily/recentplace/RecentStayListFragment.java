@@ -191,7 +191,7 @@ public class RecentStayListFragment extends RecentPlacesListFragment
                 return;
             }
 
-            sortList(RecentlyPlaceUtil.ServiceType.IB_STAY, list);
+            sortList(list, RecentlyPlaceUtil.ServiceType.IB_STAY, RecentlyPlaceUtil.ServiceType.OB_STAY);
 
             ArrayList<PlaceViewItem> viewItemList = mListLayout.makePlaceViewItemList(list);
             mListLayout.setData(viewItemList, mPlaceBookingDay);

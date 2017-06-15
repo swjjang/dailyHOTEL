@@ -145,7 +145,7 @@ public class RecentGourmetListFragment extends RecentPlacesListFragment
                 return;
             }
 
-            sortList(RecentlyPlaceUtil.ServiceType.GOURMET, list);
+            sortList(list, RecentlyPlaceUtil.ServiceType.GOURMET);
 
             ArrayList<PlaceViewItem> viewItemList = mListLayout.makePlaceViewItemList(list);
 

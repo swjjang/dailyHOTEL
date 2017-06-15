@@ -21,14 +21,13 @@ import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
 import com.daily.base.widget.DailyToast;
-import com.daily.dailyhotel.entity.ImageMap;
-import com.daily.dailyhotel.entity.StayOutbound;
 import com.daily.dailyhotel.entity.StayOutbounds;
 import com.daily.dailyhotel.repository.local.ConfigLocalImpl;
 import com.daily.dailyhotel.repository.remote.FacebookRemoteImpl;
 import com.daily.dailyhotel.repository.remote.KakaoRemoteImpl;
 import com.daily.dailyhotel.repository.remote.RecentlyRemoteImpl;
 import com.daily.dailyhotel.screen.stay.outbound.search.StayOutboundSearchActivity;
+import com.daily.dailyhotel.util.RecentlyPlaceUtil;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
@@ -842,82 +841,11 @@ public class HomeFragment extends BaseMenuNavigationFragment
             , new BiFunction<List<HomePlace>, StayOutbounds, List<HomePlace>>()
             {
                 @Override
-                public List<HomePlace> apply(@NonNull List<HomePlace> homePlaces, @NonNull StayOutbounds stayOutbounds) throws Exception
+                public List<HomePlace> apply(@NonNull List<HomePlace> homePlacesList, @NonNull StayOutbounds stayOutbounds) throws Exception
                 {
-                    List<StayOutbound> stayOutboundList = stayOutbounds.getStayOutbound();
-                    if (stayOutboundList == null || stayOutboundList.size() == 0)
-                    {
-                        return homePlaces;
-                    }
-
-                    ArrayList<HomePlace> resultList = new ArrayList<HomePlace>();
-                    if (homePlaces != null)
-                    {
-                        resultList.addAll(homePlaces);
-                    }
-
-                    for (StayOutbound stayOutbound : stayOutboundList)
-                    {
-                        HomePlace homePlace = new HomePlace();
-//                        homePlace.index = stayOutbound.index;
-//                        homePlace.title = stayOutbound.name;
-//                        homePlace.serviceType = stayOutbound.name;
-//                        homePlace.regionName = stayOutbound.name;
-//                        homePlace.prices = stayOutbound.name;
-//                        homePlace.imgPathMain = stayOutbound.name;
-//                        homePlace.details = stayOutbound.name;
-//                        homePlace.placeType = stayOutbound.name;
-//                        homePlace.isSoldOut = stayOutbound.name;
-
-
-
-
-                        ImageMap imageMap = stayOutbound.getImageMap();
-                        String url;
-
-                        if (ScreenUtils.getScreenWidth(mBaseActivity) >= ScreenUtils.DEFAULT_STAYOUTBOUND_XXHDPI_WIDTH)
-                        {
-                            if (DailyTextUtils.isTextEmpty(imageMap.bigUrl) == true)
-                            {
-                                url = imageMap.smallUrl;
-                            } else
-                            {
-                                url = imageMap.bigUrl;
-                            }
-                        } else
-                        {
-                            if (DailyTextUtils.isTextEmpty(imageMap.mediumUrl) == true)
-                            {
-                                url = imageMap.smallUrl;
-                            } else
-                            {
-                                url = imageMap.mediumUrl;
-                            }
-                        }
-
-                        homePlace.imageUrl = url;
-                    }
-
-
-                    return null;
+                    return RecentlyPlaceUtil.mergeHomePlaceList(mBaseActivity, homePlacesList, stayOutbounds);
                 }
             }).subscribe(new Consumer<List<HomePlace>>()
-        {
-            @Override
-            public void accept(@NonNull List<HomePlace> homePlaces) throws Exception
-            {
-
-            }
-        }, new Consumer<Throwable>()
-        {
-            @Override
-            public void accept(@NonNull Throwable throwable) throws Exception
-            {
-
-            }
-        }));
-
-        addCompositeDisposable(mRecentlyRemoteImpl.getHomeRecentlyList(MAX_REQUEST_SIZE).subscribe(new Consumer<List<HomePlace>>()
         {
             @Override
             public void accept(@NonNull List<HomePlace> homePlacesList) throws Exception
@@ -947,22 +875,52 @@ public class HomeFragment extends BaseMenuNavigationFragment
             }
         }));
 
-        addCompositeDisposable(mRecentlyRemoteImpl.getStayOutboundRecentlyList(MAX_REQUEST_SIZE).subscribe(new Consumer<StayOutbounds>()
-        {
-            @Override
-            public void accept(@NonNull StayOutbounds stayOutbounds) throws Exception
-            {
-                List<StayOutbound> stayOutboundList = stayOutbounds.getStayOutbound();
-                ExLog.d(stayOutboundList.toString());
-            }
-        }, new Consumer<Throwable>()
-        {
-            @Override
-            public void accept(@NonNull Throwable throwable) throws Exception
-            {
-                // TODO : 실패시 할 행동 추가 필요.
-            }
-        }));
+//        addCompositeDisposable(mRecentlyRemoteImpl.getHomeRecentlyList(MAX_REQUEST_SIZE).subscribe(new Consumer<List<HomePlace>>()
+//        {
+//            @Override
+//            public void accept(@NonNull List<HomePlace> homePlacesList) throws Exception
+//            {
+//                ArrayList<HomePlace> list = new ArrayList<HomePlace>();
+//                if (homePlacesList != null)
+//                {
+//                    list.addAll(homePlacesList);
+//                }
+//
+//                mHomeLayout.setRecentListData(list, false);
+//
+//                mNetworkRunState = mNetworkRunState | IS_RUNNED_RECENTLIST;
+//
+//                sendHomeBlockEventAnalytics();
+//            }
+//        }, new Consumer<Throwable>()
+//        {
+//            @Override
+//            public void accept(@NonNull Throwable throwable) throws Exception
+//            {
+//                mHomeLayout.setRecentListData(null, true);
+//
+//                mNetworkRunState = mNetworkRunState | IS_RUNNED_RECENTLIST;
+//
+//                sendHomeBlockEventAnalytics();
+//            }
+//        }));
+//
+//        addCompositeDisposable(mRecentlyRemoteImpl.getStayOutboundRecentlyList(MAX_REQUEST_SIZE).subscribe(new Consumer<StayOutbounds>()
+//        {
+//            @Override
+//            public void accept(@NonNull StayOutbounds stayOutbounds) throws Exception
+//            {
+//                List<StayOutbound> stayOutboundList = stayOutbounds.getStayOutbound();
+//                ExLog.d(stayOutboundList.toString());
+//            }
+//        }, new Consumer<Throwable>()
+//        {
+//            @Override
+//            public void accept(@NonNull Throwable throwable) throws Exception
+//            {
+//                // TODO : 실패시 할 행동 추가 필요.
+//            }
+//        }));
     }
 
     public void forceRefreshing()

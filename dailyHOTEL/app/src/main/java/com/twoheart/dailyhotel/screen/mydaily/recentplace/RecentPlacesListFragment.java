@@ -108,14 +108,14 @@ public abstract class RecentPlacesListFragment extends BaseFragment
         return RecentlyPlaceUtil.getTargetIndices(serviceType, RecentlyPlaceUtil.MAX_RECENT_PLACE_COUNT);
     }
 
-    public void sortList(RecentlyPlaceUtil.ServiceType serviceType, ArrayList<? extends Place> actualList)
+    public void sortList(ArrayList<? extends Place> actualList, RecentlyPlaceUtil.ServiceType... serviceTypes)
     {
         if (actualList == null || actualList.size() == 0)
         {
             return;
         }
 
-        ArrayList<Integer> expectedList = RecentlyPlaceUtil.getRecentlyIndexList(serviceType);
+        ArrayList<Integer> expectedList = RecentlyPlaceUtil.getRecentlyIndexList(serviceTypes);
         if (expectedList == null || expectedList.size() == 0)
         {
             return;
