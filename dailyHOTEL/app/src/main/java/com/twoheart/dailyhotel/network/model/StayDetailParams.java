@@ -308,7 +308,7 @@ public class StayDetailParams extends PlaceDetailParams<StayProduct>
 
     public List<String> getBenefitList()
     {
-        return benefitContents;
+        return mBenefitInformation;
     }
 
     @Override
