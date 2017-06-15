@@ -48,7 +48,7 @@ public class ImageListActivity extends BaseActivity<ImageListPresenter>
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
-        overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
+        overridePendingTransition(R.anim.slide_in_bottom, R.anim.hold);
 
         super.onCreate(savedInstanceState);
     }
