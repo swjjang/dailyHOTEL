@@ -3,7 +3,7 @@ package com.daily.dailyhotel.entity;
 public class StayOutboundReceipt
 {
     public int index;
-    public String paymentType;
+    public String paymentTypeName;
     public String placeName;
     public String placeAddress;
     public String paymentDate;
@@ -18,7 +18,7 @@ public class StayOutboundReceipt
     public String userName;
     public String userPhone;
     public String userEmail;
-    public int rooms;
+    public int roomCount;
 
     public String comment;
 

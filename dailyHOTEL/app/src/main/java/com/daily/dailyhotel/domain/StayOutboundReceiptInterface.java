@@ -10,5 +10,5 @@ public interface StayOutboundReceiptInterface
     Observable<StayOutboundReceipt> getStayOutboundReceipt(int bookingIndex);
 
     // 영수증 이메일로 신청
-    Observable<Boolean> getStayOutboundEmailReceipt(int bookingIndex);
+    Observable<String> getStayOutboundEmailReceipt(int bookingIndex, String email);
 }

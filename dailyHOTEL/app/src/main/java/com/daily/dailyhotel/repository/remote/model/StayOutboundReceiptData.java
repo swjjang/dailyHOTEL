@@ -22,29 +22,23 @@ public class StayOutboundReceiptData
     @JsonField(name = "checkinDate")
     public String checkinDate;
 
-    @JsonField(name = "checkinTime")
-    public String checkinTime;
-
     @JsonField(name = "checkoutDate")
     public String checkoutDate;
 
-    @JsonField(name = "checkoutTime")
-    public String checkoutTime;
+    @JsonField(name = "email")
+    public String email;
 
-    @JsonField(name = "userEmail")
-    public String userEmail;
+    @JsonField(name = "name")
+    public String name;
 
-    @JsonField(name = "userName")
-    public String userName;
-
-    @JsonField(name = "userPhone")
-    public String userPhone;
+    @JsonField(name = "phone")
+    public String phone;
 
     @JsonField(name = "roomName")
     public String roomName;
 
-    @JsonField(name = "paymentType")
-    public String paymentType;
+    @JsonField(name = "paymentTypeName")
+    public String paymentTypeName;
 
     @JsonField(name = "paymentDate")
     public String paymentDate;
@@ -58,11 +52,11 @@ public class StayOutboundReceiptData
     @JsonField(name = "bonus")
     public int bonus;
 
-    @JsonField(name = "comment")
-    public String comment;
+    @JsonField(name = "description")
+    public String description;
 
-    @JsonField(name = "rooms")
-    public int rooms;
+    @JsonField(name = "reservationRooms")
+    public int reservationRooms;
 
     public StayOutboundReceiptData()
     {
@@ -74,7 +68,7 @@ public class StayOutboundReceiptData
         StayOutboundReceipt stayOutboundReceipt = new StayOutboundReceipt();
 
         stayOutboundReceipt.index = reservationIdx;
-        stayOutboundReceipt.paymentType = paymentType;
+        stayOutboundReceipt.paymentTypeName = paymentTypeName;
         stayOutboundReceipt.placeName = hotelName;
         stayOutboundReceipt.placeAddress = hotelAddress;
         stayOutboundReceipt.paymentDate = paymentDate;
@@ -83,11 +77,11 @@ public class StayOutboundReceiptData
         stayOutboundReceipt.bonus = bonus;
         stayOutboundReceipt.checkInDate = checkinDate;
         stayOutboundReceipt.checkOutDate = checkoutDate;
-        stayOutboundReceipt.comment = comment;
-        stayOutboundReceipt.userName = userName;
-        stayOutboundReceipt.userPhone = userPhone;
-        stayOutboundReceipt.userEmail = userEmail;
-        stayOutboundReceipt.rooms = rooms;
+        stayOutboundReceipt.comment = description;
+        stayOutboundReceipt.userName = name;
+        stayOutboundReceipt.userPhone = phone;
+        stayOutboundReceipt.userEmail = email;
+        stayOutboundReceipt.roomCount = reservationRooms;
 
         return stayOutboundReceipt;
     }

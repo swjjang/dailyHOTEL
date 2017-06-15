@@ -1,15 +1,26 @@
 package com.daily.dailyhotel.screen.booking.detail.stay.outbound.receipt;
 
+import android.content.Context;
+import android.content.DialogInterface;
+import android.databinding.DataBindingUtil;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 
 import com.daily.base.BaseActivity;
 import com.daily.base.BaseDialogView;
 import com.daily.base.OnBaseEventListener;
 import com.daily.base.util.DailyTextUtils;
+import com.daily.base.util.ExLog;
+import com.daily.base.widget.DailyEditText;
 import com.daily.dailyhotel.entity.StayOutboundReceipt;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ActivityStayOutboundReceiptDataBinding;
+import com.twoheart.dailyhotel.databinding.DialogStayOutboundReceiptEmailDataBinding;
+import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
@@ -21,6 +32,8 @@ public class StayOutboundReceiptView extends BaseDialogView<StayOutboundReceiptV
     public interface OnEventListener extends OnBaseEventListener
     {
         void onEmailClick();
+
+        void onSendEmailClick(String email);
 
         void onFullScreenClick();
     }
@@ -37,11 +50,28 @@ public class StayOutboundReceiptView extends BaseDialogView<StayOutboundReceiptV
         {
             return;
         }
+
+        initToolbar(viewDataBinding);
+
+        viewDataBinding.sendEmailView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                getEventListener().onEmailClick();
+            }
+        });
     }
 
     @Override
     public void setToolbarTitle(String title)
     {
+        if (mDailyToolbarLayout == null)
+        {
+            return;
+        }
+
+        mDailyToolbarLayout.setToolbarTitle(title);
     }
 
     @Override
@@ -53,7 +83,7 @@ public class StayOutboundReceiptView extends BaseDialogView<StayOutboundReceiptV
         }
         // **예약 세부 정보**
         // 예약 번호
-        getViewDataBinding().bookingIndexTextView.setText(stayOutboundReceipt.index);
+        getViewDataBinding().bookingIndexTextView.setText(Integer.toString(stayOutboundReceipt.index));
 
         // 호텔명
         getViewDataBinding().stayNameTextView.setText(stayOutboundReceipt.placeName);
@@ -67,24 +97,36 @@ public class StayOutboundReceiptView extends BaseDialogView<StayOutboundReceiptV
         // 체크인/아웃
         getViewDataBinding().checkInOutTextView.setText(stayOutboundReceipt.checkInDate + " - " + stayOutboundReceipt.checkOutDate);
 
-        int nights = 1;
-        int rooms = 1;
+        try
+        {
+            int nights = DailyCalendar.compareDateDay(DailyCalendar.convertDateFormatString(stayOutboundReceipt.checkOutDate, "yyyy-MM-dd", DailyCalendar.ISO_8601_FORMAT)//
+                , DailyCalendar.convertDateFormatString(stayOutboundReceipt.checkInDate, "yyyy-MM-dd", DailyCalendar.ISO_8601_FORMAT));
 
-        // 숙박 일수/객실수
-        getViewDataBinding().roomTxtView.setText(getString(R.string.label_stay_outbound_booking_night_room, nights, rooms));
+            // 숙박 일수/객실수
+            getViewDataBinding().roomTxtView.setText(getString(R.string.label_stay_outbound_booking_night_room, nights, stayOutboundReceipt.roomCount));
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+        }
 
         // **결제 정보**
         // 결제일
-        getViewDataBinding().paymentDateTextView.setText(stayOutboundReceipt.paymentDate);
+        try
+        {
+            getViewDataBinding().paymentDateTextView.setText(DailyCalendar.convertDateFormatString(stayOutboundReceipt.paymentDate, DailyCalendar.ISO_8601_FORMAT, "yyyy/MM/dd"));
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+        }
 
         // 결제수단
-        if (DailyTextUtils.isTextEmpty(stayOutboundReceipt.paymentType) == true)
+        if (DailyTextUtils.isTextEmpty(stayOutboundReceipt.paymentTypeName) == true)
         {
             getViewDataBinding().paymentTypeLayout.setVisibility(View.GONE);
         } else
         {
             getViewDataBinding().paymentTypeLayout.setVisibility(View.VISIBLE);
-            getViewDataBinding().paymentTypeTextView.setText(stayOutboundReceipt.paymentType);
+            getViewDataBinding().paymentTypeTextView.setText(stayOutboundReceipt.paymentTypeName);
         }
 
         getViewDataBinding().saleLayout.setVisibility(View.VISIBLE);
@@ -174,5 +216,84 @@ public class StayOutboundReceiptView extends BaseDialogView<StayOutboundReceiptV
 
             getViewDataBinding().bottomLayout.setVisibility(View.VISIBLE);
         }
+    }
+
+    @Override
+    public void showSendEmailDialog(String email)
+    {
+        DialogStayOutboundReceiptEmailDataBinding dataBinding = DataBindingUtil.inflate(LayoutInflater.from(getContext()), R.layout.dialog_stay_outbound_receipt_email_data, null, false);
+
+
+        dataBinding.emailEditTExt.setDeleteButtonVisible(new DailyEditText.OnDeleteTextClickListener()
+        {
+            @Override
+            public void onDelete(DailyEditText dailyEditText)
+            {
+                InputMethodManager inputMethodManager = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                inputMethodManager.showSoftInput(dailyEditText, InputMethodManager.SHOW_IMPLICIT);
+            }
+        });
+
+        dataBinding.emailEditTExt.setText(email);
+        dataBinding.emailEditTExt.setSelection(dataBinding.emailEditTExt.length());
+
+        // 버튼
+        dataBinding.negativeTextView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                hideSimpleDialog();
+            }
+        });
+
+        dataBinding.positiveTextView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                getEventListener().onSendEmailClick(dataBinding.emailEditTExt.getText().toString());
+            }
+        });
+
+        dataBinding.emailEditTExt.addTextChangedListener(new TextWatcher()
+        {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2)
+            {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2)
+            {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable)
+            {
+                if (editable == null || editable.length() == 0)
+                {
+                    dataBinding.positiveTextView.setEnabled(false);
+                } else
+                {
+                    dataBinding.positiveTextView.setEnabled(true);
+                }
+            }
+        });
+
+        showSimpleDialog(dataBinding.getRoot(), null, null, true);
+    }
+
+    private void initToolbar(ActivityStayOutboundReceiptDataBinding viewDataBinding)
+    {
+        if (viewDataBinding == null)
+        {
+            return;
+        }
+
+        mDailyToolbarLayout = new DailyToolbarLayout(getContext(), viewDataBinding.toolbar.findViewById(R.id.toolbar));
+        mDailyToolbarLayout.initToolbar(null, v -> getEventListener().onBackClick());
     }
 }

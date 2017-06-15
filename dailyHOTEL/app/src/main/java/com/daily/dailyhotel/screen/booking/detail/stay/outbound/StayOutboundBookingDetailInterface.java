@@ -23,6 +23,8 @@ public interface StayOutboundBookingDetailInterface extends BaseDialogViewInterf
 
     void showConciergeDialog(Dialog.OnDismissListener listener);
 
+    void showRefundCallDialog(Dialog.OnDismissListener listener);
+
     void showShareDialog(Dialog.OnDismissListener listener);
 
     void setMyLocation(Location location);

@@ -26,12 +26,12 @@ import com.daily.dailyhotel.entity.People;
 import com.daily.dailyhotel.entity.StayOutboundBookingDetail;
 import com.daily.dailyhotel.repository.remote.BookingRemoteImpl;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
+import com.daily.dailyhotel.screen.booking.detail.stay.outbound.receipt.StayOutboundReceiptActivity;
 import com.daily.dailyhotel.screen.booking.detail.stay.outbound.refund.StayOutboundRefundActivity;
 import com.daily.dailyhotel.screen.common.call.CallDialogActivity;
 import com.daily.dailyhotel.screen.stay.outbound.detail.StayOutboundDetailActivity;
 import com.daily.dailyhotel.util.DailyLocationExFactory;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.screen.booking.detail.hotel.IssuingReceiptActivity;
 import com.twoheart.dailyhotel.screen.common.HappyTalkCategoryDialog;
 import com.twoheart.dailyhotel.screen.common.PermissionManagerActivity;
 import com.twoheart.dailyhotel.screen.common.ZoomMapActivity;
@@ -225,7 +225,6 @@ public class StayOutboundBookingDetailPresenter extends BaseExceptionPresenter<S
         addCompositeDisposable(Observable.zip(mCommonRemoteImpl.getCommonDateTime(), mBookingRemoteImpl.getStayOutboundBookingDetail(mBookingIndex)//
             , new BiFunction<CommonDateTime, StayOutboundBookingDetail, StayOutboundBookingDetail>()
             {
-
                 @Override
                 public StayOutboundBookingDetail apply(@io.reactivex.annotations.NonNull CommonDateTime commonDateTime, @io.reactivex.annotations.NonNull StayOutboundBookingDetail stayOutboundBookingDetail) throws Exception
                 {
@@ -400,11 +399,12 @@ public class StayOutboundBookingDetailPresenter extends BaseExceptionPresenter<S
             case NRD:
             case TIMEOVER:
             default:
-                getViewInterface().showConciergeDialog(new DialogInterface.OnDismissListener()
+                getViewInterface().showRefundCallDialog(new DialogInterface.OnDismissListener()
                 {
                     @Override
                     public void onDismiss(DialogInterface dialog)
                     {
+                        unLockAll();
                     }
                 });
                 break;
@@ -461,7 +461,7 @@ public class StayOutboundBookingDetailPresenter extends BaseExceptionPresenter<S
             return;
         }
 
-        startActivityForResult(IssuingReceiptActivity.newInstance(getActivity(), mBookingIndex), StayOutboundBookingDetailActivity.REQUEST_CODE_ISSUING_RECEIPT);
+        startActivityForResult(StayOutboundReceiptActivity.newInstance(getActivity(), mBookingIndex), StayOutboundBookingDetailActivity.REQUEST_CODE_ISSUING_RECEIPT);
     }
 
     @Override
@@ -490,7 +490,7 @@ public class StayOutboundBookingDetailPresenter extends BaseExceptionPresenter<S
     }
 
     @Override
-    public void onConciergeHappyTalkClick()
+    public void onConciergeHappyTalkClick(boolean refund)
     {
         if (mStayOutboundBookingDetail == null)
         {
@@ -502,8 +502,15 @@ public class StayOutboundBookingDetailPresenter extends BaseExceptionPresenter<S
             // 카카오톡 패키지 설치 여부
             getActivity().getPackageManager().getPackageInfo("com.kakao.talk", PackageManager.GET_META_DATA);
 
-            startActivityForResult(HappyTalkCategoryDialog.newInstance(getActivity(), HappyTalkCategoryDialog.CallScreen.SCREEN_STAY_OUTBOUND_BOOKING//
-                , mStayOutboundBookingDetail.stayIndex, 0, mStayOutboundBookingDetail.name), StayOutboundBookingDetailActivity.REQUEST_CODE_HAPPYTALK);
+            if (refund == true)
+            {
+                startActivityForResult(HappyTalkCategoryDialog.newInstance(getActivity(), HappyTalkCategoryDialog.CallScreen.SCREEN_STAY_OUTBOUND_REFUND//
+                    , mStayOutboundBookingDetail.stayIndex, 0, mStayOutboundBookingDetail.name), StayOutboundBookingDetailActivity.REQUEST_CODE_HAPPYTALK);
+            } else
+            {
+                startActivityForResult(HappyTalkCategoryDialog.newInstance(getActivity(), HappyTalkCategoryDialog.CallScreen.SCREEN_STAY_OUTBOUND_BOOKING//
+                    , mStayOutboundBookingDetail.stayIndex, 0, mStayOutboundBookingDetail.name), StayOutboundBookingDetailActivity.REQUEST_CODE_HAPPYTALK);
+            }
         } catch (Exception e)
         {
             getViewInterface().showSimpleDialog(null, getString(R.string.dialog_msg_not_installed_kakaotalk)//
