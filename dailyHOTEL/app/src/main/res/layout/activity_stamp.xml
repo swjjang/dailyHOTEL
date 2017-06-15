@@ -204,6 +204,7 @@
                     android:paddingRight="26dp">
 
                     <com.daily.base.widget.DailyTextView
+                        android:id="@+id/freePassCoupon01TextView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/label_stamp_freepass"
@@ -212,7 +213,7 @@
                         dailyFont:style="Medium"/>
 
                     <com.daily.base.widget.DailyTextView
-                        android:id="@+id/freePassCouponTextView"
+                        android:id="@+id/freePassCoupon02TextView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="1dp"

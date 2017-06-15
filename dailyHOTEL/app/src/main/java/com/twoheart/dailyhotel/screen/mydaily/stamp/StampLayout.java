@@ -20,7 +20,7 @@ public class StampLayout extends BaseLayout implements View.OnClickListener
     private TextView mNightsTextView;
     private View mPushLayout, mStampHistoryTextView;
     private View mFreePassLayout, mFreePassCouponLayout;
-    private TextView mFreePassCouponTextView;
+    private TextView mFreePassCoupon01TextView, mFreePassCoupon02TextView;
     private TextView mFreePassTextView;
 
     public interface OnEventListener extends OnBaseEventListener
@@ -53,7 +53,8 @@ public class StampLayout extends BaseLayout implements View.OnClickListener
         mFreePassLayout = view.findViewById(R.id.freePassLayout);
         mFreePassTextView = (TextView) view.findViewById(R.id.freePassTextView);
         mFreePassCouponLayout = mFreePassLayout.findViewById(R.id.freePassCouponLayout);
-        mFreePassCouponTextView = (TextView) mFreePassCouponLayout.findViewById(R.id.freePassCouponTextView);
+        mFreePassCoupon01TextView = (TextView) mFreePassCouponLayout.findViewById(R.id.freePassCoupon01TextView);
+        mFreePassCoupon02TextView = (TextView) mFreePassCouponLayout.findViewById(R.id.freePassCoupon02TextView);
 
         View stampMessageLayout = view.findViewById(R.id.stampMessageLayout);
         View pushMessageLayout = mPushLayout.findViewById(R.id.pushMessageLayout);
@@ -249,12 +250,18 @@ public class StampLayout extends BaseLayout implements View.OnClickListener
         {
             mFreePassTextView.setText(R.string.message_stamp_completed_issuance);
             mFreePassCouponLayout.setBackgroundResource(R.drawable.ic_stamp_coupon_active);
-            mFreePassCouponTextView.setText(R.string.label_stamp_completed_issuance);
+
+            mFreePassCoupon01TextView.setTextColor(mContext.getResources().getColor(R.color.default_text_c323232));
+            mFreePassCoupon02TextView.setText(R.string.label_stamp_completed_issuance);
+            mFreePassCoupon02TextView.setTextColor(mContext.getResources().getColor(R.color.default_text_c666666));
         } else
         {
             mFreePassTextView.setText(R.string.message_stamp_before_issuance);
             mFreePassCouponLayout.setBackgroundResource(R.drawable.ic_stamp_coupon_inactive);
-            mFreePassCouponTextView.setText(R.string.label_stamp_before_issuance);
+
+            mFreePassCoupon01TextView.setTextColor(mContext.getResources().getColor(R.color.default_text_c929292));
+            mFreePassCoupon02TextView.setText(R.string.label_stamp_before_issuance);
+            mFreePassCoupon02TextView.setTextColor(mContext.getResources().getColor(R.color.default_text_c929292));
         }
     }
 
