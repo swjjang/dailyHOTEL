@@ -419,11 +419,13 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
             @Override
             public void accept(Throwable throwable) throws Exception
             {
+                unLockAll();
+
                 // 리스트를 호출하다가 에러가 난 경우 처리 방안
                 // 검색 결과 없는 것으로
                 getViewInterface().setRefreshing(false);
                 getViewInterface().setErrorScreenVisible(true);
-                onHandleError(throwable);
+                //                onHandleError(throwable);
             }
         }));
     }
