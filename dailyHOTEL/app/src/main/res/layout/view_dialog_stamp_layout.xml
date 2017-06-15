@@ -22,6 +22,7 @@
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
         android:layout_marginTop="24dp"
+        android:lineSpacingExtra="-1dp"
         android:gravity="center_horizontal"
         android:textColor="@color/default_text_c323232"
         android:textSize="17dp"
