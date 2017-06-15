@@ -90,18 +90,32 @@ android {
         }
     }
 
+    flavorDimensions "STORE", "SERVER"
+
     productFlavors {
         googlePlayStore {
+            dimension "STORE"
             applicationId "com.twoheart.dailyhotel"
-            buildConfigField 'com.twoheart.dailyhotel.Setting.Stores', 'RELEASE_STORE', 'com.twoheart.dailyhotel.Setting.Stores.PLAY_STORE'
         }
+
         oneStore {
+            dimension "STORE"
             applicationId "com.twoheart.dailyhotel"
-            buildConfigField 'com.twoheart.dailyhotel.Setting.Stores', 'RELEASE_STORE', 'com.twoheart.dailyhotel.Setting.Stores.T_STORE'
         }
-        staging {
+
+        dev {
+            dimension "SERVER"
             applicationId "com.twoheart.dailyhotel"
-            buildConfigField 'com.twoheart.dailyhotel.Setting.Stores', 'RELEASE_STORE', 'com.twoheart.dailyhotel.Setting.Stores.PLAY_STORE'
+        }
+
+        stage {
+            dimension "SERVER"
+            applicationId "com.twoheart.dailyhotel"
+        }
+
+        prod {
+            dimension "SERVER"
+            applicationId "com.twoheart.dailyhotel"
         }
     }
 
@@ -125,22 +139,23 @@ android {
         simpleDateFormat.setTimeZone(TimeZone.getDefault());
 
         def apkName = "DH";
+        apkName += "-" + variant.flavorName;
 
-        if (variant.buildType.name == "release") {
-            apkName += "-Prod";
-        } else {
-            apkName += "-Dev";
-        }
-
-        def currentFlavor = variant.flavorName;
-
-        if (currentFlavor.equalsIgnoreCase("googleplaystore") == true) {
-            apkName += "-Play";
-        } else if (currentFlavor.equalsIgnoreCase("onestore") == true) {
-            apkName += "-Tstore";
-        } else {
-            apkName += "-" + variant.flavorName;
-        }
+//        if (variant.buildType.name == "release") {
+//            apkName += "-Prod";
+//        } else {
+//            apkName += "-Dev";
+//        }
+//
+//        def currentFlavor = variant.flavorName;
+//
+//        if (currentFlavor.equalsIgnoreCase("googleplaystore") == true) {
+//            apkName += "-Play";
+//        } else if (currentFlavor.equalsIgnoreCase("onestore") == true) {
+//            apkName += "-Tstore";
+//        } else {
+//            apkName += "-" + variant.flavorName;
+//        }
 
         if (variant.buildType.name == "release") {
 

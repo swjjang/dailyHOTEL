@@ -349,7 +349,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
             mStoreParams.put("gender", gender);
         }
 
-        mStoreParams.put("market_type", Setting.RELEASE_STORE.getName());
+        mStoreParams.put("market_type", Setting.getStore().getName());
 
         DailyMobileAPI.getInstance(this).requestFacebookUserLogin(mNetworkTag, params, mSocialUserLoginCallback);
     }
@@ -375,7 +375,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
         params.put("user_type", Constants.KAKAO_USER);
 
         mStoreParams.putAll(params);
-        mStoreParams.put("market_type", Setting.RELEASE_STORE.getName());
+        mStoreParams.put("market_type", Setting.getStore().getName());
 
         DailyMobileAPI.getInstance(this).requestKakaoUserLogin(mNetworkTag, params, mSocialUserLoginCallback);
     }

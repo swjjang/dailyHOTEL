@@ -162,7 +162,7 @@ public class DailyRemoteConfig
             JSONObject versionJSONObject = new JSONObject(androidUpdateVersion);
             JSONObject versionCode = versionJSONObject.getJSONObject("versionCode");
 
-            switch (Setting.RELEASE_STORE)
+            switch (Setting.getStore())
             {
                 case PLAY_STORE:
                 {

@@ -521,7 +521,7 @@ public class DailyMobileAPITest
                         String maxVersionName;
                         String minVersionName;
 
-                        switch (Setting.RELEASE_STORE)
+                        switch (Setting.getStore())
                         {
                             case T_STORE:
                                 maxVersionName = dataJSONObject.getString("tstoreMax");
@@ -535,8 +535,8 @@ public class DailyMobileAPITest
                                 break;
                         }
 
-                        assertThat(Setting.RELEASE_STORE.getName(), minVersionName, notNullValue());
-                        assertThat(Setting.RELEASE_STORE.getName(), maxVersionName, notNullValue());
+                        assertThat(Setting.getStore().getName(), minVersionName, notNullValue());
+                        assertThat(Setting.getStore().getName(), maxVersionName, notNullValue());
                     } else
                     {
                         String message = responseJSONObject.getString("msg");
@@ -3451,6 +3451,65 @@ public class DailyMobileAPITest
         mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
     }
 
+    // eventIndex 의 경우 고정이 아니기 때문에 requestEventList 이후에 진행하도록 한다.
+    @Ignore
+    public void requestEventPageUrl(int eventIndex) throws Exception
+    {
+        mLock = new CountDownLatch(1);
+
+        final retrofit2.Callback networkCallback = new retrofit2.Callback<JSONObject>()
+        {
+            @Override
+            public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
+            {
+                try
+                {
+                    assertThat(response, notNullValue());
+                    assertThat(response.isSuccessful(), is(true));
+                    assertThat(response.body(), allOf(notNullValue(), isA(JSONObject.class)));
+
+                    JSONObject responseJSONObject = response.body();
+
+                    int msgCode = responseJSONObject.getInt("msg_code");
+                    String message = responseJSONObject.getString("msg");
+                    assertThat(message, isNotEmpty());
+                    assertThat(message, msgCode, is(0));
+
+                    JSONObject eventJsonObject = responseJSONObject.getJSONObject("data");
+                    assertThat(eventJsonObject, notNullValue());
+
+                    String eventUrl = eventJsonObject.getString("url");
+                    assertThat(eventUrl, isNotEmpty());
+                } catch (Throwable t)
+                {
+                    addException(call, response, t);
+                } finally
+                {
+                    mLock.countDown();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<JSONObject> call, Throwable t)
+            {
+                addException(call, null, t);
+                mLock.countDown();
+            }
+        };
+
+        String store;
+        if (Setting.getStore() == Setting.Stores.PLAY_STORE)
+        {
+            store = "google";
+        } else
+        {
+            store = "skt";
+        }
+
+        DailyMobileAPI.getInstance(mContext).requestEventPageUrl(mNetworkTag, eventIndex, store, networkCallback);
+        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
+    }
+
     @Test
     public void requestDailyUserVerification() throws Exception
     {
@@ -3657,7 +3716,7 @@ public class DailyMobileAPITest
         //        }
 
         signUpParams.put("birthday", Const.TEST_USER_BIRTHDAY);
-        signUpParams.put("market_type", Setting.RELEASE_STORE.getName());
+        signUpParams.put("market_type", Setting.getStore().getName());
         signUpParams.put("isAgreedBenefit", Boolean.toString(Const.TEST_IS_AGREED_BENEFIT));
 
         DailyMobileAPI.getInstance(mContext).requestSignupValidation(mNetworkTag, signUpParams, networkCallback);
