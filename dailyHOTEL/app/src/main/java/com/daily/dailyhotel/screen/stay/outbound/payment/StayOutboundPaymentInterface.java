@@ -25,7 +25,7 @@ public interface StayOutboundPaymentInterface extends BaseDialogViewInterface
 
     void setEasyCard(Card card);
 
-    void setRefundDescriptionList(List<String> refundDescriptionList);
+    void setNonRefundableDescription(String nonRefundableDescription);
 
     void setMemoPaymentType(String memo);
 

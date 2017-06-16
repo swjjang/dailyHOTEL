@@ -50,6 +50,7 @@ public class StayOutboundListAdapter extends RecyclerView.Adapter<RecyclerView.V
     View.OnLongClickListener mOnLongClickListener;
 
     private boolean mDistanceEnabled;
+    private boolean mNightsEnabled; // 연박 여부
 
     public StayOutboundListAdapter(Context context, ArrayList<ListItem> arrayList)
     {
@@ -65,6 +66,11 @@ public class StayOutboundListAdapter extends RecyclerView.Adapter<RecyclerView.V
     public void setDistanceEnabled(boolean enabled)
     {
         mDistanceEnabled = enabled;
+    }
+
+    public void setNightsEnabled(boolean enabled)
+    {
+        mNightsEnabled = enabled;
     }
 
     public void setOnClickListener(View.OnClickListener onClickListener, View.OnLongClickListener onLongClickListener)
@@ -246,13 +252,12 @@ public class StayOutboundListAdapter extends RecyclerView.Adapter<RecyclerView.V
 
         holder.dataBinding.discountPriceTextView.setText(DailyTextUtils.getPriceFormat(mContext, stayOutbound.nightlyRate, false));
 
-        // 1박인 경우 전체가격과 1박가격이 같다.
-        if (stayOutbound.nightlyRate == stayOutbound.total)
-        {
-            holder.dataBinding.averageTextView.setVisibility(View.GONE);
-        } else
+        if (mNightsEnabled == true)
         {
             holder.dataBinding.averageTextView.setVisibility(View.VISIBLE);
+        } else
+        {
+            holder.dataBinding.averageTextView.setVisibility(View.GONE);
         }
 
         if (VersionUtils.isOverAPI16() == true)

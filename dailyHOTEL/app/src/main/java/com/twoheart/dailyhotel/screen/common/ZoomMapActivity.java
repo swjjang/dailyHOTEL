@@ -157,6 +157,15 @@ public class ZoomMapActivity extends BaseActivity
     }
 
     @Override
+    protected void onDestroy()
+    {
+        super.onDestroy();
+
+        DailyLocationFactory.getInstance(ZoomMapActivity.this).stopLocationMeasure();
+    }
+
+
+    @Override
     public void finish()
     {
         super.finish();
@@ -352,8 +361,6 @@ public class ZoomMapActivity extends BaseActivity
 
     private void searchMyLocation()
     {
-        lockUI();
-
         DailyLocationFactory.getInstance(this).startLocationMeasure(this, mMyLocationView, new DailyLocationFactory.LocationListenerEx()
         {
             @Override

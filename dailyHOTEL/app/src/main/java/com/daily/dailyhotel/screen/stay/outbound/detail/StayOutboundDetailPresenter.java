@@ -108,7 +108,6 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
     private StayOutboundRoom mSelectedRoom;
 
     private int mStatus = STATUS_NONE;
-    private PriceType mPriceType = PriceType.AVERAGE;
 
     private boolean mIsUsedMultiTransition, mCallFromMap;
     private boolean mIsDeepLink;
@@ -146,8 +145,6 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
         setStatus(STATUS_NONE);
 
         setRefresh(false);
-
-        mPriceType = PriceType.AVERAGE;
 
         Observable<Boolean> observable = getViewInterface().hideRoomList(false);
 
@@ -1232,7 +1229,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
                 {
                     for (StayOutboundRoom room : roomList)
                     {
-                        if (listViewPrice == room.nightly)
+                        if (listViewPrice == room.total)
                         {
                             hasPrice = true;
                             break;

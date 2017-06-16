@@ -557,11 +557,11 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
                 getViewInterface().hideMapLayout(getActivity().getSupportFragmentManager());
 
                 getViewInterface().setViewTypeOptionImage(ViewState.LIST);
+
+                unLockAll();
                 break;
             }
         }
-
-        unLockAll();
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
@@ -617,7 +617,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
             ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(), pair);
 
             startActivityForResult(StayOutboundDetailActivity.newInstance(getActivity(), stayOutbound.index//
-                , stayOutbound.name, imageUrl, stayOutbound.nightlyRate//
+                , stayOutbound.name, imageUrl, stayOutbound.total//
                 , mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
                 , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
                 , mPeople.numberOfAdults, mPeople.getChildAgeList(), true, mViewState == ViewState.MAP)//
@@ -625,7 +625,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
         } else
         {
             startActivityForResult(StayOutboundDetailActivity.newInstance(getActivity(), stayOutbound.index//
-                , stayOutbound.name, imageUrl, stayOutbound.nightlyRate//
+                , stayOutbound.name, imageUrl, stayOutbound.total//
                 , mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
                 , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
                 , mPeople.numberOfAdults, mPeople.getChildAgeList(), false, mViewState == ViewState.MAP)//
@@ -677,7 +677,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
     {
         getViewInterface().setStayOutboundMakeMarker(mStayOutboundList);
 
-
+        unLockAll();
     }
 
     @Override
@@ -968,7 +968,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
                 {
                     boolean isSortByDistance = mStayOutboundFilters != null && mStayOutboundFilters.sortType == StayOutboundFilters.SortType.DISTANCE;
 
-                    getViewInterface().setStayOutboundList(listItems, isSortByDistance);
+                    getViewInterface().setStayOutboundList(listItems, isSortByDistance, mStayBookDateTime.getNights() > 1);
                 } else
                 {
                     getViewInterface().addStayOutboundList(listItems);

@@ -10,6 +10,7 @@ import android.text.SpannableString;
 import android.view.View;
 
 import com.daily.base.BaseAnalyticsInterface;
+import com.daily.base.exception.BaseException;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.util.FontManager;
@@ -34,6 +35,7 @@ public class StayOutboundRefundPresenter extends BaseExceptionPresenter<StayOutb
     private StayOutboundRefundRemoteImpl mRefundRemoteImpl;
 
     private int mBookingIndex;
+    private String mTitle;
     private StayOutboundRefundDetail mStayOutboundRefundDetail;
 
     private String mCancelKey;
@@ -88,12 +90,15 @@ public class StayOutboundRefundPresenter extends BaseExceptionPresenter<StayOutb
             return false;
         }
 
+        mTitle = intent.getStringExtra(StayOutboundRefundActivity.INTENT_EXTRA_DATA_TITLE);
+
         return true;
     }
 
     @Override
     public void onPostCreate()
     {
+        getViewInterface().setToolbarTitle(mTitle);
     }
 
     @Override
@@ -236,7 +241,22 @@ public class StayOutboundRefundPresenter extends BaseExceptionPresenter<StayOutb
                                 @Override
                                 public void accept(@io.reactivex.annotations.NonNull Throwable throwable) throws Exception
                                 {
-                                    onHandleErrorAndFinish(throwable);
+                                    unLockAll();
+
+                                    if (throwable instanceof BaseException)
+                                    {
+                                        onRefundError((BaseException)throwable);
+                                    } else
+                                    {
+                                        getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.act_base_network_connect)//
+                                            , getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
+                                            {
+                                                @Override
+                                                public void onDismiss(DialogInterface dialog)
+                                                {
+                                                }
+                                            });
+                                    }
                                 }
                             }));
                         }
@@ -274,7 +294,23 @@ public class StayOutboundRefundPresenter extends BaseExceptionPresenter<StayOutb
                                 @Override
                                 public void accept(@io.reactivex.annotations.NonNull Throwable throwable) throws Exception
                                 {
-                                    onHandleErrorAndFinish(throwable);
+                                    unLockAll();
+
+                                    if (throwable instanceof BaseException)
+                                    {
+                                        onRefundError((BaseException)throwable);
+                                    } else
+                                    {
+                                        getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.act_base_network_connect)//
+                                            , getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
+                                            {
+                                                @Override
+                                                public void onDismiss(DialogInterface dialog)
+                                                {
+                                                    onBackClick();
+                                                }
+                                            });
+                                    }
                                 }
                             }));
                         }
@@ -346,5 +382,40 @@ public class StayOutboundRefundPresenter extends BaseExceptionPresenter<StayOutb
         }
 
         getViewInterface().setRefundDetail(mStayOutboundRefundDetail);
+    }
+
+    private void onRefundError(BaseException baseException)
+    {
+        unLockAll();
+
+        if (baseException == null)
+        {
+            getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.act_base_network_connect)//
+                , getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
+                {
+                    @Override
+                    public void onDismiss(DialogInterface dialog)
+                    {
+
+                    }
+                });
+        }
+
+        String message = baseException.getMessage();
+
+        switch (baseException.getCode())
+        {
+
+        }
+
+        getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2), message//
+            , getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
+            {
+                @Override
+                public void onDismiss(DialogInterface dialog)
+                {
+
+                }
+            });
     }
 }

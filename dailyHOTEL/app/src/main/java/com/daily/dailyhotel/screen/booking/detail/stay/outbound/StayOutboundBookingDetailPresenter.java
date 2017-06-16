@@ -22,7 +22,7 @@ import com.daily.base.util.FontManager;
 import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
 import com.daily.dailyhotel.entity.CommonDateTime;
-import com.daily.dailyhotel.entity.People;
+import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayOutboundBookingDetail;
 import com.daily.dailyhotel.repository.remote.BookingRemoteImpl;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
@@ -346,14 +346,15 @@ public class StayOutboundBookingDetailPresenter extends BaseExceptionPresenter<S
 
         try
         {
-            String checkInDateTime = DailyCalendar.convertDateFormatString(mStayOutboundBookingDetail.checkInDate, "yyyy-MM-dd", DailyCalendar.ISO_8601_FORMAT);
-            String checkOutDateTime = DailyCalendar.convertDateFormatString(mStayOutboundBookingDetail.checkOutDate, "yyyy-MM-dd", DailyCalendar.ISO_8601_FORMAT);
-
-            People people = mStayOutboundBookingDetail.getPeople();
+            StayBookDateTime stayBookDateTime = new StayBookDateTime();
+            stayBookDateTime.setCheckInDateTime(mCommonDateTime.currentDateTime, 7);
+            stayBookDateTime.setCheckOutDateTime(stayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT), 1);
 
             startActivityForResult(StayOutboundDetailActivity.newInstance(getActivity(), mStayOutboundBookingDetail.stayIndex//
-                , mStayOutboundBookingDetail.name, null, -1, checkInDateTime, checkOutDateTime//
-                , people.numberOfAdults, people.getChildAgeList(), false, true), StayOutboundBookingDetailActivity.REQUEST_CODE_DETAIL);
+                , mStayOutboundBookingDetail.name, null, -1//
+                , stayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
+                , stayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
+                , 2, null, false, false), StayOutboundBookingDetailActivity.REQUEST_CODE_DETAIL);
 
             getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
         } catch (Exception e)
@@ -391,8 +392,13 @@ public class StayOutboundBookingDetailPresenter extends BaseExceptionPresenter<S
         switch (mStayOutboundBookingDetail.refundStatus)
         {
             case FULL:
+                startActivityForResult(StayOutboundRefundActivity.newInstance(getActivity()//
+                    , mBookingIndex, getString(R.string.label_request_free_refund))//
+                    , StayOutboundBookingDetailActivity.REQUEST_CODE_REFUND);
+                break;
             case PARTIAL:
-                startActivityForResult(StayOutboundRefundActivity.newInstance(getActivity(), mBookingIndex)//
+                startActivityForResult(StayOutboundRefundActivity.newInstance(getActivity()//
+                    , mBookingIndex, getString(R.string.label_contact_request_refund))//
                     , StayOutboundBookingDetailActivity.REQUEST_CODE_REFUND);
                 break;
 

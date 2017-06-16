@@ -683,13 +683,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
 
                     if (throwable instanceof BaseException)
                     {
-                        // 팝업 에러 보여주기
-                        BaseException baseException = (BaseException) throwable;
-
-                        switch (baseException.getCode())
-                        {
-
-                        }
+                        onPaymentError((BaseException)throwable);
                     } else
                     {
                         getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.act_base_network_connect)//
@@ -728,13 +722,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
 
                         if (throwable instanceof BaseException)
                         {
-                            // 팝업 에러 보여주기
-                            BaseException baseException = (BaseException) throwable;
-
-                            switch (baseException.getCode())
-                            {
-
-                            }
+                            onPaymentError((BaseException)throwable);
                         } else
                         {
                             getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.act_base_network_connect)//
@@ -824,7 +812,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
             ExLog.d(e.toString());
         }
 
-        getViewInterface().setRefundDescriptionList(mStayOutboundPayment.getRefundDescriptionList());
+        getViewInterface().setNonRefundableDescription(mStayOutboundPayment.nonRefundableDescription);
     }
 
     private void setStayOutboundPayment(StayOutboundPayment stayOutboundPayment)
@@ -1122,12 +1110,12 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
                     @Override
                     public void onDismiss(DialogInterface dialog)
                     {
-                        onBackClick();
+
                     }
                 });
         }
 
-        String message = null;
+        String message = baseException.getMessage();
 
         switch (baseException.getCode())
         {
@@ -1140,7 +1128,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
                 @Override
                 public void onDismiss(DialogInterface dialog)
                 {
-                    onBackClick();
+
                 }
             });
     }
