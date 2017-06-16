@@ -49,8 +49,6 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
     private Suggest mSuggest;
     private People mPeople;
 
-    private StayOutboundFilters mStayOutboundFilters;
-
     public interface StayOutboundSearchAnalyticsInterface extends BaseAnalyticsInterface
     {
     }

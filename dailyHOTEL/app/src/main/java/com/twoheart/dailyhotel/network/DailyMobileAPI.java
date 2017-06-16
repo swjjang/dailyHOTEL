@@ -1381,12 +1381,12 @@ public class DailyMobileAPI implements IDailyNetwork
             , jsonObject).subscribeOn(Schedulers.io());
     }
 
-    public Observable<BaseListDto<CardData>> getSimpleCardList()
+    public Observable<BaseListDto<CardData>> getEasyCardList()
     {
         final String API = Constants.UNENCRYPTED_URL ? "api/user/session/billing/card/info"//
             : "NDIkOCQ1NSQ4NyQ4NyQ4MCQxMzIkOTIkMTMwJDU2JDE2JDQyJDY4JDU5JDEzMCQ3MyQ=$QzdFNkE5NNjgzM0JIFMjZFRjlCQjY4OEQ3NkI5NDdDKRjUMxNDkzNTk1MTBWjkzQkE5NELNDNQ0RFOENGRDAwMGEE5MTE3UARDYFGQjEzMzMxRjVDMDA2MjVEQzBGMTgxREYJGNDMK3MTGI2$";
 
-        return mDailyMobileService.getSimpleCardList(Crypto.getUrlDecoderEx(API)).subscribeOn(Schedulers.io());
+        return mDailyMobileService.getEasyCardList(Crypto.getUrlDecoderEx(API)).subscribeOn(Schedulers.io());
     }
 
     public Observable<BaseDto<UserInformationData>> getUserInformationForPayment()

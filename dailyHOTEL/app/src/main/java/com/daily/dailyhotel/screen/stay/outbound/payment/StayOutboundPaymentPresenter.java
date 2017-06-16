@@ -362,7 +362,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
 
         addCompositeDisposable(Observable.zip(mPaymentRemoteImpl.getStayOutboundPayment(mStayBookDateTime, mStayIndex//
             , mRateCode, mRateKey, mRoomTypeCode, mRoomBedTypeId, mPeople)//
-            , mPaymentRemoteImpl.getSimpleCardList(), mProfileRemoteImpl.getUserInformation()//
+            , mPaymentRemoteImpl.getEasyCardList(), mProfileRemoteImpl.getUserInformation()//
             , new Function3<StayOutboundPayment, List<Card>, UserInformation, Boolean>()
             {
                 @Override
@@ -1145,7 +1145,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
     {
         screenLock(true);
 
-        addCompositeDisposable(mPaymentRemoteImpl.getSimpleCardList().subscribe(consumer, new Consumer<Throwable>()
+        addCompositeDisposable(mPaymentRemoteImpl.getEasyCardList().subscribe(consumer, new Consumer<Throwable>()
         {
             @Override
             public void accept(@io.reactivex.annotations.NonNull Throwable throwable) throws Exception

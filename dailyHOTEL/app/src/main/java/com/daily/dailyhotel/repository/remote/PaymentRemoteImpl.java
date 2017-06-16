@@ -82,9 +82,9 @@ public class PaymentRemoteImpl implements PaymentInterface
     }
 
     @Override
-    public Observable<List<Card>> getSimpleCardList()
+    public Observable<List<Card>> getEasyCardList()
     {
-        return DailyMobileAPI.getInstance(mContext).getSimpleCardList().map(new Function<BaseListDto<CardData>, List<Card>>()
+        return DailyMobileAPI.getInstance(mContext).getEasyCardList().map(new Function<BaseListDto<CardData>, List<Card>>()
         {
             @Override
             public List<Card> apply(@io.reactivex.annotations.NonNull BaseListDto<CardData> cardDataBaseListDto) throws Exception
