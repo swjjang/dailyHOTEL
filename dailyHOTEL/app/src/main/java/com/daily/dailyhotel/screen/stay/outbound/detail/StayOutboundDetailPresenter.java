@@ -107,7 +107,6 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
     private StayOutboundRoom mSelectedRoom;
 
     private int mStatus = STATUS_NONE;
-    private PriceType mPriceType = PriceType.AVERAGE;
 
     private boolean mIsUsedMultiTransition, mCallFromMap;
     private boolean mIsDeepLink;
