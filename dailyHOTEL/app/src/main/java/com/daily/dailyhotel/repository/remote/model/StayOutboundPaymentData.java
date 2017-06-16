@@ -4,8 +4,6 @@ import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 import com.daily.dailyhotel.entity.StayOutboundPayment;
 
-import java.util.List;
-
 @JsonObject
 public class StayOutboundPaymentData
 {

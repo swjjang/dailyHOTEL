@@ -88,7 +88,7 @@ public class StayOutboundRefundDetailData
 
         List<Pair<String, String>> cancelReasonTypeList = new ArrayList<>();
 
-        if(reasons != null)
+        if (reasons != null)
         {
             for (ReasonType reasonType : reasons)
             {

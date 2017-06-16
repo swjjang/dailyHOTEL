@@ -245,7 +245,7 @@ public class StayOutboundRefundPresenter extends BaseExceptionPresenter<StayOutb
 
                                     if (throwable instanceof BaseException)
                                     {
-                                        onRefundError((BaseException)throwable);
+                                        onRefundError((BaseException) throwable);
                                     } else
                                     {
                                         getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.act_base_network_connect)//
@@ -298,7 +298,7 @@ public class StayOutboundRefundPresenter extends BaseExceptionPresenter<StayOutb
 
                                     if (throwable instanceof BaseException)
                                     {
-                                        onRefundError((BaseException)throwable);
+                                        onRefundError((BaseException) throwable);
                                     } else
                                     {
                                         getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.act_base_network_connect)//

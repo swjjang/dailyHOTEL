@@ -45,7 +45,7 @@ public abstract class BaseExceptionPresenter<T1 extends BaseActivity, T2 extends
                     @Override
                     public void onDismiss(DialogInterface dialog)
                     {
-                        if(getActivity().isFinishing() == true)
+                        if (getActivity().isFinishing() == true)
                         {
                             return;
                         }
@@ -94,7 +94,7 @@ public abstract class BaseExceptionPresenter<T1 extends BaseActivity, T2 extends
                     @Override
                     public void onDismiss(DialogInterface dialog)
                     {
-                        if(getActivity().isFinishing() == true)
+                        if (getActivity().isFinishing() == true)
                         {
                             return;
                         }

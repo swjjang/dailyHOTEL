@@ -380,8 +380,7 @@ public class RecentPlacesTabActivity extends BaseActivity
         }
     };
 
-    private RecentPlacesNetworkController.OnNetworkControllerListener mOnNetworkControllerListener
-        = new RecentPlacesNetworkController.OnNetworkControllerListener() //
+    private RecentPlacesNetworkController.OnNetworkControllerListener mOnNetworkControllerListener = new RecentPlacesNetworkController.OnNetworkControllerListener() //
     {
         @Override
         public void onCommonDateTime(TodayDateTime todayDateTime)
