@@ -11,7 +11,7 @@ public class StayOutboundPayment
     public String checkOutDate;
     public String checkOutTime;
     public boolean nonRefundable;
-    public List<String> nonRefundableDescription;
+    public String nonRefundableDescription;
     public int totalPrice;
     public int discountPrice;
     public double feeTotalAmountUsd;
@@ -23,16 +23,6 @@ public class StayOutboundPayment
     public StayOutboundPayment()
     {
 
-    }
-
-    public void setRefundDescriptionList(List<String> descriptionList)
-    {
-        nonRefundableDescription = descriptionList;
-    }
-
-    public List<String> getRefundDescriptionList()
-    {
-        return nonRefundableDescription;
     }
 
     public enum PaymentType

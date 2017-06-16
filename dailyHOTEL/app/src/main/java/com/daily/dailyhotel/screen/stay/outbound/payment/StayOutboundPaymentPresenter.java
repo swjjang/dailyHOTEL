@@ -824,7 +824,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
             ExLog.d(e.toString());
         }
 
-        getViewInterface().setRefundDescriptionList(mStayOutboundPayment.getRefundDescriptionList());
+        getViewInterface().setNonRefundableDescription(mStayOutboundPayment.nonRefundableDescription);
     }
 
     private void setStayOutboundPayment(StayOutboundPayment stayOutboundPayment)

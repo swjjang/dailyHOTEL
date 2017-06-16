@@ -31,7 +31,7 @@ public class StayOutboundPaymentData
     public boolean nonRefundable;
 
     @JsonField(name = "nonRefundableDescriptions")
-    public List<String> nonRefundableDescriptions;
+    public String nonRefundableDescriptions;
 
     @JsonField(name = "total")
     public int total;
@@ -70,12 +70,7 @@ public class StayOutboundPaymentData
         stayOutboundPayment.checkOutDate = checkoutDate;
         stayOutboundPayment.checkOutTime = checkoutTime;
         stayOutboundPayment.nonRefundable = nonRefundable;
-
-        if (nonRefundable == true)
-        {
-            stayOutboundPayment.setRefundDescriptionList(nonRefundableDescriptions);
-        }
-
+        stayOutboundPayment.nonRefundableDescription = nonRefundableDescriptions;
         stayOutboundPayment.totalPrice = total;
         stayOutboundPayment.feeTotalAmountUsd = feeTotalAmountUsd;
         stayOutboundPayment.rateKey = rateKey;

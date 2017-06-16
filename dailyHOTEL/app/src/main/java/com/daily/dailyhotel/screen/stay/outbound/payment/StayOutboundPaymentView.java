@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.databinding.DataBindingUtil;
 import android.support.v4.view.MotionEventCompat;
 import android.text.Editable;
+import android.text.Html;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
@@ -266,14 +267,20 @@ public class StayOutboundPaymentView extends BaseDialogView<StayOutboundPaymentV
     }
 
     @Override
-    public void setRefundDescriptionList(List<String> refundDescriptionList)
+    public void setNonRefundableDescription(String nonRefundableDescription)
     {
-        if (refundDescriptionList == null || refundDescriptionList.size() == 0)
+        if (getViewDataBinding() == null || mRefundDataBinding == null)
+        {
+            return;
+        }
+
+        if (DailyTextUtils.isTextEmpty(nonRefundableDescription) == true)
         {
             mRefundDataBinding.getRoot().setVisibility(View.GONE);
         } else
         {
             mRefundDataBinding.getRoot().setVisibility(View.VISIBLE);
+            mRefundDataBinding.refundPolicyTextView.setText(Html.fromHtml(nonRefundableDescription));
         }
     }
 
