@@ -293,6 +293,28 @@ public class RecentStayListFragment extends RecentPlacesListFragment
         return index;
     }
 
+    private void setStayBookDateTime(String currentDateTime)
+    {
+        if (DailyTextUtils.isTextEmpty(currentDateTime) == true)
+        {
+            return;
+        }
+
+        if (mStayBookDateTime == null)
+        {
+            mStayBookDateTime = new StayBookDateTime();
+        }
+
+        try
+        {
+            mStayBookDateTime.setCheckInDateTime(currentDateTime);
+            mStayBookDateTime.setCheckOutDateTime(currentDateTime, 1);
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+        }
+    }
+
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     private void onStayItemClick(View view, PlaceViewItem placeViewItem)
     {
@@ -424,7 +446,7 @@ public class RecentStayListFragment extends RecentPlacesListFragment
 
             ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(), pairs);
 
-                mBaseActivity.startActivityForResult(StayOutboundDetailActivity.newInstance(getActivity(), stayOutbound.index//
+            mBaseActivity.startActivityForResult(StayOutboundDetailActivity.newInstance(getActivity(), stayOutbound.index//
                 , stayOutbound.name, imageUrl, stayOutbound.total//
                 , mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
                 , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
@@ -441,32 +463,17 @@ public class RecentStayListFragment extends RecentPlacesListFragment
 
             mBaseActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
         }
-    }
 
-    private void setStayBookDateTime(String currentDateTime)
-    {
-        if (DailyTextUtils.isTextEmpty(currentDateTime) == true)
-        {
-            return;
-        }
-
-        if (mStayBookDateTime == null)
-        {
-            mStayBookDateTime = new StayBookDateTime();
-        }
-
-        try
-        {
-            mStayBookDateTime.setCheckInDateTime(currentDateTime);
-            mStayBookDateTime.setCheckOutDateTime(currentDateTime, 1);
-        } catch (Exception e)
-        {
-            ExLog.e(e.toString());
-        }
+        AnalyticsManager.getInstance(mBaseActivity).recordEvent(//
+            AnalyticsManager.Category.NAVIGATION_, //
+            AnalyticsManager.Action.RECENT_VIEW_CLICKED, //
+            stayOutbound.name, null);
     }
 
     private void onStayItemLongClick(View view, int position, PlaceViewItem placeViewItem)
     {
+        mListLayout.setBlurVisibility(mBaseActivity, true);
+
         Stay stay = placeViewItem.getItem();
 
         mViewByLongPress = view;
@@ -480,6 +487,54 @@ public class RecentStayListFragment extends RecentPlacesListFragment
     private void onStayOutboundItemLongClick()
     {
         DailyToast.showToast(getActivity(), getString(R.string.label_stay_outbound_preparing_preview), DailyToast.LENGTH_SHORT);
+    }
+
+    private void onStayItemDeleteClick(PlaceViewItem placeViewItem)
+    {
+        if (placeViewItem == null)
+        {
+            return;
+        }
+
+        Place place = placeViewItem.getItem();
+        ExLog.d("isRemove : " + (place != null));
+
+        RecentlyPlaceUtil.deleteRecentlyItemAsync(RecentlyPlaceUtil.ServiceType.IB_STAY, place.index);
+
+        mListLayout.setData(mListLayout.getList(), mPlaceBookingDay);
+        mRecentPlaceListFragmentListener.onDeleteItemClickAnalytics();
+
+        AnalyticsManager.getInstance(mBaseActivity).recordEvent(//
+            AnalyticsManager.Category.NAVIGATION_, //
+            AnalyticsManager.Action.RECENT_VIEW_DELETE, //
+            place.name, null);
+
+        AnalyticsManager.getInstance(mBaseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION, //
+            AnalyticsManager.Action.RECENTVIEW_ITEM_DELETE, Integer.toString(place.index), null);
+    }
+
+    private void onStayOutboundItemDeleteClick(PlaceViewItem placeViewItem)
+    {
+        if (placeViewItem == null)
+        {
+            return;
+        }
+
+        StayOutbound stayOutbound = placeViewItem.getItem();
+        ExLog.d("isRemove : " + (stayOutbound != null));
+
+        RecentlyPlaceUtil.deleteRecentlyItemAsync(RecentlyPlaceUtil.ServiceType.OB_STAY, stayOutbound.index);
+
+        mListLayout.setData(mListLayout.getList(), mPlaceBookingDay);
+        mRecentPlaceListFragmentListener.onDeleteItemClickAnalytics();
+
+        AnalyticsManager.getInstance(mBaseActivity).recordEvent(//
+            AnalyticsManager.Category.NAVIGATION_, //
+            AnalyticsManager.Action.RECENT_VIEW_DELETE, //
+            stayOutbound.name, null);
+
+        AnalyticsManager.getInstance(mBaseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION, //
+            AnalyticsManager.Action.RECENTVIEW_ITEM_DELETE, Integer.toString(stayOutbound.index), null);
     }
 
     RecentPlacesListLayout.OnEventListener mEventListener = new RecentPlacesListLayout.OnEventListener()
@@ -518,9 +573,8 @@ public class RecentStayListFragment extends RecentPlacesListFragment
                 return;
             }
 
-            mListLayout.setBlurVisibility(mBaseActivity, true);
-
             PlaceViewItem placeViewItem = mListLayout.getItem(position);
+
             Object object = placeViewItem.getItem();
 
             if (object == null)
@@ -547,21 +601,20 @@ public class RecentStayListFragment extends RecentPlacesListFragment
             }
 
             PlaceViewItem placeViewItem = mListLayout.removeItem(position);
-            Place place = placeViewItem.getItem();
-            ExLog.d("isRemove : " + (place != null));
+            Object object = placeViewItem.getItem();
 
-            RecentlyPlaceUtil.deleteRecentlyItemAsync(RecentlyPlaceUtil.ServiceType.IB_STAY, place.index);
+            if (object == null)
+            {
+                return;
+            }
 
-            mListLayout.setData(mListLayout.getList(), mPlaceBookingDay);
-            mRecentPlaceListFragmentListener.onDeleteItemClickAnalytics();
-
-            AnalyticsManager.getInstance(mBaseActivity).recordEvent(//
-                AnalyticsManager.Category.NAVIGATION_, //
-                AnalyticsManager.Action.RECENT_VIEW_DELETE, //
-                place.name, null);
-
-            AnalyticsManager.getInstance(mBaseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION, //
-                AnalyticsManager.Action.RECENTVIEW_ITEM_DELETE, Integer.toString(place.index), null);
+            if (object instanceof Stay)
+            {
+                onStayItemDeleteClick(placeViewItem);
+            } else if (object instanceof StayOutbound)
+            {
+                onStayOutboundItemDeleteClick(placeViewItem);
+            }
         }
 
         @Override
@@ -594,11 +647,11 @@ public class RecentStayListFragment extends RecentPlacesListFragment
                 }
 
                 PlaceViewItem placeViewItem = list.get(i);
-                Place place = placeViewItem.getItem();
+                int index = getPlaceViewItemIndex(placeViewItem);
 
-                if (place != null)
+                if (index >= 0)
                 {
-                    stringBuilder.append(place.index);
+                    stringBuilder.append(index);
                 }
             }
 

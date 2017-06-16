@@ -110,7 +110,7 @@ public class RecentStayListAdapter extends RecentPlacesListAdapter
                 break;
 
             case PlaceViewItem.TYPE_OB_ENTRY:
-                onBindViewHolder((StayOutboundViewHolder) viewHolder, item);
+                onBindViewHolder((StayOutboundViewHolder) viewHolder, item, position);
                 break;
 
             case PlaceViewItem.TYPE_FOOTER_VIEW:
@@ -265,7 +265,7 @@ public class RecentStayListAdapter extends RecentPlacesListAdapter
         }
     }
 
-    private void onBindViewHolder(StayOutboundViewHolder holder, PlaceViewItem placeViewItem)
+    private void onBindViewHolder(StayOutboundViewHolder holder, PlaceViewItem placeViewItem, int position)
     {
         if (holder == null || placeViewItem == null)
         {
@@ -374,6 +374,20 @@ public class RecentStayListAdapter extends RecentPlacesListAdapter
         holder.dataBinding.promoTextView.setVisibility(View.GONE);
         holder.dataBinding.dot1View.setVisibility(View.GONE);
         holder.dataBinding.distanceTextView.setVisibility(View.GONE);
+
+        holder.dataBinding.deleteView.setVisibility(View.VISIBLE);
+        holder.dataBinding.deleteView.setTag(position);
+        holder.dataBinding.deleteView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                if (mListener != null)
+                {
+                    mListener.onDeleteClick(v, (Integer) v.getTag());
+                }
+            }
+        });
     }
 
 
