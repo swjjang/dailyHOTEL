@@ -7,14 +7,19 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.SharedElementCallback;
+import android.support.v4.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
+import com.daily.base.util.ScreenUtils;
+import com.daily.base.widget.DailyToast;
+import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayOutbound;
 import com.daily.dailyhotel.entity.StayOutbounds;
+import com.daily.dailyhotel.screen.stay.outbound.detail.StayOutboundDetailActivity;
 import com.daily.dailyhotel.util.RecentlyPlaceUtil;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.twoheart.dailyhotel.R;
@@ -29,6 +34,7 @@ import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.screen.hotel.detail.StayDetailActivity;
 import com.twoheart.dailyhotel.screen.hotel.preview.StayPreviewActivity;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
@@ -52,6 +58,10 @@ import io.reactivex.functions.Consumer;
 
 public class RecentStayListFragment extends RecentPlacesListFragment
 {
+    private static final int REQUEST_CODE_DETAIL = 10000;
+
+    private StayBookDateTime mStayBookDateTime;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
@@ -73,6 +83,8 @@ public class RecentStayListFragment extends RecentPlacesListFragment
             stayBookingDay.setCheckOutDay(todayDateTime.dailyDateTime, 1);
 
             mPlaceBookingDay = stayBookingDay;
+
+            setStayBookDateTime(todayDateTime.currentDateTime);
         } catch (Exception e)
         {
             ExLog.e(e.toString());
@@ -216,7 +228,7 @@ public class RecentStayListFragment extends RecentPlacesListFragment
         {
             for (StayOutbound stayOutbound : stayOutboundList)
             {
-                list.add(new PlaceViewItem(PlaceViewItem.TYPE_ENTRY, stayOutbound));
+                list.add(new PlaceViewItem(PlaceViewItem.TYPE_OB_ENTRY, stayOutbound));
             }
         }
 
@@ -262,17 +274,212 @@ public class RecentStayListFragment extends RecentPlacesListFragment
         int index;
 
         Object object = placeViewItem.getItem();
+        if (object == null)
+        {
+            return -1;
+        }
+
         if (object instanceof Stay)
         {
             index = ((Stay) object).index;
         } else if (object instanceof StayOutbound)
         {
             index = ((StayOutbound) object).index;
-        } else {
+        } else
+        {
             index = -1;
         }
 
         return index;
+    }
+
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+    private void onStayItemClick(View view, PlaceViewItem placeViewItem)
+    {
+        if (view == null || placeViewItem == null)
+        {
+            return;
+        }
+
+        Stay stay = placeViewItem.getItem();
+
+        if (Util.isUsedMultiTransition() == true)
+        {
+            mBaseActivity.setExitSharedElementCallback(new SharedElementCallback()
+            {
+                @Override
+                public void onSharedElementEnd(List<String> sharedElementNames, List<View> sharedElements, List<View> sharedElementSnapshots)
+                {
+                    super.onSharedElementEnd(sharedElementNames, sharedElements, sharedElementSnapshots);
+
+                    for (View view : sharedElements)
+                    {
+                        if (view instanceof SimpleDraweeView)
+                        {
+                            view.setVisibility(View.VISIBLE);
+                            break;
+                        }
+                    }
+                }
+            });
+
+            Intent intent = StayDetailActivity.newInstance(mBaseActivity, (StayBookingDay) mPlaceBookingDay, stay, 0, true);
+
+            View simpleDraweeView = view.findViewById(R.id.imageView);
+            View gradeTextView = view.findViewById(R.id.gradeTextView);
+            View nameTextView = view.findViewById(R.id.nameTextView);
+            View gradientTopView = view.findViewById(R.id.gradientTopView);
+            View gradientBottomView = view.findViewById(R.id.gradientView);
+
+            ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(mBaseActivity,//
+                android.support.v4.util.Pair.create(simpleDraweeView, getString(R.string.transition_place_image)),//
+                android.support.v4.util.Pair.create(gradeTextView, getString(R.string.transition_place_grade)),//
+                android.support.v4.util.Pair.create(nameTextView, getString(R.string.transition_place_name)),//
+                android.support.v4.util.Pair.create(gradientTopView, getString(R.string.transition_gradient_top_view)),//
+                android.support.v4.util.Pair.create(gradientBottomView, getString(R.string.transition_gradient_bottom_view)));
+
+            mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL, options.toBundle());
+        } else
+        {
+            Intent intent = StayDetailActivity.newInstance(mBaseActivity, (StayBookingDay) mPlaceBookingDay, stay, 0, false);
+
+            mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL);
+
+            mBaseActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
+        }
+
+        AnalyticsManager.getInstance(mBaseActivity).recordEvent(//
+            AnalyticsManager.Category.NAVIGATION_, //
+            AnalyticsManager.Action.RECENT_VIEW_CLICKED, //
+            stay.name, null);
+
+        if (stay.truevr == true)
+        {
+            AnalyticsManager.getInstance(mBaseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                , AnalyticsManager.Action.STAY_ITEM_CLICK_TRUE_VR, Integer.toString(stay.index), null);
+        }
+    }
+
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+    private void onStayOutboundItemClick(View view, PlaceViewItem placeViewItem)
+    {
+        View simpleDraweeView = view.findViewById(R.id.imageView);
+        View nameTextView = view.findViewById(R.id.nameTextView);
+        View gradientTopView = view.findViewById(R.id.gradientTopView);
+        View gradientBottomView = view.findViewById(R.id.gradientView);
+
+        android.support.v4.util.Pair[] pairs = new Pair[4];
+        pairs[0] = android.support.v4.util.Pair.create(simpleDraweeView, getString(R.string.transition_place_image));
+        pairs[1] = android.support.v4.util.Pair.create(nameTextView, getString(R.string.transition_place_name));
+        pairs[2] = android.support.v4.util.Pair.create(gradientTopView, getString(R.string.transition_gradient_top_view));
+        pairs[3] = android.support.v4.util.Pair.create(gradientBottomView, getString(R.string.transition_gradient_bottom_view));
+
+        StayOutbound stayOutbound = placeViewItem.getItem();
+
+        if (stayOutbound == null)
+        {
+            return;
+        }
+
+        String imageUrl;
+        if (ScreenUtils.getScreenWidth(getActivity()) >= ScreenUtils.DEFAULT_STAYOUTBOUND_XXHDPI_WIDTH)
+        {
+            if (DailyTextUtils.isTextEmpty(stayOutbound.getImageMap().bigUrl) == false)
+            {
+                imageUrl = stayOutbound.getImageMap().bigUrl;
+            } else
+            {
+                imageUrl = stayOutbound.getImageMap().smallUrl;
+            }
+        } else
+        {
+            if (DailyTextUtils.isTextEmpty(stayOutbound.getImageMap().mediumUrl) == false)
+            {
+                imageUrl = stayOutbound.getImageMap().mediumUrl;
+            } else
+            {
+                imageUrl = stayOutbound.getImageMap().smallUrl;
+            }
+        }
+
+        if (Util.isUsedMultiTransition() == true && pairs != null)
+        {
+            getActivity().setExitSharedElementCallback(new SharedElementCallback()
+            {
+                @Override
+                public void onSharedElementEnd(List<String> sharedElementNames, List<View> sharedElements, List<View> sharedElementSnapshots)
+                {
+                    super.onSharedElementEnd(sharedElementNames, sharedElements, sharedElementSnapshots);
+
+                    for (View view : sharedElements)
+                    {
+                        if (view instanceof SimpleDraweeView)
+                        {
+                            view.setVisibility(View.VISIBLE);
+                            break;
+                        }
+                    }
+                }
+            });
+
+            ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(), pairs);
+
+                mBaseActivity.startActivityForResult(StayOutboundDetailActivity.newInstance(getActivity(), stayOutbound.index//
+                , stayOutbound.name, imageUrl, stayOutbound.total//
+                , mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
+                , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
+                , 2, null, true, false)//
+                , REQUEST_CODE_DETAIL, options.toBundle());
+        } else
+        {
+            mBaseActivity.startActivityForResult(StayOutboundDetailActivity.newInstance(getActivity(), stayOutbound.index//
+                , stayOutbound.name, imageUrl, stayOutbound.total//
+                , mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
+                , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
+                , 2, null, false, false)//
+                , REQUEST_CODE_DETAIL);
+
+            mBaseActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
+        }
+    }
+
+    private void setStayBookDateTime(String currentDateTime)
+    {
+        if (DailyTextUtils.isTextEmpty(currentDateTime) == true)
+        {
+            return;
+        }
+
+        if (mStayBookDateTime == null)
+        {
+            mStayBookDateTime = new StayBookDateTime();
+        }
+
+        try
+        {
+            mStayBookDateTime.setCheckInDateTime(currentDateTime);
+            mStayBookDateTime.setCheckOutDateTime(currentDateTime, 1);
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+        }
+    }
+
+    private void onStayItemLongClick(View view, int position, PlaceViewItem placeViewItem)
+    {
+        Stay stay = placeViewItem.getItem();
+
+        mViewByLongPress = view;
+        mPositionByLongPress = position;
+
+        Intent intent = StayPreviewActivity.newInstance(mBaseActivity, (StayBookingDay) mPlaceBookingDay, stay);
+
+        mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PREVIEW);
+    }
+
+    private void onStayOutboundItemLongClick()
+    {
+        DailyToast.showToast(getActivity(), getString(R.string.label_stay_outbound_preparing_preview), DailyToast.LENGTH_SHORT);
     }
 
     RecentPlacesListLayout.OnEventListener mEventListener = new RecentPlacesListLayout.OnEventListener()
@@ -287,62 +494,19 @@ public class RecentStayListFragment extends RecentPlacesListFragment
             }
 
             PlaceViewItem placeViewItem = mListLayout.getItem(position);
-            Stay stay = placeViewItem.getItem();
+            Object object = placeViewItem.getItem();
 
-            if (Util.isUsedMultiTransition() == true)
+            if (object == null)
             {
-                mBaseActivity.setExitSharedElementCallback(new SharedElementCallback()
-                {
-                    @Override
-                    public void onSharedElementEnd(List<String> sharedElementNames, List<View> sharedElements, List<View> sharedElementSnapshots)
-                    {
-                        super.onSharedElementEnd(sharedElementNames, sharedElements, sharedElementSnapshots);
-
-                        for (View view : sharedElements)
-                        {
-                            if (view instanceof SimpleDraweeView)
-                            {
-                                view.setVisibility(View.VISIBLE);
-                                break;
-                            }
-                        }
-                    }
-                });
-
-                Intent intent = StayDetailActivity.newInstance(mBaseActivity, (StayBookingDay) mPlaceBookingDay, stay, 0, true);
-
-                View simpleDraweeView = view.findViewById(R.id.imageView);
-                View gradeTextView = view.findViewById(R.id.gradeTextView);
-                View nameTextView = view.findViewById(R.id.nameTextView);
-                View gradientTopView = view.findViewById(R.id.gradientTopView);
-                View gradientBottomView = view.findViewById(R.id.gradientView);
-
-                ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(mBaseActivity,//
-                    android.support.v4.util.Pair.create(simpleDraweeView, getString(R.string.transition_place_image)),//
-                    android.support.v4.util.Pair.create(gradeTextView, getString(R.string.transition_place_grade)),//
-                    android.support.v4.util.Pair.create(nameTextView, getString(R.string.transition_place_name)),//
-                    android.support.v4.util.Pair.create(gradientTopView, getString(R.string.transition_gradient_top_view)),//
-                    android.support.v4.util.Pair.create(gradientBottomView, getString(R.string.transition_gradient_bottom_view)));
-
-                mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL, options.toBundle());
-            } else
-            {
-                Intent intent = StayDetailActivity.newInstance(mBaseActivity, (StayBookingDay) mPlaceBookingDay, stay, 0, false);
-
-                mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL);
-
-                mBaseActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
+                return;
             }
 
-            AnalyticsManager.getInstance(mBaseActivity).recordEvent(//
-                AnalyticsManager.Category.NAVIGATION_, //
-                AnalyticsManager.Action.RECENT_VIEW_CLICKED, //
-                stay.name, null);
-
-            if (stay.truevr == true)
+            if (object instanceof Stay)
             {
-                AnalyticsManager.getInstance(mBaseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION//
-                    , AnalyticsManager.Action.STAY_ITEM_CLICK_TRUE_VR, Integer.toString(stay.index), null);
+                onStayItemClick(view, placeViewItem);
+            } else if (object instanceof StayOutbound)
+            {
+                onStayOutboundItemClick(view, placeViewItem);
             }
         }
 
@@ -357,14 +521,20 @@ public class RecentStayListFragment extends RecentPlacesListFragment
             mListLayout.setBlurVisibility(mBaseActivity, true);
 
             PlaceViewItem placeViewItem = mListLayout.getItem(position);
-            Stay stay = placeViewItem.getItem();
+            Object object = placeViewItem.getItem();
 
-            mViewByLongPress = view;
-            mPositionByLongPress = position;
+            if (object == null)
+            {
+                return;
+            }
 
-            Intent intent = StayPreviewActivity.newInstance(mBaseActivity, (StayBookingDay) mPlaceBookingDay, stay);
-
-            mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PREVIEW);
+            if (object instanceof Stay)
+            {
+                onStayItemLongClick(view, position, placeViewItem);
+            } else if (object instanceof StayOutbound)
+            {
+                onStayOutboundItemLongClick();
+            }
         }
 
         @Override
