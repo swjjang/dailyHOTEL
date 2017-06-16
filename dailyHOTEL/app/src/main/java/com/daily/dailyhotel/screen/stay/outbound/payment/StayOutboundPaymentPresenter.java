@@ -29,6 +29,7 @@ import com.daily.dailyhotel.repository.remote.ProfileRemoteImpl;
 import com.daily.dailyhotel.screen.common.call.CallDialogActivity;
 import com.daily.dailyhotel.screen.stay.outbound.thankyou.StayOutboundThankYouActivity;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.screen.common.StayOutboundPaymentWebActivity;
 import com.twoheart.dailyhotel.screen.mydaily.creditcard.CreditCardListActivity;
 import com.twoheart.dailyhotel.screen.mydaily.creditcard.RegisterCreditCardActivity;
 import com.twoheart.dailyhotel.screen.mydaily.member.InputMobileNumberDialogActivity;
@@ -37,6 +38,9 @@ import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.DailyUserPreference;
 import com.twoheart.dailyhotel.widget.CustomFontTypefaceSpan;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -683,7 +687,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
 
                     if (throwable instanceof BaseException)
                     {
-                        onPaymentError((BaseException)throwable);
+                        onPaymentError((BaseException) throwable);
                     } else
                     {
                         getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.act_base_network_connect)//
@@ -722,7 +726,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
 
                         if (throwable instanceof BaseException)
                         {
-                            onPaymentError((BaseException)throwable);
+                            onPaymentError((BaseException) throwable);
                         } else
                         {
                             getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.act_base_network_connect)//
@@ -740,18 +744,123 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
                 }
 
                 case CARD:
+                {
+                    final String PAYMENT_TYPE = "CREDIT_CARD";
+
+                    JSONObject jsonObject = getPaymentJSONObject(PAYMENT_TYPE, mStayBookDateTime, mStayIndex//
+                        , mRateCode, mRateKey, mRoomTypeCode, mRoomBedTypeId, mPeople//
+                        , mBonusSelected, mGuest, mStayOutboundPayment.totalPrice);
+
+                    startActivityForResult(StayOutboundPaymentWebActivity.newInstance(getActivity(), mStayIndex, "card", jsonObject.toString())//
+                        , StayOutboundPaymentActivity.REQUEST_CODE_PAYMENT_WEB_CARD);
                     break;
+                }
 
                 case PHONE_PAY:
+                {
+                    final String PAYMENT_TYPE = "MOBILE";
 
-                    // 테스트
-                    startActivityForResult(StayOutboundThankYouActivity.newInstance(getActivity(), mStayIndex, mStayName, mImageUrl, mStayOutboundPayment.totalPrice//
-                        , mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
-                        , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
-                        , mStayOutboundPayment.checkInTime, mStayOutboundPayment.checkOutTime, mRoomType, -1), StayOutboundPaymentActivity.REQUEST_CODE_THANK_YOU);
+                    JSONObject jsonObject = getPaymentJSONObject(PAYMENT_TYPE, mStayBookDateTime, mStayIndex//
+                        , mRateCode, mRateKey, mRoomTypeCode, mRoomBedTypeId, mPeople//
+                        , mBonusSelected, mGuest, mStayOutboundPayment.totalPrice);
+
+                    startActivityForResult(StayOutboundPaymentWebActivity.newInstance(getActivity(), mStayIndex, "mobile", jsonObject.toString())//
+                        , StayOutboundPaymentActivity.REQUEST_CODE_PAYMENT_WEB_PHONE);
                     break;
+                }
             }
         }
+    }
+
+    private JSONObject getPaymentJSONObject(String paymentType, StayBookDateTime stayBookDateTime, int index//
+        , String rateCode, String rateKey, String roomTypeCode, int roomBedTypeId, People people//
+        , boolean usedBonus, Guest guest, int totalPrice)
+    {
+        JSONObject jsonObject = new JSONObject();
+
+        final int NUMBER_OF_ROOMS = 1;
+
+        try
+        {
+            jsonObject.put("arrivalDate", stayBookDateTime.getCheckInDateTime("yyyy-MM-dd"));
+            jsonObject.put("departureDate", stayBookDateTime.getCheckOutDateTime("yyyy-MM-dd"));
+            jsonObject.put("numberOfRooms", NUMBER_OF_ROOMS);
+            jsonObject.put("rooms", getRooms(new People[]{people}, new int[]{roomBedTypeId}));
+            jsonObject.put("rateCode", rateCode);
+            jsonObject.put("rateKey", rateKey);
+            jsonObject.put("roomTypeCode", roomTypeCode);
+
+            if (usedBonus == true)
+            {
+                int bonus = guest.bonus > totalPrice ? totalPrice : guest.bonus;
+
+                jsonObject.put("bonusAmount", bonus);
+            }
+
+            jsonObject.put("firstName", guest.firstName);
+            jsonObject.put("lastName", guest.lastName);
+            jsonObject.put("email", guest.email);
+            jsonObject.put("phoneNumber", guest.phone.replace("-", ""));
+            jsonObject.put("paymentType", paymentType);
+            jsonObject.put("total", totalPrice);
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+
+            jsonObject = null;
+        }
+
+        return jsonObject;
+    }
+
+    private JSONArray getRooms(People[] peoples, int[] roomBedTypeIds)
+    {
+        JSONArray roomJSONArray = new JSONArray();
+
+        if (peoples == null || peoples.length == 0 || roomBedTypeIds == null || roomBedTypeIds.length == 0//
+            || peoples.length != roomBedTypeIds.length)
+        {
+            return roomJSONArray;
+        }
+
+        try
+        {
+            int length = peoples.length;
+
+            for (int i = 0; i < length; i++)
+            {
+                JSONObject roomJSONObject = new JSONObject();
+
+                roomJSONObject.put("numberOfAdults", peoples[i].numberOfAdults);
+                roomJSONObject.put("roomBedTypeId", roomBedTypeIds[i]);
+
+                List<Integer> childAgeList = peoples[i].getChildAgeList();
+
+                if (childAgeList != null && childAgeList.size() > 0)
+                {
+                    JSONArray childJSONArray = new JSONArray();
+
+                    for (int age : childAgeList)
+                    {
+                        childJSONArray.put(Integer.toString(age));
+                    }
+
+                    roomJSONObject.put("numberOfChildren", childAgeList.size());
+                    roomJSONObject.put("childAges", childJSONArray);
+                } else
+                {
+                    roomJSONObject.put("numberOfChildren", 0);
+                    roomJSONObject.put("childAges", null);
+                }
+
+                roomJSONArray.put(roomJSONObject);
+            }
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+        }
+
+        return roomJSONArray;
     }
 
     private void onBookingInformation(StayOutboundPayment stayOutboundPayment, StayBookDateTime stayBookDateTime)
