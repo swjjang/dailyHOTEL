@@ -144,8 +144,8 @@
             android:id="@+id/stampClickLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:minHeight="87dp"
             android:background="@color/white"
+            android:minHeight="87dp"
             android:paddingLeft="15dp"
             android:paddingRight="15dp">
 
@@ -153,6 +153,7 @@
                 android:id="@+id/stampImageView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:src="@drawable/detail_ic_stamp"/>
 
@@ -160,8 +161,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="10dp"
-                android:layout_toRightOf="@+id/stampImageView"
+                android:layout_marginRight="10dp"
+                android:layout_toLeftOf="@id/stampImageView"
                 android:orientation="vertical">
 
                 <com.daily.base.widget.DailyTextView
