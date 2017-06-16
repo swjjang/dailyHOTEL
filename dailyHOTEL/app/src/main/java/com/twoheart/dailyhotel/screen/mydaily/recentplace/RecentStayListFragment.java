@@ -2,7 +2,6 @@ package com.twoheart.dailyhotel.screen.mydaily.recentplace;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -14,8 +13,6 @@ import android.view.ViewGroup;
 
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
-import com.daily.base.util.ScreenUtils;
-import com.daily.dailyhotel.entity.ImageMap;
 import com.daily.dailyhotel.entity.StayOutbound;
 import com.daily.dailyhotel.entity.StayOutbounds;
 import com.daily.dailyhotel.util.RecentlyPlaceUtil;
@@ -36,6 +33,8 @@ import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 
@@ -46,8 +45,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Consumer;
-import retrofit2.Call;
-import retrofit2.Response;
 
 /**
  * Created by android_sam on 2016. 10. 12..
@@ -114,7 +111,7 @@ public class RecentStayListFragment extends RecentPlacesListFragment
     @Override
     protected BaseNetworkController getNetworkController()
     {
-        return new RecentStayListNetworkController(mBaseActivity, mNetworkTag, mOnNetworkControllerListener);
+        return null;
     }
 
     @Override
@@ -171,8 +168,7 @@ public class RecentStayListFragment extends RecentPlacesListFragment
                 @Override
                 public ArrayList<PlaceViewItem> apply(@NonNull List<Stay> stays, @NonNull StayOutbounds stayOutbounds) throws Exception
                 {
-                    ArrayList<Stay> stayList = mergeStayList(stays, stayOutbounds);
-                    return mListLayout.makePlaceViewItemList(stayList);
+                    return makePlaceViewItemList(stays, stayOutbounds);
                 }
             }).subscribe(new Consumer<ArrayList<PlaceViewItem>>()
         {
@@ -198,139 +194,86 @@ public class RecentStayListFragment extends RecentPlacesListFragment
         }));
     }
 
-    private ArrayList<Stay> mergeStayList(List<Stay> stays, StayOutbounds stayOutbounds)
+    private ArrayList<PlaceViewItem> makePlaceViewItemList(List<Stay> stayList, StayOutbounds stayOutbounds)
     {
-        ArrayList<Stay> stayList = new ArrayList<>();
+        ArrayList<PlaceViewItem> list = new ArrayList<>();
 
-        if (stays != null)
+        if (stayList != null)
         {
-            stayList.addAll(stays);
+            for (Stay stay : stayList)
+            {
+                list.add(new PlaceViewItem(PlaceViewItem.TYPE_ENTRY, stay));
+            }
         }
 
-        List<StayOutbound> stayOutboundList = stayOutbounds.getStayOutbound();
-        if (stayOutboundList == null || stayOutboundList.size() == 0)
+        List<StayOutbound> stayOutboundList = null;
+        if (stayOutbounds != null)
         {
-            return stayList;
+            stayOutboundList = stayOutbounds.getStayOutbound();
         }
 
-        for (StayOutbound stayOutbound : stayOutboundList)
+        if (stayOutboundList != null)
         {
-            stayList.add(convertStay(mBaseActivity, stayOutbound));
+            for (StayOutbound stayOutbound : stayOutboundList)
+            {
+                list.add(new PlaceViewItem(PlaceViewItem.TYPE_ENTRY, stayOutbound));
+            }
         }
 
-        sortList(stayList, RecentlyPlaceUtil.ServiceType.IB_STAY, RecentlyPlaceUtil.ServiceType.OB_STAY);
+        if (list.size() == 0)
+        {
+            return list;
+        }
 
-        return stayList;
+        sortList(list);
+
+        list.add(new PlaceViewItem(PlaceViewItem.TYPE_FOOTER_VIEW, null));
+
+        return list;
     }
 
-    private Stay convertStay(Context context, StayOutbound stayOutbound)
+    private void sortList(ArrayList<PlaceViewItem> actualList)
     {
-        if (context == null || stayOutbound == null)
+        if (actualList == null || actualList.size() == 0)
         {
-            return null;
+            return;
         }
 
-        Stay stay = null;
-
-        try
+        ArrayList<Integer> expectedList = RecentlyPlaceUtil.getRecentlyIndexList(RecentlyPlaceUtil.ServiceType.IB_STAY, RecentlyPlaceUtil.ServiceType.OB_STAY);
+        if (expectedList == null || expectedList.size() == 0)
         {
-            stay = new Stay();
-            stay.name = stayOutbound.name;
-            stay.addressSummary = stayOutbound.locationDescription;
+            return;
+        }
 
-            // TODO 등급은 어찌?
-            stay.setGrade(Stay.Grade.etc); // stayOutbound.rating; // 숫자
-
-            stay.index = stayOutbound.index;
-            stay.latitude = stayOutbound.latitude;
-            stay.longitude = stayOutbound.longitude;
-            stay.isDailyChoice = false;
-            stay.satisfaction = (int) stayOutbound.tripAdvisorRating;
-            stay.distance = stayOutbound.distance;
-            stay.truevr = false;
-
-            ImageMap imageMap = stayOutbound.getImageMap();
-            String url;
-
-            if (ScreenUtils.getScreenWidth(context) >= ScreenUtils.DEFAULT_STAYOUTBOUND_XXHDPI_WIDTH)
+        Collections.sort(actualList, new Comparator<PlaceViewItem>()
+        {
+            @Override
+            public int compare(PlaceViewItem placeViewItem1, PlaceViewItem placeViewItem2)
             {
-                if (DailyTextUtils.isTextEmpty(imageMap.bigUrl) == true)
-                {
-                    url = imageMap.smallUrl;
-                } else
-                {
-                    url = imageMap.bigUrl;
-                }
-            } else
-            {
-                if (DailyTextUtils.isTextEmpty(imageMap.mediumUrl) == true)
-                {
-                    url = imageMap.smallUrl;
-                } else
-                {
-                    url = imageMap.mediumUrl;
-                }
+                Integer position1 = expectedList.indexOf(getPlaceViewItemIndex(placeViewItem1));
+                Integer position2 = expectedList.indexOf(getPlaceViewItemIndex(placeViewItem2));
+                return position1.compareTo(position2);
             }
-
-            stay.imageUrl = url;
-
-        } catch (Exception e)
-        {
-            ExLog.d(stayOutbound.index + " , " + stayOutbound.name + " , " + e.toString());
-        }
-
-        return stay;
-
+        });
     }
 
-    private RecentStayListNetworkController.OnNetworkControllerListener mOnNetworkControllerListener = new RecentStayListNetworkController.OnNetworkControllerListener()
+    private int getPlaceViewItemIndex(PlaceViewItem placeViewItem)
     {
-        @Override
-        public void onRecentStayList(ArrayList<Stay> list)
+        int index;
+
+        Object object = placeViewItem.getItem();
+        if (object instanceof Stay)
         {
-            unLockUI();
-
-            if (isFinishing() == true)
-            {
-                return;
-            }
-
-            sortList(list, RecentlyPlaceUtil.ServiceType.IB_STAY, RecentlyPlaceUtil.ServiceType.OB_STAY);
-
-            ArrayList<PlaceViewItem> viewItemList = mListLayout.makePlaceViewItemList(list);
-            mListLayout.setData(viewItemList, mPlaceBookingDay);
+            index = ((Stay) object).index;
+        } else if (object instanceof StayOutbound)
+        {
+            index = ((StayOutbound) object).index;
+        } else {
+            index = -1;
         }
 
-        @Override
-        public void onError(Call call, Throwable e, boolean onlyReport)
-        {
-            RecentStayListFragment.this.onError(call, e, onlyReport);
-        }
-
-        @Override
-        public void onError(Throwable e)
-        {
-            RecentStayListFragment.this.onError(e);
-        }
-
-        @Override
-        public void onErrorPopupMessage(int msgCode, String message)
-        {
-            RecentStayListFragment.this.onErrorPopupMessage(msgCode, message);
-        }
-
-        @Override
-        public void onErrorToastMessage(String message)
-        {
-            RecentStayListFragment.this.onErrorToastMessage(message);
-        }
-
-        @Override
-        public void onErrorResponse(Call call, Response response)
-        {
-            RecentStayListFragment.this.onErrorResponse(call, response);
-        }
-    };
+        return index;
+    }
 
     RecentPlacesListLayout.OnEventListener mEventListener = new RecentPlacesListLayout.OnEventListener()
     {
