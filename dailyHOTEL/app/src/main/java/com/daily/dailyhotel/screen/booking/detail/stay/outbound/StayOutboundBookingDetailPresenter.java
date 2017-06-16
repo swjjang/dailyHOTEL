@@ -22,7 +22,6 @@ import com.daily.base.util.FontManager;
 import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
 import com.daily.dailyhotel.entity.CommonDateTime;
-import com.daily.dailyhotel.entity.People;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayOutboundBookingDetail;
 import com.daily.dailyhotel.repository.remote.BookingRemoteImpl;
@@ -393,8 +392,13 @@ public class StayOutboundBookingDetailPresenter extends BaseExceptionPresenter<S
         switch (mStayOutboundBookingDetail.refundStatus)
         {
             case FULL:
+                startActivityForResult(StayOutboundRefundActivity.newInstance(getActivity()//
+                    , mBookingIndex, getString(R.string.label_request_free_refund))//
+                    , StayOutboundBookingDetailActivity.REQUEST_CODE_REFUND);
+                break;
             case PARTIAL:
-                startActivityForResult(StayOutboundRefundActivity.newInstance(getActivity(), mBookingIndex)//
+                startActivityForResult(StayOutboundRefundActivity.newInstance(getActivity()//
+                    , mBookingIndex, getString(R.string.label_contact_request_refund))//
                     , StayOutboundBookingDetailActivity.REQUEST_CODE_REFUND);
                 break;
 

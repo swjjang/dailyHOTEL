@@ -145,8 +145,6 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
 
         setRefresh(false);
 
-        mPriceType = PriceType.AVERAGE;
-
         Observable<Boolean> observable = getViewInterface().hideRoomList(false);
 
         if (observable != null)

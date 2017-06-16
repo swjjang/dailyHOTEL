@@ -33,6 +33,7 @@ import com.twoheart.dailyhotel.databinding.LayoutStayOutboundRefund02DataBinding
 import com.twoheart.dailyhotel.databinding.LayoutStayOutboundRefund03DataBinding;
 import com.twoheart.dailyhotel.databinding.LayoutStayOutboundRefundCancelReasonEtcDataBinding;
 import com.twoheart.dailyhotel.util.DailyCalendar;
+import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
 import java.util.List;
 import java.util.Locale;
@@ -40,6 +41,8 @@ import java.util.Locale;
 public class StayOutboundRefundView extends BaseDialogView<StayOutboundRefundView.OnEventListener, ActivityStayOutboundRefundDataBinding> //
     implements StayOutboundRefundInterface, View.OnClickListener
 {
+    private DailyToolbarLayout mDailyToolbarLayout;
+
     private LayoutStayOutboundRefund01DataBinding mRefund01DataBinding;
     private LayoutStayOutboundRefund02DataBinding mRefund02DataBinding;
     private LayoutStayOutboundRefund03DataBinding mRefund03DataBinding;
@@ -66,6 +69,8 @@ public class StayOutboundRefundView extends BaseDialogView<StayOutboundRefundVie
             return;
         }
 
+        initToolbar(viewDataBinding);
+
         mRefund01DataBinding = DataBindingUtil.inflate(LayoutInflater.from(getContext())//
             , R.layout.layout_stay_outbound_refund_01_data, viewDataBinding.scrollLayout, true);
 
@@ -82,6 +87,12 @@ public class StayOutboundRefundView extends BaseDialogView<StayOutboundRefundVie
     @Override
     public void setToolbarTitle(String title)
     {
+        if (mDailyToolbarLayout == null)
+        {
+            return;
+        }
+
+        mDailyToolbarLayout.setToolbarTitle(title);
     }
 
     @Override
@@ -326,7 +337,7 @@ public class StayOutboundRefundView extends BaseDialogView<StayOutboundRefundVie
         if (selectedDailyTextView == null)
         {
             dataBinding.positiveTextView.setEnabled(false);
-        }else
+        } else
         {
             selectedDailyTextView.performClick();
         }
@@ -385,6 +396,17 @@ public class StayOutboundRefundView extends BaseDialogView<StayOutboundRefundVie
         }
 
         mRefund03DataBinding.selectReasonCancelView.setText(reason);
+    }
+
+    private void initToolbar(ActivityStayOutboundRefundDataBinding viewDataBinding)
+    {
+        if (viewDataBinding == null)
+        {
+            return;
+        }
+
+        mDailyToolbarLayout = new DailyToolbarLayout(getContext(), viewDataBinding.toolbar.findViewById(R.id.toolbar));
+        mDailyToolbarLayout.initToolbar(null, v -> getEventListener().onBackClick());
     }
 
     private void setBookingInformation(Context context, LayoutStayOutboundRefund01DataBinding dataBinding, StayOutboundRefundDetail stayOutboundRefundDetail)
