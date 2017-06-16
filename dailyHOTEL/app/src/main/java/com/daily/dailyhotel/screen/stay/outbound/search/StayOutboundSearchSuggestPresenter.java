@@ -191,9 +191,6 @@ public class StayOutboundSearchSuggestPresenter extends BaseExceptionPresenter<S
 
         mSuggest = suggest;
 
-        // 검색어에 해당 내용을 넣어준다.
-        getViewInterface().setSuggest(suggest.display);
-
         Intent intent = new Intent();
         intent.putExtra(StayOutboundSearchSuggestActivity.INTENT_EXTRA_DATA_SUGGEST, new SuggestParcel(suggest));
 
