@@ -208,6 +208,7 @@ public class StayOutboundSearchSuggestView extends BaseDialogView<StayOutboundSe
             listItemList.add(new ListItem(ListItem.TYPE_SECTION, new Suggest(0, null)));
 
             mSuggestListAdapter.setAll(getViewDataBinding().keywordEditText.getText().toString(), listItemList);
+            mSuggestListAdapter.notifyDataSetChanged();
         }
     }
 

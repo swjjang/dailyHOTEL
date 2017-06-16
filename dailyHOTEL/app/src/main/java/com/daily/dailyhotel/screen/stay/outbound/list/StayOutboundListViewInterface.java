@@ -53,5 +53,7 @@ public interface StayOutboundListViewInterface extends BaseDialogViewInterface
 
     void setErrorScreenVisible(boolean visible);
 
+    void setEmptyScreenVisible(boolean visible);
+
     Observable<Long> getLocationAnimation();
 }

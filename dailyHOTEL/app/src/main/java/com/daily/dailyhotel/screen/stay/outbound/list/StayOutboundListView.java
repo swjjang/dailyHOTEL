@@ -549,6 +549,17 @@ public class StayOutboundListView extends BaseDialogView<StayOutboundListView.On
     }
 
     @Override
+    public void setEmptyScreenVisible(boolean visible)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        getViewDataBinding().emptyLayout.setVisibility(visible == true ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
     public Observable<Long> getLocationAnimation()
     {
         if (mStayOutboundMapFragment == null)
