@@ -609,6 +609,8 @@ public abstract class PlacePaymentActivity extends BaseActivity
 
     protected void showChangedValueDialog(int messageResId, OnDismissListener onDismissListener)
     {
+        unLockUI();
+
         if (onDismissListener == null)
         {
             onDismissListener = new OnDismissListener()

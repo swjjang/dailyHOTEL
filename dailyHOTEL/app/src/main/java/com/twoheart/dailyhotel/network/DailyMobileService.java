@@ -443,7 +443,7 @@ public interface DailyMobileService
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @POST("{mobileAPI}")
     Call<BaseDto<HomePlaces>> requestHomeRecentList(@Path(value = "mobileAPI", encoded = true) String mobileAPI,//
-                                                               @Body JSONObject jsonObject);
+                                                    @Body JSONObject jsonObject);
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET("{mobileAPI}")
@@ -611,7 +611,7 @@ public interface DailyMobileService
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @POST("{mobileAPI}")
-    Observable<BaseListDto<CardData>> getSimpleCardList(@Path(value = "mobileAPI", encoded = true) String mobileAPI);
+    Observable<BaseListDto<CardData>> getEasyCardList(@Path(value = "mobileAPI", encoded = true) String mobileAPI);
 
     @GET("{mobileAPI}")
     Observable<BaseDto<UserInformationData>> getUserInformationForPayment(@Path(value = "mobileAPI", encoded = true) String mobileAPI);
@@ -680,7 +680,7 @@ public interface DailyMobileService
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET("{mobileAPI}")
     Observable<BaseDto<StayListData>> getStayInboundList(@Path(value = "mobileAPI", encoded = true) String mobileAPI, //
-                                                      @QueryMap Map<String, Object> queryMap, //
-                                                      @Query("bedType") List<String> bedTypeList, //
-                                                      @Query("luxury") List<String> luxuryList);
+                                                         @QueryMap Map<String, Object> queryMap, //
+                                                         @Query("bedType") List<String> bedTypeList, //
+                                                         @Query("luxury") List<String> luxuryList);
 }

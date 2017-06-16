@@ -356,9 +356,9 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         mPlaceDetail = createPlaceDetail(intent);
 
         // 최근 본 업장 저장
-//        RecentPlaces recentPlaces = new RecentPlaces(this);
-//        recentPlaces.add(PlaceType.FNB, mPlaceDetail.index);
-//        recentPlaces.savePreference();
+        //        RecentPlaces recentPlaces = new RecentPlaces(this);
+        //        recentPlaces.add(PlaceType.FNB, mPlaceDetail.index);
+        //        recentPlaces.savePreference();
 
         String placeName = null;
         if (intent.hasExtra(NAME_INTENT_EXTRA_DATA_PLACENAME) == true)

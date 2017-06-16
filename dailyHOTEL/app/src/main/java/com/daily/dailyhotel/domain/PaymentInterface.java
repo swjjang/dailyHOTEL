@@ -18,7 +18,7 @@ public interface PaymentInterface
         , String rateCode, String rateKey, String roomTypeCode, int roomBedTypeId, People people);
 
     // 간편 결제 카드 리스트를 얻어온다.
-    Observable<List<Card>> getSimpleCardList();
+    Observable<List<Card>> getEasyCardList();
 
     Observable<PaymentResult> getPaymentTypeEasy(StayBookDateTime stayBookDateTime, int index//
         , String rateCode, String rateKey, String roomTypeCode, int roomBedTypeId, People people//

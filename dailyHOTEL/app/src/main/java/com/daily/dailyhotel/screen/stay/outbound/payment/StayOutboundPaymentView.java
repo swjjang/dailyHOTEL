@@ -43,7 +43,6 @@ import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.DailySignatureView;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
-import java.util.List;
 import java.util.Locale;
 
 public class StayOutboundPaymentView extends BaseDialogView<StayOutboundPaymentView.OnEventListener, ActivityStayOutboundPaymentDataBinding>//

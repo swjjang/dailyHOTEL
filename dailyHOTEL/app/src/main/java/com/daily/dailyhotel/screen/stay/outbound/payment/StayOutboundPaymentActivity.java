@@ -23,6 +23,8 @@ public class StayOutboundPaymentActivity extends BaseActivity<StayOutboundPaymen
     static final int REQUEST_CODE_REGISTER_PHONE_NUMBER = 10003;
     static final int REQUEST_CODE_CALL = 10004;
     static final int REQUEST_CODE_THANK_YOU = 10005;
+    static final int REQUEST_CODE_PAYMENT_WEB_CARD = 10006;
+    static final int REQUEST_CODE_PAYMENT_WEB_PHONE = 10007;
 
     static final String INTENT_EXTRA_DATA_STAY_INDEX = "stayIndex";
     static final String INTENT_EXTRA_DATA_STAY_NAME = "stayName";

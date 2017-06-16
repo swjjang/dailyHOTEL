@@ -32,7 +32,7 @@ public class StayOutboundFilterPresenter extends BaseExceptionPresenter<StayOutb
     private StayOutboundFilterAnalyticsInterface mAnalytics;
     private StayOutboundFilters mStayOutboundFilters;
     private StayOutboundFilters.SortType mPrevSortType;
-    private boolean[] mEnalbedLines;
+    private boolean[] mEnabledLines;
 
     private DailyLocationExFactory mDailyLocationExFactory;
 
@@ -90,7 +90,7 @@ public class StayOutboundFilterPresenter extends BaseExceptionPresenter<StayOutb
         }
 
         mStayOutboundFilters.rating = intent.getIntExtra(StayOutboundFilterActivity.INTENT_EXTRA_DATA_RATING, -1);
-        mEnalbedLines = intent.getBooleanArrayExtra(StayOutboundFilterActivity.INTENT_EXTRA_DATA_ENABLEDLINES);
+        mEnabledLines = intent.getBooleanArrayExtra(StayOutboundFilterActivity.INTENT_EXTRA_DATA_ENABLEDLINES);
 
         return true;
     }
@@ -100,7 +100,7 @@ public class StayOutboundFilterPresenter extends BaseExceptionPresenter<StayOutb
     {
         getViewInterface().setSort(mStayOutboundFilters.sortType);
         getViewInterface().setRating(mStayOutboundFilters.rating);
-        getViewInterface().setEnabledLines(mEnalbedLines);
+        getViewInterface().setEnabledLines(mEnabledLines);
     }
 
     @Override

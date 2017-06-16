@@ -1,7 +1,6 @@
 package com.daily.dailyhotel.screen.booking.detail.stay.outbound.receipt;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.databinding.DataBindingUtil;
 import android.text.Editable;
 import android.text.TextWatcher;

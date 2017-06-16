@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.View;
 
-import com.daily.base.util.ExLog;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.util.Constants;
 
@@ -151,8 +150,6 @@ public abstract class BaseFragment extends Fragment implements Constants
             return;
         }
 
-        ExLog.d("pinkred - lockUI : " + isShowProgress);
-
         baseActivity.lockUI(isShowProgress);
     }
 
@@ -164,8 +161,6 @@ public abstract class BaseFragment extends Fragment implements Constants
         {
             return;
         }
-
-        ExLog.d("pinkred - unLockUI");
 
         baseActivity.unLockUI();
     }

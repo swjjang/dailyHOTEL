@@ -97,15 +97,15 @@ public class StaySalesData
         stay.isSoldOut = isSoldOut;
         stay.satisfaction = rating;
         stay.districtName = districtName;
-//        stay.entryPosition;
+        //        stay.entryPosition;
         stay.truevr = isTrueVr;
-//        stay.stickerUrl;
-//        stay.stickerIndex;
+        //        stay.stickerUrl;
+        //        stay.stickerIndex;
 
         stay.dBenefitText = benefit;
         stay.distance = distance; // 정렬시에 보여주는 내용
         stay.categoryCode = categoryCode;
-//        stay.isLocalPlus;
+        //        stay.isLocalPlus;
 
         stay.setGrade(getStayGrade(grade));
         return stay;

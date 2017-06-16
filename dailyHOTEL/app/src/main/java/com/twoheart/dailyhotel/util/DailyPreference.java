@@ -6,10 +6,8 @@ import android.content.SharedPreferences.Editor;
 
 import com.crashlytics.android.Crashlytics;
 import com.daily.base.util.DailyTextUtils;
-import com.daily.dailyhotel.entity.Card;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.Setting;
-import com.twoheart.dailyhotel.model.CreditCard;
 import com.twoheart.dailyhotel.model.DailyCategoryType;
 import com.twoheart.dailyhotel.model.PlacePaymentInformation;
 
@@ -912,7 +910,6 @@ public class DailyPreference
     {
         return getValue(mPreferences, KEY_STAY_OUTBOUND_SEARCH_CALENDAR, true);
     }
-
 
 
     /////////////////////////////////////////////////////////////////////////////////////////

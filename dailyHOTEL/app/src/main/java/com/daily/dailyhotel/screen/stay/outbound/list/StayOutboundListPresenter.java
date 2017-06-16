@@ -209,7 +209,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
 
         if (isRefresh() == true)
         {
-            onRefreshAll(true);
+            retryClick();
         }
     }
 
@@ -778,6 +778,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
             return;
         }
 
+        getViewInterface().setEmptyScreenVisible(false);
         getViewInterface().setErrorScreenVisible(false);
         onRefreshAll(true);
     }

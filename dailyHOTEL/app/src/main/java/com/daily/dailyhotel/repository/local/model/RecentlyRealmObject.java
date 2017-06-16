@@ -15,6 +15,6 @@ public class RecentlyRealmObject extends RealmObject
     public long savingTime; // GMT+9 시간대 korea time
     public String name;
     public String englishName;
-//    public Province province;
+    //    public Province province;
     public String imageUrl;
 }

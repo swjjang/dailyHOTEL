@@ -72,7 +72,6 @@ public class GourmetPaymentWebActivity extends PlacePaymentWebActivity
         return gourmetPaymentInformation.getTicket().saleIdx;
     }
 
-    @Override
     protected void requestPostPaymentWebView(WebView webView //
         , PlacePaymentInformation placePaymentInformation, PlaceBookingDay placeBookingDay)
     {

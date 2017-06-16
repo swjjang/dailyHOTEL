@@ -110,7 +110,7 @@ public class RecentlyRemoteImpl implements RecentlyInterface
                         homePlaceList = homePlacesBaseDto.data.getHomePlaceList();
                         if (homePlaceList == null || homePlaceList.size() == 0)
                         {
-                           homePlaceList = new ArrayList<HomePlace>();
+                            homePlaceList = new ArrayList<HomePlace>();
                         }
                     } else
                     {
