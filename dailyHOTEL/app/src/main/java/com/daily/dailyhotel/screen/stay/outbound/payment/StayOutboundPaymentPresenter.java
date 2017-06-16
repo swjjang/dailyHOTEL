@@ -758,7 +758,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
 
                 case PHONE_PAY:
                 {
-                    final String PAYMENT_TYPE = "MOBILE";
+                    final String PAYMENT_TYPE = "MOBILE_PHONE";
 
                     JSONObject jsonObject = getPaymentJSONObject(PAYMENT_TYPE, mStayBookDateTime, mStayIndex//
                         , mRateCode, mRateKey, mRoomTypeCode, mRoomBedTypeId, mPeople//
