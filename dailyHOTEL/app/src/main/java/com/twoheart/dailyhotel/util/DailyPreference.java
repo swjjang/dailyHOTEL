@@ -180,6 +180,23 @@ public class DailyPreference
     private static final String KEY_REMOTE_CONFIG_STAY_OUTBOUND_PAYMENT_IS_CARD_ENABLED = "361";
     private static final String KEY_REMOTE_CONFIG_STAY_OUTBOUND_PAYMENT_IS_PHONE_ENABLED = "362";
 
+    // Static URL
+    private static final String KEY_REMOTE_CONFIG_STATIC_URL_PRIVACY = "370";
+    private static final String KEY_REMOTE_CONFIG_STATIC_URL_TERMS = "371";
+    private static final String KEY_REMOTE_CONFIG_STATIC_URL_ABOUT = "372";
+    private static final String KEY_REMOTE_CONFIG_STATIC_URL_LOCATION = "373";
+    private static final String KEY_REMOTE_CONFIG_STATIC_URL_CHILDPROTECT = "374";
+    private static final String KEY_REMOTE_CONFIG_STATIC_URL_BONUS = "375";
+    private static final String KEY_REMOTE_CONFIG_STATIC_URL_COUPON = "376";
+    private static final String KEY_REMOTE_CONFIG_STATIC_URL_PRODCOUPONNOTE = "377";
+    private static final String KEY_REMOTE_CONFIG_STATIC_URL_DEVCOUPONNOTE = "378";
+    private static final String KEY_REMOTE_CONFIG_STATIC_URL_FAQ = "379";
+    private static final String KEY_REMOTE_CONFIG_STATIC_URL_LICENSE = "380";
+    private static final String KEY_REMOTE_CONFIG_STATIC_URL_STAMP = "381";
+    private static final String KEY_REMOTE_CONFIG_STATIC_URL_REVIEW = "382";
+    private static final String KEY_REMOTE_CONFIG_STATIC_URL_LIFESTYLEPROJECT = "383";
+    private static final String KEY_REMOTE_CONFIG_STATIC_URL_DAILYSTAMPHOME = "384";
+
     /////////////////////////////////////////////////////////////////////////////////////////
     // New Key old --> v1
     /////////////////////////////////////////////////////////////////////////////////////////
@@ -1404,6 +1421,156 @@ public class DailyPreference
     public void setRemoteConfigStayOutboundPhonePaymentEnabled(boolean value)
     {
         setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_STAY_OUTBOUND_PAYMENT_IS_PHONE_ENABLED, value);
+    }
+
+    public void setKeyRemoteConfigStaticUrlPrivacy(String value)
+    {
+        setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_STATIC_URL_PRIVACY, value);
+    }
+
+    public String getKeyRemoteConfigStaticUrlPrivacy(String value)
+    {
+        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_STATIC_URL_PRIVACY, null);
+    }
+
+    public void setKeyRemoteConfigStaticUrlTerms(String value)
+    {
+        setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_STATIC_URL_TERMS, value);
+    }
+
+    public String getKeyRemoteConfigStaticUrlTerms(String value)
+    {
+        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_STATIC_URL_TERMS, null);
+    }
+
+    public void setKeyRemoteConfigStaticUrlAbout(String value)
+    {
+        setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_STATIC_URL_ABOUT, value);
+    }
+
+    public String getKeyRemoteConfigStaticUrlAbout(String value)
+    {
+        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_STATIC_URL_ABOUT, null);
+    }
+
+    public void setKeyRemoteConfigStaticUrlLocation(String value)
+    {
+        setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_STATIC_URL_LOCATION, value);
+    }
+
+    public String getKeyRemoteConfigStaticUrlLocation(String value)
+    {
+        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_STATIC_URL_LOCATION, null);
+    }
+
+    public void setKeyRemoteConfigStaticUrlChildProtect(String value)
+    {
+        setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_STATIC_URL_CHILDPROTECT, value);
+    }
+
+    public String getKeyRemoteConfigStaticUrlChildProtect(String value)
+    {
+        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_STATIC_URL_CHILDPROTECT, null);
+    }
+
+    public void setKeyRemoteConfigStaticUrlBonus(String value)
+    {
+        setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_STATIC_URL_BONUS, value);
+    }
+
+    public String getKeyRemoteConfigStaticUrlBonus(String value)
+    {
+        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_STATIC_URL_BONUS, null);
+    }
+
+    public void setKeyRemoteConfigStaticUrlCoupon(String value)
+    {
+        setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_STATIC_URL_COUPON, value);
+    }
+
+    public String getKeyRemoteConfigStaticUrlCoupon(String value)
+    {
+        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_STATIC_URL_COUPON, null);
+    }
+
+    public void setKeyRemoteConfigStaticUrlProdCouponNote(String value)
+    {
+        setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_STATIC_URL_PRODCOUPONNOTE, value);
+    }
+
+    public String getKeyRemoteConfigStaticUrlProdCouponNote(String value)
+    {
+        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_STATIC_URL_PRODCOUPONNOTE, null);
+    }
+
+    public void setKeyRemoteConfigStaticUrlDevCouponNote(String value)
+    {
+        setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_STATIC_URL_DEVCOUPONNOTE, value);
+    }
+
+    public String getKeyRemoteConfigStaticUrlDevCouponNote(String value)
+    {
+        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_STATIC_URL_DEVCOUPONNOTE, null);
+    }
+
+    public void setKeyRemoteConfigStaticUrlFaq(String value)
+    {
+        setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_STATIC_URL_FAQ, value);
+    }
+
+    public String getKeyRemoteConfigStaticUrlFaq(String value)
+    {
+        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_STATIC_URL_FAQ, null);
+    }
+
+    public void setKeyRemoteConfigStaticUrlLicense(String value)
+    {
+        setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_STATIC_URL_LICENSE, value);
+    }
+
+    public String getKeyRemoteConfigStaticUrlLicense(String value)
+    {
+        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_STATIC_URL_LICENSE, null);
+    }
+
+    public void setKeyRemoteConfigStaticUrlStamp(String value)
+    {
+        setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_STATIC_URL_STAMP, value);
+    }
+
+    public String getKeyRemoteConfigStaticUrlStamp(String value)
+    {
+        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_STATIC_URL_STAMP, null);
+    }
+
+    public void setKeyRemoteConfigStaticUrlReview(String value)
+    {
+        setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_STATIC_URL_REVIEW, value);
+    }
+
+    public String getKeyRemoteConfigStaticUrlReview(String value)
+    {
+        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_STATIC_URL_REVIEW, null);
+    }
+
+    public void setKeyRemoteConfigStaticUrlLifeStyleProject(String value)
+    {
+        setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_STATIC_URL_LIFESTYLEPROJECT, value);
+    }
+
+    public String getKeyRemoteConfigStaticUrlLifeStyleProject(String value)
+    {
+        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_STATIC_URL_LIFESTYLEPROJECT, null);
+    }
+
+    public void setKeyRemoteConfigStaticUrlDailyStampHome(String value)
+    {
+        setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_STATIC_URL_DAILYSTAMPHOME, value);
+    }
+
+    public String getKeyRemoteConfigStaticUrlDailyStampHome(String value)
+    {
+        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_STATIC_URL_DAILYSTAMPHOME, null);
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////

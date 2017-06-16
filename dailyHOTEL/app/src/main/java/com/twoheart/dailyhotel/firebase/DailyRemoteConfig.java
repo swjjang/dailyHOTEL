@@ -134,6 +134,7 @@ public class DailyRemoteConfig
         String androidHomeEventDefaultLink = mFirebaseRemoteConfig.getString("androidHomeEventDefaultLink");
         String androidStamp2 = mFirebaseRemoteConfig.getString("androidStamp2");
         String androidBoutiqueBM = mFirebaseRemoteConfig.getString("androidBoutiqueBM");
+        String androidStaticUrl = mFirebaseRemoteConfig.getString("androidStaticUrl");
 
         if (Constants.DEBUG == true)
         {
@@ -148,6 +149,7 @@ public class DailyRemoteConfig
                 ExLog.d("androidHomeEventDefaultLink : " + new JSONObject(androidHomeEventDefaultLink).toString());
                 ExLog.d("androidStamp2 : " + new JSONObject(androidStamp2).toString());
                 ExLog.d("androidBoutiqueBM : " + new JSONObject(androidBoutiqueBM).toString());
+                ExLog.d("androidStaticUrl : " + new JSONObject(androidStaticUrl).toString());
             } catch (Exception e)
             {
                 ExLog.d(e.toString());
@@ -203,6 +205,9 @@ public class DailyRemoteConfig
 
         // boutique BM - test BM
         writeBoutiqueBM(mContext, androidBoutiqueBM);
+
+        // androidStaticUrl
+        writeStaticUrl(mContext, androidStaticUrl);
 
         if (listener != null)
         {
@@ -541,6 +546,54 @@ public class DailyRemoteConfig
 
             DailyPreference.getInstance(context).setRemoteConfigBoutiqueBMEnabled(enabled);
 
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+        }
+    }
+
+    void writeStaticUrl(Context context, String jsonString)
+    {
+        if (context == null || DailyTextUtils.isTextEmpty(jsonString) == true)
+        {
+            return;
+        }
+
+        try
+        {
+            JSONObject jsonObject = new JSONObject(jsonString);
+
+            String privacyUrl = jsonObject.getString("privacy");
+            String termsUrl = jsonObject.getString("terms");
+            String aboutUrl = jsonObject.getString("about");
+            String locationUrl = jsonObject.getString("location");
+            String childProtectUrl = jsonObject.getString("childProtect");
+            String bonusUrl = jsonObject.getString("bonus");
+            String couponUrl = jsonObject.getString("coupon");
+            String prodCouponNoteUrl = jsonObject.getString("prodCouponNote");
+            String devCouponNoteUrl = jsonObject.getString("devCouponNote");
+            String faqUrl = jsonObject.getString("faq");
+            String licenseUrl = jsonObject.getString("license");
+            String stampUrl = jsonObject.getString("stamp");
+            String reviewUrl = jsonObject.getString("review");
+            String lifeStyleProjectUrl = jsonObject.getString("lifeStyleProject");
+            String dailyStampHomeUrl = jsonObject.getString("dailyStampHome");
+
+            DailyPreference.getInstance(context).setKeyRemoteConfigStaticUrlPrivacy(privacyUrl);
+            DailyPreference.getInstance(context).setKeyRemoteConfigStaticUrlTerms(termsUrl);
+            DailyPreference.getInstance(context).setKeyRemoteConfigStaticUrlAbout(aboutUrl);
+            DailyPreference.getInstance(context).setKeyRemoteConfigStaticUrlLocation(locationUrl);
+            DailyPreference.getInstance(context).setKeyRemoteConfigStaticUrlChildProtect(childProtectUrl);
+            DailyPreference.getInstance(context).setKeyRemoteConfigStaticUrlBonus(bonusUrl);
+            DailyPreference.getInstance(context).setKeyRemoteConfigStaticUrlCoupon(couponUrl);
+            DailyPreference.getInstance(context).setKeyRemoteConfigStaticUrlProdCouponNote(prodCouponNoteUrl);
+            DailyPreference.getInstance(context).setKeyRemoteConfigStaticUrlDevCouponNote(devCouponNoteUrl);
+            DailyPreference.getInstance(context).setKeyRemoteConfigStaticUrlFaq(faqUrl);
+            DailyPreference.getInstance(context).setKeyRemoteConfigStaticUrlLicense(licenseUrl);
+            DailyPreference.getInstance(context).setKeyRemoteConfigStaticUrlStamp(stampUrl);
+            DailyPreference.getInstance(context).setKeyRemoteConfigStaticUrlReview(reviewUrl);
+            DailyPreference.getInstance(context).setKeyRemoteConfigStaticUrlLifeStyleProject(lifeStyleProjectUrl);
+            DailyPreference.getInstance(context).setKeyRemoteConfigStaticUrlDailyStampHome(dailyStampHomeUrl);
         } catch (Exception e)
         {
             ExLog.e(e.toString());
