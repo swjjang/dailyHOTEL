@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
-import android.util.Pair;
 import android.view.View;
 import android.widget.LinearLayout;
 
@@ -38,9 +37,6 @@ import retrofit2.Response;
 
 public class RecentPlacesTabActivity extends BaseActivity
 {
-    ArrayList<Pair<Integer, String>> mRecentStayList;
-    ArrayList<Pair<Integer, String>> mRecentGourmetList;
-
     ArrayList<RecentPlacesListFragment> mFragmentList;
 
     private RecentStayListFragment mRecentStayListFragment;
@@ -57,7 +53,7 @@ public class RecentPlacesTabActivity extends BaseActivity
     private SourceType mSourceType;
     private PlaceType mPlaceType;
 
-    private boolean mDontReloadAtOnResume; // TODO : 타 기능 구현 완료 후 처리 예정
+    private boolean mDontReloadAtOnResume;
 
     public enum SourceType
     {
@@ -291,12 +287,15 @@ public class RecentPlacesTabActivity extends BaseActivity
 
     private boolean isEmptyRecentStayPlace()
     {
-        return mRecentStayList == null || mRecentStayList.size() == 0;
+        RealmResults<RecentlyRealmObject> resultList = RecentlyPlaceUtil.getRecentlyTypeList( //
+            RecentlyPlaceUtil.ServiceType.IB_STAY, RecentlyPlaceUtil.ServiceType.OB_STAY);
+        return resultList == null || resultList.size() == 0;
     }
 
     private boolean isEmptyRecentGourmetPlace()
     {
-        return mRecentGourmetList == null || mRecentGourmetList.size() == 0;
+        RealmResults<RecentlyRealmObject> resultList = RecentlyPlaceUtil.getRecentlyTypeList(RecentlyPlaceUtil.ServiceType.GOURMET);
+        return resultList == null || resultList.size() == 0;
     }
 
     @Override

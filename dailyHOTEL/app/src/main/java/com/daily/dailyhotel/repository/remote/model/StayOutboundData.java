@@ -49,6 +49,9 @@ public class StayOutboundData
     @JsonField(name = "tripAdvisor")
     public TripAdvisorData tripAdvisorData;
 
+    @JsonField(name = "city")
+    public String city;
+
     public StayOutboundData()
     {
 
@@ -71,6 +74,7 @@ public class StayOutboundData
         stayOutbound.nightlyBaseRate = nightlyBaseRate;
         stayOutbound.total = total;
         stayOutbound.setImageMap(imageMapData.getImageMap());
+        stayOutbound.city = city;
 
         if (tripAdvisorData != null)
         {

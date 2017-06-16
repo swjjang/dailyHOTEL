@@ -2,6 +2,7 @@ package com.twoheart.dailyhotel.screen.mydaily.recentplace;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -13,12 +14,15 @@ import android.view.ViewGroup;
 
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
+import com.daily.base.util.ScreenUtils;
+import com.daily.dailyhotel.entity.ImageMap;
+import com.daily.dailyhotel.entity.StayOutbound;
+import com.daily.dailyhotel.entity.StayOutbounds;
 import com.daily.dailyhotel.util.RecentlyPlaceUtil;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Place;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
-import com.twoheart.dailyhotel.model.RecentStayParams;
 import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.model.time.PlaceBookingDay;
 import com.twoheart.dailyhotel.model.time.StayBookingDay;
@@ -39,6 +43,9 @@ import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.functions.BiFunction;
+import io.reactivex.functions.Consumer;
 import retrofit2.Call;
 import retrofit2.Response;
 
@@ -140,19 +147,10 @@ public class RecentStayListFragment extends RecentPlacesListFragment
             return;
         }
 
-        if (isInBound == true)
-        {
-            requestIBRecentlyList(placeBookingDay);
-        }
-
-        if (isOutBound == true)
-        {
-            // TODO : OUTBOUND request
-            requestOBRecentlyList(placeBookingDay);
-        }
+        requestRecentlyList(placeBookingDay);
     }
 
-    private void requestIBRecentlyList(PlaceBookingDay placeBookingDay)
+    private void requestRecentlyList(PlaceBookingDay placeBookingDay)
     {
         String targetIndices = getTargetIndices(RecentlyPlaceUtil.ServiceType.IB_STAY);
         if (DailyTextUtils.isTextEmpty(targetIndices) == true)
@@ -166,17 +164,123 @@ public class RecentStayListFragment extends RecentPlacesListFragment
             return;
         }
 
-        RecentStayParams recentStayParams = new RecentStayParams();
-        recentStayParams.setStayBookingDay((StayBookingDay) placeBookingDay);
-        recentStayParams.setTargetIndices(targetIndices);
+        addCompositeDisposable(Observable.zip(mRecentlyRemoteImpl.getStayInboundRecentlyList((StayBookingDay) placeBookingDay) //
+            , mRecentlyRemoteImpl.getStayOutboundRecentlyList(10000) //
+            , new BiFunction<List<Stay>, StayOutbounds, ArrayList<PlaceViewItem>>()
+            {
+                @Override
+                public ArrayList<PlaceViewItem> apply(@NonNull List<Stay> stays, @NonNull StayOutbounds stayOutbounds) throws Exception
+                {
+                    ArrayList<Stay> stayList = mergeStayList(stays, stayOutbounds);
+                    return mListLayout.makePlaceViewItemList(stayList);
+                }
+            }).subscribe(new Consumer<ArrayList<PlaceViewItem>>()
+        {
+            @Override
+            public void accept(@NonNull ArrayList<PlaceViewItem> viewItemList) throws Exception
+            {
+                unLockUI();
 
-        ((RecentStayListNetworkController) mNetworkController).requestRecentStayList(recentStayParams);
-        //        DailyToast.showToast(mBaseActivity, "recent Stay", Toast.LENGTH_SHORT);
+                if (isFinishing() == true)
+                {
+                    return;
+                }
+
+                mListLayout.setData(viewItemList, mPlaceBookingDay);
+            }
+        }, new Consumer<Throwable>()
+        {
+            @Override
+            public void accept(@NonNull Throwable throwable) throws Exception
+            {
+                onHandleError(throwable);
+            }
+        }));
     }
 
-    private void requestOBRecentlyList(PlaceBookingDay placeBookingDay)
+    private ArrayList<Stay> mergeStayList(List<Stay> stays, StayOutbounds stayOutbounds)
     {
-        // TODO : OUTBOUND request
+        ArrayList<Stay> stayList = new ArrayList<>();
+
+        if (stays != null)
+        {
+            stayList.addAll(stays);
+        }
+
+        List<StayOutbound> stayOutboundList = stayOutbounds.getStayOutbound();
+        if (stayOutboundList == null || stayOutboundList.size() == 0)
+        {
+            return stayList;
+        }
+
+        for (StayOutbound stayOutbound : stayOutboundList)
+        {
+            stayList.add(convertStay(mBaseActivity, stayOutbound));
+        }
+
+        sortList(stayList, RecentlyPlaceUtil.ServiceType.IB_STAY, RecentlyPlaceUtil.ServiceType.OB_STAY);
+
+        return stayList;
+    }
+
+    private Stay convertStay(Context context, StayOutbound stayOutbound)
+    {
+        if (context == null || stayOutbound == null)
+        {
+            return null;
+        }
+
+        Stay stay = null;
+
+        try
+        {
+            stay = new Stay();
+            stay.name = stayOutbound.name;
+            stay.addressSummary = stayOutbound.locationDescription;
+
+            // TODO 등급은 어찌?
+            stay.setGrade(Stay.Grade.etc); // stayOutbound.rating; // 숫자
+
+            stay.index = stayOutbound.index;
+            stay.latitude = stayOutbound.latitude;
+            stay.longitude = stayOutbound.longitude;
+            stay.isDailyChoice = false;
+            stay.satisfaction = (int) stayOutbound.tripAdvisorRating;
+            stay.distance = stayOutbound.distance;
+            stay.truevr = false;
+
+            ImageMap imageMap = stayOutbound.getImageMap();
+            String url;
+
+            if (ScreenUtils.getScreenWidth(context) >= ScreenUtils.DEFAULT_STAYOUTBOUND_XXHDPI_WIDTH)
+            {
+                if (DailyTextUtils.isTextEmpty(imageMap.bigUrl) == true)
+                {
+                    url = imageMap.smallUrl;
+                } else
+                {
+                    url = imageMap.bigUrl;
+                }
+            } else
+            {
+                if (DailyTextUtils.isTextEmpty(imageMap.mediumUrl) == true)
+                {
+                    url = imageMap.smallUrl;
+                } else
+                {
+                    url = imageMap.mediumUrl;
+                }
+            }
+
+            stay.imageUrl = url;
+
+        } catch (Exception e)
+        {
+            ExLog.d(stayOutbound.index + " , " + stayOutbound.name + " , " + e.toString());
+        }
+
+        return stay;
+
     }
 
     private RecentStayListNetworkController.OnNetworkControllerListener mOnNetworkControllerListener = new RecentStayListNetworkController.OnNetworkControllerListener()

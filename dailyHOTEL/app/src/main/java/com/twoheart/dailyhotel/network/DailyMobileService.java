@@ -5,6 +5,7 @@ import com.daily.dailyhotel.repository.remote.model.BookingHideData;
 import com.daily.dailyhotel.repository.remote.model.CardData;
 import com.daily.dailyhotel.repository.remote.model.CommonDateTimeData;
 import com.daily.dailyhotel.repository.remote.model.PaymentResultData;
+import com.daily.dailyhotel.repository.remote.model.StayListData;
 import com.daily.dailyhotel.repository.remote.model.StayOutboundBookingDetailData;
 import com.daily.dailyhotel.repository.remote.model.StayOutboundDetailData;
 import com.daily.dailyhotel.repository.remote.model.StayOutboundEmailReceiptData;
@@ -609,19 +610,6 @@ public interface DailyMobileService
     Observable<BaseDto<StayOutboundPaymentData>> getStayOutboundPayment(@Url String mobileAPI, @Body JSONObject jsonObject);
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
-    @GET
-    Observable<BaseDto<StayOutboundsData>> getStayOutboundRecentlyList(@Url String mobileAPI//
-        , @Query(value = "hotelIds") String hotelIds//
-        , @Query(value = "numberOfResults") int numberOfResults//
-        , @Query(value = "sort") String sort//
-    );
-
-    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
-    @POST("{mobileAPI}")
-    Observable<BaseDto<HomePlaces>> getHomeRecentList(@Path(value = "mobileAPI", encoded = true) String mobileAPI,//
-                                                               @Body JSONObject jsonObject);
-
-    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @POST("{mobileAPI}")
     Observable<BaseListDto<CardData>> getSimpleCardList(@Path(value = "mobileAPI", encoded = true) String mobileAPI);
 
@@ -671,4 +659,28 @@ public interface DailyMobileService
     @GET()
     Observable<BaseDto<StayOutboundEmailReceiptData>> getStayOutboundEmailReceipt(@Url String mobileAPI//
         , @Query("receiverEmail") String receiverEmail);
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+    // RecentlyRemoteImpl
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
+    @GET
+    Observable<BaseDto<StayOutboundsData>> getStayOutboundRecentlyList(@Url String mobileAPI//
+        , @Query(value = "hotelIds") String hotelIds//
+        , @Query(value = "numberOfResults") int numberOfResults//
+        , @Query(value = "sort") String sort//
+    );
+
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
+    @POST("{mobileAPI}")
+    Observable<BaseDto<HomePlaces>> getHomeRecentList(@Path(value = "mobileAPI", encoded = true) String mobileAPI,//
+                                                      @Body JSONObject jsonObject);
+
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
+    @GET("{mobileAPI}")
+    Observable<BaseDto<StayListData>> getStayInboundList(@Path(value = "mobileAPI", encoded = true) String mobileAPI, //
+                                                      @QueryMap Map<String, Object> queryMap, //
+                                                      @Query("bedType") List<String> bedTypeList, //
+                                                      @Query("luxury") List<String> luxuryList);
 }

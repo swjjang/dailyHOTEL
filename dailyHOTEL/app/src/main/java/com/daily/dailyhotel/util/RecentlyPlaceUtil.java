@@ -467,7 +467,7 @@ public class RecentlyPlaceUtil
             homePlace.index = stayOutbound.index;
             homePlace.title = stayOutbound.name;
             homePlace.serviceType = RecentlyPlaceUtil.SERVICE_TYPE_OB_STAY_NAME;
-            homePlace.regionName = stayOutbound.locationDescription;
+            homePlace.regionName = stayOutbound.city;
             homePlace.prices = null;
             homePlace.imgPathMain = null;
             homePlace.details = null;

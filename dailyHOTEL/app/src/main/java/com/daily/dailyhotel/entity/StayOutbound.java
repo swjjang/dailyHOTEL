@@ -17,6 +17,7 @@ public class StayOutbound
     public ImageMap mImageMap;
     public float tripAdvisorRating;
     public int tripAdvisorReviewCount;
+    public String city;
 
     public StayOutbound()
     {

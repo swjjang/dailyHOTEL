@@ -874,53 +874,6 @@ public class HomeFragment extends BaseMenuNavigationFragment
                 sendHomeBlockEventAnalytics();
             }
         }));
-
-//        addCompositeDisposable(mRecentlyRemoteImpl.getHomeRecentlyList(MAX_REQUEST_SIZE).subscribe(new Consumer<List<HomePlace>>()
-//        {
-//            @Override
-//            public void accept(@NonNull List<HomePlace> homePlacesList) throws Exception
-//            {
-//                ArrayList<HomePlace> list = new ArrayList<HomePlace>();
-//                if (homePlacesList != null)
-//                {
-//                    list.addAll(homePlacesList);
-//                }
-//
-//                mHomeLayout.setRecentListData(list, false);
-//
-//                mNetworkRunState = mNetworkRunState | IS_RUNNED_RECENTLIST;
-//
-//                sendHomeBlockEventAnalytics();
-//            }
-//        }, new Consumer<Throwable>()
-//        {
-//            @Override
-//            public void accept(@NonNull Throwable throwable) throws Exception
-//            {
-//                mHomeLayout.setRecentListData(null, true);
-//
-//                mNetworkRunState = mNetworkRunState | IS_RUNNED_RECENTLIST;
-//
-//                sendHomeBlockEventAnalytics();
-//            }
-//        }));
-//
-//        addCompositeDisposable(mRecentlyRemoteImpl.getStayOutboundRecentlyList(MAX_REQUEST_SIZE).subscribe(new Consumer<StayOutbounds>()
-//        {
-//            @Override
-//            public void accept(@NonNull StayOutbounds stayOutbounds) throws Exception
-//            {
-//                List<StayOutbound> stayOutboundList = stayOutbounds.getStayOutbound();
-//                ExLog.d(stayOutboundList.toString());
-//            }
-//        }, new Consumer<Throwable>()
-//        {
-//            @Override
-//            public void accept(@NonNull Throwable throwable) throws Exception
-//            {
-//                // TODO : 실패시 할 행동 추가 필요.
-//            }
-//        }));
     }
 
     public void forceRefreshing()
