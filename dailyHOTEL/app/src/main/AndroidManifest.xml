@@ -778,6 +778,14 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
 
+        <activity
+            android:name=".screen.common.StayOutboundPaymentWebActivity"
+            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppBaseTheme"
+            android:windowSoftInputMode="stateAlwaysHidden"/>
+
         <!--  com.daily.dailyhotel.... -->
 
 
