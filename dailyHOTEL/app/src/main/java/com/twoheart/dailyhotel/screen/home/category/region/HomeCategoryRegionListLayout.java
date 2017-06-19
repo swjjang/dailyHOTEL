@@ -166,7 +166,13 @@ public class HomeCategoryRegionListLayout extends BaseLayout
                 {
                     // 상세 지역이 없는 경우.
                     mListView.setSelection(i);
-                    mListView.setSelectedGroup(i);
+                    if (i == 0)
+                    {
+                        mListView.setSelectionAfterHeaderView();
+                    } else
+                    {
+                        mListView.setSelectedGroup(i);
+                    }
 
                     regionViewItem.isExpandGroup = false;
                 } else

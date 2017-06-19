@@ -14,6 +14,7 @@ import com.twoheart.dailyhotel.model.CreditCard;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
@@ -130,6 +131,14 @@ public class CreditCardListActivity extends BaseActivity
             mCreditCardLayout.setViewLoginLayout(true);
             DailyMobileAPI.getInstance(this).requestUserBillingCardList(mNetworkTag, mCreditCardListCallback);
         }
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState)
+    {
+        super.onRestoreInstanceState(savedInstanceState);
+
+        Util.restartApp(this);
     }
 
     @Override

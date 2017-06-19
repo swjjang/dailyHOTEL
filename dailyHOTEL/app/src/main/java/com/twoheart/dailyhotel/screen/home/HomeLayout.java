@@ -36,6 +36,7 @@ import com.daily.base.util.ScreenUtils;
 import com.daily.base.widget.DailyTextView;
 import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.deprecated.DeviceResolutionUtil;
 import com.twoheart.dailyhotel.model.DailyCategoryType;
@@ -91,7 +92,7 @@ public class HomeLayout extends BaseBlurLayout
     View mScrollButtonLayout;
     private HomeCategoryLayout mCategoryLayout;
     View mTextMessageLayout;
-    View mTopButtonLayout, mStampLayout;
+    View mTopButtonLayout, mProviderLayout, mStampLayout;
     HomeCarouselLayout mRecentListLayout;
     HomeCarouselLayout mWishListLayout;
     HomeRecommendationLayout mHomeRecommendationLayout;
@@ -319,7 +320,7 @@ public class HomeLayout extends BaseBlurLayout
         initWishListLayout(mHomeContentLayout);
         initRecommendationLayout(mHomeContentLayout);
 
-        if (DailyPreference.getInstance(mContext).isRemoteConfigStampEnabled() == true //
+        if (DailyHotel.isLogin() == true && DailyPreference.getInstance(mContext).isRemoteConfigStampEnabled() == true //
             && DailyPreference.getInstance(mContext).isRemoteConfigStampHomeEnabled() == true)
         {
             initStampLayout(mHomeContentLayout);
@@ -544,15 +545,15 @@ public class HomeLayout extends BaseBlurLayout
             return;
         }
 
-        View providerLayout = LayoutInflater.from(mContext).inflate(R.layout.list_row_home_provider_information_layout, null);
-        layout.addView(providerLayout);
+        mProviderLayout = LayoutInflater.from(mContext).inflate(R.layout.list_row_home_provider_information_layout, null);
+        layout.addView(mProviderLayout);
 
-        mProviderInfoView = (LinearLayout) providerLayout.findViewById(R.id.providerInfoLayout);
+        mProviderInfoView = (LinearLayout) mProviderLayout.findViewById(R.id.providerInfoLayout);
 
-        LinearLayout policyLayout = (LinearLayout) providerLayout.findViewById(R.id.policyLayout);
-        View verticalLine1 = providerLayout.findViewById(R.id.vericalLineTextView1);
-        View verticalLine2 = providerLayout.findViewById(R.id.vericalLineTextView2);
-        View verticalLine3 = providerLayout.findViewById(R.id.vericalLineTextView3);
+        LinearLayout policyLayout = (LinearLayout) mProviderLayout.findViewById(R.id.policyLayout);
+        View verticalLine1 = mProviderLayout.findViewById(R.id.vericalLineTextView1);
+        View verticalLine2 = mProviderLayout.findViewById(R.id.vericalLineTextView2);
+        View verticalLine3 = mProviderLayout.findViewById(R.id.vericalLineTextView3);
 
         mProviderInfoView.setVisibility(View.GONE);
 
@@ -594,11 +595,11 @@ public class HomeLayout extends BaseBlurLayout
         String mailSalesOrderNo = DailyPreference.getInstance(mContext).getRemoteConfigCompanyItcRegNumber();
         String companyName = DailyPreference.getInstance(mContext).getRemoteConfigCompanyName();
 
-        DailyTextView companyInfoTextView = (DailyTextView) providerLayout.findViewById(R.id.companyInfoTextView);
-        DailyTextView companyAddressTextView = (DailyTextView) providerLayout.findViewById(R.id.companyAddressTextView);
-        DailyTextView registrationNoTextView = (DailyTextView) providerLayout.findViewById(R.id.registrationNoTextView);
-        DailyTextView mailSalesOrderNoTextView = (DailyTextView) providerLayout.findViewById(R.id.mailSalesOrderNoTextView);
-        DailyTextView privacyEmailTextView = (DailyTextView) providerLayout.findViewById(R.id.privacyEmailTextView);
+        DailyTextView companyInfoTextView = (DailyTextView) mProviderLayout.findViewById(R.id.companyInfoTextView);
+        DailyTextView companyAddressTextView = (DailyTextView) mProviderLayout.findViewById(R.id.companyAddressTextView);
+        DailyTextView registrationNoTextView = (DailyTextView) mProviderLayout.findViewById(R.id.registrationNoTextView);
+        DailyTextView mailSalesOrderNoTextView = (DailyTextView) mProviderLayout.findViewById(R.id.mailSalesOrderNoTextView);
+        DailyTextView privacyEmailTextView = (DailyTextView) mProviderLayout.findViewById(R.id.privacyEmailTextView);
 
         String companyText = mContext.getString(R.string.label_home_business_license01, companyName, ceoName, phone);
         SpannableStringBuilder stringBuilder = new SpannableStringBuilder(companyText);
@@ -623,7 +624,7 @@ public class HomeLayout extends BaseBlurLayout
         mailSalesOrderNoTextView.setText(mContext.getString(R.string.label_home_business_license03, mailSalesOrderNo));
         privacyEmailTextView.setText(mContext.getString(R.string.label_home_business_license04, privacyEmail));
 
-        final DailyTextView providerButtonView = (DailyTextView) providerLayout.findViewById(R.id.providerInfoButtonView);
+        final DailyTextView providerButtonView = (DailyTextView) mProviderLayout.findViewById(R.id.providerInfoButtonView);
         providerButtonView.setDrawableVectorTint(R.color.default_text_cababab);
         providerButtonView.setSelected(false);
         providerButtonView.setOnClickListener(v ->
@@ -645,10 +646,10 @@ public class HomeLayout extends BaseBlurLayout
             }
         });
 
-        View termsView = providerLayout.findViewById(R.id.termsTextView);
-        View privacyView = providerLayout.findViewById(R.id.privacyTextView);
-        View locationView = providerLayout.findViewById(R.id.locationTermsTextView);
-        View protectYouthView = providerLayout.findViewById(R.id.protectYouthTermsTextView);
+        View termsView = mProviderLayout.findViewById(R.id.termsTextView);
+        View privacyView = mProviderLayout.findViewById(R.id.privacyTextView);
+        View locationView = mProviderLayout.findViewById(R.id.locationTermsTextView);
+        View protectYouthView = mProviderLayout.findViewById(R.id.protectYouthTermsTextView);
 
         termsView.setOnClickListener(v -> ((OnEventListener) mOnEventListener).onTermsClick());
 
@@ -959,6 +960,9 @@ public class HomeLayout extends BaseBlurLayout
             setErrorPopupLayout(true);
         } else
         {
+            TextView stampTextView = (TextView) mStampLayout.findViewById(R.id.stampTextView);
+            stampTextView.setText("현재 받은 스탬프 개수는 : " + count);
+
             if (mStampLayout.getVisibility() != View.VISIBLE)
             {
                 mStampLayout.setVisibility(View.VISIBLE);
@@ -1567,12 +1571,9 @@ public class HomeLayout extends BaseBlurLayout
             boolean isCanScroll = false;
 
             View child = ((DailyHomeScrollView) v).getChildAt(0);
-            if (child != null)
+            if (child != null && mProviderLayout != null)
             {
-                int childHeight = child.getHeight();
-                int topButtonHeight = mTopButtonLayout.getHeight();
-
-                isCanScroll = v.getHeight() < childHeight + v.getPaddingTop() + v.getPaddingBottom() - topButtonHeight;
+                isCanScroll = v.getHeight() - mContext.getResources().getDimensionPixelSize(R.dimen.bottom_navigation_height_over21) < mProviderLayout.getBottom() - child.getY();
             }
 
             if (isCanScroll == true)
