@@ -650,7 +650,6 @@ public abstract class PlacePaymentWebActivity extends BaseActivity implements Co
         {
             super.onPageStarted(view, url, favicon);
 
-            lockUI();
             // handler.removeCallbacks(networkCheckRunner);
             // 결제 완료시 항상 네트워크 불안정뜨므로, 네트워크 체크는 제거하도록 함.
 
@@ -664,8 +663,6 @@ public abstract class PlacePaymentWebActivity extends BaseActivity implements Co
         public void onPageFinished(WebView view, String url)
         {
             super.onPageFinished(view, url);
-
-            unLockUI();
 
             if (VersionUtils.isOverAPI14() == true)
             {
