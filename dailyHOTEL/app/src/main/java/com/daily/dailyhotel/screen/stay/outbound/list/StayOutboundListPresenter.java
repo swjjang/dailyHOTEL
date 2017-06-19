@@ -35,6 +35,7 @@ import com.daily.dailyhotel.parcel.SuggestParcel;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
 import com.daily.dailyhotel.repository.remote.StayOutboundRemoteImpl;
 import com.daily.dailyhotel.screen.common.calendar.StayCalendarActivity;
+import com.daily.dailyhotel.screen.common.call.CallDialogActivity;
 import com.daily.dailyhotel.screen.stay.outbound.detail.StayOutboundDetailActivity;
 import com.daily.dailyhotel.screen.stay.outbound.filter.StayOutboundFilterActivity;
 import com.daily.dailyhotel.screen.stay.outbound.people.SelectPeopleActivity;
@@ -798,6 +799,17 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
         onBackClick();
     }
 
+    @Override
+    public void onCallClick()
+    {
+        if (lock() == true)
+        {
+            return;
+        }
+
+        startActivityForResult(CallDialogActivity.newInstance(getActivity()), StayOutboundListActivity.REQUEST_CODE_CALL);
+    }
+
     private void setPeople(int numberOfAdults, ArrayList<Integer> childAgeList)
     {
         if (mPeople == null)
@@ -970,9 +982,27 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
                     boolean isSortByDistance = mStayOutboundFilters != null && mStayOutboundFilters.sortType == StayOutboundFilters.SortType.DISTANCE;
 
                     getViewInterface().setStayOutboundList(listItems, isSortByDistance, mStayBookDateTime.getNights() > 1);
+
+                    if (listItems == null || listItems.size() == 0)
+                    {
+                        if (isDefaultFilter(mStayOutboundFilters) == true)
+                        {
+                            getViewInterface().setBottomLayoutVisible(false);
+                        } else
+                        {
+                            getViewInterface().setBottomLayoutVisible(true);
+                            getViewInterface().setBottomLayoutEnabled(false, true);
+                        }
+                    } else
+                    {
+                        getViewInterface().setBottomLayoutVisible(true);
+                        getViewInterface().setBottomLayoutEnabled(true, true);
+                    }
                 } else
                 {
                     getViewInterface().addStayOutboundList(listItems);
+
+                    getViewInterface().setBottomLayoutVisible(true);
                 }
             }
         }));
@@ -995,13 +1025,23 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
             return;
         }
 
-        if (mStayOutboundFilters.sortType == StayOutboundFilters.SortType.RECOMMENDATION && mStayOutboundFilters.rating == -1)
+        if (isDefaultFilter(mStayOutboundFilters) == true)
         {
             getViewInterface().setFilterOptionImage(false);
         } else
         {
             getViewInterface().setFilterOptionImage(true);
         }
+    }
+
+    private boolean isDefaultFilter(StayOutboundFilters stayOutboundFilters)
+    {
+        if (stayOutboundFilters == null)
+        {
+            return true;
+        }
+
+        return (stayOutboundFilters.sortType == StayOutboundFilters.SortType.RECOMMENDATION && stayOutboundFilters.rating == -1);
     }
 
     private void notifyStayBookDateTimeChanged()
