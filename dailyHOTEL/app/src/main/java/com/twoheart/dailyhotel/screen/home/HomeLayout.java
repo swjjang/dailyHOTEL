@@ -144,6 +144,8 @@ public class HomeLayout extends BaseBlurLayout
         void onProtectedYouthClick();
 
         void onCategoryItemClick(DailyCategoryType categoryType);
+
+        void onStampEventClick();
     }
 
     public enum MessageType
@@ -316,6 +318,13 @@ public class HomeLayout extends BaseBlurLayout
         initRecentListLayout(mHomeContentLayout);
         initWishListLayout(mHomeContentLayout);
         initRecommendationLayout(mHomeContentLayout);
+
+        if (DailyPreference.getInstance(mContext).isRemoteConfigStampEnabled() == true //
+            && DailyPreference.getInstance(mContext).isRemoteConfigStampHomeEnabled() == true)
+        {
+            initStampLayout(mHomeContentLayout);
+        }
+
         initProviderInfoLayout(mHomeContentLayout);
         initTopButtonLayout(mHomeContentLayout);
     }
@@ -496,6 +505,34 @@ public class HomeLayout extends BaseBlurLayout
         mHomeRecommendationLayout.setListener((view, recommendation, position) -> ((OnEventListener) mOnEventListener).onRecommendationClick(view, recommendation));
 
         layout.addView(mHomeRecommendationLayout, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+    }
+
+    private void initStampLayout(LinearLayout layout)
+    {
+        if (layout == null || mContext == null)
+        {
+            return;
+        }
+
+        View stampLayout = LayoutInflater.from(mContext).inflate(R.layout.list_row_home_stamp_layout, layout);
+
+        TextView message1TextView = (TextView) stampLayout.findViewById(R.id.message1TextView);
+        TextView message2TextView = (TextView) stampLayout.findViewById(R.id.message2TextView);
+
+        message1TextView.setText(DailyPreference.getInstance(mContext).getRemoteConfigStampHomeMessage1());
+
+        SpannableString spannableString = new SpannableString(DailyPreference.getInstance(mContext).getRemoteConfigStampHomeMessage2());
+        spannableString.setSpan(new UnderlineSpan(), 0, spannableString.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        message2TextView.setText(spannableString);
+        message2TextView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                ((HomeLayout.OnEventListener) mOnEventListener).onStampEventClick();
+            }
+        });
     }
 
     private void initProviderInfoLayout(LinearLayout layout)
@@ -904,6 +941,16 @@ public class HomeLayout extends BaseBlurLayout
     public void setRecommendationData(ArrayList<Recommendation> list, boolean isError)
     {
         mHomeRecommendationLayout.setData(list);
+
+        if (isError == true)
+        {
+            setErrorPopupLayout(true);
+        }
+    }
+
+    public void setStampCount(int count, boolean isError)
+    {
+
 
         if (isError == true)
         {

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/default_background">
+
+    <LinearLayout
+        android:id="@+id/textLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginBottom="14dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="14dp"
+        android:layout_toLeftOf="@id/closeImageView"
+        android:orientation="vertical">
+
+        <com.daily.base.widget.DailyTextView
+            android:id="@+id/message1TextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:gravity="left|center_vertical"
+            android:maxLines="2"
+            android:textColor="@color/default_text_c666666"
+            android:textSize="13dp"/>
+
+        <com.daily.base.widget.DailyTextView
+            android:id="@+id/message2TextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:ellipsize="end"
+            android:gravity="left|center_vertical"
+            android:maxLines="2"
+            android:textColor="@color/default_text_c929292"
+            android:textSize="12dp"/>
+
+    </LinearLayout>
+
+    <View
+        android:id="@id/bottomDivider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@id/textLayout"
+        android:layout_marginTop="15dp"
+        android:background="@color/default_line_cf0f0f0"/>
+
+</RelativeLayout>
