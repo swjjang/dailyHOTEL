@@ -1017,11 +1017,11 @@ public class HomeFragment extends BaseMenuNavigationFragment
             requestWishList();
             requestRecentList();
 
-//            if (DailyPreference.getInstance(mBaseActivity).isRemoteConfigStampEnabled() == true //
-//                && DailyPreference.getInstance(mBaseActivity).isRemoteConfigStampHomeEnabled() == true)
-//            {
-//                mNetworkController.requestUserStamps();
-//            }
+            if (DailyHotel.isLogin() == true && DailyPreference.getInstance(mBaseActivity).isRemoteConfigStampEnabled() == true //
+                && DailyPreference.getInstance(mBaseActivity).isRemoteConfigStampHomeEnabled() == true)
+            {
+                mNetworkController.requestUserStamps();
+            }
         }
     }
 
