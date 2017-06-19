@@ -161,18 +161,6 @@ public class RecentStayListFragment extends RecentPlacesListFragment
 
     private void requestRecentlyList(PlaceBookingDay placeBookingDay)
     {
-        String targetIndices = getTargetIndices(RecentlyPlaceUtil.ServiceType.IB_STAY);
-        if (DailyTextUtils.isTextEmpty(targetIndices) == true)
-        {
-            unLockUI();
-
-            if (mListLayout != null && isFinishing() == false)
-            {
-                mListLayout.setData(null, placeBookingDay);
-            }
-            return;
-        }
-
         addCompositeDisposable(Observable.zip(mRecentlyRemoteImpl.getStayInboundRecentlyList((StayBookingDay) placeBookingDay) //
             , mRecentlyRemoteImpl.getStayOutboundRecentlyList(10000) //
             , new BiFunction<List<Stay>, StayOutbounds, ArrayList<PlaceViewItem>>()
