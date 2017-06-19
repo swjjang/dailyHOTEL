@@ -91,7 +91,7 @@ public class HomeLayout extends BaseBlurLayout
     View mScrollButtonLayout;
     private HomeCategoryLayout mCategoryLayout;
     View mTextMessageLayout;
-    View mTopButtonLayout;
+    View mTopButtonLayout, mStampLayout;
     HomeCarouselLayout mRecentListLayout;
     HomeCarouselLayout mWishListLayout;
     HomeRecommendationLayout mHomeRecommendationLayout;
@@ -514,10 +514,10 @@ public class HomeLayout extends BaseBlurLayout
             return;
         }
 
-        View stampLayout = LayoutInflater.from(mContext).inflate(R.layout.list_row_home_stamp_layout, layout);
+        mStampLayout = LayoutInflater.from(mContext).inflate(R.layout.list_row_home_stamp_layout, layout);
 
-        TextView message1TextView = (TextView) stampLayout.findViewById(R.id.message1TextView);
-        TextView message2TextView = (TextView) stampLayout.findViewById(R.id.message2TextView);
+        TextView message1TextView = (TextView) mStampLayout.findViewById(R.id.message1TextView);
+        TextView message2TextView = (TextView) mStampLayout.findViewById(R.id.message2TextView);
 
         message1TextView.setText(DailyPreference.getInstance(mContext).getRemoteConfigStampHomeMessage1());
 
@@ -533,6 +533,8 @@ public class HomeLayout extends BaseBlurLayout
                 ((HomeLayout.OnEventListener) mOnEventListener).onStampEventClick();
             }
         });
+
+        stampLayout.setVisibility(View.GONE);
     }
 
     private void initProviderInfoLayout(LinearLayout layout)
@@ -950,11 +952,17 @@ public class HomeLayout extends BaseBlurLayout
 
     public void setStampCount(int count, boolean isError)
     {
-
-
         if (isError == true)
         {
+            mStampLayout.setVisibility(View.GONE);
+
             setErrorPopupLayout(true);
+        } else
+        {
+            if (mStampLayout.getVisibility() != View.VISIBLE)
+            {
+                mStampLayout.setVisibility(View.VISIBLE);
+            }
         }
     }
 
