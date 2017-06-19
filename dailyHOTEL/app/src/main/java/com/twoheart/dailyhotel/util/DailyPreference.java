@@ -162,6 +162,9 @@ public class DailyPreference
     private static final String KEY_REMOTE_CONFIG_STAMP_STAMP_DATE2 = "329";
     private static final String KEY_REMOTE_CONFIG_STAMP_STAMP_DATE3 = "330";
     private static final String KEY_REMOTE_CONFIG_STAMP_END_EVENT_POPUP_ENABLED = "331";
+    private static final String KEY_REMOTE_CONFIG_STAMP_STAMP_HOME_MESSAGE1 = "333";
+    private static final String KEY_REMOTE_CONFIG_STAMP_STAMP_HOME_MESSAGE2 = "334";
+    private static final String KEY_REMOTE_CONFIG_STAMP_STAMP_HOME_ENABLED = "335";
 
     // Home - Category
     private static final String KEY_REMOTE_CONFIG_HOME_CATEGORY_ENABLED = "332";
@@ -1356,6 +1359,28 @@ public class DailyPreference
     public void setRemoteConfigUpdateOptional(String value)
     {
         setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_UPDATE_OPTIONAL, value);
+    }
+
+    public void setRemoteConfigStampHomeMessage(String message1, String message2, boolean enabled)
+    {
+        setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_STAMP_STAMP_HOME_MESSAGE1, message1);
+        setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_STAMP_STAMP_HOME_MESSAGE2, message2);
+        setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_STAMP_STAMP_HOME_ENABLED, enabled);
+    }
+
+    public String getRemoteConfigStampHomeMessage1()
+    {
+        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_STAMP_STAMP_HOME_MESSAGE1, null);
+    }
+
+    public String getRemoteConfigStampHomeMessage2()
+    {
+        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_STAMP_STAMP_HOME_MESSAGE2, null);
+    }
+
+    public boolean isRemoteConfigStampHomeEnabled()
+    {
+        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_STAMP_STAMP_HOME_ENABLED, false);
     }
 
     public String getRemoteConfigUpdateOptional()
