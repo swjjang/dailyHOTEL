@@ -319,11 +319,11 @@ public class HomeLayout extends BaseBlurLayout
         initWishListLayout(mHomeContentLayout);
         initRecommendationLayout(mHomeContentLayout);
 
-        if (DailyPreference.getInstance(mContext).isRemoteConfigStampEnabled() == true //
-            && DailyPreference.getInstance(mContext).isRemoteConfigStampHomeEnabled() == true)
-        {
-            initStampLayout(mHomeContentLayout);
-        }
+//        if (DailyPreference.getInstance(mContext).isRemoteConfigStampEnabled() == true //
+//            && DailyPreference.getInstance(mContext).isRemoteConfigStampHomeEnabled() == true)
+//        {
+//            initStampLayout(mHomeContentLayout);
+//        }
 
         initProviderInfoLayout(mHomeContentLayout);
         initTopButtonLayout(mHomeContentLayout);
@@ -514,7 +514,8 @@ public class HomeLayout extends BaseBlurLayout
             return;
         }
 
-        mStampLayout = LayoutInflater.from(mContext).inflate(R.layout.list_row_home_stamp_layout, layout);
+        mStampLayout = LayoutInflater.from(mContext).inflate(R.layout.list_row_home_stamp_layout, null);
+        layout.addView(mStampLayout);
 
         TextView message1TextView = (TextView) mStampLayout.findViewById(R.id.message1TextView);
         TextView message2TextView = (TextView) mStampLayout.findViewById(R.id.message2TextView);
