@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.SharedElementCallback;
+import android.support.v4.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,11 +22,13 @@ import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
 import com.daily.base.widget.DailyToast;
+import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayOutbounds;
 import com.daily.dailyhotel.repository.local.ConfigLocalImpl;
 import com.daily.dailyhotel.repository.remote.FacebookRemoteImpl;
 import com.daily.dailyhotel.repository.remote.KakaoRemoteImpl;
 import com.daily.dailyhotel.repository.remote.RecentlyRemoteImpl;
+import com.daily.dailyhotel.screen.stay.outbound.detail.StayOutboundDetailActivity;
 import com.daily.dailyhotel.screen.stay.outbound.search.StayOutboundSearchActivity;
 import com.daily.dailyhotel.util.RecentlyPlaceUtil;
 import com.facebook.drawee.view.SimpleDraweeView;
@@ -64,6 +67,7 @@ import com.twoheart.dailyhotel.screen.mydaily.wishlist.WishListTabActivity;
 import com.twoheart.dailyhotel.screen.search.SearchActivity;
 import com.twoheart.dailyhotel.screen.search.stay.result.StaySearchResultActivity;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
 import com.twoheart.dailyhotel.util.DailyExternalDeepLink;
 import com.twoheart.dailyhotel.util.DailyLocationFactory;
@@ -273,6 +277,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
             case Constants.CODE_REQUEST_ACTIVITY_COUPONLIST:
             case Constants.CODE_REQUEST_ACTIVITY_BONUS:
             case Constants.CODE_REQUEST_ACTIVITY_STAMP:
+            case Constants.CODE_REQUEST_ACTIVITY_STAY_OB_DETAIL:
                 if (resultCode == Constants.CODE_RESULT_ACTIVITY_GO_HOME)
                 {
                     mDontReload = true;
@@ -772,6 +777,87 @@ public class HomeFragment extends BaseMenuNavigationFragment
         } catch (Exception e)
         {
             ExLog.e(e.toString());
+        }
+    }
+
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+    private void startStayOutboundDetail(View view, HomePlace place, TodayDateTime todayDateTime)
+    {
+        View simpleDraweeView = view.findViewById(R.id.imageView);
+        View nameTextView = view.findViewById(R.id.nameTextView);
+        View gradientTopView = view.findViewById(R.id.gradientTopView);
+        View gradientBottomView = view.findViewById(R.id.gradientView);
+
+        android.support.v4.util.Pair[] pairs = new Pair[4];
+        pairs[0] = android.support.v4.util.Pair.create(simpleDraweeView, getString(R.string.transition_place_image));
+        pairs[1] = android.support.v4.util.Pair.create(nameTextView, getString(R.string.transition_place_name));
+        pairs[2] = android.support.v4.util.Pair.create(gradientTopView, getString(R.string.transition_gradient_top_view));
+        pairs[3] = android.support.v4.util.Pair.create(gradientBottomView, getString(R.string.transition_gradient_bottom_view));
+
+        if (place == null)
+        {
+            return;
+        }
+
+        String imageUrl = place.imageUrl;
+        StayBookDateTime stayBookDateTime = new StayBookDateTime();
+
+        try
+        {
+            stayBookDateTime.setCheckInDateTime(todayDateTime.currentDateTime);
+            stayBookDateTime.setCheckOutDateTime(todayDateTime.currentDateTime, 1);
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+        }
+
+        if (Util.isUsedMultiTransition() == true && pairs != null)
+        {
+            getActivity().setExitSharedElementCallback(new SharedElementCallback()
+            {
+                @Override
+                public void onSharedElementEnd(List<String> sharedElementNames, List<View> sharedElements, List<View> sharedElementSnapshots)
+                {
+                    super.onSharedElementEnd(sharedElementNames, sharedElements, sharedElementSnapshots);
+
+                    for (View view : sharedElements)
+                    {
+                        if (view instanceof SimpleDraweeView)
+                        {
+                            view.setVisibility(View.VISIBLE);
+                            break;
+                        }
+                    }
+                }
+            });
+
+            ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(), pairs);
+
+            try
+            {
+                stayBookDateTime.setCheckInDateTime(todayDateTime.currentDateTime);
+                stayBookDateTime.setCheckOutDateTime(todayDateTime.currentDateTime, 1);
+            } catch (Exception e)
+            {
+                ExLog.e(e.toString());
+            }
+
+            mBaseActivity.startActivityForResult(StayOutboundDetailActivity.newInstance(getActivity(), place.index//
+                , place.title, imageUrl, 0//
+                , stayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
+                , stayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
+                , 2, null, true, false)//
+                , Constants.CODE_REQUEST_ACTIVITY_STAY_OB_DETAIL, options.toBundle());
+        } else
+        {
+            mBaseActivity.startActivityForResult(StayOutboundDetailActivity.newInstance(getActivity(), place.index//
+                , place.title, imageUrl, 0//
+                , stayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
+                , stayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
+                , 2, null, false, false)//
+                , Constants.CODE_REQUEST_ACTIVITY_STAY_OB_DETAIL);
+
+            mBaseActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
         }
     }
 
@@ -1429,7 +1515,14 @@ public class HomeFragment extends BaseMenuNavigationFragment
 
             if (recentItem != null)
             {
-                startPlaceDetail(view, recentItem, mTodayDateTime);
+                if (RecentlyPlaceUtil.SERVICE_TYPE_OB_STAY_NAME.equalsIgnoreCase(recentItem.serviceType) == true)
+                {
+                    // stayOutbound
+                    startStayOutboundDetail(view, recentItem, mTodayDateTime);
+                } else
+                {
+                    startPlaceDetail(view, recentItem, mTodayDateTime);
+                }
             }
 
             AnalyticsManager.getInstance(mBaseActivity).recordEvent(//
@@ -1461,34 +1554,42 @@ public class HomeFragment extends BaseMenuNavigationFragment
             {
                 try
                 {
-                    mViewByLongPress = view;
-                    mHomePlaceByLongPress = recentItem;
-
-                    mHomeLayout.setBlurVisibility(mBaseActivity, true);
-
-                    switch (recentItem.placeType)
+                    if (RecentlyPlaceUtil.SERVICE_TYPE_OB_STAY_NAME.equalsIgnoreCase(recentItem.serviceType) == true)
                     {
-                        case HOTEL:
+                        // stayOutbound
+                        DailyToast.showToast(getActivity(), getString(R.string.label_stay_outbound_preparing_preview), DailyToast.LENGTH_SHORT);
+                        unLockUI();
+                    } else
+                    {
+                        mViewByLongPress = view;
+                        mHomePlaceByLongPress = recentItem;
+
+                        mHomeLayout.setBlurVisibility(mBaseActivity, true);
+
+                        switch (recentItem.placeType)
                         {
-                            StayBookingDay stayBookingDay = new StayBookingDay();
-                            stayBookingDay.setCheckInDay(mTodayDateTime.dailyDateTime);
-                            stayBookingDay.setCheckOutDay(mTodayDateTime.dailyDateTime, 1);
+                            case HOTEL:
+                            {
+                                StayBookingDay stayBookingDay = new StayBookingDay();
+                                stayBookingDay.setCheckInDay(mTodayDateTime.dailyDateTime);
+                                stayBookingDay.setCheckOutDay(mTodayDateTime.dailyDateTime, 1);
 
-                            Intent intent = StayPreviewActivity.newInstance(mBaseActivity, stayBookingDay, recentItem);
+                                Intent intent = StayPreviewActivity.newInstance(mBaseActivity, stayBookingDay, recentItem);
 
-                            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PREVIEW);
-                            break;
-                        }
+                                startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PREVIEW);
+                                break;
+                            }
 
-                        case FNB:
-                        {
-                            GourmetBookingDay gourmetBookingDay = new GourmetBookingDay();
-                            gourmetBookingDay.setVisitDay(mTodayDateTime.dailyDateTime);
+                            case FNB:
+                            {
+                                GourmetBookingDay gourmetBookingDay = new GourmetBookingDay();
+                                gourmetBookingDay.setVisitDay(mTodayDateTime.dailyDateTime);
 
-                            Intent intent = GourmetPreviewActivity.newInstance(mBaseActivity, gourmetBookingDay, recentItem);
+                                Intent intent = GourmetPreviewActivity.newInstance(mBaseActivity, gourmetBookingDay, recentItem);
 
-                            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PREVIEW);
-                            break;
+                                startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PREVIEW);
+                                break;
+                            }
                         }
                     }
                 } catch (Exception e)

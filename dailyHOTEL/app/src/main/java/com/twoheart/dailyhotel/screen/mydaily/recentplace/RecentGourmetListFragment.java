@@ -147,7 +147,7 @@ public class RecentGourmetListFragment extends RecentPlacesListFragment
 
             sortList(list, RecentlyPlaceUtil.ServiceType.GOURMET);
 
-            ArrayList<PlaceViewItem> viewItemList = mListLayout.makePlaceViewItemList(list);
+            ArrayList<PlaceViewItem> viewItemList = ((RecentGourmetListLayout) mListLayout).makePlaceViewItemList(list);
 
             mListLayout.setData(viewItemList, mPlaceBookingDay);
         }

@@ -8,7 +8,6 @@ import android.view.View;
 import com.daily.base.widget.DailyImageView;
 import com.daily.base.widget.DailyTextView;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.Place;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.time.PlaceBookingDay;
 import com.twoheart.dailyhotel.place.base.BaseBlurLayout;
@@ -51,8 +50,6 @@ public abstract class RecentPlacesListLayout extends BaseBlurLayout
     protected abstract int getEmptyImageResId();
 
     protected abstract int getEmptyButtonTextResId();
-
-    protected abstract ArrayList<PlaceViewItem> makePlaceViewItemList(ArrayList<? extends Place> list);
 
     protected abstract RecentPlacesListAdapter getRecentPlacesListAdapter(Context context//
         , ArrayList<PlaceViewItem> list, RecentPlacesListAdapter.OnRecentPlacesItemListener listener);

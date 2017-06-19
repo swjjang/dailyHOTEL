@@ -55,5 +55,9 @@ public interface StayOutboundListViewInterface extends BaseDialogViewInterface
 
     void setEmptyScreenVisible(boolean visible);
 
+    void setBottomLayoutVisible(boolean visible);
+
+    void setBottomLayoutEnabled(boolean mapEnabled, boolean filterEnabled);
+
     Observable<Long> getLocationAnimation();
 }

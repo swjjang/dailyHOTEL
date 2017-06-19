@@ -26,6 +26,7 @@ public class StayOutboundListActivity extends BaseActivity<StayOutboundListPrese
     static final int REQUEST_CODE_PERMISSION_MANAGER = 10003;
     static final int REQUEST_CODE_SETTING_LOCATION = 10004;
     static final int REQUEST_CODE_PEOPLE = 10005;
+    static final int REQUEST_CODE_CALL = 10006;
 
     static final String INTENT_EXTRA_DATA_SUGGEST = "suggest";
     static final String INTENT_EXTRA_DATA_CHECK_IN = "checkIn";

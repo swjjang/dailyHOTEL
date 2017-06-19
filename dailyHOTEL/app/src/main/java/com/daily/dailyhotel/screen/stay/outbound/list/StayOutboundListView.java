@@ -3,6 +3,7 @@ package com.daily.dailyhotel.screen.stay.outbound.list;
 import android.animation.Animator;
 import android.animation.ValueAnimator;
 import android.content.Context;
+import android.graphics.Paint;
 import android.location.Location;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.util.Pair;
@@ -86,6 +87,8 @@ public class StayOutboundListView extends BaseDialogView<StayOutboundListView.On
         void retryClick();
 
         void researchClick();
+
+        void onCallClick();
     }
 
     public StayOutboundListView(BaseActivity baseActivity, StayOutboundListView.OnEventListener listener)
@@ -156,6 +159,16 @@ public class StayOutboundListView extends BaseDialogView<StayOutboundListView.On
         viewDataBinding.filterOptionImageView.setOnClickListener(this);
         viewDataBinding.researchView.setOnClickListener(this);
         viewDataBinding.retryTextView.setOnClickListener(this);
+
+        viewDataBinding.callTextView.setPaintFlags(viewDataBinding.callTextView.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+        viewDataBinding.callTextView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                getEventListener().onCallClick();
+            }
+        });
     }
 
     @Override
@@ -557,6 +570,50 @@ public class StayOutboundListView extends BaseDialogView<StayOutboundListView.On
         }
 
         getViewDataBinding().emptyLayout.setVisibility(visible == true ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
+    public void setBottomLayoutVisible(boolean visible)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        getViewDataBinding().bottomOptionLayout.setVisibility(visible == true ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
+    public void setBottomLayoutEnabled(boolean mapEnabled, boolean filterEnabled)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        getViewDataBinding().viewTypeOptionImageView.setEnabled(mapEnabled);
+
+        if (mapEnabled == false)
+        {
+            getViewDataBinding().viewTypeOptionImageView.setAlpha(0.4f);
+            getViewDataBinding().viewTypeOptionImageView.setOnClickListener(null);
+        } else
+        {
+            getViewDataBinding().viewTypeOptionImageView.setAlpha(1.0f);
+            getViewDataBinding().viewTypeOptionImageView.setOnClickListener(this);
+        }
+
+        getViewDataBinding().filterOptionImageView.setEnabled(filterEnabled);
+
+        if (filterEnabled == false)
+        {
+            getViewDataBinding().filterOptionImageView.setAlpha(0.4f);
+            getViewDataBinding().filterOptionImageView.setOnClickListener(null);
+        } else
+        {
+            getViewDataBinding().filterOptionImageView.setAlpha(1.0f);
+            getViewDataBinding().filterOptionImageView.setOnClickListener(this);
+        }
     }
 
     @Override
