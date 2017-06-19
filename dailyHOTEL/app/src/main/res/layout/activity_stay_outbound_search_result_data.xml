@@ -91,29 +91,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:visibility="gone"/>
-
-            <LinearLayout
-                android:id="@+id/bottomOptionLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom"
-                android:layout_marginBottom="8dp"
-                android:gravity="center_horizontal"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:id="@+id/viewTypeOptionImageView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="4dp"
-                    android:background="@drawable/fab_01_map"/>
-
-                <ImageView
-                    android:id="@+id/filterOptionImageView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/selector_floatingactionview"/>
-            </LinearLayout>
         </FrameLayout>
 
         <ScrollView
@@ -185,6 +162,7 @@
                     android:layout_marginTop="25dp"
                     android:layout_weight="1"
                     android:gravity="bottom"
+                    android:layout_marginBottom="50dp"
                     android:minHeight="60dp"
                     android:orientation="vertical">
 
@@ -210,6 +188,30 @@
                 </LinearLayout>
             </LinearLayout>
         </ScrollView>
+
+        <LinearLayout
+            android:id="@+id/bottomOptionLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="8dp"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal"
+            android:visibility="invisible">
+
+            <ImageView
+                android:id="@+id/viewTypeOptionImageView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="4dp"
+                android:background="@drawable/fab_01_map"/>
+
+            <ImageView
+                android:id="@+id/filterOptionImageView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/selector_floatingactionview"/>
+        </LinearLayout>
 
         <RelativeLayout
             android:id="@+id/errorLayout"
