@@ -534,7 +534,7 @@ public class HomeLayout extends BaseBlurLayout
             }
         });
 
-        stampLayout.setVisibility(View.GONE);
+        mStampLayout.setVisibility(View.GONE);
     }
 
     private void initProviderInfoLayout(LinearLayout layout)
