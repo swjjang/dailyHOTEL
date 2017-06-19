@@ -520,6 +520,14 @@ public class DailyRemoteConfig
 
             DailyPreference.getInstance(context).setRemoteConfigStampDate(date1, date2, date3);
 
+            JSONObject homeJSONObject = jsonObject.getJSONObject("stampHome");
+
+            String homeMessage1 = homeJSONObject.getString("message1");
+            String homeMessage2 = homeJSONObject.getString("message2");
+            boolean homeEnabled = homeJSONObject.getBoolean("enabled");
+
+            DailyPreference.getInstance(context).setRemoteConfigStampHomeMessage(homeMessage1, homeMessage2, homeEnabled);
+
         } catch (Exception e)
         {
             ExLog.e(e.toString());

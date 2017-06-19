@@ -67,6 +67,7 @@ import com.twoheart.dailyhotel.screen.mydaily.wishlist.WishListTabActivity;
 import com.twoheart.dailyhotel.screen.search.SearchActivity;
 import com.twoheart.dailyhotel.screen.search.stay.result.StaySearchResultActivity;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.Crypto;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
 import com.twoheart.dailyhotel.util.DailyExternalDeepLink;
@@ -1015,6 +1016,12 @@ public class HomeFragment extends BaseMenuNavigationFragment
             mNetworkController.requestRecommendationList();
             requestWishList();
             requestRecentList();
+
+            if (DailyPreference.getInstance(mBaseActivity).isRemoteConfigStampEnabled() == true //
+                && DailyPreference.getInstance(mBaseActivity).isRemoteConfigStampHomeEnabled() == true)
+            {
+                mNetworkController.requestUserStamps();
+            }
         }
     }
 
@@ -1704,6 +1711,18 @@ public class HomeFragment extends BaseMenuNavigationFragment
         }
 
         @Override
+        public void onStampEventClick()
+        {
+            if (lockUiComponentAndIsLockUiComponent() == true)
+            {
+                return;
+            }
+
+            startActivityForResult(EventWebActivity.newInstance(mBaseActivity, EventWebActivity.SourceType.STAMP//
+                , Crypto.getUrlDecoderEx(Constants.URL_WEB_STAMP_EVENT), mBaseActivity.getString(R.string.label_stamp_event_title)), Constants.CODE_REQUEST_ACTIVITY_STAMP);
+        }
+
+        @Override
         public void finish()
         {
             unLockUI();
@@ -1762,6 +1781,15 @@ public class HomeFragment extends BaseMenuNavigationFragment
             if (mHomeLayout != null)
             {
                 mHomeLayout.setRecommendationData(list, isError);
+            }
+        }
+
+        @Override
+        public void onStamps(int count, boolean isError)
+        {
+            if (mHomeLayout != null)
+            {
+                mHomeLayout.setStampCount(count, isError);
             }
         }
 
