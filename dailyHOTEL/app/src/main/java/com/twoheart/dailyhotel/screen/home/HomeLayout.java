@@ -960,6 +960,9 @@ public class HomeLayout extends BaseBlurLayout
             setErrorPopupLayout(true);
         } else
         {
+            TextView stampTextView = (TextView) mStampLayout.findViewById(R.id.stampTextView);
+            stampTextView.setText("현재 받은 스탬프 개수는 : " + count);
+
             if (mStampLayout.getVisibility() != View.VISIBLE)
             {
                 mStampLayout.setVisibility(View.VISIBLE);
