@@ -45,7 +45,6 @@ public class RecentGourmetListLayout extends RecentPlacesListLayout
         return R.string.recent_gourmet_list_empty_button_message;
     }
 
-    @Override
     protected ArrayList<PlaceViewItem> makePlaceViewItemList(ArrayList<? extends Place> list)
     {
         if (list == null || list.size() == 0)

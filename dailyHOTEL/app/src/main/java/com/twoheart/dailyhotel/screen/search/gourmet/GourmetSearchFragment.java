@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.location.Location;
 
 import com.daily.base.util.DailyTextUtils;
+import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Keyword;
 import com.twoheart.dailyhotel.model.time.GourmetBookingDay;
 import com.twoheart.dailyhotel.network.model.TodayDateTime;
@@ -83,6 +84,12 @@ public class GourmetSearchFragment extends PlaceSearchFragment
                 break;
             }
         }
+    }
+
+    @Override
+    protected int getLayoutResourceId()
+    {
+        return R.layout.fragment_gourmet_search;
     }
 
     @Override

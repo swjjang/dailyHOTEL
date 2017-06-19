@@ -22,7 +22,7 @@ public interface Constants
     enum PlaceType
     {
         HOTEL,
-        FNB // 절대로 바꾸면 안됨 서버에서 fnb로 내려옴
+        FNB, // 절대로 바꾸면 안됨 서버에서 fnb로 내려옴
     }
 
     enum ViewType
@@ -169,7 +169,7 @@ public interface Constants
     String NAME_INTENT_EXTRA_DATA_TYPE = "type";
     String NAME_INTENT_EXTRA_DATA_ROOMINDEX = "roomIndex";
     String NAME_INTENT_EXTRA_DATA_PRODUCTINDEX = "prouctIndex";
-    String NAME_INTENT_EXTRA_DATA_RESERVATIONINDEX = "reservationIndex";
+    String NAME_INTENT_EXTRA_DATA_RESERVATIONINDEX = "index";
     String NAME_INTENT_EXTRA_DATA_CHECKINDATE = "checkInDate";
     String NAME_INTENT_EXTRA_DATA_CHECKOUTDATE = "checkOutDate";
     String NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY = "placeBookingDay";
@@ -208,11 +208,15 @@ public interface Constants
     String NAME_INTENT_EXTRA_DATA_IS_SOLDOUT = "isSoldOut";
     String NAME_INTENT_EXTRA_DATA_TODAYDATETIME = "todayDateTime";
     String NAME_INTENT_EXTRA_DATA_PLACE_REVIEW_SCORES = "placeReviewScores";
-    String NAME_INTENT_EXTRA_DATA_DAILY_CATEGORY_TYPE = "dailyCategoryType";
     String NAME_INTENT_EXTRA_DATA_INTENT = "intent";
-    String NAME_INTENT_EXTRA_DATA_TRUEVIEW_LIST = "trueViewList";
+    String NAME_INTENT_EXTRA_DATA_DAILY_CATEGORY_TYPE = "dailyCategoryType";
+    String NAME_INTENT_EXTRA_DATA_TRUEVR_LIST = "trueVRList";
     String NAME_INTENT_EXTRA_DATA_EMAIL = "email";
     String NAME_INTENT_EXTRA_DATA_VR_FLAG = "vrFlag";
+    String NAME_INTENT_EXTRA_DATA_CARD_NAME = "cardName";
+    String NAME_INTENT_EXTRA_DATA_CARD_BILLING_KEY = "cardBillingKey";
+    String NAME_INTENT_EXTRA_DATA_CARD_NUMBER = "cardNumber";
+    String NAME_INTENT_EXTRA_DATA_CARD_CD = "cardCd";
 
     // Push Type
     int PUSH_TYPE_NOTICE = 0;
@@ -286,6 +290,7 @@ public interface Constants
     int CODE_REQUEST_ACTIVITY_LIFESTYLE = 73;
     int CODE_REQUEST_ACTIVITY_TRUEVIEW = 74;
     int CODE_REQUEST_ACTIVITY_PREVIEW = 75;
+    int CODE_REQUEST_ACTIVITY_STAY_OB_DETAIL = 76;
 
     // Android Activity의 Result Code들이다.
     int CODE_RESULT_ACTIVITY_PAYMENT_FAIL = 100;
@@ -320,8 +325,9 @@ public interface Constants
     int CODE_RESULT_ACTIVITY_STAY_AUTOREFUND = 308;
     int CODE_RESULT_ACTIVITY_GO_HOME = 309;
     int CODE_RESULT_ACTIVITY_EVENT = 310;
-    int CODE_RESULT_ACTIVITY_GO_SEARCH = 311;
-    int CODE_RESULT_ACTIVITY_GO_REGION_LIST = 312;
+    int CODE_RESULT_ACTIVITY_STAY_OUTBOUND_SEARCH = 311;
+    int CODE_RESULT_ACTIVITY_GO_SEARCH = 312;
+    int CODE_RESULT_ACTIVITY_GO_REGION_LIST = 313;
 
     // 예약 리스트에서
     int CODE_PAY_TYPE_CARD_COMPLETE = 10;

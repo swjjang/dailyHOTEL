@@ -1,7 +1,23 @@
 package com.twoheart.dailyhotel.network;
 
+import com.daily.dailyhotel.repository.remote.model.BookingData;
+import com.daily.dailyhotel.repository.remote.model.BookingHideData;
+import com.daily.dailyhotel.repository.remote.model.CardData;
+import com.daily.dailyhotel.repository.remote.model.CommonDateTimeData;
+import com.daily.dailyhotel.repository.remote.model.PaymentResultData;
+import com.daily.dailyhotel.repository.remote.model.StayListData;
+import com.daily.dailyhotel.repository.remote.model.StayOutboundBookingDetailData;
+import com.daily.dailyhotel.repository.remote.model.StayOutboundDetailData;
+import com.daily.dailyhotel.repository.remote.model.StayOutboundEmailReceiptData;
+import com.daily.dailyhotel.repository.remote.model.StayOutboundPaymentData;
+import com.daily.dailyhotel.repository.remote.model.StayOutboundReceiptData;
+import com.daily.dailyhotel.repository.remote.model.StayOutboundRefundData;
+import com.daily.dailyhotel.repository.remote.model.StayOutboundRefundDetailData;
+import com.daily.dailyhotel.repository.remote.model.StayOutboundsData;
+import com.daily.dailyhotel.repository.remote.model.SuggestsData;
 import com.daily.dailyhotel.repository.remote.model.UserBenefitData;
 import com.daily.dailyhotel.repository.remote.model.UserData;
+import com.daily.dailyhotel.repository.remote.model.UserInformationData;
 import com.twoheart.dailyhotel.model.Keyword;
 import com.twoheart.dailyhotel.network.dto.BaseDto;
 import com.twoheart.dailyhotel.network.dto.BaseListDto;
@@ -9,7 +25,6 @@ import com.twoheart.dailyhotel.network.model.Event;
 import com.twoheart.dailyhotel.network.model.GourmetDetailParams;
 import com.twoheart.dailyhotel.network.model.GourmetWishItem;
 import com.twoheart.dailyhotel.network.model.Holiday;
-import com.twoheart.dailyhotel.network.model.HomePlace;
 import com.twoheart.dailyhotel.network.model.HomePlaces;
 import com.twoheart.dailyhotel.network.model.PlaceReviewScores;
 import com.twoheart.dailyhotel.network.model.PlaceReviews;
@@ -70,10 +85,6 @@ public interface DailyMobileService
     @GET("{mobileAPI}")
     Call<JSONObject> requestUserProfile(@Path(value = "mobileAPI", encoded = true) String mobileAPI);
 
-    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
-    @GET("{mobileAPI}")
-    Observable<BaseDto<UserData>> getUserProfile(@Path(value = "mobileAPI", encoded = true) String mobileAPI);
-
     @GET("{mobileAPI}")
     Call<JSONObject> requestUserBonus(@Path(value = "mobileAPI", encoded = true) String mobileAPI);
 
@@ -84,10 +95,6 @@ public interface DailyMobileService
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET("{mobileAPI}")
     Call<JSONObject> requestUserProfileBenefit(@Path(value = "mobileAPI", encoded = true) String mobileAPI);
-
-    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
-    @GET("{mobileAPI}")
-    Observable<BaseDto<UserBenefitData>> getUserBenefit(@Path(value = "mobileAPI", encoded = true) String mobileAPI);
 
     @FormUrlEncoded
     @POST("{mobileAPI}")
@@ -431,12 +438,12 @@ public interface DailyMobileService
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET("{mobileAPI}")
-    Call<BaseDto<HomePlaces<HomePlace>>> requestHomeWishList(@Path(value = "mobileAPI", encoded = true) String mobileAPI);
+    Call<BaseDto<HomePlaces>> requestHomeWishList(@Path(value = "mobileAPI", encoded = true) String mobileAPI);
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @POST("{mobileAPI}")
-    Call<BaseDto<HomePlaces<HomePlace>>> requestHomeRecentList(@Path(value = "mobileAPI", encoded = true) String mobileAPI,//
-                                                               @Body JSONObject jsonObject);
+    Call<BaseDto<HomePlaces>> requestHomeRecentList(@Path(value = "mobileAPI", encoded = true) String mobileAPI,//
+                                                    @Body JSONObject jsonObject);
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET("{mobileAPI}")
@@ -464,4 +471,216 @@ public interface DailyMobileService
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET("{mobileAPI}")
     Call<JSONObject> requestStayCategoryRegions(@Path(value = "mobileAPI", encoded = true) String mobileAPI);
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    // RxJava2 API
+    //
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+    // CommonRemoteImpl
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
+    @GET("{mobileAPI}")
+    Observable<BaseDto<CommonDateTimeData>> getCommonDateTime(@Path(value = "mobileAPI", encoded = true) String mobileAPI);
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+    // ProfileRemoteImpl
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
+    @GET("{mobileAPI}")
+    Observable<BaseDto<UserData>> getUserProfile(@Path(value = "mobileAPI", encoded = true) String mobileAPI);
+
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
+    @GET("{mobileAPI}")
+    Observable<BaseDto<UserBenefitData>> getUserBenefit(@Path(value = "mobileAPI", encoded = true) String mobileAPI);
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+    // SuggestRemoteImpl
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
+    @GET()
+    Observable<BaseDto<SuggestsData>> getSuggestsByStayOutbound(@Url String mobileAPI, @Query(value = "keyword") String keyword);
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+    // SuggestRemoteImpl
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
+    @GET()
+    Observable<BaseDto<StayOutboundsData>> getStayOutboundList(@Url String mobileAPI//
+        , @Query(value = "arrivalDate") String arrivalDate//
+        , @Query(value = "departureDate") String departureDate//
+        , @Query(value = "rooms[0].numberOfAdults") int numberOfAdults//
+        , @Query(value = "rooms[0].numberOfChildren") int numberOfChildren//
+        , @Query(value = "rooms[0].childAges") String childAges //
+        , @Query(value = "numberOfRooms") int numberOfRooms//
+        , @Query(value = "countryCode") String countryCode//
+        , @Query(value = "city") String city//
+        , @Query(value = "numberOfResults") int numberOfResults//
+        , @Query(value = "cacheKey") String cacheKey//
+        , @Query(value = "cacheLocation") String cacheLocation//
+        , @Query(value = "apiExperience") String apiExperience// 디폴트 인자들
+        , @Query(value = "locale") String locale// 디폴트 인자들
+        , @Query(value = "sort") String sort// 디폴트 인자들
+    );
+
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
+    @GET()
+    Observable<BaseDto<StayOutboundsData>> getStayOutboundList(@Url String mobileAPI//
+        , @Query(value = "arrivalDate") String arrivalDate//
+        , @Query(value = "departureDate") String departureDate//
+        , @Query(value = "rooms[0].numberOfAdults") int numberOfAdults//
+        , @Query(value = "rooms[0].numberOfChildren") int numberOfChildren//
+        , @Query(value = "rooms[0].childAges") String childAges //
+        , @Query(value = "filter.maxStarRating") double maxStarRating //
+        , @Query(value = "filter.minStarRating") double minStarRating //
+        , @Query(value = "numberOfRooms") int numberOfRooms//
+        , @Query(value = "geographyId") long geographyId//
+        , @Query(value = "geographyType") String geographyType//
+        , @Query(value = "numberOfResults") int numberOfResults//
+        , @Query(value = "cacheKey") String cacheKey//
+        , @Query(value = "cacheLocation") String cacheLocation//
+        , @Query(value = "apiExperience") String apiExperience// 디폴트 인자들
+        , @Query(value = "locale") String locale// 디폴트 인자들
+        , @Query(value = "sort") String sort// 디폴트 인자들
+    );
+
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
+    @GET()
+    Observable<BaseDto<StayOutboundsData>> getStayOutboundList(@Url String mobileAPI//
+        , @Query(value = "arrivalDate") String arrivalDate//
+        , @Query(value = "departureDate") String departureDate//
+        , @Query(value = "rooms[0].numberOfAdults") int numberOfAdults//
+        , @Query(value = "rooms[0].numberOfChildren") int numberOfChildren//
+        , @Query(value = "rooms[0].childAges") String childAges //
+        , @Query(value = "filter.maxStarRating") double maxStarRating //
+        , @Query(value = "filter.minStarRating") double minStarRating //
+        , @Query(value = "numberOfRooms") int numberOfRooms//
+        , @Query(value = "geographyId") long geographyId//
+        , @Query(value = "geographyType") String geographyType//
+        , @Query(value = "latitude") double latitude//
+        , @Query(value = "longitude") double longitude//
+        , @Query(value = "numberOfResults") int numberOfResults//
+        , @Query(value = "cacheKey") String cacheKey//
+        , @Query(value = "cacheLocation") String cacheLocation//
+        , @Query(value = "apiExperience") String apiExperience// 디폴트 인자들
+        , @Query(value = "locale") String locale// 디폴트 인자들
+        , @Query(value = "sort") String sort// 디폴트 인자들
+    );
+
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
+    @GET()
+    Observable<BaseDto<StayOutboundsData>> getStayOutboundList(@Url String mobileAPI//
+        , @Query(value = "filter.includeSurrounding") boolean filterIncludeSurrounding//
+        , @Query(value = "filter.maxStarRating") int filterMaxStarRating//
+        , @Query(value = "filter.minStarRating") int filterMinStarRating//
+        , @Query(value = "arrivalDate") String arrivalDate//
+        , @Query(value = "departureDate") String departureDate//
+        , @Query(value = "rooms[0].numberOfAdults") int numberOfAdults//
+        , @Query(value = "rooms[0].numberOfChildren") int numberOfChildren//
+        , @Query(value = "rooms[0].childAges") String childAges //
+        , @Query(value = "numberOfRooms") int numberOfRooms//
+        , @Query(value = "latitude") double latitude//
+        , @Query(value = "longitude") double longitude//
+        , @Query(value = "searchRadius") int searchRadius//
+        , @Query(value = "searchRadiusUnit") String searchRadiusUnit//
+        , @Query(value = "numberOfResults") int numberOfResults//
+        , @Query(value = "cacheKey") String cacheKey//
+        , @Query(value = "cacheLocation") String cacheLocation//
+        , @Query(value = "apiExperience") String apiExperience// 디폴트 인자들
+        , @Query(value = "locale") String locale// 디폴트 인자들
+        , @Query(value = "sort") String sort// 디폴트 인자들
+    );
+
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
+    @POST()
+    Observable<BaseDto<StayOutboundsData>> getStayOutboundList(@Url String mobileAPI, @Body JSONObject jsonObject);
+
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
+    @POST()
+    Observable<BaseDto<StayOutboundDetailData>> getStayOutboundDetail(@Url String mobileAPI, @Body JSONObject jsonObject);
+
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
+    @POST()
+    Observable<BaseDto<StayOutboundPaymentData>> getStayOutboundPayment(@Url String mobileAPI, @Body JSONObject jsonObject);
+
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
+    @POST("{mobileAPI}")
+    Observable<BaseListDto<CardData>> getEasyCardList(@Path(value = "mobileAPI", encoded = true) String mobileAPI);
+
+    @GET("{mobileAPI}")
+    Observable<BaseDto<UserInformationData>> getUserInformationForPayment(@Path(value = "mobileAPI", encoded = true) String mobileAPI);
+
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
+    @POST()
+    Observable<BaseDto<PaymentResultData>> getPaymentTypeEasy(@Url String mobileAPI, @Body JSONObject jsonObject);
+
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
+    @POST()
+    Observable<BaseDto<PaymentResultData>> getPaymentTypeBonus(@Url String mobileAPI, @Body JSONObject jsonObject);
+
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
+    @GET()
+    Observable<BaseListDto<BookingData>> getStayOutboundBookingList(@Url String mobileAPI);
+
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
+    @GET("{mobileAPI}")
+    Observable<BaseListDto<BookingData>> getBookingList(@Path(value = "mobileAPI", encoded = true) String mobileAPI);
+
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
+    @POST()
+    Observable<BaseDto<BookingHideData>> getStayOutboundHideBooking(@Url String mobileAPI);
+
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
+    @GET()
+    Observable<BaseDto<StayOutboundBookingDetailData>> getStayOutboundBookingDetail(@Url String mobileAPI);
+
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
+    @GET()
+    Observable<BaseDto<StayOutboundRefundDetailData>> getStayOutboundRefundDetail(@Url String mobileAPI);
+
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
+    @POST()
+    Observable<BaseDto<StayOutboundRefundData>> getStayOutboundRefund(@Url String mobileAPI//
+        , @Query("refundType") String refundType//
+        , @Query("cancelReasonType") String cancelReasonType//
+        , @Query("reasons") String reasons);
+
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
+    @GET()
+    Observable<BaseDto<StayOutboundReceiptData>> getStayOutboundReceipt(@Url String mobileAPI);
+
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
+    @GET()
+    Observable<BaseDto<StayOutboundEmailReceiptData>> getStayOutboundEmailReceipt(@Url String mobileAPI//
+        , @Query("receiverEmail") String receiverEmail);
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+    // RecentlyRemoteImpl
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
+    @GET
+    Observable<BaseDto<StayOutboundsData>> getStayOutboundRecentlyList(@Url String mobileAPI//
+        , @Query(value = "hotelIds") String hotelIds//
+        , @Query(value = "numberOfResults") int numberOfResults//
+        , @Query(value = "sort") String sort//
+    );
+
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
+    @POST("{mobileAPI}")
+    Observable<BaseDto<HomePlaces>> getHomeRecentList(@Path(value = "mobileAPI", encoded = true) String mobileAPI,//
+                                                      @Body JSONObject jsonObject);
+
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
+    @GET("{mobileAPI}")
+    Observable<BaseDto<StayListData>> getStayInboundList(@Path(value = "mobileAPI", encoded = true) String mobileAPI, //
+                                                         @QueryMap Map<String, Object> queryMap, //
+                                                         @Query("bedType") List<String> bedTypeList, //
+                                                         @Query("luxury") List<String> luxuryList);
 }

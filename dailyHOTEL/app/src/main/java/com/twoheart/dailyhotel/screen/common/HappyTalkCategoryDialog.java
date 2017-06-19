@@ -47,13 +47,16 @@ public class HappyTalkCategoryDialog extends BaseActivity
     {
         SCREEN_STAY_DETAIL("호텔상세"),
         SCREEN_GOURMET_DETAIL("고메상세"),
+        SCREEN_STAY_OUTBOUND_DETAIL("해외호텔상세"),
         SCREEN_STAY_PAYMENT_WAIT("예약내역>입금대기"),
         SCREEN_GOURMET_PAYMENT_WAIT("예약내역>입금대기"),
         SCREEN_STAY_BOOKING("예약내역>문의"),
         SCREEN_GOURMET_BOOKING("예약내역>문의"),
+        SCREEN_STAY_OUTBOUND_BOOKING("해외호텔예약내역>문의"),
         SCREEN_FAQ("더보기>자주묻는질문"),
         SCREEN_CONTACT_US("더보기>문의하기"),
-        SCREEN_STAY_REFUND("예약내역>환불문의");
+        SCREEN_STAY_REFUND("예약내역>환불문의"),
+        SCREEN_STAY_OUTBOUND_REFUND("해외호텔예약내역>환불문의");
 
         private String mName;
 
@@ -161,7 +164,7 @@ public class HappyTalkCategoryDialog extends BaseActivity
         parseCategory(category, mainCategoryMap, subCategoryMap);
 
         // 환불인 경우 바로 연동한다.
-        if (mCallScreen == CallScreen.SCREEN_STAY_REFUND)
+        if (mCallScreen == CallScreen.SCREEN_STAY_REFUND || mCallScreen == CallScreen.SCREEN_STAY_OUTBOUND_REFUND)
         {
             final String STAY_PREFIX = "S_";
             final String STAY_REFUND = "64796";
@@ -481,6 +484,15 @@ public class HappyTalkCategoryDialog extends BaseActivity
 
                 case SCREEN_STAY_REFUND:
                     label = AnalyticsManager.Label.STAY_BOOKING_DETAIL_REFUND;
+                    break;
+
+                case SCREEN_STAY_OUTBOUND_BOOKING:
+                    break;
+
+                case SCREEN_STAY_OUTBOUND_DETAIL:
+                    break;
+
+                case SCREEN_STAY_OUTBOUND_REFUND:
                     break;
 
                 default:

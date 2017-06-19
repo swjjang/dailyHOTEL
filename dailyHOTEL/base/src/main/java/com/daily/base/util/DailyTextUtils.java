@@ -10,7 +10,11 @@ import android.widget.TextView;
 
 import com.daily.base.R;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.util.Locale;
 import java.util.regex.Pattern;
 
 public class DailyTextUtils
@@ -71,6 +75,15 @@ public class DailyTextUtils
             DecimalFormat decimalFormat = new DecimalFormat(context.getString(R.string.label_currency_format_postfix));
             return decimalFormat.format(price);
         }
+    }
+
+    public static String getGlobalCurrency(Locale locale, String currencyCode, double price)
+    {
+        NumberFormat numberFormat = NumberFormat.getInstance(locale);
+        numberFormat.setMaximumFractionDigits(2);
+        numberFormat.setMinimumFractionDigits(2);
+
+        return currencyCode + " " + numberFormat.format(price);
     }
 
     /**

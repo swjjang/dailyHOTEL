@@ -3,6 +3,7 @@ package com.twoheart.dailyhotel.screen.mydaily;
 import android.content.Context;
 
 import com.crashlytics.android.Crashlytics;
+import com.daily.base.util.ExLog;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
@@ -92,10 +93,14 @@ public class MyDailyNetworkController extends BaseNetworkController
                     }
                 } catch (Exception e)
                 {
+                    ExLog.e(e.toString());
+
                     mOnNetworkControllerListener.onError(e);
                 }
             } else
             {
+                ExLog.e(response.toString());
+
                 mOnNetworkControllerListener.onErrorResponse(call, response);
             }
         }
@@ -136,10 +141,14 @@ public class MyDailyNetworkController extends BaseNetworkController
                     }
                 } catch (Exception e)
                 {
+                    ExLog.e(e.toString());
+
                     mOnNetworkControllerListener.onError(e);
                 }
             } else
             {
+                ExLog.e(response.toString());
+
                 mOnNetworkControllerListener.onErrorResponse(call, response);
             }
         }
@@ -177,10 +186,14 @@ public class MyDailyNetworkController extends BaseNetworkController
                     }
                 } catch (Exception e)
                 {
+                    ExLog.e(e.toString());
+
                     mOnNetworkControllerListener.onError(e);
                 }
             } else
             {
+                ExLog.e(response.toString());
+
                 mOnNetworkControllerListener.onErrorResponse(call, response);
             }
         }
@@ -188,7 +201,7 @@ public class MyDailyNetworkController extends BaseNetworkController
         @Override
         public void onFailure(Call<JSONObject> call, Throwable t)
         {
-            mOnNetworkControllerListener.onError(t);
+            mOnNetworkControllerListener.onError(call, t, false);
         }
     };
 
@@ -233,10 +246,14 @@ public class MyDailyNetworkController extends BaseNetworkController
                     mOnNetworkControllerListener.onError(e);
                 } catch (Exception e)
                 {
+                    ExLog.e(e.toString());
+
                     mOnNetworkControllerListener.onError(e);
                 }
             } else
             {
+                ExLog.e(response.toString());
+
                 mOnNetworkControllerListener.onErrorResponse(call, response);
             }
         }
@@ -244,7 +261,7 @@ public class MyDailyNetworkController extends BaseNetworkController
         @Override
         public void onFailure(Call<JSONObject> call, Throwable t)
         {
-            mOnNetworkControllerListener.onError(t);
+            mOnNetworkControllerListener.onError(call, t, false);
         }
     };
 }

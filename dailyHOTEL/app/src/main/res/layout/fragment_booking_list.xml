@@ -7,13 +7,14 @@
 
     <include layout="@layout/toolbar_default"/>
 
-    <com.twoheart.dailyhotel.widget.PinnedSectionListView
-        android:id="@+id/listview_booking"
+    <com.twoheart.dailyhotel.widget.PinnedSectionRecyclerView
+        android:id="@+id/bookingRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/toolbar"
         android:cacheColorHint="@android:color/transparent"
         android:divider="@null"
+        android:scrollbars="vertical"
         android:fadingEdge="none"/>
 
     <RelativeLayout

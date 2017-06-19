@@ -1,22 +1,17 @@
 package com.daily.base;
 
-import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
+import android.content.res.ColorStateList;
 import android.databinding.DataBindingUtil;
 import android.databinding.ViewDataBinding;
-import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.view.WindowManager;
 
-import com.daily.base.databinding.DialogLayoutDataBinding;
-import com.daily.base.util.ExLog;
-import com.daily.base.util.ScreenUtils;
-import com.daily.base.util.DailyTextUtils;
+import com.daily.base.util.VersionUtils;
 
 public abstract class BaseView<T1 extends OnBaseEventListener, T2 extends ViewDataBinding> implements BaseViewInterface
 {
@@ -24,9 +19,7 @@ public abstract class BaseView<T1 extends OnBaseEventListener, T2 extends ViewDa
     private T2 mViewDataBinding;
     private T1 mOnEventListener;
 
-    private Dialog mDialog;
-
-    protected abstract void initLayout(T2 viewDataBinding);
+    protected abstract void setContentView(T2 viewDataBinding);
 
     public BaseView(BaseActivity activity, T1 listener)
     {
@@ -42,9 +35,12 @@ public abstract class BaseView<T1 extends OnBaseEventListener, T2 extends ViewDa
     @Override
     public final void setContentView(int layoutResID)
     {
-        mViewDataBinding = DataBindingUtil.setContentView(mActivity, layoutResID);
+        if (layoutResID != 0)
+        {
+            mViewDataBinding = DataBindingUtil.setContentView(mActivity, layoutResID);
+        }
 
-        initLayout(mViewDataBinding);
+        setContentView(mViewDataBinding);
     }
 
     @Override
@@ -52,7 +48,7 @@ public abstract class BaseView<T1 extends OnBaseEventListener, T2 extends ViewDa
     {
         mViewDataBinding = DataBindingUtil.inflate(LayoutInflater.from(mActivity), layoutResID, viewGroup, false);
 
-        initLayout(mViewDataBinding);
+        setContentView(mViewDataBinding);
     }
 
     protected void setVisibility(int visibility)
@@ -84,9 +80,19 @@ public abstract class BaseView<T1 extends OnBaseEventListener, T2 extends ViewDa
         return mOnEventListener;
     }
 
+    protected Window getWindow()
+    {
+        return mActivity.getWindow();
+    }
+
     protected int getColor(int resId)
     {
         return mActivity.getResources().getColor(resId);
+    }
+
+    protected ColorStateList getColorStateList(int resId)
+    {
+        return mActivity.getResources().getColorStateList(resId);
     }
 
     protected String getString(int resId)
@@ -99,172 +105,30 @@ public abstract class BaseView<T1 extends OnBaseEventListener, T2 extends ViewDa
         return mActivity.getString(resId, formatArgs);
     }
 
-    @Override
-    public void hideSimpleDialog()
+    protected Drawable getDrawable(int id)
     {
-        if (mDialog != null)
+        if (VersionUtils.isOverAPI21() == true)
         {
-            if (mDialog.isShowing())
-            {
-                mDialog.cancel();
-            }
-
-            mDialog = null;
-        }
-    }
-
-    public void showLoadingBar()
-    {
-
-    }
-
-    public void hideLoadingBar()
-    {
-
-    }
-
-    @Override
-    public void showSimpleDialog(String title, String msg, String positive, View.OnClickListener positiveListener)
-    {
-        showSimpleDialog(title, msg, positive, null, positiveListener, null);
-    }
-
-    @Override
-    public void showSimpleDialog(String title, String msg, String positive, View.OnClickListener positiveListener, DialogInterface.OnCancelListener cancelListener)
-    {
-        showSimpleDialog(title, msg, positive, null, positiveListener, null, cancelListener, null, true);
-    }
-
-    @Override
-    public void showSimpleDialog(String title, String msg, String positive, View.OnClickListener positiveListener, DialogInterface.OnDismissListener dismissListener)
-    {
-        showSimpleDialog(title, msg, positive, null, positiveListener, null, null, dismissListener, true);
-    }
-
-    @Override
-    public void showSimpleDialog(String title, String msg, String positive, String negative, View.OnClickListener positiveListener, View.OnClickListener negativeListener)
-    {
-        showSimpleDialog(title, msg, positive, negative, positiveListener, negativeListener, null, null, true);
-    }
-
-    @Override
-    public void showSimpleDialog(String title, String msg, String positive, String negative, View.OnClickListener positiveListener, View.OnClickListener negativeListener, boolean isCancelable)
-    {
-        showSimpleDialog(title, msg, positive, negative, positiveListener, negativeListener, null, null, isCancelable);
-    }
-
-    @Override
-    public void showSimpleDialog(String titleText, String msg, String positive, String negative, final View.OnClickListener positiveListener, final View.OnClickListener negativeListener, DialogInterface.OnCancelListener cancelListener, //
-                                 DialogInterface.OnDismissListener dismissListener, //
-                                 boolean isCancelable)
-    {
-        if (mActivity.isFinishing() == true)
-        {
-            return;
-        }
-
-        hideSimpleDialog();
-
-        LayoutInflater layoutInflater = (LayoutInflater) mActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        DialogLayoutDataBinding dataBinding = DataBindingUtil.inflate(LayoutInflater.from(mActivity), R.layout.dialog_layout_data, null, false);
-
-        mDialog = new Dialog(mActivity);
-        mDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        mDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
-        mDialog.setCanceledOnTouchOutside(false);
-
-        // 상단
-        dataBinding.titleTextView.setVisibility(View.VISIBLE);
-
-        if (DailyTextUtils.isTextEmpty(titleText) == true)
-        {
-            dataBinding.titleTextView.setText(getString(R.string.label_notice));
+            return mActivity.getDrawable(id);
         } else
         {
-            dataBinding.titleTextView.setText(titleText);
+            return mActivity.getResources().getDrawable(id);
         }
+    }
 
-        // 메시지
-        dataBinding.messageTextView.setText(msg);
+    protected int getDimensionPixelSize(int id)
+    {
+        return mActivity.getResources().getDimensionPixelSize(id);
+    }
 
-        // 버튼
-        if (DailyTextUtils.isTextEmpty(positive, negative) == false)
-        {
-            dataBinding.twoButtonLayout.setVisibility(View.VISIBLE);
-            dataBinding.oneButtonLayout.setVisibility(View.GONE);
+    @NonNull
+    BaseActivity getActivity()
+    {
+        return mActivity;
+    }
 
-            dataBinding.negativeTextView.setText(negative);
-            dataBinding.negativeTextView.setOnClickListener(v ->
-            {
-                if (mDialog != null && mDialog.isShowing() == true)
-                {
-                    mDialog.dismiss();
-                }
-
-                if (negativeListener != null)
-                {
-                    negativeListener.onClick(v);
-                }
-            });
-
-
-            dataBinding.positiveTextView.setText(positive);
-            dataBinding.positiveTextView.setOnClickListener(v ->
-            {
-                if (mDialog != null && mDialog.isShowing())
-                {
-                    mDialog.dismiss();
-                }
-
-                if (positiveListener != null)
-                {
-                    positiveListener.onClick(v);
-                }
-            });
-        } else
-        {
-            dataBinding.twoButtonLayout.setVisibility(View.GONE);
-            dataBinding.oneButtonLayout.setVisibility(View.VISIBLE);
-
-            dataBinding.confirmTextView.setText(positive);
-            dataBinding.oneButtonLayout.setOnClickListener(v ->
-            {
-                if (mDialog != null && mDialog.isShowing())
-                {
-                    mDialog.dismiss();
-                }
-
-                if (positiveListener != null)
-                {
-                    positiveListener.onClick(v);
-                }
-            });
-        }
-
-        if (cancelListener != null)
-        {
-            mDialog.setOnCancelListener(cancelListener);
-        }
-
-        if (dismissListener != null)
-        {
-            mDialog.setOnDismissListener(dismissListener);
-        }
-
-        mDialog.setCancelable(isCancelable);
-
-        try
-        {
-            mDialog.setContentView(dataBinding.getRoot());
-
-            WindowManager.LayoutParams layoutParams = ScreenUtils.getDialogWidthLayoutParams(mActivity, mDialog);
-
-            mDialog.show();
-
-            mDialog.getWindow().setAttributes(layoutParams);
-        } catch (Exception e)
-        {
-            ExLog.d(e.toString());
-        }
+    protected Fragment findFragmentById(int id)
+    {
+        return mActivity.getSupportFragmentManager().findFragmentById(id);
     }
 }

@@ -22,6 +22,7 @@ import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
 import com.daily.base.widget.DailyToast;
+import com.daily.dailyhotel.util.RecentlyPlaceUtil;
 import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.drawee.view.DraweeTransition;
 import com.twoheart.dailyhotel.DailyHotel;
@@ -30,7 +31,6 @@ import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.Customer;
 import com.twoheart.dailyhotel.model.PlaceDetail;
 import com.twoheart.dailyhotel.model.Province;
-import com.twoheart.dailyhotel.model.RecentPlaces;
 import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.model.StayDetail;
 import com.twoheart.dailyhotel.model.time.PlaceBookingDay;
@@ -357,9 +357,23 @@ public class StayDetailActivity extends PlaceDetailActivity
         mPlaceDetail = createPlaceDetail(intent);
 
         // 최근 본 업장 저장
-        RecentPlaces recentPlaces = new RecentPlaces(this);
-        recentPlaces.add(Constants.PlaceType.HOTEL, mPlaceDetail.index);
-        recentPlaces.savePreference();
+        //        RecentPlaces recentPlaces = new RecentPlaces(this);
+        //        recentPlaces.add(Constants.PlaceType.HOTEL, mPlaceDetail.index);
+        //        recentPlaces.savePreference();
+
+        String placeName = null;
+        if (intent.hasExtra(NAME_INTENT_EXTRA_DATA_HOTELNAME) == true)
+        {
+            placeName = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_HOTELNAME);
+        }
+
+        if (intent.hasExtra(NAME_INTENT_EXTRA_DATA_IMAGEURL) == true)
+        {
+            mDefaultImageUrl = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_IMAGEURL);
+        }
+
+        RecentlyPlaceUtil.addRecentlyItemAsync(RecentlyPlaceUtil.ServiceType.IB_STAY //
+            , mPlaceDetail.index, placeName, null, mDefaultImageUrl, true);
 
         if (intent.hasExtra(NAME_INTENT_EXTRA_DATA_TYPE) == true)
         {
@@ -374,9 +388,6 @@ public class StayDetailActivity extends PlaceDetailActivity
         } else
         {
             mIsDeepLink = false;
-
-            String placeName = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_HOTELNAME);
-            mDefaultImageUrl = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_IMAGEURL);
 
             if (placeName == null)
             {
@@ -977,8 +988,11 @@ public class StayDetailActivity extends PlaceDetailActivity
             //                stayDetailParams.category = stayDetailParams.getGrade().name();
             //            }
 
-            mDailyToolbarLayout.setToolbarText(stayDetailParams.name);
+            mDailyToolbarLayout.setToolbarTitle(stayDetailParams.name);
         }
+
+        RecentlyPlaceUtil.addRecentlyItemAsync(RecentlyPlaceUtil.ServiceType.IB_STAY //
+            , stayDetail.index, stayDetailParams.name, null, stayDetailParams.imgUrl, false);
 
         if (mPlaceDetailLayout != null)
         {

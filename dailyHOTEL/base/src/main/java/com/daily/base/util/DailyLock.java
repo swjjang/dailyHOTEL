@@ -1,11 +1,14 @@
 package com.daily.base.util;
 
 import android.app.Dialog;
+import android.content.DialogInterface;
+import android.graphics.PorterDuff;
 import android.os.Handler;
 import android.os.Message;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.ProgressBar;
 
 import com.daily.base.BaseActivity;
@@ -57,19 +60,20 @@ public class DailyLock
         synchronized (this)
         {
             mIsLock = false;
-
-            mProgressBarDialog.hide();
         }
     }
 
     /**
      * 스크린 락을 건다.
      */
-    public boolean screenLock(boolean showProgress)
+    public void screenLock(boolean showProgress)
     {
         mProgressBarDialog.show(showProgress);
+    }
 
-        return lock();
+    public boolean isScreenLock()
+    {
+        return mProgressBarDialog.isShow();
     }
 
     /**
@@ -78,8 +82,6 @@ public class DailyLock
     public void screenUnLock()
     {
         mProgressBarDialog.hide();
-
-        unLock();
     }
 
     /**
@@ -87,7 +89,7 @@ public class DailyLock
      */
     public void clear()
     {
-        mProgressBarDialog.close();
+        mProgressBarDialog.clear();
         unLock();
     }
 
@@ -107,9 +109,9 @@ public class DailyLock
                     return;
                 }
 
-                if (mDialog != null && mDialog.isShowing())
+                if (isShow() == true)
                 {
-                    mDialog.dismiss();
+                    close();
                 }
             }
         };
@@ -120,22 +122,28 @@ public class DailyLock
 
             mDialog = new Dialog(activity, R.style.TransBaseDialog);
             mProgressBar = new ProgressBar(activity);
+            mProgressBar.getIndeterminateDrawable().setColorFilter(activity.getResources().getColor(R.color.default_probressbar), PorterDuff.Mode.SRC_IN);
             ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             mDialog.addContentView(mProgressBar, params);
+            mDialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
             mDialog.setCancelable(false);
 
-            mDialog.setOnCancelListener(dialog ->
+            mDialog.setOnCancelListener(new DialogInterface.OnCancelListener()
             {
-                hide();
+                @Override
+                public void onCancel(DialogInterface dialog)
+                {
+                    hide();
 
-                mActivity.onBackPressed();
+                    mActivity.onLockProgressBackPressed();
+                }
             });
 
             mDialog.setOnKeyListener((dialog, keyCode, event) ->
             {
                 if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_UP && !event.isCanceled())
                 {
-                    mActivity.onBackPressed();
+                    mActivity.onLockProgressBackPressed();
                 }
 
                 return false;
@@ -169,22 +177,40 @@ public class DailyLock
                     mDialog.show();
                 } catch (Exception e)
                 {
+                    ExLog.e(e.toString());
                 }
             }
+        }
+
+        boolean isShow()
+        {
+            if (mDialog == null)
+            {
+                return false;
+            }
+
+            return mDialog.isShowing();
         }
 
         void hide()
         {
             mHandler.removeMessages(0);
-            mHandler.sendEmptyMessageDelayed(0, 300);
+            mHandler.sendEmptyMessageDelayed(0, 200);
         }
 
         void close()
         {
-            if (mDialog != null && mDialog.isShowing() == true)
+            mHandler.removeMessages(0);
+
+            if (isShow() == true)
             {
                 mDialog.dismiss();
             }
+        }
+
+        void clear()
+        {
+            close();
 
             mDialog = null;
         }

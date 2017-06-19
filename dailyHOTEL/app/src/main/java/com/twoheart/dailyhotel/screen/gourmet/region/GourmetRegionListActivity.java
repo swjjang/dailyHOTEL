@@ -2,7 +2,6 @@ package com.twoheart.dailyhotel.screen.gourmet.region;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 
@@ -75,18 +74,6 @@ public class GourmetRegionListActivity extends PlaceRegionListActivity
     }
 
     @Override
-    protected void initTabLayout(TabLayout tabLayout, View tabUpperLineView)
-    {
-        if (tabLayout == null)
-        {
-            return;
-        }
-
-        tabUpperLineView.setVisibility(View.GONE);
-        tabLayout.setVisibility(ViewPager.GONE);
-    }
-
-    @Override
     protected void initToolbar(View toolbar)
     {
         DailyToolbarLayout dailyToolbarLayout = new DailyToolbarLayout(this, toolbar);
@@ -111,7 +98,7 @@ public class GourmetRegionListActivity extends PlaceRegionListActivity
     }
 
     @Override
-    protected void initViewPager(TabLayout tabLayout)
+    protected void initViewPager()
     {
         mViewPager = (ViewPager) findViewById(R.id.viewPager);
 
@@ -127,7 +114,6 @@ public class GourmetRegionListActivity extends PlaceRegionListActivity
         mViewPager.setOffscreenPageLimit(GOURMET_TAB_COUNT);
         mViewPager.setAdapter(mFragmentPagerAdapter);
         mViewPager.clearOnPageChangeListeners();
-        mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
 
         AnalyticsManager.getInstance(GourmetRegionListActivity.this).recordScreen(this, AnalyticsManager.Screen.DAILYGOURMET_LIST_REGION_DOMESTIC, null);
     }
@@ -256,7 +242,7 @@ public class GourmetRegionListActivity extends PlaceRegionListActivity
     private PlaceRegionListNetworkController.OnNetworkControllerListener mOnNetworkControllerListener = new PlaceRegionListNetworkController.OnNetworkControllerListener()
     {
         @Override
-        public void onRegionListResponse(List<RegionViewItem> domesticList, List<RegionViewItem> globalList)
+        public void onRegionListResponse(List<RegionViewItem> domesticList)
         {
             ArrayList<PlaceRegionListFragment> arrayList = mFragmentPagerAdapter.getFragmentList();
 

@@ -31,7 +31,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/receipt_bg_top"
-                android:minWidth="165dp"
+                android:minHeight="165dp"
                 android:paddingLeft="11dp"
                 android:paddingRight="11dp">
 

@@ -10,21 +10,32 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.SharedElementCallback;
+import android.support.v4.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
+import com.daily.base.exception.BaseException;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
 import com.daily.base.widget.DailyToast;
+import com.daily.dailyhotel.entity.StayBookDateTime;
+import com.daily.dailyhotel.entity.StayOutbounds;
+import com.daily.dailyhotel.repository.local.ConfigLocalImpl;
+import com.daily.dailyhotel.repository.remote.FacebookRemoteImpl;
+import com.daily.dailyhotel.repository.remote.KakaoRemoteImpl;
+import com.daily.dailyhotel.repository.remote.RecentlyRemoteImpl;
+import com.daily.dailyhotel.screen.stay.outbound.detail.StayOutboundDetailActivity;
+import com.daily.dailyhotel.screen.stay.outbound.search.StayOutboundSearchActivity;
+import com.daily.dailyhotel.util.RecentlyPlaceUtil;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.DailyCategoryType;
 import com.twoheart.dailyhotel.model.Province;
-import com.twoheart.dailyhotel.model.RecentPlaces;
 import com.twoheart.dailyhotel.model.time.GourmetBookingDay;
 import com.twoheart.dailyhotel.model.time.StayBookingDay;
 import com.twoheart.dailyhotel.network.model.Event;
@@ -57,6 +68,7 @@ import com.twoheart.dailyhotel.screen.search.SearchActivity;
 import com.twoheart.dailyhotel.screen.search.stay.result.StaySearchResultActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Crypto;
+import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
 import com.twoheart.dailyhotel.util.DailyExternalDeepLink;
 import com.twoheart.dailyhotel.util.DailyLocationFactory;
@@ -72,7 +84,13 @@ import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.BiFunction;
+import io.reactivex.functions.Consumer;
 import retrofit2.Call;
+import retrofit2.HttpException;
 import retrofit2.Response;
 
 /**
@@ -102,6 +120,17 @@ public class HomeFragment extends BaseMenuNavigationFragment
 
     private View mViewByLongPress;
     private HomePlace mHomePlaceByLongPress;
+
+    private RecentlyRemoteImpl mRecentlyRemoteImpl;
+
+    private CompositeDisposable mCompositeDisposable = new CompositeDisposable();
+
+    @Override
+    public void onCreate(Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
+        mRecentlyRemoteImpl = new RecentlyRemoteImpl(getActivity());
+    }
 
     @Nullable
     @Override
@@ -190,6 +219,8 @@ public class HomeFragment extends BaseMenuNavigationFragment
             mHomeLayout.removeOnLayoutChangeListener();
         }
 
+        clearCompositeDisposable();
+
         super.onDestroy();
     }
 
@@ -247,6 +278,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
             case Constants.CODE_REQUEST_ACTIVITY_COUPONLIST:
             case Constants.CODE_REQUEST_ACTIVITY_BONUS:
             case Constants.CODE_REQUEST_ACTIVITY_STAMP:
+            case Constants.CODE_REQUEST_ACTIVITY_STAY_OB_DETAIL:
                 if (resultCode == Constants.CODE_RESULT_ACTIVITY_GO_HOME)
                 {
                     mDontReload = true;
@@ -749,6 +781,87 @@ public class HomeFragment extends BaseMenuNavigationFragment
         }
     }
 
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+    private void startStayOutboundDetail(View view, HomePlace place, TodayDateTime todayDateTime)
+    {
+        View simpleDraweeView = view.findViewById(R.id.imageView);
+        View nameTextView = view.findViewById(R.id.nameTextView);
+        View gradientTopView = view.findViewById(R.id.gradientTopView);
+        View gradientBottomView = view.findViewById(R.id.gradientView);
+
+        android.support.v4.util.Pair[] pairs = new Pair[4];
+        pairs[0] = android.support.v4.util.Pair.create(simpleDraweeView, getString(R.string.transition_place_image));
+        pairs[1] = android.support.v4.util.Pair.create(nameTextView, getString(R.string.transition_place_name));
+        pairs[2] = android.support.v4.util.Pair.create(gradientTopView, getString(R.string.transition_gradient_top_view));
+        pairs[3] = android.support.v4.util.Pair.create(gradientBottomView, getString(R.string.transition_gradient_bottom_view));
+
+        if (place == null)
+        {
+            return;
+        }
+
+        String imageUrl = place.imageUrl;
+        StayBookDateTime stayBookDateTime = new StayBookDateTime();
+
+        try
+        {
+            stayBookDateTime.setCheckInDateTime(todayDateTime.currentDateTime);
+            stayBookDateTime.setCheckOutDateTime(todayDateTime.currentDateTime, 1);
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+        }
+
+        if (Util.isUsedMultiTransition() == true && pairs != null)
+        {
+            getActivity().setExitSharedElementCallback(new SharedElementCallback()
+            {
+                @Override
+                public void onSharedElementEnd(List<String> sharedElementNames, List<View> sharedElements, List<View> sharedElementSnapshots)
+                {
+                    super.onSharedElementEnd(sharedElementNames, sharedElements, sharedElementSnapshots);
+
+                    for (View view : sharedElements)
+                    {
+                        if (view instanceof SimpleDraweeView)
+                        {
+                            view.setVisibility(View.VISIBLE);
+                            break;
+                        }
+                    }
+                }
+            });
+
+            ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(), pairs);
+
+            try
+            {
+                stayBookDateTime.setCheckInDateTime(todayDateTime.currentDateTime);
+                stayBookDateTime.setCheckOutDateTime(todayDateTime.currentDateTime, 1);
+            } catch (Exception e)
+            {
+                ExLog.e(e.toString());
+            }
+
+            mBaseActivity.startActivityForResult(StayOutboundDetailActivity.newInstance(getActivity(), place.index//
+                , place.title, imageUrl, 0//
+                , stayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
+                , stayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
+                , 2, null, true, false)//
+                , Constants.CODE_REQUEST_ACTIVITY_STAY_OB_DETAIL, options.toBundle());
+        } else
+        {
+            mBaseActivity.startActivityForResult(StayOutboundDetailActivity.newInstance(getActivity(), place.index//
+                , place.title, imageUrl, 0//
+                , stayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
+                , stayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
+                , 2, null, false, false)//
+                , Constants.CODE_REQUEST_ACTIVITY_STAY_OB_DETAIL);
+
+            mBaseActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
+        }
+    }
+
     public void sendHomeScreenAnalytics()
     {
         if (mBaseActivity == null)
@@ -810,8 +923,44 @@ public class HomeFragment extends BaseMenuNavigationFragment
 
     private void requestRecentList()
     {
-        RecentPlaces allRecentPlaces = new RecentPlaces(mBaseActivity);
-        mNetworkController.requestRecentList(allRecentPlaces.getParamList(MAX_REQUEST_SIZE));
+        addCompositeDisposable(Observable.zip(mRecentlyRemoteImpl.getHomeRecentlyList(MAX_REQUEST_SIZE) //
+            , mRecentlyRemoteImpl.getStayOutboundRecentlyList(MAX_REQUEST_SIZE) //
+            , new BiFunction<List<HomePlace>, StayOutbounds, List<HomePlace>>()
+            {
+                @Override
+                public List<HomePlace> apply(@NonNull List<HomePlace> homePlacesList, @NonNull StayOutbounds stayOutbounds) throws Exception
+                {
+                    return RecentlyPlaceUtil.mergeHomePlaceList(mBaseActivity, homePlacesList, stayOutbounds);
+                }
+            }).subscribe(new Consumer<List<HomePlace>>()
+        {
+            @Override
+            public void accept(@NonNull List<HomePlace> homePlacesList) throws Exception
+            {
+                ArrayList<HomePlace> list = new ArrayList<HomePlace>();
+                if (homePlacesList != null)
+                {
+                    list.addAll(homePlacesList);
+                }
+
+                mHomeLayout.setRecentListData(list, false);
+
+                mNetworkRunState = mNetworkRunState | IS_RUNNED_RECENTLIST;
+
+                sendHomeBlockEventAnalytics();
+            }
+        }, new Consumer<Throwable>()
+        {
+            @Override
+            public void accept(@NonNull Throwable throwable) throws Exception
+            {
+                mHomeLayout.setRecentListData(null, true);
+
+                mNetworkRunState = mNetworkRunState | IS_RUNNED_RECENTLIST;
+
+                sendHomeBlockEventAnalytics();
+            }
+        }));
     }
 
     public void forceRefreshing()
@@ -1373,7 +1522,14 @@ public class HomeFragment extends BaseMenuNavigationFragment
 
             if (recentItem != null)
             {
-                startPlaceDetail(view, recentItem, mTodayDateTime);
+                if (RecentlyPlaceUtil.SERVICE_TYPE_OB_STAY_NAME.equalsIgnoreCase(recentItem.serviceType) == true)
+                {
+                    // stayOutbound
+                    startStayOutboundDetail(view, recentItem, mTodayDateTime);
+                } else
+                {
+                    startPlaceDetail(view, recentItem, mTodayDateTime);
+                }
             }
 
             AnalyticsManager.getInstance(mBaseActivity).recordEvent(//
@@ -1405,34 +1561,42 @@ public class HomeFragment extends BaseMenuNavigationFragment
             {
                 try
                 {
-                    mViewByLongPress = view;
-                    mHomePlaceByLongPress = recentItem;
-
-                    mHomeLayout.setBlurVisibility(mBaseActivity, true);
-
-                    switch (recentItem.placeType)
+                    if (RecentlyPlaceUtil.SERVICE_TYPE_OB_STAY_NAME.equalsIgnoreCase(recentItem.serviceType) == true)
                     {
-                        case HOTEL:
+                        // stayOutbound
+                        DailyToast.showToast(getActivity(), getString(R.string.label_stay_outbound_preparing_preview), DailyToast.LENGTH_SHORT);
+                        unLockUI();
+                    } else
+                    {
+                        mViewByLongPress = view;
+                        mHomePlaceByLongPress = recentItem;
+
+                        mHomeLayout.setBlurVisibility(mBaseActivity, true);
+
+                        switch (recentItem.placeType)
                         {
-                            StayBookingDay stayBookingDay = new StayBookingDay();
-                            stayBookingDay.setCheckInDay(mTodayDateTime.dailyDateTime);
-                            stayBookingDay.setCheckOutDay(mTodayDateTime.dailyDateTime, 1);
+                            case HOTEL:
+                            {
+                                StayBookingDay stayBookingDay = new StayBookingDay();
+                                stayBookingDay.setCheckInDay(mTodayDateTime.dailyDateTime);
+                                stayBookingDay.setCheckOutDay(mTodayDateTime.dailyDateTime, 1);
 
-                            Intent intent = StayPreviewActivity.newInstance(mBaseActivity, stayBookingDay, recentItem);
+                                Intent intent = StayPreviewActivity.newInstance(mBaseActivity, stayBookingDay, recentItem);
 
-                            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PREVIEW);
-                            break;
-                        }
+                                startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PREVIEW);
+                                break;
+                            }
 
-                        case FNB:
-                        {
-                            GourmetBookingDay gourmetBookingDay = new GourmetBookingDay();
-                            gourmetBookingDay.setVisitDay(mTodayDateTime.dailyDateTime);
+                            case FNB:
+                            {
+                                GourmetBookingDay gourmetBookingDay = new GourmetBookingDay();
+                                gourmetBookingDay.setVisitDay(mTodayDateTime.dailyDateTime);
 
-                            Intent intent = GourmetPreviewActivity.newInstance(mBaseActivity, gourmetBookingDay, recentItem);
+                                Intent intent = GourmetPreviewActivity.newInstance(mBaseActivity, gourmetBookingDay, recentItem);
 
-                            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PREVIEW);
-                            break;
+                                startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PREVIEW);
+                                break;
+                            }
                         }
                     }
                 } catch (Exception e)
@@ -1499,6 +1663,11 @@ public class HomeFragment extends BaseMenuNavigationFragment
                     ExLog.d(e.toString());
                 }
 
+                return;
+            } else if (categoryType == DailyCategoryType.STAY_OUTBOUND_HOTEL)
+            {
+                Intent intent = StayOutboundSearchActivity.newInstance(mBaseActivity);
+                startActivityForResult(intent, Constants.CODE_RESULT_ACTIVITY_STAY_OUTBOUND_SEARCH);
                 return;
             }
 
@@ -1607,19 +1776,6 @@ public class HomeFragment extends BaseMenuNavigationFragment
         }
 
         @Override
-        public void onRecentList(ArrayList<HomePlace> list, boolean isError)
-        {
-            if (mHomeLayout != null)
-            {
-                mHomeLayout.setRecentListData(list, isError);
-            }
-
-            mNetworkRunState = mNetworkRunState | IS_RUNNED_RECENTLIST;
-
-            sendHomeBlockEventAnalytics();
-        }
-
-        @Override
         public void onRecommendationList(ArrayList<Recommendation> list, boolean isError)
         {
             if (mHomeLayout != null)
@@ -1667,4 +1823,74 @@ public class HomeFragment extends BaseMenuNavigationFragment
             HomeFragment.this.onErrorResponse(call, response);
         }
     };
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    // 기존의 BaseActivity에 있는 정보 가져오기
+    ///////////////////////////////////////////////////////////////////////////////////////////////
+
+    private void addCompositeDisposable(Disposable disposable)
+    {
+        if (disposable == null)
+        {
+            return;
+        }
+
+        mCompositeDisposable.add(disposable);
+    }
+
+    private void clearCompositeDisposable()
+    {
+        mCompositeDisposable.clear();
+    }
+
+    protected void onHandleError(Throwable throwable)
+    {
+        unLockUI();
+
+        BaseActivity baseActivity = (BaseActivity) getActivity();
+
+        if (baseActivity == null || baseActivity.isFinishing() == true)
+        {
+            return;
+        }
+
+        if (throwable instanceof BaseException)
+        {
+            // 팝업 에러 보여주기
+            BaseException baseException = (BaseException) throwable;
+
+            baseActivity.showSimpleDialog(null, baseException.getMessage()//
+                , getString(R.string.dialog_btn_text_confirm), null, null, null, null, dialogInterface -> getActivity().onBackPressed(), true);
+        } else if (throwable instanceof HttpException)
+        {
+            retrofit2.HttpException httpException = (HttpException) throwable;
+
+            if (httpException.code() == BaseException.CODE_UNAUTHORIZED)
+            {
+                addCompositeDisposable(new ConfigLocalImpl(getActivity()).clear().subscribe(object ->
+                {
+                    new FacebookRemoteImpl().logOut();
+                    new KakaoRemoteImpl().logOut();
+
+                    baseActivity.restartExpiredSession();
+                }));
+            } else
+            {
+                DailyToast.showToast(getActivity(), getString(R.string.act_base_network_connect), DailyToast.LENGTH_LONG);
+
+                if (Constants.DEBUG == false)
+                {
+                    Crashlytics.log(httpException.response().raw().request().url().toString());
+                    Crashlytics.logException(throwable);
+                } else
+                {
+                    ExLog.e(httpException.response().raw().request().url().toString() + ", " + httpException.toString());
+                }
+            }
+        } else
+        {
+            DailyToast.showToast(getActivity(), getString(R.string.act_base_network_connect), DailyToast.LENGTH_LONG);
+        }
+    }
 }

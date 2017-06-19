@@ -683,6 +683,108 @@
 
         <!--  com.daily.dailyhotel.... -->
 
+        <activity
+            android:name="com.daily.dailyhotel.screen.stay.outbound.search.StayOutboundSearchActivity"
+            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"/>
+
+        <activity
+            android:name="com.daily.dailyhotel.screen.stay.outbound.search.StayOutboundSearchSuggestActivity"
+            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"/>
+
+        <activity
+            android:name="com.daily.dailyhotel.screen.stay.outbound.list.StayOutboundListActivity"
+            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"/>
+
+        <activity
+            android:name="com.daily.dailyhotel.screen.common.calendar.StayCalendarActivity"
+            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Translucent"/>
+
+        <activity
+            android:name="com.daily.dailyhotel.screen.stay.outbound.filter.StayOutboundFilterActivity"
+            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"/>
+
+        <activity
+            android:name="com.daily.dailyhotel.screen.stay.outbound.detail.StayOutboundDetailActivity"
+            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden"/>
+
+        <activity
+            android:name="com.daily.dailyhotel.screen.stay.outbound.people.SelectPeopleActivity"
+            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/TransDialog"/>
+
+        <activity
+            android:name="com.daily.dailyhotel.screen.stay.outbound.detail.amenities.AmenityListActivity"
+            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"/>
+
+        <activity
+            android:name="com.daily.dailyhotel.screen.stay.outbound.detail.images.ImageListActivity"
+            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Translucent"/>
+
+        <activity
+            android:name="com.daily.dailyhotel.screen.common.call.CallDialogActivity"
+            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/TransDialog"/>
+
+        <activity
+            android:name="com.daily.dailyhotel.screen.stay.outbound.payment.StayOutboundPaymentActivity"
+            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"/>
+
+        <activity
+            android:name="com.daily.dailyhotel.screen.stay.outbound.thankyou.StayOutboundThankYouActivity"
+            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"/>
+
+        <activity
+            android:name="com.daily.dailyhotel.screen.booking.detail.stay.outbound.StayOutboundBookingDetailActivity"
+            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"/>
+
+        <activity
+            android:name="com.daily.dailyhotel.screen.booking.detail.stay.outbound.receipt.StayOutboundReceiptActivity"
+            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"/>
+
+        <activity
+            android:name="com.daily.dailyhotel.screen.booking.detail.stay.outbound.refund.StayOutboundRefundActivity"
+            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"/>
+
+        <activity
+            android:name=".screen.common.StayOutboundPaymentWebActivity"
+            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppBaseTheme"
+            android:windowSoftInputMode="stateAlwaysHidden"/>
 
         <!--  com.daily.dailyhotel.... -->
 

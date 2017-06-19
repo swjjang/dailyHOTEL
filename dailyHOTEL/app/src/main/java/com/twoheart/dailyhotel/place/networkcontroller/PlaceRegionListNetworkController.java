@@ -21,20 +21,18 @@ public abstract class PlaceRegionListNetworkController
 
     public interface OnNetworkControllerListener extends OnBaseNetworkControllerListener
     {
-        void onRegionListResponse(List<RegionViewItem> domesticList, List<RegionViewItem> globalList);
+        void onRegionListResponse(List<RegionViewItem> domesticList);
     }
 
     /**
      * @param domesticProvinceList in
-     * @param globalProvinceList   in
      * @param areaList
      * @param domesticRegionList   out
-     * @param globalRegionList     out
      */
-    protected void makeRegionViewItemList(List<Province> domesticProvinceList, List<Province> globalProvinceList//
-        , ArrayList<Area> areaList, List<RegionViewItem> domesticRegionList, List<RegionViewItem> globalRegionList)
+    protected void makeRegionViewItemList(List<Province> domesticProvinceList//
+        , ArrayList<Area> areaList, List<RegionViewItem> domesticRegionList)
     {
-        if (domesticProvinceList == null || globalProvinceList == null || areaList == null || domesticRegionList == null || globalRegionList == null)
+        if (domesticProvinceList == null || areaList == null || domesticRegionList == null)
         {
             return;
         }
@@ -46,15 +44,6 @@ public abstract class PlaceRegionListNetworkController
         {
             domesticRegionList.clear();
             domesticRegionList.addAll(regionViewList1);
-        }
-
-        // 해외
-        List<RegionViewItem> regionViewList2 = getRegionViewList(globalProvinceList, areaList);
-
-        if (regionViewList2 != null)
-        {
-            globalRegionList.clear();
-            globalRegionList.addAll(regionViewList2);
         }
     }
 
@@ -133,12 +122,11 @@ public abstract class PlaceRegionListNetworkController
      * @param jsonArray
      * @param imageUrl
      * @param domesticProvinceList out
-     * @param globalProvinceList   out
      * @throws JSONException
      */
-    protected void makeProvinceList(JSONArray jsonArray, String imageUrl, List<Province> domesticProvinceList, List<Province> globalProvinceList) throws JSONException
+    protected void makeProvinceList(JSONArray jsonArray, String imageUrl, List<Province> domesticProvinceList) throws JSONException
     {
-        if (domesticProvinceList == null || globalProvinceList == null)
+        if (domesticProvinceList == null)
         {
             return;
         }
@@ -151,12 +139,14 @@ public abstract class PlaceRegionListNetworkController
 
             try
             {
+                if (jsonObject.has("overseas") == true && jsonObject.getBoolean("overseas") == true)
+                {
+                    continue;
+                }
+
                 Province province = new Province(jsonObject, imageUrl);
 
-                if (province.isOverseas == true)
-                {
-                    globalProvinceList.add(province);
-                } else
+                if (province.isOverseas == false)
                 {
                     domesticProvinceList.add(province);
                 }
@@ -181,6 +171,11 @@ public abstract class PlaceRegionListNetworkController
 
                 try
                 {
+                    if (jsonObject.has("overseas") == true && jsonObject.getBoolean("overseas") == true)
+                    {
+                        continue;
+                    }
+
                     Area area = new Area(jsonObject);
 
                     areaList.add(area);

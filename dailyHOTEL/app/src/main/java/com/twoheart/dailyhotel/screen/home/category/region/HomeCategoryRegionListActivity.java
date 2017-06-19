@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.support.design.widget.TabLayout;
 import android.view.View;
 import android.widget.Toast;
 
@@ -85,9 +84,7 @@ public class HomeCategoryRegionListActivity extends BaseActivity
     {
         initToolbar();
 
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabLayout);
-        initTabLayout(tabLayout);
-        initViewPager(tabLayout);
+        initViewPager();
     }
 
     private void initToolbar()
@@ -101,16 +98,6 @@ public class HomeCategoryRegionListActivity extends BaseActivity
     {
         mDailyCategoryType = intent.getParcelableExtra(Constants.NAME_INTENT_EXTRA_DATA_DAILY_CATEGORY_TYPE);
         mStayBookingDay = intent.getParcelableExtra(Constants.NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY);
-    }
-
-    private void initTabLayout(TabLayout tabLayout)
-    {
-        if (tabLayout == null)
-        {
-            return;
-        }
-
-        tabLayout.setVisibility(View.GONE);
     }
 
     private void initToolbar(View toolbar)
@@ -141,7 +128,7 @@ public class HomeCategoryRegionListActivity extends BaseActivity
         dailyToolbarLayout.setToolbarMenuClickListener(v -> showSearch());
     }
 
-    private void initViewPager(TabLayout tabLayout)
+    private void initViewPager()
     {
         mViewPager = (DailyViewPager) findViewById(R.id.viewPager);
 
@@ -156,7 +143,6 @@ public class HomeCategoryRegionListActivity extends BaseActivity
         mViewPager.setOffscreenPageLimit(1);
         mViewPager.setAdapter(mFragmentPagerAdapter);
         mViewPager.clearOnPageChangeListeners();
-        mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
 
         try
         {

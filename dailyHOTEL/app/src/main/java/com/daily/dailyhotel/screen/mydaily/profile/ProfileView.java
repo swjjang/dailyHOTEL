@@ -3,7 +3,7 @@ package com.daily.dailyhotel.screen.mydaily.profile;
 import android.view.View;
 
 import com.daily.base.BaseActivity;
-import com.daily.base.BaseView;
+import com.daily.base.BaseDialogView;
 import com.daily.base.OnBaseEventListener;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
@@ -14,7 +14,7 @@ import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
-public class ProfileView extends BaseView<ProfileView.OnEventListener, ActivityProfileDataBinding> implements ProfileViewInterface
+public class ProfileView extends BaseDialogView<ProfileView.OnEventListener, ActivityProfileDataBinding> implements ProfileViewInterface
 {
     public interface OnEventListener extends OnBaseEventListener
     {
@@ -39,7 +39,7 @@ public class ProfileView extends BaseView<ProfileView.OnEventListener, ActivityP
     }
 
     @Override
-    protected void initLayout(ActivityProfileDataBinding viewDataBinding)
+    protected void setContentView(ActivityProfileDataBinding viewDataBinding)
     {
         if (viewDataBinding == null)
         {
@@ -73,6 +73,12 @@ public class ProfileView extends BaseView<ProfileView.OnEventListener, ActivityP
         viewDataBinding.codeCopyView.setOnClickListener(v -> getEventListener().onCodeCopyClick(viewDataBinding.referralTextView.getText().toString()));
     }
 
+    @Override
+    public void setToolbarTitle(String title)
+    {
+
+    }
+
     private void initToolbar(ActivityProfileDataBinding viewDataBinding)
     {
         if (viewDataBinding == null)
@@ -82,7 +88,7 @@ public class ProfileView extends BaseView<ProfileView.OnEventListener, ActivityP
 
         DailyToolbarLayout dailyToolbarLayout = new DailyToolbarLayout(getContext(), viewDataBinding.toolbar);
         dailyToolbarLayout.initToolbar(getString(R.string.actionbar_title_profile_activity)//
-            , v -> getEventListener().finish());
+            , v -> getEventListener().onBackClick());
     }
 
     @Override

@@ -467,7 +467,7 @@ public class MyDailyFragment extends BaseMenuNavigationFragment implements Const
             lockUiComponent();
 
             BaseActivity baseActivity = (BaseActivity) getActivity();
-            startActivity(new Intent(baseActivity, CreditCardListActivity.class));
+            startActivity(CreditCardListActivity.newInstance(baseActivity));
 
             AnalyticsManager.getInstance(baseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION_//
                 , Action.CARD_MANAGEMENT_CLICKED, AnalyticsManager.Label.CARD_MANAGEMENT_CLICKED, null);

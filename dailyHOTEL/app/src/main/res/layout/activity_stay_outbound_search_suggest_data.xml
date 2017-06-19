@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:dailyFont="http://schemas.android.com/apk/res-auto">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/toolbar_height"
+            android:background="@color/white"
+            android:elevation="2dp">
+
+            <com.daily.base.widget.DailyImageView
+                android:id="@+id/backImageView"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp"
+                app:srcCompat="@drawable/navibar_ic_back_01_black"/>
+
+            <com.daily.base.widget.DailyEditText
+                android:id="@+id/keywordEditText"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_toLeftOf="@+id/deleteImageView"
+                android:layout_toRightOf="@id/backImageView"
+                android:background="@color/white"
+                android:gravity="center_vertical"
+                android:hint="@string/label_stay_outbound_search_keyword_hint"
+                android:maxLines="1"
+                android:singleLine="true"
+                android:textColor="@color/default_text_c323232"
+                android:textColorHint="@color/default_text_cc5c5c5"
+                android:textSize="18dp"
+                android:theme="@style/EditTextTheme"/>
+
+            <com.daily.base.widget.DailyImageView
+                android:id="@+id/deleteImageView"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentRight="true"
+                android:paddingLeft="10dp"
+                android:paddingRight="15dp"
+                android:tint="@color/cababab"
+                app:srcCompat="@drawable/navibar_ic_x"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/gradient_1dp_line_height_under_21"
+                android:layout_alignParentBottom="true"
+                android:background="@color/default_line_ce7e7e7"/>
+        </RelativeLayout>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/suggestsRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/toolbar"
+            android:background="@color/white"
+            android:visibility="gone"/>
+
+        <RelativeLayout
+            android:id="@+id/emptyLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone">
+
+            <LinearLayout
+                android:id="@+id/textLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginTop="20dp"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <com.daily.base.widget.DailyTextView
+                    android:id="@+id/messageTextView01"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/label_searchresult_empty"
+                    android:textColor="@color/default_text_c323232"
+                    android:textSize="18dp"
+                    dailyFont:style="Medium"/>
+
+                <com.daily.base.widget.DailyTextView
+                    android:id="@+id/messageTextView02"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="13dp"
+                    android:gravity="center"
+                    android:text="@string/message_stay_outbound_suggest_empty_suggest"
+                    android:textColor="@color/default_text_c929292"
+                    android:textSize="14dp"/>
+            </LinearLayout>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@id/textLayout"
+                android:layout_centerHorizontal="true"
+                android:gravity="center"
+                app:srcCompat="@drawable/no_hotel_ic"/>
+        </RelativeLayout>
+
+        <ScrollView
+            android:id="@+id/progressBarScrollView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fillViewport="true"
+            android:visibility="gone">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center">
+
+                <ProgressBar
+                    android:id="@+id/progressBar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+            </LinearLayout>
+        </ScrollView>
+    </RelativeLayout>
+</layout>

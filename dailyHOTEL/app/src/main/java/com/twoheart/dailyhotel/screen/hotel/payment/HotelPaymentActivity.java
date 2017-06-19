@@ -462,9 +462,9 @@ public class HotelPaymentActivity extends PlacePaymentActivity
         mSelectedCreditCard = creditCard;
 
         if (paymentType == PlacePaymentInformation.PaymentType.EASY_CARD &&//
-            creditCard != null && DailyTextUtils.isTextEmpty(creditCard.billingkey) == false)
+            creditCard != null && DailyTextUtils.isTextEmpty(creditCard.number, creditCard.billingkey) == false)
         {
-            DailyPreference.getInstance(this).setSelectedSimpleCard(creditCard);
+            DailyPreference.getInstance(this).setFavoriteCard(creditCard.number, creditCard.billingkey);
         }
 
         mOnEventListener.changedPaymentType(paymentType);
@@ -559,7 +559,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
         {
             try
             {
-                DailyPreference.getInstance(this).setSelectedSimpleCard(mSelectedCreditCard);
+                DailyPreference.getInstance(this).setFavoriteCard(mSelectedCreditCard.number, mSelectedCreditCard.billingkey);
             } catch (Exception e)
             {
                 ExLog.d(e.toString());
@@ -588,8 +588,8 @@ public class HotelPaymentActivity extends PlacePaymentActivity
 
         String placeName = mPlaceName;
         String placeType = stayProduct.roomName;
-        //        String checkInDate = stayBookingDay.getCheckInDay("yyyy.M.d (EEE) HH시");
-        //        String checkOutDate = stayBookingDay.getCheckOutDay("yyyy.M.d (EEE) HH시");
+        //        String checkInDate = stayBookingDay.getCheckInDateTime("yyyy.M.d (EEE) HH시");
+        //        String checkOutDate = stayBookingDay.getCheckOutDateTime("yyyy.M.d (EEE) HH시");
         String userName = stayPaymentInformation.getCustomer() == null ? "" : stayPaymentInformation.getCustomer().getName();
         String userIndex = stayPaymentInformation.getCustomer() == null ? "" : stayPaymentInformation.getCustomer().getUserIdx();
 
@@ -1239,7 +1239,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
             , Action.PAYMENT_CLICKED, label, null);
     }
 
-    private void onCheckOverlapSaty(boolean overlap)
+    private void onCheckOverlapStay(boolean overlap)
     {
         unLockUI();
 
@@ -1875,11 +1875,13 @@ public class HotelPaymentActivity extends PlacePaymentActivity
                 AnalyticsManager.getInstance(HotelPaymentActivity.this).recordEvent(AnalyticsManager.Category.GOURMET_BOOKINGS//
                     , AnalyticsManager.Action.EDIT_BUTTON_CLICKED, AnalyticsManager.Label.PAYMENT_CARD_REGISTRATION, null);
 
-                Intent intent = new Intent(HotelPaymentActivity.this, RegisterCreditCardActivity.class);
-                startActivityForResult(intent, CODE_REQUEST_ACTIVITY_REGISTERCREDITCARD);
+                startActivityForResult(RegisterCreditCardActivity.newInstance(HotelPaymentActivity.this), CODE_REQUEST_ACTIVITY_REGISTERCREDITCARD);
             } else
             {
                 startCreditCardList();
+
+                AnalyticsManager.getInstance(HotelPaymentActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS//
+                    , Action.EDIT_BUTTON_CLICKED, Label.PAYMENT_CARD_EDIT, null);
             }
         }
 
@@ -2854,32 +2856,32 @@ public class HotelPaymentActivity extends PlacePaymentActivity
 
                         if (length == 0)
                         {
-                            onCheckOverlapSaty(false);
+                            onCheckOverlapStay(false);
                         } else
                         {
-                            onCheckOverlapSaty(checkOverlapBookingList(mTodayDateTime, dataJSONArray));
+                            onCheckOverlapStay(checkOverlapBookingList(mTodayDateTime, dataJSONArray));
                         }
                     } else
                     {
-                        onCheckOverlapSaty(false);
+                        onCheckOverlapStay(false);
                     }
                 } catch (Exception e)
                 {
-                    onCheckOverlapSaty(false);
+                    onCheckOverlapStay(false);
                 } finally
                 {
                     unLockUI();
                 }
             } else
             {
-                onCheckOverlapSaty(false);
+                onCheckOverlapStay(false);
             }
         }
 
         @Override
         public void onFailure(Call<JSONObject> call, Throwable t)
         {
-            onCheckOverlapSaty(false);
+            onCheckOverlapStay(false);
         }
 
         private boolean checkOverlapBookingList(TodayDateTime todayDateTime, JSONArray jsonArray) throws Exception

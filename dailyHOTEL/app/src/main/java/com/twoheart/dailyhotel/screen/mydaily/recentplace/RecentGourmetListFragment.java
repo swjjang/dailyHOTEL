@@ -1,23 +1,25 @@
 package com.twoheart.dailyhotel.screen.mydaily.recentplace;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.SharedElementCallback;
-import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
+import com.daily.dailyhotel.util.RecentlyPlaceUtil;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Gourmet;
 import com.twoheart.dailyhotel.model.Place;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.RecentGourmetParams;
-import com.twoheart.dailyhotel.model.RecentPlaces;
 import com.twoheart.dailyhotel.model.time.GourmetBookingDay;
 import com.twoheart.dailyhotel.model.time.PlaceBookingDay;
 import com.twoheart.dailyhotel.network.model.TodayDateTime;
@@ -112,8 +114,8 @@ public class RecentGourmetListFragment extends RecentPlacesListFragment
     {
         lockUI();
 
-        int count = mRecentPlaceList != null ? mRecentPlaceList.size() : 0;
-        if (count == 0)
+        String targetIndices = getTargetIndices(mServiceType);
+        if (DailyTextUtils.isTextEmpty(targetIndices) == true)
         {
             unLockUI();
 
@@ -126,7 +128,7 @@ public class RecentGourmetListFragment extends RecentPlacesListFragment
 
         RecentGourmetParams params = new RecentGourmetParams();
         params.setGourmetBookingDay((GourmetBookingDay) placeBookingDay);
-        params.setTargetIndices(getPlaceIndexList());
+        params.setTargetIndices(targetIndices);
 
         ((RecentGourmetListNetworkController) mNetworkController).requestRecentGourmetList(params);
     }
@@ -143,9 +145,9 @@ public class RecentGourmetListFragment extends RecentPlacesListFragment
                 return;
             }
 
-            sortList(mRecentPlaceList, list);
+            sortList(list, RecentlyPlaceUtil.ServiceType.GOURMET);
 
-            ArrayList<PlaceViewItem> viewItemList = mListLayout.makePlaceViewItemList(list);
+            ArrayList<PlaceViewItem> viewItemList = ((RecentGourmetListLayout) mListLayout).makePlaceViewItemList(list);
 
             mListLayout.setData(viewItemList, mPlaceBookingDay);
         }
@@ -183,10 +185,11 @@ public class RecentGourmetListFragment extends RecentPlacesListFragment
 
     RecentPlacesListLayout.OnEventListener mEventListener = new RecentPlacesListLayout.OnEventListener()
     {
+        @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
         @Override
         public void onListItemClick(View view, int position)
         {
-            if (position < 0 || mRecentPlaceList.size() - 1 < position)
+            if (position < 0 || mListLayout.getItemCount() - 1 < position)
             {
                 return;
             }
@@ -248,7 +251,7 @@ public class RecentGourmetListFragment extends RecentPlacesListFragment
         @Override
         public void onListItemLongClick(View view, int position)
         {
-            if (position < 0 || mRecentPlaceList.size() - 1 < position)
+            if (position < 0 || mListLayout.getItemCount() < position)
             {
                 return;
             }
@@ -270,7 +273,7 @@ public class RecentGourmetListFragment extends RecentPlacesListFragment
         @Override
         public void onListItemDeleteClick(int position)
         {
-            if (position < 0 || mRecentPlaceList.size() - 1 < position)
+            if (position < 0 || mListLayout.getItemCount() - 1 < position)
             {
                 return;
             }
@@ -279,12 +282,10 @@ public class RecentGourmetListFragment extends RecentPlacesListFragment
             Place place = placeViewItem.getItem();
             ExLog.d("isRemove : " + (place != null));
 
-            Pair<Integer, String> deleteItem = new Pair<>(place.index, RecentPlaces.getServiceType(PlaceType.FNB));
-
-            mRecentPlaceList.remove(deleteItem);
+            RecentlyPlaceUtil.deleteRecentlyItemAsync(RecentlyPlaceUtil.ServiceType.GOURMET, place.index);
 
             mListLayout.setData(mListLayout.getList(), mPlaceBookingDay);
-            mRecentPlaceListFragmentListener.onDeleteItemClick(deleteItem);
+            mRecentPlaceListFragmentListener.onDeleteItemClickAnalytics();
 
             AnalyticsManager.getInstance(mBaseActivity).recordEvent(//
                 AnalyticsManager.Category.NAVIGATION_, //

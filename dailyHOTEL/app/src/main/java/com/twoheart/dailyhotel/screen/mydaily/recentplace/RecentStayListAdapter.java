@@ -1,18 +1,27 @@
 package com.twoheart.dailyhotel.screen.mydaily.recentplace;
 
 import android.content.Context;
+import android.databinding.DataBindingUtil;
 import android.graphics.Paint;
 import android.os.Vibrator;
 import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ScreenUtils;
 import com.daily.base.util.VersionUtils;
+import com.daily.dailyhotel.entity.ImageMap;
+import com.daily.dailyhotel.entity.StayOutbound;
+import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.drawee.controller.BaseControllerListener;
+import com.facebook.drawee.controller.ControllerListener;
+import com.facebook.drawee.interfaces.DraweeController;
+import com.facebook.imagepipeline.image.ImageInfo;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.databinding.ListRowStayOutboundDataBinding;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.model.time.PlaceBookingDay;
@@ -20,6 +29,7 @@ import com.twoheart.dailyhotel.model.time.StayBookingDay;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
 
+import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
@@ -61,11 +71,17 @@ public class RecentStayListAdapter extends RecentPlacesListAdapter
             case PlaceViewItem.TYPE_ENTRY:
             {
                 View view = mInflater.inflate(R.layout.list_row_hotel, parent, false);
-                ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT//
-                    , ScreenUtils.getRatioHeightType16x9(ScreenUtils.getScreenWidth(mContext)));
-                view.setLayoutParams(layoutParams);
 
                 return new StayViewHolder(view);
+            }
+
+            case PlaceViewItem.TYPE_OB_ENTRY:
+            {
+                ListRowStayOutboundDataBinding dataBinding = DataBindingUtil.inflate(LayoutInflater.from(mContext), R.layout.list_row_stay_outbound_data, parent, false);
+
+                StayOutboundViewHolder stayViewHolder = new StayOutboundViewHolder(dataBinding);
+
+                return stayViewHolder;
             }
 
             case PlaceViewItem.TYPE_FOOTER_VIEW:
@@ -91,6 +107,10 @@ public class RecentStayListAdapter extends RecentPlacesListAdapter
         {
             case PlaceViewItem.TYPE_ENTRY:
                 onBindViewHolder((StayViewHolder) viewHolder, item, position);
+                break;
+
+            case PlaceViewItem.TYPE_OB_ENTRY:
+                onBindViewHolder((StayOutboundViewHolder) viewHolder, item, position);
                 break;
 
             case PlaceViewItem.TYPE_FOOTER_VIEW:
@@ -177,11 +197,11 @@ public class RecentStayListAdapter extends RecentPlacesListAdapter
 
         if (DailyTextUtils.isTextEmpty(stay.dBenefitText) == false)
         {
-            holder.dBenefitLayout.setVisibility(View.VISIBLE);
+            holder.dBenefitTextView.setVisibility(View.VISIBLE);
             holder.dBenefitTextView.setText(stay.dBenefitText);
         } else
         {
-            holder.dBenefitLayout.setVisibility(View.GONE);
+            holder.dBenefitTextView.setVisibility(View.GONE);
         }
 
         if (mShowDistanceIgnoreSort == true || getSortType() == Constants.SortType.DISTANCE)
@@ -245,6 +265,132 @@ public class RecentStayListAdapter extends RecentPlacesListAdapter
         }
     }
 
+    private void onBindViewHolder(StayOutboundViewHolder holder, PlaceViewItem placeViewItem, int position)
+    {
+        if (holder == null || placeViewItem == null)
+        {
+            return;
+        }
+
+        StayOutbound stayOutbound = placeViewItem.getItem();
+
+        holder.dataBinding.addressTextView.setText(stayOutbound.locationDescription);
+        holder.dataBinding.nameTextView.setText(stayOutbound.name);
+        holder.dataBinding.nameEngTextView.setText("(" + stayOutbound.nameEng + ")");
+
+        // 가격
+        if (stayOutbound.promo == true)
+        {
+            holder.dataBinding.priceTextView.setVisibility(View.VISIBLE);
+            holder.dataBinding.priceTextView.setText(DailyTextUtils.getPriceFormat(mContext, stayOutbound.nightlyBaseRate, false));
+            holder.dataBinding.priceTextView.setPaintFlags(holder.dataBinding.priceTextView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+        } else
+        {
+            holder.dataBinding.priceTextView.setVisibility(View.INVISIBLE);
+            holder.dataBinding.priceTextView.setText(null);
+        }
+
+        holder.dataBinding.discountPriceTextView.setText(null);
+        //        holder.dataBinding.discountPriceTextView.setText(DailyTextUtils.getPriceFormat(mContext, stayOutbound.nightlyRate, false));
+
+        holder.dataBinding.averageTextView.setVisibility(View.GONE);
+
+        if (VersionUtils.isOverAPI16() == true)
+        {
+            holder.dataBinding.gradientView.setBackground(mPaintDrawable);
+        } else
+        {
+            holder.dataBinding.gradientView.setBackgroundDrawable(mPaintDrawable);
+        }
+
+        // grade
+        holder.dataBinding.gradeTextView.setText(mContext.getString(R.string.label_stay_outbound_filter_x_star_rate, (int) stayOutbound.rating));
+
+        // 별등급
+        holder.dataBinding.ratingBar.setRating(stayOutbound.rating);
+        holder.dataBinding.tripAdvisorLayout.setVisibility(View.VISIBLE);
+
+        // tripAdvisor - 최근 본 업장의 경우 노출 안함
+        holder.dataBinding.tripAdvisorImageView.setVisibility(View.GONE);
+        holder.dataBinding.tripAdvisorRatingBar.setVisibility(View.GONE);
+        holder.dataBinding.tripAdvisorRatingTextView.setVisibility(View.GONE);
+
+        // Image
+        holder.dataBinding.imageView.getHierarchy().setPlaceholderImage(R.drawable.layerlist_placeholder);
+
+        ImageMap imageMap = stayOutbound.getImageMap();
+        String url;
+
+        if (ScreenUtils.getScreenWidth(mContext) >= ScreenUtils.DEFAULT_STAYOUTBOUND_XXHDPI_WIDTH)
+        {
+            if (DailyTextUtils.isTextEmpty(imageMap.bigUrl) == true)
+            {
+                url = imageMap.smallUrl;
+            } else
+            {
+                url = imageMap.bigUrl;
+            }
+        } else
+        {
+            if (DailyTextUtils.isTextEmpty(imageMap.mediumUrl) == true)
+            {
+                url = imageMap.smallUrl;
+            } else
+            {
+                url = imageMap.mediumUrl;
+            }
+        }
+
+        ControllerListener controllerListener = new BaseControllerListener<ImageInfo>()
+        {
+            @Override
+            public void onFailure(String id, Throwable throwable)
+            {
+                if (throwable instanceof IOException == true)
+                {
+                    if (url.equalsIgnoreCase(imageMap.bigUrl) == true)
+                    {
+                        imageMap.bigUrl = null;
+                    } else if (url.equalsIgnoreCase(imageMap.mediumUrl) == true)
+                    {
+                        imageMap.mediumUrl = null;
+                    } else
+                    {
+                        // 작은 이미지를 로딩했지만 실패하는 경우.
+                        return;
+                    }
+
+                    holder.dataBinding.imageView.setImageURI(imageMap.smallUrl);
+                }
+            }
+        };
+
+        DraweeController draweeController = Fresco.newDraweeControllerBuilder()//
+            .setControllerListener(controllerListener).setUri(url).build();
+
+        holder.dataBinding.imageView.setController(draweeController);
+
+        // Promo 설명은 사용하지 않는다.
+        holder.dataBinding.promoTextView.setVisibility(View.GONE);
+        holder.dataBinding.dot1View.setVisibility(View.GONE);
+        holder.dataBinding.distanceTextView.setVisibility(View.GONE);
+
+        holder.dataBinding.deleteView.setVisibility(View.VISIBLE);
+        holder.dataBinding.deleteView.setTag(position);
+        holder.dataBinding.deleteView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                if (mListener != null)
+                {
+                    mListener.onDeleteClick(v, (Integer) v.getTag());
+                }
+            }
+        });
+    }
+
+
     private class FooterViewHolder extends RecyclerView.ViewHolder
     {
         public FooterViewHolder(View itemView)
@@ -257,28 +403,26 @@ public class RecentStayListAdapter extends RecentPlacesListAdapter
     {
         View gradientView;
         com.facebook.drawee.view.SimpleDraweeView hotelImageView;
+        TextView dBenefitTextView;
+        TextView hotelGradeView;
         TextView hotelNameView;
+        View informationLayout;
+        TextView satisfactionView;
+        View dot1View;
+        TextView distanceTextView;
+        View dot2View;
+        View trueVRView;
+        TextView hotelAddressView;
         TextView hotelPriceView;
+        View averageView;
         TextView hotelDiscountView;
         View hotelSoldOutView;
-        TextView hotelAddressView;
-        TextView hotelGradeView;
-        TextView satisfactionView;
-        View averageView;
-        TextView dBenefitTextView;
-        TextView distanceTextView;
-        View dBenefitLayout;
         View deleteView;
-        View informationLayout;
-        View trueVRView;
-        View dot1View;
-        View dot2View;
 
         public StayViewHolder(View itemView)
         {
             super(itemView);
 
-            dBenefitLayout = itemView.findViewById(R.id.dBenefitLayout);
             gradientView = itemView.findViewById(R.id.gradientView);
             hotelImageView = (com.facebook.drawee.view.SimpleDraweeView) itemView.findViewById(R.id.imageView);
             hotelNameView = (TextView) itemView.findViewById(R.id.nameTextView);
@@ -296,10 +440,6 @@ public class RecentStayListAdapter extends RecentPlacesListAdapter
             trueVRView = itemView.findViewById(R.id.trueVRView);
             dot1View = itemView.findViewById(R.id.dot1View);
             dot2View = itemView.findViewById(R.id.dot2View);
-
-            RelativeLayout.LayoutParams dBenefitLayoutParams = (RelativeLayout.LayoutParams) dBenefitLayout.getLayoutParams();
-            dBenefitLayoutParams.rightMargin = ScreenUtils.dpToPx(mContext, 4);
-            dBenefitLayout.setLayoutParams(dBenefitLayoutParams);
 
             itemView.setOnClickListener(new View.OnClickListener()
             {
@@ -335,6 +475,50 @@ public class RecentStayListAdapter extends RecentPlacesListAdapter
                     }
                 });
             }
+        }
+    }
+
+    private class StayOutboundViewHolder extends RecyclerView.ViewHolder
+    {
+        ListRowStayOutboundDataBinding dataBinding;
+
+        public StayOutboundViewHolder(ListRowStayOutboundDataBinding dataBinding)
+        {
+            super(dataBinding.getRoot());
+
+            this.dataBinding = dataBinding;
+
+            itemView.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    if (mListener != null)
+                    {
+                        mListener.onItemClick(v);
+
+                    }
+                }
+            });
+
+            itemView.setOnLongClickListener(new View.OnLongClickListener()
+            {
+                @Override
+                public boolean onLongClick(View v)
+                {
+                    if (mListener == null)
+                    {
+                        return false;
+                    } else
+                    {
+                        Vibrator vibrator = (Vibrator) mContext.getSystemService(Context.VIBRATOR_SERVICE);
+                        vibrator.vibrate(70);
+
+                        mListener.onItemLongClick(v);
+                        return true;
+                    }
+                }
+            });
         }
     }
 }

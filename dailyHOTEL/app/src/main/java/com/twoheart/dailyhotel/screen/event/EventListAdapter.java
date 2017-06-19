@@ -4,7 +4,6 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 import android.widget.ArrayAdapter;
 
 import com.daily.base.util.ScreenUtils;
@@ -87,9 +86,6 @@ public class EventListAdapter extends ArrayAdapter<Event>
         {
             LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             view = inflater.inflate(R.layout.list_row_event, parent, false);
-
-            AbsListView.LayoutParams layoutParams = new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ScreenUtils.getRatioHeightType16x9(ScreenUtils.getScreenWidth(mContext)));
-            view.setLayoutParams(layoutParams);
         } else
         {
             view = convertView;

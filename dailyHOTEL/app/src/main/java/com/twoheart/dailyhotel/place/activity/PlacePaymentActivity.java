@@ -244,11 +244,15 @@ public abstract class PlacePaymentActivity extends BaseActivity
                 // 신용카드 간편 결제 선택후
                 if (resultCode == Activity.RESULT_OK && intent != null)
                 {
-                    CreditCard creditCard = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_CREDITCARD);
+                    String cardName = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_CARD_NAME);
+                    String cardNumber = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_CARD_NUMBER);
+                    String cardBillingKey = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_CARD_BILLING_KEY);
+                    String cardCd = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_CARD_CD);
 
-                    if (creditCard != null)
+                    if (DailyTextUtils.isTextEmpty(cardName, cardNumber, cardBillingKey, cardCd) == false)
                     {
-                        changedPaymentType(PlacePaymentInformation.PaymentType.EASY_CARD, creditCard);
+                        mSelectedCreditCard = new CreditCard(cardName, cardNumber, cardBillingKey, cardCd);
+                        changedPaymentType(PlacePaymentInformation.PaymentType.EASY_CARD, mSelectedCreditCard);
                     }
                 }
                 break;
@@ -442,8 +446,7 @@ public abstract class PlacePaymentActivity extends BaseActivity
         {
             if (mPaymentInformation.paymentType == PlacePaymentInformation.PaymentType.EASY_CARD && mSelectedCreditCard == null)
             {
-                Intent intent = new Intent(this, RegisterCreditCardActivity.class);
-                startActivityForResult(intent, CODE_REQUEST_ACTIVITY_REGISTERCREDITCARD_AND_PAYMENT);
+                startActivityForResult(RegisterCreditCardActivity.newInstance(this), CODE_REQUEST_ACTIVITY_REGISTERCREDITCARD_AND_PAYMENT);
             } else
             {
                 showAgreeTermDialog(mPaymentInformation.paymentType);
@@ -651,14 +654,14 @@ public abstract class PlacePaymentActivity extends BaseActivity
 
     protected void startCreditCardList()
     {
-        Intent intent = new Intent(this, CreditCardListActivity.class);
-        intent.setAction(Intent.ACTION_PICK);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_CREDITCARD, mSelectedCreditCard);
+        if (mSelectedCreditCard == null)
+        {
+            return;
+        }
 
-        startActivityForResult(intent, CODE_REQUEST_ACTIVITY_CREDITCARD_MANAGER);
-
-        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS//
-            , Action.EDIT_BUTTON_CLICKED, Label.PAYMENT_CARD_EDIT, null);
+        startActivityForResult(CreditCardListActivity.newInstance(this, mSelectedCreditCard.name//
+            , mSelectedCreditCard.number, mSelectedCreditCard.billingkey, mSelectedCreditCard.cardcd)//
+            , CODE_REQUEST_ACTIVITY_CREDITCARD_MANAGER);
     }
 
     protected void startInputMobileNumberDialog(String mobileNumber)
@@ -762,7 +765,7 @@ public abstract class PlacePaymentActivity extends BaseActivity
                         {
                             JSONObject jsonObject = null;
 
-                            String selectedSimpleCard = DailyPreference.getInstance(PlacePaymentActivity.this).getSelectedSimpleCard();
+                            String selectedSimpleCard = DailyPreference.getInstance(PlacePaymentActivity.this).getFavoriteCard();
 
                             if (DailyTextUtils.isTextEmpty(selectedSimpleCard) == true)
                             {
@@ -791,7 +794,7 @@ public abstract class PlacePaymentActivity extends BaseActivity
                             }
 
                             mSelectedCreditCard = new CreditCard(jsonObject.getString("card_name"), jsonObject.getString("print_cardno"), jsonObject.getString("billkey"), jsonObject.getString("cardcd"));
-                            DailyPreference.getInstance(PlacePaymentActivity.this).setSelectedSimpleCard(mSelectedCreditCard);
+                            DailyPreference.getInstance(PlacePaymentActivity.this).setFavoriteCard(mSelectedCreditCard.number, mSelectedCreditCard.billingkey);
                         } else
                         {
                             boolean hasCreditCard = false;

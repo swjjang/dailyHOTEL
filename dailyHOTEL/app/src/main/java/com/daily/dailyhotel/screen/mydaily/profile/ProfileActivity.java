@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 
 import com.daily.base.BaseActivity;
-import com.daily.base.BasePresenter;
 import com.twoheart.dailyhotel.R;
 
 /**
@@ -39,7 +38,7 @@ public class ProfileActivity extends BaseActivity<ProfilePresenter>
 
     @NonNull
     @Override
-    protected BasePresenter createInstancePresenter()
+    protected ProfilePresenter createInstancePresenter()
     {
         return new ProfilePresenter(this);
     }

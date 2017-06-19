@@ -8,7 +8,6 @@ import com.crashlytics.android.Crashlytics;
 import com.daily.base.util.DailyTextUtils;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.Setting;
-import com.twoheart.dailyhotel.model.CreditCard;
 import com.twoheart.dailyhotel.model.DailyCategoryType;
 import com.twoheart.dailyhotel.model.PlacePaymentInformation;
 
@@ -84,6 +83,8 @@ public class DailyPreference
     private static final String KEY_TRUE_VR_CHECK_DATA_GUIDE = "214";
     private static final String KEY_PREVIEW_GUIDE = "215";
     private static final String KEY_APP_PERMISSIONS_GUIDE = "216";
+
+    private static final String KEY_STAY_OUTBOUND_SEARCH_CALENDAR = "216"; // 최초에 1회 캘린더 띄우기
 
     // ----> DailyPreference 로 이동
     private static final String KEY_AUTHORIZATION = "1000";
@@ -167,6 +168,7 @@ public class DailyPreference
 
     // Home - Category
     private static final String KEY_REMOTE_CONFIG_HOME_CATEGORY_ENABLED = "332";
+
     //    private static final String KEY_REMOTE_CONFIG_ABTEST_GOURMET_PRODUCT_LIST = "340";
     //    private static final String KEY_REMOTE_CONFIG_ABTEST_HOME_BUTTON = "341";
 
@@ -176,6 +178,10 @@ public class DailyPreference
 
     // Boutique BM - Test
     private static final String KEY_REMOTE_CONFIG_BOUTIQUE_BM = "350";
+
+    private static final String KEY_REMOTE_CONFIG_STAY_OUTBOUND_PAYMENT_IS_SIMPLECARD_ENABLED = "360";
+    private static final String KEY_REMOTE_CONFIG_STAY_OUTBOUND_PAYMENT_IS_CARD_ENABLED = "361";
+    private static final String KEY_REMOTE_CONFIG_STAY_OUTBOUND_PAYMENT_IS_PHONE_ENABLED = "362";
 
     /////////////////////////////////////////////////////////////////////////////////////////
     // New Key old --> v1
@@ -898,6 +904,17 @@ public class DailyPreference
         return getValue(mPreferences, KEY_APP_PERMISSIONS_GUIDE, false);
     }
 
+    public void setShowStayOutboundSearchCalendar(boolean value)
+    {
+        setValue(mEditor, KEY_STAY_OUTBOUND_SEARCH_CALENDAR, value);
+    }
+
+    public boolean isShowStayOutboundSearchCalendar()
+    {
+        return getValue(mPreferences, KEY_STAY_OUTBOUND_SEARCH_CALENDAR, true);
+    }
+
+
     /////////////////////////////////////////////////////////////////////////////////////////
     // Remote Config Text
     /////////////////////////////////////////////////////////////////////////////////////////
@@ -1384,6 +1401,36 @@ public class DailyPreference
         return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_BOUTIQUE_BM, false);
     }
 
+    public boolean isRemoteConfigStayOutboundSimpleCardPaymentEnabled()
+    {
+        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_STAY_OUTBOUND_PAYMENT_IS_SIMPLECARD_ENABLED, true);
+    }
+
+    public void setRemoteConfigStayOutboundSimpleCardPaymentEnabled(boolean value)
+    {
+        setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_STAY_OUTBOUND_PAYMENT_IS_SIMPLECARD_ENABLED, value);
+    }
+
+    public boolean isRemoteConfigStayOutboundCardPaymentEnabled()
+    {
+        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_STAY_OUTBOUND_PAYMENT_IS_CARD_ENABLED, true);
+    }
+
+    public void setRemoteConfigStayOutboundCardPaymentEnabled(boolean value)
+    {
+        setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_STAY_OUTBOUND_PAYMENT_IS_CARD_ENABLED, value);
+    }
+
+    public boolean isRemoteConfigStayOutboundPhonePaymentEnabled()
+    {
+        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_STAY_OUTBOUND_PAYMENT_IS_PHONE_ENABLED, true);
+    }
+
+    public void setRemoteConfigStayOutboundPhonePaymentEnabled(boolean value)
+    {
+        setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_STAY_OUTBOUND_PAYMENT_IS_PHONE_ENABLED, value);
+    }
+
     /////////////////////////////////////////////////////////////////////////////////////////
     // new
     /////////////////////////////////////////////////////////////////////////////////////////
@@ -1473,7 +1520,7 @@ public class DailyPreference
         setValue(mEditor, KEY_NOTICE_NEW_REMOVE_LIST, value);
     }
 
-    public String getSelectedSimpleCard()
+    public String getFavoriteCard()
     {
         String value = getValue(mPreferences, KEY_SELECTED_SIMPLE_CARD, null);
 
@@ -1485,9 +1532,15 @@ public class DailyPreference
         return value;
     }
 
-    public void setSelectedSimpleCard(CreditCard creditCard)
+    public void setFavoriteCard(String number, String billingKey)
     {
-        setValue(mEditor, KEY_SELECTED_SIMPLE_CARD, Crypto.urlEncrypt(creditCard.number.replaceAll("\\*|-", "") + creditCard.billingkey.substring(3, 7)));
+        if (DailyTextUtils.isTextEmpty(number, billingKey) == true)
+        {
+            setValue(mEditor, KEY_SELECTED_SIMPLE_CARD, null);
+        } else
+        {
+            setValue(mEditor, KEY_SELECTED_SIMPLE_CARD, Crypto.urlEncrypt(number.replaceAll("\\*|-", "") + billingKey.substring(3, 7)));
+        }
     }
 
     // version - 2.0.4 로 강업 이후 삭제 필요 부분

@@ -39,7 +39,7 @@ public class TrueVRActivity extends WebViewActivity implements View.OnClickListe
     {
         Intent intent = new Intent(context, TrueVRActivity.class);
         intent.putExtra(Constants.NAME_INTENT_EXTRA_DATA_PLACEIDX, placeIndex);
-        intent.putExtra(Constants.NAME_INTENT_EXTRA_DATA_TRUEVIEW_LIST, list);
+        intent.putExtra(Constants.NAME_INTENT_EXTRA_DATA_TRUEVR_LIST, list);
         intent.putExtra(Constants.NAME_INTENT_EXTRA_DATA_PLACETYPE, placeType.name());
         intent.putExtra(Constants.NAME_INTENT_EXTRA_DATA_CATEGORY, category);
         return intent;
@@ -60,7 +60,7 @@ public class TrueVRActivity extends WebViewActivity implements View.OnClickListe
         }
 
         mPlaceIndex = intent.getIntExtra(Constants.NAME_INTENT_EXTRA_DATA_PLACEIDX, -1);
-        mTrueVRParamsList = intent.getParcelableArrayListExtra(Constants.NAME_INTENT_EXTRA_DATA_TRUEVIEW_LIST);
+        mTrueVRParamsList = intent.getParcelableArrayListExtra(Constants.NAME_INTENT_EXTRA_DATA_TRUEVR_LIST);
         mPlaceType = PlaceType.valueOf(intent.getStringExtra(Constants.NAME_INTENT_EXTRA_DATA_PLACETYPE));
         String category = intent.getStringExtra(Constants.NAME_INTENT_EXTRA_DATA_CATEGORY);
 

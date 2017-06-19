@@ -174,6 +174,14 @@ public class HomeCarouselAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 holder.personView.setText("");
                 holder.personView.setVisibility(View.GONE);
             }
+        } else
+        {
+            // Stay Outbound 의 경우 PlaceType 이 없음
+            holder.gradeView.setText("");
+            holder.dotView.setVisibility(View.GONE);
+
+            holder.personView.setText("");
+            holder.personView.setVisibility(View.GONE);
         }
 
         holder.itemView.setTag(place);

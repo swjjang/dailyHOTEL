@@ -5,11 +5,9 @@ import android.os.Vibrator;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.daily.base.util.DailyTextUtils;
-import com.daily.base.util.ScreenUtils;
 import com.daily.base.util.VersionUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
@@ -60,9 +58,6 @@ public class StayWishListAdapter extends PlaceWishListAdapter
             case PlaceViewItem.TYPE_ENTRY:
             {
                 View view = mInflater.inflate(R.layout.list_row_hotel, parent, false);
-                ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT//
-                    , ScreenUtils.getRatioHeightType16x9(ScreenUtils.getScreenWidth(mContext)));
-                view.setLayoutParams(layoutParams);
 
                 return new StayWishListViewHolder(view);
             }
@@ -70,6 +65,7 @@ public class StayWishListAdapter extends PlaceWishListAdapter
             case PlaceViewItem.TYPE_FOOTER_VIEW:
             {
                 View view = mInflater.inflate(R.layout.list_row_users_place_footer, parent, false);
+
                 return new FooterViewHolder(view);
             }
         }
@@ -158,11 +154,11 @@ public class StayWishListAdapter extends PlaceWishListAdapter
 
         if (DailyTextUtils.isTextEmpty(stay.dBenefitText) == false)
         {
-            holder.dBenefitLayout.setVisibility(View.VISIBLE);
+            holder.dBenefitTextView.setVisibility(View.VISIBLE);
             holder.dBenefitTextView.setText(stay.dBenefitText);
         } else
         {
-            holder.dBenefitLayout.setVisibility(View.GONE);
+            holder.dBenefitTextView.setVisibility(View.GONE);
         }
 
         if (mShowDistanceIgnoreSort == true || getSortType() == Constants.SortType.DISTANCE)
@@ -238,28 +234,26 @@ public class StayWishListAdapter extends PlaceWishListAdapter
     {
         View gradientView;
         com.facebook.drawee.view.SimpleDraweeView hotelImageView;
+        TextView dBenefitTextView;
+        TextView hotelGradeView;
         TextView hotelNameView;
+        View informationLayout;
+        TextView satisfactionView;
+        View dot1View;
+        TextView distanceTextView;
+        View dot2View;
+        View trueVRView;
+        TextView hotelAddressView;
         TextView hotelPriceView;
+        View averageView;
         TextView hotelDiscountView;
         View hotelSoldOutView;
-        TextView hotelAddressView;
-        TextView hotelGradeView;
-        TextView satisfactionView;
-        View averageView;
-        TextView dBenefitTextView;
-        TextView distanceTextView;
-        View dBenefitLayout;
         View deleteView;
-        View informationLayout;
-        View trueVRView;
-        View dot1View;
-        View dot2View;
 
         public StayWishListViewHolder(View itemView)
         {
             super(itemView);
 
-            dBenefitLayout = itemView.findViewById(R.id.dBenefitLayout);
             gradientView = itemView.findViewById(R.id.gradientView);
             hotelImageView = (com.facebook.drawee.view.SimpleDraweeView) itemView.findViewById(R.id.imageView);
             hotelNameView = (TextView) itemView.findViewById(R.id.nameTextView);
@@ -277,10 +271,6 @@ public class StayWishListAdapter extends PlaceWishListAdapter
             trueVRView = itemView.findViewById(R.id.trueVRView);
             dot1View = itemView.findViewById(R.id.dot1View);
             dot2View = itemView.findViewById(R.id.dot2View);
-
-            RelativeLayout.LayoutParams dBenefitLayoutParams = (RelativeLayout.LayoutParams) dBenefitLayout.getLayoutParams();
-            dBenefitLayoutParams.rightMargin = ScreenUtils.dpToPx(mContext, 4);
-            dBenefitLayout.setLayoutParams(dBenefitLayoutParams);
 
             itemView.setOnClickListener(new View.OnClickListener()
             {

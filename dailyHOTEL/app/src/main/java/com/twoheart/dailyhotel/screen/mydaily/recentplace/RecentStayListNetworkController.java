@@ -22,7 +22,7 @@ import retrofit2.Response;
 /**
  * Created by android_sam on 2016. 10. 12..
  */
-
+@Deprecated
 public class RecentStayListNetworkController extends BaseNetworkController
 {
     public RecentStayListNetworkController(Context context, String networkTag, OnBaseNetworkControllerListener listener)

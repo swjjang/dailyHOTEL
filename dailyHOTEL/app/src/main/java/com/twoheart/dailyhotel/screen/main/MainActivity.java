@@ -403,6 +403,7 @@ public class MainActivity extends BaseActivity implements Constants, BaseMenuNav
             case CODE_REQUEST_ACTIVITY_SEARCH_RESULT:
             case CODE_REQUEST_ACTIVITY_BOOKING_DETAIL:
             case CODE_REQUEST_ACTIVITY_COLLECTION:
+            case CODE_REQUEST_ACTIVITY_STAY_OB_DETAIL:
             {
                 if (mMainFragmentManager == null || mMainFragmentManager.getCurrentFragment() == null)
                 {

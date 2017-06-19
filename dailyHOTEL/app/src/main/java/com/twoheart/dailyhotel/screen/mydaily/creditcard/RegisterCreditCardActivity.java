@@ -1,5 +1,6 @@
 package com.twoheart.dailyhotel.screen.mydaily.creditcard;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Build;
@@ -30,6 +31,12 @@ import java.util.Map;
 
 public class RegisterCreditCardActivity extends BaseActivity implements Constants
 {
+    public static Intent newInstance(Context context)
+    {
+        Intent intent = new Intent(context, RegisterCreditCardActivity.class);
+        return intent;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {

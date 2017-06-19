@@ -1332,11 +1332,11 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
             }
         };
 
-        String[] hour = DailyPreference.getInstance(BaseActivity.this).getOperationTime().split("\\,");
+        String[] hour = DailyPreference.getInstance(this).getOperationTime().split("\\,");
         String startHour = hour[0];
         String endHour = hour[1];
 
-        String[] lunchTimes = DailyPreference.getInstance(BaseActivity.this).getRemoteConfigOperationLunchTime().split("\\,");
+        String[] lunchTimes = DailyPreference.getInstance(this).getRemoteConfigOperationLunchTime().split("\\,");
         String startLunchTime = lunchTimes[0];
         String endLunchTime = lunchTimes[1];
 

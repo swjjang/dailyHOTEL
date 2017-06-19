@@ -198,7 +198,7 @@ public abstract class PlaceDetailLayout extends BaseLayout
 
         mWishPopupScrollView = view.findViewById(R.id.wishListPopupScrollView);
         mWishPopupTextView = (DailyTextView) view.findViewById(R.id.wishListPopupView);
-        mWishButtonTextView = (DailyTextView) view.findViewById(R.id.wishListBottonView);
+        mWishButtonTextView = (DailyTextView) view.findViewById(R.id.wishListButtonView);
         mWishButtonTextView.setTag(false);
         mWishButtonTextView.setOnClickListener(new OnClickListener()
         {

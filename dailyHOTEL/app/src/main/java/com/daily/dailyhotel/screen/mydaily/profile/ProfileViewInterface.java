@@ -1,8 +1,8 @@
 package com.daily.dailyhotel.screen.mydaily.profile;
 
-import com.daily.base.BaseViewInterface;
+import com.daily.base.BaseDialogViewInterface;
 
-public interface ProfileViewInterface extends BaseViewInterface
+public interface ProfileViewInterface extends BaseDialogViewInterface
 {
     void setEmail(String userType, String email);
 

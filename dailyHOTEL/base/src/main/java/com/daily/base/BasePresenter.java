@@ -1,15 +1,19 @@
 package com.daily.base;
 
+import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 
 import com.daily.base.util.DailyLock;
 
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 
-public abstract class BasePresenter<T1 extends BaseActivity, T2 extends BaseViewInterface> implements BaseActivityInterface
+public abstract class BasePresenter<T1 extends BaseActivity, T2 extends BaseDialogViewInterface> implements BaseActivityInterface
 {
     private T1 mActivity;
 
@@ -27,16 +31,18 @@ public abstract class BasePresenter<T1 extends BaseActivity, T2 extends BaseView
 
         mOnViewInterface = createInstanceViewInterface();
 
-        initialize(activity);
+        constructorInitialize(activity);
     }
 
     protected abstract
     @NonNull
     T2 createInstanceViewInterface();
 
-    public abstract void initialize(T1 activity);
+    public abstract void constructorInitialize(T1 activity);
 
     public abstract void setAnalytics(BaseAnalyticsInterface analytics);
+
+    public abstract void onPostCreate();
 
     protected abstract void onHandleError(Throwable throwable);
 
@@ -98,10 +104,17 @@ public abstract class BasePresenter<T1 extends BaseActivity, T2 extends BaseView
     @Override
     public void onDestroy()
     {
+        clearLock();
+
         getViewInterface().hideSimpleDialog();
 
-        mCompositeDisposable.clear();
-        mCompositeDisposable.dispose();
+        clearCompositeDisposable();
+    }
+
+    @Override
+    public void onFinish()
+    {
+
     }
 
     @Override
@@ -122,6 +135,32 @@ public abstract class BasePresenter<T1 extends BaseActivity, T2 extends BaseView
 
     }
 
+    protected void startActivity(Intent intent)
+    {
+        mActivity.startActivity(intent);
+    }
+
+    protected void startActivityForResult(Intent intent, int requestCode)
+    {
+        mActivity.startActivityForResult(intent, requestCode);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
+    protected void startActivityForResult(Intent intent, int requestCode, Bundle options)
+    {
+        mActivity.startActivityForResult(intent, requestCode, options);
+    }
+
+    protected void setResult(int resultCode)
+    {
+        mActivity.setResult(resultCode);
+    }
+
+    protected void setResult(int resultCode, Intent data)
+    {
+        mActivity.setResult(resultCode, data);
+    }
+
     protected void addCompositeDisposable(Disposable disposable)
     {
         if (disposable == null)
@@ -132,9 +171,29 @@ public abstract class BasePresenter<T1 extends BaseActivity, T2 extends BaseView
         mCompositeDisposable.add(disposable);
     }
 
+    protected void removeCompositeDisposable(Disposable disposable)
+    {
+        if (disposable == null)
+        {
+            return;
+        }
+
+        mCompositeDisposable.remove(disposable);
+    }
+
+    protected void clearCompositeDisposable()
+    {
+        mCompositeDisposable.clear();
+    }
+
     protected boolean isLock()
     {
         return mLock.isLock();
+    }
+
+    protected boolean isScreenLock()
+    {
+        return mLock.isScreenLock();
     }
 
     protected boolean lock()
@@ -147,9 +206,14 @@ public abstract class BasePresenter<T1 extends BaseActivity, T2 extends BaseView
         mLock.unLock();
     }
 
-    protected boolean screenLock(boolean showProgress)
+    void clearLock()
     {
-        return mLock.screenLock(showProgress);
+        mLock.clear();
+    }
+
+    protected void screenLock(boolean showProgress)
+    {
+        mLock.screenLock(showProgress);
     }
 
     protected void screenUnLock()
@@ -157,64 +221,9 @@ public abstract class BasePresenter<T1 extends BaseActivity, T2 extends BaseView
         mLock.screenUnLock();
     }
 
-    //    protected void onHandleError(Throwable throwable)
-    //    {
-    //        screenUnLock();
-    //
-    //        if (throwable instanceof BaseException)
-    //        {
-    //            // 팝업 에러 보여주기
-    //            BaseException baseException = (BaseException) throwable;
-    //
-    //            mOnViewInterface.showSimpleDialog(null, baseException.getMessage()//
-    //                , getString(R.string.dialog_btn_text_confirm), null, null, null, null, new DialogInterface.OnDismissListener()
-    //                {
-    //                    @Override
-    //                    public void onDismiss(DialogInterface dialog)
-    //                    {
-    //                        getActivity().onBackPressed();
-    //                    }
-    //                }, true);
-    //        } else if (throwable instanceof HttpException)
-    //        {
-    //            retrofit2.HttpException httpException = (HttpException) throwable;
-    //
-    //            if (httpException.code() == BaseException.CODE_UNAUTHORIZED)
-    //            {
-    //                onHandleAuthorizedError();
-    //            } else
-    //            {
-    //                if (Constants.DEBUG == false)
-    //                {
-    //                    Crashlytics.log(httpException.response().raw().request().url().toString());
-    //                    Crashlytics.logException(throwable);
-    //                }
-    //            }
-    //        } else
-    //        {
-    //            DailyToast.showToast(getActivity(), getString(R.string.act_base_network_connect), DailyToast.LENGTH_LONG);
-    //        }
-    //    }
-    //
-    //    private void onHandleAuthorizedError()
-    //    {
-    //        addCompositeDisposable(new ConfigLocalImpl(getActivity()).clear().subscribe(new Consumer()
-    //        {
-    //            @Override
-    //            public void accept(Object o) throws Exception
-    //            {
-    //                new FacebookImpl().logOut();
-    //                new KakaoImpl().logOut();
-    //
-    //                restartExpiredSession();
-    //            }
-    //        }));
-    //    }
-    //
-    //    private void restartExpiredSession()
-    //    {
-    //        DailyToast.showToast(getActivity(), R.string.dialog_msg_session_expired, DailyToast.LENGTH_SHORT);
-    //
-    //        Util.restartApp(getActivity());
-    //    }
+    protected void unLockAll()
+    {
+        unLock();
+        screenUnLock();
+    }
 }

@@ -26,13 +26,11 @@ public class DailyInternalDeepLink extends DailyDeepLink
     private static final String PARAM_CHECK_IN_TIME = "ci";
     private static final String PARAM_CHECK_OUT_TIME = "co";
     private static final String PARAM_VISIT_TIME = "vt";
+    private static final String PARAM_BOOKING_INDEX = "bid";
 
     private static final String VIEW_BOOKING_DETAIL = "bd"; // 예약 상세화면
     private static final String VIEW_STAMP = "stamp"; // 스탬프.
     private static final String VIEW_HOME = "home"; // 홈.
-
-    private static final String STAY = "stay";
-    private static final String GOURMET = "gourmet";
 
     public DailyInternalDeepLink(Uri uri)
     {
@@ -124,6 +122,17 @@ public class DailyInternalDeepLink extends DailyDeepLink
         return mParamsMap.get(PARAM_VISIT_TIME);
     }
 
+    public int getBookingIndex()
+    {
+        try
+        {
+            return Integer.parseInt(mParamsMap.get(PARAM_BOOKING_INDEX));
+        } catch (Exception e)
+        {
+            return -1;
+        }
+    }
+
     private boolean decodingLink(Uri uri)
     {
         mParamsMap.clear();
@@ -172,12 +181,24 @@ public class DailyInternalDeepLink extends DailyDeepLink
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("dailyhotel://");
         stringBuilder.append(HOST_INTERNAL_DAILYHOTEL);
-        stringBuilder.append("?v=" + VIEW_BOOKING_DETAIL);
-        stringBuilder.append("&pt=" + STAY);
-        stringBuilder.append("&pn=" + URLEncoder.encode(placeName));
-        stringBuilder.append("&pm=" + URLEncoder.encode(paymentType.name()));
-        stringBuilder.append("&ci=" + URLEncoder.encode(checkInTime));
-        stringBuilder.append("&co=" + URLEncoder.encode(checkOutTime));
+        stringBuilder.append("?" + PARAM_VIEW + "=" + VIEW_BOOKING_DETAIL);
+        stringBuilder.append("&" + PARAM_PLACE_TYPE + "=" + STAY);
+        stringBuilder.append("&" + PARAM_PLACE_NAME + "=" + URLEncoder.encode(placeName));
+        stringBuilder.append("&" + PARAM_PAYMENT_METHOD + "=" + URLEncoder.encode(paymentType.name()));
+        stringBuilder.append("&" + PARAM_CHECK_IN_TIME + "=" + URLEncoder.encode(checkInTime));
+        stringBuilder.append("&" + PARAM_CHECK_OUT_TIME + "=" + URLEncoder.encode(checkOutTime));
+
+        return getIntent(context, Uri.parse(stringBuilder.toString()));
+    }
+
+    public static Intent getStayOutboundBookingDetailScreenLink(Context context, int bookingIndex)
+    {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("dailyhotel://");
+        stringBuilder.append(HOST_INTERNAL_DAILYHOTEL);
+        stringBuilder.append("?" + PARAM_VIEW + "=" + VIEW_BOOKING_DETAIL);
+        stringBuilder.append("&" + PARAM_PLACE_TYPE + "=" + STAY_OUTBOUND);
+        stringBuilder.append("&" + PARAM_BOOKING_INDEX + "=" + bookingIndex);
 
         return getIntent(context, Uri.parse(stringBuilder.toString()));
     }
@@ -193,11 +214,11 @@ public class DailyInternalDeepLink extends DailyDeepLink
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("dailyhotel://");
         stringBuilder.append(HOST_INTERNAL_DAILYHOTEL);
-        stringBuilder.append("?v=" + VIEW_BOOKING_DETAIL);
-        stringBuilder.append("&pt=" + GOURMET);
-        stringBuilder.append("&pn=" + URLEncoder.encode(placeName));
-        stringBuilder.append("&pm=" + URLEncoder.encode(paymentType.name()));
-        stringBuilder.append("&vt=" + URLEncoder.encode(visitTime));
+        stringBuilder.append("?" + PARAM_VIEW + "=" + VIEW_BOOKING_DETAIL);
+        stringBuilder.append("&" + PARAM_PLACE_TYPE + "=" + GOURMET);
+        stringBuilder.append("&" + PARAM_PLACE_NAME + "=" + URLEncoder.encode(placeName));
+        stringBuilder.append("&" + PARAM_PAYMENT_METHOD + "=" + URLEncoder.encode(paymentType.name()));
+        stringBuilder.append("&" + PARAM_VISIT_TIME + "=" + URLEncoder.encode(visitTime));
 
         return getIntent(context, Uri.parse(stringBuilder.toString()));
     }
@@ -207,7 +228,7 @@ public class DailyInternalDeepLink extends DailyDeepLink
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("dailyhotel://");
         stringBuilder.append(HOST_INTERNAL_DAILYHOTEL);
-        stringBuilder.append("?v=" + VIEW_STAMP);
+        stringBuilder.append("?" + PARAM_VIEW + "=" + VIEW_STAMP);
 
         return getIntent(context, Uri.parse(stringBuilder.toString()));
     }
@@ -217,7 +238,7 @@ public class DailyInternalDeepLink extends DailyDeepLink
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("dailyhotel://");
         stringBuilder.append(HOST_INTERNAL_DAILYHOTEL);
-        stringBuilder.append("?v=" + VIEW_HOME);
+        stringBuilder.append("?" + PARAM_VIEW + "=" + VIEW_HOME);
 
         return getIntent(context, Uri.parse(stringBuilder.toString()));
     }

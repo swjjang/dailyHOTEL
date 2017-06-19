@@ -43,7 +43,7 @@ public class RetrofitHttpClient implements Constants
     {
         mOkHttpClient = new OkHttpClient().newBuilder()//
             .addInterceptor(new HeaderInterceptor())//
-            .readTimeout(10, TimeUnit.SECONDS).writeTimeout(10, TimeUnit.SECONDS).build();
+            .readTimeout(15, TimeUnit.SECONDS).writeTimeout(10, TimeUnit.SECONDS).build();
 
         mTagCancellableCallAdapterFactory = TagCancellableCallAdapterFactory.create();
 

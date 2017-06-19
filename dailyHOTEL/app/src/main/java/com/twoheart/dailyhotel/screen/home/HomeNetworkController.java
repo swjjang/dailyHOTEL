@@ -5,7 +5,6 @@ import android.content.Context;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.twoheart.dailyhotel.Setting;
-import com.twoheart.dailyhotel.model.HomeRecentParam;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.network.dto.BaseDto;
 import com.twoheart.dailyhotel.network.dto.BaseListDto;
@@ -17,10 +16,6 @@ import com.twoheart.dailyhotel.network.model.Stamp;
 import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -45,8 +40,6 @@ public class HomeNetworkController extends BaseNetworkController
         void onEventList(ArrayList<Event> list);
 
         void onWishList(ArrayList<HomePlace> list, boolean isError);
-
-        void onRecentList(ArrayList<HomePlace> list, boolean isError);
 
         void onRecommendationList(ArrayList<Recommendation> list, boolean isError);
 
@@ -78,29 +71,6 @@ public class HomeNetworkController extends BaseNetworkController
         DailyMobileAPI.getInstance(mContext).requestHomeWishList(mNetworkTag, mWishListCallBack);
     }
 
-    public void requestRecentList(ArrayList<HomeRecentParam> recentParamList)
-    {
-        // 리스트가 비었을때 서버에 리퀘스트시 필수 값 없어 에러 발생, 하지만 해당 경우는 정상인 상태로 서버에 리퀘스트 하지 않음 - 아이폰 동일
-        if (recentParamList == null || recentParamList.size() == 0)
-        {
-            ((HomeNetworkController.OnNetworkControllerListener) mOnNetworkControllerListener).onRecentList(null, false);
-            return;
-        }
-
-        JSONArray recentJsonArray = getRecentJsonArray(recentParamList);
-
-        JSONObject recentJsonObject = new JSONObject();
-        try
-        {
-            recentJsonObject.put("keys", recentJsonArray);
-        } catch (JSONException e)
-        {
-            ExLog.d(e.getMessage());
-        }
-
-        DailyMobileAPI.getInstance(mContext).requestHomeRecentList(mNetworkTag, recentJsonObject, mRecentListCallBack);
-    }
-
     public void requestRecommendationList()
     {
         DailyMobileAPI.getInstance(mContext).requestRecommendationList(mNetworkTag, mRecommendationCallback);
@@ -109,34 +79,6 @@ public class HomeNetworkController extends BaseNetworkController
     public void requestUserStamps()
     {
         DailyMobileAPI.getInstance(mContext).requestUserStamps(mNetworkTag, false, mStampCallback);
-    }
-
-    private JSONArray getRecentJsonArray(ArrayList<HomeRecentParam> list)
-    {
-        if (list == null || list.size() == 0)
-        {
-            return null;
-        }
-
-        JSONArray jsonArray = new JSONArray();
-
-        for (HomeRecentParam param : list)
-        {
-            JSONObject jsonObject = new JSONObject();
-
-            try
-            {
-                jsonObject.put("serviceType", param.serviceType);
-                jsonObject.put("idx", param.index);
-
-                jsonArray.put(jsonObject);
-            } catch (JSONException e)
-            {
-                ExLog.d(e.getMessage());
-            }
-        }
-
-        return jsonArray;
     }
 
     private retrofit2.Callback mDateTimeJsonCallback = new retrofit2.Callback<BaseDto<TodayDateTime>>()
@@ -252,16 +194,16 @@ public class HomeNetworkController extends BaseNetworkController
         }
     };
 
-    private retrofit2.Callback mWishListCallBack = new retrofit2.Callback<BaseDto<HomePlaces<HomePlace>>>()
+    private retrofit2.Callback mWishListCallBack = new retrofit2.Callback<BaseDto<HomePlaces>>()
     {
         @Override
-        public void onResponse(Call<BaseDto<HomePlaces<HomePlace>>> call, Response<BaseDto<HomePlaces<HomePlace>>> response)
+        public void onResponse(Call<BaseDto<HomePlaces>> call, Response<BaseDto<HomePlaces>> response)
         {
             if (response != null && response.isSuccessful() && response.body() != null)
             {
                 try
                 {
-                    BaseDto<HomePlaces<HomePlace>> baseDto = response.body();
+                    BaseDto<HomePlaces> baseDto = response.body();
 
                     if (baseDto.msgCode == 100)
                     {
@@ -299,56 +241,6 @@ public class HomeNetworkController extends BaseNetworkController
         {
             mOnNetworkControllerListener.onError(call, t, true);
             ((HomeNetworkController.OnNetworkControllerListener) mOnNetworkControllerListener).onWishList(null, true);
-        }
-    };
-
-    private retrofit2.Callback mRecentListCallBack = new retrofit2.Callback<BaseDto<HomePlaces<HomePlace>>>()
-    {
-        @Override
-        public void onResponse(Call<BaseDto<HomePlaces<HomePlace>>> call, Response<BaseDto<HomePlaces<HomePlace>>> response)
-        {
-            if (response != null && response.isSuccessful() && response.body() != null)
-            {
-                try
-                {
-                    BaseDto<HomePlaces<HomePlace>> baseDto = response.body();
-
-                    if (baseDto.msgCode == 100)
-                    {
-                        ArrayList<HomePlace> homePlaceList = new ArrayList<>();
-                        homePlaceList.addAll(baseDto.data.items);
-
-                        String imageBaseUrl = baseDto.data.imageBaseUrl;
-
-                        for (HomePlace recentItem : homePlaceList)
-                        {
-                            if (DailyTextUtils.isTextEmpty(recentItem.imageUrl) == false)
-                            {
-                                recentItem.imageUrl = imageBaseUrl + recentItem.imageUrl;
-                            }
-                        }
-
-                        ((HomeNetworkController.OnNetworkControllerListener) mOnNetworkControllerListener).onRecentList(homePlaceList, false);
-                    } else
-                    {
-                        ((HomeNetworkController.OnNetworkControllerListener) mOnNetworkControllerListener).onRecentList(null, true);
-                    }
-                } catch (Exception e)
-                {
-                    ExLog.e(e.toString());
-                    ((HomeNetworkController.OnNetworkControllerListener) mOnNetworkControllerListener).onRecentList(null, true);
-                }
-            } else
-            {
-                ((HomeNetworkController.OnNetworkControllerListener) mOnNetworkControllerListener).onRecentList(null, true);
-            }
-        }
-
-        @Override
-        public void onFailure(Call call, Throwable t)
-        {
-            mOnNetworkControllerListener.onError(call, t, true);
-            ((HomeNetworkController.OnNetworkControllerListener) mOnNetworkControllerListener).onRecentList(null, true);
         }
     };
 

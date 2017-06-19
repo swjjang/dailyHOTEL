@@ -31,11 +31,12 @@ public class HomeCategoryLayout extends RelativeLayout
         void onItemClick(DailyCategoryType dailyCategoryType);
     }
 
-    private static final int MAX_COLUMN_COUNT = 4;
+    private static final int MAX_COLUMN_COUNT = 5;
     private static final int ANIMATION_DURATION = 200;
 
     private static final DailyCategoryType[] sColumnList = { //
         DailyCategoryType.STAY_HOTEL, //
+        DailyCategoryType.STAY_OUTBOUND_HOTEL, //
         DailyCategoryType.STAY_BOUTIQUE, //
         DailyCategoryType.STAY_PENSION, //
         DailyCategoryType.STAY_RESORT};

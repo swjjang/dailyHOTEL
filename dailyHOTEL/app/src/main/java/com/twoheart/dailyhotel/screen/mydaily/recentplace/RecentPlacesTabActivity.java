@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
-import android.util.Pair;
 import android.view.View;
 import android.widget.LinearLayout;
 
@@ -15,8 +14,9 @@ import com.daily.base.util.ExLog;
 import com.daily.base.util.FontManager;
 import com.daily.base.util.ScreenUtils;
 import com.daily.base.widget.DailyViewPager;
+import com.daily.dailyhotel.repository.local.model.RecentlyRealmObject;
+import com.daily.dailyhotel.util.RecentlyPlaceUtil;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.RecentPlaces;
 import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.Constants;
@@ -27,6 +27,7 @@ import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 
+import io.realm.RealmResults;
 import retrofit2.Call;
 import retrofit2.Response;
 
@@ -36,10 +37,6 @@ import retrofit2.Response;
 
 public class RecentPlacesTabActivity extends BaseActivity
 {
-    RecentPlaces mAllRecentPlaces;
-    ArrayList<Pair<Integer, String>> mRecentStayList;
-    ArrayList<Pair<Integer, String>> mRecentGourmetList;
-
     ArrayList<RecentPlacesListFragment> mFragmentList;
 
     private RecentStayListFragment mRecentStayListFragment;
@@ -56,7 +53,7 @@ public class RecentPlacesTabActivity extends BaseActivity
     private SourceType mSourceType;
     private PlaceType mPlaceType;
 
-    private boolean mDontReloadAtOnResume; // TODO : 타 기능 구현 완료 후 처리 예정
+    private boolean mDontReloadAtOnResume;
 
     public enum SourceType
     {
@@ -92,11 +89,6 @@ public class RecentPlacesTabActivity extends BaseActivity
         setContentView(R.layout.activity_recent_places);
 
         mNetworkController = new RecentPlacesNetworkController(this, mNetworkTag, mOnNetworkControllerListener);
-
-        mAllRecentPlaces = new RecentPlaces(this);
-
-        mRecentStayList = mAllRecentPlaces.getRecentTypeList(PlaceType.HOTEL);
-        mRecentGourmetList = mAllRecentPlaces.getRecentTypeList(PlaceType.FNB);
 
         initIntent(getIntent());
 
@@ -194,13 +186,13 @@ public class RecentPlacesTabActivity extends BaseActivity
         mFragmentList = new ArrayList<>();
 
         mRecentStayListFragment = new RecentStayListFragment();
-        mRecentStayListFragment.setRecentPlaceList(mRecentStayList);
+        mRecentStayListFragment.setServiceType(RecentlyPlaceUtil.ServiceType.ALL_STAY);
         mRecentStayListFragment.setRecentPlaceListFragmentListener(mRecentPlaceListFragmentListener);
 
         mFragmentList.add(mRecentStayListFragment);
 
         mRecentGourmetListFragment = new RecentGourmetListFragment();
-        mRecentGourmetListFragment.setRecentPlaceList(mRecentGourmetList);
+        mRecentGourmetListFragment.setServiceType(RecentlyPlaceUtil.ServiceType.GOURMET);
         mRecentGourmetListFragment.setRecentPlaceListFragmentListener(mRecentPlaceListFragmentListener);
 
         mFragmentList.add(mRecentGourmetListFragment);
@@ -295,12 +287,15 @@ public class RecentPlacesTabActivity extends BaseActivity
 
     private boolean isEmptyRecentStayPlace()
     {
-        return mRecentStayList == null || mRecentStayList.size() == 0;
+        RealmResults<RecentlyRealmObject> resultList = RecentlyPlaceUtil.getRecentlyTypeList( //
+            RecentlyPlaceUtil.ServiceType.IB_STAY, RecentlyPlaceUtil.ServiceType.OB_STAY);
+        return resultList == null || resultList.size() == 0;
     }
 
     private boolean isEmptyRecentGourmetPlace()
     {
-        return mRecentGourmetList == null || mRecentGourmetList.size() == 0;
+        RealmResults<RecentlyRealmObject> resultList = RecentlyPlaceUtil.getRecentlyTypeList(RecentlyPlaceUtil.ServiceType.GOURMET);
+        return resultList == null || resultList.size() == 0;
     }
 
     @Override
@@ -369,40 +364,23 @@ public class RecentPlacesTabActivity extends BaseActivity
         }
     };
 
-    private RecentPlacesListFragment.OnRecentPlaceListFragmentListener mRecentPlaceListFragmentListener = new RecentPlacesListFragment.OnRecentPlaceListFragmentListener()
+    private RecentPlacesListFragment.OnRecentPlaceListFragmentListener mRecentPlaceListFragmentListener //
+        = new RecentPlacesListFragment.OnRecentPlaceListFragmentListener()
     {
         @Override
-        public void onDeleteItemClick(Pair<Integer, String> deleteItem)
+        public void onDeleteItemClickAnalytics()
         {
-            if (mAllRecentPlaces == null || mAllRecentPlaces.size() == 0)
+            RealmResults<RecentlyRealmObject> resultList = RecentlyPlaceUtil.getRecentlyTypeList((RecentlyPlaceUtil.ServiceType[]) null);
+
+            if (resultList == null || resultList.size() == 0)
             {
-                return;
-            }
-
-            if (deleteItem != null)
-            {
-                String serviceType = deleteItem.second;
-
-                if (RecentPlaces.getServiceType(PlaceType.HOTEL).equalsIgnoreCase(serviceType) == true)
-                {
-                    mRecentStayList.remove(deleteItem);
-                } else if (RecentPlaces.getServiceType(PlaceType.FNB).equalsIgnoreCase(serviceType) == true)
-                {
-                    mRecentGourmetList.remove(deleteItem);
-                }
-            }
-
-            mAllRecentPlaces.remove(deleteItem);
-            mAllRecentPlaces.savePreference();
-
-            if (mAllRecentPlaces.size() == 0)
-            {
-                AnalyticsManager.getInstance(RecentPlacesTabActivity.this).recordScreen(RecentPlacesTabActivity.this, AnalyticsManager.Screen.MENU_RECENT_VIEW_EMPTY, null);
+                AnalyticsManager.getInstance(RecentPlacesTabActivity.this).recordScreen( //
+                    RecentPlacesTabActivity.this, AnalyticsManager.Screen.MENU_RECENT_VIEW_EMPTY, null);
             }
         }
     };
 
-    private RecentPlacesNetworkController.OnNetworkControllerListener mOnNetworkControllerListener = new RecentPlacesNetworkController.OnNetworkControllerListener()
+    private RecentPlacesNetworkController.OnNetworkControllerListener mOnNetworkControllerListener = new RecentPlacesNetworkController.OnNetworkControllerListener() //
     {
         @Override
         public void onCommonDateTime(TodayDateTime todayDateTime)

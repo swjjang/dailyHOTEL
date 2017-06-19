@@ -17,8 +17,8 @@ import com.daily.dailyhotel.entity.User;
 import com.daily.dailyhotel.entity.UserBenefit;
 import com.daily.dailyhotel.parcel.UserParcel;
 import com.daily.dailyhotel.repository.local.ConfigLocalImpl;
-import com.daily.dailyhotel.repository.remote.FacebookImpl;
-import com.daily.dailyhotel.repository.remote.KakaoImpl;
+import com.daily.dailyhotel.repository.remote.FacebookRemoteImpl;
+import com.daily.dailyhotel.repository.remote.KakaoRemoteImpl;
 import com.daily.dailyhotel.repository.remote.ProfileRemoteImpl;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
@@ -68,7 +68,7 @@ public class ProfilePresenter extends BaseExceptionPresenter<ProfileActivity, Pr
     }
 
     @Override
-    public void initialize(ProfileActivity activity)
+    public void constructorInitialize(ProfileActivity activity)
     {
         setContentView(R.layout.activity_profile_data);
 
@@ -85,22 +85,24 @@ public class ProfilePresenter extends BaseExceptionPresenter<ProfileActivity, Pr
     }
 
     @Override
-    public void finish()
-    {
-        onBackPressed();
-    }
-
-    @Override
-    public void onIntent(Intent intent)
+    public boolean onIntent(Intent intent)
     {
         if (intent == null)
         {
-            return;
+            return true;
         }
 
         if (intent.hasExtra(BaseActivity.INTENT_EXTRA_DATA_DEEPLINK) == true)
         {
         }
+
+        return true;
+    }
+
+    @Override
+    public void onPostCreate()
+    {
+
     }
 
     @Override
@@ -183,6 +185,12 @@ public class ProfilePresenter extends BaseExceptionPresenter<ProfileActivity, Pr
     }
 
     @Override
+    public void onBackClick()
+    {
+        getActivity().onBackPressed();
+    }
+
+    @Override
     public void onSaveInstanceState(Bundle outState)
     {
         super.onSaveInstanceState(outState);
@@ -200,6 +208,12 @@ public class ProfilePresenter extends BaseExceptionPresenter<ProfileActivity, Pr
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+
+    }
+
+    @Override
+    protected void onRefresh(boolean showProgress)
     {
 
     }
@@ -267,6 +281,13 @@ public class ProfilePresenter extends BaseExceptionPresenter<ProfileActivity, Pr
                         {
                             getViewInterface().showSimpleDialog(null, getString(R.string.message_invalid_verification), getString(R.string.dialog_btn_text_confirm), null);
                         }
+                    }
+                }, new Consumer<Throwable>()
+                {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception
+                    {
+                        onHandleError(throwable);
                     }
                 }));
 
@@ -345,8 +366,8 @@ public class ProfilePresenter extends BaseExceptionPresenter<ProfileActivity, Pr
                     mProfileAnalytics.clearUserInformation(getActivity());
                     mProfileAnalytics.screenLogOut(getActivity());
 
-                    new FacebookImpl().logOut();
-                    new KakaoImpl().logOut();
+                    new FacebookRemoteImpl().logOut();
+                    new KakaoRemoteImpl().logOut();
                 }
             }, null, null, new DialogInterface.OnDismissListener()
             {

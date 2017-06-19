@@ -3,13 +3,15 @@ package com.daily.dailyhotel.repository.remote;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
-import com.daily.base.BaseException;
+import com.daily.base.exception.BaseException;
 import com.daily.dailyhotel.domain.ProfileInterface;
 import com.daily.dailyhotel.entity.User;
 import com.daily.dailyhotel.entity.UserBenefit;
+import com.daily.dailyhotel.entity.UserInformation;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
 
 import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 
 public class ProfileRemoteImpl implements ProfileInterface
 {
@@ -23,7 +25,6 @@ public class ProfileRemoteImpl implements ProfileInterface
     @Override
     public Observable<User> getProfile()
     {
-        //        return DailyMobileAPI.getInstance(mContext).getUserProfile().map(new Function<BaseDto<UserData>, User>()
         return DailyMobileAPI.getInstance(mContext).getUserProfile().map((userDataBaseDto) ->
         {
             User user = null;
@@ -43,7 +44,7 @@ public class ProfileRemoteImpl implements ProfileInterface
             }
 
             return user;
-        });
+        }).observeOn(AndroidSchedulers.mainThread());
     }
 
     @Override
@@ -68,6 +69,31 @@ public class ProfileRemoteImpl implements ProfileInterface
             }
 
             return userBenefit;
-        });
+        }).observeOn(AndroidSchedulers.mainThread());
+    }
+
+    @Override
+    public Observable<UserInformation> getUserInformation()
+    {
+        return DailyMobileAPI.getInstance(mContext).getUserInformationForPayment().map(userInformationDataBaseDto ->
+        {
+            UserInformation userInformation = null;
+
+            if (userInformationDataBaseDto != null)
+            {
+                if (userInformationDataBaseDto.msgCode == 0 && userInformationDataBaseDto.data != null)
+                {
+                    userInformation = userInformationDataBaseDto.data.getUserInformation();
+                } else
+                {
+                    throw new BaseException(userInformationDataBaseDto.msgCode, userInformationDataBaseDto.msg);
+                }
+            } else
+            {
+                throw new BaseException(-1, null);
+            }
+
+            return userInformation;
+        }).observeOn(AndroidSchedulers.mainThread());
     }
 }

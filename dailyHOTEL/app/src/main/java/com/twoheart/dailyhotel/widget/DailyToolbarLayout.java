@@ -220,7 +220,7 @@ public class DailyToolbarLayout
         }
     }
 
-    public void setToolbarText(String title)
+    public void setToolbarTitle(String title)
     {
         TextView textView = getTitleTextView(mContext);
         textView.setText(title);

@@ -7,6 +7,8 @@ import android.location.Location;
 
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
+import com.daily.dailyhotel.screen.stay.outbound.search.StayOutboundSearchActivity;
+import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Keyword;
 import com.twoheart.dailyhotel.model.time.StayBookingDay;
 import com.twoheart.dailyhotel.network.model.TodayDateTime;
@@ -90,6 +92,12 @@ public class StaySearchFragment extends PlaceSearchFragment
                 break;
             }
         }
+    }
+
+    @Override
+    protected int getLayoutResourceId()
+    {
+        return R.layout.fragment_stay_search;
     }
 
     @Override
@@ -191,8 +199,19 @@ public class StaySearchFragment extends PlaceSearchFragment
     // OnEventListener
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private PlaceSearchLayout.OnEventListener mOnEventListener = new PlaceSearchLayout.OnEventListener()
+    private StaySearchLayout.OnEventListener mOnEventListener = new StaySearchLayout.OnEventListener()
     {
+        @Override
+        public void onStayOutboundClick()
+        {
+            if (mIsScrolling == true)
+            {
+                return;
+            }
+
+            startActivity(StayOutboundSearchActivity.newInstance(getContext()));
+        }
+
         @Override
         public void onResetKeyword()
         {

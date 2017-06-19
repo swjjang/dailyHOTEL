@@ -123,4 +123,16 @@
         <item name="colorAccent">@android:color/transparent</item>
         <item name="colorButtonNormal">@android:color/transparent</item>
     </style>
+
+    <style name="StayOutboundRatingBarWhite" parent="@android:style/Widget.RatingBar">
+        <item name="android:progressDrawable">@drawable/layerlist_rating_bar_white</item>
+    </style>
+
+    <style name="StayOutboundRatingBarGold" parent="@android:style/Widget.RatingBar">
+        <item name="android:progressDrawable">@drawable/layerlist_rating_bar_gold</item>
+    </style>
+
+    <style name="TripAdvisorRatingBar" parent="@android:style/Widget.RatingBar">
+        <item name="android:progressDrawable">@drawable/layerlist_tripadvisor_rating_bar</item>
+    </style>
 </resources>

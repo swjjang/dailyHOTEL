@@ -94,7 +94,6 @@ public class StayPaymentWebActivity extends PlacePaymentWebActivity
         return AnalyticsManager.Screen.DAILYHOTEL_PAYMENT_PROCESS;
     }
 
-    @Override
     protected void requestPostPaymentWebView(WebView webView //
         , PlacePaymentInformation placePaymentInformation, PlaceBookingDay placeBookingDay)
     {
@@ -434,7 +433,7 @@ public class StayPaymentWebActivity extends PlacePaymentWebActivity
 //            FormBody.Builder builder = new FormBody.Builder();
 //            builder.add("room_idx", String.valueOf(stayProduct.roomIndex));
 //            builder.add("payment_type", stayPaymentInformation.paymentType.name());
-//            builder.add("checkin_date", stayBookingDay.getCheckInDay("yyyyMMdd"));
+//            builder.add("checkin_date", stayBookingDay.getCheckInDateTime("yyyyMMdd"));
 //            builder.add("nights", Integer.toString(stayBookingDay.getNights()));
 //
 //            switch (stayPaymentInformation.discountType)

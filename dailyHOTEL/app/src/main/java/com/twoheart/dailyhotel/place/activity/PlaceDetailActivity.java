@@ -132,7 +132,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
         mDailyToolbarLayout.setToolbarMenu(R.drawable.navibar_ic_share_01_black, -1);
         mDailyToolbarLayout.setToolbarMenuClickListener(mToolbarOptionsItemSelectedListener);
 
-        mTrueViewView = findViewById(R.id.trueViewView);
+        mTrueViewView = findViewById(R.id.trueVRView);
         mTrueViewView.setVisibility(View.GONE);
 
         View backImage = findViewById(R.id.backView);

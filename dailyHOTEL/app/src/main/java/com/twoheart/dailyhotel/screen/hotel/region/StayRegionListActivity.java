@@ -3,18 +3,12 @@ package com.twoheart.dailyhotel.screen.hotel.region;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
 import android.view.View;
-import android.widget.RelativeLayout;
 
-import com.daily.base.util.FontManager;
-import com.daily.base.util.ScreenUtils;
-import com.daily.base.util.VersionUtils;
-import com.daily.base.widget.DailyViewPager;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Area;
-import com.twoheart.dailyhotel.model.DailyCategoryType;
 import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.RegionViewItem;
 import com.twoheart.dailyhotel.model.time.StayBookingDay;
@@ -26,12 +20,9 @@ import com.twoheart.dailyhotel.screen.common.PermissionManagerActivity;
 import com.twoheart.dailyhotel.screen.search.SearchActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
-import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
-
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -48,15 +39,14 @@ public class StayRegionListActivity extends PlaceRegionListActivity
     public static final String INTENT_EXTRA_DATA_PROVINCE_INDEX = "provinceIndex";
     public static final String INTENT_EXTRA_DATA_AREA_INDEX = "areaIndex";
 
-    private static final int STAY_TAB_COUNT = 2;
+    private static final int STAY_TAB_COUNT = 1;
 
-    DailyViewPager mViewPager;
+    ViewPager mViewPager;
     PlaceRegionFragmentPagerAdapter mFragmentPagerAdapter;
 
     private StayRegionListNetworkController mNetworkController;
     StayBookingDay mStayBookingDay;
     Province mSelectedProvince;
-    private TabLayout mTabLayout;
     private String mCategoryCode;
 
     public static Intent newInstance(Context context, Province province, StayBookingDay stayBookingDay, String categoryCode)
@@ -95,38 +85,6 @@ public class StayRegionListActivity extends PlaceRegionListActivity
     }
 
     @Override
-    protected void initTabLayout(TabLayout tabLayout, View tabUpperLineView)
-    {
-        if (tabLayout == null)
-        {
-            return;
-        }
-
-        mTabLayout = tabLayout;
-
-        tabLayout.addTab(tabLayout.newTab().setText(R.string.label_domestic));
-        tabLayout.addTab(tabLayout.newTab().setText(R.string.label_global));
-        tabLayout.setOnTabSelectedListener(mOnTabSelectedListener);
-
-        if (VersionUtils.isOverAPI21() == true)
-        {
-            tabUpperLineView.setVisibility(View.VISIBLE);
-        } else
-        {
-            tabUpperLineView.setVisibility(View.GONE);
-
-            RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mTabLayout.getLayoutParams();
-            layoutParams.topMargin = 1 - ScreenUtils.dpToPx(this, 1);
-
-            mTabLayout.setLayoutParams(layoutParams);
-        }
-
-        hideTabLayout();
-
-        FontManager.apply(tabLayout, FontManager.getInstance(this).getRegularTypeface());
-    }
-
-    @Override
     protected void initToolbar(View toolbar)
     {
         DailyToolbarLayout dailyToolbarLayout = new DailyToolbarLayout(this, toolbar);
@@ -151,78 +109,42 @@ public class StayRegionListActivity extends PlaceRegionListActivity
     }
 
     @Override
-    protected void initViewPager(TabLayout tabLayout)
+    protected void initViewPager()
     {
-        mViewPager = (DailyViewPager) findViewById(R.id.viewPager);
+        mViewPager = (ViewPager) findViewById(R.id.viewPager);
 
         ArrayList<PlaceRegionListFragment> fragmentList = new ArrayList<>(STAY_TAB_COUNT);
+
         StayRegionListFragment regionListFragment01 = new StayRegionListFragment();
-
-        boolean isOverSeas = false;
-
-        if (mSelectedProvince != null)
-        {
-            if (mSelectedProvince instanceof Area)
-            {
-                Area area = ((Area) mSelectedProvince);
-
-                if (area.getProvince() == null)
-                {
-                    JSONObject jsonObject = DailyPreference.getInstance(this).getDailyRegion(DailyCategoryType.STAY_ALL);
-                    isOverSeas = Util.isDailyOverSeas(jsonObject);
-                    //                    isOverSeas = DailyPreference.getInstance(this).isSelectedOverseaRegion(PlaceType.HOTEL);
-                } else
-                {
-                    isOverSeas = area.getProvince().isOverseas;
-                }
-            } else
-            {
-                isOverSeas = mSelectedProvince.isOverseas;
-            }
-        }
-
-        regionListFragment01.setInformation(Region.DOMESTIC, isOverSeas ? null : mSelectedProvince, mCategoryCode);
+        regionListFragment01.setInformation(Region.DOMESTIC, mSelectedProvince, mCategoryCode);
         regionListFragment01.setOnPlaceRegionListFragmentListener(mOnPlaceRegionListFragment);
         fragmentList.add(regionListFragment01);
-
-        StayRegionListFragment regionListFragment02 = new StayRegionListFragment();
-        regionListFragment02.setInformation(Region.GLOBAL, isOverSeas ? mSelectedProvince : null, mCategoryCode);
-        regionListFragment02.setOnPlaceRegionListFragmentListener(mOnPlaceRegionListFragment);
-        fragmentList.add(regionListFragment02);
 
         mFragmentPagerAdapter = new PlaceRegionFragmentPagerAdapter(getSupportFragmentManager(), fragmentList);
 
         mViewPager.setOffscreenPageLimit(STAY_TAB_COUNT);
         mViewPager.setAdapter(mFragmentPagerAdapter);
         mViewPager.clearOnPageChangeListeners();
-        mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
-        mViewPager.setCurrentItem(isOverSeas ? 1 : 0);
 
-        if (isOverSeas == true)
+        try
         {
-            AnalyticsManager.getInstance(StayRegionListActivity.this).recordScreen(this, AnalyticsManager.Screen.DAILYHOTEL_LIST_REGION_GLOBAL, null);
-        } else
-        {
-            try
+            Map<String, String> params = new HashMap<>();
+
+            if (DailyHotel.isLogin() == false)
             {
-                Map<String, String> params = new HashMap<>();
-
-                if (DailyHotel.isLogin() == false)
-                {
-                    params.put(AnalyticsManager.KeyType.IS_SIGNED, AnalyticsManager.ValueType.GUEST);
-                } else
-                {
-                    params.put(AnalyticsManager.KeyType.IS_SIGNED, AnalyticsManager.ValueType.MEMBER);
-                }
-
-                params.put(AnalyticsManager.KeyType.PLACE_TYPE, AnalyticsManager.ValueType.STAY);
-                params.put(AnalyticsManager.KeyType.CATEGORY, mCategoryCode);
-
-                AnalyticsManager.getInstance(this).recordScreen(this, AnalyticsManager.Screen.DAILYHOTEL_LIST_REGION_DOMESTIC, null, params);
-            } catch (Exception e)
+                params.put(AnalyticsManager.KeyType.IS_SIGNED, AnalyticsManager.ValueType.GUEST);
+            } else
             {
-
+                params.put(AnalyticsManager.KeyType.IS_SIGNED, AnalyticsManager.ValueType.MEMBER);
             }
+
+            params.put(AnalyticsManager.KeyType.PLACE_TYPE, AnalyticsManager.ValueType.STAY);
+            params.put(AnalyticsManager.KeyType.CATEGORY, mCategoryCode);
+
+            AnalyticsManager.getInstance(this).recordScreen(this, AnalyticsManager.Screen.DAILYHOTEL_LIST_REGION_DOMESTIC, null, params);
+        } catch (Exception e)
+        {
+
         }
     }
 
@@ -433,18 +355,6 @@ public class StayRegionListActivity extends PlaceRegionListActivity
         }
     };
 
-    void removeGlobalRegion()
-    {
-        mTabLayout.setVisibility(View.GONE);
-        mTabLayout.removeTabAt(1);
-        mViewPager.setCurrentItem(0);
-        mViewPager.clearOnPageChangeListeners();
-        mViewPager.setPagingEnabled(false);
-
-        mFragmentPagerAdapter.removeItem(1);
-        mFragmentPagerAdapter.notifyDataSetChanged();
-    }
-
     @Override
     protected void updateTermsOfLocationLayout()
     {
@@ -470,90 +380,14 @@ public class StayRegionListActivity extends PlaceRegionListActivity
         return (PlaceRegionListFragment) mFragmentPagerAdapter.getItem(position);
     }
 
-    void showTabLayout()
-    {
-        mTabLayout.setVisibility(View.VISIBLE);
-    }
-
-    private void hideTabLayout()
-    {
-        mTabLayout.setVisibility(View.INVISIBLE);
-    }
-
-    private TabLayout.OnTabSelectedListener mOnTabSelectedListener = new TabLayout.OnTabSelectedListener()
-    {
-        private void recordAnalytics(int position)
-        {
-            if (position == 0)
-            {
-                try
-                {
-                    Map<String, String> params = new HashMap<>();
-
-                    if (DailyHotel.isLogin() == false)
-                    {
-                        params.put(AnalyticsManager.KeyType.IS_SIGNED, AnalyticsManager.ValueType.GUEST);
-                    } else
-                    {
-                        params.put(AnalyticsManager.KeyType.IS_SIGNED, AnalyticsManager.ValueType.MEMBER);
-                    }
-
-                    params.put(AnalyticsManager.KeyType.PLACE_TYPE, AnalyticsManager.ValueType.STAY);
-                    params.put(AnalyticsManager.KeyType.CATEGORY, mCategoryCode);
-
-                    AnalyticsManager.getInstance(StayRegionListActivity.this).recordScreen(StayRegionListActivity.this, AnalyticsManager.Screen.DAILYHOTEL_LIST_REGION_DOMESTIC, null, params);
-                } catch (Exception e)
-                {
-
-                }
-            } else
-            {
-                AnalyticsManager.getInstance(StayRegionListActivity.this).recordScreen(StayRegionListActivity.this, AnalyticsManager.Screen.DAILYHOTEL_LIST_REGION_GLOBAL, null);
-            }
-        }
-
-        @Override
-        public void onTabSelected(TabLayout.Tab tab)
-        {
-            if (mViewPager != null)
-            {
-                mViewPager.setCurrentItem(tab.getPosition());
-            }
-
-            recordAnalytics(tab.getPosition());
-        }
-
-        @Override
-        public void onTabUnselected(TabLayout.Tab tab)
-        {
-
-        }
-
-        @Override
-        public void onTabReselected(TabLayout.Tab tab)
-        {
-
-        }
-    };
-
     private PlaceRegionListNetworkController.OnNetworkControllerListener mOnNetworkControllerListener = new PlaceRegionListNetworkController.OnNetworkControllerListener()
     {
         @Override
-        public void onRegionListResponse(List<RegionViewItem> domesticList, List<RegionViewItem> globalList)
+        public void onRegionListResponse(List<RegionViewItem> domesticList)
         {
             ArrayList<PlaceRegionListFragment> arrayList = mFragmentPagerAdapter.getFragmentList();
 
             arrayList.get(0).setRegionViewList(StayRegionListActivity.this, domesticList);
-
-            if (globalList == null || globalList.size() == 0)
-            {
-                removeGlobalRegion();
-            } else
-            {
-                showTabLayout();
-
-                arrayList.get(1).setRegionViewList(StayRegionListActivity.this, globalList);
-            }
 
             unLockUI();
         }

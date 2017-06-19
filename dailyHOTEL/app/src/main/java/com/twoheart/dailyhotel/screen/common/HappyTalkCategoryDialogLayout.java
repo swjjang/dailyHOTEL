@@ -177,6 +177,8 @@ public class HappyTalkCategoryDialogLayout extends BaseLayout implements View.On
             case SCREEN_STAY_DETAIL:
             case SCREEN_STAY_BOOKING:
             case SCREEN_STAY_PAYMENT_WAIT:
+            case SCREEN_STAY_OUTBOUND_BOOKING:
+            case SCREEN_STAY_OUTBOUND_DETAIL:
                 mMainCategorySpinner.setSelection(0);
                 break;
 
@@ -187,6 +189,7 @@ public class HappyTalkCategoryDialogLayout extends BaseLayout implements View.On
                 break;
 
             case SCREEN_STAY_REFUND:
+            case SCREEN_STAY_OUTBOUND_REFUND:
                 mMainCategorySpinner.setSelection(0);
                 break;
 

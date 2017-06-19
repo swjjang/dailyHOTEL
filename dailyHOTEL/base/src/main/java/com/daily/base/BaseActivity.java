@@ -27,12 +27,18 @@ public abstract class BaseActivity<T1 extends BasePresenter> extends AppCompatAc
 
         mPresenter = createInstancePresenter();
 
-        mPresenter.onIntent(getIntent());
+        if (mPresenter.onIntent(getIntent()) == false)
+        {
+            finish();
+            return;
+        }
+
+        mPresenter.onPostCreate();
     }
 
     protected abstract
     @NonNull
-    BasePresenter createInstancePresenter();
+    T1 createInstancePresenter();
 
     public
     @NonNull
@@ -128,6 +134,17 @@ public abstract class BaseActivity<T1 extends BasePresenter> extends AppCompatAc
     }
 
     @Override
+    public void finish()
+    {
+        super.finish();
+
+        if (mPresenter != null)
+        {
+            mPresenter.onFinish();
+        }
+    }
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
         super.onActivityResult(requestCode, resultCode, data);
@@ -136,6 +153,22 @@ public abstract class BaseActivity<T1 extends BasePresenter> extends AppCompatAc
         {
             mPresenter.onActivityResult(requestCode, resultCode, data);
         }
+    }
+
+    /**
+     * DailyLock에서 사용하는 메소드
+     */
+    public void onLockProgressBackPressed()
+    {
+        onBackPressed();
+
+        //        if (this instanceof PlaceDetailActivity == true)
+        //        {
+        //
+        //        } else if (this instanceof MainActivity == false && isFinishing() == false)
+        //        {
+        //            finish();
+        //        }
     }
 
     /**
@@ -186,6 +219,22 @@ public abstract class BaseActivity<T1 extends BasePresenter> extends AppCompatAc
         try
         {
             mFragmentManager.beginTransaction().add(containerViewId, fragment, tag).commitAllowingStateLoss();
+        } catch (Exception e)
+        {
+
+        }
+    }
+
+    public void removeFragment(Fragment fragment)
+    {
+        if (isFinishing() == true || mFragmentManager == null || fragment == null)
+        {
+            return;
+        }
+
+        try
+        {
+            mFragmentManager.beginTransaction().remove(fragment).commitAllowingStateLoss();
         } catch (Exception e)
         {
 

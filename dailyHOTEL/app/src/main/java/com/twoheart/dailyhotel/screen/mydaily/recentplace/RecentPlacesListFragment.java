@@ -1,11 +1,19 @@
 package com.twoheart.dailyhotel.screen.mydaily.recentplace;
 
 import android.os.Bundle;
-import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.crashlytics.android.Crashlytics;
+import com.daily.base.exception.BaseException;
+import com.daily.base.util.ExLog;
+import com.daily.base.widget.DailyToast;
+import com.daily.dailyhotel.repository.local.ConfigLocalImpl;
+import com.daily.dailyhotel.repository.remote.FacebookRemoteImpl;
+import com.daily.dailyhotel.repository.remote.KakaoRemoteImpl;
+import com.daily.dailyhotel.repository.remote.RecentlyRemoteImpl;
+import com.daily.dailyhotel.util.RecentlyPlaceUtil;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Place;
 import com.twoheart.dailyhotel.model.time.PlaceBookingDay;
@@ -13,13 +21,15 @@ import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.base.BaseFragment;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
+import com.twoheart.dailyhotel.util.Constants;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Iterator;
 
-import static com.twoheart.dailyhotel.model.RecentPlaces.RECENT_PLACE_DELIMITER;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
+import retrofit2.HttpException;
 
 /**
  * Created by android_sam on 2016. 10. 10..
@@ -37,11 +47,17 @@ public abstract class RecentPlacesListFragment extends BaseFragment
 
     protected View mViewByLongPress;
     protected int mPositionByLongPress;
+    protected PlaceType mPlaceType;
+    protected RecentlyPlaceUtil.ServiceType mServiceType;
+
+    protected RecentlyRemoteImpl mRecentlyRemoteImpl;
+
+    private CompositeDisposable mCompositeDisposable = new CompositeDisposable();
 
     /**
      * 해당 데이터는 리퀘스트 및 저장 용도로만 사용해야 합니다. emptyList 의 판단은 listAdapter의 갯수 또는 서버 전달 데이터 갯수로 판단해야 합니다.
      */
-    protected ArrayList<Pair<Integer, String>> mRecentPlaceList;
+    //    protected ArrayList<Pair<Integer, String>> mRecentPlaceList;
     protected OnRecentPlaceListFragmentListener mRecentPlaceListFragmentListener;
 
     protected abstract void setPlaceBookingDay(TodayDateTime todayDateTime);
@@ -54,12 +70,19 @@ public abstract class RecentPlacesListFragment extends BaseFragment
 
     public interface OnRecentPlaceListFragmentListener
     {
-        void onDeleteItemClick(Pair<Integer, String> deleteItem);
+        void onDeleteItemClickAnalytics();
     }
 
     public void setRecentPlaceListFragmentListener(OnRecentPlaceListFragmentListener listener)
     {
         mRecentPlaceListFragmentListener = listener;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
+        mRecentlyRemoteImpl = new RecentlyRemoteImpl(getActivity());
     }
 
     @Override
@@ -94,9 +117,17 @@ public abstract class RecentPlacesListFragment extends BaseFragment
         }
     }
 
-    public void setRecentPlaceList(ArrayList<Pair<Integer, String>> recentPlaceList)
+    @Override
+    public void onDestroy()
     {
-        mRecentPlaceList = recentPlaceList;
+        clearCompositeDisposable();
+
+        super.onDestroy();
+    }
+
+    public void setServiceType(RecentlyPlaceUtil.ServiceType serviceType)
+    {
+        mServiceType = serviceType;
     }
 
     public void setDontReload(boolean dontReload)
@@ -104,56 +135,103 @@ public abstract class RecentPlacesListFragment extends BaseFragment
         mDontReload = dontReload;
     }
 
-    public String getPlaceIndexList()
+    public String getTargetIndices(RecentlyPlaceUtil.ServiceType serviceType)
     {
-        if (mRecentPlaceList == null || mRecentPlaceList.size() == 0)
-        {
-            return "";
-        }
-
-        StringBuilder builder = new StringBuilder();
-
-        Iterator<Pair<Integer, String>> iterator = mRecentPlaceList.iterator();
-
-        while (iterator.hasNext() == true)
-        {
-            Pair<Integer, String> pair = iterator.next();
-            builder.append(pair.first);
-
-            if (iterator.hasNext() == true)
-            {
-                builder.append(RECENT_PLACE_DELIMITER);
-            }
-        }
-
-        return builder.toString();
+        return RecentlyPlaceUtil.getTargetIndices(serviceType, RecentlyPlaceUtil.MAX_RECENT_PLACE_COUNT);
     }
 
-    public void sortList(final ArrayList<Pair<Integer, String>> expectedList, ArrayList<? extends Place> actual)
+    public void sortList(ArrayList<? extends Place> actualList, RecentlyPlaceUtil.ServiceType... serviceTypes)
     {
+        if (actualList == null || actualList.size() == 0)
+        {
+            return;
+        }
+
+        ArrayList<Integer> expectedList = RecentlyPlaceUtil.getRecentlyIndexList(serviceTypes);
         if (expectedList == null || expectedList.size() == 0)
         {
             return;
         }
 
-        final String serviceType = expectedList.get(0).second;
-
-        if (actual != null && actual.size() > 0)
+        Collections.sort(actualList, new Comparator<Place>()
         {
-            Collections.sort(actual, new Comparator<Place>()
+            @Override
+            public int compare(Place place1, Place place2)
             {
-                @Override
-                public int compare(Place place1, Place place2)
+                Integer position1 = expectedList.indexOf(place1.index);
+                Integer position2 = expectedList.indexOf(place2.index);
+                return position1.compareTo(position2);
+            }
+        });
+    }
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    // 기존의 BaseActivity에 있는 정보 가져오기
+    ///////////////////////////////////////////////////////////////////////////////////////////////
+
+    protected void addCompositeDisposable(Disposable disposable)
+    {
+        if (disposable == null)
+        {
+            return;
+        }
+
+        mCompositeDisposable.add(disposable);
+    }
+
+    private void clearCompositeDisposable()
+    {
+        mCompositeDisposable.clear();
+    }
+
+    protected void onHandleError(Throwable throwable)
+    {
+        unLockUI();
+
+        BaseActivity baseActivity = (BaseActivity) getActivity();
+
+        if (baseActivity == null || baseActivity.isFinishing() == true)
+        {
+            return;
+        }
+
+        if (throwable instanceof BaseException)
+        {
+            // 팝업 에러 보여주기
+            BaseException baseException = (BaseException) throwable;
+
+            baseActivity.showSimpleDialog(null, baseException.getMessage()//
+                , getString(R.string.dialog_btn_text_confirm), null, null, null, null, dialogInterface -> getActivity().onBackPressed(), true);
+        } else if (throwable instanceof HttpException)
+        {
+            retrofit2.HttpException httpException = (HttpException) throwable;
+
+            if (httpException.code() == BaseException.CODE_UNAUTHORIZED)
+            {
+                addCompositeDisposable(new ConfigLocalImpl(getActivity()).clear().subscribe(object ->
                 {
-                    Pair<Integer, String> pair1 = new Pair<>(place1.index, serviceType);
-                    Pair<Integer, String> pair2 = new Pair<>(place2.index, serviceType);
+                    new FacebookRemoteImpl().logOut();
+                    new KakaoRemoteImpl().logOut();
 
-                    Integer position1 = expectedList.indexOf(pair1);
-                    Integer position2 = expectedList.indexOf(pair2);
+                    baseActivity.restartExpiredSession();
+                }));
+            } else
+            {
+                DailyToast.showToast(getActivity(), getString(R.string.act_base_network_connect), DailyToast.LENGTH_LONG);
 
-                    return position1.compareTo(position2);
+                if (Constants.DEBUG == false)
+                {
+                    Crashlytics.log(httpException.response().raw().request().url().toString());
+                    Crashlytics.logException(throwable);
+                } else
+                {
+                    ExLog.e(httpException.response().raw().request().url().toString() + ", " + httpException.toString());
                 }
-            });
+            }
+        } else
+        {
+            DailyToast.showToast(getActivity(), getString(R.string.act_base_network_connect), DailyToast.LENGTH_LONG);
         }
     }
 }

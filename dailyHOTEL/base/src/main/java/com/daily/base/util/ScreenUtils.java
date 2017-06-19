@@ -18,6 +18,8 @@ import android.view.WindowManager;
 
 public class ScreenUtils
 {
+    public static int DEFAULT_STAYOUTBOUND_XXHDPI_WIDTH = 1000;
+
     public static int dpToPx(Context context, double dp)
     {
         float scale = context.getResources().getDisplayMetrics().density;
@@ -166,6 +168,11 @@ public class ScreenUtils
     public static String getResolutionImageUrl(Context context, String defaultImageUrl, String lowResolutionImageUrl)
     {
         return ScreenUtils.getScreenWidth(context) < 1440 ? lowResolutionImageUrl : defaultImageUrl;
+    }
+
+    public static int getDetailScreenImageLayoutHeight(Context context)
+    {
+        return ScreenUtils.getRatioHeightType4x3(ScreenUtils.getScreenWidth(context));
     }
 
     public static Bitmap takeScreenShot(@NonNull Activity activity)

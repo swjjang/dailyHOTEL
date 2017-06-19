@@ -3361,7 +3361,6 @@ public class DailyMobileAPITest
 
                     if (eventIndex != -1)
                     {
-                        requestEventPageUrl(eventIndex);
                     }
                 } catch (Throwable t)
                 {
@@ -3453,63 +3452,63 @@ public class DailyMobileAPITest
     }
 
     // eventIndex 의 경우 고정이 아니기 때문에 requestEventList 이후에 진행하도록 한다.
-    @Ignore
-    public void requestEventPageUrl(int eventIndex) throws Exception
-    {
-        mLock = new CountDownLatch(1);
-
-        final retrofit2.Callback networkCallback = new retrofit2.Callback<JSONObject>()
-        {
-            @Override
-            public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
-            {
-                try
-                {
-                    assertThat(response, notNullValue());
-                    assertThat(response.isSuccessful(), is(true));
-                    assertThat(response.body(), allOf(notNullValue(), isA(JSONObject.class)));
-
-                    JSONObject responseJSONObject = response.body();
-
-                    int msgCode = responseJSONObject.getInt("msg_code");
-                    String message = responseJSONObject.getString("msg");
-                    assertThat(message, isNotEmpty());
-                    assertThat(message, msgCode, is(0));
-
-                    JSONObject eventJsonObject = responseJSONObject.getJSONObject("data");
-                    assertThat(eventJsonObject, notNullValue());
-
-                    String eventUrl = eventJsonObject.getString("url");
-                    assertThat(eventUrl, isNotEmpty());
-                } catch (Throwable t)
-                {
-                    addException(call, response, t);
-                } finally
-                {
-                    mLock.countDown();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<JSONObject> call, Throwable t)
-            {
-                addException(call, null, t);
-                mLock.countDown();
-            }
-        };
-
-        String store;
-        if (Setting.getStore() == Setting.Stores.PLAY_STORE)
-        {
-            store = "google";
-        } else
-        {
-            store = "skt";
-        }
-
-        DailyMobileAPI.getInstance(mContext).requestEventPageUrl(mNetworkTag, eventIndex, store, networkCallback);
-        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
-    }
+//    @Ignore
+//    public void requestEventPageUrl(int eventIndex) throws Exception
+//    {
+//        mLock = new CountDownLatch(1);
+//
+//        final retrofit2.Callback networkCallback = new retrofit2.Callback<JSONObject>()
+//        {
+//            @Override
+//            public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
+//            {
+//                try
+//                {
+//                    assertThat(response, notNullValue());
+//                    assertThat(response.isSuccessful(), is(true));
+//                    assertThat(response.body(), allOf(notNullValue(), isA(JSONObject.class)));
+//
+//                    JSONObject responseJSONObject = response.body();
+//
+//                    int msgCode = responseJSONObject.getInt("msg_code");
+//                    String message = responseJSONObject.getString("msg");
+//                    assertThat(message, isNotEmpty());
+//                    assertThat(message, msgCode, is(0));
+//
+//                    JSONObject eventJsonObject = responseJSONObject.getJSONObject("data");
+//                    assertThat(eventJsonObject, notNullValue());
+//
+//                    String eventUrl = eventJsonObject.getString("url");
+//                    assertThat(eventUrl, isNotEmpty());
+//                } catch (Throwable t)
+//                {
+//                    addException(call, response, t);
+//                } finally
+//                {
+//                    mLock.countDown();
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<JSONObject> call, Throwable t)
+//            {
+//                addException(call, null, t);
+//                mLock.countDown();
+//            }
+//        };
+//
+//        String store;
+//        if (Setting.getStore() == Setting.Stores.PLAY_STORE)
+//        {
+//            store = "google";
+//        } else
+//        {
+//            store = "skt";
+//        }
+//
+//        DailyMobileAPI.getInstance(mContext).requestEventPageUrl(mNetworkTag, eventIndex, store, networkCallback);
+//        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
+//    }
 
     @Test
     public void requestDailyUserVerification() throws Exception

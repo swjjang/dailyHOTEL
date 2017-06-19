@@ -56,6 +56,7 @@
     <string name="label_register_card">카드 등록하기</string>
     <string name="label_manager">카드변경/관리하기</string>
     <string name="label_search">검색</string>
+    <string name="label_do_search">검색 하기</string>
     <string name="label_filter">필터</string>
     <string name="label_phone">전화</string>
     <string name="label_location">위치</string>
@@ -92,6 +93,7 @@
     <string name="label_subway_station">지하철역</string>
     <string name="label_trueview">트루뷰</string>
     <string name="label_dont_again">다시보지 않기</string>
+    <string name="label_search_stay_outbound">해외호텔 검색</string>
     <string name="label_do_booking">예약하기</string>
     <string name="label_changing_date">날짜 변경하기</string>
 
@@ -104,6 +106,8 @@
     <string name="label_view_detail">자세히 보기</string>
     <string name="label_truevr">트루VR</string>
     <string name="label_distance_km">거리 %1$skm</string>
+
+    <string name="label_currency_usd">USD</string>
 
     <string name="label_cardcd01">외환</string>
     <string name="label_cardcd03">롯데</string>
@@ -368,7 +372,6 @@
     <string name="dialog_msg_changed_time">방문할 수 있는 시간이 변경되었습니다. 확인 후 다시 선택해주세요.</string>
     <string name="dialog_msg_changed_time_price">상품 상황 변동으로 인하여 가격, 시간이 변경되었습니다. 확인 뒤 결제해주세요.</string>
     <string name="dialog_msg_issuing_account">가상계좌가 발급되었습니다.\n입금 대기 내역을 확인해주세요.</string>
-    <string name="dialog_message_cs_operating_time">데일리 고객센터 운영시간은\n오전%1$d시부터 다음 날 새벽%2$d시까지입니다.</string>
     <string name="dialog_message_coupon_list_login">로그인 후 할인 쿠폰함을 확인할 수 있습니다.\n로그인 할까요?</string>
     <string name="dialog_message_profile_login">로그인 후 내정보를 확인할 수 있습니다.\n로그인 할까요?</string>
     <string name="dialog_message_profile_birthday_login">로그인 후 생일정보를 확인할 수 있습니다.\n로그인 할까요?</string>
@@ -709,6 +712,7 @@
     <string name="message_booking_already_input_review">리뷰를 이미 입력하셨습니다.\n입력하신 리뷰를 확인하실 수 있도록 준비 중입니다.</string>
     <string name="message_booking_stay_share_sms">[데일리호텔] %1$s님이 예약하신 스테이\n\n%2$s\n예약자명: %3$s\n결제금액: %4$s\n객실: %5$s\n체크인: %6$s\n체크아웃: %7$s\n주소: %8$s\n\n데일리호텔 앱 다운로드\nmobile.dailyhotel.co.kr</string>
     <string name="message_booking_stay_share_kakao">%1$s님이 예약하신 스테이\n\n%2$s\n예약자명: %3$s\n결제금액: %4$s\n객실: %5$s\n체크인: %6$s\n체크아웃: %7$s\n주소: %8$s\n\n지금 데일리호텔에서 스테이 정보를 확인할 수 있어요!</string>
+    <string name="message_booking_stay_outbound_share_kakao">%1$s님이 예약하신 호텔\n\n%2$s\n예약자명: %3$s\n결제금액: %4$s\n객실: %5$s\n체크인: %6$s\n체크아웃: %7$s\n주소: %8$s\n\n지금 데일리호텔에서 호텔 정보를 확인할 수 있어요!</string>
     <string name="message_booking_gourmet_share_sms">[데일리호텔] %1$s님이 예약하신 레스토랑\n\n%2$s\n예약자명: %3$s\n결제금액: %4$s\n방문일: %5$s\n방문시간: %6$s\n상품: %7$s\n수량: %8$s\n주소: %9$s\n\n데일리호텔 앱 다운로드\nmobile.dailyhotel.co.kr</string>
     <string name="message_booking_gourmet_share_kakao">%1$s님이 예약하신 레스토랑\n\n%2$s\n예약자명: %3$s\n결제금액: %4$s\n방문일: %5$s\n방문시간: %6$s\n상품: %7$s\n수량: %8$s\n주소: %9$s\n\n지금 데일리호텔에서 레스토랑 정보를 확인할 수 있어요!</string>
 
@@ -724,9 +728,11 @@
     <string name="label_kakao_reservation_gourmet">예약 레스토랑 확인!</string>
     <string name="kakao_btn_share_hotel">%1$s 추천하는 근사한 스테이!\n\n%2$s\n체크인 : %3$s\n체크아웃 : %4$s (%5$d박 %6$d일)\n주소 : %7$s\n\n지금 데일리호텔에서 맘에 드는 객실을 확인할 수 있어요!</string>
     <string name="kakao_btn_share_fnb">%1$s 추천하는 근사한 레스토랑\n\n%2$s\n날짜 : %3$s\n주소 : %4$s\n\n지금 데일리호텔에서 메뉴와\n이용시간을 확인할 수 있어요!</string>
+    <string name="kakao_btn_share_stay_outbound">%1$s 추천하는 근사한 호텔!\n\n%2$s\n체크인 : %3$s\n체크아웃 : %4$s (%5$d박 %6$d일)\n주소 : %7$s\n\n지금 데일리호텔에서 맘에 드는 객실을 확인할 수 있어요!</string>
 
     <string name="message_detail_stay_share_sms">[데일리호텔] %1$s 추천하는 근사한 스테이\n\n%2$s\n체크인: %3$s\n체크아웃: %4$s (%5$d박 %6$d일)\n주소: %7$s\n\n지금 데일리호텔에서 맘에 드는 객실을 확인할 수 있어요!\n\n데일리호텔 앱 다운로드\nmobile.dailyhotel.co.kr</string>
     <string name="message_detail_gourmet_share_sms">[데일리호텔] %1$s 추천하는 근사한 레스토랑\n\n%2$s\n날짜: %3$s\n주소: %4$s\n\n지금 데일리호텔에서 메뉴와 이용시간을 확인할 수 있어요!\n\n데일리호텔 앱 다운로드\nmobile.dailyhotel.co.kr</string>
+    <string name="message_detail_stay_outbound_share_sms">[데일리호텔] %1$s 추천하는 근사한 호텔\n\n%2$s\n체크인: %3$s\n체크아웃: %4$s (%5$d박 %6$d일)\n주소: %7$s\n\n지금 데일리호텔에서 맘에 드는 객실을 확인할 수 있어요!\n\n데일리호텔 앱 다운로드\nmobile.dailyhotel.co.kr</string>
 
     <!-- Base Activity -->
     <string name="act_base_network_connect">서버와의 접속이 원활하지 않습니다.\n잠시 후 다시 시도해주세요.</string>
@@ -870,6 +876,7 @@
     <string name="label_gourmet_filter_result_empty">0개의 레스토랑</string>
     <string name="label_reset">초기화</string>
     <string name="label_sort_by">정렬</string>
+    <string name="label_rating">등급</string>
     <string name="label_sort_by_distance">거리순</string>
     <string name="label_sort_by_low_price">낮은 가격순</string>
     <string name="label_sort_by_high_price">높은 가격순</string>
@@ -903,6 +910,7 @@
     <string name="label_time_1517">15–17시</string>
     <string name="label_time_1721">17–21시</string>
     <string name="label_time_2106">21시 이후</string>
+    <string name="label_view_result">결과 보기</string>
     <string name="label_searching">검색 중…</string>
     <string name="label_business_center">비즈니스 센터</string>
     <string name="label_sauna">사우나</string>
@@ -913,6 +921,7 @@
     <string name="label_private_bbq">개별바베큐</string>
     <string name="label_karaoke">노래방</string>
     <string name="label_party_room">파티룸</string>
+    <string name="label_more">더보기</string>
     <string name="activity_curation_title"> 정렬 / 필터 적용하기</string>
 
     <!-- PaymentResult Activity -->
@@ -933,7 +942,7 @@
     <string name="label_view_myaround_gourmet">내 주변 레스토랑 보기</string>
     <string name="label_view_my_around_daily_category_format">내 주변 %1$s 보기</string>
     <string name="label_change_date">검색 날짜 변경하기</string>
-    <string name="label_search_need_to_agree_termsoflocation">위치기반서비스 이용약관 동의 필요</string>
+    <string name="label_search_need_to_agree_termsoflocation">위치서비스 약관 동의 필요</string>
     <string name="label_search_agree_termsoflocation">위치기반서비스 이용동의</string>
     <string name="label_search_hotel_hint">스테이명 또는 지역명 입력</string>
     <string name="label_search_gourmet_hint">레스토랑명 또는 지역명 입력</string>
@@ -1075,6 +1084,7 @@
     <!-- 무료 취소 요청하기 -->
     <string name="label_request_free_refund">무료 취소 요청하기</string>
     <string name="label_contact_refund">환불 문의하기</string>
+    <string name="label_contact_request_refund">환불 요청하기</string>
     <string name="label_contact_refund_kakao">데일리 카카오톡 환불문의</string>
     <string name="label_contact_refund_daily">데일리 고객센터 전화 환불문의</string>
     <string name="label_select_reason_for_cancellation">3. 취소 사유 선택 (필수 선택)</string>
@@ -1206,7 +1216,8 @@
 
     <string name="label_home_category_stay_all">스테이</string>
     <string name="label_home_category_domestic_hotel">국내호텔</string>
-    <string name="label_home_category_boutique">부띠끄</string>
+    <string name="label_home_category_overseas_hotel">해외호텔</string>
+    <string name="label_home_category_boutique">부티끄</string>
     <string name="label_home_category_pension">펜션</string>
     <string name="label_home_category_resort">리조트</string>
     <string name="label_home_category_guest_house">게스트하우스</string>
@@ -1278,6 +1289,93 @@
     <string name="message_detail_review_stay_explain">트루리뷰는 100% 직접 투숙한 고객님이 남겨주신 리뷰입니다.</string>
     <string name="message_detail_review_gourmet_explain">트루리뷰는 100% 직접 방문한 고객님이 남겨주신 리뷰입니다.</string>
 
+    <!-- Stay Out Bound Search -->
+    <string name="label_stay_outbound_search">데일리 해외호텔 검색</string>
+    <string name="label_stay_outbound_search_keyword_hint">호텔명 또는 지역명 입력</string>
+    <string name="label_stay_outbound_search_adult_count">성인 %1$d명</string>
+    <string name="label_stay_outbound_search_child_count">아동 %1$d명</string>
+    <string name="label_stay_outbound_search_children_age">(만 %1$s)</string>
+    <string name="label_stay_outbound_search_child_age">%1$d세</string>
+    <string name="label_stay_outbound_search_under_of_1_age">1세 미만</string>
+
+    <string name="label_stay_outbound_suggest_region">도시/지역</string>
+    <string name="label_stay_outbound_suggest_hotel">호텔</string>
+    <string name="label_stay_outbound_suggest_point">주요지점</string>
+    <string name="label_stay_outbound_suggest_station">역</string>
+    <string name="label_stay_outbound_suggest_airport">공항</string>
+
+    <string name="message_stay_outbound_suggest_empty_suggest">검색어를 변경하여 검색해 보세요.</string>
+
+    <string name="label_people_select_person">투숙 인원 선택</string>
+    <string name="label_people_adult">성인</string>
+    <string name="label_people_child">아동</string>
+    <string name="label_people_age_of_child1">아동1의 나이</string>
+    <string name="label_people_age_of_child2">아동2의 나이</string>
+    <string name="label_people_age_of_child3">아동3의 나이</string>
+    <string name="label_people_confirm">선택완료</string>
+    <string name="label_people_number_of_person">%1$d 명</string>
+    <string name="label_people_under_of_1_age">만 1세 미만</string>
+
+
+    <!-- Stay Out Bound List -->
+    <string name="label_stay_outbound_list_adult_count">성인 %1$d</string>
+    <string name="label_stay_outbound_list_child_count">아동 %1$d</string>
+    <string name="label_stay_outbound_tripadvisor_rating">(평점 %1$s)</string>
+    <string name="label_stay_outbound_preparing_preview">미리보기 준비중</string>
+
+    <!-- Stay Out Bound Filter -->
+    <string name="label_stay_outbound_filter_1_star_rate">1성급</string>
+    <string name="label_stay_outbound_filter_2_star_rate">2성급</string>
+    <string name="label_stay_outbound_filter_3_star_rate">3성급</string>
+    <string name="label_stay_outbound_filter_4_star_rate">4성급</string>
+    <string name="label_stay_outbound_filter_5_star_rate">5성급</string>
+    <string name="label_stay_outbound_filter_x_star_rate">%1$d성급</string>
+
+    <!-- Stay Out Bound Detail -->
+    <string name="label_stay_outbound_detail_grade">%1$d성급</string>
+    <string name="label_stay_outbound_detail_check_in_out">체크인/체크아웃</string>
+    <string name="label_stay_outbound_detail_number_of_people">인원수</string>
+    <string name="label_stay_outbound_room_default_person">%1$d인 기준</string>
+    <string name="label_stay_outbound_room_max_person_free">최대 %1$d인</string>
+    <string name="label_stay_outbound_room_max_person_charge">최대 %1$d인(유료)</string>
+    <string name="label_stay_outbound_amenities">편의시설</string>
+    <string name="message_stay_outbound_detail_sold_out">마지막 객실이 방금 판매 완료되었습니다.\n날짜를 변경하거나 다른 호텔을 확인해주세요.</string>
+    <string name="message_stay_outbound_detail_changed_price">일부 객실의 요금이\n변동되었습니다.\n객실 금액을\n한번 더 확인해주시고\n원하시는 객실이 없으면\n날짜를 변경해보세요.</string>
+
+    <!-- Stay Out Bound Payment -->
+    <string name="label_stay_outbound_payment_last_name">영문 성</string>
+    <string name="label_stay_outbound_payment_first_name">영문 이름</string>
+    <string name="label_stay_outbound_payment_last_name_hint">여권기재 영문 성 입력</string>
+    <string name="label_stay_outbound_payment_first_name_hint">여권기재 영문 이름 입력</string>
+    <string name="label_stay_outbound_payment_people">투숙인원</string>
+    <string name="label_stay_outbound_payment_additional_tax">TAX (DUE AT HOTEL)</string>
+    <string name="label_stay_outbound_payment_hour">%1$s시</string>
+    <string name="message_stay_outbound_payment_additional_tax">현지에서 별도로 지불해야 하는 세금입니다.</string>
+    <string name="message_stay_outbound_payment_agree_01">결제 완료 후 현지 호텔 사정으로 예약이 불가한 경우 결제하신 수단으로 환불처리 됩니다.</string>
+    <string name="message_stay_outbound_payment_agree_02">예약 시 입력되지 않은 추가인원이 투숙하는 경우, 추가 요금이 부과되거나 투숙이 거부될 수 있습니다.</string>
+    <string name="message_stay_outbound_payment_agree_03">미성년자는 보호자 동반 시 투숙 가능합니다.</string>
+    <string name="message_stay_outbound_payment_agree_04">취소 규정 등 위 내용에 동의하시면 버튼을 눌러 결제를 진행해주세요.</string>
+    <string name="message_stay_outbound_payment_sold_out">마지막 객실이 방금 판매 완료되었습니다.\n날짜를 변경하거나 다른 호텔을 확인해주세요.</string>
+    <string name="message_stay_outbound_payment_empty_name">해외 호텔 예약 시에는 투숙자를 영문 성함으로 입력해주세요.</string>
+
+
+    <!-- New Booking -->
+    <string name="message_booking_delete_booking">삭제 되었습니다.</string>
+    <string name="message_booking_failed_delete_booking">삭제에 실패했습니다.\n잠시 후에 다시 시도해주십시요.</string>
+
+
+    <!-- Stay Out Bound Booking Detail -->
+    <string name="message_stay_outbound_booking_detail_current_time">날짜는 현지시간 기준입니다.</string>
+
+    <!-- Stay Out Bound Booking Refund -->
+    <string name="message_stay_outbound_refund_cancel_free">무료 취소를 진행할까요?</string>
+    <string name="message_stay_outbound_refund_partial_refund">무료취소 기간이 지나 취소 수수료가\n부과됩니다. 취소 하시겠습니까?</string>
+    <string name="message_stay_outbound_refund_select_a_reason_for_cancellation">취소 사유를 선택해주세요.</string>
+
+    <!-- Stay Out Bound Booking Receipt -->
+    <string name="label_stay_outbound_booking_hotel_name">호텔명</string>
+    <string name="label_stay_outbound_booking_night_room">%1$d일/%2$d객실</string>
+
     <!-- Preview -->
     <string name="label_preview_add_wish">위시리스트\n추가하기</string>
     <string name="label_preview_remove_wish">위시리스트\n삭제하기</string>
@@ -1302,6 +1400,9 @@
     <string name="message_truevr_not_support_hardware">트루VR을 지원하지 않는 단말입니다.</string>
     <string name="message_truevr_not_support">트루VR 정보가 없습니다.</string>
     <string name="message_truevr_failed_load_truevr"> 트루VR 로드 중 오류가 발생했습니다.\n잠시 후 다시 시도해주세요.</string>
+
+    <!-- New Calendar -->
+    <string name="label_calendar_possible_night">%1$d박 까지만 가능합니다.</string>
 
     <!-- 앱 사용 권한 안내 -->
     <string name="label_app_permissions_guide_title">DAILY 앱 사용 권한 안내</string>
@@ -1349,5 +1450,26 @@
         <item>\@me.com</item>
         <item>\@outlook.com</item>
         <item>\@qq.com</item>
+    </string-array>
+
+    <string-array name="child_age_array">
+        <item>만 1세 미만</item>
+        <item>만 1세</item>
+        <item>만 2세</item>
+        <item>만 3세</item>
+        <item>만 4세</item>
+        <item>만 5세</item>
+        <item>만 6세</item>
+        <item>만 7세</item>
+        <item>만 8세</item>
+        <item>만 9세</item>
+        <item>만 10세</item>
+        <item>만 11세</item>
+        <item>만 12세</item>
+        <item>만 13세</item>
+        <item>만 14세</item>
+        <item>만 15세</item>
+        <item>만 16세</item>
+        <item>만 17세</item>
     </string-array>
 </resources>

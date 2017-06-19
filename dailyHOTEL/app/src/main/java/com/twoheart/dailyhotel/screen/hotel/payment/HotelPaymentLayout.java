@@ -187,7 +187,7 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
 
     public void setToolbarTitle(String title)
     {
-        mDailyToolbarLayout.setToolbarText(title);
+        mDailyToolbarLayout.setToolbarTitle(title);
     }
 
     private void initReservationInformation(View view)

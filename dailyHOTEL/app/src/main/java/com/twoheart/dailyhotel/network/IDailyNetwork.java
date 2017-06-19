@@ -304,7 +304,6 @@ public interface IDailyNetwork
     void requestStayReceipt(String tag, String index, Object listener);
 
     /**
-     * api/daily/event/list
      * 이벤트 리스트 요청
      *
      * @return
@@ -312,20 +311,11 @@ public interface IDailyNetwork
     void requestEventList(String tag, String store, Object listener);
 
     /**
-     * api/daily/event/count
      * 신규 이벤트 개수
      *
      * @return
      */
     void requestEventNCouponNNoticeNewCount(String tag, String eventLatestDate, String couponLatestDate, String noticeLatestDate, Object listener);
-
-    /**
-     * api/daily/event/page
-     * 이벤트 페이지 Url
-     *
-     * @return
-     */
-    void requestEventPageUrl(String tag, int eventIndex, String store, Object listener);
 
     /**
      * @param tag

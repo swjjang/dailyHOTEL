@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -60,7 +61,8 @@ public abstract class PlaceReservationDetailLayout extends BaseLayout implements
     private RelativeLayout mGoogleMapLayout;
     FrameLayout mMapLayout;
     GoogleMap mGoogleMap;
-    View mFakeMapLayout, mMyLocationView, mZoomControl;
+    View mFakeMapLayout, mZoomControl;
+    ImageView mMyLocationView;
     MarkerOptions mMyLocationMarkerOptions;
     Marker mMyLocationMarker, mPlaceLocationMarker;
 
@@ -693,14 +695,14 @@ public abstract class PlaceReservationDetailLayout extends BaseLayout implements
         mGoogleMap.animateCamera(cameraUpdate);
     }
 
-    public View getMyLocationView()
+    public ImageView getMyLocationView()
     {
         return mMyLocationView;
     }
 
     void relocationMyLocation(View view)
     {
-        mMyLocationView = view.findViewById(0x2);
+        mMyLocationView = (ImageView) view.findViewById(0x2);
 
         if (mMyLocationView != null)
         {
