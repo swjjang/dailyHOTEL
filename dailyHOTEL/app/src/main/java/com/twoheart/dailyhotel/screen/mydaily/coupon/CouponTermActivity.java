@@ -71,7 +71,7 @@ public class CouponTermActivity extends WebViewActivity
 
         if (DailyTextUtils.isTextEmpty(mCouponIdx) == true)
         {
-            setWebView(Crypto.getUrlDecoderEx(URL_WEB_COMMON_COUPON_TERMS));
+            setWebView(Crypto.getUrlDecoderEx(DailyPreference.getInstance(this).getKeyRemoteConfigStaticUrlCoupon()));
         } else
         {
             String url;
@@ -87,10 +87,10 @@ public class CouponTermActivity extends WebViewActivity
             // 현재 접속하는 서버가 실서버인 경우와 테스트 서버인 경우 쿠폰 이용약관 서버가 다름
             if (url.startsWith("http://prod-") == true)
             {
-                setWebView(Crypto.getUrlDecoderEx(URL_WEB_EACH_COUPON_TERMS) + mCouponIdx);
+                setWebView(Crypto.getUrlDecoderEx(DailyPreference.getInstance(this).getKeyRemoteConfigStaticUrlProdCouponNote()) + mCouponIdx);
             } else
             {
-                setWebView(Crypto.getUrlDecoderEx(URL_WEB_EACH_COUPON_TERMS_DEV) + mCouponIdx);
+                setWebView(Crypto.getUrlDecoderEx(DailyPreference.getInstance(this).getKeyRemoteConfigStaticUrlDevCouponNote()) + mCouponIdx);
             }
         }
 

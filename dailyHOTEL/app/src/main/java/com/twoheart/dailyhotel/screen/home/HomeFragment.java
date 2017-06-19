@@ -1719,7 +1719,8 @@ public class HomeFragment extends BaseMenuNavigationFragment
             }
 
             startActivityForResult(EventWebActivity.newInstance(mBaseActivity, EventWebActivity.SourceType.STAMP//
-                , Crypto.getUrlDecoderEx(Constants.URL_WEB_STAMP_EVENT), mBaseActivity.getString(R.string.label_stamp_event_title)), Constants.CODE_REQUEST_ACTIVITY_STAMP);
+                , Crypto.getUrlDecoderEx(DailyPreference.getInstance(mBaseActivity).getKeyRemoteConfigStaticUrlDailyStampHome())//
+                , mBaseActivity.getString(R.string.label_stamp_event_title)), Constants.CODE_REQUEST_ACTIVITY_STAMP);
         }
 
         @Override
