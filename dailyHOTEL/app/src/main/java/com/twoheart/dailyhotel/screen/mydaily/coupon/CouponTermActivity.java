@@ -13,6 +13,7 @@ import com.twoheart.dailyhotel.screen.common.WebViewActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Crypto;
 import com.twoheart.dailyhotel.util.DailyPreference;
+import com.twoheart.dailyhotel.util.DailyRemoteConfigPreference;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
@@ -71,7 +72,7 @@ public class CouponTermActivity extends WebViewActivity
 
         if (DailyTextUtils.isTextEmpty(mCouponIdx) == true)
         {
-            setWebView(Crypto.getUrlDecoderEx(DailyPreference.getInstance(this).getKeyRemoteConfigStaticUrlCoupon()));
+            setWebView(Crypto.getUrlDecoderEx(DailyRemoteConfigPreference.getInstance(this).getKeyRemoteConfigStaticUrlCoupon()));
         } else
         {
             String url;
@@ -87,10 +88,10 @@ public class CouponTermActivity extends WebViewActivity
             // 현재 접속하는 서버가 실서버인 경우와 테스트 서버인 경우 쿠폰 이용약관 서버가 다름
             if (url.startsWith("http://prod-") == true)
             {
-                setWebView(Crypto.getUrlDecoderEx(DailyPreference.getInstance(this).getKeyRemoteConfigStaticUrlProdCouponNote()) + mCouponIdx);
+                setWebView(Crypto.getUrlDecoderEx(DailyRemoteConfigPreference.getInstance(this).getKeyRemoteConfigStaticUrlProdCouponNote()) + mCouponIdx);
             } else
             {
-                setWebView(Crypto.getUrlDecoderEx(DailyPreference.getInstance(this).getKeyRemoteConfigStaticUrlDevCouponNote()) + mCouponIdx);
+                setWebView(Crypto.getUrlDecoderEx(DailyRemoteConfigPreference.getInstance(this).getKeyRemoteConfigStaticUrlDevCouponNote()) + mCouponIdx);
             }
         }
 

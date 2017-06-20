@@ -16,6 +16,7 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.Setting;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyPreference;
+import com.twoheart.dailyhotel.util.DailyRemoteConfigPreference;
 import com.twoheart.dailyhotel.util.Util;
 
 import org.json.JSONArray;
@@ -57,7 +58,7 @@ public class DailyRemoteConfig
 
     public void requestRemoteConfig(final OnCompleteListener listener)
     {
-        if (DailyTextUtils.isTextEmpty(DailyPreference.getInstance(mContext).getRemoteConfigCompanyName()) == true)
+        if (DailyTextUtils.isTextEmpty(DailyRemoteConfigPreference.getInstance(mContext).getRemoteConfigCompanyName()) == true)
         {
             writeCompanyInformation(mContext, mContext.getString(R.string.default_company_information));
         }
@@ -117,7 +118,7 @@ public class DailyRemoteConfig
                 }
 
                 // 버전이 업데이트 되는 경우 텍스트의 내용을 다시 넣는 것을 수행한다.
-                writeTextFiled(mContext, DailyPreference.getInstance(mContext).getRemoteConfigText());
+                writeTextFiled(mContext, DailyRemoteConfigPreference.getInstance(mContext).getRemoteConfigText());
                 listener.onComplete(null, null);
             }
         });
@@ -191,7 +192,7 @@ public class DailyRemoteConfig
         writePaymentType(mContext, androidPaymentType);
 
         //
-        DailyPreference.getInstance(mContext).setRemoteConfigText(androidText);
+        DailyRemoteConfigPreference.getInstance(mContext).setRemoteConfigText(androidText);
         writeTextFiled(mContext, androidText);
 
         // 이미지 로딩 관련(추후 진행)
@@ -245,15 +246,15 @@ public class DailyRemoteConfig
             // 아직은 고려하지 않도록 한다."default"
             //            String defaultType = imageUrlJSONObject.getString("default");
             String url = imageUrlJSONObject.getJSONObject("image").getString(dpi);
-            String currentVersion = DailyPreference.getInstance(context).getRemoteConfigIntroImageVersion();
+            String currentVersion = DailyRemoteConfigPreference.getInstance(context).getRemoteConfigIntroImageVersion();
             String newVersion = updateTimeJSONObject.getString("time");
 
             if (Constants.DAILY_INTRO_CURRENT_VERSION.equalsIgnoreCase(newVersion) == true)
             {
-                DailyPreference.getInstance(context).setRemoteConfigIntroImageVersion(Constants.DAILY_INTRO_CURRENT_VERSION);
+                DailyRemoteConfigPreference.getInstance(context).setRemoteConfigIntroImageVersion(Constants.DAILY_INTRO_CURRENT_VERSION);
             } else if (Constants.DAILY_INTRO_DEFAULT_VERSION.equalsIgnoreCase(newVersion) == true)
             {
-                DailyPreference.getInstance(context).setRemoteConfigIntroImageVersion(Constants.DAILY_INTRO_DEFAULT_VERSION);
+                DailyRemoteConfigPreference.getInstance(context).setRemoteConfigIntroImageVersion(Constants.DAILY_INTRO_DEFAULT_VERSION);
             } else
             {
                 // 기존 버전과 비교해서 다르면 다운로드를 시도한다.
@@ -283,7 +284,7 @@ public class DailyRemoteConfig
             String fax = jsonObject.getString("fax1");
             String privacyEmail = jsonObject.getString("privacyManager");
 
-            DailyPreference.getInstance(context).setRemoteConfigCompanyInformation(companyName//
+            DailyRemoteConfigPreference.getInstance(context).setRemoteConfigCompanyInformation(companyName//
                 , companyCEO, companyBizRegNumber, companyItcRegNumber, address, phoneNumber, fax, privacyEmail);
         } catch (Exception e)
         {
@@ -298,23 +299,23 @@ public class DailyRemoteConfig
             JSONObject jsonObject = new JSONObject(androidPaymentType);
             JSONObject stayJSONObject = jsonObject.getJSONObject("stay");
 
-            DailyPreference.getInstance(context).setRemoteConfigStaySimpleCardPaymentEnabled(stayJSONObject.getBoolean("easyCard"));
-            DailyPreference.getInstance(context).setRemoteConfigStayCardPaymentEnabled(stayJSONObject.getBoolean("card"));
-            DailyPreference.getInstance(context).setRemoteConfigStayPhonePaymentEnabled(stayJSONObject.getBoolean("phoneBill"));
-            DailyPreference.getInstance(context).setRemoteConfigStayVirtualPaymentEnabled(stayJSONObject.getBoolean("virtualAccount"));
+            DailyRemoteConfigPreference.getInstance(context).setRemoteConfigStaySimpleCardPaymentEnabled(stayJSONObject.getBoolean("easyCard"));
+            DailyRemoteConfigPreference.getInstance(context).setRemoteConfigStayCardPaymentEnabled(stayJSONObject.getBoolean("card"));
+            DailyRemoteConfigPreference.getInstance(context).setRemoteConfigStayPhonePaymentEnabled(stayJSONObject.getBoolean("phoneBill"));
+            DailyRemoteConfigPreference.getInstance(context).setRemoteConfigStayVirtualPaymentEnabled(stayJSONObject.getBoolean("virtualAccount"));
 
             JSONObject gourmetJSONObject = jsonObject.getJSONObject("gourmet");
 
-            DailyPreference.getInstance(context).setRemoteConfigGourmetSimpleCardPaymentEnabled(gourmetJSONObject.getBoolean("easyCard"));
-            DailyPreference.getInstance(context).setRemoteConfigGourmetCardPaymentEnabled(gourmetJSONObject.getBoolean("card"));
-            DailyPreference.getInstance(context).setRemoteConfigGourmetPhonePaymentEnabled(gourmetJSONObject.getBoolean("phoneBill"));
-            DailyPreference.getInstance(context).setRemoteConfigGourmetVirtualPaymentEnabled(gourmetJSONObject.getBoolean("virtualAccount"));
+            DailyRemoteConfigPreference.getInstance(context).setRemoteConfigGourmetSimpleCardPaymentEnabled(gourmetJSONObject.getBoolean("easyCard"));
+            DailyRemoteConfigPreference.getInstance(context).setRemoteConfigGourmetCardPaymentEnabled(gourmetJSONObject.getBoolean("card"));
+            DailyRemoteConfigPreference.getInstance(context).setRemoteConfigGourmetPhonePaymentEnabled(gourmetJSONObject.getBoolean("phoneBill"));
+            DailyRemoteConfigPreference.getInstance(context).setRemoteConfigGourmetVirtualPaymentEnabled(gourmetJSONObject.getBoolean("virtualAccount"));
 
             JSONObject stayOutboundJSONObject = jsonObject.getJSONObject("stayOutbound");
 
-            DailyPreference.getInstance(context).setRemoteConfigStayOutboundSimpleCardPaymentEnabled(stayOutboundJSONObject.getBoolean("easyCard"));
-            DailyPreference.getInstance(context).setRemoteConfigStayOutboundCardPaymentEnabled(stayOutboundJSONObject.getBoolean("card"));
-            DailyPreference.getInstance(context).setRemoteConfigStayOutboundPhonePaymentEnabled(stayOutboundJSONObject.getBoolean("phoneBill"));
+            DailyRemoteConfigPreference.getInstance(context).setRemoteConfigStayOutboundSimpleCardPaymentEnabled(stayOutboundJSONObject.getBoolean("easyCard"));
+            DailyRemoteConfigPreference.getInstance(context).setRemoteConfigStayOutboundCardPaymentEnabled(stayOutboundJSONObject.getBoolean("card"));
+            DailyRemoteConfigPreference.getInstance(context).setRemoteConfigStayOutboundPhonePaymentEnabled(stayOutboundJSONObject.getBoolean("phoneBill"));
         } catch (Exception e)
         {
             ExLog.e(e.toString());
@@ -334,10 +335,10 @@ public class DailyRemoteConfig
 
             String version = jsonObject.getString("version");
 
-            DailyPreference.getInstance(context).setRemoteConfigTextVersion(version);
-            DailyPreference.getInstance(context).setRemoteConfigTextLoginText01(jsonObject.getString("loginText01"));
-            DailyPreference.getInstance(context).setRemoteConfigTextSignUpText01(jsonObject.getString("signupText01"));
-            DailyPreference.getInstance(context).setRemoteConfigTextSignUpText02(jsonObject.getString("signupText02"));
+            DailyRemoteConfigPreference.getInstance(context).setRemoteConfigTextVersion(version);
+            DailyRemoteConfigPreference.getInstance(context).setRemoteConfigTextLoginText01(jsonObject.getString("loginText01"));
+            DailyRemoteConfigPreference.getInstance(context).setRemoteConfigTextSignUpText01(jsonObject.getString("signupText01"));
+            DailyRemoteConfigPreference.getInstance(context).setRemoteConfigTextSignUpText02(jsonObject.getString("signupText02"));
 
             // 홈 메시지 추가 영역
             JSONObject homeJSONObject = jsonObject.getJSONObject("home");
@@ -346,27 +347,27 @@ public class DailyRemoteConfig
             JSONObject logoutJSONObject = messageAreaJSONObject.getJSONObject("logout");
             JSONObject categoryAreaJsonObject = homeJSONObject.getJSONObject("categoryArea");
 
-            DailyPreference.getInstance(context).setRemoteConfigHomeMessageAreaLoginEnabled(loginJSONObject.getBoolean("enabled"));
+            DailyRemoteConfigPreference.getInstance(context).setRemoteConfigHomeMessageAreaLoginEnabled(loginJSONObject.getBoolean("enabled"));
 
-            DailyPreference.getInstance(context).setRemoteConfigHomeMessageAreaLogoutEnabled(logoutJSONObject.getBoolean("enabled"));
-            DailyPreference.getInstance(context).setRemoteConfigHomeMessageAreaLogoutTitle(logoutJSONObject.getString("title"));
-            DailyPreference.getInstance(context).setRemoteConfigHomeMessageAreaLogoutCallToAction(logoutJSONObject.getString("callToAction"));
+            DailyRemoteConfigPreference.getInstance(context).setRemoteConfigHomeMessageAreaLogoutEnabled(logoutJSONObject.getBoolean("enabled"));
+            DailyRemoteConfigPreference.getInstance(context).setRemoteConfigHomeMessageAreaLogoutTitle(logoutJSONObject.getString("title"));
+            DailyRemoteConfigPreference.getInstance(context).setRemoteConfigHomeMessageAreaLogoutCallToAction(logoutJSONObject.getString("callToAction"));
 
-            DailyPreference.getInstance(context).setRemoteConfigHomeCategoryEnabled(categoryAreaJsonObject.getBoolean("enabled"));
+            DailyRemoteConfigPreference.getInstance(context).setRemoteConfigHomeCategoryEnabled(categoryAreaJsonObject.getBoolean("enabled"));
 
             // 업데이트 메시지
             JSONObject updateJSONObject = jsonObject.getJSONObject("updateMessage");
             JSONObject optionalJSONObject = updateJSONObject.getJSONObject("optional");
             JSONObject forceJSONObject = updateJSONObject.getJSONObject("force");
 
-            DailyPreference.getInstance(context).setRemoteConfigUpdateOptional(optionalJSONObject.toString());
-            DailyPreference.getInstance(context).setRemoteConfigUpdateForce(forceJSONObject.toString());
+            DailyRemoteConfigPreference.getInstance(context).setRemoteConfigUpdateOptional(optionalJSONObject.toString());
+            DailyRemoteConfigPreference.getInstance(context).setRemoteConfigUpdateForce(forceJSONObject.toString());
 
             JSONObject operationLunchTimeJsonObject = jsonObject.getJSONObject("operationLunchTime");
             String startTime = operationLunchTimeJsonObject.getString("startTime");
             String endTime = operationLunchTimeJsonObject.getString("endTime");
 
-            DailyPreference.getInstance(context).setRemoteConfigOperationLunchTime(String.format(Locale.KOREA, "%s,%s", startTime, endTime));
+            DailyRemoteConfigPreference.getInstance(context).setRemoteConfigOperationLunchTime(String.format(Locale.KOREA, "%s,%s", startTime, endTime));
         } catch (Exception e)
         {
             ExLog.e(e.toString());
@@ -397,7 +398,7 @@ public class DailyRemoteConfig
         final String eventLinkUrl = eventUrl;
         final int eventIndex = index;
 
-        final String clientHomeEventCurrentVersion = DailyPreference.getInstance(context).getRemoteConfigHomeEventCurrentVersion();
+        final String clientHomeEventCurrentVersion = DailyRemoteConfigPreference.getInstance(context).getRemoteConfigHomeEventCurrentVersion();
 
         processImage(context, clientHomeEventCurrentVersion, androidHomeEventDefaultLink, new ImageDownloadAsyncTask.OnCompletedListener()
         {
@@ -417,10 +418,10 @@ public class DailyRemoteConfig
                         }
                     }
 
-                    DailyPreference.getInstance(context).setRemoteConfigHomeEventCurrentVersion(version);
-                    DailyPreference.getInstance(context).setRemoteConfigHomeEventTitle(eventTitle);
-                    DailyPreference.getInstance(context).setRemoteConfigHomeEventUrl(eventLinkUrl);
-                    DailyPreference.getInstance(context).setRemoteConfigHomeEventIndex(eventIndex);
+                    DailyRemoteConfigPreference.getInstance(context).setRemoteConfigHomeEventCurrentVersion(version);
+                    DailyRemoteConfigPreference.getInstance(context).setRemoteConfigHomeEventTitle(eventTitle);
+                    DailyRemoteConfigPreference.getInstance(context).setRemoteConfigHomeEventUrl(eventLinkUrl);
+                    DailyRemoteConfigPreference.getInstance(context).setRemoteConfigHomeEventIndex(eventIndex);
                 }
             }
         });
@@ -482,7 +483,7 @@ public class DailyRemoteConfig
 
             boolean enabled = jsonObject.getBoolean("enabled");
 
-            DailyPreference.getInstance(context).setRemoteConfigStampEnabled(enabled);
+            DailyRemoteConfigPreference.getInstance(context).setRemoteConfigStampEnabled(enabled);
 
             JSONObject stayDetailJSONObject = jsonObject.getJSONObject("stayDetail");
 
@@ -493,14 +494,14 @@ public class DailyRemoteConfig
             String stayDetailMessage3Text = stayDetailMessage3JSONObject.getString("text");
             boolean stayDetailMessage3Enabled = stayDetailMessage3JSONObject.getBoolean("enabled");
 
-            DailyPreference.getInstance(context).setRemoteConfigStampStayDetailMessage(stayDetailMessage1, stayDetailMessage2, stayDetailMessage3Text, stayDetailMessage3Enabled);
+            DailyRemoteConfigPreference.getInstance(context).setRemoteConfigStampStayDetailMessage(stayDetailMessage1, stayDetailMessage2, stayDetailMessage3Text, stayDetailMessage3Enabled);
 
             JSONObject stayDetailPopupJSONObject = stayDetailJSONObject.getJSONObject("popup");
 
             String stayDetailPopupTitle = stayDetailPopupJSONObject.getString("title");
             String stayDetailPopupMessage = stayDetailPopupJSONObject.getString("message");
 
-            DailyPreference.getInstance(context).setRemoteConfigStampStayDetailPopup(stayDetailPopupTitle, stayDetailPopupMessage);
+            DailyRemoteConfigPreference.getInstance(context).setRemoteConfigStampStayDetailPopup(stayDetailPopupTitle, stayDetailPopupMessage);
 
             JSONObject stayThankYouJSONObject = jsonObject.getJSONObject("stayThankYou");
 
@@ -508,11 +509,11 @@ public class DailyRemoteConfig
             String stayThankYouMessage2 = stayThankYouJSONObject.getString("message2");
             String stayThankYouMessage3 = stayThankYouJSONObject.getString("message3");
 
-            DailyPreference.getInstance(context).setRemoteConfigStampStayThankYouMessage(stayThankYouMessage1, stayThankYouMessage2, stayThankYouMessage3);
+            DailyRemoteConfigPreference.getInstance(context).setRemoteConfigStampStayThankYouMessage(stayThankYouMessage1, stayThankYouMessage2, stayThankYouMessage3);
 
             boolean endEventPopupEnabled = jsonObject.getBoolean("endEventPopupEnabled");
 
-            DailyPreference.getInstance(context).setRemoteConfigStampStayEndEventPopupEnabled(endEventPopupEnabled);
+            DailyRemoteConfigPreference.getInstance(context).setRemoteConfigStampStayEndEventPopupEnabled(endEventPopupEnabled);
 
             JSONArray stampDetailJSONArray = jsonObject.getJSONArray("stampDetail");
 
@@ -523,7 +524,7 @@ public class DailyRemoteConfig
             String date2 = stampHistoryJSONArray.getString(0);
             String date3 = stampHistoryJSONArray.getString(1);
 
-            DailyPreference.getInstance(context).setRemoteConfigStampDate(date1, date2, date3);
+            DailyRemoteConfigPreference.getInstance(context).setRemoteConfigStampDate(date1, date2, date3);
 
             JSONObject homeJSONObject = jsonObject.getJSONObject("stampHome");
 
@@ -531,7 +532,7 @@ public class DailyRemoteConfig
             String homeMessage2 = homeJSONObject.getString("message2");
             boolean homeEnabled = homeJSONObject.getBoolean("enabled");
 
-            DailyPreference.getInstance(context).setRemoteConfigStampHomeMessage(homeMessage1, homeMessage2, homeEnabled);
+            DailyRemoteConfigPreference.getInstance(context).setRemoteConfigStampHomeMessage(homeMessage1, homeMessage2, homeEnabled);
 
         } catch (Exception e)
         {
@@ -552,7 +553,7 @@ public class DailyRemoteConfig
 
             boolean enabled = jsonObject.getBoolean("enabled");
 
-            DailyPreference.getInstance(context).setRemoteConfigBoutiqueBMEnabled(enabled);
+            DailyRemoteConfigPreference.getInstance(context).setRemoteConfigBoutiqueBMEnabled(enabled);
 
         } catch (Exception e)
         {
@@ -587,21 +588,21 @@ public class DailyRemoteConfig
             String lifeStyleProjectUrl = jsonObject.getString("lifeStyleProject");
             String dailyStampHomeUrl = jsonObject.getString("dailyStampHome");
 
-            DailyPreference.getInstance(context).setKeyRemoteConfigStaticUrlPrivacy(privacyUrl);
-            DailyPreference.getInstance(context).setKeyRemoteConfigStaticUrlTerms(termsUrl);
-            DailyPreference.getInstance(context).setKeyRemoteConfigStaticUrlAbout(aboutUrl);
-            DailyPreference.getInstance(context).setKeyRemoteConfigStaticUrlLocation(locationUrl);
-            DailyPreference.getInstance(context).setKeyRemoteConfigStaticUrlChildProtect(childProtectUrl);
-            DailyPreference.getInstance(context).setKeyRemoteConfigStaticUrlBonus(bonusUrl);
-            DailyPreference.getInstance(context).setKeyRemoteConfigStaticUrlCoupon(couponUrl);
-            DailyPreference.getInstance(context).setKeyRemoteConfigStaticUrlProdCouponNote(prodCouponNoteUrl);
-            DailyPreference.getInstance(context).setKeyRemoteConfigStaticUrlDevCouponNote(devCouponNoteUrl);
-            DailyPreference.getInstance(context).setKeyRemoteConfigStaticUrlFaq(faqUrl);
-            DailyPreference.getInstance(context).setKeyRemoteConfigStaticUrlLicense(licenseUrl);
-            DailyPreference.getInstance(context).setKeyRemoteConfigStaticUrlStamp(stampUrl);
-            DailyPreference.getInstance(context).setKeyRemoteConfigStaticUrlReview(reviewUrl);
-            DailyPreference.getInstance(context).setKeyRemoteConfigStaticUrlLifeStyleProject(lifeStyleProjectUrl);
-            DailyPreference.getInstance(context).setKeyRemoteConfigStaticUrlDailyStampHome(dailyStampHomeUrl);
+            DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigStaticUrlPrivacy(privacyUrl);
+            DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigStaticUrlTerms(termsUrl);
+            DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigStaticUrlAbout(aboutUrl);
+            DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigStaticUrlLocation(locationUrl);
+            DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigStaticUrlChildProtect(childProtectUrl);
+            DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigStaticUrlBonus(bonusUrl);
+            DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigStaticUrlCoupon(couponUrl);
+            DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigStaticUrlProdCouponNote(prodCouponNoteUrl);
+            DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigStaticUrlDevCouponNote(devCouponNoteUrl);
+            DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigStaticUrlFaq(faqUrl);
+            DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigStaticUrlLicense(licenseUrl);
+            DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigStaticUrlStamp(stampUrl);
+            DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigStaticUrlReview(reviewUrl);
+            DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigStaticUrlLifeStyleProject(lifeStyleProjectUrl);
+            DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigStaticUrlDailyStampHome(dailyStampHomeUrl);
         } catch (Exception e)
         {
             ExLog.e(e.toString());

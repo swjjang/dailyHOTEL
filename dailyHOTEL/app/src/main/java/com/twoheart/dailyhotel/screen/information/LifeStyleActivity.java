@@ -11,6 +11,7 @@ import com.twoheart.dailyhotel.screen.common.WebViewActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Crypto;
 import com.twoheart.dailyhotel.util.DailyPreference;
+import com.twoheart.dailyhotel.util.DailyRemoteConfigPreference;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
 public class LifeStyleActivity extends WebViewActivity
@@ -27,7 +28,7 @@ public class LifeStyleActivity extends WebViewActivity
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_about);
-        setWebView(Crypto.getUrlDecoderEx(DailyPreference.getInstance(this).getKeyRemoteConfigStaticUrlLifeStyleProject()));
+        setWebView(Crypto.getUrlDecoderEx(DailyRemoteConfigPreference.getInstance(this).getKeyRemoteConfigStaticUrlLifeStyleProject()));
 
         initToolbar();
         initLayout((DailyWebView) mWebView);

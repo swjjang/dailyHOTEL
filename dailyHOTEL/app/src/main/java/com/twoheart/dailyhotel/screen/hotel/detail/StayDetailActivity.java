@@ -59,6 +59,7 @@ import com.twoheart.dailyhotel.screen.mydaily.wishlist.WishListTabActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyPreference;
+import com.twoheart.dailyhotel.util.DailyRemoteConfigPreference;
 import com.twoheart.dailyhotel.util.DailyUserPreference;
 import com.twoheart.dailyhotel.util.KakaoLinkManager;
 import com.twoheart.dailyhotel.util.Util;
@@ -1498,11 +1499,11 @@ public class StayDetailActivity extends PlaceDetailActivity
 
             // 상단
             TextView titleTextView = (TextView) dialogView.findViewById(R.id.titleTextView);
-            titleTextView.setText(DailyPreference.getInstance(StayDetailActivity.this).getRemoteConfigStampStayDetailPopupTitle());
+            titleTextView.setText(DailyRemoteConfigPreference.getInstance(StayDetailActivity.this).getRemoteConfigStampStayDetailPopupTitle());
 
             // 메시지
             TextView messageTextView = (TextView) dialogView.findViewById(R.id.messageTextView);
-            messageTextView.setText(DailyPreference.getInstance(StayDetailActivity.this).getRemoteConfigStampStayDetailPopupMessage());
+            messageTextView.setText(DailyRemoteConfigPreference.getInstance(StayDetailActivity.this).getRemoteConfigStampStayDetailPopupMessage());
 
             View confirmTextView = dialogView.findViewById(R.id.confirmTextView);
             confirmTextView.setOnClickListener(new View.OnClickListener()

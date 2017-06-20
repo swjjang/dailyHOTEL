@@ -15,6 +15,7 @@ import com.twoheart.dailyhotel.screen.mydaily.member.LoginActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Crypto;
 import com.twoheart.dailyhotel.util.DailyPreference;
+import com.twoheart.dailyhotel.util.DailyRemoteConfigPreference;
 import com.twoheart.dailyhotel.util.DailyUserPreference;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
@@ -62,7 +63,7 @@ public class StampActivity extends BaseActivity
 
         setContentView(mStampLayout.onCreateView(R.layout.activity_stamp));
 
-        String stampDate1 = DailyPreference.getInstance(this).getRemoteConfigStampDate1();
+        String stampDate1 = DailyRemoteConfigPreference.getInstance(this).getRemoteConfigStampDate1();
 
         mStampLayout.setStampDate(stampDate1);
 
@@ -88,7 +89,7 @@ public class StampActivity extends BaseActivity
 
         AnalyticsManager.getInstance(StampActivity.this).recordScreen(this, AnalyticsManager.Screen.STAMP_DETAIL, null);
 
-        if (DailyPreference.getInstance(this).isRemoteConfigStampEnabled() == true)
+        if (DailyRemoteConfigPreference.getInstance(this).isRemoteConfigStampEnabled() == true)
         {
             if (DailyHotel.isLogin() == true)
             {
@@ -155,7 +156,7 @@ public class StampActivity extends BaseActivity
 
     private void showFinishDialog()
     {
-        if (DailyPreference.getInstance(this).isRemoteConfigStampStayEndEventPopupEnabled() == false)
+        if (DailyRemoteConfigPreference.getInstance(this).isRemoteConfigStampStayEndEventPopupEnabled() == false)
         {
             setResult(CODE_RESULT_ACTIVITY_GO_HOME);
             onBackPressed();
@@ -200,7 +201,7 @@ public class StampActivity extends BaseActivity
             } else
             {
                 startActivityForResult(EventWebActivity.newInstance(StampActivity.this, EventWebActivity.SourceType.STAMP//
-                    , Crypto.getUrlDecoderEx(DailyPreference.getInstance(StampActivity.this).getKeyRemoteConfigStaticUrlDailyStampHome()), getString(R.string.label_stamp_event_title)), Constants.CODE_RESULT_ACTIVITY_EVENT);
+                    , Crypto.getUrlDecoderEx(DailyRemoteConfigPreference.getInstance(StampActivity.this).getKeyRemoteConfigStaticUrlDailyStampHome()), getString(R.string.label_stamp_event_title)), Constants.CODE_RESULT_ACTIVITY_EVENT);
             }
 
             AnalyticsManager.getInstance(StampActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION, //

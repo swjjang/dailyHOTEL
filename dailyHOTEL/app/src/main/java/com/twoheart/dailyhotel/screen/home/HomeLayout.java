@@ -47,6 +47,7 @@ import com.twoheart.dailyhotel.place.base.BaseBlurLayout;
 import com.twoheart.dailyhotel.place.base.BaseMenuNavigationFragment;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
 import com.twoheart.dailyhotel.util.DailyPreference;
+import com.twoheart.dailyhotel.util.DailyRemoteConfigPreference;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.CustomFontTypefaceSpan;
@@ -320,8 +321,8 @@ public class HomeLayout extends BaseBlurLayout
         initWishListLayout(mHomeContentLayout);
         initRecommendationLayout(mHomeContentLayout);
 
-        if (DailyHotel.isLogin() == true && DailyPreference.getInstance(mContext).isRemoteConfigStampEnabled() == true //
-            && DailyPreference.getInstance(mContext).isRemoteConfigStampHomeEnabled() == true)
+        if (DailyHotel.isLogin() == true && DailyRemoteConfigPreference.getInstance(mContext).isRemoteConfigStampEnabled() == true //
+            && DailyRemoteConfigPreference.getInstance(mContext).isRemoteConfigStampHomeEnabled() == true)
         {
             initStampLayout(mHomeContentLayout);
         }
@@ -520,9 +521,9 @@ public class HomeLayout extends BaseBlurLayout
         TextView message1TextView = (TextView) mStampLayout.findViewById(R.id.message1TextView);
         TextView message2TextView = (TextView) mStampLayout.findViewById(R.id.message2TextView);
 
-        message1TextView.setText(DailyPreference.getInstance(mContext).getRemoteConfigStampHomeMessage1());
+        message1TextView.setText(DailyRemoteConfigPreference.getInstance(mContext).getRemoteConfigStampHomeMessage1());
 
-        SpannableString spannableString = new SpannableString(DailyPreference.getInstance(mContext).getRemoteConfigStampHomeMessage2());
+        SpannableString spannableString = new SpannableString(DailyRemoteConfigPreference.getInstance(mContext).getRemoteConfigStampHomeMessage2());
         spannableString.setSpan(new UnderlineSpan(), 0, spannableString.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
         message2TextView.setText(spannableString);
@@ -587,13 +588,13 @@ public class HomeLayout extends BaseBlurLayout
             });
         }
 
-        String phone = DailyPreference.getInstance(mContext).getRemoteConfigCompanyPhoneNumber();
-        String privacyEmail = DailyPreference.getInstance(mContext).getRemoteConfigCompanyPrivacyEmail();
-        String address = DailyPreference.getInstance(mContext).getRemoteConfigCompanyAddress();
-        String ceoName = DailyPreference.getInstance(mContext).getRemoteConfigCompanyCEO();
-        String registrationNo = DailyPreference.getInstance(mContext).getRemoteConfigCompanyBizRegNumber();
-        String mailSalesOrderNo = DailyPreference.getInstance(mContext).getRemoteConfigCompanyItcRegNumber();
-        String companyName = DailyPreference.getInstance(mContext).getRemoteConfigCompanyName();
+        String phone = DailyRemoteConfigPreference.getInstance(mContext).getRemoteConfigCompanyPhoneNumber();
+        String privacyEmail = DailyRemoteConfigPreference.getInstance(mContext).getRemoteConfigCompanyPrivacyEmail();
+        String address = DailyRemoteConfigPreference.getInstance(mContext).getRemoteConfigCompanyAddress();
+        String ceoName = DailyRemoteConfigPreference.getInstance(mContext).getRemoteConfigCompanyCEO();
+        String registrationNo = DailyRemoteConfigPreference.getInstance(mContext).getRemoteConfigCompanyBizRegNumber();
+        String mailSalesOrderNo = DailyRemoteConfigPreference.getInstance(mContext).getRemoteConfigCompanyItcRegNumber();
+        String companyName = DailyRemoteConfigPreference.getInstance(mContext).getRemoteConfigCompanyName();
 
         DailyTextView companyInfoTextView = (DailyTextView) mProviderLayout.findViewById(R.id.companyInfoTextView);
         DailyTextView companyAddressTextView = (DailyTextView) mProviderLayout.findViewById(R.id.companyAddressTextView);
@@ -698,10 +699,10 @@ public class HomeLayout extends BaseBlurLayout
 
     private Event getDefaultEvent()
     {
-        String homeEventCurrentVersion = DailyPreference.getInstance(mContext).getRemoteConfigHomeEventCurrentVersion();
-        String homeEventUrl = DailyPreference.getInstance(mContext).getRemoteConfigHomeEventUrl();
-        String homeEventTitle = DailyPreference.getInstance(mContext).getRemoteConfigHomeEventTitle();
-        int homeEventIndex = DailyPreference.getInstance(mContext).getRemoteConfigHomeEventIndex();
+        String homeEventCurrentVersion = DailyRemoteConfigPreference.getInstance(mContext).getRemoteConfigHomeEventCurrentVersion();
+        String homeEventUrl = DailyRemoteConfigPreference.getInstance(mContext).getRemoteConfigHomeEventUrl();
+        String homeEventTitle = DailyRemoteConfigPreference.getInstance(mContext).getRemoteConfigHomeEventTitle();
+        int homeEventIndex = DailyRemoteConfigPreference.getInstance(mContext).getRemoteConfigHomeEventIndex();
 
         if (DailyTextUtils.isTextEmpty(homeEventCurrentVersion) == true)
         {

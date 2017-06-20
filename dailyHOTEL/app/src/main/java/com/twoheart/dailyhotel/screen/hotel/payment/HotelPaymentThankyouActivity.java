@@ -15,6 +15,7 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.time.StayBookingDay;
 import com.twoheart.dailyhotel.place.activity.PlacePaymentThankyouActivity;
 import com.twoheart.dailyhotel.util.DailyPreference;
+import com.twoheart.dailyhotel.util.DailyRemoteConfigPreference;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.CustomFontTypefaceSpan;
 
@@ -63,9 +64,9 @@ public class HotelPaymentThankyouActivity extends PlacePaymentThankyouActivity i
 
         if (isStampEnabled() == true)
         {
-            setStampLayout(DailyPreference.getInstance(this).getRemoteConfigStampStayThankYouMessage1()//
-                , DailyPreference.getInstance(this).getRemoteConfigStampStayThankYouMessage2()//
-                , DailyPreference.getInstance(this).getRemoteConfigStampStayThankYouMessage3());
+            setStampLayout(DailyRemoteConfigPreference.getInstance(this).getRemoteConfigStampStayThankYouMessage1()//
+                , DailyRemoteConfigPreference.getInstance(this).getRemoteConfigStampStayThankYouMessage2()//
+                , DailyRemoteConfigPreference.getInstance(this).getRemoteConfigStampStayThankYouMessage3());
         }
     }
 
@@ -168,6 +169,6 @@ public class HotelPaymentThankyouActivity extends PlacePaymentThankyouActivity i
     @Override
     protected boolean isStampEnabled()
     {
-        return DailyPreference.getInstance(this).isRemoteConfigStampEnabled();
+        return DailyRemoteConfigPreference.getInstance(this).isRemoteConfigStampEnabled();
     }
 }

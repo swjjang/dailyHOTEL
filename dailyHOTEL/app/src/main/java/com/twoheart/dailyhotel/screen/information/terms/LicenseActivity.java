@@ -9,6 +9,7 @@ import com.twoheart.dailyhotel.screen.common.WebViewActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Crypto;
 import com.twoheart.dailyhotel.util.DailyPreference;
+import com.twoheart.dailyhotel.util.DailyRemoteConfigPreference;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
 public class LicenseActivity extends WebViewActivity
@@ -19,7 +20,7 @@ public class LicenseActivity extends WebViewActivity
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_license);
-        setWebView(Crypto.getUrlDecoderEx(DailyPreference.getInstance(this).getKeyRemoteConfigStaticUrlLicense()));
+        setWebView(Crypto.getUrlDecoderEx(DailyRemoteConfigPreference.getInstance(this).getKeyRemoteConfigStaticUrlLicense()));
 
         initToolbar();
         initLayout((DailyWebView) mWebView);

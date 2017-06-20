@@ -10,6 +10,7 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.Crypto;
 import com.twoheart.dailyhotel.util.DailyInternalDeepLink;
 import com.twoheart.dailyhotel.util.DailyPreference;
+import com.twoheart.dailyhotel.util.DailyRemoteConfigPreference;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
 public class ReviewTermsActivity extends WebViewActivity
@@ -26,7 +27,7 @@ public class ReviewTermsActivity extends WebViewActivity
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_term);
-        setWebView(Crypto.getUrlDecoderEx(DailyPreference.getInstance(this).getKeyRemoteConfigStaticUrlReview()));
+        setWebView(Crypto.getUrlDecoderEx(DailyRemoteConfigPreference.getInstance(this).getKeyRemoteConfigStaticUrlReview()));
 
         initToolbar();
         initLayout((DailyWebView) mWebView);

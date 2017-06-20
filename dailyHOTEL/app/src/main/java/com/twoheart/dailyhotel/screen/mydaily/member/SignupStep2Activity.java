@@ -23,6 +23,7 @@ import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyPreference;
+import com.twoheart.dailyhotel.util.DailyRemoteConfigPreference;
 import com.twoheart.dailyhotel.util.DailyUserPreference;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
@@ -177,7 +178,7 @@ public class SignupStep2Activity extends BaseActivity
 
         // 상단
         TextView titleTextView = (TextView) dialogView.findViewById(R.id.titleTextView);
-        titleTextView.setText(DailyPreference.getInstance(SignupStep2Activity.this).getRemoteConfigTextSignUpText02());
+        titleTextView.setText(DailyRemoteConfigPreference.getInstance(SignupStep2Activity.this).getRemoteConfigTextSignUpText02());
 
         // 메시지
         TextView messageTextView = (TextView) dialogView.findViewById(R.id.messageTextView);

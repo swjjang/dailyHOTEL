@@ -27,6 +27,7 @@ import com.twoheart.dailyhotel.screen.information.terms.TermActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyPreference;
+import com.twoheart.dailyhotel.util.DailyRemoteConfigPreference;
 import com.twoheart.dailyhotel.util.DailyUserPreference;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Screen;
@@ -106,7 +107,7 @@ public class SignupStep1Activity extends BaseActivity
             mSignupStep1Layout.setRecommenderText(recommender);
         }
 
-        String signUpText = DailyPreference.getInstance(this).getRemoteConfigTextSignUpText01();
+        String signUpText = DailyRemoteConfigPreference.getInstance(this).getRemoteConfigTextSignUpText01();
 
         if (DailyTextUtils.isTextEmpty(signUpText) == false)
         {
