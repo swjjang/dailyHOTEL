@@ -47,8 +47,6 @@ public abstract class RecentPlacesListFragment extends BaseFragment
 
     protected View mViewByLongPress;
     protected int mPositionByLongPress;
-    protected PlaceType mPlaceType;
-    protected RecentlyPlaceUtil.ServiceType mServiceType;
 
     protected RecentlyRemoteImpl mRecentlyRemoteImpl;
 
@@ -123,11 +121,6 @@ public abstract class RecentPlacesListFragment extends BaseFragment
         clearCompositeDisposable();
 
         super.onDestroy();
-    }
-
-    public void setServiceType(RecentlyPlaceUtil.ServiceType serviceType)
-    {
-        mServiceType = serviceType;
     }
 
     public void setDontReload(boolean dontReload)

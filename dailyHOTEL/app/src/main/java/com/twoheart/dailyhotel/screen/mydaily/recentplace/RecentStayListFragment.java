@@ -48,9 +48,6 @@ import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.annotations.NonNull;
-import io.reactivex.functions.BiFunction;
-import io.reactivex.functions.Consumer;
 
 /**
  * Created by android_sam on 2016. 10. 12..
@@ -130,32 +127,6 @@ public class RecentStayListFragment extends RecentPlacesListFragment
     protected void requestRecentPlacesList(PlaceBookingDay placeBookingDay)
     {
         lockUI();
-
-        boolean isInBound = false;
-        boolean isOutBound = false;
-        if (RecentlyPlaceUtil.ServiceType.ALL_STAY == mServiceType)
-        {
-            isInBound = true;
-            isOutBound = true;
-        } else if (RecentlyPlaceUtil.ServiceType.IB_STAY == mServiceType)
-        {
-            isInBound = true;
-        } else if (RecentlyPlaceUtil.ServiceType.OB_STAY == mServiceType)
-        {
-            isOutBound = true;
-        }
-
-        if (isInBound == false && isOutBound == false)
-        {
-            unLockUI();
-
-            if (mListLayout != null && isFinishing() == false)
-            {
-                mListLayout.setData(null, placeBookingDay);
-            }
-            return;
-        }
-
         requestRecentlyList(placeBookingDay);
     }
 
@@ -163,35 +134,17 @@ public class RecentStayListFragment extends RecentPlacesListFragment
     {
         addCompositeDisposable(Observable.zip(mRecentlyRemoteImpl.getStayInboundRecentlyList((StayBookingDay) placeBookingDay) //
             , mRecentlyRemoteImpl.getStayOutboundRecentlyList(10000) //
-            , new BiFunction<List<Stay>, StayOutbounds, ArrayList<PlaceViewItem>>()
-            {
-                @Override
-                public ArrayList<PlaceViewItem> apply(@NonNull List<Stay> stays, @NonNull StayOutbounds stayOutbounds) throws Exception
-                {
-                    return makePlaceViewItemList(stays, stayOutbounds);
-                }
-            }).subscribe(new Consumer<ArrayList<PlaceViewItem>>()
+            , (stays, stayOutbounds) -> makePlaceViewItemList(stays, stayOutbounds)).subscribe(viewItemList ->
         {
-            @Override
-            public void accept(@NonNull ArrayList<PlaceViewItem> viewItemList) throws Exception
-            {
-                unLockUI();
+            unLockUI();
 
-                if (isFinishing() == true)
-                {
-                    return;
-                }
-
-                mListLayout.setData(viewItemList, mPlaceBookingDay);
-            }
-        }, new Consumer<Throwable>()
-        {
-            @Override
-            public void accept(@NonNull Throwable throwable) throws Exception
+            if (isFinishing() == true)
             {
-                onHandleError(throwable);
+                return;
             }
-        }));
+
+            mListLayout.setData(viewItemList, mPlaceBookingDay);
+        }, throwable -> onHandleError(throwable)));
     }
 
     private ArrayList<PlaceViewItem> makePlaceViewItemList(List<Stay> stayList, StayOutbounds stayOutbounds)

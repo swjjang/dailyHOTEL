@@ -114,7 +114,7 @@ public class RecentGourmetListFragment extends RecentPlacesListFragment
     {
         lockUI();
 
-        String targetIndices = getTargetIndices(mServiceType);
+        String targetIndices = getTargetIndices(RecentlyPlaceUtil.ServiceType.GOURMET);
         if (DailyTextUtils.isTextEmpty(targetIndices) == true)
         {
             unLockUI();
