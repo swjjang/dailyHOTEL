@@ -30,7 +30,6 @@ import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.model.time.PlaceBookingDay;
 import com.twoheart.dailyhotel.model.time.StayBookingDay;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
-import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.screen.hotel.detail.StayDetailActivity;
 import com.twoheart.dailyhotel.screen.hotel.preview.StayPreviewActivity;
 import com.twoheart.dailyhotel.util.Constants;
@@ -51,6 +50,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by android_sam on 2016. 10. 12..
@@ -121,18 +121,12 @@ public class RecentStayListFragment extends RecentPlacesListFragment
     }
 
     @Override
-    protected BaseNetworkController getNetworkController()
-    {
-        return null;
-    }
-
-    @Override
     protected void requestRecentPlacesList(PlaceBookingDay placeBookingDay)
     {
         lockUI();
 
-        addCompositeDisposable(Observable.zip(mRecentlyRemoteImpl.getStayInboundRecentlyList((StayBookingDay) placeBookingDay) //
-            , mRecentlyRemoteImpl.getStayOutboundRecentlyList(10000) //
+        addCompositeDisposable(Observable.zip(mRecentlyRemoteImpl.getStayInboundRecentlyList((StayBookingDay) placeBookingDay).observeOn(Schedulers.io()) //
+            , mRecentlyRemoteImpl.getStayOutboundRecentlyList(10000).observeOn(Schedulers.io()) //
             , new BiFunction<List<Stay>, StayOutbounds, ArrayList<PlaceViewItem>>()
             {
                 @Override
@@ -140,7 +134,7 @@ public class RecentStayListFragment extends RecentPlacesListFragment
                 {
                     return RecentStayListFragment.this.makePlaceViewItemList(stays, stayOutbounds);
                 }
-            }).subscribe(new Consumer<ArrayList<PlaceViewItem>>()
+            }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<ArrayList<PlaceViewItem>>()
         {
             @Override
             public void accept(@NonNull ArrayList<PlaceViewItem> viewItemList) throws Exception
@@ -154,7 +148,14 @@ public class RecentStayListFragment extends RecentPlacesListFragment
 
                 mListLayout.setData(viewItemList, mPlaceBookingDay);
             }
-        }, throwable -> onHandleError(throwable)));
+        }, new Consumer<Throwable>()
+        {
+            @Override
+            public void accept(@NonNull Throwable throwable) throws Exception
+            {
+                RecentStayListFragment.this.onHandleError(throwable);
+            }
+        }));
     }
 
     private ArrayList<PlaceViewItem> makePlaceViewItemList(List<Stay> stayList, StayOutbounds stayOutbounds)
