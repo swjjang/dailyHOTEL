@@ -9,6 +9,7 @@ import com.crashlytics.android.Crashlytics;
 import com.daily.base.exception.BaseException;
 import com.daily.base.util.ExLog;
 import com.daily.base.widget.DailyToast;
+import com.daily.dailyhotel.entity.CommonDateTime;
 import com.daily.dailyhotel.repository.local.ConfigLocalImpl;
 import com.daily.dailyhotel.repository.remote.FacebookRemoteImpl;
 import com.daily.dailyhotel.repository.remote.KakaoRemoteImpl;
@@ -17,7 +18,6 @@ import com.daily.dailyhotel.util.RecentlyPlaceUtil;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Place;
 import com.twoheart.dailyhotel.model.time.PlaceBookingDay;
-import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.base.BaseFragment;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
@@ -60,7 +60,7 @@ public abstract class RecentPlacesListFragment extends BaseFragment
     //    protected ArrayList<Pair<Integer, String>> mRecentPlaceList;
     protected OnRecentPlaceListFragmentListener mRecentPlaceListFragmentListener;
 
-    protected abstract void setPlaceBookingDay(TodayDateTime todayDateTime);
+    protected abstract void setPlaceBookingDay(CommonDateTime commonDateTime);
 
     protected abstract RecentPlacesListLayout getListLayout();
 

@@ -9,15 +9,21 @@ import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.widget.LinearLayout;
 
+import com.crashlytics.android.Crashlytics;
+import com.daily.base.exception.BaseException;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.util.FontManager;
 import com.daily.base.util.ScreenUtils;
+import com.daily.base.widget.DailyToast;
 import com.daily.base.widget.DailyViewPager;
+import com.daily.dailyhotel.repository.local.ConfigLocalImpl;
 import com.daily.dailyhotel.repository.local.model.RecentlyRealmObject;
+import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
+import com.daily.dailyhotel.repository.remote.FacebookRemoteImpl;
+import com.daily.dailyhotel.repository.remote.KakaoRemoteImpl;
 import com.daily.dailyhotel.util.RecentlyPlaceUtil;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
@@ -27,9 +33,10 @@ import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
 import io.realm.RealmResults;
-import retrofit2.Call;
-import retrofit2.Response;
+import retrofit2.HttpException;
 
 /**
  * Created by android_sam on 2016. 10. 10..
@@ -44,7 +51,9 @@ public class RecentPlacesTabActivity extends BaseActivity
 
     private RecentPlacesFragmentPagerAdapter mPageAdapter;
 
-    private RecentPlacesNetworkController mNetworkController;
+    private CommonRemoteImpl mCommonRemoteImpl;
+
+    private CompositeDisposable mCompositeDisposable = new CompositeDisposable();
 
     DailyViewPager mViewPager;
     private TabLayout mTabLayout;
@@ -61,6 +70,13 @@ public class RecentPlacesTabActivity extends BaseActivity
         MYDAILY
     }
 
+    /**
+     *
+     * @param context
+     * @param sourceType 진입 화면
+     * @param placeType 딥링크로 인한 화면 이동 처리를 위한 타입
+     * @return
+     */
     public static Intent newInstance(Context context, SourceType sourceType, PlaceType placeType)
     {
         if (sourceType == null)
@@ -88,7 +104,7 @@ public class RecentPlacesTabActivity extends BaseActivity
 
         setContentView(R.layout.activity_recent_places);
 
-        mNetworkController = new RecentPlacesNetworkController(this, mNetworkTag, mOnNetworkControllerListener);
+        mCommonRemoteImpl = new CommonRemoteImpl(this);
 
         initIntent(getIntent());
 
@@ -112,7 +128,20 @@ public class RecentPlacesTabActivity extends BaseActivity
         } else
         {
             lockUI();
-            mNetworkController.requestCommonDateTime();
+
+            addCompositeDisposable(mCommonRemoteImpl.getCommonDateTime() //
+                .subscribe(commonDateTime ->
+                {
+                    if (mFragmentList != null)
+                    {
+                        for (RecentPlacesListFragment fragment : mFragmentList)
+                        {
+                            fragment.setPlaceBookingDay(commonDateTime);
+                        }
+                    }
+
+                    setTabLayout();
+                }, throwable -> onHandleError(throwable)));
         }
 
         super.onResume();
@@ -121,6 +150,8 @@ public class RecentPlacesTabActivity extends BaseActivity
     @Override
     protected void onDestroy()
     {
+        clearCompositeDisposable();
+
         super.onDestroy();
 
         switch (mSourceType)
@@ -380,52 +411,77 @@ public class RecentPlacesTabActivity extends BaseActivity
         }
     };
 
-    private RecentPlacesNetworkController.OnNetworkControllerListener mOnNetworkControllerListener = new RecentPlacesNetworkController.OnNetworkControllerListener() //
+    ///////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    // 기존의 BaseActivity에 있는 정보 가져오기
+    ///////////////////////////////////////////////////////////////////////////////////////////////
+
+    private void addCompositeDisposable(Disposable disposable)
     {
-        @Override
-        public void onCommonDateTime(TodayDateTime todayDateTime)
+        if (disposable == null)
         {
-            if (mFragmentList != null)
+            return;
+        }
+
+        mCompositeDisposable.add(disposable);
+    }
+
+    private void clearCompositeDisposable()
+    {
+        mCompositeDisposable.clear();
+    }
+
+    protected void onHandleError(Throwable throwable)
+    {
+        unLockUI();
+
+        BaseActivity baseActivity = RecentPlacesTabActivity.this;
+
+        if (baseActivity == null || baseActivity.isFinishing() == true)
+        {
+            return;
+        }
+
+        if (throwable instanceof BaseException)
+        {
+            // 팝업 에러 보여주기
+            BaseException baseException = (BaseException) throwable;
+
+            baseActivity.showSimpleDialog(null, baseException.getMessage()//
+                , getString(R.string.dialog_btn_text_confirm), null, null, null, null, dialogInterface -> RecentPlacesTabActivity.this.onBackPressed(), true);
+        } else if (throwable instanceof HttpException)
+        {
+            retrofit2.HttpException httpException = (HttpException) throwable;
+
+            if (httpException.code() == BaseException.CODE_UNAUTHORIZED)
             {
-                for (RecentPlacesListFragment fragment : mFragmentList)
+                addCompositeDisposable(new ConfigLocalImpl(RecentPlacesTabActivity.this).clear().subscribe(object ->
                 {
-                    fragment.setPlaceBookingDay(todayDateTime);
+                    new FacebookRemoteImpl().logOut();
+                    new KakaoRemoteImpl().logOut();
+
+                    baseActivity.restartExpiredSession();
+                }));
+            } else
+            {
+                DailyToast.showToast(RecentPlacesTabActivity.this, getString(R.string.act_base_network_connect), DailyToast.LENGTH_LONG);
+
+                if (Constants.DEBUG == false)
+                {
+                    Crashlytics.log(httpException.response().raw().request().url().toString());
+                    Crashlytics.logException(throwable);
+                } else
+                {
+                    ExLog.e(httpException.response().raw().request().url().toString() + ", " + httpException.toString());
                 }
+
+                RecentPlacesTabActivity.this.finish();
             }
-
-            setTabLayout();
-        }
-
-        @Override
-        public void onError(Call call, Throwable e, boolean onlyReport)
+        } else
         {
-            RecentPlacesTabActivity.this.onError(call, e, onlyReport);
-        }
+            DailyToast.showToast(RecentPlacesTabActivity.this, getString(R.string.act_base_network_connect), DailyToast.LENGTH_LONG);
 
-        @Override
-        public void onError(Throwable e)
-        {
-            RecentPlacesTabActivity.this.onError(e);
+            RecentPlacesTabActivity.this.finish();
         }
-
-        @Override
-        public void onErrorPopupMessage(int msgCode, String message)
-        {
-            RecentPlacesTabActivity.this.onErrorPopupMessage(msgCode, message);
-        }
-
-        @Override
-        public void onErrorToastMessage(String message)
-        {
-            RecentPlacesTabActivity.this.onErrorToastMessage(message);
-            finish();
-        }
-
-        @Override
-        public void onErrorResponse(Call call, Response response)
-        {
-            RecentPlacesTabActivity.this.onErrorResponse(call, response);
-            finish();
-        }
-    };
+    }
 }
