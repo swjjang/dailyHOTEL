@@ -548,6 +548,9 @@ public class GourmetDetailActivity extends PlaceDetailActivity
     {
         setContentView(mPlaceDetailLayout.onCreateView(R.layout.activity_gourmet_detail));
 
+        mPlaceDetailLayout.setStatusBarHeight(this);
+        mPlaceDetailLayout.setIsUsedMultiTransitions(mIsUsedMultiTransition);
+
         if (mIsDeepLink == false && mIsUsedMultiTransition == true)
         {
             initTransLayout(placeName, imageUrl, isFromMap);
@@ -555,9 +558,6 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         {
             mPlaceDetailLayout.setDefaultImage(imageUrl);
         }
-
-        mPlaceDetailLayout.setStatusBarHeight(this);
-        mPlaceDetailLayout.setIsUsedMultiTransitions(mIsUsedMultiTransition);
 
         setLockUICancelable(true);
         initToolbar(placeName);
