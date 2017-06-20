@@ -991,7 +991,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
                 } catch (Exception e)
                 {
                     unLockUI();
-                    ExLog.d(e.toString());
+                    LoginActivity.this.onError(e);
                 }
             } else
             {
