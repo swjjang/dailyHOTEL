@@ -7,7 +7,7 @@ import android.location.Location;
 
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
-import com.daily.dailyhotel.screen.stay.outbound.search.StayOutboundSearchActivity;
+import com.daily.dailyhotel.screen.home.stay.outbound.search.StayOutboundSearchActivity;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Keyword;
 import com.twoheart.dailyhotel.model.time.StayBookingDay;
