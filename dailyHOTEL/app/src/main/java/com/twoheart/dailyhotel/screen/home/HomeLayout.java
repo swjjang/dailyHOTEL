@@ -25,6 +25,7 @@ import android.text.style.UnderlineSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -33,6 +34,7 @@ import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.util.FontManager;
 import com.daily.base.util.ScreenUtils;
+import com.daily.base.widget.DailyButton;
 import com.daily.base.widget.DailyTextView;
 import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.drawee.view.SimpleDraweeView;
@@ -953,6 +955,11 @@ public class HomeLayout extends BaseBlurLayout
 
     public void setStampCount(int count, boolean isError)
     {
+        if (mStampLayout == null)
+        {
+            return;
+        }
+
         if (isError == true)
         {
             mStampLayout.setVisibility(View.GONE);
@@ -960,8 +967,56 @@ public class HomeLayout extends BaseBlurLayout
             setErrorPopupLayout(true);
         } else
         {
-            TextView stampTextView = (TextView) mStampLayout.findViewById(R.id.stampTextView);
-            stampTextView.setText("현재 받은 스탬프 개수는 : " + count);
+
+            DailyButton nights01TextView = (DailyButton) mStampLayout.findViewById(R.id.nights01TextView);
+            DailyButton nights02TextView = (DailyButton) mStampLayout.findViewById(R.id.nights02TextView);
+            DailyButton nights03TextView = (DailyButton) mStampLayout.findViewById(R.id.nights03TextView);
+            DailyButton nights04TextView = (DailyButton) mStampLayout.findViewById(R.id.nights04TextView);
+            DailyButton nights05TextView = (DailyButton) mStampLayout.findViewById(R.id.nights05TextView);
+            DailyButton nights06TextView = (DailyButton) mStampLayout.findViewById(R.id.nights06TextView);
+            FrameLayout nights07TextView = (FrameLayout) mStampLayout.findViewById(R.id.nights07TextView);
+
+            if (count >= 1)
+            {
+                nights01TextView.setBackgroundResource(R.drawable.ic_stamp_achieved_01);
+                nights01TextView.setText(null);
+            }
+
+            if (count >= 2)
+            {
+                nights02TextView.setBackgroundResource(R.drawable.ic_stamp_achieved_02);
+                nights02TextView.setText(null);
+            }
+
+            if (count >= 3)
+            {
+                nights03TextView.setBackgroundResource(R.drawable.ic_stamp_achieved_03);
+                nights03TextView.setText(null);
+            }
+
+            if (count >= 4)
+            {
+                nights04TextView.setBackgroundResource(R.drawable.ic_stamp_achieved_04);
+                nights04TextView.setText(null);
+            }
+
+            if (count >= 5)
+            {
+                nights05TextView.setBackgroundResource(R.drawable.ic_stamp_achieved_05);
+                nights05TextView.setText(null);
+            }
+
+            if (count >= 6)
+            {
+                nights06TextView.setBackgroundResource(R.drawable.ic_stamp_achieved_06);
+                nights06TextView.setText(null);
+            }
+
+            if (count >= 7)
+            {
+                nights07TextView.removeAllViews();
+                nights07TextView.setBackgroundResource(R.drawable.ic_stamp_achieved_07);
+            }
 
             if (mStampLayout.getVisibility() != View.VISIBLE)
             {

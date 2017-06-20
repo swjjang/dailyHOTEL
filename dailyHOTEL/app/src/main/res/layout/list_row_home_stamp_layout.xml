@@ -1,61 +1,163 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/white">
+                android:background="@color/default_background"
+                android:padding="15dp">
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/textLayout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_marginBottom="14dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="5dp"
-        android:layout_marginTop="14dp"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
         android:layout_toLeftOf="@id/closeImageView"
-        android:orientation="vertical">
+        android:background="@drawable/shape_fillrect_lf0f0f0_bffffff_r2">
 
         <com.daily.base.widget.DailyTextView
-            android:id="@+id/message1TextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:gravity="left|center_vertical"
-            android:maxLines="2"
-            android:textColor="@color/default_text_c666666"
-            android:textSize="13dp"/>
-
-        <com.daily.base.widget.DailyTextView
-            android:id="@+id/stampTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:gravity="left|center_vertical"
-            android:maxLines="2"
-            android:textColor="@color/default_text_c666666"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:text="@string/label_home_stamp"
+            android:textColor="@color/default_text_c323232"
             android:textSize="13dp"/>
 
         <com.daily.base.widget.DailyTextView
             android:id="@+id/message2TextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:ellipsize="end"
-            android:gravity="left|center_vertical"
-            android:maxLines="2"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10dp"
             android:textColor="@color/default_text_c929292"
             android:textSize="12dp"/>
 
-    </LinearLayout>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/stampLayout"
+        android:layout_width="match_parent"
+        android:layout_height="180dp"
+        android:layout_below="@+id/textLayout"
+        android:layout_marginTop="-2dp"
+        android:background="@drawable/coupon_popup_bg">
+
+        <LinearLayout
+            android:id="@+id/stamp01Layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="15dp"
+            android:orientation="horizontal">
+
+            <com.daily.base.widget.DailyButton
+                android:id="@+id/nights01TextView"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:layout_marginRight="5dp"
+                android:background="@drawable/ic_stamp_placeholder_01"
+                android:text="@string/label_stamp_1_nights"
+                android:textColor="@color/default_text_cc5c5c5"
+                android:textSize="12dp"/>
+
+            <com.daily.base.widget.DailyButton
+                android:id="@+id/nights02TextView"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:background="@drawable/ic_stamp_placeholder_01"
+                android:text="@string/label_stamp_2_nights"
+                android:textColor="@color/default_text_cc5c5c5"
+                android:textSize="12dp"/>
+
+            <com.daily.base.widget.DailyButton
+                android:id="@+id/nights03TextView"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:background="@drawable/ic_stamp_placeholder_01"
+                android:text="@string/label_stamp_3_nights"
+                android:textColor="@color/default_text_cc5c5c5"
+                android:textSize="12dp"/>
+
+            <com.daily.base.widget.DailyButton
+                android:id="@+id/nights04TextView"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:layout_marginLeft="5dp"
+                android:background="@drawable/ic_stamp_placeholder_01"
+                android:text="@string/label_stamp_4_nights"
+                android:textColor="@color/default_text_cc5c5c5"
+                android:textSize="12dp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/stamp02Layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/stamp01Layout"
+            android:layout_centerHorizontal="true"
+            android:orientation="horizontal">
+
+            <com.daily.base.widget.DailyButton
+                android:id="@+id/nights05TextView"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:layout_marginRight="5dp"
+                android:background="@drawable/ic_stamp_placeholder_01"
+                android:text="@string/label_stamp_5_nights"
+                android:textColor="@color/default_text_cc5c5c5"
+                android:textSize="12dp"/>
+
+            <com.daily.base.widget.DailyButton
+                android:id="@+id/nights06TextView"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:background="@drawable/ic_stamp_placeholder_01"
+                android:text="@string/label_stamp_6_nights"
+                android:textColor="@color/default_text_cc5c5c5"
+                android:textSize="12dp"/>
+
+            <FrameLayout
+                android:id="@+id/nights07TextView"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:layout_marginLeft="5dp"
+                android:background="@drawable/ic_stamp_placeholder_03">
+
+                <com.daily.base.widget.DailyTextView
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"
+                    android:gravity="center"
+                    android:paddingTop="24dp"
+                    android:text="@string/label_stamp_7_nights"
+                    android:textColor="@color/default_text_cc5c5c5"
+                    android:textSize="10dp"/>
+            </FrameLayout>
+        </LinearLayout>
+
+        <com.daily.base.widget.DailyTextView
+            android:id="@+id/message1TextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/stamp02Layout"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:maxLines="2"
+            android:textColor="@color/default_text_c666666"
+            android:textSize="13dp"/>
+    </RelativeLayout>
 
     <View
         android:id="@id/bottomDivider"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_below="@id/textLayout"
+        android:layout_below="@id/stampLayout"
         android:layout_marginTop="15dp"
         android:background="@color/default_line_cf0f0f0"/>
-
 </RelativeLayout>
