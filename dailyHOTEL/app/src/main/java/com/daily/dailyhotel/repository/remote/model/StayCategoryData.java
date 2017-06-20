@@ -7,7 +7,7 @@ import com.bluelinelabs.logansquare.annotation.JsonObject;
  * Created by android_sam on 2017. 6. 15..
  */
 @JsonObject
-public class CategoryData
+public class StayCategoryData
 {
     @JsonField(name = "alias")
     public String alias;

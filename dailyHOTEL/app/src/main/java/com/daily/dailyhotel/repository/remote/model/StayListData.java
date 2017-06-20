@@ -14,7 +14,7 @@ import java.util.List;
 public class StayListData
 {
     @JsonField(name = "categories")
-    public List<CategoryData> categoryDataList;
+    public List<StayCategoryData> stayCategoryDataList;
 
     @JsonField(name = "hotelSales")
     public List<StaySalesData> staySalesDataList;

@@ -48,6 +48,9 @@ import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.functions.BiFunction;
+import io.reactivex.functions.Consumer;
 
 /**
  * Created by android_sam on 2016. 10. 12..
@@ -127,23 +130,30 @@ public class RecentStayListFragment extends RecentPlacesListFragment
     protected void requestRecentPlacesList(PlaceBookingDay placeBookingDay)
     {
         lockUI();
-        requestRecentlyList(placeBookingDay);
-    }
 
-    private void requestRecentlyList(PlaceBookingDay placeBookingDay)
-    {
         addCompositeDisposable(Observable.zip(mRecentlyRemoteImpl.getStayInboundRecentlyList((StayBookingDay) placeBookingDay) //
             , mRecentlyRemoteImpl.getStayOutboundRecentlyList(10000) //
-            , (stays, stayOutbounds) -> makePlaceViewItemList(stays, stayOutbounds)).subscribe(viewItemList ->
-        {
-            unLockUI();
-
-            if (isFinishing() == true)
+            , new BiFunction<List<Stay>, StayOutbounds, ArrayList<PlaceViewItem>>()
             {
-                return;
-            }
+                @Override
+                public ArrayList<PlaceViewItem> apply(@NonNull List<Stay> stays, @NonNull StayOutbounds stayOutbounds) throws Exception
+                {
+                    return RecentStayListFragment.this.makePlaceViewItemList(stays, stayOutbounds);
+                }
+            }).subscribe(new Consumer<ArrayList<PlaceViewItem>>()
+        {
+            @Override
+            public void accept(@NonNull ArrayList<PlaceViewItem> viewItemList) throws Exception
+            {
+                RecentStayListFragment.this.unLockUI();
 
-            mListLayout.setData(viewItemList, mPlaceBookingDay);
+                if (RecentStayListFragment.this.isFinishing() == true)
+                {
+                    return;
+                }
+
+                mListLayout.setData(viewItemList, mPlaceBookingDay);
+            }
         }, throwable -> onHandleError(throwable)));
     }
 

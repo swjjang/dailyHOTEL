@@ -4,6 +4,7 @@ import com.daily.dailyhotel.repository.remote.model.BookingData;
 import com.daily.dailyhotel.repository.remote.model.BookingHideData;
 import com.daily.dailyhotel.repository.remote.model.CardData;
 import com.daily.dailyhotel.repository.remote.model.CommonDateTimeData;
+import com.daily.dailyhotel.repository.remote.model.GourmetListData;
 import com.daily.dailyhotel.repository.remote.model.PaymentResultData;
 import com.daily.dailyhotel.repository.remote.model.StayListData;
 import com.daily.dailyhotel.repository.remote.model.StayOutboundBookingDetailData;
@@ -683,4 +684,12 @@ public interface DailyMobileService
                                                          @QueryMap Map<String, Object> queryMap, //
                                                          @Query("bedType") List<String> bedTypeList, //
                                                          @Query("luxury") List<String> luxuryList);
+
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
+    @GET("{mobileAPI}")
+    Observable<BaseDto<GourmetListData>> getGourmetList(@Path(value = "mobileAPI", encoded = true) String mobileAPI, //
+                                                        @QueryMap Map<String, Object> queryMap,//
+                                                        @Query("category") List<String> categoryList,//
+                                                        @Query("timeFrame") List<String> timeList,//
+                                                        @Query("luxury") List<String> luxuryList);
 }

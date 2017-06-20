@@ -11,7 +11,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.entity.CommonDateTime;
 import com.daily.dailyhotel.util.RecentlyPlaceUtil;
@@ -20,7 +19,6 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Gourmet;
 import com.twoheart.dailyhotel.model.Place;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
-import com.twoheart.dailyhotel.model.RecentGourmetParams;
 import com.twoheart.dailyhotel.model.time.GourmetBookingDay;
 import com.twoheart.dailyhotel.model.time.PlaceBookingDay;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
@@ -39,6 +37,8 @@ import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.functions.Consumer;
 import retrofit2.Call;
 import retrofit2.Response;
 
@@ -114,23 +114,40 @@ public class RecentGourmetListFragment extends RecentPlacesListFragment
     {
         lockUI();
 
-        String targetIndices = getTargetIndices(RecentlyPlaceUtil.ServiceType.GOURMET);
-        if (DailyTextUtils.isTextEmpty(targetIndices) == true)
-        {
-            unLockUI();
-
-            if (mListLayout != null && isFinishing() == false)
+        addCompositeDisposable(mRecentlyRemoteImpl.getGourmetRecentlyList((GourmetBookingDay) placeBookingDay) //
+            .subscribe(new Consumer<List<Gourmet>>()
             {
-                mListLayout.setData(null, placeBookingDay);
-            }
-            return;
-        }
+                @Override
+                public void accept(@NonNull List<Gourmet> gourmets) throws Exception
+                {
+                    unLockUI();
 
-        RecentGourmetParams params = new RecentGourmetParams();
-        params.setGourmetBookingDay((GourmetBookingDay) placeBookingDay);
-        params.setTargetIndices(targetIndices);
+                    if (isFinishing() == true)
+                    {
+                        return;
+                    }
 
-        ((RecentGourmetListNetworkController) mNetworkController).requestRecentGourmetList(params);
+                    ArrayList<Gourmet> gourmetList = new ArrayList<>();
+                    if (gourmets != null && gourmets.size() > 0)
+                    {
+                        gourmetList.addAll(gourmets);
+                    }
+
+                    sortList(gourmetList, RecentlyPlaceUtil.ServiceType.GOURMET);
+
+                    ArrayList<PlaceViewItem> viewItemList = ((RecentGourmetListLayout) mListLayout).makePlaceViewItemList(gourmetList);
+
+                    mListLayout.setData(viewItemList, mPlaceBookingDay);
+                }
+            }, new Consumer<Throwable>()
+            {
+                @Override
+                public void accept(@NonNull Throwable throwable) throws Exception
+                {
+                    onHandleError(throwable);
+                }
+            }));
+
     }
 
     private RecentGourmetListNetworkController.OnNetworkControllerListener mOnNetworkControllerListener = new RecentGourmetListNetworkController.OnNetworkControllerListener()
