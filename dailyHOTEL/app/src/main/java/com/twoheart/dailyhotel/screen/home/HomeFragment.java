@@ -23,7 +23,6 @@ import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
 import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.entity.StayBookDateTime;
-import com.daily.dailyhotel.entity.StayOutbounds;
 import com.daily.dailyhotel.repository.local.ConfigLocalImpl;
 import com.daily.dailyhotel.repository.remote.FacebookRemoteImpl;
 import com.daily.dailyhotel.repository.remote.KakaoRemoteImpl;
@@ -84,11 +83,8 @@ import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.BiFunction;
-import io.reactivex.functions.Consumer;
 import retrofit2.Call;
 import retrofit2.HttpException;
 import retrofit2.Response;
@@ -925,41 +921,26 @@ public class HomeFragment extends BaseMenuNavigationFragment
     {
         addCompositeDisposable(Observable.zip(mRecentlyRemoteImpl.getHomeRecentlyList(MAX_REQUEST_SIZE) //
             , mRecentlyRemoteImpl.getStayOutboundRecentlyList(MAX_REQUEST_SIZE) //
-            , new BiFunction<List<HomePlace>, StayOutbounds, List<HomePlace>>()
-            {
-                @Override
-                public List<HomePlace> apply(@NonNull List<HomePlace> homePlacesList, @NonNull StayOutbounds stayOutbounds) throws Exception
-                {
-                    return RecentlyPlaceUtil.mergeHomePlaceList(mBaseActivity, homePlacesList, stayOutbounds);
-                }
-            }).subscribe(new Consumer<List<HomePlace>>()
+            , (homePlacesList, stayOutbounds) -> RecentlyPlaceUtil.mergeHomePlaceList(mBaseActivity, homePlacesList, stayOutbounds)).subscribe(homePlacesList ->
         {
-            @Override
-            public void accept(@NonNull List<HomePlace> homePlacesList) throws Exception
+            ArrayList<HomePlace> list = new ArrayList<>();
+            if (homePlacesList != null)
             {
-                ArrayList<HomePlace> list = new ArrayList<HomePlace>();
-                if (homePlacesList != null)
-                {
-                    list.addAll(homePlacesList);
-                }
-
-                mHomeLayout.setRecentListData(list, false);
-
-                mNetworkRunState = mNetworkRunState | IS_RUNNED_RECENTLIST;
-
-                sendHomeBlockEventAnalytics();
+                list.addAll(homePlacesList);
             }
-        }, new Consumer<Throwable>()
+
+            mHomeLayout.setRecentListData(list, false);
+
+            mNetworkRunState = mNetworkRunState | IS_RUNNED_RECENTLIST;
+
+            sendHomeBlockEventAnalytics();
+        }, throwable ->
         {
-            @Override
-            public void accept(@NonNull Throwable throwable) throws Exception
-            {
-                mHomeLayout.setRecentListData(null, true);
+            mHomeLayout.setRecentListData(null, true);
 
-                mNetworkRunState = mNetworkRunState | IS_RUNNED_RECENTLIST;
+            mNetworkRunState = mNetworkRunState | IS_RUNNED_RECENTLIST;
 
-                sendHomeBlockEventAnalytics();
-            }
+            sendHomeBlockEventAnalytics();
         }));
     }
 
