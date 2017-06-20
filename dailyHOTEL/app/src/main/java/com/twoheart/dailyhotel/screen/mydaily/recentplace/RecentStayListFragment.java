@@ -16,6 +16,7 @@ import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
 import com.daily.base.widget.DailyToast;
+import com.daily.dailyhotel.entity.CommonDateTime;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayOutbound;
 import com.daily.dailyhotel.entity.StayOutbounds;
@@ -28,7 +29,6 @@ import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.model.time.PlaceBookingDay;
 import com.twoheart.dailyhotel.model.time.StayBookingDay;
-import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.screen.hotel.detail.StayDetailActivity;
@@ -69,9 +69,9 @@ public class RecentStayListFragment extends RecentPlacesListFragment
     }
 
     @Override
-    protected void setPlaceBookingDay(TodayDateTime todayDateTime)
+    protected void setPlaceBookingDay(CommonDateTime commonDateTime)
     {
-        if (todayDateTime == null)
+        if (commonDateTime == null)
         {
             return;
         }
@@ -79,12 +79,12 @@ public class RecentStayListFragment extends RecentPlacesListFragment
         try
         {
             StayBookingDay stayBookingDay = new StayBookingDay();
-            stayBookingDay.setCheckInDay(todayDateTime.dailyDateTime);
-            stayBookingDay.setCheckOutDay(todayDateTime.dailyDateTime, 1);
+            stayBookingDay.setCheckInDay(commonDateTime.dailyDateTime);
+            stayBookingDay.setCheckOutDay(commonDateTime.dailyDateTime, 1);
 
             mPlaceBookingDay = stayBookingDay;
 
-            setStayBookDateTime(todayDateTime.currentDateTime);
+            setStayBookDateTime(commonDateTime.currentDateTime);
         } catch (Exception e)
         {
             ExLog.e(e.toString());

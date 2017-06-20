@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
+import com.daily.dailyhotel.entity.CommonDateTime;
 import com.daily.dailyhotel.util.RecentlyPlaceUtil;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.twoheart.dailyhotel.R;
@@ -22,7 +23,6 @@ import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.RecentGourmetParams;
 import com.twoheart.dailyhotel.model.time.GourmetBookingDay;
 import com.twoheart.dailyhotel.model.time.PlaceBookingDay;
-import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.screen.gourmet.detail.GourmetDetailActivity;
@@ -55,9 +55,9 @@ public class RecentGourmetListFragment extends RecentPlacesListFragment
     }
 
     @Override
-    protected void setPlaceBookingDay(TodayDateTime todayDateTime)
+    protected void setPlaceBookingDay(CommonDateTime commonDateTime)
     {
-        if (todayDateTime == null)
+        if (commonDateTime == null)
         {
             return;
         }
@@ -65,7 +65,7 @@ public class RecentGourmetListFragment extends RecentPlacesListFragment
         try
         {
             GourmetBookingDay gourmetBookingDay = new GourmetBookingDay();
-            gourmetBookingDay.setVisitDay(todayDateTime.dailyDateTime);
+            gourmetBookingDay.setVisitDay(commonDateTime.dailyDateTime);
 
             mPlaceBookingDay = gourmetBookingDay;
         } catch (Exception e)

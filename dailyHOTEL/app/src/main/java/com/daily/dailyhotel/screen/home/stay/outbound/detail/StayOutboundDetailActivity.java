@@ -30,7 +30,7 @@ public class StayOutboundDetailActivity extends BaseActivity<StayOutboundDetailP
 
     static final String INTENT_EXTRA_DATA_STAY_INDEX = "stayIndex";
     static final String INTENT_EXTRA_DATA_STAY_NAME = "stayName";
-    static final String INTENT_EXTRA_DATA_URL = "url";
+    static final String INTENT_EXTRA_DATA_IMAGE_URL = "imageUrl";
     static final String INTENT_EXTRA_DATA_CHECK_IN = "checkIn";
     static final String INTENT_EXTRA_DATA_CHECK_OUT = "checkOut";
     static final String INTENT_EXTRA_DATA_NUMBER_OF_ADULTS = "numberOfAdults";
@@ -51,18 +51,18 @@ public class StayOutboundDetailActivity extends BaseActivity<StayOutboundDetailP
      */
     public static Intent newInstance(Context context, int stayIndex, String stayName, String imageUrl//
         , int listPrice, String checkInDateTime, String checkOutDateTime//
-        , int numberOfAdults, ArrayList<Integer> childList, boolean mIsUsedMultiTransition, boolean mCallFromMap)
+        , int numberOfAdults, ArrayList<Integer> childList, boolean isUsedMultiTransition, boolean mCallFromMap)
     {
         Intent intent = new Intent(context, StayOutboundDetailActivity.class);
         intent.putExtra(INTENT_EXTRA_DATA_STAY_INDEX, stayIndex);
         intent.putExtra(INTENT_EXTRA_DATA_STAY_NAME, stayName);
-        intent.putExtra(INTENT_EXTRA_DATA_URL, imageUrl);
+        intent.putExtra(INTENT_EXTRA_DATA_IMAGE_URL, imageUrl);
         intent.putExtra(INTENT_EXTRA_DATA_LIST_PRICE, listPrice);
         intent.putExtra(INTENT_EXTRA_DATA_CHECK_IN, checkInDateTime);
         intent.putExtra(INTENT_EXTRA_DATA_CHECK_OUT, checkOutDateTime);
         intent.putExtra(INTENT_EXTRA_DATA_NUMBER_OF_ADULTS, numberOfAdults);
         intent.putExtra(INTENT_EXTRA_DATA_CHILD_LIST, childList);
-        intent.putExtra(INTENT_EXTRA_DATA_MULTITRANSITION, mIsUsedMultiTransition);
+        intent.putExtra(INTENT_EXTRA_DATA_MULTITRANSITION, isUsedMultiTransition);
         intent.putExtra(INTENT_EXTRA_DATA_CALL_FROM_MAP, mCallFromMap);
         return intent;
     }
