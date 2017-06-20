@@ -8,6 +8,7 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.transition.Transition;
 import android.transition.TransitionSet;
+import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.animation.LinearInterpolator;
 import android.widget.Toast;
@@ -969,7 +970,10 @@ public class GourmetDetailActivity extends PlaceDetailActivity
 
         if (mPlaceDetailLayout != null)
         {
-            ((GourmetDetailLayout) mPlaceDetailLayout).setDetail(gourmetBookingDay, gourmetDetail, mPlaceReviewScores, mCurrentImage);
+            DisplayMetrics displayMetrics = new DisplayMetrics();
+            getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+            ((GourmetDetailLayout) mPlaceDetailLayout).setDetail(gourmetBookingDay, gourmetDetail//
+                , mPlaceReviewScores, mCurrentImage, displayMetrics.densityDpi);
         }
 
         if (mFirstCheckPrice == false)
@@ -1346,6 +1350,17 @@ public class GourmetDetailActivity extends PlaceDetailActivity
             recordAnalyticsGourmetDetail(AnalyticsManager.Screen.DAILYGOURMET_DETAIL_TICKETTYPE, (GourmetBookingDay) mPlaceBookingDay, (GourmetDetail) mPlaceDetail);
             AnalyticsManager.getInstance(GourmetDetailActivity.this).recordEvent(AnalyticsManager.Category.GOURMET_BOOKINGS//
                 , AnalyticsManager.Action.TICKET_TYPE_CLICKED, gourmetDetailParams.name, null);
+        }
+
+        @Override
+        public void onProductClick(GourmetProduct gourmetProduct)
+        {
+//            if (lockUiComponentAndIsLockUiComponent() == true)
+//            {
+//                return;
+//            }
+
+            // 메뉴 목록 보여주기
         }
 
         @Override

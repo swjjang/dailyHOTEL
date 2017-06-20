@@ -186,9 +186,9 @@ public abstract class PlaceDetailLayout extends BaseLayout
         mViewPager.setOnPageChangeListener(mOnPageChangeListener);
         mDailyLineIndicator.setOnPageChangeListener(mOnPageChangeListener);
 
-        ViewGroup.LayoutParams layoutParams = mViewPager.getLayoutParams();
-        layoutParams.height = getImageLayoutHeight(mContext);
-        mViewPager.setLayoutParams(layoutParams);
+//        ViewGroup.LayoutParams layoutParams = mViewPager.getLayoutParams();
+//        layoutParams.height = getImageLayoutHeight(mContext);
+//        mViewPager.setLayoutParams(layoutParams);
 
         mMoreIconView = view.findViewById(R.id.moreIconView);
         mBottomLayout = view.findViewById(R.id.bottomLayout);
@@ -198,16 +198,16 @@ public abstract class PlaceDetailLayout extends BaseLayout
 
         mWishPopupScrollView = view.findViewById(R.id.wishListPopupScrollView);
         mWishPopupTextView = (DailyTextView) view.findViewById(R.id.wishListPopupView);
-        mWishButtonTextView = (DailyTextView) view.findViewById(R.id.wishListButtonView);
-        mWishButtonTextView.setTag(false);
-        mWishButtonTextView.setOnClickListener(new OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                ((OnEventListener) mOnEventListener).onWishClick();
-            }
-        });
+//        mWishButtonTextView = (DailyTextView) view.findViewById(R.id.wishListButtonView);
+//        mWishButtonTextView.setTag(false);
+//        mWishButtonTextView.setOnClickListener(new OnClickListener()
+//        {
+//            @Override
+//            public void onClick(View v)
+//            {
+//                ((OnEventListener) mOnEventListener).onWishClick();
+//            }
+//        });
 
         setBookingStatus(STATUS_NONE);
         showWishButton();
@@ -221,10 +221,10 @@ public abstract class PlaceDetailLayout extends BaseLayout
             setTransVisibility(View.VISIBLE);
             mTransTitleLayout.setVisibility(View.VISIBLE);
 
-            mTransSimpleDraweeView.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, getImageLayoutHeight(mContext)));
+//            mTransSimpleDraweeView.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, getImageLayoutHeight(mContext)));
             mTransSimpleDraweeView.setTransitionName(mContext.getString(R.string.transition_place_image));
 
-            mTransGradientBottomView.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, getImageLayoutHeight(mContext)));
+//            mTransGradientBottomView.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, getImageLayoutHeight(mContext)));
             mTransGradientBottomView.setTransitionName(mContext.getString(R.string.transition_gradient_bottom_view));
             mTransGradientBottomView.setBackground(makeShaderFactory());
 
@@ -483,26 +483,26 @@ public abstract class PlaceDetailLayout extends BaseLayout
 
     public void setWishButtonSelected(boolean isSelected)
     {
-        int imageResId = isSelected == true ? R.drawable.ic_heart_fill_s : R.drawable.ic_heart_stroke_s;
-        mWishButtonTextView.setCompoundDrawablesWithIntrinsicBounds(0, imageResId, 0, 0);
-        mWishButtonTextView.setTag(isSelected);
+//        int imageResId = isSelected == true ? R.drawable.ic_heart_fill_s : R.drawable.ic_heart_stroke_s;
+//        mWishButtonTextView.setCompoundDrawablesWithIntrinsicBounds(0, imageResId, 0, 0);
+//        mWishButtonTextView.setTag(isSelected);
     }
 
     public void setWishButtonCount(int count)
     {
-        String buttonText;
-        if (count <= 0)
-        {
-            buttonText = mContext.getResources().getString(R.string.label_wishlist);
-        } else if (count > 9999)
-        {
-            buttonText = mContext.getResources().getString(R.string.wishlist_count_over_10_thousand);
-        } else
-        {
-            buttonText = mContext.getResources().getString(R.string.wishlist_count_format, count);
-        }
-
-        mWishButtonTextView.setText(buttonText);
+//        String buttonText;
+//        if (count <= 0)
+//        {
+//            buttonText = mContext.getResources().getString(R.string.label_wishlist);
+//        } else if (count > 9999)
+//        {
+//            buttonText = mContext.getResources().getString(R.string.wishlist_count_over_10_thousand);
+//        } else
+//        {
+//            buttonText = mContext.getResources().getString(R.string.wishlist_count_format, count);
+//        }
+//
+//        mWishButtonTextView.setText(buttonText);
     }
 
     public void setUpdateWishPopup(final WishPopupState state)
@@ -598,110 +598,110 @@ public abstract class PlaceDetailLayout extends BaseLayout
 
     public void showWishButton()
     {
-        if (mBookingTextViewAnimator != null && mBookingTextViewAnimator.isRunning() == true)
-        {
-            mBookingTextViewAnimator.cancel();
-        }
-
-        if (mBookingTextView == null)
-        {
-            return;
-        }
-
-        final int end = mContext.getResources().getDimensionPixelOffset(R.dimen.detail_button_max_left_margin);
-
-        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mBookingTextView.getLayoutParams();
-        params.leftMargin = end;
-        mBookingTextView.setLayoutParams(params);
+//        if (mBookingTextViewAnimator != null && mBookingTextViewAnimator.isRunning() == true)
+//        {
+//            mBookingTextViewAnimator.cancel();
+//        }
+//
+//        if (mBookingTextView == null)
+//        {
+//            return;
+//        }
+//
+//        final int end = mContext.getResources().getDimensionPixelOffset(R.dimen.detail_button_max_left_margin);
+//
+//        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mBookingTextView.getLayoutParams();
+//        params.leftMargin = end;
+//        mBookingTextView.setLayoutParams(params);
     }
 
     public void hideWishButton()
     {
-        if (mBookingTextViewAnimator != null && mBookingTextViewAnimator.isRunning() == true)
-        {
-            mBookingTextViewAnimator.cancel();
-        }
+//        if (mBookingTextViewAnimator != null && mBookingTextViewAnimator.isRunning() == true)
+//        {
+//            mBookingTextViewAnimator.cancel();
+//        }
 
-        final int end = mContext.getResources().getDimensionPixelOffset(R.dimen.detail_button_min_left_margin);
-
-        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mBookingTextView.getLayoutParams();
-        params.leftMargin = end;
-        mBookingTextView.setLayoutParams(params);
+//        final int end = mContext.getResources().getDimensionPixelOffset(R.dimen.detail_button_min_left_margin);
+//
+//        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mBookingTextView.getLayoutParams();
+//        params.leftMargin = end;
+//        mBookingTextView.setLayoutParams(params);
     }
 
     public void showWishButtonAnimation()
     {
-        final int start = mContext.getResources().getDimensionPixelOffset(R.dimen.detail_button_min_left_margin);
-        final int end = mContext.getResources().getDimensionPixelOffset(R.dimen.detail_button_max_left_margin);
-
-        startWishButtonAnimation(start, end);
+//        final int start = mContext.getResources().getDimensionPixelOffset(R.dimen.detail_button_min_left_margin);
+//        final int end = mContext.getResources().getDimensionPixelOffset(R.dimen.detail_button_max_left_margin);
+//
+//        startWishButtonAnimation(start, end);
     }
 
     public void hideWishButtonAnimation()
     {
-        final int start = mContext.getResources().getDimensionPixelOffset(R.dimen.detail_button_max_left_margin);
-        final int end = mContext.getResources().getDimensionPixelOffset(R.dimen.detail_button_min_left_margin);
-
-        startWishButtonAnimation(start, end);
+//        final int start = mContext.getResources().getDimensionPixelOffset(R.dimen.detail_button_max_left_margin);
+//        final int end = mContext.getResources().getDimensionPixelOffset(R.dimen.detail_button_min_left_margin);
+//
+//        startWishButtonAnimation(start, end);
     }
 
     private void startWishButtonAnimation(final int start, final int end)
     {
-        if (mBookingTextViewAnimator != null && mBookingTextViewAnimator.isRunning() == true)
-        {
-            mBookingTextViewAnimator.cancel();
-        }
-
-        mBookingTextViewAnimator = ValueAnimator.ofInt(start, end);
-        mBookingTextViewAnimator.setInterpolator(new LinearInterpolator());
-        mBookingTextViewAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener()
-        {
-            @Override
-            public void onAnimationUpdate(ValueAnimator valueAnimator)
-            {
-                int value = (int) valueAnimator.getAnimatedValue();
-                RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mBookingTextView.getLayoutParams();
-                params.leftMargin = value;
-                mBookingTextView.setLayoutParams(params);
-            }
-        });
-
-        mBookingTextViewAnimator.addListener(new Animator.AnimatorListener()
-        {
-            @Override
-            public void onAnimationStart(Animator animation)
-            {
-                RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mBookingTextView.getLayoutParams();
-                params.leftMargin = start;
-                mBookingTextView.setLayoutParams(params);
-            }
-
-            @Override
-            public void onAnimationEnd(Animator animation)
-            {
-                mBookingTextViewAnimator.removeAllListeners();
-                mBookingTextViewAnimator.removeAllUpdateListeners();
-                mBookingTextViewAnimator = null;
-
-                RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mBookingTextView.getLayoutParams();
-                params.leftMargin = end;
-                mBookingTextView.setLayoutParams(params);
-            }
-
-            @Override
-            public void onAnimationCancel(Animator animation)
-            {
-            }
-
-            @Override
-            public void onAnimationRepeat(Animator animation)
-            {
-
-            }
-        });
-
-        mBookingTextViewAnimator.setDuration(BOOKING_TEXT_VIEW_DURATION);
-        mBookingTextViewAnimator.start();
+//        if (mBookingTextViewAnimator != null && mBookingTextViewAnimator.isRunning() == true)
+//        {
+//            mBookingTextViewAnimator.cancel();
+//        }
+//
+//        mBookingTextViewAnimator = ValueAnimator.ofInt(start, end);
+//        mBookingTextViewAnimator.setInterpolator(new LinearInterpolator());
+//        mBookingTextViewAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener()
+//        {
+//            @Override
+//            public void onAnimationUpdate(ValueAnimator valueAnimator)
+//            {
+//                int value = (int) valueAnimator.getAnimatedValue();
+//                RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mBookingTextView.getLayoutParams();
+//                params.leftMargin = value;
+//                mBookingTextView.setLayoutParams(params);
+//            }
+//        });
+//
+//        mBookingTextViewAnimator.addListener(new Animator.AnimatorListener()
+//        {
+//            @Override
+//            public void onAnimationStart(Animator animation)
+//            {
+//                RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mBookingTextView.getLayoutParams();
+//                params.leftMargin = start;
+//                mBookingTextView.setLayoutParams(params);
+//            }
+//
+//            @Override
+//            public void onAnimationEnd(Animator animation)
+//            {
+//                mBookingTextViewAnimator.removeAllListeners();
+//                mBookingTextViewAnimator.removeAllUpdateListeners();
+//                mBookingTextViewAnimator = null;
+//
+//                RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mBookingTextView.getLayoutParams();
+//                params.leftMargin = end;
+//                mBookingTextView.setLayoutParams(params);
+//            }
+//
+//            @Override
+//            public void onAnimationCancel(Animator animation)
+//            {
+//            }
+//
+//            @Override
+//            public void onAnimationRepeat(Animator animation)
+//            {
+//
+//            }
+//        });
+//
+//        mBookingTextViewAnimator.setDuration(BOOKING_TEXT_VIEW_DURATION);
+//        mBookingTextViewAnimator.start();
     }
 
     private OnPageChangeListener mOnPageChangeListener = new OnPageChangeListener()

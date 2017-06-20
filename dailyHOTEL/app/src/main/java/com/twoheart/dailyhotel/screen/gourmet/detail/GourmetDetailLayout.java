@@ -38,6 +38,8 @@ public class GourmetDetailLayout extends PlaceDetailLayout
     {
         void onProductListClick();
 
+        void onProductClick(GourmetProduct gourmetProduct);
+
         void onReviewClick();
     }
 
@@ -82,7 +84,8 @@ public class GourmetDetailLayout extends PlaceDetailLayout
         }
     }
 
-    public void setDetail(GourmetBookingDay gourmetBookingDay, GourmetDetail gourmetDetail, PlaceReviewScores placeReviewScores, int imagePosition)
+    public void setDetail(GourmetBookingDay gourmetBookingDay, GourmetDetail gourmetDetail//
+        , PlaceReviewScores placeReviewScores, int imagePosition, int dpi)
     {
         if (gourmetBookingDay == null || gourmetDetail == null || gourmetDetail.getGourmetDetailParmas() == null)
         {
@@ -111,6 +114,7 @@ public class GourmetDetailLayout extends PlaceDetailLayout
         mGourmetDetailItemLayout.setOnEventListener((GourmetDetailLayout.OnEventListener) mOnEventListener);
         mGourmetDetailItemLayout.setEmptyViewOnTouchListener(mEmptyViewOnTouchListener);
         mGourmetDetailItemLayout.setData(gourmetBookingDay, (GourmetDetail) mPlaceDetail, placeReviewScores);
+        mGourmetDetailItemLayout.setDpi(dpi);
 
         mScrollView.removeAllViews();
         mScrollView.addView(mGourmetDetailItemLayout);
@@ -183,7 +187,7 @@ public class GourmetDetailLayout extends PlaceDetailLayout
             {
                 mBookingTextView.setVisibility(View.VISIBLE);
                 mSoldoutTextView.setVisibility(View.GONE);
-                mWishButtonTextView.setVisibility(View.VISIBLE);
+//                mWishButtonTextView.setVisibility(View.VISIBLE);
                 break;
             }
 
@@ -191,7 +195,7 @@ public class GourmetDetailLayout extends PlaceDetailLayout
             {
                 mBookingTextView.setVisibility(View.VISIBLE);
                 mSoldoutTextView.setVisibility(View.GONE);
-                mWishButtonTextView.setVisibility(View.VISIBLE);
+//                mWishButtonTextView.setVisibility(View.VISIBLE);
 
                 mBookingTextView.setText(R.string.act_hotel_search_ticket);
                 break;
@@ -201,7 +205,7 @@ public class GourmetDetailLayout extends PlaceDetailLayout
             {
                 mBookingTextView.setVisibility(View.VISIBLE);
                 mSoldoutTextView.setVisibility(View.GONE);
-                mWishButtonTextView.setVisibility(View.VISIBLE);
+//                mWishButtonTextView.setVisibility(View.VISIBLE);
 
                 mBookingTextView.setText(R.string.act_hotel_booking);
                 break;
@@ -211,7 +215,7 @@ public class GourmetDetailLayout extends PlaceDetailLayout
             {
                 mBookingTextView.setVisibility(View.GONE);
                 mSoldoutTextView.setVisibility(View.VISIBLE);
-                mWishButtonTextView.setVisibility(View.VISIBLE);
+//                mWishButtonTextView.setVisibility(View.VISIBLE);
                 break;
             }
         }

@@ -372,7 +372,7 @@ public class StayDetailLayout extends PlaceDetailLayout implements RadioGroup.On
             {
                 mBookingTextView.setVisibility(View.VISIBLE);
                 mSoldoutTextView.setVisibility(View.GONE);
-                mWishButtonTextView.setVisibility(View.VISIBLE);
+//                mWishButtonTextView.setVisibility(View.VISIBLE);
                 break;
             }
 
@@ -380,7 +380,7 @@ public class StayDetailLayout extends PlaceDetailLayout implements RadioGroup.On
             {
                 mBookingTextView.setVisibility(View.VISIBLE);
                 mSoldoutTextView.setVisibility(View.GONE);
-                mWishButtonTextView.setVisibility(View.VISIBLE);
+//                mWishButtonTextView.setVisibility(View.VISIBLE);
 
                 mBookingTextView.setText(R.string.act_hotel_search_room);
                 break;
@@ -390,7 +390,7 @@ public class StayDetailLayout extends PlaceDetailLayout implements RadioGroup.On
             {
                 mBookingTextView.setVisibility(View.VISIBLE);
                 mSoldoutTextView.setVisibility(View.GONE);
-                mWishButtonTextView.setVisibility(View.VISIBLE);
+//                mWishButtonTextView.setVisibility(View.VISIBLE);
 
                 mBookingTextView.setText(R.string.act_hotel_booking);
                 break;
@@ -400,7 +400,7 @@ public class StayDetailLayout extends PlaceDetailLayout implements RadioGroup.On
             {
                 mBookingTextView.setVisibility(View.GONE);
                 mSoldoutTextView.setVisibility(View.VISIBLE);
-                mWishButtonTextView.setVisibility(View.VISIBLE);
+//                mWishButtonTextView.setVisibility(View.VISIBLE);
                 break;
             }
         }
