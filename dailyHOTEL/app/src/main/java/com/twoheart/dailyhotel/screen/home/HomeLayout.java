@@ -5,6 +5,7 @@ import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.content.Context;
+import android.databinding.DataBindingUtil;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
@@ -25,7 +26,6 @@ import android.text.style.UnderlineSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -34,12 +34,12 @@ import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.util.FontManager;
 import com.daily.base.util.ScreenUtils;
-import com.daily.base.widget.DailyButton;
 import com.daily.base.widget.DailyTextView;
 import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.databinding.ListRowHomeStampDataBinding;
 import com.twoheart.dailyhotel.deprecated.DeviceResolutionUtil;
 import com.twoheart.dailyhotel.model.DailyCategoryType;
 import com.twoheart.dailyhotel.network.model.Event;
@@ -94,7 +94,8 @@ public class HomeLayout extends BaseBlurLayout
     View mScrollButtonLayout;
     private HomeCategoryLayout mCategoryLayout;
     View mTextMessageLayout;
-    View mTopButtonLayout, mProviderLayout, mStampLayout;
+    View mTopButtonLayout, mProviderLayout;
+    private ListRowHomeStampDataBinding mListRowHomeStampDataBinding;
     HomeCarouselLayout mRecentListLayout;
     HomeCarouselLayout mWishListLayout;
     HomeRecommendationLayout mHomeRecommendationLayout;
@@ -517,18 +518,15 @@ public class HomeLayout extends BaseBlurLayout
             return;
         }
 
-        mStampLayout = LayoutInflater.from(mContext).inflate(R.layout.list_row_home_stamp_layout, layout);
+        mListRowHomeStampDataBinding = DataBindingUtil.inflate(LayoutInflater.from(mContext), R.layout.list_row_home_stamp_data, layout, true);
 
-        TextView message1TextView = (TextView) mStampLayout.findViewById(R.id.message1TextView);
-        TextView message2TextView = (TextView) mStampLayout.findViewById(R.id.message2TextView);
-
-        message1TextView.setText(DailyPreference.getInstance(mContext).getRemoteConfigStampHomeMessage1());
+        mListRowHomeStampDataBinding.message1TextView.setText(DailyPreference.getInstance(mContext).getRemoteConfigStampHomeMessage1());
 
         SpannableString spannableString = new SpannableString(DailyPreference.getInstance(mContext).getRemoteConfigStampHomeMessage2());
         spannableString.setSpan(new UnderlineSpan(), 0, spannableString.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
-        message2TextView.setText(spannableString);
-        message2TextView.setOnClickListener(new View.OnClickListener()
+        mListRowHomeStampDataBinding.message2TextView.setText(spannableString);
+        mListRowHomeStampDataBinding.message2TextView.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
@@ -537,7 +535,7 @@ public class HomeLayout extends BaseBlurLayout
             }
         });
 
-        mStampLayout.setVisibility(View.GONE);
+        mListRowHomeStampDataBinding.getRoot().setVisibility(View.GONE);
     }
 
     private void initProviderInfoLayout(LinearLayout layout)
@@ -955,72 +953,63 @@ public class HomeLayout extends BaseBlurLayout
 
     public void setStampCount(int count, boolean isError)
     {
-        if (mStampLayout == null)
+        if (mListRowHomeStampDataBinding == null)
         {
             return;
         }
 
         if (isError == true)
         {
-            mStampLayout.setVisibility(View.GONE);
+            mListRowHomeStampDataBinding.getRoot().setVisibility(View.GONE);
 
             setErrorPopupLayout(true);
         } else
         {
-
-            DailyButton nights01TextView = (DailyButton) mStampLayout.findViewById(R.id.nights01TextView);
-            DailyButton nights02TextView = (DailyButton) mStampLayout.findViewById(R.id.nights02TextView);
-            DailyButton nights03TextView = (DailyButton) mStampLayout.findViewById(R.id.nights03TextView);
-            DailyButton nights04TextView = (DailyButton) mStampLayout.findViewById(R.id.nights04TextView);
-            DailyButton nights05TextView = (DailyButton) mStampLayout.findViewById(R.id.nights05TextView);
-            DailyButton nights06TextView = (DailyButton) mStampLayout.findViewById(R.id.nights06TextView);
-            FrameLayout nights07TextView = (FrameLayout) mStampLayout.findViewById(R.id.nights07TextView);
-
             if (count >= 1)
             {
-                nights01TextView.setBackgroundResource(R.drawable.ic_stamp_achieved_01);
-                nights01TextView.setText(null);
+                mListRowHomeStampDataBinding.nights01TextView.setBackgroundResource(R.drawable.ic_stamp_achieved_01);
+                mListRowHomeStampDataBinding.nights01TextView.setText(null);
             }
 
             if (count >= 2)
             {
-                nights02TextView.setBackgroundResource(R.drawable.ic_stamp_achieved_02);
-                nights02TextView.setText(null);
+                mListRowHomeStampDataBinding.nights02TextView.setBackgroundResource(R.drawable.ic_stamp_achieved_02);
+                mListRowHomeStampDataBinding.nights02TextView.setText(null);
             }
 
             if (count >= 3)
             {
-                nights03TextView.setBackgroundResource(R.drawable.ic_stamp_achieved_03);
-                nights03TextView.setText(null);
+                mListRowHomeStampDataBinding.nights03TextView.setBackgroundResource(R.drawable.ic_stamp_achieved_03);
+                mListRowHomeStampDataBinding.nights03TextView.setText(null);
             }
 
             if (count >= 4)
             {
-                nights04TextView.setBackgroundResource(R.drawable.ic_stamp_achieved_04);
-                nights04TextView.setText(null);
+                mListRowHomeStampDataBinding.nights04TextView.setBackgroundResource(R.drawable.ic_stamp_achieved_04);
+                mListRowHomeStampDataBinding.nights04TextView.setText(null);
             }
 
             if (count >= 5)
             {
-                nights05TextView.setBackgroundResource(R.drawable.ic_stamp_achieved_05);
-                nights05TextView.setText(null);
+                mListRowHomeStampDataBinding.nights05TextView.setBackgroundResource(R.drawable.ic_stamp_achieved_05);
+                mListRowHomeStampDataBinding.nights05TextView.setText(null);
             }
 
             if (count >= 6)
             {
-                nights06TextView.setBackgroundResource(R.drawable.ic_stamp_achieved_06);
-                nights06TextView.setText(null);
+                mListRowHomeStampDataBinding.nights06TextView.setBackgroundResource(R.drawable.ic_stamp_achieved_06);
+                mListRowHomeStampDataBinding.nights06TextView.setText(null);
             }
 
             if (count >= 7)
             {
-                nights07TextView.removeAllViews();
-                nights07TextView.setBackgroundResource(R.drawable.ic_stamp_achieved_07);
+                mListRowHomeStampDataBinding.nights07TextView.removeAllViews();
+                mListRowHomeStampDataBinding.nights07TextView.setBackgroundResource(R.drawable.ic_stamp_achieved_07);
             }
 
-            if (mStampLayout.getVisibility() != View.VISIBLE)
+            if (mListRowHomeStampDataBinding.getRoot().getVisibility() != View.VISIBLE)
             {
-                mStampLayout.setVisibility(View.VISIBLE);
+                mListRowHomeStampDataBinding.getRoot().setVisibility(View.VISIBLE);
             }
         }
     }
