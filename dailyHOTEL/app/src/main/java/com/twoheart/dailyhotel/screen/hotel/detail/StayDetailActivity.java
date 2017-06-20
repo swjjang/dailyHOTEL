@@ -547,6 +547,9 @@ public class StayDetailActivity extends PlaceDetailActivity
     {
         setContentView(mPlaceDetailLayout.onCreateView(R.layout.activity_placedetail));
 
+        mPlaceDetailLayout.setStatusBarHeight(this);
+        mPlaceDetailLayout.setIsUsedMultiTransitions(mIsUsedMultiTransition);
+
         if (mIsDeepLink == false && mIsUsedMultiTransition == true)
         {
             initTransLayout(placeName, imageUrl, grade, isFromMap);
@@ -554,9 +557,6 @@ public class StayDetailActivity extends PlaceDetailActivity
         {
             mPlaceDetailLayout.setDefaultImage(imageUrl);
         }
-
-        mPlaceDetailLayout.setStatusBarHeight(this);
-        mPlaceDetailLayout.setIsUsedMultiTransitions(mIsUsedMultiTransition);
 
         setLockUICancelable(true);
         initToolbar(placeName);
