@@ -522,10 +522,7 @@ public class HomeLayout extends BaseBlurLayout
 
         mListRowHomeStampDataBinding.message1TextView.setText(DailyPreference.getInstance(mContext).getRemoteConfigStampHomeMessage1());
 
-        SpannableString spannableString = new SpannableString(DailyPreference.getInstance(mContext).getRemoteConfigStampHomeMessage2());
-        spannableString.setSpan(new UnderlineSpan(), 0, spannableString.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-        mListRowHomeStampDataBinding.message2TextView.setText(spannableString);
+        mListRowHomeStampDataBinding.message2TextView.setText(DailyPreference.getInstance(mContext).getRemoteConfigStampHomeMessage2());
         mListRowHomeStampDataBinding.message2TextView.setOnClickListener(new View.OnClickListener()
         {
             @Override
