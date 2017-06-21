@@ -15,7 +15,6 @@ import com.twoheart.dailyhotel.network.model.Status;
 import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
-import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
@@ -400,13 +399,7 @@ public class MainNetworkController extends BaseNetworkController
 
                         if (DailyTextUtils.isTextEmpty(userIndex) == true)
                         {
-                            if (Constants.DEBUG == true)
-                            {
-                                ExLog.w(dataJSONObject.toString());
-                            } else
-                            {
-                                Crashlytics.logException(new RuntimeException("JSON USER Check : " + dataJSONObject.toString(1)));
-                            }
+                            Crashlytics.logException(new RuntimeException("JSON USER Check : " + dataJSONObject.toString(1)));
                         }
 
                         AnalyticsManager.getInstance(mContext).startApplication();

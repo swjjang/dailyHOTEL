@@ -50,36 +50,29 @@ public class DailyHotel extends android.support.multidex.MultiDexApplication imp
         // URL 만들때 사용
         //        com.twoheart.dailyhotel.util.Crypto.getUrlEncoder("");
 
-        if (DEBUG == false)
-        {
-            final Thread.UncaughtExceptionHandler uncaughtExceptionHandler = Thread.getDefaultUncaughtExceptionHandler();
+        final Thread.UncaughtExceptionHandler uncaughtExceptionHandler = Thread.getDefaultUncaughtExceptionHandler();
 
-            Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler()
+        Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler()
+        {
+            @Override
+            public void uncaughtException(Thread thread, Throwable ex)
             {
-                @Override
-                public void uncaughtException(Thread thread, Throwable ex)
+                if (ex.getClass().equals(OutOfMemoryError.class) == true)
                 {
-                    if (ex.getClass().equals(OutOfMemoryError.class) == true)
+                    Util.finishOutOfMemory(getApplicationContext());
+                } else
+                {
+                    if (uncaughtExceptionHandler != null)
                     {
-                        Util.finishOutOfMemory(getApplicationContext());
-                    } else
-                    {
-                        if (uncaughtExceptionHandler != null)
-                        {
-                            uncaughtExceptionHandler.uncaughtException(thread, ex);
-                        }
+                        uncaughtExceptionHandler.uncaughtException(thread, ex);
                     }
-
-                    //                    Util.restartExitApp(getApplicationContext());
                 }
-            });
 
-            Fabric.with(this, new Crashlytics());
-        } else
-        {
-            //            Stetho.initializeWithDefaults(this);
-            //            LeakCanary.install(this);
-        }
+                //                    Util.restartExitApp(getApplicationContext());
+            }
+        });
+
+        Fabric.with(this, new Crashlytics());
 
         mInstance = this;
 

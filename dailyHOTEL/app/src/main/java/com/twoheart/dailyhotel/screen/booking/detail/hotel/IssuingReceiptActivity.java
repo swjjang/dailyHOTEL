@@ -284,7 +284,7 @@ public class IssuingReceiptActivity extends BaseActivity
 
             mReservationIndex = jsonObject.getString("reservation_idx");
 
-            if (Constants.DEBUG == false && DailyTextUtils.isTextEmpty(mReservationIndex) == true)
+            if (DailyTextUtils.isTextEmpty(mReservationIndex) == true)
             {
                 Crashlytics.logException(new NullPointerException("IssuingReceiptActivity : mReservationIndex == null"));
             }

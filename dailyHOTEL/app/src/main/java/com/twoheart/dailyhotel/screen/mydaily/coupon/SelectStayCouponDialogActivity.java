@@ -13,7 +13,6 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Coupon;
 import com.twoheart.dailyhotel.model.time.StayBookingDay;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
-import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
@@ -210,10 +209,7 @@ public class SelectStayCouponDialogActivity extends BaseActivity
             }
         } catch (Exception e)
         {
-            if (Constants.DEBUG == false)
-            {
-                Crashlytics.logException(e);
-            }
+            Crashlytics.logException(e);
         }
     }
 
@@ -440,10 +436,7 @@ public class SelectStayCouponDialogActivity extends BaseActivity
                 }
             } catch (ParseException e)
             {
-                if (Constants.DEBUG == false)
-                {
-                    Crashlytics.log("Select Coupon::coupon.validTo: " + (coupon != null ? coupon.validTo : ""));
-                }
+                Crashlytics.log("Select Coupon::coupon.validTo: " + (coupon != null ? coupon.validTo : ""));
                 ExLog.d(e.toString());
             } catch (Exception e)
             {

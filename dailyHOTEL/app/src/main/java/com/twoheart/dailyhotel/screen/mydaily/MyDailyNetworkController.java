@@ -7,7 +7,6 @@ import com.daily.base.util.ExLog;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
-import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 
 import org.json.JSONObject;
@@ -238,11 +237,7 @@ public class MyDailyNetworkController extends BaseNetworkController
                     }
                 } catch (ParseException e)
                 {
-                    if (Constants.DEBUG == false)
-                    {
-                        Crashlytics.log("Url: " + call.request().url().toString());
-                    }
-
+                    Crashlytics.log("Url: " + call.request().url().toString());
                     mOnNetworkControllerListener.onError(e);
                 } catch (Exception e)
                 {

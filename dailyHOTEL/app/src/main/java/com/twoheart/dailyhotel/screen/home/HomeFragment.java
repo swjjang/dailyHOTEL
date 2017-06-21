@@ -1862,14 +1862,8 @@ public class HomeFragment extends BaseMenuNavigationFragment
             {
                 DailyToast.showToast(getActivity(), getString(R.string.act_base_network_connect), DailyToast.LENGTH_LONG);
 
-                if (Constants.DEBUG == false)
-                {
-                    Crashlytics.log(httpException.response().raw().request().url().toString());
-                    Crashlytics.logException(throwable);
-                } else
-                {
-                    ExLog.e(httpException.response().raw().request().url().toString() + ", " + httpException.toString());
-                }
+                Crashlytics.log(httpException.response().raw().request().url().toString());
+                Crashlytics.logException(throwable);
             }
         } else
         {

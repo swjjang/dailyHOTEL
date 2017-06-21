@@ -119,20 +119,12 @@ public class GourmetListNetworkController extends BaseNetworkController
                     {
                         String message = responseJSONObject.getString("msg");
 
-                        if (Constants.DEBUG == false)
-                        {
-                            Crashlytics.log(call.request().url().toString());
-                        }
-
+                        Crashlytics.log(call.request().url().toString());
                         mOnNetworkControllerListener.onErrorPopupMessage(msgCode, message);
                     }
                 } catch (Exception e)
                 {
-                    if (Constants.DEBUG == false)
-                    {
-                        Crashlytics.log(call.request().url().toString());
-                    }
-
+                    Crashlytics.log(call.request().url().toString());
                     mOnNetworkControllerListener.onError(e);
                 }
             } else

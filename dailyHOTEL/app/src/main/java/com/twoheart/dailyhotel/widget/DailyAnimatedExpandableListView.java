@@ -34,7 +34,6 @@ import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
 
 import com.crashlytics.android.Crashlytics;
-import com.twoheart.dailyhotel.util.Constants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -77,11 +76,8 @@ public class DailyAnimatedExpandableListView extends ExpandableListView
             super.layoutChildren();
         } catch (Exception e)
         {
-            if (Constants.DEBUG == false)
-            {
-                Crashlytics.log("DailyAnimatedExpandableListView");
-                Crashlytics.logException(e);
-            }
+            Crashlytics.log("DailyAnimatedExpandableListView");
+            Crashlytics.logException(e);
         }
     }
 

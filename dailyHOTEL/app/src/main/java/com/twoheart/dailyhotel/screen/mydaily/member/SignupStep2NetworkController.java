@@ -318,13 +318,7 @@ public class SignupStep2NetworkController extends BaseNetworkController
 
                                 if (DailyTextUtils.isTextEmpty(userIndex) == true || DailyTextUtils.isTextEmpty(name) == true)
                                 {
-                                    if (Constants.DEBUG == true)
-                                    {
-                                        ExLog.w(dataJSONObject.toString());
-                                    } else
-                                    {
-                                        Crashlytics.logException(new RuntimeException("JSON USER Check : " + dataJSONObject.toString(1)));
-                                    }
+                                    Crashlytics.logException(new RuntimeException("JSON USER Check : " + dataJSONObject.toString(1)));
                                 }
 
                                 ((OnNetworkControllerListener) mOnNetworkControllerListener).onLogin(String.format(Locale.KOREA, "%s %s", tokenType, accessToken),//

@@ -261,16 +261,13 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
         params.put("arrival_time", Long.toString(gourmetPaymentInformation.ticketTime + DailyCalendar.NINE_HOUR_MILLISECOND));
         params.put("customer_msg", "");
 
-        if (DEBUG == false)
+        if (customer == null)
         {
-            if (customer == null)
-            {
-                Crashlytics.log("GourmetPaymentActivity::requestEasyPayment :: customer is null");
-            } else if (DailyTextUtils.isTextEmpty(customer.getName()) == true)
-            {
-                Crashlytics.log("GourmetPaymentActivity::requestEasyPayment :: name=" //
-                    + customer.getName() + " , userIndex=" + customer.getUserIdx() + " , user_email=" + customer.getEmail());
-            }
+            Crashlytics.log("GourmetPaymentActivity::requestEasyPayment :: customer is null");
+        } else if (DailyTextUtils.isTextEmpty(customer.getName()) == true)
+        {
+            Crashlytics.log("GourmetPaymentActivity::requestEasyPayment :: name=" //
+                + customer.getName() + " , userIndex=" + customer.getUserIdx() + " , user_email=" + customer.getEmail());
         }
 
         DailyMobileAPI.getInstance(this).requestGourmetPayment(mNetworkTag, params, mPaymentEasyCreditCardCallback);
@@ -329,16 +326,13 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
         params.put("arrival_time", Long.toString(gourmetPaymentInformation.ticketTime + DailyCalendar.NINE_HOUR_MILLISECOND));
         params.put("customer_msg", "");
 
-        if (DEBUG == false)
+        if (customer == null)
         {
-            if (customer == null)
-            {
-                Crashlytics.log("GourmetPaymentActivity::requestEasyPayment :: customer is null");
-            } else if (DailyTextUtils.isTextEmpty(customer.getName()) == true)
-            {
-                Crashlytics.log("GourmetPaymentActivity::requestEasyPayment :: name=" //
-                    + customer.getName() + " , userIndex=" + customer.getUserIdx() + " , user_email=" + customer.getEmail());
-            }
+            Crashlytics.log("GourmetPaymentActivity::requestEasyPayment :: customer is null");
+        } else if (DailyTextUtils.isTextEmpty(customer.getName()) == true)
+        {
+            Crashlytics.log("GourmetPaymentActivity::requestEasyPayment :: name=" //
+                + customer.getName() + " , userIndex=" + customer.getUserIdx() + " , user_email=" + customer.getEmail());
         }
 
         //        DailyMobileAPI.getInstance(this).requestGourmetFreePayment(mNetworkTag, params, mPaymentEasyCreditCardCallback);
@@ -734,10 +728,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
 
             if (customer == null || DailyTextUtils.isTextEmpty(customer.getName(), customer.getUserIdx()) == true)
             {
-                if (DEBUG == false)
-                {
-                    Crashlytics.log("GourmetPaymentActivity - onActivityPaymentResult : Clear mPaymentInformation");
-                }
+                Crashlytics.log("GourmetPaymentActivity - onActivityPaymentResult : Clear mPaymentInformation");
 
                 mPaymentInformation = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PAYMENTINFORMATION);
             }
@@ -1758,13 +1749,10 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
                         , gourmetPaymentInformation.getTicket().saleIdx//
                         , mGourmetPaymentInformationCallback);
 
-                    if (DEBUG == false)
+                    if (DailyTextUtils.isTextEmpty(name) == true)
                     {
-                        if (DailyTextUtils.isTextEmpty(name) == true)
-                        {
-                            Crashlytics.log("GourmetPaymentActivity::requestUserInformationForPayment :: name="//
-                                + name + " , userIndex=" + userIndex + " , user_email=" + email);
-                        }
+                        Crashlytics.log("GourmetPaymentActivity::requestUserInformationForPayment :: name="//
+                            + name + " , userIndex=" + userIndex + " , user_email=" + email);
                     }
                 } catch (Exception e)
                 {
