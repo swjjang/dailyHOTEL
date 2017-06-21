@@ -48,8 +48,7 @@ public class RecentlyPlaceUtil
     {
         IB_STAY,
         GOURMET,
-        OB_STAY,
-        ALL_STAY
+        OB_STAY
     }
 
     public static void migrateRecentlyPlaces(Context context)

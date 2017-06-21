@@ -8,11 +8,15 @@ import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.domain.RecentlyInterface;
 import com.daily.dailyhotel.entity.StayOutbounds;
 import com.daily.dailyhotel.repository.local.model.RecentlyRealmObject;
+import com.daily.dailyhotel.repository.remote.model.GourmetListData;
 import com.daily.dailyhotel.repository.remote.model.StayListData;
 import com.daily.dailyhotel.repository.remote.model.StayOutboundsData;
 import com.daily.dailyhotel.util.RecentlyPlaceUtil;
+import com.twoheart.dailyhotel.model.Gourmet;
+import com.twoheart.dailyhotel.model.RecentGourmetParams;
 import com.twoheart.dailyhotel.model.RecentStayParams;
 import com.twoheart.dailyhotel.model.Stay;
+import com.twoheart.dailyhotel.model.time.GourmetBookingDay;
 import com.twoheart.dailyhotel.model.time.StayBookingDay;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.network.dto.BaseDto;
@@ -129,7 +133,7 @@ public class RecentlyRemoteImpl implements RecentlyInterface
     @Override
     public Observable<List<Stay>> getStayInboundRecentlyList(StayBookingDay stayBookingDay)
     {
-        String targetIndices = RecentlyPlaceUtil.getTargetIndices(RecentlyPlaceUtil.ServiceType.IB_STAY, 10000);
+        String targetIndices = RecentlyPlaceUtil.getTargetIndices(RecentlyPlaceUtil.ServiceType.IB_STAY, RecentlyPlaceUtil.MAX_RECENT_PLACE_COUNT);
 
         if (TextUtils.isEmpty(targetIndices) == true)
         {
@@ -156,7 +160,7 @@ public class RecentlyRemoteImpl implements RecentlyInterface
                             stayList = stayListDataBaseDto.data.getStayList();
                             if (stayList == null || stayList.size() == 0)
                             {
-                                stayList = new ArrayList<Stay>();
+                                stayList = new ArrayList<>();
                             }
                         } else
                         {
@@ -168,6 +172,52 @@ public class RecentlyRemoteImpl implements RecentlyInterface
                     }
 
                     return stayList;
+                }
+            }).observeOn(AndroidSchedulers.mainThread());
+    }
+
+    @Override
+    public Observable<List<Gourmet>> getGourmetRecentlyList(GourmetBookingDay gourmetBookingDay)
+    {
+        String targetIndices = RecentlyPlaceUtil.getTargetIndices(RecentlyPlaceUtil.ServiceType.GOURMET, RecentlyPlaceUtil.MAX_RECENT_PLACE_COUNT);
+
+        if (TextUtils.isEmpty(targetIndices) == true)
+        {
+            targetIndices = "0";
+        }
+
+        RecentGourmetParams params = new RecentGourmetParams();
+        params.setGourmetBookingDay(gourmetBookingDay);
+        params.setTargetIndices(targetIndices);
+
+        return DailyMobileAPI.getInstance(mContext) //
+            .getGourmetList(params.toParamsMap(), params.getCategoryList(), params.getTimeList(), params.getLuxuryList()) //
+            .map(new Function<BaseDto<GourmetListData>, List<Gourmet>>()
+            {
+                @Override
+                public List<Gourmet> apply(@NonNull BaseDto<GourmetListData> gourmetListDataBaseDto) throws Exception
+                {
+                    List<Gourmet> gourmetList = null;
+
+                    if (gourmetListDataBaseDto != null)
+                    {
+                        if (gourmetListDataBaseDto.msgCode == 100 && gourmetListDataBaseDto.data != null)
+                        {
+                            gourmetList = gourmetListDataBaseDto.data.getGourmetList(mContext);
+                            if (gourmetList == null || gourmetList.size() == 0)
+                            {
+                                gourmetList = new ArrayList<>();
+                            }
+                        } else
+                        {
+                            throw new BaseException(gourmetListDataBaseDto.msgCode, gourmetListDataBaseDto.msg);
+                        }
+                    } else
+                    {
+                        throw new BaseException(-1, null);
+                    }
+
+                    return gourmetList;
                 }
             }).observeOn(AndroidSchedulers.mainThread());
     }

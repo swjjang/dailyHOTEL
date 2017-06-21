@@ -217,13 +217,11 @@ public class RecentPlacesTabActivity extends BaseActivity
         mFragmentList = new ArrayList<>();
 
         mRecentStayListFragment = new RecentStayListFragment();
-        mRecentStayListFragment.setServiceType(RecentlyPlaceUtil.ServiceType.ALL_STAY);
         mRecentStayListFragment.setRecentPlaceListFragmentListener(mRecentPlaceListFragmentListener);
 
         mFragmentList.add(mRecentStayListFragment);
 
         mRecentGourmetListFragment = new RecentGourmetListFragment();
-        mRecentGourmetListFragment.setServiceType(RecentlyPlaceUtil.ServiceType.GOURMET);
         mRecentGourmetListFragment.setRecentPlaceListFragmentListener(mRecentPlaceListFragmentListener);
 
         mFragmentList.add(mRecentGourmetListFragment);

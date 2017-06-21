@@ -30,7 +30,6 @@ import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.model.time.PlaceBookingDay;
 import com.twoheart.dailyhotel.model.time.StayBookingDay;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
-import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.screen.hotel.detail.StayDetailActivity;
 import com.twoheart.dailyhotel.screen.hotel.preview.StayPreviewActivity;
 import com.twoheart.dailyhotel.util.Constants;
@@ -51,6 +50,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by android_sam on 2016. 10. 12..
@@ -121,63 +121,27 @@ public class RecentStayListFragment extends RecentPlacesListFragment
     }
 
     @Override
-    protected BaseNetworkController getNetworkController()
-    {
-        return null;
-    }
-
-    @Override
     protected void requestRecentPlacesList(PlaceBookingDay placeBookingDay)
     {
         lockUI();
 
-        boolean isInBound = false;
-        boolean isOutBound = false;
-        if (RecentlyPlaceUtil.ServiceType.ALL_STAY == mServiceType)
-        {
-            isInBound = true;
-            isOutBound = true;
-        } else if (RecentlyPlaceUtil.ServiceType.IB_STAY == mServiceType)
-        {
-            isInBound = true;
-        } else if (RecentlyPlaceUtil.ServiceType.OB_STAY == mServiceType)
-        {
-            isOutBound = true;
-        }
-
-        if (isInBound == false && isOutBound == false)
-        {
-            unLockUI();
-
-            if (mListLayout != null && isFinishing() == false)
-            {
-                mListLayout.setData(null, placeBookingDay);
-            }
-            return;
-        }
-
-        requestRecentlyList(placeBookingDay);
-    }
-
-    private void requestRecentlyList(PlaceBookingDay placeBookingDay)
-    {
-        addCompositeDisposable(Observable.zip(mRecentlyRemoteImpl.getStayInboundRecentlyList((StayBookingDay) placeBookingDay) //
-            , mRecentlyRemoteImpl.getStayOutboundRecentlyList(10000) //
+        addCompositeDisposable(Observable.zip(mRecentlyRemoteImpl.getStayInboundRecentlyList((StayBookingDay) placeBookingDay).observeOn(Schedulers.io()) //
+            , mRecentlyRemoteImpl.getStayOutboundRecentlyList(10000).observeOn(Schedulers.io()) //
             , new BiFunction<List<Stay>, StayOutbounds, ArrayList<PlaceViewItem>>()
             {
                 @Override
                 public ArrayList<PlaceViewItem> apply(@NonNull List<Stay> stays, @NonNull StayOutbounds stayOutbounds) throws Exception
                 {
-                    return makePlaceViewItemList(stays, stayOutbounds);
+                    return RecentStayListFragment.this.makePlaceViewItemList(stays, stayOutbounds);
                 }
-            }).subscribe(new Consumer<ArrayList<PlaceViewItem>>()
+            }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<ArrayList<PlaceViewItem>>()
         {
             @Override
             public void accept(@NonNull ArrayList<PlaceViewItem> viewItemList) throws Exception
             {
-                unLockUI();
+                RecentStayListFragment.this.unLockUI();
 
-                if (isFinishing() == true)
+                if (RecentStayListFragment.this.isFinishing() == true)
                 {
                     return;
                 }
@@ -189,7 +153,7 @@ public class RecentStayListFragment extends RecentPlacesListFragment
             @Override
             public void accept(@NonNull Throwable throwable) throws Exception
             {
-                onHandleError(throwable);
+                RecentStayListFragment.this.onHandleError(throwable);
             }
         }));
     }

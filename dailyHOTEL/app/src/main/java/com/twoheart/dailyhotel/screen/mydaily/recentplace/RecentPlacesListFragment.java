@@ -14,18 +14,11 @@ import com.daily.dailyhotel.repository.local.ConfigLocalImpl;
 import com.daily.dailyhotel.repository.remote.FacebookRemoteImpl;
 import com.daily.dailyhotel.repository.remote.KakaoRemoteImpl;
 import com.daily.dailyhotel.repository.remote.RecentlyRemoteImpl;
-import com.daily.dailyhotel.util.RecentlyPlaceUtil;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.Place;
 import com.twoheart.dailyhotel.model.time.PlaceBookingDay;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.base.BaseFragment;
-import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.util.Constants;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
@@ -39,7 +32,6 @@ public abstract class RecentPlacesListFragment extends BaseFragment
 {
     protected BaseActivity mBaseActivity;
     protected RecentPlacesListLayout mListLayout;
-    protected BaseNetworkController mNetworkController;
 
     protected PlaceBookingDay mPlaceBookingDay;
 
@@ -47,8 +39,6 @@ public abstract class RecentPlacesListFragment extends BaseFragment
 
     protected View mViewByLongPress;
     protected int mPositionByLongPress;
-    protected PlaceType mPlaceType;
-    protected RecentlyPlaceUtil.ServiceType mServiceType;
 
     protected RecentlyRemoteImpl mRecentlyRemoteImpl;
 
@@ -63,8 +53,6 @@ public abstract class RecentPlacesListFragment extends BaseFragment
     protected abstract void setPlaceBookingDay(CommonDateTime commonDateTime);
 
     protected abstract RecentPlacesListLayout getListLayout();
-
-    protected abstract BaseNetworkController getNetworkController();
 
     protected abstract void requestRecentPlacesList(PlaceBookingDay placeBookingDay);
 
@@ -90,7 +78,6 @@ public abstract class RecentPlacesListFragment extends BaseFragment
     {
         mBaseActivity = (BaseActivity) getActivity();
         mListLayout = getListLayout();
-        mNetworkController = getNetworkController();
 
         mDontReload = false;
 
@@ -125,44 +112,9 @@ public abstract class RecentPlacesListFragment extends BaseFragment
         super.onDestroy();
     }
 
-    public void setServiceType(RecentlyPlaceUtil.ServiceType serviceType)
-    {
-        mServiceType = serviceType;
-    }
-
     public void setDontReload(boolean dontReload)
     {
         mDontReload = dontReload;
-    }
-
-    public String getTargetIndices(RecentlyPlaceUtil.ServiceType serviceType)
-    {
-        return RecentlyPlaceUtil.getTargetIndices(serviceType, RecentlyPlaceUtil.MAX_RECENT_PLACE_COUNT);
-    }
-
-    public void sortList(ArrayList<? extends Place> actualList, RecentlyPlaceUtil.ServiceType... serviceTypes)
-    {
-        if (actualList == null || actualList.size() == 0)
-        {
-            return;
-        }
-
-        ArrayList<Integer> expectedList = RecentlyPlaceUtil.getRecentlyIndexList(serviceTypes);
-        if (expectedList == null || expectedList.size() == 0)
-        {
-            return;
-        }
-
-        Collections.sort(actualList, new Comparator<Place>()
-        {
-            @Override
-            public int compare(Place place1, Place place2)
-            {
-                Integer position1 = expectedList.indexOf(place1.index);
-                Integer position2 = expectedList.indexOf(place2.index);
-                return position1.compareTo(position2);
-            }
-        });
     }
 
     ///////////////////////////////////////////////////////////////////////////////////////////////

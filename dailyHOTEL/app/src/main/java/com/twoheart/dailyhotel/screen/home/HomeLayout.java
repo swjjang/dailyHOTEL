@@ -5,6 +5,7 @@ import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.content.Context;
+import android.databinding.DataBindingUtil;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
@@ -38,6 +39,7 @@ import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.databinding.ListRowHomeStampDataBinding;
 import com.twoheart.dailyhotel.deprecated.DeviceResolutionUtil;
 import com.twoheart.dailyhotel.model.DailyCategoryType;
 import com.twoheart.dailyhotel.network.model.Event;
@@ -92,7 +94,8 @@ public class HomeLayout extends BaseBlurLayout
     View mScrollButtonLayout;
     private HomeCategoryLayout mCategoryLayout;
     View mTextMessageLayout;
-    View mTopButtonLayout, mProviderLayout, mStampLayout;
+    View mTopButtonLayout, mProviderLayout;
+    private ListRowHomeStampDataBinding mListRowHomeStampDataBinding;
     HomeCarouselLayout mRecentListLayout;
     HomeCarouselLayout mWishListLayout;
     HomeRecommendationLayout mHomeRecommendationLayout;
@@ -515,18 +518,11 @@ public class HomeLayout extends BaseBlurLayout
             return;
         }
 
-        mStampLayout = LayoutInflater.from(mContext).inflate(R.layout.list_row_home_stamp_layout, layout);
+        mListRowHomeStampDataBinding = DataBindingUtil.inflate(LayoutInflater.from(mContext), R.layout.list_row_home_stamp_data, layout, true);
 
-        TextView message1TextView = (TextView) mStampLayout.findViewById(R.id.message1TextView);
-        TextView message2TextView = (TextView) mStampLayout.findViewById(R.id.message2TextView);
-
-        message1TextView.setText(DailyRemoteConfigPreference.getInstance(mContext).getRemoteConfigStampHomeMessage1());
-
-        SpannableString spannableString = new SpannableString(DailyRemoteConfigPreference.getInstance(mContext).getRemoteConfigStampHomeMessage2());
-        spannableString.setSpan(new UnderlineSpan(), 0, spannableString.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-        message2TextView.setText(spannableString);
-        message2TextView.setOnClickListener(new View.OnClickListener()
+        mListRowHomeStampDataBinding.message1TextView.setText(DailyRemoteConfigPreference.getInstance(mContext).getRemoteConfigStampHomeMessage1());
+        mListRowHomeStampDataBinding.message2TextView.setText(DailyRemoteConfigPreference.getInstance(mContext).getRemoteConfigStampHomeMessage2());
+        mListRowHomeStampDataBinding.message2TextView.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
@@ -535,7 +531,7 @@ public class HomeLayout extends BaseBlurLayout
             }
         });
 
-        mStampLayout.setVisibility(View.GONE);
+        mListRowHomeStampDataBinding.getRoot().setVisibility(View.GONE);
     }
 
     private void initProviderInfoLayout(LinearLayout layout)
@@ -953,19 +949,63 @@ public class HomeLayout extends BaseBlurLayout
 
     public void setStampCount(int count, boolean isError)
     {
+        if (mListRowHomeStampDataBinding == null)
+        {
+            return;
+        }
+
         if (isError == true)
         {
-            mStampLayout.setVisibility(View.GONE);
+            mListRowHomeStampDataBinding.getRoot().setVisibility(View.GONE);
 
             setErrorPopupLayout(true);
         } else
         {
-            TextView stampTextView = (TextView) mStampLayout.findViewById(R.id.stampTextView);
-            stampTextView.setText("현재 받은 스탬프 개수는 : " + count);
-
-            if (mStampLayout.getVisibility() != View.VISIBLE)
+            if (count >= 1)
             {
-                mStampLayout.setVisibility(View.VISIBLE);
+                mListRowHomeStampDataBinding.nights01TextView.setBackgroundResource(R.drawable.ic_stamp_achieved_01);
+                mListRowHomeStampDataBinding.nights01TextView.setText(null);
+            }
+
+            if (count >= 2)
+            {
+                mListRowHomeStampDataBinding.nights02TextView.setBackgroundResource(R.drawable.ic_stamp_achieved_02);
+                mListRowHomeStampDataBinding.nights02TextView.setText(null);
+            }
+
+            if (count >= 3)
+            {
+                mListRowHomeStampDataBinding.nights03TextView.setBackgroundResource(R.drawable.ic_stamp_achieved_03);
+                mListRowHomeStampDataBinding.nights03TextView.setText(null);
+            }
+
+            if (count >= 4)
+            {
+                mListRowHomeStampDataBinding.nights04TextView.setBackgroundResource(R.drawable.ic_stamp_achieved_04);
+                mListRowHomeStampDataBinding.nights04TextView.setText(null);
+            }
+
+            if (count >= 5)
+            {
+                mListRowHomeStampDataBinding.nights05TextView.setBackgroundResource(R.drawable.ic_stamp_achieved_05);
+                mListRowHomeStampDataBinding.nights05TextView.setText(null);
+            }
+
+            if (count >= 6)
+            {
+                mListRowHomeStampDataBinding.nights06TextView.setBackgroundResource(R.drawable.ic_stamp_achieved_06);
+                mListRowHomeStampDataBinding.nights06TextView.setText(null);
+            }
+
+            if (count >= 7)
+            {
+                mListRowHomeStampDataBinding.nights07TextView.removeAllViews();
+                mListRowHomeStampDataBinding.nights07TextView.setBackgroundResource(R.drawable.ic_stamp_achieved_07);
+            }
+
+            if (mListRowHomeStampDataBinding.getRoot().getVisibility() != View.VISIBLE)
+            {
+                mListRowHomeStampDataBinding.getRoot().setVisibility(View.VISIBLE);
             }
         }
     }

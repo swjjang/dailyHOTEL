@@ -11,7 +11,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.entity.CommonDateTime;
 import com.daily.dailyhotel.util.RecentlyPlaceUtil;
@@ -20,11 +19,9 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Gourmet;
 import com.twoheart.dailyhotel.model.Place;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
-import com.twoheart.dailyhotel.model.RecentGourmetParams;
 import com.twoheart.dailyhotel.model.time.GourmetBookingDay;
 import com.twoheart.dailyhotel.model.time.PlaceBookingDay;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
-import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.screen.gourmet.detail.GourmetDetailActivity;
 import com.twoheart.dailyhotel.screen.gourmet.preview.GourmetPreviewActivity;
 import com.twoheart.dailyhotel.util.Constants;
@@ -32,6 +29,8 @@ import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 
@@ -39,8 +38,10 @@ import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import retrofit2.Call;
-import retrofit2.Response;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by android_sam on 2016. 10. 12..
@@ -104,84 +105,87 @@ public class RecentGourmetListFragment extends RecentPlacesListFragment
     }
 
     @Override
-    protected BaseNetworkController getNetworkController()
-    {
-        return new RecentGourmetListNetworkController(mBaseActivity, mNetworkTag, mOnNetworkControllerListener);
-    }
-
-    @Override
     protected void requestRecentPlacesList(PlaceBookingDay placeBookingDay)
     {
         lockUI();
 
-        String targetIndices = getTargetIndices(mServiceType);
-        if (DailyTextUtils.isTextEmpty(targetIndices) == true)
-        {
-            unLockUI();
-
-            if (mListLayout != null && isFinishing() == false)
+        addCompositeDisposable(mRecentlyRemoteImpl.getGourmetRecentlyList((GourmetBookingDay) placeBookingDay) //
+            .observeOn(Schedulers.io()).map(new Function<List<Gourmet>, ArrayList<PlaceViewItem>>()
             {
-                mListLayout.setData(null, placeBookingDay);
-            }
+                @Override
+                public ArrayList<PlaceViewItem> apply(@NonNull List<Gourmet> gourmets) throws Exception
+                {
+                    return makePlaceViewItemList(gourmets);
+                }
+            }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<ArrayList<PlaceViewItem>>()
+            {
+                @Override
+                public void accept(@NonNull ArrayList<PlaceViewItem> list) throws Exception
+                {
+                    unLockUI();
+
+                    if (isFinishing() == true)
+                    {
+                        return;
+                    }
+
+                    mListLayout.setData(list, mPlaceBookingDay);
+                }
+            }, new Consumer<Throwable>()
+            {
+                @Override
+                public void accept(@NonNull Throwable throwable) throws Exception
+                {
+                    onHandleError(throwable);
+                }
+            }));
+
+    }
+
+    private ArrayList<PlaceViewItem> makePlaceViewItemList(List<Gourmet> gourmetList)
+    {
+        if (gourmetList == null || gourmetList.size() == 0)
+        {
+            return new ArrayList<>();
+        }
+
+        sortList(gourmetList);
+
+        ArrayList<PlaceViewItem> list = new ArrayList<>();
+        for (Gourmet gourmet : gourmetList)
+        {
+            list.add(new PlaceViewItem(PlaceViewItem.TYPE_ENTRY, gourmet));
+        }
+
+        list.add(new PlaceViewItem(PlaceViewItem.TYPE_FOOTER_VIEW, null));
+
+        return list;
+    }
+
+    private void sortList(List<Gourmet> actualList)
+    {
+        if (actualList == null || actualList.size() == 0)
+        {
             return;
         }
 
-        RecentGourmetParams params = new RecentGourmetParams();
-        params.setGourmetBookingDay((GourmetBookingDay) placeBookingDay);
-        params.setTargetIndices(targetIndices);
-
-        ((RecentGourmetListNetworkController) mNetworkController).requestRecentGourmetList(params);
-    }
-
-    private RecentGourmetListNetworkController.OnNetworkControllerListener mOnNetworkControllerListener = new RecentGourmetListNetworkController.OnNetworkControllerListener()
-    {
-        @Override
-        public void onRecentGourmetList(ArrayList<Gourmet> list)
+        ArrayList<Integer> expectedList = RecentlyPlaceUtil.getRecentlyIndexList(RecentlyPlaceUtil.ServiceType.GOURMET);
+        if (expectedList == null || expectedList.size() == 0)
         {
-            unLockUI();
+            return;
+        }
 
-            if (isFinishing() == true)
+        Collections.sort(actualList, new Comparator<Gourmet>()
+        {
+            @Override
+            public int compare(Gourmet place1, Gourmet place2)
             {
-                return;
+                Integer position1 = expectedList.indexOf(place1.index);
+                Integer position2 = expectedList.indexOf(place2.index);
+                return position1.compareTo(position2);
             }
-
-            sortList(list, RecentlyPlaceUtil.ServiceType.GOURMET);
-
-            ArrayList<PlaceViewItem> viewItemList = ((RecentGourmetListLayout) mListLayout).makePlaceViewItemList(list);
-
-            mListLayout.setData(viewItemList, mPlaceBookingDay);
-        }
-
-        @Override
-        public void onError(Call call, Throwable e, boolean onlyReport)
-        {
-            RecentGourmetListFragment.this.onError(call, e, onlyReport);
-        }
-
-        @Override
-        public void onError(Throwable e)
-        {
-            RecentGourmetListFragment.this.onError(e);
-        }
-
-        @Override
-        public void onErrorPopupMessage(int msgCode, String message)
-        {
-            RecentGourmetListFragment.this.onErrorPopupMessage(msgCode, message);
-        }
-
-        @Override
-        public void onErrorToastMessage(String message)
-        {
-            RecentGourmetListFragment.this.onErrorToastMessage(message);
-        }
-
-        @Override
-        public void onErrorResponse(Call call, Response response)
-        {
-            RecentGourmetListFragment.this.onErrorResponse(call, response);
-        }
-    };
+        });
+    }
 
     RecentPlacesListLayout.OnEventListener mEventListener = new RecentPlacesListLayout.OnEventListener()
     {
