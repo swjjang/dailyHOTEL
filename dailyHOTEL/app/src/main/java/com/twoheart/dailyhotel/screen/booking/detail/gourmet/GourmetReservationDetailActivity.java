@@ -737,11 +737,7 @@ public class GourmetReservationDetailActivity extends PlaceReservationDetailActi
                 mPlaceReservationDetailLayout.initLayout(mTodayDateTime, gourmetBookingDetail);
             } catch (Exception e)
             {
-                if (Constants.DEBUG == false)
-                {
-                    Crashlytics.logException(e);
-                }
-
+                Crashlytics.logException(e);
                 finish();
                 return;
             }

@@ -8,7 +8,6 @@ import com.twoheart.dailyhotel.model.StayCategoryParams;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
-import com.twoheart.dailyhotel.util.Constants;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -138,11 +137,7 @@ public class StayCategoryListNetworkController extends BaseNetworkController
                     {
                         String message = responseJSONObject.getString("msg");
 
-                        if (Constants.DEBUG == false)
-                        {
-                            Crashlytics.log(call.request().url().toString());
-                        }
-
+                        Crashlytics.log(call.request().url().toString());
                         mOnNetworkControllerListener.onErrorPopupMessage(msgCode, message);
                     }
                 } catch (Exception e)

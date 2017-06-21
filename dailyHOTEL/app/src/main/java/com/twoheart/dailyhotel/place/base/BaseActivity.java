@@ -417,16 +417,12 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
 
     public void onError(Call call, Throwable e, boolean onlyReport)
     {
-        if (DEBUG == false && call != null && e != null)
+        if (call != null && e != null)
         {
             Crashlytics.log(call.request().url().toString());
             Crashlytics.logException(e);
-        } else
-        {
-            if (e != null)
-            {
-                ExLog.e(e.toString());
-            }
+
+            ExLog.e(e.toString());
         }
 
         if (onlyReport == false)
@@ -437,15 +433,10 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
 
     public void onError(Throwable e)
     {
-        if (DEBUG == false && e != null)
+        if (e != null)
         {
             Crashlytics.logException(e);
-        } else
-        {
-            if (e != null)
-            {
-                ExLog.e(e.toString());
-            }
+            ExLog.e(e.toString());
         }
 
         onError();

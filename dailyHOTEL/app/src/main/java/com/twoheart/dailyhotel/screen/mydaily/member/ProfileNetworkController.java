@@ -7,7 +7,6 @@ import com.crashlytics.android.Crashlytics;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
-import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 
 import org.json.JSONObject;
@@ -95,12 +94,9 @@ public class ProfileNetworkController extends BaseNetworkController
                         {
                             verifiedDate = jsonObject.has("phoneVerifiedAt") == true ? jsonObject.getString("phoneVerifiedAt") : "no date";
 
-                            if (Constants.DEBUG == false)
-                            {
-                                Crashlytics.logException(new RuntimeException("isVerified : " + isVerified //
-                                    + " , isPhoneVerified : " + isPhoneVerified + " , verifiedDate : " + verifiedDate //
-                                    + " , " + Base64.encodeToString(userIndex.getBytes(), Base64.NO_WRAP)));
-                            }
+                            Crashlytics.logException(new RuntimeException("isVerified : " + isVerified //
+                                + " , isPhoneVerified : " + isPhoneVerified + " , verifiedDate : " + verifiedDate //
+                                + " , " + Base64.encodeToString(userIndex.getBytes(), Base64.NO_WRAP)));
                         }
 
                         ((OnNetworkControllerListener) mOnNetworkControllerListener).onUserProfile(userIndex//
@@ -112,11 +108,7 @@ public class ProfileNetworkController extends BaseNetworkController
                     }
                 } catch (ParseException e)
                 {
-                    if (Constants.DEBUG == false)
-                    {
-                        Crashlytics.log("Url: " + call.request().url());
-                    }
-
+                    Crashlytics.log("Url: " + call.request().url());
                     mOnNetworkControllerListener.onError(e);
                 } catch (Exception e)
                 {

@@ -832,11 +832,7 @@ public class EventWebActivity extends WebViewActivity implements Constants
 
                     } catch (ParseException e)
                     {
-                        if (Constants.DEBUG == false)
-                        {
-                            Crashlytics.log("Url: " + call.request().url().toString());
-                        }
-
+                        Crashlytics.log("Url: " + call.request().url().toString());
                         onError(e);
                     } catch (Exception e)
                     {
@@ -877,11 +873,7 @@ public class EventWebActivity extends WebViewActivity implements Constants
                         , AnalyticsManager.Action.COUPON_DOWNLOAD_CLICKED, "event-NULL", paramsMap);
                 } catch (ParseException e)
                 {
-                    if (Constants.DEBUG == false)
-                    {
-                        Crashlytics.log("requestDownloadEventCoupon::CouponCode: " + couponCode + ", validTo: " + validTo);
-                    }
-
+                    Crashlytics.log("requestDownloadEventCoupon::CouponCode: " + couponCode + ", validTo: " + validTo);
                     ExLog.d(e.toString());
                 } catch (Exception e)
                 {
@@ -1102,11 +1094,7 @@ public class EventWebActivity extends WebViewActivity implements Constants
                                         }
                                     } catch (ParseException e)
                                     {
-                                        if (Constants.DEBUG == false)
-                                        {
-                                            Crashlytics.log("Url: " + call.request().url().toString());
-                                        }
-
+                                        Crashlytics.log("Url: " + call.request().url().toString());
                                         EventWebActivity.this.onError(e);
                                     } catch (Exception e)
                                     {

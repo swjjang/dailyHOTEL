@@ -14,7 +14,6 @@ import com.daily.dailyhotel.repository.local.ConfigLocalImpl;
 import com.daily.dailyhotel.repository.remote.FacebookRemoteImpl;
 import com.daily.dailyhotel.repository.remote.KakaoRemoteImpl;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
 
 import retrofit2.HttpException;
@@ -64,14 +63,8 @@ public abstract class BaseExceptionPresenter<T1 extends BaseActivity, T2 extends
             {
                 DailyToast.showToast(getActivity(), getString(R.string.act_base_network_connect), DailyToast.LENGTH_LONG);
 
-                if (Constants.DEBUG == false)
-                {
-                    Crashlytics.log(httpException.response().raw().request().url().toString());
-                    Crashlytics.logException(throwable);
-                } else
-                {
-                    ExLog.e(httpException.response().raw().request().url().toString() + ", " + httpException.toString());
-                }
+                Crashlytics.log(httpException.response().raw().request().url().toString());
+                Crashlytics.logException(throwable);
             }
         } else
         {

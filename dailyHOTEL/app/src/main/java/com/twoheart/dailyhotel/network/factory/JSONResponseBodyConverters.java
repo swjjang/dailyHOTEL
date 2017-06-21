@@ -38,11 +38,7 @@ public class JSONResponseBodyConverters
             } catch (JSONException e)
             {
                 ExLog.e(e.toString());
-
-                if (Constants.DEBUG == false)
-                {
-                    Crashlytics.logException(e);
-                }
+                Crashlytics.logException(e);
             }
             return null;
         }
@@ -61,11 +57,7 @@ public class JSONResponseBodyConverters
             } catch (JSONException e)
             {
                 ExLog.e(e.toString());
-
-                if (Constants.DEBUG == false)
-                {
-                    Crashlytics.logException(e);
-                }
+                Crashlytics.logException(e);
             }
             return null;
         }
