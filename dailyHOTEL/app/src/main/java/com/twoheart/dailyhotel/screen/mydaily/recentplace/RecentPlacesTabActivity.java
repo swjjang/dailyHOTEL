@@ -71,10 +71,9 @@ public class RecentPlacesTabActivity extends BaseActivity
     }
 
     /**
-     *
      * @param context
      * @param sourceType 진입 화면
-     * @param placeType 딥링크로 인한 화면 이동 처리를 위한 타입
+     * @param placeType  딥링크로 인한 화면 이동 처리를 위한 타입
      * @return
      */
     public static Intent newInstance(Context context, SourceType sourceType, PlaceType placeType)
@@ -464,14 +463,8 @@ public class RecentPlacesTabActivity extends BaseActivity
             {
                 DailyToast.showToast(RecentPlacesTabActivity.this, getString(R.string.act_base_network_connect), DailyToast.LENGTH_LONG);
 
-                if (Constants.DEBUG == false)
-                {
-                    Crashlytics.log(httpException.response().raw().request().url().toString());
-                    Crashlytics.logException(throwable);
-                } else
-                {
-                    ExLog.e(httpException.response().raw().request().url().toString() + ", " + httpException.toString());
-                }
+                Crashlytics.log(httpException.response().raw().request().url().toString());
+                Crashlytics.logException(throwable);
 
                 RecentPlacesTabActivity.this.finish();
             }

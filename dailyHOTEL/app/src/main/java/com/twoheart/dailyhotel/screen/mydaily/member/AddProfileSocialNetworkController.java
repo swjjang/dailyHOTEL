@@ -8,7 +8,6 @@ import com.twoheart.dailyhotel.model.Customer;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
-import com.twoheart.dailyhotel.util.Constants;
 
 import org.json.JSONObject;
 
@@ -69,13 +68,10 @@ public class AddProfileSocialNetworkController extends BaseNetworkController
 
         params.put("isAgreedBenefit", isBenefit == true ? "true" : "false");
 
-        if (Constants.DEBUG == false)
+        if (DailyTextUtils.isTextEmpty(name) == true)
         {
-            if (DailyTextUtils.isTextEmpty(name) == true)
-            {
-                Crashlytics.log("AddProfileSocialNetworkController::requestUpdateSocialUserInformation :: name="//
-                    + name + " , userIndex=" + userIndex + " , user_email=" + email);
-            }
+            Crashlytics.log("AddProfileSocialNetworkController::requestUpdateSocialUserInformation :: name="//
+                + name + " , userIndex=" + userIndex + " , user_email=" + email);
         }
 
         DailyMobileAPI.getInstance(mContext).requestUserUpdateInformationForSocial(mNetworkTag, params, mUserUpdateFacebookCallback);

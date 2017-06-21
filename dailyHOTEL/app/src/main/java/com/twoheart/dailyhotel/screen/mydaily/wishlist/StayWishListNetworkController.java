@@ -12,7 +12,6 @@ import com.twoheart.dailyhotel.network.model.PlaceWishItems;
 import com.twoheart.dailyhotel.network.model.StayWishItem;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
-import com.twoheart.dailyhotel.util.Constants;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -99,11 +98,7 @@ public class StayWishListNetworkController extends BaseNetworkController
                     {
                         String message = baseDto.msg;
 
-                        if (Constants.DEBUG == false)
-                        {
-                            Crashlytics.log(call.request().url().toString());
-                        }
-
+                        Crashlytics.log(call.request().url().toString());
                         mOnNetworkControllerListener.onErrorPopupMessage(msgCode, message);
                     }
                 } catch (Exception e)

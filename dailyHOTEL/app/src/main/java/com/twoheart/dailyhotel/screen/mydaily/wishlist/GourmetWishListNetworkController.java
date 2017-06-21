@@ -14,7 +14,6 @@ import com.twoheart.dailyhotel.network.model.PlaceWishItems;
 import com.twoheart.dailyhotel.network.model.Sticker;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
-import com.twoheart.dailyhotel.util.Constants;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -100,20 +99,12 @@ public class GourmetWishListNetworkController extends BaseNetworkController
                     {
                         String message = baseDto.msg;
 
-                        if (Constants.DEBUG == false)
-                        {
-                            Crashlytics.log(call.request().url().toString());
-                        }
-
+                        Crashlytics.log(call.request().url().toString());
                         mOnNetworkControllerListener.onErrorPopupMessage(msgCode, message);
                     }
                 } catch (Exception e)
                 {
-                    if (Constants.DEBUG == false)
-                    {
-                        Crashlytics.log(call.request().url().toString());
-                    }
-
+                    Crashlytics.log(call.request().url().toString());
                     mOnNetworkControllerListener.onError(e);
                 }
             } else

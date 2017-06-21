@@ -11,7 +11,6 @@ import com.crashlytics.android.Crashlytics;
 import com.daily.base.util.ExLog;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Notice;
-import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 
 import java.text.ParseException;
@@ -109,11 +108,7 @@ public class NoticeListAdapter extends ArrayAdapter<Notice>
             dateTextView.setText(DailyCalendar.convertDateFormatString(notice.createdAt, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd"));
         } catch (ParseException e)
         {
-            if (Constants.DEBUG == false)
-            {
-                Crashlytics.log("notice.createdAt: " + (notice != null ? notice.createdAt : ""));
-            }
-
+            Crashlytics.log("notice.createdAt: " + (notice != null ? notice.createdAt : ""));
             ExLog.d(e.toString());
         } catch (Exception e)
         {

@@ -198,13 +198,10 @@ public class EditProfileNameActivity extends BaseActivity implements OnClickList
                     params.put("user_idx", mUserIndex);
                     params.put("user_name", name);
 
-                    if (DEBUG == false)
+                    if (DailyTextUtils.isTextEmpty(name) == true)
                     {
-                        if (DailyTextUtils.isTextEmpty(name) == true)
-                        {
-                            Crashlytics.log("EditProfileNameActivity :: requestUserUpdateInformationForSocial :: name="//
-                                + name + " , userIndex=" + mUserIndex);
-                        }
+                        Crashlytics.log("EditProfileNameActivity :: requestUserUpdateInformationForSocial :: name="//
+                            + name + " , userIndex=" + mUserIndex);
                     }
 
                     DailyMobileAPI.getInstance(this).requestUserUpdateInformationForSocial(mNetworkTag, params, mSocialUserUpdateCallback);

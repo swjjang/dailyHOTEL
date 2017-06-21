@@ -1071,11 +1071,7 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
                 }
             } catch (Exception e)
             {
-                if (Constants.DEBUG == false)
-                {
-                    Crashlytics.logException(e);
-                }
-
+                Crashlytics.logException(e);
                 finish();
                 return;
             }

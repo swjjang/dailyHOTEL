@@ -310,16 +310,13 @@ public class HotelPaymentActivity extends PlacePaymentActivity
                 params.put("arrival_transportation", "NO_PARKING");
             }
 
-            if (DEBUG == false)
+            if (customer == null)
             {
-                if (customer == null)
-                {
-                    Crashlytics.log("HotelPaymentActivity::requestEasyPayment :: customer is null");
-                } else if (DailyTextUtils.isTextEmpty(customer.getName()) == true)
-                {
-                    Crashlytics.log("HotelPaymentActivity::requestEasyPayment :: name=" //
-                        + customer.getName() + " , userIndex=" + customer.getUserIdx() + " , user_email=" + customer.getEmail());
-                }
+                Crashlytics.log("HotelPaymentActivity::requestEasyPayment :: customer is null");
+            } else if (DailyTextUtils.isTextEmpty(customer.getName()) == true)
+            {
+                Crashlytics.log("HotelPaymentActivity::requestEasyPayment :: name=" //
+                    + customer.getName() + " , userIndex=" + customer.getUserIdx() + " , user_email=" + customer.getEmail());
             }
 
             DailyMobileAPI.getInstance(this).requestStayPayment(mNetworkTag, params, mPaymentEasyCreditCardCallback);
@@ -396,16 +393,13 @@ public class HotelPaymentActivity extends PlacePaymentActivity
                 params.put("arrival_transportation", "NO_PARKING");
             }
 
-            if (DEBUG == false)
+            if (customer == null)
             {
-                if (customer == null)
-                {
-                    Crashlytics.log("HotelPaymentActivity::requestEasyPayment :: customer is null");
-                } else if (DailyTextUtils.isTextEmpty(customer.getName()) == true)
-                {
-                    Crashlytics.log("HotelPaymentActivity::requestEasyPayment :: name=" //
-                        + customer.getName() + " , userIndex=" + customer.getUserIdx() + " , user_email=" + customer.getEmail());
-                }
+                Crashlytics.log("HotelPaymentActivity::requestEasyPayment :: customer is null");
+            } else if (DailyTextUtils.isTextEmpty(customer.getName()) == true)
+            {
+                Crashlytics.log("HotelPaymentActivity::requestEasyPayment :: name=" //
+                    + customer.getName() + " , userIndex=" + customer.getUserIdx() + " , user_email=" + customer.getEmail());
             }
 
             //        DailyMobileAPI.getInstance(this).requestStayFreePayment(mNetworkTag, params, mPaymentEasyCreditCardCallback);
@@ -873,11 +867,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
 
             if (customer == null || DailyTextUtils.isTextEmpty(customer.getName(), customer.getUserIdx()) == true)
             {
-                if (DEBUG == false)
-                {
-                    Crashlytics.log("HotelPaymentActivity - onActivityPaymentResult : Clear mPaymentInformation");
-                }
-
+                Crashlytics.log("HotelPaymentActivity - onActivityPaymentResult : Clear mPaymentInformation");
                 mPaymentInformation = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PAYMENTINFORMATION);
             }
         }
