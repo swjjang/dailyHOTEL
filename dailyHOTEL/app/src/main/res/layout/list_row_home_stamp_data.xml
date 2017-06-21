@@ -78,8 +78,8 @@
                     android:id="@+id/nights03TextView"
                     android:layout_width="64dp"
                     android:layout_height="64dp"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginRight="5dp"
+                    android:layout_marginLeft="3dp"
+                    android:layout_marginRight="3dp"
                     android:background="@drawable/ic_stamp_placeholder_01"
                     android:text="@string/label_stamp_3_nights"
                     android:textColor="@color/default_text_cc5c5c5"
@@ -136,7 +136,7 @@
                         android:layout_width="64dp"
                         android:layout_height="64dp"
                         android:gravity="center"
-                        android:paddingTop="21dp"
+                        android:paddingTop="20dp"
                         android:text="@string/label_stamp_7_nights"
                         android:textColor="@color/default_text_cc5c5c5"
                         android:textSize="11dp"/>
@@ -149,7 +149,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/stamp02Layout"
                 android:layout_marginBottom="20dp"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="22dp"
                 android:gravity="center"
                 android:textColor="@color/default_text_c929292"
                 android:textSize="12dp"/>
