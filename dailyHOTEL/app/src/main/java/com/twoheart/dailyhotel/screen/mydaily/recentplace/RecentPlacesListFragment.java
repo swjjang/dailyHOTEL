@@ -7,7 +7,6 @@ import android.view.ViewGroup;
 
 import com.crashlytics.android.Crashlytics;
 import com.daily.base.exception.BaseException;
-import com.daily.base.util.ExLog;
 import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.entity.CommonDateTime;
 import com.daily.dailyhotel.repository.local.ConfigLocalImpl;
@@ -18,7 +17,6 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.time.PlaceBookingDay;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.base.BaseFragment;
-import com.twoheart.dailyhotel.util.Constants;
 
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
@@ -172,14 +170,8 @@ public abstract class RecentPlacesListFragment extends BaseFragment
             {
                 DailyToast.showToast(getActivity(), getString(R.string.act_base_network_connect), DailyToast.LENGTH_LONG);
 
-                if (Constants.DEBUG == false)
-                {
-                    Crashlytics.log(httpException.response().raw().request().url().toString());
-                    Crashlytics.logException(throwable);
-                } else
-                {
-                    ExLog.e(httpException.response().raw().request().url().toString() + ", " + httpException.toString());
-                }
+                Crashlytics.log(httpException.response().raw().request().url().toString());
+                Crashlytics.logException(throwable);
             }
         } else
         {
