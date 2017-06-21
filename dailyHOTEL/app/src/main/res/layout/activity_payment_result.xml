@@ -388,7 +388,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:layout_alignParentRight="true"
                     android:src="@drawable/detail_ic_stamp"/>
 
                 <LinearLayout
@@ -396,10 +397,10 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_marginBottom="14dp"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="15dp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="10dp"
                     android:layout_marginTop="14dp"
-                    android:layout_toRightOf="@+id/stampImageView"
+                    android:layout_toLeftOf="@+id/stampImageView"
                     android:orientation="vertical">
 
                     <com.daily.base.widget.DailyTextView
@@ -415,7 +416,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="2dp"
                         android:textColor="@color/default_text_c666666"
-                        android:textSize="13dp"/>
+                        android:textSize="12dp"/>
 
                     <com.daily.base.widget.DailyTextView
                         android:id="@+id/message3TextView"
