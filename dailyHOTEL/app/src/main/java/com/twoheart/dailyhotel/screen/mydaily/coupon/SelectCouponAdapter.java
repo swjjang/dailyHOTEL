@@ -14,7 +14,6 @@ import com.daily.base.widget.DailyImageView;
 import com.daily.base.widget.DailyTextView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Coupon;
-import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 
 import java.text.ParseException;
@@ -129,10 +128,7 @@ public class SelectCouponAdapter extends ArrayAdapter<Coupon>
             holder.expireTextView.setVisibility(View.VISIBLE);
         } catch (ParseException e)
         {
-            if (Constants.DEBUG == false)
-            {
-                Crashlytics.log("Select Coupon::coupon.validTo: " + (coupon != null ? coupon.validTo : ""));
-            }
+            Crashlytics.log("Select Coupon::coupon.validTo: " + (coupon != null ? coupon.validTo : ""));
             ExLog.d(e.getMessage());
             holder.expireTextView.setVisibility(View.GONE);
         }

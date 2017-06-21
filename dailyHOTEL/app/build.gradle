@@ -85,6 +85,8 @@ android {
         }
 
         debug {
+            debuggable true
+            applicationIdSuffix ".debug"
             buildConfigField 'com.twoheart.dailyhotel.Setting.Stores', 'RELEASE_STORE', 'com.twoheart.dailyhotel.Setting.Stores.PLAY_STORE'
         }
     }
@@ -94,27 +96,22 @@ android {
     productFlavors {
         googlePlayStore {
             dimension "STORE"
-            applicationId "com.twoheart.dailyhotel"
         }
 
         oneStore {
             dimension "STORE"
-            applicationId "com.twoheart.dailyhotel"
         }
 
         dev {
             dimension "SERVER"
-            applicationId "com.twoheart.dailyhotel"
         }
 
         stage {
             dimension "SERVER"
-            applicationId "com.twoheart.dailyhotel"
         }
 
         prod {
             dimension "SERVER"
-            applicationId "com.twoheart.dailyhotel"
         }
     }
 

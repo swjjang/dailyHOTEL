@@ -12,7 +12,6 @@ import com.daily.dailyhotel.repository.local.ConfigLocalImpl;
 import com.daily.dailyhotel.repository.remote.FacebookImpl;
 import com.daily.dailyhotel.repository.remote.KakaoImpl;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
 
 import retrofit2.HttpException;
@@ -44,11 +43,8 @@ public abstract class BaseExceptionPresenter<T1 extends BaseActivity, T2 extends
                 onHandleAuthorizedError();
             } else
             {
-                if (Constants.DEBUG == false)
-                {
-                    Crashlytics.log(httpException.response().raw().request().url().toString());
-                    Crashlytics.logException(throwable);
-                }
+                Crashlytics.log(httpException.response().raw().request().url().toString());
+                Crashlytics.logException(throwable);
             }
         } else
         {

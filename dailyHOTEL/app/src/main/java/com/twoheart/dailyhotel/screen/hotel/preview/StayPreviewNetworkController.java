@@ -112,11 +112,7 @@ public class StayPreviewNetworkController extends BaseNetworkController
                     }
                 } catch (Exception e)
                 {
-                    if (Constants.DEBUG == false)
-                    {
-                        Crashlytics.log(call.request().url().toString());
-                    }
-
+                    Crashlytics.log(call.request().url().toString());
                     mOnNetworkControllerListener.onError(e);
                 }
             } else

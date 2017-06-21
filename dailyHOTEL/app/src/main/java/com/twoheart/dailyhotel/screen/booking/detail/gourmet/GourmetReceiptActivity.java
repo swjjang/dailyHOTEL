@@ -41,7 +41,7 @@ public class GourmetReceiptActivity extends PlaceReceiptActivity
         // 영수증
         mReservationIndex = jsonObject.getString("gourmetReservationIdx");
 
-        if (Constants.DEBUG == false && DailyTextUtils.isTextEmpty(mReservationIndex) == true)
+        if (DailyTextUtils.isTextEmpty(mReservationIndex) == true)
         {
             Crashlytics.logException(new NullPointerException("GourmetReceiptActivity : mReservationIndex == null"));
         }

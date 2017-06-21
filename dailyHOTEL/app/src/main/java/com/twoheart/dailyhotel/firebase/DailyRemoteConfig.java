@@ -97,23 +97,11 @@ public class DailyRemoteConfig
                         return;
                     } catch (Exception e1)
                     {
-                        if (Constants.DEBUG == false)
-                        {
-                            Crashlytics.logException(e1);
-                        } else
-                        {
-                            ExLog.e(e1.toString());
-                        }
+                        Crashlytics.logException(e1);
                     }
                 } else
                 {
-                    if (Constants.DEBUG == false)
-                    {
-                        Crashlytics.logException(e);
-                    } else
-                    {
-                        ExLog.e(e.toString());
-                    }
+                    Crashlytics.logException(e);
                 }
 
                 // 버전이 업데이트 되는 경우 텍스트의 내용을 다시 넣는 것을 수행한다.

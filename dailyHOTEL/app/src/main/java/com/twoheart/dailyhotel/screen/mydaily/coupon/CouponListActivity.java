@@ -462,10 +462,7 @@ public class CouponListActivity extends BaseActivity
                     , AnalyticsManager.Action.COUPON_DOWNLOAD_CLICKED, "couponbox-" + coupon.title, paramsMap);
             } catch (ParseException e)
             {
-                if (Constants.DEBUG == false)
-                {
-                    Crashlytics.log("Coupon List::coupon.validTo: " + (coupon != null ? coupon.validTo : ""));
-                }
+                Crashlytics.log("Coupon List::coupon.validTo: " + (coupon != null ? coupon.validTo : ""));
                 ExLog.d(e.toString());
             } catch (Exception e)
             {

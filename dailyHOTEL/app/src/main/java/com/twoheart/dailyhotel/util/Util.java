@@ -896,13 +896,7 @@ public class Util implements Constants
             logMessage = activity != null ? activity.getLocalClassName() : "Unknown activity";
             logMessage = logMessage + " : " + placeName + " : " + latitude + " : " + longitude;
 
-            if (DEBUG == true)
-            {
-                ExLog.d(logMessage);
-            } else
-            {
-                Crashlytics.log(logMessage);
-            }
+            Crashlytics.log(logMessage);
 
             if (activity != null)
             {

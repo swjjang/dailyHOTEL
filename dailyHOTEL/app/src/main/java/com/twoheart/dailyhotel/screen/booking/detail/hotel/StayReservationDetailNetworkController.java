@@ -130,11 +130,7 @@ public class StayReservationDetailNetworkController extends BaseNetworkControlle
                     }
                 } catch (Exception e)
                 {
-                    if (Constants.DEBUG == false)
-                    {
-                        Crashlytics.logException(e);
-                    }
-
+                    Crashlytics.logException(e);
                     ((OnNetworkControllerListener) mOnNetworkControllerListener).onPolicyRefund(false, null, null, false, null);
                 }
             } else

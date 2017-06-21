@@ -10,7 +10,41 @@
       "client_info": {
         "mobilesdk_app_id": "1:506429493485:android:a16acdd735662081",
         "android_client_info": {
-          "package_name": "com.twoheart.dailyhotel"
+          "package_name": "com.twoheart.dailyhotel.dev"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "506429493485-9d3e9sp8giqcao9b76lgdpt5h59t20u5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDjhmWw3dUuqYB9E9bbykjh53RFFdKiSuQ"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 2,
+          "analytics_property": {
+            "tracking_id": "UA-80273653-1"
+          }
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:506429493485:android:078407d2783b06b9",
+        "android_client_info": {
+          "package_name": "com.twoheart.dailyhotel.debug"
         }
       },
       "oauth_client": [

@@ -317,19 +317,16 @@ public class DailyPreference
 
         } catch (ClassCastException e)
         {
-            if (Constants.DEBUG == false)
+            try
             {
-                try
-                {
-                    Object object = sharedPreferences.getAll().get(key);
-                    String msg = "key : " + key + ", value : " + sharedPreferences.getAll().get(key) + ", Type : " + object.toString();
+                Object object = sharedPreferences.getAll().get(key);
+                String msg = "key : " + key + ", value : " + sharedPreferences.getAll().get(key) + ", Type : " + object.toString();
 
-                    Crashlytics.log(msg);
-                    Crashlytics.logException(e);
-                } catch (Exception e1)
-                {
+                Crashlytics.log(msg);
+                Crashlytics.logException(e);
+            } catch (Exception e1)
+            {
 
-                }
             }
 
             if (sharedPreferences != null)
@@ -372,19 +369,16 @@ public class DailyPreference
 
         } catch (ClassCastException e)
         {
-            if (Constants.DEBUG == false)
+            try
             {
-                try
-                {
-                    Object object = sharedPreferences.getAll().get(key);
-                    String msg = "key : " + key + ", value : " + sharedPreferences.getAll().get(key) + ", Type : " + object.toString();
+                Object object = sharedPreferences.getAll().get(key);
+                String msg = "key : " + key + ", value : " + sharedPreferences.getAll().get(key) + ", Type : " + object.toString();
 
-                    Crashlytics.log(msg);
-                    Crashlytics.logException(e);
-                } catch (Exception e1)
-                {
+                Crashlytics.log(msg);
+                Crashlytics.logException(e);
+            } catch (Exception e1)
+            {
 
-                }
             }
 
             if (sharedPreferences != null)
@@ -420,19 +414,16 @@ public class DailyPreference
 
         } catch (ClassCastException e)
         {
-            if (Constants.DEBUG == false)
+            try
             {
-                try
-                {
-                    Object object = sharedPreferences.getAll().get(key);
-                    String msg = "key : " + key + ", value : " + sharedPreferences.getAll().get(key) + ", Type : " + object.toString();
+                Object object = sharedPreferences.getAll().get(key);
+                String msg = "key : " + key + ", value : " + sharedPreferences.getAll().get(key) + ", Type : " + object.toString();
 
-                    Crashlytics.log(msg);
-                    Crashlytics.logException(e);
-                } catch (Exception e1)
-                {
+                Crashlytics.log(msg);
+                Crashlytics.logException(e);
+            } catch (Exception e1)
+            {
 
-                }
             }
 
             if (sharedPreferences != null)
@@ -468,19 +459,16 @@ public class DailyPreference
 
         } catch (ClassCastException e)
         {
-            if (Constants.DEBUG == false)
+            try
             {
-                try
-                {
-                    Object object = sharedPreferences.getAll().get(key);
-                    String msg = "key : " + key + ", value : " + sharedPreferences.getAll().get(key) + ", Type : " + object.toString();
+                Object object = sharedPreferences.getAll().get(key);
+                String msg = "key : " + key + ", value : " + sharedPreferences.getAll().get(key) + ", Type : " + object.toString();
 
-                    Crashlytics.log(msg);
-                    Crashlytics.logException(e);
-                } catch (Exception e1)
-                {
+                Crashlytics.log(msg);
+                Crashlytics.logException(e);
+            } catch (Exception e1)
+            {
 
-                }
             }
 
             if (sharedPreferences != null)
