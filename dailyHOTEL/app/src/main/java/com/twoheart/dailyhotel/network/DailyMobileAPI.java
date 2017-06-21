@@ -1439,14 +1439,10 @@ public class DailyMobileAPI implements IDailyNetwork
 
     public Observable<BaseListDto<BookingData>> getBookingList()
     {
-        // 임시 작업 다음주 까지 머지가 안되어서 미리 작업을 하기 위한 방법
-        final String URL = Constants.UNENCRYPTED_URL ? "https://temp-mobileapi.dailyhotel.me/goodnight/"//
-            : "MTUkMTExJDEyOCQ1NiQ2OSQxMTEkNjAkODMkNjIkNzEkMTEzJDEyNyQzJDk4JDgwJDc0JA==$MDNFEQTg1RTgwOTMAyMTdFOTI2QURFQTYyODY2QjA5NzA3OEMwRDU2QzAMzRDWAH4RDlCNjMYUU3NEI3MDkZGMjADzRDhEODMzQTCIwRkVCMUNCRTYzOTTJCIRTKQ4QTVFOGEY1RjlCMkNIy$";
-
         final String API = Constants.UNENCRYPTED_URL ? "api/v5/reservations"//
             : "NzkkMzIkNTMkODUkNTkkNDUkMjckOTQkNzEkOTYkOTYkODQkNzIkNTMkODckNTMk$MTRDNDIwMTk1OEM1Mzg1OUMyQUNYEMzM3IOTNDNjE4Q0FFPMDQ3M0AUJEIOEM0QYTM1MEM2NETJQ5NDY3NEY5MDOEQWxNjJI4Nw=ZLO=$";
 
-        return mDailyMobileService.getBookingList(Crypto.getUrlDecoderEx(URL) + Crypto.getUrlDecoderEx(API)).subscribeOn(Schedulers.io());
+        return mDailyMobileService.getBookingList(Crypto.getUrlDecoderEx(API)).subscribeOn(Schedulers.io());
     }
 
     public Observable<BaseDto<BookingHideData>> getStayOutboundHideBooking(int bookingIndex)
