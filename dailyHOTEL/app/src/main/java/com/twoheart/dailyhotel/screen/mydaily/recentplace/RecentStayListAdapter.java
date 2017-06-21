@@ -8,7 +8,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ScreenUtils;
@@ -21,6 +20,7 @@ import com.facebook.drawee.controller.ControllerListener;
 import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.imagepipeline.image.ImageInfo;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.databinding.ListRowStayDataBinding;
 import com.twoheart.dailyhotel.databinding.ListRowStayOutboundDataBinding;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.Stay;
@@ -70,18 +70,14 @@ public class RecentStayListAdapter extends RecentPlacesListAdapter
         {
             case PlaceViewItem.TYPE_ENTRY:
             {
-                View view = mInflater.inflate(R.layout.list_row_hotel, parent, false);
-
-                return new StayViewHolder(view);
+                ListRowStayDataBinding dataBinding = DataBindingUtil.inflate(mInflater, R.layout.list_row_stay_data, parent, false);
+                return new StayInboundViewHolder(dataBinding);
             }
 
             case PlaceViewItem.TYPE_OB_ENTRY:
             {
                 ListRowStayOutboundDataBinding dataBinding = DataBindingUtil.inflate(LayoutInflater.from(mContext), R.layout.list_row_stay_outbound_data, parent, false);
-
-                StayOutboundViewHolder stayViewHolder = new StayOutboundViewHolder(dataBinding);
-
-                return stayViewHolder;
+                return new StayOutboundViewHolder(dataBinding);
             }
 
             case PlaceViewItem.TYPE_FOOTER_VIEW:
@@ -106,7 +102,7 @@ public class RecentStayListAdapter extends RecentPlacesListAdapter
         switch (item.mType)
         {
             case PlaceViewItem.TYPE_ENTRY:
-                onBindViewHolder((StayViewHolder) viewHolder, item, position);
+                onBindViewHolder((StayInboundViewHolder) viewHolder, item, position);
                 break;
 
             case PlaceViewItem.TYPE_OB_ENTRY:
@@ -118,7 +114,7 @@ public class RecentStayListAdapter extends RecentPlacesListAdapter
         }
     }
 
-    private void onBindViewHolder(StayViewHolder holder, PlaceViewItem placeViewItem, int position)
+    private void onBindViewHolder(StayInboundViewHolder holder, PlaceViewItem placeViewItem, int position)
     {
         final Stay stay = placeViewItem.getItem();
 
@@ -136,132 +132,121 @@ public class RecentStayListAdapter extends RecentPlacesListAdapter
             address = address.replace(" l ", "ㅣ");
         }
 
-        holder.hotelAddressView.setText(address);
-        holder.hotelNameView.setText(stay.name);
+        holder.dataBinding.addressTextView.setText(address);
+        holder.dataBinding.nameTextView.setText(stay.name);
 
         if (stay.price <= 0 || stay.price <= stay.discountPrice)
         {
-            holder.hotelPriceView.setVisibility(View.INVISIBLE);
-            holder.hotelPriceView.setText(null);
+            holder.dataBinding.priceTextView.setVisibility(View.INVISIBLE);
+            holder.dataBinding.priceTextView.setText(null);
         } else
         {
-            holder.hotelPriceView.setVisibility(View.VISIBLE);
-            holder.hotelPriceView.setText(strPrice);
-            holder.hotelPriceView.setPaintFlags(holder.hotelPriceView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+            holder.dataBinding.priceTextView.setVisibility(View.VISIBLE);
+            holder.dataBinding.priceTextView.setText(strPrice);
+            holder.dataBinding.priceTextView.setPaintFlags(holder.dataBinding.priceTextView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
         }
 
         // 만족도
         if (stay.satisfaction > 0)
         {
-            holder.satisfactionView.setVisibility(View.VISIBLE);
-            holder.satisfactionView.setText(//
+            holder.dataBinding.satisfactionView.setVisibility(View.VISIBLE);
+            holder.dataBinding.satisfactionView.setText(//
                 mContext.getResources().getString(R.string.label_list_satisfaction, stay.satisfaction));
         } else
         {
-            holder.satisfactionView.setVisibility(View.GONE);
+            holder.dataBinding.satisfactionView.setVisibility(View.GONE);
         }
 
         if (mNights > 1)
         {
-            holder.averageView.setVisibility(View.VISIBLE);
+            holder.dataBinding.averageTextView.setVisibility(View.VISIBLE);
         } else
         {
-            holder.averageView.setVisibility(View.GONE);
+            holder.dataBinding.averageTextView.setVisibility(View.GONE);
         }
 
-        holder.hotelDiscountView.setText(strDiscount);
-        holder.hotelNameView.setSelected(true); // Android TextView marquee bug
+        holder.dataBinding.discountPriceTextView.setText(strDiscount);
+        holder.dataBinding.nameTextView.setSelected(true); // Android TextView marquee bug
 
         if (VersionUtils.isOverAPI16() == true)
         {
-            holder.gradientView.setBackground(mPaintDrawable);
+            holder.dataBinding.gradientView.setBackground(mPaintDrawable);
         } else
         {
-            holder.gradientView.setBackgroundDrawable(mPaintDrawable);
+            holder.dataBinding.gradientView.setBackgroundDrawable(mPaintDrawable);
         }
 
         // grade
-        holder.hotelGradeView.setText(stay.getGrade().getName(mContext));
-        holder.hotelGradeView.setBackgroundResource(stay.getGrade().getColorResId());
+        holder.dataBinding.gradeTextView.setText(stay.getGrade().getName(mContext));
+        holder.dataBinding.gradeTextView.setBackgroundResource(stay.getGrade().getColorResId());
 
-        Util.requestImageResize(mContext, holder.hotelImageView, stay.imageUrl);
+        Util.requestImageResize(mContext, holder.dataBinding.imageView, stay.imageUrl);
 
         // SOLD OUT 표시
         if (stay.isSoldOut == true)
         {
-            holder.hotelSoldOutView.setVisibility(View.VISIBLE);
+            holder.dataBinding.soldoutView.setVisibility(View.VISIBLE);
         } else
         {
-            holder.hotelSoldOutView.setVisibility(View.GONE);
+            holder.dataBinding.soldoutView.setVisibility(View.GONE);
         }
 
         if (DailyTextUtils.isTextEmpty(stay.dBenefitText) == false)
         {
-            holder.dBenefitTextView.setVisibility(View.VISIBLE);
-            holder.dBenefitTextView.setText(stay.dBenefitText);
+            holder.dataBinding.dBenefitTextView.setVisibility(View.VISIBLE);
+            holder.dataBinding.dBenefitTextView.setText(stay.dBenefitText);
         } else
         {
-            holder.dBenefitTextView.setVisibility(View.GONE);
+            holder.dataBinding.dBenefitTextView.setVisibility(View.GONE);
         }
 
         if (mShowDistanceIgnoreSort == true || getSortType() == Constants.SortType.DISTANCE)
         {
-            if (holder.satisfactionView.getVisibility() == View.VISIBLE || holder.trueVRView.getVisibility() == View.VISIBLE)
+            if (holder.dataBinding.satisfactionView.getVisibility() == View.VISIBLE || holder.dataBinding.trueVRView.getVisibility() == View.VISIBLE)
             {
-                holder.dot1View.setVisibility(View.VISIBLE);
+                holder.dataBinding.dot1View.setVisibility(View.VISIBLE);
             } else
             {
-                holder.dot1View.setVisibility(View.GONE);
+                holder.dataBinding.dot1View.setVisibility(View.GONE);
             }
 
-            holder.distanceTextView.setVisibility(View.VISIBLE);
-            holder.distanceTextView.setText(mContext.getString(R.string.label_distance_km, new DecimalFormat("#.#").format(stay.distance)));
+            holder.dataBinding.distanceTextView.setVisibility(View.VISIBLE);
+            holder.dataBinding.distanceTextView.setText(mContext.getString(R.string.label_distance_km, new DecimalFormat("#.#").format(stay.distance)));
         } else
         {
-            holder.dot1View.setVisibility(View.GONE);
-            holder.distanceTextView.setVisibility(View.GONE);
+            holder.dataBinding.dot1View.setVisibility(View.GONE);
+            holder.dataBinding.distanceTextView.setVisibility(View.GONE);
         }
 
         // VR 여부
         if (stay.truevr == true && mTrueVREnabled == true)
         {
-            if (holder.satisfactionView.getVisibility() == View.VISIBLE)
+            if (holder.dataBinding.satisfactionView.getVisibility() == View.VISIBLE)
             {
-                holder.dot2View.setVisibility(View.VISIBLE);
+                holder.dataBinding.dot2View.setVisibility(View.VISIBLE);
             } else
             {
-                holder.dot2View.setVisibility(View.GONE);
+                holder.dataBinding.dot2View.setVisibility(View.GONE);
             }
 
-            holder.trueVRView.setVisibility(View.VISIBLE);
+            holder.dataBinding.trueVRView.setVisibility(View.VISIBLE);
         } else
         {
-            holder.dot2View.setVisibility(View.GONE);
-            holder.trueVRView.setVisibility(View.GONE);
+            holder.dataBinding.dot2View.setVisibility(View.GONE);
+            holder.dataBinding.trueVRView.setVisibility(View.GONE);
         }
 
-        holder.deleteView.setVisibility(View.VISIBLE);
-        holder.deleteView.setTag(position);
-        holder.deleteView.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                if (mListener != null)
-                {
-                    mListener.onDeleteClick(v, (Integer) v.getTag());
-                }
-            }
-        });
+        holder.dataBinding.deleteView.setVisibility(View.VISIBLE);
+        holder.dataBinding.deleteView.setTag(position);
 
-        if (holder.satisfactionView.getVisibility() == View.GONE//
-            && holder.trueVRView.getVisibility() == View.GONE//
-            && holder.distanceTextView.getVisibility() == View.GONE)
+        if (holder.dataBinding.satisfactionView.getVisibility() == View.GONE//
+            && holder.dataBinding.trueVRView.getVisibility() == View.GONE//
+            && holder.dataBinding.distanceTextView.getVisibility() == View.GONE)
         {
-            holder.informationLayout.setVisibility(View.GONE);
+            holder.dataBinding.informationLayout.setVisibility(View.GONE);
         } else
         {
-            holder.informationLayout.setVisibility(View.VISIBLE);
+            holder.dataBinding.informationLayout.setVisibility(View.VISIBLE);
         }
     }
 
@@ -399,47 +384,15 @@ public class RecentStayListAdapter extends RecentPlacesListAdapter
         }
     }
 
-    private class StayViewHolder extends RecyclerView.ViewHolder
+    private class StayInboundViewHolder extends RecyclerView.ViewHolder
     {
-        View gradientView;
-        com.facebook.drawee.view.SimpleDraweeView hotelImageView;
-        TextView dBenefitTextView;
-        TextView hotelGradeView;
-        TextView hotelNameView;
-        View informationLayout;
-        TextView satisfactionView;
-        View dot1View;
-        TextView distanceTextView;
-        View dot2View;
-        View trueVRView;
-        TextView hotelAddressView;
-        TextView hotelPriceView;
-        View averageView;
-        TextView hotelDiscountView;
-        View hotelSoldOutView;
-        View deleteView;
+        ListRowStayDataBinding dataBinding;
 
-        public StayViewHolder(View itemView)
+        public StayInboundViewHolder(ListRowStayDataBinding dataBinding)
         {
-            super(itemView);
+            super(dataBinding.getRoot());
 
-            gradientView = itemView.findViewById(R.id.gradientView);
-            hotelImageView = (com.facebook.drawee.view.SimpleDraweeView) itemView.findViewById(R.id.imageView);
-            hotelNameView = (TextView) itemView.findViewById(R.id.nameTextView);
-            hotelPriceView = (TextView) itemView.findViewById(R.id.priceTextView);
-            satisfactionView = (TextView) itemView.findViewById(R.id.satisfactionView);
-            hotelDiscountView = (TextView) itemView.findViewById(R.id.discountPriceTextView);
-            hotelSoldOutView = itemView.findViewById(R.id.soldoutView);
-            hotelAddressView = (TextView) itemView.findViewById(R.id.addressTextView);
-            hotelGradeView = (TextView) itemView.findViewById(R.id.gradeTextView);
-            dBenefitTextView = (TextView) itemView.findViewById(R.id.dBenefitTextView);
-            averageView = itemView.findViewById(R.id.averageTextView);
-            distanceTextView = (TextView) itemView.findViewById(R.id.distanceTextView);
-            deleteView = itemView.findViewById(R.id.deleteView);
-            informationLayout = itemView.findViewById(R.id.informationLayout);
-            trueVRView = itemView.findViewById(R.id.trueVRView);
-            dot1View = itemView.findViewById(R.id.dot1View);
-            dot2View = itemView.findViewById(R.id.dot2View);
+            this.dataBinding = dataBinding;
 
             itemView.setOnClickListener(new View.OnClickListener()
             {
@@ -475,6 +428,18 @@ public class RecentStayListAdapter extends RecentPlacesListAdapter
                     }
                 });
             }
+
+            this.dataBinding.deleteView.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    if (mListener != null)
+                    {
+                        mListener.onDeleteClick(v, (Integer) v.getTag());
+                    }
+                }
+            });
         }
     }
 
@@ -501,24 +466,27 @@ public class RecentStayListAdapter extends RecentPlacesListAdapter
                 }
             });
 
-            itemView.setOnLongClickListener(new View.OnLongClickListener()
+            if (Util.supportPreview(mContext) == true)
             {
-                @Override
-                public boolean onLongClick(View v)
+                itemView.setOnLongClickListener(new View.OnLongClickListener()
                 {
-                    if (mListener == null)
+                    @Override
+                    public boolean onLongClick(View v)
                     {
-                        return false;
-                    } else
-                    {
-                        Vibrator vibrator = (Vibrator) mContext.getSystemService(Context.VIBRATOR_SERVICE);
-                        vibrator.vibrate(70);
+                        if (mListener == null)
+                        {
+                            return false;
+                        } else
+                        {
+                            Vibrator vibrator = (Vibrator) mContext.getSystemService(Context.VIBRATOR_SERVICE);
+                            vibrator.vibrate(70);
 
-                        mListener.onItemLongClick(v);
-                        return true;
+                            mListener.onItemLongClick(v);
+                            return true;
+                        }
                     }
-                }
-            });
+                });
+            }
         }
     }
 }
