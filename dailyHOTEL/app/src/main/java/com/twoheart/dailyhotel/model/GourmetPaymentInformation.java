@@ -12,6 +12,7 @@ public class GourmetPaymentInformation extends PlacePaymentInformation
     public String placeName;
     public int ticketCount;
     public int ticketMaxCount; // 최대 결제 가능한 티켓 개수
+    public int ticketMinCount; // 최소 구매 수량
     public long ticketTime;
     public long[] ticketTimes;
     public String category;
@@ -23,6 +24,7 @@ public class GourmetPaymentInformation extends PlacePaymentInformation
 
         // Default Ticket count
         ticketCount = 1;
+        ticketMinCount = 1;
         ticketMaxCount = 1;
     }
 

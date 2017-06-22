@@ -1476,7 +1476,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
 
             final int count = gourmetPaymentInformation.ticketCount;
 
-            if (count <= 1)
+            if (count <= gourmetPaymentInformation.ticketMinCount)
             {
                 mGourmetPaymentLayout.setTicketCountMinusButtonEnabled(false);
             } else
@@ -1796,6 +1796,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
                         int discountPrice = jsonObject.getInt("discount");
                         long sday = jsonObject.getLong("sday");
                         //					jsonObject.getInt("available_ticket_count");
+                        int minCount = jsonObject.getInt("minimum_order_quantity");
                         int maxCount = jsonObject.getInt("max_sale_count");
 
                         JSONArray timeJSONArray = jsonObject.getJSONArray("eating_time_list");
@@ -1848,6 +1849,13 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
                         }
 
                         gourmetProduct.discountPrice = discountPrice;
+                        gourmetPaymentInformation.ticketMinCount = minCount;
+
+                        if (gourmetPaymentInformation.ticketCount < minCount)
+                        {
+                            gourmetPaymentInformation.ticketCount = minCount;
+                        }
+
                         gourmetPaymentInformation.ticketMaxCount = maxCount;
 
                         if (gourmetPaymentInformation.ticketTime == 0)
