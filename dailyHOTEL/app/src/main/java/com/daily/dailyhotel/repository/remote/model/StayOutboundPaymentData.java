@@ -28,8 +28,8 @@ public class StayOutboundPaymentData
     @JsonField(name = "nonRefundable")
     public boolean nonRefundable;
 
-    @JsonField(name = "nonRefundableDescriptions")
-    public String nonRefundableDescriptions;
+    @JsonField(name = "nonRefundableDescription")
+    public String nonRefundableDescription;
 
     @JsonField(name = "total")
     public int total;
@@ -68,7 +68,7 @@ public class StayOutboundPaymentData
         stayOutboundPayment.checkOutDate = checkoutDate;
         stayOutboundPayment.checkOutTime = checkoutTime;
         stayOutboundPayment.nonRefundable = nonRefundable;
-        stayOutboundPayment.nonRefundableDescription = nonRefundableDescriptions;
+        stayOutboundPayment.nonRefundableDescription = nonRefundableDescription;
         stayOutboundPayment.totalPrice = total;
         stayOutboundPayment.feeTotalAmountUsd = feeTotalAmountUsd;
         stayOutboundPayment.rateKey = rateKey;
