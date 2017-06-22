@@ -1701,6 +1701,9 @@ public class HomeFragment extends BaseMenuNavigationFragment
 
             startActivityForResult(EventWebActivity.newInstance(mBaseActivity, EventWebActivity.SourceType.STAMP//
                 , Crypto.getUrlDecoderEx(Constants.URL_WEB_STAMP_EVENT), mBaseActivity.getString(R.string.label_stamp_event_title)), Constants.CODE_REQUEST_ACTIVITY_STAMP);
+
+            AnalyticsManager.getInstance(mBaseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION,//
+                AnalyticsManager.Action.STAMP_DETAIL_CLICK, AnalyticsManager.Label.HOME, null);
         }
 
         @Override
