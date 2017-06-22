@@ -366,11 +366,11 @@ public class HomeNetworkController extends BaseNetworkController
                     ((OnNetworkControllerListener) mOnNetworkControllerListener).onStamps(baseDto.data.count, false);
                 } else
                 {
-                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onStamps(-1, true);
+                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onStamps(-1, false);
                 }
             } else
             {
-                ((OnNetworkControllerListener) mOnNetworkControllerListener).onStamps(-1, true);
+                ((OnNetworkControllerListener) mOnNetworkControllerListener).onStamps(-1, false);
             }
         }
 
