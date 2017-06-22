@@ -962,6 +962,12 @@ public class HomeLayout extends BaseBlurLayout
             setErrorPopupLayout(true);
         } else
         {
+            if (count < 0)
+            {
+                mListRowHomeStampDataBinding.getRoot().setVisibility(View.GONE);
+                return;
+            }
+
             if (count >= 1)
             {
                 mListRowHomeStampDataBinding.nights01TextView.setBackgroundResource(R.drawable.ic_stamp_achieved_01);
