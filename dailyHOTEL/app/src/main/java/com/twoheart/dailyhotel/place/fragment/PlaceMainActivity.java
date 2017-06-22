@@ -109,18 +109,21 @@ public abstract class PlaceMainActivity extends BaseActivity
                 mPlaceMainLayout.setBlurVisibility(this, false);
             } else
             {
-
-                int count = DailyPreference.getInstance(this).getCountPreviewGuide() + 1;
-
-                if (count == 2)
+                // View 타입이 리스트일때만
+                if (mViewType == ViewType.LIST)
                 {
-                    showPreviewGuide();
-                } else if (count > 2)
-                {
-                    return;
+                    int count = DailyPreference.getInstance(this).getCountPreviewGuide() + 1;
+
+                    if (count == 2)
+                    {
+                        showPreviewGuide();
+                    } else if (count > 2)
+                    {
+                        return;
+                    }
+
+                    DailyPreference.getInstance(this).setCountPreviewGuide(count);
                 }
-
-                DailyPreference.getInstance(this).setCountPreviewGuide(count);
             }
         }
     }
