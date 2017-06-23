@@ -1,6 +1,7 @@
 package com.daily.dailyhotel.screen.booking.detail.stay.outbound.refund;
 
 
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -230,6 +231,7 @@ public class StayOutboundRefundPresenter extends BaseExceptionPresenter<StayOutb
                                             @Override
                                             public void onDismiss(DialogInterface dialog)
                                             {
+                                                setResult(Activity.RESULT_OK);
                                                 onBackClick();
                                             }
                                         });
@@ -283,6 +285,7 @@ public class StayOutboundRefundPresenter extends BaseExceptionPresenter<StayOutb
                                             @Override
                                             public void onDismiss(DialogInterface dialog)
                                             {
+                                                setResult(Activity.RESULT_OK);
                                                 onBackClick();
                                             }
                                         });

@@ -36,6 +36,7 @@ import com.twoheart.dailyhotel.screen.common.HappyTalkCategoryDialog;
 import com.twoheart.dailyhotel.screen.common.PermissionManagerActivity;
 import com.twoheart.dailyhotel.screen.common.ZoomMapActivity;
 import com.twoheart.dailyhotel.screen.information.FAQActivity;
+import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyUserPreference;
 import com.twoheart.dailyhotel.util.KakaoLinkManager;
@@ -207,6 +208,14 @@ public class StayOutboundBookingDetailPresenter extends BaseExceptionPresenter<S
 
             case StayOutboundBookingDetailActivity.REQUEST_CODE_SETTING_LOCATION:
                 onMyLocationClick();
+                break;
+
+            case StayOutboundBookingDetailActivity.REQUEST_CODE_REFUND:
+                if (resultCode == Activity.RESULT_OK)
+                {
+                    setResult(Constants.CODE_RESULT_ACTIVITY_REFRESH);
+                    onBackClick();
+                }
                 break;
         }
     }

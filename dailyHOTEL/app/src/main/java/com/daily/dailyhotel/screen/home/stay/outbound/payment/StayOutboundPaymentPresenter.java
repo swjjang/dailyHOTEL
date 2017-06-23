@@ -1341,7 +1341,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
                     @Override
                     public void onDismiss(DialogInterface dialog)
                     {
-
+                        onBackClick();
                     }
                 });
         }
@@ -1359,7 +1359,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
                 @Override
                 public void onDismiss(DialogInterface dialog)
                 {
-
+                    onBackClick();
                 }
             }, false);
     }
