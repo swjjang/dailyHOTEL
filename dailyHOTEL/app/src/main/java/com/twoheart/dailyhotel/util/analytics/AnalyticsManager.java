@@ -6,11 +6,16 @@ import android.net.Uri;
 import android.os.Bundle;
 
 import com.daily.base.util.ExLog;
+import com.daily.dailyhotel.repository.local.model.AnalyticsRealmObject;
+import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import io.realm.Realm;
+import io.realm.RealmConfiguration;
 
 public class AnalyticsManager
 {
@@ -120,6 +125,24 @@ public class AnalyticsManager
         {
             mAnalyticsManagerList.add(mFirebaseManager);
         }
+
+        // 개발용 코드 - 릴리즈시 삭제 필요. - 이코드가 동작하면 최근 본 업장 데이터가 초기화 될 수 있음
+        if (Constants.DEBUG == true)
+        {
+            RealmConfiguration config = new RealmConfiguration.Builder().deleteRealmIfMigrationNeeded().build();
+            Realm.setDefaultConfiguration(config);
+        }
+
+        // analyticsRealmObject clear
+        Realm realm = Realm.getDefaultInstance();
+        realm.executeTransactionAsync(new Realm.Transaction()
+        {
+            @Override
+            public void execute(Realm realm)
+            {
+                realm.delete(AnalyticsRealmObject.class);
+            }
+        });
     }
 
     public GoogleAnalyticsManager getGoogleAnalyticsManager()

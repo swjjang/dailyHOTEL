@@ -9,7 +9,6 @@ import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.util.FontManager;
 import com.daily.base.util.VersionUtils;
-import com.daily.dailyhotel.repository.local.model.AnalyticsRealmObject;
 import com.daily.dailyhotel.util.RecentlyPlaceUtil;
 import com.facebook.FacebookSdk;
 import com.kakao.auth.ApprovalType;
@@ -31,7 +30,6 @@ import java.util.Locale;
 
 import io.fabric.sdk.android.Fabric;
 import io.realm.Realm;
-import io.realm.RealmConfiguration;
 
 public class DailyHotel extends android.support.multidex.MultiDexApplication implements Constants
 {
@@ -73,6 +71,8 @@ public class DailyHotel extends android.support.multidex.MultiDexApplication imp
             }
         });
 
+        Realm.init(this);
+
         Fabric.with(this, new Crashlytics());
 
         mInstance = this;
@@ -109,26 +109,6 @@ public class DailyHotel extends android.support.multidex.MultiDexApplication imp
         }
 
         FontManager.getInstance(getApplicationContext());
-
-        Realm.init(this);
-
-        // 개발용 코드 - 릴리즈시 삭제 필요. - 이코드가 동작하면 최근 본 업장 데이터가 초기화 될 수 있음
-        if (DEBUG == true)
-        {
-            RealmConfiguration config = new RealmConfiguration.Builder().deleteRealmIfMigrationNeeded().build();
-            Realm.setDefaultConfiguration(config);
-        }
-
-        // analyticsRealmObject clear
-        Realm realm = Realm.getDefaultInstance();
-        realm.executeTransactionAsync(new Realm.Transaction()
-        {
-            @Override
-            public void execute(Realm realm)
-            {
-                realm.delete(AnalyticsRealmObject.class);
-            }
-        });
 
         RecentlyPlaceUtil.migrateRecentlyPlaces(DailyHotel.this);
 
