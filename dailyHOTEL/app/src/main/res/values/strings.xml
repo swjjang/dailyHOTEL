@@ -6,6 +6,7 @@
     <!-- Basic Infos -->
     <string name="app_name">DAILYHOTEL</string>
     <string name="facebook_app_id">268888829950610</string>
+    <string name="fb_login_protocol_scheme">fb268888829950610</string>
     <string name="homepage">http://dailyhotel.kr</string>
     <string name="contact_us">help@dailyhotel.co.kr</string>
     <string name="currency">원</string>
@@ -1323,6 +1324,7 @@
     <string name="label_stay_outbound_list_child_count">아동 %1$d</string>
     <string name="label_stay_outbound_tripadvisor_rating">(평점 %1$s)</string>
     <string name="label_stay_outbound_preparing_preview">미리보기 준비중</string>
+    <string name="label_stay_outbound_research_filter_on">조건을 변경하여 검색해보세요.</string>
 
     <!-- Stay Out Bound Filter -->
     <string name="label_stay_outbound_filter_1_star_rate">1성급</string>

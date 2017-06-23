@@ -14,6 +14,12 @@ import io.reactivex.Observable;
 
 public interface StayOutboundListViewInterface extends BaseDialogViewInterface
 {
+    enum EmptyScreenType
+    {
+        DEFAULT,
+        FILTER_ON,
+    }
+
     void setToolbarTitle(String title);
 
     void setCalendarText(String calendarText);
@@ -29,10 +35,6 @@ public interface StayOutboundListViewInterface extends BaseDialogViewInterface
     void setStayOutboundMapViewPagerList(Context context, List<StayOutbound> stayOutboundList);
 
     int getMapLayoutResourceId();
-
-    void setViewTypeOptionLayout(boolean enabled);
-
-    void setFilterOptionLayout(boolean enabled);
 
     void setViewTypeOptionImage(StayOutboundListPresenter.ViewState viewState);
 
@@ -55,9 +57,11 @@ public interface StayOutboundListViewInterface extends BaseDialogViewInterface
 
     void setEmptyScreenVisible(boolean visible);
 
-    void setBottomLayoutVisible(boolean visible);
+    void setEmptyScreenType(EmptyScreenType emptyScreenType);
 
-    void setBottomLayoutEnabled(boolean mapEnabled, boolean filterEnabled);
+    void setBottomLayoutType(EmptyScreenType emptyScreenType);
+
+    void setBottomLayoutVisible(boolean visible);
 
     Observable<Long> getLocationAnimation();
 }

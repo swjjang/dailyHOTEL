@@ -321,7 +321,6 @@ public class HomeLayout extends BaseBlurLayout
         initTextMessageLayout(mHomeContentLayout);
         initRecentListLayout(mHomeContentLayout);
         initWishListLayout(mHomeContentLayout);
-        initRecommendationLayout(mHomeContentLayout);
 
         if (DailyHotel.isLogin() == true && DailyRemoteConfigPreference.getInstance(mContext).isRemoteConfigStampEnabled() == true //
             && DailyRemoteConfigPreference.getInstance(mContext).isRemoteConfigStampHomeEnabled() == true)
@@ -329,6 +328,7 @@ public class HomeLayout extends BaseBlurLayout
             initStampLayout(mHomeContentLayout);
         }
 
+        initRecommendationLayout(mHomeContentLayout);
         initProviderInfoLayout(mHomeContentLayout);
         initTopButtonLayout(mHomeContentLayout);
     }

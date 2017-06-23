@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Basic Infos -->
+    <string name="app_name">DAILYHOTEL\nDEBUG</string>
+    <string name="facebook_app_id">1956422234637703</string>
+    <string name="fb_login_protocol_scheme">fb1956422234637703</string>
+</resources>
