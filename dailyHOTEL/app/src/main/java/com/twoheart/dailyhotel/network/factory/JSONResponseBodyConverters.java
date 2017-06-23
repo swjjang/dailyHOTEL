@@ -2,7 +2,6 @@ package com.twoheart.dailyhotel.network.factory;
 
 import com.crashlytics.android.Crashlytics;
 import com.daily.base.util.ExLog;
-import com.twoheart.dailyhotel.util.Constants;
 
 import org.json.JSONArray;
 import org.json.JSONException;

@@ -1305,6 +1305,16 @@ public abstract class PlacePaymentWebActivity extends BaseActivity implements Co
          * 각각의 경우에 맞는 resultCode를 넣어 BookingActivity로 finish시킴.
          */
         @JavascriptInterface
+        public void payment(final String jsonString)
+        {
+            onPaymentResult(jsonString);
+        }
+
+        /**
+         * 서버로부터 받은 결제 결과 메시지를 처리함.
+         * 각각의 경우에 맞는 resultCode를 넣어 BookingActivity로 finish시킴.
+         */
+        @JavascriptInterface
         public void feed(final String msg)
         {
             onFeed(msg);
@@ -1320,6 +1330,8 @@ public abstract class PlacePaymentWebActivity extends BaseActivity implements Co
             onPaymentFeed(result);
         }
     }
+
+    public abstract void onPaymentResult(String jsonString);
 
     public abstract void onFeed(String msg);
 

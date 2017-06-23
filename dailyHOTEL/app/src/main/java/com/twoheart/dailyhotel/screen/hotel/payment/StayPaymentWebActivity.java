@@ -94,6 +94,12 @@ public class StayPaymentWebActivity extends PlacePaymentWebActivity
         return AnalyticsManager.Screen.DAILYHOTEL_PAYMENT_PROCESS;
     }
 
+    @Override
+    public void onPaymentResult(String msg)
+    {
+        // do nothing
+    }
+
     protected void requestPostPaymentWebView(WebView webView //
         , PlacePaymentInformation placePaymentInformation, PlaceBookingDay placeBookingDay)
     {
