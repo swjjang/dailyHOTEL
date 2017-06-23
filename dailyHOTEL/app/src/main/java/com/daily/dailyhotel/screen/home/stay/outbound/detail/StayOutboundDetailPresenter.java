@@ -413,6 +413,13 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
             case StayOutboundDetailActivity.REQUEST_CODE_CALL:
                 break;
 
+            case StayOutboundDetailActivity.REQUEST_CODE_PAYMENT:
+                if (resultCode == Constants.CODE_RESULT_ACTIVITY_REFRESH)
+                {
+                    setRefresh(true);
+                }
+                break;
+
             case StayOutboundDetailActivity.REQUEST_CODE_PROFILE_UPDATE:
             case StayOutboundDetailActivity.REQUEST_CODE_LOGIN:
                 if (resultCode == Activity.RESULT_OK)

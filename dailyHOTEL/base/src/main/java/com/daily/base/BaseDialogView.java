@@ -60,6 +60,13 @@ public abstract class BaseDialogView<T1 extends OnBaseEventListener, T2 extends 
     }
 
     @Override
+    public void showSimpleDialog(String title, String msg, String positive, View.OnClickListener positiveListener//
+        , DialogInterface.OnDismissListener dismissListener, boolean cancelable)
+    {
+        showSimpleDialog(title, msg, positive, null, positiveListener, null, null, dismissListener, cancelable);
+    }
+
+    @Override
     public void showSimpleDialog(String title, String msg, String positive, String negative//
         , View.OnClickListener positiveListener, View.OnClickListener negativeListener)
     {
@@ -68,15 +75,15 @@ public abstract class BaseDialogView<T1 extends OnBaseEventListener, T2 extends 
 
     @Override
     public void showSimpleDialog(String title, String msg, String positive, String negative//
-        , View.OnClickListener positiveListener, View.OnClickListener negativeListener, boolean isCancelable)
+        , View.OnClickListener positiveListener, View.OnClickListener negativeListener, boolean cancelable)
     {
-        showSimpleDialog(title, msg, positive, negative, positiveListener, negativeListener, null, null, isCancelable);
+        showSimpleDialog(title, msg, positive, negative, positiveListener, negativeListener, null, null, cancelable);
     }
 
     @Override
     public void showSimpleDialog(String titleText, String msg, String positive, String negative//
         , final View.OnClickListener positiveListener, final View.OnClickListener negativeListener, DialogInterface.OnCancelListener cancelListener, //
-                                 DialogInterface.OnDismissListener dismissListener, boolean isCancelable)
+                                 DialogInterface.OnDismissListener dismissListener, boolean cancelable)
     {
         if (getActivity().isFinishing() == true)
         {
@@ -171,7 +178,7 @@ public abstract class BaseDialogView<T1 extends OnBaseEventListener, T2 extends 
             mDialog.setOnDismissListener(dismissListener);
         }
 
-        mDialog.setCancelable(isCancelable);
+        mDialog.setCancelable(cancelable);
 
         try
         {
@@ -189,7 +196,7 @@ public abstract class BaseDialogView<T1 extends OnBaseEventListener, T2 extends 
     }
 
     protected void showSimpleDialog(View view, DialogInterface.OnCancelListener cancelListener//
-        , DialogInterface.OnDismissListener dismissListener, boolean isCancelable)
+        , DialogInterface.OnDismissListener dismissListener, boolean cancelable)
     {
         if (getActivity().isFinishing() == true | view == null)
         {
@@ -203,7 +210,7 @@ public abstract class BaseDialogView<T1 extends OnBaseEventListener, T2 extends 
         mDialog = new Dialog(getActivity());
         mDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         mDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
-        mDialog.setCanceledOnTouchOutside(isCancelable);
+        mDialog.setCanceledOnTouchOutside(cancelable);
 
         if (cancelListener != null)
         {

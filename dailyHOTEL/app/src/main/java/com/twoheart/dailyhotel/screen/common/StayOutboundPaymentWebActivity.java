@@ -94,6 +94,16 @@ public class StayOutboundPaymentWebActivity extends PlacePaymentWebActivity
         return AnalyticsManager.Screen.DAILYHOTEL_PAYMENT_PROCESS;
     }
 
+    @Override
+    public void onPaymentResult(String jsonString)
+    {
+        Intent intent = new Intent();
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_PAYMENT_RESULT, jsonString);
+
+        setResult(RESULT_OK, intent);
+        finish();
+    }
+
     protected void requestPostPaymentWebView(WebView webView, int placeIndex, String payType, String jsonString)
     {
         if (DailyTextUtils.isTextEmpty(jsonString) == true)
@@ -125,65 +135,13 @@ public class StayOutboundPaymentWebActivity extends PlacePaymentWebActivity
     @Override
     public void onFeed(String msg)
     {
-        int resultCode;
-
-        if (msg == null)
-        {
-            resultCode = CODE_RESULT_ACTIVITY_PAYMENT_FAIL;
-        } else if (msg.equals("SUCCESS"))
-        {
-            resultCode = CODE_RESULT_ACTIVITY_PAYMENT_SUCCESS;
-        } else if (msg.equals("INVALID_SESSION"))
-        {
-            resultCode = CODE_RESULT_ACTIVITY_PAYMENT_INVALID_SESSION;
-        } else if (msg.equals("SOLD_OUT"))
-        {
-            resultCode = CODE_RESULT_ACTIVITY_PAYMENT_SOLD_OUT;
-        } else if (msg.equals("PAYMENT_COMPLETE"))
-        {
-            resultCode = CODE_RESULT_ACTIVITY_PAYMENT_COMPLETE;
-        } else if (msg.equals("INVALID_DATE"))
-        {
-            resultCode = CODE_RESULT_ACTIVITY_PAYMENT_INVALID_DATE;
-        } else if (msg.equals("PAYMENT_CANCELED"))
-        {
-            resultCode = CODE_RESULT_ACTIVITY_PAYMENT_CANCELED;
-        } else if (msg.equals("ACCOUNT_READY"))
-        {
-            resultCode = CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY;
-        } else if (msg.equals("ACCOUNT_TIME_ERROR"))
-        {
-            resultCode = CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_TIME_ERROR;
-        } else if (msg.equals("ACCOUNT_DUPLICATE"))
-        {
-            resultCode = CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_DUPLICATE;
-        } else if (msg.equals("NOT_AVAILABLE"))
-        {
-            resultCode = CODE_RESULT_ACTIVITY_PAYMENT_NOT_AVAILABLE;
-        } else if (msg.equals("PAYMENT_TIMEOVER"))
-        {
-            resultCode = CODE_RESULT_ACTIVITY_PAYMENT_TIMEOVER;
-        } else
-        {
-            resultCode = CODE_RESULT_ACTIVITY_PAYMENT_FAIL;
-        }
-
-        Intent intent = new Intent();
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_PAYMENTINFORMATION, mPlacePaymentInformation);
-
-        setResult(resultCode, intent);
-        finish();
+        // do nothing
     }
 
     @Override
     public void onPaymentFeed(String result)
     {
-        Intent intent = new Intent();
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_MESSAGE, result);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_PAYMENTINFORMATION, mPlacePaymentInformation);
-
-        setResult(CODE_RESULT_ACTIVITY_PAYMENT_PRECHECK, intent);
-        finish();
+        // do nothing
     }
 
     protected class WebViewPostAsyncTask extends AsyncTask<String, Void, String>

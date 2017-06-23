@@ -4,7 +4,6 @@ import android.content.Context;
 
 import com.crashlytics.android.Crashlytics;
 import com.daily.base.util.DailyTextUtils;
-import com.daily.base.util.ExLog;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;

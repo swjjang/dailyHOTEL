@@ -7,7 +7,6 @@ import com.twoheart.dailyhotel.model.Review;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
-import com.twoheart.dailyhotel.util.Constants;
 
 import org.json.JSONObject;
 
