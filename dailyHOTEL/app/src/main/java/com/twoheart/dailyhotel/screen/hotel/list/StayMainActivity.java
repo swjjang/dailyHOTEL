@@ -1,10 +1,12 @@
 package com.twoheart.dailyhotel.screen.hotel.list;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityOptionsCompat;
@@ -40,7 +42,6 @@ import com.twoheart.dailyhotel.place.fragment.PlaceListFragment;
 import com.twoheart.dailyhotel.place.fragment.PlaceMainActivity;
 import com.twoheart.dailyhotel.place.layout.PlaceMainLayout;
 import com.twoheart.dailyhotel.place.networkcontroller.PlaceMainNetworkController;
-import com.twoheart.dailyhotel.screen.home.category.list.StayCategoryTabActivity;
 import com.twoheart.dailyhotel.screen.hotel.detail.StayDetailActivity;
 import com.twoheart.dailyhotel.screen.hotel.filter.StayCalendarActivity;
 import com.twoheart.dailyhotel.screen.hotel.filter.StayCurationActivity;
@@ -989,6 +990,7 @@ public class StayMainActivity extends PlaceMainActivity
 
     StayListFragment.OnStayListFragmentListener mStayListFragmentListener = new StayListFragment.OnStayListFragmentListener()
     {
+        @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
         @Override
         public void onStayClick(View view, PlaceViewItem placeViewItem, int listCount)
         {
@@ -1106,7 +1108,7 @@ public class StayMainActivity extends PlaceMainActivity
                         analyticsParam.setTotalListCount(listCount);
 
                         Intent intent = StayDetailActivity.newInstance(StayMainActivity.this, //
-                            mStayCuration.getStayBookingDay(), province, stay, listCount, analyticsParam, true);
+                            mStayCuration.getStayBookingDay(), stay, analyticsParam, true);
 
                         View simpleDraweeView = view.findViewById(R.id.imageView);
                         View gradeTextView = view.findViewById(R.id.gradeTextView);
@@ -1137,7 +1139,7 @@ public class StayMainActivity extends PlaceMainActivity
                         analyticsParam.setTotalListCount(listCount);
 
                         Intent intent = StayDetailActivity.newInstance(StayMainActivity.this, //
-                            mStayCuration.getStayBookingDay(), province, stay, listCount, analyticsParam, false);
+                            mStayCuration.getStayBookingDay(), stay, analyticsParam, false);
 
                         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL);
 

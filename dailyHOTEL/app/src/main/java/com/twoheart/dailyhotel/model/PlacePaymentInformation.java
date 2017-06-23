@@ -11,9 +11,9 @@ public abstract class PlacePaymentInformation implements Parcelable
     public PaymentType paymentType; //
     public boolean isDBenefit;
     public int ratingValue;
-    public String isShowOriginalPrice;
-    public int entryPosition;
-    public boolean isDailyChoice;
+//    public String isShowOriginalPrice;
+//    public int entryPosition;
+//    public boolean isDailyChoice;
 
     private Customer mCustomer;
     private Guest mGuest;

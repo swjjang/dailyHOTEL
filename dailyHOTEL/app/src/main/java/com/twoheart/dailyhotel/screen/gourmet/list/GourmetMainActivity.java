@@ -1,10 +1,12 @@
 package com.twoheart.dailyhotel.screen.gourmet.list;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityOptionsCompat;
@@ -45,7 +47,6 @@ import com.twoheart.dailyhotel.screen.gourmet.filter.GourmetCalendarActivity;
 import com.twoheart.dailyhotel.screen.gourmet.filter.GourmetCurationActivity;
 import com.twoheart.dailyhotel.screen.gourmet.preview.GourmetPreviewActivity;
 import com.twoheart.dailyhotel.screen.gourmet.region.GourmetRegionListActivity;
-import com.twoheart.dailyhotel.screen.hotel.list.StayMainActivity;
 import com.twoheart.dailyhotel.screen.search.SearchActivity;
 import com.twoheart.dailyhotel.screen.search.gourmet.result.GourmetSearchResultActivity;
 import com.twoheart.dailyhotel.util.Constants;
@@ -909,6 +910,7 @@ public class GourmetMainActivity extends PlaceMainActivity
 
     GourmetListFragment.OnGourmetListFragmentListener mOnPlaceListFragmentListener = new GourmetListFragment.OnGourmetListFragmentListener()
     {
+        @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
         @Override
         public void onGourmetClick(View view, PlaceViewItem placeViewItem, int listCount)
         {
@@ -1025,7 +1027,7 @@ public class GourmetMainActivity extends PlaceMainActivity
                         analyticsParam.setTotalListCount(listCount);
 
                         Intent intent = GourmetDetailActivity.newInstance(GourmetMainActivity.this, //
-                            mGourmetCuration.getGourmetBookingDay(), province, gourmet, listCount, analyticsParam, true);
+                            mGourmetCuration.getGourmetBookingDay(), gourmet, analyticsParam, true);
 
                         View simpleDraweeView = view.findViewById(R.id.imageView);
                         View nameTextView = view.findViewById(R.id.nameTextView);
@@ -1054,7 +1056,7 @@ public class GourmetMainActivity extends PlaceMainActivity
                         analyticsParam.setTotalListCount(listCount);
 
                         Intent intent = GourmetDetailActivity.newInstance(GourmetMainActivity.this, //
-                            mGourmetCuration.getGourmetBookingDay(), province, gourmet, listCount, analyticsParam, false);
+                            mGourmetCuration.getGourmetBookingDay(), gourmet, analyticsParam, false);
 
                         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL);
 

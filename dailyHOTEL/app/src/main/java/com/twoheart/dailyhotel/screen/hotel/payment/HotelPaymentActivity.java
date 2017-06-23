@@ -31,14 +31,12 @@ import com.daily.base.widget.DailyScrollView;
 import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.repository.local.model.AnalyticsParam;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.Booking;
 import com.twoheart.dailyhotel.model.Coupon;
 import com.twoheart.dailyhotel.model.CreditCard;
 import com.twoheart.dailyhotel.model.Customer;
 import com.twoheart.dailyhotel.model.Guest;
 import com.twoheart.dailyhotel.model.PlacePaymentInformation;
-import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.model.StayBookingDetail;
 import com.twoheart.dailyhotel.model.StayPaymentInformation;
@@ -97,18 +95,17 @@ public class HotelPaymentActivity extends PlacePaymentActivity
     // 10 : 오후 10시 전 사전 예약, 11 : 오후 10시 후 사전 예약 00시 전 12 : 00시 부터 오전 9시
     int mPensionPopupMessageType;
     String mWarningDialogMessage;
-    private Province mProvince;
-    private String mArea; // Analytics용 소지역
+//    private Province mProvince;
+//    private String mArea; // Analytics용 소지역
     String mPlaceName;
     private String mCategoryCode;
-    private AnalyticsParam mAnalyticsParam;
 
     // GA용 스크린 정의
     String mScreenAnalytics;
 
     public static Intent newInstance(Context context, StayProduct stayProduct//
         , StayBookingDay stayBookingDay, String imageUrl, int hotelIndex, boolean isDBenefit //
-        , Province province, String area, String isShowOriginalPrice, int entryPosition //
+        , String isShowOriginalPrice, int entryPosition //
         , boolean isDailyChoice, int ratingValue, String gradeName, String address //
         , boolean isOverSeas, String placeName, String categoryCode, AnalyticsParam analyticsParam)
     {
@@ -119,8 +116,8 @@ public class HotelPaymentActivity extends PlacePaymentActivity
         intent.putExtra(NAME_INTENT_EXTRA_DATA_URL, imageUrl);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_HOTELIDX, hotelIndex);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_DBENEFIT, isDBenefit);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_PROVINCE, province);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_AREA, area);
+//        intent.putExtra(NAME_INTENT_EXTRA_DATA_PROVINCE, province);
+//        intent.putExtra(NAME_INTENT_EXTRA_DATA_AREA, area);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_SHOW_ORIGINALPRICE, isShowOriginalPrice);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_ENTRY_INDEX, entryPosition);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_DAILYCHOICE, isDailyChoice);
@@ -167,10 +164,11 @@ public class HotelPaymentActivity extends PlacePaymentActivity
     {
         outState.putParcelable(STATE_PAYMENT_INFORMATION, mPaymentInformation);
         outState.putString(STATE_PLACE_NAME, mPlaceName);
-        outState.putParcelable(STATE_PLACE_PROVINCE, mProvince);
-        outState.putString(STATE_PLACE_AREA, mArea);
+//        outState.putParcelable(STATE_PLACE_PROVINCE, mProvince);
+//        outState.putString(STATE_PLACE_AREA, mArea);
         outState.putParcelable(STATE_PLACE_BOOKINGDAY, mPlaceBookingDay);
         outState.putString(STATE_PLACE_SCREEN, mScreenAnalytics);
+        outState.putParcelable(STATE_ANALYTICS_PARAM, mAnalyticsParam);
 
         super.onSaveInstanceState(outState);
     }
@@ -182,10 +180,11 @@ public class HotelPaymentActivity extends PlacePaymentActivity
 
         mPaymentInformation = savedInstanceState.getParcelable(STATE_PAYMENT_INFORMATION);
         mPlaceName = savedInstanceState.getString(STATE_PLACE_NAME);
-        mProvince = savedInstanceState.getParcelable(STATE_PLACE_PROVINCE);
-        mArea = savedInstanceState.getString(STATE_PLACE_AREA);
+//        mProvince = savedInstanceState.getParcelable(STATE_PLACE_PROVINCE);
+//        mArea = savedInstanceState.getString(STATE_PLACE_AREA);
         mPlaceBookingDay = savedInstanceState.getParcelable(STATE_PLACE_BOOKINGDAY);
         mScreenAnalytics = savedInstanceState.getString(STATE_PLACE_SCREEN);
+        mAnalyticsParam = savedInstanceState.getParcelable(STATE_ANALYTICS_PARAM);
     }
 
     private boolean initIntent(Intent intent)
@@ -198,12 +197,12 @@ public class HotelPaymentActivity extends PlacePaymentActivity
         mPlaceImageUrl = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_URL);
         stayPaymentInformation.placeIndex = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_HOTELIDX, -1);
         stayPaymentInformation.isDBenefit = intent.getBooleanExtra(NAME_INTENT_EXTRA_DATA_DBENEFIT, false);
-        mProvince = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PROVINCE);
-        mArea = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_AREA);
+//        mProvince = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PROVINCE);
+//        mArea = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_AREA);
         stayPaymentInformation.ratingValue = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_RATING_VALUE, -1);
-        stayPaymentInformation.isShowOriginalPrice = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_IS_SHOW_ORIGINALPRICE);
-        stayPaymentInformation.entryPosition = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_ENTRY_INDEX, -1);
-        stayPaymentInformation.isDailyChoice = intent.getBooleanExtra(NAME_INTENT_EXTRA_DATA_IS_DAILYCHOICE, false);
+//        stayPaymentInformation.isShowOriginalPrice = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_IS_SHOW_ORIGINALPRICE);
+//        stayPaymentInformation.entryPosition = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_ENTRY_INDEX, -1);
+//        stayPaymentInformation.isDailyChoice = intent.getBooleanExtra(NAME_INTENT_EXTRA_DATA_IS_DAILYCHOICE, false);
         stayPaymentInformation.address = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_ADDRESS);
         stayPaymentInformation.isOverSeas = intent.getBooleanExtra(NAME_INTENT_EXTRA_DATA_ISOVERSEAS, false);
         mPlaceName = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_PLACENAME);
@@ -1355,30 +1354,31 @@ public class HotelPaymentActivity extends PlacePaymentActivity
             params.put(AnalyticsManager.KeyType.REGISTERED_SIMPLE_CARD, mSelectedCreditCard != null ? "y" : "n");
             params.put(AnalyticsManager.KeyType.NRD, stayPaymentInformation.getSaleRoomInformation().isNRD ? "y" : "n");
             params.put(AnalyticsManager.KeyType.RATING, Integer.toString(stayPaymentInformation.ratingValue));
-            params.put(AnalyticsManager.KeyType.IS_SHOW_ORIGINAL_PRICE, stayPaymentInformation.isShowOriginalPrice);
-            params.put(AnalyticsManager.KeyType.LIST_INDEX, Integer.toString(stayPaymentInformation.entryPosition));
-            params.put(AnalyticsManager.KeyType.DAILYCHOICE, stayPaymentInformation.isDailyChoice ? "y" : "n");
+            params.put(AnalyticsManager.KeyType.IS_SHOW_ORIGINAL_PRICE, mAnalyticsParam.showOriginalPriceYn);
+            params.put(AnalyticsManager.KeyType.LIST_INDEX, Integer.toString(mAnalyticsParam.listPosition));
+            params.put(AnalyticsManager.KeyType.DAILYCHOICE, mAnalyticsParam.isDailyChoice ? "y" : "n");
 
-            if (mProvince == null)
+            boolean isEmptyProvinceName = DailyTextUtils.isTextEmpty(mAnalyticsParam.provinceName);
+            boolean isEmptyAreaName = DailyTextUtils.isTextEmpty(mAnalyticsParam.areaName);
+
+            String areaName = AnalyticsManager.ValueType.EMPTY;
+            String addressAreaName = AnalyticsManager.ValueType.EMPTY;
+            if (isEmptyProvinceName == false)
             {
-                params.put(AnalyticsManager.KeyType.PROVINCE, AnalyticsManager.ValueType.EMPTY);
-                params.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.EMPTY);
-                params.put(AnalyticsManager.KeyType.AREA, AnalyticsManager.ValueType.EMPTY);
-            } else
-            {
-                if (mProvince instanceof Area)
+                if (isEmptyAreaName == true)
                 {
-                    Area area = (Area) mProvince;
-                    params.put(AnalyticsManager.KeyType.PROVINCE, area.getProvince().name);
-                    params.put(AnalyticsManager.KeyType.DISTRICT, area.name);
+                    areaName = AnalyticsManager.ValueType.ALL_LOCALE_KR;
                 } else
                 {
-                    params.put(AnalyticsManager.KeyType.PROVINCE, mProvince.name);
-                    params.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.ALL_LOCALE_KR);
+                    areaName = mAnalyticsParam.areaName;
                 }
 
-                params.put(AnalyticsManager.KeyType.AREA, DailyTextUtils.isTextEmpty(mArea) ? AnalyticsManager.ValueType.EMPTY : mArea);
+                addressAreaName = mAnalyticsParam.addressAreaName;
             }
+
+            params.put(AnalyticsManager.KeyType.PROVINCE, isEmptyProvinceName == false ? mAnalyticsParam.provinceName : AnalyticsManager.ValueType.EMPTY);
+            params.put(AnalyticsManager.KeyType.DISTRICT, areaName);
+            params.put(AnalyticsManager.KeyType.AREA, addressAreaName);
 
             AnalyticsManager.getInstance(HotelPaymentActivity.this).recordScreen(this, mScreenAnalytics, null, params);
         } catch (Exception e)
@@ -1418,9 +1418,9 @@ public class HotelPaymentActivity extends PlacePaymentActivity
             params.put(AnalyticsManager.KeyType.REGISTERED_SIMPLE_CARD, mSelectedCreditCard != null ? "y" : "n");
             params.put(AnalyticsManager.KeyType.NRD, stayPaymentInformation.getSaleRoomInformation().isNRD ? "y" : "n");
             params.put(AnalyticsManager.KeyType.RATING, Integer.toString(stayPaymentInformation.ratingValue));
-            params.put(AnalyticsManager.KeyType.IS_SHOW_ORIGINAL_PRICE, stayPaymentInformation.isShowOriginalPrice);
-            params.put(AnalyticsManager.KeyType.LIST_INDEX, Integer.toString(stayPaymentInformation.entryPosition));
-            params.put(AnalyticsManager.KeyType.DAILYCHOICE, stayPaymentInformation.isDailyChoice ? "y" : "n");
+            params.put(AnalyticsManager.KeyType.IS_SHOW_ORIGINAL_PRICE, mAnalyticsParam.showOriginalPriceYn);
+            params.put(AnalyticsManager.KeyType.LIST_INDEX, Integer.toString(mAnalyticsParam.listPosition));
+            params.put(AnalyticsManager.KeyType.DAILYCHOICE, mAnalyticsParam.isDailyChoice ? "y" : "n");
 
             switch (stayPaymentInformation.discountType)
             {
@@ -1484,26 +1484,27 @@ public class HotelPaymentActivity extends PlacePaymentActivity
             params.put(AnalyticsManager.KeyType.ADDRESS, stayPaymentInformation.address);
             params.put(AnalyticsManager.KeyType.CATEGORY, mCategoryCode);
 
-            if (mProvince == null)
+            boolean isEmptyProvinceName = DailyTextUtils.isTextEmpty(mAnalyticsParam.provinceName);
+            boolean isEmptyAreaName = DailyTextUtils.isTextEmpty(mAnalyticsParam.areaName);
+
+            String areaName = AnalyticsManager.ValueType.EMPTY;
+            String addressAreaName = AnalyticsManager.ValueType.EMPTY;
+            if (isEmptyProvinceName == false)
             {
-                params.put(AnalyticsManager.KeyType.PROVINCE, AnalyticsManager.ValueType.EMPTY);
-                params.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.EMPTY);
-                params.put(AnalyticsManager.KeyType.AREA, AnalyticsManager.ValueType.EMPTY);
-            } else
-            {
-                if (mProvince instanceof Area)
+                if (isEmptyAreaName == true)
                 {
-                    Area area = (Area) mProvince;
-                    params.put(AnalyticsManager.KeyType.PROVINCE, area.getProvince().name);
-                    params.put(AnalyticsManager.KeyType.DISTRICT, area.name);
+                    areaName = AnalyticsManager.ValueType.ALL_LOCALE_KR;
                 } else
                 {
-                    params.put(AnalyticsManager.KeyType.PROVINCE, mProvince.name);
-                    params.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.ALL_LOCALE_KR);
+                    areaName = mAnalyticsParam.areaName;
                 }
 
-                params.put(AnalyticsManager.KeyType.AREA, DailyTextUtils.isTextEmpty(mArea) ? AnalyticsManager.ValueType.EMPTY : mArea);
+                addressAreaName = mAnalyticsParam.addressAreaName;
             }
+
+            params.put(AnalyticsManager.KeyType.PROVINCE, isEmptyProvinceName == false ? mAnalyticsParam.provinceName : AnalyticsManager.ValueType.EMPTY);
+            params.put(AnalyticsManager.KeyType.DISTRICT, areaName);
+            params.put(AnalyticsManager.KeyType.AREA, addressAreaName);
 
             params.put(AnalyticsManager.KeyType.CHECK_IN_DATE, stayBookingDay.getCheckInDay("yyyyMMdd"));
             params.put(AnalyticsManager.KeyType.CHECK_OUT_DATE, stayBookingDay.getCheckOutDay("yyyyMMdd"));

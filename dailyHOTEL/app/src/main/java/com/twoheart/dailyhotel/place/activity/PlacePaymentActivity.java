@@ -22,6 +22,7 @@ import android.widget.TextView;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
+import com.daily.dailyhotel.repository.local.model.AnalyticsParam;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Coupon;
@@ -57,8 +58,9 @@ public abstract class PlacePaymentActivity extends BaseActivity
 
     protected static final String STATE_PAYMENT_INFORMATION = "statePaymentInformation";
     protected static final String STATE_PLACE_BOOKINGDAY = "statePlaceBookingDay";
-    protected static final String STATE_PLACE_PROVINCE = "state_place_province";
-    protected static final String STATE_PLACE_AREA = "statePlaceArea";
+//    protected static final String STATE_PLACE_PROVINCE = "state_place_province";
+//    protected static final String STATE_PLACE_AREA = "statePlaceArea";
+    protected static final String STATE_ANALYTICS_PARAM = "stateAnalyticsParam";
 
     protected PlacePaymentInformation mPaymentInformation;
     protected CreditCard mSelectedCreditCard;
@@ -68,6 +70,8 @@ public abstract class PlacePaymentActivity extends BaseActivity
     private ProgressDialog mProgressDialog;
 
     protected boolean mDontReload;
+
+    protected AnalyticsParam mAnalyticsParam;
 
     protected abstract void requestUserInformationForPayment();
 

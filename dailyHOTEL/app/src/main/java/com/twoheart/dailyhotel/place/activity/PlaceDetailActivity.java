@@ -21,7 +21,6 @@ import com.daily.dailyhotel.repository.local.model.AnalyticsParam;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Customer;
 import com.twoheart.dailyhotel.model.PlaceDetail;
-import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.time.PlaceBookingDay;
 import com.twoheart.dailyhotel.network.model.ImageInformation;
 import com.twoheart.dailyhotel.network.model.PlaceReviewScores;
@@ -70,8 +69,8 @@ public abstract class PlaceDetailActivity extends BaseActivity
     protected boolean mIsTransitionEnd;
     protected int mInitializeStatus;
 
-    protected Province mProvince;
-    protected String mArea; // Analytics용 소지역
+//    protected Province mProvince;
+//    protected String mArea; // Analytics용 소지역
     protected int mViewPrice; // Analytics용 리스트 가격
     protected int mProductDetailIndex; // 딥링크로 시작시에 객실/티켓 정보 오픈후에 선택되어있는 인덱스
     protected PlaceReviewScores mPlaceReviewScores;
