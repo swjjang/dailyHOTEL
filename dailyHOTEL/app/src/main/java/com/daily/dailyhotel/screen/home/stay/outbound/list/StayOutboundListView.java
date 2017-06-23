@@ -158,6 +158,7 @@ public class StayOutboundListView extends BaseDialogView<StayOutboundListView.On
         viewDataBinding.viewTypeOptionImageView.setOnClickListener(this);
         viewDataBinding.filterOptionImageView.setOnClickListener(this);
         viewDataBinding.researchView.setOnClickListener(this);
+        viewDataBinding.filterView.setOnClickListener(this);
         viewDataBinding.retryTextView.setOnClickListener(this);
 
         viewDataBinding.callTextView.setPaintFlags(viewDataBinding.callTextView.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
@@ -360,44 +361,6 @@ public class StayOutboundListView extends BaseDialogView<StayOutboundListView.On
     }
 
     @Override
-    public void setViewTypeOptionLayout(boolean enabled)
-    {
-        if (getViewDataBinding() == null)
-        {
-            return;
-        }
-
-        if (enabled == true)
-        {
-            getViewDataBinding().viewTypeOptionImageView.getBackground().setAlpha(255);
-        } else
-        {
-            getViewDataBinding().viewTypeOptionImageView.getBackground().setAlpha(102);
-        }
-
-        getViewDataBinding().viewTypeOptionImageView.setEnabled(enabled);
-    }
-
-    @Override
-    public void setFilterOptionLayout(boolean enabled)
-    {
-        if (getViewDataBinding() == null)
-        {
-            return;
-        }
-
-        if (enabled == true)
-        {
-            getViewDataBinding().filterOptionImageView.getBackground().setAlpha(255);
-        } else
-        {
-            getViewDataBinding().filterOptionImageView.getBackground().setAlpha(102);
-        }
-
-        getViewDataBinding().filterOptionImageView.setEnabled(enabled);
-    }
-
-    @Override
     public void setViewTypeOptionImage(StayOutboundListPresenter.ViewState viewState)
     {
         if (viewState == null || getViewDataBinding() == null)
@@ -573,6 +536,60 @@ public class StayOutboundListView extends BaseDialogView<StayOutboundListView.On
     }
 
     @Override
+    public void setEmptyScreenType(EmptyScreenType emptyScreenType)
+    {
+        if (getViewDataBinding() == null || emptyScreenType == null)
+        {
+            return;
+        }
+
+        switch (emptyScreenType)
+        {
+            case FILTER_ON:
+            {
+                getViewDataBinding().messageTextView02.setText(R.string.label_stay_outbound_research_filter_on);
+                getViewDataBinding().filterView.setVisibility(View.VISIBLE);
+                getViewDataBinding().callLayout.setVisibility(View.INVISIBLE);
+                break;
+            }
+
+            case DEFAULT:
+            {
+                getViewDataBinding().messageTextView02.setText(R.string.label_searchresult_text01);
+                getViewDataBinding().filterView.setVisibility(View.GONE);
+                getViewDataBinding().callLayout.setVisibility(View.VISIBLE);
+                break;
+            }
+        }
+    }
+
+    @Override
+    public void setBottomLayoutType(EmptyScreenType emptyScreenType)
+    {
+        if (getViewDataBinding() == null || emptyScreenType == null)
+        {
+            return;
+        }
+
+        switch (emptyScreenType)
+        {
+            case FILTER_ON:
+            {
+                getViewDataBinding().viewTypeOptionImageView.setVisibility(View.GONE);
+                getViewDataBinding().filterOptionImageView.setVisibility(View.VISIBLE);
+                break;
+            }
+
+            case DEFAULT:
+            {
+                getViewDataBinding().viewTypeOptionImageView.setVisibility(View.VISIBLE);
+                getViewDataBinding().filterOptionImageView.setVisibility(View.VISIBLE);
+                break;
+            }
+        }
+    }
+
+    @Override
     public void setBottomLayoutVisible(boolean visible)
     {
         if (getViewDataBinding() == null)
@@ -581,39 +598,6 @@ public class StayOutboundListView extends BaseDialogView<StayOutboundListView.On
         }
 
         getViewDataBinding().bottomOptionLayout.setVisibility(visible == true ? View.VISIBLE : View.GONE);
-    }
-
-    @Override
-    public void setBottomLayoutEnabled(boolean mapEnabled, boolean filterEnabled)
-    {
-        if (getViewDataBinding() == null)
-        {
-            return;
-        }
-
-        getViewDataBinding().viewTypeOptionImageView.setEnabled(mapEnabled);
-
-        if (mapEnabled == false)
-        {
-            getViewDataBinding().viewTypeOptionImageView.setAlpha(0.4f);
-            getViewDataBinding().viewTypeOptionImageView.setOnClickListener(null);
-        } else
-        {
-            getViewDataBinding().viewTypeOptionImageView.setAlpha(1.0f);
-            getViewDataBinding().viewTypeOptionImageView.setOnClickListener(this);
-        }
-
-        getViewDataBinding().filterOptionImageView.setEnabled(filterEnabled);
-
-        if (filterEnabled == false)
-        {
-            getViewDataBinding().filterOptionImageView.setAlpha(0.4f);
-            getViewDataBinding().filterOptionImageView.setOnClickListener(null);
-        } else
-        {
-            getViewDataBinding().filterOptionImageView.setAlpha(1.0f);
-            getViewDataBinding().filterOptionImageView.setOnClickListener(this);
-        }
     }
 
     @Override
@@ -673,6 +657,7 @@ public class StayOutboundListView extends BaseDialogView<StayOutboundListView.On
 
 
             case R.id.filterOptionImageView:
+            case R.id.filterView:
                 getEventListener().onFilterClick();
                 break;
 

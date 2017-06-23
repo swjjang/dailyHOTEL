@@ -988,21 +988,25 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
                         if (isDefaultFilter(mStayOutboundFilters) == true)
                         {
                             getViewInterface().setBottomLayoutVisible(false);
+                            getViewInterface().setEmptyScreenType(StayOutboundListViewInterface.EmptyScreenType.DEFAULT);
                         } else
                         {
                             getViewInterface().setBottomLayoutVisible(true);
-                            getViewInterface().setBottomLayoutEnabled(false, true);
+                            getViewInterface().setBottomLayoutType(StayOutboundListViewInterface.EmptyScreenType.FILTER_ON);
+                            getViewInterface().setEmptyScreenType(StayOutboundListViewInterface.EmptyScreenType.FILTER_ON);
                         }
                     } else
                     {
                         getViewInterface().setBottomLayoutVisible(true);
-                        getViewInterface().setBottomLayoutEnabled(true, true);
+                        getViewInterface().setBottomLayoutType(StayOutboundListViewInterface.EmptyScreenType.DEFAULT);
+                        getViewInterface().setEmptyScreenType(StayOutboundListViewInterface.EmptyScreenType.DEFAULT);
                     }
                 } else
                 {
                     getViewInterface().addStayOutboundList(listItems);
-
                     getViewInterface().setBottomLayoutVisible(true);
+                    getViewInterface().setBottomLayoutType(StayOutboundListViewInterface.EmptyScreenType.DEFAULT);
+                    getViewInterface().setEmptyScreenType(StayOutboundListViewInterface.EmptyScreenType.DEFAULT);
                 }
             }
         }));
