@@ -9,6 +9,7 @@ import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.util.FontManager;
 import com.daily.base.util.VersionUtils;
+import com.daily.dailyhotel.repository.local.model.AnalyticsRealmObject;
 import com.daily.dailyhotel.util.RecentlyPlaceUtil;
 import com.facebook.FacebookSdk;
 import com.kakao.auth.ApprovalType;
@@ -117,6 +118,17 @@ public class DailyHotel extends android.support.multidex.MultiDexApplication imp
             RealmConfiguration config = new RealmConfiguration.Builder().deleteRealmIfMigrationNeeded().build();
             Realm.setDefaultConfiguration(config);
         }
+
+        // analyticsRealmObject clear
+        Realm realm = Realm.getDefaultInstance();
+        realm.executeTransactionAsync(new Realm.Transaction()
+        {
+            @Override
+            public void execute(Realm realm)
+            {
+                realm.delete(AnalyticsRealmObject.class);
+            }
+        });
 
         RecentlyPlaceUtil.migrateRecentlyPlaces(DailyHotel.this);
 
