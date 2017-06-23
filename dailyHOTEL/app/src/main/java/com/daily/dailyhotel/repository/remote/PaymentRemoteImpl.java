@@ -118,7 +118,7 @@ public class PaymentRemoteImpl implements PaymentInterface
     @Override
     public Observable<PaymentResult> getPaymentTypeEasy(StayBookDateTime stayBookDateTime, int index//
         , String rateCode, String rateKey, String roomTypeCode, int roomBedTypeId, People people//
-        , boolean usedBonus, Guest guest, int totalPrice)
+        , boolean usedBonus, Guest guest, int totalPrice, String billingKey)
     {
         JSONObject jsonObject = new JSONObject();
 
@@ -146,6 +146,7 @@ public class PaymentRemoteImpl implements PaymentInterface
             jsonObject.put("phoneNumber", guest.phone.replace("-", ""));
             jsonObject.put("paymentType", PAYMENT_TYPE);
             jsonObject.put("total", totalPrice);
+            jsonObject.put("billingKey", billingKey);
         } catch (Exception e)
         {
             ExLog.e(e.toString());
