@@ -714,9 +714,17 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
             {
                 case EASY_CARD:
                 {
+                    // 진입하기 전에 이미 막혀있지만 최후의 보루
+                    if (mSelectedCard == null)
+                    {
+                        startActivityForResult(RegisterCreditCardActivity.newInstance(getActivity())//
+                            , StayOutboundPaymentActivity.REQUEST_CODE_REGISTER_CARD_PAYMENT);
+                        return;
+                    }
+
                     addCompositeDisposable(mPaymentRemoteImpl.getPaymentTypeEasy(mStayBookDateTime, mStayIndex//
                         , mRateCode, mRateKey, mRoomTypeCode, mRoomBedTypeId, mPeople//
-                        , mBonusSelected, mGuest, mStayOutboundPayment.totalPrice).subscribe(new Consumer<PaymentResult>()
+                        , mBonusSelected, mGuest, mStayOutboundPayment.totalPrice, mSelectedCard.billKey).subscribe(new Consumer<PaymentResult>()
                     {
                         @Override
                         public void accept(@io.reactivex.annotations.NonNull PaymentResult paymentResult) throws Exception

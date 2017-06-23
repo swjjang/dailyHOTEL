@@ -22,7 +22,7 @@ public interface PaymentInterface
 
     Observable<PaymentResult> getPaymentTypeEasy(StayBookDateTime stayBookDateTime, int index//
         , String rateCode, String rateKey, String roomTypeCode, int roomBedTypeId, People people//
-        , boolean usedBonus, Guest guest, int totalPrice);
+        , boolean usedBonus, Guest guest, int totalPrice, String billingKey);
 
     Observable<PaymentResult> getPaymentTypeBonus(StayBookDateTime stayBookDateTime, int index//
         , String rateCode, String rateKey, String roomTypeCode, int roomBedTypeId, People people//
