@@ -19,6 +19,10 @@ public interface BaseDialogViewInterface extends BaseViewInterface
         , View.OnClickListener positiveListener//
         , DialogInterface.OnDismissListener dismissListener);
 
+    void showSimpleDialog(String title, String msg, String positive//
+        , View.OnClickListener positiveListener//
+        , DialogInterface.OnDismissListener dismissListener, boolean isCancelable);
+
     void showSimpleDialog(String title, String msg, String positive, String negative//
         , View.OnClickListener positiveListener//
         , View.OnClickListener negativeListener);

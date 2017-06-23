@@ -344,6 +344,11 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
                 }
                 break;
             }
+
+            case StayOutboundPaymentActivity.REQUEST_CODE_PAYMENT_WEB_CARD:
+            case StayOutboundPaymentActivity.REQUEST_CODE_PAYMENT_WEB_PHONE:
+                onPaymentWebResult(resultCode, data.getStringExtra(Constants.NAME_INTENT_EXTRA_DATA_PAYMENT_RESULT));
+                break;
         }
     }
 
@@ -1207,13 +1212,130 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
         }
     }
 
+    private void onPaymentWebResult(int resultCode, String result)
+    {
+        if (resultCode == Activity.RESULT_OK)
+        {
+            Observable.just(result).map(jsonString ->
+            {
+                PaymentResult paymentResult = new PaymentResult();
+
+                JSONObject jsonObject = new JSONObject(jsonString);
+
+                int msgCode = jsonObject.getInt("msgCode");
+                String msg = jsonObject.getString("msg");
+
+                if (msgCode == 100)
+                {
+                    JSONObject dataJSONObject = jsonObject.getJSONObject("data");
+
+                    paymentResult.bookingIndex = dataJSONObject.getInt("reservationIdx");
+                    paymentResult.result = dataJSONObject.getString("result");
+                } else
+                {
+                    throw new BaseException(msgCode, msg);
+                }
+
+                return paymentResult;
+            }).subscribe(new Consumer<PaymentResult>()
+            {
+                @Override
+                public void accept(@io.reactivex.annotations.NonNull PaymentResult paymentResult) throws Exception
+                {
+                    startActivityForResult(StayOutboundThankYouActivity.newInstance(getActivity(), mStayIndex, mStayName, mImageUrl, mStayOutboundPayment.totalPrice//
+                        , mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
+                        , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
+                        , mStayOutboundPayment.checkInTime, mStayOutboundPayment.checkOutTime, mRoomType, paymentResult.bookingIndex), StayOutboundPaymentActivity.REQUEST_CODE_THANK_YOU);
+
+                }
+            }, throwable ->
+            {
+                unLockAll();
+
+                if (throwable instanceof BaseException)
+                {
+                    onPaymentError((BaseException) throwable);
+                } else
+                {
+                    getViewInterface().showSimpleDialog(getString(R.string.dialog_title_payment), getString(R.string.act_base_network_connect)//
+                        , getString(R.string.frag_error_btn), null, new DialogInterface.OnDismissListener()
+                        {
+                            @Override
+                            public void onDismiss(DialogInterface dialog)
+                            {
+                                onBackClick();
+                            }
+                        });
+                }
+            });
+        } else
+        {
+            String title = getString(R.string.dialog_title_payment);
+            String message = null;
+
+            View.OnClickListener confirmListener = null;
+
+            switch (resultCode)
+            {
+                case Constants.CODE_RESULT_ACTIVITY_PAYMENT_FAIL:
+                    message = getString(R.string.act_toast_payment_fail);
+                    break;
+
+                case Constants.CODE_RESULT_ACTIVITY_PAYMENT_INVALID_SESSION:
+                    restartExpiredSession();
+                    return;
+
+                case Constants.CODE_RESULT_ACTIVITY_PAYMENT_NOT_AVAILABLE:
+                    title = getString(R.string.dialog_notice2);
+                    message = getString(R.string.act_toast_payment_not_available);
+                    break;
+
+
+                case Constants.CODE_RESULT_ACTIVITY_PAYMENT_CANCELED:
+                    message = getString(R.string.act_toast_payment_canceled);
+
+                    confirmListener = new View.OnClickListener()
+                    {
+                        @Override
+                        public void onClick(View v)
+                        {
+                        }
+                    };
+                    break;
+
+                case Constants.CODE_RESULT_ACTIVITY_PAYMENT_NETWORK_ERROR:
+                    message = getString(R.string.act_toast_payment_network_error);
+                    break;
+
+                default:
+                    message = getString(R.string.act_toast_payment_fail);
+                    break;
+            }
+
+            if (confirmListener == null)
+            {
+                confirmListener = new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View view)
+                    {
+                        setResult(Constants.CODE_RESULT_ACTIVITY_REFRESH);
+                        onBackClick();
+                    }
+                };
+            }
+
+            getViewInterface().showSimpleDialog(title, message, getString(R.string.dialog_btn_text_confirm), null, confirmListener, null, false);
+        }
+    }
+
     private void onPaymentError(BaseException baseException)
     {
         unLockAll();
 
         if (baseException == null)
         {
-            getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.act_base_network_connect)//
+            getViewInterface().showSimpleDialog(getString(R.string.dialog_title_payment), getString(R.string.act_base_network_connect)//
                 , getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
                 {
                     @Override
@@ -1231,7 +1353,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
 
         }
 
-        getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2), message//
+        getViewInterface().showSimpleDialog(getString(R.string.dialog_title_payment), message//
             , getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
             {
                 @Override
@@ -1239,6 +1361,6 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
                 {
 
                 }
-            });
+            }, false);
     }
 }

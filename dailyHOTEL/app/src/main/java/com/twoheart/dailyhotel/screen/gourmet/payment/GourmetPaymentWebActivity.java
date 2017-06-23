@@ -156,6 +156,12 @@ public class GourmetPaymentWebActivity extends PlacePaymentWebActivity
     }
 
     @Override
+    public void onPaymentResult(String msg)
+    {
+        // do nothing
+    }
+
+    @Override
     public void onFeed(String msg)
     {
         int resultCode;
