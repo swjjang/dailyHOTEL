@@ -16,6 +16,8 @@ import android.widget.Toast;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.widget.DailyToast;
+import com.daily.dailyhotel.repository.local.model.AnalyticsParam;
+import com.daily.dailyhotel.repository.local.model.AnalyticsRealmObject;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.android.gms.maps.model.LatLng;
 import com.twoheart.dailyhotel.DailyHotel;
@@ -38,6 +40,7 @@ import com.twoheart.dailyhotel.place.fragment.PlaceListFragment;
 import com.twoheart.dailyhotel.place.fragment.PlaceMainActivity;
 import com.twoheart.dailyhotel.place.layout.PlaceMainLayout;
 import com.twoheart.dailyhotel.place.networkcontroller.PlaceMainNetworkController;
+import com.twoheart.dailyhotel.screen.home.category.list.StayCategoryTabActivity;
 import com.twoheart.dailyhotel.screen.hotel.detail.StayDetailActivity;
 import com.twoheart.dailyhotel.screen.hotel.filter.StayCalendarActivity;
 import com.twoheart.dailyhotel.screen.hotel.filter.StayCurationActivity;
@@ -62,6 +65,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
 
+import io.realm.Realm;
+import io.realm.RealmResults;
 import retrofit2.Call;
 import retrofit2.Response;
 
@@ -1015,6 +1020,66 @@ public class StayMainActivity extends PlaceMainActivity
                         AnalyticsManager.getInstance(StayMainActivity.this).onRegionChanged(country, realProvinceName);
                     }
 
+                    ////////////////////////////////////////////////////////////////////////////////
+
+                    AnalyticsRealmObject realmObject = new AnalyticsRealmObject();
+                    realmObject.screenName = StayMainActivity.this.getClass().getSimpleName();
+                    realmObject.placeIndex = stay.index;
+                    realmObject.placeName = stay.name;
+
+                    if (province instanceof Area)
+                    {
+                        Area area = (Area) province;
+
+                        realmObject.provinceName = area.getProvince().name;
+                        realmObject.areaName = area.name;
+                    } else
+                    {
+                        realmObject.provinceName = province.name;
+                        realmObject.areaName = AnalyticsManager.ValueType.ALL_LOCALE_KR;
+                    }
+
+                    String[] addressArray = stay.addressSummary.split("\\||l|ㅣ|I");
+                    realmObject.addressAreaName = addressArray[0].trim();
+                    realmObject.price = stay.price;
+                    realmObject.discountPrice = stay.discountPrice;
+                    realmObject.showOrginalPriceYn = stay.price <= 0 || stay.price <= stay.discountPrice ? "N" : "Y";
+                    realmObject.listPosition = stay.entryPosition;
+                    realmObject.totalListCount = listCount;
+                    realmObject.gradeName = stay.getGrade().getName(StayMainActivity.this);
+                    realmObject.isDailyChoice = stay.isDailyChoice;
+
+                    Realm.getDefaultInstance().executeTransactionAsync(new Realm.Transaction()
+                    {
+                        @Override
+                        public void execute(Realm realm)
+                        {
+                            realm.copyToRealmOrUpdate(realmObject);
+
+                            RealmResults<AnalyticsRealmObject> list = realm.where(AnalyticsRealmObject.class).findAll();
+                            for (AnalyticsRealmObject analyticsRealmObject : list)
+                            {
+                                ExLog.d("AnalyticsRealmObject :: " + analyticsRealmObject.screenName + " , " + analyticsRealmObject.placeName);
+                            }
+                        }
+                    }, new Realm.Transaction.OnSuccess()
+                    {
+                        @Override
+                        public void onSuccess()
+                        {
+                            ExLog.d("AnalyticsRealmObject :: " + "onSuccess : " + realmObject.toString());
+                        }
+                    }, new Realm.Transaction.OnError()
+                    {
+                        @Override
+                        public void onError(Throwable error)
+                        {
+                            ExLog.d("AnalyticsRealmObject :: " + "onError : " + error.getMessage() + " , " + realmObject.toString());
+                        }
+                    });
+
+                    ////////////////////////////////////////////////////////////////////////////////
+
                     if (Util.isUsedMultiTransition() == true)
                     {
                         setExitSharedElementCallback(new SharedElementCallback()
@@ -1035,8 +1100,13 @@ public class StayMainActivity extends PlaceMainActivity
                             }
                         });
 
+                        AnalyticsParam analyticsParam = new AnalyticsParam();
+                        analyticsParam.setParam(StayMainActivity.this, stay);
+                        analyticsParam.setProvince(province);
+                        analyticsParam.setTotalListCount(listCount);
+
                         Intent intent = StayDetailActivity.newInstance(StayMainActivity.this, //
-                            mStayCuration.getStayBookingDay(), province, stay, listCount, true);
+                            mStayCuration.getStayBookingDay(), province, stay, listCount, analyticsParam, true);
 
                         View simpleDraweeView = view.findViewById(R.id.imageView);
                         View gradeTextView = view.findViewById(R.id.gradeTextView);
@@ -1061,8 +1131,13 @@ public class StayMainActivity extends PlaceMainActivity
                         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL, options.toBundle());
                     } else
                     {
+                        AnalyticsParam analyticsParam = new AnalyticsParam();
+                        analyticsParam.setParam(StayMainActivity.this, stay);
+                        analyticsParam.setProvince(province);
+                        analyticsParam.setTotalListCount(listCount);
+
                         Intent intent = StayDetailActivity.newInstance(StayMainActivity.this, //
-                            mStayCuration.getStayBookingDay(), province, stay, listCount, false);
+                            mStayCuration.getStayBookingDay(), province, stay, listCount, analyticsParam, false);
 
                         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL);
 

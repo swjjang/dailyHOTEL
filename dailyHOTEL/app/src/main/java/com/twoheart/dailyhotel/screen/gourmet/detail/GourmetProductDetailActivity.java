@@ -6,6 +6,7 @@ import android.os.Bundle;
 
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
+import com.daily.dailyhotel.repository.local.model.AnalyticsParam;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Area;
@@ -46,9 +47,10 @@ public class GourmetProductDetailActivity extends BaseActivity
     private Province mProvince;
     private String mArea;
     int mSelectedProductPosition;
+    private AnalyticsParam mAnalyticsParam;
 
     public static Intent newInstance(Context context, GourmetBookingDay gourmetBookingDay, GourmetDetail gourmetDetail//
-        , int productPosition, Province province, String area)
+        , int productPosition, Province province, String area, AnalyticsParam analyticsParam)
     {
         Intent intent = new Intent(context, GourmetProductDetailActivity.class);
 
@@ -57,6 +59,7 @@ public class GourmetProductDetailActivity extends BaseActivity
         intent.putExtra(NAME_INTENT_EXTRA_DATA_PRODUCTINDEX, productPosition);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_PROVINCE, province);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_AREA, area);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_ANALYTICS_PARAM, analyticsParam);
 
         return intent;
     }
@@ -83,6 +86,7 @@ public class GourmetProductDetailActivity extends BaseActivity
         mSelectedProductPosition = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_PRODUCTINDEX, -1);
         mProvince = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PROVINCE);
         mArea = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_AREA);
+        mAnalyticsParam = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_ANALYTICS_PARAM);
 
         setContentView(mGourmetProductDetailLayout.onCreateView(R.layout.activity_gourmet_product_detail));
 
@@ -239,8 +243,8 @@ public class GourmetProductDetailActivity extends BaseActivity
 
         Intent intent = GourmetPaymentActivity.newInstance(GourmetProductDetailActivity.this, gourmetDetailParams.name, gourmetProduct//
             , gourmetBookingDay, imageUrl, gourmetDetailParams.category, gourmetDetail.index, isBenefit //
-            , mProvince, mArea, gourmetDetail.isShowOriginalPrice, gourmetDetail.entryPosition //
-            , gourmetDetail.isDailyChoice, gourmetDetailParams.ratingValue);
+            , mProvince, mArea, mAnalyticsParam.showOriginalPriceYn, mAnalyticsParam.listPosition //
+            , mAnalyticsParam.isDailyChoice, gourmetDetailParams.ratingValue);
 
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_BOOKING);
     }

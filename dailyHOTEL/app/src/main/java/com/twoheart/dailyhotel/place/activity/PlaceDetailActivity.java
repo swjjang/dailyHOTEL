@@ -17,6 +17,7 @@ import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
 import com.daily.base.widget.DailyTextView;
+import com.daily.dailyhotel.repository.local.model.AnalyticsParam;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Customer;
 import com.twoheart.dailyhotel.model.PlaceDetail;
@@ -82,6 +83,8 @@ public abstract class PlaceDetailActivity extends BaseActivity
     protected Intent mResultIntent;
     protected boolean mIsUsedMultiTransition;
     protected Runnable mTransitionEndRunnable; // 트렌지션 중에 에러가 난경우 팝업을 띄워야 하는데 트렌지션으로 이슈가 발생하여 트레진션 끝나고 동작.
+
+    protected AnalyticsParam mAnalyticsParam;
 
     private View mTrueViewView;
 

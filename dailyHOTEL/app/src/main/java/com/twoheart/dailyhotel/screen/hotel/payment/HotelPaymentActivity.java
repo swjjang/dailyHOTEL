@@ -29,6 +29,7 @@ import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.widget.DailyScrollView;
 import com.daily.base.widget.DailyToast;
+import com.daily.dailyhotel.repository.local.model.AnalyticsParam;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.Booking;
@@ -100,6 +101,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
     private String mArea; // Analytics용 소지역
     String mPlaceName;
     private String mCategoryCode;
+    private AnalyticsParam mAnalyticsParam;
 
     // GA용 스크린 정의
     String mScreenAnalytics;
@@ -108,7 +110,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
         , StayBookingDay stayBookingDay, String imageUrl, int hotelIndex, boolean isDBenefit //
         , Province province, String area, String isShowOriginalPrice, int entryPosition //
         , boolean isDailyChoice, int ratingValue, String gradeName, String address //
-        , boolean isOverSeas, String placeName, String categoryCode)
+        , boolean isOverSeas, String placeName, String categoryCode, AnalyticsParam analyticsParam)
     {
         Intent intent = new Intent(context, HotelPaymentActivity.class);
 
@@ -129,6 +131,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
         intent.putExtra(NAME_INTENT_EXTRA_DATA_ISOVERSEAS, isOverSeas);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACENAME, placeName);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_CATEGORY, categoryCode);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_ANALYTICS_PARAM, analyticsParam);
 
         return intent;
     }
@@ -205,6 +208,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
         stayPaymentInformation.isOverSeas = intent.getBooleanExtra(NAME_INTENT_EXTRA_DATA_ISOVERSEAS, false);
         mPlaceName = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_PLACENAME);
         mCategoryCode = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_CATEGORY);
+        mAnalyticsParam = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_ANALYTICS_PARAM);
 
         Stay.Grade grade;
         try

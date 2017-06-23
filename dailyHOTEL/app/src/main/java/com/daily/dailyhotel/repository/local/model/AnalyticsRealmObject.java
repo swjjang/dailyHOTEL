@@ -1,6 +1,7 @@
 package com.daily.dailyhotel.repository.local.model;
 
 import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
 
 /**
  * Created by android_sam on 2017. 6. 23..
@@ -10,6 +11,7 @@ public class AnalyticsRealmObject extends RealmObject
 {
     public String screenName;
 
+    @PrimaryKey
     public int placeIndex;
     public String placeName;
     public String provinceName;

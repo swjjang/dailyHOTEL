@@ -16,6 +16,8 @@ import android.widget.Toast;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.widget.DailyToast;
+import com.daily.dailyhotel.repository.local.model.AnalyticsParam;
+import com.daily.dailyhotel.repository.local.model.AnalyticsRealmObject;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.android.gms.maps.model.LatLng;
 import com.twoheart.dailyhotel.DailyHotel;
@@ -43,6 +45,7 @@ import com.twoheart.dailyhotel.screen.gourmet.filter.GourmetCalendarActivity;
 import com.twoheart.dailyhotel.screen.gourmet.filter.GourmetCurationActivity;
 import com.twoheart.dailyhotel.screen.gourmet.preview.GourmetPreviewActivity;
 import com.twoheart.dailyhotel.screen.gourmet.region.GourmetRegionListActivity;
+import com.twoheart.dailyhotel.screen.hotel.list.StayMainActivity;
 import com.twoheart.dailyhotel.screen.search.SearchActivity;
 import com.twoheart.dailyhotel.screen.search.gourmet.result.GourmetSearchResultActivity;
 import com.twoheart.dailyhotel.util.Constants;
@@ -63,6 +66,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
 
+import io.realm.Realm;
+import io.realm.RealmResults;
 import retrofit2.Call;
 import retrofit2.Response;
 
@@ -934,6 +939,66 @@ public class GourmetMainActivity extends PlaceMainActivity
                         AnalyticsManager.getInstance(GourmetMainActivity.this).onRegionChanged(country, realProvinceName);
                     }
 
+                    ////////////////////////////////////////////////////////////////////////////////
+
+                    AnalyticsRealmObject realmObject = new AnalyticsRealmObject();
+                    realmObject.screenName = GourmetMainActivity.this.getClass().getSimpleName();
+                    realmObject.placeIndex = gourmet.index;
+                    realmObject.placeName = gourmet.name;
+
+                    if (province instanceof Area)
+                    {
+                        Area area = (Area) province;
+
+                        realmObject.provinceName = area.getProvince().name;
+                        realmObject.areaName = area.name;
+                    } else
+                    {
+                        realmObject.provinceName = province.name;
+                        realmObject.areaName = AnalyticsManager.ValueType.ALL_LOCALE_KR;
+                    }
+
+                    String[] addressArray = gourmet.addressSummary.split("\\||l|ㅣ|I");
+                    realmObject.addressAreaName = addressArray[0].trim();
+                    realmObject.price = gourmet.price;
+                    realmObject.discountPrice = gourmet.discountPrice;
+                    realmObject.showOrginalPriceYn = gourmet.price <= 0 || gourmet.price <= gourmet.discountPrice ? "N" : "Y";
+                    realmObject.listPosition = gourmet.entryPosition;
+                    realmObject.totalListCount = listCount;
+                    //                        realmObject.gradeName = gourmet.getGrade().getName(GourmetMainActivity.this);
+                    realmObject.isDailyChoice = gourmet.isDailyChoice;
+
+                    Realm.getDefaultInstance().executeTransactionAsync(new Realm.Transaction()
+                    {
+                        @Override
+                        public void execute(Realm realm)
+                        {
+                            realm.copyToRealmOrUpdate(realmObject);
+
+                            RealmResults<AnalyticsRealmObject> list = realm.where(AnalyticsRealmObject.class).findAll();
+                            for (AnalyticsRealmObject analyticsRealmObject : list)
+                            {
+                                ExLog.d("AnalyticsRealmObject :: " + analyticsRealmObject.screenName + " , " + analyticsRealmObject.placeName);
+                            }
+                        }
+                    }, new Realm.Transaction.OnSuccess()
+                    {
+                        @Override
+                        public void onSuccess()
+                        {
+                            ExLog.d("AnalyticsRealmObject :: " + "onSuccess : " + realmObject.toString());
+                        }
+                    }, new Realm.Transaction.OnError()
+                    {
+                        @Override
+                        public void onError(Throwable error)
+                        {
+                            ExLog.d("AnalyticsRealmObject :: " + "onError : " + error.getMessage() + " , " + realmObject.toString());
+                        }
+                    });
+
+                    ////////////////////////////////////////////////////////////////////////////////
+
                     if (Util.isUsedMultiTransition() == true)
                     {
                         setExitSharedElementCallback(new SharedElementCallback()
@@ -954,8 +1019,13 @@ public class GourmetMainActivity extends PlaceMainActivity
                             }
                         });
 
+                        AnalyticsParam analyticsParam = new AnalyticsParam();
+                        analyticsParam.setParam(GourmetMainActivity.this, gourmet);
+                        analyticsParam.setProvince(province);
+                        analyticsParam.setTotalListCount(listCount);
+
                         Intent intent = GourmetDetailActivity.newInstance(GourmetMainActivity.this, //
-                            mGourmetCuration.getGourmetBookingDay(), province, gourmet, listCount, true);
+                            mGourmetCuration.getGourmetBookingDay(), province, gourmet, listCount, analyticsParam, true);
 
                         View simpleDraweeView = view.findViewById(R.id.imageView);
                         View nameTextView = view.findViewById(R.id.nameTextView);
@@ -978,8 +1048,13 @@ public class GourmetMainActivity extends PlaceMainActivity
                         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL, options.toBundle());
                     } else
                     {
+                        AnalyticsParam analyticsParam = new AnalyticsParam();
+                        analyticsParam.setParam(GourmetMainActivity.this, gourmet);
+                        analyticsParam.setProvince(province);
+                        analyticsParam.setTotalListCount(listCount);
+
                         Intent intent = GourmetDetailActivity.newInstance(GourmetMainActivity.this, //
-                            mGourmetCuration.getGourmetBookingDay(), province, gourmet, listCount, false);
+                            mGourmetCuration.getGourmetBookingDay(), province, gourmet, listCount, analyticsParam, false);
 
                         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL);
 

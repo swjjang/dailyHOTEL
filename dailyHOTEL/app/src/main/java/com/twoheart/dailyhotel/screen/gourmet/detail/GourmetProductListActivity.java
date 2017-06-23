@@ -6,6 +6,7 @@ import android.os.Bundle;
 
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
+import com.daily.dailyhotel.repository.local.model.AnalyticsParam;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Area;
@@ -43,8 +44,9 @@ public class GourmetProductListActivity extends BaseActivity
     Province mProvince;
     String mArea;
     int mSelectedProductPosition;
+    private AnalyticsParam mAnalyticsParam;
 
-    public static Intent newInstance(Context context, GourmetBookingDay gourmetBookingDay, GourmetDetail gourmetDetail, int productIndex, Province province, String area)
+    public static Intent newInstance(Context context, GourmetBookingDay gourmetBookingDay, GourmetDetail gourmetDetail, int productIndex, Province province, String area, AnalyticsParam analyticsParam)
     {
         Intent intent = new Intent(context, GourmetProductListActivity.class);
 
@@ -53,6 +55,7 @@ public class GourmetProductListActivity extends BaseActivity
         intent.putExtra(NAME_INTENT_EXTRA_DATA_PRODUCTINDEX, productIndex);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_PROVINCE, province);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_AREA, area);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_ANALYTICS_PARAM, analyticsParam);
 
         return intent;
     }
@@ -79,6 +82,7 @@ public class GourmetProductListActivity extends BaseActivity
         int productIndex = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_PRODUCTINDEX, -1);
         mProvince = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PROVINCE);
         mArea = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_AREA);
+        mAnalyticsParam = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_ANALYTICS_PARAM);
 
         setContentView(mGourmetProductListLayout.onCreateView(R.layout.activity_gourmet_product_list));
 
@@ -96,7 +100,7 @@ public class GourmetProductListActivity extends BaseActivity
                 if (gourmetProductList.get(i).index == productIndex)
                 {
                     Intent intentProductDetail = GourmetProductDetailActivity.newInstance(GourmetProductListActivity.this//
-                        , mGourmetBookingDay, mGourmetDetail, i, mProvince, mArea);
+                        , mGourmetBookingDay, mGourmetDetail, i, mProvince, mArea, mAnalyticsParam);
                     startActivityForResult(intentProductDetail, CODE_REQUEST_ACTIVITY_GOURMET_PRODUCT_DETAIL);
                     break;
                 }
@@ -248,8 +252,8 @@ public class GourmetProductListActivity extends BaseActivity
 
         Intent intent = GourmetPaymentActivity.newInstance(GourmetProductListActivity.this, gourmetDetailParams.name, gourmetProduct//
             , gourmetBookingDay, imageUrl, gourmetDetailParams.category, gourmetDetail.index, isBenefit //
-            , mProvince, mArea, gourmetDetail.isShowOriginalPrice, gourmetDetail.entryPosition //
-            , gourmetDetail.isDailyChoice, gourmetDetailParams.ratingValue);
+            , mProvince, mArea, mAnalyticsParam.showOriginalPriceYn, mAnalyticsParam.listPosition //
+            , mAnalyticsParam.isDailyChoice, gourmetDetailParams.ratingValue);
 
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_BOOKING);
     }
@@ -339,7 +343,7 @@ public class GourmetProductListActivity extends BaseActivity
             }
 
             Intent intent = GourmetProductDetailActivity.newInstance(GourmetProductListActivity.this//
-                , mGourmetBookingDay, mGourmetDetail, position, mProvince, mArea);
+                , mGourmetBookingDay, mGourmetDetail, position, mProvince, mArea, mAnalyticsParam);
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMET_PRODUCT_DETAIL);
 
             Map<String, String> paramsMap = new HashMap<>();

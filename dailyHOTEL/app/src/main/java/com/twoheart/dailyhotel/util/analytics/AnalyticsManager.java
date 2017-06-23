@@ -16,6 +16,7 @@ import java.util.Map;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
+import io.realm.RealmResults;
 
 public class AnalyticsManager
 {
@@ -548,6 +549,35 @@ public class AnalyticsManager
                 ExLog.d(TAG + e.toString());
             }
         }
+    }
+
+    private AnalyticsRealmObject getLastAnalyticsRealmObject()
+    {
+        Realm realm = Realm.getDefaultInstance();
+        RealmResults<AnalyticsRealmObject> resultList = realm.where(AnalyticsRealmObject.class).findAll();
+        if (resultList == null || resultList.size() == 0)
+        {
+            return null;
+        }
+
+        return resultList.last();
+    }
+
+    public AnalyticsRealmObject getLastAnalyticsRealmObject(int placeIndex)
+    {
+        AnalyticsRealmObject realmObject = getLastAnalyticsRealmObject();
+
+        if (realmObject == null)
+        {
+            return null;
+        }
+
+        if (realmObject.placeIndex == placeIndex)
+        {
+            return realmObject;
+        }
+
+        return null;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////

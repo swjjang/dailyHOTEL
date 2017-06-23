@@ -143,7 +143,7 @@ public class StayPreviewActivity extends BaseActivity
         mPlaceBookingDay = intent.getParcelableExtra(Constants.NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY);
 
         int placeIndex = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_PLACEIDX, -1);
-        mPlaceDetail = new StayDetail(placeIndex, -1, "N", -1, false);
+        mPlaceDetail = new StayDetail(placeIndex);
 
         mViewPrice = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_DISCOUNTPRICE, 0);
         String placeName = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_PLACENAME);

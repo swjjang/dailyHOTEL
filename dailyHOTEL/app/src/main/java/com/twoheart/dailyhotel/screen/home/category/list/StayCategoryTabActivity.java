@@ -17,6 +17,7 @@ import android.widget.Toast;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.widget.DailyToast;
+import com.daily.dailyhotel.repository.local.model.AnalyticsParam;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
@@ -43,6 +44,7 @@ import com.twoheart.dailyhotel.screen.home.category.region.HomeCategoryRegionLis
 import com.twoheart.dailyhotel.screen.hotel.detail.StayDetailActivity;
 import com.twoheart.dailyhotel.screen.hotel.filter.StayCalendarActivity;
 import com.twoheart.dailyhotel.screen.hotel.list.StayListAdapter;
+import com.twoheart.dailyhotel.screen.hotel.list.StayMainActivity;
 import com.twoheart.dailyhotel.screen.hotel.preview.StayPreviewActivity;
 import com.twoheart.dailyhotel.screen.search.SearchActivity;
 import com.twoheart.dailyhotel.util.Constants;
@@ -1082,8 +1084,13 @@ public class StayCategoryTabActivity extends PlaceMainActivity
                             }
                         });
 
+                        AnalyticsParam analyticsParam = new AnalyticsParam();
+                        analyticsParam.setParam(StayCategoryTabActivity.this, stay);
+                        analyticsParam.setProvince(province);
+                        analyticsParam.setTotalListCount(listCount);
+
                         Intent intent = StayDetailActivity.newInstance(StayCategoryTabActivity.this, //
-                            mStayCategoryCuration.getStayBookingDay(), province, stay, listCount, true);
+                            mStayCategoryCuration.getStayBookingDay(), province, stay, listCount, analyticsParam, true);
 
                         View simpleDraweeView = view.findViewById(R.id.imageView);
                         View gradeTextView = view.findViewById(R.id.gradeTextView);
@@ -1108,8 +1115,13 @@ public class StayCategoryTabActivity extends PlaceMainActivity
                         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL, options.toBundle());
                     } else
                     {
+                        AnalyticsParam analyticsParam = new AnalyticsParam();
+                        analyticsParam.setParam(StayCategoryTabActivity.this, stay);
+                        analyticsParam.setProvince(province);
+                        analyticsParam.setTotalListCount(listCount);
+
                         Intent intent = StayDetailActivity.newInstance(StayCategoryTabActivity.this, //
-                            mStayCategoryCuration.getStayBookingDay(), province, stay, listCount, false);
+                            mStayCategoryCuration.getStayBookingDay(), province, stay, listCount, analyticsParam, false);
 
                         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL);
 

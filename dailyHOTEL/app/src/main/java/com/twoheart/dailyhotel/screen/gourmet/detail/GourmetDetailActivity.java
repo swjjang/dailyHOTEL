@@ -15,6 +15,8 @@ import android.widget.Toast;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.widget.DailyToast;
+import com.daily.dailyhotel.repository.local.model.AnalyticsParam;
+import com.daily.dailyhotel.repository.local.model.AnalyticsRealmObject;
 import com.daily.dailyhotel.util.RecentlyPlaceUtil;
 import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.drawee.view.DraweeTransition;
@@ -86,7 +88,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
      * @return
      */
     public static Intent newInstance(Context context, GourmetBookingDay gourmetBookingDay, Province province, Gourmet gourmet//
-        , int listCount, boolean isUsedMultiTransition)
+        , int listCount, AnalyticsParam analyticsParam, boolean isUsedMultiTransition)
     {
         Intent intent = new Intent(context, GourmetDetailActivity.class);
 
@@ -100,23 +102,24 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         intent.putExtra(NAME_INTENT_EXTRA_DATA_DISCOUNTPRICE, gourmet.discountPrice);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_PRICE, gourmet.price);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_CALENDAR_FLAG, false);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_ENTRY_INDEX, gourmet.entryPosition);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_LIST_COUNT, listCount);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_DAILYCHOICE, gourmet.isDailyChoice);
+//        intent.putExtra(NAME_INTENT_EXTRA_DATA_ENTRY_INDEX, gourmet.entryPosition);
+//        intent.putExtra(NAME_INTENT_EXTRA_DATA_LIST_COUNT, listCount);
+//        intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_DAILYCHOICE, gourmet.isDailyChoice);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_ANALYTICS_PARAM, analyticsParam);
 
         String[] area = gourmet.addressSummary.split("\\||l|ㅣ|I");
         intent.putExtra(NAME_INTENT_EXTRA_DATA_AREA, area[0].trim());
 
-        String isShowOriginalPrice;
-        if (gourmet.price <= 0 || gourmet.price <= gourmet.discountPrice)
-        {
-            isShowOriginalPrice = "N";
-        } else
-        {
-            isShowOriginalPrice = "Y";
-        }
-
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_SHOW_ORIGINALPRICE, isShowOriginalPrice);
+//        String isShowOriginalPrice;
+//        if (gourmet.price <= 0 || gourmet.price <= gourmet.discountPrice)
+//        {
+//            isShowOriginalPrice = "N";
+//        } else
+//        {
+//            isShowOriginalPrice = "Y";
+//        }
+//
+//        intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_SHOW_ORIGINALPRICE, isShowOriginalPrice);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_USED_MULTITRANSITIOIN, isUsedMultiTransition);
 
         return intent;
@@ -617,7 +620,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         int listCount = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_LIST_COUNT, -1);
         boolean isDailyChoice = intent.getBooleanExtra(NAME_INTENT_EXTRA_DATA_IS_DAILYCHOICE, false);
 
-        return new GourmetDetail(index, entryIndex, isShowOriginalPrice, listCount, isDailyChoice);
+        return new GourmetDetail(index);
     }
 
     @Override
@@ -840,8 +843,8 @@ public class GourmetDetailActivity extends PlaceDetailActivity
 
         Intent intent = GourmetPaymentActivity.newInstance(GourmetDetailActivity.this, gourmetDetailParams.name, gourmetProduct//
             , gourmetBookingDay, imageUrl, gourmetDetailParams.category, gourmetDetail.index, isBenefit //
-            , mProvince, mArea, gourmetDetail.isShowOriginalPrice, gourmetDetail.entryPosition //
-            , gourmetDetail.isDailyChoice, gourmetDetailParams.ratingValue);
+            , mProvince, mArea, mAnalyticsParam.showOriginalPriceYn, mAnalyticsParam.listPosition //
+            , mAnalyticsParam.isDailyChoice, gourmetDetailParams.ratingValue);
 
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_BOOKING);
     }
@@ -864,8 +867,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
 
             mPlaceBookingDay = gourmetBookingDay;
 
-            mPlaceDetail = new GourmetDetail(mPlaceDetail.index, mPlaceDetail.entryPosition, //
-                mPlaceDetail.isShowOriginalPrice, mPlaceDetail.listCount, mPlaceDetail.isDailyChoice);
+            mPlaceDetail = new GourmetDetail(mPlaceDetail.index);
 
             ((GourmetDetailNetworkController) mPlaceDetailNetworkController).requestHasCoupon(mPlaceDetail.index,//
                 gourmetBookingDay.getVisitDay("yyyy-MM-dd"));
@@ -987,7 +989,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         {
             if (mPlaceDetailLayout != null)
             {
-                Intent intent = GourmetProductListActivity.newInstance(GourmetDetailActivity.this, gourmetBookingDay, gourmetDetail, mProductDetailIndex, null, null);
+                Intent intent = GourmetProductListActivity.newInstance(GourmetDetailActivity.this, gourmetBookingDay, gourmetDetail, mProductDetailIndex, null, null, mAnalyticsParam);
                 startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_GOURMET_PRODUCT_LIST);
             }
         }
@@ -1247,21 +1249,30 @@ public class GourmetDetailActivity extends PlaceDetailActivity
             params.put(AnalyticsManager.KeyType.UNIT_PRICE, Integer.toString(mViewPrice));
             params.put(AnalyticsManager.KeyType.VISIT_DATE, gourmetBookingDay.getVisitDay("yyyyMMdd"));
 
-            String listIndex = gourmetDetail.entryPosition == -1 //
-                ? AnalyticsManager.ValueType.EMPTY : Integer.toString(gourmetDetail.entryPosition);
+            String listIndex = mAnalyticsParam.listPosition == -1 //
+                ? AnalyticsManager.ValueType.EMPTY : Integer.toString(mAnalyticsParam.listPosition);
 
             params.put(AnalyticsManager.KeyType.LIST_INDEX, listIndex);
 
-            String placeCount = gourmetDetail.listCount == -1 //
-                ? AnalyticsManager.ValueType.EMPTY : Integer.toString(gourmetDetail.listCount);
+            String placeCount = mAnalyticsParam.totalListCount == -1 //
+                ? AnalyticsManager.ValueType.EMPTY : Integer.toString(mAnalyticsParam.totalListCount);
 
             params.put(AnalyticsManager.KeyType.PLACE_COUNT, placeCount);
 
             params.put(AnalyticsManager.KeyType.RATING, Integer.toString(gourmetDetailParams.ratingValue));
-            params.put(AnalyticsManager.KeyType.IS_SHOW_ORIGINAL_PRICE, gourmetDetail.isShowOriginalPrice);
-            params.put(AnalyticsManager.KeyType.DAILYCHOICE, gourmetDetail.isDailyChoice ? "y" : "n");
+            params.put(AnalyticsManager.KeyType.IS_SHOW_ORIGINAL_PRICE, mAnalyticsParam.showOriginalPriceYn);
+            params.put(AnalyticsManager.KeyType.DAILYCHOICE, mAnalyticsParam.isDailyChoice ? "y" : "n");
             params.put(AnalyticsManager.KeyType.LENGTH_OF_STAY, "1");
             params.put(AnalyticsManager.KeyType.NRD, gourmetDetailParams.sticker != null ? "y" : "n");
+
+            AnalyticsRealmObject realmObject = AnalyticsManager.getInstance(GourmetDetailActivity.this).getLastAnalyticsRealmObject(gourmetDetail.index);
+            if (realmObject == null)
+            {
+                ExLog.d("AnalyticsRealmObject :: " + "is not Same placeIndex " + gourmetDetail.index);
+            } else
+            {
+                ExLog.d("AnalyticsRealmObject :: " + "is Same place " + realmObject.screenName + " , " + realmObject.placeName);
+            }
 
             AnalyticsManager.getInstance(this).recordScreen(this, screen, null, params);
         } catch (Exception e)
@@ -1340,7 +1351,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
             GourmetDetail gourmetDetail = (GourmetDetail) mPlaceDetail;
             GourmetDetailParams gourmetDetailParams = gourmetDetail.getGourmetDetailParmas();
 
-            Intent intent = GourmetProductListActivity.newInstance(GourmetDetailActivity.this, (GourmetBookingDay) mPlaceBookingDay, gourmetDetail, -1, mProvince, mArea);
+            Intent intent = GourmetProductListActivity.newInstance(GourmetDetailActivity.this, (GourmetBookingDay) mPlaceBookingDay, gourmetDetail, -1, mProvince, mArea, mAnalyticsParam);
             startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_GOURMET_PRODUCT_LIST);
 
             recordAnalyticsGourmetDetail(AnalyticsManager.Screen.DAILYGOURMET_DETAIL_TICKETTYPE, (GourmetBookingDay) mPlaceBookingDay, (GourmetDetail) mPlaceDetail);
@@ -1810,16 +1821,16 @@ public class GourmetDetailActivity extends PlaceDetailActivity
                     params.put(AnalyticsManager.KeyType.PLACE_INDEX, Integer.toString(mPlaceDetail.index));
                     params.put(AnalyticsManager.KeyType.RATING, Integer.toString(gourmetDetailParams.ratingValue));
 
-                    String listIndex = mPlaceDetail.entryPosition == -1 //
-                        ? AnalyticsManager.ValueType.EMPTY : Integer.toString(mPlaceDetail.entryPosition);
+                    String listIndex = mAnalyticsParam.listPosition == -1 //
+                        ? AnalyticsManager.ValueType.EMPTY : Integer.toString(mAnalyticsParam.listPosition);
 
                     params.put(AnalyticsManager.KeyType.LIST_INDEX, listIndex);
-                    params.put(AnalyticsManager.KeyType.DAILYCHOICE, mPlaceDetail.isDailyChoice ? "y" : "n");
+                    params.put(AnalyticsManager.KeyType.DAILYCHOICE, mAnalyticsParam.isDailyChoice ? "y" : "n");
                     params.put(AnalyticsManager.KeyType.DBENEFIT, DailyTextUtils.isTextEmpty(gourmetDetailParams.benefit) ? "no" : "yes");
 
                     params.put(AnalyticsManager.KeyType.CHECK_IN, gourmetBookingDay.getVisitDay("yyyy-MM-dd"));
                     params.put(AnalyticsManager.KeyType.LENGTH_OF_STAY, "1");
-                    params.put(AnalyticsManager.KeyType.IS_SHOW_ORIGINAL_PRICE, mPlaceDetail.isShowOriginalPrice);
+                    params.put(AnalyticsManager.KeyType.IS_SHOW_ORIGINAL_PRICE, mAnalyticsParam.showOriginalPriceYn);
 
 
                     AnalyticsManager.getInstance(GourmetDetailActivity.this).recordEvent(//
@@ -1903,16 +1914,16 @@ public class GourmetDetailActivity extends PlaceDetailActivity
                 params.put(AnalyticsManager.KeyType.PLACE_INDEX, Integer.toString(mPlaceDetail.index));
                 params.put(AnalyticsManager.KeyType.RATING, Integer.toString(gourmetDetailParams.ratingValue));
 
-                String listIndex = mPlaceDetail.entryPosition == -1 //
-                    ? AnalyticsManager.ValueType.EMPTY : Integer.toString(mPlaceDetail.entryPosition);
+                String listIndex = mAnalyticsParam.listPosition == -1 //
+                    ? AnalyticsManager.ValueType.EMPTY : Integer.toString(mAnalyticsParam.listPosition);
 
                 params.put(AnalyticsManager.KeyType.LIST_INDEX, listIndex);
-                params.put(AnalyticsManager.KeyType.DAILYCHOICE, mPlaceDetail.isDailyChoice ? "y" : "n");
+                params.put(AnalyticsManager.KeyType.DAILYCHOICE, mAnalyticsParam.isDailyChoice ? "y" : "n");
                 params.put(AnalyticsManager.KeyType.DBENEFIT, DailyTextUtils.isTextEmpty(gourmetDetailParams.benefit) ? "no" : "yes");
 
                 params.put(AnalyticsManager.KeyType.CHECK_IN, gourmetBookingDay.getVisitDay("yyyy-MM-dd"));
                 params.put(AnalyticsManager.KeyType.LENGTH_OF_STAY, "1");
-                params.put(AnalyticsManager.KeyType.IS_SHOW_ORIGINAL_PRICE, mPlaceDetail.isShowOriginalPrice);
+                params.put(AnalyticsManager.KeyType.IS_SHOW_ORIGINAL_PRICE, mAnalyticsParam.showOriginalPriceYn);
 
 
                 AnalyticsManager.getInstance(GourmetDetailActivity.this).recordEvent(//
