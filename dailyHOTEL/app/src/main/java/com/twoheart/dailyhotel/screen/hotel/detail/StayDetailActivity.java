@@ -83,7 +83,7 @@ public class StayDetailActivity extends PlaceDetailActivity
     private boolean mCheckPrice;
 
     /**
-     * 리스트에서 호출
+     * 리스트, 검색 결과에서 호출
      *
      * @param context
      * @param stayBookingDay
@@ -115,75 +115,45 @@ public class StayDetailActivity extends PlaceDetailActivity
         return intent;
     }
 
-    /**
-     * 딥링크로 호출
-     *
-     * @param context
-     * @param stayBookingDay
-     * @param stayIndex
-     * @param roomIndex
-     * @param isShowCalendar
-     * @param isUsedMultiTransition
-     * @return
-     */
-    public static Intent newInstance(Context context, StayBookingDay stayBookingDay, int stayIndex//
-        , int roomIndex, boolean isShowCalendar, boolean isShowVR, boolean isUsedMultiTransition)
-    {
-        Intent intent = new Intent(context, StayDetailActivity.class);
-
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_TYPE, "share");
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_HOTELIDX, stayIndex);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_ROOMINDEX, roomIndex);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, stayBookingDay);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_CALENDAR_FLAG, isShowCalendar);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_VR_FLAG, isShowVR);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_ENTRY_INDEX, -1);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_LIST_COUNT, -1);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_DAILYCHOICE, false);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_USED_MULTITRANSITIOIN, isUsedMultiTransition);
-
-        return intent;
-    }
-
-    /**
-     * 검색 결과에서 호출
-     *
-     * @param context
-     * @param stayBookingDay
-     * @param stay
-     * @param listCount
-     * @param isUsedMultiTransition
-     * @return
-     */
-    public static Intent newInstance(Context context, StayBookingDay stayBookingDay, Stay stay, int listCount, boolean isUsedMultiTransition)
-    {
-        Intent intent = new Intent(context, StayDetailActivity.class);
-
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, stayBookingDay);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_HOTELIDX, stay.index);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_HOTELNAME, stay.name);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_IMAGEURL, stay.imageUrl);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_CALENDAR_FLAG, false);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_DISCOUNTPRICE, stay.discountPrice);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_ENTRY_INDEX, stay.entryPosition);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_LIST_COUNT, listCount);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_DAILYCHOICE, stay.isDailyChoice);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_GRADE, stay.getGrade().name());
-
-        String isShowOriginalPrice;
-        if (stay.price <= 0 || stay.price <= stay.discountPrice)
-        {
-            isShowOriginalPrice = "N";
-        } else
-        {
-            isShowOriginalPrice = "Y";
-        }
-
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_SHOW_ORIGINALPRICE, isShowOriginalPrice);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_USED_MULTITRANSITIOIN, isUsedMultiTransition);
-
-        return intent;
-    }
+//    /**
+//     * 검색 결과에서 호출
+//     *
+//     * @param context
+//     * @param stayBookingDay
+//     * @param stay
+//     * @param listCount
+//     * @param isUsedMultiTransition
+//     * @return
+//     */
+//    public static Intent newInstance(Context context, StayBookingDay stayBookingDay, Stay stay, int listCount, boolean isUsedMultiTransition)
+//    {
+//        Intent intent = new Intent(context, StayDetailActivity.class);
+//
+//        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, stayBookingDay);
+//        intent.putExtra(NAME_INTENT_EXTRA_DATA_HOTELIDX, stay.index);
+//        intent.putExtra(NAME_INTENT_EXTRA_DATA_HOTELNAME, stay.name);
+//        intent.putExtra(NAME_INTENT_EXTRA_DATA_IMAGEURL, stay.imageUrl);
+//        intent.putExtra(NAME_INTENT_EXTRA_DATA_CALENDAR_FLAG, false);
+//        intent.putExtra(NAME_INTENT_EXTRA_DATA_DISCOUNTPRICE, stay.discountPrice);
+//        intent.putExtra(NAME_INTENT_EXTRA_DATA_ENTRY_INDEX, stay.entryPosition);
+//        intent.putExtra(NAME_INTENT_EXTRA_DATA_LIST_COUNT, listCount);
+//        intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_DAILYCHOICE, stay.isDailyChoice);
+//        intent.putExtra(NAME_INTENT_EXTRA_DATA_GRADE, stay.getGrade().name());
+//
+//        String isShowOriginalPrice;
+//        if (stay.price <= 0 || stay.price <= stay.discountPrice)
+//        {
+//            isShowOriginalPrice = "N";
+//        } else
+//        {
+//            isShowOriginalPrice = "Y";
+//        }
+//
+//        intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_SHOW_ORIGINALPRICE, isShowOriginalPrice);
+//        intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_USED_MULTITRANSITIOIN, isUsedMultiTransition);
+//
+//        return intent;
+//    }
 
     /**
      * 위시리스트에서 호출
@@ -311,6 +281,36 @@ public class StayDetailActivity extends PlaceDetailActivity
         }
 
         intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_SHOW_ORIGINALPRICE, isShowOriginalPrice);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_USED_MULTITRANSITIOIN, isUsedMultiTransition);
+
+        return intent;
+    }
+
+    /**
+     * 딥링크로 호출
+     *
+     * @param context
+     * @param stayBookingDay
+     * @param stayIndex
+     * @param roomIndex
+     * @param isShowCalendar
+     * @param isUsedMultiTransition
+     * @return
+     */
+    public static Intent newInstance(Context context, StayBookingDay stayBookingDay, int stayIndex//
+        , int roomIndex, boolean isShowCalendar, boolean isShowVR, boolean isUsedMultiTransition)
+    {
+        Intent intent = new Intent(context, StayDetailActivity.class);
+
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_TYPE, "share");
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_HOTELIDX, stayIndex);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_ROOMINDEX, roomIndex);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, stayBookingDay);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_CALENDAR_FLAG, isShowCalendar);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_VR_FLAG, isShowVR);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_ENTRY_INDEX, -1);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_LIST_COUNT, -1);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_DAILYCHOICE, false);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_USED_MULTITRANSITIOIN, isUsedMultiTransition);
 
         return intent;

@@ -17,6 +17,8 @@ import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 public class AnalyticsParam implements Parcelable
 {
+    protected static final int SKIP_CHECK_DISCOUNT_PRICE_VALUE = Integer.MIN_VALUE;
+
     public int placeIndex;
     public String placeName;
     public String provinceName;
@@ -47,7 +49,15 @@ public class AnalyticsParam implements Parcelable
 
         addressAreaName = getAddressAreaName(stay.addressSummary);
         price = stay.price;
-        discountPrice = stay.discountPrice;
+
+        if (discountPrice > 0)
+        {
+            discountPrice = stay.discountPrice;
+        } else
+        {
+            discountPrice = SKIP_CHECK_DISCOUNT_PRICE_VALUE;
+        }
+
         showOriginalPriceYn = getShowOrginalPriceYn(stay.price, stay.discountPrice);
         listPosition = stay.entryPosition;
         gradeName = stay.getGrade().getName(context);
@@ -70,6 +80,13 @@ public class AnalyticsParam implements Parcelable
 
     public void setProvince(Province province)
     {
+        if (province == null)
+        {
+            provinceName = null;
+            areaName = null;
+            return;
+        }
+
         if (province instanceof Area)
         {
             Area area = (Area) province;

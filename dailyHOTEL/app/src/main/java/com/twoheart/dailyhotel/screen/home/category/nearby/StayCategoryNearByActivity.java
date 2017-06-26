@@ -19,6 +19,7 @@ import android.widget.Toast;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.widget.DailyToast;
+import com.daily.dailyhotel.repository.local.model.AnalyticsParam;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
@@ -1158,8 +1159,13 @@ public class StayCategoryNearByActivity extends BaseActivity
                     }
                 });
 
+                AnalyticsParam analyticsParam = new AnalyticsParam();
+                analyticsParam.setParam(StayCategoryNearByActivity.this, stay);
+                analyticsParam.setProvince(null);
+                analyticsParam.setTotalListCount(listCount);
+
                 Intent intent = StayDetailActivity.newInstance(StayCategoryNearByActivity.this, //
-                    mStayCategoryNearByCuration.getStayBookingDay(), stay, listCount, true);
+                    mStayCategoryNearByCuration.getStayBookingDay(), stay, analyticsParam, true);
 
                 View simpleDraweeView = view.findViewById(R.id.imageView);
                 View gradeTextView = view.findViewById(R.id.gradeTextView);
@@ -1184,8 +1190,13 @@ public class StayCategoryNearByActivity extends BaseActivity
                 startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL, options.toBundle());
             } else
             {
+                AnalyticsParam analyticsParam = new AnalyticsParam();
+                analyticsParam.setParam(StayCategoryNearByActivity.this, stay);
+                analyticsParam.setProvince(null);
+                analyticsParam.setTotalListCount(listCount);
+
                 Intent intent = StayDetailActivity.newInstance(StayCategoryNearByActivity.this, //
-                    mStayCategoryNearByCuration.getStayBookingDay(), stay, listCount, false);
+                    mStayCategoryNearByCuration.getStayBookingDay(), stay, analyticsParam, false);
 
                 startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL);
 
