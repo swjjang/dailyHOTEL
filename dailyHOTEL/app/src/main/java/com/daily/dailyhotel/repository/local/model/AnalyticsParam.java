@@ -29,7 +29,7 @@ public class AnalyticsParam implements Parcelable
     public String addressAreaName; // addressSummary 의 split 이름 stay.addressSummary.split("\\||l|ㅣ|I")  index : 0;
     public int price; // 정가
     public int discountPrice; // 표시가
-    public String showOriginalPriceYn; // stay.price <= 0 || stay.price <= stay.discountPrice ? "N" : "Y"
+    public String showOriginalPriceYn = "N"; // stay.price <= 0 || stay.price <= stay.discountPrice ? "N" : "Y"
     public int listPosition = -1;
     public int totalListCount = -1;
     public boolean isDailyChoice;

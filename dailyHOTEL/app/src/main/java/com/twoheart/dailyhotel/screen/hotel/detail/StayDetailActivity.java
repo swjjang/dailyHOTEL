@@ -89,15 +89,13 @@ public class StayDetailActivity extends PlaceDetailActivity
      * @param index
      * @param name
      * @param imageUrl
-//     * @param discountPrice
-//     * @param stayGradeName
      * @param analyticsParam
      * @param isUsedMultiTransition
      * @return
      */
     public static Intent newInstance(Context context, StayBookingDay stayBookingDay, int index //
         , String name, String imageUrl //
-//        , String name, String imageUrl, int discountPrice, String stayGradeName //
+        //        , String name, String imageUrl, int discountPrice, String stayGradeName //
         , AnalyticsParam analyticsParam, boolean isUsedMultiTransition)
     {
         Intent intent = new Intent(context, StayDetailActivity.class);
@@ -106,9 +104,9 @@ public class StayDetailActivity extends PlaceDetailActivity
         intent.putExtra(NAME_INTENT_EXTRA_DATA_HOTELIDX, index);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_HOTELNAME, name);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_IMAGEURL, imageUrl);
-//        intent.putExtra(NAME_INTENT_EXTRA_DATA_DISCOUNTPRICE, discountPrice);
+        //        intent.putExtra(NAME_INTENT_EXTRA_DATA_DISCOUNTPRICE, discountPrice);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_CALENDAR_FLAG, false);
-//        intent.putExtra(NAME_INTENT_EXTRA_DATA_GRADE, stayGradeName);
+        //        intent.putExtra(NAME_INTENT_EXTRA_DATA_GRADE, stayGradeName);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_ANALYTICS_PARAM, analyticsParam);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_USED_MULTITRANSITIOIN, isUsedMultiTransition);
 
@@ -123,6 +121,7 @@ public class StayDetailActivity extends PlaceDetailActivity
      * @param stayIndex
      * @param roomIndex
      * @param isShowCalendar
+     * @param isShowVR
      * @param isUsedMultiTransition
      * @return
      */
@@ -137,9 +136,13 @@ public class StayDetailActivity extends PlaceDetailActivity
         intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, stayBookingDay);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_CALENDAR_FLAG, isShowCalendar);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_VR_FLAG, isShowVR);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_ENTRY_INDEX, -1);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_LIST_COUNT, -1);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_DAILYCHOICE, false);
+        //        intent.putExtra(NAME_INTENT_EXTRA_DATA_ENTRY_INDEX, -1);
+        //        intent.putExtra(NAME_INTENT_EXTRA_DATA_LIST_COUNT, -1);
+        //        intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_DAILYCHOICE, false);
+
+        AnalyticsParam analyticsParam = new AnalyticsParam();
+        analyticsParam.placeIndex = stayIndex;
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_ANALYTICS_PARAM, analyticsParam);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_USED_MULTITRANSITIOIN, isUsedMultiTransition);
 
         return intent;
@@ -413,10 +416,10 @@ public class StayDetailActivity extends PlaceDetailActivity
         }
 
         int stayIndex = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_HOTELIDX, -1);
-//        int entryPosition = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_ENTRY_INDEX, -1);
-//        String isShowOriginalPrice = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_IS_SHOW_ORIGINALPRICE);
-//        int listCount = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_LIST_COUNT, -1);
-//        boolean isDailyChoice = intent.getBooleanExtra(NAME_INTENT_EXTRA_DATA_IS_DAILYCHOICE, false);
+        //        int entryPosition = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_ENTRY_INDEX, -1);
+        //        String isShowOriginalPrice = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_IS_SHOW_ORIGINALPRICE);
+        //        int listCount = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_LIST_COUNT, -1);
+        //        boolean isDailyChoice = intent.getBooleanExtra(NAME_INTENT_EXTRA_DATA_IS_DAILYCHOICE, false);
 
         return new StayDetail(stayIndex);
     }
@@ -1646,6 +1649,11 @@ public class StayDetailActivity extends PlaceDetailActivity
                 StayDetail stayDetail = (StayDetail) mPlaceDetail;
 
                 stayDetail.setStayDetailParams(stayDetailParams);
+
+                // analyticsParam 갱신용 - 딥링크시 호텔 index 빼고는 알 수 없음 - 상세에서 받아온 정보로 갱신
+                mAnalyticsParam.placeName = stayDetailParams.name;
+                mAnalyticsParam.gradeCode = stayDetailParams.getGrade().name();
+                mAnalyticsParam.gradeName = stayDetailParams.getGrade().getName(StayDetailActivity.this);
 
                 if (mInitializeStatus == STATUS_INITIALIZE_NONE)
                 {
