@@ -19,7 +19,7 @@ import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 public class AnalyticsParam implements Parcelable
 {
-    protected static final int SKIP_CHECK_DISCOUNT_PRICE_VALUE = Integer.MIN_VALUE;
+    public static final int SKIP_CHECK_DISCOUNT_PRICE_VALUE = Integer.MIN_VALUE;
 
     public int placeIndex;
     public String placeName;
