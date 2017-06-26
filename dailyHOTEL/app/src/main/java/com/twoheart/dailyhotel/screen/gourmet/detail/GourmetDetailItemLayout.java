@@ -6,7 +6,6 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.graphics.Paint;
-import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Build;
@@ -62,6 +61,7 @@ public class GourmetDetailItemLayout extends LinearLayout
     private PlaceReviewScores mPlaceReviewScores;
     protected View mGourmetTitleLayout;
     private LinearLayout mMoreLayout;
+    private DailyTextView mMoreTextView;
 
     private int mDpi;
     private int mFirstProductIndex;
@@ -139,6 +139,161 @@ public class GourmetDetailItemLayout extends LinearLayout
     public int getLastProductIndex()
     {
         return mLastProductIndex;
+    }
+
+    public void openMoreProductList()
+    {
+        if (mMoreLayout == null)
+        {
+            return;
+        }
+
+        Integer height = (Integer) mMoreLayout.getTag();
+
+        if (height == null)
+        {
+            return;
+        }
+
+        if (isOpenedProductMoreList() == true)
+        {
+            return;
+        }
+
+        ValueAnimator valueAnimator = ValueAnimator.ofInt(0, height);
+        valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener()
+        {
+            @Override
+            public void onAnimationUpdate(ValueAnimator valueAnimator)
+            {
+                if (valueAnimator == null)
+                {
+                    return;
+                }
+
+                int val = (int) valueAnimator.getAnimatedValue();
+                ViewGroup.LayoutParams layoutParams = mMoreLayout.getLayoutParams();
+                layoutParams.height = val;
+                mMoreLayout.requestLayout();
+            }
+        });
+        valueAnimator.setDuration(200);
+        valueAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
+        valueAnimator.addListener(new Animator.AnimatorListener()
+        {
+            @Override
+            public void onAnimationStart(Animator animation)
+            {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation)
+            {
+                valueAnimator.removeAllUpdateListeners();
+                valueAnimator.removeAllListeners();
+
+                mMoreTextView.setText("접기");
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation)
+            {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation)
+            {
+
+            }
+        });
+
+        valueAnimator.start();
+    }
+
+    public boolean isOpenedProductMoreList()
+    {
+        if (mMoreLayout == null)
+        {
+            return false;
+        }
+
+        return mMoreLayout.getHeight() > 0;
+    }
+
+    public void closeMoreProductList()
+    {
+        if (mMoreLayout == null)
+        {
+            return;
+        }
+
+        Integer height = (Integer) mMoreLayout.getTag();
+
+        if (height == null)
+        {
+            return;
+        }
+
+        if (isOpenedProductMoreList() == false)
+        {
+            return;
+        }
+
+        ScrollView scrollView = (ScrollView) GourmetDetailItemLayout.this.getParent();
+        scrollView.smoothScrollTo(0, (int) getChildAt(mFirstProductIndex).getY() - mContext.getResources().getDimensionPixelSize(R.dimen.toolbar_height));
+
+        ValueAnimator valueAnimator = ValueAnimator.ofInt(height, 0);
+        valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener()
+        {
+            @Override
+            public void onAnimationUpdate(ValueAnimator valueAnimator)
+            {
+                if (valueAnimator == null)
+                {
+                    return;
+                }
+
+                int val = (int) valueAnimator.getAnimatedValue();
+                ViewGroup.LayoutParams layoutParams = mMoreLayout.getLayoutParams();
+                layoutParams.height = val;
+                mMoreLayout.requestLayout();
+            }
+        });
+        valueAnimator.setDuration(200);
+        valueAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
+        valueAnimator.addListener(new Animator.AnimatorListener()
+        {
+            @Override
+            public void onAnimationStart(Animator animation)
+            {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation)
+            {
+                valueAnimator.removeAllUpdateListeners();
+                valueAnimator.removeAllListeners();
+
+                mMoreTextView.setText(String.format(Locale.KOREA, "%d개 상품 모두 보기 ", (int) mMoreTextView.getTag()));
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation)
+            {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation)
+            {
+
+            }
+        });
+
+        valueAnimator.start();
     }
 
     private void setView()
@@ -604,135 +759,25 @@ public class GourmetDetailItemLayout extends LinearLayout
                     setProductLayout(layoutInflater, parent, i, gourmetProductList.get(i));
                 } else if (i == DEFAULT_SHOW_PRODUCT_COUNT)
                 {
-                    DailyTextView dailyTextView = new DailyTextView(mContext);
-                    dailyTextView.setText(String.format(Locale.KOREA, "%d개 상품 모두 보기 ", size));
-                    dailyTextView.setGravity(Gravity.CENTER);
-                    dailyTextView.setBackgroundResource(R.color.white);
-                    dailyTextView.setOnClickListener(new OnClickListener()
+                    mMoreTextView = new DailyTextView(mContext);
+                    mMoreTextView.setTag(size);
+                    mMoreTextView.setText(String.format(Locale.KOREA, "%d개 상품 모두 보기 ", size));
+                    mMoreTextView.setGravity(Gravity.CENTER);
+                    mMoreTextView.setBackgroundResource(R.color.white);
+                    mMoreTextView.setOnClickListener(new OnClickListener()
                     {
                         @Override
                         public void onClick(View v)
                         {
-                            Integer height = (Integer) mMoreLayout.getTag();
-
-                            if (height == null)
+                            if (mEventListener != null)
                             {
-                                return;
-                            }
-
-                            if (mMoreLayout.getHeight() == 0)
-                            {
-                                ValueAnimator valueAnimator = ValueAnimator.ofInt(0, height);
-                                valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener()
-                                {
-                                    @Override
-                                    public void onAnimationUpdate(ValueAnimator valueAnimator)
-                                    {
-                                        if (valueAnimator == null)
-                                        {
-                                            return;
-                                        }
-
-                                        int val = (int) valueAnimator.getAnimatedValue();
-                                        ViewGroup.LayoutParams layoutParams = mMoreLayout.getLayoutParams();
-                                        layoutParams.height = val;
-                                        mMoreLayout.requestLayout();
-                                    }
-                                });
-                                valueAnimator.setDuration(200);
-                                valueAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
-                                valueAnimator.addListener(new Animator.AnimatorListener()
-                                {
-                                    @Override
-                                    public void onAnimationStart(Animator animation)
-                                    {
-
-                                    }
-
-                                    @Override
-                                    public void onAnimationEnd(Animator animation)
-                                    {
-                                        valueAnimator.removeAllUpdateListeners();
-                                        valueAnimator.removeAllListeners();
-
-                                        dailyTextView.setText("접기");
-                                    }
-
-                                    @Override
-                                    public void onAnimationCancel(Animator animation)
-                                    {
-
-                                    }
-
-                                    @Override
-                                    public void onAnimationRepeat(Animator animation)
-                                    {
-
-                                    }
-                                });
-
-                                valueAnimator.start();
-                            } else
-                            {
-                                ScrollView scrollView = (ScrollView) GourmetDetailItemLayout.this.getParent();
-                                scrollView.smoothScrollTo(0, (int) getChildAt(firstPosition).getY() - mContext.getResources().getDimensionPixelSize(R.dimen.toolbar_height));
-
-                                ValueAnimator valueAnimator = ValueAnimator.ofInt(height, 0);
-                                valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener()
-                                {
-                                    @Override
-                                    public void onAnimationUpdate(ValueAnimator valueAnimator)
-                                    {
-                                        if (valueAnimator == null)
-                                        {
-                                            return;
-                                        }
-
-                                        int val = (int) valueAnimator.getAnimatedValue();
-                                        ViewGroup.LayoutParams layoutParams = mMoreLayout.getLayoutParams();
-                                        layoutParams.height = val;
-                                        mMoreLayout.requestLayout();
-                                    }
-                                });
-                                valueAnimator.setDuration(200);
-                                valueAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
-                                valueAnimator.addListener(new Animator.AnimatorListener()
-                                {
-                                    @Override
-                                    public void onAnimationStart(Animator animation)
-                                    {
-
-                                    }
-
-                                    @Override
-                                    public void onAnimationEnd(Animator animation)
-                                    {
-                                        valueAnimator.removeAllUpdateListeners();
-                                        valueAnimator.removeAllListeners();
-
-                                        dailyTextView.setText(String.format(Locale.KOREA, "%d개 상품 모두 보기 ", size));
-                                    }
-
-                                    @Override
-                                    public void onAnimationCancel(Animator animation)
-                                    {
-
-                                    }
-
-                                    @Override
-                                    public void onAnimationRepeat(Animator animation)
-                                    {
-
-                                    }
-                                });
-
-                                valueAnimator.start();
+                                mEventListener.onMoreProductListClick();
                             }
                         }
                     });
 
                     parent.addView(mMoreLayout, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-                    parent.addView(dailyTextView, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ScreenUtils.dpToPx(mContext, 45)));
+                    parent.addView(mMoreTextView, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ScreenUtils.dpToPx(mContext, 45)));
 
                     setProductLayout(layoutInflater, mMoreLayout, i, gourmetProductList.get(i));
                 } else

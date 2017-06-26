@@ -43,6 +43,8 @@ public class GourmetDetailLayout extends PlaceDetailLayout
         void onProductClick(int index);
 
         void onReviewClick();
+
+        void onMoreProductListClick();
     }
 
     public GourmetDetailLayout(Context context, OnBaseEventListener listener)
@@ -232,6 +234,36 @@ public class GourmetDetailLayout extends PlaceDetailLayout
 
         mScrollView.smoothScrollTo(0, (int) mGourmetDetailItemLayout.getChildAt(mGourmetDetailItemLayout.getFirstProductIndex()).getY()//
             - mContext.getResources().getDimensionPixelSize(R.dimen.toolbar_height));
+    }
+
+    public boolean isOpenedProductMoreList()
+    {
+        if(mGourmetDetailItemLayout == null)
+        {
+            return false;
+        }
+
+        return mGourmetDetailItemLayout.isOpenedProductMoreList();
+    }
+
+    public void openMoreProductList()
+    {
+        if(mGourmetDetailItemLayout == null)
+        {
+            return;
+        }
+
+        mGourmetDetailItemLayout.openMoreProductList();
+    }
+
+    public void closeMoreProductList()
+    {
+        if(mGourmetDetailItemLayout == null)
+        {
+            return;
+        }
+
+        mGourmetDetailItemLayout.closeMoreProductList();
     }
 
     private void setSticker(Sticker sticker)

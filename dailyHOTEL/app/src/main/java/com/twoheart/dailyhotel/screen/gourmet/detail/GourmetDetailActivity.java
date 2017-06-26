@@ -426,6 +426,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         switch (requestCode)
         {
             case CODE_REQUEST_ACTIVITY_GOURMET_PRODUCT_LIST:
+            case CODE_REQUEST_ACTIVITY_GOURMET_PRODUCT_DETAIL:
                 setResultCode(resultCode);
 
                 switch (resultCode)
@@ -1359,17 +1360,17 @@ public class GourmetDetailActivity extends PlaceDetailActivity
                 return;
             }
 
-            ((GourmetDetailLayout)mPlaceDetailLayout).scrollProduct();
+            ((GourmetDetailLayout) mPlaceDetailLayout).scrollProduct();
 
-//            GourmetDetail gourmetDetail = (GourmetDetail) mPlaceDetail;
-//            GourmetDetailParams gourmetDetailParams = gourmetDetail.getGourmetDetailParmas();
-//
-//            Intent intent = GourmetProductListActivity.newInstance(GourmetDetailActivity.this, (GourmetBookingDay) mPlaceBookingDay, gourmetDetail, -1, mProvince, mArea);
-//            startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_GOURMET_PRODUCT_LIST);
-//
-//            recordAnalyticsGourmetDetail(AnalyticsManager.Screen.DAILYGOURMET_DETAIL_TICKETTYPE, (GourmetBookingDay) mPlaceBookingDay, (GourmetDetail) mPlaceDetail);
-//            AnalyticsManager.getInstance(GourmetDetailActivity.this).recordEvent(AnalyticsManager.Category.GOURMET_BOOKINGS//
-//                , AnalyticsManager.Action.TICKET_TYPE_CLICKED, gourmetDetailParams.name, null);
+            //            GourmetDetail gourmetDetail = (GourmetDetail) mPlaceDetail;
+            //            GourmetDetailParams gourmetDetailParams = gourmetDetail.getGourmetDetailParmas();
+            //
+            //            Intent intent = GourmetProductListActivity.newInstance(GourmetDetailActivity.this, (GourmetBookingDay) mPlaceBookingDay, gourmetDetail, -1, mProvince, mArea);
+            //            startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_GOURMET_PRODUCT_LIST);
+            //
+            //            recordAnalyticsGourmetDetail(AnalyticsManager.Screen.DAILYGOURMET_DETAIL_TICKETTYPE, (GourmetBookingDay) mPlaceBookingDay, (GourmetDetail) mPlaceDetail);
+            //            AnalyticsManager.getInstance(GourmetDetailActivity.this).recordEvent(AnalyticsManager.Category.GOURMET_BOOKINGS//
+            //                , AnalyticsManager.Action.TICKET_TYPE_CLICKED, gourmetDetailParams.name, null);
 
 
             unLockUI();
@@ -1413,6 +1414,23 @@ public class GourmetDetailActivity extends PlaceDetailActivity
 
             AnalyticsManager.getInstance(GourmetDetailActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
                 , AnalyticsManager.Action.TRUE_REVIEW_CLICK, AnalyticsManager.Label.GOURMET, null);
+        }
+
+        @Override
+        public void onMoreProductListClick()
+        {
+            if (mPlaceDetail == null || mPlaceDetailLayout == null)
+            {
+                return;
+            }
+
+            if (((GourmetDetailLayout) mPlaceDetailLayout).isOpenedProductMoreList() == true)
+            {
+                ((GourmetDetailLayout) mPlaceDetailLayout).closeMoreProductList();
+            } else
+            {
+                ((GourmetDetailLayout) mPlaceDetailLayout).openMoreProductList();
+            }
         }
 
         //        @Override
@@ -1514,69 +1532,6 @@ public class GourmetDetailActivity extends PlaceDetailActivity
             AnalyticsManager.getInstance(GourmetDetailActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
                 , AnalyticsManager.Action.CONTACT_DAILY_CONCIERGE, AnalyticsManager.Label.GOURMET_DETAIL, null);
         }
-
-        //        @Override
-        //        public void showProductInformationLayout()
-        //        {
-        //            if (isLockUiComponent() == true || isFinishing() == true)
-        //            {
-        //                return;
-        //            }
-        //
-        //            lockUiComponent();
-        //
-        //            if (mPlaceDetailLayout != null)
-        //            {
-        //                mPlaceDetailLayout.showAnimationProductInformationLayout(0);
-        //                mPlaceDetailLayout.hideWishButtonAnimation();
-        //            }
-        //
-        //            if (Util.isOverAPI21() == true)
-        //            {
-        //                Window window = getWindow();
-        //                window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-        //                window.setStatusBarColor(getResources().getColor(R.color.textView_textColor_shadow_soldout));
-        //            }
-        //
-        //            releaseUiComponent();
-        //
-        //            recordAnalyticsGourmetDetail(AnalyticsManager.Screen.DAILYGOURMET_DETAIL_TICKETTYPE, mSaleTime, (GourmetDetail) mPlaceDetail);
-        //            AnalyticsManager.getInstance(GourmetDetailActivity.this).recordEvent(AnalyticsManager.Category.GOURMET_BOOKINGS//
-        //                , AnalyticsManager.Action.TICKET_TYPE_CLICKED, mPlaceDetail.name, null);
-        //        }
-        //
-        //        @Override
-        //        public void hideProductInformationLayout(boolean isAnimation)
-        //        {
-        //            if (isLockUiComponent() == true || isFinishing() == true)
-        //            {
-        //                return;
-        //            }
-        //
-        //            lockUiComponent();
-        //
-        //            if (mPlaceDetailLayout != null)
-        //            {
-        //                if (isAnimation == true)
-        //                {
-        //                    mPlaceDetailLayout.hideAnimationProductInformationLayout();
-        //                    mPlaceDetailLayout.showWishButtonAnimation();
-        //                } else
-        //                {
-        //                    mPlaceDetailLayout.hideProductInformationLayout();
-        //                    mPlaceDetailLayout.showWishButton();
-        //                }
-        //            }
-        //
-        //            if (Util.isOverAPI21() == true)
-        //            {
-        //                Window window = getWindow();
-        //                window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-        //                window.setStatusBarColor(getResources().getColor(R.color.white));
-        //            }
-        //
-        //            releaseUiComponent();
-        //        }
 
         @Override
         public void showMap()
