@@ -895,7 +895,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
 
                 Intent intent = StayDetailActivity.newInstance(StaySearchResultActivity.this //
                     , mStaySearchCuration.getStayBookingDay(), stay.index, stay.name, stay.imageUrl //
-                    , stay.discountPrice, stay.getGrade().name(), analyticsParam, true);
+                    , analyticsParam, true);
 
                 View simpleDraweeView = view.findViewById(R.id.imageView);
                 View gradeTextView = view.findViewById(R.id.gradeTextView);
@@ -930,7 +930,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
 
                 Intent intent = StayDetailActivity.newInstance(StaySearchResultActivity.this //
                     , mStaySearchCuration.getStayBookingDay(), stay.index, stay.name, stay.imageUrl //
-                    , stay.discountPrice, stay.getGrade().name(), analyticsParam, true);
+                    , analyticsParam, true);
 
                 startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL);
 

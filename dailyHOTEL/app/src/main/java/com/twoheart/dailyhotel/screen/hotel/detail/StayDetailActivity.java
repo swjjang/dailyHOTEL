@@ -89,14 +89,15 @@ public class StayDetailActivity extends PlaceDetailActivity
      * @param index
      * @param name
      * @param imageUrl
-     * @param discountPrice
-     * @param stayGradeName
+//     * @param discountPrice
+//     * @param stayGradeName
      * @param analyticsParam
      * @param isUsedMultiTransition
      * @return
      */
     public static Intent newInstance(Context context, StayBookingDay stayBookingDay, int index //
-        , String name, String imageUrl, int discountPrice, String stayGradeName //
+        , String name, String imageUrl //
+//        , String name, String imageUrl, int discountPrice, String stayGradeName //
         , AnalyticsParam analyticsParam, boolean isUsedMultiTransition)
     {
         Intent intent = new Intent(context, StayDetailActivity.class);
@@ -105,9 +106,9 @@ public class StayDetailActivity extends PlaceDetailActivity
         intent.putExtra(NAME_INTENT_EXTRA_DATA_HOTELIDX, index);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_HOTELNAME, name);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_IMAGEURL, imageUrl);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_DISCOUNTPRICE, discountPrice);
+//        intent.putExtra(NAME_INTENT_EXTRA_DATA_DISCOUNTPRICE, discountPrice);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_CALENDAR_FLAG, false);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_GRADE, stayGradeName);
+//        intent.putExtra(NAME_INTENT_EXTRA_DATA_GRADE, stayGradeName);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_ANALYTICS_PARAM, analyticsParam);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_USED_MULTITRANSITIOIN, isUsedMultiTransition);
 
@@ -208,10 +209,8 @@ public class StayDetailActivity extends PlaceDetailActivity
                 return;
             }
 
-//            mProvince = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PROVINCE);
-//            mArea = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_AREA);
-            mViewPrice = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_DISCOUNTPRICE, 0);
-            Stay.Grade grade = Stay.Grade.valueOf(intent.getStringExtra(NAME_INTENT_EXTRA_DATA_GRADE));
+            mViewPrice = mAnalyticsParam != null ? mAnalyticsParam.discountPrice : 0;
+            Stay.Grade grade = mAnalyticsParam != null ? Stay.Grade.valueOf(mAnalyticsParam.gradeCode) : Stay.Grade.etc;
 
             boolean isFromMap = intent.hasExtra(NAME_INTENT_EXTRA_DATA_FROM_MAP) == true;
 

@@ -33,6 +33,7 @@ public class AnalyticsParam implements Parcelable
     public int listPosition = -1;
     public int totalListCount = -1;
     public boolean isDailyChoice;
+    public String gradeCode;
     public String gradeName;
 
     public AnalyticsParam()
@@ -63,6 +64,7 @@ public class AnalyticsParam implements Parcelable
 
         showOriginalPriceYn = getShowOrginalPriceYn(stay.price, stay.discountPrice);
         listPosition = stay.entryPosition;
+        gradeCode = stay.getGrade().name();
         gradeName = stay.getGrade().getName(context);
         isDailyChoice = stay.isDailyChoice;
     }
@@ -103,13 +105,17 @@ public class AnalyticsParam implements Parcelable
         showOriginalPriceYn = getShowOrginalPriceYn(price, discountPrice);
         listPosition = -1;
 
-        if (place.details == null || place.details.stayGrade == null)
+        Stay.Grade grade;
+        try
         {
-            gradeName = Stay.Grade.etc.getName(context);
-        } else
+            grade = place.details.stayGrade;
+        } catch (Exception e)
         {
-            gradeName = place.details.stayGrade.getName(context);
+            grade = Stay.Grade.etc;
         }
+
+        gradeCode = grade.name();
+        gradeName = grade.getName(context);
 
         isDailyChoice = false;
     }
@@ -133,6 +139,7 @@ public class AnalyticsParam implements Parcelable
             grade = Stay.Grade.etc;
         }
 
+        gradeCode = grade.name();
         gradeName = grade.getName(context);
 
         isDailyChoice = recommendationStay.isDailyChoice;
@@ -201,6 +208,7 @@ public class AnalyticsParam implements Parcelable
         dest.writeInt(listPosition);
         dest.writeInt(totalListCount);
         dest.writeInt(isDailyChoice == true ? 1 : 0);
+        dest.writeString(gradeCode);
         dest.writeString(gradeName);
     }
 
@@ -217,6 +225,7 @@ public class AnalyticsParam implements Parcelable
         listPosition = in.readInt();
         totalListCount = in.readInt();
         isDailyChoice = in.readInt() == 1 ? true : false;
+        gradeCode = in.readString();
         gradeName = in.readString();
     }
 

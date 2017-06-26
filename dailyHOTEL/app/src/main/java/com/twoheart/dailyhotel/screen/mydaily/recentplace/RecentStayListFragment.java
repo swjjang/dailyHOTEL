@@ -307,7 +307,7 @@ public class RecentStayListFragment extends RecentPlacesListFragment
 
             Intent intent = StayDetailActivity.newInstance(mBaseActivity //
                 , (StayBookingDay) mPlaceBookingDay, stay.index, stay.name, stay.imageUrl //
-                , stay.discountPrice, stay.getGrade().name(), analyticsParam, true);
+                , analyticsParam, true);
 
             View simpleDraweeView = view.findViewById(R.id.imageView);
             View gradeTextView = view.findViewById(R.id.gradeTextView);
@@ -334,7 +334,7 @@ public class RecentStayListFragment extends RecentPlacesListFragment
 
             Intent intent = StayDetailActivity.newInstance(mBaseActivity //
                 , (StayBookingDay) mPlaceBookingDay, stay.index, stay.name, stay.imageUrl //
-                , stay.discountPrice, stay.getGrade().name(), analyticsParam, true);
+                , analyticsParam, true);
 
             mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL);
 

@@ -266,7 +266,7 @@ public class CollectionStayActivity extends CollectionBaseActivity
 
                 Intent intent = StayDetailActivity.newInstance(CollectionStayActivity.this //
                     , (StayBookingDay) mPlaceBookingDay, recommendationStay.index, recommendationStay.name, recommendationStay.imageUrl //
-                    , recommendationStay.discount, recommendationStay.grade, analyticsParam, true);
+                    , analyticsParam, true);
 
                 View simpleDraweeView = view.findViewById(R.id.imageView);
                 View gradeTextView = view.findViewById(R.id.gradeTextView);
@@ -300,7 +300,7 @@ public class CollectionStayActivity extends CollectionBaseActivity
 
                 Intent intent = StayDetailActivity.newInstance(CollectionStayActivity.this //
                     , (StayBookingDay) mPlaceBookingDay, recommendationStay.index, recommendationStay.name, recommendationStay.imageUrl //
-                    , recommendationStay.discount, recommendationStay.grade, analyticsParam, false);
+                    , analyticsParam, false);
 
                 startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL);
 

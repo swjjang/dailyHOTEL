@@ -1169,7 +1169,7 @@ public class StayCategoryNearByActivity extends BaseActivity
 
                 Intent intent = StayDetailActivity.newInstance(StayCategoryNearByActivity.this //
                     , mStayCategoryNearByCuration.getStayBookingDay(), stay.index, stay.name, stay.imageUrl //
-                    , stay.discountPrice, stay.getGrade().name(), analyticsParam, true);
+                    , analyticsParam, true);
 
                 View simpleDraweeView = view.findViewById(R.id.imageView);
                 View gradeTextView = view.findViewById(R.id.gradeTextView);
@@ -1204,7 +1204,7 @@ public class StayCategoryNearByActivity extends BaseActivity
 
                 Intent intent = StayDetailActivity.newInstance(StayCategoryNearByActivity.this //
                     , mStayCategoryNearByCuration.getStayBookingDay(), stay.index, stay.name, stay.imageUrl //
-                    , stay.discountPrice, stay.getGrade().name(), analyticsParam, false);
+                    , analyticsParam, false);
 
                 startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL);
 

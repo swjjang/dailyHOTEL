@@ -36,12 +36,10 @@ import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.DailyCategoryType;
 import com.twoheart.dailyhotel.model.Province;
-import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.model.time.GourmetBookingDay;
 import com.twoheart.dailyhotel.model.time.StayBookingDay;
 import com.twoheart.dailyhotel.network.model.Event;
 import com.twoheart.dailyhotel.network.model.HomePlace;
-import com.twoheart.dailyhotel.network.model.Prices;
 import com.twoheart.dailyhotel.network.model.Recommendation;
 import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
@@ -695,29 +693,9 @@ public class HomeFragment extends BaseMenuNavigationFragment
 
 //                        Intent intent = StayDetailActivity.newInstance(mBaseActivity, stayBookingDay, place, true);
 
-                        // TODO : GA 용인지 확인 후 제거 가능한지 discountPrice, gradeName 확인 필요
-                        int discountPrice = AnalyticsParam.SKIP_CHECK_DISCOUNT_PRICE_VALUE;
-                        Prices prices = place.prices;
-                        if (prices != null)
-                        {
-                            if (prices.discountPrice > 0)
-                            {
-                                discountPrice = prices.discountPrice;
-                            }
-                        }
-
-                        String gradeName;
-                        if (place.details == null || place.details.stayGrade == null)
-                        {
-                            gradeName = Stay.Grade.etc.name();
-                        } else
-                        {
-                            gradeName = place.details.stayGrade.name();
-                        }
-
                         Intent intent = StayDetailActivity.newInstance(mBaseActivity //
                             , stayBookingDay, place.index, place.title, place.imageUrl //
-                            , discountPrice, gradeName, analyticsParam, true);
+                            , analyticsParam, true);
 
                         if (intent == null)
                         {
@@ -740,29 +718,9 @@ public class HomeFragment extends BaseMenuNavigationFragment
 
                         //                        Intent intent = StayDetailActivity.newInstance(mBaseActivity, stayBookingDay, place, false);
 
-                        // TODO : GA 용인지 확인 후 제거 가능한지 discountPrice, gradeName 확인 필요
-                        int discountPrice = AnalyticsParam.SKIP_CHECK_DISCOUNT_PRICE_VALUE;
-                        Prices prices = place.prices;
-                        if (prices != null)
-                        {
-                            if (prices.discountPrice > 0)
-                            {
-                                discountPrice = prices.discountPrice;
-                            }
-                        }
-
-                        String gradeName;
-                        if (place.details == null || place.details.stayGrade == null)
-                        {
-                            gradeName = Stay.Grade.etc.name();
-                        } else
-                        {
-                            gradeName = place.details.stayGrade.name();
-                        }
-
                         Intent intent = StayDetailActivity.newInstance(mBaseActivity //
                             , stayBookingDay, place.index, place.title, place.imageUrl //
-                            , discountPrice, gradeName, analyticsParam, false);
+                            , analyticsParam, false);
 
                         if (intent == null)
                         {
