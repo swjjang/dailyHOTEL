@@ -301,7 +301,7 @@ public class RecentStayListFragment extends RecentPlacesListFragment
             AnalyticsParam analyticsParam = new AnalyticsParam();
             analyticsParam.setParam(mBaseActivity, stay);
             analyticsParam.setProvince(null);
-            analyticsParam.setTotalListCount(0);
+            analyticsParam.setTotalListCount(-1);
 
             Intent intent = StayDetailActivity.newInstance(mBaseActivity, (StayBookingDay) mPlaceBookingDay, stay, analyticsParam, true);
 
@@ -324,7 +324,7 @@ public class RecentStayListFragment extends RecentPlacesListFragment
             AnalyticsParam analyticsParam = new AnalyticsParam();
             analyticsParam.setParam(mBaseActivity , stay);
             analyticsParam.setProvince(null);
-            analyticsParam.setTotalListCount(0);
+            analyticsParam.setTotalListCount(-1);
 
             Intent intent = StayDetailActivity.newInstance(mBaseActivity, (StayBookingDay) mPlaceBookingDay, stay, analyticsParam, false);
 
