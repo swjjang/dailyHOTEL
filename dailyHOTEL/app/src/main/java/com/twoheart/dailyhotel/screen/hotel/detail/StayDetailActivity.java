@@ -34,7 +34,6 @@ import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.model.StayDetail;
 import com.twoheart.dailyhotel.model.time.PlaceBookingDay;
 import com.twoheart.dailyhotel.model.time.StayBookingDay;
-import com.twoheart.dailyhotel.network.model.HomePlace;
 import com.twoheart.dailyhotel.network.model.ImageInformation;
 import com.twoheart.dailyhotel.network.model.PlaceReviewScores;
 import com.twoheart.dailyhotel.network.model.RecommendationStay;
@@ -83,7 +82,7 @@ public class StayDetailActivity extends PlaceDetailActivity
     private boolean mCheckPrice;
 
     /**
-     * 리스트, 검색 결과, 위시리스트 에서 호출
+     * 리스트, 검색 결과, 위시리스트, 최근 본 업장, 홈 에서 호출
      *
      * @param context
      * @param stayBookingDay
@@ -110,51 +109,6 @@ public class StayDetailActivity extends PlaceDetailActivity
         intent.putExtra(NAME_INTENT_EXTRA_DATA_CALENDAR_FLAG, false);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_GRADE, stayGradeName);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_ANALYTICS_PARAM, analyticsParam);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_USED_MULTITRANSITIOIN, isUsedMultiTransition);
-
-        return intent;
-    }
-
-    /**
-     * 홈에서 호출
-     *
-     * @param context
-     * @param stayBookingDay
-     * @param homePlace
-     * @param isUsedMultiTransition
-     * @return
-     */
-    public static Intent newInstance(Context context, StayBookingDay stayBookingDay, HomePlace homePlace, boolean isUsedMultiTransition)
-    {
-        if (stayBookingDay == null || homePlace == null)
-        {
-            return null;
-        }
-
-        Intent intent = new Intent(context, StayDetailActivity.class);
-
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, stayBookingDay);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_HOTELIDX, homePlace.index);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_HOTELNAME, homePlace.title);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_IMAGEURL, homePlace.imageUrl);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_CALENDAR_FLAG, false);
-
-        if (homePlace.prices != null && homePlace.prices.discountPrice > 0)
-        {
-            intent.putExtra(NAME_INTENT_EXTRA_DATA_DISCOUNTPRICE, homePlace.prices.discountPrice);
-        } else
-        {
-            intent.putExtra(NAME_INTENT_EXTRA_DATA_DISCOUNTPRICE, SKIP_CHECK_DISCOUNT_PRICE_VALUE);
-        }
-
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_ENTRY_INDEX, -1);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_LIST_COUNT, -1);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_DAILYCHOICE, false);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_GRADE, homePlace.details.stayGrade.name());
-
-        String isShowOriginalPrice = "N";
-
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_SHOW_ORIGINALPRICE, isShowOriginalPrice);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_USED_MULTITRANSITIOIN, isUsedMultiTransition);
 
         return intent;

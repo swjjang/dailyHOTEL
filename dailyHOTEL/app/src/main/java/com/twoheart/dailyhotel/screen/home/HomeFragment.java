@@ -24,6 +24,7 @@ import com.daily.base.util.ScreenUtils;
 import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.repository.local.ConfigLocalImpl;
+import com.daily.dailyhotel.repository.local.model.AnalyticsParam;
 import com.daily.dailyhotel.repository.remote.FacebookRemoteImpl;
 import com.daily.dailyhotel.repository.remote.KakaoRemoteImpl;
 import com.daily.dailyhotel.repository.remote.RecentlyRemoteImpl;
@@ -684,7 +685,16 @@ public class HomeFragment extends BaseMenuNavigationFragment
                             }
                         });
 
-                        Intent intent = StayDetailActivity.newInstance(mBaseActivity, stayBookingDay, place, true);
+                        AnalyticsParam analyticsParam = new AnalyticsParam();
+                        analyticsParam.setParam(mBaseActivity, place);
+                        analyticsParam.setProvince(null);
+                        analyticsParam.setTotalListCount(-1);
+
+//                        Intent intent = StayDetailActivity.newInstance(mBaseActivity, stayBookingDay, place, true);
+
+                        Intent intent = StayDetailActivity.newInstance(mBaseActivity //
+                            , stayBookingDay, place.index, place.title, place.imageUrl //
+                            , analyticsParam.discountPrice, analyticsParam.gradeName, analyticsParam, true);
 
                         if (intent == null)
                         {
@@ -700,7 +710,16 @@ public class HomeFragment extends BaseMenuNavigationFragment
                         mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL, options.toBundle());
                     } else
                     {
-                        Intent intent = StayDetailActivity.newInstance(mBaseActivity, stayBookingDay, place, false);
+                        AnalyticsParam analyticsParam = new AnalyticsParam();
+                        analyticsParam.setParam(mBaseActivity, place);
+                        analyticsParam.setProvince(null);
+                        analyticsParam.setTotalListCount(-1);
+
+                        //                        Intent intent = StayDetailActivity.newInstance(mBaseActivity, stayBookingDay, place, false);
+
+                        Intent intent = StayDetailActivity.newInstance(mBaseActivity //
+                            , stayBookingDay, place.index, place.title, place.imageUrl //
+                            , analyticsParam.discountPrice, analyticsParam.gradeName, analyticsParam, false);
 
                         if (intent == null)
                         {
