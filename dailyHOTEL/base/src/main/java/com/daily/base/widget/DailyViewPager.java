@@ -5,6 +5,8 @@ import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 
+import com.daily.base.util.ExLog;
+
 public class DailyViewPager extends ViewPager
 {
     private boolean enabled;
@@ -26,7 +28,13 @@ public class DailyViewPager extends ViewPager
     {
         if (enabled == true)
         {
-            return super.onTouchEvent(event);
+            try
+            {
+                return super.onTouchEvent(event);
+            } catch (IllegalArgumentException e)
+            {
+                ExLog.e(e.toString());
+            }
         }
 
         return false;
@@ -37,7 +45,13 @@ public class DailyViewPager extends ViewPager
     {
         if (enabled == true)
         {
-            return super.onInterceptTouchEvent(event);
+            try
+            {
+                return super.onTouchEvent(event);
+            } catch (IllegalArgumentException e)
+            {
+                ExLog.e(e.toString());
+            }
         }
 
         return false;
