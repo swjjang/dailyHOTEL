@@ -8,6 +8,7 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.screen.common.WebViewActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Crypto;
+import com.twoheart.dailyhotel.util.DailyRemoteConfigPreference;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
@@ -19,7 +20,7 @@ public class PrivacyActivity extends WebViewActivity
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_term);
-        setWebView(Crypto.getUrlDecoderEx(URL_WEB_PRIVACY));
+        setWebView(Crypto.getUrlDecoderEx(DailyRemoteConfigPreference.getInstance(this).getKeyRemoteConfigStaticUrlPrivacy()));
 
         initToolbar();
         initLayout((DailyWebView) mWebView);

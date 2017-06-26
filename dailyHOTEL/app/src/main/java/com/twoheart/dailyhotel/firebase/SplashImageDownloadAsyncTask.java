@@ -5,7 +5,7 @@ import android.os.AsyncTask;
 
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
-import com.twoheart.dailyhotel.util.DailyPreference;
+import com.twoheart.dailyhotel.util.DailyRemoteConfigPreference;
 import com.twoheart.dailyhotel.util.Util;
 
 import java.io.File;
@@ -42,8 +42,8 @@ public class SplashImageDownloadAsyncTask extends AsyncTask<String, Void, Boolea
         File downloadedFile = null;
         BufferedSink bufferedSink = null;
 
-        DailyPreference.getInstance(mContext).setRemoteConfigIntroImageNewUrl(url);
-        DailyPreference.getInstance(mContext).setRemoteConfigIntroImageNewVersion(version);
+        DailyRemoteConfigPreference.getInstance(mContext).setRemoteConfigIntroImageNewUrl(url);
+        DailyRemoteConfigPreference.getInstance(mContext).setRemoteConfigIntroImageNewVersion(version);
 
         try
         {
@@ -90,12 +90,12 @@ public class SplashImageDownloadAsyncTask extends AsyncTask<String, Void, Boolea
     {
         if (result == true)
         {
-            String currentVersion = DailyPreference.getInstance(mContext).getRemoteConfigIntroImageVersion();
-            String newVersion = DailyPreference.getInstance(mContext).getRemoteConfigIntroImageNewVersion();
+            String currentVersion = DailyRemoteConfigPreference.getInstance(mContext).getRemoteConfigIntroImageVersion();
+            String newVersion = DailyRemoteConfigPreference.getInstance(mContext).getRemoteConfigIntroImageNewVersion();
 
-            DailyPreference.getInstance(mContext).setRemoteConfigIntroImageVersion(newVersion);
-            DailyPreference.getInstance(mContext).setRemoteConfigIntroImageNewUrl(null);
-            DailyPreference.getInstance(mContext).setRemoteConfigIntroImageNewVersion(null);
+            DailyRemoteConfigPreference.getInstance(mContext).setRemoteConfigIntroImageVersion(newVersion);
+            DailyRemoteConfigPreference.getInstance(mContext).setRemoteConfigIntroImageNewUrl(null);
+            DailyRemoteConfigPreference.getInstance(mContext).setRemoteConfigIntroImageNewVersion(null);
 
             // 파일 삭제
             if (DailyTextUtils.isTextEmpty(currentVersion) == false)

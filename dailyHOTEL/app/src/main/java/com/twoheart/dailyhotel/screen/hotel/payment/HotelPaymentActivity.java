@@ -55,6 +55,7 @@ import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyInternalDeepLink;
 import com.twoheart.dailyhotel.util.DailyPreference;
+import com.twoheart.dailyhotel.util.DailyRemoteConfigPreference;
 import com.twoheart.dailyhotel.util.DailyUserPreference;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
@@ -1159,10 +1160,10 @@ public class HotelPaymentActivity extends PlacePaymentActivity
 
     private void setAvailableDefaultPaymentType()
     {
-        boolean isSimpleCardPaymentEnabled = DailyPreference.getInstance(this).isRemoteConfigStaySimpleCardPaymentEnabled();
-        boolean isCardPaymentEnabled = DailyPreference.getInstance(this).isRemoteConfigStayCardPaymentEnabled();
-        boolean isPhonePaymentEnabled = DailyPreference.getInstance(this).isRemoteConfigStayPhonePaymentEnabled();
-        boolean isVirtualPaymentEnabled = DailyPreference.getInstance(this).isRemoteConfigStayVirtualPaymentEnabled();
+        boolean isSimpleCardPaymentEnabled = DailyRemoteConfigPreference.getInstance(this).isRemoteConfigStaySimpleCardPaymentEnabled();
+        boolean isCardPaymentEnabled = DailyRemoteConfigPreference.getInstance(this).isRemoteConfigStayCardPaymentEnabled();
+        boolean isPhonePaymentEnabled = DailyRemoteConfigPreference.getInstance(this).isRemoteConfigStayPhonePaymentEnabled();
+        boolean isVirtualPaymentEnabled = DailyRemoteConfigPreference.getInstance(this).isRemoteConfigStayVirtualPaymentEnabled();
 
         StringBuilder guideMemo = new StringBuilder();
 
@@ -1619,12 +1620,12 @@ public class HotelPaymentActivity extends PlacePaymentActivity
             mOnEventListener.changedPaymentType(PlacePaymentInformation.PaymentType.PHONE_PAY);
         } else
         {
-            if (DailyPreference.getInstance(this).isRemoteConfigStaySimpleCardPaymentEnabled() == true)
+            if (DailyRemoteConfigPreference.getInstance(this).isRemoteConfigStaySimpleCardPaymentEnabled() == true)
             {
                 mHotelPaymentLayout.setPaymentTypeEnabled(PlacePaymentInformation.PaymentType.EASY_CARD, true);
             }
 
-            if (DailyPreference.getInstance(this).isRemoteConfigStayCardPaymentEnabled() == true)
+            if (DailyRemoteConfigPreference.getInstance(this).isRemoteConfigStayCardPaymentEnabled() == true)
             {
                 mHotelPaymentLayout.setPaymentTypeEnabled(PlacePaymentInformation.PaymentType.CARD, true);
             }
@@ -1640,7 +1641,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
                 mHotelPaymentLayout.setPaymentTypeEnabled(PlacePaymentInformation.PaymentType.PHONE_PAY, false);
             } else
             {
-                if (DailyPreference.getInstance(this).isRemoteConfigStayPhonePaymentEnabled() == true)
+                if (DailyRemoteConfigPreference.getInstance(this).isRemoteConfigStayPhonePaymentEnabled() == true)
                 {
                     mHotelPaymentLayout.setPaymentTypeEnabled(PlacePaymentInformation.PaymentType.PHONE_PAY, true);
                 }
@@ -1661,19 +1662,19 @@ public class HotelPaymentActivity extends PlacePaymentActivity
 
     private PlacePaymentInformation.PaymentType getAvailableDefaultPaymentType()
     {
-        if (DailyPreference.getInstance(this).isRemoteConfigStaySimpleCardPaymentEnabled() == true &&//
+        if (DailyRemoteConfigPreference.getInstance(this).isRemoteConfigStaySimpleCardPaymentEnabled() == true &&//
             mHotelPaymentLayout.isPaymentTypeEnabled(PlacePaymentInformation.PaymentType.EASY_CARD) == true)
         {
             return PlacePaymentInformation.PaymentType.EASY_CARD;
-        } else if (DailyPreference.getInstance(this).isRemoteConfigStayCardPaymentEnabled() == true &&//
+        } else if (DailyRemoteConfigPreference.getInstance(this).isRemoteConfigStayCardPaymentEnabled() == true &&//
             mHotelPaymentLayout.isPaymentTypeEnabled(PlacePaymentInformation.PaymentType.CARD) == true)
         {
             return PlacePaymentInformation.PaymentType.CARD;
-        } else if (DailyPreference.getInstance(this).isRemoteConfigStayPhonePaymentEnabled() == true &&//
+        } else if (DailyRemoteConfigPreference.getInstance(this).isRemoteConfigStayPhonePaymentEnabled() == true &&//
             mHotelPaymentLayout.isPaymentTypeEnabled(PlacePaymentInformation.PaymentType.PHONE_PAY) == true)
         {
             return PlacePaymentInformation.PaymentType.PHONE_PAY;
-        } else if (DailyPreference.getInstance(this).isRemoteConfigStayVirtualPaymentEnabled() == true &&//
+        } else if (DailyRemoteConfigPreference.getInstance(this).isRemoteConfigStayVirtualPaymentEnabled() == true &&//
             mHotelPaymentLayout.isPaymentTypeEnabled(PlacePaymentInformation.PaymentType.VBANK) == true)
         {
             return PlacePaymentInformation.PaymentType.VBANK;

@@ -5,6 +5,7 @@ import android.graphics.drawable.Animatable;
 import android.net.Uri;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ScrollView;
 
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ScreenUtils;
@@ -25,6 +26,7 @@ import com.twoheart.dailyhotel.place.adapter.PlaceDetailImageViewPagerAdapter;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
 import com.twoheart.dailyhotel.place.layout.PlaceDetailLayout;
 import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.widget.DailyPlaceDetailScrollView;
 
 import java.util.List;
 
@@ -38,7 +40,11 @@ public class GourmetDetailLayout extends PlaceDetailLayout
     {
         void onProductListClick();
 
+        void onProductClick(int index);
+
         void onReviewClick();
+
+        void onMoreProductListClick();
     }
 
     public GourmetDetailLayout(Context context, OnBaseEventListener listener)
@@ -82,13 +88,12 @@ public class GourmetDetailLayout extends PlaceDetailLayout
         }
     }
 
-    public void setDetail(GourmetBookingDay gourmetBookingDay, GourmetDetail gourmetDetail, PlaceReviewScores placeReviewScores, int imagePosition)
+    public void setDetail(GourmetBookingDay gourmetBookingDay, GourmetDetail gourmetDetail//
+        , PlaceReviewScores placeReviewScores, int imagePosition, int dpi)
     {
         if (gourmetBookingDay == null || gourmetDetail == null || gourmetDetail.getGourmetDetailParmas() == null)
         {
             setLineIndicatorVisible(false);
-            setWishButtonSelected(false);
-            setWishButtonCount(0);
             return;
         }
 
@@ -111,12 +116,12 @@ public class GourmetDetailLayout extends PlaceDetailLayout
         mGourmetDetailItemLayout.setOnEventListener((GourmetDetailLayout.OnEventListener) mOnEventListener);
         mGourmetDetailItemLayout.setEmptyViewOnTouchListener(mEmptyViewOnTouchListener);
         mGourmetDetailItemLayout.setData(gourmetBookingDay, (GourmetDetail) mPlaceDetail, placeReviewScores);
+        mGourmetDetailItemLayout.setDpi(dpi);
 
         mScrollView.removeAllViews();
         mScrollView.addView(mGourmetDetailItemLayout);
 
         setCurrentImage(imagePosition);
-        showWishButton();
 
         // SOLD OUT 판단 조건.
         List<GourmetProduct> gourmetProductList = gourmetDetail.getProductList();
@@ -145,9 +150,6 @@ public class GourmetDetailLayout extends PlaceDetailLayout
         }
 
         GourmetDetailParams gourmetDetailParams = gourmetDetail.getGourmetDetailParmas();
-
-        setWishButtonSelected(gourmetDetailParams.myWish);
-        setWishButtonCount(gourmetDetailParams.wishCount);
 
         if (placeReviewScores != null)
         {
@@ -183,7 +185,7 @@ public class GourmetDetailLayout extends PlaceDetailLayout
             {
                 mBookingTextView.setVisibility(View.VISIBLE);
                 mSoldoutTextView.setVisibility(View.GONE);
-                mWishButtonTextView.setVisibility(View.VISIBLE);
+                //                mWishButtonTextView.setVisibility(View.VISIBLE);
                 break;
             }
 
@@ -191,7 +193,7 @@ public class GourmetDetailLayout extends PlaceDetailLayout
             {
                 mBookingTextView.setVisibility(View.VISIBLE);
                 mSoldoutTextView.setVisibility(View.GONE);
-                mWishButtonTextView.setVisibility(View.VISIBLE);
+                //                mWishButtonTextView.setVisibility(View.VISIBLE);
 
                 mBookingTextView.setText(R.string.act_hotel_search_ticket);
                 break;
@@ -201,7 +203,7 @@ public class GourmetDetailLayout extends PlaceDetailLayout
             {
                 mBookingTextView.setVisibility(View.VISIBLE);
                 mSoldoutTextView.setVisibility(View.GONE);
-                mWishButtonTextView.setVisibility(View.VISIBLE);
+                //                mWishButtonTextView.setVisibility(View.VISIBLE);
 
                 mBookingTextView.setText(R.string.act_hotel_booking);
                 break;
@@ -211,10 +213,57 @@ public class GourmetDetailLayout extends PlaceDetailLayout
             {
                 mBookingTextView.setVisibility(View.GONE);
                 mSoldoutTextView.setVisibility(View.VISIBLE);
-                mWishButtonTextView.setVisibility(View.VISIBLE);
+                //                mWishButtonTextView.setVisibility(View.VISIBLE);
                 break;
             }
         }
+    }
+
+    @Override
+    public DailyPlaceDetailScrollView.OnScrollChangedListener getScrollChangedListener()
+    {
+        return mOnScrollChangedListener;
+    }
+
+    public void scrollProduct()
+    {
+        if (mScrollView == null || mGourmetDetailItemLayout == null)
+        {
+            return;
+        }
+
+        mScrollView.smoothScrollTo(0, (int) mGourmetDetailItemLayout.getChildAt(mGourmetDetailItemLayout.getFirstProductIndex()).getY()//
+            - mContext.getResources().getDimensionPixelSize(R.dimen.toolbar_height));
+    }
+
+    public boolean isOpenedProductMoreList()
+    {
+        if(mGourmetDetailItemLayout == null)
+        {
+            return false;
+        }
+
+        return mGourmetDetailItemLayout.isOpenedProductMoreList();
+    }
+
+    public void openMoreProductList()
+    {
+        if(mGourmetDetailItemLayout == null)
+        {
+            return;
+        }
+
+        mGourmetDetailItemLayout.openMoreProductList();
+    }
+
+    public void closeMoreProductList()
+    {
+        if(mGourmetDetailItemLayout == null)
+        {
+            return;
+        }
+
+        mGourmetDetailItemLayout.closeMoreProductList();
     }
 
     private void setSticker(Sticker sticker)
@@ -266,4 +315,51 @@ public class GourmetDetailLayout extends PlaceDetailLayout
 
         mStickerSimpleDraweeView.setController(controller);
     }
+
+    private DailyPlaceDetailScrollView.OnScrollChangedListener mOnScrollChangedListener = new DailyPlaceDetailScrollView.OnScrollChangedListener()
+    {
+        @Override
+        public void onScrollChanged(ScrollView scrollView, int l, int t, int oldl, int oldt)
+        {
+            if (getBookingStatus() == STATUS_BOOKING)
+            {
+                return;
+            }
+
+            final int TOOLBAR_HEIGHT = mContext.getResources().getDimensionPixelSize(R.dimen.toolbar_height);
+
+            int viewpagerHeight = getImageLayoutHeight(mContext);
+
+            if (t >= viewpagerHeight - TOOLBAR_HEIGHT)
+            {
+                ((OnEventListener) mOnEventListener).showActionBar(true);
+            } else
+            {
+                ((OnEventListener) mOnEventListener).hideActionBar(true);
+            }
+
+            if (mGourmetDetailItemLayout != null)
+            {
+                int firstProductIndex = mGourmetDetailItemLayout.getFirstProductIndex();
+                int lastProductIndex = mGourmetDetailItemLayout.getLastProductIndex();
+
+                if (firstProductIndex >= lastProductIndex)
+                {
+                    return;
+                }
+
+                int scrollY = scrollView.getScrollY();
+
+                // 겹치지 않은 경우
+                if (scrollY == 0 || scrollY > mGourmetDetailItemLayout.getChildAt(lastProductIndex).getBottom()//
+                    || scrollY + scrollView.getHeight() < mGourmetDetailItemLayout.getChildAt(firstProductIndex).getY())
+                {
+                    mBottomLayout.setVisibility(View.VISIBLE);
+                } else
+                {
+                    mBottomLayout.setVisibility(View.GONE);
+                }
+            }
+        }
+    };
 }

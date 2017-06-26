@@ -46,6 +46,7 @@ import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Crypto;
 import com.twoheart.dailyhotel.util.DailyPreference;
+import com.twoheart.dailyhotel.util.DailyRemoteConfigPreference;
 import com.twoheart.dailyhotel.util.DailyUserPreference;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
@@ -162,7 +163,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
         TextView signUpView = (TextView) findViewById(R.id.signUpView);
         signUpView.setOnClickListener(this);
 
-        String signupMessage = DailyPreference.getInstance(this).getRemoteConfigTextLoginText01();
+        String signupMessage = DailyRemoteConfigPreference.getInstance(this).getRemoteConfigTextLoginText01();
 
         if (DailyTextUtils.isTextEmpty(signupMessage) == false)
         {

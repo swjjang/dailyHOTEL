@@ -18,6 +18,7 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyPreference;
+import com.twoheart.dailyhotel.util.DailyRemoteConfigPreference;
 import com.twoheart.dailyhotel.util.Util;
 
 import java.util.Calendar;
@@ -169,7 +170,7 @@ public class CallDialogPresenter extends BaseExceptionPresenter<CallDialogActivi
     @Override
     public void onCallClick()
     {
-        String remoteConfigPhoneNumber = DailyPreference.getInstance(getActivity()).getRemoteConfigCompanyPhoneNumber();
+        String remoteConfigPhoneNumber = DailyRemoteConfigPreference.getInstance(getActivity()).getRemoteConfigCompanyPhoneNumber();
         String phoneNumber = DailyTextUtils.isTextEmpty(remoteConfigPhoneNumber) == false //
             ? remoteConfigPhoneNumber : Constants.PHONE_NUMBER_DAILYHOTEL;
 
@@ -213,7 +214,7 @@ public class CallDialogPresenter extends BaseExceptionPresenter<CallDialogActivi
             int startHour = Integer.parseInt(startHourString);
             int endHour = Integer.parseInt(endHourString);
 
-            String[] lunchTimes = DailyPreference.getInstance(getActivity()).getRemoteConfigOperationLunchTime().split("\\,");
+            String[] lunchTimes = DailyRemoteConfigPreference.getInstance(getActivity()).getRemoteConfigOperationLunchTime().split("\\,");
             String[] startLunchTime = lunchTimes[0].split(":");
             String[] endLunchTime = lunchTimes[1].split(":");
 
@@ -253,7 +254,7 @@ public class CallDialogPresenter extends BaseExceptionPresenter<CallDialogActivi
         String startHour = hour[0];
         String endHour = hour[1];
 
-        String[] lunchTimes = DailyPreference.getInstance(getActivity()).getRemoteConfigOperationLunchTime().split("\\,");
+        String[] lunchTimes = DailyRemoteConfigPreference.getInstance(getActivity()).getRemoteConfigOperationLunchTime().split("\\,");
         String startLunchTime = lunchTimes[0];
         String endLunchTime = lunchTimes[1];
 
@@ -276,7 +277,7 @@ public class CallDialogPresenter extends BaseExceptionPresenter<CallDialogActivi
         String startHour = hour[0];
         String endHour = hour[1];
 
-        String[] lunchTimes = DailyPreference.getInstance(getActivity()).getRemoteConfigOperationLunchTime().split("\\,");
+        String[] lunchTimes = DailyRemoteConfigPreference.getInstance(getActivity()).getRemoteConfigOperationLunchTime().split("\\,");
         String startLunchTime = lunchTimes[0];
         String endLunchTime = lunchTimes[1];
 

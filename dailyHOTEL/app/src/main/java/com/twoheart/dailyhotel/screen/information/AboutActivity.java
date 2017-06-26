@@ -10,6 +10,7 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.screen.common.WebViewActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Crypto;
+import com.twoheart.dailyhotel.util.DailyRemoteConfigPreference;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
@@ -28,7 +29,7 @@ public class AboutActivity extends WebViewActivity
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_about);
-        setWebView(Crypto.getUrlDecoderEx(URL_WEB_ABOUT));
+        setWebView(Crypto.getUrlDecoderEx(DailyRemoteConfigPreference.getInstance(this).getKeyRemoteConfigStaticUrlAbout()));
 
         initToolbar();
         initLayout((DailyWebView) mWebView);

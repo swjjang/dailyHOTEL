@@ -65,6 +65,7 @@ import com.twoheart.dailyhotel.databinding.LayoutStayOutboundDetailAmenityMoreDa
 import com.twoheart.dailyhotel.databinding.LayoutStayOutboundDetailConcierageDataBinding;
 import com.twoheart.dailyhotel.databinding.LayoutStayOutboundDetailInformationDataBinding;
 import com.twoheart.dailyhotel.util.DailyPreference;
+import com.twoheart.dailyhotel.util.DailyRemoteConfigPreference;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.widget.AlphaTransition;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
@@ -1374,7 +1375,7 @@ public class StayOutboundDetailView extends BaseDialogView<StayOutboundDetailVie
         String startHour = hour[0];
         String endHour = hour[1];
 
-        String[] lunchTimes = DailyPreference.getInstance(getContext()).getRemoteConfigOperationLunchTime().split("\\,");
+        String[] lunchTimes = DailyRemoteConfigPreference.getInstance(getContext()).getRemoteConfigOperationLunchTime().split("\\,");
         String startLunchTime = lunchTimes[0];
         String endLunchTime = lunchTimes[1];
 

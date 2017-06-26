@@ -47,6 +47,7 @@ import com.twoheart.dailyhotel.util.DailyDeepLink;
 import com.twoheart.dailyhotel.util.DailyExternalDeepLink;
 import com.twoheart.dailyhotel.util.DailyInternalDeepLink;
 import com.twoheart.dailyhotel.util.DailyPreference;
+import com.twoheart.dailyhotel.util.DailyRemoteConfigPreference;
 import com.twoheart.dailyhotel.util.DailyUserPreference;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
@@ -274,7 +275,7 @@ public class MainActivity extends BaseActivity implements Constants, BaseMenuNav
             return;
         }
 
-        String splashVersion = DailyPreference.getInstance(this).getRemoteConfigIntroImageVersion();
+        String splashVersion = DailyRemoteConfigPreference.getInstance(this).getRemoteConfigIntroImageVersion();
 
         DailyImageView imageView = (DailyImageView) splashLayout.findViewById(R.id.splashImageView);
 
@@ -302,7 +303,7 @@ public class MainActivity extends BaseActivity implements Constants, BaseMenuNav
 
             if (file.exists() == false)
             {
-                DailyPreference.getInstance(this).setRemoteConfigIntroImageVersion(Constants.DAILY_INTRO_DEFAULT_VERSION);
+                DailyRemoteConfigPreference.getInstance(this).setRemoteConfigIntroImageVersion(Constants.DAILY_INTRO_DEFAULT_VERSION);
                 imageView.setVectorImageResource(R.drawable.img_splash_logo);
             } else
             {
@@ -322,7 +323,7 @@ public class MainActivity extends BaseActivity implements Constants, BaseMenuNav
                     imageView.setImageURI(Uri.fromFile(file));
                 } catch (Exception | OutOfMemoryError e)
                 {
-                    DailyPreference.getInstance(this).setRemoteConfigIntroImageVersion(Constants.DAILY_INTRO_DEFAULT_VERSION);
+                    DailyRemoteConfigPreference.getInstance(this).setRemoteConfigIntroImageVersion(Constants.DAILY_INTRO_DEFAULT_VERSION);
                     imageView.setPadding(0, 0, 0, ScreenUtils.dpToPx(this, 26));
                     imageView.setScaleType(ImageView.ScaleType.CENTER);
                     imageView.setVectorImageResource(R.drawable.img_splash_logo);
@@ -689,7 +690,7 @@ public class MainActivity extends BaseActivity implements Constants, BaseMenuNav
 
             try
             {
-                String forceString = DailyPreference.getInstance(MainActivity.this).getRemoteConfigUpdateForce();
+                String forceString = DailyRemoteConfigPreference.getInstance(MainActivity.this).getRemoteConfigUpdateForce();
 
                 if (DailyTextUtils.isTextEmpty(forceString) == true)
                 {
@@ -756,7 +757,7 @@ public class MainActivity extends BaseActivity implements Constants, BaseMenuNav
 
             try
             {
-                String optionalString = DailyPreference.getInstance(MainActivity.this).getRemoteConfigUpdateOptional();
+                String optionalString = DailyRemoteConfigPreference.getInstance(MainActivity.this).getRemoteConfigUpdateOptional();
 
                 if (DailyTextUtils.isTextEmpty(optionalString) == true)
                 {
@@ -1287,7 +1288,7 @@ public class MainActivity extends BaseActivity implements Constants, BaseMenuNav
                     {
                         // 스탬프 이벤트가 종료되면 홈에서 팝업을 띄우고 종료시킨다.
                         if (externalDeepLink.isStampView() == true//
-                            && DailyPreference.getInstance(MainActivity.this).isRemoteConfigStampEnabled() == false)
+                            && DailyRemoteConfigPreference.getInstance(MainActivity.this).isRemoteConfigStampEnabled() == false)
                         {
                             mMainFragmentManager.select(false, MainFragmentManager.INDEX_HOME_FRAGMENT, true, bundle);
                         } else

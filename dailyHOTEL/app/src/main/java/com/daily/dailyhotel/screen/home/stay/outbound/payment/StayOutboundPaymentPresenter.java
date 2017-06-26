@@ -36,6 +36,7 @@ import com.twoheart.dailyhotel.screen.mydaily.member.InputMobileNumberDialogActi
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyPreference;
+import com.twoheart.dailyhotel.util.DailyRemoteConfigPreference;
 import com.twoheart.dailyhotel.util.DailyUserPreference;
 import com.twoheart.dailyhotel.widget.CustomFontTypefaceSpan;
 
@@ -1170,9 +1171,9 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
 
     private void checkAvailablePaymentType()
     {
-        boolean isSimpleCardPaymentEnabled = DailyPreference.getInstance(getActivity()).isRemoteConfigStayOutboundSimpleCardPaymentEnabled();
-        boolean isCardPaymentEnabled = DailyPreference.getInstance(getActivity()).isRemoteConfigStayOutboundCardPaymentEnabled();
-        boolean isPhonePaymentEnabled = DailyPreference.getInstance(getActivity()).isRemoteConfigStayOutboundPhonePaymentEnabled();
+        boolean isSimpleCardPaymentEnabled = DailyRemoteConfigPreference.getInstance(getActivity()).isRemoteConfigStayOutboundSimpleCardPaymentEnabled();
+        boolean isCardPaymentEnabled = DailyRemoteConfigPreference.getInstance(getActivity()).isRemoteConfigStayOutboundCardPaymentEnabled();
+        boolean isPhonePaymentEnabled = DailyRemoteConfigPreference.getInstance(getActivity()).isRemoteConfigStayOutboundPhonePaymentEnabled();
 
         StringBuilder guideMemo = new StringBuilder();
 
