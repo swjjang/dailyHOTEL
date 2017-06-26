@@ -1044,8 +1044,12 @@ public class StayMainActivity extends PlaceMainActivity
                         analyticsParam.setProvince(province);
                         analyticsParam.setTotalListCount(listCount);
 
-                        Intent intent = StayDetailActivity.newInstance(StayMainActivity.this, //
-                            mStayCuration.getStayBookingDay(), stay, analyticsParam, true);
+//                        Intent intent = StayDetailActivity.newInstance(StayMainActivity.this, //
+//                            mStayCuration.getStayBookingDay(), stay, analyticsParam, true);
+
+                        Intent intent = StayDetailActivity.newInstance(StayMainActivity.this //
+                            , mStayCuration.getStayBookingDay(), stay.index, stay.name, stay.imageUrl //
+                            , stay.discountPrice, stay.getGrade().name(), analyticsParam, true);
 
                         View simpleDraweeView = view.findViewById(R.id.imageView);
                         View gradeTextView = view.findViewById(R.id.gradeTextView);
@@ -1075,8 +1079,12 @@ public class StayMainActivity extends PlaceMainActivity
                         analyticsParam.setProvince(province);
                         analyticsParam.setTotalListCount(listCount);
 
-                        Intent intent = StayDetailActivity.newInstance(StayMainActivity.this, //
-                            mStayCuration.getStayBookingDay(), stay, analyticsParam, false);
+//                        Intent intent = StayDetailActivity.newInstance(StayMainActivity.this, //
+//                            mStayCuration.getStayBookingDay(), stay, analyticsParam, false);
+
+                        Intent intent = StayDetailActivity.newInstance(StayMainActivity.this //
+                            , mStayCuration.getStayBookingDay(), stay.index, stay.name, stay.imageUrl //
+                            , stay.discountPrice, stay.getGrade().name(), analyticsParam, true);
 
                         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL);
 

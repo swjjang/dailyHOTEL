@@ -1091,10 +1091,14 @@ public class StayCategoryTabActivity extends PlaceMainActivity
                         analyticsParam.setProvince(province);
                         analyticsParam.setTotalListCount(listCount);
 
-                        Intent intent = StayDetailActivity.newInstance(StayCategoryTabActivity.this, //
-                            mStayCategoryCuration.getStayBookingDay(), stay, analyticsParam, true);
+//                        Intent intent = StayDetailActivity.newInstance(StayCategoryTabActivity.this, //
+//                            mStayCategoryCuration.getStayBookingDay(), stay, analyticsParam, true);
 
-                        View simpleDraweeView = view.findViewById(R.id.imageView);
+                        Intent intent = StayDetailActivity.newInstance(StayCategoryTabActivity.this //
+                            , mStayCategoryCuration.getStayBookingDay(), stay.index, stay.name, stay.imageUrl //
+                            , stay.discountPrice, stay.getGrade().name(), analyticsParam, true);
+
+                            View simpleDraweeView = view.findViewById(R.id.imageView);
                         View gradeTextView = view.findViewById(R.id.gradeTextView);
                         View nameTextView = view.findViewById(R.id.nameTextView);
                         View gradientTopView = view.findViewById(R.id.gradientTopView);
@@ -1122,8 +1126,12 @@ public class StayCategoryTabActivity extends PlaceMainActivity
                         analyticsParam.setProvince(province);
                         analyticsParam.setTotalListCount(listCount);
 
-                        Intent intent = StayDetailActivity.newInstance(StayCategoryTabActivity.this, //
-                            mStayCategoryCuration.getStayBookingDay(), stay, analyticsParam, false);
+//                        Intent intent = StayDetailActivity.newInstance(StayCategoryTabActivity.this, //
+//                            mStayCategoryCuration.getStayBookingDay(), stay, analyticsParam, false);
+
+                        Intent intent = StayDetailActivity.newInstance(StayCategoryTabActivity.this //
+                            , mStayCategoryCuration.getStayBookingDay(), stay.index, stay.name, stay.imageUrl //
+                            , stay.discountPrice, stay.getGrade().name(), analyticsParam, false);
 
                         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL);
 

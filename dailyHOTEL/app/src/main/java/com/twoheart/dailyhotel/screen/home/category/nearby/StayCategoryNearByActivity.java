@@ -1164,8 +1164,12 @@ public class StayCategoryNearByActivity extends BaseActivity
                 analyticsParam.setProvince(null);
                 analyticsParam.setTotalListCount(listCount);
 
-                Intent intent = StayDetailActivity.newInstance(StayCategoryNearByActivity.this, //
-                    mStayCategoryNearByCuration.getStayBookingDay(), stay, analyticsParam, true);
+//                Intent intent = StayDetailActivity.newInstance(StayCategoryNearByActivity.this, //
+//                    mStayCategoryNearByCuration.getStayBookingDay(), stay, analyticsParam, true);
+
+                Intent intent = StayDetailActivity.newInstance(StayCategoryNearByActivity.this //
+                    , mStayCategoryNearByCuration.getStayBookingDay(), stay.index, stay.name, stay.imageUrl //
+                    , stay.discountPrice, stay.getGrade().name(), analyticsParam, true);
 
                 View simpleDraweeView = view.findViewById(R.id.imageView);
                 View gradeTextView = view.findViewById(R.id.gradeTextView);
@@ -1195,8 +1199,12 @@ public class StayCategoryNearByActivity extends BaseActivity
                 analyticsParam.setProvince(null);
                 analyticsParam.setTotalListCount(listCount);
 
-                Intent intent = StayDetailActivity.newInstance(StayCategoryNearByActivity.this, //
-                    mStayCategoryNearByCuration.getStayBookingDay(), stay, analyticsParam, false);
+//                Intent intent = StayDetailActivity.newInstance(StayCategoryNearByActivity.this, //
+//                    mStayCategoryNearByCuration.getStayBookingDay(), stay, analyticsParam, false);
+
+                Intent intent = StayDetailActivity.newInstance(StayCategoryNearByActivity.this //
+                    , mStayCategoryNearByCuration.getStayBookingDay(), stay.index, stay.name, stay.imageUrl //
+                    , stay.discountPrice, stay.getGrade().name(), analyticsParam, false);
 
                 startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL);
 

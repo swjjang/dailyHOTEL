@@ -312,7 +312,11 @@ public class StayWishListFragment extends PlaceWishListFragment
                 analyticsParam.setProvince(null);
                 analyticsParam.setTotalListCount(-1);
 
-                Intent intent = StayDetailActivity.newInstance(mBaseActivity, (StayBookingDay) mPlaceBookingDay, stay, analyticsParam, true);
+//                Intent intent = StayDetailActivity.newInstance(mBaseActivity, (StayBookingDay) mPlaceBookingDay, stay, analyticsParam, true);
+
+                Intent intent = StayDetailActivity.newInstance(mBaseActivity //
+                    , (StayBookingDay) mPlaceBookingDay, stay.index, stay.name, stay.imageUrl //
+                    , stay.discountPrice, stay.getGrade().name(), analyticsParam, true);
 
                 View simpleDraweeView = view.findViewById(R.id.imageView);
                 View gradeTextView = view.findViewById(R.id.gradeTextView);
@@ -335,7 +339,11 @@ public class StayWishListFragment extends PlaceWishListFragment
                 analyticsParam.setProvince(null);
                 analyticsParam.setTotalListCount(-1);
 
-                Intent intent = StayDetailActivity.newInstance(mBaseActivity, (StayBookingDay) mPlaceBookingDay, stay, analyticsParam, false);
+//                Intent intent = StayDetailActivity.newInstance(mBaseActivity, (StayBookingDay) mPlaceBookingDay, stay, analyticsParam, false);
+
+                Intent intent = StayDetailActivity.newInstance(mBaseActivity //
+                    , (StayBookingDay) mPlaceBookingDay, stay.index, stay.name, stay.imageUrl //
+                    , stay.discountPrice, stay.getGrade().name(), analyticsParam, true);
 
                 mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL);
 
