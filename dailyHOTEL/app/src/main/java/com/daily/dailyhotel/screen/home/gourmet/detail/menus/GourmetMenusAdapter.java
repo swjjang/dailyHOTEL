@@ -114,7 +114,7 @@ public class GourmetMenusAdapter extends RecyclerView.Adapter<GourmetMenusAdapte
     {
         ListRowGourmetMenuDataBinding dataBinding = DataBindingUtil.inflate(LayoutInflater.from(mContext), R.layout.list_row_gourmet_menu_data, parent, false);
 
-        dataBinding.getRoot().setLayoutParams(new RecyclerView.LayoutParams(parent.getWidth() * 9 / 10, ViewGroup.LayoutParams.MATCH_PARENT));
+        dataBinding.getRoot().setLayoutParams(new RecyclerView.LayoutParams(parent.getWidth() * 8 / 10, ViewGroup.LayoutParams.MATCH_PARENT));
         GourmetMenuViewHolder gourmetMenuViewHolder = new GourmetMenuViewHolder(dataBinding);
 
         return gourmetMenuViewHolder;
@@ -273,7 +273,7 @@ public class GourmetMenusAdapter extends RecyclerView.Adapter<GourmetMenusAdapte
         holder.dataBinding.reservationTextView.setOnClickListener(mOnClickListener);
     }
 
-    public void setLineIndicatorVisible(ListRowGourmetMenuDataBinding dataBinding, int count)
+    private void setLineIndicatorVisible(ListRowGourmetMenuDataBinding dataBinding, int count)
     {
         if (count > 1)
         {
