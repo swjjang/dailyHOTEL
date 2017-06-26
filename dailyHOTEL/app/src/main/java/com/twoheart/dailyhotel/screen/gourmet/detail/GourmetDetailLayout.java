@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import android.widget.ScrollView;
 
 import com.daily.base.util.DailyTextUtils;
-import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.controller.BaseControllerListener;
@@ -226,12 +225,12 @@ public class GourmetDetailLayout extends PlaceDetailLayout
 
     public void scrollProduct()
     {
-        if(mScrollView == null || mGourmetDetailItemLayout == null)
+        if (mScrollView == null || mGourmetDetailItemLayout == null)
         {
             return;
         }
 
-        mScrollView.scrollTo(0, (int)mGourmetDetailItemLayout.getChildAt(mGourmetDetailItemLayout.getFirstProductIndex()).getY()//
+        mScrollView.smoothScrollTo(0, (int) mGourmetDetailItemLayout.getChildAt(mGourmetDetailItemLayout.getFirstProductIndex()).getY()//
             - mContext.getResources().getDimensionPixelSize(R.dimen.toolbar_height));
     }
 
@@ -317,9 +316,11 @@ public class GourmetDetailLayout extends PlaceDetailLayout
                     return;
                 }
 
+                int scrollY = scrollView.getScrollY();
+
                 // 겹치지 않은 경우
-                if (scrollView.getScrollY() > mGourmetDetailItemLayout.getChildAt(lastProductIndex).getBottom()//
-                    || scrollView.getScrollY() + scrollView.getHeight() < mGourmetDetailItemLayout.getChildAt(firstProductIndex).getY())
+                if (scrollY == 0 || scrollY > mGourmetDetailItemLayout.getChildAt(lastProductIndex).getBottom()//
+                    || scrollY + scrollView.getHeight() < mGourmetDetailItemLayout.getChildAt(firstProductIndex).getY())
                 {
                     mBottomLayout.setVisibility(View.VISIBLE);
                 } else
