@@ -63,6 +63,11 @@ public class GourmetListFragment extends PlaceListFragment
     @Override
     public void setPlaceCuration(PlaceCuration curation)
     {
+        if (mPlaceListLayout == null)
+        {
+            return;
+        }
+
         mGourmetCuration = (GourmetCuration) curation;
         ((GourmetListLayout) mPlaceListLayout).setGourmetCuration(mGourmetCuration);
     }
