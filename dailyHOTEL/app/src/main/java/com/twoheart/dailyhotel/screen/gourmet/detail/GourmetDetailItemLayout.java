@@ -601,7 +601,7 @@ public class GourmetDetailItemLayout extends LinearLayout
             {
                 if (i < DEFAULT_SHOW_PRODUCT_COUNT)
                 {
-                    setProductLayout(layoutInflater, parent, gourmetProductList.get(i));
+                    setProductLayout(layoutInflater, parent, i, gourmetProductList.get(i));
                 } else if (i == DEFAULT_SHOW_PRODUCT_COUNT)
                 {
                     DailyTextView dailyTextView = new DailyTextView(mContext);
@@ -734,10 +734,10 @@ public class GourmetDetailItemLayout extends LinearLayout
                     parent.addView(mMoreLayout, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
                     parent.addView(dailyTextView, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ScreenUtils.dpToPx(mContext, 45)));
 
-                    setProductLayout(layoutInflater, mMoreLayout, gourmetProductList.get(i));
+                    setProductLayout(layoutInflater, mMoreLayout, i, gourmetProductList.get(i));
                 } else
                 {
-                    setProductLayout(layoutInflater, mMoreLayout, gourmetProductList.get(i));
+                    setProductLayout(layoutInflater, mMoreLayout, i, gourmetProductList.get(i));
                 }
             }
 
@@ -755,14 +755,14 @@ public class GourmetDetailItemLayout extends LinearLayout
             });
         } else
         {
-            for (GourmetProduct gourmetProduct : gourmetProductList)
+            for (int i = 0; i < size; i++)
             {
-                setProductLayout(layoutInflater, parent, gourmetProduct);
+                setProductLayout(layoutInflater, parent, i, gourmetProductList.get(i));
             }
         }
     }
 
-    private void setProductLayout(LayoutInflater layoutInflater, ViewGroup parent, GourmetProduct gourmetProduct)
+    private void setProductLayout(LayoutInflater layoutInflater, ViewGroup parent, int index, GourmetProduct gourmetProduct)
     {
         if (layoutInflater == null || parent == null || gourmetProduct == null)
         {
@@ -778,7 +778,7 @@ public class GourmetDetailItemLayout extends LinearLayout
             {
                 if (mEventListener != null)
                 {
-                    mEventListener.onProductClick(gourmetProduct);
+                    mEventListener.onProductClick(index);
                 }
             }
         });

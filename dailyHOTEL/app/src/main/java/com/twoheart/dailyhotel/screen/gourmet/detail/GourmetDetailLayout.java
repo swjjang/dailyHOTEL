@@ -40,7 +40,7 @@ public class GourmetDetailLayout extends PlaceDetailLayout
     {
         void onProductListClick();
 
-        void onProductClick(GourmetProduct gourmetProduct);
+        void onProductClick(int index);
 
         void onReviewClick();
     }

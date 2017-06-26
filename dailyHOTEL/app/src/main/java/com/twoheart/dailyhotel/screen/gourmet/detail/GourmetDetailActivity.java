@@ -1376,8 +1376,20 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         }
 
         @Override
-        public void onProductClick(GourmetProduct gourmetProduct)
+        public void onProductClick(int index)
         {
+            if (lockUiComponentAndIsLockUiComponent() == true)
+            {
+                return;
+            }
+
+            GourmetDetail gourmetDetail = (GourmetDetail) mPlaceDetail;
+
+            Intent intentProductDetail = GourmetProductDetailActivity.newInstance(GourmetDetailActivity.this//
+                , (GourmetBookingDay) mPlaceBookingDay, gourmetDetail, index, mProvince, mArea);
+            startActivityForResult(intentProductDetail, CODE_REQUEST_ACTIVITY_GOURMET_PRODUCT_DETAIL);
+
+
             //            if (lockUiComponentAndIsLockUiComponent() == true)
             //            {
             //                return;
