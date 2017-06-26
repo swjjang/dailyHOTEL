@@ -16,6 +16,9 @@ import android.widget.Toast;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.widget.DailyToast;
+import com.daily.dailyhotel.entity.GourmetMenu;
+import com.daily.dailyhotel.entity.GourmetMenuImage;
+import com.daily.dailyhotel.screen.home.gourmet.detail.menus.GourmetMenusActivity;
 import com.daily.dailyhotel.util.RecentlyPlaceUtil;
 import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.drawee.view.DraweeTransition;
@@ -34,6 +37,7 @@ import com.twoheart.dailyhotel.network.model.GourmetProduct;
 import com.twoheart.dailyhotel.network.model.HomePlace;
 import com.twoheart.dailyhotel.network.model.ImageInformation;
 import com.twoheart.dailyhotel.network.model.PlaceReviewScores;
+import com.twoheart.dailyhotel.network.model.ProductImageInformation;
 import com.twoheart.dailyhotel.network.model.RecommendationGourmet;
 import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.network.model.TrueVRParams;
@@ -64,8 +68,15 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
+import io.reactivex.schedulers.Schedulers;
 import retrofit2.Call;
 import retrofit2.Response;
 
@@ -425,22 +436,23 @@ public class GourmetDetailActivity extends PlaceDetailActivity
 
         switch (requestCode)
         {
-            case CODE_REQUEST_ACTIVITY_GOURMET_PRODUCT_LIST:
             case CODE_REQUEST_ACTIVITY_GOURMET_PRODUCT_DETAIL:
-                setResultCode(resultCode);
-
                 switch (resultCode)
                 {
+                    // 결제 하기 선택
                     case RESULT_OK:
-                    case CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY:
-                        finish();
-                        break;
+                        mDontReloadAtOnResume = true;
 
-                    case CODE_RESULT_ACTIVITY_REFRESH:
-                    case CODE_RESULT_ACTIVITY_PAYMENT_TIMEOVER:
-                        mDontReloadAtOnResume = false;
+                        // 결재하기 호출
+                        if (data != null)
+                        {
+                            int index = data.getIntExtra(GourmetMenusActivity.INTENT_EXTRA_DATA_INDEX, -1);
 
-                        mRefreshCheckPrice = true;
+                            if (index >= 0)
+                            {
+                                onReservation(index);
+                            }
+                        }
                         break;
 
                     default:
@@ -1218,6 +1230,48 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         }
     }
 
+    public void onReservation(int index)
+    {
+        if (mPlaceDetail == null)
+        {
+            return;
+        }
+
+        GourmetProduct gourmetProduct = ((GourmetDetail) mPlaceDetail).getProduct(index);
+
+        if (gourmetProduct == null)
+        {
+            setResult(CODE_RESULT_ACTIVITY_REFRESH);
+            finish();
+            return;
+        }
+
+        if (lockUiComponentAndIsLockUiComponent() == true)
+        {
+            return;
+        }
+
+        mSelectedTicketIndex = index;
+
+        if (DailyHotel.isLogin() == false)
+        {
+            startLoginActivity(AnalyticsManager.Screen.DAILYGOURMET_DETAIL);
+        } else
+        {
+            lockUI();
+            mPlaceDetailNetworkController.requestProfile();
+        }
+
+        GourmetDetailParams gourmetDetailParams = ((GourmetDetail) mPlaceDetail).getGourmetDetailParmas();
+
+        if (gourmetDetailParams != null)
+        {
+            String label = String.format(Locale.KOREA, "%s-%s", gourmetDetailParams.name, gourmetProduct.ticketName);
+            AnalyticsManager.getInstance(GourmetDetailActivity.this).recordEvent(AnalyticsManager.Category.GOURMET_BOOKINGS//
+                , AnalyticsManager.Action.BOOKING_CLICKED, label, recordAnalyticsBooking((GourmetBookingDay) mPlaceBookingDay, ((GourmetDetail) mPlaceDetail), gourmetProduct));
+        }
+    }
+
     protected void recordAnalyticsGourmetDetail(String screen, GourmetBookingDay gourmetBookingDay, GourmetDetail gourmetDetail)
     {
         if (gourmetBookingDay == null || gourmetDetail == null)
@@ -1386,9 +1440,9 @@ public class GourmetDetailActivity extends PlaceDetailActivity
 
             GourmetDetail gourmetDetail = (GourmetDetail) mPlaceDetail;
 
-            Intent intentProductDetail = GourmetProductDetailActivity.newInstance(GourmetDetailActivity.this//
-                , (GourmetBookingDay) mPlaceBookingDay, gourmetDetail, index, mProvince, mArea);
-            startActivityForResult(intentProductDetail, CODE_REQUEST_ACTIVITY_GOURMET_PRODUCT_DETAIL);
+            //            Intent intentProductDetail = GourmetProductDetailActivity.newInstance(GourmetDetailActivity.this//
+            //                , (GourmetBookingDay) mPlaceBookingDay, gourmetDetail, index, mProvince, mArea);
+            //            startActivityForResult(intentProductDetail, CODE_REQUEST_ACTIVITY_GOURMET_PRODUCT_DETAIL);
 
 
             //            if (lockUiComponentAndIsLockUiComponent() == true)
@@ -1397,6 +1451,64 @@ public class GourmetDetailActivity extends PlaceDetailActivity
             //            }
 
             // 메뉴 목록 보여주기
+
+            Observable.just(gourmetDetail.getProductList()).subscribeOn(Schedulers.io()).map(new Function<List<GourmetProduct>, List<GourmetMenu>>()
+            {
+                @Override
+                public List<GourmetMenu> apply(@NonNull List<GourmetProduct> gourmetProductList) throws Exception
+                {
+                    List<GourmetMenu> gourmetMenuList = new ArrayList<>(gourmetProductList.size());
+
+                    for (GourmetProduct gourmetProduct : gourmetProductList)
+                    {
+                        GourmetMenu gourmetMenu = new GourmetMenu();
+                        gourmetMenu.index = gourmetProduct.index;
+                        gourmetMenu.saleIdx = gourmetProduct.saleIdx;
+                        gourmetMenu.ticketName = gourmetProduct.ticketName;
+                        gourmetMenu.price = gourmetProduct.price;
+                        gourmetMenu.discountPrice = gourmetProduct.discountPrice;
+                        gourmetMenu.menuBenefit = gourmetProduct.menuBenefit;
+                        gourmetMenu.needToKnow = gourmetProduct.needToKnow;
+                        gourmetMenu.openTime = gourmetProduct.openTime;
+                        gourmetMenu.closeTime = gourmetProduct.closeTime;
+                        gourmetMenu.lastOrderTime = gourmetProduct.lastOrderTime;
+                        gourmetMenu.menuSummary = gourmetProduct.menuSummary;
+
+                        List<GourmetMenuImage> gourmetMenuImageList = new ArrayList<>();
+                        for (ProductImageInformation productImageInformation : gourmetProduct.getImageList())
+                        {
+                            GourmetMenuImage gourmetMenuImage = new GourmetMenuImage();
+                            gourmetMenuImage.url = productImageInformation.imageUrl;
+                            gourmetMenuImage.caption = productImageInformation.imageDescription;
+
+                            gourmetMenuImageList.add(gourmetMenuImage);
+                        }
+
+                        gourmetMenu.setImageList(gourmetMenuImageList);
+                        gourmetMenu.setMenuDetailList(gourmetProduct.getMenuDetailList());
+
+                        gourmetMenuList.add(gourmetMenu);
+                    }
+
+                    return gourmetMenuList;
+                }
+            }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<List<GourmetMenu>>()
+            {
+                @Override
+                public void accept(@NonNull List<GourmetMenu> gourmetMenuList) throws Exception
+                {
+                    startActivityForResult(GourmetMenusActivity.newInstance(GourmetDetailActivity.this, gourmetMenuList, index)//
+                        , CODE_REQUEST_ACTIVITY_GOURMET_PRODUCT_DETAIL);
+                }
+            }, new Consumer<Throwable>()
+            {
+                @Override
+                public void accept(@NonNull Throwable throwable) throws Exception
+                {
+                    ExLog.d(throwable.toString());
+                    unLockUI();
+                }
+            });
         }
 
         @Override
@@ -1432,36 +1544,6 @@ public class GourmetDetailActivity extends PlaceDetailActivity
                 ((GourmetDetailLayout) mPlaceDetailLayout).openMoreProductList();
             }
         }
-
-        //        @Override
-        //        public void onReservationClick(TicketInformation ticketInformation)
-        //        {
-        //            if (ticketInformation == null)
-        //            {
-        //                finish();
-        //                return;
-        //            }
-        //
-        //            if (lockUiComponentAndIsLockUiComponent() == true)
-        //            {
-        //                return;
-        //            }
-        //
-        //            mSelectedTicketInformation = ticketInformation;
-        //
-        //            if (DailyHotel.isLogin() == false)
-        //            {
-        //                startLoginActivity(AnalyticsManager.Screen.DAILYGOURMET_DETAIL);
-        //            } else
-        //            {
-        //                lockUI();
-        //                mPlaceDetailNetworkController.requestProfile();
-        //            }
-        //
-        //            String label = String.format("%s-%s", mPlaceDetail.name, mSelectedTicketInformation.name);
-        //            AnalyticsManager.getInstance(GourmetDetailActivity.this).recordEvent(AnalyticsManager.Category.GOURMET_BOOKINGS//
-        //                , AnalyticsManager.Action.BOOKING_CLICKED, label, recordAnalyticsBooking(mSaleTime, (GourmetDetail) mPlaceDetail, mSelectedTicketInformation));
-        //        }
 
         @Override
         public void doBooking()
