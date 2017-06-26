@@ -1,12 +1,15 @@
 package com.twoheart.dailyhotel.screen.home.collection;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.SharedElementCallback;
 import android.view.View;
 
 import com.daily.base.util.ExLog;
+import com.daily.dailyhotel.repository.local.model.AnalyticsParam;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
@@ -223,6 +226,7 @@ public class CollectionStayActivity extends CollectionBaseActivity
             startCalendarActivity(mTodayDateTime, mPlaceBookingDay);
         }
 
+        @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
         @Override
         public void onPlaceClick(View view, PlaceViewItem placeViewItem, int count)
         {
@@ -253,7 +257,16 @@ public class CollectionStayActivity extends CollectionBaseActivity
                     }
                 });
 
-                Intent intent = StayDetailActivity.newInstance(CollectionStayActivity.this, (StayBookingDay) mPlaceBookingDay, recommendationStay, count, true);
+                AnalyticsParam analyticsParam = new AnalyticsParam();
+                analyticsParam.setParam(CollectionStayActivity.this, recommendationStay);
+                analyticsParam.setProvince(null);
+                analyticsParam.setTotalListCount(count);
+
+                //                Intent intent = StayDetailActivity.newInstance(CollectionStayActivity.this, (StayBookingDay) mPlaceBookingDay, recommendationStay, count, true);
+
+                Intent intent = StayDetailActivity.newInstance(CollectionStayActivity.this //
+                    , (StayBookingDay) mPlaceBookingDay, recommendationStay.index, recommendationStay.name, recommendationStay.imageUrl //
+                    , recommendationStay.discount, recommendationStay.grade, analyticsParam, true);
 
                 View simpleDraweeView = view.findViewById(R.id.imageView);
                 View gradeTextView = view.findViewById(R.id.gradeTextView);
@@ -278,7 +291,16 @@ public class CollectionStayActivity extends CollectionBaseActivity
                 startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL, options.toBundle());
             } else
             {
-                Intent intent = StayDetailActivity.newInstance(CollectionStayActivity.this, (StayBookingDay) mPlaceBookingDay, recommendationStay, count, false);
+                AnalyticsParam analyticsParam = new AnalyticsParam();
+                analyticsParam.setParam(CollectionStayActivity.this, recommendationStay);
+                analyticsParam.setProvince(null);
+                analyticsParam.setTotalListCount(count);
+
+                //                Intent intent = StayDetailActivity.newInstance(CollectionStayActivity.this, (StayBookingDay) mPlaceBookingDay, recommendationStay, count, false);
+
+                Intent intent = StayDetailActivity.newInstance(CollectionStayActivity.this //
+                    , (StayBookingDay) mPlaceBookingDay, recommendationStay.index, recommendationStay.name, recommendationStay.imageUrl //
+                    , recommendationStay.discount, recommendationStay.grade, analyticsParam, false);
 
                 startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL);
 

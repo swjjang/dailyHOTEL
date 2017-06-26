@@ -36,7 +36,6 @@ import com.twoheart.dailyhotel.model.time.PlaceBookingDay;
 import com.twoheart.dailyhotel.model.time.StayBookingDay;
 import com.twoheart.dailyhotel.network.model.ImageInformation;
 import com.twoheart.dailyhotel.network.model.PlaceReviewScores;
-import com.twoheart.dailyhotel.network.model.RecommendationStay;
 import com.twoheart.dailyhotel.network.model.StayDetailParams;
 import com.twoheart.dailyhotel.network.model.StayProduct;
 import com.twoheart.dailyhotel.network.model.TodayDateTime;
@@ -82,7 +81,7 @@ public class StayDetailActivity extends PlaceDetailActivity
     private boolean mCheckPrice;
 
     /**
-     * 리스트, 검색 결과, 위시리스트, 최근 본 업장, 홈 에서 호출
+     * 리스트, 검색 결과, 위시리스트, 최근 본 업장, 홈 , 추천모아보기 에서 호출
      *
      * @param context
      * @param stayBookingDay
@@ -109,47 +108,6 @@ public class StayDetailActivity extends PlaceDetailActivity
         intent.putExtra(NAME_INTENT_EXTRA_DATA_CALENDAR_FLAG, false);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_GRADE, stayGradeName);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_ANALYTICS_PARAM, analyticsParam);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_USED_MULTITRANSITIOIN, isUsedMultiTransition);
-
-        return intent;
-    }
-
-    /**
-     * 추천 목록에서 호출
-     *
-     * @param context
-     * @param stayBookingDay
-     * @param recommendationStay
-     * @param listCount
-     * @param isUsedMultiTransition
-     * @return
-     */
-    public static Intent newInstance(Context context, StayBookingDay stayBookingDay, RecommendationStay recommendationStay//
-        , int listCount, boolean isUsedMultiTransition)
-    {
-        Intent intent = new Intent(context, StayDetailActivity.class);
-
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, stayBookingDay);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_HOTELIDX, recommendationStay.index);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_HOTELNAME, recommendationStay.name);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_IMAGEURL, recommendationStay.imageUrl);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_CALENDAR_FLAG, false);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_DISCOUNTPRICE, recommendationStay.discount);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_ENTRY_INDEX, recommendationStay.entryPosition);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_LIST_COUNT, listCount);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_DAILYCHOICE, recommendationStay.isDailyChoice);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_GRADE, recommendationStay.grade);
-
-        String isShowOriginalPrice;
-        if (recommendationStay.price <= 0 || recommendationStay.price <= recommendationStay.discount)
-        {
-            isShowOriginalPrice = "N";
-        } else
-        {
-            isShowOriginalPrice = "Y";
-        }
-
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_SHOW_ORIGINALPRICE, isShowOriginalPrice);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_USED_MULTITRANSITIOIN, isUsedMultiTransition);
 
         return intent;

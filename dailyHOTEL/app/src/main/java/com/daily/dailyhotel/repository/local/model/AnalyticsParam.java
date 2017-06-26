@@ -11,6 +11,7 @@ import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.network.model.HomePlace;
 import com.twoheart.dailyhotel.network.model.Prices;
+import com.twoheart.dailyhotel.network.model.RecommendationStay;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 /**
@@ -71,7 +72,6 @@ public class AnalyticsParam implements Parcelable
         placeIndex = gourmet.index;
         placeName = gourmet.name;
 
-
         addressAreaName = getAddressAreaName(gourmet.addressSummary);
         price = gourmet.price;
         discountPrice = gourmet.discountPrice;
@@ -112,6 +112,30 @@ public class AnalyticsParam implements Parcelable
         }
 
         isDailyChoice = false;
+    }
+
+    public void setParam(Context context, RecommendationStay recommendationStay)
+    {
+        placeIndex = recommendationStay.index;
+        placeName = recommendationStay.name;
+
+        price = recommendationStay.price;
+        discountPrice = recommendationStay.discount;
+        showOriginalPriceYn = getShowOrginalPriceYn(recommendationStay.price, recommendationStay.discount);
+        listPosition = recommendationStay.entryPosition;
+
+        Stay.Grade grade;
+        try
+        {
+            grade = Stay.Grade.valueOf(recommendationStay.grade);
+        } catch (Exception e)
+        {
+            grade = Stay.Grade.etc;
+        }
+
+        gradeName = grade.getName(context);
+
+        isDailyChoice = recommendationStay.isDailyChoice;
     }
 
     public void setProvince(Province province)
