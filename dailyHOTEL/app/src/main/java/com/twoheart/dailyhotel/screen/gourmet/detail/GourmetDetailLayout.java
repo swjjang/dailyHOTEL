@@ -90,8 +90,6 @@ public class GourmetDetailLayout extends PlaceDetailLayout
         if (gourmetBookingDay == null || gourmetDetail == null || gourmetDetail.getGourmetDetailParmas() == null)
         {
             setLineIndicatorVisible(false);
-            setWishButtonSelected(false);
-            setWishButtonCount(0);
             return;
         }
 
@@ -120,7 +118,6 @@ public class GourmetDetailLayout extends PlaceDetailLayout
         mScrollView.addView(mGourmetDetailItemLayout);
 
         setCurrentImage(imagePosition);
-        showWishButton();
 
         // SOLD OUT 판단 조건.
         List<GourmetProduct> gourmetProductList = gourmetDetail.getProductList();
@@ -149,9 +146,6 @@ public class GourmetDetailLayout extends PlaceDetailLayout
         }
 
         GourmetDetailParams gourmetDetailParams = gourmetDetail.getGourmetDetailParmas();
-
-        setWishButtonSelected(gourmetDetailParams.myWish);
-        setWishButtonCount(gourmetDetailParams.wishCount);
 
         if (placeReviewScores != null)
         {

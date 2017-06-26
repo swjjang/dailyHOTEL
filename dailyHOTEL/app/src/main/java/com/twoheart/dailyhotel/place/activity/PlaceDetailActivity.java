@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.TextView;
 
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
@@ -36,8 +37,9 @@ import com.twoheart.dailyhotel.screen.mydaily.member.EditProfilePhoneActivity;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
-import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
+import com.twoheart.dailyhotel.widget.DailyDetailToolbarLayout;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 public abstract class PlaceDetailActivity extends BaseActivity
@@ -64,7 +66,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
     protected boolean mIsShowCalendar;
     protected boolean mIsShowVR;
     protected String mDefaultImageUrl;
-    protected DailyToolbarLayout mDailyToolbarLayout;
+    protected DailyDetailToolbarLayout mDailyToolbarLayout;
     protected boolean mDontReloadAtOnResume;
     protected boolean mIsTransitionEnd;
     protected int mInitializeStatus;
@@ -84,6 +86,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
     protected Runnable mTransitionEndRunnable; // 트렌지션 중에 에러가 난경우 팝업을 띄워야 하는데 트렌지션으로 이슈가 발생하여 트레진션 끝나고 동작.
 
     private View mTrueViewView;
+    private TextView mWishTextView;
 
     protected abstract PlaceDetailLayout getDetailLayout(Context context);
 
@@ -105,6 +108,8 @@ public abstract class PlaceDetailActivity extends BaseActivity
 
     protected abstract void onTrueViewClick();
 
+    protected abstract void onWishClick();
+
     protected abstract void recordAnalyticsShareClicked();
 
     @Override
@@ -119,8 +124,8 @@ public abstract class PlaceDetailActivity extends BaseActivity
     protected void initToolbar(String title)
     {
         View toolbar = findViewById(R.id.toolbar);
-        mDailyToolbarLayout = new DailyToolbarLayout(this, toolbar);
-        mDailyToolbarLayout.initToolbar(title, new View.OnClickListener()
+        mDailyToolbarLayout = new DailyDetailToolbarLayout(this, toolbar);
+        mDailyToolbarLayout.initToolbar(null, new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
@@ -129,7 +134,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
             }
         }, false);
 
-        mDailyToolbarLayout.setToolbarMenu(R.drawable.navibar_ic_share_01_black, -1);
+        mDailyToolbarLayout.setToolbarMenu(R.drawable.navibar_ic_share_01_black, -1, R.drawable.ic_lp_01_wishlist_off, null);
         mDailyToolbarLayout.setToolbarMenuClickListener(mToolbarOptionsItemSelectedListener);
 
         mTrueViewView = findViewById(R.id.trueVRView);
@@ -137,6 +142,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
 
         View backImage = findViewById(R.id.backView);
         View shareView = findViewById(R.id.shareView);
+        mWishTextView = (TextView) findViewById(R.id.wishTextView);
 
         backImage.setOnClickListener(new View.OnClickListener()
         {
@@ -153,6 +159,15 @@ public abstract class PlaceDetailActivity extends BaseActivity
             public void onClick(View v)
             {
                 onShareClick();
+            }
+        });
+
+        mWishTextView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                onWishClick();
             }
         });
     }
@@ -594,7 +609,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
     {
         if (mDailyToolbarLayout != null)
         {
-            mDailyToolbarLayout.setToolbarMenu(R.drawable.navibar_ic_share_01_black, R.drawable.navibar_ic_treuvr);
+            mDailyToolbarLayout.setToolbarMenu(R.drawable.navibar_ic_share_01_black, R.drawable.navibar_ic_treuvr, 0, null);
         }
 
         if (mTrueViewView != null)
@@ -633,7 +648,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
     {
         if (mDailyToolbarLayout != null)
         {
-            mDailyToolbarLayout.setToolbarMenu(R.drawable.navibar_ic_share_01_black, -1);
+            mDailyToolbarLayout.setToolbarMenu(R.drawable.navibar_ic_share_01_black, -1, 0, null);
         }
 
         if (mTrueViewView != null)
@@ -643,6 +658,33 @@ public abstract class PlaceDetailActivity extends BaseActivity
         }
 
         mPlaceDetailLayout.setTrueVRTooltipVisibility(false);
+    }
+
+    protected void setWishTextView(boolean selected, int count)
+    {
+        int imageResId = selected == true ? R.drawable.ic_heart_fill_s : R.drawable.ic_heart_stroke_s;
+        mWishTextView.setCompoundDrawablesWithIntrinsicBounds(0, 0, imageResId, 0);
+        mWishTextView.setTag(selected);
+
+        String wishCountText;
+        if (count <= 0)
+        {
+            wishCountText = null;
+        } else if (count > 9999)
+        {
+            wishCountText = getString(R.string.wishlist_count_over_10_thousand, Float.toString((float) (count / 10000) / 10.0f));
+        } else
+        {
+            DecimalFormat decimalFormat = new DecimalFormat("###,##0");
+            wishCountText = decimalFormat.format(count);
+        }
+
+        mWishTextView.setText(wishCountText);
+
+        if (mDailyToolbarLayout != null)
+        {
+            mDailyToolbarLayout.setToolbarMenu(R.drawable.navibar_ic_share_01_black, 0, imageResId, wishCountText);
+        }
     }
 
     private void onShareClick()
@@ -750,6 +792,10 @@ public abstract class PlaceDetailActivity extends BaseActivity
 
                 case R.id.menu2View:
                     onTrueViewClick();
+                    break;
+
+                case R.id.menu3TextView:
+                    onWishClick();
                     break;
             }
         }
