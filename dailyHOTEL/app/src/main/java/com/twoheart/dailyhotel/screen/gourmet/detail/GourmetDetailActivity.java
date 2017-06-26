@@ -1359,15 +1359,20 @@ public class GourmetDetailActivity extends PlaceDetailActivity
                 return;
             }
 
-            GourmetDetail gourmetDetail = (GourmetDetail) mPlaceDetail;
-            GourmetDetailParams gourmetDetailParams = gourmetDetail.getGourmetDetailParmas();
+            ((GourmetDetailLayout)mPlaceDetailLayout).scrollProduct();
 
-            Intent intent = GourmetProductListActivity.newInstance(GourmetDetailActivity.this, (GourmetBookingDay) mPlaceBookingDay, gourmetDetail, -1, mProvince, mArea);
-            startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_GOURMET_PRODUCT_LIST);
+//            GourmetDetail gourmetDetail = (GourmetDetail) mPlaceDetail;
+//            GourmetDetailParams gourmetDetailParams = gourmetDetail.getGourmetDetailParmas();
+//
+//            Intent intent = GourmetProductListActivity.newInstance(GourmetDetailActivity.this, (GourmetBookingDay) mPlaceBookingDay, gourmetDetail, -1, mProvince, mArea);
+//            startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_GOURMET_PRODUCT_LIST);
+//
+//            recordAnalyticsGourmetDetail(AnalyticsManager.Screen.DAILYGOURMET_DETAIL_TICKETTYPE, (GourmetBookingDay) mPlaceBookingDay, (GourmetDetail) mPlaceDetail);
+//            AnalyticsManager.getInstance(GourmetDetailActivity.this).recordEvent(AnalyticsManager.Category.GOURMET_BOOKINGS//
+//                , AnalyticsManager.Action.TICKET_TYPE_CLICKED, gourmetDetailParams.name, null);
 
-            recordAnalyticsGourmetDetail(AnalyticsManager.Screen.DAILYGOURMET_DETAIL_TICKETTYPE, (GourmetBookingDay) mPlaceBookingDay, (GourmetDetail) mPlaceDetail);
-            AnalyticsManager.getInstance(GourmetDetailActivity.this).recordEvent(AnalyticsManager.Category.GOURMET_BOOKINGS//
-                , AnalyticsManager.Action.TICKET_TYPE_CLICKED, gourmetDetailParams.name, null);
+
+            unLockUI();
         }
 
         @Override

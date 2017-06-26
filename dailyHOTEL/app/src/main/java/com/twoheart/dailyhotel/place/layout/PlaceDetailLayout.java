@@ -126,6 +126,8 @@ public abstract class PlaceDetailLayout extends BaseLayout
 
     public abstract void setBookingStatus(int status);
 
+    public abstract DailyPlaceDetailScrollView.OnScrollChangedListener getScrollChangedListener();
+
     public static int getImageLayoutHeight(Context context)
     {
         return ScreenUtils.getRatioHeightType4x3(ScreenUtils.getScreenWidth(context));
@@ -148,7 +150,7 @@ public abstract class PlaceDetailLayout extends BaseLayout
         mTransPlaceNameTextView = (TextView) mTransTitleLayout.findViewById(R.id.transNameTextView);
 
         mScrollView = (DailyPlaceDetailScrollView) view.findViewById(R.id.placeScrollView);
-        mScrollView.setOnScrollChangedListener(mOnScrollChangedListener);
+        mScrollView.setOnScrollChangedListener(getScrollChangedListener());
 
         // 이미지 ViewPage 넣기.
         mDailyLineIndicator = (DailyLineIndicator) view.findViewById(R.id.viewpagerIndicator);
@@ -606,30 +608,6 @@ public abstract class PlaceDetailLayout extends BaseLayout
 
                 case ViewPager.SCROLL_STATE_SETTLING:
                     break;
-            }
-        }
-    };
-
-    private DailyPlaceDetailScrollView.OnScrollChangedListener mOnScrollChangedListener = new DailyPlaceDetailScrollView.OnScrollChangedListener()
-    {
-        @Override
-        public void onScrollChanged(ScrollView scrollView, int l, int t, int oldl, int oldt)
-        {
-            if (getBookingStatus() == STATUS_BOOKING)
-            {
-                return;
-            }
-
-            final int TOOLBAR_HEIGHT = mContext.getResources().getDimensionPixelSize(R.dimen.toolbar_height);
-
-            int viewpagerHeight = getImageLayoutHeight(mContext);
-
-            if (t >= viewpagerHeight - TOOLBAR_HEIGHT)
-            {
-                ((OnEventListener) mOnEventListener).showActionBar(true);
-            } else
-            {
-                ((OnEventListener) mOnEventListener).hideActionBar(true);
             }
         }
     };
