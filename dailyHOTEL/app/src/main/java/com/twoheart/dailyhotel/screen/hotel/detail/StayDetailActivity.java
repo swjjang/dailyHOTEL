@@ -23,7 +23,6 @@ import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
 import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.repository.local.model.AnalyticsParam;
-import com.daily.dailyhotel.repository.local.model.AnalyticsRealmObject;
 import com.daily.dailyhotel.util.RecentlyPlaceUtil;
 import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.drawee.view.DraweeTransition;
@@ -1207,15 +1206,6 @@ public class StayDetailActivity extends PlaceDetailActivity
         if (stayDetailParams == null)
         {
             return;
-        }
-
-        AnalyticsRealmObject realmObject = AnalyticsManager.getInstance(StayDetailActivity.this).getLastAnalyticsRealmObject(stayDetail.index);
-        if (realmObject == null)
-        {
-            ExLog.d("AnalyticsRealmObject :: " + "is not Same placeIndex " + stayDetail.index);
-        } else
-        {
-            ExLog.d("AnalyticsRealmObject :: " + "is Same place " + realmObject.screenName + " , " + realmObject.placeName);
         }
 
         try

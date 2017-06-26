@@ -6,7 +6,6 @@ import android.net.Uri;
 import android.os.Bundle;
 
 import com.daily.base.util.ExLog;
-import com.daily.dailyhotel.repository.local.model.AnalyticsRealmObject;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
 
@@ -16,7 +15,6 @@ import java.util.Map;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
-import io.realm.RealmResults;
 
 public class AnalyticsManager
 {
@@ -133,17 +131,6 @@ public class AnalyticsManager
             RealmConfiguration config = new RealmConfiguration.Builder().deleteRealmIfMigrationNeeded().build();
             Realm.setDefaultConfiguration(config);
         }
-
-        // analyticsRealmObject clear
-        Realm realm = Realm.getDefaultInstance();
-        realm.executeTransactionAsync(new Realm.Transaction()
-        {
-            @Override
-            public void execute(Realm realm)
-            {
-                realm.delete(AnalyticsRealmObject.class);
-            }
-        });
     }
 
     public GoogleAnalyticsManager getGoogleAnalyticsManager()
@@ -549,35 +536,6 @@ public class AnalyticsManager
                 ExLog.d(TAG + e.toString());
             }
         }
-    }
-
-    private AnalyticsRealmObject getLastAnalyticsRealmObject()
-    {
-        Realm realm = Realm.getDefaultInstance();
-        RealmResults<AnalyticsRealmObject> resultList = realm.where(AnalyticsRealmObject.class).findAll();
-        if (resultList == null || resultList.size() == 0)
-        {
-            return null;
-        }
-
-        return resultList.last();
-    }
-
-    public AnalyticsRealmObject getLastAnalyticsRealmObject(int placeIndex)
-    {
-        AnalyticsRealmObject realmObject = getLastAnalyticsRealmObject();
-
-        if (realmObject == null)
-        {
-            return null;
-        }
-
-        if (realmObject.placeIndex == placeIndex)
-        {
-            return realmObject;
-        }
-
-        return null;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////

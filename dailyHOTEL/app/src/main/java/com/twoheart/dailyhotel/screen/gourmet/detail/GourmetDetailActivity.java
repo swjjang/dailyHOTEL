@@ -16,7 +16,6 @@ import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.repository.local.model.AnalyticsParam;
-import com.daily.dailyhotel.repository.local.model.AnalyticsRealmObject;
 import com.daily.dailyhotel.util.RecentlyPlaceUtil;
 import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.drawee.view.DraweeTransition;
@@ -1253,15 +1252,6 @@ public class GourmetDetailActivity extends PlaceDetailActivity
             params.put(AnalyticsManager.KeyType.DAILYCHOICE, mAnalyticsParam.isDailyChoice ? "y" : "n");
             params.put(AnalyticsManager.KeyType.LENGTH_OF_STAY, "1");
             params.put(AnalyticsManager.KeyType.NRD, gourmetDetailParams.sticker != null ? "y" : "n");
-
-            AnalyticsRealmObject realmObject = AnalyticsManager.getInstance(GourmetDetailActivity.this).getLastAnalyticsRealmObject(gourmetDetail.index);
-            if (realmObject == null)
-            {
-                ExLog.d("AnalyticsRealmObject :: " + "is not Same placeIndex " + gourmetDetail.index);
-            } else
-            {
-                ExLog.d("AnalyticsRealmObject :: " + "is Same place " + realmObject.screenName + " , " + realmObject.placeName);
-            }
 
             AnalyticsManager.getInstance(this).recordScreen(this, screen, null, params);
         } catch (Exception e)
