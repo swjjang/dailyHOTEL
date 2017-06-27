@@ -20,6 +20,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -135,6 +136,27 @@ public class RegionIconGenerator
         if (mTextView != null)
         {
             mTextView.setPadding(value, value, value, value);
+        }
+    }
+
+    public void setTextSize(int dp)
+    {
+        if (mTextView != null)
+        {
+            mTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, dp);
+        }
+    }
+
+    public void setLayoutParams(ViewGroup.LayoutParams layoutParams)
+    {
+        if (layoutParams == null)
+        {
+            return;
+        }
+
+        if (mTextView != null)
+        {
+            mTextView.setLayoutParams(layoutParams);
         }
     }
 
