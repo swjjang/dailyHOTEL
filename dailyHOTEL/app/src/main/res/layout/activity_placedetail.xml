@@ -45,9 +45,9 @@
         android:id="@+id/viewPagerBottomLine"
         android:layout_width="0dp"
         android:layout_height="1dp"
-        app:layout_constraintBottom_toBottomOf="@id/defaultLoopViewPager"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"/>
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/defaultLoopViewPager"/>
 
     <com.twoheart.dailyhotel.widget.DailyLineIndicator
         android:id="@+id/viewpagerIndicator"
@@ -234,9 +234,9 @@
         android:id="@+id/productTypeLayout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/bottomLayout"
         android:orientation="vertical"
         android:visibility="visible"
+        app:layout_constraintBottom_toTopOf="@+id/bottomLayout"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent">
 
@@ -346,8 +346,8 @@
     <View
         android:layout_width="0dp"
         android:layout_height="@dimen/gradient_2dp_line_height_over_21"
-        android:layout_above="@+id/bottomLayout"
         android:background="@drawable/shape_gradient_bottom_up"
+        app:layout_constraintBottom_toTopOf="@+id/bottomLayout"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"/>
 
@@ -364,21 +364,6 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/gradient_1dp_line_height_under_21"
             android:background="@color/default_line_ce7e7e7"/>
-
-        <com.daily.base.widget.DailyTextView
-            android:id="@+id/wishListButtonView"
-            android:layout_width="48dp"
-            android:layout_height="44dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="10dp"
-            android:background="@drawable/shape_fillrect_le8e8e9_bfafafb"
-            android:drawablePadding="4dp"
-            android:gravity="center_horizontal"
-            android:paddingTop="9dp"
-            android:text="@string/label_wishlist"
-            android:textColor="@color/default_text_c454545"
-            android:textSize="9dp"
-            app:drawableCompatTop="@drawable/ic_heart_stroke_s"/>
 
         <com.daily.base.widget.DailyTextView
             android:id="@+id/bookingTextView"
@@ -400,7 +385,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_margin="10dp"
-            android:layout_toRightOf="@id/wishListButtonView"
             android:background="@drawable/shape_button_disable"
             android:gravity="center"
             android:text="@string/act_hotel_soldout"
