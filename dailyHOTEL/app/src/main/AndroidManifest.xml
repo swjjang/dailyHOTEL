@@ -790,8 +790,7 @@
             android:name="com.daily.dailyhotel.screen.home.gourmet.detail.menus.GourmetMenusActivity"
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.Translucent"/>
+            android:screenOrientation="portrait"/>
 
         <!--  com.daily.dailyhotel.... -->
 

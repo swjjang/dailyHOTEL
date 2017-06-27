@@ -2,9 +2,12 @@ package com.daily.dailyhotel.screen.home.gourmet.detail.menus;
 
 import android.content.Context;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.LinearSmoothScroller;
+import android.support.v7.widget.PagerSnapHelper;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SnapHelper;
 import android.util.AttributeSet;
+import android.util.DisplayMetrics;
 import android.view.View;
 
 import com.daily.base.BaseActivity;
@@ -14,7 +17,6 @@ import com.daily.dailyhotel.entity.GourmetMenu;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ActivityGourmetMenusDataBinding;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
-import com.twoheart.dailyhotel.widget.DailyPagerSnapHelper;
 
 import java.util.List;
 
@@ -38,10 +40,10 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
             return;
         }
 
-        viewDataBinding.recyclerView.setLayoutManager(new ZoomCenterLayoutManaber(getContext(), LinearLayoutManager.HORIZONTAL, false));
+        viewDataBinding.recyclerView.setLayoutManager(new ZoomCenterLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
         EdgeEffectColor.setEdgeGlowColor(viewDataBinding.recyclerView, getColor(R.color.default_over_scroll_edge));
 
-        SnapHelper snapHelper = new DailyPagerSnapHelper();
+        SnapHelper snapHelper = new PagerSnapHelper();
         snapHelper.attachToRecyclerView(viewDataBinding.recyclerView);
     }
 
@@ -58,42 +60,48 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
             return;
         }
 
-        if (position < 0)
-        {
-            position = 0;
-        }
-
         GourmetMenusAdapter gourmetMenusAdapter = new GourmetMenusAdapter(getContext(), gourmetMenuList);
         gourmetMenusAdapter.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View view)
             {
-                int position = getViewDataBinding().recyclerView.getChildAdapterPosition((View) (view.getParent().getParent()));
-                getEventListener().onReservationClick(position);
+                getEventListener().onReservationClick(getViewDataBinding().recyclerView.getChildAdapterPosition((View) (view.getParent().getParent())));
             }
         });
 
         getViewDataBinding().recyclerView.setAdapter(gourmetMenusAdapter);
-        getViewDataBinding().recyclerView.scrollToPosition(position);
+
+        LinearSmoothScroller linearSmoothScroller = new LinearSmoothScroller(getContext())
+        {
+            @Override
+            protected float calculateSpeedPerPixel(DisplayMetrics displayMetrics)
+            {
+                return 0.1f / displayMetrics.densityDpi;
+            }
+        };
+
+        linearSmoothScroller.setTargetPosition(position);
+        getViewDataBinding().recyclerView.getLayoutManager().startSmoothScroll(linearSmoothScroller);
+        //        getViewDataBinding().recyclerView.smoothScrollToPosition(position);
     }
 
-    class ZoomCenterLayoutManaber extends LinearLayoutManager
+    class ZoomCenterLayoutManager extends LinearLayoutManager
     {
         private final float mShrinkAmount = 0.10f;
         private final float mShrinkDistance = 0.75f;
 
-        public ZoomCenterLayoutManaber(Context context)
+        public ZoomCenterLayoutManager(Context context)
         {
             super(context);
         }
 
-        public ZoomCenterLayoutManaber(Context context, int orientation, boolean reverseLayout)
+        public ZoomCenterLayoutManager(Context context, int orientation, boolean reverseLayout)
         {
             super(context, orientation, reverseLayout);
         }
 
-        public ZoomCenterLayoutManaber(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes)
+        public ZoomCenterLayoutManager(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes)
         {
             super(context, attrs, defStyleAttr, defStyleRes);
         }
@@ -131,6 +139,7 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
         public void onLayoutChildren(RecyclerView.Recycler recycler, RecyclerView.State state)
         {
             super.onLayoutChildren(recycler, state);
+
             scrollHorizontallyBy(0, recycler, state);
         }
     }
