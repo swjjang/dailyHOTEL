@@ -218,7 +218,7 @@
         android:paddingLeft="15dp"
         android:paddingRight="15dp"
         android:paddingTop="11dp"
-        android:visibility="visible">
+        android:visibility="gone">
 
         <com.daily.base.widget.DailyTextView
             android:layout_width="wrap_content"

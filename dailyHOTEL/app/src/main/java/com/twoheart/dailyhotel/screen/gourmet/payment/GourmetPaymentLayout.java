@@ -710,12 +710,12 @@ public class GourmetPaymentLayout extends BaseLayout implements View.OnClickList
 
     public void requestCheckListCheckFocus()
     {
-        if (mCheckListCheckBox == null)
+        if (mScrollView == null || mCheckListLayout == null)
         {
             return;
         }
 
-        mCheckListCheckBox.requestFocus();
+        mScrollView.scrollTo(0, (int) mCheckListLayout.getY());
     }
 
     public void clearFocus()
