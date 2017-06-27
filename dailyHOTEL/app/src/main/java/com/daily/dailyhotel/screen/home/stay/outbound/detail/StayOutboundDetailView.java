@@ -459,6 +459,8 @@ public class StayOutboundDetailView extends BaseDialogView<StayOutboundDetailVie
             return;
         }
 
+        getViewDataBinding().bottomLayout.setVisibility(View.VISIBLE);
+
         setImageList(stayOutboundDetail.getImageList());
 
         getViewDataBinding().scrollLayout.removeAllViews();
