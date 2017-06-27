@@ -43,6 +43,16 @@ public class StayCategoryListNetworkController extends BaseNetworkController
             return;
         }
 
+        try
+        {
+            params.toParamsMap();
+        } catch (Exception e)
+        {
+            Crashlytics.log("requestStayCategoryList :: params.toParamsMap() error : " + params.toString());
+            mOnNetworkControllerListener.onError(e);
+            return;
+        }
+
         DailyMobileAPI.getInstance(mContext).requestStayCategoryList(mNetworkTag //
             , params.getCategoryCode(), params.toParamsMap() //
             , params.getBedTypeList(), params.getLuxuryList(), mStayCategoryListCallback);

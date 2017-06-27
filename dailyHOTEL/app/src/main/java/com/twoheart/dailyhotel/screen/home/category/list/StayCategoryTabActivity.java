@@ -14,6 +14,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.widget.DailyToast;
@@ -222,6 +223,17 @@ public class StayCategoryTabActivity extends PlaceMainActivity
                     //                    String realProvinceName = Util.getRealProvinceName(province); // 대지역 반환
                     //                    DailyPreference.getInstance(this).setSelectedRegionTypeProvince(PlaceType.HOTEL, realProvinceName);
                     //                    AnalyticsManager.getInstance(this).onRegionChanged(country, realProvinceName);
+                }
+
+                StayBookingDay stayBookingDay = mStayCategoryCuration.getStayBookingDay();
+                if (stayBookingDay == null)
+                {
+                    Crashlytics.log("StayCategoryTabActivity :: onRegionActivityResult : stayBookingDay is null , resultCode=" //
+                        + resultCode + " , province index=" + province.index + " , category code=" + categoryCode);
+                } else if (DailyTextUtils.isTextEmpty(stayBookingDay.getCheckInDay("yyyy-MM-dd")) == true)
+                {
+                    Crashlytics.log("StayCategoryTabActivity :: onRegionActivityResult : stayBookingDay.getCheckInDay(\"yyyy-MM-dd\") is empty , resultCode=" //
+                        + resultCode + " , province index=" + province.index + " , category code=" + categoryCode);
                 }
 
                 ArrayList<Category> categoryList = new ArrayList<>();
