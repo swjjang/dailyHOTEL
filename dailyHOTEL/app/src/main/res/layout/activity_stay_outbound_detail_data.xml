@@ -312,6 +312,7 @@
             android:id="@+id/bottomLayout"
             android:layout_width="match_parent"
             android:layout_height="64dp"
+            android:visibility="gone"
             android:layout_alignParentBottom="true"
             android:background="@color/white">
 
