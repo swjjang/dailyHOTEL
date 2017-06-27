@@ -47,7 +47,7 @@ public class DailyViewPager extends ViewPager
         {
             try
             {
-                return super.onTouchEvent(event);
+                return super.onInterceptTouchEvent(event);
             } catch (IllegalArgumentException e)
             {
                 ExLog.e(e.toString());
