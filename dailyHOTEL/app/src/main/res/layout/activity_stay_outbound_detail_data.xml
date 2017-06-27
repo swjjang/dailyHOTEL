@@ -322,21 +322,6 @@
                 android:background="@color/default_line_ce7e7e7"/>
 
             <com.daily.base.widget.DailyTextView
-                android:id="@+id/wishListButtonView"
-                android:layout_width="48dp"
-                android:layout_height="44dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="10dp"
-                android:background="@drawable/shape_fillrect_le8e8e9_bfafafb"
-                android:drawablePadding="4dp"
-                android:gravity="center_horizontal"
-                android:paddingTop="9dp"
-                android:text="@string/label_wishlist"
-                android:textColor="@color/default_text_c454545"
-                android:textSize="9dp"
-                app:drawableCompatTop="@drawable/ic_heart_stroke_s"/>
-
-            <com.daily.base.widget.DailyTextView
                 android:id="@+id/bookingTextView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"

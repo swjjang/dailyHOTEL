@@ -726,7 +726,6 @@ public class StayOutboundDetailView extends BaseDialogView<StayOutboundDetailVie
             {
                 getViewDataBinding().bookingTextView.setVisibility(View.VISIBLE);
                 getViewDataBinding().soldoutTextView.setVisibility(View.GONE);
-                getViewDataBinding().wishListButtonView.setVisibility(View.GONE);
                 break;
             }
 
@@ -734,7 +733,6 @@ public class StayOutboundDetailView extends BaseDialogView<StayOutboundDetailVie
             {
                 getViewDataBinding().bookingTextView.setVisibility(View.VISIBLE);
                 getViewDataBinding().soldoutTextView.setVisibility(View.GONE);
-                getViewDataBinding().wishListButtonView.setVisibility(View.GONE);
 
                 getViewDataBinding().bookingTextView.setText(R.string.act_hotel_search_room);
                 break;
@@ -744,7 +742,6 @@ public class StayOutboundDetailView extends BaseDialogView<StayOutboundDetailVie
             {
                 getViewDataBinding().bookingTextView.setVisibility(View.VISIBLE);
                 getViewDataBinding().soldoutTextView.setVisibility(View.GONE);
-                getViewDataBinding().wishListButtonView.setVisibility(View.GONE);
 
                 getViewDataBinding().bookingTextView.setText(R.string.act_hotel_booking);
                 break;
@@ -754,7 +751,6 @@ public class StayOutboundDetailView extends BaseDialogView<StayOutboundDetailVie
             {
                 getViewDataBinding().bookingTextView.setVisibility(View.GONE);
                 getViewDataBinding().soldoutTextView.setVisibility(View.VISIBLE);
-                getViewDataBinding().wishListButtonView.setVisibility(View.GONE);
                 break;
             }
         }
