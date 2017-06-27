@@ -760,7 +760,12 @@ public class HomeFragment extends BaseMenuNavigationFragment
                             }
                         });
 
-                        Intent intent = GourmetDetailActivity.newInstance(mBaseActivity, gourmetBookingDay, place, true);
+                        AnalyticsParam analyticsParam = new AnalyticsParam();
+                        analyticsParam.setParam(mBaseActivity, place);
+                        analyticsParam.setProvince(null);
+                        analyticsParam.setTotalListCount(-1);
+
+                        Intent intent = GourmetDetailActivity.newInstance(mBaseActivity, gourmetBookingDay, place, analyticsParam, true);
 
                         if (intent == null)
                         {
@@ -776,7 +781,12 @@ public class HomeFragment extends BaseMenuNavigationFragment
                         mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMET_DETAIL, options.toBundle());
                     } else
                     {
-                        Intent intent = GourmetDetailActivity.newInstance(mBaseActivity, gourmetBookingDay, place, false);
+                        AnalyticsParam analyticsParam = new AnalyticsParam();
+                        analyticsParam.setParam(mBaseActivity, place);
+                        analyticsParam.setProvince(null);
+                        analyticsParam.setTotalListCount(-1);
+
+                        Intent intent = GourmetDetailActivity.newInstance(mBaseActivity, gourmetBookingDay, place, analyticsParam, false);
 
                         if (intent == null)
                         {

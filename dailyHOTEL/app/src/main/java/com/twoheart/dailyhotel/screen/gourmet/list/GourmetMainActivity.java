@@ -963,8 +963,12 @@ public class GourmetMainActivity extends PlaceMainActivity
                         analyticsParam.setProvince(province);
                         analyticsParam.setTotalListCount(listCount);
 
-                        Intent intent = GourmetDetailActivity.newInstance(GourmetMainActivity.this, //
-                            mGourmetCuration.getGourmetBookingDay(), gourmet, analyticsParam, true);
+                        //                        Intent intent = GourmetDetailActivity.newInstance(GourmetMainActivity.this, //
+                        //                            mGourmetCuration.getGourmetBookingDay(), gourmet, analyticsParam, true);
+
+                        Intent intent = GourmetDetailActivity.newInstance(GourmetMainActivity.this //
+                            , mGourmetCuration.getGourmetBookingDay(), gourmet.index, gourmet.name //
+                            , gourmet.imageUrl, gourmet.category, gourmet.isSoldOut, analyticsParam, true);
 
                         View simpleDraweeView = view.findViewById(R.id.imageView);
                         View nameTextView = view.findViewById(R.id.nameTextView);
@@ -992,8 +996,12 @@ public class GourmetMainActivity extends PlaceMainActivity
                         analyticsParam.setProvince(province);
                         analyticsParam.setTotalListCount(listCount);
 
-                        Intent intent = GourmetDetailActivity.newInstance(GourmetMainActivity.this, //
-                            mGourmetCuration.getGourmetBookingDay(), gourmet, analyticsParam, false);
+//                        Intent intent = GourmetDetailActivity.newInstance(GourmetMainActivity.this, //
+//                            mGourmetCuration.getGourmetBookingDay(), gourmet, analyticsParam, false);
+
+                        Intent intent = GourmetDetailActivity.newInstance(GourmetMainActivity.this //
+                            , mGourmetCuration.getGourmetBookingDay(), gourmet.index, gourmet.name //
+                            , gourmet.imageUrl, gourmet.category, gourmet.isSoldOut, analyticsParam, false);
 
                         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL);
 

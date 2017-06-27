@@ -23,7 +23,6 @@ import com.facebook.drawee.view.DraweeTransition;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Customer;
-import com.twoheart.dailyhotel.model.Gourmet;
 import com.twoheart.dailyhotel.model.GourmetDetail;
 import com.twoheart.dailyhotel.model.PlaceDetail;
 import com.twoheart.dailyhotel.model.time.GourmetBookingDay;
@@ -73,49 +72,97 @@ public class GourmetDetailActivity extends PlaceDetailActivity
     int mSelectedTicketIndex;
     private boolean mFirstCheckPrice;
     private boolean mRefreshCheckPrice;
-    boolean mIsListSoldOut; // 리스테어서 솔드아웃인지 체크한다.
+    boolean mIsListSoldOut; // 리스트에서 솔드아웃인지 체크한다.
 
     /**
-     * 리스트에서 호출
+     * 리스트, 검색 결과, 위시리스트 에서 호출
      *
      * @param context
      * @param gourmetBookingDay
-     * @param gourmet
+     * @param index
+     * @param name
+     * @param imageUrl
+     * @param category
+     * @param isSoldOut
+     * @param analyticsParam
+     * @param isUsedMultiTransition
      * @return
      */
-    public static Intent newInstance(Context context, GourmetBookingDay gourmetBookingDay, Gourmet gourmet//
+    public static Intent newInstance(Context context, GourmetBookingDay gourmetBookingDay, int index //
+        , String name, String imageUrl, String category, boolean isSoldOut //
         , AnalyticsParam analyticsParam, boolean isUsedMultiTransition)
     {
         Intent intent = new Intent(context, GourmetDetailActivity.class);
 
         intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, gourmetBookingDay);
-//        intent.putExtra(NAME_INTENT_EXTRA_DATA_PROVINCE, province);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEIDX, gourmet.index);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACENAME, gourmet.name);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_IMAGEURL, gourmet.imageUrl);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_CATEGORY, gourmet.category);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_SOLDOUT, gourmet.isSoldOut);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_DISCOUNTPRICE, gourmet.discountPrice);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_PRICE, gourmet.price);
+        //        intent.putExtra(NAME_INTENT_EXTRA_DATA_PROVINCE, province);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEIDX, index);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACENAME, name);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_IMAGEURL, imageUrl);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_CATEGORY, category);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_SOLDOUT, isSoldOut);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_CALENDAR_FLAG, false);
-        //        intent.putExtra(NAME_INTENT_EXTRA_DATA_ENTRY_INDEX, gourmet.entryPosition);
-        //        intent.putExtra(NAME_INTENT_EXTRA_DATA_LIST_COUNT, listCount);
-        //        intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_DAILYCHOICE, gourmet.isDailyChoice);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_ANALYTICS_PARAM, analyticsParam);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_USED_MULTITRANSITIOIN, isUsedMultiTransition);
 
-//        String[] area = gourmet.addressSummary.split("\\||l|ㅣ|I");
-//        intent.putExtra(NAME_INTENT_EXTRA_DATA_AREA, area[0].trim());
+        return intent;
+    }
 
-        //        String isShowOriginalPrice;
-        //        if (gourmet.price <= 0 || gourmet.price <= gourmet.discountPrice)
-        //        {
-        //            isShowOriginalPrice = "N";
-        //        } else
-        //        {
-        //            isShowOriginalPrice = "Y";
-        //        }
-        //
-        //        intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_SHOW_ORIGINALPRICE, isShowOriginalPrice);
+    /**
+     * 홈에서 호출
+     *
+     * @param context
+     * @param gourmetBookingDay
+     * @param homePlace
+     * @param isUsedMultiTransition
+     * @return
+     */
+    public static Intent newInstance(Context context, GourmetBookingDay gourmetBookingDay //
+        , HomePlace homePlace, AnalyticsParam analyticsParam, boolean isUsedMultiTransition)
+    {
+        if (gourmetBookingDay == null || homePlace == null)
+        {
+            return null;
+        }
+
+        Intent intent = new Intent(context, GourmetDetailActivity.class);
+
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, gourmetBookingDay);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEIDX, homePlace.index);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACENAME, homePlace.title);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_IMAGEURL, homePlace.imageUrl);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_CATEGORY, homePlace.details.category);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_CALENDAR_FLAG, false);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_ANALYTICS_PARAM, analyticsParam);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_USED_MULTITRANSITIOIN, isUsedMultiTransition);
+
+        return intent;
+    }
+
+    /**
+     * 추천 목록에서 호출
+     *
+     * @param context
+     * @param gourmetBookingDay
+     * @param recommendationGourmet
+     * @param isUsedMultiTransition
+     * @return
+     */
+    public static Intent newInstance(Context context, GourmetBookingDay gourmetBookingDay, RecommendationGourmet recommendationGourmet//
+        , AnalyticsParam analyticsParam, boolean isUsedMultiTransition)
+    {
+        Intent intent = new Intent(context, GourmetDetailActivity.class);
+
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, gourmetBookingDay);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEIDX, recommendationGourmet.index);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACENAME, recommendationGourmet.name);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_IMAGEURL, recommendationGourmet.imageUrl);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_CATEGORY, recommendationGourmet.category);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_SOLDOUT, recommendationGourmet.isSoldOut);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_DISCOUNTPRICE, recommendationGourmet.discount);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_PRICE, recommendationGourmet.price);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_CALENDAR_FLAG, false);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_ANALYTICS_PARAM, analyticsParam);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_USED_MULTITRANSITIOIN, isUsedMultiTransition);
 
         return intent;
@@ -144,186 +191,10 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         intent.putExtra(NAME_INTENT_EXTRA_DATA_ENTRY_INDEX, -1);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_LIST_COUNT, -1);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_DAILYCHOICE, false);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_USED_MULTITRANSITIOIN, isUsedMultiTransition);
 
-        return intent;
-    }
-
-    /**
-     * 검색 결과에서 호출
-     *
-     * @param context
-     * @param gourmetBookingDay
-     * @param gourmet
-     * @param listCount
-     * @return
-     */
-    public static Intent newInstance(Context context, GourmetBookingDay gourmetBookingDay, Gourmet gourmet, int listCount, boolean isUsedMultiTransition)
-    {
-        Intent intent = new Intent(context, GourmetDetailActivity.class);
-
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, gourmetBookingDay);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEIDX, gourmet.index);
-
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACENAME, gourmet.name);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_IMAGEURL, gourmet.imageUrl);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_CATEGORY, gourmet.category);
-
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_SOLDOUT, gourmet.isSoldOut);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_DISCOUNTPRICE, gourmet.discountPrice);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_PRICE, gourmet.price);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_CALENDAR_FLAG, false);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_ENTRY_INDEX, gourmet.entryPosition);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_LIST_COUNT, listCount);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_DAILYCHOICE, gourmet.isDailyChoice);
-
-        String isShowOriginalPrice;
-        if (gourmet.price <= 0 || gourmet.price <= gourmet.discountPrice)
-        {
-            isShowOriginalPrice = "N";
-        } else
-        {
-            isShowOriginalPrice = "Y";
-        }
-
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_SHOW_ORIGINALPRICE, isShowOriginalPrice);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_USED_MULTITRANSITIOIN, isUsedMultiTransition);
-
-        return intent;
-    }
-
-    /**
-     * 위시리스트에서 호출
-     *
-     * @param context
-     * @param gourmetBookingDay
-     * @param gourmet
-     * @param isUsedMultiTransition
-     * @return
-     */
-    public static Intent newInstance(Context context, GourmetBookingDay gourmetBookingDay, Gourmet gourmet, boolean isUsedMultiTransition)
-    {
-        if (gourmetBookingDay == null || gourmet == null)
-        {
-            return null;
-        }
-
-        Intent intent = new Intent(context, GourmetDetailActivity.class);
-
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, gourmetBookingDay);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEIDX, gourmet.index);
-
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACENAME, gourmet.name);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_IMAGEURL, gourmet.imageUrl);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_CATEGORY, gourmet.category);
-
-        if (gourmet.discountPrice > 0)
-        {
-            intent.putExtra(NAME_INTENT_EXTRA_DATA_DISCOUNTPRICE, gourmet.discountPrice);
-        } else
-        {
-            intent.putExtra(NAME_INTENT_EXTRA_DATA_DISCOUNTPRICE, SKIP_CHECK_DISCOUNT_PRICE_VALUE);
-        }
-
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_CALENDAR_FLAG, false);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_ENTRY_INDEX, -1);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_LIST_COUNT, -1);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_DAILYCHOICE, false);
-
-        String isShowOriginalPrice = "N";
-
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_SHOW_ORIGINALPRICE, isShowOriginalPrice);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_USED_MULTITRANSITIOIN, isUsedMultiTransition);
-
-        return intent;
-    }
-
-    /**
-     * 홈에서 호출
-     *
-     * @param context
-     * @param gourmetBookingDay
-     * @param homePlace
-     * @param isUsedMultiTransition
-     * @return
-     */
-    public static Intent newInstance(Context context, GourmetBookingDay gourmetBookingDay, HomePlace homePlace, boolean isUsedMultiTransition)
-    {
-        if (gourmetBookingDay == null || homePlace == null)
-        {
-            return null;
-        }
-
-        Intent intent = new Intent(context, GourmetDetailActivity.class);
-
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, gourmetBookingDay);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEIDX, homePlace.index);
-
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACENAME, homePlace.title);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_IMAGEURL, homePlace.imageUrl);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_CATEGORY, homePlace.details.category);
-
-        if (homePlace.prices != null && homePlace.prices.discountPrice > 0)
-        {
-            intent.putExtra(NAME_INTENT_EXTRA_DATA_DISCOUNTPRICE, homePlace.prices.discountPrice);
-        } else
-        {
-            intent.putExtra(NAME_INTENT_EXTRA_DATA_DISCOUNTPRICE, SKIP_CHECK_DISCOUNT_PRICE_VALUE);
-        }
-
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_CALENDAR_FLAG, false);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_ENTRY_INDEX, -1);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_LIST_COUNT, -1);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_DAILYCHOICE, false);
-
-        String isShowOriginalPrice = "N";
-
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_SHOW_ORIGINALPRICE, isShowOriginalPrice);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_USED_MULTITRANSITIOIN, isUsedMultiTransition);
-
-        return intent;
-    }
-
-    /**
-     * 추천 목록에서 호출
-     *
-     * @param context
-     * @param gourmetBookingDay
-     * @param recommendationGourmet
-     * @param listCount
-     * @param isUsedMultiTransition
-     * @return
-     */
-    public static Intent newInstance(Context context, GourmetBookingDay gourmetBookingDay, RecommendationGourmet recommendationGourmet//
-        , int listCount, boolean isUsedMultiTransition)
-    {
-        Intent intent = new Intent(context, GourmetDetailActivity.class);
-
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, gourmetBookingDay);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEIDX, recommendationGourmet.index);
-
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACENAME, recommendationGourmet.name);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_IMAGEURL, recommendationGourmet.imageUrl);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_CATEGORY, recommendationGourmet.category);
-
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_SOLDOUT, recommendationGourmet.isSoldOut);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_DISCOUNTPRICE, recommendationGourmet.discount);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_PRICE, recommendationGourmet.price);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_CALENDAR_FLAG, false);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_ENTRY_INDEX, recommendationGourmet.entryPosition);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_LIST_COUNT, listCount);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_DAILYCHOICE, recommendationGourmet.isDailyChoice);
-
-        String isShowOriginalPrice;
-        if (recommendationGourmet.price <= 0 || recommendationGourmet.price <= recommendationGourmet.discount)
-        {
-            isShowOriginalPrice = "N";
-        } else
-        {
-            isShowOriginalPrice = "Y";
-        }
-
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_SHOW_ORIGINALPRICE, isShowOriginalPrice);
+        AnalyticsParam analyticsParam = new AnalyticsParam();
+        analyticsParam.placeIndex = gourmetIndex;
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_ANALYTICS_PARAM, analyticsParam);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_USED_MULTITRANSITIOIN, isUsedMultiTransition);
 
         return intent;
@@ -373,6 +244,11 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         RecentlyPlaceUtil.addRecentlyItemAsync(RecentlyPlaceUtil.ServiceType.GOURMET //
             , mPlaceDetail.index, placeName, null, mDefaultImageUrl, true);
 
+        if (intent.hasExtra(NAME_INTENT_EXTRA_DATA_ANALYTICS_PARAM) == true)
+        {
+            mAnalyticsParam = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_ANALYTICS_PARAM);
+        }
+
         if (intent.hasExtra(NAME_INTENT_EXTRA_DATA_TYPE) == true)
         {
             mIsDeepLink = true;
@@ -392,8 +268,8 @@ public class GourmetDetailActivity extends PlaceDetailActivity
                 return;
             }
 
-//            mProvince = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PROVINCE);
-//            mArea = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_AREA);
+            //            mProvince = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PROVINCE);
+            //            mArea = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_AREA);
             mViewPrice = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_DISCOUNTPRICE, 0);
             mIsListSoldOut = intent.getBooleanExtra(NAME_INTENT_EXTRA_DATA_IS_SOLDOUT, false);
 
@@ -612,10 +488,10 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         }
 
         int index = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_PLACEIDX, -1);
-        int entryIndex = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_ENTRY_INDEX, -1);
-        String isShowOriginalPrice = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_IS_SHOW_ORIGINALPRICE);
-        int listCount = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_LIST_COUNT, -1);
-        boolean isDailyChoice = intent.getBooleanExtra(NAME_INTENT_EXTRA_DATA_IS_DAILYCHOICE, false);
+        //        int entryIndex = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_ENTRY_INDEX, -1);
+        //        String isShowOriginalPrice = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_IS_SHOW_ORIGINALPRICE);
+        //        int listCount = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_LIST_COUNT, -1);
+        //        boolean isDailyChoice = intent.getBooleanExtra(NAME_INTENT_EXTRA_DATA_IS_DAILYCHOICE, false);
 
         return new GourmetDetail(index);
     }
@@ -1703,6 +1579,12 @@ public class GourmetDetailActivity extends PlaceDetailActivity
             try
             {
                 ((GourmetDetail) mPlaceDetail).setGourmetDetailParmas(gourmetDetailParams);
+
+                // analyticsParam 갱신용 - 딥링크시 고메 index 빼고는 알 수 없음 - 상세에서 받아온 정보로 갱신
+                mAnalyticsParam.placeName = gourmetDetailParams.name;
+                mAnalyticsParam.gradeCode = gourmetDetailParams.getGrade().name();
+                mAnalyticsParam.gradeName = gourmetDetailParams.getGrade().getName(GourmetDetailActivity.this);
+                //                mAnalyticsParam. // TODO : 여기 추가로 들어간... 카테고리 어찌 할지
 
                 if (mInitializeStatus == STATUS_INITIALIZE_NONE)
                 {

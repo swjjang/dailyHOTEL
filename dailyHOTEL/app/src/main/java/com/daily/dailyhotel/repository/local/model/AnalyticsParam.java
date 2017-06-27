@@ -11,6 +11,7 @@ import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.network.model.HomePlace;
 import com.twoheart.dailyhotel.network.model.Prices;
+import com.twoheart.dailyhotel.network.model.RecommendationGourmet;
 import com.twoheart.dailyhotel.network.model.RecommendationStay;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
@@ -54,7 +55,7 @@ public class AnalyticsParam implements Parcelable
         addressAreaName = getAddressAreaName(stay.addressSummary);
         price = stay.price;
 
-        if (discountPrice > 0)
+        if (stay.discountPrice > 0)
         {
             discountPrice = stay.discountPrice;
         } else
@@ -76,9 +77,22 @@ public class AnalyticsParam implements Parcelable
 
         addressAreaName = getAddressAreaName(gourmet.addressSummary);
         price = gourmet.price;
+
+        if (gourmet.discountPrice > 0)
+        {
+            discountPrice = gourmet.discountPrice;
+        } else
+        {
+            discountPrice = SKIP_CHECK_DISCOUNT_PRICE_VALUE;
+        }
+
         discountPrice = gourmet.discountPrice;
         showOriginalPriceYn = getShowOrginalPriceYn(gourmet.price, gourmet.discountPrice);
         listPosition = gourmet.entryPosition;
+
+        gradeCode = Gourmet.Grade.gourmet.name();
+        gradeName = Gourmet.Grade.gourmet.getName(context);
+
         isDailyChoice = gourmet.isDailyChoice;
     }
 
@@ -105,17 +119,24 @@ public class AnalyticsParam implements Parcelable
         showOriginalPriceYn = getShowOrginalPriceYn(price, discountPrice);
         listPosition = -1;
 
-        Stay.Grade grade;
-        try
+        if ("GOURMET".equalsIgnoreCase(place.serviceType) == true)
         {
-            grade = place.details.stayGrade;
-        } catch (Exception e)
+            gradeCode = Gourmet.Grade.gourmet.name();
+            gradeName = Gourmet.Grade.gourmet.getName(context);
+        } else
         {
-            grade = Stay.Grade.etc;
-        }
+            Stay.Grade grade;
+            try
+            {
+                grade = place.details.stayGrade;
+            } catch (Exception e)
+            {
+                grade = Stay.Grade.etc;
+            }
 
-        gradeCode = grade.name();
-        gradeName = grade.getName(context);
+            gradeCode = grade.name();
+            gradeName = grade.getName(context);
+        }
 
         isDailyChoice = false;
     }
@@ -143,6 +164,22 @@ public class AnalyticsParam implements Parcelable
         gradeName = grade.getName(context);
 
         isDailyChoice = recommendationStay.isDailyChoice;
+    }
+
+    public void setParam(Context context, RecommendationGourmet recommendationGourmet)
+    {
+        placeIndex = recommendationGourmet.index;
+        placeName = recommendationGourmet.name;
+
+        price = recommendationGourmet.price;
+        discountPrice = recommendationGourmet.discount;
+        showOriginalPriceYn = getShowOrginalPriceYn(recommendationGourmet.price, recommendationGourmet.discount);
+        listPosition = recommendationGourmet.entryPosition;
+
+        gradeCode = Gourmet.Grade.gourmet.name();
+        gradeName = Gourmet.Grade.gourmet.getName(context);
+
+        isDailyChoice = recommendationGourmet.isDailyChoice;
     }
 
     public void setProvince(Province province)

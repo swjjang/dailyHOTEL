@@ -1,7 +1,9 @@
 package com.twoheart.dailyhotel.screen.mydaily.wishlist;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.SharedElementCallback;
@@ -10,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.daily.base.util.ExLog;
+import com.daily.dailyhotel.repository.local.model.AnalyticsParam;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Gourmet;
@@ -262,6 +265,7 @@ public class GourmetWishListFragment extends PlaceWishListFragment
 
     private GourmetWishListLayout.OnEventListener mEventListener = new PlaceWishListLayout.OnEventListener()
     {
+        @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
         @Override
         public void onListItemClick(View view, int position)
         {
@@ -298,8 +302,17 @@ public class GourmetWishListFragment extends PlaceWishListFragment
                     }
                 });
 
-                Intent intent = GourmetDetailActivity.newInstance(mBaseActivity, //
-                    (GourmetBookingDay) mPlaceBookingDay, gourmet, true);
+                AnalyticsParam analyticsParam = new AnalyticsParam();
+                analyticsParam.setParam(mBaseActivity, gourmet);
+                analyticsParam.setProvince(null);
+                analyticsParam.setTotalListCount(-1);
+
+//                Intent intent = GourmetDetailActivity.newInstance(mBaseActivity, //
+//                    (GourmetBookingDay) mPlaceBookingDay, gourmet, analyticsParam, true);
+
+                Intent intent = GourmetDetailActivity.newInstance(mBaseActivity //
+                    , (GourmetBookingDay) mPlaceBookingDay, gourmet.index, gourmet.name //
+                    , gourmet.imageUrl, gourmet.category, gourmet.isSoldOut, analyticsParam, true);
 
                 View simpleDraweeView = view.findViewById(R.id.imageView);
                 View nameTextView = view.findViewById(R.id.nameTextView);
@@ -315,8 +328,17 @@ public class GourmetWishListFragment extends PlaceWishListFragment
                 mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMET_DETAIL, options.toBundle());
             } else
             {
-                Intent intent = GourmetDetailActivity.newInstance(mBaseActivity, //
-                    (GourmetBookingDay) mPlaceBookingDay, gourmet, false);
+                AnalyticsParam analyticsParam = new AnalyticsParam();
+                analyticsParam.setParam(mBaseActivity, gourmet);
+                analyticsParam.setProvince(null);
+                analyticsParam.setTotalListCount(-1);
+
+//                Intent intent = GourmetDetailActivity.newInstance(mBaseActivity, //
+//                    (GourmetBookingDay) mPlaceBookingDay, gourmet, analyticsParam, false);
+
+                Intent intent = GourmetDetailActivity.newInstance(mBaseActivity //
+                    , (GourmetBookingDay) mPlaceBookingDay, gourmet.index, gourmet.name //
+                    , gourmet.imageUrl, gourmet.category, gourmet.isSoldOut, analyticsParam, false);
 
                 mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMET_DETAIL);
 
