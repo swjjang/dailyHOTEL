@@ -238,6 +238,7 @@
     <string name="toast_msg_profile_success_edit_email">이메일 설정을 완료했습니다.</string>
     <string name="toast_msg_profile_success_edit_birthday">생일 설정을 완료했습니다.</string>
     <string name="toast_msg_wrong_max_password_length">최대 50자까지 입력 가능합니다.</string>
+    <string name="toast_msg_please_check_checklist">확인사항 동의에 체크해주세요.</string>
 
     <string name="toast_msg_logouted">로그아웃되었습니다.</string>
     <string name="toast_msg_logoined">로그인했습니다.</string>
@@ -585,6 +586,7 @@
     <string name="label_booking_ticket_info">상품 정보</string>
     <string name="label_booking_ticket_type">상품 타입</string>
     <string name="label_booking_select_ticket_count">수량 선택</string>
+    <string name="label_booking_checklist">확인사항 동의(필수)</string>
     <string name="label_booking_select_ticket_time">방문시간</string>
     <string name="label_booking_user_info">예약자 정보</string>
     <string name="label_booking_visitor_info">방문자 정보</string>

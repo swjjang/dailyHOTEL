@@ -1601,6 +1601,16 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
                 }
             }
 
+            if (mGourmetPaymentLayout.isCheckListCheck() == false)
+            {
+                releaseUiComponent();
+
+                mGourmetPaymentLayout.requestCheckListCheckFocus();
+
+                DailyToast.showToast(GourmetPaymentActivity.this, R.string.toast_msg_please_check_checklist, Toast.LENGTH_SHORT);
+                return;
+            }
+
             gourmetPaymentInformation.setGuest(guest);
             processAgreeTermDialog();
 

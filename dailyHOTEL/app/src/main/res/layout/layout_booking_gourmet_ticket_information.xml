@@ -207,6 +207,48 @@
         </LinearLayout>
     </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/checkListLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:minHeight="36dp"
+        android:orientation="vertical"
+        android:paddingBottom="11dp"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:paddingTop="11dp"
+        android:visibility="visible">
+
+        <com.daily.base.widget.DailyTextView
+            android:layout_width="wrap_content"
+            android:layout_height="36dp"
+            android:text="@string/label_booking_checklist"
+            android:textColor="@color/default_text_c929292"
+            android:textSize="13dp"/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="36dp">
+
+            <com.daily.base.widget.DailyCheckBox
+                android:id="@+id/checkListCheckBox"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:theme="@style/CheckBoxTheme"/>
+
+            <com.daily.base.widget.DailyTextView
+                android:id="@+id/checkListTextView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_toRightOf="@+id/checkListCheckBox"
+                android:gravity="center_vertical"
+                android:textColor="@color/default_text_c929292"
+                android:textSize="12dp"/>
+        </RelativeLayout>
+    </LinearLayout>
+
     <View
         android:layout_width="match_parent"
         android:layout_height="1px"
@@ -344,12 +386,12 @@
             <com.daily.base.widget.DailyTextView
                 android:layout_width="match_parent"
                 android:layout_height="55dp"
+                android:layout_marginRight="15dp"
+                android:layout_toRightOf="@+id/guestCheckBox"
                 android:gravity="center_vertical"
                 android:text="@string/message_gourmet_check_other_user"
                 android:textColor="@color/default_text_c929292"
-                android:textSize="12dp"
-                android:layout_marginRight="15dp"
-                android:layout_toRightOf="@+id/guestCheckBox"/>
+                android:textSize="12dp"/>
         </RelativeLayout>
     </LinearLayout>
 
