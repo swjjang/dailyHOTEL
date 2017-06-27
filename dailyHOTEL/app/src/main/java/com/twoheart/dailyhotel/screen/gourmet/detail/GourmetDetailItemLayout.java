@@ -224,7 +224,7 @@ public class GourmetDetailItemLayout extends LinearLayout
 
     public void closeMoreProductList()
     {
-        if (mMoreLayout == null)
+        if (mMoreLayout == null || mFirstProductIndex < 0)
         {
             return;
         }
@@ -335,6 +335,11 @@ public class GourmetDetailItemLayout extends LinearLayout
         setProductListLayout(mLayoutInflater, this, mGourmetDetail.getProductList());
 
         mLastProductIndex = getChildCount() - 1;
+
+        if (mGourmetDetail.getProductList().size() == 0)
+        {
+            mFirstProductIndex = mLastProductIndex = -1;
+        }
 
         // 주소 및 맵
         View addressView = getAddressView(mLayoutInflater, mGourmetDetail, mEventListener);

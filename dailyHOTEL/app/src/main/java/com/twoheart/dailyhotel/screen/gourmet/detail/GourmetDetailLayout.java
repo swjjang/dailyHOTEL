@@ -227,7 +227,7 @@ public class GourmetDetailLayout extends PlaceDetailLayout
 
     public void scrollProduct()
     {
-        if (mScrollView == null || mGourmetDetailItemLayout == null)
+        if (mScrollView == null || mGourmetDetailItemLayout == null || mGourmetDetailItemLayout.getFirstProductIndex() < 0)
         {
             return;
         }
@@ -238,7 +238,7 @@ public class GourmetDetailLayout extends PlaceDetailLayout
 
     public boolean isOpenedProductMoreList()
     {
-        if(mGourmetDetailItemLayout == null)
+        if (mGourmetDetailItemLayout == null)
         {
             return false;
         }
@@ -248,7 +248,7 @@ public class GourmetDetailLayout extends PlaceDetailLayout
 
     public void openMoreProductList()
     {
-        if(mGourmetDetailItemLayout == null)
+        if (mGourmetDetailItemLayout == null)
         {
             return;
         }
@@ -258,7 +258,7 @@ public class GourmetDetailLayout extends PlaceDetailLayout
 
     public void closeMoreProductList()
     {
-        if(mGourmetDetailItemLayout == null)
+        if (mGourmetDetailItemLayout == null)
         {
             return;
         }
@@ -343,7 +343,7 @@ public class GourmetDetailLayout extends PlaceDetailLayout
                 int firstProductIndex = mGourmetDetailItemLayout.getFirstProductIndex();
                 int lastProductIndex = mGourmetDetailItemLayout.getLastProductIndex();
 
-                if (firstProductIndex >= lastProductIndex)
+                if (firstProductIndex < 0 || lastProductIndex < 0 || firstProductIndex > lastProductIndex)
                 {
                     return;
                 }
