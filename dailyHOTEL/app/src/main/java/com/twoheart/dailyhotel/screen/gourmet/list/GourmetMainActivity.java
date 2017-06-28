@@ -382,7 +382,7 @@ public class GourmetMainActivity extends PlaceMainActivity
             params.put(AnalyticsManager.KeyType.COUNTRY, area.getProvince().isOverseas ? AnalyticsManager.ValueType.OVERSEAS : AnalyticsManager.ValueType.DOMESTIC);
             params.put(AnalyticsManager.KeyType.PROVINCE, area.getProvince().name);
             params.put(AnalyticsManager.KeyType.DISTRICT, area.name);
-        } else if (province != null)
+        } else
         {
             params.put(AnalyticsManager.KeyType.COUNTRY, province.isOverseas ? AnalyticsManager.ValueType.OVERSEAS : AnalyticsManager.ValueType.DOMESTIC);
             params.put(AnalyticsManager.KeyType.PROVINCE, province.name);

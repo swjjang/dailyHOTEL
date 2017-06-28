@@ -646,13 +646,13 @@ public class StayCategoryCurationActivity extends PlaceCurationActivity implemen
             , AnalyticsManager.Action.STAY_PERSON, String.valueOf(stayCurationOption.person), null);
 
         AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.SORT_FLITER//
-            , AnalyticsManager.Action.STAY_BEDTYPE, stayCurationOption.toBedTypeString(stayCurationOption.GA_DELIMITER), null);
+            , AnalyticsManager.Action.STAY_BEDTYPE, stayCurationOption.toBedTypeString(StayCurationOption.GA_DELIMITER), null);
 
         AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.SORT_FLITER//
-            , AnalyticsManager.Action.STAY_AMENITIES, stayCurationOption.toAmenitiesString(stayCurationOption.GA_DELIMITER), null);
+            , AnalyticsManager.Action.STAY_AMENITIES, stayCurationOption.toAmenitiesString(StayCurationOption.GA_DELIMITER), null);
 
         AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.SORT_FLITER//
-            , AnalyticsManager.Action.STAY_ROOM_AMENITIES, stayCurationOption.toRoomAmenitiesString(stayCurationOption.GA_DELIMITER), null);
+            , AnalyticsManager.Action.STAY_ROOM_AMENITIES, stayCurationOption.toRoomAmenitiesString(StayCurationOption.GA_DELIMITER), null);
 
         if (Constants.DEBUG == true)
         {

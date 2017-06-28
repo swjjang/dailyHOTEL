@@ -192,7 +192,7 @@ public class Gourmet extends Place
             //            }
             truevr = false;
 
-            Sticker sticker = gourmetWishDetails.sticker;
+            Sticker sticker = gourmetWishDetails != null ? gourmetWishDetails.sticker : null;
             if (sticker != null)
             {
                 stickerIndex = sticker.index;

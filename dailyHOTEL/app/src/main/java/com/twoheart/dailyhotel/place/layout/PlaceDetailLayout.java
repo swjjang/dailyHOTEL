@@ -24,12 +24,12 @@ import android.view.Window;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.LinearInterpolator;
 import android.widget.RadioGroup;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
+import com.daily.base.util.VersionUtils;
 import com.daily.base.widget.DailyTextView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.PlaceDetail;
@@ -213,14 +213,17 @@ public abstract class PlaceDetailLayout extends BaseLayout
             setTransVisibility(View.VISIBLE);
             mTransTitleLayout.setVisibility(View.VISIBLE);
 
-            //            mTransSimpleDraweeView.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, getImageLayoutHeight(mContext)));
-            mTransSimpleDraweeView.setTransitionName(mContext.getString(R.string.transition_place_image));
+            if (VersionUtils.isOverAPI21() == true)
+            {
+                mTransSimpleDraweeView.setTransitionName(mContext.getString(R.string.transition_place_image));
+                mTransGradientBottomView.setTransitionName(mContext.getString(R.string.transition_gradient_bottom_view));
+                mTransGradientBottomView.setBackground(makeShaderFactory());
+            }
 
-            //            mTransGradientBottomView.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, getImageLayoutHeight(mContext)));
-            mTransGradientBottomView.setTransitionName(mContext.getString(R.string.transition_gradient_bottom_view));
-            mTransGradientBottomView.setBackground(makeShaderFactory());
-
-            mTransGradientTopView.setTransitionName(mContext.getString(R.string.transition_gradient_top_view));
+            if (VersionUtils.isOverAPI16() == true)
+            {
+                mTransGradientBottomView.setBackground(makeShaderFactory());
+            }
         } else
         {
             setTransVisibility(View.GONE);

@@ -283,8 +283,19 @@ public class RecentGourmetListFragment extends RecentPlacesListFragment
             }
 
             PlaceViewItem placeViewItem = mListLayout.removeItem(position);
+
+            if (placeViewItem == null)
+            {
+                return;
+            }
+
             Place place = placeViewItem.getItem();
             ExLog.d("isRemove : " + (place != null));
+
+            if (place == null)
+            {
+                return;
+            }
 
             RecentlyPlaceUtil.deleteRecentlyItemAsync(RecentlyPlaceUtil.ServiceType.GOURMET, place.index);
 

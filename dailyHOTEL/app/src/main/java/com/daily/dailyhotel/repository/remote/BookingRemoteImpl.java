@@ -38,7 +38,7 @@ public class BookingRemoteImpl implements BookingInterface
             @Override
             public List<Booking> apply(@io.reactivex.annotations.NonNull BaseListDto<BookingData> bookingDataBaseListDto) throws Exception
             {
-                List<Booking> bookingList = new ArrayList<Booking>();
+                List<Booking> bookingList = new ArrayList<>();
 
                 if (bookingDataBaseListDto != null)
                 {
@@ -70,7 +70,7 @@ public class BookingRemoteImpl implements BookingInterface
             @Override
             public List<Booking> apply(@io.reactivex.annotations.NonNull BaseListDto<BookingData> bookingDataBaseListDto) throws Exception
             {
-                List<Booking> bookingList = new ArrayList<Booking>();
+                List<Booking> bookingList = new ArrayList<>();
 
                 if (bookingDataBaseListDto != null)
                 {

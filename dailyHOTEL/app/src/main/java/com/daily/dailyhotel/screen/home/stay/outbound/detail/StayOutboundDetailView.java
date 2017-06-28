@@ -62,7 +62,7 @@ import com.twoheart.dailyhotel.databinding.LayoutStayOutboundDetail04DataBinding
 import com.twoheart.dailyhotel.databinding.LayoutStayOutboundDetail05DataBinding;
 import com.twoheart.dailyhotel.databinding.LayoutStayOutboundDetailAmenityDataBinding;
 import com.twoheart.dailyhotel.databinding.LayoutStayOutboundDetailAmenityMoreDataBinding;
-import com.twoheart.dailyhotel.databinding.LayoutStayOutboundDetailConcierageDataBinding;
+import com.twoheart.dailyhotel.databinding.LayoutStayOutboundDetailConciergeDataBinding;
 import com.twoheart.dailyhotel.databinding.LayoutStayOutboundDetailInformationDataBinding;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.DailyRemoteConfigPreference;
@@ -84,7 +84,7 @@ import io.reactivex.Observer;
 public class StayOutboundDetailView extends BaseDialogView<StayOutboundDetailView.OnEventListener, ActivityStayOutboundDetailDataBinding>//
     implements StayOutboundDetailViewInterface, View.OnClickListener, ViewPager.OnPageChangeListener, RadioGroup.OnCheckedChangeListener
 {
-    private static final int ANIMATION_DEALY = 250;
+    private static final int ANIMATION_DELAY = 250;
 
     private DailyToolbarLayout mDailyToolbarLayout;
 
@@ -316,7 +316,7 @@ public class StayOutboundDetailView extends BaseDialogView<StayOutboundDetailVie
                     mRoomAnimatorSet = new AnimatorSet();
                     mRoomAnimatorSet.playTogether(transObjectAnimator, alphaObjectAnimator);
                     mRoomAnimatorSet.setInterpolator(new AccelerateDecelerateInterpolator());
-                    mRoomAnimatorSet.setDuration(ANIMATION_DEALY);
+                    mRoomAnimatorSet.setDuration(ANIMATION_DELAY);
 
                     mRoomAnimatorSet.addListener(new Animator.AnimatorListener()
                     {
@@ -397,7 +397,7 @@ public class StayOutboundDetailView extends BaseDialogView<StayOutboundDetailVie
                     mRoomAnimatorSet = new AnimatorSet();
                     mRoomAnimatorSet.playTogether(transObjectAnimator, alphaObjectAnimator);
                     mRoomAnimatorSet.setInterpolator(new AccelerateDecelerateInterpolator());
-                    mRoomAnimatorSet.setDuration(ANIMATION_DEALY);
+                    mRoomAnimatorSet.setDuration(ANIMATION_DELAY);
 
                     mRoomAnimatorSet.addListener(new Animator.AnimatorListener()
                     {
@@ -1365,8 +1365,8 @@ public class StayOutboundDetailView extends BaseDialogView<StayOutboundDetailVie
             return;
         }
 
-        LayoutStayOutboundDetailConcierageDataBinding viewDataBinding = DataBindingUtil.inflate(layoutInflater//
-            , R.layout.layout_stay_outbound_detail_concierage_data, viewGroup, true);
+        LayoutStayOutboundDetailConciergeDataBinding viewDataBinding = DataBindingUtil.inflate(layoutInflater//
+            , R.layout.layout_stay_outbound_detail_concierge_data, viewGroup, true);
 
         String[] hour = DailyPreference.getInstance(getContext()).getOperationTime().split("\\,");
 

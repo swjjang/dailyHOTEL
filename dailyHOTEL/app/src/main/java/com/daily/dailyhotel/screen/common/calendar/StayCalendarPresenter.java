@@ -201,7 +201,7 @@ public class StayCalendarPresenter extends PlaceCalendarPresenter<StayCalendarAc
                 if (mIsSelected == true)
                 {
                     String checkInDateTime = mCheckInDateTime;
-                    String chekcOutDateTime = mCheckOutDateTime;
+                    String checkOutDateTime = mCheckOutDateTime;
 
                     mCheckInDateTime = mCheckOutDateTime = null;
 
@@ -209,7 +209,7 @@ public class StayCalendarPresenter extends PlaceCalendarPresenter<StayCalendarAc
 
                     if (mNightsOfMaxCount > 1)
                     {
-                        getViewInterface().clickDay(chekcOutDateTime);
+                        getViewInterface().clickDay(checkOutDateTime);
                     }
                 }
             }

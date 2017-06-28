@@ -266,7 +266,7 @@ public class AddProfileSocialActivity extends BaseActivity
         }
     }
 
-    private AddProfileSocialLayout.OnEventListener mOnEventListener = new AddProfileSocialLayout.OnEventListener()
+    final private AddProfileSocialLayout.OnEventListener mOnEventListener = new AddProfileSocialLayout.OnEventListener()
     {
         @Override
         public void showTermOfService()

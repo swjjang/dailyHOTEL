@@ -313,7 +313,7 @@ public class PlaceReviewLayout extends BaseLayout
 
     class ReviewListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     {
-        boolean mShowtProgressbarAnimation;
+        boolean mShowProgressbarAnimation;
         private Context mContext;
         private LayoutInflater mInflater;
         private List<PlaceReviewItem> mPlaceReviewItemList;
@@ -326,7 +326,7 @@ public class PlaceReviewLayout extends BaseLayout
             @Override
             public void handleMessage(Message msg)
             {
-                mShowtProgressbarAnimation = true;
+                mShowProgressbarAnimation = true;
 
                 startAnimation((ViewGroup) msg.obj);
             }
@@ -357,7 +357,7 @@ public class PlaceReviewLayout extends BaseLayout
             mPlaceType = placeType;
             addAll(placeReviewItemList);
 
-            mShowtProgressbarAnimation = false;
+            mShowProgressbarAnimation = false;
         }
 
         public void addAll(List<PlaceReviewItem> placeReviewItemList)
@@ -515,7 +515,7 @@ public class PlaceReviewLayout extends BaseLayout
 
                     int progress = (int) (10.0f * placeReviewScore.scoreAvg);
 
-                    if (mShowtProgressbarAnimation == true)
+                    if (mShowProgressbarAnimation == true)
                     {
                         progressBar.setProgress(progress);
                     } else
@@ -542,7 +542,7 @@ public class PlaceReviewLayout extends BaseLayout
 
             headerViewHolder.reviewCountTextView.setText(mContext.getString(R.string.label_detail_review_count, mTotalCount));
 
-            if (mShowtProgressbarAnimation == false)
+            if (mShowProgressbarAnimation == false)
             {
                 Message message = new Message();
                 message.arg1 = 0;

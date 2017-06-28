@@ -483,7 +483,7 @@ public class StayDetailItemLayout extends LinearLayout
         android.support.v7.widget.GridLayout gridLayout = (android.support.v7.widget.GridLayout) view.findViewById(R.id.amenitiesGridLayout);
         gridLayout.removeAllViews();
 
-        boolean isSingleLine = pictogramList == null || pictogramList.size() <= GRID_COLUMN_COUNT;
+        boolean isSingleLine = pictogramList.size() <= GRID_COLUMN_COUNT;
 
         for (StayDetail.Pictogram pictogram : pictogramList)
         {
@@ -731,7 +731,7 @@ public class StayDetailItemLayout extends LinearLayout
      *
      * @return
      */
-    private View getConciergeView(LayoutInflater layoutInflater, StayDetailLayout.OnEventListener onEventListene)
+    private View getConciergeView(LayoutInflater layoutInflater, StayDetailLayout.OnEventListener onEventListener)
     {
         View view = layoutInflater.inflate(R.layout.list_row_detail07, this, false);
         if (view == null)
@@ -760,9 +760,9 @@ public class StayDetailItemLayout extends LinearLayout
             @Override
             public void onClick(View v)
             {
-                if (onEventListene != null)
+                if (onEventListener != null)
                 {
-                    onEventListene.onConciergeClick();
+                    onEventListener.onConciergeClick();
                 }
             }
         });

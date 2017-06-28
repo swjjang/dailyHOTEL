@@ -301,12 +301,15 @@ public class SelectGourmetCouponDialogActivity extends BaseActivity
 
                     boolean hasDownloadCoupon = false;
 
-                    for (Coupon coupon : list)
+                    if (isEmpty == false)
                     {
-                        if (coupon.isDownloaded == false)
+                        for (Coupon coupon : list)
                         {
-                            hasDownloadCoupon = true;
-                            break;
+                            if (coupon.isDownloaded == false)
+                            {
+                                hasDownloadCoupon = true;
+                                break;
+                            }
                         }
                     }
 

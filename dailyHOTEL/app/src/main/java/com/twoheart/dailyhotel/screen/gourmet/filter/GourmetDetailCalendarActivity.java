@@ -52,13 +52,7 @@ public class GourmetDetailCalendarActivity extends GourmetCalendarActivity
     @Override
     protected void onConfirm(GourmetBookingDay gourmetBookingDay)
     {
-        if (gourmetBookingDay == null)
-        {
-            setSaleTicketResult(gourmetBookingDay, -1);
-            return;
-        }
-
-        if (mPlaceIndex == -1)
+        if (gourmetBookingDay == null || mPlaceIndex == -1)
         {
             setSaleTicketResult(gourmetBookingDay, -1);
             return;
