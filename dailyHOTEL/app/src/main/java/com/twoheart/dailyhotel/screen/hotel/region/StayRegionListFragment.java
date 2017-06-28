@@ -48,6 +48,6 @@ public class StayRegionListFragment extends PlaceRegionListFragment
     @Override
     protected String getAroundPlaceText()
     {
-        return mBaseActivity.getString(R.string.label_view_myaround_hotel);
+        return mBaseActivity.getString(R.string.label_region_around_stay);
     }
 }

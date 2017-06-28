@@ -351,7 +351,7 @@ public class StayRegionListActivity extends PlaceRegionListActivity
             startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_PERMISSION_MANAGER);
 
             AnalyticsManager.getInstance(StayRegionListActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_, //
-                AnalyticsManager.Action.HOTEL_LOCATIONS_CLICKED, getString(R.string.label_view_myaround_hotel), null);
+                AnalyticsManager.Action.HOTEL_LOCATIONS_CLICKED, getString(R.string.label_region_around_stay), null);
         }
     };
 
