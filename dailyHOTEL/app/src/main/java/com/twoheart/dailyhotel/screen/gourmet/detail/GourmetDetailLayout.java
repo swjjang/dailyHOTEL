@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ScreenUtils;
+import com.daily.base.util.VersionUtils;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.controller.BaseControllerListener;
 import com.facebook.drawee.interfaces.DraweeController;
@@ -78,7 +79,11 @@ public class GourmetDetailLayout extends PlaceDetailLayout
         if (DailyTextUtils.isTextEmpty(placeName) == false)
         {
             mTransPlaceNameTextView.setText(placeName);
-            mTransPlaceNameTextView.setTransitionName(mContext.getString(R.string.transition_place_name));
+
+            if (VersionUtils.isOverAPI21() == true)
+            {
+                mTransPlaceNameTextView.setTransitionName(mContext.getString(R.string.transition_place_name));
+            }
         }
     }
 

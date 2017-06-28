@@ -102,11 +102,11 @@ public class AppboyManager extends BaseAnalyticsManager
                 appboyProperties.addProperty(AnalyticsManager.KeyType.UNIT_PRICE, Integer.parseInt(params.get(AnalyticsManager.KeyType.UNIT_PRICE)));
                 appboyProperties.addProperty(AnalyticsManager.KeyType.CHECK_IN_DATE, new Date(Long.parseLong(params.get(AnalyticsManager.KeyType.CHECK_IN_DATE))));
 
-                mAppboy.logCustomEvent(EventName.STAY_DETAIL_CICKED, appboyProperties);
+                mAppboy.logCustomEvent(EventName.STAY_DETAIL_CLICKED, appboyProperties);
 
                 if (DEBUG == true)
                 {
-                    ExLog.d(TAG + " : " + EventName.STAY_DETAIL_CICKED + ", " + appboyProperties.forJsonPut().toString());
+                    ExLog.d(TAG + " : " + EventName.STAY_DETAIL_CLICKED + ", " + appboyProperties.forJsonPut().toString());
                 }
             } catch (NumberFormatException e)
             {
@@ -1087,7 +1087,7 @@ public class AppboyManager extends BaseAnalyticsManager
         public static final String CURRENT_APP_VERSION = "current_app_version";
         public static final String REGISTERED_CARD_INFO = "registered_card_info";
         public static final String STAY_SELECTED_DATE = "stay_selected_date";
-        public static final String STAY_DETAIL_CICKED = "stay_detail_clicked";
+        public static final String STAY_DETAIL_CLICKED = "stay_detail_clicked";
         public static final String STAY_BOOKING_INITIALISED = "stay_booking_initialised";
         public static final String STAY_PURCHASE_COMPLETED = "stay_purchase_completed";
 

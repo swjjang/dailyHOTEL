@@ -402,6 +402,8 @@ public class StayOutboundRefundPresenter extends BaseExceptionPresenter<StayOutb
 
                     }
                 });
+
+            return;
         }
 
         String message = baseException.getMessage();

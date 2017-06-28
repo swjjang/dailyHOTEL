@@ -99,13 +99,7 @@ public class StayDetailCalendarActivity extends StayCalendarActivity
     @Override
     protected void onConfirm(StayBookingDay stayBookingDay)
     {
-        if (stayBookingDay == null)
-        {
-            setSaleRoomResult(stayBookingDay, -1, null);
-            return;
-        }
-
-        if (mHotelIndex == -1)
+        if (stayBookingDay == null || mHotelIndex == -1)
         {
             setSaleRoomResult(stayBookingDay, -1, null);
             return;

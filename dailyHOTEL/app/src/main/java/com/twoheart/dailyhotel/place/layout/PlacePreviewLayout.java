@@ -273,19 +273,19 @@ public class PlacePreviewLayout extends BaseLayout implements View.OnClickListen
     protected void updateBottomLayout(boolean myWish)
     {
         // 하단 메뉴 이벤트
-        DailyTextView wishTextVieww = (DailyTextView) mBottomBarLayout.findViewById(R.id.wishTextView);
+        DailyTextView wishTextView = (DailyTextView) mBottomBarLayout.findViewById(R.id.wishTextView);
         View shareKakaoView = mBottomBarLayout.findViewById(R.id.shareKakaoView);
         View mapView = mBottomBarLayout.findViewById(R.id.mapView);
 
-        wishTextVieww.setOnClickListener(this);
+        wishTextView.setOnClickListener(this);
         if (myWish == true)
         {
-            wishTextVieww.setText(R.string.label_preview_remove_wish);
-            wishTextVieww.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_lp_01_wishlist_on, 0, 0);
+            wishTextView.setText(R.string.label_preview_remove_wish);
+            wishTextView.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_lp_01_wishlist_on, 0, 0);
         } else
         {
-            wishTextVieww.setText(R.string.label_preview_add_wish);
-            wishTextVieww.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_lp_01_wishlist_off, 0, 0);
+            wishTextView.setText(R.string.label_preview_add_wish);
+            wishTextView.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_lp_01_wishlist_off, 0, 0);
         }
 
         shareKakaoView.setOnClickListener(this);

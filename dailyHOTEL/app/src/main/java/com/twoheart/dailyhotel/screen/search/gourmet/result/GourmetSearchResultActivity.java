@@ -677,7 +677,7 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
                     } else if (mReceiveDataFlag == 1)
                     {
                         ArrayList<PlaceListFragment> placeListFragmentList = mPlaceSearchResultLayout.getPlaceListFragment();
-                        if (placeListFragmentList != null || placeListFragmentList.size() > 0)
+                        if (placeListFragmentList != null && placeListFragmentList.size() > 0)
                         {
                             GourmetBookingDay gourmetBookingDay = mGourmetSearchCuration.getGourmetBookingDay();
                             Map<String, String> params = new HashMap<>();

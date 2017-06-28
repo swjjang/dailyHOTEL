@@ -152,7 +152,7 @@ public class GourmetDetailListAdapter extends BaseAdapter
             if (mDetailViews[3] == null)
             {
                 mDetailViews[3] = layoutInflater.inflate(R.layout.list_row_detail_pictogram, parent, false);
-                getAmenitiesView(mDetailViews[3], mGourmetDetail);
+                getAmenitiesView(mDetailViews[3], pictogramList);
             }
 
             linearLayout.addView(mDetailViews[3]);
@@ -425,9 +425,9 @@ public class GourmetDetailListAdapter extends BaseAdapter
      * @param view
      * @return
      */
-    private View getAmenitiesView(View view, GourmetDetail gourmetDetail)
+    private View getAmenitiesView(View view, List<GourmetDetail.Pictogram> pictogramList)
     {
-        if (view == null || gourmetDetail == null)
+        if (view == null || pictogramList == null)
         {
             return view;
         }
@@ -435,9 +435,7 @@ public class GourmetDetailListAdapter extends BaseAdapter
         android.support.v7.widget.GridLayout gridLayout = (android.support.v7.widget.GridLayout) view.findViewById(R.id.amenitiesGridLayout);
         gridLayout.removeAllViews();
 
-        List<GourmetDetail.Pictogram> pictogramList = gourmetDetail.getPictogramList();
-
-        boolean isSingleLine = pictogramList == null || pictogramList.size() <= GRID_COLUMN_COUNT;
+        boolean isSingleLine = pictogramList.size() <= GRID_COLUMN_COUNT;
 
         for (GourmetDetail.Pictogram pictogram : pictogramList)
         {

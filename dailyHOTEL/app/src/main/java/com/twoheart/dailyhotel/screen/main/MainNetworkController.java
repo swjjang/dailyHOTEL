@@ -50,7 +50,7 @@ public class MainNetworkController extends BaseNetworkController
 
         void onHolidays(String startDay, String holidays);
 
-        void onHappyTalkCategory(String categorys);
+        void onHappyTalkCategory(String categories);
     }
 
     public MainNetworkController(Context context, String networkTag, OnNetworkControllerListener listener)

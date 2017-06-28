@@ -68,9 +68,9 @@ public class GourmetParams extends PlaceParams
             mCategoryList = toParamListByCategory(gourmetCurationOption.getFilterMap());
             mTimeList = toParamListByTime(gourmetCurationOption.flagTimeFilter);
             mLuxuryList = toParamListByAmenities(gourmetCurationOption.flagAmenitiesFilters);
+            mSort = gourmetCurationOption.getSortType();
         }
 
-        mSort = gourmetCurationOption.getSortType();
         setSortType(mSort);
 
         if (Constants.SortType.DISTANCE == mSort)

@@ -948,7 +948,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
 
     public void forceRefreshing()
     {
-        if (mHomeLayout == null && mHomeLayout.isRefreshing() == false && lockUiComponentAndIsLockUiComponent() == true)
+        if (mHomeLayout == null || mHomeLayout.isRefreshing() == false || lockUiComponentAndIsLockUiComponent() == true)
         {
             return;
         }
@@ -1395,12 +1395,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
                 return;
             }
 
-            HomePlace wishItem = null;
-
-            if (view != null)
-            {
-                wishItem = (HomePlace) view.getTag();
-            }
+            HomePlace wishItem = (HomePlace) view.getTag();
 
             if (wishItem == null)
             {
@@ -1425,12 +1420,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
                 return;
             }
 
-            HomePlace wishItem = null;
-
-            if (view != null)
-            {
-                wishItem = (HomePlace) view.getTag();
-            }
+            HomePlace wishItem = (HomePlace) view.getTag();
 
             if (wishItem == null)
             {
@@ -1491,12 +1481,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
                 return;
             }
 
-            HomePlace recentItem = null;
-
-            if (view != null)
-            {
-                recentItem = (HomePlace) view.getTag();
-            }
+            HomePlace recentItem = (HomePlace) view.getTag();
 
             if (recentItem == null)
             {
@@ -1528,12 +1513,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
                 return;
             }
 
-            HomePlace recentItem = null;
-
-            if (view != null)
-            {
-                recentItem = (HomePlace) view.getTag();
-            }
+            HomePlace recentItem = (HomePlace) view.getTag();
 
             if (recentItem == null)
             {

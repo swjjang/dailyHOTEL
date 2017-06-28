@@ -434,7 +434,7 @@ public class GourmetDetailItemLayout extends LinearLayout
         android.support.v7.widget.GridLayout gridLayout = (android.support.v7.widget.GridLayout) view.findViewById(R.id.amenitiesGridLayout);
         gridLayout.removeAllViews();
 
-        boolean isSingleLine = pictogramList == null || pictogramList.size() <= GRID_COLUMN_COUNT;
+        boolean isSingleLine = pictogramList.size() <= GRID_COLUMN_COUNT;
 
         for (GourmetDetail.Pictogram pictogram : pictogramList)
         {

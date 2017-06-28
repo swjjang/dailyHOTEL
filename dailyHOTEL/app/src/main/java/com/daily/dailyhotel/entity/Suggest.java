@@ -40,32 +40,32 @@ public class Suggest
 
         if (DailyTextUtils.isTextEmpty(name) == false)
         {
-            suggest.name = new String(name);
+            suggest.name = name;
         }
 
         if (DailyTextUtils.isTextEmpty(city) == false)
         {
-            suggest.city = new String(city);
+            suggest.city = city;
         }
 
         if (DailyTextUtils.isTextEmpty(country) == false)
         {
-            suggest.country = new String(country);
+            suggest.country = country;
         }
 
         if (DailyTextUtils.isTextEmpty(countryCode) == false)
         {
-            suggest.countryCode = new String(countryCode);
+            suggest.countryCode = countryCode;
         }
 
         if (DailyTextUtils.isTextEmpty(categoryKey) == false)
         {
-            suggest.categoryKey = new String(categoryKey);
+            suggest.categoryKey = categoryKey;
         }
 
         if (DailyTextUtils.isTextEmpty(display) == false)
         {
-            suggest.display = new String(display);
+            suggest.display = display;
         }
 
         suggest.latitude = latitude;

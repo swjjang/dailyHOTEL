@@ -154,7 +154,7 @@ public class StayDetailListAdapter extends BaseAdapter
             if (mDetailViews[3] == null)
             {
                 mDetailViews[3] = layoutInflater.inflate(R.layout.list_row_detail_pictogram, parent, false);
-                getAmenitiesView(mDetailViews[3], mStayDetail);
+                getAmenitiesView(mDetailViews[3], pictogramList);
             }
 
             linearLayout.addView(mDetailViews[3]);
@@ -477,9 +477,9 @@ public class StayDetailListAdapter extends BaseAdapter
      * @param view
      * @return
      */
-    private View getAmenitiesView(View view, StayDetail stayDetail)
+    private View getAmenitiesView(View view, List<StayDetail.Pictogram> pictogramList)
     {
-        if (view == null || stayDetail == null)
+        if (view == null || pictogramList == null)
         {
             return view;
         }
@@ -487,9 +487,7 @@ public class StayDetailListAdapter extends BaseAdapter
         android.support.v7.widget.GridLayout gridLayout = (android.support.v7.widget.GridLayout) view.findViewById(R.id.amenitiesGridLayout);
         gridLayout.removeAllViews();
 
-        List<StayDetail.Pictogram> pictogramList = stayDetail.getPictogramList();
-
-        boolean isSingleLine = pictogramList == null || pictogramList.size() <= GRID_COLUMN_COUNT;
+        boolean isSingleLine = pictogramList.size() <= GRID_COLUMN_COUNT;
 
         for (StayDetail.Pictogram pictogram : pictogramList)
         {

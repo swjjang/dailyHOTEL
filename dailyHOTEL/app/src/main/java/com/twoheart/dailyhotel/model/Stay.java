@@ -182,7 +182,7 @@ public class Stay extends Place
             districtName = stayWishItem.regionName;
             categoryCode = stayWishDetails != null ? stayWishDetails.category : "";
             satisfaction = stayWishItem.rating;
-            truevr = stayWishDetails.isTrueVR;
+            truevr = stayWishDetails != null ? stayWishDetails.isTrueVR : false;
 
             try
             {

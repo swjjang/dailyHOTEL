@@ -71,7 +71,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
     // showCallDialog 용 interface
     private interface OnOperatingTimeListener
     {
-        void onInValidOperatingTime(boolean isInVaildOperatingTime);
+        void onInValidOperatingTime(boolean isInValidOperatingTime);
     }
 
     Dialog mDialog;
