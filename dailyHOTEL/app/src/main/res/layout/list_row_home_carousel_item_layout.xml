@@ -38,6 +38,16 @@
                 fresco:actualImageScaleType="centerCrop"
                 fresco:overlayImage="@drawable/shape_home_viewpager_image_overlay"/>
 
+            <View
+                android:id="@+id/gradientTopView"
+                android:layout_width="match_parent"
+                android:layout_height="135dp"/>
+
+            <View
+                android:id="@+id/gradientBottomView"
+                android:layout_width="match_parent"
+                android:layout_height="135dp"/>
+
             <ImageView
                 android:id="@+id/soldoutView"
                 android:layout_width="match_parent"

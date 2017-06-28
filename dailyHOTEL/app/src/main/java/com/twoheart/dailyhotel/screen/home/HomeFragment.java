@@ -693,9 +693,11 @@ public class HomeFragment extends BaseMenuNavigationFragment
                         }
 
                         View simpleDraweeView = view.findViewById(R.id.contentImageView);
+                        View gradientTopView = view.findViewById(R.id.gradientTopView);
+                        View gradientBottomView = view.findViewById(R.id.gradientBottomView);
 
-                        ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(mBaseActivity,//
-                            android.support.v4.util.Pair.create(simpleDraweeView, getString(R.string.transition_place_image)));
+                        ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(mBaseActivity//
+                            , android.support.v4.util.Pair.create(simpleDraweeView, getString(R.string.transition_place_image)), android.support.v4.util.Pair.create(gradientTopView, getString(R.string.transition_gradient_top_view)), android.support.v4.util.Pair.create(gradientBottomView, getString(R.string.transition_gradient_bottom_view)));
 
                         mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL, options.toBundle());
                     } else
@@ -749,9 +751,11 @@ public class HomeFragment extends BaseMenuNavigationFragment
                         }
 
                         View simpleDraweeView = view.findViewById(R.id.contentImageView);
+                        View gradientTopView = view.findViewById(R.id.gradientTopView);
+                        View gradientBottomView = view.findViewById(R.id.gradientBottomView);
 
-                        ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(mBaseActivity,//
-                            android.support.v4.util.Pair.create(simpleDraweeView, getString(R.string.transition_place_image)));
+                        ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(mBaseActivity//
+                            , android.support.v4.util.Pair.create(simpleDraweeView, getString(R.string.transition_place_image)), android.support.v4.util.Pair.create(gradientTopView, getString(R.string.transition_gradient_top_view)), android.support.v4.util.Pair.create(gradientBottomView, getString(R.string.transition_gradient_bottom_view)));
 
                         mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMET_DETAIL, options.toBundle());
                     } else
@@ -780,13 +784,6 @@ public class HomeFragment extends BaseMenuNavigationFragment
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     private void startStayOutboundDetail(View view, HomePlace place, TodayDateTime todayDateTime)
     {
-        View simpleDraweeView = view.findViewById(R.id.contentImageView);
-        View nameTextView = view.findViewById(R.id.contentTextView);
-
-        android.support.v4.util.Pair[] pairs = new Pair[2];
-        pairs[0] = android.support.v4.util.Pair.create(simpleDraweeView, getString(R.string.transition_place_image));
-        pairs[1] = android.support.v4.util.Pair.create(nameTextView, getString(R.string.transition_place_name));
-
         if (place == null)
         {
             return;
@@ -804,7 +801,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
             ExLog.e(e.toString());
         }
 
-        if (Util.isUsedMultiTransition() == true && pairs != null)
+        if (Util.isUsedMultiTransition() == true)
         {
             getActivity().setExitSharedElementCallback(new SharedElementCallback()
             {
@@ -823,6 +820,15 @@ public class HomeFragment extends BaseMenuNavigationFragment
                     }
                 }
             });
+
+            View simpleDraweeView = view.findViewById(R.id.contentImageView);
+            View gradientTopView = view.findViewById(R.id.gradientTopView);
+            View gradientBottomView = view.findViewById(R.id.gradientBottomView);
+
+            android.support.v4.util.Pair[] pairs = new Pair[3];
+            pairs[0] = android.support.v4.util.Pair.create(simpleDraweeView, getString(R.string.transition_place_image));
+            pairs[1] = android.support.v4.util.Pair.create(gradientTopView, getString(R.string.transition_gradient_top_view));
+            pairs[2] = android.support.v4.util.Pair.create(gradientBottomView, getString(R.string.transition_gradient_bottom_view));
 
             ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(), pairs);
 
