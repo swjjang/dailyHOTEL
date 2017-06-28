@@ -58,7 +58,7 @@ import io.reactivex.schedulers.Schedulers;
 
 public class RecentStayListFragment extends RecentPlacesListFragment
 {
-    private static final int REQUEST_CODE_DETAIL = 10000;
+    static final int REQUEST_CODE_DETAIL = 10000;
 
     private StayBookDateTime mStayBookDateTime;
 

@@ -251,33 +251,6 @@ public class StayOutboundFilterPresenter extends BaseExceptionPresenter<StayOutb
 
         mPrevSortType = mStayOutboundFilters.sortType;
         mStayOutboundFilters.sortType = sortType;
-
-        //        if (sortType == StayOutboundFilters.SortType.DISTANCE)
-        //        {
-        //            screenLock(true);
-        //
-        //            addCompositeDisposable(searchMyLocation().subscribe(new Consumer<Location>()
-        //            {
-        //                @Override
-        //                public void accept(@io.reactivex.annotations.NonNull Location location) throws Exception
-        //                {
-        //                    mStayOutboundFilters.sortType = StayOutboundFilters.SortType.DISTANCE;
-        //                }
-        //            }, new Consumer<Throwable>()
-        //            {
-        //                @Override
-        //                public void accept(@io.reactivex.annotations.NonNull Throwable throwable) throws Exception
-        //                {
-        //                    if (throwable instanceof PermissionException)
-        //                    {
-        //
-        //                    } else
-        //                    {
-        //                        onReverseSort();
-        //                    }
-        //                }
-        //            }));
-        //        }
     }
 
     @Override
