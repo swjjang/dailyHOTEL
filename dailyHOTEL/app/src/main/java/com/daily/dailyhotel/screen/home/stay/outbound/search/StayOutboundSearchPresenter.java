@@ -55,6 +55,8 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
     public StayOutboundSearchPresenter(@NonNull StayOutboundSearchActivity activity)
     {
         super(activity);
+
+        DailyPreference.getInstance(getActivity()).setShowStayOutboundSearchCalendar(true);
     }
 
     @NonNull
