@@ -743,6 +743,12 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
     @Override
     public void onMyLocationClick()
     {
+        if (lock() == true)
+        {
+            return;
+        }
+
+        screenLock(true);
         Observable<Long> locationAnimationObservable = null;
 
         if (mViewState == ViewState.MAP)
@@ -760,12 +766,14 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
                 public void accept(@io.reactivex.annotations.NonNull Location location) throws Exception
                 {
                     getViewInterface().setMyLocation(location);
+                    unLockAll();
                 }
             }, new Consumer<Throwable>()
             {
                 @Override
                 public void accept(@io.reactivex.annotations.NonNull Throwable throwable) throws Exception
                 {
+                    unLockAll();
                 }
             }));
         }
