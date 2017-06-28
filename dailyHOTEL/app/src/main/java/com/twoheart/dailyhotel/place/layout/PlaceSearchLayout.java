@@ -24,6 +24,7 @@ import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ScreenUtils;
 import com.daily.base.widget.DailyScrollView;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.model.Keyword;
 import com.twoheart.dailyhotel.place.base.BaseLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
 import com.twoheart.dailyhotel.util.DailyPreference;
