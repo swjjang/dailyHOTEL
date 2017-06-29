@@ -32,6 +32,7 @@ import com.daily.dailyhotel.entity.StayOutboundFilters;
 import com.daily.dailyhotel.entity.StayOutbounds;
 import com.daily.dailyhotel.entity.Suggest;
 import com.daily.dailyhotel.parcel.SuggestParcel;
+import com.daily.dailyhotel.parcel.analytics.StayOutboundDetailAnalyticsParam;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
 import com.daily.dailyhotel.repository.remote.StayOutboundRemoteImpl;
 import com.daily.dailyhotel.screen.common.calendar.StayCalendarActivity;
@@ -100,6 +101,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
 
     public interface StayOutboundListAnalyticsInterface extends BaseAnalyticsInterface
     {
+        void onScreen(Activity activity);
     }
 
     public StayOutboundListPresenter(@NonNull StayOutboundListActivity activity)
@@ -196,6 +198,8 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
     public void onStart()
     {
         super.onStart();
+
+        mAnalytics.onScreen(getActivity());
 
         if (isRefresh() == true)
         {
@@ -569,7 +573,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
     @Override
     public void onStayClick(android.support.v4.util.Pair[] pair, StayOutbound stayOutbound)
     {
-        if (stayOutbound == null || lock() == true)
+        if (stayOutbound == null || mStayOutboundList == null || lock() == true)
         {
             return;
         }
@@ -593,6 +597,32 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
             {
                 imageUrl = stayOutbound.getImageMap().smallUrl;
             }
+        }
+
+        StayOutboundDetailAnalyticsParam analyticsParam = new StayOutboundDetailAnalyticsParam();
+
+        try
+        {
+            analyticsParam.index = stayOutbound.index;
+            analyticsParam.benefit = stayOutbound.promo;
+            analyticsParam.grade = getString(R.string.label_stay_outbound_filter_x_star_rate, (int) stayOutbound.rating);
+            analyticsParam.rankingPosition = 0;
+
+            for (StayOutbound searchStayOutbound : mStayOutboundList)
+            {
+                analyticsParam.rankingPosition++;
+
+                if (searchStayOutbound.index == stayOutbound.index)
+                {
+                    break;
+                }
+            }
+
+            analyticsParam.rating = Float.toString(stayOutbound.tripAdvisorRating);
+            analyticsParam.listCount = mStayOutboundList.size();
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
         }
 
         if (Util.isUsedMultiTransition() == true && pair != null)
@@ -621,7 +651,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
                 , stayOutbound.name, imageUrl, stayOutbound.total//
                 , mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
                 , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
-                , mPeople.numberOfAdults, mPeople.getChildAgeList(), true, mViewState == ViewState.MAP)//
+                , mPeople.numberOfAdults, mPeople.getChildAgeList(), true, mViewState == ViewState.MAP, analyticsParam)//
                 , StayOutboundListActivity.REQUEST_CODE_DETAIL, options.toBundle());
         } else
         {
@@ -629,7 +659,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
                 , stayOutbound.name, imageUrl, stayOutbound.total//
                 , mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
                 , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
-                , mPeople.numberOfAdults, mPeople.getChildAgeList(), false, mViewState == ViewState.MAP)//
+                , mPeople.numberOfAdults, mPeople.getChildAgeList(), false, mViewState == ViewState.MAP, analyticsParam)//
                 , StayOutboundListActivity.REQUEST_CODE_DETAIL);
         }
     }

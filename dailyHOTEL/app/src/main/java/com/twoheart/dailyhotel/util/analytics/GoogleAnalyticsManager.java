@@ -349,8 +349,21 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
             {
                 ExLog.d(TAG + "recordScreen : " + screenName + " | " + screenViewBuilder.build().toString());
             }
-        }
+        } else if (AnalyticsManager.Screen.SEARCHSCREENVIEW_OUTBOUND.equalsIgnoreCase(screenName) == true)
+        {
+            HitBuilders.ScreenViewBuilder screenViewBuilder = new HitBuilders.ScreenViewBuilder();
 
+            screenViewBuilder.setCustomDimension(6, params.get(AnalyticsManager.KeyType.PLACE_TYPE));
+            screenViewBuilder.setCustomDimension(7, params.get(AnalyticsManager.KeyType.COUNTRY));
+
+            mGoogleAnalyticsTracker.setScreenName(screenName);
+            mGoogleAnalyticsTracker.send(screenViewBuilder.build());
+
+            if (DEBUG == true)
+            {
+                ExLog.d(TAG + "recordScreen : " + screenName + " | " + screenViewBuilder.build().toString());
+            }
+        }
     }
 
     @Override

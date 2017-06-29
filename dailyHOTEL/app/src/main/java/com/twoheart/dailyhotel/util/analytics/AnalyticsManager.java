@@ -693,6 +693,11 @@ public class AnalyticsManager
         public static final String STAY_LIST_SHORTCUT_PENSION = "stay_list_shortcut_pension";
         public static final String STAY_LIST_SHORTCUT_RESORT = "stay_list_shortcut_resort";
         public static final String STAY_LIST_SHORTCUT_NEARBY = "stay_list_shortcut_nearby";
+
+        // STAY OUTBOUND
+        public static final String SEARCHSCREENVIEW_OUTBOUND = "SearchScreenView_outbound";
+        public static final String DAILYHOTEL_HOTELLIST_OUTBOUND = "DailyHotel_HotelList_outbound";
+        public static final String DAILYHOTEL_HOTELDETAILVIEW_OUTBOUND = "DailyHotel_HotelDetailView_outbound";
     }
 
     public static class Action

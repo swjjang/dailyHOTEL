@@ -23,6 +23,7 @@ import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
 import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.entity.StayBookDateTime;
+import com.daily.dailyhotel.parcel.analytics.StayOutboundDetailAnalyticsParam;
 import com.daily.dailyhotel.repository.local.ConfigLocalImpl;
 import com.daily.dailyhotel.repository.remote.FacebookRemoteImpl;
 import com.daily.dailyhotel.repository.remote.KakaoRemoteImpl;
@@ -802,6 +803,21 @@ public class HomeFragment extends BaseMenuNavigationFragment
             ExLog.e(e.toString());
         }
 
+        StayOutboundDetailAnalyticsParam analyticsParam = new StayOutboundDetailAnalyticsParam();
+
+        try
+        {
+            analyticsParam.index = place.index;
+            analyticsParam.benefit = false;
+            analyticsParam.grade = null;
+            analyticsParam.rankingPosition = -1;
+            analyticsParam.rating = null;
+            analyticsParam.listCount = -1;
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+        }
+
         if (Util.isUsedMultiTransition() == true)
         {
             getActivity().setExitSharedElementCallback(new SharedElementCallback()
@@ -846,7 +862,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
                 , place.title, imageUrl, 0//
                 , stayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
                 , stayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
-                , 2, null, true, false)//
+                , 2, null, true, false, analyticsParam)//
                 , Constants.CODE_REQUEST_ACTIVITY_STAY_OB_DETAIL, options.toBundle());
         } else
         {
@@ -854,7 +870,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
                 , place.title, imageUrl, 0//
                 , stayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
                 , stayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
-                , 2, null, false, false)//
+                , 2, null, false, false, analyticsParam)//
                 , Constants.CODE_REQUEST_ACTIVITY_STAY_OB_DETAIL);
 
             mBaseActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.hold);

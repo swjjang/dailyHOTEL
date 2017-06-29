@@ -1,5 +1,7 @@
 package com.daily.dailyhotel.entity;
 
+import java.util.List;
+
 public class StayOutboundBookingDetail
 {
     public int stayIndex;
@@ -23,7 +25,7 @@ public class StayOutboundBookingDetail
     private People mPeople;
 
     public RefundType refundStatus;
-    public String refundPolicy;
+    private List<String> mRefundPolicyList;
 
     public String checkInDate;
     public String checkInTime;
@@ -78,5 +80,15 @@ public class StayOutboundBookingDetail
     public void setPeople(People people)
     {
         mPeople = people;
+    }
+
+    public List<String> getRefundPolicyList()
+    {
+        return mRefundPolicyList;
+    }
+
+    public void setRefundPolicyList(List<String> refundPolicyList)
+    {
+        mRefundPolicyList = refundPolicyList;
     }
 }
