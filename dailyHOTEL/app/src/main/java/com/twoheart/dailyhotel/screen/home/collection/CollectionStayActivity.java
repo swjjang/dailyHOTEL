@@ -262,8 +262,6 @@ public class CollectionStayActivity extends CollectionBaseActivity
                 analyticsParam.setProvince(null);
                 analyticsParam.setTotalListCount(count);
 
-                //                Intent intent = StayDetailActivity.newInstance(CollectionStayActivity.this, (StayBookingDay) mPlaceBookingDay, recommendationStay, count, true);
-
                 Intent intent = StayDetailActivity.newInstance(CollectionStayActivity.this //
                     , (StayBookingDay) mPlaceBookingDay, recommendationStay.index, recommendationStay.name, recommendationStay.imageUrl //
                     , analyticsParam, true);
@@ -295,8 +293,6 @@ public class CollectionStayActivity extends CollectionBaseActivity
                 analyticsParam.setParam(CollectionStayActivity.this, recommendationStay);
                 analyticsParam.setProvince(null);
                 analyticsParam.setTotalListCount(count);
-
-                //                Intent intent = StayDetailActivity.newInstance(CollectionStayActivity.this, (StayBookingDay) mPlaceBookingDay, recommendationStay, count, false);
 
                 Intent intent = StayDetailActivity.newInstance(CollectionStayActivity.this //
                     , (StayBookingDay) mPlaceBookingDay, recommendationStay.index, recommendationStay.name, recommendationStay.imageUrl //

@@ -793,9 +793,6 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
                 analyticsParam.setProvince(null);
                 analyticsParam.setTotalListCount(listCount);
 
-//                Intent intent = GourmetDetailActivity.newInstance(GourmetSearchResultActivity.this,//
-//                    mGourmetSearchCuration.getGourmetBookingDay(), gourmet, analyticsParam, true);
-
                 Intent intent = GourmetDetailActivity.newInstance(GourmetSearchResultActivity.this //
                     , mGourmetSearchCuration.getGourmetBookingDay(), gourmet.index, gourmet.name //
                     , gourmet.imageUrl, gourmet.category, gourmet.isSoldOut, analyticsParam, true);
@@ -825,9 +822,6 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
                 analyticsParam.setParam(GourmetSearchResultActivity.this, gourmet);
                 analyticsParam.setProvince(null);
                 analyticsParam.setTotalListCount(listCount);
-
-//                Intent intent = GourmetDetailActivity.newInstance(GourmetSearchResultActivity.this,//
-//                    mGourmetSearchCuration.getGourmetBookingDay(), gourmet, analyticsParam, false);
 
                 Intent intent = GourmetDetailActivity.newInstance(GourmetSearchResultActivity.this //
                     , mGourmetSearchCuration.getGourmetBookingDay(), gourmet.index, gourmet.name //

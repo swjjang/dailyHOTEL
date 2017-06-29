@@ -266,27 +266,9 @@ public class GourmetProductDetailActivity extends BaseActivity
             params.put(AnalyticsManager.KeyType.NAME, gourmetDetailParams.name);
             params.put(AnalyticsManager.KeyType.CATEGORY, gourmetDetailParams.category);
 
-            boolean isEmptyProvinceName = DailyTextUtils.isTextEmpty(mAnalyticsParam.provinceName);
-            boolean isEmptyAreaName = DailyTextUtils.isTextEmpty(mAnalyticsParam.areaName);
-
-            String areaName = AnalyticsManager.ValueType.EMPTY;
-            String addressAreaName = AnalyticsManager.ValueType.EMPTY;
-            if (isEmptyProvinceName == false)
-            {
-                if (isEmptyAreaName == true)
-                {
-                    areaName = AnalyticsManager.ValueType.ALL_LOCALE_KR;
-                } else
-                {
-                    areaName = mAnalyticsParam.areaName;
-                }
-
-                addressAreaName = mAnalyticsParam.addressAreaName;
-            }
-
-            params.put(AnalyticsManager.KeyType.PROVINCE, isEmptyProvinceName == false ? mAnalyticsParam.provinceName : AnalyticsManager.ValueType.EMPTY);
-            params.put(AnalyticsManager.KeyType.DISTRICT, areaName);
-            params.put(AnalyticsManager.KeyType.AREA, addressAreaName);
+            params.put(AnalyticsManager.KeyType.PROVINCE, mAnalyticsParam.getProvinceName());
+            params.put(AnalyticsManager.KeyType.DISTRICT, mAnalyticsParam.getDistrictName());
+            params.put(AnalyticsManager.KeyType.AREA, mAnalyticsParam.getAddressAreaName());
 
             GourmetProduct gourmetProduct = gourmetDetail.getProduct(productIndex);
 

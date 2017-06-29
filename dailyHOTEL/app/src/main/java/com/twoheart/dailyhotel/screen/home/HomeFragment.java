@@ -692,8 +692,6 @@ public class HomeFragment extends BaseMenuNavigationFragment
                         analyticsParam.setProvince(null);
                         analyticsParam.setTotalListCount(-1);
 
-//                        Intent intent = StayDetailActivity.newInstance(mBaseActivity, stayBookingDay, place, true);
-
                         Intent intent = StayDetailActivity.newInstance(mBaseActivity //
                             , stayBookingDay, place.index, place.title, place.imageUrl //
                             , analyticsParam, true);
@@ -718,8 +716,6 @@ public class HomeFragment extends BaseMenuNavigationFragment
                         analyticsParam.setParam(mBaseActivity, place);
                         analyticsParam.setProvince(null);
                         analyticsParam.setTotalListCount(-1);
-
-                        //                        Intent intent = StayDetailActivity.newInstance(mBaseActivity, stayBookingDay, place, false);
 
                         Intent intent = StayDetailActivity.newInstance(mBaseActivity //
                             , stayBookingDay, place.index, place.title, place.imageUrl //
@@ -772,8 +768,6 @@ public class HomeFragment extends BaseMenuNavigationFragment
                             , gourmetBookingDay, place.index, place.title //
                             , place.imageUrl, place.details.category, place.isSoldOut, analyticsParam, true);
 
-//                        Intent intent = GourmetDetailActivity.newInstance(mBaseActivity, gourmetBookingDay, place, analyticsParam, true);
-
                         if (intent == null)
                         {
                             Util.restartApp(mBaseActivity);
@@ -798,8 +792,6 @@ public class HomeFragment extends BaseMenuNavigationFragment
                         Intent intent = GourmetDetailActivity.newInstance(mBaseActivity //
                             , gourmetBookingDay, place.index, place.title //
                             , place.imageUrl, place.details.category, place.isSoldOut, analyticsParam, false);
-
-//                        Intent intent = GourmetDetailActivity.newInstance(mBaseActivity, gourmetBookingDay, place, analyticsParam, false);
 
                         if (intent == null)
                         {

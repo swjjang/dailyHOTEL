@@ -1164,9 +1164,6 @@ public class StayCategoryNearByActivity extends BaseActivity
                 analyticsParam.setProvince(null);
                 analyticsParam.setTotalListCount(listCount);
 
-//                Intent intent = StayDetailActivity.newInstance(StayCategoryNearByActivity.this, //
-//                    mStayCategoryNearByCuration.getStayBookingDay(), stay, analyticsParam, true);
-
                 Intent intent = StayDetailActivity.newInstance(StayCategoryNearByActivity.this //
                     , mStayCategoryNearByCuration.getStayBookingDay(), stay.index, stay.name, stay.imageUrl //
                     , analyticsParam, true);
@@ -1198,9 +1195,6 @@ public class StayCategoryNearByActivity extends BaseActivity
                 analyticsParam.setParam(StayCategoryNearByActivity.this, stay);
                 analyticsParam.setProvince(null);
                 analyticsParam.setTotalListCount(listCount);
-
-//                Intent intent = StayDetailActivity.newInstance(StayCategoryNearByActivity.this, //
-//                    mStayCategoryNearByCuration.getStayBookingDay(), stay, analyticsParam, false);
 
                 Intent intent = StayDetailActivity.newInstance(StayCategoryNearByActivity.this //
                     , mStayCategoryNearByCuration.getStayBookingDay(), stay.index, stay.name, stay.imageUrl //

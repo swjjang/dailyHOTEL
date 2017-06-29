@@ -104,7 +104,6 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         Intent intent = new Intent(context, GourmetDetailActivity.class);
 
         intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, gourmetBookingDay);
-        //        intent.putExtra(NAME_INTENT_EXTRA_DATA_PROVINCE, province);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEIDX, index);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACENAME, name);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_IMAGEURL, imageUrl);
@@ -174,11 +173,6 @@ public class GourmetDetailActivity extends PlaceDetailActivity
 
         mPlaceDetail = createPlaceDetail(intent);
 
-        // 최근 본 업장 저장
-        //        RecentPlaces recentPlaces = new RecentPlaces(this);
-        //        recentPlaces.add(PlaceType.FNB, mPlaceDetail.index);
-        //        recentPlaces.savePreference();
-
         String placeName = null;
         if (intent.hasExtra(NAME_INTENT_EXTRA_DATA_PLACENAME) == true)
         {
@@ -190,6 +184,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
             mDefaultImageUrl = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_IMAGEURL);
         }
 
+        // 최근 본 업장 저장
         RecentlyPlaceUtil.addRecentlyItemAsync(RecentlyPlaceUtil.ServiceType.GOURMET //
             , mPlaceDetail.index, placeName, null, mDefaultImageUrl, true);
 
@@ -542,7 +537,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
             HashMap<String, String> params = new HashMap<>();
             params.put(AnalyticsManager.KeyType.SERVICE, AnalyticsManager.ValueType.GOURMET);
             params.put(AnalyticsManager.KeyType.COUNTRY, AnalyticsManager.ValueType.DOMESTIC);
-            params.put(AnalyticsManager.KeyType.PROVINCE, mAnalyticsParam.provinceName);
+            params.put(AnalyticsManager.KeyType.PROVINCE, mAnalyticsParam.getProvinceName());
 
             if (DailyHotel.isLogin() == true)
             {
@@ -1103,33 +1098,15 @@ public class GourmetDetailActivity extends PlaceDetailActivity
             params.put(AnalyticsManager.KeyType.PLACE_INDEX, Integer.toString(gourmetDetail.index));
             params.put(AnalyticsManager.KeyType.DATE, gourmetBookingDay.getVisitDay("yyyy-MM-dd"));
 
-            boolean isEmptyProvinceName = DailyTextUtils.isTextEmpty(mAnalyticsParam.provinceName);
-            boolean isEmptyAreaName = DailyTextUtils.isTextEmpty(mAnalyticsParam.areaName);
-
-            String areaName = AnalyticsManager.ValueType.EMPTY;
-            String addressAreaName = AnalyticsManager.ValueType.EMPTY;
-            if (isEmptyProvinceName == false)
-            {
-                if (isEmptyAreaName == true)
-                {
-                    areaName = AnalyticsManager.ValueType.ALL_LOCALE_KR;
-                } else
-                {
-                    areaName = mAnalyticsParam.areaName;
-                }
-
-                addressAreaName = mAnalyticsParam.addressAreaName;
-            }
-
-            params.put(AnalyticsManager.KeyType.PROVINCE, isEmptyProvinceName == false ? mAnalyticsParam.provinceName : AnalyticsManager.ValueType.EMPTY);
-            params.put(AnalyticsManager.KeyType.DISTRICT, areaName);
-            params.put(AnalyticsManager.KeyType.AREA, addressAreaName);
+            params.put(AnalyticsManager.KeyType.PROVINCE, mAnalyticsParam.getProvinceName());
+            params.put(AnalyticsManager.KeyType.DISTRICT, mAnalyticsParam.getDistrictName());
+            params.put(AnalyticsManager.KeyType.AREA, mAnalyticsParam.getAddressAreaName());
 
             params.put(AnalyticsManager.KeyType.UNIT_PRICE, Integer.toString(mViewPrice));
             params.put(AnalyticsManager.KeyType.VISIT_DATE, gourmetBookingDay.getVisitDay("yyyyMMdd"));
 
-            String listIndex = mAnalyticsParam.listPosition == -1 //
-                ? AnalyticsManager.ValueType.EMPTY : Integer.toString(mAnalyticsParam.listPosition);
+            String listIndex = mAnalyticsParam.entryPosition == -1 //
+                ? AnalyticsManager.ValueType.EMPTY : Integer.toString(mAnalyticsParam.entryPosition);
 
             params.put(AnalyticsManager.KeyType.LIST_INDEX, listIndex);
 
@@ -1171,27 +1148,9 @@ public class GourmetDetailActivity extends PlaceDetailActivity
             params.put(AnalyticsManager.KeyType.NAME, gourmetDetailParams.name);
             params.put(AnalyticsManager.KeyType.CATEGORY, gourmetDetailParams.category);
 
-            boolean isEmptyProvinceName = DailyTextUtils.isTextEmpty(mAnalyticsParam.provinceName);
-            boolean isEmptyAreaName = DailyTextUtils.isTextEmpty(mAnalyticsParam.areaName);
-
-            String areaName = AnalyticsManager.ValueType.EMPTY;
-            String addressAreaName = AnalyticsManager.ValueType.EMPTY;
-            if (isEmptyProvinceName == false)
-            {
-                if (isEmptyAreaName == true)
-                {
-                    areaName = AnalyticsManager.ValueType.ALL_LOCALE_KR;
-                } else
-                {
-                    areaName = mAnalyticsParam.areaName;
-                }
-
-                addressAreaName = mAnalyticsParam.addressAreaName;
-            }
-
-            params.put(AnalyticsManager.KeyType.PROVINCE, isEmptyProvinceName == false ? mAnalyticsParam.provinceName : AnalyticsManager.ValueType.EMPTY);
-            params.put(AnalyticsManager.KeyType.DISTRICT, areaName);
-            params.put(AnalyticsManager.KeyType.AREA, addressAreaName);
+            params.put(AnalyticsManager.KeyType.PROVINCE, mAnalyticsParam.getProvinceName());
+            params.put(AnalyticsManager.KeyType.DISTRICT, mAnalyticsParam.getDistrictName());
+            params.put(AnalyticsManager.KeyType.AREA, mAnalyticsParam.getAddressAreaName());
 
             params.put(AnalyticsManager.KeyType.PRICE_OF_SELECTED_TICKET, Integer.toString(gourmetProduct.discountPrice));
             params.put(AnalyticsManager.KeyType.VISIT_DATE, gourmetBookingDay.getVisitDay("yyyyMMdd"));
@@ -1667,34 +1626,16 @@ public class GourmetDetailActivity extends PlaceDetailActivity
                     params.put(AnalyticsManager.KeyType.COUNTRY, AnalyticsManager.ValueType.DOMESTIC);
                     params.put(AnalyticsManager.KeyType.CATEGORY, gourmetDetailParams.category);
 
-                    boolean isEmptyProvinceName = DailyTextUtils.isTextEmpty(mAnalyticsParam.provinceName);
-                    boolean isEmptyAreaName = DailyTextUtils.isTextEmpty(mAnalyticsParam.areaName);
-
-                    String areaName = AnalyticsManager.ValueType.EMPTY;
-                    String addressAreaName = AnalyticsManager.ValueType.EMPTY;
-                    if (isEmptyProvinceName == false)
-                    {
-                        if (isEmptyAreaName == true)
-                        {
-                            areaName = AnalyticsManager.ValueType.ALL_LOCALE_KR;
-                        } else
-                        {
-                            areaName = mAnalyticsParam.areaName;
-                        }
-
-                        addressAreaName = mAnalyticsParam.addressAreaName;
-                    }
-
-                    params.put(AnalyticsManager.KeyType.PROVINCE, isEmptyProvinceName == false ? mAnalyticsParam.provinceName : AnalyticsManager.ValueType.EMPTY);
-                    params.put(AnalyticsManager.KeyType.DISTRICT, areaName);
-                    params.put(AnalyticsManager.KeyType.AREA, addressAreaName);
+                    params.put(AnalyticsManager.KeyType.PROVINCE, mAnalyticsParam.getProvinceName());
+                    params.put(AnalyticsManager.KeyType.DISTRICT, mAnalyticsParam.getDistrictName());
+                    params.put(AnalyticsManager.KeyType.AREA, mAnalyticsParam.getAddressAreaName());
 
                     params.put(AnalyticsManager.KeyType.GRADE, gourmetDetailParams.getGrade().name());
                     params.put(AnalyticsManager.KeyType.PLACE_INDEX, Integer.toString(mPlaceDetail.index));
                     params.put(AnalyticsManager.KeyType.RATING, Integer.toString(gourmetDetailParams.ratingValue));
 
-                    String listIndex = mAnalyticsParam.listPosition == -1 //
-                        ? AnalyticsManager.ValueType.EMPTY : Integer.toString(mAnalyticsParam.listPosition);
+                    String listIndex = mAnalyticsParam.entryPosition == -1 //
+                        ? AnalyticsManager.ValueType.EMPTY : Integer.toString(mAnalyticsParam.entryPosition);
 
                     params.put(AnalyticsManager.KeyType.LIST_INDEX, listIndex);
                     params.put(AnalyticsManager.KeyType.DAILYCHOICE, mAnalyticsParam.isDailyChoice ? "y" : "n");
@@ -1759,34 +1700,16 @@ public class GourmetDetailActivity extends PlaceDetailActivity
                 params.put(AnalyticsManager.KeyType.COUNTRY, AnalyticsManager.ValueType.DOMESTIC);
                 params.put(AnalyticsManager.KeyType.CATEGORY, gourmetDetailParams.category);
 
-                boolean isEmptyProvinceName = DailyTextUtils.isTextEmpty(mAnalyticsParam.provinceName);
-                boolean isEmptyAreaName = DailyTextUtils.isTextEmpty(mAnalyticsParam.areaName);
-
-                String areaName = AnalyticsManager.ValueType.EMPTY;
-                String addressAreaName = AnalyticsManager.ValueType.EMPTY;
-                if (isEmptyProvinceName == false)
-                {
-                    if (isEmptyAreaName == true)
-                    {
-                        areaName = AnalyticsManager.ValueType.ALL_LOCALE_KR;
-                    } else
-                    {
-                        areaName = mAnalyticsParam.areaName;
-                    }
-
-                    addressAreaName = mAnalyticsParam.addressAreaName;
-                }
-
-                params.put(AnalyticsManager.KeyType.PROVINCE, isEmptyProvinceName == false ? mAnalyticsParam.provinceName : AnalyticsManager.ValueType.EMPTY);
-                params.put(AnalyticsManager.KeyType.DISTRICT, areaName);
-                params.put(AnalyticsManager.KeyType.AREA, addressAreaName);
+                params.put(AnalyticsManager.KeyType.PROVINCE, mAnalyticsParam.getProvinceName());
+                params.put(AnalyticsManager.KeyType.DISTRICT, mAnalyticsParam.getDistrictName());
+                params.put(AnalyticsManager.KeyType.AREA, mAnalyticsParam.getAddressAreaName());
 
                 params.put(AnalyticsManager.KeyType.GRADE, gourmetDetailParams.getGrade().name());
                 params.put(AnalyticsManager.KeyType.PLACE_INDEX, Integer.toString(mPlaceDetail.index));
                 params.put(AnalyticsManager.KeyType.RATING, Integer.toString(gourmetDetailParams.ratingValue));
 
-                String listIndex = mAnalyticsParam.listPosition == -1 //
-                    ? AnalyticsManager.ValueType.EMPTY : Integer.toString(mAnalyticsParam.listPosition);
+                String listIndex = mAnalyticsParam.entryPosition == -1 //
+                    ? AnalyticsManager.ValueType.EMPTY : Integer.toString(mAnalyticsParam.entryPosition);
 
                 params.put(AnalyticsManager.KeyType.LIST_INDEX, listIndex);
                 params.put(AnalyticsManager.KeyType.DAILYCHOICE, mAnalyticsParam.isDailyChoice ? "y" : "n");

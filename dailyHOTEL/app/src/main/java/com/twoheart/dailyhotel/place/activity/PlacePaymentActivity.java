@@ -22,7 +22,6 @@ import android.widget.TextView;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
-import com.daily.dailyhotel.repository.local.model.AnalyticsParam;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Coupon;
@@ -70,8 +69,6 @@ public abstract class PlacePaymentActivity extends BaseActivity
     private ProgressDialog mProgressDialog;
 
     protected boolean mDontReload;
-
-    protected AnalyticsParam mAnalyticsParam;
 
     protected abstract void requestUserInformationForPayment();
 

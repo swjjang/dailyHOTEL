@@ -963,9 +963,6 @@ public class GourmetMainActivity extends PlaceMainActivity
                         analyticsParam.setProvince(province);
                         analyticsParam.setTotalListCount(listCount);
 
-                        //                        Intent intent = GourmetDetailActivity.newInstance(GourmetMainActivity.this, //
-                        //                            mGourmetCuration.getGourmetBookingDay(), gourmet, analyticsParam, true);
-
                         Intent intent = GourmetDetailActivity.newInstance(GourmetMainActivity.this //
                             , mGourmetCuration.getGourmetBookingDay(), gourmet.index, gourmet.name //
                             , gourmet.imageUrl, gourmet.category, gourmet.isSoldOut, analyticsParam, true);
@@ -995,9 +992,6 @@ public class GourmetMainActivity extends PlaceMainActivity
                         analyticsParam.setParam(GourmetMainActivity.this, gourmet);
                         analyticsParam.setProvince(province);
                         analyticsParam.setTotalListCount(listCount);
-
-//                        Intent intent = GourmetDetailActivity.newInstance(GourmetMainActivity.this, //
-//                            mGourmetCuration.getGourmetBookingDay(), gourmet, analyticsParam, false);
 
                         Intent intent = GourmetDetailActivity.newInstance(GourmetMainActivity.this //
                             , mGourmetCuration.getGourmetBookingDay(), gourmet.index, gourmet.name //

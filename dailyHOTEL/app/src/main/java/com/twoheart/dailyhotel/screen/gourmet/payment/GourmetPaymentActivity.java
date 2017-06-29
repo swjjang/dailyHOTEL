@@ -74,13 +74,11 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
     boolean mIsChangedPrice; // 가격이 변경된 경우.
     String mPlaceImageUrl;
     private boolean mIsUnderPrice;
-//    private Province mProvince;
-//    private String mArea; // Analytics용 소지역
     Dialog mTimeDialog;
 
-    public static Intent newInstance(Context context, String placeName, GourmetProduct gourmetProduct, GourmetBookingDay gourmetBookingDay//
-        , String imageUrl, String category, int gourmetIndex, boolean isDBenefit//
-        , int ratingValue, AnalyticsParam analyticsParam)
+    public static Intent newInstance(Context context, String placeName, GourmetProduct gourmetProduct //
+        , GourmetBookingDay gourmetBookingDay, String imageUrl, String category, int gourmetIndex //
+        , boolean isDBenefit, int ratingValue, AnalyticsParam analyticsParam)
     {
         Intent intent = new Intent(context, GourmetPaymentActivity.class);
 
@@ -91,11 +89,6 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
         intent.putExtra(NAME_INTENT_EXTRA_DATA_GOURMETIDX, gourmetIndex);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_CATEGORY, category);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_DBENEFIT, isDBenefit);
-//        intent.putExtra(NAME_INTENT_EXTRA_DATA_PROVINCE, province);
-//        intent.putExtra(NAME_INTENT_EXTRA_DATA_AREA, area);
-//        intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_SHOW_ORIGINALPRICE, isShowOriginalPrice);
-//        intent.putExtra(NAME_INTENT_EXTRA_DATA_ENTRY_INDEX, entryPosition);
-//        intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_DAILYCHOICE, isDailyChoice);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_RATING_VALUE, ratingValue);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_ANALYTICS_PARAM, analyticsParam);
 
@@ -133,9 +126,6 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
     {
         outState.putParcelable(STATE_PAYMENT_INFORMATION, mPaymentInformation);
         outState.putParcelable(STATE_PLACE_BOOKINGDAY, mPlaceBookingDay);
-//        outState.putParcelable(STATE_PLACE_PROVINCE, mProvince);
-//        outState.putString(STATE_PLACE_AREA, mArea);
-        outState.putParcelable(STATE_ANALYTICS_PARAM, mAnalyticsParam);
 
         super.onSaveInstanceState(outState);
     }
@@ -147,9 +137,6 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
 
         mPaymentInformation = savedInstanceState.getParcelable(STATE_PAYMENT_INFORMATION);
         mPlaceBookingDay = savedInstanceState.getParcelable(STATE_PLACE_BOOKINGDAY);
-//        mProvince = savedInstanceState.getParcelable(STATE_PLACE_PROVINCE);
-//        mArea = savedInstanceState.getString(STATE_PLACE_AREA);
-        mAnalyticsParam = savedInstanceState.getParcelable(STATE_ANALYTICS_PARAM);
     }
 
     private boolean initIntent(Intent intent)
@@ -164,13 +151,14 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
         gourmetPaymentInformation.placeIndex = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_GOURMETIDX, -1);
         gourmetPaymentInformation.category = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_CATEGORY);
         gourmetPaymentInformation.isDBenefit = intent.getBooleanExtra(NAME_INTENT_EXTRA_DATA_DBENEFIT, false);
-//        mProvince = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PROVINCE);
-//        mArea = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_AREA);
         gourmetPaymentInformation.ratingValue = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_RATING_VALUE, -1);
-//        gourmetPaymentInformation.isShowOriginalPrice = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_IS_SHOW_ORIGINALPRICE);
-//        gourmetPaymentInformation.entryPosition = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_ENTRY_INDEX, -1);
-//        gourmetPaymentInformation.isDailyChoice = intent.getBooleanExtra(NAME_INTENT_EXTRA_DATA_IS_DAILYCHOICE, false);
-        mAnalyticsParam = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_ANALYTICS_PARAM);
+
+        AnalyticsParam analyticsParam = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_ANALYTICS_PARAM);
+        gourmetPaymentInformation.showOriginalPriceYn = analyticsParam.showOriginalPriceYn;
+        gourmetPaymentInformation.entryPosition = analyticsParam.entryPosition;
+        gourmetPaymentInformation.isDailyChoice = analyticsParam.isDailyChoice;
+        gourmetPaymentInformation.setProvince(analyticsParam.getProvince());
+        gourmetPaymentInformation.addressAreaName = analyticsParam.getAddressAreaName();
 
         return gourmetPaymentInformation.getTicket() != null;
     }
@@ -1079,31 +1067,13 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
             params.put(AnalyticsManager.KeyType.DBENEFIT, gourmetPaymentInformation.isDBenefit ? "yes" : "no");
             params.put(AnalyticsManager.KeyType.REGISTERED_SIMPLE_CARD, mSelectedCreditCard != null ? "y" : "n");
             params.put(AnalyticsManager.KeyType.RATING, Integer.toString(gourmetPaymentInformation.ratingValue));
-            params.put(AnalyticsManager.KeyType.IS_SHOW_ORIGINAL_PRICE, mAnalyticsParam.showOriginalPriceYn);
-            params.put(AnalyticsManager.KeyType.LIST_INDEX, Integer.toString(mAnalyticsParam.listPosition));
-            params.put(AnalyticsManager.KeyType.DAILYCHOICE, mAnalyticsParam.isDailyChoice ? "y" : "n");
+            params.put(AnalyticsManager.KeyType.IS_SHOW_ORIGINAL_PRICE, gourmetPaymentInformation.showOriginalPriceYn);
+            params.put(AnalyticsManager.KeyType.LIST_INDEX, Integer.toString(gourmetPaymentInformation.entryPosition));
+            params.put(AnalyticsManager.KeyType.DAILYCHOICE, gourmetPaymentInformation.isDailyChoice ? "y" : "n");
 
-            boolean isEmptyProvinceName = DailyTextUtils.isTextEmpty(mAnalyticsParam.provinceName);
-            boolean isEmptyAreaName = DailyTextUtils.isTextEmpty(mAnalyticsParam.areaName);
-
-            String areaName = AnalyticsManager.ValueType.EMPTY;
-            String addressAreaName = AnalyticsManager.ValueType.EMPTY;
-            if (isEmptyProvinceName == false)
-            {
-                if (isEmptyAreaName == true)
-                {
-                    areaName = AnalyticsManager.ValueType.ALL_LOCALE_KR;
-                } else
-                {
-                    areaName = mAnalyticsParam.areaName;
-                }
-
-                addressAreaName = mAnalyticsParam.addressAreaName;
-            }
-
-            params.put(AnalyticsManager.KeyType.PROVINCE, isEmptyProvinceName == false ? mAnalyticsParam.provinceName : AnalyticsManager.ValueType.EMPTY);
-            params.put(AnalyticsManager.KeyType.DISTRICT, areaName);
-            params.put(AnalyticsManager.KeyType.AREA, addressAreaName);
+            params.put(AnalyticsManager.KeyType.PROVINCE, gourmetPaymentInformation.getAnalyticsProvinceName());
+            params.put(AnalyticsManager.KeyType.DISTRICT, gourmetPaymentInformation.getAnalyticsDistrictName());
+            params.put(AnalyticsManager.KeyType.AREA, gourmetPaymentInformation.getAnalyticsAddressAreaName());
 
             AnalyticsManager.getInstance(GourmetPaymentActivity.this).recordScreen(GourmetPaymentActivity.this, AnalyticsManager.Screen.DAILYGOURMET_PAYMENT, null, params);
         } catch (Exception e)
@@ -1142,9 +1112,9 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
 
             params.put(AnalyticsManager.KeyType.REGISTERED_SIMPLE_CARD, mSelectedCreditCard != null ? "y" : "n");
             params.put(AnalyticsManager.KeyType.RATING, Integer.toString(gourmetPaymentInformation.ratingValue));
-            params.put(AnalyticsManager.KeyType.IS_SHOW_ORIGINAL_PRICE, mAnalyticsParam.showOriginalPriceYn);
-            params.put(AnalyticsManager.KeyType.LIST_INDEX, Integer.toString(mAnalyticsParam.listPosition));
-            params.put(AnalyticsManager.KeyType.DAILYCHOICE, mAnalyticsParam.isDailyChoice ? "y" : "n");
+            params.put(AnalyticsManager.KeyType.IS_SHOW_ORIGINAL_PRICE, gourmetPaymentInformation.showOriginalPriceYn);
+            params.put(AnalyticsManager.KeyType.LIST_INDEX, Integer.toString(gourmetPaymentInformation.entryPosition));
+            params.put(AnalyticsManager.KeyType.DAILYCHOICE, gourmetPaymentInformation.isDailyChoice ? "y" : "n");
             params.put(AnalyticsManager.KeyType.REGISTERED_SIMPLE_CARD, mSelectedCreditCard != null ? "y" : "n");
 
             switch (gourmetPaymentInformation.discountType)
@@ -1186,27 +1156,9 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
                 }
             }
 
-            boolean isEmptyProvinceName = DailyTextUtils.isTextEmpty(mAnalyticsParam.provinceName);
-            boolean isEmptyAreaName = DailyTextUtils.isTextEmpty(mAnalyticsParam.areaName);
-
-            String areaName = AnalyticsManager.ValueType.EMPTY;
-            String addressAreaName = AnalyticsManager.ValueType.EMPTY;
-            if (isEmptyProvinceName == false)
-            {
-                if (isEmptyAreaName == true)
-                {
-                    areaName = AnalyticsManager.ValueType.ALL_LOCALE_KR;
-                } else
-                {
-                    areaName = mAnalyticsParam.areaName;
-                }
-
-                addressAreaName = mAnalyticsParam.addressAreaName;
-            }
-
-            params.put(AnalyticsManager.KeyType.PROVINCE, isEmptyProvinceName == false ? mAnalyticsParam.provinceName : AnalyticsManager.ValueType.EMPTY);
-            params.put(AnalyticsManager.KeyType.DISTRICT, areaName);
-            params.put(AnalyticsManager.KeyType.AREA, addressAreaName);
+            params.put(AnalyticsManager.KeyType.PROVINCE, gourmetPaymentInformation.getAnalyticsProvinceName());
+            params.put(AnalyticsManager.KeyType.DISTRICT, gourmetPaymentInformation.getAnalyticsDistrictName());
+            params.put(AnalyticsManager.KeyType.AREA, gourmetPaymentInformation.getAnalyticsAddressAreaName());
 
             params.put(AnalyticsManager.KeyType.VISIT_DATE, gourmetBookingDay.getVisitDay("yyyyMMdd"));
         } catch (Exception e)

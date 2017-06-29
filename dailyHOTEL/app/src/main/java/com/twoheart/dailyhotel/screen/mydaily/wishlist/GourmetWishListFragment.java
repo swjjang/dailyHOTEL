@@ -307,9 +307,6 @@ public class GourmetWishListFragment extends PlaceWishListFragment
                 analyticsParam.setProvince(null);
                 analyticsParam.setTotalListCount(-1);
 
-//                Intent intent = GourmetDetailActivity.newInstance(mBaseActivity, //
-//                    (GourmetBookingDay) mPlaceBookingDay, gourmet, analyticsParam, true);
-
                 Intent intent = GourmetDetailActivity.newInstance(mBaseActivity //
                     , (GourmetBookingDay) mPlaceBookingDay, gourmet.index, gourmet.name //
                     , gourmet.imageUrl, gourmet.category, gourmet.isSoldOut, analyticsParam, true);
@@ -332,9 +329,6 @@ public class GourmetWishListFragment extends PlaceWishListFragment
                 analyticsParam.setParam(mBaseActivity, gourmet);
                 analyticsParam.setProvince(null);
                 analyticsParam.setTotalListCount(-1);
-
-//                Intent intent = GourmetDetailActivity.newInstance(mBaseActivity, //
-//                    (GourmetBookingDay) mPlaceBookingDay, gourmet, analyticsParam, false);
 
                 Intent intent = GourmetDetailActivity.newInstance(mBaseActivity //
                     , (GourmetBookingDay) mPlaceBookingDay, gourmet.index, gourmet.name //

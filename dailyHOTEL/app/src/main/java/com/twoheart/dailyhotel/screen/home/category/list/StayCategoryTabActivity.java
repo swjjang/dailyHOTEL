@@ -1103,9 +1103,6 @@ public class StayCategoryTabActivity extends PlaceMainActivity
                         analyticsParam.setProvince(province);
                         analyticsParam.setTotalListCount(listCount);
 
-//                        Intent intent = StayDetailActivity.newInstance(StayCategoryTabActivity.this, //
-//                            mStayCategoryCuration.getStayBookingDay(), stay, analyticsParam, true);
-
                         Intent intent = StayDetailActivity.newInstance(StayCategoryTabActivity.this //
                             , mStayCategoryCuration.getStayBookingDay(), stay.index, stay.name, stay.imageUrl //
                             , analyticsParam, true);
@@ -1137,9 +1134,6 @@ public class StayCategoryTabActivity extends PlaceMainActivity
                         analyticsParam.setParam(StayCategoryTabActivity.this, stay);
                         analyticsParam.setProvince(province);
                         analyticsParam.setTotalListCount(listCount);
-
-//                        Intent intent = StayDetailActivity.newInstance(StayCategoryTabActivity.this, //
-//                            mStayCategoryCuration.getStayBookingDay(), stay, analyticsParam, false);
 
                         Intent intent = StayDetailActivity.newInstance(StayCategoryTabActivity.this //
                             , mStayCategoryCuration.getStayBookingDay(), stay.index, stay.name, stay.imageUrl //

@@ -312,8 +312,6 @@ public class StayWishListFragment extends PlaceWishListFragment
                 analyticsParam.setProvince(null);
                 analyticsParam.setTotalListCount(-1);
 
-//                Intent intent = StayDetailActivity.newInstance(mBaseActivity, (StayBookingDay) mPlaceBookingDay, stay, analyticsParam, true);
-
                 Intent intent = StayDetailActivity.newInstance(mBaseActivity //
                     , (StayBookingDay) mPlaceBookingDay, stay.index, stay.name, stay.imageUrl //
                     , analyticsParam, true);
@@ -339,11 +337,9 @@ public class StayWishListFragment extends PlaceWishListFragment
                 analyticsParam.setProvince(null);
                 analyticsParam.setTotalListCount(-1);
 
-//                Intent intent = StayDetailActivity.newInstance(mBaseActivity, (StayBookingDay) mPlaceBookingDay, stay, analyticsParam, false);
-
                 Intent intent = StayDetailActivity.newInstance(mBaseActivity //
                     , (StayBookingDay) mPlaceBookingDay, stay.index, stay.name, stay.imageUrl //
-                    , analyticsParam, true);
+                    , analyticsParam, false);
 
                 mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL);
 

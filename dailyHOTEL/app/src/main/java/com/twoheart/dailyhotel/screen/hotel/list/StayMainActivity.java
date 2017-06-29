@@ -1044,9 +1044,6 @@ public class StayMainActivity extends PlaceMainActivity
                         analyticsParam.setProvince(province);
                         analyticsParam.setTotalListCount(listCount);
 
-//                        Intent intent = StayDetailActivity.newInstance(StayMainActivity.this, //
-//                            mStayCuration.getStayBookingDay(), stay, analyticsParam, true);
-
                         Intent intent = StayDetailActivity.newInstance(StayMainActivity.this //
                             , mStayCuration.getStayBookingDay(), stay.index, stay.name, stay.imageUrl //
                             , analyticsParam, true);
@@ -1079,12 +1076,9 @@ public class StayMainActivity extends PlaceMainActivity
                         analyticsParam.setProvince(province);
                         analyticsParam.setTotalListCount(listCount);
 
-//                        Intent intent = StayDetailActivity.newInstance(StayMainActivity.this, //
-//                            mStayCuration.getStayBookingDay(), stay, analyticsParam, false);
-
                         Intent intent = StayDetailActivity.newInstance(StayMainActivity.this //
                             , mStayCuration.getStayBookingDay(), stay.index, stay.name, stay.imageUrl //
-                            , analyticsParam, true);
+                            , analyticsParam, false);
 
                         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL);
 

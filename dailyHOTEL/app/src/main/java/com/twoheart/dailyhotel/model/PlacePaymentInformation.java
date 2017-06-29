@@ -3,6 +3,9 @@ package com.twoheart.dailyhotel.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.daily.base.util.DailyTextUtils;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
+
 public abstract class PlacePaymentInformation implements Parcelable
 {
     public int placeIndex; // 호텔 호텔인덱스 고메 고메 인덱스
@@ -11,9 +14,12 @@ public abstract class PlacePaymentInformation implements Parcelable
     public PaymentType paymentType; //
     public boolean isDBenefit;
     public int ratingValue;
-//    public String isShowOriginalPrice;
-//    public int entryPosition;
-//    public boolean isDailyChoice;
+    public String showOriginalPriceYn;
+    public int entryPosition;
+    public boolean isDailyChoice;
+
+    private Province province;
+    public String addressAreaName;
 
     private Customer mCustomer;
     private Guest mGuest;
@@ -40,6 +46,12 @@ public abstract class PlacePaymentInformation implements Parcelable
         dest.writeString(discountType.name());
         dest.writeString(paymentType.name());
         dest.writeInt(isDBenefit ? 1 : 0);
+        dest.writeInt(ratingValue);
+        dest.writeString(showOriginalPriceYn);
+        dest.writeInt(entryPosition);
+        dest.writeInt(isDailyChoice ? 1 : 0);
+        dest.writeParcelable(province, flags);
+        dest.writeString(addressAreaName);
         dest.writeParcelable(mCustomer, flags);
         dest.writeParcelable(mGuest, flags);
         dest.writeParcelable(mCoupon, flags);
@@ -53,6 +65,12 @@ public abstract class PlacePaymentInformation implements Parcelable
         discountType = DiscountType.valueOf(in.readString());
         paymentType = PaymentType.valueOf(in.readString());
         isDBenefit = in.readInt() == 1;
+        ratingValue = in.readInt();
+        showOriginalPriceYn = in.readString();
+        entryPosition = in.readInt();
+        isDailyChoice = in.readInt() == 1;
+        province = in.readParcelable(Province.class.getClassLoader());
+        addressAreaName = in.readString();
         mCustomer = in.readParcelable(Customer.class.getClassLoader());
         mGuest = in.readParcelable(Guest.class.getClassLoader());
         mCoupon = in.readParcelable(Coupon.class.getClassLoader());
@@ -87,6 +105,65 @@ public abstract class PlacePaymentInformation implements Parcelable
     public void setGuest(Guest guest)
     {
         mGuest = guest;
+    }
+
+    public void setProvince(Province province)
+    {
+        if (province == null)
+        {
+            this.province = null;
+            return;
+        }
+
+        this.province = province;
+    }
+
+    public Province getProvince()
+    {
+        return province;
+    }
+
+    public String getAnalyticsProvinceName()
+    {
+        if (this.province == null)
+        {
+            return AnalyticsManager.ValueType.EMPTY;
+        }
+
+        if (this.province instanceof Area)
+        {
+            Area area = (Area) this.province;
+            return area.getProvince().name;
+        }
+
+        return this.province.name;
+    }
+
+    public String getAnalyticsDistrictName()
+    {
+        if (this.province == null)
+        {
+            return AnalyticsManager.ValueType.EMPTY;
+        }
+
+        if (this.province instanceof Area)
+        {
+            Area area = (Area) this.province;
+            String provinceName = area.getProvince().name;
+            return DailyTextUtils.isTextEmpty(provinceName) == false ? area.name : AnalyticsManager.ValueType.EMPTY;
+        }
+
+        return AnalyticsManager.ValueType.ALL_LOCALE_KR;
+    }
+
+    public String getAnalyticsAddressAreaName()
+    {
+        if (this.province == null)
+        {
+            return AnalyticsManager.ValueType.EMPTY;
+        }
+
+        return addressAreaName;
     }
 
     @Override

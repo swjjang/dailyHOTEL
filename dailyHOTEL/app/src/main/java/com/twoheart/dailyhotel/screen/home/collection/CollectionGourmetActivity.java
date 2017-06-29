@@ -277,9 +277,6 @@ public class CollectionGourmetActivity extends CollectionBaseActivity
                     , (GourmetBookingDay) mPlaceBookingDay, recommendationGourmet.index, recommendationGourmet.name //
                     , recommendationGourmet.imageUrl, recommendationGourmet.category, recommendationGourmet.isSoldOut, analyticsParam, true);
 
-                //                Intent intent = GourmetDetailActivity.newInstance(CollectionGourmetActivity.this //
-                //                    , (GourmetBookingDay) mPlaceBookingDay, recommendationGourmet, analyticsParam, true);
-
                 View simpleDraweeView = view.findViewById(R.id.imageView);
                 View nameTextView = view.findViewById(R.id.nameTextView);
                 View gradientTopView = view.findViewById(R.id.gradientTopView);
@@ -309,9 +306,6 @@ public class CollectionGourmetActivity extends CollectionBaseActivity
                 Intent intent = GourmetDetailActivity.newInstance(CollectionGourmetActivity.this //
                     , (GourmetBookingDay) mPlaceBookingDay, recommendationGourmet.index, recommendationGourmet.name //
                     , recommendationGourmet.imageUrl, recommendationGourmet.category, recommendationGourmet.isSoldOut, analyticsParam, false);
-
-                //                Intent intent = GourmetDetailActivity.newInstance(CollectionGourmetActivity.this //
-                //                    , (GourmetBookingDay) mPlaceBookingDay, recommendationGourmet, analyticsParam, false);
 
                 startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMET_DETAIL);
 
