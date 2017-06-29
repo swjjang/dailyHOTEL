@@ -575,6 +575,10 @@ public class StayOutboundBookingDetailView extends BaseDialogView<StayOutboundBo
             setRefundLayoutVisible(false);
         } else
         {
+            setRefundLayoutVisible(true);
+
+            mBookingDetail03DataBinding.defaultRefundPolicyLayout.removeAllViews();
+
             for (String refundPolicy : refundPolicyList)
             {
                 if (DailyTextUtils.isTextEmpty(refundPolicy) == true)
@@ -587,8 +591,6 @@ public class StayOutboundBookingDetailView extends BaseDialogView<StayOutboundBo
 
                 detailInformationDataBinding.textView.setText(Html.fromHtml(refundPolicy));
             }
-
-            setRefundLayoutVisible(true);
 
             switch (stayOutboundBookingDetail.refundStatus)
             {

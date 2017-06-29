@@ -2,6 +2,8 @@ package com.daily.dailyhotel.screen.home.stay.outbound.list;
 
 import android.app.Activity;
 
+import com.daily.dailyhotel.entity.StayOutbound;
+import com.daily.dailyhotel.parcel.analytics.StayOutboundDetailAnalyticsParam;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import java.util.HashMap;
@@ -12,11 +14,30 @@ public class StayOutboundListAnalyticsImpl implements StayOutboundListPresenter.
     @Override
     public void onScreen(Activity activity)
     {
-        Map<String, String> params = new HashMap<>();
+        if (activity == null)
+        {
+            return;
+        }
 
-        params.put(AnalyticsManager.KeyType.PLACE_TYPE, "stay");
-        params.put(AnalyticsManager.KeyType.COUNTRY, "overseas");
+        AnalyticsManager.getInstance(activity).recordScreen(activity, AnalyticsManager.Screen.DAILYHOTEL_HOTELLIST_OUTBOUND, null);
+    }
 
-        AnalyticsManager.getInstance(activity).recordScreen(activity, AnalyticsManager.Screen.DAILYHOTEL_HOTELLIST_OUTBOUND, null, params);
+    @Override
+    public StayOutboundDetailAnalyticsParam getDetailAnalyticsParam(StayOutbound stayOutbound, String grade, int rankingPosition, int listSize)
+    {
+        StayOutboundDetailAnalyticsParam analyticsParam = new StayOutboundDetailAnalyticsParam();
+
+        if (stayOutbound != null)
+        {
+            analyticsParam.index = stayOutbound.index;
+            analyticsParam.benefit = false;
+            analyticsParam.rating = Float.toString(stayOutbound.tripAdvisorRating);
+        }
+
+        analyticsParam.grade = grade;
+        analyticsParam.rankingPosition = rankingPosition;
+        analyticsParam.listSize = listSize;
+
+        return analyticsParam;
     }
 }

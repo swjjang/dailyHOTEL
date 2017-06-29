@@ -12,6 +12,11 @@ public class StayOutboundSearchAnalyticsImpl implements StayOutboundSearchPresen
     @Override
     public void onScreen(Activity activity)
     {
+        if (activity == null)
+        {
+            return;
+        }
+
         Map<String, String> params = new HashMap<>();
 
         params.put(AnalyticsManager.KeyType.PLACE_TYPE, "stay");

@@ -32,6 +32,7 @@ import com.daily.dailyhotel.entity.People;
 import com.daily.dailyhotel.entity.StayOutboundPayment;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ActivityStayOutboundPaymentDataBinding;
+import com.twoheart.dailyhotel.databinding.LayoutStayOutboundDetailInformationDataBinding;
 import com.twoheart.dailyhotel.databinding.LayoutStayOutboundPaymentBookingDataBinding;
 import com.twoheart.dailyhotel.databinding.LayoutStayOutboundPaymentButtonDataBinding;
 import com.twoheart.dailyhotel.databinding.LayoutStayOutboundPaymentDiscountDataBinding;
@@ -43,6 +44,7 @@ import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.DailySignatureView;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
+import java.util.List;
 import java.util.Locale;
 
 public class StayOutboundPaymentView extends BaseDialogView<StayOutboundPaymentView.OnEventListener, ActivityStayOutboundPaymentDataBinding>//
@@ -266,20 +268,33 @@ public class StayOutboundPaymentView extends BaseDialogView<StayOutboundPaymentV
     }
 
     @Override
-    public void setNonRefundableDescription(String nonRefundableDescription)
+    public void setRefundPolicyList(List<String> refundPolicyList)
     {
         if (getViewDataBinding() == null || mRefundDataBinding == null)
         {
             return;
         }
 
-        if (DailyTextUtils.isTextEmpty(nonRefundableDescription) == true)
+        if (refundPolicyList == null || refundPolicyList.size() == 0)
         {
             mRefundDataBinding.getRoot().setVisibility(View.GONE);
         } else
         {
             mRefundDataBinding.getRoot().setVisibility(View.VISIBLE);
-            mRefundDataBinding.refundPolicyTextView.setText(Html.fromHtml(nonRefundableDescription));
+            mRefundDataBinding.refundPolicyListLayout.removeAllViews();
+
+            for (String refundPolicy : refundPolicyList)
+            {
+                if (DailyTextUtils.isTextEmpty(refundPolicy) == true)
+                {
+                    continue;
+                }
+
+                LayoutStayOutboundDetailInformationDataBinding detailInformationDataBinding = DataBindingUtil.inflate(LayoutInflater.from(getContext())//
+                    , R.layout.layout_stay_outbound_detail_information_data, mRefundDataBinding.refundPolicyListLayout, true);
+
+                detailInformationDataBinding.textView.setText(Html.fromHtml(refundPolicy));
+            }
         }
     }
 

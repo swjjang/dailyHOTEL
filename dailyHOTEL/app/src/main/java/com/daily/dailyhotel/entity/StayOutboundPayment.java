@@ -1,5 +1,7 @@
 package com.daily.dailyhotel.entity;
 
+import java.util.List;
+
 public class StayOutboundPayment
 {
     public int stayIndex;
@@ -9,7 +11,7 @@ public class StayOutboundPayment
     public String checkOutDate;
     public String checkOutTime;
     public boolean nonRefundable;
-    public String nonRefundableDescription;
+    private List<String> mRefundPolicyList;
     public int totalPrice; // 결재할 총금액
     public int discountPrice; // 할인 총금액(보너스, 쿠폰)
     public double feeTotalAmountUsd;
@@ -30,25 +32,13 @@ public class StayOutboundPayment
         PHONE_PAY,
     }
 
-    /**
-     * 할인 타입 , NONE, BONUS, COUPON
-     */
-    public enum DiscountType
+    public List<String> getRefundPolicyList()
     {
-        NONE("None"),
-        BONUS("Bonus"),
-        COUPON("Coupon");
+        return mRefundPolicyList;
+    }
 
-        private String mName;
-
-        DiscountType(String name)
-        {
-            mName = name;
-        }
-
-        public String getName()
-        {
-            return mName;
-        }
+    public void setRefundPolicyList(List<String> refundPolicyList)
+    {
+        mRefundPolicyList = refundPolicyList;
     }
 }

@@ -698,6 +698,9 @@ public class AnalyticsManager
         public static final String SEARCHSCREENVIEW_OUTBOUND = "SearchScreenView_outbound";
         public static final String DAILYHOTEL_HOTELLIST_OUTBOUND = "DailyHotel_HotelList_outbound";
         public static final String DAILYHOTEL_HOTELDETAILVIEW_OUTBOUND = "DailyHotel_HotelDetailView_outbound";
+        public static final String DAILYHOTEL_HOTELROOMTYPELIST_OUTBOUND = "DailyHotel_HotelRoomTypeList_outbound";
+        public static final String DAILYHOTEL_PAYMENTCOMPLETE_OUTBOUND = "DailyHotel_PaymentComplete_outbound";
+        public static final String DAILYHOTEL_THANKYOU_OUTBOUND = "DailyHotel_Thankyou_outbound";
     }
 
     public static class Action

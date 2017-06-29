@@ -9,6 +9,8 @@ import com.daily.dailyhotel.entity.Card;
 import com.daily.dailyhotel.entity.People;
 import com.daily.dailyhotel.entity.StayOutboundPayment;
 
+import java.util.List;
+
 public interface StayOutboundPaymentInterface extends BaseDialogViewInterface
 {
     void setBooking(SpannableString checkInDate, SpannableString checkOutDate, int nights, String stayName, String roomType);
@@ -23,7 +25,7 @@ public interface StayOutboundPaymentInterface extends BaseDialogViewInterface
 
     void setEasyCard(Card card);
 
-    void setNonRefundableDescription(String nonRefundableDescription);
+    void setRefundPolicyList(List<String> refundPolicyList);
 
     void setMemoPaymentType(String memo);
 

@@ -371,7 +371,7 @@ public class RecentStayListFragment extends RecentPlacesListFragment
         try
         {
             analyticsParam.index = stayOutbound.index;
-            analyticsParam.benefit = stayOutbound.promo;
+            analyticsParam.benefit = false;
             analyticsParam.grade = getString(R.string.label_stay_outbound_filter_x_star_rate, (int) stayOutbound.rating);
             analyticsParam.rankingPosition = 0;
 
@@ -389,7 +389,7 @@ public class RecentStayListFragment extends RecentPlacesListFragment
             }
 
             analyticsParam.rating = Float.toString(stayOutbound.tripAdvisorRating);
-            analyticsParam.listCount = mListLayout.getRealItemCount();
+            analyticsParam.listSize = mListLayout.getRealItemCount();
         } catch (Exception e)
         {
             ExLog.d(e.toString());

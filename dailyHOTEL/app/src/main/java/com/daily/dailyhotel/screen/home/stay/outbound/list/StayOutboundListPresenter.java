@@ -102,6 +102,8 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
     public interface StayOutboundListAnalyticsInterface extends BaseAnalyticsInterface
     {
         void onScreen(Activity activity);
+
+        StayOutboundDetailAnalyticsParam getDetailAnalyticsParam(StayOutbound stayOutbound, String grade, int rankingPosition, int listSize);
     }
 
     public StayOutboundListPresenter(@NonNull StayOutboundListActivity activity)
@@ -599,31 +601,20 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
             }
         }
 
-        StayOutboundDetailAnalyticsParam analyticsParam = new StayOutboundDetailAnalyticsParam();
-
-        try
+        int rankingPosition = 0;
+        for (StayOutbound searchStayOutbound : mStayOutboundList)
         {
-            analyticsParam.index = stayOutbound.index;
-            analyticsParam.benefit = stayOutbound.promo;
-            analyticsParam.grade = getString(R.string.label_stay_outbound_filter_x_star_rate, (int) stayOutbound.rating);
-            analyticsParam.rankingPosition = 0;
+            rankingPosition++;
 
-            for (StayOutbound searchStayOutbound : mStayOutboundList)
+            if (searchStayOutbound.index == stayOutbound.index)
             {
-                analyticsParam.rankingPosition++;
-
-                if (searchStayOutbound.index == stayOutbound.index)
-                {
-                    break;
-                }
+                break;
             }
-
-            analyticsParam.rating = Float.toString(stayOutbound.tripAdvisorRating);
-            analyticsParam.listCount = mStayOutboundList.size();
-        } catch (Exception e)
-        {
-            ExLog.d(e.toString());
         }
+
+        StayOutboundDetailAnalyticsParam analyticsParam = mAnalytics.getDetailAnalyticsParam(stayOutbound//
+            , getString(R.string.label_stay_outbound_filter_x_star_rate, (int) stayOutbound.rating)//
+            , rankingPosition, mStayOutboundList.size());
 
         if (Util.isUsedMultiTransition() == true && pair != null)
         {

@@ -29,6 +29,8 @@ import com.daily.dailyhotel.entity.StayOutboundDetail;
 import com.daily.dailyhotel.entity.StayOutboundDetailImage;
 import com.daily.dailyhotel.entity.StayOutboundRoom;
 import com.daily.dailyhotel.entity.User;
+import com.daily.dailyhotel.parcel.analytics.StayOutboundDetailAnalyticsParam;
+import com.daily.dailyhotel.parcel.analytics.StayOutboundPaymentAnalyticsParam;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
 import com.daily.dailyhotel.repository.remote.ProfileRemoteImpl;
 import com.daily.dailyhotel.repository.remote.StayOutboundRemoteImpl;
@@ -115,7 +117,15 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
 
     public interface StayOutboundDetailAnalyticsInterface extends BaseAnalyticsInterface
     {
+        void setAnalyticsParam(StayOutboundDetailAnalyticsParam analyticsParam);
+
+        StayOutboundDetailAnalyticsParam getAnalyticsParam();
+
         void onScreen(Activity activity);
+
+        void onScreenRoomList(Activity activity);
+
+        StayOutboundPaymentAnalyticsParam getPaymentAnalyticsParam(String grade, boolean nrd, boolean showOriginalPrice);
     }
 
     public StayOutboundDetailPresenter(@NonNull StayOutboundDetailActivity activity)
@@ -135,7 +145,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
     {
         setContentView(R.layout.activity_stay_outbound_detail_data);
 
-        setAnalytics(new StayStayOutboundDetailAnalyticsImpl());
+        setAnalytics(new StayOutboundDetailAnalyticsImpl());
 
         mStayOutboundRemoteImpl = new StayOutboundRemoteImpl(activity);
         mCommonRemoteImpl = new CommonRemoteImpl(activity);
@@ -199,6 +209,8 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
             ArrayList<Integer> childAgeList = intent.getIntegerArrayListExtra(StayOutboundDetailActivity.INTENT_EXTRA_DATA_CHILD_LIST);
 
             setPeople(numberOfAdults, childAgeList);
+
+            mAnalytics.setAnalyticsParam(intent.getParcelableExtra(StayOutboundDetailActivity.INTENT_EXTRA_DATA_ANALYTICS));
         }
 
         return true;
@@ -272,6 +284,8 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
     public void onStart()
     {
         super.onStart();
+
+        mAnalytics.onScreen(getActivity());
 
         if (isRefresh() == true)
         {
@@ -883,6 +897,8 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
                         public void accept(@io.reactivex.annotations.NonNull User user) throws Exception
                         {
                             boolean isDailyUser = Constants.DAILY_USER.equalsIgnoreCase(user.userType);
+                            StayOutboundPaymentAnalyticsParam analyticsParam = mAnalytics.getPaymentAnalyticsParam(getString(R.string.label_stay_outbound_detail_grade, mStayOutboundDetail.grade)//
+                                , mSelectedRoom.nonRefundable, mSelectedRoom.base > 0);
 
                             if (isDailyUser == true)
                             {
@@ -900,7 +916,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
                                         , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
                                         , mPeople.numberOfAdults, mPeople.getChildAgeList()//
                                         , mSelectedRoom.roomName, mSelectedRoom.rateCode, mSelectedRoom.rateKey//
-                                        , mSelectedRoom.roomTypeCode, mSelectedRoom.roomBedTypeId)//
+                                        , mSelectedRoom.roomTypeCode, mSelectedRoom.roomBedTypeId, analyticsParam)//
                                         , StayOutboundDetailActivity.REQUEST_CODE_PAYMENT);
                                 }
                             } else
@@ -929,7 +945,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
                                         , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
                                         , mPeople.numberOfAdults, mPeople.getChildAgeList()//
                                         , mSelectedRoom.roomName, mSelectedRoom.rateCode, mSelectedRoom.rateKey//
-                                        , mSelectedRoom.roomTypeCode, mSelectedRoom.roomBedTypeId)//
+                                        , mSelectedRoom.roomTypeCode, mSelectedRoom.roomBedTypeId, analyticsParam)//
                                         , StayOutboundDetailActivity.REQUEST_CODE_PAYMENT);
                                 }
                             }
@@ -963,6 +979,8 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
                         }
                     }));
                 }
+
+                mAnalytics.onScreenRoomList(getActivity());
                 break;
 
             default:
