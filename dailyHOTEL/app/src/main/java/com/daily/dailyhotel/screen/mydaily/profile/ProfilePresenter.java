@@ -43,16 +43,16 @@ public class ProfilePresenter extends BaseExceptionPresenter<ProfileActivity, Pr
 
     public interface ProfileAnalyticsInterface extends BaseAnalyticsInterface
     {
-        void screenProfile(Activity activity);
+        void onScreen(Activity activity);
 
-        void screenLogOut(Activity activity);
+        void onScreenLogOut(Activity activity);
 
-        void clearUserInformation(Context context);
+        void onClearUserInformation(Context context);
 
-        void eventCopyReferralCode(Context context);
+        void onEventCopyReferralCode(Context context);
 
         // 보너스 초과 여부
-        void setExceedBonus(Context context, boolean isExceedBonus);
+        void onExceedBonus(Context context, boolean isExceedBonus);
     }
 
     public ProfilePresenter(@NonNull ProfileActivity activity)
@@ -110,7 +110,7 @@ public class ProfilePresenter extends BaseExceptionPresenter<ProfileActivity, Pr
     {
         super.onStart();
 
-        mProfileAnalytics.screenProfile(getActivity());
+        mProfileAnalytics.onScreen(getActivity());
         //
         //        if (DailyDeepLink.getInstance().isValidateLink() == true)
         //        {
@@ -315,7 +315,7 @@ public class ProfilePresenter extends BaseExceptionPresenter<ProfileActivity, Pr
             return;
         }
 
-        mProfileAnalytics.setExceedBonus(getActivity(), userBenefit.exceedLimitedBonus);
+        mProfileAnalytics.onExceedBonus(getActivity(), userBenefit.exceedLimitedBonus);
     }
 
     @Override
@@ -363,8 +363,8 @@ public class ProfilePresenter extends BaseExceptionPresenter<ProfileActivity, Pr
                 @Override
                 public void onClick(View v)
                 {
-                    mProfileAnalytics.clearUserInformation(getActivity());
-                    mProfileAnalytics.screenLogOut(getActivity());
+                    mProfileAnalytics.onClearUserInformation(getActivity());
+                    mProfileAnalytics.onScreenLogOut(getActivity());
 
                     new FacebookRemoteImpl().logOut();
                     new KakaoRemoteImpl().logOut();
@@ -382,6 +382,6 @@ public class ProfilePresenter extends BaseExceptionPresenter<ProfileActivity, Pr
     @Override
     public void onCodeCopyClick(String code)
     {
-        mProfileAnalytics.eventCopyReferralCode(getActivity());
+        mProfileAnalytics.onEventCopyReferralCode(getActivity());
     }
 }

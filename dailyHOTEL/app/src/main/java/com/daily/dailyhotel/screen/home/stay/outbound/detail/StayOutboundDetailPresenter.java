@@ -115,6 +115,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
 
     public interface StayOutboundDetailAnalyticsInterface extends BaseAnalyticsInterface
     {
+        void onScreen(Activity activity);
     }
 
     public StayOutboundDetailPresenter(@NonNull StayOutboundDetailActivity activity)

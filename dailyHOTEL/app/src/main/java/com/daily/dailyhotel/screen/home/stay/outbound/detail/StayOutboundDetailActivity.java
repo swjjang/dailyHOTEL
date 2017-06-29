@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 
 import com.daily.base.BaseActivity;
 import com.daily.base.util.DailyTextUtils;
+import com.daily.dailyhotel.parcel.analytics.StayOutboundDetailAnalyticsParam;
 
 import java.util.ArrayList;
 
@@ -39,6 +40,7 @@ public class StayOutboundDetailActivity extends BaseActivity<StayOutboundDetailP
     static final String INTENT_EXTRA_DATA_CALL_FROM_MAP = "callFromMap";
     static final String INTENT_EXTRA_DATA_REFRESH = "refresh";
     static final String INTENT_EXTRA_DATA_LIST_PRICE = "listPrice";
+    static final String INTENT_EXTRA_DATA_ANALYTICS = "alalytics";
 
     /**
      * @param stayIndex
@@ -51,7 +53,8 @@ public class StayOutboundDetailActivity extends BaseActivity<StayOutboundDetailP
      */
     public static Intent newInstance(Context context, int stayIndex, String stayName, String imageUrl//
         , int listPrice, String checkInDateTime, String checkOutDateTime//
-        , int numberOfAdults, ArrayList<Integer> childList, boolean isUsedMultiTransition, boolean mCallFromMap)
+        , int numberOfAdults, ArrayList<Integer> childList, boolean isUsedMultiTransition, boolean mCallFromMap//
+        , StayOutboundDetailAnalyticsParam analyticsParam)
     {
         Intent intent = new Intent(context, StayOutboundDetailActivity.class);
         intent.putExtra(INTENT_EXTRA_DATA_STAY_INDEX, stayIndex);
@@ -64,6 +67,8 @@ public class StayOutboundDetailActivity extends BaseActivity<StayOutboundDetailP
         intent.putExtra(INTENT_EXTRA_DATA_CHILD_LIST, childList);
         intent.putExtra(INTENT_EXTRA_DATA_MULTITRANSITION, isUsedMultiTransition);
         intent.putExtra(INTENT_EXTRA_DATA_CALL_FROM_MAP, mCallFromMap);
+        intent.putExtra(INTENT_EXTRA_DATA_ANALYTICS, analyticsParam);
+
         return intent;
     }
 

@@ -50,6 +50,7 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
 
     public interface StayOutboundSearchAnalyticsInterface extends BaseAnalyticsInterface
     {
+        void onScreen(Activity activity);
     }
 
     public StayOutboundSearchPresenter(@NonNull StayOutboundSearchActivity activity)
@@ -115,6 +116,8 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
     public void onStart()
     {
         super.onStart();
+
+        mAnalytics.onScreen(getActivity());
 
         if (isRefresh() == true)
         {

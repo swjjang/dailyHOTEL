@@ -6,6 +6,7 @@ import com.daily.dailyhotel.entity.People;
 import com.daily.dailyhotel.entity.StayOutboundBookingDetail;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @JsonObject
 public class StayOutboundBookingDetailData
@@ -67,8 +68,8 @@ public class StayOutboundBookingDetailData
     @JsonField(name = "refundStatus")
     public String refundStatus;
 
-    @JsonField(name = "cancelPolicyDescription")
-    public String cancelPolicyDescription;
+    @JsonField(name = "cancelPolicyDescriptions")
+    public List<String> cancelPolicyDescriptions;
 
     @JsonField(name = "paymentType")
     public String paymentType;
@@ -114,7 +115,7 @@ public class StayOutboundBookingDetailData
         stayOutboundBookingDetail.fee = fee;
         stayOutboundBookingDetail.setPeople(new People(numberOfAdults, childrenAges));
         stayOutboundBookingDetail.refundStatus = StayOutboundBookingDetail.RefundType.valueOf(refundStatus);
-        stayOutboundBookingDetail.refundPolicy = cancelPolicyDescription;
+        stayOutboundBookingDetail.setRefundPolicyList(cancelPolicyDescriptions);
         stayOutboundBookingDetail.checkInDate = checkinDate;
         stayOutboundBookingDetail.checkInTime = checkinTime;
         stayOutboundBookingDetail.checkOutDate = checkoutDate;
