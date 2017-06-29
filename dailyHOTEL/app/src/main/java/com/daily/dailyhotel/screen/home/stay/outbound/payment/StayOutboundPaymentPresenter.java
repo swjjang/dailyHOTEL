@@ -933,18 +933,18 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
                 getViewInterface().setPaymentTypeEnabled(StayOutboundPayment.PaymentType.EASY_CARD, false);
                 getViewInterface().setPaymentTypeEnabled(StayOutboundPayment.PaymentType.CARD, false);
 
-                if (DailyPreference.getInstance(getActivity()).isRemoteConfigStayOutboundPhonePaymentEnabled() == true)
+                if (DailyRemoteConfigPreference.getInstance(getActivity()).isRemoteConfigStayOutboundPhonePaymentEnabled() == true)
                 {
                     getViewInterface().setPaymentTypeEnabled(StayOutboundPayment.PaymentType.PHONE_PAY, true);
                 }
             } else if (paymentPrice >= PHONE_MAX_PRICE)
             {
-                if (DailyPreference.getInstance(getActivity()).isRemoteConfigStayOutboundSimpleCardPaymentEnabled() == true)
+                if (DailyRemoteConfigPreference.getInstance(getActivity()).isRemoteConfigStayOutboundSimpleCardPaymentEnabled() == true)
                 {
                     getViewInterface().setPaymentTypeEnabled(StayOutboundPayment.PaymentType.EASY_CARD, true);
                 }
 
-                if (DailyPreference.getInstance(getActivity()).isRemoteConfigStayOutboundCardPaymentEnabled() == true)
+                if (DailyRemoteConfigPreference.getInstance(getActivity()).isRemoteConfigStayOutboundCardPaymentEnabled() == true)
                 {
                     getViewInterface().setPaymentTypeEnabled(StayOutboundPayment.PaymentType.CARD, true);
                 }
@@ -952,17 +952,17 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
                 getViewInterface().setPaymentTypeEnabled(StayOutboundPayment.PaymentType.PHONE_PAY, false);
             } else if (paymentPrice > 0)
             {
-                if (DailyPreference.getInstance(getActivity()).isRemoteConfigStayOutboundSimpleCardPaymentEnabled() == true)
+                if (DailyRemoteConfigPreference.getInstance(getActivity()).isRemoteConfigStayOutboundSimpleCardPaymentEnabled() == true)
                 {
                     getViewInterface().setPaymentTypeEnabled(StayOutboundPayment.PaymentType.EASY_CARD, true);
                 }
 
-                if (DailyPreference.getInstance(getActivity()).isRemoteConfigStayOutboundCardPaymentEnabled() == true)
+                if (DailyRemoteConfigPreference.getInstance(getActivity()).isRemoteConfigStayOutboundCardPaymentEnabled() == true)
                 {
                     getViewInterface().setPaymentTypeEnabled(StayOutboundPayment.PaymentType.CARD, true);
                 }
 
-                if (DailyPreference.getInstance(getActivity()).isRemoteConfigStayOutboundPhonePaymentEnabled() == true)
+                if (DailyRemoteConfigPreference.getInstance(getActivity()).isRemoteConfigStayOutboundPhonePaymentEnabled() == true)
                 {
                     getViewInterface().setPaymentTypeEnabled(StayOutboundPayment.PaymentType.PHONE_PAY, true);
                 }
