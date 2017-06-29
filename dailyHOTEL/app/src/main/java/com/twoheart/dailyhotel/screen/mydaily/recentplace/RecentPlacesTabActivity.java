@@ -340,6 +340,7 @@ public class RecentPlacesTabActivity extends BaseActivity
         {
             case CODE_REQUEST_ACTIVITY_GOURMET_DETAIL:
             case CODE_REQUEST_ACTIVITY_STAY_DETAIL:
+            case RecentStayListFragment.REQUEST_CODE_DETAIL:
             {
                 mDontReloadAtOnResume = true;
 

@@ -6,6 +6,7 @@ import com.twoheart.dailyhotel.model.Place;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.model.StayCategoryParams;
+import com.twoheart.dailyhotel.model.time.StayBookingDay;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.layout.PlaceListLayout;
 import com.twoheart.dailyhotel.screen.hotel.list.StayListFragment;
@@ -86,6 +87,17 @@ public class StayCategoryListFragment extends StayListFragment
         {
             unLockUI();
             Util.restartApp(mBaseActivity);
+            return;
+        }
+
+        StayBookingDay stayBookingDay = mStayCuration.getStayBookingDay();
+        if (stayBookingDay == null)
+        {
+            mNetworkControllerListener.onError(new NullPointerException("requestStayCategoryList : page=" + page + " stayBookingDay is null"));
+            return;
+        } else if (DailyTextUtils.isTextEmpty(stayBookingDay.getCheckInDay("yyyy-MM-dd")) == true)
+        {
+            mNetworkControllerListener.onError(new NullPointerException("requestStayCategoryList : page=" + page + " stayBookingDay.getCheckInDay(\"yyyy-MM-dd\") is empty"));
             return;
         }
 

@@ -40,7 +40,7 @@ public class StayOutboundDetailData
     public double longitude;
 
     @JsonField(name = "details")
-    public LinkedHashMap<String, List<String>> detailMap;
+    public List<LinkedHashMap<String, List<String>>> detailList;
 
     @JsonField(name = "rooms")
     public List<RoomData> roomDataList;
@@ -73,7 +73,15 @@ public class StayOutboundDetailData
 
         stayOutboundDetail.latitude = latitude;
         stayOutboundDetail.longitude = longitude;
-        stayOutboundDetail.setInformationMap(detailMap);
+
+        LinkedHashMap<String, List<String>> detailsMap = new LinkedHashMap<>();
+
+        for (LinkedHashMap<String, List<String>> detailMap : detailList)
+        {
+            detailsMap.putAll(detailMap);
+        }
+
+        stayOutboundDetail.setInformationMap(detailsMap);
 
         if (roomDataList != null && roomDataList.size() > 0)
         {

@@ -178,4 +178,16 @@ public class StayCategoryParams extends StayParams
             return new StayCategoryParams[size];
         }
     };
+
+    @Override
+    public String toString()
+    {
+        return "StayCategoryParams{" + "dateCheckIn='" + dateCheckIn + '\'' + ", stays=" + stays //
+            + ", category=" + category + ", mBedTypeList=" + mBedTypeList + ", mLuxuryList=" + mLuxuryList //
+            + ", mRoomLuxuryList=" + mRoomLuxuryList + "provinceIdx=" + provinceIdx //
+            + ", areaIdx=" + areaIdx + ", persons=" + persons + ", longitude=" + longitude //
+            + ", latitude=" + latitude + ", page=" + page + ", limit=" + limit //
+            + ", sortProperty='" + sortProperty + '\'' + ", sortDirection='" + sortDirection + '\''//
+            + ", details=" + details + ", mSort=" + mSort + "}";
+    }
 }

@@ -223,10 +223,10 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
             {
                 if (resultCode == Activity.RESULT_OK && data != null)
                 {
-                    String cardName = data.getParcelableExtra(Constants.NAME_INTENT_EXTRA_DATA_CARD_NAME);
-                    String cardNumber = data.getParcelableExtra(Constants.NAME_INTENT_EXTRA_DATA_CARD_NUMBER);
-                    String cardBillingKey = data.getParcelableExtra(Constants.NAME_INTENT_EXTRA_DATA_CARD_BILLING_KEY);
-                    String cardCd = data.getParcelableExtra(Constants.NAME_INTENT_EXTRA_DATA_CARD_CD);
+                    String cardName = data.getStringExtra(Constants.NAME_INTENT_EXTRA_DATA_CARD_NAME);
+                    String cardNumber = data.getStringExtra(Constants.NAME_INTENT_EXTRA_DATA_CARD_NUMBER);
+                    String cardBillingKey = data.getStringExtra(Constants.NAME_INTENT_EXTRA_DATA_CARD_BILLING_KEY);
+                    String cardCd = data.getStringExtra(Constants.NAME_INTENT_EXTRA_DATA_CARD_CD);
 
                     if (DailyTextUtils.isTextEmpty(cardName, cardNumber, cardBillingKey, cardCd) == false)
                     {
@@ -1353,6 +1353,8 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
                         onBackClick();
                     }
                 });
+
+            return;
         }
 
         String message = baseException.getMessage();

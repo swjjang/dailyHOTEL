@@ -59,7 +59,7 @@ import io.reactivex.schedulers.Schedulers;
 
 public class RecentStayListFragment extends RecentPlacesListFragment
 {
-    private static final int REQUEST_CODE_DETAIL = 10000;
+    static final int REQUEST_CODE_DETAIL = 10000;
 
     private StayBookDateTime mStayBookDateTime;
 
@@ -356,17 +356,6 @@ public class RecentStayListFragment extends RecentPlacesListFragment
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     private void onStayOutboundItemClick(View view, PlaceViewItem placeViewItem)
     {
-        View simpleDraweeView = view.findViewById(R.id.imageView);
-        View nameTextView = view.findViewById(R.id.nameTextView);
-        View gradientTopView = view.findViewById(R.id.gradientTopView);
-        View gradientBottomView = view.findViewById(R.id.gradientView);
-
-        android.support.v4.util.Pair[] pairs = new Pair[4];
-        pairs[0] = android.support.v4.util.Pair.create(simpleDraweeView, getString(R.string.transition_place_image));
-        pairs[1] = android.support.v4.util.Pair.create(nameTextView, getString(R.string.transition_place_name));
-        pairs[2] = android.support.v4.util.Pair.create(gradientTopView, getString(R.string.transition_gradient_top_view));
-        pairs[3] = android.support.v4.util.Pair.create(gradientBottomView, getString(R.string.transition_gradient_bottom_view));
-
         StayOutbound stayOutbound = placeViewItem.getItem();
 
         if (stayOutbound == null)
@@ -395,7 +384,7 @@ public class RecentStayListFragment extends RecentPlacesListFragment
             }
         }
 
-        if (Util.isUsedMultiTransition() == true && pairs != null)
+        if (Util.isUsedMultiTransition() == true)
         {
             getActivity().setExitSharedElementCallback(new SharedElementCallback()
             {
@@ -414,6 +403,17 @@ public class RecentStayListFragment extends RecentPlacesListFragment
                     }
                 }
             });
+
+            View simpleDraweeView = view.findViewById(R.id.imageView);
+            View nameTextView = view.findViewById(R.id.nameTextView);
+            View gradientTopView = view.findViewById(R.id.gradientTopView);
+            View gradientBottomView = view.findViewById(R.id.gradientView);
+
+            android.support.v4.util.Pair[] pairs = new Pair[4];
+            pairs[0] = android.support.v4.util.Pair.create(simpleDraweeView, getString(R.string.transition_place_image));
+            pairs[1] = android.support.v4.util.Pair.create(nameTextView, getString(R.string.transition_place_name));
+            pairs[2] = android.support.v4.util.Pair.create(gradientTopView, getString(R.string.transition_gradient_top_view));
+            pairs[3] = android.support.v4.util.Pair.create(gradientBottomView, getString(R.string.transition_gradient_bottom_view));
 
             ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(), pairs);
 
@@ -470,6 +470,11 @@ public class RecentStayListFragment extends RecentPlacesListFragment
         Place place = placeViewItem.getItem();
         ExLog.d("isRemove : " + (place != null));
 
+        if (place == null)
+        {
+            return;
+        }
+
         RecentlyPlaceUtil.deleteRecentlyItemAsync(RecentlyPlaceUtil.ServiceType.IB_STAY, place.index);
 
         mListLayout.setData(mListLayout.getList(), mPlaceBookingDay);
@@ -493,6 +498,11 @@ public class RecentStayListFragment extends RecentPlacesListFragment
 
         StayOutbound stayOutbound = placeViewItem.getItem();
         ExLog.d("isRemove : " + (stayOutbound != null));
+
+        if (stayOutbound == null)
+        {
+            return;
+        }
 
         RecentlyPlaceUtil.deleteRecentlyItemAsync(RecentlyPlaceUtil.ServiceType.OB_STAY, stayOutbound.index);
 

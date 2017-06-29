@@ -9,6 +9,7 @@ import android.widget.ScrollView;
 
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ScreenUtils;
+import com.daily.base.util.VersionUtils;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.controller.BaseControllerListener;
 import com.facebook.drawee.interfaces.DraweeController;
@@ -84,7 +85,11 @@ public class GourmetDetailLayout extends PlaceDetailLayout
         if (DailyTextUtils.isTextEmpty(placeName) == false)
         {
             mTransPlaceNameTextView.setText(placeName);
-            mTransPlaceNameTextView.setTransitionName(mContext.getString(R.string.transition_place_name));
+
+            if (VersionUtils.isOverAPI21() == true)
+            {
+                mTransPlaceNameTextView.setTransitionName(mContext.getString(R.string.transition_place_name));
+            }
         }
     }
 
@@ -227,7 +232,7 @@ public class GourmetDetailLayout extends PlaceDetailLayout
 
     public void scrollProduct()
     {
-        if (mScrollView == null || mGourmetDetailItemLayout == null)
+        if (mScrollView == null || mGourmetDetailItemLayout == null || mGourmetDetailItemLayout.getFirstProductIndex() < 0)
         {
             return;
         }
@@ -238,7 +243,7 @@ public class GourmetDetailLayout extends PlaceDetailLayout
 
     public boolean isOpenedProductMoreList()
     {
-        if(mGourmetDetailItemLayout == null)
+        if (mGourmetDetailItemLayout == null)
         {
             return false;
         }
@@ -248,7 +253,7 @@ public class GourmetDetailLayout extends PlaceDetailLayout
 
     public void openMoreProductList()
     {
-        if(mGourmetDetailItemLayout == null)
+        if (mGourmetDetailItemLayout == null)
         {
             return;
         }
@@ -258,7 +263,7 @@ public class GourmetDetailLayout extends PlaceDetailLayout
 
     public void closeMoreProductList()
     {
-        if(mGourmetDetailItemLayout == null)
+        if (mGourmetDetailItemLayout == null)
         {
             return;
         }
@@ -343,7 +348,7 @@ public class GourmetDetailLayout extends PlaceDetailLayout
                 int firstProductIndex = mGourmetDetailItemLayout.getFirstProductIndex();
                 int lastProductIndex = mGourmetDetailItemLayout.getLastProductIndex();
 
-                if (firstProductIndex >= lastProductIndex)
+                if (firstProductIndex < 0 || lastProductIndex < 0 || firstProductIndex > lastProductIndex)
                 {
                     return;
                 }

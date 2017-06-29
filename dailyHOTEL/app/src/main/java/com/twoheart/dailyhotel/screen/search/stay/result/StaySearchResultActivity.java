@@ -780,7 +780,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
                 }
 
                 ArrayList<PlaceListFragment> placeListFragmentList = mPlaceSearchResultLayout.getPlaceListFragment();
-                if (placeListFragmentList != null || placeListFragmentList.size() > 0)
+                if (placeListFragmentList != null && placeListFragmentList.size() > 0)
                 {
                     StayBookingDay stayBookingDay = mStaySearchCuration.getStayBookingDay();
                     Map<String, String> params = new HashMap<>();

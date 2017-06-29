@@ -248,10 +248,10 @@ public abstract class PlacePaymentActivity extends BaseActivity
                 // 신용카드 간편 결제 선택후
                 if (resultCode == Activity.RESULT_OK && intent != null)
                 {
-                    String cardName = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_CARD_NAME);
-                    String cardNumber = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_CARD_NUMBER);
-                    String cardBillingKey = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_CARD_BILLING_KEY);
-                    String cardCd = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_CARD_CD);
+                    String cardName = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_CARD_NAME);
+                    String cardNumber = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_CARD_NUMBER);
+                    String cardBillingKey = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_CARD_BILLING_KEY);
+                    String cardCd = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_CARD_CD);
 
                     if (DailyTextUtils.isTextEmpty(cardName, cardNumber, cardBillingKey, cardCd) == false)
                     {

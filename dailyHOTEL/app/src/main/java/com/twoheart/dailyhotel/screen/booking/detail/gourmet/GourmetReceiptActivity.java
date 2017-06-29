@@ -147,14 +147,6 @@ public class GourmetReceiptActivity extends PlaceReceiptActivity
             saleLayout.setVisibility(View.GONE);
         }
 
-        if (bonus > 0 || coupon > 0)
-        {
-            saleLayout.setVisibility(View.VISIBLE);
-        } else
-        {
-            saleLayout.setVisibility(View.GONE);
-        }
-
         // 총 입금 금액
         TextView totalPaymentTextView = (TextView) paymentInfoLayout.findViewById(R.id.totalPaymentTextView);
         totalPaymentTextView.setText(DailyTextUtils.getPriceFormat(this, paymentAmount, false));

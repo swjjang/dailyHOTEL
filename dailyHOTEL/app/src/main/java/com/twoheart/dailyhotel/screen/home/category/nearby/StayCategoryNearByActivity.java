@@ -1054,7 +1054,7 @@ public class StayCategoryNearByActivity extends BaseActivity
                 }
 
                 ArrayList<PlaceListFragment> placeListFragmentList = mStayCategoryNearByLayout.getPlaceListFragment();
-                if (placeListFragmentList != null || placeListFragmentList.size() > 0)
+                if (placeListFragmentList != null && placeListFragmentList.size() > 0)
                 {
                     StayBookingDay stayBookingDay = mStayCategoryNearByCuration.getStayBookingDay();
                     Map<String, String> params = new HashMap<>();

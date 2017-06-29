@@ -35,7 +35,7 @@ public class HomeCarouselLayout extends LinearLayout
     private Context mContext;
     private DailyTextView mTitleTextView;
     private DailyTextView mViewAllTextView;
-    OnCarouselListener mCarouselListenter;
+    OnCarouselListener mCarouselListener;
     private RecyclerView mRecyclerView;
     private HomeCarouselAdapter mRecyclerAdapter;
     ValueAnimator mValueAnimator;
@@ -105,9 +105,9 @@ public class HomeCarouselLayout extends LinearLayout
             @Override
             public void onClick(View v)
             {
-                if (mCarouselListenter != null)
+                if (mCarouselListener != null)
                 {
-                    mCarouselListenter.onViewAllClick();
+                    mCarouselListener.onViewAllClick();
                 }
             }
         });
@@ -350,7 +350,7 @@ public class HomeCarouselLayout extends LinearLayout
 
     public void setCarouselListener(OnCarouselListener listener)
     {
-        mCarouselListenter = listener;
+        mCarouselListener = listener;
     }
 
     private HomeCarouselAdapter.ItemClickListener mRecyclerItemClickListener = new HomeCarouselAdapter.ItemClickListener()
@@ -358,18 +358,18 @@ public class HomeCarouselLayout extends LinearLayout
         @Override
         public void onItemClick(View view, int position)
         {
-            if (mCarouselListenter != null)
+            if (mCarouselListener != null)
             {
-                mCarouselListenter.onItemClick(view, position);
+                mCarouselListener.onItemClick(view, position);
             }
         }
 
         @Override
         public void onItemLongClick(View view, int position)
         {
-            if (mCarouselListenter != null)
+            if (mCarouselListener != null)
             {
-                mCarouselListenter.onItemLongClick(view, position);
+                mCarouselListener.onItemLongClick(view, position);
             }
         }
     };

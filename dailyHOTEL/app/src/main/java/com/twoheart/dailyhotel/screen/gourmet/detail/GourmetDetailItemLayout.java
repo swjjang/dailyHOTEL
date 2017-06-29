@@ -224,7 +224,7 @@ public class GourmetDetailItemLayout extends LinearLayout
 
     public void closeMoreProductList()
     {
-        if (mMoreLayout == null)
+        if (mMoreLayout == null || mFirstProductIndex < 0)
         {
             return;
         }
@@ -335,6 +335,11 @@ public class GourmetDetailItemLayout extends LinearLayout
         setProductListLayout(mLayoutInflater, this, mGourmetDetail.getProductList());
 
         mLastProductIndex = getChildCount() - 1;
+
+        if (mGourmetDetail.getProductList().size() == 0)
+        {
+            mFirstProductIndex = mLastProductIndex = -1;
+        }
 
         // 주소 및 맵
         View addressView = getAddressView(mLayoutInflater, mGourmetDetail, mEventListener);
@@ -633,7 +638,7 @@ public class GourmetDetailItemLayout extends LinearLayout
         android.support.v7.widget.GridLayout gridLayout = (android.support.v7.widget.GridLayout) view.findViewById(R.id.amenitiesGridLayout);
         gridLayout.removeAllViews();
 
-        boolean isSingleLine = pictogramList == null || pictogramList.size() <= GRID_COLUMN_COUNT;
+        boolean isSingleLine = pictogramList.size() <= GRID_COLUMN_COUNT;
 
         for (GourmetDetail.Pictogram pictogram : pictogramList)
         {

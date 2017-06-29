@@ -449,11 +449,6 @@ public class StayDetailActivity extends PlaceDetailActivity
 
             StayDetail stayDetail = (StayDetail) placeDetail;
 
-            if (stayDetail == null)
-            {
-                return;
-            }
-
             StayDetailParams stayDetailParams = stayDetail.getStayDetailParams();
             if (stayDetailParams == null)
             {

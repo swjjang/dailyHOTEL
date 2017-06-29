@@ -62,7 +62,7 @@ import com.twoheart.dailyhotel.databinding.LayoutStayOutboundDetail04DataBinding
 import com.twoheart.dailyhotel.databinding.LayoutStayOutboundDetail05DataBinding;
 import com.twoheart.dailyhotel.databinding.LayoutStayOutboundDetailAmenityDataBinding;
 import com.twoheart.dailyhotel.databinding.LayoutStayOutboundDetailAmenityMoreDataBinding;
-import com.twoheart.dailyhotel.databinding.LayoutStayOutboundDetailConcierageDataBinding;
+import com.twoheart.dailyhotel.databinding.LayoutStayOutboundDetailConciergeDataBinding;
 import com.twoheart.dailyhotel.databinding.LayoutStayOutboundDetailInformationDataBinding;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.DailyRemoteConfigPreference;
@@ -84,7 +84,7 @@ import io.reactivex.Observer;
 public class StayOutboundDetailView extends BaseDialogView<StayOutboundDetailView.OnEventListener, ActivityStayOutboundDetailDataBinding>//
     implements StayOutboundDetailViewInterface, View.OnClickListener, ViewPager.OnPageChangeListener, RadioGroup.OnCheckedChangeListener
 {
-    private static final int ANIMATION_DEALY = 250;
+    private static final int ANIMATION_DELAY = 250;
 
     private DailyToolbarLayout mDailyToolbarLayout;
 
@@ -185,10 +185,6 @@ public class StayOutboundDetailView extends BaseDialogView<StayOutboundDetailVie
 
         viewDataBinding.imageLoopViewPager.setOnPageChangeListener(this);
         viewDataBinding.viewpagerIndicator.setOnPageChangeListener(this);
-
-        ViewGroup.LayoutParams layoutParams = viewDataBinding.imageLoopViewPager.getLayoutParams();
-        layoutParams.height = ScreenUtils.getDetailScreenImageLayoutHeight(getContext());
-        viewDataBinding.imageLoopViewPager.setLayoutParams(layoutParams);
 
         // 객실 초기화
         viewDataBinding.productTypeTextView.setText(R.string.act_hotel_search_room);
@@ -316,7 +312,7 @@ public class StayOutboundDetailView extends BaseDialogView<StayOutboundDetailVie
                     mRoomAnimatorSet = new AnimatorSet();
                     mRoomAnimatorSet.playTogether(transObjectAnimator, alphaObjectAnimator);
                     mRoomAnimatorSet.setInterpolator(new AccelerateDecelerateInterpolator());
-                    mRoomAnimatorSet.setDuration(ANIMATION_DEALY);
+                    mRoomAnimatorSet.setDuration(ANIMATION_DELAY);
 
                     mRoomAnimatorSet.addListener(new Animator.AnimatorListener()
                     {
@@ -397,7 +393,7 @@ public class StayOutboundDetailView extends BaseDialogView<StayOutboundDetailVie
                     mRoomAnimatorSet = new AnimatorSet();
                     mRoomAnimatorSet.playTogether(transObjectAnimator, alphaObjectAnimator);
                     mRoomAnimatorSet.setInterpolator(new AccelerateDecelerateInterpolator());
-                    mRoomAnimatorSet.setDuration(ANIMATION_DEALY);
+                    mRoomAnimatorSet.setDuration(ANIMATION_DELAY);
 
                     mRoomAnimatorSet.addListener(new Animator.AnimatorListener()
                     {
@@ -459,6 +455,8 @@ public class StayOutboundDetailView extends BaseDialogView<StayOutboundDetailVie
         {
             return;
         }
+
+        getViewDataBinding().bottomLayout.setVisibility(View.VISIBLE);
 
         setImageList(stayOutboundDetail.getImageList());
 
@@ -692,14 +690,9 @@ public class StayOutboundDetailView extends BaseDialogView<StayOutboundDetailVie
             getViewDataBinding().transGradientView.setVisibility(View.VISIBLE);
             getViewDataBinding().transGradientTopView.setVisibility(View.VISIBLE);
             getViewDataBinding().transTitleLayout.setVisibility(View.VISIBLE);
-
-            getViewDataBinding().transImageView.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ScreenUtils.getDetailScreenImageLayoutHeight(getContext())));
             getViewDataBinding().transImageView.setTransitionName(getString(R.string.transition_place_image));
-
-            getViewDataBinding().transGradientView.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ScreenUtils.getDetailScreenImageLayoutHeight(getContext())));
             getViewDataBinding().transGradientView.setTransitionName(getString(R.string.transition_gradient_bottom_view));
             getViewDataBinding().transGradientView.setBackground(makeShaderFactory());
-
             getViewDataBinding().transGradientTopView.setTransitionName(getString(R.string.transition_gradient_top_view));
             getViewDataBinding().transNameTextView.setTransitionName(getString(R.string.transition_place_name));
         } else
@@ -725,7 +718,6 @@ public class StayOutboundDetailView extends BaseDialogView<StayOutboundDetailVie
             {
                 getViewDataBinding().bookingTextView.setVisibility(View.VISIBLE);
                 getViewDataBinding().soldoutTextView.setVisibility(View.GONE);
-                getViewDataBinding().wishListButtonView.setVisibility(View.GONE);
                 break;
             }
 
@@ -733,7 +725,6 @@ public class StayOutboundDetailView extends BaseDialogView<StayOutboundDetailVie
             {
                 getViewDataBinding().bookingTextView.setVisibility(View.VISIBLE);
                 getViewDataBinding().soldoutTextView.setVisibility(View.GONE);
-                getViewDataBinding().wishListButtonView.setVisibility(View.GONE);
 
                 getViewDataBinding().bookingTextView.setText(R.string.act_hotel_search_room);
                 break;
@@ -743,7 +734,6 @@ public class StayOutboundDetailView extends BaseDialogView<StayOutboundDetailVie
             {
                 getViewDataBinding().bookingTextView.setVisibility(View.VISIBLE);
                 getViewDataBinding().soldoutTextView.setVisibility(View.GONE);
-                getViewDataBinding().wishListButtonView.setVisibility(View.GONE);
 
                 getViewDataBinding().bookingTextView.setText(R.string.act_hotel_booking);
                 break;
@@ -753,7 +743,6 @@ public class StayOutboundDetailView extends BaseDialogView<StayOutboundDetailVie
             {
                 getViewDataBinding().bookingTextView.setVisibility(View.GONE);
                 getViewDataBinding().soldoutTextView.setVisibility(View.VISIBLE);
-                getViewDataBinding().wishListButtonView.setVisibility(View.GONE);
                 break;
             }
         }
@@ -1367,8 +1356,8 @@ public class StayOutboundDetailView extends BaseDialogView<StayOutboundDetailVie
             return;
         }
 
-        LayoutStayOutboundDetailConcierageDataBinding viewDataBinding = DataBindingUtil.inflate(layoutInflater//
-            , R.layout.layout_stay_outbound_detail_concierage_data, viewGroup, true);
+        LayoutStayOutboundDetailConciergeDataBinding viewDataBinding = DataBindingUtil.inflate(layoutInflater//
+            , R.layout.layout_stay_outbound_detail_concierge_data, viewGroup, true);
 
         String[] hour = DailyPreference.getInstance(getContext()).getOperationTime().split("\\,");
 

@@ -279,18 +279,15 @@ public class ReviewScoreCardLayout extends ReviewCardLayout implements View.OnTo
 
                 mSelectedEmoticonView = selectedEmoticonView;
 
-                if (selectedEmoticonView != null)
+                ValueAnimator valueAnimator = (ValueAnimator) selectedEmoticonView.getTag();
+                if (valueAnimator != null && valueAnimator.isRunning() == true)
                 {
-                    ValueAnimator valueAnimator = (ValueAnimator) selectedEmoticonView.getTag();
-                    if (valueAnimator != null && valueAnimator.isRunning() == true)
-                    {
-                        valueAnimator.cancel();
-                    }
-
-                    scaleUpAnimator = getScaleUpAnimator(selectedEmoticonView);
-                    selectedEmoticonView.setTag(scaleUpAnimator);
-                    scaleUpAnimator.start();
+                    valueAnimator.cancel();
                 }
+
+                scaleUpAnimator = getScaleUpAnimator(selectedEmoticonView);
+                selectedEmoticonView.setTag(scaleUpAnimator);
+                scaleUpAnimator.start();
                 break;
             }
 
