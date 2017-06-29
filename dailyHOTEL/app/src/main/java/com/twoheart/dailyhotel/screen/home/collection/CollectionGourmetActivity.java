@@ -274,7 +274,11 @@ public class CollectionGourmetActivity extends CollectionBaseActivity
                 analyticsParam.setTotalListCount(count);
 
                 Intent intent = GourmetDetailActivity.newInstance(CollectionGourmetActivity.this //
-                    , (GourmetBookingDay) mPlaceBookingDay, recommendationGourmet, analyticsParam, true);
+                    , (GourmetBookingDay) mPlaceBookingDay, recommendationGourmet.index, recommendationGourmet.name //
+                    , recommendationGourmet.imageUrl, recommendationGourmet.category, recommendationGourmet.isSoldOut, analyticsParam, true);
+
+                //                Intent intent = GourmetDetailActivity.newInstance(CollectionGourmetActivity.this //
+                //                    , (GourmetBookingDay) mPlaceBookingDay, recommendationGourmet, analyticsParam, true);
 
                 View simpleDraweeView = view.findViewById(R.id.imageView);
                 View nameTextView = view.findViewById(R.id.nameTextView);
@@ -303,7 +307,11 @@ public class CollectionGourmetActivity extends CollectionBaseActivity
                 analyticsParam.setTotalListCount(count);
 
                 Intent intent = GourmetDetailActivity.newInstance(CollectionGourmetActivity.this //
-                    , (GourmetBookingDay) mPlaceBookingDay, recommendationGourmet, analyticsParam, false);
+                    , (GourmetBookingDay) mPlaceBookingDay, recommendationGourmet.index, recommendationGourmet.name //
+                    , recommendationGourmet.imageUrl, recommendationGourmet.category, recommendationGourmet.isSoldOut, analyticsParam, false);
+
+                //                Intent intent = GourmetDetailActivity.newInstance(CollectionGourmetActivity.this //
+                //                    , (GourmetBookingDay) mPlaceBookingDay, recommendationGourmet, analyticsParam, false);
 
                 startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMET_DETAIL);
 

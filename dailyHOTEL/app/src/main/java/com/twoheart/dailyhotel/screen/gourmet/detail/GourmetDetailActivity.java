@@ -35,7 +35,6 @@ import com.twoheart.dailyhotel.network.model.GourmetProduct;
 import com.twoheart.dailyhotel.network.model.ImageInformation;
 import com.twoheart.dailyhotel.network.model.PlaceReviewScores;
 import com.twoheart.dailyhotel.network.model.ProductImageInformation;
-import com.twoheart.dailyhotel.network.model.RecommendationGourmet;
 import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.network.model.TrueVRParams;
 import com.twoheart.dailyhotel.place.activity.PlaceDetailActivity;
@@ -85,7 +84,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
     boolean mIsListSoldOut; // 리스트에서 솔드아웃인지 체크한다.
 
     /**
-     * 리스트, 검색 결과, 위시리스트 에서 호출
+     * 리스트, 검색 결과, 위시리스트, 홈, 추천 목록 에서 호출
      *
      * @param context
      * @param gourmetBookingDay
@@ -111,35 +110,6 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         intent.putExtra(NAME_INTENT_EXTRA_DATA_IMAGEURL, imageUrl);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_CATEGORY, category);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_SOLDOUT, isSoldOut);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_CALENDAR_FLAG, false);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_ANALYTICS_PARAM, analyticsParam);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_USED_MULTITRANSITIOIN, isUsedMultiTransition);
-
-        return intent;
-    }
-
-    /**
-     * 추천 목록에서 호출
-     *
-     * @param context
-     * @param gourmetBookingDay
-     * @param recommendationGourmet
-     * @param isUsedMultiTransition
-     * @return
-     */
-    public static Intent newInstance(Context context, GourmetBookingDay gourmetBookingDay, RecommendationGourmet recommendationGourmet//
-        , AnalyticsParam analyticsParam, boolean isUsedMultiTransition)
-    {
-        Intent intent = new Intent(context, GourmetDetailActivity.class);
-
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, gourmetBookingDay);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEIDX, recommendationGourmet.index);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACENAME, recommendationGourmet.name);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_IMAGEURL, recommendationGourmet.imageUrl);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_CATEGORY, recommendationGourmet.category);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_SOLDOUT, recommendationGourmet.isSoldOut);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_DISCOUNTPRICE, recommendationGourmet.discount);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_PRICE, recommendationGourmet.price);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_CALENDAR_FLAG, false);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_ANALYTICS_PARAM, analyticsParam);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_USED_MULTITRANSITIOIN, isUsedMultiTransition);
