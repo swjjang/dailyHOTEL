@@ -94,7 +94,7 @@
     <string name="label_subway_station">지하철역</string>
     <string name="label_trueview">트루뷰</string>
     <string name="label_dont_again">다시보지 않기</string>
-    <string name="label_search_stay_outbound">해외호텔 검색</string>
+    <string name="label_search_stay_outbound">해외호텔 검색하기</string>
     <string name="label_do_booking">예약하기</string>
     <string name="label_changing_date">날짜 변경하기</string>
 
@@ -792,6 +792,7 @@
     <string name="act_list_region_japan">일본</string>
     <string name="label_visit_date">방문 날짜 확인</string>
     <string name="label_region_change_date">날짜 변경하기</string>
+    <string name="label_region_around_stay">내 주변 스테이 보기</string>
     <string name="message_region_search_date">방문하실 날짜가 맞나요?</string>
 
     <!-- Main Tab -->
@@ -1324,7 +1325,7 @@
     <string name="label_stay_outbound_list_adult_count">성인 %1$d</string>
     <string name="label_stay_outbound_list_child_count">아동 %1$d</string>
     <string name="label_stay_outbound_tripadvisor_rating">(평점 %1$s)</string>
-    <string name="label_stay_outbound_preparing_preview">미리보기 준비중</string>
+    <string name="label_stay_outbound_preparing_preview">해외호텔의 미리보기 기능은 준비 중입니다.</string>
     <string name="label_stay_outbound_research_filter_on">조건을 변경하여 검색해보세요.</string>
 
     <!-- Stay Out Bound Filter -->

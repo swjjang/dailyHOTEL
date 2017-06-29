@@ -668,6 +668,7 @@ public interface DailyMobileService
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET
     Observable<BaseDto<StayOutboundsData>> getStayOutboundRecentlyList(@Url String mobileAPI//
+        , @Query(value = "filter.includeSurrounding") boolean includeSurrounding//
         , @Query(value = "hotelIds") String hotelIds//
         , @Query(value = "numberOfResults") int numberOfResults//
         , @Query(value = "sort") String sort//

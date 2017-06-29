@@ -1542,7 +1542,7 @@ public class DailyMobileAPI implements IDailyNetwork
         final String API = Constants.UNENCRYPTED_URL ? "api/v1/outbound/id-find-static-hotels"//
             : "MjMkMzAkODAkMTI4JDU1JDQ5JDEyJDEyNSQzNyQ3OCQ1NCQ1NyQzOCQ2NCQ3NyQxMzAk$MEJFNTFGNEY0RQTlCNTBGM0ZIGQUQ4MQjU1RjFCBCOERCQUFFODJTBNRUME0NHjdKBQjhBMTAwRjlPEQTFDFN0FDMzCNBREJFQkVGRDM4QTIxNzhDNzQ0RjFDOUYzMTlGMJDMBzOUUwMFDY1$";
 
-        return mDailyMobileService.getStayOutboundRecentlyList(Crypto.getUrlDecoderEx(URL) + Crypto.getUrlDecoderEx(API), hotelIds, numberOfResults, "NO_SORT").subscribeOn(Schedulers.io());
+        return mDailyMobileService.getStayOutboundRecentlyList(Crypto.getUrlDecoderEx(URL) + Crypto.getUrlDecoderEx(API), false, hotelIds, numberOfResults, "NO_SORT").subscribeOn(Schedulers.io());
     }
 
     public Observable<BaseDto<HomePlaces>> getHomeRecentlyList(JSONObject jsonObject)

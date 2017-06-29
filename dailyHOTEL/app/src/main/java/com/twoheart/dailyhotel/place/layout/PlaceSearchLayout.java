@@ -6,6 +6,7 @@ import android.os.Message;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.Spannable;
+import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.TextWatcher;
 import android.text.style.StyleSpan;
@@ -47,7 +48,7 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
     private static final int HANDLER_MESSAGE_REQUEST_AUTOCOMPLETE = 0;
     private static final int HANDLER_MESSAGE_HIDE_AUTOCOMPLETE = 1;
 
-    private View mTermsOfLocationView;
+    private TextView mTermsOfLocationView;
     ViewGroup mAutoCompleteLayout;
     private DailyScrollView mAutoCompleteScrollLayout;
     private View mRecentSearchLayout;
@@ -79,6 +80,8 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
     }
 
     protected abstract String getAroundPlaceText();
+
+    protected abstract SpannableString getAroundPlaceTermText();
 
     protected abstract String getSearchHintText();
 
@@ -209,7 +212,8 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
         TextView text01View = (TextView) searchAroundLayout.findViewById(R.id.text01View);
         text01View.setText(getAroundPlaceText());
 
-        mTermsOfLocationView = searchAroundLayout.findViewById(R.id.text02View);
+        mTermsOfLocationView = (TextView) searchAroundLayout.findViewById(R.id.text02View);
+        mTermsOfLocationView.setText(getAroundPlaceTermText());
 
         updateTermsOfLocationLayout(mTermsOfLocationView);
     }

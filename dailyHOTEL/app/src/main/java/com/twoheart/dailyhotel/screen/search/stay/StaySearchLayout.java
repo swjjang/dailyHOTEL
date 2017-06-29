@@ -1,6 +1,9 @@
 package com.twoheart.dailyhotel.screen.search.stay;
 
 import android.content.Context;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.style.ScaleXSpan;
 import android.view.View;
 
 import com.twoheart.dailyhotel.R;
@@ -41,6 +44,20 @@ public class StaySearchLayout extends PlaceSearchLayout
     protected String getAroundPlaceText()
     {
         return mContext.getString(R.string.label_view_myaround_hotel);
+    }
+
+    @Override
+    protected SpannableString getAroundPlaceTermText()
+    {
+        final String text = mContext.getString(R.string.label_search_need_to_agree_termsoflocation);
+        SpannableString spannableString = new SpannableString(text);
+
+        if (mContext.getResources().getDisplayMetrics().densityDpi <= 240)
+        {
+            spannableString.setSpan(new ScaleXSpan(0.8f), 0, spannableString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        }
+
+        return spannableString;
     }
 
     @Override
