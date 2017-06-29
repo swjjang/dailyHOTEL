@@ -280,8 +280,8 @@ public class StayOutboundPaymentView extends BaseDialogView<StayOutboundPaymentV
             mRefundDataBinding.getRoot().setVisibility(View.GONE);
         } else
         {
-
             mRefundDataBinding.getRoot().setVisibility(View.VISIBLE);
+            mRefundDataBinding.refundPolicyListLayout.removeAllViews();
 
             for (String refundPolicy : refundPolicyList)
             {
