@@ -898,7 +898,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
                         {
                             boolean isDailyUser = Constants.DAILY_USER.equalsIgnoreCase(user.userType);
                             StayOutboundPaymentAnalyticsParam analyticsParam = mAnalytics.getPaymentAnalyticsParam(getString(R.string.label_stay_outbound_detail_grade, mStayOutboundDetail.grade)//
-                                , mSelectedRoom.nonRefundable, mSelectedRoom.base > 0);
+                                , mSelectedRoom.nonRefundable, mSelectedRoom.promotion);
 
                             if (isDailyUser == true)
                             {

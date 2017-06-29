@@ -363,6 +363,58 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
             {
                 ExLog.d(TAG + "recordScreen : " + screenName + " | " + screenViewBuilder.build().toString());
             }
+        } else if (AnalyticsManager.Screen.DAILYHOTEL_HOTELDETAILVIEW_OUTBOUND.equalsIgnoreCase(screenName) == true)
+        {
+            HitBuilders.ScreenViewBuilder screenViewBuilder = new HitBuilders.ScreenViewBuilder();
+
+            screenViewBuilder.setCustomDimension(3, params.get(AnalyticsManager.KeyType.DBENEFIT));
+            screenViewBuilder.setCustomDimension(6, params.get(AnalyticsManager.KeyType.PLACE_TYPE));
+            screenViewBuilder.setCustomDimension(7, params.get(AnalyticsManager.KeyType.COUNTRY));
+            screenViewBuilder.setCustomDimension(14, params.get(AnalyticsManager.KeyType.GRADE));
+            screenViewBuilder.setCustomDimension(15, params.get(AnalyticsManager.KeyType.PLACE_INDEX));
+            screenViewBuilder.setCustomDimension(16, params.get(AnalyticsManager.KeyType.LIST_INDEX));
+            screenViewBuilder.setCustomDimension(17, params.get(AnalyticsManager.KeyType.RATING));
+            screenViewBuilder.setCustomDimension(20, params.get(AnalyticsManager.KeyType.PLACE_COUNT));
+
+            mGoogleAnalyticsTracker.setScreenName(screenName);
+            mGoogleAnalyticsTracker.send(screenViewBuilder.build());
+
+            if (DEBUG == true)
+            {
+                ExLog.d(TAG + "recordScreen : " + screenName + " | " + screenViewBuilder.build().toString());
+            }
+        } else if (AnalyticsManager.Screen.DAILYHOTEL_BOOKINGINITIALISE_OUTBOUND.equalsIgnoreCase(screenName) == true)
+        {
+            HitBuilders.ScreenViewBuilder screenViewBuilder = new HitBuilders.ScreenViewBuilder();
+
+            screenViewBuilder.setCustomDimension(1, params.get(AnalyticsManager.KeyType.CHECK_IN));
+            screenViewBuilder.setCustomDimension(2, params.get(AnalyticsManager.KeyType.CHECK_OUT));
+            screenViewBuilder.setCustomDimension(10, params.get(AnalyticsManager.KeyType.NRD));
+            screenViewBuilder.setCustomDimension(14, params.get(AnalyticsManager.KeyType.GRADE));
+            screenViewBuilder.setCustomDimension(18, params.get(AnalyticsManager.KeyType.IS_SHOW_ORIGINAL_PRICE));
+
+            mGoogleAnalyticsTracker.setScreenName(screenName);
+            mGoogleAnalyticsTracker.send(screenViewBuilder.build());
+
+            if (DEBUG == true)
+            {
+                ExLog.d(TAG + "recordScreen : " + screenName + " | " + screenViewBuilder.build().toString());
+            }
+        } else if (AnalyticsManager.Screen.DAILYHOTEL_PAYMENTCOMPLETE_OUTBOUND.equalsIgnoreCase(screenName) == true//
+            || AnalyticsManager.Screen.DAILYHOTEL_THANKYOU_OUTBOUND.equalsIgnoreCase(screenName) == true)
+        {
+            HitBuilders.ScreenViewBuilder screenViewBuilder = new HitBuilders.ScreenViewBuilder();
+
+            screenViewBuilder.setCustomDimension(4, params.get(AnalyticsManager.KeyType.PAYMENT_TYPE));
+            screenViewBuilder.setCustomDimension(9, params.get(AnalyticsManager.KeyType.REGISTERED_SIMPLE_CARD));
+
+            mGoogleAnalyticsTracker.setScreenName(screenName);
+            mGoogleAnalyticsTracker.send(screenViewBuilder.build());
+
+            if (DEBUG == true)
+            {
+                ExLog.d(TAG + "recordScreen : " + screenName + " | " + screenViewBuilder.build().toString());
+            }
         }
     }
 

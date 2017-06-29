@@ -51,6 +51,6 @@ public class StayOutboundThankYouAnalyticsImpl implements StayOutboundThankYouPr
 
         params.put(AnalyticsManager.KeyType.REGISTERED_SIMPLE_CARD, mAnalyticsParam.registerEasyCard ? "y" : "n");
 
-        AnalyticsManager.getInstance(activity).recordScreen(activity, AnalyticsManager.Screen.DAILYHOTEL_HOTELDETAILVIEW_OUTBOUND, null, params);
+        AnalyticsManager.getInstance(activity).recordScreen(activity, AnalyticsManager.Screen.DAILYHOTEL_THANKYOU_OUTBOUND, null, params);
     }
 }
