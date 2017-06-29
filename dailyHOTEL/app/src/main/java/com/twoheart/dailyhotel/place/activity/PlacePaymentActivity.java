@@ -57,8 +57,9 @@ public abstract class PlacePaymentActivity extends BaseActivity
 
     protected static final String STATE_PAYMENT_INFORMATION = "statePaymentInformation";
     protected static final String STATE_PLACE_BOOKINGDAY = "statePlaceBookingDay";
-    protected static final String STATE_PLACE_PROVINCE = "state_place_province";
-    protected static final String STATE_PLACE_AREA = "statePlaceArea";
+//    protected static final String STATE_PLACE_PROVINCE = "state_place_province";
+//    protected static final String STATE_PLACE_AREA = "statePlaceArea";
+    protected static final String STATE_ANALYTICS_PARAM = "stateAnalyticsParam";
 
     protected PlacePaymentInformation mPaymentInformation;
     protected CreditCard mSelectedCreditCard;

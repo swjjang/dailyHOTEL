@@ -20,6 +20,7 @@ import com.daily.dailyhotel.entity.CommonDateTime;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayOutbound;
 import com.daily.dailyhotel.entity.StayOutbounds;
+import com.daily.dailyhotel.repository.local.model.AnalyticsParam;
 import com.daily.dailyhotel.parcel.analytics.StayOutboundDetailAnalyticsParam;
 import com.daily.dailyhotel.screen.home.stay.outbound.detail.StayOutboundDetailActivity;
 import com.daily.dailyhotel.util.RecentlyPlaceUtil;
@@ -298,7 +299,14 @@ public class RecentStayListFragment extends RecentPlacesListFragment
                 }
             });
 
-            Intent intent = StayDetailActivity.newInstance(mBaseActivity, (StayBookingDay) mPlaceBookingDay, stay, 0, true);
+            AnalyticsParam analyticsParam = new AnalyticsParam();
+            analyticsParam.setParam(mBaseActivity, stay);
+            analyticsParam.setProvince(null);
+            analyticsParam.setTotalListCount(-1);
+
+            Intent intent = StayDetailActivity.newInstance(mBaseActivity //
+                , (StayBookingDay) mPlaceBookingDay, stay.index, stay.name, stay.imageUrl //
+                , analyticsParam, true);
 
             View simpleDraweeView = view.findViewById(R.id.imageView);
             View gradeTextView = view.findViewById(R.id.gradeTextView);
@@ -316,7 +324,14 @@ public class RecentStayListFragment extends RecentPlacesListFragment
             mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL, options.toBundle());
         } else
         {
-            Intent intent = StayDetailActivity.newInstance(mBaseActivity, (StayBookingDay) mPlaceBookingDay, stay, 0, false);
+            AnalyticsParam analyticsParam = new AnalyticsParam();
+            analyticsParam.setParam(mBaseActivity , stay);
+            analyticsParam.setProvince(null);
+            analyticsParam.setTotalListCount(-1);
+
+            Intent intent = StayDetailActivity.newInstance(mBaseActivity //
+                , (StayBookingDay) mPlaceBookingDay, stay.index, stay.name, stay.imageUrl //
+                , analyticsParam, false);
 
             mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL);
 

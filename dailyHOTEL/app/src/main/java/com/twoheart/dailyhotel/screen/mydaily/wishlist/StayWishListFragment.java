@@ -1,7 +1,9 @@
 package com.twoheart.dailyhotel.screen.mydaily.wishlist;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.SharedElementCallback;
@@ -10,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.daily.base.util.ExLog;
+import com.daily.dailyhotel.repository.local.model.AnalyticsParam;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Place;
@@ -263,6 +266,7 @@ public class StayWishListFragment extends PlaceWishListFragment
 
     StayWishListLayout.OnEventListener mEventListener = new PlaceWishListLayout.OnEventListener()
     {
+        @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
         @Override
         public void onListItemClick(View view, int position)
         {
@@ -303,7 +307,14 @@ public class StayWishListFragment extends PlaceWishListFragment
                     }
                 });
 
-                Intent intent = StayDetailActivity.newInstance(mBaseActivity, (StayBookingDay) mPlaceBookingDay, stay, true);
+                AnalyticsParam analyticsParam = new AnalyticsParam();
+                analyticsParam.setParam(mBaseActivity, stay);
+                analyticsParam.setProvince(null);
+                analyticsParam.setTotalListCount(-1);
+
+                Intent intent = StayDetailActivity.newInstance(mBaseActivity //
+                    , (StayBookingDay) mPlaceBookingDay, stay.index, stay.name, stay.imageUrl //
+                    , analyticsParam, true);
 
                 View simpleDraweeView = view.findViewById(R.id.imageView);
                 View gradeTextView = view.findViewById(R.id.gradeTextView);
@@ -321,7 +332,14 @@ public class StayWishListFragment extends PlaceWishListFragment
                 mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL, options.toBundle());
             } else
             {
-                Intent intent = StayDetailActivity.newInstance(mBaseActivity, (StayBookingDay) mPlaceBookingDay, stay, false);
+                AnalyticsParam analyticsParam = new AnalyticsParam();
+                analyticsParam.setParam(mBaseActivity, stay);
+                analyticsParam.setProvince(null);
+                analyticsParam.setTotalListCount(-1);
+
+                Intent intent = StayDetailActivity.newInstance(mBaseActivity //
+                    , (StayBookingDay) mPlaceBookingDay, stay.index, stay.name, stay.imageUrl //
+                    , analyticsParam, false);
 
                 mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL);
 

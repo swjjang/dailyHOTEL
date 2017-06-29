@@ -1,7 +1,9 @@
 package com.twoheart.dailyhotel.screen.home.collection;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.SharedElementCallback;
 import android.util.SparseArray;
@@ -9,6 +11,7 @@ import android.view.View;
 
 import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
+import com.daily.dailyhotel.repository.local.model.AnalyticsParam;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
@@ -234,6 +237,7 @@ public class CollectionGourmetActivity extends CollectionBaseActivity
             startCalendarActivity(mTodayDateTime, mPlaceBookingDay);
         }
 
+        @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
         @Override
         public void onPlaceClick(View view, PlaceViewItem placeViewItem, int count)
         {
@@ -264,7 +268,14 @@ public class CollectionGourmetActivity extends CollectionBaseActivity
                     }
                 });
 
-                Intent intent = GourmetDetailActivity.newInstance(CollectionGourmetActivity.this, (GourmetBookingDay) mPlaceBookingDay, recommendationGourmet, count, true);
+                AnalyticsParam analyticsParam = new AnalyticsParam();
+                analyticsParam.setParam(CollectionGourmetActivity.this, recommendationGourmet);
+                analyticsParam.setProvince(null);
+                analyticsParam.setTotalListCount(count);
+
+                Intent intent = GourmetDetailActivity.newInstance(CollectionGourmetActivity.this //
+                    , (GourmetBookingDay) mPlaceBookingDay, recommendationGourmet.index, recommendationGourmet.name //
+                    , recommendationGourmet.imageUrl, recommendationGourmet.category, recommendationGourmet.isSoldOut, analyticsParam, true);
 
                 View simpleDraweeView = view.findViewById(R.id.imageView);
                 View nameTextView = view.findViewById(R.id.nameTextView);
@@ -287,7 +298,14 @@ public class CollectionGourmetActivity extends CollectionBaseActivity
                 startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMET_DETAIL, options.toBundle());
             } else
             {
-                Intent intent = GourmetDetailActivity.newInstance(CollectionGourmetActivity.this, (GourmetBookingDay) mPlaceBookingDay, recommendationGourmet, count, false);
+                AnalyticsParam analyticsParam = new AnalyticsParam();
+                analyticsParam.setParam(CollectionGourmetActivity.this, recommendationGourmet);
+                analyticsParam.setProvince(null);
+                analyticsParam.setTotalListCount(count);
+
+                Intent intent = GourmetDetailActivity.newInstance(CollectionGourmetActivity.this //
+                    , (GourmetBookingDay) mPlaceBookingDay, recommendationGourmet.index, recommendationGourmet.name //
+                    , recommendationGourmet.imageUrl, recommendationGourmet.category, recommendationGourmet.isSoldOut, analyticsParam, false);
 
                 startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMET_DETAIL);
 

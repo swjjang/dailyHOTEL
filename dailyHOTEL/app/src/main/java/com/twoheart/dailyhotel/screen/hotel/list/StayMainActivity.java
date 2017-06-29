@@ -1,10 +1,12 @@
 package com.twoheart.dailyhotel.screen.hotel.list;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityOptionsCompat;
@@ -16,6 +18,7 @@ import android.widget.Toast;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.widget.DailyToast;
+import com.daily.dailyhotel.repository.local.model.AnalyticsParam;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.android.gms.maps.model.LatLng;
 import com.twoheart.dailyhotel.DailyHotel;
@@ -984,6 +987,7 @@ public class StayMainActivity extends PlaceMainActivity
 
     StayListFragment.OnStayListFragmentListener mStayListFragmentListener = new StayListFragment.OnStayListFragmentListener()
     {
+        @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
         @Override
         public void onStayClick(View view, PlaceViewItem placeViewItem, int listCount)
         {
@@ -1035,8 +1039,14 @@ public class StayMainActivity extends PlaceMainActivity
                             }
                         });
 
-                        Intent intent = StayDetailActivity.newInstance(StayMainActivity.this, //
-                            mStayCuration.getStayBookingDay(), province, stay, listCount, true);
+                        AnalyticsParam analyticsParam = new AnalyticsParam();
+                        analyticsParam.setParam(StayMainActivity.this, stay);
+                        analyticsParam.setProvince(province);
+                        analyticsParam.setTotalListCount(listCount);
+
+                        Intent intent = StayDetailActivity.newInstance(StayMainActivity.this //
+                            , mStayCuration.getStayBookingDay(), stay.index, stay.name, stay.imageUrl //
+                            , analyticsParam, true);
 
                         View simpleDraweeView = view.findViewById(R.id.imageView);
                         View gradeTextView = view.findViewById(R.id.gradeTextView);
@@ -1061,8 +1071,14 @@ public class StayMainActivity extends PlaceMainActivity
                         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL, options.toBundle());
                     } else
                     {
-                        Intent intent = StayDetailActivity.newInstance(StayMainActivity.this, //
-                            mStayCuration.getStayBookingDay(), province, stay, listCount, false);
+                        AnalyticsParam analyticsParam = new AnalyticsParam();
+                        analyticsParam.setParam(StayMainActivity.this, stay);
+                        analyticsParam.setProvince(province);
+                        analyticsParam.setTotalListCount(listCount);
+
+                        Intent intent = StayDetailActivity.newInstance(StayMainActivity.this //
+                            , mStayCuration.getStayBookingDay(), stay.index, stay.name, stay.imageUrl //
+                            , analyticsParam, false);
 
                         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL);
 

@@ -17,13 +17,14 @@ public class GourmetDetail extends PlaceDetail<GourmetProduct> implements Parcel
 
     public boolean hasCoupon;
 
-    public GourmetDetail(int index, int entryPosition, String isShowOriginalPrice, int listCount, boolean isDailyChoice)
+    public GourmetDetail(int index)
+//    public GourmetDetail(int index, int entryPosition, String isShowOriginalPrice, int listCount, boolean isDailyChoice)
     {
         this.index = index;
-        this.entryPosition = entryPosition;
-        this.isShowOriginalPrice = isShowOriginalPrice;
-        this.listCount = listCount;
-        this.isDailyChoice = isDailyChoice;
+//        this.entryPosition = entryPosition;
+//        this.isShowOriginalPrice = isShowOriginalPrice;
+//        this.listCount = listCount;
+//        this.isDailyChoice = isDailyChoice;
     }
 
     public GourmetDetail(Parcel in)
@@ -120,10 +121,10 @@ public class GourmetDetail extends PlaceDetail<GourmetProduct> implements Parcel
         dest.writeParcelable(mGourmetDetailParams, flags);
         dest.writeInt(hasCoupon == true ? 1 : 0);
         dest.writeInt(index);
-        dest.writeInt(listCount);
-        dest.writeInt(entryPosition);
-        dest.writeString(isShowOriginalPrice);
-        dest.writeInt(isDailyChoice == true ? 1 : 0);
+//        dest.writeInt(listCount);
+//        dest.writeInt(entryPosition);
+//        dest.writeString(isShowOriginalPrice);
+//        dest.writeInt(isDailyChoice == true ? 1 : 0);
     }
 
     protected void readFromParcel(Parcel in)
@@ -131,10 +132,10 @@ public class GourmetDetail extends PlaceDetail<GourmetProduct> implements Parcel
         mGourmetDetailParams = in.readParcelable(GourmetDetailParams.class.getClassLoader());
         hasCoupon = in.readInt() == 1;
         index = in.readInt();
-        listCount = in.readInt();
-        entryPosition = in.readInt();
-        isShowOriginalPrice = in.readString();
-        isDailyChoice = in.readInt() == 1;
+//        listCount = in.readInt();
+//        entryPosition = in.readInt();
+//        isShowOriginalPrice = in.readString();
+//        isDailyChoice = in.readInt() == 1;
     }
 
     @Override

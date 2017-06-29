@@ -72,6 +72,8 @@ public class DailyHotel extends android.support.multidex.MultiDexApplication imp
             }
         });
 
+        Realm.init(this);
+
         Fabric.with(this, new Crashlytics());
 
         mInstance = this;
@@ -110,8 +112,6 @@ public class DailyHotel extends android.support.multidex.MultiDexApplication imp
         }
 
         FontManager.getInstance(getApplicationContext());
-
-        Realm.init(this);
 
         RecentlyPlaceUtil.migrateRecentlyPlaces(DailyHotel.this);
 

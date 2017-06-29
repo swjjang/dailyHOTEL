@@ -27,15 +27,14 @@ import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.widget.DailyScrollView;
 import com.daily.base.widget.DailyToast;
+import com.daily.dailyhotel.repository.local.model.AnalyticsParam;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.Coupon;
 import com.twoheart.dailyhotel.model.CreditCard;
 import com.twoheart.dailyhotel.model.Customer;
 import com.twoheart.dailyhotel.model.GourmetPaymentInformation;
 import com.twoheart.dailyhotel.model.Guest;
 import com.twoheart.dailyhotel.model.PlacePaymentInformation;
-import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.time.GourmetBookingDay;
 import com.twoheart.dailyhotel.model.time.PlaceBookingDay;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
@@ -75,14 +74,11 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
     boolean mIsChangedPrice; // 가격이 변경된 경우.
     String mPlaceImageUrl;
     private boolean mIsUnderPrice;
-    private Province mProvince;
-    private String mArea; // Analytics용 소지역
     Dialog mTimeDialog;
 
-    public static Intent newInstance(Context context, String placeName, GourmetProduct gourmetProduct, GourmetBookingDay gourmetBookingDay//
-        , String imageUrl, String category, int gourmetIndex, boolean isDBenefit//
-        , Province province, String area, String isShowOriginalPrice, int entryPosition//
-        , boolean isDailyChoice, int ratingValue)
+    public static Intent newInstance(Context context, String placeName, GourmetProduct gourmetProduct //
+        , GourmetBookingDay gourmetBookingDay, String imageUrl, String category, int gourmetIndex //
+        , boolean isDBenefit, int ratingValue, AnalyticsParam analyticsParam)
     {
         Intent intent = new Intent(context, GourmetPaymentActivity.class);
 
@@ -93,12 +89,8 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
         intent.putExtra(NAME_INTENT_EXTRA_DATA_GOURMETIDX, gourmetIndex);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_CATEGORY, category);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_DBENEFIT, isDBenefit);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_PROVINCE, province);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_AREA, area);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_SHOW_ORIGINALPRICE, isShowOriginalPrice);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_ENTRY_INDEX, entryPosition);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_DAILYCHOICE, isDailyChoice);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_RATING_VALUE, ratingValue);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_ANALYTICS_PARAM, analyticsParam);
 
         return intent;
     }
@@ -134,8 +126,6 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
     {
         outState.putParcelable(STATE_PAYMENT_INFORMATION, mPaymentInformation);
         outState.putParcelable(STATE_PLACE_BOOKINGDAY, mPlaceBookingDay);
-        outState.putParcelable(STATE_PLACE_PROVINCE, mProvince);
-        outState.putString(STATE_PLACE_AREA, mArea);
 
         super.onSaveInstanceState(outState);
     }
@@ -147,8 +137,6 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
 
         mPaymentInformation = savedInstanceState.getParcelable(STATE_PAYMENT_INFORMATION);
         mPlaceBookingDay = savedInstanceState.getParcelable(STATE_PLACE_BOOKINGDAY);
-        mProvince = savedInstanceState.getParcelable(STATE_PLACE_PROVINCE);
-        mArea = savedInstanceState.getString(STATE_PLACE_AREA);
     }
 
     private boolean initIntent(Intent intent)
@@ -163,12 +151,14 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
         gourmetPaymentInformation.placeIndex = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_GOURMETIDX, -1);
         gourmetPaymentInformation.category = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_CATEGORY);
         gourmetPaymentInformation.isDBenefit = intent.getBooleanExtra(NAME_INTENT_EXTRA_DATA_DBENEFIT, false);
-        mProvince = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PROVINCE);
-        mArea = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_AREA);
         gourmetPaymentInformation.ratingValue = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_RATING_VALUE, -1);
-        gourmetPaymentInformation.isShowOriginalPrice = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_IS_SHOW_ORIGINALPRICE);
-        gourmetPaymentInformation.entryPosition = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_ENTRY_INDEX, -1);
-        gourmetPaymentInformation.isDailyChoice = intent.getBooleanExtra(NAME_INTENT_EXTRA_DATA_IS_DAILYCHOICE, false);
+
+        AnalyticsParam analyticsParam = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_ANALYTICS_PARAM);
+        gourmetPaymentInformation.showOriginalPriceYn = analyticsParam.showOriginalPriceYn;
+        gourmetPaymentInformation.entryPosition = analyticsParam.entryPosition;
+        gourmetPaymentInformation.isDailyChoice = analyticsParam.isDailyChoice;
+        gourmetPaymentInformation.setProvince(analyticsParam.getProvince());
+        gourmetPaymentInformation.addressAreaName = analyticsParam.getAddressAreaName();
 
         return gourmetPaymentInformation.getTicket() != null;
     }
@@ -1077,30 +1067,13 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
             params.put(AnalyticsManager.KeyType.DBENEFIT, gourmetPaymentInformation.isDBenefit ? "yes" : "no");
             params.put(AnalyticsManager.KeyType.REGISTERED_SIMPLE_CARD, mSelectedCreditCard != null ? "y" : "n");
             params.put(AnalyticsManager.KeyType.RATING, Integer.toString(gourmetPaymentInformation.ratingValue));
-            params.put(AnalyticsManager.KeyType.IS_SHOW_ORIGINAL_PRICE, gourmetPaymentInformation.isShowOriginalPrice);
+            params.put(AnalyticsManager.KeyType.IS_SHOW_ORIGINAL_PRICE, gourmetPaymentInformation.showOriginalPriceYn);
             params.put(AnalyticsManager.KeyType.LIST_INDEX, Integer.toString(gourmetPaymentInformation.entryPosition));
             params.put(AnalyticsManager.KeyType.DAILYCHOICE, gourmetPaymentInformation.isDailyChoice ? "y" : "n");
 
-            if (mProvince == null)
-            {
-                params.put(AnalyticsManager.KeyType.PROVINCE, AnalyticsManager.ValueType.EMPTY);
-                params.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.EMPTY);
-                params.put(AnalyticsManager.KeyType.AREA, AnalyticsManager.ValueType.EMPTY);
-            } else
-            {
-                if (mProvince instanceof Area)
-                {
-                    Area area = (Area) mProvince;
-                    params.put(AnalyticsManager.KeyType.PROVINCE, area.getProvince().name);
-                    params.put(AnalyticsManager.KeyType.DISTRICT, area.name);
-                } else
-                {
-                    params.put(AnalyticsManager.KeyType.PROVINCE, mProvince.name);
-                    params.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.ALL_LOCALE_KR);
-                }
-
-                params.put(AnalyticsManager.KeyType.AREA, DailyTextUtils.isTextEmpty(mArea) ? AnalyticsManager.ValueType.EMPTY : mArea);
-            }
+            params.put(AnalyticsManager.KeyType.PROVINCE, gourmetPaymentInformation.getAnalyticsProvinceName());
+            params.put(AnalyticsManager.KeyType.DISTRICT, gourmetPaymentInformation.getAnalyticsDistrictName());
+            params.put(AnalyticsManager.KeyType.AREA, gourmetPaymentInformation.getAnalyticsAddressAreaName());
 
             AnalyticsManager.getInstance(GourmetPaymentActivity.this).recordScreen(GourmetPaymentActivity.this, AnalyticsManager.Screen.DAILYGOURMET_PAYMENT, null, params);
         } catch (Exception e)
@@ -1139,7 +1112,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
 
             params.put(AnalyticsManager.KeyType.REGISTERED_SIMPLE_CARD, mSelectedCreditCard != null ? "y" : "n");
             params.put(AnalyticsManager.KeyType.RATING, Integer.toString(gourmetPaymentInformation.ratingValue));
-            params.put(AnalyticsManager.KeyType.IS_SHOW_ORIGINAL_PRICE, gourmetPaymentInformation.isShowOriginalPrice);
+            params.put(AnalyticsManager.KeyType.IS_SHOW_ORIGINAL_PRICE, gourmetPaymentInformation.showOriginalPriceYn);
             params.put(AnalyticsManager.KeyType.LIST_INDEX, Integer.toString(gourmetPaymentInformation.entryPosition));
             params.put(AnalyticsManager.KeyType.DAILYCHOICE, gourmetPaymentInformation.isDailyChoice ? "y" : "n");
             params.put(AnalyticsManager.KeyType.REGISTERED_SIMPLE_CARD, mSelectedCreditCard != null ? "y" : "n");
@@ -1183,26 +1156,9 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
                 }
             }
 
-            if (mProvince == null)
-            {
-                params.put(AnalyticsManager.KeyType.PROVINCE, AnalyticsManager.ValueType.EMPTY);
-                params.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.EMPTY);
-                params.put(AnalyticsManager.KeyType.AREA, AnalyticsManager.ValueType.EMPTY);
-            } else
-            {
-                if (mProvince instanceof Area)
-                {
-                    Area area = (Area) mProvince;
-                    params.put(AnalyticsManager.KeyType.PROVINCE, area.getProvince().name);
-                    params.put(AnalyticsManager.KeyType.DISTRICT, area.name);
-                } else
-                {
-                    params.put(AnalyticsManager.KeyType.PROVINCE, mProvince.name);
-                    params.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.ALL_LOCALE_KR);
-                }
-
-                params.put(AnalyticsManager.KeyType.AREA, DailyTextUtils.isTextEmpty(mArea) ? AnalyticsManager.ValueType.EMPTY : mArea);
-            }
+            params.put(AnalyticsManager.KeyType.PROVINCE, gourmetPaymentInformation.getAnalyticsProvinceName());
+            params.put(AnalyticsManager.KeyType.DISTRICT, gourmetPaymentInformation.getAnalyticsDistrictName());
+            params.put(AnalyticsManager.KeyType.AREA, gourmetPaymentInformation.getAnalyticsAddressAreaName());
 
             params.put(AnalyticsManager.KeyType.VISIT_DATE, gourmetBookingDay.getVisitDay("yyyyMMdd"));
         } catch (Exception e)

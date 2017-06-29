@@ -25,6 +25,7 @@ import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.parcel.analytics.StayOutboundDetailAnalyticsParam;
 import com.daily.dailyhotel.repository.local.ConfigLocalImpl;
+import com.daily.dailyhotel.repository.local.model.AnalyticsParam;
 import com.daily.dailyhotel.repository.remote.FacebookRemoteImpl;
 import com.daily.dailyhotel.repository.remote.KakaoRemoteImpl;
 import com.daily.dailyhotel.repository.remote.RecentlyRemoteImpl;
@@ -686,7 +687,14 @@ public class HomeFragment extends BaseMenuNavigationFragment
                             }
                         });
 
-                        Intent intent = StayDetailActivity.newInstance(mBaseActivity, stayBookingDay, place, true);
+                        AnalyticsParam analyticsParam = new AnalyticsParam();
+                        analyticsParam.setParam(mBaseActivity, place);
+                        analyticsParam.setProvince(null);
+                        analyticsParam.setTotalListCount(-1);
+
+                        Intent intent = StayDetailActivity.newInstance(mBaseActivity //
+                            , stayBookingDay, place.index, place.title, place.imageUrl //
+                            , analyticsParam, true);
 
                         if (intent == null)
                         {
@@ -704,7 +712,14 @@ public class HomeFragment extends BaseMenuNavigationFragment
                         mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL, options.toBundle());
                     } else
                     {
-                        Intent intent = StayDetailActivity.newInstance(mBaseActivity, stayBookingDay, place, false);
+                        AnalyticsParam analyticsParam = new AnalyticsParam();
+                        analyticsParam.setParam(mBaseActivity, place);
+                        analyticsParam.setProvince(null);
+                        analyticsParam.setTotalListCount(-1);
+
+                        Intent intent = StayDetailActivity.newInstance(mBaseActivity //
+                            , stayBookingDay, place.index, place.title, place.imageUrl //
+                            , analyticsParam, false);
 
                         if (intent == null)
                         {
@@ -744,7 +759,14 @@ public class HomeFragment extends BaseMenuNavigationFragment
                             }
                         });
 
-                        Intent intent = GourmetDetailActivity.newInstance(mBaseActivity, gourmetBookingDay, place, true);
+                        AnalyticsParam analyticsParam = new AnalyticsParam();
+                        analyticsParam.setParam(mBaseActivity, place);
+                        analyticsParam.setProvince(null);
+                        analyticsParam.setTotalListCount(-1);
+
+                        Intent intent = GourmetDetailActivity.newInstance(mBaseActivity //
+                            , gourmetBookingDay, place.index, place.title //
+                            , place.imageUrl, place.details.category, place.isSoldOut, analyticsParam, true);
 
                         if (intent == null)
                         {
@@ -762,7 +784,14 @@ public class HomeFragment extends BaseMenuNavigationFragment
                         mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMET_DETAIL, options.toBundle());
                     } else
                     {
-                        Intent intent = GourmetDetailActivity.newInstance(mBaseActivity, gourmetBookingDay, place, false);
+                        AnalyticsParam analyticsParam = new AnalyticsParam();
+                        analyticsParam.setParam(mBaseActivity, place);
+                        analyticsParam.setProvince(null);
+                        analyticsParam.setTotalListCount(-1);
+
+                        Intent intent = GourmetDetailActivity.newInstance(mBaseActivity //
+                            , gourmetBookingDay, place.index, place.title //
+                            , place.imageUrl, place.details.category, place.isSoldOut, analyticsParam, false);
 
                         if (intent == null)
                         {
