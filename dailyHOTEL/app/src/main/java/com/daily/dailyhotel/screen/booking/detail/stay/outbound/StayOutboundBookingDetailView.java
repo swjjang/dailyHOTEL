@@ -49,6 +49,7 @@ import com.twoheart.dailyhotel.databinding.DialogStayOutboundMapDataBinding;
 import com.twoheart.dailyhotel.databinding.LayoutStayOutboundBookingDetail01DataBinding;
 import com.twoheart.dailyhotel.databinding.LayoutStayOutboundBookingDetail02DataBinding;
 import com.twoheart.dailyhotel.databinding.LayoutStayOutboundBookingDetail03DataBinding;
+import com.twoheart.dailyhotel.databinding.LayoutStayOutboundDetailInformationDataBinding;
 import com.twoheart.dailyhotel.model.MyLocationMarker;
 import com.twoheart.dailyhotel.place.adapter.PlaceNameInfoWindowAdapter;
 import com.twoheart.dailyhotel.util.Constants;
@@ -58,6 +59,7 @@ import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
+import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
@@ -567,12 +569,24 @@ public class StayOutboundBookingDetailView extends BaseDialogView<StayOutboundBo
         }
 
         // 정책을 보여주지 않을 경우
-        if (DailyTextUtils.isTextEmpty(stayOutboundBookingDetail.refundPolicy) == true)
+        List<String> refundPolicyList = stayOutboundBookingDetail.getRefundPolicyList();
+        if (refundPolicyList == null || refundPolicyList.size() == 0)
         {
             setRefundLayoutVisible(false);
         } else
         {
-            mBookingDetail03DataBinding.refundPolicyTextView.setText(Html.fromHtml(stayOutboundBookingDetail.refundPolicy));
+            for (String refundPolicy : refundPolicyList)
+            {
+                if (DailyTextUtils.isTextEmpty(refundPolicy) == true)
+                {
+                    continue;
+                }
+
+                LayoutStayOutboundDetailInformationDataBinding detailInformationDataBinding = DataBindingUtil.inflate(LayoutInflater.from(getContext())//
+                    , R.layout.layout_stay_outbound_detail_information_data, mBookingDetail03DataBinding.defaultRefundPolicyLayout, true);
+
+                detailInformationDataBinding.textView.setText(Html.fromHtml(refundPolicy));
+            }
 
             setRefundLayoutVisible(true);
 

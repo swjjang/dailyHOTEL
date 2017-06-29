@@ -20,6 +20,7 @@ import com.daily.dailyhotel.entity.CommonDateTime;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayOutbound;
 import com.daily.dailyhotel.entity.StayOutbounds;
+import com.daily.dailyhotel.parcel.analytics.StayOutboundDetailAnalyticsParam;
 import com.daily.dailyhotel.screen.home.stay.outbound.detail.StayOutboundDetailActivity;
 import com.daily.dailyhotel.util.RecentlyPlaceUtil;
 import com.facebook.drawee.view.SimpleDraweeView;
@@ -365,6 +366,35 @@ public class RecentStayListFragment extends RecentPlacesListFragment
             }
         }
 
+        StayOutboundDetailAnalyticsParam analyticsParam = new StayOutboundDetailAnalyticsParam();
+
+        try
+        {
+            analyticsParam.index = stayOutbound.index;
+            analyticsParam.benefit = stayOutbound.promo;
+            analyticsParam.grade = getString(R.string.label_stay_outbound_filter_x_star_rate, (int) stayOutbound.rating);
+            analyticsParam.rankingPosition = 0;
+
+            for (PlaceViewItem searchPlaceViewItem : mListLayout.getList())
+            {
+                if (searchPlaceViewItem.mType == PlaceViewItem.TYPE_ENTRY)
+                {
+                    analyticsParam.rankingPosition++;
+
+                    if (((StayOutbound) searchPlaceViewItem.getItem()).index == stayOutbound.index)
+                    {
+                        break;
+                    }
+                }
+            }
+
+            analyticsParam.rating = Float.toString(stayOutbound.tripAdvisorRating);
+            analyticsParam.listCount = mListLayout.getRealItemCount();
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+        }
+
         if (Util.isUsedMultiTransition() == true)
         {
             getActivity().setExitSharedElementCallback(new SharedElementCallback()
@@ -402,7 +432,7 @@ public class RecentStayListFragment extends RecentPlacesListFragment
                 , stayOutbound.name, imageUrl, stayOutbound.total//
                 , mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
                 , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
-                , 2, null, true, false)//
+                , 2, null, true, false, analyticsParam)//
                 , REQUEST_CODE_DETAIL, options.toBundle());
         } else
         {
@@ -410,7 +440,7 @@ public class RecentStayListFragment extends RecentPlacesListFragment
                 , stayOutbound.name, imageUrl, stayOutbound.total//
                 , mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
                 , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
-                , 2, null, false, false)//
+                , 2, null, false, false, analyticsParam)//
                 , REQUEST_CODE_DETAIL);
 
             mBaseActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.hold);

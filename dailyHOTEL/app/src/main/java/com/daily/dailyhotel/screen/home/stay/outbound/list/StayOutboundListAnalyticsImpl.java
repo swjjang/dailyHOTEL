@@ -1,5 +1,22 @@
 package com.daily.dailyhotel.screen.home.stay.outbound.list;
 
+import android.app.Activity;
+
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
+
+import java.util.HashMap;
+import java.util.Map;
+
 public class StayOutboundListAnalyticsImpl implements StayOutboundListPresenter.StayOutboundListAnalyticsInterface
 {
+    @Override
+    public void onScreen(Activity activity)
+    {
+        Map<String, String> params = new HashMap<>();
+
+        params.put(AnalyticsManager.KeyType.PLACE_TYPE, "stay");
+        params.put(AnalyticsManager.KeyType.COUNTRY, "overseas");
+
+        AnalyticsManager.getInstance(activity).recordScreen(activity, AnalyticsManager.Screen.DAILYHOTEL_HOTELLIST_OUTBOUND, null, params);
+    }
 }
