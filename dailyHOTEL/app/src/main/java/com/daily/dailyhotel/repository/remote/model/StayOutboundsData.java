@@ -23,6 +23,9 @@ public class StayOutboundsData
     @JsonField(name = "moreResultsAvailable")
     public boolean moreResultsAvailable;
 
+    @JsonField(name = "numberOfRoomsRequested")
+    public int numberOfRoomsRequested;
+
     public StayOutboundsData()
     {
 
