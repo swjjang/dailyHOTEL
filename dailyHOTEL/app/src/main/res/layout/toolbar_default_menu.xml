@@ -24,6 +24,12 @@
         android:layout_marginRight="15dp">
 
         <ImageView
+            android:id="@+id/menu3View"
+            android:layout_width="30dp"
+            android:layout_height="@dimen/toolbar_height"
+            android:scaleType="center"/>
+
+        <ImageView
             android:id="@+id/menu2View"
             android:layout_width="30dp"
             android:layout_height="@dimen/toolbar_height"

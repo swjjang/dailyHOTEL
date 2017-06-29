@@ -20,7 +20,7 @@ public class DailyToolbarLayout
 {
     private static final int ANIMATION_DELAY = 200;
 
-    private Context mContext;
+    Context mContext;
     View mToolbar;
     private AlphaAnimation mAlphaAnimation;
 
@@ -105,45 +105,6 @@ public class DailyToolbarLayout
 
         menu1.setOnClickListener(listener);
         menu2.setOnClickListener(listener);
-    }
-
-    public void setToolbarMenuVisibility(boolean isVisibility)
-    {
-        View menu1 = mToolbar.findViewById(R.id.menu1View);
-        View menu2 = mToolbar.findViewById(R.id.menu2View);
-
-        if (menu1 == null || menu2 == null)
-        {
-            Util.restartApp(mContext);
-            return;
-        }
-
-        if (isVisibility == true)
-        {
-            menu1.setVisibility(View.VISIBLE);
-
-            if (menu2.getTag() != null)
-            {
-                menu2.setVisibility(View.VISIBLE);
-            }
-        } else
-        {
-            menu1.setVisibility(View.INVISIBLE);
-
-            if (menu2.getTag() != null)
-            {
-                menu2.setVisibility(View.INVISIBLE);
-            }
-        }
-    }
-
-    public void setToolbarMenuEnable(boolean enableMenu1, boolean enableMenu2)
-    {
-        View menu1 = mToolbar.findViewById(R.id.menu1View);
-        View menu2 = mToolbar.findViewById(R.id.menu2View);
-
-        menu1.setEnabled(enableMenu1);
-        menu2.setEnabled(enableMenu2);
     }
 
     public void setToolbarMenu(String menu1Text, String menu2Text)

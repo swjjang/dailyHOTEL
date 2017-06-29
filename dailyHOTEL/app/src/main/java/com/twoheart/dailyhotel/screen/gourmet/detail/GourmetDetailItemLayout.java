@@ -1,7 +1,14 @@
 package com.twoheart.dailyhotel.screen.gourmet.detail;
 
+import android.animation.Animator;
+import android.animation.ValueAnimator;
+import android.annotation.TargetApi;
 import android.content.Context;
+import android.databinding.DataBindingUtil;
+import android.graphics.Paint;
 import android.graphics.Typeface;
+import android.net.Uri;
+import android.os.Build;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.util.TypedValue;
@@ -9,24 +16,32 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ScreenUtils;
+import com.daily.base.widget.DailyImageView;
 import com.daily.base.widget.DailyTextView;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.databinding.ListRowDetailProductDataBinding;
 import com.twoheart.dailyhotel.model.DetailInformation;
 import com.twoheart.dailyhotel.model.GourmetDetail;
 import com.twoheart.dailyhotel.model.time.GourmetBookingDay;
 import com.twoheart.dailyhotel.network.model.GourmetDetailParams;
+import com.twoheart.dailyhotel.network.model.GourmetProduct;
 import com.twoheart.dailyhotel.network.model.PlaceReviewScores;
+import com.twoheart.dailyhotel.network.model.ProductImageInformation;
 import com.twoheart.dailyhotel.place.layout.PlaceDetailLayout;
 import com.twoheart.dailyhotel.util.DailyPreference;
+import com.twoheart.dailyhotel.util.DailyRemoteConfigPreference;
 
 import java.text.DecimalFormat;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by android_sam on 2017. 6. 5..
@@ -45,6 +60,12 @@ public class GourmetDetailItemLayout extends LinearLayout
     private GourmetBookingDay mGourmetBookingDay;
     private PlaceReviewScores mPlaceReviewScores;
     protected View mGourmetTitleLayout;
+    private LinearLayout mMoreLayout;
+    private DailyTextView mMoreTextView;
+
+    private int mDpi;
+    private int mFirstProductIndex;
+    private int mLastProductIndex;
 
     public GourmetDetailItemLayout(Context context)
     {
@@ -70,6 +91,7 @@ public class GourmetDetailItemLayout extends LinearLayout
         initLayout();
     }
 
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public GourmetDetailItemLayout(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes)
     {
         super(context, attrs, defStyleAttr, defStyleRes);
@@ -95,6 +117,11 @@ public class GourmetDetailItemLayout extends LinearLayout
         mEmptyViewOnTouchListener = emptyViewOnTouchListener;
     }
 
+    public void setDpi(int dpi)
+    {
+        mDpi = dpi;
+    }
+
     public void setData(GourmetBookingDay gourmetBookingDay, GourmetDetail gourmetDetail, PlaceReviewScores placeReviewScores)
     {
         mGourmetBookingDay = gourmetBookingDay;
@@ -102,6 +129,171 @@ public class GourmetDetailItemLayout extends LinearLayout
         mPlaceReviewScores = placeReviewScores;
 
         setView();
+    }
+
+    public int getFirstProductIndex()
+    {
+        return mFirstProductIndex;
+    }
+
+    public int getLastProductIndex()
+    {
+        return mLastProductIndex;
+    }
+
+    public void openMoreProductList()
+    {
+        if (mMoreLayout == null)
+        {
+            return;
+        }
+
+        Integer height = (Integer) mMoreLayout.getTag();
+
+        if (height == null)
+        {
+            return;
+        }
+
+        if (isOpenedProductMoreList() == true)
+        {
+            return;
+        }
+
+        ValueAnimator valueAnimator = ValueAnimator.ofInt(0, height);
+        valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener()
+        {
+            @Override
+            public void onAnimationUpdate(ValueAnimator valueAnimator)
+            {
+                if (valueAnimator == null)
+                {
+                    return;
+                }
+
+                int val = (int) valueAnimator.getAnimatedValue();
+                ViewGroup.LayoutParams layoutParams = mMoreLayout.getLayoutParams();
+                layoutParams.height = val;
+                mMoreLayout.requestLayout();
+            }
+        });
+        valueAnimator.setDuration(200);
+        valueAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
+        valueAnimator.addListener(new Animator.AnimatorListener()
+        {
+            @Override
+            public void onAnimationStart(Animator animation)
+            {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation)
+            {
+                valueAnimator.removeAllUpdateListeners();
+                valueAnimator.removeAllListeners();
+
+                mMoreTextView.setText("접기");
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation)
+            {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation)
+            {
+
+            }
+        });
+
+        valueAnimator.start();
+    }
+
+    public boolean isOpenedProductMoreList()
+    {
+        if (mMoreLayout == null)
+        {
+            return false;
+        }
+
+        return mMoreLayout.getHeight() > 0;
+    }
+
+    public void closeMoreProductList()
+    {
+        if (mMoreLayout == null || mFirstProductIndex < 0)
+        {
+            return;
+        }
+
+        Integer height = (Integer) mMoreLayout.getTag();
+
+        if (height == null)
+        {
+            return;
+        }
+
+        if (isOpenedProductMoreList() == false)
+        {
+            return;
+        }
+
+        ScrollView scrollView = (ScrollView) GourmetDetailItemLayout.this.getParent();
+        scrollView.smoothScrollTo(0, (int) getChildAt(mFirstProductIndex).getY() - mContext.getResources().getDimensionPixelSize(R.dimen.toolbar_height));
+
+        ValueAnimator valueAnimator = ValueAnimator.ofInt(height, 0);
+        valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener()
+        {
+            @Override
+            public void onAnimationUpdate(ValueAnimator valueAnimator)
+            {
+                if (valueAnimator == null)
+                {
+                    return;
+                }
+
+                int val = (int) valueAnimator.getAnimatedValue();
+                ViewGroup.LayoutParams layoutParams = mMoreLayout.getLayoutParams();
+                layoutParams.height = val;
+                mMoreLayout.requestLayout();
+            }
+        });
+        valueAnimator.setDuration(200);
+        valueAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
+        valueAnimator.addListener(new Animator.AnimatorListener()
+        {
+            @Override
+            public void onAnimationStart(Animator animation)
+            {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation)
+            {
+                valueAnimator.removeAllUpdateListeners();
+                valueAnimator.removeAllListeners();
+
+                mMoreTextView.setText(String.format(Locale.KOREA, "%d개 상품 모두 보기 ", (int) mMoreTextView.getTag()));
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation)
+            {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation)
+            {
+
+            }
+        });
+
+        valueAnimator.start();
     }
 
     private void setView()
@@ -122,20 +314,6 @@ public class GourmetDetailItemLayout extends LinearLayout
             addView(titleView);
         }
 
-        // 주소 및 맵
-        View addressView = getAddressView(mLayoutInflater, mGourmetDetail, mEventListener);
-        if (addressView != null)
-        {
-            addView(addressView);
-        }
-
-        // 편의 시설
-        View amenitiesView = getAmenitiesView(mLayoutInflater, mGourmetDetail);
-        if (amenitiesView != null)
-        {
-            addView(amenitiesView);
-        }
-
         // D Benefit
         View benefitView = getBenefitView(mLayoutInflater, mGourmetDetail);
         if (benefitView != null)
@@ -149,6 +327,32 @@ public class GourmetDetailItemLayout extends LinearLayout
             view.setLayoutParams(layoutParams);
             view.setBackgroundResource(R.color.default_line_cf0f0f0);
             addView(view);
+        }
+
+        mFirstProductIndex = getChildCount();
+
+        // 상품 정보
+        setProductListLayout(mLayoutInflater, this, mGourmetDetail.getProductList());
+
+        mLastProductIndex = getChildCount() - 1;
+
+        if (mGourmetDetail.getProductList().size() == 0)
+        {
+            mFirstProductIndex = mLastProductIndex = -1;
+        }
+
+        // 주소 및 맵
+        View addressView = getAddressView(mLayoutInflater, mGourmetDetail, mEventListener);
+        if (addressView != null)
+        {
+            addView(addressView);
+        }
+
+        // 편의 시설
+        View amenitiesView = getAmenitiesView(mLayoutInflater, mGourmetDetail);
+        if (amenitiesView != null)
+        {
+            addView(amenitiesView);
         }
 
         // 정보
@@ -530,6 +734,217 @@ public class GourmetDetailItemLayout extends LinearLayout
         return view;
     }
 
+    private void setProductListLayout(LayoutInflater layoutInflater, ViewGroup parent, List<GourmetProduct> gourmetProductList)
+    {
+        if (layoutInflater == null || gourmetProductList == null || gourmetProductList.size() == 0)
+        {
+            return;
+        }
+
+        final int DEFAULT_SHOW_PRODUCT_COUNT = 3;
+        int size = gourmetProductList.size();
+
+        if (size > DEFAULT_SHOW_PRODUCT_COUNT)
+        {
+            if (mMoreLayout != null)
+            {
+                mMoreLayout.removeAllViews();
+                mMoreLayout = null;
+            }
+
+            mMoreLayout = new LinearLayout(mContext);
+            mMoreLayout.setOrientation(LinearLayout.VERTICAL);
+
+            int firstPosition = parent.getChildCount();
+
+            for (int i = 0; i < size; i++)
+            {
+                if (i < DEFAULT_SHOW_PRODUCT_COUNT)
+                {
+                    setProductLayout(layoutInflater, parent, i, gourmetProductList.get(i));
+                } else if (i == DEFAULT_SHOW_PRODUCT_COUNT)
+                {
+                    mMoreTextView = new DailyTextView(mContext);
+                    mMoreTextView.setTag(size);
+                    mMoreTextView.setText(String.format(Locale.KOREA, "%d개 상품 모두 보기 ", size));
+                    mMoreTextView.setGravity(Gravity.CENTER);
+                    mMoreTextView.setBackgroundResource(R.color.white);
+                    mMoreTextView.setOnClickListener(new OnClickListener()
+                    {
+                        @Override
+                        public void onClick(View v)
+                        {
+                            if (mEventListener != null)
+                            {
+                                mEventListener.onMoreProductListClick();
+                            }
+                        }
+                    });
+
+                    parent.addView(mMoreLayout, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                    parent.addView(mMoreTextView, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ScreenUtils.dpToPx(mContext, 45)));
+
+                    setProductLayout(layoutInflater, mMoreLayout, i, gourmetProductList.get(i));
+                } else
+                {
+                    setProductLayout(layoutInflater, mMoreLayout, i, gourmetProductList.get(i));
+                }
+            }
+
+            mMoreLayout.post(new Runnable()
+            {
+                @Override
+                public void run()
+                {
+                    mMoreLayout.setTag(mMoreLayout.getHeight());
+
+                    LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) mMoreLayout.getLayoutParams();
+                    layoutParams.height = 0;
+                    mMoreLayout.requestLayout();
+                }
+            });
+        } else
+        {
+            for (int i = 0; i < size; i++)
+            {
+                setProductLayout(layoutInflater, parent, i, gourmetProductList.get(i));
+            }
+        }
+    }
+
+    private void setProductLayout(LayoutInflater layoutInflater, ViewGroup parent, int index, GourmetProduct gourmetProduct)
+    {
+        if (layoutInflater == null || parent == null || gourmetProduct == null)
+        {
+            return;
+        }
+
+        ListRowDetailProductDataBinding viewDataBinding = DataBindingUtil.inflate(layoutInflater, R.layout.list_row_detail_product_data, parent, true);
+
+        viewDataBinding.contentsLayout.setOnClickListener(new OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                if (mEventListener != null)
+                {
+                    mEventListener.onProductClick(index);
+                }
+            }
+        });
+
+        boolean hasThumbnail = true;
+
+        ProductImageInformation productImageInformation = gourmetProduct.getPrimaryImage();
+        if (productImageInformation == null)
+        {
+            hasThumbnail = false;
+        } else
+        {
+            String url;
+            if (mDpi <= 240)
+            {
+                url = "android_gourmet_product_hdpi";
+            } else if (mDpi <= 480)
+            {
+                url = "android_gourmet_product_xhdpi";
+            } else
+            {
+                url = "android_gourmet_product_xxxhdpi";
+            }
+
+            viewDataBinding.simpleDraweeView.setImageURI(Uri.parse(productImageInformation.imageUrl + "?impolicy=" + url));
+            viewDataBinding.simpleDraweeView.getHierarchy().setPlaceholderImage(R.drawable.layerlist_placeholder_s);
+        }
+
+        viewDataBinding.productNameTextView.setText(gourmetProduct.ticketName);
+
+        if (hasThumbnail == false)
+        {
+            viewDataBinding.simpleDraweeView.setVisibility(View.GONE);
+        } else
+        {
+            viewDataBinding.simpleDraweeView.setVisibility(View.VISIBLE);
+        }
+
+        viewDataBinding.contentsList.removeAllViews();
+
+        if (DailyTextUtils.isTextEmpty(gourmetProduct.menuBenefit) == true && DailyTextUtils.isTextEmpty(gourmetProduct.needToKnow) == true//
+            && DailyTextUtils.isTextEmpty(gourmetProduct.openTime, gourmetProduct.closeTime) == true)
+        {
+            viewDataBinding.contentsList.setVisibility(View.GONE);
+        } else
+        {
+            viewDataBinding.contentsList.setVisibility(View.VISIBLE);
+
+            // 베네핏
+            if (DailyTextUtils.isTextEmpty(gourmetProduct.menuBenefit) == false)
+            {
+                addProductSubInformation(layoutInflater, viewDataBinding.contentsList, gourmetProduct.menuBenefit, R.drawable.ic_detail_item_02_benefit, false);
+            }
+
+            // 이용 시간
+            if (DailyTextUtils.isTextEmpty(gourmetProduct.openTime, gourmetProduct.closeTime) == false)
+            {
+                String timeFormat = mContext.getString(R.string.label_office_hours) + " " + String.format(Locale.KOREA, "%s ~ %s", gourmetProduct.openTime, gourmetProduct.closeTime);
+
+                //                if (DailyTextUtils.isTextEmpty(gourmetProduct.lastOrderTime) == false)
+                //                {
+                //                    timeFormat += " " + mContext.getString(R.string.label_gourmet_product_lastorder, gourmetProduct.lastOrderTime);
+                //                }
+
+                addProductSubInformation(layoutInflater, viewDataBinding.contentsList, timeFormat, R.drawable.ic_detail_item_03_time, true);
+            }
+
+            // 확인 사항
+            //            if (DailyTextUtils.isTextEmpty(gourmetProduct.needToKnow) == false)
+            //            {
+            //                addProductSubInformation(layoutInflater, viewDataBinding.contentsList, gourmetProduct.needToKnow, R.drawable.ic_detail_item_01_info, true);
+            //            }
+        }
+
+        String price = DailyTextUtils.getPriceFormat(mContext, gourmetProduct.price, false);
+        String discountPrice = DailyTextUtils.getPriceFormat(mContext, gourmetProduct.discountPrice, false);
+
+        if (gourmetProduct.price <= 0 || gourmetProduct.price <= gourmetProduct.discountPrice)
+        {
+            viewDataBinding.priceTextView.setVisibility(View.GONE);
+            viewDataBinding.priceTextView.setText(null);
+        } else
+        {
+            viewDataBinding.priceTextView.setVisibility(View.VISIBLE);
+            viewDataBinding.priceTextView.setText(price);
+            viewDataBinding.priceTextView.setPaintFlags(viewDataBinding.priceTextView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+        }
+
+        viewDataBinding.discountPriceTextView.setText(discountPrice);
+    }
+
+    private void addProductSubInformation(LayoutInflater layoutInflater, ViewGroup viewGroup, String contentText, int iconResId, boolean hasTopMargin)
+    {
+        if (layoutInflater == null || viewGroup == null || DailyTextUtils.isTextEmpty(contentText) == true)
+        {
+            return;
+        }
+
+        View textLayout = layoutInflater.inflate(R.layout.list_row_detail_product_text, viewGroup, false);
+        viewGroup.addView(textLayout);
+
+        if (hasTopMargin == true)
+        {
+            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            layoutParams.topMargin = ScreenUtils.dpToPx(mContext, 6);
+            textLayout.setLayoutParams(layoutParams);
+        }
+
+        DailyImageView iconImageView = (DailyImageView) textLayout.findViewById(R.id.iconImageView);
+        iconImageView.setVectorImageResource(iconResId);
+
+        TextView textView = (TextView) textLayout.findViewById(R.id.textView);
+        textView.setText(contentText);
+    }
+
+
     /**
      * 정보
      *
@@ -629,7 +1044,7 @@ public class GourmetDetailItemLayout extends LinearLayout
         String startHour = hour[0];
         String endHour = hour[1];
 
-        String[] lunchTimes = DailyPreference.getInstance(mContext).getRemoteConfigOperationLunchTime().split("\\,");
+        String[] lunchTimes = DailyRemoteConfigPreference.getInstance(mContext).getRemoteConfigOperationLunchTime().split("\\,");
         String startLunchTime = lunchTimes[0];
         String endLunchTime = lunchTimes[1];
 

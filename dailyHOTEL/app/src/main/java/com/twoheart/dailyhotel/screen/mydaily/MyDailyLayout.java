@@ -22,7 +22,7 @@ import com.twoheart.dailyhotel.place.base.BaseMenuNavigationFragment;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
 import com.twoheart.dailyhotel.screen.mydaily.coupon.CouponListActivity;
 import com.twoheart.dailyhotel.util.Constants;
-import com.twoheart.dailyhotel.util.DailyPreference;
+import com.twoheart.dailyhotel.util.DailyRemoteConfigPreference;
 import com.twoheart.dailyhotel.util.DailyUserPreference;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
@@ -115,7 +115,7 @@ public class MyDailyLayout extends BaseLayout implements View.OnClickListener
         View wishListLayout = view.findViewById(R.id.wishListLayout);
         View recentPlacesLayout = view.findViewById(R.id.recentPlacesLayout);
 
-        if (DailyPreference.getInstance(mContext).isRemoteConfigStampEnabled() == true)
+        if (DailyRemoteConfigPreference.getInstance(mContext).isRemoteConfigStampEnabled() == true)
         {
             stampLayout.setVisibility(View.VISIBLE);
             stampLayout.setOnClickListener(this);

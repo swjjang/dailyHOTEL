@@ -31,6 +31,7 @@ import com.twoheart.dailyhotel.network.model.StayDetailParams;
 import com.twoheart.dailyhotel.network.model.StayProduct;
 import com.twoheart.dailyhotel.place.layout.PlaceDetailLayout;
 import com.twoheart.dailyhotel.util.DailyPreference;
+import com.twoheart.dailyhotel.util.DailyRemoteConfigPreference;
 
 import java.text.DecimalFormat;
 import java.util.List;
@@ -278,7 +279,7 @@ public class StayDetailItemLayout extends LinearLayout
         View stampLayout = view.findViewById(R.id.stampLayout);
         View stampClickLayout = stampLayout.findViewById(R.id.stampClickLayout);
 
-        if (DailyPreference.getInstance(mContext).isRemoteConfigStampEnabled() == true)
+        if (DailyRemoteConfigPreference.getInstance(mContext).isRemoteConfigStampEnabled() == true)
         {
             // 테블릿 높이 수정 필요한지 확인
             stampLayout.setVisibility(View.VISIBLE);
@@ -287,17 +288,17 @@ public class StayDetailItemLayout extends LinearLayout
             TextView stampMessage2TextView = (TextView) stampLayout.findViewById(R.id.stampMessage2TextView);
             TextView stampMessage3TextView = (TextView) stampLayout.findViewById(R.id.stampMessage3TextView);
 
-            String message1 = DailyPreference.getInstance(mContext).getRemoteConfigStampStayDetailMessage1();
-            String message2 = DailyPreference.getInstance(mContext).getRemoteConfigStampStayDetailMessage2();
+            String message1 = DailyRemoteConfigPreference.getInstance(mContext).getRemoteConfigStampStayDetailMessage1();
+            String message2 = DailyRemoteConfigPreference.getInstance(mContext).getRemoteConfigStampStayDetailMessage2();
 
-            boolean message3Enabled = DailyPreference.getInstance(mContext).isRemoteConfigStampStayDetailMessage3Enabled();
+            boolean message3Enabled = DailyRemoteConfigPreference.getInstance(mContext).isRemoteConfigStampStayDetailMessage3Enabled();
 
             stampMessage1TextView.setText(message1);
             stampMessage2TextView.setText(message2);
 
             if (message3Enabled == true)
             {
-                String message3 = DailyPreference.getInstance(mContext).getRemoteConfigStampStayDetailMessage3();
+                String message3 = DailyRemoteConfigPreference.getInstance(mContext).getRemoteConfigStampStayDetailMessage3();
 
                 SpannableString spannableString3 = new SpannableString(message3);
                 spannableString3.setSpan(new UnderlineSpan(), 0, spannableString3.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -747,7 +748,7 @@ public class StayDetailItemLayout extends LinearLayout
         String startHour = hour[0];
         String endHour = hour[1];
 
-        String[] lunchTimes = DailyPreference.getInstance(mContext).getRemoteConfigOperationLunchTime().split("\\,");
+        String[] lunchTimes = DailyRemoteConfigPreference.getInstance(mContext).getRemoteConfigOperationLunchTime().split("\\,");
         String startLunchTime = lunchTimes[0];
         String endLunchTime = lunchTimes[1];
 

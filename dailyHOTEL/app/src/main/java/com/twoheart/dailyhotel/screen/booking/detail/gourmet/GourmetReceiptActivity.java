@@ -23,7 +23,7 @@ import com.daily.base.widget.DailyToast;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.util.DailyCalendar;
-import com.twoheart.dailyhotel.util.DailyPreference;
+import com.twoheart.dailyhotel.util.DailyRemoteConfigPreference;
 import com.twoheart.dailyhotel.util.DailyUserPreference;
 
 import org.json.JSONObject;
@@ -153,13 +153,13 @@ public class GourmetReceiptActivity extends PlaceReceiptActivity
 
         // **공급자**
 
-        String phone = DailyPreference.getInstance(GourmetReceiptActivity.this).getRemoteConfigCompanyPhoneNumber();
-        String fax = DailyPreference.getInstance(GourmetReceiptActivity.this).getRemoteConfigCompanyFax();
+        String phone = DailyRemoteConfigPreference.getInstance(GourmetReceiptActivity.this).getRemoteConfigCompanyPhoneNumber();
+        String fax = DailyRemoteConfigPreference.getInstance(GourmetReceiptActivity.this).getRemoteConfigCompanyFax();
         String receiptNotice = jsonObject.getString("receiptNotice");
-        String address = DailyPreference.getInstance(GourmetReceiptActivity.this).getRemoteConfigCompanyAddress();
-        String ceoName = DailyPreference.getInstance(GourmetReceiptActivity.this).getRemoteConfigCompanyCEO();
-        String registrationNo = DailyPreference.getInstance(GourmetReceiptActivity.this).getRemoteConfigCompanyBizRegNumber();
-        String companyName = DailyPreference.getInstance(GourmetReceiptActivity.this).getRemoteConfigCompanyName();
+        String address = DailyRemoteConfigPreference.getInstance(GourmetReceiptActivity.this).getRemoteConfigCompanyAddress();
+        String ceoName = DailyRemoteConfigPreference.getInstance(GourmetReceiptActivity.this).getRemoteConfigCompanyCEO();
+        String registrationNo = DailyRemoteConfigPreference.getInstance(GourmetReceiptActivity.this).getRemoteConfigCompanyBizRegNumber();
+        String companyName = DailyRemoteConfigPreference.getInstance(GourmetReceiptActivity.this).getRemoteConfigCompanyName();
 
         View providerInfoLayout = findViewById(R.id.providerInfoLayout);
 

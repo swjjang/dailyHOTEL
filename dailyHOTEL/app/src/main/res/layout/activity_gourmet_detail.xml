@@ -1,119 +1,136 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
-                xmlns:dailyLineIndicator="http://schemas.android.com/apk/res-auto"
-                xmlns:fresco="http://schemas.android.com/apk/res-auto"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
+    xmlns:dailyLineIndicator="http://schemas.android.com/apk/res-auto"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/transImageView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintDimensionRatio="H,4:3"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        fresco:actualImageScaleType="centerCrop"/>
+
+    <com.twoheart.dailyhotel.widget.DailyLoopViewPager
+        android:id="@+id/defaultLoopViewPager"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintDimensionRatio="H,4:3"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"/>
+
+    <View
+        android:id="@+id/transGradientView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintDimensionRatio="H,4:3"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"/>
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="60dp"
+        android:background="@drawable/img_detail_bottom_gradient"
+        app:layout_constraintBottom_toBottomOf="@id/defaultLoopViewPager"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"/>
+
+    <View
+        android:id="@+id/viewPagerBottomLine"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        app:layout_constraintTop_toBottomOf="@id/defaultLoopViewPager"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"/>
+
+    <com.twoheart.dailyhotel.widget.DailyLineIndicator
+        android:id="@+id/viewpagerIndicator"
+        android:layout_width="0dp"
+        android:layout_height="2dp"
+        android:layout_marginBottom="12dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        app:layout_constraintBottom_toTopOf="@id/viewPagerBottomLine"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        dailyLineIndicator:indicatorBackgroundColor="@color/white_a40"
+        dailyLineIndicator:indicatorColor="@color/white"/>
 
     <RelativeLayout
-        android:id="@+id/defaultImageLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <com.facebook.drawee.view.SimpleDraweeView
-            android:id="@+id/transImageView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:adjustViewBounds="true"
-            fresco:actualImageScaleType="centerCrop"/>
-
-        <com.twoheart.dailyhotel.widget.DailyLoopViewPager
-            android:id="@+id/defaultLoopViewPager"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        app:layout_constraintBottom_toTopOf="@id/viewpagerIndicator"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent">
 
         <View
-            android:id="@+id/transGradientView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:id="@+id/moreIconView"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/detail_ic_more_img"/>
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:layout_alignBottom="@id/defaultLoopViewPager"
-            android:background="@drawable/img_detail_bottom_gradient"/>
-
-        <View
-            android:id="@+id/viewPagerBottomLine"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_below="@id/defaultLoopViewPager"/>
-
-        <com.twoheart.dailyhotel.widget.DailyLineIndicator
-            android:id="@+id/viewpagerIndicator"
-            android:layout_width="match_parent"
-            android:layout_height="2dp"
-            android:layout_above="@id/viewPagerBottomLine"
-            android:layout_marginBottom="12dp"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
-            dailyLineIndicator:indicatorBackgroundColor="@color/white_a40"
-            dailyLineIndicator:indicatorColor="@color/white"/>
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_above="@id/viewpagerIndicator"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="10dp"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp">
-
-            <View
-                android:id="@+id/moreIconView"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentRight="true"
-                android:background="@drawable/detail_ic_more_img"/>
-
-            <com.daily.base.widget.DailyTextView
-                android:id="@+id/descriptionTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_centerHorizontal="true"
-                android:layout_marginLeft="72dp"
-                android:layout_marginRight="72dp"
-                android:background="@drawable/background_image_information_detail"
-                android:ellipsize="end"
-                android:gravity="center"
-                android:maxLines="2"
-                android:paddingBottom="7dp"
-                android:paddingLeft="8dp"
-                android:paddingRight="8dp"
-                android:paddingTop="7dp"
-                android:textColor="@color/white"
-                android:textSize="12dp"
-                android:visibility="invisible"/>
-        </RelativeLayout>
-
-        <View
-            android:id="@+id/transGradientTopView"
-            android:layout_width="match_parent"
-            android:layout_height="112dp"
-            android:background="@drawable/img_detail_gradient"/>
-
-        <com.facebook.drawee.view.SimpleDraweeView
-            android:id="@+id/stickerSimpleDraweeView"
+        <com.daily.base.widget.DailyTextView
+            android:id="@+id/descriptionTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="52dp"
-            android:layout_marginLeft="15dp"
-            android:visibility="gone"/>
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="72dp"
+            android:layout_marginRight="72dp"
+            android:background="@drawable/background_image_information_detail"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:maxLines="2"
+            android:paddingBottom="7dp"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:paddingTop="7dp"
+            android:textColor="@color/white"
+            android:textSize="12dp"
+            android:visibility="invisible"/>
     </RelativeLayout>
+
+    <View
+        android:id="@+id/transGradientTopView"
+        android:layout_width="0dp"
+        android:layout_height="112dp"
+        android:background="@drawable/img_detail_gradient"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"/>
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/stickerSimpleDraweeView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="52dp"
+        android:visibility="gone"
+        app:layout_constraintLeft_toLeftOf="@+id/defaultLoopViewPager"
+        app:layout_constraintTop_toTopOf="@+id/defaultLoopViewPager"/>
 
     <LinearLayout
         android:id="@+id/transTitleLayout"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/defaultImageLayout"
         android:layout_marginTop="-1dp"
         android:orientation="vertical"
         android:paddingBottom="16dp"
-        android:paddingTop="19dp">
+        android:paddingTop="19dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/defaultLoopViewPager">
 
         <com.daily.base.widget.DailyTextView
             android:id="@+id/transGradeTextView"
@@ -144,15 +161,20 @@
 
     <com.twoheart.dailyhotel.widget.DailyPlaceDetailScrollView
         android:id="@+id/placeScrollView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@+id/bottomLayout"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:layout_alignParentBottom="false"
-        android:overScrollMode="never"/>
+        android:overScrollMode="never"
+        app:layout_constraintBottom_toTopOf="@+id/bottomLayout"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
 
     <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/toolbar_height">
+        android:layout_width="0dp"
+        android:layout_height="@dimen/toolbar_height"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent">
 
         <ImageView
             android:id="@+id/backView"
@@ -163,12 +185,23 @@
             android:tint="@color/white"
             app:srcCompat="@drawable/navibar_ic_back_01_black"/>
 
+        <com.daily.base.widget.DailyTextView
+            android:id="@+id/wishTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/toolbar_height"
+            android:layout_toLeftOf="@+id/trueVRView"
+            android:drawablePadding="5dp"
+            android:gravity="center_vertical"
+            android:textColor="@color/white"
+            android:textSize="12dp"
+            app:drawableCompatRight="@drawable/ic_heart_stroke_s"/>
+
         <ImageView
             android:id="@+id/trueVRView"
             android:layout_width="30dp"
             android:layout_height="@dimen/toolbar_height"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="5dp"
+            android:layout_marginLeft="10dp"
             android:layout_toLeftOf="@+id/shareView"
             android:scaleType="center"
             android:tint="@color/white"
@@ -188,47 +221,35 @@
             app:srcCompat="@drawable/navibar_ic_share_01_black"/>
     </RelativeLayout>
 
-    <include layout="@layout/toolbar_default_menu"/>
+    <include
+        layout="@layout/toolbar_detail_menu"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/toolbar_height"
+        android:elevation="2dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"/>
 
     <View
-        android:id="@+id/productTypeBackgroundView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/textView_textColor_shadow_soldout"
-        android:visibility="gone"/>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/gradient_2dp_line_height_over_21"
-        android:layout_above="@+id/bottomLayout"
-        android:background="@drawable/shape_gradient_bottom_up"/>
+        android:layout_width="0dp"
+        android:layout_height="2dp"
+        android:background="@drawable/shape_gradient_bottom_up"
+        app:layout_constraintBottom_toTopOf="@+id/bottomLayout"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"/>
 
     <RelativeLayout
         android:id="@+id/bottomLayout"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="64dp"
-        android:layout_alignParentBottom="true"
-        android:background="@color/white">
+        android:background="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent">
 
         <View
             android:layout_width="match_parent"
             android:layout_height="@dimen/gradient_1dp_line_height_under_21"
             android:background="@color/default_line_ce7e7e7"/>
-
-        <com.daily.base.widget.DailyTextView
-            android:id="@+id/wishListButtonView"
-            android:layout_width="48dp"
-            android:layout_height="44dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="10dp"
-            android:background="@drawable/shape_fillrect_le8e8e9_bfafafb"
-            android:drawablePadding="4dp"
-            android:gravity="center_horizontal"
-            android:paddingTop="9dp"
-            android:text="@string/label_wishlist"
-            android:textColor="@color/default_text_c454545"
-            android:textSize="9dp"
-            app:drawableCompatTop="@drawable/ic_heart_stroke_s"/>
 
         <com.daily.base.widget.DailyTextView
             android:id="@+id/bookingTextView"
@@ -250,7 +271,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_margin="10dp"
-            android:layout_toRightOf="@id/wishListButtonView"
             android:background="@drawable/shape_button_disable"
             android:gravity="center"
             android:text="@string/act_hotel_soldout"
@@ -262,11 +282,15 @@
 
     <ScrollView
         android:id="@+id/wishListPopupScrollView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:background="@color/transparent"
         android:fillViewport="true"
-        android:visibility="gone">
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -305,9 +329,13 @@
 
     <FrameLayout
         android:id="@+id/trueVRTooltipView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="gone">
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <com.daily.base.widget.DailyTextView
             android:layout_width="316dp"
@@ -320,4 +348,4 @@
             android:textSize="13dp"
             dailyFont:style="Medium"/>
     </FrameLayout>
-</RelativeLayout>
+</android.support.constraint.ConstraintLayout>

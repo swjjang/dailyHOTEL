@@ -20,7 +20,7 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ActivityStayOutboundReceiptDataBinding;
 import com.twoheart.dailyhotel.databinding.DialogStayOutboundReceiptEmailDataBinding;
 import com.twoheart.dailyhotel.util.DailyCalendar;
-import com.twoheart.dailyhotel.util.DailyPreference;
+import com.twoheart.dailyhotel.util.DailyRemoteConfigPreference;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
@@ -165,12 +165,12 @@ public class StayOutboundReceiptView extends BaseDialogView<StayOutboundReceiptV
         getViewDataBinding().totalPaymentTextView.setText(DailyTextUtils.getPriceFormat(getContext(), stayOutboundReceipt.totalPrice, false));
 
         // **공급자**
-        String phone = DailyPreference.getInstance(getContext()).getRemoteConfigCompanyPhoneNumber();
-        String fax = DailyPreference.getInstance(getContext()).getRemoteConfigCompanyFax();
-        String address = DailyPreference.getInstance(getContext()).getRemoteConfigCompanyAddress();
-        String ceoName = DailyPreference.getInstance(getContext()).getRemoteConfigCompanyCEO();
-        String registrationNo = DailyPreference.getInstance(getContext()).getRemoteConfigCompanyBizRegNumber();
-        String companyName = DailyPreference.getInstance(getContext()).getRemoteConfigCompanyName();
+        String phone = DailyRemoteConfigPreference.getInstance(getContext()).getRemoteConfigCompanyPhoneNumber();
+        String fax = DailyRemoteConfigPreference.getInstance(getContext()).getRemoteConfigCompanyFax();
+        String address = DailyRemoteConfigPreference.getInstance(getContext()).getRemoteConfigCompanyAddress();
+        String ceoName = DailyRemoteConfigPreference.getInstance(getContext()).getRemoteConfigCompanyCEO();
+        String registrationNo = DailyRemoteConfigPreference.getInstance(getContext()).getRemoteConfigCompanyBizRegNumber();
+        String companyName = DailyRemoteConfigPreference.getInstance(getContext()).getRemoteConfigCompanyName();
 
         // 상호
         getViewDataBinding().companyNameTextView.setText(getString(R.string.label_receipt_business_license, companyName, ceoName, phone, fax));

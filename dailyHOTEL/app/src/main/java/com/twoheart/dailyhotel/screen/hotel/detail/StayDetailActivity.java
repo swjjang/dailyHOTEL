@@ -59,6 +59,7 @@ import com.twoheart.dailyhotel.screen.mydaily.wishlist.WishListTabActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyPreference;
+import com.twoheart.dailyhotel.util.DailyRemoteConfigPreference;
 import com.twoheart.dailyhotel.util.DailyUserPreference;
 import com.twoheart.dailyhotel.util.KakaoLinkManager;
 import com.twoheart.dailyhotel.util.Util;
@@ -991,6 +992,14 @@ public class StayDetailActivity extends PlaceDetailActivity
 
         if (mPlaceDetailLayout != null)
         {
+            if (stayDetail == null || stayDetail.getStayDetailParams() == null)
+            {
+                setWishTextView(false, 0);
+            } else
+            {
+                setWishTextView(stayDetail.getStayDetailParams().myWish, stayDetail.getStayDetailParams().wishCount);
+            }
+
             ((StayDetailLayout) mPlaceDetailLayout).setDetail(stayBookingDay, stayDetail, mPlaceReviewScores, mCurrentImage);
         }
 
@@ -1006,7 +1015,6 @@ public class StayDetailActivity extends PlaceDetailActivity
             if (mPlaceDetailLayout != null)
             {
                 ((StayDetailLayout) mPlaceDetailLayout).showProductInformationLayout(mProductDetailIndex);
-                mPlaceDetailLayout.hideWishButton();
             }
         }
 
@@ -1156,8 +1164,7 @@ public class StayDetailActivity extends PlaceDetailActivity
 
         boolean isExpectSelected = !stayDetailParams.myWish;
         int wishCount = isExpectSelected == true ? stayDetailParams.wishCount + 1 : stayDetailParams.wishCount - 1;
-        mPlaceDetailLayout.setWishButtonCount(wishCount);
-        mPlaceDetailLayout.setWishButtonSelected(isExpectSelected);
+        setWishTextView(isExpectSelected, wishCount);
 
         if (isExpectSelected == true)
         {
@@ -1209,6 +1216,21 @@ public class StayDetailActivity extends PlaceDetailActivity
         } catch (Exception e)
         {
             ExLog.e(e.toString());
+        }
+    }
+
+    @Override
+    protected void onWishClick()
+    {
+        if (DailyHotel.isLogin() == false)
+        {
+            DailyToast.showToast(StayDetailActivity.this, R.string.toast_msg_please_login, Toast.LENGTH_LONG);
+
+            Intent intent = LoginActivity.newInstance(StayDetailActivity.this, Screen.DAILYHOTEL_DETAIL);
+            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_LOGIN_BY_DETAIL_WISHLIST);
+        } else
+        {
+            StayDetailActivity.this.onWishButtonClick(PlaceType.HOTEL, (StayDetail) mPlaceDetail);
         }
     }
 
@@ -1437,7 +1459,6 @@ public class StayDetailActivity extends PlaceDetailActivity
             if (mPlaceDetailLayout != null)
             {
                 ((StayDetailLayout) mPlaceDetailLayout).showAnimationProductInformationLayout();
-                mPlaceDetailLayout.hideWishButtonAnimation();
             }
 
             releaseUiComponent();
@@ -1464,11 +1485,9 @@ public class StayDetailActivity extends PlaceDetailActivity
                 if (isAnimation == true)
                 {
                     ((StayDetailLayout) mPlaceDetailLayout).hideAnimationProductInformationLayout();
-                    mPlaceDetailLayout.showWishButtonAnimation();
                 } else
                 {
                     ((StayDetailLayout) mPlaceDetailLayout).hideProductInformationLayout();
-                    mPlaceDetailLayout.showWishButton();
                 }
             }
 
@@ -1493,11 +1512,11 @@ public class StayDetailActivity extends PlaceDetailActivity
 
             // 상단
             TextView titleTextView = (TextView) dialogView.findViewById(R.id.titleTextView);
-            titleTextView.setText(DailyPreference.getInstance(StayDetailActivity.this).getRemoteConfigStampStayDetailPopupTitle());
+            titleTextView.setText(DailyRemoteConfigPreference.getInstance(StayDetailActivity.this).getRemoteConfigStampStayDetailPopupTitle());
 
             // 메시지
             TextView messageTextView = (TextView) dialogView.findViewById(R.id.messageTextView);
-            messageTextView.setText(DailyPreference.getInstance(StayDetailActivity.this).getRemoteConfigStampStayDetailPopupMessage());
+            messageTextView.setText(DailyRemoteConfigPreference.getInstance(StayDetailActivity.this).getRemoteConfigStampStayDetailPopupMessage());
 
             View confirmTextView = dialogView.findViewById(R.id.confirmTextView);
             confirmTextView.setOnClickListener(new View.OnClickListener()
@@ -1690,21 +1709,6 @@ public class StayDetailActivity extends PlaceDetailActivity
         }
 
         @Override
-        public void onWishClick()
-        {
-            if (DailyHotel.isLogin() == false)
-            {
-                DailyToast.showToast(StayDetailActivity.this, R.string.toast_msg_please_login, Toast.LENGTH_LONG);
-
-                Intent intent = LoginActivity.newInstance(StayDetailActivity.this, Screen.DAILYHOTEL_DETAIL);
-                startActivityForResult(intent, CODE_REQUEST_ACTIVITY_LOGIN_BY_DETAIL_WISHLIST);
-            } else
-            {
-                StayDetailActivity.this.onWishButtonClick(PlaceType.HOTEL, (StayDetail) mPlaceDetail);
-            }
-        }
-
-        @Override
         public void releaseUiComponent()
         {
             StayDetailActivity.this.releaseUiComponent();
@@ -1893,8 +1897,7 @@ public class StayDetailActivity extends PlaceDetailActivity
             {
                 stayDetailParams.myWish = true;
                 int wishCount = ++stayDetailParams.wishCount;
-                mPlaceDetailLayout.setWishButtonCount(wishCount);
-                mPlaceDetailLayout.setWishButtonSelected(true);
+                setWishTextView(true, wishCount);
                 mPlaceDetailLayout.setUpdateWishPopup(PlaceDetailLayout.WishPopupState.ADD);
 
                 try
@@ -1954,8 +1957,7 @@ public class StayDetailActivity extends PlaceDetailActivity
                 }
             } else
             {
-                mPlaceDetailLayout.setWishButtonCount(stayDetailParams.wishCount);
-                mPlaceDetailLayout.setWishButtonSelected(stayDetailParams.myWish);
+                setWishTextView(stayDetailParams.myWish, stayDetailParams.wishCount);
 
                 if (DailyTextUtils.isTextEmpty(message) == true)
                 {
@@ -1991,8 +1993,7 @@ public class StayDetailActivity extends PlaceDetailActivity
             {
                 stayDetailParams.myWish = false;
                 int wishCount = --stayDetailParams.wishCount;
-                mPlaceDetailLayout.setWishButtonCount(wishCount);
-                mPlaceDetailLayout.setWishButtonSelected(false);
+                setWishTextView(false, wishCount);
                 mPlaceDetailLayout.setUpdateWishPopup(PlaceDetailLayout.WishPopupState.DELETE);
 
                 try
@@ -2052,8 +2053,7 @@ public class StayDetailActivity extends PlaceDetailActivity
                 }
             } else
             {
-                mPlaceDetailLayout.setWishButtonCount(stayDetailParams.wishCount);
-                mPlaceDetailLayout.setWishButtonSelected(stayDetailParams.myWish);
+                setWishTextView(stayDetailParams.myWish, stayDetailParams.wishCount);
 
                 if (DailyTextUtils.isTextEmpty(message) == true)
                 {

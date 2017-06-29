@@ -49,6 +49,7 @@ import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyInternalDeepLink;
 import com.twoheart.dailyhotel.util.DailyPreference;
+import com.twoheart.dailyhotel.util.DailyRemoteConfigPreference;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailySignatureView;
@@ -959,10 +960,10 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
 
     private void setAvailableDefaultPaymentType()
     {
-        boolean isSimpleCardPaymentEnabled = DailyPreference.getInstance(this).isRemoteConfigGourmetSimpleCardPaymentEnabled();
-        boolean isCardPaymentEnabled = DailyPreference.getInstance(this).isRemoteConfigGourmetCardPaymentEnabled();
-        boolean isPhonePaymentEnabled = DailyPreference.getInstance(this).isRemoteConfigGourmetPhonePaymentEnabled();
-        boolean isVirtualPaymentEnabled = DailyPreference.getInstance(this).isRemoteConfigGourmetVirtualPaymentEnabled();
+        boolean isSimpleCardPaymentEnabled = DailyRemoteConfigPreference.getInstance(this).isRemoteConfigGourmetSimpleCardPaymentEnabled();
+        boolean isCardPaymentEnabled = DailyRemoteConfigPreference.getInstance(this).isRemoteConfigGourmetCardPaymentEnabled();
+        boolean isPhonePaymentEnabled = DailyRemoteConfigPreference.getInstance(this).isRemoteConfigGourmetPhonePaymentEnabled();
+        boolean isVirtualPaymentEnabled = DailyRemoteConfigPreference.getInstance(this).isRemoteConfigGourmetVirtualPaymentEnabled();
 
         StringBuilder guideMemo = new StringBuilder();
 
@@ -1276,12 +1277,12 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
             mOnEventListener.changedPaymentType(PlacePaymentInformation.PaymentType.PHONE_PAY);
         } else
         {
-            if (DailyPreference.getInstance(this).isRemoteConfigStaySimpleCardPaymentEnabled() == true)
+            if (DailyRemoteConfigPreference.getInstance(this).isRemoteConfigStaySimpleCardPaymentEnabled() == true)
             {
                 mGourmetPaymentLayout.setPaymentTypeEnabled(PlacePaymentInformation.PaymentType.EASY_CARD, true);
             }
 
-            if (DailyPreference.getInstance(this).isRemoteConfigStayCardPaymentEnabled() == true)
+            if (DailyRemoteConfigPreference.getInstance(this).isRemoteConfigStayCardPaymentEnabled() == true)
             {
                 mGourmetPaymentLayout.setPaymentTypeEnabled(PlacePaymentInformation.PaymentType.CARD, true);
             }
@@ -1297,7 +1298,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
                 mGourmetPaymentLayout.setPaymentTypeEnabled(PlacePaymentInformation.PaymentType.PHONE_PAY, false);
             } else
             {
-                if (DailyPreference.getInstance(this).isRemoteConfigStayPhonePaymentEnabled() == true)
+                if (DailyRemoteConfigPreference.getInstance(this).isRemoteConfigStayPhonePaymentEnabled() == true)
                 {
                     mGourmetPaymentLayout.setPaymentTypeEnabled(PlacePaymentInformation.PaymentType.PHONE_PAY, true);
                 }
@@ -1318,19 +1319,19 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
 
     private PlacePaymentInformation.PaymentType getAvailableDefaultPaymentType()
     {
-        if (DailyPreference.getInstance(this).isRemoteConfigGourmetSimpleCardPaymentEnabled() == true &&//
+        if (DailyRemoteConfigPreference.getInstance(this).isRemoteConfigGourmetSimpleCardPaymentEnabled() == true &&//
             mGourmetPaymentLayout.isPaymentTypeEnabled(PlacePaymentInformation.PaymentType.EASY_CARD) == true)
         {
             return PlacePaymentInformation.PaymentType.EASY_CARD;
-        } else if (DailyPreference.getInstance(this).isRemoteConfigGourmetCardPaymentEnabled() == true &&//
+        } else if (DailyRemoteConfigPreference.getInstance(this).isRemoteConfigGourmetCardPaymentEnabled() == true &&//
             mGourmetPaymentLayout.isPaymentTypeEnabled(PlacePaymentInformation.PaymentType.CARD) == true)
         {
             return PlacePaymentInformation.PaymentType.CARD;
-        } else if (DailyPreference.getInstance(this).isRemoteConfigGourmetPhonePaymentEnabled() == true &&//
+        } else if (DailyRemoteConfigPreference.getInstance(this).isRemoteConfigGourmetPhonePaymentEnabled() == true &&//
             mGourmetPaymentLayout.isPaymentTypeEnabled(PlacePaymentInformation.PaymentType.PHONE_PAY) == true)
         {
             return PlacePaymentInformation.PaymentType.PHONE_PAY;
-        } else if (DailyPreference.getInstance(this).isRemoteConfigGourmetVirtualPaymentEnabled() == true &&//
+        } else if (DailyRemoteConfigPreference.getInstance(this).isRemoteConfigGourmetVirtualPaymentEnabled() == true &&//
             mGourmetPaymentLayout.isPaymentTypeEnabled(PlacePaymentInformation.PaymentType.VBANK) == true)
         {
             return PlacePaymentInformation.PaymentType.VBANK;
@@ -1475,7 +1476,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
 
             final int count = gourmetPaymentInformation.ticketCount;
 
-            if (count <= 1)
+            if (count <= gourmetPaymentInformation.ticketMinCount)
             {
                 mGourmetPaymentLayout.setTicketCountMinusButtonEnabled(false);
             } else
@@ -1598,6 +1599,16 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
                     DailyToast.showToast(GourmetPaymentActivity.this, R.string.toast_msg_wrong_email_address, Toast.LENGTH_SHORT);
                     return;
                 }
+            }
+
+            if (mGourmetPaymentLayout.isCheckListCheck() == false)
+            {
+                releaseUiComponent();
+
+                mGourmetPaymentLayout.requestCheckListCheckFocus();
+
+                DailyToast.showToast(GourmetPaymentActivity.this, R.string.toast_msg_please_check_checklist, Toast.LENGTH_SHORT);
+                return;
             }
 
             gourmetPaymentInformation.setGuest(guest);
@@ -1795,6 +1806,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
                         int discountPrice = jsonObject.getInt("discount");
                         long sday = jsonObject.getLong("sday");
                         //					jsonObject.getInt("available_ticket_count");
+                        int minCount = jsonObject.getInt("minimum_order_quantity");
                         int maxCount = jsonObject.getInt("max_sale_count");
 
                         JSONArray timeJSONArray = jsonObject.getJSONArray("eating_time_list");
@@ -1847,6 +1859,13 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
                         }
 
                         gourmetProduct.discountPrice = discountPrice;
+                        gourmetPaymentInformation.ticketMinCount = minCount;
+
+                        if (gourmetPaymentInformation.ticketCount < minCount)
+                        {
+                            gourmetPaymentInformation.ticketCount = minCount;
+                        }
+
                         gourmetPaymentInformation.ticketMaxCount = maxCount;
 
                         if (gourmetPaymentInformation.ticketTime == 0)

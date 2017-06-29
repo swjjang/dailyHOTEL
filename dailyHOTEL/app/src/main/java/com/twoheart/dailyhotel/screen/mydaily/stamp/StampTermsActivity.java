@@ -10,6 +10,7 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.screen.common.WebViewActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Crypto;
+import com.twoheart.dailyhotel.util.DailyRemoteConfigPreference;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
 public class StampTermsActivity extends WebViewActivity
@@ -26,7 +27,7 @@ public class StampTermsActivity extends WebViewActivity
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_term);
-        setWebView(Crypto.getUrlDecoderEx(URL_WEB_STAMP_TERMS));
+        setWebView(Crypto.getUrlDecoderEx(DailyRemoteConfigPreference.getInstance(this).getKeyRemoteConfigStaticUrlStamp()));
 
         initToolbar();
         initLayout((DailyWebView) mWebView);

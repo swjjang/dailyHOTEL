@@ -45,6 +45,7 @@ import com.twoheart.dailyhotel.screen.mydaily.member.LoginActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyPreference;
+import com.twoheart.dailyhotel.util.DailyRemoteConfigPreference;
 import com.twoheart.dailyhotel.util.DailyUserPreference;
 import com.twoheart.dailyhotel.util.Util;
 
@@ -1158,7 +1159,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
                             int startHour = Integer.parseInt(startHourString);
                             int endHour = Integer.parseInt(endHourString);
 
-                            String[] lunchTimes = DailyPreference.getInstance(BaseActivity.this).getRemoteConfigOperationLunchTime().split("\\,");
+                            String[] lunchTimes = DailyRemoteConfigPreference.getInstance(BaseActivity.this).getRemoteConfigOperationLunchTime().split("\\,");
                             String[] startLunchTime = lunchTimes[0].split(":");
                             String[] endLunchTime = lunchTimes[1].split(":");
 
@@ -1228,7 +1229,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
                                 listener.onPositiveButtonClick(v);
                             }
 
-                            String remoteConfigPhoneNumber = DailyPreference.getInstance(BaseActivity.this).getRemoteConfigCompanyPhoneNumber();
+                            String remoteConfigPhoneNumber = DailyRemoteConfigPreference.getInstance(BaseActivity.this).getRemoteConfigCompanyPhoneNumber();
                             String phoneNumber = DailyTextUtils.isTextEmpty(remoteConfigPhoneNumber) == false //
                                 ? remoteConfigPhoneNumber : Constants.PHONE_NUMBER_DAILYHOTEL;
 
@@ -1280,7 +1281,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
                     String startHour = hour[0];
                     String endHour = hour[1];
 
-                    String[] lunchTimes = DailyPreference.getInstance(BaseActivity.this).getRemoteConfigOperationLunchTime().split("\\,");
+                    String[] lunchTimes = DailyRemoteConfigPreference.getInstance(BaseActivity.this).getRemoteConfigOperationLunchTime().split("\\,");
                     String startLunchTime = lunchTimes[0];
                     String endLunchTime = lunchTimes[1];
 
@@ -1327,7 +1328,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
         String startHour = hour[0];
         String endHour = hour[1];
 
-        String[] lunchTimes = DailyPreference.getInstance(this).getRemoteConfigOperationLunchTime().split("\\,");
+        String[] lunchTimes = DailyRemoteConfigPreference.getInstance(this).getRemoteConfigOperationLunchTime().split("\\,");
         String startLunchTime = lunchTimes[0];
         String endLunchTime = lunchTimes[1];
 

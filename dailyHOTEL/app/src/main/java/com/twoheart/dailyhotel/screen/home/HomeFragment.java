@@ -72,6 +72,7 @@ import com.twoheart.dailyhotel.util.DailyDeepLink;
 import com.twoheart.dailyhotel.util.DailyExternalDeepLink;
 import com.twoheart.dailyhotel.util.DailyLocationFactory;
 import com.twoheart.dailyhotel.util.DailyPreference;
+import com.twoheart.dailyhotel.util.DailyRemoteConfigPreference;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
@@ -451,7 +452,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
                 startWishList(PlaceType.FNB);
             } else if (externalDeepLink.isStampView() == true)
             {
-                if (DailyPreference.getInstance(mBaseActivity).isRemoteConfigStampStayEndEventPopupEnabled() == true)
+                if (DailyRemoteConfigPreference.getInstance(mBaseActivity).isRemoteConfigStampStayEndEventPopupEnabled() == true)
                 {
                     mBaseActivity.showSimpleDialog(null, getString(R.string.message_stamp_finish_stamp), getString(R.string.dialog_btn_text_confirm), null);
                 }
@@ -509,7 +510,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
 
         if (mIsLogin == false)
         {
-            boolean isLogoutAreaEnable = DailyPreference.getInstance(mBaseActivity).isRemoteConfigHomeMessageAreaLogoutEnabled();
+            boolean isLogoutAreaEnable = DailyRemoteConfigPreference.getInstance(mBaseActivity).isRemoteConfigHomeMessageAreaLogoutEnabled();
             boolean isTextMessageAreaEnable = DailyPreference.getInstance(mBaseActivity).isHomeTextMessageAreaEnabled();
 
             if (isLogoutAreaEnable == true && isTextMessageAreaEnable == true)
@@ -529,8 +530,8 @@ public class HomeFragment extends BaseMenuNavigationFragment
 
     private void requestTextMessage()
     {
-        String title = DailyPreference.getInstance(mBaseActivity).getRemoteConfigHomeMessageAreaLogoutTitle();
-        String description = DailyPreference.getInstance(mBaseActivity).getRemoteConfigHomeMessageAreaLogoutCallToAction();
+        String title = DailyRemoteConfigPreference.getInstance(mBaseActivity).getRemoteConfigHomeMessageAreaLogoutTitle();
+        String description = DailyRemoteConfigPreference.getInstance(mBaseActivity).getRemoteConfigHomeMessageAreaLogoutCallToAction();
 
         if (mHomeLayout != null)
         {
@@ -547,7 +548,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
 
     private void requestCategoryEnabled()
     {
-        boolean isEnabled = DailyPreference.getInstance(mBaseActivity).getRemoteConfigHomeCategoryEnabled();
+        boolean isEnabled = DailyRemoteConfigPreference.getInstance(mBaseActivity).getRemoteConfigHomeCategoryEnabled();
 
         if (mHomeLayout != null)
         {
@@ -1000,8 +1001,8 @@ public class HomeFragment extends BaseMenuNavigationFragment
             requestWishList();
             requestRecentList();
 
-            if (DailyHotel.isLogin() == true && DailyPreference.getInstance(mBaseActivity).isRemoteConfigStampEnabled() == true //
-                && DailyPreference.getInstance(mBaseActivity).isRemoteConfigStampHomeEnabled() == true)
+            if (DailyHotel.isLogin() == true && DailyRemoteConfigPreference.getInstance(mBaseActivity).isRemoteConfigStampEnabled() == true //
+                && DailyRemoteConfigPreference.getInstance(mBaseActivity).isRemoteConfigStampHomeEnabled() == true)
             {
                 mNetworkController.requestUserStamps();
             }
@@ -1682,7 +1683,8 @@ public class HomeFragment extends BaseMenuNavigationFragment
             }
 
             startActivityForResult(EventWebActivity.newInstance(mBaseActivity, EventWebActivity.SourceType.STAMP//
-                , Crypto.getUrlDecoderEx(Constants.URL_WEB_STAMP_EVENT), mBaseActivity.getString(R.string.label_stamp_event_title)), Constants.CODE_REQUEST_ACTIVITY_STAMP);
+                , Crypto.getUrlDecoderEx(DailyRemoteConfigPreference.getInstance(mBaseActivity).getKeyRemoteConfigStaticUrlDailyStampHome())//
+                , mBaseActivity.getString(R.string.label_stamp_event_title)), Constants.CODE_REQUEST_ACTIVITY_STAMP);
 
             AnalyticsManager.getInstance(mBaseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION,//
                 AnalyticsManager.Action.STAMP_DETAIL_CLICK, AnalyticsManager.Label.HOME, null);

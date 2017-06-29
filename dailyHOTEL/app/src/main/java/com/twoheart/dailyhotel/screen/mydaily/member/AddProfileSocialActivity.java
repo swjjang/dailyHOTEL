@@ -24,7 +24,7 @@ import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.screen.information.terms.PrivacyActivity;
 import com.twoheart.dailyhotel.screen.information.terms.TermActivity;
 import com.twoheart.dailyhotel.util.DailyCalendar;
-import com.twoheart.dailyhotel.util.DailyPreference;
+import com.twoheart.dailyhotel.util.DailyRemoteConfigPreference;
 import com.twoheart.dailyhotel.util.DailyUserPreference;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
@@ -206,7 +206,7 @@ public class AddProfileSocialActivity extends BaseActivity
 
         // 상단
         TextView titleTextView = (TextView) dialogView.findViewById(R.id.titleTextView);
-        titleTextView.setText(DailyPreference.getInstance(this).getRemoteConfigTextSignUpText02());
+        titleTextView.setText(DailyRemoteConfigPreference.getInstance(this).getRemoteConfigTextSignUpText02());
 
         // 메시지
         TextView messageTextView = (TextView) dialogView.findViewById(R.id.messageTextView);

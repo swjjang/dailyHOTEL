@@ -26,7 +26,7 @@ import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
-import com.twoheart.dailyhotel.util.DailyPreference;
+import com.twoheart.dailyhotel.util.DailyRemoteConfigPreference;
 import com.twoheart.dailyhotel.util.DailyUserPreference;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
@@ -401,13 +401,13 @@ public class IssuingReceiptActivity extends BaseActivity
 
             JSONObject provider = jsonObject.getJSONObject("provider");
 
-            String phone = DailyPreference.getInstance(IssuingReceiptActivity.this).getRemoteConfigCompanyPhoneNumber();
-            String fax = DailyPreference.getInstance(IssuingReceiptActivity.this).getRemoteConfigCompanyFax();
+            String phone = DailyRemoteConfigPreference.getInstance(IssuingReceiptActivity.this).getRemoteConfigCompanyPhoneNumber();
+            String fax = DailyRemoteConfigPreference.getInstance(IssuingReceiptActivity.this).getRemoteConfigCompanyFax();
             String memo = provider.getString("memo");
-            String address = DailyPreference.getInstance(IssuingReceiptActivity.this).getRemoteConfigCompanyAddress();
-            String ceoName = DailyPreference.getInstance(IssuingReceiptActivity.this).getRemoteConfigCompanyCEO();
-            String registrationNo = DailyPreference.getInstance(IssuingReceiptActivity.this).getRemoteConfigCompanyBizRegNumber();
-            String companyName = DailyPreference.getInstance(IssuingReceiptActivity.this).getRemoteConfigCompanyName();
+            String address = DailyRemoteConfigPreference.getInstance(IssuingReceiptActivity.this).getRemoteConfigCompanyAddress();
+            String ceoName = DailyRemoteConfigPreference.getInstance(IssuingReceiptActivity.this).getRemoteConfigCompanyCEO();
+            String registrationNo = DailyRemoteConfigPreference.getInstance(IssuingReceiptActivity.this).getRemoteConfigCompanyBizRegNumber();
+            String companyName = DailyRemoteConfigPreference.getInstance(IssuingReceiptActivity.this).getRemoteConfigCompanyName();
 
             View providerInfoLayout = findViewById(R.id.providerInfoLayout);
 

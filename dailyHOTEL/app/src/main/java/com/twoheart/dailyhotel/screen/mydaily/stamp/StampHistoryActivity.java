@@ -13,7 +13,7 @@ import com.twoheart.dailyhotel.network.dto.BaseDto;
 import com.twoheart.dailyhotel.network.model.Stamp;
 import com.twoheart.dailyhotel.network.model.StampHistory;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
-import com.twoheart.dailyhotel.util.DailyPreference;
+import com.twoheart.dailyhotel.util.DailyRemoteConfigPreference;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import retrofit2.Call;
@@ -40,8 +40,8 @@ public class StampHistoryActivity extends BaseActivity
 
         setContentView(mStampHistoryLayout.onCreateView(R.layout.activity_stamp_history));
 
-        String stampDate1 = DailyPreference.getInstance(this).getRemoteConfigStampDate2();
-        String stampDate2 = DailyPreference.getInstance(this).getRemoteConfigStampDate3();
+        String stampDate1 = DailyRemoteConfigPreference.getInstance(this).getRemoteConfigStampDate2();
+        String stampDate2 = DailyRemoteConfigPreference.getInstance(this).getRemoteConfigStampDate3();
 
         mStampHistoryLayout.setStampDate(stampDate1, stampDate2);
     }
@@ -53,7 +53,7 @@ public class StampHistoryActivity extends BaseActivity
 
         AnalyticsManager.getInstance(StampHistoryActivity.this).recordScreen(this, AnalyticsManager.Screen.STAMP_HISTORY, null);
 
-        if (DailyPreference.getInstance(this).isRemoteConfigStampEnabled() == true)
+        if (DailyRemoteConfigPreference.getInstance(this).isRemoteConfigStampEnabled() == true)
         {
             lockUI();
             DailyMobileAPI.getInstance(this).requestUserStamps(mNetworkTag, true, mStampHistoryCallback);
