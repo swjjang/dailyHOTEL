@@ -363,8 +363,6 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
         setRefresh(false);
         screenLock(showProgress);
 
-        Observable<StayOutboundPayment> observable;
-
         addCompositeDisposable(Observable.zip(mPaymentRemoteImpl.getStayOutboundPayment(mStayBookDateTime, mStayIndex//
             , mRateCode, mRateKey, mRoomTypeCode, mRoomBedTypeId, mPeople)//
             , mPaymentRemoteImpl.getEasyCardList(), mProfileRemoteImpl.getUserInformation()//
@@ -479,16 +477,9 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
                 discountPrice = mStayOutboundPayment.totalPrice;
             }
 
-            try
-            {
-                setStayOutboundPayment(discountPrice);
+            setStayOutboundPayment(discountPrice);
 
-                getViewInterface().setStayOutboundPayment(mGuest.bonus, mStayBookDateTime.getNights()//
-                    , mStayOutboundPayment.totalPrice, discountPrice, mStayOutboundPayment.feeTotalAmountUsd);
-            } catch (Exception e)
-            {
-                ExLog.d(e.toString());
-            }
+            notifyStayOutboundPaymentChanged();
         } else
         {
             // 적립금 삭제
@@ -929,6 +920,53 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
             getViewInterface().setStayOutboundPayment(mGuest.bonus, mStayBookDateTime.getNights()//
                 , mStayOutboundPayment.totalPrice, mStayOutboundPayment.discountPrice//
                 , mStayOutboundPayment.feeTotalAmountUsd);
+
+            // 1000원 미만 결제시에 간편/일반 결제 불가 - 쿠폰 또는 적립금 전체 사용이 아닌경우 조건 추가
+            int paymentPrice = mStayOutboundPayment.totalPrice - (mBonusSelected == true ? mGuest.bonus : 0);
+
+            final int CARD_MIN_PRICE = 1000;
+            final int PHONE_MAX_PRICE = 500000;
+
+            if (paymentPrice > 0 && paymentPrice < CARD_MIN_PRICE)
+            {
+                getViewInterface().setPaymentTypeEnabled(StayOutboundPayment.PaymentType.EASY_CARD, false);
+                getViewInterface().setPaymentTypeEnabled(StayOutboundPayment.PaymentType.CARD, false);
+
+                if (DailyPreference.getInstance(getActivity()).isRemoteConfigStayOutboundPhonePaymentEnabled() == true)
+                {
+                    getViewInterface().setPaymentTypeEnabled(StayOutboundPayment.PaymentType.PHONE_PAY, true);
+                }
+            } else if (paymentPrice >= PHONE_MAX_PRICE)
+            {
+                if (DailyPreference.getInstance(getActivity()).isRemoteConfigStayOutboundSimpleCardPaymentEnabled() == true)
+                {
+                    getViewInterface().setPaymentTypeEnabled(StayOutboundPayment.PaymentType.EASY_CARD, true);
+                }
+
+                if (DailyPreference.getInstance(getActivity()).isRemoteConfigStayOutboundCardPaymentEnabled() == true)
+                {
+                    getViewInterface().setPaymentTypeEnabled(StayOutboundPayment.PaymentType.CARD, true);
+                }
+
+                getViewInterface().setPaymentTypeEnabled(StayOutboundPayment.PaymentType.PHONE_PAY, false);
+            } else if (paymentPrice > 0)
+            {
+                if (DailyPreference.getInstance(getActivity()).isRemoteConfigStayOutboundSimpleCardPaymentEnabled() == true)
+                {
+                    getViewInterface().setPaymentTypeEnabled(StayOutboundPayment.PaymentType.EASY_CARD, true);
+                }
+
+                if (DailyPreference.getInstance(getActivity()).isRemoteConfigStayOutboundCardPaymentEnabled() == true)
+                {
+                    getViewInterface().setPaymentTypeEnabled(StayOutboundPayment.PaymentType.CARD, true);
+                }
+
+                if (DailyPreference.getInstance(getActivity()).isRemoteConfigStayOutboundPhonePaymentEnabled() == true)
+                {
+                    getViewInterface().setPaymentTypeEnabled(StayOutboundPayment.PaymentType.PHONE_PAY, true);
+                }
+            }
+
         } catch (Exception e)
         {
             ExLog.d(e.toString());
