@@ -16,9 +16,9 @@ import android.widget.Toast;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.widget.DailyToast;
-import com.daily.dailyhotel.repository.local.model.AnalyticsParam;
 import com.daily.dailyhotel.entity.GourmetMenu;
 import com.daily.dailyhotel.entity.GourmetMenuImage;
+import com.daily.dailyhotel.repository.local.model.AnalyticsParam;
 import com.daily.dailyhotel.screen.home.gourmet.detail.menus.GourmetMenusActivity;
 import com.daily.dailyhotel.util.RecentlyPlaceUtil;
 import com.facebook.drawee.drawable.ScalingUtils;
@@ -32,7 +32,6 @@ import com.twoheart.dailyhotel.model.time.GourmetBookingDay;
 import com.twoheart.dailyhotel.model.time.PlaceBookingDay;
 import com.twoheart.dailyhotel.network.model.GourmetDetailParams;
 import com.twoheart.dailyhotel.network.model.GourmetProduct;
-import com.twoheart.dailyhotel.network.model.HomePlace;
 import com.twoheart.dailyhotel.network.model.ImageInformation;
 import com.twoheart.dailyhotel.network.model.PlaceReviewScores;
 import com.twoheart.dailyhotel.network.model.ProductImageInformation;
@@ -112,37 +111,6 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         intent.putExtra(NAME_INTENT_EXTRA_DATA_IMAGEURL, imageUrl);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_CATEGORY, category);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_SOLDOUT, isSoldOut);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_CALENDAR_FLAG, false);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_ANALYTICS_PARAM, analyticsParam);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_USED_MULTITRANSITIOIN, isUsedMultiTransition);
-
-        return intent;
-    }
-
-    /**
-     * 홈에서 호출
-     *
-     * @param context
-     * @param gourmetBookingDay
-     * @param homePlace
-     * @param isUsedMultiTransition
-     * @return
-     */
-    public static Intent newInstance(Context context, GourmetBookingDay gourmetBookingDay //
-        , HomePlace homePlace, AnalyticsParam analyticsParam, boolean isUsedMultiTransition)
-    {
-        if (gourmetBookingDay == null || homePlace == null)
-        {
-            return null;
-        }
-
-        Intent intent = new Intent(context, GourmetDetailActivity.class);
-
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, gourmetBookingDay);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEIDX, homePlace.index);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACENAME, homePlace.title);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_IMAGEURL, homePlace.imageUrl);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_CATEGORY, homePlace.details.category);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_CALENDAR_FLAG, false);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_ANALYTICS_PARAM, analyticsParam);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_USED_MULTITRANSITIOIN, isUsedMultiTransition);

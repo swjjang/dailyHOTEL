@@ -767,7 +767,11 @@ public class HomeFragment extends BaseMenuNavigationFragment
                         analyticsParam.setProvince(null);
                         analyticsParam.setTotalListCount(-1);
 
-                        Intent intent = GourmetDetailActivity.newInstance(mBaseActivity, gourmetBookingDay, place, analyticsParam, true);
+                        Intent intent = GourmetDetailActivity.newInstance(mBaseActivity //
+                            , gourmetBookingDay, place.index, place.title //
+                            , place.imageUrl, place.details.category, place.isSoldOut, analyticsParam, true);
+
+//                        Intent intent = GourmetDetailActivity.newInstance(mBaseActivity, gourmetBookingDay, place, analyticsParam, true);
 
                         if (intent == null)
                         {
@@ -790,7 +794,11 @@ public class HomeFragment extends BaseMenuNavigationFragment
                         analyticsParam.setProvince(null);
                         analyticsParam.setTotalListCount(-1);
 
-                        Intent intent = GourmetDetailActivity.newInstance(mBaseActivity, gourmetBookingDay, place, analyticsParam, false);
+                        Intent intent = GourmetDetailActivity.newInstance(mBaseActivity //
+                            , gourmetBookingDay, place.index, place.title //
+                            , place.imageUrl, place.details.category, place.isSoldOut, analyticsParam, false);
+
+//                        Intent intent = GourmetDetailActivity.newInstance(mBaseActivity, gourmetBookingDay, place, analyticsParam, false);
 
                         if (intent == null)
                         {
