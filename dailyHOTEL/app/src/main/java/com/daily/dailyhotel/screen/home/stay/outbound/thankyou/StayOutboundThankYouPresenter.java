@@ -97,6 +97,8 @@ public class StayOutboundThankYouPresenter extends BaseExceptionPresenter<StayOu
         mRoomType = intent.getStringExtra(StayOutboundThankYouActivity.INTENT_EXTRA_DATA_ROOM_TYPE);
         mReservationId = intent.getIntExtra(StayOutboundThankYouActivity.INTENT_EXTRA_DATA_RESERVATION_ID, -1);
 
+        mAnalytics.setAnalyticsParam(intent.getParcelableExtra(StayOutboundThankYouActivity.INTENT_EXTRA_DATA_ANALYTICS));
+
         return true;
     }
 
@@ -143,6 +145,8 @@ public class StayOutboundThankYouPresenter extends BaseExceptionPresenter<StayOu
     public void onStart()
     {
         super.onStart();
+
+        mAnalytics.onScreen(getActivity());
 
         if (isRefresh() == true)
         {
