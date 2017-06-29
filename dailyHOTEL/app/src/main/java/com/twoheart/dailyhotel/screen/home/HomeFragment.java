@@ -811,7 +811,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
             analyticsParam.grade = null;
             analyticsParam.rankingPosition = -1;
             analyticsParam.rating = null;
-            analyticsParam.listCount = -1;
+            analyticsParam.listSize = -1;
         } catch (Exception e)
         {
             ExLog.d(e.toString());

@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 
 import com.daily.base.BaseActivity;
+import com.daily.dailyhotel.parcel.analytics.StayOutboundPaymentAnalyticsParam;
 import com.twoheart.dailyhotel.R;
 
 import java.util.ArrayList;
@@ -39,12 +40,14 @@ public class StayOutboundPaymentActivity extends BaseActivity<StayOutboundPaymen
     static final String INTENT_EXTRA_DATA_RATE_KEY = "rateKey";
     static final String INTENT_EXTRA_DATA_ROOM_TYPE_CODE = "roomTypeCode";
     static final String INTENT_EXTRA_DATA_ROOM_BED_TYPE_ID = "roomBedTypeId";
+    static final String INTENT_EXTRA_DATA_ANALYTICS = "analytics";
 
 
     public static Intent newInstance(Context context, int stayIndex, String stayName, String imageUrl, int roomPrice//
         , String checkInDateTime, String checkOutDateTime, int numberOfAdults//
         , ArrayList<Integer> childAgeList, String roomType//
-        , String rateCode, String rateKey, String roomTypeCode, int roomBedTypeId)
+        , String rateCode, String rateKey, String roomTypeCode, int roomBedTypeId//
+        , StayOutboundPaymentAnalyticsParam analyticsParam)
     {
         Intent intent = new Intent(context, StayOutboundPaymentActivity.class);
 
@@ -61,6 +64,7 @@ public class StayOutboundPaymentActivity extends BaseActivity<StayOutboundPaymen
         intent.putExtra(INTENT_EXTRA_DATA_RATE_KEY, rateKey);
         intent.putExtra(INTENT_EXTRA_DATA_ROOM_TYPE_CODE, roomTypeCode);
         intent.putExtra(INTENT_EXTRA_DATA_ROOM_BED_TYPE_ID, roomBedTypeId);
+        intent.putExtra(INTENT_EXTRA_DATA_ANALYTICS, analyticsParam);
 
         return intent;
     }

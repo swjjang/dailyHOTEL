@@ -1,6 +1,7 @@
 package com.daily.dailyhotel.screen.home.stay.outbound.thankyou;
 
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -13,6 +14,7 @@ import com.daily.base.util.ExLog;
 import com.daily.base.util.FontManager;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
 import com.daily.dailyhotel.entity.StayBookDateTime;
+import com.daily.dailyhotel.parcel.analytics.StayOutboundThankYouAnalyticsParam;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.DailyInternalDeepLink;
 import com.twoheart.dailyhotel.util.DailyUserPreference;
@@ -37,6 +39,11 @@ public class StayOutboundThankYouPresenter extends BaseExceptionPresenter<StayOu
 
     public interface StayOutboundThankYouAnalyticsInterface extends BaseAnalyticsInterface
     {
+        void setAnalyticsParam(StayOutboundThankYouAnalyticsParam analyticsParam);
+
+        StayOutboundThankYouAnalyticsParam getAnalyticsParam();
+
+        void onScreen(Activity activity);
     }
 
     public StayOutboundThankYouPresenter(@NonNull StayOutboundThankYouActivity activity)

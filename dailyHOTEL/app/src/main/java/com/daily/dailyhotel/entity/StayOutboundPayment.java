@@ -32,28 +32,6 @@ public class StayOutboundPayment
         PHONE_PAY,
     }
 
-    /**
-     * 할인 타입 , NONE, BONUS, COUPON
-     */
-    public enum DiscountType
-    {
-        NONE("None"),
-        BONUS("Bonus"),
-        COUPON("Coupon");
-
-        private String mName;
-
-        DiscountType(String name)
-        {
-            mName = name;
-        }
-
-        public String getName()
-        {
-            return mName;
-        }
-    }
-
     public List<String> getRefundPolicyList()
     {
         return mRefundPolicyList;

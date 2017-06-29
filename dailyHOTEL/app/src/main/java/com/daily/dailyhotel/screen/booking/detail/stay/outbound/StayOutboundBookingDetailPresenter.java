@@ -73,6 +73,7 @@ public class StayOutboundBookingDetailPresenter extends BaseExceptionPresenter<S
 
     public interface StayOutboundBookingAnalyticsInterface extends BaseAnalyticsInterface
     {
+        StayOutboundDetailAnalyticsParam getDetailAnalyticsParam(StayOutboundBookingDetail stayOutboundBookingDetail);
     }
 
     public StayOutboundBookingDetailPresenter(@NonNull StayOutboundBookingDetailActivity activity)
@@ -360,20 +361,7 @@ public class StayOutboundBookingDetailPresenter extends BaseExceptionPresenter<S
             stayBookDateTime.setCheckInDateTime(mCommonDateTime.currentDateTime, 7);
             stayBookDateTime.setCheckOutDateTime(stayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT), 1);
 
-            StayOutboundDetailAnalyticsParam analyticsParam = new StayOutboundDetailAnalyticsParam();
-
-            try
-            {
-                analyticsParam.index = mStayOutboundBookingDetail.stayIndex;
-                analyticsParam.benefit = false;
-                analyticsParam.grade = null;
-                analyticsParam.rankingPosition = -1;
-                analyticsParam.rating = null;
-                analyticsParam.listCount = -1;
-            } catch (Exception e)
-            {
-                ExLog.d(e.toString());
-            }
+            StayOutboundDetailAnalyticsParam analyticsParam = mAnalytics.getDetailAnalyticsParam(mStayOutboundBookingDetail);
 
             startActivityForResult(StayOutboundDetailActivity.newInstance(getActivity(), mStayOutboundBookingDetail.stayIndex//
                 , mStayOutboundBookingDetail.name, null, -1//

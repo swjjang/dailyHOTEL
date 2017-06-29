@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 
 import com.daily.base.BaseActivity;
+import com.daily.dailyhotel.parcel.analytics.StayOutboundThankYouAnalyticsParam;
 import com.twoheart.dailyhotel.R;
 
 /**
@@ -25,10 +26,11 @@ public class StayOutboundThankYouActivity extends BaseActivity<StayOutboundThank
     static final String INTENT_EXTRA_DATA_CHECK_OUT_TIME = "checkOutTime";
     static final String INTENT_EXTRA_DATA_ROOM_TYPE = "roomType";
     static final String INTENT_EXTRA_DATA_RESERVATION_ID = "reservationId";
+    static final String INTENT_EXTRA_DATA_ANALYTICS = "analytics";
 
     public static Intent newInstance(Context context, int stayIndex, String stayName, String imageUrl, int roomPrice//
         , String checkInDateTime, String checkOutDateTime, String checkInTime, String checkOutTime//
-        , String roomType, int reservationId)
+        , String roomType, int reservationId, StayOutboundThankYouAnalyticsParam analyticsParam)
     {
         Intent intent = new Intent(context, StayOutboundThankYouActivity.class);
 
@@ -42,6 +44,7 @@ public class StayOutboundThankYouActivity extends BaseActivity<StayOutboundThank
         intent.putExtra(INTENT_EXTRA_DATA_CHECK_OUT_TIME, checkOutTime);
         intent.putExtra(INTENT_EXTRA_DATA_ROOM_TYPE, roomType);
         intent.putExtra(INTENT_EXTRA_DATA_RESERVATION_ID, reservationId);
+        intent.putExtra(INTENT_EXTRA_DATA_ANALYTICS, analyticsParam);
 
         return intent;
     }

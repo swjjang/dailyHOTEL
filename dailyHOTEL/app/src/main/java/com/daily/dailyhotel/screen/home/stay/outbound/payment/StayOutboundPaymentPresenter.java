@@ -24,6 +24,8 @@ import com.daily.dailyhotel.entity.People;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayOutboundPayment;
 import com.daily.dailyhotel.entity.UserInformation;
+import com.daily.dailyhotel.parcel.analytics.StayOutboundPaymentAnalyticsParam;
+import com.daily.dailyhotel.parcel.analytics.StayOutboundThankYouAnalyticsParam;
 import com.daily.dailyhotel.repository.remote.PaymentRemoteImpl;
 import com.daily.dailyhotel.repository.remote.ProfileRemoteImpl;
 import com.daily.dailyhotel.screen.common.call.CallDialogActivity;
@@ -73,6 +75,15 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
 
     public interface StayOutboundPaymentAnalyticsInterface extends BaseAnalyticsInterface
     {
+        void setAnalyticsParam(StayOutboundPaymentAnalyticsParam analyticsParam);
+
+        StayOutboundPaymentAnalyticsParam getAnalyticsParam();
+
+        void onScreen(Activity activity, StayBookDateTime stayBookDateTime);
+
+        void onScreenPaymentCompleted(Activity activity, StayOutboundPayment.PaymentType paymentType, boolean registerEasyCard);
+
+        StayOutboundThankYouAnalyticsParam getThankYouAnalyticsParam(StayOutboundPayment.PaymentType paymentType, boolean registerEasyCard);
     }
 
     public StayOutboundPaymentPresenter(@NonNull StayOutboundPaymentActivity activity)
@@ -145,6 +156,8 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
 
         setPeople(numberOfAdults, childAgeList);
 
+        mAnalytics.setAnalyticsParam(intent.getParcelableExtra(StayOutboundPaymentActivity.INTENT_EXTRA_DATA_ANALYTICS));
+
         return true;
     }
 
@@ -166,6 +179,8 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
     public void onStart()
     {
         super.onStart();
+
+        mAnalytics.onScreen(getActivity(), mStayBookDateTime);
 
         if (isRefresh() == true)
         {
@@ -672,7 +687,10 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
                     startActivityForResult(StayOutboundThankYouActivity.newInstance(getActivity(), mStayIndex, mStayName, mImageUrl, mStayOutboundPayment.totalPrice//
                         , mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
                         , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
-                        , mStayOutboundPayment.checkInTime, mStayOutboundPayment.checkOutTime, mRoomType, paymentResult.bookingIndex), StayOutboundPaymentActivity.REQUEST_CODE_THANK_YOU);
+                        , mStayOutboundPayment.checkInTime, mStayOutboundPayment.checkOutTime, mRoomType, paymentResult.bookingIndex//
+                        , mAnalytics.getThankYouAnalyticsParam(mPaymentType, mSelectedCard != null)), StayOutboundPaymentActivity.REQUEST_CODE_THANK_YOU);
+
+                    mAnalytics.onScreenPaymentCompleted(getActivity(), mPaymentType, mSelectedCard != null);
                 }
             }, new Consumer<Throwable>()
             {
@@ -722,7 +740,10 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
                             startActivityForResult(StayOutboundThankYouActivity.newInstance(getActivity(), mStayIndex, mStayName, mImageUrl, mStayOutboundPayment.totalPrice//
                                 , mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
                                 , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
-                                , mStayOutboundPayment.checkInTime, mStayOutboundPayment.checkOutTime, mRoomType, paymentResult.bookingIndex), StayOutboundPaymentActivity.REQUEST_CODE_THANK_YOU);
+                                , mStayOutboundPayment.checkInTime, mStayOutboundPayment.checkOutTime, mRoomType, paymentResult.bookingIndex//
+                                , mAnalytics.getThankYouAnalyticsParam(mPaymentType, mSelectedCard != null)), StayOutboundPaymentActivity.REQUEST_CODE_THANK_YOU);
+
+                            mAnalytics.onScreenPaymentCompleted(getActivity(), mPaymentType, mSelectedCard != null);
                         }
                     }, throwable ->
                     {
@@ -1291,8 +1312,10 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
                     startActivityForResult(StayOutboundThankYouActivity.newInstance(getActivity(), mStayIndex, mStayName, mImageUrl, mStayOutboundPayment.totalPrice//
                         , mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
                         , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
-                        , mStayOutboundPayment.checkInTime, mStayOutboundPayment.checkOutTime, mRoomType, paymentResult.bookingIndex), StayOutboundPaymentActivity.REQUEST_CODE_THANK_YOU);
+                        , mStayOutboundPayment.checkInTime, mStayOutboundPayment.checkOutTime, mRoomType, paymentResult.bookingIndex//
+                        , mAnalytics.getThankYouAnalyticsParam(mPaymentType, mSelectedCard != null)), StayOutboundPaymentActivity.REQUEST_CODE_THANK_YOU);
 
+                    mAnalytics.onScreenPaymentCompleted(getActivity(), mPaymentType, mSelectedCard != null);
                 }
             }, throwable ->
             {
