@@ -51,6 +51,8 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
     public interface StayOutboundSearchAnalyticsInterface extends BaseAnalyticsInterface
     {
         void onScreen(Activity activity);
+
+        void onEventDestroy(Activity activity);
     }
 
     public StayOutboundSearchPresenter(@NonNull StayOutboundSearchActivity activity)
@@ -143,6 +145,8 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
     {
         // 꼭 호출해 주세요.
         super.onDestroy();
+
+        mAnalytics.onEventDestroy(getActivity());
     }
 
     @Override

@@ -1647,6 +1647,10 @@ public class HomeFragment extends BaseMenuNavigationFragment
             {
                 Intent intent = StayOutboundSearchActivity.newInstance(mBaseActivity);
                 startActivityForResult(intent, Constants.CODE_RESULT_ACTIVITY_STAY_OUTBOUND_SEARCH);
+
+                AnalyticsManager.getInstance(mBaseActivity).recordEvent(//
+                    AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.HOME_SHORTCUT_CLICK,//
+                    AnalyticsManager.Label.OUTBOUND, null);
                 return;
             }
 

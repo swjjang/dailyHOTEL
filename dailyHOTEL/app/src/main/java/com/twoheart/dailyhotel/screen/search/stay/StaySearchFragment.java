@@ -210,6 +210,10 @@ public class StaySearchFragment extends PlaceSearchFragment
             }
 
             startActivity(StayOutboundSearchActivity.newInstance(getContext()));
+
+            AnalyticsManager.getInstance(mBaseActivity).recordEvent(//
+                AnalyticsManager.Category.SEARCH, AnalyticsManager.Action.SEARCH_SCREEN,//
+                AnalyticsManager.Label.OUTBOUND_CLICK, null);
         }
 
         @Override

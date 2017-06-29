@@ -383,7 +383,8 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
             {
                 ExLog.d(TAG + "recordScreen : " + screenName + " | " + screenViewBuilder.build().toString());
             }
-        } else if (AnalyticsManager.Screen.DAILYHOTEL_BOOKINGINITIALISE_OUTBOUND.equalsIgnoreCase(screenName) == true)
+        } else if (AnalyticsManager.Screen.DAILYHOTEL_BOOKINGINITIALISE_CANCELABLE_OUTBOUND.equalsIgnoreCase(screenName) == true//
+            || AnalyticsManager.Screen.DAILYHOTEL_BOOKINGINITIALISE_NOREFUNDS_OUTBOUND.equalsIgnoreCase(screenName) == true)
         {
             HitBuilders.ScreenViewBuilder screenViewBuilder = new HitBuilders.ScreenViewBuilder();
 
