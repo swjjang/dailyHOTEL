@@ -4,6 +4,8 @@ import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 import com.daily.dailyhotel.entity.StayOutboundPayment;
 
+import java.util.List;
+
 @JsonObject
 public class StayOutboundPaymentData
 {
@@ -28,8 +30,8 @@ public class StayOutboundPaymentData
     @JsonField(name = "nonRefundable")
     public boolean nonRefundable;
 
-    @JsonField(name = "nonRefundableDescription")
-    public String nonRefundableDescription;
+    @JsonField(name = "cancelPolicyDescriptions")
+    public List<String> cancelPolicyDescriptions;
 
     @JsonField(name = "total")
     public int total;
@@ -68,7 +70,7 @@ public class StayOutboundPaymentData
         stayOutboundPayment.checkOutDate = checkoutDate;
         stayOutboundPayment.checkOutTime = checkoutTime;
         stayOutboundPayment.nonRefundable = nonRefundable;
-        stayOutboundPayment.nonRefundableDescription = nonRefundableDescription;
+        stayOutboundPayment.setRefundPolicyList(cancelPolicyDescriptions);
         stayOutboundPayment.totalPrice = total;
         stayOutboundPayment.feeTotalAmountUsd = feeTotalAmountUsd;
         stayOutboundPayment.rateKey = rateKey;

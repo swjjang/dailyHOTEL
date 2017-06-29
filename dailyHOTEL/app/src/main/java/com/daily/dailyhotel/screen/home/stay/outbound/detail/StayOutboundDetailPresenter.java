@@ -29,6 +29,7 @@ import com.daily.dailyhotel.entity.StayOutboundDetail;
 import com.daily.dailyhotel.entity.StayOutboundDetailImage;
 import com.daily.dailyhotel.entity.StayOutboundRoom;
 import com.daily.dailyhotel.entity.User;
+import com.daily.dailyhotel.parcel.analytics.StayOutboundDetailAnalyticsParam;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
 import com.daily.dailyhotel.repository.remote.ProfileRemoteImpl;
 import com.daily.dailyhotel.repository.remote.StayOutboundRemoteImpl;
@@ -112,10 +113,11 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
     private boolean mIsUsedMultiTransition, mCallFromMap;
     private boolean mIsDeepLink;
     private boolean mCheckChangedPrice;
+    private StayOutboundDetailAnalyticsParam mAnalyticsParam;
 
     public interface StayOutboundDetailAnalyticsInterface extends BaseAnalyticsInterface
     {
-        void onScreen(Activity activity);
+        void onScreen(Activity activity, StayOutboundDetailAnalyticsParam analyticsParam);
     }
 
     public StayOutboundDetailPresenter(@NonNull StayOutboundDetailActivity activity)
@@ -135,7 +137,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
     {
         setContentView(R.layout.activity_stay_outbound_detail_data);
 
-        setAnalytics(new StayStayOutboundDetailAnalyticsImpl());
+        setAnalytics(new StayOutboundDetailAnalyticsImpl());
 
         mStayOutboundRemoteImpl = new StayOutboundRemoteImpl(activity);
         mCommonRemoteImpl = new CommonRemoteImpl(activity);
@@ -199,6 +201,8 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
             ArrayList<Integer> childAgeList = intent.getIntegerArrayListExtra(StayOutboundDetailActivity.INTENT_EXTRA_DATA_CHILD_LIST);
 
             setPeople(numberOfAdults, childAgeList);
+
+            mAnalyticsParam = intent.getParcelableExtra(StayOutboundDetailActivity.INTENT_EXTRA_DATA_ANALYTICS);
         }
 
         return true;

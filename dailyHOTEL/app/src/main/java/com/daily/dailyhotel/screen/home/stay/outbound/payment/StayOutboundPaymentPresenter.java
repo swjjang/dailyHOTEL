@@ -972,7 +972,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
             ExLog.d(e.toString());
         }
 
-        getViewInterface().setNonRefundableDescription(mStayOutboundPayment.nonRefundableDescription);
+        getViewInterface().setRefundPolicyList(mStayOutboundPayment.getRefundPolicyList());
     }
 
     private void setStayOutboundPayment(StayOutboundPayment stayOutboundPayment)
