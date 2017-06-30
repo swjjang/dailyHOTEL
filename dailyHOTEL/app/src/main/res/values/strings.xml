@@ -706,6 +706,7 @@
     <string name="label_booking_reservation_information">1. 예약 정보</string>
     <string name="label_booking_payment_information">2. 결제 금액 정보</string>
     <string name="label_booking_refund_information">3. 취소 및 환불 규정</string>
+    <string name="label_booking_reservation_recommend_gourmet">주변 추천 레스토랑 확인</string>
     <string name="message_consult_kakao">무엇을 도와드릴까요?</string>
     <string name="message_consult01">데일리 컨시어지팀이 친절하고 신속하게 답변해드려요.</string>
     <string name="message_consult02">상담시간 : 오전 %1$s시 ~ 익일 새벽 %2$s시\n(점심시간 : %3$s ~ %4$s)</string>

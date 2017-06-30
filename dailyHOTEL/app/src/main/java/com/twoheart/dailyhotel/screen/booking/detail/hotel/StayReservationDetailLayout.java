@@ -5,11 +5,15 @@ import android.text.Html;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.view.View;
+import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.util.FontManager;
+import com.daily.base.widget.DailyScrollView;
+import com.daily.base.widget.DailyToast;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.PlaceBookingDetail;
 import com.twoheart.dailyhotel.model.StayBookingDetail;
@@ -26,10 +30,30 @@ public class StayReservationDetailLayout extends PlaceReservationDetailLayout
 {
     private View mRefundPolicyLayout, mButtonBottomMarginView;
     private View mDefaultRefundPolicyLayout, mWaitRefundPolicyLayout;
+    private View mRecommendGourmetView;
 
     public StayReservationDetailLayout(Context context, OnBaseEventListener listener)
     {
         super(context, listener);
+    }
+
+    @Override
+    protected void initLayout(View view)
+    {
+        super.initLayout(view);
+
+        mRecommendGourmetView = view.findViewById(R.id.recommendGourmetView);
+
+        mRecommendGourmetView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                DailyToast.showToast(mContext, "고메 추천 클릭", Toast.LENGTH_SHORT);
+            }
+        });
+
+        mScrollLayout.setOnScrollChangedListener(mOnScrollChangedListener);
     }
 
     @Override
@@ -404,4 +428,13 @@ public class StayReservationDetailLayout extends PlaceReservationDetailLayout
             mButtonBottomMarginView.setVisibility(View.VISIBLE);
         }
     }
+
+    private DailyScrollView.OnScrollChangedListener mOnScrollChangedListener = new DailyScrollView.OnScrollChangedListener()
+    {
+        @Override
+        public void onScrollChanged(ScrollView scrollView, int l, int t, int oldl, int oldt)
+        {
+
+        }
+    };
 }

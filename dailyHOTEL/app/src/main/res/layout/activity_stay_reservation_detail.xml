@@ -271,6 +271,29 @@
                     android:layout_height="wrap_content"
                     android:visibility="visible"/>
             </LinearLayout>
+
+            <com.twoheart.dailyhotel.screen.home.HomeCarouselLayout
+                android:id="@+id/recommendGourmetCarouselLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"/>
         </LinearLayout>
     </com.daily.base.widget.DailyScrollView>
+
+    <com.daily.base.widget.DailyTextView
+        android:id="@+id/recommendGourmetView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/bottom_message"
+        android:drawablePadding="6dp"
+        android:gravity="center_vertical"
+        android:text="@string/label_booking_reservation_recommend_gourmet"
+        android:textColor="@color/default_text_cb70038"
+        android:textSize="12dp"
+        android:visibility="gone"
+        app:drawableCompatLeft="@drawable/ic_arrow_bottom"
+        />
 </RelativeLayout>

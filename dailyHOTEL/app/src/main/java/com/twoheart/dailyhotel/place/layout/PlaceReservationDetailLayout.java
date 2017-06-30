@@ -49,7 +49,7 @@ import java.util.Locale;
 
 public abstract class PlaceReservationDetailLayout extends BaseLayout implements View.OnClickListener
 {
-    DailyScrollView mScrollLayout;
+    protected DailyScrollView mScrollLayout;
     private View mPlaceInformationLayout;
 
     View mInputReviewVerticalLine, mMapExpandedView;
