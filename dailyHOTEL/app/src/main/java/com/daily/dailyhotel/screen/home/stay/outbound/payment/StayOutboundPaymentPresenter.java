@@ -974,7 +974,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
                 {
                     getViewInterface().setPaymentTypeEnabled(StayOutboundPayment.PaymentType.PHONE_PAY, true);
                 }
-            } else if (paymentPrice >= PHONE_MAX_PRICE)
+            } else if (paymentPrice > PHONE_MAX_PRICE)
             {
                 if (DailyPreference.getInstance(getActivity()).isRemoteConfigStayOutboundSimpleCardPaymentEnabled() == true)
                 {
