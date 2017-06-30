@@ -632,7 +632,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
                 startActivityForResult(RegisterCreditCardActivity.newInstance(getActivity())//
                     , StayOutboundPaymentActivity.REQUEST_CODE_REGISTER_CARD_PAYMENT);
 
-                mAnalytics.onEventStartPayment(getActivity(), AnalyticsManager.Label.EASYCARDPAY_UNREGISTERED);
+                mAnalytics.onEventStartPayment(getActivity(), AnalyticsManager.Label.EASYCARDPAY);
             } else
             {
                 getViewInterface().showAgreeTermDialog(mPaymentType, new View.OnClickListener()
@@ -724,6 +724,8 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
                     }
                 }
             }));
+
+            mAnalytics.onEventStartPayment(getActivity(), AnalyticsManager.Label.FULLBONUS);
         } else
         {
             switch (mPaymentType)
@@ -775,7 +777,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
                         }
                     }));
 
-                    mAnalytics.onEventStartPayment(getActivity(), AnalyticsManager.Label.EASYCARDPAY_REGISTERED);
+                    mAnalytics.onEventStartPayment(getActivity(), AnalyticsManager.Label.EASYCARDPAY);
                     break;
                 }
 

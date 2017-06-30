@@ -36,21 +36,21 @@ public class StayOutboundThankYouAnalyticsImpl implements StayOutboundThankYouPr
 
         if (mAnalyticsParam.fullBonus == true)
         {
-            params.put(AnalyticsManager.KeyType.PAYMENT_TYPE, "fullBonus");
+            params.put(AnalyticsManager.KeyType.PAYMENT_TYPE, AnalyticsManager.Label.FULLBONUS);
         } else
         {
             switch (mAnalyticsParam.paymentType)
             {
                 case EASY_CARD:
-                    params.put(AnalyticsManager.KeyType.PAYMENT_TYPE, "EasyCardPay");
+                    params.put(AnalyticsManager.KeyType.PAYMENT_TYPE, AnalyticsManager.Label.EASYCARDPAY);
                     break;
 
                 case CARD:
-                    params.put(AnalyticsManager.KeyType.PAYMENT_TYPE, "CardPay");
+                    params.put(AnalyticsManager.KeyType.PAYMENT_TYPE, AnalyticsManager.Label.CARDPAY);
                     break;
 
                 case PHONE_PAY:
-                    params.put(AnalyticsManager.KeyType.PAYMENT_TYPE, "PhoneBillPay");
+                    params.put(AnalyticsManager.KeyType.PAYMENT_TYPE, AnalyticsManager.Label.PHONEBILLPAY);
                     break;
             }
         }
@@ -72,13 +72,13 @@ public class StayOutboundThankYouAnalyticsImpl implements StayOutboundThankYouPr
 
         if (mAnalyticsParam.fullBonus == true)
         {
-            label = "fullBonusPayment";
+            label = AnalyticsManager.Label.FULLBONUS;
         } else if (mAnalyticsParam.usedBonus == true)
         {
-            label = "PaymentwithCredit";
+            label = AnalyticsManager.Label.PAYMENTWITH_COUPON;
         } else
         {
-            label = "FullPayment";
+            label = AnalyticsManager.Label.FULL_PAYMENT;
         }
 
         AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS//

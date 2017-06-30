@@ -1252,10 +1252,10 @@ public class AnalyticsManager
 
         // Stay OutBound
         public static final String OUTBOUND_CLICK = "outbound_click";
-        public static final String EASYCARDPAY_REGISTERED = "EasyCardPay_Registered";
-        public static final String EASYCARDPAY_UNREGISTERED = "EasyCardPay_Unregistered";
+        public static final String EASYCARDPAY = "EasyCardPay";
         public static final String CARDPAY = "CardPay";
         public static final String PHONEBILLPAY = "PhoneBillPay";
+        public static final String FULLBONUS = "FullBonus";
     }
 
     public static class UserType

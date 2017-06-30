@@ -70,21 +70,21 @@ public class StayOutboundPaymentAnalyticsImpl implements StayOutboundPaymentPres
 
         if (fullBonus == true)
         {
-            params.put(AnalyticsManager.KeyType.PAYMENT_TYPE, "fullBonus");
+            params.put(AnalyticsManager.KeyType.PAYMENT_TYPE, AnalyticsManager.Label.FULLBONUS);
         } else
         {
             switch (paymentType)
             {
                 case EASY_CARD:
-                    params.put(AnalyticsManager.KeyType.PAYMENT_TYPE, "EasyCardPay");
+                    params.put(AnalyticsManager.KeyType.PAYMENT_TYPE, AnalyticsManager.Label.EASYCARDPAY);
                     break;
 
                 case CARD:
-                    params.put(AnalyticsManager.KeyType.PAYMENT_TYPE, "CardPay");
+                    params.put(AnalyticsManager.KeyType.PAYMENT_TYPE, AnalyticsManager.Label.CARDPAY);
                     break;
 
                 case PHONE_PAY:
-                    params.put(AnalyticsManager.KeyType.PAYMENT_TYPE, "PhoneBillPay");
+                    params.put(AnalyticsManager.KeyType.PAYMENT_TYPE, AnalyticsManager.Label.PHONEBILLPAY);
                     break;
             }
         }
