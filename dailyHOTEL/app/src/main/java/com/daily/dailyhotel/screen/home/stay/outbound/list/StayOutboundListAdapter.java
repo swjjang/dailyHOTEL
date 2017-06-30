@@ -14,6 +14,7 @@ import android.os.Vibrator;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -273,6 +274,14 @@ public class StayOutboundListAdapter extends RecyclerView.Adapter<RecyclerView.V
         holder.dataBinding.gradeTextView.setText(mContext.getString(R.string.label_stay_outbound_filter_x_star_rate, (int) stayOutbound.rating));
 
         // 별등급
+        holder.dataBinding.ratingBar.setOnTouchListener(new View.OnTouchListener()
+        {
+            @Override
+            public boolean onTouch(View v, MotionEvent event)
+            {
+                return true;
+            }
+        });
         holder.dataBinding.ratingBar.setRating(stayOutbound.rating);
 
         if (stayOutbound.tripAdvisorRating == 0.0f && mDistanceEnabled == false)
@@ -307,6 +316,14 @@ public class StayOutboundListAdapter extends RecyclerView.Adapter<RecyclerView.V
             holder.dataBinding.tripAdvisorRatingBar.setVisibility(View.VISIBLE);
             holder.dataBinding.tripAdvisorRatingTextView.setVisibility(View.VISIBLE);
 
+            holder.dataBinding.tripAdvisorRatingBar.setOnTouchListener(new View.OnTouchListener()
+            {
+                @Override
+                public boolean onTouch(View v, MotionEvent event)
+                {
+                    return true;
+                }
+            });
             holder.dataBinding.tripAdvisorRatingBar.setRating(stayOutbound.tripAdvisorRating);
             holder.dataBinding.tripAdvisorRatingTextView.setText(mContext.getString(R.string.label_stay_outbound_tripadvisor_rating, Float.toString(stayOutbound.tripAdvisorRating)));
 

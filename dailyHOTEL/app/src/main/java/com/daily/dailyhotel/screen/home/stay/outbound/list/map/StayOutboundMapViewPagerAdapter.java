@@ -5,6 +5,7 @@ import android.databinding.DataBindingUtil;
 import android.graphics.Paint;
 import android.support.v4.view.PagerAdapter;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -83,6 +84,15 @@ public class StayOutboundMapViewPagerAdapter extends PagerAdapter
 
         // grade
         dataBinding.gradeTextView.setText(mContext.getString(R.string.label_stay_outbound_filter_x_star_rate, (int) stayOutbound.rating));
+
+        dataBinding.ratingBar.setOnTouchListener(new View.OnTouchListener()
+        {
+            @Override
+            public boolean onTouch(View v, MotionEvent event)
+            {
+                return true;
+            }
+        });
         dataBinding.ratingBar.setRating(stayOutbound.rating);
 
         // Image
