@@ -897,7 +897,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
                         public void accept(@io.reactivex.annotations.NonNull User user) throws Exception
                         {
                             boolean isDailyUser = Constants.DAILY_USER.equalsIgnoreCase(user.userType);
-                            StayOutboundPaymentAnalyticsParam analyticsParam = mAnalytics.getPaymentAnalyticsParam(getString(R.string.label_stay_outbound_detail_grade, mStayOutboundDetail.grade)//
+                            StayOutboundPaymentAnalyticsParam analyticsParam = mAnalytics.getPaymentAnalyticsParam(getString(R.string.label_stay_outbound_detail_grade, (int) mStayOutboundDetail.rating)//
                                 , mSelectedRoom.nonRefundable, mSelectedRoom.promotion);
 
                             if (isDailyUser == true)

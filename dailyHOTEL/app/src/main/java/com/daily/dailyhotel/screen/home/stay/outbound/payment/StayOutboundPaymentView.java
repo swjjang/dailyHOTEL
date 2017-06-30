@@ -19,6 +19,7 @@ import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.daily.base.BaseActivity;
@@ -609,6 +610,17 @@ public class StayOutboundPaymentView extends BaseDialogView<StayOutboundPaymentV
 
         mPayDataBinding = DataBindingUtil.inflate(LayoutInflater.from(context)//
             , R.layout.layout_stay_outbound_payment_pay_data, viewGroup, true);
+
+        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mPayDataBinding.simpleCreditCardLayout.getLayoutParams();
+
+        if (layoutParams == null)
+        {
+            layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            layoutParams.setMargins(ScreenUtils.dpToPx(getContext(), 15), ScreenUtils.dpToPx(getContext(), 15), ScreenUtils.dpToPx(getContext(), 15), ScreenUtils.dpToPx(getContext(), 15));
+        }
+
+        layoutParams.height = (ScreenUtils.getScreenWidth(getContext()) - ScreenUtils.dpToPx(getContext(), 60)) * 9 / 16;
+        mPayDataBinding.simpleCreditCardLayout.setLayoutParams(layoutParams);
 
         mPayDataBinding.cardManagerLayout.setOnClickListener(this);
         mPayDataBinding.emptySimpleCardLayout.setOnClickListener(this);

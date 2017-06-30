@@ -11,6 +11,7 @@ import android.graphics.drawable.PaintDrawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.RectShape;
 import android.os.Vibrator;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -277,8 +278,20 @@ public class StayOutboundListAdapter extends RecyclerView.Adapter<RecyclerView.V
         if (stayOutbound.tripAdvisorRating == 0.0f && mDistanceEnabled == false)
         {
             holder.dataBinding.tripAdvisorLayout.setVisibility(View.GONE);
+
+            ConstraintLayout.LayoutParams nameEngLayoutParams = (ConstraintLayout.LayoutParams) holder.dataBinding.nameEngTextView.getLayoutParams();
+            nameEngLayoutParams.bottomMargin = ScreenUtils.dpToPx(mContext, 2);
+
+            ConstraintLayout.LayoutParams nameLayoutParams = (ConstraintLayout.LayoutParams) holder.dataBinding.nameTextView.getLayoutParams();
+            nameLayoutParams.bottomMargin = ScreenUtils.dpToPx(mContext, -3);
         } else
         {
+            ConstraintLayout.LayoutParams nameEngLayoutParams = (ConstraintLayout.LayoutParams) holder.dataBinding.nameEngTextView.getLayoutParams();
+            nameEngLayoutParams.bottomMargin = ScreenUtils.dpToPx(mContext, 4);
+
+            ConstraintLayout.LayoutParams nameLayoutParams = (ConstraintLayout.LayoutParams) holder.dataBinding.nameTextView.getLayoutParams();
+            nameLayoutParams.bottomMargin = ScreenUtils.dpToPx(mContext, -2);
+
             holder.dataBinding.tripAdvisorLayout.setVisibility(View.VISIBLE);
         }
 

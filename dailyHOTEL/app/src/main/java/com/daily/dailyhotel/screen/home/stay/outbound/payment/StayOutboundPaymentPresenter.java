@@ -921,7 +921,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
 
             SpannableString checkInDateSpannableString = new SpannableString(checkInDate + " " + checkInTime);
             checkInDateSpannableString.setSpan( //
-                new CustomFontTypefaceSpan(FontManager.getInstance(getActivity()).getBoldTypeface()),//
+                new CustomFontTypefaceSpan(FontManager.getInstance(getActivity()).getMediumTypeface()),//
                 checkInDate.length(), checkInDate.length() + checkInTime.length() + 1,//
                 Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
@@ -930,7 +930,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
 
             SpannableString checkOutDateSpannableString = new SpannableString(checkOutDate + " " + checkOutTime);
             checkOutDateSpannableString.setSpan( //
-                new CustomFontTypefaceSpan(FontManager.getInstance(getActivity()).getBoldTypeface()),//
+                new CustomFontTypefaceSpan(FontManager.getInstance(getActivity()).getMediumTypeface()),//
                 checkOutDate.length(), checkOutDate.length() + checkOutTime.length() + 1,//
                 Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 

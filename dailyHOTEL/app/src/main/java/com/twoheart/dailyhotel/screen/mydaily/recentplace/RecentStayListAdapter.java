@@ -4,6 +4,7 @@ import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.graphics.Paint;
 import android.os.Vibrator;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -263,6 +264,12 @@ public class RecentStayListAdapter extends RecentPlacesListAdapter
         holder.dataBinding.nameTextView.setText(stayOutbound.name);
         holder.dataBinding.nameEngTextView.setText("(" + stayOutbound.nameEng + ")");
 
+        ConstraintLayout.LayoutParams nameEngLayoutParams = (ConstraintLayout.LayoutParams) holder.dataBinding.nameEngTextView.getLayoutParams();
+        nameEngLayoutParams.bottomMargin = ScreenUtils.dpToPx(mContext, 2);
+
+        ConstraintLayout.LayoutParams nameLayoutParams = (ConstraintLayout.LayoutParams) holder.dataBinding.nameTextView.getLayoutParams();
+        nameLayoutParams.bottomMargin = ScreenUtils.dpToPx(mContext, -3);
+
         // 가격
         if (stayOutbound.promo == true)
         {
@@ -293,12 +300,9 @@ public class RecentStayListAdapter extends RecentPlacesListAdapter
 
         // 별등급
         holder.dataBinding.ratingBar.setRating(stayOutbound.rating);
-        holder.dataBinding.tripAdvisorLayout.setVisibility(View.VISIBLE);
 
         // tripAdvisor - 최근 본 업장의 경우 노출 안함
-        holder.dataBinding.tripAdvisorImageView.setVisibility(View.GONE);
-        holder.dataBinding.tripAdvisorRatingBar.setVisibility(View.GONE);
-        holder.dataBinding.tripAdvisorRatingTextView.setVisibility(View.GONE);
+        holder.dataBinding.tripAdvisorLayout.setVisibility(View.GONE);
 
         // Image
         holder.dataBinding.imageView.getHierarchy().setPlaceholderImage(R.drawable.layerlist_placeholder);
