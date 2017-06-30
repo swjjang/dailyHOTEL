@@ -189,6 +189,9 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
                             return;
                         }
 
+                        // 캘린더를 먼저보는 경우 캘린더를 띄우지 않는다.
+                        DailyPreference.getInstance(getActivity()).setShowStayOutboundSearchCalendar(false);
+
                         setStayBookDateTime(checkInDateTime, 0, checkOutDateTime, 0);
                         notifyStayBookDateTimeChanged();
                     }

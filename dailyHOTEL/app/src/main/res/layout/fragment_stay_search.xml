@@ -116,7 +116,7 @@
                     android:layout_marginLeft="8dp"
                     android:layout_marginRight="4dp"
                     android:layout_weight="1"
-                    android:background="@drawable/shape_fillrect_le7e7e7_bffffff">
+                    android:background="@drawable/shape_fillrect_le7e7e7_bffffff_r2">
 
                     <ImageView
                         android:id="@+id/aroundIconView"
@@ -162,7 +162,7 @@
                     android:layout_marginLeft="4dp"
                     android:layout_marginRight="8dp"
                     android:layout_weight="1"
-                    android:background="@drawable/shape_fillrect_le7e7e7_bffffff">
+                    android:background="@drawable/shape_fillrect_le7e7e7_bffffff_r2">
 
                     <ImageView
                         android:id="@+id/stayOutboundIconView"
@@ -240,11 +240,6 @@
                     android:layout_marginRight="15dp"
                     android:orientation="vertical"/>
             </com.daily.base.widget.DailyScrollView>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/default_line_cf0f0f0"/>
 
             <View
                 android:layout_width="match_parent"
