@@ -830,7 +830,7 @@ public class StayOutboundListView extends BaseDialogView<StayOutboundListView.On
             return;
         }
 
-        mDailyToolbarLayout = new DailyToolbarLayout(getContext(), viewDataBinding.toolbar.findViewById(R.id.toolbar));
+        mDailyToolbarLayout = new DailyToolbarLayout(getContext(), viewDataBinding.toolbar);
         mDailyToolbarLayout.initToolbar(null//
             , v -> getEventListener().onBackClick());
     }

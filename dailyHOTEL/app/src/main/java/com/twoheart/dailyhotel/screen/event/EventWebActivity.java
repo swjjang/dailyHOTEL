@@ -160,7 +160,7 @@ public class EventWebActivity extends WebViewActivity implements Constants
 
         setWebView(url);
 
-        initLayout((DailyWebView) webView);
+        //        initLayout((DailyWebView) webView);
     }
 
     private void initToolbar(String title)

@@ -103,6 +103,10 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
     {
         void onScreen(Activity activity);
 
+        void onEventStayClick(Activity activity, int index);
+
+        void onEventDestroy(Activity activity);
+
         StayOutboundDetailAnalyticsParam getDetailAnalyticsParam(StayOutbound stayOutbound, String grade, int rankingPosition, int listSize);
     }
 
@@ -236,6 +240,8 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
         {
             mDailyLocationExFactory.stopLocationMeasure();
         }
+
+        mAnalytics.onEventDestroy(getActivity());
     }
 
     @Override
@@ -653,6 +659,8 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
                 , mPeople.numberOfAdults, mPeople.getChildAgeList(), false, mViewState == ViewState.MAP, analyticsParam)//
                 , StayOutboundListActivity.REQUEST_CODE_DETAIL);
         }
+
+        mAnalytics.onEventStayClick(getActivity(), stayOutbound.index);
     }
 
     @Override
@@ -983,6 +991,11 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
                     listItemList.add(new ListItem(ListItem.TYPE_ENTRY, stayOutbound));
                 }
 
+                if (DailyTextUtils.isTextEmpty(stayOutbounds.cacheKey, stayOutbounds.cacheLocation) == true)
+                {
+                    stayOutbounds.moreResultsAvailable = false;
+                }
+
                 if (listItemList.size() > 0)
                 {
                     if (stayOutbounds.moreResultsAvailable == true)
@@ -996,7 +1009,6 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
 
                 mCacheKey = stayOutbounds.cacheKey;
                 mCacheLocation = stayOutbounds.cacheLocation;
-                mMoreResultsAvailable = stayOutbounds.moreResultsAvailable;
                 mMoreEnabled = mMoreResultsAvailable;
 
                 return listItemList;

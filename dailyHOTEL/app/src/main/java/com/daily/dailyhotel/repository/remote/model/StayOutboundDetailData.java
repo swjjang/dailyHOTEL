@@ -28,7 +28,7 @@ public class StayOutboundDetailData
     public String address;
 
     @JsonField(name = "hotelRating")
-    public int hotelRating;
+    public float hotelRating;
 
     @JsonField(name = "tripAdvisor")
     public TripAdvisorData tripAdvisorData;
@@ -63,7 +63,7 @@ public class StayOutboundDetailData
         stayOutboundDetail.name = name;
         stayOutboundDetail.nameEng = nameEng;
         stayOutboundDetail.address = address;
-        stayOutboundDetail.grade = hotelRating;
+        stayOutboundDetail.rating = hotelRating;
 
         if (tripAdvisorData != null)
         {

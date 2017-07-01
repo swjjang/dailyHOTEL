@@ -223,18 +223,24 @@ public class SelectPeopleView extends BaseDialogView<SelectPeopleView.OnEventLis
             switch (childSize)
             {
                 case 3:
+                    getViewDataBinding().divisionLineView.setVisibility(View.VISIBLE);
+
                     getViewDataBinding().child3Layout.setVisibility(View.VISIBLE);
                     getViewDataBinding().child2Layout.setVisibility(View.VISIBLE);
                     getViewDataBinding().child1Layout.setVisibility(View.VISIBLE);
                     break;
 
                 case 2:
+                    getViewDataBinding().divisionLineView.setVisibility(View.VISIBLE);
+
                     getViewDataBinding().child3Layout.setVisibility(View.GONE);
                     getViewDataBinding().child2Layout.setVisibility(View.VISIBLE);
                     getViewDataBinding().child1Layout.setVisibility(View.VISIBLE);
                     break;
 
                 case 1:
+                    getViewDataBinding().divisionLineView.setVisibility(View.VISIBLE);
+
                     getViewDataBinding().child3Layout.setVisibility(View.GONE);
                     getViewDataBinding().child2Layout.setVisibility(View.GONE);
                     getViewDataBinding().child1Layout.setVisibility(View.VISIBLE);

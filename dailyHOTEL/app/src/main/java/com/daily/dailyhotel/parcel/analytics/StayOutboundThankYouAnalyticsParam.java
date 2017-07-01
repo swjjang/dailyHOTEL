@@ -9,6 +9,8 @@ public class StayOutboundThankYouAnalyticsParam implements Parcelable
 {
     public StayOutboundPayment.PaymentType paymentType;
     public boolean registerEasyCard;
+    public boolean fullBonus;
+    public boolean usedBonus;
 
     public StayOutboundThankYouAnalyticsParam()
     {
@@ -24,12 +26,14 @@ public class StayOutboundThankYouAnalyticsParam implements Parcelable
     {
         dest.writeString(paymentType.name());
         dest.writeInt(registerEasyCard == true ? 1 : 0);
+        dest.writeInt(fullBonus == true ? 1 : 0);
     }
 
     void readFromParcel(Parcel in)
     {
         paymentType = StayOutboundPayment.PaymentType.valueOf(in.readString());
         registerEasyCard = in.readInt() == 1 ? true : false;
+        fullBonus = in.readInt() == 1 ? true : false;
     }
 
     @Override

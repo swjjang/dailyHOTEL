@@ -61,7 +61,7 @@ public class StayOutboundSearchSuggestView extends BaseDialogView<StayOutboundSe
             return;
         }
 
-        viewDataBinding.keywordEditText.setImeOptions(EditorInfo.IME_ACTION_SEARCH);
+        viewDataBinding.keywordEditText.setImeOptions(EditorInfo.IME_ACTION_DONE);
         viewDataBinding.keywordEditText.setOnEditorActionListener(new TextView.OnEditorActionListener()
         {
             @Override
@@ -69,7 +69,7 @@ public class StayOutboundSearchSuggestView extends BaseDialogView<StayOutboundSe
             {
                 switch (actionId)
                 {
-                    case EditorInfo.IME_ACTION_SEARCH:
+                    case EditorInfo.IME_ACTION_DONE:
                         if (DailyTextUtils.isTextEmpty(v.getText().toString()) == false)
                         {
                             getEventListener().onSearchSuggest(v.getText().toString());

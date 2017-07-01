@@ -710,6 +710,8 @@ public class AnalyticsManager
         public static final String DAILYHOTEL_HOTELLIST_OUTBOUND = "DailyHotel_HotelList_outbound";
         public static final String DAILYHOTEL_HOTELDETAILVIEW_OUTBOUND = "DailyHotel_HotelDetailView_outbound";
         public static final String DAILYHOTEL_HOTELROOMTYPELIST_OUTBOUND = "DailyHotel_HotelRoomTypeList_outbound";
+        public static final String DAILYHOTEL_BOOKINGINITIALISE_CANCELABLE_OUTBOUND = "DailyHotel_BookingInitialise_Cancelable_outbound";
+        public static final String DAILYHOTEL_BOOKINGINITIALISE_NOREFUNDS_OUTBOUND = "DailyHotel_BookingInitialise_NoRefunds_outbound";
         public static final String DAILYHOTEL_PAYMENTCOMPLETE_OUTBOUND = "DailyHotel_PaymentComplete_outbound";
         public static final String DAILYHOTEL_THANKYOU_OUTBOUND = "DailyHotel_Thankyou_outbound";
     }
@@ -998,6 +1000,14 @@ public class AnalyticsManager
 
         // boutique BM
         public static final String STAY_ITEM_CLICK_BOUTIQUE_AD = "stay_item_click_boutique_ad";
+
+        // Stay OutBound
+        public static final String SEARCHSCREEN_OUTBOUND = "SearchScreen_outbound";
+        public static final String SEARCHRESULTVIEW_OUTBOUND = "SearchResultView_outbound";
+        public static final String STAY_ITEM_CLICK_OUTBOUND = "stay_item_click_outbound";
+        public static final String STARTPAYMENT_OUTBOUND = "StartPayment_outbound";
+        public static final String ENDPAYMENT_OUTBOUND = "EndPayment_outbound";
+        public static final String PAYMENTUSED_OUTBOUND = "PaymentUsed_outbound";
     }
 
     public static class Category
@@ -1035,6 +1045,9 @@ public class AnalyticsManager
         public static final String EXPERIMENT = "experiment";
 
         public static final String CONTACT_DAILY_CONCIERGE = "contact_daily_concierge";
+
+        // Stay OutBound
+        public static final String AUTOSEARCH_OUTBOUND = "AutoSearch_outbound";
     }
 
     public static class Label
@@ -1046,6 +1059,7 @@ public class AnalyticsManager
         public static final String PENSION = "pension";
         public static final String RESORT = "resort";
         public static final String NEAR_BY = "nearby";
+        public static final String OUTBOUND = "outbound";
 
         public static final String HOTEL_SCREEN = "HotelScreen";
         public static final String GOURMET_SCREEN = "GoumetScreen";
@@ -1246,6 +1260,13 @@ public class AnalyticsManager
         public static final String MENU_INQUIRY = "menu_inquiry";
         public static final String BACKKEY = "backkey";
         public static final String STAY_BOOKING_DETAIL_REFUND = "stay_booking_detail_refund";
+
+        // Stay OutBound
+        public static final String OUTBOUND_CLICK = "outbound_click";
+        public static final String EASYCARDPAY = "EasyCardPay";
+        public static final String CARDPAY = "CardPay";
+        public static final String PHONEBILLPAY = "PhoneBillPay";
+        public static final String FULLBONUS = "FullBonus";
     }
 
     public static class UserType

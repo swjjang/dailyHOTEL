@@ -614,7 +614,6 @@ public class PlaceReviewLayout extends BaseLayout
 
                     final String expandText = "…  더 읽어보기";
 
-                    StaticLayout layout = (StaticLayout) reviewViewHolder.reviewTextView.getLayout();
                     int lineStartIndex = reviewViewHolder.reviewTextView.getLayout().getLineStart(MAX_LINE - 1);
                     int lineEndIndex = reviewViewHolder.reviewTextView.getLayout().getLineEnd(MAX_LINE - 1);
 

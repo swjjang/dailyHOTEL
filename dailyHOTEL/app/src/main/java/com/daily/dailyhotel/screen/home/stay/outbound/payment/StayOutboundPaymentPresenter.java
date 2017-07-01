@@ -40,6 +40,7 @@ import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.DailyRemoteConfigPreference;
 import com.twoheart.dailyhotel.util.DailyUserPreference;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.CustomFontTypefaceSpan;
 
 import org.json.JSONArray;
@@ -82,9 +83,13 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
 
         void onScreen(Activity activity, StayBookDateTime stayBookDateTime);
 
-        void onScreenPaymentCompleted(Activity activity, StayOutboundPayment.PaymentType paymentType, boolean registerEasyCard);
+        void onScreenPaymentCompleted(Activity activity, StayOutboundPayment.PaymentType paymentType, boolean fullBonus, boolean registerEasyCard);
 
-        StayOutboundThankYouAnalyticsParam getThankYouAnalyticsParam(StayOutboundPayment.PaymentType paymentType, boolean registerEasyCard);
+        void onEventStartPayment(Activity activity, String label);
+
+        void onEventEndPayment(Activity activity);
+
+        StayOutboundThankYouAnalyticsParam getThankYouAnalyticsParam(StayOutboundPayment.PaymentType paymentType, boolean fullBonus, boolean usedBonus, boolean registerEasyCard);
     }
 
     public StayOutboundPaymentPresenter(@NonNull StayOutboundPaymentActivity activity)
@@ -627,6 +632,8 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
             {
                 startActivityForResult(RegisterCreditCardActivity.newInstance(getActivity())//
                     , StayOutboundPaymentActivity.REQUEST_CODE_REGISTER_CARD_PAYMENT);
+
+                mAnalytics.onEventStartPayment(getActivity(), AnalyticsManager.Label.EASYCARDPAY);
             } else
             {
                 getViewInterface().showAgreeTermDialog(mPaymentType, new View.OnClickListener()
@@ -689,9 +696,10 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
                         , mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
                         , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
                         , mStayOutboundPayment.checkInTime, mStayOutboundPayment.checkOutTime, mRoomType, paymentResult.bookingIndex//
-                        , mAnalytics.getThankYouAnalyticsParam(mPaymentType, mSelectedCard != null)), StayOutboundPaymentActivity.REQUEST_CODE_THANK_YOU);
+                        , mAnalytics.getThankYouAnalyticsParam(mPaymentType, true, mBonusSelected, mSelectedCard != null)), StayOutboundPaymentActivity.REQUEST_CODE_THANK_YOU);
 
-                    mAnalytics.onScreenPaymentCompleted(getActivity(), mPaymentType, mSelectedCard != null);
+                    mAnalytics.onScreenPaymentCompleted(getActivity(), mPaymentType, true, mSelectedCard != null);
+                    mAnalytics.onEventEndPayment(getActivity());
                 }
             }, new Consumer<Throwable>()
             {
@@ -717,6 +725,8 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
                     }
                 }
             }));
+
+            mAnalytics.onEventStartPayment(getActivity(), AnalyticsManager.Label.FULLBONUS);
         } else
         {
             switch (mPaymentType)
@@ -742,9 +752,10 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
                                 , mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
                                 , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
                                 , mStayOutboundPayment.checkInTime, mStayOutboundPayment.checkOutTime, mRoomType, paymentResult.bookingIndex//
-                                , mAnalytics.getThankYouAnalyticsParam(mPaymentType, mSelectedCard != null)), StayOutboundPaymentActivity.REQUEST_CODE_THANK_YOU);
+                                , mAnalytics.getThankYouAnalyticsParam(mPaymentType, false, mBonusSelected, mSelectedCard != null)), StayOutboundPaymentActivity.REQUEST_CODE_THANK_YOU);
 
-                            mAnalytics.onScreenPaymentCompleted(getActivity(), mPaymentType, mSelectedCard != null);
+                            mAnalytics.onScreenPaymentCompleted(getActivity(), mPaymentType, false, mSelectedCard != null);
+                            mAnalytics.onEventEndPayment(getActivity());
                         }
                     }, throwable ->
                     {
@@ -766,6 +777,8 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
                                 });
                         }
                     }));
+
+                    mAnalytics.onEventStartPayment(getActivity(), AnalyticsManager.Label.EASYCARDPAY);
                     break;
                 }
 
@@ -779,6 +792,8 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
 
                     startActivityForResult(StayOutboundPaymentWebActivity.newInstance(getActivity(), mStayIndex, "card", jsonObject.toString())//
                         , StayOutboundPaymentActivity.REQUEST_CODE_PAYMENT_WEB_CARD);
+
+                    mAnalytics.onEventStartPayment(getActivity(), AnalyticsManager.Label.CARDPAY);
                     break;
                 }
 
@@ -792,6 +807,8 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
 
                     startActivityForResult(StayOutboundPaymentWebActivity.newInstance(getActivity(), mStayIndex, "mobile", jsonObject.toString())//
                         , StayOutboundPaymentActivity.REQUEST_CODE_PAYMENT_WEB_PHONE);
+
+                    mAnalytics.onEventStartPayment(getActivity(), AnalyticsManager.Label.PHONEBILLPAY);
                     break;
                 }
             }
@@ -905,7 +922,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
 
             SpannableString checkInDateSpannableString = new SpannableString(checkInDate + " " + checkInTime);
             checkInDateSpannableString.setSpan( //
-                new CustomFontTypefaceSpan(FontManager.getInstance(getActivity()).getBoldTypeface()),//
+                new CustomFontTypefaceSpan(FontManager.getInstance(getActivity()).getMediumTypeface()),//
                 checkInDate.length(), checkInDate.length() + checkInTime.length() + 1,//
                 Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
@@ -914,7 +931,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
 
             SpannableString checkOutDateSpannableString = new SpannableString(checkOutDate + " " + checkOutTime);
             checkOutDateSpannableString.setSpan( //
-                new CustomFontTypefaceSpan(FontManager.getInstance(getActivity()).getBoldTypeface()),//
+                new CustomFontTypefaceSpan(FontManager.getInstance(getActivity()).getMediumTypeface()),//
                 checkOutDate.length(), checkOutDate.length() + checkOutTime.length() + 1,//
                 Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
@@ -958,7 +975,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
                 {
                     getViewInterface().setPaymentTypeEnabled(StayOutboundPayment.PaymentType.PHONE_PAY, true);
                 }
-            } else if (paymentPrice >= PHONE_MAX_PRICE)
+            } else if (paymentPrice > PHONE_MAX_PRICE)
             {
                 if (DailyRemoteConfigPreference.getInstance(getActivity()).isRemoteConfigStayOutboundSimpleCardPaymentEnabled() == true)
                 {
@@ -1314,9 +1331,10 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
                         , mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
                         , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
                         , mStayOutboundPayment.checkInTime, mStayOutboundPayment.checkOutTime, mRoomType, paymentResult.bookingIndex//
-                        , mAnalytics.getThankYouAnalyticsParam(mPaymentType, mSelectedCard != null)), StayOutboundPaymentActivity.REQUEST_CODE_THANK_YOU);
+                        , mAnalytics.getThankYouAnalyticsParam(mPaymentType, false, mBonusSelected, mSelectedCard != null)), StayOutboundPaymentActivity.REQUEST_CODE_THANK_YOU);
 
-                    mAnalytics.onScreenPaymentCompleted(getActivity(), mPaymentType, mSelectedCard != null);
+                    mAnalytics.onScreenPaymentCompleted(getActivity(), mPaymentType, false, mSelectedCard != null);
+                    mAnalytics.onEventEndPayment(getActivity());
                 }
             }, throwable ->
             {
