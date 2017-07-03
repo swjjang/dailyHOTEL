@@ -284,9 +284,11 @@ public class StayOutboundPaymentView extends BaseDialogView<StayOutboundPaymentV
             mRefundDataBinding.getRoot().setVisibility(View.VISIBLE);
             mRefundDataBinding.refundPolicyListLayout.removeAllViews();
 
-            for (String refundPolicy : refundPolicyList)
+            int size = refundPolicyList.size();
+
+            for (int i = 0; i < size; i++)
             {
-                if (DailyTextUtils.isTextEmpty(refundPolicy) == true)
+                if (DailyTextUtils.isTextEmpty(refundPolicyList.get(i)) == true)
                 {
                     continue;
                 }
@@ -294,7 +296,14 @@ public class StayOutboundPaymentView extends BaseDialogView<StayOutboundPaymentV
                 LayoutStayOutboundDetailInformationDataBinding detailInformationDataBinding = DataBindingUtil.inflate(LayoutInflater.from(getContext())//
                     , R.layout.layout_stay_outbound_detail_information_data, mRefundDataBinding.refundPolicyListLayout, true);
 
-                detailInformationDataBinding.textView.setText(Html.fromHtml(refundPolicy));
+                detailInformationDataBinding.textView.setText(Html.fromHtml(refundPolicyList.get(i)));
+
+                if (i == size - 1)
+                {
+                    LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) detailInformationDataBinding.textView.getLayoutParams();
+                    layoutParams.bottomMargin = 0;
+                    detailInformationDataBinding.textView.setLayoutParams(layoutParams);
+                }
             }
         }
     }

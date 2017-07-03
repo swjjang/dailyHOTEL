@@ -53,13 +53,10 @@
             android:layout_below="@id/homeCategoryTitleBottomLine"
             app:columnCount="4"/>
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@+id/categoryGridLayout"
+            android:background="@color/default_line_cf0f0f0"/>
     </RelativeLayout>
-
-    <View
-        android:id="@id/bottomDivider"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_below="@id/homeCategoryLayout"
-        android:background="@color/default_line_cf0f0f0"/>
-
 </merge>

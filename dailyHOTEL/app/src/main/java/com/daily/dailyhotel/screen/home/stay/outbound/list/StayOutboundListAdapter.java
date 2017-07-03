@@ -289,10 +289,10 @@ public class StayOutboundListAdapter extends RecyclerView.Adapter<RecyclerView.V
             holder.dataBinding.tripAdvisorLayout.setVisibility(View.GONE);
 
             ConstraintLayout.LayoutParams nameEngLayoutParams = (ConstraintLayout.LayoutParams) holder.dataBinding.nameEngTextView.getLayoutParams();
-            nameEngLayoutParams.bottomMargin = ScreenUtils.dpToPx(mContext, 2);
+            nameEngLayoutParams.bottomMargin = ScreenUtils.dpToPx(mContext, 6);
 
             ConstraintLayout.LayoutParams nameLayoutParams = (ConstraintLayout.LayoutParams) holder.dataBinding.nameTextView.getLayoutParams();
-            nameLayoutParams.bottomMargin = ScreenUtils.dpToPx(mContext, -3);
+            nameLayoutParams.bottomMargin = ScreenUtils.dpToPx(mContext, -4);
         } else
         {
             ConstraintLayout.LayoutParams nameEngLayoutParams = (ConstraintLayout.LayoutParams) holder.dataBinding.nameEngTextView.getLayoutParams();

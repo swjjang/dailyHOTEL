@@ -1051,7 +1051,7 @@ public class StayOutboundDetailView extends BaseDialogView<StayOutboundDetailVie
 
         // 등급
         viewDataBinding.gradeTextView.setVisibility(View.VISIBLE);
-        viewDataBinding.gradeTextView.setText(getString(R.string.label_stay_outbound_detail_grade, (int)stayOutboundDetail.rating));
+        viewDataBinding.gradeTextView.setText(getString(R.string.label_stay_outbound_detail_grade, (int) stayOutboundDetail.rating));
         viewDataBinding.ratingBar.setOnTouchListener(new View.OnTouchListener()
         {
             @Override
@@ -1344,9 +1344,11 @@ public class StayOutboundDetailView extends BaseDialogView<StayOutboundDetailVie
 
         if (informationList != null && informationList.size() > 0)
         {
-            for (String text : informationList)
+            int size = informationList.size();
+
+            for (int i = 0; i < size; i++)
             {
-                if (DailyTextUtils.isTextEmpty(text) == true)
+                if (DailyTextUtils.isTextEmpty(informationList.get(i)) == true)
                 {
                     continue;
                 }
@@ -1354,7 +1356,14 @@ public class StayOutboundDetailView extends BaseDialogView<StayOutboundDetailVie
                 LayoutStayOutboundDetailInformationDataBinding detailInformationDataBinding = DataBindingUtil.inflate(layoutInflater//
                     , R.layout.layout_stay_outbound_detail_information_data, viewDataBinding.informationLayout, true);
 
-                detailInformationDataBinding.textView.setText(Html.fromHtml(text));
+                detailInformationDataBinding.textView.setText(Html.fromHtml(informationList.get(i)));
+
+                if (i == size - 1)
+                {
+                    LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) detailInformationDataBinding.textView.getLayoutParams();
+                    layoutParams.bottomMargin = 0;
+                    detailInformationDataBinding.textView.setLayoutParams(layoutParams);
+                }
             }
         }
     }

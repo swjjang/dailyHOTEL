@@ -18,6 +18,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 
@@ -579,9 +580,11 @@ public class StayOutboundBookingDetailView extends BaseDialogView<StayOutboundBo
 
             mBookingDetail03DataBinding.defaultRefundPolicyLayout.removeAllViews();
 
-            for (String refundPolicy : refundPolicyList)
+            int size = refundPolicyList.size();
+
+            for (int i = 0; i < size; i++)
             {
-                if (DailyTextUtils.isTextEmpty(refundPolicy) == true)
+                if (DailyTextUtils.isTextEmpty(refundPolicyList.get(i)) == true)
                 {
                     continue;
                 }
@@ -589,7 +592,14 @@ public class StayOutboundBookingDetailView extends BaseDialogView<StayOutboundBo
                 LayoutStayOutboundDetailInformationDataBinding detailInformationDataBinding = DataBindingUtil.inflate(LayoutInflater.from(getContext())//
                     , R.layout.layout_stay_outbound_detail_information_data, mBookingDetail03DataBinding.defaultRefundPolicyLayout, true);
 
-                detailInformationDataBinding.textView.setText(Html.fromHtml(refundPolicy));
+                detailInformationDataBinding.textView.setText(Html.fromHtml(refundPolicyList.get(i)));
+
+                if (i == size - 1)
+                {
+                    LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) detailInformationDataBinding.textView.getLayoutParams();
+                    layoutParams.bottomMargin = 0;
+                    detailInformationDataBinding.textView.setLayoutParams(layoutParams);
+                }
             }
 
             switch (stayOutboundBookingDetail.refundStatus)
