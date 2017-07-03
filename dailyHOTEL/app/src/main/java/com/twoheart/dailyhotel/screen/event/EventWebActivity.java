@@ -16,7 +16,6 @@ import android.webkit.WebView;
 import com.crashlytics.android.Crashlytics;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
-import com.daily.base.widget.DailyWebView;
 import com.google.android.gms.maps.model.LatLng;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.LauncherActivity;
@@ -183,46 +182,46 @@ public class EventWebActivity extends WebViewActivity implements Constants
         });
     }
 
-    private void initLayout(final DailyWebView dailyWebView)
-    {
-        final View topButtonView = findViewById(R.id.topButtonView);
-        topButtonView.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                smoothScrollTop(dailyWebView);
-            }
-        });
-
-        topButtonView.setVisibility(View.GONE);
-
-        dailyWebView.setOnScrollListener(new DailyWebView.OnScrollListener()
-        {
-            @Override
-            public void onScroll(int l, int t, int oldl, int oldt)
-            {
-                if (t == 0)
-                {
-                    topButtonView.setVisibility(View.GONE);
-                } else
-                {
-                    topButtonView.setVisibility(View.VISIBLE);
-                }
-            }
-        });
-
-        View homeButtonView = findViewById(R.id.homeButtonView);
-        homeButtonView.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                setResult(Constants.CODE_RESULT_ACTIVITY_GO_HOME);
-                finish();
-            }
-        });
-    }
+    //    private void initLayout(final DailyWebView dailyWebView)
+    //    {
+    //        final View topButtonView = findViewById(R.id.topButtonView);
+    //        topButtonView.setOnClickListener(new View.OnClickListener()
+    //        {
+    //            @Override
+    //            public void onClick(View v)
+    //            {
+    //                smoothScrollTop(dailyWebView);
+    //            }
+    //        });
+    //
+    //        topButtonView.setVisibility(View.GONE);
+    //
+    //        dailyWebView.setOnScrollListener(new DailyWebView.OnScrollListener()
+    //        {
+    //            @Override
+    //            public void onScroll(int l, int t, int oldl, int oldt)
+    //            {
+    //                if (t == 0)
+    //                {
+    //                    topButtonView.setVisibility(View.GONE);
+    //                } else
+    //                {
+    //                    topButtonView.setVisibility(View.VISIBLE);
+    //                }
+    //            }
+    //        });
+    //
+    //        View homeButtonView = findViewById(R.id.homeButtonView);
+    //        homeButtonView.setOnClickListener(new View.OnClickListener()
+    //        {
+    //            @Override
+    //            public void onClick(View v)
+    //            {
+    //                setResult(Constants.CODE_RESULT_ACTIVITY_GO_HOME);
+    //                finish();
+    //            }
+    //        });
+    //    }
 
     private void requestCommonDatetime(final String url)
     {
