@@ -40,7 +40,7 @@ public class GourmetPaymentLayout extends BaseLayout implements View.OnClickList
 {
     ScrollView mScrollView;
     //
-    private View mBookingLayout, mCheckListLayout;
+    private View mBookingLayout;
     private TextView mTicketTypeTextView, mTicketDateTextView, mTicketCountTextView, mTicketTimeTextView;
     private TextView mAmountNightsTextView;
     private TextView mPriceTextView, mDiscountPriceTextView, mFinalPaymentTextView;
@@ -50,8 +50,7 @@ public class GourmetPaymentLayout extends BaseLayout implements View.OnClickList
     //    private EditText mMemoEditText;
     private View mUserLayout;
     View mGuestFrameLayout, mGuestLinearLayout;
-    private CheckBox mGuestCheckBox, mCheckListCheckBox;
-    private TextView mCheckListTextView;
+    private CheckBox mGuestCheckBox;
 
     private View mTicketCountMinusButton, mTicketCountPlusButton;
 
@@ -192,11 +191,6 @@ public class GourmetPaymentLayout extends BaseLayout implements View.OnClickList
 
         mTicketCountMinusButton.setOnClickListener(this);
         mTicketCountPlusButton.setOnClickListener(this);
-
-        // 확인사항 동의
-        mCheckListLayout = view.findViewById(R.id.checkListLayout);
-        mCheckListCheckBox = (CheckBox) view.findViewById(R.id.checkListCheckBox);
-        mCheckListTextView = (TextView) view.findViewById(R.id.checkListTextView);
 
         // 예약자 정보
         initUserInformationLayout(view);
@@ -440,26 +434,6 @@ public class GourmetPaymentLayout extends BaseLayout implements View.OnClickList
 
         // 수량
         mTicketCountTextView.setText(mContext.getString(R.string.label_booking_count, gourmetPaymentInformation.ticketCount));
-
-        // 확인 사항
-        if (DailyTextUtils.isTextEmpty(gourmetProduct.needToKnow) == true)
-        {
-            mCheckListLayout.setVisibility(View.GONE);
-        } else
-        {
-            mCheckListLayout.setVisibility(View.VISIBLE);
-            mCheckListTextView.setText(gourmetProduct.needToKnow);
-        }
-    }
-
-    public boolean isCheckListCheck()
-    {
-        if (mCheckListLayout.getVisibility() != View.VISIBLE)
-        {
-            return true;
-        }
-
-        return mCheckListCheckBox.isChecked();
     }
 
     protected void setUserInformation(Customer user, boolean isOverseas)
@@ -706,16 +680,6 @@ public class GourmetPaymentLayout extends BaseLayout implements View.OnClickList
                 mGuestEmailEditText.requestFocus();
                 break;
         }
-    }
-
-    public void requestCheckListCheckFocus()
-    {
-        if (mScrollView == null || mCheckListLayout == null)
-        {
-            return;
-        }
-
-        mScrollView.scrollTo(0, (int) mCheckListLayout.getY());
     }
 
     public void clearFocus()
