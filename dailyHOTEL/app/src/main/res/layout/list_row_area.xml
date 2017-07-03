@@ -105,4 +105,12 @@
         android:layout_below="@id/verticalLine"
         android:background="@color/selectarea_underline"/>
 
+    <View
+        android:id="@+id/lastUnderLineView"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@id/verticalLine"
+        android:background="@color/default_line_cf0f0f0"
+        android:visibility="gone"/>
+
 </RelativeLayout>
