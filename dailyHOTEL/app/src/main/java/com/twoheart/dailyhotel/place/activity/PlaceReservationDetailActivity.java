@@ -116,6 +116,11 @@ public abstract class PlaceReservationDetailActivity extends BaseActivity
         {
             unLockUI();
         }
+
+        if (mPlaceReservationDetailLayout != null && mPlaceReservationDetailLayout.getBlurVisibility() == true)
+        {
+            mPlaceReservationDetailLayout.setBlurVisibility(this, false);
+        }
     }
 
     @Override
