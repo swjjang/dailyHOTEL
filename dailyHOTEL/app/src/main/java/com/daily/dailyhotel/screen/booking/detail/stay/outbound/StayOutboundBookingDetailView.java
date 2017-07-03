@@ -1009,6 +1009,17 @@ public class StayOutboundBookingDetailView extends BaseDialogView<StayOutboundBo
 
         dataBinding.totalPriceTextView.setText(DailyTextUtils.getPriceFormat(context, stayOutboundBookingDetail.paymentPrice, false));
 
+        if (stayOutboundBookingDetail.fee > 0)
+        {
+            dataBinding.additionalTaxMemoTextView.setVisibility(View.VISIBLE);
+            dataBinding.additionalTaxLayout.setVisibility(View.VISIBLE);
+            dataBinding.taxPriceTextView.setText(DailyTextUtils.getGlobalCurrency(Locale.US, getString(R.string.label_currency_usd), stayOutboundBookingDetail.fee));
+        } else
+        {
+            dataBinding.additionalTaxMemoTextView.setVisibility(View.GONE);
+            dataBinding.additionalTaxLayout.setVisibility(View.GONE);
+        }
+
         // 영수증 발급
         dataBinding.buttonLayout.setOnClickListener(this);
     }

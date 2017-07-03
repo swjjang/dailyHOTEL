@@ -135,6 +135,12 @@ public class StayCategoryNearByActivity extends BaseActivity
 
         mStayCategoryNearByLayout.setViewTypeVisibility(true);
 
+        if (mStayCategoryNearByCuration == null)
+        {
+            Util.restartApp(this);
+            return;
+        }
+
         mNetworkController.requestAddress(mStayCategoryNearByCuration.getLocation());
 
         mStayCategoryNearByLayout.setCategoryTabLayoutVisibility(View.INVISIBLE);

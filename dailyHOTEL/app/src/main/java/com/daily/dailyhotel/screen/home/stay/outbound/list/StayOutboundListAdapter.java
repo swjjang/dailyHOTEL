@@ -11,8 +11,10 @@ import android.graphics.drawable.PaintDrawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.RectShape;
 import android.os.Vibrator;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -153,8 +155,8 @@ public class StayOutboundListAdapter extends RecyclerView.Adapter<RecyclerView.V
     private void makeShaderFactory()
     {
         // 그라디에이션 만들기.
-        final int colors[] = {Color.parseColor("#ED000000"), Color.parseColor("#E8000000"), Color.parseColor("#E2000000"), Color.parseColor("#66000000"), Color.parseColor("#00000000")};
-        final float positions[] = {0.0f, 0.01f, 0.02f, 0.17f, 0.80f};
+        final int colors[] = {Color.parseColor("#E6000000"), Color.parseColor("#99000000"), Color.parseColor("#1A000000"), Color.parseColor("#00000000"), Color.parseColor("#00000000")};
+        final float positions[] = {0.0f, 0.24f, 0.66f, 0.8f, 1.0f};
 
         mPaintDrawable = new PaintDrawable();
         mPaintDrawable.setShape(new RectShape());
@@ -272,13 +274,33 @@ public class StayOutboundListAdapter extends RecyclerView.Adapter<RecyclerView.V
         holder.dataBinding.gradeTextView.setText(mContext.getString(R.string.label_stay_outbound_filter_x_star_rate, (int) stayOutbound.rating));
 
         // 별등급
+        holder.dataBinding.ratingBar.setOnTouchListener(new View.OnTouchListener()
+        {
+            @Override
+            public boolean onTouch(View v, MotionEvent event)
+            {
+                return true;
+            }
+        });
         holder.dataBinding.ratingBar.setRating(stayOutbound.rating);
 
         if (stayOutbound.tripAdvisorRating == 0.0f && mDistanceEnabled == false)
         {
             holder.dataBinding.tripAdvisorLayout.setVisibility(View.GONE);
+
+            ConstraintLayout.LayoutParams nameEngLayoutParams = (ConstraintLayout.LayoutParams) holder.dataBinding.nameEngTextView.getLayoutParams();
+            nameEngLayoutParams.bottomMargin = ScreenUtils.dpToPx(mContext, 2);
+
+            ConstraintLayout.LayoutParams nameLayoutParams = (ConstraintLayout.LayoutParams) holder.dataBinding.nameTextView.getLayoutParams();
+            nameLayoutParams.bottomMargin = ScreenUtils.dpToPx(mContext, -3);
         } else
         {
+            ConstraintLayout.LayoutParams nameEngLayoutParams = (ConstraintLayout.LayoutParams) holder.dataBinding.nameEngTextView.getLayoutParams();
+            nameEngLayoutParams.bottomMargin = ScreenUtils.dpToPx(mContext, 4);
+
+            ConstraintLayout.LayoutParams nameLayoutParams = (ConstraintLayout.LayoutParams) holder.dataBinding.nameTextView.getLayoutParams();
+            nameLayoutParams.bottomMargin = ScreenUtils.dpToPx(mContext, -2);
+
             holder.dataBinding.tripAdvisorLayout.setVisibility(View.VISIBLE);
         }
 
@@ -294,6 +316,14 @@ public class StayOutboundListAdapter extends RecyclerView.Adapter<RecyclerView.V
             holder.dataBinding.tripAdvisorRatingBar.setVisibility(View.VISIBLE);
             holder.dataBinding.tripAdvisorRatingTextView.setVisibility(View.VISIBLE);
 
+            holder.dataBinding.tripAdvisorRatingBar.setOnTouchListener(new View.OnTouchListener()
+            {
+                @Override
+                public boolean onTouch(View v, MotionEvent event)
+                {
+                    return true;
+                }
+            });
             holder.dataBinding.tripAdvisorRatingBar.setRating(stayOutbound.tripAdvisorRating);
             holder.dataBinding.tripAdvisorRatingTextView.setText(mContext.getString(R.string.label_stay_outbound_tripadvisor_rating, Float.toString(stayOutbound.tripAdvisorRating)));
 

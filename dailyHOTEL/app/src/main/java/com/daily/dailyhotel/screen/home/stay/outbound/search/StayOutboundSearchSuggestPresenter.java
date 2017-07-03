@@ -26,10 +26,11 @@ public class StayOutboundSearchSuggestPresenter extends BaseExceptionPresenter<S
     private StayOutboundSearchSuggestAnalyticsInterface mAnalytics;
     private SuggestRemoteImpl mSuggestRemoteImpl;
 
-    private Suggest mSuggest;
+    private String mKeyword;
 
     public interface StayOutboundSearchSuggestAnalyticsInterface extends BaseAnalyticsInterface
     {
+        void onEventSuggestClick(Activity activity, String keyword, Suggest suggest);
     }
 
     public StayOutboundSearchSuggestPresenter(@NonNull StayOutboundSearchSuggestActivity activity)
@@ -153,13 +154,7 @@ public class StayOutboundSearchSuggestPresenter extends BaseExceptionPresenter<S
     {
         clearCompositeDisposable();
 
-        if (mSuggest == null)
-        {
-            mSuggest = new Suggest();
-        }
-
-        mSuggest.id = 0;
-        mSuggest.city = keyword;
+        mKeyword = keyword;
 
         getViewInterface().setEmptySuggestsVisible(false);
         getViewInterface().setProgressBarVisible(true);
@@ -189,7 +184,7 @@ public class StayOutboundSearchSuggestPresenter extends BaseExceptionPresenter<S
             return;
         }
 
-        mSuggest = suggest;
+        mAnalytics.onEventSuggestClick(getActivity(), mKeyword, suggest);
 
         Intent intent = new Intent();
         intent.putExtra(StayOutboundSearchSuggestActivity.INTENT_EXTRA_DATA_SUGGEST, new SuggestParcel(suggest));

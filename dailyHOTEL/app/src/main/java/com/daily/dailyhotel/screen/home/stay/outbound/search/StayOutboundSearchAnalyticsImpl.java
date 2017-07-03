@@ -24,4 +24,16 @@ public class StayOutboundSearchAnalyticsImpl implements StayOutboundSearchPresen
 
         AnalyticsManager.getInstance(activity).recordScreen(activity, AnalyticsManager.Screen.SEARCHSCREENVIEW_OUTBOUND, null, params);
     }
+
+    @Override
+    public void onEventDestroy(Activity activity)
+    {
+        if (activity == null)
+        {
+            return;
+        }
+
+        AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.SEARCH//
+            , AnalyticsManager.Action.SEARCHSCREEN_OUTBOUND, AnalyticsManager.Label.CLOSED, null);
+    }
 }

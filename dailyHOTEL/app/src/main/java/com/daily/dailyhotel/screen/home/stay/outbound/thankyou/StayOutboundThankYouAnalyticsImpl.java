@@ -27,30 +27,61 @@ public class StayOutboundThankYouAnalyticsImpl implements StayOutboundThankYouPr
     @Override
     public void onScreen(Activity activity)
     {
-        if(activity == null || mAnalyticsParam == null)
+        if (activity == null || mAnalyticsParam == null)
         {
             return;
         }
 
         Map<String, String> params = new HashMap<>();
 
-        switch (mAnalyticsParam.paymentType)
+        if (mAnalyticsParam.fullBonus == true)
         {
-            case EASY_CARD:
-                params.put(AnalyticsManager.KeyType.PAYMENT_TYPE, "EasyCardPay");
-                break;
+            params.put(AnalyticsManager.KeyType.PAYMENT_TYPE, AnalyticsManager.Label.FULLBONUS);
+        } else
+        {
+            switch (mAnalyticsParam.paymentType)
+            {
+                case EASY_CARD:
+                    params.put(AnalyticsManager.KeyType.PAYMENT_TYPE, AnalyticsManager.Label.EASYCARDPAY);
+                    break;
 
-            case CARD:
-                params.put(AnalyticsManager.KeyType.PAYMENT_TYPE, "CardPay");
-                break;
+                case CARD:
+                    params.put(AnalyticsManager.KeyType.PAYMENT_TYPE, AnalyticsManager.Label.CARDPAY);
+                    break;
 
-            case PHONE_PAY:
-                params.put(AnalyticsManager.KeyType.PAYMENT_TYPE, "PhoneBillPay");
-                break;
+                case PHONE_PAY:
+                    params.put(AnalyticsManager.KeyType.PAYMENT_TYPE, AnalyticsManager.Label.PHONEBILLPAY);
+                    break;
+            }
         }
 
         params.put(AnalyticsManager.KeyType.REGISTERED_SIMPLE_CARD, mAnalyticsParam.registerEasyCard ? "y" : "n");
 
-        AnalyticsManager.getInstance(activity).recordScreen(activity, AnalyticsManager.Screen.DAILYHOTEL_HOTELDETAILVIEW_OUTBOUND, null, params);
+        AnalyticsManager.getInstance(activity).recordScreen(activity, AnalyticsManager.Screen.DAILYHOTEL_THANKYOU_OUTBOUND, null, params);
+    }
+
+    @Override
+    public void onEventPayment(Activity activity)
+    {
+        if (activity == null || mAnalyticsParam == null)
+        {
+            return;
+        }
+
+        String label;
+
+        if (mAnalyticsParam.fullBonus == true)
+        {
+            label = AnalyticsManager.Label.FULLBONUS;
+        } else if (mAnalyticsParam.usedBonus == true)
+        {
+            label = AnalyticsManager.Label.PAYMENTWITH_COUPON;
+        } else
+        {
+            label = AnalyticsManager.Label.FULL_PAYMENT;
+        }
+
+        AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS//
+            , AnalyticsManager.Action.PAYMENTUSED_OUTBOUND, label, null);
     }
 }

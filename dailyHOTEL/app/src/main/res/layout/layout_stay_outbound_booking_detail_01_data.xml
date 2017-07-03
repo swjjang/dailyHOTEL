@@ -331,8 +331,7 @@
             android:layout_height="36dp"
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"
-            android:gravity="center_vertical"
-            android:visibility="gone">
+            android:gravity="center_vertical">
 
             <com.daily.base.widget.DailyTextView
                 android:layout_width="0dp"

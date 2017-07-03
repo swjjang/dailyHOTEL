@@ -296,17 +296,19 @@ public abstract class PlaceDetailActivity extends BaseActivity
                     mPlaceDetailLayout.setTransVisibility(View.VISIBLE);
                 } else
                 {
+                    lockUiComponent();
+
                     mPlaceDetailLayout.setScrollViewTop();
+                    mPlaceDetailLayout.setTransVisibility(View.VISIBLE);
 
                     mHandler.postDelayed(new Runnable()
                     {
                         @Override
                         public void run()
                         {
-                            mPlaceDetailLayout.setTransVisibility(View.VISIBLE);
                             PlaceDetailActivity.super.onBackPressed();
                         }
-                    }, 100);
+                    }, 300);
 
                     return;
                 }

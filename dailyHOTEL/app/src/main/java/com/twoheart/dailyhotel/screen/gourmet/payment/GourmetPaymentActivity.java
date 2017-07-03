@@ -1244,7 +1244,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
             }
 
             // 50만원 한도 핸드폰 결제 금지
-            if (payPrice >= PHONE_PAYMENT_LIMIT)
+            if (payPrice > PHONE_PAYMENT_LIMIT)
             {
                 if (mPaymentInformation.paymentType == PlacePaymentInformation.PaymentType.PHONE_PAY)
                 {
@@ -1555,16 +1555,6 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
                     DailyToast.showToast(GourmetPaymentActivity.this, R.string.toast_msg_wrong_email_address, Toast.LENGTH_SHORT);
                     return;
                 }
-            }
-
-            if (mGourmetPaymentLayout.isCheckListCheck() == false)
-            {
-                releaseUiComponent();
-
-                mGourmetPaymentLayout.requestCheckListCheckFocus();
-
-                DailyToast.showToast(GourmetPaymentActivity.this, R.string.toast_msg_please_check_checklist, Toast.LENGTH_SHORT);
-                return;
             }
 
             gourmetPaymentInformation.setGuest(guest);

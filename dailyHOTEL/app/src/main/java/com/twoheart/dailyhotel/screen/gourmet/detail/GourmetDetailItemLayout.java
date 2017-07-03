@@ -314,6 +314,18 @@ public class GourmetDetailItemLayout extends LinearLayout
             addView(titleView);
         }
 
+        mFirstProductIndex = getChildCount();
+
+        // 상품 정보
+        setProductListLayout(mLayoutInflater, this, mGourmetDetail.getProductList());
+
+        mLastProductIndex = getChildCount() - 1;
+
+        if (mGourmetDetail.getProductList().size() == 0)
+        {
+            mFirstProductIndex = mLastProductIndex = -1;
+        }
+
         // D Benefit
         View benefitView = getBenefitView(mLayoutInflater, mGourmetDetail);
         if (benefitView != null)
@@ -327,18 +339,6 @@ public class GourmetDetailItemLayout extends LinearLayout
             view.setLayoutParams(layoutParams);
             view.setBackgroundResource(R.color.default_line_cf0f0f0);
             addView(view);
-        }
-
-        mFirstProductIndex = getChildCount();
-
-        // 상품 정보
-        setProductListLayout(mLayoutInflater, this, mGourmetDetail.getProductList());
-
-        mLastProductIndex = getChildCount() - 1;
-
-        if (mGourmetDetail.getProductList().size() == 0)
-        {
-            mFirstProductIndex = mLastProductIndex = -1;
         }
 
         // 주소 및 맵

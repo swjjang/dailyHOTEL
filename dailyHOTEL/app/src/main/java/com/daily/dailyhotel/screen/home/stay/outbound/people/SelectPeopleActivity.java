@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 
 import com.daily.base.BaseActivity;
+import com.twoheart.dailyhotel.R;
 
 import java.util.ArrayList;
 
@@ -31,6 +32,8 @@ public class SelectPeopleActivity extends BaseActivity<SelectPeoplePresenter>
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
+        overridePendingTransition(R.anim.hold, R.anim.hold);
+
         super.onCreate(savedInstanceState);
     }
 
@@ -45,5 +48,7 @@ public class SelectPeopleActivity extends BaseActivity<SelectPeoplePresenter>
     public void finish()
     {
         super.finish();
+
+        overridePendingTransition(R.anim.hold, R.anim.hold);
     }
 }

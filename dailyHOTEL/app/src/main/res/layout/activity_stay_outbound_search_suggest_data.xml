@@ -64,49 +64,61 @@
             android:background="@color/white"
             android:visibility="gone"/>
 
-        <RelativeLayout
+        <ScrollView
             android:id="@+id/emptyLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_below="@+id/toolbar"
+            android:fillViewport="true"
             android:visibility="gone">
 
-            <LinearLayout
-                android:id="@+id/textLayout"
+            <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginTop="20dp"
-                android:gravity="center"
-                android:orientation="vertical">
+                android:layout_height="wrap_content">
 
-                <com.daily.base.widget.DailyTextView
-                    android:id="@+id/messageTextView01"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/label_searchresult_empty"
-                    android:textColor="@color/default_text_c323232"
-                    android:textSize="18dp"
-                    dailyFont:style="Medium"/>
+                    android:layout_gravity="center"
+                    android:orientation="vertical">
 
-                <com.daily.base.widget.DailyTextView
-                    android:id="@+id/messageTextView02"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="13dp"
-                    android:gravity="center"
-                    android:text="@string/message_stay_outbound_suggest_empty_suggest"
-                    android:textColor="@color/default_text_c929292"
-                    android:textSize="14dp"/>
-            </LinearLayout>
+                    <ImageView
+                        android:id="@+id/imageView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        app:srcCompat="@drawable/no_hotel_ic"/>
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_above="@id/textLayout"
-                android:layout_centerHorizontal="true"
-                android:gravity="center"
-                app:srcCompat="@drawable/no_hotel_ic"/>
-        </RelativeLayout>
+                    <LinearLayout
+                        android:id="@+id/textLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <com.daily.base.widget.DailyTextView
+                            android:id="@+id/messageTextView01"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/label_searchresult_empty"
+                            android:textColor="@color/default_text_c323232"
+                            android:textSize="18dp"
+                            dailyFont:style="Medium"/>
+
+                        <com.daily.base.widget.DailyTextView
+                            android:id="@+id/messageTextView02"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="13dp"
+                            android:gravity="center"
+                            android:text="@string/message_stay_outbound_suggest_empty_suggest"
+                            android:textColor="@color/default_text_c929292"
+                            android:textSize="14dp"/>
+                    </LinearLayout>
+                </LinearLayout>
+            </FrameLayout>
+        </ScrollView>
 
         <ScrollView
             android:id="@+id/progressBarScrollView"

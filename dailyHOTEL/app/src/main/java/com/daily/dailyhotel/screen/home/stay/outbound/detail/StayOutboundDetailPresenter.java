@@ -345,9 +345,11 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
 
                 if (mIsUsedMultiTransition == true)
                 {
+                    lock();
+
                     getViewInterface().scrollTop();
 
-                    Single.just(mIsUsedMultiTransition).delaySubscription(100, TimeUnit.MILLISECONDS, AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
+                    Single.just(mIsUsedMultiTransition).delaySubscription(300, TimeUnit.MILLISECONDS, AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
                     {
                         @Override
                         public void accept(@io.reactivex.annotations.NonNull Boolean aBoolean) throws Exception
@@ -897,8 +899,8 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
                         public void accept(@io.reactivex.annotations.NonNull User user) throws Exception
                         {
                             boolean isDailyUser = Constants.DAILY_USER.equalsIgnoreCase(user.userType);
-                            StayOutboundPaymentAnalyticsParam analyticsParam = mAnalytics.getPaymentAnalyticsParam(getString(R.string.label_stay_outbound_detail_grade, mStayOutboundDetail.grade)//
-                                , mSelectedRoom.nonRefundable, mSelectedRoom.base > 0);
+                            StayOutboundPaymentAnalyticsParam analyticsParam = mAnalytics.getPaymentAnalyticsParam(getString(R.string.label_stay_outbound_detail_grade, (int) mStayOutboundDetail.rating)//
+                                , mSelectedRoom.nonRefundable, mSelectedRoom.promotion);
 
                             if (isDailyUser == true)
                             {

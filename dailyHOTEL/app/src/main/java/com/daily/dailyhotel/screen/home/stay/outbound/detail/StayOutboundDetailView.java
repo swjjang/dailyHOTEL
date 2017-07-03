@@ -1051,8 +1051,16 @@ public class StayOutboundDetailView extends BaseDialogView<StayOutboundDetailVie
 
         // 등급
         viewDataBinding.gradeTextView.setVisibility(View.VISIBLE);
-        viewDataBinding.gradeTextView.setText(getString(R.string.label_stay_outbound_detail_grade, stayOutboundDetail.grade));
-        viewDataBinding.gradeTextView.setBackgroundResource(R.color.default_background_c929292);
+        viewDataBinding.gradeTextView.setText(getString(R.string.label_stay_outbound_detail_grade, (int)stayOutboundDetail.rating));
+        viewDataBinding.ratingBar.setOnTouchListener(new View.OnTouchListener()
+        {
+            @Override
+            public boolean onTouch(View v, MotionEvent event)
+            {
+                return true;
+            }
+        });
+        viewDataBinding.ratingBar.setRating(stayOutboundDetail.rating);
 
         // 호텔명
         viewDataBinding.nameTextView.setText(stayOutboundDetail.name);
@@ -1066,6 +1074,14 @@ public class StayOutboundDetailView extends BaseDialogView<StayOutboundDetailVie
         {
             viewDataBinding.tripAdvisorLayout.setVisibility(View.VISIBLE);
 
+            viewDataBinding.tripAdvisorRatingBar.setOnTouchListener(new View.OnTouchListener()
+            {
+                @Override
+                public boolean onTouch(View v, MotionEvent event)
+                {
+                    return true;
+                }
+            });
             viewDataBinding.tripAdvisorRatingBar.setRating(stayOutboundDetail.tripAdvisorRating);
             viewDataBinding.tripAdvisorRatingTextView.setText(getString(R.string.label_stay_outbound_tripadvisor_rating, Float.toString(stayOutboundDetail.tripAdvisorRating)));
 

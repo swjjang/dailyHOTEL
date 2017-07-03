@@ -88,8 +88,9 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
 
     class ZoomCenterLayoutManager extends LinearLayoutManager
     {
-        private final float mShrinkAmount = 0.10f;
-        private final float mShrinkDistance = 0.75f;
+        private static final float MIN_SCALE = 0.90f;
+        private static final float AMOUNT = 0.10f; // 1.0f - AMOUNT = MIN_SCALE
+        private static final float DISTANCE = 0.75f;
 
         public ZoomCenterLayoutManager(Context context)
         {
@@ -112,11 +113,12 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
             int scrolled = super.scrollHorizontallyBy(dx, recycler, state);
             float midpoint = getWidth() / 2.f;
             float d0 = 0.f;
-            float d1 = mShrinkDistance * midpoint;
+            float d1 = DISTANCE * midpoint;
             float s0 = 1.f;
-            float s1 = 1.f - mShrinkAmount;
+            float s1 = 1.f - AMOUNT;
+            int childCount = getChildCount();
 
-            for (int i = 0; i < getChildCount(); i++)
+            for (int i = 0; i < childCount; i++)
             {
                 View child = getChildAt(i);
                 float childMidpoint = (getDecoratedRight(child) + getDecoratedLeft(child)) / 2.f;
@@ -124,6 +126,13 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
                 float scale = s0 + (s1 - s0) * (d - d0) / (d1 - d0);
                 child.setScaleX(scale);
                 child.setScaleY(scale);
+
+                View blurView = (View) child.getTag(R.id.blurView);
+
+                if (blurView != null)
+                {
+                    blurView.setAlpha(1.0f - (scale - MIN_SCALE) * MIN_SCALE / AMOUNT);
+                }
             }
 
             return scrolled;
