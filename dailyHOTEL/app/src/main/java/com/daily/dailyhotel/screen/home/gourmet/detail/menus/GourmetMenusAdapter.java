@@ -285,6 +285,8 @@ public class GourmetMenusAdapter extends RecyclerView.Adapter<GourmetMenusAdapte
 
         holder.dataBinding.discountPriceTextView.setText(discountPrice);
         holder.dataBinding.reservationTextView.setOnClickListener(mOnClickListener);
+
+        holder.dataBinding.getRoot().setTag(R.id.blurView, holder.dataBinding.blurView);
     }
 
     private void setLineIndicatorVisible(ListRowGourmetMenuDataBinding dataBinding, int count)
