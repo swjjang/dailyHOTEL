@@ -409,10 +409,8 @@ public class HomeLayout extends BaseBlurLayout
             return;
         }
 
-        View messageLayout = LayoutInflater.from(mContext).inflate(R.layout.list_row_home_message_type_text_layout, null);
-        layout.addView(messageLayout);
-
-        mTextMessageLayout = messageLayout.findViewById(R.id.homeMessageLayout);
+        mTextMessageLayout = LayoutInflater.from(mContext).inflate(R.layout.list_row_home_message_type_text_layout, null);
+        layout.addView(mTextMessageLayout);
 
         View homeMessageLayout = mTextMessageLayout.findViewById(R.id.homeMessageLayout);
         View closeView = mTextMessageLayout.findViewById(R.id.closeImageView);
@@ -498,19 +496,6 @@ public class HomeLayout extends BaseBlurLayout
         });
     }
 
-    private void initRecommendationLayout(LinearLayout layout)
-    {
-        if (layout == null || mContext == null)
-        {
-            return;
-        }
-
-        mHomeRecommendationLayout = new HomeRecommendationLayout(mContext);
-        mHomeRecommendationLayout.setListener((view, recommendation, position) -> ((OnEventListener) mOnEventListener).onRecommendationClick(view, recommendation));
-
-        layout.addView(mHomeRecommendationLayout, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-    }
-
     private void initStampLayout(LinearLayout layout)
     {
         if (layout == null || mContext == null)
@@ -521,7 +506,6 @@ public class HomeLayout extends BaseBlurLayout
         mListRowHomeStampDataBinding = DataBindingUtil.inflate(LayoutInflater.from(mContext), R.layout.list_row_home_stamp_data, layout, true);
 
         mListRowHomeStampDataBinding.message1TextView.setText(DailyPreference.getInstance(mContext).getRemoteConfigStampHomeMessage1());
-
         mListRowHomeStampDataBinding.message2TextView.setText(DailyPreference.getInstance(mContext).getRemoteConfigStampHomeMessage2());
         mListRowHomeStampDataBinding.message2TextView.setOnClickListener(new View.OnClickListener()
         {
@@ -533,6 +517,19 @@ public class HomeLayout extends BaseBlurLayout
         });
 
         mListRowHomeStampDataBinding.getRoot().setVisibility(View.GONE);
+    }
+
+    private void initRecommendationLayout(LinearLayout layout)
+    {
+        if (layout == null || mContext == null)
+        {
+            return;
+        }
+
+        mHomeRecommendationLayout = new HomeRecommendationLayout(mContext);
+        mHomeRecommendationLayout.setListener((view, recommendation, position) -> ((OnEventListener) mOnEventListener).onRecommendationClick(view, recommendation));
+
+        layout.addView(mHomeRecommendationLayout, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
     }
 
     private void initProviderInfoLayout(LinearLayout layout)
