@@ -81,6 +81,8 @@ public abstract class PlaceReservationDetailLayout extends BaseBlurLayout implem
 
     protected abstract void initRefundPolicyLayout(Context context, View view, PlaceBookingDetail placeBookingDetail);
 
+    protected abstract void onScrollChanged(ScrollView scrollView, int l, int t, int oldl, int oldt);
+
     public interface OnEventListener extends OnBaseEventListener
     {
         void onIssuingReceiptClick();
@@ -332,6 +334,8 @@ public abstract class PlaceReservationDetailLayout extends BaseBlurLayout implem
             public void onScrollChanged(ScrollView scrollView, int l, int t, int oldl, int oldt)
             {
                 mFakeMapLayout.setTranslationY(-t);
+
+                PlaceReservationDetailLayout.this.onScrollChanged(scrollView, l, t, oldl, oldt);
             }
         });
 

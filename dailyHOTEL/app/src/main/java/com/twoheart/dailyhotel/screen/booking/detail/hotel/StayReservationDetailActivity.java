@@ -29,7 +29,6 @@ import com.daily.base.util.ScreenUtils;
 import com.daily.base.widget.DailyTextView;
 import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.repository.local.model.AnalyticsParam;
-import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
 import com.daily.dailyhotel.repository.remote.GourmetListRemoteImpl;
 import com.daily.dailyhotel.util.RecentlyPlaceUtil;
 import com.facebook.drawee.view.SimpleDraweeView;
@@ -1341,7 +1340,7 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
                 if (currentDateTime > checkInDateTime)
                 {
                     // 고메 추천 Hidden - 현재 시간이 체크인 시간보다 큰 경우
-                    ((StayReservationDetailLayout) mPlaceReservationDetailLayout).setRecommendGourmetButtonAnimataion(false);
+                    ((StayReservationDetailLayout) mPlaceReservationDetailLayout).setRecommendGourmetLayoutVisible(false);
                 } else
                 {
                     // 고메 추천 Show
@@ -1383,7 +1382,6 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
                             public void accept(@NonNull Throwable throwable) throws Exception
                             {
                                 ((StayReservationDetailLayout) mPlaceReservationDetailLayout).setRecommendGourmetData(null);
-                                ((StayReservationDetailLayout) mPlaceReservationDetailLayout).setRecommendGourmetButtonAnimataion(false);
                             }
                         }));
                 }

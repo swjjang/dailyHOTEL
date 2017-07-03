@@ -2,6 +2,7 @@ package com.twoheart.dailyhotel.screen.booking.detail.gourmet;
 
 import android.content.Context;
 import android.view.View;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.daily.base.util.DailyTextUtils;
@@ -188,6 +189,12 @@ public class GourmetReservationDetailLayout extends PlaceReservationDetailLayout
 
     @Override
     protected void initRefundPolicyLayout(Context context, View view, PlaceBookingDetail placeBookingDetail)
+    {
+
+    }
+
+    @Override
+    protected void onScrollChanged(ScrollView scrollView, int l, int t, int oldl, int oldt)
     {
 
     }
