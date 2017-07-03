@@ -278,6 +278,7 @@
                 android:layout_height="wrap_content"
                 android:background="@color/default_background"
                 android:paddingBottom="24dp"
+                android:visibility="gone"
                 android:orientation="vertical">
 
                 <!-- 레이아웃 하단 기본 마진은 소스에서 제거 함 -->

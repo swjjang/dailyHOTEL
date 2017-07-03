@@ -1,5 +1,7 @@
 package com.twoheart.dailyhotel.screen.booking.detail.hotel;
 
+import android.annotation.TargetApi;
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
@@ -9,7 +11,10 @@ import android.content.pm.PackageManager;
 import android.graphics.drawable.ColorDrawable;
 import android.location.Location;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.app.SharedElementCallback;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
@@ -23,24 +28,30 @@ import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
 import com.daily.base.widget.DailyTextView;
 import com.daily.base.widget.DailyToast;
+import com.daily.dailyhotel.repository.local.model.AnalyticsParam;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
 import com.daily.dailyhotel.repository.remote.GourmetListRemoteImpl;
 import com.daily.dailyhotel.util.RecentlyPlaceUtil;
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Gourmet;
-import com.twoheart.dailyhotel.model.GourmetCuration;
-import com.twoheart.dailyhotel.model.GourmetParams;
+import com.twoheart.dailyhotel.model.GourmetSearchCuration;
+import com.twoheart.dailyhotel.model.GourmetSearchParams;
 import com.twoheart.dailyhotel.model.PlaceBookingDetail;
 import com.twoheart.dailyhotel.model.Review;
 import com.twoheart.dailyhotel.model.StayBookingDetail;
 import com.twoheart.dailyhotel.model.time.GourmetBookingDay;
 import com.twoheart.dailyhotel.model.time.StayBookingDay;
+import com.twoheart.dailyhotel.network.model.HomeDetails;
 import com.twoheart.dailyhotel.network.model.HomePlace;
 import com.twoheart.dailyhotel.network.model.Prices;
+import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.place.activity.PlaceReservationDetailActivity;
 import com.twoheart.dailyhotel.screen.common.HappyTalkCategoryDialog;
 import com.twoheart.dailyhotel.screen.common.PermissionManagerActivity;
 import com.twoheart.dailyhotel.screen.common.ZoomMapActivity;
+import com.twoheart.dailyhotel.screen.gourmet.detail.GourmetDetailActivity;
+import com.twoheart.dailyhotel.screen.gourmet.preview.GourmetPreviewActivity;
 import com.twoheart.dailyhotel.screen.hotel.detail.StayDetailActivity;
 import com.twoheart.dailyhotel.screen.information.FAQActivity;
 import com.twoheart.dailyhotel.screen.review.ReviewActivity;
@@ -57,6 +68,9 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Consumer;
@@ -69,8 +83,10 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
 {
     StayReservationDetailNetworkController mNetworkController;
 
-    private CommonRemoteImpl mCommonRemoteImpl;
     private GourmetListRemoteImpl mGourmetListRemoteImpl;
+
+    private View mViewByLongPress;
+    private HomePlace mHomePlaceByLongPress;
 
     public static Intent newInstance(Context context, int reservationIndex, String imageUrl, boolean isDeepLink)
     {
@@ -94,7 +110,6 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
         mPlaceReservationDetailLayout = new StayReservationDetailLayout(this, mOnEventListener);
         mNetworkController = new StayReservationDetailNetworkController(this, mNetworkTag, mNetworkControllerListener);
 
-        mCommonRemoteImpl = new CommonRemoteImpl(this);
         mGourmetListRemoteImpl = new GourmetListRemoteImpl(this);
 
         setContentView(mPlaceReservationDetailLayout.onCreateView(R.layout.activity_stay_reservation_detail));
@@ -127,6 +142,22 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
                         finish();
                         break;
                     }
+                }
+                break;
+            }
+
+            case CODE_REQUEST_ACTIVITY_PREVIEW:
+            {
+                if (resultCode == Activity.RESULT_OK)
+                {
+                    Observable.create(new ObservableOnSubscribe<Object>()
+                    {
+                        @Override
+                        public void subscribe(ObservableEmitter<Object> e) throws Exception
+                        {
+                            startGourmetDetail(mViewByLongPress, mHomePlaceByLongPress, mTodayDateTime);
+                        }
+                    }).subscribeOn(AndroidSchedulers.mainThread()).subscribe();
                 }
                 break;
             }
@@ -775,6 +806,134 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
         }
     }
 
+    private ArrayList<HomePlace> convertHomePlaceList(List<Gourmet> gourmetList)
+    {
+        ArrayList<HomePlace> homePlaceList = new ArrayList<HomePlace>();
+
+        if (gourmetList == null || gourmetList.size() == 0)
+        {
+            return homePlaceList;
+        }
+
+        for (Gourmet gourmet : gourmetList)
+        {
+            try
+            {
+                HomePlace homePlace = new HomePlace();
+                homePlace.index = gourmet.index;
+                homePlace.title = gourmet.name;
+                homePlace.serviceType = RecentlyPlaceUtil.ServiceType.GOURMET.name();
+                homePlace.regionName = gourmet.districtName;
+
+                Prices prices = new Prices();
+                prices.discountPrice = gourmet.discountPrice;
+                prices.normalPrice = gourmet.price;
+
+                homePlace.prices = prices;
+                homePlace.imageUrl = gourmet.imageUrl;
+                homePlace.placeType = PlaceType.FNB;
+                homePlace.isSoldOut = gourmet.isSoldOut;
+
+                HomeDetails details = new HomeDetails();
+                details.category = gourmet.category;
+                details.grade = gourmet.grade.getName(StayReservationDetailActivity.this);
+                details.persons = gourmet.persons;
+
+                homePlace.details = details;
+
+                homePlaceList.add(homePlace);
+            } catch (Exception e)
+            {
+                ExLog.w(gourmet.index + " | " + gourmet.name + " :: " + e.getMessage());
+            }
+        }
+
+        return homePlaceList;
+    }
+
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+    private void startGourmetDetail(View view, HomePlace homePlace, TodayDateTime todayDateTime)
+    {
+        if (view == null || homePlace == null || todayDateTime == null)
+        {
+            return;
+        }
+
+        try
+        {
+            GourmetBookingDay gourmetBookingDay = new GourmetBookingDay();
+            gourmetBookingDay.setVisitDay(mTodayDateTime.dailyDateTime);
+
+            if (Util.isUsedMultiTransition() == true)
+            {
+                StayReservationDetailActivity.this.setExitSharedElementCallback(new SharedElementCallback()
+                {
+                    @Override
+                    public void onSharedElementEnd(List<String> sharedElementNames, List<View> sharedElements, List<View> sharedElementSnapshots)
+                    {
+                        super.onSharedElementEnd(sharedElementNames, sharedElements, sharedElementSnapshots);
+
+                        for (View view : sharedElements)
+                        {
+                            if (view instanceof SimpleDraweeView)
+                            {
+                                view.setVisibility(View.VISIBLE);
+                                break;
+                            }
+                        }
+                    }
+                });
+
+                AnalyticsParam analyticsParam = new AnalyticsParam();
+                analyticsParam.setParam(StayReservationDetailActivity.this, homePlace);
+                analyticsParam.setProvince(null);
+                analyticsParam.setTotalListCount(-1);
+
+                Intent intent = GourmetDetailActivity.newInstance(StayReservationDetailActivity.this //
+                    , gourmetBookingDay, homePlace.index, homePlace.title //
+                    , homePlace.imageUrl, homePlace.details.category, homePlace.isSoldOut, analyticsParam, true);
+
+                if (intent == null)
+                {
+                    Util.restartApp(StayReservationDetailActivity.this);
+                    return;
+                }
+
+                View simpleDraweeView = view.findViewById(R.id.contentImageView);
+                View gradientTopView = view.findViewById(R.id.gradientTopView);
+                View gradientBottomView = view.findViewById(R.id.gradientBottomView);
+
+                ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(StayReservationDetailActivity.this//
+                    , android.support.v4.util.Pair.create(simpleDraweeView, getString(R.string.transition_place_image)), android.support.v4.util.Pair.create(gradientTopView, getString(R.string.transition_gradient_top_view)), android.support.v4.util.Pair.create(gradientBottomView, getString(R.string.transition_gradient_bottom_view)));
+
+                StayReservationDetailActivity.this.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMET_DETAIL, options.toBundle());
+            } else
+            {
+                AnalyticsParam analyticsParam = new AnalyticsParam();
+                analyticsParam.setParam(StayReservationDetailActivity.this, homePlace);
+                analyticsParam.setProvince(null);
+                analyticsParam.setTotalListCount(-1);
+
+                Intent intent = GourmetDetailActivity.newInstance(StayReservationDetailActivity.this //
+                    , gourmetBookingDay, homePlace.index, homePlace.title //
+                    , homePlace.imageUrl, homePlace.details.category, homePlace.isSoldOut, analyticsParam, false);
+
+                if (intent == null)
+                {
+                    Util.restartApp(StayReservationDetailActivity.this);
+                    return;
+                }
+
+                StayReservationDetailActivity.this.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMET_DETAIL);
+
+                StayReservationDetailActivity.this.overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
+            }
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+        }
+    }
+
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // Listener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -966,6 +1125,89 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
         {
             DailyToast.showToast(StayReservationDetailActivity.this, R.string.message_loading_map, Toast.LENGTH_SHORT);
         }
+
+        @Override
+        public void onRecommendListItemViewAllClick()
+        {
+            // TODO : 전체 보기 페이지 진입
+        }
+
+        @Override
+        public void onRecommendListItemClick(View view, int position)
+        {
+            if (isFinishing() == true || view == null || mPlaceReservationDetailLayout == null || lockUiComponentAndIsLockUiComponent() == true)
+            {
+                return;
+            }
+
+            HomePlace homePlace = (HomePlace) view.getTag();
+
+            if (homePlace == null)
+            {
+                homePlace = ((StayReservationDetailLayout) mPlaceReservationDetailLayout).getRecommendGourmetItem(position);
+            }
+
+            if (homePlace == null)
+            {
+                return;
+            }
+
+            if (RecentlyPlaceUtil.SERVICE_TYPE_GOURMET_NAME.equalsIgnoreCase(homePlace.serviceType) == false)
+            {
+                return;
+            }
+
+            startGourmetDetail(view, homePlace, mTodayDateTime);
+
+            //            AnalyticsManager.getInstance(mBaseActivity).recordEvent(//
+            //                AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.HOME_RECENTVIEW_CLICK,//
+            //                Integer.toString(recentItem.index), null);
+        }
+
+        @Override
+        public void onRecommendListItemLongClick(View view, int position)
+        {
+            if (isFinishing() == true || view == null || mPlaceReservationDetailLayout == null || lockUiComponentAndIsLockUiComponent() == true)
+            {
+                return;
+            }
+
+            HomePlace homePlace = (HomePlace) view.getTag();
+
+            if (homePlace == null)
+            {
+                homePlace = ((StayReservationDetailLayout) mPlaceReservationDetailLayout).getRecommendGourmetItem(position);
+            }
+
+            if (homePlace == null)
+            {
+                return;
+            }
+
+            if (RecentlyPlaceUtil.SERVICE_TYPE_GOURMET_NAME.equalsIgnoreCase(homePlace.serviceType) == false)
+            {
+                return;
+            }
+
+            try
+            {
+                mViewByLongPress = view;
+                mHomePlaceByLongPress = homePlace;
+
+                mPlaceReservationDetailLayout.setBlurVisibility(StayReservationDetailActivity.this, true);
+
+                GourmetBookingDay gourmetBookingDay = new GourmetBookingDay();
+                gourmetBookingDay.setVisitDay(mTodayDateTime.dailyDateTime);
+
+                Intent intent = GourmetPreviewActivity.newInstance(StayReservationDetailActivity.this, gourmetBookingDay, homePlace);
+
+                startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PREVIEW);
+            } catch (Exception e)
+            {
+                unLockUI();
+            }
+
+        }
     };
 
     private StayReservationDetailNetworkController.OnNetworkControllerListener //
@@ -1099,7 +1341,7 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
                 if (currentDateTime > checkInDateTime)
                 {
                     // 고메 추천 Hidden - 현재 시간이 체크인 시간보다 큰 경우
-                    ((StayReservationDetailLayout) mPlaceReservationDetailLayout).setRecommendGourmetLayoutVisible(false);
+                    ((StayReservationDetailLayout) mPlaceReservationDetailLayout).setRecommendGourmetButtonAnimataion(false);
                 } else
                 {
                     // 고메 추천 Show
@@ -1113,11 +1355,12 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
                     location.setLatitude(stayBookingDetail.latitude);
                     location.setLongitude(stayBookingDetail.longitude);
 
-                    GourmetCuration gourmetCuration = new GourmetCuration();
+                    GourmetSearchCuration gourmetCuration = new GourmetSearchCuration();
                     gourmetCuration.setGourmetBookingDay(gourmetBookingDay);
                     gourmetCuration.setLocation(location);
+                    gourmetCuration.setRadius(10d);
 
-                    GourmetParams gourmetParams = (GourmetParams) gourmetCuration.toPlaceParams(1, 10, true);
+                    GourmetSearchParams gourmetParams = (GourmetSearchParams) gourmetCuration.toPlaceParams(1, 10, true);
 
                     addCompositeDisposable(mGourmetListRemoteImpl.getGourmetList(gourmetParams) //
                         .observeOn(Schedulers.io()).map(new Function<List<Gourmet>, ArrayList<HomePlace>>()
@@ -1125,48 +1368,22 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
                             @Override
                             public ArrayList<HomePlace> apply(@NonNull List<Gourmet> gourmets) throws Exception
                             {
-                                ArrayList<HomePlace> homePlaceList = new ArrayList<HomePlace>();
-
-                                if (gourmets == null || gourmets.size() == 0)
-                                {
-                                    return homePlaceList;
-                                }
-
-                                for (Gourmet gourmet : gourmets)
-                                {
-                                    HomePlace homePlace = new HomePlace();
-                                    homePlace.index = gourmet.index;
-                                    homePlace.title = gourmet.name;
-                                    homePlace.serviceType = RecentlyPlaceUtil.ServiceType.GOURMET.name();
-                                    homePlace.regionName = gourmet.districtName;
-
-                                    Prices prices = new Prices();
-                                    prices.discountPrice = gourmet.discountPrice;
-                                    prices.normalPrice = gourmet.price;
-
-                                    homePlace.prices = prices;
-                                    homePlace.imageUrl = gourmet.imageUrl;
-                                    homePlace.placeType = PlaceType.FNB;
-                                    homePlace.isSoldOut = gourmet.isSoldOut;
-
-                                    homePlaceList.add(homePlace);
-                                }
-
-                                return homePlaceList;
+                                return convertHomePlaceList(gourmets);
                             }
                         }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<ArrayList<HomePlace>>()
                         {
                             @Override
                             public void accept(@NonNull ArrayList<HomePlace> homePlaces) throws Exception
                             {
-
+                                ((StayReservationDetailLayout) mPlaceReservationDetailLayout).setRecommendGourmetData(homePlaces);
                             }
                         }, new Consumer<Throwable>()
                         {
                             @Override
                             public void accept(@NonNull Throwable throwable) throws Exception
                             {
-
+                                ((StayReservationDetailLayout) mPlaceReservationDetailLayout).setRecommendGourmetData(null);
+                                ((StayReservationDetailLayout) mPlaceReservationDetailLayout).setRecommendGourmetButtonAnimataion(false);
                             }
                         }));
                 }

@@ -1,10 +1,12 @@
 package com.twoheart.dailyhotel.screen.booking.detail.hotel;
 
+import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.text.Html;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.view.View;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -12,11 +14,13 @@ import android.widget.Toast;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.util.FontManager;
+import com.daily.base.util.ScreenUtils;
 import com.daily.base.widget.DailyScrollView;
 import com.daily.base.widget.DailyToast;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.PlaceBookingDetail;
 import com.twoheart.dailyhotel.model.StayBookingDetail;
+import com.twoheart.dailyhotel.network.model.HomePlace;
 import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
 import com.twoheart.dailyhotel.place.layout.PlaceReservationDetailLayout;
@@ -25,6 +29,7 @@ import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.CustomFontTypefaceSpan;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 public class StayReservationDetailLayout extends PlaceReservationDetailLayout
@@ -34,6 +39,15 @@ public class StayReservationDetailLayout extends PlaceReservationDetailLayout
     private View mRecommendGourmetButtonView;
     private View mRecommendGourmetItemLayout;
     private HomeCarouselLayout mRecommendGourmetCarouselLayout;
+
+    public interface OnEventListener extends PlaceReservationDetailLayout.OnEventListener
+    {
+        void onRecommendListItemViewAllClick();
+
+        void onRecommendListItemClick(View view, int position);
+
+        void onRecommendListItemLongClick(View view, int position);
+    }
 
     public StayReservationDetailLayout(Context context, OnBaseEventListener listener)
     {
@@ -52,7 +66,9 @@ public class StayReservationDetailLayout extends PlaceReservationDetailLayout
             @Override
             public void onClick(View v)
             {
-                DailyToast.showToast(mContext, "고메 추천 클릭", Toast.LENGTH_SHORT);
+                DailyToast.showToast(mContext, "고메 추천 클릭 scrollY : " + mRecommendGourmetItemLayout.getBottom(), Toast.LENGTH_SHORT);
+
+                mScrollLayout.smoothScrollTo(0, mRecommendGourmetItemLayout.getBottom());
             }
         });
 
@@ -71,21 +87,22 @@ public class StayReservationDetailLayout extends PlaceReservationDetailLayout
             public void onViewAllClick()
             {
                 DailyToast.showToast(mContext, "모두 보기 클릭", Toast.LENGTH_SHORT);
-//                ((HomeLayout.OnEventListener) mOnEventListener).onRecentListViewAllClick();
+                ((StayReservationDetailLayout.OnEventListener) mOnEventListener).onRecommendListItemViewAllClick();
             }
 
             @Override
             public void onItemClick(View view, int position)
             {
                 DailyToast.showToast(mContext, "아이템 클릭 , 포지션 :: " + position, Toast.LENGTH_SHORT);
-//                ((HomeLayout.OnEventListener) mOnEventListener).onRecentListItemClick(view, position);
+                ((StayReservationDetailLayout.OnEventListener) mOnEventListener).onRecommendListItemClick(view, position);
             }
 
             @Override
             public void onItemLongClick(View view, int position)
             {
                 DailyToast.showToast(mContext, "아이템 롱 클릭 , 포지션 :: " + position, Toast.LENGTH_SHORT);
-//                ((HomeLayout.OnEventListener) mOnEventListener).onRecentListItemLongClick(view, position);
+                //                ((HomeLayout.OnEventListener) mOnEventListener).onRecentListItemLongClick(view, position);
+                ((StayReservationDetailLayout.OnEventListener) mOnEventListener).onRecommendListItemLongClick(view, position);
             }
         });
     }
@@ -463,7 +480,11 @@ public class StayReservationDetailLayout extends PlaceReservationDetailLayout
         }
     }
 
-    public void setRecommendGourmetLayoutVisible(boolean isVisible)
+    ////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////  고메  추천  ///////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    private void setRecommendGourmetLayoutVisible(boolean isVisible)
     {
         if (mRecommendGourmetItemLayout == null)
         {
@@ -471,6 +492,71 @@ public class StayReservationDetailLayout extends PlaceReservationDetailLayout
         }
 
         mRecommendGourmetItemLayout.setVisibility(isVisible == true ? View.VISIBLE : View.GONE);
+
+        if (mRecommendGourmetButtonView == null)
+        {
+            return;
+        }
+
+        mRecommendGourmetButtonView.setVisibility(isVisible == true ? View.VISIBLE : View.GONE);
+    }
+
+    public void setRecommendGourmetData(ArrayList<HomePlace> list)
+    {
+        if (mRecommendGourmetItemLayout == null)
+        {
+            return;
+        }
+
+        setRecommendGourmetButtonAnimataion(list != null && list.size() > 0);
+        mRecommendGourmetCarouselLayout.setData(list);
+    }
+
+    ObjectAnimator mRecommendGourmetButtonAnimator;
+
+    public void setRecommendGourmetButtonAnimataion(boolean isVisible)
+    {
+        if (mRecommendGourmetButtonView == null)
+        {
+            return;
+        }
+
+        boolean isOldVisible = mRecommendGourmetButtonView.getVisibility() == View.VISIBLE;
+        if (isOldVisible == isVisible)
+        {
+            return;
+        }
+
+        if (mRecommendGourmetButtonAnimator != null)
+        {
+            mRecommendGourmetButtonAnimator.cancel();
+            mRecommendGourmetButtonAnimator = null;
+        }
+
+        if (isVisible == true)
+        {
+            setRecommendGourmetLayoutVisible(isVisible);
+
+            float transY = ScreenUtils.dpToPx(mContext, 10d);
+
+            mRecommendGourmetButtonAnimator = ObjectAnimator.ofFloat(mRecommendGourmetButtonView, "translationY", 0.0f, transY, 0.0f);
+            mRecommendGourmetButtonAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
+            mRecommendGourmetButtonAnimator.setDuration(2000);
+            mRecommendGourmetButtonAnimator.setRepeatCount(ObjectAnimator.INFINITE);
+            mRecommendGourmetButtonAnimator.start();
+        } else {
+            setRecommendGourmetLayoutVisible(isVisible);
+        }
+    }
+
+    public HomePlace getRecommendGourmetItem(int position)
+    {
+        if (mRecommendGourmetCarouselLayout == null)
+        {
+            return null;
+        }
+
+        return mRecommendGourmetCarouselLayout.getItem(position);
     }
 
     private DailyScrollView.OnScrollChangedListener mOnScrollChangedListener = new DailyScrollView.OnScrollChangedListener()
@@ -478,7 +564,22 @@ public class StayReservationDetailLayout extends PlaceReservationDetailLayout
         @Override
         public void onScrollChanged(ScrollView scrollView, int l, int t, int oldl, int oldt)
         {
+            if (mRecommendGourmetItemLayout == null)
+            {
+                return;
+            }
 
+            if (mRecommendGourmetCarouselLayout.hasData() == false)
+            {
+                return;
+            }
+
+            if (mRecommendGourmetItemLayout.getTop() >= t)
+            {
+                setRecommendGourmetButtonAnimataion(false);
+            } else {
+                setRecommendGourmetButtonAnimataion(true);
+            }
         }
     };
 }

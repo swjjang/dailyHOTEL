@@ -37,6 +37,7 @@ import com.twoheart.dailyhotel.model.PlaceBookingDetail;
 import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.place.adapter.PlaceNameInfoWindowAdapter;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
+import com.twoheart.dailyhotel.place.base.BaseBlurLayout;
 import com.twoheart.dailyhotel.place.base.BaseLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
 import com.twoheart.dailyhotel.util.Constants;
@@ -47,7 +48,7 @@ import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
 import java.util.Locale;
 
-public abstract class PlaceReservationDetailLayout extends BaseLayout implements View.OnClickListener
+public abstract class PlaceReservationDetailLayout extends BaseBlurLayout implements View.OnClickListener
 {
     protected DailyScrollView mScrollLayout;
     private View mPlaceInformationLayout;
