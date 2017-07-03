@@ -345,9 +345,11 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
 
                 if (mIsUsedMultiTransition == true)
                 {
+                    lock();
+
                     getViewInterface().scrollTop();
 
-                    Single.just(mIsUsedMultiTransition).delaySubscription(100, TimeUnit.MILLISECONDS, AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
+                    Single.just(mIsUsedMultiTransition).delaySubscription(300, TimeUnit.MILLISECONDS, AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
                     {
                         @Override
                         public void accept(@io.reactivex.annotations.NonNull Boolean aBoolean) throws Exception
