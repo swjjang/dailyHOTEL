@@ -970,13 +970,24 @@ public class GourmetDetailItemLayout extends LinearLayout
         {
             viewGroup.removeAllViews();
 
+            ViewGroup childViewGroup = null;
+
             for (DetailInformation detailInformation : detailInformationList)
             {
-                ViewGroup childGroup = (ViewGroup) layoutInflater.inflate(R.layout.list_row_detail05, viewGroup, false);
+                childViewGroup = (ViewGroup) layoutInflater.inflate(R.layout.list_row_detail05, viewGroup, false);
 
-                makeInformationLayout(layoutInflater, childGroup, detailInformation);
+                makeInformationLayout(layoutInflater, childViewGroup, detailInformation);
 
-                viewGroup.addView(childGroup);
+                viewGroup.addView(childViewGroup);
+            }
+
+            View lastContentView = childViewGroup.findViewById(R.id.contentsList);
+
+            if (lastContentView != null)
+            {
+                LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) lastContentView.getLayoutParams();
+                layoutParams.bottomMargin = ScreenUtils.dpToPx(mContext, 20);
+                lastContentView.setLayoutParams(layoutParams);
             }
         }
 

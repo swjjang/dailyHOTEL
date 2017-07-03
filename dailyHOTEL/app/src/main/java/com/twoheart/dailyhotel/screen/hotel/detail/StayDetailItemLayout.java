@@ -619,14 +619,14 @@ public class StayDetailItemLayout extends LinearLayout
             viewGroup.removeAllViews();
             boolean hasRefundPolicy = false;
 
-            ViewGroup childGroup = null;
+            ViewGroup childViewGroup = null;
             for (DetailInformation information : detailInformationList)
             {
-                childGroup = (ViewGroup) layoutInflater.inflate(R.layout.list_row_detail05, viewGroup, false);
+                childViewGroup = (ViewGroup) layoutInflater.inflate(R.layout.list_row_detail05, viewGroup, false);
 
-                makeInformationLayout(layoutInflater, childGroup, information, hasNRD);
+                makeInformationLayout(layoutInflater, childViewGroup, information, hasNRD);
 
-                viewGroup.addView(childGroup);
+                viewGroup.addView(childViewGroup);
 
                 if (hasNRD == true && mContext.getString(R.string.label_detail_cancellation_refund_policy).equalsIgnoreCase(information.title) == true)
                 {
@@ -637,13 +637,13 @@ public class StayDetailItemLayout extends LinearLayout
             // 서버에서 타이틀이 취소및 환불 규정이 없는 경우가 발생하는 경우가 있어서 관련 내용 처리
             if (hasNRD == true && hasRefundPolicy == false)
             {
-                childGroup = (ViewGroup) layoutInflater.inflate(R.layout.list_row_detail05, viewGroup, false);
+                childViewGroup = (ViewGroup) layoutInflater.inflate(R.layout.list_row_detail05, viewGroup, false);
 
                 DetailInformation detailInformation = new DetailInformation(mContext.getString(R.string.label_detail_cancellation_refund_policy), null);
 
-                makeInformationLayout(layoutInflater, childGroup, detailInformation, hasNRD);
+                makeInformationLayout(layoutInflater, childViewGroup, detailInformation, hasNRD);
 
-                viewGroup.addView(childGroup);
+                viewGroup.addView(childViewGroup);
             }
 
             String gradeString = stayDetail.getStayDetailParams().getGrade().name();
@@ -654,9 +654,9 @@ public class StayDetailItemLayout extends LinearLayout
                 View pensionOnlyLayout = layoutInflater.inflate(R.layout.list_row_detail_pension_only, viewGroup, false);
                 viewGroup.addView(pensionOnlyLayout);
 
-                if (childGroup != null)
+                if (childViewGroup != null)
                 {
-                    View lastContentView = childGroup.findViewById(R.id.contentsList);
+                    View lastContentView = childViewGroup.findViewById(R.id.contentsList);
                     if (lastContentView != null)
                     {
                         LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) lastContentView.getLayoutParams();
@@ -664,7 +664,16 @@ public class StayDetailItemLayout extends LinearLayout
                         lastContentView.setLayoutParams(layoutParams);
                     }
                 }
+            } else
+            {
+                View lastContentView = childViewGroup.findViewById(R.id.contentsList);
 
+                if (lastContentView != null)
+                {
+                    LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) lastContentView.getLayoutParams();
+                    layoutParams.bottomMargin = ScreenUtils.dpToPx(mContext, 20);
+                    lastContentView.setLayoutParams(layoutParams);
+                }
             }
         }
 
