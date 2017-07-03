@@ -561,7 +561,7 @@
     <string name="act_booking_credit_use">적립금 사용</string>
     <string name="act_booking_price">예약 금액</string>
     <string name="act_booking_credit_discount">할인 금액</string>
-    <string name="act_booking_price_real">총 결제금액(VAT 포함)</string>
+    <string name="act_booking_price_real">총 결제 금액(VAT 포함)</string>
     <string name="act_booking_pay_card">신용/체크카드 일반결제</string>
     <string name="act_booking_pay_mobile">휴대폰 결제</string>
     <string name="act_booking_pay_account">계좌이체</string>
