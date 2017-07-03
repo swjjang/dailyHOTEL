@@ -596,9 +596,16 @@ public class GourmetDetailItemLayout extends LinearLayout
                     continue;
                 }
 
-                View textLayout = layoutInflater.inflate(R.layout.list_row_detail_text, null, false);
+                View textLayout = layoutInflater.inflate(R.layout.list_row_detail_text, contentsLayout, false);
                 TextView textView = (TextView) textLayout.findViewById(R.id.textView);
                 textView.setText(contentText);
+
+                if (i == size - 1)
+                {
+                    LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) textView.getLayoutParams();
+                    layoutParams.bottomMargin = 0;
+                    textView.setLayoutParams(layoutParams);
+                }
 
                 contentsLayout.addView(textLayout);
             }
