@@ -1334,6 +1334,19 @@ public class StayOutboundDetailView extends BaseDialogView<StayOutboundDetailVie
 
             setInformationView(layoutInflater, viewDataBinding.informationLayout, entry);
         }
+
+        int childCount = viewDataBinding.informationLayout.getChildCount();
+
+        if (childCount > 0)
+        {
+            View lastView = viewDataBinding.informationLayout.getChildAt(childCount - 1);
+            if (lastView != null && lastView.getId() == R.id.informationLayout)
+            {
+                LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) lastView.getLayoutParams();
+                layoutParams.bottomMargin = ScreenUtils.dpToPx(getContext(), 20);
+                lastView.setLayoutParams(layoutParams);
+            }
+        }
     }
 
     private void setInformationView(LayoutInflater layoutInflater, ViewGroup viewGroup, Map.Entry<String, List<String>> information)
