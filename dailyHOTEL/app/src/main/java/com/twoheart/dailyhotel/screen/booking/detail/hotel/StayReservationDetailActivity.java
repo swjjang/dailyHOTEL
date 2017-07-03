@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.ColorDrawable;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -22,11 +23,20 @@ import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
 import com.daily.base.widget.DailyTextView;
 import com.daily.base.widget.DailyToast;
+import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
+import com.daily.dailyhotel.repository.remote.GourmetListRemoteImpl;
+import com.daily.dailyhotel.util.RecentlyPlaceUtil;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.model.Gourmet;
+import com.twoheart.dailyhotel.model.GourmetCuration;
+import com.twoheart.dailyhotel.model.GourmetParams;
 import com.twoheart.dailyhotel.model.PlaceBookingDetail;
 import com.twoheart.dailyhotel.model.Review;
 import com.twoheart.dailyhotel.model.StayBookingDetail;
+import com.twoheart.dailyhotel.model.time.GourmetBookingDay;
 import com.twoheart.dailyhotel.model.time.StayBookingDay;
+import com.twoheart.dailyhotel.network.model.HomePlace;
+import com.twoheart.dailyhotel.network.model.Prices;
 import com.twoheart.dailyhotel.place.activity.PlaceReservationDetailActivity;
 import com.twoheart.dailyhotel.screen.common.HappyTalkCategoryDialog;
 import com.twoheart.dailyhotel.screen.common.PermissionManagerActivity;
@@ -42,15 +52,25 @@ import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
+import io.reactivex.schedulers.Schedulers;
 import retrofit2.Call;
 import retrofit2.Response;
 
 public class StayReservationDetailActivity extends PlaceReservationDetailActivity
 {
     StayReservationDetailNetworkController mNetworkController;
+
+    private CommonRemoteImpl mCommonRemoteImpl;
+    private GourmetListRemoteImpl mGourmetListRemoteImpl;
 
     public static Intent newInstance(Context context, int reservationIndex, String imageUrl, boolean isDeepLink)
     {
@@ -73,6 +93,9 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
         mPlaceBookingDetail = new StayBookingDetail();
         mPlaceReservationDetailLayout = new StayReservationDetailLayout(this, mOnEventListener);
         mNetworkController = new StayReservationDetailNetworkController(this, mNetworkTag, mNetworkControllerListener);
+
+        mCommonRemoteImpl = new CommonRemoteImpl(this);
+        mGourmetListRemoteImpl = new GourmetListRemoteImpl(this);
 
         setContentView(mPlaceReservationDetailLayout.onCreateView(R.layout.activity_stay_reservation_detail));
     }
@@ -1069,6 +1092,86 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
                         mPlaceReservationDetailLayout.initLayout(mTodayDateTime, stayBookingDetail);
                     }
                 }
+
+                long currentDateTime = DailyCalendar.convertStringToDate(mTodayDateTime.currentDateTime).getTime();
+                long checkInDateTime = DailyCalendar.convertStringToDate(stayBookingDetail.checkInDate).getTime();
+
+                if (currentDateTime > checkInDateTime)
+                {
+                    // 고메 추천 Hidden - 현재 시간이 체크인 시간보다 큰 경우
+                    ((StayReservationDetailLayout) mPlaceReservationDetailLayout).setRecommendGourmetLayoutVisible(false);
+                } else
+                {
+                    // 고메 추천 Show
+
+                    GourmetBookingDay gourmetBookingDay = new GourmetBookingDay();
+
+                    Date checkInDate = DailyCalendar.convertStringToDate(stayBookingDetail.checkInDate);
+                    gourmetBookingDay.setVisitDay(DailyCalendar.format(checkInDate, DailyCalendar.ISO_8601_FORMAT));
+
+                    Location location = new Location((String) null);
+                    location.setLatitude(stayBookingDetail.latitude);
+                    location.setLongitude(stayBookingDetail.longitude);
+
+                    GourmetCuration gourmetCuration = new GourmetCuration();
+                    gourmetCuration.setGourmetBookingDay(gourmetBookingDay);
+                    gourmetCuration.setLocation(location);
+
+                    GourmetParams gourmetParams = (GourmetParams) gourmetCuration.toPlaceParams(1, 10, true);
+
+                    addCompositeDisposable(mGourmetListRemoteImpl.getGourmetList(gourmetParams) //
+                        .observeOn(Schedulers.io()).map(new Function<List<Gourmet>, ArrayList<HomePlace>>()
+                        {
+                            @Override
+                            public ArrayList<HomePlace> apply(@NonNull List<Gourmet> gourmets) throws Exception
+                            {
+                                ArrayList<HomePlace> homePlaceList = new ArrayList<HomePlace>();
+
+                                if (gourmets == null || gourmets.size() == 0)
+                                {
+                                    return homePlaceList;
+                                }
+
+                                for (Gourmet gourmet : gourmets)
+                                {
+                                    HomePlace homePlace = new HomePlace();
+                                    homePlace.index = gourmet.index;
+                                    homePlace.title = gourmet.name;
+                                    homePlace.serviceType = RecentlyPlaceUtil.ServiceType.GOURMET.name();
+                                    homePlace.regionName = gourmet.districtName;
+
+                                    Prices prices = new Prices();
+                                    prices.discountPrice = gourmet.discountPrice;
+                                    prices.normalPrice = gourmet.price;
+
+                                    homePlace.prices = prices;
+                                    homePlace.imageUrl = gourmet.imageUrl;
+                                    homePlace.placeType = PlaceType.FNB;
+                                    homePlace.isSoldOut = gourmet.isSoldOut;
+
+                                    homePlaceList.add(homePlace);
+                                }
+
+                                return homePlaceList;
+                            }
+                        }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<ArrayList<HomePlace>>()
+                        {
+                            @Override
+                            public void accept(@NonNull ArrayList<HomePlace> homePlaces) throws Exception
+                            {
+
+                            }
+                        }, new Consumer<Throwable>()
+                        {
+                            @Override
+                            public void accept(@NonNull Throwable throwable) throws Exception
+                            {
+
+                            }
+                        }));
+                }
+
+
             } catch (Exception e)
             {
                 Crashlytics.logException(e);

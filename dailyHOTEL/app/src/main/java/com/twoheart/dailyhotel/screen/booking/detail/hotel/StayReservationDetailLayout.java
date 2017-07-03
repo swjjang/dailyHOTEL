@@ -20,6 +20,7 @@ import com.twoheart.dailyhotel.model.StayBookingDetail;
 import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
 import com.twoheart.dailyhotel.place.layout.PlaceReservationDetailLayout;
+import com.twoheart.dailyhotel.screen.home.HomeCarouselLayout;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.CustomFontTypefaceSpan;
@@ -30,7 +31,9 @@ public class StayReservationDetailLayout extends PlaceReservationDetailLayout
 {
     private View mRefundPolicyLayout, mButtonBottomMarginView;
     private View mDefaultRefundPolicyLayout, mWaitRefundPolicyLayout;
-    private View mRecommendGourmetView;
+    private View mRecommendGourmetButtonView;
+    private View mRecommendGourmetItemLayout;
+    private HomeCarouselLayout mRecommendGourmetCarouselLayout;
 
     public StayReservationDetailLayout(Context context, OnBaseEventListener listener)
     {
@@ -42,9 +45,9 @@ public class StayReservationDetailLayout extends PlaceReservationDetailLayout
     {
         super.initLayout(view);
 
-        mRecommendGourmetView = view.findViewById(R.id.recommendGourmetView);
+        mRecommendGourmetButtonView = view.findViewById(R.id.recommendGourmetButtonView);
 
-        mRecommendGourmetView.setOnClickListener(new View.OnClickListener()
+        mRecommendGourmetButtonView.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
@@ -54,6 +57,37 @@ public class StayReservationDetailLayout extends PlaceReservationDetailLayout
         });
 
         mScrollLayout.setOnScrollChangedListener(mOnScrollChangedListener);
+
+        mRecommendGourmetItemLayout = view.findViewById(R.id.recommendGourmetLayout);
+
+        mRecommendGourmetCarouselLayout = (HomeCarouselLayout) view.findViewById(R.id.recommendGourmetCarouselLayout);
+        mRecommendGourmetCarouselLayout.findViewById(R.id.bottomDivider).setVisibility(View.GONE);
+
+        mRecommendGourmetCarouselLayout.setTitleText(R.string.label_booking_reservation_recommend_gourmet_title);
+
+        mRecommendGourmetCarouselLayout.setCarouselListener(new HomeCarouselLayout.OnCarouselListener()
+        {
+            @Override
+            public void onViewAllClick()
+            {
+                DailyToast.showToast(mContext, "모두 보기 클릭", Toast.LENGTH_SHORT);
+//                ((HomeLayout.OnEventListener) mOnEventListener).onRecentListViewAllClick();
+            }
+
+            @Override
+            public void onItemClick(View view, int position)
+            {
+                DailyToast.showToast(mContext, "아이템 클릭 , 포지션 :: " + position, Toast.LENGTH_SHORT);
+//                ((HomeLayout.OnEventListener) mOnEventListener).onRecentListItemClick(view, position);
+            }
+
+            @Override
+            public void onItemLongClick(View view, int position)
+            {
+                DailyToast.showToast(mContext, "아이템 롱 클릭 , 포지션 :: " + position, Toast.LENGTH_SHORT);
+//                ((HomeLayout.OnEventListener) mOnEventListener).onRecentListItemLongClick(view, position);
+            }
+        });
     }
 
     @Override
@@ -427,6 +461,16 @@ public class StayReservationDetailLayout extends PlaceReservationDetailLayout
             mRefundPolicyLayout.setVisibility(View.GONE);
             mButtonBottomMarginView.setVisibility(View.VISIBLE);
         }
+    }
+
+    public void setRecommendGourmetLayoutVisible(boolean isVisible)
+    {
+        if (mRecommendGourmetItemLayout == null)
+        {
+            return;
+        }
+
+        mRecommendGourmetItemLayout.setVisibility(isVisible == true ? View.VISIBLE : View.GONE);
     }
 
     private DailyScrollView.OnScrollChangedListener mOnScrollChangedListener = new DailyScrollView.OnScrollChangedListener()

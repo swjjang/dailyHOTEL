@@ -272,16 +272,26 @@
                     android:visibility="visible"/>
             </LinearLayout>
 
-            <com.twoheart.dailyhotel.screen.home.HomeCarouselLayout
-                android:id="@+id/recommendGourmetCarouselLayout"
+            <LinearLayout
+                android:id="@+id/recommendGourmetLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"/>
+                android:background="@color/default_background"
+                android:paddingBottom="24dp"
+                android:orientation="vertical">
+
+                <!-- 레이아웃 하단 기본 마진은 소스에서 제거 함 -->
+                <com.twoheart.dailyhotel.screen.home.HomeCarouselLayout
+                    android:id="@+id/recommendGourmetCarouselLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+            </LinearLayout>
+
         </LinearLayout>
     </com.daily.base.widget.DailyScrollView>
 
     <com.daily.base.widget.DailyTextView
-        android:id="@+id/recommendGourmetView"
+        android:id="@+id/recommendGourmetButtonView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -290,7 +300,7 @@
         android:background="@drawable/bottom_message"
         android:drawablePadding="6dp"
         android:gravity="center_vertical"
-        android:text="@string/label_booking_reservation_recommend_gourmet"
+        android:text="@string/label_booking_reservation_recommend_gourmet_button"
         android:textColor="@color/default_text_cb70038"
         android:textSize="12dp"
         android:visibility="gone"
