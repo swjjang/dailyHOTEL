@@ -403,7 +403,7 @@ public class RecentStayListFragment extends RecentPlacesListFragment
                 }
             }
 
-            analyticsParam.rating = Float.toString(stayOutbound.tripAdvisorRating);
+            analyticsParam.rating = null;
             analyticsParam.listSize = mListLayout.getRealItemCount();
         } catch (Exception e)
         {

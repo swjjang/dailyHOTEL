@@ -688,7 +688,6 @@ public class StayOutboundDetailView extends BaseDialogView<StayOutboundDetailVie
         {
             getViewDataBinding().transImageView.setVisibility(View.VISIBLE);
             getViewDataBinding().transGradientView.setVisibility(View.VISIBLE);
-            getViewDataBinding().transGradientTopView.setVisibility(View.VISIBLE);
             getViewDataBinding().transTitleLayout.setVisibility(View.VISIBLE);
             getViewDataBinding().transImageView.setTransitionName(getString(R.string.transition_place_image));
             getViewDataBinding().transGradientView.setTransitionName(getString(R.string.transition_gradient_bottom_view));
@@ -699,7 +698,6 @@ public class StayOutboundDetailView extends BaseDialogView<StayOutboundDetailVie
         {
             getViewDataBinding().transImageView.setVisibility(View.GONE);
             getViewDataBinding().transGradientView.setVisibility(View.GONE);
-            getViewDataBinding().transGradientTopView.setVisibility(View.GONE);
             getViewDataBinding().transTitleLayout.setVisibility(View.GONE);
         }
     }

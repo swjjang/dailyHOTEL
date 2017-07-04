@@ -52,7 +52,7 @@ public class StayOutboundListAnalyticsImpl implements StayOutboundListPresenter.
         {
             analyticsParam.index = stayOutbound.index;
             analyticsParam.benefit = false;
-            analyticsParam.rating = Float.toString(stayOutbound.tripAdvisorRating);
+            analyticsParam.rating = stayOutbound.tripAdvisorRating == 0.0f ? null : Float.toString(stayOutbound.tripAdvisorRating);
         }
 
         analyticsParam.grade = grade;

@@ -1140,7 +1140,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
         getViewInterface().setStayDetail(mStayBookDateTime, mPeople, stayOutboundDetail);
 
         // 리스트 가격 변동은 진입시 한번 만 한다.
-        checkChangedPrice(mIsDeepLink, stayOutboundDetail, mListPrice, mCheckChangedPrice);
+        checkChangedPrice(mIsDeepLink, stayOutboundDetail, mListPrice, mCheckChangedPrice == false);
         mCheckChangedPrice = true;
 
         // 선택된 방이 없으면 처음 방으로 한다.
