@@ -298,7 +298,6 @@ public abstract class PlaceDetailLayout extends BaseLayout
     {
         mTransSimpleDraweeView.setVisibility(visibility);
         mTransGradientBottomView.setVisibility(visibility);
-        mTransGradientTopView.setVisibility(visibility);
     }
 
     public void setTransBottomGradientBackground(int resId)
