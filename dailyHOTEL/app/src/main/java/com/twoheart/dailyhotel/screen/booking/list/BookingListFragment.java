@@ -373,7 +373,20 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
 
                     bookingList.addAll(stayOutboundBookingList);
 
-                    List<ListItem> listItemList = getBookingSortList(bookingList);
+                    List<ListItem> listItemList = null;
+
+                    if (bookingList.size() == 0)
+                    {
+                        listItemList = new ArrayList<>();
+                    } else
+                    {
+                        listItemList = getBookingSortList(bookingList);
+
+                        if (listItemList == null)
+                        {
+                            listItemList = new ArrayList<>();
+                        }
+                    }
 
                     return listItemList;
                 }
