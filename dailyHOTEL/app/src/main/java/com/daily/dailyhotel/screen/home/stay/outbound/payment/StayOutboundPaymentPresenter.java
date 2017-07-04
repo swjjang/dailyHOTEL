@@ -355,7 +355,6 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
             }
 
             case StayOutboundPaymentActivity.REQUEST_CODE_REGISTER_PHONE_NUMBER:
-            {
                 if (resultCode == Activity.RESULT_OK && data != null)
                 {
                     String phoneMobile = data.getStringExtra(InputMobileNumberDialogActivity.INTENT_EXTRA_MOBILE_NUMBER);
@@ -363,11 +362,13 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
                     notifyGuestPhoneInformationChanged();
                 }
                 break;
-            }
 
             case StayOutboundPaymentActivity.REQUEST_CODE_PAYMENT_WEB_CARD:
             case StayOutboundPaymentActivity.REQUEST_CODE_PAYMENT_WEB_PHONE:
-                onPaymentWebResult(resultCode, data.getStringExtra(Constants.NAME_INTENT_EXTRA_DATA_PAYMENT_RESULT));
+                if (resultCode == Activity.RESULT_OK && data != null)
+                {
+                    onPaymentWebResult(resultCode, data.getStringExtra(Constants.NAME_INTENT_EXTRA_DATA_PAYMENT_RESULT));
+                }
                 break;
         }
     }
