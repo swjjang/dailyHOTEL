@@ -17,6 +17,7 @@ import android.graphics.drawable.shapes.RectShape;
 import android.net.Uri;
 import android.os.Build;
 import android.support.annotation.IdRes;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
@@ -1490,7 +1491,7 @@ public class StayOutboundDetailView extends BaseDialogView<StayOutboundDetailVie
                     topMargin = DEFAULT_TOP_MARGIN;
                 }
 
-                RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) getViewDataBinding().productTypeLayout.getLayoutParams();
+                ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) getViewDataBinding().productTypeLayout.getLayoutParams();
                 layoutParams.topMargin = DEFAULT_TOP_MARGIN;
 
                 getViewDataBinding().productTypeLayout.setLayoutParams(layoutParams);
