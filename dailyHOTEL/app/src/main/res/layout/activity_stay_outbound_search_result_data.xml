@@ -68,7 +68,6 @@
                 android:paddingRight="9dp"
                 android:textColor="@color/default_text_c323232"
                 android:textSize="13dp"
-                android:drawableTint="@color/default_background_c454545"
                 app:drawableCompatLeft="@drawable/search_ic_01_date"
                 app:drawableCompatRight="@drawable/navibar_m_ic_v"/>
 
@@ -90,7 +89,6 @@
                 android:textColor="@color/default_text_c323232"
                 android:textSize="13dp"
                 app:drawableCompatLeft="@drawable/vector_search_ic_02_people"
-                android:drawableTint="@color/default_background_c454545"
                 app:drawableCompatRight="@drawable/navibar_m_ic_v"/>
         </LinearLayout>
 
