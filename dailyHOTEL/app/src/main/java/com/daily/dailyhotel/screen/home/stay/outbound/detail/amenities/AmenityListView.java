@@ -107,13 +107,19 @@ public class AmenityListView extends BaseDialogView<AmenityListView.OnEventListe
             holder.dataBinding.amenityTextView.setText(getItem(position));
 
             // 마지막 아이템인 경우 하단에 여백 추가
-            RecyclerView.LayoutParams layoutParams = (RecyclerView.LayoutParams)holder.dataBinding.amenityTextView.getLayoutParams();
+            RecyclerView.LayoutParams layoutParams = (RecyclerView.LayoutParams) holder.dataBinding.amenityTextView.getLayoutParams();
 
-            if(position == getItemCount() - 1)
+            if (position == 0)
             {
+                layoutParams.topMargin = ScreenUtils.dpToPx(mContext, 16);
+                layoutParams.bottomMargin = 0;
+            } else if (position == getItemCount() - 1)
+            {
+                layoutParams.topMargin = 0;
                 layoutParams.bottomMargin = ScreenUtils.dpToPx(mContext, 12);
             } else
             {
+                layoutParams.topMargin = 0;
                 layoutParams.bottomMargin = 0;
             }
 
