@@ -123,29 +123,30 @@
                     android:textSize="13dp"/>
             </RelativeLayout>
 
-            <RelativeLayout
-                android:id="@+id/couponLayout"
-                android:layout_width="match_parent"
-                android:layout_height="36dp"
-                android:gravity="center_vertical">
+            <!--<RelativeLayout-->
+                <!--android:id="@+id/couponLayout"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="36dp"-->
+                <!--android:gravity="center_vertical"-->
+                <!--android:visibility="gone">-->
 
-                <com.daily.base.widget.DailyTextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/label_wait_payment_used_coupon"
-                    android:textColor="@color/default_text_c929292"
-                    android:textSize="13dp"/>
+                <!--<com.daily.base.widget.DailyTextView-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:text="@string/label_wait_payment_used_coupon"-->
+                    <!--android:textColor="@color/default_text_c929292"-->
+                    <!--android:textSize="13dp"/>-->
 
-                <com.daily.base.widget.DailyTextView
-                    android:id="@+id/couponTextView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:gravity="right|center_vertical"
-                    android:lineSpacingExtra="-2dp"
-                    android:textColor="@color/default_text_c323232"
-                    android:textSize="13dp"/>
-            </RelativeLayout>
+                <!--<com.daily.base.widget.DailyTextView-->
+                    <!--android:id="@+id/couponTextView"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_alignParentRight="true"-->
+                    <!--android:gravity="right|center_vertical"-->
+                    <!--android:lineSpacingExtra="-2dp"-->
+                    <!--android:textColor="@color/default_text_c323232"-->
+                    <!--android:textSize="13dp"/>-->
+            <!--</RelativeLayout>-->
 
             <RelativeLayout
                 android:layout_width="match_parent"
