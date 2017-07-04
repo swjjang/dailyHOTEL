@@ -296,6 +296,13 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
 
         switch (requestCode)
         {
+            case StayOutboundListActivity.REQUEST_CODE_DETAIL:
+                if (requestCode == BaseActivity.RESULT_CODE_REFRESH)
+                {
+                    setRefresh(true);
+                }
+                break;
+
             case StayOutboundListActivity.REQUEST_CODE_CALENDAR:
             {
                 if (resultCode == Activity.RESULT_OK && data != null)

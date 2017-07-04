@@ -42,4 +42,6 @@
     <dimen name="gradient_2dp_line_height_over_21">0dp</dimen>
     <dimen name="gradient_1dp_line_height_over_21">0dp</dimen>
     <dimen name="bottom_navigation_height_over21">51dp</dimen>
+
+    <dimen name="calendar_title_text_size">14dp</dimen>
 </resources>

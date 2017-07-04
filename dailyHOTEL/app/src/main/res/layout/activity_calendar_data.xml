@@ -42,7 +42,7 @@
                     android:layout_height="match_parent"
                     android:gravity="center"
                     android:textColor="@color/default_text_c323232"
-                    android:textSize="13dp"/>
+                    android:textSize="@dimen/calendar_title_text_size"/>
             </RelativeLayout>
 
             <View

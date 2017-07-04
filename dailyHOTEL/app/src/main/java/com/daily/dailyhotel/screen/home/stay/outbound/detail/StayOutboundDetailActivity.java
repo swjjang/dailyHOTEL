@@ -18,6 +18,8 @@ import java.util.ArrayList;
  */
 public class StayOutboundDetailActivity extends BaseActivity<StayOutboundDetailPresenter>
 {
+    public static final int NONE_PRICE = -1;
+
     static final int REQUEST_CODE_CALENDAR = 10000;
     static final int REQUEST_CODE_PEOPLE = 10001;
     static final int REQUEST_CODE_HAPPYTALK = 10002;
