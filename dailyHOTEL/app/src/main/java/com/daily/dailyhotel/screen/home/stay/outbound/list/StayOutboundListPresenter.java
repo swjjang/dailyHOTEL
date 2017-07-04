@@ -247,6 +247,12 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
     @Override
     public boolean onBackPressed()
     {
+        // 빈 리스트인 경우 종료한다.
+        if (mStayOutboundList == null || mStayOutboundList.size() == 0)
+        {
+            return super.onBackPressed();
+        }
+
         if (mViewState == ViewState.MAP)
         {
             try
