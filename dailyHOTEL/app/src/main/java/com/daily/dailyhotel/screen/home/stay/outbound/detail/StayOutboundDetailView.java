@@ -1330,24 +1330,11 @@ public class StayOutboundDetailView extends BaseDialogView<StayOutboundDetailVie
                 continue;
             }
 
-            setInformationView(layoutInflater, viewDataBinding.informationLayout, entry);
-        }
-
-        int childCount = viewDataBinding.informationLayout.getChildCount();
-
-        if (childCount > 0)
-        {
-            View lastView = viewDataBinding.informationLayout.getChildAt(childCount - 1);
-            if (lastView != null && lastView.getId() == R.id.informationLayout)
-            {
-                LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) lastView.getLayoutParams();
-                layoutParams.bottomMargin = ScreenUtils.dpToPx(getContext(), 20);
-                lastView.setLayoutParams(layoutParams);
-            }
+            setInformationView(layoutInflater, viewDataBinding.informationLayout, entry, iterator.hasNext() == false);
         }
     }
 
-    private void setInformationView(LayoutInflater layoutInflater, ViewGroup viewGroup, Map.Entry<String, List<String>> information)
+    private void setInformationView(LayoutInflater layoutInflater, ViewGroup viewGroup, Map.Entry<String, List<String>> information, boolean lastView)
     {
         if (layoutInflater == null || viewGroup == null || information == null)
         {
@@ -1361,29 +1348,38 @@ public class StayOutboundDetailView extends BaseDialogView<StayOutboundDetailVie
 
         List<String> informationList = information.getValue();
 
-        if (informationList != null && informationList.size() > 0)
+        if (informationList == null && informationList.size() == 0)
         {
-            int size = informationList.size();
+            return;
+        }
 
-            for (int i = 0; i < size; i++)
+        int size = informationList.size();
+
+        for (int i = 0; i < size; i++)
+        {
+            if (DailyTextUtils.isTextEmpty(informationList.get(i)) == true)
             {
-                if (DailyTextUtils.isTextEmpty(informationList.get(i)) == true)
-                {
-                    continue;
-                }
-
-                LayoutStayOutboundDetailInformationDataBinding detailInformationDataBinding = DataBindingUtil.inflate(layoutInflater//
-                    , R.layout.layout_stay_outbound_detail_information_data, viewDataBinding.informationLayout, true);
-
-                detailInformationDataBinding.textView.setText(Html.fromHtml(informationList.get(i)));
-
-                if (i == size - 1)
-                {
-                    LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) detailInformationDataBinding.textView.getLayoutParams();
-                    layoutParams.bottomMargin = 0;
-                    detailInformationDataBinding.textView.setLayoutParams(layoutParams);
-                }
+                continue;
             }
+
+            LayoutStayOutboundDetailInformationDataBinding detailInformationDataBinding = DataBindingUtil.inflate(layoutInflater//
+                , R.layout.layout_stay_outbound_detail_information_data, viewDataBinding.informationLayout, true);
+
+            detailInformationDataBinding.textView.setText(Html.fromHtml(informationList.get(i)));
+
+            if (i == size - 1)
+            {
+                LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) detailInformationDataBinding.textView.getLayoutParams();
+                layoutParams.bottomMargin = 0;
+                detailInformationDataBinding.textView.setLayoutParams(layoutParams);
+            }
+        }
+
+        if (lastView == true)
+        {
+            LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) viewDataBinding.informationLayout.getLayoutParams();
+            layoutParams.bottomMargin = ScreenUtils.dpToPx(getContext(), 20);
+            viewDataBinding.informationLayout.setLayoutParams(layoutParams);
         }
     }
 

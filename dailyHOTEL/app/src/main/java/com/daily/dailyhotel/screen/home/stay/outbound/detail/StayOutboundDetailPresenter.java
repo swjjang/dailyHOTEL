@@ -198,7 +198,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
 
             mStayName = intent.getStringExtra(StayOutboundDetailActivity.INTENT_EXTRA_DATA_STAY_NAME);
             mImageUrl = intent.getStringExtra(StayOutboundDetailActivity.INTENT_EXTRA_DATA_IMAGE_URL);
-            mListPrice = intent.getIntExtra(StayOutboundDetailActivity.INTENT_EXTRA_DATA_LIST_PRICE, -1);
+            mListPrice = intent.getIntExtra(StayOutboundDetailActivity.INTENT_EXTRA_DATA_LIST_PRICE, StayOutboundDetailActivity.NONE_PRICE);
 
             String checkInDateTime = intent.getStringExtra(StayOutboundDetailActivity.INTENT_EXTRA_DATA_CHECK_IN);
             String checkOutDateTime = intent.getStringExtra(StayOutboundDetailActivity.INTENT_EXTRA_DATA_CHECK_OUT);
@@ -431,7 +431,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
                 break;
 
             case StayOutboundDetailActivity.REQUEST_CODE_PAYMENT:
-                if (resultCode == Constants.CODE_RESULT_ACTIVITY_REFRESH)
+                if (resultCode == BaseActivity.RESULT_CODE_REFRESH)
                 {
                     setRefresh(true);
                 }
@@ -1235,7 +1235,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
                     {
                         Intent intent = new Intent();
                         intent.putExtra(StayOutboundDetailActivity.INTENT_EXTRA_DATA_REFRESH, true);
-                        setResult(Activity.RESULT_OK, intent);
+                        setResult(BaseActivity.RESULT_CODE_REFRESH, intent);
                     }
                 });
         } else
@@ -1244,7 +1244,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
             {
                 boolean hasPrice = false;
 
-                if (listViewPrice == -1)
+                if (listViewPrice == StayOutboundDetailActivity.NONE_PRICE)
                 {
                     hasPrice = true;
                 } else
@@ -1263,7 +1263,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
                 {
                     Intent intent = new Intent();
                     intent.putExtra(StayOutboundDetailActivity.INTENT_EXTRA_DATA_REFRESH, true);
-                    setResult(Activity.RESULT_OK, intent);
+                    setResult(BaseActivity.RESULT_CODE_REFRESH, intent);
 
                     getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.message_stay_outbound_detail_changed_price)//
                         , getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()

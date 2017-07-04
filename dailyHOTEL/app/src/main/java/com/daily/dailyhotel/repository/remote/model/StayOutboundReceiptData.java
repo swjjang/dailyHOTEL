@@ -72,7 +72,7 @@ public class StayOutboundReceiptData
         stayOutboundReceipt.placeName = hotelName;
         stayOutboundReceipt.placeAddress = hotelAddress;
         stayOutboundReceipt.paymentDate = paymentDate;
-        stayOutboundReceipt.discountPrice = paymentAmount;
+        stayOutboundReceipt.paymentAmount = paymentAmount;
         stayOutboundReceipt.totalPrice = total;
         stayOutboundReceipt.bonus = bonus;
         stayOutboundReceipt.checkInDate = checkinDate;

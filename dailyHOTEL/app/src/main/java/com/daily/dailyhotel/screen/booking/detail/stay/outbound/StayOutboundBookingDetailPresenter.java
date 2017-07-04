@@ -364,7 +364,7 @@ public class StayOutboundBookingDetailPresenter extends BaseExceptionPresenter<S
             StayOutboundDetailAnalyticsParam analyticsParam = mAnalytics.getDetailAnalyticsParam(mStayOutboundBookingDetail);
 
             startActivityForResult(StayOutboundDetailActivity.newInstance(getActivity(), mStayOutboundBookingDetail.stayIndex//
-                , mStayOutboundBookingDetail.name, null, -1//
+                , mStayOutboundBookingDetail.name, null, StayOutboundDetailActivity.NONE_PRICE//
                 , stayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
                 , stayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
                 , 2, null, false, false, analyticsParam), StayOutboundBookingDetailActivity.REQUEST_CODE_DETAIL);

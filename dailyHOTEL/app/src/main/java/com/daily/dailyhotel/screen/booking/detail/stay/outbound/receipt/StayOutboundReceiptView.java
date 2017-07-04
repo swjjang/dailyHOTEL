@@ -131,7 +131,7 @@ public class StayOutboundReceiptView extends BaseDialogView<StayOutboundReceiptV
         getViewDataBinding().saleLayout.setVisibility(View.VISIBLE);
 
         // 총금액
-        getViewDataBinding().totalPriceTextView.setText(DailyTextUtils.getPriceFormat(getContext(), stayOutboundReceipt.discountPrice, false));
+        getViewDataBinding().totalPriceTextView.setText(DailyTextUtils.getPriceFormat(getContext(), stayOutboundReceipt.totalPrice, false));
 
         // 적립금 혹은 쿠폰 사용
         if (stayOutboundReceipt.bonus > 0 || stayOutboundReceipt.coupon > 0)
@@ -162,7 +162,7 @@ public class StayOutboundReceiptView extends BaseDialogView<StayOutboundReceiptV
         }
 
         // 총 입금(실 결제) 금액
-        getViewDataBinding().totalPaymentTextView.setText(DailyTextUtils.getPriceFormat(getContext(), stayOutboundReceipt.totalPrice, false));
+        getViewDataBinding().totalPaymentTextView.setText(DailyTextUtils.getPriceFormat(getContext(), stayOutboundReceipt.paymentAmount, false));
 
         // **공급자**
         String phone = DailyPreference.getInstance(getContext()).getRemoteConfigCompanyPhoneNumber();

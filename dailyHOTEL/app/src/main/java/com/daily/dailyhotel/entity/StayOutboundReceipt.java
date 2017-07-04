@@ -7,7 +7,7 @@ public class StayOutboundReceipt
     public String placeName;
     public String placeAddress;
     public String paymentDate;
-    public int discountPrice;
+    public int paymentAmount;
     public int totalPrice;
     public int bonus;
     public int coupon;

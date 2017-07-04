@@ -10,6 +10,7 @@ import android.text.Spannable;
 import android.text.SpannableString;
 import android.view.View;
 
+import com.daily.base.BaseActivity;
 import com.daily.base.BaseAnalyticsInterface;
 import com.daily.base.exception.BaseException;
 import com.daily.base.util.DailyTextUtils;
@@ -1415,7 +1416,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
                     @Override
                     public void onClick(View view)
                     {
-                        setResult(Constants.CODE_RESULT_ACTIVITY_REFRESH);
+                        setResult(BaseActivity.RESULT_CODE_REFRESH);
                         onBackClick();
                     }
                 };

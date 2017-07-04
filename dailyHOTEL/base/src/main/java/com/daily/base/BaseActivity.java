@@ -14,6 +14,8 @@ public abstract class BaseActivity<T1 extends BasePresenter> extends AppCompatAc
 {
     public static final String INTENT_EXTRA_DATA_DEEPLINK = "deepLink";
 
+    public static final int RESULT_CODE_REFRESH = -10000; // 종료시에 화면 리플래쉬를 요청한다.
+
     private BasePresenter mPresenter;
 
     private FragmentManager mFragmentManager;
