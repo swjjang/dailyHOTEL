@@ -26,7 +26,7 @@ public class ReviewTermsActivity extends WebViewActivity
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_term);
-        setWebView(Crypto.getUrlDecoderEx(DailyRemoteConfigPreference.getInstance(this).getKeyRemoteConfigStaticUrlReview()));
+        setWebView(DailyRemoteConfigPreference.getInstance(this).getKeyRemoteConfigStaticUrlReview());
 
         initToolbar();
         initLayout((DailyWebView) mWebView);

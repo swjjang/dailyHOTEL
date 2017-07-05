@@ -41,7 +41,7 @@ public class FAQActivity extends WebViewActivity
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_faq);
-        setWebView(Crypto.getUrlDecoderEx(DailyRemoteConfigPreference.getInstance(this).getKeyRemoteConfigStaticUrlFaq()));
+        setWebView(DailyRemoteConfigPreference.getInstance(this).getKeyRemoteConfigStaticUrlFaq());
 
         initToolbar();
         initLayout((DailyWebView) mWebView);

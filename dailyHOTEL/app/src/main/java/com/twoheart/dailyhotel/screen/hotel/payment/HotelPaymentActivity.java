@@ -810,7 +810,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
             return null;
         }
 
-        makeDialogMessages(messageLayout, textResIds);
+        makeDialogMessages(messageLayout, textResIds, mPaymentInformation.vendorName, ((StayPaymentInformation)mPaymentInformation).isOverSeas);
 
         View confirmTextView = view.findViewById(R.id.confirmTextView);
 

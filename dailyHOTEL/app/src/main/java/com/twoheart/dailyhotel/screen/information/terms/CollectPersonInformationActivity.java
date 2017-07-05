@@ -1,5 +1,7 @@
 package com.twoheart.dailyhotel.screen.information.terms;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
@@ -9,18 +11,23 @@ import com.twoheart.dailyhotel.screen.common.WebViewActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Crypto;
 import com.twoheart.dailyhotel.util.DailyRemoteConfigPreference;
-import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
-public class ProtectYouthTermsActivity extends WebViewActivity
+public class CollectPersonInformationActivity extends WebViewActivity
 {
+    public static Intent newInstance(Context context)
+    {
+        Intent intent = new Intent(context, CollectPersonInformationActivity.class);
+        return intent;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_term);
-        setWebView(DailyRemoteConfigPreference.getInstance(this).getKeyRemoteConfigStaticUrlChildProtect());
+        setWebView(DailyRemoteConfigPreference.getInstance(this).getKeyRemoteConfigStaticUrlCollectPersonalInformation());
 
         initToolbar();
         initLayout((DailyWebView) mWebView);
@@ -30,7 +37,7 @@ public class ProtectYouthTermsActivity extends WebViewActivity
     {
         View toolbar = findViewById(R.id.toolbar);
         DailyToolbarLayout dailyToolbarLayout = new DailyToolbarLayout(this, toolbar);
-        dailyToolbarLayout.initToolbar(getString(R.string.actionbar_title_protectyouthterms_activity), new View.OnClickListener()
+        dailyToolbarLayout.initToolbar(getString(R.string.actionbar_title_collect_person_information_activity), new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
@@ -84,8 +91,6 @@ public class ProtectYouthTermsActivity extends WebViewActivity
     @Override
     protected void onStart()
     {
-        AnalyticsManager.getInstance(this).recordScreen(this, AnalyticsManager.Screen.TERMSOFJUVENILE, null);
-
         super.onStart();
     }
 }

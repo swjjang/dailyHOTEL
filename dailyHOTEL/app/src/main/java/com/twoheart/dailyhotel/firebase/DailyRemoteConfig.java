@@ -560,6 +560,7 @@ public class DailyRemoteConfig
             JSONObject jsonObject = new JSONObject(jsonString);
 
             String privacyUrl = jsonObject.getString("privacy");
+            String collectPersonalInformation = jsonObject.getString("collectPersonalInformation");
             String termsUrl = jsonObject.getString("terms");
             String aboutUrl = jsonObject.getString("about");
             String locationUrl = jsonObject.getString("location");
@@ -590,6 +591,7 @@ public class DailyRemoteConfig
             DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigStaticUrlReview(reviewUrl);
             DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigStaticUrlLifeStyleProject(lifeStyleProjectUrl);
             DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigStaticUrlDailyStampHome(dailyStampHomeUrl);
+            DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigStaticUrlCollectPersonalInformation(collectPersonalInformation);
         } catch (Exception e)
         {
             ExLog.e(e.toString());

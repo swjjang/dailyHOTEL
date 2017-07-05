@@ -199,7 +199,7 @@ public class StampActivity extends BaseActivity
             } else
             {
                 startActivityForResult(EventWebActivity.newInstance(StampActivity.this, EventWebActivity.SourceType.STAMP//
-                    , Crypto.getUrlDecoderEx(DailyRemoteConfigPreference.getInstance(StampActivity.this).getKeyRemoteConfigStaticUrlDailyStampHome()), getString(R.string.label_stamp_event_title)), Constants.CODE_RESULT_ACTIVITY_EVENT);
+                    , DailyRemoteConfigPreference.getInstance(StampActivity.this).getKeyRemoteConfigStaticUrlDailyStampHome(), getString(R.string.label_stamp_event_title)), Constants.CODE_RESULT_ACTIVITY_EVENT);
             }
 
             AnalyticsManager.getInstance(StampActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION, //

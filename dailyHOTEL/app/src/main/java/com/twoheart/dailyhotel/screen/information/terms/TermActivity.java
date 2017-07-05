@@ -20,7 +20,7 @@ public class TermActivity extends WebViewActivity
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_term);
-        setWebView(Crypto.getUrlDecoderEx(DailyRemoteConfigPreference.getInstance(this).getKeyRemoteConfigStaticUrlTerms()));
+        setWebView(DailyRemoteConfigPreference.getInstance(this).getKeyRemoteConfigStaticUrlTerms());
 
         initToolbar();
         initLayout((DailyWebView) mWebView);

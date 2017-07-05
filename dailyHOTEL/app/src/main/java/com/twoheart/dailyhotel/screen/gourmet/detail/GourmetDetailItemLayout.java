@@ -24,9 +24,9 @@ import android.widget.TextView;
 
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ScreenUtils;
-import com.daily.base.widget.DailyImageView;
 import com.daily.base.widget.DailyTextView;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.databinding.LayoutGourmetDetailMoreMenuDataBinding;
 import com.twoheart.dailyhotel.databinding.ListRowDetailProductDataBinding;
 import com.twoheart.dailyhotel.model.DetailInformation;
 import com.twoheart.dailyhotel.model.GourmetDetail;
@@ -61,7 +61,7 @@ public class GourmetDetailItemLayout extends LinearLayout
     private PlaceReviewScores mPlaceReviewScores;
     protected View mGourmetTitleLayout;
     private LinearLayout mMoreLayout;
-    private DailyTextView mMoreTextView;
+    private LayoutGourmetDetailMoreMenuDataBinding mLayoutGourmetDetailMoreMenuDataBinding;
 
     private int mDpi;
     private int mFirstProductIndex;
@@ -193,7 +193,11 @@ public class GourmetDetailItemLayout extends LinearLayout
                 valueAnimator.removeAllUpdateListeners();
                 valueAnimator.removeAllListeners();
 
-                mMoreTextView.setText("접기");
+                if (mLayoutGourmetDetailMoreMenuDataBinding != null)
+                {
+                    mLayoutGourmetDetailMoreMenuDataBinding.arrorImageView.setRotation(180);
+                    mLayoutGourmetDetailMoreMenuDataBinding.moreTextView.setText(R.string.label_collapse);
+                }
             }
 
             @Override
@@ -277,7 +281,11 @@ public class GourmetDetailItemLayout extends LinearLayout
                 valueAnimator.removeAllUpdateListeners();
                 valueAnimator.removeAllListeners();
 
-                mMoreTextView.setText(String.format(Locale.KOREA, "%d개 상품 모두 보기 ", (int) mMoreTextView.getTag()));
+                if (mLayoutGourmetDetailMoreMenuDataBinding != null)
+                {
+                    mLayoutGourmetDetailMoreMenuDataBinding.arrorImageView.setRotation(0);
+                    mLayoutGourmetDetailMoreMenuDataBinding.moreTextView.setText(mContext.getString(R.string.label_gourmet_detail_view_more, (int) mLayoutGourmetDetailMoreMenuDataBinding.moreTextView.getTag()));
+                }
             }
 
             @Override
@@ -741,7 +749,7 @@ public class GourmetDetailItemLayout extends LinearLayout
             return;
         }
 
-        final int DEFAULT_SHOW_PRODUCT_COUNT = 3;
+        final int DEFAULT_SHOW_PRODUCT_COUNT = 5;
         int size = gourmetProductList.size();
 
         if (size > DEFAULT_SHOW_PRODUCT_COUNT)
@@ -764,12 +772,12 @@ public class GourmetDetailItemLayout extends LinearLayout
                     setProductLayout(layoutInflater, parent, i, gourmetProductList.get(i));
                 } else if (i == DEFAULT_SHOW_PRODUCT_COUNT)
                 {
-                    mMoreTextView = new DailyTextView(mContext);
-                    mMoreTextView.setTag(size);
-                    mMoreTextView.setText(String.format(Locale.KOREA, "%d개 상품 모두 보기 ", size));
-                    mMoreTextView.setGravity(Gravity.CENTER);
-                    mMoreTextView.setBackgroundResource(R.color.white);
-                    mMoreTextView.setOnClickListener(new OnClickListener()
+                    parent.addView(mMoreLayout, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+
+                    mLayoutGourmetDetailMoreMenuDataBinding = DataBindingUtil.inflate(layoutInflater, R.layout.layout_gourmet_detail_more_menu_data, parent, true);
+                    mLayoutGourmetDetailMoreMenuDataBinding.moreTextView.setText(mContext.getString(R.string.label_gourmet_detail_view_more, size));
+                    mLayoutGourmetDetailMoreMenuDataBinding.moreTextView.setTag(size);
+                    mLayoutGourmetDetailMoreMenuDataBinding.getRoot().setOnClickListener(new OnClickListener()
                     {
                         @Override
                         public void onClick(View v)
@@ -780,9 +788,6 @@ public class GourmetDetailItemLayout extends LinearLayout
                             }
                         }
                     });
-
-                    parent.addView(mMoreLayout, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-                    parent.addView(mMoreTextView, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ScreenUtils.dpToPx(mContext, 45)));
 
                     setProductLayout(layoutInflater, mMoreLayout, i, gourmetProductList.get(i));
                 } else
@@ -821,7 +826,7 @@ public class GourmetDetailItemLayout extends LinearLayout
 
         ListRowDetailProductDataBinding viewDataBinding = DataBindingUtil.inflate(layoutInflater, R.layout.list_row_detail_product_data, parent, true);
 
-        viewDataBinding.contentsLayout.setOnClickListener(new OnClickListener()
+        viewDataBinding.getRoot().setOnClickListener(new OnClickListener()
         {
             @Override
             public void onClick(View v)
@@ -833,12 +838,10 @@ public class GourmetDetailItemLayout extends LinearLayout
             }
         });
 
-        boolean hasThumbnail = true;
-
         ProductImageInformation productImageInformation = gourmetProduct.getPrimaryImage();
         if (productImageInformation == null)
         {
-            hasThumbnail = false;
+            viewDataBinding.simpleDraweeView.getHierarchy().setPlaceholderImage(R.drawable.layerlist_failure_image);
         } else
         {
             String url;
@@ -855,54 +858,13 @@ public class GourmetDetailItemLayout extends LinearLayout
 
             viewDataBinding.simpleDraweeView.setImageURI(Uri.parse(productImageInformation.imageUrl + "?impolicy=" + url));
             viewDataBinding.simpleDraweeView.getHierarchy().setPlaceholderImage(R.drawable.layerlist_placeholder_s);
+            viewDataBinding.simpleDraweeView.getHierarchy().setFailureImage(R.drawable.layerlist_failure_image);
         }
 
+        // 메뉴 이름
         viewDataBinding.productNameTextView.setText(gourmetProduct.ticketName);
 
-        if (hasThumbnail == false)
-        {
-            viewDataBinding.simpleDraweeView.setVisibility(View.GONE);
-        } else
-        {
-            viewDataBinding.simpleDraweeView.setVisibility(View.VISIBLE);
-        }
-
-        viewDataBinding.contentsList.removeAllViews();
-
-        if (DailyTextUtils.isTextEmpty(gourmetProduct.menuBenefit) == true && DailyTextUtils.isTextEmpty(gourmetProduct.needToKnow) == true//
-            && DailyTextUtils.isTextEmpty(gourmetProduct.openTime, gourmetProduct.closeTime) == true)
-        {
-            viewDataBinding.contentsList.setVisibility(View.GONE);
-        } else
-        {
-            viewDataBinding.contentsList.setVisibility(View.VISIBLE);
-
-            // 베네핏
-            if (DailyTextUtils.isTextEmpty(gourmetProduct.menuBenefit) == false)
-            {
-                addProductSubInformation(layoutInflater, viewDataBinding.contentsList, gourmetProduct.menuBenefit, R.drawable.ic_detail_item_02_benefit, false);
-            }
-
-            // 이용 시간
-            if (DailyTextUtils.isTextEmpty(gourmetProduct.openTime, gourmetProduct.closeTime) == false)
-            {
-                String timeFormat = mContext.getString(R.string.label_office_hours) + " " + String.format(Locale.KOREA, "%s ~ %s", gourmetProduct.openTime, gourmetProduct.closeTime);
-
-                //                if (DailyTextUtils.isTextEmpty(gourmetProduct.lastOrderTime) == false)
-                //                {
-                //                    timeFormat += " " + mContext.getString(R.string.label_gourmet_product_lastorder, gourmetProduct.lastOrderTime);
-                //                }
-
-                addProductSubInformation(layoutInflater, viewDataBinding.contentsList, timeFormat, R.drawable.ic_detail_item_03_time, true);
-            }
-
-            // 확인 사항
-            //            if (DailyTextUtils.isTextEmpty(gourmetProduct.needToKnow) == false)
-            //            {
-            //                addProductSubInformation(layoutInflater, viewDataBinding.contentsList, gourmetProduct.needToKnow, R.drawable.ic_detail_item_01_info, true);
-            //            }
-        }
-
+        // 메뉴 가격
         String price = DailyTextUtils.getPriceFormat(mContext, gourmetProduct.price, false);
         String discountPrice = DailyTextUtils.getPriceFormat(mContext, gourmetProduct.discountPrice, false);
 
@@ -912,38 +874,41 @@ public class GourmetDetailItemLayout extends LinearLayout
             viewDataBinding.priceTextView.setText(null);
         } else
         {
-            viewDataBinding.priceTextView.setVisibility(View.VISIBLE);
             viewDataBinding.priceTextView.setText(price);
             viewDataBinding.priceTextView.setPaintFlags(viewDataBinding.priceTextView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+            viewDataBinding.priceTextView.setVisibility(View.VISIBLE);
         }
 
         viewDataBinding.discountPriceTextView.setText(discountPrice);
-    }
 
-    private void addProductSubInformation(LayoutInflater layoutInflater, ViewGroup viewGroup, String contentText, int iconResId, boolean hasTopMargin)
-    {
-        if (layoutInflater == null || viewGroup == null || DailyTextUtils.isTextEmpty(contentText) == true)
+        // 이용시간
+        if (DailyTextUtils.isTextEmpty(gourmetProduct.openTime, gourmetProduct.closeTime) == true)
         {
-            return;
+            viewDataBinding.timeTextView.setVisibility(View.GONE);
+        } else
+        {
+            String timeFormat = mContext.getString(R.string.label_office_hours) + " " + String.format(Locale.KOREA, "%s ~ %s", gourmetProduct.openTime, gourmetProduct.closeTime);
+            viewDataBinding.timeTextView.setText(timeFormat);
+            viewDataBinding.timeTextView.setVisibility(View.VISIBLE);
         }
 
-        View textLayout = layoutInflater.inflate(R.layout.list_row_detail_product_text, viewGroup, false);
-        viewGroup.addView(textLayout);
-
-        if (hasTopMargin == true)
+        // 베네핏
+        if (DailyTextUtils.isTextEmpty(gourmetProduct.menuBenefit) == true)
         {
-            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            layoutParams.topMargin = ScreenUtils.dpToPx(mContext, 6);
-            textLayout.setLayoutParams(layoutParams);
+            viewDataBinding.benefitTextView.setVisibility(View.GONE);
+        } else
+        {
+            viewDataBinding.benefitTextView.setText(gourmetProduct.menuBenefit);
+            viewDataBinding.benefitTextView.setVisibility(View.VISIBLE);
         }
 
-        DailyImageView iconImageView = (DailyImageView) textLayout.findViewById(R.id.iconImageView);
-        iconImageView.setVectorImageResource(iconResId);
-
-        TextView textView = (TextView) textLayout.findViewById(R.id.textView);
-        textView.setText(contentText);
+        // 마지막 라인 넣기
+        View view = new View(mContext);
+        view.setBackgroundColor(mContext.getResources().getColor(R.color.default_line_cdcdcdd));
+        final int DP_15 = ScreenUtils.dpToPx(mContext, 15);
+        view.setPadding(DP_15, 0, DP_15, 0);
+        parent.addView(view, new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 1));
     }
-
 
     /**
      * 정보

@@ -29,7 +29,7 @@ public class AboutActivity extends WebViewActivity
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_about);
-        setWebView(Crypto.getUrlDecoderEx(DailyRemoteConfigPreference.getInstance(this).getKeyRemoteConfigStaticUrlAbout()));
+        setWebView(DailyRemoteConfigPreference.getInstance(this).getKeyRemoteConfigStaticUrlAbout());
 
         initToolbar();
         initLayout((DailyWebView) mWebView);

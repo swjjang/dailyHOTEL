@@ -214,7 +214,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
 
             //            mProvince = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PROVINCE);
             //            mArea = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_AREA);
-            mViewPrice = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_DISCOUNTPRICE, 0);
+            mViewPrice = mAnalyticsParam != null ? mAnalyticsParam.discountPrice : 0;
             mIsListSoldOut = intent.getBooleanExtra(NAME_INTENT_EXTRA_DATA_IS_SOLDOUT, false);
 
             boolean isFromMap = intent.hasExtra(NAME_INTENT_EXTRA_DATA_FROM_MAP) == true;

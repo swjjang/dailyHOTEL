@@ -97,6 +97,7 @@
     <string name="label_search_stay_outbound">해외호텔 검색하기</string>
     <string name="label_do_booking">예약하기</string>
     <string name="label_changing_date">날짜 변경하기</string>
+    <string name="label_collapse">접기</string>
 
     <string name="label_count_stay">%1$d개 스테이</string>
     <string name="label_count_gourmet">%1$d개 고메</string>
@@ -191,6 +192,7 @@
     <string name="actionbar_title_notice_activity">공지사항</string>
     <string name="actionbar_title_payment_activity">결제하기</string>
     <string name="actionbar_title_privacy_activity">개인정보 처리 방침</string>
+    <string name="actionbar_title_collect_person_information_activity">개인정보 수집 및 이용동의</string>
     <string name="actionbar_title_locationterms_activity">위치기반서비스 이용약관</string>
     <string name="actionbar_title_protectyouthterms_activity">청소년 보호 정책</string>
     <string name="actionbar_title_profile_activity">내정보</string>
@@ -1239,11 +1241,13 @@
 
 
     <!-- Gourmet Product List -->
+    <string name="label_gourmet_detail_view_more">%1$d개 상품 모두 보기</string>
 
     <!-- Gourmet Product Detail -->
     <string name="label_gourmet_product_detail_reservation">예약하기</string>
     <string name="label_gourmet_product_detail_menu_description">메뉴 설명</string>
     <string name="label_gourmet_product_lastorder">(라스트 오더 %1$s)</string>
+
 
     <!-- Happy Talk -->
     <string name="label_select_category">선택</string>

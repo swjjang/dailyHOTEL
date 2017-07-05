@@ -27,7 +27,7 @@ public class LifeStyleActivity extends WebViewActivity
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_about);
-        setWebView(Crypto.getUrlDecoderEx(DailyRemoteConfigPreference.getInstance(this).getKeyRemoteConfigStaticUrlLifeStyleProject()));
+        setWebView(DailyRemoteConfigPreference.getInstance(this).getKeyRemoteConfigStaticUrlLifeStyleProject());
 
         initToolbar();
         initLayout((DailyWebView) mWebView);
