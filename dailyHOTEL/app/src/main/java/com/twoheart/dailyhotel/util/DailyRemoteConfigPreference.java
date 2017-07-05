@@ -109,6 +109,7 @@ public class DailyRemoteConfigPreference
     private static final String KEY_REMOTE_CONFIG_STATIC_URL_REVIEW = "382";
     private static final String KEY_REMOTE_CONFIG_STATIC_URL_LIFESTYLEPROJECT = "383";
     private static final String KEY_REMOTE_CONFIG_STATIC_URL_DAILYSTAMPHOME = "384";
+    private static final String KEY_REMOTE_CONFIG_STATIC_URL_COLLECTPERSONAL = "385";
 
 
     private static DailyRemoteConfigPreference mInstance;
@@ -1003,5 +1004,15 @@ public class DailyRemoteConfigPreference
     public String getKeyRemoteConfigStaticUrlDailyStampHome()
     {
         return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_STATIC_URL_DAILYSTAMPHOME, Crypto.getUrlDecoderEx(Constants.URL_WEB_STAMP_EVENT));
+    }
+
+    public void setKeyRemoteConfigStaticUrlCollectPersonalInformation(String value)
+    {
+        setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_STATIC_URL_COLLECTPERSONAL, value);
+    }
+
+    public String getKeyRemoteConfigStaticUrlCollectPersonalInformation()
+    {
+        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_STATIC_URL_COLLECTPERSONAL, Crypto.getUrlDecoderEx(Constants.URL_WEB_COLLECT_PERSONAL));
     }
 }
