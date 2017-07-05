@@ -6,8 +6,10 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnDismissListener;
 import android.content.Intent;
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.text.Spannable;
+import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
@@ -24,6 +26,8 @@ import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.databinding.LayoutFinalcheckThirdPartyDataBinding;
+import com.twoheart.dailyhotel.databinding.LayoutPaymentAgreedialogThirdPartyDataBinding;
 import com.twoheart.dailyhotel.model.Coupon;
 import com.twoheart.dailyhotel.model.CreditCard;
 import com.twoheart.dailyhotel.model.PlacePaymentInformation;
@@ -680,7 +684,7 @@ public abstract class PlacePaymentActivity extends BaseActivity
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_LOGIN);
     }
 
-    protected void makeDialogMessages(ViewGroup viewGroup, int[] textResIds)
+    protected void makeDialogMessages(ViewGroup viewGroup, int[] textResIds, String vendorName, boolean overseas)
     {
         if (viewGroup == null || textResIds == null)
         {
@@ -695,15 +699,7 @@ public abstract class PlacePaymentActivity extends BaseActivity
 
             TextView messageTextView = (TextView) messageRow.findViewById(R.id.messageTextView);
             LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-
-            if (i == length - 1)
-            {
-                layoutParams.setMargins(ScreenUtils.dpToPx(this, 5), 0, 0, 0);
-            } else
-            {
-                layoutParams.setMargins(ScreenUtils.dpToPx(this, 5), 0, 0, ScreenUtils.dpToPx(this, 10));
-            }
-
+            layoutParams.setMargins(ScreenUtils.dpToPx(this, 5), 0, 0, ScreenUtils.dpToPx(this, 12));
             messageTextView.setLayoutParams(layoutParams);
 
             String message = getString(textResIds[i]);
@@ -722,8 +718,6 @@ public abstract class PlacePaymentActivity extends BaseActivity
 
                 spannableStringBuilder.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.dh_theme_color)), //
                     startIndex, endIndex, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                spannableStringBuilder.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), //
-                    startIndex, endIndex, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
                 messageTextView.setText(spannableStringBuilder);
             } else
@@ -733,6 +727,45 @@ public abstract class PlacePaymentActivity extends BaseActivity
 
             viewGroup.addView(messageRow);
         }
+
+        // 제 3자 제공 내용 자세히 보기
+        LayoutPaymentAgreedialogThirdPartyDataBinding viewDataBinding1 = DataBindingUtil.inflate(LayoutInflater.from(this), R.layout.layout_payment_agreedialog_third_party_data, viewGroup, true);
+
+        vendorName = "업체명";
+
+        String text = getString(R.string.message_payment_agreement_third_party_02, vendorName);
+        SpannableString spannableString = new SpannableString(text);
+        spannableString.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.dh_theme_color)), text.indexOf(":") + 1, text.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        LayoutFinalcheckThirdPartyDataBinding viewDataBinding2 = DataBindingUtil.inflate(LayoutInflater.from(this), R.layout.layout_finalcheck_third_party_data, viewGroup, true);
+        viewDataBinding2.vendorTextView.setText(spannableString);
+
+        if (overseas == true)
+        {
+            viewDataBinding2.offerInformationTextView.setText(R.string.message_payment_agreement_third_party_04_overseas);
+        } else
+        {
+            viewDataBinding2.offerInformationTextView.setText(R.string.message_payment_agreement_third_party_04);
+        }
+
+        viewDataBinding1.getRoot().setOnClickListener(new OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                if (viewDataBinding2.getRoot().getVisibility() == View.VISIBLE)
+                {
+                    viewDataBinding1.arrowImageView.setRotation(0f);
+                    viewDataBinding2.getRoot().setVisibility(View.GONE);
+                } else
+                {
+                    viewDataBinding1.arrowImageView.setRotation(180f);
+                    viewDataBinding2.getRoot().setVisibility(View.VISIBLE);
+                }
+            }
+        });
+
+        viewDataBinding2.getRoot().setVisibility(View.GONE);
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////

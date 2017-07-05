@@ -15,22 +15,28 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
         android:gravity="center_horizontal"
         android:text="@string/label_booking_confirm_signature"
         android:textColor="@color/default_text_c323232"
         android:textSize="17dp"
-        dailyFont:style="Medium"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"/>
+        dailyFont:style="Medium"/>
 
-    <LinearLayout
-        android:id="@+id/messageLayout"
+    <com.daily.base.widget.DailyScrollView
+        android:id="@+id/scrollLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:orientation="vertical"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"/>
+        android:layout_marginBottom="16dp">
+
+        <LinearLayout
+            android:id="@+id/messageLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:orientation="vertical"/>
+    </com.daily.base.widget.DailyScrollView>
 
     <RelativeLayout
         android:id="@+id/buttonLayout"

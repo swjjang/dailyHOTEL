@@ -668,7 +668,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
                 return null;
         }
 
-        makeDialogMessages(messageLayout, textResIds);
+        makeDialogMessages(messageLayout, textResIds, mPaymentInformation.vendorName, false);
 
         View confirmTextView = view.findViewById(R.id.confirmTextView);
 

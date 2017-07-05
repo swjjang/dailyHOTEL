@@ -2,15 +2,11 @@ package com.twoheart.dailyhotel.screen.common;
 
 import android.content.Context;
 import android.databinding.DataBindingUtil;
-import android.graphics.Paint;
-import android.support.v7.widget.LinearLayoutCompat;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.style.ForegroundColorSpan;
-import android.text.style.StyleSpan;
 import android.util.AttributeSet;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,9 +15,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.daily.base.util.ScreenUtils;
-import com.daily.base.widget.DailyTextView;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.databinding.LayoutFinalcheckThirdPartyBinding;
+import com.twoheart.dailyhotel.databinding.LayoutFinalcheckThirdPartyDataBinding;
+import com.twoheart.dailyhotel.databinding.LayoutPaymentAgreedialogThirdPartyDataBinding;
 import com.twoheart.dailyhotel.widget.DailySignatureView;
 
 /**
@@ -88,15 +84,7 @@ public class FinalCheckLayout extends FrameLayout
 
             TextView messageTextView = (TextView) messageRow.findViewById(R.id.messageTextView);
             LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-
-//            if (i == length - 1)
-//            {
-//                layoutParams.setMargins(ScreenUtils.dpToPx(context, 5), 0, 0, 0);
-//            } else
-            {
-                layoutParams.setMargins(ScreenUtils.dpToPx(context, 5), 0, 0, ScreenUtils.dpToPx(context, 10));
-            }
-
+            layoutParams.setMargins(ScreenUtils.dpToPx(context, 5), 0, 0, ScreenUtils.dpToPx(context, 12));
             messageTextView.setLayoutParams(layoutParams);
 
             String message = context.getString(textResIds[i]);
@@ -115,8 +103,6 @@ public class FinalCheckLayout extends FrameLayout
 
                 spannableStringBuilder.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.dh_theme_color)), //
                     startIndex, endIndex, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                spannableStringBuilder.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), //
-                    startIndex, endIndex, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
                 messageTextView.setText(spannableStringBuilder);
             } else
@@ -128,17 +114,7 @@ public class FinalCheckLayout extends FrameLayout
         }
 
         // 제 3자 제공 내용 자세히 보기
-        DailyTextView dailyTextView = new DailyTextView(getContext());
-        dailyTextView.setPadding(ScreenUtils.dpToPx(getContext(), 15), 0, 0, 0);
-        dailyTextView.setText(R.string.label_payment_agreement_third_party);
-        dailyTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 13);
-        dailyTextView.setTextColor(getContext().getResources().getColor(R.color.default_text_c323232));
-        dailyTextView.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.navibar_m_ic_v, 0);
-        dailyTextView.setCompoundDrawablePadding(ScreenUtils.dpToPx(getContext(), 2));
-        dailyTextView.setPaintFlags(dailyTextView.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
-        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-
-        mMessageLayout.addView(dailyTextView, layoutParams);
+        LayoutPaymentAgreedialogThirdPartyDataBinding viewDataBinding1 = DataBindingUtil.inflate(inflater, R.layout.layout_payment_agreedialog_third_party_data, mMessageLayout, true);
 
         vendorName = "업체명";
 
@@ -146,35 +122,35 @@ public class FinalCheckLayout extends FrameLayout
         SpannableString spannableString = new SpannableString(text);
         spannableString.setSpan(new ForegroundColorSpan(getContext().getResources().getColor(R.color.dh_theme_color)), text.indexOf(":") + 1, text.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
-        LayoutFinalcheckThirdPartyBinding viewDataBinding = DataBindingUtil.inflate(inflater, R.layout.layout_finalcheck_third_party, mMessageLayout, true);
-        viewDataBinding.vendorTextView.setText(spannableString);
+        LayoutFinalcheckThirdPartyDataBinding viewDataBinding2 = DataBindingUtil.inflate(inflater, R.layout.layout_finalcheck_third_party_data, mMessageLayout, true);
+        viewDataBinding2.vendorTextView.setText(spannableString);
 
         if (overseas == true)
         {
-            viewDataBinding.offerInformationTextView.setText(R.string.message_payment_agreement_third_party_04_overseas);
+            viewDataBinding2.offerInformationTextView.setText(R.string.message_payment_agreement_third_party_04_overseas);
         } else
         {
-            viewDataBinding.offerInformationTextView.setText(R.string.message_payment_agreement_third_party_04);
+            viewDataBinding2.offerInformationTextView.setText(R.string.message_payment_agreement_third_party_04);
         }
 
-        dailyTextView.setOnClickListener(new OnClickListener()
+        viewDataBinding1.getRoot().setOnClickListener(new OnClickListener()
         {
             @Override
             public void onClick(View v)
             {
-                if (viewDataBinding.getRoot().getVisibility() == View.VISIBLE)
+                if (viewDataBinding2.getRoot().getVisibility() == View.VISIBLE)
                 {
-                    dailyTextView.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.navibar_m_ic_v, 0);
-                    viewDataBinding.getRoot().setVisibility(View.GONE);
+                    viewDataBinding1.arrowImageView.setRotation(0f);
+                    viewDataBinding2.getRoot().setVisibility(View.GONE);
                 } else
                 {
-                    dailyTextView.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.navibar_m_ic_v, 0);
-                    viewDataBinding.getRoot().setVisibility(View.VISIBLE);
+                    viewDataBinding1.arrowImageView.setRotation(180f);
+                    viewDataBinding2.getRoot().setVisibility(View.VISIBLE);
                 }
             }
         });
 
-        viewDataBinding.getRoot().setVisibility(View.GONE);
+        viewDataBinding2.getRoot().setVisibility(View.GONE);
     }
 
     public DailySignatureView getDailySignatureView()
