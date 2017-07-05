@@ -21,6 +21,7 @@ import com.daily.base.widget.DailyToast;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Customer;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
+import com.twoheart.dailyhotel.screen.information.terms.CollectPersonInformationActivity;
 import com.twoheart.dailyhotel.screen.information.terms.PrivacyActivity;
 import com.twoheart.dailyhotel.screen.information.terms.TermActivity;
 import com.twoheart.dailyhotel.util.DailyCalendar;
@@ -288,8 +289,7 @@ public class AddProfileSocialActivity extends BaseActivity
                 return;
             }
 
-            Intent intent = new Intent(AddProfileSocialActivity.this, PrivacyActivity.class);
-            startActivityForResult(intent, REQUEST_CODE_ACTIVITY);
+            startActivityForResult(CollectPersonInformationActivity.newInstance(AddProfileSocialActivity.this), REQUEST_CODE_ACTIVITY);
         }
 
         @Override

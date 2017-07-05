@@ -191,6 +191,7 @@
     <string name="actionbar_title_notice_activity">공지사항</string>
     <string name="actionbar_title_payment_activity">결제하기</string>
     <string name="actionbar_title_privacy_activity">개인정보 처리 방침</string>
+    <string name="actionbar_title_collect_person_information_activity">개인정보 수집 및 이용동의</string>
     <string name="actionbar_title_locationterms_activity">위치기반서비스 이용약관</string>
     <string name="actionbar_title_protectyouthterms_activity">청소년 보호 정책</string>
     <string name="actionbar_title_profile_activity">내정보</string>
