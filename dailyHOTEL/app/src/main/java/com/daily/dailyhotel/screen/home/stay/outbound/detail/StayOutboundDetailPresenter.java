@@ -298,6 +298,8 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
     {
         super.onResume();
 
+        onHideRoomListClick(false);
+
         if (isRefresh() == true)
         {
             onRefresh(true);
