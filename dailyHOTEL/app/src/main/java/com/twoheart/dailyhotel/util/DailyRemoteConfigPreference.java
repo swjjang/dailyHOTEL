@@ -862,7 +862,7 @@ public class DailyRemoteConfigPreference
 
     public String getKeyRemoteConfigStaticUrlPrivacy()
     {
-        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_STATIC_URL_PRIVACY, Constants.URL_WEB_PRIVACY);
+        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_STATIC_URL_PRIVACY, Crypto.getUrlDecoderEx(Constants.URL_WEB_PRIVACY));
     }
 
     public void setKeyRemoteConfigStaticUrlTerms(String value)
@@ -872,7 +872,7 @@ public class DailyRemoteConfigPreference
 
     public String getKeyRemoteConfigStaticUrlTerms()
     {
-        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_STATIC_URL_TERMS, Constants.URL_WEB_TERMS);
+        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_STATIC_URL_TERMS, Crypto.getUrlDecoderEx(Constants.URL_WEB_TERMS));
     }
 
     public void setKeyRemoteConfigStaticUrlAbout(String value)
@@ -882,7 +882,7 @@ public class DailyRemoteConfigPreference
 
     public String getKeyRemoteConfigStaticUrlAbout()
     {
-        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_STATIC_URL_ABOUT, Constants.URL_WEB_ABOUT);
+        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_STATIC_URL_ABOUT, Crypto.getUrlDecoderEx(Constants.URL_WEB_ABOUT));
     }
 
     public void setKeyRemoteConfigStaticUrlLocation(String value)
@@ -892,7 +892,7 @@ public class DailyRemoteConfigPreference
 
     public String getKeyRemoteConfigStaticUrlLocation()
     {
-        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_STATIC_URL_LOCATION, Constants.URL_WEB_LOCATION_TERMS);
+        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_STATIC_URL_LOCATION, Crypto.getUrlDecoderEx(Constants.URL_WEB_LOCATION_TERMS));
     }
 
     public void setKeyRemoteConfigStaticUrlChildProtect(String value)
@@ -902,7 +902,7 @@ public class DailyRemoteConfigPreference
 
     public String getKeyRemoteConfigStaticUrlChildProtect()
     {
-        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_STATIC_URL_CHILDPROTECT, Constants.URL_WEB_CHILD_PROTECT_TERMS);
+        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_STATIC_URL_CHILDPROTECT, Crypto.getUrlDecoderEx(Constants.URL_WEB_CHILD_PROTECT_TERMS));
     }
 
     public void setKeyRemoteConfigStaticUrlBonus(String value)
@@ -912,7 +912,7 @@ public class DailyRemoteConfigPreference
 
     public String getKeyRemoteConfigStaticUrlBonus()
     {
-        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_STATIC_URL_BONUS, Constants.URL_WEB_BONUS_TERMS);
+        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_STATIC_URL_BONUS, Crypto.getUrlDecoderEx(Constants.URL_WEB_BONUS_TERMS));
     }
 
     public void setKeyRemoteConfigStaticUrlCoupon(String value)
@@ -922,7 +922,7 @@ public class DailyRemoteConfigPreference
 
     public String getKeyRemoteConfigStaticUrlCoupon()
     {
-        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_STATIC_URL_COUPON, Constants.URL_WEB_COMMON_COUPON_TERMS);
+        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_STATIC_URL_COUPON, Crypto.getUrlDecoderEx(Constants.URL_WEB_COMMON_COUPON_TERMS));
     }
 
     public void setKeyRemoteConfigStaticUrlProdCouponNote(String value)
@@ -932,7 +932,7 @@ public class DailyRemoteConfigPreference
 
     public String getKeyRemoteConfigStaticUrlProdCouponNote()
     {
-        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_STATIC_URL_PRODCOUPONNOTE, Constants.URL_WEB_EACH_COUPON_TERMS);
+        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_STATIC_URL_PRODCOUPONNOTE, Crypto.getUrlDecoderEx(Constants.URL_WEB_EACH_COUPON_TERMS));
     }
 
     public void setKeyRemoteConfigStaticUrlDevCouponNote(String value)
@@ -942,7 +942,7 @@ public class DailyRemoteConfigPreference
 
     public String getKeyRemoteConfigStaticUrlDevCouponNote()
     {
-        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_STATIC_URL_DEVCOUPONNOTE, Constants.URL_WEB_EACH_COUPON_TERMS_DEV);
+        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_STATIC_URL_DEVCOUPONNOTE, Crypto.getUrlDecoderEx(Constants.URL_WEB_EACH_COUPON_TERMS_DEV));
     }
 
     public void setKeyRemoteConfigStaticUrlFaq(String value)
@@ -952,7 +952,7 @@ public class DailyRemoteConfigPreference
 
     public String getKeyRemoteConfigStaticUrlFaq()
     {
-        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_STATIC_URL_FAQ, Constants.URL_WEB_FAQ);
+        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_STATIC_URL_FAQ, Crypto.getUrlDecoderEx(Constants.URL_WEB_FAQ));
     }
 
     public void setKeyRemoteConfigStaticUrlLicense(String value)
@@ -962,7 +962,7 @@ public class DailyRemoteConfigPreference
 
     public String getKeyRemoteConfigStaticUrlLicense()
     {
-        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_STATIC_URL_LICENSE, Constants.URL_WEB_LICNESE);
+        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_STATIC_URL_LICENSE, Crypto.getUrlDecoderEx(Constants.URL_WEB_LICNESE));
     }
 
     public void setKeyRemoteConfigStaticUrlStamp(String value)
@@ -972,7 +972,7 @@ public class DailyRemoteConfigPreference
 
     public String getKeyRemoteConfigStaticUrlStamp()
     {
-        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_STATIC_URL_STAMP, Constants.URL_WEB_STAMP_TERMS);
+        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_STATIC_URL_STAMP, Crypto.getUrlDecoderEx(Constants.URL_WEB_STAMP_TERMS));
     }
 
     public void setKeyRemoteConfigStaticUrlReview(String value)
@@ -982,7 +982,7 @@ public class DailyRemoteConfigPreference
 
     public String getKeyRemoteConfigStaticUrlReview()
     {
-        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_STATIC_URL_REVIEW, Constants.URL_WEB_REVIEW_TERMS);
+        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_STATIC_URL_REVIEW, Crypto.getUrlDecoderEx(Constants.URL_WEB_REVIEW_TERMS));
     }
 
     public void setKeyRemoteConfigStaticUrlLifeStyleProject(String value)
@@ -992,7 +992,7 @@ public class DailyRemoteConfigPreference
 
     public String getKeyRemoteConfigStaticUrlLifeStyleProject()
     {
-        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_STATIC_URL_LIFESTYLEPROJECT, Constants.URL_WEB_LIFESTYLE);
+        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_STATIC_URL_LIFESTYLEPROJECT, Crypto.getUrlDecoderEx(Constants.URL_WEB_LIFESTYLE));
     }
 
     public void setKeyRemoteConfigStaticUrlDailyStampHome(String value)
@@ -1002,6 +1002,6 @@ public class DailyRemoteConfigPreference
 
     public String getKeyRemoteConfigStaticUrlDailyStampHome()
     {
-        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_STATIC_URL_DAILYSTAMPHOME, Constants.URL_WEB_STAMP_EVENT);
+        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_STATIC_URL_DAILYSTAMPHOME, Crypto.getUrlDecoderEx(Constants.URL_WEB_STAMP_EVENT));
     }
 }

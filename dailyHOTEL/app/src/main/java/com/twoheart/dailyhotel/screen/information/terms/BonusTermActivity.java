@@ -20,7 +20,7 @@ public class BonusTermActivity extends WebViewActivity
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_bonus_n_coupon_term);
-        setWebView(Crypto.getUrlDecoderEx(DailyRemoteConfigPreference.getInstance(this).getKeyRemoteConfigStaticUrlBonus()));
+        setWebView(DailyRemoteConfigPreference.getInstance(this).getKeyRemoteConfigStaticUrlBonus());
 
         initToolbar();
         initLayout((DailyWebView) mWebView);
