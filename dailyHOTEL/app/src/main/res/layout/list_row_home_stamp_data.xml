@@ -5,13 +5,15 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/default_background"
-        android:padding="15dp">
+        android:layout_marginTop="15dp"
+        android:background="@color/default_background">
 
         <RelativeLayout
             android:id="@+id/textLayout"
             android:layout_width="match_parent"
             android:layout_height="47dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
             android:layout_toLeftOf="@id/closeImageView"
             android:background="@drawable/shape_fillrect_lf0f0f0_bffffff_r2">
 
@@ -42,6 +44,8 @@
             android:layout_width="match_parent"
             android:layout_height="211dp"
             android:layout_below="@+id/textLayout"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
             android:layout_marginTop="-2dp"
             android:background="@drawable/coupon_home_bg">
 

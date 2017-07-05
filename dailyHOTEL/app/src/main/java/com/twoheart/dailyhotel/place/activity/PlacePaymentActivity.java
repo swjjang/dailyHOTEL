@@ -98,7 +98,7 @@ public abstract class PlacePaymentActivity extends BaseActivity
 
     protected abstract void showPaymentThankyou(PlacePaymentInformation paymentInformation, String imageUrl, PlaceBookingDay placeBookingDay);
 
-    protected abstract Dialog getEasyPaymentConfirmDialog();
+    protected abstract Dialog getEasyPaymentConfirmDialog(String vendorName);
 
     protected abstract Dialog getPaymentConfirmDialog(PlacePaymentInformation.PaymentType paymentType);
 
@@ -522,7 +522,7 @@ public abstract class PlacePaymentActivity extends BaseActivity
         switch (paymentType)
         {
             case EASY_CARD:
-                mFinalCheckDialog = getEasyPaymentConfirmDialog();
+                mFinalCheckDialog = getEasyPaymentConfirmDialog(mPaymentInformation.vendorName);
                 break;
 
             case CARD:

@@ -284,9 +284,11 @@ public class StayOutboundPaymentView extends BaseDialogView<StayOutboundPaymentV
             mRefundDataBinding.getRoot().setVisibility(View.VISIBLE);
             mRefundDataBinding.refundPolicyListLayout.removeAllViews();
 
-            for (String refundPolicy : refundPolicyList)
+            int size = refundPolicyList.size();
+
+            for (int i = 0; i < size; i++)
             {
-                if (DailyTextUtils.isTextEmpty(refundPolicy) == true)
+                if (DailyTextUtils.isTextEmpty(refundPolicyList.get(i)) == true)
                 {
                     continue;
                 }
@@ -294,7 +296,14 @@ public class StayOutboundPaymentView extends BaseDialogView<StayOutboundPaymentV
                 LayoutStayOutboundDetailInformationDataBinding detailInformationDataBinding = DataBindingUtil.inflate(LayoutInflater.from(getContext())//
                     , R.layout.layout_stay_outbound_detail_information_data, mRefundDataBinding.refundPolicyListLayout, true);
 
-                detailInformationDataBinding.textView.setText(Html.fromHtml(refundPolicy));
+                detailInformationDataBinding.textView.setText(Html.fromHtml(refundPolicyList.get(i)));
+
+                if (i == size - 1)
+                {
+                    LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) detailInformationDataBinding.textView.getLayoutParams();
+                    layoutParams.bottomMargin = 0;
+                    detailInformationDataBinding.textView.setLayoutParams(layoutParams);
+                }
             }
         }
     }
@@ -432,7 +441,7 @@ public class StayOutboundPaymentView extends BaseDialogView<StayOutboundPaymentV
     }
 
     @Override
-    public void showAgreeTermDialog(StayOutboundPayment.PaymentType paymentType//
+    public void showAgreeTermDialog(StayOutboundPayment.PaymentType paymentType, String vendorName//
         , View.OnClickListener onClickListener, DialogInterface.OnCancelListener cancelListener)
     {
         hideSimpleDialog();
@@ -441,7 +450,7 @@ public class StayOutboundPaymentView extends BaseDialogView<StayOutboundPaymentV
         {
             case EASY_CARD:
             {
-                showSimpleDialog(getEasyPaymentAgreeLayout(onClickListener), cancelListener, null, true);
+                showSimpleDialog(getEasyPaymentAgreeLayout(vendorName, onClickListener), cancelListener, null, true);
                 break;
             }
 
@@ -759,7 +768,7 @@ public class StayOutboundPaymentView extends BaseDialogView<StayOutboundPaymentV
         }
     }
 
-    protected ViewGroup getEasyPaymentAgreeLayout(View.OnClickListener onClickListener)
+    protected ViewGroup getEasyPaymentAgreeLayout(String vendorName, View.OnClickListener onClickListener)
     {
         int[] messageResIds = new int[]{R.string.dialog_msg_hotel_payment_message01//
             , R.string.message_stay_outbound_payment_agree_01//
@@ -768,7 +777,7 @@ public class StayOutboundPaymentView extends BaseDialogView<StayOutboundPaymentV
             , R.string.message_stay_outbound_payment_agree_04};
 
         final FinalCheckLayout finalCheckLayout = new FinalCheckLayout(getContext());
-        finalCheckLayout.setMessages(messageResIds);
+        finalCheckLayout.setMessages(messageResIds, vendorName, true);
 
         final TextView agreeSignatureTextView = (TextView) finalCheckLayout.findViewById(R.id.agreeSignatureTextView);
         final View confirmTextView = finalCheckLayout.findViewById(R.id.confirmTextView);

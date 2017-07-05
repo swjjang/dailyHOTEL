@@ -190,7 +190,25 @@ public class PlaceRegionAnimatedExpandableListAdapter extends AnimatedExpandable
         setRealChildView(convertView, groupPosition, areas, 0);
         setRealChildView(convertView, groupPosition, areas, 1);
 
+        setUnderLineView(convertView, groupPosition, childPosition);
+
         return convertView;
+    }
+
+    private void setUnderLineView(View convertView,int groupPosition, int childPosition)
+    {
+        ArrayList<Area[]> children = getChildren(groupPosition);
+        View normalUnderLineView = convertView.findViewById(R.id.underLineView);
+        View lastUnderLineView = convertView.findViewById(R.id.lastUnderLineView);
+
+        if (children == null || children.size() == 0)
+        {
+            return;
+        }
+
+        boolean isLast = childPosition == children.size() -1;
+        normalUnderLineView.setVisibility(isLast == true ? View.GONE : View.VISIBLE);
+        lastUnderLineView.setVisibility(isLast == true ? View.VISIBLE : View.GONE);
     }
 
     @Override

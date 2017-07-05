@@ -10,6 +10,7 @@ import android.text.Spannable;
 import android.text.SpannableString;
 import android.view.View;
 
+import com.daily.base.BaseActivity;
 import com.daily.base.BaseAnalyticsInterface;
 import com.daily.base.exception.BaseException;
 import com.daily.base.util.DailyTextUtils;
@@ -74,6 +75,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
     private Guest mGuest;
     private StayOutboundPayment.PaymentType mPaymentType;
     private boolean mBonusSelected;
+    private UserInformation mUserInformation;
 
     public interface StayOutboundPaymentAnalyticsInterface extends BaseAnalyticsInterface
     {
@@ -83,7 +85,8 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
 
         void onScreen(Activity activity, StayBookDateTime stayBookDateTime);
 
-        void onScreenPaymentCompleted(Activity activity, StayOutboundPayment.PaymentType paymentType, boolean fullBonus, boolean registerEasyCard);
+        void onScreenPaymentCompleted(Activity activity, StayOutboundPayment stayOutboundPayment, StayBookDateTime stayBookDateTime//
+            , String stayName, StayOutboundPayment.PaymentType paymentType, boolean fullBonus, boolean registerEasyCard, UserInformation userInformation);
 
         void onEventStartPayment(Activity activity, String label);
 
@@ -198,7 +201,6 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
     public void onResume()
     {
         super.onResume();
-
     }
 
     @Override
@@ -356,7 +358,6 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
             }
 
             case StayOutboundPaymentActivity.REQUEST_CODE_REGISTER_PHONE_NUMBER:
-            {
                 if (resultCode == Activity.RESULT_OK && data != null)
                 {
                     String phoneMobile = data.getStringExtra(InputMobileNumberDialogActivity.INTENT_EXTRA_MOBILE_NUMBER);
@@ -364,11 +365,13 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
                     notifyGuestPhoneInformationChanged();
                 }
                 break;
-            }
 
             case StayOutboundPaymentActivity.REQUEST_CODE_PAYMENT_WEB_CARD:
             case StayOutboundPaymentActivity.REQUEST_CODE_PAYMENT_WEB_PHONE:
-                onPaymentWebResult(resultCode, data.getStringExtra(Constants.NAME_INTENT_EXTRA_DATA_PAYMENT_RESULT));
+                if (resultCode == Activity.RESULT_OK && data != null)
+                {
+                    onPaymentWebResult(resultCode, data.getStringExtra(Constants.NAME_INTENT_EXTRA_DATA_PAYMENT_RESULT));
+                }
                 break;
         }
     }
@@ -395,6 +398,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
                 {
                     setStayOutboundPayment(stayOutboundPayment);
                     setSelectCard(getSelectedCard(cardList));
+                    setUserInformation(userInformation);
                     setGuestInformation(userInformation);
 
                     return true;
@@ -607,7 +611,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
         if (mBonusSelected == true && mStayOutboundPayment.totalPrice == mStayOutboundPayment.discountPrice)
         {
             // 보너스로만 결제할 경우에는 팝업이 기존의 카드 타입과 동일한다.
-            getViewInterface().showAgreeTermDialog(StayOutboundPayment.PaymentType.CARD, new View.OnClickListener()
+            getViewInterface().showAgreeTermDialog(StayOutboundPayment.PaymentType.CARD, mStayOutboundPayment.vendorName, new View.OnClickListener()
             {
                 @Override
                 public void onClick(View v)
@@ -636,7 +640,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
                 mAnalytics.onEventStartPayment(getActivity(), AnalyticsManager.Label.EASYCARDPAY);
             } else
             {
-                getViewInterface().showAgreeTermDialog(mPaymentType, new View.OnClickListener()
+                getViewInterface().showAgreeTermDialog(mPaymentType, mStayOutboundPayment.vendorName, new View.OnClickListener()
                 {
                     @Override
                     public void onClick(View v)
@@ -698,7 +702,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
                         , mStayOutboundPayment.checkInTime, mStayOutboundPayment.checkOutTime, mRoomType, paymentResult.bookingIndex//
                         , mAnalytics.getThankYouAnalyticsParam(mPaymentType, true, mBonusSelected, mSelectedCard != null)), StayOutboundPaymentActivity.REQUEST_CODE_THANK_YOU);
 
-                    mAnalytics.onScreenPaymentCompleted(getActivity(), mPaymentType, true, mSelectedCard != null);
+                    mAnalytics.onScreenPaymentCompleted(getActivity(), mStayOutboundPayment, mStayBookDateTime, mStayName, mPaymentType, true, mSelectedCard != null, mUserInformation);
                     mAnalytics.onEventEndPayment(getActivity());
                 }
             }, new Consumer<Throwable>()
@@ -754,7 +758,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
                                 , mStayOutboundPayment.checkInTime, mStayOutboundPayment.checkOutTime, mRoomType, paymentResult.bookingIndex//
                                 , mAnalytics.getThankYouAnalyticsParam(mPaymentType, false, mBonusSelected, mSelectedCard != null)), StayOutboundPaymentActivity.REQUEST_CODE_THANK_YOU);
 
-                            mAnalytics.onScreenPaymentCompleted(getActivity(), mPaymentType, false, mSelectedCard != null);
+                            mAnalytics.onScreenPaymentCompleted(getActivity(), mStayOutboundPayment, mStayBookDateTime, mStayName, mPaymentType, false, mSelectedCard != null, mUserInformation);
                             mAnalytics.onEventEndPayment(getActivity());
                         }
                     }, throwable ->
@@ -1027,6 +1031,11 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
         }
 
         mStayOutboundPayment.discountPrice = discountPrice;
+    }
+
+    private void setUserInformation(UserInformation userInformation)
+    {
+        mUserInformation = userInformation;
     }
 
     private void setGuestInformation(UserInformation userInformation)
@@ -1333,7 +1342,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
                         , mStayOutboundPayment.checkInTime, mStayOutboundPayment.checkOutTime, mRoomType, paymentResult.bookingIndex//
                         , mAnalytics.getThankYouAnalyticsParam(mPaymentType, false, mBonusSelected, mSelectedCard != null)), StayOutboundPaymentActivity.REQUEST_CODE_THANK_YOU);
 
-                    mAnalytics.onScreenPaymentCompleted(getActivity(), mPaymentType, false, mSelectedCard != null);
+                    mAnalytics.onScreenPaymentCompleted(getActivity(), mStayOutboundPayment, mStayBookDateTime, mStayName, mPaymentType, false, mSelectedCard != null, mUserInformation);
                     mAnalytics.onEventEndPayment(getActivity());
                 }
             }, throwable ->
@@ -1407,7 +1416,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
                     @Override
                     public void onClick(View view)
                     {
-                        setResult(Constants.CODE_RESULT_ACTIVITY_REFRESH);
+                        setResult(BaseActivity.RESULT_CODE_REFRESH);
                         onBackClick();
                     }
                 };

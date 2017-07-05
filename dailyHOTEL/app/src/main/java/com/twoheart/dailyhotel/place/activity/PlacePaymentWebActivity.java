@@ -1285,11 +1285,12 @@ public abstract class PlacePaymentWebActivity extends BaseActivity implements Co
         @JavascriptInterface
         public void BestClose()
         {
-            Intent intent = new Intent();
-            intent.putExtra(NAME_INTENT_EXTRA_DATA_PAYMENTINFORMATION, mPlacePaymentInformation);
-
-            setResult(CODE_RESULT_ACTIVITY_PAYMENT_CANCELED, intent);
-            finish();
+//            Intent intent = new Intent();
+//            intent.putExtra(NAME_INTENT_EXTRA_DATA_PAYMENTINFORMATION, mPlacePaymentInformation);
+//
+//            setResult(CODE_RESULT_ACTIVITY_PAYMENT_CANCELED, intent);
+//            finish();
+            onBackPressed();
         }
     }
 

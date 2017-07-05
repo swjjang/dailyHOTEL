@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/default_background"
+        android:orientation="vertical"
+        android:layout_marginTop="16dp"
+        android:paddingBottom="12dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp">
+
+        <com.daily.base.widget.DailyTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            android:layout_marginTop="12dp"
+            android:gravity="center"
+            android:text="@string/message_payment_agreement_third_party_01"
+            android:textColor="@color/default_text_c323232"
+            android:textSize="11dp"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="@color/default_line_cdcdcdd"/>
+
+        <com.daily.base.widget.DailyTextView
+            android:id="@+id/vendorTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="@string/message_payment_agreement_third_party_02"
+            android:textColor="@color/default_text_c323232"
+            android:textSize="11dp"/>
+
+        <com.daily.base.widget.DailyTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="7dp"
+            android:text="@string/message_payment_agreement_third_party_03"
+            android:textColor="@color/default_text_c323232"
+            android:textSize="11dp"/>
+
+        <com.daily.base.widget.DailyTextView
+            android:id="@+id/offerInformationTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="7dp"
+            android:text="@string/message_payment_agreement_third_party_04"
+            android:textColor="@color/default_text_c323232"
+            android:textSize="11dp"/>
+
+        <com.daily.base.widget.DailyTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="7dp"
+            android:text="@string/message_payment_agreement_third_party_05"
+            android:textColor="@color/default_text_c323232"
+            android:textSize="11dp"/>
+
+        <com.daily.base.widget.DailyTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/message_payment_agreement_third_party_06"
+            android:textColor="@color/default_text_c323232"
+            android:textSize="11dp"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="14dp">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                app:srcCompat="@drawable/ic_notice"/>
+
+            <com.daily.base.widget.DailyTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="3dp"
+                android:text="@string/message_payment_agreement_third_party_07"
+                android:textColor="@color/default_text_c929292"
+                android:textSize="10dp"/>
+        </LinearLayout>
+    </LinearLayout>
+</layout>
+

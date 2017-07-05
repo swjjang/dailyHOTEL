@@ -17,6 +17,7 @@ import android.graphics.drawable.shapes.RectShape;
 import android.net.Uri;
 import android.os.Build;
 import android.support.annotation.IdRes;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
@@ -326,8 +327,11 @@ public class StayOutboundDetailView extends BaseDialogView<StayOutboundDetailVie
                         @Override
                         public void onAnimationEnd(Animator animation)
                         {
-                            mRoomAnimatorSet.removeAllListeners();
-                            mRoomAnimatorSet = null;
+                            if (mRoomAnimatorSet != null)
+                            {
+                                mRoomAnimatorSet.removeAllListeners();
+                                mRoomAnimatorSet = null;
+                            }
 
                             observer.onNext(true);
                             observer.onComplete();
@@ -405,8 +409,11 @@ public class StayOutboundDetailView extends BaseDialogView<StayOutboundDetailVie
                         @Override
                         public void onAnimationEnd(Animator animation)
                         {
-                            mRoomAnimatorSet.removeAllListeners();
-                            mRoomAnimatorSet = null;
+                            if (mRoomAnimatorSet != null)
+                            {
+                                mRoomAnimatorSet.removeAllListeners();
+                                mRoomAnimatorSet = null;
+                            }
 
                             getViewDataBinding().productTypeBackgroundView.setVisibility(View.GONE);
                             getViewDataBinding().productTypeLayout.setVisibility(View.INVISIBLE);
@@ -688,7 +695,6 @@ public class StayOutboundDetailView extends BaseDialogView<StayOutboundDetailVie
         {
             getViewDataBinding().transImageView.setVisibility(View.VISIBLE);
             getViewDataBinding().transGradientView.setVisibility(View.VISIBLE);
-            getViewDataBinding().transGradientTopView.setVisibility(View.VISIBLE);
             getViewDataBinding().transTitleLayout.setVisibility(View.VISIBLE);
             getViewDataBinding().transImageView.setTransitionName(getString(R.string.transition_place_image));
             getViewDataBinding().transGradientView.setTransitionName(getString(R.string.transition_gradient_bottom_view));
@@ -699,7 +705,6 @@ public class StayOutboundDetailView extends BaseDialogView<StayOutboundDetailVie
         {
             getViewDataBinding().transImageView.setVisibility(View.GONE);
             getViewDataBinding().transGradientView.setVisibility(View.GONE);
-            getViewDataBinding().transGradientTopView.setVisibility(View.GONE);
             getViewDataBinding().transTitleLayout.setVisibility(View.GONE);
         }
     }
@@ -1051,7 +1056,7 @@ public class StayOutboundDetailView extends BaseDialogView<StayOutboundDetailVie
 
         // 등급
         viewDataBinding.gradeTextView.setVisibility(View.VISIBLE);
-        viewDataBinding.gradeTextView.setText(getString(R.string.label_stay_outbound_detail_grade, (int)stayOutboundDetail.rating));
+        viewDataBinding.gradeTextView.setText(getString(R.string.label_stay_outbound_detail_grade, (int) stayOutboundDetail.rating));
         viewDataBinding.ratingBar.setOnTouchListener(new View.OnTouchListener()
         {
             @Override
@@ -1324,11 +1329,11 @@ public class StayOutboundDetailView extends BaseDialogView<StayOutboundDetailVie
                 continue;
             }
 
-            setInformationView(layoutInflater, viewDataBinding.informationLayout, entry);
+            setInformationView(layoutInflater, viewDataBinding.informationLayout, entry, iterator.hasNext() == false);
         }
     }
 
-    private void setInformationView(LayoutInflater layoutInflater, ViewGroup viewGroup, Map.Entry<String, List<String>> information)
+    private void setInformationView(LayoutInflater layoutInflater, ViewGroup viewGroup, Map.Entry<String, List<String>> information, boolean lastView)
     {
         if (layoutInflater == null || viewGroup == null || information == null)
         {
@@ -1342,20 +1347,38 @@ public class StayOutboundDetailView extends BaseDialogView<StayOutboundDetailVie
 
         List<String> informationList = information.getValue();
 
-        if (informationList != null && informationList.size() > 0)
+        if (informationList == null && informationList.size() == 0)
         {
-            for (String text : informationList)
+            return;
+        }
+
+        int size = informationList.size();
+
+        for (int i = 0; i < size; i++)
+        {
+            if (DailyTextUtils.isTextEmpty(informationList.get(i)) == true)
             {
-                if (DailyTextUtils.isTextEmpty(text) == true)
-                {
-                    continue;
-                }
-
-                LayoutStayOutboundDetailInformationDataBinding detailInformationDataBinding = DataBindingUtil.inflate(layoutInflater//
-                    , R.layout.layout_stay_outbound_detail_information_data, viewDataBinding.informationLayout, true);
-
-                detailInformationDataBinding.textView.setText(Html.fromHtml(text));
+                continue;
             }
+
+            LayoutStayOutboundDetailInformationDataBinding detailInformationDataBinding = DataBindingUtil.inflate(layoutInflater//
+                , R.layout.layout_stay_outbound_detail_information_data, viewDataBinding.informationLayout, true);
+
+            detailInformationDataBinding.textView.setText(Html.fromHtml(informationList.get(i)));
+
+            if (i == size - 1)
+            {
+                LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) detailInformationDataBinding.textView.getLayoutParams();
+                layoutParams.bottomMargin = 0;
+                detailInformationDataBinding.textView.setLayoutParams(layoutParams);
+            }
+        }
+
+        if (lastView == true)
+        {
+            LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) viewDataBinding.informationLayout.getLayoutParams();
+            layoutParams.bottomMargin = ScreenUtils.dpToPx(getContext(), 20);
+            viewDataBinding.informationLayout.setLayoutParams(layoutParams);
         }
     }
 
@@ -1474,7 +1497,7 @@ public class StayOutboundDetailView extends BaseDialogView<StayOutboundDetailVie
                     topMargin = DEFAULT_TOP_MARGIN;
                 }
 
-                RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) getViewDataBinding().productTypeLayout.getLayoutParams();
+                ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) getViewDataBinding().productTypeLayout.getLayoutParams();
                 layoutParams.topMargin = DEFAULT_TOP_MARGIN;
 
                 getViewDataBinding().productTypeLayout.setLayoutParams(layoutParams);

@@ -241,6 +241,10 @@
 
     <color name="payment_memo_hint">#d0d0d0</color>
 
+
+    <!-- Stay OutBound -->
+    <color name="stay_outbound_detail_grade">#cfad80</color>
+
     <!-- DEFAULT -->
     <color name="default_text_cb70038">#B70038</color>
     <color name="default_text_c323232">#323232</color>

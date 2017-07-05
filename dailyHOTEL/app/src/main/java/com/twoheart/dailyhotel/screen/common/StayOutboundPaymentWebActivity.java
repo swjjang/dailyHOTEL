@@ -161,6 +161,11 @@ public class StayOutboundPaymentWebActivity extends PlacePaymentWebActivity
         {
             mUrl = params[0];
 
+            if (DEBUG == true)
+            {
+                ExLog.d("pinkred : " + mJSONString);
+            }
+
             try
             {
                 OkHttpClient okHttpClient = new OkHttpClient();

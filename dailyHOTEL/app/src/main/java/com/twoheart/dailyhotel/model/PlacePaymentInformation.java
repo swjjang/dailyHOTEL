@@ -25,6 +25,8 @@ public abstract class PlacePaymentInformation implements Parcelable
     private Guest mGuest;
     private Coupon mCoupon;
 
+    public String vendorName;
+
     public boolean isFree; // 무료 결제 인지
 
     public PlacePaymentInformation()

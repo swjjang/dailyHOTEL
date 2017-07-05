@@ -35,8 +35,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:layout_marginBottom="20dp"
-            android:src="@drawable/img_detail_standby_reserve"
-            />
+            android:src="@drawable/img_detail_standby_reserve"/>
 
     </LinearLayout>
 </RelativeLayout>

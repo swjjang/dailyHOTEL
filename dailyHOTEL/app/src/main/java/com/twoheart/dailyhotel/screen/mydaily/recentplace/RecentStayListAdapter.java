@@ -265,10 +265,10 @@ public class RecentStayListAdapter extends RecentPlacesListAdapter
         holder.dataBinding.nameEngTextView.setText("(" + stayOutbound.nameEng + ")");
 
         ConstraintLayout.LayoutParams nameEngLayoutParams = (ConstraintLayout.LayoutParams) holder.dataBinding.nameEngTextView.getLayoutParams();
-        nameEngLayoutParams.bottomMargin = ScreenUtils.dpToPx(mContext, 2);
+        nameEngLayoutParams.bottomMargin = ScreenUtils.dpToPx(mContext, 6);
 
         ConstraintLayout.LayoutParams nameLayoutParams = (ConstraintLayout.LayoutParams) holder.dataBinding.nameTextView.getLayoutParams();
-        nameLayoutParams.bottomMargin = ScreenUtils.dpToPx(mContext, -3);
+        nameLayoutParams.bottomMargin = ScreenUtils.dpToPx(mContext, -4);
 
         // 가격
         if (stayOutbound.promo == true)

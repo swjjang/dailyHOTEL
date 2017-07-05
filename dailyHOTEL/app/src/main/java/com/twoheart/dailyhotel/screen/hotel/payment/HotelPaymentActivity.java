@@ -614,7 +614,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
     }
 
     @Override
-    protected Dialog getEasyPaymentConfirmDialog()
+    protected Dialog getEasyPaymentConfirmDialog(String vendorName)
     {
         final Dialog dialog = new Dialog(this);
 
@@ -640,12 +640,11 @@ public class HotelPaymentActivity extends PlacePaymentActivity
                 , R.string.dialog_msg_hotel_payment_message14//
                 , R.string.dialog_msg_hotel_payment_message02//
                 , R.string.dialog_msg_hotel_payment_message03//
-                , R.string.dialog_msg_hotel_payment_message07};
+                , R.string.dialog_msg_hotel_payment_message07, R.string.dialog_msg_hotel_payment_message08};
         }
 
-
         final FinalCheckLayout finalCheckLayout = new FinalCheckLayout(HotelPaymentActivity.this);
-        finalCheckLayout.setMessages(messageResIds);
+        finalCheckLayout.setMessages(messageResIds, vendorName, ((StayPaymentInformation)mPaymentInformation).isOverSeas);
 
         final TextView agreeSignatureTextView = (TextView) finalCheckLayout.findViewById(R.id.agreeSignatureTextView);
         final View confirmTextView = finalCheckLayout.findViewById(R.id.confirmTextView);
@@ -1738,7 +1737,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
         }
 
         int[] messageList;
-        if (PlacePaymentInformation.PaymentType.VBANK == paymentType)
+        if (PlacePaymentInformation.PaymentType.VBANK == paymentType || PlacePaymentInformation.PaymentType.EASY_CARD == paymentType)
         {
             messageList = new int[6];
         } else
@@ -1777,6 +1776,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
         {
             case EASY_CARD:
                 messageList[4] = R.string.dialog_msg_hotel_payment_message07;
+                messageList[5] = R.string.dialog_msg_hotel_payment_message08;
                 break;
 
             case VBANK:

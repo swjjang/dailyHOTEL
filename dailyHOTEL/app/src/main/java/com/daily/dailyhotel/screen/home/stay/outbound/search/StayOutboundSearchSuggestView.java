@@ -61,6 +61,7 @@ public class StayOutboundSearchSuggestView extends BaseDialogView<StayOutboundSe
             return;
         }
 
+        viewDataBinding.keywordEditText.setBackgroundDrawable(null);
         viewDataBinding.keywordEditText.setImeOptions(EditorInfo.IME_ACTION_DONE);
         viewDataBinding.keywordEditText.setOnEditorActionListener(new TextView.OnEditorActionListener()
         {

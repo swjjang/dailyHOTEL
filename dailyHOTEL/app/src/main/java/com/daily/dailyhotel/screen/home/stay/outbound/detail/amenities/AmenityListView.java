@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import com.daily.base.BaseActivity;
 import com.daily.base.BaseDialogView;
 import com.daily.base.OnBaseEventListener;
+import com.daily.base.util.ScreenUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ActivityAmenityListDataBinding;
 import com.twoheart.dailyhotel.databinding.ListRowAmenityDataBinding;
@@ -104,6 +105,25 @@ public class AmenityListView extends BaseDialogView<AmenityListView.OnEventListe
         public void onBindViewHolder(AmenityViewHolder holder, int position)
         {
             holder.dataBinding.amenityTextView.setText(getItem(position));
+
+            // 마지막 아이템인 경우 하단에 여백 추가
+            RecyclerView.LayoutParams layoutParams = (RecyclerView.LayoutParams) holder.dataBinding.amenityTextView.getLayoutParams();
+
+            if (position == 0)
+            {
+                layoutParams.topMargin = ScreenUtils.dpToPx(mContext, 16);
+                layoutParams.bottomMargin = 0;
+            } else if (position == getItemCount() - 1)
+            {
+                layoutParams.topMargin = 0;
+                layoutParams.bottomMargin = ScreenUtils.dpToPx(mContext, 12);
+            } else
+            {
+                layoutParams.topMargin = 0;
+                layoutParams.bottomMargin = 0;
+            }
+
+            holder.dataBinding.amenityTextView.setLayoutParams(layoutParams);
         }
 
         @Override
