@@ -38,6 +38,7 @@ public class StayReservationDetailLayout extends PlaceReservationDetailLayout
     private View mRecommendGourmetButtonView;
     private View mRecommendGourmetItemLayout;
     private HomeCarouselLayout mRecommendGourmetCarouselLayout;
+    private ObjectAnimator mRecommendGourmetButtonAnimator;
 
     public interface OnEventListener extends PlaceReservationDetailLayout.OnEventListener
     {
@@ -498,9 +499,19 @@ public class StayReservationDetailLayout extends PlaceReservationDetailLayout
         setRecommendGourmetButtonAnimation(isVisible);
     }
 
+    public ArrayList<HomePlace> getRecommendGourmetData()
+    {
+        if (mRecommendGourmetCarouselLayout == null)
+        {
+            return null;
+        }
+
+        return mRecommendGourmetCarouselLayout.getData();
+    }
+
     public void setRecommendGourmetData(ArrayList<HomePlace> list)
     {
-        if (mRecommendGourmetItemLayout == null)
+        if (mRecommendGourmetCarouselLayout == null)
         {
             return;
         }
@@ -508,8 +519,6 @@ public class StayReservationDetailLayout extends PlaceReservationDetailLayout
         mRecommendGourmetCarouselLayout.setData(list);
         setRecommendGourmetLayoutVisible(list != null && list.size() > 0);
     }
-
-    ObjectAnimator mRecommendGourmetButtonAnimator;
 
     private void setRecommendGourmetButtonAnimation(boolean isVisible)
     {
