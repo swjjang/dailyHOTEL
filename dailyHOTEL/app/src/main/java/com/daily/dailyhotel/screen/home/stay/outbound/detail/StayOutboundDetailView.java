@@ -327,8 +327,11 @@ public class StayOutboundDetailView extends BaseDialogView<StayOutboundDetailVie
                         @Override
                         public void onAnimationEnd(Animator animation)
                         {
-                            mRoomAnimatorSet.removeAllListeners();
-                            mRoomAnimatorSet = null;
+                            if (mRoomAnimatorSet != null)
+                            {
+                                mRoomAnimatorSet.removeAllListeners();
+                                mRoomAnimatorSet = null;
+                            }
 
                             observer.onNext(true);
                             observer.onComplete();
@@ -406,8 +409,11 @@ public class StayOutboundDetailView extends BaseDialogView<StayOutboundDetailVie
                         @Override
                         public void onAnimationEnd(Animator animation)
                         {
-                            mRoomAnimatorSet.removeAllListeners();
-                            mRoomAnimatorSet = null;
+                            if (mRoomAnimatorSet != null)
+                            {
+                                mRoomAnimatorSet.removeAllListeners();
+                                mRoomAnimatorSet = null;
+                            }
 
                             getViewDataBinding().productTypeBackgroundView.setVisibility(View.GONE);
                             getViewDataBinding().productTypeLayout.setVisibility(View.INVISIBLE);
