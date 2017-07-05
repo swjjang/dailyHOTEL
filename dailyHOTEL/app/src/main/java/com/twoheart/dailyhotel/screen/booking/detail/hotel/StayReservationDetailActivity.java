@@ -34,6 +34,7 @@ import com.daily.dailyhotel.util.RecentlyPlaceUtil;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Gourmet;
+import com.twoheart.dailyhotel.model.GourmetCurationOption;
 import com.twoheart.dailyhotel.model.GourmetSearchCuration;
 import com.twoheart.dailyhotel.model.GourmetSearchParams;
 import com.twoheart.dailyhotel.model.PlaceBookingDetail;
@@ -1355,8 +1356,12 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
                     location.setLongitude(stayBookingDetail.longitude);
 
                     GourmetSearchCuration gourmetCuration = new GourmetSearchCuration();
+                    GourmetCurationOption gourmetCurationOption = (GourmetCurationOption) gourmetCuration.getCurationOption();
+                    gourmetCurationOption.setSortType(SortType.DISTANCE);
+
                     gourmetCuration.setGourmetBookingDay(gourmetBookingDay);
                     gourmetCuration.setLocation(location);
+                    gourmetCuration.setCurationOption(gourmetCurationOption);
                     gourmetCuration.setRadius(10d);
 
                     GourmetSearchParams gourmetParams = (GourmetSearchParams) gourmetCuration.toPlaceParams(1, 10, true);
