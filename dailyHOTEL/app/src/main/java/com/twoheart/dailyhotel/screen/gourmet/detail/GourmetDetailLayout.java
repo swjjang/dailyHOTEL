@@ -238,7 +238,7 @@ public class GourmetDetailLayout extends PlaceDetailLayout
         }
 
         mScrollView.smoothScrollTo(0, (int) mGourmetDetailItemLayout.getMoveFirstView()//
-            - mContext.getResources().getDimensionPixelSize(R.dimen.toolbar_height) - ScreenUtils.dpToPx(mContext, 13));
+            - mContext.getResources().getDimensionPixelSize(R.dimen.toolbar_height));
     }
 
     public boolean isOpenedProductMoreList()
