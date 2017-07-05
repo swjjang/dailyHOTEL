@@ -19,6 +19,7 @@ public class StayOutboundPayment
     public String roomTypeCode;
     public String rateCode;
     public int roomBedTypeId;
+    public String vendorName;
 
     public StayOutboundPayment()
     {

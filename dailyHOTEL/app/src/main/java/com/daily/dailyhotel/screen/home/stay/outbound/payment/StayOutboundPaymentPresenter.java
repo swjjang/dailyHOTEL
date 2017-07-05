@@ -201,7 +201,6 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
     public void onResume()
     {
         super.onResume();
-
     }
 
     @Override
@@ -612,7 +611,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
         if (mBonusSelected == true && mStayOutboundPayment.totalPrice == mStayOutboundPayment.discountPrice)
         {
             // 보너스로만 결제할 경우에는 팝업이 기존의 카드 타입과 동일한다.
-            getViewInterface().showAgreeTermDialog(StayOutboundPayment.PaymentType.CARD, new View.OnClickListener()
+            getViewInterface().showAgreeTermDialog(StayOutboundPayment.PaymentType.CARD, mStayOutboundPayment.vendorName, new View.OnClickListener()
             {
                 @Override
                 public void onClick(View v)
@@ -641,7 +640,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
                 mAnalytics.onEventStartPayment(getActivity(), AnalyticsManager.Label.EASYCARDPAY);
             } else
             {
-                getViewInterface().showAgreeTermDialog(mPaymentType, new View.OnClickListener()
+                getViewInterface().showAgreeTermDialog(mPaymentType, mStayOutboundPayment.vendorName, new View.OnClickListener()
                 {
                     @Override
                     public void onClick(View v)

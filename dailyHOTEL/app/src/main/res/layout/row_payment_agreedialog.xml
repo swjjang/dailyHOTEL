@@ -21,6 +21,5 @@
         android:freezesText="true"
         android:lineSpacingExtra="-2dp"
         android:textColor="@color/black"
-        android:textSize="13dp"
-        dailyFont:style="DemiLight"/>
+        android:textSize="13dp"/>
 </LinearLayout>
