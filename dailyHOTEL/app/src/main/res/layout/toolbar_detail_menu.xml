@@ -27,9 +27,8 @@
             android:id="@+id/menu3TextView"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/toolbar_height"
-            android:drawablePadding="5dp"
             android:gravity="center_vertical"
-            android:text="12dp"
+            android:text="13dp"
             android:textColor="@color/default_text_c323232"/>
 
         <ImageView

@@ -71,8 +71,8 @@ public abstract class PlaceDetailActivity extends BaseActivity
     protected boolean mIsTransitionEnd;
     protected int mInitializeStatus;
 
-//    protected Province mProvince;
-//    protected String mArea; // Analytics용 소지역
+    //    protected Province mProvince;
+    //    protected String mArea; // Analytics용 소지역
     protected int mViewPrice; // Analytics용 리스트 가격
     protected int mProductDetailIndex; // 딥링크로 시작시에 객실/티켓 정보 오픈후에 선택되어있는 인덱스
     protected PlaceReviewScores mPlaceReviewScores;
@@ -666,7 +666,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
 
     protected void setWishTextView(boolean selected, int count)
     {
-        int imageResId = selected == true ? R.drawable.ic_heart_fill_s : R.drawable.ic_heart_stroke_s;
+        int imageResId = selected == true ? R.drawable.vector_navibar_ic_heart_on : R.drawable.vector_navibar_ic_heart_off_white;
         mWishTextView.setCompoundDrawablesWithIntrinsicBounds(0, 0, imageResId, 0);
         mWishTextView.setTag(selected);
 
@@ -676,7 +676,15 @@ public abstract class PlaceDetailActivity extends BaseActivity
             wishCountText = null;
         } else if (count > 9999)
         {
-            wishCountText = getString(R.string.wishlist_count_over_10_thousand, Float.toString((float) (count / 10000) / 10.0f));
+            int wishCount = count / 1000;
+
+            if (wishCount % 10 == 0)
+            {
+                wishCountText = getString(R.string.wishlist_count_over_10_thousand, Integer.toString(wishCount / 10));
+            } else
+            {
+                wishCountText = getString(R.string.wishlist_count_over_10_thousand, Float.toString((float)count / 10.0f));
+            }
         } else
         {
             DecimalFormat decimalFormat = new DecimalFormat("###,##0");
@@ -687,6 +695,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
 
         if (mDailyToolbarLayout != null)
         {
+            imageResId = selected == true ? R.drawable.vector_navibar_ic_heart_on : R.drawable.vector_navibar_ic_heart_off_black;
             mDailyToolbarLayout.setToolbarMenu(R.drawable.navibar_ic_share_01_black, 0, imageResId, wishCountText);
         }
     }

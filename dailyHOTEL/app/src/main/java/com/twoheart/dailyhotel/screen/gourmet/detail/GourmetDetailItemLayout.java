@@ -66,6 +66,7 @@ public class GourmetDetailItemLayout extends LinearLayout
     private int mDpi;
     private int mFirstProductIndex;
     private int mLastProductIndex;
+    private View mMoveFirstView;
 
     public GourmetDetailItemLayout(Context context)
     {
@@ -129,6 +130,17 @@ public class GourmetDetailItemLayout extends LinearLayout
         mPlaceReviewScores = placeReviewScores;
 
         setView();
+    }
+
+    public float getMoveFirstView()
+    {
+        if (mMoveFirstView == null || mGourmetTitleLayout == null)
+        {
+            return 0.0f;
+        } else
+        {
+            return mGourmetTitleLayout.getY() + mGourmetTitleLayout.getHeight() - mMoveFirstView.getHeight();
+        }
     }
 
     public int getFirstProductIndex()
@@ -245,9 +257,6 @@ public class GourmetDetailItemLayout extends LinearLayout
             return;
         }
 
-        ScrollView scrollView = (ScrollView) GourmetDetailItemLayout.this.getParent();
-        scrollView.smoothScrollTo(0, (int) getChildAt(mFirstProductIndex).getY() - mContext.getResources().getDimensionPixelSize(R.dimen.toolbar_height));
-
         ValueAnimator valueAnimator = ValueAnimator.ofInt(height, 0);
         valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener()
         {
@@ -339,14 +348,6 @@ public class GourmetDetailItemLayout extends LinearLayout
         if (benefitView != null)
         {
             addView(benefitView);
-        } else
-        {
-            // 베네핏이 없으면 정보화면의 상단 라인으로 대체한다.
-            View view = new View(mContext);
-            ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ScreenUtils.dpToPx(mContext, 1));
-            view.setLayoutParams(layoutParams);
-            view.setBackgroundResource(R.color.default_line_cf0f0f0);
-            addView(view);
         }
 
         // 주소 및 맵
@@ -505,6 +506,7 @@ public class GourmetDetailItemLayout extends LinearLayout
         dayTextView.setText(mGourmetBookingDay.getVisitDay("yyyy.MM.dd(EEE)"));
 
         View dateInformationLayout = view.findViewById(R.id.dateInformationLayout);
+        mMoveFirstView = dateInformationLayout;
         dateInformationLayout.setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -769,7 +771,7 @@ public class GourmetDetailItemLayout extends LinearLayout
             {
                 if (i < DEFAULT_SHOW_PRODUCT_COUNT)
                 {
-                    setProductLayout(layoutInflater, parent, i, gourmetProductList.get(i));
+                    setProductLayout(layoutInflater, parent, i, gourmetProductList.get(i), true);
                 } else if (i == DEFAULT_SHOW_PRODUCT_COUNT)
                 {
                     parent.addView(mMoreLayout, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
@@ -789,10 +791,10 @@ public class GourmetDetailItemLayout extends LinearLayout
                         }
                     });
 
-                    setProductLayout(layoutInflater, mMoreLayout, i, gourmetProductList.get(i));
+                    setProductLayout(layoutInflater, mMoreLayout, i, gourmetProductList.get(i), true);
                 } else
                 {
-                    setProductLayout(layoutInflater, mMoreLayout, i, gourmetProductList.get(i));
+                    setProductLayout(layoutInflater, mMoreLayout, i, gourmetProductList.get(i), true);
                 }
             }
 
@@ -812,12 +814,17 @@ public class GourmetDetailItemLayout extends LinearLayout
         {
             for (int i = 0; i < size; i++)
             {
-                setProductLayout(layoutInflater, parent, i, gourmetProductList.get(i));
+                setProductLayout(layoutInflater, parent, i, gourmetProductList.get(i), i != size - 1);
             }
         }
+
+        // 하단 마지막 라인.
+        View view = new View(mContext);
+        view.setBackgroundResource(R.color.default_line_cf0f0f0);
+        parent.addView(view, new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ScreenUtils.dpToPx(mContext, 1)));
     }
 
-    private void setProductLayout(LayoutInflater layoutInflater, ViewGroup parent, int index, GourmetProduct gourmetProduct)
+    private void setProductLayout(LayoutInflater layoutInflater, ViewGroup parent, int index, GourmetProduct gourmetProduct, boolean showBottomLine)
     {
         if (layoutInflater == null || parent == null || gourmetProduct == null)
         {
@@ -903,11 +910,17 @@ public class GourmetDetailItemLayout extends LinearLayout
         }
 
         // 마지막 라인 넣기
-        View view = new View(mContext);
-        view.setBackgroundColor(mContext.getResources().getColor(R.color.default_line_cdcdcdd));
-        final int DP_15 = ScreenUtils.dpToPx(mContext, 15);
-        view.setPadding(DP_15, 0, DP_15, 0);
-        parent.addView(view, new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 1));
+        if (showBottomLine == true)
+        {
+            final int DP_15 = ScreenUtils.dpToPx(mContext, 15);
+
+            ImageView imageView = new ImageView(mContext);
+            imageView.setImageResource(R.color.default_line_cdcdcdd);
+            imageView.setBackgroundColor(mContext.getResources().getColor(R.color.white));
+            imageView.setScaleType(ImageView.ScaleType.FIT_XY);
+            imageView.setPadding(DP_15, 0, DP_15, 0);
+            parent.addView(imageView, new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 1));
+        }
     }
 
     /**

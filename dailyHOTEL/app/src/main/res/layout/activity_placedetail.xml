@@ -180,11 +180,10 @@
             android:layout_width="wrap_content"
             android:layout_height="@dimen/toolbar_height"
             android:layout_toLeftOf="@+id/trueVRView"
-            android:drawablePadding="5dp"
             android:gravity="center_vertical"
             android:textColor="@color/white"
-            android:textSize="12dp"
-            app:drawableCompatRight="@drawable/ic_heart_stroke_s"/>
+            android:textSize="13dp"
+            app:drawableCompatRight="@drawable/vector_navibar_ic_heart_off_white"/>
 
         <ImageView
             android:id="@+id/trueVRView"

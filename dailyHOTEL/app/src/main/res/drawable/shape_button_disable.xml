@@ -23,5 +23,5 @@
 
     <corners android:radius="2dp"/>
 
-    <solid android:color="@color/default_background_disable_ce6e6e6"/>
+    <solid android:color="@color/default_background_ce8e8e9"/>
 </shape>
