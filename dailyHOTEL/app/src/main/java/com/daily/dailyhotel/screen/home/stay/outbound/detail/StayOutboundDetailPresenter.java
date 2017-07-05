@@ -463,6 +463,8 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
         setRefresh(false);
         screenLock(showProgress);
 
+        mSelectedRoom = null;
+
         addCompositeDisposable(Observable.zip(mCommonRemoteImpl.getCommonDateTime(), mStayOutboundRemoteImpl.getStayOutboundDetail(mStayIndex, mStayBookDateTime, mPeople), new BiFunction<CommonDateTime, StayOutboundDetail, StayOutboundDetail>()
         {
             @Override
