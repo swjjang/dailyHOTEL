@@ -22,6 +22,7 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.Setting;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
+import com.twoheart.dailyhotel.screen.information.terms.CollectPersonInformationActivity;
 import com.twoheart.dailyhotel.screen.information.terms.PrivacyActivity;
 import com.twoheart.dailyhotel.screen.information.terms.TermActivity;
 import com.twoheart.dailyhotel.util.Constants;
@@ -296,8 +297,7 @@ public class SignupStep1Activity extends BaseActivity
                 return;
             }
 
-            Intent intent = new Intent(SignupStep1Activity.this, PrivacyActivity.class);
-            startActivityForResult(intent, REQUEST_CODE_ACTIVITY);
+            startActivityForResult(CollectPersonInformationActivity.newInstance(SignupStep1Activity.this), REQUEST_CODE_ACTIVITY);
         }
 
         @Override
