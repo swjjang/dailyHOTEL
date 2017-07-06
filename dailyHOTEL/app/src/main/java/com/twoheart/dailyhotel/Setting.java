@@ -67,7 +67,7 @@ public class Setting
                 return URL_DAILYHOTEL_PROD_OUTBOUND_SERVER_DEFAULT;
 
             case "stage":
-                return URL_DAILYHOTEL_DEV_OUTBOUND_SERVER_DEFAULT;
+                return URL_DAILYHOTEL_STAGE_OUTBOUND_SERVER_DEFAULT;
 
             default:
                 return URL_DAILYHOTEL_DEV_OUTBOUND_SERVER_DEFAULT;
@@ -90,6 +90,10 @@ public class Setting
     // API 해외 서버 호스트
     public static String URL_DAILYHOTEL_PROD_OUTBOUND_SERVER_DEFAULT = Constants.UNENCRYPTED_URL ? "https://prod-silo.dailyhotel.me/"//
         : "MjIkNzgkMzUkNzIkNiQxMjUkODMkNzQkMTEwJDEzJDEyMCQyOSQxMjEkMTIwJDE4JDExNiQ=$QjVENUUFCRUUwZOUY4YNDdFRDYdGRkVFCQjMxRkXQyMEIxMkZERjc0NzZEODZEMkZCRDg0Qjg0RjTRM0MEU1NNDDk2QjAzREI1MEE1RkRBMEZFRThJCNCkFDRTQZHLDN0I2RTJGRNUE1OTE3$";
+
+    // Dev 해외 서버
+    public static String URL_DAILYHOTEL_STAGE_OUTBOUND_SERVER_DEFAULT = Constants.UNENCRYPTED_URL ? "https://stage-silo.dailyhotel.me/"//
+        : "MTMkNTkkMTE3JDgkNjckMTAyJDExOCQxMDQkNjMkMjUkNjYkMTAyJDEzNSQxMzckODUkODAk$M0VDREQ2ARjA1QAkU3QzkxN0VBBNkQ0RDYxOTMzNDMzMDE1MEI3MENEOTU0NEHIxWRGEMxBQUUwN0RCMGEQ1MjAgzREE3REM5NzcwMTQC0RTNMJxRDI1NDhEOTlGNJEMOzNTkxODAN1MNDk5$";
 
     // Dev 해외 서버
     public static String URL_DAILYHOTEL_DEV_OUTBOUND_SERVER_DEFAULT = Constants.UNENCRYPTED_URL ? "https://dev-silo.dailyhotel.me/"//
