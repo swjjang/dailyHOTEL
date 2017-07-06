@@ -907,7 +907,6 @@ public class AdjustManager extends BaseAnalyticsManager
         // 결제시에만 들어가는 부분
         if (EventToken.STAY_FIRST_PURCHASE.equalsIgnoreCase(eventToken) == true //
             || EventToken.STAY_PURCHASE.equalsIgnoreCase(eventToken) == true //
-            || EventToken.
             || EventToken.GOURMET_FIRST_PURCHASE.equalsIgnoreCase(eventToken) == true //
             || EventToken.GOURMET_PURCHASE.equalsIgnoreCase(eventToken) == true)
         {
