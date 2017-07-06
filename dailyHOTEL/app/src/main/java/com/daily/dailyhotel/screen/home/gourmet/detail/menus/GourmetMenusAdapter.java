@@ -114,7 +114,7 @@ public class GourmetMenusAdapter extends RecyclerView.Adapter<GourmetMenusAdapte
     {
         ListRowGourmetMenuDataBinding dataBinding = DataBindingUtil.inflate(LayoutInflater.from(mContext), R.layout.list_row_gourmet_menu_data, parent, false);
 
-        dataBinding.getRoot().setLayoutParams(new RecyclerView.LayoutParams(ScreenUtils.getScreenWidth(mContext) * 8 / 10, ViewGroup.LayoutParams.MATCH_PARENT));
+        dataBinding.getRoot().setLayoutParams(new RecyclerView.LayoutParams(ScreenUtils.getScreenWidth(mContext) * 5 / 6, ViewGroup.LayoutParams.MATCH_PARENT));
         GourmetMenuViewHolder gourmetMenuViewHolder = new GourmetMenuViewHolder(dataBinding);
 
         return gourmetMenuViewHolder;
@@ -130,12 +130,12 @@ public class GourmetMenusAdapter extends RecyclerView.Adapter<GourmetMenusAdapte
 
         if (position == 0)
         {
-            ((RecyclerView.LayoutParams)holder.dataBinding.getRoot().getLayoutParams()).leftMargin = ScreenUtils.getScreenWidth(mContext) / 10;
+            ((RecyclerView.LayoutParams)holder.dataBinding.getRoot().getLayoutParams()).leftMargin = ScreenUtils.getScreenWidth(mContext) / 12;
             ((RecyclerView.LayoutParams)holder.dataBinding.getRoot().getLayoutParams()).rightMargin = 0;
         } else if (position == getItemCount() - 1)
         {
             ((RecyclerView.LayoutParams)holder.dataBinding.getRoot().getLayoutParams()).leftMargin = 0;
-            ((RecyclerView.LayoutParams)holder.dataBinding.getRoot().getLayoutParams()).rightMargin = ScreenUtils.getScreenWidth(mContext) / 10;
+            ((RecyclerView.LayoutParams)holder.dataBinding.getRoot().getLayoutParams()).rightMargin = ScreenUtils.getScreenWidth(mContext) / 12;
         } else
         {
             ((RecyclerView.LayoutParams)holder.dataBinding.getRoot().getLayoutParams()).leftMargin = 0;
