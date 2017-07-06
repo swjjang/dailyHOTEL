@@ -698,6 +698,12 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
     }
 
     @Override
+    void purchaseCompleteStayOutbound(String transId, Map<String, String> params)
+    {
+
+    }
+
+    @Override
     void purchaseCompleteGourmet(String transId, Map<String, String> params)
     {
         String credit = params.get(AnalyticsManager.KeyType.USED_BOUNS);

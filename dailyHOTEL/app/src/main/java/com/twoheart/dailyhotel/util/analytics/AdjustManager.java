@@ -703,6 +703,21 @@ public class AdjustManager extends BaseAnalyticsManager
     }
 
     @Override
+    void purchaseCompleteStayOutbound(String transId, Map<String, String> params)
+    {
+        if (params == null)
+        {
+            return;
+        }
+
+        params.put(Key.SERVICE, AnalyticsManager.ValueType.STAY);
+
+        DailyAdjustEvent event = getPaymentEvent(EventToken.STAY_PURCHASE, params, true);
+
+        Adjust.trackEvent(event);
+    }
+
+    @Override
     void purchaseCompleteGourmet(String transId, Map<String, String> params)
     {
         if (params == null)
@@ -892,6 +907,7 @@ public class AdjustManager extends BaseAnalyticsManager
         // 결제시에만 들어가는 부분
         if (EventToken.STAY_FIRST_PURCHASE.equalsIgnoreCase(eventToken) == true //
             || EventToken.STAY_PURCHASE.equalsIgnoreCase(eventToken) == true //
+            || EventToken.
             || EventToken.GOURMET_FIRST_PURCHASE.equalsIgnoreCase(eventToken) == true //
             || EventToken.GOURMET_PURCHASE.equalsIgnoreCase(eventToken) == true)
         {

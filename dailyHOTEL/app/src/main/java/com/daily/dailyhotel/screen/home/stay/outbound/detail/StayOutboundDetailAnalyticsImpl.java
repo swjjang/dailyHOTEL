@@ -68,6 +68,8 @@ public class StayOutboundDetailAnalyticsImpl implements StayOutboundDetailPresen
         analyticsParam.grade = grade;
         analyticsParam.nrd = nrd;
         analyticsParam.showOriginalPrice = showOriginalPrice;
+        analyticsParam.rankingPosition = mAnalyticsParam.rankingPosition;
+        analyticsParam.rating = mAnalyticsParam.rating;
 
         return analyticsParam;
     }
