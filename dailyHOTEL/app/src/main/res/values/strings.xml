@@ -1313,7 +1313,7 @@
     <string name="label_stay_outbound_suggest_station">역</string>
     <string name="label_stay_outbound_suggest_airport">공항</string>
 
-    <string name="message_stay_outbound_suggest_empty_suggest">검색어를 변경하여 검색해 보세요.</string>
+    <string name="message_stay_outbound_suggest_empty_suggest">검색어를 변경하거나 영문으로 검색해 보세요.</string>
 
     <string name="label_people_select_person">투숙 인원 선택</string>
     <string name="label_people_adult">성인</string>
