@@ -75,7 +75,7 @@ public class StayReservationDetailLayout extends PlaceReservationDetailLayout
         mRecommendGourmetItemLayout = view.findViewById(R.id.recommendGourmetLayout);
 
         mRecommendGourmetCarouselLayout = (HomeCarouselLayout) view.findViewById(R.id.recommendGourmetCarouselLayout);
-        mRecommendGourmetCarouselLayout.findViewById(R.id.bottomDivider).setVisibility(View.GONE);
+//        mRecommendGourmetCarouselLayout.findViewById(R.id.bottomDivider).setVisibility(View.GONE);
 
         mRecommendGourmetCarouselLayout.setTitleText(R.string.label_booking_reservation_recommend_gourmet_title);
 

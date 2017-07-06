@@ -30,6 +30,7 @@ import com.daily.base.widget.DailyTextView;
 import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.repository.local.model.AnalyticsParam;
 import com.daily.dailyhotel.repository.remote.GourmetListRemoteImpl;
+import com.daily.dailyhotel.screen.booking.detail.map.PlaceBookingDetailMapActivity;
 import com.daily.dailyhotel.util.RecentlyPlaceUtil;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.twoheart.dailyhotel.R;
@@ -81,12 +82,16 @@ import retrofit2.Response;
 
 public class StayReservationDetailActivity extends PlaceReservationDetailActivity
 {
+    public static final int CODE_REQUEST_ACTIVITY_PLACE_BOOKING_DETAIL_MAP = 10000;
+
     StayReservationDetailNetworkController mNetworkController;
 
     private GourmetListRemoteImpl mGourmetListRemoteImpl;
 
     private View mViewByLongPress;
     private HomePlace mHomePlaceByLongPress;
+
+    private List<Gourmet> mRecommendGourmetList;
 
     public static Intent newInstance(Context context, int reservationIndex, String imageUrl, boolean isDeepLink)
     {
@@ -1129,7 +1134,34 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
         @Override
         public void onRecommendListItemViewAllClick()
         {
-            // TODO : 전체 보기 페이지 진입
+            if (isFinishing() == true || lockUiComponentAndIsLockUiComponent() == true)
+            {
+                return;
+            }
+
+            try
+            {
+                String title = getResources().getString(R.string.label_home_view_all);
+
+                GourmetBookingDay gourmetBookingDay = new GourmetBookingDay();
+                gourmetBookingDay.setVisitDay(mTodayDateTime.dailyDateTime);
+
+                ArrayList<Gourmet> gourmetList = new ArrayList<>();
+                if (mRecommendGourmetList != null && mRecommendGourmetList.size() > 0)
+                {
+                    gourmetList.addAll(mRecommendGourmetList);
+                }
+
+                Intent intent = PlaceBookingDetailMapActivity.newInstance( //
+                    StayReservationDetailActivity.this, title, gourmetBookingDay, gourmetList);
+
+                StayReservationDetailActivity.this.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PLACE_BOOKING_DETAIL_MAP);
+
+            } catch (Exception e)
+            {
+                ExLog.d(e.toString());
+            }
+
         }
 
         @Override
@@ -1372,6 +1404,7 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
                             @Override
                             public ArrayList<HomePlace> apply(@NonNull List<Gourmet> gourmets) throws Exception
                             {
+                                mRecommendGourmetList = gourmets;
                                 return convertHomePlaceList(gourmets);
                             }
                         }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<ArrayList<HomePlace>>()
@@ -1390,7 +1423,6 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
                             }
                         }));
                 }
-
 
             } catch (Exception e)
             {
