@@ -42,7 +42,7 @@ public class StayListFragment extends PlaceListFragment
     }
 
     @Override
-    protected PlaceListLayout getPlaceListLayout()
+    public PlaceListLayout getPlaceListLayout()
     {
         if (mStayListLayout == null)
         {

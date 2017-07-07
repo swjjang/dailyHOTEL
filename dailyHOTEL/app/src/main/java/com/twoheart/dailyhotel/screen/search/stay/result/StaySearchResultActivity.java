@@ -522,6 +522,66 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
         }
     }
 
+    @Override
+    protected void changeViewType()
+    {
+        if (isFinishing() == true || isLockUiComponent() == true)
+        {
+            return;
+        }
+
+        lockUI();
+
+        StaySearchResultListFragment currentFragment = (StaySearchResultListFragment) mPlaceSearchResultLayout.getCurrentPlaceListFragment();
+
+        if (currentFragment == null)
+        {
+            unLockUI();
+            return;
+        }
+
+        switch (mViewType)
+        {
+            case LIST:
+            {
+                // 고메 쪽에서 보여지는 메세지로 Stay의 경우도 동일한 처리가 필요해보여서 추가함
+                if (currentFragment.hasSalesPlace() == false)
+                {
+                    unLockUI();
+
+                    DailyToast.showToast(StaySearchResultActivity.this, R.string.toast_msg_solodout_area, Toast.LENGTH_SHORT);
+                    return;
+                }
+
+                mViewType = ViewType.MAP;
+
+                AnalyticsManager.getInstance(StaySearchResultActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_, AnalyticsManager.Action.CHANGE_VIEW, AnalyticsManager.Label._HOTEL_MAP, null);
+                break;
+            }
+
+            case MAP:
+            {
+                mViewType = ViewType.LIST;
+                break;
+            }
+        }
+
+        mPlaceSearchResultLayout.setOptionViewTypeView(mViewType);
+
+        // 현재 페이지 선택 상태를 Fragment에게 알려준다.
+        for (PlaceListFragment placeListFragment : mPlaceSearchResultLayout.getPlaceListFragment())
+        {
+            boolean isCurrentFragment = (placeListFragment == currentFragment);
+            placeListFragment.setVisibility(mViewType, isCurrentFragment);
+
+            ((StaySearchResultListFragment) placeListFragment).setIsDeepLink(mIsDeepLink);
+        }
+
+        refreshCurrentFragment(false);
+
+        unLockUI();
+    }
+
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // mOnEventListener
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -581,61 +641,9 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
         @Override
         public void onViewTypeClick()
         {
-            if (isFinishing() == true || isLockUiComponent() == true)
-            {
-                return;
-            }
+            mPlaceSearchResultLayout.showBottomLayout(false);
 
-            lockUI();
-
-            StaySearchResultListFragment currentFragment = (StaySearchResultListFragment) mPlaceSearchResultLayout.getCurrentPlaceListFragment();
-
-            if (currentFragment == null)
-            {
-                unLockUI();
-                return;
-            }
-
-            switch (mViewType)
-            {
-                case LIST:
-                {
-                    // 고메 쪽에서 보여지는 메세지로 Stay의 경우도 동일한 처리가 필요해보여서 추가함
-                    if (currentFragment.hasSalesPlace() == false)
-                    {
-                        unLockUI();
-
-                        DailyToast.showToast(StaySearchResultActivity.this, R.string.toast_msg_solodout_area, Toast.LENGTH_SHORT);
-                        return;
-                    }
-
-                    mViewType = ViewType.MAP;
-
-                    AnalyticsManager.getInstance(StaySearchResultActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_, AnalyticsManager.Action.CHANGE_VIEW, AnalyticsManager.Label._HOTEL_MAP, null);
-                    break;
-                }
-
-                case MAP:
-                {
-                    mViewType = ViewType.LIST;
-                    break;
-                }
-            }
-
-            mPlaceSearchResultLayout.setOptionViewTypeView(mViewType);
-
-            // 현재 페이지 선택 상태를 Fragment에게 알려준다.
-            for (PlaceListFragment placeListFragment : mPlaceSearchResultLayout.getPlaceListFragment())
-            {
-                boolean isCurrentFragment = (placeListFragment == currentFragment);
-                placeListFragment.setVisibility(mViewType, isCurrentFragment);
-
-                ((StaySearchResultListFragment) placeListFragment).setIsDeepLink(mIsDeepLink);
-            }
-
-            refreshCurrentFragment(false);
-
-            unLockUI();
+            changeViewType();
         }
 
         @Override
