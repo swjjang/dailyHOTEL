@@ -37,6 +37,7 @@ import com.twoheart.dailyhotel.util.DailyDeepLink;
 import com.twoheart.dailyhotel.util.DailyExternalDeepLink;
 import com.twoheart.dailyhotel.util.DailyInternalDeepLink;
 import com.twoheart.dailyhotel.util.DailyPreference;
+import com.twoheart.dailyhotel.util.DailyRemoteConfigPreference;
 import com.twoheart.dailyhotel.util.DailyUserPreference;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Action;
@@ -160,7 +161,7 @@ public class MyDailyFragment extends BaseMenuNavigationFragment implements Const
                     onStartEditProfile(externalDeepLink);
                 } else if (externalDeepLink.isStampView() == true)
                 {
-                    if (DailyPreference.getInstance(context).isRemoteConfigStampEnabled() == true)
+                    if (DailyRemoteConfigPreference.getInstance(context).isRemoteConfigStampEnabled() == true)
                     {
                         mOnEventListener.startStamp();
                     }
@@ -179,7 +180,7 @@ public class MyDailyFragment extends BaseMenuNavigationFragment implements Const
 
                 if (internalDeepLink.isStampView() == true)
                 {
-                    if (DailyPreference.getInstance(context).isRemoteConfigStampEnabled() == true)
+                    if (DailyRemoteConfigPreference.getInstance(context).isRemoteConfigStampEnabled() == true)
                     {
                         mOnEventListener.startStamp();
                     }
