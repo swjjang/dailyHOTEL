@@ -83,6 +83,7 @@
     <string name="label_product_detail">상품 상세</string>
     <string name="label_office_hours">이용시간</string>
     <string name="label_checklist">확인사항</string>
+    <string name="label_reservation_conditions">예약조건</string>
     <string name="label_truereview">트루리뷰</string>
     <string name="label_password">비밀번호</string>
     <string name="label_daily_truereview">데일리 트루리뷰</string>
@@ -1245,6 +1246,7 @@
     <string name="label_gourmet_product_detail_reservation">예약하기</string>
     <string name="label_gourmet_product_detail_menu_description">메뉴 설명</string>
     <string name="label_gourmet_product_lastorder">(라스트 오더 %1$s)</string>
+    <string name="label_gourmet_product_detail_title">상품 상세</string>
 
 
     <!-- Happy Talk -->

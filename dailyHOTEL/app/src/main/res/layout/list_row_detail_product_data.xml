@@ -20,7 +20,8 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             fresco:actualImageScaleType="centerCrop"
-            fresco:overlayImage="@drawable/shape_fillrect_l000000_a10"/>
+            fresco:roundingBorderWidth="1dp"
+            fresco:roundingBorderColor="@color/black_a10"/>
 
         <com.daily.base.widget.DailyTextView
             android:id="@+id/productNameTextView"

@@ -14,6 +14,7 @@ import com.twoheart.dailyhotel.R;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by sheldon
@@ -25,6 +26,7 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
 
     private List<GourmetMenu> mGourmetMenuList;
     private int mIndex;
+    private int mCenterPosition = -1;
 
     public interface GourmetMenusAnalyticsInterface extends BaseAnalyticsInterface
     {
@@ -89,6 +91,8 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
     public void onPostCreate()
     {
         getViewInterface().setGourmetMenus(mGourmetMenuList, mIndex);
+
+        onScrolled(mIndex);
     }
 
     @Override
@@ -173,5 +177,18 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
         intent.putExtra(GourmetMenusActivity.INTENT_EXTRA_DATA_INDEX, index);
         setResult(Activity.RESULT_OK, intent);
         onBackClick();
+    }
+
+    @Override
+    public void onScrolled(int position)
+    {
+        if (mCenterPosition == position)
+        {
+            return;
+        }
+
+        mCenterPosition = position;
+
+        getViewInterface().setSubTitle(String.format(Locale.KOREA, "%d / %d", position + 1, mGourmetMenuList.size()));
     }
 }

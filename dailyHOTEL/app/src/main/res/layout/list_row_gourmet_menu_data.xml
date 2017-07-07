@@ -2,19 +2,18 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
-        xmlns:dailyLineIndicator="http://schemas.android.com/apk/res-auto"
         xmlns:fresco="http://schemas.android.com/apk/res-auto">
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@drawable/product_detail_card">
 
         <android.support.v4.widget.NestedScrollView
             android:id="@+id/nestedScrollView"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginBottom="20dp"
-            android:background="@color/white"
             app:layout_constraintBottom_toTopOf="@+id/bottomBarLineView"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
@@ -38,165 +37,89 @@
                         app:layout_constraintDimensionRatio="H,4:3"
                         app:layout_constraintLeft_toLeftOf="parent"
                         app:layout_constraintRight_toRightOf="parent"
-                        fresco:actualImageScaleType="centerCrop"/>
+                        fresco:actualImageScaleType="centerCrop"
+                        fresco:roundBottomLeft="false"
+                        fresco:roundBottomRight="false"
+                        fresco:roundTopLeft="true"
+                        fresco:roundTopRight="true"
+                        fresco:roundedCornerRadius="5dp"/>
 
                     <View
-                        android:layout_width="0dp"
-                        android:layout_height="60dp"
-                        android:background="@drawable/img_detail_bottom_gradient"
-                        app:layout_constraintBottom_toBottomOf="@id/simpleDraweeView"
-                        app:layout_constraintLeft_toLeftOf="parent"
-                        app:layout_constraintRight_toRightOf="parent"/>
-
-                    <View
-                        android:id="@+id/viewPagerBottomLine"
-                        android:layout_width="0dp"
-                        android:layout_height="1dp"
-                        app:layout_constraintLeft_toLeftOf="parent"
-                        app:layout_constraintRight_toRightOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/simpleDraweeView"/>
-
-                    <com.twoheart.dailyhotel.widget.DailyLineIndicator
-                        android:id="@+id/viewpagerIndicator"
-                        android:layout_width="0dp"
-                        android:layout_height="2dp"
-                        android:layout_marginBottom="12dp"
-                        android:layout_marginLeft="15dp"
-                        android:layout_marginRight="15dp"
-                        app:layout_constraintBottom_toTopOf="@id/viewPagerBottomLine"
-                        app:layout_constraintLeft_toLeftOf="parent"
-                        app:layout_constraintRight_toRightOf="parent"
-                        dailyLineIndicator:indicatorBackgroundColor="@color/white_a40"
-                        dailyLineIndicator:indicatorColor="@color/white"/>
-
-                    <RelativeLayout
-                        android:id="@+id/descriptionLayout"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_centerHorizontal="true"
+                        android:id="@+id/moreIconView"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
                         android:layout_marginBottom="10dp"
-                        android:layout_marginLeft="15dp"
-                        android:layout_marginRight="15dp"
-                        app:layout_constraintBottom_toTopOf="@id/viewpagerIndicator"
-                        app:layout_constraintLeft_toLeftOf="parent"
-                        app:layout_constraintRight_toRightOf="parent">
-
-                        <View
-                            android:id="@+id/moreIconView"
-                            android:layout_width="30dp"
-                            android:layout_height="30dp"
-                            android:layout_alignParentBottom="true"
-                            android:layout_alignParentRight="true"
-                            android:background="@drawable/detail_ic_more_img"/>
-
-                        <com.daily.base.widget.DailyTextView
-                            android:id="@+id/descriptionTextView"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentBottom="true"
-                            android:layout_centerHorizontal="true"
-                            android:layout_marginLeft="72dp"
-                            android:layout_marginRight="72dp"
-                            android:background="@drawable/background_image_information_detail"
-                            android:ellipsize="end"
-                            android:gravity="center"
-                            android:maxLines="2"
-                            android:paddingBottom="7dp"
-                            android:paddingLeft="8dp"
-                            android:paddingRight="8dp"
-                            android:paddingTop="7dp"
-                            android:textColor="@color/white"
-                            android:textSize="12dp"
-                            android:visibility="invisible"/>
-                    </RelativeLayout>
+                        android:layout_marginRight="10dp"
+                        android:background="@drawable/detail_ic_more_img"
+                        app:layout_constraintBottom_toBottomOf="@id/simpleDraweeView"
+                        app:layout_constraintRight_toRightOf="@id/simpleDraweeView"/>
                 </android.support.constraint.ConstraintLayout>
 
                 <com.daily.base.widget.DailyTextView
                     android:id="@+id/productNameTextView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="15dp"
-                    android:layout_marginRight="15dp"
-                    android:gravity="center_vertical"
-                    android:minHeight="59dp"
-                    android:paddingBottom="16dp"
-                    android:paddingTop="16dp"
+                    android:layout_marginLeft="12dp"
+                    android:layout_marginRight="12dp"
+                    android:layout_marginTop="13dp"
                     android:textColor="@color/default_text_c323232"
-                    android:textSize="18dp"
+                    android:textSize="17dp"
                     dailyFont:style="Medium"/>
 
-                <LinearLayout
-                    android:id="@+id/defaultInformationTopLine"
+                <View
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:background="@color/default_line_cf0f0f0"/>
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="10dp"
-                        android:background="@color/default_background"/>
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:background="@color/default_line_cf0f0f0"/>
-                </LinearLayout>
+                    android:layout_height="1px"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="12dp"
+                    android:layout_marginTop="12dp"
+                    android:background="@color/default_line_cf0f0f0"/>
 
                 <RelativeLayout
                     android:id="@+id/benefitLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="13dp"
-                    android:layout_marginRight="15dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="12dp"
+                    android:layout_marginTop="10dp"
                     android:minHeight="44dp">
 
                     <ImageView
                         android:id="@+id/benefitImageView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:src="@drawable/ic_detail_item_02_benefit_02"/>
+                        app:srcCompat="@drawable/vector_ic_detail_item_02_benefit"/>
 
                     <com.daily.base.widget.DailyTextView
                         android:id="@+id/benefitTextView"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="12dp"
-                        android:layout_marginLeft="9dp"
-                        android:layout_marginTop="12dp"
+                        android:layout_marginLeft="6dp"
                         android:layout_toRightOf="@id/benefitImageView"
                         android:freezesText="true"
                         android:textColor="@color/default_text_cb70038"
                         android:textSize="13dp"/>
 
                     <View
-                        android:id="@+id/benefitLineView"
                         android:layout_width="match_parent"
                         android:layout_height="1px"
-                        android:layout_alignParentBottom="true"
-                        android:layout_marginBottom="10dp"
-                        android:layout_marginLeft="1dp"
-                        android:background="@color/default_line_cdcdcdd"/>
+                        android:layout_marginTop="12dp"
+                        android:background="@color/default_line_cf0f0f0"/>
                 </RelativeLayout>
 
                 <LinearLayout
                     android:id="@+id/timeLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="12dp"
-                    android:layout_marginRight="15dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="12dp"
                     android:layout_marginTop="10dp"
                     android:orientation="vertical">
 
                     <com.daily.base.widget.DailyTextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:drawablePadding="10dp"
+                        android:drawablePadding="6dp"
                         android:freezesText="true"
                         android:gravity="center_vertical"
                         android:text="@string/label_office_hours"
@@ -208,7 +131,7 @@
                         android:id="@+id/timeTextView"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="30dp"
+                        android:layout_marginLeft="26dp"
                         android:freezesText="true"
                         android:textColor="@color/default_text_c323232"
                         android:textSize="13dp"/>
@@ -218,15 +141,15 @@
                     android:id="@+id/checkLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="12dp"
-                    android:layout_marginRight="15dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="12dp"
                     android:layout_marginTop="10dp"
                     android:orientation="vertical">
 
                     <com.daily.base.widget.DailyTextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:drawablePadding="10dp"
+                        android:drawablePadding="6dp"
                         android:freezesText="true"
                         android:gravity="center_vertical"
                         android:text="@string/label_checklist"
@@ -238,45 +161,47 @@
                         android:id="@+id/checkTextView"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="30dp"
+                        android:layout_marginLeft="26dp"
                         android:freezesText="true"
-                        android:textColor="@color/default_text_c323232"
+                        android:textColor="@color/default_text_cb70038"
                         android:textSize="13dp"/>
                 </LinearLayout>
 
-                <View
-                    android:id="@+id/bottomMarginView"
-                    android:layout_width="match_parent"
-                    android:layout_height="20dp"
-                    android:background="@color/white"/>
-
                 <LinearLayout
-                    android:id="@+id/menuInformationTopLine"
+                    android:id="@+id/conditionLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="12dp"
+                    android:layout_marginTop="10dp"
                     android:orientation="vertical">
 
-                    <View
+                    <com.daily.base.widget.DailyTextView
                         android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:background="@color/default_line_cf0f0f0"/>
+                        android:layout_height="wrap_content"
+                        android:drawablePadding="6dp"
+                        android:freezesText="true"
+                        android:gravity="center_vertical"
+                        android:text="@string/label_reservation_conditions"
+                        android:textColor="@color/default_text_c929292"
+                        android:textSize="13dp"
+                        app:drawableCompatLeft="@drawable/vector_ic_detail_item_04_condition"/>
 
-                    <View
+                    <com.daily.base.widget.DailyTextView
+                        android:id="@+id/conditionTextView"
                         android:layout_width="match_parent"
-                        android:layout_height="10dp"
-                        android:background="@color/default_background"/>
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:background="@color/default_line_cf0f0f0"/>
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="26dp"
+                        android:freezesText="true"
+                        android:textColor="@color/default_text_c323232"
+                        android:textSize="13dp"/>
                 </LinearLayout>
 
                 <com.daily.base.widget.DailyTextView
                     android:id="@+id/menuTextView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="15dp"
+                    android:layout_marginLeft="12dp"
                     android:layout_marginTop="20dp"
                     android:text="@string/label_gourmet_product_detail_menu_description"
                     android:textColor="@color/default_text_c323232"
@@ -287,10 +212,9 @@
                     android:id="@+id/menuSummaryTextView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="5dp"
-                    android:layout_marginLeft="15dp"
-                    android:layout_marginRight="15dp"
-                    android:layout_marginTop="15dp"
+                    android:layout_marginLeft="12dp"
+                    android:layout_marginRight="12dp"
+                    android:layout_marginTop="12dp"
                     android:background="@drawable/shape_fillrect_ld1d1d1_bfafafb_r1"
                     android:paddingBottom="16dp"
                     android:paddingLeft="10dp"
@@ -303,29 +227,19 @@
                     android:id="@+id/menuDetailLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginLeft="12dp"
+                    android:layout_marginRight="12dp"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginBottom="20dp"
                     android:orientation="vertical"/>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="10dp"
-                    android:background="@color/white"/>
             </LinearLayout>
         </android.support.v4.widget.NestedScrollView>
 
         <View
             android:id="@+id/bottomBarLineView"
             android:layout_width="0dp"
-            android:layout_height="@dimen/gradient_1dp_line_height_under_21"
+            android:layout_height="1dp"
             android:background="@color/default_line_ce7e7e7"
-            app:layout_constraintBottom_toTopOf="@+id/bottomBarLayout"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"/>
-
-        <View
-            android:layout_width="0dp"
-            android:layout_height="@dimen/gradient_2dp_line_height_over_21"
-            android:background="@drawable/shape_gradient_bottom_up"
             app:layout_constraintBottom_toTopOf="@+id/bottomBarLayout"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"/>
@@ -333,9 +247,7 @@
         <RelativeLayout
             android:id="@+id/bottomBarLayout"
             android:layout_width="0dp"
-            android:layout_height="64dp"
-            android:background="@color/white"
-            android:elevation="8dp"
+            android:layout_height="58dp"
             android:padding="10dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -346,16 +258,15 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="5dp"
+                android:layout_marginLeft="1dp"
                 android:textColor="@color/default_text_cb70038"
-                android:textSize="18dp"/>
+                android:textSize="16dp"/>
 
             <com.daily.base.widget.DailyTextView
                 android:id="@+id/priceTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_marginBottom="10dp"
                 android:layout_marginLeft="4dp"
                 android:layout_toRightOf="@id/discountPriceTextView"
                 android:textColor="@color/default_text_cc5c5c5"
@@ -372,7 +283,7 @@
                 android:paddingRight="20dp"
                 android:text="@string/label_gourmet_product_detail_reservation"
                 android:textColor="@color/white"
-                android:textSize="17dp"
+                android:textSize="14dp"
                 dailyFont:style="Medium"/>
         </RelativeLayout>
 

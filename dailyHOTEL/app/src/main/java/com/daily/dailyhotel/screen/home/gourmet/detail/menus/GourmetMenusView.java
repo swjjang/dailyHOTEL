@@ -5,7 +5,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.LinearSmoothScroller;
 import android.support.v7.widget.PagerSnapHelper;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SnapHelper;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.view.View;
@@ -25,6 +24,8 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
     public interface OnEventListener extends OnBaseEventListener
     {
         void onReservationClick(int index);
+
+        void onScrolled(int position);
     }
 
     public GourmetMenusView(BaseActivity baseActivity, GourmetMenusView.OnEventListener listener)
@@ -43,13 +44,36 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
         viewDataBinding.recyclerView.setLayoutManager(new ZoomCenterLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
         EdgeEffectColor.setEdgeGlowColor(viewDataBinding.recyclerView, getColor(R.color.default_over_scroll_edge));
 
-        SnapHelper snapHelper = new PagerSnapHelper();
+        PagerSnapHelper snapHelper = new PagerSnapHelper();
         snapHelper.attachToRecyclerView(viewDataBinding.recyclerView);
+
+        viewDataBinding.recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener()
+        {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy)
+            {
+                super.onScrolled(recyclerView, dx, dy);
+
+                View view = snapHelper.findSnapView(viewDataBinding.recyclerView.getLayoutManager());
+                getEventListener().onScrolled(viewDataBinding.recyclerView.getChildAdapterPosition(view));
+            }
+        });
     }
 
     @Override
     public void setToolbarTitle(String title)
     {
+    }
+
+    @Override
+    public void setSubTitle(String text)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        getViewDataBinding().menuTextView.setText(text);
     }
 
     @Override
@@ -83,7 +107,6 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
 
         linearSmoothScroller.setTargetPosition(position);
         getViewDataBinding().recyclerView.getLayoutManager().startSmoothScroll(linearSmoothScroller);
-        //        getViewDataBinding().recyclerView.smoothScrollToPosition(position);
     }
 
     class ZoomCenterLayoutManager extends LinearLayoutManager

@@ -59,7 +59,7 @@ public class DailyExternalDeepLink extends DailyDeepLink
     private static final String PARAM_V7_NOTICE_INDEX = "ni"; // 공지사항 인덱스
 
     //    private static final String PARAM_V9_QUERY = "qr"; // 검색 쿼리
-    private static final String PARAM_V9_OPEN_TICKEt_INDEX = "oti"; // 스테이/고메 메뉴 오픈시에 해당 인덱스
+    private static final String PARAM_V9_OPEN_TICKET_INDEX = "oti"; // 스테이/고메 메뉴 오픈시에 해당 인덱스
     private static final String PARAM_V9_QUERY_TYPE = "qt"; // 쿼리 방식
     //    private static final String PARAM_V9_TITLE_IMAGE_URL = "tiu"; // 타이틀 이미지 URL
 
@@ -118,7 +118,7 @@ public class DailyExternalDeepLink extends DailyDeepLink
     private static final String HOME_V12_RECOMMENDATION_PLACE_LIST = "hrpl"; // 홈의 데일리 추천 -> 상세 리스트
 
 
-    private static final String PARAM_V13_PRODUCT_INDEX = "pdi"; // 상품 인덱스.
+    //    private static final String PARAM_V13_PRODUCT_INDEX = "pdi"; // 상품 인덱스.
 
     private static final String STAMP_V14 = "stamp"; // 스탬프.
 
@@ -229,27 +229,27 @@ public class DailyExternalDeepLink extends DailyDeepLink
     // Version 13
     ///////////////////////////////////////////////////////////////////////////////////
 
-    public int getProductIndex()
-    {
-        int index = 0;
-
-        if (mVersionCode >= 9)
-        {
-            String value = mParamsMap.get(PARAM_V13_PRODUCT_INDEX);
-
-            if (DailyTextUtils.isTextEmpty(value) == false)
-            {
-                try
-                {
-                    index = Integer.parseInt(value);
-                } catch (NumberFormatException e)
-                {
-                }
-            }
-        }
-
-        return index;
-    }
+    //    public int getProductIndex()
+    //    {
+    //        int index = 0;
+    //
+    //        if (mVersionCode >= 9)
+    //        {
+    //            String value = mParamsMap.get(PARAM_V13_PRODUCT_INDEX);
+    //
+    //            if (DailyTextUtils.isTextEmpty(value) == false)
+    //            {
+    //                try
+    //                {
+    //                    index = Integer.parseInt(value);
+    //                } catch (NumberFormatException e)
+    //                {
+    //                }
+    //            }
+    //        }
+    //
+    //        return index;
+    //    }
 
     ///////////////////////////////////////////////////////////////////////////////////
     // Version 12
@@ -399,7 +399,7 @@ public class DailyExternalDeepLink extends DailyDeepLink
 
         if (mVersionCode >= 9)
         {
-            String value = mParamsMap.get(PARAM_V9_OPEN_TICKEt_INDEX);
+            String value = mParamsMap.get(PARAM_V9_OPEN_TICKET_INDEX);
 
             if (DailyTextUtils.isTextEmpty(value) == false)
             {

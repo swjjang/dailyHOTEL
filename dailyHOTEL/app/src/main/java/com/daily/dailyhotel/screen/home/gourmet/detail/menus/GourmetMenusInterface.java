@@ -7,5 +7,7 @@ import java.util.List;
 
 public interface GourmetMenusInterface extends BaseDialogViewInterface
 {
+    void setSubTitle(String text);
+
     void setGourmetMenus(List<GourmetMenu> gourmetMenuList, int position);
 }

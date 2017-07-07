@@ -125,7 +125,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
      * @param isShowCalendar
      * @return
      */
-    public static Intent newInstance(Context context, GourmetBookingDay gourmetBookingDay, int gourmetIndex, int productIndex//
+    public static Intent newInstance(Context context, GourmetBookingDay gourmetBookingDay, int gourmetIndex//
         , boolean isShowCalendar, boolean isShowVR, boolean isUsedMultiTransition)
     {
         Intent intent = new Intent(context, GourmetDetailActivity.class);
@@ -133,7 +133,6 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         intent.putExtra(NAME_INTENT_EXTRA_DATA_TYPE, "share");
         intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, gourmetBookingDay);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEIDX, gourmetIndex);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_PRODUCTINDEX, productIndex);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_CALENDAR_FLAG, isShowCalendar);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_VR_FLAG, isShowVR);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_ENTRY_INDEX, -1);
@@ -198,8 +197,6 @@ public class GourmetDetailActivity extends PlaceDetailActivity
             mIsDeepLink = true;
             mDontReloadAtOnResume = false;
             mIsTransitionEnd = true;
-
-            mProductDetailIndex = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_PRODUCTINDEX, 0);
 
             initLayout(null, null, false);
         } else
@@ -800,17 +797,6 @@ public class GourmetDetailActivity extends PlaceDetailActivity
             checkGourmetTicket(mIsDeepLink, gourmetDetail, SKIP_CHECK_DISCOUNT_PRICE_VALUE, mIsListSoldOut);
         }
 
-        // 딥링크로 메뉴 오픈 요청
-        if (mIsDeepLink == true && mProductDetailIndex > 0 && gourmetDetail.getProductList().size() > 0)
-        {
-            if (mPlaceDetailLayout != null)
-            {
-                Intent intent = GourmetProductListActivity.newInstance(GourmetDetailActivity.this //
-                    , gourmetBookingDay, gourmetDetail, mProductDetailIndex, mAnalyticsParam);
-                startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_GOURMET_PRODUCT_LIST);
-            }
-        }
-
         if (DailyPreference.getInstance(this).getTrueVRSupport() > 0)
         {
             if (mTrueVRParamsList != null && mTrueVRParamsList.size() > 0)
@@ -843,7 +829,6 @@ public class GourmetDetailActivity extends PlaceDetailActivity
             }
         }
 
-        mProductDetailIndex = 0;
         mIsDeepLink = false;
         mInitializeStatus = STATUS_INITIALIZE_COMPLETE;
     }
