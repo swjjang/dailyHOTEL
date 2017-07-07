@@ -12,7 +12,6 @@ import android.view.View;
 import com.daily.base.BaseActivity;
 import com.daily.base.BaseDialogView;
 import com.daily.base.OnBaseEventListener;
-import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
 import com.daily.dailyhotel.entity.GourmetMenu;
 import com.twoheart.dailyhotel.R;
@@ -119,7 +118,7 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
     @Override
     public void onClick(View v)
     {
-        switch(v.getId())
+        switch (v.getId())
         {
             case R.id.closeImageView:
                 getEventListener().onCloseClick();
@@ -129,23 +128,37 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
 
     class ZoomCenterLayoutManager extends LinearLayoutManager
     {
-        private static final float MIN_SCALE = 0.95f;
+        private static final float MIN_SCALE = 0.90f;
         private static final float AMOUNT = 1.0f - MIN_SCALE; // 1.0f - AMOUNT = MIN_SCALE
         private static final float DISTANCE = 0.75f;
+        private int DP_10;
+        private int STANDARD_X;
 
         public ZoomCenterLayoutManager(Context context)
         {
             super(context);
+
+            initialize(context);
         }
 
         public ZoomCenterLayoutManager(Context context, int orientation, boolean reverseLayout)
         {
             super(context, orientation, reverseLayout);
+
+            initialize(context);
         }
 
         public ZoomCenterLayoutManager(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes)
         {
             super(context, attrs, defStyleAttr, defStyleRes);
+
+            initialize(context);
+        }
+
+        private void initialize(Context context)
+        {
+            DP_10 = ScreenUtils.dpToPx(context, 10);
+            STANDARD_X = ScreenUtils.getScreenWidth(getContext()) / 12;
         }
 
         @Override
@@ -168,32 +181,27 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
                 childView.setScaleX(scale);
                 childView.setScaleY(scale);
 
-//                float childMidPoint = childView.getX() + childView.getWidth();
-//
-//                if (childMidPoint > midpoint)
-//                {
-//                    final int DP_5 = ScreenUtils.dpToPx(getContext(), 5);
-//
-//                    float distance = DP_5 * (1.0f - (scale - MIN_SCALE) * MIN_SCALE / AMOUNT);
-//
-//                    childView.setTranslationX(-distance);
-//                } else if (childMidPoint < midpoint)
-//                {
-//                    final int DP_5 = ScreenUtils.dpToPx(getContext(), 5);
-//
-//                    float distance = DP_5 * (1.0f - (scale - MIN_SCALE) * MIN_SCALE / AMOUNT);
-//
-//                    childView.setTranslationX(distance);
-//                } else
-//                {
-//
-//                }
+                float childX = childView.getX();
+                float vectorValue = (1.0f - scale) / AMOUNT;
+
+                final float distance = DP_10 * vectorValue;
+
+                if (childX > STANDARD_X)
+                {
+                    childView.setTranslationX(-distance);
+                } else if (childX < STANDARD_X)
+                {
+                    childView.setTranslationX(distance);
+                } else
+                {
+                    childView.setTranslationX(0.0f);
+                }
 
                 View blurView = (View) childView.getTag(R.id.blurView);
 
                 if (blurView != null)
                 {
-                    blurView.setAlpha(1.0f - (scale - MIN_SCALE) * MIN_SCALE / AMOUNT);
+                    blurView.setAlpha(vectorValue);
                 }
             }
 
