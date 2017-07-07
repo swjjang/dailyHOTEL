@@ -166,6 +166,12 @@ public class FirebaseManager extends BaseAnalyticsManager
     }
 
     @Override
+    void purchaseCompleteStayOutbound(String transId, Map<String, String> params)
+    {
+
+    }
+
+    @Override
     void purchaseCompleteGourmet(String transId, Map<String, String> params)
     {
     }

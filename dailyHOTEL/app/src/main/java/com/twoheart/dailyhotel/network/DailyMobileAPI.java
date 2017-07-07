@@ -48,6 +48,7 @@ import com.twoheart.dailyhotel.network.model.TrueVRParams;
 import com.twoheart.dailyhotel.screen.common.HappyTalkCategoryDialog;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Crypto;
+import com.twoheart.dailyhotel.util.DailyPreference;
 
 import org.json.JSONObject;
 
@@ -62,6 +63,7 @@ public class DailyMobileAPI implements IDailyNetwork
 {
     private static DailyMobileAPI mInstance;
     private DailyMobileService mDailyMobileService;
+    private Context mContext;
 
     public static synchronized DailyMobileAPI getInstance(Context context)
     {
@@ -75,6 +77,8 @@ public class DailyMobileAPI implements IDailyNetwork
 
     private DailyMobileAPI(Context context)
     {
+        mContext = context;
+
         mDailyMobileService = RetrofitHttpClient.getInstance(context).getService();
     }
 
@@ -1323,7 +1327,7 @@ public class DailyMobileAPI implements IDailyNetwork
 
     public Observable<BaseDto<SuggestsData>> getSuggestsByStayOutbound(String keyword)
     {
-        final String URL = Setting.getOutboundServerUrl();
+        final String URL = Constants.DEBUG ? DailyPreference.getInstance(mContext).getBaseOutBoundUrl() : Setting.getOutboundServerUrl();
 
         final String API = Constants.UNENCRYPTED_URL ? "api/v1/suggests"//
             : "MTEkNDQkMzckNDQkMyQxMiQzOCQ0NCQ3JDQwJDEzJDUyJDIzJDQwJDQ4JDIxJA==$Q0ZUCMzDg1RjYULXwOTcyMMjTI4RkI3NUFEOUNGRjOgSN3BMkPZSFNzXTAQ=$";
@@ -1338,7 +1342,7 @@ public class DailyMobileAPI implements IDailyNetwork
 
     public Observable<BaseDto<StayOutboundsData>> getStayOutboundList(JSONObject jsonObject)
     {
-        final String URL = Setting.getOutboundServerUrl();
+        final String URL = Constants.DEBUG ? DailyPreference.getInstance(mContext).getBaseOutBoundUrl() : Setting.getOutboundServerUrl();
 
         final String API = Constants.UNENCRYPTED_URL ? "api/v1/outbound/geographicalid-find-hotels"//
             : "MzYkMTYkMTAzJDkxJDE4JDUxJDMyJDEkMTE3JDc0JDExMSQxMjkkMzQkMTIyJDEwJDExNCQ=$QLjEzMUYzQHUYzNjlDJNFjIxNkI3NUU0ODCXY2MTY5VRjA4MUY2RkJELODlGQTcwRkI3NkIzODZGJMDBFM0I1Qzg4MDY2QzVFMWUEwQkNGNUQ1NXUVPI3NEExQWzWY3QzQ1QzOE1NUVEREFC$";
@@ -1349,7 +1353,7 @@ public class DailyMobileAPI implements IDailyNetwork
 
     public Observable<BaseDto<StayOutboundDetailData>> getStayOutboundDetail(int index, JSONObject jsonObject)
     {
-        final String URL = Setting.getOutboundServerUrl();
+        final String URL = Constants.DEBUG ? DailyPreference.getInstance(mContext).getBaseOutBoundUrl() : Setting.getOutboundServerUrl();
 
         final String API = Constants.UNENCRYPTED_URL ? "api/v1/outbound/hotels/{hotelId}"//
             : "MjIkOTkkMTA0JDEyOCQyMyQ0NiQyNSQ0MCQyNCQxMTYkMTMkMjckNjQkNDkkMCQ5MyQ=$FMUFFOEQzM0Y4NL0E5NkQ2ODVLPUPDzQkY0MzVBNTA5REUQzQTAI1FRjhDRDQ5MDJGJQzRDRThCQzBBREVEMjdCOEQ4NDIMwQjA4NEY5NkU4NTEQ1Q0OVDRjlDVQTUyRjQ4MjhCNEY5QQjNF$";
@@ -1367,7 +1371,7 @@ public class DailyMobileAPI implements IDailyNetwork
 
     public Observable<BaseDto<StayOutboundPaymentData>> getStayOutboundPayment(int index, JSONObject jsonObject)
     {
-        final String URL = Setting.getOutboundServerUrl();
+        final String URL = Constants.DEBUG ? DailyPreference.getInstance(mContext).getBaseOutBoundUrl() : Setting.getOutboundServerUrl();
 
         final String API = Constants.UNENCRYPTED_URL ? "api/v1/outbound/hotels/{hotelId}/room-reservation-saleinfos"//
             : "MTcxJDEzNSQxMzYkNTYkMzIkMjQkMTI3JDE3OCQ3MyQ2NyQ2MyQ0MCQxMzckNzgkMTgxJDEzOSQ=$RTM0Q0Q1ODFGQjVCOTc5QzlCGMUNGQzJBDRkI2QjSI5OTQyMjQyQ0ZBMjAwBNkMwYMkJCAMEIxMjCZQFQkQyQjVCRTJEQjBFNzIxMzBEMjZFMDk1N0QxOEY4QUUyNzg3NDgzJOTEyNGIDQ1ODRERBMkU4MzIwMTcyMTJDMTg3QjAyN0M2N0I1RZUUVA=$";
@@ -1397,7 +1401,7 @@ public class DailyMobileAPI implements IDailyNetwork
 
     public Observable<BaseDto<PaymentResultData>> getPaymentTypeEasy(int index, JSONObject jsonObject)
     {
-        final String URL = Setting.getOutboundServerUrl();
+        final String URL = Constants.DEBUG ? DailyPreference.getInstance(mContext).getBaseOutBoundUrl() : Setting.getOutboundServerUrl();
 
         final String API = Constants.UNENCRYPTED_URL ? "api/v1/outbound/hotels/{hotelId}/room-reservation-payments/oneclick"//
             : "MTU2JDEyNyQxNTAkMTYyJDQkMjIkMTc0JDE2NSQyNCQxNDMkMTkwJDU4JDQ2JDIyNCQyMyQxMDYk$OUM2KNjQyOEY1QzQxRTUzQQBzVczQTFEQjBGRjU1ODY2NDIQ0QjM0NTc4RjYR0NUYxNTU4MDIyMUMzRUQ2RDYyQzgyRkYzQTBDQ0Y3MzNGIRTA2RUNCRTlEQUNEODMxNzg2QkNSGMkFFMjIwRDMK1NUI1NTg5QOUI5RDExWODkHCzMTgwMDA2JRTY2QzQ5OUE3DOTY1MDE3RTkwREMzNDU2NDYwNTE3NTcXxRQ==$";
@@ -1411,7 +1415,7 @@ public class DailyMobileAPI implements IDailyNetwork
 
     public Observable<BaseDto<PaymentResultData>> getPaymentTypeBonus(int index, JSONObject jsonObject)
     {
-        final String URL = Setting.getOutboundServerUrl();
+        final String URL = Constants.DEBUG ? DailyPreference.getInstance(mContext).getBaseOutBoundUrl() : Setting.getOutboundServerUrl();
 
         final String API = Constants.UNENCRYPTED_URL ? "api/v1/outbound/hotels/{hotelId}/room-reservation-payments/bonus"//
             : "MTE5JDI0JDg1JDI1JDcyJDE5JDckNTUkNiQxOTckMTE3JDYyJDE0MiQ2MyQxNTIkODgk$OTdFMECFHDNDY2MkQ1NENQGQTNEYPQTg5RTczNjQwRjA4RjZCMjZBRkURzREI4DSOTREQ0M3Mjc4OEUYyNDFERjUX4ODg5OODI1NTlENUY0RDEwQTg2NzVENJzgyM0IwOTAC3NUUzNDM2NjVJGQzkxODkY5Q0E2NzEyOUQ0QzdBRTlEMDU2RUYzMDU0RUYyQTI5OTE2NDQ5FREVFOTk0QTM0QzQ2MjQxNTA0Ng==$";
@@ -1429,7 +1433,7 @@ public class DailyMobileAPI implements IDailyNetwork
 
     public Observable<BaseListDto<BookingData>> getStayOutboundBookingList()
     {
-        final String URL = Setting.getOutboundServerUrl();
+        final String URL = Constants.DEBUG ? DailyPreference.getInstance(mContext).getBaseOutBoundUrl() : Setting.getOutboundServerUrl();
 
         final String API = Constants.UNENCRYPTED_URL ? "api/v1/outbound/hotel-reservations"//
             : "MTckMzAkNDUkNjMkMTAzJDExMSQ1JDAkNiQzJDEyJDEyMSQ5NiQxMzQkMzMkNTUk$ARUSFDMON0VCWNkYxMkZGQZkI0NDQ2N0QX2MYTNDMDQ0QUUxRDEDzMELRBNEEyMjY5NUI0XQjA1NEQ4RDQ3RTAzNjQ5QzJEOUUA5MzY5QUE2NkYA0Njg0NDZk5QjJgyNEE2NTAzNCkM0RjI5$";
@@ -1447,7 +1451,7 @@ public class DailyMobileAPI implements IDailyNetwork
 
     public Observable<BaseDto<BookingHideData>> getStayOutboundHideBooking(int bookingIndex)
     {
-        final String URL = Setting.getOutboundServerUrl();
+        final String URL = Constants.DEBUG ? DailyPreference.getInstance(mContext).getBaseOutBoundUrl() : Setting.getOutboundServerUrl();
 
         final String API = Constants.UNENCRYPTED_URL ? "api/v1/outbound/hotel-reservations/{reservationIdx}/hide"//
             : "MzckMTM5JDQkMjIkMTExJDE2NiQzNSQxNDAkMTkkMjkkODckMTAzJDEkOTYkMzYkMTU5JA==$NJDdFAQjRGNUQwNzdEQUII2QMzMyQ0YMzQjMI4QKjM4NUkEwNkE5OUVGOTA0MjkyQjRGMEMxMjhERUU3MDQ0NDU0NZDczMEM0ANkQyMDhBMRTdDNDZFM0ZFXQ0Y5Q0QyNDUxODQ1QzZCODEyNzEK0RjRZDQ0M4RNUE4Q0Q2RjJFNTc2QTkI0OTNDRkQ=$";
@@ -1460,7 +1464,7 @@ public class DailyMobileAPI implements IDailyNetwork
 
     public Observable<BaseDto<StayOutboundBookingDetailData>> getStayOutboundBookingDetail(int bookingIndex)
     {
-        final String URL = Setting.getOutboundServerUrl();
+        final String URL = Constants.DEBUG ? DailyPreference.getInstance(mContext).getBaseOutBoundUrl() : Setting.getOutboundServerUrl();
 
         final String API = Constants.UNENCRYPTED_URL ? "api/v1/outbound/hotel-reservations/{reservationIdx}"//
             : "MTY4JDg4JDc3JDU4JDE2NCQ3NiQxMjgkODckMTMzJDg3JDczJDEzNyQxNzckMTM1JDEwMyQxNyQ=$OUY1NDc3N0FDRTgzMNDk1MkVGQTQ3OTI5MzdBMUY1OTdBRTkwRkM0MzkwRTWhFNDZGMTMyNTBGDQTVYGRAkIxQUEyYENzIyFNzQwNTM2DNTgyMkM0ODcyQzY5QzhFOUQzRUI3EMzQDEzIOUYyOTU4RDU0QzUyMENEMzUwMjg0RTYwNOEQ1RjLk3QNUE=$";
@@ -1477,7 +1481,7 @@ public class DailyMobileAPI implements IDailyNetwork
 
     public Observable<BaseDto<StayOutboundRefundDetailData>> getStayOutboundRefundDetail(int bookingIndex)
     {
-        final String URL = Setting.getOutboundServerUrl();
+        final String URL = Constants.DEBUG ? DailyPreference.getInstance(mContext).getBaseOutBoundUrl() : Setting.getOutboundServerUrl();
 
         final String API = Constants.UNENCRYPTED_URL ? "api/v1/outbound/hotel-reservations/{reservationIdx}/cancelinfos"//
             : "MTEyJDY2JDExMCQxMjAkMjEkNTMkMTE2JDEyMiQxNSQxNjYkMzAkMTY3JDE1NSQzNSQ3MCQyMiQ=$MzRFOUM4N0ZCODAD4QTNDOHODA3RkE3QMjM4UOEY0RURCMDlDNEEyQTdFONjM3MEExQ0UxQIUSM4Qjc1NzY0MTQ1Nzc0NDgyRTQ2REZFRjU2NkRFNDgzNUjIyJEMzEwCNZEQ5RUMyMzg2Nzk1MjhDMUQ5RUE0QBzlEQzY0MTFGRDXEI3MzNGM0UxQzY=$";
@@ -1490,7 +1494,7 @@ public class DailyMobileAPI implements IDailyNetwork
 
     public Observable<BaseDto<StayOutboundRefundData>> getStayOutboundRefund(int bookingIndex, String refundType, String cancelReasonType, String reasons)
     {
-        final String URL = Setting.getOutboundServerUrl();
+        final String URL = Constants.DEBUG ? DailyPreference.getInstance(mContext).getBaseOutBoundUrl() : Setting.getOutboundServerUrl();
 
         final String API = Constants.UNENCRYPTED_URL ? "api/v1/outbound/hotel-reservations/{reservationIdx}/cancel"//
             : "NiQxMTIkMTMxJDY5JDg4JDE2MSQ4MiQxMDQkOTYkMjgkOSQzNiQ1OCQ3OSQxMzgkMTUyJA==$NjYxRTFE3DQTk4RkY3N0FEMjc0QjcW1OTgzNFDdGOTY3RTFEODMxRTM5QjCUxMjdBMzQ4MjFDKQjc0NBTY5NDgxEQjYyNzVAyN0ZCBNjI5RDczINzZENEQzNTcV1MTVBMjgwNTQ0OTQY3OBDhDMjIzNTJI3NzI0RkM3MTY5MjNBCRDlDNUQ0ODBDNjA=$";
@@ -1507,7 +1511,7 @@ public class DailyMobileAPI implements IDailyNetwork
 
     public Observable<BaseDto<StayOutboundReceiptData>> getStayOutboundReceipt(int bookingIndex)
     {
-        final String URL = Setting.getOutboundServerUrl();
+        final String URL = Constants.DEBUG ? DailyPreference.getInstance(mContext).getBaseOutBoundUrl() : Setting.getOutboundServerUrl();
 
         final String API = Constants.UNENCRYPTED_URL ? "api/v1/outbound/reservations/{reservationIdx}/sales-receipt"//
             : "MTM4JDE0NCQxNDckNzgkMTEzJDE1NSQ1NiQxNzYkNzYkOTgkMTQyJDE1NSQzMCQyJDE1MCQ5NCQ=$RjLI5NUVFQjcyQzUzRkQ3NEU4OTc3NTEc5NzlDNjg4RTI4OTgyMzZFNTcwBMzQ4NTY2NjU5N0NBNzMQ4MTHgzNEQzMkMxRVDg2NDlXCMjY3MjU5NUZDMTBDFQjZBODhFQzA4ODcwOTgzMjUyMLDNgwRPEUB0RZUMI4RjZUyODc4RTBERjlDRTc0RADI=$";
@@ -1520,7 +1524,7 @@ public class DailyMobileAPI implements IDailyNetwork
 
     public Observable<BaseDto<StayOutboundEmailReceiptData>> getStayOutboundEmailReceipt(int bookingIndex, String email)
     {
-        final String URL = Setting.getOutboundServerUrl();
+        final String URL = Constants.DEBUG ? DailyPreference.getInstance(mContext).getBaseOutBoundUrl() : Setting.getOutboundServerUrl();
 
         final String API = Constants.UNENCRYPTED_URL ? "api/v1/outbound/reservations/{reservationIdx}/sales-receipt/request"//
             : "MTcxJDEzNCQxMDAkNzAkMzgkOTUkNTUkMTgzJDYzJDE2MCQyMTgkMjIkMTk1JDIwMyQxODUkMjA1JA==$ODgwNUIyMTY5NEU3QTUwRTCJENTQzMzg0NDA2MTHNGOTExMjg5MDZFMEUQ4MkY2MNUM4MTcyMkSEwREQ0NjdDMDdBOTMwMDYyOCDRBODE2SMUE4NDc0MEQ5Nzc1Mzg3OUVEM0Y1QjIwMTEc2MEMyRDdBMkNCRERFOMUQyNzRDMjAwREQzNDhVBOUJZFWMDYzRDMxDOUExN0RBDENTEzM0M1MDFCRDY1AQ0I0Qg==$";
@@ -1537,7 +1541,7 @@ public class DailyMobileAPI implements IDailyNetwork
 
     public Observable<BaseDto<StayOutboundsData>> getStayOutboundRecentlyList(String hotelIds, int numberOfResults)
     {
-        final String URL = Setting.getOutboundServerUrl();
+        final String URL = Constants.DEBUG ? DailyPreference.getInstance(mContext).getBaseOutBoundUrl() : Setting.getOutboundServerUrl();
 
         final String API = Constants.UNENCRYPTED_URL ? "api/v1/outbound/id-find-static-hotels"//
             : "MjMkMzAkODAkMTI4JDU1JDQ5JDEyJDEyNSQzNyQ3OCQ1NCQ1NyQzOCQ2NCQ3NyQxMzAk$MEJFNTFGNEY0RQTlCNTBGM0ZIGQUQ4MQjU1RjFCBCOERCQUFFODJTBNRUME0NHjdKBQjhBMTAwRjlPEQTFDFN0FDMzCNBREJFQkVGRDM4QTIxNzhDNzQ0RjFDOUYzMTlGMJDMBzOUUwMFDY1$";

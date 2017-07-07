@@ -34,9 +34,14 @@ public class GourmetSearchResultListFragment extends GourmetListFragment
     }
 
     @Override
-    protected PlaceListLayout getPlaceListLayout()
+    public PlaceListLayout getPlaceListLayout()
     {
-        return new GourmetSearchResultListLayout(mBaseActivity, mEventListener);
+        if (mPlaceListLayout == null)
+        {
+            mPlaceListLayout = new GourmetSearchResultListLayout(mBaseActivity, mEventListener);
+        }
+
+        return mPlaceListLayout;
     }
 
     public void setSearchType(SearchType searchType)

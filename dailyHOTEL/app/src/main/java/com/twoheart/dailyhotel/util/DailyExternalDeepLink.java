@@ -111,6 +111,7 @@ public class DailyExternalDeepLink extends DailyDeepLink
     //    private static final String COLECTION_VIWE_V9 = "cv"; // 모아보기 화면
 
     private static final String PARAM_V10_BASE_URL = "baseUrl"; // 서버 BASE URL 변경
+    private static final String PARAM_V10_BASE_OUTBOUND_URL = "baseOutBoundUrl"; // 서버 BASE URL 변경
 
     private static final String MYDAILY_V12 = "md"; // 마이 데일리 화면
     private static final String HOME_V12_EVENT_DETAIL = "hed"; // 홈의 이벤트 상세화면
@@ -124,7 +125,6 @@ public class DailyExternalDeepLink extends DailyDeepLink
     private static final String PARAM_V15_VR = "vr"; // vr
 
     private static final String PARAM_V16_STAY_SHORTCUT_LIST = "scl"; // 스테이 숏컷 리스트
-
 
     private static final int MINIMUM_VERSION_CODE = 2;
     private static final int MAXIMUM_VERSION_CODE = 16;
@@ -305,6 +305,21 @@ public class DailyExternalDeepLink extends DailyDeepLink
         if (mVersionCode >= 11)
         {
             value = mParamsMap.get(PARAM_V10_BASE_URL);
+        } else
+        {
+            value = null;
+        }
+
+        return value;
+    }
+
+    public String getBaseOutBoundUrl()
+    {
+        String value;
+
+        if (mVersionCode >= 11)
+        {
+            value = mParamsMap.get(PARAM_V10_BASE_OUTBOUND_URL);
         } else
         {
             value = null;

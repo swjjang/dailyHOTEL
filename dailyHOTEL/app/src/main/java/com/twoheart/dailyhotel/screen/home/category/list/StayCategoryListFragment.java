@@ -34,7 +34,7 @@ public class StayCategoryListFragment extends StayListFragment
     }
 
     @Override
-    protected PlaceListLayout getPlaceListLayout()
+    public PlaceListLayout getPlaceListLayout()
     {
         if (mStayListLayout == null)
         {

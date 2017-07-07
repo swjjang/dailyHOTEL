@@ -44,9 +44,14 @@ public class StayCategoryNearByListFragment extends StayListFragment
     }
 
     @Override
-    protected StayListLayout getPlaceListLayout()
+    public StayListLayout getPlaceListLayout()
     {
-        return new StayCategoryNearByListLayout(mBaseActivity, mEventListener);
+        if (mStayListLayout == null)
+        {
+            mStayListLayout = new StayCategoryNearByListLayout(mBaseActivity, mEventListener);
+        }
+
+        return mStayListLayout;
     }
 
     @Override

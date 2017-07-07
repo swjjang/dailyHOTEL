@@ -457,6 +457,68 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
         // do nothing!
     }
 
+    @Override
+    protected void changeViewType()
+    {
+        if (isFinishing() == true || isLockUiComponent() == true)
+        {
+            return;
+        }
+
+        lockUI();
+
+        GourmetSearchResultListFragment currentFragment = (GourmetSearchResultListFragment) mPlaceSearchResultLayout.getCurrentPlaceListFragment();
+
+        if (currentFragment == null)
+        {
+            unLockUI();
+            return;
+        }
+
+        switch (mViewType)
+        {
+            case LIST:
+            {
+                // 맵리스트 진입시에 솔드아웃은 맵에서 보여주지 않기 때문에 맵으로 진입시에 아무것도 볼수 없다.
+                if (currentFragment.hasSalesPlace() == false)
+                {
+                    unLockUI();
+
+                    DailyToast.showToast(GourmetSearchResultActivity.this, R.string.toast_msg_solodout_area, Toast.LENGTH_SHORT);
+                    return;
+                }
+
+                mViewType = ViewType.MAP;
+
+                AnalyticsManager.getInstance(GourmetSearchResultActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_, AnalyticsManager.Action.CHANGE_VIEW, AnalyticsManager.Label._GOURMET_MAP, null);
+                break;
+            }
+
+            case MAP:
+            {
+                mViewType = ViewType.LIST;
+
+                AnalyticsManager.getInstance(GourmetSearchResultActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_, AnalyticsManager.Action.CHANGE_VIEW, AnalyticsManager.Label._GOURMET_LIST_, null);
+                break;
+            }
+        }
+
+        // 고메는 리스트를 한번에 받기 때문에 계속 요청할 필요는 없다.
+        mPlaceSearchResultLayout.setOptionViewTypeView(mViewType);
+
+        for (PlaceListFragment placeListFragment : mPlaceSearchResultLayout.getPlaceListFragment())
+        {
+            boolean isCurrentFragment = (placeListFragment == currentFragment);
+            placeListFragment.setVisibility(mViewType, isCurrentFragment);
+
+            ((GourmetSearchResultListFragment) placeListFragment).setIsDeepLink(mIsDeepLink);
+        }
+
+        refreshCurrentFragment(false);
+
+        unLockUI();
+    }
+
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // mOnEventListener
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -510,63 +572,9 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
         @Override
         public void onViewTypeClick()
         {
-            if (isFinishing() == true || isLockUiComponent() == true)
-            {
-                return;
-            }
+            mPlaceSearchResultLayout.showBottomLayout(false);
 
-            lockUI();
-
-            GourmetSearchResultListFragment currentFragment = (GourmetSearchResultListFragment) mPlaceSearchResultLayout.getCurrentPlaceListFragment();
-
-            if (currentFragment == null)
-            {
-                unLockUI();
-                return;
-            }
-
-            switch (mViewType)
-            {
-                case LIST:
-                {
-                    // 맵리스트 진입시에 솔드아웃은 맵에서 보여주지 않기 때문에 맵으로 진입시에 아무것도 볼수 없다.
-                    if (currentFragment.hasSalesPlace() == false)
-                    {
-                        unLockUI();
-
-                        DailyToast.showToast(GourmetSearchResultActivity.this, R.string.toast_msg_solodout_area, Toast.LENGTH_SHORT);
-                        return;
-                    }
-
-                    mViewType = ViewType.MAP;
-
-                    AnalyticsManager.getInstance(GourmetSearchResultActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_, AnalyticsManager.Action.CHANGE_VIEW, AnalyticsManager.Label._GOURMET_MAP, null);
-                    break;
-                }
-
-                case MAP:
-                {
-                    mViewType = ViewType.LIST;
-
-                    AnalyticsManager.getInstance(GourmetSearchResultActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_, AnalyticsManager.Action.CHANGE_VIEW, AnalyticsManager.Label._GOURMET_LIST_, null);
-                    break;
-                }
-            }
-
-            // 고메는 리스트를 한번에 받기 때문에 계속 요청할 필요는 없다.
-            mPlaceSearchResultLayout.setOptionViewTypeView(mViewType);
-
-            for (PlaceListFragment placeListFragment : mPlaceSearchResultLayout.getPlaceListFragment())
-            {
-                boolean isCurrentFragment = (placeListFragment == currentFragment);
-                placeListFragment.setVisibility(mViewType, isCurrentFragment);
-
-                ((GourmetSearchResultListFragment) placeListFragment).setIsDeepLink(mIsDeepLink);
-            }
-
-            refreshCurrentFragment(false);
-
-            unLockUI();
+            changeViewType();
         }
 
         @Override

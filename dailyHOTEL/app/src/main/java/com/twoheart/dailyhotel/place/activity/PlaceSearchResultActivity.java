@@ -9,6 +9,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 
+import com.daily.base.util.ExLog;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Keyword;
 import com.twoheart.dailyhotel.model.PlaceCuration;
@@ -84,6 +85,8 @@ public abstract class PlaceSearchResultActivity extends BaseActivity
 
     protected abstract void requestAnalyticsByCanceled();
 
+    protected abstract void changeViewType();
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -122,6 +125,27 @@ public abstract class PlaceSearchResultActivity extends BaseActivity
     @Override
     public void onBackPressed()
     {
+        if(mViewType == ViewType.MAP)
+        {
+            try
+            {
+                if (mPlaceSearchResultLayout.getCurrentPlaceListFragment().getPlaceListLayout().getListMapFragment().isShowPlaceInformation() == true)
+                {
+                    mPlaceSearchResultLayout.getCurrentPlaceListFragment().getPlaceListLayout().getListMapFragment().clickMap();
+                } else
+                {
+                    changeViewType();
+                }
+            } catch (Exception e)
+            {
+                ExLog.d(e.toString());
+
+                changeViewType();
+            }
+
+            return;
+        }
+
         finish(RESULT_CANCELED);
     }
 

@@ -355,7 +355,7 @@ public class StayAutoRefundActivity extends BaseActivity
                         messageEditText.setCursorVisible(true);
 
                         InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                        inputMethodManager.showSoftInput(messageEditText, InputMethodManager.SHOW_IMPLICIT);
+                        inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
 
                         setSelected(v);
 

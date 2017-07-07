@@ -56,6 +56,8 @@ public abstract class BaseAnalyticsManager
 
     abstract void purchaseCompleteHotel(String transId, Map<String, String> params);
 
+    abstract void purchaseCompleteStayOutbound(String transId, Map<String, String> params);
+
     abstract void purchaseCompleteGourmet(String transId, Map<String, String> params);
 
     abstract void startDeepLink(Uri deepLinkUri);
