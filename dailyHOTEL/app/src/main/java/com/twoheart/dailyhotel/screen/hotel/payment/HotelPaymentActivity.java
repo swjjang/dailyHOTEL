@@ -607,8 +607,9 @@ public class HotelPaymentActivity extends PlacePaymentActivity
 
         Map<String, String> params = getMapPaymentInformation((StayPaymentInformation) paymentInformation, (StayBookingDay) mPlaceBookingDay);
 
-        Intent intent = HotelPaymentThankyouActivity.newInstance(this, imageUrl, placeName, placeType, //
-            userName, stayBookingDay, paymentInformation.paymentType.getName(), discountType, params);
+        Intent intent = HotelPaymentThankyouActivity.newInstance(this, imageUrl, placeName, placeType//
+            , ((StayPaymentInformation)paymentInformation).isOverSeas, userName, stayBookingDay//
+            , paymentInformation.paymentType.getName(), discountType, params);
 
         startActivityForResult(intent, REQUEST_CODE_PAYMETRESULT_ACTIVITY);
     }

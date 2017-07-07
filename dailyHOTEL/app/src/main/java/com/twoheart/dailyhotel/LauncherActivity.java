@@ -90,22 +90,15 @@ public class LauncherActivity extends Activity
                         String baseUrl = externalDeepLink.getBaseUrl();
                         String baseOutBoundUrl = externalDeepLink.getBaseOutBoundUrl();
 
-                        if (DailyTextUtils.isTextEmpty(baseUrl) == true)
+                        if (DailyTextUtils.isTextEmpty(baseUrl, baseOutBoundUrl) == false)
                         {
-                            baseUrl = Setting.getServerUrl();
+                            logOut();
+                            DailyPreference.getInstance(this).setBaseUrl(baseUrl);
+                            DailyPreference.getInstance(this).setBaseOutBoundUrl(baseOutBoundUrl);
+                            externalDeepLink.clear();
+                            Util.restartExitApp(this);
+                            return;
                         }
-
-                        if (DailyTextUtils.isTextEmpty(baseOutBoundUrl) == true)
-                        {
-                            baseUrl = Setting.getOutboundServerUrl();
-                        }
-
-                        logOut();
-                        DailyPreference.getInstance(this).setBaseUrl(baseUrl);
-                        DailyPreference.getInstance(this).setBaseOutBoundUrl(baseOutBoundUrl);
-                        externalDeepLink.clear();
-                        Util.restartExitApp(this);
-                        return;
                     }
 
                     AnalyticsManager.getInstance(this).recordDeepLink(externalDeepLink);

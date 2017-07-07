@@ -19,6 +19,8 @@ import com.twoheart.dailyhotel.util.Crypto;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
+import org.json.JSONObject;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -96,10 +98,30 @@ public class StayOutboundPaymentWebActivity extends PlacePaymentWebActivity
     @Override
     public void onPaymentResult(String jsonString)
     {
-        Intent intent = new Intent();
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_PAYMENT_RESULT, jsonString);
+        int msgCode;
 
-        setResult(RESULT_OK, intent);
+        try
+        {
+            JSONObject jsonObject = new JSONObject(jsonString);
+            msgCode = jsonObject.getInt("msgCode");
+        } catch (Exception e)
+        {
+            msgCode = -1;
+
+            ExLog.e(e.toString());
+        }
+
+        Intent intent = new Intent();
+        if (msgCode < 0)
+        {
+            intent.putExtra(NAME_INTENT_EXTRA_DATA_PAYMENT_RESULT, jsonString);
+            setResult(RESULT_CANCELED, intent);
+        } else
+        {
+            intent.putExtra(NAME_INTENT_EXTRA_DATA_PAYMENT_RESULT, jsonString);
+            setResult(RESULT_OK, intent);
+        }
+
         finish();
     }
 
@@ -176,6 +198,11 @@ public class StayOutboundPaymentWebActivity extends PlacePaymentWebActivity
 
             try
             {
+                if (Constants.DEBUG == true)
+                {
+                    ExLog.d("pinkred : " + mJSONString);
+                }
+
                 OkHttpClient okHttpClient = new OkHttpClient();
                 Request request = new Request.Builder()//
                     .url(mUrl)//

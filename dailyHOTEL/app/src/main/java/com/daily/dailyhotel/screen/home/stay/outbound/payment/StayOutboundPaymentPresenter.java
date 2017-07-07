@@ -368,7 +368,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
 
             case StayOutboundPaymentActivity.REQUEST_CODE_PAYMENT_WEB_CARD:
             case StayOutboundPaymentActivity.REQUEST_CODE_PAYMENT_WEB_PHONE:
-                if (resultCode == Activity.RESULT_OK && data != null)
+                if (data != null)
                 {
                     onPaymentWebResult(resultCode, data.getStringExtra(Constants.NAME_INTENT_EXTRA_DATA_PAYMENT_RESULT));
                 }
@@ -1355,7 +1355,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
                 } else
                 {
                     getViewInterface().showSimpleDialog(getString(R.string.dialog_title_payment), getString(R.string.act_base_network_connect)//
-                        , getString(R.string.frag_error_btn), null, new DialogInterface.OnDismissListener()
+                        , getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
                         {
                             @Override
                             public void onDismiss(DialogInterface dialog)
@@ -1367,50 +1367,42 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
             });
         } else
         {
-            String title = getString(R.string.dialog_title_payment);
-            String message = null;
+            unLockAll();
 
+            String title = getString(R.string.dialog_title_payment);
+            String message;
+
+            int msgCode;
             View.OnClickListener confirmListener = null;
 
-            switch (resultCode)
+            try
             {
-                case Constants.CODE_RESULT_ACTIVITY_PAYMENT_FAIL:
-                    message = getString(R.string.act_toast_payment_fail);
-                    break;
+                JSONObject jsonObject = new JSONObject(result);
+                msgCode = jsonObject.getInt("msgCode");
 
-                case Constants.CODE_RESULT_ACTIVITY_PAYMENT_INVALID_SESSION:
-                    restartExpiredSession();
-                    return;
-
-                case Constants.CODE_RESULT_ACTIVITY_PAYMENT_NOT_AVAILABLE:
-                    title = getString(R.string.dialog_notice2);
-                    message = getString(R.string.act_toast_payment_not_available);
-                    break;
-
-
-                case Constants.CODE_RESULT_ACTIVITY_PAYMENT_CANCELED:
+                // 다날 핸드폰 화면에서 취소 버튼 누르는 경우
+                if (msgCode == -104)
+                {
                     message = getString(R.string.act_toast_payment_canceled);
+                } else
+                {
+                    message = jsonObject.getString("msg");
 
                     confirmListener = new View.OnClickListener()
                     {
                         @Override
-                        public void onClick(View v)
+                        public void onClick(View view)
                         {
+                            setResult(BaseActivity.RESULT_CODE_REFRESH);
+                            onBackClick();
                         }
                     };
-                    break;
-
-                case Constants.CODE_RESULT_ACTIVITY_PAYMENT_NETWORK_ERROR:
-                    message = getString(R.string.act_toast_payment_network_error);
-                    break;
-
-                default:
-                    message = getString(R.string.act_toast_payment_fail);
-                    break;
-            }
-
-            if (confirmListener == null)
+                }
+            } catch (Exception e)
             {
+                msgCode = -1;
+                message = getString(R.string.act_toast_payment_fail);
+
                 confirmListener = new View.OnClickListener()
                 {
                     @Override
