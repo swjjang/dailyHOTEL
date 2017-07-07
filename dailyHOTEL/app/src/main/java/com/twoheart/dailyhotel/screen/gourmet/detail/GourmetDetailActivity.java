@@ -1180,17 +1180,6 @@ public class GourmetDetailActivity extends PlaceDetailActivity
 
             ((GourmetDetailLayout) mPlaceDetailLayout).scrollProduct();
 
-            //            GourmetDetail gourmetDetail = (GourmetDetail) mPlaceDetail;
-            //            GourmetDetailParams gourmetDetailParams = gourmetDetail.getGourmetDetailParmas();
-            //
-            //            Intent intent = GourmetProductListActivity.newInstance(GourmetDetailActivity.this, (GourmetBookingDay) mPlaceBookingDay, gourmetDetail, -1, mProvince, mArea);
-            //            startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_GOURMET_PRODUCT_LIST);
-            //
-            //            recordAnalyticsGourmetDetail(AnalyticsManager.Screen.DAILYGOURMET_DETAIL_TICKETTYPE, (GourmetBookingDay) mPlaceBookingDay, (GourmetDetail) mPlaceDetail);
-            //            AnalyticsManager.getInstance(GourmetDetailActivity.this).recordEvent(AnalyticsManager.Category.GOURMET_BOOKINGS//
-            //                , AnalyticsManager.Action.TICKET_TYPE_CLICKED, gourmetDetailParams.name, null);
-
-
             unLockUI();
         }
 
@@ -1204,18 +1193,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
 
             GourmetDetail gourmetDetail = (GourmetDetail) mPlaceDetail;
 
-//            Intent intent = GourmetProductDetailActivity.newInstance(GourmetDetailActivity.this //
-//                , (GourmetBookingDay) mPlaceBookingDay, gourmetDetail, index, mAnalyticsParam);
-//            startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_GOURMET_PRODUCT_DETAIL);
-
-
-            //            if (lockUiComponentAndIsLockUiComponent() == true)
-            //            {
-            //                return;
-            //            }
-
             // 메뉴 목록 보여주기
-
             Observable.just(gourmetDetail.getProductList()).subscribeOn(Schedulers.io()).map(new Function<List<GourmetProduct>, List<GourmetMenu>>()
             {
                 @Override

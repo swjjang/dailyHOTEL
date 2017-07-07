@@ -72,6 +72,7 @@ public class DailyHotel extends android.support.multidex.MultiDexApplication imp
             }
         });
 
+
         Realm.init(this);
 
         Fabric.with(this, new Crashlytics());

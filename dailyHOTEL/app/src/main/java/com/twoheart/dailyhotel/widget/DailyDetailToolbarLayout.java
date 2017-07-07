@@ -61,9 +61,6 @@ public class DailyDetailToolbarLayout extends DailyToolbarLayout
         {
             menu1.setVisibility(View.GONE);
             menu1.setImageResource(0);
-        } else
-        {
-            menu1.setVisibility(View.VISIBLE);
         }
 
         if (menu2ResId > 0)
@@ -74,9 +71,6 @@ public class DailyDetailToolbarLayout extends DailyToolbarLayout
         {
             menu2.setVisibility(View.GONE);
             menu2.setImageResource(0);
-        } else
-        {
-            menu2.setVisibility(View.VISIBLE);
         }
 
         if (menu3ResId > 0)
@@ -89,9 +83,6 @@ public class DailyDetailToolbarLayout extends DailyToolbarLayout
             menu3TextView.setVisibility(View.GONE);
             menu3TextView.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
             menu3TextView.setText(null);
-        } else
-        {
-            menu3TextView.setVisibility(View.VISIBLE);
         }
     }
 }

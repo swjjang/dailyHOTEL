@@ -232,12 +232,12 @@ public class GourmetDetailLayout extends PlaceDetailLayout
 
     public void scrollProduct()
     {
-        if (mScrollView == null || mGourmetDetailItemLayout == null || mGourmetDetailItemLayout.getFirstProductIndex() < 0)
+        if (mScrollView == null || mGourmetDetailItemLayout == null || mGourmetDetailItemLayout.getMoveFirstView() == 0.0f)
         {
             return;
         }
 
-        mScrollView.smoothScrollTo(0, (int) mGourmetDetailItemLayout.getChildAt(mGourmetDetailItemLayout.getFirstProductIndex()).getY()//
+        mScrollView.smoothScrollTo(0, (int) mGourmetDetailItemLayout.getMoveFirstView()//
             - mContext.getResources().getDimensionPixelSize(R.dimen.toolbar_height));
     }
 
@@ -268,6 +268,7 @@ public class GourmetDetailLayout extends PlaceDetailLayout
             return;
         }
 
+        scrollProduct();
         mGourmetDetailItemLayout.closeMoreProductList();
     }
 
