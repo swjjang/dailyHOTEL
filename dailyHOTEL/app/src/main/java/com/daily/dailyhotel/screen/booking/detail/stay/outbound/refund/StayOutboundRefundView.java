@@ -207,7 +207,7 @@ public class StayOutboundRefundView extends BaseDialogView<StayOutboundRefundVie
                     messageEditText.setCursorVisible(true);
 
                     InputMethodManager inputMethodManager = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-                    inputMethodManager.showSoftInput(messageEditText, InputMethodManager.SHOW_IMPLICIT);
+                    inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
                 }
 
                 setSelected(v);
