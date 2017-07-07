@@ -12,6 +12,8 @@ import android.view.View;
 import com.daily.base.BaseActivity;
 import com.daily.base.BaseDialogView;
 import com.daily.base.OnBaseEventListener;
+import com.daily.base.util.ExLog;
+import com.daily.base.util.ScreenUtils;
 import com.daily.dailyhotel.entity.GourmetMenu;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ActivityGourmetMenusDataBinding;
@@ -19,10 +21,13 @@ import com.twoheart.dailyhotel.util.EdgeEffectColor;
 
 import java.util.List;
 
-public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventListener, ActivityGourmetMenusDataBinding> implements GourmetMenusInterface
+public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventListener, ActivityGourmetMenusDataBinding>//
+    implements GourmetMenusInterface, View.OnClickListener
 {
     public interface OnEventListener extends OnBaseEventListener
     {
+        void onCloseClick();
+
         void onReservationClick(int index);
 
         void onScrolled(int position);
@@ -40,6 +45,8 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
         {
             return;
         }
+
+        viewDataBinding.closeImageView.setOnClickListener(this);
 
         viewDataBinding.recyclerView.setLayoutManager(new ZoomCenterLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
         EdgeEffectColor.setEdgeGlowColor(viewDataBinding.recyclerView, getColor(R.color.default_over_scroll_edge));
@@ -109,10 +116,21 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
         getViewDataBinding().recyclerView.getLayoutManager().startSmoothScroll(linearSmoothScroller);
     }
 
+    @Override
+    public void onClick(View v)
+    {
+        switch(v.getId())
+        {
+            case R.id.closeImageView:
+                getEventListener().onCloseClick();
+                break;
+        }
+    }
+
     class ZoomCenterLayoutManager extends LinearLayoutManager
     {
-        private static final float MIN_SCALE = 0.90f;
-        private static final float AMOUNT = 0.10f; // 1.0f - AMOUNT = MIN_SCALE
+        private static final float MIN_SCALE = 0.95f;
+        private static final float AMOUNT = 1.0f - MIN_SCALE; // 1.0f - AMOUNT = MIN_SCALE
         private static final float DISTANCE = 0.75f;
 
         public ZoomCenterLayoutManager(Context context)
@@ -143,14 +161,35 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
 
             for (int i = 0; i < childCount; i++)
             {
-                View child = getChildAt(i);
-                float childMidpoint = (getDecoratedRight(child) + getDecoratedLeft(child)) / 2.f;
+                View childView = getChildAt(i);
+                float childMidpoint = (getDecoratedRight(childView) + getDecoratedLeft(childView)) / 2.f;
                 float d = Math.min(d1, Math.abs(midpoint - childMidpoint));
                 float scale = s0 + (s1 - s0) * (d - d0) / (d1 - d0);
-                child.setScaleX(scale);
-                child.setScaleY(scale);
+                childView.setScaleX(scale);
+                childView.setScaleY(scale);
 
-                View blurView = (View) child.getTag(R.id.blurView);
+//                float childMidPoint = childView.getX() + childView.getWidth();
+//
+//                if (childMidPoint > midpoint)
+//                {
+//                    final int DP_5 = ScreenUtils.dpToPx(getContext(), 5);
+//
+//                    float distance = DP_5 * (1.0f - (scale - MIN_SCALE) * MIN_SCALE / AMOUNT);
+//
+//                    childView.setTranslationX(-distance);
+//                } else if (childMidPoint < midpoint)
+//                {
+//                    final int DP_5 = ScreenUtils.dpToPx(getContext(), 5);
+//
+//                    float distance = DP_5 * (1.0f - (scale - MIN_SCALE) * MIN_SCALE / AMOUNT);
+//
+//                    childView.setTranslationX(distance);
+//                } else
+//                {
+//
+//                }
+
+                View blurView = (View) childView.getTag(R.id.blurView);
 
                 if (blurView != null)
                 {

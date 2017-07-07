@@ -166,6 +166,12 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
     }
 
     @Override
+    public void onCloseClick()
+    {
+        onBackClick();
+    }
+
+    @Override
     public void onReservationClick(int index)
     {
         if (lock() == true)
