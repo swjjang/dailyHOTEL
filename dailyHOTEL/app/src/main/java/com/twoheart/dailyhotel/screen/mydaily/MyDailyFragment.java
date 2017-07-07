@@ -160,7 +160,10 @@ public class MyDailyFragment extends BaseMenuNavigationFragment implements Const
                     onStartEditProfile(externalDeepLink);
                 } else if (externalDeepLink.isStampView() == true)
                 {
-                    mOnEventListener.startStamp();
+                    if (DailyPreference.getInstance(context).isRemoteConfigStampEnabled() == true)
+                    {
+                        mOnEventListener.startStamp();
+                    }
                 }
 
                 //            else if (DailyDeepLink.getInstance().isWishListHotelView() == true)
@@ -176,7 +179,10 @@ public class MyDailyFragment extends BaseMenuNavigationFragment implements Const
 
                 if (internalDeepLink.isStampView() == true)
                 {
-                    mOnEventListener.startStamp();
+                    if (DailyPreference.getInstance(context).isRemoteConfigStampEnabled() == true)
+                    {
+                        mOnEventListener.startStamp();
+                    }
                 }
             }
 
