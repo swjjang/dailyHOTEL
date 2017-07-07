@@ -1287,12 +1287,12 @@ public class MainActivity extends BaseActivity implements Constants, BaseMenuNav
                     {
                         // 스탬프 이벤트가 종료되면 홈에서 팝업을 띄우고 종료시킨다.
                         if (externalDeepLink.isStampView() == true//
-                            && DailyPreference.getInstance(MainActivity.this).isRemoteConfigStampEnabled() == false)
-                        {
-                            mMainFragmentManager.select(false, MainFragmentManager.INDEX_HOME_FRAGMENT, true, bundle);
-                        } else
+                            && DailyPreference.getInstance(MainActivity.this).isRemoteConfigStampEnabled() == true)
                         {
                             mMainFragmentManager.select(false, MainFragmentManager.INDEX_MYDAILY_FRAGMENT, true, bundle);
+                        } else
+                        {
+                            mMainFragmentManager.select(false, MainFragmentManager.INDEX_HOME_FRAGMENT, true, bundle);
                         }
                     } else if (externalDeepLink.isSingUpView() == true)
                     {
