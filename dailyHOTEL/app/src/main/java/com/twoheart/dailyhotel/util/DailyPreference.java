@@ -92,6 +92,7 @@ public class DailyPreference
 
     private static final String KEY_VERIFICATION = "1001";
     private static final String KEY_BASE_URL = "1005"; // 앱의 기본 URL
+    private static final String KEY_BASE_OUTBOUND_URL = "1006"; // 앱의 기본 OUTBOUND URL
 
     private static final String KEY_SETTING_MIGRATION_FLAG = "1003"; // 2.0.0 이후 사용안함
     private static final String KEY_STAY_CATEGORY_CODE = "1010";
@@ -287,6 +288,7 @@ public class DailyPreference
 
         String allRecentPlaces = getAllRecentPlaces();
         String baseUrl = getBaseUrl();
+        String baseOutBoundUrl = getBaseOutBoundUrl();
         boolean isHomeTextMessageAreaEnable = isHomeTextMessageAreaEnabled();
         int countPreviewGuide = getCountPreviewGuide();
         boolean isShowAppPermissionsGuide = isShowAppPermissionsGuide();
@@ -303,6 +305,7 @@ public class DailyPreference
         setTrueVRSupport(supportTrueVR);
         setAllRecentPlaces(allRecentPlaces);
         setBaseUrl(baseUrl);
+        setBaseOutBoundUrl(baseOutBoundUrl);
         setHomeTextMessageAreaEnabled(isHomeTextMessageAreaEnable);
         setCountPreviewGuide(countPreviewGuide);
         setShowAppPermissionsGuide(isShowAppPermissionsGuide);
@@ -817,6 +820,19 @@ public class DailyPreference
     public void setBaseUrl(String value)
     {
         setValue(mEditor, KEY_BASE_URL, value);
+
+        // 반영이 안되는 경우가 있어서 특별히 추가 하였습니다.
+        mEditor.commit();
+    }
+
+    public String getBaseOutBoundUrl()
+    {
+        return getValue(mPreferences, KEY_BASE_OUTBOUND_URL, Crypto.getUrlDecoderEx(Setting.getOutboundServerUrl()));
+    }
+
+    public void setBaseOutBoundUrl(String value)
+    {
+        setValue(mEditor, KEY_BASE_OUTBOUND_URL, value);
 
         // 반영이 안되는 경우가 있어서 특별히 추가 하였습니다.
         mEditor.commit();

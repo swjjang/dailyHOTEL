@@ -16,6 +16,7 @@ import com.twoheart.dailyhotel.Setting;
 import com.twoheart.dailyhotel.place.activity.PlacePaymentWebActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Crypto;
+import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import java.util.HashMap;
@@ -33,8 +34,6 @@ import okhttp3.Response;
 
 public class StayOutboundPaymentWebActivity extends PlacePaymentWebActivity
 {
-    private String URL_BASE_STAY_OUTBOUND = Setting.getOutboundServerUrl();
-
     private String URL_WEBAPI_PAYMENT = Constants.UNENCRYPTED_URL ? "outbound/hotels/{hotelId}/room-reservation-payments/{type}/pay"//
         : "MTAwJDUzJDY0JDE1NyQzNSQ0MSQ5NyQxNDUkODEkNTUkMjMkMTIkMTI5JDc2JDkwJDE2NiQ=$Qjc0RkY3QzJEUNkQ2NTkzMENYBMjI5OEUwNUVQGMEI2CMDAzMDFCMzNBOHEUVGMjQzQjAUwNDlGONTMyNjVFMUjg5RGUE4NzU5NDBCRXUI5REFEPMUZGN0QyQUY4NDhDOUIRwRjI0RUFCMDVDRUVCNEVZCRTFBNEUyQkZDIODTZDRkQ0NUY4Q0MzQkQ=$";
 
@@ -117,8 +116,17 @@ public class StayOutboundPaymentWebActivity extends PlacePaymentWebActivity
 
         try
         {
-            String url = Crypto.getUrlDecoderEx(URL_BASE_STAY_OUTBOUND)//
-                + Crypto.getUrlDecoderEx(URL_WEBAPI_PAYMENT, urlParams);
+            String url;
+
+            if (Constants.DEBUG == true)
+            {
+                url = DailyPreference.getInstance(this).getBaseOutBoundUrl()//
+                    + Crypto.getUrlDecoderEx(URL_WEBAPI_PAYMENT, urlParams);
+            } else
+            {
+                url = Crypto.getUrlDecoderEx(Setting.getOutboundServerUrl())//
+                    + Crypto.getUrlDecoderEx(URL_WEBAPI_PAYMENT, urlParams);
+            }
 
             WebViewPostAsyncTask webViewPostAsyncTask = new WebViewPostAsyncTask(webView, jsonString);
             webViewPostAsyncTask.execute(url);
