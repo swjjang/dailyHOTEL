@@ -24,7 +24,7 @@ import java.util.Map;
 public class HotelPaymentThankyouActivity extends PlacePaymentThankyouActivity implements OnClickListener
 {
     public static Intent newInstance(Context context, String imageUrl, String placeName, String placeType, //
-                                     String userName, StayBookingDay stayBookingDay, //
+                                     boolean overseas, String userName, StayBookingDay stayBookingDay, //
                                      String paymentType, String discountType, Map<String, String> params)
     {
         Intent intent = new Intent(context, HotelPaymentThankyouActivity.class);
@@ -32,6 +32,7 @@ public class HotelPaymentThankyouActivity extends PlacePaymentThankyouActivity i
         intent.putExtra(INTENT_EXTRA_DATA_IMAGEURL, imageUrl);
         intent.putExtra(INTENT_EXTRA_DATA_PLACE_NAME, placeName);
         intent.putExtra(INTENT_EXTRA_DATA_PLACE_TYPE, placeType);
+        intent.putExtra(INTENT_EXTRA_DATA_PLACE_OVERSEAS, overseas);
         intent.putExtra(INTENT_EXTRA_DATA_USER_NAME, userName);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, stayBookingDay);
         intent.putExtra(INTENT_EXTRA_DATA_PAYMENT_TYPE, paymentType);
@@ -168,6 +169,6 @@ public class HotelPaymentThankyouActivity extends PlacePaymentThankyouActivity i
     @Override
     protected boolean isStampEnabled()
     {
-        return DailyPreference.getInstance(this).isRemoteConfigStampEnabled();
+        return DailyPreference.getInstance(this).isRemoteConfigStampEnabled() && mOverseas == false;
     }
 }
