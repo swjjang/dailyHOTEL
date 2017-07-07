@@ -75,7 +75,7 @@ public class StayReservationDetailLayout extends PlaceReservationDetailLayout
         mRecommendGourmetItemLayout = view.findViewById(R.id.recommendGourmetLayout);
 
         mRecommendGourmetCarouselLayout = (HomeCarouselLayout) view.findViewById(R.id.recommendGourmetCarouselLayout);
-//        mRecommendGourmetCarouselLayout.findViewById(R.id.bottomDivider).setVisibility(View.GONE);
+        //        mRecommendGourmetCarouselLayout.findViewById(R.id.bottomDivider).setVisibility(View.GONE);
 
         mRecommendGourmetCarouselLayout.setTitleText(R.string.label_booking_reservation_recommend_gourmet_title);
 
@@ -550,7 +550,8 @@ public class StayReservationDetailLayout extends PlaceReservationDetailLayout
             mRecommendGourmetButtonAnimator.setDuration(2000);
             mRecommendGourmetButtonAnimator.setRepeatCount(ObjectAnimator.INFINITE);
             mRecommendGourmetButtonAnimator.start();
-        } else {
+        } else
+        {
             mRecommendGourmetButtonView.setVisibility(View.GONE);
         }
     }
@@ -573,20 +574,22 @@ public class StayReservationDetailLayout extends PlaceReservationDetailLayout
             return;
         }
 
-        if (mRecommendGourmetCarouselLayout.hasData() == false)
+        if (mRecommendGourmetCarouselLayout.hasData() == false //
+            || View.VISIBLE != mRecommendGourmetItemLayout.getVisibility())
         {
             return;
         }
 
         int expectedY = mRecommendGourmetItemLayout.getTop() - ScreenUtils.getScreenHeight(mContext) //
-            + mContext.getResources().getDimensionPixelOffset(R.dimen.toolbar_height) + ScreenUtils.dpToPx(mContext, 25d);
+            + mContext.getResources().getDimensionPixelOffset(R.dimen.toolbar_height) + ScreenUtils.dpToPx(mContext, 75d);
 
-//        ExLog.d("expectedY : " + expectedY + " , t : " + t);
+        //        ExLog.d("expectedY : " + expectedY + " , t : " + t);
 
         if (expectedY <= t)
         {
             setRecommendGourmetButtonAnimation(false);
-        } else {
+        } else
+        {
             setRecommendGourmetButtonAnimation(true);
         }
     }
