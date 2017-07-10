@@ -238,7 +238,7 @@ public class GourmetListAdapter extends PlaceListAdapter
 
         // SOLD OUT 표시
         //        if (gourmet.isSoldOut)
-        if (gourmet.availableTicketNumbers == 0)
+        if (gourmet.isExpiredTicket == true)
         {
             holder.dataBinding.soldoutView.setVisibility(View.VISIBLE);
         } else

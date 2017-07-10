@@ -28,6 +28,7 @@ public class Gourmet extends Place
     public String subCategory;
     public double distance;
     public int availableTicketNumbers;
+    public boolean isExpiredTicket;
 
     public Grade grade;
 
