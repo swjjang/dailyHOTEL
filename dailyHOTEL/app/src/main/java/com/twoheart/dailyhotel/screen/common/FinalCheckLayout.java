@@ -1,9 +1,7 @@
 package com.twoheart.dailyhotel.screen.common;
 
 import android.content.Context;
-import android.databinding.DataBindingUtil;
 import android.text.Spannable;
-import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.style.ForegroundColorSpan;
 import android.util.AttributeSet;
@@ -16,8 +14,6 @@ import android.widget.TextView;
 
 import com.daily.base.util.ScreenUtils;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.databinding.LayoutFinalcheckThirdPartyDataBinding;
-import com.twoheart.dailyhotel.databinding.LayoutPaymentAgreedialogThirdPartyDataBinding;
 import com.twoheart.dailyhotel.widget.DailySignatureView;
 
 /**
@@ -66,7 +62,7 @@ public class FinalCheckLayout extends FrameLayout
         mDailySignatureView = (DailySignatureView) view.findViewById(R.id.signatureView);
     }
 
-    public void setMessages(int[] textResIds, String vendorName, boolean overseas)
+    public void setMessages(int[] textResIds)
     {
         if (textResIds == null)
         {
@@ -84,7 +80,15 @@ public class FinalCheckLayout extends FrameLayout
 
             TextView messageTextView = (TextView) messageRow.findViewById(R.id.messageTextView);
             LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            layoutParams.setMargins(ScreenUtils.dpToPx(context, 5), 0, 0, ScreenUtils.dpToPx(context, 12));
+
+            if (i == length - 1)
+            {
+                layoutParams.setMargins(ScreenUtils.dpToPx(context, 5), 0, 0, 0);
+            } else
+            {
+                layoutParams.setMargins(ScreenUtils.dpToPx(context, 5), 0, 0, ScreenUtils.dpToPx(context, 10));
+            }
+
             messageTextView.setLayoutParams(layoutParams);
 
             String message = context.getString(textResIds[i]);
@@ -112,45 +116,6 @@ public class FinalCheckLayout extends FrameLayout
 
             mMessageLayout.addView(messageRow);
         }
-
-        // 제 3자 제공 내용 자세히 보기
-        LayoutPaymentAgreedialogThirdPartyDataBinding viewDataBinding1 = DataBindingUtil.inflate(inflater, R.layout.layout_payment_agreedialog_third_party_data, mMessageLayout, true);
-
-        vendorName = "업체명";
-
-        String text = getContext().getString(R.string.message_payment_agreement_third_party_02, vendorName);
-        SpannableString spannableString = new SpannableString(text);
-        spannableString.setSpan(new ForegroundColorSpan(getContext().getResources().getColor(R.color.dh_theme_color)), text.indexOf(":") + 1, text.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-        LayoutFinalcheckThirdPartyDataBinding viewDataBinding2 = DataBindingUtil.inflate(inflater, R.layout.layout_finalcheck_third_party_data, mMessageLayout, true);
-        viewDataBinding2.vendorTextView.setText(spannableString);
-
-        if (overseas == true)
-        {
-            viewDataBinding2.offerInformationTextView.setText(R.string.message_payment_agreement_third_party_04_overseas);
-        } else
-        {
-            viewDataBinding2.offerInformationTextView.setText(R.string.message_payment_agreement_third_party_04);
-        }
-
-        viewDataBinding1.getRoot().setOnClickListener(new OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                if (viewDataBinding2.getRoot().getVisibility() == View.VISIBLE)
-                {
-                    viewDataBinding1.arrowImageView.setRotation(0f);
-                    viewDataBinding2.getRoot().setVisibility(View.GONE);
-                } else
-                {
-                    viewDataBinding1.arrowImageView.setRotation(180f);
-                    viewDataBinding2.getRoot().setVisibility(View.VISIBLE);
-                }
-            }
-        });
-
-        viewDataBinding2.getRoot().setVisibility(View.GONE);
     }
 
     public DailySignatureView getDailySignatureView()

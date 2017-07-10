@@ -496,7 +496,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
     }
 
     @Override
-    protected Dialog getEasyPaymentConfirmDialog(String vendorName)
+    protected Dialog getEasyPaymentConfirmDialog()
     {
         final Dialog dialog = new Dialog(this);
 
@@ -518,7 +518,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
             , R.string.dialog_msg_gourmet_payment_message07};
 
         final FinalCheckLayout finalCheckLayout = new FinalCheckLayout(this);
-        finalCheckLayout.setMessages(messageResIds, vendorName, false);
+        finalCheckLayout.setMessages(messageResIds);
 
         final TextView agreeSignatureTextView = (TextView) finalCheckLayout.findViewById(R.id.agreeSignatureTextView);
         final View confirmTextView = finalCheckLayout.findViewById(R.id.confirmTextView);
@@ -668,7 +668,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
                 return null;
         }
 
-        makeDialogMessages(messageLayout, textResIds, mPaymentInformation.vendorName, false);
+        makeDialogMessages(messageLayout, textResIds);
 
         View confirmTextView = view.findViewById(R.id.confirmTextView);
 
