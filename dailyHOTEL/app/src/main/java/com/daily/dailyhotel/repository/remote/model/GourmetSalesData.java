@@ -67,10 +67,10 @@ public class GourmetSalesData
     public String lastOrderTime;
 
     @JsonField(name = "latitude")
-    public int latitude;
+    public double latitude;
 
     @JsonField(name = "longitude")
-    public int longitude;
+    public double longitude;
 
     @JsonField(name = "menuBenefit")
     public String menuBenefit;
