@@ -9,12 +9,23 @@ import android.support.annotation.NonNull;
 import com.daily.base.BaseAnalyticsInterface;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
 import com.daily.dailyhotel.entity.GourmetMenu;
+import com.daily.dailyhotel.entity.GourmetMenuImage;
 import com.daily.dailyhotel.parcel.GourmetMenuParcel;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.network.model.ImageInformation;
+import com.twoheart.dailyhotel.screen.common.ImageDetailListActivity;
+import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by sheldon
@@ -196,5 +207,63 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
         mCenterPosition = position;
 
         getViewInterface().setSubTitle(String.format(Locale.KOREA, "%d / %d", position + 1, mGourmetMenuList.size()));
+    }
+
+    @Override
+    public void onMoreImageClick(int position)
+    {
+        if (lock() == true)
+        {
+            return;
+        }
+
+        GourmetMenu gourmetMenu = mGourmetMenuList.get(position);
+        List<GourmetMenuImage> gourmetMenuImageList = gourmetMenu.getImageList();
+
+
+        if (gourmetMenuImageList == null || gourmetMenuImageList.size() == 0)
+        {
+            unLockAll();
+            return;
+        }
+
+        addCompositeDisposable(Observable.just(gourmetMenuImageList).subscribeOn(Schedulers.newThread()).map(new Function<List<GourmetMenuImage>, List<ImageInformation>>()
+        {
+            @Override
+            public List<ImageInformation> apply(@io.reactivex.annotations.NonNull List<GourmetMenuImage> gourmetMenuImages) throws Exception
+            {
+                List<ImageInformation> imageInformationList = new ArrayList<>();
+
+                for (GourmetMenuImage gourmetMenuImage : gourmetMenuImageList)
+                {
+                    ImageInformation imageInformation = new ImageInformation();
+                    imageInformation.description = gourmetMenuImage.caption;
+                    imageInformation.setImageUrl(gourmetMenuImage.url);
+
+                    imageInformationList.add(imageInformation);
+                }
+
+                return imageInformationList;
+            }
+        }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<List<ImageInformation>>()
+        {
+            @Override
+            public void accept(@io.reactivex.annotations.NonNull List<ImageInformation> imageInformations) throws Exception
+            {
+                Intent intent = ImageDetailListActivity.newInstance(getActivity(), Constants.PlaceType.FNB//
+                    , gourmetMenu.ticketName, imageInformations, 0);
+                startActivityForResult(intent, GourmetMenusActivity.REQUEST_CODE_IMAGE_LIST);
+
+                AnalyticsManager.getInstance(getActivity()).recordEvent(AnalyticsManager.Category.GOURMET_BOOKINGS,//
+                    AnalyticsManager.Action.GOURMET_IMAGE_CLICKED, gourmetMenu.ticketName, null);
+            }
+        }, new Consumer<Throwable>()
+        {
+            @Override
+            public void accept(@io.reactivex.annotations.NonNull Throwable throwable) throws Exception
+            {
+                unLockAll();
+            }
+        }));
     }
 }

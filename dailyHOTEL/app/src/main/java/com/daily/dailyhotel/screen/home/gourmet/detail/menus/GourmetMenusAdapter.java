@@ -9,13 +9,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
+import com.daily.base.OnBaseEventListener;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ScreenUtils;
 import com.daily.dailyhotel.entity.GourmetMenu;
 import com.daily.dailyhotel.entity.GourmetMenuImage;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.LayoutGourmetMenuDetailInformationDataBinding;
-import com.twoheart.dailyhotel.databinding.LayoutStayOutboundDetailInformationDataBinding;
 import com.twoheart.dailyhotel.databinding.ListRowGourmetMenuDataBinding;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.Util;
@@ -30,7 +30,14 @@ public class GourmetMenusAdapter extends RecyclerView.Adapter<GourmetMenusAdapte
     private Context mContext;
     private List<GourmetMenu> mList;
 
-    private View.OnClickListener mOnClickListener;
+    private OnEventListener mOnEventListener;
+
+    public interface OnEventListener extends OnBaseEventListener
+    {
+        void onReservationClick(int index);
+
+        void onMoreImageClick(int index);
+    }
 
     public GourmetMenusAdapter(Context context, List<GourmetMenu> gourmetMenuList)
     {
@@ -41,9 +48,9 @@ public class GourmetMenusAdapter extends RecyclerView.Adapter<GourmetMenusAdapte
         addAll(gourmetMenuList);
     }
 
-    public void setOnClickListener(View.OnClickListener onClickListener)
+    public void setOnEventListener(OnEventListener onEventListener)
     {
-        mOnClickListener = onClickListener;
+        mOnEventListener = onEventListener;
     }
 
     public void clear()
@@ -132,16 +139,16 @@ public class GourmetMenusAdapter extends RecyclerView.Adapter<GourmetMenusAdapte
 
         if (position == 0)
         {
-            ((RecyclerView.LayoutParams)holder.dataBinding.getRoot().getLayoutParams()).leftMargin = ScreenUtils.getScreenWidth(mContext) / 12;
-            ((RecyclerView.LayoutParams)holder.dataBinding.getRoot().getLayoutParams()).rightMargin = 0;
+            ((RecyclerView.LayoutParams) holder.dataBinding.getRoot().getLayoutParams()).leftMargin = ScreenUtils.getScreenWidth(mContext) / 12;
+            ((RecyclerView.LayoutParams) holder.dataBinding.getRoot().getLayoutParams()).rightMargin = 0;
         } else if (position == getItemCount() - 1)
         {
-            ((RecyclerView.LayoutParams)holder.dataBinding.getRoot().getLayoutParams()).leftMargin = 0;
-            ((RecyclerView.LayoutParams)holder.dataBinding.getRoot().getLayoutParams()).rightMargin = ScreenUtils.getScreenWidth(mContext) / 12;
+            ((RecyclerView.LayoutParams) holder.dataBinding.getRoot().getLayoutParams()).leftMargin = 0;
+            ((RecyclerView.LayoutParams) holder.dataBinding.getRoot().getLayoutParams()).rightMargin = ScreenUtils.getScreenWidth(mContext) / 12;
         } else
         {
-            ((RecyclerView.LayoutParams)holder.dataBinding.getRoot().getLayoutParams()).leftMargin = 0;
-            ((RecyclerView.LayoutParams)holder.dataBinding.getRoot().getLayoutParams()).rightMargin = 0;
+            ((RecyclerView.LayoutParams) holder.dataBinding.getRoot().getLayoutParams()).leftMargin = 0;
+            ((RecyclerView.LayoutParams) holder.dataBinding.getRoot().getLayoutParams()).rightMargin = 0;
         }
 
         GourmetMenu gourmetMenu = getItem(position);
@@ -162,6 +169,18 @@ public class GourmetMenusAdapter extends RecyclerView.Adapter<GourmetMenusAdapte
             Util.requestImageResize(mContext, holder.dataBinding.simpleDraweeView, gourmetMenu.getImageList().get(0).url);
             setLineIndicatorVisible(holder.dataBinding, gourmetMenuImageList.size());
         }
+
+        holder.dataBinding.moreIconView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                if (mOnEventListener != null)
+                {
+                    mOnEventListener.onMoreImageClick(position);
+                }
+            }
+        });
 
         // 메뉴 제목
         holder.dataBinding.productNameTextView.setText(gourmetMenu.ticketName);
@@ -259,7 +278,17 @@ public class GourmetMenusAdapter extends RecyclerView.Adapter<GourmetMenusAdapte
         }
 
         holder.dataBinding.discountPriceTextView.setText(discountPrice);
-        holder.dataBinding.reservationTextView.setOnClickListener(mOnClickListener);
+        holder.dataBinding.reservationTextView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                if (mOnEventListener != null)
+                {
+                    mOnEventListener.onReservationClick(position);
+                }
+            }
+        });
 
         holder.dataBinding.getRoot().setTag(R.id.blurView, holder.dataBinding.blurView);
     }
@@ -301,9 +330,9 @@ public class GourmetMenusAdapter extends RecyclerView.Adapter<GourmetMenusAdapte
             LayoutGourmetMenuDetailInformationDataBinding dataBinding = DataBindingUtil.inflate(LayoutInflater.from(mContext), R.layout.layout_gourmet_menu_detail_information_data, viewGroup, true);
             dataBinding.textView.setText(contentText);
 
-            if(i != 0)
+            if (i != 0)
             {
-                LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams)dataBinding.getRoot().getLayoutParams();
+                LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) dataBinding.getRoot().getLayoutParams();
                 layoutParams.topMargin = ScreenUtils.dpToPx(mContext, 10);
             }
         }

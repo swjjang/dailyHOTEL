@@ -28,6 +28,8 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
         void onReservationClick(int index);
 
         void onScrolled(int position);
+
+        void onMoreImageClick(int position);
     }
 
     public GourmetMenusView(BaseActivity baseActivity, GourmetMenusView.OnEventListener listener)
@@ -89,12 +91,24 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
         }
 
         GourmetMenusAdapter gourmetMenusAdapter = new GourmetMenusAdapter(getContext(), gourmetMenuList);
-        gourmetMenusAdapter.setOnClickListener(new View.OnClickListener()
+        gourmetMenusAdapter.setOnEventListener(new GourmetMenusAdapter.OnEventListener()
         {
             @Override
-            public void onClick(View view)
+            public void onReservationClick(int index)
             {
-                getEventListener().onReservationClick(getViewDataBinding().recyclerView.getChildAdapterPosition((View) (view.getParent().getParent())));
+                getEventListener().onReservationClick(index);
+            }
+
+            @Override
+            public void onMoreImageClick(int index)
+            {
+                getEventListener().onMoreImageClick(index);
+            }
+
+            @Override
+            public void onBackClick()
+            {
+
             }
         });
 
