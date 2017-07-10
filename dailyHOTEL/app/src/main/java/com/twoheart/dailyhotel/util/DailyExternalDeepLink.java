@@ -59,7 +59,7 @@ public class DailyExternalDeepLink extends DailyDeepLink
     private static final String PARAM_V7_NOTICE_INDEX = "ni"; // 공지사항 인덱스
 
     //    private static final String PARAM_V9_QUERY = "qr"; // 검색 쿼리
-    private static final String PARAM_V9_OPEN_TICKEt_INDEX = "oti"; // 스테이/고메 메뉴 오픈시에 해당 인덱스
+    private static final String PARAM_V9_OPEN_TICKET_INDEX = "oti"; // 스테이/고메 메뉴 오픈시에 해당 인덱스
     private static final String PARAM_V9_QUERY_TYPE = "qt"; // 쿼리 방식
     //    private static final String PARAM_V9_TITLE_IMAGE_URL = "tiu"; // 타이틀 이미지 URL
 
@@ -111,20 +111,20 @@ public class DailyExternalDeepLink extends DailyDeepLink
     //    private static final String COLECTION_VIWE_V9 = "cv"; // 모아보기 화면
 
     private static final String PARAM_V10_BASE_URL = "baseUrl"; // 서버 BASE URL 변경
+    private static final String PARAM_V10_BASE_OUTBOUND_URL = "baseOutBoundUrl"; // 서버 BASE URL 변경
 
     private static final String MYDAILY_V12 = "md"; // 마이 데일리 화면
     private static final String HOME_V12_EVENT_DETAIL = "hed"; // 홈의 이벤트 상세화면
     private static final String HOME_V12_RECOMMENDATION_PLACE_LIST = "hrpl"; // 홈의 데일리 추천 -> 상세 리스트
 
 
-    private static final String PARAM_V13_PRODUCT_INDEX = "pdi"; // 상품 인덱스.
+    //    private static final String PARAM_V13_PRODUCT_INDEX = "pdi"; // 상품 인덱스.
 
     private static final String STAMP_V14 = "stamp"; // 스탬프.
 
     private static final String PARAM_V15_VR = "vr"; // vr
 
     private static final String PARAM_V16_STAY_SHORTCUT_LIST = "scl"; // 스테이 숏컷 리스트
-
 
     private static final int MINIMUM_VERSION_CODE = 2;
     private static final int MAXIMUM_VERSION_CODE = 16;
@@ -229,27 +229,27 @@ public class DailyExternalDeepLink extends DailyDeepLink
     // Version 13
     ///////////////////////////////////////////////////////////////////////////////////
 
-    public int getProductIndex()
-    {
-        int index = 0;
-
-        if (mVersionCode >= 9)
-        {
-            String value = mParamsMap.get(PARAM_V13_PRODUCT_INDEX);
-
-            if (DailyTextUtils.isTextEmpty(value) == false)
-            {
-                try
-                {
-                    index = Integer.parseInt(value);
-                } catch (NumberFormatException e)
-                {
-                }
-            }
-        }
-
-        return index;
-    }
+    //    public int getProductIndex()
+    //    {
+    //        int index = 0;
+    //
+    //        if (mVersionCode >= 9)
+    //        {
+    //            String value = mParamsMap.get(PARAM_V13_PRODUCT_INDEX);
+    //
+    //            if (DailyTextUtils.isTextEmpty(value) == false)
+    //            {
+    //                try
+    //                {
+    //                    index = Integer.parseInt(value);
+    //                } catch (NumberFormatException e)
+    //                {
+    //                }
+    //            }
+    //        }
+    //
+    //        return index;
+    //    }
 
     ///////////////////////////////////////////////////////////////////////////////////
     // Version 12
@@ -305,6 +305,21 @@ public class DailyExternalDeepLink extends DailyDeepLink
         if (mVersionCode >= 11)
         {
             value = mParamsMap.get(PARAM_V10_BASE_URL);
+        } else
+        {
+            value = null;
+        }
+
+        return value;
+    }
+
+    public String getBaseOutBoundUrl()
+    {
+        String value;
+
+        if (mVersionCode >= 11)
+        {
+            value = mParamsMap.get(PARAM_V10_BASE_OUTBOUND_URL);
         } else
         {
             value = null;
@@ -384,7 +399,7 @@ public class DailyExternalDeepLink extends DailyDeepLink
 
         if (mVersionCode >= 9)
         {
-            String value = mParamsMap.get(PARAM_V9_OPEN_TICKEt_INDEX);
+            String value = mParamsMap.get(PARAM_V9_OPEN_TICKET_INDEX);
 
             if (DailyTextUtils.isTextEmpty(value) == false)
             {

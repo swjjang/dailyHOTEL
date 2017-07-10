@@ -4,19 +4,26 @@ import android.content.Context;
 
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
-import com.twoheart.dailyhotel.model.Keyword;
 import com.twoheart.dailyhotel.model.time.StayBookingDay;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.network.dto.BaseListDto;
+import com.twoheart.dailyhotel.network.model.StayKeyword;
 import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
 import com.twoheart.dailyhotel.place.layout.PlaceSearchLayout;
 import com.twoheart.dailyhotel.place.networkcontroller.PlaceSearchNetworkController;
+
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Response;
 
 public class StaySearchNetworkController extends PlaceSearchNetworkController
 {
+    public interface OnNetworkControllerListener extends PlaceSearchNetworkController.OnNetworkControllerListener
+    {
+        void onResponseAutoComplete(String keyword, List<StayKeyword> list);
+    }
+
     public StaySearchNetworkController(Context context, String networkTag, OnBaseNetworkControllerListener listener)
     {
         super(context, networkTag, listener);
@@ -39,26 +46,26 @@ public class StaySearchNetworkController extends PlaceSearchNetworkController
         }
     }
 
-    private retrofit2.Callback mHotelSearchAutoCompleteCallback = new retrofit2.Callback<BaseListDto<Keyword>>()
+    private retrofit2.Callback mHotelSearchAutoCompleteCallback = new retrofit2.Callback<BaseListDto<StayKeyword>>()
     {
         @Override
-        public void onResponse(Call<BaseListDto<Keyword>> call, Response<BaseListDto<Keyword>> response)
+        public void onResponse(Call<BaseListDto<StayKeyword>> call, Response<BaseListDto<StayKeyword>> response)
         {
             if (response != null && response.isSuccessful() && response.body() != null)
             {
                 String term = call.request().url().queryParameter("term");
 
-                BaseListDto<Keyword> baseListDto = response.body();
+                BaseListDto<StayKeyword> baseListDto = response.body();
 
                 if (baseListDto.msgCode == 100)
                 {
                     if (baseListDto.data != null)
                     {
-                        for (Keyword keyword : baseListDto.data)
+                        for (StayKeyword stayKeyword : baseListDto.data)
                         {
-                            if (keyword.price > 0)
+                            if (stayKeyword.index > 0)
                             {
-                                keyword.icon = PlaceSearchLayout.HOTEL_ICON;
+                                stayKeyword.icon = PlaceSearchLayout.HOTEL_ICON;
                             }
                         }
                     }
@@ -72,65 +79,10 @@ public class StaySearchNetworkController extends PlaceSearchNetworkController
         }
 
         @Override
-        public void onFailure(Call<BaseListDto<Keyword>> call, Throwable t)
+        public void onFailure(Call<BaseListDto<StayKeyword>> call, Throwable t)
         {
             mOnNetworkControllerListener.onError(call, t, true);
             ((OnNetworkControllerListener) mOnNetworkControllerListener).onResponseAutoComplete(null, null);
         }
     };
-
-    //    private retrofit2.Callback mHotelSearchAutoCompleteCallback = new retrofit2.Callback<JSONObject>()
-    //    {
-    //        @Override
-    //        public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
-    //        {
-    //            if (response != null && response.isSuccessful() && response.body() != null)
-    //            {
-    //                String keyword = call.request().url().queryParameter("term");
-    //
-    //                List<Keyword> keywordList = null;
-    //
-    //                try
-    //                {
-    //                    JSONObject responseJSONObject = response.body();
-    //
-    //                    int msgCode = responseJSONObject.getInt("msgCode");
-    //
-    //                    if (msgCode == 100)
-    //                    {
-    //                        JSONArray dataJSONArray = responseJSONObject.getJSONArray("data");
-    //
-    //                        int length = dataJSONArray.length();
-    //
-    //                        keywordList = new ArrayList<>(length);
-    //
-    //                        for (int i = 0; i < length; i++)
-    //                        {
-    //                            try
-    //                            {
-    //                                keywordList.add(new Keyword(dataJSONArray.getJSONObject(i), PlaceSearchLayout.HOTEL_ICON));
-    //                            } catch (Exception e)
-    //                            {
-    //                                ExLog.d(e.toString());
-    //                            }
-    //                        }
-    //                    }
-    //                } catch (Exception e)
-    //                {
-    //                    ExLog.d(e.toString());
-    //                }
-    //
-    //                ((OnNetworkControllerListener) mOnNetworkControllerListener).onResponseAutoComplete(keyword, keywordList);
-    //            } else
-    //            {
-    //                mOnNetworkControllerListener.onErrorResponse(call, response);
-    //            }
-    //        }
-    //
-    //        @Override
-    //        public void onFailure(Call<JSONObject> call, Throwable t)
-    //        {
-    //            ((OnNetworkControllerListener) mOnNetworkControllerListener).onResponseAutoComplete(null, null);
-    //        }
-    //    };
 }

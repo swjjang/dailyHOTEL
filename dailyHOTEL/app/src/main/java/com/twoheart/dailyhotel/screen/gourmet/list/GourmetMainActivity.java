@@ -1225,7 +1225,6 @@ public class GourmetMainActivity extends PlaceMainActivity
                 int datePlus = externalDeepLink.getDatePlus();
                 boolean isShowCalendar = externalDeepLink.isShowCalendar();
                 boolean isShowVR = externalDeepLink.isShowVR();
-                int productIndex = externalDeepLink.getProductIndex();
 
                 GourmetBookingDay gourmetBookingDay = new GourmetBookingDay();
 
@@ -1243,7 +1242,7 @@ public class GourmetMainActivity extends PlaceMainActivity
 
                 mGourmetCuration.setGourmetBookingDay(gourmetBookingDay);
 
-                Intent intent = GourmetDetailActivity.newInstance(baseActivity, gourmetBookingDay, gourmetIndex, productIndex, isShowCalendar, isShowVR, false);
+                Intent intent = GourmetDetailActivity.newInstance(baseActivity, gourmetBookingDay, gourmetIndex, isShowCalendar, isShowVR, false);
                 baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMET_DETAIL);
 
                 overridePendingTransition(R.anim.slide_in_right, R.anim.hold);

@@ -607,14 +607,15 @@ public class HotelPaymentActivity extends PlacePaymentActivity
 
         Map<String, String> params = getMapPaymentInformation((StayPaymentInformation) paymentInformation, (StayBookingDay) mPlaceBookingDay);
 
-        Intent intent = HotelPaymentThankyouActivity.newInstance(this, imageUrl, placeName, placeType, //
-            userName, stayBookingDay, paymentInformation.paymentType.getName(), discountType, params);
+        Intent intent = HotelPaymentThankyouActivity.newInstance(this, imageUrl, placeName, placeType//
+            , ((StayPaymentInformation)paymentInformation).isOverSeas, userName, stayBookingDay//
+            , paymentInformation.paymentType.getName(), discountType, params);
 
         startActivityForResult(intent, REQUEST_CODE_PAYMETRESULT_ACTIVITY);
     }
 
     @Override
-    protected Dialog getEasyPaymentConfirmDialog(String vendorName)
+    protected Dialog getEasyPaymentConfirmDialog()
     {
         final Dialog dialog = new Dialog(this);
 
@@ -640,11 +641,11 @@ public class HotelPaymentActivity extends PlacePaymentActivity
                 , R.string.dialog_msg_hotel_payment_message14//
                 , R.string.dialog_msg_hotel_payment_message02//
                 , R.string.dialog_msg_hotel_payment_message03//
-                , R.string.dialog_msg_hotel_payment_message07, R.string.dialog_msg_hotel_payment_message08};
+                , R.string.dialog_msg_hotel_payment_message07};
         }
 
         final FinalCheckLayout finalCheckLayout = new FinalCheckLayout(HotelPaymentActivity.this);
-        finalCheckLayout.setMessages(messageResIds, vendorName, ((StayPaymentInformation)mPaymentInformation).isOverSeas);
+        finalCheckLayout.setMessages(messageResIds);
 
         final TextView agreeSignatureTextView = (TextView) finalCheckLayout.findViewById(R.id.agreeSignatureTextView);
         final View confirmTextView = finalCheckLayout.findViewById(R.id.confirmTextView);
@@ -810,7 +811,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
             return null;
         }
 
-        makeDialogMessages(messageLayout, textResIds, mPaymentInformation.vendorName, ((StayPaymentInformation)mPaymentInformation).isOverSeas);
+        makeDialogMessages(messageLayout, textResIds);
 
         View confirmTextView = view.findViewById(R.id.confirmTextView);
 
@@ -1737,7 +1738,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
         }
 
         int[] messageList;
-        if (PlacePaymentInformation.PaymentType.VBANK == paymentType || PlacePaymentInformation.PaymentType.EASY_CARD == paymentType)
+        if (PlacePaymentInformation.PaymentType.VBANK == paymentType)
         {
             messageList = new int[6];
         } else
@@ -1776,7 +1777,6 @@ public class HotelPaymentActivity extends PlacePaymentActivity
         {
             case EASY_CARD:
                 messageList[4] = R.string.dialog_msg_hotel_payment_message07;
-                messageList[5] = R.string.dialog_msg_hotel_payment_message08;
                 break;
 
             case VBANK:

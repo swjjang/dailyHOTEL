@@ -7,6 +7,7 @@ import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.model.StaySearchCuration;
 import com.twoheart.dailyhotel.model.StaySearchParams;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
+import com.twoheart.dailyhotel.place.layout.PlaceListLayout;
 import com.twoheart.dailyhotel.screen.hotel.list.StayListFragment;
 import com.twoheart.dailyhotel.screen.hotel.list.StayListLayout;
 import com.twoheart.dailyhotel.util.Util;
@@ -41,9 +42,14 @@ public class StaySearchResultListFragment extends StayListFragment
     }
 
     @Override
-    protected StayListLayout getPlaceListLayout()
+    public PlaceListLayout getPlaceListLayout()
     {
-        return new StaySearchResultListLayout(mBaseActivity, mEventListener);
+        if (mPlaceListLayout == null)
+        {
+            mPlaceListLayout = new StaySearchResultListLayout(mBaseActivity, mEventListener);
+        }
+
+        return mPlaceListLayout;
     }
 
     public void setSearchType(SearchType searchType)

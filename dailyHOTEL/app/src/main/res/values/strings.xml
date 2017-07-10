@@ -83,6 +83,7 @@
     <string name="label_product_detail">상품 상세</string>
     <string name="label_office_hours">이용시간</string>
     <string name="label_checklist">확인사항</string>
+    <string name="label_reservation_conditions">예약조건</string>
     <string name="label_truereview">트루리뷰</string>
     <string name="label_password">비밀번호</string>
     <string name="label_daily_truereview">데일리 트루리뷰</string>
@@ -299,9 +300,8 @@
     <string name="dialog_msg_hotel_payment_message02">\'체크인 시 배정\'의 경우 베드 타입을 보장하지 않으며 2인이 투숙할 수 있는 객실로 배정됩니다.</string>
     <string name="dialog_msg_hotel_payment_message03">미성년자는 보호자 동반시 투숙 가능합니다.</string>
     <string name="dialog_msg_hotel_payment_message05">발급된 가상 계좌번호로 10분 안에 입금해주세요. 미입금 시, 자동으로 예약이 취소됩니다.</string>
-    <string name="dialog_msg_hotel_payment_message06">취소 규정 등 위 내용과 &lt;b&gt;개인정보 제 3자 제공&lt;/b&gt;에 동의하시면 버튼을 눌러 결제를 진행해주세요.</string>
-    <string name="dialog_msg_hotel_payment_message07">아래에 서명하시면 취소 규정 등 위 내용과 &lt;b&gt;개인정보 제 3자 제공&lt;/b&gt;에 동의하신 것으로 간주됩니다.</string>
-    <string name="dialog_msg_hotel_payment_message08">서명 후 결제 완료 버튼을 눌러주세요.</string>
+    <string name="dialog_msg_hotel_payment_message06">취소 규정 등 위 내용에 동의하시면 버튼을 눌러 결제를 진행해 주세요.</string>
+    <string name="dialog_msg_hotel_payment_message07">취소 규정 등 위 내용에 동의하시면 서명 후 결제 완료 버튼을 눌러주세요.</string>
     <string name="dialog_msg_hotel_payment_message_pension_1">해당 예약은 확정 예약이 아닌 &lt;b&gt;대기 예약&lt;/b&gt;으로, 결제 완료 시 예약대기 상태이며, 예약확정 여부가 문자로 발송됩니다.</string>
     <string name="dialog_msg_hotel_payment_message_pension_2">해당 예약은 확정 예약이 아닌 &lt;b&gt;대기 예약&lt;/b&gt;으로, 결제 완료 시 예약대기 상태이며, 오전 11시까지 예약확정 여부가 문자로 발송됩니다.</string>
     <string name="dialog_msg_hotel_payment_message_pension_3">해당 예약은 확정 예약이 아닌 &lt;b&gt;대기 예약&lt;/b&gt;으로, 결제 완료 시 예약대기 상태이며, 예약확정 여부가 문자로 발송됩니다.</string>
@@ -1247,6 +1247,7 @@
     <string name="label_gourmet_product_detail_reservation">예약하기</string>
     <string name="label_gourmet_product_detail_menu_description">메뉴 설명</string>
     <string name="label_gourmet_product_lastorder">(라스트 오더 %1$s)</string>
+    <string name="label_gourmet_product_detail_title">상품 상세</string>
 
 
     <!-- Happy Talk -->
@@ -1429,18 +1430,6 @@
     <string name="label_app_permissions_guide_select03">소셜로그인 사용</string>
     <string name="label_app_permissions_guide_select04">소셜로그인, 공유(카카오톡, 페이스북)</string>
     <string name="label_app_permissions_guide_select05">해당 기능을 이용하실 때 동의를 받으며,\n허용하지 않으셔도 서비스 이용이 가능합니다.</string>
-
-
-    <!-- Payment Third Party -->
-    <string name="label_payment_agreement_third_party">제 3자 제공 내용 자세히 보기</string>
-    <string name="message_payment_agreement_third_party_01">서비스 제공을 위해 아래 개인정보가 업체에 제공됩니다.</string>
-    <string name="message_payment_agreement_third_party_02">개인정보 제공 받는 자: %1$s</string>
-    <string name="message_payment_agreement_third_party_03">제공목적: 서비스제공, 이용자 확인, 예약확인전화</string>
-    <string name="message_payment_agreement_third_party_04">제공정보: 예약자 성명, 핸드폰번호, 이메일주소</string>
-    <string name="message_payment_agreement_third_party_04_overseas">제공정보: 영문성명, 핸드폰번호, 이메일주소</string>
-    <string name="message_payment_agreement_third_party_05">보유 및 이용기간: 재화 또는 서비스의 제공 목적이 달성 된 후 파기</string>
-    <string name="message_payment_agreement_third_party_06">(단, 관계법령에 정해진 규정에 따라 법정기간 동안 보관)</string>
-    <string name="message_payment_agreement_third_party_07">고객님께서는 정보제공에 동의하지 않을 수 있으나, 이 경우 서비스 이용이 제한될 수 있습니다.</string>
 
     <string-array name="coupon_sort_array">
         <item>전체 쿠폰 보기</item>

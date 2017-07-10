@@ -443,7 +443,7 @@ public class EventWebActivity extends WebViewActivity implements Constants
                 }
 
                 Intent intent = GourmetDetailActivity.newInstance(EventWebActivity.this,//
-                    gourmetBookingDay, gourmetIndex, ticketIndex, isShowCalendar, isShowVR, false);
+                    gourmetBookingDay, gourmetIndex, isShowCalendar, isShowVR, false);
 
                 startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMET_DETAIL);
 

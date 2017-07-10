@@ -1,14 +1,11 @@
-package com.twoheart.dailyhotel.screen.gourmet.list;
+package com.twoheart.dailyhotel.screen.search.gourmet.result;
 
 import android.annotation.TargetApi;
 import android.content.Context;
-import android.databinding.DataBindingUtil;
 import android.graphics.Paint;
 import android.graphics.drawable.Animatable;
 import android.net.Uri;
 import android.os.Build;
-import android.os.Vibrator;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -20,102 +17,24 @@ import com.facebook.drawee.controller.BaseControllerListener;
 import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.imagepipeline.image.ImageInfo;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.databinding.ListRowGourmetDataBinding;
 import com.twoheart.dailyhotel.model.Gourmet;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
-import com.twoheart.dailyhotel.model.time.PlaceBookingDay;
 import com.twoheart.dailyhotel.network.model.Sticker;
-import com.twoheart.dailyhotel.place.adapter.PlaceListAdapter;
+import com.twoheart.dailyhotel.screen.gourmet.list.GourmetListAdapter;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
-public class GourmetListAdapter extends PlaceListAdapter
+public class GourmetSearchResultListAdapter extends GourmetListAdapter
 {
-    View.OnClickListener mOnClickListener;
-
-    public GourmetListAdapter(Context context, ArrayList<PlaceViewItem> arrayList, View.OnClickListener listener, View.OnClickListener eventBannerListener)
+    public GourmetSearchResultListAdapter(Context context, ArrayList<PlaceViewItem> arrayList, View.OnClickListener listener, View.OnClickListener eventBannerListener)
     {
-        super(context, arrayList);
-
-        mOnClickListener = listener;
-        mOnEventBannerClickListener = eventBannerListener;
-
-        setSortType(Constants.SortType.DEFAULT);
+        super(context, arrayList, listener, eventBannerListener);
     }
 
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
-    {
-        switch (viewType)
-        {
-            case PlaceViewItem.TYPE_SECTION:
-            {
-                View view = mInflater.inflate(R.layout.list_row_default_section, parent, false);
-
-                return new SectionViewHolder(view);
-            }
-
-            case PlaceViewItem.TYPE_ENTRY:
-            {
-                ListRowGourmetDataBinding dataBinding = DataBindingUtil.inflate(mInflater, R.layout.list_row_gourmet_data, parent, false);
-
-                return new GourmetViewHolder(dataBinding);
-            }
-
-            case PlaceViewItem.TYPE_EVENT_BANNER:
-            {
-                View view = mInflater.inflate(R.layout.list_row_eventbanner, parent, false);
-
-                return new EventBannerViewHolder(view);
-            }
-
-            case PlaceViewItem.TYPE_FOOTER_VIEW:
-            {
-                View view = mInflater.inflate(R.layout.list_row_footer, parent, false);
-
-                return new FooterViewHolder(view);
-            }
-
-            case PlaceViewItem.TYPE_LOADING_VIEW:
-            {
-                View view = mInflater.inflate(R.layout.list_row_loading, parent, false);
-
-                return new FooterViewHolder(view);
-            }
-        }
-
-        return null;
-    }
-
-    @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position)
-    {
-        PlaceViewItem item = getItem(position);
-
-        if (item == null)
-        {
-            return;
-        }
-
-        switch (item.mType)
-        {
-            case PlaceViewItem.TYPE_ENTRY:
-                onBindViewHolder((GourmetViewHolder) holder, item);
-                break;
-
-            case PlaceViewItem.TYPE_SECTION:
-                onBindViewHolder((SectionViewHolder) holder, item);
-                break;
-
-            case PlaceViewItem.TYPE_EVENT_BANNER:
-                onBindViewHolder((EventBannerViewHolder) holder, item);
-                break;
-        }
-    }
-
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     protected void onBindViewHolder(GourmetViewHolder holder, PlaceViewItem placeViewItem)
     {
@@ -237,13 +156,13 @@ public class GourmetListAdapter extends PlaceListAdapter
         Util.requestImageResize(mContext, holder.dataBinding.imageView, gourmet.imageUrl);
 
         // SOLD OUT 표시
-        //        if (gourmet.isSoldOut)
+        holder.dataBinding.soldoutView.setVisibility(View.GONE);
+
         if (gourmet.isExpiredTicket == true)
         {
-            holder.dataBinding.soldoutView.setVisibility(View.VISIBLE);
-        } else
-        {
-            holder.dataBinding.soldoutView.setVisibility(View.GONE);
+            holder.dataBinding.priceTextView.setVisibility(View.INVISIBLE);
+            holder.dataBinding.priceTextView.setText(null);
+            holder.dataBinding.discountPriceTextView.setText(mContext.getString(R.string.act_hotel_soldout));
         }
 
         if (DailyTextUtils.isTextEmpty(gourmet.dBenefitText) == false)
@@ -299,47 +218,6 @@ public class GourmetListAdapter extends PlaceListAdapter
         } else
         {
             holder.dataBinding.informationLayout.setVisibility(View.VISIBLE);
-        }
-    }
-
-    @Override
-    public void setPlaceBookingDay(PlaceBookingDay placeBookingDay)
-    {
-
-    }
-
-    protected class GourmetViewHolder extends RecyclerView.ViewHolder
-    {
-        public ListRowGourmetDataBinding dataBinding;
-
-        public GourmetViewHolder(ListRowGourmetDataBinding dataBinding)
-        {
-            super(dataBinding.getRoot());
-
-            this.dataBinding = dataBinding;
-
-            itemView.setOnClickListener(mOnClickListener);
-
-            if (Util.supportPreview(mContext) == true)
-            {
-                itemView.setOnLongClickListener(new View.OnLongClickListener()
-                {
-                    @Override
-                    public boolean onLongClick(View v)
-                    {
-                        if (mOnLongClickListener == null)
-                        {
-                            return false;
-                        } else
-                        {
-                            Vibrator vibrator = (Vibrator) mContext.getSystemService(Context.VIBRATOR_SERVICE);
-                            vibrator.vibrate(70);
-
-                            return mOnLongClickListener.onLongClick(v);
-                        }
-                    }
-                });
-            }
         }
     }
 }

@@ -1,4 +1,4 @@
-package com.twoheart.dailyhotel.screen.hotel.list;
+package com.twoheart.dailyhotel.screen.search.stay.result;
 
 import android.annotation.TargetApi;
 import android.content.Context;
@@ -19,113 +19,21 @@ import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.model.time.PlaceBookingDay;
 import com.twoheart.dailyhotel.model.time.StayBookingDay;
 import com.twoheart.dailyhotel.place.adapter.PlaceListAdapter;
+import com.twoheart.dailyhotel.screen.hotel.list.StayListAdapter;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
-public class StayListAdapter extends PlaceListAdapter
+public class StaySearchResultListAdapter extends StayListAdapter
 {
-    protected int mNights;
-    View.OnClickListener mOnClickListener;
-
-    public StayListAdapter(Context context, ArrayList<PlaceViewItem> arrayList, View.OnClickListener listener, View.OnClickListener eventBannerListener)
+    public StaySearchResultListAdapter(Context context, ArrayList<PlaceViewItem> arrayList, View.OnClickListener listener, View.OnClickListener eventBannerListener)
     {
-        super(context, arrayList);
-
-        mOnClickListener = listener;
-        mOnEventBannerClickListener = eventBannerListener;
-
-        setSortType(Constants.SortType.DEFAULT);
+        super(context, arrayList, listener, eventBannerListener);
     }
 
     @Override
-    public void setPlaceBookingDay(PlaceBookingDay placeBookingDay)
-    {
-        if (placeBookingDay == null)
-        {
-            return;
-        }
-
-        try
-        {
-            mNights = ((StayBookingDay) placeBookingDay).getNights();
-        } catch (Exception e)
-        {
-            mNights = 1;
-        }
-    }
-
-    @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
-    {
-        switch (viewType)
-        {
-            case PlaceViewItem.TYPE_SECTION:
-            {
-                View view = mInflater.inflate(R.layout.list_row_default_section, parent, false);
-
-                return new SectionViewHolder(view);
-            }
-
-            case PlaceViewItem.TYPE_ENTRY:
-            {
-                ListRowStayDataBinding dataBinding = DataBindingUtil.inflate(mInflater, R.layout.list_row_stay_data, parent, false);
-                return new HotelViewHolder(dataBinding);
-            }
-
-            case PlaceViewItem.TYPE_EVENT_BANNER:
-            {
-                View view = mInflater.inflate(R.layout.list_row_eventbanner, parent, false);
-
-                return new EventBannerViewHolder(view);
-            }
-
-            case PlaceViewItem.TYPE_FOOTER_VIEW:
-            {
-                View view = mInflater.inflate(R.layout.list_row_footer, parent, false);
-
-                return new FooterViewHolder(view);
-            }
-
-            case PlaceViewItem.TYPE_LOADING_VIEW:
-            {
-                View view = mInflater.inflate(R.layout.list_row_loading, parent, false);
-
-                return new FooterViewHolder(view);
-            }
-        }
-
-        return null;
-    }
-
-    @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position)
-    {
-        PlaceViewItem item = getItem(position);
-
-        if (item == null)
-        {
-            return;
-        }
-
-        switch (item.mType)
-        {
-            case PlaceViewItem.TYPE_ENTRY:
-                onBindViewHolder((HotelViewHolder) holder, item);
-                break;
-
-            case PlaceViewItem.TYPE_SECTION:
-                onBindViewHolder((SectionViewHolder) holder, item);
-                break;
-
-            case PlaceViewItem.TYPE_EVENT_BANNER:
-                onBindViewHolder((EventBannerViewHolder) holder, item);
-                break;
-        }
-    }
-
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     protected void onBindViewHolder(HotelViewHolder holder, PlaceViewItem placeViewItem)
     {
@@ -203,12 +111,13 @@ public class StayListAdapter extends PlaceListAdapter
         Util.requestImageResize(mContext, holder.dataBinding.imageView, stay.imageUrl);
 
         // SOLD OUT 표시
-        if (stay.isSoldOut == true)
+        holder.dataBinding.soldoutView.setVisibility(View.GONE);
+
+        if (stay.availableRooms == 0)
         {
-            holder.dataBinding.soldoutView.setVisibility(View.VISIBLE);
-        } else
-        {
-            holder.dataBinding.soldoutView.setVisibility(View.GONE);
+            holder.dataBinding.priceTextView.setVisibility(View.INVISIBLE);
+            holder.dataBinding.priceTextView.setText(null);
+            holder.dataBinding.discountPriceTextView.setText(mContext.getString(R.string.act_hotel_soldout));
         }
 
         if (DailyTextUtils.isTextEmpty(stay.dBenefitText) == false)
@@ -264,41 +173,6 @@ public class StayListAdapter extends PlaceListAdapter
         } else
         {
             holder.dataBinding.informationLayout.setVisibility(View.VISIBLE);
-        }
-    }
-
-    protected class HotelViewHolder extends RecyclerView.ViewHolder
-    {
-        public ListRowStayDataBinding dataBinding;
-
-        public HotelViewHolder(ListRowStayDataBinding dataBinding)
-        {
-            super(dataBinding.getRoot());
-
-            this.dataBinding = dataBinding;
-
-            itemView.setOnClickListener(mOnClickListener);
-
-            if (Util.supportPreview(mContext) == true)
-            {
-                itemView.setOnLongClickListener(new View.OnLongClickListener()
-                {
-                    @Override
-                    public boolean onLongClick(View v)
-                    {
-                        if (mOnLongClickListener == null)
-                        {
-                            return false;
-                        } else
-                        {
-                            Vibrator vibrator = (Vibrator) mContext.getSystemService(Context.VIBRATOR_SERVICE);
-                            vibrator.vibrate(70);
-
-                            return mOnLongClickListener.onLongClick(v);
-                        }
-                    }
-                });
-            }
         }
     }
 }

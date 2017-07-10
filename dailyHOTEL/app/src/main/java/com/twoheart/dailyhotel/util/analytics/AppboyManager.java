@@ -958,6 +958,12 @@ public class AppboyManager extends BaseAnalyticsManager
     }
 
     @Override
+    void purchaseCompleteStayOutbound(String transId, Map<String, String> params)
+    {
+
+    }
+
+    @Override
     void purchaseCompleteGourmet(String transId, Map<String, String> params)
     {
         AppboyProperties appboyProperties = new AppboyProperties();

@@ -19,6 +19,8 @@ import java.util.List;
  */
 public class GourmetMenusActivity extends BaseActivity<GourmetMenusPresenter>
 {
+    static final int REQUEST_CODE_IMAGE_LIST = 10000;
+
     static final String INTENT_EXTRA_DATA_MENU_LIST = "menuList";
     public static final String INTENT_EXTRA_DATA_INDEX = "index";
 

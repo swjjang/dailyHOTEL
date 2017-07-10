@@ -27,6 +27,8 @@ public class Gourmet extends Place
     public int categorySequence;
     public String subCategory;
     public double distance;
+    public int availableTicketNumbers;
+    public boolean isExpiredTicket;
 
     public Grade grade;
 
@@ -126,6 +128,14 @@ public class Gourmet extends Place
             }
 
             truevr = false;
+
+            if (jsonObject.has("availableTicketNumbers") == true)
+            {
+                availableTicketNumbers = jsonObject.getInt("availableTicketNumbers");
+            } else
+            {
+                availableTicketNumbers = -1;
+            }
 
             JSONObject imageJSONObject = jsonObject.getJSONObject("imgPathMain");
 

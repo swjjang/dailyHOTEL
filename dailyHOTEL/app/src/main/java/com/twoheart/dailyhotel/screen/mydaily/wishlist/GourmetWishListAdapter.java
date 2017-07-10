@@ -51,7 +51,7 @@ public class GourmetWishListAdapter extends PlaceWishListAdapter
         {
             case PlaceViewItem.TYPE_ENTRY:
             {
-                View view = mInflater.inflate(R.layout.list_row_gourmet, parent, false);
+                View view = mInflater.inflate(R.layout.list_row_gourmet_data, parent, false);
 
                 return new GourmetWishListViewHolder(view);
             }

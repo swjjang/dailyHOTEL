@@ -1437,58 +1437,58 @@ public class DailyMobileAPITest
         mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
     }
 
-    @Test
-    public void requestStaySearchAutoCompleteList() throws Exception
-    {
-        mLock = new CountDownLatch(1);
-
-        retrofit2.Callback networkCallback = new retrofit2.Callback<JSONObject>()
-        {
-            @Override
-            public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
-            {
-                try
-                {
-                    assertThat(response, notNullValue());
-                    assertThat(response.isSuccessful(), is(true));
-                    assertThat(response.body(), allOf(notNullValue(), isA(JSONObject.class)));
-
-                    JSONObject responseJSONObject = response.body();
-
-                    int msgCode = responseJSONObject.getInt("msgCode");
-                    assertThat(msgCode, is(100));
-
-                    JSONArray dataJSONArray = responseJSONObject.getJSONArray("data");
-
-                    int length = dataJSONArray.length();
-                    for (int i = 0; i < length; i++)
-                    {
-                        Keyword keyword = new Keyword(dataJSONArray.getJSONObject(i), PlaceSearchLayout.HOTEL_ICON);
-                        assertThat(keyword, notNullValue());
-                        assertThat(keyword.name, isNotEmpty());
-                    }
-                } catch (Throwable t)
-                {
-                    addException(call, response, t);
-                } finally
-                {
-                    mLock.countDown();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<JSONObject> call, Throwable t)
-            {
-                addException(call, null, t);
-                mLock.countDown();
-            }
-        };
-
-        DailyMobileAPI.getInstance(mContext).requestStaySearchAutoCompleteList(mNetworkTag//
-            , DailyCalendar.convertDateFormatString(mTodayDateTime.dailyDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyy-MM-dd")//
-            , TEST_NIGHTS, Const.TEST_STAY_AUTO_SEARCH_TEXT, networkCallback);
-        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
-    }
+//    @Test
+//    public void requestStaySearchAutoCompleteList() throws Exception
+//    {
+//        mLock = new CountDownLatch(1);
+//
+//        retrofit2.Callback networkCallback = new retrofit2.Callback<JSONObject>()
+//        {
+//            @Override
+//            public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
+//            {
+//                try
+//                {
+//                    assertThat(response, notNullValue());
+//                    assertThat(response.isSuccessful(), is(true));
+//                    assertThat(response.body(), allOf(notNullValue(), isA(JSONObject.class)));
+//
+//                    JSONObject responseJSONObject = response.body();
+//
+//                    int msgCode = responseJSONObject.getInt("msgCode");
+//                    assertThat(msgCode, is(100));
+//
+//                    JSONArray dataJSONArray = responseJSONObject.getJSONArray("data");
+//
+//                    int length = dataJSONArray.length();
+//                    for (int i = 0; i < length; i++)
+//                    {
+//                        Keyword keyword = new Keyword(dataJSONArray.getJSONObject(i), PlaceSearchLayout.HOTEL_ICON);
+//                        assertThat(keyword, notNullValue());
+//                        assertThat(keyword.name, isNotEmpty());
+//                    }
+//                } catch (Throwable t)
+//                {
+//                    addException(call, response, t);
+//                } finally
+//                {
+//                    mLock.countDown();
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<JSONObject> call, Throwable t)
+//            {
+//                addException(call, null, t);
+//                mLock.countDown();
+//            }
+//        };
+//
+//        DailyMobileAPI.getInstance(mContext).requestStaySearchAutoCompleteList(mNetworkTag//
+//            , DailyCalendar.convertDateFormatString(mTodayDateTime.dailyDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyy-MM-dd")//
+//            , TEST_NIGHTS, Const.TEST_STAY_AUTO_SEARCH_TEXT, networkCallback);
+//        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
+//    }
 
     @Test
     public void requestStayRegionList() throws Exception

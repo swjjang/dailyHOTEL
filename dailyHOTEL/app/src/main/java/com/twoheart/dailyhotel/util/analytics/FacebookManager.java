@@ -423,6 +423,12 @@ public class FacebookManager extends BaseAnalyticsManager
     }
 
     @Override
+    void purchaseCompleteStayOutbound(String transId, Map<String, String> params)
+    {
+
+    }
+
+    @Override
     void purchaseCompleteGourmet(String transId, Map<String, String> params)
     {
         AppEventsLogger appEventsLogger = AppEventsLogger.newLogger(mContext);

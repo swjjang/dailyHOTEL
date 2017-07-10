@@ -70,11 +70,11 @@ public abstract class PlaceListFragment extends BaseFragment implements Constant
 
     protected abstract int getLayoutResourceId();
 
-    protected abstract PlaceListLayout getPlaceListLayout();
-
     protected abstract BaseNetworkController getNetworkController();
 
     protected abstract void refreshList(boolean isShowProgress, int page);
+
+    public abstract PlaceListLayout getPlaceListLayout();
 
     public abstract void setPlaceCuration(PlaceCuration curation);
 

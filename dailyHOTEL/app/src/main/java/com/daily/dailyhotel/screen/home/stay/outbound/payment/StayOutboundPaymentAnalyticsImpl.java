@@ -100,27 +100,32 @@ public class StayOutboundPaymentAnalyticsImpl implements StayOutboundPaymentPres
 
             AnalyticsManager.getInstance(activity).recordScreen(activity, AnalyticsManager.Screen.DAILYHOTEL_PAYMENTCOMPLETE_OUTBOUND, null, params);
 
+            // Adjust
+            params.put(AnalyticsManager.KeyType.PROVINCE, AnalyticsManager.ValueType.EMPTY);
             params.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.EMPTY);
             params.put(AnalyticsManager.KeyType.PAYMENT_PRICE, Integer.toString(stayOutboundPayment.discountPrice));
             params.put(AnalyticsManager.KeyType.CATEGORY, AnalyticsManager.ValueType.EMPTY);
+            params.put(AnalyticsManager.KeyType.GRADE, mAnalyticsParam.grade);
             params.put(AnalyticsManager.KeyType.PLACE_INDEX, Integer.toString(stayOutboundPayment.stayIndex));
             params.put(AnalyticsManager.KeyType.NAME, stayName);
             params.put(AnalyticsManager.KeyType.IS_SHOW_ORIGINAL_PRICE, mAnalyticsParam.showOriginalPrice ? "y" : "n");
-            //        params.put(AnalyticsManager.KeyType.LIST_INDEX, );
+            params.put(AnalyticsManager.KeyType.LIST_INDEX, Integer.toString(mAnalyticsParam.rankingPosition));
             params.put(AnalyticsManager.KeyType.DBENEFIT, AnalyticsManager.ValueType.EMPTY);
             params.put(AnalyticsManager.KeyType.TICKET_INDEX, AnalyticsManager.ValueType.EMPTY);
             params.put(AnalyticsManager.KeyType.CHECK_IN, stayBookDateTime.getCheckInDateTime("yyyy-MM-dd"));
             params.put(AnalyticsManager.KeyType.CHECK_OUT, stayBookDateTime.getCheckOutDateTime("yyyy-MM-dd"));
+            params.put(AnalyticsManager.KeyType.LENGTH_OF_STAY, Integer.toString(stayBookDateTime.getNights()));
             params.put(AnalyticsManager.KeyType.NRD, mAnalyticsParam.nrd ? "y" : "n");
-            //        params.put(AnalyticsManager.KeyType.RATING, );
+            params.put(AnalyticsManager.KeyType.RATING, mAnalyticsParam.rating);
             params.put(AnalyticsManager.KeyType.DAILYCHOICE, AnalyticsManager.ValueType.EMPTY);
             params.put(AnalyticsManager.KeyType.PRICE_OFF, Integer.toString(stayOutboundPayment.totalPrice - stayOutboundPayment.discountPrice));
+            params.put(AnalyticsManager.KeyType.COUPON_CODE, AnalyticsManager.ValueType.EMPTY);
             params.put(AnalyticsManager.KeyType.USED_BOUNS, stayOutboundPayment.totalPrice != stayOutboundPayment.discountPrice ? "y" : "n");
 
             String strDate = DailyCalendar.format(new Date(), "yyyyMMddHHmmss");
             String transId = strDate + '_' + userInformation.index;
 
-            AnalyticsManager.getInstance(activity).purchaseCompleteHotel(transId, params);
+            AnalyticsManager.getInstance(activity).purchaseCompleteStayOutbound(transId, params);
         } catch (Exception e)
         {
             ExLog.e(e.toString());

@@ -24,6 +24,7 @@ public class Stay extends Place
     public String categoryCode;
     //    public String sday;
     public boolean isLocalPlus;
+    public int availableRooms;
 
     protected Grade mGrade;
 
@@ -103,10 +104,11 @@ public class Stay extends Place
 
             index = jsonObject.getInt("hotelIdx");
 
-            if (jsonObject.has("isSoldOut") == true)
-            {
-                isSoldOut = jsonObject.getBoolean("isSoldOut"); //
-            }
+            // 해당 정보 내려오지 않음.
+//            if (jsonObject.has("isSoldOut") == true)
+//            {
+//                isSoldOut = jsonObject.getBoolean("isSoldOut"); //
+//            }
 
             districtName = jsonObject.getString("districtName");
             categoryCode = jsonObject.getString("category");
@@ -120,6 +122,14 @@ public class Stay extends Place
             if (jsonObject.has("truevr") == true)
             {
                 truevr = jsonObject.getBoolean("truevr");
+            }
+
+            if (jsonObject.has("availableRooms") == true)
+            {
+                availableRooms = jsonObject.getInt("availableRooms");
+            } else
+            {
+                availableRooms = -1;
             }
 
             try

@@ -52,7 +52,7 @@ public class RecentGourmetListAdapter extends RecentPlacesListAdapter
         {
             case PlaceViewItem.TYPE_ENTRY:
             {
-                View view = mInflater.inflate(R.layout.list_row_gourmet, parent, false);
+                View view = mInflater.inflate(R.layout.list_row_gourmet_data, parent, false);
 
                 return new GourmetViewHolder(view);
             }

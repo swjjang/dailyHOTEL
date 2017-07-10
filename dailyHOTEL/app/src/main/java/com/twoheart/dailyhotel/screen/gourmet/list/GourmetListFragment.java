@@ -44,7 +44,7 @@ public class GourmetListFragment extends PlaceListFragment
     }
 
     @Override
-    protected PlaceListLayout getPlaceListLayout()
+    public PlaceListLayout getPlaceListLayout()
     {
         if (mGourmetListLayout == null)
         {

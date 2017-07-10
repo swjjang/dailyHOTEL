@@ -128,7 +128,7 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
                 {
                     Intent intent = new Intent(mContext, LauncherActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                    intent.setData(Uri.parse("dailyhotel://dailyhotel.co.kr?vc=11&baseUrl=https%3A%2F%2Fprod-mobileapi.dailyhotel.kr%2Fgoodnight%2F"));
+                    intent.setData(Uri.parse("dailyhotel://dailyhotel.co.kr?vc=11&baseUrl=https%3A%2F%2Fprod-mobileapi.dailyhotel.kr%2Fgoodnight%2F&baseOutBoundUrl=https%3A%2F%2Fprod-silo.dailyhotel.me%2F"));
                     mContext.startActivity(intent);
                 }
             });
@@ -140,7 +140,7 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
                 {
                     Intent intent = new Intent(mContext, LauncherActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                    intent.setData(Uri.parse("dailyhotel://dailyhotel.co.kr?vc=11&baseUrl=https%3A%2F%2Fstage-mobileapi.dailyhotel.me%2Fgoodnight%2F"));
+                    intent.setData(Uri.parse("dailyhotel://dailyhotel.co.kr?vc=11&baseUrl=https%3A%2F%2Fstage-mobileapi.dailyhotel.me%2Fgoodnight%2F&baseOutBoundUrl=https%3A%2F%2Fstage-silo.dailyhotel.me%2F"));
                     mContext.startActivity(intent);
                 }
             });
@@ -152,7 +152,7 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
                 {
                     Intent intent = new Intent(mContext, LauncherActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                    intent.setData(Uri.parse("dailyhotel://dailyhotel.co.kr?vc=11&baseUrl=https%3A%2F%2Fdev-mobileapi.dailyhotel.me%2Fgoodnight%2F"));
+                    intent.setData(Uri.parse("dailyhotel://dailyhotel.co.kr?vc=11&baseUrl=https%3A%2F%2Fdev-mobileapi.dailyhotel.me%2Fgoodnight%2F&baseOutBoundUrl=https%3A%2F%2Fdev-silo.dailyhotel.me%2F"));
                     mContext.startActivity(intent);
                 }
             });
@@ -173,7 +173,7 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
                 "xxhdpi 480dpi\n" +//
                 "xxxhdpi 640dpi";
 
-            debugTextView.setText(DailyPreference.getInstance(mContext).getBaseUrl() + "\n"//
+            debugTextView.setText(DailyPreference.getInstance(mContext).getBaseUrl() + "\n" + DailyPreference.getInstance(mContext).getBaseOutBoundUrl() + "\n"//
                 + webViewVersion + "\n\nDPI : " + displayMetrics.densityDpi//
                 + String.format(Locale.KOREA, "(%d, %d)", ScreenUtils.getScreenWidth(mContext), ScreenUtils.getScreenHeight(mContext))//
                 + dpiText);

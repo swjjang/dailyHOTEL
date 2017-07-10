@@ -448,6 +448,26 @@ public class AnalyticsManager
         }
     }
 
+    public void purchaseCompleteStayOutbound(String transId, Map<String, String> params)
+    {
+        try
+        {
+            for (BaseAnalyticsManager analyticsManager : mAnalyticsManagerList)
+            {
+                try
+                {
+                    analyticsManager.purchaseCompleteStayOutbound(transId, params);
+                } catch (Exception e)
+                {
+                    ExLog.d(TAG + e.toString());
+                }
+            }
+        } catch (Exception e)
+        {
+            ExLog.d(TAG + e.toString());
+        }
+    }
+
     public void purchaseCompleteGourmet(String transId, Map<String, String> params)
     {
         try

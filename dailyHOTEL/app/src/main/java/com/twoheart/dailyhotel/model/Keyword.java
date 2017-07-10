@@ -13,14 +13,11 @@ import org.json.JSONObject;
 @JsonObject
 public class Keyword implements Parcelable
 {
-    @JsonIgnore
-    public int icon;
-
     @JsonField(name = "displayText")
     public String name;
 
-    @JsonField(name = "discount")
-    public int price;
+    @JsonIgnore
+    public int icon;
 
     public Keyword()
     {
@@ -30,28 +27,6 @@ public class Keyword implements Parcelable
     {
         this.icon = icon;
         this.name = name;
-        this.price = -1;
-    }
-
-    public Keyword(JSONObject jsonObject, int defaultPlaceIcon) throws JSONException
-    {
-        name = jsonObject.getString("displayText");
-
-        if (jsonObject.has("discount") == true)
-        {
-            price = jsonObject.getInt("discount");
-        } else
-        {
-            price = 0;
-        }
-
-        if (price > 0)
-        {
-            icon = defaultPlaceIcon;
-        } else
-        {
-            icon = 0;
-        }
     }
 
     public Keyword(Parcel in)
@@ -64,14 +39,12 @@ public class Keyword implements Parcelable
     {
         dest.writeInt(icon);
         dest.writeString(name);
-        dest.writeInt(price);
     }
 
-    private void readFromParcel(Parcel in)
+    protected void readFromParcel(Parcel in)
     {
         icon = in.readInt();
         name = in.readString();
-        price = in.readInt();
     }
 
     @Override

@@ -42,6 +42,7 @@ public abstract class PlacePaymentThankyouActivity extends BaseActivity implemen
     protected static final String INTENT_EXTRA_DATA_IMAGEURL = "imageUrl";
     protected static final String INTENT_EXTRA_DATA_PLACE_NAME = "placeName";
     protected static final String INTENT_EXTRA_DATA_PLACE_TYPE = "placeType";
+    protected static final String INTENT_EXTRA_DATA_PLACE_OVERSEAS = "overseas";
     protected static final String INTENT_EXTRA_DATA_USER_NAME = "userName";
     protected static final String INTENT_EXTRA_DATA_VISIT_DAY = "visitDay";
     protected static final String INTENT_EXTRA_DATA_VISIT_TIME = "visitTime";
@@ -53,6 +54,7 @@ public abstract class PlacePaymentThankyouActivity extends BaseActivity implemen
     String mPaymentType;
     Map<String, String> mParams;
     View mStampLayout;
+    protected boolean mOverseas;
 
     protected abstract void recordEvent(String action, String label);
 
@@ -82,6 +84,7 @@ public abstract class PlacePaymentThankyouActivity extends BaseActivity implemen
         String imageUrl = intent.getStringExtra(INTENT_EXTRA_DATA_IMAGEURL);
         String placeName = intent.getStringExtra(INTENT_EXTRA_DATA_PLACE_NAME);
         String placeType = intent.getStringExtra(INTENT_EXTRA_DATA_PLACE_TYPE);
+        mOverseas = intent.getBooleanExtra(INTENT_EXTRA_DATA_PLACE_OVERSEAS, false);
         String userName = intent.getStringExtra(INTENT_EXTRA_DATA_USER_NAME);
 
         String discountType = intent.getStringExtra(INTENT_EXTRA_DATA_DISCOUNT_TYPE);

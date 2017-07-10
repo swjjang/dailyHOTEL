@@ -11,6 +11,7 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.GourmetCurationOption;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.time.PlaceBookingDay;
+import com.twoheart.dailyhotel.place.adapter.PlaceListAdapter;
 import com.twoheart.dailyhotel.screen.gourmet.list.GourmetListLayout;
 import com.twoheart.dailyhotel.screen.gourmet.list.GourmetListMapFragment;
 import com.twoheart.dailyhotel.util.Constants;
@@ -35,6 +36,12 @@ public class GourmetSearchResultListLayout extends GourmetListLayout
         mResultTextView = (TextView) view.findViewById(R.id.resultCountView);
 
         //        setBannerVisibility(false);
+    }
+
+    @Override
+    protected PlaceListAdapter getPlaceListAdapter(Context context, ArrayList<PlaceViewItem> arrayList)
+    {
+        return new GourmetSearchResultListAdapter(context, arrayList, mOnItemClickListener, null);
     }
 
     @Override

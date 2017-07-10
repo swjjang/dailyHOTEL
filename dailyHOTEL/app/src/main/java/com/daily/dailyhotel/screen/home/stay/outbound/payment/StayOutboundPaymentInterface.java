@@ -37,7 +37,7 @@ public interface StayOutboundPaymentInterface extends BaseDialogViewInterface
 
     void setBonusSelected(boolean selected);
 
-    void showAgreeTermDialog(StayOutboundPayment.PaymentType paymentType, String vendorName//
+    void showAgreeTermDialog(StayOutboundPayment.PaymentType paymentType//
         , View.OnClickListener onClickListener, DialogInterface.OnCancelListener cancelListener);
 
 

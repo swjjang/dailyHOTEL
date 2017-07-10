@@ -87,6 +87,8 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
 
     protected abstract int getRecentSearchesIcon(int type);
 
+    protected abstract void updateSuggestLayout(TextView titleTextView, TextView priceTextView, Keyword keyword, String text);
+
     public PlaceSearchLayout(Context context, OnBaseEventListener listener)
     {
         super(context, listener);
@@ -520,7 +522,7 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
         EdgeEffectColor.setEdgeGlowColor(mAutoCompleteScrollLayout, mContext.getResources().getColor(R.color.default_over_scroll_edge));
     }
 
-    public void updateAutoCompleteLayout(String text, List<Keyword> keywordList)
+    public void updateAutoCompleteLayout(String text, List<? extends Keyword> keywordList)
     {
         if (mSearchEditText.length() == 0)
         {
@@ -550,7 +552,7 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
         }
     }
 
-    void updateAutoCompleteLayout(ViewGroup viewGroup, String text, List<Keyword> keywordList)
+    void updateAutoCompleteLayout(ViewGroup viewGroup, String text, List<? extends Keyword> keywordList)
     {
         if (viewGroup == null)
         {
@@ -612,40 +614,7 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
                     TextView textView01 = (TextView) view.findViewById(R.id.textView01);
                     TextView textView02 = (TextView) view.findViewById(R.id.textView02);
 
-                    if (keyword.price > 0)
-                    {
-                        String keywordNameUpperCase = keyword.name.toUpperCase();
-                        String textUpperCase = text.toUpperCase();
-
-                        int separatorIndex = keywordNameUpperCase.indexOf('>');
-                        int startIndex = keywordNameUpperCase.lastIndexOf(textUpperCase);
-                        int endIndex = startIndex + textUpperCase.length();
-
-                        if (startIndex > separatorIndex)
-                        {
-                            try
-                            {
-                                SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(keyword.name);
-                                spannableStringBuilder.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), //
-                                    startIndex, endIndex, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-                                textView01.setText(spannableStringBuilder);
-                            } catch (Exception e)
-                            {
-                                textView01.setText(keyword.name);
-                            }
-                        } else
-                        {
-                            textView01.setText(keyword.name);
-                        }
-
-                        textView02.setVisibility(View.VISIBLE);
-                        textView02.setText(DailyTextUtils.getPriceFormat(mContext, keyword.price, false));
-                    } else
-                    {
-                        textView01.setText(keyword.name);
-                        textView02.setVisibility(View.INVISIBLE);
-                    }
+                    updateSuggestLayout(textView01, textView02, keyword, text);
                 }
             }
         }
