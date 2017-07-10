@@ -118,10 +118,10 @@ public class GourmetDetailLayout extends PlaceDetailLayout
         setImageInformation((imageInformationList.size() > 0) ? imageInformationList.get(0).description : null);
 
         mGourmetDetailItemLayout = new GourmetDetailItemLayout(mContext);
+        mGourmetDetailItemLayout.setDpi(dpi);
         mGourmetDetailItemLayout.setOnEventListener((GourmetDetailLayout.OnEventListener) mOnEventListener);
         mGourmetDetailItemLayout.setEmptyViewOnTouchListener(mEmptyViewOnTouchListener);
         mGourmetDetailItemLayout.setData(gourmetBookingDay, (GourmetDetail) mPlaceDetail, placeReviewScores);
-        mGourmetDetailItemLayout.setDpi(dpi);
 
         mScrollView.removeAllViews();
         mScrollView.addView(mGourmetDetailItemLayout);
