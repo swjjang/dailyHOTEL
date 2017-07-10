@@ -3,18 +3,15 @@ package com.twoheart.dailyhotel.screen.search.gourmet;
 import android.content.Context;
 
 import com.daily.base.util.DailyTextUtils;
-import com.daily.base.util.ExLog;
 import com.twoheart.dailyhotel.model.Keyword;
 import com.twoheart.dailyhotel.model.time.GourmetBookingDay;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
+import com.twoheart.dailyhotel.network.dto.BaseListDto;
+import com.twoheart.dailyhotel.network.model.GourmetKeyword;
 import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
 import com.twoheart.dailyhotel.place.layout.PlaceSearchLayout;
 import com.twoheart.dailyhotel.place.networkcontroller.PlaceSearchNetworkController;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -22,6 +19,11 @@ import retrofit2.Response;
 
 public class GourmetSearchNetworkController extends PlaceSearchNetworkController
 {
+    public interface OnNetworkControllerListener extends PlaceSearchNetworkController.OnNetworkControllerListener
+    {
+        void onResponseAutoComplete(String keyword, List<GourmetKeyword> list);
+    }
+
     public GourmetSearchNetworkController(Context context, String networkTag, OnBaseNetworkControllerListener listener)
     {
         super(context, networkTag, listener);
@@ -38,48 +40,32 @@ public class GourmetSearchNetworkController extends PlaceSearchNetworkController
             , gourmetBookingDay.getVisitDay("yyyy-MM-dd"), keyword, mGourmetSearchAutoCompleteCallback);
     }
 
-    private retrofit2.Callback mGourmetSearchAutoCompleteCallback = new retrofit2.Callback<JSONObject>()
+    private retrofit2.Callback mGourmetSearchAutoCompleteCallback = new retrofit2.Callback<BaseListDto<GourmetKeyword>>()
     {
         @Override
-        public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
+        public void onResponse(Call<BaseListDto<GourmetKeyword>> call, Response<BaseListDto<GourmetKeyword>> response)
         {
             if (response != null && response.isSuccessful() && response.body() != null)
             {
-                String keyword = call.request().url().queryParameter("term");
+                String term = call.request().url().queryParameter("term");
 
-                List<Keyword> keywordList = null;
+                BaseListDto<GourmetKeyword> baseListDto = response.body();
 
-                try
+                if (baseListDto.msgCode == 100)
                 {
-                    JSONObject responseJSONObject = response.body();
-
-                    int msgCode = responseJSONObject.getInt("msgCode");
-
-                    if (msgCode == 100)
+                    if (baseListDto.data != null)
                     {
-                        JSONArray dataJSONArray = responseJSONObject.getJSONArray("data");
-
-                        int length = dataJSONArray.length();
-
-                        keywordList = new ArrayList<>(length);
-
-                        for (int i = 0; i < length; i++)
+                        for (GourmetKeyword gourmetKeyword : baseListDto.data)
                         {
-                            try
+                            if (gourmetKeyword.index > 0)
                             {
-                                keywordList.add(new Keyword(dataJSONArray.getJSONObject(i), PlaceSearchLayout.GOURMET_ICON));
-                            } catch (Exception e)
-                            {
-                                ExLog.d(e.toString());
+                                gourmetKeyword.icon = PlaceSearchLayout.GOURMET_ICON;
                             }
                         }
                     }
-                } catch (Exception e)
-                {
-                    ExLog.d(e.toString());
                 }
 
-                ((OnNetworkControllerListener) mOnNetworkControllerListener).onResponseAutoComplete(keyword, keywordList);
+                ((OnNetworkControllerListener) mOnNetworkControllerListener).onResponseAutoComplete(term, baseListDto.data);
             } else
             {
                 mOnNetworkControllerListener.onErrorResponse(call, response);
@@ -87,7 +73,7 @@ public class GourmetSearchNetworkController extends PlaceSearchNetworkController
         }
 
         @Override
-        public void onFailure(Call<JSONObject> call, Throwable t)
+        public void onFailure(Call<BaseListDto<GourmetKeyword>> call, Throwable t)
         {
             mOnNetworkControllerListener.onError(call, t, true);
             ((OnNetworkControllerListener) mOnNetworkControllerListener).onResponseAutoComplete(null, null);

@@ -18,8 +18,6 @@ public abstract class PlaceSearchNetworkController extends BaseNetworkController
 {
     public interface OnNetworkControllerListener extends OnBaseNetworkControllerListener
     {
-        void onResponseAutoComplete(String keyword, List<Keyword> list);
-
         void onDateTime(TodayDateTime todayDateTime);
     }
 

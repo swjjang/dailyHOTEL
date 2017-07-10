@@ -24,6 +24,7 @@ import com.twoheart.dailyhotel.network.dto.BaseDto;
 import com.twoheart.dailyhotel.network.dto.BaseListDto;
 import com.twoheart.dailyhotel.network.model.Event;
 import com.twoheart.dailyhotel.network.model.GourmetDetailParams;
+import com.twoheart.dailyhotel.network.model.GourmetKeyword;
 import com.twoheart.dailyhotel.network.model.GourmetWishItem;
 import com.twoheart.dailyhotel.network.model.Holiday;
 import com.twoheart.dailyhotel.network.model.HomePlaces;
@@ -37,6 +38,7 @@ import com.twoheart.dailyhotel.network.model.RecommendationStay;
 import com.twoheart.dailyhotel.network.model.Stamp;
 import com.twoheart.dailyhotel.network.model.Status;
 import com.twoheart.dailyhotel.network.model.StayDetailParams;
+import com.twoheart.dailyhotel.network.model.StayKeyword;
 import com.twoheart.dailyhotel.network.model.StayWishItem;
 import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.network.model.TrueVRParams;
@@ -128,10 +130,10 @@ public interface DailyMobileService
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET("{mobileAPI}")
-    Call<BaseListDto<Keyword>> requestStaySearchAutoCompleteList(@Path(value = "mobileAPI", encoded = true) String mobileAPI, //
-                                                                 @Query("dateCheckIn") String date, //
-                                                                 @Query("stays") int stays, //
-                                                                 @Query("term") String term);
+    Call<BaseListDto<StayKeyword>> requestStaySearchAutoCompleteList(@Path(value = "mobileAPI", encoded = true) String mobileAPI, //
+                                                                     @Query("dateCheckIn") String date, //
+                                                                     @Query("stays") int stays, //
+                                                                     @Query("term") String term);
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET("{mobileAPI}")
@@ -182,7 +184,7 @@ public interface DailyMobileService
                                         @Query("luxury") List<String> luxuryList);
 
     @GET("{mobileAPI}")
-    Call<JSONObject> requestGourmetSearchAutoCompleteList(@Path(value = "mobileAPI", encoded = true) String mobileAPI, @Query("reserveDate") String date, @Query("term") String term);
+    Call<BaseListDto<GourmetKeyword>> requestGourmetSearchAutoCompleteList(@Path(value = "mobileAPI", encoded = true) String mobileAPI, @Query("reservationDate") String date, @Query("term") String term);
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET("{mobileAPI}")

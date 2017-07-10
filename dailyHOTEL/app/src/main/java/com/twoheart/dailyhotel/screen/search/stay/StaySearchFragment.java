@@ -11,6 +11,7 @@ import com.daily.dailyhotel.screen.home.stay.outbound.search.StayOutboundSearchA
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Keyword;
 import com.twoheart.dailyhotel.model.time.StayBookingDay;
+import com.twoheart.dailyhotel.network.model.StayKeyword;
 import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.place.fragment.PlaceSearchFragment;
 import com.twoheart.dailyhotel.place.layout.PlaceSearchLayout;
@@ -308,7 +309,7 @@ public class StaySearchFragment extends PlaceSearchFragment
                 return;
             }
 
-            if (keyword.price < 0)
+            if (((StayKeyword)keyword).price < 0)
             {
                 Intent intent = StaySearchResultActivity.newInstance(mBaseActivity, mTodayDateTime, mStayBookingDay, keyword, Constants.SearchType.RECENT);
                 startActivityForResult(intent, REQUEST_ACTIVITY_SEARCHRESULT);
@@ -376,7 +377,7 @@ public class StaySearchFragment extends PlaceSearchFragment
     private StaySearchNetworkController.OnNetworkControllerListener mOnNetworkControllerListener = new StaySearchNetworkController.OnNetworkControllerListener()
     {
         @Override
-        public void onResponseAutoComplete(String keyword, List<Keyword> list)
+        public void onResponseAutoComplete(String keyword, List<StayKeyword> list)
         {
             if (isFinishing() == true)
             {
