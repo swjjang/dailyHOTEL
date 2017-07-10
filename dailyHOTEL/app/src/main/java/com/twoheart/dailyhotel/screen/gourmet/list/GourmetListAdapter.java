@@ -117,7 +117,7 @@ public class GourmetListAdapter extends PlaceListAdapter
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-    private void onBindViewHolder(GourmetViewHolder holder, PlaceViewItem placeViewItem)
+    protected void onBindViewHolder(GourmetViewHolder holder, PlaceViewItem placeViewItem)
     {
         final Gourmet gourmet = placeViewItem.getItem();
 
@@ -237,7 +237,8 @@ public class GourmetListAdapter extends PlaceListAdapter
         Util.requestImageResize(mContext, holder.dataBinding.imageView, gourmet.imageUrl);
 
         // SOLD OUT 표시
-        if (gourmet.isSoldOut)
+        //        if (gourmet.isSoldOut)
+        if (gourmet.availableTicketNumbers == 0)
         {
             holder.dataBinding.soldoutView.setVisibility(View.VISIBLE);
         } else

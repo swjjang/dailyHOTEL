@@ -309,13 +309,13 @@ public class StaySearchFragment extends PlaceSearchFragment
                 return;
             }
 
-            if (((StayKeyword)keyword).price < 0)
+            if (keyword instanceof StayKeyword)
             {
-                Intent intent = StaySearchResultActivity.newInstance(mBaseActivity, mTodayDateTime, mStayBookingDay, keyword, Constants.SearchType.RECENT);
+                Intent intent = StaySearchResultActivity.newInstance(mBaseActivity, mTodayDateTime, mStayBookingDay, text, keyword, Constants.SearchType.AUTOCOMPLETE);
                 startActivityForResult(intent, REQUEST_ACTIVITY_SEARCHRESULT);
             } else
             {
-                Intent intent = StaySearchResultActivity.newInstance(mBaseActivity, mTodayDateTime, mStayBookingDay, text, keyword, Constants.SearchType.AUTOCOMPLETE);
+                Intent intent = StaySearchResultActivity.newInstance(mBaseActivity, mTodayDateTime, mStayBookingDay, keyword, Constants.SearchType.RECENT);
                 startActivityForResult(intent, REQUEST_ACTIVITY_SEARCHRESULT);
             }
         }

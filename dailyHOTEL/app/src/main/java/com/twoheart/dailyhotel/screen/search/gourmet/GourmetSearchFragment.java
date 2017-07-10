@@ -273,13 +273,13 @@ public class GourmetSearchFragment extends PlaceSearchFragment
                 return;
             }
 
-            if (((GourmetKeyword)keyword).price < 0)
+            if (keyword instanceof GourmetKeyword)
             {
-                Intent intent = GourmetSearchResultActivity.newInstance(mBaseActivity, mTodayDateTime, mGourmetBookingDay, keyword, Constants.SearchType.RECENT);
+                Intent intent = GourmetSearchResultActivity.newInstance(mBaseActivity, mTodayDateTime, mGourmetBookingDay, text, keyword, Constants.SearchType.AUTOCOMPLETE);
                 startActivityForResult(intent, REQUEST_ACTIVITY_SEARCHRESULT);
             } else
             {
-                Intent intent = GourmetSearchResultActivity.newInstance(mBaseActivity, mTodayDateTime, mGourmetBookingDay, text, keyword, Constants.SearchType.AUTOCOMPLETE);
+                Intent intent = GourmetSearchResultActivity.newInstance(mBaseActivity, mTodayDateTime, mGourmetBookingDay, keyword, Constants.SearchType.RECENT);
                 startActivityForResult(intent, REQUEST_ACTIVITY_SEARCHRESULT);
             }
         }

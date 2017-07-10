@@ -127,7 +127,7 @@ public class StayListAdapter extends PlaceListAdapter
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-    private void onBindViewHolder(HotelViewHolder holder, PlaceViewItem placeViewItem)
+    protected void onBindViewHolder(HotelViewHolder holder, PlaceViewItem placeViewItem)
     {
         final Stay stay = placeViewItem.getItem();
 
