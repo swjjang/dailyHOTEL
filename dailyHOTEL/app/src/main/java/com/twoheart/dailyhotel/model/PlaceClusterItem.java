@@ -6,18 +6,18 @@ import com.google.maps.android.clustering.ClusterItem;
 public class PlaceClusterItem implements ClusterItem
 {
     private final Place mPlace;
-    private final LatLng mPosition;
+    private final LatLng mLatLng;
 
     public PlaceClusterItem(Place place)
     {
         mPlace = place;
-        mPosition = new LatLng(place.latitude, place.longitude);
+        mLatLng = new LatLng(place.latitude, place.longitude);
     }
 
     @Override
     public LatLng getPosition()
     {
-        return mPosition;
+        return mLatLng;
     }
 
     @Override
