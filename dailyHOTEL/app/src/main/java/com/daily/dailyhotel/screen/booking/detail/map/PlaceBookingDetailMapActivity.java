@@ -23,6 +23,9 @@ public class PlaceBookingDetailMapActivity extends BaseActivity<PlaceBookingDeta
     protected static final String INTENT_EXTRA_DATA_PLACEBOOKINGDAY = "placeBookingDay";
     protected static final String INTENT_EXTRA_DATA_PLACE_LIST = "placeList";
 
+    static final int REQUEST_CODE_PERMISSION_MANAGER = 10000;
+    static final int REQUEST_CODE_SETTING_LOCATION = 10001;
+
     public static Intent newInstance(Context context, String title, PlaceBookingDay placeBookingDay, ArrayList<? extends Place> list)
     {
         Intent intent = new Intent(context, PlaceBookingDetailMapActivity.class);

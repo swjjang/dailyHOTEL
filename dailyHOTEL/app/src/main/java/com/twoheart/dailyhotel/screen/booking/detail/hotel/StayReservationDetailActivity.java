@@ -160,7 +160,7 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
                         @Override
                         public void subscribe(ObservableEmitter<Object> e) throws Exception
                         {
-                            startGourmetDetail(mViewByLongPress, mHomePlaceByLongPress, mTodayDateTime);
+                            startGourmetDetail(mViewByLongPress, mHomePlaceByLongPress, mTodayDateTime, (StayBookingDetail) mPlaceBookingDetail);
                         }
                     }).subscribeOn(AndroidSchedulers.mainThread()).subscribe();
                 }
@@ -857,17 +857,26 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-    private void startGourmetDetail(View view, HomePlace homePlace, TodayDateTime todayDateTime)
+    private void startGourmetDetail(View view, HomePlace homePlace, TodayDateTime todayDateTime, StayBookingDetail stayBookingDetail)
     {
-        if (view == null || homePlace == null || todayDateTime == null)
+        if (view == null || homePlace == null || todayDateTime == null || stayBookingDetail == null)
         {
             return;
         }
 
         try
         {
+            long currentDateTime = DailyCalendar.convertStringToDate(mTodayDateTime.currentDateTime).getTime();
+            long checkInDateTime = DailyCalendar.convertStringToDate(stayBookingDetail.checkInDate).getTime();
+
+            String visitDay = stayBookingDetail.checkInDate;
+            if (currentDateTime > checkInDateTime)
+            {
+                visitDay = todayDateTime.dailyDateTime;
+            }
+
             GourmetBookingDay gourmetBookingDay = new GourmetBookingDay();
-            gourmetBookingDay.setVisitDay(mTodayDateTime.dailyDateTime);
+            gourmetBookingDay.setVisitDay(visitDay);
 
             if (Util.isUsedMultiTransition() == true)
             {
@@ -1143,8 +1152,19 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
             {
                 String title = getResources().getString(R.string.label_home_view_all);
 
+                StayBookingDetail stayBookingDetail = (StayBookingDetail) mPlaceBookingDetail;
+
+                long currentDateTime = DailyCalendar.convertStringToDate(mTodayDateTime.currentDateTime).getTime();
+                long checkInDateTime = DailyCalendar.convertStringToDate(stayBookingDetail.checkInDate).getTime();
+
+                String visitDay = stayBookingDetail.checkInDate;
+                if (currentDateTime > checkInDateTime)
+                {
+                    visitDay = mTodayDateTime.dailyDateTime;
+                }
+
                 GourmetBookingDay gourmetBookingDay = new GourmetBookingDay();
-                gourmetBookingDay.setVisitDay(mTodayDateTime.dailyDateTime);
+                gourmetBookingDay.setVisitDay(visitDay);
 
                 ArrayList<Gourmet> gourmetList = new ArrayList<>();
                 if (mRecommendGourmetList != null && mRecommendGourmetList.size() > 0)
@@ -1189,7 +1209,7 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
                 return;
             }
 
-            startGourmetDetail(view, homePlace, mTodayDateTime);
+            startGourmetDetail(view, homePlace, mTodayDateTime, (StayBookingDetail) mPlaceBookingDetail);
 
             //            AnalyticsManager.getInstance(mBaseActivity).recordEvent(//
             //                AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.HOME_RECENTVIEW_CLICK,//
