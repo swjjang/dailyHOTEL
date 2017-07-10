@@ -2,11 +2,9 @@ package com.daily.dailyhotel.screen.home.gourmet.detail.menus;
 
 import android.content.Context;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.LinearSmoothScroller;
 import android.support.v7.widget.PagerSnapHelper;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
-import android.util.DisplayMetrics;
 import android.view.View;
 
 import com.daily.base.BaseActivity;
@@ -101,18 +99,14 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
         });
 
         getViewDataBinding().recyclerView.setAdapter(gourmetMenusAdapter);
-
-        LinearSmoothScroller linearSmoothScroller = new LinearSmoothScroller(getContext())
+        getViewDataBinding().recyclerView.post(new Runnable()
         {
             @Override
-            protected float calculateSpeedPerPixel(DisplayMetrics displayMetrics)
+            public void run()
             {
-                return 0.1f / displayMetrics.densityDpi;
+                ((LinearLayoutManager) (getViewDataBinding().recyclerView.getLayoutManager())).scrollToPositionWithOffset(position, ScreenUtils.getScreenWidth(getContext()) / 12);
             }
-        };
-
-        linearSmoothScroller.setTargetPosition(position);
-        getViewDataBinding().recyclerView.getLayoutManager().startSmoothScroll(linearSmoothScroller);
+        });
     }
 
     @Override
