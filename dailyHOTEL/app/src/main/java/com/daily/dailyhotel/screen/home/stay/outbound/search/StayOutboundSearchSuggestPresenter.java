@@ -31,6 +31,8 @@ public class StayOutboundSearchSuggestPresenter extends BaseExceptionPresenter<S
     public interface StayOutboundSearchSuggestAnalyticsInterface extends BaseAnalyticsInterface
     {
         void onEventSuggestClick(Activity activity, String keyword, Suggest suggest);
+
+        void onEventSuggestEmpty(Activity activity, String keyword);
     }
 
     public StayOutboundSearchSuggestPresenter(@NonNull StayOutboundSearchSuggestActivity activity)
@@ -188,6 +190,7 @@ public class StayOutboundSearchSuggestPresenter extends BaseExceptionPresenter<S
 
         Intent intent = new Intent();
         intent.putExtra(StayOutboundSearchSuggestActivity.INTENT_EXTRA_DATA_SUGGEST, new SuggestParcel(suggest));
+        intent.putExtra(StayOutboundSearchSuggestActivity.INTENT_EXTRA_DATA_KEYWORD, mKeyword);
 
         setResult(Activity.RESULT_OK, intent);
         onBackClick();
@@ -201,6 +204,8 @@ public class StayOutboundSearchSuggestPresenter extends BaseExceptionPresenter<S
         {
             getViewInterface().setSuggestsVisible(false);
             getViewInterface().setEmptySuggestsVisible(true);
+
+            mAnalytics.onEventSuggestEmpty(getActivity(), mKeyword);
         } else
         {
             getViewInterface().setSuggestsVisible(true);

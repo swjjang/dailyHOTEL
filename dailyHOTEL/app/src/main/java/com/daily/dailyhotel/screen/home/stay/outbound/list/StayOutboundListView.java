@@ -408,6 +408,7 @@ public class StayOutboundListView extends BaseDialogView<StayOutboundListView.On
             return;
         }
 
+        getViewDataBinding().swipeRefreshLayout.setVisibility(View.INVISIBLE);
         getViewDataBinding().mapLayout.setVisibility(View.VISIBLE);
 
         if (mStayOutboundMapFragment == null)
@@ -450,6 +451,7 @@ public class StayOutboundListView extends BaseDialogView<StayOutboundListView.On
 
         getViewDataBinding().mapLayout.removeAllViews();
         getViewDataBinding().mapLayout.setVisibility(View.GONE);
+        getViewDataBinding().swipeRefreshLayout.setVisibility(View.VISIBLE);
 
         resetMenuBarLayoutTranslation();
     }

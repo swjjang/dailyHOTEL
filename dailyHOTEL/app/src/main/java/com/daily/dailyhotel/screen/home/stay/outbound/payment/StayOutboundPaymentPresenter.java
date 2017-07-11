@@ -165,7 +165,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
 
         setPeople(numberOfAdults, childAgeList);
 
-        mAnalytics.setAnalyticsParam(intent.getParcelableExtra(StayOutboundPaymentActivity.INTENT_EXTRA_DATA_ANALYTICS));
+        mAnalytics.setAnalyticsParam(intent.getParcelableExtra(BaseActivity.INTENT_EXTRA_DATA_ANALYTICS));
 
         return true;
     }

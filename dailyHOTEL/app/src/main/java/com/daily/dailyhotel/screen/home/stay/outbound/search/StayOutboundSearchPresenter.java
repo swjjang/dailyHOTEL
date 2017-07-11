@@ -17,6 +17,7 @@ import com.daily.dailyhotel.entity.People;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.Suggest;
 import com.daily.dailyhotel.parcel.SuggestParcel;
+import com.daily.dailyhotel.parcel.analytics.StayOutboundListAnalyticsParam;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
 import com.daily.dailyhotel.screen.common.calendar.StayCalendarActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.list.StayOutboundListActivity;
@@ -46,6 +47,7 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
     private StayBookDateTime mStayBookDateTime;
 
     private Suggest mSuggest;
+    private String mKeyword;
     private People mPeople;
 
     public interface StayOutboundSearchAnalyticsInterface extends BaseAnalyticsInterface
@@ -206,6 +208,7 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
                     if (data.hasExtra(StayOutboundSearchSuggestActivity.INTENT_EXTRA_DATA_SUGGEST) == true)
                     {
                         SuggestParcel suggestParcel = data.getParcelableExtra(StayOutboundSearchSuggestActivity.INTENT_EXTRA_DATA_SUGGEST);
+                        mKeyword = data.getStringExtra(StayOutboundSearchSuggestActivity.INTENT_EXTRA_DATA_KEYWORD);
 
                         if (suggestParcel != null)
                         {
@@ -308,22 +311,25 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
 
         Intent intent;
 
-        if (mSuggest.id == 0)
-        {
-            // 키워드 검색인 경우
-            intent = StayOutboundListActivity.newInstance(getActivity(), mSuggest.city//
-                , mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
-                , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
-                , mPeople.numberOfAdults, mPeople.getChildAgeList());
-        } else
-        {
-            // Suggest검색인 경우
-            intent = StayOutboundListActivity.newInstance(getActivity(), mSuggest//
-                , mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
-                , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
-                , mPeople.numberOfAdults, mPeople.getChildAgeList());
+        //        if (mSuggest.id == 0)
+        //        {
+        // 키워드 검색인 경우
+        //            intent = StayOutboundListActivity.newInstance(getActivity(), mSuggest.city//
+        //                , mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
+        //                , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
+        //                , mPeople.numberOfAdults, mPeople.getChildAgeList());
+        //        } else
+        //        {
+        StayOutboundListAnalyticsParam analyticsParam = new StayOutboundListAnalyticsParam();
+        analyticsParam.keyword = mKeyword;
 
-        }
+        // Suggest검색인 경우
+        intent = StayOutboundListActivity.newInstance(getActivity(), mSuggest//
+            , mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
+            , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
+            , mPeople.numberOfAdults, mPeople.getChildAgeList(), analyticsParam);
+
+        //        }
 
         startActivityForResult(intent, StayOutboundSearchActivity.REQUEST_CODE_LIST);
     }
@@ -447,6 +453,11 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
     private void setSuggest(Suggest suggest)
     {
         mSuggest = suggest;
+    }
+
+    private void setKeyword(String keyword)
+    {
+        mKeyword = keyword;
     }
 
     private void setPeople(int numberOfAdults, ArrayList<Integer> childAgeList)

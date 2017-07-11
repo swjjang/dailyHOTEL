@@ -96,7 +96,7 @@
             android:text="@string/label_home_term"
             android:textColor="@color/default_text_cababab"
             android:textSize="10dp"
-            dailyFont:style="Bold"/>
+            dailyFont:style="Medium"/>
 
         <com.daily.base.widget.DailyTextView
             android:id="@+id/vericalLineTextView1"
@@ -136,7 +136,7 @@
             android:text="@string/label_home_location_terms"
             android:textColor="@color/default_text_cababab"
             android:textSize="10dp"
-            dailyFont:style="Bold"/>
+            dailyFont:style="Medium"/>
 
         <com.daily.base.widget.DailyTextView
             android:id="@+id/vericalLineTextView3"
@@ -156,7 +156,7 @@
             android:text="@string/label_home_protect_youth_terms"
             android:textColor="@color/default_text_cababab"
             android:textSize="10dp"
-            dailyFont:style="Bold"/>
+            dailyFont:style="Medium"/>
 
     </LinearLayout>
 
