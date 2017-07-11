@@ -10,6 +10,7 @@ import com.daily.base.BaseActivity;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.dailyhotel.entity.Suggest;
 import com.daily.dailyhotel.parcel.SuggestParcel;
+import com.daily.dailyhotel.parcel.analytics.StayOutboundListAnalyticsParam;
 import com.twoheart.dailyhotel.R;
 
 import java.util.ArrayList;
@@ -36,16 +37,19 @@ public class StayOutboundListActivity extends BaseActivity<StayOutboundListPrese
     static final String INTENT_EXTRA_DATA_CHILD_LIST = "childList";
     public static final String INTENT_EXTRA_DATA_RESEARCH = "research";
 
+
     /**
      * @param context
      * @param suggest
+     * @param keyword
      * @param checkInDateTime  ISO-8601
      * @param checkOutDateTime ISO-8601
      * @param numberOfAdults
      * @param childAgeList
      * @return
      */
-    public static Intent newInstance(Context context, Suggest suggest, String checkInDateTime, String checkOutDateTime, int numberOfAdults, ArrayList<Integer> childAgeList)
+    public static Intent newInstance(Context context, Suggest suggest, String checkInDateTime, String checkOutDateTime
+        , int numberOfAdults, ArrayList<Integer> childAgeList, StayOutboundListAnalyticsParam analyticsParam)
     {
         Intent intent = new Intent(context, StayOutboundListActivity.class);
         intent.putExtra(INTENT_EXTRA_DATA_SUGGEST, new SuggestParcel(suggest));
@@ -53,19 +57,20 @@ public class StayOutboundListActivity extends BaseActivity<StayOutboundListPrese
         intent.putExtra(INTENT_EXTRA_DATA_CHECK_OUT, checkOutDateTime);
         intent.putExtra(INTENT_EXTRA_DATA_NUMBER_OF_ADULTS, numberOfAdults);
         intent.putExtra(INTENT_EXTRA_DATA_CHILD_LIST, childAgeList);
+        intent.putExtra(INTENT_EXTRA_DATA_ANALYTICS, analyticsParam);
         return intent;
     }
 
-    public static Intent newInstance(Context context, String keyword, String checkInDateTime, String checkOutDateTime, int numberOfAdults, ArrayList<Integer> childAgeList)
-    {
-        Intent intent = new Intent(context, StayOutboundListActivity.class);
-        intent.putExtra(INTENT_EXTRA_DATA_KEYWORD, keyword);
-        intent.putExtra(INTENT_EXTRA_DATA_CHECK_IN, checkInDateTime);
-        intent.putExtra(INTENT_EXTRA_DATA_CHECK_OUT, checkOutDateTime);
-        intent.putExtra(INTENT_EXTRA_DATA_NUMBER_OF_ADULTS, numberOfAdults);
-        intent.putExtra(INTENT_EXTRA_DATA_CHILD_LIST, childAgeList);
-        return intent;
-    }
+//    public static Intent newInstance(Context context, String keyword, String checkInDateTime, String checkOutDateTime, int numberOfAdults, ArrayList<Integer> childAgeList)
+//    {
+//        Intent intent = new Intent(context, StayOutboundListActivity.class);
+//        intent.putExtra(INTENT_EXTRA_DATA_KEYWORD, keyword);
+//        intent.putExtra(INTENT_EXTRA_DATA_CHECK_IN, checkInDateTime);
+//        intent.putExtra(INTENT_EXTRA_DATA_CHECK_OUT, checkOutDateTime);
+//        intent.putExtra(INTENT_EXTRA_DATA_NUMBER_OF_ADULTS, numberOfAdults);
+//        intent.putExtra(INTENT_EXTRA_DATA_CHILD_LIST, childAgeList);
+//        return intent;
+//    }
 
     public static Intent newInstance(Context context, String deepLink)
     {

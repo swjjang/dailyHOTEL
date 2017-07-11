@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 import android.text.Spannable;
 import android.text.SpannableString;
 
+import com.daily.base.BaseActivity;
 import com.daily.base.BaseAnalyticsInterface;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
@@ -99,7 +100,7 @@ public class StayOutboundThankYouPresenter extends BaseExceptionPresenter<StayOu
         mRoomType = intent.getStringExtra(StayOutboundThankYouActivity.INTENT_EXTRA_DATA_ROOM_TYPE);
         mReservationId = intent.getIntExtra(StayOutboundThankYouActivity.INTENT_EXTRA_DATA_RESERVATION_ID, -1);
 
-        mAnalytics.setAnalyticsParam(intent.getParcelableExtra(StayOutboundThankYouActivity.INTENT_EXTRA_DATA_ANALYTICS));
+        mAnalytics.setAnalyticsParam(intent.getParcelableExtra(BaseActivity.INTENT_EXTRA_DATA_ANALYTICS));
 
         return true;
     }

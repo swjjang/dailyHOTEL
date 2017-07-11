@@ -33,6 +33,7 @@ import com.daily.dailyhotel.entity.StayOutbounds;
 import com.daily.dailyhotel.entity.Suggest;
 import com.daily.dailyhotel.parcel.SuggestParcel;
 import com.daily.dailyhotel.parcel.analytics.StayOutboundDetailAnalyticsParam;
+import com.daily.dailyhotel.parcel.analytics.StayOutboundListAnalyticsParam;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
 import com.daily.dailyhotel.repository.remote.StayOutboundRemoteImpl;
 import com.daily.dailyhotel.screen.common.calendar.StayCalendarActivity;
@@ -92,6 +93,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
     private boolean mMoreResultsAvailable, mMoreEnabled;
 
     private ViewState mViewState = ViewState.LIST;
+    private boolean mFirstRequest;
 
     enum ViewState
     {
@@ -101,11 +103,15 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
 
     public interface StayOutboundListAnalyticsInterface extends BaseAnalyticsInterface
     {
+        void setAnalyticsParam(StayOutboundListAnalyticsParam analyticsParam);
+
         void onScreen(Activity activity);
 
         void onEventStayClick(Activity activity, int index);
 
         void onEventDestroy(Activity activity);
+
+        void onEventEmptyList(Activity activity, String suggest);
 
         StayOutboundDetailAnalyticsParam getDetailAnalyticsParam(StayOutbound stayOutbound, String grade, int rankingPosition, int listSize);
     }
@@ -173,6 +179,8 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
             ArrayList<Integer> childAgeList = intent.getIntegerArrayListExtra(StayOutboundListActivity.INTENT_EXTRA_DATA_CHILD_LIST);
 
             setPeople(numberOfAdults, childAgeList);
+
+            mAnalytics.setAnalyticsParam(intent.getParcelableExtra(BaseActivity.INTENT_EXTRA_DATA_ANALYTICS));
         } else if (intent.hasExtra(StayOutboundListActivity.INTENT_EXTRA_DATA_KEYWORD) == true)
         {
         } else
@@ -436,6 +444,16 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
                 return stayOutbounds;
             }).subscribe(stayOutbounds ->
         {
+            if (mFirstRequest == false)
+            {
+                mFirstRequest = true;
+
+                if (stayOutbounds.getStayOutbound().size() == 0)
+                {
+                    mAnalytics.onEventEmptyList(getActivity(), mSuggest.display);
+                }
+            }
+
             onStayOutbounds(stayOutbounds);
 
             getViewInterface().setRefreshing(false);

@@ -1028,6 +1028,7 @@ public class AnalyticsManager
         public static final String STARTPAYMENT_OUTBOUND = "StartPayment_outbound";
         public static final String ENDPAYMENT_OUTBOUND = "EndPayment_outbound";
         public static final String PAYMENTUSED_OUTBOUND = "PaymentUsed_outbound";
+        public static final String KEYWORD_NOT_MATCH_OUTBOUND = "keyword_not_match_outbound";
     }
 
     public static class Category
@@ -1068,6 +1069,7 @@ public class AnalyticsManager
 
         // Stay OutBound
         public static final String AUTOSEARCH_OUTBOUND = "AutoSearch_outbound";
+        public static final String AUTOSEARCHNOTFOUND_OUTBOUND = "AutoSearchNotFound_outbound";
     }
 
     public static class Label

@@ -2,12 +2,22 @@ package com.daily.dailyhotel.screen.home.stay.outbound.list;
 
 import android.app.Activity;
 
+import com.daily.base.util.DailyTextUtils;
 import com.daily.dailyhotel.entity.StayOutbound;
 import com.daily.dailyhotel.parcel.analytics.StayOutboundDetailAnalyticsParam;
+import com.daily.dailyhotel.parcel.analytics.StayOutboundListAnalyticsParam;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 public class StayOutboundListAnalyticsImpl implements StayOutboundListPresenter.StayOutboundListAnalyticsInterface
 {
+    private StayOutboundListAnalyticsParam mAnalyticsParam;
+
+    @Override
+    public void setAnalyticsParam(StayOutboundListAnalyticsParam analyticsParam)
+    {
+        mAnalyticsParam = analyticsParam;
+    }
+
     @Override
     public void onScreen(Activity activity)
     {
@@ -41,6 +51,18 @@ public class StayOutboundListAnalyticsImpl implements StayOutboundListPresenter.
 
         AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.SEARCH//
             , AnalyticsManager.Action.SEARCHRESULTVIEW_OUTBOUND, AnalyticsManager.Label.BACK_BUTTON, null);
+    }
+
+    @Override
+    public void onEventEmptyList(Activity activity, String suggest)
+    {
+        if (activity == null || DailyTextUtils.isTextEmpty(suggest) == true || mAnalyticsParam == null)
+        {
+            return;
+        }
+
+        AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.AUTOSEARCHNOTFOUND_OUTBOUND//
+            , suggest, mAnalyticsParam.keyword, null);
     }
 
     @Override
