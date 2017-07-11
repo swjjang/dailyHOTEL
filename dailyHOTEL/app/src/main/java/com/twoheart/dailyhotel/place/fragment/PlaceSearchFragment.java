@@ -41,6 +41,8 @@ public abstract class PlaceSearchFragment extends BaseFragment
 
     protected TodayDateTime mTodayDateTime;
 
+    private boolean mIsDateChanged;
+
     protected abstract int getLayoutResourceId();
 
     protected abstract PlaceSearchLayout getPlaceSearchLayout(Context context);
@@ -157,6 +159,16 @@ public abstract class PlaceSearchFragment extends BaseFragment
     public void onScrollingFragment(boolean scrolling)
     {
         mIsScrolling = scrolling;
+    }
+
+    public void setDateChanged(boolean isDateChanged)
+    {
+        mIsDateChanged = isDateChanged;
+    }
+
+    public boolean isDateChanged()
+    {
+        return mIsDateChanged;
     }
 
     @Override
