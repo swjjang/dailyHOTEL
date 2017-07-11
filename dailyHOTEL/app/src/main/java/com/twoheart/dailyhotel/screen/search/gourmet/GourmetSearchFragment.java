@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.location.Location;
 
 import com.daily.base.util.DailyTextUtils;
+import com.daily.base.util.ExLog;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Keyword;
 import com.twoheart.dailyhotel.model.time.GourmetBookingDay;
@@ -18,6 +19,7 @@ import com.twoheart.dailyhotel.screen.common.PermissionManagerActivity;
 import com.twoheart.dailyhotel.screen.gourmet.filter.GourmetCalendarActivity;
 import com.twoheart.dailyhotel.screen.search.gourmet.result.GourmetSearchResultActivity;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
@@ -68,6 +70,8 @@ public class GourmetSearchFragment extends PlaceSearchFragment
         {
             case REQUEST_ACTIVITY_CALENDAR:
             {
+                setDateChanged(true);
+
                 if (resultCode == Activity.RESULT_OK && data != null)
                 {
                     if (data.hasExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY) == true)
@@ -175,6 +179,29 @@ public class GourmetSearchFragment extends PlaceSearchFragment
         mPlaceSearchLayout.setDataText(gourmetBookingDay.getVisitDay("yyyy.MM.dd(EEE)"));
     }
 
+    private void setDateChanged(TodayDateTime todayDateTime, GourmetBookingDay gourmetBookingDay)
+    {
+        if (isDateChanged() == true || todayDateTime == null || gourmetBookingDay == null)
+        {
+            return;
+        }
+
+        try
+        {
+            String visitDay = gourmetBookingDay.getVisitDay(DailyCalendar.ISO_8601_FORMAT);
+
+            long visitTime = DailyCalendar.getInstance(visitDay, true).getTimeInMillis();
+            long toDayTime = DailyCalendar.getInstance(todayDateTime.dailyDateTime, true).getTimeInMillis();
+
+            int dayOfDays = (int) ((visitTime - toDayTime) / DailyCalendar.DAY_MILLISECOND);
+            // 체크인 날짜가 익일이상이면 달력 체크 안함 , 즉 현재 날짜 이전이면 달력 표시 해야 함
+            setDateChanged(dayOfDays > 0);
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+        }
+    }
+
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // OnEventListener
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -202,6 +229,12 @@ public class GourmetSearchFragment extends PlaceSearchFragment
 
             if (lockUiComponentAndIsLockUiComponent() == true)
             {
+                return;
+            }
+
+            if (isDateChanged() == false)
+            {
+                onCalendarClick(true);
                 return;
             }
 
@@ -256,6 +289,12 @@ public class GourmetSearchFragment extends PlaceSearchFragment
                 return;
             }
 
+            if (isDateChanged() == false)
+            {
+                onCalendarClick(true);
+                return;
+            }
+
             Intent intent = GourmetSearchResultActivity.newInstance(mBaseActivity, mTodayDateTime, mGourmetBookingDay, text);
             startActivityForResult(intent, REQUEST_ACTIVITY_SEARCHRESULT);
         }
@@ -270,6 +309,12 @@ public class GourmetSearchFragment extends PlaceSearchFragment
 
             if (keyword == null || mGourmetBookingDay == null)
             {
+                return;
+            }
+
+            if (isDateChanged() == false)
+            {
+                onCalendarClick(true);
                 return;
             }
 
@@ -349,6 +394,8 @@ public class GourmetSearchFragment extends PlaceSearchFragment
         public void onDateTime(TodayDateTime todayDateTime)
         {
             mTodayDateTime = todayDateTime;
+
+            setDateChanged(mTodayDateTime, mGourmetBookingDay);
         }
 
         @Override
