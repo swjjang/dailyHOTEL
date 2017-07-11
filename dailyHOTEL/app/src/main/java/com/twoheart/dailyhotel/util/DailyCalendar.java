@@ -308,8 +308,8 @@ public class DailyCalendar
 
     public static int compareDateDay(String dateTime1, String dateTime2) throws ParseException, NullPointerException
     {
-        Date date1 = DailyCalendar.convertDate(dateTime1, ISO_8601_FORMAT, null);
-        Date date2 = DailyCalendar.convertDate(dateTime2, ISO_8601_FORMAT, null);
+        Date date1 = DailyCalendar.convertDate(dateTime1, "yyyy-MM-dd", null);
+        Date date2 = DailyCalendar.convertDate(dateTime2, "yyyy-MM-dd", null);
 
         return (int) ((date1.getTime() - date2.getTime()) / DAY_MILLISECOND);
     }
