@@ -35,6 +35,9 @@ public class GourmetProduct implements Parcelable
     @JsonField(name = "needToKnow")
     public String needToKnow;
 
+    @JsonField(name = "reserveCondition")
+    public String reserveCondition;
+
     //    @JsonField
     //    public String startEatingTime;
     //
