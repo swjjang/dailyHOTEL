@@ -810,7 +810,7 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
                 stayBookingDay.setCheckInDay(mTodayDateTime.dailyDateTime);
                 stayBookingDay.setCheckOutDay(mTodayDateTime.dailyDateTime, 1);
 
-                Intent intent = StayDetailActivity.newInstance(StayReservationDetailActivity.this, stayBookingDay, mPlaceBookingDetail.placeIndex, 0, false, false, false);
+                Intent intent = StayDetailActivity.newInstance(StayReservationDetailActivity.this, stayBookingDay, mPlaceBookingDetail.isOverseas, mPlaceBookingDetail.placeIndex, 0, false, false, false);
                 startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL);
 
                 overridePendingTransition(R.anim.slide_in_right, R.anim.hold);

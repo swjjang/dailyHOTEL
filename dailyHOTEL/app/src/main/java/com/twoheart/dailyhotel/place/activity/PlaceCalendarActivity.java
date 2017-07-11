@@ -43,6 +43,7 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
     protected static final String INTENT_EXTRA_DATA_ISSELECTED = "isSelected";
     protected static final String INTENT_EXTRA_DATA_TODAYDATETIME = "todayDateTime";
     protected static final String INTENT_EXTRA_DATA_ISSINGLE_DAY = "isSingleDay"; // 연박 불가
+    protected static final String INTENT_EXTRA_DATA_OVERSEAS = "overseas";
 
     private static final int ANIMATION_DELAY = 200;
 

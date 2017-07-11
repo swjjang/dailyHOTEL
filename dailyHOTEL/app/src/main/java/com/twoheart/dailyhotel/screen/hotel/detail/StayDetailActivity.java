@@ -80,6 +80,7 @@ public class StayDetailActivity extends PlaceDetailActivity
 {
     StayProduct mSelectedStayProduct;
     private boolean mCheckPrice;
+    private boolean mOverseas;
 
     /**
      * 리스트, 검색 결과, 위시리스트, 최근 본 업장, 홈 , 추천모아보기 에서 호출
@@ -122,12 +123,13 @@ public class StayDetailActivity extends PlaceDetailActivity
      * @param isUsedMultiTransition
      * @return
      */
-    public static Intent newInstance(Context context, StayBookingDay stayBookingDay, int stayIndex//
+    public static Intent newInstance(Context context, StayBookingDay stayBookingDay, boolean overseas, int stayIndex//
         , int roomIndex, boolean isShowCalendar, boolean isShowVR, boolean isUsedMultiTransition)
     {
         Intent intent = new Intent(context, StayDetailActivity.class);
 
         intent.putExtra(NAME_INTENT_EXTRA_DATA_TYPE, "share");
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_ISOVERSEAS, overseas);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_HOTELIDX, stayIndex);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_ROOMINDEX, roomIndex);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, stayBookingDay);
@@ -158,6 +160,7 @@ public class StayDetailActivity extends PlaceDetailActivity
             return;
         }
 
+        mOverseas = intent.getBooleanExtra(NAME_INTENT_EXTRA_DATA_ISOVERSEAS, false);
         mPlaceBookingDay = intent.getParcelableExtra(Constants.NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY);
         mIsShowCalendar = intent.getBooleanExtra(NAME_INTENT_EXTRA_DATA_CALENDAR_FLAG, false);
         mIsShowVR = intent.getBooleanExtra(NAME_INTENT_EXTRA_DATA_VR_FLAG, false);
@@ -937,7 +940,7 @@ public class StayDetailActivity extends PlaceDetailActivity
         }
     }
 
-    void startCalendar(TodayDateTime todayDateTime, StayBookingDay stayBookingDay, int placeIndex, boolean isAnimation, boolean isSingleDay)
+    void startCalendar(TodayDateTime todayDateTime, StayBookingDay stayBookingDay, boolean overseas, int placeIndex, boolean isAnimation, boolean isSingleDay)
     {
         if (isFinishing() == true || lockUiComponentAndIsLockUiComponent() == true)
         {
@@ -945,7 +948,7 @@ public class StayDetailActivity extends PlaceDetailActivity
         }
 
         Intent intent = StayDetailCalendarActivity.newInstance(StayDetailActivity.this, todayDateTime, stayBookingDay//
-            , placeIndex, AnalyticsManager.ValueType.DETAIL, true, isAnimation, isSingleDay);
+            , overseas, placeIndex, AnalyticsManager.ValueType.DETAIL, true, isAnimation, isSingleDay);
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_CALENDAR);
 
         AnalyticsManager.getInstance(StayDetailActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_//
@@ -1421,7 +1424,7 @@ public class StayDetailActivity extends PlaceDetailActivity
                 return;
             }
 
-            startCalendar(mTodayDateTime, (StayBookingDay) mPlaceBookingDay, stayDetail.index, true, stayDetailParams.isSingleStay);
+            startCalendar(mTodayDateTime, (StayBookingDay) mPlaceBookingDay, stayDetailParams.isOverseas, stayDetail.index, true, stayDetailParams.isSingleStay);
         }
 
         @Override
@@ -1541,8 +1544,15 @@ public class StayDetailActivity extends PlaceDetailActivity
 
                 if (mIsShowCalendar == true)
                 {
+                    boolean overseas = mOverseas;
+
+                    if (mPlaceDetail != null && ((StayDetail) mPlaceDetail).getStayDetailParams() != null)
+                    {
+                        overseas = ((StayDetail) mPlaceDetail).getStayDetailParams().isOverseas;
+                    }
+
                     unLockUI();
-                    startCalendar(mTodayDateTime, stayBookingDay, mPlaceDetail.index, false, false);
+                    startCalendar(mTodayDateTime, stayBookingDay, overseas, mPlaceDetail.index, false, false);
                     return;
                 }
 

@@ -31,7 +31,6 @@ public class StayCalendarActivity extends PlaceCalendarActivity
     public static final String INTENT_EXTRA_DATA_CHECKOUT_DATETIME = "checkOutDateTime";
 
     private static final int DAYCOUNT_OF_MAX = 60;
-    private static final int ENABLE_DAYCOUNT_OF_MAX = 60;
 
     private View mCheckInDayView;
     private View mCheckOutDayView;
@@ -79,7 +78,7 @@ public class StayCalendarActivity extends PlaceCalendarActivity
             return;
         }
 
-        initLayout(R.layout.activity_calendar, DAYCOUNT_OF_MAX);
+        initLayout(R.layout.activity_calendar, getMaxDay());
         initToolbar(getString(R.string.label_calendar_hotel_select_checkin));
 
         if (isAnimation == true)
@@ -90,7 +89,7 @@ public class StayCalendarActivity extends PlaceCalendarActivity
                 @Override
                 public void run()
                 {
-                    makeCalendar(mTodayDateTime, DAYCOUNT_OF_MAX);
+                    makeCalendar(mTodayDateTime, getMaxDay());
 
                     reset();
 
@@ -107,7 +106,7 @@ public class StayCalendarActivity extends PlaceCalendarActivity
         {
             setTouchEnabled(true);
 
-            makeCalendar(mTodayDateTime, DAYCOUNT_OF_MAX);
+            makeCalendar(mTodayDateTime, getMaxDay());
 
             reset();
 
@@ -288,6 +287,11 @@ public class StayCalendarActivity extends PlaceCalendarActivity
                 break;
             }
         }
+    }
+
+    protected int getMaxDay()
+    {
+        return DAYCOUNT_OF_MAX;
     }
 
     protected void onConfirm(StayBookingDay stayBookingDay)

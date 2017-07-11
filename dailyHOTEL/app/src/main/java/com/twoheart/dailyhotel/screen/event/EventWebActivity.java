@@ -364,6 +364,7 @@ public class EventWebActivity extends WebViewActivity implements Constants
                 boolean isShowCalendar = externalDeepLink.isShowCalendar();
                 boolean isShowVR = externalDeepLink.isShowVR();
                 int ticketIndex = externalDeepLink.getOpenTicketIndex();
+                boolean overseas = externalDeepLink.getIsOverseas();
 
                 StayBookingDay stayBookingDay = new StayBookingDay();
 
@@ -381,7 +382,7 @@ public class EventWebActivity extends WebViewActivity implements Constants
 
                 stayBookingDay.setCheckOutDay(stayBookingDay.getCheckInDay(DailyCalendar.ISO_8601_FORMAT), nights);
 
-                Intent intent = StayDetailActivity.newInstance(EventWebActivity.this, stayBookingDay, hotelIndex, ticketIndex, isShowCalendar, isShowVR, false);
+                Intent intent = StayDetailActivity.newInstance(EventWebActivity.this, stayBookingDay, overseas, hotelIndex, ticketIndex, isShowCalendar, isShowVR, false);
                 startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL);
 
                 overridePendingTransition(R.anim.slide_in_right, R.anim.hold);

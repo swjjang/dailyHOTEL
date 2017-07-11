@@ -29,17 +29,21 @@ import retrofit2.Response;
 
 public class StayDetailCalendarActivity extends StayCalendarActivity
 {
+    private static final int OVERSEAS_DAYCOUNT_OF_MAX = 180;
+
     private int mHotelIndex;
     private boolean mIsSingleDay;
+    private boolean mOverseas;
 
     public static Intent newInstance(Context context, TodayDateTime todayDateTime, StayBookingDay stayBookingDay //
-        , int hotelIndex, String screen, boolean isSelected//
+        , boolean overseas, int hotelIndex, String screen, boolean isSelected//
         , boolean isAnimation, boolean isSingleDay)
     {
         Intent intent = new Intent(context, StayDetailCalendarActivity.class);
         intent.putExtra(INTENT_EXTRA_DATA_TODAYDATETIME, todayDateTime);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, stayBookingDay);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_HOTELIDX, hotelIndex);
+        intent.putExtra(INTENT_EXTRA_DATA_OVERSEAS, overseas);
         intent.putExtra(INTENT_EXTRA_DATA_SCREEN, screen);
         intent.putExtra(INTENT_EXTRA_DATA_ISSELECTED, isSelected);
         intent.putExtra(INTENT_EXTRA_DATA_ANIMATION, isAnimation);
@@ -51,11 +55,12 @@ public class StayDetailCalendarActivity extends StayCalendarActivity
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
-        super.onCreate(savedInstanceState);
-
         Intent intent = getIntent();
         mHotelIndex = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_HOTELIDX, -1);
+        mOverseas = intent.getBooleanExtra(INTENT_EXTRA_DATA_OVERSEAS, false);
         mIsSingleDay = intent.getBooleanExtra(INTENT_EXTRA_DATA_ISSINGLE_DAY, false);
+
+        super.onCreate(savedInstanceState);
 
         if (mIsSingleDay == true)
         {
@@ -121,6 +126,18 @@ public class StayDetailCalendarActivity extends StayCalendarActivity
         } catch (Exception e)
         {
             ExLog.e(e.toString());
+        }
+    }
+
+    @Override
+    protected int getMaxDay()
+    {
+        if(mOverseas == true)
+        {
+            return OVERSEAS_DAYCOUNT_OF_MAX;
+        } else
+        {
+            return super.getMaxDay();
         }
     }
 

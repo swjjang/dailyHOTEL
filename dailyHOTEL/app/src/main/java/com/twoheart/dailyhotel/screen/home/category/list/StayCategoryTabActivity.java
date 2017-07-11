@@ -1387,6 +1387,7 @@ public class StayCategoryTabActivity extends PlaceMainActivity
                 boolean isShowCalendar = externalDeepLink.isShowCalendar();
                 boolean isShowVR = externalDeepLink.isShowVR();
                 int ticketIndex = externalDeepLink.getOpenTicketIndex();
+                boolean overseas = externalDeepLink.getIsOverseas();
 
                 StayBookingDay stayBookingDay = new StayBookingDay();
 
@@ -1406,7 +1407,7 @@ public class StayCategoryTabActivity extends PlaceMainActivity
 
                 mStayCategoryCuration.setStayBookingDay(stayBookingDay);
 
-                Intent intent = StayDetailActivity.newInstance(baseActivity, stayBookingDay, hotelIndex, ticketIndex, isShowCalendar, isShowVR, false);
+                Intent intent = StayDetailActivity.newInstance(baseActivity, stayBookingDay, overseas, hotelIndex, ticketIndex, isShowCalendar, isShowVR, false);
                 baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL);
 
                 overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
