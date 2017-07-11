@@ -13,6 +13,7 @@ import android.support.v7.app.AppCompatActivity;
 public abstract class BaseActivity<T1 extends BasePresenter> extends AppCompatActivity
 {
     public static final String INTENT_EXTRA_DATA_DEEPLINK = "deepLink";
+    public static final String INTENT_EXTRA_DATA_ANALYTICS = "analytics";
 
     public static final int RESULT_CODE_REFRESH = -10000; // 종료시에 화면 리플래쉬를 요청한다.
 

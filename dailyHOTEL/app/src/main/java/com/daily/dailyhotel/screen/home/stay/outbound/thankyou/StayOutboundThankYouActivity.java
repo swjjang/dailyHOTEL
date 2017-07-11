@@ -26,7 +26,6 @@ public class StayOutboundThankYouActivity extends BaseActivity<StayOutboundThank
     static final String INTENT_EXTRA_DATA_CHECK_OUT_TIME = "checkOutTime";
     static final String INTENT_EXTRA_DATA_ROOM_TYPE = "roomType";
     static final String INTENT_EXTRA_DATA_RESERVATION_ID = "reservationId";
-    static final String INTENT_EXTRA_DATA_ANALYTICS = "analytics";
 
     public static Intent newInstance(Context context, int stayIndex, String stayName, String imageUrl, int roomPrice//
         , String checkInDateTime, String checkOutDateTime, String checkInTime, String checkOutTime//

@@ -11,12 +11,24 @@ public class StayOutboundSearchSuggestAnalyticsImpl implements StayOutboundSearc
     @Override
     public void onEventSuggestClick(Activity activity, String keyword, Suggest suggest)
     {
-        if(DailyTextUtils.isTextEmpty(keyword) == true || suggest == null)
+        if (DailyTextUtils.isTextEmpty(keyword) == true || suggest == null)
         {
             return;
         }
 
         AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.AUTOSEARCH_OUTBOUND//
             , suggest.display, keyword, null);
+    }
+
+    @Override
+    public void onEventSuggestEmpty(Activity activity, String keyword)
+    {
+        if (DailyTextUtils.isTextEmpty(keyword) == true)
+        {
+            return;
+        }
+
+        AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.SEARCH//
+            , AnalyticsManager.Action.KEYWORD_NOT_MATCH_OUTBOUND, keyword, null);
     }
 }

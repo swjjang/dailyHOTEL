@@ -40,7 +40,6 @@ public class StayOutboundPaymentActivity extends BaseActivity<StayOutboundPaymen
     static final String INTENT_EXTRA_DATA_RATE_KEY = "rateKey";
     static final String INTENT_EXTRA_DATA_ROOM_TYPE_CODE = "roomTypeCode";
     static final String INTENT_EXTRA_DATA_ROOM_BED_TYPE_ID = "roomBedTypeId";
-    static final String INTENT_EXTRA_DATA_ANALYTICS = "analytics";
 
 
     public static Intent newInstance(Context context, int stayIndex, String stayName, String imageUrl, int roomPrice//
