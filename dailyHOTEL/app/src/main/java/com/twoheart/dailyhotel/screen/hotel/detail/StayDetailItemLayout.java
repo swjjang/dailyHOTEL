@@ -231,7 +231,7 @@ public class StayDetailItemLayout extends LinearLayout
         // 만족도
         TextView satisfactionView = (TextView) mHotelTitleLayout.findViewById(R.id.satisfactionView);
 
-        if (stayDetailParams.ratingValue == 0)
+        if (stayDetailParams.ratingShow == false)
         {
             satisfactionView.setVisibility(View.GONE);
         } else
