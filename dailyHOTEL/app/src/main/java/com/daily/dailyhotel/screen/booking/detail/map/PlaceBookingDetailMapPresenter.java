@@ -210,7 +210,8 @@ public abstract class PlaceBookingDetailMapPresenter extends BaseExceptionPresen
     @Override
     public void onBackClick()
     {
-        getActivity().onBackPressed();
+//        getActivity().onBackPressed();
+        getActivity().finish();
     }
 
     @Override

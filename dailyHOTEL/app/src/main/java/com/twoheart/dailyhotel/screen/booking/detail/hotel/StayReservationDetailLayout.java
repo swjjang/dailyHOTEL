@@ -9,13 +9,11 @@ import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.util.FontManager;
 import com.daily.base.util.ScreenUtils;
-import com.daily.base.widget.DailyToast;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.PlaceBookingDetail;
 import com.twoheart.dailyhotel.model.StayBookingDetail;
@@ -66,8 +64,6 @@ public class StayReservationDetailLayout extends PlaceReservationDetailLayout
             @Override
             public void onClick(View v)
             {
-                DailyToast.showToast(mContext, "고메 추천 클릭 scrollY : " + mRecommendGourmetItemLayout.getBottom(), Toast.LENGTH_SHORT);
-
                 mScrollLayout.smoothScrollTo(0, mRecommendGourmetItemLayout.getBottom());
             }
         });
@@ -75,7 +71,6 @@ public class StayReservationDetailLayout extends PlaceReservationDetailLayout
         mRecommendGourmetItemLayout = view.findViewById(R.id.recommendGourmetLayout);
 
         mRecommendGourmetCarouselLayout = (HomeCarouselLayout) view.findViewById(R.id.recommendGourmetCarouselLayout);
-        //        mRecommendGourmetCarouselLayout.findViewById(R.id.bottomDivider).setVisibility(View.GONE);
 
         mRecommendGourmetCarouselLayout.setTitleText(R.string.label_booking_reservation_recommend_gourmet_title);
 
@@ -84,22 +79,18 @@ public class StayReservationDetailLayout extends PlaceReservationDetailLayout
             @Override
             public void onViewAllClick()
             {
-                DailyToast.showToast(mContext, "모두 보기 클릭", Toast.LENGTH_SHORT);
                 ((StayReservationDetailLayout.OnEventListener) mOnEventListener).onRecommendListItemViewAllClick();
             }
 
             @Override
             public void onItemClick(View view, int position)
             {
-                DailyToast.showToast(mContext, "아이템 클릭 , 포지션 :: " + position, Toast.LENGTH_SHORT);
                 ((StayReservationDetailLayout.OnEventListener) mOnEventListener).onRecommendListItemClick(view, position);
             }
 
             @Override
             public void onItemLongClick(View view, int position)
             {
-                DailyToast.showToast(mContext, "아이템 롱 클릭 , 포지션 :: " + position, Toast.LENGTH_SHORT);
-                //                ((HomeLayout.OnEventListener) mOnEventListener).onRecentListItemLongClick(view, position);
                 ((StayReservationDetailLayout.OnEventListener) mOnEventListener).onRecommendListItemLongClick(view, position);
             }
         });

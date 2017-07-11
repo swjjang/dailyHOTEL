@@ -61,12 +61,17 @@ public abstract class PlaceBookingDetailMapViewPagerAdapter extends PagerAdapter
 
     public void setData(List<Place> list)
     {
-        if (list == null)
+        if (mPlaceList == null)
         {
-            list = new ArrayList<>();
+            mPlaceList = new ArrayList<>();
         }
 
-        mPlaceList = list;
+        mPlaceList.clear();
+
+        if (list != null)
+        {
+            mPlaceList.addAll(list);
+        }
     }
 
     public Place getItem(int position)
