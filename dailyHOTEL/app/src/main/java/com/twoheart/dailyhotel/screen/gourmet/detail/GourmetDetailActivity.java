@@ -1200,6 +1200,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
                         gourmetMenu.closeTime = gourmetProduct.closeTime;
                         gourmetMenu.lastOrderTime = gourmetProduct.lastOrderTime;
                         gourmetMenu.menuSummary = gourmetProduct.menuSummary;
+                        gourmetMenu.reserveCondition = gourmetProduct.reserveCondition;
 
                         List<GourmetMenuImage> gourmetMenuImageList = new ArrayList<>();
                         for (ProductImageInformation productImageInformation : gourmetProduct.getImageList())

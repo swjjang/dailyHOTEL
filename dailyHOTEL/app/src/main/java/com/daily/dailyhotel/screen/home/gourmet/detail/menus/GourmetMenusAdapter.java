@@ -166,7 +166,7 @@ public class GourmetMenusAdapter extends RecyclerView.Adapter<GourmetMenusAdapte
             holder.dataBinding.defaultImageLayout.setVisibility(View.VISIBLE);
 
             holder.dataBinding.simpleDraweeView.getHierarchy().setPlaceholderImage(R.drawable.layerlist_placeholder);
-            Util.requestImageResize(mContext, holder.dataBinding.simpleDraweeView, gourmetMenu.getImageList().get(0).url);
+            Util.requestImageResize(mContext, holder.dataBinding.simpleDraweeView, gourmetMenu.getPrimaryImage().url);
             setLineIndicatorVisible(holder.dataBinding, gourmetMenuImageList.size());
         }
 
@@ -223,13 +223,13 @@ public class GourmetMenusAdapter extends RecyclerView.Adapter<GourmetMenusAdapte
         }
 
         // 예약 조건
-        if (DailyTextUtils.isTextEmpty(gourmetMenu.reservationContitions) == true)
+        if (DailyTextUtils.isTextEmpty(gourmetMenu.reserveCondition) == true)
         {
             holder.dataBinding.conditionLayout.setVisibility(View.GONE);
         } else
         {
             holder.dataBinding.conditionLayout.setVisibility(View.VISIBLE);
-            holder.dataBinding.conditionTextView.setText(gourmetMenu.reservationContitions);
+            holder.dataBinding.conditionTextView.setText(gourmetMenu.reserveCondition);
         }
 
         // 메뉴 설명

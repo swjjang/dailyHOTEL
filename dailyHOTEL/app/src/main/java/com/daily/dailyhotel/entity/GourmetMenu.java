@@ -11,7 +11,7 @@ public class GourmetMenu
     public int discountPrice;
     public String menuBenefit;
     public String needToKnow;
-    public String reservationContitions;
+    public String reserveCondition;
     public String openTime;
     public String closeTime;
     public String lastOrderTime;

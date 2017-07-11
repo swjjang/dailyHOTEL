@@ -44,6 +44,7 @@ public class GourmetMenuParcel implements Parcelable
         dest.writeInt(mGourmetMenu.discountPrice);
         dest.writeString(mGourmetMenu.menuBenefit);
         dest.writeString(mGourmetMenu.needToKnow);
+        dest.writeString(mGourmetMenu.reserveCondition);
         dest.writeString(mGourmetMenu.openTime);
         dest.writeString(mGourmetMenu.closeTime);
         dest.writeString(mGourmetMenu.lastOrderTime);
@@ -76,6 +77,7 @@ public class GourmetMenuParcel implements Parcelable
         mGourmetMenu.discountPrice = in.readInt();
         mGourmetMenu.menuBenefit = in.readString();
         mGourmetMenu.needToKnow = in.readString();
+        mGourmetMenu.reserveCondition = in.readString();
         mGourmetMenu.openTime = in.readString();
         mGourmetMenu.closeTime = in.readString();
         mGourmetMenu.lastOrderTime = in.readString();
