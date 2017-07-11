@@ -20,6 +20,7 @@ import com.twoheart.dailyhotel.screen.common.PermissionManagerActivity;
 import com.twoheart.dailyhotel.screen.hotel.filter.StayCalendarActivity;
 import com.twoheart.dailyhotel.screen.search.stay.result.StaySearchResultActivity;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
@@ -71,6 +72,8 @@ public class StaySearchFragment extends PlaceSearchFragment
         {
             case REQUEST_ACTIVITY_CALENDAR:
             {
+                setDateChanged(true);
+
                 if (resultCode == Activity.RESULT_OK && data != null)
                 {
                     if (data.hasExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY) == true)
@@ -196,6 +199,36 @@ public class StaySearchFragment extends PlaceSearchFragment
         }
     }
 
+    private void setDateChanged(TodayDateTime todayDateTime, StayBookingDay stayBookingDay)
+    {
+        if (isDateChanged() == true || todayDateTime == null || stayBookingDay == null)
+        {
+            return;
+        }
+
+        try
+        {
+            int night = stayBookingDay.getNights();
+            if (night > 1)
+            {
+                setDateChanged(true);
+                return;
+            }
+
+            String checkInDateString = stayBookingDay.getCheckInDay(DailyCalendar.ISO_8601_FORMAT);
+
+            long checkInTime = DailyCalendar.getInstance(checkInDateString, true).getTimeInMillis();
+            long toDayTime = DailyCalendar.getInstance(todayDateTime.dailyDateTime, true).getTimeInMillis();
+
+            int dayOfDays = (int) ((checkInTime - toDayTime) / DailyCalendar.DAY_MILLISECOND);
+            // 체크인 날짜가 익일이상이면 달력 체크 안함 , 즉 현재 날짜 이전이면 달력 표시 해야 함
+            setDateChanged(dayOfDays > 0);
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+        }
+    }
+
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // OnEventListener
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -238,6 +271,12 @@ public class StaySearchFragment extends PlaceSearchFragment
 
             if (lockUiComponentAndIsLockUiComponent() == true)
             {
+                return;
+            }
+
+            if (isDateChanged() == false)
+            {
+                onCalendarClick(true);
                 return;
             }
 
@@ -292,6 +331,12 @@ public class StaySearchFragment extends PlaceSearchFragment
                 return;
             }
 
+            if (isDateChanged() == false)
+            {
+                onCalendarClick(true);
+                return;
+            }
+
             Intent intent = StaySearchResultActivity.newInstance(mBaseActivity, mTodayDateTime, mStayBookingDay, text);
             startActivityForResult(intent, REQUEST_ACTIVITY_SEARCHRESULT);
         }
@@ -306,6 +351,12 @@ public class StaySearchFragment extends PlaceSearchFragment
 
             if (keyword == null || mStayBookingDay == null)
             {
+                return;
+            }
+
+            if (isDateChanged() == false)
+            {
+                onCalendarClick(true);
                 return;
             }
 
@@ -393,6 +444,8 @@ public class StaySearchFragment extends PlaceSearchFragment
             unLockUI();
 
             mTodayDateTime = todayDateTime;
+
+            setDateChanged(mTodayDateTime, mStayBookingDay);
         }
 
         @Override
