@@ -143,6 +143,16 @@ public class HomeCarouselLayout extends LinearLayout
         }
     }
 
+    public ArrayList<HomePlace> getData()
+    {
+        if (mRecyclerAdapter == null)
+        {
+            return null;
+        }
+
+        return mRecyclerAdapter.getData();
+    }
+
     public void setData(ArrayList<HomePlace> list)
     {
         mRecyclerView.scrollToPosition(0);

@@ -236,6 +236,11 @@ public class HomeCarouselAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         return mList != null && mList.size() > 0 ? mList.size() : 0;
     }
 
+    public ArrayList<HomePlace> getData()
+    {
+        return mList;
+    }
+
     public void setData(ArrayList<HomePlace> list)
     {
         mList = list;

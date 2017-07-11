@@ -1,35 +1,99 @@
 package com.twoheart.dailyhotel.screen.booking.detail.hotel;
 
+import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.text.Html;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.view.View;
+import android.view.animation.AccelerateDecelerateInterpolator;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.util.FontManager;
+import com.daily.base.util.ScreenUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.PlaceBookingDetail;
 import com.twoheart.dailyhotel.model.StayBookingDetail;
+import com.twoheart.dailyhotel.network.model.HomePlace;
 import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
 import com.twoheart.dailyhotel.place.layout.PlaceReservationDetailLayout;
+import com.twoheart.dailyhotel.screen.home.HomeCarouselLayout;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.CustomFontTypefaceSpan;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 public class StayReservationDetailLayout extends PlaceReservationDetailLayout
 {
     private View mRefundPolicyLayout, mButtonBottomMarginView;
     private View mDefaultRefundPolicyLayout, mWaitRefundPolicyLayout;
+    private View mRecommendGourmetButtonView;
+    private View mRecommendGourmetItemLayout;
+    private HomeCarouselLayout mRecommendGourmetCarouselLayout;
+    private ObjectAnimator mRecommendGourmetButtonAnimator;
+
+    public interface OnEventListener extends PlaceReservationDetailLayout.OnEventListener
+    {
+        void onRecommendListItemViewAllClick();
+
+        void onRecommendListItemClick(View view, int position);
+
+        void onRecommendListItemLongClick(View view, int position);
+    }
 
     public StayReservationDetailLayout(Context context, OnBaseEventListener listener)
     {
         super(context, listener);
+    }
+
+    @Override
+    protected void initLayout(View view)
+    {
+        super.initLayout(view);
+
+        mRecommendGourmetButtonView = view.findViewById(R.id.recommendGourmetButtonView);
+
+        mRecommendGourmetButtonView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                mScrollLayout.smoothScrollTo(0, mRecommendGourmetItemLayout.getBottom());
+            }
+        });
+
+        mRecommendGourmetItemLayout = view.findViewById(R.id.recommendGourmetLayout);
+
+        mRecommendGourmetCarouselLayout = (HomeCarouselLayout) view.findViewById(R.id.recommendGourmetCarouselLayout);
+
+        mRecommendGourmetCarouselLayout.setTitleText(R.string.label_booking_reservation_recommend_gourmet_title);
+
+        mRecommendGourmetCarouselLayout.setCarouselListener(new HomeCarouselLayout.OnCarouselListener()
+        {
+            @Override
+            public void onViewAllClick()
+            {
+                ((StayReservationDetailLayout.OnEventListener) mOnEventListener).onRecommendListItemViewAllClick();
+            }
+
+            @Override
+            public void onItemClick(View view, int position)
+            {
+                ((StayReservationDetailLayout.OnEventListener) mOnEventListener).onRecommendListItemClick(view, position);
+            }
+
+            @Override
+            public void onItemLongClick(View view, int position)
+            {
+                ((StayReservationDetailLayout.OnEventListener) mOnEventListener).onRecommendListItemLongClick(view, position);
+            }
+        });
     }
 
     @Override
@@ -402,6 +466,122 @@ public class StayReservationDetailLayout extends PlaceReservationDetailLayout
         {
             mRefundPolicyLayout.setVisibility(View.GONE);
             mButtonBottomMarginView.setVisibility(View.VISIBLE);
+        }
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////  고메  추천  ///////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public void setRecommendGourmetLayoutVisible(boolean isVisible)
+    {
+        if (mRecommendGourmetItemLayout == null)
+        {
+            return;
+        }
+
+        mRecommendGourmetItemLayout.setVisibility(isVisible == true ? View.VISIBLE : View.GONE);
+
+        if (mRecommendGourmetButtonView == null)
+        {
+            return;
+        }
+
+        setRecommendGourmetButtonAnimation(isVisible);
+    }
+
+    public ArrayList<HomePlace> getRecommendGourmetData()
+    {
+        if (mRecommendGourmetCarouselLayout == null)
+        {
+            return null;
+        }
+
+        return mRecommendGourmetCarouselLayout.getData();
+    }
+
+    public void setRecommendGourmetData(ArrayList<HomePlace> list)
+    {
+        if (mRecommendGourmetCarouselLayout == null)
+        {
+            return;
+        }
+
+        mRecommendGourmetCarouselLayout.setData(list);
+        setRecommendGourmetLayoutVisible(list != null && list.size() > 0);
+    }
+
+    private void setRecommendGourmetButtonAnimation(boolean isVisible)
+    {
+        if (mRecommendGourmetButtonView == null)
+        {
+            return;
+        }
+
+        boolean isOldVisible = mRecommendGourmetButtonView.getVisibility() == View.VISIBLE;
+        if (isOldVisible == isVisible)
+        {
+            return;
+        }
+
+        if (mRecommendGourmetButtonAnimator != null)
+        {
+            mRecommendGourmetButtonAnimator.cancel();
+            mRecommendGourmetButtonAnimator = null;
+        }
+
+        if (isVisible == true)
+        {
+            mRecommendGourmetButtonView.setVisibility(View.VISIBLE);
+
+            float transY = ScreenUtils.dpToPx(mContext, 10d);
+
+            mRecommendGourmetButtonAnimator = ObjectAnimator.ofFloat(mRecommendGourmetButtonView, "translationY", 0.0f, transY, 0.0f);
+            mRecommendGourmetButtonAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
+            mRecommendGourmetButtonAnimator.setDuration(2000);
+            mRecommendGourmetButtonAnimator.setRepeatCount(ObjectAnimator.INFINITE);
+            mRecommendGourmetButtonAnimator.start();
+        } else
+        {
+            mRecommendGourmetButtonView.setVisibility(View.GONE);
+        }
+    }
+
+    public HomePlace getRecommendGourmetItem(int position)
+    {
+        if (mRecommendGourmetCarouselLayout == null)
+        {
+            return null;
+        }
+
+        return mRecommendGourmetCarouselLayout.getItem(position);
+    }
+
+    @Override
+    protected void onScrollChanged(ScrollView scrollView, int l, int t, int oldl, int oldt)
+    {
+        if (mRecommendGourmetItemLayout == null)
+        {
+            return;
+        }
+
+        if (mRecommendGourmetCarouselLayout.hasData() == false //
+            || View.VISIBLE != mRecommendGourmetItemLayout.getVisibility())
+        {
+            return;
+        }
+
+        int expectedY = mRecommendGourmetItemLayout.getTop() - ScreenUtils.getScreenHeight(mContext) //
+            + mContext.getResources().getDimensionPixelOffset(R.dimen.toolbar_height) + ScreenUtils.dpToPx(mContext, 75d);
+
+        //        ExLog.d("expectedY : " + expectedY + " , t : " + t);
+
+        if (expectedY <= t)
+        {
+            setRecommendGourmetButtonAnimation(false);
+        } else
+        {
+            setRecommendGourmetButtonAnimation(true);
         }
     }
 }

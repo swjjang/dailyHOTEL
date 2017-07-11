@@ -56,6 +56,9 @@ public class Gourmet extends Place
         dest.writeString(dBenefitText);
         dest.writeInt(persons);
         dest.writeSerializable(grade);
+        dest.writeString(category);
+        dest.writeInt(categorySequence);
+        dest.writeString(subCategory);
     }
 
     protected void readFromParcel(Parcel in)
@@ -65,6 +68,9 @@ public class Gourmet extends Place
         dBenefitText = in.readString();
         persons = in.readInt();
         grade = (Grade) in.readSerializable();
+        category = in.readString();
+        categorySequence = in.readInt();
+        subCategory = in.readString();
     }
 
     public boolean setData(JSONObject jsonObject, String imageUrl, SparseArray<String> stringSparseArray)

@@ -37,6 +37,7 @@ import com.twoheart.dailyhotel.model.PlaceBookingDetail;
 import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.place.adapter.PlaceNameInfoWindowAdapter;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
+import com.twoheart.dailyhotel.place.base.BaseBlurLayout;
 import com.twoheart.dailyhotel.place.base.BaseLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
 import com.twoheart.dailyhotel.util.Constants;
@@ -47,9 +48,9 @@ import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
 import java.util.Locale;
 
-public abstract class PlaceReservationDetailLayout extends BaseLayout implements View.OnClickListener
+public abstract class PlaceReservationDetailLayout extends BaseBlurLayout implements View.OnClickListener
 {
-    DailyScrollView mScrollLayout;
+    protected DailyScrollView mScrollLayout;
     private View mPlaceInformationLayout;
 
     View mInputReviewVerticalLine, mMapExpandedView;
@@ -79,6 +80,8 @@ public abstract class PlaceReservationDetailLayout extends BaseLayout implements
     protected abstract void initPaymentInformationLayout(Context context, View view, PlaceBookingDetail placeBookingDetail);
 
     protected abstract void initRefundPolicyLayout(Context context, View view, PlaceBookingDetail placeBookingDetail);
+
+    protected abstract void onScrollChanged(ScrollView scrollView, int l, int t, int oldl, int oldt);
 
     public interface OnEventListener extends OnBaseEventListener
     {
@@ -331,6 +334,8 @@ public abstract class PlaceReservationDetailLayout extends BaseLayout implements
             public void onScrollChanged(ScrollView scrollView, int l, int t, int oldl, int oldt)
             {
                 mFakeMapLayout.setTranslationY(-t);
+
+                PlaceReservationDetailLayout.this.onScrollChanged(scrollView, l, t, oldl, oldt);
             }
         });
 
