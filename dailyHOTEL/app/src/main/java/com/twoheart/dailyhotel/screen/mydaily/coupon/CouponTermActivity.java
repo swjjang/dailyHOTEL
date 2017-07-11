@@ -8,7 +8,6 @@ import android.view.View;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.widget.DailyWebView;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.Setting;
 import com.twoheart.dailyhotel.screen.common.WebViewActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Crypto;
@@ -74,23 +73,23 @@ public class CouponTermActivity extends WebViewActivity
             setWebView(Crypto.getUrlDecoderEx(URL_WEB_COMMON_COUPON_TERMS));
         } else
         {
-            String url;
-
             if (Constants.DEBUG == true)
             {
-                url = DailyPreference.getInstance(this).getBaseUrl();
-            } else
-            {
-                url = Crypto.getUrlDecoderEx(Setting.getServerUrl());
-            }
+                String url;
 
-            // 현재 접속하는 서버가 실서버인 경우와 테스트 서버인 경우 쿠폰 이용약관 서버가 다름
-            if (url.startsWith("http://prod-") == true)
+                url = DailyPreference.getInstance(this).getBaseUrl();
+
+                // 현재 접속하는 서버가 실서버인 경우와 테스트 서버인 경우 쿠폰 이용약관 서버가 다름
+                if (url.startsWith("https://prod-") == true)
+                {
+                    setWebView(Crypto.getUrlDecoderEx(URL_WEB_EACH_COUPON_TERMS) + mCouponIdx);
+                } else
+                {
+                    setWebView(Crypto.getUrlDecoderEx(URL_WEB_EACH_COUPON_TERMS_DEV) + mCouponIdx);
+                }
+            } else
             {
                 setWebView(Crypto.getUrlDecoderEx(URL_WEB_EACH_COUPON_TERMS) + mCouponIdx);
-            } else
-            {
-                setWebView(Crypto.getUrlDecoderEx(URL_WEB_EACH_COUPON_TERMS_DEV) + mCouponIdx);
             }
         }
 
