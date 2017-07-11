@@ -100,7 +100,12 @@ public class StayOutboundPaymentAnalyticsImpl implements StayOutboundPaymentPres
 
             AnalyticsManager.getInstance(activity).recordScreen(activity, AnalyticsManager.Screen.DAILYHOTEL_PAYMENTCOMPLETE_OUTBOUND, null, params);
 
+
             // Adjust
+            // Session
+            AnalyticsManager.getInstance(activity).onRegionChanged("outbound", AnalyticsManager.ValueType.EMPTY);
+
+            // event
             params.put(AnalyticsManager.KeyType.PROVINCE, AnalyticsManager.ValueType.EMPTY);
             params.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.EMPTY);
             params.put(AnalyticsManager.KeyType.PAYMENT_PRICE, Integer.toString(stayOutboundPayment.discountPrice));
@@ -117,8 +122,7 @@ public class StayOutboundPaymentAnalyticsImpl implements StayOutboundPaymentPres
             params.put(AnalyticsManager.KeyType.LENGTH_OF_STAY, Integer.toString(stayBookDateTime.getNights()));
             params.put(AnalyticsManager.KeyType.NRD, mAnalyticsParam.nrd ? "y" : "n");
             params.put(AnalyticsManager.KeyType.RATING, mAnalyticsParam.rating);
-            params.put(AnalyticsManager.KeyType.DAILYCHOICE, AnalyticsManager.ValueType.EMPTY);
-            params.put(AnalyticsManager.KeyType.PRICE_OFF, Integer.toString(stayOutboundPayment.totalPrice - stayOutboundPayment.discountPrice));
+            params.put(AnalyticsManager.KeyType.DAILYCHOICE, "n");
             params.put(AnalyticsManager.KeyType.COUPON_CODE, AnalyticsManager.ValueType.EMPTY);
             params.put(AnalyticsManager.KeyType.USED_BOUNS, stayOutboundPayment.totalPrice != stayOutboundPayment.discountPrice ? "y" : "n");
 
