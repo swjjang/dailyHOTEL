@@ -1,5 +1,7 @@
 package com.twoheart.dailyhotel.screen.gourmet.detail;
 
+import android.animation.Animator;
+import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.graphics.drawable.Animatable;
 import android.net.Uri;
@@ -238,7 +240,7 @@ public class GourmetDetailLayout extends PlaceDetailLayout
         }
 
         mScrollView.smoothScrollTo(0, (int) mGourmetDetailItemLayout.getMoveFirstView()//
-            - mContext.getResources().getDimensionPixelSize(R.dimen.toolbar_height));
+            - mContext.getResources().getDimensionPixelSize(R.dimen.toolbar_height) - ScreenUtils.dpToPx(mContext, 12));
     }
 
     public boolean isOpenedProductMoreList()
@@ -322,6 +324,131 @@ public class GourmetDetailLayout extends PlaceDetailLayout
         mStickerSimpleDraweeView.setController(controller);
     }
 
+    private ObjectAnimator mShowBottomAnimator;
+    private ObjectAnimator mHideBottomAnimator;
+
+    private void showBottomLayout(boolean animation)
+    {
+        if (mBottomLayout == null)
+        {
+            return;
+        }
+
+        if (mShowBottomAnimator != null)
+        {
+            return;
+        }
+
+        if (mHideBottomAnimator != null && mHideBottomAnimator.isRunning() == true)
+        {
+            mHideBottomAnimator.cancel();
+            mHideBottomAnimator = null;
+        }
+
+        if (animation == true)
+        {
+            mShowBottomAnimator = ObjectAnimator.ofFloat(mBottomLayout, View.ALPHA, mBottomLayout.getAlpha(), 1.0f);
+            mShowBottomAnimator.setDuration(300);
+            mShowBottomAnimator.addListener(new Animator.AnimatorListener()
+            {
+                @Override
+                public void onAnimationStart(Animator animation)
+                {
+                    mBottomLayout.setVisibility(View.VISIBLE);
+                }
+
+                @Override
+                public void onAnimationEnd(Animator animation)
+                {
+                    mShowBottomAnimator.removeAllListeners();
+                    mShowBottomAnimator = null;
+
+                    mBottomLayout.setVisibility(View.VISIBLE);
+                }
+
+                @Override
+                public void onAnimationCancel(Animator animation)
+                {
+
+                }
+
+                @Override
+                public void onAnimationRepeat(Animator animation)
+                {
+
+                }
+            });
+            mShowBottomAnimator.start();
+        } else
+        {
+            mBottomLayout.setVisibility(View.VISIBLE);
+            mBottomLayout.setAlpha(1.0f);
+        }
+    }
+
+    private void hideBottomLayout(boolean animation)
+    {
+        if (mBottomLayout == null)
+        {
+            return;
+        }
+
+        if (mHideBottomAnimator != null)
+        {
+            return;
+        }
+
+        if (mShowBottomAnimator != null && mShowBottomAnimator.isRunning() == true)
+        {
+            mShowBottomAnimator.cancel();
+            mShowBottomAnimator = null;
+        }
+
+        if (animation == true)
+        {
+            mHideBottomAnimator = ObjectAnimator.ofFloat(mBottomLayout, View.ALPHA, mBottomLayout.getAlpha(), 0.0f);
+            mHideBottomAnimator.setDuration(300);
+            mHideBottomAnimator.addListener(new Animator.AnimatorListener()
+            {
+                boolean mCanceled;
+
+                @Override
+                public void onAnimationStart(Animator animation)
+                {
+                }
+
+                @Override
+                public void onAnimationEnd(Animator animation)
+                {
+                    mHideBottomAnimator.removeAllListeners();
+                    mHideBottomAnimator = null;
+
+                    if (mCanceled == false)
+                    {
+                        mBottomLayout.setVisibility(View.INVISIBLE);
+                    }
+                }
+
+                @Override
+                public void onAnimationCancel(Animator animation)
+                {
+                    mCanceled = true;
+                }
+
+                @Override
+                public void onAnimationRepeat(Animator animation)
+                {
+
+                }
+            });
+            mHideBottomAnimator.start();
+        } else
+        {
+            mBottomLayout.setVisibility(View.INVISIBLE);
+            mBottomLayout.setAlpha(0.0f);
+        }
+    }
+
     private DailyPlaceDetailScrollView.OnScrollChangedListener mOnScrollChangedListener = new DailyPlaceDetailScrollView.OnScrollChangedListener()
     {
         @Override
@@ -357,13 +484,13 @@ public class GourmetDetailLayout extends PlaceDetailLayout
                 int scrollY = scrollView.getScrollY();
 
                 // 겹치지 않은 경우
-                if (scrollY == 0 || scrollY > mGourmetDetailItemLayout.getChildAt(lastProductIndex).getBottom()//
+                if (scrollY == 0 || scrollY + mContext.getResources().getDimensionPixelSize(R.dimen.toolbar_height) > mGourmetDetailItemLayout.getChildAt(lastProductIndex).getBottom()//
                     || scrollY + scrollView.getHeight() < mGourmetDetailItemLayout.getChildAt(firstProductIndex).getY())
                 {
-                    mBottomLayout.setVisibility(View.VISIBLE);
+                    showBottomLayout(true);
                 } else
                 {
-                    mBottomLayout.setVisibility(View.GONE);
+                    hideBottomLayout(true);
                 }
             }
         }

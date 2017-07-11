@@ -19,7 +19,6 @@ import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.daily.base.util.DailyTextUtils;
@@ -106,6 +105,8 @@ public class GourmetDetailItemLayout extends LinearLayout
         setOrientation(LinearLayout.VERTICAL);
 
         mLayoutInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+        setPadding(getPaddingLeft(), getPaddingTop(), getPaddingRight(), ScreenUtils.dpToPx(getContext(), 64));
     }
 
     public void setOnEventListener(GourmetDetailLayout.OnEventListener onEventListener)
