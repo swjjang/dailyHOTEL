@@ -19,6 +19,12 @@ public class GourmetKeyword extends Keyword
     @JsonField(name = "discount")
     public int price;
 
+    @JsonField(name = "isExpired")
+    public boolean isExpired;
+
+    @JsonField(name = "minimumOrderQuantity")
+    public int minimumOrderQuantity;
+
     public GourmetKeyword()
     {
     }
@@ -41,6 +47,8 @@ public class GourmetKeyword extends Keyword
         dest.writeInt(index);
         dest.writeInt(availableTickets);
         dest.writeInt(price);
+        dest.writeInt(isExpired ? 1 :0);
+        dest.writeInt(minimumOrderQuantity);
     }
 
     @Override
@@ -51,6 +59,8 @@ public class GourmetKeyword extends Keyword
         index = in.readInt();
         availableTickets = in.readInt();
         price = in.readInt();
+        isExpired = in.readInt() == 1 ? true : false;
+        minimumOrderQuantity = in.readInt();
     }
 
     @Override

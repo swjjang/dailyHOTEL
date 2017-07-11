@@ -28,7 +28,8 @@ public class Gourmet extends Place
     public String subCategory;
     public double distance;
     public int availableTicketNumbers;
-    public boolean isExpiredTicket;
+    public int minimumOrderQuantity;
+    public boolean expired;
 
     public Grade grade;
 
@@ -141,6 +142,22 @@ public class Gourmet extends Place
             } else
             {
                 availableTicketNumbers = -1;
+            }
+
+            if (jsonObject.has("minimumOrderQuantity") == true)
+            {
+                minimumOrderQuantity = jsonObject.getInt("minimumOrderQuantity");
+            } else
+            {
+                minimumOrderQuantity = -1;
+            }
+
+            if (jsonObject.has("expired") == true)
+            {
+                expired = jsonObject.getBoolean("expired");
+            } else
+            {
+                expired = false;
             }
 
             JSONObject imageJSONObject = jsonObject.getJSONObject("imgPathMain");

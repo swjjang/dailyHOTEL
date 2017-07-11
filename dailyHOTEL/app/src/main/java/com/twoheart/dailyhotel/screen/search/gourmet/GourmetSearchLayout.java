@@ -92,7 +92,7 @@ public class GourmetSearchLayout extends PlaceSearchLayout
 
             priceTextView.setVisibility(View.VISIBLE);
 
-            if (gourmetKeyword.availableTickets == 0)
+            if (gourmetKeyword.availableTickets == 0 || gourmetKeyword.availableTickets < gourmetKeyword.minimumOrderQuantity || gourmetKeyword.isExpired == true)
             {
                 priceTextView.setText(mContext.getString(R.string.act_hotel_soldout));
             } else

@@ -237,8 +237,7 @@ public class GourmetListAdapter extends PlaceListAdapter
         Util.requestImageResize(mContext, holder.dataBinding.imageView, gourmet.imageUrl);
 
         // SOLD OUT 표시
-        //        if (gourmet.isSoldOut)
-        if (gourmet.isExpiredTicket == true)
+        if (gourmet.isSoldOut == true)
         {
             holder.dataBinding.soldoutView.setVisibility(View.VISIBLE);
         } else

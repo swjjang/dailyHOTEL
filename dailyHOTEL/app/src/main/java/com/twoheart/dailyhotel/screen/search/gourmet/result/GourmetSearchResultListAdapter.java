@@ -158,8 +158,9 @@ public class GourmetSearchResultListAdapter extends GourmetListAdapter
         // SOLD OUT 표시
         holder.dataBinding.soldoutView.setVisibility(View.GONE);
 
-        if (gourmet.isExpiredTicket == true)
+        if (gourmet.availableTicketNumbers == 0 || gourmet.availableTicketNumbers < gourmet.minimumOrderQuantity || gourmet.expired == true)
         {
+            holder.dataBinding.personsTextView.setVisibility(View.GONE);
             holder.dataBinding.priceTextView.setVisibility(View.INVISIBLE);
             holder.dataBinding.priceTextView.setText(null);
             holder.dataBinding.discountPriceTextView.setText(mContext.getString(R.string.act_hotel_soldout));
