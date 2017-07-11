@@ -426,6 +426,7 @@ public class PlaceBookingDetailMapFragment extends com.google.android.gms.maps.S
             return;
         }
 
+        //noinspection ResourceType
         mMyLocationView = (ImageView) getView().findViewById(0x2);
 
         if (mMyLocationView != null)

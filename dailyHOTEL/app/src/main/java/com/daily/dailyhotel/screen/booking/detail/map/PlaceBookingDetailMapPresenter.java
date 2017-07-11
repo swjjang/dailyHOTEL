@@ -8,11 +8,7 @@ import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityOptionsCompat;
-import android.support.v4.app.SharedElementCallback;
-import android.support.v4.util.Pair;
 import android.view.View;
-import android.widget.Toast;
 
 import com.daily.base.BaseAnalyticsInterface;
 import com.daily.base.exception.DuplicateRunException;
@@ -22,24 +18,16 @@ import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
-import com.daily.dailyhotel.repository.local.model.AnalyticsParam;
 import com.daily.dailyhotel.util.DailyLocationExFactory;
-import com.facebook.drawee.view.SimpleDraweeView;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.Gourmet;
 import com.twoheart.dailyhotel.model.Place;
 import com.twoheart.dailyhotel.model.Stay;
-import com.twoheart.dailyhotel.model.time.GourmetBookingDay;
 import com.twoheart.dailyhotel.model.time.PlaceBookingDay;
 import com.twoheart.dailyhotel.screen.common.PermissionManagerActivity;
-import com.twoheart.dailyhotel.screen.gourmet.detail.GourmetDetailActivity;
-import com.twoheart.dailyhotel.util.Constants;
-import com.twoheart.dailyhotel.util.Util;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.List;
 
 import io.reactivex.Observable;
 import io.reactivex.Observer;
@@ -54,13 +42,18 @@ import io.reactivex.schedulers.Schedulers;
  * Created by android_sam on 2017. 7. 5..
  */
 
-public class PlaceBookingDetailMapPresenter extends BaseExceptionPresenter<PlaceBookingDetailMapActivity, PlaceBookingDetailMapInterface> //
+public abstract class PlaceBookingDetailMapPresenter extends BaseExceptionPresenter<PlaceBookingDetailMapActivity, PlaceBookingDetailMapInterface> //
     implements PlaceBookingDetailMapView.OnEventListener
 {
     private String mTitle;
     private PlaceBookingDay mPlaceBookingDay;
     private ArrayList<Place> mPlaceList;
     private DailyLocationExFactory mDailyLocationExFactory;
+
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+    protected abstract void startPlaceDetail(View view, PlaceBookingDay placeBookingDay, Place place);
+
+    protected abstract PlaceBookingDetailMapView getBookingDetailMapView();
 
     public PlaceBookingDetailMapPresenter(@NonNull PlaceBookingDetailMapActivity activity)
     {
@@ -71,7 +64,8 @@ public class PlaceBookingDetailMapPresenter extends BaseExceptionPresenter<Place
     @Override
     protected PlaceBookingDetailMapInterface createInstanceViewInterface()
     {
-        return new PlaceBookingDetailMapView(getActivity(), this);
+        return getBookingDetailMapView();
+//        return new GourmetBookingDetailMapView(getActivity(), this);
     }
 
     @Override
@@ -104,7 +98,7 @@ public class PlaceBookingDetailMapPresenter extends BaseExceptionPresenter<Place
 
             if (mPlaceList == null || mPlaceList.size() == 0)
             {
-                DailyToast.showToast(getActivity(), "Test - 임시 추천 업장이 없습니다", Toast.LENGTH_SHORT);
+                ExLog.d("mPlaceList is empty");
                 return false;
             }
         } catch (Exception e)
@@ -165,6 +159,7 @@ public class PlaceBookingDetailMapPresenter extends BaseExceptionPresenter<Place
         if (getViewInterface().isMapViewPagerVisibility() == true)
         {
             getViewInterface().setMapViewPagerVisibility(false);
+            return true;
         }
 
         return super.onBackPressed();
@@ -189,7 +184,6 @@ public class PlaceBookingDetailMapPresenter extends BaseExceptionPresenter<Place
 
         switch (requestCode)
         {
-            // TODO : 추후 Request code Constants 에서 Activity 의 리퀘스트코드로 변경, StayOutboundListActivity 참조
             case PlaceBookingDetailMapActivity.REQUEST_CODE_SETTING_LOCATION:
             {
                 onMyLocationClick();
@@ -219,7 +213,6 @@ public class PlaceBookingDetailMapPresenter extends BaseExceptionPresenter<Place
         getActivity().onBackPressed();
     }
 
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     @Override
     public void onPlaceClick(View view, Place place)
     {
@@ -231,78 +224,11 @@ public class PlaceBookingDetailMapPresenter extends BaseExceptionPresenter<Place
         if (place instanceof Stay)
         {
             // 아직 지원하지 않음
+            ExLog.w("stay type is not yet supported");
             return;
         }
 
-        Gourmet gourmet = (Gourmet) place;
-
-        GourmetBookingDay gourmetBookingDay = (GourmetBookingDay) mPlaceBookingDay;
-
-
-        if (Util.isUsedMultiTransition() == true)
-        {
-            getActivity().setExitSharedElementCallback(new SharedElementCallback()
-            {
-                @Override
-                public void onSharedElementEnd(List<String> sharedElementNames, List<View> sharedElements, List<View> sharedElementSnapshots)
-                {
-                    super.onSharedElementEnd(sharedElementNames, sharedElements, sharedElementSnapshots);
-
-                    for (View view : sharedElements)
-                    {
-                        if (view instanceof SimpleDraweeView)
-                        {
-                            view.setVisibility(View.VISIBLE);
-                            break;
-                        }
-                    }
-                }
-            });
-
-            AnalyticsParam analyticsParam = new AnalyticsParam();
-            analyticsParam.setParam(getActivity(), gourmet);
-            analyticsParam.setProvince(null);
-            analyticsParam.setTotalListCount(-1);
-
-            Intent intent = GourmetDetailActivity.newInstance(getActivity() //
-                , gourmetBookingDay, gourmet.index, gourmet.name //
-                , gourmet.imageUrl, gourmet.category, gourmet.isSoldOut, analyticsParam, true);
-
-            if (intent == null)
-            {
-                Util.restartApp(getActivity());
-                return;
-            }
-
-            View simpleDraweeView = view.findViewById(R.id.simpleDraweeView);
-            View nameTextView = view.findViewById(R.id.nameTextView);
-            View gradientTopView = view.findViewById(R.id.gradientTopView);
-            View gradientBottomView = view.findViewById(R.id.gradientView);
-
-            android.support.v4.util.Pair[] pairs = new Pair[4];
-            pairs[0] = android.support.v4.util.Pair.create(simpleDraweeView, getString(R.string.transition_place_image));
-            pairs[1] = android.support.v4.util.Pair.create(nameTextView, getString(R.string.transition_place_name));
-            pairs[2] = android.support.v4.util.Pair.create(gradientTopView, getString(R.string.transition_gradient_top_view));
-            pairs[3] = android.support.v4.util.Pair.create(gradientBottomView, getString(R.string.transition_gradient_bottom_view));
-
-            ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(), pairs);
-
-            startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_GOURMET_DETAIL, options.toBundle());
-        } else
-        {
-            AnalyticsParam analyticsParam = new AnalyticsParam();
-            analyticsParam.setParam(getActivity(), gourmet);
-            analyticsParam.setProvince(null);
-            analyticsParam.setTotalListCount(-1);
-
-            Intent intent = GourmetDetailActivity.newInstance(getActivity() //
-                , gourmetBookingDay, gourmet.index, gourmet.name //
-                , gourmet.imageUrl, gourmet.category, gourmet.isSoldOut, analyticsParam, false);
-
-            startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_STAY_DETAIL);
-
-            getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
-        }
+        startPlaceDetail(view, mPlaceBookingDay, place);
     }
 
     @Override
@@ -310,7 +236,6 @@ public class PlaceBookingDetailMapPresenter extends BaseExceptionPresenter<Place
     {
         if (getActivity().isFinishing() == true)
         {
-//            unLockAll();
             return;
         }
 
@@ -599,24 +524,4 @@ public class PlaceBookingDetailMapPresenter extends BaseExceptionPresenter<Place
             }
         });
     }
-
-//    private ArrayList<PlaceViewItem> makePlaceViewItemList(List<? extends Place> placeList)
-//    {
-//        ArrayList<PlaceViewItem> placeViewItemList = new ArrayList<>();
-//        if (placeList == null || placeList.size() == 0)
-//        {
-//            return placeViewItemList;
-//        }
-//
-//        int entryPosition = 1;
-//
-//        for (Place place : placeList)
-//        {
-//            place.entryPosition = entryPosition;
-//            placeViewItemList.add(new PlaceViewItem(PlaceViewItem.TYPE_ENTRY, place));
-//            entryPosition++;
-//        }
-//
-//        return placeViewItemList;
-//    }
 }

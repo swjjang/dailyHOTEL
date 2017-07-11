@@ -798,7 +798,7 @@
             android:screenOrientation="portrait"/>
 
         <activity
-            android:name="com.daily.dailyhotel.screen.booking.detail.map.PlaceBookingDetailMapActivity"
+            android:name="com.daily.dailyhotel.screen.booking.detail.map.GourmetBookingDetailMapActivity"
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>

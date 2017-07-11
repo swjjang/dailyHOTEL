@@ -30,7 +30,7 @@ import io.reactivex.Observable;
  * Created by android_sam on 2017. 7. 5..
  */
 
-public class PlaceBookingDetailMapView extends BaseDialogView<PlaceBookingDetailMapView.OnEventListener, ActivityPlaceBookingDetailMapDataBinding> //
+public abstract class PlaceBookingDetailMapView extends BaseDialogView<PlaceBookingDetailMapView.OnEventListener, ActivityPlaceBookingDetailMapDataBinding> //
     implements PlaceBookingDetailMapInterface, ViewPager.OnPageChangeListener, PlaceBookingDetailMapFragment.OnEventListener
 {
     private static final int ANIMATION_DELAY = 200;
@@ -61,6 +61,8 @@ public class PlaceBookingDetailMapView extends BaseDialogView<PlaceBookingDetail
 
         void onMyLocationClick();
     }
+
+    public abstract PlaceBookingDetailMapViewPagerAdapter getViewPagerAdapter(Context context);
 
     public PlaceBookingDetailMapView(BaseActivity baseActivity, PlaceBookingDetailMapView.OnEventListener listener)
     {
@@ -131,7 +133,7 @@ public class PlaceBookingDetailMapView extends BaseDialogView<PlaceBookingDetail
             return;
         }
 
-        mViewPagerAdapter = new PlaceBookingDetailMapViewPagerAdapter(context);
+        mViewPagerAdapter = getViewPagerAdapter(context);
         mViewPagerAdapter.setOnPlaceMapViewPagerAdapterListener(new PlaceBookingDetailMapViewPagerAdapter.OnPlaceMapViewPagerAdapterListener()
         {
             @Override
@@ -151,15 +153,8 @@ public class PlaceBookingDetailMapView extends BaseDialogView<PlaceBookingDetail
     @Override
     public void setPlaceList(ArrayList<Place> placeList, PlaceBookingDay placeBookingDay)
     {
-        //        if (getViewDataBinding() == null)
-        //        {
-        //            return;
-        //        }
-
         if (mPlaceBookingDetailMapFragment == null || mViewPager == null || mViewPagerAdapter == null)
         {
-            //            getViewDataBinding().mapLayout.removeAllViews();
-            //            getViewDataBinding().mapLayout.setVisibility(View.GONE);
             return;
         }
 
@@ -329,7 +324,12 @@ public class PlaceBookingDetailMapView extends BaseDialogView<PlaceBookingDetail
     @Override
     public Observable<Long> getLocationAnimation()
     {
-        return null;
+        if (mPlaceBookingDetailMapFragment == null)
+        {
+            return null;
+        }
+
+        return mPlaceBookingDetailMapFragment.getLocationAnimation();
     }
 
     @Override
@@ -365,8 +365,6 @@ public class PlaceBookingDetailMapView extends BaseDialogView<PlaceBookingDetail
                 int value = (Integer) animation.getAnimatedValue();
                 int height = ScreenUtils.dpToPx(getContext(), (VIEWPAGER_HEIGHT_DP - VIEWPAGER_TOP_N_BOTTOM_PADDING_DP));
                 float translationY = height - height * value / 100;
-
-//                setMenuBarLayoutTranslationY(translationY);
 
                 if (mViewPager != null)
                 {

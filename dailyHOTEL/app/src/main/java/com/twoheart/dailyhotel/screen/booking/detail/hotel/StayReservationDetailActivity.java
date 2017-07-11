@@ -30,7 +30,7 @@ import com.daily.base.widget.DailyTextView;
 import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.repository.local.model.AnalyticsParam;
 import com.daily.dailyhotel.repository.remote.GourmetListRemoteImpl;
-import com.daily.dailyhotel.screen.booking.detail.map.PlaceBookingDetailMapActivity;
+import com.daily.dailyhotel.screen.booking.detail.map.GourmetBookingDetailMapActivity;
 import com.daily.dailyhotel.util.RecentlyPlaceUtil;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.twoheart.dailyhotel.R;
@@ -1172,7 +1172,7 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
                     gourmetList.addAll(mRecommendGourmetList);
                 }
 
-                Intent intent = PlaceBookingDetailMapActivity.newInstance( //
+                Intent intent = GourmetBookingDetailMapActivity.newInstance( //
                     StayReservationDetailActivity.this, title, gourmetBookingDay, gourmetList);
 
                 StayReservationDetailActivity.this.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PLACE_BOOKING_DETAIL_MAP);
