@@ -152,9 +152,9 @@ public class Gourmet extends Place
                 minimumOrderQuantity = -1;
             }
 
-            if (jsonObject.has("expired") == true)
+            if (jsonObject.has("isExpired") == true)
             {
-                expired = jsonObject.getBoolean("expired");
+                expired = jsonObject.getBoolean("isExpired");
             } else
             {
                 expired = false;
