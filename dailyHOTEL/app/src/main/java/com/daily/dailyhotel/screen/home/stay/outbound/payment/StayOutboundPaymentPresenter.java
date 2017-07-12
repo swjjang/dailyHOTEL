@@ -954,7 +954,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
                 Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
             getViewInterface().setBooking(checkInDateSpannableString, checkOutDateSpannableString, mStayBookDateTime.getNights(), mStayName, mRoomType);
-            getViewInterface().setVendorName("업장명(국가명, 전화번호)");
+            getViewInterface().setVendorName(getString(R.string.label_stay_outbound_payment_third_party_vendor));
         } catch (Exception e)
         {
             ExLog.d(e.toString());
