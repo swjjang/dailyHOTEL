@@ -8,10 +8,8 @@ import android.view.View;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.widget.DailyWebView;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.Setting;
 import com.twoheart.dailyhotel.screen.common.WebViewActivity;
 import com.twoheart.dailyhotel.util.Constants;
-import com.twoheart.dailyhotel.util.Crypto;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.DailyRemoteConfigPreference;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
@@ -75,23 +73,23 @@ public class CouponTermActivity extends WebViewActivity
             setWebView(DailyRemoteConfigPreference.getInstance(this).getKeyRemoteConfigStaticUrlCoupon());
         } else
         {
-            String url;
-
             if (Constants.DEBUG == true)
             {
-                url = DailyPreference.getInstance(this).getBaseUrl();
-            } else
-            {
-                url = Crypto.getUrlDecoderEx(Setting.getServerUrl());
-            }
+                String url;
 
-            // 현재 접속하는 서버가 실서버인 경우와 테스트 서버인 경우 쿠폰 이용약관 서버가 다름
-            if (url.startsWith("http://prod-") == true)
+                url = DailyPreference.getInstance(this).getBaseUrl();
+
+                // 현재 접속하는 서버가 실서버인 경우와 테스트 서버인 경우 쿠폰 이용약관 서버가 다름
+                if (url.startsWith("https://prod-") == true)
+                {
+                    setWebView(DailyRemoteConfigPreference.getInstance(this).getKeyRemoteConfigStaticUrlProdCouponNote() + mCouponIdx);
+                } else
+                {
+                    setWebView(DailyRemoteConfigPreference.getInstance(this).getKeyRemoteConfigStaticUrlDevCouponNote() + mCouponIdx);
+                }
+            } else
             {
                 setWebView(DailyRemoteConfigPreference.getInstance(this).getKeyRemoteConfigStaticUrlProdCouponNote() + mCouponIdx);
-            } else
-            {
-                setWebView(DailyRemoteConfigPreference.getInstance(this).getKeyRemoteConfigStaticUrlDevCouponNote() + mCouponIdx);
             }
         }
 
