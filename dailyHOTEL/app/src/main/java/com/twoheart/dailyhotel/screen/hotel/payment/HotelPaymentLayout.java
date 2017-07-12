@@ -107,9 +107,13 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
     private View mSelectedSimpleCardLayout;
     //
     private View mRefundPolicyLayout;
+    private TextView mRefundPolicyTitleTextView, mVendorNameTextView;
+    private View mThirdPartTermsLayout;
+    private View mArrowImageView;
+    private CheckBox mAgreeThirdPartyCheckBox;
     //
     int mAnimationValue;
-    ValueAnimator mValueAnimator;
+    ValueAnimator mValueAnimator, mThirdPartyValueAnimator;
     boolean mIsAnimationCancel;
     //
     Rect mGuestFrameLayoutRect = new Rect();
@@ -358,6 +362,22 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
     private void initRefundPolicy(View view)
     {
         mRefundPolicyLayout = view.findViewById(R.id.refundPolicyLayout);
+        mRefundPolicyTitleTextView = (TextView) view.findViewById(R.id.refundPolicyTitleTextView);
+        mArrowImageView = view.findViewById(R.id.arrowImageView);
+        mVendorNameTextView = (TextView) view.findViewById(R.id.vendorNameTextView);
+        mThirdPartTermsLayout = view.findViewById(R.id.thirdPartyTermsLayout);
+        mAgreeThirdPartyCheckBox = (CheckBox) view.findViewById(R.id.agreePersonalInformationCheckBox);
+        mArrowImageView.setOnClickListener(this);
+
+        mThirdPartTermsLayout.post(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                mThirdPartTermsLayout.setTag(mThirdPartTermsLayout.getHeight());
+                mThirdPartTermsLayout.setVisibility(View.GONE);
+            }
+        });
     }
 
     public void setPaymentMemoTextView(String text, boolean visible)
@@ -417,6 +437,11 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
         }
 
         return false;
+    }
+
+    public boolean isAgreeThirdParty()
+    {
+        return mAgreeThirdPartyCheckBox.isChecked();
     }
 
     private void setPaymentTypeEnabled(final View view, boolean enabled)
@@ -773,7 +798,25 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
             return;
         }
 
-        mRefundPolicyLayout.setVisibility(visible == true ? View.VISIBLE : View.GONE);
+        if (visible == true)
+        {
+            mRefundPolicyLayout.setVisibility(View.VISIBLE);
+            mRefundPolicyTitleTextView.setText(R.string.label_booking_step4);
+        } else
+        {
+            mRefundPolicyLayout.setVisibility(View.GONE);
+            mRefundPolicyTitleTextView.setText(R.string.label_booking_step4_empty_policy);
+        }
+    }
+
+    public void setVendorName(String vendorName)
+    {
+        if (mVendorNameTextView == null)
+        {
+            return;
+        }
+
+        mVendorNameTextView.setText(vendorName);
     }
 
     public Guest getGuest()
@@ -1074,6 +1117,19 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
 
                 ((OnEventListener) mOnEventListener).onVisitType(false);
                 break;
+
+            case R.id.arrowImageView:
+                if (mThirdPartTermsLayout != null && mArrowImageView != null)
+                {
+                    if (mThirdPartTermsLayout.getVisibility() == View.VISIBLE)
+                    {
+                        hideOfferPersonalInformation(mArrowImageView, mThirdPartTermsLayout);
+                    } else
+                    {
+                        showOfferPersonalInformation(mArrowImageView, mThirdPartTermsLayout);
+                    }
+                }
+                break;
         }
     }
 
@@ -1184,5 +1240,155 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
         mValueAnimator.setDuration(300);
         mValueAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
         mValueAnimator.start();
+    }
+
+    private void showOfferPersonalInformation(View arrowImageView, View view)
+    {
+        if (view == null || arrowImageView == null)
+        {
+            return;
+        }
+
+        if (mThirdPartyValueAnimator != null && mThirdPartyValueAnimator.isRunning() == true)
+        {
+            return;
+        }
+
+        Integer height = (Integer) view.getTag();
+
+        if (height == null)
+        {
+            return;
+        }
+
+        mThirdPartyValueAnimator = ValueAnimator.ofInt(0, height.intValue());
+        mThirdPartyValueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener()
+        {
+            @Override
+            public void onAnimationUpdate(ValueAnimator valueAnimator)
+            {
+                if (valueAnimator == null)
+                {
+                    return;
+                }
+
+                int val = (int) valueAnimator.getAnimatedValue();
+
+                ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
+                layoutParams.height = val;
+                view.requestLayout();
+
+                arrowImageView.setRotation(-180.0f * val / height);
+            }
+        });
+
+        mThirdPartyValueAnimator.setDuration(200);
+        mThirdPartyValueAnimator.addListener(new Animator.AnimatorListener()
+        {
+            @Override
+            public void onAnimationStart(Animator animation)
+            {
+                view.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation)
+            {
+                mThirdPartyValueAnimator.removeAllUpdateListeners();
+                mThirdPartyValueAnimator.removeAllListeners();
+                mThirdPartyValueAnimator = null;
+
+                arrowImageView.setRotation(-180);
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation)
+            {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation)
+            {
+
+            }
+        });
+
+        mThirdPartyValueAnimator.start();
+    }
+
+    private void hideOfferPersonalInformation(View arrowImageView, View view)
+    {
+        if (arrowImageView == null || view == null)
+        {
+            return;
+        }
+
+        if (mThirdPartyValueAnimator != null && mThirdPartyValueAnimator.isRunning() == true)
+        {
+            return;
+        }
+
+        Integer height = (Integer) view.getTag();
+
+        if (height == null)
+        {
+            return;
+        }
+
+        mThirdPartyValueAnimator = ValueAnimator.ofInt(height, 0);
+        mThirdPartyValueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener()
+        {
+            @Override
+            public void onAnimationUpdate(ValueAnimator valueAnimator)
+            {
+                if (valueAnimator == null)
+                {
+                    return;
+                }
+
+                int val = (int) valueAnimator.getAnimatedValue();
+                ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
+                layoutParams.height = val;
+                view.requestLayout();
+
+                arrowImageView.setRotation(-180.0f * val / height);
+            }
+        });
+
+        mThirdPartyValueAnimator.setDuration(200);
+        mThirdPartyValueAnimator.addListener(new Animator.AnimatorListener()
+        {
+            @Override
+            public void onAnimationStart(Animator animation)
+            {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation)
+            {
+                mThirdPartyValueAnimator.removeAllUpdateListeners();
+                mThirdPartyValueAnimator.removeAllListeners();
+                mThirdPartyValueAnimator = null;
+
+                arrowImageView.setRotation(0);
+                view.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation)
+            {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation)
+            {
+
+            }
+        });
+
+        mThirdPartyValueAnimator.start();
     }
 }
