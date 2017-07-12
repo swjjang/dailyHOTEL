@@ -217,7 +217,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center_horizontal"
-                        android:text="@string/label_searchresult_text02"
+                        android:text="@string/message_stay_outbound_search_empty"
                         android:textColor="@color/default_text_cc5c5c5"
                         android:textSize="12dp"/>
 
