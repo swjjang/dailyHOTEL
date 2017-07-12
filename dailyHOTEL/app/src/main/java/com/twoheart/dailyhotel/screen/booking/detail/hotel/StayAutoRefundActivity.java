@@ -340,10 +340,19 @@ public class StayAutoRefundActivity extends BaseActivity
 
                         messageEditText.setCursorVisible(false);
 
-                        InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                        inputMethodManager.hideSoftInputFromWindow(messageEditText.getWindowToken(), InputMethodManager.HIDE_IMPLICIT_ONLY);
-
                         setSelected(v);
+
+                        messageEditText.post(new Runnable()
+                        {
+                            @Override
+                            public void run()
+                            {
+                                InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                                inputMethodManager.hideSoftInputFromWindow(messageEditText.getWindowToken(), InputMethodManager.HIDE_IMPLICIT_ONLY);
+                            }
+                        });
+
+
                         break;
                     }
 
@@ -354,12 +363,19 @@ public class StayAutoRefundActivity extends BaseActivity
 
                         messageEditText.setCursorVisible(true);
 
-                        InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                        inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
-
                         setSelected(v);
 
                         scrollView.fullScroll(View.FOCUS_DOWN);
+
+                        messageEditText.post(new Runnable()
+                        {
+                            @Override
+                            public void run()
+                            {
+                                InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                                inputMethodManager.showSoftInput(messageEditText, InputMethodManager.SHOW_IMPLICIT);
+                            }
+                        });
                         break;
                     }
 

@@ -150,6 +150,8 @@ public class StayOutboundRefundView extends BaseDialogView<StayOutboundRefundVie
                 View messageClickView = dataBinding.scrollLayout.findViewById(R.id.messageClickView);
                 View cancelReasonEtcView = dataBinding.scrollLayout.findViewById(R.id.cancelReasonEtcView);
 
+                setSelected(v);
+
                 if (messageEditText != null && messageClickView != null)
                 {
                     messageEditText.setText(null);
@@ -164,12 +166,16 @@ public class StayOutboundRefundView extends BaseDialogView<StayOutboundRefundVie
                     });
 
                     messageEditText.setCursorVisible(false);
-
-                    InputMethodManager inputMethodManager = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-                    inputMethodManager.hideSoftInputFromWindow(messageEditText.getWindowToken(), InputMethodManager.HIDE_IMPLICIT_ONLY);
+                    messageEditText.post(new Runnable()
+                    {
+                        @Override
+                        public void run()
+                        {
+                            InputMethodManager inputMethodManager = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                            inputMethodManager.hideSoftInputFromWindow(messageEditText.getWindowToken(), InputMethodManager.HIDE_IMPLICIT_ONLY);
+                        }
+                    });
                 }
-
-                setSelected(v);
             }
 
             private void setSelected(View view)
@@ -199,20 +205,25 @@ public class StayOutboundRefundView extends BaseDialogView<StayOutboundRefundVie
                 EditText messageEditText = (EditText) dataBinding.scrollLayout.findViewById(R.id.messageEditText);
                 View messageClickView = dataBinding.scrollLayout.findViewById(R.id.messageClickView);
 
+                setSelected(v);
+                dataBinding.scrollView.fullScroll(View.FOCUS_DOWN);
+
                 if (messageEditText != null && messageClickView != null)
                 {
                     messageClickView.setVisibility(View.GONE);
                     messageClickView.setOnClickListener(null);
 
                     messageEditText.setCursorVisible(true);
-
-                    InputMethodManager inputMethodManager = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-                    inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
+                    messageEditText.post(new Runnable()
+                    {
+                        @Override
+                        public void run()
+                        {
+                            InputMethodManager inputMethodManager = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                            inputMethodManager.showSoftInput(messageEditText, InputMethodManager.SHOW_IMPLICIT);
+                        }
+                    });
                 }
-
-                setSelected(v);
-
-                dataBinding.scrollView.fullScroll(View.FOCUS_DOWN);
             }
 
             private void setSelected(View view)
