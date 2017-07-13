@@ -19,7 +19,7 @@
             android:paddingLeft="15dp"
             android:paddingRight="15dp"
             android:paddingTop="25dp"
-            android:text="@string/label_booking_step2"
+            android:text="@string/label_stay_outbound_payment_booking_step2"
             android:textColor="@color/default_text_c323232"
             android:textSize="14dp"
             dailyFont:style="Medium"/>
@@ -39,6 +39,7 @@
             android:text="@string/label_booking_discount_information"
             android:textColor="@color/default_text_c666666"
             android:textSize="13dp"
+            android:visibility="gone"
             dailyFont:style="Medium"/>
 
         <com.daily.base.widget.DailyTextView
@@ -60,7 +61,8 @@
             android:layout_width="match_parent"
             android:layout_height="36dp"
             android:paddingLeft="15dp"
-            android:paddingRight="15dp">
+            android:paddingRight="15dp"
+            android:visibility="gone">
 
             <ImageView
                 android:id="@+id/bonusRadioButton"
@@ -179,7 +181,8 @@
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"
             android:layout_marginTop="10dp"
-            android:background="@color/default_line_cdcdcdd"/>
+            android:background="@color/default_line_cdcdcdd"
+            android:visibility="gone"/>
 
         <!-- 결제 -->
         <com.daily.base.widget.DailyTextView
@@ -192,16 +195,17 @@
             android:text="@string/act_booking_payment"
             android:textColor="@color/default_text_c666666"
             android:textSize="13dp"
+            android:visibility="gone"
             dailyFont:style="Medium"/>
 
         <LinearLayout
             android:id="@+id/paymentInformationLayout"
             android:layout_width="match_parent"
-            android:layout_height="147dp"
+            android:layout_height="wrap_content"
             android:layout_marginBottom="15dp"
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="15dp"
             android:background="@drawable/shape_fillrect_le8e8e9_bfafafb"
             android:orientation="vertical"
             android:paddingLeft="10dp"
@@ -211,6 +215,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="36dp"
                 android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
                 android:gravity="center_vertical">
 
                 <com.daily.base.widget.DailyTextView
@@ -247,7 +252,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="36dp"
                 android:layout_marginBottom="10dp"
-                android:gravity="center_vertical">
+                android:gravity="center_vertical"
+                android:visibility="gone">
 
                 <com.daily.base.widget.DailyTextView
                     android:layout_width="wrap_content"
