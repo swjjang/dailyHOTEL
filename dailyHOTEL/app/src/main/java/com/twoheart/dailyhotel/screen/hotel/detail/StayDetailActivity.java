@@ -22,6 +22,7 @@ import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
 import com.daily.base.widget.DailyToast;
+import com.daily.dailyhotel.entity.CommonDateTime;
 import com.daily.dailyhotel.repository.local.model.AnalyticsParam;
 import com.daily.dailyhotel.util.RecentlyPlaceUtil;
 import com.facebook.drawee.drawable.ScalingUtils;
@@ -47,6 +48,7 @@ import com.twoheart.dailyhotel.screen.common.HappyTalkCategoryDialog;
 import com.twoheart.dailyhotel.screen.common.ImageDetailListActivity;
 import com.twoheart.dailyhotel.screen.common.TrueVRActivity;
 import com.twoheart.dailyhotel.screen.common.ZoomMapActivity;
+import com.twoheart.dailyhotel.screen.gourmet.filter.GourmetCalendarActivity;
 import com.twoheart.dailyhotel.screen.hotel.filter.StayDetailCalendarActivity;
 import com.twoheart.dailyhotel.screen.hotel.payment.HotelPaymentActivity;
 import com.twoheart.dailyhotel.screen.mydaily.coupon.SelectStayCouponDialogActivity;
@@ -73,6 +75,10 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import io.reactivex.Observable;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.functions.BiFunction;
+import io.reactivex.functions.Consumer;
 import retrofit2.Call;
 import retrofit2.Response;
 
@@ -425,9 +431,115 @@ public class StayDetailActivity extends PlaceDetailActivity
     }
 
     @Override
+    protected void requestCommonDateTimeNSoldOutList(int placeIndex)
+    {
+        addCompositeDisposable(Observable.zip(mCommonRemoteImpl.getCommonDateTime() //
+            , mPlaceDetailCalendarImpl.getStayUnavailableDates(mPlaceDetail.index, GourmetCalendarActivity.DAYCOUNT_OF_MAX, false) //
+            , new BiFunction<CommonDateTime, List<String>, TodayDateTime>()
+            {
+                @Override
+                public TodayDateTime apply(@NonNull CommonDateTime commonDateTime, @NonNull List<String> soldOutList) throws Exception
+                {
+                    if (mSoldOutList == null)
+                    {
+                        mSoldOutList = new ArrayList<String>();
+                    }
+
+                    mSoldOutList.clear();
+                    mSoldOutList.addAll(soldOutList);
+
+                    TodayDateTime todayDateTime = new TodayDateTime();
+                    todayDateTime.setToday(commonDateTime.openDateTime, commonDateTime.closeDateTime //
+                        , commonDateTime.currentDateTime, commonDateTime.dailyDateTime);
+
+                    return todayDateTime;
+                }
+            }).subscribe(new Consumer<TodayDateTime>()
+        {
+            @Override
+            public void accept(@NonNull TodayDateTime todayDateTime) throws Exception
+            {
+                setCommonDateTime(todayDateTime);
+            }
+        }, new Consumer<Throwable>()
+        {
+            @Override
+            public void accept(@NonNull Throwable throwable) throws Exception
+            {
+                onHandleError(throwable);
+            }
+        }));
+    }
+
+    @Override
     protected void setCommonDateTime(TodayDateTime todayDateTime)
     {
+        mTodayDateTime = todayDateTime;
 
+        try
+        {
+            // 체크인 시간이 설정되어 있지 않는 경우 기본값을 넣어준다.
+            if (mPlaceBookingDay == null)
+            {
+                mPlaceBookingDay = new StayBookingDay();
+                StayBookingDay stayBookingDay = (StayBookingDay) mPlaceBookingDay;
+
+                stayBookingDay.setCheckInDay(mTodayDateTime.dailyDateTime);
+                stayBookingDay.setCheckOutDay(mTodayDateTime.dailyDateTime, 1);
+            } else
+            {
+                StayBookingDay stayBookingDay = (StayBookingDay) mPlaceBookingDay;
+
+                // 예외 처리로 보고 있는 체크인/체크아웃 날짜가 지나 간경우 다음 날로 변경해준다.
+                // 체크인 날짜 체크
+
+                // 날짜로 비교해야 한다.
+                Calendar todayCalendar = DailyCalendar.getInstance(mTodayDateTime.dailyDateTime, true);
+                Calendar checkInCalendar = DailyCalendar.getInstance(stayBookingDay.getCheckInDay(DailyCalendar.ISO_8601_FORMAT), true);
+                Calendar checkOutCalendar = DailyCalendar.getInstance(stayBookingDay.getCheckOutDay(DailyCalendar.ISO_8601_FORMAT), true);
+
+                // 하루가 지나서 체크인 날짜가 전날짜 인 경우
+                if (todayCalendar.getTimeInMillis() > checkInCalendar.getTimeInMillis())
+                {
+                    stayBookingDay.setCheckInDay(mTodayDateTime.dailyDateTime);
+
+                    checkInCalendar = DailyCalendar.getInstance(stayBookingDay.getCheckInDay(DailyCalendar.ISO_8601_FORMAT), true);
+                }
+
+                // 체크인 날짜가 체크 아웃 날짜와 같거나 큰경우.
+                if (checkInCalendar.getTimeInMillis() >= checkOutCalendar.getTimeInMillis())
+                {
+                    stayBookingDay.setCheckOutDay(stayBookingDay.getCheckInDay(DailyCalendar.ISO_8601_FORMAT), 1);
+                }
+            }
+
+            StayBookingDay stayBookingDay = (StayBookingDay) mPlaceBookingDay;
+
+            if (mIsShowCalendar == true)
+            {
+                boolean overseas = mOverseas;
+
+                if (mPlaceDetail != null && ((StayDetail) mPlaceDetail).getStayDetailParams() != null)
+                {
+                    overseas = ((StayDetail) mPlaceDetail).getStayDetailParams().isOverseas;
+                }
+
+                unLockUI();
+                startCalendar(mTodayDateTime, stayBookingDay, overseas, mPlaceDetail.index, mSoldOutList, false, false);
+                return;
+            }
+
+            ((StayDetailNetworkController) mPlaceDetailNetworkController).requestHasCoupon(mPlaceDetail.index,//
+                stayBookingDay.getCheckInDay("yyyy-MM-dd"), stayBookingDay.getNights());
+
+            mPlaceDetailNetworkController.requestPlaceReviewScores(PlaceType.HOTEL, mPlaceDetail.index);
+        } catch (Exception e)
+        {
+            onError(e);
+            unLockUI();
+
+            finish();
+        }
     }
 
     @Override
@@ -946,7 +1058,7 @@ public class StayDetailActivity extends PlaceDetailActivity
         }
     }
 
-    void startCalendar(TodayDateTime todayDateTime, StayBookingDay stayBookingDay, boolean overseas, int placeIndex, boolean isAnimation, boolean isSingleDay)
+    void startCalendar(TodayDateTime todayDateTime, StayBookingDay stayBookingDay, boolean overseas, int placeIndex, List<String> soldOutList, boolean isAnimation, boolean isSingleDay)
     {
         if (isFinishing() == true || lockUiComponentAndIsLockUiComponent() == true)
         {
@@ -954,7 +1066,7 @@ public class StayDetailActivity extends PlaceDetailActivity
         }
 
         Intent intent = StayDetailCalendarActivity.newInstance(StayDetailActivity.this, todayDateTime, stayBookingDay//
-            , overseas, placeIndex, AnalyticsManager.ValueType.DETAIL, true, isAnimation, isSingleDay);
+            , overseas, placeIndex, AnalyticsManager.ValueType.DETAIL, soldOutList, true, isAnimation, isSingleDay);
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_CALENDAR);
 
         AnalyticsManager.getInstance(StayDetailActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_//
@@ -1430,7 +1542,7 @@ public class StayDetailActivity extends PlaceDetailActivity
                 return;
             }
 
-            startCalendar(mTodayDateTime, (StayBookingDay) mPlaceBookingDay, stayDetailParams.isOverseas, stayDetail.index, true, stayDetailParams.isSingleStay);
+            startCalendar(mTodayDateTime, (StayBookingDay) mPlaceBookingDay, stayDetailParams.isOverseas, stayDetail.index, mSoldOutList, true, stayDetailParams.isSingleStay);
         }
 
         @Override
@@ -1558,7 +1670,7 @@ public class StayDetailActivity extends PlaceDetailActivity
                     }
 
                     unLockUI();
-                    startCalendar(mTodayDateTime, stayBookingDay, overseas, mPlaceDetail.index, false, false);
+                    startCalendar(mTodayDateTime, stayBookingDay, overseas, mPlaceDetail.index, mSoldOutList, false, false);
                     return;
                 }
 

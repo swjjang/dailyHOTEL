@@ -11,4 +11,6 @@ import io.reactivex.Observable;
 public interface PlaceDetailCalendarInterface
 {
     Observable<List<String>> getGourmetUnavailableDates(int placeIndex, int dateRange, boolean reverse);
+
+    Observable<List<String>> getStayUnavailableDates(int placeIndex, int dateRange, boolean reverse);
 }

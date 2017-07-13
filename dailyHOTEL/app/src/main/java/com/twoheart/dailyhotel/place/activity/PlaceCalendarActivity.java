@@ -41,6 +41,7 @@ import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.Util;
 
 import java.util.Calendar;
+import java.util.List;
 
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
@@ -79,6 +80,8 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
     AnimatorSet mAnimatorSet;
 
     private int[] mHolidays;
+
+    protected List<String> mSoldOutDayList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)

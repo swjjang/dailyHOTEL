@@ -16,6 +16,7 @@ import android.widget.Toast;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.widget.DailyToast;
+import com.daily.dailyhotel.entity.CommonDateTime;
 import com.daily.dailyhotel.entity.GourmetMenu;
 import com.daily.dailyhotel.entity.GourmetMenuImage;
 import com.daily.dailyhotel.repository.local.model.AnalyticsParam;
@@ -44,6 +45,7 @@ import com.twoheart.dailyhotel.screen.common.HappyTalkCategoryDialog;
 import com.twoheart.dailyhotel.screen.common.ImageDetailListActivity;
 import com.twoheart.dailyhotel.screen.common.TrueVRActivity;
 import com.twoheart.dailyhotel.screen.common.ZoomMapActivity;
+import com.twoheart.dailyhotel.screen.gourmet.filter.GourmetCalendarActivity;
 import com.twoheart.dailyhotel.screen.gourmet.filter.GourmetDetailCalendarActivity;
 import com.twoheart.dailyhotel.screen.gourmet.payment.GourmetPaymentActivity;
 import com.twoheart.dailyhotel.screen.mydaily.coupon.SelectGourmetCouponDialogActivity;
@@ -70,6 +72,7 @@ import java.util.Map;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
+import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
@@ -436,6 +439,47 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         //        boolean isDailyChoice = intent.getBooleanExtra(NAME_INTENT_EXTRA_DATA_IS_DAILYCHOICE, false);
 
         return new GourmetDetail(index);
+    }
+
+    @Override
+    protected void requestCommonDateTimeNSoldOutList(int placeIndex)
+    {
+        addCompositeDisposable(Observable.zip(mCommonRemoteImpl.getCommonDateTime() //
+            , mPlaceDetailCalendarImpl.getGourmetUnavailableDates(placeIndex, GourmetCalendarActivity.DAYCOUNT_OF_MAX, false) //
+            , new BiFunction<CommonDateTime, List<String>, TodayDateTime>()
+            {
+                @Override
+                public TodayDateTime apply(@NonNull CommonDateTime commonDateTime, @NonNull List<String> soldOutList) throws Exception
+                {
+                    if (mSoldOutList == null)
+                    {
+                        mSoldOutList = new ArrayList<String>();
+                    }
+
+                    mSoldOutList.clear();
+                    mSoldOutList.addAll(soldOutList);
+
+                    TodayDateTime todayDateTime = new TodayDateTime();
+                    todayDateTime.setToday(commonDateTime.openDateTime, commonDateTime.closeDateTime //
+                        , commonDateTime.currentDateTime, commonDateTime.dailyDateTime);
+
+                    return todayDateTime;
+                }
+            }).subscribe(new Consumer<TodayDateTime>()
+        {
+            @Override
+            public void accept(@NonNull TodayDateTime todayDateTime) throws Exception
+            {
+                setCommonDateTime(todayDateTime);
+            }
+        }, new Consumer<Throwable>()
+        {
+            @Override
+            public void accept(@NonNull Throwable throwable) throws Exception
+            {
+                onHandleError(throwable);
+            }
+        }));
     }
 
     @Override

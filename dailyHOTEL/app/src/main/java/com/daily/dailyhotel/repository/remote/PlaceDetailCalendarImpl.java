@@ -28,9 +28,45 @@ public class PlaceDetailCalendarImpl implements PlaceDetailCalendarInterface
         mContext = context;
     }
 
+    @Override
     public Observable<List<String>> getGourmetUnavailableDates(int placeIndex, int dateRange, boolean reverse)
     {
         return DailyMobileAPI.getInstance(mContext).getGourmetUnavailableDates(placeIndex, dateRange, reverse) //
+            .map(new Function<BaseListDto<String>, List<String>>()
+            {
+                @Override
+                public List<String> apply(@NonNull BaseListDto<String> stringBaseListDto) throws Exception
+                {
+                    List<String> unavailableDateList = null;
+
+                    if (stringBaseListDto != null)
+                    {
+                        if (stringBaseListDto.msgCode == 100 && stringBaseListDto.data != null)
+                        {
+                            unavailableDateList = stringBaseListDto.data;
+
+                            if (unavailableDateList == null)
+                            {
+                                unavailableDateList = new ArrayList<String>();
+                            }
+                        } else
+                        {
+                            throw new BaseException(stringBaseListDto.msgCode, stringBaseListDto.msg);
+                        }
+                    } else
+                    {
+                        throw new BaseException(-1, null);
+                    }
+
+                    return unavailableDateList;
+                }
+            }).observeOn(AndroidSchedulers.mainThread());
+    }
+
+    @Override
+    public Observable<List<String>> getStayUnavailableDates(int placeIndex, int dateRange, boolean reverse)
+    {
+        return DailyMobileAPI.getInstance(mContext).getStayUnavailableDates(placeIndex, dateRange, reverse) //
             .map(new Function<BaseListDto<String>, List<String>>()
             {
                 @Override

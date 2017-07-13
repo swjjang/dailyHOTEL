@@ -21,7 +21,6 @@ import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
 import com.daily.base.widget.DailyTextView;
 import com.daily.base.widget.DailyToast;
-import com.daily.dailyhotel.entity.CommonDateTime;
 import com.daily.dailyhotel.repository.local.ConfigLocalImpl;
 import com.daily.dailyhotel.repository.local.model.AnalyticsParam;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
@@ -39,7 +38,6 @@ import com.twoheart.dailyhotel.network.model.TrueVRParams;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.layout.PlaceDetailLayout;
 import com.twoheart.dailyhotel.place.networkcontroller.PlaceDetailNetworkController;
-import com.twoheart.dailyhotel.screen.gourmet.filter.GourmetCalendarActivity;
 import com.twoheart.dailyhotel.screen.information.FAQActivity;
 import com.twoheart.dailyhotel.screen.main.MainActivity;
 import com.twoheart.dailyhotel.screen.mydaily.member.AddProfileSocialActivity;
@@ -51,14 +49,9 @@ import com.twoheart.dailyhotel.widget.DailyDetailToolbarLayout;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.List;
 
-import io.reactivex.Observable;
-import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.BiFunction;
-import io.reactivex.functions.Consumer;
 import retrofit2.HttpException;
 
 public abstract class PlaceDetailActivity extends BaseActivity
@@ -119,6 +112,8 @@ public abstract class PlaceDetailActivity extends BaseActivity
     protected abstract PlaceDetailNetworkController getNetworkController(Context context);
 
     protected abstract PlaceDetail createPlaceDetail(Intent intent);
+
+    protected abstract void requestCommonDateTimeNSoldOutList(int placeIndex);
 
     protected abstract void setCommonDateTime(TodayDateTime todayDateTime);
 
@@ -241,42 +236,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
                 lockUI();
             }
 
-            addCompositeDisposable(Observable.zip(mCommonRemoteImpl.getCommonDateTime() //
-                , mPlaceDetailCalendarImpl.getGourmetUnavailableDates(mPlaceDetail.index, GourmetCalendarActivity.DAYCOUNT_OF_MAX, false) //
-                , new BiFunction<CommonDateTime, List<String>, TodayDateTime>()
-                {
-                    @Override
-                    public TodayDateTime apply(@NonNull CommonDateTime commonDateTime, @NonNull List<String> soldOutList) throws Exception
-                    {
-                        if (mSoldOutList == null)
-                        {
-                            mSoldOutList = new ArrayList<String>();
-                        }
-
-                        mSoldOutList.clear();
-                        mSoldOutList.addAll(soldOutList);
-
-                        TodayDateTime todayDateTime = new TodayDateTime();
-                        todayDateTime.setToday(commonDateTime.openDateTime, commonDateTime.closeDateTime //
-                            , commonDateTime.currentDateTime, commonDateTime.dailyDateTime);
-
-                        return todayDateTime;
-                    }
-                }).subscribe(new Consumer<TodayDateTime>()
-            {
-                @Override
-                public void accept(@NonNull TodayDateTime todayDateTime) throws Exception
-                {
-                    setCommonDateTime(todayDateTime);
-                }
-            }, new Consumer<Throwable>()
-            {
-                @Override
-                public void accept(@NonNull Throwable throwable) throws Exception
-                {
-                    onHandleError(throwable);
-                }
-            }));
+            requestCommonDateTimeNSoldOutList(mPlaceDetail.index);
         }
 
         super.onResume();

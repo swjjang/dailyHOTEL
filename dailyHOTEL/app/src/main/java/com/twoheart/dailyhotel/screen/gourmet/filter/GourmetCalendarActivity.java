@@ -36,8 +36,6 @@ public class GourmetCalendarActivity extends PlaceCalendarActivity
 
     protected boolean mIsChanged;
 
-    protected List<String> mSoldOutDayList;
-
     /**
      * @param context
      * @param todayDateTime
@@ -99,7 +97,7 @@ public class GourmetCalendarActivity extends PlaceCalendarActivity
 
                     reset();
 
-                    setSoldOutDays(mTodayDateTime, (GourmetBookingDay) mPlaceBookingDay, mSoldOutDayList);
+                    setSoldOutDays(mTodayDateTime, mSoldOutDayList);
 
                     if (isSelected == true)
                     {
@@ -117,7 +115,7 @@ public class GourmetCalendarActivity extends PlaceCalendarActivity
 
             reset();
 
-            setSoldOutDays(mTodayDateTime, (GourmetBookingDay) mPlaceBookingDay, mSoldOutDayList);
+            setSoldOutDays(mTodayDateTime, mSoldOutDayList);
 
             if (isSelected == true)
             {
@@ -226,7 +224,7 @@ public class GourmetCalendarActivity extends PlaceCalendarActivity
 
                 view.setSelected(true);
 
-                setSoldOutDays(mTodayDateTime, (GourmetBookingDay) mPlaceBookingDay, mSoldOutDayList);
+                setSoldOutDays(mTodayDateTime, mSoldOutDayList);
 
                 Calendar calendar = DailyCalendar.getInstance();
 
@@ -345,10 +343,9 @@ public class GourmetCalendarActivity extends PlaceCalendarActivity
         }
     }
 
-    void setSoldOutDays(TodayDateTime todayDateTime, GourmetBookingDay gourmetBookingDay, List<String> unavailableDateList)
+    void setSoldOutDays(TodayDateTime todayDateTime, List<String> unavailableDateList)
     {
-        if (todayDateTime == null || gourmetBookingDay == null //
-            || unavailableDateList == null || unavailableDateList.size() == 0)
+        if (todayDateTime == null || unavailableDateList == null || unavailableDateList.size() == 0)
         {
             return;
         }

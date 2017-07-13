@@ -2,7 +2,9 @@ package com.twoheart.dailyhotel.screen.hotel.filter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Paint;
 import android.os.Bundle;
+import android.util.TypedValue;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -19,9 +21,11 @@ import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -72,6 +76,11 @@ public class StayCalendarActivity extends PlaceCalendarActivity
         final boolean isSelected = intent.getBooleanExtra(INTENT_EXTRA_DATA_ISSELECTED, true);
         boolean isAnimation = intent.getBooleanExtra(INTENT_EXTRA_DATA_ANIMATION, false);
 
+        if (intent.hasExtra(INTENT_EXTRA_DATA_SOLDOUT_LIST) == true)
+        {
+            mSoldOutDayList = (ArrayList<String>) intent.getSerializableExtra(INTENT_EXTRA_DATA_SOLDOUT_LIST);
+        }
+
         if (mTodayDateTime == null || mPlaceBookingDay == null)
         {
             Util.restartApp(this);
@@ -93,6 +102,8 @@ public class StayCalendarActivity extends PlaceCalendarActivity
 
                     reset();
 
+                    setSoldOutDays(mTodayDateTime, mSoldOutDayList);
+
                     if (isSelected == true)
                     {
                         setSelectedRangeDay(mTodayDateTime, (StayBookingDay) mPlaceBookingDay);
@@ -109,6 +120,8 @@ public class StayCalendarActivity extends PlaceCalendarActivity
             makeCalendar(mTodayDateTime, getMaxDay());
 
             reset();
+
+            setSoldOutDays(mTodayDateTime, mSoldOutDayList);
 
             if (isSelected == true)
             {
@@ -247,6 +260,9 @@ public class StayCalendarActivity extends PlaceCalendarActivity
                     setSelectedCheckIn(mCheckInDayView);
 
                     view.setSelected(true);
+
+                    setSoldOutDays(mTodayDateTime, mSoldOutDayList);
+
                     setToolbarText(getString(R.string.label_calendar_hotel_select_checkout));
                     mDailyViews[mDailyViews.length - 1].setEnabled(true);
                 } else
@@ -259,6 +275,8 @@ public class StayCalendarActivity extends PlaceCalendarActivity
                     int nights = checkOutDay.dayOffset - checkInDay.dayOffset;
 
                     view.setSelected(true);
+
+                    setSoldOutDays(mTodayDateTime, mSoldOutDayList);
 
                     Calendar calendar = DailyCalendar.getInstance();
 
@@ -343,6 +361,7 @@ public class StayCalendarActivity extends PlaceCalendarActivity
 
         TextView textView = (TextView) checkInView.findViewById(R.id.textView);
         textView.setText(R.string.act_booking_chkin);
+        textView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 11);
         textView.setVisibility(View.VISIBLE);
 
         checkInView.setBackgroundResource(R.drawable.select_date_check_in);
@@ -357,6 +376,7 @@ public class StayCalendarActivity extends PlaceCalendarActivity
 
         TextView textView = (TextView) checkOutView.findViewById(R.id.textView);
         textView.setText(R.string.act_booking_chkout);
+        textView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 11);
         textView.setVisibility(View.VISIBLE);
 
         checkOutView.setBackgroundResource(R.drawable.select_date_check_out);
@@ -459,6 +479,70 @@ public class StayCalendarActivity extends PlaceCalendarActivity
         }
 
         mDailyViews[mDailyViews.length - 1].setEnabled(false);
+    }
+
+    void setSoldOutDays(TodayDateTime todayDateTime, List<String> unavailableDateList)
+    {
+        if (todayDateTime == null || unavailableDateList == null || unavailableDateList.size() == 0)
+        {
+            return;
+        }
+
+        Calendar calendar = DailyCalendar.getInstance();
+
+        try
+        {
+            for (View dayView : mDailyViews)
+            {
+                if (dayView == null)
+                {
+                    continue;
+                }
+
+                Day day = (Day) dayView.getTag();
+
+                DailyCalendar.setCalendarDateString(calendar, todayDateTime.dailyDateTime, day.dayOffset);
+
+                int calendarDay = Integer.parseInt(DailyCalendar.format(calendar.getTime(), "yyyyMMdd"));
+
+                if (dayView.isSelected() == true)
+                {
+                    continue;
+                }
+
+                for (String unavailableDate : unavailableDateList)
+                {
+                    int checkDay = Integer.parseInt(DailyCalendar.convertDateFormatString(unavailableDate, "yyyy-MM-dd", "yyyyMMdd"));
+
+                    if (calendarDay == checkDay)
+                    {
+                        setSoldOutDay(dayView);
+                        break;
+                    }
+
+                }
+            }
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+        }
+    }
+
+    void setSoldOutDay(View view)
+    {
+        if (view == null)
+        {
+            return;
+        }
+
+        TextView textView = (TextView) view.findViewById(R.id.textView);
+        textView.setText(R.string.label_calendar_soldout);
+        textView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 8);
+        textView.setVisibility(View.VISIBLE);
+        view.setEnabled(false);
+
+        TextView dateTextView = (TextView) view.findViewById(R.id.dateTextView);
+        dateTextView.setPaintFlags(textView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
     }
 
     void reset()

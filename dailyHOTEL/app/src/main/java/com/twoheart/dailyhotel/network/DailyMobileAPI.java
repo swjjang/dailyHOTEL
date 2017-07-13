@@ -1574,6 +1574,17 @@ public class DailyMobileAPI implements IDailyNetwork
         return mDailyMobileService.getGourmetList(Crypto.getUrlDecoderEx(URL), queryMap, categoryList, timeList, luxuryList).subscribeOn(Schedulers.io());
     }
 
+    public Observable<BaseListDto<String>> getStayUnavailableDates(int placeIndex, int dateRange, boolean isReverse)
+    {
+        final String URL = Constants.UNENCRYPTED_URL ? "api/v3/hotel/{hotelIdx}/unavailableCheckinDates" //
+            : "MjIkMTAwJDM1JDg3JDM0JDEyNiQyNCQ5NyQ0NiQ3OSQxMjUkNzYkNiQyOSQ3NCQ0OCQ=$OTMxQTTQ0MkI1NUUwNjBERjYMAzRkFY0NTM0MTEBVBQjVFMEEMQwMzc5NTNEQUMxODA1NDIzMTIOwQUML3ODIUxNUUzMzBCMPUNCMkZDNQjE5QkFEFODJBMzkwQzBEMkNGMMTI3NITZEQkM5$";
+
+        Map<String, String> urlParams = new HashMap<>();
+        urlParams.put("{hotelIdx}", Integer.toString(placeIndex));
+
+        return mDailyMobileService.getStayUnavailableDates(Crypto.getUrlDecoderEx(URL, urlParams), dateRange, isReverse).subscribeOn(Schedulers.io());
+    }
+
     public Observable<BaseListDto<String>> getGourmetUnavailableDates(int placeIndex, int dateRange, boolean isReverse)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/v3/gourmet/{restaurantIdx}/unavailableDates" //
