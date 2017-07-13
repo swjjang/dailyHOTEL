@@ -1526,57 +1526,6 @@ public class GourmetDetailActivity extends PlaceDetailActivity
     private GourmetDetailNetworkController.OnNetworkControllerListener mOnNetworkControllerListener = new GourmetDetailNetworkController.OnNetworkControllerListener()
     {
         @Override
-        public void onCommonDateTime(TodayDateTime todayDateTime)
-        {
-            mTodayDateTime = todayDateTime;
-
-            try
-            {
-                // 체크인 시간이 설정되어 있지 않는 경우 기본값을 넣어준다.
-                if (mPlaceBookingDay == null)
-                {
-                    mPlaceBookingDay = new GourmetBookingDay();
-                    GourmetBookingDay gourmetBookingDay = (GourmetBookingDay) mPlaceBookingDay;
-
-                    gourmetBookingDay.setVisitDay(mTodayDateTime.dailyDateTime);
-                } else
-                {
-                    GourmetBookingDay gourmetBookingDay = (GourmetBookingDay) mPlaceBookingDay;
-
-                    // 예외 처리로 보고 있는 체크인/체크아웃 날짜가 지나 간경우 다음 날로 변경해준다.
-                    // 체크인 날짜 체크
-
-                    // 날짜로 비교해야 한다.
-                    Calendar todayCalendar = DailyCalendar.getInstance(mTodayDateTime.dailyDateTime, true);
-                    Calendar visitCalendar = DailyCalendar.getInstance(gourmetBookingDay.getVisitDay(DailyCalendar.ISO_8601_FORMAT), true);
-
-                    // 하루가 지나서 체크인 날짜가 전날짜 인 경우
-                    if (todayCalendar.getTimeInMillis() > visitCalendar.getTimeInMillis())
-                    {
-                        gourmetBookingDay.setVisitDay(mTodayDateTime.dailyDateTime);
-                    }
-                }
-
-                GourmetBookingDay gourmetBookingDay = (GourmetBookingDay) mPlaceBookingDay;
-
-                if (mIsShowCalendar == true)
-                {
-                    unLockUI();
-                    startCalendar(mTodayDateTime, gourmetBookingDay, mPlaceDetail.index, mSoldOutList, false);
-                    return;
-                }
-
-                ((GourmetDetailNetworkController) mPlaceDetailNetworkController).requestHasCoupon(mPlaceDetail.index,//
-                    gourmetBookingDay.getVisitDay("yyyy-MM-dd"));
-
-                mPlaceDetailNetworkController.requestPlaceReviewScores(PlaceType.FNB, mPlaceDetail.index);
-            } catch (Exception e)
-            {
-                ExLog.e(e.toString());
-            }
-        }
-
-        @Override
         public void onUserProfile(Customer user, String birthday, boolean isDailyUser, boolean isVerified, boolean isPhoneVerified)
         {
             if (isDailyUser == true)
