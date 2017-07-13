@@ -96,8 +96,8 @@ public class HotelPaymentActivity extends PlacePaymentActivity
     // 10 : 오후 10시 전 사전 예약, 11 : 오후 10시 후 사전 예약 00시 전 12 : 00시 부터 오전 9시
     int mPensionPopupMessageType;
     String mWarningDialogMessage;
-//    private Province mProvince;
-//    private String mArea; // Analytics용 소지역
+    //    private Province mProvince;
+    //    private String mArea; // Analytics용 소지역
     String mPlaceName;
     private String mCategoryCode;
 
@@ -608,7 +608,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
         Map<String, String> params = getMapPaymentInformation((StayPaymentInformation) paymentInformation, (StayBookingDay) mPlaceBookingDay);
 
         Intent intent = HotelPaymentThankyouActivity.newInstance(this, imageUrl, placeName, placeType//
-            , ((StayPaymentInformation)paymentInformation).isOverSeas, userName, stayBookingDay//
+            , ((StayPaymentInformation) paymentInformation).isOverSeas, userName, stayBookingDay//
             , paymentInformation.paymentType.getName(), discountType, params);
 
         startActivityForResult(intent, REQUEST_CODE_PAYMETRESULT_ACTIVITY);
@@ -1902,6 +1902,14 @@ public class HotelPaymentActivity extends PlacePaymentActivity
                 }
             }
 
+            if (mHotelPaymentLayout.isAgreeThirdParty() == false)
+            {
+                releaseUiComponent();
+
+                DailyToast.showToast(HotelPaymentActivity.this, R.string.message_payment_please_agree_personal_information, Toast.LENGTH_SHORT);
+                return;
+            }
+
             stayPaymentInformation.setGuest(guest);
 
             //호텔 가격이 xx 이하인 이벤트 호텔에서는 적립금 사용을 못하게 막음.
@@ -2309,6 +2317,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
                             }
 
                             mHotelPaymentLayout.setVisitTypeInformation(stayPaymentInformation);
+                            mHotelPaymentLayout.setVendorName(mPlaceName);
 
                             // 판매 중지 상품으로 호텔 리스트로 복귀 시킨다.
                             if (isOnSale == false || availableRooms == 0)

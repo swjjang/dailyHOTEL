@@ -27,6 +27,8 @@ public interface StayOutboundPaymentInterface extends BaseDialogViewInterface
 
     void setRefundPolicyList(List<String> refundPolicyList);
 
+    void setVendorName(String vendorName);
+
     void setMemoPaymentType(String memo);
 
     void setPaymentTypeEnabled(StayOutboundPayment.PaymentType paymentType, boolean enabled);
@@ -39,6 +41,4 @@ public interface StayOutboundPaymentInterface extends BaseDialogViewInterface
 
     void showAgreeTermDialog(StayOutboundPayment.PaymentType paymentType//
         , View.OnClickListener onClickListener, DialogInterface.OnCancelListener cancelListener);
-
-
 }

@@ -261,6 +261,7 @@
     <color name="default_text_cababab">#ababab</color>
     <color name="default_text_cbe945b">#be945b</color>
     <color name="default_text_cb8b8b8">#b8b8b8</color>
+    <color name="default_text_c4a4a4a">#4a4a4a</color>
 
     <color name="default_over_scroll_edge">#dcdcdc</color>
     <color name="default_text_kakao">#3c1e1e</color>
@@ -316,6 +317,7 @@
     <color name="default_line_cd1d1d1">#d1d1d1</color>
     <color name="default_line_ce8e8e9">#e8e8e9</color>
     <color name="default_line_cd9d9d9">#d9d9d9</color>
+    <color name="default_line_c979797">#979797</color>
     <color name="default_line_c1a000000">#1a000000</color>
 
 

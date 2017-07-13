@@ -474,29 +474,7 @@ public class RecentlyPlaceUtil
             homePlace.isSoldOut = false;
 
             ImageMap imageMap = stayOutbound.getImageMap();
-            String url;
-
-            if (ScreenUtils.getScreenWidth(context) >= ScreenUtils.DEFAULT_STAYOUTBOUND_XXHDPI_WIDTH)
-            {
-                if (DailyTextUtils.isTextEmpty(imageMap.bigUrl) == true)
-                {
-                    url = imageMap.smallUrl;
-                } else
-                {
-                    url = imageMap.bigUrl;
-                }
-            } else
-            {
-                if (DailyTextUtils.isTextEmpty(imageMap.mediumUrl) == true)
-                {
-                    url = imageMap.smallUrl;
-                } else
-                {
-                    url = imageMap.mediumUrl;
-                }
-            }
-
-            homePlace.imageUrl = url;
+            homePlace.imageUrl = imageMap.smallUrl;
         } catch (Exception e)
         {
             ExLog.d(stayOutbound.index + " , " + stayOutbound.name + " , " + e.toString());

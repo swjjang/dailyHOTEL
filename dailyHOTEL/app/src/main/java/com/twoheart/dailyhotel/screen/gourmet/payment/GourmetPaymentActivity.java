@@ -1557,6 +1557,14 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
                 }
             }
 
+            if (mGourmetPaymentLayout.isAgreeThirdParty() == false)
+            {
+                releaseUiComponent();
+
+                DailyToast.showToast(GourmetPaymentActivity.this, R.string.message_payment_please_agree_personal_information, Toast.LENGTH_SHORT);
+                return;
+            }
+
             gourmetPaymentInformation.setGuest(guest);
             processAgreeTermDialog();
 
@@ -1824,6 +1832,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
                         }
 
                         mGourmetPaymentLayout.setTicketInformation(gourmetPaymentInformation, gourmetBookingDay);
+                        mGourmetPaymentLayout.setVendorName(gourmetPaymentInformation.placeName);
                         setPaymentInformation(gourmetPaymentInformation);
                     } else
                     {

@@ -77,11 +77,10 @@
                     android:id="@+id/benefitLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"
+                    android:layout_marginBottom="4dp"
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="12dp"
-                    android:layout_marginTop="10dp"
-                    android:minHeight="44dp">
+                    android:layout_marginTop="10dp">
 
                     <ImageView
                         android:id="@+id/benefitImageView"
@@ -94,15 +93,17 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="6dp"
+                        android:layout_marginTop="2dp"
                         android:layout_toRightOf="@id/benefitImageView"
                         android:freezesText="true"
-                        android:textColor="@color/default_text_cb70038"
+                        android:textColor="@color/default_text_cbe945b"
                         android:textSize="13dp"/>
 
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1px"
-                        android:layout_marginTop="12dp"
+                        android:layout_marginTop="11dp"
+                        android:layout_below="@id/benefitTextView"
                         android:background="@color/default_line_cf0f0f0"/>
                 </RelativeLayout>
 

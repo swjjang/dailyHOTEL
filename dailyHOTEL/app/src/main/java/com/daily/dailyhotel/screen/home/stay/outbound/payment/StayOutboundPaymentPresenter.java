@@ -74,7 +74,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
     private Card mSelectedCard;
     private Guest mGuest;
     private StayOutboundPayment.PaymentType mPaymentType;
-    private boolean mBonusSelected;
+    private boolean mBonusSelected, mAgreedThirdPartyTerms;
     private UserInformation mUserInformation;
 
     public interface StayOutboundPaymentAnalyticsInterface extends BaseAnalyticsInterface
@@ -607,6 +607,14 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
             return;
         }
 
+        if (mAgreedThirdPartyTerms == false)
+        {
+            DailyToast.showToast(getActivity(), R.string.message_payment_please_agree_personal_information, DailyToast.LENGTH_SHORT);
+
+            unLockAll();
+            return;
+        }
+
         // 보너스로만 결제하는 경우
         if (mBonusSelected == true && mStayOutboundPayment.totalPrice == mStayOutboundPayment.discountPrice)
         {
@@ -673,6 +681,12 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
 
         startActivityForResult(InputMobileNumberDialogActivity.newInstance(getActivity(), phoneNumber)//
             , StayOutboundPaymentActivity.REQUEST_CODE_REGISTER_PHONE_NUMBER);
+    }
+
+    @Override
+    public void onAgreedTermClick(boolean checked)
+    {
+        mAgreedThirdPartyTerms = checked;
     }
 
     private void onAgreedPaymentClick()
@@ -940,6 +954,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
                 Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
             getViewInterface().setBooking(checkInDateSpannableString, checkOutDateSpannableString, mStayBookDateTime.getNights(), mStayName, mRoomType);
+            getViewInterface().setVendorName(getString(R.string.label_stay_outbound_payment_third_party_vendor));
         } catch (Exception e)
         {
             ExLog.d(e.toString());
