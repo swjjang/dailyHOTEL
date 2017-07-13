@@ -101,6 +101,15 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
         LIST
     }
 
+    enum ScreenType
+    {
+        NONE,
+        EMPTY,
+        ERROR,
+        LOCATION,
+        LIST
+    }
+
     public interface StayOutboundListAnalyticsInterface extends BaseAnalyticsInterface
     {
         void setAnalyticsParam(StayOutboundListAnalyticsParam analyticsParam);
@@ -307,7 +316,40 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
             case StayOutboundListActivity.REQUEST_CODE_DETAIL:
                 if (requestCode == BaseActivity.RESULT_CODE_REFRESH)
                 {
-                    setRefresh(true);
+                    if (mStayOutboundFilters != null && mStayOutboundFilters.sortType == StayOutboundFilters.SortType.DISTANCE)
+                    {
+                        Observable observable = searchMyLocation(null);
+
+                        if (observable != null)
+                        {
+                            lock();
+
+                            setScreenVisible(ScreenType.LOCATION, mStayOutboundFilters);
+
+                            addCompositeDisposable(observable.subscribe(new Consumer<Location>()
+                            {
+                                @Override
+                                public void accept(@io.reactivex.annotations.NonNull Location location) throws Exception
+                                {
+                                    unLockAll();
+
+                                    onRefreshAll(false);
+                                }
+                            }, new Consumer<Throwable>()
+                            {
+                                @Override
+                                public void accept(@io.reactivex.annotations.NonNull Throwable throwable) throws Exception
+                                {
+                                    unLockAll();
+
+                                    setScreenVisible(ScreenType.EMPTY, mStayOutboundFilters);
+                                }
+                            }));
+                        }
+                    } else
+                    {
+                        setRefresh(true);
+                    }
                 }
                 break;
 
@@ -328,7 +370,41 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
 
                         setStayBookDateTime(checkInDateTime, checkOutDateTime);
                         notifyStayBookDateTimeChanged();
-                        setRefresh(true);
+
+                        if (mStayOutboundFilters != null && mStayOutboundFilters.sortType == StayOutboundFilters.SortType.DISTANCE)
+                        {
+                            Observable observable = searchMyLocation(null);
+
+                            if (observable != null)
+                            {
+                                lock();
+
+                                setScreenVisible(ScreenType.LOCATION, mStayOutboundFilters);
+
+                                addCompositeDisposable(observable.subscribe(new Consumer<Location>()
+                                {
+                                    @Override
+                                    public void accept(@io.reactivex.annotations.NonNull Location location) throws Exception
+                                    {
+                                        unLockAll();
+
+                                        onRefreshAll(false);
+                                    }
+                                }, new Consumer<Throwable>()
+                                {
+                                    @Override
+                                    public void accept(@io.reactivex.annotations.NonNull Throwable throwable) throws Exception
+                                    {
+                                        unLockAll();
+
+                                        setScreenVisible(ScreenType.EMPTY, mStayOutboundFilters);
+                                    }
+                                }));
+                            }
+                        } else
+                        {
+                            setRefresh(true);
+                        }
                     }
                 }
                 break;
@@ -345,7 +421,41 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
 
                         setPeople(numberOfAdults, childAgeList);
                         notifyPeopleChanged();
-                        setRefresh(true);
+
+                        if (mStayOutboundFilters != null && mStayOutboundFilters.sortType == StayOutboundFilters.SortType.DISTANCE)
+                        {
+                            Observable observable = searchMyLocation(null);
+
+                            if (observable != null)
+                            {
+                                lock();
+
+                                setScreenVisible(ScreenType.LOCATION, mStayOutboundFilters);
+
+                                addCompositeDisposable(observable.subscribe(new Consumer<Location>()
+                                {
+                                    @Override
+                                    public void accept(@io.reactivex.annotations.NonNull Location location) throws Exception
+                                    {
+                                        unLockAll();
+
+                                        onRefreshAll(false);
+                                    }
+                                }, new Consumer<Throwable>()
+                                {
+                                    @Override
+                                    public void accept(@io.reactivex.annotations.NonNull Throwable throwable) throws Exception
+                                    {
+                                        unLockAll();
+
+                                        setScreenVisible(ScreenType.EMPTY, mStayOutboundFilters);
+                                    }
+                                }));
+                            }
+                        } else
+                        {
+                            setRefresh(true);
+                        }
                     }
                 }
                 break;
@@ -371,26 +481,29 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
                             if (observable != null)
                             {
                                 lock();
-                                screenLock(true);
+
+                                setScreenVisible(ScreenType.LOCATION, mStayOutboundFilters);
 
                                 addCompositeDisposable(observable.subscribe(new Consumer<Location>()
                                 {
                                     @Override
                                     public void accept(@io.reactivex.annotations.NonNull Location location) throws Exception
                                     {
+                                        unLockAll();
+
                                         setFilter(StayOutboundFilters.SortType.DISTANCE, location.getLatitude(), location.getLongitude());
                                         notifyFilterChanged();
-                                        setRefresh(true);
+
+                                        onRefreshAll(false);
                                     }
                                 }, new Consumer<Throwable>()
                                 {
                                     @Override
                                     public void accept(@io.reactivex.annotations.NonNull Throwable throwable) throws Exception
                                     {
-                                        setFilter(StayOutboundFilters.SortType.RECOMMENDATION, -1);
-                                        notifyFilterChanged();
+                                        unLockAll();
 
-                                        setRefresh(true);
+                                        setScreenVisible(ScreenType.EMPTY, mStayOutboundFilters);
                                     }
                                 }));
                             }
@@ -433,6 +546,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
 
         setRefresh(false);
         screenLock(showProgress);
+        setScreenVisible(ScreenType.NONE, mStayOutboundFilters);
 
         addCompositeDisposable(Observable.zip(mCommonRemoteImpl.getCommonDateTime()//
             , mStayOutboundRemoteImpl.getStayOutboundList(mStayBookDateTime, mSuggest.id, mSuggest.categoryKey//
@@ -468,8 +582,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
                 // 리스트를 호출하다가 에러가 난 경우 처리 방안
                 // 검색 결과 없는 것으로
                 getViewInterface().setRefreshing(false);
-                getViewInterface().setErrorScreenVisible(true);
-                //                onHandleError(throwable);
+                setScreenVisible(ScreenType.ERROR, mStayOutboundFilters);
             }
         }));
     }
@@ -847,8 +960,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
             return;
         }
 
-        getViewInterface().setEmptyScreenVisible(false);
-        getViewInterface().setErrorScreenVisible(false);
+        setScreenVisible(ScreenType.NONE, mStayOutboundFilters);
         onRefreshAll(true);
     }
 
@@ -1053,32 +1165,20 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
                 {
                     boolean isSortByDistance = mStayOutboundFilters != null && mStayOutboundFilters.sortType == StayOutboundFilters.SortType.DISTANCE;
 
-                    getViewInterface().setStayOutboundList(listItems, isSortByDistance, mStayBookDateTime.getNights() > 1);
-
                     if (listItems == null || listItems.size() == 0)
                     {
-                        if (isDefaultFilter(mStayOutboundFilters) == true)
-                        {
-                            getViewInterface().setBottomLayoutVisible(false);
-                            getViewInterface().setEmptyScreenType(StayOutboundListViewInterface.EmptyScreenType.DEFAULT);
-                        } else
-                        {
-                            getViewInterface().setBottomLayoutVisible(true);
-                            getViewInterface().setBottomLayoutType(StayOutboundListViewInterface.EmptyScreenType.FILTER_ON);
-                            getViewInterface().setEmptyScreenType(StayOutboundListViewInterface.EmptyScreenType.FILTER_ON);
-                        }
+                        setScreenVisible(ScreenType.EMPTY, mStayOutboundFilters);
                     } else
                     {
-                        getViewInterface().setBottomLayoutVisible(true);
-                        getViewInterface().setBottomLayoutType(StayOutboundListViewInterface.EmptyScreenType.DEFAULT);
-                        getViewInterface().setEmptyScreenType(StayOutboundListViewInterface.EmptyScreenType.DEFAULT);
+                        setScreenVisible(ScreenType.LIST, mStayOutboundFilters);
                     }
+
+                    getViewInterface().setStayOutboundList(listItems, isSortByDistance, mStayBookDateTime.getNights() > 1);
                 } else
                 {
+                    setScreenVisible(ScreenType.LIST, mStayOutboundFilters);
+
                     getViewInterface().addStayOutboundList(listItems);
-                    getViewInterface().setBottomLayoutVisible(true);
-                    getViewInterface().setBottomLayoutType(StayOutboundListViewInterface.EmptyScreenType.DEFAULT);
-                    getViewInterface().setEmptyScreenType(StayOutboundListViewInterface.EmptyScreenType.DEFAULT);
                 }
             }
         }));
@@ -1155,11 +1255,72 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
         }
     }
 
+    private void setScreenVisible(ScreenType screenVisible, StayOutboundFilters filters)
+    {
+        if (screenVisible == null || getViewInterface() == null)
+        {
+            return;
+        }
+
+        switch (screenVisible)
+        {
+            case NONE:
+                getViewInterface().setEmptyScreenVisible(false);
+                getViewInterface().setErrorScreenVisible(false);
+                getViewInterface().setSearchLocationScreenVisible(false);
+                getViewInterface().setListScreenVisible(false);
+                break;
+
+            case EMPTY:
+                getViewInterface().setEmptyScreenVisible(true);
+                getViewInterface().setErrorScreenVisible(false);
+                getViewInterface().setSearchLocationScreenVisible(false);
+                getViewInterface().setListScreenVisible(false);
+
+                if (isDefaultFilter(filters) == true)
+                {
+                    getViewInterface().setBottomLayoutVisible(false);
+                    getViewInterface().setEmptyScreenType(StayOutboundListViewInterface.EmptyScreenType.DEFAULT);
+                } else
+                {
+                    getViewInterface().setBottomLayoutVisible(true);
+                    getViewInterface().setBottomLayoutType(StayOutboundListViewInterface.EmptyScreenType.FILTER_ON);
+                    getViewInterface().setEmptyScreenType(StayOutboundListViewInterface.EmptyScreenType.FILTER_ON);
+                }
+                break;
+
+            case ERROR:
+                getViewInterface().setEmptyScreenVisible(false);
+                getViewInterface().setErrorScreenVisible(true);
+                getViewInterface().setSearchLocationScreenVisible(false);
+                getViewInterface().setListScreenVisible(false);
+                break;
+
+            case LOCATION:
+                getViewInterface().setEmptyScreenVisible(false);
+                getViewInterface().setErrorScreenVisible(false);
+                getViewInterface().setSearchLocationScreenVisible(true);
+                getViewInterface().setListScreenVisible(false);
+                break;
+
+            case LIST:
+                getViewInterface().setEmptyScreenVisible(false);
+                getViewInterface().setErrorScreenVisible(false);
+                getViewInterface().setSearchLocationScreenVisible(false);
+                getViewInterface().setListScreenVisible(true);
+
+                getViewInterface().setBottomLayoutVisible(true);
+                getViewInterface().setBottomLayoutType(StayOutboundListViewInterface.EmptyScreenType.DEFAULT);
+                getViewInterface().setEmptyScreenType(StayOutboundListViewInterface.EmptyScreenType.DEFAULT);
+                break;
+        }
+    }
+
     private Observable<Location> searchMyLocation(Observable locationAnimationObservable)
     {
         if (mDailyLocationExFactory == null)
         {
-            mDailyLocationExFactory = new DailyLocationExFactory();
+            mDailyLocationExFactory = new DailyLocationExFactory(getActivity());
         }
 
         if (mDailyLocationExFactory.measuringLocation() == true)
@@ -1182,7 +1343,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
             @Override
             protected void subscribeActual(Observer<? super Location> observer)
             {
-                mDailyLocationExFactory.startLocationMeasure(getActivity(), new DailyLocationExFactory.LocationListenerEx()
+                mDailyLocationExFactory.checkLocationMeasure(new DailyLocationExFactory.OnCheckLocationListener()
                 {
                     @Override
                     public void onRequirePermission()
@@ -1207,32 +1368,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
                     }
 
                     @Override
-                    public void onAlreadyRun()
-                    {
-                        if (locationAnimationDisposable != null)
-                        {
-                            locationAnimationDisposable.dispose();
-                        }
-
-                        observer.onError(new DuplicateRunException());
-                    }
-
-                    @Override
-                    public void onStatusChanged(String provider, int status, Bundle extras)
-                    {
-                        // TODO Auto-generated method stub
-
-                    }
-
-                    @Override
-                    public void onProviderEnabled(String provider)
-                    {
-                        // TODO Auto-generated method stub
-
-                    }
-
-                    @Override
-                    public void onProviderDisabled(String provider)
+                    public void onProviderDisabled()
                     {
                         if (locationAnimationDisposable != null)
                         {
@@ -1243,25 +1379,54 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
                     }
 
                     @Override
-                    public void onLocationChanged(Location location)
+                    public void onProviderEnabled()
                     {
-                        if (locationAnimationDisposable != null)
+                        mDailyLocationExFactory.startLocationMeasure(new DailyLocationExFactory.OnLocationListener()
                         {
-                            locationAnimationDisposable.dispose();
-                        }
+                            @Override
+                            public void onFailed()
+                            {
+                                if (locationAnimationDisposable != null)
+                                {
+                                    locationAnimationDisposable.dispose();
+                                }
 
-                        unLockAll();
+                                observer.onError(new Exception());
+                            }
 
-                        mDailyLocationExFactory.stopLocationMeasure();
+                            @Override
+                            public void onAlreadyRun()
+                            {
+                                if (locationAnimationDisposable != null)
+                                {
+                                    locationAnimationDisposable.dispose();
+                                }
 
-                        if (location == null)
-                        {
-                            observer.onError(new NullPointerException());
-                        } else
-                        {
-                            observer.onNext(location);
-                            observer.onComplete();
-                        }
+                                observer.onError(new DuplicateRunException());
+                            }
+
+                            @Override
+                            public void onLocationChanged(Location location)
+                            {
+                                if (locationAnimationDisposable != null)
+                                {
+                                    locationAnimationDisposable.dispose();
+                                }
+
+                                unLockAll();
+
+                                mDailyLocationExFactory.stopLocationMeasure();
+
+                                if (location == null)
+                                {
+                                    observer.onError(new NullPointerException());
+                                } else
+                                {
+                                    observer.onNext(location);
+                                    observer.onComplete();
+                                }
+                            }
+                        });
                     }
                 });
             }
@@ -1299,39 +1464,33 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
                 } else if (throwable instanceof ProviderException)
                 {
                     // 현재 GPS 설정이 꺼져있습니다 설정에서 바꾸어 주세요.
-                    View.OnClickListener positiveListener = new View.OnClickListener()//
-                    {
-                        @Override
-                        public void onClick(View v)
-                        {
-                            Intent intent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                            startActivityForResult(intent, StayOutboundListActivity.REQUEST_CODE_SETTING_LOCATION);
-                        }
-                    };
-
-                    View.OnClickListener negativeListener = new View.OnClickListener()//
-                    {
-                        @Override
-                        public void onClick(View v)
-                        {
-                            DailyToast.showToast(getActivity(), R.string.message_failed_mylocation, DailyToast.LENGTH_SHORT);
-                        }
-                    };
-
-                    DialogInterface.OnCancelListener cancelListener = new DialogInterface.OnCancelListener()
-                    {
-                        @Override
-                        public void onCancel(DialogInterface dialog)
-                        {
-                            DailyToast.showToast(getActivity(), R.string.message_failed_mylocation, DailyToast.LENGTH_SHORT);
-                        }
-                    };
-
                     getViewInterface().showSimpleDialog(//
                         getString(R.string.dialog_title_used_gps), getString(R.string.dialog_msg_used_gps), //
                         getString(R.string.dialog_btn_text_dosetting), //
                         getString(R.string.dialog_btn_text_cancel), //
-                        positiveListener, negativeListener, cancelListener, null, true);
+                        new View.OnClickListener()//
+                        {
+                            @Override
+                            public void onClick(View v)
+                            {
+                                Intent intent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                                startActivityForResult(intent, StayOutboundListActivity.REQUEST_CODE_SETTING_LOCATION);
+                            }
+                        }, new View.OnClickListener()//
+                        {
+                            @Override
+                            public void onClick(View v)
+                            {
+                                DailyToast.showToast(getActivity(), R.string.message_failed_mylocation, DailyToast.LENGTH_SHORT);
+                            }
+                        }, new DialogInterface.OnCancelListener()
+                        {
+                            @Override
+                            public void onCancel(DialogInterface dialog)
+                            {
+                                DailyToast.showToast(getActivity(), R.string.message_failed_mylocation, DailyToast.LENGTH_SHORT);
+                            }
+                        }, null, true);
                 } else if (throwable instanceof DuplicateRunException)
                 {
 

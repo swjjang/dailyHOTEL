@@ -297,7 +297,12 @@ public abstract class PlaceCurationActivity extends BaseActivity implements View
         {
             lockUI();
 
-            DailyLocationFactory.getInstance(PlaceCurationActivity.this).startLocationMeasure(PlaceCurationActivity.this, null, new DailyLocationFactory.LocationListenerEx()
+            if (DailyLocationFactory.getInstance(PlaceCurationActivity.this).measuringLocation() == true)
+            {
+                return;
+            }
+
+            DailyLocationFactory.getInstance(PlaceCurationActivity.this).checkLocationMeasure(PlaceCurationActivity.this, new DailyLocationFactory.OnCheckLocationListener()
             {
                 @Override
                 public void onRequirePermission()
@@ -316,21 +321,43 @@ public abstract class PlaceCurationActivity extends BaseActivity implements View
                 }
 
                 @Override
-                public void onStatusChanged(String provider, int status, Bundle extras)
+                public void onProviderEnabled()
                 {
-                    // TODO Auto-generated method stub
+                    DailyLocationFactory.getInstance(PlaceCurationActivity.this).startLocationMeasure(PlaceCurationActivity.this, null, new DailyLocationFactory.OnLocationListener()
+                    {
 
+                        @Override
+                        public void onFailed()
+                        {
+                            unLockUI();
+                            onSearchLocationResult(null);
+                        }
+
+                        @Override
+                        public void onAlreadyRun()
+                        {
+
+                        }
+
+                        @Override
+                        public void onLocationChanged(Location location)
+                        {
+                            unLockUI();
+
+                            if (isFinishing() == true)
+                            {
+                                return;
+                            }
+
+                            DailyLocationFactory.getInstance(PlaceCurationActivity.this).stopLocationMeasure();
+
+                            onSearchLocationResult(location);
+                        }
+                    });
                 }
 
                 @Override
-                public void onProviderEnabled(String provider)
-                {
-                    // TODO Auto-generated method stub
-
-                }
-
-                @Override
-                public void onProviderDisabled(String provider)
+                public void onProviderDisabled()
                 {
                     unLockUI();
 
@@ -375,21 +402,6 @@ public abstract class PlaceCurationActivity extends BaseActivity implements View
                         getString(R.string.dialog_btn_text_dosetting), //
                         getString(R.string.dialog_btn_text_cancel), //
                         positiveListener, negativeListener, cancelListener, null, true);
-                }
-
-                @Override
-                public void onLocationChanged(Location location)
-                {
-                    unLockUI();
-
-                    if (isFinishing() == true)
-                    {
-                        return;
-                    }
-
-                    DailyLocationFactory.getInstance(PlaceCurationActivity.this).stopLocationMeasure();
-
-                    onSearchLocationResult(location);
                 }
             });
         }

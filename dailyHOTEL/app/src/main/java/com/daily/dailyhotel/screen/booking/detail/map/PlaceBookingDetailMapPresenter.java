@@ -65,7 +65,7 @@ public abstract class PlaceBookingDetailMapPresenter extends BaseExceptionPresen
     protected PlaceBookingDetailMapInterface createInstanceViewInterface()
     {
         return getBookingDetailMapView();
-//        return new GourmetBookingDetailMapView(getActivity(), this);
+        //        return new GourmetBookingDetailMapView(getActivity(), this);
     }
 
     @Override
@@ -210,7 +210,7 @@ public abstract class PlaceBookingDetailMapPresenter extends BaseExceptionPresen
     @Override
     public void onBackClick()
     {
-//        getActivity().onBackPressed();
+        //        getActivity().onBackPressed();
         getActivity().finish();
     }
 
@@ -342,7 +342,7 @@ public abstract class PlaceBookingDetailMapPresenter extends BaseExceptionPresen
     {
         if (mDailyLocationExFactory == null)
         {
-            mDailyLocationExFactory = new DailyLocationExFactory();
+            mDailyLocationExFactory = new DailyLocationExFactory(getActivity());
         }
 
         if (mDailyLocationExFactory.measuringLocation() == true)
@@ -365,7 +365,7 @@ public abstract class PlaceBookingDetailMapPresenter extends BaseExceptionPresen
             @Override
             protected void subscribeActual(Observer<? super Location> observer)
             {
-                mDailyLocationExFactory.startLocationMeasure(getActivity(), new DailyLocationExFactory.LocationListenerEx()
+                mDailyLocationExFactory.checkLocationMeasure(new DailyLocationExFactory.OnCheckLocationListener()
                 {
                     @Override
                     public void onRequirePermission()
@@ -390,32 +390,7 @@ public abstract class PlaceBookingDetailMapPresenter extends BaseExceptionPresen
                     }
 
                     @Override
-                    public void onAlreadyRun()
-                    {
-                        if (locationAnimationDisposable != null)
-                        {
-                            locationAnimationDisposable.dispose();
-                        }
-
-                        observer.onError(new DuplicateRunException());
-                    }
-
-                    @Override
-                    public void onStatusChanged(String provider, int status, Bundle extras)
-                    {
-                        // TODO Auto-generated method stub
-
-                    }
-
-                    @Override
-                    public void onProviderEnabled(String provider)
-                    {
-                        // TODO Auto-generated method stub
-
-                    }
-
-                    @Override
-                    public void onProviderDisabled(String provider)
+                    public void onProviderDisabled()
                     {
                         if (locationAnimationDisposable != null)
                         {
@@ -426,25 +401,54 @@ public abstract class PlaceBookingDetailMapPresenter extends BaseExceptionPresen
                     }
 
                     @Override
-                    public void onLocationChanged(Location location)
+                    public void onProviderEnabled()
                     {
-                        if (locationAnimationDisposable != null)
+                        mDailyLocationExFactory.startLocationMeasure(new DailyLocationExFactory.OnLocationListener()
                         {
-                            locationAnimationDisposable.dispose();
-                        }
+                            @Override
+                            public void onFailed()
+                            {
+                                if (locationAnimationDisposable != null)
+                                {
+                                    locationAnimationDisposable.dispose();
+                                }
 
-                        unLockAll();
+                                observer.onError(new Exception());
+                            }
 
-                        mDailyLocationExFactory.stopLocationMeasure();
+                            @Override
+                            public void onAlreadyRun()
+                            {
+                                if (locationAnimationDisposable != null)
+                                {
+                                    locationAnimationDisposable.dispose();
+                                }
 
-                        if (location == null)
-                        {
-                            observer.onError(new NullPointerException());
-                        } else
-                        {
-                            observer.onNext(location);
-                            observer.onComplete();
-                        }
+                                observer.onError(new DuplicateRunException());
+                            }
+
+                            @Override
+                            public void onLocationChanged(Location location)
+                            {
+                                if (locationAnimationDisposable != null)
+                                {
+                                    locationAnimationDisposable.dispose();
+                                }
+
+                                unLockAll();
+
+                                mDailyLocationExFactory.stopLocationMeasure();
+
+                                if (location == null)
+                                {
+                                    observer.onError(new NullPointerException());
+                                } else
+                                {
+                                    observer.onNext(location);
+                                    observer.onComplete();
+                                }
+                            }
+                        });
                     }
                 });
             }

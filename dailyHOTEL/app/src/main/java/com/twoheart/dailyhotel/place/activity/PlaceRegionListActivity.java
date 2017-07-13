@@ -80,6 +80,15 @@ public abstract class PlaceRegionListActivity extends BaseActivity
     }
 
     @Override
+    protected void onDestroy()
+    {
+        super.onDestroy();
+
+        DailyLocationFactory.getInstance(this).stopLocationMeasure();
+        DailyLocationFactory.getInstance(this).clear();
+    }
+
+    @Override
     public void finish()
     {
         super.finish();
@@ -135,7 +144,12 @@ public abstract class PlaceRegionListActivity extends BaseActivity
     {
         lockUI();
 
-        DailyLocationFactory.getInstance(PlaceRegionListActivity.this).startLocationMeasure(this, null, new DailyLocationFactory.LocationListenerEx()
+        if (DailyLocationFactory.getInstance(PlaceRegionListActivity.this).measuringLocation() == true)
+        {
+            return;
+        }
+
+        DailyLocationFactory.getInstance(PlaceRegionListActivity.this).checkLocationMeasure(this, new DailyLocationFactory.OnCheckLocationListener()
         {
             @Override
             public void onRequirePermission()
@@ -153,21 +167,61 @@ public abstract class PlaceRegionListActivity extends BaseActivity
             }
 
             @Override
-            public void onStatusChanged(String provider, int status, Bundle extras)
+            public void onProviderEnabled()
             {
-                // TODO Auto-generated method stub
+                DailyLocationFactory.getInstance(PlaceRegionListActivity.this).startLocationMeasure(PlaceRegionListActivity.this, null, new DailyLocationFactory.OnLocationListener()
+                {
+                    @Override
+                    public void onFailed()
+                    {
+                        unLockUI();
+                    }
 
+                    @Override
+                    public void onAlreadyRun()
+                    {
+
+                    }
+
+                    @Override
+                    public void onLocationChanged(Location location)
+                    {
+                        unLockUI();
+
+                        if (isFinishing() == true)
+                        {
+                            return;
+                        }
+
+                        DailyLocationFactory.getInstance(PlaceRegionListActivity.this).stopLocationMeasure();
+
+                        if (location == null)
+                        {
+                            DailyToast.showToast(PlaceRegionListActivity.this, R.string.message_failed_mylocation, Toast.LENGTH_SHORT);
+                        } else
+                        {
+                            // Location
+                            Intent intent = new Intent();
+                            intent.putExtra(NAME_INTENT_EXTRA_DATA_LOCATION, location);
+
+                            try
+                            {
+                                PlaceRegionListFragment placeRegionListFragment = getCurrentFragment();
+                                intent.putExtra(NAME_INTENT_EXTRA_DATA_RESULT, placeRegionListFragment.getRegion().name());
+                            } catch (Exception e)
+                            {
+                                ExLog.d(e.toString());
+                            }
+
+                            setResult(RESULT_ARROUND_SEARCH_LIST, intent);
+                            finish();
+                        }
+                    }
+                });
             }
 
             @Override
-            public void onProviderEnabled(String provider)
-            {
-                // TODO Auto-generated method stub
-
-            }
-
-            @Override
-            public void onProviderDisabled(String provider)
+            public void onProviderDisabled()
             {
                 unLockUI();
 
@@ -192,41 +246,6 @@ public abstract class PlaceRegionListActivity extends BaseActivity
                             startActivityForResult(intent, Constants.CODE_RESULT_ACTIVITY_SETTING_LOCATION);
                         }
                     }, null, false);
-            }
-
-            @Override
-            public void onLocationChanged(Location location)
-            {
-                unLockUI();
-
-                if (isFinishing() == true)
-                {
-                    return;
-                }
-
-                DailyLocationFactory.getInstance(PlaceRegionListActivity.this).stopLocationMeasure();
-
-                if (location == null)
-                {
-                    DailyToast.showToast(PlaceRegionListActivity.this, R.string.message_failed_mylocation, Toast.LENGTH_SHORT);
-                } else
-                {
-                    // Location
-                    Intent intent = new Intent();
-                    intent.putExtra(NAME_INTENT_EXTRA_DATA_LOCATION, location);
-
-                    try
-                    {
-                        PlaceRegionListFragment placeRegionListFragment = getCurrentFragment();
-                        intent.putExtra(NAME_INTENT_EXTRA_DATA_RESULT, placeRegionListFragment.getRegion().name());
-                    } catch (Exception e)
-                    {
-                        ExLog.d(e.toString());
-                    }
-
-                    setResult(RESULT_ARROUND_SEARCH_LIST, intent);
-                    finish();
-                }
             }
         });
     }

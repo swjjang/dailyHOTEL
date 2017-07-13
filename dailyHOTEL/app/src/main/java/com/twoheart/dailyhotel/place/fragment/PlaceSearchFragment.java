@@ -84,6 +84,15 @@ public abstract class PlaceSearchFragment extends BaseFragment
         return view;
     }
 
+    @Override
+    public void onDestroy()
+    {
+        super.onDestroy();
+
+        DailyLocationFactory.getInstance(mBaseActivity).stopLocationMeasure();
+        DailyLocationFactory.getInstance(mBaseActivity).clear();
+    }
+
     protected void initContents()
     {
         mDailyRecentSearches = new DailyRecentSearches(getRecentSearches());
@@ -254,7 +263,12 @@ public abstract class PlaceSearchFragment extends BaseFragment
     {
         lockUI();
 
-        DailyLocationFactory.getInstance(mBaseActivity).startLocationMeasure(this, null, new DailyLocationFactory.LocationListenerEx()
+        if (DailyLocationFactory.getInstance(mBaseActivity).measuringLocation() == true)
+        {
+            return;
+        }
+
+        DailyLocationFactory.getInstance(mBaseActivity).checkLocationMeasure(mBaseActivity, new DailyLocationFactory.OnCheckLocationListener()
         {
             @Override
             public void onRequirePermission()
@@ -272,21 +286,48 @@ public abstract class PlaceSearchFragment extends BaseFragment
             }
 
             @Override
-            public void onStatusChanged(String provider, int status, Bundle extras)
+            public void onProviderEnabled()
             {
-                // TODO Auto-generated method stub
+                DailyLocationFactory.getInstance(mBaseActivity).startLocationMeasure(mBaseActivity, null, new DailyLocationFactory.OnLocationListener()
+                {
+                    @Override
+                    public void onFailed()
+                    {
+                        unLockUI();
+                    }
 
+                    @Override
+                    public void onAlreadyRun()
+                    {
+
+                    }
+
+                    @Override
+                    public void onLocationChanged(Location location)
+                    {
+                        unLockUI();
+
+                        if (isFinishing() == true)
+                        {
+                            return;
+                        }
+
+                        DailyLocationFactory.getInstance(mBaseActivity).stopLocationMeasure();
+
+                        if (location == null)
+                        {
+                            DailyToast.showToast(mBaseActivity, R.string.message_failed_mylocation, Toast.LENGTH_SHORT);
+                        } else
+                        {
+                            // 서버
+                            onSearch(location);
+                        }
+                    }
+                });
             }
 
             @Override
-            public void onProviderEnabled(String provider)
-            {
-                // TODO Auto-generated method stub
-
-            }
-
-            @Override
-            public void onProviderDisabled(String provider)
+            public void onProviderDisabled()
             {
                 unLockUI();
 
@@ -311,28 +352,6 @@ public abstract class PlaceSearchFragment extends BaseFragment
                             startActivityForResult(intent, Constants.CODE_RESULT_ACTIVITY_SETTING_LOCATION);
                         }
                     }, null, false);
-            }
-
-            @Override
-            public void onLocationChanged(Location location)
-            {
-                unLockUI();
-
-                if (isFinishing() == true)
-                {
-                    return;
-                }
-
-                DailyLocationFactory.getInstance(mBaseActivity).stopLocationMeasure();
-
-                if (location == null)
-                {
-                    DailyToast.showToast(mBaseActivity, R.string.message_failed_mylocation, Toast.LENGTH_SHORT);
-                } else
-                {
-                    // 서버
-                    onSearch(location);
-                }
             }
         });
     }

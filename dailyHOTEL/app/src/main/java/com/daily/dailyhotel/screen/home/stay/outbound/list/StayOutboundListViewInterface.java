@@ -57,6 +57,10 @@ public interface StayOutboundListViewInterface extends BaseDialogViewInterface
 
     void setEmptyScreenVisible(boolean visible);
 
+    void setSearchLocationScreenVisible(boolean visible);
+
+    void setListScreenVisible(boolean visible);
+
     void setEmptyScreenType(EmptyScreenType emptyScreenType);
 
     void setBottomLayoutType(EmptyScreenType emptyScreenType);

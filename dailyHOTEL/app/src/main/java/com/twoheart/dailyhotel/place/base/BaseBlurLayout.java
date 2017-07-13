@@ -2,6 +2,7 @@ package com.twoheart.dailyhotel.place.base;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.support.annotation.NonNull;
 import android.view.View;
@@ -15,6 +16,8 @@ import com.twoheart.dailyhotel.R;
 
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
 public abstract class BaseBlurLayout extends BaseLayout
@@ -57,31 +60,41 @@ public abstract class BaseBlurLayout extends BaseLayout
 
             mBlurImageView.setVisibility(View.VISIBLE);
 
-            Observable.just(ScreenUtils.takeScreenShot(activity)).subscribeOn(Schedulers.io()).map(bitmap ->
+            Bitmap bitmap = ScreenUtils.takeScreenShot(activity);
+
+            if (bitmap == null)
             {
-                if (bitmap == null)
+                if (mBlurImageView != null)
                 {
-                    return null;
+                    mBlurImageView.setBackgroundDrawable(null);
+                    mBlurImageView.setVisibility(View.GONE);
                 }
-
-                try
-                {
-                    NativeBlurFilter.iterativeBoxBlur(bitmap, 2, 60);
-                } catch (Exception e)
-                {
-                    ExLog.d(e.toString());
-                }
-
-                return bitmap;
-            }).observeOn(AndroidSchedulers.mainThread()).subscribe(bitmap ->
+            } else
             {
-                if (bitmap == null)
+                Observable.just(ScreenUtils.takeScreenShot(activity)).subscribeOn(Schedulers.io()).map(new Function<Bitmap, Bitmap>()
                 {
-                    return;
-                }
+                    @Override
+                    public Bitmap apply(@io.reactivex.annotations.NonNull Bitmap bitmap) throws Exception
+                    {
+                        try
+                        {
+                            NativeBlurFilter.iterativeBoxBlur(bitmap, 2, 60);
+                        } catch (Exception e)
+                        {
+                            ExLog.d(e.toString());
+                        }
 
-                mBlurImageView.setBackgroundDrawable(new BitmapDrawable(mContext.getResources(), bitmap));
-            });
+                        return bitmap;
+                    }
+                }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Bitmap>()
+                {
+                    @Override
+                    public void accept(@io.reactivex.annotations.NonNull Bitmap bitmap) throws Exception
+                    {
+                        mBlurImageView.setBackgroundDrawable(new BitmapDrawable(mContext.getResources(), bitmap));
+                    }
+                });
+            }
         } else
         {
             if (mBlurImageView != null)

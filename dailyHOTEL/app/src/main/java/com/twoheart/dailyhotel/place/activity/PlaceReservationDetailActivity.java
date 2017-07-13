@@ -238,6 +238,15 @@ public abstract class PlaceReservationDetailActivity extends BaseActivity
         }
     }
 
+    @Override
+    protected void onDestroy()
+    {
+        super.onDestroy();
+
+        DailyLocationFactory.getInstance(this).stopLocationMeasure();
+        DailyLocationFactory.getInstance(this).clear();
+    }
+
     protected void requestCommonDatetime()
     {
         DailyMobileAPI.getInstance(this).requestCommonDateTime(mNetworkTag, new retrofit2.Callback<BaseDto<TodayDateTime>>()
@@ -371,7 +380,12 @@ public abstract class PlaceReservationDetailActivity extends BaseActivity
     {
         lockUI();
 
-        DailyLocationFactory.getInstance(this).startLocationMeasure(this, myLocationView, new DailyLocationFactory.LocationListenerEx()
+        if (DailyLocationFactory.getInstance(this).measuringLocation() == true)
+        {
+            return;
+        }
+
+        DailyLocationFactory.getInstance(this).checkLocationMeasure(this, new DailyLocationFactory.OnCheckLocationListener()
         {
             @Override
             public void onRequirePermission()
@@ -389,21 +403,46 @@ public abstract class PlaceReservationDetailActivity extends BaseActivity
             }
 
             @Override
-            public void onStatusChanged(String provider, int status, Bundle extras)
+            public void onProviderEnabled()
             {
-                // TODO Auto-generated method stub
+                DailyLocationFactory.getInstance(PlaceReservationDetailActivity.this).startLocationMeasure(PlaceReservationDetailActivity.this, myLocationView, new DailyLocationFactory.OnLocationListener()
+                {
+                    @Override
+                    public void onFailed()
+                    {
+                        unLockUI();
+                    }
 
+                    @Override
+                    public void onAlreadyRun()
+                    {
+
+                    }
+
+                    @Override
+                    public void onLocationChanged(Location location)
+                    {
+                        unLockUI();
+
+                        if (isFinishing() == true)
+                        {
+                            return;
+                        }
+
+                        DailyLocationFactory.getInstance(PlaceReservationDetailActivity.this).stopLocationMeasure();
+
+                        if (mPlaceReservationDetailLayout == null || location == null)
+                        {
+                            return;
+                        }
+
+                        mPlaceReservationDetailLayout.changeLocation(location);
+                    }
+                });
             }
 
             @Override
-            public void onProviderEnabled(String provider)
-            {
-                // TODO Auto-generated method stub
-
-            }
-
-            @Override
-            public void onProviderDisabled(String provider)
+            public void onProviderDisabled()
             {
                 unLockUI();
 
@@ -425,26 +464,6 @@ public abstract class PlaceReservationDetailActivity extends BaseActivity
                     }
                 }, null, true);
             }
-
-            @Override
-            public void onLocationChanged(Location location)
-            {
-                unLockUI();
-
-                if (isFinishing() == true)
-                {
-                    return;
-                }
-
-                DailyLocationFactory.getInstance(PlaceReservationDetailActivity.this).stopLocationMeasure();
-
-                if (mPlaceReservationDetailLayout == null || location == null)
-                {
-                    return;
-                }
-
-                mPlaceReservationDetailLayout.changeLocation(location);
-            }
         });
     }
 
@@ -453,7 +472,7 @@ public abstract class PlaceReservationDetailActivity extends BaseActivity
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-     ///////////////////////////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////////////////////
     //
     // 기존의 BaseActivity에 있는 정보 가져오기
     ///////////////////////////////////////////////////////////////////////////////////////////////

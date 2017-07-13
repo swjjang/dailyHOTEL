@@ -382,7 +382,12 @@ public abstract class PlaceMainActivity extends BaseActivity
 
         lockUI();
 
-        DailyLocationFactory.getInstance(this).startLocationMeasure(this, null, new DailyLocationFactory.LocationListenerEx()
+        if (DailyLocationFactory.getInstance(this).measuringLocation() == true)
+        {
+            return;
+        }
+
+        DailyLocationFactory.getInstance(this).checkLocationMeasure(this, new DailyLocationFactory.OnCheckLocationListener()
         {
             @Override
             public void onRequirePermission()
@@ -412,19 +417,48 @@ public abstract class PlaceMainActivity extends BaseActivity
             }
 
             @Override
-            public void onStatusChanged(String provider, int status, Bundle extras)
+            public void onProviderEnabled()
             {
-                unLockUI();
+                DailyLocationFactory.getInstance(PlaceMainActivity.this).startLocationMeasure(PlaceMainActivity.this, null, new DailyLocationFactory.OnLocationListener()
+                {
+                    @Override
+                    public void onFailed()
+                    {
+                        unLockUI();
+
+                        if (isFinishing() == true)
+                        {
+                            return;
+                        }
+
+                        onLocationFailed();
+                    }
+
+                    @Override
+                    public void onAlreadyRun()
+                    {
+
+                    }
+
+                    @Override
+                    public void onLocationChanged(Location location)
+                    {
+                        unLockUI();
+
+                        if (isFinishing() == true)
+                        {
+                            return;
+                        }
+
+                        DailyLocationFactory.getInstance(PlaceMainActivity.this).stopLocationMeasure();
+
+                        PlaceMainActivity.this.onLocationChanged(location);
+                    }
+                });
             }
 
             @Override
-            public void onProviderEnabled(String provider)
-            {
-                unLockUI();
-            }
-
-            @Override
-            public void onProviderDisabled(String provider)
+            public void onProviderDisabled()
             {
                 unLockUI();
 
@@ -456,21 +490,6 @@ public abstract class PlaceMainActivity extends BaseActivity
                             onLocationProviderDisabled();
                         }
                     }, false);
-            }
-
-            @Override
-            public void onLocationChanged(Location location)
-            {
-                unLockUI();
-
-                if (isFinishing() == true)
-                {
-                    return;
-                }
-
-                DailyLocationFactory.getInstance(PlaceMainActivity.this).stopLocationMeasure();
-
-                PlaceMainActivity.this.onLocationChanged(location);
             }
         });
     }

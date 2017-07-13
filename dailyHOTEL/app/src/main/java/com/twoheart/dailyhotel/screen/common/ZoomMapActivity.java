@@ -161,7 +161,8 @@ public class ZoomMapActivity extends BaseActivity
     {
         super.onDestroy();
 
-        DailyLocationFactory.getInstance(ZoomMapActivity.this).stopLocationMeasure();
+        DailyLocationFactory.getInstance(this).stopLocationMeasure();
+        DailyLocationFactory.getInstance(this).clear();
     }
 
 
@@ -361,7 +362,14 @@ public class ZoomMapActivity extends BaseActivity
 
     private void searchMyLocation()
     {
-        DailyLocationFactory.getInstance(this).startLocationMeasure(this, mMyLocationView, new DailyLocationFactory.LocationListenerEx()
+        lockUI();
+
+        if (DailyLocationFactory.getInstance(this).measuringLocation() == true)
+        {
+            return;
+        }
+
+        DailyLocationFactory.getInstance(this).checkLocationMeasure(this, new DailyLocationFactory.OnCheckLocationListener()
         {
             @Override
             public void onRequirePermission()
@@ -379,21 +387,61 @@ public class ZoomMapActivity extends BaseActivity
             }
 
             @Override
-            public void onStatusChanged(String provider, int status, Bundle extras)
+            public void onProviderEnabled()
             {
-                // TODO Auto-generated method stub
+                DailyLocationFactory.getInstance(ZoomMapActivity.this).startLocationMeasure(ZoomMapActivity.this, mMyLocationView, new DailyLocationFactory.OnLocationListener()
+                {
+                    @Override
+                    public void onFailed()
+                    {
+                        unLockUI();
+                    }
 
+                    @Override
+                    public void onAlreadyRun()
+                    {
+
+                    }
+
+                    @Override
+                    public void onLocationChanged(Location location)
+                    {
+                        unLockUI();
+
+                        if (isFinishing() == true || mGoogleMap == null)
+                        {
+                            return;
+                        }
+
+                        DailyLocationFactory.getInstance(ZoomMapActivity.this).stopLocationMeasure();
+
+                        if (mMyLocationMarkerOptions == null)
+                        {
+                            mMyLocationMarkerOptions = new MarkerOptions();
+                            mMyLocationMarkerOptions.icon(new MyLocationMarker(ZoomMapActivity.this).makeIcon());
+                            mMyLocationMarkerOptions.anchor(0.5f, 0.5f);
+                        }
+
+                        if (mMyLocationMarker != null)
+                        {
+                            mMyLocationMarker.remove();
+                        }
+
+                        mMyLocationMarkerOptions.position(new LatLng(location.getLatitude(), location.getLongitude()));
+                        mMyLocationMarker = mGoogleMap.addMarker(mMyLocationMarkerOptions);
+
+                        LatLngBounds.Builder latLngBounds = new LatLngBounds.Builder();
+                        latLngBounds.include(mPlaceLocationMarker.getPosition());
+                        latLngBounds.include(mMyLocationMarker.getPosition());
+
+                        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(latLngBounds.build(), ScreenUtils.dpToPx(ZoomMapActivity.this, 50));
+                        mGoogleMap.animateCamera(cameraUpdate);
+                    }
+                });
             }
 
             @Override
-            public void onProviderEnabled(String provider)
-            {
-                // TODO Auto-generated method stub
-
-            }
-
-            @Override
-            public void onProviderDisabled(String provider)
+            public void onProviderDisabled()
             {
                 unLockUI();
 
@@ -414,41 +462,6 @@ public class ZoomMapActivity extends BaseActivity
                         startActivityForResult(intent, Constants.CODE_RESULT_ACTIVITY_SETTING_LOCATION);
                     }
                 }, null, true);
-            }
-
-            @Override
-            public void onLocationChanged(Location location)
-            {
-                unLockUI();
-
-                if (isFinishing() == true || mGoogleMap == null)
-                {
-                    return;
-                }
-
-                DailyLocationFactory.getInstance(ZoomMapActivity.this).stopLocationMeasure();
-
-                if (mMyLocationMarkerOptions == null)
-                {
-                    mMyLocationMarkerOptions = new MarkerOptions();
-                    mMyLocationMarkerOptions.icon(new MyLocationMarker(ZoomMapActivity.this).makeIcon());
-                    mMyLocationMarkerOptions.anchor(0.5f, 0.5f);
-                }
-
-                if (mMyLocationMarker != null)
-                {
-                    mMyLocationMarker.remove();
-                }
-
-                mMyLocationMarkerOptions.position(new LatLng(location.getLatitude(), location.getLongitude()));
-                mMyLocationMarker = mGoogleMap.addMarker(mMyLocationMarkerOptions);
-
-                LatLngBounds.Builder latLngBounds = new LatLngBounds.Builder();
-                latLngBounds.include(mPlaceLocationMarker.getPosition());
-                latLngBounds.include(mMyLocationMarker.getPosition());
-
-                CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(latLngBounds.build(), ScreenUtils.dpToPx(ZoomMapActivity.this, 50));
-                mGoogleMap.animateCamera(cameraUpdate);
             }
         });
     }

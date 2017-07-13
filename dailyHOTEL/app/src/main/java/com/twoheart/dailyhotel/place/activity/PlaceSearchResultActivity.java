@@ -1,11 +1,9 @@
 package com.twoheart.dailyhotel.place.activity;
 
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 
@@ -125,7 +123,7 @@ public abstract class PlaceSearchResultActivity extends BaseActivity
     @Override
     public void onBackPressed()
     {
-        if(mViewType == ViewType.MAP)
+        if (mViewType == ViewType.MAP)
         {
             try
             {
@@ -327,9 +325,13 @@ public abstract class PlaceSearchResultActivity extends BaseActivity
         {
             lockUI();
 
-            DailyLocationFactory.getInstance(this).startLocationMeasure(this, null, new DailyLocationFactory.LocationListenerEx()
+            if (DailyLocationFactory.getInstance(this).measuringLocation() == true)
             {
-                @TargetApi(Build.VERSION_CODES.M)
+                return;
+            }
+
+            DailyLocationFactory.getInstance(this).checkLocationMeasure(this, new DailyLocationFactory.OnCheckLocationListener()
+            {
                 @Override
                 public void onRequirePermission()
                 {
@@ -358,20 +360,48 @@ public abstract class PlaceSearchResultActivity extends BaseActivity
                 }
 
                 @Override
-                public void onStatusChanged(String provider, int status, Bundle extras)
+                public void onProviderEnabled()
                 {
-                    unLockUI();
+                    DailyLocationFactory.getInstance(PlaceSearchResultActivity.this).startLocationMeasure(PlaceSearchResultActivity.this, null, new DailyLocationFactory.OnLocationListener()
+                    {
+                        @Override
+                        public void onFailed()
+                        {
+                            unLockUI();
 
+                            if (isFinishing() == true)
+                            {
+                                return;
+                            }
+
+                            onLocationFailed();
+                        }
+
+                        @Override
+                        public void onAlreadyRun()
+                        {
+
+                        }
+
+                        @Override
+                        public void onLocationChanged(Location location)
+                        {
+                            unLockUI();
+
+                            if (isFinishing() == true)
+                            {
+                                return;
+                            }
+
+                            DailyLocationFactory.getInstance(PlaceSearchResultActivity.this).stopLocationMeasure();
+
+                            PlaceSearchResultActivity.this.onLocationChanged(location);
+                        }
+                    });
                 }
 
                 @Override
-                public void onProviderEnabled(String provider)
-                {
-                    unLockUI();
-                }
-
-                @Override
-                public void onProviderDisabled(String provider)
+                public void onProviderDisabled()
                 {
                     unLockUI();
 
@@ -403,21 +433,6 @@ public abstract class PlaceSearchResultActivity extends BaseActivity
                                 onLocationProviderDisabled();
                             }
                         }, false);
-                }
-
-                @Override
-                public void onLocationChanged(Location location)
-                {
-                    unLockUI();
-
-                    if (isFinishing() == true)
-                    {
-                        return;
-                    }
-
-                    DailyLocationFactory.getInstance(PlaceSearchResultActivity.this).stopLocationMeasure();
-
-                    PlaceSearchResultActivity.this.onLocationChanged(location);
                 }
             });
         }

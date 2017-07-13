@@ -68,7 +68,6 @@ import com.twoheart.dailyhotel.screen.mydaily.wishlist.WishListTabActivity;
 import com.twoheart.dailyhotel.screen.search.SearchActivity;
 import com.twoheart.dailyhotel.screen.search.stay.result.StaySearchResultActivity;
 import com.twoheart.dailyhotel.util.Constants;
-import com.twoheart.dailyhotel.util.Crypto;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
 import com.twoheart.dailyhotel.util.DailyExternalDeepLink;
@@ -1058,89 +1057,98 @@ public class HomeFragment extends BaseMenuNavigationFragment
     {
         lockUI();
 
-        DailyLocationFactory.getInstance(mBaseActivity) //
-            .startLocationMeasure(this, null, new DailyLocationFactory.LocationListenerEx()
+        if (DailyLocationFactory.getInstance(mBaseActivity).measuringLocation() == true)
+        {
+            return;
+        }
+
+        DailyLocationFactory.getInstance(mBaseActivity).checkLocationMeasure(mBaseActivity, new DailyLocationFactory.OnCheckLocationListener()
+        {
+            @Override
+            public void onRequirePermission()
             {
-                @Override
-                public void onRequirePermission()
+                unLockUI();
+
+                Intent intent = PermissionManagerActivity.newInstance( //
+                    mBaseActivity, PermissionManagerActivity.PermissionType.ACCESS_FINE_LOCATION);
+                startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_PERMISSION_MANAGER);
+            }
+
+            @Override
+            public void onFailed()
+            {
+                unLockUI();
+            }
+
+            @Override
+            public void onProviderEnabled()
+            {
+                DailyLocationFactory.getInstance(mBaseActivity).startLocationMeasure(mBaseActivity, null, new DailyLocationFactory.OnLocationListener()
                 {
-                    unLockUI();
-
-                    Intent intent = PermissionManagerActivity.newInstance( //
-                        mBaseActivity, PermissionManagerActivity.PermissionType.ACCESS_FINE_LOCATION);
-                    startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_PERMISSION_MANAGER);
-                }
-
-                @Override
-                public void onFailed()
-                {
-                    unLockUI();
-                }
-
-                @Override
-                public void onStatusChanged(String provider, int status, Bundle extras)
-                {
-                    // TODO Auto-generated method stub
-
-                }
-
-                @Override
-                public void onProviderEnabled(String provider)
-                {
-                    // TODO Auto-generated method stub
-
-                }
-
-                @Override
-                public void onProviderDisabled(String provider)
-                {
-                    unLockUI();
-
-                    if (isFinishing() == true)
+                    @Override
+                    public void onFailed()
                     {
-                        return;
+                        unLockUI();
                     }
 
-                    // 현재 GPS 설정이 꺼져있습니다 설정에서 바꾸어 주세요.
-                    DailyLocationFactory.getInstance(mBaseActivity).stopLocationMeasure();
+                    @Override
+                    public void onAlreadyRun()
+                    {
 
-                    mBaseActivity.showSimpleDialog(getString(R.string.dialog_title_used_gps)//
-                        , getString(R.string.dialog_msg_used_gps)//
-                        , getString(R.string.dialog_btn_text_dosetting)//
-                        , getString(R.string.dialog_btn_text_cancel)//
-                        , new View.OnClickListener()//
+                    }
+
+                    @Override
+                    public void onLocationChanged(Location location)
+                    {
+                        unLockUI();
+
+                        if (isFinishing() == true)
                         {
-                            @Override
-                            public void onClick(View v)
-                            {
-                                Intent intent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                                startActivityForResult(intent, Constants.CODE_RESULT_ACTIVITY_SETTING_LOCATION);
-                            }
-                        }, null, false);
-                }
+                            return;
+                        }
 
-                @Override
-                public void onLocationChanged(Location location)
+                        DailyLocationFactory.getInstance(mBaseActivity).stopLocationMeasure();
+
+                        if (location == null)
+                        {
+                            DailyToast.showToast(mBaseActivity, R.string.message_failed_mylocation, Toast.LENGTH_SHORT);
+                        } else
+                        {
+                            // Location
+                            onSearchLocation(location);
+                        }
+                    }
+                });
+            }
+
+            @Override
+            public void onProviderDisabled()
+            {
+                unLockUI();
+
+                if (isFinishing() == true)
                 {
-                    unLockUI();
-
-                    if (isFinishing() == true)
-                    {
-                        return;
-                    }
-
-                    DailyLocationFactory.getInstance(mBaseActivity).stopLocationMeasure();
-
-                    if (location == null)
-                    {
-                        DailyToast.showToast(mBaseActivity, R.string.message_failed_mylocation, Toast.LENGTH_SHORT);
-                    } else
-                    {
-                        // Location
-                        onSearchLocation(location);
-                    }
+                    return;
                 }
-            });
+
+                // 현재 GPS 설정이 꺼져있습니다 설정에서 바꾸어 주세요.
+                DailyLocationFactory.getInstance(mBaseActivity).stopLocationMeasure();
+
+                mBaseActivity.showSimpleDialog(getString(R.string.dialog_title_used_gps)//
+                    , getString(R.string.dialog_msg_used_gps)//
+                    , getString(R.string.dialog_btn_text_dosetting)//
+                    , getString(R.string.dialog_btn_text_cancel)//
+                    , new View.OnClickListener()//
+                    {
+                        @Override
+                        public void onClick(View v)
+                        {
+                            Intent intent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                            startActivityForResult(intent, Constants.CODE_RESULT_ACTIVITY_SETTING_LOCATION);
+                        }
+                    }, null, false);
+            }
+        });
     }
 
     private void onSearchLocation(Location location)

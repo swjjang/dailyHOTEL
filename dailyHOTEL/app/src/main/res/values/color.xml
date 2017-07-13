@@ -262,6 +262,7 @@
     <color name="default_text_cbe945b">#be945b</color>
     <color name="default_text_cb8b8b8">#b8b8b8</color>
     <color name="default_text_c4a4a4a">#4a4a4a</color>
+    <color name="default_text_cb4b4b4">#b4b4b4</color>
 
     <color name="default_over_scroll_edge">#dcdcdc</color>
     <color name="default_text_kakao">#3c1e1e</color>
@@ -322,6 +323,7 @@
 
 
     <color name="cababab">#ababab</color>
+    <color name="location_progressbar_cc8c8c8">#c8c8c8</color>
 
     <!-- Coupon -->
     <color name="coupon_expire_text">#929292</color>

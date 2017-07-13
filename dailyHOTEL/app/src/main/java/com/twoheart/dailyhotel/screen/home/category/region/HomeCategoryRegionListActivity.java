@@ -180,6 +180,15 @@ public class HomeCategoryRegionListActivity extends BaseActivity
     }
 
     @Override
+    protected void onDestroy()
+    {
+        super.onDestroy();
+
+        DailyLocationFactory.getInstance(this).stopLocationMeasure();
+        DailyLocationFactory.getInstance(this).clear();
+    }
+
+    @Override
     public void finish()
     {
         super.finish();
@@ -235,99 +244,108 @@ public class HomeCategoryRegionListActivity extends BaseActivity
     {
         lockUI();
 
-        DailyLocationFactory.getInstance(HomeCategoryRegionListActivity.this) //
-            .startLocationMeasure(this, null, new DailyLocationFactory.LocationListenerEx()
+        if (DailyLocationFactory.getInstance(this).measuringLocation() == true)
+        {
+            return;
+        }
+
+        DailyLocationFactory.getInstance(this).checkLocationMeasure(this, new DailyLocationFactory.OnCheckLocationListener()
+        {
+            @Override
+            public void onRequirePermission()
             {
-                @Override
-                public void onRequirePermission()
+                unLockUI();
+
+                Intent intent = PermissionManagerActivity.newInstance( //
+                    HomeCategoryRegionListActivity.this, PermissionManagerActivity.PermissionType.ACCESS_FINE_LOCATION);
+                startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_PERMISSION_MANAGER);
+            }
+
+            @Override
+            public void onFailed()
+            {
+                unLockUI();
+            }
+
+            @Override
+            public void onProviderEnabled()
+            {
+                DailyLocationFactory.getInstance(HomeCategoryRegionListActivity.this).startLocationMeasure(HomeCategoryRegionListActivity.this, null, new DailyLocationFactory.OnLocationListener()
                 {
-                    unLockUI();
-
-                    Intent intent = PermissionManagerActivity.newInstance( //
-                        HomeCategoryRegionListActivity.this, PermissionManagerActivity.PermissionType.ACCESS_FINE_LOCATION);
-                    startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_PERMISSION_MANAGER);
-                }
-
-                @Override
-                public void onFailed()
-                {
-                    unLockUI();
-                }
-
-                @Override
-                public void onStatusChanged(String provider, int status, Bundle extras)
-                {
-                    // TODO Auto-generated method stub
-
-                }
-
-                @Override
-                public void onProviderEnabled(String provider)
-                {
-                    // TODO Auto-generated method stub
-
-                }
-
-                @Override
-                public void onProviderDisabled(String provider)
-                {
-                    unLockUI();
-
-                    if (isFinishing() == true)
+                    @Override
+                    public void onFailed()
                     {
-                        return;
+                        unLockUI();
                     }
 
-                    // 현재 GPS 설정이 꺼져있습니다 설정에서 바꾸어 주세요.
-                    DailyLocationFactory.getInstance(HomeCategoryRegionListActivity.this).stopLocationMeasure();
-
-                    HomeCategoryRegionListActivity.this.showSimpleDialog(getString(R.string.dialog_title_used_gps)//
-                        , getString(R.string.dialog_msg_used_gps)//
-                        , getString(R.string.dialog_btn_text_dosetting)//
-                        , getString(R.string.dialog_btn_text_cancel)//
-                        , v ->
-                        {
-                            Intent intent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                            startActivityForResult(intent, Constants.CODE_RESULT_ACTIVITY_SETTING_LOCATION);
-                        }, null, false);
-                }
-
-                @Override
-                public void onLocationChanged(Location location)
-                {
-                    unLockUI();
-
-                    if (isFinishing() == true)
+                    @Override
+                    public void onAlreadyRun()
                     {
-                        return;
+
                     }
 
-                    DailyLocationFactory.getInstance(HomeCategoryRegionListActivity.this).stopLocationMeasure();
-
-                    if (location == null)
+                    @Override
+                    public void onLocationChanged(Location location)
                     {
-                        DailyToast.showToast(HomeCategoryRegionListActivity.this, R.string.message_failed_mylocation, Toast.LENGTH_SHORT);
-                    } else
-                    {
-                        // Location
-                        Intent intent = new Intent();
-                        intent.putExtra(NAME_INTENT_EXTRA_DATA_LOCATION, location);
+                        unLockUI();
 
-                        try
+                        if (isFinishing() == true)
                         {
-                            HomeCategoryRegionListFragment homeCategoryRegionListFragment = getCurrentFragment();
-                            intent.putExtra(NAME_INTENT_EXTRA_DATA_RESULT, PlaceRegionListActivity.Region.DOMESTIC.name());
-                            intent.putExtra(NAME_INTENT_EXTRA_DATA_DAILY_CATEGORY_TYPE, (Parcelable) mDailyCategoryType);
-                        } catch (Exception e)
-                        {
-                            ExLog.d(e.toString());
+                            return;
                         }
 
-                        setResult(RESULT_ARROUND_SEARCH_LIST, intent);
-                        finish();
+                        DailyLocationFactory.getInstance(HomeCategoryRegionListActivity.this).stopLocationMeasure();
+
+                        if (location == null)
+                        {
+                            DailyToast.showToast(HomeCategoryRegionListActivity.this, R.string.message_failed_mylocation, Toast.LENGTH_SHORT);
+                        } else
+                        {
+                            // Location
+                            Intent intent = new Intent();
+                            intent.putExtra(NAME_INTENT_EXTRA_DATA_LOCATION, location);
+
+                            try
+                            {
+                                HomeCategoryRegionListFragment homeCategoryRegionListFragment = getCurrentFragment();
+                                intent.putExtra(NAME_INTENT_EXTRA_DATA_RESULT, PlaceRegionListActivity.Region.DOMESTIC.name());
+                                intent.putExtra(NAME_INTENT_EXTRA_DATA_DAILY_CATEGORY_TYPE, (Parcelable) mDailyCategoryType);
+                            } catch (Exception e)
+                            {
+                                ExLog.d(e.toString());
+                            }
+
+                            setResult(RESULT_ARROUND_SEARCH_LIST, intent);
+                            finish();
+                        }
                     }
+                });
+            }
+
+            @Override
+            public void onProviderDisabled()
+            {
+                unLockUI();
+
+                if (isFinishing() == true)
+                {
+                    return;
                 }
-            });
+
+                // 현재 GPS 설정이 꺼져있습니다 설정에서 바꾸어 주세요.
+                DailyLocationFactory.getInstance(HomeCategoryRegionListActivity.this).stopLocationMeasure();
+
+                HomeCategoryRegionListActivity.this.showSimpleDialog(getString(R.string.dialog_title_used_gps)//
+                    , getString(R.string.dialog_msg_used_gps)//
+                    , getString(R.string.dialog_btn_text_dosetting)//
+                    , getString(R.string.dialog_btn_text_cancel)//
+                    , v ->
+                    {
+                        Intent intent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                        startActivityForResult(intent, Constants.CODE_RESULT_ACTIVITY_SETTING_LOCATION);
+                    }, null, false);
+            }
+        });
     }
 
     private void showSearch()

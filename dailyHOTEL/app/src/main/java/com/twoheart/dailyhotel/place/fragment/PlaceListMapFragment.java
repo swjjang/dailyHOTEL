@@ -182,6 +182,15 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
     }
 
     @Override
+    public void onDestroy()
+    {
+        super.onDestroy();
+
+        DailyLocationFactory.getInstance(mBaseActivity).stopLocationMeasure();
+        DailyLocationFactory.getInstance(mBaseActivity).clear();
+    }
+
+    @Override
     public void onLowMemory()
     {
         super.onLowMemory();
@@ -1073,7 +1082,12 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
             return;
         }
 
-        DailyLocationFactory.getInstance(mBaseActivity).startLocationMeasure(this, mMyLocationView, new DailyLocationFactory.LocationListenerEx()
+        if (DailyLocationFactory.getInstance(mBaseActivity).measuringLocation() == true)
+        {
+            return;
+        }
+
+        DailyLocationFactory.getInstance(mBaseActivity).checkLocationMeasure(mBaseActivity, new DailyLocationFactory.OnCheckLocationListener()
         {
             @Override
             public void onRequirePermission()
@@ -1091,21 +1105,37 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
             }
 
             @Override
-            public void onStatusChanged(String provider, int status, Bundle extras)
+            public void onProviderEnabled()
             {
-                // TODO Auto-generated method stub
+                DailyLocationFactory.getInstance(mBaseActivity).startLocationMeasure(mBaseActivity, mMyLocationView, new DailyLocationFactory.OnLocationListener()
+                {
+                    @Override
+                    public void onFailed()
+                    {
+                        mBaseActivity.unLockUI();
+                    }
 
+                    @Override
+                    public void onAlreadyRun()
+                    {
+
+                    }
+
+                    @Override
+                    public void onLocationChanged(Location location)
+                    {
+                        mBaseActivity.unLockUI();
+
+                        DailyLocationFactory.getInstance(mBaseActivity).stopLocationMeasure();
+
+                        setMyLocation(location, true);
+                        moveCameraPosition(mMyLocationMarkerOptions.getPosition());
+                    }
+                });
             }
 
             @Override
-            public void onProviderEnabled(String provider)
-            {
-                // TODO Auto-generated method stub
-
-            }
-
-            @Override
-            public void onProviderDisabled(String provider)
+            public void onProviderDisabled()
             {
                 mBaseActivity.unLockUI();
 
@@ -1127,17 +1157,6 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
                         mBaseActivity.startActivityForResult(intent, Constants.CODE_RESULT_ACTIVITY_SETTING_LOCATION);
                     }
                 }, null, true);
-            }
-
-            @Override
-            public void onLocationChanged(Location location)
-            {
-                mBaseActivity.unLockUI();
-
-                DailyLocationFactory.getInstance(mBaseActivity).stopLocationMeasure();
-
-                setMyLocation(location, true);
-                moveCameraPosition(mMyLocationMarkerOptions.getPosition());
             }
         });
     }

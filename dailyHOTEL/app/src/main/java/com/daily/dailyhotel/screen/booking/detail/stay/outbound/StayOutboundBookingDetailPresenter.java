@@ -697,7 +697,7 @@ public class StayOutboundBookingDetailPresenter extends BaseExceptionPresenter<S
     {
         if (mDailyLocationExFactory == null)
         {
-            mDailyLocationExFactory = new DailyLocationExFactory();
+            mDailyLocationExFactory = new DailyLocationExFactory(getActivity());
         }
 
         if (mDailyLocationExFactory.measuringLocation() == true)
@@ -720,7 +720,7 @@ public class StayOutboundBookingDetailPresenter extends BaseExceptionPresenter<S
             @Override
             protected void subscribeActual(Observer<? super Location> observer)
             {
-                mDailyLocationExFactory.startLocationMeasure(getActivity(), new DailyLocationExFactory.LocationListenerEx()
+                mDailyLocationExFactory.checkLocationMeasure(new DailyLocationExFactory.OnCheckLocationListener()
                 {
                     @Override
                     public void onRequirePermission()
@@ -745,32 +745,58 @@ public class StayOutboundBookingDetailPresenter extends BaseExceptionPresenter<S
                     }
 
                     @Override
-                    public void onAlreadyRun()
+                    public void onProviderEnabled()
                     {
-                        if (locationAnimationDisposable != null)
+                        mDailyLocationExFactory.startLocationMeasure(new DailyLocationExFactory.OnLocationListener()
                         {
-                            locationAnimationDisposable.dispose();
-                        }
+                            @Override
+                            public void onFailed()
+                            {
+                                if (locationAnimationDisposable != null)
+                                {
+                                    locationAnimationDisposable.dispose();
+                                }
 
-                        observer.onError(new DuplicateRunException());
+                                observer.onError(new Exception());
+                            }
+
+                            @Override
+                            public void onAlreadyRun()
+                            {
+                                if (locationAnimationDisposable != null)
+                                {
+                                    locationAnimationDisposable.dispose();
+                                }
+
+                                observer.onError(new DuplicateRunException());
+                            }
+
+                            @Override
+                            public void onLocationChanged(Location location)
+                            {
+                                if (locationAnimationDisposable != null)
+                                {
+                                    locationAnimationDisposable.dispose();
+                                }
+
+                                unLockAll();
+
+                                mDailyLocationExFactory.stopLocationMeasure();
+
+                                if (location == null)
+                                {
+                                    observer.onError(new NullPointerException());
+                                } else
+                                {
+                                    observer.onNext(location);
+                                    observer.onComplete();
+                                }
+                            }
+                        });
                     }
 
                     @Override
-                    public void onStatusChanged(String provider, int status, Bundle extras)
-                    {
-                        // TODO Auto-generated method stub
-
-                    }
-
-                    @Override
-                    public void onProviderEnabled(String provider)
-                    {
-                        // TODO Auto-generated method stub
-
-                    }
-
-                    @Override
-                    public void onProviderDisabled(String provider)
+                    public void onProviderDisabled()
                     {
                         if (locationAnimationDisposable != null)
                         {
@@ -779,104 +805,70 @@ public class StayOutboundBookingDetailPresenter extends BaseExceptionPresenter<S
 
                         observer.onError(new ProviderException());
                     }
-
-                    @Override
-                    public void onLocationChanged(Location location)
-                    {
-                        if (locationAnimationDisposable != null)
-                        {
-                            locationAnimationDisposable.dispose();
-                        }
-
-                        unLockAll();
-
-                        mDailyLocationExFactory.stopLocationMeasure();
-
-                        if (location == null)
-                        {
-                            observer.onError(new NullPointerException());
-                        } else
-                        {
-                            observer.onNext(location);
-                            observer.onComplete();
-                        }
-                    }
                 });
             }
-        }.doOnComplete(new Action()
+        }.doOnComplete(() ->
         {
-            @Override
-            public void run() throws Exception
+            if (locationAnimationDisposable != null)
             {
-                if (locationAnimationDisposable != null)
-                {
-                    locationAnimationDisposable.dispose();
-                }
+                locationAnimationDisposable.dispose();
             }
-        }).doOnDispose(new Action()
+        }).doOnDispose(() ->
         {
-            @Override
-            public void run() throws Exception
+            if (locationAnimationDisposable != null)
             {
-                if (locationAnimationDisposable != null)
-                {
-                    locationAnimationDisposable.dispose();
-                }
+                locationAnimationDisposable.dispose();
             }
-        }).doOnError(new Consumer<Throwable>()
+        }).doOnError(throwable ->
         {
-            @Override
-            public void accept(@io.reactivex.annotations.NonNull Throwable throwable) throws Exception
+            unLockAll();
+
+            if (throwable instanceof PermissionException)
             {
-                unLockAll();
-
-                if (throwable instanceof PermissionException)
+                Intent intent = PermissionManagerActivity.newInstance(getActivity(), PermissionManagerActivity.PermissionType.ACCESS_FINE_LOCATION);
+                startActivityForResult(intent, StayOutboundBookingDetailActivity.REQUEST_CODE_PERMISSION_MANAGER);
+            } else if (throwable instanceof ProviderException)
+            {
+                // 현재 GPS 설정이 꺼져있습니다 설정에서 바꾸어 주세요.
+                View.OnClickListener positiveListener = new View.OnClickListener()//
                 {
-                    Intent intent = PermissionManagerActivity.newInstance(getActivity(), PermissionManagerActivity.PermissionType.ACCESS_FINE_LOCATION);
-                    startActivityForResult(intent, StayOutboundBookingDetailActivity.REQUEST_CODE_PERMISSION_MANAGER);
-                } else if (throwable instanceof ProviderException)
-                {
-                    // 현재 GPS 설정이 꺼져있습니다 설정에서 바꾸어 주세요.
-                    View.OnClickListener positiveListener = new View.OnClickListener()//
+                    @Override
+                    public void onClick(View v)
                     {
-                        @Override
-                        public void onClick(View v)
-                        {
-                            Intent intent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                            startActivityForResult(intent, StayOutboundBookingDetailActivity.REQUEST_CODE_SETTING_LOCATION);
-                        }
-                    };
+                        Intent intent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                        startActivityForResult(intent, StayOutboundBookingDetailActivity.REQUEST_CODE_SETTING_LOCATION);
+                    }
+                };
 
-                    View.OnClickListener negativeListener = new View.OnClickListener()//
-                    {
-                        @Override
-                        public void onClick(View v)
-                        {
-                            DailyToast.showToast(getActivity(), R.string.message_failed_mylocation, DailyToast.LENGTH_SHORT);
-                        }
-                    };
-
-                    DialogInterface.OnCancelListener cancelListener = new DialogInterface.OnCancelListener()
-                    {
-                        @Override
-                        public void onCancel(DialogInterface dialog)
-                        {
-                            DailyToast.showToast(getActivity(), R.string.message_failed_mylocation, DailyToast.LENGTH_SHORT);
-                        }
-                    };
-
-                    getViewInterface().showSimpleDialog(//
-                        getString(R.string.dialog_title_used_gps), getString(R.string.dialog_msg_used_gps), //
-                        getString(R.string.dialog_btn_text_dosetting), //
-                        getString(R.string.dialog_btn_text_cancel), //
-                        positiveListener, negativeListener, cancelListener, null, true);
-                } else if (throwable instanceof DuplicateRunException)
+                View.OnClickListener negativeListener = new View.OnClickListener()//
                 {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        DailyToast.showToast(getActivity(), R.string.message_failed_mylocation, DailyToast.LENGTH_SHORT);
+                    }
+                };
 
-                } else
+                DialogInterface.OnCancelListener cancelListener = new DialogInterface.OnCancelListener()
                 {
-                    DailyToast.showToast(getActivity(), R.string.message_failed_mylocation, DailyToast.LENGTH_SHORT);
-                }
+                    @Override
+                    public void onCancel(DialogInterface dialog)
+                    {
+                        DailyToast.showToast(getActivity(), R.string.message_failed_mylocation, DailyToast.LENGTH_SHORT);
+                    }
+                };
+
+                getViewInterface().showSimpleDialog(//
+                    getString(R.string.dialog_title_used_gps), getString(R.string.dialog_msg_used_gps), //
+                    getString(R.string.dialog_btn_text_dosetting), //
+                    getString(R.string.dialog_btn_text_cancel), //
+                    positiveListener, negativeListener, cancelListener, null, true);
+            } else if (throwable instanceof DuplicateRunException)
+            {
+
+            } else
+            {
+                DailyToast.showToast(getActivity(), R.string.message_failed_mylocation, DailyToast.LENGTH_SHORT);
             }
         });
     }

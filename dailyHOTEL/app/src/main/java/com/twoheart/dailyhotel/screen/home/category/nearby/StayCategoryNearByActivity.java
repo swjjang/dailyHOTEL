@@ -175,6 +175,15 @@ public class StayCategoryNearByActivity extends BaseActivity
     }
 
     @Override
+    protected void onDestroy()
+    {
+        super.onDestroy();
+
+        DailyLocationFactory.getInstance(this).stopLocationMeasure();
+        DailyLocationFactory.getInstance(this).clear();
+    }
+
+    @Override
     public void finish()
     {
         super.finish();
@@ -689,9 +698,13 @@ public class StayCategoryNearByActivity extends BaseActivity
         {
             lockUI();
 
-            DailyLocationFactory.getInstance(this).startLocationMeasure(this, null, new DailyLocationFactory.LocationListenerEx()
+            if (DailyLocationFactory.getInstance(this).measuringLocation() == true)
             {
-                @TargetApi(Build.VERSION_CODES.M)
+                return;
+            }
+
+            DailyLocationFactory.getInstance(this).checkLocationMeasure(this, new DailyLocationFactory.OnCheckLocationListener()
+            {
                 @Override
                 public void onRequirePermission()
                 {
@@ -720,20 +733,48 @@ public class StayCategoryNearByActivity extends BaseActivity
                 }
 
                 @Override
-                public void onStatusChanged(String provider, int status, Bundle extras)
+                public void onProviderEnabled()
                 {
-                    unLockUI();
+                    DailyLocationFactory.getInstance(StayCategoryNearByActivity.this).startLocationMeasure(StayCategoryNearByActivity.this, null, new DailyLocationFactory.OnLocationListener()
+                    {
+                        @Override
+                        public void onFailed()
+                        {
+                            unLockUI();
 
+                            if (isFinishing() == true)
+                            {
+                                return;
+                            }
+
+                            onLocationFailed();
+                        }
+
+                        @Override
+                        public void onAlreadyRun()
+                        {
+
+                        }
+
+                        @Override
+                        public void onLocationChanged(Location location)
+                        {
+                            unLockUI();
+
+                            if (isFinishing() == true)
+                            {
+                                return;
+                            }
+
+                            DailyLocationFactory.getInstance(StayCategoryNearByActivity.this).stopLocationMeasure();
+
+                            StayCategoryNearByActivity.this.onLocationChanged(location);
+                        }
+                    });
                 }
 
                 @Override
-                public void onProviderEnabled(String provider)
-                {
-                    unLockUI();
-                }
-
-                @Override
-                public void onProviderDisabled(String provider)
+                public void onProviderDisabled()
                 {
                     unLockUI();
 
@@ -765,21 +806,6 @@ public class StayCategoryNearByActivity extends BaseActivity
                                 onLocationProviderDisabled();
                             }
                         }, false);
-                }
-
-                @Override
-                public void onLocationChanged(Location location)
-                {
-                    unLockUI();
-
-                    if (isFinishing() == true)
-                    {
-                        return;
-                    }
-
-                    DailyLocationFactory.getInstance(StayCategoryNearByActivity.this).stopLocationMeasure();
-
-                    StayCategoryNearByActivity.this.onLocationChanged(location);
                 }
             });
         }
