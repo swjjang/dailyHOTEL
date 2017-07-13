@@ -161,6 +161,7 @@ public class GourmetMenusAdapter extends RecyclerView.Adapter<GourmetMenusAdapte
         if (gourmetMenuImageList == null || gourmetMenuImageList.size() == 0)
         {
             holder.dataBinding.defaultImageLayout.setVisibility(View.GONE);
+            holder.dataBinding.defaultImageLayout.setOnClickListener(null);
         } else
         {
             holder.dataBinding.defaultImageLayout.setVisibility(View.VISIBLE);
@@ -168,19 +169,19 @@ public class GourmetMenusAdapter extends RecyclerView.Adapter<GourmetMenusAdapte
             holder.dataBinding.simpleDraweeView.getHierarchy().setPlaceholderImage(R.drawable.layerlist_placeholder);
             Util.requestImageResize(mContext, holder.dataBinding.simpleDraweeView, gourmetMenu.getPrimaryImage().url);
             setLineIndicatorVisible(holder.dataBinding, gourmetMenuImageList.size());
-        }
 
-        holder.dataBinding.moreIconView.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
+            holder.dataBinding.defaultImageLayout.setOnClickListener(new View.OnClickListener()
             {
-                if (mOnEventListener != null)
+                @Override
+                public void onClick(View v)
                 {
-                    mOnEventListener.onMoreImageClick(position);
+                    if (mOnEventListener != null)
+                    {
+                        mOnEventListener.onMoreImageClick(position);
+                    }
                 }
-            }
-        });
+            });
+        }
 
         // 메뉴 제목
         holder.dataBinding.productNameTextView.setText(gourmetMenu.ticketName);
