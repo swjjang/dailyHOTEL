@@ -439,6 +439,57 @@ public class GourmetDetailActivity extends PlaceDetailActivity
     }
 
     @Override
+    protected void setCommonDateTime(TodayDateTime todayDateTime)
+    {
+        mTodayDateTime = todayDateTime;
+
+        try
+        {
+            // 체크인 시간이 설정되어 있지 않는 경우 기본값을 넣어준다.
+            if (mPlaceBookingDay == null)
+            {
+                mPlaceBookingDay = new GourmetBookingDay();
+                GourmetBookingDay gourmetBookingDay = (GourmetBookingDay) mPlaceBookingDay;
+
+                gourmetBookingDay.setVisitDay(mTodayDateTime.dailyDateTime);
+            } else
+            {
+                GourmetBookingDay gourmetBookingDay = (GourmetBookingDay) mPlaceBookingDay;
+
+                // 예외 처리로 보고 있는 체크인/체크아웃 날짜가 지나 간경우 다음 날로 변경해준다.
+                // 체크인 날짜 체크
+
+                // 날짜로 비교해야 한다.
+                Calendar todayCalendar = DailyCalendar.getInstance(mTodayDateTime.dailyDateTime, true);
+                Calendar visitCalendar = DailyCalendar.getInstance(gourmetBookingDay.getVisitDay(DailyCalendar.ISO_8601_FORMAT), true);
+
+                // 하루가 지나서 체크인 날짜가 전날짜 인 경우
+                if (todayCalendar.getTimeInMillis() > visitCalendar.getTimeInMillis())
+                {
+                    gourmetBookingDay.setVisitDay(mTodayDateTime.dailyDateTime);
+                }
+            }
+
+            GourmetBookingDay gourmetBookingDay = (GourmetBookingDay) mPlaceBookingDay;
+
+            if (mIsShowCalendar == true)
+            {
+                unLockUI();
+                startCalendar(mTodayDateTime, gourmetBookingDay, mPlaceDetail.index, mSoldOutList, false);
+                return;
+            }
+
+            ((GourmetDetailNetworkController) mPlaceDetailNetworkController).requestHasCoupon(mPlaceDetail.index,//
+                gourmetBookingDay.getVisitDay("yyyy-MM-dd"));
+
+            mPlaceDetailNetworkController.requestPlaceReviewScores(PlaceType.FNB, mPlaceDetail.index);
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+        }
+    }
+
+    @Override
     protected void shareKakao(String imageUrl, PlaceBookingDay placeBookingDay, PlaceDetail placeDetail)
     {
         if (placeBookingDay == null || placeDetail == null)
@@ -905,7 +956,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         }
     }
 
-    void startCalendar(TodayDateTime todayDateTime, GourmetBookingDay gourmetBookingDay, int placeIndex, boolean isAnimation)
+    void startCalendar(TodayDateTime todayDateTime, GourmetBookingDay gourmetBookingDay, int placeIndex, List<String> soldoutList, boolean isAnimation)
     {
         if (isFinishing() == true || lockUiComponentAndIsLockUiComponent() == true)
         {
@@ -922,7 +973,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         }
 
         Intent intent = GourmetDetailCalendarActivity.newInstance(GourmetDetailActivity.this, //
-            todayDateTime, gourmetBookingDay, placeIndex, callByScreen, true, isAnimation);
+            todayDateTime, gourmetBookingDay, placeIndex, callByScreen, mSoldOutList, true, isAnimation);
         startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_CALENDAR);
 
         AnalyticsManager.getInstance(GourmetDetailActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_//
@@ -1408,7 +1459,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         @Override
         public void onCalendarClick()
         {
-            startCalendar(mTodayDateTime, (GourmetBookingDay) mPlaceBookingDay, mPlaceDetail.index, true);
+            startCalendar(mTodayDateTime, (GourmetBookingDay) mPlaceBookingDay, mPlaceDetail.index, mSoldOutList, true);
         }
 
         @Override
@@ -1467,7 +1518,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
                 if (mIsShowCalendar == true)
                 {
                     unLockUI();
-                    startCalendar(mTodayDateTime, gourmetBookingDay, mPlaceDetail.index, false);
+                    startCalendar(mTodayDateTime, gourmetBookingDay, mPlaceDetail.index, mSoldOutList, false);
                     return;
                 }
 

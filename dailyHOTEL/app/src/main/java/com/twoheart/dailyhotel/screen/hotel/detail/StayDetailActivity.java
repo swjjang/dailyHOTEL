@@ -425,6 +425,12 @@ public class StayDetailActivity extends PlaceDetailActivity
     }
 
     @Override
+    protected void setCommonDateTime(TodayDateTime todayDateTime)
+    {
+
+    }
+
+    @Override
     protected void shareKakao(String imageUrl, PlaceBookingDay placeBookingDay, PlaceDetail placeDetail)
     {
         if (placeBookingDay == null || placeDetail == null)

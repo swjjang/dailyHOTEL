@@ -872,6 +872,8 @@
     <string name="label_saturday">토</string>
     <string name="label_sunday">일</string>
 
+    <string name="label_calendar_soldout">SOLD OUT</string>
+
     <!-- Curation Activity -->
     <string name="label_double">더블</string>
     <string name="label_twin">트윈</string>

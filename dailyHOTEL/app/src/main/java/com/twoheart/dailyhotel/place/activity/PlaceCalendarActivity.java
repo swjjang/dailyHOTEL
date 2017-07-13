@@ -20,11 +20,17 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.crashlytics.android.Crashlytics;
+import com.daily.base.exception.BaseException;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
 import com.daily.base.util.VersionUtils;
 import com.daily.base.widget.DailyTextView;
+import com.daily.base.widget.DailyToast;
+import com.daily.dailyhotel.repository.local.ConfigLocalImpl;
+import com.daily.dailyhotel.repository.remote.FacebookRemoteImpl;
+import com.daily.dailyhotel.repository.remote.KakaoRemoteImpl;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.time.PlaceBookingDay;
 import com.twoheart.dailyhotel.network.model.TodayDateTime;
@@ -36,6 +42,10 @@ import com.twoheart.dailyhotel.util.Util;
 
 import java.util.Calendar;
 
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
+import retrofit2.HttpException;
+
 public abstract class PlaceCalendarActivity extends BaseActivity implements View.OnClickListener
 {
     protected static final String INTENT_EXTRA_DATA_SCREEN = "screen";
@@ -44,8 +54,11 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
     protected static final String INTENT_EXTRA_DATA_TODAYDATETIME = "todayDateTime";
     protected static final String INTENT_EXTRA_DATA_ISSINGLE_DAY = "isSingleDay"; // 연박 불가
     protected static final String INTENT_EXTRA_DATA_OVERSEAS = "overseas";
+    protected static final String INTENT_EXTRA_DATA_SOLDOUT_LIST = "soldoutList";
 
     private static final int ANIMATION_DELAY = 200;
+
+    private CompositeDisposable mCompositeDisposable = new CompositeDisposable();
 
     protected View[] mDailyViews;
 
@@ -102,6 +115,14 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
         super.onRestoreInstanceState(savedInstanceState);
 
         Util.restartApp(this);
+    }
+
+    @Override
+    protected void onDestroy()
+    {
+        clearCompositeDisposable();
+
+        super.onDestroy();
     }
 
     protected void initLayout(int layoutResID, final int dayCountOfMax)
@@ -236,7 +257,7 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
         DailyTextView visitTextView = new DailyTextView(context);
         visitTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 11);
         visitTextView.setGravity(Gravity.CENTER_HORIZONTAL);
-        visitTextView.setTextColor(getResources().getColor(R.color.white));
+        visitTextView.setTextColor(context.getResources().getColorStateList(R.color.selector_calendar_default_text_color));
         visitTextView.setDuplicateParentStateEnabled(true);
         visitTextView.setId(R.id.textView);
         visitTextView.setVisibility(View.INVISIBLE);
@@ -249,6 +270,7 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
         DailyTextView dayTextView = new DailyTextView(context);
         dayTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 16);
         dayTextView.setGravity(Gravity.CENTER_HORIZONTAL);
+        dayTextView.setId(R.id.dateTextView);
         dayTextView.setDuplicateParentStateEnabled(true);
 
         RelativeLayout.LayoutParams dayLayoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -595,5 +617,72 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
         public int dayOffset;
         String dayString;
         int dayOfWeek;
+    }
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////
+    // 기존의 BaseActivity에 있는 정보 가져오기
+    ///////////////////////////////////////////////////////////////////////////////////////////////
+
+    protected void addCompositeDisposable(Disposable disposable)
+    {
+        if (disposable == null)
+        {
+            return;
+        }
+
+        mCompositeDisposable.add(disposable);
+    }
+
+    protected void clearCompositeDisposable()
+    {
+        mCompositeDisposable.clear();
+    }
+
+    protected void onHandleError(Throwable throwable)
+    {
+        unLockUI();
+
+        BaseActivity baseActivity = PlaceCalendarActivity.this;
+
+        if (baseActivity == null || baseActivity.isFinishing() == true)
+        {
+            return;
+        }
+
+        if (throwable instanceof BaseException)
+        {
+            // 팝업 에러 보여주기
+            BaseException baseException = (BaseException) throwable;
+
+            baseActivity.showSimpleDialog(null, baseException.getMessage()//
+                , getString(R.string.dialog_btn_text_confirm), null, null, null, null, dialogInterface -> PlaceCalendarActivity.this.onBackPressed(), true);
+        } else if (throwable instanceof HttpException)
+        {
+            retrofit2.HttpException httpException = (HttpException) throwable;
+
+            if (httpException.code() == BaseException.CODE_UNAUTHORIZED)
+            {
+                addCompositeDisposable(new ConfigLocalImpl(PlaceCalendarActivity.this).clear().subscribe(object ->
+                {
+                    new FacebookRemoteImpl().logOut();
+                    new KakaoRemoteImpl().logOut();
+
+                    baseActivity.restartExpiredSession();
+                }));
+            } else
+            {
+                DailyToast.showToast(PlaceCalendarActivity.this, getString(R.string.act_base_network_connect), DailyToast.LENGTH_LONG);
+
+                Crashlytics.log(httpException.response().raw().request().url().toString());
+                Crashlytics.logException(throwable);
+
+                PlaceCalendarActivity.this.finish();
+            }
+        } else
+        {
+            DailyToast.showToast(PlaceCalendarActivity.this, getString(R.string.act_base_network_connect), DailyToast.LENGTH_LONG);
+
+            PlaceCalendarActivity.this.finish();
+        }
     }
 }
