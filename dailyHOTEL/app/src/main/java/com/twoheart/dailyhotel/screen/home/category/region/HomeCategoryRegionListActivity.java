@@ -50,6 +50,7 @@ public class HomeCategoryRegionListActivity extends BaseActivity
     private HomeCategoryRegionFragmentPagerAdapter mFragmentPagerAdapter; // 임시
 
     private HomeCategoryRegionListNetworkController mNetworkController;
+    private DailyLocationFactory mDailyLocationFactory;
 
     public static Intent newInstance(Context context //
         , DailyCategoryType categoryType, StayBookingDay stayBookingDay)
@@ -184,8 +185,10 @@ public class HomeCategoryRegionListActivity extends BaseActivity
     {
         super.onDestroy();
 
-        DailyLocationFactory.getInstance(this).stopLocationMeasure();
-        DailyLocationFactory.getInstance(this).clear();
+        if (mDailyLocationFactory != null)
+        {
+            mDailyLocationFactory.stopLocationMeasure();
+        }
     }
 
     @Override
@@ -244,12 +247,17 @@ public class HomeCategoryRegionListActivity extends BaseActivity
     {
         lockUI();
 
-        if (DailyLocationFactory.getInstance(this).measuringLocation() == true)
+        if (mDailyLocationFactory == null)
+        {
+            mDailyLocationFactory = new DailyLocationFactory(this);
+        }
+
+        if (mDailyLocationFactory.measuringLocation() == true)
         {
             return;
         }
 
-        DailyLocationFactory.getInstance(this).checkLocationMeasure(this, new DailyLocationFactory.OnCheckLocationListener()
+        mDailyLocationFactory.checkLocationMeasure(new DailyLocationFactory.OnCheckLocationListener()
         {
             @Override
             public void onRequirePermission()
@@ -268,9 +276,33 @@ public class HomeCategoryRegionListActivity extends BaseActivity
             }
 
             @Override
+            public void onProviderDisabled()
+            {
+                unLockUI();
+
+                if (isFinishing() == true)
+                {
+                    return;
+                }
+
+                // 현재 GPS 설정이 꺼져있습니다 설정에서 바꾸어 주세요.
+                mDailyLocationFactory.stopLocationMeasure();
+
+                HomeCategoryRegionListActivity.this.showSimpleDialog(getString(R.string.dialog_title_used_gps)//
+                    , getString(R.string.dialog_msg_used_gps)//
+                    , getString(R.string.dialog_btn_text_dosetting)//
+                    , getString(R.string.dialog_btn_text_cancel)//
+                    , v ->
+                    {
+                        Intent intent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                        startActivityForResult(intent, Constants.CODE_RESULT_ACTIVITY_SETTING_LOCATION);
+                    }, null, false);
+            }
+
+            @Override
             public void onProviderEnabled()
             {
-                DailyLocationFactory.getInstance(HomeCategoryRegionListActivity.this).startLocationMeasure(HomeCategoryRegionListActivity.this, null, new DailyLocationFactory.OnLocationListener()
+                mDailyLocationFactory.startLocationMeasure(null, new DailyLocationFactory.OnLocationListener()
                 {
                     @Override
                     public void onFailed()
@@ -294,7 +326,7 @@ public class HomeCategoryRegionListActivity extends BaseActivity
                             return;
                         }
 
-                        DailyLocationFactory.getInstance(HomeCategoryRegionListActivity.this).stopLocationMeasure();
+                        mDailyLocationFactory.stopLocationMeasure();
 
                         if (location == null)
                         {
@@ -320,30 +352,6 @@ public class HomeCategoryRegionListActivity extends BaseActivity
                         }
                     }
                 });
-            }
-
-            @Override
-            public void onProviderDisabled()
-            {
-                unLockUI();
-
-                if (isFinishing() == true)
-                {
-                    return;
-                }
-
-                // 현재 GPS 설정이 꺼져있습니다 설정에서 바꾸어 주세요.
-                DailyLocationFactory.getInstance(HomeCategoryRegionListActivity.this).stopLocationMeasure();
-
-                HomeCategoryRegionListActivity.this.showSimpleDialog(getString(R.string.dialog_title_used_gps)//
-                    , getString(R.string.dialog_msg_used_gps)//
-                    , getString(R.string.dialog_btn_text_dosetting)//
-                    , getString(R.string.dialog_btn_text_cancel)//
-                    , v ->
-                    {
-                        Intent intent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                        startActivityForResult(intent, Constants.CODE_RESULT_ACTIVITY_SETTING_LOCATION);
-                    }, null, false);
             }
         });
     }

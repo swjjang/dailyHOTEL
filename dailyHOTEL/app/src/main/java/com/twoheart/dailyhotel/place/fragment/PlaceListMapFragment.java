@@ -90,6 +90,8 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
     Constants.ANIMATION_STATE mAnimationState = Constants.ANIMATION_STATE.END;
     ValueAnimator mValueAnimator;
 
+    private DailyLocationFactory mDailyLocationFactory;
+
     public interface OnPlaceListMapFragmentListener
     {
         void onInformationClick(View view, PlaceViewItem placeViewItem);
@@ -182,15 +184,6 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
     }
 
     @Override
-    public void onDestroy()
-    {
-        super.onDestroy();
-
-        DailyLocationFactory.getInstance(mBaseActivity).stopLocationMeasure();
-        DailyLocationFactory.getInstance(mBaseActivity).clear();
-    }
-
-    @Override
     public void onLowMemory()
     {
         super.onLowMemory();
@@ -246,7 +239,10 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
             mGoogleMap.clear();
         }
 
-        DailyLocationFactory.getInstance(mBaseActivity).clear();
+        if (mDailyLocationFactory != null)
+        {
+            mDailyLocationFactory.stopLocationMeasure();
+        }
 
         super.onDestroyView();
     }
@@ -1082,12 +1078,17 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
             return;
         }
 
-        if (DailyLocationFactory.getInstance(mBaseActivity).measuringLocation() == true)
+        if (mDailyLocationFactory == null)
+        {
+            mDailyLocationFactory = new DailyLocationFactory(getContext());
+        }
+
+        if (mDailyLocationFactory.measuringLocation() == true)
         {
             return;
         }
 
-        DailyLocationFactory.getInstance(mBaseActivity).checkLocationMeasure(mBaseActivity, new DailyLocationFactory.OnCheckLocationListener()
+        mDailyLocationFactory.checkLocationMeasure(new DailyLocationFactory.OnCheckLocationListener()
         {
             @Override
             public void onRequirePermission()
@@ -1105,9 +1106,34 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
             }
 
             @Override
+            public void onProviderDisabled()
+            {
+                mBaseActivity.unLockUI();
+
+                // Fragment가 added가 되지 않은 상태에서 터치가 될경우.
+                if (isAdded() == false)
+                {
+                    return;
+                }
+
+                // 현재 GPS 설정이 꺼져있습니다 설정에서 바꾸어 주세요.
+                mDailyLocationFactory.stopLocationMeasure();
+
+                mBaseActivity.showSimpleDialog(getString(R.string.dialog_title_used_gps), getString(R.string.dialog_msg_used_gps), getString(R.string.dialog_btn_text_dosetting), getString(R.string.dialog_btn_text_cancel), new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        Intent intent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                        mBaseActivity.startActivityForResult(intent, Constants.CODE_RESULT_ACTIVITY_SETTING_LOCATION);
+                    }
+                }, null, true);
+            }
+
+            @Override
             public void onProviderEnabled()
             {
-                DailyLocationFactory.getInstance(mBaseActivity).startLocationMeasure(mBaseActivity, mMyLocationView, new DailyLocationFactory.OnLocationListener()
+                mDailyLocationFactory.startLocationMeasure(mMyLocationView, new DailyLocationFactory.OnLocationListener()
                 {
                     @Override
                     public void onFailed()
@@ -1126,37 +1152,12 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
                     {
                         mBaseActivity.unLockUI();
 
-                        DailyLocationFactory.getInstance(mBaseActivity).stopLocationMeasure();
+                        mDailyLocationFactory.stopLocationMeasure();
 
                         setMyLocation(location, true);
                         moveCameraPosition(mMyLocationMarkerOptions.getPosition());
                     }
                 });
-            }
-
-            @Override
-            public void onProviderDisabled()
-            {
-                mBaseActivity.unLockUI();
-
-                // Fragment가 added가 되지 않은 상태에서 터치가 될경우.
-                if (isAdded() == false)
-                {
-                    return;
-                }
-
-                // 현재 GPS 설정이 꺼져있습니다 설정에서 바꾸어 주세요.
-                DailyLocationFactory.getInstance(mBaseActivity).stopLocationMeasure();
-
-                mBaseActivity.showSimpleDialog(getString(R.string.dialog_title_used_gps), getString(R.string.dialog_msg_used_gps), getString(R.string.dialog_btn_text_dosetting), getString(R.string.dialog_btn_text_cancel), new View.OnClickListener()
-                {
-                    @Override
-                    public void onClick(View v)
-                    {
-                        Intent intent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                        mBaseActivity.startActivityForResult(intent, Constants.CODE_RESULT_ACTIVITY_SETTING_LOCATION);
-                    }
-                }, null, true);
             }
         });
     }

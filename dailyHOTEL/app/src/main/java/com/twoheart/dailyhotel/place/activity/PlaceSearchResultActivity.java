@@ -59,6 +59,8 @@ public abstract class PlaceSearchResultActivity extends BaseActivity
 
     protected PlaceSearchResultLayout mPlaceSearchResultLayout;
 
+    private DailyLocationFactory mDailyLocationFactory;
+
     protected abstract PlaceSearchResultLayout getPlaceSearchResultLayout(Context context);
 
     protected abstract void onCalendarActivityResult(int resultCode, Intent data);
@@ -145,6 +147,17 @@ public abstract class PlaceSearchResultActivity extends BaseActivity
         }
 
         finish(RESULT_CANCELED);
+    }
+
+    @Override
+    protected void onDestroy()
+    {
+        super.onDestroy();
+
+        if (mDailyLocationFactory != null)
+        {
+            mDailyLocationFactory.stopLocationMeasure();
+        }
     }
 
     @Override
@@ -325,12 +338,17 @@ public abstract class PlaceSearchResultActivity extends BaseActivity
         {
             lockUI();
 
-            if (DailyLocationFactory.getInstance(this).measuringLocation() == true)
+            if (mDailyLocationFactory == null)
+            {
+                mDailyLocationFactory = new DailyLocationFactory(this);
+            }
+
+            if (mDailyLocationFactory.measuringLocation() == true)
             {
                 return;
             }
 
-            DailyLocationFactory.getInstance(this).checkLocationMeasure(this, new DailyLocationFactory.OnCheckLocationListener()
+            mDailyLocationFactory.checkLocationMeasure(new DailyLocationFactory.OnCheckLocationListener()
             {
                 @Override
                 public void onRequirePermission()
@@ -360,9 +378,44 @@ public abstract class PlaceSearchResultActivity extends BaseActivity
                 }
 
                 @Override
+                public void onProviderDisabled()
+                {
+                    unLockUI();
+
+                    if (isFinishing() == true)
+                    {
+                        return;
+                    }
+
+                    // 현재 GPS 설정이 꺼져있습니다 설정에서 바꾸어 주세요.
+                    mDailyLocationFactory.stopLocationMeasure();
+
+                    showSimpleDialog(getString(R.string.dialog_title_used_gps)//
+                        , getString(R.string.dialog_msg_used_gps)//
+                        , getString(R.string.dialog_btn_text_dosetting)//
+                        , getString(R.string.dialog_btn_text_cancel)//
+                        , new View.OnClickListener()//
+                        {
+                            @Override
+                            public void onClick(View v)
+                            {
+                                Intent intent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                                startActivityForResult(intent, Constants.CODE_RESULT_ACTIVITY_SETTING_LOCATION);
+                            }
+                        }, new View.OnClickListener()
+                        {
+                            @Override
+                            public void onClick(View v)
+                            {
+                                onLocationProviderDisabled();
+                            }
+                        }, false);
+                }
+
+                @Override
                 public void onProviderEnabled()
                 {
-                    DailyLocationFactory.getInstance(PlaceSearchResultActivity.this).startLocationMeasure(PlaceSearchResultActivity.this, null, new DailyLocationFactory.OnLocationListener()
+                    mDailyLocationFactory.startLocationMeasure(null, new DailyLocationFactory.OnLocationListener()
                     {
                         @Override
                         public void onFailed()
@@ -393,46 +446,11 @@ public abstract class PlaceSearchResultActivity extends BaseActivity
                                 return;
                             }
 
-                            DailyLocationFactory.getInstance(PlaceSearchResultActivity.this).stopLocationMeasure();
+                            mDailyLocationFactory.stopLocationMeasure();
 
                             PlaceSearchResultActivity.this.onLocationChanged(location);
                         }
                     });
-                }
-
-                @Override
-                public void onProviderDisabled()
-                {
-                    unLockUI();
-
-                    if (isFinishing() == true)
-                    {
-                        return;
-                    }
-
-                    // 현재 GPS 설정이 꺼져있습니다 설정에서 바꾸어 주세요.
-                    DailyLocationFactory.getInstance(PlaceSearchResultActivity.this).stopLocationMeasure();
-
-                    showSimpleDialog(getString(R.string.dialog_title_used_gps)//
-                        , getString(R.string.dialog_msg_used_gps)//
-                        , getString(R.string.dialog_btn_text_dosetting)//
-                        , getString(R.string.dialog_btn_text_cancel)//
-                        , new View.OnClickListener()//
-                        {
-                            @Override
-                            public void onClick(View v)
-                            {
-                                Intent intent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                                startActivityForResult(intent, Constants.CODE_RESULT_ACTIVITY_SETTING_LOCATION);
-                            }
-                        }, new View.OnClickListener()
-                        {
-                            @Override
-                            public void onClick(View v)
-                            {
-                                onLocationProviderDisabled();
-                            }
-                        }, false);
                 }
             });
         }

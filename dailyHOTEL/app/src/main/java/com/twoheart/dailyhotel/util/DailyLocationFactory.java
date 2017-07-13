@@ -1,7 +1,6 @@
 package com.twoheart.dailyhotel.util;
 
 import android.Manifest;
-import android.app.Activity;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -27,7 +26,6 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.place.base.BaseActivity;
 
 import java.util.List;
 
@@ -37,12 +35,11 @@ public class DailyLocationFactory
     private static final long FASTEST_UPDATE_INTERVAL = 1000; // Every 30 seconds
     private static final long MAX_WAIT_TIME = UPDATE_INTERVAL * 3; // Every 3 minutes.
 
-    private static DailyLocationFactory mInstance;
     private boolean mIsMeasuringLocation = false;
     OnLocationListener mLocationListener;
     ImageView mMyLocationView;
     Drawable mMyLocationDrawable;
-    BaseActivity mBaseActivity;
+    Context mContext;
 
     private FusedLocationProviderClient mFusedLocationClient;
     private LocationRequest mLocationRequest;
@@ -51,11 +48,6 @@ public class DailyLocationFactory
     {
         public void handleMessage(android.os.Message msg)
         {
-            if (mBaseActivity == null || mBaseActivity.isFinishing() == true)
-            {
-                return;
-            }
-
             switch (msg.what)
             {
                 case 0:
@@ -66,9 +58,9 @@ public class DailyLocationFactory
                         mLocationListener.onFailed();
                     }
 
-                    if (mBaseActivity != null)
+                    if (mContext != null)
                     {
-                        DailyToast.showToast(mBaseActivity, R.string.message_failed_mylocation, Toast.LENGTH_SHORT);
+                        DailyToast.showToast(mContext, R.string.message_failed_mylocation, Toast.LENGTH_SHORT);
                     }
                     break;
 
@@ -135,25 +127,9 @@ public class DailyLocationFactory
         void onProviderDisabled();
     }
 
-    private DailyLocationFactory()
+    public DailyLocationFactory(Context context)
     {
-    }
-
-    public synchronized static DailyLocationFactory getInstance(BaseActivity activity)
-    {
-        if (mInstance == null)
-        {
-            mInstance = new DailyLocationFactory();
-        }
-
-        mInstance.mBaseActivity = activity;
-
-        return mInstance;
-    }
-
-    public void clear()
-    {
-        mInstance = null;
+        mContext = context;
     }
 
     public boolean measuringLocation()
@@ -161,16 +137,16 @@ public class DailyLocationFactory
         return mIsMeasuringLocation;
     }
 
-    public void checkLocationMeasure(Activity activity, OnCheckLocationListener listener)
+    public void checkLocationMeasure(OnCheckLocationListener listener)
     {
-        if (activity == null)
+        if (mContext == null)
         {
             return;
         }
 
         if (VersionUtils.isOverAPI23() == true)
         {
-            if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)
+            if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)
             {
                 if (listener != null)
                 {
@@ -181,7 +157,7 @@ public class DailyLocationFactory
             }
         }
 
-        if (isLocationProviderEnabled(activity) == true)
+        if (isLocationProviderEnabled(mContext) == true)
         {
             listener.onProviderEnabled();
         } else
@@ -197,9 +173,9 @@ public class DailyLocationFactory
      * @param myLocation
      * @param listener
      */
-    public void startLocationMeasure(Activity activity, ImageView myLocation, OnLocationListener listener)
+    public void startLocationMeasure(ImageView myLocation, OnLocationListener listener)
     {
-        if (activity == null)
+        if (mContext == null)
         {
             return;
         }
@@ -217,7 +193,7 @@ public class DailyLocationFactory
 
         if (mFusedLocationClient == null)
         {
-            mFusedLocationClient = LocationServices.getFusedLocationProviderClient(activity);
+            mFusedLocationClient = LocationServices.getFusedLocationProviderClient(mContext);
         }
 
         mLocationListener = listener;
@@ -255,7 +231,7 @@ public class DailyLocationFactory
                                 mLocationRequest = createLocationRequest();
                             }
 
-                            mFusedLocationClient.requestLocationUpdates(mLocationRequest, getPendingIntent(activity));
+                            mFusedLocationClient.requestLocationUpdates(mLocationRequest, getPendingIntent(mContext));
 
                             mHandler.sendEmptyMessageDelayed(1, 1000);
                             mHandler.removeMessages(0);
@@ -294,7 +270,7 @@ public class DailyLocationFactory
 
         if (mFusedLocationClient != null)
         {
-            mFusedLocationClient.removeLocationUpdates(getPendingIntent(mBaseActivity));
+            mFusedLocationClient.removeLocationUpdates(getPendingIntent(mContext));
         }
 
         mIsMeasuringLocation = false;

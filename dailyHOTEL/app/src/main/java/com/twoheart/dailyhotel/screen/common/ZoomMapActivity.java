@@ -46,6 +46,8 @@ public class ZoomMapActivity extends BaseActivity
     private Handler mHandler = new Handler();
     SourceType mSourceType;
 
+    private DailyLocationFactory mDailyLocationFactory;
+
     public enum SourceType
     {
         HOTEL,
@@ -161,8 +163,10 @@ public class ZoomMapActivity extends BaseActivity
     {
         super.onDestroy();
 
-        DailyLocationFactory.getInstance(this).stopLocationMeasure();
-        DailyLocationFactory.getInstance(this).clear();
+        if (mDailyLocationFactory != null)
+        {
+            mDailyLocationFactory.stopLocationMeasure();
+        }
     }
 
 
@@ -364,12 +368,17 @@ public class ZoomMapActivity extends BaseActivity
     {
         lockUI();
 
-        if (DailyLocationFactory.getInstance(this).measuringLocation() == true)
+        if (mDailyLocationFactory == null)
+        {
+            mDailyLocationFactory = new DailyLocationFactory(this);
+        }
+
+        if (mDailyLocationFactory.measuringLocation() == true)
         {
             return;
         }
 
-        DailyLocationFactory.getInstance(this).checkLocationMeasure(this, new DailyLocationFactory.OnCheckLocationListener()
+        mDailyLocationFactory.checkLocationMeasure(new DailyLocationFactory.OnCheckLocationListener()
         {
             @Override
             public void onRequirePermission()
@@ -387,9 +396,33 @@ public class ZoomMapActivity extends BaseActivity
             }
 
             @Override
+            public void onProviderDisabled()
+            {
+                unLockUI();
+
+                if (isFinishing() == true)
+                {
+                    return;
+                }
+
+                // 현재 GPS 설정이 꺼져있습니다 설정에서 바꾸어 주세요.
+                mDailyLocationFactory.stopLocationMeasure();
+
+                showSimpleDialog(getString(R.string.dialog_title_used_gps), getString(R.string.dialog_msg_used_gps), getString(R.string.dialog_btn_text_dosetting), getString(R.string.dialog_btn_text_cancel), new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        Intent intent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                        startActivityForResult(intent, Constants.CODE_RESULT_ACTIVITY_SETTING_LOCATION);
+                    }
+                }, null, true);
+            }
+
+            @Override
             public void onProviderEnabled()
             {
-                DailyLocationFactory.getInstance(ZoomMapActivity.this).startLocationMeasure(ZoomMapActivity.this, mMyLocationView, new DailyLocationFactory.OnLocationListener()
+                mDailyLocationFactory.startLocationMeasure(mMyLocationView, new DailyLocationFactory.OnLocationListener()
                 {
                     @Override
                     public void onFailed()
@@ -413,7 +446,7 @@ public class ZoomMapActivity extends BaseActivity
                             return;
                         }
 
-                        DailyLocationFactory.getInstance(ZoomMapActivity.this).stopLocationMeasure();
+                        mDailyLocationFactory.stopLocationMeasure();
 
                         if (mMyLocationMarkerOptions == null)
                         {
@@ -438,30 +471,6 @@ public class ZoomMapActivity extends BaseActivity
                         mGoogleMap.animateCamera(cameraUpdate);
                     }
                 });
-            }
-
-            @Override
-            public void onProviderDisabled()
-            {
-                unLockUI();
-
-                if (isFinishing() == true)
-                {
-                    return;
-                }
-
-                // 현재 GPS 설정이 꺼져있습니다 설정에서 바꾸어 주세요.
-                DailyLocationFactory.getInstance(ZoomMapActivity.this).stopLocationMeasure();
-
-                showSimpleDialog(getString(R.string.dialog_title_used_gps), getString(R.string.dialog_msg_used_gps), getString(R.string.dialog_btn_text_dosetting), getString(R.string.dialog_btn_text_cancel), new View.OnClickListener()
-                {
-                    @Override
-                    public void onClick(View v)
-                    {
-                        Intent intent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                        startActivityForResult(intent, Constants.CODE_RESULT_ACTIVITY_SETTING_LOCATION);
-                    }
-                }, null, true);
             }
         });
     }

@@ -118,6 +118,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
 
     private View mViewByLongPress;
     private HomePlace mHomePlaceByLongPress;
+    private DailyLocationFactory mDailyLocationFactory;
 
     private RecentlyRemoteImpl mRecentlyRemoteImpl;
 
@@ -1057,12 +1058,17 @@ public class HomeFragment extends BaseMenuNavigationFragment
     {
         lockUI();
 
-        if (DailyLocationFactory.getInstance(mBaseActivity).measuringLocation() == true)
+        if (mDailyLocationFactory == null)
+        {
+            mDailyLocationFactory = new DailyLocationFactory(getContext());
+        }
+
+        if (mDailyLocationFactory.measuringLocation() == true)
         {
             return;
         }
 
-        DailyLocationFactory.getInstance(mBaseActivity).checkLocationMeasure(mBaseActivity, new DailyLocationFactory.OnCheckLocationListener()
+        mDailyLocationFactory.checkLocationMeasure(new DailyLocationFactory.OnCheckLocationListener()
         {
             @Override
             public void onRequirePermission()
@@ -1081,9 +1087,37 @@ public class HomeFragment extends BaseMenuNavigationFragment
             }
 
             @Override
+            public void onProviderDisabled()
+            {
+                unLockUI();
+
+                if (isFinishing() == true)
+                {
+                    return;
+                }
+
+                // 현재 GPS 설정이 꺼져있습니다 설정에서 바꾸어 주세요.
+                mDailyLocationFactory.stopLocationMeasure();
+
+                mBaseActivity.showSimpleDialog(getString(R.string.dialog_title_used_gps)//
+                    , getString(R.string.dialog_msg_used_gps)//
+                    , getString(R.string.dialog_btn_text_dosetting)//
+                    , getString(R.string.dialog_btn_text_cancel)//
+                    , new View.OnClickListener()//
+                    {
+                        @Override
+                        public void onClick(View v)
+                        {
+                            Intent intent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                            startActivityForResult(intent, Constants.CODE_RESULT_ACTIVITY_SETTING_LOCATION);
+                        }
+                    }, null, false);
+            }
+
+            @Override
             public void onProviderEnabled()
             {
-                DailyLocationFactory.getInstance(mBaseActivity).startLocationMeasure(mBaseActivity, null, new DailyLocationFactory.OnLocationListener()
+                mDailyLocationFactory.startLocationMeasure(null, new DailyLocationFactory.OnLocationListener()
                 {
                     @Override
                     public void onFailed()
@@ -1107,7 +1141,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
                             return;
                         }
 
-                        DailyLocationFactory.getInstance(mBaseActivity).stopLocationMeasure();
+                        mDailyLocationFactory.stopLocationMeasure();
 
                         if (location == null)
                         {
@@ -1119,34 +1153,6 @@ public class HomeFragment extends BaseMenuNavigationFragment
                         }
                     }
                 });
-            }
-
-            @Override
-            public void onProviderDisabled()
-            {
-                unLockUI();
-
-                if (isFinishing() == true)
-                {
-                    return;
-                }
-
-                // 현재 GPS 설정이 꺼져있습니다 설정에서 바꾸어 주세요.
-                DailyLocationFactory.getInstance(mBaseActivity).stopLocationMeasure();
-
-                mBaseActivity.showSimpleDialog(getString(R.string.dialog_title_used_gps)//
-                    , getString(R.string.dialog_msg_used_gps)//
-                    , getString(R.string.dialog_btn_text_dosetting)//
-                    , getString(R.string.dialog_btn_text_cancel)//
-                    , new View.OnClickListener()//
-                    {
-                        @Override
-                        public void onClick(View v)
-                        {
-                            Intent intent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                            startActivityForResult(intent, Constants.CODE_RESULT_ACTIVITY_SETTING_LOCATION);
-                        }
-                    }, null, false);
             }
         });
     }

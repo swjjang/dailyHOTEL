@@ -18,6 +18,8 @@ import com.twoheart.dailyhotel.util.DailyLocationFactory;
 
 public abstract class PlaceRegionListActivity extends BaseActivity
 {
+    private DailyLocationFactory mDailyLocationFactory;
+
     protected abstract void initPrepare();
 
     protected abstract void initIntent(Intent intent);
@@ -84,8 +86,10 @@ public abstract class PlaceRegionListActivity extends BaseActivity
     {
         super.onDestroy();
 
-        DailyLocationFactory.getInstance(this).stopLocationMeasure();
-        DailyLocationFactory.getInstance(this).clear();
+        if (mDailyLocationFactory != null)
+        {
+            mDailyLocationFactory.stopLocationMeasure();
+        }
     }
 
     @Override
@@ -144,12 +148,17 @@ public abstract class PlaceRegionListActivity extends BaseActivity
     {
         lockUI();
 
-        if (DailyLocationFactory.getInstance(PlaceRegionListActivity.this).measuringLocation() == true)
+        if (mDailyLocationFactory == null)
+        {
+            mDailyLocationFactory = new DailyLocationFactory(this);
+        }
+
+        if (mDailyLocationFactory.measuringLocation() == true)
         {
             return;
         }
 
-        DailyLocationFactory.getInstance(PlaceRegionListActivity.this).checkLocationMeasure(this, new DailyLocationFactory.OnCheckLocationListener()
+        mDailyLocationFactory.checkLocationMeasure(new DailyLocationFactory.OnCheckLocationListener()
         {
             @Override
             public void onRequirePermission()
@@ -169,7 +178,7 @@ public abstract class PlaceRegionListActivity extends BaseActivity
             @Override
             public void onProviderEnabled()
             {
-                DailyLocationFactory.getInstance(PlaceRegionListActivity.this).startLocationMeasure(PlaceRegionListActivity.this, null, new DailyLocationFactory.OnLocationListener()
+                mDailyLocationFactory.startLocationMeasure(null, new DailyLocationFactory.OnLocationListener()
                 {
                     @Override
                     public void onFailed()
@@ -193,7 +202,7 @@ public abstract class PlaceRegionListActivity extends BaseActivity
                             return;
                         }
 
-                        DailyLocationFactory.getInstance(PlaceRegionListActivity.this).stopLocationMeasure();
+                        mDailyLocationFactory.stopLocationMeasure();
 
                         if (location == null)
                         {
@@ -231,7 +240,7 @@ public abstract class PlaceRegionListActivity extends BaseActivity
                 }
 
                 // 현재 GPS 설정이 꺼져있습니다 설정에서 바꾸어 주세요.
-                DailyLocationFactory.getInstance(PlaceRegionListActivity.this).stopLocationMeasure();
+                mDailyLocationFactory.stopLocationMeasure();
 
                 PlaceRegionListActivity.this.showSimpleDialog(getString(R.string.dialog_title_used_gps)//
                     , getString(R.string.dialog_msg_used_gps)//
