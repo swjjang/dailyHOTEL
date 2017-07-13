@@ -102,8 +102,8 @@
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1px"
-                        android:layout_marginTop="11dp"
                         android:layout_below="@id/benefitTextView"
+                        android:layout_marginTop="11dp"
                         android:background="@color/default_line_cf0f0f0"/>
                 </RelativeLayout>
 
@@ -230,8 +230,11 @@
                     android:layout_marginLeft="12dp"
                     android:layout_marginRight="12dp"
                     android:layout_marginTop="12dp"
-                    android:layout_marginBottom="20dp"
                     android:orientation="vertical"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="20dp"/>
             </LinearLayout>
         </android.support.v4.widget.NestedScrollView>
 
