@@ -7,10 +7,6 @@ import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.graphics.Rect;
-import android.renderscript.Allocation;
-import android.renderscript.Element;
-import android.renderscript.RenderScript;
-import android.renderscript.ScriptIntrinsicBlur;
 import android.support.annotation.NonNull;
 import android.util.DisplayMetrics;
 import android.view.View;
@@ -187,47 +183,57 @@ public class ScreenUtils
         view.buildDrawingCache();
         view.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_LOW);
 
-        Bitmap snapShot = view.getDrawingCache();
-
-        Rect frame = new Rect();
-        activity.getWindow().getDecorView().getWindowVisibleDisplayFrame(frame);
-
-        Matrix matrix = new Matrix();
-        matrix.setScale(0.4f, 0.4f);
-
         Bitmap copySnapShot;
-        if (frame.top >= frame.height() - frame.top)
+
+        try
         {
-            copySnapShot = Bitmap.createBitmap(snapShot, 0, 0, frame.width(), frame.height(), matrix, false);
-        } else
+            Bitmap snapShot = view.getDrawingCache();
+
+            Rect frame = new Rect();
+            activity.getWindow().getDecorView().getWindowVisibleDisplayFrame(frame);
+
+            Matrix matrix = new Matrix();
+            matrix.setScale(0.4f, 0.4f);
+
+            if (frame.top >= frame.height() - frame.top)
+            {
+                copySnapShot = Bitmap.createBitmap(snapShot, 0, 0, frame.width(), frame.height(), matrix, false);
+            } else
+            {
+                copySnapShot = Bitmap.createBitmap(snapShot, 0, frame.top, frame.width(), frame.height() - frame.top, matrix, false);
+            }
+        } catch (Exception e)
         {
-            copySnapShot = Bitmap.createBitmap(snapShot, 0, frame.top, frame.width(), frame.height() - frame.top, matrix, false);
+            copySnapShot = null;
+
+            ExLog.d(e.toString());
         }
 
         view.setDrawingCacheEnabled(false);
         view.destroyDrawingCache();
+
         return copySnapShot;
     }
 
-    public static Bitmap fastblur(Context context, Bitmap snapShotBitmap, float radius)
-    {
-        if (context == null || snapShotBitmap == null)
-        {
-            return null;
-        }
-
-        //        Bitmap bitmap = sentBitmap.copy(sentBitmap.getConfig(), true);
-
-        final RenderScript renderScript = RenderScript.create(context);
-        final Allocation inputAllocation = Allocation.createFromBitmap(renderScript, snapShotBitmap, Allocation.MipmapControl.MIPMAP_NONE, Allocation.USAGE_SCRIPT);
-        final Allocation outputAllocation = Allocation.createTyped(renderScript, inputAllocation.getType());
-        final ScriptIntrinsicBlur scriptIntrinsicBlur = ScriptIntrinsicBlur.create(renderScript, Element.U8_4(renderScript));
-        scriptIntrinsicBlur.setRadius(radius /* e.g. 3.f */);
-        scriptIntrinsicBlur.setInput(inputAllocation);
-        scriptIntrinsicBlur.forEach(outputAllocation);
-
-        outputAllocation.copyTo(snapShotBitmap);
-
-        return snapShotBitmap;
-    }
+    //    public static Bitmap fastblur(Context context, Bitmap snapShotBitmap, float radius)
+    //    {
+    //        if (context == null || snapShotBitmap == null)
+    //        {
+    //            return null;
+    //        }
+    //
+    //        //        Bitmap bitmap = sentBitmap.copy(sentBitmap.getConfig(), true);
+    //
+    //        final RenderScript renderScript = RenderScript.create(context);
+    //        final Allocation inputAllocation = Allocation.createFromBitmap(renderScript, snapShotBitmap, Allocation.MipmapControl.MIPMAP_NONE, Allocation.USAGE_SCRIPT);
+    //        final Allocation outputAllocation = Allocation.createTyped(renderScript, inputAllocation.getType());
+    //        final ScriptIntrinsicBlur scriptIntrinsicBlur = ScriptIntrinsicBlur.create(renderScript, Element.U8_4(renderScript));
+    //        scriptIntrinsicBlur.setRadius(radius /* e.g. 3.f */);
+    //        scriptIntrinsicBlur.setInput(inputAllocation);
+    //        scriptIntrinsicBlur.forEach(outputAllocation);
+    //
+    //        outputAllocation.copyTo(snapShotBitmap);
+    //
+    //        return snapShotBitmap;
+    //    }
 }
