@@ -112,9 +112,6 @@ public abstract class PlaceReservationDetailActivity extends BaseActivity
         if (mDontReload == false)
         {
             mDontReload = true;
-        } else
-        {
-            unLockUI();
         }
 
         if (mPlaceReservationDetailLayout != null && mPlaceReservationDetailLayout.getBlurVisibility() == true)

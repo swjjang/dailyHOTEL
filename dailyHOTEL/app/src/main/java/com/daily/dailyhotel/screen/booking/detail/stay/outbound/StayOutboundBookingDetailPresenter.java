@@ -48,7 +48,6 @@ import io.reactivex.Observable;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Action;
 import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Consumer;
 
@@ -448,6 +447,11 @@ public class StayOutboundBookingDetailPresenter extends BaseExceptionPresenter<S
     @Override
     public void onMyLocationClick()
     {
+        if (lock() == true)
+        {
+            return;
+        }
+
         Observable<Long> locationAnimationObservable = getViewInterface().getLocationAnimation();
         Observable observable = searchMyLocation(locationAnimationObservable);
 
@@ -469,6 +473,9 @@ public class StayOutboundBookingDetailPresenter extends BaseExceptionPresenter<S
                     unLockAll();
                 }
             }));
+        } else
+        {
+            unLockAll();
         }
     }
 
