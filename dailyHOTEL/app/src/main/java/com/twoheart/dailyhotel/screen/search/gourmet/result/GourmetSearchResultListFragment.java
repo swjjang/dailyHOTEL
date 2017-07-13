@@ -18,8 +18,14 @@ import retrofit2.Response;
 
 public class GourmetSearchResultListFragment extends GourmetListFragment
 {
+    boolean mFirstRequest;
     boolean mIsDeepLink;
     private SearchType mSearchType;
+
+    public interface OnGourmetSearchResultListFragmentListener extends OnGourmetListFragmentListener
+    {
+        void onGourmetListCount(int count);
+    }
 
     @Override
     protected BaseNetworkController getNetworkController()
@@ -96,6 +102,13 @@ public class GourmetSearchResultListFragment extends GourmetListFragment
         @Override
         public void onGourmetList(ArrayList<Gourmet> list, int page, int totalCount, int maxCount, HashMap<String, Integer> categoryCodeMap, HashMap<String, Integer> categorySequenceMap)
         {
+            if (mFirstRequest == false)
+            {
+                mFirstRequest = true;
+
+                ((OnGourmetSearchResultListFragmentListener) mOnPlaceListFragmentListener).onGourmetListCount(totalCount);
+            }
+
             GourmetSearchResultListFragment.this.onGourmetList(list, page, totalCount, maxCount, categoryCodeMap, categorySequenceMap, false);
 
             if (mViewType == ViewType.MAP)

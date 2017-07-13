@@ -1062,6 +1062,16 @@ public class AppboyManager extends BaseAnalyticsManager
 
     }
 
+    @Override
+    void onSearch(String keyword, String autoKeyword, String category, int resultCount)
+    {
+        AppboyProperties appboyProperties = new AppboyProperties();
+        appboyProperties.addProperty(AnalyticsManager.KeyType.USER_IDX, getUserIndex());
+        appboyProperties.addProperty(AnalyticsManager.KeyType.KEYWORD, keyword);
+        appboyProperties.addProperty(AnalyticsManager.KeyType.NUM_OF_SEARCH_RESULTS_RETURNED, resultCount);
+        appboyProperties.addProperty(AnalyticsManager.KeyType.CATEGORY, category);
+    }
+
     private String getUserIndex()
     {
         return DailyTextUtils.isTextEmpty(mUserIndex) == true ? AnalyticsManager.ValueType.EMPTY : mUserIndex;

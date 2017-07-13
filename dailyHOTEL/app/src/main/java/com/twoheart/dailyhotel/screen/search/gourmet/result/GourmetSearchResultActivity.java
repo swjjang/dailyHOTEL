@@ -763,7 +763,7 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
         }
     };
 
-    private GourmetListFragment.OnGourmetListFragmentListener mOnGourmetListFragmentListener = new GourmetListFragment.OnGourmetListFragmentListener()
+    private GourmetListFragment.OnGourmetListFragmentListener mOnGourmetListFragmentListener = new GourmetSearchResultListFragment.OnGourmetSearchResultListFragmentListener()
     {
         @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
         @Override
@@ -878,6 +878,18 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
         //        {
         //
         //        }
+
+        @Override
+        public void onGourmetListCount(int count)
+        {
+            try
+            {
+                AnalyticsManager.getInstance(GourmetSearchResultActivity.this).onSearch(mGourmetSearchCuration.getKeyword().name, null, "dailygourmet", count);
+            } catch (Exception e)
+            {
+                ExLog.d(e.toString());
+            }
+        }
 
         @Override
         public void onActivityCreated(PlaceListFragment placeListFragment)

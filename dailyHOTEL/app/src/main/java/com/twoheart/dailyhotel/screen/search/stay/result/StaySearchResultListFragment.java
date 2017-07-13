@@ -27,6 +27,8 @@ public class StaySearchResultListFragment extends StayListFragment
     public interface OnStaySearchResultListFragmentListener extends OnStayListFragmentListener
     {
         void onCategoryList(List<Category> categoryList);
+
+        void onStayListCount(int count);
     }
 
     @Override
@@ -114,6 +116,8 @@ public class StaySearchResultListFragment extends StayListFragment
                     ((OnStaySearchResultListFragmentListener) mOnPlaceListFragmentListener).onCategoryList(categoryList);
                     mOnPlaceListFragmentListener.onSearchCountUpdate(totalCount, maxCount);
                 }
+
+                ((OnStaySearchResultListFragmentListener) mOnPlaceListFragmentListener).onStayListCount(totalCount);
             }
 
             StaySearchResultListFragment.this.onStayList(list, page, false);

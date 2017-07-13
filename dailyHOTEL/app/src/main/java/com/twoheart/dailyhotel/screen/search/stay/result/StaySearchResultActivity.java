@@ -984,6 +984,18 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
         }
 
         @Override
+        public void onStayListCount(int count)
+        {
+            try
+            {
+                AnalyticsManager.getInstance(StaySearchResultActivity.this).onSearch(mStaySearchCuration.getKeyword().name, null, "dailyhotel", count);
+            } catch (Exception e)
+            {
+                ExLog.d(e.toString());
+            }
+        }
+
+        @Override
         public void onActivityCreated(PlaceListFragment placeListFragment)
         {
             if (mPlaceSearchResultLayout == null || placeListFragment == null)
