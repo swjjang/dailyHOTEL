@@ -6,6 +6,7 @@ import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.graphics.Paint;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.TypedValue;
@@ -92,6 +93,11 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
         setStatusBarColor(getResources().getColor(R.color.black_a67));
 
         // 휴일 정보를 얻어온다.
+        initHolidays();
+    }
+
+    private void initHolidays()
+    {
         String calendarHolidays = DailyPreference.getInstance(this).getCalendarHolidays();
 
         if (DailyTextUtils.isTextEmpty(calendarHolidays) == false)
@@ -185,8 +191,6 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
         } catch (Exception e)
         {
             ExLog.d(e.toString());
-
-
         }
     }
 
@@ -232,6 +236,8 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
             days[j].dayOffset = dayOffset + i;
             days[j].dayString = Integer.toString(cloneCalendar.get(Calendar.DAY_OF_MONTH));
             days[j].dayOfWeek = cloneCalendar.get(Calendar.DAY_OF_WEEK);
+            days[j].isHoliDay = isHoliday(cloneCalendar);
+            days[j].isSoldOut = isSoldOutDay(cloneCalendar);
 
             cloneCalendar.add(Calendar.DAY_OF_MONTH, 1);
         }
@@ -251,6 +257,70 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
         }
 
         return calendarLayout;
+    }
+
+    private boolean isHoliday(Calendar calendar)
+    {
+        if (calendar == null)
+        {
+            return false;
+        }
+
+        if (mHolidays == null || mHolidays.length == 0)
+        {
+            return false;
+        }
+
+        try
+        {
+            int calendarDay = Integer.parseInt(DailyCalendar.format(calendar.getTime(), "yyyyMMdd"));
+
+            for (int holiday : mHolidays)
+            {
+                if (holiday == calendarDay)
+                {
+                    return true;
+                }
+            }
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+        }
+
+        return false;
+    }
+
+    private boolean isSoldOutDay(Calendar calendar)
+    {
+        if (calendar == null)
+        {
+            return false;
+        }
+
+        if (mSoldOutDayList == null || mSoldOutDayList.size() == 0)
+        {
+            return false;
+        }
+
+        try
+        {
+            int calendarDay = Integer.parseInt(DailyCalendar.format(calendar.getTime(), "yyyyMMdd"));
+
+            for (String soldOutDayString : mSoldOutDayList)
+            {
+                int soldOutDay = Integer.parseInt(DailyCalendar.convertDateFormatString(soldOutDayString, "yyyy-MM-dd", "yyyyMMdd"));
+
+                if (soldOutDay == calendarDay)
+                {
+                    return true;
+                }
+            }
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+        }
+
+        return false;
     }
 
     public View getDayView(Context context, Day day)
@@ -297,71 +367,89 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
             relativeLayout.setEnabled(false);
         } else
         {
-            switch (day.dayOfWeek)
-            {
-                // 일요일
-                case Calendar.SUNDAY:
-                    dayTextView.setTextColor(context.getResources().getColorStateList(R.color.selector_calendar_sunday_textcolor));
-                    break;
-
-                case Calendar.SATURDAY:
-                    if (isHoliday(day) == true)
-                    {
-                        dayTextView.setTextColor(context.getResources().getColorStateList(R.color.selector_calendar_sunday_textcolor));
-                    } else
-                    {
-                        dayTextView.setTextColor(context.getResources().getColorStateList(R.color.selector_calendar_saturday_textcolor));
-                    }
-                    break;
-
-                default:
-                    if (isHoliday(day) == true)
-                    {
-                        dayTextView.setTextColor(context.getResources().getColorStateList(R.color.selector_calendar_sunday_textcolor));
-                    } else
-                    {
-                        dayTextView.setTextColor(context.getResources().getColorStateList(R.color.selector_calendar_default_text_color));
-                    }
-                    break;
-            }
-
             dayTextView.setText(day.dayString);
             relativeLayout.setTag(day);
         }
+
+        updateDayView(relativeLayout);
 
         relativeLayout.setOnClickListener(this);
 
         return relativeLayout;
     }
 
-    private boolean isHoliday(Day day)
+    protected void updateDayView(View dayView)
     {
-        if (day == null || mHolidays == null || mHolidays.length == 0 || mTodayDateTime == null)
+        if (dayView == null)
         {
-            return false;
+            return;
         }
 
-        Calendar calendar = DailyCalendar.getInstance();
+        TextView visitTextView = (TextView) dayView.findViewById(R.id.textView);
+        TextView dayTextView = (TextView) dayView.findViewById(R.id.dateTextView);
 
-        try
+        Day day = (Day) dayView.getTag();
+
+        if (day == null)
         {
-            DailyCalendar.setCalendarDateString(calendar, mTodayDateTime.dailyDateTime, day.dayOffset);
+            dayView.setEnabled(false);
+            return;
+        }
 
-            int calendarDay = Integer.parseInt(DailyCalendar.format(calendar.getTime(), "yyyyMMdd"));
+        switch (day.dayOfWeek)
+        {
+            // 일요일
+            case Calendar.SUNDAY:
+                dayTextView.setTextColor(getResources().getColorStateList(R.color.selector_calendar_sunday_textcolor));
+                break;
 
-            for (int holiday : mHolidays)
-            {
-                if (holiday == calendarDay)
+            case Calendar.SATURDAY:
+                if (day.isHoliDay == true)
                 {
-                    return true;
+                    dayTextView.setTextColor(getResources().getColorStateList(R.color.selector_calendar_sunday_textcolor));
+                } else
+                {
+                    dayTextView.setTextColor(getResources().getColorStateList(R.color.selector_calendar_saturday_textcolor));
                 }
-            }
-        } catch (Exception e)
-        {
-            ExLog.d(e.toString());
+                break;
+
+            default:
+                if (day.isHoliDay == true)
+                {
+                    dayTextView.setTextColor(getResources().getColorStateList(R.color.selector_calendar_sunday_textcolor));
+                } else
+                {
+                    dayTextView.setTextColor(getResources().getColorStateList(R.color.selector_calendar_default_text_color));
+                }
+                break;
         }
 
-        return false;
+        if (dayView.isSelected() == true)
+        {
+            return;
+        }
+
+        if (day.isSoldOut == true)
+        {
+
+            visitTextView.setText(R.string.label_calendar_soldout);
+            visitTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 8);
+            visitTextView.setVisibility(View.VISIBLE);
+            dayView.setEnabled(false);
+
+            dayTextView.setPaintFlags(dayTextView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+        } else
+        {
+            visitTextView.setText(null);
+            visitTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 11);
+            visitTextView.setVisibility(View.INVISIBLE);
+            dayView.setEnabled(true);
+
+            if ((dayTextView.getPaintFlags() & Paint.STRIKE_THRU_TEXT_FLAG) == Paint.STRIKE_THRU_TEXT_FLAG)
+            {
+                dayTextView.setPaintFlags(dayTextView.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
+            }
+        }
     }
 
     private int getMonthInterval(final Calendar calendar, int interval)
@@ -620,6 +708,10 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
         public int dayOffset;
         String dayString;
         int dayOfWeek;
+
+        boolean isHoliDay;
+        boolean isSoldOut;
+        boolean isDefaultDimmed;
     }
 
     ///////////////////////////////////////////////////////////////////////////////////////////////

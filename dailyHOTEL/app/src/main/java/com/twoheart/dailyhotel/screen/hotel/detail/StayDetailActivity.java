@@ -434,7 +434,7 @@ public class StayDetailActivity extends PlaceDetailActivity
     protected void requestCommonDateTimeNSoldOutList(int placeIndex)
     {
         addCompositeDisposable(Observable.zip(mCommonRemoteImpl.getCommonDateTime() //
-            , mPlaceDetailCalendarImpl.getStayUnavailableDates(mPlaceDetail.index, GourmetCalendarActivity.DAYCOUNT_OF_MAX, false) //
+            , mPlaceDetailCalendarImpl.getStayUnavailableCheckInDates(mPlaceDetail.index, GourmetCalendarActivity.DAYCOUNT_OF_MAX, false) //
             , new BiFunction<CommonDateTime, List<String>, TodayDateTime>()
             {
                 @Override

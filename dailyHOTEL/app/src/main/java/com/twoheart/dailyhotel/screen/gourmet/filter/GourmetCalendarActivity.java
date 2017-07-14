@@ -23,7 +23,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class GourmetCalendarActivity extends PlaceCalendarActivity
@@ -97,7 +96,7 @@ public class GourmetCalendarActivity extends PlaceCalendarActivity
 
                     reset();
 
-                    setSoldOutDays(mTodayDateTime, mSoldOutDayList);
+//                    setSoldOutDays(mTodayDateTime, mSoldOutDayList);
 
                     if (isSelected == true)
                     {
@@ -115,7 +114,7 @@ public class GourmetCalendarActivity extends PlaceCalendarActivity
 
             reset();
 
-            setSoldOutDays(mTodayDateTime, mSoldOutDayList);
+//            setSoldOutDays(mTodayDateTime, mSoldOutDayList);
 
             if (isSelected == true)
             {
@@ -224,7 +223,7 @@ public class GourmetCalendarActivity extends PlaceCalendarActivity
 
                 view.setSelected(true);
 
-                setSoldOutDays(mTodayDateTime, mSoldOutDayList);
+//                setSoldOutDays(mTodayDateTime, mSoldOutDayList);
 
                 Calendar calendar = DailyCalendar.getInstance();
 
@@ -283,10 +282,16 @@ public class GourmetCalendarActivity extends PlaceCalendarActivity
             return;
         }
 
-        TextView textView = (TextView) view.findViewById(R.id.textView);
-        textView.setText(R.string.label_visit_day);
-        textView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 11);
-        textView.setVisibility(View.VISIBLE);
+        TextView visitTextView = (TextView) view.findViewById(R.id.textView);
+        visitTextView.setText(R.string.label_visit_day);
+        visitTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 11);
+        visitTextView.setVisibility(View.VISIBLE);
+
+        TextView dayTextView = (TextView) view.findViewById(R.id.dateTextView);
+        if ((dayTextView.getPaintFlags() & Paint.STRIKE_THRU_TEXT_FLAG) == Paint.STRIKE_THRU_TEXT_FLAG)
+        {
+            dayTextView.setPaintFlags(dayTextView.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
+        }
 
         view.setBackgroundResource(R.drawable.select_date_gourmet);
     }
@@ -298,9 +303,10 @@ public class GourmetCalendarActivity extends PlaceCalendarActivity
             return;
         }
 
-        TextView textView = (TextView) view.findViewById(R.id.textView);
-        textView.setText(null);
-        textView.setVisibility(View.INVISIBLE);
+//        TextView textView = (TextView) view.findViewById(R.id.textView);
+//        textView.setText(null);
+//        textView.setVisibility(View.INVISIBLE);
+        updateDayView(view);
 
         view.setBackgroundDrawable(getResources().getDrawable(R.drawable.selector_calendar_day_background));
     }
@@ -343,69 +349,69 @@ public class GourmetCalendarActivity extends PlaceCalendarActivity
         }
     }
 
-    void setSoldOutDays(TodayDateTime todayDateTime, List<String> unavailableDateList)
-    {
-        if (todayDateTime == null || unavailableDateList == null || unavailableDateList.size() == 0)
-        {
-            return;
-        }
-
-        Calendar calendar = DailyCalendar.getInstance();
-
-        try
-        {
-            for (View dayView : mDailyViews)
-            {
-                if (dayView == null)
-                {
-                    continue;
-                }
-
-                Day day = (Day) dayView.getTag();
-
-                DailyCalendar.setCalendarDateString(calendar, todayDateTime.dailyDateTime, day.dayOffset);
-
-                int calendarDay = Integer.parseInt(DailyCalendar.format(calendar.getTime(), "yyyyMMdd"));
-
-                if (dayView.isSelected() == true)
-                {
-                    continue;
-                }
-
-                for (String unavailableDate : unavailableDateList)
-                {
-                    int checkDay = Integer.parseInt(DailyCalendar.convertDateFormatString(unavailableDate, "yyyy-MM-dd", "yyyyMMdd"));
-
-                    if (calendarDay == checkDay)
-                    {
-                        setSoldOutDay(dayView);
-                        break;
-                    }
-
-                }
-            }
-        } catch (Exception e)
-        {
-            ExLog.e(e.toString());
-        }
-    }
-
-    void setSoldOutDay(View view)
-    {
-        if (view == null)
-        {
-            return;
-        }
-
-        TextView textView = (TextView) view.findViewById(R.id.textView);
-        textView.setText(R.string.label_calendar_soldout);
-        textView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 8);
-        textView.setVisibility(View.VISIBLE);
-        view.setEnabled(false);
-
-        TextView dateTextView = (TextView) view.findViewById(R.id.dateTextView);
-        dateTextView.setPaintFlags(textView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-    }
+//    void setSoldOutDays(TodayDateTime todayDateTime, List<String> unavailableDateList)
+//    {
+//        if (todayDateTime == null || unavailableDateList == null || unavailableDateList.size() == 0)
+//        {
+//            return;
+//        }
+//
+//        Calendar calendar = DailyCalendar.getInstance();
+//
+//        try
+//        {
+//            for (View dayView : mDailyViews)
+//            {
+//                if (dayView == null)
+//                {
+//                    continue;
+//                }
+//
+//                Day day = (Day) dayView.getTag();
+//
+//                DailyCalendar.setCalendarDateString(calendar, todayDateTime.dailyDateTime, day.dayOffset);
+//
+//                int calendarDay = Integer.parseInt(DailyCalendar.format(calendar.getTime(), "yyyyMMdd"));
+//
+//                if (dayView.isSelected() == true)
+//                {
+//                    continue;
+//                }
+//
+//                for (String unavailableDate : unavailableDateList)
+//                {
+//                    int checkDay = Integer.parseInt(DailyCalendar.convertDateFormatString(unavailableDate, "yyyy-MM-dd", "yyyyMMdd"));
+//
+//                    if (calendarDay == checkDay)
+//                    {
+//                        setSoldOutDay(dayView);
+//                        break;
+//                    }
+//
+//                }
+//            }
+//        } catch (Exception e)
+//        {
+//            ExLog.e(e.toString());
+//        }
+//    }
+//
+//    void setSoldOutDay(View view)
+//    {
+//        if (view == null)
+//        {
+//            return;
+//        }
+//
+//        TextView textView = (TextView) view.findViewById(R.id.textView);
+//        textView.setText(R.string.label_calendar_soldout);
+//        textView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 8);
+//        textView.setVisibility(View.VISIBLE);
+//        view.setEnabled(false);
+//
+//        TextView dateTextView = (TextView) view.findViewById(R.id.dateTextView);
+//        dateTextView.setPaintFlags(textView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+//    }
 
     void reset()
     {
@@ -413,6 +419,7 @@ public class GourmetCalendarActivity extends PlaceCalendarActivity
 
         if (mDayView != null)
         {
+            mDayView.setSelected(false);
             resetSelectedDay(mDayView);
             mDayView = null;
         }
@@ -425,7 +432,7 @@ public class GourmetCalendarActivity extends PlaceCalendarActivity
             }
 
             dayView.setSelected(false);
-            dayView.setEnabled(true);
+            updateDayView(dayView);
         }
 
         setToolbarText(getString(R.string.label_calendar_gourmet_select));

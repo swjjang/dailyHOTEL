@@ -9,6 +9,7 @@ import android.widget.Toast;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.widget.DailyToast;
+import com.daily.dailyhotel.repository.remote.PlaceDetailCalendarImpl;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.time.StayBookingDay;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
@@ -20,11 +21,14 @@ import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import java.io.Serializable;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import io.reactivex.annotations.NonNull;
+import io.reactivex.functions.Consumer;
 import retrofit2.Call;
 import retrofit2.Response;
 
@@ -35,6 +39,8 @@ public class StayDetailCalendarActivity extends StayCalendarActivity
     private int mHotelIndex;
     private boolean mIsSingleDay;
     private boolean mOverseas;
+
+    private PlaceDetailCalendarImpl mPlaceDetailCalendarImpl;
 
     public static Intent newInstance(Context context, TodayDateTime todayDateTime, StayBookingDay stayBookingDay //
         , boolean overseas, int hotelIndex, String screen, List<String> soldOutList, boolean isSelected//
@@ -57,6 +63,8 @@ public class StayDetailCalendarActivity extends StayCalendarActivity
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
+        mPlaceDetailCalendarImpl = new PlaceDetailCalendarImpl(this);
+
         Intent intent = getIntent();
         mHotelIndex = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_HOTELIDX, -1);
         mOverseas = intent.getBooleanExtra(INTENT_EXTRA_DATA_OVERSEAS, false);
@@ -134,7 +142,7 @@ public class StayDetailCalendarActivity extends StayCalendarActivity
     @Override
     protected int getMaxDay()
     {
-        if(mOverseas == true)
+        if (mOverseas == true)
         {
             return OVERSEAS_DAYCOUNT_OF_MAX;
         } else
@@ -204,6 +212,47 @@ public class StayDetailCalendarActivity extends StayCalendarActivity
         String confirm = getResources().getString(R.string.dialog_btn_text_confirm);
 
         showSimpleDialog(title, message, confirm, null);
+    }
+
+    @Override
+    void setAvailableCheckOutDays(TodayDateTime todayDateTime, View checkinDayView)
+    {
+        Calendar calendar = DailyCalendar.getInstance();
+
+        String checkInDate = null;
+
+        try
+        {
+            Day checkInDay = (Day) checkinDayView.getTag();
+            DailyCalendar.setCalendarDateString(calendar, todayDateTime.dailyDateTime, checkInDay.dayOffset);
+
+            checkInDate = DailyCalendar.format(calendar.getTime(), "yyyy-MM-dd");
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+        }
+
+        if (DailyTextUtils.isTextEmpty(checkInDate) == true)
+        {
+            return;
+        }
+
+        addCompositeDisposable(mPlaceDetailCalendarImpl.getStayAvailableCheckOutDates(mHotelIndex
+            , StayCalendarActivity.DAYCOUNT_OF_MAX, checkInDate).subscribe(new Consumer<List<String>>()
+        {
+            @Override
+            public void accept(@NonNull List<String> strings) throws Exception
+            {
+
+            }
+        }, new Consumer<Throwable>()
+        {
+            @Override
+            public void accept(@NonNull Throwable throwable) throws Exception
+            {
+                onHandleError(throwable);
+            }
+        }));
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////

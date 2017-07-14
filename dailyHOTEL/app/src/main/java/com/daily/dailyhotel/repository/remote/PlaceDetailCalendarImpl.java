@@ -64,9 +64,9 @@ public class PlaceDetailCalendarImpl implements PlaceDetailCalendarInterface
     }
 
     @Override
-    public Observable<List<String>> getStayUnavailableDates(int placeIndex, int dateRange, boolean reverse)
+    public Observable<List<String>> getStayUnavailableCheckInDates(int placeIndex, int dateRange, boolean reverse)
     {
-        return DailyMobileAPI.getInstance(mContext).getStayUnavailableDates(placeIndex, dateRange, reverse) //
+        return DailyMobileAPI.getInstance(mContext).getStayUnavailableCheckInDates(placeIndex, dateRange, reverse) //
             .map(new Function<BaseListDto<String>, List<String>>()
             {
                 @Override
@@ -96,5 +96,40 @@ public class PlaceDetailCalendarImpl implements PlaceDetailCalendarInterface
                     return unavailableDateList;
                 }
             }).observeOn(AndroidSchedulers.mainThread());
+    }
+
+    @Override
+    public Observable<List<String>> getStayAvailableCheckOutDates(int placeIndex, int dateRange, String checkInDate)
+    {
+        return DailyMobileAPI.getInstance(mContext).getStayAvailableCheckOutDates(placeIndex, dateRange, checkInDate) //
+            .map(new Function<BaseListDto<String>, List<String>>()
+        {
+            @Override
+            public List<String> apply(@NonNull BaseListDto<String> stringBaseListDto) throws Exception
+            {
+                List<String> availableDateList = null;
+
+                if (stringBaseListDto != null)
+                {
+                    if (stringBaseListDto.msgCode == 100 && stringBaseListDto.data != null)
+                    {
+                        availableDateList = stringBaseListDto.data;
+
+                        if (availableDateList == null)
+                        {
+                            availableDateList = new ArrayList<String>();
+                        }
+                    } else
+                    {
+                        throw new BaseException(stringBaseListDto.msgCode, stringBaseListDto.msg);
+                    }
+                } else
+                {
+                    throw new BaseException(-1, null);
+                }
+
+                return availableDateList;
+            }
+        }).observeOn(AndroidSchedulers.mainThread());
     }
 }
