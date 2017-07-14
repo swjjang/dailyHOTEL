@@ -884,7 +884,7 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
         {
             try
             {
-                AnalyticsManager.getInstance(GourmetSearchResultActivity.this).onSearch(mGourmetSearchCuration.getKeyword().name, null, "dailygourmet", count);
+                AnalyticsManager.getInstance(GourmetSearchResultActivity.this).onSearch(mGourmetSearchCuration.getKeyword().name, null, "gourmet", count);
             } catch (Exception e)
             {
                 ExLog.d(e.toString());

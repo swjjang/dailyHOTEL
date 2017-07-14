@@ -988,7 +988,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
         {
             try
             {
-                AnalyticsManager.getInstance(StaySearchResultActivity.this).onSearch(mStaySearchCuration.getKeyword().name, null, "dailyhotel", count);
+                AnalyticsManager.getInstance(StaySearchResultActivity.this).onSearch(mStaySearchCuration.getKeyword().name, null, "stay", count);
             } catch (Exception e)
             {
                 ExLog.d(e.toString());
