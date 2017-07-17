@@ -10,6 +10,9 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 
+import com.crashlytics.android.Crashlytics;
+import com.daily.base.util.VersionUtils;
+
 public abstract class BaseActivity<T1 extends BasePresenter> extends AppCompatActivity
 {
     public static final String INTENT_EXTRA_DATA_DEEPLINK = "deepLink";
@@ -124,6 +127,12 @@ public abstract class BaseActivity<T1 extends BasePresenter> extends AppCompatAc
     @Override
     public void onBackPressed()
     {
+        if (isFinishing() == true || (VersionUtils.isOverAPI17() == true && isDestroyed() == true))
+        {
+            Crashlytics.logException(new IllegalStateException("activity : " + getLocalClassName()));
+            return;
+        }
+
         if (mPresenter != null)
         {
             if (mPresenter.onBackPressed() == false)
