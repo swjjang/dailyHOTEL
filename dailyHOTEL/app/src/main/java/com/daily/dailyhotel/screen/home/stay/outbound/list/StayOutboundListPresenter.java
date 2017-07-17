@@ -106,7 +106,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
         NONE,
         EMPTY,
         ERROR,
-        LOCATION,
+        SEARCH_LOCATION,
         LIST
     }
 
@@ -324,7 +324,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
                         {
                             lock();
 
-                            setScreenVisible(ScreenType.LOCATION, mStayOutboundFilters);
+                            setScreenVisible(ScreenType.SEARCH_LOCATION, mStayOutboundFilters);
 
                             addCompositeDisposable(observable.subscribe(new Consumer<Location>()
                             {
@@ -379,7 +379,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
                             {
                                 lock();
 
-                                setScreenVisible(ScreenType.LOCATION, mStayOutboundFilters);
+                                setScreenVisible(ScreenType.SEARCH_LOCATION, mStayOutboundFilters);
 
                                 addCompositeDisposable(observable.subscribe(new Consumer<Location>()
                                 {
@@ -430,7 +430,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
                             {
                                 lock();
 
-                                setScreenVisible(ScreenType.LOCATION, mStayOutboundFilters);
+                                setScreenVisible(ScreenType.SEARCH_LOCATION, mStayOutboundFilters);
 
                                 addCompositeDisposable(observable.subscribe(new Consumer<Location>()
                                 {
@@ -482,7 +482,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
                             {
                                 lock();
 
-                                setScreenVisible(ScreenType.LOCATION, mStayOutboundFilters);
+                                setScreenVisible(ScreenType.SEARCH_LOCATION, mStayOutboundFilters);
 
                                 addCompositeDisposable(observable.subscribe(new Consumer<Location>()
                                 {
@@ -1255,14 +1255,14 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
         }
     }
 
-    private void setScreenVisible(ScreenType screenVisible, StayOutboundFilters filters)
+    private void setScreenVisible(ScreenType screenType, StayOutboundFilters filters)
     {
-        if (screenVisible == null || getViewInterface() == null)
+        if (screenType == null || getViewInterface() == null)
         {
             return;
         }
 
-        switch (screenVisible)
+        switch (screenType)
         {
             case NONE:
                 getViewInterface().setEmptyScreenVisible(false);
@@ -1296,7 +1296,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
                 getViewInterface().setListScreenVisible(false);
                 break;
 
-            case LOCATION:
+            case SEARCH_LOCATION:
                 getViewInterface().setEmptyScreenVisible(false);
                 getViewInterface().setErrorScreenVisible(false);
                 getViewInterface().setSearchLocationScreenVisible(true);

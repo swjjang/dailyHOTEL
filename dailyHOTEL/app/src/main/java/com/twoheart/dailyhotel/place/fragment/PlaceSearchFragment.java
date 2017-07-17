@@ -241,7 +241,7 @@ public abstract class PlaceSearchFragment extends BaseFragment
             {
                 mPlaceSearchLayout.updateTermsOfLocationLayout();
 
-                searchMyLocation();
+                checkLocationProvider();
                 break;
             }
 
@@ -251,7 +251,7 @@ public abstract class PlaceSearchFragment extends BaseFragment
 
                 if (resultCode == Activity.RESULT_OK)
                 {
-                    searchMyLocation();
+                    checkLocationProvider();
                 } else if (resultCode == CODE_RESULT_ACTIVITY_GO_HOME)
                 {
                     mBaseActivity.setResult(resultCode);
@@ -260,6 +260,70 @@ public abstract class PlaceSearchFragment extends BaseFragment
                 break;
             }
         }
+    }
+
+    protected void checkLocationProvider()
+    {
+        lockUI();
+
+        if (mDailyLocationFactory == null)
+        {
+            mDailyLocationFactory = new DailyLocationFactory(getContext());
+        }
+
+        mDailyLocationFactory.checkLocationMeasure(new DailyLocationFactory.OnCheckLocationListener()
+        {
+            @Override
+            public void onRequirePermission()
+            {
+                unLockUI();
+
+                Intent intent = PermissionManagerActivity.newInstance(mBaseActivity, PermissionManagerActivity.PermissionType.ACCESS_FINE_LOCATION);
+                startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_PERMISSION_MANAGER);
+            }
+
+            @Override
+            public void onFailed()
+            {
+                unLockUI();
+            }
+
+            @Override
+            public void onProviderDisabled()
+            {
+                unLockUI();
+
+                if (isFinishing() == true)
+                {
+                    return;
+                }
+
+                // 현재 GPS 설정이 꺼져있습니다 설정에서 바꾸어 주세요.
+                mDailyLocationFactory.stopLocationMeasure();
+
+                mBaseActivity.showSimpleDialog(getString(R.string.dialog_title_used_gps)//
+                    , getString(R.string.dialog_msg_used_gps)//
+                    , getString(R.string.dialog_btn_text_dosetting)//
+                    , getString(R.string.dialog_btn_text_cancel)//
+                    , new View.OnClickListener()//
+                    {
+                        @Override
+                        public void onClick(View v)
+                        {
+                            Intent intent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                            startActivityForResult(intent, Constants.CODE_RESULT_ACTIVITY_SETTING_LOCATION);
+                        }
+                    }, null, false);
+            }
+
+            @Override
+            public void onProviderEnabled()
+            {
+                unLockUI();
+
+                onSearch(null);
+            }
+        });
     }
 
     protected void searchMyLocation()

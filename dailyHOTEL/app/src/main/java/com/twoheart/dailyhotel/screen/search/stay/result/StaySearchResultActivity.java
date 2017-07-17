@@ -125,18 +125,39 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
 
         if (mSearchType == SearchType.LOCATION)
         {
-            mPlaceSearchResultLayout.setViewTypeVisibility(true);
+            try
+            {
+                if (mStaySearchCuration.getCurationOption().getSortType() == SortType.DISTANCE && mStaySearchCuration.getLocation() == null)
+                {
+                    unLockUI();
 
-            mNetworkController.requestAddress(mStaySearchCuration.getLocation());
+                    mPlaceSearchResultLayout.setViewTypeVisibility(false);
+
+                    searchMyLocation();
+                } else
+                {
+                    mPlaceSearchResultLayout.setViewTypeVisibility(true);
+
+                    // 기본적으로 시작시에 전체 카테고리를 넣는다.
+                    mPlaceSearchResultLayout.setCategoryTabLayoutVisibility(View.INVISIBLE);
+                    mPlaceSearchResultLayout.setScreenVisible(ScreenType.NONE);
+                    mPlaceSearchResultLayout.setCategoryAllTabLayout(getSupportFragmentManager(), mOnStayListFragmentListener);
+
+                    mNetworkController.requestAddress(mStaySearchCuration.getLocation());
+                }
+            } catch (Exception e)
+            {
+                ExLog.e(e.toString());
+            }
         } else
         {
             mPlaceSearchResultLayout.setViewTypeVisibility(false);
-        }
 
-        // 기본적으로 시작시에 전체 카테고리를 넣는다.
-        mPlaceSearchResultLayout.setCategoryTabLayoutVisibility(View.INVISIBLE);
-        mPlaceSearchResultLayout.processListLayout();
-        mPlaceSearchResultLayout.setCategoryAllTabLayout(getSupportFragmentManager(), mOnStayListFragmentListener);
+            // 기본적으로 시작시에 전체 카테고리를 넣는다.
+            mPlaceSearchResultLayout.setCategoryTabLayoutVisibility(View.INVISIBLE);
+            mPlaceSearchResultLayout.setScreenVisible(ScreenType.NONE);
+            mPlaceSearchResultLayout.setCategoryAllTabLayout(getSupportFragmentManager(), mOnStayListFragmentListener);
+        }
     }
 
     @Override
@@ -168,8 +189,16 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
             mPlaceSearchResultLayout.setOptionFilterSelected(false);
             mPlaceSearchResultLayout.clearCategoryTab();
             mPlaceSearchResultLayout.setCategoryTabLayoutVisibility(View.INVISIBLE);
-            mPlaceSearchResultLayout.processListLayout();
-            mPlaceSearchResultLayout.setCategoryAllTabLayout(getSupportFragmentManager(), mOnStayListFragmentListener);
+            mPlaceSearchResultLayout.setScreenVisible(ScreenType.NONE);
+
+            if (mSearchType == SearchType.LOCATION && mStaySearchCuration.getCurationOption().getSortType() == SortType.DISTANCE//
+                && mStaySearchCuration.getLocation() == null)
+            {
+                searchMyLocation();
+            } else
+            {
+                mPlaceSearchResultLayout.setCategoryAllTabLayout(getSupportFragmentManager(), mOnStayListFragmentListener);
+            }
         }
     }
 
@@ -210,23 +239,40 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
     @Override
     protected void onLocationFailed()
     {
-        StayCurationOption stayCurationOption = (StayCurationOption) mStaySearchCuration.getCurationOption();
+        mPlaceSearchResultLayout.setCategoryTabLayoutVisibility(View.INVISIBLE);
+        mPlaceSearchResultLayout.setScreenVisible(ScreenType.EMPTY);
 
-        stayCurationOption.setSortType(SortType.DEFAULT);
-        mPlaceSearchResultLayout.setOptionFilterSelected(stayCurationOption.isDefaultFilter() == false);
-
-        refreshCurrentFragment(true);
+//        if (mSearchType == SearchType.LOCATION)
+//        {
+//            mPlaceSearchResultLayout.setCategoryTabLayoutVisibility(View.INVISIBLE);
+//            mPlaceSearchResultLayout.setScreenVisible(ScreenType.EMPTY);
+//        } else
+//        {
+//            StayCurationOption stayCurationOption = (StayCurationOption) mStaySearchCuration.getCurationOption();
+//
+//            stayCurationOption.setSortType(SortType.DEFAULT);
+//            mPlaceSearchResultLayout.setOptionFilterSelected(stayCurationOption.isDefaultFilter() == false);
+//
+//            refreshCurrentFragment(true);
+//        }
     }
 
     @Override
     protected void onLocationProviderDisabled()
     {
-        StayCurationOption stayCurationOption = (StayCurationOption) mStaySearchCuration.getCurationOption();
+        if (mSearchType == SearchType.LOCATION)
+        {
+            mPlaceSearchResultLayout.setCategoryTabLayoutVisibility(View.INVISIBLE);
+            mPlaceSearchResultLayout.setScreenVisible(ScreenType.EMPTY);
+        } else
+        {
+            StayCurationOption stayCurationOption = (StayCurationOption) mStaySearchCuration.getCurationOption();
 
-        stayCurationOption.setSortType(SortType.DEFAULT);
-        mPlaceSearchResultLayout.setOptionFilterSelected(stayCurationOption.isDefaultFilter() == false);
+            stayCurationOption.setSortType(SortType.DEFAULT);
+            mPlaceSearchResultLayout.setOptionFilterSelected(stayCurationOption.isDefaultFilter() == false);
 
-        refreshCurrentFragment(true);
+            refreshCurrentFragment(true);
+        }
     }
 
     @Override
@@ -234,17 +280,25 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
     {
         if (location == null)
         {
-            mStaySearchCuration.getCurationOption().setSortType(SortType.DEFAULT);
-            refreshCurrentFragment(true);
+            mPlaceSearchResultLayout.setCategoryTabLayoutVisibility(View.INVISIBLE);
+            mPlaceSearchResultLayout.setScreenVisible(ScreenType.EMPTY);
         } else
         {
+            mNetworkController.requestAddress(location);
             mStaySearchCuration.setLocation(location);
 
-            // 만약 sort type이 거리가 아니라면 다른 곳에서 변경 작업이 일어났음으로 갱신하지 않음
-            if (mStaySearchCuration.getCurationOption().getSortType() == SortType.DISTANCE)
-            {
-                refreshCurrentFragment(true);
-            }
+            mPlaceSearchResultLayout.clearCategoryTab();
+
+            // 기본적으로 시작시에 전체 카테고리를 넣는다.
+            mPlaceSearchResultLayout.setCategoryTabLayoutVisibility(View.INVISIBLE);
+            mPlaceSearchResultLayout.setScreenVisible(ScreenType.NONE);
+            mPlaceSearchResultLayout.setCategoryAllTabLayout(getSupportFragmentManager(), mOnStayListFragmentListener);
+
+            //            // 만약 sort type이 거리가 아니라면 다른 곳에서 변경 작업이 일어났음으로 갱신하지 않음
+            //            if (mStaySearchCuration.getCurationOption().getSortType() == SortType.DISTANCE)
+            //            {
+            //                refreshCurrentFragment(true);
+            //            }
         }
     }
 
@@ -748,7 +802,23 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
                 }
             }
 
-            refreshCurrentFragment(true);
+            if (mSearchType == SearchType.LOCATION && mStaySearchCuration.getCurationOption().getSortType() == SortType.DISTANCE//
+                && mStaySearchCuration.getLocation() == null)
+            {
+                searchMyLocation();
+            } else
+            {
+                lockUI();
+
+                mStaySearchCuration.setCategory(Category.ALL);
+
+                mPlaceSearchResultLayout.clearCategoryTab();
+                mPlaceSearchResultLayout.setCategoryTabLayoutVisibility(View.INVISIBLE);
+                mPlaceSearchResultLayout.setScreenVisible(ScreenType.NONE);
+
+                // 기본적으로 시작시에 전체 카테고리를 넣는다.
+                mPlaceSearchResultLayout.setCategoryAllTabLayout(getSupportFragmentManager(), mOnStayListFragmentListener);
+            }
         }
     };
 
@@ -974,12 +1044,12 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
             if (categoryList != null && categoryList.size() > 0)
             {
                 mPlaceSearchResultLayout.setCategoryTabLayoutVisibility(View.VISIBLE);
-                mPlaceSearchResultLayout.processListLayout();
+
                 ((StaySearchResultLayout) mPlaceSearchResultLayout).addCategoryTabLayout(categoryList, mOnStayListFragmentListener);
             } else
             {
                 mPlaceSearchResultLayout.setCategoryTabLayoutVisibility(View.GONE);
-                mPlaceSearchResultLayout.showEmptyLayout();
+                mPlaceSearchResultLayout.setScreenVisible(ScreenType.EMPTY);
             }
         }
 
@@ -1117,7 +1187,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
             if (isShow == true)
             {
                 mPlaceSearchResultLayout.setCategoryTabLayoutVisibility(View.GONE);
-                mPlaceSearchResultLayout.showEmptyLayout();
+                mPlaceSearchResultLayout.setScreenVisible(ScreenType.EMPTY);
 
                 recordScreenSearchResult(AnalyticsManager.Screen.SEARCH_RESULT_EMPTY);
             } else
@@ -1130,7 +1200,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
                     mPlaceSearchResultLayout.setCategoryTabLayoutVisibility(View.VISIBLE);
                 }
 
-                mPlaceSearchResultLayout.showListLayout();
+                mPlaceSearchResultLayout.setScreenVisible(ScreenType.LIST);
             }
 
             StayBookingDay stayBookingDay = mStaySearchCuration.getStayBookingDay();

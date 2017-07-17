@@ -18,7 +18,7 @@ import retrofit2.Response;
 
 public class GourmetSearchResultListFragment extends GourmetListFragment
 {
-    boolean mFirstRequest;
+    boolean mResetCategory = true;
     boolean mIsDeepLink;
     private SearchType mSearchType;
 
@@ -102,9 +102,9 @@ public class GourmetSearchResultListFragment extends GourmetListFragment
         @Override
         public void onGourmetList(ArrayList<Gourmet> list, int page, int totalCount, int maxCount, HashMap<String, Integer> categoryCodeMap, HashMap<String, Integer> categorySequenceMap)
         {
-            if (mFirstRequest == false)
+            if (mResetCategory == true)
             {
-                mFirstRequest = true;
+                mResetCategory = false;
 
                 ((OnGourmetSearchResultListFragmentListener) mOnPlaceListFragmentListener).onGourmetListCount(totalCount);
             }

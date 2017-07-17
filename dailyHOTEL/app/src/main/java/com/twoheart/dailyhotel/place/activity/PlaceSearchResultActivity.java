@@ -61,6 +61,14 @@ public abstract class PlaceSearchResultActivity extends BaseActivity
 
     private DailyLocationFactory mDailyLocationFactory;
 
+    public enum ScreenType
+    {
+        NONE,
+        EMPTY,
+        SEARCH_LOCATION,
+        LIST
+    }
+
     protected abstract PlaceSearchResultLayout getPlaceSearchResultLayout(Context context);
 
     protected abstract void onCalendarActivityResult(int resultCode, Intent data);
@@ -336,7 +344,11 @@ public abstract class PlaceSearchResultActivity extends BaseActivity
             }
         } else
         {
-            lockUI();
+            lockUI(false);
+
+            mPlaceSearchResultLayout.clearCategoryTab();
+            mPlaceSearchResultLayout.setCategoryTabLayoutVisibility(View.INVISIBLE);
+            mPlaceSearchResultLayout.setScreenVisible(ScreenType.SEARCH_LOCATION);
 
             if (mDailyLocationFactory == null)
             {
