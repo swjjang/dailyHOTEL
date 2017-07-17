@@ -13,6 +13,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.widget.DailyToast;
@@ -279,27 +280,38 @@ public class StayMainActivity extends PlaceMainActivity
     {
         if (resultCode == Activity.RESULT_OK && data != null)
         {
-            PlaceCuration placeCuration = data.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PLACECURATION);
-
-            if ((placeCuration instanceof StayCuration) == false)
+            try
             {
-                return;
-            }
+                PlaceCuration placeCuration = data.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PLACECURATION);
 
-            StayCuration changedStayCuration = (StayCuration) placeCuration;
-            StayCurationOption changedStayCurationOption = (StayCurationOption) changedStayCuration.getCurationOption();
+                if ((placeCuration instanceof StayCuration) == false)
+                {
+                    return;
+                }
 
-            mStayCuration.setCurationOption(changedStayCurationOption);
-            mPlaceMainLayout.setOptionFilterSelected(changedStayCurationOption.isDefaultFilter() == false);
+                StayCuration changedStayCuration = (StayCuration) placeCuration;
+                StayCurationOption changedStayCurationOption = (StayCurationOption) changedStayCuration.getCurationOption();
 
-            if (changedStayCurationOption.getSortType() == SortType.DISTANCE)
+                mStayCuration.setCurationOption(changedStayCurationOption);
+                mPlaceMainLayout.setOptionFilterSelected(changedStayCurationOption.isDefaultFilter() == false);
+
+                if (changedStayCurationOption.getSortType() == SortType.DISTANCE)
+                {
+                    mStayCuration.setLocation(changedStayCuration.getLocation());
+
+                    searchMyLocation();
+                } else
+                {
+                    refreshCurrentFragment(true);
+                }
+            } catch (Exception e)
             {
-                mStayCuration.setLocation(changedStayCuration.getLocation());
+                // 예외 처리 추가 원인 찾기
+                Crashlytics.log(data.toString());
+                Crashlytics.logException(e);
 
-                searchMyLocation();
-            } else
-            {
-                refreshCurrentFragment(true);
+                setResult(RESULT_CANCELED);
+                finish();
             }
         } else if (resultCode == CODE_RESULT_ACTIVITY_GO_HOME)
         {
