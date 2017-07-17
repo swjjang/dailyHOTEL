@@ -384,7 +384,7 @@ public abstract class PlaceMainActivity extends BaseActivity
 
         lockUI();
 
-        if(mDailyLocationFactory != null)
+        if(mDailyLocationFactory == null)
         {
             mDailyLocationFactory = new DailyLocationFactory(this);
         }
