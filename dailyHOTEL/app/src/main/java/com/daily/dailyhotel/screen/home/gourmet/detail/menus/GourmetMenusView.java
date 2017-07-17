@@ -11,6 +11,7 @@ import com.daily.base.BaseActivity;
 import com.daily.base.BaseDialogView;
 import com.daily.base.OnBaseEventListener;
 import com.daily.base.util.ScreenUtils;
+import com.daily.base.widget.DailyRoundedConstraintLayout;
 import com.daily.dailyhotel.entity.GourmetMenu;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ActivityGourmetMenusDataBinding;
@@ -140,6 +141,7 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
         private static final float AMOUNT = 1.0f - MIN_SCALE; // 1.0f - AMOUNT = MIN_SCALE
         private static final float DISTANCE = 0.75f;
         private int DP_10;
+        private int DP_5;
         private int STANDARD_X;
 
         public ZoomCenterLayoutManager(Context context)
@@ -166,6 +168,7 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
         private void initialize(Context context)
         {
             DP_10 = ScreenUtils.dpToPx(context, 10);
+            DP_5 = ScreenUtils.dpToPx(context, 5);
             STANDARD_X = ScreenUtils.getScreenWidth(getContext()) / 12;
         }
 
@@ -186,6 +189,9 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
                 float childMidpoint = (getDecoratedRight(childView) + getDecoratedLeft(childView)) / 2.f;
                 float d = Math.min(d1, Math.abs(midpoint - childMidpoint));
                 float scale = s0 + (s1 - s0) * (d - d0) / (d1 - d0);
+
+                DailyRoundedConstraintLayout roundedConstraintLayout = (DailyRoundedConstraintLayout) childView.findViewById(R.id.roundedConstraintLayout);
+
                 childView.setScaleX(scale);
                 childView.setScaleY(scale);
 
@@ -204,6 +210,14 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
                 {
                     childView.setTranslationX(0.0f);
                 }
+
+                final float width = roundedConstraintLayout.getWidth();
+                final float height = roundedConstraintLayout.getHeight();
+                final float scaleWidth = (1.0f - scale) * width;
+                final float scaleHeight = (1.0f - scale) * height;
+
+                roundedConstraintLayout.setRound(0, 0, width - scaleWidth, height - scaleHeight, DP_5);
+                roundedConstraintLayout.invalidate();
 
                 View blurView = (View) childView.getTag(R.id.blurView);
 

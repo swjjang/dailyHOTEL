@@ -34,17 +34,29 @@ public class DailyRoundedConstraintLayout extends ConstraintLayout
             mRoundPath = new Path();
         }
 
+        mRoundPath.reset();
+
         mRadius = radius;
+    }
+
+    public void setRound(float left, float top, float right, float bottom, float radius)
+    {
+        setRound(radius);
+
+        mRoundPath.reset();
+        mRoundPath.addRoundRect(new RectF(left, top, right, bottom), radius, radius, Path.Direction.CW);
     }
 
     @Override
     protected void dispatchDraw(Canvas canvas)
     {
-        if (mRoundPath != null && mRadius > 0.0f)
+        if (mRoundPath != null && mRoundPath.isEmpty() == true)
         {
-            mRoundPath.reset();
-            mRoundPath.addRoundRect(new RectF(0, 0, canvas.getWidth(), canvas.getHeight()), mRadius, mRadius, Path.Direction.CW);
+            mRoundPath.addRoundRect(new RectF(canvas.getClipBounds()), mRadius, mRadius, Path.Direction.CW);
+        }
 
+        if (mRadius > 0.0f)
+        {
             canvas.clipPath(mRoundPath);
         }
 
