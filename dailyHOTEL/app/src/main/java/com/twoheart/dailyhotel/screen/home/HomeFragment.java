@@ -1061,11 +1061,6 @@ public class HomeFragment extends BaseMenuNavigationFragment
             mDailyLocationFactory = new DailyLocationFactory(getContext());
         }
 
-        if (mDailyLocationFactory.measuringLocation() == true)
-        {
-            return;
-        }
-
         mDailyLocationFactory.checkLocationMeasure(new DailyLocationFactory.OnCheckLocationListener()
         {
             @Override
