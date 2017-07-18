@@ -252,9 +252,6 @@ public class GourmetSearchFragment extends PlaceSearchFragment
             }
 
             checkLocationProvider();
-
-            //            Intent intent = PermissionManagerActivity.newInstance(mBaseActivity, PermissionManagerActivity.PermissionType.ACCESS_FINE_LOCATION);
-            //            startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_PERMISSION_MANAGER);
         }
 
         @Override

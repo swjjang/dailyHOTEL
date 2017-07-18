@@ -367,7 +367,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
 
             case Constants.CODE_RESULT_ACTIVITY_SETTING_LOCATION:
             {
-                checkLocationMeasure();
+                checkLocationProvider();
                 break;
             }
 
@@ -375,7 +375,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
             {
                 if (resultCode == Activity.RESULT_OK)
                 {
-                    checkLocationMeasure();
+                    checkLocationProvider();
                 } else if (resultCode == CODE_RESULT_ACTIVITY_GO_HOME)
                 {
                     mDontReload = true;
@@ -1053,7 +1053,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
         }
     }
 
-    protected void checkLocationMeasure()
+    protected void checkLocationProvider()
     {
         if (mDailyLocationFactory == null)
         {
