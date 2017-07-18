@@ -272,8 +272,8 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
             days[i].dateTime = DailyCalendar.format(cloneCalendar.getTime(), DailyCalendar.ISO_8601_FORMAT);
             days[i].dayOfMonth = Integer.toString(dayValue);
             days[i].dayOfWeek = cloneCalendar.get(Calendar.DAY_OF_WEEK);
-            days[i].isHoliDay = isHoliday(calendar);
-            days[i].isSoldOut = isSoldOutDay(calendar);
+            days[i].isHoliDay = isHoliday(calendar, holidayList);
+            days[i].isSoldOut = isSoldOutDay(calendar, soldOutDayList);
             days[i].isDefaultDimmed = dayValue < todayValue || isLast == true && dayCount < 0;
 
             if (isLast == false && dayCount <= endCount)
@@ -362,14 +362,14 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
         return monthCalendarLayout;
     }
 
-    private boolean isHoliday(Calendar calendar)
+    private boolean isHoliday(Calendar calendar, ArrayList<Integer> holidayList)
     {
         if (calendar == null)
         {
             return false;
         }
 
-        if (mHolidayList == null || mHolidayList.size() == 0)
+        if (holidayList == null || holidayList.size() == 0)
         {
             return false;
         }
@@ -377,14 +377,7 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
         try
         {
             int calendarDay = Integer.parseInt(DailyCalendar.format(calendar.getTime(), "yyyyMMdd"));
-
-            for (int holiday : mHolidayList)
-            {
-                if (holiday == calendarDay)
-                {
-                    return true;
-                }
-            }
+            return holidayList.remove((Integer) calendarDay);
         } catch (Exception e)
         {
             ExLog.d(e.toString());
@@ -393,14 +386,14 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
         return false;
     }
 
-    private boolean isSoldOutDay(Calendar calendar)
+    private boolean isSoldOutDay(Calendar calendar, ArrayList<Integer> soldOutDayList)
     {
         if (calendar == null)
         {
             return false;
         }
 
-        if (mSoldOutDayList == null || mSoldOutDayList.size() == 0)
+        if (soldOutDayList == null || soldOutDayList.size() == 0)
         {
             return false;
         }
@@ -408,14 +401,7 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
         try
         {
             int calendarDay = Integer.parseInt(DailyCalendar.format(calendar.getTime(), "yyyyMMdd"));
-
-            for (int soldOutDay : mSoldOutDayList)
-            {
-                if (soldOutDay == calendarDay)
-                {
-                    return true;
-                }
-            }
+            return soldOutDayList.remove((Integer) calendarDay);
         } catch (Exception e)
         {
             ExLog.d(e.toString());
