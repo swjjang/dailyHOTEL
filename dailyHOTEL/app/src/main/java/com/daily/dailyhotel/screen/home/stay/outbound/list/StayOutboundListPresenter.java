@@ -890,7 +890,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
             @Override
             public void accept(@io.reactivex.annotations.NonNull List<StayOutbound> stayOutboundList) throws Exception
             {
-                getViewInterface().setStayOutboundMapViewPagerList(getActivity(), stayOutboundList);
+                getViewInterface().setStayOutboundMapViewPagerList(getActivity(), stayOutboundList, mStayBookDateTime.getNights() > 1);
                 getViewInterface().setMapViewPagerVisibility(true);
             }
         }));
@@ -1116,7 +1116,14 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
         if (mViewState == ViewState.MAP)
         {
             getViewInterface().setStayOutboundMakeMarker(mStayOutboundList);
-            getViewInterface().setStayOutboundMapViewPagerList(getActivity(), mStayOutboundList);
+
+            try
+            {
+                getViewInterface().setStayOutboundMapViewPagerList(getActivity(), mStayOutboundList, mStayBookDateTime.getNights() > 1);
+            } catch (Exception e)
+            {
+                ExLog.d(e.toString());
+            }
         }
 
         addCompositeDisposable(Observable.just(stayOutbounds).subscribeOn(Schedulers.io()).map(new Function<StayOutbounds, List<ListItem>>()
