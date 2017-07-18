@@ -35,7 +35,6 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.LinearInterpolator;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup;
-import android.widget.RelativeLayout;
 
 import com.daily.base.BaseActivity;
 import com.daily.base.BaseDialogView;

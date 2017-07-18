@@ -47,7 +47,7 @@ public class GourmetKeyword extends Keyword
         dest.writeInt(index);
         dest.writeInt(availableTickets);
         dest.writeInt(price);
-        dest.writeInt(isExpired ? 1 :0);
+        dest.writeInt(isExpired ? 1 : 0);
         dest.writeInt(minimumOrderQuantity);
     }
 

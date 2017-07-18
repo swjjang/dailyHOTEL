@@ -48,8 +48,7 @@ public class StayOutboundListActivity extends BaseActivity<StayOutboundListPrese
      * @param childAgeList
      * @return
      */
-    public static Intent newInstance(Context context, Suggest suggest, String checkInDateTime, String checkOutDateTime
-        , int numberOfAdults, ArrayList<Integer> childAgeList, StayOutboundListAnalyticsParam analyticsParam)
+    public static Intent newInstance(Context context, Suggest suggest, String checkInDateTime, String checkOutDateTime, int numberOfAdults, ArrayList<Integer> childAgeList, StayOutboundListAnalyticsParam analyticsParam)
     {
         Intent intent = new Intent(context, StayOutboundListActivity.class);
         intent.putExtra(INTENT_EXTRA_DATA_SUGGEST, new SuggestParcel(suggest));
@@ -61,16 +60,16 @@ public class StayOutboundListActivity extends BaseActivity<StayOutboundListPrese
         return intent;
     }
 
-//    public static Intent newInstance(Context context, String keyword, String checkInDateTime, String checkOutDateTime, int numberOfAdults, ArrayList<Integer> childAgeList)
-//    {
-//        Intent intent = new Intent(context, StayOutboundListActivity.class);
-//        intent.putExtra(INTENT_EXTRA_DATA_KEYWORD, keyword);
-//        intent.putExtra(INTENT_EXTRA_DATA_CHECK_IN, checkInDateTime);
-//        intent.putExtra(INTENT_EXTRA_DATA_CHECK_OUT, checkOutDateTime);
-//        intent.putExtra(INTENT_EXTRA_DATA_NUMBER_OF_ADULTS, numberOfAdults);
-//        intent.putExtra(INTENT_EXTRA_DATA_CHILD_LIST, childAgeList);
-//        return intent;
-//    }
+    //    public static Intent newInstance(Context context, String keyword, String checkInDateTime, String checkOutDateTime, int numberOfAdults, ArrayList<Integer> childAgeList)
+    //    {
+    //        Intent intent = new Intent(context, StayOutboundListActivity.class);
+    //        intent.putExtra(INTENT_EXTRA_DATA_KEYWORD, keyword);
+    //        intent.putExtra(INTENT_EXTRA_DATA_CHECK_IN, checkInDateTime);
+    //        intent.putExtra(INTENT_EXTRA_DATA_CHECK_OUT, checkOutDateTime);
+    //        intent.putExtra(INTENT_EXTRA_DATA_NUMBER_OF_ADULTS, numberOfAdults);
+    //        intent.putExtra(INTENT_EXTRA_DATA_CHILD_LIST, childAgeList);
+    //        return intent;
+    //    }
 
     public static Intent newInstance(Context context, String deepLink)
     {

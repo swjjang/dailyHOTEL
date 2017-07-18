@@ -132,7 +132,7 @@ public class StayDetailCalendarActivity extends StayCalendarActivity
     @Override
     protected int getMaxDay()
     {
-        if(mOverseas == true)
+        if (mOverseas == true)
         {
             return OVERSEAS_DAYCOUNT_OF_MAX;
         } else

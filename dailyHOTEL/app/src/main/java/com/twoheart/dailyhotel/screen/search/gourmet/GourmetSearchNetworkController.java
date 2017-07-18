@@ -3,7 +3,6 @@ package com.twoheart.dailyhotel.screen.search.gourmet;
 import android.content.Context;
 
 import com.daily.base.util.DailyTextUtils;
-import com.twoheart.dailyhotel.model.Keyword;
 import com.twoheart.dailyhotel.model.time.GourmetBookingDay;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.network.dto.BaseListDto;

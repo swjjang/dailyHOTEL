@@ -3,7 +3,6 @@ package com.daily.dailyhotel.screen.home.stay.outbound.detail;
 import android.app.Activity;
 
 import com.daily.base.util.DailyTextUtils;
-import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.parcel.analytics.StayOutboundDetailAnalyticsParam;
 import com.daily.dailyhotel.parcel.analytics.StayOutboundPaymentAnalyticsParam;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
