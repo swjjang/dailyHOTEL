@@ -323,7 +323,7 @@ public class GourmetCalendarActivity extends PlaceCalendarActivity
         {
             int visitDay = Integer.parseInt(gourmetBookingDay.getVisitDay("yyyyMMdd"));
 
-            for (View dayView : mDailyViews)
+            for (View dayView : mDayViewList)
             {
                 if (dayView == null)
                 {
@@ -423,7 +423,7 @@ public class GourmetCalendarActivity extends PlaceCalendarActivity
             mDayView = null;
         }
 
-        for (View dayView : mDailyViews)
+        for (View dayView : mDayViewList)
         {
             if (dayView == null)
             {

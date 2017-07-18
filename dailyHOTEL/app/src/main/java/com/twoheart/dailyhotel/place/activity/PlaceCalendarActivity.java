@@ -9,6 +9,7 @@ import android.content.Context;
 import android.graphics.Paint;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.util.Pair;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -43,6 +44,7 @@ import com.twoheart.dailyhotel.util.Util;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import io.reactivex.disposables.CompositeDisposable;
@@ -63,7 +65,7 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
 
     private CompositeDisposable mCompositeDisposable = new CompositeDisposable();
 
-    protected View[] mDailyViews;
+    protected List<View> mDayViewList;
 
     protected View mAnimationLayout; // 애니메이션 되는 뷰
     private View mDisableLayout; // 전체 화면을 덮는 뷰
@@ -153,45 +155,175 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
         mDisableLayout = findViewById(R.id.disableLayout);
         mBackgroundView = (View) mExitView.getParent();
 
-        mDailyViews = new View[dayCountOfMax];
+        mDayViewList = new ArrayList<>();
+    }
+
+    protected ArrayList<Pair<String, Day[]>> makeCalendarList(TodayDateTime todayDateTime, int dayCountOfMax)
+    {
+        ArrayList<Pair<String, Day[]>> arrayList = new ArrayList<>();
+
+        Date todayDate;
+
+        try
+        {
+            todayDate = DailyCalendar.convertStringToDate(todayDateTime.dailyDateTime);
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+            return null;
+        }
+
+        Calendar todayCalendar = DailyCalendar.getInstance();
+        todayCalendar.setTime(todayDate);
+
+        ArrayList<Integer> holidayList = new ArrayList<>();
+        if (mHolidayList != null && mHolidayList.size() > 0)
+        {
+            holidayList.addAll(mHolidayList);
+        }
+
+        ArrayList<Integer> soldOutDayList = new ArrayList<>();
+        if (mSoldOutDayList != null && mSoldOutDayList.size() > 0)
+        {
+            soldOutDayList.addAll(mSoldOutDayList);
+        }
+
+        int maxMonth = getMonthInterval(todayCalendar, dayCountOfMax);
+
+        // 초기 설정 - for 문을 돌면서 카운트 감소 됨
+        int dayCount = dayCountOfMax;
+
+        for (int i = 0; i <= maxMonth; i++)
+        {
+            String titleMonth = DailyCalendar.format(todayCalendar.getTime(), "yyyy.MM");
+
+            Pair<Integer, Day[]> daysPair = getMonthCalendar(todayCalendar, dayCount, dayCountOfMax, holidayList, soldOutDayList);
+            Day[] days = null;
+            if (daysPair != null)
+            {
+                dayCount = daysPair.first;
+                days = daysPair.second;
+            }
+
+            arrayList.add(new Pair(titleMonth, days));
+
+            todayCalendar.set(Calendar.DAY_OF_MONTH, 1);
+            todayCalendar.add(Calendar.MONTH, 1);
+        }
+
+        return arrayList;
+    }
+
+    private Pair<Integer, Day[]> getMonthCalendar(Calendar calendar, int dayCount, final int dayCountOfMax, ArrayList<Integer> holidayList, ArrayList<Integer> soldOutDayList)
+    {
+        int todayDayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
+        int maxDayOfMonth = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
+        int todayValue = calendar.get(Calendar.DAY_OF_MONTH);
+
+        boolean isStart = false;
+        boolean isLast = false;
+
+        // 남은 값과 최대 값이 같으면 시작 달력
+        if (dayCount == dayCountOfMax)
+        {
+            isStart = true;
+        }
+
+        // 남은 값이 이달의 최대 값과 같거나 작으면 마지막 달력
+        if (dayCount <= maxDayOfMonth)
+        {
+            isLast = true;
+        }
+
+        maxDayOfMonth = todayValue + dayCount + 1 > maxDayOfMonth ? maxDayOfMonth : todayValue + dayCount + 1;
+
+        int startGap = 0;
+
+        if (isStart == true)
+        {
+            startGap = Calendar.SUNDAY - todayDayOfWeek;
+        }
+
+        Calendar cloneCalendar = (Calendar) calendar.clone();
+        if (startGap != 0)
+        {
+            cloneCalendar.add(Calendar.DAY_OF_MONTH, startGap);
+        }
+
+        int startDayValue = cloneCalendar.get(Calendar.DAY_OF_MONTH);
+        int startDayOfWeek = cloneCalendar.get(Calendar.DAY_OF_WEEK);
+
+        int endCount = dayCount - maxDayOfMonth + todayValue;
+
+        final int LENGTH_OF_WEEK = 7;
+        int length = maxDayOfMonth - startDayValue + 1 + startDayOfWeek;
+        if (length % LENGTH_OF_WEEK != 0)
+        {
+            length += (LENGTH_OF_WEEK - (length % LENGTH_OF_WEEK));
+        }
+
+        Day[] days = new Day[length];
+
+        for (int i = startDayOfWeek - 1; i < length; i++)
+        {
+            int dayValue = cloneCalendar.get(Calendar.DAY_OF_MONTH);
+
+            days[i] = new Day();
+            days[i].dateTime = DailyCalendar.format(cloneCalendar.getTime(), DailyCalendar.ISO_8601_FORMAT);
+            days[i].dayOfMonth = Integer.toString(dayValue);
+            days[i].dayOfWeek = cloneCalendar.get(Calendar.DAY_OF_WEEK);
+            days[i].isHoliDay = isHoliday(calendar);
+            days[i].isSoldOut = isSoldOutDay(calendar);
+            days[i].isDefaultDimmed = dayValue < todayValue || isLast == true && dayCount < 0;
+
+            if (isLast == false && dayCount <= endCount)
+            {
+                break;
+            }
+
+            if (days[i].isDefaultDimmed == false)
+            {
+                dayCount--;
+            }
+
+            cloneCalendar.add(Calendar.DAY_OF_MONTH, 1);
+        }
+
+        return new Pair(dayCount, days);
     }
 
     protected void makeCalendar(TodayDateTime mTodayDateTime, int dayCountOfMax)
     {
-        try
+        ArrayList<Pair<String, Day[]>> calendarList = makeCalendarList(mTodayDateTime, dayCountOfMax);
+
+        if (calendarList == null)
         {
-            Calendar calendar = DailyCalendar.getInstance();
-            calendar.setTime(DailyCalendar.convertStringToDate(mTodayDateTime.dailyDateTime));
+            return;
+        }
 
-            int maxMonth = getMonthInterval(calendar, dayCountOfMax);
-            int maxDay = dayCountOfMax;
-            int dayOffset = 0;
+        int size = calendarList.size();
 
-            for (int i = 0; i <= maxMonth; i++)
+        if (mDayViewList == null)
+        {
+            mDayViewList = new ArrayList<>();
+        }
+
+        mDayViewList.clear();
+
+        for (int i = 0 ; i < size ; i++)
+        {
+            Pair<String, Day[]> pair = calendarList.get(i);
+
+            View monthCalendarLayout = getMonthCalendarView(this, pair);
+
+            if (i >= 0 && i < size)
             {
-                int maxDayOfMonth = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
-                int day = calendar.get(Calendar.DAY_OF_MONTH);
-
-                View calendarLayout = getMonthCalendarView(this, dayOffset//
-                    , calendar, day + maxDay - 1 > maxDayOfMonth ? maxDayOfMonth : day + maxDay - 1);
-
-                if (i >= 0 && i < maxMonth)
-                {
-                    calendarLayout.setPadding(calendarLayout.getPaddingLeft(), calendarLayout.getPaddingTop()//
-                        , calendarLayout.getPaddingRight(), calendarLayout.getPaddingBottom() + ScreenUtils.dpToPx(this, 30));
-                }
-
-                mCalendarsLayout.addView(calendarLayout);
-
-                dayOffset += maxDayOfMonth - day + 1;
-                maxDay = dayCountOfMax - dayOffset;
-
-                calendar.set(Calendar.DAY_OF_MONTH, 1);
-                calendar.add(Calendar.MONTH, 1);
+                monthCalendarLayout.setPadding(monthCalendarLayout.getPaddingLeft(), monthCalendarLayout.getPaddingTop()//
+                    , monthCalendarLayout.getPaddingRight(), monthCalendarLayout.getPaddingBottom() + ScreenUtils.dpToPx(this, 30));
             }
-        } catch (Exception e)
-        {
-            ExLog.d(e.toString());
+
+            mCalendarsLayout.addView(monthCalendarLayout);
+
         }
     }
 
@@ -206,58 +338,28 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
         mTitleTextView.setText(title);
     }
 
-    private View getMonthCalendarView(Context context, final int dayOffset, final Calendar calendar, final int maxDayOfMonth)
+    private View getMonthCalendarView(Context context, Pair<String, Day[]> pair)
     {
-        View calendarLayout = LayoutInflater.from(context).inflate(R.layout.view_calendar, null);
+        View monthCalendarLayout = LayoutInflater.from(context).inflate(R.layout.view_calendar, null);
+        TextView monthTextView = (TextView) monthCalendarLayout.findViewById(R.id.monthTextView);
+        android.support.v7.widget.GridLayout calendarGridLayout = (android.support.v7.widget.GridLayout) monthCalendarLayout.findViewById(R.id.calendarGridLayout);
 
-        TextView monthTextView = (TextView) calendarLayout.findViewById(R.id.monthTextView);
-        android.support.v7.widget.GridLayout calendarGridLayout = (android.support.v7.widget.GridLayout) calendarLayout.findViewById(R.id.calendarGridLayout);
-
-        monthTextView.setText(DailyCalendar.format(calendar.getTime(), "yyyy.MM"));
-
-        // dayString
-        final int day = calendar.get(Calendar.DAY_OF_MONTH);
-        int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK) - 1;
-
-        int length = maxDayOfMonth - day + 1 + dayOfWeek;
-        final int LENGTH_OF_WEEK = 7;
-
-        if (length % LENGTH_OF_WEEK != 0)
-        {
-            length += (LENGTH_OF_WEEK - (length % LENGTH_OF_WEEK));
-        }
-
-        Day[] days = new Day[length];
-
-        Calendar cloneCalendar = (Calendar) calendar.clone();
-
-        for (int i = 0, j = dayOfWeek, k = day; k <= maxDayOfMonth; i++, j++, k++)
-        {
-            days[j] = new Day();
-            days[j].dayOffset = dayOffset + i;
-            days[j].dayString = Integer.toString(cloneCalendar.get(Calendar.DAY_OF_MONTH));
-            days[j].dayOfWeek = cloneCalendar.get(Calendar.DAY_OF_WEEK);
-            days[j].isHoliDay = isHoliday(cloneCalendar);
-            days[j].isSoldOut = isSoldOutDay(cloneCalendar);
-
-            cloneCalendar.add(Calendar.DAY_OF_MONTH, 1);
-        }
+        monthTextView.setText(pair.first);
 
         View dayView;
-
-        for (Day dayClass : days)
+        for (Day day : pair.second)
         {
-            dayView = getDayView(context, dayClass);
+            dayView = getDayView(context, day);
 
-            if (dayClass != null)
+            if (day != null && day.isDefaultDimmed == false)
             {
-                mDailyViews[dayClass.dayOffset] = dayView;
+                mDayViewList.add(dayView);
             }
 
             calendarGridLayout.addView(dayView);
         }
 
-        return calendarLayout;
+        return monthCalendarLayout;
     }
 
     private boolean isHoliday(Calendar calendar)
@@ -366,7 +468,7 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
             relativeLayout.setEnabled(false);
         } else
         {
-            dayTextView.setText(day.dayString);
+            dayTextView.setText(day.dayOfMonth);
             relativeLayout.setTag(day);
         }
 
@@ -442,7 +544,14 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
             visitTextView.setText(null);
             visitTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 11);
             visitTextView.setVisibility(View.INVISIBLE);
-            dayView.setEnabled(true);
+
+            if (day.isDefaultDimmed == true)
+            {
+                dayView.setEnabled(false);
+            } else
+            {
+                dayView.setEnabled(true);
+            }
 
             if ((dayTextView.getPaintFlags() & Paint.STRIKE_THRU_TEXT_FLAG) == Paint.STRIKE_THRU_TEXT_FLAG)
             {
@@ -704,13 +813,15 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
 
     protected static class Day
     {
-        public int dayOffset;
-        String dayString;
+        String dateTime; // ISO-8601 format
+        String dayOfMonth;
         int dayOfWeek;
-
         boolean isHoliDay;
         boolean isSoldOut;
         boolean isDefaultDimmed;
+
+        public int dayOffset; // TODO : 제거 함 <-- 이게 말썽임
+
     }
 
     ///////////////////////////////////////////////////////////////////////////////////////////////

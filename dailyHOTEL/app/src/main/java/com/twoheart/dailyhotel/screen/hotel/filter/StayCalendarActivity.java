@@ -231,7 +231,7 @@ public class StayCalendarActivity extends PlaceCalendarActivity
                 if (mCheckInDayView != null && mCheckOutDayView != null)
                 {
                     // 체크인 체크아웃이 되어있는데 마지막 날짜를 체크인할때
-                    if (mDailyViews[mDailyViews.length - 1] == view)
+                    if (mDayViewList.get(mDayViewList.size() - 1) == view)
                     {
                         DailyToast.showToast(this, getString(R.string.label_message_dont_check_date), Toast.LENGTH_SHORT);
                         releaseUiComponent();
@@ -263,7 +263,7 @@ public class StayCalendarActivity extends PlaceCalendarActivity
 //                    setSoldOutDays(mTodayDateTime, mSoldOutDayList);
 
                     setToolbarText(getString(R.string.label_calendar_hotel_select_checkout));
-                    mDailyViews[mDailyViews.length - 1].setEnabled(true);
+                    mDayViewList.get(mDayViewList.size() - 1).setEnabled(true);
 
                     // TODO : 여기서 체크아웃 가능 날짜 조회
 
@@ -427,7 +427,7 @@ public class StayCalendarActivity extends PlaceCalendarActivity
             int checkInDay = Integer.parseInt(stayBookingDay.getCheckInDay("yyyyMMdd"));
             int checkOutDay = Integer.parseInt(stayBookingDay.getCheckOutDay("yyyyMMdd"));
 
-            for (View dayView : mDailyViews)
+            for (View dayView : mDayViewList)
             {
                 if (dayView == null)
                 {
@@ -459,7 +459,7 @@ public class StayCalendarActivity extends PlaceCalendarActivity
     {
         boolean isStartPosition = false;
 
-        for (View dayView : mDailyViews)
+        for (View dayView : mDayViewList)
         {
             if (isStartPosition == false)
             {
@@ -490,12 +490,12 @@ public class StayCalendarActivity extends PlaceCalendarActivity
             return;
         }
 
-        if (mDailyViews[mDailyViews.length - 1] == mCheckOutDayView)
+        if (mDayViewList.get(mDayViewList.size() - 1) == mCheckOutDayView)
         {
             return;
         }
 
-        mDailyViews[mDailyViews.length - 1].setEnabled(false);
+        mDayViewList.get(mDayViewList.size() - 1).setEnabled(false);
     }
 
 //    void setSoldOutDays(TodayDateTime todayDateTime, List<String> unavailableDateList)
@@ -578,7 +578,7 @@ public class StayCalendarActivity extends PlaceCalendarActivity
 
         try
         {
-            for (View dayView : mDailyViews)
+            for (View dayView : mDayViewList)
             {
                 if (dayView == null)
                 {
@@ -634,7 +634,7 @@ public class StayCalendarActivity extends PlaceCalendarActivity
             mCheckOutDayView = null;
         }
 
-        for (View dayView : mDailyViews)
+        for (View dayView : mDayViewList)
         {
             if (dayView == null)
             {

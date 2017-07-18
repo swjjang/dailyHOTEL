@@ -97,11 +97,11 @@ public class StayDetailCalendarActivity extends StayCalendarActivity
 
                 if (mIsSingleDay == true)
                 {
-                    for (int i = 0; i < mDailyViews.length; i++)
+                    for (int i = 0; i < mDayViewList.size(); i++)
                     {
-                        if (view == mDailyViews[i] && i < mDailyViews.length - 1)
+                        if (view == mDayViewList.get(i) && i < mDayViewList.size() - 1)
                         {
-                            super.onClick(mDailyViews[i + 1]);
+                            super.onClick(mDayViewList.get(i + 1));
                             break;
                         }
                     }
