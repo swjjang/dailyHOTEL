@@ -368,7 +368,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
 
             case Constants.CODE_RESULT_ACTIVITY_SETTING_LOCATION:
             {
-                searchMyLocation();
+                checkLocationMeasure();
                 break;
             }
 
@@ -376,7 +376,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
             {
                 if (resultCode == Activity.RESULT_OK)
                 {
-                    searchMyLocation();
+                    checkLocationMeasure();
                 } else if (resultCode == CODE_RESULT_ACTIVITY_GO_HOME)
                 {
                     mDontReload = true;
@@ -1054,10 +1054,8 @@ public class HomeFragment extends BaseMenuNavigationFragment
         }
     }
 
-    protected void searchMyLocation()
+    protected void checkLocationMeasure()
     {
-        lockUI();
-
         if (mDailyLocationFactory == null)
         {
             mDailyLocationFactory = new DailyLocationFactory(getContext());
@@ -1117,47 +1115,12 @@ public class HomeFragment extends BaseMenuNavigationFragment
             @Override
             public void onProviderEnabled()
             {
-                mDailyLocationFactory.startLocationMeasure(null, new DailyLocationFactory.OnLocationListener()
-                {
-                    @Override
-                    public void onFailed()
-                    {
-                        unLockUI();
-                    }
-
-                    @Override
-                    public void onAlreadyRun()
-                    {
-
-                    }
-
-                    @Override
-                    public void onLocationChanged(Location location)
-                    {
-                        unLockUI();
-
-                        if (isFinishing() == true)
-                        {
-                            return;
-                        }
-
-                        mDailyLocationFactory.stopLocationMeasure();
-
-                        if (location == null)
-                        {
-                            DailyToast.showToast(mBaseActivity, R.string.message_failed_mylocation, Toast.LENGTH_SHORT);
-                        } else
-                        {
-                            // Location
-                            onSearchLocation(location);
-                        }
-                    }
-                });
+                onSearchLocation();
             }
         });
     }
 
-    private void onSearchLocation(Location location)
+    private void onSearchLocation()
     {
         if (mTodayDateTime == null)
         {
@@ -1171,7 +1134,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
             stayBookingDay.setCheckInDay(mTodayDateTime.dailyDateTime);
             stayBookingDay.setCheckOutDay(mTodayDateTime.dailyDateTime, 1);
 
-            Intent intent = StaySearchResultActivity.newInstance(mBaseActivity, mTodayDateTime, stayBookingDay, location, AnalyticsManager.Screen.HOME);
+            Intent intent = StaySearchResultActivity.newInstance(mBaseActivity, mTodayDateTime, stayBookingDay, null, AnalyticsManager.Screen.HOME);
             startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_SEARCH_RESULT);
         } catch (Exception e)
         {
