@@ -221,7 +221,15 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
             {
                 mGourmetSearchCuration.setLocation(changedGourmetCuration.getLocation());
 
-                searchMyLocation();
+                if (mGourmetSearchCuration.getLocation() != null)
+                {
+                    lockUI();
+
+                    onLocationChanged(mGourmetSearchCuration.getLocation());
+                } else
+                {
+                    searchMyLocation();
+                }
             } else
             {
                 refreshCurrentFragment(true);

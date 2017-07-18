@@ -224,7 +224,15 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
             {
                 mStaySearchCuration.setLocation(changedStayCuration.getLocation());
 
-                searchMyLocation();
+                if (mStaySearchCuration.getLocation() != null)
+                {
+                    lockUI();
+
+                    onLocationChanged(mStaySearchCuration.getLocation());
+                } else
+                {
+                    searchMyLocation();
+                }
             } else
             {
                 refreshCurrentFragment(true);
@@ -242,19 +250,19 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
         mPlaceSearchResultLayout.setCategoryTabLayoutVisibility(View.INVISIBLE);
         mPlaceSearchResultLayout.setScreenVisible(ScreenType.EMPTY);
 
-//        if (mSearchType == SearchType.LOCATION)
-//        {
-//            mPlaceSearchResultLayout.setCategoryTabLayoutVisibility(View.INVISIBLE);
-//            mPlaceSearchResultLayout.setScreenVisible(ScreenType.EMPTY);
-//        } else
-//        {
-//            StayCurationOption stayCurationOption = (StayCurationOption) mStaySearchCuration.getCurationOption();
-//
-//            stayCurationOption.setSortType(SortType.DEFAULT);
-//            mPlaceSearchResultLayout.setOptionFilterSelected(stayCurationOption.isDefaultFilter() == false);
-//
-//            refreshCurrentFragment(true);
-//        }
+        //        if (mSearchType == SearchType.LOCATION)
+        //        {
+        //            mPlaceSearchResultLayout.setCategoryTabLayoutVisibility(View.INVISIBLE);
+        //            mPlaceSearchResultLayout.setScreenVisible(ScreenType.EMPTY);
+        //        } else
+        //        {
+        //            StayCurationOption stayCurationOption = (StayCurationOption) mStaySearchCuration.getCurationOption();
+        //
+        //            stayCurationOption.setSortType(SortType.DEFAULT);
+        //            mPlaceSearchResultLayout.setOptionFilterSelected(stayCurationOption.isDefaultFilter() == false);
+        //
+        //            refreshCurrentFragment(true);
+        //        }
     }
 
     @Override
