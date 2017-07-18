@@ -20,7 +20,7 @@ import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
-import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -43,7 +43,7 @@ public class StayDetailCalendarActivity extends StayCalendarActivity
     private PlaceDetailCalendarImpl mPlaceDetailCalendarImpl;
 
     public static Intent newInstance(Context context, TodayDateTime todayDateTime, StayBookingDay stayBookingDay //
-        , boolean overseas, int hotelIndex, String screen, List<String> soldOutList, boolean isSelected//
+        , boolean overseas, int hotelIndex, String screen, ArrayList<Integer> soldOutList, boolean isSelected//
         , boolean isAnimation, boolean isSingleDay)
     {
         Intent intent = new Intent(context, StayDetailCalendarActivity.class);
@@ -55,7 +55,7 @@ public class StayDetailCalendarActivity extends StayCalendarActivity
         intent.putExtra(INTENT_EXTRA_DATA_ISSELECTED, isSelected);
         intent.putExtra(INTENT_EXTRA_DATA_ANIMATION, isAnimation);
         intent.putExtra(INTENT_EXTRA_DATA_ISSINGLE_DAY, isSingleDay);
-        intent.putExtra(INTENT_EXTRA_DATA_SOLDOUT_LIST, (Serializable) soldOutList);
+        intent.putIntegerArrayListExtra(INTENT_EXTRA_DATA_SOLDOUT_LIST, soldOutList);
 
         return intent;
     }

@@ -442,11 +442,16 @@ public class StayDetailActivity extends PlaceDetailActivity
                 {
                     if (mSoldOutList == null)
                     {
-                        mSoldOutList = new ArrayList<String>();
+                        mSoldOutList = new ArrayList<>();
                     }
 
                     mSoldOutList.clear();
-                    mSoldOutList.addAll(soldOutList);
+
+                    for (String dayString : soldOutList)
+                    {
+                        int soldOutDay = Integer.parseInt(DailyCalendar.convertDateFormatString(dayString, "yyyy-MM-dd", "yyyyMMdd"));
+                        mSoldOutList.add(soldOutDay);
+                    }
 
                     TodayDateTime todayDateTime = new TodayDateTime();
                     todayDateTime.setToday(commonDateTime.openDateTime, commonDateTime.closeDateTime //
@@ -1058,12 +1063,38 @@ public class StayDetailActivity extends PlaceDetailActivity
         }
     }
 
-    void startCalendar(TodayDateTime todayDateTime, StayBookingDay stayBookingDay, boolean overseas, int placeIndex, List<String> soldOutList, boolean isAnimation, boolean isSingleDay)
+    void startCalendar(TodayDateTime todayDateTime, StayBookingDay stayBookingDay, boolean overseas, int placeIndex, ArrayList<Integer> soldOutList, boolean isAnimation, boolean isSingleDay)
     {
         if (isFinishing() == true || lockUiComponentAndIsLockUiComponent() == true)
         {
             return;
         }
+
+//        try
+//        {
+//            Calendar startCalendar = DailyCalendar.getInstance();
+//            startCalendar.setTime(DailyCalendar.convertDate(todayDateTime.currentDateTime, DailyCalendar.ISO_8601_FORMAT));
+//            startCalendar.add(Calendar.DAY_OF_MONTH, -1);
+//
+//            String startDateTime = DailyCalendar.format(startCalendar.getTime(), DailyCalendar.ISO_8601_FORMAT);
+//
+//            startCalendar.add(Calendar.DAY_OF_MONTH, 60);
+//
+//            String endDateTime = DailyCalendar.format(startCalendar.getTime(), DailyCalendar.ISO_8601_FORMAT);
+//
+//            Intent intent = StayCalendarActivity.newInstance(this//
+//                , stayBookingDay.getCheckInDay(DailyCalendar.ISO_8601_FORMAT)//
+//                , stayBookingDay.getCheckOutDay(DailyCalendar.ISO_8601_FORMAT)//
+//                , startDateTime, endDateTime, 7, AnalyticsManager.ValueType.STAY, true, 0, true);
+//
+//            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_CALENDAR);
+//        } catch (Exception e)
+//        {
+//            ExLog.e(e.toString());
+//
+//           unLockUI();
+//        }
+
 
         Intent intent = StayDetailCalendarActivity.newInstance(StayDetailActivity.this, todayDateTime, stayBookingDay//
             , overseas, placeIndex, AnalyticsManager.ValueType.DETAIL, soldOutList, true, isAnimation, isSingleDay);

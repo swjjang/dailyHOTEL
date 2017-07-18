@@ -453,11 +453,16 @@ public class GourmetDetailActivity extends PlaceDetailActivity
                 {
                     if (mSoldOutList == null)
                     {
-                        mSoldOutList = new ArrayList<String>();
+                        mSoldOutList = new ArrayList<>();
                     }
 
                     mSoldOutList.clear();
-                    mSoldOutList.addAll(soldOutList);
+
+                    for (String dayString : soldOutList)
+                    {
+                        int soldOutDay = Integer.parseInt(DailyCalendar.convertDateFormatString(dayString, "yyyy-MM-dd", "yyyyMMdd"));
+                        mSoldOutList.add(soldOutDay);
+                    }
 
                     TodayDateTime todayDateTime = new TodayDateTime();
                     todayDateTime.setToday(commonDateTime.openDateTime, commonDateTime.closeDateTime //
@@ -1000,7 +1005,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         }
     }
 
-    void startCalendar(TodayDateTime todayDateTime, GourmetBookingDay gourmetBookingDay, int placeIndex, List<String> soldoutList, boolean isAnimation)
+    void startCalendar(TodayDateTime todayDateTime, GourmetBookingDay gourmetBookingDay, int placeIndex, ArrayList<Integer> soldoutList, boolean isAnimation)
     {
         if (isFinishing() == true || lockUiComponentAndIsLockUiComponent() == true)
         {
@@ -1017,7 +1022,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         }
 
         Intent intent = GourmetDetailCalendarActivity.newInstance(GourmetDetailActivity.this, //
-            todayDateTime, gourmetBookingDay, placeIndex, callByScreen, mSoldOutList, true, isAnimation);
+            todayDateTime, gourmetBookingDay, placeIndex, callByScreen, soldoutList, true, isAnimation);
         startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_CALENDAR);
 
         AnalyticsManager.getInstance(GourmetDetailActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_//

@@ -19,7 +19,6 @@ import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -72,7 +71,7 @@ public class GourmetCalendarActivity extends PlaceCalendarActivity
 
         if (intent.hasExtra(INTENT_EXTRA_DATA_SOLDOUT_LIST) == true)
         {
-            mSoldOutDayList = (ArrayList<String>) intent.getSerializableExtra(INTENT_EXTRA_DATA_SOLDOUT_LIST);
+            mSoldOutDayList =  intent.getIntegerArrayListExtra(INTENT_EXTRA_DATA_SOLDOUT_LIST);
         }
 
         if (mTodayDateTime == null || mPlaceBookingDay == null)

@@ -82,7 +82,7 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
 
     private int[] mHolidays;
 
-    protected List<String> mSoldOutDayList;
+    protected List<Integer> mSoldOutDayList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -306,10 +306,8 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
         {
             int calendarDay = Integer.parseInt(DailyCalendar.format(calendar.getTime(), "yyyyMMdd"));
 
-            for (String soldOutDayString : mSoldOutDayList)
+            for (int soldOutDay : mSoldOutDayList)
             {
-                int soldOutDay = Integer.parseInt(DailyCalendar.convertDateFormatString(soldOutDayString, "yyyy-MM-dd", "yyyyMMdd"));
-
                 if (soldOutDay == calendarDay)
                 {
                     return true;
