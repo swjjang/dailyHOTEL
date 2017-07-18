@@ -41,6 +41,7 @@ import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.Util;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -80,7 +81,7 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
     ANIMATION_STATE mAnimationState = ANIMATION_STATE.END;
     AnimatorSet mAnimatorSet;
 
-    private int[] mHolidays;
+    protected List<Integer> mHolidayList;
 
     protected List<Integer> mSoldOutDayList;
 
@@ -103,13 +104,13 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
         if (DailyTextUtils.isTextEmpty(calendarHolidays) == false)
         {
             String[] holidays = calendarHolidays.split("\\,");
-            mHolidays = new int[holidays.length];
+            mHolidayList = new ArrayList<>();
 
             for (int i = 0; i < holidays.length; i++)
             {
                 try
                 {
-                    mHolidays[i] = Integer.parseInt(holidays[i]);
+                    mHolidayList.add(Integer.parseInt(holidays[i]));
                 } catch (NumberFormatException e)
                 {
                     ExLog.e(e.toString());
@@ -266,7 +267,7 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
             return false;
         }
 
-        if (mHolidays == null || mHolidays.length == 0)
+        if (mHolidayList == null || mHolidayList.size() == 0)
         {
             return false;
         }
@@ -275,7 +276,7 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
         {
             int calendarDay = Integer.parseInt(DailyCalendar.format(calendar.getTime(), "yyyyMMdd"));
 
-            for (int holiday : mHolidays)
+            for (int holiday : mHolidayList)
             {
                 if (holiday == calendarDay)
                 {
