@@ -9,6 +9,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Window;
+import android.view.WindowManager;
 
 import com.crashlytics.android.Crashlytics;
 import com.daily.base.util.VersionUtils;
@@ -28,6 +30,14 @@ public abstract class BaseActivity<T1 extends BasePresenter> extends AppCompatAc
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+
+        if (VersionUtils.isOverAPI21() == true && VersionUtils.isOverAPI23() == false)
+        {
+            Window window = getWindow();
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            window.setStatusBarColor(getResources().getColor(R.color.default_statusbar_background));
+        }
 
         mFragmentManager = getSupportFragmentManager();
 
