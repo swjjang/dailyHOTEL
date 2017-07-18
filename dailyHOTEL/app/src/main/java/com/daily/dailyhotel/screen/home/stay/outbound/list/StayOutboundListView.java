@@ -315,7 +315,7 @@ public class StayOutboundListView extends BaseDialogView<StayOutboundListView.On
     }
 
     @Override
-    public void setStayOutboundMapViewPagerList(Context context, List<StayOutbound> stayOutboundList)
+    public void setStayOutboundMapViewPagerList(Context context, List<StayOutbound> stayOutboundList, boolean isNights)
     {
         if (context == null)
         {
@@ -352,9 +352,11 @@ public class StayOutboundListView extends BaseDialogView<StayOutboundListView.On
             });
         }
 
+        mViewPager.setAdapter(mViewPagerAdapter);
+
         mViewPagerAdapter.clear();
         mViewPagerAdapter.setData(stayOutboundList);
-        mViewPager.setAdapter(mViewPagerAdapter);
+        mViewPagerAdapter.setNightsEnabled(isNights);
         mViewPagerAdapter.notifyDataSetChanged();
     }
 

@@ -31,6 +31,8 @@ public class StayOutboundMapViewPagerAdapter extends PagerAdapter
     protected List<StayOutbound> mStayOutboundList;
     protected OnPlaceMapViewPagerAdapterListener mOnPlaceMapViewPagerAdapterListener;
 
+    private boolean mNightsEnabled; // 연박 여부
+
     public interface OnPlaceMapViewPagerAdapterListener
     {
         void onStayClick(View view, StayOutbound stayOutbound);
@@ -42,6 +44,11 @@ public class StayOutboundMapViewPagerAdapter extends PagerAdapter
     {
         mContext = context;
         mStayOutboundList = new ArrayList<>();
+    }
+
+    public void setNightsEnabled(boolean enabled)
+    {
+        mNightsEnabled = enabled;
     }
 
     @Override
@@ -73,13 +80,12 @@ public class StayOutboundMapViewPagerAdapter extends PagerAdapter
 
         dataBinding.discountPriceTextView.setText(DailyTextUtils.getPriceFormat(mContext, stayOutbound.nightlyRate, false));
 
-        // 1박인 경우 전체가격과 1박가격이 같다.
-        if (stayOutbound.nightlyRate == stayOutbound.total)
-        {
-            dataBinding.averageTextView.setVisibility(View.GONE);
-        } else
+        if (mNightsEnabled == true)
         {
             dataBinding.averageTextView.setVisibility(View.VISIBLE);
+        } else
+        {
+            dataBinding.averageTextView.setVisibility(View.GONE);
         }
 
         // grade
