@@ -972,6 +972,7 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
             } else
             {
                 mPlaceReservationDetailLayout.expandMap(mPlaceBookingDetail.latitude, mPlaceBookingDetail.longitude);
+                ((StayReservationDetailLayout) mPlaceReservationDetailLayout).setRecommendGourmetButtonAnimation(false);
             }
         }
 

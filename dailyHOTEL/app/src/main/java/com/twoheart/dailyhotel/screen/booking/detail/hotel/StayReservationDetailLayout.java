@@ -511,7 +511,7 @@ public class StayReservationDetailLayout extends PlaceReservationDetailLayout
         setRecommendGourmetLayoutVisible(list != null && list.size() > 0);
     }
 
-    private void setRecommendGourmetButtonAnimation(boolean isVisible)
+    public void setRecommendGourmetButtonAnimation(boolean isVisible)
     {
         if (mRecommendGourmetButtonView == null)
         {
@@ -561,6 +561,11 @@ public class StayReservationDetailLayout extends PlaceReservationDetailLayout
     protected void onScrollChanged(ScrollView scrollView, int l, int t, int oldl, int oldt)
     {
         if (mRecommendGourmetItemLayout == null)
+        {
+            return;
+        }
+
+        if (isExpandedMap() == true)
         {
             return;
         }

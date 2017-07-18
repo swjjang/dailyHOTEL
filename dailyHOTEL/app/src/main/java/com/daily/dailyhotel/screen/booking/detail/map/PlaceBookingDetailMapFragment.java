@@ -294,10 +294,10 @@ public class PlaceBookingDetailMapFragment extends com.google.android.gms.maps.S
                     mGoogleMap.setOnCameraIdleListener(mClusterManager);
                 }
             });
-            mGoogleMap.animateCamera(CameraUpdateFactory.newLatLng(mPlaceLocationMarker.getPosition()));
+            mGoogleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cp));
         } else
         {
-            mGoogleMap.moveCamera(CameraUpdateFactory.newLatLng(mPlaceLocationMarker.getPosition()));
+            mGoogleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cp));
         }
 
         mGoogleMap.setInfoWindowAdapter(new PlaceNameInfoWindowAdapter(getActivity()));
