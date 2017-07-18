@@ -50,6 +50,15 @@ public abstract class PlaceListLayout extends BaseLayout
 
     protected PinnedSectionRecyclerView mPlaceRecyclerView;
 
+    protected enum ScreenType
+    {
+        NONE,
+        EMPTY,
+        FILTER_EMPTY,
+        LIST,
+        MAP
+    }
+
     public interface OnEventListener extends OnBaseEventListener
     {
         void onPlaceClick(View view, PlaceViewItem placeViewItem);
@@ -483,6 +492,92 @@ public abstract class PlaceListLayout extends BaseLayout
     public int getMapItemSize()
     {
         return mPlaceListMapFragment != null ? mPlaceListMapFragment.getPlaceViewItemListSize() : 0;
+    }
+
+    public void setEmptyScreenVisible(boolean visible)
+    {
+        if (mEmptyView == null)
+        {
+            return;
+        }
+
+        mEmptyView.setVisibility(visible == true ? View.VISIBLE : View.GONE);
+    }
+
+    public void setFilterEmptyScreenVisible(boolean visible)
+    {
+        if (mFilterEmptyView == null)
+        {
+            return;
+        }
+
+        mFilterEmptyView.setVisibility(visible == true ? View.VISIBLE : View.GONE);
+    }
+
+    public void setMapScreenVisible(boolean visible)
+    {
+        if (mMapLayout == null)
+        {
+            return;
+        }
+
+        mMapLayout.setVisibility(visible == true ? View.VISIBLE : View.GONE);
+    }
+
+    public void setListScreenVisible(boolean visible)
+    {
+        if (mSwipeRefreshLayout == null)
+        {
+            return;
+        }
+
+        mSwipeRefreshLayout.setVisibility(visible == true ? View.VISIBLE : View.INVISIBLE);
+    }
+
+    public void setScreenVisible(ScreenType screenType)
+    {
+        if (screenType == null)
+        {
+            return;
+        }
+
+        switch (screenType)
+        {
+            case NONE:
+                setEmptyScreenVisible(false);
+                setFilterEmptyScreenVisible(false);
+                setListScreenVisible(false);
+                setMapScreenVisible(false);
+                break;
+
+            case EMPTY:
+                setEmptyScreenVisible(true);
+                setFilterEmptyScreenVisible(false);
+                setListScreenVisible(false);
+                setMapScreenVisible(false);
+                break;
+
+            case FILTER_EMPTY:
+                setEmptyScreenVisible(false);
+                setFilterEmptyScreenVisible(true);
+                setListScreenVisible(false);
+                setMapScreenVisible(false);
+                break;
+
+            case LIST:
+                setEmptyScreenVisible(false);
+                setFilterEmptyScreenVisible(false);
+                setListScreenVisible(true);
+                setMapScreenVisible(false);
+                break;
+
+            case MAP:
+                setEmptyScreenVisible(false);
+                setFilterEmptyScreenVisible(false);
+                setListScreenVisible(false);
+                setMapScreenVisible(true);
+                break;
+        }
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////

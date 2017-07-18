@@ -66,9 +66,7 @@ public class StayListLayout extends PlaceListLayout
         switch (viewType)
         {
             case LIST:
-                mEmptyView.setVisibility(View.GONE);
-                mMapLayout.setVisibility(View.GONE);
-                mFilterEmptyView.setVisibility(View.GONE);
+                setScreenVisible(ScreenType.LIST);
 
                 if (mPlaceListMapFragment != null)
                 {
@@ -78,16 +76,12 @@ public class StayListLayout extends PlaceListLayout
                     mPlaceListMapFragment = null;
                 }
 
-                mSwipeRefreshLayout.setVisibility(View.VISIBLE);
-
                 ((StayListLayout.OnEventListener) mOnEventListener).onUpdateFilterEnabled(true);
                 ((StayListLayout.OnEventListener) mOnEventListener).onUpdateViewTypeEnabled(true);
                 break;
 
             case MAP:
-                mEmptyView.setVisibility(View.GONE);
-                mMapLayout.setVisibility(View.VISIBLE);
-                mFilterEmptyView.setVisibility(View.GONE);
+                setScreenVisible(ScreenType.MAP);
 
                 if (isCurrentPage == true && mPlaceListMapFragment == null)
                 {
@@ -103,8 +97,6 @@ public class StayListLayout extends PlaceListLayout
                     }
                 }
 
-                mSwipeRefreshLayout.setVisibility(View.INVISIBLE);
-
                 ((StayListLayout.OnEventListener) mOnEventListener).onUpdateFilterEnabled(true);
                 ((StayListLayout.OnEventListener) mOnEventListener).onUpdateViewTypeEnabled(true);
                 break;
@@ -116,19 +108,13 @@ public class StayListLayout extends PlaceListLayout
 
                 if (stayCurationOption.isDefaultFilter() == true)
                 {
-                    mEmptyView.setVisibility(View.VISIBLE);
-                    mFilterEmptyView.setVisibility(View.GONE);
+                    setScreenVisible(ScreenType.EMPTY);
                     ((StayListLayout.OnEventListener) mOnEventListener).onUpdateFilterEnabled(false);
                 } else
                 {
-                    mEmptyView.setVisibility(View.GONE);
-                    mFilterEmptyView.setVisibility(View.VISIBLE);
+                    setScreenVisible(ScreenType.FILTER_EMPTY);
                     ((StayListLayout.OnEventListener) mOnEventListener).onUpdateFilterEnabled(true);
                 }
-
-                mMapLayout.setVisibility(View.GONE);
-
-                mSwipeRefreshLayout.setVisibility(View.INVISIBLE);
 
                 ((StayListLayout.OnEventListener) mOnEventListener).onUpdateViewTypeEnabled(false);
 

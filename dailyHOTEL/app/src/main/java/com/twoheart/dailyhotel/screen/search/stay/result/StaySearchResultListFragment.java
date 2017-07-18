@@ -9,7 +9,6 @@ import com.twoheart.dailyhotel.model.StaySearchParams;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.layout.PlaceListLayout;
 import com.twoheart.dailyhotel.screen.hotel.list.StayListFragment;
-import com.twoheart.dailyhotel.screen.hotel.list.StayListLayout;
 import com.twoheart.dailyhotel.util.Util;
 
 import java.util.ArrayList;

@@ -144,17 +144,24 @@ public class DailyLocationFactory
             return;
         }
 
-        if (VersionUtils.isOverAPI23() == true)
+        if (DailyPreference.getInstance(mContext).isAgreeTermsOfLocation() == false)
         {
-            if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)
+            if (listener != null)
             {
-                if (listener != null)
-                {
-                    listener.onRequirePermission();
-                }
-
-                return;
+                listener.onRequirePermission();
             }
+
+            return;
+        }
+
+        if (VersionUtils.isOverAPI23() == true && ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)
+        {
+            if (listener != null)
+            {
+                listener.onRequirePermission();
+            }
+
+            return;
         }
 
         if (isLocationProviderEnabled(mContext) == true)
@@ -169,7 +176,6 @@ public class DailyLocationFactory
     /**
      * checkLocationMeasure이 onProviderEnabled일때 호출
      *
-     * @param activity
      * @param myLocation
      * @param listener
      */

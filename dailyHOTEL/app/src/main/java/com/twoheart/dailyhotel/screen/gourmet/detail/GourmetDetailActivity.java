@@ -1113,7 +1113,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         }
     }
 
-    public void onReservation(int index)
+    private void onReservation(int index)
     {
         if (mPlaceDetail == null)
         {
@@ -1168,7 +1168,8 @@ public class GourmetDetailActivity extends PlaceDetailActivity
 
             Map<String, String> params = new HashMap<>();
             params.put(AnalyticsManager.KeyType.NAME, gourmetDetailParams.name);
-            params.put(AnalyticsManager.KeyType.GRADE, gourmetDetailParams.getGrade().name()); // 14
+            params.put(AnalyticsManager.KeyType.GRADE, gourmetDetailParams.getGrade().name()); //
+            params.put(AnalyticsManager.KeyType.PLACE_TYPE, "gourmet"); //
             params.put(AnalyticsManager.KeyType.CATEGORY, gourmetDetailParams.category);
             params.put(AnalyticsManager.KeyType.DBENEFIT, DailyTextUtils.isTextEmpty(gourmetDetailParams.benefit) ? "no" : "yes");
 
@@ -1195,7 +1196,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
 
             params.put(AnalyticsManager.KeyType.LIST_INDEX, listIndex);
 
-            String placeCount = mAnalyticsParam.totalListCount == -1 //
+            String placeCount = mAnalyticsParam.totalListCount == -1 //o
                 ? AnalyticsManager.ValueType.EMPTY : Integer.toString(mAnalyticsParam.totalListCount);
 
             params.put(AnalyticsManager.KeyType.PLACE_COUNT, placeCount);
@@ -1266,6 +1267,15 @@ public class GourmetDetailActivity extends PlaceDetailActivity
             ((GourmetDetailLayout) mPlaceDetailLayout).scrollProduct();
 
             unLockUI();
+
+            try
+            {
+                AnalyticsManager.getInstance(GourmetDetailActivity.this).recordEvent(AnalyticsManager.Category.GOURMET_BOOKINGS//
+                    , AnalyticsManager.Action.TICKET_TYPE_CLICKED, ((GourmetDetail) mPlaceDetail).getGourmetDetailParmas().name, null);
+            } catch (Exception e)
+            {
+                ExLog.d(e.toString());
+            }
         }
 
         @Override
@@ -1327,6 +1337,18 @@ public class GourmetDetailActivity extends PlaceDetailActivity
                 {
                     startActivityForResult(GourmetMenusActivity.newInstance(GourmetDetailActivity.this, gourmetMenuList, index)//
                         , CODE_REQUEST_ACTIVITY_GOURMET_PRODUCT_DETAIL);
+
+                    try
+                    {
+                        AnalyticsManager.getInstance(GourmetDetailActivity.this).recordEvent(AnalyticsManager.Category.GOURMET_BOOKINGS//
+                            , AnalyticsManager.Action.GOURMET_MENU_DETAIL_CLICK, Integer.toString(gourmetDetail.getProductList().get(index).index), null);
+
+                        AnalyticsManager.getInstance(GourmetDetailActivity.this).recordEvent(AnalyticsManager.Category.GOURMET_BOOKINGS//
+                            , AnalyticsManager.Action.GOURMET_TICKET_RANK, Integer.toString(index + 1), null);
+                    } catch (Exception e)
+                    {
+                        ExLog.d(e.toString());
+                    }
                 }
             }, new Consumer<Throwable>()
             {
@@ -1367,9 +1389,27 @@ public class GourmetDetailActivity extends PlaceDetailActivity
             if (((GourmetDetailLayout) mPlaceDetailLayout).isOpenedProductMoreList() == true)
             {
                 ((GourmetDetailLayout) mPlaceDetailLayout).closeMoreProductList();
+
+                try
+                {
+                    AnalyticsManager.getInstance(GourmetDetailActivity.this).recordEvent(AnalyticsManager.Category.GOURMET_BOOKINGS//
+                        , AnalyticsManager.Action.GOURMET_MENU_FOLD, Integer.toString(mPlaceDetail.index), null);
+                } catch (Exception e)
+                {
+                    ExLog.d(e.toString());
+                }
             } else
             {
                 ((GourmetDetailLayout) mPlaceDetailLayout).openMoreProductList();
+
+                try
+                {
+                    AnalyticsManager.getInstance(GourmetDetailActivity.this).recordEvent(AnalyticsManager.Category.GOURMET_BOOKINGS//
+                        , AnalyticsManager.Action.GOURMET_MENU_UNFOLD, Integer.toString(mPlaceDetail.index), null);
+                } catch (Exception e)
+                {
+                    ExLog.d(e.toString());
+                }
             }
         }
 

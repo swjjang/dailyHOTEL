@@ -2,14 +2,11 @@ package com.twoheart.dailyhotel.place.networkcontroller;
 
 import android.content.Context;
 
-import com.twoheart.dailyhotel.model.Keyword;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.network.dto.BaseDto;
 import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
-
-import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Response;

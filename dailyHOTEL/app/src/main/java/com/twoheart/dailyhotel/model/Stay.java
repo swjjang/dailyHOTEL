@@ -105,10 +105,10 @@ public class Stay extends Place
             index = jsonObject.getInt("hotelIdx");
 
             // 해당 정보 내려오지 않음.
-//            if (jsonObject.has("isSoldOut") == true)
-//            {
-//                isSoldOut = jsonObject.getBoolean("isSoldOut"); //
-//            }
+            //            if (jsonObject.has("isSoldOut") == true)
+            //            {
+            //                isSoldOut = jsonObject.getBoolean("isSoldOut"); //
+            //            }
 
             districtName = jsonObject.getString("districtName");
             categoryCode = jsonObject.getString("category");

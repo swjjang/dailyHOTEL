@@ -302,7 +302,15 @@ public class StayMainActivity extends PlaceMainActivity
                 {
                     mStayCuration.setLocation(changedStayCuration.getLocation());
 
-                    searchMyLocation();
+                    if (mStayCuration.getLocation() != null)
+                    {
+                        lockUI();
+
+                        onLocationChanged(mStayCuration.getLocation());
+                    } else
+                    {
+                        searchMyLocation();
+                    }
                 } else
                 {
                     refreshCurrentFragment(true);

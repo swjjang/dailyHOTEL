@@ -5,7 +5,6 @@ import android.support.annotation.Nullable;
 
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
-import com.daily.base.util.ScreenUtils;
 import com.daily.dailyhotel.entity.ImageMap;
 import com.daily.dailyhotel.entity.StayOutbound;
 import com.daily.dailyhotel.entity.StayOutbounds;

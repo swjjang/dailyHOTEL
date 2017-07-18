@@ -5,7 +5,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 
 import com.daily.base.util.DailyLock;
@@ -225,5 +224,10 @@ public abstract class BasePresenter<T1 extends BaseActivity, T2 extends BaseDial
     {
         unLock();
         screenUnLock();
+    }
+
+    protected void finish()
+    {
+        mActivity.finish();
     }
 }

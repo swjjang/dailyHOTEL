@@ -1107,7 +1107,7 @@ public class StayCategoryTabActivity extends PlaceMainActivity
                             , mStayCategoryCuration.getStayBookingDay(), stay.index, stay.name, stay.imageUrl //
                             , analyticsParam, true);
 
-                            View simpleDraweeView = view.findViewById(R.id.imageView);
+                        View simpleDraweeView = view.findViewById(R.id.imageView);
                         View gradeTextView = view.findViewById(R.id.gradeTextView);
                         View nameTextView = view.findViewById(R.id.nameTextView);
                         View gradientTopView = view.findViewById(R.id.gradientTopView);

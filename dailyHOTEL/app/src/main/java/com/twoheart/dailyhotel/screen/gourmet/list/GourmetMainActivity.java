@@ -244,7 +244,15 @@ public class GourmetMainActivity extends PlaceMainActivity
             {
                 mGourmetCuration.setLocation(changedGourmetCuration.getLocation());
 
-                searchMyLocation();
+                if (mGourmetCuration.getLocation() != null)
+                {
+                    lockUI();
+
+                    onLocationChanged(mGourmetCuration.getLocation());
+                } else
+                {
+                    searchMyLocation();
+                }
             } else
             {
                 refreshCurrentFragment(true);

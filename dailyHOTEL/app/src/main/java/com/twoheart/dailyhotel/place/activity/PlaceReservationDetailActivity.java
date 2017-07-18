@@ -22,6 +22,7 @@ import com.twoheart.dailyhotel.network.dto.BaseDto;
 import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.layout.PlaceReservationDetailLayout;
+import com.twoheart.dailyhotel.screen.booking.detail.hotel.StayReservationDetailLayout;
 import com.twoheart.dailyhotel.screen.common.PermissionManagerActivity;
 import com.twoheart.dailyhotel.screen.mydaily.member.LoginActivity;
 import com.twoheart.dailyhotel.util.Constants;
@@ -230,6 +231,7 @@ public abstract class PlaceReservationDetailActivity extends BaseActivity
             }
 
             mPlaceReservationDetailLayout.collapseMap();
+            ((StayReservationDetailLayout) mPlaceReservationDetailLayout).setRecommendGourmetButtonAnimation(true);
         } else
         {
             super.onBackPressed();

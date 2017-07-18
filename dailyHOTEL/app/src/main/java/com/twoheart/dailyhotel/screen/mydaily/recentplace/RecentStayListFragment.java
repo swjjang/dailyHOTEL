@@ -20,8 +20,8 @@ import com.daily.dailyhotel.entity.CommonDateTime;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayOutbound;
 import com.daily.dailyhotel.entity.StayOutbounds;
-import com.daily.dailyhotel.repository.local.model.AnalyticsParam;
 import com.daily.dailyhotel.parcel.analytics.StayOutboundDetailAnalyticsParam;
+import com.daily.dailyhotel.repository.local.model.AnalyticsParam;
 import com.daily.dailyhotel.screen.home.stay.outbound.detail.StayOutboundDetailActivity;
 import com.daily.dailyhotel.util.RecentlyPlaceUtil;
 import com.facebook.drawee.view.SimpleDraweeView;
@@ -325,7 +325,7 @@ public class RecentStayListFragment extends RecentPlacesListFragment
         } else
         {
             AnalyticsParam analyticsParam = new AnalyticsParam();
-            analyticsParam.setParam(mBaseActivity , stay);
+            analyticsParam.setParam(mBaseActivity, stay);
             analyticsParam.setProvince(null);
             analyticsParam.setTotalListCount(-1);
 

@@ -134,6 +134,9 @@
             android:layout_marginLeft="11dp"
             android:layout_marginRight="5dp"
             android:layout_toLeftOf="@+id/discountPriceLayout"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:singleLine="true"
             android:textColor="@color/white"
             android:textSize="12dp"
             dailyFont:style="DemiLight"/>

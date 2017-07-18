@@ -32,7 +32,7 @@ public interface StayOutboundListViewInterface extends BaseDialogViewInterface
 
     void setStayOutboundMakeMarker(List<StayOutbound> stayOutboundList);
 
-    void setStayOutboundMapViewPagerList(Context context, List<StayOutbound> stayOutboundList);
+    void setStayOutboundMapViewPagerList(Context context, List<StayOutbound> stayOutboundList, boolean isNights);
 
     int getMapLayoutResourceId();
 

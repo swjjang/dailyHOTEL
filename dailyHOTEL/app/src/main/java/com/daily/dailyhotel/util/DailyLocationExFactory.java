@@ -19,6 +19,7 @@ import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.twoheart.dailyhotel.util.DailyPreference;
 
 import java.util.List;
 
@@ -90,17 +91,24 @@ public class DailyLocationExFactory
             return;
         }
 
-        if (VersionUtils.isOverAPI23() == true)
+        if (DailyPreference.getInstance(mContext).isAgreeTermsOfLocation() == false)
         {
-            if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)
+            if (listener != null)
             {
-                if (listener != null)
-                {
-                    listener.onRequirePermission();
-                }
-
-                return;
+                listener.onRequirePermission();
             }
+
+            return;
+        }
+
+        if (VersionUtils.isOverAPI23() == true && ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)
+        {
+            if (listener != null)
+            {
+                listener.onRequirePermission();
+            }
+
+            return;
         }
 
         if (isLocationProviderEnabled() == true)

@@ -28,7 +28,7 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
 
         void onReservationClick(int index);
 
-        void onScrolled(int position);
+        void onScrolled(int position, boolean real);
 
         void onMoreImageClick(int position);
     }
@@ -62,7 +62,7 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
                 super.onScrolled(recyclerView, dx, dy);
 
                 View view = snapHelper.findSnapView(viewDataBinding.recyclerView.getLayoutManager());
-                getEventListener().onScrolled(viewDataBinding.recyclerView.getChildAdapterPosition(view));
+                getEventListener().onScrolled(viewDataBinding.recyclerView.getChildAdapterPosition(view), true);
             }
         });
     }
@@ -177,7 +177,7 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
         {
             int scrolled = super.scrollHorizontallyBy(dx, recycler, state);
             final float midpoint = getWidth() / 2.f;
-//            final float d0 = 0.f;
+            //            final float d0 = 0.f;
             final float d1 = DISTANCE * midpoint;
             final float s0 = 1.f;
             final float s1 = 1.f - AMOUNT;
@@ -189,7 +189,7 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
                 float childMidpoint = (getDecoratedRight(childView) + getDecoratedLeft(childView)) / 2.f;
                 float d = Math.min(d1, Math.abs(midpoint - childMidpoint));
                 float scale = s0 - AMOUNT * d / d1;
-//                float scale = s0 + (s1 - s0) * (d - d0) / (d1 - d0);
+                //                float scale = s0 + (s1 - s0) * (d - d0) / (d1 - d0);
 
                 childView.setScaleX(scale);
                 childView.setScaleY(scale);

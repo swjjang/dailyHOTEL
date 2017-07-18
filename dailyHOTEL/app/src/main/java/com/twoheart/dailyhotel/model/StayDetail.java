@@ -19,13 +19,13 @@ public class StayDetail extends PlaceDetail<StayProduct> implements Parcelable
     public boolean hasCoupon;
 
     public StayDetail(int hotelIndex)
-//    public StayDetail(int hotelIndex, int entryIndex, String isShowOriginalPrice, int listCount, boolean isDailyChoice)
+    //    public StayDetail(int hotelIndex, int entryIndex, String isShowOriginalPrice, int listCount, boolean isDailyChoice)
     {
         this.index = hotelIndex;
-//        this.entryPosition = entryIndex;
-//        this.isShowOriginalPrice = isShowOriginalPrice;
-//        this.listCount = listCount;
-//        this.isDailyChoice = isDailyChoice;
+        //        this.entryPosition = entryIndex;
+        //        this.isShowOriginalPrice = isShowOriginalPrice;
+        //        this.listCount = listCount;
+        //        this.isDailyChoice = isDailyChoice;
     }
 
     public StayDetail(Parcel in)
@@ -322,10 +322,10 @@ public class StayDetail extends PlaceDetail<StayProduct> implements Parcelable
         dest.writeParcelable(mStayDetailParams, flags);
         dest.writeInt(hasCoupon == true ? 1 : 0);
         dest.writeInt(index);
-//        dest.writeInt(listCount);
-//        dest.writeInt(entryPosition);
-//        dest.writeString(isShowOriginalPrice);
-//        dest.writeInt(isDailyChoice == true ? 1 : 0);
+        //        dest.writeInt(listCount);
+        //        dest.writeInt(entryPosition);
+        //        dest.writeString(isShowOriginalPrice);
+        //        dest.writeInt(isDailyChoice == true ? 1 : 0);
     }
 
     protected void readFromParcel(Parcel in)
@@ -333,10 +333,10 @@ public class StayDetail extends PlaceDetail<StayProduct> implements Parcelable
         mStayDetailParams = in.readParcelable(StayDetailParams.class.getClassLoader());
         hasCoupon = in.readInt() == 1;
         index = in.readInt();
-//        listCount = in.readInt();
-//        entryPosition = in.readInt();
-//        isShowOriginalPrice = in.readString();
-//        isDailyChoice = in.readInt() == 1;
+        //        listCount = in.readInt();
+        //        entryPosition = in.readInt();
+        //        isShowOriginalPrice = in.readString();
+        //        isDailyChoice = in.readInt() == 1;
     }
 
     @Override

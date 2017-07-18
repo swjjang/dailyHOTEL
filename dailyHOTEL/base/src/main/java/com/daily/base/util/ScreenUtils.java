@@ -161,6 +161,19 @@ public class ScreenUtils
         return false;
     }
 
+    public static int getResolution(Activity activity)
+    {
+        if (activity == null)
+        {
+            return DisplayMetrics.DENSITY_DEFAULT;
+        }
+
+        DisplayMetrics metrics = new DisplayMetrics();
+        activity.getWindowManager().getDefaultDisplay().getMetrics(metrics);
+
+        return metrics.densityDpi;
+    }
+
     public static String getResolutionImageUrl(Context context, String defaultImageUrl, String lowResolutionImageUrl)
     {
         return ScreenUtils.getScreenWidth(context) < 1440 ? lowResolutionImageUrl : defaultImageUrl;

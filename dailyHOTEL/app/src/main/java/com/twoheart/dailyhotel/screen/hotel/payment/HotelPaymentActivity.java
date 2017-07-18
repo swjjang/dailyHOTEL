@@ -1838,6 +1838,11 @@ public class HotelPaymentActivity extends PlacePaymentActivity
         @Override
         public void changedPaymentType(PlacePaymentInformation.PaymentType paymentType)
         {
+            if (mPaymentInformation.paymentType == paymentType)
+            {
+                return;
+            }
+
             mPaymentInformation.paymentType = paymentType;
             mHotelPaymentLayout.checkPaymentType(paymentType);
         }

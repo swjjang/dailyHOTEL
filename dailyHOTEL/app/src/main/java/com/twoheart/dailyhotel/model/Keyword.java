@@ -7,9 +7,6 @@ import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonIgnore;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 @JsonObject
 public class Keyword implements Parcelable
 {

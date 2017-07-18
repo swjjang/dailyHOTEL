@@ -189,8 +189,7 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
             || AnalyticsManager.Screen.DAILYGOURMET_DETAIL.equalsIgnoreCase(screenName) == true)
         {
             checkoutStep(1, screenName, null, params);
-        } else if (AnalyticsManager.Screen.DAILYHOTEL_DETAIL_ROOMTYPE.equalsIgnoreCase(screenName) == true//
-            || AnalyticsManager.Screen.DAILYGOURMET_DETAIL_TICKETTYPE.equalsIgnoreCase(screenName) == true)
+        } else if (AnalyticsManager.Screen.DAILYHOTEL_DETAIL_ROOMTYPE.equalsIgnoreCase(screenName) == true)
         {
             checkoutStep(2, screenName, null, params);
         } else if (AnalyticsManager.Screen.DAILYHOTEL_PAYMENT.equalsIgnoreCase(screenName) == true//
@@ -887,6 +886,7 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
         String checkOut = params.get(AnalyticsManager.KeyType.CHECK_OUT);
         String dBenefit = params.get(AnalyticsManager.KeyType.DBENEFIT);
         String paymentType = params.get(AnalyticsManager.KeyType.PAYMENT_TYPE);
+        String placeType = params.get(AnalyticsManager.KeyType.PLACE_TYPE);
         String registeredSimpleCard = params.get(AnalyticsManager.KeyType.REGISTERED_SIMPLE_CARD);
         String nrd = params.get(AnalyticsManager.KeyType.NRD);
         String category = params.get(AnalyticsManager.KeyType.CATEGORY);
@@ -915,6 +915,11 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
         if (DailyTextUtils.isTextEmpty(paymentType) == false)
         {
             screenViewBuilder.setCustomDimension(4, paymentType);
+        }
+
+        if (DailyTextUtils.isTextEmpty(placeType) == false)
+        {
+            screenViewBuilder.setCustomDimension(6, placeType);
         }
 
         if (DailyTextUtils.isTextEmpty(registeredSimpleCard) == false)

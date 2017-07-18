@@ -67,9 +67,7 @@ public class GourmetListLayout extends PlaceListLayout
         switch (viewType)
         {
             case LIST:
-                mEmptyView.setVisibility(View.GONE);
-                mMapLayout.setVisibility(View.GONE);
-                mFilterEmptyView.setVisibility(View.GONE);
+                setScreenVisible(ScreenType.LIST);
 
                 if (mPlaceListMapFragment != null)
                 {
@@ -79,16 +77,12 @@ public class GourmetListLayout extends PlaceListLayout
                     mPlaceListMapFragment = null;
                 }
 
-                mSwipeRefreshLayout.setVisibility(View.VISIBLE);
-
                 ((GourmetListLayout.OnEventListener) mOnEventListener).onUpdateFilterEnabled(true);
                 ((GourmetListLayout.OnEventListener) mOnEventListener).onUpdateViewTypeEnabled(true);
                 break;
 
             case MAP:
-                mEmptyView.setVisibility(View.GONE);
-                mMapLayout.setVisibility(View.VISIBLE);
-                mFilterEmptyView.setVisibility(View.GONE);
+                setScreenVisible(ScreenType.MAP);
 
                 if (isCurrentPage == true && mPlaceListMapFragment == null)
                 {
@@ -104,8 +98,6 @@ public class GourmetListLayout extends PlaceListLayout
                     }
                 }
 
-                mSwipeRefreshLayout.setVisibility(View.INVISIBLE);
-
                 ((GourmetListLayout.OnEventListener) mOnEventListener).onUpdateFilterEnabled(true);
                 ((GourmetListLayout.OnEventListener) mOnEventListener).onUpdateViewTypeEnabled(true);
                 break;
@@ -117,19 +109,14 @@ public class GourmetListLayout extends PlaceListLayout
 
                 if (gourmetCurationOption.isDefaultFilter() == true)
                 {
-                    mEmptyView.setVisibility(View.VISIBLE);
-                    mFilterEmptyView.setVisibility(View.GONE);
+                    setScreenVisible(ScreenType.EMPTY);
                     ((GourmetListLayout.OnEventListener) mOnEventListener).onUpdateFilterEnabled(false);
                 } else
                 {
-                    mEmptyView.setVisibility(View.GONE);
+                    setScreenVisible(ScreenType.FILTER_EMPTY);
                     mFilterEmptyView.setVisibility(View.VISIBLE);
                     ((GourmetListLayout.OnEventListener) mOnEventListener).onUpdateFilterEnabled(true);
                 }
-
-                mMapLayout.setVisibility(View.GONE);
-
-                mSwipeRefreshLayout.setVisibility(View.INVISIBLE);
 
                 ((GourmetListLayout.OnEventListener) mOnEventListener).onUpdateViewTypeEnabled(false);
 

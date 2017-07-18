@@ -3,6 +3,7 @@ package com.daily.dailyhotel.screen.booking.detail.map;
 
 import android.content.Context;
 import android.content.Intent;
+import android.location.Location;
 
 import com.twoheart.dailyhotel.model.Gourmet;
 import com.twoheart.dailyhotel.model.time.GourmetBookingDay;
@@ -15,12 +16,15 @@ import java.util.ArrayList;
 
 public class GourmetBookingDetailMapActivity extends PlaceBookingDetailMapActivity
 {
-    public static Intent newInstance(Context context, String title, GourmetBookingDay gourmetBookingDay, ArrayList<Gourmet> gourmetList)
+    public static Intent newInstance(Context context, String title, GourmetBookingDay gourmetBookingDay //
+        , ArrayList<Gourmet> gourmetList, Location location, String placeName)
     {
         Intent intent = new Intent(context, GourmetBookingDetailMapActivity.class);
         intent.putExtra(INTENT_EXTRA_DATA_TITLE, title);
         intent.putExtra(INTENT_EXTRA_DATA_PLACEBOOKINGDAY, gourmetBookingDay);
         intent.putExtra(INTENT_EXTRA_DATA_PLACE_LIST, gourmetList);
+        intent.putExtra(INTENT_EXTRA_DATA_PLACE_LOCATION, location);
+        intent.putExtra(INTENT_EXTRA_DATA_PLACE_NAME, placeName);
         return intent;
     }
 

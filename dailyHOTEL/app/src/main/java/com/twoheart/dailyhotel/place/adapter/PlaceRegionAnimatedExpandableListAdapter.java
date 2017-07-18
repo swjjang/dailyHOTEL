@@ -195,7 +195,7 @@ public class PlaceRegionAnimatedExpandableListAdapter extends AnimatedExpandable
         return convertView;
     }
 
-    private void setUnderLineView(View convertView,int groupPosition, int childPosition)
+    private void setUnderLineView(View convertView, int groupPosition, int childPosition)
     {
         ArrayList<Area[]> children = getChildren(groupPosition);
         View normalUnderLineView = convertView.findViewById(R.id.underLineView);
@@ -206,7 +206,7 @@ public class PlaceRegionAnimatedExpandableListAdapter extends AnimatedExpandable
             return;
         }
 
-        boolean isLast = childPosition == children.size() -1;
+        boolean isLast = childPosition == children.size() - 1;
         normalUnderLineView.setVisibility(isLast == true ? View.GONE : View.VISIBLE);
         lastUnderLineView.setVisibility(isLast == true ? View.VISIBLE : View.GONE);
     }

@@ -14,7 +14,6 @@ import android.support.v4.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.daily.base.exception.BaseException;
@@ -368,7 +367,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
 
             case Constants.CODE_RESULT_ACTIVITY_SETTING_LOCATION:
             {
-                searchMyLocation();
+                checkLocationProvider();
                 break;
             }
 
@@ -376,7 +375,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
             {
                 if (resultCode == Activity.RESULT_OK)
                 {
-                    searchMyLocation();
+                    checkLocationProvider();
                 } else if (resultCode == CODE_RESULT_ACTIVITY_GO_HOME)
                 {
                     mDontReload = true;
@@ -1054,18 +1053,11 @@ public class HomeFragment extends BaseMenuNavigationFragment
         }
     }
 
-    protected void searchMyLocation()
+    protected void checkLocationProvider()
     {
-        lockUI();
-
         if (mDailyLocationFactory == null)
         {
             mDailyLocationFactory = new DailyLocationFactory(getContext());
-        }
-
-        if (mDailyLocationFactory.measuringLocation() == true)
-        {
-            return;
         }
 
         mDailyLocationFactory.checkLocationMeasure(new DailyLocationFactory.OnCheckLocationListener()
@@ -1117,47 +1109,12 @@ public class HomeFragment extends BaseMenuNavigationFragment
             @Override
             public void onProviderEnabled()
             {
-                mDailyLocationFactory.startLocationMeasure(null, new DailyLocationFactory.OnLocationListener()
-                {
-                    @Override
-                    public void onFailed()
-                    {
-                        unLockUI();
-                    }
-
-                    @Override
-                    public void onAlreadyRun()
-                    {
-
-                    }
-
-                    @Override
-                    public void onLocationChanged(Location location)
-                    {
-                        unLockUI();
-
-                        if (isFinishing() == true)
-                        {
-                            return;
-                        }
-
-                        mDailyLocationFactory.stopLocationMeasure();
-
-                        if (location == null)
-                        {
-                            DailyToast.showToast(mBaseActivity, R.string.message_failed_mylocation, Toast.LENGTH_SHORT);
-                        } else
-                        {
-                            // Location
-                            onSearchLocation(location);
-                        }
-                    }
-                });
+                onSearchLocation();
             }
         });
     }
 
-    private void onSearchLocation(Location location)
+    private void onSearchLocation()
     {
         if (mTodayDateTime == null)
         {
@@ -1171,7 +1128,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
             stayBookingDay.setCheckInDay(mTodayDateTime.dailyDateTime);
             stayBookingDay.setCheckOutDay(mTodayDateTime.dailyDateTime, 1);
 
-            Intent intent = StaySearchResultActivity.newInstance(mBaseActivity, mTodayDateTime, stayBookingDay, location, AnalyticsManager.Screen.HOME);
+            Intent intent = StaySearchResultActivity.newInstance(mBaseActivity, mTodayDateTime, stayBookingDay, null, AnalyticsManager.Screen.HOME);
             startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_SEARCH_RESULT);
         } catch (Exception e)
         {

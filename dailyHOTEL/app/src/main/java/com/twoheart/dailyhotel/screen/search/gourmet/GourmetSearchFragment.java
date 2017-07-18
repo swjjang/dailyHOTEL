@@ -15,7 +15,6 @@ import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.place.fragment.PlaceSearchFragment;
 import com.twoheart.dailyhotel.place.layout.PlaceSearchLayout;
 import com.twoheart.dailyhotel.place.networkcontroller.PlaceSearchNetworkController;
-import com.twoheart.dailyhotel.screen.common.PermissionManagerActivity;
 import com.twoheart.dailyhotel.screen.gourmet.filter.GourmetCalendarActivity;
 import com.twoheart.dailyhotel.screen.search.gourmet.result.GourmetSearchResultActivity;
 import com.twoheart.dailyhotel.util.Constants;
@@ -175,7 +174,7 @@ public class GourmetSearchFragment extends PlaceSearchFragment
 
     public void setGourmetBookingDay(GourmetBookingDay gourmetBookingDay)
     {
-        if(gourmetBookingDay == null)
+        if (gourmetBookingDay == null)
         {
             return;
         }
@@ -253,9 +252,6 @@ public class GourmetSearchFragment extends PlaceSearchFragment
             }
 
             checkLocationProvider();
-
-//            Intent intent = PermissionManagerActivity.newInstance(mBaseActivity, PermissionManagerActivity.PermissionType.ACCESS_FINE_LOCATION);
-//            startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_PERMISSION_MANAGER);
         }
 
         @Override
@@ -353,7 +349,7 @@ public class GourmetSearchFragment extends PlaceSearchFragment
                 return;
             }
 
-            if(mGourmetBookingDay == null)
+            if (mGourmetBookingDay == null)
             {
                 Util.restartApp(mBaseActivity);
                 return;
