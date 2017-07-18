@@ -49,6 +49,8 @@ public abstract class PlaceBookingDetailMapPresenter extends BaseExceptionPresen
     private PlaceBookingDay mPlaceBookingDay;
     private ArrayList<Place> mPlaceList;
     private DailyLocationExFactory mDailyLocationExFactory;
+    private String mPlaceName;
+    private Location mPlaceLocation;
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     protected abstract void startPlaceDetail(View view, PlaceBookingDay placeBookingDay, Place place);
@@ -95,6 +97,8 @@ public abstract class PlaceBookingDetailMapPresenter extends BaseExceptionPresen
             mTitle = intent.getStringExtra(PlaceBookingDetailMapActivity.INTENT_EXTRA_DATA_TITLE);
             mPlaceBookingDay = intent.getParcelableExtra(PlaceBookingDetailMapActivity.INTENT_EXTRA_DATA_PLACEBOOKINGDAY);
             mPlaceList = intent.getParcelableArrayListExtra(PlaceBookingDetailMapActivity.INTENT_EXTRA_DATA_PLACE_LIST);
+            mPlaceName = intent.getStringExtra(PlaceBookingDetailMapActivity.INTENT_EXTRA_DATA_PLACE_NAME);
+            mPlaceLocation = intent.getParcelableExtra(PlaceBookingDetailMapActivity.INTENT_EXTRA_DATA_PLACE_LOCATION);
 
             if (mPlaceList == null || mPlaceList.size() == 0)
             {
@@ -241,6 +245,7 @@ public abstract class PlaceBookingDetailMapPresenter extends BaseExceptionPresen
         }
 
         getViewInterface().setPlaceList(mPlaceList, mPlaceBookingDay);
+        getViewInterface().addMarker(mPlaceLocation.getLatitude(), mPlaceLocation.getLongitude(), mPlaceName);
 
         unLockAll();
     }

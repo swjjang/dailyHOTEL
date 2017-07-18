@@ -534,11 +534,11 @@ public class StayReservationDetailLayout extends PlaceReservationDetailLayout
         {
             mRecommendGourmetButtonView.setVisibility(View.VISIBLE);
 
-            float transY = ScreenUtils.dpToPx(mContext, 10d);
+            float transY = ScreenUtils.dpToPx(mContext, 7d);
 
             mRecommendGourmetButtonAnimator = ObjectAnimator.ofFloat(mRecommendGourmetButtonView, "translationY", 0.0f, transY, 0.0f);
             mRecommendGourmetButtonAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
-            mRecommendGourmetButtonAnimator.setDuration(2000);
+            mRecommendGourmetButtonAnimator.setDuration(1600);
             mRecommendGourmetButtonAnimator.setRepeatCount(ObjectAnimator.INFINITE);
             mRecommendGourmetButtonAnimator.start();
         } else

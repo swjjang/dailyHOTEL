@@ -1155,8 +1155,12 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
                     gourmetList.addAll(mRecommendGourmetList);
                 }
 
+                Location location = new Location((String) null);
+                location.setLatitude(stayBookingDetail.latitude);
+                location.setLongitude(stayBookingDetail.longitude);
+
                 Intent intent = GourmetBookingDetailMapActivity.newInstance( //
-                    StayReservationDetailActivity.this, title, gourmetBookingDay, gourmetList);
+                    StayReservationDetailActivity.this, title, gourmetBookingDay, gourmetList, location, stayBookingDetail.placeName);
 
                 StayReservationDetailActivity.this.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PLACE_BOOKING_DETAIL_MAP);
 
