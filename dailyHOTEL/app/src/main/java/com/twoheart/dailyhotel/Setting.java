@@ -23,7 +23,7 @@ public class Setting
         }
     }
 
-    public static final Stores getStore()
+    public static Stores getStore()
     {
         switch (BuildConfig.FLAVOR_STORE)
         {
@@ -38,7 +38,7 @@ public class Setting
         }
     }
 
-    public static final String getServerUrl()
+    public static String getServerUrl()
     {
         switch (BuildConfig.FLAVOR_SERVER)
         {
@@ -56,7 +56,7 @@ public class Setting
         }
     }
 
-    public static final String getOutboundServerUrl()
+    public static String getOutboundServerUrl()
     {
         switch (BuildConfig.FLAVOR_SERVER)
         {

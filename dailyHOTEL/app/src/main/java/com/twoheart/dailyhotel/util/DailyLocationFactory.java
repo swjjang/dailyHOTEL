@@ -169,7 +169,6 @@ public class DailyLocationFactory
     /**
      * checkLocationMeasure이 onProviderEnabled일때 호출
      *
-     * @param activity
      * @param myLocation
      * @param listener
      */

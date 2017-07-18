@@ -206,7 +206,7 @@ public class CollectionGourmetAdapter extends PlaceListAdapter
             holder.gradeView.setText(displayCategory);
         }
 
-        if (mIsUsedMultiTransition == true)
+        if (mIsUsedMultiTransition == true && VersionUtils.isOverAPI21() == true)
         {
             holder.gourmetImageView.setTransitionName(null);
         }

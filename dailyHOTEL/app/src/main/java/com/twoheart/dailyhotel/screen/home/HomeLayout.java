@@ -23,6 +23,7 @@ import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.UnderlineSpan;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,7 +41,6 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ListRowHomeStampDataBinding;
-import com.twoheart.dailyhotel.deprecated.DeviceResolutionUtil;
 import com.twoheart.dailyhotel.model.DailyCategoryType;
 import com.twoheart.dailyhotel.network.model.Event;
 import com.twoheart.dailyhotel.network.model.HomePlace;
@@ -551,7 +551,7 @@ public class HomeLayout extends BaseBlurLayout
 
         mProviderInfoView.setVisibility(View.GONE);
 
-        if (DeviceResolutionUtil.RESOLUTION_XHDPI > DeviceResolutionUtil.getResolutionType((Activity) mContext))
+        if (DisplayMetrics.DENSITY_XHIGH > ScreenUtils.getResolution((Activity) mContext))
         {
             policyLayout.setOrientation(LinearLayout.VERTICAL);
             verticalLine1.setVisibility(View.GONE);

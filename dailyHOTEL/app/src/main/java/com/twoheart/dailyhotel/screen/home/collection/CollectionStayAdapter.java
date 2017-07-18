@@ -203,7 +203,7 @@ public class CollectionStayAdapter extends PlaceListAdapter
         holder.dataBinding.gradeTextView.setText(grade.getName(mContext));
         holder.dataBinding.gradeTextView.setBackgroundResource(grade.getColorResId());
 
-        if (mIsUsedMultiTransition == true)
+        if (mIsUsedMultiTransition == true && VersionUtils.isOverAPI21() == true)
         {
             holder.dataBinding.imageView.setTransitionName(null);
         }
