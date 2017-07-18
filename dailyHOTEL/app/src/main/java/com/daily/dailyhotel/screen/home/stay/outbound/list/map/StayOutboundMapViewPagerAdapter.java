@@ -80,7 +80,6 @@ public class StayOutboundMapViewPagerAdapter extends PagerAdapter
 
         dataBinding.discountPriceTextView.setText(DailyTextUtils.getPriceFormat(mContext, stayOutbound.nightlyRate, false));
 
-        // 1박인 경우 전체가격과 1박가격이 같다.
         if (mNightsEnabled == true)
         {
             dataBinding.averageTextView.setVisibility(View.VISIBLE);
