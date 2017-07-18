@@ -15,7 +15,6 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.network.model.ImageInformation;
 import com.twoheart.dailyhotel.screen.common.ImageDetailListActivity;
 import com.twoheart.dailyhotel.util.Constants;
-import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,6 +40,13 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
 
     public interface GourmetMenusAnalyticsInterface extends BaseAnalyticsInterface
     {
+        void onScreen(Activity activity);
+
+        void onEventBackClick(Activity activity);
+
+        void onEventFlicking(Activity activity);
+
+        void onEventImageClick(Activity activity, String label);
     }
 
     public GourmetMenusPresenter(@NonNull GourmetMenusActivity activity)
@@ -103,13 +109,15 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
     {
         getViewInterface().setGourmetMenus(mGourmetMenuList, mIndex);
 
-        onScrolled(mIndex);
+        onScrolled(mIndex, false);
     }
 
     @Override
     public void onStart()
     {
         super.onStart();
+
+        mAnalytics.onScreen(getActivity());
 
         if (isRefresh() == true)
         {
@@ -140,6 +148,8 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
     @Override
     public boolean onBackPressed()
     {
+        mAnalytics.onEventBackClick(getActivity());
+
         return super.onBackPressed();
     }
 
@@ -193,11 +203,11 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
         Intent intent = new Intent();
         intent.putExtra(GourmetMenusActivity.INTENT_EXTRA_DATA_INDEX, index);
         setResult(Activity.RESULT_OK, intent);
-        onBackClick();
+        finish();
     }
 
     @Override
-    public void onScrolled(int position)
+    public void onScrolled(int position, boolean real)
     {
         if (mCenterPosition == position)
         {
@@ -207,6 +217,11 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
         mCenterPosition = position;
 
         getViewInterface().setSubTitle(String.format(Locale.KOREA, "%d / %d", position + 1, mGourmetMenuList.size()));
+
+        if (real == true)
+        {
+            mAnalytics.onEventFlicking(getActivity());
+        }
     }
 
     @Override
@@ -254,8 +269,7 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
                     , gourmetMenu.ticketName, imageInformations, 0);
                 startActivityForResult(intent, GourmetMenusActivity.REQUEST_CODE_IMAGE_LIST);
 
-                AnalyticsManager.getInstance(getActivity()).recordEvent(AnalyticsManager.Category.GOURMET_BOOKINGS,//
-                    AnalyticsManager.Action.GOURMET_IMAGE_CLICKED, gourmetMenu.ticketName, null);
+                mAnalytics.onEventImageClick(getActivity(), Integer.toString(gourmetMenu.index));
             }
         }, new Consumer<Throwable>()
         {

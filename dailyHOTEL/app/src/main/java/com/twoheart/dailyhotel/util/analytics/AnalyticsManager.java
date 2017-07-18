@@ -604,7 +604,6 @@ public class AnalyticsManager
         public static final String DAILYGOURMET_CURATION = "DailyGourmet_SortFilterSelectView";
         //
         public static final String DAILYGOURMET_DETAIL = "DailyGourmet_GourmetDetailView";
-        public static final String DAILYGOURMET_DETAIL_TICKETTYPE = " DailyGourmet_GourmetMenuTypeList";
         public static final String DAILYGOURMET_DETAIL_MAP = "DailyGourmet_GourmetDetailMapView";
         //
         public static final String DAILYGOURMET_PAYMENT = "DailyGourmet_BookingInitialise";
@@ -914,6 +913,7 @@ public class AnalyticsManager
         // Detail Image List
         public static final String HOTEL_IMAGE_CLICKED = "HotelImageClicked";
         public static final String GOURMET_IMAGE_CLICKED = "GourmetImageClicked";
+        public static final String GOURMET_MENU_IMG_CLICK = "gourmet_menu_img_click";
 
         public static final String HOTEL_IMAGE_CLOSED = "HotelImageClosed";
         public static final String GOURMET_IMAGE_CLOSED = "GourmetImageClosed";
@@ -972,9 +972,13 @@ public class AnalyticsManager
         public static final String NEARBY_DISTANCE_10 = "nearby_distance_10";
 
         public static final String GOURMET_MENU_DETAIL_CLICK = "gourmet_menu_detail_click";
+        public static final String GOURMET_TICKET_RANK = "gourmet_ticket_rank";
         public static final String GOURMET_MENU_BACK_CLICK = "gourmet_menu_back_click";
         public static final String GOURMET_MENU_DETAIL_CLICK_PHOTO = "gourmet_menu_detail_click_photo";
         public static final String GOURMET_MENU_BOOKING_CLICK_PHOTO = "gourmet_menu_booking_click_photo";
+        public static final String GOURMET_MENU_UNFOLD = "gourmet_menu_unfold";
+        public static final String GOURMET_MENU_FOLD = "gourmet_menu_fold";
+        public static final String GOURMET_MENU_FLICKING = "gourmet_menu_flicking";
 
         public static final String STAY_SORT = "stay_sort";
         public static final String STAY_PERSON = "stay_person";

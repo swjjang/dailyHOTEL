@@ -28,7 +28,7 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
 
         void onReservationClick(int index);
 
-        void onScrolled(int position);
+        void onScrolled(int position, boolean real);
 
         void onMoreImageClick(int position);
     }
@@ -62,7 +62,7 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
                 super.onScrolled(recyclerView, dx, dy);
 
                 View view = snapHelper.findSnapView(viewDataBinding.recyclerView.getLayoutManager());
-                getEventListener().onScrolled(viewDataBinding.recyclerView.getChildAdapterPosition(view));
+                getEventListener().onScrolled(viewDataBinding.recyclerView.getChildAdapterPosition(view), true);
             }
         });
     }
