@@ -16,7 +16,6 @@ import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.place.fragment.PlaceSearchFragment;
 import com.twoheart.dailyhotel.place.layout.PlaceSearchLayout;
 import com.twoheart.dailyhotel.place.networkcontroller.PlaceSearchNetworkController;
-import com.twoheart.dailyhotel.screen.common.PermissionManagerActivity;
 import com.twoheart.dailyhotel.screen.hotel.filter.StayCalendarActivity;
 import com.twoheart.dailyhotel.screen.search.stay.result.StaySearchResultActivity;
 import com.twoheart.dailyhotel.util.Constants;
@@ -133,6 +132,8 @@ public class StaySearchFragment extends PlaceSearchFragment
     {
         if (mIsScrolling == true)
         {
+            unLockUI();
+
             return;
         }
 
@@ -141,6 +142,8 @@ public class StaySearchFragment extends PlaceSearchFragment
             Util.restartApp(mBaseActivity);
             return;
         }
+
+        lockUI();
 
         Intent intent = StaySearchResultActivity.newInstance(mBaseActivity, mTodayDateTime, mStayBookingDay, location, AnalyticsManager.Screen.SEARCH_MAIN);
         startActivityForResult(intent, REQUEST_ACTIVITY_SEARCHRESULT);
@@ -280,8 +283,10 @@ public class StaySearchFragment extends PlaceSearchFragment
                 return;
             }
 
-            Intent intent = PermissionManagerActivity.newInstance(mBaseActivity, PermissionManagerActivity.PermissionType.ACCESS_FINE_LOCATION);
-            startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_PERMISSION_MANAGER);
+            checkLocationProvider();
+
+            //            Intent intent = PermissionManagerActivity.newInstance(mBaseActivity, PermissionManagerActivity.PermissionType.ACCESS_FINE_LOCATION);
+            //            startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_PERMISSION_MANAGER);
         }
 
         @Override
@@ -326,7 +331,7 @@ public class StaySearchFragment extends PlaceSearchFragment
                 return;
             }
 
-            if (DailyTextUtils.isTextEmpty(text) == true)
+            if (DailyTextUtils.isTextEmpty(text) == true || mStayBookingDay == null)
             {
                 return;
             }

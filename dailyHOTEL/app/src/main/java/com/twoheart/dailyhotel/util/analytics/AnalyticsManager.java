@@ -399,6 +399,20 @@ public class AnalyticsManager
         }
     }
 
+    public void onSearch(String keyword, String autoKeyword, String category, int resultCount)
+    {
+        for (BaseAnalyticsManager analyticsManager : mAnalyticsManagerList)
+        {
+            try
+            {
+                analyticsManager.onSearch(keyword, autoKeyword, category, resultCount);
+            } catch (Exception e)
+            {
+                ExLog.d(TAG + e.toString());
+            }
+        }
+    }
+
     public void signUpSocialUser(String userIndex, String email, String name, String gender, String phoneNumber, String userType, String callByScreen)
     {
         for (BaseAnalyticsManager analyticsManager : mAnalyticsManagerList)

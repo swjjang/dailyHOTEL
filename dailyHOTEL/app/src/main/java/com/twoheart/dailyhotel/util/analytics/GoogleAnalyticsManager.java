@@ -777,6 +777,12 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
 
     }
 
+    @Override
+    void onSearch(String keyword, String autoKeyword, String category, int resultCount)
+    {
+
+    }
+
     private Product getProduct(Map<String, String> params)
     {
         String placeIndex = params.get(AnalyticsManager.KeyType.PLACE_INDEX);

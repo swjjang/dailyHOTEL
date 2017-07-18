@@ -204,4 +204,10 @@ public class FirebaseManager extends BaseAnalyticsManager
     {
 
     }
+
+    @Override
+    void onSearch(String keyword, String autoKeyword, String category, int resultCount)
+    {
+
+    }
 }

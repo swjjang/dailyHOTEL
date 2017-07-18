@@ -90,6 +90,8 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
     Constants.ANIMATION_STATE mAnimationState = Constants.ANIMATION_STATE.END;
     ValueAnimator mValueAnimator;
 
+    private DailyLocationFactory mDailyLocationFactory;
+
     public interface OnPlaceListMapFragmentListener
     {
         void onInformationClick(View view, PlaceViewItem placeViewItem);
@@ -237,7 +239,10 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
             mGoogleMap.clear();
         }
 
-        DailyLocationFactory.getInstance(mBaseActivity).clear();
+        if (mDailyLocationFactory != null)
+        {
+            mDailyLocationFactory.stopLocationMeasure();
+        }
 
         super.onDestroyView();
     }
@@ -1073,7 +1078,17 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
             return;
         }
 
-        DailyLocationFactory.getInstance(mBaseActivity).startLocationMeasure(this, mMyLocationView, new DailyLocationFactory.LocationListenerEx()
+        if (mDailyLocationFactory == null)
+        {
+            mDailyLocationFactory = new DailyLocationFactory(getContext());
+        }
+
+        if (mDailyLocationFactory.measuringLocation() == true)
+        {
+            return;
+        }
+
+        mDailyLocationFactory.checkLocationMeasure(new DailyLocationFactory.OnCheckLocationListener()
         {
             @Override
             public void onRequirePermission()
@@ -1091,21 +1106,7 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
             }
 
             @Override
-            public void onStatusChanged(String provider, int status, Bundle extras)
-            {
-                // TODO Auto-generated method stub
-
-            }
-
-            @Override
-            public void onProviderEnabled(String provider)
-            {
-                // TODO Auto-generated method stub
-
-            }
-
-            @Override
-            public void onProviderDisabled(String provider)
+            public void onProviderDisabled()
             {
                 mBaseActivity.unLockUI();
 
@@ -1116,7 +1117,7 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
                 }
 
                 // 현재 GPS 설정이 꺼져있습니다 설정에서 바꾸어 주세요.
-                DailyLocationFactory.getInstance(mBaseActivity).stopLocationMeasure();
+                mDailyLocationFactory.stopLocationMeasure();
 
                 mBaseActivity.showSimpleDialog(getString(R.string.dialog_title_used_gps), getString(R.string.dialog_msg_used_gps), getString(R.string.dialog_btn_text_dosetting), getString(R.string.dialog_btn_text_cancel), new View.OnClickListener()
                 {
@@ -1130,14 +1131,33 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
             }
 
             @Override
-            public void onLocationChanged(Location location)
+            public void onProviderEnabled()
             {
-                mBaseActivity.unLockUI();
+                mDailyLocationFactory.startLocationMeasure(mMyLocationView, new DailyLocationFactory.OnLocationListener()
+                {
+                    @Override
+                    public void onFailed()
+                    {
+                        mBaseActivity.unLockUI();
+                    }
 
-                DailyLocationFactory.getInstance(mBaseActivity).stopLocationMeasure();
+                    @Override
+                    public void onAlreadyRun()
+                    {
 
-                setMyLocation(location, true);
-                moveCameraPosition(mMyLocationMarkerOptions.getPosition());
+                    }
+
+                    @Override
+                    public void onLocationChanged(Location location)
+                    {
+                        mBaseActivity.unLockUI();
+
+                        mDailyLocationFactory.stopLocationMeasure();
+
+                        setMyLocation(location, true);
+                        moveCameraPosition(mMyLocationMarkerOptions.getPosition());
+                    }
+                });
             }
         });
     }

@@ -20,13 +20,15 @@ import retrofit2.Response;
 
 public class StaySearchResultListFragment extends StayListFragment
 {
-    boolean mIsOptimizeCategory;
+    boolean mResetCategory = true;
     boolean mIsDeepLink;
     private SearchType mSearchType;
 
     public interface OnStaySearchResultListFragmentListener extends OnStayListFragmentListener
     {
         void onCategoryList(List<Category> categoryList);
+
+        void onStayListCount(int count);
     }
 
     @Override
@@ -105,15 +107,17 @@ public class StaySearchResultListFragment extends StayListFragment
         public void onStayList(ArrayList<Stay> list, int page, int totalCount, int maxCount, List<Category> categoryList)
         {
             // 첫페이지 호출시에 카테고리 목록 조절
-            if (mIsOptimizeCategory == false)
+            if (mResetCategory == true)
             {
-                mIsOptimizeCategory = true;
+                mResetCategory = false;
 
                 if (page <= 1 && Category.ALL.code.equalsIgnoreCase(mStayCuration.getCategory().code) == true)
                 {
                     ((OnStaySearchResultListFragmentListener) mOnPlaceListFragmentListener).onCategoryList(categoryList);
                     mOnPlaceListFragmentListener.onSearchCountUpdate(totalCount, maxCount);
                 }
+
+                ((OnStaySearchResultListFragmentListener) mOnPlaceListFragmentListener).onStayListCount(totalCount);
             }
 
             StaySearchResultListFragment.this.onStayList(list, page, false);

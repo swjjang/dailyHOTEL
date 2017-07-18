@@ -198,6 +198,8 @@ public abstract class CollectionBaseActivity extends BaseActivity
     {
         if (mIsUsedMultiTransition == true)
         {
+            lockUiComponent();
+
             mCollectionBaseLayout.setListScrollTop();
 
             mHandler.postDelayed(new Runnable()
@@ -207,7 +209,7 @@ public abstract class CollectionBaseActivity extends BaseActivity
                 {
                     CollectionBaseActivity.super.onBackPressed();
                 }
-            }, 100);
+            }, 300);
 
             return;
         }

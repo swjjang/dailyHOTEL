@@ -5,34 +5,35 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.location.Location;
-import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 
-import com.daily.base.util.ExLog;
 import com.daily.base.util.VersionUtils;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 
 import java.util.List;
 
 public class DailyLocationExFactory
 {
-    private static final int DELAY_TIME = 15 * 1000;
-    private static final int TWO_MINUTES = 1000 * 60 * 2;
-    private static final int TEN_MINUTES = 1000 * 60 * 10;
-    protected static final String SINGLE_LOCATION_UPDATE_ACTION = "com.daily.dailyhotel.SINGLE_LOCATION_UPDATE_ACTION";
+    private static final long UPDATE_INTERVAL = 5000; // Every 60 seconds.
+    private static final long FASTEST_UPDATE_INTERVAL = 1000; // Every 30 seconds
+    private static final long MAX_WAIT_TIME = UPDATE_INTERVAL * 3; // Every 3 minutes.
 
-    protected PendingIntent mUpdatePendingIntent;
-    private LocationManager mLocationManager = null;
+    private FusedLocationProviderClient mFusedLocationClient;
+    private LocationRequest mLocationRequest;
     private boolean mIsMeasuringLocation = false;
 
-    LocationListenerEx mLocationListener;
+    OnLocationListener mLocationListener;
     Context mContext;
-
-    private int mProviderCount;
 
     private Handler mHandler = new Handler()
     {
@@ -52,49 +53,29 @@ public class DailyLocationExFactory
         }
     };
 
-    protected BroadcastReceiver mSingleUpdateReceiver = new BroadcastReceiver()
+    public interface OnLocationListener
     {
-        @Override
-        public void onReceive(Context context, Intent intent)
-        {
-            Location location = (Location) intent.getExtras().get(LocationManager.KEY_LOCATION_CHANGED);
+        void onFailed();
 
-            if (mLocationListener != null)
-            {
-                if (location != null)
-                {
-                    stopLocationMeasure();
-                    mLocationListener.onLocationChanged(location);
-                } else
-                {
-                    if (++mProviderCount > 1)
-                    {
-                        stopLocationMeasure();
-                    } else
-                    {
-                        return;
-                    }
+        void onAlreadyRun();
 
-                    mLocationListener.onFailed();
-                }
-            } else
-            {
-                stopLocationMeasure();
-            }
-        }
-    };
+        void onLocationChanged(Location location);
+    }
 
-    public interface LocationListenerEx extends LocationListener
+    public interface OnCheckLocationListener
     {
         void onRequirePermission();
 
         void onFailed();
 
-        void onAlreadyRun();
+        void onProviderDisabled();
+
+        void onProviderEnabled();
     }
 
-    public DailyLocationExFactory()
+    public DailyLocationExFactory(@NonNull Context context)
     {
+        mContext = context;
     }
 
     public boolean measuringLocation()
@@ -102,26 +83,45 @@ public class DailyLocationExFactory
         return mIsMeasuringLocation;
     }
 
-    public void startLocationMeasure(Context context, LocationListenerEx listener)
+    public void checkLocationMeasure(OnCheckLocationListener listener)
     {
-        if (context == null)
+        if (mContext == null)
         {
             return;
         }
 
-        mContext = context;
-        mProviderCount = 0;
-
         if (VersionUtils.isOverAPI23() == true)
         {
-            if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)
+            if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)
             {
                 if (listener != null)
                 {
                     listener.onRequirePermission();
                 }
+
                 return;
             }
+        }
+
+        if (isLocationProviderEnabled() == true)
+        {
+            listener.onProviderEnabled();
+        } else
+        {
+            listener.onProviderDisabled();
+        }
+    }
+
+    /**
+     * checkLocationMeasure이 onProviderEnabled일때 호출
+     *
+     * @param listener
+     */
+    public void startLocationMeasure(OnLocationListener listener)
+    {
+        if (mContext == null)
+        {
+            return;
         }
 
         if (mIsMeasuringLocation)
@@ -130,166 +130,170 @@ public class DailyLocationExFactory
             return;
         }
 
-        if (mLocationManager == null)
-        {
-            mLocationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
-        }
+        mIsMeasuringLocation = true;
 
-        if (mUpdatePendingIntent == null)
+        if (mFusedLocationClient == null)
         {
-            Intent updateIntent = new Intent(SINGLE_LOCATION_UPDATE_ACTION);
-            mUpdatePendingIntent = PendingIntent.getBroadcast(context, 0, updateIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+            mFusedLocationClient = LocationServices.getFusedLocationProviderClient(mContext);
         }
 
         mLocationListener = listener;
 
-        boolean isGpsProviderEnabled = mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
-        boolean isNetworkProviderEnabled = mLocationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
-
-        if (isGpsProviderEnabled == false && isNetworkProviderEnabled == false)
+        try
         {
+            mFusedLocationClient.getLastLocation().addOnCompleteListener(new OnCompleteListener<Location>()
+            {
+                @Override
+                public void onComplete(@NonNull Task<Location> task)
+                {
+                    if (task.isSuccessful() && task.getResult() != null)
+                    {
+                        Location location = task.getResult();
+
+                        if (mLocationListener != null)
+                        {
+                            mLocationListener.onLocationChanged(location);
+                        }
+
+                        stopLocationMeasure();
+                        return;
+                    } else
+                    {
+                        try
+                        {
+                            if (mLocationRequest == null)
+                            {
+                                mLocationRequest = createLocationRequest();
+                            }
+
+                            mFusedLocationClient.requestLocationUpdates(mLocationRequest, getPendingIntent(mContext));
+
+                            mHandler.removeMessages(0);
+                            mHandler.sendEmptyMessageDelayed(0, MAX_WAIT_TIME);
+                        } catch (SecurityException e)
+                        {
+                            stopLocationMeasure();
+
+                            if (mLocationListener != null)
+                            {
+                                mLocationListener.onFailed();
+                            }
+                        }
+                    }
+                }
+            });
+        } catch (SecurityException e)
+        {
+            stopLocationMeasure();
+
             if (mLocationListener != null)
             {
-                mLocationListener.onProviderDisabled(null);
+                mLocationListener.onFailed();
             }
-
-            stopLocationMeasure();
-            return;
-        }
-
-        mIsMeasuringLocation = true;
-
-        Location location = getLastBestLocation(context, 1000, System.currentTimeMillis() + TEN_MINUTES);
-
-        if (location != null && mLocationListener != null)
-        {
-            mLocationListener.onLocationChanged(location);
-            stopLocationMeasure();
-            return;
-        }
-
-        IntentFilter locIntentFilter = new IntentFilter(SINGLE_LOCATION_UPDATE_ACTION);
-        context.registerReceiver(mSingleUpdateReceiver, locIntentFilter);
-        mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, mUpdatePendingIntent);
-        mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, mUpdatePendingIntent);
-
-        mHandler.removeMessages(0);
-        mHandler.sendEmptyMessageDelayed(0, DELAY_TIME);
-    }
-
-    private Location getLastBestLocation(Context context, int minDistance, long minTime)
-    {
-        Location bestResult = null;
-        float bestAccuracy = Float.MAX_VALUE;
-        long bestTime = Long.MIN_VALUE;
-
-        // Iterate through all the providers on the system, keeping
-        // note of the most accurate result within the acceptable time limit.
-        // If no result is found within maxTime, return the newest Location.
-        List<String> matchingProviders = mLocationManager.getAllProviders();
-        for (String provider : matchingProviders)
-        {
-            Location location = mLocationManager.getLastKnownLocation(provider);
-            if (location != null)
-            {
-                float accuracy = location.getAccuracy();
-                long time = location.getTime();
-
-                if ((time > minTime && accuracy < bestAccuracy))
-                {
-                    bestResult = location;
-                    bestAccuracy = accuracy;
-                    bestTime = time;
-                } else if (time < minTime && bestAccuracy == Float.MAX_VALUE && time > bestTime)
-                {
-                    bestResult = location;
-                    bestTime = time;
-                }
-            }
-        }
-
-        // If the best result is beyond the allowed time limit, or the accuracy of the
-        // best result is wider than the acceptable maximum distance, request a single update.
-        // This check simply implements the same conditions we set when requesting regular
-        // location updates every [minTime] and [minDistance].
-        if (mLocationManager != null && (bestTime < minTime || bestAccuracy < minDistance))
-        {
-            return bestResult;
-        } else
-        {
-            return null;
         }
     }
 
     public void stopLocationMeasure()
     {
-        mProviderCount = 0;
-
         mHandler.removeMessages(0);
 
-        if (mLocationManager != null)
+        if (mFusedLocationClient != null)
         {
-            mLocationManager.removeUpdates(mUpdatePendingIntent);
-        }
-
-        try
-        {
-            mContext.unregisterReceiver(mSingleUpdateReceiver);
-        } catch (Exception e)
-        {
-            ExLog.d(e.toString());
+            mFusedLocationClient.removeLocationUpdates(getPendingIntent(mContext));
         }
 
         mIsMeasuringLocation = false;
     }
 
-    private boolean isBetterLocation(Location location, Location currentBestLocation)
+    private PendingIntent getPendingIntent(Context context)
     {
-        if (currentBestLocation == null)
-        {
-            return true;
-        }
+        Intent intent = new Intent(context, LocationUpdatesBroadcastReceiver.class);
+        intent.setAction(LocationUpdatesBroadcastReceiver.ACTION_PROCESS_UPDATES);
 
-        long timeDelta = location.getTime() - currentBestLocation.getTime();
-        boolean isSignificantlyNewer = timeDelta > TWO_MINUTES;
-        boolean isSignificantlyOlder = timeDelta < -TWO_MINUTES;
-        boolean isNewer = timeDelta > 0;
-
-        if (isSignificantlyNewer)
-        {
-            return true;
-        } else if (isSignificantlyOlder)
-        {
-            return false;
-        }
-
-        int accuracyDelta = (int) (location.getAccuracy() - currentBestLocation.getAccuracy());
-        boolean isLessAccurate = accuracyDelta > 0;
-        boolean isMoreAccurate = accuracyDelta < 0;
-        boolean isSignificantlyLessAccurate = accuracyDelta > 200;
-
-        boolean isFromSameProvider = isSameProvider(location.getProvider(), currentBestLocation.getProvider());
-
-        if (isMoreAccurate)
-        {
-            return true;
-        } else if (isNewer && !isLessAccurate)
-        {
-            return true;
-        } else if (isNewer && !isSignificantlyLessAccurate && isFromSameProvider)
-        {
-            return true;
-        }
-
-        return false;
+        return PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
     }
 
-    private boolean isSameProvider(String provider1, String provider2)
+    private LocationRequest createLocationRequest()
     {
-        if (provider1 == null)
+        LocationRequest locationRequest = new LocationRequest();
+        locationRequest.setInterval(UPDATE_INTERVAL);
+        locationRequest.setFastestInterval(FASTEST_UPDATE_INTERVAL);
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        locationRequest.setMaxWaitTime(MAX_WAIT_TIME);
+
+        return locationRequest;
+    }
+
+    private boolean isLocationProviderEnabled()
+    {
+        boolean gpsEnabled = false;
+        boolean networkEnabled = false;
+        LocationManager locationManager = (LocationManager) mContext.getSystemService(Context.LOCATION_SERVICE);
+
+        try
         {
-            return provider2 == null;
+            gpsEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        } catch (Exception ex)
+        {
+            //do nothing...
         }
-        return provider1.equals(provider2);
+
+        try
+        {
+            networkEnabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+        } catch (Exception ex)
+        {
+            //do nothing...
+        }
+
+        return gpsEnabled || networkEnabled;
+    }
+
+    private class LocationUpdatesBroadcastReceiver extends BroadcastReceiver
+    {
+        static final String ACTION_PROCESS_UPDATES = "com.daily.dailyhotel.PROCESS_UPDATES";
+
+        @Override
+        public void onReceive(Context context, Intent intent)
+        {
+            if (intent == null)
+            {
+                return;
+            }
+
+            final String action = intent.getAction();
+
+            if (ACTION_PROCESS_UPDATES.equals(action))
+            {
+                stopLocationMeasure();
+
+                LocationResult result = LocationResult.extractResult(intent);
+
+                if (result != null)
+                {
+                    List<Location> locations = result.getLocations();
+
+                    if (locations.isEmpty() == true)
+                    {
+                        if (mLocationListener != null)
+                        {
+                            mLocationListener.onLocationChanged(locations.get(locations.size() - 1));
+                        }
+                    } else
+                    {
+                        if (mLocationListener != null)
+                        {
+                            mLocationListener.onFailed();
+                        }
+                    }
+                } else
+                {
+                    if (mLocationListener != null)
+                    {
+                        mLocationListener.onFailed();
+                    }
+                }
+            }
+        }
     }
 }

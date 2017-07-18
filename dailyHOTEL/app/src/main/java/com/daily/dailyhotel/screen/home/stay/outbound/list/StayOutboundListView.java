@@ -4,6 +4,7 @@ import android.animation.Animator;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.Paint;
+import android.graphics.PorterDuff;
 import android.location.Location;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.util.Pair;
@@ -174,6 +175,8 @@ public class StayOutboundListView extends BaseDialogView<StayOutboundListView.On
                 getEventListener().onCallClick();
             }
         });
+
+        viewDataBinding.progressBar.getIndeterminateDrawable().setColorFilter(getColor(R.color.location_progressbar_cc8c8c8), PorterDuff.Mode.SRC_IN);
     }
 
     @Override
@@ -221,8 +224,6 @@ public class StayOutboundListView extends BaseDialogView<StayOutboundListView.On
 
         if (listItemList.size() == 0)
         {
-            getViewDataBinding().emptyLayout.setVisibility(View.VISIBLE);
-            getViewDataBinding().resultLayout.setVisibility(View.GONE);
             return;
         }
 
@@ -271,9 +272,6 @@ public class StayOutboundListView extends BaseDialogView<StayOutboundListView.On
 
         getViewDataBinding().recyclerView.setAdapter(mStayOutboundListAdapter);
 
-        getViewDataBinding().emptyLayout.setVisibility(View.GONE);
-        getViewDataBinding().resultLayout.setVisibility(View.VISIBLE);
-
         mStayOutboundListAdapter.setAll(listItemList);
         mStayOutboundListAdapter.setDistanceEnabled(isSortByDistance);
         mStayOutboundListAdapter.setNightsEnabled(isNights);
@@ -295,8 +293,10 @@ public class StayOutboundListView extends BaseDialogView<StayOutboundListView.On
             return;
         }
 
-        getViewDataBinding().emptyLayout.setVisibility(View.GONE);
-        getViewDataBinding().resultLayout.setVisibility(View.VISIBLE);
+        setEmptyScreenVisible(false);
+        setErrorScreenVisible(false);
+        setSearchLocationScreenVisible(false);
+        setListScreenVisible(true);
 
         mStayOutboundListAdapter.remove(mStayOutboundListAdapter.getItemCount() - 1);
         mStayOutboundListAdapter.addAll(listItemList);
@@ -539,6 +539,28 @@ public class StayOutboundListView extends BaseDialogView<StayOutboundListView.On
         }
 
         getViewDataBinding().emptyLayout.setVisibility(visible == true ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
+    public void setSearchLocationScreenVisible(boolean visible)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        getViewDataBinding().searchLocationLayout.setVisibility(visible == true ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
+    public void setListScreenVisible(boolean visible)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        getViewDataBinding().resultLayout.setVisibility(visible == true ? View.VISIBLE : View.GONE);
     }
 
     @Override

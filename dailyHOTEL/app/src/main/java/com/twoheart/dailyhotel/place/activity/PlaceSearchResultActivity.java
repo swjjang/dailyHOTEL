@@ -1,11 +1,9 @@
 package com.twoheart.dailyhotel.place.activity;
 
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 
@@ -60,6 +58,16 @@ public abstract class PlaceSearchResultActivity extends BaseActivity
     protected TodayDateTime mTodayDateTime;
 
     protected PlaceSearchResultLayout mPlaceSearchResultLayout;
+
+    private DailyLocationFactory mDailyLocationFactory;
+
+    public enum ScreenType
+    {
+        NONE,
+        EMPTY,
+        SEARCH_LOCATION,
+        LIST
+    }
 
     protected abstract PlaceSearchResultLayout getPlaceSearchResultLayout(Context context);
 
@@ -125,7 +133,7 @@ public abstract class PlaceSearchResultActivity extends BaseActivity
     @Override
     public void onBackPressed()
     {
-        if(mViewType == ViewType.MAP)
+        if (mViewType == ViewType.MAP)
         {
             try
             {
@@ -147,6 +155,17 @@ public abstract class PlaceSearchResultActivity extends BaseActivity
         }
 
         finish(RESULT_CANCELED);
+    }
+
+    @Override
+    protected void onDestroy()
+    {
+        super.onDestroy();
+
+        if (mDailyLocationFactory != null)
+        {
+            mDailyLocationFactory.stopLocationMeasure();
+        }
     }
 
     @Override
@@ -325,11 +344,24 @@ public abstract class PlaceSearchResultActivity extends BaseActivity
             }
         } else
         {
-            lockUI();
+            lockUI(false);
 
-            DailyLocationFactory.getInstance(this).startLocationMeasure(this, null, new DailyLocationFactory.LocationListenerEx()
+            mPlaceSearchResultLayout.clearCategoryTab();
+            mPlaceSearchResultLayout.setCategoryTabLayoutVisibility(View.INVISIBLE);
+            mPlaceSearchResultLayout.setScreenVisible(ScreenType.SEARCH_LOCATION);
+
+            if (mDailyLocationFactory == null)
             {
-                @TargetApi(Build.VERSION_CODES.M)
+                mDailyLocationFactory = new DailyLocationFactory(this);
+            }
+
+            if (mDailyLocationFactory.measuringLocation() == true)
+            {
+                return;
+            }
+
+            mDailyLocationFactory.checkLocationMeasure(new DailyLocationFactory.OnCheckLocationListener()
+            {
                 @Override
                 public void onRequirePermission()
                 {
@@ -358,20 +390,7 @@ public abstract class PlaceSearchResultActivity extends BaseActivity
                 }
 
                 @Override
-                public void onStatusChanged(String provider, int status, Bundle extras)
-                {
-                    unLockUI();
-
-                }
-
-                @Override
-                public void onProviderEnabled(String provider)
-                {
-                    unLockUI();
-                }
-
-                @Override
-                public void onProviderDisabled(String provider)
+                public void onProviderDisabled()
                 {
                     unLockUI();
 
@@ -381,7 +400,7 @@ public abstract class PlaceSearchResultActivity extends BaseActivity
                     }
 
                     // 현재 GPS 설정이 꺼져있습니다 설정에서 바꾸어 주세요.
-                    DailyLocationFactory.getInstance(PlaceSearchResultActivity.this).stopLocationMeasure();
+                    mDailyLocationFactory.stopLocationMeasure();
 
                     showSimpleDialog(getString(R.string.dialog_title_used_gps)//
                         , getString(R.string.dialog_msg_used_gps)//
@@ -406,18 +425,44 @@ public abstract class PlaceSearchResultActivity extends BaseActivity
                 }
 
                 @Override
-                public void onLocationChanged(Location location)
+                public void onProviderEnabled()
                 {
-                    unLockUI();
-
-                    if (isFinishing() == true)
+                    mDailyLocationFactory.startLocationMeasure(null, new DailyLocationFactory.OnLocationListener()
                     {
-                        return;
-                    }
+                        @Override
+                        public void onFailed()
+                        {
+                            unLockUI();
 
-                    DailyLocationFactory.getInstance(PlaceSearchResultActivity.this).stopLocationMeasure();
+                            if (isFinishing() == true)
+                            {
+                                return;
+                            }
 
-                    PlaceSearchResultActivity.this.onLocationChanged(location);
+                            onLocationFailed();
+                        }
+
+                        @Override
+                        public void onAlreadyRun()
+                        {
+
+                        }
+
+                        @Override
+                        public void onLocationChanged(Location location)
+                        {
+                            unLockUI();
+
+                            if (isFinishing() == true)
+                            {
+                                return;
+                            }
+
+                            mDailyLocationFactory.stopLocationMeasure();
+
+                            PlaceSearchResultActivity.this.onLocationChanged(location);
+                        }
+                    });
                 }
             });
         }

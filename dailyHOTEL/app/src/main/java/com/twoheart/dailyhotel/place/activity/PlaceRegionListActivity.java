@@ -18,6 +18,8 @@ import com.twoheart.dailyhotel.util.DailyLocationFactory;
 
 public abstract class PlaceRegionListActivity extends BaseActivity
 {
+    private DailyLocationFactory mDailyLocationFactory;
+
     protected abstract void initPrepare();
 
     protected abstract void initIntent(Intent intent);
@@ -80,6 +82,17 @@ public abstract class PlaceRegionListActivity extends BaseActivity
     }
 
     @Override
+    protected void onDestroy()
+    {
+        super.onDestroy();
+
+        if (mDailyLocationFactory != null)
+        {
+            mDailyLocationFactory.stopLocationMeasure();
+        }
+    }
+
+    @Override
     public void finish()
     {
         super.finish();
@@ -135,7 +148,17 @@ public abstract class PlaceRegionListActivity extends BaseActivity
     {
         lockUI();
 
-        DailyLocationFactory.getInstance(PlaceRegionListActivity.this).startLocationMeasure(this, null, new DailyLocationFactory.LocationListenerEx()
+        if (mDailyLocationFactory == null)
+        {
+            mDailyLocationFactory = new DailyLocationFactory(this);
+        }
+
+        if (mDailyLocationFactory.measuringLocation() == true)
+        {
+            return;
+        }
+
+        mDailyLocationFactory.checkLocationMeasure(new DailyLocationFactory.OnCheckLocationListener()
         {
             @Override
             public void onRequirePermission()
@@ -153,21 +176,61 @@ public abstract class PlaceRegionListActivity extends BaseActivity
             }
 
             @Override
-            public void onStatusChanged(String provider, int status, Bundle extras)
+            public void onProviderEnabled()
             {
-                // TODO Auto-generated method stub
+                mDailyLocationFactory.startLocationMeasure(null, new DailyLocationFactory.OnLocationListener()
+                {
+                    @Override
+                    public void onFailed()
+                    {
+                        unLockUI();
+                    }
 
+                    @Override
+                    public void onAlreadyRun()
+                    {
+
+                    }
+
+                    @Override
+                    public void onLocationChanged(Location location)
+                    {
+                        unLockUI();
+
+                        if (isFinishing() == true)
+                        {
+                            return;
+                        }
+
+                        mDailyLocationFactory.stopLocationMeasure();
+
+                        if (location == null)
+                        {
+                            DailyToast.showToast(PlaceRegionListActivity.this, R.string.message_failed_mylocation, Toast.LENGTH_SHORT);
+                        } else
+                        {
+                            // Location
+                            Intent intent = new Intent();
+                            intent.putExtra(NAME_INTENT_EXTRA_DATA_LOCATION, location);
+
+                            try
+                            {
+                                PlaceRegionListFragment placeRegionListFragment = getCurrentFragment();
+                                intent.putExtra(NAME_INTENT_EXTRA_DATA_RESULT, placeRegionListFragment.getRegion().name());
+                            } catch (Exception e)
+                            {
+                                ExLog.d(e.toString());
+                            }
+
+                            setResult(RESULT_ARROUND_SEARCH_LIST, intent);
+                            finish();
+                        }
+                    }
+                });
             }
 
             @Override
-            public void onProviderEnabled(String provider)
-            {
-                // TODO Auto-generated method stub
-
-            }
-
-            @Override
-            public void onProviderDisabled(String provider)
+            public void onProviderDisabled()
             {
                 unLockUI();
 
@@ -177,7 +240,7 @@ public abstract class PlaceRegionListActivity extends BaseActivity
                 }
 
                 // 현재 GPS 설정이 꺼져있습니다 설정에서 바꾸어 주세요.
-                DailyLocationFactory.getInstance(PlaceRegionListActivity.this).stopLocationMeasure();
+                mDailyLocationFactory.stopLocationMeasure();
 
                 PlaceRegionListActivity.this.showSimpleDialog(getString(R.string.dialog_title_used_gps)//
                     , getString(R.string.dialog_msg_used_gps)//
@@ -192,41 +255,6 @@ public abstract class PlaceRegionListActivity extends BaseActivity
                             startActivityForResult(intent, Constants.CODE_RESULT_ACTIVITY_SETTING_LOCATION);
                         }
                     }, null, false);
-            }
-
-            @Override
-            public void onLocationChanged(Location location)
-            {
-                unLockUI();
-
-                if (isFinishing() == true)
-                {
-                    return;
-                }
-
-                DailyLocationFactory.getInstance(PlaceRegionListActivity.this).stopLocationMeasure();
-
-                if (location == null)
-                {
-                    DailyToast.showToast(PlaceRegionListActivity.this, R.string.message_failed_mylocation, Toast.LENGTH_SHORT);
-                } else
-                {
-                    // Location
-                    Intent intent = new Intent();
-                    intent.putExtra(NAME_INTENT_EXTRA_DATA_LOCATION, location);
-
-                    try
-                    {
-                        PlaceRegionListFragment placeRegionListFragment = getCurrentFragment();
-                        intent.putExtra(NAME_INTENT_EXTRA_DATA_RESULT, placeRegionListFragment.getRegion().name());
-                    } catch (Exception e)
-                    {
-                        ExLog.d(e.toString());
-                    }
-
-                    setResult(RESULT_ARROUND_SEARCH_LIST, intent);
-                    finish();
-                }
             }
         });
     }

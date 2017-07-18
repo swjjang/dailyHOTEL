@@ -119,8 +119,8 @@ public class StayCuration extends PlaceCuration
     @Override
     public void writeToParcel(Parcel dest, int flags)
     {
-        dest.writeParcelable(mProvince, flags);
-        dest.writeParcelable(mLocation, flags);
+        super.writeToParcel(dest, flags);
+
         dest.writeParcelable(mStayBookingDay, flags);
         dest.writeParcelable(mCategory, flags);
         dest.writeParcelable(mStayCurationOption, flags);
@@ -128,8 +128,8 @@ public class StayCuration extends PlaceCuration
 
     protected void readFromParcel(Parcel in)
     {
-        mProvince = in.readParcelable(Province.class.getClassLoader());
-        mLocation = in.readParcelable(Location.class.getClassLoader());
+        super.readFromParcel(in);
+
         mStayBookingDay = in.readParcelable(StayBookingDay.class.getClassLoader());
         mCategory = in.readParcelable(Category.class.getClassLoader());
         mStayCurationOption = in.readParcelable(StayCurationOption.class.getClassLoader());

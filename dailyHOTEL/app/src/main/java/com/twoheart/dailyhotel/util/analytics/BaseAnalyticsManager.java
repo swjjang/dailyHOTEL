@@ -69,4 +69,6 @@ public abstract class BaseAnalyticsManager
     abstract void setPushEnabled(boolean onOff, String pushSettingType);
 
     abstract void purchaseWithCoupon(Map<String, String> param);
+
+    abstract void onSearch(String keyword, String autoKeyword, String category, int resultCount);
 }

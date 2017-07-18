@@ -99,6 +99,7 @@ public class StayCategoryNearByActivity extends BaseActivity
     StayCategoryNearByCuration mStayCategoryNearByCuration;
 
     private StayCategoryNearByNetworkController mNetworkController;
+    private DailyLocationFactory mDailyLocationFactory;
 
     public static Intent newInstance(Context context //
         , TodayDateTime todayDateTime, StayBookingDay stayBookingDay //
@@ -172,6 +173,17 @@ public class StayCategoryNearByActivity extends BaseActivity
     public void onBackPressed()
     {
         finish(RESULT_CANCELED);
+    }
+
+    @Override
+    protected void onDestroy()
+    {
+        super.onDestroy();
+
+        if (mDailyLocationFactory != null)
+        {
+            mDailyLocationFactory.stopLocationMeasure();
+        }
     }
 
     @Override
@@ -689,9 +701,18 @@ public class StayCategoryNearByActivity extends BaseActivity
         {
             lockUI();
 
-            DailyLocationFactory.getInstance(this).startLocationMeasure(this, null, new DailyLocationFactory.LocationListenerEx()
+            if (mDailyLocationFactory == null)
             {
-                @TargetApi(Build.VERSION_CODES.M)
+                mDailyLocationFactory = new DailyLocationFactory(this);
+            }
+
+            if (mDailyLocationFactory.measuringLocation() == true)
+            {
+                return;
+            }
+
+            mDailyLocationFactory.checkLocationMeasure(new DailyLocationFactory.OnCheckLocationListener()
+            {
                 @Override
                 public void onRequirePermission()
                 {
@@ -720,20 +741,7 @@ public class StayCategoryNearByActivity extends BaseActivity
                 }
 
                 @Override
-                public void onStatusChanged(String provider, int status, Bundle extras)
-                {
-                    unLockUI();
-
-                }
-
-                @Override
-                public void onProviderEnabled(String provider)
-                {
-                    unLockUI();
-                }
-
-                @Override
-                public void onProviderDisabled(String provider)
+                public void onProviderDisabled()
                 {
                     unLockUI();
 
@@ -743,7 +751,7 @@ public class StayCategoryNearByActivity extends BaseActivity
                     }
 
                     // 현재 GPS 설정이 꺼져있습니다 설정에서 바꾸어 주세요.
-                    DailyLocationFactory.getInstance(StayCategoryNearByActivity.this).stopLocationMeasure();
+                    mDailyLocationFactory.stopLocationMeasure();
 
                     showSimpleDialog(getString(R.string.dialog_title_used_gps)//
                         , getString(R.string.dialog_msg_used_gps)//
@@ -768,18 +776,44 @@ public class StayCategoryNearByActivity extends BaseActivity
                 }
 
                 @Override
-                public void onLocationChanged(Location location)
+                public void onProviderEnabled()
                 {
-                    unLockUI();
-
-                    if (isFinishing() == true)
+                    mDailyLocationFactory.startLocationMeasure(null, new DailyLocationFactory.OnLocationListener()
                     {
-                        return;
-                    }
+                        @Override
+                        public void onFailed()
+                        {
+                            unLockUI();
 
-                    DailyLocationFactory.getInstance(StayCategoryNearByActivity.this).stopLocationMeasure();
+                            if (isFinishing() == true)
+                            {
+                                return;
+                            }
 
-                    StayCategoryNearByActivity.this.onLocationChanged(location);
+                            onLocationFailed();
+                        }
+
+                        @Override
+                        public void onAlreadyRun()
+                        {
+
+                        }
+
+                        @Override
+                        public void onLocationChanged(Location location)
+                        {
+                            unLockUI();
+
+                            if (isFinishing() == true)
+                            {
+                                return;
+                            }
+
+                            mDailyLocationFactory.stopLocationMeasure();
+
+                            StayCategoryNearByActivity.this.onLocationChanged(location);
+                        }
+                    });
                 }
             });
         }

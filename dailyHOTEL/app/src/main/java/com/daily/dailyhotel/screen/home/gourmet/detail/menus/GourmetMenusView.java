@@ -11,6 +11,7 @@ import com.daily.base.BaseActivity;
 import com.daily.base.BaseDialogView;
 import com.daily.base.OnBaseEventListener;
 import com.daily.base.util.ScreenUtils;
+import com.daily.base.widget.DailyRoundedConstraintLayout;
 import com.daily.dailyhotel.entity.GourmetMenu;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ActivityGourmetMenusDataBinding;
@@ -140,6 +141,7 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
         private static final float AMOUNT = 1.0f - MIN_SCALE; // 1.0f - AMOUNT = MIN_SCALE
         private static final float DISTANCE = 0.75f;
         private int DP_10;
+        private int DP_5;
         private int STANDARD_X;
 
         public ZoomCenterLayoutManager(Context context)
@@ -166,6 +168,7 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
         private void initialize(Context context)
         {
             DP_10 = ScreenUtils.dpToPx(context, 10);
+            DP_5 = ScreenUtils.dpToPx(context, 5);
             STANDARD_X = ScreenUtils.getScreenWidth(getContext()) / 12;
         }
 
@@ -173,11 +176,11 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
         public int scrollHorizontallyBy(int dx, RecyclerView.Recycler recycler, RecyclerView.State state)
         {
             int scrolled = super.scrollHorizontallyBy(dx, recycler, state);
-            float midpoint = getWidth() / 2.f;
-            float d0 = 0.f;
-            float d1 = DISTANCE * midpoint;
-            float s0 = 1.f;
-            float s1 = 1.f - AMOUNT;
+            final float midpoint = getWidth() / 2.f;
+//            final float d0 = 0.f;
+            final float d1 = DISTANCE * midpoint;
+            final float s0 = 1.f;
+            final float s1 = 1.f - AMOUNT;
             int childCount = getChildCount();
 
             for (int i = 0; i < childCount; i++)
@@ -185,7 +188,9 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
                 View childView = getChildAt(i);
                 float childMidpoint = (getDecoratedRight(childView) + getDecoratedLeft(childView)) / 2.f;
                 float d = Math.min(d1, Math.abs(midpoint - childMidpoint));
-                float scale = s0 + (s1 - s0) * (d - d0) / (d1 - d0);
+                float scale = s0 - AMOUNT * d / d1;
+//                float scale = s0 + (s1 - s0) * (d - d0) / (d1 - d0);
+
                 childView.setScaleX(scale);
                 childView.setScaleY(scale);
 
@@ -204,6 +209,16 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
                 {
                     childView.setTranslationX(0.0f);
                 }
+
+                DailyRoundedConstraintLayout roundedConstraintLayout = (DailyRoundedConstraintLayout) childView.findViewById(R.id.roundedConstraintLayout);
+
+                final float width = roundedConstraintLayout.getWidth();
+                final float height = roundedConstraintLayout.getHeight();
+                final float scaleWidth = (1.0f - scale) * width;
+                final float scaleHeight = (1.0f - scale) * height;
+
+                roundedConstraintLayout.setRound(0, 0, width - scaleWidth, height - scaleHeight, DP_5);
+                roundedConstraintLayout.invalidate();
 
                 View blurView = (View) childView.getTag(R.id.blurView);
 

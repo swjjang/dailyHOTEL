@@ -420,6 +420,11 @@ public class StayOutboundPaymentView extends BaseDialogView<StayOutboundPaymentV
     @Override
     public void setBonusEnabled(boolean enabled)
     {
+        if (mDiscountDataBinding == null || mDiscountDataBinding.bonusLayout.getVisibility() != View.VISIBLE)
+        {
+            return;
+        }
+
         mDiscountDataBinding.bonusRadioButton.setEnabled(enabled);
         mDiscountDataBinding.bonusLayout.setEnabled(enabled);
         mDiscountDataBinding.usedBonusLayout.setEnabled(enabled);
@@ -428,7 +433,7 @@ public class StayOutboundPaymentView extends BaseDialogView<StayOutboundPaymentV
     @Override
     public void setBonusSelected(boolean selected)
     {
-        if (getViewDataBinding() == null || mDiscountDataBinding == null)
+        if (getViewDataBinding() == null || mDiscountDataBinding == null || mDiscountDataBinding.bonusLayout.getVisibility() != View.VISIBLE)
         {
             return;
         }
@@ -639,6 +644,7 @@ public class StayOutboundPaymentView extends BaseDialogView<StayOutboundPaymentV
         mDiscountDataBinding = DataBindingUtil.inflate(LayoutInflater.from(context)//
             , R.layout.layout_stay_outbound_payment_discount_data, viewGroup, true);
 
+        mDiscountDataBinding.bonusLayout.setVisibility(View.GONE);
         mDiscountDataBinding.bonusLayout.setOnClickListener(this);
         mDiscountDataBinding.usedBonusLayout.setOnClickListener(this);
     }

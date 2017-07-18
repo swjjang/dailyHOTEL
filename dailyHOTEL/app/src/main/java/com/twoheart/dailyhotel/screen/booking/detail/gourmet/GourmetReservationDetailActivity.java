@@ -520,23 +520,6 @@ public class GourmetReservationDetailActivity extends PlaceReservationDetailActi
                     }
                 }, null);
         }
-
-
-        //        try
-        //        {
-        //            startActivity(new Intent(Intent.ACTION_SEND, Uri.parse("kakaolink://friend/%40%EB%8D%B0%EC%9D%BC%EB%A6%AC%EA%B3%A0%EB%A9%94")));
-        //        } catch (ActivityNotFoundException e)
-        //        {
-        //            try
-        //            {
-        //                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(URL_STORE_GOOGLE_KAKAOTALK)));
-        //            } catch (ActivityNotFoundException e1)
-        //            {
-        //                Intent marketLaunch = new Intent(Intent.ACTION_VIEW);
-        //                marketLaunch.setData(Uri.parse(URL_STORE_GOOGLE_KAKAOTALK_WEB));
-        //                startActivity(marketLaunch);
-        //            }
-        //        }
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -562,7 +545,7 @@ public class GourmetReservationDetailActivity extends PlaceReservationDetailActi
 
             Intent intent = new Intent(GourmetReservationDetailActivity.this, GourmetReceiptActivity.class);
             intent.putExtra(NAME_INTENT_EXTRA_DATA_BOOKINGIDX, mReservationIndex);
-            startActivity(intent);
+            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_RECEIPT);
         }
 
         @Override

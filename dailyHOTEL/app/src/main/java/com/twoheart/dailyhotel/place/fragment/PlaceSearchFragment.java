@@ -42,6 +42,7 @@ public abstract class PlaceSearchFragment extends BaseFragment
     protected TodayDateTime mTodayDateTime;
 
     private boolean mIsDateChanged;
+    private DailyLocationFactory mDailyLocationFactory;
 
     protected abstract int getLayoutResourceId();
 
@@ -82,6 +83,17 @@ public abstract class PlaceSearchFragment extends BaseFragment
         mPlaceSearchNetworkController.requestCommonDateTime();
 
         return view;
+    }
+
+    @Override
+    public void onDestroy()
+    {
+        super.onDestroy();
+
+        if (mDailyLocationFactory != null)
+        {
+            mDailyLocationFactory.stopLocationMeasure();
+        }
     }
 
     protected void initContents()
@@ -229,7 +241,7 @@ public abstract class PlaceSearchFragment extends BaseFragment
             {
                 mPlaceSearchLayout.updateTermsOfLocationLayout();
 
-                searchMyLocation();
+                checkLocationProvider();
                 break;
             }
 
@@ -239,7 +251,7 @@ public abstract class PlaceSearchFragment extends BaseFragment
 
                 if (resultCode == Activity.RESULT_OK)
                 {
-                    searchMyLocation();
+                    checkLocationProvider();
                 } else if (resultCode == CODE_RESULT_ACTIVITY_GO_HOME)
                 {
                     mBaseActivity.setResult(resultCode);
@@ -250,11 +262,16 @@ public abstract class PlaceSearchFragment extends BaseFragment
         }
     }
 
-    protected void searchMyLocation()
+    protected void checkLocationProvider()
     {
         lockUI();
 
-        DailyLocationFactory.getInstance(mBaseActivity).startLocationMeasure(this, null, new DailyLocationFactory.LocationListenerEx()
+        if (mDailyLocationFactory == null)
+        {
+            mDailyLocationFactory = new DailyLocationFactory(getContext());
+        }
+
+        mDailyLocationFactory.checkLocationMeasure(new DailyLocationFactory.OnCheckLocationListener()
         {
             @Override
             public void onRequirePermission()
@@ -272,21 +289,7 @@ public abstract class PlaceSearchFragment extends BaseFragment
             }
 
             @Override
-            public void onStatusChanged(String provider, int status, Bundle extras)
-            {
-                // TODO Auto-generated method stub
-
-            }
-
-            @Override
-            public void onProviderEnabled(String provider)
-            {
-                // TODO Auto-generated method stub
-
-            }
-
-            @Override
-            public void onProviderDisabled(String provider)
+            public void onProviderDisabled()
             {
                 unLockUI();
 
@@ -296,7 +299,7 @@ public abstract class PlaceSearchFragment extends BaseFragment
                 }
 
                 // 현재 GPS 설정이 꺼져있습니다 설정에서 바꾸어 주세요.
-                DailyLocationFactory.getInstance(mBaseActivity).stopLocationMeasure();
+                mDailyLocationFactory.stopLocationMeasure();
 
                 mBaseActivity.showSimpleDialog(getString(R.string.dialog_title_used_gps)//
                     , getString(R.string.dialog_msg_used_gps)//
@@ -314,7 +317,48 @@ public abstract class PlaceSearchFragment extends BaseFragment
             }
 
             @Override
-            public void onLocationChanged(Location location)
+            public void onProviderEnabled()
+            {
+                unLockUI();
+
+                onSearch(null);
+            }
+        });
+    }
+
+    protected void searchMyLocation()
+    {
+        lockUI();
+
+        if (mDailyLocationFactory == null)
+        {
+            mDailyLocationFactory = new DailyLocationFactory(getContext());
+        }
+
+        if (mDailyLocationFactory.measuringLocation() == true)
+        {
+            return;
+        }
+
+        mDailyLocationFactory.checkLocationMeasure(new DailyLocationFactory.OnCheckLocationListener()
+        {
+            @Override
+            public void onRequirePermission()
+            {
+                unLockUI();
+
+                Intent intent = PermissionManagerActivity.newInstance(mBaseActivity, PermissionManagerActivity.PermissionType.ACCESS_FINE_LOCATION);
+                startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_PERMISSION_MANAGER);
+            }
+
+            @Override
+            public void onFailed()
+            {
+                unLockUI();
+            }
+
+            @Override
+            public void onProviderDisabled()
             {
                 unLockUI();
 
@@ -323,16 +367,63 @@ public abstract class PlaceSearchFragment extends BaseFragment
                     return;
                 }
 
-                DailyLocationFactory.getInstance(mBaseActivity).stopLocationMeasure();
+                // 현재 GPS 설정이 꺼져있습니다 설정에서 바꾸어 주세요.
+                mDailyLocationFactory.stopLocationMeasure();
 
-                if (location == null)
+                mBaseActivity.showSimpleDialog(getString(R.string.dialog_title_used_gps)//
+                    , getString(R.string.dialog_msg_used_gps)//
+                    , getString(R.string.dialog_btn_text_dosetting)//
+                    , getString(R.string.dialog_btn_text_cancel)//
+                    , new View.OnClickListener()//
+                    {
+                        @Override
+                        public void onClick(View v)
+                        {
+                            Intent intent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                            startActivityForResult(intent, Constants.CODE_RESULT_ACTIVITY_SETTING_LOCATION);
+                        }
+                    }, null, false);
+            }
+
+            @Override
+            public void onProviderEnabled()
+            {
+                mDailyLocationFactory.startLocationMeasure(null, new DailyLocationFactory.OnLocationListener()
                 {
-                    DailyToast.showToast(mBaseActivity, R.string.message_failed_mylocation, Toast.LENGTH_SHORT);
-                } else
-                {
-                    // 서버
-                    onSearch(location);
-                }
+                    @Override
+                    public void onFailed()
+                    {
+                        unLockUI();
+                    }
+
+                    @Override
+                    public void onAlreadyRun()
+                    {
+
+                    }
+
+                    @Override
+                    public void onLocationChanged(Location location)
+                    {
+                        unLockUI();
+
+                        if (isFinishing() == true)
+                        {
+                            return;
+                        }
+
+                        mDailyLocationFactory.stopLocationMeasure();
+
+                        if (location == null)
+                        {
+                            DailyToast.showToast(mBaseActivity, R.string.message_failed_mylocation, Toast.LENGTH_SHORT);
+                        } else
+                        {
+                            // 서버
+                            onSearch(location);
+                        }
+                    }
+                });
             }
         });
     }

@@ -46,6 +46,8 @@ public class ZoomMapActivity extends BaseActivity
     private Handler mHandler = new Handler();
     SourceType mSourceType;
 
+    private DailyLocationFactory mDailyLocationFactory;
+
     public enum SourceType
     {
         HOTEL,
@@ -161,7 +163,10 @@ public class ZoomMapActivity extends BaseActivity
     {
         super.onDestroy();
 
-        DailyLocationFactory.getInstance(ZoomMapActivity.this).stopLocationMeasure();
+        if (mDailyLocationFactory != null)
+        {
+            mDailyLocationFactory.stopLocationMeasure();
+        }
     }
 
 
@@ -361,7 +366,19 @@ public class ZoomMapActivity extends BaseActivity
 
     private void searchMyLocation()
     {
-        DailyLocationFactory.getInstance(this).startLocationMeasure(this, mMyLocationView, new DailyLocationFactory.LocationListenerEx()
+        lockUI();
+
+        if (mDailyLocationFactory == null)
+        {
+            mDailyLocationFactory = new DailyLocationFactory(this);
+        }
+
+        if (mDailyLocationFactory.measuringLocation() == true)
+        {
+            return;
+        }
+
+        mDailyLocationFactory.checkLocationMeasure(new DailyLocationFactory.OnCheckLocationListener()
         {
             @Override
             public void onRequirePermission()
@@ -379,21 +396,7 @@ public class ZoomMapActivity extends BaseActivity
             }
 
             @Override
-            public void onStatusChanged(String provider, int status, Bundle extras)
-            {
-                // TODO Auto-generated method stub
-
-            }
-
-            @Override
-            public void onProviderEnabled(String provider)
-            {
-                // TODO Auto-generated method stub
-
-            }
-
-            @Override
-            public void onProviderDisabled(String provider)
+            public void onProviderDisabled()
             {
                 unLockUI();
 
@@ -403,7 +406,7 @@ public class ZoomMapActivity extends BaseActivity
                 }
 
                 // 현재 GPS 설정이 꺼져있습니다 설정에서 바꾸어 주세요.
-                DailyLocationFactory.getInstance(ZoomMapActivity.this).stopLocationMeasure();
+                mDailyLocationFactory.stopLocationMeasure();
 
                 showSimpleDialog(getString(R.string.dialog_title_used_gps), getString(R.string.dialog_msg_used_gps), getString(R.string.dialog_btn_text_dosetting), getString(R.string.dialog_btn_text_cancel), new View.OnClickListener()
                 {
@@ -417,38 +420,57 @@ public class ZoomMapActivity extends BaseActivity
             }
 
             @Override
-            public void onLocationChanged(Location location)
+            public void onProviderEnabled()
             {
-                unLockUI();
-
-                if (isFinishing() == true || mGoogleMap == null)
+                mDailyLocationFactory.startLocationMeasure(mMyLocationView, new DailyLocationFactory.OnLocationListener()
                 {
-                    return;
-                }
+                    @Override
+                    public void onFailed()
+                    {
+                        unLockUI();
+                    }
 
-                DailyLocationFactory.getInstance(ZoomMapActivity.this).stopLocationMeasure();
+                    @Override
+                    public void onAlreadyRun()
+                    {
 
-                if (mMyLocationMarkerOptions == null)
-                {
-                    mMyLocationMarkerOptions = new MarkerOptions();
-                    mMyLocationMarkerOptions.icon(new MyLocationMarker(ZoomMapActivity.this).makeIcon());
-                    mMyLocationMarkerOptions.anchor(0.5f, 0.5f);
-                }
+                    }
 
-                if (mMyLocationMarker != null)
-                {
-                    mMyLocationMarker.remove();
-                }
+                    @Override
+                    public void onLocationChanged(Location location)
+                    {
+                        unLockUI();
 
-                mMyLocationMarkerOptions.position(new LatLng(location.getLatitude(), location.getLongitude()));
-                mMyLocationMarker = mGoogleMap.addMarker(mMyLocationMarkerOptions);
+                        if (isFinishing() == true || mGoogleMap == null)
+                        {
+                            return;
+                        }
 
-                LatLngBounds.Builder latLngBounds = new LatLngBounds.Builder();
-                latLngBounds.include(mPlaceLocationMarker.getPosition());
-                latLngBounds.include(mMyLocationMarker.getPosition());
+                        mDailyLocationFactory.stopLocationMeasure();
 
-                CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(latLngBounds.build(), ScreenUtils.dpToPx(ZoomMapActivity.this, 50));
-                mGoogleMap.animateCamera(cameraUpdate);
+                        if (mMyLocationMarkerOptions == null)
+                        {
+                            mMyLocationMarkerOptions = new MarkerOptions();
+                            mMyLocationMarkerOptions.icon(new MyLocationMarker(ZoomMapActivity.this).makeIcon());
+                            mMyLocationMarkerOptions.anchor(0.5f, 0.5f);
+                        }
+
+                        if (mMyLocationMarker != null)
+                        {
+                            mMyLocationMarker.remove();
+                        }
+
+                        mMyLocationMarkerOptions.position(new LatLng(location.getLatitude(), location.getLongitude()));
+                        mMyLocationMarker = mGoogleMap.addMarker(mMyLocationMarkerOptions);
+
+                        LatLngBounds.Builder latLngBounds = new LatLngBounds.Builder();
+                        latLngBounds.include(mPlaceLocationMarker.getPosition());
+                        latLngBounds.include(mMyLocationMarker.getPosition());
+
+                        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(latLngBounds.build(), ScreenUtils.dpToPx(ZoomMapActivity.this, 50));
+                        mGoogleMap.animateCamera(cameraUpdate);
+                    }
+                });
             }
         });
     }

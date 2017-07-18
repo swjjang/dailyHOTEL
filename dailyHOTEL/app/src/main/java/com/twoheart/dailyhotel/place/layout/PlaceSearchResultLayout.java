@@ -5,6 +5,7 @@ import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Paint;
+import android.graphics.PorterDuff;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
@@ -14,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -23,6 +25,7 @@ import com.daily.base.util.FontManager;
 import com.daily.base.util.ScreenUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Category;
+import com.twoheart.dailyhotel.place.activity.PlaceSearchResultActivity;
 import com.twoheart.dailyhotel.place.adapter.PlaceListFragmentPagerAdapter;
 import com.twoheart.dailyhotel.place.base.BaseBlurLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
@@ -41,7 +44,7 @@ public abstract class PlaceSearchResultLayout extends BaseBlurLayout implements 
 
     private View mToolbar;
     protected TextView mCalendarTextView;
-    private View mEmptyLayout;
+    private View mEmptyLayout, mSearchLocationLayout;
     private View mResultLayout;
 
     protected View mBottomOptionLayout;
@@ -107,9 +110,11 @@ public abstract class PlaceSearchResultLayout extends BaseBlurLayout implements 
         initToolbarLayout(view);
 
         mEmptyLayout = view.findViewById(R.id.emptyLayout);
+        mSearchLocationLayout = view.findViewById(R.id.searchLocationLayout);
         mResultLayout = view.findViewById(R.id.resultLayout);
 
         initEmptyLayout(mEmptyLayout);
+        initSearchLocationLayout(mSearchLocationLayout);
         initCategoryTabLayout(view);
         initOptionLayout(view);
     }
@@ -254,6 +259,17 @@ public abstract class PlaceSearchResultLayout extends BaseBlurLayout implements 
                 ((PlaceSearchResultLayout.OnEventListener) mOnEventListener).onShowCallDialog();
             }
         });
+    }
+
+    private void initSearchLocationLayout(View view)
+    {
+        if (view == null)
+        {
+            return;
+        }
+
+        ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
+        progressBar.getIndeterminateDrawable().setColorFilter(mContext.getResources().getColor(R.color.location_progressbar_cc8c8c8), PorterDuff.Mode.SRC_IN);
     }
 
     private void initOptionLayout(View view)
@@ -578,11 +594,22 @@ public abstract class PlaceSearchResultLayout extends BaseBlurLayout implements 
 
     public void clearCategoryTab()
     {
-        mViewPager.setAdapter(null);
-        mCategoryTabLayout.setOnTabSelectedListener(null);
-        mCategoryTabLayout.removeAllTabs();
-        mFragmentPagerAdapter.removeAll();
-        mViewPager.removeAllViews();
+        if (mCategoryTabLayout != null)
+        {
+            mCategoryTabLayout.setOnTabSelectedListener(null);
+            mCategoryTabLayout.removeAllTabs();
+        }
+
+        if (mFragmentPagerAdapter != null)
+        {
+            mFragmentPagerAdapter.removeAll();
+        }
+
+        if (mViewPager != null)
+        {
+            mViewPager.setAdapter(null);
+            mViewPager.removeAllViews();
+        }
     }
 
     public PlaceListFragment getCurrentPlaceListFragment()
@@ -669,22 +696,39 @@ public abstract class PlaceSearchResultLayout extends BaseBlurLayout implements 
         mDistanceFilterSpinner.setSelection(position);
     }
 
-    public void showEmptyLayout()
+    public void setScreenVisible(PlaceSearchResultActivity.ScreenType screenType)
     {
-        mEmptyLayout.setVisibility(View.VISIBLE);
-        mResultLayout.setVisibility(View.GONE);
-    }
+        if (screenType == null)
+        {
+            return;
+        }
 
-    public void showListLayout()
-    {
-        mEmptyLayout.setVisibility(View.GONE);
-        mResultLayout.setVisibility(View.VISIBLE);
-    }
+        switch (screenType)
+        {
+            case NONE:
+                mEmptyLayout.setVisibility(View.GONE);
+                mResultLayout.setVisibility(View.INVISIBLE);
+                mSearchLocationLayout.setVisibility(View.GONE);
+                break;
 
-    public void processListLayout()
-    {
-        mEmptyLayout.setVisibility(View.GONE);
-        mResultLayout.setVisibility(View.INVISIBLE);
+            case EMPTY:
+                mEmptyLayout.setVisibility(View.VISIBLE);
+                mResultLayout.setVisibility(View.INVISIBLE);
+                mSearchLocationLayout.setVisibility(View.GONE);
+                break;
+
+            case SEARCH_LOCATION:
+                mEmptyLayout.setVisibility(View.GONE);
+                mResultLayout.setVisibility(View.INVISIBLE);
+                mSearchLocationLayout.setVisibility(View.VISIBLE);
+                break;
+
+            case LIST:
+                mEmptyLayout.setVisibility(View.GONE);
+                mResultLayout.setVisibility(View.VISIBLE);
+                mSearchLocationLayout.setVisibility(View.GONE);
+                break;
+        }
     }
 
     public boolean isEmptyLayout()

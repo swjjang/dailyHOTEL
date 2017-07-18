@@ -78,6 +78,11 @@ public class GourmetSearchFragment extends PlaceSearchFragment
                     {
                         GourmetBookingDay gourmetBookingDay = data.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY);
 
+                        if (gourmetBookingDay == null)
+                        {
+                            return;
+                        }
+
                         setGourmetBookingDay(gourmetBookingDay);
                         setDateText(gourmetBookingDay);
 
@@ -126,6 +131,8 @@ public class GourmetSearchFragment extends PlaceSearchFragment
     {
         if (mIsScrolling == true)
         {
+            unLockUI();
+
             return;
         }
 
@@ -134,6 +141,8 @@ public class GourmetSearchFragment extends PlaceSearchFragment
             Util.restartApp(mBaseActivity);
             return;
         }
+
+        lockUI();
 
         Intent intent = GourmetSearchResultActivity.newInstance(mBaseActivity, mTodayDateTime, mGourmetBookingDay, location, AnalyticsManager.Screen.SEARCH_MAIN);
         startActivityForResult(intent, REQUEST_ACTIVITY_SEARCHRESULT);
@@ -166,6 +175,11 @@ public class GourmetSearchFragment extends PlaceSearchFragment
 
     public void setGourmetBookingDay(GourmetBookingDay gourmetBookingDay)
     {
+        if(gourmetBookingDay == null)
+        {
+            return;
+        }
+
         mGourmetBookingDay = gourmetBookingDay;
     }
 
@@ -238,8 +252,10 @@ public class GourmetSearchFragment extends PlaceSearchFragment
                 return;
             }
 
-            Intent intent = PermissionManagerActivity.newInstance(mBaseActivity, PermissionManagerActivity.PermissionType.ACCESS_FINE_LOCATION);
-            startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_PERMISSION_MANAGER);
+            checkLocationProvider();
+
+//            Intent intent = PermissionManagerActivity.newInstance(mBaseActivity, PermissionManagerActivity.PermissionType.ACCESS_FINE_LOCATION);
+//            startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_PERMISSION_MANAGER);
         }
 
         @Override
@@ -332,8 +348,14 @@ public class GourmetSearchFragment extends PlaceSearchFragment
         @Override
         public void onCalendarClick(boolean isAnimation)
         {
-            if (mIsScrolling == true)
+            if (mIsScrolling == true || isAdded() == false)
             {
+                return;
+            }
+
+            if(mGourmetBookingDay == null)
+            {
+                Util.restartApp(mBaseActivity);
                 return;
             }
 
@@ -393,6 +415,8 @@ public class GourmetSearchFragment extends PlaceSearchFragment
         @Override
         public void onDateTime(TodayDateTime todayDateTime)
         {
+            unLockUI();
+
             mTodayDateTime = todayDateTime;
 
             setDateChanged(mTodayDateTime, mGourmetBookingDay);

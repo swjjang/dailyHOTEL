@@ -45,6 +45,7 @@ public abstract class PlaceReservationDetailActivity extends BaseActivity
     protected boolean mIsDeepLink;
     protected PlaceBookingDetail mPlaceBookingDetail;
     protected TodayDateTime mTodayDateTime;
+    private DailyLocationFactory mDailyLocationFactory;
 
     protected PlaceReservationDetailLayout mPlaceReservationDetailLayout;
 
@@ -112,9 +113,6 @@ public abstract class PlaceReservationDetailActivity extends BaseActivity
         if (mDontReload == false)
         {
             mDontReload = true;
-        } else
-        {
-            unLockUI();
         }
 
         if (mPlaceReservationDetailLayout != null && mPlaceReservationDetailLayout.getBlurVisibility() == true)
@@ -235,6 +233,17 @@ public abstract class PlaceReservationDetailActivity extends BaseActivity
         } else
         {
             super.onBackPressed();
+        }
+    }
+
+    @Override
+    protected void onDestroy()
+    {
+        super.onDestroy();
+
+        if (mDailyLocationFactory != null)
+        {
+            mDailyLocationFactory.stopLocationMeasure();
         }
     }
 
@@ -371,7 +380,17 @@ public abstract class PlaceReservationDetailActivity extends BaseActivity
     {
         lockUI();
 
-        DailyLocationFactory.getInstance(this).startLocationMeasure(this, myLocationView, new DailyLocationFactory.LocationListenerEx()
+        if (mDailyLocationFactory == null)
+        {
+            mDailyLocationFactory = new DailyLocationFactory(this);
+        }
+
+        if (mDailyLocationFactory.measuringLocation() == true)
+        {
+            return;
+        }
+
+        mDailyLocationFactory.checkLocationMeasure(new DailyLocationFactory.OnCheckLocationListener()
         {
             @Override
             public void onRequirePermission()
@@ -389,21 +408,7 @@ public abstract class PlaceReservationDetailActivity extends BaseActivity
             }
 
             @Override
-            public void onStatusChanged(String provider, int status, Bundle extras)
-            {
-                // TODO Auto-generated method stub
-
-            }
-
-            @Override
-            public void onProviderEnabled(String provider)
-            {
-                // TODO Auto-generated method stub
-
-            }
-
-            @Override
-            public void onProviderDisabled(String provider)
+            public void onProviderDisabled()
             {
                 unLockUI();
 
@@ -413,7 +418,7 @@ public abstract class PlaceReservationDetailActivity extends BaseActivity
                 }
 
                 // 현재 GPS 설정이 꺼져있습니다 설정에서 바꾸어 주세요.
-                DailyLocationFactory.getInstance(PlaceReservationDetailActivity.this).stopLocationMeasure();
+                mDailyLocationFactory.stopLocationMeasure();
 
                 showSimpleDialog(getString(R.string.dialog_title_used_gps), getString(R.string.dialog_msg_used_gps), getString(R.string.dialog_btn_text_dosetting), getString(R.string.dialog_btn_text_cancel), new View.OnClickListener()
                 {
@@ -427,23 +432,42 @@ public abstract class PlaceReservationDetailActivity extends BaseActivity
             }
 
             @Override
-            public void onLocationChanged(Location location)
+            public void onProviderEnabled()
             {
-                unLockUI();
-
-                if (isFinishing() == true)
+                mDailyLocationFactory.startLocationMeasure(myLocationView, new DailyLocationFactory.OnLocationListener()
                 {
-                    return;
-                }
+                    @Override
+                    public void onFailed()
+                    {
+                        unLockUI();
+                    }
 
-                DailyLocationFactory.getInstance(PlaceReservationDetailActivity.this).stopLocationMeasure();
+                    @Override
+                    public void onAlreadyRun()
+                    {
 
-                if (mPlaceReservationDetailLayout == null || location == null)
-                {
-                    return;
-                }
+                    }
 
-                mPlaceReservationDetailLayout.changeLocation(location);
+                    @Override
+                    public void onLocationChanged(Location location)
+                    {
+                        unLockUI();
+
+                        if (isFinishing() == true)
+                        {
+                            return;
+                        }
+
+                        mDailyLocationFactory.stopLocationMeasure();
+
+                        if (mPlaceReservationDetailLayout == null || location == null)
+                        {
+                            return;
+                        }
+
+                        mPlaceReservationDetailLayout.changeLocation(location);
+                    }
+                });
             }
         });
     }
@@ -453,7 +477,7 @@ public abstract class PlaceReservationDetailActivity extends BaseActivity
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-     ///////////////////////////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////////////////////
     //
     // 기존의 BaseActivity에 있는 정보 가져오기
     ///////////////////////////////////////////////////////////////////////////////////////////////
