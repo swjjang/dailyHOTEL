@@ -61,6 +61,11 @@ public class StaySearchResultListFragment extends StayListFragment
     @Override
     public void setPlaceCuration(PlaceCuration curation)
     {
+        if (mPlaceListLayout == null)
+        {
+            return;
+        }
+
         super.setPlaceCuration(curation);
 
         ((StaySearchResultListLayout) mPlaceListLayout).setSearchType(mSearchType);
