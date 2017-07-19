@@ -91,7 +91,7 @@ public class GourmetCalendarActivity extends PlaceCalendarActivity
                 @Override
                 public void run()
                 {
-                    makeCalendar(mTodayDateTime, DAYCOUNT_OF_MAX);
+                    makeCalendar(mTodayDateTime, DAYCOUNT_OF_MAX, mSoldOutDayList);
 
                     reset();
 
@@ -109,7 +109,7 @@ public class GourmetCalendarActivity extends PlaceCalendarActivity
         {
             setTouchEnabled(true);
 
-            makeCalendar(mTodayDateTime, DAYCOUNT_OF_MAX);
+            makeCalendar(mTodayDateTime, DAYCOUNT_OF_MAX, mSoldOutDayList);
 
             reset();
 
@@ -188,7 +188,7 @@ public class GourmetCalendarActivity extends PlaceCalendarActivity
 
                 try
                 {
-                    gourmetBookingDay.setVisitDay(mTodayDateTime.dailyDateTime, day.dayOffset);
+                    gourmetBookingDay.setVisitDay(day.dateTime);
 
                     onConfirm(gourmetBookingDay);
                 } catch (Exception e)
@@ -228,7 +228,7 @@ public class GourmetCalendarActivity extends PlaceCalendarActivity
 
                 try
                 {
-                    DailyCalendar.setCalendarDateString(calendar, mTodayDateTime.dailyDateTime, day.dayOffset);
+                    DailyCalendar.setCalendarDateString(calendar, day.dateTime);
                     String visitDate = DailyCalendar.format(calendar.getTime(), "yyyy.MM.dd(EEE)");
 
                     setToolbarText(visitDate);
@@ -332,7 +332,7 @@ public class GourmetCalendarActivity extends PlaceCalendarActivity
 
                 Day day = (Day) dayView.getTag();
 
-                DailyCalendar.setCalendarDateString(calendar, todayDateTime.dailyDateTime, day.dayOffset);
+                DailyCalendar.setCalendarDateString(calendar, day.dateTime);
 
                 int calendarDay = Integer.parseInt(DailyCalendar.format(calendar.getTime(), "yyyyMMdd"));
 

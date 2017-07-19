@@ -83,9 +83,9 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
     ANIMATION_STATE mAnimationState = ANIMATION_STATE.END;
     AnimatorSet mAnimatorSet;
 
-    protected List<Integer> mHolidayList;
+    protected ArrayList<Integer> mHolidayList;
 
-    protected List<Integer> mSoldOutDayList;
+    protected ArrayList<Integer> mSoldOutDayList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -272,7 +272,7 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
             days[i].dateTime = DailyCalendar.format(cloneCalendar.getTime(), DailyCalendar.ISO_8601_FORMAT);
             days[i].dayOfMonth = Integer.toString(dayValue);
             days[i].dayOfWeek = cloneCalendar.get(Calendar.DAY_OF_WEEK);
-            days[i].isHoliDay = isHoliday(calendar, holidayList);
+            days[i].isHoliday = isHoliday(calendar, holidayList);
             days[i].isSoldOut = isSoldOutDay(calendar, soldOutDayList);
             days[i].isDefaultDimmed = dayValue < todayValue || isLast == true && dayCount < 0;
 
@@ -292,8 +292,18 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
         return new Pair(dayCount, days);
     }
 
-    protected void makeCalendar(TodayDateTime mTodayDateTime, int dayCountOfMax)
+    protected void makeCalendar(TodayDateTime mTodayDateTime, int dayCountOfMax, ArrayList<Integer> soldOutDayList)
     {
+        if (mSoldOutDayList == null)
+        {
+            mSoldOutDayList = new ArrayList<>();
+        }
+
+        if (soldOutDayList != null && soldOutDayList.size() > 0)
+        {
+            mSoldOutDayList.addAll(soldOutDayList);
+        }
+
         ArrayList<Pair<String, Day[]>> calendarList = makeCalendarList(mTodayDateTime, dayCountOfMax);
 
         if (calendarList == null)
@@ -310,7 +320,7 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
 
         mDayViewList.clear();
 
-        for (int i = 0 ; i < size ; i++)
+        for (int i = 0; i < size; i++)
         {
             Pair<String, Day[]> pair = calendarList.get(i);
 
@@ -491,7 +501,7 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
                 break;
 
             case Calendar.SATURDAY:
-                if (day.isHoliDay == true)
+                if (day.isHoliday == true)
                 {
                     dayTextView.setTextColor(getResources().getColorStateList(R.color.selector_calendar_sunday_textcolor));
                 } else
@@ -501,7 +511,7 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
                 break;
 
             default:
-                if (day.isHoliDay == true)
+                if (day.isHoliday == true)
                 {
                     dayTextView.setTextColor(getResources().getColorStateList(R.color.selector_calendar_sunday_textcolor));
                 } else
@@ -799,15 +809,12 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
 
     protected static class Day
     {
-        String dateTime; // ISO-8601 format
+        public String dateTime; // ISO-8601 format
         String dayOfMonth;
         int dayOfWeek;
-        boolean isHoliDay;
+        boolean isHoliday;
         boolean isSoldOut;
         boolean isDefaultDimmed;
-
-        public int dayOffset; // TODO : 제거 함 <-- 이게 말썽임
-
     }
 
     ///////////////////////////////////////////////////////////////////////////////////////////////

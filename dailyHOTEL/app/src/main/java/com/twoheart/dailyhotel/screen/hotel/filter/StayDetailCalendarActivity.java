@@ -215,7 +215,7 @@ public class StayDetailCalendarActivity extends StayCalendarActivity
     }
 
     @Override
-    void setAvailableCheckOutDays(TodayDateTime todayDateTime, View checkinDayView)
+    void setAvailableCheckOutDays(TodayDateTime todayDateTime, View checkInDayView)
     {
         Calendar calendar = DailyCalendar.getInstance();
 
@@ -223,8 +223,8 @@ public class StayDetailCalendarActivity extends StayCalendarActivity
 
         try
         {
-            Day checkInDay = (Day) checkinDayView.getTag();
-            DailyCalendar.setCalendarDateString(calendar, todayDateTime.dailyDateTime, checkInDay.dayOffset);
+            Day checkInDay = (Day) checkInDayView.getTag();
+            DailyCalendar.setCalendarDateString(calendar, checkInDay.dateTime);
 
             checkInDate = DailyCalendar.format(calendar.getTime(), "yyyy-MM-dd");
         } catch (Exception e)

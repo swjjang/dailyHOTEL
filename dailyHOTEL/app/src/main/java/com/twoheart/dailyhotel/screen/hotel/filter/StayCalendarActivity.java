@@ -97,7 +97,7 @@ public class StayCalendarActivity extends PlaceCalendarActivity
                 @Override
                 public void run()
                 {
-                    makeCalendar(mTodayDateTime, getMaxDay());
+                    makeCalendar(mTodayDateTime, getMaxDay(), mSoldOutDayList);
 
                     reset();
 
@@ -116,7 +116,7 @@ public class StayCalendarActivity extends PlaceCalendarActivity
         {
             setTouchEnabled(true);
 
-            makeCalendar(mTodayDateTime, getMaxDay());
+            makeCalendar(mTodayDateTime, getMaxDay(), mSoldOutDayList);
 
             reset();
 
@@ -202,8 +202,8 @@ public class StayCalendarActivity extends PlaceCalendarActivity
 
                 try
                 {
-                    stayBookingDay.setCheckInDay(mTodayDateTime.dailyDateTime, checkInDay.dayOffset);
-                    stayBookingDay.setCheckOutDay(mTodayDateTime.dailyDateTime, checkOutDay.dayOffset);
+                    stayBookingDay.setCheckInDay(checkInDay.dateTime);
+                    stayBookingDay.setCheckOutDay(checkOutDay.dateTime);
 
                     onConfirm(stayBookingDay);
                 } catch (Exception e)
@@ -247,7 +247,16 @@ public class StayCalendarActivity extends PlaceCalendarActivity
                 {
                     Day currentCheckInDay = (Day) mCheckInDayView.getTag();
 
-                    if (currentCheckInDay.dayOffset >= day.dayOffset)
+                    int compareValue = 0;
+                    try
+                    {
+                        compareValue = DailyCalendar.compareDateDay(currentCheckInDay.dateTime, day.dateTime);
+                    } catch (Exception e)
+                    {
+                        ExLog.w(e.toString());
+                    }
+
+                    if (compareValue >= 0)
                     {
                         reset();
                     }
@@ -275,7 +284,6 @@ public class StayCalendarActivity extends PlaceCalendarActivity
 
                     Day checkInDay = (Day) mCheckInDayView.getTag();
                     Day checkOutDay = (Day) mCheckOutDayView.getTag();
-                    int nights = checkOutDay.dayOffset - checkInDay.dayOffset;
 
                     view.setSelected(true);
 
@@ -285,10 +293,12 @@ public class StayCalendarActivity extends PlaceCalendarActivity
 
                     try
                     {
-                        DailyCalendar.setCalendarDateString(calendar, mTodayDateTime.dailyDateTime, checkInDay.dayOffset);
+                        int nights = DailyCalendar.compareDateDay(checkOutDay.dateTime, checkInDay.dateTime);
+
+                        DailyCalendar.setCalendarDateString(calendar, checkInDay.dateTime);
                         String checkInDate = DailyCalendar.format(calendar.getTime(), "yyyy.MM.dd(EEE)");
 
-                        DailyCalendar.setCalendarDateString(calendar, mTodayDateTime.dailyDateTime, checkOutDay.dayOffset);
+                        DailyCalendar.setCalendarDateString(calendar, checkOutDay.dateTime);
                         String checkOutDate = DailyCalendar.format(calendar.getTime(), "yyyy.MM.dd(EEE)");
 
                         String title = String.format(Locale.KOREA, "%s - %s, %d박", checkInDate, checkOutDate, nights);
@@ -436,7 +446,7 @@ public class StayCalendarActivity extends PlaceCalendarActivity
 
                 Day day = (Day) dayView.getTag();
 
-                DailyCalendar.setCalendarDateString(calendar, todayDateTime.dailyDateTime, day.dayOffset);
+                DailyCalendar.setCalendarDateString(calendar, day.dateTime);
 
                 int calendarDay = Integer.parseInt(DailyCalendar.format(calendar.getTime(), "yyyyMMdd"));
 
@@ -593,7 +603,7 @@ public class StayCalendarActivity extends PlaceCalendarActivity
 
                 Day day = (Day) dayView.getTag();
 
-                DailyCalendar.setCalendarDateString(calendar, todayDateTime.dailyDateTime, day.dayOffset);
+                DailyCalendar.setCalendarDateString(calendar, day.dateTime);
 
                 int calendarDay = Integer.parseInt(DailyCalendar.format(calendar.getTime(), "yyyyMMdd"));
 
