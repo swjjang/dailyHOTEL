@@ -95,8 +95,6 @@ public class GourmetCalendarActivity extends PlaceCalendarActivity
 
                     reset();
 
-//                    setSoldOutDays(mTodayDateTime, mSoldOutDayList);
-
                     if (isSelected == true)
                     {
                         setSelectedDay(mTodayDateTime, (GourmetBookingDay) mPlaceBookingDay);
@@ -112,8 +110,6 @@ public class GourmetCalendarActivity extends PlaceCalendarActivity
             makeCalendar(mTodayDateTime, DAYCOUNT_OF_MAX);
 
             reset();
-
-//            setSoldOutDays(mTodayDateTime, mSoldOutDayList);
 
             if (isSelected == true)
             {
@@ -221,8 +217,6 @@ public class GourmetCalendarActivity extends PlaceCalendarActivity
                 setSelectedDay(mDayView);
 
                 view.setSelected(true);
-
-//                setSoldOutDays(mTodayDateTime, mSoldOutDayList);
 
                 Calendar calendar = DailyCalendar.getInstance();
 
@@ -347,70 +341,6 @@ public class GourmetCalendarActivity extends PlaceCalendarActivity
             ExLog.e(e.toString());
         }
     }
-
-//    void setSoldOutDays(TodayDateTime todayDateTime, List<String> unavailableDateList)
-//    {
-//        if (todayDateTime == null || unavailableDateList == null || unavailableDateList.size() == 0)
-//        {
-//            return;
-//        }
-//
-//        Calendar calendar = DailyCalendar.getInstance();
-//
-//        try
-//        {
-//            for (View dayView : mDailyViews)
-//            {
-//                if (dayView == null)
-//                {
-//                    continue;
-//                }
-//
-//                Day day = (Day) dayView.getTag();
-//
-//                DailyCalendar.setCalendarDateString(calendar, todayDateTime.dailyDateTime, day.dayOffset);
-//
-//                int calendarDay = Integer.parseInt(DailyCalendar.format(calendar.getTime(), "yyyyMMdd"));
-//
-//                if (dayView.isSelected() == true)
-//                {
-//                    continue;
-//                }
-//
-//                for (String unavailableDate : unavailableDateList)
-//                {
-//                    int checkDay = Integer.parseInt(DailyCalendar.convertDateFormatString(unavailableDate, "yyyy-MM-dd", "yyyyMMdd"));
-//
-//                    if (calendarDay == checkDay)
-//                    {
-//                        setSoldOutDay(dayView);
-//                        break;
-//                    }
-//
-//                }
-//            }
-//        } catch (Exception e)
-//        {
-//            ExLog.e(e.toString());
-//        }
-//    }
-//
-//    void setSoldOutDay(View view)
-//    {
-//        if (view == null)
-//        {
-//            return;
-//        }
-//
-//        TextView textView = (TextView) view.findViewById(R.id.textView);
-//        textView.setText(R.string.label_calendar_soldout);
-//        textView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 8);
-//        textView.setVisibility(View.VISIBLE);
-//        view.setEnabled(false);
-//
-//        TextView dateTextView = (TextView) view.findViewById(R.id.dateTextView);
-//        dateTextView.setPaintFlags(textView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-//    }
 
     void reset()
     {

@@ -101,8 +101,6 @@ public class StayCalendarActivity extends PlaceCalendarActivity
 
                     reset();
 
-//                    setSoldOutDays(mTodayDateTime, mSoldOutDayList);
-
                     if (isSelected == true)
                     {
                         setSelectedRangeDay(mTodayDateTime, (StayBookingDay) mPlaceBookingDay);
@@ -119,8 +117,6 @@ public class StayCalendarActivity extends PlaceCalendarActivity
             makeCalendar(mTodayDateTime, getMaxDay());
 
             reset();
-
-//            setSoldOutDays(mTodayDateTime, mSoldOutDayList);
 
             if (isSelected == true)
             {
@@ -269,8 +265,6 @@ public class StayCalendarActivity extends PlaceCalendarActivity
 
                     view.setSelected(true);
 
-//                    setSoldOutDays(mTodayDateTime, mSoldOutDayList);
-
                     setToolbarText(getString(R.string.label_calendar_hotel_select_checkout));
                     mDayViewList.get(mDayViewList.size() - 1).setEnabled(true);
 
@@ -286,8 +280,6 @@ public class StayCalendarActivity extends PlaceCalendarActivity
                     Day checkOutDay = (Day) mCheckOutDayView.getTag();
 
                     view.setSelected(true);
-
-//                    setSoldOutDays(mTodayDateTime, mSoldOutDayList);
 
                     Calendar calendar = DailyCalendar.getInstance();
 
@@ -508,70 +500,6 @@ public class StayCalendarActivity extends PlaceCalendarActivity
         mDayViewList.get(mDayViewList.size() - 1).setEnabled(false);
     }
 
-//    void setSoldOutDays(TodayDateTime todayDateTime, List<String> unavailableDateList)
-//    {
-//        if (todayDateTime == null || unavailableDateList == null || unavailableDateList.size() == 0)
-//        {
-//            return;
-//        }
-//
-//        Calendar calendar = DailyCalendar.getInstance();
-//
-//        try
-//        {
-//            for (View dayView : mDailyViews)
-//            {
-//                if (dayView == null)
-//                {
-//                    continue;
-//                }
-//
-//                Day day = (Day) dayView.getTag();
-//
-//                DailyCalendar.setCalendarDateString(calendar, todayDateTime.dailyDateTime, day.dayOffset);
-//
-//                int calendarDay = Integer.parseInt(DailyCalendar.format(calendar.getTime(), "yyyyMMdd"));
-//
-//                if (dayView.isSelected() == true)
-//                {
-//                    continue;
-//                }
-//
-//                for (String unavailableDate : unavailableDateList)
-//                {
-//                    int checkDay = Integer.parseInt(DailyCalendar.convertDateFormatString(unavailableDate, "yyyy-MM-dd", "yyyyMMdd"));
-//
-//                    if (calendarDay == checkDay)
-//                    {
-//                        setSoldOutDay(dayView);
-//                        break;
-//                    }
-//
-//                }
-//            }
-//        } catch (Exception e)
-//        {
-//            ExLog.e(e.toString());
-//        }
-//    }
-//
-//    void setSoldOutDay(View view)
-//    {
-//        if (view == null)
-//        {
-//            return;
-//        }
-//
-//        TextView textView = (TextView) view.findViewById(R.id.textView);
-//        textView.setText(R.string.label_calendar_soldout);
-//        textView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 8);
-//        textView.setVisibility(View.VISIBLE);
-//        view.setEnabled(false);
-//
-//        TextView dateTextView = (TextView) view.findViewById(R.id.dateTextView);
-//        dateTextView.setPaintFlags(textView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-//    }
-
     void setAvailableCheckOutDays(TodayDateTime todayDateTime, View checkinDayView)
     {
         // do nothing - stayDetailCalendar 용
@@ -613,7 +541,6 @@ public class StayCalendarActivity extends PlaceCalendarActivity
 
                     if (calendarDay == checkDay)
                     {
-//                        setSoldOutDay(dayView);
                         updateDayView(dayView);
                         break;
                     }
