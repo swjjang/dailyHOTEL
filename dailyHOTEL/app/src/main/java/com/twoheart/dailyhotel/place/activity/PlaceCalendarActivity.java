@@ -230,12 +230,12 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
         }
 
         // 남은 값이 이달의 최대 값과 같거나 작으면 마지막 달력
-        if (dayCount <= maxDayOfMonth)
+        if (todayValue + dayCount + 1 <= maxDayOfMonth)
         {
             isLast = true;
         }
 
-        maxDayOfMonth = todayValue + dayCount + 1 > maxDayOfMonth ? maxDayOfMonth : todayValue + dayCount + 1;
+        maxDayOfMonth = isLast == false ? maxDayOfMonth : todayValue + dayCount + 1;
 
         int startGap = 0;
 
