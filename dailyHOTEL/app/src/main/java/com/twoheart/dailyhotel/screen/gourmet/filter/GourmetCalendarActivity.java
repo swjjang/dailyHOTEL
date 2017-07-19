@@ -91,7 +91,7 @@ public class GourmetCalendarActivity extends PlaceCalendarActivity
                 @Override
                 public void run()
                 {
-                    makeCalendar(mTodayDateTime, DAYCOUNT_OF_MAX, mSoldOutDayList);
+                    makeCalendar(mTodayDateTime, DAYCOUNT_OF_MAX);
 
                     reset();
 
@@ -109,7 +109,7 @@ public class GourmetCalendarActivity extends PlaceCalendarActivity
         {
             setTouchEnabled(true);
 
-            makeCalendar(mTodayDateTime, DAYCOUNT_OF_MAX, mSoldOutDayList);
+            makeCalendar(mTodayDateTime, DAYCOUNT_OF_MAX);
 
             reset();
 

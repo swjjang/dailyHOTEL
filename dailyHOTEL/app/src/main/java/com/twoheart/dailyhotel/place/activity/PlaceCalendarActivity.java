@@ -272,8 +272,8 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
             days[i].dateTime = DailyCalendar.format(cloneCalendar.getTime(), DailyCalendar.ISO_8601_FORMAT);
             days[i].dayOfMonth = Integer.toString(dayValue);
             days[i].dayOfWeek = cloneCalendar.get(Calendar.DAY_OF_WEEK);
-            days[i].isHoliday = isHoliday(calendar, holidayList);
-            days[i].isSoldOut = isSoldOutDay(calendar, soldOutDayList);
+            days[i].isHoliday = isHoliday(cloneCalendar, holidayList);
+            days[i].isSoldOut = isSoldOutDay(cloneCalendar, soldOutDayList);
             days[i].isDefaultDimmed = dayValue < todayValue || isLast == true && dayCount < 0;
 
             if (isLast == false && dayCount <= endCount)
@@ -292,18 +292,8 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
         return new Pair(dayCount, days);
     }
 
-    protected void makeCalendar(TodayDateTime mTodayDateTime, int dayCountOfMax, ArrayList<Integer> soldOutDayList)
+    protected void makeCalendar(TodayDateTime mTodayDateTime, int dayCountOfMax)
     {
-        if (mSoldOutDayList == null)
-        {
-            mSoldOutDayList = new ArrayList<>();
-        }
-
-        if (soldOutDayList != null && soldOutDayList.size() > 0)
-        {
-            mSoldOutDayList.addAll(soldOutDayList);
-        }
-
         ArrayList<Pair<String, Day[]>> calendarList = makeCalendarList(mTodayDateTime, dayCountOfMax);
 
         if (calendarList == null)

@@ -1005,7 +1005,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         }
     }
 
-    void startCalendar(TodayDateTime todayDateTime, GourmetBookingDay gourmetBookingDay, int placeIndex, ArrayList<Integer> soldoutList, boolean isAnimation)
+    void startCalendar(TodayDateTime todayDateTime, GourmetBookingDay gourmetBookingDay, int placeIndex, ArrayList<Integer> soldOutList, boolean isAnimation)
     {
         if (isFinishing() == true || lockUiComponentAndIsLockUiComponent() == true)
         {
@@ -1022,7 +1022,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         }
 
         Intent intent = GourmetDetailCalendarActivity.newInstance(GourmetDetailActivity.this, //
-            todayDateTime, gourmetBookingDay, placeIndex, callByScreen, soldoutList, true, isAnimation);
+            todayDateTime, gourmetBookingDay, placeIndex, callByScreen, soldOutList, true, isAnimation);
         startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_CALENDAR);
 
         AnalyticsManager.getInstance(GourmetDetailActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_//

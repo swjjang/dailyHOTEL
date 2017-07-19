@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.daily.dailyhotel.repository.remote.PlaceDetailCalendarImpl;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.time.GourmetBookingDay;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
@@ -28,7 +27,7 @@ public class GourmetDetailCalendarActivity extends GourmetCalendarActivity
 {
     private int mPlaceIndex;
 
-    private PlaceDetailCalendarImpl mPlaceDetailCalendarImpl;
+//    private PlaceDetailCalendarImpl mPlaceDetailCalendarImpl;
 
     public static Intent newInstance(Context context, TodayDateTime todayDateTime, GourmetBookingDay gourmetBookingDay, int placeIndex, String screen, ArrayList<Integer> soldOutList, boolean isSelected, boolean isAnimation)
     {
@@ -49,7 +48,7 @@ public class GourmetDetailCalendarActivity extends GourmetCalendarActivity
     {
         super.onCreate(savedInstanceState);
 
-        mPlaceDetailCalendarImpl = new PlaceDetailCalendarImpl(this);
+//        mPlaceDetailCalendarImpl = new PlaceDetailCalendarImpl(this);
 
         Intent intent = getIntent();
 
