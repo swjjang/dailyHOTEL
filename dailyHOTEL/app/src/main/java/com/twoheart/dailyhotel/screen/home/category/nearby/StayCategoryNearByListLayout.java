@@ -44,9 +44,7 @@ public class StayCategoryNearByListLayout extends StayListLayout
         switch (viewType)
         {
             case LIST:
-                mEmptyView.setVisibility(View.GONE);
-                mMapLayout.setVisibility(View.GONE);
-                mFilterEmptyView.setVisibility(View.GONE);
+                setScreenVisible(ScreenType.LIST);
                 mResultTextView.setVisibility(View.VISIBLE);
 
                 if (mPlaceListMapFragment != null)
@@ -57,17 +55,13 @@ public class StayCategoryNearByListLayout extends StayListLayout
                     mPlaceListMapFragment = null;
                 }
 
-                mSwipeRefreshLayout.setVisibility(View.VISIBLE);
-
                 ((StayCategoryNearByListLayout.OnEventListener) mOnEventListener).onUpdateFilterEnabled(true);
                 ((StayCategoryNearByListLayout.OnEventListener) mOnEventListener).onUpdateViewTypeEnabled(true);
                 break;
 
             case MAP:
+                setScreenVisible(ScreenType.MAP);
                 mResultTextView.setVisibility(View.GONE);
-                mEmptyView.setVisibility(View.GONE);
-                mMapLayout.setVisibility(View.VISIBLE);
-                mFilterEmptyView.setVisibility(View.GONE);
 
                 if (isCurrentPage == true && mPlaceListMapFragment == null)
                 {
@@ -96,21 +90,16 @@ public class StayCategoryNearByListLayout extends StayListLayout
 
                 if (stayCurationOption.isDefaultFilter() == true)
                 {
-                    mEmptyView.setVisibility(View.VISIBLE);
+                    setScreenVisible(ScreenType.EMPTY);
                     mFilterEmptyView.setVisibility(View.GONE);
                     ((StayCategoryNearByListLayout.OnEventListener) mOnEventListener).onUpdateFilterEnabled(false);
                 } else
                 {
-                    mEmptyView.setVisibility(View.GONE);
-                    mFilterEmptyView.setVisibility(View.VISIBLE);
+                    setScreenVisible(ScreenType.FILTER_EMPTY);
                     ((StayCategoryNearByListLayout.OnEventListener) mOnEventListener).onUpdateFilterEnabled(true);
                 }
 
-                mMapLayout.setVisibility(View.GONE);
                 mResultTextView.setVisibility(View.GONE);
-
-                mSwipeRefreshLayout.setVisibility(View.INVISIBLE);
-
                 ((StayCategoryNearByListLayout.OnEventListener) mOnEventListener).onUpdateViewTypeEnabled(false);
                 break;
         }
