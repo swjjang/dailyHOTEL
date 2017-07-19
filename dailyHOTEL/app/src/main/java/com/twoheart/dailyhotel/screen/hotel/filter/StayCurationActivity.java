@@ -89,8 +89,16 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
 
     protected void initIntent(Intent intent)
     {
-        mViewType = ViewType.valueOf(intent.getStringExtra(INTENT_EXTRA_DATA_VIEWTYPE));
-        mStayCuration = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PLACECURATION);
+        try
+        {
+            mViewType = ViewType.valueOf(intent.getStringExtra(INTENT_EXTRA_DATA_VIEWTYPE));
+            mStayCuration = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PLACECURATION);
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+
+            Util.restartApp(this);
+        }
     }
 
     @Override

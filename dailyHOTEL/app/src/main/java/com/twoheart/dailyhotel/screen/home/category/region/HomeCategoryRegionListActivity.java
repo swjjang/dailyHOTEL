@@ -7,10 +7,8 @@ import android.location.Location;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.view.View;
-import android.widget.Toast;
 
 import com.daily.base.util.ExLog;
-import com.daily.base.widget.DailyToast;
 import com.daily.base.widget.DailyViewPager;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
@@ -222,7 +220,7 @@ public class HomeCategoryRegionListActivity extends BaseActivity
             {
                 updateTermsOfLocationLayout();
 
-                searchMyLocation();
+                checkLocationProvider();
                 break;
             }
 
@@ -232,7 +230,7 @@ public class HomeCategoryRegionListActivity extends BaseActivity
 
                 if (resultCode == Activity.RESULT_OK)
                 {
-                    searchMyLocation();
+                    checkLocationProvider();
                 } else if (resultCode == CODE_RESULT_ACTIVITY_GO_HOME)
                 {
                     setResult(resultCode);
@@ -243,18 +241,13 @@ public class HomeCategoryRegionListActivity extends BaseActivity
         }
     }
 
-    protected void searchMyLocation()
+    protected void checkLocationProvider()
     {
         lockUI();
 
         if (mDailyLocationFactory == null)
         {
             mDailyLocationFactory = new DailyLocationFactory(this);
-        }
-
-        if (mDailyLocationFactory.measuringLocation() == true)
-        {
-            return;
         }
 
         mDailyLocationFactory.checkLocationMeasure(new DailyLocationFactory.OnCheckLocationListener()
@@ -302,56 +295,22 @@ public class HomeCategoryRegionListActivity extends BaseActivity
             @Override
             public void onProviderEnabled()
             {
-                mDailyLocationFactory.startLocationMeasure(null, new DailyLocationFactory.OnLocationListener()
+                // Location
+                Intent intent = new Intent();
+                intent.putExtra(NAME_INTENT_EXTRA_DATA_LOCATION, (Location)null);
+
+                try
                 {
-                    @Override
-                    public void onFailed()
-                    {
-                        unLockUI();
-                    }
+                    HomeCategoryRegionListFragment homeCategoryRegionListFragment = getCurrentFragment();
+                    intent.putExtra(NAME_INTENT_EXTRA_DATA_RESULT, PlaceRegionListActivity.Region.DOMESTIC.name());
+                    intent.putExtra(NAME_INTENT_EXTRA_DATA_DAILY_CATEGORY_TYPE, (Parcelable) mDailyCategoryType);
+                } catch (Exception e)
+                {
+                    ExLog.d(e.toString());
+                }
 
-                    @Override
-                    public void onAlreadyRun()
-                    {
-
-                    }
-
-                    @Override
-                    public void onLocationChanged(Location location)
-                    {
-                        unLockUI();
-
-                        if (isFinishing() == true)
-                        {
-                            return;
-                        }
-
-                        mDailyLocationFactory.stopLocationMeasure();
-
-                        if (location == null)
-                        {
-                            DailyToast.showToast(HomeCategoryRegionListActivity.this, R.string.message_failed_mylocation, Toast.LENGTH_SHORT);
-                        } else
-                        {
-                            // Location
-                            Intent intent = new Intent();
-                            intent.putExtra(NAME_INTENT_EXTRA_DATA_LOCATION, location);
-
-                            try
-                            {
-                                HomeCategoryRegionListFragment homeCategoryRegionListFragment = getCurrentFragment();
-                                intent.putExtra(NAME_INTENT_EXTRA_DATA_RESULT, PlaceRegionListActivity.Region.DOMESTIC.name());
-                                intent.putExtra(NAME_INTENT_EXTRA_DATA_DAILY_CATEGORY_TYPE, (Parcelable) mDailyCategoryType);
-                            } catch (Exception e)
-                            {
-                                ExLog.d(e.toString());
-                            }
-
-                            setResult(RESULT_ARROUND_SEARCH_LIST, intent);
-                            finish();
-                        }
-                    }
-                });
+                setResult(RESULT_ARROUND_SEARCH_LIST, intent);
+                finish();
             }
         });
     }
@@ -491,9 +450,7 @@ public class HomeCategoryRegionListActivity extends BaseActivity
                 return;
             }
 
-            Intent intent = PermissionManagerActivity.newInstance( //
-                HomeCategoryRegionListActivity.this, PermissionManagerActivity.PermissionType.ACCESS_FINE_LOCATION);
-            startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_PERMISSION_MANAGER);
+            checkLocationProvider();
 
             String label = "";
             switch (mDailyCategoryType)

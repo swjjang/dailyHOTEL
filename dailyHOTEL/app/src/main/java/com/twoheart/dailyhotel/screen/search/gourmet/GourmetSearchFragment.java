@@ -215,6 +215,38 @@ public class GourmetSearchFragment extends PlaceSearchFragment
         }
     }
 
+    @Override
+    public void startCalendar(boolean isAnimation)
+    {
+        if (mIsScrolling == true || isAdded() == false)
+        {
+            return;
+        }
+
+        if (mGourmetBookingDay == null)
+        {
+            Util.restartApp(mBaseActivity);
+            return;
+        }
+
+        if (isAnimation == true)
+        {
+            AnalyticsManager.getInstance(mBaseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION_//
+                , AnalyticsManager.Action.GOURMET_BOOKING_CALENDAR_CLICKED, AnalyticsManager.ValueType.SEARCH, null);
+        }
+
+        Intent intent = GourmetCalendarActivity.newInstance(mBaseActivity, mTodayDateTime, mGourmetBookingDay, //
+            AnalyticsManager.ValueType.SEARCH, true, isAnimation);
+
+        if (intent == null)
+        {
+            Util.restartApp(mBaseActivity);
+            return;
+        }
+
+        startActivityForResult(intent, REQUEST_ACTIVITY_CALENDAR);
+    }
+
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // OnEventListener
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -344,33 +376,7 @@ public class GourmetSearchFragment extends PlaceSearchFragment
         @Override
         public void onCalendarClick(boolean isAnimation)
         {
-            if (mIsScrolling == true || isAdded() == false)
-            {
-                return;
-            }
-
-            if (mGourmetBookingDay == null)
-            {
-                Util.restartApp(mBaseActivity);
-                return;
-            }
-
-            if (isAnimation == true)
-            {
-                AnalyticsManager.getInstance(mBaseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION_//
-                    , AnalyticsManager.Action.GOURMET_BOOKING_CALENDAR_CLICKED, AnalyticsManager.ValueType.SEARCH, null);
-            }
-
-            Intent intent = GourmetCalendarActivity.newInstance(mBaseActivity, mTodayDateTime, mGourmetBookingDay, //
-                AnalyticsManager.ValueType.SEARCH, true, isAnimation);
-
-            if (intent == null)
-            {
-                Util.restartApp(mBaseActivity);
-                return;
-            }
-
-            startActivityForResult(intent, REQUEST_ACTIVITY_CALENDAR);
+            startCalendar(isAnimation);
         }
 
         @Override

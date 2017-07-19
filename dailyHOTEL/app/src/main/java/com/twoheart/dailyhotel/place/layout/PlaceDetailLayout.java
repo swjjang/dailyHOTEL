@@ -216,6 +216,7 @@ public abstract class PlaceDetailLayout extends BaseLayout
             if (VersionUtils.isOverAPI21() == true)
             {
                 mTransSimpleDraweeView.setTransitionName(mContext.getString(R.string.transition_place_image));
+                mTransGradientTopView.setTransitionName(mContext.getString(R.string.transition_gradient_top_view));
                 mTransGradientBottomView.setTransitionName(mContext.getString(R.string.transition_gradient_bottom_view));
                 mTransGradientBottomView.setBackground(makeShaderFactory());
             }
@@ -285,6 +286,7 @@ public abstract class PlaceDetailLayout extends BaseLayout
     {
         mTransSimpleDraweeView.setVisibility(visibility);
         mTransGradientBottomView.setVisibility(visibility);
+        mTransGradientTopView.setVisibility(visibility);
     }
 
     public void setTransBottomGradientBackground(int resId)
