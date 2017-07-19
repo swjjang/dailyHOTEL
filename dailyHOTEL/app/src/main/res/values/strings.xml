@@ -1265,6 +1265,7 @@
     <string name="label_gourmet_product_detail_menu_description">메뉴 설명</string>
     <string name="label_gourmet_product_lastorder">(라스트 오더 %1$s)</string>
     <string name="label_gourmet_product_detail_title">상품 상세</string>
+    <string name="label_gourmet_product_detail_preview">스크롤하여 상세한 내용을\n확인해보세요!</string>
 
 
     <!-- Happy Talk -->
