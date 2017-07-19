@@ -232,6 +232,38 @@ public class StaySearchFragment extends PlaceSearchFragment
         }
     }
 
+    @Override
+    public void startCalendar(boolean isAnimation)
+    {
+        if (mIsScrolling == true || isAdded() == false)
+        {
+            return;
+        }
+
+        if (mStayBookingDay == null)
+        {
+            Util.restartApp(mBaseActivity);
+            return;
+        }
+
+        if (isAnimation == true)
+        {
+            AnalyticsManager.getInstance(mBaseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION_//
+                , AnalyticsManager.Action.HOTEL_BOOKING_CALENDAR_CLICKED, AnalyticsManager.ValueType.SEARCH, null);
+        }
+
+        Intent intent = StayCalendarActivity.newInstance(mBaseActivity, mTodayDateTime, mStayBookingDay, //
+            AnalyticsManager.ValueType.SEARCH, true, isAnimation);
+
+        if (intent == null)
+        {
+            Util.restartApp(mBaseActivity);
+            return;
+        }
+
+        startActivityForResult(intent, REQUEST_ACTIVITY_CALENDAR);
+    }
+
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // OnEventListener
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -376,33 +408,7 @@ public class StaySearchFragment extends PlaceSearchFragment
         @Override
         public void onCalendarClick(boolean isAnimation)
         {
-            if (mIsScrolling == true || isAdded() == false)
-            {
-                return;
-            }
-
-            if (mStayBookingDay == null)
-            {
-                Util.restartApp(mBaseActivity);
-                return;
-            }
-
-            if (isAnimation == true)
-            {
-                AnalyticsManager.getInstance(mBaseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION_//
-                    , AnalyticsManager.Action.HOTEL_BOOKING_CALENDAR_CLICKED, AnalyticsManager.ValueType.SEARCH, null);
-            }
-
-            Intent intent = StayCalendarActivity.newInstance(mBaseActivity, mTodayDateTime, mStayBookingDay, //
-                AnalyticsManager.ValueType.SEARCH, true, isAnimation);
-
-            if (intent == null)
-            {
-                Util.restartApp(mBaseActivity);
-                return;
-            }
-
-            startActivityForResult(intent, REQUEST_ACTIVITY_CALENDAR);
+            startCalendar(isAnimation);
         }
 
         @Override
