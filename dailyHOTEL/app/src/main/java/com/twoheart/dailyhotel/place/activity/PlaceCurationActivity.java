@@ -8,6 +8,7 @@ import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.os.PersistableBundle;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
