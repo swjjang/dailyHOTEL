@@ -52,6 +52,11 @@ public class GourmetSearchResultListFragment extends GourmetListFragment
     @Override
     public void setPlaceCuration(PlaceCuration curation)
     {
+        if (mPlaceListLayout == null)
+        {
+            return;
+        }
+
         super.setPlaceCuration(curation);
 
         ((GourmetSearchResultListLayout) mPlaceListLayout).setSearchType(mSearchType);
