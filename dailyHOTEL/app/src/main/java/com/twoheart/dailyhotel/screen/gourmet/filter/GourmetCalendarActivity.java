@@ -2,7 +2,9 @@ package com.twoheart.dailyhotel.screen.gourmet.filter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Paint;
 import android.os.Bundle;
+import android.util.TypedValue;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -24,7 +26,7 @@ import java.util.Map;
 
 public class GourmetCalendarActivity extends PlaceCalendarActivity
 {
-    private static final int DAYCOUNT_OF_MAX = 30;
+    public static final int DAYCOUNT_OF_MAX = 30;
     private static final int ENABLE_DAYCOUNT_OF_MAX = 30;
 
     private View mDayView;
@@ -65,6 +67,12 @@ public class GourmetCalendarActivity extends PlaceCalendarActivity
         mCallByScreen = intent.getStringExtra(INTENT_EXTRA_DATA_SCREEN);
         final boolean isSelected = intent.getBooleanExtra(INTENT_EXTRA_DATA_ISSELECTED, true);
         boolean isAnimation = intent.getBooleanExtra(INTENT_EXTRA_DATA_ANIMATION, false);
+
+
+        if (intent.hasExtra(INTENT_EXTRA_DATA_SOLDOUT_LIST) == true)
+        {
+            mSoldOutDayList =  intent.getIntegerArrayListExtra(INTENT_EXTRA_DATA_SOLDOUT_LIST);
+        }
 
         if (mTodayDateTime == null || mPlaceBookingDay == null)
         {
@@ -176,7 +184,7 @@ public class GourmetCalendarActivity extends PlaceCalendarActivity
 
                 try
                 {
-                    gourmetBookingDay.setVisitDay(mTodayDateTime.dailyDateTime, day.dayOffset);
+                    gourmetBookingDay.setVisitDay(day.dateTime);
 
                     onConfirm(gourmetBookingDay);
                 } catch (Exception e)
@@ -214,7 +222,7 @@ public class GourmetCalendarActivity extends PlaceCalendarActivity
 
                 try
                 {
-                    DailyCalendar.setCalendarDateString(calendar, mTodayDateTime.dailyDateTime, day.dayOffset);
+                    DailyCalendar.setCalendarDateString(calendar, day.dateTime);
                     String visitDate = DailyCalendar.format(calendar.getTime(), "yyyy.MM.dd(EEE)");
 
                     setToolbarText(visitDate);
@@ -267,9 +275,16 @@ public class GourmetCalendarActivity extends PlaceCalendarActivity
             return;
         }
 
-        TextView textView = (TextView) view.findViewById(R.id.textView);
-        textView.setText(R.string.label_visit_day);
-        textView.setVisibility(View.VISIBLE);
+        TextView visitTextView = (TextView) view.findViewById(R.id.textView);
+        visitTextView.setText(R.string.label_visit_day);
+        visitTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 11);
+        visitTextView.setVisibility(View.VISIBLE);
+
+        TextView dayTextView = (TextView) view.findViewById(R.id.dateTextView);
+        if ((dayTextView.getPaintFlags() & Paint.STRIKE_THRU_TEXT_FLAG) == Paint.STRIKE_THRU_TEXT_FLAG)
+        {
+            dayTextView.setPaintFlags(dayTextView.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
+        }
 
         view.setBackgroundResource(R.drawable.select_date_gourmet);
     }
@@ -281,9 +296,10 @@ public class GourmetCalendarActivity extends PlaceCalendarActivity
             return;
         }
 
-        TextView textView = (TextView) view.findViewById(R.id.textView);
-        textView.setText(null);
-        textView.setVisibility(View.INVISIBLE);
+//        TextView textView = (TextView) view.findViewById(R.id.textView);
+//        textView.setText(null);
+//        textView.setVisibility(View.INVISIBLE);
+        updateDayView(view);
 
         view.setBackgroundDrawable(getResources().getDrawable(R.drawable.selector_calendar_day_background));
     }
@@ -301,7 +317,7 @@ public class GourmetCalendarActivity extends PlaceCalendarActivity
         {
             int visitDay = Integer.parseInt(gourmetBookingDay.getVisitDay("yyyyMMdd"));
 
-            for (View dayView : mDailyViews)
+            for (View dayView : mDayViewList)
             {
                 if (dayView == null)
                 {
@@ -310,7 +326,7 @@ public class GourmetCalendarActivity extends PlaceCalendarActivity
 
                 Day day = (Day) dayView.getTag();
 
-                DailyCalendar.setCalendarDateString(calendar, todayDateTime.dailyDateTime, day.dayOffset);
+                DailyCalendar.setCalendarDateString(calendar, day.dateTime);
 
                 int calendarDay = Integer.parseInt(DailyCalendar.format(calendar.getTime(), "yyyyMMdd"));
 
@@ -332,11 +348,12 @@ public class GourmetCalendarActivity extends PlaceCalendarActivity
 
         if (mDayView != null)
         {
+            mDayView.setSelected(false);
             resetSelectedDay(mDayView);
             mDayView = null;
         }
 
-        for (View dayView : mDailyViews)
+        for (View dayView : mDayViewList)
         {
             if (dayView == null)
             {
@@ -344,7 +361,7 @@ public class GourmetCalendarActivity extends PlaceCalendarActivity
             }
 
             dayView.setSelected(false);
-            dayView.setEnabled(true);
+            updateDayView(dayView);
         }
 
         setToolbarText(getString(R.string.label_calendar_gourmet_select));

@@ -2,7 +2,9 @@ package com.twoheart.dailyhotel.screen.hotel.filter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Paint;
 import android.os.Bundle;
+import android.util.TypedValue;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -19,6 +21,7 @@ import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -27,10 +30,7 @@ import java.util.Map;
 
 public class StayCalendarActivity extends PlaceCalendarActivity
 {
-    public static final String INTENT_EXTRA_DATA_CHECKIN_DATETIME = "checkInDateTime";
-    public static final String INTENT_EXTRA_DATA_CHECKOUT_DATETIME = "checkOutDateTime";
-
-    private static final int DAYCOUNT_OF_MAX = 60;
+    protected static final int DAYCOUNT_OF_MAX = 60;
 
     private View mCheckInDayView;
     private View mCheckOutDayView;
@@ -72,6 +72,11 @@ public class StayCalendarActivity extends PlaceCalendarActivity
         final boolean isSelected = intent.getBooleanExtra(INTENT_EXTRA_DATA_ISSELECTED, true);
         boolean isAnimation = intent.getBooleanExtra(INTENT_EXTRA_DATA_ANIMATION, false);
 
+        if (intent.hasExtra(INTENT_EXTRA_DATA_SOLDOUT_LIST) == true)
+        {
+            mSoldOutDayList = intent.getIntegerArrayListExtra(INTENT_EXTRA_DATA_SOLDOUT_LIST);
+        }
+
         if (mTodayDateTime == null || mPlaceBookingDay == null)
         {
             Util.restartApp(this);
@@ -95,7 +100,7 @@ public class StayCalendarActivity extends PlaceCalendarActivity
 
                     if (isSelected == true)
                     {
-                        setSelectedRangeDay(mTodayDateTime, (StayBookingDay) mPlaceBookingDay);
+                        setSelectedRangeDay((StayBookingDay) mPlaceBookingDay);
                         checkLastDay();
                     }
 
@@ -112,7 +117,7 @@ public class StayCalendarActivity extends PlaceCalendarActivity
 
             if (isSelected == true)
             {
-                setSelectedRangeDay(mTodayDateTime, (StayBookingDay) mPlaceBookingDay);
+                setSelectedRangeDay((StayBookingDay) mPlaceBookingDay);
                 checkLastDay();
             }
         }
@@ -190,8 +195,8 @@ public class StayCalendarActivity extends PlaceCalendarActivity
 
                 try
                 {
-                    stayBookingDay.setCheckInDay(mTodayDateTime.dailyDateTime, checkInDay.dayOffset);
-                    stayBookingDay.setCheckOutDay(mTodayDateTime.dailyDateTime, checkOutDay.dayOffset);
+                    stayBookingDay.setCheckInDay(checkInDay.dateTime);
+                    stayBookingDay.setCheckOutDay(checkOutDay.dateTime);
 
                     onConfirm(stayBookingDay);
                 } catch (Exception e)
@@ -219,7 +224,7 @@ public class StayCalendarActivity extends PlaceCalendarActivity
                 if (mCheckInDayView != null && mCheckOutDayView != null)
                 {
                     // 체크인 체크아웃이 되어있는데 마지막 날짜를 체크인할때
-                    if (mDailyViews[mDailyViews.length - 1] == view)
+                    if (mDayViewList.get(mDayViewList.size() - 1) == view || day.isSoldOut == true)
                     {
                         DailyToast.showToast(this, getString(R.string.label_message_dont_check_date), Toast.LENGTH_SHORT);
                         releaseUiComponent();
@@ -235,7 +240,16 @@ public class StayCalendarActivity extends PlaceCalendarActivity
                 {
                     Day currentCheckInDay = (Day) mCheckInDayView.getTag();
 
-                    if (currentCheckInDay.dayOffset >= day.dayOffset)
+                    int compareValue = 0;
+                    try
+                    {
+                        compareValue = DailyCalendar.compareDateDay(currentCheckInDay.dateTime, day.dateTime);
+                    } catch (Exception e)
+                    {
+                        ExLog.w(e.toString());
+                    }
+
+                    if (compareValue >= 0)
                     {
                         reset();
                     }
@@ -247,8 +261,11 @@ public class StayCalendarActivity extends PlaceCalendarActivity
                     setSelectedCheckIn(mCheckInDayView);
 
                     view.setSelected(true);
+
                     setToolbarText(getString(R.string.label_calendar_hotel_select_checkout));
-                    mDailyViews[mDailyViews.length - 1].setEnabled(true);
+                    mDayViewList.get(mDayViewList.size() - 1).setEnabled(true);
+
+                    getAvailableCheckOutDays(mCheckInDayView);
                 } else
                 {
                     mCheckOutDayView = view;
@@ -256,7 +273,6 @@ public class StayCalendarActivity extends PlaceCalendarActivity
 
                     Day checkInDay = (Day) mCheckInDayView.getTag();
                     Day checkOutDay = (Day) mCheckOutDayView.getTag();
-                    int nights = checkOutDay.dayOffset - checkInDay.dayOffset;
 
                     view.setSelected(true);
 
@@ -264,16 +280,18 @@ public class StayCalendarActivity extends PlaceCalendarActivity
 
                     try
                     {
-                        DailyCalendar.setCalendarDateString(calendar, mTodayDateTime.dailyDateTime, checkInDay.dayOffset);
+                        int nights = DailyCalendar.compareDateDay(checkOutDay.dateTime, checkInDay.dateTime);
+
+                        DailyCalendar.setCalendarDateString(calendar, checkInDay.dateTime);
                         String checkInDate = DailyCalendar.format(calendar.getTime(), "yyyy.MM.dd(EEE)");
 
-                        DailyCalendar.setCalendarDateString(calendar, mTodayDateTime.dailyDateTime, checkOutDay.dayOffset);
+                        DailyCalendar.setCalendarDateString(calendar, checkOutDay.dateTime);
                         String checkOutDate = DailyCalendar.format(calendar.getTime(), "yyyy.MM.dd(EEE)");
 
                         String title = String.format(Locale.KOREA, "%s - %s, %d박", checkInDate, checkOutDate, nights);
                         setToolbarText(title);
 
-                        setRangeDaysAlpha(mCheckOutDayView);
+                        setRangeDaysAlphaAndUpdateDayView(mCheckInDayView, mCheckOutDayView);
                         checkLastDay();
                         mConfirmTextView.setEnabled(true);
                         mConfirmTextView.setText(getString(R.string.label_calendar_stay_search_selected_date, nights));
@@ -341,9 +359,16 @@ public class StayCalendarActivity extends PlaceCalendarActivity
             return;
         }
 
-        TextView textView = (TextView) checkInView.findViewById(R.id.textView);
-        textView.setText(R.string.act_booking_chkin);
-        textView.setVisibility(View.VISIBLE);
+        TextView visitTextView = (TextView) checkInView.findViewById(R.id.textView);
+        visitTextView.setText(R.string.act_booking_chkin);
+        visitTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 11);
+        visitTextView.setVisibility(View.VISIBLE);
+
+        TextView dayTextView = (TextView) checkInView.findViewById(R.id.dateTextView);
+        if ((dayTextView.getPaintFlags() & Paint.STRIKE_THRU_TEXT_FLAG) == Paint.STRIKE_THRU_TEXT_FLAG)
+        {
+            dayTextView.setPaintFlags(dayTextView.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
+        }
 
         checkInView.setBackgroundResource(R.drawable.select_date_check_in);
     }
@@ -355,9 +380,16 @@ public class StayCalendarActivity extends PlaceCalendarActivity
             return;
         }
 
-        TextView textView = (TextView) checkOutView.findViewById(R.id.textView);
-        textView.setText(R.string.act_booking_chkout);
-        textView.setVisibility(View.VISIBLE);
+        TextView visitTextView = (TextView) checkOutView.findViewById(R.id.textView);
+        visitTextView.setText(R.string.act_booking_chkout);
+        visitTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 11);
+        visitTextView.setVisibility(View.VISIBLE);
+
+        TextView dayTextView = (TextView) checkOutView.findViewById(R.id.dateTextView);
+        if ((dayTextView.getPaintFlags() & Paint.STRIKE_THRU_TEXT_FLAG) == Paint.STRIKE_THRU_TEXT_FLAG)
+        {
+            dayTextView.setPaintFlags(dayTextView.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
+        }
 
         checkOutView.setBackgroundResource(R.drawable.select_date_check_out);
     }
@@ -369,14 +401,12 @@ public class StayCalendarActivity extends PlaceCalendarActivity
             return;
         }
 
-        TextView textView = (TextView) checkView.findViewById(R.id.textView);
-        textView.setText(null);
-        textView.setVisibility(View.INVISIBLE);
+        updateDayView(checkView);
 
         checkView.setBackgroundDrawable(getResources().getDrawable(R.drawable.selector_calendar_day_background));
     }
 
-    void setSelectedRangeDay(TodayDateTime todayDateTime, StayBookingDay stayBookingDay)
+    void setSelectedRangeDay(StayBookingDay stayBookingDay)
     {
         if (stayBookingDay == null)
         {
@@ -390,7 +420,7 @@ public class StayCalendarActivity extends PlaceCalendarActivity
             int checkInDay = Integer.parseInt(stayBookingDay.getCheckInDay("yyyyMMdd"));
             int checkOutDay = Integer.parseInt(stayBookingDay.getCheckOutDay("yyyyMMdd"));
 
-            for (View dayView : mDailyViews)
+            for (View dayView : mDayViewList)
             {
                 if (dayView == null)
                 {
@@ -399,13 +429,20 @@ public class StayCalendarActivity extends PlaceCalendarActivity
 
                 Day day = (Day) dayView.getTag();
 
-                DailyCalendar.setCalendarDateString(calendar, todayDateTime.dailyDateTime, day.dayOffset);
+                DailyCalendar.setCalendarDateString(calendar, day.dateTime);
 
                 int calendarDay = Integer.parseInt(DailyCalendar.format(calendar.getTime(), "yyyyMMdd"));
 
                 if (calendarDay == checkInDay)
                 {
-                    dayView.performClick();
+                    // 초기 셋팅으로 서버에서 활용가능한 날짜를 받지 않고 바로 셋팅하기때문에 dayView.perfomClick() 을 사용하지 않음
+                    mCheckInDayView = dayView;
+                    setSelectedCheckIn(mCheckInDayView);
+
+                    dayView.setSelected(true);
+
+                    setToolbarText(getString(R.string.label_calendar_hotel_select_checkout));
+                    mDayViewList.get(mDayViewList.size() - 1).setEnabled(true);
                 } else if (calendarDay == checkOutDay)
                 {
                     dayView.performClick();
@@ -418,27 +455,44 @@ public class StayCalendarActivity extends PlaceCalendarActivity
         }
     }
 
-    private void setRangeDaysAlpha(View view)
+    private void setRangeDaysAlphaAndUpdateDayView(View checkInDayView, View checkOutDayView)
     {
-        boolean isStartPosition = false;
-
-        for (View dayView : mDailyViews)
+        if (mDayViewList == null || mDayViewList.size() == 0)
         {
-            if (isStartPosition == false)
-            {
-                if (dayView.isSelected() == true)
-                {
-                    isStartPosition = true;
-                }
-            } else
-            {
-                if (view == dayView)
-                {
-                    break;
-                }
+            return;
+        }
 
+        if (checkInDayView == null || checkOutDayView == null)
+        {
+            return;
+        }
+
+        boolean isStartPosition = false;
+        boolean isEndPosition = false;
+
+        for (View dayView : mDayViewList)
+        {
+            if (checkInDayView == dayView)
+            {
+                dayView.setSelected(true);
+                isStartPosition = true;
+                continue;
+            }
+
+            if (checkOutDayView == dayView)
+            {
+                dayView.setSelected(true);
+                isEndPosition = true;
+                continue;
+            }
+
+            if (isStartPosition == true && isEndPosition == false)
+            {
                 dayView.setSelected(true);
                 dayView.setActivated(true);
+            } else
+            {
+                updateDayView(dayView);
             }
         }
     }
@@ -453,12 +507,145 @@ public class StayCalendarActivity extends PlaceCalendarActivity
             return;
         }
 
-        if (mDailyViews[mDailyViews.length - 1] == mCheckOutDayView)
+        if (mDayViewList.get(mDayViewList.size() - 1) == mCheckOutDayView)
         {
             return;
         }
 
-        mDailyViews[mDailyViews.length - 1].setEnabled(false);
+        mDayViewList.get(mDayViewList.size() - 1).setEnabled(false);
+    }
+
+    void getAvailableCheckOutDays(View checkInDayView)
+    {
+        // do nothing - stayDetailCalendar 용
+    }
+
+    void setAvailableCheckOutDays(View checkInDayView, ArrayList<Integer> availableDayList)
+    {
+        if (availableDayList == null || availableDayList.size() == 0)
+        {
+            if (checkInDayView == null)
+            {
+                checkInDayView = mCheckInDayView;
+            }
+
+            // 이때는 바로 다음 날짜를 강제로 선택 후 판매 완료 다른 날짜 선택 팝업을 띄우기로 함
+            if (checkInDayView == null || mDayViewList == null || mDayViewList.size() == 0)
+            {
+                // 진짜 방법 없음 이럴땐 달력 닫아버림
+                if (mExitView == null)
+                {
+                    finish();
+                    return;
+                }
+
+                mExitView.performClick();
+                return;
+            }
+
+            Day checkInDay = (Day) checkInDayView.getTag();
+            checkInDay.isSoldOut = true;
+
+            int index = mDayViewList.indexOf(checkInDayView);
+            if (index == -1)
+            {
+                if (mExitView == null)
+                {
+                    finish();
+                    return;
+                }
+
+                mExitView.performClick();
+                return;
+            }
+
+            if (index + 1 < mDayViewList.size())
+            {
+                mDayViewList.get(index + 1).performClick();
+            }
+
+            showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.message_stay_detail_sold_out)//
+                , getString(R.string.label_changing_date), new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        // do nothing!
+                    }
+                });
+            return;
+        }
+
+        Calendar calendar = DailyCalendar.getInstance();
+
+        try
+        {
+            for (View dayView : mDayViewList)
+            {
+                if (dayView == null)
+                {
+                    continue;
+                }
+
+                if (dayView.isSelected() == true)
+                {
+                    // 체크인 날짜는 활성화 되어있음으로 처리 하지 않음
+                    continue;
+                }
+
+                Day day = (Day) dayView.getTag();
+                DailyCalendar.setCalendarDateString(calendar, day.dateTime);
+
+                // updateDayView 를 사용하지 말 것. 호출시 다 활성화 됨
+                updateAvailableDayView(dayView, isAvailableDay(calendar, availableDayList));
+            }
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+        }
+    }
+
+    protected void updateAvailableDayView(View dayView, boolean isAvailable)
+    {
+        if (dayView == null)
+        {
+            return;
+        }
+
+        Day day = (Day) dayView.getTag();
+        if (day == null)
+        {
+            dayView.setEnabled(false);
+            return;
+        }
+
+        setDayOfWeekTextColor(dayView);
+
+        if (dayView.isSelected() == true)
+        {
+            return;
+        }
+
+        dayView.setEnabled(isAvailable);
+        // 기존에 설정된 SoldOutView 를 선택 가능한 날짜 일 경우 default 설정으로 변경
+        setSoldOutTextView(dayView, isAvailable == false && day.isSoldOut);
+
+    }
+
+    private boolean isAvailableDay(Calendar calendar, ArrayList<Integer> availableDayList)
+    {
+        if (calendar == null)
+        {
+            return false;
+        }
+
+        if (availableDayList == null || availableDayList.size() == 0)
+        {
+            return false;
+        }
+
+        Integer calendarDay = Integer.parseInt(DailyCalendar.format(calendar.getTime(), "yyyyMMdd"));
+        return availableDayList.remove(calendarDay);
     }
 
     void reset()
@@ -467,17 +654,19 @@ public class StayCalendarActivity extends PlaceCalendarActivity
 
         if (mCheckInDayView != null)
         {
+            mCheckInDayView.setSelected(false);
             resetCheckView(mCheckInDayView);
             mCheckInDayView = null;
         }
 
         if (mCheckOutDayView != null)
         {
+            mCheckOutDayView.setSelected(false);
             resetCheckView(mCheckOutDayView);
             mCheckOutDayView = null;
         }
 
-        for (View dayView : mDailyViews)
+        for (View dayView : mDayViewList)
         {
             if (dayView == null)
             {
@@ -486,7 +675,7 @@ public class StayCalendarActivity extends PlaceCalendarActivity
 
             dayView.setActivated(false);
             dayView.setSelected(false);
-            dayView.setEnabled(true);
+            updateDayView(dayView);
         }
 
         setToolbarText(getString(R.string.label_calendar_hotel_select_checkin));

@@ -694,4 +694,22 @@ public interface DailyMobileService
                                                         @Query("category") List<String> categoryList,//
                                                         @Query("timeFrame") List<String> timeList,//
                                                         @Query("luxury") List<String> luxuryList);
+
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
+    @GET("{mobileAPI}")
+    Observable<BaseListDto<String>> getStayUnavailableCheckInDates(@Path(value = "mobileAPI", encoded = true) String mobileAPI, //
+                                                                   @Query("dateRange") int dateRange, //
+                                                                   @Query("reverse") boolean isReverse);
+
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
+    @GET("{mobileAPI}")
+    Observable<BaseListDto<String>> getStayAvailableCheckOutDates(@Path(value = "mobileAPI", encoded = true) String mobileAPI, //
+                                                                   @Query("dateRange") int dateRange, //
+                                                                   @Query("dateCheckIn") String checkInDate);
+
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
+    @GET("{mobileAPI}")
+    Observable<BaseListDto<String>> getGourmetUnavailableDates(@Path(value = "mobileAPI", encoded = true) String mobileAPI, //
+                                                               @Query("dateRange") int dateRange, //
+                                                               @Query("reverse") boolean isReverse);
 }
