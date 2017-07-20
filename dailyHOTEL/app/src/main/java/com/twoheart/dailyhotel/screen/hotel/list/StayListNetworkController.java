@@ -45,14 +45,15 @@ public class StayListNetworkController extends BaseNetworkController
         super(context, networkTag, listener);
     }
 
-    public void requestStayList(StayParams params)
+    public void requestStayList(StayParams params, String abTestType)
     {
         if (params == null)
         {
             return;
         }
 
-        DailyMobileAPI.getInstance(mContext).requestStayList(mNetworkTag, params.toParamsMap(), params.getBedTypeList(), params.getLuxuryList(), mStayListCallback);
+        DailyMobileAPI.getInstance(mContext).requestStayList(mNetworkTag, params.toParamsMap()//
+            , params.getBedTypeList(), params.getLuxuryList(), abTestType, mStayListCallback);
     }
 
     private ArrayList<Stay> makeStayList(JSONArray jsonArray, String imageUrl) throws JSONException
@@ -132,7 +133,6 @@ public class StayListNetworkController extends BaseNetworkController
                         }
 
                         ((OnNetworkControllerListener) mOnNetworkControllerListener).onStayList(stayList, page);
-
                     } else
                     {
                         String message = responseJSONObject.getString("msg");

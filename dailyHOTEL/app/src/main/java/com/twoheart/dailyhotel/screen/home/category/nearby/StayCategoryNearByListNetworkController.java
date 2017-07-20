@@ -34,7 +34,7 @@ public class StayCategoryNearByListNetworkController extends BaseNetworkControll
         super(context, networkTag, listener);
     }
 
-    public void requestStaySearchList(StayCategoryNearByParams params)
+    public void requestStaySearchList(StayCategoryNearByParams params, String abTestType)
     {
         if (params == null)
         {
@@ -43,7 +43,7 @@ public class StayCategoryNearByListNetworkController extends BaseNetworkControll
 
         DailyMobileAPI.getInstance(mContext).requestStayCategoryList(mNetworkTag //
             , params.getCategoryCode(), params.toParamsMap() //
-            , params.getBedTypeList(), params.getLuxuryList(), mStayCategoryListCallback);
+            , params.getBedTypeList(), params.getLuxuryList(), abTestType, mStayCategoryListCallback);
 
     }
 

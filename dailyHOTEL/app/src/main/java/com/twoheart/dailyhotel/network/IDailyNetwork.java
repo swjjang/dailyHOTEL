@@ -514,6 +514,4 @@ public interface IDailyNetwork
     void requestLocalPlus(String tag, Map<String, Object> queryMap, Object listener);
 
     void requestStayCategoryRegionList(String tag, String category, Object listener);
-
-    void requestStayCategoryList(String tag, String category, Map<String, Object> queryMap, List<String> bedTypeList, List<String> luxuryList, Object listener);
 }

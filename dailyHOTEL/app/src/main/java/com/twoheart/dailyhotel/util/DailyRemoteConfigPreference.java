@@ -112,7 +112,8 @@ public class DailyRemoteConfigPreference
     private static final String KEY_REMOTE_CONFIG_STATIC_URL_COLLECTPERSONAL = "385";
 
     // A/B Test
-    private static final String KEY_REMOTE_CONFIG_STAY_RANK_TEST_TYPE = "1000";
+    private static final String KEY_REMOTE_CONFIG_STAY_RANK_TEST = "1000";
+    private static final String KEY_REMOTE_CONFIG_STAY_RANK_TEST_TYPE = "1001";
 
 
     private static DailyRemoteConfigPreference mInstance;
@@ -1017,6 +1018,16 @@ public class DailyRemoteConfigPreference
     public String getKeyRemoteConfigStaticUrlCollectPersonalInformation()
     {
         return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_STATIC_URL_COLLECTPERSONAL, Crypto.getUrlDecoderEx(Constants.URL_WEB_COLLECT_PERSONAL));
+    }
+
+    public void setKeyRemoteConfigStayRankTest(String value)
+    {
+        setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_STAY_RANK_TEST, value);
+    }
+
+    public String getKeyRemoteConfigStayRankTest()
+    {
+        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_STAY_RANK_TEST, null);
     }
 
     public void setKeyRemoteConfigStayRankTestType(String value)

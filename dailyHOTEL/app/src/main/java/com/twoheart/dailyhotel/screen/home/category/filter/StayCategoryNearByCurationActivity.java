@@ -17,6 +17,7 @@ import com.twoheart.dailyhotel.model.StayCategoryNearByParams;
 import com.twoheart.dailyhotel.model.StayCurationOption;
 import com.twoheart.dailyhotel.model.StayFilter;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
+import com.twoheart.dailyhotel.util.DailyRemoteConfigPreference;
 
 import retrofit2.Call;
 import retrofit2.Response;
@@ -167,7 +168,9 @@ public class StayCategoryNearByCurationActivity extends StayCategoryCurationActi
             return;
         }
 
-        ((StayCategoryNearByCurationNetworkController) mNetworkController).requestStayCategoryNearByList(mLastParams);
+        String abTestType = DailyRemoteConfigPreference.getInstance(this).getKeyRemoteConfigStayRankTestType();
+
+        ((StayCategoryNearByCurationNetworkController) mNetworkController).requestStayCategoryNearByList(mLastParams, abTestType);
     }
 
     @Override

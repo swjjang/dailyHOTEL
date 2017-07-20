@@ -619,6 +619,7 @@ public class DailyRemoteConfig
 
         if (DailyTextUtils.isTextEmpty(jsonString) == true)
         {
+            DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigStayRankTest(null);
             DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigStayRankTestType(null);
         } else
         {
@@ -626,9 +627,11 @@ public class DailyRemoteConfig
             {
                 JSONObject jsonObject = new JSONObject(jsonString);
 
-                String testType = jsonObject.getString("type");
+                String test = jsonObject.getString("test");
+                String type = jsonObject.getString("type");
 
-                DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigStayRankTestType(testType);
+                DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigStayRankTest(test);
+                DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigStayRankTestType(type);
             } catch (Exception e)
             {
                 ExLog.e(e.toString());

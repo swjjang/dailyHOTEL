@@ -122,10 +122,11 @@ public interface DailyMobileService
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET("{mobileAPI}")
-    Call<JSONObject> requestStayList(@Path(value = "mobileAPI", encoded = true) String mobileAPI, //
-                                     @QueryMap Map<String, Object> queryMap, //
-                                     @Query("bedType") List<String> bedTypeList, //
-                                     @Query("luxury") List<String> luxuryList);
+    Call<JSONObject> requestStayList(@Path(value = "mobileAPI", encoded = true) String mobileAPI//
+        , @QueryMap Map<String, Object> queryMap//
+        , @Query("bedType") List<String> bedTypeList//
+        , @Query("luxury") List<String> luxuryList//
+        , @Query("type") String type);
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET("{mobileAPI}")
@@ -682,10 +683,11 @@ public interface DailyMobileService
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET("{mobileAPI}")
-    Observable<BaseDto<StayListData>> getStayInboundList(@Path(value = "mobileAPI", encoded = true) String mobileAPI, //
-                                                         @QueryMap Map<String, Object> queryMap, //
-                                                         @Query("bedType") List<String> bedTypeList, //
-                                                         @Query("luxury") List<String> luxuryList);
+    Observable<BaseDto<StayListData>> getStayInboundList(@Path(value = "mobileAPI", encoded = true) String mobileAPI//
+        , @QueryMap Map<String, Object> queryMap//
+        , @Query("bedType") List<String> bedTypeList//
+        , @Query("luxury") List<String> luxuryList//
+        , @Query("type") String type);
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET("{mobileAPI}")

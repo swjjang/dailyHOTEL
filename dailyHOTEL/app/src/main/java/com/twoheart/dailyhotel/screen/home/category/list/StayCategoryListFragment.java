@@ -10,6 +10,7 @@ import com.twoheart.dailyhotel.model.time.StayBookingDay;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.layout.PlaceListLayout;
 import com.twoheart.dailyhotel.screen.hotel.list.StayListFragment;
+import com.twoheart.dailyhotel.util.DailyRemoteConfigPreference;
 import com.twoheart.dailyhotel.util.Util;
 
 import java.util.ArrayList;
@@ -102,7 +103,9 @@ public class StayCategoryListFragment extends StayListFragment
         }
 
         StayCategoryParams params = (StayCategoryParams) mStayCuration.toPlaceParams(page, PAGENATION_LIST_SIZE, true);
-        ((StayCategoryListNetworkController) mNetworkController).requestStayCategoryList(params);
+        String abTestType = DailyRemoteConfigPreference.getInstance(getContext()).getKeyRemoteConfigStayRankTestType();
+
+        ((StayCategoryListNetworkController) mNetworkController).requestStayCategoryList(params, abTestType);
     }
 
     private void requestLocalPlusList(int page)
@@ -275,74 +278,165 @@ public class StayCategoryListFragment extends StayListFragment
             }
         }
 
-        if (hasSection == true)
+        String abTest = DailyRemoteConfigPreference.getInstance(getContext()).getKeyRemoteConfigStayRankTest();
+        String abTestType = DailyRemoteConfigPreference.getInstance(getContext()).getKeyRemoteConfigStayRankTestType();
+
+        if (DailyTextUtils.isTextEmpty(abTest, abTestType) == true)
         {
-            for (Place place : placeList)
+            // 기존 그대로
+            if (hasSection == true)
             {
-                // 지역순에만 section 존재함
-                if (SortType.DEFAULT == sortType)
+                for (Place place : placeList)
                 {
-                    String region = place.districtName;
-
-                    if (DailyTextUtils.isTextEmpty(region) == true)
+                    // 지역순에만 section 존재함
+                    if (SortType.DEFAULT == sortType)
                     {
-                        continue;
-                    }
+                        String region = place.districtName;
 
-                    if (localPlusList != null && localPlusList.size() > 0)
-                    {
-                        int placeIndex = place.index;
-                        boolean isAlreadyShowPlace = false;
-
-                        for (Place localPlace : localPlusList)
-                        {
-                            // 기존 광고 BM 에 추가 되어있으면 바로 검색 끝
-                            if (placeIndex == localPlace.index)
-                            {
-                                isAlreadyShowPlace = true;
-                                break;
-                            }
-                        }
-
-                        // 기존에 노출 되어있으면 다음 리스트로 넘김
-                        if (isAlreadyShowPlace == true)
+                        if (DailyTextUtils.isTextEmpty(region) == true)
                         {
                             continue;
                         }
+
+                        if (localPlusList != null && localPlusList.size() > 0)
+                        {
+                            int placeIndex = place.index;
+                            boolean isAlreadyShowPlace = false;
+
+                            for (Place localPlace : localPlusList)
+                            {
+                                // 기존 광고 BM 에 추가 되어있으면 바로 검색 끝
+                                if (placeIndex == localPlace.index)
+                                {
+                                    isAlreadyShowPlace = true;
+                                    break;
+                                }
+                            }
+
+                            // 기존에 노출 되어있으면 다음 리스트로 넘김
+                            if (isAlreadyShowPlace == true)
+                            {
+                                continue;
+                            }
+                        }
+
+                        if (place.isDailyChoice == true)
+                        {
+                            if (hasDailyChoice == false)
+                            {
+                                hasDailyChoice = true;
+
+                                PlaceViewItem section = new PlaceViewItem(PlaceViewItem.TYPE_SECTION, mBaseActivity.getResources().getString(R.string.label_dailychoice));
+                                placeViewItemList.add(section);
+                            }
+                        } else
+                        {
+                            if (DailyTextUtils.isTextEmpty(previousRegion) == true || region.equalsIgnoreCase(previousRegion) == false)
+                            {
+                                previousRegion = region;
+
+                                PlaceViewItem section = new PlaceViewItem(PlaceViewItem.TYPE_SECTION, region);
+                                placeViewItemList.add(section);
+                            }
+                        }
                     }
 
-                    if (place.isDailyChoice == true)
-                    {
-                        if (hasDailyChoice == false)
-                        {
-                            hasDailyChoice = true;
-
-                            PlaceViewItem section = new PlaceViewItem(PlaceViewItem.TYPE_SECTION, mBaseActivity.getResources().getString(R.string.label_dailychoice));
-                            placeViewItemList.add(section);
-                        }
-                    } else
-                    {
-                        if (DailyTextUtils.isTextEmpty(previousRegion) == true || region.equalsIgnoreCase(previousRegion) == false)
-                        {
-                            previousRegion = region;
-
-                            PlaceViewItem section = new PlaceViewItem(PlaceViewItem.TYPE_SECTION, region);
-                            placeViewItemList.add(section);
-                        }
-                    }
+                    place.entryPosition = entryPosition;
+                    placeViewItemList.add(new PlaceViewItem(PlaceViewItem.TYPE_ENTRY, place));
+                    entryPosition++;
                 }
-
-                place.entryPosition = entryPosition;
-                placeViewItemList.add(new PlaceViewItem(PlaceViewItem.TYPE_ENTRY, place));
-                entryPosition++;
+            } else
+            {
+                for (Place place : placeList)
+                {
+                    place.entryPosition = entryPosition;
+                    placeViewItemList.add(new PlaceViewItem(PlaceViewItem.TYPE_ENTRY, place));
+                    entryPosition++;
+                }
             }
         } else
         {
-            for (Place place : placeList)
+            if (hasSection == true)
             {
-                place.entryPosition = entryPosition;
-                placeViewItemList.add(new PlaceViewItem(PlaceViewItem.TYPE_ENTRY, place));
-                entryPosition++;
+                for (Place place : placeList)
+                {
+                    // 지역순에만 section 존재함
+                    if (SortType.DEFAULT == sortType)
+                    {
+                        String region = place.districtName;
+
+                        if (DailyTextUtils.isTextEmpty(region) == true)
+                        {
+                            continue;
+                        }
+
+                        if (localPlusList != null && localPlusList.size() > 0)
+                        {
+                            int placeIndex = place.index;
+                            boolean isAlreadyShowPlace = false;
+
+                            for (Place localPlace : localPlusList)
+                            {
+                                // 기존 광고 BM 에 추가 되어있으면 바로 검색 끝
+                                if (placeIndex == localPlace.index)
+                                {
+                                    isAlreadyShowPlace = true;
+                                    break;
+                                }
+                            }
+
+                            // 기존에 노출 되어있으면 다음 리스트로 넘김
+                            if (isAlreadyShowPlace == true)
+                            {
+                                continue;
+                            }
+                        }
+
+                        if (place.isDailyChoice == true)
+                        {
+                            if (hasDailyChoice == false)
+                            {
+                                hasDailyChoice = true;
+
+                                PlaceViewItem section = new PlaceViewItem(PlaceViewItem.TYPE_SECTION, mBaseActivity.getResources().getString(R.string.label_dailychoice));
+                                placeViewItemList.add(section);
+                            }
+                        } else
+                        {
+                            // 처음에 대초여부로 인한 섹션여부 파악
+                            if (placeViewItemList.size() > 0)
+                            {
+                                if (DailyTextUtils.isTextEmpty(previousRegion) == true)
+                                {
+                                    previousRegion = getString(R.string.label_all);
+
+                                    PlaceViewItem section = new PlaceViewItem(PlaceViewItem.TYPE_SECTION, previousRegion);
+                                    placeViewItemList.add(section);
+                                }
+                            } else
+                            {
+                                previousRegion = getString(R.string.label_all);
+                            }
+                        }
+                    }
+
+                    place.entryPosition = entryPosition;
+                    placeViewItemList.add(new PlaceViewItem(PlaceViewItem.TYPE_ENTRY, place));
+                    entryPosition++;
+                }
+            } else
+            {
+                if (page <= 1 && placeViewItemList.size() > 0)
+                {
+
+                }
+
+                for (Place place : placeList)
+                {
+                    place.entryPosition = entryPosition;
+                    placeViewItemList.add(new PlaceViewItem(PlaceViewItem.TYPE_ENTRY, place));
+                    entryPosition++;
+                }
             }
         }
 
