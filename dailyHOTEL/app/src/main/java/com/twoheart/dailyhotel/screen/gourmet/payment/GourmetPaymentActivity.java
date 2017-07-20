@@ -76,6 +76,9 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
     private boolean mIsUnderPrice;
     Dialog mTimeDialog;
 
+    //GA
+    private int mPlaceListCount;
+
     public static Intent newInstance(Context context, String placeName, GourmetProduct gourmetProduct //
         , GourmetBookingDay gourmetBookingDay, String imageUrl, String category, int gourmetIndex //
         , boolean isDBenefit, int ratingValue, AnalyticsParam analyticsParam)
@@ -159,6 +162,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
         gourmetPaymentInformation.isDailyChoice = analyticsParam.isDailyChoice;
         gourmetPaymentInformation.setProvince(analyticsParam.getProvince());
         gourmetPaymentInformation.addressAreaName = analyticsParam.getAddressAreaName();
+        mPlaceListCount = analyticsParam.totalListCount;
 
         return gourmetPaymentInformation.getTicket() != null;
     }
@@ -1075,7 +1079,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
             params.put(AnalyticsManager.KeyType.DISTRICT, gourmetPaymentInformation.getAnalyticsDistrictName());
             params.put(AnalyticsManager.KeyType.AREA, gourmetPaymentInformation.getAnalyticsAddressAreaName());
 
-            AnalyticsManager.getInstance(GourmetPaymentActivity.this).recordScreen(GourmetPaymentActivity.this, AnalyticsManager.Screen.DAILYGOURMET_PAYMENT, null, params);
+            AnalyticsManager.getInstance(GourmetPaymentActivity.this).recordScreen(GourmetPaymentActivity.this, AnalyticsManager.Screen.DAILYGOURMET_BOOKINGINITIALISE, null, params);
         } catch (Exception e)
         {
             ExLog.d(e.toString());
@@ -1116,6 +1120,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
             params.put(AnalyticsManager.KeyType.LIST_INDEX, Integer.toString(gourmetPaymentInformation.entryPosition));
             params.put(AnalyticsManager.KeyType.DAILYCHOICE, gourmetPaymentInformation.isDailyChoice ? "y" : "n");
             params.put(AnalyticsManager.KeyType.REGISTERED_SIMPLE_CARD, mSelectedCreditCard != null ? "y" : "n");
+            params.put(AnalyticsManager.KeyType.PLACE_COUNT, Integer.toString(mPlaceListCount));
 
             switch (gourmetPaymentInformation.discountType)
             {
