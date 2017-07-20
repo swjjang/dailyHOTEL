@@ -49,6 +49,7 @@ import com.twoheart.dailyhotel.screen.gourmet.payment.GourmetPaymentActivity;
 import com.twoheart.dailyhotel.screen.mydaily.coupon.SelectGourmetCouponDialogActivity;
 import com.twoheart.dailyhotel.screen.mydaily.member.EditProfilePhoneActivity;
 import com.twoheart.dailyhotel.screen.mydaily.member.LoginActivity;
+import com.twoheart.dailyhotel.screen.mydaily.member.ProfileLayout;
 import com.twoheart.dailyhotel.screen.mydaily.wishlist.WishListTabActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
@@ -99,7 +100,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
      */
     public static Intent newInstance(Context context, GourmetBookingDay gourmetBookingDay, int index //
         , String name, String imageUrl, String category, boolean isSoldOut //
-        , AnalyticsParam analyticsParam, boolean isUsedMultiTransition)
+        , AnalyticsParam analyticsParam, boolean isUsedMultiTransition, int gradientType)
     {
         Intent intent = new Intent(context, GourmetDetailActivity.class);
 
@@ -112,6 +113,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         intent.putExtra(NAME_INTENT_EXTRA_DATA_CALENDAR_FLAG, false);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_ANALYTICS_PARAM, analyticsParam);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_USED_MULTITRANSITIOIN, isUsedMultiTransition);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_GRADIENT_TYPE, gradientType);
 
         return intent;
     }
@@ -198,7 +200,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
             mDontReloadAtOnResume = false;
             mIsTransitionEnd = true;
 
-            initLayout(null, null, false);
+            initLayout(null, null, PlaceDetailLayout.TRANS_GRADIENT_BOTTOM_TYPE_NONE);
         } else
         {
             mIsDeepLink = false;
@@ -214,7 +216,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
             mViewPrice = mAnalyticsParam != null ? mAnalyticsParam.discountPrice : 0;
             mIsListSoldOut = intent.getBooleanExtra(NAME_INTENT_EXTRA_DATA_IS_SOLDOUT, false);
 
-            boolean isFromMap = intent.hasExtra(NAME_INTENT_EXTRA_DATA_FROM_MAP) == true;
+            int gradientType = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_GRADIENT_TYPE, PlaceDetailLayout.TRANS_GRADIENT_BOTTOM_TYPE_NONE);
 
             mIsUsedMultiTransition = intent.getBooleanExtra(NAME_INTENT_EXTRA_DATA_IS_USED_MULTITRANSITIOIN, false);
 
@@ -226,7 +228,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
                 mIsTransitionEnd = true;
             }
 
-            initLayout(placeName, mDefaultImageUrl, isFromMap);
+            initLayout(placeName, mDefaultImageUrl, gradientType);
         }
 
         // VR 여부 판단
@@ -372,16 +374,16 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         }
     }
 
-    private void initLayout(String placeName, String imageUrl, boolean isFromMap)
+    private void initLayout(String placeName, String imageUrl, int gradientType)
     {
         setContentView(mPlaceDetailLayout.onCreateView(R.layout.activity_gourmet_detail));
 
         mPlaceDetailLayout.setStatusBarHeight(this);
-        mPlaceDetailLayout.setIsUsedMultiTransitions(mIsUsedMultiTransition);
+        mPlaceDetailLayout.setIsUsedMultiTransitions(mIsUsedMultiTransition, gradientType);
 
         if (mIsDeepLink == false && mIsUsedMultiTransition == true)
         {
-            initTransLayout(placeName, imageUrl, isFromMap);
+            initTransLayout(placeName, imageUrl);
         } else
         {
             mPlaceDetailLayout.setDefaultImage(imageUrl);
@@ -393,7 +395,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         mOnEventListener.hideActionBar(false);
     }
 
-    private void initTransLayout(String placeName, String imageUrl, boolean isFromMap)
+    private void initTransLayout(String placeName, String imageUrl)
     {
         if (DailyTextUtils.isTextEmpty(imageUrl) == true)
         {
@@ -402,11 +404,6 @@ public class GourmetDetailActivity extends PlaceDetailActivity
 
         mPlaceDetailLayout.setTransImageView(imageUrl);
         ((GourmetDetailLayout) mPlaceDetailLayout).setTitleText(placeName);
-
-        if (isFromMap == true)
-        {
-            mPlaceDetailLayout.setTransBottomGradientBackground(R.color.black_a28);
-        }
     }
 
     @Override

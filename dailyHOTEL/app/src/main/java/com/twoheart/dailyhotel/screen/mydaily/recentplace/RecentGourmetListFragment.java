@@ -23,6 +23,7 @@ import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.time.GourmetBookingDay;
 import com.twoheart.dailyhotel.model.time.PlaceBookingDay;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
+import com.twoheart.dailyhotel.place.layout.PlaceDetailLayout;
 import com.twoheart.dailyhotel.screen.gourmet.detail.GourmetDetailActivity;
 import com.twoheart.dailyhotel.screen.gourmet.preview.GourmetPreviewActivity;
 import com.twoheart.dailyhotel.util.Constants;
@@ -229,7 +230,7 @@ public class RecentGourmetListFragment extends RecentPlacesListFragment
 
                 Intent intent = GourmetDetailActivity.newInstance(mBaseActivity //
                     , (GourmetBookingDay) mPlaceBookingDay, gourmet.index, gourmet.name //
-                    , gourmet.imageUrl, gourmet.category, gourmet.isSoldOut, analyticsParam, true);
+                    , gourmet.imageUrl, gourmet.category, gourmet.isSoldOut, analyticsParam, true, PlaceDetailLayout.TRANS_GRADIENT_BOTTOM_TYPE_LIST);
 
                 View simpleDraweeView = view.findViewById(R.id.imageView);
                 View nameTextView = view.findViewById(R.id.nameTextView);
@@ -252,7 +253,7 @@ public class RecentGourmetListFragment extends RecentPlacesListFragment
 
                 Intent intent = GourmetDetailActivity.newInstance(mBaseActivity //
                     , (GourmetBookingDay) mPlaceBookingDay, gourmet.index, gourmet.name //
-                    , gourmet.imageUrl, gourmet.category, gourmet.isSoldOut, analyticsParam, false);
+                    , gourmet.imageUrl, gourmet.category, gourmet.isSoldOut, analyticsParam, false, PlaceDetailLayout.TRANS_GRADIENT_BOTTOM_TYPE_NONE);
 
                 mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMET_DETAIL);
 

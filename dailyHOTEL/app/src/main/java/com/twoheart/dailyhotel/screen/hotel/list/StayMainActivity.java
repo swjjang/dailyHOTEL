@@ -40,6 +40,7 @@ import com.twoheart.dailyhotel.place.activity.PlaceRegionListActivity;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.fragment.PlaceListFragment;
 import com.twoheart.dailyhotel.place.fragment.PlaceMainActivity;
+import com.twoheart.dailyhotel.place.layout.PlaceDetailLayout;
 import com.twoheart.dailyhotel.place.layout.PlaceMainLayout;
 import com.twoheart.dailyhotel.place.networkcontroller.PlaceMainNetworkController;
 import com.twoheart.dailyhotel.screen.hotel.detail.StayDetailActivity;
@@ -1064,10 +1065,6 @@ public class StayMainActivity extends PlaceMainActivity
                         analyticsParam.setProvince(province);
                         analyticsParam.setTotalListCount(listCount);
 
-                        Intent intent = StayDetailActivity.newInstance(StayMainActivity.this //
-                            , mStayCuration.getStayBookingDay(), stay.index, stay.name, stay.imageUrl //
-                            , analyticsParam, true);
-
                         View simpleDraweeView = view.findViewById(R.id.imageView);
                         View gradeTextView = view.findViewById(R.id.gradeTextView);
                         View nameTextView = view.findViewById(R.id.nameTextView);
@@ -1075,10 +1072,18 @@ public class StayMainActivity extends PlaceMainActivity
                         View gradientBottomView = view.findViewById(R.id.gradientView);
 
                         Object mapTag = gradientBottomView.getTag();
+                        Intent intent;
 
                         if (mapTag != null && "map".equals(mapTag) == true)
                         {
-                            intent.putExtra(NAME_INTENT_EXTRA_DATA_FROM_MAP, true);
+                            intent = StayDetailActivity.newInstance(StayMainActivity.this //
+                                , mStayCuration.getStayBookingDay(), stay.index, stay.name, stay.imageUrl //
+                                , analyticsParam, true, PlaceDetailLayout.TRANS_GRADIENT_BOTTOM_TYPE_MAP);
+                        } else
+                        {
+                            intent = StayDetailActivity.newInstance(StayMainActivity.this //
+                                , mStayCuration.getStayBookingDay(), stay.index, stay.name, stay.imageUrl //
+                                , analyticsParam, true, PlaceDetailLayout.TRANS_GRADIENT_BOTTOM_TYPE_LIST);
                         }
 
                         ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(StayMainActivity.this,//
@@ -1098,7 +1103,7 @@ public class StayMainActivity extends PlaceMainActivity
 
                         Intent intent = StayDetailActivity.newInstance(StayMainActivity.this //
                             , mStayCuration.getStayBookingDay(), stay.index, stay.name, stay.imageUrl //
-                            , analyticsParam, false);
+                            , analyticsParam, false, PlaceDetailLayout.TRANS_GRADIENT_BOTTOM_TYPE_NONE);
 
                         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL);
 

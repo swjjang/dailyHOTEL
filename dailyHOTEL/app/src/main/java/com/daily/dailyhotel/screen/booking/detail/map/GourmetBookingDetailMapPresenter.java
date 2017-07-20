@@ -17,6 +17,7 @@ import com.twoheart.dailyhotel.model.Gourmet;
 import com.twoheart.dailyhotel.model.Place;
 import com.twoheart.dailyhotel.model.time.GourmetBookingDay;
 import com.twoheart.dailyhotel.model.time.PlaceBookingDay;
+import com.twoheart.dailyhotel.place.layout.PlaceDetailLayout;
 import com.twoheart.dailyhotel.screen.gourmet.detail.GourmetDetailActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
@@ -86,7 +87,7 @@ public class GourmetBookingDetailMapPresenter extends PlaceBookingDetailMapPrese
 
             Intent intent = GourmetDetailActivity.newInstance(getActivity() //
                 , gourmetBookingDay, gourmet.index, gourmet.name //
-                , gourmet.imageUrl, gourmet.category, gourmet.isSoldOut, analyticsParam, true);
+                , gourmet.imageUrl, gourmet.category, gourmet.isSoldOut, analyticsParam, true, PlaceDetailLayout.TRANS_GRADIENT_BOTTOM_TYPE_MAP);
 
             if (intent == null)
             {
@@ -117,7 +118,7 @@ public class GourmetBookingDetailMapPresenter extends PlaceBookingDetailMapPrese
 
             Intent intent = GourmetDetailActivity.newInstance(getActivity() //
                 , gourmetBookingDay, gourmet.index, gourmet.name //
-                , gourmet.imageUrl, gourmet.category, gourmet.isSoldOut, analyticsParam, false);
+                , gourmet.imageUrl, gourmet.category, gourmet.isSoldOut, analyticsParam, false, PlaceDetailLayout.TRANS_GRADIENT_BOTTOM_TYPE_NONE);
 
             startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_GOURMET_DETAIL);
 

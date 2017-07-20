@@ -49,6 +49,7 @@ import com.twoheart.dailyhotel.network.model.HomePlace;
 import com.twoheart.dailyhotel.network.model.Prices;
 import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.place.activity.PlaceReservationDetailActivity;
+import com.twoheart.dailyhotel.place.layout.PlaceDetailLayout;
 import com.twoheart.dailyhotel.screen.common.HappyTalkCategoryDialog;
 import com.twoheart.dailyhotel.screen.common.PermissionManagerActivity;
 import com.twoheart.dailyhotel.screen.common.ZoomMapActivity;
@@ -891,7 +892,7 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
 
                 Intent intent = GourmetDetailActivity.newInstance(StayReservationDetailActivity.this //
                     , gourmetBookingDay, homePlace.index, homePlace.title //
-                    , homePlace.imageUrl, homePlace.details.category, homePlace.isSoldOut, analyticsParam, true);
+                    , homePlace.imageUrl, homePlace.details.category, homePlace.isSoldOut, analyticsParam, true, PlaceDetailLayout.TRANS_GRADIENT_BOTTOM_TYPE_NONE);
 
                 if (intent == null)
                 {
@@ -918,7 +919,7 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
 
                 Intent intent = GourmetDetailActivity.newInstance(StayReservationDetailActivity.this //
                     , gourmetBookingDay, homePlace.index, homePlace.title //
-                    , homePlace.imageUrl, homePlace.details.category, homePlace.isSoldOut, analyticsParam, false);
+                    , homePlace.imageUrl, homePlace.details.category, homePlace.isSoldOut, analyticsParam, false, PlaceDetailLayout.TRANS_GRADIENT_BOTTOM_TYPE_NONE);
 
                 if (intent == null)
                 {
@@ -1061,7 +1062,8 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
                 stayBookingDay.setCheckInDay(mTodayDateTime.dailyDateTime);
                 stayBookingDay.setCheckOutDay(mTodayDateTime.dailyDateTime, 1);
 
-                Intent intent = StayDetailActivity.newInstance(StayReservationDetailActivity.this, stayBookingDay, mPlaceBookingDetail.isOverseas, mPlaceBookingDetail.placeIndex, 0, false, false, false);
+                Intent intent = StayDetailActivity.newInstance(StayReservationDetailActivity.this, stayBookingDay//
+                    , mPlaceBookingDetail.isOverseas, mPlaceBookingDetail.placeIndex, 0, false, false, false);
                 startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL);
 
                 overridePendingTransition(R.anim.slide_in_right, R.anim.hold);

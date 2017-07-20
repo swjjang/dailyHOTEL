@@ -38,6 +38,7 @@ import com.twoheart.dailyhotel.model.time.StayBookingDay;
 import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.fragment.PlaceListFragment;
+import com.twoheart.dailyhotel.place.layout.PlaceDetailLayout;
 import com.twoheart.dailyhotel.screen.common.PermissionManagerActivity;
 import com.twoheart.dailyhotel.screen.home.category.filter.StayCategoryNearByCurationActivity;
 import com.twoheart.dailyhotel.screen.hotel.detail.StayDetailActivity;
@@ -1271,10 +1272,6 @@ public class StayCategoryNearByActivity extends BaseActivity
                 analyticsParam.setProvince(null);
                 analyticsParam.setTotalListCount(listCount);
 
-                Intent intent = StayDetailActivity.newInstance(StayCategoryNearByActivity.this //
-                    , mStayCategoryNearByCuration.getStayBookingDay(), stay.index, stay.name, stay.imageUrl //
-                    , analyticsParam, true);
-
                 View simpleDraweeView = view.findViewById(R.id.imageView);
                 View gradeTextView = view.findViewById(R.id.gradeTextView);
                 View nameTextView = view.findViewById(R.id.nameTextView);
@@ -1282,10 +1279,18 @@ public class StayCategoryNearByActivity extends BaseActivity
                 View gradientBottomView = view.findViewById(R.id.gradientView);
 
                 Object mapTag = gradientBottomView.getTag();
+                Intent intent;
 
                 if (mapTag != null && "map".equals(mapTag) == true)
                 {
-                    intent.putExtra(NAME_INTENT_EXTRA_DATA_FROM_MAP, true);
+                    intent = StayDetailActivity.newInstance(StayCategoryNearByActivity.this //
+                        , mStayCategoryNearByCuration.getStayBookingDay(), stay.index, stay.name, stay.imageUrl //
+                        , analyticsParam, true, PlaceDetailLayout.TRANS_GRADIENT_BOTTOM_TYPE_MAP);
+                } else
+                {
+                    intent = StayDetailActivity.newInstance(StayCategoryNearByActivity.this //
+                        , mStayCategoryNearByCuration.getStayBookingDay(), stay.index, stay.name, stay.imageUrl //
+                        , analyticsParam, true, PlaceDetailLayout.TRANS_GRADIENT_BOTTOM_TYPE_LIST);
                 }
 
                 ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(StayCategoryNearByActivity.this,//
@@ -1305,7 +1310,7 @@ public class StayCategoryNearByActivity extends BaseActivity
 
                 Intent intent = StayDetailActivity.newInstance(StayCategoryNearByActivity.this //
                     , mStayCategoryNearByCuration.getStayBookingDay(), stay.index, stay.name, stay.imageUrl //
-                    , analyticsParam, false);
+                    , analyticsParam, false, PlaceDetailLayout.TRANS_GRADIENT_BOTTOM_TYPE_NONE);
 
                 startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL);
 

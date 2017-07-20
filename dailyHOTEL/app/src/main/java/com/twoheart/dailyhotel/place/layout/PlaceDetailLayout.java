@@ -51,6 +51,10 @@ public abstract class PlaceDetailLayout extends BaseLayout
     public static final int STATUS_BOOKING = 2;
     public static final int STATUS_SOLD_OUT = 3;
 
+    public static final int TRANS_GRADIENT_BOTTOM_TYPE_NONE = -1;
+    public static final int TRANS_GRADIENT_BOTTOM_TYPE_MAP = 1;
+    public static final int TRANS_GRADIENT_BOTTOM_TYPE_LIST = 2;
+
     protected PlaceDetail mPlaceDetail;
     protected DailyLoopViewPager mViewPager;
     protected DailyLineIndicator mDailyLineIndicator;
@@ -142,7 +146,7 @@ public abstract class PlaceDetailLayout extends BaseLayout
     protected void initLayout(View view)
     {
         mTransSimpleDraweeView = (com.facebook.drawee.view.SimpleDraweeView) view.findViewById(R.id.transImageView);
-        mTransGradientBottomView = view.findViewById(R.id.transGradientView);
+        mTransGradientBottomView = view.findViewById(R.id.transGradientBottomView);
         mTransGradientTopView = view.findViewById(R.id.transGradientTopView);
 
         mTransTitleLayout = view.findViewById(R.id.transTitleLayout);
@@ -206,7 +210,7 @@ public abstract class PlaceDetailLayout extends BaseLayout
         setUpdateWishPopup(WishPopupState.GONE);
     }
 
-    public void setIsUsedMultiTransitions(boolean enabled)
+    public void setIsUsedMultiTransitions(boolean enabled, int gradientBottomType)
     {
         if (enabled == true)
         {
@@ -218,12 +222,24 @@ public abstract class PlaceDetailLayout extends BaseLayout
                 mTransSimpleDraweeView.setTransitionName(mContext.getString(R.string.transition_place_image));
                 mTransGradientTopView.setTransitionName(mContext.getString(R.string.transition_gradient_top_view));
                 mTransGradientBottomView.setTransitionName(mContext.getString(R.string.transition_gradient_bottom_view));
-                mTransGradientBottomView.setBackground(makeShaderFactory());
-            }
 
-            if (VersionUtils.isOverAPI16() == true)
-            {
-                mTransGradientBottomView.setBackground(makeShaderFactory());
+                switch(gradientBottomType)
+                {
+
+                    case TRANS_GRADIENT_BOTTOM_TYPE_LIST:
+                        mTransGradientBottomView.setBackground(getGradientBottomDrawable());
+                        break;
+
+                    case TRANS_GRADIENT_BOTTOM_TYPE_MAP:
+                        mTransGradientBottomView.setBackgroundResource(R.color.black_a28);
+                        break;
+
+                    case TRANS_GRADIENT_BOTTOM_TYPE_NONE:
+                    default:
+                        mTransGradientBottomView.setBackground(null);
+                        break;
+                }
+
             }
         } else
         {
@@ -232,11 +248,16 @@ public abstract class PlaceDetailLayout extends BaseLayout
         }
     }
 
-    private PaintDrawable makeShaderFactory()
+    /**
+     * 리스트에서 사용하는것과 동일한다.
+     *
+     * @return
+     */
+    private PaintDrawable getGradientBottomDrawable()
     {
         // 그라디에이션 만들기.
-        final int colors[] = {Color.parseColor("#ED000000"), Color.parseColor("#E8000000"), Color.parseColor("#E2000000"), Color.parseColor("#66000000"), Color.parseColor("#00000000")};
-        final float positions[] = {0.0f, 0.01f, 0.02f, 0.17f, 0.60f};
+        final int colors[] = {Color.parseColor("#E6000000"), Color.parseColor("#99000000"), Color.parseColor("#1A000000"), Color.parseColor("#00000000"), Color.parseColor("#00000000")};
+        final float positions[] = {0.0f, 0.24f, 0.66f, 0.8f, 1.0f};
 
         PaintDrawable paintDrawable = new PaintDrawable();
         paintDrawable.setShape(new RectShape());
@@ -286,7 +307,6 @@ public abstract class PlaceDetailLayout extends BaseLayout
     {
         mTransSimpleDraweeView.setVisibility(visibility);
         mTransGradientBottomView.setVisibility(visibility);
-        mTransGradientTopView.setVisibility(visibility);
     }
 
     public void setTransBottomGradientBackground(int resId)
