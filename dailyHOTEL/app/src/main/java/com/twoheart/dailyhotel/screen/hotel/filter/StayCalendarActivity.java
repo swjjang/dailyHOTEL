@@ -30,9 +30,6 @@ import java.util.Map;
 
 public class StayCalendarActivity extends PlaceCalendarActivity
 {
-    public static final String INTENT_EXTRA_DATA_CHECKIN_DATETIME = "checkInDateTime";
-    public static final String INTENT_EXTRA_DATA_CHECKOUT_DATETIME = "checkOutDateTime";
-
     protected static final int DAYCOUNT_OF_MAX = 60;
 
     private View mCheckInDayView;
@@ -561,8 +558,6 @@ public class StayCalendarActivity extends PlaceCalendarActivity
                 mExitView.performClick();
                 return;
             }
-
-            Day day = (Day) mDayViewList.get(index).getTag();
 
             if (index + 1 < mDayViewList.size())
             {
