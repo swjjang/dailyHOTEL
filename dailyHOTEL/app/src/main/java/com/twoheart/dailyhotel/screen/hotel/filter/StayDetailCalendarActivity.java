@@ -4,11 +4,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Toast;
 
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
-import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.repository.remote.PlaceDetailCalendarImpl;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.time.StayBookingDay;
@@ -40,7 +38,6 @@ public class StayDetailCalendarActivity extends StayCalendarActivity
     private static final int OVERSEAS_DAYCOUNT_OF_MAX = 180;
 
     private int mHotelIndex;
-    private boolean mIsSingleDay;
     private boolean mOverseas;
 
     private PlaceDetailCalendarImpl mPlaceDetailCalendarImpl;
@@ -71,47 +68,8 @@ public class StayDetailCalendarActivity extends StayCalendarActivity
         Intent intent = getIntent();
         mHotelIndex = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_HOTELIDX, -1);
         mOverseas = intent.getBooleanExtra(INTENT_EXTRA_DATA_OVERSEAS, false);
-        mIsSingleDay = intent.getBooleanExtra(INTENT_EXTRA_DATA_ISSINGLE_DAY, false);
 
         super.onCreate(savedInstanceState);
-
-        if (mIsSingleDay == true)
-        {
-            DailyToast.showToast(this, getString(R.string.message_calendar_select_single_day), Toast.LENGTH_SHORT);
-        }
-    }
-
-    @Override
-    public void onClick(View view)
-    {
-        switch (view.getId())
-        {
-            case R.id.exitView:
-            case R.id.closeView:
-            case R.id.confirmView:
-            {
-                super.onClick(view);
-                break;
-            }
-
-            default:
-            {
-                super.onClick(view);
-
-                if (mIsSingleDay == true)
-                {
-                    for (int i = 0; i < mDayViewList.size(); i++)
-                    {
-                        if (view == mDayViewList.get(i) && i < mDayViewList.size() - 1)
-                        {
-                            super.onClick(mDayViewList.get(i + 1));
-                            break;
-                        }
-                    }
-                }
-                break;
-            }
-        }
     }
 
     @Override
