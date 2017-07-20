@@ -1077,6 +1077,8 @@ public class AnalyticsManager
         public static final String RECENT = "recent";
         public static final String KEYWORD = "keyword";
 
+        public static final String GOURMET_RECOMMEND = "gourmet_recommend";
+
     }
 
     public static class Category
@@ -1089,6 +1091,7 @@ public class AnalyticsManager
         public static final String HOTEL_SEARCH = "HotelSearches";
         public static final String GOURMET_SEARCH = "GourmetSearches";
         public static final String BOOKING_STATUS = "BookingStatus";
+        public static final String BOOKING_DETAIL = "booking_detail";
         public static final String COUPON_BOX = "CouponBox";
         public static final String INVITE_FRIEND = "InviteFriend";
         public static final String SEARCH_ = "Search";
@@ -1352,6 +1355,9 @@ public class AnalyticsManager
         public static final String TEMPORARY_ACCOUNT = "temporary_account";
         public static final String COMPLETE_PAYMENT = "complete_payment";
         public static final String CANCELLEATION_PROGRESS = "cancelleation_progress";
+
+        public static final String Y = "y";
+        public static final String N = "n";
     }
 
     public static class UserType

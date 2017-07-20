@@ -1484,6 +1484,11 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
                             public void accept(@NonNull ArrayList<HomePlace> homePlaces) throws Exception
                             {
                                 ((StayReservationDetailLayout) mPlaceReservationDetailLayout).setRecommendGourmetData(homePlaces);
+
+                                boolean hasData = !(homePlaces == null || homePlaces.size() == 0);
+
+                                AnalyticsManager.getInstance(StayReservationDetailActivity.this).recordEvent(AnalyticsManager.Category.BOOKING_DETAIL//
+                                    , AnalyticsManager.Action.GOURMET_RECOMMEND, hasData ? AnalyticsManager.Label.Y : AnalyticsManager.Label.N, null);
                             }
                         }, new Consumer<Throwable>()
                         {
@@ -1491,6 +1496,9 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
                             public void accept(@NonNull Throwable throwable) throws Exception
                             {
                                 ((StayReservationDetailLayout) mPlaceReservationDetailLayout).setRecommendGourmetData(null);
+
+                                AnalyticsManager.getInstance(StayReservationDetailActivity.this).recordEvent(AnalyticsManager.Category.BOOKING_DETAIL//
+                                    , AnalyticsManager.Action.GOURMET_RECOMMEND, AnalyticsManager.Label.N, null);
                             }
                         }));
                 }
