@@ -192,11 +192,11 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
         } else if (AnalyticsManager.Screen.DAILYHOTEL_DETAIL_ROOMTYPE.equalsIgnoreCase(screenName) == true)
         {
             checkoutStep(2, screenName, null, params);
-        } else if (AnalyticsManager.Screen.DAILYHOTEL_PAYMENT.equalsIgnoreCase(screenName) == true//
+        } else if (AnalyticsManager.Screen.DAILYHOTEL_BOOKINGINITIALISE.equalsIgnoreCase(screenName) == true//
             || AnalyticsManager.Screen.DAILYHOTEL_BOOKINGINITIALISE_CANCELABLE.equalsIgnoreCase(screenName) == true//
             || AnalyticsManager.Screen.DAILYHOTEL_BOOKINGINITIALISE_CANCELLATIONFEE.equalsIgnoreCase(screenName) == true//
             || AnalyticsManager.Screen.DAILYHOTEL_BOOKINGINITIALISE_NOREFUNDS.equalsIgnoreCase(screenName) == true//
-            || AnalyticsManager.Screen.DAILYGOURMET_PAYMENT.equalsIgnoreCase(screenName) == true)
+            || AnalyticsManager.Screen.DAILYGOURMET_BOOKINGINITIALISE.equalsIgnoreCase(screenName) == true)
         {
             checkoutStep(3, screenName, null, params);
         } else if (AnalyticsManager.Screen.DAILYHOTEL_PAYMENT_AGREEMENT_POPUP.equalsIgnoreCase(screenName) == true//
@@ -938,6 +938,7 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
         String rating = params.get(AnalyticsManager.KeyType.RATING);
         String isShowOriginalPrice = params.get(AnalyticsManager.KeyType.IS_SHOW_ORIGINAL_PRICE);
         String placeCount = params.get(AnalyticsManager.KeyType.PLACE_COUNT);
+        String dailyChoice = params.get(AnalyticsManager.KeyType.DAILYCHOICE);
 
         if (DailyTextUtils.isTextEmpty(checkIn) == false)
         {
@@ -1002,6 +1003,11 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
         if (DailyTextUtils.isTextEmpty(isShowOriginalPrice) == false)
         {
             screenViewBuilder.setCustomDimension(18, isShowOriginalPrice.toLowerCase());
+        }
+
+        if (DailyTextUtils.isTextEmpty(dailyChoice) == false)
+        {
+            screenViewBuilder.setCustomDimension(19, dailyChoice.toLowerCase());
         }
 
         if (DailyTextUtils.isTextEmpty(placeCount) == false && "-1".equalsIgnoreCase(placeCount) == false)
