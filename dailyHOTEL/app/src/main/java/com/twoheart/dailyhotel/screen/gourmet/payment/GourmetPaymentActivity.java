@@ -1767,6 +1767,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
                         //					jsonObject.getInt("available_ticket_count");
                         int minCount = jsonObject.getInt("minimum_order_quantity");
                         int maxCount = jsonObject.getInt("max_sale_count");
+                        String businessName = jsonObject.getString("business_name");
 
                         JSONArray timeJSONArray = jsonObject.getJSONArray("eating_time_list");
 
@@ -1837,7 +1838,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
                         }
 
                         mGourmetPaymentLayout.setTicketInformation(gourmetPaymentInformation, gourmetBookingDay);
-                        mGourmetPaymentLayout.setVendorName(gourmetPaymentInformation.placeName);
+                        mGourmetPaymentLayout.setVendorBusinessName(businessName);
                         setPaymentInformation(gourmetPaymentInformation);
                     } else
                     {
