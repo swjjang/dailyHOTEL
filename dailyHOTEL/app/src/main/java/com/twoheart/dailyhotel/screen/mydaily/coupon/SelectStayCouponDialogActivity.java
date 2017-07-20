@@ -62,7 +62,7 @@ public class SelectStayCouponDialogActivity extends BaseActivity
         intent.putExtra(INTENT_EXTRA_CATEGORY_CODE, categoryCode);
         intent.putExtra(INTENT_EXTRA_HOTEL_NAME, hotelName);
         intent.putExtra(INTENT_EXTRA_ROOM_PRICE, roomPrice);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_CALL_BY_SCREEN, AnalyticsManager.Screen.DAILYHOTEL_PAYMENT);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_CALL_BY_SCREEN, AnalyticsManager.Screen.DAILYHOTEL_BOOKINGINITIALISE);
 
         return intent;
     }
@@ -104,7 +104,7 @@ public class SelectStayCouponDialogActivity extends BaseActivity
 
         switch (mCallByScreen)
         {
-            case AnalyticsManager.Screen.DAILYHOTEL_PAYMENT:
+            case AnalyticsManager.Screen.DAILYHOTEL_BOOKINGINITIALISE:
             {
                 mHotelIdx = intent.getIntExtra(INTENT_EXTRA_HOTEL_IDX, -1);
                 mRoomIdx = intent.getIntExtra(INTENT_EXTRA_ROOM_IDX, -1);
@@ -152,7 +152,7 @@ public class SelectStayCouponDialogActivity extends BaseActivity
         {
             switch (mCallByScreen)
             {
-                case AnalyticsManager.Screen.DAILYHOTEL_PAYMENT:
+                case AnalyticsManager.Screen.DAILYHOTEL_BOOKINGINITIALISE:
                     mNetworkController.requestCouponList(mHotelIdx, mRoomIdx, mStayBookingDay.getCheckInDay(DailyCalendar.ISO_8601_FORMAT), mStayBookingDay.getCheckOutDay(DailyCalendar.ISO_8601_FORMAT));
                     break;
 
@@ -185,7 +185,7 @@ public class SelectStayCouponDialogActivity extends BaseActivity
         {
             switch (mCallByScreen)
             {
-                case AnalyticsManager.Screen.DAILYHOTEL_PAYMENT:
+                case AnalyticsManager.Screen.DAILYHOTEL_BOOKINGINITIALISE:
                 {
                     if (mLayout.getCouponCount() == 0)
                     {
@@ -259,7 +259,7 @@ public class SelectStayCouponDialogActivity extends BaseActivity
 
             switch (mCallByScreen)
             {
-                case AnalyticsManager.Screen.DAILYHOTEL_PAYMENT:
+                case AnalyticsManager.Screen.DAILYHOTEL_BOOKINGINITIALISE:
                 {
                     if (isEmpty == true)
                     {
@@ -330,7 +330,7 @@ public class SelectStayCouponDialogActivity extends BaseActivity
             {
                 switch (mCallByScreen)
                 {
-                    case AnalyticsManager.Screen.DAILYHOTEL_PAYMENT:
+                    case AnalyticsManager.Screen.DAILYHOTEL_BOOKINGINITIALISE:
                         mNetworkController.requestCouponList(mHotelIdx, mRoomIdx, mStayBookingDay.getCheckInDay(DailyCalendar.ISO_8601_FORMAT), mStayBookingDay.getCheckOutDay(DailyCalendar.ISO_8601_FORMAT));
                         break;
 
@@ -382,7 +382,7 @@ public class SelectStayCouponDialogActivity extends BaseActivity
             {
                 switch (mCallByScreen)
                 {
-                    case AnalyticsManager.Screen.DAILYHOTEL_PAYMENT:
+                    case AnalyticsManager.Screen.DAILYHOTEL_BOOKINGINITIALISE:
                     {
                         Map<String, String> paramsMap = new HashMap<>();
                         paramsMap.put(AnalyticsManager.KeyType.COUPON_NAME, coupon.title);
