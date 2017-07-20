@@ -825,6 +825,7 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
                 homePlace.imageUrl = gourmet.imageUrl;
                 homePlace.placeType = PlaceType.FNB;
                 homePlace.isSoldOut = gourmet.isSoldOut;
+                homePlace.distance = gourmet.distance;
 
                 HomeDetails details = new HomeDetails();
                 details.category = gourmet.category;
@@ -1282,9 +1283,11 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
 
             startGourmetDetail(view, homePlace, mTodayDateTime, (StayBookingDetail) mPlaceBookingDetail);
 
-            //            AnalyticsManager.getInstance(mBaseActivity).recordEvent(//
-            //                AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.HOME_RECENTVIEW_CLICK,//
-            //                Integer.toString(recentItem.index), null);
+            String distanceString = String.format("%.1f", homePlace.distance);
+
+            AnalyticsManager.getInstance(StayReservationDetailActivity.this).recordEvent(//
+                AnalyticsManager.Category.BOOKING_GOURMET_RECOMMEND_CLICK, distanceString//
+                , Integer.toString(homePlace.index), null);
         }
 
         @Override
