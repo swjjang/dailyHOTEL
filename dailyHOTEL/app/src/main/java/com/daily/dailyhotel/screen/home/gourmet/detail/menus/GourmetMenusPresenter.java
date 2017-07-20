@@ -15,6 +15,7 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.network.model.ImageInformation;
 import com.twoheart.dailyhotel.screen.common.ImageDetailListActivity;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.DailyPreference;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -107,6 +108,12 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
     @Override
     public void onPostCreate()
     {
+        if (DailyPreference.getInstance(getActivity()).getGourmetProductDetailGuide() == true)
+        {
+            DailyPreference.getInstance(getActivity()).setGourmetProductDetailGuide(false);
+            getViewInterface().setGuideVisible(true);
+        }
+
         getViewInterface().setGourmetMenus(mGourmetMenuList, mIndex);
 
         onScrolled(mIndex, false);
@@ -190,6 +197,12 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
     public void onCloseClick()
     {
         onBackClick();
+    }
+
+    @Override
+    public void onGuideClick()
+    {
+        getViewInterface().setGuideVisible(false);
     }
 
     @Override

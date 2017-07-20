@@ -26,6 +26,8 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
     {
         void onCloseClick();
 
+        void onGuideClick();
+
         void onReservationClick(int index);
 
         void onScrolled(int position, boolean real);
@@ -65,6 +67,9 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
                 getEventListener().onScrolled(viewDataBinding.recyclerView.getChildAdapterPosition(view), true);
             }
         });
+
+        viewDataBinding.guideLayout.setOnClickListener(this);
+        viewDataBinding.guideLayout.setVisibility(View.GONE);
     }
 
     @Override
@@ -125,12 +130,27 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
     }
 
     @Override
+    public void setGuideVisible(boolean visible)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        getViewDataBinding().guideLayout.setVisibility(visible ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
     public void onClick(View v)
     {
         switch (v.getId())
         {
             case R.id.closeImageView:
                 getEventListener().onCloseClick();
+                break;
+
+            case R.id.guideLayout:
+                getEventListener().onGuideClick();
                 break;
         }
     }

@@ -5,6 +5,7 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,6 +21,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
@@ -34,6 +36,7 @@ import com.twoheart.dailyhotel.model.Place;
 import com.twoheart.dailyhotel.model.PlaceClusterItem;
 import com.twoheart.dailyhotel.model.PlaceClusterRenderer;
 import com.twoheart.dailyhotel.model.PlaceRenderer;
+import com.twoheart.dailyhotel.place.adapter.PlaceNameInfoWindowAdapter;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -59,9 +62,11 @@ public class PlaceBookingDetailMapFragment extends com.google.android.gms.maps.S
     private ImageView mMyLocationView;
     private Drawable mMyLocationDrawable;
 
-    private Marker mMyLocationMarker, mSelectedMarker;
+    private Marker mMyLocationMarker, mSelectedMarker, mPlaceLocationMarker;
     private ClusterManager mClusterManager;
     private PlaceClusterRenderer mClusterRenderer;
+
+    private Handler mHandler = new Handler();
 
     // 특별히 많은 데이터를 관리하기 때문에 넣어주었다.
     private CompositeDisposable mCompositeDisposable = new CompositeDisposable();
@@ -264,6 +269,57 @@ public class PlaceBookingDetailMapFragment extends com.google.android.gms.maps.S
         {
             makeMarker(placeList, (Place) mSelectedMarker.getTag(), true);
         }
+    }
+
+    public void addMarker(double lat, double lng, String placeName)
+    {
+        if (mGoogleMap == null)
+        {
+            return;
+        }
+
+        mPlaceLocationMarker = mGoogleMap.addMarker(new MarkerOptions().position(new LatLng(lat, lng)).title(placeName));
+        mPlaceLocationMarker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.info_ic_map_large));
+
+        LatLng latLng = new LatLng(lat, lng);
+        CameraPosition cp = new CameraPosition.Builder().target((latLng)).zoom(15).build();
+
+        if (VersionUtils.isOverAPI21() == true)
+        {
+            mGoogleMap.setOnCameraIdleListener(new GoogleMap.OnCameraIdleListener()
+            {
+                @Override
+                public void onCameraIdle()
+                {
+                    mGoogleMap.setOnCameraIdleListener(mClusterManager);
+                }
+            });
+            mGoogleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cp));
+        } else
+        {
+            mGoogleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cp));
+        }
+
+        mGoogleMap.setInfoWindowAdapter(new PlaceNameInfoWindowAdapter(getActivity()));
+        mGoogleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener()
+        {
+            @Override
+            public boolean onMarkerClick(Marker marker)
+            {
+                marker.showInfoWindow();
+                return true;
+            }
+        });
+
+        mPlaceLocationMarker.hideInfoWindow();
+        mHandler.post(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                mPlaceLocationMarker.showInfoWindow();
+            }
+        });
     }
 
     public void setSelectedMarker(Place place)

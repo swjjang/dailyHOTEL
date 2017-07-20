@@ -161,6 +161,17 @@ public abstract class PlaceBookingDetailMapView extends BaseDialogView<PlaceBook
         mPlaceBookingDetailMapFragment.setPlaceList(placeList);
     }
 
+    @Override
+    public void addMarker(double lat, double lng, String placeName)
+    {
+       if (mPlaceBookingDetailMapFragment == null)
+       {
+           return;
+       }
+
+       mPlaceBookingDetailMapFragment.addMarker(lat, lng, placeName);
+    }
+
     private DailyOverScrollViewPager addMapViewPager(Context context, ViewGroup viewGroup)
     {
         if (context == null || viewGroup == null)
@@ -190,6 +201,8 @@ public abstract class PlaceBookingDetailMapView extends BaseDialogView<PlaceBook
 
         return viewPager;
     }
+
+
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////// PlaceDetailMapFragment.OnEventListener - Start //////////////////////////

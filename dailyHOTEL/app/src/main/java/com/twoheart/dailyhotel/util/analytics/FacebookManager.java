@@ -254,6 +254,12 @@ public class FacebookManager extends BaseAnalyticsManager
     }
 
     @Override
+    void recordEvent(String category, String action, String label, long value, Map<String, String> params)
+    {
+
+    }
+
+    @Override
     void recordDeepLink(DailyDeepLink dailyDeepLink)
     {
 

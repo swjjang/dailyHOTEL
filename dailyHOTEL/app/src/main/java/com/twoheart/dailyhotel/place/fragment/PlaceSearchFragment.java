@@ -58,6 +58,8 @@ public abstract class PlaceSearchFragment extends BaseFragment
 
     public abstract void startSearchResultActivity();
 
+    public abstract void startCalendar(boolean isAnimation);
+
     public interface OnSearchFragmentListener
     {
         void finish();

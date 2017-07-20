@@ -28,6 +28,7 @@ import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
 import com.daily.base.widget.DailyTextView;
 import com.daily.base.widget.DailyToast;
+import com.daily.dailyhotel.entity.Booking;
 import com.daily.dailyhotel.repository.local.model.AnalyticsParam;
 import com.daily.dailyhotel.repository.remote.GourmetListRemoteImpl;
 import com.daily.dailyhotel.screen.booking.detail.map.GourmetBookingDetailMapActivity;
@@ -67,6 +68,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import io.reactivex.Observable;
@@ -93,13 +95,14 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
 
     private List<Gourmet> mRecommendGourmetList;
 
-    public static Intent newInstance(Context context, int reservationIndex, String imageUrl, boolean isDeepLink)
+    public static Intent newInstance(Context context, int reservationIndex, String imageUrl, boolean isDeepLink, int bookingState)
     {
         Intent intent = new Intent(context, StayReservationDetailActivity.class);
 
         intent.putExtra(NAME_INTENT_EXTRA_DATA_BOOKINGIDX, reservationIndex);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_URL, imageUrl);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_DEEPLINK, isDeepLink);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_BOOKING_STATE, bookingState);
 
         return intent;
     }
@@ -901,7 +904,9 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
                 View gradientBottomView = view.findViewById(R.id.gradientBottomView);
 
                 ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(StayReservationDetailActivity.this//
-                    , android.support.v4.util.Pair.create(simpleDraweeView, getString(R.string.transition_place_image)), android.support.v4.util.Pair.create(gradientTopView, getString(R.string.transition_gradient_top_view)), android.support.v4.util.Pair.create(gradientBottomView, getString(R.string.transition_gradient_bottom_view)));
+                    , android.support.v4.util.Pair.create(simpleDraweeView, getString(R.string.transition_place_image)) //
+                    , android.support.v4.util.Pair.create(gradientTopView, getString(R.string.transition_gradient_top_view)) //
+                    , android.support.v4.util.Pair.create(gradientBottomView, getString(R.string.transition_gradient_bottom_view)));
 
                 StayReservationDetailActivity.this.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMET_DETAIL, options.toBundle());
             } else
@@ -928,6 +933,69 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
         } catch (Exception e)
         {
             ExLog.e(e.toString());
+        }
+    }
+
+    private void analyticsOnScreen(StayBookingDetail stayBookingDetail, String refundPolicy)
+    {
+        if (stayBookingDetail == null)
+        {
+            return;
+        }
+
+        HashMap<String, String> params = new HashMap();
+        params.put(AnalyticsManager.KeyType.PLACE_TYPE, "stay");
+        params.put(AnalyticsManager.KeyType.COUNTRY, stayBookingDetail.isOverseas == false ? "domestic" : "overseas");
+        params.put(AnalyticsManager.KeyType.PLACE_INDEX, Integer.toString(stayBookingDetail.placeIndex));
+
+        switch (mBookingState)
+        {
+            case Booking.BOOKING_STATE_WAITING_REFUND:
+                AnalyticsManager.getInstance(StayReservationDetailActivity.this).recordScreen(StayReservationDetailActivity.this//
+                    , AnalyticsManager.Screen.BOOKINGDETAIL_MYBOOKINGINFO_CANCELLATION_PROGRESS, null);
+                break;
+
+            case Booking.BOOKING_STATE_BEFORE_USE:
+                if (DailyTextUtils.isTextEmpty(refundPolicy) == false)
+                {
+                    switch (refundPolicy)
+                    {
+                        case StayBookingDetail.STATUS_NO_CHARGE_REFUND:
+                            AnalyticsManager.getInstance(StayReservationDetailActivity.this).recordScreen(StayReservationDetailActivity.this//
+                                , AnalyticsManager.Screen.BOOKINGDETAIL_MYBOOKINGINFO_CANCELABLE, null, params);
+                            break;
+
+                        case StayBookingDetail.STATUS_SURCHARGE_REFUND:
+                            AnalyticsManager.getInstance(StayReservationDetailActivity.this).recordScreen(StayReservationDetailActivity.this//
+                                , AnalyticsManager.Screen.BOOKINGDETAIL_MYBOOKINGINFO_CANCELLATIONFEE, null, params);
+                            break;
+
+                        case StayBookingDetail.STATUS_NRD:
+                            AnalyticsManager.getInstance(StayReservationDetailActivity.this).recordScreen(StayReservationDetailActivity.this//
+                                , AnalyticsManager.Screen.BOOKINGDETAIL_MYBOOKINGINFO_NOREFUNDS, null, params);
+                            break;
+
+                        default:
+                            AnalyticsManager.getInstance(StayReservationDetailActivity.this).recordScreen(StayReservationDetailActivity.this//
+                                , AnalyticsManager.Screen.BOOKINGDETAIL_MYBOOKINGINFO, null, params);
+                            break;
+                    }
+                } else
+                {
+                    AnalyticsManager.getInstance(StayReservationDetailActivity.this).recordScreen(StayReservationDetailActivity.this//
+                        , AnalyticsManager.Screen.BOOKINGDETAIL_MYBOOKINGINFO, null, params);
+                }
+                break;
+
+            case Booking.BOOKING_STATE_AFTER_USE:
+                AnalyticsManager.getInstance(StayReservationDetailActivity.this).recordScreen(StayReservationDetailActivity.this//
+                    , AnalyticsManager.Screen.BOOKINGDETAIL_MYBOOKINGINFO_POST_VISIT, null, params);
+                break;
+
+            default:
+                AnalyticsManager.getInstance(StayReservationDetailActivity.this).recordScreen(StayReservationDetailActivity.this//
+                    , AnalyticsManager.Screen.BOOKINGDETAIL_MYBOOKINGINFO, null, params);
+                break;
         }
     }
 
@@ -972,7 +1040,11 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
             } else
             {
                 mPlaceReservationDetailLayout.expandMap(mPlaceBookingDetail.latitude, mPlaceBookingDetail.longitude);
+                ((StayReservationDetailLayout) mPlaceReservationDetailLayout).setRecommendGourmetButtonAnimation(false);
             }
+
+            AnalyticsManager.getInstance(StayReservationDetailActivity.this).recordEvent(AnalyticsManager.Category.BOOKING_STATUS//
+                , AnalyticsManager.Action.MAP_CLICK, AnalyticsManager.ValueType.EMPTY, null);
         }
 
         @Override
@@ -993,6 +1065,9 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
                 startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL);
 
                 overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
+
+                AnalyticsManager.getInstance(StayReservationDetailActivity.this).recordEvent(AnalyticsManager.Category.BOOKING_STATUS//
+                    , AnalyticsManager.Action.BOOKING_ITEM_DETAIL_CLICK, AnalyticsManager.ValueType.EMPTY, null);
             } catch (Exception e)
             {
                 ExLog.e(e.toString());
@@ -1057,6 +1132,9 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
             {
                 lockUI();
                 mNetworkController.requestReviewInformation(mReservationIndex);
+
+                AnalyticsManager.getInstance(StayReservationDetailActivity.this).recordEvent(AnalyticsManager.Category.BOOKING_STATUS//
+                    , AnalyticsManager.Action.WRITE_REVIEW, AnalyticsManager.ValueType.EMPTY, null);
             }
         }
 
@@ -1155,8 +1233,12 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
                     gourmetList.addAll(mRecommendGourmetList);
                 }
 
+                Location location = new Location((String) null);
+                location.setLatitude(stayBookingDetail.latitude);
+                location.setLongitude(stayBookingDetail.longitude);
+
                 Intent intent = GourmetBookingDetailMapActivity.newInstance( //
-                    StayReservationDetailActivity.this, title, gourmetBookingDay, gourmetList);
+                    StayReservationDetailActivity.this, title, gourmetBookingDay, gourmetList, location, stayBookingDetail.placeName);
 
                 StayReservationDetailActivity.this.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PLACE_BOOKING_DETAIL_MAP);
 
@@ -1296,34 +1378,14 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
                     mPlaceReservationDetailLayout.initLayout(mTodayDateTime, stayBookingDetail);
                 }
 
-                // Analytics
-                if (DailyTextUtils.isTextEmpty(refundPolicy) == false)
-                {
-                    switch (refundPolicy)
-                    {
-                        case StayBookingDetail.STATUS_NO_CHARGE_REFUND:
-                            AnalyticsManager.getInstance(StayReservationDetailActivity.this).recordScreen(StayReservationDetailActivity.this, AnalyticsManager.Screen.BOOKINGDETAIL_MYBOOKINGINFO_CANCELABLE, null);
-                            break;
-
-                        case StayBookingDetail.STATUS_SURCHARGE_REFUND:
-                            AnalyticsManager.getInstance(StayReservationDetailActivity.this).recordScreen(StayReservationDetailActivity.this, AnalyticsManager.Screen.BOOKINGDETAIL_MYBOOKINGINFO_CANCELLATIONFEE, null);
-                            break;
-
-                        default:
-                            AnalyticsManager.getInstance(StayReservationDetailActivity.this).recordScreen(StayReservationDetailActivity.this, AnalyticsManager.Screen.BOOKINGDETAIL_MYBOOKINGINFO_NOREFUNDS, null);
-                            break;
-                    }
-                } else
-                {
-                    AnalyticsManager.getInstance(StayReservationDetailActivity.this).recordScreen(StayReservationDetailActivity.this, AnalyticsManager.Screen.BOOKINGDETAIL_MYBOOKINGINFO_NOREFUNDS, null);
-                }
+                analyticsOnScreen(stayBookingDetail, refundPolicy);
             } else
             {
                 stayBookingDetail.isVisibleRefundPolicy = false;
 
                 mPlaceReservationDetailLayout.initLayout(mTodayDateTime, stayBookingDetail);
 
-                AnalyticsManager.getInstance(StayReservationDetailActivity.this).recordScreen(StayReservationDetailActivity.this, AnalyticsManager.Screen.BOOKINGDETAIL_MYBOOKINGINFO_NOREFUNDS, null);
+                analyticsOnScreen(stayBookingDetail, null);
             }
 
             unLockUI();
@@ -1352,6 +1414,8 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
 
                     // 환불 대기 인 상태에서는 문구가 고정이다.
                     mPlaceReservationDetailLayout.initLayout(mTodayDateTime, stayBookingDetail);
+
+                    analyticsOnScreen(stayBookingDetail, null);
                 } else
                 {
                     long checkOutDateTime = DailyCalendar.convertStringToDate(stayBookingDetail.checkOutDate).getTime();
@@ -1367,6 +1431,8 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
                         stayBookingDetail.isVisibleRefundPolicy = false;
 
                         mPlaceReservationDetailLayout.initLayout(mTodayDateTime, stayBookingDetail);
+
+                        analyticsOnScreen(stayBookingDetail, null);
                     }
                 }
 

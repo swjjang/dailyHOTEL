@@ -47,6 +47,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.ParseException;
+import java.util.HashMap;
 import java.util.Locale;
 
 import retrofit2.Call;
@@ -102,12 +103,22 @@ public class PaymentWaitActivity extends BaseActivity
         switch (mBooking.placeType)
         {
             case STAY:
-                AnalyticsManager.getInstance(this).recordScreen(this, AnalyticsManager.Screen.DAILYHOTEL_DEPOSITWAITING, null);
+            {
+                HashMap<String, String> params = new HashMap();
+                params.put(AnalyticsManager.KeyType.PLACE_TYPE, "stay");
+
+                AnalyticsManager.getInstance(this).recordScreen(this, AnalyticsManager.Screen.BOOKINGDETAIL_MYBOOKINGINFO_TEMPORARY_ACCOUNT, null, params);
                 break;
+            }
 
             case GOURMET:
-                AnalyticsManager.getInstance(this).recordScreen(this, AnalyticsManager.Screen.DAILYGOURMET_DEPOSITWAITING, null);
+            {
+                HashMap<String, String> params = new HashMap();
+                params.put(AnalyticsManager.KeyType.PLACE_TYPE, "gourmet");
+
+                AnalyticsManager.getInstance(this).recordScreen(this, AnalyticsManager.Screen.BOOKINGDETAIL_MYBOOKINGINFO_TEMPORARY_ACCOUNT, null, params);
                 break;
+            }
         }
     }
 

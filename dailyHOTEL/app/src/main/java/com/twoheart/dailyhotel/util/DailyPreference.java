@@ -84,6 +84,7 @@ public class DailyPreference
     private static final String KEY_APP_PERMISSIONS_GUIDE = "216";
 
     private static final String KEY_STAY_OUTBOUND_SEARCH_CALENDAR = "216"; // 최초에 1회 캘린더 띄우기
+    private static final String KEY_GOURMET_PRODUCT_DETAIL_GUIDE = "220"; // 최초에 1회 고메 상세 가이드 띄우기
 
     // ----> DailyPreference 로 이동
     private static final String KEY_AUTHORIZATION = "1000";
@@ -830,6 +831,16 @@ public class DailyPreference
     public boolean isShowStayOutboundSearchCalendar()
     {
         return getValue(mPreferences, KEY_STAY_OUTBOUND_SEARCH_CALENDAR, true);
+    }
+
+    public void setGourmetProductDetailGuide(boolean value)
+    {
+        setValue(mEditor, KEY_GOURMET_PRODUCT_DETAIL_GUIDE, value);
+    }
+
+    public boolean getGourmetProductDetailGuide()
+    {
+        return getValue(mPreferences, KEY_GOURMET_PRODUCT_DETAIL_GUIDE, true);
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////

@@ -21,6 +21,7 @@ import com.daily.base.util.ExLog;
 import com.daily.base.util.FontManager;
 import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
+import com.daily.dailyhotel.entity.Booking;
 import com.daily.dailyhotel.entity.CommonDateTime;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayOutboundBookingDetail;
@@ -42,6 +43,7 @@ import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyUserPreference;
 import com.twoheart.dailyhotel.util.KakaoLinkManager;
 import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.CustomFontTypefaceSpan;
 
 import io.reactivex.Observable;
@@ -64,6 +66,7 @@ public class StayOutboundBookingDetailPresenter extends BaseExceptionPresenter<S
 
     private int mBookingIndex;
     private String mImageUrl;
+    private int mBookingState;
 
     private CommonDateTime mCommonDateTime;
     private StayOutboundBookingDetail mStayOutboundBookingDetail;
@@ -72,6 +75,8 @@ public class StayOutboundBookingDetailPresenter extends BaseExceptionPresenter<S
 
     public interface StayOutboundBookingAnalyticsInterface extends BaseAnalyticsInterface
     {
+        void onScreen(Activity activity, int bookingState, int placeIndex, StayOutboundBookingDetail.RefundType refundType);
+
         StayOutboundDetailAnalyticsParam getDetailAnalyticsParam(StayOutboundBookingDetail stayOutboundBookingDetail);
     }
 
@@ -116,6 +121,7 @@ public class StayOutboundBookingDetailPresenter extends BaseExceptionPresenter<S
 
         mBookingIndex = intent.getIntExtra(StayOutboundBookingDetailActivity.INTENT_EXTRA_DATA_BOOKING_INDEX, -1);
         mImageUrl = intent.getStringExtra(StayOutboundBookingDetailActivity.INTENT_EXTRA_DATA_IMAGE_URL);
+        mBookingState = intent.getIntExtra(StayOutboundBookingDetailActivity.INTENT_EXTRA_DATA_IMAGE_URL, Booking.BOOKING_STATE_NONE);
 
         return true;
     }
@@ -250,6 +256,8 @@ public class StayOutboundBookingDetailPresenter extends BaseExceptionPresenter<S
                 notifyStayOutboundBookingDetailChanged();
 
                 unLockAll();
+
+                mAnalytics.onScreen(getActivity(), mBookingState, mStayOutboundBookingDetail.stayIndex, mStayOutboundBookingDetail.refundStatus);
             }
         }, new Consumer<Throwable>()
         {
@@ -304,6 +312,9 @@ public class StayOutboundBookingDetailPresenter extends BaseExceptionPresenter<S
             , mStayOutboundBookingDetail.latitude, mStayOutboundBookingDetail.longitude, true);
 
         startActivityForResult(intent, StayOutboundBookingDetailActivity.REQUEST_CODE_ZOOMMAP);
+
+        AnalyticsManager.getInstance(getActivity()).recordEvent(AnalyticsManager.Category.BOOKING_STATUS//
+            , AnalyticsManager.Action.MAP_CLICK, AnalyticsManager.ValueType.EMPTY, null);
     }
 
     @Override
@@ -323,6 +334,9 @@ public class StayOutboundBookingDetailPresenter extends BaseExceptionPresenter<S
                     unLockAll();
                 }
             }));
+
+        AnalyticsManager.getInstance(getActivity()).recordEvent(AnalyticsManager.Category.BOOKING_STATUS//
+            , AnalyticsManager.Action.MAP_CLICK, AnalyticsManager.ValueType.EMPTY, null);
     }
 
     @Override
@@ -369,6 +383,9 @@ public class StayOutboundBookingDetailPresenter extends BaseExceptionPresenter<S
                 , 2, null, false, false, analyticsParam), StayOutboundBookingDetailActivity.REQUEST_CODE_DETAIL);
 
             getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
+
+            AnalyticsManager.getInstance(getActivity()).recordEvent(AnalyticsManager.Category.BOOKING_STATUS//
+                , AnalyticsManager.Action.BOOKING_ITEM_DETAIL_CLICK, AnalyticsManager.ValueType.EMPTY, null);
         } catch (Exception e)
         {
             ExLog.e(e.toString());

@@ -364,7 +364,15 @@ public class StayCategoryTabActivity extends PlaceMainActivity
             {
                 mStayCategoryCuration.setLocation(changedStayCuration.getLocation());
 
-                searchMyLocation();
+                if (mStayCategoryCuration.getLocation() != null)
+                {
+                    lockUI();
+
+                    onLocationChanged(mStayCategoryCuration.getLocation());
+                } else
+                {
+                    searchMyLocation();
+                }
             } else
             {
                 refreshCurrentFragment(true);

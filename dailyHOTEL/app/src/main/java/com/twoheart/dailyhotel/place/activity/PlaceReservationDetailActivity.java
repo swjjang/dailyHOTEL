@@ -11,6 +11,7 @@ import com.crashlytics.android.Crashlytics;
 import com.daily.base.exception.BaseException;
 import com.daily.base.util.ExLog;
 import com.daily.base.widget.DailyToast;
+import com.daily.dailyhotel.entity.Booking;
 import com.daily.dailyhotel.repository.local.ConfigLocalImpl;
 import com.daily.dailyhotel.repository.remote.FacebookRemoteImpl;
 import com.daily.dailyhotel.repository.remote.KakaoRemoteImpl;
@@ -22,6 +23,7 @@ import com.twoheart.dailyhotel.network.dto.BaseDto;
 import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.layout.PlaceReservationDetailLayout;
+import com.twoheart.dailyhotel.screen.booking.detail.hotel.StayReservationDetailLayout;
 import com.twoheart.dailyhotel.screen.common.PermissionManagerActivity;
 import com.twoheart.dailyhotel.screen.mydaily.member.LoginActivity;
 import com.twoheart.dailyhotel.util.Constants;
@@ -43,6 +45,8 @@ public abstract class PlaceReservationDetailActivity extends BaseActivity
     protected int mReservationIndex;
     protected String mImageUrl;
     protected boolean mIsDeepLink;
+    protected int mBookingState;
+
     protected PlaceBookingDetail mPlaceBookingDetail;
     protected TodayDateTime mTodayDateTime;
     private DailyLocationFactory mDailyLocationFactory;
@@ -69,6 +73,7 @@ public abstract class PlaceReservationDetailActivity extends BaseActivity
             mReservationIndex = bundle.getInt(NAME_INTENT_EXTRA_DATA_BOOKINGIDX);
             mImageUrl = bundle.getString(NAME_INTENT_EXTRA_DATA_URL);
             mIsDeepLink = bundle.getBoolean(NAME_INTENT_EXTRA_DATA_DEEPLINK, false);
+            mBookingState = bundle.getInt(NAME_INTENT_EXTRA_DATA_BOOKING_STATE);
         }
 
         if (mReservationIndex <= 0)
@@ -76,8 +81,6 @@ public abstract class PlaceReservationDetailActivity extends BaseActivity
             Util.restartApp(this);
             return;
         }
-
-        AnalyticsManager.getInstance(this).recordScreen(this, AnalyticsManager.Screen.BOOKING_DETAIL, null);
     }
 
     @Override
@@ -230,6 +233,7 @@ public abstract class PlaceReservationDetailActivity extends BaseActivity
             }
 
             mPlaceReservationDetailLayout.collapseMap();
+            ((StayReservationDetailLayout) mPlaceReservationDetailLayout).setRecommendGourmetButtonAnimation(true);
         } else
         {
             super.onBackPressed();

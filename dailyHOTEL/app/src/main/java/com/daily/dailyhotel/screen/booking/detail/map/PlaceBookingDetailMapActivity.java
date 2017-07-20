@@ -15,6 +15,8 @@ public abstract class PlaceBookingDetailMapActivity extends BaseActivity<PlaceBo
     protected static final String INTENT_EXTRA_DATA_TITLE = "title";
     protected static final String INTENT_EXTRA_DATA_PLACEBOOKINGDAY = "placeBookingDay";
     protected static final String INTENT_EXTRA_DATA_PLACE_LIST = "placeList";
+    protected static final String INTENT_EXTRA_DATA_PLACE_LOCATION = "placeLocation";
+    protected static final String INTENT_EXTRA_DATA_PLACE_NAME = "placeName";
 
     static final int REQUEST_CODE_PERMISSION_MANAGER = 10000;
     static final int REQUEST_CODE_SETTING_LOCATION = 10001;

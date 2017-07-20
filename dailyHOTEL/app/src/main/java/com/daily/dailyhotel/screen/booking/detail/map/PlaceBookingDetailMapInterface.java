@@ -31,4 +31,6 @@ public interface PlaceBookingDetailMapInterface extends BaseDialogViewInterface
     Observable<Long> getLocationAnimation();
 
     void setMyLocation(Location location);
+
+    void addMarker(double lat, double lng, String placeName);
 }

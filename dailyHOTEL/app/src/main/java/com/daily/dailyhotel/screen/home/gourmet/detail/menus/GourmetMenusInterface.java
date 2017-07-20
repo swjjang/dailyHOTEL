@@ -10,4 +10,6 @@ public interface GourmetMenusInterface extends BaseDialogViewInterface
     void setSubTitle(String text);
 
     void setGourmetMenus(List<GourmetMenu> gourmetMenuList, int position);
+
+    void setGuideVisible(boolean visible);
 }

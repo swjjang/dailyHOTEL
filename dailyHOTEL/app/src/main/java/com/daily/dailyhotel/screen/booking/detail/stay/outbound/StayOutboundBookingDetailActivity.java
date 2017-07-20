@@ -26,13 +26,15 @@ public class StayOutboundBookingDetailActivity extends BaseActivity<StayOutbound
 
     static final String INTENT_EXTRA_DATA_BOOKING_INDEX = "index";
     static final String INTENT_EXTRA_DATA_IMAGE_URL = "imageUrl";
+    static final String INTENT_EXTRA_DATA_BOOKING_STATE = "bookingState";
 
-    public static Intent newInstance(Context context, int bookingIndex, String imageUrl)
+    public static Intent newInstance(Context context, int bookingIndex, String imageUrl, int bookingState)
     {
         Intent intent = new Intent(context, StayOutboundBookingDetailActivity.class);
 
         intent.putExtra(INTENT_EXTRA_DATA_BOOKING_INDEX, bookingIndex);
         intent.putExtra(INTENT_EXTRA_DATA_IMAGE_URL, imageUrl);
+        intent.putExtra(INTENT_EXTRA_DATA_BOOKING_STATE, bookingState);
 
         return intent;
     }

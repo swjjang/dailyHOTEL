@@ -503,7 +503,7 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
 
                 if (PlacePaymentInformation.PaymentType.VBANK == paymentType)
                 {
-                    if (booking.statusPayment == Booking.WAIT_PAYMENT//
+                    if (booking.statePayment == Booking.PAYMENT_WAITING//
                         && booking.placeName.equalsIgnoreCase(placeName)//
                         && booking.placeType == Booking.PlaceType.STAY//
                         && booking.checkInDateTime.equalsIgnoreCase(checkInDate) == true//
@@ -513,7 +513,7 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
                     }
                 } else
                 {
-                    if (booking.statusPayment != Booking.WAIT_PAYMENT //
+                    if (booking.statePayment != Booking.PAYMENT_WAITING //
                         && booking.readyForRefund == false//
                         && booking.placeName.equalsIgnoreCase(placeName)//
                         && booking.placeType == Booking.PlaceType.STAY//
@@ -568,7 +568,7 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
 
                 if (PlacePaymentInformation.PaymentType.VBANK == paymentType)
                 {
-                    if (booking.statusPayment == Booking.WAIT_PAYMENT//
+                    if (booking.statePayment == Booking.PAYMENT_WAITING//
                         && booking.placeName.equalsIgnoreCase(placeName)//
                         && booking.placeType == Booking.PlaceType.GOURMET//
                         && booking.checkInDateTime.equalsIgnoreCase(visitDate) == true)
@@ -577,7 +577,7 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
                     }
                 } else
                 {
-                    if (booking.statusPayment != Booking.WAIT_PAYMENT//
+                    if (booking.statePayment != Booking.PAYMENT_WAITING//
                         && booking.readyForRefund == false//
                         && booking.placeName.equalsIgnoreCase(placeName)//
                         && booking.placeType == Booking.PlaceType.GOURMET//
@@ -600,22 +600,22 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
     }
 
     boolean startBookingDetail(BaseActivity baseActivity, Booking.PlaceType placeType,//
-                               int reservationIndex, String imageUrl, boolean isDeepLink)
+                               int reservationIndex, String imageUrl, boolean isDeepLink, int bookingState)
     {
         Intent intent;
 
         switch (placeType)
         {
             case STAY:
-                intent = StayReservationDetailActivity.newInstance(baseActivity, reservationIndex, imageUrl, isDeepLink);
+                intent = StayReservationDetailActivity.newInstance(baseActivity, reservationIndex, imageUrl, isDeepLink, bookingState);
                 break;
 
             case GOURMET:
-                intent = GourmetReservationDetailActivity.newInstance(baseActivity, reservationIndex, imageUrl, isDeepLink);
+                intent = GourmetReservationDetailActivity.newInstance(baseActivity, reservationIndex, imageUrl, isDeepLink, bookingState);
                 break;
 
             case STAY_OUTBOUND:
-                intent = StayOutboundBookingDetailActivity.newInstance(baseActivity, reservationIndex, imageUrl);
+                intent = StayOutboundBookingDetailActivity.newInstance(baseActivity, reservationIndex, imageUrl, bookingState);
                 break;
 
             default:
@@ -623,6 +623,24 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
         }
 
         baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_BOOKING_DETAIL);
+
+        switch (bookingState)
+        {
+            case Booking.BOOKING_STATE_WAITING_REFUND:
+                AnalyticsManager.getInstance(baseActivity).recordEvent(AnalyticsManager.Category.BOOKING_STATUS//
+                    , AnalyticsManager.Action.BOOKING_DETAIL_CLICK, AnalyticsManager.Label.CANCELLEATION_PROGRESS, null);
+                break;
+
+            case Booking.BOOKING_STATE_BEFORE_USE:
+                AnalyticsManager.getInstance(baseActivity).recordEvent(AnalyticsManager.Category.BOOKING_STATUS//
+                    , AnalyticsManager.Action.BOOKING_DETAIL_CLICK, AnalyticsManager.Label.COMPLETE_PAYMENT, null);
+                break;
+
+            case Booking.BOOKING_STATE_AFTER_USE:
+                AnalyticsManager.getInstance(baseActivity).recordEvent(AnalyticsManager.Category.BOOKING_STATUS//
+                    , AnalyticsManager.Action.BOOKING_DETAIL_CLICK, AnalyticsManager.Label.POST_VISIT, null);
+                break;
+        }
 
         return true;
     }
@@ -665,9 +683,9 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
                 waitRefundList.add(booking);
             } else
             {
-                switch (booking.statusPayment)
+                switch (booking.statePayment)
                 {
-                    case Booking.COMPLETED_PAYMENT:
+                    case Booking.PAYMENT_COMPLETED:
                         booking.isUsed = DailyCalendar.compareDateDay(DailyCalendar.convertDateFormatString(booking.checkOutDateTime, "yyyy-MM-dd", DailyCalendar.ISO_8601_FORMAT)//
                             , mCommonDateTime.currentDateTime) < 0;
 
@@ -680,7 +698,7 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
                         }
                         break;
 
-                    case Booking.WAIT_PAYMENT:
+                    case Booking.PAYMENT_WAITING:
                         depositWaitingList.add(booking);
                         break;
                 }
@@ -771,8 +789,12 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
 
             for (Booking booking : waitRefundList)
             {
+                booking.bookingState = Booking.BOOKING_STATE_WAITING_REFUND;
                 listItemList.add(new ListItem(ListItem.TYPE_ENTRY, booking));
             }
+
+            AnalyticsManager.getInstance(getContext()).recordEvent(AnalyticsManager.Category.BOOKING_STATUS//
+                , AnalyticsManager.Action.BOOKING_STATUS_CHECK, AnalyticsManager.Label.CANCELLEATION_PROGRESS, null);
         }
 
         // 입금 대기가 있는 경우.
@@ -785,8 +807,12 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
 
             for (Booking booking : depositWaitingList)
             {
+                booking.bookingState = Booking.BOOKING_STATE_NONE;
                 listItemList.add(new ListItem(ListItem.TYPE_ENTRY, booking));
             }
+
+            AnalyticsManager.getInstance(getContext()).recordEvent(AnalyticsManager.Category.BOOKING_STATUS//
+                , AnalyticsManager.Action.BOOKING_STATUS_CHECK, AnalyticsManager.Label.TEMPORARY_ACCOUNT, null);
         }
 
         // 결제 완료가 있는 경우.
@@ -799,8 +825,12 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
 
             for (Booking booking : beforeUseList)
             {
+                booking.bookingState = Booking.BOOKING_STATE_BEFORE_USE;
                 listItemList.add(new ListItem(ListItem.TYPE_ENTRY, booking));
             }
+
+            AnalyticsManager.getInstance(getContext()).recordEvent(AnalyticsManager.Category.BOOKING_STATUS//
+                , AnalyticsManager.Action.BOOKING_STATUS_CHECK, AnalyticsManager.Label.COMPLETE_PAYMENT, null);
         }
 
         // 이용 완료가 있는 경우.
@@ -813,8 +843,12 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
 
             for (Booking booking : afterUseList)
             {
+                booking.bookingState = Booking.BOOKING_STATE_AFTER_USE;
                 listItemList.add(new ListItem(ListItem.TYPE_ENTRY, booking));
             }
+
+            AnalyticsManager.getInstance(getContext()).recordEvent(AnalyticsManager.Category.BOOKING_STATUS//
+                , AnalyticsManager.Action.BOOKING_STATUS_CHECK, AnalyticsManager.Label.POST_VISIT, null);
         }
 
         return listItemList;
@@ -971,19 +1005,22 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
 
             Intent intent;
 
-            switch (booking.statusPayment)
+            switch (booking.statePayment)
             {
-                case Booking.COMPLETED_PAYMENT:
-                    if (startBookingDetail(baseActivity, booking.placeType, booking.index, booking.imageUrl, false) == false)
+                case Booking.PAYMENT_COMPLETED:
+                    if (startBookingDetail(baseActivity, booking.placeType, booking.index, booking.imageUrl, false, booking.bookingState) == false)
                     {
                         releaseUiComponent();
                     }
                     break;
 
-                case Booking.WAIT_PAYMENT:
+                case Booking.PAYMENT_WAITING:
                     // 가상계좌 입금대기
                     intent = PaymentWaitActivity.newInstance(baseActivity, booking);
                     baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_VIRTUAL_BOOKING_DETAIL);
+
+                    AnalyticsManager.getInstance(baseActivity).recordEvent(AnalyticsManager.Category.BOOKING_STATUS//
+                        , AnalyticsManager.Action.BOOKING_DETAIL_CLICK, AnalyticsManager.Label.TEMPORARY_ACCOUNT, null);
                     break;
 
                 default:
@@ -1139,7 +1176,7 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
                             }
                         }
 
-                        startBookingDetail(baseActivity, placeType, reservationIndex, imageUrl, true);
+                        startBookingDetail(baseActivity, placeType, reservationIndex, imageUrl, true, Booking.BOOKING_STATE_NONE);
                     }
                 }
             }
@@ -1220,6 +1257,9 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
                                 onRefresh();
                             }
                         };
+
+                        AnalyticsManager.getInstance(baseActivity).recordEvent(AnalyticsManager.Category.BOOKING_STATUS//
+                            , AnalyticsManager.Action.BOOKING_HISTORY_DELETE, AnalyticsManager.ValueType.EMPTY, null);
                     } else
                     {
                         onClickListener = new View.OnClickListener()

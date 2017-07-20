@@ -101,6 +101,14 @@ public class StayCategoryNearByActivity extends BaseActivity
     private StayCategoryNearByNetworkController mNetworkController;
     private DailyLocationFactory mDailyLocationFactory;
 
+    public enum ScreenType
+    {
+        NONE,
+        EMPTY,
+        SEARCH_LOCATION,
+        LIST
+    }
+
     public static Intent newInstance(Context context //
         , TodayDateTime todayDateTime, StayBookingDay stayBookingDay //
         , Location location, DailyCategoryType dailyCategoryType, String callByScreen)
@@ -142,12 +150,30 @@ public class StayCategoryNearByActivity extends BaseActivity
             return;
         }
 
-        mNetworkController.requestAddress(mStayCategoryNearByCuration.getLocation());
+        try
+        {
+            if (mStayCategoryNearByCuration.getLocation() == null)
+            {
+                unLockUI();
 
-        mStayCategoryNearByLayout.setCategoryTabLayoutVisibility(View.INVISIBLE);
-        mStayCategoryNearByLayout.processListLayout();
+                mStayCategoryNearByLayout.setViewTypeVisibility(false);
 
-        mStayCategoryNearByLayout.setCategoryTabLayout(getSupportFragmentManager(), mOnStayListFragmentListener);
+                searchMyLocation();
+            } else
+            {
+                mStayCategoryNearByLayout.setViewTypeVisibility(true);
+
+                // 기본적으로 시작시에 전체 카테고리를 넣는다.
+                mStayCategoryNearByLayout.setCategoryTabLayoutVisibility(View.INVISIBLE);
+                mStayCategoryNearByLayout.setScreenVisible(ScreenType.NONE);
+                mStayCategoryNearByLayout.setCategoryTabLayout(getSupportFragmentManager(), mOnStayListFragmentListener);
+
+                mNetworkController.requestAddress(mStayCategoryNearByCuration.getLocation());
+            }
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+        }
     }
 
     @Override
@@ -345,8 +371,15 @@ public class StayCategoryNearByActivity extends BaseActivity
             mStayCategoryNearByLayout.setOptionFilterSelected(false);
             mStayCategoryNearByLayout.clearCategoryTab();
             mStayCategoryNearByLayout.setCategoryTabLayoutVisibility(View.INVISIBLE);
-            mStayCategoryNearByLayout.processListLayout();
-            mStayCategoryNearByLayout.setCategoryTabLayout(getSupportFragmentManager(), mOnStayListFragmentListener);
+            mStayCategoryNearByLayout.setScreenVisible(ScreenType.NONE);
+
+            if (mStayCategoryNearByCuration.getLocation() == null)
+            {
+                searchMyLocation();
+            } else
+            {
+                mStayCategoryNearByLayout.setCategoryTabLayout(getSupportFragmentManager(), mOnStayListFragmentListener);
+            }
         }
     }
 
@@ -371,7 +404,15 @@ public class StayCategoryNearByActivity extends BaseActivity
             {
                 mStayCategoryNearByCuration.setLocation(changedStayCuration.getLocation());
 
-                searchMyLocation();
+                if (mStayCategoryNearByCuration.getLocation() != null)
+                {
+                    lockUI();
+
+                    onLocationChanged(mStayCategoryNearByCuration.getLocation());
+                } else
+                {
+                    searchMyLocation();
+                }
             } else
             {
                 refreshCurrentFragment(true);
@@ -385,39 +426,53 @@ public class StayCategoryNearByActivity extends BaseActivity
 
     protected void onLocationFailed()
     {
-        StayCurationOption stayCurationOption = (StayCurationOption) mStayCategoryNearByCuration.getCurationOption();
+        mStayCategoryNearByLayout.setCategoryTabLayoutVisibility(View.INVISIBLE);
+        mStayCategoryNearByLayout.setScreenVisible(ScreenType.EMPTY);
 
-        stayCurationOption.setSortType(SortType.DEFAULT);
-        mStayCategoryNearByLayout.setOptionFilterSelected(stayCurationOption.isDefaultFilter() == false);
-
-        refreshCurrentFragment(true);
+//        StayCurationOption stayCurationOption = (StayCurationOption) mStayCategoryNearByCuration.getCurationOption();
+//
+//        stayCurationOption.setSortType(SortType.DEFAULT);
+//        mStayCategoryNearByLayout.setOptionFilterSelected(stayCurationOption.isDefaultFilter() == false);
+//
+//        refreshCurrentFragment(true);
     }
 
     protected void onLocationProviderDisabled()
     {
-        StayCurationOption stayCurationOption = (StayCurationOption) mStayCategoryNearByCuration.getCurationOption();
+        mStayCategoryNearByLayout.setCategoryTabLayoutVisibility(View.INVISIBLE);
+        mStayCategoryNearByLayout.setScreenVisible(ScreenType.EMPTY);
 
-        stayCurationOption.setSortType(SortType.DEFAULT);
-        mStayCategoryNearByLayout.setOptionFilterSelected(stayCurationOption.isDefaultFilter() == false);
-
-        refreshCurrentFragment(true);
+//        StayCurationOption stayCurationOption = (StayCurationOption) mStayCategoryNearByCuration.getCurationOption();
+//
+//        stayCurationOption.setSortType(SortType.DEFAULT);
+//        mStayCategoryNearByLayout.setOptionFilterSelected(stayCurationOption.isDefaultFilter() == false);
+//
+//        refreshCurrentFragment(true);
     }
 
     protected void onLocationChanged(Location location)
     {
         if (location == null)
         {
-            mStayCategoryNearByCuration.getCurationOption().setSortType(SortType.DEFAULT);
-            refreshCurrentFragment(true);
+            mStayCategoryNearByLayout.setCategoryTabLayoutVisibility(View.INVISIBLE);
+            mStayCategoryNearByLayout.setScreenVisible(ScreenType.EMPTY);
         } else
         {
+            mNetworkController.requestAddress(location);
             mStayCategoryNearByCuration.setLocation(location);
 
-            // 만약 sort type이 거리가 아니라면 다른 곳에서 변경 작업이 일어났음으로 갱신하지 않음
-            if (mStayCategoryNearByCuration.getCurationOption().getSortType() == SortType.DISTANCE)
-            {
-                refreshCurrentFragment(true);
-            }
+            mStayCategoryNearByLayout.clearCategoryTab();
+
+            // 기본적으로 시작시에 전체 카테고리를 넣는다.
+            mStayCategoryNearByLayout.setCategoryTabLayoutVisibility(View.INVISIBLE);
+            mStayCategoryNearByLayout.setScreenVisible(ScreenType.NONE);
+            mStayCategoryNearByLayout.setCategoryTabLayout(getSupportFragmentManager(), mOnStayListFragmentListener);
+
+//            // 만약 sort type이 거리가 아니라면 다른 곳에서 변경 작업이 일어났음으로 갱신하지 않음
+//            if (mStayCategoryNearByCuration.getCurationOption().getSortType() == SortType.DISTANCE)
+//            {
+//                refreshCurrentFragment(true);
+//            }
         }
     }
 
@@ -461,21 +516,14 @@ public class StayCategoryNearByActivity extends BaseActivity
 
         mStayCategoryNearByCuration = new StayCategoryNearByCuration();
 
-        if (intent.hasExtra(INTENT_EXTRA_DATA_LOCATION) == true)
-        {
-            location = intent.getParcelableExtra(INTENT_EXTRA_DATA_LOCATION);
+        location = intent.getParcelableExtra(INTENT_EXTRA_DATA_LOCATION);
 
-            if (intent.hasExtra(INTENT_EXTRA_DATA_CALL_BY_SCREEN) == true)
-            {
-                mCallByScreen = intent.getStringExtra(INTENT_EXTRA_DATA_CALL_BY_SCREEN);
-            }
-
-            mStayCategoryNearByCuration.getCurationOption().setDefaultSortType(SortType.DISTANCE);
-        } else
+        if (intent.hasExtra(INTENT_EXTRA_DATA_CALL_BY_SCREEN) == true)
         {
-            finish();
-            return;
+            mCallByScreen = intent.getStringExtra(INTENT_EXTRA_DATA_CALL_BY_SCREEN);
         }
+
+        mStayCategoryNearByCuration.getCurationOption().setDefaultSortType(SortType.DISTANCE);
 
         // 내주변 위치 검색으로 시작하는 경우에는 특정 반경과 거리순으로 시작해야한다.
         mStayCategoryNearByCuration.getCurationOption().setSortType(SortType.DISTANCE);
@@ -699,7 +747,11 @@ public class StayCategoryNearByActivity extends BaseActivity
             }
         } else
         {
-            lockUI();
+            lockUI(false);
+
+            mStayCategoryNearByLayout.clearCategoryTab();
+            mStayCategoryNearByLayout.setCategoryTabLayoutVisibility(View.INVISIBLE);
+            mStayCategoryNearByLayout.setScreenVisible(ScreenType.SEARCH_LOCATION);
 
             if (mDailyLocationFactory == null)
             {
@@ -1059,6 +1111,21 @@ public class StayCategoryNearByActivity extends BaseActivity
                 }
             }
 
+            if (mStayCategoryNearByCuration.getLocation() == null)
+            {
+                searchMyLocation();
+            } else
+            {
+                lockUI();
+
+                mStayCategoryNearByLayout.clearCategoryTab();
+                mStayCategoryNearByLayout.setCategoryTabLayoutVisibility(View.INVISIBLE);
+                mStayCategoryNearByLayout.setScreenVisible(ScreenType.NONE);
+
+                // 기본적으로 시작시에 전체 카테고리를 넣는다.
+                mStayCategoryNearByLayout.setCategoryTabLayout(getSupportFragmentManager(), mOnStayListFragmentListener);
+            }
+
             refreshCurrentFragment(true);
         }
     };
@@ -1280,12 +1347,11 @@ public class StayCategoryNearByActivity extends BaseActivity
             if (categoryList != null && categoryList.size() > 0)
             {
                 mStayCategoryNearByLayout.setCategoryTabLayoutVisibility(View.VISIBLE);
-                mStayCategoryNearByLayout.processListLayout();
                 mStayCategoryNearByLayout.addCategoryTabLayout(categoryList, mOnStayListFragmentListener);
             } else
             {
                 mStayCategoryNearByLayout.setCategoryTabLayoutVisibility(View.GONE);
-                mStayCategoryNearByLayout.showEmptyLayout();
+                mStayCategoryNearByLayout.setScreenVisible(ScreenType.EMPTY);
             }
         }
 
@@ -1410,7 +1476,7 @@ public class StayCategoryNearByActivity extends BaseActivity
             if (isShow == true)
             {
                 mStayCategoryNearByLayout.setCategoryTabLayoutVisibility(View.GONE);
-                mStayCategoryNearByLayout.showEmptyLayout();
+                mStayCategoryNearByLayout.setScreenVisible(ScreenType.EMPTY);
 
                 recordScreenSearchResult(AnalyticsManager.Screen.SEARCH_RESULT_EMPTY);
             } else
@@ -1423,7 +1489,7 @@ public class StayCategoryNearByActivity extends BaseActivity
                     mStayCategoryNearByLayout.setCategoryTabLayoutVisibility(View.VISIBLE);
                 }
 
-                mStayCategoryNearByLayout.showListLayout();
+                mStayCategoryNearByLayout.setScreenVisible(ScreenType.LIST);
             }
 
             StayBookingDay stayBookingDay = mStayCategoryNearByCuration.getStayBookingDay();

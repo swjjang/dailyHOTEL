@@ -242,7 +242,7 @@ public class BookingListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         {
             holder.dataBinding.simpleDraweeView.clearColorFilter();
 
-            if (booking.statusPayment == Booking.WAIT_PAYMENT)
+            if (booking.statePayment == Booking.PAYMENT_WAITING)
             {
                 holder.dataBinding.waitAccountTextView.setVisibility(View.VISIBLE);
                 holder.dataBinding.waitAccountTextView.setText(booking.comment);

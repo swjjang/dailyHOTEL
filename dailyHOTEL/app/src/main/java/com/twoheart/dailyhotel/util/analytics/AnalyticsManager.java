@@ -339,6 +339,21 @@ public class AnalyticsManager
         }
     }
 
+
+    public void recordEvent(String category, String action, String label, long value, Map<String, String> params)
+    {
+        for (BaseAnalyticsManager analyticsManager : mAnalyticsManagerList)
+        {
+            try
+            {
+                analyticsManager.recordEvent(category, action, label, value, params);
+            } catch (Exception e)
+            {
+                ExLog.d(TAG + e.toString());
+            }
+        }
+    }
+
     public void recordDeepLink(DailyDeepLink dailyDeepLink)
     {
         for (BaseAnalyticsManager analyticsManager : mAnalyticsManagerList)
@@ -616,10 +631,15 @@ public class AnalyticsManager
         public static final String BOOKING_LIST = "Booking_BookingStatusList";
         public static final String BOOKING_LIST_EMPTY = "Booking_NoBookingHistory";
         public static final String BOOKING_BEFORE_LOGIN_BOOKING_LIST = "Booking_BeforeLoginBookingList";
+
         //
-        public static final String BOOKING_DETAIL = "BookingDetail_MyBookingInfo";
+        public static final String BOOKINGDETAIL_MYBOOKINGINFO = "BookingDetail_MyBookingInfo";
+        public static final String BOOKINGDETAIL_MYBOOKINGINFO_POST_VISIT = "BookingDetail_MyBookingInfo_post_visit";
+        public static final String BOOKINGDETAIL_MYBOOKINGINFO_TEMPORARY_ACCOUNT = "BookingDetail_MyBookingInfo_temporary_account";
+        public static final String BOOKINGDETAIL_MYBOOKINGINFO_CANCELLATION_PROGRESS = "BookingDetail_MyBookingInfo_cancellation_progress";
         public static final String BOOKING_DETAIL_MAP = "BookingDetail_MapView";
         public static final String BOOKING_DETAIL_RECEIPT = "BookingDetail_Receipt";
+
         //
         public static final String SIGNIN = "Menu_Login";
         public static final String MENU_REGISTRATION = "Menu_Registration";
@@ -663,9 +683,6 @@ public class AnalyticsManager
         public static final String DAILY_GOURMET_AVAILABLE_COUPON_LIST = "DailyGourmet_AvailableCouponList";
         public static final String MENU_COUPON_REGISTRATION = "Menu_CouponRegistration";
         //
-        public static final String DAILYHOTEL_DEPOSITWAITING = "DailyHotel_DepositWaiting";
-        public static final String DAILYGOURMET_DEPOSITWAITING = "DailyGourmet_DepositWaiting";
-
         public static final String SEARCH_MAIN = "SearchScreenView";
         public static final String SEARCH_RESULT = "SearchResultView";
         public static final String SEARCH_RESULT_EMPTY = "SearchResultView_Empty";
@@ -882,6 +899,8 @@ public class AnalyticsManager
         public static final String MENU = "Menu";
         public static final String DEPOSIT_WAITING = "DepositWaiting";
         public static final String BOOKING_INITIALISE = "BookingInitialise";
+        public static final String BOOKING_STATUS_CHECK = "booking_status_check";
+        public static final String BOOKING_DETAIL_CLICK = "booking_detail_click";
         //
         public static final String LOST_PASSWORD_CLICKED = "LostPasswordClicked";
 
@@ -1047,6 +1066,13 @@ public class AnalyticsManager
         public static final String ENDPAYMENT_OUTBOUND = "EndPayment_outbound";
         public static final String PAYMENTUSED_OUTBOUND = "PaymentUsed_outbound";
         public static final String KEYWORD_NOT_MATCH_OUTBOUND = "keyword_not_match_outbound";
+
+        //
+        public static final String BOOKING_HISTORY_DELETE = "booking_history_delete";
+        public static final String BOOKING_ITEM_DETAIL_CLICK = "booking_item_detail_click";
+        public static final String WRITE_REVIEW = "write_review";
+        public static final String MAP_CLICK = "map_click";
+
     }
 
     public static class Category
@@ -1307,6 +1333,12 @@ public class AnalyticsManager
         public static final String CARDPAY = "CardPay";
         public static final String PHONEBILLPAY = "PhoneBillPay";
         public static final String FULLBONUS = "FullBonus";
+
+        // Booking List
+        public static final String POST_VISIT = "post_visit";
+        public static final String TEMPORARY_ACCOUNT = "temporary_account";
+        public static final String COMPLETE_PAYMENT = "complete_payment";
+        public static final String CANCELLEATION_PROGRESS = "cancelleation_progress";
     }
 
     public static class UserType
