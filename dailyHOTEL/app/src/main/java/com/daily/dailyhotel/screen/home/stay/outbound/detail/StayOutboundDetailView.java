@@ -643,7 +643,7 @@ public class StayOutboundDetailView extends BaseDialogView<StayOutboundDetailVie
     }
 
     @Override
-    public void setInitializedTransLayout(String name, String url, boolean callFromMap)
+    public void setInitializedTransLayout(String name, String url)
     {
         if (getViewDataBinding() == null || DailyTextUtils.isTextEmpty(name, url) == true)
         {
@@ -655,11 +655,6 @@ public class StayOutboundDetailView extends BaseDialogView<StayOutboundDetailVie
 
         getViewDataBinding().transImageView.setImageURI(Uri.parse(url));
         getViewDataBinding().transNameTextView.setText(name);
-
-        if (callFromMap == true)
-        {
-            getViewDataBinding().transGradientView.setBackgroundResource(R.color.black_a28);
-        }
 
         if (mImageViewPagerAdapter == null)
         {
@@ -683,7 +678,7 @@ public class StayOutboundDetailView extends BaseDialogView<StayOutboundDetailVie
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     @Override
-    public void setSharedElementTransitionEnabled(boolean enabled)
+    public void setSharedElementTransitionEnabled(boolean enabled, int gradientType)
     {
         if (getViewDataBinding() == null)
         {
@@ -693,17 +688,32 @@ public class StayOutboundDetailView extends BaseDialogView<StayOutboundDetailVie
         if (enabled == true)
         {
             getViewDataBinding().transImageView.setVisibility(View.VISIBLE);
-            getViewDataBinding().transGradientView.setVisibility(View.VISIBLE);
+            getViewDataBinding().transGradientBottomView.setVisibility(View.VISIBLE);
             getViewDataBinding().transTitleLayout.setVisibility(View.VISIBLE);
             getViewDataBinding().transImageView.setTransitionName(getString(R.string.transition_place_image));
-            getViewDataBinding().transGradientView.setTransitionName(getString(R.string.transition_gradient_bottom_view));
-            getViewDataBinding().transGradientView.setBackground(makeShaderFactory());
+            getViewDataBinding().transGradientBottomView.setTransitionName(getString(R.string.transition_gradient_bottom_view));
             getViewDataBinding().transGradientTopView.setTransitionName(getString(R.string.transition_gradient_top_view));
             getViewDataBinding().transNameTextView.setTransitionName(getString(R.string.transition_place_name));
+
+            switch(gradientType)
+            {
+                case StayOutboundDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_LIST:
+                    getViewDataBinding().transGradientBottomView.setBackground(getGradientBottomDrawable());
+                    break;
+
+                case StayOutboundDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_MAP:
+                    getViewDataBinding().transGradientBottomView.setBackgroundResource(R.color.black_a28);
+                    break;
+
+                case StayOutboundDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_NONE:
+                default:
+                    getViewDataBinding().transGradientBottomView.setBackground(null);
+                    break;
+            }
         } else
         {
             getViewDataBinding().transImageView.setVisibility(View.GONE);
-            getViewDataBinding().transGradientView.setVisibility(View.GONE);
+            getViewDataBinding().transGradientBottomView.setVisibility(View.GONE);
             getViewDataBinding().transTitleLayout.setVisibility(View.GONE);
         }
     }
@@ -1506,12 +1516,16 @@ public class StayOutboundDetailView extends BaseDialogView<StayOutboundDetailVie
         getViewDataBinding().bookingTextView.setOnClickListener(this);
     }
 
-
-    private PaintDrawable makeShaderFactory()
+    /**
+     * 리스트에서 사용하는것과 동일한다.
+     *
+     * @return
+     */
+    private PaintDrawable getGradientBottomDrawable()
     {
         // 그라디에이션 만들기.
-        final int colors[] = {Color.parseColor("#ED000000"), Color.parseColor("#E8000000"), Color.parseColor("#E2000000"), Color.parseColor("#66000000"), Color.parseColor("#00000000")};
-        final float positions[] = {0.0f, 0.01f, 0.02f, 0.17f, 0.60f};
+        final int colors[] = {Color.parseColor("#E6000000"), Color.parseColor("#99000000"), Color.parseColor("#1A000000"), Color.parseColor("#00000000"), Color.parseColor("#00000000")};
+        final float positions[] = {0.0f, 0.24f, 0.66f, 0.8f, 1.0f};
 
         PaintDrawable paintDrawable = new PaintDrawable();
         paintDrawable.setShape(new RectShape());

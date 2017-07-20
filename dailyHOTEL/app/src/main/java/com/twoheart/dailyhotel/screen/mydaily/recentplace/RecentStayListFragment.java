@@ -32,6 +32,7 @@ import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.model.time.PlaceBookingDay;
 import com.twoheart.dailyhotel.model.time.StayBookingDay;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
+import com.twoheart.dailyhotel.place.layout.PlaceDetailLayout;
 import com.twoheart.dailyhotel.screen.hotel.detail.StayDetailActivity;
 import com.twoheart.dailyhotel.screen.hotel.preview.StayPreviewActivity;
 import com.twoheart.dailyhotel.util.Constants;
@@ -306,7 +307,7 @@ public class RecentStayListFragment extends RecentPlacesListFragment
 
             Intent intent = StayDetailActivity.newInstance(mBaseActivity //
                 , (StayBookingDay) mPlaceBookingDay, stay.index, stay.name, stay.imageUrl //
-                , analyticsParam, true);
+                , analyticsParam, true, PlaceDetailLayout.TRANS_GRADIENT_BOTTOM_TYPE_LIST);
 
             View simpleDraweeView = view.findViewById(R.id.imageView);
             View gradeTextView = view.findViewById(R.id.gradeTextView);
@@ -331,7 +332,7 @@ public class RecentStayListFragment extends RecentPlacesListFragment
 
             Intent intent = StayDetailActivity.newInstance(mBaseActivity //
                 , (StayBookingDay) mPlaceBookingDay, stay.index, stay.name, stay.imageUrl //
-                , analyticsParam, false);
+                , analyticsParam, false, PlaceDetailLayout.TRANS_GRADIENT_BOTTOM_TYPE_NONE);
 
             mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL);
 
@@ -447,7 +448,7 @@ public class RecentStayListFragment extends RecentPlacesListFragment
                 , stayOutbound.name, imageUrl, StayOutboundDetailActivity.NONE_PRICE//
                 , mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
                 , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
-                , 2, null, true, false, analyticsParam)//
+                , 2, null, true, StayOutboundDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_LIST, analyticsParam)//
                 , REQUEST_CODE_DETAIL, options.toBundle());
         } else
         {
@@ -455,7 +456,7 @@ public class RecentStayListFragment extends RecentPlacesListFragment
                 , stayOutbound.name, imageUrl, StayOutboundDetailActivity.NONE_PRICE//
                 , mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
                 , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
-                , 2, null, false, false, analyticsParam)//
+                , 2, null, false, StayOutboundDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_NONE, analyticsParam)//
                 , REQUEST_CODE_DETAIL);
 
             mBaseActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.hold);

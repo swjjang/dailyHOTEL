@@ -25,6 +25,7 @@ import com.daily.dailyhotel.entity.CommonDateTime;
 import com.daily.dailyhotel.entity.ImageMap;
 import com.daily.dailyhotel.entity.People;
 import com.daily.dailyhotel.entity.StayBookDateTime;
+import com.daily.dailyhotel.entity.StayOutbound;
 import com.daily.dailyhotel.entity.StayOutboundDetail;
 import com.daily.dailyhotel.entity.StayOutboundDetailImage;
 import com.daily.dailyhotel.entity.StayOutboundRoom;
@@ -111,9 +112,10 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
 
     private int mStatus = STATUS_NONE;
 
-    private boolean mIsUsedMultiTransition, mCallFromMap;
+    private boolean mIsUsedMultiTransition;
     private boolean mIsDeepLink;
     private boolean mCheckChangedPrice;
+    private int mGradientType;
 
     public interface StayOutboundDetailAnalyticsInterface extends BaseAnalyticsInterface
     {
@@ -186,7 +188,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
         } else
         {
             mIsUsedMultiTransition = intent.getBooleanExtra(StayOutboundDetailActivity.INTENT_EXTRA_DATA_MULTITRANSITION, false);
-            mCallFromMap = intent.getBooleanExtra(StayOutboundDetailActivity.INTENT_EXTRA_DATA_CALL_FROM_MAP, false);
+            mGradientType = intent.getIntExtra(StayOutboundDetailActivity.INTENT_EXTRA_DATA_CALL_GRADIENT_TYPE, StayOutboundDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_NONE);
             mIsDeepLink = false;
 
             mStayIndex = intent.getIntExtra(StayOutboundDetailActivity.INTENT_EXTRA_DATA_STAY_INDEX, -1);
@@ -221,11 +223,11 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
     {
         if (mIsDeepLink == false && mIsUsedMultiTransition == true)
         {
-            getViewInterface().setSharedElementTransitionEnabled(true);
-            getViewInterface().setInitializedTransLayout(mStayName, mImageUrl, mCallFromMap);
+            getViewInterface().setSharedElementTransitionEnabled(true, mGradientType);
+            getViewInterface().setInitializedTransLayout(mStayName, mImageUrl);
         } else
         {
-            getViewInterface().setSharedElementTransitionEnabled(false);
+            getViewInterface().setSharedElementTransitionEnabled(false, StayOutboundDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_NONE);
             getViewInterface().setInitializedImage(mImageUrl);
         }
 

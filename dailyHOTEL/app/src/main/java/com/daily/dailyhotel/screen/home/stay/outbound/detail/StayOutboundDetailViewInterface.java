@@ -21,9 +21,9 @@ public interface StayOutboundDetailViewInterface extends BaseDialogViewInterface
 
     void setInitializedImage(String url);
 
-    void setInitializedTransLayout(String name, String url, boolean callFromMap);
+    void setInitializedTransLayout(String name, String url);
 
-    void setSharedElementTransitionEnabled(boolean enabled);
+    void setSharedElementTransitionEnabled(boolean enabled, int gradientType);
 
     void setBottomButtonLayout(int status);
 

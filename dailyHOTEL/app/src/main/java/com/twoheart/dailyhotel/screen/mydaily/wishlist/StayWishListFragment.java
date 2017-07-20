@@ -22,6 +22,7 @@ import com.twoheart.dailyhotel.model.time.StayBookingDay;
 import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
+import com.twoheart.dailyhotel.place.layout.PlaceDetailLayout;
 import com.twoheart.dailyhotel.screen.hotel.detail.StayDetailActivity;
 import com.twoheart.dailyhotel.screen.hotel.preview.StayPreviewActivity;
 import com.twoheart.dailyhotel.util.Constants;
@@ -314,7 +315,7 @@ public class StayWishListFragment extends PlaceWishListFragment
 
                 Intent intent = StayDetailActivity.newInstance(mBaseActivity //
                     , (StayBookingDay) mPlaceBookingDay, stay.index, stay.name, stay.imageUrl //
-                    , analyticsParam, true);
+                    , analyticsParam, true, PlaceDetailLayout.TRANS_GRADIENT_BOTTOM_TYPE_LIST);
 
                 View simpleDraweeView = view.findViewById(R.id.imageView);
                 View gradeTextView = view.findViewById(R.id.gradeTextView);
@@ -339,7 +340,7 @@ public class StayWishListFragment extends PlaceWishListFragment
 
                 Intent intent = StayDetailActivity.newInstance(mBaseActivity //
                     , (StayBookingDay) mPlaceBookingDay, stay.index, stay.name, stay.imageUrl //
-                    , analyticsParam, false);
+                    , analyticsParam, false, PlaceDetailLayout.TRANS_GRADIENT_BOTTOM_TYPE_NONE);
 
                 mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL);
 

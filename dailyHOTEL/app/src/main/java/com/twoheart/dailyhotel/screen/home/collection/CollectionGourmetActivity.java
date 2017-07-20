@@ -24,6 +24,7 @@ import com.twoheart.dailyhotel.network.model.RecommendationPlace;
 import com.twoheart.dailyhotel.network.model.RecommendationPlaceList;
 import com.twoheart.dailyhotel.network.model.Sticker;
 import com.twoheart.dailyhotel.network.model.TodayDateTime;
+import com.twoheart.dailyhotel.place.layout.PlaceDetailLayout;
 import com.twoheart.dailyhotel.screen.gourmet.detail.GourmetDetailActivity;
 import com.twoheart.dailyhotel.screen.gourmet.filter.GourmetCalendarActivity;
 import com.twoheart.dailyhotel.screen.gourmet.preview.GourmetPreviewActivity;
@@ -273,20 +274,26 @@ public class CollectionGourmetActivity extends CollectionBaseActivity
                 analyticsParam.setProvince(null);
                 analyticsParam.setTotalListCount(count);
 
-                Intent intent = GourmetDetailActivity.newInstance(CollectionGourmetActivity.this //
-                    , (GourmetBookingDay) mPlaceBookingDay, recommendationGourmet.index, recommendationGourmet.name //
-                    , recommendationGourmet.imageUrl, recommendationGourmet.category, recommendationGourmet.isSoldOut, analyticsParam, true);
-
                 View simpleDraweeView = view.findViewById(R.id.imageView);
                 View nameTextView = view.findViewById(R.id.nameTextView);
                 View gradientTopView = view.findViewById(R.id.gradientTopView);
                 View gradientBottomView = view.findViewById(R.id.gradientView);
 
                 Object mapTag = gradientBottomView.getTag();
+                Intent intent;
 
                 if (mapTag != null && "map".equals(mapTag) == true)
                 {
-                    intent.putExtra(NAME_INTENT_EXTRA_DATA_FROM_MAP, true);
+                    intent = GourmetDetailActivity.newInstance(CollectionGourmetActivity.this //
+                        , (GourmetBookingDay) mPlaceBookingDay, recommendationGourmet.index, recommendationGourmet.name //
+                        , recommendationGourmet.imageUrl, recommendationGourmet.category, recommendationGourmet.isSoldOut//
+                        , analyticsParam, true, PlaceDetailLayout.TRANS_GRADIENT_BOTTOM_TYPE_MAP);
+                } else
+                {
+                    intent = GourmetDetailActivity.newInstance(CollectionGourmetActivity.this //
+                        , (GourmetBookingDay) mPlaceBookingDay, recommendationGourmet.index, recommendationGourmet.name //
+                        , recommendationGourmet.imageUrl, recommendationGourmet.category, recommendationGourmet.isSoldOut//
+                        , analyticsParam, true, PlaceDetailLayout.TRANS_GRADIENT_BOTTOM_TYPE_LIST);
                 }
 
                 ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(CollectionGourmetActivity.this,//
@@ -305,7 +312,8 @@ public class CollectionGourmetActivity extends CollectionBaseActivity
 
                 Intent intent = GourmetDetailActivity.newInstance(CollectionGourmetActivity.this //
                     , (GourmetBookingDay) mPlaceBookingDay, recommendationGourmet.index, recommendationGourmet.name //
-                    , recommendationGourmet.imageUrl, recommendationGourmet.category, recommendationGourmet.isSoldOut, analyticsParam, false);
+                    , recommendationGourmet.imageUrl, recommendationGourmet.category, recommendationGourmet.isSoldOut//
+                    , analyticsParam, false, PlaceDetailLayout.TRANS_GRADIENT_BOTTOM_TYPE_NONE);
 
                 startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMET_DETAIL);
 

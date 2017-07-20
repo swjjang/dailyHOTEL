@@ -44,6 +44,7 @@ import com.twoheart.dailyhotel.network.model.Recommendation;
 import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.base.BaseMenuNavigationFragment;
+import com.twoheart.dailyhotel.place.layout.PlaceDetailLayout;
 import com.twoheart.dailyhotel.screen.common.PermissionManagerActivity;
 import com.twoheart.dailyhotel.screen.event.EventWebActivity;
 import com.twoheart.dailyhotel.screen.gourmet.detail.GourmetDetailActivity;
@@ -693,7 +694,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
 
                         Intent intent = StayDetailActivity.newInstance(mBaseActivity //
                             , stayBookingDay, place.index, place.title, place.imageUrl //
-                            , analyticsParam, true);
+                            , analyticsParam, true, PlaceDetailLayout.TRANS_GRADIENT_BOTTOM_TYPE_NONE);
 
                         if (intent == null)
                         {
@@ -718,7 +719,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
 
                         Intent intent = StayDetailActivity.newInstance(mBaseActivity //
                             , stayBookingDay, place.index, place.title, place.imageUrl //
-                            , analyticsParam, false);
+                            , analyticsParam, false, PlaceDetailLayout.TRANS_GRADIENT_BOTTOM_TYPE_NONE);
 
                         if (intent == null)
                         {
@@ -764,8 +765,8 @@ public class HomeFragment extends BaseMenuNavigationFragment
                         analyticsParam.setTotalListCount(-1);
 
                         Intent intent = GourmetDetailActivity.newInstance(mBaseActivity //
-                            , gourmetBookingDay, place.index, place.title //
-                            , place.imageUrl, place.details.category, place.isSoldOut, analyticsParam, true);
+                            , gourmetBookingDay, place.index, place.title, place.imageUrl, place.details.category//
+                            , place.isSoldOut, analyticsParam, true, PlaceDetailLayout.TRANS_GRADIENT_BOTTOM_TYPE_NONE);
 
                         if (intent == null)
                         {
@@ -789,8 +790,8 @@ public class HomeFragment extends BaseMenuNavigationFragment
                         analyticsParam.setTotalListCount(-1);
 
                         Intent intent = GourmetDetailActivity.newInstance(mBaseActivity //
-                            , gourmetBookingDay, place.index, place.title //
-                            , place.imageUrl, place.details.category, place.isSoldOut, analyticsParam, false);
+                            , gourmetBookingDay, place.index, place.title, place.imageUrl, place.details.category//
+                            , place.isSoldOut, analyticsParam, false, PlaceDetailLayout.TRANS_GRADIENT_BOTTOM_TYPE_NONE);
 
                         if (intent == null)
                         {
@@ -890,7 +891,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
                 , place.title, imageUrl, StayOutboundDetailActivity.NONE_PRICE//
                 , stayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
                 , stayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
-                , 2, null, true, false, analyticsParam)//
+                , 2, null, true, StayOutboundDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_NONE, analyticsParam)//
                 , Constants.CODE_REQUEST_ACTIVITY_STAY_OB_DETAIL, options.toBundle());
         } else
         {
@@ -898,7 +899,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
                 , place.title, imageUrl, StayOutboundDetailActivity.NONE_PRICE//
                 , stayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
                 , stayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
-                , 2, null, false, false, analyticsParam)//
+                , 2, null, false, StayOutboundDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_NONE, analyticsParam)//
                 , Constants.CODE_REQUEST_ACTIVITY_STAY_OB_DETAIL);
 
             mBaseActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.hold);

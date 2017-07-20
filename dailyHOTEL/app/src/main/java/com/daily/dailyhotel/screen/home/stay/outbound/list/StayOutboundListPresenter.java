@@ -792,7 +792,9 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
                 , stayOutbound.name, imageUrl, stayOutbound.total//
                 , mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
                 , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
-                , mPeople.numberOfAdults, mPeople.getChildAgeList(), true, mViewState == ViewState.MAP, analyticsParam)//
+                , mPeople.numberOfAdults, mPeople.getChildAgeList(), true//
+                , mViewState == ViewState.MAP ? StayOutboundDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_MAP : StayOutboundDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_LIST//
+                , analyticsParam)//
                 , StayOutboundListActivity.REQUEST_CODE_DETAIL, options.toBundle());
         } else
         {
@@ -800,7 +802,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
                 , stayOutbound.name, imageUrl, stayOutbound.total//
                 , mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
                 , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
-                , mPeople.numberOfAdults, mPeople.getChildAgeList(), false, mViewState == ViewState.MAP, analyticsParam)//
+                , mPeople.numberOfAdults, mPeople.getChildAgeList(), false, StayOutboundDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_NONE, analyticsParam)//
                 , StayOutboundListActivity.REQUEST_CODE_DETAIL);
         }
 

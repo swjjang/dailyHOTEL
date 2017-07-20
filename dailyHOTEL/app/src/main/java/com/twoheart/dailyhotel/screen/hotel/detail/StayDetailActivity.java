@@ -95,8 +95,8 @@ public class StayDetailActivity extends PlaceDetailActivity
      * @return
      */
     public static Intent newInstance(Context context, StayBookingDay stayBookingDay, int index //
-        , String name, String imageUrl //
-        , AnalyticsParam analyticsParam, boolean isUsedMultiTransition)
+        , String name, String imageUrl, AnalyticsParam analyticsParam//
+        , boolean isUsedMultiTransition, int gradientType)
     {
         Intent intent = new Intent(context, StayDetailActivity.class);
 
@@ -107,6 +107,7 @@ public class StayDetailActivity extends PlaceDetailActivity
         intent.putExtra(NAME_INTENT_EXTRA_DATA_CALENDAR_FLAG, false);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_ANALYTICS_PARAM, analyticsParam);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_USED_MULTITRANSITIOIN, isUsedMultiTransition);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_GRADIENT_TYPE, gradientType);
 
         return intent;
     }
@@ -201,7 +202,7 @@ public class StayDetailActivity extends PlaceDetailActivity
 
             mProductDetailIndex = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_ROOMINDEX, 0);
 
-            initLayout(null, null, null, false);
+            initLayout(null, null, null, PlaceDetailLayout.TRANS_GRADIENT_BOTTOM_TYPE_NONE);
         } else
         {
             mIsDeepLink = false;
@@ -215,7 +216,7 @@ public class StayDetailActivity extends PlaceDetailActivity
             mViewPrice = mAnalyticsParam != null ? mAnalyticsParam.discountPrice : 0;
             Stay.Grade grade = mAnalyticsParam != null ? Stay.Grade.valueOf(mAnalyticsParam.gradeCode) : Stay.Grade.etc;
 
-            boolean isFromMap = intent.hasExtra(NAME_INTENT_EXTRA_DATA_FROM_MAP) == true;
+            int gradientType = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_GRADIENT_TYPE, PlaceDetailLayout.TRANS_GRADIENT_BOTTOM_TYPE_NONE);
 
             mIsUsedMultiTransition = intent.getBooleanExtra(NAME_INTENT_EXTRA_DATA_IS_USED_MULTITRANSITIOIN, false);
 
@@ -227,7 +228,7 @@ public class StayDetailActivity extends PlaceDetailActivity
                 mIsTransitionEnd = true;
             }
 
-            initLayout(placeName, mDefaultImageUrl, grade, isFromMap);
+            initLayout(placeName, mDefaultImageUrl, grade, gradientType);
         }
 
         // VR 여부 판단
@@ -358,16 +359,16 @@ public class StayDetailActivity extends PlaceDetailActivity
         }
     }
 
-    private void initLayout(String placeName, String imageUrl, Stay.Grade grade, boolean isFromMap)
+    private void initLayout(String placeName, String imageUrl, Stay.Grade grade, int gradientType)
     {
         setContentView(mPlaceDetailLayout.onCreateView(R.layout.activity_placedetail));
 
         mPlaceDetailLayout.setStatusBarHeight(this);
-        mPlaceDetailLayout.setIsUsedMultiTransitions(mIsUsedMultiTransition);
+        mPlaceDetailLayout.setIsUsedMultiTransitions(mIsUsedMultiTransition, gradientType);
 
         if (mIsDeepLink == false && mIsUsedMultiTransition == true)
         {
-            initTransLayout(placeName, imageUrl, grade, isFromMap);
+            initTransLayout(placeName, imageUrl, grade);
         } else
         {
             mPlaceDetailLayout.setDefaultImage(imageUrl);
@@ -379,7 +380,7 @@ public class StayDetailActivity extends PlaceDetailActivity
         mOnEventListener.hideActionBar(false);
     }
 
-    private void initTransLayout(String placeName, String imageUrl, Stay.Grade grade, boolean isFromMap)
+    private void initTransLayout(String placeName, String imageUrl, Stay.Grade grade)
     {
         if (DailyTextUtils.isTextEmpty(placeName, imageUrl) == true)
         {
@@ -388,11 +389,6 @@ public class StayDetailActivity extends PlaceDetailActivity
 
         mPlaceDetailLayout.setTransImageView(imageUrl);
         ((StayDetailLayout) mPlaceDetailLayout).setTitleText(grade, placeName);
-
-        if (isFromMap == true)
-        {
-            mPlaceDetailLayout.setTransBottomGradientBackground(R.color.black_a28);
-        }
     }
 
     @Override

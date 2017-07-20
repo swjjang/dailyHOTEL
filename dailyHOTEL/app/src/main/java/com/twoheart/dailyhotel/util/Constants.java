@@ -197,7 +197,7 @@ public interface Constants
     String NAME_INTENT_EXTRA_DATA_IS_DAILYCHOICE = "dailychoice";
     String NAME_INTENT_EXTRA_DATA_RATING_VALUE = "ratingValue";
     String NAME_INTENT_EXTRA_DATA_GRADE = "grade";
-    String NAME_INTENT_EXTRA_DATA_FROM_MAP = "fromMap";
+    String NAME_INTENT_EXTRA_DATA_GRADIENT_TYPE = "gradientType";
     String NAME_INTENT_EXTRA_DATA_BIRTHDAY = "birthday";
     String NAME_INTENT_EXTRA_DATA_IS_CHANGE_WISHLIST = "isChangeWishList";
     String NAME_INTENT_EXTRA_DATA_REVIEW_COMMENT = "reviewComment";

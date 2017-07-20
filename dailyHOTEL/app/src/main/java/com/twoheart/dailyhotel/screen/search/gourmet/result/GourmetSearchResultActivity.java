@@ -35,6 +35,7 @@ import com.twoheart.dailyhotel.model.time.GourmetBookingDay;
 import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.place.activity.PlaceSearchResultActivity;
 import com.twoheart.dailyhotel.place.fragment.PlaceListFragment;
+import com.twoheart.dailyhotel.place.layout.PlaceDetailLayout;
 import com.twoheart.dailyhotel.place.layout.PlaceSearchResultLayout;
 import com.twoheart.dailyhotel.place.networkcontroller.PlaceSearchResultNetworkController;
 import com.twoheart.dailyhotel.screen.gourmet.detail.GourmetDetailActivity;
@@ -879,20 +880,24 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
                 analyticsParam.setProvince(null);
                 analyticsParam.setTotalListCount(listCount);
 
-                Intent intent = GourmetDetailActivity.newInstance(GourmetSearchResultActivity.this //
-                    , mGourmetSearchCuration.getGourmetBookingDay(), gourmet.index, gourmet.name //
-                    , gourmet.imageUrl, gourmet.category, gourmet.isSoldOut, analyticsParam, true);
-
                 View simpleDraweeView = view.findViewById(R.id.imageView);
                 View nameTextView = view.findViewById(R.id.nameTextView);
                 View gradientTopView = view.findViewById(R.id.gradientTopView);
                 View gradientBottomView = view.findViewById(R.id.gradientView);
 
                 Object mapTag = gradientBottomView.getTag();
+                Intent intent;
 
                 if (mapTag != null && "map".equals(mapTag) == true)
                 {
-                    intent.putExtra(NAME_INTENT_EXTRA_DATA_FROM_MAP, true);
+                    intent = GourmetDetailActivity.newInstance(GourmetSearchResultActivity.this //
+                        , mGourmetSearchCuration.getGourmetBookingDay(), gourmet.index, gourmet.name //
+                        , gourmet.imageUrl, gourmet.category, gourmet.isSoldOut, analyticsParam, true, PlaceDetailLayout.TRANS_GRADIENT_BOTTOM_TYPE_MAP);
+                } else
+                {
+                    intent = GourmetDetailActivity.newInstance(GourmetSearchResultActivity.this //
+                        , mGourmetSearchCuration.getGourmetBookingDay(), gourmet.index, gourmet.name //
+                        , gourmet.imageUrl, gourmet.category, gourmet.isSoldOut, analyticsParam, true, PlaceDetailLayout.TRANS_GRADIENT_BOTTOM_TYPE_LIST);
                 }
 
                 ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(GourmetSearchResultActivity.this,//
@@ -911,7 +916,7 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
 
                 Intent intent = GourmetDetailActivity.newInstance(GourmetSearchResultActivity.this //
                     , mGourmetSearchCuration.getGourmetBookingDay(), gourmet.index, gourmet.name //
-                    , gourmet.imageUrl, gourmet.category, gourmet.isSoldOut, analyticsParam, false);
+                    , gourmet.imageUrl, gourmet.category, gourmet.isSoldOut, analyticsParam, false, PlaceDetailLayout.TRANS_GRADIENT_BOTTOM_TYPE_NONE);
 
                 startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMET_DETAIL);
 
