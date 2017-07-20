@@ -38,6 +38,8 @@ public class StayCalendarActivity extends PlaceCalendarActivity
 
     protected boolean mIsChanged;
 
+    private boolean mIsSingleDay;
+
     /**
      * @param context
      * @param todayDateTime
@@ -71,6 +73,8 @@ public class StayCalendarActivity extends PlaceCalendarActivity
         mCallByScreen = intent.getStringExtra(INTENT_EXTRA_DATA_SCREEN);
         final boolean isSelected = intent.getBooleanExtra(INTENT_EXTRA_DATA_ISSELECTED, true);
         boolean isAnimation = intent.getBooleanExtra(INTENT_EXTRA_DATA_ANIMATION, false);
+
+        mIsSingleDay = intent.getBooleanExtra(INTENT_EXTRA_DATA_ISSINGLE_DAY, false);
 
         if (intent.hasExtra(INTENT_EXTRA_DATA_SOLDOUT_LIST) == true)
         {
@@ -120,6 +124,11 @@ public class StayCalendarActivity extends PlaceCalendarActivity
                 setSelectedRangeDay((StayBookingDay) mPlaceBookingDay);
                 checkLastDay();
             }
+        }
+
+        if (mIsSingleDay == true)
+        {
+            DailyToast.showToast(this, getString(R.string.message_calendar_select_single_day), Toast.LENGTH_SHORT);
         }
     }
 
@@ -443,6 +452,14 @@ public class StayCalendarActivity extends PlaceCalendarActivity
 
                     setToolbarText(getString(R.string.label_calendar_hotel_select_checkout));
                     mDayViewList.get(mDayViewList.size() - 1).setEnabled(true);
+
+                    if (mIsSingleDay == true)
+                    {
+                        Calendar checkOutCalendar = (Calendar) calendar.clone();
+                        checkOutCalendar.add(Calendar.DAY_OF_MONTH, 1);
+
+                        checkOutDay = Integer.parseInt(DailyCalendar.format(checkOutCalendar.getTime(), "yyyyMMdd"));
+                    }
                 } else if (calendarDay == checkOutDay)
                 {
                     dayView.performClick();
@@ -522,12 +539,13 @@ public class StayCalendarActivity extends PlaceCalendarActivity
 
     void setAvailableCheckOutDays(View checkInDayView, ArrayList<Integer> availableDayList)
     {
+        if (checkInDayView == null)
+        {
+            checkInDayView = mCheckInDayView;
+        }
+
         if (availableDayList == null || availableDayList.size() == 0)
         {
-            if (checkInDayView == null)
-            {
-                checkInDayView = mCheckInDayView;
-            }
 
             // 이때는 바로 다음 날짜를 강제로 선택 후 판매 완료 다른 날짜 선택 팝업을 띄우기로 함
             if (checkInDayView == null || mDayViewList == null || mDayViewList.size() == 0)
@@ -573,6 +591,15 @@ public class StayCalendarActivity extends PlaceCalendarActivity
                         // do nothing!
                     }
                 });
+            return;
+        }
+
+        if (mIsSingleDay == true)
+        {
+            int checkOutPosition = mDayViewList.indexOf(checkInDayView) + 1;
+            View checkOutDayView = mDayViewList.get(checkOutPosition);
+
+            checkOutDayView.performClick();
             return;
         }
 
