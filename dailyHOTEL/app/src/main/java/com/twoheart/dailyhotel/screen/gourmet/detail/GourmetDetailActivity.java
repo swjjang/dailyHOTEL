@@ -16,6 +16,7 @@ import android.widget.Toast;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.widget.DailyToast;
+import com.daily.dailyhotel.entity.CommonDateTime;
 import com.daily.dailyhotel.entity.GourmetMenu;
 import com.daily.dailyhotel.entity.GourmetMenuImage;
 import com.daily.dailyhotel.repository.local.model.AnalyticsParam;
@@ -44,6 +45,7 @@ import com.twoheart.dailyhotel.screen.common.HappyTalkCategoryDialog;
 import com.twoheart.dailyhotel.screen.common.ImageDetailListActivity;
 import com.twoheart.dailyhotel.screen.common.TrueVRActivity;
 import com.twoheart.dailyhotel.screen.common.ZoomMapActivity;
+import com.twoheart.dailyhotel.screen.gourmet.filter.GourmetCalendarActivity;
 import com.twoheart.dailyhotel.screen.gourmet.filter.GourmetDetailCalendarActivity;
 import com.twoheart.dailyhotel.screen.gourmet.payment.GourmetPaymentActivity;
 import com.twoheart.dailyhotel.screen.mydaily.coupon.SelectGourmetCouponDialogActivity;
@@ -71,6 +73,7 @@ import java.util.Map;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
+import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
@@ -433,6 +436,103 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         //        boolean isDailyChoice = intent.getBooleanExtra(NAME_INTENT_EXTRA_DATA_IS_DAILYCHOICE, false);
 
         return new GourmetDetail(index);
+    }
+
+    @Override
+    protected void requestCommonDateTimeNSoldOutList(int placeIndex)
+    {
+        addCompositeDisposable(Observable.zip(mCommonRemoteImpl.getCommonDateTime() //
+            , mPlaceDetailCalendarImpl.getGourmetUnavailableDates(placeIndex, GourmetCalendarActivity.DAYCOUNT_OF_MAX, false) //
+            , new BiFunction<CommonDateTime, List<String>, TodayDateTime>()
+            {
+                @Override
+                public TodayDateTime apply(@NonNull CommonDateTime commonDateTime, @NonNull List<String> soldOutList) throws Exception
+                {
+                    if (mSoldOutList == null)
+                    {
+                        mSoldOutList = new ArrayList<>();
+                    }
+
+                    mSoldOutList.clear();
+
+                    for (String dayString : soldOutList)
+                    {
+                        int soldOutDay = Integer.parseInt(DailyCalendar.convertDateFormatString(dayString, "yyyy-MM-dd", "yyyyMMdd"));
+                        mSoldOutList.add(soldOutDay);
+                    }
+
+                    TodayDateTime todayDateTime = new TodayDateTime();
+                    todayDateTime.setToday(commonDateTime.openDateTime, commonDateTime.closeDateTime //
+                        , commonDateTime.currentDateTime, commonDateTime.dailyDateTime);
+
+                    return todayDateTime;
+                }
+            }).subscribe(new Consumer<TodayDateTime>()
+        {
+            @Override
+            public void accept(@NonNull TodayDateTime todayDateTime) throws Exception
+            {
+                setCommonDateTime(todayDateTime);
+            }
+        }, new Consumer<Throwable>()
+        {
+            @Override
+            public void accept(@NonNull Throwable throwable) throws Exception
+            {
+                onHandleError(throwable);
+            }
+        }));
+    }
+
+    @Override
+    protected void setCommonDateTime(TodayDateTime todayDateTime)
+    {
+        mTodayDateTime = todayDateTime;
+
+        try
+        {
+            // 체크인 시간이 설정되어 있지 않는 경우 기본값을 넣어준다.
+            if (mPlaceBookingDay == null)
+            {
+                mPlaceBookingDay = new GourmetBookingDay();
+                GourmetBookingDay gourmetBookingDay = (GourmetBookingDay) mPlaceBookingDay;
+
+                gourmetBookingDay.setVisitDay(mTodayDateTime.dailyDateTime);
+            } else
+            {
+                GourmetBookingDay gourmetBookingDay = (GourmetBookingDay) mPlaceBookingDay;
+
+                // 예외 처리로 보고 있는 체크인/체크아웃 날짜가 지나 간경우 다음 날로 변경해준다.
+                // 체크인 날짜 체크
+
+                // 날짜로 비교해야 한다.
+                Calendar todayCalendar = DailyCalendar.getInstance(mTodayDateTime.dailyDateTime, true);
+                Calendar visitCalendar = DailyCalendar.getInstance(gourmetBookingDay.getVisitDay(DailyCalendar.ISO_8601_FORMAT), true);
+
+                // 하루가 지나서 체크인 날짜가 전날짜 인 경우
+                if (todayCalendar.getTimeInMillis() > visitCalendar.getTimeInMillis())
+                {
+                    gourmetBookingDay.setVisitDay(mTodayDateTime.dailyDateTime);
+                }
+            }
+
+            GourmetBookingDay gourmetBookingDay = (GourmetBookingDay) mPlaceBookingDay;
+
+            if (mIsShowCalendar == true)
+            {
+                unLockUI();
+                startCalendar(mTodayDateTime, gourmetBookingDay, mPlaceDetail.index, mSoldOutList, false);
+                return;
+            }
+
+            ((GourmetDetailNetworkController) mPlaceDetailNetworkController).requestHasCoupon(mPlaceDetail.index,//
+                gourmetBookingDay.getVisitDay("yyyy-MM-dd"));
+
+            mPlaceDetailNetworkController.requestPlaceReviewScores(PlaceType.FNB, mPlaceDetail.index);
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+        }
     }
 
     @Override
@@ -902,7 +1002,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         }
     }
 
-    void startCalendar(TodayDateTime todayDateTime, GourmetBookingDay gourmetBookingDay, int placeIndex, boolean isAnimation)
+    void startCalendar(TodayDateTime todayDateTime, GourmetBookingDay gourmetBookingDay, int placeIndex, ArrayList<Integer> soldOutList, boolean isAnimation)
     {
         if (isFinishing() == true || lockUiComponentAndIsLockUiComponent() == true)
         {
@@ -919,7 +1019,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         }
 
         Intent intent = GourmetDetailCalendarActivity.newInstance(GourmetDetailActivity.this, //
-            todayDateTime, gourmetBookingDay, placeIndex, callByScreen, true, isAnimation);
+            todayDateTime, gourmetBookingDay, placeIndex, callByScreen, soldOutList, true, isAnimation);
         startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_CALENDAR);
 
         AnalyticsManager.getInstance(GourmetDetailActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_//
@@ -1445,7 +1545,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         @Override
         public void onCalendarClick()
         {
-            startCalendar(mTodayDateTime, (GourmetBookingDay) mPlaceBookingDay, mPlaceDetail.index, true);
+            startCalendar(mTodayDateTime, (GourmetBookingDay) mPlaceBookingDay, mPlaceDetail.index, mSoldOutList, true);
         }
 
         @Override
@@ -1467,57 +1567,6 @@ public class GourmetDetailActivity extends PlaceDetailActivity
 
     private GourmetDetailNetworkController.OnNetworkControllerListener mOnNetworkControllerListener = new GourmetDetailNetworkController.OnNetworkControllerListener()
     {
-        @Override
-        public void onCommonDateTime(TodayDateTime todayDateTime)
-        {
-            mTodayDateTime = todayDateTime;
-
-            try
-            {
-                // 체크인 시간이 설정되어 있지 않는 경우 기본값을 넣어준다.
-                if (mPlaceBookingDay == null)
-                {
-                    mPlaceBookingDay = new GourmetBookingDay();
-                    GourmetBookingDay gourmetBookingDay = (GourmetBookingDay) mPlaceBookingDay;
-
-                    gourmetBookingDay.setVisitDay(mTodayDateTime.dailyDateTime);
-                } else
-                {
-                    GourmetBookingDay gourmetBookingDay = (GourmetBookingDay) mPlaceBookingDay;
-
-                    // 예외 처리로 보고 있는 체크인/체크아웃 날짜가 지나 간경우 다음 날로 변경해준다.
-                    // 체크인 날짜 체크
-
-                    // 날짜로 비교해야 한다.
-                    Calendar todayCalendar = DailyCalendar.getInstance(mTodayDateTime.dailyDateTime, true);
-                    Calendar visitCalendar = DailyCalendar.getInstance(gourmetBookingDay.getVisitDay(DailyCalendar.ISO_8601_FORMAT), true);
-
-                    // 하루가 지나서 체크인 날짜가 전날짜 인 경우
-                    if (todayCalendar.getTimeInMillis() > visitCalendar.getTimeInMillis())
-                    {
-                        gourmetBookingDay.setVisitDay(mTodayDateTime.dailyDateTime);
-                    }
-                }
-
-                GourmetBookingDay gourmetBookingDay = (GourmetBookingDay) mPlaceBookingDay;
-
-                if (mIsShowCalendar == true)
-                {
-                    unLockUI();
-                    startCalendar(mTodayDateTime, gourmetBookingDay, mPlaceDetail.index, false);
-                    return;
-                }
-
-                ((GourmetDetailNetworkController) mPlaceDetailNetworkController).requestHasCoupon(mPlaceDetail.index,//
-                    gourmetBookingDay.getVisitDay("yyyy-MM-dd"));
-
-                mPlaceDetailNetworkController.requestPlaceReviewScores(PlaceType.FNB, mPlaceDetail.index);
-            } catch (Exception e)
-            {
-                ExLog.e(e.toString());
-            }
-        }
-
         @Override
         public void onUserProfile(Customer user, String birthday, boolean isDailyUser, boolean isVerified, boolean isPhoneVerified)
         {

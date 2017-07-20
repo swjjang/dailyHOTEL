@@ -9,6 +9,7 @@ import android.widget.Toast;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.widget.DailyToast;
+import com.daily.dailyhotel.repository.remote.PlaceDetailCalendarImpl;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.time.StayBookingDay;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
@@ -19,11 +20,18 @@ import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
+import io.reactivex.schedulers.Schedulers;
 import retrofit2.Call;
 import retrofit2.Response;
 
@@ -35,8 +43,10 @@ public class StayDetailCalendarActivity extends StayCalendarActivity
     private boolean mIsSingleDay;
     private boolean mOverseas;
 
+    private PlaceDetailCalendarImpl mPlaceDetailCalendarImpl;
+
     public static Intent newInstance(Context context, TodayDateTime todayDateTime, StayBookingDay stayBookingDay //
-        , boolean overseas, int hotelIndex, String screen, boolean isSelected//
+        , boolean overseas, int hotelIndex, String screen, ArrayList<Integer> soldOutList, boolean isSelected//
         , boolean isAnimation, boolean isSingleDay)
     {
         Intent intent = new Intent(context, StayDetailCalendarActivity.class);
@@ -48,6 +58,7 @@ public class StayDetailCalendarActivity extends StayCalendarActivity
         intent.putExtra(INTENT_EXTRA_DATA_ISSELECTED, isSelected);
         intent.putExtra(INTENT_EXTRA_DATA_ANIMATION, isAnimation);
         intent.putExtra(INTENT_EXTRA_DATA_ISSINGLE_DAY, isSingleDay);
+        intent.putIntegerArrayListExtra(INTENT_EXTRA_DATA_SOLDOUT_LIST, soldOutList);
 
         return intent;
     }
@@ -55,6 +66,8 @@ public class StayDetailCalendarActivity extends StayCalendarActivity
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
+        mPlaceDetailCalendarImpl = new PlaceDetailCalendarImpl(this);
+
         Intent intent = getIntent();
         mHotelIndex = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_HOTELIDX, -1);
         mOverseas = intent.getBooleanExtra(INTENT_EXTRA_DATA_OVERSEAS, false);
@@ -87,11 +100,11 @@ public class StayDetailCalendarActivity extends StayCalendarActivity
 
                 if (mIsSingleDay == true)
                 {
-                    for (int i = 0; i < mDailyViews.length; i++)
+                    for (int i = 0; i < mDayViewList.size(); i++)
                     {
-                        if (view == mDailyViews[i] && i < mDailyViews.length - 1)
+                        if (view == mDayViewList.get(i) && i < mDayViewList.size() - 1)
                         {
-                            super.onClick(mDailyViews[i + 1]);
+                            super.onClick(mDayViewList.get(i + 1));
                             break;
                         }
                     }
@@ -202,6 +215,77 @@ public class StayDetailCalendarActivity extends StayCalendarActivity
         String confirm = getResources().getString(R.string.dialog_btn_text_confirm);
 
         showSimpleDialog(title, message, confirm, null);
+    }
+
+    @Override
+    void getAvailableCheckOutDays(final View checkInDayView)
+    {
+        lockUI();
+
+        int index = mDayViewList.indexOf(checkInDayView);
+        if (index != -1)
+        {
+            for (int i = 0; i < index; i++)
+            {
+                updateAvailableDayView(mDayViewList.get(i), false);
+            }
+        }
+
+        Calendar calendar = DailyCalendar.getInstance();
+
+        String checkInDate = null;
+
+        try
+        {
+            Day checkInDay = (Day) checkInDayView.getTag();
+            DailyCalendar.setCalendarDateString(calendar, checkInDay.dateTime);
+
+            checkInDate = DailyCalendar.format(calendar.getTime(), "yyyy-MM-dd");
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+        }
+
+        if (DailyTextUtils.isTextEmpty(checkInDate) == true)
+        {
+            unLockUI();
+            return;
+        }
+
+        addCompositeDisposable(mPlaceDetailCalendarImpl.getStayAvailableCheckOutDates( //
+            mHotelIndex, StayCalendarActivity.DAYCOUNT_OF_MAX, checkInDate).observeOn(Schedulers.io())//
+            .map(new Function<List<String>, ArrayList<Integer>>()
+            {
+                @Override
+                public ArrayList<Integer> apply(@NonNull List<String> stringList) throws Exception
+                {
+                    ArrayList<Integer> availableDayList = new ArrayList<>();
+
+                    for (String dayString : stringList)
+                    {
+                        int availableDay = Integer.parseInt(DailyCalendar.convertDateFormatString(dayString, "yyyy-MM-dd", "yyyyMMdd"));
+                        availableDayList.add(availableDay);
+                    }
+
+                    return availableDayList;
+                }
+            }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<ArrayList<Integer>>()
+            {
+                @Override
+                public void accept(@NonNull ArrayList<Integer> availableDayList) throws Exception
+                {
+                    unLockUI();
+
+                    setAvailableCheckOutDays(checkInDayView, availableDayList);
+                }
+            }, new Consumer<Throwable>()
+            {
+                @Override
+                public void accept(@NonNull Throwable throwable) throws Exception
+                {
+                    onHandleError(throwable);
+                }
+            }));
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -154,10 +154,6 @@ public class DailyCalendar
      * @param calendar
      * @param dateString ISO8601타입이 아니면 안받아줌.
      */
-    /**
-     * @param calendar
-     * @param dateString ISO8601타입이 아니면 안받아줌.
-     */
     public static void setCalendarDateString(Calendar calendar, String dateString) throws Exception
     {
         if (calendar == null || DailyTextUtils.isTextEmpty(dateString) == true)
