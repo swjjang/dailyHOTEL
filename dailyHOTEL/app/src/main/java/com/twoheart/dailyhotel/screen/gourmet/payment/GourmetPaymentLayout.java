@@ -86,7 +86,7 @@ public class GourmetPaymentLayout extends BaseLayout implements View.OnClickList
     private View mSelectedSimpleCardLayout;
     //
     private View mRefundPolicyLayout;
-    private TextView mRefundPolicyTitleTextView, mVendorNameTextView;
+    private TextView mRefundPolicyTitleTextView, mVendorBusinessNameTextView;
     private View mThirdPartTermsLayout;
     private View mArrowImageView;
     private CheckBox mAgreeThirdPartyCheckBox;
@@ -322,7 +322,7 @@ public class GourmetPaymentLayout extends BaseLayout implements View.OnClickList
         mRefundPolicyLayout = view.findViewById(R.id.refundPolicyLayout);
         mRefundPolicyTitleTextView = (TextView) view.findViewById(R.id.refundPolicyTitleTextView);
         mArrowImageView = view.findViewById(R.id.arrowImageView);
-        mVendorNameTextView = (TextView) view.findViewById(R.id.vendorNameTextView);
+        mVendorBusinessNameTextView = (TextView) view.findViewById(R.id.vendorNameTextView);
         mThirdPartTermsLayout = view.findViewById(R.id.thirdPartyTermsLayout);
         mAgreeThirdPartyCheckBox = (CheckBox) view.findViewById(R.id.agreePersonalInformationCheckBox);
         mArrowImageView.setOnClickListener(this);
@@ -644,14 +644,14 @@ public class GourmetPaymentLayout extends BaseLayout implements View.OnClickList
         }
     }
 
-    public void setVendorName(String vendorName)
+    public void setVendorBusinessName(String businessName)
     {
-        if (mVendorNameTextView == null)
+        if (mVendorBusinessNameTextView == null)
         {
             return;
         }
 
-        mVendorNameTextView.setText(vendorName);
+        mVendorBusinessNameTextView.setText(businessName);
     }
 
     public void setTicketCount(int count)

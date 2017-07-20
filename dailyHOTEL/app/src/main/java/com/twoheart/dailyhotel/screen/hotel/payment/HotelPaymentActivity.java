@@ -2254,6 +2254,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
                             int discount = dataJSONObject.getInt("discount_total");
                             boolean isOnSale = dataJSONObject.getBoolean("on_sale");
                             int availableRooms = dataJSONObject.getInt("available_rooms");
+                            String businessName = dataJSONObject.getString("business_name");
                             boolean isNRD = false;
 
                             boolean noParking = false;
@@ -2322,7 +2323,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
                             }
 
                             mHotelPaymentLayout.setVisitTypeInformation(stayPaymentInformation);
-                            mHotelPaymentLayout.setVendorName(mPlaceName);
+                            mHotelPaymentLayout.setVendorBusinessName(businessName);
 
                             // 판매 중지 상품으로 호텔 리스트로 복귀 시킨다.
                             if (isOnSale == false || availableRooms == 0)

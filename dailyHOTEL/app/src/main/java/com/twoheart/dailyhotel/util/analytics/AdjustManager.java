@@ -537,7 +537,7 @@ public class AdjustManager extends BaseAnalyticsManager
             if (AnalyticsManager.Action.AROUND_SEARCH_NOT_FOUND.equalsIgnoreCase(action) == true //
                 || AnalyticsManager.Action.AROUND_SEARCH_CLICKED.equalsIgnoreCase(action) == true //
                 || AnalyticsManager.Action.KEYWORD_NOT_FOUND.equalsIgnoreCase(action) == true //
-                || AnalyticsManager.Action.KEYWORD.equalsIgnoreCase(action) == true //
+                || AnalyticsManager.Action.KEYWORD_.equalsIgnoreCase(action) == true //
                 || AnalyticsManager.Action.RECENT_KEYWORD.equalsIgnoreCase(action) == true //
                 || AnalyticsManager.Action.RECENT_KEYWORD_NOT_FOUND.equalsIgnoreCase(action) == true)
             {

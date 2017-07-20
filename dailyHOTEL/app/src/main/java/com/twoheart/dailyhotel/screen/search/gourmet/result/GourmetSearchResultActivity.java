@@ -917,6 +917,35 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
 
                 overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
             }
+
+            AnalyticsManager.getInstance(GourmetSearchResultActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                , AnalyticsManager.Action.GOURMET_ITEM_CLICK, Integer.toString(gourmet.index), null);
+
+            if (gourmet.availableTicketNumbers == 0 || gourmet.availableTicketNumbers < gourmet.minimumOrderQuantity || gourmet.expired == true)
+            {
+                switch (mSearchType)
+                {
+                    case AUTOCOMPLETE:
+                        AnalyticsManager.getInstance(GourmetSearchResultActivity.this).recordEvent(AnalyticsManager.Category.SOLDOUT_GOURMET_ITEM_CLICK//
+                            , AnalyticsManager.Action.AUTO_SEARCH, Integer.toString(gourmet.index), null);
+                        break;
+
+                    case LOCATION:
+                        AnalyticsManager.getInstance(GourmetSearchResultActivity.this).recordEvent(AnalyticsManager.Category.SOLDOUT_GOURMET_ITEM_CLICK//
+                            , AnalyticsManager.Action.NEARBY, Integer.toString(gourmet.index), null);
+                        break;
+
+                    case RECENT:
+                        AnalyticsManager.getInstance(GourmetSearchResultActivity.this).recordEvent(AnalyticsManager.Category.SOLDOUT_GOURMET_ITEM_CLICK//
+                            , AnalyticsManager.Action.RECENT, Integer.toString(gourmet.index), null);
+                        break;
+
+                    case SEARCHES:
+                        AnalyticsManager.getInstance(GourmetSearchResultActivity.this).recordEvent(AnalyticsManager.Category.SOLDOUT_GOURMET_ITEM_CLICK//
+                            , AnalyticsManager.Action.KEYWORD, Integer.toString(gourmet.index), null);
+                        break;
+                }
+            }
         }
 
         @Override

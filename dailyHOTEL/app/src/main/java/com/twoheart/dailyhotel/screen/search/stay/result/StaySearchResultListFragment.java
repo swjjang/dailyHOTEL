@@ -10,10 +10,14 @@ import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.layout.PlaceListLayout;
 import com.twoheart.dailyhotel.screen.hotel.list.StayListFragment;
 import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import io.reactivex.Observable;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.functions.Consumer;
 import retrofit2.Call;
 import retrofit2.Response;
 
@@ -119,6 +123,52 @@ public class StaySearchResultListFragment extends StayListFragment
                 {
                     ((OnStaySearchResultListFragmentListener) mOnPlaceListFragmentListener).onCategoryList(categoryList);
                     mOnPlaceListFragmentListener.onSearchCountUpdate(totalCount, maxCount);
+
+                    Observable.just(totalCount).subscribe(new Consumer<Integer>()
+                    {
+                        @Override
+                        public void accept(@NonNull Integer integer) throws Exception
+                        {
+                            int soldOutCount = 0;
+                            for (Stay stay : list)
+                            {
+                                if (stay.availableRooms == 0)
+                                {
+                                    soldOutCount++;
+                                }
+                            }
+
+                            switch (mSearchType)
+                            {
+                                case AUTOCOMPLETE:
+                                    AnalyticsManager.getInstance(getContext()).recordEvent(AnalyticsManager.Category.AUTO_SEARCH_RESULT//
+                                        , ((StaySearchCuration) mStayCuration).getKeyword().name, integer.toString(), soldOutCount, null);
+                                    break;
+
+                                case LOCATION:
+                                    AnalyticsManager.getInstance(getContext()).recordEvent(AnalyticsManager.Category.NEARBY_SEARCH_RESULT//
+                                        , ((StaySearchCuration) mStayCuration).getKeyword().name, integer.toString(), soldOutCount, null);
+                                    break;
+
+                                case RECENT:
+                                    AnalyticsManager.getInstance(getContext()).recordEvent(AnalyticsManager.Category.RECENT_SEARCH_RESULT//
+                                        , ((StaySearchCuration) mStayCuration).getKeyword().name, integer.toString(), soldOutCount, null);
+                                    break;
+
+                                case SEARCHES:
+                                    AnalyticsManager.getInstance(getContext()).recordEvent(AnalyticsManager.Category.KEYWORD_SEARCH_RESULT//
+                                        , ((StaySearchCuration) mStayCuration).getKeyword().name, integer.toString(), soldOutCount, null);
+                                    break;
+                            }
+                        }
+                    }, new Consumer<Throwable>()
+                    {
+                        @Override
+                        public void accept(@NonNull Throwable throwable) throws Exception
+                        {
+
+                        }
+                    });
                 }
 
                 ((OnStaySearchResultListFragmentListener) mOnPlaceListFragmentListener).onStayListCount(totalCount);

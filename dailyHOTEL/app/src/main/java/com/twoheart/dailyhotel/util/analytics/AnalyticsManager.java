@@ -870,7 +870,7 @@ public class AnalyticsManager
 
         public static final String SEARCH_BUTTON_CLICKED = "SearchButtonClicked";
         public static final String KEYWORD_NOT_FOUND = "KeywordNotFound";
-        public static final String KEYWORD = "Keyword";
+        public static final String KEYWORD_ = "Keyword";
         public static final String SEARCH_SCREEN = "SearchScreen";
         public static final String SEARCH_RESULT_VIEW = "SearchResultView";
         //
@@ -1072,6 +1072,10 @@ public class AnalyticsManager
         public static final String BOOKING_ITEM_DETAIL_CLICK = "booking_item_detail_click";
         public static final String WRITE_REVIEW = "write_review";
         public static final String MAP_CLICK = "map_click";
+        public static final String AUTO_SEARCH = "auto_search";
+        public static final String NEARBY = "nearby";
+        public static final String RECENT = "recent";
+        public static final String KEYWORD = "keyword";
 
     }
 
@@ -1114,6 +1118,15 @@ public class AnalyticsManager
         // Stay OutBound
         public static final String AUTOSEARCH_OUTBOUND = "AutoSearch_outbound";
         public static final String AUTOSEARCHNOTFOUND_OUTBOUND = "AutoSearchNotFound_outbound";
+
+        //
+        public static final String AUTO_SEARCH_LIST = "auto_search_list";
+        public static final String AUTO_SEARCH_RESULT = "auto_search_result";
+        public static final String KEYWORD_SEARCH_RESULT = "keyword_search_result";
+        public static final String NEARBY_SEARCH_RESULT = "nearby_search_result";
+        public static final String RECENT_SEARCH_RESULT = "recent_search_result";
+        public static final String SOLDOUT_STAY_ITEM_CLICK = "soldout_stay_item_click";
+        public static final String SOLDOUT_GOURMET_ITEM_CLICK = "soldout_gourmet_item_click";
     }
 
     public static class Label
