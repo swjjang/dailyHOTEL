@@ -1244,6 +1244,10 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
 
                 StayReservationDetailActivity.this.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PLACE_BOOKING_DETAIL_MAP);
 
+                AnalyticsManager.getInstance(StayReservationDetailActivity.this).recordEvent( //
+                    AnalyticsManager.Category.BOOKING_GOURMET_RECOMMEND_LIST_CLICK //
+                    , AnalyticsManager.Action.LIST_CLICK, null, null);
+
             } catch (Exception e)
             {
                 ExLog.d(e.toString());

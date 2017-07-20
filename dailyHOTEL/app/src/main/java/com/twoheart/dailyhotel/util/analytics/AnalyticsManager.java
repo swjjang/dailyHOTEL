@@ -1078,6 +1078,7 @@ public class AnalyticsManager
         public static final String KEYWORD = "keyword";
 
         public static final String GOURMET_RECOMMEND = "gourmet_recommend";
+        public static final String LIST_CLICK = "list_click";
 
     }
 
@@ -1091,7 +1092,6 @@ public class AnalyticsManager
         public static final String HOTEL_SEARCH = "HotelSearches";
         public static final String GOURMET_SEARCH = "GourmetSearches";
         public static final String BOOKING_STATUS = "BookingStatus";
-        public static final String BOOKING_DETAIL = "booking_detail";
         public static final String COUPON_BOX = "CouponBox";
         public static final String INVITE_FRIEND = "InviteFriend";
         public static final String SEARCH_ = "Search";
@@ -1130,6 +1130,9 @@ public class AnalyticsManager
         public static final String RECENT_SEARCH_RESULT = "recent_search_result";
         public static final String SOLDOUT_STAY_ITEM_CLICK = "soldout_stay_item_click";
         public static final String SOLDOUT_GOURMET_ITEM_CLICK = "soldout_gourmet_item_click";
+
+        public static final String BOOKING_DETAIL = "booking_detail";
+        public static final String BOOKING_GOURMET_RECOMMEND_LIST_CLICK = "booking_gourmet_recommend_list_click";
     }
 
     public static class Label
