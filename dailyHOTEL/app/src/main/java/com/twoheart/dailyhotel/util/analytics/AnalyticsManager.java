@@ -1077,6 +1077,9 @@ public class AnalyticsManager
         public static final String RECENT = "recent";
         public static final String KEYWORD = "keyword";
 
+        public static final String GOURMET_RECOMMEND = "gourmet_recommend";
+        public static final String LIST_CLICK = "list_click";
+
     }
 
     public static class Category
@@ -1127,6 +1130,10 @@ public class AnalyticsManager
         public static final String RECENT_SEARCH_RESULT = "recent_search_result";
         public static final String SOLDOUT_STAY_ITEM_CLICK = "soldout_stay_item_click";
         public static final String SOLDOUT_GOURMET_ITEM_CLICK = "soldout_gourmet_item_click";
+
+        public static final String BOOKING_DETAIL = "booking_detail";
+        public static final String BOOKING_GOURMET_RECOMMEND_LIST_CLICK = "booking_gourmet_recommend_list_click";
+        public static final String BOOKING_GOURMET_RECOMMEND_CLICK = "booking_gourmet_recommend_click";
     }
 
     public static class Label
@@ -1352,6 +1359,9 @@ public class AnalyticsManager
         public static final String TEMPORARY_ACCOUNT = "temporary_account";
         public static final String COMPLETE_PAYMENT = "complete_payment";
         public static final String CANCELLEATION_PROGRESS = "cancelleation_progress";
+
+        public static final String Y = "y";
+        public static final String N = "n";
     }
 
     public static class UserType

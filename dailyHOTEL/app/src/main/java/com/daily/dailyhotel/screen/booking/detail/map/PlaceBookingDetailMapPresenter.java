@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.View;
 
-import com.daily.base.BaseAnalyticsInterface;
 import com.daily.base.exception.DuplicateRunException;
 import com.daily.base.exception.PermissionException;
 import com.daily.base.exception.ProviderException;
@@ -74,14 +73,6 @@ public abstract class PlaceBookingDetailMapPresenter extends BaseExceptionPresen
     public void constructorInitialize(PlaceBookingDetailMapActivity activity)
     {
         setContentView(R.layout.activity_place_booking_detail_map_data);
-
-        //        setAnalytics(new StayOutboundListAnalyticsImpl()); // TODO : Analytics
-    }
-
-    @Override
-    public void setAnalytics(BaseAnalyticsInterface analytics)
-    {
-        // TODO : Analytics
     }
 
     @Override

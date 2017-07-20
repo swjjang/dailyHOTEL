@@ -825,6 +825,7 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
                 homePlace.imageUrl = gourmet.imageUrl;
                 homePlace.placeType = PlaceType.FNB;
                 homePlace.isSoldOut = gourmet.isSoldOut;
+                homePlace.distance = gourmet.distance;
 
                 HomeDetails details = new HomeDetails();
                 details.category = gourmet.category;
@@ -1244,6 +1245,10 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
 
                 StayReservationDetailActivity.this.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PLACE_BOOKING_DETAIL_MAP);
 
+                AnalyticsManager.getInstance(StayReservationDetailActivity.this).recordEvent( //
+                    AnalyticsManager.Category.BOOKING_GOURMET_RECOMMEND_LIST_CLICK //
+                    , AnalyticsManager.Action.LIST_CLICK, null, null);
+
             } catch (Exception e)
             {
                 ExLog.d(e.toString());
@@ -1278,9 +1283,11 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
 
             startGourmetDetail(view, homePlace, mTodayDateTime, (StayBookingDetail) mPlaceBookingDetail);
 
-            //            AnalyticsManager.getInstance(mBaseActivity).recordEvent(//
-            //                AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.HOME_RECENTVIEW_CLICK,//
-            //                Integer.toString(recentItem.index), null);
+            String distanceString = String.format("%.1f", homePlace.distance);
+
+            AnalyticsManager.getInstance(StayReservationDetailActivity.this).recordEvent(//
+                AnalyticsManager.Category.BOOKING_GOURMET_RECOMMEND_CLICK, distanceString//
+                , Integer.toString(homePlace.index), null);
         }
 
         @Override
@@ -1484,6 +1491,11 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
                             public void accept(@NonNull ArrayList<HomePlace> homePlaces) throws Exception
                             {
                                 ((StayReservationDetailLayout) mPlaceReservationDetailLayout).setRecommendGourmetData(homePlaces);
+
+                                boolean hasData = !(homePlaces == null || homePlaces.size() == 0);
+
+                                AnalyticsManager.getInstance(StayReservationDetailActivity.this).recordEvent(AnalyticsManager.Category.BOOKING_DETAIL//
+                                    , AnalyticsManager.Action.GOURMET_RECOMMEND, hasData ? AnalyticsManager.Label.Y : AnalyticsManager.Label.N, null);
                             }
                         }, new Consumer<Throwable>()
                         {
@@ -1491,6 +1503,9 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
                             public void accept(@NonNull Throwable throwable) throws Exception
                             {
                                 ((StayReservationDetailLayout) mPlaceReservationDetailLayout).setRecommendGourmetData(null);
+
+                                AnalyticsManager.getInstance(StayReservationDetailActivity.this).recordEvent(AnalyticsManager.Category.BOOKING_DETAIL//
+                                    , AnalyticsManager.Action.GOURMET_RECOMMEND, AnalyticsManager.Label.N, null);
                             }
                         }));
                 }
