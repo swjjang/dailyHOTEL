@@ -125,7 +125,7 @@ public class FacebookManager extends BaseAnalyticsManager
             {
                 ExLog.d(TAG + "Screen : " + screenName + parameters.toString());
             }
-        } else if (AnalyticsManager.Screen.DAILYHOTEL_PAYMENT.equalsIgnoreCase(screenName) == true)
+        } else if (AnalyticsManager.Screen.DAILYHOTEL_BOOKINGINITIALISE.equalsIgnoreCase(screenName) == true)
         {
             AppEventsLogger appEventsLogger = AppEventsLogger.newLogger(mContext);
 
@@ -145,7 +145,7 @@ public class FacebookManager extends BaseAnalyticsManager
             {
                 ExLog.d(TAG + "Screen : " + screenName + parameters.toString());
             }
-        } else if (AnalyticsManager.Screen.DAILYGOURMET_PAYMENT.equalsIgnoreCase(screenName) == true)
+        } else if (AnalyticsManager.Screen.DAILYGOURMET_BOOKINGINITIALISE.equalsIgnoreCase(screenName) == true)
         {
             AppEventsLogger appEventsLogger = AppEventsLogger.newLogger(mContext);
 

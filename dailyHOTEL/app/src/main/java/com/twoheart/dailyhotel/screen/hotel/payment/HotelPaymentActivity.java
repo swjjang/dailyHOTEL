@@ -103,6 +103,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
 
     // GA용 스크린 정의
     String mScreenAnalytics;
+    private int mPlaceListCount;
 
     public static Intent newInstance(Context context, StayProduct stayProduct//
         , StayBookingDay stayBookingDay, String imageUrl, int hotelIndex, boolean isDBenefit //
@@ -194,6 +195,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
         stayPaymentInformation.isDailyChoice = analyticsParam.isDailyChoice;
         stayPaymentInformation.setProvince(analyticsParam.getProvince());
         stayPaymentInformation.addressAreaName = analyticsParam.getAddressAreaName();
+        mPlaceListCount = analyticsParam.totalListCount;
 
         stayPaymentInformation.address = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_ADDRESS);
         stayPaymentInformation.isOverSeas = intent.getBooleanExtra(NAME_INTENT_EXTRA_DATA_ISOVERSEAS, false);
@@ -1394,6 +1396,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
             params.put(AnalyticsManager.KeyType.IS_SHOW_ORIGINAL_PRICE, stayPaymentInformation.showOriginalPriceYn);
             params.put(AnalyticsManager.KeyType.LIST_INDEX, Integer.toString(stayPaymentInformation.entryPosition));
             params.put(AnalyticsManager.KeyType.DAILYCHOICE, stayPaymentInformation.isDailyChoice ? "y" : "n");
+            params.put(AnalyticsManager.KeyType.PLACE_COUNT, Integer.toString(mPlaceListCount));
 
             switch (stayPaymentInformation.discountType)
             {
@@ -2762,7 +2765,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
                                 }
                             } else
                             {
-                                mScreenAnalytics = Screen.DAILYHOTEL_BOOKINGINITIALISE_NOREFUNDS;
+                                mScreenAnalytics = Screen.DAILYHOTEL_BOOKINGINITIALISE;
                             }
                             break;
                         }
@@ -2771,7 +2774,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
                             // 에러가 발생하더라도 결제는 가능하도록 수정
                             mHotelPaymentLayout.setRefundPolicyVisible(false);
 
-                            mScreenAnalytics = Screen.DAILYHOTEL_BOOKINGINITIALISE_NOREFUNDS;
+                            mScreenAnalytics = Screen.DAILYHOTEL_BOOKINGINITIALISE;
                             break;
                     }
 

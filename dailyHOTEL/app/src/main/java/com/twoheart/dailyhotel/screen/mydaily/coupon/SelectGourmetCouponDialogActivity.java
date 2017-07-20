@@ -57,7 +57,7 @@ public class SelectGourmetCouponDialogActivity extends BaseActivity
         intent.putExtra(INTENT_EXTRA_DATE, date);
         intent.putExtra(INTENT_EXTRA_GOURMET_NAME, gourmetName);
         intent.putExtra(INTENT_EXTRA_TICKET_COUNT, ticketCount);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_CALL_BY_SCREEN, AnalyticsManager.Screen.DAILYGOURMET_PAYMENT);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_CALL_BY_SCREEN, AnalyticsManager.Screen.DAILYGOURMET_BOOKINGINITIALISE);
 
         return intent;
     }
@@ -96,7 +96,7 @@ public class SelectGourmetCouponDialogActivity extends BaseActivity
 
         switch (mCallByScreen)
         {
-            case AnalyticsManager.Screen.DAILYGOURMET_PAYMENT:
+            case AnalyticsManager.Screen.DAILYGOURMET_BOOKINGINITIALISE:
             {
                 mGourmetIdx = intent.getIntExtra(INTENT_EXTRA_GOURMET_IDX, -1);
                 mDate = intent.getStringExtra(INTENT_EXTRA_DATE);
@@ -145,7 +145,7 @@ public class SelectGourmetCouponDialogActivity extends BaseActivity
 
         switch (mCallByScreen)
         {
-            case AnalyticsManager.Screen.DAILYGOURMET_PAYMENT:
+            case AnalyticsManager.Screen.DAILYGOURMET_BOOKINGINITIALISE:
             {
                 if (DailyTextUtils.isTextEmpty(mDate) == true)
                 {
@@ -190,7 +190,7 @@ public class SelectGourmetCouponDialogActivity extends BaseActivity
         {
             switch (mCallByScreen)
             {
-                case AnalyticsManager.Screen.DAILYGOURMET_PAYMENT:
+                case AnalyticsManager.Screen.DAILYGOURMET_BOOKINGINITIALISE:
                 {
                     if (mLayout.getCouponCount() == 0)
                     {
@@ -264,7 +264,7 @@ public class SelectGourmetCouponDialogActivity extends BaseActivity
 
             switch (mCallByScreen)
             {
-                case AnalyticsManager.Screen.DAILYGOURMET_PAYMENT:
+                case AnalyticsManager.Screen.DAILYGOURMET_BOOKINGINITIALISE:
                 {
                     if (isEmpty == true)
                     {
@@ -333,7 +333,7 @@ public class SelectGourmetCouponDialogActivity extends BaseActivity
 
             switch (mCallByScreen)
             {
-                case AnalyticsManager.Screen.DAILYGOURMET_PAYMENT:
+                case AnalyticsManager.Screen.DAILYGOURMET_BOOKINGINITIALISE:
                 {
                     if (DailyTextUtils.isTextEmpty(mDate) == true)
                     {
@@ -396,7 +396,7 @@ public class SelectGourmetCouponDialogActivity extends BaseActivity
             {
                 switch (mCallByScreen)
                 {
-                    case AnalyticsManager.Screen.DAILYGOURMET_PAYMENT:
+                    case AnalyticsManager.Screen.DAILYGOURMET_BOOKINGINITIALISE:
                     {
                         Map<String, String> paramsMap = new HashMap<>();
                         paramsMap.put(AnalyticsManager.KeyType.COUPON_NAME, coupon.title);

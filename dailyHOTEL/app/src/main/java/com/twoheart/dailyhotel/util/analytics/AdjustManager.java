@@ -266,7 +266,7 @@ public class AdjustManager extends BaseAnalyticsManager
             {
                 ExLog.d(TAG + "Screen : " + screenName + params.toString());
             }
-        } else if (AnalyticsManager.Screen.DAILYHOTEL_PAYMENT.equalsIgnoreCase(screenName) == true)
+        } else if (AnalyticsManager.Screen.DAILYHOTEL_BOOKINGINITIALISE.equalsIgnoreCase(screenName) == true)
         {
             params.put(Key.SERVICE, AnalyticsManager.ValueType.STAY);
 
@@ -276,7 +276,7 @@ public class AdjustManager extends BaseAnalyticsManager
             {
                 ExLog.d(TAG + "Screen : " + screenName + params.toString());
             }
-        } else if (AnalyticsManager.Screen.DAILYGOURMET_PAYMENT.equalsIgnoreCase(screenName) == true)
+        } else if (AnalyticsManager.Screen.DAILYGOURMET_BOOKINGINITIALISE.equalsIgnoreCase(screenName) == true)
         {
             params.put(Key.SERVICE, AnalyticsManager.ValueType.GOURMET);
 
