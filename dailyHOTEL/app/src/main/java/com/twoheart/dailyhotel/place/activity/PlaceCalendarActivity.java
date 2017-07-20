@@ -6,8 +6,10 @@ import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.graphics.Paint;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.util.Pair;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -20,11 +22,17 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.crashlytics.android.Crashlytics;
+import com.daily.base.exception.BaseException;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
 import com.daily.base.util.VersionUtils;
 import com.daily.base.widget.DailyTextView;
+import com.daily.base.widget.DailyToast;
+import com.daily.dailyhotel.repository.local.ConfigLocalImpl;
+import com.daily.dailyhotel.repository.remote.FacebookRemoteImpl;
+import com.daily.dailyhotel.repository.remote.KakaoRemoteImpl;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.time.PlaceBookingDay;
 import com.twoheart.dailyhotel.network.model.TodayDateTime;
@@ -34,7 +42,14 @@ import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.Util;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
+import retrofit2.HttpException;
 
 public abstract class PlaceCalendarActivity extends BaseActivity implements View.OnClickListener
 {
@@ -44,10 +59,13 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
     protected static final String INTENT_EXTRA_DATA_TODAYDATETIME = "todayDateTime";
     protected static final String INTENT_EXTRA_DATA_ISSINGLE_DAY = "isSingleDay"; // 연박 불가
     protected static final String INTENT_EXTRA_DATA_OVERSEAS = "overseas";
+    protected static final String INTENT_EXTRA_DATA_SOLDOUT_LIST = "soldoutList";
 
     private static final int ANIMATION_DELAY = 200;
 
-    protected View[] mDailyViews;
+    private CompositeDisposable mCompositeDisposable = new CompositeDisposable();
+
+    protected List<View> mDayViewList;
 
     protected View mAnimationLayout; // 애니메이션 되는 뷰
     private View mDisableLayout; // 전체 화면을 덮는 뷰
@@ -65,7 +83,9 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
     ANIMATION_STATE mAnimationState = ANIMATION_STATE.END;
     AnimatorSet mAnimatorSet;
 
-    private int[] mHolidays;
+    protected ArrayList<Integer> mHolidayList;
+
+    protected ArrayList<Integer> mSoldOutDayList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -76,18 +96,23 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
         setStatusBarColor(getResources().getColor(R.color.black_a67));
 
         // 휴일 정보를 얻어온다.
+        initHolidays();
+    }
+
+    private void initHolidays()
+    {
         String calendarHolidays = DailyPreference.getInstance(this).getCalendarHolidays();
 
         if (DailyTextUtils.isTextEmpty(calendarHolidays) == false)
         {
             String[] holidays = calendarHolidays.split("\\,");
-            mHolidays = new int[holidays.length];
+            mHolidayList = new ArrayList<>();
 
             for (int i = 0; i < holidays.length; i++)
             {
                 try
                 {
-                    mHolidays[i] = Integer.parseInt(holidays[i]);
+                    mHolidayList.add(Integer.parseInt(holidays[i]));
                 } catch (NumberFormatException e)
                 {
                     ExLog.e(e.toString());
@@ -102,6 +127,14 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
         super.onRestoreInstanceState(savedInstanceState);
 
         Util.restartApp(this);
+    }
+
+    @Override
+    protected void onDestroy()
+    {
+        clearCompositeDisposable();
+
+        super.onDestroy();
     }
 
     protected void initLayout(int layoutResID, final int dayCountOfMax)
@@ -122,46 +155,174 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
         mDisableLayout = findViewById(R.id.disableLayout);
         mBackgroundView = (View) mExitView.getParent();
 
-        mDailyViews = new View[dayCountOfMax];
+        mDayViewList = new ArrayList<>();
+    }
+
+    protected ArrayList<Pair<String, Day[]>> makeCalendarList(TodayDateTime todayDateTime, int dayCountOfMax)
+    {
+        ArrayList<Pair<String, Day[]>> arrayList = new ArrayList<>();
+
+        Date todayDate;
+
+        try
+        {
+            todayDate = DailyCalendar.convertStringToDate(todayDateTime.dailyDateTime);
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+            return null;
+        }
+
+        Calendar todayCalendar = DailyCalendar.getInstance();
+        todayCalendar.setTime(todayDate);
+
+        ArrayList<Integer> holidayList = new ArrayList<>();
+        if (mHolidayList != null && mHolidayList.size() > 0)
+        {
+            holidayList.addAll(mHolidayList);
+        }
+
+        ArrayList<Integer> soldOutDayList = new ArrayList<>();
+        if (mSoldOutDayList != null && mSoldOutDayList.size() > 0)
+        {
+            soldOutDayList.addAll(mSoldOutDayList);
+        }
+
+        int maxMonth = getMonthInterval(todayCalendar, dayCountOfMax);
+
+        // 초기 설정 - for 문을 돌면서 카운트 감소 됨
+        int dayCount = dayCountOfMax;
+
+        for (int i = 0; i <= maxMonth; i++)
+        {
+            String titleMonth = DailyCalendar.format(todayCalendar.getTime(), "yyyy.MM");
+
+            Pair<Integer, Day[]> daysPair = getMonthCalendar(todayCalendar, dayCount, dayCountOfMax, holidayList, soldOutDayList);
+            Day[] days = null;
+            if (daysPair != null)
+            {
+                dayCount = daysPair.first;
+                days = daysPair.second;
+            }
+
+            arrayList.add(new Pair(titleMonth, days));
+
+            todayCalendar.set(Calendar.DAY_OF_MONTH, 1);
+            todayCalendar.add(Calendar.MONTH, 1);
+        }
+
+        return arrayList;
+    }
+
+    private Pair<Integer, Day[]> getMonthCalendar(Calendar calendar, int dayCount, final int dayCountOfMax, ArrayList<Integer> holidayList, ArrayList<Integer> soldOutDayList)
+    {
+        int todayDayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
+        int maxDayOfMonth = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
+        int todayValue = calendar.get(Calendar.DAY_OF_MONTH);
+
+        boolean isStart = false;
+        boolean isLast = false;
+
+        // 남은 값과 최대 값이 같으면 시작 달력
+        if (dayCount == dayCountOfMax)
+        {
+            isStart = true;
+        }
+
+        // 남은 값이 이달의 최대 값과 같거나 작으면 마지막 달력
+        if (todayValue + dayCount + 1 <= maxDayOfMonth)
+        {
+            isLast = true;
+        }
+
+        maxDayOfMonth = isLast == false ? maxDayOfMonth : todayValue + dayCount + 1;
+
+        int startGap = 0;
+
+        if (isStart == true)
+        {
+            startGap = Calendar.SUNDAY - todayDayOfWeek;
+        }
+
+        Calendar cloneCalendar = (Calendar) calendar.clone();
+        if (startGap != 0)
+        {
+            cloneCalendar.add(Calendar.DAY_OF_MONTH, startGap);
+        }
+
+        int startDayValue = cloneCalendar.get(Calendar.DAY_OF_MONTH);
+        int startDayOfWeek = cloneCalendar.get(Calendar.DAY_OF_WEEK);
+
+        int endCount = dayCount - maxDayOfMonth + todayValue;
+
+        final int LENGTH_OF_WEEK = 7;
+        int length = maxDayOfMonth - startDayValue + 1 + startDayOfWeek;
+        if (length % LENGTH_OF_WEEK != 0)
+        {
+            length += (LENGTH_OF_WEEK - (length % LENGTH_OF_WEEK));
+        }
+
+        Day[] days = new Day[length];
+
+        for (int i = startDayOfWeek - 1; i < length; i++)
+        {
+            int dayValue = cloneCalendar.get(Calendar.DAY_OF_MONTH);
+
+            days[i] = new Day();
+            days[i].dateTime = DailyCalendar.format(cloneCalendar.getTime(), DailyCalendar.ISO_8601_FORMAT);
+            days[i].dayOfMonth = Integer.toString(dayValue);
+            days[i].dayOfWeek = cloneCalendar.get(Calendar.DAY_OF_WEEK);
+            days[i].isHoliday = isHoliday(cloneCalendar, holidayList);
+            days[i].isSoldOut = isSoldOutDay(cloneCalendar, soldOutDayList);
+            days[i].isDefaultDimmed = dayValue < todayValue || isLast == true && dayCount < 0;
+
+            if (isLast == false && dayCount <= endCount)
+            {
+                break;
+            }
+
+            if (days[i].isDefaultDimmed == false)
+            {
+                dayCount--;
+            }
+
+            cloneCalendar.add(Calendar.DAY_OF_MONTH, 1);
+        }
+
+        return new Pair(dayCount, days);
     }
 
     protected void makeCalendar(TodayDateTime mTodayDateTime, int dayCountOfMax)
     {
-        try
+        ArrayList<Pair<String, Day[]>> calendarList = makeCalendarList(mTodayDateTime, dayCountOfMax);
+
+        if (calendarList == null)
         {
-            Calendar calendar = DailyCalendar.getInstance();
-            calendar.setTime(DailyCalendar.convertStringToDate(mTodayDateTime.dailyDateTime));
+            return;
+        }
 
-            int maxMonth = getMonthInterval(calendar, dayCountOfMax);
-            int maxDay = dayCountOfMax;
-            int dayOffset = 0;
+        int size = calendarList.size();
 
-            for (int i = 0; i <= maxMonth; i++)
+        if (mDayViewList == null)
+        {
+            mDayViewList = new ArrayList<>();
+        }
+
+        mDayViewList.clear();
+
+        for (int i = 0; i < size; i++)
+        {
+            Pair<String, Day[]> pair = calendarList.get(i);
+
+            View monthCalendarLayout = getMonthCalendarView(this, pair);
+
+            if (i >= 0 && i < size)
             {
-                int maxDayOfMonth = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
-                int day = calendar.get(Calendar.DAY_OF_MONTH);
-
-                View calendarLayout = getMonthCalendarView(this, dayOffset//
-                    , calendar, day + maxDay - 1 > maxDayOfMonth ? maxDayOfMonth : day + maxDay - 1);
-
-                if (i >= 0 && i < maxMonth)
-                {
-                    calendarLayout.setPadding(calendarLayout.getPaddingLeft(), calendarLayout.getPaddingTop()//
-                        , calendarLayout.getPaddingRight(), calendarLayout.getPaddingBottom() + ScreenUtils.dpToPx(this, 30));
-                }
-
-                mCalendarsLayout.addView(calendarLayout);
-
-                dayOffset += maxDayOfMonth - day + 1;
-                maxDay = dayCountOfMax - dayOffset;
-
-                calendar.set(Calendar.DAY_OF_MONTH, 1);
-                calendar.add(Calendar.MONTH, 1);
+                monthCalendarLayout.setPadding(monthCalendarLayout.getPaddingLeft(), monthCalendarLayout.getPaddingTop()//
+                    , monthCalendarLayout.getPaddingRight(), monthCalendarLayout.getPaddingBottom() + ScreenUtils.dpToPx(this, 30));
             }
-        } catch (Exception e)
-        {
-            ExLog.d(e.toString());
 
+            mCalendarsLayout.addView(monthCalendarLayout);
 
         }
     }
@@ -177,56 +338,76 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
         mTitleTextView.setText(title);
     }
 
-    private View getMonthCalendarView(Context context, final int dayOffset, final Calendar calendar, final int maxDayOfMonth)
+    private View getMonthCalendarView(Context context, Pair<String, Day[]> pair)
     {
-        View calendarLayout = LayoutInflater.from(context).inflate(R.layout.view_calendar, null);
+        View monthCalendarLayout = LayoutInflater.from(context).inflate(R.layout.view_calendar, null);
+        TextView monthTextView = (TextView) monthCalendarLayout.findViewById(R.id.monthTextView);
+        android.support.v7.widget.GridLayout calendarGridLayout = (android.support.v7.widget.GridLayout) monthCalendarLayout.findViewById(R.id.calendarGridLayout);
 
-        TextView monthTextView = (TextView) calendarLayout.findViewById(R.id.monthTextView);
-        android.support.v7.widget.GridLayout calendarGridLayout = (android.support.v7.widget.GridLayout) calendarLayout.findViewById(R.id.calendarGridLayout);
-
-        monthTextView.setText(DailyCalendar.format(calendar.getTime(), "yyyy.MM"));
-
-        // dayString
-        final int day = calendar.get(Calendar.DAY_OF_MONTH);
-        int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK) - 1;
-
-        int length = maxDayOfMonth - day + 1 + dayOfWeek;
-        final int LENGTH_OF_WEEK = 7;
-
-        if (length % LENGTH_OF_WEEK != 0)
-        {
-            length += (LENGTH_OF_WEEK - (length % LENGTH_OF_WEEK));
-        }
-
-        Day[] days = new Day[length];
-
-        Calendar cloneCalendar = (Calendar) calendar.clone();
-
-        for (int i = 0, j = dayOfWeek, k = day; k <= maxDayOfMonth; i++, j++, k++)
-        {
-            days[j] = new Day();
-            days[j].dayOffset = dayOffset + i;
-            days[j].dayString = Integer.toString(cloneCalendar.get(Calendar.DAY_OF_MONTH));
-            days[j].dayOfWeek = cloneCalendar.get(Calendar.DAY_OF_WEEK);
-
-            cloneCalendar.add(Calendar.DAY_OF_MONTH, 1);
-        }
+        monthTextView.setText(pair.first);
 
         View dayView;
-
-        for (Day dayClass : days)
+        for (Day day : pair.second)
         {
-            dayView = getDayView(context, dayClass);
+            dayView = getDayView(context, day);
 
-            if (dayClass != null)
+            if (day != null && day.isDefaultDimmed == false)
             {
-                mDailyViews[dayClass.dayOffset] = dayView;
+                mDayViewList.add(dayView);
             }
 
             calendarGridLayout.addView(dayView);
         }
 
-        return calendarLayout;
+        return monthCalendarLayout;
+    }
+
+    private boolean isHoliday(Calendar calendar, ArrayList<Integer> holidayList)
+    {
+        if (calendar == null)
+        {
+            return false;
+        }
+
+        if (holidayList == null || holidayList.size() == 0)
+        {
+            return false;
+        }
+
+        try
+        {
+            int calendarDay = Integer.parseInt(DailyCalendar.format(calendar.getTime(), "yyyyMMdd"));
+            return holidayList.remove((Integer) calendarDay);
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+        }
+
+        return false;
+    }
+
+    private boolean isSoldOutDay(Calendar calendar, ArrayList<Integer> soldOutDayList)
+    {
+        if (calendar == null)
+        {
+            return false;
+        }
+
+        if (soldOutDayList == null || soldOutDayList.size() == 0)
+        {
+            return false;
+        }
+
+        try
+        {
+            int calendarDay = Integer.parseInt(DailyCalendar.format(calendar.getTime(), "yyyyMMdd"));
+            return soldOutDayList.remove((Integer) calendarDay);
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+        }
+
+        return false;
     }
 
     public View getDayView(Context context, Day day)
@@ -236,7 +417,7 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
         DailyTextView visitTextView = new DailyTextView(context);
         visitTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 11);
         visitTextView.setGravity(Gravity.CENTER_HORIZONTAL);
-        visitTextView.setTextColor(getResources().getColor(R.color.white));
+        visitTextView.setTextColor(context.getResources().getColorStateList(R.color.selector_calendar_default_text_color));
         visitTextView.setDuplicateParentStateEnabled(true);
         visitTextView.setId(R.id.textView);
         visitTextView.setVisibility(View.INVISIBLE);
@@ -249,6 +430,7 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
         DailyTextView dayTextView = new DailyTextView(context);
         dayTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 16);
         dayTextView.setGravity(Gravity.CENTER_HORIZONTAL);
+        dayTextView.setId(R.id.dateTextView);
         dayTextView.setDuplicateParentStateEnabled(true);
 
         RelativeLayout.LayoutParams dayLayoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -272,71 +454,124 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
             relativeLayout.setEnabled(false);
         } else
         {
-            switch (day.dayOfWeek)
-            {
-                // 일요일
-                case Calendar.SUNDAY:
-                    dayTextView.setTextColor(context.getResources().getColorStateList(R.color.selector_calendar_sunday_textcolor));
-                    break;
-
-                case Calendar.SATURDAY:
-                    if (isHoliday(day) == true)
-                    {
-                        dayTextView.setTextColor(context.getResources().getColorStateList(R.color.selector_calendar_sunday_textcolor));
-                    } else
-                    {
-                        dayTextView.setTextColor(context.getResources().getColorStateList(R.color.selector_calendar_saturday_textcolor));
-                    }
-                    break;
-
-                default:
-                    if (isHoliday(day) == true)
-                    {
-                        dayTextView.setTextColor(context.getResources().getColorStateList(R.color.selector_calendar_sunday_textcolor));
-                    } else
-                    {
-                        dayTextView.setTextColor(context.getResources().getColorStateList(R.color.selector_calendar_default_text_color));
-                    }
-                    break;
-            }
-
-            dayTextView.setText(day.dayString);
+            dayTextView.setText(day.dayOfMonth);
             relativeLayout.setTag(day);
         }
+
+        updateDayView(relativeLayout);
 
         relativeLayout.setOnClickListener(this);
 
         return relativeLayout;
     }
 
-    private boolean isHoliday(Day day)
+    protected void updateDayView(View dayView)
     {
-        if (day == null || mHolidays == null || mHolidays.length == 0 || mTodayDateTime == null)
+        if (dayView == null)
         {
-            return false;
+            return;
         }
 
-        Calendar calendar = DailyCalendar.getInstance();
-
-        try
+        Day day = (Day) dayView.getTag();
+        if (day == null)
         {
-            DailyCalendar.setCalendarDateString(calendar, mTodayDateTime.dailyDateTime, day.dayOffset);
+            dayView.setEnabled(false);
+            return;
+        }
 
-            int calendarDay = Integer.parseInt(DailyCalendar.format(calendar.getTime(), "yyyyMMdd"));
+        setDayOfWeekTextColor(dayView);
 
-            for (int holiday : mHolidays)
+        if (dayView.isSelected() == true)
+        {
+            return;
+        }
+
+        setSoldOutTextView(dayView, day.isSoldOut);
+
+        if (day.isSoldOut == true)
+        {
+            dayView.setEnabled(false);
+            return;
+        }
+
+        if (day.isDefaultDimmed == true)
+        {
+            dayView.setEnabled(false);
+        } else
+        {
+            dayView.setEnabled(true);
+        }
+    }
+
+    protected void setSoldOutTextView(View dayView , boolean isShow)
+    {
+        if (dayView== null)
+        {
+            return;
+        }
+
+        TextView visitTextView = (TextView) dayView.findViewById(R.id.textView);
+        TextView dayTextView = (TextView) dayView.findViewById(R.id.dateTextView);
+
+        if (isShow == false)
+        {
+            visitTextView.setText(null);
+            visitTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 11);
+            visitTextView.setVisibility(View.INVISIBLE);
+
+            if ((dayTextView.getPaintFlags() & Paint.STRIKE_THRU_TEXT_FLAG) == Paint.STRIKE_THRU_TEXT_FLAG)
             {
-                if (holiday == calendarDay)
-                {
-                    return true;
-                }
+                dayTextView.setPaintFlags(dayTextView.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
             }
-        } catch (Exception e)
-        {
-            ExLog.d(e.toString());
+
+            return;
         }
 
-        return false;
+        visitTextView.setText(R.string.label_calendar_soldout);
+        visitTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 8);
+        visitTextView.setVisibility(View.VISIBLE);
+
+        dayTextView.setPaintFlags(dayTextView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+    }
+
+    protected void setDayOfWeekTextColor(View dayView)
+    {
+        TextView dayTextView = (TextView) dayView.findViewById(R.id.dateTextView);
+
+        Day day = (Day) dayView.getTag();
+
+        if (day == null)
+        {
+            return;
+        }
+
+        switch (day.dayOfWeek)
+        {
+            // 일요일
+            case Calendar.SUNDAY:
+                dayTextView.setTextColor(getResources().getColorStateList(R.color.selector_calendar_sunday_textcolor));
+                break;
+
+            case Calendar.SATURDAY:
+                if (day.isHoliday == true)
+                {
+                    dayTextView.setTextColor(getResources().getColorStateList(R.color.selector_calendar_sunday_textcolor));
+                } else
+                {
+                    dayTextView.setTextColor(getResources().getColorStateList(R.color.selector_calendar_saturday_textcolor));
+                }
+                break;
+
+            default:
+                if (day.isHoliday == true)
+                {
+                    dayTextView.setTextColor(getResources().getColorStateList(R.color.selector_calendar_sunday_textcolor));
+                } else
+                {
+                    dayTextView.setTextColor(getResources().getColorStateList(R.color.selector_calendar_default_text_color));
+                }
+                break;
+        }
     }
 
     private int getMonthInterval(final Calendar calendar, int interval)
@@ -592,8 +827,78 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
 
     protected static class Day
     {
-        public int dayOffset;
-        String dayString;
-        int dayOfWeek;
+        public String dateTime; // ISO-8601 format
+        public String dayOfMonth;
+        public int dayOfWeek;
+        public boolean isHoliday;
+        public boolean isSoldOut;
+        public boolean isDefaultDimmed;
+    }
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////
+    // 기존의 BaseActivity에 있는 정보 가져오기
+    ///////////////////////////////////////////////////////////////////////////////////////////////
+
+    protected void addCompositeDisposable(Disposable disposable)
+    {
+        if (disposable == null)
+        {
+            return;
+        }
+
+        mCompositeDisposable.add(disposable);
+    }
+
+    protected void clearCompositeDisposable()
+    {
+        mCompositeDisposable.clear();
+    }
+
+    protected void onHandleError(Throwable throwable)
+    {
+        unLockUI();
+
+        BaseActivity baseActivity = PlaceCalendarActivity.this;
+
+        if (baseActivity == null || baseActivity.isFinishing() == true)
+        {
+            return;
+        }
+
+        if (throwable instanceof BaseException)
+        {
+            // 팝업 에러 보여주기
+            BaseException baseException = (BaseException) throwable;
+
+            baseActivity.showSimpleDialog(null, baseException.getMessage()//
+                , getString(R.string.dialog_btn_text_confirm), null, null, null, null, dialogInterface -> PlaceCalendarActivity.this.onBackPressed(), true);
+        } else if (throwable instanceof HttpException)
+        {
+            retrofit2.HttpException httpException = (HttpException) throwable;
+
+            if (httpException.code() == BaseException.CODE_UNAUTHORIZED)
+            {
+                addCompositeDisposable(new ConfigLocalImpl(PlaceCalendarActivity.this).clear().subscribe(object ->
+                {
+                    new FacebookRemoteImpl().logOut();
+                    new KakaoRemoteImpl().logOut();
+
+                    baseActivity.restartExpiredSession();
+                }));
+            } else
+            {
+                DailyToast.showToast(PlaceCalendarActivity.this, getString(R.string.act_base_network_connect), DailyToast.LENGTH_LONG);
+
+                Crashlytics.log(httpException.response().raw().request().url().toString());
+                Crashlytics.logException(throwable);
+
+                PlaceCalendarActivity.this.finish();
+            }
+        } else
+        {
+            DailyToast.showToast(PlaceCalendarActivity.this, getString(R.string.act_base_network_connect), DailyToast.LENGTH_LONG);
+
+            PlaceCalendarActivity.this.finish();
+        }
     }
 }

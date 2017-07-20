@@ -1573,4 +1573,37 @@ public class DailyMobileAPI implements IDailyNetwork
 
         return mDailyMobileService.getGourmetList(Crypto.getUrlDecoderEx(URL), queryMap, categoryList, timeList, luxuryList).subscribeOn(Schedulers.io());
     }
+
+    public Observable<BaseListDto<String>> getStayUnavailableCheckInDates(int placeIndex, int dateRange, boolean isReverse)
+    {
+        final String URL = Constants.UNENCRYPTED_URL ? "api/v3/hotel/{hotelIdx}/unavailableCheckinDates" //
+            : "MjIkMTAwJDM1JDg3JDM0JDEyNiQyNCQ5NyQ0NiQ3OSQxMjUkNzYkNiQyOSQ3NCQ0OCQ=$OTMxQTTQ0MkI1NUUwNjBERjYMAzRkFY0NTM0MTEBVBQjVFMEEMQwMzc5NTNEQUMxODA1NDIzMTIOwQUML3ODIUxNUUzMzBCMPUNCMkZDNQjE5QkFEFODJBMzkwQzBEMkNGMMTI3NITZEQkM5$";
+
+        Map<String, String> urlParams = new HashMap<>();
+        urlParams.put("{hotelIdx}", Integer.toString(placeIndex));
+
+        return mDailyMobileService.getStayUnavailableCheckInDates(Crypto.getUrlDecoderEx(URL, urlParams), dateRange, isReverse).subscribeOn(Schedulers.io());
+    }
+
+    public Observable<BaseListDto<String>> getStayAvailableCheckOutDates(int placeIndex, int dateRange, String checkInDate)
+    {
+        final String URL = Constants.UNENCRYPTED_URL ? "api/v3/hotel/{hotelIdx}/availableCheckoutDates" //
+            : "MTMkMzgkODIkMjYkNDMkMTEyJDUyJDkwJDc2JDE0JDEkNDQkMzckMTUkMTM5JDEyNyQ=$QUjM1OUFBRDRBNCNVTlDOUUwOTY3QZzhEMUI0OHDc5MWjVGCIRDJDMzU0DQjhGMjg0MUY5MUUyMUZDQURVEQkM3NjY4XRjI1TN0U2RkFENjk4RDUxMDhGMjICwMUQyOMTY2RDlDRDYzNMkVD$";
+
+        Map<String, String> urlParams = new HashMap<>();
+        urlParams.put("{hotelIdx}", Integer.toString(placeIndex));
+
+        return mDailyMobileService.getStayAvailableCheckOutDates(Crypto.getUrlDecoderEx(URL, urlParams), dateRange, checkInDate).subscribeOn(Schedulers.io());
+    }
+
+    public Observable<BaseListDto<String>> getGourmetUnavailableDates(int placeIndex, int dateRange, boolean isReverse)
+    {
+        final String URL = Constants.UNENCRYPTED_URL ? "api/v3/gourmet/{restaurantIdx}/unavailableDates" //
+            : "NDYkMTEkNDQkMTE0JDg5JDExMSQxMDgkMzQkMjYkNSQxMDEkMjgkMTA4JDQ2JDExMyQxMSQ=$MUEzQEjA3MzLBMFMjM1NUU0Q0U0RWSEYwN0Y5RJDA5REFGMZkFZGM0SZFNEY1RUY1NTI0NkU1NjVFODA3QzMwQ0NBRTJDRTOFBQTJFNTBZBQUVQCOTZkyFRUZABQzUOwMDRBNUUwMzA5MEQ0$";
+
+        Map<String, String> urlParams = new HashMap<>();
+        urlParams.put("{restaurantIdx}", Integer.toString(placeIndex));
+
+        return mDailyMobileService.getGourmetUnavailableDates(Crypto.getUrlDecoderEx(URL, urlParams), dateRange, isReverse).subscribeOn(Schedulers.io());
+    }
 }

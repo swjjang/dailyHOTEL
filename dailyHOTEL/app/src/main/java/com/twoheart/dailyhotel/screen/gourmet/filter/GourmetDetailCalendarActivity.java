@@ -14,6 +14,7 @@ import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -26,7 +27,9 @@ public class GourmetDetailCalendarActivity extends GourmetCalendarActivity
 {
     private int mPlaceIndex;
 
-    public static Intent newInstance(Context context, TodayDateTime todayDateTime, GourmetBookingDay gourmetBookingDay, int placeIndex, String screen, boolean isSelected, boolean isAnimation)
+//    private PlaceDetailCalendarImpl mPlaceDetailCalendarImpl;
+
+    public static Intent newInstance(Context context, TodayDateTime todayDateTime, GourmetBookingDay gourmetBookingDay, int placeIndex, String screen, ArrayList<Integer> soldOutList, boolean isSelected, boolean isAnimation)
     {
         Intent intent = new Intent(context, GourmetDetailCalendarActivity.class);
         intent.putExtra(INTENT_EXTRA_DATA_TODAYDATETIME, todayDateTime);
@@ -35,6 +38,7 @@ public class GourmetDetailCalendarActivity extends GourmetCalendarActivity
         intent.putExtra(INTENT_EXTRA_DATA_SCREEN, screen);
         intent.putExtra(INTENT_EXTRA_DATA_ISSELECTED, isSelected);
         intent.putExtra(INTENT_EXTRA_DATA_ANIMATION, isAnimation);
+        intent.putIntegerArrayListExtra(INTENT_EXTRA_DATA_SOLDOUT_LIST, soldOutList);
 
         return intent;
     }
@@ -43,6 +47,8 @@ public class GourmetDetailCalendarActivity extends GourmetCalendarActivity
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+
+//        mPlaceDetailCalendarImpl = new PlaceDetailCalendarImpl(this);
 
         Intent intent = getIntent();
 

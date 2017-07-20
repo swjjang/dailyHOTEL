@@ -7,7 +7,6 @@ import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.network.dto.BaseDto;
 import com.twoheart.dailyhotel.network.dto.BaseListDto;
 import com.twoheart.dailyhotel.network.model.PlaceReviewScores;
-import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.network.model.TrueVRParams;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
@@ -29,8 +28,6 @@ public abstract class PlaceDetailNetworkController extends BaseNetworkController
 
     public interface OnNetworkControllerListener extends OnBaseNetworkControllerListener
     {
-        void onCommonDateTime(TodayDateTime todayDateTime);
-
         //        void onUserInformation(Customer user, String birthday, boolean isDailyUser);
 
         void onUserProfile(Customer user, String birthday, boolean isDailyUser, boolean isVerified, boolean isPhoneVerified);
@@ -42,11 +39,6 @@ public abstract class PlaceDetailNetworkController extends BaseNetworkController
         void onPlaceReviewScores(PlaceReviewScores placeReviewScores);
 
         void onHasVRList(ArrayList<TrueVRParams> trueVRParamsList);
-    }
-
-    public void requestCommonDatetime()
-    {
-        DailyMobileAPI.getInstance(mContext).requestCommonDateTime(mNetworkTag, mDateTimeCallback);
     }
 
     public void requestProfile()
@@ -84,41 +76,6 @@ public abstract class PlaceDetailNetworkController extends BaseNetworkController
     {
         DailyMobileAPI.getInstance(mContext).requestHasVRList(mNetworkTag, placeType, placeIndex, type, mVRListCallback);
     }
-
-    private retrofit2.Callback mDateTimeCallback = new retrofit2.Callback<BaseDto<TodayDateTime>>()
-    {
-        @Override
-        public void onResponse(Call<BaseDto<TodayDateTime>> call, Response<BaseDto<TodayDateTime>> response)
-        {
-            if (response != null && response.isSuccessful() && response.body() != null)
-            {
-                try
-                {
-                    BaseDto<TodayDateTime> baseDto = response.body();
-
-                    if (baseDto.msgCode == 100)
-                    {
-                        ((OnNetworkControllerListener) mOnNetworkControllerListener).onCommonDateTime(baseDto.data);
-                    } else
-                    {
-                        mOnNetworkControllerListener.onErrorPopupMessage(baseDto.msgCode, baseDto.msg);
-                    }
-                } catch (Exception e)
-                {
-                    mOnNetworkControllerListener.onError(e);
-                }
-            } else
-            {
-                mOnNetworkControllerListener.onErrorResponse(call, response);
-            }
-        }
-
-        @Override
-        public void onFailure(Call<BaseDto<TodayDateTime>> call, Throwable t)
-        {
-            mOnNetworkControllerListener.onError(t);
-        }
-    };
 
     private retrofit2.Callback mUserProfileCallback = new retrofit2.Callback<JSONObject>()
     {

@@ -14,11 +14,19 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
 
+import com.crashlytics.android.Crashlytics;
+import com.daily.base.exception.BaseException;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
 import com.daily.base.widget.DailyTextView;
+import com.daily.base.widget.DailyToast;
+import com.daily.dailyhotel.repository.local.ConfigLocalImpl;
 import com.daily.dailyhotel.repository.local.model.AnalyticsParam;
+import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
+import com.daily.dailyhotel.repository.remote.FacebookRemoteImpl;
+import com.daily.dailyhotel.repository.remote.KakaoRemoteImpl;
+import com.daily.dailyhotel.repository.remote.PlaceDetailCalendarImpl;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Customer;
 import com.twoheart.dailyhotel.model.PlaceDetail;
@@ -42,6 +50,10 @@ import com.twoheart.dailyhotel.widget.DailyDetailToolbarLayout;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
+import retrofit2.HttpException;
+
 public abstract class PlaceDetailActivity extends BaseActivity
 {
     //    protected static final String INTENT_EXTRA_DATA_START_SALETIME = "startSaleTime";
@@ -57,6 +69,10 @@ public abstract class PlaceDetailActivity extends BaseActivity
     protected PlaceDetailLayout mPlaceDetailLayout;
     protected PlaceDetail mPlaceDetail;
     protected PlaceDetailNetworkController mPlaceDetailNetworkController;
+
+    private CompositeDisposable mCompositeDisposable = new CompositeDisposable();
+    protected CommonRemoteImpl mCommonRemoteImpl;
+    protected PlaceDetailCalendarImpl mPlaceDetailCalendarImpl;
 
     protected PlaceBookingDay mPlaceBookingDay;
     protected TodayDateTime mTodayDateTime;
@@ -77,6 +93,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
     protected int mProductDetailIndex; // 딥링크로 시작시에 객실/티켓 정보 오픈후에 선택되어있는 인덱스
     protected PlaceReviewScores mPlaceReviewScores;
     protected ArrayList<TrueVRParams> mTrueVRParamsList;
+    protected ArrayList<Integer> mSoldOutList;
 
     protected Handler mHandler = new Handler();
 
@@ -95,6 +112,10 @@ public abstract class PlaceDetailActivity extends BaseActivity
     protected abstract PlaceDetailNetworkController getNetworkController(Context context);
 
     protected abstract PlaceDetail createPlaceDetail(Intent intent);
+
+    protected abstract void requestCommonDateTimeNSoldOutList(int placeIndex);
+
+    protected abstract void setCommonDateTime(TodayDateTime todayDateTime);
 
     protected abstract void shareKakao(String imageUrl, PlaceBookingDay placeBookingDay, PlaceDetail placeDetail);
 
@@ -121,6 +142,9 @@ public abstract class PlaceDetailActivity extends BaseActivity
 
         mPlaceDetailLayout = getDetailLayout(this);
         mPlaceDetailNetworkController = getNetworkController(this);
+
+        mCommonRemoteImpl = new CommonRemoteImpl(this);
+        mPlaceDetailCalendarImpl = new PlaceDetailCalendarImpl(this);
     }
 
     protected void initToolbar(String title)
@@ -212,7 +236,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
                 lockUI();
             }
 
-            mPlaceDetailNetworkController.requestCommonDatetime();
+            requestCommonDateTimeNSoldOutList(mPlaceDetail.index);
         }
 
         super.onResume();
@@ -228,6 +252,14 @@ public abstract class PlaceDetailActivity extends BaseActivity
             mPlaceDetailLayout.setTrueVRTooltipVisibility(false);
             DailyPreference.getInstance(this).setTrueVRViewTooltip(false);
         }
+    }
+
+    @Override
+    protected void onDestroy()
+    {
+        clearCompositeDisposable();
+
+        super.onDestroy();
     }
 
     @Override
@@ -376,13 +408,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
 
                 case CODE_REQUEST_ACTIVITY_LOGIN_BY_DETAIL_WISHLIST:
                 {
-                    if (resultCode == RESULT_OK)
-                    {
-                        mDontReloadAtOnResume = false;
-                    } else
-                    {
-                        mDontReloadAtOnResume = true;
-                    }
+                    mDontReloadAtOnResume = resultCode != RESULT_OK;
                     break;
                 }
 
@@ -813,4 +839,71 @@ public abstract class PlaceDetailActivity extends BaseActivity
             }
         }
     };
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////
+    // 기존의 BaseActivity에 있는 정보 가져오기
+    ///////////////////////////////////////////////////////////////////////////////////////////////
+
+    protected void addCompositeDisposable(Disposable disposable)
+    {
+        if (disposable == null)
+        {
+            return;
+        }
+
+        mCompositeDisposable.add(disposable);
+    }
+
+    protected void clearCompositeDisposable()
+    {
+        mCompositeDisposable.clear();
+    }
+
+    protected void onHandleError(Throwable throwable)
+    {
+        unLockUI();
+
+        BaseActivity baseActivity = PlaceDetailActivity.this;
+
+        if (baseActivity == null || baseActivity.isFinishing() == true)
+        {
+            return;
+        }
+
+        if (throwable instanceof BaseException)
+        {
+            // 팝업 에러 보여주기
+            BaseException baseException = (BaseException) throwable;
+
+            baseActivity.showSimpleDialog(null, baseException.getMessage()//
+                , getString(R.string.dialog_btn_text_confirm), null, null, null, null, dialogInterface -> baseActivity.onBackPressed(), true);
+        } else if (throwable instanceof HttpException)
+        {
+            retrofit2.HttpException httpException = (HttpException) throwable;
+
+            if (httpException.code() == BaseException.CODE_UNAUTHORIZED)
+            {
+                addCompositeDisposable(new ConfigLocalImpl(baseActivity).clear().subscribe(object ->
+                {
+                    new FacebookRemoteImpl().logOut();
+                    new KakaoRemoteImpl().logOut();
+
+                    baseActivity.restartExpiredSession();
+                }));
+            } else
+            {
+                DailyToast.showToast(baseActivity, getString(R.string.act_base_network_connect), DailyToast.LENGTH_LONG);
+
+                Crashlytics.log(httpException.response().raw().request().url().toString());
+                Crashlytics.logException(throwable);
+
+                baseActivity.finish();
+            }
+        } else
+        {
+            DailyToast.showToast(baseActivity, getString(R.string.act_base_network_connect), DailyToast.LENGTH_LONG);
+
+            baseActivity.finish();
+        }
+    }
 }

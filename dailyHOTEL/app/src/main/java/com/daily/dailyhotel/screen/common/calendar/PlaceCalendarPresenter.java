@@ -141,5 +141,7 @@ public abstract class PlaceCalendarPresenter<T1 extends BaseActivity, T2 extends
         String dayOfMonth;
         int dayOfWeek;
         boolean isHoliday;
+        boolean isSoldOut;
+        boolean isDefaultDimmed;
     }
 }
