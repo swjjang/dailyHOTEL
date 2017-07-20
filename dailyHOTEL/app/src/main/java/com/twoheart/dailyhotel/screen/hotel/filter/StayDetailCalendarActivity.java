@@ -27,8 +27,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
+import io.reactivex.schedulers.Schedulers;
 import retrofit2.Call;
 import retrofit2.Response;
 
@@ -215,8 +218,19 @@ public class StayDetailCalendarActivity extends StayCalendarActivity
     }
 
     @Override
-    void setAvailableCheckOutDays(TodayDateTime todayDateTime, View checkInDayView)
+    void getAvailableCheckOutDays(final View checkInDayView)
     {
+        lockUI();
+
+        int index = mDayViewList.indexOf(checkInDayView);
+        if (index != -1)
+        {
+            for (int i = 0; i < index; i++)
+            {
+                updateAvailableDayView(mDayViewList.get(i), false);
+            }
+        }
+
         Calendar calendar = DailyCalendar.getInstance();
 
         String checkInDate = null;
@@ -234,25 +248,44 @@ public class StayDetailCalendarActivity extends StayCalendarActivity
 
         if (DailyTextUtils.isTextEmpty(checkInDate) == true)
         {
+            unLockUI();
             return;
         }
 
-        addCompositeDisposable(mPlaceDetailCalendarImpl.getStayAvailableCheckOutDates(mHotelIndex
-            , StayCalendarActivity.DAYCOUNT_OF_MAX, checkInDate).subscribe(new Consumer<List<String>>()
-        {
-            @Override
-            public void accept(@NonNull List<String> strings) throws Exception
+        addCompositeDisposable(mPlaceDetailCalendarImpl.getStayAvailableCheckOutDates( //
+            mHotelIndex, StayCalendarActivity.DAYCOUNT_OF_MAX, checkInDate).observeOn(Schedulers.io())//
+            .map(new Function<List<String>, ArrayList<Integer>>()
             {
+                @Override
+                public ArrayList<Integer> apply(@NonNull List<String> stringList) throws Exception
+                {
+                    ArrayList<Integer> availableDayList = new ArrayList<>();
 
-            }
-        }, new Consumer<Throwable>()
-        {
-            @Override
-            public void accept(@NonNull Throwable throwable) throws Exception
+                    for (String dayString : stringList)
+                    {
+                        int availableDay = Integer.parseInt(DailyCalendar.convertDateFormatString(dayString, "yyyy-MM-dd", "yyyyMMdd"));
+                        availableDayList.add(availableDay);
+                    }
+
+                    return availableDayList;
+                }
+            }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<ArrayList<Integer>>()
             {
-                onHandleError(throwable);
-            }
-        }));
+                @Override
+                public void accept(@NonNull ArrayList<Integer> availableDayList) throws Exception
+                {
+                    unLockUI();
+
+                    setAvailableCheckOutDays(checkInDayView, availableDayList);
+                }
+            }, new Consumer<Throwable>()
+            {
+                @Override
+                public void accept(@NonNull Throwable throwable) throws Exception
+                {
+                    onHandleError(throwable);
+                }
+            }));
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////

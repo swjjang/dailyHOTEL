@@ -1070,32 +1070,6 @@ public class StayDetailActivity extends PlaceDetailActivity
             return;
         }
 
-//        try
-//        {
-//            Calendar startCalendar = DailyCalendar.getInstance();
-//            startCalendar.setTime(DailyCalendar.convertDate(todayDateTime.currentDateTime, DailyCalendar.ISO_8601_FORMAT));
-//            startCalendar.add(Calendar.DAY_OF_MONTH, -1);
-//
-//            String startDateTime = DailyCalendar.format(startCalendar.getTime(), DailyCalendar.ISO_8601_FORMAT);
-//
-//            startCalendar.add(Calendar.DAY_OF_MONTH, 60);
-//
-//            String endDateTime = DailyCalendar.format(startCalendar.getTime(), DailyCalendar.ISO_8601_FORMAT);
-//
-//            Intent intent = StayCalendarActivity.newInstance(this//
-//                , stayBookingDay.getCheckInDay(DailyCalendar.ISO_8601_FORMAT)//
-//                , stayBookingDay.getCheckOutDay(DailyCalendar.ISO_8601_FORMAT)//
-//                , startDateTime, endDateTime, 7, AnalyticsManager.ValueType.STAY, true, 0, true);
-//
-//            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_CALENDAR);
-//        } catch (Exception e)
-//        {
-//            ExLog.e(e.toString());
-//
-//           unLockUI();
-//        }
-
-
         Intent intent = StayDetailCalendarActivity.newInstance(StayDetailActivity.this, todayDateTime, stayBookingDay//
             , overseas, placeIndex, AnalyticsManager.ValueType.DETAIL, soldOutList, true, isAnimation, isSingleDay);
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_CALENDAR);
@@ -1573,7 +1547,8 @@ public class StayDetailActivity extends PlaceDetailActivity
                 return;
             }
 
-            startCalendar(mTodayDateTime, (StayBookingDay) mPlaceBookingDay, stayDetailParams.isOverseas, stayDetail.index, mSoldOutList, true, stayDetailParams.isSingleStay);
+            startCalendar(mTodayDateTime, (StayBookingDay) mPlaceBookingDay, stayDetailParams.isOverseas //
+                , stayDetail.index, mSoldOutList, true, stayDetailParams.isSingleStay);
         }
 
         @Override

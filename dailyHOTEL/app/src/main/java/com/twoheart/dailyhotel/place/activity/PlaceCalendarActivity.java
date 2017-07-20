@@ -472,14 +472,76 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
             return;
         }
 
+        Day day = (Day) dayView.getTag();
+        if (day == null)
+        {
+            dayView.setEnabled(false);
+            return;
+        }
+
+        setDayOfWeekTextColor(dayView);
+
+        if (dayView.isSelected() == true)
+        {
+            return;
+        }
+
+        setSoldOutTextView(dayView, day.isSoldOut);
+
+        if (day.isSoldOut == true)
+        {
+            dayView.setEnabled(false);
+            return;
+        }
+
+        if (day.isDefaultDimmed == true)
+        {
+            dayView.setEnabled(false);
+        } else
+        {
+            dayView.setEnabled(true);
+        }
+    }
+
+    protected void setSoldOutTextView(View dayView , boolean isShow)
+    {
+        if (dayView== null)
+        {
+            return;
+        }
+
         TextView visitTextView = (TextView) dayView.findViewById(R.id.textView);
+        TextView dayTextView = (TextView) dayView.findViewById(R.id.dateTextView);
+
+        if (isShow == false)
+        {
+            visitTextView.setText(null);
+            visitTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 11);
+            visitTextView.setVisibility(View.INVISIBLE);
+
+            if ((dayTextView.getPaintFlags() & Paint.STRIKE_THRU_TEXT_FLAG) == Paint.STRIKE_THRU_TEXT_FLAG)
+            {
+                dayTextView.setPaintFlags(dayTextView.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
+            }
+
+            return;
+        }
+
+        visitTextView.setText(R.string.label_calendar_soldout);
+        visitTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 8);
+        visitTextView.setVisibility(View.VISIBLE);
+
+        dayTextView.setPaintFlags(dayTextView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+    }
+
+    protected void setDayOfWeekTextColor(View dayView)
+    {
         TextView dayTextView = (TextView) dayView.findViewById(R.id.dateTextView);
 
         Day day = (Day) dayView.getTag();
 
         if (day == null)
         {
-            dayView.setEnabled(false);
             return;
         }
 
@@ -509,40 +571,6 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
                     dayTextView.setTextColor(getResources().getColorStateList(R.color.selector_calendar_default_text_color));
                 }
                 break;
-        }
-
-        if (dayView.isSelected() == true)
-        {
-            return;
-        }
-
-        if (day.isSoldOut == true)
-        {
-
-            visitTextView.setText(R.string.label_calendar_soldout);
-            visitTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 8);
-            visitTextView.setVisibility(View.VISIBLE);
-            dayView.setEnabled(false);
-
-            dayTextView.setPaintFlags(dayTextView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-        } else
-        {
-            visitTextView.setText(null);
-            visitTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 11);
-            visitTextView.setVisibility(View.INVISIBLE);
-
-            if (day.isDefaultDimmed == true)
-            {
-                dayView.setEnabled(false);
-            } else
-            {
-                dayView.setEnabled(true);
-            }
-
-            if ((dayTextView.getPaintFlags() & Paint.STRIKE_THRU_TEXT_FLAG) == Paint.STRIKE_THRU_TEXT_FLAG)
-            {
-                dayTextView.setPaintFlags(dayTextView.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
-            }
         }
     }
 
@@ -800,11 +828,11 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
     protected static class Day
     {
         public String dateTime; // ISO-8601 format
-        String dayOfMonth;
-        int dayOfWeek;
-        boolean isHoliday;
-        boolean isSoldOut;
-        boolean isDefaultDimmed;
+        public String dayOfMonth;
+        public int dayOfWeek;
+        public boolean isHoliday;
+        public boolean isSoldOut;
+        public boolean isDefaultDimmed;
     }
 
     ///////////////////////////////////////////////////////////////////////////////////////////////
