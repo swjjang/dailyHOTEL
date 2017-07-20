@@ -219,6 +219,7 @@ public interface Constants
     String NAME_INTENT_EXTRA_DATA_CARD_CD = "cardCd";
     String NAME_INTENT_EXTRA_DATA_PAYMENT_RESULT = "paymentResult";
     String NAME_INTENT_EXTRA_DATA_ANALYTICS_PARAM = "analyticsParam";
+    String NAME_INTENT_EXTRA_DATA_BOOKING_STATE = "bookingState";
 
     // Push Type
     int PUSH_TYPE_NOTICE = 0;

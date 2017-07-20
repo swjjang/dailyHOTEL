@@ -415,6 +415,35 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
             {
                 ExLog.d(TAG + "recordScreen : " + screenName + " | " + screenViewBuilder.build().toString());
             }
+        } else if (AnalyticsManager.Screen.BOOKINGDETAIL_MYBOOKINGINFO_CANCELLATION_PROGRESS.equalsIgnoreCase(screenName) == true//
+            || AnalyticsManager.Screen.BOOKINGDETAIL_MYBOOKINGINFO.equalsIgnoreCase(screenName) == true//
+            || AnalyticsManager.Screen.BOOKINGDETAIL_MYBOOKINGINFO_CANCELABLE.equalsIgnoreCase(screenName) == true//
+            || AnalyticsManager.Screen.BOOKINGDETAIL_MYBOOKINGINFO_CANCELLATIONFEE.equalsIgnoreCase(screenName) == true//
+            || AnalyticsManager.Screen.BOOKINGDETAIL_MYBOOKINGINFO_NOREFUNDS.equalsIgnoreCase(screenName) == true//
+            || AnalyticsManager.Screen.BOOKINGDETAIL_MYBOOKINGINFO_POST_VISIT.equalsIgnoreCase(screenName) == true//
+            || AnalyticsManager.Screen.BOOKINGDETAIL_MYBOOKINGINFO_TEMPORARY_ACCOUNT.equalsIgnoreCase(screenName) == true)
+        {
+            HitBuilders.ScreenViewBuilder screenViewBuilder = new HitBuilders.ScreenViewBuilder();
+
+            screenViewBuilder.setCustomDimension(6, params.get(AnalyticsManager.KeyType.PLACE_TYPE));
+
+            if (params.containsKey(AnalyticsManager.KeyType.COUNTRY) == true)
+            {
+                screenViewBuilder.setCustomDimension(7, params.get(AnalyticsManager.KeyType.COUNTRY));
+            }
+
+            if (params.containsKey(AnalyticsManager.KeyType.PLACE_INDEX) == true)
+            {
+                screenViewBuilder.setCustomDimension(15, params.get(AnalyticsManager.KeyType.PLACE_INDEX));
+            }
+
+            mGoogleAnalyticsTracker.setScreenName(screenName);
+            mGoogleAnalyticsTracker.send(screenViewBuilder.build());
+
+            if (DEBUG == true)
+            {
+                ExLog.d(TAG + "recordScreen : " + screenName + " | " + screenViewBuilder.build().toString());
+            }
         }
     }
 
@@ -470,6 +499,12 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
         {
             ExLog.d(TAG + "Event : " + category + " | " + action + " | " + label);
         }
+    }
+
+    @Override
+    void recordEvent(String category, String action, String label, long value, Map<String, String> params)
+    {
+
     }
 
     @Override

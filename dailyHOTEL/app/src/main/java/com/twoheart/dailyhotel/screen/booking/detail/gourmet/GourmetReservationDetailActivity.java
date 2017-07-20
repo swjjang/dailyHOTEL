@@ -21,6 +21,7 @@ import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
 import com.daily.base.widget.DailyTextView;
 import com.daily.base.widget.DailyToast;
+import com.daily.dailyhotel.entity.Booking;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.GourmetBookingDetail;
 import com.twoheart.dailyhotel.model.PlaceBookingDetail;
@@ -41,6 +42,8 @@ import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import org.json.JSONObject;
 
+import java.util.HashMap;
+
 import retrofit2.Call;
 import retrofit2.Response;
 
@@ -48,13 +51,14 @@ public class GourmetReservationDetailActivity extends PlaceReservationDetailActi
 {
     GourmetReservationDetailNetworkController mNetworkController;
 
-    public static Intent newInstance(Context context, int reservationIndex, String imageUrl, boolean isDeepLink)
+    public static Intent newInstance(Context context, int reservationIndex, String imageUrl, boolean isDeepLink, int bookingState)
     {
         Intent intent = new Intent(context, GourmetReservationDetailActivity.class);
 
         intent.putExtra(NAME_INTENT_EXTRA_DATA_BOOKINGIDX, reservationIndex);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_URL, imageUrl);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_DEEPLINK, isDeepLink);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_BOOKING_STATE, bookingState);
 
         return intent;
     }
@@ -567,6 +571,9 @@ public class GourmetReservationDetailActivity extends PlaceReservationDetailActi
             {
                 mPlaceReservationDetailLayout.expandMap(mPlaceBookingDetail.latitude, mPlaceBookingDetail.longitude);
             }
+
+            AnalyticsManager.getInstance(GourmetReservationDetailActivity.this).recordEvent(AnalyticsManager.Category.BOOKING_STATUS//
+                , AnalyticsManager.Action.MAP_CLICK, AnalyticsManager.ValueType.EMPTY, null);
         }
 
         @Override
@@ -586,6 +593,9 @@ public class GourmetReservationDetailActivity extends PlaceReservationDetailActi
                 startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL);
 
                 overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
+
+                AnalyticsManager.getInstance(GourmetReservationDetailActivity.this).recordEvent(AnalyticsManager.Category.BOOKING_STATUS//
+                    , AnalyticsManager.Action.BOOKING_ITEM_DETAIL_CLICK, AnalyticsManager.ValueType.EMPTY, null);
             } catch (Exception e)
             {
                 ExLog.e(e.toString());
@@ -625,6 +635,9 @@ public class GourmetReservationDetailActivity extends PlaceReservationDetailActi
             {
                 lockUI();
                 mNetworkController.requestReviewInformation(mReservationIndex);
+
+                AnalyticsManager.getInstance(GourmetReservationDetailActivity.this).recordEvent(AnalyticsManager.Category.BOOKING_STATUS//
+                    , AnalyticsManager.Action.WRITE_REVIEW, AnalyticsManager.ValueType.EMPTY, null);
             }
         }
 
@@ -718,6 +731,34 @@ public class GourmetReservationDetailActivity extends PlaceReservationDetailActi
                 GourmetBookingDetail gourmetBookingDetail = (GourmetBookingDetail) mPlaceBookingDetail;
                 gourmetBookingDetail.setData(jsonObject);
                 mPlaceReservationDetailLayout.initLayout(mTodayDateTime, gourmetBookingDetail);
+
+                HashMap<String, String> params = new HashMap();
+                params.put(AnalyticsManager.KeyType.PLACE_TYPE, "gourmet");
+                params.put(AnalyticsManager.KeyType.COUNTRY, "domestic");
+                params.put(AnalyticsManager.KeyType.PLACE_INDEX, Integer.toString(gourmetBookingDetail.placeIndex));
+
+                switch (mBookingState)
+                {
+                    case Booking.BOOKING_STATE_WAITING_REFUND:
+                        AnalyticsManager.getInstance(GourmetReservationDetailActivity.this).recordScreen(GourmetReservationDetailActivity.this//
+                            , AnalyticsManager.Screen.BOOKINGDETAIL_MYBOOKINGINFO_CANCELLATION_PROGRESS, null, params);
+                        break;
+
+                    case Booking.BOOKING_STATE_BEFORE_USE:
+                        AnalyticsManager.getInstance(GourmetReservationDetailActivity.this).recordScreen(GourmetReservationDetailActivity.this//
+                            , AnalyticsManager.Screen.BOOKINGDETAIL_MYBOOKINGINFO, null, params);
+                        break;
+
+                    case Booking.BOOKING_STATE_AFTER_USE:
+                        AnalyticsManager.getInstance(GourmetReservationDetailActivity.this).recordScreen(GourmetReservationDetailActivity.this//
+                            , AnalyticsManager.Screen.BOOKINGDETAIL_MYBOOKINGINFO_POST_VISIT, null, params);
+                        break;
+
+                    default:
+                        AnalyticsManager.getInstance(GourmetReservationDetailActivity.this).recordScreen(GourmetReservationDetailActivity.this//
+                            , AnalyticsManager.Screen.BOOKINGDETAIL_MYBOOKINGINFO, null, params);
+                        break;
+                }
             } catch (Exception e)
             {
                 Crashlytics.logException(e);

@@ -21,7 +21,6 @@ public interface IDailyNetwork
 
 
     /**
-     * http://status.dailyhotel.kr/status/health/check
      * 서버 상태 체크
      *
      * @param tag
@@ -38,7 +37,6 @@ public interface IDailyNetwork
     void requestHappyTalkCategory(String tag, Object listener);
 
     /**
-     * common/ver_dual
      * 버전을 받아 업데이트를 체크한다
      *
      * @return
@@ -46,7 +44,6 @@ public interface IDailyNetwork
     void requestCommonVersion(String tag, Object listener);
 
     /**
-     * api/common/datetime
      * 서비시간 앱 운영시간 등등의 기본이되는 시간값을 받아온다
      *
      * @return
@@ -61,7 +58,6 @@ public interface IDailyNetwork
     void requestUserProfile(String tag, Object listener);
 
     /**
-     * user/session/bonus/all
      * 적립금 정보를 요청한다
      *
      * @return
@@ -69,7 +65,6 @@ public interface IDailyNetwork
     void requestUserBonus(String tag, Object listener);
 
     /**
-     * user/update
      * 데일리 유저 정보를 업데이트 한다
      *
      * @return
@@ -79,7 +74,6 @@ public interface IDailyNetwork
     void requestUserProfileBenefit(String tag, Object listener);
 
     /**
-     * user/check/email_auth
      * 비번찾기의 이메일 정보를 확인한다
      *
      * @return
@@ -87,7 +81,6 @@ public interface IDailyNetwork
     void requestUserCheckEmail(String tag, String userEmail, Object listener);
 
     /**
-     * user/change_pw
      * 비번찾기를 요청한다
      *
      * @return
@@ -95,7 +88,6 @@ public interface IDailyNetwork
     void requestUserChangePassword(String tag, String email, Object listener);
 
     /**
-     * api/user/information
      * 결제를 위한 유저 정보
      *
      * @return
@@ -104,7 +96,6 @@ public interface IDailyNetwork
 
 
     /**
-     * api/user/session/update/fb_user
      * 소셜유저의 정보를 업데이트 한다
      *
      * @return
@@ -113,7 +104,6 @@ public interface IDailyNetwork
 
 
     /**
-     * api/user/session/billing/card/info
      * 신용카드 목록을 요청한다
      *
      * @return
@@ -122,7 +112,6 @@ public interface IDailyNetwork
 
 
     /**
-     * api/user/session/billing/card/del
      * 신용카드를 삭제한다
      *
      * @return
@@ -130,7 +119,6 @@ public interface IDailyNetwork
     void requestUserDeleteBillingCard(String tag, String billkey, Object listener);
 
     /**
-     * /api/v3/hotels/sales
      * Stay 리스트를 요청한다
      *
      * @return
@@ -146,7 +134,6 @@ public interface IDailyNetwork
     void requestStaySearchAutoCompleteList(String tag, String date, int stay, String text, Object listener);
 
     /**
-     * api/sale/region/all
      * 호텔 지역 리스트를 요청한다
      *
      * @return
@@ -154,7 +141,6 @@ public interface IDailyNetwork
     void requestStayRegionList(String tag, Object listener);
 
     /**
-     * api/hotel/v1/payment/detail
      * 호텔 결제 정보 내역을 요청한다
      *
      * @return
@@ -162,7 +148,6 @@ public interface IDailyNetwork
     void requestStayPaymentInformation(String tag, int roomIndex, String date, int nights, Object listener);
 
     /**
-     * api/hotel/v1/sale/detail
      * 호텔 상세 정보를 요청한다
      *
      * @return
@@ -170,7 +155,6 @@ public interface IDailyNetwork
     void requestStayDetailInformation(String tag, int index, String date, int nights, Object listener);
 
     /**
-     * api/hotel/v1/payment/session/easy
      * 호텔의 간편결제를 요청한다
      *
      * @return
@@ -178,7 +162,6 @@ public interface IDailyNetwork
     void requestStayPayment(String tag, Map<String, String> params, Object listener);
 
     /**
-     * api/fnb/reservation/booking/list
      * 예약 리스트(호텔 고메)를 요청한다
      *
      * @return
@@ -186,7 +169,6 @@ public interface IDailyNetwork
     void requestBookingList(String tag, Object listener);
 
     /**
-     * api/fnb/reservation/booking/detail
      * 고메의 상세 예약 내역을 요청한다
      *
      * @return
@@ -194,7 +176,6 @@ public interface IDailyNetwork
     void requestGourmetReservationDetail(String tag, int index, Object listener);
 
     /**
-     * api/fnb/reservation/booking/receipt
      * 고메의 영수증 내역을 불러온다
      *
      * @return
@@ -202,7 +183,6 @@ public interface IDailyNetwork
     void requestGourmetReceipt(String tag, int index, Object listener);
 
     /**
-     * api/fnb/reservation/session/hidden
      * 고메 예약 내역 숨기기
      *
      * @return
@@ -211,7 +191,6 @@ public interface IDailyNetwork
 
 
     /**
-     * api/fnb/reservation/session/vbank/account/info
      * 고메 가상계좌 정보
      *
      * @return
@@ -220,7 +199,6 @@ public interface IDailyNetwork
 
 
     /**
-     * api/fnb/sale/region/province/list
      * 고메 지역 리스트 요청
      *
      * @return
@@ -229,7 +207,6 @@ public interface IDailyNetwork
     void requestGourmetRegionList(String tag, Object listener);
 
     /**
-     * api/fnb/sale/list
      * 고메 리스트 요청
      *
      * @return
@@ -239,7 +216,6 @@ public interface IDailyNetwork
     void requestGourmetSearchAutoCompleteList(String tag, String date, String text, Object listener);
 
     /**
-     * api/fnb/sale/restaurant/info
      * 고메 상세 정보 내용
      *
      * @return
@@ -247,7 +223,6 @@ public interface IDailyNetwork
     void requestGourmetDetailInformation(String tag, int index, String day, Object listener);
 
     /**
-     * api/fnb/sale/ticket/payment/info
      * 고메 결제 정보 요청
      *
      * @return
@@ -256,7 +231,6 @@ public interface IDailyNetwork
 
 
     /**
-     * api/fnb/sale/session/ticket/sell/check
      * 고메 티켓이 구매가 가능한지 체크한다.
      *
      * @return
@@ -264,7 +238,6 @@ public interface IDailyNetwork
     void requestGourmetCheckTicket(String tag, int index, String day, int count, String time, Object listener);
 
     /**
-     * api/fnb/payment/session/easy
      * 고메 간편결제
      *
      * @return
@@ -272,7 +245,6 @@ public interface IDailyNetwork
     void requestGourmetPayment(String tag, Map<String, String> params, Object listener);
 
     /**
-     * reserv/mine/detail
      * 입금 대기 계좌이체 상세 내용 요청
      *
      * @return
@@ -280,7 +252,6 @@ public interface IDailyNetwork
     void requestDepositWaitDetailInformation(String tag, String tid, Object listener);
 
     /**
-     * api/reserv/detail
      * 호텔 예약 화면 상세 내용
      *
      * @return
@@ -288,7 +259,6 @@ public interface IDailyNetwork
     void requestStayReservationDetail(String tag, int index, Object listener);
 
     /**
-     * api/reserv/mine/hidden
      * 호텔 예약내용 숨기기
      *
      * @return
@@ -296,7 +266,6 @@ public interface IDailyNetwork
     void requestStayHiddenBooking(String tag, int index, Object listener);
 
     /**
-     * api/reserv/receipt
      * 호텔 영수증
      *
      * @return
@@ -393,7 +362,6 @@ public interface IDailyNetwork
     void requestKakaoUserLogin(String tag, Map<String, String> params, Object listener);
 
     /**
-     * /api/v3/users/coupons
      * 자신이 소유한 Coupon List
      *
      * @param tag
@@ -402,7 +370,6 @@ public interface IDailyNetwork
     void requestCouponList(String tag, Object listener);
 
     /**
-     * /api/v3/users/coupons
      * 결제화면에서 사용되는 자신이 소유한 Coupon List
      *
      * @param tag
@@ -417,7 +384,6 @@ public interface IDailyNetwork
     void requestCouponList(String tag, int ticketIdx, int countOfTicket, Object listener);
 
     /**
-     * /api/v3/users/coupons/history
      * 자신이 소유한 Coupon List
      *
      * @param tag
@@ -451,7 +417,6 @@ public interface IDailyNetwork
     void requestNoticeAgreementResult(String tag, boolean isAgree, Object listener);
 
     /**
-     * api/v1/notice/benefit - GET
      *
      * @param tag
      * @param listener
@@ -481,7 +446,6 @@ public interface IDailyNetwork
     void requestDownloadEventCoupon(String tag, String couponCode, Object listener);
 
     /**
-     * api/v1/notice/benefit - PUT
      *
      * @param tag
      * @param isAgree  required

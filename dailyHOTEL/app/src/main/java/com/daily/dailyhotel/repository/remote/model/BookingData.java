@@ -47,8 +47,8 @@ public class BookingData
 
     public Booking getBooking()
     {
-        final String COMPLETED_PAYMENT = "10";
-        final String WAIT_PAYMENT = "20";
+        final String PAYMENT_COMPLETED = "10";
+        final String PAYMENT_WAITING = "20";
 
         Booking booking = new Booking();
         booking.placeName = name;
@@ -59,12 +59,12 @@ public class BookingData
             booking.imageUrl = images.get(0).get("path");
         }
 
-        if (WAIT_PAYMENT.equalsIgnoreCase(payType) == true)
+        if (PAYMENT_WAITING.equalsIgnoreCase(payType) == true)
         {
-            booking.statusPayment = Booking.WAIT_PAYMENT;
+            booking.statePayment = Booking.PAYMENT_WAITING;
         } else
         {
-            booking.statusPayment = Booking.COMPLETED_PAYMENT;
+            booking.statePayment = Booking.PAYMENT_COMPLETED;
         }
 
         switch (type)
