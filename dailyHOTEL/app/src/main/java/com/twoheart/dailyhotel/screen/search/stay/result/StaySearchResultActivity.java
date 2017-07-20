@@ -1022,6 +1022,35 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
                 AnalyticsManager.getInstance(StaySearchResultActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
                     , AnalyticsManager.Action.STAY_ITEM_CLICK_TRUE_VR, Integer.toString(stay.index), null);
             }
+
+            AnalyticsManager.getInstance(StaySearchResultActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                , AnalyticsManager.Action.STAY_ITEM_CLICK, Integer.toString(stay.index), null);
+
+            if (stay.availableRooms == 0)
+            {
+                switch (mSearchType)
+                {
+                    case AUTOCOMPLETE:
+                        AnalyticsManager.getInstance(StaySearchResultActivity.this).recordEvent(AnalyticsManager.Category.SOLDOUT_STAY_ITEM_CLICK//
+                            , AnalyticsManager.Action.AUTO_SEARCH, Integer.toString(stay.index), null);
+                        break;
+
+                    case LOCATION:
+                        AnalyticsManager.getInstance(StaySearchResultActivity.this).recordEvent(AnalyticsManager.Category.SOLDOUT_STAY_ITEM_CLICK//
+                            , AnalyticsManager.Action.NEARBY, Integer.toString(stay.index), null);
+                        break;
+
+                    case RECENT:
+                        AnalyticsManager.getInstance(StaySearchResultActivity.this).recordEvent(AnalyticsManager.Category.SOLDOUT_STAY_ITEM_CLICK//
+                            , AnalyticsManager.Action.RECENT, Integer.toString(stay.index), null);
+                        break;
+
+                    case SEARCHES:
+                        AnalyticsManager.getInstance(StaySearchResultActivity.this).recordEvent(AnalyticsManager.Category.SOLDOUT_STAY_ITEM_CLICK//
+                            , AnalyticsManager.Action.KEYWORD, Integer.toString(stay.index), null);
+                        break;
+                }
+            }
         }
 
         @Override

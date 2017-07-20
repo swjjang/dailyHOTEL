@@ -24,13 +24,19 @@ import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
+import io.reactivex.Observable;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
 import retrofit2.Call;
 import retrofit2.Response;
 
 public class GourmetSearchFragment extends PlaceSearchFragment
 {
     GourmetBookingDay mGourmetBookingDay;
+    Disposable mAnalyticsDisposable;
 
     @Override
     protected void initContents()
@@ -406,12 +412,50 @@ public class GourmetSearchFragment extends PlaceSearchFragment
         @Override
         public void onResponseAutoComplete(String keyword, List<GourmetKeyword> list)
         {
+            if (mAnalyticsDisposable != null)
+            {
+                mAnalyticsDisposable.dispose();
+            }
+
+            mAnalyticsDisposable = null;
+
             if (isFinishing() == true)
             {
                 return;
             }
 
             mPlaceSearchLayout.updateAutoCompleteLayout(keyword, list);
+
+            if (keyword != null)
+            {
+                mAnalyticsDisposable = Observable.just(keyword).delaySubscription(2, TimeUnit.SECONDS).subscribe(new Consumer<String>()
+                {
+                    @Override
+                    public void accept(@NonNull String keyword) throws Exception
+                    {
+                        int soldOutCount = 0;
+
+                        for (GourmetKeyword gourmetKeyword : list)
+                        {
+                            if (gourmetKeyword.availableTickets == 0 || gourmetKeyword.availableTickets < gourmetKeyword.minimumOrderQuantity || gourmetKeyword.isExpired == true)
+                            {
+                                soldOutCount++;
+                            }
+                        }
+
+                        AnalyticsManager.getInstance(getContext()).recordEvent(AnalyticsManager.Category.AUTO_SEARCH_LIST//
+                            , keyword, Integer.toString(list.size()), soldOutCount, null);
+                    }
+                }, new Consumer<Throwable>()
+                {
+                    @Override
+                    public void accept(@NonNull Throwable throwable) throws Exception
+                    {
+                        AnalyticsManager.getInstance(getContext()).recordEvent(AnalyticsManager.Category.AUTO_SEARCH_LIST//
+                            , keyword, "0", 0, null);
+                    }
+                });
+            }
         }
 
         @Override

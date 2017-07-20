@@ -9,10 +9,14 @@ import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.layout.PlaceListLayout;
 import com.twoheart.dailyhotel.screen.gourmet.list.GourmetListFragment;
 import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import io.reactivex.Observable;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.functions.Consumer;
 import retrofit2.Call;
 import retrofit2.Response;
 
@@ -112,6 +116,55 @@ public class GourmetSearchResultListFragment extends GourmetListFragment
                 mResetCategory = false;
 
                 ((OnGourmetSearchResultListFragmentListener) mOnPlaceListFragmentListener).onGourmetListCount(totalCount);
+
+                if (page <= 1)
+                {
+                    Observable.just(totalCount).subscribe(new Consumer<Integer>()
+                    {
+                        @Override
+                        public void accept(@NonNull Integer integer) throws Exception
+                        {
+                            int soldOutCount = 0;
+                            for (Gourmet gourmet : list)
+                            {
+                                if (gourmet.availableTicketNumbers == 0 || gourmet.availableTicketNumbers < gourmet.minimumOrderQuantity || gourmet.expired == true)
+                                {
+                                    soldOutCount++;
+                                }
+                            }
+
+                            switch(mSearchType)
+                            {
+                                case AUTOCOMPLETE:
+                                    AnalyticsManager.getInstance(getContext()).recordEvent(AnalyticsManager.Category.AUTO_SEARCH_RESULT//
+                                        , ((GourmetSearchCuration) mGourmetCuration).getKeyword().name, integer.toString(), soldOutCount, null);
+                                    break;
+
+                                case LOCATION:
+                                    AnalyticsManager.getInstance(getContext()).recordEvent(AnalyticsManager.Category.NEARBY_SEARCH_RESULT//
+                                        , ((GourmetSearchCuration) mGourmetCuration).getKeyword().name, integer.toString(), soldOutCount, null);
+                                    break;
+
+                                case RECENT:
+                                    AnalyticsManager.getInstance(getContext()).recordEvent(AnalyticsManager.Category.RECENT_SEARCH_RESULT//
+                                        , ((GourmetSearchCuration) mGourmetCuration).getKeyword().name, integer.toString(), soldOutCount, null);
+                                    break;
+
+                                case SEARCHES:
+                                    AnalyticsManager.getInstance(getContext()).recordEvent(AnalyticsManager.Category.KEYWORD_SEARCH_RESULT//
+                                        , ((GourmetSearchCuration) mGourmetCuration).getKeyword().name, integer.toString(), soldOutCount, null);
+                                    break;
+                            }
+                        }
+                    }, new Consumer<Throwable>()
+                    {
+                        @Override
+                        public void accept(@NonNull Throwable throwable) throws Exception
+                        {
+
+                        }
+                    });
+                }
             }
 
             GourmetSearchResultListFragment.this.onGourmetList(list, page, totalCount, maxCount, categoryCodeMap, categorySequenceMap, false);

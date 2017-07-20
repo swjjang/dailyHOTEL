@@ -497,14 +497,21 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
 
         if (DEBUG == true)
         {
-            ExLog.d(TAG + "Event : " + category + " | " + action + " | " + label);
+            ExLog.d(TAG + "Event : " + category + " | " + action + " | " + label + " | " + value);
         }
     }
 
     @Override
     void recordEvent(String category, String action, String label, long value, Map<String, String> params)
     {
+        mGoogleAnalyticsTracker.send(new HitBuilders.EventBuilder()//
+            .setCategory(category).setAction(action)//
+            .setLabel(label).setValue(value).build());
 
+        if (DEBUG == true)
+        {
+            ExLog.d(TAG + "Event : " + category + " | " + action + " | " + label + " | " + value);
+        }
     }
 
     @Override
