@@ -51,7 +51,6 @@ import com.twoheart.dailyhotel.screen.gourmet.payment.GourmetPaymentActivity;
 import com.twoheart.dailyhotel.screen.mydaily.coupon.SelectGourmetCouponDialogActivity;
 import com.twoheart.dailyhotel.screen.mydaily.member.EditProfilePhoneActivity;
 import com.twoheart.dailyhotel.screen.mydaily.member.LoginActivity;
-import com.twoheart.dailyhotel.screen.mydaily.member.ProfileLayout;
 import com.twoheart.dailyhotel.screen.mydaily.wishlist.WishListTabActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
@@ -1613,7 +1612,6 @@ public class GourmetDetailActivity extends PlaceDetailActivity
                 mAnalyticsParam.placeName = gourmetDetailParams.name;
                 mAnalyticsParam.gradeCode = gourmetDetailParams.getGrade().name();
                 mAnalyticsParam.gradeName = gourmetDetailParams.getGrade().getName(GourmetDetailActivity.this);
-                //                mAnalyticsParam. // TODO : 여기 추가로 들어간... 카테고리 어찌 할지
 
                 if (mInitializeStatus == STATUS_INITIALIZE_NONE)
                 {
