@@ -519,6 +519,10 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
             visitTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 11);
             visitTextView.setVisibility(View.INVISIBLE);
 
+            RelativeLayout.LayoutParams visitLayoutParams = (RelativeLayout.LayoutParams) visitTextView.getLayoutParams();
+            visitLayoutParams.topMargin = ScreenUtils.dpToPx(this, 5);
+            visitTextView.setLayoutParams(visitLayoutParams);
+
             if ((dayTextView.getPaintFlags() & Paint.STRIKE_THRU_TEXT_FLAG) == Paint.STRIKE_THRU_TEXT_FLAG)
             {
                 dayTextView.setPaintFlags(dayTextView.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
@@ -530,6 +534,10 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
         visitTextView.setText(R.string.label_calendar_soldout);
         visitTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 8);
         visitTextView.setVisibility(View.VISIBLE);
+
+        RelativeLayout.LayoutParams visitLayoutParams = (RelativeLayout.LayoutParams) visitTextView.getLayoutParams();
+        visitLayoutParams.topMargin = ScreenUtils.dpToPx(this, 8);
+        visitTextView.setLayoutParams(visitLayoutParams);
 
         dayTextView.setPaintFlags(dayTextView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
     }
