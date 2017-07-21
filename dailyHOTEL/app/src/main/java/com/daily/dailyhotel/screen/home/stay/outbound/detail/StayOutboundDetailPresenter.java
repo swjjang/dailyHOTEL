@@ -261,7 +261,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
                 {
                     onStayOutboundDetail(stayOutboundDetail);
 
-                    if (disposable != null && disposable.isDisposed() == false)
+                    if (disposable != null)
                     {
                         disposable.dispose();
                     }
