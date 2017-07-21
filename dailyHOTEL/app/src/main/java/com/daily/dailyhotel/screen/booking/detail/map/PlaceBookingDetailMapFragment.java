@@ -135,6 +135,12 @@ public class PlaceBookingDetailMapFragment extends com.google.android.gms.maps.S
             mMyLocationMarker = null;
         }
 
+        if (mPlaceLocationMarker != null)
+        {
+            mPlaceLocationMarker.remove();
+            mPlaceLocationMarker = null;
+        }
+
         super.onDestroyView();
     }
 
