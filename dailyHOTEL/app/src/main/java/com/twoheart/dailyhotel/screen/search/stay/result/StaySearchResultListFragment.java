@@ -9,6 +9,7 @@ import com.twoheart.dailyhotel.model.StaySearchParams;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.layout.PlaceListLayout;
 import com.twoheart.dailyhotel.screen.hotel.list.StayListFragment;
+import com.twoheart.dailyhotel.util.DailyRemoteConfigPreference;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
@@ -101,7 +102,9 @@ public class StaySearchResultListFragment extends StayListFragment
         }
 
         StaySearchParams params = (StaySearchParams) mStayCuration.toPlaceParams(page, PAGENATION_LIST_SIZE, true);
-        ((StaySearchResultListNetworkController) mNetworkController).requestStaySearchList(params);
+        String abTestType = DailyRemoteConfigPreference.getInstance(getContext()).getKeyRemoteConfigStayRankTestType();
+
+        ((StaySearchResultListNetworkController) mNetworkController).requestStaySearchList(params, abTestType);
     }
 
     public void setIsDeepLink(boolean isDeepLink)

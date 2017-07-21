@@ -123,6 +123,7 @@ public class DailyRemoteConfig
         String androidStamp2 = mFirebaseRemoteConfig.getString("androidStamp2");
         String androidBoutiqueBM = mFirebaseRemoteConfig.getString("androidBoutiqueBM");
         String androidStaticUrl = mFirebaseRemoteConfig.getString("androidStaticUrl");
+        String androidStayRankABTest = mFirebaseRemoteConfig.getString("androidStayRankABTest");
 
         if (Constants.DEBUG == true)
         {
@@ -138,6 +139,14 @@ public class DailyRemoteConfig
                 ExLog.d("androidStamp2 : " + new JSONObject(androidStamp2).toString());
                 ExLog.d("androidBoutiqueBM : " + new JSONObject(androidBoutiqueBM).toString());
                 ExLog.d("androidStaticUrl : " + new JSONObject(androidStaticUrl).toString());
+
+                if (DailyTextUtils.isTextEmpty(androidStayRankABTest) == true)
+                {
+                    ExLog.d("androidStayRankABTest : ");
+                } else
+                {
+                    ExLog.d("androidStayRankABTest : " + new JSONObject(androidStayRankABTest).toString());
+                }
             } catch (Exception e)
             {
                 ExLog.d(e.toString());
@@ -196,6 +205,9 @@ public class DailyRemoteConfig
 
         // androidStaticUrl
         writeStaticUrl(mContext, androidStaticUrl);
+
+        // Android Stay Rank A/B Test
+        writeStayRankTest(mContext, androidStayRankABTest);
 
         if (listener != null)
         {
@@ -595,6 +607,35 @@ public class DailyRemoteConfig
         } catch (Exception e)
         {
             ExLog.e(e.toString());
+        }
+    }
+
+    void writeStayRankTest(Context context, String jsonString)
+    {
+        if (context == null)
+        {
+            return;
+        }
+
+        if (DailyTextUtils.isTextEmpty(jsonString) == true)
+        {
+            DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigStayRankTest(null);
+            DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigStayRankTestType(null);
+        } else
+        {
+            try
+            {
+                JSONObject jsonObject = new JSONObject(jsonString);
+
+                String test = jsonObject.getString("test");
+                String type = jsonObject.getString("type");
+
+                DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigStayRankTest(test);
+                DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigStayRankTestType(type);
+            } catch (Exception e)
+            {
+                ExLog.e(e.toString());
+            }
         }
     }
 }

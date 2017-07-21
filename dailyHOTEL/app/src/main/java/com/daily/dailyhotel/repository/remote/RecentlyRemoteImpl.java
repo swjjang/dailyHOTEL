@@ -145,7 +145,7 @@ public class RecentlyRemoteImpl implements RecentlyInterface
         recentStayParams.setTargetIndices(targetIndices);
 
         return DailyMobileAPI.getInstance(mContext) //
-            .getStayList(recentStayParams.toParamsMap(), recentStayParams.getBedTypeList(), recentStayParams.getLuxuryList()) //
+            .getStayList(recentStayParams.toParamsMap(), recentStayParams.getBedTypeList(), recentStayParams.getLuxuryList(), null) //
             .map(new Function<BaseDto<StayListData>, List<Stay>>()
             {
                 @Override
