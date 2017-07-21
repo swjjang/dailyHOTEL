@@ -46,6 +46,9 @@ public class HomePlace
     @JsonField(name = "soldOut")
     public boolean isSoldOut;
 
+    @JsonIgnore
+    public double distance; // 고메 추천 영역을 위해 삽입
+
     @OnJsonParseComplete
     void onParseComplete()
     {

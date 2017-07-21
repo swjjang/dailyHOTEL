@@ -1,6 +1,7 @@
 package com.daily.dailyhotel.screen.booking.detail.map;
 
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Build;
 import android.support.annotation.NonNull;
@@ -30,6 +31,13 @@ import java.util.List;
 
 public class GourmetBookingDetailMapPresenter extends PlaceBookingDetailMapPresenter
 {
+    private GourmetBookingDetailMapAnalyticsInterface mAnalytics;
+
+    public interface GourmetBookingDetailMapAnalyticsInterface extends BaseAnalyticsInterface
+    {
+        void onItemClick(Activity activity, Gourmet gourmet);
+    }
+
     public GourmetBookingDetailMapPresenter(@NonNull PlaceBookingDetailMapActivity activity)
     {
         super(activity);
@@ -43,9 +51,17 @@ public class GourmetBookingDetailMapPresenter extends PlaceBookingDetailMapPrese
     }
 
     @Override
+    public void constructorInitialize(PlaceBookingDetailMapActivity activity)
+    {
+        super.constructorInitialize(activity);
+
+        setAnalytics(new GourmetBookingDetailMapAnalyticsImpl());
+    }
+
+    @Override
     public void setAnalytics(BaseAnalyticsInterface analytics)
     {
-        // TODO : Analytics
+        mAnalytics = (GourmetBookingDetailMapAnalyticsInterface) analytics;
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
@@ -124,6 +140,8 @@ public class GourmetBookingDetailMapPresenter extends PlaceBookingDetailMapPrese
 
             getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
         }
+
+        mAnalytics.onItemClick(getActivity(), gourmet);
     }
 
     @Override
