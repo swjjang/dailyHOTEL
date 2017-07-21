@@ -820,7 +820,7 @@ public class DailyPreference
 
     public boolean isShowAppPermissionsGuide()
     {
-        return getValue(mPreferences, KEY_APP_PERMISSIONS_GUIDE, false);
+        return getValue(mPreferences, KEY_APP_PERMISSIONS_GUIDE, true);
     }
 
     public void setShowStayOutboundSearchCalendar(boolean value)

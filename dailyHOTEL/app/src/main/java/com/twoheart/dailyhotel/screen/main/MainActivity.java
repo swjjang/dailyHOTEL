@@ -168,14 +168,14 @@ public class MainActivity extends BaseActivity implements Constants, BaseMenuNav
 
         initLayout();
 
-        if (DailyPreference.getInstance(this).isShowAppPermissionsGuide() == false)
+        if (DailyPreference.getInstance(this).isShowAppPermissionsGuide() == true)
         {
             showAppPermissionsGuideDialog(new View.OnClickListener()
             {
                 @Override
                 public void onClick(View v)
                 {
-                    DailyPreference.getInstance(MainActivity.this).setShowAppPermissionsGuide(true);
+                    DailyPreference.getInstance(MainActivity.this).setShowAppPermissionsGuide(false);
 
                     if (mAppPermissionsGuideDialog != null && mAppPermissionsGuideDialog.isShowing() == true)
                     {
