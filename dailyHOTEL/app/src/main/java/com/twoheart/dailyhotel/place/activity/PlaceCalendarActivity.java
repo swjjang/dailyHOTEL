@@ -503,9 +503,9 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
         }
     }
 
-    protected void setSoldOutTextView(View dayView , boolean isShow)
+    protected void setSoldOutTextView(View dayView, boolean isShow)
     {
-        if (dayView== null)
+        if (dayView == null)
         {
             return;
         }
@@ -609,6 +609,48 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
                 }
             });
         }
+    }
+
+    protected void smoothScrollCheckInDayPosition(View checkInDayView)
+    {
+        ScrollView scrollView = (ScrollView) findViewById(R.id.calendarScrollLayout);
+
+        if (checkInDayView == null)
+        {
+            if (mDayViewList == null || mDayViewList.size() == 0)
+            {
+                return;
+            }
+
+            for (View dayView : mDayViewList)
+            {
+                if (dayView.isSelected() == true)
+                {
+                    checkInDayView = dayView;
+                    break;
+                }
+            }
+
+            if (checkInDayView == null)
+            {
+                return;
+            }
+
+        }
+
+        final View selectView = checkInDayView;
+
+        scrollView.postDelayed(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                View view = (View) selectView.getParent().getParent();
+                int scrollTop = view.getTop();
+
+                scrollView.smoothScrollBy(0, scrollTop);
+            }
+        }, 200);
     }
 
     protected void showAnimation()

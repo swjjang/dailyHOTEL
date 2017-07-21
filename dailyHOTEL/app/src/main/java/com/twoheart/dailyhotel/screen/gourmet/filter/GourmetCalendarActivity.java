@@ -71,7 +71,7 @@ public class GourmetCalendarActivity extends PlaceCalendarActivity
 
         if (intent.hasExtra(INTENT_EXTRA_DATA_SOLDOUT_LIST) == true)
         {
-            mSoldOutDayList =  intent.getIntegerArrayListExtra(INTENT_EXTRA_DATA_SOLDOUT_LIST);
+            mSoldOutDayList = intent.getIntegerArrayListExtra(INTENT_EXTRA_DATA_SOLDOUT_LIST);
         }
 
         if (mTodayDateTime == null || mPlaceBookingDay == null)
@@ -101,6 +101,8 @@ public class GourmetCalendarActivity extends PlaceCalendarActivity
                     }
 
                     showAnimation();
+
+                    smoothScrollCheckInDayPosition(mDayView);
                 }
             }, 20);
         } else
@@ -115,6 +117,8 @@ public class GourmetCalendarActivity extends PlaceCalendarActivity
             {
                 setSelectedDay(mTodayDateTime, (GourmetBookingDay) mPlaceBookingDay);
             }
+
+            smoothScrollCheckInDayPosition(mDayView);
         }
     }
 
@@ -296,9 +300,9 @@ public class GourmetCalendarActivity extends PlaceCalendarActivity
             return;
         }
 
-//        TextView textView = (TextView) view.findViewById(R.id.textView);
-//        textView.setText(null);
-//        textView.setVisibility(View.INVISIBLE);
+        //        TextView textView = (TextView) view.findViewById(R.id.textView);
+        //        textView.setText(null);
+        //        textView.setVisibility(View.INVISIBLE);
         updateDayView(view);
 
         view.setBackgroundDrawable(getResources().getDrawable(R.drawable.selector_calendar_day_background));
