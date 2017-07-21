@@ -6,9 +6,8 @@ import android.animation.ObjectAnimator;
 import android.animation.PropertyValuesHolder;
 import android.text.Spannable;
 import android.text.SpannableString;
-import android.text.SpannableStringBuilder;
+import android.util.Pair;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.animation.OvershootInterpolator;
 
 import com.daily.base.BaseActivity;
@@ -22,6 +21,9 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ActivityStayOutboundPaymentThankYouDataBinding;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.CustomFontTypefaceSpan;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class StayOutboundThankYouView extends BaseDialogView<StayOutboundThankYouView.OnEventListener, ActivityStayOutboundPaymentThankYouDataBinding> implements StayOutboundThankYouInterface, View.OnClickListener
 {
@@ -42,6 +44,7 @@ public class StayOutboundThankYouView extends BaseDialogView<StayOutboundThankYo
             return;
         }
 
+        viewDataBinding.thankYouInformationView.setReservationTitle(R.string.label_booking_room_info);
         viewDataBinding.closeView.setOnClickListener(this);
         viewDataBinding.confirmView.setOnClickListener(this);
     }
@@ -61,16 +64,15 @@ public class StayOutboundThankYouView extends BaseDialogView<StayOutboundThankYo
 
         if (DailyTextUtils.isTextEmpty(userName) == false)
         {
-            String message = getString(R.string.message_completed_payment_format, userName);
-            SpannableStringBuilder userNameBuilder = new SpannableStringBuilder(message);
-            userNameBuilder.setSpan( //
+            SpannableString spannableString = new SpannableString(getString(R.string.message_completed_payment_format, userName));
+            spannableString.setSpan( //
                 new CustomFontTypefaceSpan(FontManager.getInstance(getContext()).getMediumTypeface()),//
                 0, userName.length(),//
                 Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-            getViewDataBinding().messageTextView.setText(userNameBuilder);
+            getViewDataBinding().thankYouInformationView.setMessageText(spannableString);
         } else
         {
-            getViewDataBinding().messageTextView.setText(R.string.message_completed_payment_default);
+            getViewDataBinding().thankYouInformationView.setMessageText(R.string.message_completed_payment_default);
         }
     }
 
@@ -81,11 +83,6 @@ public class StayOutboundThankYouView extends BaseDialogView<StayOutboundThankYo
         {
             return;
         }
-
-        int imageHeight = ScreenUtils.getRatioHeightType4x3(ScreenUtils.getScreenWidth(getContext()));
-        ViewGroup.LayoutParams layoutParams = getViewDataBinding().simpleDraweeView.getLayoutParams();
-        layoutParams.height = imageHeight;
-        getViewDataBinding().simpleDraweeView.setLayoutParams(layoutParams);
 
         Util.requestImageResize(getContext(), getViewDataBinding().simpleDraweeView, imageUrl);
     }
@@ -98,11 +95,16 @@ public class StayOutboundThankYouView extends BaseDialogView<StayOutboundThankYo
             return;
         }
 
-        getViewDataBinding().checkInDateTextView.setText(checkInDate);
-        getViewDataBinding().checkOutDateTextView.setText(checkOutDate);
-        getViewDataBinding().nightsTextView.setText(getString(R.string.label_nights, nights));
-        getViewDataBinding().bookingPlaceTextView.setText(stayName);
-        getViewDataBinding().productTypeTextView.setText(roomType);
+        getViewDataBinding().thankYouInformationView.setDate1Text(getString(R.string.act_booking_chkin), checkInDate);
+        getViewDataBinding().thankYouInformationView.setDate2Text(getString(R.string.act_booking_chkout), checkOutDate);
+        getViewDataBinding().thankYouInformationView.setCenterNightsText(getString(R.string.label_nights, nights));
+
+        List<Pair<CharSequence, CharSequence>> reservationInformationList = new ArrayList<>();
+
+        reservationInformationList.add(new Pair(getString(R.string.label_booking_place_name), stayName));
+        reservationInformationList.add(new Pair(getString(R.string.label_booking_room_type), roomType));
+
+        getViewDataBinding().thankYouInformationView.setReservationInformation(reservationInformationList);
     }
 
     @Override
@@ -146,7 +148,7 @@ public class StayOutboundThankYouView extends BaseDialogView<StayOutboundThankYo
             stampLayoutAnimatorDuration = 200;
         }
 
-        getViewDataBinding().receiptLayout.setTranslationY(startY);
+        getViewDataBinding().thankYouInformationView.setTranslationY(startY);
 
         AnimatorSet animatorSet = new AnimatorSet();
         animatorSet.setStartDelay(animatorSetStartDelay);
@@ -189,7 +191,7 @@ public class StayOutboundThankYouView extends BaseDialogView<StayOutboundThankYo
             }
         });
 
-        ObjectAnimator receiptLayoutAnimator = ObjectAnimator.ofPropertyValuesHolder(getViewDataBinding().receiptLayout //
+        ObjectAnimator receiptLayoutAnimator = ObjectAnimator.ofPropertyValuesHolder(getViewDataBinding().thankYouInformationView //
             , PropertyValuesHolder.ofFloat("translationY", startY, endY) //
         );
 
@@ -206,13 +208,13 @@ public class StayOutboundThankYouView extends BaseDialogView<StayOutboundThankYo
             @Override
             public void onAnimationEnd(Animator animation)
             {
-                getViewDataBinding().receiptLayout.setTranslationY(endY);
+                getViewDataBinding().thankYouInformationView.setTranslationY(endY);
             }
 
             @Override
             public void onAnimationCancel(Animator animation)
             {
-                getViewDataBinding().receiptLayout.setTranslationY(endY);
+                getViewDataBinding().thankYouInformationView.setTranslationY(endY);
             }
 
             @Override
