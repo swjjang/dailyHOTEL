@@ -109,6 +109,8 @@ public class StayCalendarActivity extends PlaceCalendarActivity
                     }
 
                     showAnimation();
+
+                    smoothScrollCheckInDayPosition(mCheckInDayView);
                 }
             }, 20);
         } else
@@ -124,6 +126,8 @@ public class StayCalendarActivity extends PlaceCalendarActivity
                 setSelectedRangeDay((StayBookingDay) mPlaceBookingDay);
                 checkLastDay();
             }
+
+            smoothScrollCheckInDayPosition(mCheckInDayView);
         }
 
         if (mIsSingleDay == true)
