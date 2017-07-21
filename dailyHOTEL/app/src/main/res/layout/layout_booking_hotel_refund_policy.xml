@@ -147,7 +147,8 @@
         android:paddingBottom="16dp"
         android:paddingEnd="8dp"
         android:paddingLeft="15dp"
-        android:paddingRight="15dp">
+        android:paddingRight="15dp"
+        android:paddingTop="10dp">
 
         <com.daily.base.widget.DailyTextView
             android:layout_width="wrap_content"
@@ -179,7 +180,7 @@
                 android:gravity="center"
                 android:text="@string/label_payment_agree_personal_information02"
                 android:textColor="@color/default_text_c666666"
-                android:textSize="12dp"/>
+                android:textSize="11dp"/>
 
             <View
                 android:layout_width="1dp"
@@ -195,7 +196,7 @@
                 android:gravity="center_vertical"
                 android:padding="6dp"
                 android:textColor="@color/default_text_cb70038"
-                android:textSize="12dp"/>
+                android:textSize="11dp"/>
 
             <View
                 android:layout_width="1dp"
@@ -225,7 +226,7 @@
                 android:gravity="center"
                 android:text="@string/label_payment_agree_personal_information03"
                 android:textColor="@color/default_text_c666666"
-                android:textSize="12dp"/>
+                android:textSize="11dp"/>
 
             <View
                 android:layout_width="1dp"
@@ -241,7 +242,7 @@
                 android:padding="6dp"
                 android:text="@string/message_payment_agree_personal_information03"
                 android:textColor="@color/default_text_c929292"
-                android:textSize="12dp"/>
+                android:textSize="11dp"/>
 
             <View
                 android:layout_width="1dp"
@@ -271,7 +272,7 @@
                 android:gravity="center"
                 android:text="@string/label_payment_agree_personal_information04"
                 android:textColor="@color/default_text_c666666"
-                android:textSize="12dp"/>
+                android:textSize="11dp"/>
 
             <View
                 android:layout_width="1dp"
@@ -287,7 +288,7 @@
                 android:padding="6dp"
                 android:text="@string/message_payment_agree_personal_information04"
                 android:textColor="@color/default_text_c929292"
-                android:textSize="12dp"/>
+                android:textSize="11dp"/>
 
             <View
                 android:layout_width="1dp"
@@ -317,7 +318,7 @@
                 android:gravity="center"
                 android:text="@string/label_payment_agree_personal_information05"
                 android:textColor="@color/default_text_c666666"
-                android:textSize="12dp"/>
+                android:textSize="11dp"/>
 
             <View
                 android:layout_width="1dp"
@@ -334,7 +335,7 @@
                 android:padding="6dp"
                 android:text="@string/message_payment_agree_personal_information05"
                 android:textColor="@color/default_text_c929292"
-                android:textSize="12dp"/>
+                android:textSize="11dp"/>
 
             <View
                 android:layout_width="1dp"
