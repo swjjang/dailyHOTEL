@@ -247,10 +247,10 @@ public abstract class PlaceDetailActivity extends BaseActivity
     {
         super.onPause();
 
-        if (mPlaceDetailLayout != null && mPlaceDetailLayout.isTrueVRTooltipVisibility() == true)
+        if (mPlaceDetailLayout != null && mPlaceDetailLayout.isWishTooltipVisibility() == true)
         {
-            mPlaceDetailLayout.setTrueVRTooltipVisibility(false);
-            DailyPreference.getInstance(this).setTrueVRViewTooltip(false);
+            mPlaceDetailLayout.setWishTooltipVisibility(false, 0);
+            DailyPreference.getInstance(this).setWishTooltip(false);
         }
     }
 
@@ -655,22 +655,22 @@ public abstract class PlaceDetailActivity extends BaseActivity
             });
         }
 
-        if (DailyPreference.getInstance(this).isTrueVRViewTooltip() == true)
+//        if (DailyPreference.getInstance(this).isWishTooltip() == true)
         {
-            mPlaceDetailLayout.setTrueVRTooltipVisibility(true);
+            mPlaceDetailLayout.setWishTooltipVisibility(true, ScreenUtils.dpToPx(this, 40));
 
             mHandler.postDelayed(new Runnable()
             {
                 @Override
                 public void run()
                 {
-                    DailyPreference.getInstance(PlaceDetailActivity.this).setTrueVRViewTooltip(false);
+                    DailyPreference.getInstance(PlaceDetailActivity.this).setWishTooltip(false);
                     mPlaceDetailLayout.hideAnimationTooltip();
                 }
             }, 3000);
-        } else
-        {
-            mPlaceDetailLayout.setTrueVRTooltipVisibility(false);
+//        } else
+//        {
+//            mPlaceDetailLayout.setWishTooltipVisibility(false);
         }
     }
 
@@ -687,7 +687,23 @@ public abstract class PlaceDetailActivity extends BaseActivity
             mTrueViewView.setOnClickListener(null);
         }
 
-        mPlaceDetailLayout.setTrueVRTooltipVisibility(false);
+//        if (DailyPreference.getInstance(this).isWishTooltip() == true)
+//        {
+            mPlaceDetailLayout.setWishTooltipVisibility(true, 0);
+
+            mHandler.postDelayed(new Runnable()
+            {
+                @Override
+                public void run()
+                {
+                    DailyPreference.getInstance(PlaceDetailActivity.this).setWishTooltip(false);
+                    mPlaceDetailLayout.hideAnimationTooltip();
+                }
+            }, 3000);
+//        } else
+//        {
+//            mPlaceDetailLayout.setWishTooltipVisibility(false);
+//        }
     }
 
     protected void setWishTextView(boolean selected, int count)

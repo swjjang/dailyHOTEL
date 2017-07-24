@@ -1607,12 +1607,12 @@ public class StayDetailActivity extends PlaceDetailActivity
         }
 
         @Override
-        public void onTrueVRTooltipClick()
+        public void onWishTooltipClick()
         {
-            if (mPlaceDetailLayout != null && mPlaceDetailLayout.isTrueVRTooltipVisibility() == true)
+            if (mPlaceDetailLayout != null && mPlaceDetailLayout.isWishTooltipVisibility() == true)
             {
                 mPlaceDetailLayout.hideAnimationTooltip();
-                DailyPreference.getInstance(StayDetailActivity.this).setTrueVRViewTooltip(false);
+                DailyPreference.getInstance(StayDetailActivity.this).setWishTooltip(false);
             }
         }
     };
