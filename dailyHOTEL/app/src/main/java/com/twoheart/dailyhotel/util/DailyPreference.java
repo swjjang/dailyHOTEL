@@ -59,7 +59,7 @@ public class DailyPreference
 
     private static final String KEY_IS_REQUEST_REVIEW = "32";
 
-    private static final String KEY_IS_VIEW_TRUEVR_TOOLTIP = "33";
+    private static final String KEY_IS_VIEW_WISH_TOOLTIP = "33";
 
     private static final String KEY_IS_VIEW_STAY_CATEGORY_TOOLTIP = "34";
 
@@ -198,7 +198,7 @@ public class DailyPreference
         // 해택 알림 내용은 유지 하도록 한다. 단 로그인시에는 서버에서 다시 가져와서 세팅한다.
         boolean isShowBenefitAlarm = isShowBenefitAlarm();
         boolean isShowSearchTooltip = isViewSearchTooltip();
-        boolean isShowTrueVRTooltip = isTrueVRViewTooltip();
+        boolean isShowTrueVRTooltip = isWishTooltip();
         int supportTrueVR = getTrueVRSupport();
 
         String allRecentPlaces = getAllRecentPlaces();
@@ -207,6 +207,7 @@ public class DailyPreference
         boolean isHomeTextMessageAreaEnable = isHomeTextMessageAreaEnabled();
         int countPreviewGuide = getCountPreviewGuide();
         boolean isShowAppPermissionsGuide = isShowAppPermissionsGuide();
+        boolean isProductDetailGuide = getGourmetProductDetailGuide();
 
         if (mEditor != null)
         {
@@ -216,7 +217,7 @@ public class DailyPreference
 
         setShowBenefitAlarm(isShowBenefitAlarm);
         setViewSearchTooltip(isShowSearchTooltip);
-        setTrueVRViewTooltip(isShowTrueVRTooltip);
+        setWishTooltip(isShowTrueVRTooltip);
         setTrueVRSupport(supportTrueVR);
         setAllRecentPlaces(allRecentPlaces);
         setBaseUrl(baseUrl);
@@ -224,6 +225,7 @@ public class DailyPreference
         setHomeTextMessageAreaEnabled(isHomeTextMessageAreaEnable);
         setCountPreviewGuide(countPreviewGuide);
         setShowAppPermissionsGuide(isShowAppPermissionsGuide);
+        setGourmetProductDetailGuide(isProductDetailGuide);
 
         DailyHotel.AUTHORIZATION = null;
     }
@@ -671,14 +673,14 @@ public class DailyPreference
         return getValue(mPreferences, KEY_IS_VIEW_SEARCH_TOOLTIP, false);
     }
 
-    public void setTrueVRViewTooltip(boolean value)
+    public void setWishTooltip(boolean value)
     {
-        setValue(mEditor, KEY_IS_VIEW_TRUEVR_TOOLTIP, value);
+        setValue(mEditor, KEY_IS_VIEW_WISH_TOOLTIP, value);
     }
 
-    public boolean isTrueVRViewTooltip()
+    public boolean isWishTooltip()
     {
-        return getValue(mPreferences, KEY_IS_VIEW_TRUEVR_TOOLTIP, true);
+        return getValue(mPreferences, KEY_IS_VIEW_WISH_TOOLTIP, true);
     }
 
     public void setStayCategoryListTooltip(boolean value)

@@ -398,7 +398,7 @@ public class PlacePreviewLayout extends BaseLayout implements View.OnClickListen
 
         mWishPopupTextView.setText(R.string.wishlist_detail_delete_message);
         mWishPopupTextView.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_heart_stroke_l, 0, 0);
-        mWishPopupTextView.setBackgroundResource(R.drawable.shape_filloval_75000000);
+        mWishPopupTextView.setBackgroundResource(R.drawable.shape_filloval_a5000000);
 
         ObjectAnimator objectAnimator1 = ObjectAnimator.ofPropertyValuesHolder(mWishPopupTextView //
             , PropertyValuesHolder.ofFloat("scaleX", 0.8f, 1.2f, 1.0f) //

@@ -48,7 +48,7 @@ import com.twoheart.dailyhotel.screen.common.HappyTalkCategoryDialog;
 import com.twoheart.dailyhotel.screen.common.ImageDetailListActivity;
 import com.twoheart.dailyhotel.screen.common.TrueVRActivity;
 import com.twoheart.dailyhotel.screen.common.ZoomMapActivity;
-import com.twoheart.dailyhotel.screen.gourmet.filter.GourmetCalendarActivity;
+import com.twoheart.dailyhotel.screen.hotel.filter.StayCalendarActivity;
 import com.twoheart.dailyhotel.screen.hotel.filter.StayDetailCalendarActivity;
 import com.twoheart.dailyhotel.screen.hotel.payment.HotelPaymentActivity;
 import com.twoheart.dailyhotel.screen.mydaily.coupon.SelectStayCouponDialogActivity;
@@ -429,8 +429,10 @@ public class StayDetailActivity extends PlaceDetailActivity
     @Override
     protected void requestCommonDateTimeNSoldOutList(int placeIndex)
     {
+        int dayCount = mOverseas == false ? StayCalendarActivity.DAYCOUNT_OF_MAX : StayDetailCalendarActivity.OVERSEAS_DAYCOUNT_OF_MAX;
+
         addCompositeDisposable(Observable.zip(mCommonRemoteImpl.getCommonDateTime() //
-            , mPlaceDetailCalendarImpl.getStayUnavailableCheckInDates(mPlaceDetail.index, GourmetCalendarActivity.DAYCOUNT_OF_MAX, false) //
+            , mPlaceDetailCalendarImpl.getStayUnavailableCheckInDates(mPlaceDetail.index, dayCount, false) //
             , new BiFunction<CommonDateTime, List<String>, TodayDateTime>()
             {
                 @Override
@@ -1605,12 +1607,12 @@ public class StayDetailActivity extends PlaceDetailActivity
         }
 
         @Override
-        public void onTrueVRTooltipClick()
+        public void onWishTooltipClick()
         {
-            if (mPlaceDetailLayout != null && mPlaceDetailLayout.isTrueVRTooltipVisibility() == true)
+            if (mPlaceDetailLayout != null && mPlaceDetailLayout.isWishTooltipVisibility() == true)
             {
                 mPlaceDetailLayout.hideAnimationTooltip();
-                DailyPreference.getInstance(StayDetailActivity.this).setTrueVRViewTooltip(false);
+                DailyPreference.getInstance(StayDetailActivity.this).setWishTooltip(false);
             }
         }
     };
