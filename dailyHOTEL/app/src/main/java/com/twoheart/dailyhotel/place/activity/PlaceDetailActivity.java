@@ -639,7 +639,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
     {
         if (mDailyToolbarLayout != null)
         {
-            mDailyToolbarLayout.setToolbarMenu(R.drawable.navibar_ic_share_01_black, R.drawable.navibar_ic_treuvr, 0, null);
+            mDailyToolbarLayout.setToolbarMenu(R.drawable.navibar_ic_share_01_black, R.drawable.vector_navibar_ic_treuvr, 0, null);
         }
 
         if (mTrueViewView != null)

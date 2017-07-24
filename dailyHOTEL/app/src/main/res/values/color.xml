@@ -69,6 +69,7 @@
     <color name="black_a80">#cc000000</color>
     <color name="black_a75">#bf000000</color>
     <color name="black_a67">#ab000000</color>
+    <color name="black_a65">#a5000000</color>
     <color name="black_a60">#99000000</color>
     <color name="black_a50">#80000000</color>
     <color name="black_a46">#75000000</color>
@@ -289,14 +290,13 @@
     <color name="default_background_cf6f6f8">#f6f6f8</color>
     <color name="default_background_cffcd5b">#ffcd5b</color>
     <color name="default_background_cfedf72">#fedf72</color>
-    <color name="default_background_cdb2453_alpha_80">#ccdb2453</color>
     <color name="default_background_cababab">#ABABAB</color>
     <color name="default_background_cefeff0">#efeff0</color>
     <color name="default_background_ce6e6e7">#e6e6e7</color>
     <color name="default_background_ce4e4e9">#e4e4e9</color>
     <color name="default_background_ccfad80">#cfad80</color>
     <color name="default_placeholder">#dfdfe0</color>
-    <color name="default_background_cdb2353_alpha_92">#ebdb2353</color>
+    <color name="default_background_cdb2353_alpha_92">#eadb2353</color>
 
     <color name="default_popup_button_background_cb70038">#B70038</color>
     <color name="default_popup_button_background_ce8e8e9">#e8e8e9</color>
