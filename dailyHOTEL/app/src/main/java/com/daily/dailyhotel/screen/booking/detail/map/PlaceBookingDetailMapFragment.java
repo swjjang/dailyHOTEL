@@ -16,6 +16,7 @@ import android.widget.RelativeLayout;
 import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
 import com.daily.base.util.VersionUtils;
+import com.daily.base.widget.DailyTextView;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -347,6 +348,26 @@ public class PlaceBookingDetailMapFragment extends com.google.android.gms.maps.S
         {
             mGoogleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cp));
         }
+
+//        mGoogleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener()
+//        {
+//            @Override
+//            public boolean onMarkerClick(Marker marker)
+//            {
+//                marker.showInfoWindow();
+//                return true;
+//            }
+//        });
+
+        mPlaceLocationMarker.hideInfoWindow();
+        mHandler.post(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                mPlaceLocationMarker.showInfoWindow();
+            }
+        });
     }
 
     public void setMyLocation(LatLng latLng, boolean isVisibleMarker)
@@ -820,23 +841,37 @@ public class PlaceBookingDetailMapFragment extends com.google.android.gms.maps.S
 
     private class MapWindowAdapter implements GoogleMap.InfoWindowAdapter
     {
-        private Context mContext;
+        private LayoutInflater mLayoutInflater;
 
         public MapWindowAdapter(Context context)
         {
-            mContext = context;
+            mLayoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         }
 
         @Override
         public View getInfoWindow(Marker marker)
         {
-            LayoutInflater layoutInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            return layoutInflater.inflate(R.layout.no_info_window, null);
+            if (mPlaceLocationMarker != null && mPlaceLocationMarker.equals(marker) == true)
+            {
+                return null;
+            }
+
+            return mLayoutInflater.inflate(R.layout.no_info_window, null);
         }
 
         @Override
         public View getInfoContents(Marker marker)
         {
+            if (mPlaceLocationMarker != null && mPlaceLocationMarker.equals(marker) == true)
+            {
+                View view = mLayoutInflater.inflate(R.layout.fragment_tabmap_popup, null);
+
+                DailyTextView textView = (DailyTextView) view.findViewById(R.id.titleTextView);
+                textView.setText(marker.getTitle());
+
+                return view;
+            }
+
             return null;
         }
 
