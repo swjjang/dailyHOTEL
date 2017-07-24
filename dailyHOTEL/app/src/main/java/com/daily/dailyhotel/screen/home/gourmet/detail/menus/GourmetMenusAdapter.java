@@ -124,7 +124,7 @@ public class GourmetMenusAdapter extends RecyclerView.Adapter<GourmetMenusAdapte
     {
         ListRowGourmetMenuDataBinding dataBinding = DataBindingUtil.inflate(LayoutInflater.from(mContext), R.layout.list_row_gourmet_menu_data, parent, false);
 
-        dataBinding.getRoot().setLayoutParams(new RecyclerView.LayoutParams((int)(ScreenUtils.getScreenWidth(mContext) * MENU_WIDTH_RATIO), ViewGroup.LayoutParams.MATCH_PARENT));
+        dataBinding.getRoot().setLayoutParams(new RecyclerView.LayoutParams((int)getMenuWidth(), ViewGroup.LayoutParams.MATCH_PARENT));
         GourmetMenuViewHolder gourmetMenuViewHolder = new GourmetMenuViewHolder(dataBinding);
 
         dataBinding.roundedConstraintLayout.setRound(ScreenUtils.dpToPx(mContext, 5));
@@ -140,7 +140,7 @@ public class GourmetMenusAdapter extends RecyclerView.Adapter<GourmetMenusAdapte
             return;
         }
 
-        final float with = ScreenUtils.getScreenWidth(mContext) * (1.0f - MENU_WIDTH_RATIO) / 2.0f;
+        final float with = getMenuMargin();
 
         if (position == 0)
         {
@@ -297,6 +297,16 @@ public class GourmetMenusAdapter extends RecyclerView.Adapter<GourmetMenusAdapte
         });
 
         holder.dataBinding.getRoot().setTag(R.id.blurView, holder.dataBinding.blurView);
+    }
+
+    public float getMenuWidth()
+    {
+        return ScreenUtils.getScreenWidth(mContext) * MENU_WIDTH_RATIO;
+    }
+
+    public float getMenuMargin()
+    {
+        return ScreenUtils.getScreenWidth(mContext) * (1.0f - MENU_WIDTH_RATIO) / 2.0f;
     }
 
     private void setLineIndicatorVisible(ListRowGourmetMenuDataBinding dataBinding, int count)

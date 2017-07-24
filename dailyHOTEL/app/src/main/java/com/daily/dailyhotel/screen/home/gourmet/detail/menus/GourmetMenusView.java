@@ -121,15 +121,15 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
             }
         });
 
+        ((ZoomCenterLayoutManager) getViewDataBinding().recyclerView.getLayoutManager()).setMenuMargin((int) gourmetMenusAdapter.getMenuMargin());
         getViewDataBinding().recyclerView.setAdapter(gourmetMenusAdapter);
         getViewDataBinding().recyclerView.post(new Runnable()
         {
             @Override
             public void run()
             {
-                int offset = (int) (ScreenUtils.getScreenWidth(getContext()) * (1.0f - GourmetMenusAdapter.MENU_WIDTH_RATIO) / 2.0f);
-
-                ((LinearLayoutManager) (getViewDataBinding().recyclerView.getLayoutManager())).scrollToPositionWithOffset(position, offset);
+                ((LinearLayoutManager) (getViewDataBinding().recyclerView.getLayoutManager()))//
+                    .scrollToPositionWithOffset(position, (int) gourmetMenusAdapter.getMenuMargin());
             }
         });
     }
@@ -252,7 +252,11 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
         {
             DP_10 = ScreenUtils.dpToPx(context, 10);
             DP_5 = ScreenUtils.dpToPx(context, 5);
-            STANDARD_X = (int) (ScreenUtils.getScreenWidth(context) * (1.0f - GourmetMenusAdapter.MENU_WIDTH_RATIO) / 2.0f);
+        }
+
+        public void setMenuMargin(int margin)
+        {
+            STANDARD_X = margin;
         }
 
         @Override
