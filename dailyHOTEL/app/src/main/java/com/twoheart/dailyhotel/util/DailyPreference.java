@@ -207,6 +207,7 @@ public class DailyPreference
         boolean isHomeTextMessageAreaEnable = isHomeTextMessageAreaEnabled();
         int countPreviewGuide = getCountPreviewGuide();
         boolean isShowAppPermissionsGuide = isShowAppPermissionsGuide();
+        boolean isProductDetailGuide = getGourmetProductDetailGuide();
 
         if (mEditor != null)
         {
@@ -224,6 +225,7 @@ public class DailyPreference
         setHomeTextMessageAreaEnabled(isHomeTextMessageAreaEnable);
         setCountPreviewGuide(countPreviewGuide);
         setShowAppPermissionsGuide(isShowAppPermissionsGuide);
+        setGourmetProductDetailGuide(isProductDetailGuide);
 
         DailyHotel.AUTHORIZATION = null;
     }
