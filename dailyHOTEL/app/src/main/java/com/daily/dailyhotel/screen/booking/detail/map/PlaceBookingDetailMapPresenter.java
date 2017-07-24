@@ -235,8 +235,7 @@ public abstract class PlaceBookingDetailMapPresenter extends BaseExceptionPresen
             return;
         }
 
-        getViewInterface().setPlaceList(mPlaceList, mPlaceBookingDay);
-        getViewInterface().addMarker(mPlaceLocation.getLatitude(), mPlaceLocation.getLongitude(), mPlaceName);
+        getViewInterface().setPlaceList(mPlaceList, mPlaceBookingDay, mPlaceLocation, mPlaceName);
 
         unLockAll();
     }

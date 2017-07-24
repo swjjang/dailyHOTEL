@@ -20,7 +20,7 @@ public interface PlaceBookingDetailMapInterface extends BaseDialogViewInterface
 {
     void initMapLayout(FragmentManager fragmentManager);
 
-    void setPlaceList(ArrayList<Place> placeList, PlaceBookingDay placeBookingDay);
+    void setPlaceList(ArrayList<Place> placeList, PlaceBookingDay placeBookingDay, Location placeLocation, String placeName);
 
     void setPlaceMapViewPagerList(Context context, ArrayList<Place> placeList);
 
@@ -32,5 +32,5 @@ public interface PlaceBookingDetailMapInterface extends BaseDialogViewInterface
 
     void setMyLocation(Location location);
 
-    void addMarker(double lat, double lng, String placeName);
+    void setPlaceMarker(double lat, double lng, String placeName);
 }

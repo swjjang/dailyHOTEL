@@ -151,25 +151,25 @@ public abstract class PlaceBookingDetailMapView extends BaseDialogView<PlaceBook
     }
 
     @Override
-    public void setPlaceList(ArrayList<Place> placeList, PlaceBookingDay placeBookingDay)
+    public void setPlaceList(ArrayList<Place> placeList, PlaceBookingDay placeBookingDay, Location placeLocation, String placeName)
     {
         if (mPlaceBookingDetailMapFragment == null || mViewPager == null || mViewPagerAdapter == null)
         {
             return;
         }
 
-        mPlaceBookingDetailMapFragment.setPlaceList(placeList);
+        mPlaceBookingDetailMapFragment.setPlaceList(placeList, placeLocation, placeName);
     }
 
     @Override
-    public void addMarker(double lat, double lng, String placeName)
+    public void setPlaceMarker(double lat, double lng, String placeName)
     {
        if (mPlaceBookingDetailMapFragment == null)
        {
            return;
        }
 
-       mPlaceBookingDetailMapFragment.addMarker(lat, lng, placeName);
+       mPlaceBookingDetailMapFragment.setPlaceMarker(lat, lng, placeName);
     }
 
     private DailyOverScrollViewPager addMapViewPager(Context context, ViewGroup viewGroup)
