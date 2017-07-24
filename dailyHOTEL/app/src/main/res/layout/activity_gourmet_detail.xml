@@ -348,11 +348,11 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <com.daily.base.widget.DailyTextView
+            android:id="@+id/wishTooltipTextView"
             android:layout_width="316dp"
             android:layout_height="wrap_content"
             android:layout_gravity="right"
             android:layout_marginTop="32dp"
-            android:background="@drawable/tooltip_top_vr"
             android:text="@string/label_preview_wish_guide"
             android:textColor="@color/default_text_c323232"
             android:textSize="13dp"

@@ -655,9 +655,9 @@ public abstract class PlaceDetailActivity extends BaseActivity
             });
         }
 
-//        if (DailyPreference.getInstance(this).isWishTooltip() == true)
+        if (DailyPreference.getInstance(this).isWishTooltip() == true)
         {
-            mPlaceDetailLayout.setWishTooltipVisibility(true, ScreenUtils.dpToPx(this, 40));
+            mPlaceDetailLayout.setWishTooltipVisibility(true, 2);
 
             mHandler.postDelayed(new Runnable()
             {
@@ -668,9 +668,9 @@ public abstract class PlaceDetailActivity extends BaseActivity
                     mPlaceDetailLayout.hideAnimationTooltip();
                 }
             }, 3000);
-//        } else
-//        {
-//            mPlaceDetailLayout.setWishTooltipVisibility(false);
+        } else
+        {
+            mPlaceDetailLayout.setWishTooltipVisibility(false, 0);
         }
     }
 
@@ -687,9 +687,9 @@ public abstract class PlaceDetailActivity extends BaseActivity
             mTrueViewView.setOnClickListener(null);
         }
 
-//        if (DailyPreference.getInstance(this).isWishTooltip() == true)
-//        {
-            mPlaceDetailLayout.setWishTooltipVisibility(true, 0);
+        if (DailyPreference.getInstance(this).isWishTooltip() == true)
+        {
+            mPlaceDetailLayout.setWishTooltipVisibility(true, 1);
 
             mHandler.postDelayed(new Runnable()
             {
@@ -700,10 +700,10 @@ public abstract class PlaceDetailActivity extends BaseActivity
                     mPlaceDetailLayout.hideAnimationTooltip();
                 }
             }, 3000);
-//        } else
-//        {
-//            mPlaceDetailLayout.setWishTooltipVisibility(false);
-//        }
+        } else
+        {
+            mPlaceDetailLayout.setWishTooltipVisibility(false, 0);
+        }
     }
 
     protected void setWishTextView(boolean selected, int count)

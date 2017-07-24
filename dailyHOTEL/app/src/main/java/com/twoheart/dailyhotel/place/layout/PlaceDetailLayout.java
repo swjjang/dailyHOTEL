@@ -83,6 +83,7 @@ public abstract class PlaceDetailLayout extends BaseLayout
     protected DailyTextView mWishPopupTextView;
     protected View mWishPopupScrollView;
     protected View mWishTooltipView;
+    protected TextView mWishTooltipTextView;
 
     public enum WishPopupState
     {
@@ -160,6 +161,7 @@ public abstract class PlaceDetailLayout extends BaseLayout
         mDailyLineIndicator = (DailyLineIndicator) view.findViewById(R.id.viewpagerIndicator);
 
         mWishTooltipView = view.findViewById(R.id.wishTooltipView);
+        mWishTooltipTextView = (TextView)view.findViewById(R.id.wishTooltipTextView);
         mWishTooltipView.setOnClickListener(new OnClickListener()
         {
             @Override
@@ -370,7 +372,7 @@ public abstract class PlaceDetailLayout extends BaseLayout
         return mStatusBarHeight;
     }
 
-    public void setWishTooltipVisibility(boolean visibility, int rightMargin)
+    public void setWishTooltipVisibility(boolean visibility, int orderIcon)
     {
         if (mWishTooltipView == null)
         {
@@ -385,9 +387,17 @@ public abstract class PlaceDetailLayout extends BaseLayout
             mWishTooltipView.setVisibility(View.GONE);
         }
 
-        ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) mWishTooltipView.getLayoutParams();
-        layoutParams.rightMargin = rightMargin;
-        mWishTooltipView.requestLayout();
+        // 우측에서부터 순서
+        switch(orderIcon)
+        {
+            case 1:
+                mWishTooltipTextView.setBackgroundResource(R.drawable.tooltip_top_vr);
+                break;
+
+            case 2:
+                mWishTooltipTextView.setBackgroundResource(R.drawable.tooltip_top_wish);
+                break;
+        }
     }
 
     public void hideAnimationTooltip()
