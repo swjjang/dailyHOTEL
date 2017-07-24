@@ -36,7 +36,6 @@ import com.twoheart.dailyhotel.model.Place;
 import com.twoheart.dailyhotel.model.PlaceClusterItem;
 import com.twoheart.dailyhotel.model.PlaceClusterRenderer;
 import com.twoheart.dailyhotel.model.PlaceRenderer;
-import com.twoheart.dailyhotel.place.adapter.PlaceNameInfoWindowAdapter;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -261,7 +260,7 @@ public class PlaceBookingDetailMapFragment extends com.google.android.gms.maps.S
         mOnEventListener = listener;
     }
 
-    public void setPlaceList(List<Place> placeList)
+    public void setPlaceList(List<Place> placeList, Location placeLocation, String placeName)
     {
         if (mGoogleMap == null || placeList == null || placeList.size() == 0)
         {
@@ -270,62 +269,11 @@ public class PlaceBookingDetailMapFragment extends com.google.android.gms.maps.S
 
         if (mSelectedMarker == null)
         {
-            makeMarker(placeList, null, true);
+            makeMarker(placeList, null, true, placeLocation, placeName);
         } else
         {
-            makeMarker(placeList, (Place) mSelectedMarker.getTag(), true);
+            makeMarker(placeList, (Place) mSelectedMarker.getTag(), true, placeLocation, placeName);
         }
-    }
-
-    public void addMarker(double lat, double lng, String placeName)
-    {
-        if (mGoogleMap == null)
-        {
-            return;
-        }
-
-        mPlaceLocationMarker = mGoogleMap.addMarker(new MarkerOptions().position(new LatLng(lat, lng)).title(placeName));
-        mPlaceLocationMarker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.info_ic_map_large));
-
-        LatLng latLng = new LatLng(lat, lng);
-        CameraPosition cp = new CameraPosition.Builder().target((latLng)).zoom(15).build();
-
-        if (VersionUtils.isOverAPI21() == true)
-        {
-            mGoogleMap.setOnCameraIdleListener(new GoogleMap.OnCameraIdleListener()
-            {
-                @Override
-                public void onCameraIdle()
-                {
-                    mGoogleMap.setOnCameraIdleListener(mClusterManager);
-                }
-            });
-            mGoogleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cp));
-        } else
-        {
-            mGoogleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cp));
-        }
-
-        mGoogleMap.setInfoWindowAdapter(new PlaceNameInfoWindowAdapter(getActivity()));
-        mGoogleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener()
-        {
-            @Override
-            public boolean onMarkerClick(Marker marker)
-            {
-                marker.showInfoWindow();
-                return true;
-            }
-        });
-
-        mPlaceLocationMarker.hideInfoWindow();
-        mHandler.post(new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                mPlaceLocationMarker.showInfoWindow();
-            }
-        });
     }
 
     public void setSelectedMarker(Place place)
@@ -376,6 +324,28 @@ public class PlaceBookingDetailMapFragment extends com.google.android.gms.maps.S
                 mSelectedMarker.showInfoWindow();
                 break;
             }
+        }
+    }
+
+    public void setPlaceMarker(double lat, double lng, String placeName)
+    {
+        if (mGoogleMap == null)
+        {
+            return;
+        }
+
+        LatLng latLng = new LatLng(lat, lng);
+        mPlaceLocationMarker = mGoogleMap.addMarker(new MarkerOptions().position(latLng).title(placeName));
+        mPlaceLocationMarker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.info_ic_map_large));
+
+        CameraPosition cp = new CameraPosition.Builder().target((latLng)).zoom(14f).build();
+
+        if (VersionUtils.isOverAPI21() == true)
+        {
+            mGoogleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cp));
+        } else
+        {
+            mGoogleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cp));
         }
     }
 
@@ -510,7 +480,7 @@ public class PlaceBookingDetailMapFragment extends com.google.android.gms.maps.S
         }
     }
 
-    private void makeMarker(List<Place> placeList, Place selectedPlace, boolean refreshAll)
+    private void makeMarker(List<Place> placeList, Place selectedPlace, boolean refreshAll, Location placeLocation, String placeName)
     {
         if (isFinishing() == true || mGoogleMap == null)
         {
@@ -536,6 +506,13 @@ public class PlaceBookingDetailMapFragment extends com.google.android.gms.maps.S
 
         LatLngBounds.Builder boundsBuilder = new LatLngBounds.Builder();
 
+        setPlaceMarker(placeLocation.getLatitude(), placeLocation.getLongitude(), placeName);
+        if (mPlaceLocationMarker != null)
+        {
+            LatLng placeLatLng = mPlaceLocationMarker.getPosition();
+            boundsBuilder.include(placeLatLng);
+        }
+
         // 나의 위치 마커를 생성시켜 놓는다.
         if (myLatLng != null)
         {
@@ -556,8 +533,18 @@ public class PlaceBookingDetailMapFragment extends com.google.android.gms.maps.S
                 List<Place> placeArrangeList = reLocationDuplicatePlace(placeList);
                 List<PlaceClusterItem> placeClusterItemList = new ArrayList<>(placeArrangeList.size());
 
+                double farthestEast = Double.MIN_VALUE;
+                double farthestWest = Double.MAX_VALUE;
+                double farthestNorth = Double.MIN_VALUE;
+                double farthestSouth = Double.MAX_VALUE;
+
                 for (Place place : placeArrangeList)
                 {
+                    farthestNorth = Math.max(place.latitude, farthestNorth);
+                    farthestSouth = Math.min(place.latitude, farthestSouth);
+                    farthestEast = Math.max(place.longitude, farthestEast);
+                    farthestWest = Math.min(place.longitude, farthestWest);
+
                     PlaceClusterItem placeClusterItem = new PlaceClusterItem(place);
 
                     // 시작시에 전체 영역을 계산하여 화면에 보일수 있도록 한다.
@@ -584,6 +571,19 @@ public class PlaceBookingDetailMapFragment extends com.google.android.gms.maps.S
                     placeClusterItemList.add(placeClusterItem);
                 }
 
+                // 국내 기준임 - 국제 기준으로 할때는 적도, 본초 자오선을 고려해야 함
+                if (placeLocation != null)
+                {
+                    double placeLatitude = placeLocation.getLatitude();
+                    double placeLongitude = placeLocation.getLongitude();
+
+                    LatLng emptyLatLng1 = new LatLng((placeLatitude * 2) - farthestNorth, (placeLongitude * 2) - farthestEast);
+                    LatLng emptyLatLng2 = new LatLng((placeLatitude * 2) - farthestSouth, (placeLongitude * 2) - farthestWest);
+
+                    boundsBuilder.include(emptyLatLng1);
+                    boundsBuilder.include(emptyLatLng2);
+                }
+
                 mClusterManager.clearItems();
                 mClusterManager.addItems(placeClusterItemList);
 
@@ -598,7 +598,7 @@ public class PlaceBookingDetailMapFragment extends com.google.android.gms.maps.S
                 {
                     try
                     {
-                        moveCameraBounds(boundsBuilder.build(), size + (myLatLng == null ? 0 : 1));
+                        moveCameraBounds(boundsBuilder.build(), size + (myLatLng == null ? 0 : 1) + (placeLocation == null ? 0 : 1));
                     } catch (Exception e)
                     {
                         ExLog.d(e.toString());
