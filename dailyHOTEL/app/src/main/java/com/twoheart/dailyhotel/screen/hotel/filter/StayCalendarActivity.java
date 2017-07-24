@@ -30,7 +30,7 @@ import java.util.Map;
 
 public class StayCalendarActivity extends PlaceCalendarActivity
 {
-    protected static final int DAYCOUNT_OF_MAX = 60;
+    public static final int DAYCOUNT_OF_MAX = 60;
 
     private View mCheckInDayView;
     private View mCheckOutDayView;

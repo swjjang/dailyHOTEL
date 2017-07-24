@@ -35,7 +35,7 @@ import retrofit2.Response;
 
 public class StayDetailCalendarActivity extends StayCalendarActivity
 {
-    private static final int OVERSEAS_DAYCOUNT_OF_MAX = 180;
+    public static final int OVERSEAS_DAYCOUNT_OF_MAX = 180; // 해외 직계약 호텔
 
     private int mHotelIndex;
     private boolean mOverseas;
