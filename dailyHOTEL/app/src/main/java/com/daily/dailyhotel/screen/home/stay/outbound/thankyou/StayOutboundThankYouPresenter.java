@@ -1,6 +1,7 @@
 package com.daily.dailyhotel.screen.home.stay.outbound.thankyou;
 
 
+import android.animation.Animator;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -29,10 +30,9 @@ public class StayOutboundThankYouPresenter extends BaseExceptionPresenter<StayOu
 {
     private StayOutboundThankYouAnalyticsInterface mAnalytics;
 
-    private int mStayIndex, mReservationId;
+    private int mReservationId;
     private String mStayName;
     private String mImageUrl;
-    private int mRoomPrice;
     private StayBookDateTime mStayBookDateTime;
     private String mCheckInTime;
     private String mCheckOutTime;
@@ -64,6 +64,8 @@ public class StayOutboundThankYouPresenter extends BaseExceptionPresenter<StayOu
     @Override
     public void constructorInitialize(StayOutboundThankYouActivity activity)
     {
+        lock();
+        
         setContentView(R.layout.activity_stay_outbound_payment_thank_you_data);
 
         setAnalytics(new StayOutboundThankYouAnalyticsImpl());
@@ -85,10 +87,8 @@ public class StayOutboundThankYouPresenter extends BaseExceptionPresenter<StayOu
             return true;
         }
 
-        mStayIndex = intent.getIntExtra(StayOutboundThankYouActivity.INTENT_EXTRA_DATA_STAY_INDEX, -1);
         mStayName = intent.getStringExtra(StayOutboundThankYouActivity.INTENT_EXTRA_DATA_STAY_NAME);
         mImageUrl = intent.getStringExtra(StayOutboundThankYouActivity.INTENT_EXTRA_DATA_IMAGE_URL);
-        mRoomPrice = intent.getIntExtra(StayOutboundThankYouActivity.INTENT_EXTRA_DATA_ROOM_PRICE, -1);
         mCheckInTime = intent.getStringExtra(StayOutboundThankYouActivity.INTENT_EXTRA_DATA_CHECK_IN_TIME);
         mCheckOutTime = intent.getStringExtra(StayOutboundThankYouActivity.INTENT_EXTRA_DATA_CHECK_OUT_TIME);
 
@@ -141,7 +141,32 @@ public class StayOutboundThankYouPresenter extends BaseExceptionPresenter<StayOu
             ExLog.d(e.toString());
         }
 
-        getViewInterface().startAnimation();
+        getViewInterface().startAnimation(new Animator.AnimatorListener()
+        {
+            @Override
+            public void onAnimationStart(Animator animation)
+            {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation)
+            {
+                unLockAll();
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation)
+            {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation)
+            {
+
+            }
+        });
     }
 
     @Override
@@ -181,6 +206,11 @@ public class StayOutboundThankYouPresenter extends BaseExceptionPresenter<StayOu
     @Override
     public boolean onBackPressed()
     {
+        if (isLock() == true)
+        {
+            return true;
+        }
+
         startActivity(DailyInternalDeepLink.getStayOutboundBookingDetailScreenLink(getActivity(), mReservationId));
 
         return super.onBackPressed();
@@ -211,7 +241,6 @@ public class StayOutboundThankYouPresenter extends BaseExceptionPresenter<StayOu
         {
             return;
         }
-
     }
 
     @Override

@@ -1,4 +1,4 @@
-package com.daily.dailyhotel.screen.home.stay.outbound.thankyou;
+package com.daily.dailyhotel.screen.home.gourmet.thankyou;
 
 import android.animation.Animator;
 import android.text.Spannable;
@@ -20,13 +20,14 @@ import com.twoheart.dailyhotel.widget.CustomFontTypefaceSpan;
 import java.util.ArrayList;
 import java.util.List;
 
-public class StayOutboundThankYouView extends BaseDialogView<StayOutboundThankYouView.OnEventListener, ActivityStayOutboundPaymentThankYouDataBinding> implements StayOutboundThankYouInterface, View.OnClickListener
+public class GourmetThankYouView extends BaseDialogView<GourmetThankYouView.OnEventListener, ActivityStayOutboundPaymentThankYouDataBinding> implements GourmetThankYouInterface, View.OnClickListener
 {
     public interface OnEventListener extends OnBaseEventListener
     {
+        void onConfirmClick();
     }
 
-    public StayOutboundThankYouView(BaseActivity baseActivity, StayOutboundThankYouView.OnEventListener listener)
+    public GourmetThankYouView(BaseActivity baseActivity, GourmetThankYouView.OnEventListener listener)
     {
         super(baseActivity, listener);
     }
@@ -39,7 +40,7 @@ public class StayOutboundThankYouView extends BaseDialogView<StayOutboundThankYo
             return;
         }
 
-        viewDataBinding.thankYouInformationView.setReservationTitle(R.string.label_booking_room_info);
+        viewDataBinding.thankYouInformationView.setReservationTitle(R.string.label_booking_ticket_info);
         viewDataBinding.closeView.setOnClickListener(this);
         viewDataBinding.confirmView.setOnClickListener(this);
 
@@ -86,23 +87,26 @@ public class StayOutboundThankYouView extends BaseDialogView<StayOutboundThankYo
     }
 
     @Override
-    public void setBooking(SpannableString checkInDate, SpannableString checkOutDate, int nights, String stayName, String roomType)
+    public void setBooking(String visitDate, String visitTime, String gourmetName, String productType, int productCount)
     {
         if (getViewDataBinding() == null)
         {
             return;
         }
 
-        getViewDataBinding().thankYouInformationView.setDate1Text(getString(R.string.act_booking_chkin), checkInDate);
-        getViewDataBinding().thankYouInformationView.setDate2Text(getString(R.string.act_booking_chkout), checkOutDate);
-
-        getViewDataBinding().thankYouInformationView.setCenterNightsVisible(true);
-        getViewDataBinding().thankYouInformationView.setCenterNightsText(getString(R.string.label_nights, nights));
+        getViewDataBinding().thankYouInformationView.setDate1Text(getString(R.string.label_visit_day), visitDate);
+        getViewDataBinding().thankYouInformationView.setDate2Text(getString(R.string.label_booking_select_ticket_time), visitTime);
+        getViewDataBinding().thankYouInformationView.setCenterNightsVisible(false);
 
         List<Pair<CharSequence, CharSequence>> reservationInformationList = new ArrayList<>();
 
-        reservationInformationList.add(new Pair(getString(R.string.label_booking_place_name), stayName));
-        reservationInformationList.add(new Pair(getString(R.string.label_booking_room_type), roomType));
+        reservationInformationList.add(new Pair(getString(R.string.label_booking_place_name), gourmetName));
+        reservationInformationList.add(new Pair(getString(R.string.frag_booking_tab_ticket_type), productType));
+
+        if (productCount > 0)
+        {
+            reservationInformationList.add(new Pair(getString(R.string.label_product_count), productCount));
+        }
 
         getViewDataBinding().thankYouInformationView.setReservationInformation(reservationInformationList);
     }
@@ -128,8 +132,11 @@ public class StayOutboundThankYouView extends BaseDialogView<StayOutboundThankYo
         switch (v.getId())
         {
             case R.id.closeView:
-            case R.id.confirmView:
                 getEventListener().onBackClick();
+                break;
+
+            case R.id.confirmView:
+                getEventListener().onConfirmClick();
                 break;
         }
     }

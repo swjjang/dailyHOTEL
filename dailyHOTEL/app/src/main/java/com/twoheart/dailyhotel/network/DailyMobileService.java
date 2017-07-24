@@ -19,6 +19,7 @@ import com.daily.dailyhotel.repository.remote.model.SuggestsData;
 import com.daily.dailyhotel.repository.remote.model.UserBenefitData;
 import com.daily.dailyhotel.repository.remote.model.UserData;
 import com.daily.dailyhotel.repository.remote.model.UserInformationData;
+import com.daily.dailyhotel.repository.remote.model.UserTrackingData;
 import com.twoheart.dailyhotel.network.dto.BaseDto;
 import com.twoheart.dailyhotel.network.dto.BaseListDto;
 import com.twoheart.dailyhotel.network.model.Event;
@@ -501,6 +502,10 @@ public interface DailyMobileService
     @GET("{mobileAPI}")
     Observable<BaseDto<UserBenefitData>> getUserBenefit(@Path(value = "mobileAPI", encoded = true) String mobileAPI);
 
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
+    @GET("{mobileAPI}")
+    Observable<BaseDto<UserTrackingData>> getUserTracking(@Path(value = "mobileAPI", encoded = true) String mobileAPI);
+
     /////////////////////////////////////////////////////////////////////////////////////////////////
     // SuggestRemoteImpl
     /////////////////////////////////////////////////////////////////////////////////////////////////
@@ -706,8 +711,8 @@ public interface DailyMobileService
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET("{mobileAPI}")
     Observable<BaseListDto<String>> getStayAvailableCheckOutDates(@Path(value = "mobileAPI", encoded = true) String mobileAPI, //
-                                                                   @Query("dateRange") int dateRange, //
-                                                                   @Query("dateCheckIn") String checkInDate);
+                                                                  @Query("dateRange") int dateRange, //
+                                                                  @Query("dateCheckIn") String checkInDate);
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET("{mobileAPI}")

@@ -710,7 +710,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
                 @Override
                 public void accept(@io.reactivex.annotations.NonNull PaymentResult paymentResult) throws Exception
                 {
-                    startActivityForResult(StayOutboundThankYouActivity.newInstance(getActivity(), mStayIndex, mStayName, mImageUrl, mStayOutboundPayment.totalPrice//
+                    startActivityForResult(StayOutboundThankYouActivity.newInstance(getActivity(), mStayName, mImageUrl//
                         , mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
                         , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
                         , mStayOutboundPayment.checkInTime, mStayOutboundPayment.checkOutTime, mRoomType, paymentResult.bookingIndex//
@@ -766,7 +766,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
                         @Override
                         public void accept(@io.reactivex.annotations.NonNull PaymentResult paymentResult) throws Exception
                         {
-                            startActivityForResult(StayOutboundThankYouActivity.newInstance(getActivity(), mStayIndex, mStayName, mImageUrl, mStayOutboundPayment.totalPrice//
+                            startActivityForResult(StayOutboundThankYouActivity.newInstance(getActivity(), mStayName, mImageUrl//
                                 , mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
                                 , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
                                 , mStayOutboundPayment.checkInTime, mStayOutboundPayment.checkOutTime, mRoomType, paymentResult.bookingIndex//
@@ -1351,7 +1351,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
                 @Override
                 public void accept(@io.reactivex.annotations.NonNull PaymentResult paymentResult) throws Exception
                 {
-                    startActivityForResult(StayOutboundThankYouActivity.newInstance(getActivity(), mStayIndex, mStayName, mImageUrl, mStayOutboundPayment.totalPrice//
+                    startActivityForResult(StayOutboundThankYouActivity.newInstance(getActivity(), mStayName, mImageUrl//
                         , mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
                         , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
                         , mStayOutboundPayment.checkInTime, mStayOutboundPayment.checkOutTime, mRoomType, paymentResult.bookingIndex//
