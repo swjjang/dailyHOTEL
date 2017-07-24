@@ -1,11 +1,14 @@
 package com.daily.dailyhotel.screen.home.gourmet.detail.menus;
 
+import android.animation.Animator;
+import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PagerSnapHelper;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.View;
+import android.view.animation.LinearInterpolator;
 
 import com.daily.base.BaseActivity;
 import com.daily.base.BaseDialogView;
@@ -141,6 +144,64 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
     }
 
     @Override
+    public void hideGuideAnimation(Animator.AnimatorListener listener)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        final ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(getViewDataBinding().guideLayout, "alpha", 1.0f, 0.0f);
+
+        objectAnimator.setInterpolator(new LinearInterpolator());
+        objectAnimator.setDuration(300);
+        objectAnimator.addListener(new Animator.AnimatorListener()
+        {
+            @Override
+            public void onAnimationStart(Animator animator)
+            {
+                if (listener != null)
+                {
+                    listener.onAnimationStart(animator);
+                }
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animator)
+            {
+                objectAnimator.removeAllListeners();
+
+                getViewDataBinding().guideLayout.setVisibility(View.GONE);
+
+                if (listener != null)
+                {
+                    listener.onAnimationEnd(animator);
+                }
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animator)
+            {
+                if (listener != null)
+                {
+                    listener.onAnimationCancel(animator);
+                }
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animator)
+            {
+                if (listener != null)
+                {
+                    listener.onAnimationRepeat(animator);
+                }
+            }
+        });
+
+        objectAnimator.start();
+    }
+
+    @Override
     public void onClick(View v)
     {
         switch (v.getId())
@@ -189,7 +250,7 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
         {
             DP_10 = ScreenUtils.dpToPx(context, 10);
             DP_5 = ScreenUtils.dpToPx(context, 5);
-            STANDARD_X = ScreenUtils.getScreenWidth(getContext()) / 12;
+            STANDARD_X = (int)(ScreenUtils.getScreenWidth(context) * (1.0f - GourmetMenusAdapter.MENU_WIDTH_RATIO) / 2.0f);
         }
 
         @Override
