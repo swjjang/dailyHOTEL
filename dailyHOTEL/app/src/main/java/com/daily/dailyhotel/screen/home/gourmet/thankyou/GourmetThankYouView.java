@@ -105,7 +105,7 @@ public class GourmetThankYouView extends BaseDialogView<GourmetThankYouView.OnEv
 
         if (productCount > 0)
         {
-            reservationInformationList.add(new Pair(getString(R.string.label_product_count), productCount));
+            reservationInformationList.add(new Pair(getString(R.string.label_product_count), getString(R.string.label_booking_count, productCount)));
         }
 
         getViewDataBinding().thankYouInformationView.setReservationInformation(reservationInformationList);

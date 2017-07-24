@@ -791,6 +791,11 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
 
+        <activity
+            android:name="com.daily.dailyhotel.screen.home.gourmet.thankyou.GourmetThankYouActivity"
+            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"/>
         <!--  com.daily.dailyhotel.... -->
 
 

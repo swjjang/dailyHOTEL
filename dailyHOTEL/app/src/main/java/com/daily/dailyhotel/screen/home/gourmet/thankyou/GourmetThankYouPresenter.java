@@ -98,11 +98,11 @@ public class GourmetThankYouPresenter extends BaseExceptionPresenter<GourmetThan
 
         mGourmetName = intent.getStringExtra(GourmetThankYouActivity.INTENT_EXTRA_DATA_GOURMET_NAME);
         mImageUrl = intent.getStringExtra(GourmetThankYouActivity.INTENT_EXTRA_DATA_IMAGE_URL);
+
+        String visitDate = intent.getStringExtra(GourmetThankYouActivity.INTENT_EXTRA_DATA_VISIT_DATE);
         mVisitTime = intent.getStringExtra(GourmetThankYouActivity.INTENT_EXTRA_DATA_VISIT_TIME);
 
-        String visitDateTime = intent.getStringExtra(GourmetThankYouActivity.INTENT_EXTRA_DATA_VISIT_DATE);
-
-        setGourmetBookDateTime(visitDateTime);
+        setGourmetBookDateTime(visitDate);
 
         mProductType = intent.getStringExtra(GourmetThankYouActivity.INTENT_EXTRA_DATA_PRODUCT_TYPE);
         mProductCount = intent.getIntExtra(GourmetThankYouActivity.INTENT_EXTRA_DATA_PRODUCT_COUNT, 0);
