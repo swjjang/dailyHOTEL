@@ -113,7 +113,7 @@ public class StayOutboundThankYouPresenter extends BaseExceptionPresenter<StayOu
         String name = DailyUserPreference.getInstance(getActivity()).getName();
         getViewInterface().setUserName(name);
 
-        final String DATE_FORMAT = "yyyy.MM.dd(EEE)";
+        final String DATE_FORMAT = "yyyy.M.d(EEE)";
 
         try
         {

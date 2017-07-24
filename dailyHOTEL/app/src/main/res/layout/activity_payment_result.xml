@@ -381,7 +381,7 @@
                 android:layout_below="@id/receiptLayout"
                 android:layout_marginTop="15dp"
                 android:background="@drawable/shape_thankyou_stamp_background"
-                android:visibility="gone">
+                android:visibility="visible">
 
                 <ImageView
                     android:id="@+id/stampImageView"

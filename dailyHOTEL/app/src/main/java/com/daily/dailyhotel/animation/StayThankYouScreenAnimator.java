@@ -6,31 +6,22 @@ import android.animation.ObjectAnimator;
 import android.animation.PropertyValuesHolder;
 import android.content.Context;
 import android.view.View;
-import android.view.animation.OvershootInterpolator;
+import android.view.animation.AccelerateDecelerateInterpolator;
 
-import com.daily.base.util.ScreenUtils;
 import com.daily.base.util.VersionUtils;
 
-public class ThankYouScreenAnimator
+public class StayThankYouScreenAnimator extends ThankYouScreenAnimator
 {
-    Context mContext;
-    View mCheckView;
-    View mInformationView;
+    private View mStampView;
 
-    Animator.AnimatorListener mAnimatorListener;
-
-    public ThankYouScreenAnimator(Context context, View checkView, View informationView)
+    public StayThankYouScreenAnimator(Context context, View checkView, View informationView, View stampView)
     {
-        mContext = context;
-        mCheckView = checkView;
-        mInformationView = informationView;
+        super(context, checkView, informationView);
+
+        mStampView = stampView;
     }
 
-    public void setListener(Animator.AnimatorListener listener)
-    {
-        mAnimatorListener = listener;
-    }
-
+    @Override
     public void start()
     {
         if (mContext == null || mCheckView == null || mInformationView == null)
@@ -42,6 +33,8 @@ public class ThankYouScreenAnimator
         int receiptLayoutAnimatorDuration;
         int confirmImageAnimatorStartDelay;
         int confirmImageAnimatorDuration;
+        int stampLayoutAnimatorStartDelay;
+        int stampLayoutAnimatorDuration;
 
         if (VersionUtils.isOverAPI21() == true)
         {
@@ -49,12 +42,16 @@ public class ThankYouScreenAnimator
             receiptLayoutAnimatorDuration = 300;
             confirmImageAnimatorStartDelay = receiptLayoutAnimatorDuration - 50;
             confirmImageAnimatorDuration = 200;
+            stampLayoutAnimatorStartDelay = receiptLayoutAnimatorDuration - 50;
+            stampLayoutAnimatorDuration = 200;
         } else
         {
             animatorSetStartDelay = 600;
             receiptLayoutAnimatorDuration = 400;
             confirmImageAnimatorStartDelay = receiptLayoutAnimatorDuration - 50;
             confirmImageAnimatorDuration = 200;
+            stampLayoutAnimatorStartDelay = receiptLayoutAnimatorDuration - 50;
+            stampLayoutAnimatorDuration = 200;
         }
 
         AnimatorSet animatorSet = new AnimatorSet();
@@ -67,12 +64,23 @@ public class ThankYouScreenAnimator
         checkAnimator.setDuration(confirmImageAnimatorDuration);
         checkAnimator.setStartDelay(confirmImageAnimatorStartDelay);
 
+        if (mStampView != null)
+        {
+            ObjectAnimator stampAnimator = getStampAnimation(mContext);
+            stampAnimator.setDuration(stampLayoutAnimatorDuration);
+            stampAnimator.setStartDelay(stampLayoutAnimatorStartDelay);
+
+            animatorSet.playTogether(informationAnimator, checkAnimator, stampAnimator);
+        } else
+        {
+            animatorSet.playTogether(informationAnimator, checkAnimator);
+        }
+
         animatorSet.addListener(mAnimatorListener);
-        animatorSet.playTogether(informationAnimator, checkAnimator);
         animatorSet.start();
     }
 
-    ObjectAnimator getCheckAnimation(Context context)
+    private ObjectAnimator getStampAnimation(Context context)
     {
         if (context == null)
         {
@@ -82,80 +90,31 @@ public class ThankYouScreenAnimator
         final float startScaleY = 2.3f;
         final float endScaleY = 1.0f;
 
-        final ObjectAnimator objectAnimator = ObjectAnimator.ofPropertyValuesHolder(mCheckView //
-            , PropertyValuesHolder.ofFloat("scaleX", startScaleY, endScaleY) //
-            , PropertyValuesHolder.ofFloat("scaleY", startScaleY, endScaleY) //
+        final ObjectAnimator objectAnimator = ObjectAnimator.ofPropertyValuesHolder(mStampView //
+            , PropertyValuesHolder.ofFloat("scaleX", 0.9f, 1.0f) //
+            , PropertyValuesHolder.ofFloat("scaleY", 0.9f, 1.0f) //
             , PropertyValuesHolder.ofFloat("alpha", 0.0f, 1.0f) //
         );
 
-        objectAnimator.setInterpolator(new OvershootInterpolator(1.6f));
+        objectAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
         objectAnimator.addListener(new Animator.AnimatorListener()
         {
             @Override
             public void onAnimationStart(Animator animation)
             {
-                mCheckView.setVisibility(View.VISIBLE);
+                mStampView.setVisibility(View.VISIBLE);
             }
 
             @Override
             public void onAnimationEnd(Animator animation)
             {
                 objectAnimator.removeAllListeners();
-
-                mCheckView.setScaleX(endScaleY);
-                mCheckView.setScaleY(endScaleY);
             }
 
             @Override
             public void onAnimationCancel(Animator animation)
             {
 
-            }
-
-            @Override
-            public void onAnimationRepeat(Animator animation)
-            {
-
-            }
-        });
-
-        return objectAnimator;
-    }
-
-    ObjectAnimator getInformationAnimation(Context context)
-    {
-        if (context == null)
-        {
-            return null;
-        }
-
-        final float startY = 0f - ScreenUtils.getScreenHeight(context);
-        final float endY = 0.0f;
-
-        final ObjectAnimator objectAnimator = ObjectAnimator.ofPropertyValuesHolder(mInformationView //
-            , PropertyValuesHolder.ofFloat("translationY", startY, endY)//
-        );
-
-        objectAnimator.setInterpolator(new OvershootInterpolator(0.82f));
-        objectAnimator.addListener(new Animator.AnimatorListener()
-        {
-            @Override
-            public void onAnimationStart(Animator animation)
-            {
-                mInformationView.setVisibility(View.VISIBLE);
-            }
-
-            @Override
-            public void onAnimationEnd(Animator animation)
-            {
-                objectAnimator.removeAllListeners();
-
-                mInformationView.setTranslationY(endY);
-            }
-
-            @Override
-            public void onAnimationCancel(Animator animation)
-            {
             }
 
             @Override

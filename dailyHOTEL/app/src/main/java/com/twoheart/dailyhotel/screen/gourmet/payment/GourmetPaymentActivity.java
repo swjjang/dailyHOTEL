@@ -477,8 +477,8 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
         //        String date = gourmetBookingDay.getVisitDay("yyyy.MM.dd (EEE)");
         String visitTime = DailyCalendar.format(gourmetPaymentInformation.ticketTime, "HH:mm", TimeZone.getTimeZone("GMT+09:00"));
 
-        String userName = gourmetPaymentInformation.getCustomer() == null ? "" : gourmetPaymentInformation.getCustomer().getName();
-        String userIndex = gourmetPaymentInformation.getCustomer() == null ? "" : gourmetPaymentInformation.getCustomer().getUserIdx();
+        //        String userName = gourmetPaymentInformation.getCustomer() == null ? "" : gourmetPaymentInformation.getCustomer().getName();
+        //        String userIndex = gourmetPaymentInformation.getCustomer() == null ? "" : gourmetPaymentInformation.getCustomer().getUserIdx();
 
         //        if (com.daily.base.util.TextUtils.isTextEmpty(userName) == true)
         //        {
@@ -501,8 +501,8 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
         Intent intent = GourmetThankYouActivity.newInstance(this, placeName, imageUrl//
             , gourmetBookingDay.getVisitDay(DailyCalendar.ISO_8601_FORMAT), visitTime, productType, productCount, gourmetThankYouAnalyticsParam);
 
-//        Intent intent = GourmetPaymentThankyouActivity.newInstance(this, imageUrl, placeName, placeType, //
-//            userName, gourmetBookingDay, visitTime, productCount, paymentInformation.paymentType.getName(), discountType, params);
+        //        Intent intent = GourmetPaymentThankyouActivity.newInstance(this, imageUrl, placeName, placeType, //
+        //            userName, gourmetBookingDay, visitTime, productCount, paymentInformation.paymentType.getName(), discountType, params);
 
         startActivityForResult(intent, REQUEST_CODE_PAYMETRESULT_ACTIVITY);
     }
