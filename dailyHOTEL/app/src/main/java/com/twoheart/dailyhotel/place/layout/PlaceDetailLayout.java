@@ -13,6 +13,7 @@ import android.graphics.Shader;
 import android.graphics.drawable.PaintDrawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.RectShape;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.view.MotionEventCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
@@ -79,10 +80,9 @@ public abstract class PlaceDetailLayout extends BaseLayout
     protected TextView mTransTotalGradeTextView, mTransPlaceNameTextView;
     protected View mTransTitleLayout, mTransGradientBottomView, mTransGradientTopView;
 
-    protected DailyTextView mWishButtonTextView;
     protected DailyTextView mWishPopupTextView;
     protected View mWishPopupScrollView;
-    protected View mTrueVRTooltipView;
+    protected View mWishTooltipView;
 
     public enum WishPopupState
     {
@@ -119,7 +119,7 @@ public abstract class PlaceDetailLayout extends BaseLayout
 
         void releaseUiComponent();
 
-        void onTrueVRTooltipClick();
+        void onWishTooltipClick();
     }
 
     protected abstract String getProductTypeTitle();
@@ -159,15 +159,15 @@ public abstract class PlaceDetailLayout extends BaseLayout
         // 이미지 ViewPage 넣기.
         mDailyLineIndicator = (DailyLineIndicator) view.findViewById(R.id.viewpagerIndicator);
 
-        mTrueVRTooltipView = view.findViewById(R.id.trueVRTooltipView);
-        mTrueVRTooltipView.setOnClickListener(new OnClickListener()
+        mWishTooltipView = view.findViewById(R.id.wishTooltipView);
+        mWishTooltipView.setOnClickListener(new OnClickListener()
         {
             @Override
             public void onClick(View v)
             {
-                if (mTrueVRTooltipView.getVisibility() == View.VISIBLE)
+                if (mWishTooltipView.getVisibility() == View.VISIBLE)
                 {
-                    ((OnEventListener) mOnEventListener).onTrueVRTooltipClick();
+                    ((OnEventListener) mOnEventListener).onWishTooltipClick();
                 }
             }
         });
@@ -223,7 +223,7 @@ public abstract class PlaceDetailLayout extends BaseLayout
                 mTransGradientTopView.setTransitionName(mContext.getString(R.string.transition_gradient_top_view));
                 mTransGradientBottomView.setTransitionName(mContext.getString(R.string.transition_gradient_bottom_view));
 
-                switch(gradientBottomType)
+                switch (gradientBottomType)
                 {
 
                     case TRANS_GRADIENT_BOTTOM_TYPE_LIST:
@@ -370,32 +370,36 @@ public abstract class PlaceDetailLayout extends BaseLayout
         return mStatusBarHeight;
     }
 
-    public void setTrueVRTooltipVisibility(boolean visibility)
+    public void setWishTooltipVisibility(boolean visibility, int rightMargin)
     {
-        if (mTrueVRTooltipView == null)
+        if (mWishTooltipView == null)
         {
             return;
         }
 
         if (visibility == true)
         {
-            mTrueVRTooltipView.setVisibility(View.VISIBLE);
+            mWishTooltipView.setVisibility(View.VISIBLE);
         } else
         {
-            mTrueVRTooltipView.setVisibility(View.GONE);
+            mWishTooltipView.setVisibility(View.GONE);
         }
+
+        ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) mWishTooltipView.getLayoutParams();
+        layoutParams.rightMargin = rightMargin;
+        mWishTooltipView.requestLayout();
     }
 
     public void hideAnimationTooltip()
     {
-        if (mTrueVRTooltipView == null || mTrueVRTooltipView.getTag() != null)
+        if (mWishTooltipView == null || mWishTooltipView.getTag() != null)
         {
             return;
         }
 
-        final ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(mTrueVRTooltipView, "alpha", 1.0f, 0.0f);
+        final ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(mWishTooltipView, "alpha", 1.0f, 0.0f);
 
-        mTrueVRTooltipView.setTag(objectAnimator);
+        mWishTooltipView.setTag(objectAnimator);
 
         objectAnimator.setInterpolator(new LinearInterpolator());
         objectAnimator.setDuration(300);
@@ -413,8 +417,8 @@ public abstract class PlaceDetailLayout extends BaseLayout
                 objectAnimator.removeAllListeners();
                 objectAnimator.removeAllUpdateListeners();
 
-                mTrueVRTooltipView.setTag(null);
-                setTrueVRTooltipVisibility(false);
+                mWishTooltipView.setTag(null);
+                setWishTooltipVisibility(false, 0);
             }
 
             @Override
@@ -433,14 +437,14 @@ public abstract class PlaceDetailLayout extends BaseLayout
         objectAnimator.start();
     }
 
-    public boolean isTrueVRTooltipVisibility()
+    public boolean isWishTooltipVisibility()
     {
-        if (mTrueVRTooltipView == null)
+        if (mWishTooltipView == null)
         {
             return false;
         }
 
-        return mTrueVRTooltipView.getVisibility() == View.VISIBLE;
+        return mWishTooltipView.getVisibility() == View.VISIBLE;
     }
 
     public int getBookingStatus()

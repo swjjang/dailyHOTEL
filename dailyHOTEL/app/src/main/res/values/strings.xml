@@ -1424,7 +1424,7 @@
     <string name="label_preview_review_count">지금 예약하기</string>
     <string name="label_preview_wish_count">지금 예약하기</string>
     <string name="label_preview_extendedstay_average">(평균/1박)</string>
-    <string name="label_preview_vr_guide">실감나는 트루VR기능으로 객실을 확인해보세요!</string>
+    <string name="label_preview_wish_guide">하트 아이콘을 눌러 위시리스트를 만들어보세요!</string>
 
     <string name="label_detail_stay_product_count">%1$d개의 객실타입</string>
     <string name="label_detail_gourmet_product_count">%1$d개의 메뉴</string>
