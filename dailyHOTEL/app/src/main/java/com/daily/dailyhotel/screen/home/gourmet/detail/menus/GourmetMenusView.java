@@ -250,7 +250,7 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
         {
             DP_10 = ScreenUtils.dpToPx(context, 10);
             DP_5 = ScreenUtils.dpToPx(context, 5);
-            STANDARD_X = ScreenUtils.getScreenWidth(getContext()) / 12;
+            STANDARD_X = (int)(ScreenUtils.getScreenWidth(context) * (1.0f - GourmetMenusAdapter.MENU_WIDTH_RATIO) / 2.0f);
         }
 
         @Override

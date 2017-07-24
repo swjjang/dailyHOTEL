@@ -27,6 +27,7 @@ import java.util.Locale;
 
 public class GourmetMenusAdapter extends RecyclerView.Adapter<GourmetMenusAdapter.GourmetMenuViewHolder>
 {
+    public static final float MENU_WIDTH_RATIO = 0.87f;
     private Context mContext;
     private List<GourmetMenu> mList;
 
@@ -123,7 +124,7 @@ public class GourmetMenusAdapter extends RecyclerView.Adapter<GourmetMenusAdapte
     {
         ListRowGourmetMenuDataBinding dataBinding = DataBindingUtil.inflate(LayoutInflater.from(mContext), R.layout.list_row_gourmet_menu_data, parent, false);
 
-        dataBinding.getRoot().setLayoutParams(new RecyclerView.LayoutParams(ScreenUtils.getScreenWidth(mContext) * 5 / 6, ViewGroup.LayoutParams.MATCH_PARENT));
+        dataBinding.getRoot().setLayoutParams(new RecyclerView.LayoutParams((int)(ScreenUtils.getScreenWidth(mContext) * MENU_WIDTH_RATIO), ViewGroup.LayoutParams.MATCH_PARENT));
         GourmetMenuViewHolder gourmetMenuViewHolder = new GourmetMenuViewHolder(dataBinding);
 
         dataBinding.roundedConstraintLayout.setRound(ScreenUtils.dpToPx(mContext, 5));
@@ -139,14 +140,16 @@ public class GourmetMenusAdapter extends RecyclerView.Adapter<GourmetMenusAdapte
             return;
         }
 
+        final float with = ScreenUtils.getScreenWidth(mContext) * (1.0f - MENU_WIDTH_RATIO) / 2.0f;
+
         if (position == 0)
         {
-            ((RecyclerView.LayoutParams) holder.dataBinding.getRoot().getLayoutParams()).leftMargin = ScreenUtils.getScreenWidth(mContext) / 12;
+            ((RecyclerView.LayoutParams) holder.dataBinding.getRoot().getLayoutParams()).leftMargin = (int)with;
             ((RecyclerView.LayoutParams) holder.dataBinding.getRoot().getLayoutParams()).rightMargin = 0;
         } else if (position == getItemCount() - 1)
         {
             ((RecyclerView.LayoutParams) holder.dataBinding.getRoot().getLayoutParams()).leftMargin = 0;
-            ((RecyclerView.LayoutParams) holder.dataBinding.getRoot().getLayoutParams()).rightMargin = ScreenUtils.getScreenWidth(mContext) / 12;
+            ((RecyclerView.LayoutParams) holder.dataBinding.getRoot().getLayoutParams()).rightMargin = (int)with;
         } else
         {
             ((RecyclerView.LayoutParams) holder.dataBinding.getRoot().getLayoutParams()).leftMargin = 0;
