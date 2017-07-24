@@ -416,24 +416,24 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
 
         DailyTextView visitTextView = new DailyTextView(context);
         visitTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 11);
-        visitTextView.setGravity(Gravity.CENTER_HORIZONTAL);
+        visitTextView.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.TOP);
         visitTextView.setTextColor(context.getResources().getColorStateList(R.color.selector_calendar_default_text_color));
         visitTextView.setDuplicateParentStateEnabled(true);
         visitTextView.setId(R.id.textView);
         visitTextView.setVisibility(View.INVISIBLE);
 
-        RelativeLayout.LayoutParams visitLayoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        RelativeLayout.LayoutParams visitLayoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         visitLayoutParams.topMargin = ScreenUtils.dpToPx(context, 5);
 
         relativeLayout.addView(visitTextView, visitLayoutParams);
 
         DailyTextView dayTextView = new DailyTextView(context);
         dayTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 16);
-        dayTextView.setGravity(Gravity.CENTER_HORIZONTAL);
+        dayTextView.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.BOTTOM);
         dayTextView.setId(R.id.dateTextView);
         dayTextView.setDuplicateParentStateEnabled(true);
 
-        RelativeLayout.LayoutParams dayLayoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        RelativeLayout.LayoutParams dayLayoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         dayLayoutParams.bottomMargin = ScreenUtils.dpToPx(context, 6);
         dayLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
 
