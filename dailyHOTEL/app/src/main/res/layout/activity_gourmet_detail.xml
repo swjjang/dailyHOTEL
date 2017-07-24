@@ -213,7 +213,7 @@
             android:scaleType="center"
             android:tint="@color/white"
             android:visibility="gone"
-            app:srcCompat="@drawable/navibar_ic_treuvr"/>
+            app:srcCompat="@drawable/vector_navibar_ic_treuvr"/>
 
         <ImageView
             android:id="@+id/shareView"

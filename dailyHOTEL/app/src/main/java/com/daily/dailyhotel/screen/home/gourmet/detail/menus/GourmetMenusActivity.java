@@ -9,6 +9,7 @@ import android.support.annotation.NonNull;
 import com.daily.base.BaseActivity;
 import com.daily.dailyhotel.entity.GourmetMenu;
 import com.daily.dailyhotel.parcel.GourmetMenuParcel;
+import com.twoheart.dailyhotel.R;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,6 +48,8 @@ public class GourmetMenusActivity extends BaseActivity<GourmetMenusPresenter>
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
+        overridePendingTransition(R.anim.slide_in_bottom, R.anim.hold);
+
         super.onCreate(savedInstanceState);
     }
 
@@ -61,5 +64,7 @@ public class GourmetMenusActivity extends BaseActivity<GourmetMenusPresenter>
     public void finish()
     {
         super.finish();
+
+        overridePendingTransition(R.anim.hold, R.anim.slide_out_bottom);
     }
 }

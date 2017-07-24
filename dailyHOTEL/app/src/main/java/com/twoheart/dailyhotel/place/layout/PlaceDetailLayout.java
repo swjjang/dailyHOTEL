@@ -525,7 +525,7 @@ public abstract class PlaceDetailLayout extends BaseLayout
             {
                 mWishPopupTextView.setText(R.string.wishlist_detail_delete_message);
                 mWishPopupTextView.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_heart_stroke_l, 0, 0);
-                mWishPopupTextView.setBackgroundResource(R.drawable.shape_filloval_75000000);
+                mWishPopupTextView.setBackgroundResource(R.drawable.shape_filloval_a5000000);
             }
 
             ObjectAnimator objectAnimator1 = ObjectAnimator.ofPropertyValuesHolder(mWishPopupTextView //
