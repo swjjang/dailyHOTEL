@@ -1,6 +1,7 @@
 package com.daily.dailyhotel.screen.home.gourmet.detail.menus;
 
 
+import android.animation.Animator;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -108,7 +109,7 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
     @Override
     public void onPostCreate()
     {
-        if (DailyPreference.getInstance(getActivity()).getGourmetProductDetailGuide() == true)
+//        if (DailyPreference.getInstance(getActivity()).getGourmetProductDetailGuide() == true)
         {
             DailyPreference.getInstance(getActivity()).setGourmetProductDetailGuide(false);
             getViewInterface().setGuideVisible(true);
@@ -202,7 +203,37 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
     @Override
     public void onGuideClick()
     {
-        getViewInterface().setGuideVisible(false);
+        if (lock() == true)
+        {
+            return;
+        }
+
+        getViewInterface().hideGuideAnimation(new Animator.AnimatorListener()
+        {
+            @Override
+            public void onAnimationStart(Animator animation)
+            {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation)
+            {
+                unLockAll();
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation)
+            {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation)
+            {
+
+            }
+        });
     }
 
     @Override
