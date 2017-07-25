@@ -223,7 +223,7 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
         private static final float MIN_SCALE = 0.90f;
         private static final float AMOUNT = 1.0f - MIN_SCALE; // 1.0f - AMOUNT = MIN_SCALE
         private static final float DISTANCE = 0.75f;
-        private int DP_10;
+        private int DP_14;
         private int DP_5;
         private int STANDARD_X;
 
@@ -250,7 +250,7 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
 
         private void initialize(Context context)
         {
-            DP_10 = ScreenUtils.dpToPx(context, 10);
+            DP_14 = ScreenUtils.dpToPx(context, 14);
             DP_5 = ScreenUtils.dpToPx(context, 5);
         }
 
@@ -284,7 +284,7 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
                 float childX = childView.getX();
                 float vectorValue = (1.0f - scale) / AMOUNT;
 
-                final float distance = DP_10 * vectorValue;
+                final float distance = DP_14 * vectorValue;
 
                 if (childX > STANDARD_X)
                 {
