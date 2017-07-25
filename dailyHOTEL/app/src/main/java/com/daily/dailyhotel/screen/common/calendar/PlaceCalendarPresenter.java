@@ -38,13 +38,11 @@ public abstract class PlaceCalendarPresenter<T1 extends BaseActivity, T2 extends
 
         Date startDate;
         Date endDate;
-        final int DAYS_OF_MAX;
 
         try
         {
             startDate = DailyCalendar.convertStringToDate(startDateTime);
             endDate = DailyCalendar.convertStringToDate(endDateTime);
-            DAYS_OF_MAX = DailyCalendar.compareDateDay(endDateTime, startDateTime) + 1;
         } catch (Exception e)
         {
             ExLog.d(e.toString());
@@ -55,25 +53,15 @@ public abstract class PlaceCalendarPresenter<T1 extends BaseActivity, T2 extends
         Calendar calendar = DailyCalendar.getInstance();
         calendar.setTime(startDate);
 
-        int remainDay = DAYS_OF_MAX;
-        int maxMonth = getMonthInterval(calendar, DAYS_OF_MAX);
-
-        int dayOffset = 0;
+        int maxMonth = getMonthInterval(startDate, endDate);
 
         for (int i = 0; i <= maxMonth; i++)
         {
-            int maxDayOfMonth = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
-            int day = calendar.get(Calendar.DAY_OF_MONTH);
-
             String titleMonth = DailyCalendar.format(calendar.getTime(), "yyyy.MM");
 
-            PlaceCalendarPresenter.Day[] days = getMonthCalendar(dayOffset//
-                , calendar, day + remainDay - 1 > maxDayOfMonth ? maxDayOfMonth : day + remainDay - 1, holidaySparseIntArray);
+            PlaceCalendarPresenter.Day[] days = getMonthCalendar(calendar, startDate, endDate, holidaySparseIntArray);
 
             arrayList.add(new Pair(titleMonth, days));
-
-            dayOffset += maxDayOfMonth - day + 1;
-            remainDay = DAYS_OF_MAX - dayOffset;
 
             calendar.set(Calendar.DAY_OF_MONTH, 1);
             calendar.add(Calendar.MONTH, 1);
@@ -82,35 +70,89 @@ public abstract class PlaceCalendarPresenter<T1 extends BaseActivity, T2 extends
         return arrayList;
     }
 
-    private PlaceCalendarPresenter.Day[] getMonthCalendar(final int dayOffset, final Calendar calendar, final int maxDayOfMonth, SparseIntArray holidaySparseIntArray)
+    private PlaceCalendarPresenter.Day[] getMonthCalendar(final Calendar calendar, final Date startDate, final Date endDate, SparseIntArray holidaySparseIntArray)
     {
-        // dayOfMonth
+        int todayDayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
+        int maxDayOfMonth = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
+        int todayValue = calendar.get(Calendar.DAY_OF_MONTH);
+        int todayMonthValue = calendar.get(Calendar.MONTH);
+
+        boolean isStart = false;
+        boolean isLast = false;
+
+        Calendar startDateCalendar = Calendar.getInstance();
+        startDateCalendar.setTime(startDate);
+
+        Calendar endDateCalendar = Calendar.getInstance();
+        endDateCalendar.setTime(endDate);
+
+        int endDayValue = endDateCalendar.get(Calendar.DAY_OF_MONTH);
+        int endMonthValue = endDateCalendar.get(Calendar.MONTH);
+
+        int startGap = 0;
+
+        if (calendar.get(Calendar.MONTH) == startDateCalendar.get(Calendar.MONTH))
+        {
+            isStart = true;
+
+            startGap = Calendar.SUNDAY - todayDayOfWeek;
+        }
+
+        if (calendar.get(Calendar.MONTH) == endDateCalendar.get(Calendar.MONTH))
+        {
+            isLast = true;
+
+            maxDayOfMonth = endDayValue;
+        }
+
+        Calendar cloneCalendar = (Calendar) calendar.clone();
+
+        if (startGap != 0)
+        {
+            cloneCalendar.add(Calendar.DAY_OF_MONTH, startGap);
+        }
+
+        int startDayValue = cloneCalendar.get(Calendar.DAY_OF_MONTH);
+        int startDayOfWeek = cloneCalendar.get(Calendar.DAY_OF_WEEK);
+
         final int LENGTH_OF_WEEK = 7;
-        final int DAY = calendar.get(Calendar.DAY_OF_MONTH);
-
-        int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK) - 1;
-        int length = maxDayOfMonth - DAY + 1 + dayOfWeek;
-
+        int length = maxDayOfMonth - startDayValue + 1 + startDayOfWeek;
         if (length % LENGTH_OF_WEEK != 0)
         {
             length += (LENGTH_OF_WEEK - (length % LENGTH_OF_WEEK));
         }
 
         PlaceCalendarPresenter.Day[] days = new PlaceCalendarPresenter.Day[length];
-        Calendar cloneCalendar = (Calendar) calendar.clone();
+
         final boolean hasHolidays = holidaySparseIntArray != null && holidaySparseIntArray.size() > 0;
 
-        for (int i = 0, j = dayOfWeek, k = DAY; k <= maxDayOfMonth; i++, j++, k++)
+        for (int i = startDayOfWeek - 1; i < length; i++)
         {
-            days[j] = new PlaceCalendarPresenter.Day();
-            days[j].dateTime = DailyCalendar.format(cloneCalendar.getTime(), DailyCalendar.ISO_8601_FORMAT);
-            days[j].dayOfMonth = Integer.toString(cloneCalendar.get(Calendar.DAY_OF_MONTH));
-            days[j].dayOfWeek = cloneCalendar.get(Calendar.DAY_OF_WEEK);
+            int dayValue = cloneCalendar.get(Calendar.DAY_OF_MONTH);
+            int monthValue = cloneCalendar.get(Calendar.MONTH);
+
+            days[i] = new PlaceCalendarPresenter.Day();
+            days[i].dateTime = DailyCalendar.format(cloneCalendar.getTime(), DailyCalendar.ISO_8601_FORMAT);
+            days[i].dayOfMonth = Integer.toString(dayValue);
+            days[i].dayOfWeek = cloneCalendar.get(Calendar.DAY_OF_WEEK);
 
             if (hasHolidays)
             {
-                days[j].isHoliday = holidaySparseIntArray.get(Integer.parseInt(DailyCalendar.format(cloneCalendar.getTime(), "yyyyMMdd")), -1) != -1;
+                days[i].isHoliday = holidaySparseIntArray.get(Integer.parseInt(DailyCalendar.format(cloneCalendar.getTime(), "yyyyMMdd")), -1) != -1;
             }
+
+            if (isStart == true && todayMonthValue == monthValue && dayValue == maxDayOfMonth)
+            {
+                break;
+            }
+
+            if (isLast == false && dayValue == maxDayOfMonth)
+            {
+                break;
+            }
+
+            days[i].isDefaultDimmed = isStart == true && (dayValue < todayValue || monthValue < todayMonthValue) //
+                || isLast == true && dayValue > endDayValue || monthValue > endMonthValue;
 
             cloneCalendar.add(Calendar.DAY_OF_MONTH, 1);
         }
@@ -118,20 +160,23 @@ public abstract class PlaceCalendarPresenter<T1 extends BaseActivity, T2 extends
         return days;
     }
 
-    private int getMonthInterval(final Calendar calendar, int interval)
+    private int getMonthInterval(final Date startDate, final Date endDate)
     {
-        Calendar lastMonthCalendar = (Calendar) calendar.clone();
-        lastMonthCalendar.add(Calendar.DAY_OF_MONTH, interval - 1);
+        Calendar calendar = DailyCalendar.getInstance();
+        calendar.setTime(startDate);
 
-        int lastMonth = lastMonthCalendar.get(Calendar.MONTH);
-        int currentMonth = calendar.get(Calendar.MONTH);
+        int startMonth = calendar.get(Calendar.MONTH);
 
-        if (currentMonth > lastMonth)
+        calendar.setTime(endDate);
+
+        int endMonth = calendar.get(Calendar.MONTH);
+
+        if (startMonth > endMonth)
         {
-            return 12 - currentMonth + lastMonth;
+            return 12 - startMonth + endMonth;
         } else
         {
-            return lastMonth - currentMonth;
+            return endMonth - startMonth;
         }
     }
 

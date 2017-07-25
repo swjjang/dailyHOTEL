@@ -219,6 +219,7 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
         int todayDayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
         int maxDayOfMonth = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
         int todayValue = calendar.get(Calendar.DAY_OF_MONTH);
+        int todayMonthValue = calendar.get(Calendar.MONTH);
 
         boolean isStart = false;
         boolean isLast = false;
@@ -267,6 +268,7 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
         for (int i = startDayOfWeek - 1; i < length; i++)
         {
             int dayValue = cloneCalendar.get(Calendar.DAY_OF_MONTH);
+            int monthValue = cloneCalendar.get(Calendar.MONTH);
 
             days[i] = new Day();
             days[i].dateTime = DailyCalendar.format(cloneCalendar.getTime(), DailyCalendar.ISO_8601_FORMAT);
@@ -274,7 +276,9 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
             days[i].dayOfWeek = cloneCalendar.get(Calendar.DAY_OF_WEEK);
             days[i].isHoliday = isHoliday(cloneCalendar, holidayList);
             days[i].isSoldOut = isSoldOutDay(cloneCalendar, soldOutDayList);
-            days[i].isDefaultDimmed = dayValue < todayValue || isLast == true && dayCount < 0;
+            days[i].isDefaultDimmed = isStart == true && (dayValue < todayValue || monthValue < todayMonthValue) //
+                || isLast == true && dayCount < 0;
+            //            days[i].isDefaultDimmed = dayValue < todayValue || isLast == true && dayCount < 0;
 
             if (isLast == false && dayCount <= endCount)
             {
