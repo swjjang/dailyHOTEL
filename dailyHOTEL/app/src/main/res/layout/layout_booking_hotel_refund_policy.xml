@@ -177,10 +177,12 @@
             <com.daily.base.widget.DailyTextView
                 android:layout_width="96dp"
                 android:layout_height="match_parent"
+                android:background="@color/default_background"
                 android:gravity="center"
                 android:text="@string/label_payment_agree_personal_information02"
                 android:textColor="@color/default_text_c666666"
-                android:textSize="11dp"/>
+                android:textSize="11dp"
+                dailyFont:style="Medium"/>
 
             <View
                 android:layout_width="1dp"
@@ -223,10 +225,12 @@
             <com.daily.base.widget.DailyTextView
                 android:layout_width="96dp"
                 android:layout_height="match_parent"
+                android:background="@color/default_background"
                 android:gravity="center"
                 android:text="@string/label_payment_agree_personal_information03"
                 android:textColor="@color/default_text_c666666"
-                android:textSize="11dp"/>
+                android:textSize="11dp"
+                dailyFont:style="Medium"/>
 
             <View
                 android:layout_width="1dp"
@@ -269,10 +273,12 @@
             <com.daily.base.widget.DailyTextView
                 android:layout_width="96dp"
                 android:layout_height="match_parent"
+                android:background="@color/default_background"
                 android:gravity="center"
                 android:text="@string/label_payment_agree_personal_information04"
                 android:textColor="@color/default_text_c666666"
-                android:textSize="11dp"/>
+                android:textSize="11dp"
+                dailyFont:style="Medium"/>
 
             <View
                 android:layout_width="1dp"
@@ -315,10 +321,12 @@
             <com.daily.base.widget.DailyTextView
                 android:layout_width="96dp"
                 android:layout_height="match_parent"
+                android:background="@color/default_background"
                 android:gravity="center"
                 android:text="@string/label_payment_agree_personal_information05"
                 android:textColor="@color/default_text_c666666"
-                android:textSize="11dp"/>
+                android:textSize="11dp"
+                dailyFont:style="Medium"/>
 
             <View
                 android:layout_width="1dp"

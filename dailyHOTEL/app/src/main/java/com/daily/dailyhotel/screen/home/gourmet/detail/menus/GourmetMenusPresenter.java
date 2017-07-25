@@ -109,7 +109,7 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
     @Override
     public void onPostCreate()
     {
-//        if (DailyPreference.getInstance(getActivity()).getGourmetProductDetailGuide() == true)
+        if (DailyPreference.getInstance(getActivity()).getGourmetProductDetailGuide() == true)
         {
             DailyPreference.getInstance(getActivity()).setGourmetProductDetailGuide(false);
             getViewInterface().setGuideVisible(true);
