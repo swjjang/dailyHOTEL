@@ -550,7 +550,6 @@ public class StayCalendarActivity extends PlaceCalendarActivity
 
         if (availableDayList == null || availableDayList.size() == 0)
         {
-
             // 이때는 바로 다음 날짜를 강제로 선택 후 판매 완료 다른 날짜 선택 팝업을 띄우기로 함
             if (checkInDayView == null || mDayViewList == null || mDayViewList.size() == 0)
             {
@@ -609,6 +608,8 @@ public class StayCalendarActivity extends PlaceCalendarActivity
 
         Calendar calendar = DailyCalendar.getInstance();
 
+        Day checkInDay = (Day) checkInDayView.getTag();
+
         try
         {
             for (View dayView : mDayViewList)
@@ -627,8 +628,20 @@ public class StayCalendarActivity extends PlaceCalendarActivity
                 Day day = (Day) dayView.getTag();
                 DailyCalendar.setCalendarDateString(calendar, day.dateTime);
 
+                boolean isAvailable;
+
+                int compareValue = DailyCalendar.compareDateDay(checkInDay.dateTime, day.dateTime);
+                if (compareValue >= 0)
+                {
+                    // 체크인 날짜 이전은 활성화!
+                    isAvailable = true;
+                } else
+                {
+                    isAvailable = isAvailableDay(calendar, availableDayList);
+                }
+
                 // updateDayView 를 사용하지 말 것. 호출시 다 활성화 됨
-                updateAvailableDayView(dayView, isAvailableDay(calendar, availableDayList));
+                updateAvailableDayView(dayView, isAvailable);
             }
         } catch (Exception e)
         {

@@ -164,14 +164,14 @@ public class StayDetailCalendarActivity extends StayCalendarActivity
     {
         lockUI();
 
-        int index = mDayViewList.indexOf(checkInDayView);
-        if (index != -1)
-        {
-            for (int i = 0; i < index; i++)
-            {
-                updateAvailableDayView(mDayViewList.get(i), false);
-            }
-        }
+//        int index = mDayViewList.indexOf(checkInDayView);
+//        if (index != -1)
+//        {
+//            for (int i = 0; i < index; i++)
+//            {
+//                updateAvailableDayView(mDayViewList.get(i), false);
+//            }
+//        }
 
         Calendar calendar = DailyCalendar.getInstance();
 
