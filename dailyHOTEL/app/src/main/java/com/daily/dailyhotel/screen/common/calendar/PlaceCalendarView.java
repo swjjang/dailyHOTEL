@@ -335,7 +335,7 @@ public abstract class PlaceCalendarView<T1 extends PlaceCalendarView.OnEventList
         {
             dayView = getDayView(context, dayClass);
 
-            if (dayClass != null)
+            if (dayClass != null && dayClass.isDefaultDimmed == false)
             {
                 mDaysViewList.add(dayView);
             }
@@ -419,6 +419,14 @@ public abstract class PlaceCalendarView<T1 extends PlaceCalendarView.OnEventList
 
             dayTextView.setText(day.dayOfMonth);
             relativeLayout.setTag(day);
+
+            if (day.isDefaultDimmed == true)
+            {
+                relativeLayout.setEnabled(false);
+            } else
+            {
+                relativeLayout.setEnabled(true);
+            }
         }
 
         relativeLayout.setOnClickListener(this);
