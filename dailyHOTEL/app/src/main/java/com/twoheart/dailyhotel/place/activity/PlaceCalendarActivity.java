@@ -278,7 +278,6 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
             days[i].isSoldOut = isSoldOutDay(cloneCalendar, soldOutDayList);
             days[i].isDefaultDimmed = isStart == true && (dayValue < todayValue || monthValue < todayMonthValue) //
                 || isLast == true && dayCount < 0;
-            //            days[i].isDefaultDimmed = dayValue < todayValue || isLast == true && dayCount < 0;
 
             if (isLast == false && dayCount <= endCount)
             {

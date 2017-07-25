@@ -141,6 +141,9 @@ public abstract class PlaceCalendarPresenter<T1 extends BaseActivity, T2 extends
                 days[i].isHoliday = holidaySparseIntArray.get(Integer.parseInt(DailyCalendar.format(cloneCalendar.getTime(), "yyyyMMdd")), -1) != -1;
             }
 
+            days[i].isDefaultDimmed = isStart == true && (dayValue < todayValue || monthValue < todayMonthValue) //
+                || isLast == true && dayValue > endDayValue || monthValue > endMonthValue;
+
             if (isStart == true && todayMonthValue == monthValue && dayValue == maxDayOfMonth)
             {
                 break;
@@ -150,9 +153,6 @@ public abstract class PlaceCalendarPresenter<T1 extends BaseActivity, T2 extends
             {
                 break;
             }
-
-            days[i].isDefaultDimmed = isStart == true && (dayValue < todayValue || monthValue < todayMonthValue) //
-                || isLast == true && dayValue > endDayValue || monthValue > endMonthValue;
 
             cloneCalendar.add(Calendar.DAY_OF_MONTH, 1);
         }
