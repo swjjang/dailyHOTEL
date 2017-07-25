@@ -205,7 +205,9 @@ public class ImageDetailListActivity extends BaseActivity implements Constants
                             {
                                 mIsTop = true;
                             }
-                        } else if (mListView.getChildAt(lastChildIndex).getBottom() == mListView.getBottom() - TITLE_BAR_SIZE)
+                        }
+
+                        if (mListView.getChildAt(lastChildIndex).getBottom() <= mListView.getBottom() - TITLE_BAR_SIZE)
                         {
                             Integer bottomPosition = (Integer) mListView.getChildAt(lastChildIndex).getTag();
 
@@ -222,7 +224,11 @@ public class ImageDetailListActivity extends BaseActivity implements Constants
 
                         if (mIsMoved == true)
                         {
-                            if ((mIsTop == true && y < 0) || (mIsBottom == true && y > 0))
+                            // 사진 개수가 화면보다 작다.
+                            if (mIsTop == true && mIsBottom == true)
+                            {
+                                scrollListEffect(y);
+                            } else if ((mIsTop == true && y < 0) || (mIsBottom == true && y > 0))
                             {
                                 mIsMoved = false;
                             } else
@@ -239,7 +245,9 @@ public class ImageDetailListActivity extends BaseActivity implements Constants
                                     {
                                         mIsMoved = true;
                                     }
-                                } else if (mIsBottom == true && y < 0)
+                                }
+
+                                if (mIsBottom == true && y < 0)
                                 {
                                     mIsMoved = true;
                                 }
