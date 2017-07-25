@@ -694,8 +694,9 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
 
             StayBookingDay stayBookingDay = mStaySearchCuration.getStayBookingDay();
 
-            Intent intent = StayCalendarActivity.newInstance(StaySearchResultActivity.this, //
-                mTodayDateTime, stayBookingDay, AnalyticsManager.ValueType.SEARCH_RESULT, true, true);
+            Intent intent = StayCalendarActivity.newInstance(StaySearchResultActivity.this //
+                , mTodayDateTime, stayBookingDay, StayCalendarActivity.DEFAULT_DOMESTIC_CALENDAR_DAY_OF_MAX_COUNT //
+                , AnalyticsManager.ValueType.SEARCH_RESULT, true, true);
 
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_CALENDAR);
 

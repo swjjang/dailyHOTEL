@@ -26,8 +26,7 @@ import java.util.Map;
 
 public class GourmetCalendarActivity extends PlaceCalendarActivity
 {
-    public static final int DAYCOUNT_OF_MAX = 30;
-    private static final int ENABLE_DAYCOUNT_OF_MAX = 30;
+    public static final int DEFAULT_CALENDAR_DAY_OF_MAX_COUNT = 30;
 
     private View mDayView;
     private TextView mConfirmTextView;
@@ -43,7 +42,9 @@ public class GourmetCalendarActivity extends PlaceCalendarActivity
      * @param isAnimation
      * @return
      */
-    public static Intent newInstance(Context context, TodayDateTime todayDateTime, GourmetBookingDay gourmetBookingDay, String screen, boolean isSelected, boolean isAnimation)
+    public static Intent newInstance(Context context, TodayDateTime todayDateTime //
+        , GourmetBookingDay gourmetBookingDay, int dayOfMaxCount, String screen //
+        , boolean isSelected, boolean isAnimation)
     {
         Intent intent = new Intent(context, GourmetCalendarActivity.class);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_TODAYDATETIME, todayDateTime);
@@ -51,6 +52,7 @@ public class GourmetCalendarActivity extends PlaceCalendarActivity
         intent.putExtra(INTENT_EXTRA_DATA_SCREEN, screen);
         intent.putExtra(INTENT_EXTRA_DATA_ISSELECTED, isSelected);
         intent.putExtra(INTENT_EXTRA_DATA_ANIMATION, isAnimation);
+        intent.putExtra(INTENT_EXTRA_DATA_DAY_OF_MAXCOUNT, dayOfMaxCount);
 
         return intent;
     }
@@ -68,11 +70,12 @@ public class GourmetCalendarActivity extends PlaceCalendarActivity
         final boolean isSelected = intent.getBooleanExtra(INTENT_EXTRA_DATA_ISSELECTED, true);
         boolean isAnimation = intent.getBooleanExtra(INTENT_EXTRA_DATA_ANIMATION, false);
 
-
         if (intent.hasExtra(INTENT_EXTRA_DATA_SOLDOUT_LIST) == true)
         {
             mSoldOutDayList = intent.getIntegerArrayListExtra(INTENT_EXTRA_DATA_SOLDOUT_LIST);
         }
+
+        setDayOfMaxCount(intent.getIntExtra(INTENT_EXTRA_DATA_DAY_OF_MAXCOUNT, 0));
 
         if (mTodayDateTime == null || mPlaceBookingDay == null)
         {
@@ -80,7 +83,7 @@ public class GourmetCalendarActivity extends PlaceCalendarActivity
             return;
         }
 
-        initLayout(R.layout.activity_calendar, DAYCOUNT_OF_MAX);
+        initLayout(R.layout.activity_calendar, getDayOfMaxCount());
         initToolbar(getString(R.string.label_calendar_gourmet_select));
 
         if (isAnimation == true)
@@ -91,7 +94,7 @@ public class GourmetCalendarActivity extends PlaceCalendarActivity
                 @Override
                 public void run()
                 {
-                    makeCalendar(mTodayDateTime, DAYCOUNT_OF_MAX);
+                    makeCalendar(mTodayDateTime, getDayOfMaxCount());
 
                     reset();
 
@@ -109,7 +112,7 @@ public class GourmetCalendarActivity extends PlaceCalendarActivity
         {
             setTouchEnabled(true);
 
-            makeCalendar(mTodayDateTime, DAYCOUNT_OF_MAX);
+            makeCalendar(mTodayDateTime, getDayOfMaxCount());
 
             reset();
 

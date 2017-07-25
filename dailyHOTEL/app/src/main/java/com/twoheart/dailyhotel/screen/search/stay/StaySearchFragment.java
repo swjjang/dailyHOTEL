@@ -258,8 +258,9 @@ public class StaySearchFragment extends PlaceSearchFragment
                 , AnalyticsManager.Action.HOTEL_BOOKING_CALENDAR_CLICKED, AnalyticsManager.ValueType.SEARCH, null);
         }
 
-        Intent intent = StayCalendarActivity.newInstance(mBaseActivity, mTodayDateTime, mStayBookingDay, //
-            AnalyticsManager.ValueType.SEARCH, true, isAnimation);
+        Intent intent = StayCalendarActivity.newInstance(mBaseActivity, mTodayDateTime, mStayBookingDay //
+            , StayCalendarActivity.DEFAULT_DOMESTIC_CALENDAR_DAY_OF_MAX_COUNT //
+            , AnalyticsManager.ValueType.SEARCH, true, isAnimation);
 
         if (intent == null)
         {

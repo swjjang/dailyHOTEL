@@ -241,8 +241,9 @@ public class GourmetSearchFragment extends PlaceSearchFragment
                 , AnalyticsManager.Action.GOURMET_BOOKING_CALENDAR_CLICKED, AnalyticsManager.ValueType.SEARCH, null);
         }
 
-        Intent intent = GourmetCalendarActivity.newInstance(mBaseActivity, mTodayDateTime, mGourmetBookingDay, //
-            AnalyticsManager.ValueType.SEARCH, true, isAnimation);
+        Intent intent = GourmetCalendarActivity.newInstance(mBaseActivity, mTodayDateTime, mGourmetBookingDay //
+            , GourmetCalendarActivity.DEFAULT_CALENDAR_DAY_OF_MAX_COUNT, AnalyticsManager.ValueType.SEARCH //
+            , true, isAnimation);
 
         if (intent == null)
         {

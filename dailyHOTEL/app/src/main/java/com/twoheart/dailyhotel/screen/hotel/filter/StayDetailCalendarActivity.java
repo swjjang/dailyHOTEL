@@ -35,27 +35,24 @@ import retrofit2.Response;
 
 public class StayDetailCalendarActivity extends StayCalendarActivity
 {
-    public static final int OVERSEAS_DAYCOUNT_OF_MAX = 180; // 해외 직계약 호텔
-
     private int mHotelIndex;
-    private boolean mOverseas;
 
     private PlaceDetailCalendarImpl mPlaceDetailCalendarImpl;
 
     public static Intent newInstance(Context context, TodayDateTime todayDateTime, StayBookingDay stayBookingDay //
-        , boolean overseas, int hotelIndex, String screen, ArrayList<Integer> soldOutList, boolean isSelected//
+        , int dayOfMaxCount, int hotelIndex, String screen, ArrayList<Integer> soldOutList, boolean isSelected//
         , boolean isAnimation, boolean isSingleDay)
     {
         Intent intent = new Intent(context, StayDetailCalendarActivity.class);
         intent.putExtra(INTENT_EXTRA_DATA_TODAYDATETIME, todayDateTime);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, stayBookingDay);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_HOTELIDX, hotelIndex);
-        intent.putExtra(INTENT_EXTRA_DATA_OVERSEAS, overseas);
         intent.putExtra(INTENT_EXTRA_DATA_SCREEN, screen);
         intent.putExtra(INTENT_EXTRA_DATA_ISSELECTED, isSelected);
         intent.putExtra(INTENT_EXTRA_DATA_ANIMATION, isAnimation);
         intent.putExtra(INTENT_EXTRA_DATA_ISSINGLE_DAY, isSingleDay);
         intent.putIntegerArrayListExtra(INTENT_EXTRA_DATA_SOLDOUT_LIST, soldOutList);
+        intent.putExtra(INTENT_EXTRA_DATA_DAY_OF_MAXCOUNT, dayOfMaxCount);
 
         return intent;
     }
@@ -67,7 +64,6 @@ public class StayDetailCalendarActivity extends StayCalendarActivity
 
         Intent intent = getIntent();
         mHotelIndex = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_HOTELIDX, -1);
-        mOverseas = intent.getBooleanExtra(INTENT_EXTRA_DATA_OVERSEAS, false);
 
         super.onCreate(savedInstanceState);
     }
@@ -97,18 +93,6 @@ public class StayDetailCalendarActivity extends StayCalendarActivity
         } catch (Exception e)
         {
             ExLog.e(e.toString());
-        }
-    }
-
-    @Override
-    protected int getMaxDay()
-    {
-        if (mOverseas == true)
-        {
-            return OVERSEAS_DAYCOUNT_OF_MAX;
-        } else
-        {
-            return super.getMaxDay();
         }
     }
 
@@ -211,7 +195,7 @@ public class StayDetailCalendarActivity extends StayCalendarActivity
         }
 
         addCompositeDisposable(mPlaceDetailCalendarImpl.getStayAvailableCheckOutDates( //
-            mHotelIndex, StayCalendarActivity.DAYCOUNT_OF_MAX, checkInDate).observeOn(Schedulers.io())//
+            mHotelIndex, getDayOfMaxCount(), checkInDate).observeOn(Schedulers.io())//
             .map(new Function<List<String>, ArrayList<Integer>>()
             {
                 @Override

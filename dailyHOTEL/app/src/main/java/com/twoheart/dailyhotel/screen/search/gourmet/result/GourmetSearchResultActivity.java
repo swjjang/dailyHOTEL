@@ -625,7 +625,8 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
             GourmetBookingDay gourmetBookingDay = mGourmetSearchCuration.getGourmetBookingDay();
 
             Intent intent = GourmetCalendarActivity.newInstance(GourmetSearchResultActivity.this, //
-                mTodayDateTime, gourmetBookingDay, AnalyticsManager.ValueType.SEARCH_RESULT, true, true);
+                mTodayDateTime, gourmetBookingDay, GourmetCalendarActivity.DEFAULT_CALENDAR_DAY_OF_MAX_COUNT //
+                , AnalyticsManager.ValueType.SEARCH_RESULT, true, true);
 
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_CALENDAR);
 

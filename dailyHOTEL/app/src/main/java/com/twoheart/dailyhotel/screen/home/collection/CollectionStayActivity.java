@@ -166,7 +166,9 @@ public class CollectionStayActivity extends CollectionBaseActivity
             return;
         }
 
-        Intent intent = StayCalendarActivity.newInstance(CollectionStayActivity.this, todayDateTime, (StayBookingDay) placeBookingDay, AnalyticsManager.ValueType.SEARCH, true, true);
+        Intent intent = StayCalendarActivity.newInstance(CollectionStayActivity.this, todayDateTime //
+            , (StayBookingDay) placeBookingDay, StayCalendarActivity.DEFAULT_DOMESTIC_CALENDAR_DAY_OF_MAX_COUNT //
+            , AnalyticsManager.ValueType.SEARCH, true, true);
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_CALENDAR);
     }
 
