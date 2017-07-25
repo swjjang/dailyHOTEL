@@ -429,26 +429,12 @@ public class StayCategoryNearByActivity extends BaseActivity
     {
         mStayCategoryNearByLayout.setCategoryTabLayoutVisibility(View.INVISIBLE);
         mStayCategoryNearByLayout.setScreenVisible(ScreenType.EMPTY);
-
-//        StayCurationOption stayCurationOption = (StayCurationOption) mStayCategoryNearByCuration.getCurationOption();
-//
-//        stayCurationOption.setSortType(SortType.DEFAULT);
-//        mStayCategoryNearByLayout.setOptionFilterSelected(stayCurationOption.isDefaultFilter() == false);
-//
-//        refreshCurrentFragment(true);
     }
 
     protected void onLocationProviderDisabled()
     {
         mStayCategoryNearByLayout.setCategoryTabLayoutVisibility(View.INVISIBLE);
         mStayCategoryNearByLayout.setScreenVisible(ScreenType.EMPTY);
-
-//        StayCurationOption stayCurationOption = (StayCurationOption) mStayCategoryNearByCuration.getCurationOption();
-//
-//        stayCurationOption.setSortType(SortType.DEFAULT);
-//        mStayCategoryNearByLayout.setOptionFilterSelected(stayCurationOption.isDefaultFilter() == false);
-//
-//        refreshCurrentFragment(true);
     }
 
     protected void onLocationChanged(Location location)
@@ -468,12 +454,6 @@ public class StayCategoryNearByActivity extends BaseActivity
             mStayCategoryNearByLayout.setCategoryTabLayoutVisibility(View.INVISIBLE);
             mStayCategoryNearByLayout.setScreenVisible(ScreenType.NONE);
             mStayCategoryNearByLayout.setCategoryTabLayout(getSupportFragmentManager(), mOnStayListFragmentListener);
-
-//            // 만약 sort type이 거리가 아니라면 다른 곳에서 변경 작업이 일어났음으로 갱신하지 않음
-//            if (mStayCategoryNearByCuration.getCurationOption().getSortType() == SortType.DISTANCE)
-//            {
-//                refreshCurrentFragment(true);
-//            }
         }
     }
 
@@ -943,7 +923,8 @@ public class StayCategoryNearByActivity extends BaseActivity
             StayBookingDay stayBookingDay = mStayCategoryNearByCuration.getStayBookingDay();
 
             Intent intent = StayCalendarActivity.newInstance(StayCategoryNearByActivity.this, //
-                mTodayDateTime, stayBookingDay, AnalyticsManager.ValueType.SEARCH_RESULT, true, true);
+                mTodayDateTime, stayBookingDay, StayCalendarActivity.DEFAULT_DOMESTIC_CALENDAR_DAY_OF_MAX_COUNT //
+                , AnalyticsManager.ValueType.SEARCH_RESULT, true, true);
 
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_CALENDAR);
 

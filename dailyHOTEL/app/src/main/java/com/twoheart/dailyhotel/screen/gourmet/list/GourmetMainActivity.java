@@ -321,7 +321,9 @@ public class GourmetMainActivity extends PlaceMainActivity
             return;
         }
 
-        Intent intent = GourmetCalendarActivity.newInstance(this, todayDateTime, mGourmetCuration.getGourmetBookingDay(), callByScreen, true, true);
+        Intent intent = GourmetCalendarActivity.newInstance(this, todayDateTime //
+            , mGourmetCuration.getGourmetBookingDay(), GourmetCalendarActivity.DEFAULT_CALENDAR_DAY_OF_MAX_COUNT //
+            , callByScreen, true, true);
 
         if (intent == null)
         {

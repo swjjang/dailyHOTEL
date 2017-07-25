@@ -441,7 +441,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
     protected void requestCommonDateTimeNSoldOutList(int placeIndex)
     {
         addCompositeDisposable(Observable.zip(mCommonRemoteImpl.getCommonDateTime() //
-            , mPlaceDetailCalendarImpl.getGourmetUnavailableDates(placeIndex, GourmetCalendarActivity.DAYCOUNT_OF_MAX, false) //
+            , mPlaceDetailCalendarImpl.getGourmetUnavailableDates(placeIndex, GourmetCalendarActivity.DEFAULT_CALENDAR_DAY_OF_MAX_COUNT, false) //
             , new BiFunction<CommonDateTime, List<String>, TodayDateTime>()
             {
                 @Override

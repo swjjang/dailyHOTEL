@@ -144,7 +144,8 @@ public class CollectionGourmetActivity extends CollectionBaseActivity
         }
 
         Intent intent = GourmetCalendarActivity.newInstance(CollectionGourmetActivity.this, todayDateTime//
-            , (GourmetBookingDay) placeBookingDay, AnalyticsManager.ValueType.SEARCH, true, true);
+            , (GourmetBookingDay) placeBookingDay, GourmetCalendarActivity.DEFAULT_CALENDAR_DAY_OF_MAX_COUNT //
+            , AnalyticsManager.ValueType.SEARCH, true, true);
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_CALENDAR);
     }
 

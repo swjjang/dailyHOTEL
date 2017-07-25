@@ -30,7 +30,8 @@ import java.util.Map;
 
 public class StayCalendarActivity extends PlaceCalendarActivity
 {
-    public static final int DAYCOUNT_OF_MAX = 60;
+    public static final int DEFAULT_DOMESTIC_CALENDAR_DAY_OF_MAX_COUNT = 60;
+    public static final int DEFAULT_OVERSES_CALENDAR_DAY_OF_MAX_COUNT = 180;
 
     private View mCheckInDayView;
     private View mCheckOutDayView;
@@ -49,7 +50,8 @@ public class StayCalendarActivity extends PlaceCalendarActivity
      * @param isAnimation
      * @return
      */
-    public static Intent newInstance(Context context, TodayDateTime todayDateTime, StayBookingDay stayBookingDay, String screen, boolean isSelected, boolean isAnimation)
+    public static Intent newInstance(Context context, TodayDateTime todayDateTime //
+        , StayBookingDay stayBookingDay, int dayOfMaxCount, String screen, boolean isSelected, boolean isAnimation)
     {
         Intent intent = new Intent(context, StayCalendarActivity.class);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_TODAYDATETIME, todayDateTime);
@@ -57,6 +59,7 @@ public class StayCalendarActivity extends PlaceCalendarActivity
         intent.putExtra(INTENT_EXTRA_DATA_SCREEN, screen);
         intent.putExtra(INTENT_EXTRA_DATA_ISSELECTED, isSelected);
         intent.putExtra(INTENT_EXTRA_DATA_ANIMATION, isAnimation);
+        intent.putExtra(INTENT_EXTRA_DATA_DAY_OF_MAXCOUNT, dayOfMaxCount);
 
         return intent;
     }
@@ -81,13 +84,15 @@ public class StayCalendarActivity extends PlaceCalendarActivity
             mSoldOutDayList = intent.getIntegerArrayListExtra(INTENT_EXTRA_DATA_SOLDOUT_LIST);
         }
 
+        setDayOfMaxCount(intent.getIntExtra(INTENT_EXTRA_DATA_DAY_OF_MAXCOUNT, 0));
+
         if (mTodayDateTime == null || mPlaceBookingDay == null)
         {
             Util.restartApp(this);
             return;
         }
 
-        initLayout(R.layout.activity_calendar, getMaxDay());
+        initLayout(R.layout.activity_calendar, getDayOfMaxCount());
         initToolbar(getString(R.string.label_calendar_hotel_select_checkin));
 
         if (isAnimation == true)
@@ -98,7 +103,7 @@ public class StayCalendarActivity extends PlaceCalendarActivity
                 @Override
                 public void run()
                 {
-                    makeCalendar(mTodayDateTime, getMaxDay());
+                    makeCalendar(mTodayDateTime, getDayOfMaxCount());
 
                     reset();
 
@@ -117,7 +122,7 @@ public class StayCalendarActivity extends PlaceCalendarActivity
         {
             setTouchEnabled(true);
 
-            makeCalendar(mTodayDateTime, getMaxDay());
+            makeCalendar(mTodayDateTime, getDayOfMaxCount());
 
             reset();
 
@@ -318,11 +323,6 @@ public class StayCalendarActivity extends PlaceCalendarActivity
                 break;
             }
         }
-    }
-
-    protected int getMaxDay()
-    {
-        return DAYCOUNT_OF_MAX;
     }
 
     protected void onConfirm(StayBookingDay stayBookingDay)
@@ -550,7 +550,6 @@ public class StayCalendarActivity extends PlaceCalendarActivity
 
         if (availableDayList == null || availableDayList.size() == 0)
         {
-
             // 이때는 바로 다음 날짜를 강제로 선택 후 판매 완료 다른 날짜 선택 팝업을 띄우기로 함
             if (checkInDayView == null || mDayViewList == null || mDayViewList.size() == 0)
             {
@@ -609,6 +608,8 @@ public class StayCalendarActivity extends PlaceCalendarActivity
 
         Calendar calendar = DailyCalendar.getInstance();
 
+        Day checkInDay = (Day) checkInDayView.getTag();
+
         try
         {
             for (View dayView : mDayViewList)
@@ -627,8 +628,20 @@ public class StayCalendarActivity extends PlaceCalendarActivity
                 Day day = (Day) dayView.getTag();
                 DailyCalendar.setCalendarDateString(calendar, day.dateTime);
 
+                boolean isAvailable;
+
+                int compareValue = DailyCalendar.compareDateDay(checkInDay.dateTime, day.dateTime);
+                if (compareValue >= 0)
+                {
+                    // 체크인 날짜 이전은 활성화!
+                    isAvailable = true;
+                } else
+                {
+                    isAvailable = isAvailableDay(calendar, availableDayList);
+                }
+
                 // updateDayView 를 사용하지 말 것. 호출시 다 활성화 됨
-                updateAvailableDayView(dayView, isAvailableDay(calendar, availableDayList));
+                updateAvailableDayView(dayView, isAvailable);
             }
         } catch (Exception e)
         {

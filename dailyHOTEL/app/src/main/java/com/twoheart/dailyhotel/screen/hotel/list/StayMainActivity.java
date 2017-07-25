@@ -389,7 +389,8 @@ public class StayMainActivity extends PlaceMainActivity
             return;
         }
 
-        Intent intent = StayCalendarActivity.newInstance(this, todayDateTime, mStayCuration.getStayBookingDay(), callByScreen, true, true);
+        Intent intent = StayCalendarActivity.newInstance(this, todayDateTime, mStayCuration.getStayBookingDay() //
+            , StayCalendarActivity.DEFAULT_DOMESTIC_CALENDAR_DAY_OF_MAX_COUNT, callByScreen, true, true);
 
         if (intent == null)
         {

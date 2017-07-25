@@ -60,6 +60,7 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
     protected static final String INTENT_EXTRA_DATA_ISSINGLE_DAY = "isSingleDay"; // 연박 불가
     protected static final String INTENT_EXTRA_DATA_OVERSEAS = "overseas";
     protected static final String INTENT_EXTRA_DATA_SOLDOUT_LIST = "soldoutList";
+    protected static final String INTENT_EXTRA_DATA_DAY_OF_MAXCOUNT = "dayOfMaxCount";
 
     private static final int ANIMATION_DELAY = 200;
 
@@ -86,6 +87,18 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
     protected ArrayList<Integer> mHolidayList;
 
     protected ArrayList<Integer> mSoldOutDayList;
+
+    private int mDayOfMaxCount;
+
+    protected void setDayOfMaxCount(int dayOfMaxCount)
+    {
+        mDayOfMaxCount = dayOfMaxCount;
+    }
+
+    protected int getDayOfMaxCount()
+    {
+        return mDayOfMaxCount < 0 ? 0 : mDayOfMaxCount;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -257,7 +270,7 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
         int endCount = dayCount - maxDayOfMonth + todayValue;
 
         final int LENGTH_OF_WEEK = 7;
-        int length = maxDayOfMonth - startDayValue + 1 + startDayOfWeek;
+        int length = maxDayOfMonth - startDayValue + startDayOfWeek;
         if (length % LENGTH_OF_WEEK != 0)
         {
             length += (LENGTH_OF_WEEK - (length % LENGTH_OF_WEEK));

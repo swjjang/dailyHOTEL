@@ -442,7 +442,8 @@ public class StayCategoryTabActivity extends PlaceMainActivity
             return;
         }
 
-        Intent intent = StayCalendarActivity.newInstance(this, todayDateTime, mStayCategoryCuration.getStayBookingDay(), callByScreen, true, true);
+        Intent intent = StayCalendarActivity.newInstance(this, todayDateTime, mStayCategoryCuration.getStayBookingDay() //
+            , StayCalendarActivity.DEFAULT_DOMESTIC_CALENDAR_DAY_OF_MAX_COUNT, callByScreen, true, true);
 
         if (intent == null)
         {
