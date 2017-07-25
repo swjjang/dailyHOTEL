@@ -270,7 +270,7 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
         int endCount = dayCount - maxDayOfMonth + todayValue;
 
         final int LENGTH_OF_WEEK = 7;
-        int length = maxDayOfMonth - startDayValue + 1 + startDayOfWeek;
+        int length = maxDayOfMonth - startDayValue + startDayOfWeek;
         if (length % LENGTH_OF_WEEK != 0)
         {
             length += (LENGTH_OF_WEEK - (length % LENGTH_OF_WEEK));
