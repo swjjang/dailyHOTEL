@@ -713,6 +713,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
         mWishTextView.setTag(selected);
 
         String wishCountText;
+
         if (count <= 0)
         {
             wishCountText = null;
@@ -725,7 +726,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
                 wishCountText = getString(R.string.wishlist_count_over_10_thousand, Integer.toString(wishCount / 10));
             } else
             {
-                wishCountText = getString(R.string.wishlist_count_over_10_thousand, Float.toString((float) count / 10.0f));
+                wishCountText = getString(R.string.wishlist_count_over_10_thousand, Float.toString((float) wishCount / 10.0f));
             }
         } else
         {
