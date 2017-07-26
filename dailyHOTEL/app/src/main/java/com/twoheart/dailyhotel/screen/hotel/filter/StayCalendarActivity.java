@@ -11,6 +11,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.daily.base.util.ExLog;
+import com.daily.base.util.FontManager;
 import com.daily.base.util.ScreenUtils;
 import com.daily.base.widget.DailyToast;
 import com.twoheart.dailyhotel.R;
@@ -375,6 +376,7 @@ public class StayCalendarActivity extends PlaceCalendarActivity
         TextView visitTextView = (TextView) checkInView.findViewById(R.id.textView);
         visitTextView.setText(R.string.act_booking_chkin);
         visitTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 11);
+        visitTextView.setTypeface(FontManager.getInstance(this).getRegularTypeface());
         visitTextView.setVisibility(View.VISIBLE);
 
         TextView dayTextView = (TextView) checkInView.findViewById(R.id.dateTextView);
@@ -396,6 +398,7 @@ public class StayCalendarActivity extends PlaceCalendarActivity
         TextView visitTextView = (TextView) checkOutView.findViewById(R.id.textView);
         visitTextView.setText(R.string.act_booking_chkout);
         visitTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 11);
+        visitTextView.setTypeface(FontManager.getInstance(this).getRegularTypeface());
         visitTextView.setVisibility(View.VISIBLE);
 
         TextView dayTextView = (TextView) checkOutView.findViewById(R.id.dateTextView);
