@@ -125,6 +125,18 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
     }
 
     @Override
+    public void onBackPressed()
+    {
+        super.onBackPressed();
+
+        if (isFinishing() == false)
+        {
+            boolean isShow = mRecommendGourmetList != null && mRecommendGourmetList.size() > 0;
+            ((StayReservationDetailLayout) mPlaceReservationDetailLayout).setRecommendGourmetButtonAnimation(isShow);
+        }
+    }
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
         super.onActivityResult(requestCode, resultCode, data);
