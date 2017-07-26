@@ -379,6 +379,10 @@ public class StayCalendarActivity extends PlaceCalendarActivity
         visitTextView.setTypeface(FontManager.getInstance(this).getRegularTypeface());
         visitTextView.setVisibility(View.VISIBLE);
 
+        RelativeLayout.LayoutParams visitLayoutParams = (RelativeLayout.LayoutParams) visitTextView.getLayoutParams();
+        visitLayoutParams.topMargin = ScreenUtils.dpToPx(this, 5);
+        visitTextView.setLayoutParams(visitLayoutParams);
+
         TextView dayTextView = (TextView) checkInView.findViewById(R.id.dateTextView);
         if ((dayTextView.getPaintFlags() & Paint.STRIKE_THRU_TEXT_FLAG) == Paint.STRIKE_THRU_TEXT_FLAG)
         {
@@ -400,6 +404,10 @@ public class StayCalendarActivity extends PlaceCalendarActivity
         visitTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 11);
         visitTextView.setTypeface(FontManager.getInstance(this).getRegularTypeface());
         visitTextView.setVisibility(View.VISIBLE);
+
+        RelativeLayout.LayoutParams visitLayoutParams = (RelativeLayout.LayoutParams) visitTextView.getLayoutParams();
+        visitLayoutParams.topMargin = ScreenUtils.dpToPx(this, 5);
+        visitTextView.setLayoutParams(visitLayoutParams);
 
         TextView dayTextView = (TextView) checkOutView.findViewById(R.id.dateTextView);
         if ((dayTextView.getPaintFlags() & Paint.STRIKE_THRU_TEXT_FLAG) == Paint.STRIKE_THRU_TEXT_FLAG)
@@ -637,7 +645,7 @@ public class StayCalendarActivity extends PlaceCalendarActivity
                 if (compareValue >= 0)
                 {
                     // 체크인 날짜 이전은 활성화!
-                    isAvailable = true;
+                    isAvailable = day.isSoldOut == false;
                 } else
                 {
                     isAvailable = isAvailableDay(calendar, availableDayList);
