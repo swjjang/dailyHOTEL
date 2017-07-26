@@ -278,7 +278,7 @@ public class StayCategoryListFragment extends StayListFragment
             }
         }
 
-        String abTest = DailyRemoteConfigPreference.getInstance(getContext()).getKeyRemoteConfigStayRankTest();
+        String abTest = DailyRemoteConfigPreference.getInstance(getContext()).getKeyRemoteConfigStayRankTestName();
         String abTestType = DailyRemoteConfigPreference.getInstance(getContext()).getKeyRemoteConfigStayRankTestType();
 
         if (DailyTextUtils.isTextEmpty(abTest, abTestType) == true)

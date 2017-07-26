@@ -248,7 +248,7 @@ public class StayListFragment extends PlaceListFragment
             }
         }
 
-        String abTest = DailyRemoteConfigPreference.getInstance(getContext()).getKeyRemoteConfigStayRankTest();
+        String abTest = DailyRemoteConfigPreference.getInstance(getContext()).getKeyRemoteConfigStayRankTestName();
         String abTestType = DailyRemoteConfigPreference.getInstance(getContext()).getKeyRemoteConfigStayRankTestType();
 
         if (DailyTextUtils.isTextEmpty(abTest, abTestType) == true)
