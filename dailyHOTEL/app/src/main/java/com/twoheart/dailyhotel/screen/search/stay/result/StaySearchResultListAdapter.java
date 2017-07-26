@@ -77,7 +77,8 @@ public class StaySearchResultListAdapter extends StayListAdapter
             holder.dataBinding.satisfactionView.setVisibility(View.GONE);
         }
 
-        if (mNights > 1)
+        // 판매 완료인 경우에는 보여주지 않는다.
+        if (mNights > 1 && stay.availableRooms > 0)
         {
             holder.dataBinding.averageTextView.setVisibility(View.VISIBLE);
         } else

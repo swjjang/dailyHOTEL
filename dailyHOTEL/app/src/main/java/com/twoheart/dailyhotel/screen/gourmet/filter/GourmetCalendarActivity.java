@@ -289,6 +289,10 @@ public class GourmetCalendarActivity extends PlaceCalendarActivity
         visitTextView.setTypeface(FontManager.getInstance(this).getRegularTypeface());
         visitTextView.setVisibility(View.VISIBLE);
 
+        RelativeLayout.LayoutParams visitLayoutParams = (RelativeLayout.LayoutParams) visitTextView.getLayoutParams();
+        visitLayoutParams.topMargin = ScreenUtils.dpToPx(this, 5);
+        visitTextView.setLayoutParams(visitLayoutParams);
+
         TextView dayTextView = (TextView) view.findViewById(R.id.dateTextView);
         if ((dayTextView.getPaintFlags() & Paint.STRIKE_THRU_TEXT_FLAG) == Paint.STRIKE_THRU_TEXT_FLAG)
         {
