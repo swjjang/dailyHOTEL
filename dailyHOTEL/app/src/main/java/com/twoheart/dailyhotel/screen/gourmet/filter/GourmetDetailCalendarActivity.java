@@ -27,9 +27,11 @@ public class GourmetDetailCalendarActivity extends GourmetCalendarActivity
 {
     private int mPlaceIndex;
 
-//    private PlaceDetailCalendarImpl mPlaceDetailCalendarImpl;
+    //    private PlaceDetailCalendarImpl mPlaceDetailCalendarImpl;
 
-    public static Intent newInstance(Context context, TodayDateTime todayDateTime, GourmetBookingDay gourmetBookingDay, int placeIndex, String screen, ArrayList<Integer> soldOutList, boolean isSelected, boolean isAnimation)
+    public static Intent newInstance(Context context, TodayDateTime todayDateTime //
+        , GourmetBookingDay gourmetBookingDay, int placeIndex, int dayOfMaxCount, String screen //
+        , ArrayList<Integer> soldOutList, boolean isSelected, boolean isAnimation)
     {
         Intent intent = new Intent(context, GourmetDetailCalendarActivity.class);
         intent.putExtra(INTENT_EXTRA_DATA_TODAYDATETIME, todayDateTime);
@@ -39,6 +41,7 @@ public class GourmetDetailCalendarActivity extends GourmetCalendarActivity
         intent.putExtra(INTENT_EXTRA_DATA_ISSELECTED, isSelected);
         intent.putExtra(INTENT_EXTRA_DATA_ANIMATION, isAnimation);
         intent.putIntegerArrayListExtra(INTENT_EXTRA_DATA_SOLDOUT_LIST, soldOutList);
+        intent.putExtra(INTENT_EXTRA_DATA_DAY_OF_MAXCOUNT, dayOfMaxCount);
 
         return intent;
     }
@@ -48,7 +51,7 @@ public class GourmetDetailCalendarActivity extends GourmetCalendarActivity
     {
         super.onCreate(savedInstanceState);
 
-//        mPlaceDetailCalendarImpl = new PlaceDetailCalendarImpl(this);
+        //        mPlaceDetailCalendarImpl = new PlaceDetailCalendarImpl(this);
 
         Intent intent = getIntent();
 
