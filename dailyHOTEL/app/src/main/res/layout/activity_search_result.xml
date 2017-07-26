@@ -42,7 +42,7 @@
             android:paddingRight="15dp"
             android:text="@string/label_searchresult_cancelsearch"
             android:textColor="@color/dh_theme_color"
-            android:textSize="15dp"/>
+            android:textSize="18dp"/>
     </RelativeLayout>
 
     <RelativeLayout

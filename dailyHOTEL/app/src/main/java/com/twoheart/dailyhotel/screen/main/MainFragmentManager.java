@@ -106,7 +106,7 @@ public class MainFragmentManager
     /**
      * Fragment 컨테이너에서 해당 Fragment로 변경하여 표시한다.
      *
-     * @param fragment Fragment 리스트에 보관된 Fragement들을 받는 것이 좋다.
+     * @param fragment Fragment 리스트에 보관된 Fragment들을 받는 것이 좋다.
      */
     public void replaceFragment(BaseFragment fragment, String tag)
     {

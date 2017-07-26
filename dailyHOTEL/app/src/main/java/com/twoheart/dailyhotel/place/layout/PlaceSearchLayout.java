@@ -47,7 +47,8 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
 
     private TextView mTermsOfLocationView;
     ViewGroup mAutoCompleteLayout;
-    private DailyScrollView mAutoCompleteScrollLayout;
+    private DailyScrollView mAutoCompleteScrollView;
+    private View mAutoCompleteScrollLayout;
     private View mRecentSearchLayout;
     private ViewGroup mRecentContentsLayout;
     private View mDeleteAllRecentSearchesView;
@@ -473,11 +474,12 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
 
     private void initAutoCompleteLayout(View view)
     {
-        mAutoCompleteScrollLayout = (DailyScrollView) view.findViewById(R.id.autoCompleteScrollLayout);
-        mAutoCompleteLayout = (ViewGroup) mAutoCompleteScrollLayout.findViewById(R.id.autoCompleteLayout);
+        mAutoCompleteScrollLayout = view.findViewById(R.id.autoCompleteScrollLayout);
+        mAutoCompleteScrollView = (DailyScrollView) mAutoCompleteScrollLayout.findViewById(R.id.autoCompleteScrollView);
+        mAutoCompleteLayout = (ViewGroup) mAutoCompleteScrollView.findViewById(R.id.autoCompleteLayout);
 
         mAutoCompleteScrollLayout.setVisibility(View.GONE);
-        mAutoCompleteScrollLayout.setOnScrollChangedListener(new DailyScrollView.OnScrollChangedListener()
+        mAutoCompleteScrollView.setOnScrollChangedListener(new DailyScrollView.OnScrollChangedListener()
         {
             private int mDistance;
             boolean mIsHide;
@@ -516,7 +518,7 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
             }
         });
 
-        EdgeEffectColor.setEdgeGlowColor(mAutoCompleteScrollLayout, mContext.getResources().getColor(R.color.default_over_scroll_edge));
+        EdgeEffectColor.setEdgeGlowColor(mAutoCompleteScrollView, mContext.getResources().getColor(R.color.default_over_scroll_edge));
     }
 
     public void updateAutoCompleteLayout(String text, List<? extends Keyword> keywordList)
@@ -596,6 +598,19 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
                     view = viewGroup.getChildAt(i);
                 }
 
+                View topLineView = view.findViewById(R.id.topLineView);
+
+                if (topLineView != null)
+                {
+                    if (i == 0)
+                    {
+                        topLineView.setVisibility(View.VISIBLE);
+                    } else
+                    {
+                        topLineView.setVisibility(View.GONE);
+                    }
+                }
+
                 if (i >= size)
                 {
                     view.setVisibility(View.GONE);
@@ -636,7 +651,6 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
     void hideAutoCompleteView()
     {
         mAutoCompleteScrollLayout.setVisibility(View.GONE);
-
         resetAutoCompleteLayout(mAutoCompleteLayout);
     }
 

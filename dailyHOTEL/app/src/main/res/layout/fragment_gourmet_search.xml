@@ -214,20 +214,26 @@
                 android:background="@color/default_line_cf0f0f0"/>
         </RelativeLayout>
 
-        <com.daily.base.widget.DailyScrollView
+        <FrameLayout
             android:id="@+id/autoCompleteScrollLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/searchAroundLayout"
             android:layout_marginTop="10dp"
-            android:fadingEdge="none"
             android:visibility="gone">
 
-            <LinearLayout
-                android:id="@+id/autoCompleteLayout"
+            <com.daily.base.widget.DailyScrollView
+                android:id="@+id/autoCompleteScrollView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"/>
-        </com.daily.base.widget.DailyScrollView>
+                android:fadingEdge="none">
+
+                <LinearLayout
+                    android:id="@+id/autoCompleteLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"/>
+            </com.daily.base.widget.DailyScrollView>
+        </FrameLayout>
     </RelativeLayout>
 </RelativeLayout>

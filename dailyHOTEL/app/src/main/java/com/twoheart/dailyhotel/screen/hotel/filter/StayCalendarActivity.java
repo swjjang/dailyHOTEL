@@ -31,7 +31,7 @@ import java.util.Map;
 public class StayCalendarActivity extends PlaceCalendarActivity
 {
     public static final int DEFAULT_DOMESTIC_CALENDAR_DAY_OF_MAX_COUNT = 60;
-    public static final int DEFAULT_OVERSES_CALENDAR_DAY_OF_MAX_COUNT = 180;
+    public static final int DEFAULT_OVERSEAS_CALENDAR_DAY_OF_MAX_COUNT = 180;
 
     private View mCheckInDayView;
     private View mCheckOutDayView;
@@ -448,7 +448,7 @@ public class StayCalendarActivity extends PlaceCalendarActivity
 
                 if (calendarDay == checkInDay)
                 {
-                    // 초기 셋팅으로 서버에서 활용가능한 날짜를 받지 않고 바로 셋팅하기때문에 dayView.perfomClick() 을 사용하지 않음
+                    // 초기 셋팅으로 서버에서 활용가능한 날짜를 받지 않고 바로 셋팅하기때문에 dayView.performClick() 을 사용하지 않음
                     mCheckInDayView = dayView;
                     setSelectedCheckIn(mCheckInDayView);
 
