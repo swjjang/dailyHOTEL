@@ -10,6 +10,7 @@ import android.graphics.Paint;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.util.Pair;
+import android.text.TextPaint;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -26,6 +27,7 @@ import com.crashlytics.android.Crashlytics;
 import com.daily.base.exception.BaseException;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
+import com.daily.base.util.FontManager;
 import com.daily.base.util.ScreenUtils;
 import com.daily.base.util.VersionUtils;
 import com.daily.base.widget.DailyTextView;
@@ -432,6 +434,7 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
 
         DailyTextView visitTextView = new DailyTextView(context);
         visitTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 11);
+        visitTextView.setTypeface(FontManager.getInstance(this).getRegularTypeface());
         visitTextView.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.TOP);
         visitTextView.setTextColor(context.getResources().getColorStateList(R.color.selector_calendar_default_text_color));
         visitTextView.setDuplicateParentStateEnabled(true);
@@ -533,6 +536,7 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
         {
             visitTextView.setText(null);
             visitTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 11);
+            visitTextView.setTypeface(FontManager.getInstance(this).getRegularTypeface());
             visitTextView.setVisibility(View.INVISIBLE);
 
             RelativeLayout.LayoutParams visitLayoutParams = (RelativeLayout.LayoutParams) visitTextView.getLayoutParams();
@@ -549,11 +553,15 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
 
         visitTextView.setText(R.string.label_calendar_soldout);
         visitTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 8);
+        visitTextView.setTypeface(FontManager.getInstance(this).getMediumTypeface());
         visitTextView.setVisibility(View.VISIBLE);
 
         RelativeLayout.LayoutParams visitLayoutParams = (RelativeLayout.LayoutParams) visitTextView.getLayoutParams();
         visitLayoutParams.topMargin = ScreenUtils.dpToPx(this, 8);
         visitTextView.setLayoutParams(visitLayoutParams);
+
+        TextPaint textPaint = dayTextView.getPaint();
+        ExLog.d(textPaint.getStrokeCap() + " : " + textPaint.getStrokeJoin() + " : " + textPaint.getStrokeWidth() + " : " + textPaint.getStrokeMiter());
 
         dayTextView.setPaintFlags(dayTextView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
     }

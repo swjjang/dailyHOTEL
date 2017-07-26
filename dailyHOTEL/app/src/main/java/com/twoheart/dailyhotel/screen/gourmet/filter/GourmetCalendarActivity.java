@@ -10,6 +10,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.daily.base.util.ExLog;
+import com.daily.base.util.FontManager;
 import com.daily.base.util.ScreenUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.time.GourmetBookingDay;
@@ -285,6 +286,7 @@ public class GourmetCalendarActivity extends PlaceCalendarActivity
         TextView visitTextView = (TextView) view.findViewById(R.id.textView);
         visitTextView.setText(R.string.label_visit_day);
         visitTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 11);
+        visitTextView.setTypeface(FontManager.getInstance(this).getRegularTypeface());
         visitTextView.setVisibility(View.VISIBLE);
 
         TextView dayTextView = (TextView) view.findViewById(R.id.dateTextView);
