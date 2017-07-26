@@ -99,7 +99,7 @@
         <RelativeLayout
             android:id="@+id/relativeLayout"
             android:layout_width="match_parent"
-            android:layout_height="71dp"
+            android:layout_height="70dp"
             android:layout_below="@+id/searchLayout"
             android:background="@color/default_background">
 
@@ -183,12 +183,6 @@
                         android:textSize="13dp"/>
                 </RelativeLayout>
             </LinearLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_alignParentBottom="true"
-                android:background="@color/default_line_cf0f0f0"/>
         </RelativeLayout>
 
         <RelativeLayout
@@ -244,24 +238,35 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
+                android:background="@color/default_line_cf0f0f0"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
                 android:layout_alignParentBottom="false"
                 android:layout_below="@+id/recentSearchesScrollLayout"
                 android:background="@color/default_line_cf0f0f0"/>
         </RelativeLayout>
 
-        <com.daily.base.widget.DailyScrollView
+        <FrameLayout
             android:id="@+id/autoCompleteScrollLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/relativeLayout"
-            android:fadingEdge="none"
             android:visibility="gone">
 
-            <LinearLayout
-                android:id="@+id/autoCompleteLayout"
+            <com.daily.base.widget.DailyScrollView
+                android:id="@+id/autoCompleteScrollView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"/>
-        </com.daily.base.widget.DailyScrollView>
+                android:fadingEdge="none">
+
+                <LinearLayout
+                    android:id="@+id/autoCompleteLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"/>
+            </com.daily.base.widget.DailyScrollView>
+        </FrameLayout>
     </RelativeLayout>
 </RelativeLayout>

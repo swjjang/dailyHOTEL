@@ -11,6 +11,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.daily.base.util.ExLog;
+import com.daily.base.util.FontManager;
 import com.daily.base.util.ScreenUtils;
 import com.daily.base.widget.DailyToast;
 import com.twoheart.dailyhotel.R;
@@ -31,7 +32,7 @@ import java.util.Map;
 public class StayCalendarActivity extends PlaceCalendarActivity
 {
     public static final int DEFAULT_DOMESTIC_CALENDAR_DAY_OF_MAX_COUNT = 60;
-    public static final int DEFAULT_OVERSES_CALENDAR_DAY_OF_MAX_COUNT = 180;
+    public static final int DEFAULT_OVERSEAS_CALENDAR_DAY_OF_MAX_COUNT = 180;
 
     private View mCheckInDayView;
     private View mCheckOutDayView;
@@ -375,6 +376,7 @@ public class StayCalendarActivity extends PlaceCalendarActivity
         TextView visitTextView = (TextView) checkInView.findViewById(R.id.textView);
         visitTextView.setText(R.string.act_booking_chkin);
         visitTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 11);
+        visitTextView.setTypeface(FontManager.getInstance(this).getRegularTypeface());
         visitTextView.setVisibility(View.VISIBLE);
 
         TextView dayTextView = (TextView) checkInView.findViewById(R.id.dateTextView);
@@ -396,6 +398,7 @@ public class StayCalendarActivity extends PlaceCalendarActivity
         TextView visitTextView = (TextView) checkOutView.findViewById(R.id.textView);
         visitTextView.setText(R.string.act_booking_chkout);
         visitTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 11);
+        visitTextView.setTypeface(FontManager.getInstance(this).getRegularTypeface());
         visitTextView.setVisibility(View.VISIBLE);
 
         TextView dayTextView = (TextView) checkOutView.findViewById(R.id.dateTextView);
@@ -448,7 +451,7 @@ public class StayCalendarActivity extends PlaceCalendarActivity
 
                 if (calendarDay == checkInDay)
                 {
-                    // 초기 셋팅으로 서버에서 활용가능한 날짜를 받지 않고 바로 셋팅하기때문에 dayView.perfomClick() 을 사용하지 않음
+                    // 초기 셋팅으로 서버에서 활용가능한 날짜를 받지 않고 바로 셋팅하기때문에 dayView.performClick() 을 사용하지 않음
                     mCheckInDayView = dayView;
                     setSelectedCheckIn(mCheckInDayView);
 

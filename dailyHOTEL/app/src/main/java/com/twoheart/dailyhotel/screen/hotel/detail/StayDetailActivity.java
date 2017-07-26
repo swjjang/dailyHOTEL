@@ -431,7 +431,7 @@ public class StayDetailActivity extends PlaceDetailActivity
     {
         int dayCount = mOverseas == false //
             ? StayCalendarActivity.DEFAULT_DOMESTIC_CALENDAR_DAY_OF_MAX_COUNT //
-            : StayDetailCalendarActivity.DEFAULT_OVERSES_CALENDAR_DAY_OF_MAX_COUNT;
+            : StayDetailCalendarActivity.DEFAULT_OVERSEAS_CALENDAR_DAY_OF_MAX_COUNT;
 
         addCompositeDisposable(Observable.zip(mCommonRemoteImpl.getCommonDateTime() //
             , mPlaceDetailCalendarImpl.getStayUnavailableCheckInDates(mPlaceDetail.index, dayCount, false) //
@@ -1072,7 +1072,7 @@ public class StayDetailActivity extends PlaceDetailActivity
 
         int dayCount = overseas == false //
             ? StayCalendarActivity.DEFAULT_DOMESTIC_CALENDAR_DAY_OF_MAX_COUNT //
-            : StayDetailCalendarActivity.DEFAULT_OVERSES_CALENDAR_DAY_OF_MAX_COUNT;
+            : StayDetailCalendarActivity.DEFAULT_OVERSEAS_CALENDAR_DAY_OF_MAX_COUNT;
 
         Intent intent = StayDetailCalendarActivity.newInstance(StayDetailActivity.this, todayDateTime //
             , stayBookingDay, dayCount, placeIndex, AnalyticsManager.ValueType.DETAIL //
