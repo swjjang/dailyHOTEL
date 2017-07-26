@@ -129,8 +129,7 @@
                             android:layout_height="wrap_content"
                             android:layout_alignParentLeft="true"
                             android:layout_alignParentTop="true"
-                            app:srcCompat="@drawable/ic_payment_notice"
-                            />
+                            app:srcCompat="@drawable/ic_payment_notice"/>
 
                         <com.daily.base.widget.DailyTextView
                             android:id="@+id/waitMessageTextView"
