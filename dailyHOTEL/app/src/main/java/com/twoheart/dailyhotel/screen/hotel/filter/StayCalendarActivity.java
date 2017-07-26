@@ -637,7 +637,7 @@ public class StayCalendarActivity extends PlaceCalendarActivity
                 if (compareValue >= 0)
                 {
                     // 체크인 날짜 이전은 활성화!
-                    isAvailable = true;
+                    isAvailable = day.isSoldOut == false;
                 } else
                 {
                     isAvailable = isAvailableDay(calendar, availableDayList);
