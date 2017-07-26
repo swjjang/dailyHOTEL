@@ -814,7 +814,7 @@ public class StayDetailActivity extends PlaceDetailActivity
     @Override
     protected void doBooking()
     {
-        mOnEventListener.doBooking();
+        mOnEventListener.doBooking(mSelectedStayProduct);
     }
 
     @Override
@@ -1554,12 +1554,6 @@ public class StayDetailActivity extends PlaceDetailActivity
 
             startCalendar(mTodayDateTime, (StayBookingDay) mPlaceBookingDay, stayDetailParams.isOverseas //
                 , stayDetail.index, mSoldOutList, true, stayDetailParams.isSingleStay);
-        }
-
-        @Override
-        public void doBooking()
-        {
-            doBooking(mSelectedStayProduct);
         }
 
         @Override

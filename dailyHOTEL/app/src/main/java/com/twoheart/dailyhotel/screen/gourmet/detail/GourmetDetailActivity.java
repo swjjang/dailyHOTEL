@@ -779,7 +779,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
     @Override
     protected void doBooking()
     {
-        mOnEventListener.doBooking();
+        onReservation(mSelectedTicketIndex);
     }
 
     @Override
@@ -1112,7 +1112,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
 
     private void onReservation(int index)
     {
-        if (mPlaceDetail == null)
+        if (mPlaceDetail == null || index < 0)
         {
             return;
         }
@@ -1408,11 +1408,6 @@ public class GourmetDetailActivity extends PlaceDetailActivity
                     ExLog.d(e.toString());
                 }
             }
-        }
-
-        @Override
-        public void doBooking()
-        {
         }
 
         @Override
