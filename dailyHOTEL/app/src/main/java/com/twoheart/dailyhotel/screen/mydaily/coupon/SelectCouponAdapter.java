@@ -235,6 +235,7 @@ public class SelectCouponAdapter extends ArrayAdapter<Coupon>
 
             holder.priceTextView.setTextColor(mContext.getResources().getColor(R.color.default_text_cb70038));
             holder.priceTextView.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_check_s, 0);
+            holder.priceTextView.setSelected(true);
 
             holder.titleTextView.setTextColor(mContext.getResources().getColor(R.color.default_text_cb70038));
         } else
@@ -243,6 +244,7 @@ public class SelectCouponAdapter extends ArrayAdapter<Coupon>
 
             holder.priceTextView.setTextColor(mContext.getResources().getColor(R.color.default_text_c323232));
             holder.priceTextView.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+            holder.priceTextView.setSelected(false);
 
             holder.titleTextView.setTextColor(mContext.getResources().getColor(R.color.default_text_c323232));
         }
