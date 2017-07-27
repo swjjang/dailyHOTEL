@@ -13,7 +13,6 @@ import com.twoheart.dailyhotel.network.model.HomePlace;
 import com.twoheart.dailyhotel.network.model.HomePlaces;
 import com.twoheart.dailyhotel.network.model.Recommendation;
 import com.twoheart.dailyhotel.network.model.Stamp;
-import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
 
@@ -35,8 +34,6 @@ public class HomeNetworkController extends BaseNetworkController
 
     public interface OnNetworkControllerListener extends OnBaseNetworkControllerListener
     {
-        void onCommonDateTime(TodayDateTime todayDateTime);
-
         void onEventList(ArrayList<Event> list);
 
         void onWishList(ArrayList<HomePlace> list, boolean isError);
@@ -44,11 +41,6 @@ public class HomeNetworkController extends BaseNetworkController
         void onRecommendationList(ArrayList<Recommendation> list, boolean isError);
 
         void onStamps(int count, boolean isError);
-    }
-
-    public void requestCommonDateTime()
-    {
-        DailyMobileAPI.getInstance(mContext).requestCommonDateTime(mNetworkTag, mDateTimeJsonCallback);
     }
 
     public void requestEventList()
@@ -80,41 +72,6 @@ public class HomeNetworkController extends BaseNetworkController
     {
         DailyMobileAPI.getInstance(mContext).requestUserStamps(mNetworkTag, false, mStampCallback);
     }
-
-    private retrofit2.Callback mDateTimeJsonCallback = new retrofit2.Callback<BaseDto<TodayDateTime>>()
-    {
-        @Override
-        public void onResponse(Call<BaseDto<TodayDateTime>> call, Response<BaseDto<TodayDateTime>> response)
-        {
-            if (response != null && response.isSuccessful() && response.body() != null)
-            {
-                try
-                {
-                    BaseDto<TodayDateTime> baseDto = response.body();
-
-                    if (baseDto.msgCode == 100)
-                    {
-                        ((HomeNetworkController.OnNetworkControllerListener) mOnNetworkControllerListener).onCommonDateTime(baseDto.data);
-                    } else
-                    {
-                        mOnNetworkControllerListener.onError(new RuntimeException(baseDto.msg));
-                    }
-                } catch (Exception e)
-                {
-                    mOnNetworkControllerListener.onError(e);
-                }
-            } else
-            {
-                mOnNetworkControllerListener.onErrorResponse(call, response);
-            }
-        }
-
-        @Override
-        public void onFailure(Call<BaseDto<TodayDateTime>> call, Throwable t)
-        {
-            mOnNetworkControllerListener.onError(call, t, false);
-        }
-    };
 
     private retrofit2.Callback mEventCallback = new retrofit2.Callback<BaseListDto<Event>>()
     {

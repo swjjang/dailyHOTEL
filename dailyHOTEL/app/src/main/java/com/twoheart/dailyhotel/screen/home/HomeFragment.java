@@ -21,10 +21,13 @@ import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
 import com.daily.base.widget.DailyToast;
+import com.daily.dailyhotel.entity.CommonDateTime;
 import com.daily.dailyhotel.entity.StayBookDateTime;
+import com.daily.dailyhotel.entity.StayOutbounds;
 import com.daily.dailyhotel.parcel.analytics.StayOutboundDetailAnalyticsParam;
 import com.daily.dailyhotel.repository.local.ConfigLocalImpl;
 import com.daily.dailyhotel.repository.local.model.AnalyticsParam;
+import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
 import com.daily.dailyhotel.repository.remote.FacebookRemoteImpl;
 import com.daily.dailyhotel.repository.remote.KakaoRemoteImpl;
 import com.daily.dailyhotel.repository.remote.RecentlyRemoteImpl;
@@ -35,7 +38,9 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.DailyCategoryType;
+import com.twoheart.dailyhotel.model.Gourmet;
 import com.twoheart.dailyhotel.model.Province;
+import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.model.time.GourmetBookingDay;
 import com.twoheart.dailyhotel.model.time.StayBookingDay;
 import com.twoheart.dailyhotel.network.model.Event;
@@ -85,8 +90,13 @@ import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
+import io.reactivex.functions.Function3;
+import io.reactivex.schedulers.Schedulers;
 import retrofit2.Call;
 import retrofit2.HttpException;
 import retrofit2.Response;
@@ -97,7 +107,8 @@ import retrofit2.Response;
 
 public class HomeFragment extends BaseMenuNavigationFragment
 {
-    private static final int MAX_REQUEST_SIZE = 10;
+    private static final int MAX_REQUEST_SIZE = 15;
+    private static final int MAX_RESPONSE_SIZE = 10;
 
     private static final int IS_RUNNED_NONE = 0;
     private static final int IS_RUNNED_WISHLIST = 1 << 1;
@@ -112,6 +123,8 @@ public class HomeFragment extends BaseMenuNavigationFragment
     boolean mDontReload;
     private boolean mIsLogin;
 
+    private boolean mIsMigrationComplete;
+
     int mNetworkRunState = IS_RUNNED_NONE; // 0x0000 : 초기 상태, Ox0010 : 위시 완료 , Ox0100 : 최근 본 업장완료!
 
     private DailyDeepLink mDailyDeepLink;
@@ -122,12 +135,15 @@ public class HomeFragment extends BaseMenuNavigationFragment
 
     private RecentlyRemoteImpl mRecentlyRemoteImpl;
 
+    private CommonRemoteImpl mCommonRemoteImpl;
+
     private CompositeDisposable mCompositeDisposable = new CompositeDisposable();
 
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+        mCommonRemoteImpl = new CommonRemoteImpl(getActivity());
         mRecentlyRemoteImpl = new RecentlyRemoteImpl(getActivity());
     }
 
@@ -974,7 +990,13 @@ public class HomeFragment extends BaseMenuNavigationFragment
             ArrayList<HomePlace> list = new ArrayList<>();
             if (homePlacesList != null)
             {
-                list.addAll(homePlacesList);
+                if (homePlacesList.size() > MAX_RESPONSE_SIZE)
+                {
+                    list.addAll(homePlacesList.subList(0, MAX_RESPONSE_SIZE));
+                } else
+                {
+                    list.addAll(homePlacesList);
+                }
             }
 
             mHomeLayout.setRecentListData(list, false);
@@ -989,6 +1011,160 @@ public class HomeFragment extends BaseMenuNavigationFragment
             mNetworkRunState = mNetworkRunState | IS_RUNNED_RECENTLIST;
 
             sendHomeBlockEventAnalytics();
+        }));
+    }
+
+    private void getCommonDateTime()
+    {
+        addCompositeDisposable(mCommonRemoteImpl.getCommonDateTime().map(new Function<CommonDateTime, TodayDateTime>()
+        {
+            @Override
+            public TodayDateTime apply(@NonNull CommonDateTime commonDateTime) throws Exception
+            {
+                TodayDateTime todayDateTime = new TodayDateTime(commonDateTime.openDateTime //
+                    , commonDateTime.closeDateTime, commonDateTime.currentDateTime, commonDateTime.dailyDateTime);
+
+                return todayDateTime;
+            }
+        }).subscribeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<TodayDateTime>()
+        {
+            @Override
+            public void accept(@NonNull TodayDateTime todayDateTime) throws Exception
+            {
+                setCommonDateTime(todayDateTime);
+            }
+        }, new Consumer<Throwable>()
+        {
+            @Override
+            public void accept(@NonNull Throwable throwable) throws Exception
+            {
+                onHandleError(throwable);
+            }
+        }));
+    }
+
+    private void setCommonDateTime(TodayDateTime todayDateTime)
+    {
+        if (isFinishing() == true)
+        {
+            return;
+        }
+
+        unLockUI();
+
+        if (mHomeLayout != null)
+        {
+            if (mHomeLayout.isRefreshing() == true)
+            {
+                mHomeLayout.setRefreshing(false);
+            }
+        }
+
+        mTodayDateTime = todayDateTime;
+    }
+
+    private void requestCommonDateTimeAndRecentList()
+    {
+        addCompositeDisposable(mCommonRemoteImpl.getCommonDateTime().map(new Function<CommonDateTime, TodayDateTime>()
+        {
+            @Override
+            public TodayDateTime apply(@NonNull CommonDateTime commonDateTime) throws Exception
+            {
+                TodayDateTime todayDateTime = new TodayDateTime(commonDateTime.openDateTime //
+                    , commonDateTime.closeDateTime, commonDateTime.currentDateTime, commonDateTime.dailyDateTime);
+
+                return todayDateTime;
+            }
+        }).observeOn(Schedulers.io()).flatMap(new Function<TodayDateTime, Observable<ArrayList<HomePlace>>>()
+        {
+            @Override
+            public Observable<ArrayList<HomePlace>> apply(@NonNull TodayDateTime todayDateTime) throws Exception
+            {
+                mTodayDateTime = todayDateTime;
+
+                StayBookingDay stayBookingDay = new StayBookingDay();
+                stayBookingDay.setCheckInDay(mTodayDateTime.dailyDateTime);
+                stayBookingDay.setCheckOutDay(mTodayDateTime.dailyDateTime, 1);
+
+                GourmetBookingDay gourmetBookingDay = new GourmetBookingDay();
+                gourmetBookingDay.setVisitDay(mTodayDateTime.dailyDateTime);
+
+                Observable observable = Observable.zip(mRecentlyRemoteImpl.getStayInboundRecentlyList(stayBookingDay) //
+                    , mRecentlyRemoteImpl.getGourmetRecentlyList(gourmetBookingDay) //
+                    , mRecentlyRemoteImpl.getStayOutboundRecentlyList(30) //
+                    , new Function3<List<Stay>, List<Gourmet>, StayOutbounds, Object>()
+                    {
+                        @Override
+                        public ArrayList<HomePlace> apply(@NonNull List<Stay> stays, @NonNull List<Gourmet> gourmets //
+                            , @NonNull StayOutbounds stayOutbounds) throws Exception
+                        {
+                            return RecentlyPlaceUtil.mergeHomePlaceList(getActivity(), stays, gourmets, stayOutbounds);
+                        }
+                    });
+
+                return observable;
+            }
+        }).subscribeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<ArrayList<HomePlace>>()
+        {
+            @Override
+            public void accept(@NonNull ArrayList<HomePlace> homePlaces) throws Exception
+            {
+                mIsMigrationComplete = true;
+
+                if (isFinishing() == true)
+                {
+                    return;
+                }
+
+                unLockUI();
+
+                if (mHomeLayout != null)
+                {
+                    if (mHomeLayout.isRefreshing() == true)
+                    {
+                        mHomeLayout.setRefreshing(false);
+                    }
+                }
+
+                ArrayList<HomePlace> resultList = new ArrayList<>();
+
+                if (homePlaces != null && homePlaces.size() > MAX_RESPONSE_SIZE)
+                {
+                    resultList.addAll(homePlaces.subList(0, MAX_RESPONSE_SIZE));
+                }
+
+                mHomeLayout.setRecentListData(resultList, false);
+
+                mNetworkRunState = mNetworkRunState | IS_RUNNED_RECENTLIST;
+
+                sendHomeBlockEventAnalytics();
+            }
+        }, new Consumer<Throwable>()
+        {
+            @Override
+            public void accept(@NonNull Throwable throwable) throws Exception
+            {
+                if (isFinishing() == true)
+                {
+                    return;
+                }
+
+                unLockUI();
+
+                if (mHomeLayout != null)
+                {
+                    if (mHomeLayout.isRefreshing() == true)
+                    {
+                        mHomeLayout.setRefreshing(false);
+                    }
+                }
+
+                mHomeLayout.setRecentListData(null, true);
+
+                mNetworkRunState = mNetworkRunState | IS_RUNNED_RECENTLIST;
+
+                sendHomeBlockEventAnalytics();
+            }
         }));
     }
 
@@ -1038,13 +1214,28 @@ public class HomeFragment extends BaseMenuNavigationFragment
 
             mNetworkRunState = IS_RUNNED_NONE;
 
-            mNetworkController.requestCommonDateTime();
             requestCategoryEnabled();
             requestMessageData();
             mNetworkController.requestEventList();
             mNetworkController.requestRecommendationList();
             requestWishList();
-            requestRecentList();
+
+            ArrayList<Integer> indexList = RecentlyPlaceUtil.getRecentlyIndexList((RecentlyPlaceUtil.ServiceType) null);
+            if (indexList == null || indexList.size() == 0)
+            {
+                mIsMigrationComplete = true;
+            }
+
+            if (mIsMigrationComplete == true)
+            {
+                // 기존 홈 요청으로 진행
+                getCommonDateTime();
+                requestRecentList();
+            } else
+            {
+                //////////////
+                requestCommonDateTimeAndRecentList();
+            }
 
             if (DailyHotel.isLogin() == true && DailyRemoteConfigPreference.getInstance(mBaseActivity).isRemoteConfigStampEnabled() == true //
                 && DailyRemoteConfigPreference.getInstance(mBaseActivity).isRemoteConfigStampHomeEnabled() == true)
@@ -1721,27 +1912,6 @@ public class HomeFragment extends BaseMenuNavigationFragment
 
     HomeNetworkController.OnNetworkControllerListener mNetworkControllerListener = new HomeNetworkController.OnNetworkControllerListener()
     {
-        @Override
-        public void onCommonDateTime(TodayDateTime todayDateTime)
-        {
-            if (isFinishing() == true)
-            {
-                return;
-            }
-
-            unLockUI();
-
-            if (mHomeLayout != null)
-            {
-                if (mHomeLayout.isRefreshing() == true)
-                {
-                    mHomeLayout.setRefreshing(false);
-                }
-            }
-
-            mTodayDateTime = todayDateTime;
-        }
-
         @Override
         public void onEventList(ArrayList<Event> list)
         {

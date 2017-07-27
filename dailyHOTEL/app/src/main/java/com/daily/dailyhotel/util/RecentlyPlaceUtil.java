@@ -9,9 +9,13 @@ import com.daily.dailyhotel.entity.ImageMap;
 import com.daily.dailyhotel.entity.StayOutbound;
 import com.daily.dailyhotel.entity.StayOutbounds;
 import com.daily.dailyhotel.repository.local.model.RecentlyRealmObject;
+import com.twoheart.dailyhotel.model.Gourmet;
 import com.twoheart.dailyhotel.model.HomeRecentParam;
 import com.twoheart.dailyhotel.model.RecentPlaces;
+import com.twoheart.dailyhotel.model.Stay;
+import com.twoheart.dailyhotel.network.model.HomeDetails;
 import com.twoheart.dailyhotel.network.model.HomePlace;
+import com.twoheart.dailyhotel.network.model.Prices;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 
@@ -425,6 +429,45 @@ public class RecentlyPlaceUtil
         });
     }
 
+    public static ArrayList<HomePlace> mergeHomePlaceList(Context context, List<Stay> stayList, List<Gourmet> gourmetList, StayOutbounds stayOutbounds)
+    {
+        if (context == null)
+        {
+            return null;
+        }
+
+        ArrayList<HomePlace> homePlaceList = new ArrayList<>();
+
+        if (stayList != null && stayList.size() > 0)
+        {
+            for (Stay stay : stayList)
+            {
+                homePlaceList.add(convertHomePlace(context, stay));
+            }
+        }
+
+        if (gourmetList != null && gourmetList.size() > 0)
+        {
+            for (Gourmet gourmet : gourmetList)
+            {
+                homePlaceList.add(convertHomePlace(context, gourmet));
+            }
+        }
+
+        List<StayOutbound> stayOutboundList = stayOutbounds.getStayOutbound();
+        if (stayOutboundList != null && stayOutboundList.size() > 0)
+        {
+            for (StayOutbound stayOutbound : stayOutboundList)
+            {
+                homePlaceList.add(convertHomePlace(context, stayOutbound));
+            }
+        }
+
+        sortHomePlaceList(homePlaceList, (RecentlyPlaceUtil.ServiceType[]) null);
+
+        return homePlaceList;
+    }
+
     public static List<HomePlace> mergeHomePlaceList(Context context, List<HomePlace> homePlacesList, StayOutbounds stayOutbounds)
     {
         List<StayOutbound> stayOutboundList = stayOutbounds.getStayOutbound();
@@ -448,6 +491,88 @@ public class RecentlyPlaceUtil
         RecentlyPlaceUtil.sortHomePlaceList(resultList, (RecentlyPlaceUtil.ServiceType[]) null);
 
         return resultList;
+    }
+
+    private static HomePlace convertHomePlace(Context context, Stay stay)
+    {
+        if (context == null || stay == null)
+        {
+            return null;
+        }
+
+        HomePlace homePlace = null;
+
+        try
+        {
+            homePlace = new HomePlace();
+            homePlace.index = stay.index;
+            homePlace.title = stay.name;
+            homePlace.serviceType = RecentlyPlaceUtil.SERVICE_TYPE_IB_STAY_NAME;
+            homePlace.regionName = stay.districtName;
+
+            Prices prices = new Prices();
+            prices.discountPrice = stay.discountPrice;
+            prices.normalPrice = stay.price;
+
+            homePlace.prices = prices;
+            homePlace.imageUrl = stay.imageUrl;
+            homePlace.placeType = Constants.PlaceType.HOTEL;
+            homePlace.isSoldOut = stay.isSoldOut;
+            homePlace.distance = stay.distance;
+
+            HomeDetails details = new HomeDetails();
+            details.category = stay.categoryCode;
+            details.stayGrade = stay.getGrade();
+
+            homePlace.details = details;
+
+        } catch (Exception e)
+        {
+            ExLog.d(stay.index + " , " + stay.name + " , " + e.toString());
+        }
+
+        return homePlace;
+    }
+
+    private static HomePlace convertHomePlace(Context context, Gourmet gourmet)
+    {
+        if (context == null || gourmet == null)
+        {
+            return null;
+        }
+
+        HomePlace homePlace = null;
+
+        try
+        {
+            homePlace = new HomePlace();
+            homePlace.index = gourmet.index;
+            homePlace.title = gourmet.name;
+            homePlace.serviceType = RecentlyPlaceUtil.SERVICE_TYPE_GOURMET_NAME;
+            homePlace.regionName = gourmet.districtName;
+
+            Prices prices = new Prices();
+            prices.discountPrice = gourmet.discountPrice;
+            prices.normalPrice = gourmet.price;
+
+            homePlace.prices = prices;
+            homePlace.imageUrl = gourmet.imageUrl;
+            homePlace.placeType = Constants.PlaceType.FNB;
+            homePlace.isSoldOut = gourmet.isSoldOut;
+            homePlace.distance = gourmet.distance;
+
+            HomeDetails details = new HomeDetails();
+            details.category = gourmet.category;
+            details.grade = gourmet.grade.getName(context);
+            details.persons = gourmet.persons;
+
+            homePlace.details = details;
+        } catch (Exception e)
+        {
+            ExLog.w(gourmet.index + " | " + gourmet.name + " :: " + e.getMessage());
+        }
+
+        return homePlace;
     }
 
     private static HomePlace convertHomePlace(Context context, StayOutbound stayOutbound)
