@@ -297,7 +297,7 @@ public class HomeCategoryRegionListActivity extends BaseActivity
             {
                 // Location
                 Intent intent = new Intent();
-                intent.putExtra(NAME_INTENT_EXTRA_DATA_LOCATION, (Location)null);
+                intent.putExtra(NAME_INTENT_EXTRA_DATA_LOCATION, (Location) null);
 
                 try
                 {

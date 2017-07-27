@@ -103,33 +103,33 @@ public class PlaceDetailCalendarImpl implements PlaceDetailCalendarInterface
     {
         return DailyMobileAPI.getInstance(mContext).getStayAvailableCheckOutDates(placeIndex, dateRange, checkInDate) //
             .map(new Function<BaseListDto<String>, List<String>>()
-        {
-            @Override
-            public List<String> apply(@NonNull BaseListDto<String> stringBaseListDto) throws Exception
             {
-                List<String> availableDateList = null;
-
-                if (stringBaseListDto != null)
+                @Override
+                public List<String> apply(@NonNull BaseListDto<String> stringBaseListDto) throws Exception
                 {
-                    if (stringBaseListDto.msgCode == 100 && stringBaseListDto.data != null)
-                    {
-                        availableDateList = stringBaseListDto.data;
+                    List<String> availableDateList = null;
 
-                        if (availableDateList == null)
+                    if (stringBaseListDto != null)
+                    {
+                        if (stringBaseListDto.msgCode == 100 && stringBaseListDto.data != null)
                         {
-                            availableDateList = new ArrayList<String>();
+                            availableDateList = stringBaseListDto.data;
+
+                            if (availableDateList == null)
+                            {
+                                availableDateList = new ArrayList<String>();
+                            }
+                        } else
+                        {
+                            throw new BaseException(stringBaseListDto.msgCode, stringBaseListDto.msg);
                         }
                     } else
                     {
-                        throw new BaseException(stringBaseListDto.msgCode, stringBaseListDto.msg);
+                        throw new BaseException(-1, null);
                     }
-                } else
-                {
-                    throw new BaseException(-1, null);
-                }
 
-                return availableDateList;
-            }
-        }).observeOn(AndroidSchedulers.mainThread());
+                    return availableDateList;
+                }
+            }).observeOn(AndroidSchedulers.mainThread());
     }
 }

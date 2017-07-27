@@ -133,7 +133,7 @@ public class GourmetSearchResultListFragment extends GourmetListFragment
                                 }
                             }
 
-                            switch(mSearchType)
+                            switch (mSearchType)
                             {
                                 case AUTOCOMPLETE:
                                     AnalyticsManager.getInstance(getContext()).recordEvent(AnalyticsManager.Category.AUTO_SEARCH_RESULT//

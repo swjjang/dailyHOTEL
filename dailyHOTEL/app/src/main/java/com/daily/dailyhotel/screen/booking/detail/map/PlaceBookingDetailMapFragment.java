@@ -349,15 +349,15 @@ public class PlaceBookingDetailMapFragment extends com.google.android.gms.maps.S
             mGoogleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cp));
         }
 
-//        mGoogleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener()
-//        {
-//            @Override
-//            public boolean onMarkerClick(Marker marker)
-//            {
-//                marker.showInfoWindow();
-//                return true;
-//            }
-//        });
+        //        mGoogleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener()
+        //        {
+        //            @Override
+        //            public boolean onMarkerClick(Marker marker)
+        //            {
+        //                marker.showInfoWindow();
+        //                return true;
+        //            }
+        //        });
 
         mPlaceLocationMarker.hideInfoWindow();
         mHandler.post(new Runnable()
