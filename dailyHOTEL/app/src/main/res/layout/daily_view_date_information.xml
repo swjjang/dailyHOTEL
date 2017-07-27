@@ -37,7 +37,7 @@
 
     <View
         android:id="@+id/centerLineView"
-        android:layout_width="1dp"
+        android:layout_width="1px"
         android:layout_height="0dp"
         android:background="@color/default_line_cdcdcdd"
         app:layout_constraintBottom_toBottomOf="parent"
