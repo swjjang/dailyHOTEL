@@ -57,6 +57,12 @@ public class CollectionGourmetActivity extends CollectionBaseActivity
     private int mType;
     private int mAfterDay;
 
+    /**
+     * @param context
+     * @param index
+     * @param visitDateTime ISO-8601
+     * @return
+     */
     public static Intent newInstance(Context context, int index, String visitDateTime)
     {
         Intent intent = new Intent(context, CollectionGourmetActivity.class);
@@ -70,7 +76,7 @@ public class CollectionGourmetActivity extends CollectionBaseActivity
 
     public static Intent newInstance(Context context, int index, int afterDay)
     {
-        Intent intent = new Intent(context, CollectionStayActivity.class);
+        Intent intent = new Intent(context, CollectionGourmetActivity.class);
 
         intent.putExtra(INTENT_EXTRA_DATA_TYPE, TYPE_AFTER_DAY);
         intent.putExtra(INTENT_EXTRA_DATA_INDEX, index);

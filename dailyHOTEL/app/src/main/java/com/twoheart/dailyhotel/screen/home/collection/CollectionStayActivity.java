@@ -63,7 +63,6 @@ public class CollectionStayActivity extends CollectionBaseActivity
      * @param index
      * @param checkInDateTime       ISO-8601
      * @param checkOutDateTime      ISO-8601
-     * @param isUsedMultiTransition
      * @return
      */
     public static Intent newInstance(Context context, int index, String checkInDateTime, String checkOutDateTime)
