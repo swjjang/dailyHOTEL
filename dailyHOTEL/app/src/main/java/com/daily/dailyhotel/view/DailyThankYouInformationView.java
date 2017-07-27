@@ -19,7 +19,7 @@ public class DailyThankYouInformationView extends ConstraintLayout
     private View mNoticeLayout;
     private DailyTextView mNoticeTextView;
     private DailyDateInformationView mDailyDateInformationView;
-    private DailyInformationView mReservationInformationView;
+    private DailyBookingInformationView mReservationInformationView;
 
     public DailyThankYouInformationView(Context context)
     {
@@ -52,7 +52,7 @@ public class DailyThankYouInformationView extends ConstraintLayout
         mNoticeLayout = view.findViewById(R.id.noticeLayout);
         mNoticeTextView = (DailyTextView) mNoticeLayout.findViewById(R.id.noticeTextView);
         mDailyDateInformationView = (DailyDateInformationView) view.findViewById(R.id.dateInformationView);
-        mReservationInformationView = (DailyInformationView) view.findViewById(R.id.reservationInformationView);
+        mReservationInformationView = (DailyBookingInformationView) view.findViewById(R.id.reservationInformationView);
 
         setNoticeVisible(false);
     }

@@ -14,6 +14,7 @@ import android.text.SpannableStringBuilder;
 import android.text.TextWatcher;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -48,6 +49,7 @@ import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.DailySignatureView;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -126,12 +128,19 @@ public class StayOutboundPaymentView extends BaseDialogView<StayOutboundPaymentV
             return;
         }
 
-        mBookingDataBinding.checkInDayTextView.setText(checkInDate);
-        mBookingDataBinding.checkOutDayTextView.setText(checkOutDate);
-        mBookingDataBinding.nightsTextView.setText(getString(R.string.label_nights, nights));
+        mBookingDataBinding.dateInformationView.setDate1Text(getString(R.string.act_booking_chkin), checkInDate);
+        mBookingDataBinding.dateInformationView.setDate2Text(getString(R.string.act_booking_chkout), checkOutDate);
+        mBookingDataBinding.dateInformationView.setCenterNightsVisible(true);
+        mBookingDataBinding.dateInformationView.setCenterNightsText(getString(R.string.label_nights, nights));
 
-        mBookingDataBinding.placeNameTextView.setText(stayName);
-        mBookingDataBinding.roomTypeTextView.setText(roomType);
+        mBookingDataBinding.roomInformationView.setTitle(R.string.label_booking_room_info);
+
+        List<Pair<CharSequence, CharSequence>> reservationInformationList = new ArrayList<>();
+
+        reservationInformationList.add(new Pair(getString(R.string.label_booking_place_name), stayName));
+        reservationInformationList.add(new Pair(getString(R.string.label_booking_room_type), roomType));
+
+        mBookingDataBinding.roomInformationView.setInformation(reservationInformationList);
     }
 
     @Override

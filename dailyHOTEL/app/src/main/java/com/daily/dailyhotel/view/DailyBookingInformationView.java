@@ -16,26 +16,26 @@ import com.twoheart.dailyhotel.databinding.DailyViewLeftTitleRightDescriptionDat
 
 import java.util.List;
 
-public class DailyInformationView extends ConstraintLayout
+public class DailyBookingInformationView extends ConstraintLayout
 {
     private DailyTextView mTitleTextView;
     private LinearLayout mInformationLayout;
 
-    public DailyInformationView(Context context)
+    public DailyBookingInformationView(Context context)
     {
         super(context);
 
         initLayout(context);
     }
 
-    public DailyInformationView(Context context, AttributeSet attrs)
+    public DailyBookingInformationView(Context context, AttributeSet attrs)
     {
         super(context, attrs);
 
         initLayout(context);
     }
 
-    public DailyInformationView(Context context, AttributeSet attrs, int defStyleAttr)
+    public DailyBookingInformationView(Context context, AttributeSet attrs, int defStyleAttr)
     {
         super(context, attrs, defStyleAttr);
 
