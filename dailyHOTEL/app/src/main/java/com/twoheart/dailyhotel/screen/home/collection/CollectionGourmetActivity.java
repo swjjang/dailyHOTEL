@@ -57,6 +57,12 @@ public class CollectionGourmetActivity extends CollectionBaseActivity
     private int mType;
     private int mAfterDay;
 
+    /**
+     * @param context
+     * @param index
+     * @param visitDateTime ISO-8601
+     * @return
+     */
     public static Intent newInstance(Context context, int index, String visitDateTime)
     {
         Intent intent = new Intent(context, CollectionGourmetActivity.class);
@@ -70,7 +76,7 @@ public class CollectionGourmetActivity extends CollectionBaseActivity
 
     public static Intent newInstance(Context context, int index, int afterDay)
     {
-        Intent intent = new Intent(context, CollectionStayActivity.class);
+        Intent intent = new Intent(context, CollectionGourmetActivity.class);
 
         intent.putExtra(INTENT_EXTRA_DATA_TYPE, TYPE_AFTER_DAY);
         intent.putExtra(INTENT_EXTRA_DATA_INDEX, index);
@@ -218,25 +224,53 @@ public class CollectionGourmetActivity extends CollectionBaseActivity
             GourmetBookingDay gourmetBookingDay = new GourmetBookingDay();
             gourmetBookingDay.setVisitDay(todayDateTime.dailyDateTime);
 
-            if (mStartGourmetBookingDay != null)
+            switch (mType)
             {
-                try
-                {
-                    int startVisitDay = Integer.parseInt(mStartGourmetBookingDay.getVisitDay("yyyyMMdd"));
-                    int dailyVisitDay = Integer.parseInt(gourmetBookingDay.getVisitDay("yyyyMMdd"));
+                case TYPE_DEFAULT:
+                    break;
 
-                    // 데일리타임 이후 날짜인 경우에는
-                    if (startVisitDay >= dailyVisitDay)
+                case TYPE_DATE:
+                    if (mStartGourmetBookingDay != null)
                     {
-                        gourmetBookingDay.setVisitDay(mStartGourmetBookingDay.getVisitDay(DailyCalendar.ISO_8601_FORMAT));
-                    }
-                } catch (Exception e)
-                {
-                    ExLog.e(e.toString());
-                }
+                        try
+                        {
+                            int startVisitDay = Integer.parseInt(mStartGourmetBookingDay.getVisitDay("yyyyMMdd"));
+                            int dailyVisitDay = Integer.parseInt(gourmetBookingDay.getVisitDay("yyyyMMdd"));
 
-                mStartGourmetBookingDay = null;
+                            // 데일리타임 이후 날짜인 경우에는
+                            if (startVisitDay >= dailyVisitDay)
+                            {
+                                gourmetBookingDay.setVisitDay(mStartGourmetBookingDay.getVisitDay(DailyCalendar.ISO_8601_FORMAT));
+                            }
+                        } catch (Exception e)
+                        {
+                            ExLog.e(e.toString());
+                        }
+
+                        mStartGourmetBookingDay = null;
+                    }
+
+                    mType = TYPE_DEFAULT;
+                    break;
+
+                case TYPE_AFTER_DAY:
+                    if (mAfterDay >= 0)
+                    {
+                        try
+                        {
+                            gourmetBookingDay.setVisitDay(todayDateTime.dailyDateTime, mAfterDay);
+                        } catch (Exception e)
+                        {
+                            ExLog.e(e.toString());
+                        }
+
+                        mAfterDay = -1;
+                    }
+
+                    mType = TYPE_DEFAULT;
+                    break;
             }
+
 
             mPlaceBookingDay = gourmetBookingDay;
         } catch (Exception e)

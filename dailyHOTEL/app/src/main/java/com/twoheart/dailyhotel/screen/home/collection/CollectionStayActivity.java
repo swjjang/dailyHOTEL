@@ -63,7 +63,6 @@ public class CollectionStayActivity extends CollectionBaseActivity
      * @param index
      * @param checkInDateTime       ISO-8601
      * @param checkOutDateTime      ISO-8601
-     * @param isUsedMultiTransition
      * @return
      */
     public static Intent newInstance(Context context, int index, String checkInDateTime, String checkOutDateTime)
@@ -73,7 +72,7 @@ public class CollectionStayActivity extends CollectionBaseActivity
         intent.putExtra(INTENT_EXTRA_DATA_TYPE, TYPE_DATE);
         intent.putExtra(INTENT_EXTRA_DATA_INDEX, index);
         intent.putExtra(INTENT_EXTRA_DATA_CHECK_IN_DATE, checkInDateTime);
-        intent.putExtra(INTENT_EXTRA_DATA_CHECK_OUT_DATE, index);
+        intent.putExtra(INTENT_EXTRA_DATA_CHECK_OUT_DATE, checkOutDateTime);
 
         return intent;
     }
@@ -260,7 +259,6 @@ public class CollectionStayActivity extends CollectionBaseActivity
                     break;
 
                 case TYPE_DATE:
-                    // 호출시에 선택된 날짜가 있다면.
                     if (mStartStayBookingDay != null)
                     {
                         try
