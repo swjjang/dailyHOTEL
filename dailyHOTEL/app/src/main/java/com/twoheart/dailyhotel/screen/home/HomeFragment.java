@@ -78,8 +78,10 @@ import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.TimeZone;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
@@ -422,14 +424,62 @@ public class HomeFragment extends BaseMenuNavigationFragment
             } else if (externalDeepLink.isHomeRecommendationPlaceListView() == true)
             {
                 String serviceType = externalDeepLink.getPlaceType();
-                String stringIndex = externalDeepLink.getIndex();
-
-                int idx;
 
                 try
                 {
-                    idx = Integer.parseInt(stringIndex);
-                    startDeepLinkRecommendationActivity(serviceType, idx);
+                    int index = Integer.parseInt(externalDeepLink.getIndex());
+                    String date = externalDeepLink.getDate();
+                    int datePlus = externalDeepLink.getDatePlus();
+
+                    switch (serviceType)
+                    {
+                        case "gourmet":
+                            if (DailyTextUtils.isTextEmpty(date) == false)
+                            {
+                                GourmetBookingDay gourmetBookingDay = new GourmetBookingDay();
+                                Date visitDate = DailyCalendar.convertDate(date, "yyyyMMdd", TimeZone.getTimeZone("GMT+09:00"));
+                                gourmetBookingDay.setVisitDay(DailyCalendar.format(visitDate, DailyCalendar.ISO_8601_FORMAT));
+
+                                startDeepLinkRecommendationGourmetActivity(index, gourmetBookingDay.getVisitDay(DailyCalendar.ISO_8601_FORMAT), -1);
+                            } else
+                            {
+                                startDeepLinkRecommendationGourmetActivity(index, null, datePlus);
+                            }
+                            break;
+
+                        case "stay":
+                        default:
+                            int nights = 1;
+
+                            try
+                            {
+                                nights = Integer.parseInt(externalDeepLink.getNights());
+                            } catch (Exception e)
+                            {
+                                ExLog.d(e.toString());
+                            } finally
+                            {
+                                if (nights <= 0)
+                                {
+                                    nights = 1;
+                                }
+                            }
+
+                            if (DailyTextUtils.isTextEmpty(date) == false)
+                            {
+                                StayBookingDay stayBookingDay = new StayBookingDay();
+                                Date checkInDate = DailyCalendar.convertDate(date, "yyyyMMdd", TimeZone.getTimeZone("GMT+09:00"));
+                                stayBookingDay.setCheckInDay(DailyCalendar.format(checkInDate, DailyCalendar.ISO_8601_FORMAT));
+                                stayBookingDay.setCheckOutDay(stayBookingDay.getCheckInDay(DailyCalendar.ISO_8601_FORMAT), nights);
+
+                                startDeepLinkRecommendationStayActivity(index, stayBookingDay.getCheckInDay(DailyCalendar.ISO_8601_FORMAT)//
+                                    , stayBookingDay.getCheckOutDay(DailyCalendar.ISO_8601_FORMAT), -1, -1);
+                            } else
+                            {
+                                startDeepLinkRecommendationStayActivity(index, null, null, datePlus, nights);
+                            }
+                            break;
+                    }
                 } catch (Exception e)
                 {
                     ExLog.e(e.toString());
@@ -593,25 +643,33 @@ public class HomeFragment extends BaseMenuNavigationFragment
         mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_EVENTWEB);
     }
 
-    private void startDeepLinkRecommendationActivity(String serviceType, int index)
+    private void startDeepLinkRecommendationStayActivity(int index, String checkInDateTime, String checkOutDateTime, int afterDay, int nights)
     {
         Intent intent;
 
-        switch (serviceType)
+        if (DailyTextUtils.isTextEmpty(checkInDateTime, checkOutDateTime) == false)
         {
-            case "gourmet":
-                intent = CollectionGourmetActivity.newInstance(mBaseActivity, index//
-                    , null//
-                    , null, null, false);
-                break;
+            intent = CollectionStayActivity.newInstance(mBaseActivity, index, checkInDateTime, checkOutDateTime);
+        } else
+        {
+            intent = CollectionStayActivity.newInstance(mBaseActivity, index, afterDay, nights);
+        }
 
-            case "stay":
-            default:
-                intent = CollectionStayActivity.newInstance(mBaseActivity, index//
-                    , null//
-                    , null, null, false);
-                break;
+        mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_COLLECTION);
 
+        mBaseActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
+    }
+
+    private void startDeepLinkRecommendationGourmetActivity(int index, String visitTime, int afterDay)
+    {
+        Intent intent;
+
+        if (DailyTextUtils.isTextEmpty(visitTime) == false)
+        {
+            intent = CollectionGourmetActivity.newInstance(mBaseActivity, index, visitTime);
+        } else
+        {
+            intent = CollectionGourmetActivity.newInstance(mBaseActivity, index, afterDay);
         }
 
         mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_COLLECTION);
