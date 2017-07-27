@@ -29,7 +29,6 @@ import java.util.Locale;
 
 public class BookingListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements PinnedSectionRecyclerView.PinnedSectionListAdapter
 {
-    private final String BOOKING_DATE_FORMAT = "yyyy.MM.dd(EEE)";
     private List<ListItem> mList;
     private Context mContext;
     BookingListFragment.OnUserActionListener mOnUserActionListener;
@@ -170,6 +169,8 @@ public class BookingListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
         try
         {
+            final String BOOKING_DATE_FORMAT = "yyyy.MM.dd(EEE)";
+
             switch (booking.placeType)
             {
                 case STAY:

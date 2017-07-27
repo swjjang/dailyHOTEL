@@ -417,7 +417,6 @@ public interface IDailyNetwork
     void requestNoticeAgreementResult(String tag, boolean isAgree, Object listener);
 
     /**
-     *
      * @param tag
      * @param listener
      */
@@ -446,7 +445,6 @@ public interface IDailyNetwork
     void requestDownloadEventCoupon(String tag, String couponCode, Object listener);
 
     /**
-     *
      * @param tag
      * @param isAgree  required
      * @param listener

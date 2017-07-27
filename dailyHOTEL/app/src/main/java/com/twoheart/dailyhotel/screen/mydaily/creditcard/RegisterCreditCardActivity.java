@@ -162,15 +162,12 @@ public class RegisterCreditCardActivity extends BaseActivity implements Constant
         {
             super.onProgressChanged(view, newProgress);
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH)
+            if (newProgress != 100)
             {
-                if (newProgress != 100)
-                {
-                    setActionBarProgressBar(true);
-                } else
-                {
-                    setActionBarProgressBar(false);
-                }
+                setActionBarProgressBar(true);
+            } else
+            {
+                setActionBarProgressBar(false);
             }
         }
 
@@ -233,10 +230,7 @@ public class RegisterCreditCardActivity extends BaseActivity implements Constant
             // 불안정뜨므로, 네트워크 체크는
             // 제거하도록 함.
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH)
-            {
-                setSupportProgressBarIndeterminateVisibility(true);
-            }
+            setSupportProgressBarIndeterminateVisibility(true);
         }
 
         @Override
@@ -246,10 +240,7 @@ public class RegisterCreditCardActivity extends BaseActivity implements Constant
 
             unLockUI();
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH)
-            {
-                setSupportProgressBarIndeterminateVisibility(false);
-            }
+            setSupportProgressBarIndeterminateVisibility(false);
         }
     }
 

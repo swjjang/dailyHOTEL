@@ -695,7 +695,7 @@ public class StayOutboundDetailView extends BaseDialogView<StayOutboundDetailVie
             getViewDataBinding().transGradientTopView.setTransitionName(getString(R.string.transition_gradient_top_view));
             getViewDataBinding().transNameTextView.setTransitionName(getString(R.string.transition_place_name));
 
-            switch(gradientType)
+            switch (gradientType)
             {
                 case StayOutboundDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_LIST:
                     getViewDataBinding().transGradientBottomView.setBackground(getGradientBottomDrawable());

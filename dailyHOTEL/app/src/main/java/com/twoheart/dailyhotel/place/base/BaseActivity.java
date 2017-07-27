@@ -1210,9 +1210,9 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
         OnOperatingTimeListener operatingTimeListener = new OnOperatingTimeListener()
         {
             @Override
-            public void onInValidOperatingTime(boolean isInVaildOperatingTime)
+            public void onInValidOperatingTime(boolean isInValidOperatingTime)
             {
-                if (isInVaildOperatingTime == true)
+                if (isInValidOperatingTime == true)
                 {
                     showNonOperatingTimeDialog(listener);
                 } else

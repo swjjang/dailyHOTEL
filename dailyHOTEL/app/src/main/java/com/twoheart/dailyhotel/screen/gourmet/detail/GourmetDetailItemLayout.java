@@ -415,7 +415,7 @@ public class GourmetDetailItemLayout extends LinearLayout
      */
     private View getTitleView(LayoutInflater layoutInflater, final GourmetDetail gourmetDetail, GourmetDetailLayout.OnEventListener onEventListener)
     {
-        GourmetDetailParams gourmetDetailParams = gourmetDetail.getGourmetDetailParmas();
+        GourmetDetailParams gourmetDetailParams = gourmetDetail.getGourmetDetailParams();
 
         View view = layoutInflater.inflate(R.layout.list_row_gourmet_detail02, this, false);
 
@@ -571,7 +571,7 @@ public class GourmetDetailItemLayout extends LinearLayout
 
         view.setBackgroundColor(mContext.getResources().getColor(R.color.white));
 
-        GourmetDetailParams gourmetDetailParams = gourmetDetail.getGourmetDetailParmas();
+        GourmetDetailParams gourmetDetailParams = gourmetDetail.getGourmetDetailParams();
 
         // 주소지
         final TextView hotelAddressTextView = (TextView) view.findViewById(R.id.detailAddressTextView);
@@ -713,7 +713,7 @@ public class GourmetDetailItemLayout extends LinearLayout
             return view;
         }
 
-        GourmetDetailParams gourmetDetailParams = gourmetDetail.getGourmetDetailParmas();
+        GourmetDetailParams gourmetDetailParams = gourmetDetail.getGourmetDetailParams();
         final String benefit = gourmetDetailParams.benefit;
         if (DailyTextUtils.isTextEmpty(benefit) == true)
         {
