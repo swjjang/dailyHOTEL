@@ -1860,7 +1860,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
         }
 
         @Override
-        public void doPayment()
+        public synchronized void doPayment()
         {
             if (lockUiComponentAndIsLockUiComponent() == true)
             {

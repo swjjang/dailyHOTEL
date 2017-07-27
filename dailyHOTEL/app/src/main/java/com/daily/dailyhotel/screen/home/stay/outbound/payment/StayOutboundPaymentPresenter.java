@@ -563,7 +563,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
     }
 
     @Override
-    public void onPaymentClick(String firstName, String lastName, String phone, String email)
+    public synchronized void onPaymentClick(String firstName, String lastName, String phone, String email)
     {
         if (mGuest == null || lock() == true)
         {
@@ -689,7 +689,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
         mAgreedThirdPartyTerms = checked;
     }
 
-    private void onAgreedPaymentClick()
+    private synchronized void onAgreedPaymentClick()
     {
         if (lock() == true)
         {
