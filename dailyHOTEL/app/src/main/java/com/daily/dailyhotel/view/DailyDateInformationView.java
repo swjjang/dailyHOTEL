@@ -3,6 +3,7 @@ package com.daily.dailyhotel.view;
 import android.content.Context;
 import android.support.constraint.ConstraintLayout;
 import android.util.AttributeSet;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 
@@ -73,6 +74,17 @@ public class DailyDateInformationView extends ConstraintLayout
         }
     }
 
+    public void setOnDateClickListener(View.OnClickListener listener1, View.OnClickListener listener2)
+    {
+        if (mDate1Layout == null || mDate2Layout == null)
+        {
+            return;
+        }
+
+        mDate1Layout.setOnClickListener(listener1);
+        mDate2Layout.setOnClickListener(listener2);
+    }
+
     public void setDate1Text(CharSequence title, CharSequence dateString)
     {
         if (mDate1TitleTextView == null || mDate1TextView == null)
@@ -84,6 +96,56 @@ public class DailyDateInformationView extends ConstraintLayout
         mDate1TextView.setText(dateString);
     }
 
+    public void setDate1TitleTextColor(int color)
+    {
+        if (mDate1TitleTextView == null)
+        {
+            return;
+        }
+
+        mDate1TitleTextView.setTextColor(color);
+    }
+
+    public void setDate1TitleTextSize(float fontSize)
+    {
+        if (mDate1TitleTextView == null)
+        {
+            return;
+        }
+
+        mDate1TitleTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, fontSize);
+    }
+
+    public void setDate1DescriptionTextColor(int color)
+    {
+        if (mDate1TextView == null)
+        {
+            return;
+        }
+
+        mDate1TextView.setTextColor(color);
+    }
+
+    public void setDate1DescriptionTextSize(float fontSize)
+    {
+        if (mDate1TextView == null)
+        {
+            return;
+        }
+
+        mDate1TextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, fontSize);
+    }
+
+    public void setDate1DescriptionTextDrawable(int left, int top, int right, int bottom)
+    {
+        if (mDate1TextView == null)
+        {
+            return;
+        }
+
+        mDate1TextView.setCompoundDrawablesWithIntrinsicBounds(left, top, right, bottom);
+    }
+
     public void setDate2Text(CharSequence title, CharSequence dateString)
     {
         if (mDate2TitleTextView == null || mDate2TextView == null)
@@ -93,6 +155,56 @@ public class DailyDateInformationView extends ConstraintLayout
 
         mDate2TitleTextView.setText(title);
         mDate2TextView.setText(dateString);
+    }
+
+    public void setDate2TitleTextColor(int color)
+    {
+        if (mDate2TitleTextView == null)
+        {
+            return;
+        }
+
+        mDate2TitleTextView.setTextColor(color);
+    }
+
+    public void setDate2TitleTextSize(float fontSize)
+    {
+        if (mDate2TitleTextView == null)
+        {
+            return;
+        }
+
+        mDate2TitleTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, fontSize);
+    }
+
+    public void setDate2DescriptionTextColor(int color)
+    {
+        if (mDate2TextView == null)
+        {
+            return;
+        }
+
+        mDate2TextView.setTextColor(color);
+    }
+
+    public void setDate2DescriptionTextSize(float fontSize)
+    {
+        if (mDate1TextView == null)
+        {
+            return;
+        }
+
+        mDate2TextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, fontSize);
+    }
+
+    public void setDate2DescriptionTextDrawable(int left, int top, int right, int bottom)
+    {
+        if (mDate2TextView == null)
+        {
+            return;
+        }
+
+        mDate2TextView.setCompoundDrawablesWithIntrinsicBounds(left, top, right, bottom);
     }
 
     public void setCenterNightsVisible(boolean visible)
