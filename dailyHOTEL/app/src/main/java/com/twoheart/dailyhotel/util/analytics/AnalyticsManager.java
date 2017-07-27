@@ -37,7 +37,7 @@ public class AnalyticsManager
     {
         if (mInstance == null)
         {
-            mInstance = new AnalyticsManager();
+            mInstance = new AnalyticsManager(context);
         }
         return mInstance;
     }
