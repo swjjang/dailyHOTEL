@@ -32,14 +32,14 @@ public class GourmetDetail extends PlaceDetail<GourmetProduct> implements Parcel
         readFromParcel(in);
     }
 
-    public GourmetDetailParams getGourmetDetailParmas()
+    public GourmetDetailParams getGourmetDetailParams()
     {
         return mGourmetDetailParams;
     }
 
-    public void setGourmetDetailParmas(GourmetDetailParams gourmetDetailParmas)
+    public void setGourmetDetailParams(GourmetDetailParams gourmetDetailParams)
     {
-        mGourmetDetailParams = gourmetDetailParmas;
+        mGourmetDetailParams = gourmetDetailParams;
     }
 
     @Override

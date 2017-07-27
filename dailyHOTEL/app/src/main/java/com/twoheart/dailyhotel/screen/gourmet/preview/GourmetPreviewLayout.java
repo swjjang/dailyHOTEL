@@ -57,7 +57,7 @@ public class GourmetPreviewLayout extends PlacePreviewLayout implements View.OnC
             return;
         }
 
-        GourmetDetailParams gourmetDetailParams = gourmetDetail.getGourmetDetailParmas();
+        GourmetDetailParams gourmetDetailParams = gourmetDetail.getGourmetDetailParams();
 
         if (gourmetDetailParams == null)
         {

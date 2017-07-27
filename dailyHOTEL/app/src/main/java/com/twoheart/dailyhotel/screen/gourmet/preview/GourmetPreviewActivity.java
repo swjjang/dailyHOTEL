@@ -230,7 +230,7 @@ public class GourmetPreviewActivity extends BaseActivity
             return;
         }
 
-        GourmetDetailParams gourmetDetailParams = gourmetDetail.getGourmetDetailParmas();
+        GourmetDetailParams gourmetDetailParams = gourmetDetail.getGourmetDetailParams();
 
         if (mPreviewLayout != null)
         {
@@ -265,7 +265,7 @@ public class GourmetPreviewActivity extends BaseActivity
     {
         // 판매 완료 혹은 가격이 변동되었는지 조사한다
         List<GourmetProduct> gourmetProductList = gourmetDetail.getProductList();
-        GourmetDetailParams gourmetDetailParams = gourmetDetail.getGourmetDetailParmas();
+        GourmetDetailParams gourmetDetailParams = gourmetDetail.getGourmetDetailParams();
 
         if (gourmetProductList == null || gourmetProductList.size() == 0)
         {
@@ -312,7 +312,7 @@ public class GourmetPreviewActivity extends BaseActivity
 
             if (DailyHotel.isLogin() == true)
             {
-                if (mPlaceDetail.getGourmetDetailParmas().myWish == true)
+                if (mPlaceDetail.getGourmetDetailParams().myWish == true)
                 {
                     mNetworkController.requestRemoveWishList(PlaceType.FNB, mPlaceDetail.index);
 
@@ -361,7 +361,7 @@ public class GourmetPreviewActivity extends BaseActivity
                     return;
                 }
 
-                GourmetDetailParams gourmetDetailParams = mPlaceDetail.getGourmetDetailParmas();
+                GourmetDetailParams gourmetDetailParams = mPlaceDetail.getGourmetDetailParams();
                 if (gourmetDetailParams == null)
                 {
                     return;
@@ -413,7 +413,7 @@ public class GourmetPreviewActivity extends BaseActivity
                 return;
             }
 
-            GourmetDetailParams gourmetDetailParams = mPlaceDetail.getGourmetDetailParmas();
+            GourmetDetailParams gourmetDetailParams = mPlaceDetail.getGourmetDetailParams();
 
             if (gourmetDetailParams == null)
             {
@@ -479,7 +479,7 @@ public class GourmetPreviewActivity extends BaseActivity
 
             try
             {
-                mPlaceDetail.setGourmetDetailParmas(gourmetDetailParams);
+                mPlaceDetail.setGourmetDetailParams(gourmetDetailParams);
 
                 if (mPlaceReviewScores != null)
                 {
@@ -500,7 +500,7 @@ public class GourmetPreviewActivity extends BaseActivity
                 lockUI(false);
                 mPreviewLayout.addWish();
 
-                GourmetDetailParams gourmetDetailParams = mPlaceDetail.getGourmetDetailParmas();
+                GourmetDetailParams gourmetDetailParams = mPlaceDetail.getGourmetDetailParams();
 
                 if (gourmetDetailParams != null)
                 {
@@ -523,7 +523,7 @@ public class GourmetPreviewActivity extends BaseActivity
                 lockUI(false);
                 mPreviewLayout.removeWish();
 
-                GourmetDetailParams gourmetDetailParams = mPlaceDetail.getGourmetDetailParmas();
+                GourmetDetailParams gourmetDetailParams = mPlaceDetail.getGourmetDetailParams();
 
                 if (gourmetDetailParams != null)
                 {
@@ -548,7 +548,7 @@ public class GourmetPreviewActivity extends BaseActivity
 
             mPlaceReviewScores = placeReviewScores;
 
-            if (mPlaceDetail.getGourmetDetailParmas() != null)
+            if (mPlaceDetail.getGourmetDetailParams() != null)
             {
                 updatePreviewInformationLayout(mPlaceBookingDay, mPlaceDetail, mPlaceReviewScores.reviewScoreTotalCount);
             }

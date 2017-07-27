@@ -71,6 +71,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
@@ -1295,7 +1296,7 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
 
             startGourmetDetail(view, homePlace, mTodayDateTime, (StayBookingDetail) mPlaceBookingDetail);
 
-            String distanceString = String.format("%.1f", homePlace.distance);
+            String distanceString = String.format(Locale.KOREA, "%.1f", homePlace.distance);
 
             AnalyticsManager.getInstance(StayReservationDetailActivity.this).recordEvent(//
                 AnalyticsManager.Category.BOOKING_GOURMET_RECOMMEND_CLICK, distanceString//

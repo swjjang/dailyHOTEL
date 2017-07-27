@@ -98,7 +98,7 @@ public class GourmetDetailLayout extends PlaceDetailLayout
     public void setDetail(GourmetBookingDay gourmetBookingDay, GourmetDetail gourmetDetail//
         , PlaceReviewScores placeReviewScores, int imagePosition, int dpi)
     {
-        if (gourmetBookingDay == null || gourmetDetail == null || gourmetDetail.getGourmetDetailParmas() == null)
+        if (gourmetBookingDay == null || gourmetDetail == null || gourmetDetail.getGourmetDetailParams() == null)
         {
             setLineIndicatorVisible(false);
             return;
@@ -156,7 +156,7 @@ public class GourmetDetailLayout extends PlaceDetailLayout
             setBookingStatus(STATUS_SELECT_PRODUCT);
         }
 
-        GourmetDetailParams gourmetDetailParams = gourmetDetail.getGourmetDetailParmas();
+        GourmetDetailParams gourmetDetailParams = gourmetDetail.getGourmetDetailParams();
 
         if (placeReviewScores != null)
         {

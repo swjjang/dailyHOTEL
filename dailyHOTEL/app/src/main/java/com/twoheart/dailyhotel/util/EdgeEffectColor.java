@@ -223,37 +223,20 @@ public class EdgeEffectColor
         {
             Field edge = null, glow = null;
 
-            Class cls = null;
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH)
-            {
-                try
-                {
-                    cls = Class.forName("android.widget.EdgeGlow");
-                } catch (ClassNotFoundException e)
-                {
-                    ExLog.d(e.toString());
-                }
-            } else
-            {
-                cls = EdgeEffect.class;
+            Class cls = EdgeEffect.class;
 
-            }
-
-            if (cls != null)
+            for (Field f : cls.getDeclaredFields())
             {
-                for (Field f : cls.getDeclaredFields())
+                switch (f.getName())
                 {
-                    switch (f.getName())
-                    {
-                        case "mEdge":
-                            f.setAccessible(true);
-                            edge = f;
-                            break;
-                        case "mGlow":
-                            f.setAccessible(true);
-                            glow = f;
-                            break;
-                    }
+                    case "mEdge":
+                        f.setAccessible(true);
+                        edge = f;
+                        break;
+                    case "mGlow":
+                        f.setAccessible(true);
+                        glow = f;
+                        break;
                 }
             }
 

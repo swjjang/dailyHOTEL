@@ -5,6 +5,8 @@ import android.app.Activity;
 import com.twoheart.dailyhotel.model.Gourmet;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
+import java.util.Locale;
+
 /**
  * Created by android_sam on 2017. 7. 20..
  */
@@ -19,7 +21,7 @@ public class GourmetBookingDetailMapAnalyticsImpl implements GourmetBookingDetai
             return;
         }
 
-        String distanceString = String.format("%.1f", gourmet.distance);
+        String distanceString = String.format(Locale.KOREA, "%.1f", gourmet.distance);
 
         AnalyticsManager.getInstance(activity).recordEvent(//
             AnalyticsManager.Category.BOOKING_GOURMET_RECOMMEND_CLICK, distanceString//
