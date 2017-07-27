@@ -114,8 +114,6 @@ public abstract class PlaceDetailLayout extends BaseLayout
 
         void onCalendarClick();
 
-        void doBooking();
-
         void onDownloadCouponClick();
 
         void releaseUiComponent();

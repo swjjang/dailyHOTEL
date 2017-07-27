@@ -62,6 +62,11 @@ public class VersionUtils
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.N;
     }
 
+    public static boolean equalsAPI24()
+    {
+        return Build.VERSION.SDK_INT == Build.VERSION_CODES.N;
+    }
+
     public static String getAppVersionCode(Context context)
     {
         String version = null;
