@@ -1092,7 +1092,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
                 Observable observable = Observable.zip(mRecentlyRemoteImpl.getStayInboundRecentlyList(stayBookingDay) //
                     , mRecentlyRemoteImpl.getGourmetRecentlyList(gourmetBookingDay) //
                     , mRecentlyRemoteImpl.getStayOutboundRecentlyList(30) //
-                    , new Function3<List<Stay>, List<Gourmet>, StayOutbounds, Object>()
+                    , new Function3<List<Stay>, List<Gourmet>, StayOutbounds, ArrayList<HomePlace>>()
                     {
                         @Override
                         public ArrayList<HomePlace> apply(@NonNull List<Stay> stays, @NonNull List<Gourmet> gourmets //
