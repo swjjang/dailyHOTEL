@@ -590,7 +590,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
     @Override
     public void onBackClick()
     {
-        getActivity().onBackPressed();
+        finish();
     }
 
     @Override
@@ -978,7 +978,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
         intent.putExtra(StayOutboundListActivity.INTENT_EXTRA_DATA_RESEARCH, true);
 
         setResult(Activity.RESULT_OK, intent);
-        onBackClick();
+        finish();
     }
 
     @Override
