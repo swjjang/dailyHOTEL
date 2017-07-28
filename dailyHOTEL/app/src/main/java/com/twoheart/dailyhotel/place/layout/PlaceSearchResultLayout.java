@@ -223,12 +223,14 @@ public abstract class PlaceSearchResultLayout extends BaseBlurLayout implements 
         });
 
         int researchResId;
-        if (AnalyticsManager.Screen.HOME.equalsIgnoreCase(mCallByScreen) == true || AnalyticsManager.Screen.SEARCH_MAIN.equalsIgnoreCase(mCallByScreen) == true)
-        {
-            researchResId = R.string.label_searchresult_research;
-        } else
+        if (AnalyticsManager.Screen.DAILYGOURMET_LIST_REGION_DOMESTIC.equalsIgnoreCase(mCallByScreen) == true//
+            || AnalyticsManager.Screen.DAILYHOTEL_LIST_REGION_DOMESTIC.equalsIgnoreCase(mCallByScreen) == true//
+            || AnalyticsManager.Screen.DAILYHOTEL_LIST_REGION_GLOBAL.equalsIgnoreCase(mCallByScreen) == true)
         {
             researchResId = R.string.label_searchresult_change_region;
+        } else
+        {
+            researchResId = R.string.label_searchresult_research;
         }
 
         researchView.setText(researchResId);
@@ -238,12 +240,14 @@ public abstract class PlaceSearchResultLayout extends BaseBlurLayout implements 
             public void onClick(View v)
             {
                 int resultCode;
-                if (AnalyticsManager.Screen.HOME.equalsIgnoreCase(mCallByScreen) == true || AnalyticsManager.Screen.SEARCH_MAIN.equalsIgnoreCase(mCallByScreen) == true)
-                {
-                    resultCode = Constants.CODE_RESULT_ACTIVITY_GO_SEARCH;
-                } else
+                if (AnalyticsManager.Screen.DAILYGOURMET_LIST_REGION_DOMESTIC.equalsIgnoreCase(mCallByScreen) == true//
+                    || AnalyticsManager.Screen.DAILYHOTEL_LIST_REGION_DOMESTIC.equalsIgnoreCase(mCallByScreen) == true//
+                    || AnalyticsManager.Screen.DAILYHOTEL_LIST_REGION_GLOBAL.equalsIgnoreCase(mCallByScreen) == true)
                 {
                     resultCode = Constants.CODE_RESULT_ACTIVITY_GO_REGION_LIST;
+                } else
+                {
+                    resultCode = Constants.CODE_RESULT_ACTIVITY_GO_SEARCH;
                 }
 
                 ((PlaceSearchResultLayout.OnEventListener) mOnEventListener).research(resultCode);
