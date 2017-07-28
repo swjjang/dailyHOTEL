@@ -144,6 +144,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
         mHomeLayout.setOnScrollChangedListener(mOnScreenScrollChangeListener);
 
         mNetworkController = new HomeNetworkController(mBaseActivity, mNetworkTag, mNetworkControllerListener);
+
         return mHomeLayout.onCreateView(R.layout.fragment_home_main, container);
     }
 
@@ -249,7 +250,11 @@ public class HomeFragment extends BaseMenuNavigationFragment
             case CODE_REQUEST_ACTIVITY_SATISFACTION_GOURMET:
             {
                 mDontReload = true;
-                mHomeLayout.setScrollTop();
+
+                if (mHomeLayout != null)
+                {
+                    mHomeLayout.setScrollTop();
+                }
 
                 forceRefreshing();
                 break;
@@ -605,6 +610,14 @@ public class HomeFragment extends BaseMenuNavigationFragment
         if (mHomeLayout != null)
         {
             mHomeLayout.setCategoryEnabled(isEnabled);
+
+            // 해외 호텔 new 표시
+            if (DailyPreference.getInstance(mBaseActivity).isHomeShortCutStayOutboundNew() == true)
+            {
+                DailyPreference.getInstance(mBaseActivity).setHomeShortCutStayOutboundNew(false);
+
+                mHomeLayout.setCategoryStayOutboundNewVisible(true);
+            }
         }
     }
 
@@ -1681,37 +1694,47 @@ public class HomeFragment extends BaseMenuNavigationFragment
                 return;
             }
 
-            if (DailyCategoryType.STAY_NEARBY == categoryType)
+
+            switch (categoryType)
             {
-                if (lockUiComponentAndIsLockUiComponent() == true)
+                case STAY_NEARBY:
                 {
+                    if (lockUiComponentAndIsLockUiComponent() == true)
+                    {
+                        return;
+                    }
+
+                    Intent intent = PermissionManagerActivity.newInstance(mBaseActivity //
+                        , PermissionManagerActivity.PermissionType.ACCESS_FINE_LOCATION);
+                    startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_PERMISSION_MANAGER);
+
+                    try
+                    {
+                        AnalyticsManager.getInstance(mBaseActivity).recordEvent(//
+                            AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.HOME_SHORTCUT_CLICK,//
+                            AnalyticsManager.Label.NEAR_BY, null);
+                    } catch (Exception e)
+                    {
+                        ExLog.d(e.toString());
+                    }
                     return;
                 }
 
-                Intent intent = PermissionManagerActivity.newInstance(mBaseActivity //
-                    , PermissionManagerActivity.PermissionType.ACCESS_FINE_LOCATION);
-                startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_PERMISSION_MANAGER);
-
-                try
+                case STAY_OUTBOUND_HOTEL:
                 {
+                    if (mHomeLayout != null)
+                    {
+                        mHomeLayout.setCategoryStayOutboundNewVisible(false);
+                    }
+
+                    Intent intent = StayOutboundSearchActivity.newInstance(mBaseActivity);
+                    startActivityForResult(intent, Constants.CODE_RESULT_ACTIVITY_STAY_OUTBOUND_SEARCH);
+
                     AnalyticsManager.getInstance(mBaseActivity).recordEvent(//
                         AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.HOME_SHORTCUT_CLICK,//
-                        AnalyticsManager.Label.NEAR_BY, null);
-                } catch (Exception e)
-                {
-                    ExLog.d(e.toString());
+                        AnalyticsManager.Label.OUTBOUND, null);
+                    return;
                 }
-
-                return;
-            } else if (categoryType == DailyCategoryType.STAY_OUTBOUND_HOTEL)
-            {
-                Intent intent = StayOutboundSearchActivity.newInstance(mBaseActivity);
-                startActivityForResult(intent, Constants.CODE_RESULT_ACTIVITY_STAY_OUTBOUND_SEARCH);
-
-                AnalyticsManager.getInstance(mBaseActivity).recordEvent(//
-                    AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.HOME_SHORTCUT_CLICK,//
-                    AnalyticsManager.Label.OUTBOUND, null);
-                return;
             }
 
             try

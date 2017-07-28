@@ -12,6 +12,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.daily.base.util.ExLog;
@@ -44,8 +45,8 @@ public class HomeCategoryLayout extends RelativeLayout
     //        DailyCategoryType.STAY_NEARBY};
 
     private Context mContext;
-    private RelativeLayout mLayout;
     private android.support.v7.widget.GridLayout mItemGridLayout;
+    private ImageView mStayOutBoundNewView;
 
     private OnItemClickListener mOnItemClickListener;
 
@@ -84,18 +85,19 @@ public class HomeCategoryLayout extends RelativeLayout
 
     private void initLayout()
     {
+        setPadding(0, ScreenUtils.dpToPx(mContext, 5), 0, 0);
+        setBackgroundResource(R.color.white);
+
         setVisibility(View.GONE);
 
-        mLayout = (RelativeLayout) LayoutInflater.from(mContext) //
-            .inflate(R.layout.list_row_home_category_layout, this);
+        LayoutInflater.from(mContext) //
+            .inflate(R.layout.list_row_home_category_layout, this, true);
 
-        mLayout.setBackgroundResource(R.color.white);
-
-        View nearbyStayView = mLayout.findViewById(R.id.homeCategoryNearByTextView);
+        View nearbyStayView = findViewById(R.id.homeCategoryNearByTextView);
         nearbyStayView.setTag(DailyCategoryType.STAY_NEARBY);
         nearbyStayView.setOnClickListener(mItemClickListener);
 
-        mItemGridLayout = (android.support.v7.widget.GridLayout) mLayout.findViewById(R.id.categoryGridLayout);
+        mItemGridLayout = (android.support.v7.widget.GridLayout) findViewById(R.id.categoryGridLayout);
         mItemGridLayout.setColumnCount(MAX_COLUMN_COUNT);
 
         addGridItemView(mItemGridLayout, sColumnList);
@@ -120,14 +122,14 @@ public class HomeCategoryLayout extends RelativeLayout
             gridLayout.addView(getGridLayoutItemView(mContext, type));
         }
 
-        int remainder = categoryTypeList.length % MAX_COLUMN_COUNT;
-        if (remainder != 0)
-        {
-            for (int i = 0; i < remainder; i++)
-            {
-                gridLayout.addView(getGridLayoutItemView(mContext, DailyCategoryType.NONE));
-            }
-        }
+        //        int remainder = categoryTypeList.length % MAX_COLUMN_COUNT;
+        //        if (remainder != 0)
+        //        {
+        //            for (int i = 0; i < remainder; i++)
+        //            {
+        //                gridLayout.addView(getGridLayoutItemView(mContext, DailyCategoryType.NONE));
+        //            }
+        //        }
     }
 
     private DailyTextView getGridLayoutItemView(Context context, DailyCategoryType categoryType)
@@ -161,6 +163,37 @@ public class HomeCategoryLayout extends RelativeLayout
         mOnItemClickListener = itemClickListener;
     }
 
+    public void setStayOutBoundNewVisible(boolean visible)
+    {
+        if (visible == true)
+        {
+            if (mStayOutBoundNewView != null)
+            {
+                return;
+            }
+
+            mStayOutBoundNewView = new ImageView(mContext);
+            mStayOutBoundNewView.setImageResource(R.drawable.shortcut_ic_n);
+
+            RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+
+            final int width = ScreenUtils.getScreenWidth(mContext) / MAX_COLUMN_COUNT;
+            int marginLeft = (width - ScreenUtils.dpToPx(mContext, 24)) / 2 + ScreenUtils.dpToPx(mContext, 21);
+
+            layoutParams.addRule(RelativeLayout.BELOW, R.id.homeCategoryTitleBottomLine);
+            layoutParams.setMargins(width + marginLeft, ScreenUtils.dpToPx(mContext, 6), 0, 0);
+            addView(mStayOutBoundNewView, layoutParams);
+        } else
+        {
+            if (mStayOutBoundNewView == null)
+            {
+                return;
+            }
+
+            removeView(mStayOutBoundNewView);
+        }
+    }
+
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec)
     {
@@ -174,10 +207,10 @@ public class HomeCategoryLayout extends RelativeLayout
     {
         if (isEnabled == true)
         {
-            startShowAnimation(mLayout);
+            startShowAnimation(this);
         } else
         {
-            startCloseAnimation(mLayout);
+            startCloseAnimation(this);
         }
     }
 

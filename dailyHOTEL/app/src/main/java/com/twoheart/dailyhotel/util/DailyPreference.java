@@ -104,6 +104,8 @@ public class DailyPreference
 
     private static final String KEY_BACKGROUND_APP_TIME = "2000";
 
+    private static final String KEY_HOME_SHORT_CUT_STAY_OUTBOUND_NEW = "10001";
+
     /////////////////////////////////////////////////////////////////////////////////////////
     // New Key old --> v1
     /////////////////////////////////////////////////////////////////////////////////////////
@@ -208,6 +210,7 @@ public class DailyPreference
         int countPreviewGuide = getCountPreviewGuide();
         boolean isShowAppPermissionsGuide = isShowAppPermissionsGuide();
         boolean isProductDetailGuide = getGourmetProductDetailGuide();
+        boolean isStayOutboundNew = isHomeShortCutStayOutboundNew();
 
         if (mEditor != null)
         {
@@ -226,6 +229,7 @@ public class DailyPreference
         setCountPreviewGuide(countPreviewGuide);
         setShowAppPermissionsGuide(isShowAppPermissionsGuide);
         setGourmetProductDetailGuide(isProductDetailGuide);
+        setHomeShortCutStayOutboundNew(isStayOutboundNew);
 
         DailyHotel.AUTHORIZATION = null;
     }
@@ -955,6 +959,16 @@ public class DailyPreference
         {
             setValue(mEditor, KEY_SELECTED_SIMPLE_CARD, Crypto.urlEncrypt(number.replaceAll("\\*|-", "") + billingKey.substring(3, 7)));
         }
+    }
+
+    public void setHomeShortCutStayOutboundNew(boolean value)
+    {
+        setValue(mEditor, KEY_HOME_SHORT_CUT_STAY_OUTBOUND_NEW, value);
+    }
+
+    public boolean isHomeShortCutStayOutboundNew()
+    {
+        return getValue(mPreferences, KEY_HOME_SHORT_CUT_STAY_OUTBOUND_NEW, true);
     }
 
     // version - 2.0.4 로 강업 이후 삭제 필요 부분
