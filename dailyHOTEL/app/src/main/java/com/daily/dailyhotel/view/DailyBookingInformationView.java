@@ -7,19 +7,16 @@ import android.support.constraint.ConstraintLayout;
 import android.util.AttributeSet;
 import android.util.Pair;
 import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.LinearLayout;
 
-import com.daily.base.widget.DailyTextView;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.databinding.DailyViewBookingInformationDataBinding;
 import com.twoheart.dailyhotel.databinding.DailyViewLeftTitleRightDescriptionDataBinding;
 
 import java.util.List;
 
 public class DailyBookingInformationView extends ConstraintLayout
 {
-    private DailyTextView mTitleTextView;
-    private LinearLayout mInformationLayout;
+    private DailyViewBookingInformationDataBinding mViewDataBinding;
 
     public DailyBookingInformationView(Context context)
     {
@@ -44,40 +41,37 @@ public class DailyBookingInformationView extends ConstraintLayout
 
     private void initLayout(Context context)
     {
-        View view = LayoutInflater.from(context).inflate(R.layout.daily_view_booking_information, this, true);
-
-        mTitleTextView = (DailyTextView) view.findViewById(R.id.titleTextView);
-        mInformationLayout = (LinearLayout) view.findViewById(R.id.informationLayout);
+        mViewDataBinding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.daily_view_booking_information_data, this, true);
     }
 
     public void setTitle(CharSequence title)
     {
-        if (mTitleTextView == null)
+        if (mViewDataBinding == null)
         {
             return;
         }
 
-        mTitleTextView.setText(title);
+        mViewDataBinding.titleTextView.setText(title);
     }
 
     public void setTitle(@StringRes int resid)
     {
-        if (mTitleTextView == null)
+        if (mViewDataBinding == null)
         {
             return;
         }
 
-        mTitleTextView.setText(resid);
+        mViewDataBinding.titleTextView.setText(resid);
     }
 
     public void setInformation(List<Pair<CharSequence, CharSequence>> informationList)
     {
-        if (mInformationLayout == null)
+        if (mViewDataBinding == null)
         {
             return;
         }
 
-        mInformationLayout.removeAllViews();
+        mViewDataBinding.informationLayout.removeAllViews();
 
         if (informationList == null || informationList.size() == 0)
         {
@@ -86,7 +80,7 @@ public class DailyBookingInformationView extends ConstraintLayout
 
         for (Pair<CharSequence, CharSequence> pair : informationList)
         {
-            DailyViewLeftTitleRightDescriptionDataBinding dataBinding = DataBindingUtil.inflate(LayoutInflater.from(getContext()), R.layout.daily_view_left_title_right_description_data, mInformationLayout, true);
+            DailyViewLeftTitleRightDescriptionDataBinding dataBinding = DataBindingUtil.inflate(LayoutInflater.from(getContext()), R.layout.daily_view_left_title_right_description_data, mViewDataBinding.informationLayout, true);
 
             dataBinding.titleTextView.setText(pair.first);
             dataBinding.descriptionTextView.setText(pair.second);
