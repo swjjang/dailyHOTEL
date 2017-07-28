@@ -217,10 +217,14 @@ public abstract class PlaceSearchFragment extends BaseFragment
                 if (data != null)
                 {
                     Keyword keyword = data.getParcelableExtra(PlaceSearchResultActivity.INTENT_EXTRA_DATA_KEYWORD);
-                    mDailyRecentSearches.addString(new Keyword(keyword.icon, keyword.name));
 
-                    writeRecentSearches(mDailyRecentSearches.toString());
-                    mPlaceSearchLayout.updateRecentSearchesLayout(mDailyRecentSearches.getList());
+                    if (keyword != null)
+                    {
+                        mDailyRecentSearches.addString(new Keyword(keyword.icon, keyword.name));
+
+                        writeRecentSearches(mDailyRecentSearches.toString());
+                        mPlaceSearchLayout.updateRecentSearchesLayout(mDailyRecentSearches.getList());
+                    }
                 }
 
                 if (resultCode == Activity.RESULT_OK || resultCode == CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY)

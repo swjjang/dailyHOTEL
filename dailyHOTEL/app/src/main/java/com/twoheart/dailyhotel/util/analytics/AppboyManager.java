@@ -1076,6 +1076,8 @@ public class AppboyManager extends BaseAnalyticsManager
         appboyProperties.addProperty(AnalyticsManager.KeyType.KEYWORD, keyword);
         appboyProperties.addProperty(AnalyticsManager.KeyType.NUM_OF_SEARCH_RESULTS_RETURNED, resultCount);
         appboyProperties.addProperty(AnalyticsManager.KeyType.CATEGORY, category);
+
+        mAppboy.logCustomEvent(EventName.SEARCH_TERM, appboyProperties);
     }
 
     private String getUserIndex()

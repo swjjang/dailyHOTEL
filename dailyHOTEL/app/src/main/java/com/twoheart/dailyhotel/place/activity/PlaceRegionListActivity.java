@@ -2,13 +2,10 @@ package com.twoheart.dailyhotel.place.activity;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.location.Location;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Toast;
 
 import com.daily.base.util.ExLog;
-import com.daily.base.widget.DailyToast;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.fragment.PlaceRegionListFragment;
@@ -178,55 +175,27 @@ public abstract class PlaceRegionListActivity extends BaseActivity
             @Override
             public void onProviderEnabled()
             {
-                mDailyLocationFactory.startLocationMeasure(null, new DailyLocationFactory.OnLocationListener()
+                unLockUI();
+
+                if (isFinishing() == true)
                 {
-                    @Override
-                    public void onFailed()
-                    {
-                        unLockUI();
-                    }
+                    return;
+                }
 
-                    @Override
-                    public void onAlreadyRun()
-                    {
+                // Location
+                Intent intent = new Intent();
 
-                    }
+                try
+                {
+                    PlaceRegionListFragment placeRegionListFragment = getCurrentFragment();
+                    intent.putExtra(NAME_INTENT_EXTRA_DATA_RESULT, placeRegionListFragment.getRegion().name());
+                } catch (Exception e)
+                {
+                    ExLog.d(e.toString());
+                }
 
-                    @Override
-                    public void onLocationChanged(Location location)
-                    {
-                        unLockUI();
-
-                        if (isFinishing() == true)
-                        {
-                            return;
-                        }
-
-                        mDailyLocationFactory.stopLocationMeasure();
-
-                        if (location == null)
-                        {
-                            DailyToast.showToast(PlaceRegionListActivity.this, R.string.message_failed_mylocation, Toast.LENGTH_SHORT);
-                        } else
-                        {
-                            // Location
-                            Intent intent = new Intent();
-                            intent.putExtra(NAME_INTENT_EXTRA_DATA_LOCATION, location);
-
-                            try
-                            {
-                                PlaceRegionListFragment placeRegionListFragment = getCurrentFragment();
-                                intent.putExtra(NAME_INTENT_EXTRA_DATA_RESULT, placeRegionListFragment.getRegion().name());
-                            } catch (Exception e)
-                            {
-                                ExLog.d(e.toString());
-                            }
-
-                            setResult(RESULT_ARROUND_SEARCH_LIST, intent);
-                            finish();
-                        }
-                    }
-                });
+                setResult(RESULT_ARROUND_SEARCH_LIST, intent);
+                finish();
             }
 
             @Override
