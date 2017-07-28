@@ -8,7 +8,6 @@ import android.support.annotation.NonNull;
 
 import com.daily.base.BaseActivity;
 import com.daily.dailyhotel.parcel.analytics.GourmetThankYouAnalyticsParam;
-import com.daily.dailyhotel.parcel.analytics.StayOutboundThankYouAnalyticsParam;
 import com.twoheart.dailyhotel.R;
 
 /**

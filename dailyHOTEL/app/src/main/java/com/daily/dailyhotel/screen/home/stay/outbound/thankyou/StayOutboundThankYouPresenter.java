@@ -65,7 +65,7 @@ public class StayOutboundThankYouPresenter extends BaseExceptionPresenter<StayOu
     public void constructorInitialize(StayOutboundThankYouActivity activity)
     {
         lock();
-        
+
         setContentView(R.layout.activity_stay_outbound_payment_thank_you_data);
 
         setAnalytics(new StayOutboundThankYouAnalyticsImpl());

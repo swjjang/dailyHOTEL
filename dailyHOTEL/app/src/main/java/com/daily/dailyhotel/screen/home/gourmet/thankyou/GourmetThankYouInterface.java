@@ -1,7 +1,6 @@
 package com.daily.dailyhotel.screen.home.gourmet.thankyou;
 
 import android.animation.Animator;
-import android.text.SpannableString;
 
 import com.daily.base.BaseDialogViewInterface;
 

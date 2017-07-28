@@ -18,7 +18,6 @@ import com.daily.dailyhotel.parcel.analytics.GourmetThankYouAnalyticsParam;
 import com.daily.dailyhotel.repository.remote.ProfileRemoteImpl;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.DailyUserPreference;
-import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import io.reactivex.functions.Consumer;
 

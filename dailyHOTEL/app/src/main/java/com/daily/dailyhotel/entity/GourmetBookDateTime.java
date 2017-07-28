@@ -1,9 +1,5 @@
 package com.daily.dailyhotel.entity;
 
-import com.twoheart.dailyhotel.util.DailyCalendar;
-
-import java.util.Calendar;
-
 public class GourmetBookDateTime extends PlaceBookDateTime
 {
     public GourmetBookDateTime()

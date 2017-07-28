@@ -3,9 +3,6 @@ package com.daily.dailyhotel.parcel.analytics;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.daily.dailyhotel.entity.StayOutboundPayment;
-import com.twoheart.dailyhotel.model.PlacePaymentInformation;
-
 import java.util.HashMap;
 import java.util.Map;
 

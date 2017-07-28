@@ -41,8 +41,7 @@ public class RecentStayListNetworkController extends BaseNetworkController
             return;
         }
 
-        DailyMobileAPI.getInstance(mContext).requestStayList(mNetworkTag, params.toParamsMap()
-            , params.getBedTypeList(), params.getLuxuryList(), abTestType, mRecentListCallback);
+        DailyMobileAPI.getInstance(mContext).requestStayList(mNetworkTag, params.toParamsMap(), params.getBedTypeList(), params.getLuxuryList(), abTestType, mRecentListCallback);
     }
 
     private retrofit2.Callback mRecentListCallback = new retrofit2.Callback<JSONObject>()
