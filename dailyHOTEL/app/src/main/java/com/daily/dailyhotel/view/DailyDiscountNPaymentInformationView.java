@@ -44,26 +44,6 @@ public class DailyDiscountNPaymentInformationView extends ConstraintLayout
         mViewDataBinding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.daily_view_booking_discount_information_data, this, true);
     }
 
-    public void setDiscountInformationVisible(boolean visible)
-    {
-        if (mViewDataBinding == null)
-        {
-            return;
-        }
-
-        if (visible == true)
-        {
-            mViewDataBinding.discountInformationLayout.setVisibility(VISIBLE);
-            mViewDataBinding.paymentInformationTitleTextView.setVisibility(VISIBLE);
-            mViewDataBinding.discountPriceLayout.setVisibility(VISIBLE);
-        } else
-        {
-            mViewDataBinding.discountInformationLayout.setVisibility(GONE);
-            mViewDataBinding.paymentInformationTitleTextView.setVisibility(GONE);
-            mViewDataBinding.discountPriceLayout.setVisibility(GONE);
-        }
-    }
-
     public void setDiscountTypeVisible(boolean bonusVisible, boolean couponVisible)
     {
         if (mViewDataBinding == null)
@@ -76,12 +56,16 @@ public class DailyDiscountNPaymentInformationView extends ConstraintLayout
             setDiscountInformationVisible(false);
         } else if (bonusVisible == true && couponVisible == true)
         {
+            setDiscountInformationVisible(true);
+
             mViewDataBinding.bonusGuideView.setVisibility(VISIBLE);
 
             mViewDataBinding.bonusLayout.setVisibility(VISIBLE);
             mViewDataBinding.couponLayout.setVisibility(VISIBLE);
         } else
         {
+            setDiscountInformationVisible(true);
+
             mViewDataBinding.bonusGuideView.setVisibility(GONE);
 
             mViewDataBinding.bonusLayout.setVisibility(bonusVisible ? VISIBLE : GONE);
@@ -315,5 +299,25 @@ public class DailyDiscountNPaymentInformationView extends ConstraintLayout
         }
 
         mViewDataBinding.totalPaymentPriceTextView.setText(DailyTextUtils.getPriceFormat(getContext(), price, false));
+    }
+
+    private void setDiscountInformationVisible(boolean visible)
+    {
+        if (mViewDataBinding == null)
+        {
+            return;
+        }
+
+        if (visible == true)
+        {
+            mViewDataBinding.discountInformationLayout.setVisibility(VISIBLE);
+            mViewDataBinding.paymentInformationTitleTextView.setVisibility(VISIBLE);
+            mViewDataBinding.discountPriceLayout.setVisibility(VISIBLE);
+        } else
+        {
+            mViewDataBinding.discountInformationLayout.setVisibility(GONE);
+            mViewDataBinding.paymentInformationTitleTextView.setVisibility(GONE);
+            mViewDataBinding.discountPriceLayout.setVisibility(GONE);
+        }
     }
 }

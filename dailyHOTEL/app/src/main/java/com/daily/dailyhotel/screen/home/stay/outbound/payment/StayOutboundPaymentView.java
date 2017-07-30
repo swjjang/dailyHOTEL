@@ -646,7 +646,7 @@ public class StayOutboundPaymentView extends BaseDialogView<StayOutboundPaymentV
         mDiscountDataBinding = DataBindingUtil.inflate(LayoutInflater.from(context)//
             , R.layout.layout_stay_outbound_payment_discount_data, viewGroup, true);
 
-        mDiscountDataBinding.informationView.setDiscountInformationVisible(false);
+        mDiscountDataBinding.informationView.setDiscountTypeVisible(false, false);
     }
 
     private void setPaymentLayout(Context context, ViewGroup viewGroup)
