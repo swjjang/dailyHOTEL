@@ -13,8 +13,6 @@ import android.widget.LinearLayout;
 
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
-import com.daily.base.util.ScreenUtils;
-import com.daily.base.util.VersionUtils;
 import com.daily.dailyhotel.entity.Booking;
 import com.daily.dailyhotel.entity.ListItem;
 import com.twoheart.dailyhotel.R;
@@ -88,24 +86,6 @@ public class BookingListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             case ListItem.TYPE_ENTRY:
             {
                 ListRowBookingDataBinding dataBinding = DataBindingUtil.inflate(LayoutInflater.from(mContext), R.layout.list_row_booking_data, parent, false);
-
-                if (VersionUtils.isUnderAPI16() == true)
-                {
-                    try
-                    {
-                        final int DP_SCREEN_16 = ScreenUtils.getScreenWidth(mContext);
-                        final int DP_SCREEN_9 = DP_SCREEN_16 * 9 / 16;
-
-                        dataBinding.simpleDraweeView.getLayoutParams().width = DP_SCREEN_16;
-                        dataBinding.simpleDraweeView.getLayoutParams().height = DP_SCREEN_9;
-
-                        dataBinding.informationLayout.getLayoutParams().width = DP_SCREEN_16;
-                        dataBinding.informationLayout.getLayoutParams().height = DP_SCREEN_9;
-                    }catch (Exception e)
-                    {
-                        ExLog.e(e.toString());
-                    }
-                }
 
                 return new BookingViewHolder(dataBinding);
             }

@@ -11,9 +11,7 @@ import android.widget.LinearLayout;
 
 import com.daily.base.OnBaseEventListener;
 import com.daily.base.util.DailyTextUtils;
-import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
-import com.daily.base.util.VersionUtils;
 import com.daily.dailyhotel.entity.GourmetMenu;
 import com.daily.dailyhotel.entity.GourmetMenuImage;
 import com.twoheart.dailyhotel.R;
@@ -130,21 +128,6 @@ public class GourmetMenusAdapter extends RecyclerView.Adapter<GourmetMenusAdapte
         GourmetMenuViewHolder gourmetMenuViewHolder = new GourmetMenuViewHolder(dataBinding);
 
         dataBinding.roundedConstraintLayout.setRound(ScreenUtils.dpToPx(mContext, 5));
-
-        if (VersionUtils.isUnderAPI16() == true)
-        {
-            try
-            {
-                final int DP_SCREEN_3 = ScreenUtils.getScreenWidth(mContext);
-                final int DP_SCREEN_2 = DP_SCREEN_3 * 2 / 3;
-
-                dataBinding.simpleDraweeView.getLayoutParams().width = DP_SCREEN_3;
-                dataBinding.simpleDraweeView.getLayoutParams().height = DP_SCREEN_2;
-            } catch (Exception e)
-            {
-                ExLog.e(e.toString());
-            }
-        }
 
         return gourmetMenuViewHolder;
     }

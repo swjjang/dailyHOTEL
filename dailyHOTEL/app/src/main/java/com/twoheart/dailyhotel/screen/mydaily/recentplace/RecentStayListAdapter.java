@@ -11,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.daily.base.util.DailyTextUtils;
-import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
 import com.daily.base.util.VersionUtils;
 import com.daily.dailyhotel.entity.ImageMap;
@@ -73,27 +72,6 @@ public class RecentStayListAdapter extends RecentPlacesListAdapter
             case PlaceViewItem.TYPE_ENTRY:
             {
                 ListRowStayDataBinding dataBinding = DataBindingUtil.inflate(mInflater, R.layout.list_row_stay_data, parent, false);
-
-                if (VersionUtils.isUnderAPI16() == true)
-                {
-                    try
-                    {
-                        final int DP_SCREEN_16 = ScreenUtils.getScreenWidth(mContext);
-                        final int DP_SCREEN_9 = DP_SCREEN_16 * 9 / 16;
-
-                        dataBinding.imageView.getLayoutParams().width = DP_SCREEN_16;
-                        dataBinding.imageView.getLayoutParams().height = DP_SCREEN_9;
-
-                        dataBinding.gradientTopView.getLayoutParams().width = DP_SCREEN_16;
-                        dataBinding.gradientTopView.getLayoutParams().height = DP_SCREEN_9;
-
-                        dataBinding.gradientView.getLayoutParams().width = DP_SCREEN_16;
-                        dataBinding.gradientView.getLayoutParams().height = DP_SCREEN_9;
-                    }catch (Exception e)
-                    {
-                        ExLog.e(e.toString());
-                    }
-                }
 
                 return new StayInboundViewHolder(dataBinding);
             }

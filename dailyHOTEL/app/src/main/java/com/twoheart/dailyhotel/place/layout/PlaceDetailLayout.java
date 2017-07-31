@@ -207,30 +207,6 @@ public abstract class PlaceDetailLayout extends BaseLayout
 
         setBookingStatus(STATUS_NONE);
         setUpdateWishPopup(WishPopupState.GONE);
-
-        if (VersionUtils.isUnderAPI16() == true)
-        {
-            try
-            {
-                final int DP_SCREEN_4 = ScreenUtils.getScreenWidth(mContext);
-                final int DP_SCREEN_3 = DP_SCREEN_4 * 3 / 4;
-
-                mTransSimpleDraweeView.getLayoutParams().width = DP_SCREEN_4;
-                mTransSimpleDraweeView.getLayoutParams().height = DP_SCREEN_3;
-
-                mTransGradientBottomView.getLayoutParams().width = DP_SCREEN_4;
-                mTransGradientBottomView.getLayoutParams().height = DP_SCREEN_3;
-
-                mTransGradientTopView.getLayoutParams().width = DP_SCREEN_4;
-                mTransGradientTopView.getLayoutParams().height = DP_SCREEN_3;
-
-                mViewPager.getLayoutParams().width = DP_SCREEN_4;
-                mViewPager.getLayoutParams().height = DP_SCREEN_3;
-            } catch (Exception e)
-            {
-                ExLog.e(e.toString());
-            }
-        }
     }
 
     public void setIsUsedMultiTransitions(boolean enabled, int gradientBottomType)

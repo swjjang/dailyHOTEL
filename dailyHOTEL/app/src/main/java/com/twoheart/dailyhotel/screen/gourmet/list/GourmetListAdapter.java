@@ -63,27 +63,6 @@ public class GourmetListAdapter extends PlaceListAdapter
             {
                 ListRowGourmetDataBinding dataBinding = DataBindingUtil.inflate(mInflater, R.layout.list_row_gourmet_data, parent, false);
 
-                if (VersionUtils.isUnderAPI16() == true)
-                {
-                    try
-                    {
-                        final int DP_SCREEN_16 = ScreenUtils.getScreenWidth(mContext);
-                        final int DP_SCREEN_9 = DP_SCREEN_16 * 9 / 16;
-
-                        dataBinding.imageView.getLayoutParams().width = DP_SCREEN_16;
-                        dataBinding.imageView.getLayoutParams().height = DP_SCREEN_9;
-
-                        dataBinding.gradientTopView.getLayoutParams().width = DP_SCREEN_16;
-                        dataBinding.gradientTopView.getLayoutParams().height = DP_SCREEN_9;
-
-                        dataBinding.gradientView.getLayoutParams().width = DP_SCREEN_16;
-                        dataBinding.gradientView.getLayoutParams().height = DP_SCREEN_9;
-                    }catch (Exception e)
-                    {
-                        ExLog.e(e.toString());
-                    }
-                }
-
                 return new GourmetViewHolder(dataBinding);
             }
 

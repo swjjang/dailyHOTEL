@@ -14,6 +14,7 @@
             android:layout_height="0dp"
             android:transitionName="@string/transition_place_image"
             app:layout_constraintDimensionRatio="H,16:9"
+            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             fresco:actualImageScaleType="centerCrop"/>
@@ -24,6 +25,7 @@
             android:layout_height="0dp"
             android:transitionName="@string/transition_gradient_top_view"
             app:layout_constraintDimensionRatio="H,16:9"
+            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"/>
 
@@ -33,6 +35,7 @@
             android:layout_height="0dp"
             android:transitionName="@string/transition_gradient_bottom_view"
             app:layout_constraintDimensionRatio="H,16:9"
+            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"/>
 

@@ -20,7 +20,6 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import com.daily.base.util.DailyTextUtils;
-import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
 import com.daily.base.util.VersionUtils;
 import com.daily.dailyhotel.entity.ImageMap;
@@ -184,27 +183,6 @@ public class StayOutboundListAdapter extends RecyclerView.Adapter<RecyclerView.V
                 ListRowStayOutboundDataBinding dataBinding = DataBindingUtil.inflate(LayoutInflater.from(mContext), R.layout.list_row_stay_outbound_data, parent, false);
 
                 StayViewHolder stayViewHolder = new StayViewHolder(dataBinding);
-
-                if (VersionUtils.isUnderAPI16() == true)
-                {
-                    try
-                    {
-                        final int DP_SCREEN_16 = ScreenUtils.getScreenWidth(mContext);
-                        final int DP_SCREEN_9 = DP_SCREEN_16 * 9 / 16;
-
-                        dataBinding.imageView.getLayoutParams().width = DP_SCREEN_16;
-                        dataBinding.imageView.getLayoutParams().height = DP_SCREEN_9;
-
-                        dataBinding.gradientTopView.getLayoutParams().width = DP_SCREEN_16;
-                        dataBinding.gradientTopView.getLayoutParams().height = DP_SCREEN_9;
-
-                        dataBinding.gradientView.getLayoutParams().width = DP_SCREEN_16;
-                        dataBinding.gradientView.getLayoutParams().height = DP_SCREEN_9;
-                    }catch (Exception e)
-                    {
-                        ExLog.e(e.toString());
-                    }
-                }
 
                 return stayViewHolder;
             }

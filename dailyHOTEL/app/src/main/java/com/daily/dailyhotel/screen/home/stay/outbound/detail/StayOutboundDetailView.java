@@ -42,7 +42,6 @@ import com.daily.base.OnBaseEventListener;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
-import com.daily.base.util.VersionUtils;
 import com.daily.base.widget.DailyTextView;
 import com.daily.dailyhotel.entity.ImageMap;
 import com.daily.dailyhotel.entity.People;
@@ -198,30 +197,6 @@ public class StayOutboundDetailView extends BaseDialogView<StayOutboundDetailVie
 
         viewDataBinding.productTypeBackgroundView.setOnClickListener(this);
         viewDataBinding.closeView.setOnClickListener(this);
-
-        if (VersionUtils.isUnderAPI16() == true)
-        {
-            try
-            {
-                final int DP_SCREEN_4 = ScreenUtils.getScreenWidth(getContext());
-                final int DP_SCREEN_3 = DP_SCREEN_4 * 3 / 4;
-
-                viewDataBinding.transImageView.getLayoutParams().width = DP_SCREEN_4;
-                viewDataBinding.transImageView.getLayoutParams().height = DP_SCREEN_3;
-
-                viewDataBinding.imageLoopViewPager.getLayoutParams().width = DP_SCREEN_4;
-                viewDataBinding.imageLoopViewPager.getLayoutParams().height = DP_SCREEN_3;
-
-                viewDataBinding.transGradientBottomView.getLayoutParams().width = DP_SCREEN_4;
-                viewDataBinding.transGradientBottomView.getLayoutParams().height = DP_SCREEN_3;
-
-                viewDataBinding.transGradientTopView.getLayoutParams().width = DP_SCREEN_4;
-                viewDataBinding.transGradientTopView.getLayoutParams().height = DP_SCREEN_3;
-            } catch (Exception e)
-            {
-                ExLog.e(e.toString());
-            }
-        }
     }
 
     @Override
