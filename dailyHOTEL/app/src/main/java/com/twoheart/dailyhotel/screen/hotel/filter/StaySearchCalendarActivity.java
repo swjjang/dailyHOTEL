@@ -6,6 +6,7 @@ import android.os.Bundle;
 
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
+import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Keyword;
 import com.twoheart.dailyhotel.model.time.PlaceBookingDay;
 import com.twoheart.dailyhotel.model.time.StayBookingDay;
@@ -82,5 +83,14 @@ public class StaySearchCalendarActivity extends StayCalendarActivity
         intent.putExtra(INTENT_EXTRA_DATA_SEARCH_KEYWORD, mSearchKeyword);
 
         setResult(resultCode, intent);
+    }
+
+    @Override
+    protected String getConfirmText(int nights)
+    {
+        return getString(mSearchType == null //
+            ? R.string.label_calendar_stay_search_selected_date //
+            : R.string.label_calendar_stay_search_selected_date_after_search //
+            , nights);
     }
 }

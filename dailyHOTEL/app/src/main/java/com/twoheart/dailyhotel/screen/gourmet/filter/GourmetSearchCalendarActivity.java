@@ -6,6 +6,7 @@ import android.os.Bundle;
 
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
+import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Keyword;
 import com.twoheart.dailyhotel.model.time.GourmetBookingDay;
 import com.twoheart.dailyhotel.model.time.PlaceBookingDay;
@@ -84,5 +85,13 @@ public class GourmetSearchCalendarActivity extends GourmetCalendarActivity
         intent.putExtra(INTENT_EXTRA_DATA_SEARCH_KEYWORD, mSearchKeyword);
 
         setResult(resultCode, intent);
+    }
+
+    @Override
+    protected int getConfirmTextResId()
+    {
+        return mSearchType == null //
+            ? R.string.label_calendar_gourmet_search_selected_date //
+            : R.string.label_calendar_gourmet_search_selected_date_after_search;
     }
 }

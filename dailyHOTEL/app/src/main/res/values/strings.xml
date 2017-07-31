@@ -1051,7 +1051,9 @@
     <string name="label_calendar_placelist_confirm_selected_date">날짜 선택 완료</string>
     <string name="label_calendar_search_selected_date">날짜 선택 완료</string>
     <string name="label_calendar_gourmet_search_selected_date">방문일 선택 완료</string>
+    <string name="label_calendar_gourmet_search_selected_date_after_search">방문일 선택 완료하고 검색</string>
     <string name="label_calendar_stay_search_selected_date">%1$d박 선택 완료</string>
+    <string name="label_calendar_stay_search_selected_date_after_search">%1$d박 선택 완료하고 검색</string>
     <string name="message_calendar_search_reset">검색할 날짜를 확인해주세요.\n다시 설정하려면 다른 날짜를 선택해주세요.</string>
     <string name="message_calendar_select_single_day">1박으로만 예약할 수 있습니다.</string>
 

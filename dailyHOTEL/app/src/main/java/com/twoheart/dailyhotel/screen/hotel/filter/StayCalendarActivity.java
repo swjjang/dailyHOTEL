@@ -314,7 +314,7 @@ public class StayCalendarActivity extends PlaceCalendarActivity
                         setRangeDaysAlphaAndUpdateDayView(mCheckInDayView, mCheckOutDayView);
                         checkLastDay();
                         mConfirmTextView.setEnabled(true);
-                        mConfirmTextView.setText(getString(R.string.label_calendar_stay_search_selected_date, nights));
+                        mConfirmTextView.setText(getConfirmText(nights));
                     } catch (Exception e)
                     {
                         ExLog.e(e.toString());
@@ -371,6 +371,11 @@ public class StayCalendarActivity extends PlaceCalendarActivity
         intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, placeBookingDay);
 
         setResult(resultCode, intent);
+    }
+
+    protected String getConfirmText(int nights)
+    {
+        return getString(R.string.label_calendar_stay_search_selected_date, nights);
     }
 
     private void setSelectedCheckIn(View checkInView)

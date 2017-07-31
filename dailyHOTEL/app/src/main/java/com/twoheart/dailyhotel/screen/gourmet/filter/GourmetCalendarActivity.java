@@ -237,6 +237,7 @@ public class GourmetCalendarActivity extends PlaceCalendarActivity
                     setToolbarText(visitDate);
 
                     mConfirmTextView.setEnabled(true);
+                    mConfirmTextView.setText(getConfirmTextResId());
                 } catch (Exception e)
                 {
                     ExLog.e(e.toString());
@@ -281,6 +282,11 @@ public class GourmetCalendarActivity extends PlaceCalendarActivity
         intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, placeBookingDay);
 
         setResult(resultCode, intent);
+    }
+
+    protected int getConfirmTextResId()
+    {
+        return R.string.label_calendar_gourmet_search_selected_date;
     }
 
     private void setSelectedDay(View view)
