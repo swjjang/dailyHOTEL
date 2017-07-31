@@ -201,7 +201,7 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
 
         for (int i = 0; i <= maxMonth; i++)
         {
-            String titleMonth = DailyCalendar.format(startCalendar.getTime(), "yyyy.MM");
+            String titleMonth = DailyCalendar.format(todayCalendar.getTime(), "yyyy.MM");
 
             Day[] days = getMonthCalendar(todayCalendar, startCalendar, endCalendar, holidayList, soldOutDayList);
 
@@ -308,7 +308,8 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
         startCalendar.setTime(todayDate);
 
         Calendar endCalendar = (Calendar) startCalendar.clone();
-        endCalendar.add(Calendar.DAY_OF_MONTH, dayCountOfMax);
+        // 마지막 날짜는 start day 를 1로 잡음으로 하루를 빼고 계산 해야 함
+        endCalendar.add(Calendar.DAY_OF_MONTH, dayCountOfMax - 1);
 
         ArrayList<Pair<String, Day[]>> calendarList = makeCalendarList(startCalendar, endCalendar);
 
