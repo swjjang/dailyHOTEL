@@ -78,6 +78,7 @@ public class CollectionStayAdapter extends PlaceListAdapter
             case PlaceViewItem.TYPE_ENTRY:
             {
                 ListRowStayDataBinding dataBinding = DataBindingUtil.inflate(mInflater, R.layout.list_row_stay_data, parent, false);
+
                 return new HotelViewHolder(dataBinding);
             }
 

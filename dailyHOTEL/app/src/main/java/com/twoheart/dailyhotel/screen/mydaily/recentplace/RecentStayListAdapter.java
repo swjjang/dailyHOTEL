@@ -72,6 +72,7 @@ public class RecentStayListAdapter extends RecentPlacesListAdapter
             case PlaceViewItem.TYPE_ENTRY:
             {
                 ListRowStayDataBinding dataBinding = DataBindingUtil.inflate(mInflater, R.layout.list_row_stay_data, parent, false);
+
                 return new StayInboundViewHolder(dataBinding);
             }
 
