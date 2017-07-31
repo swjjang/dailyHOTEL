@@ -513,29 +513,35 @@ public class StayOutboundSearchSuggestView extends BaseDialogView<StayOutboundSe
 
             holder.itemView.getRootView().setTag(suggest);
 
-            SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(suggest.display);
-
-            if (DailyTextUtils.isTextEmpty(mKeyword) == false)
+            if (DailyTextUtils.isTextEmpty(suggest.display) == true)
             {
-                int fromIndex = 0;
-                do
+                holder.dataBinding.textView.setText(null);
+            } else
+            {
+                SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(suggest.display);
+
+                if (DailyTextUtils.isTextEmpty(mKeyword) == false)
                 {
-                    int startIndex = suggest.display.indexOf(mKeyword, fromIndex);
-
-                    if (startIndex < 0)
+                    int fromIndex = 0;
+                    do
                     {
-                        break;
-                    }
+                        int startIndex = suggest.display.indexOf(mKeyword, fromIndex);
 
-                    int endIndex = startIndex + mKeyword.length();
-                    fromIndex = endIndex;
+                        if (startIndex < 0)
+                        {
+                            break;
+                        }
 
-                    spannableStringBuilder.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), //
-                        startIndex, endIndex, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                } while (true);
+                        int endIndex = startIndex + mKeyword.length();
+                        fromIndex = endIndex;
+
+                        spannableStringBuilder.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), //
+                            startIndex, endIndex, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    } while (true);
+                }
+
+                holder.dataBinding.textView.setText(spannableStringBuilder);
             }
-
-            holder.dataBinding.textView.setText(spannableStringBuilder);
 
             switch (suggest.categoryKey)
             {
