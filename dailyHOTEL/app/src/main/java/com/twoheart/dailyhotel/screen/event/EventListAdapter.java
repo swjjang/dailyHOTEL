@@ -6,7 +6,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 
+import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
+import com.daily.base.util.VersionUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.network.model.Event;
 import com.twoheart.dailyhotel.util.Util;
@@ -92,6 +94,22 @@ public class EventListAdapter extends ArrayAdapter<Event>
         }
 
         com.facebook.drawee.view.SimpleDraweeView imageView = (com.facebook.drawee.view.SimpleDraweeView) view.findViewById(R.id.eventImageView);
+
+        if (VersionUtils.isUnderAPI16() == true)
+        {
+            try
+            {
+                final int DP_SCREEN_16 = ScreenUtils.getScreenWidth(mContext);
+                final int DP_SCREEN_9 = DP_SCREEN_16 * 9 / 16;
+
+                imageView.getLayoutParams().width = DP_SCREEN_16;
+                imageView.getLayoutParams().height = DP_SCREEN_9;
+            }catch (Exception e)
+            {
+                ExLog.e(e.toString());
+            }
+        }
+
         Event event = getItem(position);
         Util.requestImageResize(mContext, imageView, ScreenUtils.getResolutionImageUrl(mContext, event.defaultImageUrl, event.lowResolutionImageUrl));
 

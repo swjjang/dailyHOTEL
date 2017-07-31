@@ -27,6 +27,11 @@ public class VersionUtils
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1;
     }
 
+    public static boolean isUnderAPI16()
+    {
+        return Build.VERSION.SDK_INT <= Build.VERSION_CODES.JELLY_BEAN;
+    }
+
     public static boolean isOverAPI16()
     {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN;

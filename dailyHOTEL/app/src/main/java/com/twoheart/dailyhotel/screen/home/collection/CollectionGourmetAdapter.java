@@ -2,6 +2,7 @@ package com.twoheart.dailyhotel.screen.home.collection;
 
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.databinding.DataBindingUtil;
 import android.graphics.Paint;
 import android.graphics.drawable.Animatable;
 import android.net.Uri;
@@ -10,9 +11,9 @@ import android.os.Vibrator;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.daily.base.util.DailyTextUtils;
+import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
 import com.daily.base.util.VersionUtils;
 import com.facebook.drawee.backends.pipeline.Fresco;
@@ -20,6 +21,7 @@ import com.facebook.drawee.controller.BaseControllerListener;
 import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.imagepipeline.image.ImageInfo;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.databinding.ListRowGourmetDataBinding;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.time.PlaceBookingDay;
 import com.twoheart.dailyhotel.network.model.RecommendationGourmet;
@@ -63,9 +65,30 @@ public class CollectionGourmetAdapter extends PlaceListAdapter
 
             case PlaceViewItem.TYPE_ENTRY:
             {
-                View view = mInflater.inflate(R.layout.list_row_gourmet_data, parent, false);
+                ListRowGourmetDataBinding dataBinding = DataBindingUtil.inflate(mInflater, R.layout.list_row_gourmet_data, parent, false);
 
-                return new GourmetViewHolder(view);
+                if (VersionUtils.isUnderAPI16() == true)
+                {
+                    try
+                    {
+                        final int DP_SCREEN_16 = ScreenUtils.getScreenWidth(mContext);
+                        final int DP_SCREEN_9 = DP_SCREEN_16 * 9 / 16;
+
+                        dataBinding.imageView.getLayoutParams().width = DP_SCREEN_16;
+                        dataBinding.imageView.getLayoutParams().height = DP_SCREEN_9;
+
+                        dataBinding.gradientTopView.getLayoutParams().width = DP_SCREEN_16;
+                        dataBinding.gradientTopView.getLayoutParams().height = DP_SCREEN_9;
+
+                        dataBinding.gradientView.getLayoutParams().width = DP_SCREEN_16;
+                        dataBinding.gradientView.getLayoutParams().height = DP_SCREEN_9;
+                    } catch (Exception e)
+                    {
+                        ExLog.e(e.toString());
+                    }
+                }
+
+                return new GourmetViewHolder(dataBinding);
             }
 
             case PlaceViewItem.TYPE_HEADER_VIEW:
@@ -140,51 +163,51 @@ public class CollectionGourmetAdapter extends PlaceListAdapter
             address = address.replace(" l ", "ㅣ");
         }
 
-        holder.addressView.setText(address);
-        holder.nameView.setText(recommendationGourmet.name);
+        holder.dataBinding.addressTextView.setText(address);
+        holder.dataBinding.nameTextView.setText(recommendationGourmet.name);
 
         // 인원
         if (recommendationGourmet.persons > 1)
         {
-            holder.personsTextView.setVisibility(View.VISIBLE);
-            holder.personsTextView.setText(mContext.getString(R.string.label_persions, recommendationGourmet.persons));
+            holder.dataBinding.personsTextView.setVisibility(View.VISIBLE);
+            holder.dataBinding.personsTextView.setText(mContext.getString(R.string.label_persions, recommendationGourmet.persons));
         } else
         {
-            holder.personsTextView.setVisibility(View.GONE);
+            holder.dataBinding.personsTextView.setVisibility(View.GONE);
         }
 
         if (recommendationGourmet.price <= 0 || recommendationGourmet.price <= recommendationGourmet.discount)
         {
-            holder.priceView.setVisibility(View.INVISIBLE);
-            holder.priceView.setText(null);
+            holder.dataBinding.priceTextView.setVisibility(View.INVISIBLE);
+            holder.dataBinding.priceTextView.setText(null);
         } else
         {
-            holder.priceView.setVisibility(View.VISIBLE);
+            holder.dataBinding.priceTextView.setVisibility(View.VISIBLE);
 
-            holder.priceView.setText(strPrice);
-            holder.priceView.setPaintFlags(holder.priceView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+            holder.dataBinding.priceTextView.setText(strPrice);
+            holder.dataBinding.priceTextView.setPaintFlags(holder.dataBinding.priceTextView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
         }
 
         // 만족도
         if (recommendationGourmet.rating > 0)
         {
-            holder.satisfactionView.setVisibility(View.VISIBLE);
-            holder.satisfactionView.setText(//
+            holder.dataBinding.satisfactionView.setVisibility(View.VISIBLE);
+            holder.dataBinding.satisfactionView.setText(//
                 mContext.getResources().getString(R.string.label_list_satisfaction, recommendationGourmet.rating));
         } else
         {
-            holder.satisfactionView.setVisibility(View.GONE);
+            holder.dataBinding.satisfactionView.setVisibility(View.GONE);
         }
 
-        holder.discountView.setText(strDiscount);
-        holder.nameView.setSelected(true); // Android TextView marquee bug
+        holder.dataBinding.discountPriceTextView.setText(strDiscount);
+        holder.dataBinding.nameTextView.setSelected(true); // Android TextView marquee bug
 
         if (VersionUtils.isOverAPI16() == true)
         {
-            holder.gradientView.setBackground(mPaintDrawable);
+            holder.dataBinding.gradientView.setBackground(mPaintDrawable);
         } else
         {
-            holder.gradientView.setBackgroundDrawable(mPaintDrawable);
+            holder.dataBinding.gradientView.setBackgroundDrawable(mPaintDrawable);
         }
 
         String displayCategory;
@@ -199,29 +222,29 @@ public class CollectionGourmetAdapter extends PlaceListAdapter
         // grade
         if (DailyTextUtils.isTextEmpty(displayCategory) == true)
         {
-            holder.gradeView.setVisibility(View.GONE);
+            holder.dataBinding.gradeTextView.setVisibility(View.GONE);
         } else
         {
-            holder.gradeView.setVisibility(View.VISIBLE);
-            holder.gradeView.setText(displayCategory);
+            holder.dataBinding.gradeTextView.setVisibility(View.VISIBLE);
+            holder.dataBinding.gradeTextView.setText(displayCategory);
         }
 
         if (mIsUsedMultiTransition == true && VersionUtils.isOverAPI21() == true)
         {
-            holder.gourmetImageView.setTransitionName(null);
+            holder.dataBinding.imageView.setTransitionName(null);
         }
 
         // 스티커
         if (DailyTextUtils.isTextEmpty(recommendationGourmet.stickerUrl) == false)
         {
-            holder.stickerSimpleDraweeView.setVisibility(View.VISIBLE);
+            holder.dataBinding.stickerSimpleDraweeView.setVisibility(View.VISIBLE);
 
             DraweeController controller = Fresco.newDraweeControllerBuilder().setControllerListener(new BaseControllerListener<ImageInfo>()
             {
                 @Override
                 public void onFinalImageSet(String id, ImageInfo imageInfo, Animatable animatable)
                 {
-                    ViewGroup.LayoutParams layoutParams = holder.stickerSimpleDraweeView.getLayoutParams();
+                    ViewGroup.LayoutParams layoutParams = holder.dataBinding.stickerSimpleDraweeView.getLayoutParams();
 
                     int screenWidth = ScreenUtils.getScreenWidth(mContext);
                     if (screenWidth > Sticker.DEFAULT_SCREEN_WIDTH && screenWidth < Sticker.LARGE_SCREEN_WIDTH)
@@ -234,34 +257,34 @@ public class CollectionGourmetAdapter extends PlaceListAdapter
                         layoutParams.height = imageInfo.getHeight();
                     }
 
-                    holder.stickerSimpleDraweeView.setLayoutParams(layoutParams);
+                    holder.dataBinding.stickerSimpleDraweeView.setLayoutParams(layoutParams);
                 }
             }).setUri(Uri.parse(recommendationGourmet.stickerUrl)).build();
 
-            holder.stickerSimpleDraweeView.setController(controller);
+            holder.dataBinding.stickerSimpleDraweeView.setController(controller);
         } else
         {
-            holder.stickerSimpleDraweeView.setVisibility(View.GONE);
+            holder.dataBinding.stickerSimpleDraweeView.setVisibility(View.GONE);
         }
 
-        Util.requestImageResize(mContext, holder.gourmetImageView, recommendationGourmet.imageUrl);
+        Util.requestImageResize(mContext, holder.dataBinding.imageView, recommendationGourmet.imageUrl);
 
         // SOLD OUT 표시
         if (recommendationGourmet.isSoldOut)
         {
-            holder.soldOutView.setVisibility(View.VISIBLE);
+            holder.dataBinding.soldoutView.setVisibility(View.VISIBLE);
         } else
         {
-            holder.soldOutView.setVisibility(View.GONE);
+            holder.dataBinding.soldoutView.setVisibility(View.GONE);
         }
 
         if (DailyTextUtils.isTextEmpty(recommendationGourmet.benefit) == false)
         {
-            holder.dBenefitTextView.setVisibility(View.VISIBLE);
-            holder.dBenefitTextView.setText(recommendationGourmet.benefit);
+            holder.dataBinding.dBenefitTextView.setVisibility(View.VISIBLE);
+            holder.dataBinding.dBenefitTextView.setText(recommendationGourmet.benefit);
         } else
         {
-            holder.dBenefitTextView.setVisibility(View.GONE);
+            holder.dataBinding.dBenefitTextView.setVisibility(View.GONE);
         }
 
         //        if (mShowDistanceIgnoreSort == true || getSortType() == Constants.SortType.DISTANCE)
@@ -270,8 +293,8 @@ public class CollectionGourmetAdapter extends PlaceListAdapter
         //            holder.distanceTextView.setText(mContext.getString(R.string.label_distance_km, new DecimalFormat("#.#").format(gourmet.distance)));
         //        } else
         //        {
-        holder.dot1View.setVisibility(View.GONE);
-        holder.distanceTextView.setVisibility(View.GONE);
+        holder.dataBinding.dot1View.setVisibility(View.GONE);
+        holder.dataBinding.distanceTextView.setVisibility(View.GONE);
         //        }
 
         // VR 여부, 추후 고메가 VR이 생기면 화면에 보여주도록 한다.
@@ -288,18 +311,18 @@ public class CollectionGourmetAdapter extends PlaceListAdapter
         //            holder.trueVRView.setVisibility(View.VISIBLE);
         //        } else
         {
-            holder.dot2View.setVisibility(View.GONE);
-            holder.trueVRView.setVisibility(View.GONE);
+            holder.dataBinding.dot2View.setVisibility(View.GONE);
+            holder.dataBinding.trueVRView.setVisibility(View.GONE);
         }
 
-        if (holder.satisfactionView.getVisibility() == View.GONE//
-            && holder.trueVRView.getVisibility() == View.GONE//
-            && holder.distanceTextView.getVisibility() == View.GONE)
+        if (holder.dataBinding.satisfactionView.getVisibility() == View.GONE//
+            && holder.dataBinding.trueVRView.getVisibility() == View.GONE//
+            && holder.dataBinding.distanceTextView.getVisibility() == View.GONE)
         {
-            holder.informationLayout.setVisibility(View.GONE);
+            holder.dataBinding.informationLayout.setVisibility(View.GONE);
         } else
         {
-            holder.informationLayout.setVisibility(View.VISIBLE);
+            holder.dataBinding.informationLayout.setVisibility(View.VISIBLE);
         }
     }
 
@@ -311,45 +334,13 @@ public class CollectionGourmetAdapter extends PlaceListAdapter
 
     private class GourmetViewHolder extends RecyclerView.ViewHolder
     {
-        View gradientView;
-        com.facebook.drawee.view.SimpleDraweeView gourmetImageView;
-        com.facebook.drawee.view.SimpleDraweeView stickerSimpleDraweeView;
-        TextView nameView;
-        TextView priceView;
-        TextView discountView;
-        View soldOutView;
-        TextView addressView;
-        TextView gradeView;
-        TextView satisfactionView;
-        TextView personsTextView;
-        TextView distanceTextView;
-        TextView dBenefitTextView;
-        View informationLayout;
-        View trueVRView;
-        View dot1View;
-        View dot2View;
+        ListRowGourmetDataBinding dataBinding;
 
-        public GourmetViewHolder(View itemView)
+        public GourmetViewHolder(ListRowGourmetDataBinding dataBinding)
         {
-            super(itemView);
+            super(dataBinding.getRoot());
 
-            dBenefitTextView = (TextView) itemView.findViewById(R.id.dBenefitTextView);
-            gradientView = itemView.findViewById(R.id.gradientView);
-            gourmetImageView = (com.facebook.drawee.view.SimpleDraweeView) itemView.findViewById(R.id.imageView);
-            stickerSimpleDraweeView = (com.facebook.drawee.view.SimpleDraweeView) itemView.findViewById(R.id.stickerSimpleDraweeView);
-            nameView = (TextView) itemView.findViewById(R.id.nameTextView);
-            priceView = (TextView) itemView.findViewById(R.id.priceTextView);
-            satisfactionView = (TextView) itemView.findViewById(R.id.satisfactionView);
-            discountView = (TextView) itemView.findViewById(R.id.discountPriceTextView);
-            soldOutView = itemView.findViewById(R.id.soldoutView);
-            addressView = (TextView) itemView.findViewById(R.id.addressTextView);
-            gradeView = (TextView) itemView.findViewById(R.id.gradeTextView);
-            personsTextView = (TextView) itemView.findViewById(R.id.personsTextView);
-            distanceTextView = (TextView) itemView.findViewById(R.id.distanceTextView);
-            informationLayout = itemView.findViewById(R.id.informationLayout);
-            trueVRView = itemView.findViewById(R.id.trueVRView);
-            dot1View = itemView.findViewById(R.id.dot1View);
-            dot2View = itemView.findViewById(R.id.dot2View);
+            this.dataBinding = dataBinding;
 
             itemView.setOnClickListener(mOnClickListener);
 

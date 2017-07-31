@@ -25,6 +25,7 @@
                 fresco:overlayImage="@color/black_a40"/>
 
             <LinearLayout
+                android:id="@+id/informationLayout"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:gravity="center"
