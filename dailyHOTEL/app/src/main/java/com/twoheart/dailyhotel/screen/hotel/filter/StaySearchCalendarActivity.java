@@ -69,7 +69,6 @@ public class StaySearchCalendarActivity extends StayCalendarActivity
         mInputText = intent.getStringExtra(INTENT_EXTRA_DATA_SEARCH_INPUT_TEXT);
         mSearchKeyword = intent.getParcelableExtra(INTENT_EXTRA_DATA_SEARCH_KEYWORD);
 
-
         super.onCreate(savedInstanceState);
     }
 
