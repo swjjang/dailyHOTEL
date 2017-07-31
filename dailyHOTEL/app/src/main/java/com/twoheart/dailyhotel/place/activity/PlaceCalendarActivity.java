@@ -639,11 +639,11 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
         }
     }
 
-    protected void smoothScrollCheckInDayPosition(View checkInDayView)
+    protected void smoothScrollStartDayPosition(View startDayView)
     {
         ScrollView scrollView = (ScrollView) findViewById(R.id.calendarScrollLayout);
 
-        if (checkInDayView == null)
+        if (startDayView == null)
         {
             if (mDayViewList == null || mDayViewList.size() == 0)
             {
@@ -654,19 +654,19 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
             {
                 if (dayView.isSelected() == true)
                 {
-                    checkInDayView = dayView;
+                    startDayView = dayView;
                     break;
                 }
             }
 
-            if (checkInDayView == null)
+            if (startDayView == null)
             {
                 return;
             }
 
         }
 
-        final View selectView = checkInDayView;
+        final View selectView = startDayView;
 
         scrollView.postDelayed(new Runnable()
         {

@@ -107,7 +107,7 @@ public class GourmetCalendarActivity extends PlaceCalendarActivity
 
                     showAnimation();
 
-                    smoothScrollCheckInDayPosition(mDayView);
+                    smoothScrollStartDayPosition(mDayView);
                 }
             }, 20);
         } else
@@ -123,7 +123,7 @@ public class GourmetCalendarActivity extends PlaceCalendarActivity
                 setSelectedDay(mTodayDateTime, (GourmetBookingDay) mPlaceBookingDay);
             }
 
-            smoothScrollCheckInDayPosition(mDayView);
+            smoothScrollStartDayPosition(mDayView);
         }
     }
 
