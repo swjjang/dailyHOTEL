@@ -102,6 +102,8 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
         return mDayOfMaxCount < 0 ? 0 : mDayOfMaxCount;
     }
 
+    protected abstract void setResult(int resultCode, PlaceBookingDay placeBookingDay);
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
