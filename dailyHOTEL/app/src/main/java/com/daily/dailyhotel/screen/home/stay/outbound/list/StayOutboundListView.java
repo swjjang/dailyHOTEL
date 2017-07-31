@@ -12,6 +12,9 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.style.ScaleXSpan;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +23,7 @@ import android.widget.FrameLayout;
 import com.daily.base.BaseActivity;
 import com.daily.base.BaseDialogView;
 import com.daily.base.OnBaseEventListener;
+import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ScreenUtils;
 import com.daily.dailyhotel.entity.ListItem;
 import com.daily.dailyhotel.entity.StayOutbound;
@@ -198,7 +202,46 @@ public class StayOutboundListView extends BaseDialogView<StayOutboundListView.On
             return;
         }
 
-        getViewDataBinding().calendarTextView.setText(calendarText);
+        getViewDataBinding().calendarTextView.post(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                int viewWidth = getViewDataBinding().calendarTextView.getWidth()//
+                    - (getViewDataBinding().calendarTextView.getCompoundDrawablePadding() * 2)//
+                    - getViewDataBinding().calendarTextView.getCompoundDrawables()[0].getIntrinsicWidth()//
+                    - getViewDataBinding().calendarTextView.getCompoundDrawables()[2].getIntrinsicWidth()//
+                    - getViewDataBinding().calendarTextView.getPaddingLeft()//
+                    - getViewDataBinding().calendarTextView.getPaddingRight();
+
+                final float width = DailyTextUtils.getTextWidth(getContext(), calendarText, 13d, getViewDataBinding().calendarTextView.getTypeface());
+
+                if (viewWidth > width)
+                {
+                    getViewDataBinding().calendarTextView.setText(calendarText);
+                } else
+                {
+                    float scaleX = 1f;
+                    float scaleWidth;
+
+                    for (int i = 99; i >= 60; i--)
+                    {
+                        scaleX = (float) i / 100;
+                        scaleWidth = DailyTextUtils.getScaleTextWidth(getContext(), calendarText, 13d, scaleX, getViewDataBinding().calendarTextView.getTypeface());
+
+                        if (viewWidth > scaleWidth)
+                        {
+                            break;
+                        }
+                    }
+
+                    SpannableString spannableString = new SpannableString(calendarText);
+                    spannableString.setSpan(new ScaleXSpan(scaleX), 0, spannableString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+                    getViewDataBinding().calendarTextView.setText(spannableString);
+                }
+            }
+        });
     }
 
     @Override

@@ -15,6 +15,7 @@ import com.daily.base.util.FontManager;
 import com.daily.base.util.ScreenUtils;
 import com.daily.base.widget.DailyToast;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.model.time.PlaceBookingDay;
 import com.twoheart.dailyhotel.model.time.StayBookingDay;
 import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.place.activity.PlaceCalendarActivity;
@@ -313,7 +314,7 @@ public class StayCalendarActivity extends PlaceCalendarActivity
                         setRangeDaysAlphaAndUpdateDayView(mCheckInDayView, mCheckOutDayView);
                         checkLastDay();
                         mConfirmTextView.setEnabled(true);
-                        mConfirmTextView.setText(getString(R.string.label_calendar_stay_search_selected_date, nights));
+                        mConfirmTextView.setText(getConfirmText(nights));
                     } catch (Exception e)
                     {
                         ExLog.e(e.toString());
@@ -359,11 +360,22 @@ public class StayCalendarActivity extends PlaceCalendarActivity
             ExLog.e(e.toString());
         }
 
-        Intent intent = new Intent();
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, stayBookingDay);
-
-        setResult(RESULT_OK, intent);
+        setResult(RESULT_OK, stayBookingDay);
         hideAnimation();
+    }
+
+    @Override
+    protected void setResult(int resultCode, PlaceBookingDay placeBookingDay)
+    {
+        Intent intent = new Intent();
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, placeBookingDay);
+
+        setResult(resultCode, intent);
+    }
+
+    protected String getConfirmText(int nights)
+    {
+        return getString(R.string.label_calendar_stay_search_selected_date, nights);
     }
 
     private void setSelectedCheckIn(View checkInView)

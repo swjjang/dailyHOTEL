@@ -16,7 +16,9 @@ import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.place.fragment.PlaceSearchFragment;
 import com.twoheart.dailyhotel.place.layout.PlaceSearchLayout;
 import com.twoheart.dailyhotel.place.networkcontroller.PlaceSearchNetworkController;
+import com.twoheart.dailyhotel.screen.gourmet.filter.GourmetSearchCalendarActivity;
 import com.twoheart.dailyhotel.screen.hotel.filter.StayCalendarActivity;
+import com.twoheart.dailyhotel.screen.hotel.filter.StaySearchCalendarActivity;
 import com.twoheart.dailyhotel.screen.search.stay.result.StaySearchResultActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
@@ -94,6 +96,38 @@ public class StaySearchFragment extends PlaceSearchFragment
                         setDateText(stayBookingDay);
 
                         mPlaceSearchLayout.requestUpdateAutoCompleteLayout();
+
+                        if (data.hasExtra(GourmetSearchCalendarActivity.INTENT_EXTRA_DATA_SEARCH_TYPE) == true)
+                        {
+                            SearchType searchType;
+                            try
+                            {
+                                searchType = SearchType.valueOf(data.getStringExtra(StaySearchCalendarActivity.INTENT_EXTRA_DATA_SEARCH_TYPE));
+                            } catch (Exception e)
+                            {
+                                searchType = null;
+                            }
+
+                            String inputText = data.getStringExtra(StaySearchCalendarActivity.INTENT_EXTRA_DATA_SEARCH_INPUT_TEXT);
+                            Keyword keyword = data.getParcelableExtra(StaySearchCalendarActivity.INTENT_EXTRA_DATA_SEARCH_KEYWORD);
+
+                            if (searchType == null)
+                            {
+                                // do nothing!
+                            } else if (searchType == SearchType.SEARCHES)
+                            {
+                                startSearchResultActivity();
+                            } else if (searchType == SearchType.LOCATION)
+                            {
+                                mOnEventListener.onSearchMyLocation();
+                            } else if (searchType == SearchType.AUTOCOMPLETE)
+                            {
+                                mOnEventListener.onSearch(inputText, keyword);
+                            } else if (searchType == SearchType.RECENT)
+                            {
+                                mOnEventListener.onSearch(inputText, keyword);
+                            }
+                        }
                     }
                 }
 
@@ -239,7 +273,7 @@ public class StaySearchFragment extends PlaceSearchFragment
     }
 
     @Override
-    public void startCalendar(boolean isAnimation)
+    public void startCalendar(boolean isAnimation, Constants.SearchType searchType, String inputText, Keyword keyword)
     {
         if (mIsScrolling == true || isAdded() == false)
         {
@@ -258,9 +292,9 @@ public class StaySearchFragment extends PlaceSearchFragment
                 , AnalyticsManager.Action.HOTEL_BOOKING_CALENDAR_CLICKED, AnalyticsManager.ValueType.SEARCH, null);
         }
 
-        Intent intent = StayCalendarActivity.newInstance(mBaseActivity, mTodayDateTime, mStayBookingDay //
+        Intent intent = StaySearchCalendarActivity.newInstance(mBaseActivity, mTodayDateTime, mStayBookingDay //
             , StayCalendarActivity.DEFAULT_DOMESTIC_CALENDAR_DAY_OF_MAX_COUNT //
-            , AnalyticsManager.ValueType.SEARCH, true, isAnimation);
+            , AnalyticsManager.ValueType.SEARCH, true, isAnimation, searchType, inputText, keyword);
 
         if (intent == null)
         {
@@ -318,7 +352,7 @@ public class StaySearchFragment extends PlaceSearchFragment
 
             if (isDateChanged() == false)
             {
-                onCalendarClick(true);
+                onCalendarClick(true, SearchType.LOCATION, null, null);
                 return;
             }
 
@@ -374,7 +408,7 @@ public class StaySearchFragment extends PlaceSearchFragment
 
             if (isDateChanged() == false)
             {
-                onCalendarClick(true);
+                onCalendarClick(true, SearchType.SEARCHES, text, null);
                 return;
             }
 
@@ -397,7 +431,8 @@ public class StaySearchFragment extends PlaceSearchFragment
 
             if (isDateChanged() == false)
             {
-                onCalendarClick(true);
+                SearchType searchType = keyword instanceof StayKeyword ? Constants.SearchType.AUTOCOMPLETE : Constants.SearchType.RECENT;
+                onCalendarClick(true, searchType, text, keyword);
                 return;
             }
 
@@ -413,9 +448,9 @@ public class StaySearchFragment extends PlaceSearchFragment
         }
 
         @Override
-        public void onCalendarClick(boolean isAnimation)
+        public void onCalendarClick(boolean isAnimation, Constants.SearchType searchType, String inputText, Keyword keyword)
         {
-            startCalendar(isAnimation);
+            startCalendar(isAnimation, searchType, inputText, keyword);
         }
 
         @Override

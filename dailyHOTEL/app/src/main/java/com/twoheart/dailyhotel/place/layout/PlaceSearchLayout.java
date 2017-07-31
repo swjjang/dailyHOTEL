@@ -24,6 +24,7 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Keyword;
 import com.twoheart.dailyhotel.place.base.BaseLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
+import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.DailyRecentSearches;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
@@ -72,7 +73,7 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
 
         void onSearch(String text, Keyword keyword);
 
-        void onCalendarClick(boolean isAnimation);
+        void onCalendarClick(boolean isAnimation, Constants.SearchType searchType, String inputText, Keyword keyword);
 
         void onSearchEnabled(boolean enabled);
     }
@@ -691,7 +692,7 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
                     @Override
                     public void run()
                     {
-                        ((OnEventListener) mOnEventListener).onCalendarClick(true);
+                        ((OnEventListener) mOnEventListener).onCalendarClick(true, null, null, null);
                     }
                 }, 100);
                 break;

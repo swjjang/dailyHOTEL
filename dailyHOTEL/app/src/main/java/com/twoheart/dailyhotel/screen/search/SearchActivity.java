@@ -427,7 +427,7 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
                     case HOTEL:
                         if (mStaySearchFragment.isDateChanged() == false)
                         {
-                            mStaySearchFragment.startCalendar(true);
+                            mStaySearchFragment.startCalendar(true, SearchType.SEARCHES, null, null);
                             return;
                         }
 
@@ -437,7 +437,7 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
                     case FNB:
                         if (mGourmetSearchFragment.isDateChanged() == false)
                         {
-                            mGourmetSearchFragment.startCalendar(true);
+                            mGourmetSearchFragment.startCalendar(true, SearchType.SEARCHES, null, null);
                             return;
                         }
 
