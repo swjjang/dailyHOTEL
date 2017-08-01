@@ -707,6 +707,15 @@ public class StayOutboundPaymentView extends BaseDialogView<StayOutboundPaymentV
                 getEventListener().onAgreedTermClick(isChecked);
             }
         });
+
+        mRefundDataBinding.agreeThirdPartyTermsTextView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                mRefundDataBinding.agreeThirdPartyTermsCheckBox.performClick();
+            }
+        });
     }
 
     private void setPayButtonLayout(Context context, ViewGroup viewGroup)
