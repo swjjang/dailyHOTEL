@@ -65,6 +65,7 @@ public class DailyPaymentTypeView extends ConstraintLayout implements View.OnCli
         setEasyCard(null, null);
 
         mViewDataBinding.cardManagerLayout.setOnClickListener(this);
+        mViewDataBinding.simpleCardHeaderLayout.setOnClickListener(this);
         mViewDataBinding.emptySimpleCardLayout.setOnClickListener(this);
         mViewDataBinding.selectedSimpleCardLayout.setOnClickListener(this);
         mViewDataBinding.cardLayout.setOnClickListener(this);
@@ -96,6 +97,7 @@ public class DailyPaymentTypeView extends ConstraintLayout implements View.OnCli
                 }
                 break;
 
+            case R.id.simpleCardHeaderLayout:
             case R.id.selectedSimpleCardLayout:
                 if (mOnPaymentTypeClickListener != null)
                 {
