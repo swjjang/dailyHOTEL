@@ -1,6 +1,7 @@
 package com.daily.dailyhotel.screen.common.calendar;
 
 import android.support.v4.util.Pair;
+import android.view.View;
 
 import com.daily.base.BaseDialogViewInterface;
 
@@ -33,4 +34,8 @@ public interface StayCalendarViewInterface extends BaseDialogViewInterface
     void setMarginTop(int marginTop);
 
     void reset();
+
+    void smoothScrollStartDayPosition(View startDayView);
+
+    View searchDayView(String dateTime);
 }

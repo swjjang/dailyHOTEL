@@ -117,7 +117,7 @@ public class StayCalendarActivity extends PlaceCalendarActivity
 
                     showAnimation();
 
-                    smoothScrollCheckInDayPosition(mCheckInDayView);
+                    smoothScrollStartDayPosition(mCheckInDayView);
                 }
             }, 20);
         } else
@@ -134,7 +134,7 @@ public class StayCalendarActivity extends PlaceCalendarActivity
                 checkLastDay();
             }
 
-            smoothScrollCheckInDayPosition(mCheckInDayView);
+            smoothScrollStartDayPosition(mCheckInDayView);
         }
 
         if (mIsSingleDay == true)
