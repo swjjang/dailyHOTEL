@@ -31,7 +31,7 @@ import com.daily.dailyhotel.repository.remote.PaymentRemoteImpl;
 import com.daily.dailyhotel.repository.remote.ProfileRemoteImpl;
 import com.daily.dailyhotel.screen.common.call.CallDialogActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.thankyou.StayOutboundThankYouActivity;
-import com.daily.dailyhotel.view.DailyPaymentTypeView;
+import com.daily.dailyhotel.view.DailyBookingPaymentTypeView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.screen.common.StayOutboundPaymentWebActivity;
 import com.twoheart.dailyhotel.screen.mydaily.creditcard.CreditCardListActivity;
@@ -74,7 +74,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
     private StayOutboundPayment mStayOutboundPayment;
     private Card mSelectedCard;
     private Guest mGuest;
-    private DailyPaymentTypeView.PaymentType mPaymentType;
+    private DailyBookingPaymentTypeView.PaymentType mPaymentType;
     private boolean mBonusSelected, mAgreedThirdPartyTerms;
     private UserInformation mUserInformation;
 
@@ -87,13 +87,13 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
         void onScreen(Activity activity, StayBookDateTime stayBookDateTime);
 
         void onScreenPaymentCompleted(Activity activity, StayOutboundPayment stayOutboundPayment, StayBookDateTime stayBookDateTime//
-            , String stayName, DailyPaymentTypeView.PaymentType paymentType, boolean fullBonus, boolean registerEasyCard, UserInformation userInformation);
+            , String stayName, DailyBookingPaymentTypeView.PaymentType paymentType, boolean fullBonus, boolean registerEasyCard, UserInformation userInformation);
 
         void onEventStartPayment(Activity activity, String label);
 
         void onEventEndPayment(Activity activity);
 
-        StayOutboundThankYouAnalyticsParam getThankYouAnalyticsParam(DailyPaymentTypeView.PaymentType paymentType, boolean fullBonus, boolean usedBonus, boolean registerEasyCard);
+        StayOutboundThankYouAnalyticsParam getThankYouAnalyticsParam(DailyBookingPaymentTypeView.PaymentType paymentType, boolean fullBonus, boolean usedBonus, boolean registerEasyCard);
     }
 
     public StayOutboundPaymentPresenter(@NonNull StayOutboundPaymentActivity activity)
@@ -254,7 +254,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
                     if (DailyTextUtils.isTextEmpty(cardName, cardNumber, cardBillingKey, cardCd) == false)
                     {
                         setSelectCard(cardName, cardNumber, cardBillingKey, cardCd);
-                        setPaymentType(DailyPaymentTypeView.PaymentType.EASY_CARD);
+                        setPaymentType(DailyBookingPaymentTypeView.PaymentType.EASY_CARD);
                     }
                 }
 
@@ -262,7 +262,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
                 {
                     if (cardList.size() > 0)
                     {
-                        setPaymentType(DailyPaymentTypeView.PaymentType.EASY_CARD);
+                        setPaymentType(DailyBookingPaymentTypeView.PaymentType.EASY_CARD);
                         setSelectCard(getSelectedCard(cardList));
                     } else
                     {
@@ -294,7 +294,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
 
                                 if (cardList.size() > 0)
                                 {
-                                    setPaymentType(DailyPaymentTypeView.PaymentType.EASY_CARD);
+                                    setPaymentType(DailyBookingPaymentTypeView.PaymentType.EASY_CARD);
                                     setSelectCard(getSelectedCard(cardList));
 
                                     onPaymentClick(mGuest.firstName, mGuest.lastName, mGuest.phone, mGuest.email);
@@ -312,7 +312,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
                             {
                                 if (cardList.size() > 0)
                                 {
-                                    setPaymentType(DailyPaymentTypeView.PaymentType.EASY_CARD);
+                                    setPaymentType(DailyBookingPaymentTypeView.PaymentType.EASY_CARD);
                                     setSelectCard(getSelectedCard(cardList));
                                 } else
                                 {
@@ -552,7 +552,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
     }
 
     @Override
-    public void onPaymentTypeClick(DailyPaymentTypeView.PaymentType paymentType)
+    public void onPaymentTypeClick(DailyBookingPaymentTypeView.PaymentType paymentType)
     {
         if (paymentType == null)
         {
@@ -620,7 +620,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
         if (mBonusSelected == true && mStayOutboundPayment.totalPrice == mStayOutboundPayment.discountPrice)
         {
             // 보너스로만 결제할 경우에는 팝업이 기존의 카드 타입과 동일한다.
-            getViewInterface().showAgreeTermDialog(DailyPaymentTypeView.PaymentType.CARD, new View.OnClickListener()
+            getViewInterface().showAgreeTermDialog(DailyBookingPaymentTypeView.PaymentType.CARD, new View.OnClickListener()
             {
                 @Override
                 public void onClick(View v)
@@ -641,7 +641,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
             });
         } else
         {
-            if (mPaymentType == DailyPaymentTypeView.PaymentType.EASY_CARD && mSelectedCard == null)
+            if (mPaymentType == DailyBookingPaymentTypeView.PaymentType.EASY_CARD && mSelectedCard == null)
             {
                 startActivityForResult(RegisterCreditCardActivity.newInstance(getActivity())//
                     , StayOutboundPaymentActivity.REQUEST_CODE_REGISTER_CARD_PAYMENT);
@@ -988,45 +988,45 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
 
             if (paymentPrice > 0 && paymentPrice < CARD_MIN_PRICE)
             {
-                getViewInterface().setPaymentTypeEnabled(DailyPaymentTypeView.PaymentType.EASY_CARD, false);
-                getViewInterface().setPaymentTypeEnabled(DailyPaymentTypeView.PaymentType.CARD, false);
+                getViewInterface().setPaymentTypeEnabled(DailyBookingPaymentTypeView.PaymentType.EASY_CARD, false);
+                getViewInterface().setPaymentTypeEnabled(DailyBookingPaymentTypeView.PaymentType.CARD, false);
 
                 if (DailyRemoteConfigPreference.getInstance(getActivity()).isRemoteConfigStayOutboundPhonePaymentEnabled() == true)
                 {
-                    getViewInterface().setPaymentTypeEnabled(DailyPaymentTypeView.PaymentType.PHONE, true);
+                    getViewInterface().setPaymentTypeEnabled(DailyBookingPaymentTypeView.PaymentType.PHONE, true);
                 }
             } else if (paymentPrice > PHONE_MAX_PRICE)
             {
                 if (DailyRemoteConfigPreference.getInstance(getActivity()).isRemoteConfigStayOutboundSimpleCardPaymentEnabled() == true)
                 {
-                    getViewInterface().setPaymentTypeEnabled(DailyPaymentTypeView.PaymentType.EASY_CARD, true);
+                    getViewInterface().setPaymentTypeEnabled(DailyBookingPaymentTypeView.PaymentType.EASY_CARD, true);
                 }
 
                 if (DailyRemoteConfigPreference.getInstance(getActivity()).isRemoteConfigStayOutboundCardPaymentEnabled() == true)
                 {
-                    getViewInterface().setPaymentTypeEnabled(DailyPaymentTypeView.PaymentType.CARD, true);
+                    getViewInterface().setPaymentTypeEnabled(DailyBookingPaymentTypeView.PaymentType.CARD, true);
                 }
 
-                getViewInterface().setPaymentTypeEnabled(DailyPaymentTypeView.PaymentType.PHONE, false);
+                getViewInterface().setPaymentTypeEnabled(DailyBookingPaymentTypeView.PaymentType.PHONE, false);
             } else if (paymentPrice > 0)
             {
                 if (DailyRemoteConfigPreference.getInstance(getActivity()).isRemoteConfigStayOutboundSimpleCardPaymentEnabled() == true)
                 {
-                    getViewInterface().setPaymentTypeEnabled(DailyPaymentTypeView.PaymentType.EASY_CARD, true);
+                    getViewInterface().setPaymentTypeEnabled(DailyBookingPaymentTypeView.PaymentType.EASY_CARD, true);
                 }
 
                 if (DailyRemoteConfigPreference.getInstance(getActivity()).isRemoteConfigStayOutboundCardPaymentEnabled() == true)
                 {
-                    getViewInterface().setPaymentTypeEnabled(DailyPaymentTypeView.PaymentType.CARD, true);
+                    getViewInterface().setPaymentTypeEnabled(DailyBookingPaymentTypeView.PaymentType.CARD, true);
                 }
 
                 if (DailyRemoteConfigPreference.getInstance(getActivity()).isRemoteConfigStayOutboundPhonePaymentEnabled() == true)
                 {
-                    getViewInterface().setPaymentTypeEnabled(DailyPaymentTypeView.PaymentType.PHONE, true);
+                    getViewInterface().setPaymentTypeEnabled(DailyBookingPaymentTypeView.PaymentType.PHONE, true);
                 }
             } else if (paymentPrice == 0)
             {
-                getViewInterface().setPaymentType(DailyPaymentTypeView.PaymentType.FREE);
+                getViewInterface().setPaymentType(DailyBookingPaymentTypeView.PaymentType.FREE);
             }
 
         } catch (Exception e)
@@ -1138,7 +1138,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
         mPeople.setChildAgeList(childAgeList);
     }
 
-    private void setPaymentType(DailyPaymentTypeView.PaymentType paymentType)
+    private void setPaymentType(DailyBookingPaymentTypeView.PaymentType paymentType)
     {
         mPaymentType = paymentType;
     }
@@ -1309,19 +1309,19 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
             getViewInterface().setGuidePaymentType(null);
         }
 
-        getViewInterface().setPaymentTypeEnabled(DailyPaymentTypeView.PaymentType.EASY_CARD, isSimpleCardPaymentEnabled);
-        getViewInterface().setPaymentTypeEnabled(DailyPaymentTypeView.PaymentType.CARD, isCardPaymentEnabled);
-        getViewInterface().setPaymentTypeEnabled(DailyPaymentTypeView.PaymentType.PHONE, isPhonePaymentEnabled);
+        getViewInterface().setPaymentTypeEnabled(DailyBookingPaymentTypeView.PaymentType.EASY_CARD, isSimpleCardPaymentEnabled);
+        getViewInterface().setPaymentTypeEnabled(DailyBookingPaymentTypeView.PaymentType.CARD, isCardPaymentEnabled);
+        getViewInterface().setPaymentTypeEnabled(DailyBookingPaymentTypeView.PaymentType.PHONE, isPhonePaymentEnabled);
 
         if (isSimpleCardPaymentEnabled == true)
         {
-            setPaymentType(DailyPaymentTypeView.PaymentType.EASY_CARD);
+            setPaymentType(DailyBookingPaymentTypeView.PaymentType.EASY_CARD);
         } else if (isCardPaymentEnabled == true)
         {
-            setPaymentType(DailyPaymentTypeView.PaymentType.CARD);
+            setPaymentType(DailyBookingPaymentTypeView.PaymentType.CARD);
         } else if (isPhonePaymentEnabled == true)
         {
-            setPaymentType(DailyPaymentTypeView.PaymentType.PHONE);
+            setPaymentType(DailyBookingPaymentTypeView.PaymentType.PHONE);
         }
     }
 

@@ -28,7 +28,7 @@
             android:layout_height="1dp"
             android:background="@color/default_line_cf0f0f0"/>
 
-        <com.daily.dailyhotel.view.DailyPaymentTypeView
+        <com.daily.dailyhotel.view.DailyBookingPaymentTypeView
             android:id="@+id/paymentTypeView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

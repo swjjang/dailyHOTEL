@@ -11,7 +11,7 @@ import com.daily.base.util.DailyTextUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.DailyViewBookingPaymentTypeDataBinding;
 
-public class DailyPaymentTypeView extends ConstraintLayout implements View.OnClickListener
+public class DailyBookingPaymentTypeView extends ConstraintLayout implements View.OnClickListener
 {
     private DailyViewBookingPaymentTypeDataBinding mViewDataBinding;
 
@@ -37,21 +37,21 @@ public class DailyPaymentTypeView extends ConstraintLayout implements View.OnCli
         void onPaymentTypeClick(PaymentType paymentType);
     }
 
-    public DailyPaymentTypeView(Context context)
+    public DailyBookingPaymentTypeView(Context context)
     {
         super(context);
 
         initLayout(context);
     }
 
-    public DailyPaymentTypeView(Context context, AttributeSet attrs)
+    public DailyBookingPaymentTypeView(Context context, AttributeSet attrs)
     {
         super(context, attrs);
 
         initLayout(context);
     }
 
-    public DailyPaymentTypeView(Context context, AttributeSet attrs, int defStyleAttr)
+    public DailyBookingPaymentTypeView(Context context, AttributeSet attrs, int defStyleAttr)
     {
         super(context, attrs, defStyleAttr);
 

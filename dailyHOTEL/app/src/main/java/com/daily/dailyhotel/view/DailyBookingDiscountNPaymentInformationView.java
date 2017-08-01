@@ -14,25 +14,25 @@ import com.daily.base.util.DailyTextUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.DailyViewBookingDiscountInformationDataBinding;
 
-public class DailyDiscountNPaymentInformationView extends ConstraintLayout
+public class DailyBookingDiscountNPaymentInformationView extends ConstraintLayout
 {
     private DailyViewBookingDiscountInformationDataBinding mViewDataBinding;
 
-    public DailyDiscountNPaymentInformationView(Context context)
+    public DailyBookingDiscountNPaymentInformationView(Context context)
     {
         super(context);
 
         initLayout(context);
     }
 
-    public DailyDiscountNPaymentInformationView(Context context, AttributeSet attrs)
+    public DailyBookingDiscountNPaymentInformationView(Context context, AttributeSet attrs)
     {
         super(context, attrs);
 
         initLayout(context);
     }
 
-    public DailyDiscountNPaymentInformationView(Context context, AttributeSet attrs, int defStyleAttr)
+    public DailyBookingDiscountNPaymentInformationView(Context context, AttributeSet attrs, int defStyleAttr)
     {
         super(context, attrs, defStyleAttr);
 

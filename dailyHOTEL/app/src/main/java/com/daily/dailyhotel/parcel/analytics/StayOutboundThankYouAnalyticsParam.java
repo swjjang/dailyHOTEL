@@ -3,11 +3,11 @@ package com.daily.dailyhotel.parcel.analytics;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.daily.dailyhotel.view.DailyPaymentTypeView;
+import com.daily.dailyhotel.view.DailyBookingPaymentTypeView;
 
 public class StayOutboundThankYouAnalyticsParam implements Parcelable
 {
-    public DailyPaymentTypeView.PaymentType paymentType;
+    public DailyBookingPaymentTypeView.PaymentType paymentType;
     public boolean registerEasyCard;
     public boolean fullBonus;
     public boolean usedBonus;
@@ -31,7 +31,7 @@ public class StayOutboundThankYouAnalyticsParam implements Parcelable
 
     void readFromParcel(Parcel in)
     {
-        paymentType = DailyPaymentTypeView.PaymentType.valueOf(in.readString());
+        paymentType = DailyBookingPaymentTypeView.PaymentType.valueOf(in.readString());
         registerEasyCard = in.readInt() == 1 ? true : false;
         fullBonus = in.readInt() == 1 ? true : false;
     }

@@ -9,7 +9,7 @@ import com.daily.dailyhotel.entity.StayOutboundPayment;
 import com.daily.dailyhotel.entity.UserInformation;
 import com.daily.dailyhotel.parcel.analytics.StayOutboundPaymentAnalyticsParam;
 import com.daily.dailyhotel.parcel.analytics.StayOutboundThankYouAnalyticsParam;
-import com.daily.dailyhotel.view.DailyPaymentTypeView;
+import com.daily.dailyhotel.view.DailyBookingPaymentTypeView;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
@@ -65,7 +65,7 @@ public class StayOutboundPaymentAnalyticsImpl implements StayOutboundPaymentPres
 
     @Override
     public void onScreenPaymentCompleted(Activity activity, StayOutboundPayment stayOutboundPayment, StayBookDateTime stayBookDateTime//
-        , String stayName, DailyPaymentTypeView.PaymentType paymentType, boolean fullBonus, boolean registerEasyCard, UserInformation userInformation)
+        , String stayName, DailyBookingPaymentTypeView.PaymentType paymentType, boolean fullBonus, boolean registerEasyCard, UserInformation userInformation)
     {
         if (activity == null || mAnalyticsParam == null || paymentType == null)
         {
@@ -164,7 +164,7 @@ public class StayOutboundPaymentAnalyticsImpl implements StayOutboundPaymentPres
     }
 
     @Override
-    public StayOutboundThankYouAnalyticsParam getThankYouAnalyticsParam(DailyPaymentTypeView.PaymentType paymentType//
+    public StayOutboundThankYouAnalyticsParam getThankYouAnalyticsParam(DailyBookingPaymentTypeView.PaymentType paymentType//
         , boolean fullBonus, boolean usedBonus, boolean registerEasyCard)
     {
         StayOutboundThankYouAnalyticsParam analyticsParam = new StayOutboundThankYouAnalyticsParam();

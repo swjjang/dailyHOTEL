@@ -33,8 +33,8 @@ import com.daily.base.util.ScreenUtils;
 import com.daily.base.widget.DailyScrollView;
 import com.daily.dailyhotel.entity.Card;
 import com.daily.dailyhotel.entity.People;
-import com.daily.dailyhotel.entity.StayOutboundPayment;
-import com.daily.dailyhotel.view.DailyPaymentTypeView;
+import com.daily.dailyhotel.view.DailyBookingAgreementThirdPartyView;
+import com.daily.dailyhotel.view.DailyBookingPaymentTypeView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ActivityStayOutboundPaymentDataBinding;
 import com.twoheart.dailyhotel.databinding.LayoutStayOutboundDetailInformationDataBinding;
@@ -64,8 +64,6 @@ public class StayOutboundPaymentView extends BaseDialogView<StayOutboundPaymentV
     private LayoutStayOutboundPaymentRefundDataBinding mRefundDataBinding;
     private LayoutStayOutboundPaymentButtonDataBinding mButtonDataBinding;
 
-    private ValueAnimator mValueAnimator;
-
     public interface OnEventListener extends OnBaseEventListener
     {
         void onCallClick();
@@ -76,7 +74,7 @@ public class StayOutboundPaymentView extends BaseDialogView<StayOutboundPaymentV
 
         void onRegisterEasyCardClick();
 
-        void onPaymentTypeClick(DailyPaymentTypeView.PaymentType paymentType);
+        void onPaymentTypeClick(DailyBookingPaymentTypeView.PaymentType paymentType);
 
         void onPaymentClick(String firstName, String lastName, String phone, String email);
 
@@ -298,7 +296,7 @@ public class StayOutboundPaymentView extends BaseDialogView<StayOutboundPaymentV
             return;
         }
 
-        mRefundDataBinding.vendorNameTextView.setText(vendorName);
+        mRefundDataBinding.agreementThirdPartyView.setVendorBusinessName(vendorName);
     }
 
     @Override
@@ -321,7 +319,7 @@ public class StayOutboundPaymentView extends BaseDialogView<StayOutboundPaymentV
 
 
     @Override
-    public void setPaymentTypeEnabled(DailyPaymentTypeView.PaymentType paymentType, boolean enabled)
+    public void setPaymentTypeEnabled(DailyBookingPaymentTypeView.PaymentType paymentType, boolean enabled)
     {
         if (getViewDataBinding() == null || mPayDataBinding == null)
         {
@@ -332,7 +330,7 @@ public class StayOutboundPaymentView extends BaseDialogView<StayOutboundPaymentV
     }
 
     @Override
-    public void setPaymentType(DailyPaymentTypeView.PaymentType paymentType)
+    public void setPaymentType(DailyBookingPaymentTypeView.PaymentType paymentType)
     {
         if (getViewDataBinding() == null || mPayDataBinding == null)
         {
@@ -413,7 +411,7 @@ public class StayOutboundPaymentView extends BaseDialogView<StayOutboundPaymentV
     }
 
     @Override
-    public void showAgreeTermDialog(DailyPaymentTypeView.PaymentType paymentType//
+    public void showAgreeTermDialog(DailyBookingPaymentTypeView.PaymentType paymentType//
         , View.OnClickListener onClickListener, DialogInterface.OnCancelListener cancelListener)
     {
         hideSimpleDialog();
@@ -472,21 +470,6 @@ public class StayOutboundPaymentView extends BaseDialogView<StayOutboundPaymentV
                     , mBookingDataBinding.guestEmailEditText.getText().toString());
                 break;
             }
-
-            case R.id.arrowImageView:
-                if (mRefundDataBinding == null)
-                {
-                    return;
-                }
-
-                if (mRefundDataBinding.thirdPartyTermsLayout.getVisibility() == View.VISIBLE)
-                {
-                    hideOfferPersonalInformation(mRefundDataBinding.arrowImageView, mRefundDataBinding.thirdPartyTermsLayout);
-                } else
-                {
-                    showOfferPersonalInformation(mRefundDataBinding.arrowImageView, mRefundDataBinding.thirdPartyTermsLayout);
-                }
-                break;
         }
     }
 
@@ -570,12 +553,12 @@ public class StayOutboundPaymentView extends BaseDialogView<StayOutboundPaymentV
             , R.layout.layout_stay_outbound_payment_pay_data, viewGroup, true);
 
 
-        mPayDataBinding.paymentTypeView.setPaymentTypeVisible(DailyPaymentTypeView.PaymentType.EASY_CARD, true);
-        mPayDataBinding.paymentTypeView.setPaymentTypeVisible(DailyPaymentTypeView.PaymentType.CARD, true);
-        mPayDataBinding.paymentTypeView.setPaymentTypeVisible(DailyPaymentTypeView.PaymentType.PHONE, true);
-        mPayDataBinding.paymentTypeView.setPaymentTypeVisible(DailyPaymentTypeView.PaymentType.VBANK, false);
+        mPayDataBinding.paymentTypeView.setPaymentTypeVisible(DailyBookingPaymentTypeView.PaymentType.EASY_CARD, true);
+        mPayDataBinding.paymentTypeView.setPaymentTypeVisible(DailyBookingPaymentTypeView.PaymentType.CARD, true);
+        mPayDataBinding.paymentTypeView.setPaymentTypeVisible(DailyBookingPaymentTypeView.PaymentType.PHONE, true);
+        mPayDataBinding.paymentTypeView.setPaymentTypeVisible(DailyBookingPaymentTypeView.PaymentType.VBANK, false);
 
-        mPayDataBinding.paymentTypeView.setOnPaymentTypeClickListener(new DailyPaymentTypeView.OnPaymentTypeClickListener()
+        mPayDataBinding.paymentTypeView.setOnPaymentTypeClickListener(new DailyBookingPaymentTypeView.OnPaymentTypeClickListener()
         {
             @Override
             public void onEasyCardManagerClick()
@@ -590,7 +573,7 @@ public class StayOutboundPaymentView extends BaseDialogView<StayOutboundPaymentV
             }
 
             @Override
-            public void onPaymentTypeClick(DailyPaymentTypeView.PaymentType paymentType)
+            public void onPaymentTypeClick(DailyBookingPaymentTypeView.PaymentType paymentType)
             {
                 getEventListener().onPaymentTypeClick(paymentType);
             }
@@ -607,32 +590,12 @@ public class StayOutboundPaymentView extends BaseDialogView<StayOutboundPaymentV
         mRefundDataBinding = DataBindingUtil.inflate(LayoutInflater.from(context)//
             , R.layout.layout_stay_outbound_payment_refund_data, viewGroup, true);
 
-        mRefundDataBinding.arrowImageView.setOnClickListener(this);
-        mRefundDataBinding.thirdPartyTermsLayout.post(new Runnable()
+        mRefundDataBinding.agreementThirdPartyView.setOnAgreementClickListener(new DailyBookingAgreementThirdPartyView.OnAgreementClickListener()
         {
             @Override
-            public void run()
-            {
-                mRefundDataBinding.thirdPartyTermsLayout.setTag(mRefundDataBinding.thirdPartyTermsLayout.getHeight());
-                mRefundDataBinding.thirdPartyTermsLayout.setVisibility(View.GONE);
-            }
-        });
-
-        mRefundDataBinding.agreeThirdPartyTermsCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener()
-        {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
+            public void onAgreementClick(boolean isChecked)
             {
                 getEventListener().onAgreedTermClick(isChecked);
-            }
-        });
-
-        mRefundDataBinding.agreeThirdPartyTermsTextView.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                mRefundDataBinding.agreeThirdPartyTermsCheckBox.performClick();
             }
         });
     }
@@ -853,156 +816,6 @@ public class StayOutboundPaymentView extends BaseDialogView<StayOutboundPaymentV
             }
         }
     };
-
-    private void showOfferPersonalInformation(View arrowImageView, View view)
-    {
-        if (view == null || arrowImageView == null)
-        {
-            return;
-        }
-
-        if (mValueAnimator != null && mValueAnimator.isRunning() == true)
-        {
-            return;
-        }
-
-        Integer height = (Integer) view.getTag();
-
-        if (height == null)
-        {
-            return;
-        }
-
-        mValueAnimator = ValueAnimator.ofInt(0, height.intValue());
-        mValueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener()
-        {
-            @Override
-            public void onAnimationUpdate(ValueAnimator valueAnimator)
-            {
-                if (valueAnimator == null)
-                {
-                    return;
-                }
-
-                int val = (int) valueAnimator.getAnimatedValue();
-
-                ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
-                layoutParams.height = val;
-                view.requestLayout();
-
-                arrowImageView.setRotation(-180.0f * val / height);
-            }
-        });
-
-        mValueAnimator.setDuration(200);
-        mValueAnimator.addListener(new Animator.AnimatorListener()
-        {
-            @Override
-            public void onAnimationStart(Animator animation)
-            {
-                view.setVisibility(View.VISIBLE);
-            }
-
-            @Override
-            public void onAnimationEnd(Animator animation)
-            {
-                mValueAnimator.removeAllUpdateListeners();
-                mValueAnimator.removeAllListeners();
-                mValueAnimator = null;
-
-                arrowImageView.setRotation(-180);
-            }
-
-            @Override
-            public void onAnimationCancel(Animator animation)
-            {
-
-            }
-
-            @Override
-            public void onAnimationRepeat(Animator animation)
-            {
-
-            }
-        });
-
-        mValueAnimator.start();
-    }
-
-    private void hideOfferPersonalInformation(View arrowImageView, View view)
-    {
-        if (arrowImageView == null || view == null)
-        {
-            return;
-        }
-
-        if (mValueAnimator != null && mValueAnimator.isRunning() == true)
-        {
-            return;
-        }
-
-        Integer height = (Integer) view.getTag();
-
-        if (height == null)
-        {
-            return;
-        }
-
-        mValueAnimator = ValueAnimator.ofInt(height, 0);
-        mValueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener()
-        {
-            @Override
-            public void onAnimationUpdate(ValueAnimator valueAnimator)
-            {
-                if (valueAnimator == null)
-                {
-                    return;
-                }
-
-                int val = (int) valueAnimator.getAnimatedValue();
-                ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
-                layoutParams.height = val;
-                view.requestLayout();
-
-                arrowImageView.setRotation(-180.0f * val / height);
-            }
-        });
-
-        mValueAnimator.setDuration(200);
-        mValueAnimator.addListener(new Animator.AnimatorListener()
-        {
-            @Override
-            public void onAnimationStart(Animator animation)
-            {
-
-            }
-
-            @Override
-            public void onAnimationEnd(Animator animation)
-            {
-                mValueAnimator.removeAllUpdateListeners();
-                mValueAnimator.removeAllListeners();
-                mValueAnimator = null;
-
-                arrowImageView.setRotation(0);
-                view.setVisibility(View.GONE);
-            }
-
-            @Override
-            public void onAnimationCancel(Animator animation)
-            {
-
-            }
-
-            @Override
-            public void onAnimationRepeat(Animator animation)
-            {
-
-            }
-        });
-
-        mValueAnimator.start();
-    }
 
     private TextWatcher mLastNameTextWatcher = new TextWatcher()
     {
