@@ -63,12 +63,15 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
         viewDataBinding.recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener()
         {
             @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy)
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState)
             {
-                super.onScrolled(recyclerView, dx, dy);
+                super.onScrollStateChanged(recyclerView, newState);
 
-                View view = snapHelper.findSnapView(viewDataBinding.recyclerView.getLayoutManager());
-                getEventListener().onScrolled(viewDataBinding.recyclerView.getChildAdapterPosition(view), true);
+                if(newState == RecyclerView.SCROLL_STATE_IDLE)
+                {
+                    View view = snapHelper.findSnapView(viewDataBinding.recyclerView.getLayoutManager());
+                    getEventListener().onScrolled(viewDataBinding.recyclerView.getChildAdapterPosition(view), true);
+                }
             }
         });
 
