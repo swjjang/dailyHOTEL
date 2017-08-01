@@ -429,9 +429,10 @@ public class StayDetailActivity extends PlaceDetailActivity
     @Override
     protected void requestCommonDateTimeNSoldOutList(int placeIndex)
     {
-        int dayCount = mOverseas == false //
-            ? StayCalendarActivity.DEFAULT_DOMESTIC_CALENDAR_DAY_OF_MAX_COUNT //
-            : StayDetailCalendarActivity.DEFAULT_OVERSEAS_CALENDAR_DAY_OF_MAX_COUNT;
+//        int dayCount = mOverseas == false //
+//            ? StayCalendarActivity.DEFAULT_DOMESTIC_CALENDAR_DAY_OF_MAX_COUNT //
+//            : StayDetailCalendarActivity.DEFAULT_OVERSEAS_CALENDAR_DAY_OF_MAX_COUNT;
+        int dayCount = StayDetailCalendarActivity.DEFAULT_OVERSEAS_CALENDAR_DAY_OF_MAX_COUNT;
 
         addCompositeDisposable(Observable.zip(mCommonRemoteImpl.getCommonDateTime() //
             , mPlaceDetailCalendarImpl.getStayUnavailableCheckInDates(mPlaceDetail.index, dayCount, false) //

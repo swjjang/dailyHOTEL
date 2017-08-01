@@ -114,9 +114,18 @@ public abstract class PlaceCalendarPresenter<T1 extends BaseActivity, T2 extends
 
         int startDayValue = cloneCalendar.get(Calendar.DAY_OF_MONTH);
         int startDayOfWeek = cloneCalendar.get(Calendar.DAY_OF_WEEK);
+        int startMonthValue = cloneCalendar.get(Calendar.MONTH);
+        int startMaxDayOfMonth = cloneCalendar.getActualMaximum(Calendar.DAY_OF_MONTH);
 
         final int LENGTH_OF_WEEK = 7;
-        int length = maxDayOfMonth - startDayValue + startDayOfWeek;
+        int length = startMaxDayOfMonth - startDayValue + startDayOfWeek;
+
+        // 처음 진입시 startgap 으로 인하여 달력이 전달로 이동되었을때 처리를 위한 코드
+        if (startMonthValue < todayMonthValue)
+        {
+            length += maxDayOfMonth;
+        }
+
         if (length % LENGTH_OF_WEEK != 0)
         {
             length += (LENGTH_OF_WEEK - (length % LENGTH_OF_WEEK));
@@ -141,15 +150,15 @@ public abstract class PlaceCalendarPresenter<T1 extends BaseActivity, T2 extends
                 days[i].isHoliday = holidaySparseIntArray.get(Integer.parseInt(DailyCalendar.format(cloneCalendar.getTime(), "yyyyMMdd")), -1) != -1;
             }
 
-            days[i].isDefaultDimmed = isStart == true && (dayValue < todayValue || monthValue < todayMonthValue) //
-                || isLast == true && dayValue > endDayValue || monthValue > endMonthValue;
+            days[i].isDefaultDimmed = (isStart == true && (dayValue < todayValue || monthValue < todayMonthValue)) //
+                || (isLast == true && (dayValue > endDayValue || monthValue > endMonthValue));
 
             if (isStart == true && todayMonthValue == monthValue && dayValue == maxDayOfMonth)
             {
                 break;
             }
 
-            if (isLast == false && dayValue == maxDayOfMonth)
+            if (isLast == false && dayValue == maxDayOfMonth && todayMonthValue == monthValue)
             {
                 break;
             }
