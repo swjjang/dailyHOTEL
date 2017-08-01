@@ -118,6 +118,7 @@
             android:theme="@style/CheckBoxTheme"/>
 
         <com.daily.base.widget.DailyTextView
+            android:id="@+id/agreePersonalInformationTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
