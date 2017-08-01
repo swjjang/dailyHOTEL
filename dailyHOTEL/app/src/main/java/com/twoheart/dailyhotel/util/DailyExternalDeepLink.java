@@ -127,7 +127,7 @@ public class DailyExternalDeepLink extends DailyDeepLink
     private static final String PARAM_V16_STAY_SHORTCUT_LIST = "scl"; // 스테이 숏컷 리스트
 
     private static final int MINIMUM_VERSION_CODE = 2;
-    private static final int MAXIMUM_VERSION_CODE = 16;
+    private static final int MAXIMUM_VERSION_CODE = 18;
 
     private int mVersionCode;
 
