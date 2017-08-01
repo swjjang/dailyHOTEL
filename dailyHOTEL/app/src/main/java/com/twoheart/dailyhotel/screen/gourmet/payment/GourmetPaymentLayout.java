@@ -325,6 +325,8 @@ public class GourmetPaymentLayout extends BaseLayout implements View.OnClickList
         mVendorBusinessNameTextView = (TextView) view.findViewById(R.id.vendorNameTextView);
         mThirdPartTermsLayout = view.findViewById(R.id.thirdPartyTermsLayout);
         mAgreeThirdPartyCheckBox = (CheckBox) view.findViewById(R.id.agreePersonalInformationCheckBox);
+        View agreePersonalInformationTextView = (View) view.findViewById(R.id.agreePersonalInformationTextView);
+
         mArrowImageView.setOnClickListener(this);
 
         mThirdPartTermsLayout.post(new Runnable()
@@ -334,6 +336,15 @@ public class GourmetPaymentLayout extends BaseLayout implements View.OnClickList
             {
                 mThirdPartTermsLayout.setTag(mThirdPartTermsLayout.getHeight());
                 mThirdPartTermsLayout.setVisibility(View.GONE);
+            }
+        });
+
+        agreePersonalInformationTextView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                mAgreeThirdPartyCheckBox.performClick();
             }
         });
 

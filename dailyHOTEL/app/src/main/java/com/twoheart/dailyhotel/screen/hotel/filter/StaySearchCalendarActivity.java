@@ -77,7 +77,7 @@ public class StaySearchCalendarActivity extends StayCalendarActivity
     {
         Intent intent = new Intent();
         intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, placeBookingDay);
-        intent.putExtra(INTENT_EXTRA_DATA_SEARCH_TYPE, mSearchType.name());
+        intent.putExtra(INTENT_EXTRA_DATA_SEARCH_TYPE, mSearchType == null ? null : mSearchType.name());
         intent.putExtra(INTENT_EXTRA_DATA_SEARCH_INPUT_TEXT, mInputText);
         intent.putExtra(INTENT_EXTRA_DATA_SEARCH_KEYWORD, mSearchKeyword);
 

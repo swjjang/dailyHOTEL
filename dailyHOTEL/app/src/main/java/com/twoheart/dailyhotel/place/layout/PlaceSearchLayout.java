@@ -580,24 +580,17 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
                 }
             };
 
-            int childCount = viewGroup.getChildCount();
-            int size = keywordList.size();
+            viewGroup.removeAllViews();
 
-            int length = Math.max(childCount, size);
+            int size = keywordList.size();
             View view;
             Keyword keyword;
 
-            for (int i = 0; i < length; i++)
+            for (int i = 0; i < size; i++)
             {
-                if (i >= childCount)
-                {
-                    view = LayoutInflater.from(mContext).inflate(R.layout.list_row_search_autocomplete, viewGroup, false);
-                    view.setOnClickListener(onClickListener);
-                    viewGroup.addView(view);
-                } else
-                {
-                    view = viewGroup.getChildAt(i);
-                }
+                view = LayoutInflater.from(mContext).inflate(R.layout.list_row_search_autocomplete, viewGroup, false);
+                view.setOnClickListener(onClickListener);
+                viewGroup.addView(view);
 
                 View topLineView = view.findViewById(R.id.topLineView);
 
@@ -612,23 +605,13 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
                     }
                 }
 
-                if (i >= size)
-                {
-                    view.setVisibility(View.GONE);
-                    view.setTag(null);
-                } else
-                {
-                    view.setVisibility(View.VISIBLE);
+                keyword = keywordList.get(i);
+                view.setTag(keyword);
 
-                    keyword = keywordList.get(i);
+                TextView textView01 = (TextView) view.findViewById(R.id.textView01);
+                TextView textView02 = (TextView) view.findViewById(R.id.textView02);
 
-                    view.setTag(keyword);
-
-                    TextView textView01 = (TextView) view.findViewById(R.id.textView01);
-                    TextView textView02 = (TextView) view.findViewById(R.id.textView02);
-
-                    updateSuggestLayout(textView01, textView02, keyword, text);
-                }
+                updateSuggestLayout(textView01, textView02, keyword, text);
             }
 
             View lineView = new View(mContext);

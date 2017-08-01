@@ -367,6 +367,8 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
         mVendorBusinessNameTextView = (TextView) view.findViewById(R.id.vendorNameTextView);
         mThirdPartTermsLayout = view.findViewById(R.id.thirdPartyTermsLayout);
         mAgreeThirdPartyCheckBox = (CheckBox) view.findViewById(R.id.agreePersonalInformationCheckBox);
+        View agreePersonalInformationTextView = (View) view.findViewById(R.id.agreePersonalInformationTextView);
+
         mArrowImageView.setOnClickListener(this);
 
         mThirdPartTermsLayout.post(new Runnable()
@@ -376,6 +378,15 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
             {
                 mThirdPartTermsLayout.setTag(mThirdPartTermsLayout.getHeight());
                 mThirdPartTermsLayout.setVisibility(View.GONE);
+            }
+        });
+
+        agreePersonalInformationTextView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                mAgreeThirdPartyCheckBox.performClick();
             }
         });
     }
