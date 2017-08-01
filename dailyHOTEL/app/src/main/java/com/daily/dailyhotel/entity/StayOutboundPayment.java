@@ -25,13 +25,6 @@ public class StayOutboundPayment
 
     }
 
-    public enum PaymentType
-    {
-        EASY_CARD,
-        CARD,
-        PHONE_PAY,
-    }
-
     public List<String> getRefundPolicyList()
     {
         return mRefundPolicyList;

@@ -23,7 +23,6 @@ import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.daily.base.BaseActivity;
@@ -35,6 +34,7 @@ import com.daily.base.widget.DailyScrollView;
 import com.daily.dailyhotel.entity.Card;
 import com.daily.dailyhotel.entity.People;
 import com.daily.dailyhotel.entity.StayOutboundPayment;
+import com.daily.dailyhotel.view.DailyPaymentTypeView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ActivityStayOutboundPaymentDataBinding;
 import com.twoheart.dailyhotel.databinding.LayoutStayOutboundDetailInformationDataBinding;
@@ -72,11 +72,11 @@ public class StayOutboundPaymentView extends BaseDialogView<StayOutboundPaymentV
 
         void onBonusClick(boolean enabled);
 
-        void onCardManagerClick();
+        void onEasyCardManagerClick();
 
-        void onRegisterCardClick();
+        void onRegisterEasyCardClick();
 
-        void onPaymentTypeClick(StayOutboundPayment.PaymentType paymentType);
+        void onPaymentTypeClick(DailyPaymentTypeView.PaymentType paymentType);
 
         void onPaymentClick(String firstName, String lastName, String phone, String email);
 
@@ -221,14 +221,6 @@ public class StayOutboundPaymentView extends BaseDialogView<StayOutboundPaymentV
 
         mDiscountDataBinding.informationView.setTotalPaymentPrice(paymentPrice);
 
-        if (paymentPrice == 0)
-        {
-            setFreePaymentEnabled(true);
-        } else
-        {
-            setFreePaymentEnabled(false);
-        }
-
         if (taxPrice > 0)
         {
             mDiscountDataBinding.additionalTaxMemoTextView.setVisibility(View.VISIBLE);
@@ -249,22 +241,12 @@ public class StayOutboundPaymentView extends BaseDialogView<StayOutboundPaymentV
             return;
         }
 
-        if (card == null)
+        if(card == null)
         {
-            mPayDataBinding.cardManagerLayout.setVisibility(View.GONE);
-            mPayDataBinding.emptySimpleCardLayout.setVisibility(View.VISIBLE);
-            mPayDataBinding.selectedSimpleCardLayout.setVisibility(View.GONE);
-
-            mPayDataBinding.logoTextView.setText(null);
-            mPayDataBinding.numberTextView.setText(null);
+            mPayDataBinding.paymentTypeView.setEasyCard(null, null);
         } else
         {
-            mPayDataBinding.cardManagerLayout.setVisibility(View.VISIBLE);
-            mPayDataBinding.emptySimpleCardLayout.setVisibility(View.GONE);
-            mPayDataBinding.selectedSimpleCardLayout.setVisibility(View.VISIBLE);
-
-            mPayDataBinding.logoTextView.setText(card.name);
-            mPayDataBinding.numberTextView.setText(card.number);
+            mPayDataBinding.paymentTypeView.setEasyCard(card.name, card.number);
         }
     }
 
@@ -320,94 +302,44 @@ public class StayOutboundPaymentView extends BaseDialogView<StayOutboundPaymentV
     }
 
     @Override
-    public void setMemoPaymentType(String memo)
+    public void setGuidePaymentType(String text)
     {
         if (getViewDataBinding() == null || mPayDataBinding == null)
         {
             return;
         }
 
-        if (DailyTextUtils.isTextEmpty(memo) == true)
+        if (DailyTextUtils.isTextEmpty(text) == true)
         {
-            mPayDataBinding.guidePaymentMemoTextView.setVisibility(View.GONE);
+            mPayDataBinding.paymentTypeView.setGuidePaymentTypeVisible(false);
         } else
         {
-            mPayDataBinding.guidePaymentMemoTextView.setVisibility(View.VISIBLE);
-            mPayDataBinding.guidePaymentMemoTextView.setText(memo);
+            mPayDataBinding.paymentTypeView.setGuidePaymentTypeVisible(true);
+            mPayDataBinding.paymentTypeView.setGuidePaymentType(text);
         }
     }
 
 
     @Override
-    public void setPaymentTypeEnabled(StayOutboundPayment.PaymentType paymentType, boolean enabled)
+    public void setPaymentTypeEnabled(DailyPaymentTypeView.PaymentType paymentType, boolean enabled)
     {
         if (getViewDataBinding() == null || mPayDataBinding == null)
         {
             return;
         }
 
-        switch (paymentType)
-        {
-            case EASY_CARD:
-                setPaymentTypeEnabled(mPayDataBinding.disableSimpleCardView, enabled);
-                break;
-
-            case CARD:
-                setPaymentTypeEnabled(mPayDataBinding.disableCardView, enabled);
-                break;
-
-            case PHONE_PAY:
-                setPaymentTypeEnabled(mPayDataBinding.disablePhoneView, enabled);
-                break;
-        }
+        mPayDataBinding.paymentTypeView.setPaymentTypeEnable(paymentType, enabled);
     }
 
     @Override
-    public void setPaymentType(StayOutboundPayment.PaymentType paymentType)
+    public void setPaymentType(DailyPaymentTypeView.PaymentType paymentType)
     {
         if (getViewDataBinding() == null || mPayDataBinding == null)
         {
             return;
         }
 
-        if (paymentType == null)
-        {
-            ((View) mPayDataBinding.simpleCardLayout.getParent()).setSelected(false);
-            mPayDataBinding.simpleCardLayout.setSelected(false);
-            mPayDataBinding.cardLayout.setSelected(false);
-            mPayDataBinding.phoneLayout.setSelected(false);
-            return;
-        }
-
-        switch (paymentType)
-        {
-            case EASY_CARD:
-            {
-                ((View) mPayDataBinding.simpleCardLayout.getParent()).setSelected(true);
-                mPayDataBinding.simpleCardLayout.setSelected(true);
-                mPayDataBinding.cardLayout.setSelected(false);
-                mPayDataBinding.phoneLayout.setSelected(false);
-                break;
-            }
-
-            case CARD:
-            {
-                ((View) mPayDataBinding.simpleCardLayout.getParent()).setSelected(false);
-                mPayDataBinding.simpleCardLayout.setSelected(false);
-                mPayDataBinding.cardLayout.setSelected(true);
-                mPayDataBinding.phoneLayout.setSelected(false);
-                break;
-            }
-
-            case PHONE_PAY:
-            {
-                ((View) mPayDataBinding.simpleCardLayout.getParent()).setSelected(false);
-                mPayDataBinding.simpleCardLayout.setSelected(false);
-                mPayDataBinding.cardLayout.setSelected(false);
-                mPayDataBinding.phoneLayout.setSelected(true);
-                break;
-            }
-        }
+        mPayDataBinding.paymentTypeView.setPaymentType(paymentType);
     }
 
     @Override
@@ -481,7 +413,7 @@ public class StayOutboundPaymentView extends BaseDialogView<StayOutboundPaymentV
     }
 
     @Override
-    public void showAgreeTermDialog(StayOutboundPayment.PaymentType paymentType//
+    public void showAgreeTermDialog(DailyPaymentTypeView.PaymentType paymentType//
         , View.OnClickListener onClickListener, DialogInterface.OnCancelListener cancelListener)
     {
         hideSimpleDialog();
@@ -489,13 +421,12 @@ public class StayOutboundPaymentView extends BaseDialogView<StayOutboundPaymentV
         switch (paymentType)
         {
             case EASY_CARD:
-            {
                 showSimpleDialog(getEasyPaymentAgreeLayout(onClickListener), cancelListener, null, true);
                 break;
-            }
 
             case CARD:
-            case PHONE_PAY:
+            case PHONE:
+            case VBANK:
                 showSimpleDialog(getPaymentAgreeLayout(onClickListener), cancelListener, null, true);
                 break;
 
@@ -526,27 +457,6 @@ public class StayOutboundPaymentView extends BaseDialogView<StayOutboundPaymentV
                 }
                 break;
             }
-
-            case R.id.cardManagerLayout:
-                getEventListener().onCardManagerClick();
-                break;
-
-            case R.id.emptySimpleCardLayout:
-                getEventListener().onRegisterCardClick();
-                break;
-
-            case R.id.simpleCardLayout:
-            case R.id.selectedSimpleCardLayout:
-                getEventListener().onPaymentTypeClick(StayOutboundPayment.PaymentType.EASY_CARD);
-                break;
-
-            case R.id.cardLayout:
-                getEventListener().onPaymentTypeClick(StayOutboundPayment.PaymentType.CARD);
-                break;
-
-            case R.id.phoneLayout:
-                getEventListener().onPaymentTypeClick(StayOutboundPayment.PaymentType.PHONE_PAY);
-                break;
 
             case R.id.doPaymentView:
             {
@@ -659,23 +569,32 @@ public class StayOutboundPaymentView extends BaseDialogView<StayOutboundPaymentV
         mPayDataBinding = DataBindingUtil.inflate(LayoutInflater.from(context)//
             , R.layout.layout_stay_outbound_payment_pay_data, viewGroup, true);
 
-        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mPayDataBinding.simpleCreditCardLayout.getLayoutParams();
 
-        if (layoutParams == null)
+        mPayDataBinding.paymentTypeView.setPaymentTypeVisible(DailyPaymentTypeView.PaymentType.EASY_CARD, true);
+        mPayDataBinding.paymentTypeView.setPaymentTypeVisible(DailyPaymentTypeView.PaymentType.CARD, true);
+        mPayDataBinding.paymentTypeView.setPaymentTypeVisible(DailyPaymentTypeView.PaymentType.PHONE, true);
+        mPayDataBinding.paymentTypeView.setPaymentTypeVisible(DailyPaymentTypeView.PaymentType.VBANK, false);
+
+        mPayDataBinding.paymentTypeView.setOnPaymentTypeClickListener(new DailyPaymentTypeView.OnPaymentTypeClickListener()
         {
-            layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            layoutParams.setMargins(ScreenUtils.dpToPx(getContext(), 15), ScreenUtils.dpToPx(getContext(), 15), ScreenUtils.dpToPx(getContext(), 15), ScreenUtils.dpToPx(getContext(), 15));
-        }
+            @Override
+            public void onEasyCardManagerClick()
+            {
+                getEventListener().onEasyCardManagerClick();
+            }
 
-        layoutParams.height = (ScreenUtils.getScreenWidth(getContext()) - ScreenUtils.dpToPx(getContext(), 60)) * 9 / 16;
-        mPayDataBinding.simpleCreditCardLayout.setLayoutParams(layoutParams);
+            @Override
+            public void onRegisterEasyCardClick()
+            {
+                getEventListener().onRegisterEasyCardClick();
+            }
 
-        mPayDataBinding.cardManagerLayout.setOnClickListener(this);
-        mPayDataBinding.emptySimpleCardLayout.setOnClickListener(this);
-        mPayDataBinding.simpleCardLayout.setOnClickListener(this);
-        mPayDataBinding.selectedSimpleCardLayout.setOnClickListener(this);
-        mPayDataBinding.cardLayout.setOnClickListener(this);
-        mPayDataBinding.phoneLayout.setOnClickListener(this);
+            @Override
+            public void onPaymentTypeClick(DailyPaymentTypeView.PaymentType paymentType)
+            {
+                getEventListener().onPaymentTypeClick(paymentType);
+            }
+        });
     }
 
     private void setRefundLayout(Context context, ViewGroup viewGroup)
@@ -731,77 +650,6 @@ public class StayOutboundPaymentView extends BaseDialogView<StayOutboundPaymentV
 
         mDiscountDataBinding.informationView.setTotalBonus(bonus);
         mDiscountDataBinding.informationView.setUsedBonus(discountPrice);
-    }
-
-    private void setFreePaymentEnabled(boolean enabled)
-    {
-        if (enabled == true)
-        {
-            mPayDataBinding.freePaymentView.setVisibility(View.VISIBLE);
-            mPayDataBinding.paymentTypeInformationLayout.setVisibility(View.GONE);
-        } else
-        {
-            mPayDataBinding.freePaymentView.setVisibility(View.GONE);
-            mPayDataBinding.paymentTypeInformationLayout.setVisibility(View.VISIBLE);
-        }
-    }
-
-    public boolean isPaymentTypeEnabled(StayOutboundPayment.PaymentType paymentType)
-    {
-        if (getViewDataBinding() == null || mPayDataBinding == null)
-        {
-            return false;
-        }
-
-        switch (paymentType)
-        {
-            case EASY_CARD:
-                return mPayDataBinding.disableSimpleCardView.getVisibility() == View.VISIBLE;
-
-            case CARD:
-                return mPayDataBinding.disableCardView.getVisibility() == View.VISIBLE;
-
-            case PHONE_PAY:
-                return mPayDataBinding.disablePhoneView.getVisibility() == View.VISIBLE;
-        }
-
-        return false;
-    }
-
-    private void setPaymentTypeEnabled(final View view, boolean enabled)
-    {
-        if (view == null)
-        {
-            return;
-        }
-
-        if (enabled == true)
-        {
-            view.setOnClickListener(null);
-            view.setVisibility(View.GONE);
-        } else
-        {
-            view.setVisibility(View.VISIBLE);
-            view.post(new Runnable()
-            {
-                @Override
-                public void run()
-                {
-                    ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
-                    layoutParams.height = ((View) view.getParent()).getHeight();
-                    view.setLayoutParams(layoutParams);
-                }
-            });
-
-            view.setOnClickListener(new View.OnClickListener()
-            {
-                @Override
-                public void onClick(View v)
-                {
-
-                }
-            });
-        }
     }
 
     protected ViewGroup getEasyPaymentAgreeLayout(View.OnClickListener onClickListener)

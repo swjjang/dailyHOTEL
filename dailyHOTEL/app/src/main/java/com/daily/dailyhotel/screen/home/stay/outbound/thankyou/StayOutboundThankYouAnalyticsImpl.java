@@ -49,7 +49,7 @@ public class StayOutboundThankYouAnalyticsImpl implements StayOutboundThankYouPr
                     params.put(AnalyticsManager.KeyType.PAYMENT_TYPE, AnalyticsManager.Label.CARDPAY);
                     break;
 
-                case PHONE_PAY:
+                case PHONE:
                     params.put(AnalyticsManager.KeyType.PAYMENT_TYPE, AnalyticsManager.Label.PHONEBILLPAY);
                     break;
             }

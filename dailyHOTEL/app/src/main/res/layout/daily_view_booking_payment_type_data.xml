@@ -8,51 +8,55 @@
     <merge
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        tools:parentTag="LinearLayout">
+        tools:parentTag="android.support.constraint.ConstraintLayout">
 
         <com.daily.base.widget.DailyTextView
             android:id="@+id/freePaymentView"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="56dp"
-            android:layout_marginLeft="19dp"
-            android:layout_marginRight="15dp"
             android:drawablePadding="5dp"
             android:gravity="center_vertical"
             android:text="@string/message_payment_free_payment"
             android:textColor="@color/default_text_cb70038"
             android:textSize="13dp"
             android:visibility="gone"
-            app:drawableCompatLeft="@drawable/info_ic_text_dot_black"/>
+            app:drawableCompatLeft="@drawable/info_ic_text_dot_black"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
 
         <com.daily.base.widget.DailyTextView
             android:id="@+id/paymentGuideView"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
             android:drawablePadding="6dp"
             android:gravity="center_vertical"
             android:minHeight="36dp"
-            android:paddingBottom="10dp"
-            android:paddingTop="10dp"
+            android:paddingBottom="15dp"
+            android:paddingTop="15dp"
             android:text="@string/message_dont_support_payment_type"
             android:textColor="@color/default_text_c929292"
             android:textSize="11dp"
             android:visibility="gone"
-            app:drawableCompatLeft="@drawable/ic_payment_notice"/>
+            app:drawableCompatLeft="@drawable/ic_payment_notice"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
 
         <LinearLayout
             android:id="@+id/paymentTypeInformationLayout"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="15dp"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
             android:background="@drawable/shape_rect_ce8e8e9"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:visibility="visible"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/paymentGuideView"
+            app:layout_goneMarginTop="15dp">
 
-            <RelativeLayout
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/simpleCardLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="1dp"
@@ -60,52 +64,60 @@
                 android:layout_marginTop="1dp"
                 android:background="@drawable/selector_select_paymnettype_top_background">
 
-                <RelativeLayout
-                    android:id="@+id/simpleCardLayout"
-                    android:layout_width="match_parent"
+                <android.support.constraint.ConstraintLayout
+                    android:id="@+id/simpleCardHeaderLayout"
+                    android:layout_width="0dp"
                     android:layout_height="55dp"
-                    android:layout_toLeftOf="@+id/cardManagerLayout">
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
 
                     <ImageView
                         android:id="@+id/simpleCardImageView"
-                        android:layout_width="41dp"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:duplicateParentState="true"
-                        app:srcCompat="@drawable/payment_ic_01_add_card"/>
-
-                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_marginLeft="41dp"
+                        android:layout_marginLeft="5dp"
                         android:duplicateParentState="true"
-                        android:orientation="vertical">
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@drawable/payment_ic_01_add_card"/>
 
-                        <com.daily.base.widget.DailyTextView
-                            android:id="@+id/simpleCardTextView"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:duplicateParentState="true"
-                            android:text="@string/label_booking_easypayment"
-                            android:textColor="@drawable/selector_text_color_c323232_cb70038"
-                            android:textSize="13dp"/>
+                    <com.daily.base.widget.DailyTextView
+                        android:id="@+id/simpleCardTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:duplicateParentState="true"
+                        android:text="@string/label_booking_easypayment"
+                        android:textColor="@drawable/selector_text_color_c323232_cb70038"
+                        android:textSize="13dp"
+                        app:layout_constraintBottom_toTopOf="@+id/simpleCardGuideTextView"
+                        app:layout_constraintLeft_toRightOf="@+id/simpleCardImageView"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintVertical_chainStyle="packed"/>
 
-                        <com.daily.base.widget.DailyTextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/label_booking_simplecard_description"
-                            android:textColor="@color/default_text_c929292"
-                            android:textSize="11dp"/>
-                    </LinearLayout>
-                </RelativeLayout>
+                    <com.daily.base.widget.DailyTextView
+                        android:id="@+id/simpleCardGuideTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:text="@string/label_booking_simplecard_description"
+                        android:textColor="@color/default_text_c929292"
+                        android:textSize="11dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintLeft_toRightOf="@+id/simpleCardImageView"
+                        app:layout_constraintTop_toBottomOf="@+id/simpleCardTextView"
+                        app:layout_constraintVertical_chainStyle="packed"/>
+                </android.support.constraint.ConstraintLayout>
 
                 <FrameLayout
                     android:id="@+id/cardManagerLayout"
                     android:layout_width="wrap_content"
                     android:layout_height="55dp"
-                    android:layout_alignParentRight="true"
-                    android:paddingRight="15dp">
+                    android:paddingRight="15dp"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
 
                     <com.daily.base.widget.DailyTextView
                         android:id="@+id/cardManagerTextView"
@@ -122,22 +134,26 @@
                 </FrameLayout>
 
                 <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1px"
-                    android:layout_below="@+id/simpleCardLayout"
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="10dp"
-                    android:background="@color/default_line_ce8e8e9"/>
+                    android:background="@color/default_line_ce8e8e9"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/simpleCardHeaderLayout"/>
 
-                <RelativeLayout
+                <FrameLayout
                     android:id="@+id/simpleCreditCardLayout"
-                    android:layout_width="match_parent"
-                    android:layout_height="188dp"
-                    android:layout_below="@+id/simpleCardLayout"
-                    android:layout_centerInParent="true"
-                    android:layout_margin="15dp">
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:padding="15dp"
+                    app:layout_constraintDimensionRatio="H,16:9"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/simpleCardHeaderLayout">
 
-                    <RelativeLayout
+                    <FrameLayout
                         android:id="@+id/emptySimpleCardLayout"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
@@ -147,16 +163,16 @@
                         <com.daily.base.widget.DailyTextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_centerInParent="true"
+                            android:layout_gravity="center"
                             android:drawablePadding="12dp"
                             android:gravity="center"
                             android:text="@string/label_creditcard_introduce"
                             android:textColor="@color/default_text_c666666"
                             android:textSize="13dp"
                             app:drawableCompatTop="@drawable/card_add_ic"/>
-                    </RelativeLayout>
+                    </FrameLayout>
 
-                    <RelativeLayout
+                    <android.support.constraint.ConstraintLayout
                         android:id="@+id/selectedSimpleCardLayout"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
@@ -172,53 +188,60 @@
                             android:drawablePadding="6dp"
                             android:textColor="@color/default_text_c323232"
                             android:textSize="19dp"
+                            app:layout_constraintLeft_toLeftOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
                             dailyFont:style="Medium"/>
 
                         <ImageView
                             android:id="@+id/imageView1"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_alignParentBottom="true"
-                            android:layout_alignParentRight="true"
                             android:layout_marginBottom="20dp"
                             android:layout_marginRight="20dp"
-                            android:src="@drawable/card_daily"/>
+                            android:src="@drawable/card_daily"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintRight_toRightOf="parent"/>
 
                         <ImageView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_below="@id/logoTextView"
                             android:layout_marginLeft="16dp"
                             android:layout_marginTop="18dp"
+                            app:layout_constraintLeft_toLeftOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/logoTextView"
                             app:srcCompat="@drawable/card_chip"/>
 
                         <com.daily.base.widget.DailyTextView
                             android:id="@+id/numberTextView"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_above="@id/imageView1"
-                            android:layout_alignParentRight="true"
                             android:layout_marginBottom="8dp"
                             android:layout_marginRight="20dp"
                             android:textColor="@color/creditcard_number_text"
-                            android:textSize="16dp"/>
-                    </RelativeLayout>
-                </RelativeLayout>
+                            android:textSize="16dp"
+                            app:layout_constraintBottom_toTopOf="@+id/imageView1"
+                            app:layout_constraintRight_toRightOf="parent"/>
+                    </android.support.constraint.ConstraintLayout>
+                </FrameLayout>
 
                 <View
                     android:id="@+id/disableSimpleCardView"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
                     android:background="@color/default_background_disable_cccffffff"
-                    android:visibility="gone"/>
-            </RelativeLayout>
+                    android:visibility="gone"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"/>
+            </android.support.constraint.ConstraintLayout>
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1px"
                 android:background="@color/default_line_cdcdcdd"/>
 
-            <RelativeLayout
+            <android.support.constraint.ConstraintLayout
                 android:id="@+id/cardLayout"
                 android:layout_width="match_parent"
                 android:layout_height="55dp"
@@ -227,51 +250,62 @@
                 android:background="@drawable/selector_select_paymnettype_background">
 
                 <ImageView
-                    android:layout_width="41dp"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:duplicateParentState="true"
-                    app:srcCompat="@drawable/payment_ic_02_basic_card"/>
-
-                <LinearLayout
+                    android:id="@+id/cardImageView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="41dp"
+                    android:layout_marginLeft="5dp"
                     android:duplicateParentState="true"
-                    android:orientation="vertical">
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/payment_ic_02_basic_card"/>
 
-                    <com.daily.base.widget.DailyTextView
-                        android:id="@+id/cardTextView"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:duplicateParentState="true"
-                        android:text="@string/act_booking_pay_card"
-                        android:textColor="@drawable/selector_text_color_c323232_cb70038"
-                        android:textSize="13dp"/>
+                <com.daily.base.widget.DailyTextView
+                    android:id="@+id/cardTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:duplicateParentState="true"
+                    android:text="@string/act_booking_pay_card"
+                    android:textColor="@drawable/selector_text_color_c323232_cb70038"
+                    android:textSize="13dp"
+                    app:layout_constraintBottom_toTopOf="@+id/cardGuideTextView"
+                    app:layout_constraintLeft_toRightOf="@+id/cardImageView"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_chainStyle="packed"/>
 
-                    <com.daily.base.widget.DailyTextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/label_booking_card_description"
-                        android:textColor="@color/default_text_c929292"
-                        android:textSize="11dp"/>
-                </LinearLayout>
+                <com.daily.base.widget.DailyTextView
+                    android:id="@+id/cardGuideTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:text="@string/label_booking_card_description"
+                    android:textColor="@color/default_text_c929292"
+                    android:textSize="11dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toRightOf="@+id/cardImageView"
+                    app:layout_constraintTop_toBottomOf="@+id/cardTextView"
+                    app:layout_constraintVertical_chainStyle="packed"/>
 
                 <View
                     android:id="@+id/disableCardView"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
                     android:background="@color/default_background_disable_cccffffff"
-                    android:visibility="gone"/>
-            </RelativeLayout>
+                    android:visibility="gone"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"/>
+            </android.support.constraint.ConstraintLayout>
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1px"
                 android:background="@color/default_line_cdcdcdd"/>
 
-            <RelativeLayout
+            <android.support.constraint.ConstraintLayout
                 android:id="@+id/phoneLayout"
                 android:layout_width="match_parent"
                 android:layout_height="55dp"
@@ -280,51 +314,62 @@
                 android:background="@drawable/selector_select_paymnettype_background">
 
                 <ImageView
-                    android:layout_width="41dp"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:duplicateParentState="true"
-                    app:srcCompat="@drawable/payment_ic_03_phone"/>
-
-                <LinearLayout
+                    android:id="@+id/phoneImageView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="41dp"
+                    android:layout_marginLeft="5dp"
                     android:duplicateParentState="true"
-                    android:orientation="vertical">
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/payment_ic_03_phone"/>
 
-                    <com.daily.base.widget.DailyTextView
-                        android:id="@+id/phoneTextView"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:duplicateParentState="true"
-                        android:text="@string/act_booking_pay_mobile"
-                        android:textColor="@drawable/selector_text_color_c323232_cb70038"
-                        android:textSize="13dp"/>
+                <com.daily.base.widget.DailyTextView
+                    android:id="@+id/phoneTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:duplicateParentState="true"
+                    android:text="@string/act_booking_pay_mobile"
+                    android:textColor="@drawable/selector_text_color_c323232_cb70038"
+                    android:textSize="13dp"
+                    app:layout_constraintBottom_toTopOf="@+id/phoneGuideTextView"
+                    app:layout_constraintLeft_toRightOf="@+id/phoneImageView"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_chainStyle="packed"/>
 
-                    <com.daily.base.widget.DailyTextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/label_booking_phonepay_description"
-                        android:textColor="@color/default_text_c929292"
-                        android:textSize="11dp"/>
-                </LinearLayout>
+                <com.daily.base.widget.DailyTextView
+                    android:id="@+id/phoneGuideTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:text="@string/label_booking_phonepay_description"
+                    android:textColor="@color/default_text_c929292"
+                    android:textSize="11dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toRightOf="@+id/phoneImageView"
+                    app:layout_constraintTop_toBottomOf="@+id/phoneTextView"
+                    app:layout_constraintVertical_chainStyle="packed"/>
 
                 <View
                     android:id="@+id/disablePhoneView"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
                     android:background="@color/default_background_disable_cccffffff"
-                    android:visibility="gone"/>
-            </RelativeLayout>
+                    android:visibility="gone"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"/>
+            </android.support.constraint.ConstraintLayout>
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1px"
                 android:background="@color/default_line_cdcdcdd"/>
 
-            <RelativeLayout
+            <android.support.constraint.ConstraintLayout
                 android:id="@+id/transferLayout"
                 android:layout_width="match_parent"
                 android:layout_height="55dp"
@@ -334,44 +379,55 @@
                 android:background="@drawable/selector_select_paymnettype_bottom_background">
 
                 <ImageView
-                    android:layout_width="41dp"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:duplicateParentState="true"
-                    app:srcCompat="@drawable/payment_ic_04_transfer"/>
-
-                <LinearLayout
+                    android:id="@+id/transferImageView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="41dp"
+                    android:layout_marginLeft="5dp"
                     android:duplicateParentState="true"
-                    android:orientation="vertical">
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/payment_ic_04_transfer"/>
 
-                    <com.daily.base.widget.DailyTextView
-                        android:id="@+id/transferTextView"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:duplicateParentState="true"
-                        android:text="@string/act_booking_pay_account"
-                        android:textColor="@drawable/selector_text_color_c323232_cb70038"
-                        android:textSize="13dp"/>
+                <com.daily.base.widget.DailyTextView
+                    android:id="@+id/transferTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:duplicateParentState="true"
+                    android:text="@string/act_booking_pay_account"
+                    android:textColor="@drawable/selector_text_color_c323232_cb70038"
+                    android:textSize="13dp"
+                    app:layout_constraintBottom_toTopOf="@+id/transferGuideTextView"
+                    app:layout_constraintLeft_toRightOf="@+id/transferImageView"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_chainStyle="packed"/>
 
-                    <com.daily.base.widget.DailyTextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/label_booking_virtualpay_description"
-                        android:textColor="@color/default_text_c929292"
-                        android:textSize="11dp"/>
-                </LinearLayout>
+                <com.daily.base.widget.DailyTextView
+                    android:id="@+id/transferGuideTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:text="@string/label_booking_virtualpay_description"
+                    android:textColor="@color/default_text_c929292"
+                    android:textSize="11dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toRightOf="@+id/transferImageView"
+                    app:layout_constraintTop_toBottomOf="@+id/transferTextView"
+                    app:layout_constraintVertical_chainStyle="packed"/>
 
                 <View
                     android:id="@+id/disableTransferView"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
                     android:background="@color/default_background_disable_cccffffff"
-                    android:visibility="gone"/>
-            </RelativeLayout>
+                    android:visibility="gone"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"/>
+            </android.support.constraint.ConstraintLayout>
         </LinearLayout>
     </merge>
 </layout>
