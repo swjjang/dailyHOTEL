@@ -178,7 +178,10 @@ public abstract class PlaceSearchResultActivity extends BaseActivity
 
     protected void finish(int resultCode)
     {
-        if (mPlaceSearchResultLayout != null && mPlaceSearchResultLayout.isEmptyLayout() == false)
+        Keyword keyword = getKeyword();
+
+        if (mPlaceSearchResultLayout != null && mPlaceSearchResultLayout.isEmptyLayout() == false//
+            && keyword != null)
         {
             Intent intent = new Intent();
             intent.putExtra(INTENT_EXTRA_DATA_KEYWORD, getKeyword());

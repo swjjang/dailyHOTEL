@@ -32,14 +32,14 @@ public class StayOutboundBookingDetailAnalyticsImpl implements StayOutboundBooki
                 break;
 
             case Booking.BOOKING_STATE_BEFORE_USE:
-                if(refundType == null)
+                if (refundType == null)
                 {
                     AnalyticsManager.getInstance(activity).recordScreen(activity//
                         , AnalyticsManager.Screen.BOOKINGDETAIL_MYBOOKINGINFO, null, params);
                     return;
                 }
 
-                switch(refundType)
+                switch (refundType)
                 {
                     case FULL:
                         AnalyticsManager.getInstance(activity).recordScreen(activity//

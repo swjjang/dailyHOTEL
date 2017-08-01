@@ -102,6 +102,8 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
         return mDayOfMaxCount < 0 ? 0 : mDayOfMaxCount;
     }
 
+    protected abstract void setResult(int resultCode, PlaceBookingDay placeBookingDay);
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -173,23 +175,13 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
         mDayViewList = new ArrayList<>();
     }
 
-    protected ArrayList<Pair<String, Day[]>> makeCalendarList(TodayDateTime todayDateTime, int dayCountOfMax)
+    protected ArrayList<Pair<String, Day[]>> makeCalendarList(Calendar startCalendar, Calendar endCalendar)
     {
         ArrayList<Pair<String, Day[]>> arrayList = new ArrayList<>();
-
-        Date todayDate;
-
-        try
+        if (startCalendar == null || endCalendar == null)
         {
-            todayDate = DailyCalendar.convertStringToDate(todayDateTime.dailyDateTime);
-        } catch (Exception e)
-        {
-            ExLog.e(e.toString());
-            return null;
+            return arrayList;
         }
-
-        Calendar todayCalendar = DailyCalendar.getInstance();
-        todayCalendar.setTime(todayDate);
 
         ArrayList<Integer> holidayList = new ArrayList<>();
         if (mHolidayList != null && mHolidayList.size() > 0)
@@ -200,25 +192,27 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
         ArrayList<Integer> soldOutDayList = new ArrayList<>();
         if (mSoldOutDayList != null && mSoldOutDayList.size() > 0)
         {
-            soldOutDayList.addAll(mSoldOutDayList);
+            //            soldOutDayList.addAll(mSoldOutDayList);
+
+            int endDateValue = Integer.parseInt(DailyCalendar.format(endCalendar.getTime(), "yyyyMMdd"));
+            for (int soldOutDayValue : mSoldOutDayList)
+            {
+                if (soldOutDayValue <= endDateValue)
+                {
+                    soldOutDayList.add(soldOutDayValue);
+                }
+            }
         }
 
-        int maxMonth = getMonthInterval(todayCalendar, dayCountOfMax);
+        Calendar todayCalendar = (Calendar) startCalendar.clone();
 
-        // 초기 설정 - for 문을 돌면서 카운트 감소 됨
-        int dayCount = dayCountOfMax;
+        int maxMonth = getMonthInterval(startCalendar, endCalendar);
 
         for (int i = 0; i <= maxMonth; i++)
         {
             String titleMonth = DailyCalendar.format(todayCalendar.getTime(), "yyyy.MM");
 
-            Pair<Integer, Day[]> daysPair = getMonthCalendar(todayCalendar, dayCount, dayCountOfMax, holidayList, soldOutDayList);
-            Day[] days = null;
-            if (daysPair != null)
-            {
-                dayCount = daysPair.first;
-                days = daysPair.second;
-            }
+            Day[] days = getMonthCalendar(todayCalendar, startCalendar, endCalendar, holidayList, soldOutDayList);
 
             arrayList.add(new Pair(titleMonth, days));
 
@@ -229,7 +223,7 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
         return arrayList;
     }
 
-    private Pair<Integer, Day[]> getMonthCalendar(Calendar calendar, int dayCount, final int dayCountOfMax, ArrayList<Integer> holidayList, ArrayList<Integer> soldOutDayList)
+    private Day[] getMonthCalendar(Calendar calendar, Calendar startCalendar, Calendar endCalendar, ArrayList<Integer> holidayList, ArrayList<Integer> soldOutDayList)
     {
         int todayDayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
         int maxDayOfMonth = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
@@ -239,25 +233,23 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
         boolean isStart = false;
         boolean isLast = false;
 
-        // 남은 값과 최대 값이 같으면 시작 달력
-        if (dayCount == dayCountOfMax)
-        {
-            isStart = true;
-        }
-
-        // 남은 값이 이달의 최대 값과 같거나 작으면 마지막 달력
-        if (todayValue + dayCount + 1 <= maxDayOfMonth)
-        {
-            isLast = true;
-        }
-
-        maxDayOfMonth = isLast == false ? maxDayOfMonth : todayValue + dayCount + 1;
+        int endDayValue = endCalendar.get(Calendar.DAY_OF_MONTH);
+        int endMonthValue = endCalendar.get(Calendar.MONTH);
 
         int startGap = 0;
 
-        if (isStart == true)
+        if (calendar.get(Calendar.MONTH) == startCalendar.get(Calendar.MONTH))
         {
+            isStart = true;
+
             startGap = Calendar.SUNDAY - todayDayOfWeek;
+        }
+
+        if (calendar.get(Calendar.MONTH) == endCalendar.get(Calendar.MONTH))
+        {
+            isLast = true;
+
+            maxDayOfMonth = endDayValue;
         }
 
         Calendar cloneCalendar = (Calendar) calendar.clone();
@@ -268,11 +260,18 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
 
         int startDayValue = cloneCalendar.get(Calendar.DAY_OF_MONTH);
         int startDayOfWeek = cloneCalendar.get(Calendar.DAY_OF_WEEK);
-
-        int endCount = dayCount - maxDayOfMonth + todayValue;
+        int startMonthValue = cloneCalendar.get(Calendar.MONTH);
+        int startMaxDayOfMonth = cloneCalendar.getActualMaximum(Calendar.DAY_OF_MONTH);
 
         final int LENGTH_OF_WEEK = 7;
-        int length = maxDayOfMonth - startDayValue + startDayOfWeek;
+        int length = startMaxDayOfMonth - startDayValue + startDayOfWeek;
+
+        // 처음 진입시 startgap 으로 인하여 달력이 전달로 이동되었을때 처리를 위한 코드
+        if (startMonthValue < todayMonthValue)
+        {
+            length += maxDayOfMonth;
+        }
+
         if (length % LENGTH_OF_WEEK != 0)
         {
             length += (LENGTH_OF_WEEK - (length % LENGTH_OF_WEEK));
@@ -291,28 +290,46 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
             days[i].dayOfWeek = cloneCalendar.get(Calendar.DAY_OF_WEEK);
             days[i].isHoliday = isHoliday(cloneCalendar, holidayList);
             days[i].isSoldOut = isSoldOutDay(cloneCalendar, soldOutDayList);
-            days[i].isDefaultDimmed = isStart == true && (dayValue < todayValue || monthValue < todayMonthValue) //
-                || isLast == true && dayCount < 0;
+            days[i].isDefaultDimmed = (isStart == true && (dayValue < todayValue || monthValue < todayMonthValue)) //
+                || (isLast == true && (dayValue > endDayValue || monthValue > endMonthValue));
 
-            if (isLast == false && dayCount <= endCount)
+            if (isStart == true && todayMonthValue == monthValue && dayValue == maxDayOfMonth)
             {
                 break;
             }
 
-            if (days[i].isDefaultDimmed == false)
+            if (isLast == false && dayValue == maxDayOfMonth && todayMonthValue == monthValue)
             {
-                dayCount--;
+                break;
             }
 
             cloneCalendar.add(Calendar.DAY_OF_MONTH, 1);
         }
 
-        return new Pair(dayCount, days);
+        return days;
     }
 
-    protected void makeCalendar(TodayDateTime mTodayDateTime, int dayCountOfMax)
+    protected void makeCalendar(TodayDateTime todayDateTime, int dayCountOfMax)
     {
-        ArrayList<Pair<String, Day[]>> calendarList = makeCalendarList(mTodayDateTime, dayCountOfMax);
+        Date todayDate;
+
+        try
+        {
+            todayDate = DailyCalendar.convertStringToDate(todayDateTime.dailyDateTime);
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+            return;
+        }
+
+        Calendar startCalendar = DailyCalendar.getInstance();
+        startCalendar.setTime(todayDate);
+
+        Calendar endCalendar = (Calendar) startCalendar.clone();
+        // 마지막 날짜는 start day 를 1로 잡음으로 하루를 빼고 계산 해야 함
+        endCalendar.add(Calendar.DAY_OF_MONTH, dayCountOfMax - 1);
+
+        ArrayList<Pair<String, Day[]>> calendarList = makeCalendarList(startCalendar, endCalendar);
 
         if (calendarList == null)
         {
@@ -334,14 +351,13 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
 
             View monthCalendarLayout = getMonthCalendarView(this, pair);
 
-            if (i >= 0 && i < size)
+            if (i < size - 1)
             {
                 monthCalendarLayout.setPadding(monthCalendarLayout.getPaddingLeft(), monthCalendarLayout.getPaddingTop()//
                     , monthCalendarLayout.getPaddingRight(), monthCalendarLayout.getPaddingBottom() + ScreenUtils.dpToPx(this, 30));
             }
 
             mCalendarsLayout.addView(monthCalendarLayout);
-
         }
     }
 
@@ -606,20 +622,17 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
         }
     }
 
-    private int getMonthInterval(final Calendar calendar, int interval)
+    private int getMonthInterval(final Calendar startCalendar, final Calendar endCalendar)
     {
-        Calendar lastMonthCalendar = (Calendar) calendar.clone();
-        lastMonthCalendar.add(Calendar.DAY_OF_MONTH, interval - 1);
+        int startMonth = startCalendar.get(Calendar.MONTH);
+        int endMonth = endCalendar.get(Calendar.MONTH);
 
-        int lastMonth = lastMonthCalendar.get(Calendar.MONTH);
-        int currentMonth = calendar.get(Calendar.MONTH);
-
-        if (currentMonth > lastMonth)
+        if (startMonth > endMonth)
         {
-            return 12 - currentMonth + lastMonth;
+            return 12 - startMonth + endMonth;
         } else
         {
-            return lastMonth - currentMonth;
+            return endMonth - startMonth;
         }
     }
 
@@ -643,11 +656,11 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
         }
     }
 
-    protected void smoothScrollCheckInDayPosition(View checkInDayView)
+    protected void smoothScrollStartDayPosition(View startDayView)
     {
         ScrollView scrollView = (ScrollView) findViewById(R.id.calendarScrollLayout);
 
-        if (checkInDayView == null)
+        if (startDayView == null)
         {
             if (mDayViewList == null || mDayViewList.size() == 0)
             {
@@ -658,19 +671,19 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
             {
                 if (dayView.isSelected() == true)
                 {
-                    checkInDayView = dayView;
+                    startDayView = dayView;
                     break;
                 }
             }
 
-            if (checkInDayView == null)
+            if (startDayView == null)
             {
                 return;
             }
 
         }
 
-        final View selectView = checkInDayView;
+        final View selectView = startDayView;
 
         scrollView.postDelayed(new Runnable()
         {

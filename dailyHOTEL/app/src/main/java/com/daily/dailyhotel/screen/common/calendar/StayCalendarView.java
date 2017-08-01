@@ -78,6 +78,12 @@ public class StayCalendarView extends PlaceCalendarView<StayCalendarView.OnEvent
     }
 
     @Override
+    public void smoothScrollStartDayPosition(View startDayView)
+    {
+        super.smoothScrollStartDayPosition(startDayView);
+    }
+
+    @Override
     public Observable<Boolean> showAnimation()
     {
         return super.showAnimation();
@@ -206,7 +212,8 @@ public class StayCalendarView extends PlaceCalendarView<StayCalendarView.OnEvent
 
     }
 
-    private View searchDayView(String dateTime)
+    @Override
+    public View searchDayView(String dateTime)
     {
         if (mDaysViewList == null || mDaysViewList.size() == 0 || DailyTextUtils.isTextEmpty(dateTime) == true)
         {

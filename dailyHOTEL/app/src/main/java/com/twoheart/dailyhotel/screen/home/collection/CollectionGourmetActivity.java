@@ -4,11 +4,13 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
+import android.os.Bundle;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.SharedElementCallback;
 import android.util.SparseArray;
 import android.view.View;
 
+import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
 import com.daily.dailyhotel.repository.local.model.AnalyticsParam;
@@ -28,6 +30,7 @@ import com.twoheart.dailyhotel.place.layout.PlaceDetailLayout;
 import com.twoheart.dailyhotel.screen.gourmet.detail.GourmetDetailActivity;
 import com.twoheart.dailyhotel.screen.gourmet.filter.GourmetCalendarActivity;
 import com.twoheart.dailyhotel.screen.gourmet.preview.GourmetPreviewActivity;
+import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import java.util.ArrayList;
@@ -38,12 +41,46 @@ import retrofit2.Response;
 
 public class CollectionGourmetActivity extends CollectionBaseActivity
 {
-    public static Intent newInstance(Context context, int index, boolean isUsedMultiTransition)
+    protected static final String INTENT_EXTRA_DATA_TYPE = "type";
+    protected static final String INTENT_EXTRA_DATA_INDEX = "index";
+    protected static final String INTENT_EXTRA_DATA_IMAGE_URL = "imageUrl";
+    protected static final String INTENT_EXTRA_DATA_TITLE = "title";
+    protected static final String INTENT_EXTRA_DATA_SUBTITLE = "subTitle";
+    protected static final String INTENT_EXTRA_DATA_VISIT_DATE = "visitDate";
+    protected static final String INTENT_EXTRA_DATA_AFTER_DAY = "afterDay";
+
+    private static final int TYPE_DEFAULT = 0;
+    private static final int TYPE_DATE = 1;
+    private static final int TYPE_AFTER_DAY = 2;
+
+    private GourmetBookingDay mStartGourmetBookingDay;
+    private int mType;
+    private int mAfterDay;
+
+    /**
+     * @param context
+     * @param index
+     * @param visitDateTime ISO-8601
+     * @return
+     */
+    public static Intent newInstance(Context context, int index, String visitDateTime)
     {
         Intent intent = new Intent(context, CollectionGourmetActivity.class);
 
+        intent.putExtra(INTENT_EXTRA_DATA_TYPE, TYPE_DATE);
         intent.putExtra(INTENT_EXTRA_DATA_INDEX, index);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_USED_MULTITRANSITIOIN, isUsedMultiTransition);
+        intent.putExtra(INTENT_EXTRA_DATA_VISIT_DATE, visitDateTime);
+
+        return intent;
+    }
+
+    public static Intent newInstance(Context context, int index, int afterDay)
+    {
+        Intent intent = new Intent(context, CollectionGourmetActivity.class);
+
+        intent.putExtra(INTENT_EXTRA_DATA_TYPE, TYPE_AFTER_DAY);
+        intent.putExtra(INTENT_EXTRA_DATA_INDEX, index);
+        intent.putExtra(INTENT_EXTRA_DATA_AFTER_DAY, afterDay);
 
         return intent;
     }
@@ -52,6 +89,7 @@ public class CollectionGourmetActivity extends CollectionBaseActivity
     {
         Intent intent = new Intent(context, CollectionGourmetActivity.class);
 
+        intent.putExtra(INTENT_EXTRA_DATA_TYPE, TYPE_DEFAULT);
         intent.putExtra(INTENT_EXTRA_DATA_INDEX, index);
         intent.putExtra(INTENT_EXTRA_DATA_IMAGE_URL, imageUrl);
         intent.putExtra(INTENT_EXTRA_DATA_TITLE, title);
@@ -59,6 +97,92 @@ public class CollectionGourmetActivity extends CollectionBaseActivity
         intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_USED_MULTITRANSITIOIN, isUsedMultiTransition);
 
         return intent;
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
+
+        Intent intent = getIntent();
+
+        if (intent == null)
+        {
+            finish();
+            return;
+        }
+
+        mRecommendationIndex = intent.getIntExtra(INTENT_EXTRA_DATA_INDEX, -1);
+        mIsUsedMultiTransition = intent.getBooleanExtra(NAME_INTENT_EXTRA_DATA_IS_USED_MULTITRANSITIOIN, false);
+
+        if (mRecommendationIndex <= 0)
+        {
+            finish();
+            return;
+        }
+
+        mType = intent.getIntExtra(INTENT_EXTRA_DATA_TYPE, TYPE_DEFAULT);
+
+        String title = null;
+        String subTitle = null;
+        String imageUrl = null;
+
+        switch (mType)
+        {
+            case TYPE_DEFAULT:
+            {
+                title = intent.getStringExtra(INTENT_EXTRA_DATA_TITLE);
+                subTitle = intent.getStringExtra(INTENT_EXTRA_DATA_SUBTITLE);
+                imageUrl = intent.getStringExtra(INTENT_EXTRA_DATA_IMAGE_URL);
+                break;
+            }
+
+            case TYPE_DATE:
+            {
+                String visitDateTime = intent.getStringExtra(INTENT_EXTRA_DATA_VISIT_DATE);
+
+                if (DailyTextUtils.isTextEmpty(visitDateTime) == false)
+                {
+                    try
+                    {
+                        mStartGourmetBookingDay = new GourmetBookingDay();
+                        mStartGourmetBookingDay.setVisitDay(visitDateTime);
+                    } catch (Exception e)
+                    {
+                        mStartGourmetBookingDay = null;
+                    }
+                }
+                break;
+            }
+
+            case TYPE_AFTER_DAY:
+            {
+                mAfterDay = intent.getIntExtra(INTENT_EXTRA_DATA_AFTER_DAY, 0);
+                break;
+            }
+        }
+
+        mCollectionBaseLayout = new CollectionGourmetLayout(this, mOnEventListener);
+
+        setContentView(mCollectionBaseLayout.onCreateView(R.layout.activity_collection_search));
+
+        boolean isDeepLink = DailyTextUtils.isTextEmpty(title, subTitle, imageUrl);
+
+        mCollectionBaseLayout.setUsedMultiTransition(mIsUsedMultiTransition);
+
+        if (isDeepLink == false && mIsUsedMultiTransition == true)
+        {
+            mCollectionBaseLayout.setTitleLayout(title, subTitle, imageUrl);
+
+            initTransition();
+        } else
+        {
+            mCollectionBaseLayout.setTitleLayout(title, subTitle, imageUrl);
+
+            lockUI();
+
+            requestCommonDateTime();
+        }
     }
 
     @Override
@@ -74,12 +198,6 @@ public class CollectionGourmetActivity extends CollectionBaseActivity
         String period = gourmetBookingDay.getVisitDay("yyyy-MM-dd");
 
         DailyMobileAPI.getInstance(this).requestRecommendationGourmetList(mNetworkTag, mRecommendationIndex, period, 0, mRecommendationGourmetListCallback);
-    }
-
-    @Override
-    protected CollectionBaseLayout getCollectionLayout(Context context)
-    {
-        return new CollectionGourmetLayout(this, mOnEventListener);
     }
 
     @Override
@@ -105,6 +223,54 @@ public class CollectionGourmetActivity extends CollectionBaseActivity
         {
             GourmetBookingDay gourmetBookingDay = new GourmetBookingDay();
             gourmetBookingDay.setVisitDay(todayDateTime.dailyDateTime);
+
+            switch (mType)
+            {
+                case TYPE_DEFAULT:
+                    break;
+
+                case TYPE_DATE:
+                    if (mStartGourmetBookingDay != null)
+                    {
+                        try
+                        {
+                            int startVisitDay = Integer.parseInt(mStartGourmetBookingDay.getVisitDay("yyyyMMdd"));
+                            int dailyVisitDay = Integer.parseInt(gourmetBookingDay.getVisitDay("yyyyMMdd"));
+
+                            // 데일리타임 이후 날짜인 경우에는
+                            if (startVisitDay >= dailyVisitDay)
+                            {
+                                gourmetBookingDay.setVisitDay(mStartGourmetBookingDay.getVisitDay(DailyCalendar.ISO_8601_FORMAT));
+                            }
+                        } catch (Exception e)
+                        {
+                            ExLog.e(e.toString());
+                        }
+
+                        mStartGourmetBookingDay = null;
+                    }
+
+                    mType = TYPE_DEFAULT;
+                    break;
+
+                case TYPE_AFTER_DAY:
+                    if (mAfterDay >= 0)
+                    {
+                        try
+                        {
+                            gourmetBookingDay.setVisitDay(todayDateTime.dailyDateTime, mAfterDay);
+                        } catch (Exception e)
+                        {
+                            ExLog.e(e.toString());
+                        }
+
+                        mAfterDay = -1;
+                    }
+
+                    mType = TYPE_DEFAULT;
+                    break;
+            }
+
 
             mPlaceBookingDay = gourmetBookingDay;
         } catch (Exception e)
@@ -153,6 +319,18 @@ public class CollectionGourmetActivity extends CollectionBaseActivity
     protected String getSectionTitle(int count)
     {
         return getString(R.string.label_count_gourmet, count);
+    }
+
+    @Override
+    protected void onCommonDateTime(TodayDateTime todayDateTime)
+    {
+        mTodayDateTime = todayDateTime;
+
+        setPlaceBookingDay(todayDateTime);
+
+        mCollectionBaseLayout.setCalendarText(getCalendarDate(mPlaceBookingDay));
+
+        requestRecommendationPlaceList(mPlaceBookingDay);
     }
 
     @Override

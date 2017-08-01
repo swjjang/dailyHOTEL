@@ -5,8 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,7 +24,6 @@ import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyLocationFactory;
 import com.twoheart.dailyhotel.util.DailyRecentSearches;
 import com.twoheart.dailyhotel.util.Util;
-import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 public abstract class PlaceSearchFragment extends BaseFragment
 {
@@ -61,7 +58,7 @@ public abstract class PlaceSearchFragment extends BaseFragment
 
     public abstract void startSearchResultActivity();
 
-    public abstract void startCalendar(boolean isAnimation);
+    public abstract void startCalendar(boolean isAnimation, Constants.SearchType searchType, String inputText, Keyword keyword);
 
     public interface OnSearchFragmentListener
     {
@@ -220,10 +217,14 @@ public abstract class PlaceSearchFragment extends BaseFragment
                 if (data != null)
                 {
                     Keyword keyword = data.getParcelableExtra(PlaceSearchResultActivity.INTENT_EXTRA_DATA_KEYWORD);
-                    mDailyRecentSearches.addString(new Keyword(keyword.icon, keyword.name));
 
-                    writeRecentSearches(mDailyRecentSearches.toString());
-                    mPlaceSearchLayout.updateRecentSearchesLayout(mDailyRecentSearches.getList());
+                    if (keyword != null)
+                    {
+                        mDailyRecentSearches.addString(new Keyword(keyword.icon, keyword.name));
+
+                        writeRecentSearches(mDailyRecentSearches.toString());
+                        mPlaceSearchLayout.updateRecentSearchesLayout(mDailyRecentSearches.getList());
+                    }
                 }
 
                 if (resultCode == Activity.RESULT_OK || resultCode == CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY)

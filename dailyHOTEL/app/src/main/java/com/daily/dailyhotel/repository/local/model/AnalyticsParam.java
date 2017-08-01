@@ -63,7 +63,7 @@ public class AnalyticsParam implements Parcelable
             discountPrice = SKIP_CHECK_DISCOUNT_PRICE_VALUE;
         }
 
-        showOriginalPriceYn = getShowOrginalPriceYn(stay.price, stay.discountPrice);
+        showOriginalPriceYn = getShowOriginalPriceYn(stay.price, stay.discountPrice);
         entryPosition = stay.entryPosition;
         gradeCode = stay.getGrade().name();
         gradeName = stay.getGrade().getName(context);
@@ -87,7 +87,7 @@ public class AnalyticsParam implements Parcelable
         }
 
         discountPrice = gourmet.discountPrice;
-        showOriginalPriceYn = getShowOrginalPriceYn(gourmet.price, gourmet.discountPrice);
+        showOriginalPriceYn = getShowOriginalPriceYn(gourmet.price, gourmet.discountPrice);
         entryPosition = gourmet.entryPosition;
 
         gradeCode = Gourmet.Grade.gourmet.name();
@@ -116,7 +116,7 @@ public class AnalyticsParam implements Parcelable
             discountPrice = SKIP_CHECK_DISCOUNT_PRICE_VALUE;
         }
 
-        showOriginalPriceYn = getShowOrginalPriceYn(price, discountPrice);
+        showOriginalPriceYn = getShowOriginalPriceYn(price, discountPrice);
         entryPosition = -1;
 
         if ("GOURMET".equalsIgnoreCase(place.serviceType) == true)
@@ -148,7 +148,7 @@ public class AnalyticsParam implements Parcelable
 
         price = recommendationStay.price;
         discountPrice = recommendationStay.discount;
-        showOriginalPriceYn = getShowOrginalPriceYn(recommendationStay.price, recommendationStay.discount);
+        showOriginalPriceYn = getShowOriginalPriceYn(recommendationStay.price, recommendationStay.discount);
         entryPosition = recommendationStay.entryPosition;
 
         Stay.Grade grade;
@@ -173,7 +173,7 @@ public class AnalyticsParam implements Parcelable
 
         price = recommendationGourmet.price;
         discountPrice = recommendationGourmet.discount;
-        showOriginalPriceYn = getShowOrginalPriceYn(recommendationGourmet.price, recommendationGourmet.discount);
+        showOriginalPriceYn = getShowOriginalPriceYn(recommendationGourmet.price, recommendationGourmet.discount);
         entryPosition = recommendationGourmet.entryPosition;
 
         gradeCode = Gourmet.Grade.gourmet.name();
@@ -257,7 +257,7 @@ public class AnalyticsParam implements Parcelable
         totalListCount = listCount;
     }
 
-    private String getShowOrginalPriceYn(int originPrice, int discountPrice)
+    private String getShowOriginalPriceYn(int originPrice, int discountPrice)
     {
         return originPrice <= 0 || originPrice <= discountPrice ? "N" : "Y";
     }

@@ -11,6 +11,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.daily.base.util.DailyTextUtils;
+import com.daily.base.util.ExLog;
+import com.daily.base.util.ScreenUtils;
 import com.daily.base.util.VersionUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ListRowStayDataBinding;
@@ -72,6 +74,7 @@ public class StayListAdapter extends PlaceListAdapter
             case PlaceViewItem.TYPE_ENTRY:
             {
                 ListRowStayDataBinding dataBinding = DataBindingUtil.inflate(mInflater, R.layout.list_row_stay_data, parent, false);
+
                 return new HotelViewHolder(dataBinding);
             }
 

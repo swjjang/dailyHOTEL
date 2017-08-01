@@ -298,24 +298,18 @@ public class StayCategoryTabActivity extends PlaceMainActivity
         } else if (resultCode == RESULT_ARROUND_SEARCH_LIST && data != null)
         {
             // 검색 결과 화면으로 이동한다.
-            if (data.hasExtra(NAME_INTENT_EXTRA_DATA_LOCATION) == true)
+            String region = data.getStringExtra(NAME_INTENT_EXTRA_DATA_RESULT);
+            String callByScreen = AnalyticsManager.Screen.DAILYHOTEL_LIST_REGION_DOMESTIC;
+
+            if (PlaceRegionListActivity.Region.DOMESTIC.name().equalsIgnoreCase(region) == true)
             {
-                Location location = data.getParcelableExtra(NAME_INTENT_EXTRA_DATA_LOCATION);
-                mStayCategoryCuration.setLocation(location);
-
-                String region = data.getStringExtra(NAME_INTENT_EXTRA_DATA_RESULT);
-                String callByScreen = AnalyticsManager.Screen.DAILYHOTEL_LIST_REGION_DOMESTIC;
-
-                if (PlaceRegionListActivity.Region.DOMESTIC.name().equalsIgnoreCase(region) == true)
-                {
-                    callByScreen = AnalyticsManager.Screen.DAILYHOTEL_LIST_REGION_DOMESTIC;
-                } else if (PlaceRegionListActivity.Region.GLOBAL.name().equalsIgnoreCase(region) == true)
-                {
-                    callByScreen = AnalyticsManager.Screen.DAILYHOTEL_LIST_REGION_GLOBAL;
-                }
-
-                startAroundSearchResult(this, mTodayDateTime, mStayCategoryCuration.getStayBookingDay(), location, callByScreen);
+                callByScreen = AnalyticsManager.Screen.DAILYHOTEL_LIST_REGION_DOMESTIC;
+            } else if (PlaceRegionListActivity.Region.GLOBAL.name().equalsIgnoreCase(region) == true)
+            {
+                callByScreen = AnalyticsManager.Screen.DAILYHOTEL_LIST_REGION_GLOBAL;
             }
+
+            startAroundSearchResult(this, mTodayDateTime, mStayCategoryCuration.getStayBookingDay(), null, callByScreen);
         } else if (resultCode == CODE_RESULT_ACTIVITY_GO_HOME)
         {
             setResult(resultCode);

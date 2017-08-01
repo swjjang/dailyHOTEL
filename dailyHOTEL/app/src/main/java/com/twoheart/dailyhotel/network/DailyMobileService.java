@@ -704,8 +704,8 @@ public interface DailyMobileService
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET("{mobileAPI}")
     Observable<BaseListDto<String>> getStayAvailableCheckOutDates(@Path(value = "mobileAPI", encoded = true) String mobileAPI, //
-                                                                   @Query("dateRange") int dateRange, //
-                                                                   @Query("dateCheckIn") String checkInDate);
+                                                                  @Query("dateRange") int dateRange, //
+                                                                  @Query("dateCheckIn") String checkInDate);
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET("{mobileAPI}")

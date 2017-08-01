@@ -915,6 +915,17 @@ public class HomeLayout extends BaseBlurLayout
         mTextMessageLayout.post(() -> startTextLayoutShowAnimation());
     }
 
+    public void setCategoryStayOutboundNewVisible(boolean visible)
+    {
+        if (mCategoryLayout == null)
+        {
+            return;
+        }
+
+        // 해외 호텔 new 표시
+        mCategoryLayout.setStayOutBoundNewVisible(visible);
+    }
+
     public void setWishListData(ArrayList<HomePlace> list, boolean isError)
     {
         mWishListLayout.setData(list);

@@ -13,7 +13,6 @@ import android.graphics.Shader;
 import android.graphics.drawable.PaintDrawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.RectShape;
-import android.support.constraint.ConstraintLayout;
 import android.support.v4.view.MotionEventCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
@@ -114,8 +113,6 @@ public abstract class PlaceDetailLayout extends BaseLayout
 
         void onCalendarClick();
 
-        void doBooking();
-
         void onDownloadCouponClick();
 
         void releaseUiComponent();
@@ -161,7 +158,7 @@ public abstract class PlaceDetailLayout extends BaseLayout
         mDailyLineIndicator = (DailyLineIndicator) view.findViewById(R.id.viewpagerIndicator);
 
         mWishTooltipView = view.findViewById(R.id.wishTooltipView);
-        mWishTooltipTextView = (TextView)view.findViewById(R.id.wishTooltipTextView);
+        mWishTooltipTextView = (TextView) view.findViewById(R.id.wishTooltipTextView);
         mWishTooltipView.setOnClickListener(new OnClickListener()
         {
             @Override
@@ -388,7 +385,7 @@ public abstract class PlaceDetailLayout extends BaseLayout
         }
 
         // 우측에서부터 순서
-        switch(orderIcon)
+        switch (orderIcon)
         {
             case 1:
                 mWishTooltipTextView.setBackgroundResource(R.drawable.tooltip_top_vr);

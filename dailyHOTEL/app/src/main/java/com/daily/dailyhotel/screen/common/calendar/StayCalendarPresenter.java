@@ -211,6 +211,9 @@ public class StayCalendarPresenter extends PlaceCalendarPresenter<StayCalendarAc
                     {
                         getViewInterface().clickDay(checkOutDateTime);
                     }
+
+                    View checkInDayView = getViewInterface().searchDayView(checkInDateTime);
+                    getViewInterface().smoothScrollStartDayPosition(checkInDayView);
                 }
             }
         }));

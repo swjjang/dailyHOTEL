@@ -4,10 +4,12 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
+import android.os.Bundle;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.SharedElementCallback;
 import android.view.View;
 
+import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.repository.local.model.AnalyticsParam;
 import com.facebook.drawee.view.SimpleDraweeView;
@@ -26,6 +28,7 @@ import com.twoheart.dailyhotel.place.layout.PlaceDetailLayout;
 import com.twoheart.dailyhotel.screen.hotel.detail.StayDetailActivity;
 import com.twoheart.dailyhotel.screen.hotel.filter.StayCalendarActivity;
 import com.twoheart.dailyhotel.screen.hotel.preview.StayPreviewActivity;
+import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import java.util.ArrayList;
@@ -37,12 +40,51 @@ import retrofit2.Response;
 
 public class CollectionStayActivity extends CollectionBaseActivity
 {
-    public static Intent newInstance(Context context, int index, boolean isUsedMultiTransition)
+    protected static final String INTENT_EXTRA_DATA_TYPE = "type";
+    protected static final String INTENT_EXTRA_DATA_INDEX = "index";
+    protected static final String INTENT_EXTRA_DATA_IMAGE_URL = "imageUrl";
+    protected static final String INTENT_EXTRA_DATA_TITLE = "title";
+    protected static final String INTENT_EXTRA_DATA_SUBTITLE = "subTitle";
+    protected static final String INTENT_EXTRA_DATA_CHECK_IN_DATE = "checkInDate";
+    protected static final String INTENT_EXTRA_DATA_CHECK_OUT_DATE = "checkOutDate";
+    protected static final String INTENT_EXTRA_DATA_AFTER_DAY = "afterDay";
+    protected static final String INTENT_EXTRA_DATA_NIGHTS = "nights";
+
+    private static final int TYPE_DEFAULT = 0;
+    private static final int TYPE_DATE = 1;
+    private static final int TYPE_AFTER_DAY = 2;
+
+    private StayBookingDay mStartStayBookingDay;
+    private int mType;
+    private int mAfterDay, mNights;
+
+    /**
+     * @param context
+     * @param index
+     * @param checkInDateTime  ISO-8601
+     * @param checkOutDateTime ISO-8601
+     * @return
+     */
+    public static Intent newInstance(Context context, int index, String checkInDateTime, String checkOutDateTime)
     {
         Intent intent = new Intent(context, CollectionStayActivity.class);
 
+        intent.putExtra(INTENT_EXTRA_DATA_TYPE, TYPE_DATE);
         intent.putExtra(INTENT_EXTRA_DATA_INDEX, index);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_USED_MULTITRANSITIOIN, isUsedMultiTransition);
+        intent.putExtra(INTENT_EXTRA_DATA_CHECK_IN_DATE, checkInDateTime);
+        intent.putExtra(INTENT_EXTRA_DATA_CHECK_OUT_DATE, checkOutDateTime);
+
+        return intent;
+    }
+
+    public static Intent newInstance(Context context, int index, int afterDay, int nights)
+    {
+        Intent intent = new Intent(context, CollectionStayActivity.class);
+
+        intent.putExtra(INTENT_EXTRA_DATA_TYPE, TYPE_AFTER_DAY);
+        intent.putExtra(INTENT_EXTRA_DATA_INDEX, index);
+        intent.putExtra(INTENT_EXTRA_DATA_AFTER_DAY, afterDay);
+        intent.putExtra(INTENT_EXTRA_DATA_NIGHTS, nights);
 
         return intent;
     }
@@ -51,6 +93,7 @@ public class CollectionStayActivity extends CollectionBaseActivity
     {
         Intent intent = new Intent(context, CollectionStayActivity.class);
 
+        intent.putExtra(INTENT_EXTRA_DATA_TYPE, TYPE_DEFAULT);
         intent.putExtra(INTENT_EXTRA_DATA_INDEX, index);
         intent.putExtra(INTENT_EXTRA_DATA_IMAGE_URL, imageUrl);
         intent.putExtra(INTENT_EXTRA_DATA_TITLE, title);
@@ -58,6 +101,93 @@ public class CollectionStayActivity extends CollectionBaseActivity
         intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_USED_MULTITRANSITIOIN, isUsedMultiTransition);
 
         return intent;
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
+
+        Intent intent = getIntent();
+
+        if (intent == null)
+        {
+            finish();
+            return;
+        }
+
+        mRecommendationIndex = intent.getIntExtra(INTENT_EXTRA_DATA_INDEX, -1);
+        mIsUsedMultiTransition = intent.getBooleanExtra(NAME_INTENT_EXTRA_DATA_IS_USED_MULTITRANSITIOIN, false);
+
+        if (mRecommendationIndex <= 0)
+        {
+            finish();
+            return;
+        }
+
+        mType = intent.getIntExtra(INTENT_EXTRA_DATA_TYPE, TYPE_DEFAULT);
+
+        String title = null;
+        String subTitle = null;
+        String imageUrl = null;
+
+        switch (mType)
+        {
+            case TYPE_DEFAULT:
+            {
+                title = intent.getStringExtra(INTENT_EXTRA_DATA_TITLE);
+                subTitle = intent.getStringExtra(INTENT_EXTRA_DATA_SUBTITLE);
+                imageUrl = intent.getStringExtra(INTENT_EXTRA_DATA_IMAGE_URL);
+                break;
+            }
+
+            case TYPE_DATE:
+            {
+                String checkInDateTime = intent.getStringExtra(INTENT_EXTRA_DATA_CHECK_IN_DATE);
+                String checkOutDateTime = intent.getStringExtra(INTENT_EXTRA_DATA_CHECK_OUT_DATE);
+
+                if (DailyTextUtils.isTextEmpty(checkInDateTime, checkOutDateTime) == false)
+                {
+                    try
+                    {
+                        mStartStayBookingDay = new StayBookingDay();
+                        mStartStayBookingDay.setCheckInDay(checkInDateTime);
+                        mStartStayBookingDay.setCheckOutDay(checkOutDateTime);
+                    } catch (Exception e)
+                    {
+                        mStartStayBookingDay = null;
+                    }
+                }
+                break;
+            }
+
+            case TYPE_AFTER_DAY:
+            {
+                mAfterDay = intent.getIntExtra(INTENT_EXTRA_DATA_AFTER_DAY, 0);
+                mNights = intent.getIntExtra(INTENT_EXTRA_DATA_NIGHTS, 1);
+                break;
+            }
+        }
+
+        mCollectionBaseLayout = new CollectionStayLayout(this, mOnEventListener);
+
+        setContentView(mCollectionBaseLayout.onCreateView(R.layout.activity_collection_search));
+
+        mCollectionBaseLayout.setUsedMultiTransition(mIsUsedMultiTransition);
+
+        if (mType == TYPE_DEFAULT && mIsUsedMultiTransition == true)
+        {
+            mCollectionBaseLayout.setTitleLayout(title, subTitle, imageUrl);
+
+            initTransition();
+        } else
+        {
+            mCollectionBaseLayout.setTitleLayout(title, subTitle, imageUrl);
+
+            lockUI();
+
+            requestCommonDateTime();
+        }
     }
 
     @Override
@@ -81,12 +211,6 @@ public class CollectionStayActivity extends CollectionBaseActivity
         {
             ExLog.e(e.toString());
         }
-    }
-
-    @Override
-    protected CollectionBaseLayout getCollectionLayout(Context context)
-    {
-        return new CollectionStayLayout(context, mOnEventListener);
     }
 
     @Override
@@ -128,6 +252,56 @@ public class CollectionStayActivity extends CollectionBaseActivity
             StayBookingDay stayBookingDay = new StayBookingDay();
             stayBookingDay.setCheckInDay(todayDateTime.dailyDateTime);
             stayBookingDay.setCheckOutDay(todayDateTime.dailyDateTime, 1);
+
+            switch (mType)
+            {
+                case TYPE_DEFAULT:
+                    break;
+
+                case TYPE_DATE:
+                    if (mStartStayBookingDay != null)
+                    {
+                        try
+                        {
+                            int startCheckInDay = Integer.parseInt(mStartStayBookingDay.getCheckInDay("yyyyMMdd"));
+                            int dailyCheckInDay = Integer.parseInt(stayBookingDay.getCheckInDay("yyyyMMdd"));
+
+                            // 데일리타임 이후 날짜인 경우에는
+                            if (startCheckInDay >= dailyCheckInDay)
+                            {
+                                stayBookingDay.setCheckInDay(mStartStayBookingDay.getCheckInDay(DailyCalendar.ISO_8601_FORMAT));
+                                stayBookingDay.setCheckOutDay(mStartStayBookingDay.getCheckOutDay(DailyCalendar.ISO_8601_FORMAT));
+                            }
+                        } catch (Exception e)
+                        {
+                            ExLog.e(e.toString());
+                        }
+
+                        mStartStayBookingDay = null;
+                    }
+
+                    mType = TYPE_DEFAULT;
+                    break;
+
+                case TYPE_AFTER_DAY:
+                    if (mAfterDay >= 0 && mNights > 0)
+                    {
+                        try
+                        {
+                            stayBookingDay.setCheckInDay(todayDateTime.dailyDateTime, mAfterDay);
+                            stayBookingDay.setCheckOutDay(todayDateTime.dailyDateTime, mAfterDay + mNights);
+                        } catch (Exception e)
+                        {
+                            ExLog.e(e.toString());
+                        }
+
+                        mAfterDay = -1;
+                        mNights = -1;
+                    }
+
+                    mType = TYPE_DEFAULT;
+                    break;
+            }
 
             mPlaceBookingDay = stayBookingDay;
         } catch (Exception e)
@@ -176,6 +350,18 @@ public class CollectionStayActivity extends CollectionBaseActivity
     protected String getSectionTitle(int count)
     {
         return getString(R.string.label_count_stay, count);
+    }
+
+    @Override
+    protected void onCommonDateTime(TodayDateTime todayDateTime)
+    {
+        mTodayDateTime = todayDateTime;
+
+        setPlaceBookingDay(todayDateTime);
+
+        mCollectionBaseLayout.setCalendarText(getCalendarDate(mPlaceBookingDay));
+
+        requestRecommendationPlaceList(mPlaceBookingDay);
     }
 
     @Override

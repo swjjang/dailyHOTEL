@@ -29,7 +29,7 @@ public abstract class PlacePaymentInformation implements Parcelable
 
     public PlacePaymentInformation()
     {
-//        paymentType = PaymentType.EASY_CARD;
+        //        paymentType = PaymentType.EASY_CARD;
         discountType = DiscountType.NONE;
     }
 

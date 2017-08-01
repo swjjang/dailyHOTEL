@@ -26,7 +26,6 @@ public class AnalyticsManager
     private static final boolean ENABLED_APPBOY = true;
 
     private static AnalyticsManager mInstance = null;
-    private Context mContext;
     private GoogleAnalyticsManager mGoogleAnalyticsManager;
     private FacebookManager mFacebookManager;
     private AppboyManager mAppboyManager;
@@ -52,8 +51,6 @@ public class AnalyticsManager
 
     private void initAnalytics(Context context)
     {
-        mContext = context;
-
         try
         {
             mGoogleAnalyticsManager = new GoogleAnalyticsManager(context, new GoogleAnalyticsManager.OnClientIdListener()

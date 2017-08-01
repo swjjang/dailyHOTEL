@@ -125,19 +125,17 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
 
         if (mSearchType == SearchType.LOCATION)
         {
+            mPlaceSearchResultLayout.setViewTypeVisibility(true);
+
             try
             {
                 if (mGourmetSearchCuration.getCurationOption().getSortType() == SortType.DISTANCE && mGourmetSearchCuration.getLocation() == null)
                 {
                     unLockUI();
 
-                    mPlaceSearchResultLayout.setViewTypeVisibility(false);
-
                     searchMyLocation();
                 } else
                 {
-                    mPlaceSearchResultLayout.setViewTypeVisibility(true);
-
                     // 기본적으로 시작시에 전체 카테고리를 넣는다.
                     mPlaceSearchResultLayout.setCategoryTabLayoutVisibility(View.GONE);
                     mPlaceSearchResultLayout.setScreenVisible(ScreenType.NONE);
@@ -419,6 +417,11 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
     @Override
     protected Keyword getKeyword()
     {
+        if (mGourmetSearchCuration == null)
+        {
+            return null;
+        }
+
         return mGourmetSearchCuration.getKeyword();
     }
 

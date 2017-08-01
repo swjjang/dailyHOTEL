@@ -14,6 +14,7 @@ import com.daily.base.BaseActivity;
 import com.daily.base.BaseDialogView;
 import com.daily.base.OnBaseEventListener;
 import com.daily.base.util.ScreenUtils;
+import com.daily.base.util.VersionUtils;
 import com.daily.base.widget.DailyRoundedConstraintLayout;
 import com.daily.dailyhotel.entity.GourmetMenu;
 import com.twoheart.dailyhotel.R;
@@ -297,15 +298,19 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
                     childView.setTranslationX(0.0f);
                 }
 
-                DailyRoundedConstraintLayout roundedConstraintLayout = (DailyRoundedConstraintLayout) childView.findViewById(R.id.roundedConstraintLayout);
+                // android 7.0에서 이상 동작 버전별로 체크 필요.
+                if (VersionUtils.equalsAPI24() == true)
+                {
+                    DailyRoundedConstraintLayout roundedConstraintLayout = (DailyRoundedConstraintLayout) childView.findViewById(R.id.roundedConstraintLayout);
 
-                final float width = roundedConstraintLayout.getWidth();
-                final float height = roundedConstraintLayout.getHeight();
-                final float scaleWidth = (1.0f - scale) * width;
-                final float scaleHeight = (1.0f - scale) * height;
+                    final float width = roundedConstraintLayout.getWidth();
+                    final float height = roundedConstraintLayout.getHeight();
+                    final float scaleWidth = (1.0f - scale) * width;
+                    final float scaleHeight = (1.0f - scale) * height;
 
-                roundedConstraintLayout.setRound(0, 0, width - scaleWidth, height - scaleHeight, DP_5);
-                roundedConstraintLayout.invalidate();
+                    roundedConstraintLayout.setRound(0, 0, width - scaleWidth, height - scaleHeight, DP_5);
+                    roundedConstraintLayout.invalidate();
+                }
 
                 View blurView = (View) childView.getTag(R.id.blurView);
 

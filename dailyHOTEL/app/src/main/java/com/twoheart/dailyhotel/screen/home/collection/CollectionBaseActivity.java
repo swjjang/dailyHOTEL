@@ -2,7 +2,6 @@ package com.twoheart.dailyhotel.screen.home.collection;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,7 +10,6 @@ import android.transition.Transition;
 import android.transition.TransitionSet;
 import android.view.View;
 
-import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
 import com.facebook.drawee.drawable.ScalingUtils;
@@ -43,11 +41,6 @@ import retrofit2.Response;
 
 public abstract class CollectionBaseActivity extends BaseActivity
 {
-    protected static final String INTENT_EXTRA_DATA_INDEX = "index";
-    protected static final String INTENT_EXTRA_DATA_IMAGE_URL = "imageUrl";
-    protected static final String INTENT_EXTRA_DATA_TITLE = "title";
-    protected static final String INTENT_EXTRA_DATA_SUBTITLE = "subTitle";
-
     protected PlaceBookingDay mPlaceBookingDay;
     protected TodayDateTime mTodayDateTime;
 
@@ -64,8 +57,6 @@ public abstract class CollectionBaseActivity extends BaseActivity
 
     protected abstract void requestRecommendationPlaceList(PlaceBookingDay placeBookingDay);
 
-    protected abstract CollectionBaseLayout getCollectionLayout(Context context);
-
     protected abstract String getCalendarDate(PlaceBookingDay placeBookingDay);
 
     protected abstract void setPlaceBookingDay(TodayDateTime todayDateTime);
@@ -76,57 +67,11 @@ public abstract class CollectionBaseActivity extends BaseActivity
 
     protected abstract String getSectionTitle(int count);
 
+    protected abstract void onCommonDateTime(TodayDateTime todayDateTime);
+
     protected abstract ArrayList<PlaceViewItem> makePlaceList(String imageBaseUrl, List<? extends RecommendationPlace> placeList, List<Sticker> stickerList);
 
     protected abstract void onPlaceDetailClickByLongPress(View view, PlaceViewItem placeViewItem, int listCount);
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
-        super.onCreate(savedInstanceState);
-
-        Intent intent = getIntent();
-
-        if (intent == null)
-        {
-            finish();
-            return;
-        }
-
-        mRecommendationIndex = intent.getIntExtra(INTENT_EXTRA_DATA_INDEX, -1);
-        String title = intent.getStringExtra(INTENT_EXTRA_DATA_TITLE);
-        String subTitle = intent.getStringExtra(INTENT_EXTRA_DATA_SUBTITLE);
-        String imageUrl = intent.getStringExtra(INTENT_EXTRA_DATA_IMAGE_URL);
-        mIsUsedMultiTransition = intent.getBooleanExtra(NAME_INTENT_EXTRA_DATA_IS_USED_MULTITRANSITIOIN, false);
-
-        if (mRecommendationIndex <= 0)
-        {
-            finish();
-            return;
-        }
-
-        mCollectionBaseLayout = getCollectionLayout(this);
-
-        setContentView(mCollectionBaseLayout.onCreateView(R.layout.activity_collection_search));
-
-        boolean isDeepLink = DailyTextUtils.isTextEmpty(title, subTitle, imageUrl);
-
-        mCollectionBaseLayout.setUsedMultiTransition(mIsUsedMultiTransition);
-
-        if (isDeepLink == false && mIsUsedMultiTransition == true)
-        {
-            mCollectionBaseLayout.setTitleLayout(title, subTitle, imageUrl);
-
-            initTransition();
-        } else
-        {
-            mCollectionBaseLayout.setTitleLayout(title, subTitle, imageUrl);
-
-            lockUI();
-
-            requestCommonDateTime();
-        }
-    }
 
     @Override
     protected void onResume()
@@ -229,7 +174,7 @@ public abstract class CollectionBaseActivity extends BaseActivity
     }
 
     @TargetApi(value = 21)
-    private void initTransition()
+    void initTransition()
     {
         if (mIsUsedMultiTransition == true)
         {
@@ -324,17 +269,6 @@ public abstract class CollectionBaseActivity extends BaseActivity
                 }
                 break;
         }
-    }
-
-    protected void onCommonDateTime(TodayDateTime todayDateTime)
-    {
-        mTodayDateTime = todayDateTime;
-
-        setPlaceBookingDay(todayDateTime);
-
-        mCollectionBaseLayout.setCalendarText(getCalendarDate(mPlaceBookingDay));
-
-        requestRecommendationPlaceList(mPlaceBookingDay);
     }
 
     protected void onPlaceList(String imageBaseUrl, Recommendation recommendation, ArrayList<? extends RecommendationPlace> list, List<Sticker> stickerList)

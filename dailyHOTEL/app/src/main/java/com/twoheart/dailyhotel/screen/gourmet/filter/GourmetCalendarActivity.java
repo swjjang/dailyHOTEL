@@ -14,6 +14,7 @@ import com.daily.base.util.FontManager;
 import com.daily.base.util.ScreenUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.time.GourmetBookingDay;
+import com.twoheart.dailyhotel.model.time.PlaceBookingDay;
 import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.place.activity.PlaceCalendarActivity;
 import com.twoheart.dailyhotel.util.DailyCalendar;
@@ -106,7 +107,7 @@ public class GourmetCalendarActivity extends PlaceCalendarActivity
 
                     showAnimation();
 
-                    smoothScrollCheckInDayPosition(mDayView);
+                    smoothScrollStartDayPosition(mDayView);
                 }
             }, 20);
         } else
@@ -122,7 +123,7 @@ public class GourmetCalendarActivity extends PlaceCalendarActivity
                 setSelectedDay(mTodayDateTime, (GourmetBookingDay) mPlaceBookingDay);
             }
 
-            smoothScrollCheckInDayPosition(mDayView);
+            smoothScrollStartDayPosition(mDayView);
         }
     }
 
@@ -236,6 +237,7 @@ public class GourmetCalendarActivity extends PlaceCalendarActivity
                     setToolbarText(visitDate);
 
                     mConfirmTextView.setEnabled(true);
+                    mConfirmTextView.setText(getConfirmTextResId());
                 } catch (Exception e)
                 {
                     ExLog.e(e.toString());
@@ -269,11 +271,22 @@ public class GourmetCalendarActivity extends PlaceCalendarActivity
             , (mIsChanged ? AnalyticsManager.ValueType.CHANGED : //
                 AnalyticsManager.ValueType.NONE_) + "-" + date + "-" + DailyCalendar.format(new Date(), "yyyy.MM.dd(EEE) HH시 mm분"), params);
 
-        Intent intent = new Intent();
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, gourmetBookingDay);
-
-        setResult(RESULT_OK, intent);
+        setResult(RESULT_OK, gourmetBookingDay);
         hideAnimation();
+    }
+
+    @Override
+    protected void setResult(int resultCode, PlaceBookingDay placeBookingDay)
+    {
+        Intent intent = new Intent();
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, placeBookingDay);
+
+        setResult(resultCode, intent);
+    }
+
+    protected int getConfirmTextResId()
+    {
+        return R.string.label_calendar_gourmet_search_selected_date;
     }
 
     private void setSelectedDay(View view)

@@ -116,6 +116,46 @@ public abstract class PlaceCalendarView<T1 extends PlaceCalendarView.OnEventList
         }
     }
 
+    void smoothScrollStartDayPosition(View startDayView)
+    {
+        if (startDayView == null)
+        {
+            if (mDaysViewList == null || mDaysViewList.size() == 0)
+            {
+                return;
+            }
+
+            for (View dayView : mDaysViewList)
+            {
+                if (dayView.isSelected() == true)
+                {
+                    startDayView = dayView;
+                    break;
+                }
+            }
+
+            if (startDayView == null)
+            {
+                return;
+            }
+
+        }
+
+        final View selectView = startDayView;
+
+        getViewDataBinding().calendarScrollView.postDelayed(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                View view = (View) selectView.getParent().getParent();
+                int scrollTop = view.getTop();
+
+                getViewDataBinding().calendarScrollView.smoothScrollBy(0, scrollTop);
+            }
+        }, 200);
+    }
+
     Observable<Boolean> showAnimation()
     {
         if (getViewDataBinding() == null || mAnimatorSet != null && mAnimatorSet.isStarted() == true)

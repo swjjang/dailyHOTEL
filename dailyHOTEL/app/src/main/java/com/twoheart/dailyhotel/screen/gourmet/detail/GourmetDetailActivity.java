@@ -557,7 +557,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
                 name += "님이";
             }
 
-            GourmetDetailParams gourmetDetailParams = ((GourmetDetail) placeDetail).getGourmetDetailParmas();
+            GourmetDetailParams gourmetDetailParams = ((GourmetDetail) placeDetail).getGourmetDetailParams();
 
             if (gourmetDetailParams == null)
             {
@@ -594,7 +594,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         }
 
         GourmetBookingDay gourmetBookingDay = (GourmetBookingDay) placeBookingDay;
-        GourmetDetailParams gourmetDetailParams = ((GourmetDetail) placeDetail).getGourmetDetailParmas();
+        GourmetDetailParams gourmetDetailParams = ((GourmetDetail) placeDetail).getGourmetDetailParams();
 
         try
         {
@@ -625,7 +625,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
     {
         try
         {
-            GourmetDetailParams gourmetDetailParams = ((GourmetDetail) placeDetail).getGourmetDetailParmas();
+            GourmetDetailParams gourmetDetailParams = ((GourmetDetail) placeDetail).getGourmetDetailParams();
 
             HashMap<String, String> params = new HashMap<>();
             params.put(AnalyticsManager.KeyType.SERVICE, AnalyticsManager.ValueType.GOURMET);
@@ -681,7 +681,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
             // 카카오톡 패키지 설치 여부
             getPackageManager().getPackageInfo("com.kakao.talk", PackageManager.GET_META_DATA);
 
-            GourmetDetailParams gourmetDetailParams = ((GourmetDetail) mPlaceDetail).getGourmetDetailParmas();
+            GourmetDetailParams gourmetDetailParams = ((GourmetDetail) mPlaceDetail).getGourmetDetailParams();
 
             startActivityForResult(HappyTalkCategoryDialog.newInstance(this//
                 , HappyTalkCategoryDialog.CallScreen.SCREEN_GOURMET_DETAIL//
@@ -726,7 +726,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
             return;
         }
 
-        GourmetDetailParams gourmetDetailParams = gourmetDetail.getGourmetDetailParmas();
+        GourmetDetailParams gourmetDetailParams = gourmetDetail.getGourmetDetailParams();
         GourmetProduct gourmetProduct = gourmetDetail.getProduct(ticketIndex);
 
         if (gourmetProduct == null || gourmetDetailParams == null)
@@ -779,7 +779,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
     @Override
     protected void doBooking()
     {
-        mOnEventListener.doBooking();
+        onReservation(mSelectedTicketIndex);
     }
 
     @Override
@@ -791,7 +791,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         }
 
         GourmetBookingDay gourmetBookingDay = (GourmetBookingDay) placeBookingDay;
-        GourmetDetailParams gourmetDetailParams = ((GourmetDetail) placeDetail).getGourmetDetailParmas();
+        GourmetDetailParams gourmetDetailParams = ((GourmetDetail) placeDetail).getGourmetDetailParams();
 
         AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.GOURMET_BOOKINGS, AnalyticsManager.Action.GOURMET_COUPON_DOWNLOAD, gourmetDetailParams.name, null);
 
@@ -861,7 +861,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
                 return;
         }
 
-        GourmetDetailParams gourmetDetailParams = gourmetDetail.getGourmetDetailParmas();
+        GourmetDetailParams gourmetDetailParams = gourmetDetail.getGourmetDetailParams();
 
         RecentlyPlaceUtil.addRecentlyItemAsync(RecentlyPlaceUtil.ServiceType.GOURMET //
             , gourmetDetail.index, gourmetDetailParams.name, null, gourmetDetailParams.imgUrl, false);
@@ -871,7 +871,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
             DisplayMetrics displayMetrics = new DisplayMetrics();
             getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
 
-            if (gourmetBookingDay == null || gourmetDetail == null || gourmetDetail.getGourmetDetailParmas() == null)
+            if (gourmetBookingDay == null || gourmetDetail == null || gourmetDetail.getGourmetDetailParams() == null)
             {
                 setWishTextView(false, 0);
             } else
@@ -933,7 +933,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
     {
         // 판매 완료 혹은 가격이 변동되었는지 조사한다
         List<GourmetProduct> gourmetProductList = gourmetDetail.getProductList();
-        GourmetDetailParams gourmetDetailParams = gourmetDetail.getGourmetDetailParmas();
+        GourmetDetailParams gourmetDetailParams = gourmetDetail.getGourmetDetailParams();
 
         if (gourmetProductList == null || gourmetProductList.size() == 0)
         {
@@ -1035,7 +1035,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
 
         lockUiComponent();
 
-        GourmetDetailParams gourmetDetailParams = gourmetDetail.getGourmetDetailParmas();
+        GourmetDetailParams gourmetDetailParams = gourmetDetail.getGourmetDetailParams();
 
         boolean isExpectSelected = !gourmetDetailParams.myWish;
         int wishCount = isExpectSelected == true ? gourmetDetailParams.wishCount + 1 : gourmetDetailParams.wishCount - 1;
@@ -1068,7 +1068,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
                     public void onState(View view, boolean checked)
                     {
                         startActivityForResult(TrueVRActivity.newInstance(GourmetDetailActivity.this, mPlaceDetail.index, mTrueVRParamsList//
-                            , PlaceType.FNB, ((GourmetDetail) mPlaceDetail).getGourmetDetailParmas().category), CODE_REQUEST_ACTIVITY_TRUEVIEW);
+                            , PlaceType.FNB, ((GourmetDetail) mPlaceDetail).getGourmetDetailParams().category), CODE_REQUEST_ACTIVITY_TRUEVIEW);
                     }
                 }, null, null, new OnCheckDialogStateListener()
                 {
@@ -1082,13 +1082,13 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         } else
         {
             startActivityForResult(TrueVRActivity.newInstance(GourmetDetailActivity.this, mPlaceDetail.index, mTrueVRParamsList//
-                , PlaceType.FNB, ((GourmetDetail) mPlaceDetail).getGourmetDetailParmas().category), CODE_REQUEST_ACTIVITY_TRUEVIEW);
+                , PlaceType.FNB, ((GourmetDetail) mPlaceDetail).getGourmetDetailParams().category), CODE_REQUEST_ACTIVITY_TRUEVIEW);
         }
 
         try
         {
             AnalyticsManager.getInstance(GourmetDetailActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION,//
-                AnalyticsManager.Action.TRUE_VR_CLICK, Integer.toString(((GourmetDetail) mPlaceDetail).getGourmetDetailParmas().index), null);
+                AnalyticsManager.Action.TRUE_VR_CLICK, Integer.toString(((GourmetDetail) mPlaceDetail).getGourmetDetailParams().index), null);
         } catch (Exception e)
         {
             ExLog.e(e.toString());
@@ -1112,7 +1112,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
 
     private void onReservation(int index)
     {
-        if (mPlaceDetail == null)
+        if (mPlaceDetail == null || index < 0)
         {
             return;
         }
@@ -1142,7 +1142,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
             mPlaceDetailNetworkController.requestProfile();
         }
 
-        GourmetDetailParams gourmetDetailParams = ((GourmetDetail) mPlaceDetail).getGourmetDetailParmas();
+        GourmetDetailParams gourmetDetailParams = ((GourmetDetail) mPlaceDetail).getGourmetDetailParams();
 
         if (gourmetDetailParams != null)
         {
@@ -1161,7 +1161,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
 
         try
         {
-            GourmetDetailParams gourmetDetailParams = gourmetDetail.getGourmetDetailParmas();
+            GourmetDetailParams gourmetDetailParams = gourmetDetail.getGourmetDetailParams();
 
             Map<String, String> params = new HashMap<>();
             params.put(AnalyticsManager.KeyType.NAME, gourmetDetailParams.name);
@@ -1218,7 +1218,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
             return null;
         }
 
-        GourmetDetailParams gourmetDetailParams = gourmetDetail.getGourmetDetailParmas();
+        GourmetDetailParams gourmetDetailParams = gourmetDetail.getGourmetDetailParams();
 
         if (gourmetDetailParams == null)
         {
@@ -1268,7 +1268,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
             try
             {
                 AnalyticsManager.getInstance(GourmetDetailActivity.this).recordEvent(AnalyticsManager.Category.GOURMET_BOOKINGS//
-                    , AnalyticsManager.Action.TICKET_TYPE_CLICKED, ((GourmetDetail) mPlaceDetail).getGourmetDetailParmas().name, null);
+                    , AnalyticsManager.Action.TICKET_TYPE_CLICKED, ((GourmetDetail) mPlaceDetail).getGourmetDetailParams().name, null);
             } catch (Exception e)
             {
                 ExLog.d(e.toString());
@@ -1366,7 +1366,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
                 return;
             }
 
-            String category = ((GourmetDetail) mPlaceDetail).getGourmetDetailParmas().category;
+            String category = ((GourmetDetail) mPlaceDetail).getGourmetDetailParams().category;
 
             startActivityForResult(GourmetReviewActivity.newInstance(GourmetDetailActivity.this//
                 , mPlaceDetail.index, category, mPlaceReviewScores), Constants.CODE_REQUEST_ACTIVITY_PLACE_REVIEW);
@@ -1411,11 +1411,6 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         }
 
         @Override
-        public void doBooking()
-        {
-        }
-
-        @Override
         public void onDownloadCouponClick()
         {
             GourmetDetailActivity.this.downloadCoupon(mPlaceBookingDay, mPlaceDetail);
@@ -1449,7 +1444,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
 
             lockUiComponent();
 
-            GourmetDetailParams gourmetDetailParams = ((GourmetDetail) mPlaceDetail).getGourmetDetailParmas();
+            GourmetDetailParams gourmetDetailParams = ((GourmetDetail) mPlaceDetail).getGourmetDetailParams();
 
             Intent intent = ImageDetailListActivity.newInstance(GourmetDetailActivity.this, PlaceType.FNB, gourmetDetailParams.name, imageInformationList, mCurrentImage);
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_IMAGELIST);
@@ -1490,7 +1485,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
                     return;
                 }
 
-                GourmetDetailParams gourmetDetailParams = ((GourmetDetail) mPlaceDetail).getGourmetDetailParmas();
+                GourmetDetailParams gourmetDetailParams = ((GourmetDetail) mPlaceDetail).getGourmetDetailParams();
 
                 Intent intent = ZoomMapActivity.newInstance(GourmetDetailActivity.this//
                     , ZoomMapActivity.SourceType.GOURMET, gourmetDetailParams.name, gourmetDetailParams.address//
@@ -1515,7 +1510,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         @Override
         public void clipAddress(String address)
         {
-            GourmetDetailParams gourmetDetailParams = ((GourmetDetail) mPlaceDetail).getGourmetDetailParmas();
+            GourmetDetailParams gourmetDetailParams = ((GourmetDetail) mPlaceDetail).getGourmetDetailParams();
 
             DailyTextUtils.clipText(GourmetDetailActivity.this, address);
 
@@ -1533,7 +1528,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
                 return;
             }
 
-            GourmetDetailParams gourmetDetailParams = ((GourmetDetail) mPlaceDetail).getGourmetDetailParmas();
+            GourmetDetailParams gourmetDetailParams = ((GourmetDetail) mPlaceDetail).getGourmetDetailParams();
 
             Util.showShareMapDialog(GourmetDetailActivity.this, gourmetDetailParams.name//
                 , gourmetDetailParams.latitude, gourmetDetailParams.longitude, false//
@@ -1607,7 +1602,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         {
             try
             {
-                ((GourmetDetail) mPlaceDetail).setGourmetDetailParmas(gourmetDetailParams);
+                ((GourmetDetail) mPlaceDetail).setGourmetDetailParams(gourmetDetailParams);
 
                 // analyticsParam 갱신용 - 딥링크시 고메 index 빼고는 알 수 없음 - 상세에서 받아온 정보로 갱신
                 mAnalyticsParam.placeName = gourmetDetailParams.name;
@@ -1657,7 +1652,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
             }
 
             GourmetBookingDay gourmetBookingDay = (GourmetBookingDay) mPlaceBookingDay;
-            GourmetDetailParams gourmetDetailParams = ((GourmetDetail) mPlaceDetail).getGourmetDetailParmas();
+            GourmetDetailParams gourmetDetailParams = ((GourmetDetail) mPlaceDetail).getGourmetDetailParams();
 
             if (isSuccess == true)
             {
@@ -1733,7 +1728,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
             }
 
             GourmetBookingDay gourmetBookingDay = (GourmetBookingDay) mPlaceBookingDay;
-            GourmetDetailParams gourmetDetailParams = ((GourmetDetail) mPlaceDetail).getGourmetDetailParmas();
+            GourmetDetailParams gourmetDetailParams = ((GourmetDetail) mPlaceDetail).getGourmetDetailParams();
 
             if (isSuccess == true)
             {
