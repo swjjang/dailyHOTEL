@@ -197,7 +197,7 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
             int endDateValue = Integer.parseInt(DailyCalendar.format(endCalendar.getTime(), "yyyyMMdd"));
             for (int soldOutDayValue : mSoldOutDayList)
             {
-                if (soldOutDayValue <= endDateValue)
+                if (soldOutDayValue < endDateValue)
                 {
                     soldOutDayList.add(soldOutDayValue);
                 }
