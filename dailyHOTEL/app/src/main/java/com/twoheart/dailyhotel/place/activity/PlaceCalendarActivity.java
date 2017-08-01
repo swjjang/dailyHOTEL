@@ -192,7 +192,16 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
         ArrayList<Integer> soldOutDayList = new ArrayList<>();
         if (mSoldOutDayList != null && mSoldOutDayList.size() > 0)
         {
-            soldOutDayList.addAll(mSoldOutDayList);
+            //            soldOutDayList.addAll(mSoldOutDayList);
+
+            int endDateValue = Integer.parseInt(DailyCalendar.format(endCalendar.getTime(), "yyyyMMdd"));
+            for (int soldOutDayValue : mSoldOutDayList)
+            {
+                if (soldOutDayValue <= endDateValue)
+                {
+                    soldOutDayList.add(soldOutDayValue);
+                }
+            }
         }
 
         Calendar todayCalendar = (Calendar) startCalendar.clone();

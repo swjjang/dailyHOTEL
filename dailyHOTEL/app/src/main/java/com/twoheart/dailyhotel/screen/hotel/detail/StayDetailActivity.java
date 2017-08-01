@@ -87,6 +87,7 @@ public class StayDetailActivity extends PlaceDetailActivity
     StayProduct mSelectedStayProduct;
     private boolean mCheckPrice;
     private boolean mOverseas;
+    private boolean mHasOverseas;
 
     /**
      * 리스트, 검색 결과, 위시리스트, 최근 본 업장, 홈 , 추천모아보기 에서 호출
@@ -165,6 +166,11 @@ public class StayDetailActivity extends PlaceDetailActivity
         {
             finish();
             return;
+        }
+
+        if (intent.hasExtra(NAME_INTENT_EXTRA_DATA_ISOVERSEAS) == true)
+        {
+            mHasOverseas = true;
         }
 
         mOverseas = intent.getBooleanExtra(NAME_INTENT_EXTRA_DATA_ISOVERSEAS, false);
@@ -429,9 +435,6 @@ public class StayDetailActivity extends PlaceDetailActivity
     @Override
     protected void requestCommonDateTimeNSoldOutList(int placeIndex)
     {
-//        int dayCount = mOverseas == false //
-//            ? StayCalendarActivity.DEFAULT_DOMESTIC_CALENDAR_DAY_OF_MAX_COUNT //
-//            : StayDetailCalendarActivity.DEFAULT_OVERSEAS_CALENDAR_DAY_OF_MAX_COUNT;
         int dayCount = StayDetailCalendarActivity.DEFAULT_OVERSEAS_CALENDAR_DAY_OF_MAX_COUNT;
 
         addCompositeDisposable(Observable.zip(mCommonRemoteImpl.getCommonDateTime() //
