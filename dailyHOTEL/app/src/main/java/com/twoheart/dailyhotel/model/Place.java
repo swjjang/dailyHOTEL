@@ -37,12 +37,12 @@ public abstract class Place implements Parcelable
     @Override
     public void writeToParcel(Parcel dest, int flags)
     {
+        dest.writeInt(index);
         dest.writeString(imageUrl);
         dest.writeString(name);
         dest.writeInt(price);
         dest.writeInt(discountPrice);
         dest.writeString(addressSummary);
-        dest.writeInt(index);
         dest.writeDouble(latitude);
         dest.writeDouble(longitude);
         dest.writeInt(isDailyChoice ? 1 : 0);
@@ -57,12 +57,12 @@ public abstract class Place implements Parcelable
 
     protected void readFromParcel(Parcel in)
     {
+        index = in.readInt();
         imageUrl = in.readString();
         name = in.readString();
         price = in.readInt();
         discountPrice = in.readInt();
         addressSummary = in.readString();
-        index = in.readInt();
         latitude = in.readDouble();
         longitude = in.readDouble();
         isDailyChoice = in.readInt() == 1;

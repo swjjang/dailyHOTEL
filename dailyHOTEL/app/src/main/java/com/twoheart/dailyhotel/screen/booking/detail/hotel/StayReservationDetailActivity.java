@@ -828,7 +828,7 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
                 homePlace.index = gourmet.index;
                 homePlace.title = gourmet.name;
                 homePlace.serviceType = RecentlyPlaceUtil.ServiceType.GOURMET.name();
-                homePlace.regionName = gourmet.districtName;
+                homePlace.regionName = gourmet.regionName;
 
                 Prices prices = new Prices();
                 prices.discountPrice = gourmet.discountPrice;

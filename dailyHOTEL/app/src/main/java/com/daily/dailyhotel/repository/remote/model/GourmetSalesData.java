@@ -163,6 +163,7 @@ public class GourmetSalesData
         //        gourmet.stickerUrl // skip
         gourmet.imageUrl = getImageUrl(imgPathMain);
         gourmet.dBenefitText = benefit;
+        gourmet.regionName = regionName;
 
         return gourmet;
     }
