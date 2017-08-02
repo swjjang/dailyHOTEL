@@ -7,8 +7,12 @@ package com.daily.dailyhotel.domain;
 public interface RecentlyColumns
 {
     String PLACE_INDEX = "place_index";
+    /*
+     * ServiceType.name() 으로 저장 예정 IB_STAY, OB_STAY, GOURMET
+     */
     String SERVICE_TYPE = "service_type";
     String NAME = "korean_name";
     String ENGLISH_NAME = "english_name";
     String IMAGE_URL = "image_url";
+    String SAVING_TIME = "saving_time";
 }

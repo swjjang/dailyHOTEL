@@ -86,7 +86,7 @@ public class RecentlyRemoteImpl implements RecentlyInterface
     }
 
     @Override
-    public Observable<List<HomePlace>> getHomeRecentlyList(int maxSize)
+    public Observable<ArrayList<HomePlace>> getHomeRecentlyList(int maxSize)
     {
         RealmResults<RecentlyRealmObject> realmResults = RecentlyPlaceUtil.getRecentlyTypeList(RecentlyPlaceUtil.ServiceType.IB_STAY, RecentlyPlaceUtil.ServiceType.GOURMET);
         JSONArray recentJsonArray = RecentlyPlaceUtil.getRecentlyJsonArray(realmResults, maxSize);
@@ -100,21 +100,22 @@ public class RecentlyRemoteImpl implements RecentlyInterface
             ExLog.d(e.getMessage());
         }
 
-        return DailyMobileAPI.getInstance(mContext).getHomeRecentlyList(recentJsonObject).map(new Function<BaseDto<HomePlaces>, List<HomePlace>>()
+        return DailyMobileAPI.getInstance(mContext).getHomeRecentlyList(recentJsonObject).map(new Function<BaseDto<HomePlaces>, ArrayList<HomePlace>>()
         {
             @Override
-            public List<HomePlace> apply(@NonNull BaseDto<HomePlaces> homePlacesBaseDto) throws Exception
+            public ArrayList<HomePlace> apply(@NonNull BaseDto<HomePlaces> homePlacesBaseDto) throws Exception
             {
-                List<HomePlace> homePlaceList = null;
+                ArrayList<HomePlace> homePlaceList = new ArrayList<>();
 
                 if (homePlacesBaseDto != null)
                 {
                     if (homePlacesBaseDto.msgCode == 100 && homePlacesBaseDto.data != null)
                     {
-                        homePlaceList = homePlacesBaseDto.data.getHomePlaceList();
-                        if (homePlaceList == null || homePlaceList.size() == 0)
+                        List<HomePlace> list = homePlacesBaseDto.data.getHomePlaceList();
+
+                        if (list != null && list.size() > 0)
                         {
-                            homePlaceList = new ArrayList<HomePlace>();
+                            homePlaceList.addAll(list);
                         }
                     } else
                     {

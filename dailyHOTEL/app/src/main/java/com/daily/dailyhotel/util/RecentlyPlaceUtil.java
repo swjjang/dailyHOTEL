@@ -271,6 +271,60 @@ public class RecentlyPlaceUtil
         return realmResults;
     }
 
+    public static long getOldestSavingTime(ServiceType... serviceTypes)
+    {
+        Realm realm = Realm.getDefaultInstance();
+        RealmQuery query = realm.where(RecentlyRealmObject.class);
+
+        if (serviceTypes != null)
+        {
+            if (serviceTypes.length > 1)
+            {
+                query.beginGroup();
+
+                for (int i = 0; i < serviceTypes.length; i++)
+                {
+                    if (i > 0)
+                    {
+                        query.or();
+                    }
+
+                    query.equalTo("serviceType", serviceTypes[i].name());
+                }
+
+                query.endGroup();
+            } else
+            {
+                query.equalTo("serviceType", serviceTypes[0].name());
+            }
+        }
+
+        RealmResults<RecentlyRealmObject> realmResults = query.findAllSorted("savingTime", Sort.ASCENDING);
+        if (realmResults == null || realmResults.size() == 0)
+        {
+            return -1;
+        }
+
+        return realmResults.get(0).savingTime;
+    }
+
+    public static RecentlyRealmObject getRecentlyPlace(ServiceType serviceType, int index)
+    {
+        Realm realm = Realm.getDefaultInstance();
+
+        RealmQuery query = realm.where(RecentlyRealmObject.class);
+        query.equalTo("serviceType", serviceType.name());
+        query.equalTo("index", index);
+
+        RealmResults<RecentlyRealmObject> realmResults = query.findAllSorted("savingTime", Sort.DESCENDING);
+        if (realmResults != null && realmResults.size() > 0)
+        {
+            return realmResults.get(0);
+        }
+
+        return null;
+    }
+
     public static String getTargetIndices(ServiceType serviceType, int maxSize)
     {
         RealmResults<RecentlyRealmObject> recentlyList = RecentlyPlaceUtil.getRecentlyTypeList(serviceType);
@@ -468,7 +522,7 @@ public class RecentlyPlaceUtil
         return homePlaceList;
     }
 
-    public static List<HomePlace> mergeHomePlaceList(Context context, List<HomePlace> homePlacesList, StayOutbounds stayOutbounds)
+    public static ArrayList<HomePlace> mergeHomePlaceList(Context context, ArrayList<HomePlace> homePlacesList, StayOutbounds stayOutbounds)
     {
         List<StayOutbound> stayOutboundList = stayOutbounds.getStayOutbound();
         if (stayOutboundList == null || stayOutboundList.size() == 0)
@@ -607,7 +661,7 @@ public class RecentlyPlaceUtil
         return homePlace;
     }
 
-    private static void sortHomePlaceList(ArrayList<HomePlace> actualList, RecentlyPlaceUtil.ServiceType... serviceTypes)
+    public static void sortHomePlaceList(ArrayList<HomePlace> actualList, RecentlyPlaceUtil.ServiceType... serviceTypes)
     {
         if (actualList == null || actualList.size() == 0)
         {
@@ -630,5 +684,31 @@ public class RecentlyPlaceUtil
                 return position1.compareTo(position2);
             }
         });
+    }
+
+    public static ServiceType getServiceType(String serviceTypeString)
+    {
+        if (DailyTextUtils.isTextEmpty(serviceTypeString) == true)
+        {
+            return null;
+        }
+
+        ServiceType serviceType = null;
+
+        if (SERVICE_TYPE_OB_STAY_NAME.equalsIgnoreCase(serviceTypeString) //
+            || ServiceType.OB_STAY.name().equalsIgnoreCase(serviceTypeString))
+        {
+            serviceType = ServiceType.OB_STAY;
+        } else if (SERVICE_TYPE_IB_STAY_NAME.equalsIgnoreCase(serviceTypeString) //
+            || ServiceType.IB_STAY.name().equalsIgnoreCase(serviceTypeString))
+        {
+            serviceType = ServiceType.IB_STAY;
+        } else if (SERVICE_TYPE_GOURMET_NAME.equalsIgnoreCase(serviceTypeString) //
+            || ServiceType.GOURMET.name().equalsIgnoreCase(serviceTypeString))
+        {
+            serviceType = ServiceType.GOURMET;
+        }
+
+        return serviceType;
     }
 }

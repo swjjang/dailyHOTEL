@@ -7,6 +7,7 @@ import com.twoheart.dailyhotel.model.time.GourmetBookingDay;
 import com.twoheart.dailyhotel.model.time.StayBookingDay;
 import com.twoheart.dailyhotel.network.model.HomePlace;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.Observable;
@@ -19,7 +20,7 @@ public interface RecentlyInterface
 {
     Observable<StayOutbounds> getStayOutboundRecentlyList(int numberOfResults);
 
-    Observable<List<HomePlace>> getHomeRecentlyList(int maxSize);
+    Observable<ArrayList<HomePlace>> getHomeRecentlyList(int maxSize);
 
     Observable<List<Stay>> getStayInboundRecentlyList(StayBookingDay stayBookingDay);
 
