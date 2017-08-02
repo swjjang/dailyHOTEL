@@ -116,7 +116,7 @@ public class GourmetSearchFragment extends PlaceSearchFragment
                                 startSearchResultActivity();
                             } else if (searchType == SearchType.LOCATION)
                             {
-                               mOnEventListener.onSearchMyLocation();
+                                mOnEventListener.onSearchMyLocation();
                             } else if (searchType == SearchType.AUTOCOMPLETE)
                             {
                                 mOnEventListener.onSearch(inputText, keyword);
@@ -472,7 +472,10 @@ public class GourmetSearchFragment extends PlaceSearchFragment
 
                         for (GourmetKeyword gourmetKeyword : list)
                         {
-                            if (gourmetKeyword.availableTickets == 0 || gourmetKeyword.availableTickets < gourmetKeyword.minimumOrderQuantity || gourmetKeyword.isExpired == true)
+                            if (gourmetKeyword.index > 0 //
+                                && (gourmetKeyword.availableTickets == 0//
+                                || gourmetKeyword.availableTickets < gourmetKeyword.minimumOrderQuantity//
+                                || gourmetKeyword.isExpired == true))
                             {
                                 soldOutCount++;
                             }
