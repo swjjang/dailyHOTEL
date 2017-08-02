@@ -1077,6 +1077,8 @@ public class AnalyticsManager
         public static final String GOURMET_RECOMMEND = "gourmet_recommend";
         public static final String LIST_CLICK = "list_click";
 
+        public static final String THIRD_PARTY_PROVIDER_CHECK = "third_party_provider_check";
+
     }
 
     public static class Category

@@ -2082,6 +2082,16 @@ public class HotelPaymentActivity extends PlacePaymentActivity
         }
 
         @Override
+        public void onAgreementCheckClick(boolean isChecked)
+        {
+            if (isChecked == true)
+            {
+                AnalyticsManager.getInstance(HotelPaymentActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS//
+                    , AnalyticsManager.Action.THIRD_PARTY_PROVIDER_CHECK, AnalyticsManager.Label.STAY, null);
+            }
+        }
+
+        @Override
         public void finish()
         {
             HotelPaymentActivity.this.finish();

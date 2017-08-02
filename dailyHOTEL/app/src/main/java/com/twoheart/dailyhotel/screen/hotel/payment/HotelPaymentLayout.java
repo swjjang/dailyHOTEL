@@ -136,6 +136,8 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
         void onCouponClick(boolean isRadioLayout);
 
         void onVisitType(boolean isWalking);
+
+        void onAgreementCheckClick(boolean isChecked);
     }
 
     public HotelPaymentLayout(Context context, OnEventListener mOnEventListener)
@@ -378,6 +380,18 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
             {
                 mThirdPartTermsLayout.setTag(mThirdPartTermsLayout.getHeight());
                 mThirdPartTermsLayout.setVisibility(View.GONE);
+            }
+        });
+
+        mAgreeThirdPartyCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener()
+        {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
+            {
+                if (mOnEventListener != null)
+                {
+                    ((OnEventListener) mOnEventListener).onAgreementCheckClick(isChecked);
+                }
             }
         });
 

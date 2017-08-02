@@ -1655,6 +1655,16 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
         }
 
         @Override
+        public void onAgreementCheckClick(boolean isChecked)
+        {
+            if (isChecked == true)
+            {
+                AnalyticsManager.getInstance(GourmetPaymentActivity.this).recordEvent(AnalyticsManager.Category.GOURMET_BOOKINGS//
+                    , AnalyticsManager.Action.THIRD_PARTY_PROVIDER_CHECK, AnalyticsManager.Label.GOURMET, null);
+            }
+        }
+
+        @Override
         public void finish()
         {
             GourmetPaymentActivity.this.finish();

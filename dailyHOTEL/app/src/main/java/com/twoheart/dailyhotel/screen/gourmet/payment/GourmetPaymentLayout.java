@@ -117,6 +117,8 @@ public class GourmetPaymentLayout extends BaseLayout implements View.OnClickList
         void showCallDialog();
 
         void onCouponClick(boolean isRadioLayout);
+
+        void onAgreementCheckClick(boolean isChecked);
     }
 
     public GourmetPaymentLayout(Context context, OnEventListener mOnEventListener)
@@ -336,6 +338,18 @@ public class GourmetPaymentLayout extends BaseLayout implements View.OnClickList
             {
                 mThirdPartTermsLayout.setTag(mThirdPartTermsLayout.getHeight());
                 mThirdPartTermsLayout.setVisibility(View.GONE);
+            }
+        });
+
+        mAgreeThirdPartyCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener()
+        {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
+            {
+                if (mOnEventListener != null)
+                {
+                    ((OnEventListener) mOnEventListener).onAgreementCheckClick(isChecked);
+                }
             }
         });
 
