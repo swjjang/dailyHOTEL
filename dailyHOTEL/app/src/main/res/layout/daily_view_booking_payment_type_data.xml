@@ -236,11 +236,6 @@
                     app:layout_constraintTop_toTopOf="parent"/>
             </android.support.constraint.ConstraintLayout>
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1px"
-                android:background="@color/default_line_cdcdcdd"/>
-
             <android.support.constraint.ConstraintLayout
                 android:id="@+id/cardLayout"
                 android:layout_width="match_parent"
@@ -248,6 +243,14 @@
                 android:layout_marginLeft="1dp"
                 android:layout_marginRight="1dp"
                 android:background="@drawable/selector_select_paymnettype_background">
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="1px"
+                    android:background="@color/default_line_cdcdcdd"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"/>
 
                 <ImageView
                     android:id="@+id/cardImageView"
@@ -300,11 +303,6 @@
                     app:layout_constraintTop_toTopOf="parent"/>
             </android.support.constraint.ConstraintLayout>
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1px"
-                android:background="@color/default_line_cdcdcdd"/>
-
             <android.support.constraint.ConstraintLayout
                 android:id="@+id/phoneLayout"
                 android:layout_width="match_parent"
@@ -312,6 +310,14 @@
                 android:layout_marginLeft="1dp"
                 android:layout_marginRight="1dp"
                 android:background="@drawable/selector_select_paymnettype_background">
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="1px"
+                    android:background="@color/default_line_cdcdcdd"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"/>
 
                 <ImageView
                     android:id="@+id/phoneImageView"
@@ -364,11 +370,6 @@
                     app:layout_constraintTop_toTopOf="parent"/>
             </android.support.constraint.ConstraintLayout>
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1px"
-                android:background="@color/default_line_cdcdcdd"/>
-
             <android.support.constraint.ConstraintLayout
                 android:id="@+id/transferLayout"
                 android:layout_width="match_parent"
@@ -377,6 +378,14 @@
                 android:layout_marginLeft="1dp"
                 android:layout_marginRight="1dp"
                 android:background="@drawable/selector_select_paymnettype_bottom_background">
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="1px"
+                    android:background="@color/default_line_cdcdcdd"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"/>
 
                 <ImageView
                     android:id="@+id/transferImageView"

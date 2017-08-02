@@ -6,10 +6,14 @@ import android.support.constraint.ConstraintLayout;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.LinearLayout;
 
 import com.daily.base.util.DailyTextUtils;
+import com.daily.base.util.ScreenUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.DailyViewBookingPaymentTypeDataBinding;
+
+import java.util.ArrayList;
 
 public class DailyBookingPaymentTypeView extends ConstraintLayout implements View.OnClickListener
 {
@@ -260,6 +264,69 @@ public class DailyBookingPaymentTypeView extends ConstraintLayout implements Vie
                     mViewDataBinding.freePaymentView.setVisibility(GONE);
                 }
                 break;
+        }
+
+        if (paymentType != PaymentType.FREE)
+        {
+            ArrayList<View> paymentTypeViewList = new ArrayList<>();
+
+            if (mViewDataBinding.simpleCardLayout.getVisibility() == VISIBLE)
+            {
+                paymentTypeViewList.add(mViewDataBinding.simpleCardLayout);
+            }
+
+            if (mViewDataBinding.cardLayout.getVisibility() == VISIBLE)
+            {
+                paymentTypeViewList.add(mViewDataBinding.cardLayout);
+            }
+
+            if (mViewDataBinding.phoneLayout.getVisibility() == VISIBLE)
+            {
+                paymentTypeViewList.add(mViewDataBinding.phoneLayout);
+            }
+
+            if (mViewDataBinding.transferLayout.getVisibility() == VISIBLE)
+            {
+                paymentTypeViewList.add(mViewDataBinding.transferLayout);
+            }
+
+            if (paymentTypeViewList.size() == 0)
+            {
+                return;
+            }
+
+            final int DP_1 = ScreenUtils.dpToPx(getContext(), 1);
+
+            // 결제 타입이 1가지만 된경우
+            if (paymentTypeViewList.size() == 1)
+            {
+                View view = paymentTypeViewList.get(0);
+                ((LinearLayout.LayoutParams) view.getLayoutParams()).setMargins(DP_1, DP_1, DP_1, DP_1);
+                view.setBackgroundResource(R.drawable.selector_select_paymnettype_top_bottom_background);
+            } else
+            {
+                int size = paymentTypeViewList.size();
+                View view;
+
+                for (int i = 0; i < size; i++)
+                {
+                    view = paymentTypeViewList.get(i);
+
+                    if (i == 0)
+                    {
+                        ((LinearLayout.LayoutParams) view.getLayoutParams()).setMargins(DP_1, DP_1, DP_1, 0);
+                        view.setBackgroundResource(R.drawable.selector_select_paymnettype_top_background);
+                    } else if (i == size - 1)
+                    {
+                        ((LinearLayout.LayoutParams) view.getLayoutParams()).setMargins(DP_1, 0, DP_1, DP_1);
+                        view.setBackgroundResource(R.drawable.selector_select_paymnettype_bottom_background);
+                    } else
+                    {
+                        ((LinearLayout.LayoutParams) view.getLayoutParams()).setMargins(DP_1, 0, DP_1, 0);
+                        view.setBackgroundResource(R.drawable.selector_select_paymnettype_background);
+                    }
+                }
+            }
         }
     }
 
