@@ -1134,10 +1134,22 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
                 {
                     if (mThirdPartTermsLayout.getVisibility() == View.VISIBLE)
                     {
-                        hideOfferPersonalInformation(mArrowImageView, mThirdPartTermsLayout);
+                        mArrowImageView.setRotation(0);
+
+                        mThirdPartTermsLayout.setVisibility(View.GONE);
                     } else
                     {
-                        showOfferPersonalInformation(mArrowImageView, mThirdPartTermsLayout);
+                        mArrowImageView.setRotation(-180);
+
+                        mThirdPartTermsLayout.setVisibility(View.VISIBLE);
+                        mScrollView.post(new Runnable()
+                        {
+                            @Override
+                            public void run()
+                            {
+                                mScrollView.fullScroll(View.FOCUS_DOWN);
+                            }
+                        });
                     }
                 }
                 break;

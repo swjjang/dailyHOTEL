@@ -593,6 +593,26 @@ public class StayOutboundPaymentView extends BaseDialogView<StayOutboundPaymentV
         mRefundDataBinding.agreementThirdPartyView.setOnAgreementClickListener(new DailyBookingAgreementThirdPartyView.OnAgreementClickListener()
         {
             @Override
+            public void onExpandInformationClick()
+            {
+                mRefundDataBinding.agreementThirdPartyView.expandInformation();
+                getViewDataBinding().scrollView.post(new Runnable()
+                {
+                    @Override
+                    public void run()
+                    {
+                        getViewDataBinding().scrollView.fullScroll(View.FOCUS_DOWN);
+                    }
+                });
+            }
+
+            @Override
+            public void onCollapseInformationClick()
+            {
+                mRefundDataBinding.agreementThirdPartyView.collapseInformation();
+            }
+
+            @Override
             public void onAgreementClick(boolean isChecked)
             {
                 getEventListener().onAgreedTermClick(isChecked);

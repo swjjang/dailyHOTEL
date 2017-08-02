@@ -92,7 +92,7 @@ public class GourmetPaymentLayout extends BaseLayout implements View.OnClickList
     private CheckBox mAgreeThirdPartyCheckBox;
     //
     int mAnimationValue;
-    ValueAnimator mValueAnimator, mThirdPartyValueAnimator;
+    ValueAnimator mValueAnimator;
     boolean mIsAnimationCancel;
     //
     Rect mGuestFrameLayoutRect = new Rect();
@@ -960,10 +960,22 @@ public class GourmetPaymentLayout extends BaseLayout implements View.OnClickList
                 {
                     if (mThirdPartTermsLayout.getVisibility() == View.VISIBLE)
                     {
-                        hideOfferPersonalInformation(mArrowImageView, mThirdPartTermsLayout);
+                        mArrowImageView.setRotation(0);
+
+                        mThirdPartTermsLayout.setVisibility(View.GONE);
                     } else
                     {
-                        showOfferPersonalInformation(mArrowImageView, mThirdPartTermsLayout);
+                        mArrowImageView.setRotation(-180);
+
+                        mThirdPartTermsLayout.setVisibility(View.VISIBLE);
+                        mScrollView.post(new Runnable()
+                        {
+                            @Override
+                            public void run()
+                            {
+                                mScrollView.fullScroll(View.FOCUS_DOWN);
+                            }
+                        });
                     }
                 }
                 break;
@@ -1077,155 +1089,5 @@ public class GourmetPaymentLayout extends BaseLayout implements View.OnClickList
         mValueAnimator.setDuration(300);
         mValueAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
         mValueAnimator.start();
-    }
-
-    private void showOfferPersonalInformation(View arrowImageView, View view)
-    {
-        if (view == null || arrowImageView == null)
-        {
-            return;
-        }
-
-        if (mThirdPartyValueAnimator != null && mThirdPartyValueAnimator.isRunning() == true)
-        {
-            return;
-        }
-
-        Integer height = (Integer) view.getTag();
-
-        if (height == null)
-        {
-            return;
-        }
-
-        mThirdPartyValueAnimator = ValueAnimator.ofInt(0, height.intValue());
-        mThirdPartyValueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener()
-        {
-            @Override
-            public void onAnimationUpdate(ValueAnimator valueAnimator)
-            {
-                if (valueAnimator == null)
-                {
-                    return;
-                }
-
-                int val = (int) valueAnimator.getAnimatedValue();
-
-                ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
-                layoutParams.height = val;
-                view.requestLayout();
-
-                arrowImageView.setRotation(-180.0f * val / height);
-            }
-        });
-
-        mThirdPartyValueAnimator.setDuration(200);
-        mThirdPartyValueAnimator.addListener(new Animator.AnimatorListener()
-        {
-            @Override
-            public void onAnimationStart(Animator animation)
-            {
-                view.setVisibility(View.VISIBLE);
-            }
-
-            @Override
-            public void onAnimationEnd(Animator animation)
-            {
-                mThirdPartyValueAnimator.removeAllUpdateListeners();
-                mThirdPartyValueAnimator.removeAllListeners();
-                mThirdPartyValueAnimator = null;
-
-                arrowImageView.setRotation(-180);
-            }
-
-            @Override
-            public void onAnimationCancel(Animator animation)
-            {
-
-            }
-
-            @Override
-            public void onAnimationRepeat(Animator animation)
-            {
-
-            }
-        });
-
-        mThirdPartyValueAnimator.start();
-    }
-
-    private void hideOfferPersonalInformation(View arrowImageView, View view)
-    {
-        if (arrowImageView == null || view == null)
-        {
-            return;
-        }
-
-        if (mThirdPartyValueAnimator != null && mThirdPartyValueAnimator.isRunning() == true)
-        {
-            return;
-        }
-
-        Integer height = (Integer) view.getTag();
-
-        if (height == null)
-        {
-            return;
-        }
-
-        mThirdPartyValueAnimator = ValueAnimator.ofInt(height, 0);
-        mThirdPartyValueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener()
-        {
-            @Override
-            public void onAnimationUpdate(ValueAnimator valueAnimator)
-            {
-                if (valueAnimator == null)
-                {
-                    return;
-                }
-
-                int val = (int) valueAnimator.getAnimatedValue();
-                ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
-                layoutParams.height = val;
-                view.requestLayout();
-
-                arrowImageView.setRotation(-180.0f * val / height);
-            }
-        });
-
-        mThirdPartyValueAnimator.setDuration(200);
-        mThirdPartyValueAnimator.addListener(new Animator.AnimatorListener()
-        {
-            @Override
-            public void onAnimationStart(Animator animation)
-            {
-
-            }
-
-            @Override
-            public void onAnimationEnd(Animator animation)
-            {
-                mThirdPartyValueAnimator.removeAllUpdateListeners();
-                mThirdPartyValueAnimator.removeAllListeners();
-                mThirdPartyValueAnimator = null;
-
-                arrowImageView.setRotation(0);
-                view.setVisibility(View.GONE);
-            }
-
-            @Override
-            public void onAnimationCancel(Animator animation)
-            {
-
-            }
-
-            @Override
-            public void onAnimationRepeat(Animator animation)
-            {
-
-            }
-        });
-
-        mThirdPartyValueAnimator.start();
     }
 }
