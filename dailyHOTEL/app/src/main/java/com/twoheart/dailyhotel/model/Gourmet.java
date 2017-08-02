@@ -30,6 +30,7 @@ public class Gourmet extends Place
     public int availableTicketNumbers;
     public int minimumOrderQuantity;
     public boolean expired;
+    public String regionName;
 
     public Grade grade;
 
@@ -56,10 +57,16 @@ public class Gourmet extends Place
 
         dest.writeString(dBenefitText);
         dest.writeInt(persons);
-        dest.writeSerializable(grade);
         dest.writeString(category);
+        dest.writeInt(categoryCode);
         dest.writeInt(categorySequence);
         dest.writeString(subCategory);
+        dest.writeDouble(distance);
+        dest.writeInt(availableTicketNumbers);
+        dest.writeInt(minimumOrderQuantity);
+        dest.writeInt(expired ? 1 : 0);
+        dest.writeString(regionName);
+        dest.writeSerializable(grade);
     }
 
     protected void readFromParcel(Parcel in)
@@ -68,10 +75,16 @@ public class Gourmet extends Place
 
         dBenefitText = in.readString();
         persons = in.readInt();
-        grade = (Grade) in.readSerializable();
         category = in.readString();
+        categoryCode = in.readInt();
         categorySequence = in.readInt();
         subCategory = in.readString();
+        distance = in.readDouble();
+        availableTicketNumbers = in.readInt();
+        minimumOrderQuantity = in.readInt();
+        expired = in.readInt() == 1;
+        regionName = in.readString();
+        grade = (Grade) in.readSerializable();
     }
 
     public boolean setData(JSONObject jsonObject, String imageUrl, SparseArray<String> stringSparseArray)
@@ -101,6 +114,7 @@ public class Gourmet extends Place
             category = jsonObject.getString("category");
             categoryCode = jsonObject.getInt("categoryCode");
             categorySequence = jsonObject.getInt("categorySeq");
+            regionName = jsonObject.getString("regionName");
 
             if (jsonObject.has("categorySub") == true)
             {
