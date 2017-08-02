@@ -149,8 +149,8 @@ public class StaySearchResultListFragment extends StayListFragment
                                     break;
 
                                 case LOCATION:
-                                    AnalyticsManager.getInstance(getContext()).recordEvent(AnalyticsManager.Category.NEARBY_SEARCH_RESULT//
-                                        , ((StaySearchCuration) mStayCuration).getKeyword().name, integer.toString(), soldOutCount, null);
+                                    //                                    AnalyticsManager.getInstance(getContext()).recordEvent(AnalyticsManager.Category.NEARBY_SEARCH_RESULT//
+                                    //                                        , ((StaySearchCuration) mStayCuration).getKeyword().name, integer.toString(), soldOutCount, null);
                                     break;
 
                                 case RECENT:
