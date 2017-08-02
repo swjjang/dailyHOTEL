@@ -316,7 +316,7 @@ public class RecentPlacesTabActivity extends BaseActivity
     private boolean isEmptyRecentStayPlace()
     {
         RealmResults<RecentlyRealmObject> resultList = RecentlyPlaceUtil.getRecentlyTypeList( //
-            RecentlyPlaceUtil.ServiceType.IB_STAY, RecentlyPlaceUtil.ServiceType.OB_STAY);
+            RecentlyPlaceUtil.ServiceType.HOTEL, RecentlyPlaceUtil.ServiceType.OB_STAY);
         return resultList == null || resultList.size() == 0;
     }
 

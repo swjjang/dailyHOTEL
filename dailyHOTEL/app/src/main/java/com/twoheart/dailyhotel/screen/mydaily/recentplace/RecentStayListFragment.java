@@ -206,7 +206,7 @@ public class RecentStayListFragment extends RecentPlacesListFragment
             return;
         }
 
-        ArrayList<Integer> expectedList = RecentlyPlaceUtil.getRecentlyIndexList(RecentlyPlaceUtil.ServiceType.IB_STAY, RecentlyPlaceUtil.ServiceType.OB_STAY);
+        ArrayList<Integer> expectedList = RecentlyPlaceUtil.getRecentlyIndexList(RecentlyPlaceUtil.ServiceType.HOTEL, RecentlyPlaceUtil.ServiceType.OB_STAY);
         if (expectedList == null || expectedList.size() == 0)
         {
             return;
@@ -502,7 +502,7 @@ public class RecentStayListFragment extends RecentPlacesListFragment
             return;
         }
 
-        RecentlyPlaceUtil.deleteRecentlyItemAsync(RecentlyPlaceUtil.ServiceType.IB_STAY, place.index);
+        RecentlyPlaceUtil.deleteRecentlyItemAsync(RecentlyPlaceUtil.ServiceType.HOTEL, place.index);
 
         mListLayout.setData(mListLayout.getList(), mPlaceBookingDay);
         mRecentPlaceListFragmentListener.onDeleteItemClickAnalytics();

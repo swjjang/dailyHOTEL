@@ -88,7 +88,7 @@ public class RecentlyRemoteImpl implements RecentlyInterface
     @Override
     public Observable<ArrayList<HomePlace>> getHomeRecentlyList(int maxSize)
     {
-        RealmResults<RecentlyRealmObject> realmResults = RecentlyPlaceUtil.getRecentlyTypeList(RecentlyPlaceUtil.ServiceType.IB_STAY, RecentlyPlaceUtil.ServiceType.GOURMET);
+        RealmResults<RecentlyRealmObject> realmResults = RecentlyPlaceUtil.getRecentlyTypeList(RecentlyPlaceUtil.ServiceType.HOTEL, RecentlyPlaceUtil.ServiceType.GOURMET);
         JSONArray recentJsonArray = RecentlyPlaceUtil.getRecentlyJsonArray(realmResults, maxSize);
         JSONObject recentJsonObject = new JSONObject();
 
@@ -134,7 +134,7 @@ public class RecentlyRemoteImpl implements RecentlyInterface
     @Override
     public Observable<List<Stay>> getStayInboundRecentlyList(StayBookingDay stayBookingDay)
     {
-        String targetIndices = RecentlyPlaceUtil.getTargetIndices(RecentlyPlaceUtil.ServiceType.IB_STAY, RecentlyPlaceUtil.MAX_RECENT_PLACE_COUNT);
+        String targetIndices = RecentlyPlaceUtil.getTargetIndices(RecentlyPlaceUtil.ServiceType.HOTEL, RecentlyPlaceUtil.MAX_RECENT_PLACE_COUNT);
 
         if (TextUtils.isEmpty(targetIndices) == true)
         {

@@ -51,7 +51,7 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
         + RecentlyList.PLACE_INDEX + " INTEGER NOT NULL UNIQUE DEFAULT 0, " //
         + RecentlyList.NAME + " TEXT NULL, " //
         + RecentlyList.ENGLISH_NAME + " TEXT NULL, " //
-        + RecentlyList.SERVICE_TYPE + " TEXT NOT NULL, " // ServiceType.name() 으로 저장 예정 IB_STAY, OB_STAY, GOURMET
+        + RecentlyList.SERVICE_TYPE + " TEXT NOT NULL, " // ServiceType.name() 으로 저장 예정 HOTEL, OB_STAY, GOURMET
         + RecentlyList.SAVING_TIME + " LONG NOT NULL DEFAULT 0, " //
         + RecentlyList.IMAGE_URL + " TEXT NULL " + ");";
 
@@ -227,15 +227,15 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
         StringBuilder sqlBuilder = new StringBuilder("SELECT * FROM ");
         sqlBuilder.append(T_RECENTLY);
 
-        //        if (serviceType != null)
-        //        {
-        //            sqlBuilder.append(" WHERE ");
-        //            sqlBuilder.append(RecentlyColumns.SERVICE_TYPE).append("=\"").append(serviceType.name()).append("\"");
-        //            sqlBuilder.append(" AND ").append(RecentlyColumns.PLACE_INDEX).append("=").append(index).append("");
-        //        } else
-        //        {
-        sqlBuilder.append(" WHERE ").append(RecentlyColumns.PLACE_INDEX).append("=").append(index).append("");
-        //        }
+        if (serviceType != null)
+        {
+            sqlBuilder.append(" WHERE ");
+            sqlBuilder.append(RecentlyColumns.SERVICE_TYPE).append("=\"").append(serviceType.name()).append("\"");
+            sqlBuilder.append(" AND ").append(RecentlyColumns.PLACE_INDEX).append("=").append(index).append("");
+        } else
+        {
+            sqlBuilder.append(" WHERE ").append(RecentlyColumns.PLACE_INDEX).append("=").append(index).append("");
+        }
 
         Cursor cursor = rawQuery(sqlBuilder.toString());
 
@@ -462,7 +462,7 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
     {
         try
         {
-//            File sd = Environment.getExternalStorageDirectory();
+            //            File sd = Environment.getExternalStorageDirectory();
             File sd = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
             File data = Environment.getDataDirectory();
 

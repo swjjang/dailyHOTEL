@@ -49,7 +49,7 @@ public class RecentlyPlaceUtil
 
     public enum ServiceType
     {
-        IB_STAY,
+        HOTEL,
         GOURMET,
         OB_STAY
     }
@@ -58,6 +58,8 @@ public class RecentlyPlaceUtil
     {
         RecentPlaces recentPlaces = new RecentPlaces(context);
         ArrayList<HomeRecentParam> recentlyParamList = recentPlaces.getParamList(RecentPlaces.MAX_RECENT_PLACE_COUNT);
+
+        changeServiceType();
 
         if (recentlyParamList == null || recentlyParamList.size() == 0)
         {
@@ -80,6 +82,34 @@ public class RecentlyPlaceUtil
         }
 
         setRecentlyRealmListAsync(recentPlaces, realmObjectRealmList);
+    }
+
+    private static void changeServiceType()
+    {
+
+        Realm realm = Realm.getDefaultInstance();
+        realm.executeTransactionAsync(new Realm.Transaction()
+        {
+            @Override
+            public void execute(Realm realm)
+            {
+                RealmResults<RecentlyRealmObject> results = realm.where(RecentlyRealmObject.class).equalTo("serviceType", "IB_STAY").findAll();
+                if (results == null || results.size() == 0)
+                {
+                    return;
+                }
+
+                RealmList<RecentlyRealmObject> list = new RealmList<RecentlyRealmObject>();
+
+                for (RecentlyRealmObject realmObject : results)
+                {
+                    realmObject.serviceType = ServiceType.HOTEL.name();
+                    list.add(realmObject);
+                }
+
+                realm.copyToRealmOrUpdate(list);
+            }
+        });
     }
 
     private static void setRecentlyRealmListAsync(RecentPlaces recentPlaces, RealmList<RecentlyRealmObject> list)
@@ -149,7 +179,7 @@ public class RecentlyPlaceUtil
 
             if (SERVICE_TYPE_IB_STAY_NAME.equalsIgnoreCase(param.serviceType) == true)
             {
-                recentlyRealmObject.serviceType = ServiceType.IB_STAY.name();
+                recentlyRealmObject.serviceType = ServiceType.HOTEL.name();
             } else if (SERVICE_TYPE_GOURMET_NAME.equalsIgnoreCase(param.serviceType) == true)
             {
                 recentlyRealmObject.serviceType = ServiceType.GOURMET.name();
@@ -214,7 +244,7 @@ public class RecentlyPlaceUtil
                 String typeString = null;
 
                 ServiceType serviceType = ServiceType.valueOf(realmObject.serviceType);
-                if (ServiceType.IB_STAY == serviceType)
+                if (ServiceType.HOTEL == serviceType)
                 {
                     typeString = "HOTEL";
                 } else if (ServiceType.GOURMET == serviceType)
@@ -268,6 +298,8 @@ public class RecentlyPlaceUtil
         }
 
         RealmResults<RecentlyRealmObject> realmResults = query.findAllSorted("savingTime", Sort.DESCENDING);
+
+        realm.close();
         return realmResults;
     }
 
@@ -300,6 +332,9 @@ public class RecentlyPlaceUtil
         }
 
         RealmResults<RecentlyRealmObject> realmResults = query.findAllSorted("savingTime", Sort.ASCENDING);
+
+        realm.close();
+
         if (realmResults == null || realmResults.size() == 0)
         {
             return -1;
@@ -313,10 +348,14 @@ public class RecentlyPlaceUtil
         Realm realm = Realm.getDefaultInstance();
 
         RealmQuery query = realm.where(RecentlyRealmObject.class);
+
         query.equalTo("serviceType", serviceType.name());
         query.equalTo("index", index);
 
         RealmResults<RecentlyRealmObject> realmResults = query.findAllSorted("savingTime", Sort.DESCENDING);
+
+        realm.close();
+
         if (realmResults != null && realmResults.size() > 0)
         {
             return realmResults.get(0);
@@ -700,9 +739,9 @@ public class RecentlyPlaceUtil
         {
             serviceType = ServiceType.OB_STAY;
         } else if (SERVICE_TYPE_IB_STAY_NAME.equalsIgnoreCase(serviceTypeString) //
-            || ServiceType.IB_STAY.name().equalsIgnoreCase(serviceTypeString))
+            || ServiceType.HOTEL.name().equalsIgnoreCase(serviceTypeString))
         {
-            serviceType = ServiceType.IB_STAY;
+            serviceType = ServiceType.HOTEL;
         } else if (SERVICE_TYPE_GOURMET_NAME.equalsIgnoreCase(serviceTypeString) //
             || ServiceType.GOURMET.name().equalsIgnoreCase(serviceTypeString))
         {

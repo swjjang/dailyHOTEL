@@ -102,7 +102,6 @@ import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.functions.Function3;
 import io.realm.Realm;
-import io.realm.RealmConfiguration;
 import retrofit2.Call;
 import retrofit2.HttpException;
 import retrofit2.Response;
@@ -1203,10 +1202,14 @@ public class HomeFragment extends BaseMenuNavigationFragment
                             try
                             {
                                 Realm realm = Realm.getDefaultInstance();
-                                RealmConfiguration configuration = realm.getConfiguration();
-                                Realm.deleteRealm(configuration);
-                                realm.deleteAll();
-                                realm.close();
+                                realm.executeTransactionAsync(new Realm.Transaction()
+                                {
+                                    @Override
+                                    public void execute(Realm realm)
+                                    {
+                                        realm.deleteAll();
+                                    }
+                                });
                             } catch (Exception e)
                             {
                                 ExLog.e(e.toString());
