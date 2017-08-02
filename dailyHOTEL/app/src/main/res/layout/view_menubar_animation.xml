@@ -33,7 +33,7 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:paddingTop="4dp">
+                android:paddingTop="10dp">
 
                 <ImageView
                     android:id="@+id/homeImageView"
@@ -47,7 +47,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="top|center_horizontal"
-                    android:paddingTop="29dp"
+                    android:paddingTop="50dp"
                     android:text="@string/menu_item_title_home"
                     android:textColor="@drawable/selector_menu_textcolor"
                     android:textSize="9dp"/>
@@ -58,7 +58,7 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:paddingTop="4dp">
+                android:paddingTop="10dp">
 
                 <ImageView
                     android:id="@+id/bookingImageView"
@@ -72,7 +72,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="top|center_horizontal"
-                    android:paddingTop="29dp"
+                    android:paddingTop="50dp"
                     android:text="@string/menu_item_title_bookings"
                     android:textColor="@drawable/selector_menu_textcolor"
                     android:textSize="9dp"/>
@@ -83,7 +83,7 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:paddingTop="4dp">
+                android:paddingTop="10dp">
 
                 <ImageView
                     android:id="@+id/myDailyImageView"
@@ -98,7 +98,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="top|center_horizontal"
-                    android:paddingTop="29dp"
+                    android:paddingTop="50dp"
                     android:text="@string/menu_item_title_mydaily"
                     android:textColor="@drawable/selector_menu_textcolor"
                     android:textSize="9dp"/>
@@ -119,7 +119,7 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:paddingTop="4dp">
+                android:paddingTop="10dp">
 
                 <ImageView
                     android:id="@+id/informationImageView"
@@ -134,7 +134,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="top|center_horizontal"
-                    android:paddingTop="29dp"
+                    android:paddingTop="50dp"
                     android:text="@string/menu_item_title_information"
                     android:textColor="@drawable/selector_menu_textcolor"
                     android:textSize="9dp"/>

@@ -12,7 +12,7 @@ import com.daily.base.util.ScreenUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 
-public class MenuBarLayout implements View.OnClickListener
+public class MenuBarAnimationLayout implements View.OnClickListener
 {
     private static final int MENU_HOME_INDEX = 0;
     private static final int MENU_BOOKING_INDEX = 1;
@@ -31,9 +31,9 @@ public class MenuBarLayout implements View.OnClickListener
 
     public static class MenuBarLayoutOnPageChangeListener
     {
-        private MenuBarLayout mMenuBarLayout;
+        private MenuBarAnimationLayout mMenuBarLayout;
 
-        public MenuBarLayoutOnPageChangeListener(MenuBarLayout menuBarLayout)
+        public MenuBarLayoutOnPageChangeListener(MenuBarAnimationLayout menuBarLayout)
         {
             mMenuBarLayout = menuBarLayout;
         }
@@ -61,7 +61,7 @@ public class MenuBarLayout implements View.OnClickListener
         void onMenuReselected(boolean isCallMenuBar, int index);
     }
 
-    public MenuBarLayout(BaseActivity baseActivity, ViewGroup viewGroup, OnMenuBarSelectedListener listener)
+    public MenuBarAnimationLayout(BaseActivity baseActivity, ViewGroup viewGroup, OnMenuBarSelectedListener listener)
     {
         mBaseActivity = baseActivity;
         mOnMenuBarSelectedListener = listener;
@@ -129,7 +129,7 @@ public class MenuBarLayout implements View.OnClickListener
         {
             if (mSelectedMenuIndex >= 0)
             {
-                mMenuView[mSelectedMenuIndex].setSelected(false);
+                hideMenuText(mMenuView[mSelectedMenuIndex]);
 
                 if (mOnMenuBarSelectedListener != null)
                 {
@@ -137,7 +137,7 @@ public class MenuBarLayout implements View.OnClickListener
                 }
             }
 
-            mMenuView[index].setSelected(true);
+            showMenuText(mMenuView[index]);
 
             if (mOnMenuBarSelectedListener != null && mSelectedMenuIndex >= 0)
             {
