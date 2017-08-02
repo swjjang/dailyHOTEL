@@ -505,7 +505,7 @@ public class StaySearchFragment extends PlaceSearchFragment
 
                         for (StayKeyword stayKeyword : list)
                         {
-                            if (stayKeyword.availableRooms == 0)
+                            if (stayKeyword.index > 0 && stayKeyword.availableRooms == 0)
                             {
                                 soldOutCount++;
                             }
