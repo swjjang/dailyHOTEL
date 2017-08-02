@@ -1533,6 +1533,12 @@ public class MainActivity extends BaseActivity implements Constants, BaseMenuNav
         public void onHolidays(String startDay, String holidays)
         {
             DailyPreference.getInstance(MainActivity.this).setCheckCalendarHolidays(startDay);
+
+            if (DailyTextUtils.isTextEmpty(holidays) == true)
+            {
+                holidays = "";
+            }
+
             DailyPreference.getInstance(MainActivity.this).setCalendarHolidays(holidays);
         }
 

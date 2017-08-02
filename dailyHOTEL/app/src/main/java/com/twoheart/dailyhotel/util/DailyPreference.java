@@ -766,7 +766,7 @@ public class DailyPreference
 
     public String getCalendarHolidays()
     {
-        return getValue(mPreferences, KEY_CALENDAR_HOLIDAYS, null);
+        return getValue(mPreferences, KEY_CALENDAR_HOLIDAYS, "");
     }
 
     public void setCheckCalendarHolidays(String value)
