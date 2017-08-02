@@ -1,13 +1,10 @@
 package com.daily.dailyhotel.screen.home.stay.outbound.payment;
 
-import android.animation.Animator;
-import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.databinding.DataBindingUtil;
 import android.support.v4.view.MotionEventCompat;
 import android.text.Editable;
-import android.text.Html;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
@@ -21,7 +18,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
-import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -37,7 +33,6 @@ import com.daily.dailyhotel.view.DailyBookingAgreementThirdPartyView;
 import com.daily.dailyhotel.view.DailyBookingPaymentTypeView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ActivityStayOutboundPaymentDataBinding;
-import com.twoheart.dailyhotel.databinding.LayoutStayOutboundDetailInformationDataBinding;
 import com.twoheart.dailyhotel.databinding.LayoutStayOutboundPaymentBookingDataBinding;
 import com.twoheart.dailyhotel.databinding.LayoutStayOutboundPaymentButtonDataBinding;
 import com.twoheart.dailyhotel.databinding.LayoutStayOutboundPaymentDiscountDataBinding;
@@ -239,7 +234,7 @@ public class StayOutboundPaymentView extends BaseDialogView<StayOutboundPaymentV
             return;
         }
 
-        if(card == null)
+        if (card == null)
         {
             mPayDataBinding.paymentTypeView.setEasyCard(null, null);
         } else
@@ -256,36 +251,7 @@ public class StayOutboundPaymentView extends BaseDialogView<StayOutboundPaymentV
             return;
         }
 
-        if (refundPolicyList == null || refundPolicyList.size() == 0)
-        {
-            mRefundDataBinding.refundPolicyLayout.setVisibility(View.GONE);
-        } else
-        {
-            mRefundDataBinding.refundPolicyLayout.setVisibility(View.VISIBLE);
-            mRefundDataBinding.refundPolicyListLayout.removeAllViews();
-
-            int size = refundPolicyList.size();
-
-            for (int i = 0; i < size; i++)
-            {
-                if (DailyTextUtils.isTextEmpty(refundPolicyList.get(i)) == true)
-                {
-                    continue;
-                }
-
-                LayoutStayOutboundDetailInformationDataBinding detailInformationDataBinding = DataBindingUtil.inflate(LayoutInflater.from(getContext())//
-                    , R.layout.layout_stay_outbound_detail_information_data, mRefundDataBinding.refundPolicyListLayout, true);
-
-                detailInformationDataBinding.textView.setText(Html.fromHtml(refundPolicyList.get(i)));
-
-                if (i == size - 1)
-                {
-                    LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) detailInformationDataBinding.textView.getLayoutParams();
-                    layoutParams.bottomMargin = 0;
-                    detailInformationDataBinding.textView.setLayoutParams(layoutParams);
-                }
-            }
-        }
+        mRefundDataBinding.refundPolicyView.setRefundPolicyList(refundPolicyList);
     }
 
     @Override
