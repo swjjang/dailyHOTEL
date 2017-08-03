@@ -1,6 +1,7 @@
 package com.daily.dailyhotel.util;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.support.annotation.Nullable;
 
 import com.daily.base.util.DailyTextUtils;
@@ -8,6 +9,10 @@ import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.entity.ImageMap;
 import com.daily.dailyhotel.entity.StayOutbound;
 import com.daily.dailyhotel.entity.StayOutbounds;
+import com.daily.dailyhotel.repository.local.DailyDb;
+import com.daily.dailyhotel.repository.local.DailyDbHelper;
+import com.daily.dailyhotel.repository.local.model.RecentlyList;
+import com.daily.dailyhotel.repository.local.model.RecentlyPlace;
 import com.daily.dailyhotel.repository.local.model.RecentlyRealmObject;
 import com.twoheart.dailyhotel.model.Gourmet;
 import com.twoheart.dailyhotel.model.HomeRecentParam;
@@ -206,7 +211,7 @@ public class RecentlyPlaceUtil
         return recentlyRealmObject;
     }
 
-    public static JSONArray getRecentlyJsonArray(RealmResults<RecentlyRealmObject> list, int maxSize)
+    public static JSONArray getDbRecentlyJsonArray(ArrayList<RecentlyPlace> list, int maxSize)
     {
         JSONArray jsonArray = new JSONArray();
 
@@ -228,38 +233,34 @@ public class RecentlyPlaceUtil
             return jsonArray;
         }
 
-        if (maxSize > list.size())
+        int size = list.size();
+
+        if (maxSize > size)
         {
-            maxSize = list.size();
+            maxSize = size;
         }
 
         for (int i = 0; i < maxSize; i++)
         {
-            RecentlyRealmObject realmObject = list.get(i);
-
             JSONObject jsonObject = new JSONObject();
+
+            RecentlyPlace recentlyPlace = list.get(i);
 
             try
             {
-                String typeString = null;
+                String serviceTypeString = recentlyPlace.serviceType.name();
 
-                ServiceType serviceType = ServiceType.valueOf(realmObject.serviceType);
-                if (ServiceType.HOTEL == serviceType)
+                if (ServiceType.HOTEL.name().equalsIgnoreCase(serviceTypeString) == true //
+                    || ServiceType.GOURMET.name().equalsIgnoreCase(serviceTypeString) == true)
                 {
-                    typeString = "HOTEL";
-                } else if (ServiceType.GOURMET == serviceType)
-                {
-                    typeString = "GOURMET";
-                } else
-                {
-                    continue;
+                    int index = recentlyPlace.index;
+
+                    jsonObject.put("serviceType", serviceTypeString);
+                    jsonObject.put("idx", index);
+
+                    jsonArray.put(jsonObject);
                 }
-
-                jsonObject.put("serviceType", typeString);
-                jsonObject.put("idx", realmObject.index);
-
-                jsonArray.put(jsonObject);
-            } catch (JSONException e)
+            } catch (Exception e)
             {
                 ExLog.d(e.getMessage());
             }
@@ -268,8 +269,80 @@ public class RecentlyPlaceUtil
         return jsonArray;
     }
 
+    public static ArrayList<RecentlyPlace> getDbRecentlyTypeList(Context context, ServiceType... serviceTypes)
+    {
+        if (context == null || serviceTypes == null)
+        {
+            return null;
+        }
+
+        DailyDb dailyDb = DailyDbHelper.getInstance().open(context);
+
+        Cursor cursor = null;
+
+        ArrayList<RecentlyPlace> recentlyList = new ArrayList<>();
+
+        try
+        {
+            cursor = dailyDb.getRecentlyPlaces(-1, serviceTypes);
+
+            if (cursor == null || cursor.getCount() == 0)
+            {
+                return null;
+            }
+
+            for (int i = 0; i < cursor.getCount(); i++)
+            {
+                cursor.moveToPosition(i);
+
+                try
+                {
+                    RecentlyPlace recentlyPlace = new RecentlyPlace();
+                    recentlyPlace.index = cursor.getInt(cursor.getColumnIndex(RecentlyList.PLACE_INDEX));
+                    recentlyPlace.name = cursor.getString(cursor.getColumnIndex(RecentlyList.NAME));
+                    recentlyPlace.englishName = cursor.getString(cursor.getColumnIndex(RecentlyList.ENGLISH_NAME));
+                    recentlyPlace.savingTime = cursor.getLong(cursor.getColumnIndex(RecentlyList.SAVING_TIME));
+
+                    RecentlyPlaceUtil.ServiceType serviceType;
+
+                    try
+                    {
+                        serviceType = ServiceType.valueOf(cursor.getString(cursor.getColumnIndex(RecentlyList.SERVICE_TYPE)));
+                    } catch (Exception e)
+                    {
+                        serviceType = null;
+                    }
+
+                    recentlyPlace.serviceType = serviceType;
+                    recentlyPlace.imageUrl = cursor.getString(cursor.getColumnIndex(RecentlyList.IMAGE_URL));
+
+                    recentlyList.add(recentlyPlace);
+                } catch (Exception e)
+                {
+                    ExLog.w("index : " + i + " , e : " + e.toString());
+                }
+            }
+
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+        } finally
+        {
+            try
+            {
+                cursor.close();
+            } catch (Exception e)
+            {
+            }
+        }
+
+        DailyDbHelper.getInstance().close();
+
+        return recentlyList;
+    }
+
     @Nullable
-    public static RealmResults<RecentlyRealmObject> getRecentlyTypeList(ServiceType... serviceTypes)
+    public static RealmResults<RecentlyRealmObject> getRealmRecentlyTypeList(ServiceType... serviceTypes)
     {
         Realm realm = Realm.getDefaultInstance();
         RealmQuery query = realm.where(RecentlyRealmObject.class);
@@ -364,9 +437,68 @@ public class RecentlyPlaceUtil
         return null;
     }
 
-    public static String getTargetIndices(ServiceType serviceType, int maxSize)
+    public static String getDbTargetIndices(Context context, ServiceType serviceType, int maxSize)
     {
-        RealmResults<RecentlyRealmObject> recentlyList = RecentlyPlaceUtil.getRecentlyTypeList(serviceType);
+        if (context == null || serviceType == null || maxSize <= 0)
+        {
+            return "";
+        }
+
+        StringBuilder builder = new StringBuilder();
+
+        DailyDb dailyDb = DailyDbHelper.getInstance().open(context);
+
+        Cursor cursor = null;
+
+        try
+        {
+            cursor = dailyDb.getRecentlyPlaces(-1, serviceType);
+
+            if (cursor == null || cursor.getCount() == 0 || maxSize <= 0)
+            {
+                return "";
+            }
+
+            int size = cursor.getCount();
+            if (maxSize > size)
+            {
+                maxSize = size;
+            }
+
+            for (int i = 0; i < maxSize; i++)
+            {
+                cursor.moveToPosition(i);
+
+                int index = cursor.getInt(cursor.getColumnIndex(RecentlyList.PLACE_INDEX));
+
+                if (i != 0)
+                {
+                    builder.append(RECENT_PLACE_DELIMITER);
+                }
+
+                builder.append(index);
+            }
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+        } finally
+        {
+            try
+            {
+                cursor.close();
+            } catch (Exception e)
+            {
+            }
+        }
+
+        DailyDbHelper.getInstance().close();
+
+        return builder.toString();
+    }
+
+    public static String getRealmTargetIndices(ServiceType serviceType, int maxSize)
+    {
+        RealmResults<RecentlyRealmObject> recentlyList = RecentlyPlaceUtil.getRealmRecentlyTypeList(serviceType);
 
         if (recentlyList == null || recentlyList.size() == 0 || maxSize <= 0)
         {
@@ -395,9 +527,9 @@ public class RecentlyPlaceUtil
         return builder.toString();
     }
 
-    public static ArrayList<Integer> getRecentlyIndexList(ServiceType... serviceTypes)
+    public static ArrayList<Integer> getRealmRecentlyIndexList(ServiceType... serviceTypes)
     {
-        RealmResults<RecentlyRealmObject> recentlyList = RecentlyPlaceUtil.getRecentlyTypeList(serviceTypes);
+        RealmResults<RecentlyRealmObject> recentlyList = RecentlyPlaceUtil.getRealmRecentlyTypeList(serviceTypes);
 
         if (recentlyList == null || recentlyList.size() == 0)
         {
@@ -471,55 +603,36 @@ public class RecentlyPlaceUtil
             @Override
             public void onSuccess()
             {
-                maintainMaxRecentlyItem(serviceType);
+                //                maintainMaxRecentlyItem(serviceType);
             }
         });
     }
 
-    public static void deleteRecentlyItemAsync(ServiceType serviceType, int index)
+    public static void addRecentlyItem(Context context, final ServiceType serviceType, int index, String name //
+        , String englishName, String imageUrl, boolean isUpdateDate)
     {
-        Realm realm = Realm.getDefaultInstance();
-        realm.executeTransactionAsync(new Realm.Transaction()
+        if (serviceType == null || index <= 0 || context == null)
         {
-            @Override
-            public void execute(Realm realm)
-            {
-                RealmResults<RecentlyRealmObject> resultList = realm.where(RecentlyRealmObject.class) //
-                    .beginGroup().equalTo("serviceType", serviceType.name()).equalTo("index", index).endGroup() //
-                    .findAll();
-                resultList.deleteAllFromRealm();
-            }
-        });
+            return;
+        }
+
+        DailyDb dailyDb = DailyDbHelper.getInstance().open(context);
+        dailyDb.addRecentlyPlace(serviceType, index, name, englishName, imageUrl, isUpdateDate);
+
+        DailyDbHelper.getInstance().close();
     }
 
-    private static void maintainMaxRecentlyItem(ServiceType serviceType)
+    public static void deleteRecentlyItem(Context context, ServiceType serviceType, int index)
     {
-        RealmResults<RecentlyRealmObject> realmResults = RecentlyPlaceUtil.getRecentlyTypeList(serviceType);
-        if (realmResults == null)
+        if (serviceType == null || index <= 0 || context == null)
         {
             return;
         }
 
-        int size = realmResults.size();
-        if (size <= MAX_RECENT_PLACE_COUNT)
-        {
-            return;
-        }
+        DailyDb dailyDb = DailyDbHelper.getInstance().open(context);
+        dailyDb.deleteRecentlyItem(serviceType, index);
 
-        long deleteStartDate = realmResults.get(MAX_RECENT_PLACE_COUNT).savingTime;
-
-        Realm realm = Realm.getDefaultInstance();
-        realm.executeTransactionAsync(new Realm.Transaction()
-        {
-            @Override
-            public void execute(Realm realm)
-            {
-                RealmResults<RecentlyRealmObject> deleteList = realm.where(RecentlyRealmObject.class) //
-                    .beginGroup().equalTo("serviceType", serviceType.name()) //
-                    .lessThanOrEqualTo("savingTime", deleteStartDate).endGroup().findAllSorted("savingTime", Sort.DESCENDING);
-                deleteList.deleteAllFromRealm();
-            }
-        });
+        DailyDbHelper.getInstance().close();
     }
 
     public static ArrayList<HomePlace> mergeHomePlaceList(Context context, List<Stay> stayList, List<Gourmet> gourmetList, StayOutbounds stayOutbounds)
@@ -707,7 +820,7 @@ public class RecentlyPlaceUtil
             return;
         }
 
-        ArrayList<Integer> expectedList = RecentlyPlaceUtil.getRecentlyIndexList(serviceTypes);
+        ArrayList<Integer> expectedList = RecentlyPlaceUtil.getRealmRecentlyIndexList(serviceTypes);
         if (expectedList == null || expectedList.size() == 0)
         {
             return;

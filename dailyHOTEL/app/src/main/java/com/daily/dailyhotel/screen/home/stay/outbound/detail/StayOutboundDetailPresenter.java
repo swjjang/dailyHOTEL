@@ -232,7 +232,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
 
         getViewInterface().setToolbarTitle(mStayName);
 
-        RecentlyPlaceUtil.addRecentlyItemAsync(RecentlyPlaceUtil.ServiceType.OB_STAY, mStayIndex, mStayName, null, mImageUrl, true);
+        RecentlyPlaceUtil.addRecentlyItem(getActivity(), RecentlyPlaceUtil.ServiceType.OB_STAY, mStayIndex, mStayName, null, mImageUrl, true);
 
         if (mIsUsedMultiTransition == true)
         {

@@ -7,7 +7,6 @@ import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.os.Environment;
 import android.provider.BaseColumns;
 
 import com.daily.base.util.ExLog;
@@ -18,10 +17,6 @@ import com.daily.dailyhotel.util.RecentlyPlaceUtil;
 import com.twoheart.dailyhotel.network.model.HomePlace;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -173,7 +168,7 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
         db.execSQL(sql);
     }
 
-    public Cursor getRecentlyPlaces(RecentlyPlaceUtil.ServiceType[] serviceTypes, int limit)
+    public Cursor getRecentlyPlaces(int limit, RecentlyPlaceUtil.ServiceType... serviceTypes)
     {
         SQLiteDatabase db = getDb();
         if (db == null)
@@ -345,7 +340,7 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
         if (homePlaceList == null || homePlaceList.size() == 0)
         {
             // realm db 에도 결과가 없으면  migration 되었다고 판단함
-            RealmResults<RecentlyRealmObject> realmResultList = RecentlyPlaceUtil.getRecentlyTypeList((RecentlyPlaceUtil.ServiceType[]) null);
+            RealmResults<RecentlyRealmObject> realmResultList = RecentlyPlaceUtil.getRealmRecentlyTypeList((RecentlyPlaceUtil.ServiceType[]) null);
             return realmResultList == null || realmResultList.size() == 0;
         }
 
@@ -414,7 +409,7 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
             db.setTransactionSuccessful();
             isSuccess = true;
 
-            exportDatabse(DB_NAME);
+//            exportDatabase(DB_NAME);
         } catch (Exception e)
         {
             isSuccess = false;
@@ -433,13 +428,160 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
         return isSuccess;
     }
 
+    public void addRecentlyPlace(final RecentlyPlaceUtil.ServiceType serviceType, int index, String name //
+        , String englishName, String imageUrl, boolean isUpdateDate)
+    {
+        SQLiteDatabase db = getDb();
+        if (db == null)
+        {
+            // db를 사용할 수 없는 상태이므로 migration 실패로 판단
+            return;
+        }
+
+        try
+        {
+            long savingTime;
+
+            if (isUpdateDate == true)
+            {
+                Calendar calendar = DailyCalendar.getInstance();
+                savingTime = calendar.getTimeInMillis();
+            } else
+            {
+                savingTime = checkExistRecentPlace(serviceType, index);
+            }
+
+            ContentValues contentValues = new ContentValues();
+            contentValues.put(RecentlyColumns.PLACE_INDEX, index);
+            contentValues.put(RecentlyColumns.NAME, name);
+            contentValues.put(RecentlyColumns.ENGLISH_NAME, englishName);
+            contentValues.put(RecentlyColumns.SERVICE_TYPE, serviceType == null ? "" : serviceType.name());
+            contentValues.put(RecentlyColumns.SAVING_TIME, savingTime);
+            contentValues.put(RecentlyColumns.IMAGE_URL, imageUrl);
+
+            db.beginTransaction();
+
+            insertOrUpdate(T_RECENTLY, RecentlyColumns.PLACE_INDEX, contentValues);
+
+            db.setTransactionSuccessful();
+
+        } catch (Exception e)
+        {
+            ExLog.w("add fail : " + e.toString());
+        } finally
+        {
+            try
+            {
+                db.endTransaction();
+            } catch (IllegalStateException e)
+            {
+                // ignore
+            }
+        }
+
+        maintainMaxRecentlyItem(serviceType);
+
+        mContext.getContentResolver().notifyChange(RecentlyList.NOTIFICATION_URI, null);
+    }
+
+    public void maintainMaxRecentlyItem(RecentlyPlaceUtil.ServiceType serviceType)
+    {
+        Cursor cursor = null;
+
+        long savingTime = -1;
+
+        try
+        {
+            cursor = getRecentlyPlaces(-1, serviceType);
+            if (cursor != null && cursor.getCount() > MAX_RECENT_PLACE_COUNT)
+            {
+                cursor.moveToPosition(MAX_RECENT_PLACE_COUNT);
+                int columnIndex = cursor.getColumnIndex(RecentlyList.SAVING_TIME);
+                savingTime = cursor.getLong(columnIndex);
+            }
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+        } finally
+        {
+            try
+            {
+                cursor.close();
+            } catch (Exception e)
+            {
+                // do nothing
+            }
+        }
+
+        if (savingTime <= 0)
+        {
+            return;
+        }
+
+        SQLiteDatabase db = getDb();
+        if (db == null)
+        {
+            // db를 사용할 수 없는 상태이므로 migration 실패로 판단
+            return;
+        }
+
+        try
+        {
+            db.beginTransaction();
+            db.delete(T_RECENTLY, RecentlyList.SAVING_TIME + " > " + savingTime, null);
+            db.setTransactionSuccessful();
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+        } finally
+        {
+            try
+            {
+                db.endTransaction();
+            } catch (Exception e) {}
+        }
+    }
+
+    public void deleteRecentlyItem(RecentlyPlaceUtil.ServiceType serviceType, int index)
+    {
+        if (serviceType == null || index <= 0)
+        {
+            return;
+        }
+
+        SQLiteDatabase db = getDb();
+        if (db == null)
+        {
+            // db를 사용할 수 없는 상태이므로 migration 실패로 판단
+            return;
+        }
+
+        try
+        {
+            db.beginTransaction();
+            db.delete(T_RECENTLY, RecentlyList.PLACE_INDEX + " = " + index //
+                + " AND " + RecentlyList.SERVICE_TYPE + " = " + serviceType.name(), null);
+            db.setTransactionSuccessful();
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+        } finally
+        {
+            try
+            {
+                db.endTransaction();
+            } catch (Exception e) {}
+        }
+
+        mContext.getContentResolver().notifyChange(RecentlyList.NOTIFICATION_URI, null);
+    }
+
     private ContentValues convertContentValues(HomePlace homePlace, long savingTime)
     {
         if (homePlace == null)
         {
             return null;
         }
-
 
         if (savingTime <= 0)
         {
@@ -458,33 +600,33 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
         return contentValues;
     }
 
-    public void exportDatabse(String databaseName)
-    {
-        try
-        {
-            //            File sd = Environment.getExternalStorageDirectory();
-            File sd = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
-            File data = Environment.getDataDirectory();
-
-            if (sd.canWrite())
-            {
-                String currentDBPath = "//data//" + "com.twoheart.dailyhotel.debug" + "//databases//" + databaseName + "";
-                String backupDBPath = "backup.db";
-                File currentDB = new File(data, currentDBPath);
-                File backupDB = new File(sd, backupDBPath);
-
-                if (currentDB.exists())
-                {
-                    FileChannel src = new FileInputStream(currentDB).getChannel();
-                    FileChannel dst = new FileOutputStream(backupDB).getChannel();
-                    dst.transferFrom(src, 0, src.size());
-                    src.close();
-                    dst.close();
-                }
-            }
-        } catch (Exception e)
-        {
-
-        }
-    }
+//    public void exportDatabase(String databaseName)
+//    {
+//        try
+//        {
+//            //            File sd = Environment.getExternalStorageDirectory();
+//            File sd = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+//            File data = Environment.getDataDirectory();
+//
+//            if (sd.canWrite())
+//            {
+//                String currentDBPath = "//data//" + "com.twoheart.dailyhotel.debug" + "//databases//" + databaseName + "";
+//                String backupDBPath = "backup.db";
+//                File currentDB = new File(data, currentDBPath);
+//                File backupDB = new File(sd, backupDBPath);
+//
+//                if (currentDB.exists())
+//                {
+//                    FileChannel src = new FileInputStream(currentDB).getChannel();
+//                    FileChannel dst = new FileOutputStream(backupDB).getChannel();
+//                    dst.transferFrom(src, 0, src.size());
+//                    src.close();
+//                    dst.close();
+//                }
+//            }
+//        } catch (Exception e)
+//        {
+//
+//        }
+//    }
 }

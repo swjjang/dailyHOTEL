@@ -13,7 +13,7 @@ public class RecentlyList implements RecentlyColumns, BaseColumns
 {
     private static final String AUTHORITY = RecentlyList.class.getPackage().getName();
 
-    public static final Uri NOTIFICATION_URL = Uri.parse("content://" + AUTHORITY + "/recently");
+    public static final Uri NOTIFICATION_URI = Uri.parse("content://" + AUTHORITY + "/recently");
 
 
 }

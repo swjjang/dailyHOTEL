@@ -1053,7 +1053,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
     private void requestRecentList()
     {
         addCompositeDisposable(Observable.zip(mRecentlyRemoteImpl.getHomeRecentlyList(MAX_REQUEST_SIZE) //
-            , mRecentlyRemoteImpl.getStayOutboundRecentlyList(MAX_REQUEST_SIZE) //
+            , mRecentlyRemoteImpl.getStayOutboundRecentlyList(MAX_REQUEST_SIZE, false) //
             , new BiFunction<ArrayList<HomePlace>, StayOutbounds, ArrayList<HomePlace>>()
             {
                 @Override
@@ -1170,16 +1170,43 @@ public class HomeFragment extends BaseMenuNavigationFragment
                 GourmetBookingDay gourmetBookingDay = new GourmetBookingDay();
                 gourmetBookingDay.setVisitDay(todayDateTime.dailyDateTime);
 
-                addCompositeDisposable(Observable.zip(mRecentlyRemoteImpl.getStayInboundRecentlyList(stayBookingDay) //
-                    , mRecentlyRemoteImpl.getGourmetRecentlyList(gourmetBookingDay) //
-                    , mRecentlyRemoteImpl.getStayOutboundRecentlyList(30) //
+                addCompositeDisposable(Observable.zip(mRecentlyRemoteImpl.getStayInboundRecentlyList(stayBookingDay, true) //
+                    , mRecentlyRemoteImpl.getGourmetRecentlyList(gourmetBookingDay, true) //
+                    , mRecentlyRemoteImpl.getStayOutboundRecentlyList(RecentlyPlaceUtil.MAX_RECENT_PLACE_COUNT, true) //
                     , new Function3<List<Stay>, List<Gourmet>, StayOutbounds, ArrayList<HomePlace>>()
                     {
                         @Override
                         public ArrayList<HomePlace> apply(@NonNull List<Stay> stays, @NonNull List<Gourmet> gourmets //
                             , @NonNull StayOutbounds stayOutbounds) throws Exception
                         {
-                            return RecentlyPlaceUtil.mergeHomePlaceList(getActivity(), stays, gourmets, stayOutbounds);
+                            ArrayList<HomePlace> homePlaceList = RecentlyPlaceUtil.mergeHomePlaceList(getActivity(), stays, gourmets, stayOutbounds);
+
+                            DailyDb dailyDb = DailyDbHelper.getInstance().open(getActivity());
+
+                            mIsMigrationComplete = dailyDb.migrateAllRecentlyPlace(homePlaceList);
+
+                            DailyDbHelper.getInstance().close();
+
+                            if (mIsMigrationComplete == true)
+                            {
+                                try
+                                {
+                                    Realm realm = Realm.getDefaultInstance();
+                                    realm.executeTransactionAsync(new Realm.Transaction()
+                                    {
+                                        @Override
+                                        public void execute(Realm realm)
+                                        {
+                                            realm.deleteAll();
+                                        }
+                                    });
+                                } catch (Exception e)
+                                {
+                                    ExLog.e(e.toString());
+                                }
+                            }
+
+                            return homePlaceList;
                         }
                     }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<ArrayList<HomePlace>>()
                 {
@@ -1192,29 +1219,6 @@ public class HomeFragment extends BaseMenuNavigationFragment
                         }
 
                         unLockUI();
-
-                        DailyDb dailyDb = DailyDbHelper.getInstance().open(getActivity());
-
-                        mIsMigrationComplete = dailyDb.migrateAllRecentlyPlace(homePlaceList);
-
-                        if (mIsMigrationComplete == true)
-                        {
-                            try
-                            {
-                                Realm realm = Realm.getDefaultInstance();
-                                realm.executeTransactionAsync(new Realm.Transaction()
-                                {
-                                    @Override
-                                    public void execute(Realm realm)
-                                    {
-                                        realm.deleteAll();
-                                    }
-                                });
-                            } catch (Exception e)
-                            {
-                                ExLog.e(e.toString());
-                            }
-                        }
 
                         setRecentlyList(homePlaceList, false);
                     }
@@ -1297,7 +1301,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
             mNetworkController.requestRecommendationList();
             requestWishList();
 
-            ArrayList<Integer> indexList = RecentlyPlaceUtil.getRecentlyIndexList((RecentlyPlaceUtil.ServiceType[]) null);
+            ArrayList<Integer> indexList = RecentlyPlaceUtil.getRealmRecentlyIndexList((RecentlyPlaceUtil.ServiceType[]) null);
             if (indexList == null || indexList.size() == 0)
             {
                 mIsMigrationComplete = true;

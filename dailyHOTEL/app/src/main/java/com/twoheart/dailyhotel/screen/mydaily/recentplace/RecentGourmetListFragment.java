@@ -111,7 +111,7 @@ public class RecentGourmetListFragment extends RecentPlacesListFragment
     {
         lockUI();
 
-        addCompositeDisposable(mRecentlyRemoteImpl.getGourmetRecentlyList((GourmetBookingDay) placeBookingDay) //
+        addCompositeDisposable(mRecentlyRemoteImpl.getGourmetRecentlyList((GourmetBookingDay) placeBookingDay, false) //
             .observeOn(Schedulers.io()).map(new Function<List<Gourmet>, ArrayList<PlaceViewItem>>()
             {
                 @Override
@@ -171,7 +171,7 @@ public class RecentGourmetListFragment extends RecentPlacesListFragment
             return;
         }
 
-        ArrayList<Integer> expectedList = RecentlyPlaceUtil.getRecentlyIndexList(RecentlyPlaceUtil.ServiceType.GOURMET);
+        ArrayList<Integer> expectedList = RecentlyPlaceUtil.getRealmRecentlyIndexList(RecentlyPlaceUtil.ServiceType.GOURMET);
         if (expectedList == null || expectedList.size() == 0)
         {
             return;
@@ -311,7 +311,7 @@ public class RecentGourmetListFragment extends RecentPlacesListFragment
                 return;
             }
 
-            RecentlyPlaceUtil.deleteRecentlyItemAsync(RecentlyPlaceUtil.ServiceType.GOURMET, place.index);
+            RecentlyPlaceUtil.deleteRecentlyItem(getActivity(), RecentlyPlaceUtil.ServiceType.GOURMET, place.index);
 
             mListLayout.setData(mListLayout.getList(), mPlaceBookingDay);
             mRecentPlaceListFragmentListener.onDeleteItemClickAnalytics();

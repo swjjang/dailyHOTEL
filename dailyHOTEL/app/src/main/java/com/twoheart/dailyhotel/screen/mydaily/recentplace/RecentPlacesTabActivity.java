@@ -315,14 +315,14 @@ public class RecentPlacesTabActivity extends BaseActivity
 
     private boolean isEmptyRecentStayPlace()
     {
-        RealmResults<RecentlyRealmObject> resultList = RecentlyPlaceUtil.getRecentlyTypeList( //
+        RealmResults<RecentlyRealmObject> resultList = RecentlyPlaceUtil.getRealmRecentlyTypeList( //
             RecentlyPlaceUtil.ServiceType.HOTEL, RecentlyPlaceUtil.ServiceType.OB_STAY);
         return resultList == null || resultList.size() == 0;
     }
 
     private boolean isEmptyRecentGourmetPlace()
     {
-        RealmResults<RecentlyRealmObject> resultList = RecentlyPlaceUtil.getRecentlyTypeList(RecentlyPlaceUtil.ServiceType.GOURMET);
+        RealmResults<RecentlyRealmObject> resultList = RecentlyPlaceUtil.getRealmRecentlyTypeList(RecentlyPlaceUtil.ServiceType.GOURMET);
         return resultList == null || resultList.size() == 0;
     }
 
@@ -399,7 +399,7 @@ public class RecentPlacesTabActivity extends BaseActivity
         @Override
         public void onDeleteItemClickAnalytics()
         {
-            RealmResults<RecentlyRealmObject> resultList = RecentlyPlaceUtil.getRecentlyTypeList((RecentlyPlaceUtil.ServiceType[]) null);
+            RealmResults<RecentlyRealmObject> resultList = RecentlyPlaceUtil.getRealmRecentlyTypeList((RecentlyPlaceUtil.ServiceType[]) null);
 
             if (resultList == null || resultList.size() == 0)
             {

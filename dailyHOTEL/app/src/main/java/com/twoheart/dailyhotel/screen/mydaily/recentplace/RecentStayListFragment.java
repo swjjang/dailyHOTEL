@@ -128,8 +128,8 @@ public class RecentStayListFragment extends RecentPlacesListFragment
     {
         lockUI();
 
-        addCompositeDisposable(Observable.zip(mRecentlyRemoteImpl.getStayInboundRecentlyList((StayBookingDay) placeBookingDay).observeOn(Schedulers.io()) //
-            , mRecentlyRemoteImpl.getStayOutboundRecentlyList(10000).observeOn(Schedulers.io()) //
+        addCompositeDisposable(Observable.zip(mRecentlyRemoteImpl.getStayInboundRecentlyList((StayBookingDay) placeBookingDay, false).observeOn(Schedulers.io()) //
+            , mRecentlyRemoteImpl.getStayOutboundRecentlyList(10000, false).observeOn(Schedulers.io()) //
             , new BiFunction<List<Stay>, StayOutbounds, ArrayList<PlaceViewItem>>()
             {
                 @Override
@@ -206,7 +206,7 @@ public class RecentStayListFragment extends RecentPlacesListFragment
             return;
         }
 
-        ArrayList<Integer> expectedList = RecentlyPlaceUtil.getRecentlyIndexList(RecentlyPlaceUtil.ServiceType.HOTEL, RecentlyPlaceUtil.ServiceType.OB_STAY);
+        ArrayList<Integer> expectedList = RecentlyPlaceUtil.getRealmRecentlyIndexList(RecentlyPlaceUtil.ServiceType.HOTEL, RecentlyPlaceUtil.ServiceType.OB_STAY);
         if (expectedList == null || expectedList.size() == 0)
         {
             return;
@@ -502,7 +502,7 @@ public class RecentStayListFragment extends RecentPlacesListFragment
             return;
         }
 
-        RecentlyPlaceUtil.deleteRecentlyItemAsync(RecentlyPlaceUtil.ServiceType.HOTEL, place.index);
+        RecentlyPlaceUtil.deleteRecentlyItem(getActivity(), RecentlyPlaceUtil.ServiceType.HOTEL, place.index);
 
         mListLayout.setData(mListLayout.getList(), mPlaceBookingDay);
         mRecentPlaceListFragmentListener.onDeleteItemClickAnalytics();
@@ -531,7 +531,7 @@ public class RecentStayListFragment extends RecentPlacesListFragment
             return;
         }
 
-        RecentlyPlaceUtil.deleteRecentlyItemAsync(RecentlyPlaceUtil.ServiceType.OB_STAY, stayOutbound.index);
+        RecentlyPlaceUtil.deleteRecentlyItem(getActivity(), RecentlyPlaceUtil.ServiceType.OB_STAY, stayOutbound.index);
 
         mListLayout.setData(mListLayout.getList(), mPlaceBookingDay);
         mRecentPlaceListFragmentListener.onDeleteItemClickAnalytics();

@@ -18,11 +18,11 @@ import io.reactivex.Observable;
 
 public interface RecentlyInterface
 {
-    Observable<StayOutbounds> getStayOutboundRecentlyList(int numberOfResults);
+    Observable<StayOutbounds> getStayOutboundRecentlyList(int numberOfResults, boolean useRealm);
 
     Observable<ArrayList<HomePlace>> getHomeRecentlyList(int maxSize);
 
-    Observable<List<Stay>> getStayInboundRecentlyList(StayBookingDay stayBookingDay);
+    Observable<List<Stay>> getStayInboundRecentlyList(StayBookingDay stayBookingDay, boolean useRealm);
 
-    Observable<List<Gourmet>> getGourmetRecentlyList(GourmetBookingDay gourmetBookingDay);
+    Observable<List<Gourmet>> getGourmetRecentlyList(GourmetBookingDay gourmetBookingDay, boolean useRealm);
 }
