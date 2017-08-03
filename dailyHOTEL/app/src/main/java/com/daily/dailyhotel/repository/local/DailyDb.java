@@ -560,7 +560,7 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
         {
             db.beginTransaction();
             db.delete(T_RECENTLY, RecentlyList.PLACE_INDEX + " = " + index //
-                + " AND " + RecentlyList.SERVICE_TYPE + " = " + serviceType.name(), null);
+                + " AND " + RecentlyList.SERVICE_TYPE + " = '" + serviceType.name() + "'", null);
             db.setTransactionSuccessful();
         } catch (Exception e)
         {

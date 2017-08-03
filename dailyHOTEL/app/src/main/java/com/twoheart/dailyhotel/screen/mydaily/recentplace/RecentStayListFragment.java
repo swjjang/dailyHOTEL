@@ -206,7 +206,7 @@ public class RecentStayListFragment extends RecentPlacesListFragment
             return;
         }
 
-        ArrayList<Integer> expectedList = RecentlyPlaceUtil.getRealmRecentlyIndexList(RecentlyPlaceUtil.ServiceType.HOTEL, RecentlyPlaceUtil.ServiceType.OB_STAY);
+        ArrayList<Integer> expectedList = RecentlyPlaceUtil.getDbRecentlyIndexList(getActivity(), RecentlyPlaceUtil.ServiceType.HOTEL, RecentlyPlaceUtil.ServiceType.OB_STAY);
         if (expectedList == null || expectedList.size() == 0)
         {
             return;

@@ -18,7 +18,7 @@ import com.daily.base.util.ScreenUtils;
 import com.daily.base.widget.DailyToast;
 import com.daily.base.widget.DailyViewPager;
 import com.daily.dailyhotel.repository.local.ConfigLocalImpl;
-import com.daily.dailyhotel.repository.local.model.RecentlyRealmObject;
+import com.daily.dailyhotel.repository.local.model.RecentlyPlace;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
 import com.daily.dailyhotel.repository.remote.FacebookRemoteImpl;
 import com.daily.dailyhotel.repository.remote.KakaoRemoteImpl;
@@ -35,7 +35,6 @@ import java.util.ArrayList;
 
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
-import io.realm.RealmResults;
 import retrofit2.HttpException;
 
 /**
@@ -315,14 +314,15 @@ public class RecentPlacesTabActivity extends BaseActivity
 
     private boolean isEmptyRecentStayPlace()
     {
-        RealmResults<RecentlyRealmObject> resultList = RecentlyPlaceUtil.getRealmRecentlyTypeList( //
-            RecentlyPlaceUtil.ServiceType.HOTEL, RecentlyPlaceUtil.ServiceType.OB_STAY);
+        ArrayList<RecentlyPlace> resultList = RecentlyPlaceUtil.getDbRecentlyTypeList( //
+            RecentPlacesTabActivity.this, RecentlyPlaceUtil.ServiceType.HOTEL, RecentlyPlaceUtil.ServiceType.OB_STAY);
         return resultList == null || resultList.size() == 0;
     }
 
     private boolean isEmptyRecentGourmetPlace()
     {
-        RealmResults<RecentlyRealmObject> resultList = RecentlyPlaceUtil.getRealmRecentlyTypeList(RecentlyPlaceUtil.ServiceType.GOURMET);
+        ArrayList<RecentlyPlace> resultList = RecentlyPlaceUtil.getDbRecentlyTypeList( //
+            RecentPlacesTabActivity.this, RecentlyPlaceUtil.ServiceType.GOURMET);
         return resultList == null || resultList.size() == 0;
     }
 
@@ -399,7 +399,7 @@ public class RecentPlacesTabActivity extends BaseActivity
         @Override
         public void onDeleteItemClickAnalytics()
         {
-            RealmResults<RecentlyRealmObject> resultList = RecentlyPlaceUtil.getRealmRecentlyTypeList((RecentlyPlaceUtil.ServiceType[]) null);
+            ArrayList<RecentlyPlace> resultList = RecentlyPlaceUtil.getDbRecentlyTypeList(RecentPlacesTabActivity.this, (RecentlyPlaceUtil.ServiceType[]) null);
 
             if (resultList == null || resultList.size() == 0)
             {

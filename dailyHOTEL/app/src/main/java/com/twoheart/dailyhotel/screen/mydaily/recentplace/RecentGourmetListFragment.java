@@ -171,7 +171,7 @@ public class RecentGourmetListFragment extends RecentPlacesListFragment
             return;
         }
 
-        ArrayList<Integer> expectedList = RecentlyPlaceUtil.getRealmRecentlyIndexList(RecentlyPlaceUtil.ServiceType.GOURMET);
+        ArrayList<Integer> expectedList = RecentlyPlaceUtil.getDbRecentlyIndexList(getActivity(), RecentlyPlaceUtil.ServiceType.GOURMET);
         if (expectedList == null || expectedList.size() == 0)
         {
             return;
