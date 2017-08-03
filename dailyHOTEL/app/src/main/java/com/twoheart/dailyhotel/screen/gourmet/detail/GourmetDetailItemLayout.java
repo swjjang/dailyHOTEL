@@ -344,13 +344,6 @@ public class GourmetDetailItemLayout extends LinearLayout
             mFirstProductIndex = mLastProductIndex = -1;
         }
 
-        // D Benefit
-        View benefitView = getBenefitView(mLayoutInflater, mGourmetDetail);
-        if (benefitView != null)
-        {
-            addView(benefitView);
-        }
-
         // 주소 및 맵
         View addressView = getAddressView(mLayoutInflater, mGourmetDetail, mEventListener);
         if (addressView != null)
@@ -363,6 +356,13 @@ public class GourmetDetailItemLayout extends LinearLayout
         if (amenitiesView != null)
         {
             addView(amenitiesView);
+        }
+
+        // D Benefit
+        View benefitView = getBenefitView(mLayoutInflater, mGourmetDetail);
+        if (benefitView != null)
+        {
+            addView(benefitView);
         }
 
         // 정보
