@@ -676,6 +676,52 @@ public class StayMainActivity extends PlaceMainActivity
         }
 
         @Override
+        public void onPageScroll()
+        {
+            // 목록을 맵으로 보고 있는 경우 페이지 스크롤 중에 하단 옵션 레이아웃의 위치가 초기화 되는 이슈 수정
+            if (mViewType == ViewType.MAP)
+            {
+                try
+                {
+                    PlaceListFragment placeListFragment = mPlaceMainLayout.getCurrentPlaceListFragment();
+
+                    if (placeListFragment.getPlaceListLayout().getListMapFragment().isShowPlaceInformation() == true)
+                    {
+                        placeListFragment.getPlaceListLayout().getListMapFragment().clickMap();
+                    }
+                } catch (Exception e)
+                {
+                    ExLog.d(e.toString());
+
+                    changeViewType();
+                }
+            }
+        }
+
+        @Override
+        public void onPageSelected(int changedPosition, int prevPosition)
+        {
+            // 목록을 맵으로 보고 있는 경우 페이지 스크롤 중에 하단 옵션 레이아웃의 위치가 초기화 되는 이슈 수정
+            if (mViewType == ViewType.MAP)
+            {
+                try
+                {
+                    PlaceListFragment placeListFragment = mPlaceMainLayout.getPlaceListFragment().get(prevPosition);
+
+                    if (placeListFragment.getPlaceListLayout().getListMapFragment().isShowPlaceInformation() == true)
+                    {
+                        placeListFragment.getPlaceListLayout().getListMapFragment().clickMap();
+                    }
+                } catch (Exception e)
+                {
+                    ExLog.d(e.toString());
+
+                    changeViewType();
+                }
+            }
+        }
+
+        @Override
         public void finish()
         {
             StayMainActivity.this.finish();

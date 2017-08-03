@@ -832,6 +832,18 @@ public class StayCategoryTabActivity extends PlaceMainActivity
         }
 
         @Override
+        public void onPageScroll()
+        {
+
+        }
+
+        @Override
+        public void onPageSelected(int changedPosition, int prevPosition)
+        {
+
+        }
+
+        @Override
         public void finish()
         {
             StayCategoryTabActivity.this.finish();
