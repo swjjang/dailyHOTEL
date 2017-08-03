@@ -4,14 +4,11 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.databinding.DataBindingUtil;
 import android.support.v4.view.MotionEventCompat;
-import android.text.Editable;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
-import android.text.TextWatcher;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
-import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -30,6 +27,7 @@ import com.daily.base.widget.DailyScrollView;
 import com.daily.dailyhotel.entity.Card;
 import com.daily.dailyhotel.entity.People;
 import com.daily.dailyhotel.view.DailyBookingAgreementThirdPartyView;
+import com.daily.dailyhotel.view.DailyBookingGuestInformationsView;
 import com.daily.dailyhotel.view.DailyBookingPaymentTypeView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ActivityStayOutboundPaymentDataBinding;
@@ -44,12 +42,11 @@ import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.DailySignatureView;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
 public class StayOutboundPaymentView extends BaseDialogView<StayOutboundPaymentView.OnEventListener, ActivityStayOutboundPaymentDataBinding>//
-    implements StayOutboundPaymentInterface, View.OnClickListener, View.OnFocusChangeListener
+    implements StayOutboundPaymentInterface, View.OnClickListener
 {
     private DailyToolbarLayout mDailyToolbarLayout;
 
@@ -128,56 +125,50 @@ public class StayOutboundPaymentView extends BaseDialogView<StayOutboundPaymentV
 
         mBookingDataBinding.roomInformationView.setTitle(R.string.label_booking_room_info);
 
-        List<Pair<CharSequence, CharSequence>> reservationInformationList = new ArrayList<>();
-
-        reservationInformationList.add(new Pair(getString(R.string.label_booking_place_name), stayName));
-        reservationInformationList.add(new Pair(getString(R.string.label_booking_room_type), roomType));
-
-        mBookingDataBinding.roomInformationView.setInformation(reservationInformationList);
+        mBookingDataBinding.roomInformationView.removeAllInformation();
+        mBookingDataBinding.roomInformationView.addInformation(getString(R.string.label_booking_place_name), stayName);
+        mBookingDataBinding.roomInformationView.addInformation(getString(R.string.label_booking_room_type), roomType);
     }
 
     @Override
-    public void setGuestInformation(String firstName, String lastName, String phone, String email)
+    public void setGuestInformation(String lastName, String firstName, String mobile, String email)
     {
         if (getViewDataBinding() == null || mBookingDataBinding == null)
         {
             return;
         }
 
-        if (DailyTextUtils.isTextEmpty(phone) == false)
+        mBookingDataBinding.guestInformationView.updateInformation(DailyBookingGuestInformationsView.InformationType.LAST_NAME, lastName);
+        mBookingDataBinding.guestInformationView.updateInformation(DailyBookingGuestInformationsView.InformationType.FIRST_NAME, firstName);
+
+
+        if (DailyTextUtils.isTextEmpty(mobile) == false)
         {
-            mBookingDataBinding.guestPhoneEditText.setText(Util.addHyphenMobileNumber(getContext(), phone));
+            mBookingDataBinding.guestInformationView.updateInformation(DailyBookingGuestInformationsView.InformationType.MOBILE//
+                , Util.addHyphenMobileNumber(getContext(), mobile));
         }
 
         if (DailyTextUtils.isTextEmpty(email) == false)
         {
-            mBookingDataBinding.guestEmailEditText.setText(email);
+            mBookingDataBinding.guestInformationView.updateInformation(DailyBookingGuestInformationsView.InformationType.EMAIL, email);
         }
-
-        mBookingDataBinding.guestFirstNameEditText.removeTextChangedListener(mFirstNameTextWatcher);
-        mBookingDataBinding.guestFirstNameEditText.addTextChangedListener(mFirstNameTextWatcher);
-
-        mBookingDataBinding.guestLastNameEditText.removeTextChangedListener(mLastNameTextWatcher);
-        mBookingDataBinding.guestLastNameEditText.addTextChangedListener(mLastNameTextWatcher);
-
-        mBookingDataBinding.guestLastNameEditText.setText(lastName);
-        mBookingDataBinding.guestFirstNameEditText.setText(firstName);
     }
 
     @Override
-    public void setGuestPhoneInformation(String phone)
+    public void setGuestMobileInformation(String mobile)
     {
         if (getViewDataBinding() == null || mBookingDataBinding == null)
         {
             return;
         }
 
-        if (DailyTextUtils.isTextEmpty(phone) == true)
+        if (DailyTextUtils.isTextEmpty(mobile) == true)
         {
-            mBookingDataBinding.guestPhoneEditText.setText(null);
+            mBookingDataBinding.guestInformationView.updateInformation(DailyBookingGuestInformationsView.InformationType.MOBILE, null);
         } else
         {
-            mBookingDataBinding.guestPhoneEditText.setText(Util.addHyphenMobileNumber(getContext(), phone));
+            mBookingDataBinding.guestInformationView.updateInformation(DailyBookingGuestInformationsView.InformationType.MOBILE//
+                , Util.addHyphenMobileNumber(getContext(), mobile));
         }
     }
 
@@ -275,11 +266,11 @@ public class StayOutboundPaymentView extends BaseDialogView<StayOutboundPaymentV
 
         if (DailyTextUtils.isTextEmpty(text) == true)
         {
-            mPayDataBinding.paymentTypeView.setGuidePaymentTypeVisible(false);
+            mPayDataBinding.paymentTypeView.setGuideTextVisible(false);
         } else
         {
-            mPayDataBinding.paymentTypeView.setGuidePaymentTypeVisible(true);
-            mPayDataBinding.paymentTypeView.setGuidePaymentType(text);
+            mPayDataBinding.paymentTypeView.setGuideTextVisible(true);
+            mPayDataBinding.paymentTypeView.setGuideText(text);
         }
     }
 
@@ -404,24 +395,6 @@ public class StayOutboundPaymentView extends BaseDialogView<StayOutboundPaymentV
     {
         switch (v.getId())
         {
-            case R.id.fakeMobileEditView:
-            {
-                if (mBookingDataBinding == null)
-                {
-                    return;
-                }
-
-                if (mBookingDataBinding.guestPhoneEditText.isSelected() == true)
-                {
-                    getEventListener().onPhoneNumberClick(mBookingDataBinding.guestPhoneEditText.getText().toString());
-                } else
-                {
-                    mBookingDataBinding.guestPhoneEditText.requestFocus();
-                    mBookingDataBinding.guestPhoneEditText.setSelected(true);
-                }
-                break;
-            }
-
             case R.id.doPaymentView:
             {
                 if (mBookingDataBinding == null)
@@ -430,29 +403,12 @@ public class StayOutboundPaymentView extends BaseDialogView<StayOutboundPaymentV
                 }
 
                 // 투숙자명, 연락처 이메일,
-                getEventListener().onPaymentClick(mBookingDataBinding.guestFirstNameEditText.getText().toString()//
-                    , mBookingDataBinding.guestLastNameEditText.getText().toString()//
-                    , mBookingDataBinding.guestPhoneEditText.getText().toString()//
-                    , mBookingDataBinding.guestEmailEditText.getText().toString());
+                getEventListener().onPaymentClick(mBookingDataBinding.guestInformationView.getInformationTypeValue(DailyBookingGuestInformationsView.InformationType.FIRST_NAME)//
+                    , mBookingDataBinding.guestInformationView.getInformationTypeValue(DailyBookingGuestInformationsView.InformationType.LAST_NAME)//
+                    , mBookingDataBinding.guestInformationView.getInformationTypeValue(DailyBookingGuestInformationsView.InformationType.MOBILE)//
+                    , mBookingDataBinding.guestInformationView.getInformationTypeValue(DailyBookingGuestInformationsView.InformationType.EMAIL));
                 break;
             }
-        }
-    }
-
-    @Override
-    public void onFocusChange(View v, boolean hasFocus)
-    {
-        switch (v.getId())
-        {
-            case R.id.guestPhoneEditText:
-                if (hasFocus == true)
-                {
-                    getEventListener().onPhoneNumberClick(mBookingDataBinding.guestPhoneEditText.getText().toString());
-                } else
-                {
-                    mBookingDataBinding.guestPhoneEditText.setSelected(false);
-                }
-                break;
         }
     }
 
@@ -489,10 +445,34 @@ public class StayOutboundPaymentView extends BaseDialogView<StayOutboundPaymentV
         mBookingDataBinding = DataBindingUtil.inflate(LayoutInflater.from(context)//
             , R.layout.layout_stay_outbound_payment_booking_data, viewGroup, true);
 
-        mBookingDataBinding.guestPhoneEditText.setOnFocusChangeListener(this);
+        mBookingDataBinding.guestInformationView.setOnGuestInformationsClickListener(new DailyBookingGuestInformationsView.OnGuestInformationsClickListener()
+        {
+            @Override
+            public void onMobileClick(String mobile)
+            {
+                getEventListener().onPhoneNumberClick(mobile);
+            }
+        });
 
-        mBookingDataBinding.fakeMobileEditView.setFocusable(true);
-        mBookingDataBinding.fakeMobileEditView.setOnClickListener(this);
+        mBookingDataBinding.guestInformationView.setTitle(R.string.act_booking_reserver_info, R.string.label_booking_required_fileds);
+        mBookingDataBinding.guestInformationView.setGuideTextVisible(true);
+        mBookingDataBinding.guestInformationView.setGuideText(R.string.message_guide_name_memo);
+
+        mBookingDataBinding.guestInformationView.addInformation(DailyBookingGuestInformationsView.InformationType.LAST_NAME//
+            , getString(R.string.label_stay_outbound_payment_last_name)//
+            , null, getString(R.string.label_stay_outbound_payment_last_name_hint));
+
+        mBookingDataBinding.guestInformationView.addInformation(DailyBookingGuestInformationsView.InformationType.FIRST_NAME//
+            , getString(R.string.label_stay_outbound_payment_first_name)//
+            , null, getString(R.string.label_stay_outbound_payment_first_name_hint));
+
+        mBookingDataBinding.guestInformationView.addInformation(DailyBookingGuestInformationsView.InformationType.MOBILE//
+            , getString(R.string.act_booking_mobile)//
+            , null, null);
+
+        mBookingDataBinding.guestInformationView.addInformation(DailyBookingGuestInformationsView.InformationType.EMAIL//
+            , getString(R.string.act_booking_email)//
+            , null, getString(R.string.label_stay_outbound_payment_last_name_hint));
     }
 
     private void setDiscountLayout(Context context, ViewGroup viewGroup)
@@ -770,68 +750,4 @@ public class StayOutboundPaymentView extends BaseDialogView<StayOutboundPaymentV
             viewGroup.addView(messageRow);
         }
     }
-
-    private TextWatcher mFirstNameTextWatcher = new TextWatcher()
-    {
-        @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after)
-        {
-
-        }
-
-        @Override
-        public void onTextChanged(CharSequence s, int start, int before, int count)
-        {
-
-        }
-
-        @Override
-        public void afterTextChanged(Editable s)
-        {
-            if (mBookingDataBinding == null)
-            {
-                return;
-            }
-
-            if (s == null || s.length() == 0)
-            {
-                mBookingDataBinding.guestFirstNameHintEditText.setVisibility(View.VISIBLE);
-            } else
-            {
-                mBookingDataBinding.guestFirstNameHintEditText.setVisibility(View.GONE);
-            }
-        }
-    };
-
-    private TextWatcher mLastNameTextWatcher = new TextWatcher()
-    {
-        @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after)
-        {
-
-        }
-
-        @Override
-        public void onTextChanged(CharSequence s, int start, int before, int count)
-        {
-
-        }
-
-        @Override
-        public void afterTextChanged(Editable s)
-        {
-            if (mBookingDataBinding == null)
-            {
-                return;
-            }
-
-            if (s == null || s.length() == 0)
-            {
-                mBookingDataBinding.guestLastNameHintEditText.setVisibility(View.VISIBLE);
-            } else
-            {
-                mBookingDataBinding.guestLastNameHintEditText.setVisibility(View.GONE);
-            }
-        }
-    };
 }

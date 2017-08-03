@@ -330,7 +330,7 @@ public class DailyBookingPaymentTypeView extends ConstraintLayout implements Vie
         }
     }
 
-    public void setGuidePaymentTypeVisible(boolean visible)
+    public void setGuideTextVisible(boolean visible)
     {
         if (mViewDataBinding == null)
         {
@@ -340,7 +340,7 @@ public class DailyBookingPaymentTypeView extends ConstraintLayout implements Vie
         mViewDataBinding.paymentGuideView.setVisibility(visible ? VISIBLE : GONE);
     }
 
-    public void setGuidePaymentType(String text)
+    public void setGuideText(String text)
     {
         if (mViewDataBinding == null || DailyTextUtils.isTextEmpty(text) == true)
         {

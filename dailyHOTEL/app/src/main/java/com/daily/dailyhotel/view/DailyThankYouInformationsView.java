@@ -13,25 +13,25 @@ import com.twoheart.dailyhotel.databinding.DailyViewThankYouInformationDataBindi
 
 import java.util.List;
 
-public class DailyThankYouInformationView extends ConstraintLayout
+public class DailyThankYouInformationsView extends ConstraintLayout
 {
     private DailyViewThankYouInformationDataBinding mViewDataBinding;
 
-    public DailyThankYouInformationView(Context context)
+    public DailyThankYouInformationsView(Context context)
     {
         super(context);
 
         initLayout(context);
     }
 
-    public DailyThankYouInformationView(Context context, AttributeSet attrs)
+    public DailyThankYouInformationsView(Context context, AttributeSet attrs)
     {
         super(context, attrs);
 
         initLayout(context);
     }
 
-    public DailyThankYouInformationView(Context context, AttributeSet attrs, int defStyleAttr)
+    public DailyThankYouInformationsView(Context context, AttributeSet attrs, int defStyleAttr)
     {
         super(context, attrs, defStyleAttr);
 
@@ -147,18 +147,23 @@ public class DailyThankYouInformationView extends ConstraintLayout
         mViewDataBinding.reservationInformationView.setTitle(resid);
     }
 
-    public void setReservationInformation(List<Pair<CharSequence, CharSequence>> informationList)
+    public void removeAllReservationInformation()
     {
         if (mViewDataBinding == null)
         {
             return;
         }
 
-        if (informationList == null || informationList.size() == 0)
+        mViewDataBinding.reservationInformationView.removeAllInformation();
+    }
+
+    public void addReservationInformation(String title, String description)
+    {
+        if (mViewDataBinding == null)
         {
             return;
         }
 
-        mViewDataBinding.reservationInformationView.setInformation(informationList);
+        mViewDataBinding.reservationInformationView.addInformation(title, description);
     }
 }

@@ -363,7 +363,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
                 {
                     String phoneMobile = data.getStringExtra(InputMobileNumberDialogActivity.INTENT_EXTRA_MOBILE_NUMBER);
                     setUserPhoneNumber(phoneMobile);
-                    notifyGuestPhoneInformationChanged();
+                    notifyGuestMobileInformationChanged();
                 }
                 break;
 
@@ -1185,11 +1185,11 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
             return;
         }
 
-        getViewInterface().setGuestInformation(mGuest.firstName, mGuest.lastName, mGuest.phone, mGuest.email);
+        getViewInterface().setGuestInformation(mGuest.lastName, mGuest.firstName, mGuest.phone, mGuest.email);
         getViewInterface().setPeople(mPeople);
     }
 
-    private void notifyGuestPhoneInformationChanged()
+    private void notifyGuestMobileInformationChanged()
     {
         if (mGuest == null)
         {
@@ -1198,7 +1198,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
 
         String phone = DailyUserPreference.getInstance(getActivity()).getOverseasPhone();
 
-        getViewInterface().setGuestPhoneInformation(mGuest.phone);
+        getViewInterface().setGuestMobileInformation(mGuest.phone);
     }
 
     private void notifyPaymentTypeChanged()

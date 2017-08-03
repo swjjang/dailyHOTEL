@@ -28,7 +28,6 @@ import com.daily.base.util.ExLog;
 import com.daily.base.util.FontManager;
 import com.daily.base.util.ScreenUtils;
 import com.daily.base.util.VersionUtils;
-import com.daily.base.widget.DailyDayStrikeTextView;
 import com.daily.base.widget.DailyTextView;
 import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.repository.local.ConfigLocalImpl;
@@ -42,6 +41,7 @@ import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.widget.DailyDayStrikeTextView;
 
 import java.util.ArrayList;
 import java.util.Calendar;
