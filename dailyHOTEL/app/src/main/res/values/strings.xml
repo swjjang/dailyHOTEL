@@ -100,6 +100,7 @@
     <string name="label_changing_date">날짜 변경하기</string>
     <string name="label_collapse">접기</string>
     <string name="label_searching_around_location">내 주변 검색 중…</string>
+    <string name="label_all">전체</string>
 
     <string name="label_count_stay">%1$d개 스테이</string>
     <string name="label_count_gourmet">%1$d개 고메</string>

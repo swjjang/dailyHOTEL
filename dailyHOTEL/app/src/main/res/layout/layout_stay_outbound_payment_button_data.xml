@@ -3,7 +3,7 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:dailyFont="http://schemas.android.com/apk/res-auto">
 
-    <RelativeLayout
+    <android.support.constraint.ConstraintLayout
         android:id="@+id/bottomLayout"
         android:layout_width="match_parent"
         android:layout_height="64dp"
@@ -11,20 +11,27 @@
         android:background="@color/white">
 
         <View
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="1px"
-            android:background="@color/default_line_ce7e7e7"/>
+            android:background="@color/default_line_ce7e7e7"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
 
         <com.daily.base.widget.DailyTextView
             android:id="@+id/doPaymentView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
             android:layout_margin="10dp"
             android:background="@drawable/shape_fillrect_bb70038_r2"
             android:gravity="center"
             android:text="@string/act_booking_btn_pay"
             android:textColor="@color/white"
             android:textSize="17dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
             dailyFont:style="Medium"/>
-    </RelativeLayout>
+    </android.support.constraint.ConstraintLayout>
 </layout>

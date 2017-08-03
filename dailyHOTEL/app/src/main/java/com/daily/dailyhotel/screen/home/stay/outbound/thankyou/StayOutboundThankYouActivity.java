@@ -16,10 +16,8 @@ import com.twoheart.dailyhotel.R;
  */
 public class StayOutboundThankYouActivity extends BaseActivity<StayOutboundThankYouPresenter>
 {
-    static final String INTENT_EXTRA_DATA_STAY_INDEX = "stayIndex";
     static final String INTENT_EXTRA_DATA_IMAGE_URL = "imageUrl";
     static final String INTENT_EXTRA_DATA_STAY_NAME = "stayName";
-    static final String INTENT_EXTRA_DATA_ROOM_PRICE = "roomPrice";
     static final String INTENT_EXTRA_DATA_CHECK_IN = "checkIn";
     static final String INTENT_EXTRA_DATA_CHECK_OUT = "checkOut";
     static final String INTENT_EXTRA_DATA_CHECK_IN_TIME = "checkInTime";
@@ -27,16 +25,14 @@ public class StayOutboundThankYouActivity extends BaseActivity<StayOutboundThank
     static final String INTENT_EXTRA_DATA_ROOM_TYPE = "roomType";
     static final String INTENT_EXTRA_DATA_RESERVATION_ID = "reservationId";
 
-    public static Intent newInstance(Context context, int stayIndex, String stayName, String imageUrl, int roomPrice//
+    public static Intent newInstance(Context context, String stayName, String imageUrl//
         , String checkInDateTime, String checkOutDateTime, String checkInTime, String checkOutTime//
         , String roomType, int reservationId, StayOutboundThankYouAnalyticsParam analyticsParam)
     {
         Intent intent = new Intent(context, StayOutboundThankYouActivity.class);
 
-        intent.putExtra(INTENT_EXTRA_DATA_STAY_INDEX, stayIndex);
         intent.putExtra(INTENT_EXTRA_DATA_STAY_NAME, stayName);
         intent.putExtra(INTENT_EXTRA_DATA_IMAGE_URL, imageUrl);
-        intent.putExtra(INTENT_EXTRA_DATA_ROOM_PRICE, roomPrice);
         intent.putExtra(INTENT_EXTRA_DATA_CHECK_IN, checkInDateTime);
         intent.putExtra(INTENT_EXTRA_DATA_CHECK_OUT, checkOutDateTime);
         intent.putExtra(INTENT_EXTRA_DATA_CHECK_IN_TIME, checkInTime);

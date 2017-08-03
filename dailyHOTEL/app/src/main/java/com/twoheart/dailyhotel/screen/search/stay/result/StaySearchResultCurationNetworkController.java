@@ -25,14 +25,15 @@ public class StaySearchResultCurationNetworkController extends BaseNetworkContro
         super(context, networkTag, listener);
     }
 
-    public void requestStaySearchList(StayParams params)
+    public void requestStaySearchList(StayParams params, String abTestType)
     {
         if (params == null)
         {
             return;
         }
 
-        DailyMobileAPI.getInstance(mContext).requestStayList(mNetworkTag, params.toParamsMap(), params.getBedTypeList(), params.getLuxuryList(), mStayListCallback);
+        DailyMobileAPI.getInstance(mContext).requestStayList(mNetworkTag, params.toParamsMap()//
+            , params.getBedTypeList(), params.getLuxuryList(), abTestType, mStayListCallback);
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////

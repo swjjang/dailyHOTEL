@@ -8,7 +8,10 @@ import com.daily.dailyhotel.domain.ProfileInterface;
 import com.daily.dailyhotel.entity.User;
 import com.daily.dailyhotel.entity.UserBenefit;
 import com.daily.dailyhotel.entity.UserInformation;
+import com.daily.dailyhotel.entity.UserTracking;
+import com.daily.dailyhotel.repository.remote.model.UserTrackingData;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
+import com.twoheart.dailyhotel.network.dto.BaseDto;
 
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -94,6 +97,31 @@ public class ProfileRemoteImpl implements ProfileInterface
             }
 
             return userInformation;
+        }).observeOn(AndroidSchedulers.mainThread());
+    }
+
+    @Override
+    public Observable<UserTracking> getTracking()
+    {
+        return DailyMobileAPI.getInstance(mContext).getUserTracking().map((BaseDto<UserTrackingData> userTrackingDataBaseDto) ->
+        {
+            UserTracking userTracking = null;
+
+            if (userTrackingDataBaseDto != null)
+            {
+                if (userTrackingDataBaseDto.msgCode == 0 && userTrackingDataBaseDto.data != null)
+                {
+                    userTracking = userTrackingDataBaseDto.data.getUserTracking();
+                } else
+                {
+                    throw new BaseException(userTrackingDataBaseDto.msgCode, userTrackingDataBaseDto.msg);
+                }
+            } else
+            {
+                throw new BaseException(-1, null);
+            }
+
+            return userTracking;
         }).observeOn(AndroidSchedulers.mainThread());
     }
 }

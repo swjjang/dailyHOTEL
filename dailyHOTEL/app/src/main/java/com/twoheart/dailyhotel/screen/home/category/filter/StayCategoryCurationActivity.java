@@ -31,6 +31,7 @@ import com.twoheart.dailyhotel.model.StayRoomAmenities;
 import com.twoheart.dailyhotel.place.activity.PlaceCurationActivity;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.DailyRemoteConfigPreference;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
@@ -427,7 +428,9 @@ public class StayCategoryCurationActivity extends PlaceCurationActivity implemen
             return;
         }
 
-        ((StayCategoryCurationNetworkController) mNetworkController).requestStayCategoryList(mLastParams);
+        String abTestType = DailyRemoteConfigPreference.getInstance(this).getKeyRemoteConfigStayRankTestType();
+
+        ((StayCategoryCurationNetworkController) mNetworkController).requestStayCategoryList(mLastParams, abTestType);
     }
 
     protected void setLastStayCategoryParams(StayCategoryCuration stayCategoryCuration)

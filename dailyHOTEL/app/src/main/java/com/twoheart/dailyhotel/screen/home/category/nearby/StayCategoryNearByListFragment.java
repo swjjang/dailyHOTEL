@@ -10,6 +10,7 @@ import com.twoheart.dailyhotel.model.StayCategoryNearByParams;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.screen.hotel.list.StayListFragment;
 import com.twoheart.dailyhotel.screen.hotel.list.StayListLayout;
+import com.twoheart.dailyhotel.util.DailyRemoteConfigPreference;
 import com.twoheart.dailyhotel.util.Util;
 
 import java.util.ArrayList;
@@ -86,7 +87,9 @@ public class StayCategoryNearByListFragment extends StayListFragment
         }
 
         StayCategoryNearByParams params = (StayCategoryNearByParams) mStayCuration.toPlaceParams(page, PAGENATION_LIST_SIZE, true);
-        ((StayCategoryNearByListNetworkController) mNetworkController).requestStaySearchList(params);
+        String abTestType = DailyRemoteConfigPreference.getInstance(getContext()).getKeyRemoteConfigStayRankTestType();
+
+        ((StayCategoryNearByListNetworkController) mNetworkController).requestStaySearchList(params, abTestType);
     }
 
     @Override

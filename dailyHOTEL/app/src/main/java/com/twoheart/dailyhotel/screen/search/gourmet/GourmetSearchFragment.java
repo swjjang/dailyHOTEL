@@ -472,7 +472,7 @@ public class GourmetSearchFragment extends PlaceSearchFragment
 
                         for (GourmetKeyword gourmetKeyword : list)
                         {
-                            if (gourmetKeyword.index > 0//
+                            if (gourmetKeyword.index > 0 //
                                 && (gourmetKeyword.availableTickets == 0//
                                 || gourmetKeyword.availableTickets < gourmetKeyword.minimumOrderQuantity//
                                 || gourmetKeyword.isExpired == true))

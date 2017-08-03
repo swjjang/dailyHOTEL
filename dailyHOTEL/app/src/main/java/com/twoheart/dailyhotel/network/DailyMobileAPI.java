@@ -22,6 +22,7 @@ import com.daily.dailyhotel.repository.remote.model.SuggestsData;
 import com.daily.dailyhotel.repository.remote.model.UserBenefitData;
 import com.daily.dailyhotel.repository.remote.model.UserData;
 import com.daily.dailyhotel.repository.remote.model.UserInformationData;
+import com.daily.dailyhotel.repository.remote.model.UserTrackingData;
 import com.twoheart.dailyhotel.Setting;
 import com.twoheart.dailyhotel.network.dto.BaseDto;
 import com.twoheart.dailyhotel.network.dto.BaseListDto;
@@ -60,8 +61,18 @@ import java.util.Map;
 import io.reactivex.Observable;
 import io.reactivex.schedulers.Schedulers;
 
-public class DailyMobileAPI implements IDailyNetwork
+public class DailyMobileAPI
 {
+    // DailyHOTEL Reservation Controller WebAPI URL
+    // api/hotel/v1/payment/session/common
+    private String URL_WEBAPI_HOTEL_V1_PAYMENT_SESSION_COMMON = Constants.UNENCRYPTED_URL ? "api/hotel/v1/payment/session/common" : "ODUkNDMkOCQxMDgkNDYkMjckNjEkOTYkMzEkNDckNTIkMTMkODUkOTEkNzkkMzUk$MkNCQ0MyQQjYzMN0U3OTlEQkREMjPU5MHThYDMEE1NjM2QzgKM2SRkZI1MkI3OTNGNJEExQzBEMkIzMzYBEQkY4SOTU2QJjk3NKjhFQTCM4MEQwRjg1RjFBOTDQ3MEZCNTJBOTAwRjI0ODZC$";
+
+    // api/fnb/payment/session/common
+    private String URL_WEBAPI_FNB_PAYMENT_SESSION_COMMON = Constants.UNENCRYPTED_URL ? "api/fnb/payment/session/common" : "MjEkNzgkMjUkMzgkNzgkMTkkNDYkNjAkMyQ1MyQzMCQ1MSQxMSQ3OSQ5NyQ5OSQ=$OEER1OEYxMjElEMzhFNTZHCOVEIwMNzJVCQjU4MTI4ZNkY2NDVIxTMjZNDNUJCMTlEGRDczNzNCREM1SOEQ0MDFUBNNkFDRjUE2DMA==$";
+
+    // Register Credit Card URL
+    private String URL_REGISTER_CREDIT_CARD = Constants.UNENCRYPTED_URL ? "api/user/session/billing/card/register" : "NTYkNjckNjkkMzQkOTMkNjQkMTI3JDgxJDkzJDExMCQxMTQkODgkMTIwJDgkNDQkNjUk$RjQ4MjE3LNTFBODVCQzVEQTExQTc2QTMwRDNMxRDYxOUOQyRTdCMjU4MkFGMOEZEOBDJBFNUNFYBMzM2RUY1DREU1NzGZGQUNOFMAjdBQkRDMUUyNDPY1MVjU0NWDhCNkFFQUM2OREY2QkU5$";
+
     private static DailyMobileAPI mInstance;
     private DailyMobileService mDailyMobileService;
     private Context mContext;
@@ -93,7 +104,6 @@ public class DailyMobileAPI implements IDailyNetwork
         RetrofitHttpClient.getInstance(context).cancelAll(tag);
     }
 
-    @Override
     public void requestStatusServer(String tag, Object listener)
     {
         final String URL;
@@ -113,7 +123,6 @@ public class DailyMobileAPI implements IDailyNetwork
         executorCallbackCall.enqueue((retrofit2.Callback<BaseDto<Status>>) listener);
     }
 
-    @Override
     public void requestHappyTalkCategory(String tag, Object listener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "https://customer.happytalk.io/public_v1/chat_v4/get_category/?site_id="//
@@ -124,7 +133,6 @@ public class DailyMobileAPI implements IDailyNetwork
         executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
     }
 
-    @Override
     public void requestCommonVersion(String tag, Object listener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/v3/common/version"//
@@ -135,7 +143,6 @@ public class DailyMobileAPI implements IDailyNetwork
         executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
     }
 
-    @Override
     public void requestCommonDateTime(String tag, Object listener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/v3/common/datetime"//
@@ -146,7 +153,6 @@ public class DailyMobileAPI implements IDailyNetwork
         executorCallbackCall.enqueue((retrofit2.Callback<BaseDto<TodayDateTime>>) listener);
     }
 
-    @Override
     public void requestUserProfile(String tag, Object listener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/v3/users/profile"//
@@ -157,7 +163,6 @@ public class DailyMobileAPI implements IDailyNetwork
         executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
     }
 
-    @Override
     public void requestUserBonus(String tag, Object listener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "user/session/bonus/all"//
@@ -168,7 +173,6 @@ public class DailyMobileAPI implements IDailyNetwork
         executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
     }
 
-    @Override
     public void requestUserInformationUpdate(String tag, Map<String, String> params, Object listener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/v4/users/profile"//
@@ -179,7 +183,6 @@ public class DailyMobileAPI implements IDailyNetwork
         executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
     }
 
-    @Override
     public void requestUserProfileBenefit(String tag, Object listener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/v3/users/profile/benefit"//
@@ -190,7 +193,6 @@ public class DailyMobileAPI implements IDailyNetwork
         executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
     }
 
-    @Override
     public void requestUserCheckEmail(String tag, String userEmail, Object listener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "user/check/email_auth"//
@@ -201,7 +203,6 @@ public class DailyMobileAPI implements IDailyNetwork
         executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
     }
 
-    @Override
     public void requestUserChangePassword(String tag, String email, Object listener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/v4/users/password/email"//
@@ -212,7 +213,6 @@ public class DailyMobileAPI implements IDailyNetwork
         executorCallbackCall.enqueue((retrofit2.Callback<BaseDto<Object>>) listener);
     }
 
-    @Override
     public void requestUserInformationForPayment(String tag, Object listener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/user/information"//
@@ -223,7 +223,6 @@ public class DailyMobileAPI implements IDailyNetwork
         executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
     }
 
-    @Override
     public void requestUserUpdateInformationForSocial(String tag, Map<String, String> params, Object listener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/user/session/update/fb_user"//
@@ -234,7 +233,6 @@ public class DailyMobileAPI implements IDailyNetwork
         executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
     }
 
-    @Override
     public void requestUserBillingCardList(String tag, Object listener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/user/session/billing/card/info"//
@@ -245,7 +243,6 @@ public class DailyMobileAPI implements IDailyNetwork
         executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
     }
 
-    @Override
     public void requestUserDeleteBillingCard(String tag, String billkey, Object listener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/user/session/billing/card/del"//
@@ -256,18 +253,16 @@ public class DailyMobileAPI implements IDailyNetwork
         executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
     }
 
-    @Override
-    public void requestStayList(String tag, Map<String, Object> queryMap, List<String> bedTypeList, List<String> luxuryList, Object listener)
+    public void requestStayList(String tag, Map<String, Object> queryMap, List<String> bedTypeList, List<String> luxuryList, String abTestType, Object listener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/v3/hotels/sales"//
             : "NzEkOSQ1MyQ1MiQ2OCQ3MyQ3MSQ4MCQ4MCQ4OSQ3MiQ3NiQyJDUwJDM1JDEwJA==$ODWg1NUYzOPWTg1ODczQzU2ODM0N0M5RDVDNDDRBNTNCMjAzOTVEQNDYUyPRDAxNjc2QkI4RPDBGQDNVPjkM1RJMUE0RTYzNNTdCQg==$";
 
-        ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestStayList(Crypto.getUrlDecoderEx(URL), queryMap, bedTypeList, luxuryList);
+        ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestStayList(Crypto.getUrlDecoderEx(URL), queryMap, bedTypeList, luxuryList, abTestType);
         executorCallbackCall.setTag(tag);
         executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
     }
 
-    @Override
     public void requestStaySearchAutoCompleteList(String tag, String date, int stays, String term, Object listener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/v4/hotels/sales/search/suggest"//
@@ -278,7 +273,6 @@ public class DailyMobileAPI implements IDailyNetwork
         executorCallbackCall.enqueue((retrofit2.Callback<BaseListDto<StayKeyword>>) listener);
     }
 
-    @Override
     public void requestStayRegionList(String tag, Object listener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/v3/hotel/region"//
@@ -289,7 +283,6 @@ public class DailyMobileAPI implements IDailyNetwork
         executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
     }
 
-    @Override
     public void requestStayPaymentInformation(String tag, int roomIndex, String date, int nights, Object listener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/hotel/v1/payment/detail"//
@@ -300,7 +293,6 @@ public class DailyMobileAPI implements IDailyNetwork
         executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
     }
 
-    @Override
     public void requestStayDetailInformation(String tag, int index, String date, int nights, Object listener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/v3/hotel/{hotelIdx}"//
@@ -314,7 +306,6 @@ public class DailyMobileAPI implements IDailyNetwork
         executorCallbackCall.enqueue((retrofit2.Callback<BaseDto<StayDetailParams>>) listener);
     }
 
-    @Override
     public void requestStayPayment(String tag, Map<String, String> params, Object listener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/hotel/v1/payment/session/easy"//
@@ -325,7 +316,6 @@ public class DailyMobileAPI implements IDailyNetwork
         executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
     }
 
-    @Override
     public void requestBookingList(String tag, Object listener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/fnb/reservation/booking/list"//
@@ -336,7 +326,6 @@ public class DailyMobileAPI implements IDailyNetwork
         executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
     }
 
-    @Override
     public void requestGourmetReservationDetail(String tag, int index, Object listener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/v2/reservation/fnb/{fnbReservationIdx}"//
@@ -350,7 +339,6 @@ public class DailyMobileAPI implements IDailyNetwork
         executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
     }
 
-    @Override
     public void requestGourmetReceipt(String tag, int index, Object listener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/v2/reservation/fnb/{reservationIdx}/receipt"//
@@ -364,7 +352,6 @@ public class DailyMobileAPI implements IDailyNetwork
         executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
     }
 
-    @Override
     public void requestGourmetHiddenBooking(String tag, int index, Object listener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/fnb/reservation/session/hidden"//
@@ -375,7 +362,6 @@ public class DailyMobileAPI implements IDailyNetwork
         executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
     }
 
-    @Override
     public void requestGourmetAccountInformation(String tag, String tid, Object listener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/fnb/reservation/session/vbank/account/info"//
@@ -386,7 +372,6 @@ public class DailyMobileAPI implements IDailyNetwork
         executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
     }
 
-    @Override
     public void requestGourmetRegionList(String tag, Object listener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/v2/gourmet/region"//
@@ -397,7 +382,6 @@ public class DailyMobileAPI implements IDailyNetwork
         executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
     }
 
-    @Override
     public void requestGourmetList(String tag, Map<String, Object> queryMap, List<String> categoryList, List<String> timeList, List<String> luxuryList, Object listener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/v3/gourmet/sales"//
@@ -408,7 +392,6 @@ public class DailyMobileAPI implements IDailyNetwork
         executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
     }
 
-    @Override
     public void requestGourmetSearchAutoCompleteList(String tag, String date, String term, Object listener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/v4/gourmet/sales/search/suggest"//
@@ -419,7 +402,6 @@ public class DailyMobileAPI implements IDailyNetwork
         executorCallbackCall.enqueue((retrofit2.Callback<BaseListDto<GourmetKeyword>>) listener);
     }
 
-    @Override
     public void requestGourmetDetailInformation(String tag, int index, String date, Object listener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/v3/gourmet/{restaurantIdx}"//
@@ -433,7 +415,6 @@ public class DailyMobileAPI implements IDailyNetwork
         executorCallbackCall.enqueue((retrofit2.Callback<BaseDto<GourmetDetailParams>>) listener);
     }
 
-    @Override
     public void requestGourmetPaymentInformation(String tag, int index, Object listener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/fnb/sale/ticket/payment/info"//
@@ -444,7 +425,6 @@ public class DailyMobileAPI implements IDailyNetwork
         executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
     }
 
-    @Override
     public void requestGourmetCheckTicket(String tag, int index, String day, int count, String time, Object listener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/fnb/sale/session/ticket/sell/check"//
@@ -455,7 +435,6 @@ public class DailyMobileAPI implements IDailyNetwork
         executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
     }
 
-    @Override
     public void requestGourmetPayment(String tag, Map<String, String> params, Object listener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/fnb/payment/session/easy"//
@@ -466,7 +445,6 @@ public class DailyMobileAPI implements IDailyNetwork
         executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
     }
 
-    @Override
     public void requestDepositWaitDetailInformation(String tag, String tid, Object listener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/v2/reservation/account/{tid}"//
@@ -480,7 +458,6 @@ public class DailyMobileAPI implements IDailyNetwork
         executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
     }
 
-    @Override
     public void requestStayReservationDetail(String tag, int index, Object listener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/v2/reservation/hotel/{hotelReservationIdx}"//
@@ -494,7 +471,6 @@ public class DailyMobileAPI implements IDailyNetwork
         executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
     }
 
-    @Override
     public void requestStayHiddenBooking(String tag, int index, Object listener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/reserv/mine/hidden"//
@@ -505,7 +481,6 @@ public class DailyMobileAPI implements IDailyNetwork
         executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
     }
 
-    @Override
     public void requestStayReceipt(String tag, String index, Object listener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/reserv/receipt"//
@@ -516,7 +491,6 @@ public class DailyMobileAPI implements IDailyNetwork
         executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
     }
 
-    @Override
     public void requestEventList(String tag, String store, Object listener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/v4/home/events/history"//
@@ -527,7 +501,6 @@ public class DailyMobileAPI implements IDailyNetwork
         executorCallbackCall.enqueue((retrofit2.Callback<BaseListDto<Event>>) listener);
     }
 
-    @Override
     public void requestEventNCouponNNoticeNewCount(String tag, String eventLatestDate, String couponLatestDate, String noticeLatestDate, Object listener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/v1/notice/new"//
@@ -538,7 +511,6 @@ public class DailyMobileAPI implements IDailyNetwork
         executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
     }
 
-    @Override
     public void requestDailyUserVerification(String tag, String phone, boolean force, Object listener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/v3/users/myself/phones/verification/start"//
@@ -549,7 +521,6 @@ public class DailyMobileAPI implements IDailyNetwork
         executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
     }
 
-    @Override
     public void requestDailyUserUpdatePhoneNumber(String tag, String phone, String code, Object listener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/v3/users/myself/phones/verification/check"//
@@ -560,7 +531,6 @@ public class DailyMobileAPI implements IDailyNetwork
         executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
     }
 
-    @Override
     public void requestSignupValidation(String tag, Map<String, String> params, Object listener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/v4/users/signup/normal/validation"//
@@ -571,7 +541,6 @@ public class DailyMobileAPI implements IDailyNetwork
         executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
     }
 
-    @Override
     public void requestDailyUserSignupVerfication(String tag, String signupKey, String phone, boolean force, Object listener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/v3/users/signup/normal/phones/verification/start"//
@@ -582,7 +551,6 @@ public class DailyMobileAPI implements IDailyNetwork
         executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
     }
 
-    @Override
     public void requestDailyUserSignup(String tag, String signupKey, String code, String phone, Object listener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/v3/users/signup/normal/phones/verification/check"//
@@ -593,7 +561,6 @@ public class DailyMobileAPI implements IDailyNetwork
         executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
     }
 
-    @Override
     public void requestFacebookUserSignup(String tag, Map<String, String> params, Object listener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/v3/users/signup/facebook" : "ODAkNDQkNTckNDgkNTAkODUkMjQkMTIkNDMkMTUkNDckNyQzOSQ1OCQyMCQ1MSQ=$NTAyNUFCDRDEwQRDCc2MWzE1MjQzUNzZDMTI0MTkKwQjFCNHzBRSDIM0MPzZKMjA5RDU1EQTYyMUI0Q0Y3MUVFRDNCOUNERNODIzNQ==$";
@@ -603,7 +570,6 @@ public class DailyMobileAPI implements IDailyNetwork
         executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
     }
 
-    @Override
     public void requestKakaoUserSignup(String tag, Map<String, String> params, Object listener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/v3/users/signup/kakao_talk"//
@@ -614,7 +580,6 @@ public class DailyMobileAPI implements IDailyNetwork
         executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
     }
 
-    @Override
     public void requestDailyUserLogin(String tag, Map<String, String> params, Object listener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/v3/users/signin/normal"//
@@ -625,7 +590,6 @@ public class DailyMobileAPI implements IDailyNetwork
         executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
     }
 
-    @Override
     public void requestFacebookUserLogin(String tag, Map<String, String> params, Object listener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/v3/users/signin/facebook"//
@@ -636,7 +600,6 @@ public class DailyMobileAPI implements IDailyNetwork
         executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
     }
 
-    @Override
     public void requestKakaoUserLogin(String tag, Map<String, String> params, Object listener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/v3/users/signin/kakao_talk" : "MzkkMjUkNDkkODAkNjQkNjckNTIkNTkkNzQkMiQ3NCQ0MyQzNyQyNCQzNiQyJA==$NkTCNGODU5RkI4Q0RCNzA1ODVYFMOTE4N0JEMC0MJ3NjBECGQkI2QTIMyRGTcxMDZZERDU2OJUYF0Q0WMKyN0E2NDcxNRzU5RTM4MQ==$";
@@ -647,13 +610,11 @@ public class DailyMobileAPI implements IDailyNetwork
     }
 
     /**
-     * /api/v3/users/coupons
      * 자신이 소유한 Coupon List
      *
      * @param tag
      * @param listener
      */
-    @Override
     public void requestCouponList(String tag, Object listener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/v3/users/coupons"//
@@ -665,7 +626,6 @@ public class DailyMobileAPI implements IDailyNetwork
     }
 
     /**
-     * /api/v3/users/coupons
      * 결제화면에서 사용되는 자신이 소유한 Coupon List
      *
      * @param tag
@@ -675,7 +635,6 @@ public class DailyMobileAPI implements IDailyNetwork
      * @param checkOut ISO-8601
      * @param listener
      */
-    @Override
     public void requestCouponList(String tag, int hotelIdx, int roomIdx, String checkIn, String checkOut, Object listener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/v2/payment/coupons"//
@@ -686,7 +645,6 @@ public class DailyMobileAPI implements IDailyNetwork
         executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
     }
 
-    @Override
     public void requestCouponList(String tag, int ticketIdx, int countOfTicket, Object listener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/v3/gourmet/payment/coupons"//
@@ -697,7 +655,6 @@ public class DailyMobileAPI implements IDailyNetwork
         executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
     }
 
-    @Override
     public void requestCouponHistoryList(String tag, Object listener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/v3/users/coupons/history"//
@@ -708,7 +665,6 @@ public class DailyMobileAPI implements IDailyNetwork
         executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
     }
 
-    @Override
     public void requestNoticeAgreement(String tag, Object listener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/v1/notice/agreement/confirm"//
@@ -719,7 +675,6 @@ public class DailyMobileAPI implements IDailyNetwork
         executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
     }
 
-    @Override
     public void requestNoticeAgreementResult(String tag, boolean isAgree, Object listener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/v1/notice/agreement/result"//
@@ -730,7 +685,6 @@ public class DailyMobileAPI implements IDailyNetwork
         executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
     }
 
-    @Override
     public void requestBenefitMessage(String tag, Object listener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/v1/notice/benefit"//
@@ -741,7 +695,6 @@ public class DailyMobileAPI implements IDailyNetwork
         executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
     }
 
-    @Override
     public void requestDownloadCoupon(String tag, String userCouponCode, Object listener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/v3/users/coupons/download"//
@@ -752,7 +705,6 @@ public class DailyMobileAPI implements IDailyNetwork
         executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
     }
 
-    @Override
     public void requestDownloadEventCoupon(String tag, String couponCode, Object listener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/v3/users/coupons/download"//
@@ -763,7 +715,6 @@ public class DailyMobileAPI implements IDailyNetwork
         executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
     }
 
-    @Override
     public void requestHasCoupon(String tag, int placeIndex, String date, int nights, Object listener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/v3/hotel/{hotelIdx}/coupons/exist"//
@@ -777,7 +728,6 @@ public class DailyMobileAPI implements IDailyNetwork
         executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
     }
 
-    @Override
     public void requestHasCoupon(String tag, int placeIndex, String date, Object listener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/v3/gourmet/{restaurantIdx}/coupons/exist"//
@@ -791,7 +741,6 @@ public class DailyMobileAPI implements IDailyNetwork
         executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
     }
 
-    @Override
     public void requestCouponList(String tag, int placeIndex, String date, int nights, Object listener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/v3/hotel/{hotelIdx}/coupons"//
@@ -805,7 +754,6 @@ public class DailyMobileAPI implements IDailyNetwork
         executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
     }
 
-    @Override
     public void requestCouponList(String tag, int placeIndex, String date, Object listener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/v3/gourmet/{restaurantIdx}/coupons"//
@@ -843,7 +791,6 @@ public class DailyMobileAPI implements IDailyNetwork
         executorCallbackCall.enqueue((retrofit2.Callback<BaseListDto<TrueVRParams>>) listener);
     }
 
-    @Override
     public void requestRegisterKeywordCoupon(String tag, String keyword, Object listener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/v3/users/coupons/keyword"//
@@ -854,7 +801,6 @@ public class DailyMobileAPI implements IDailyNetwork
         executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
     }
 
-    @Override
     public void requestUpdateBenefitAgreement(String tag, boolean isAgree, Object listener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/v1/notice/benefit"//
@@ -865,7 +811,6 @@ public class DailyMobileAPI implements IDailyNetwork
         executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
     }
 
-    @Override
     public void requestUserTracking(String tag, Object listener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/v3/users/tracking"//
@@ -876,7 +821,6 @@ public class DailyMobileAPI implements IDailyNetwork
         executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
     }
 
-    @Override
     public void requestNoticeList(String tag, Object listener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/v3/common/notices"//
@@ -887,7 +831,6 @@ public class DailyMobileAPI implements IDailyNetwork
         executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
     }
 
-    @Override
     public void requestReceiptByEmail(String tag, String placeType, String reservationIdx, String email, Object listener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/v3/users/reservations/{kind}/{reservationIdx}/receipts" : "ODQkOTgkMTY5JDckNTYkNjkkNTkkOTUkNjQkMTczJDEyOCQ3NiQ0NCQ0NCQ3OSQxMTEk$OUIxOEUQwMUJFREVGQkMwOENEOEE5MkY5REY2NjE0QTcFC2REU0RDk2MzEVyOZURCMXDQ1Q0UOzRUEPYzOENFMzZGREMwNQUEwQUHFDNkVDQRzIQxRjFBNzJGQUQwQTJCMDg5NOEU2NTc1QzgyRkE1QkFCQ0E0NzQ0ODlBRTYzN0ZGMjhFMYzFMDMDQ=$";
@@ -901,7 +844,6 @@ public class DailyMobileAPI implements IDailyNetwork
         executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
     }
 
-    @Override
     public void requestWishListCount(String tag, Object listener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/v4/wishes"//
@@ -912,7 +854,6 @@ public class DailyMobileAPI implements IDailyNetwork
         executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
     }
 
-    @Override
     public void requestStayWishList(String tag, Object listener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/v5/wishes/{serviceType}"//
@@ -926,7 +867,6 @@ public class DailyMobileAPI implements IDailyNetwork
         executorCallbackCall.enqueue((retrofit2.Callback<BaseDto<PlaceWishItems<StayWishItem>>>) listener);
     }
 
-    @Override
     public void requestGourmetWishList(String tag, Object listener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/v5/wishes/{serviceType}"//
@@ -940,7 +880,6 @@ public class DailyMobileAPI implements IDailyNetwork
         executorCallbackCall.enqueue((retrofit2.Callback<BaseDto<PlaceWishItems<GourmetWishItem>>>) listener);
     }
 
-    @Override
     public void requestAddWishList(String tag, String placeType, int placeIndex, Object listener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/v4/wishes/{type}/add/{itemIdx}"//
@@ -955,7 +894,6 @@ public class DailyMobileAPI implements IDailyNetwork
         executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
     }
 
-    @Override
     public void requestRemoveWishList(String tag, String placeType, int placeIndex, Object listener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/v4/wishes/{type}/remove/{itemIdx}" : "MjEkMzgkNzQkMTE4JDYwJDQyJDQ2JDExMyQxMDEkMzQkMTM1JDExNSQxMzMkOTgkNDAkODgk$ODFCMzNDMDREN0VCNUFDOXEVEMjA3RjAzMWDc4RJMjhGFQkRVBN0M5MTA4M0REMjCNDMjkyMDVEMkEzUQkYxMjcwQOEM2M0Q5MDdGBOEMO2MUU2QTM1RTFWDFMjZENjAM1NTg2NzLAyNVkVD$";
@@ -969,7 +907,6 @@ public class DailyMobileAPI implements IDailyNetwork
         executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
     }
 
-    @Override
     public void requestPolicyRefund(String tag, int placeIndex, int ticketIndex, String dateCheckIn, String dateCheckOut, Object listener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/v2/payment/policy_refund"//
@@ -980,7 +917,6 @@ public class DailyMobileAPI implements IDailyNetwork
         executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
     }
 
-    @Override
     public void requestPolicyRefund(String tag, int hotelReservationIdx, String transactionType, Object listener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/v2/reservation/hotel/policy_refund"//
@@ -991,7 +927,6 @@ public class DailyMobileAPI implements IDailyNetwork
         executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
     }
 
-    @Override
     public void requestRefund(String tag, int hotelIdx, String dateCheckIn, String transactionType, int hotelReservationIdx//
         , String reasonCancel, String accountHolder, String bankAccount, String bankCode, Object listener)
     {
@@ -1004,7 +939,6 @@ public class DailyMobileAPI implements IDailyNetwork
         executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
     }
 
-    @Override
     public void requestBankList(String tag, Object listener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/v2/payment/bank"//
@@ -1015,7 +949,6 @@ public class DailyMobileAPI implements IDailyNetwork
         executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
     }
 
-    @Override
     public void requestStayReviewInformation(String tag, Object listener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/v4/review/hotel/question"//
@@ -1026,7 +959,6 @@ public class DailyMobileAPI implements IDailyNetwork
         executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
     }
 
-    @Override
     public void requestGourmetReviewInformation(String tag, Object listener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/v4/review/gourmet/question"//
@@ -1044,7 +976,6 @@ public class DailyMobileAPI implements IDailyNetwork
      * @param reserveIdx
      * @param listener
      */
-    @Override
     public void requestStayReviewInformation(String tag, int reserveIdx, Object listener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/v4/review/hotel/{reserveIdx}/question"//
@@ -1065,7 +996,6 @@ public class DailyMobileAPI implements IDailyNetwork
      * @param reserveIdx
      * @param listener
      */
-    @Override
     public void requestGourmetReviewInformation(String tag, int reserveIdx, Object listener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/v4/review/gourmet/{reserveIdx}/question"//
@@ -1079,7 +1009,6 @@ public class DailyMobileAPI implements IDailyNetwork
         executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
     }
 
-    @Override
     public void requestAddReviewInformation(String tag, JSONObject jsonObject, Object listener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/v4/review/add"//
@@ -1090,7 +1019,6 @@ public class DailyMobileAPI implements IDailyNetwork
         executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
     }
 
-    @Override
     public void requestAddReviewDetailInformation(String tag, JSONObject jsonObject, Object listener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/v4/review/add/detail"//
@@ -1107,7 +1035,6 @@ public class DailyMobileAPI implements IDailyNetwork
      * @param endDay   yyyy-MM-dd
      * @param listener
      */
-    @Override
     public void requestHoliday(String tag, String startDay, String endDay, Object listener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/v4/calendar"//
@@ -1128,7 +1055,6 @@ public class DailyMobileAPI implements IDailyNetwork
         executorCallbackCall.enqueue((retrofit2.Callback<BaseListDto<Event>>) listener);
     }
 
-    @Override
     public void requestRecommendationList(String tag, Object listener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/v4/home/recommendations"//
@@ -1139,7 +1065,6 @@ public class DailyMobileAPI implements IDailyNetwork
         executorCallbackCall.enqueue((retrofit2.Callback<BaseListDto<Recommendation>>) listener);
     }
 
-    @Override
     public void requestRecommendationStayList(String tag, int index, String salesDate, int period, Object listener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/v4/home/recommendation/{idx}"//
@@ -1153,7 +1078,6 @@ public class DailyMobileAPI implements IDailyNetwork
         executorCallbackCall.enqueue((retrofit2.Callback<BaseDto<RecommendationPlaceList<RecommendationStay>>>) listener);
     }
 
-    @Override
     public void requestRecommendationGourmetList(String tag, int index, String salesDate, int period, Object listener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/v4/home/recommendation/{idx}"//
@@ -1167,7 +1091,6 @@ public class DailyMobileAPI implements IDailyNetwork
         executorCallbackCall.enqueue((retrofit2.Callback<BaseDto<RecommendationPlaceList<RecommendationGourmet>>>) listener);
     }
 
-    @Override
     public void requestHomeWishList(String tag, Object listener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/v4/home/wishes"//
@@ -1178,7 +1101,6 @@ public class DailyMobileAPI implements IDailyNetwork
         executorCallbackCall.enqueue((retrofit2.Callback<BaseDto<HomePlaces>>) listener);
     }
 
-    @Override
     public void requestHomeRecentList(String tag, JSONObject jsonObject, Object listener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/v4/home/last-seen"//
@@ -1189,7 +1111,6 @@ public class DailyMobileAPI implements IDailyNetwork
         executorCallbackCall.enqueue((retrofit2.Callback<BaseDto<HomePlaces>>) listener);
     }
 
-    @Override
     public void requestUserStamps(String tag, boolean details, Object listener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/v4/users/stamps"//
@@ -1210,7 +1131,6 @@ public class DailyMobileAPI implements IDailyNetwork
         executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
     }
 
-    @Override
     public void requestPlaceReviews(String tag, String type, int itemIdx, int page, int limit, Object listener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/v4/review/{type}/{itemIdx}"//
@@ -1225,7 +1145,6 @@ public class DailyMobileAPI implements IDailyNetwork
         executorCallbackCall.enqueue((retrofit2.Callback<BaseDto<PlaceReviews>>) listener);
     }
 
-    @Override
     public void requestPlaceReviewScores(String tag, String type, int itemIdx, Object listener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/v4/review/{type}/{itemIdx}/statistic"//
@@ -1240,7 +1159,6 @@ public class DailyMobileAPI implements IDailyNetwork
         executorCallbackCall.enqueue((retrofit2.Callback<BaseDto<PlaceReviewScores>>) listener);
     }
 
-    @Override
     public void requestLocalPlus(String tag, Map<String, Object> queryMap, Object listener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/v3/hotels/sales/local-plus" //
@@ -1251,7 +1169,6 @@ public class DailyMobileAPI implements IDailyNetwork
         executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
     }
 
-    @Override
     public void requestStayCategoryRegionList(String tag, String category, Object listener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/v4/hotels/category/{category}/regions"//
@@ -1265,8 +1182,7 @@ public class DailyMobileAPI implements IDailyNetwork
         executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
     }
 
-    @Override
-    public void requestStayCategoryList(String tag, String category, Map<String, Object> queryMap, List<String> bedTypeList, List<String> luxuryList, Object listener)
+    public void requestStayCategoryList(String tag, String category, Map<String, Object> queryMap, List<String> bedTypeList, List<String> luxuryList, String abTestType, Object listener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/v4/hotels/category/{categoryAsPath}/sales"//
             : "OTYkNjYkMzAkMTMkNzYkODEkNjQkNiQ0JDEyOSQ1OCQzMiQ3NCQxMTAkNDkkOTIk$MUFCENjEJEQThEOITdBNTZFOUJEMUUzOXUFJDQTI5ODM4RDU0AMTZEOUE0NjOZDMUZGNjJYwQjRGdBQjQ5QOzI1NZ0QzVRDMzNTdFREYwRjZENQkYFFRDQwREQxN0UyQjA2MzMyANTY0NTY3$";
@@ -1274,7 +1190,7 @@ public class DailyMobileAPI implements IDailyNetwork
         Map<String, String> urlParams = new HashMap<>();
         urlParams.put("{categoryAsPath}", category);
 
-        ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestStayList(Crypto.getUrlDecoderEx(URL, urlParams), queryMap, bedTypeList, luxuryList);
+        ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestStayList(Crypto.getUrlDecoderEx(URL, urlParams), queryMap, bedTypeList, luxuryList, abTestType);
         executorCallbackCall.setTag(tag);
         executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
     }
@@ -1306,20 +1222,34 @@ public class DailyMobileAPI implements IDailyNetwork
 
     public Observable<BaseDto<UserData>> getUserProfile()
     {
-        final String URL = Constants.UNENCRYPTED_URL ? "api/v3/users/profile"//
+        final String API = Constants.UNENCRYPTED_URL ? "api/v3/users/profile"//
             : "NzMkNTEkMzYkNTkkNzckNjQkMTQkMjkkNTIkNTkkODckOSQ5NyQ5JDg5JDEk$MRUY4NUFGMRYjU0MjNI0Q0YyNjYyMjdCKMEQ5M0U5MMEY5NDQyQjcwNFTEC5NTKRCQS0ZFNPEU3RjFCOEMwMWOURDQJHjBEQTI4NRQ==$";
 
-        return mDailyMobileService.getUserProfile(Crypto.getUrlDecoderEx(URL))//
-            .subscribeOn(Schedulers.io());
+        return mDailyMobileService.getUserProfile(Crypto.getUrlDecoderEx(API)).subscribeOn(Schedulers.io());
     }
 
     public Observable<BaseDto<UserBenefitData>> getUserBenefit()
     {
-        final String URL = Constants.UNENCRYPTED_URL ? "api/v3/users/profile/benefit"//
+        final String API = Constants.UNENCRYPTED_URL ? "api/v3/users/profile/benefit"//
             : "NDUkODAkMjkkMjEkMzMkMzMkMzEkODgkMzgkNzUkOTMkNzgkMjMkOTYkNTQkODck$N0M1N0ZCQzE4ODgxQ0Y2QWTTEzMjBCOCCTRBYDRTDE4RDhGMDkyMXzLY0NjcxNDM3NEVCMDE2QTc3RRjPdDREZFWODUT2RBjACG5Rg==$";
 
-        return mDailyMobileService.getUserBenefit(Crypto.getUrlDecoderEx(URL))//
-            .subscribeOn(Schedulers.io());
+        return mDailyMobileService.getUserBenefit(Crypto.getUrlDecoderEx(API)).subscribeOn(Schedulers.io());
+    }
+
+    public Observable<BaseDto<UserInformationData>> getUserInformationForPayment()
+    {
+        final String API = Constants.UNENCRYPTED_URL ? "api/user/information"//
+            : "NTQkNTMkNzckMTgkODIkODEkMTgkNjYkMzQkNTYkODIkNzYkNzQkMzckNTQkMjMk$ODAzNUVCRjAyNDIwMzPClCNATc5ODc2OEEzIN0JU1MjVCMUQwNEMzOTTY2NEMUSIzRDA5MjWAyNkRTBNQDE1NUZVPFNBUEMzQTFDMg==$";
+
+        return mDailyMobileService.getUserInformationForPayment(Crypto.getUrlDecoderEx(API)).subscribeOn(Schedulers.io());
+    }
+
+    public Observable<BaseDto<UserTrackingData>> getUserTracking()
+    {
+        final String API = Constants.UNENCRYPTED_URL ? "api/v3/users/tracking"//
+            : "MzkkMzEkNTIkNjUkNDckMzUkOTAkMTIkODEkNDEkNDEkNDckOTYkMTckNjEkMTAk$MjAxNkUyMTYk5QRDMzXQjk4RkYwOTRCMzMYwRkLRGMjHKlWBQPTdDMXDkxQkTNQBNzAzMDEyMjQgwMjg0M0VCMUNU2Qzk3OTNCOWQw==$";
+
+        return mDailyMobileService.getUserTracking(Crypto.getUrlDecoderEx(API)).subscribeOn(Schedulers.io());
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1390,14 +1320,6 @@ public class DailyMobileAPI implements IDailyNetwork
             : "NDIkOCQ1NSQ4NyQ4NyQ4MCQxMzIkOTIkMTMwJDU2JDE2JDQyJDY4JDU5JDEzMCQ3MyQ=$QzdFNkE5NNjgzM0JIFMjZFRjlCQjY4OEQ3NkI5NDdDKRjUMxNDkzNTk1MTBWjkzQkE5NELNDNQ0RFOENGRDAwMGEE5MTE3UARDYFGQjEzMzMxRjVDMDA2MjVEQzBGMTgxREYJGNDMK3MTGI2$";
 
         return mDailyMobileService.getEasyCardList(Crypto.getUrlDecoderEx(API)).subscribeOn(Schedulers.io());
-    }
-
-    public Observable<BaseDto<UserInformationData>> getUserInformationForPayment()
-    {
-        final String API = Constants.UNENCRYPTED_URL ? "api/user/information"//
-            : "NTQkNTMkNzckMTgkODIkODEkMTgkNjYkMzQkNTYkODIkNzYkNzQkMzckNTQkMjMk$ODAzNUVCRjAyNDIwMzPClCNATc5ODc2OEEzIN0JU1MjVCMUQwNEMzOTTY2NEMUSIzRDA5MjWAyNkRTBNQDE1NUZVPFNBUEMzQTFDMg==$";
-
-        return mDailyMobileService.getUserInformationForPayment(Crypto.getUrlDecoderEx(API)).subscribeOn(Schedulers.io());
     }
 
     public Observable<BaseDto<PaymentResultData>> getPaymentTypeEasy(int index, JSONObject jsonObject)
@@ -1558,12 +1480,12 @@ public class DailyMobileAPI implements IDailyNetwork
         return mDailyMobileService.getHomeRecentList(Crypto.getUrlDecoderEx(URL), jsonObject).subscribeOn(Schedulers.io());
     }
 
-    public Observable<BaseDto<StayListData>> getStayList(Map<String, Object> queryMap, List<String> bedTypeList, List<String> luxuryList)
+    public Observable<BaseDto<StayListData>> getStayList(Map<String, Object> queryMap, List<String> bedTypeList, List<String> luxuryList, String abTestType)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/v3/hotels/sales"//
             : "NzEkOSQ1MyQ1MiQ2OCQ3MyQ3MSQ4MCQ4MCQ4OSQ3MiQ3NiQyJDUwJDM1JDEwJA==$ODWg1NUYzOPWTg1ODczQzU2ODM0N0M5RDVDNDDRBNTNCMjAzOTVEQNDYUyPRDAxNjc2QkI4RPDBGQDNVPjkM1RJMUE0RTYzNNTdCQg==$";
 
-        return mDailyMobileService.getStayInboundList(Crypto.getUrlDecoderEx(URL), queryMap, bedTypeList, luxuryList).subscribeOn(Schedulers.io());
+        return mDailyMobileService.getStayInboundList(Crypto.getUrlDecoderEx(URL), queryMap, bedTypeList, luxuryList, abTestType).subscribeOn(Schedulers.io());
     }
 
     public Observable<BaseDto<GourmetListData>> getGourmetList(Map<String, Object> queryMap, List<String> categoryList, List<String> timeList, List<String> luxuryList)

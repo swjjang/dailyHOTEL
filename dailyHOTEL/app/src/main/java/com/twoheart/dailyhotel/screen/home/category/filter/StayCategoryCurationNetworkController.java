@@ -27,7 +27,7 @@ public class StayCategoryCurationNetworkController extends BaseNetworkController
         super(context, networkTag, listener);
     }
 
-    public void requestStayCategoryList(StayCategoryParams params)
+    public void requestStayCategoryList(StayCategoryParams params, String abTestType)
     {
         if (params == null)
         {
@@ -36,7 +36,7 @@ public class StayCategoryCurationNetworkController extends BaseNetworkController
 
         DailyMobileAPI.getInstance(mContext).requestStayCategoryList(mNetworkTag //
             , params.getCategoryCode(), params.toParamsMap() //
-            , params.getBedTypeList(), params.getLuxuryList(), mStayCategoryListCallback);
+            , params.getBedTypeList(), params.getLuxuryList(), abTestType, mStayCategoryListCallback);
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////

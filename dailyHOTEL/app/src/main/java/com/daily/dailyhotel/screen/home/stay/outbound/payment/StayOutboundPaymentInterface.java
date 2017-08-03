@@ -7,7 +7,7 @@ import android.view.View;
 import com.daily.base.BaseDialogViewInterface;
 import com.daily.dailyhotel.entity.Card;
 import com.daily.dailyhotel.entity.People;
-import com.daily.dailyhotel.entity.StayOutboundPayment;
+import com.daily.dailyhotel.view.DailyBookingPaymentTypeView;
 
 import java.util.List;
 
@@ -29,16 +29,16 @@ public interface StayOutboundPaymentInterface extends BaseDialogViewInterface
 
     void setVendorName(String vendorName);
 
-    void setMemoPaymentType(String memo);
+    void setGuidePaymentType(String text);
 
-    void setPaymentTypeEnabled(StayOutboundPayment.PaymentType paymentType, boolean enabled);
+    void setPaymentTypeEnabled(DailyBookingPaymentTypeView.PaymentType paymentType, boolean enabled);
 
-    void setPaymentType(StayOutboundPayment.PaymentType paymentType);
+    void setPaymentType(DailyBookingPaymentTypeView.PaymentType paymentType);
 
     void setBonusEnabled(boolean enabled);
 
     void setBonusSelected(boolean selected);
 
-    void showAgreeTermDialog(StayOutboundPayment.PaymentType paymentType//
+    void showAgreeTermDialog(DailyBookingPaymentTypeView.PaymentType paymentType//
         , View.OnClickListener onClickListener, DialogInterface.OnCancelListener cancelListener);
 }

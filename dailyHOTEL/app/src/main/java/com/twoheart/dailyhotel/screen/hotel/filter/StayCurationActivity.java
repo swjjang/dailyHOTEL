@@ -31,6 +31,7 @@ import com.twoheart.dailyhotel.model.StayRoomAmenities;
 import com.twoheart.dailyhotel.place.activity.PlaceCurationActivity;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.DailyRemoteConfigPreference;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
@@ -435,7 +436,9 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
             return;
         }
 
-        ((StayCurationNetworkController) mNetworkController).requestStayList(mLastParams);
+        String abTestType = DailyRemoteConfigPreference.getInstance(this).getKeyRemoteConfigStayRankTestType();
+
+        ((StayCurationNetworkController) mNetworkController).requestStayList(mLastParams, abTestType);
     }
 
     protected void setLastStayParams(StayCuration stayCuration)
@@ -621,50 +624,56 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
         setResult(RESULT_OK, intent);
         finish();
 
-        Province province = mStayCuration.getProvince();
-        Map<String, String> eventParams = new HashMap<>();
-
-        eventParams.put(AnalyticsManager.KeyType.SORTING, stayCurationOption.getSortType().name());
-        eventParams.put(AnalyticsManager.KeyType.SEARCH_COUNT, String.valueOf(getConfirmCount()));
-
-        if (province != null)
+        try
         {
-            if (province instanceof Area)
+            Province province = mStayCuration.getProvince();
+            Map<String, String> eventParams = new HashMap<>();
+
+            eventParams.put(AnalyticsManager.KeyType.SORTING, stayCurationOption.getSortType().name());
+            eventParams.put(AnalyticsManager.KeyType.SEARCH_COUNT, String.valueOf(getConfirmCount()));
+
+            if (province != null)
             {
-                Area area = (Area) province;
-                eventParams.put(AnalyticsManager.KeyType.COUNTRY, area.getProvince().isOverseas ? AnalyticsManager.ValueType.OVERSEAS : AnalyticsManager.ValueType.DOMESTIC);
-                eventParams.put(AnalyticsManager.KeyType.PROVINCE, area.getProvince().name);
-                eventParams.put(AnalyticsManager.KeyType.DISTRICT, area.name);
-            } else
-            {
-                eventParams.put(AnalyticsManager.KeyType.COUNTRY, province.isOverseas ? AnalyticsManager.ValueType.OVERSEAS : AnalyticsManager.ValueType.DOMESTIC);
-                eventParams.put(AnalyticsManager.KeyType.PROVINCE, province.name);
-                eventParams.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.ALL_LOCALE_KR);
+                if (province instanceof Area)
+                {
+                    Area area = (Area) province;
+                    eventParams.put(AnalyticsManager.KeyType.COUNTRY, area.getProvince().isOverseas ? AnalyticsManager.ValueType.OVERSEAS : AnalyticsManager.ValueType.DOMESTIC);
+                    eventParams.put(AnalyticsManager.KeyType.PROVINCE, area.getProvince().name);
+                    eventParams.put(AnalyticsManager.KeyType.DISTRICT, area.name);
+                } else
+                {
+                    eventParams.put(AnalyticsManager.KeyType.COUNTRY, province.isOverseas ? AnalyticsManager.ValueType.OVERSEAS : AnalyticsManager.ValueType.DOMESTIC);
+                    eventParams.put(AnalyticsManager.KeyType.PROVINCE, province.name);
+                    eventParams.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.ALL_LOCALE_KR);
+                }
             }
-        }
 
-        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
-            , AnalyticsManager.Action.HOTEL_SORT_FILTER_APPLY_BUTTON_CLICKED, stayCurationOption.toString(), eventParams);
+            AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
+                , AnalyticsManager.Action.HOTEL_SORT_FILTER_APPLY_BUTTON_CLICKED, stayCurationOption.toString(), eventParams);
 
-        // 추가 항목
-        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.SORT_FLITER//
-            , AnalyticsManager.Action.STAY_SORT, stayCurationOption.toSortString(), null);
+            // 추가 항목
+            AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.SORT_FLITER//
+                , AnalyticsManager.Action.STAY_SORT, stayCurationOption.toSortString(), null);
 
-        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.SORT_FLITER//
-            , AnalyticsManager.Action.STAY_PERSON, String.valueOf(stayCurationOption.person), null);
+            AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.SORT_FLITER//
+                , AnalyticsManager.Action.STAY_PERSON, String.valueOf(stayCurationOption.person), null);
 
-        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.SORT_FLITER//
-            , AnalyticsManager.Action.STAY_BEDTYPE, stayCurationOption.toBedTypeString(StayCurationOption.GA_DELIMITER), null);
+            AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.SORT_FLITER//
+                , AnalyticsManager.Action.STAY_BEDTYPE, stayCurationOption.toBedTypeString(StayCurationOption.GA_DELIMITER), null);
 
-        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.SORT_FLITER//
-            , AnalyticsManager.Action.STAY_AMENITIES, stayCurationOption.toAmenitiesString(StayCurationOption.GA_DELIMITER), null);
+            AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.SORT_FLITER//
+                , AnalyticsManager.Action.STAY_AMENITIES, stayCurationOption.toAmenitiesString(StayCurationOption.GA_DELIMITER), null);
 
-        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.SORT_FLITER//
-            , AnalyticsManager.Action.STAY_ROOM_AMENITIES, stayCurationOption.toRoomAmenitiesString(StayCurationOption.GA_DELIMITER), null);
+            AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.SORT_FLITER//
+                , AnalyticsManager.Action.STAY_ROOM_AMENITIES, stayCurationOption.toRoomAmenitiesString(StayCurationOption.GA_DELIMITER), null);
 
-        if (Constants.DEBUG == true)
+            if (Constants.DEBUG == true)
+            {
+                ExLog.d(stayCurationOption.toString());
+            }
+        } catch (Exception e)
         {
-            ExLog.d(stayCurationOption.toString());
+            ExLog.d(e.toString());
         }
     }
 

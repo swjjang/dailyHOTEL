@@ -62,6 +62,10 @@ public abstract class PlaceMainLayout extends BaseBlurLayout implements View.OnC
         void onViewTypeClick();// 리스트, 맵 타입
 
         void onFilterClick();
+
+        void onPageScroll();
+
+        void onPageSelected(int changedPosition, int prevPosition);
     }
 
     protected abstract PlaceListFragmentPagerAdapter getPlaceListFragmentPagerAdapter(FragmentManager fragmentManager, int count, View bottomOptionLayout, PlaceListFragment.OnPlaceListFragmentListener listener);
@@ -366,6 +370,8 @@ public abstract class PlaceMainLayout extends BaseBlurLayout implements View.OnC
                         isScrolling = false;
                     }
 
+                    ((OnEventListener) mOnEventListener).onPageSelected(position, prevPosition);
+
                     prevPosition = position;
 
                     PlaceListFragment placeListFragment = getPlaceListFragment().get(position);
@@ -384,6 +390,8 @@ public abstract class PlaceMainLayout extends BaseBlurLayout implements View.OnC
                         case ViewPager.SCROLL_STATE_DRAGGING:
                             isScrolling = true;
                             //                            hideBottomLayout();
+
+                            ((OnEventListener) mOnEventListener).onPageScroll();
                             break;
 
                         case ViewPager.SCROLL_STATE_IDLE:

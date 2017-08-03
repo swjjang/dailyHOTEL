@@ -29,7 +29,9 @@ import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.widget.DailyScrollView;
 import com.daily.base.widget.DailyToast;
+import com.daily.dailyhotel.parcel.analytics.StayThankYouAnalyticsParam;
 import com.daily.dailyhotel.repository.local.model.AnalyticsParam;
+import com.daily.dailyhotel.screen.home.stay.inbound.thankyou.StayThankYouActivity;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Booking;
 import com.twoheart.dailyhotel.model.Coupon;
@@ -577,11 +579,11 @@ public class HotelPaymentActivity extends PlacePaymentActivity
         }
 
         String placeName = mPlaceName;
-        String placeType = stayProduct.roomName;
+        String roomType = stayProduct.roomName;
         //        String checkInDate = stayBookingDay.getCheckInDateTime("yyyy.M.d (EEE) HH시");
         //        String checkOutDate = stayBookingDay.getCheckOutDateTime("yyyy.M.d (EEE) HH시");
-        String userName = stayPaymentInformation.getCustomer() == null ? "" : stayPaymentInformation.getCustomer().getName();
-        String userIndex = stayPaymentInformation.getCustomer() == null ? "" : stayPaymentInformation.getCustomer().getUserIdx();
+        //        String userName = stayPaymentInformation.getCustomer() == null ? "" : stayPaymentInformation.getCustomer().getName();
+        //        String userIndex = stayPaymentInformation.getCustomer() == null ? "" : stayPaymentInformation.getCustomer().getUserIdx();
 
         //        if (com.daily.base.util.TextUtils.isTextEmpty(userName) == true)
         //        {
@@ -609,9 +611,16 @@ public class HotelPaymentActivity extends PlacePaymentActivity
 
         Map<String, String> params = getMapPaymentInformation((StayPaymentInformation) paymentInformation, (StayBookingDay) mPlaceBookingDay);
 
-        Intent intent = HotelPaymentThankyouActivity.newInstance(this, imageUrl, placeName, placeType//
-            , ((StayPaymentInformation) paymentInformation).isOverSeas, userName, stayBookingDay//
-            , paymentInformation.paymentType.getName(), discountType, params);
+        StayThankYouAnalyticsParam stayThankYouAnalyticsParam = new StayThankYouAnalyticsParam();
+        stayThankYouAnalyticsParam.params = params;
+
+        Intent intent = StayThankYouActivity.newInstance(this, ((StayPaymentInformation) paymentInformation).isOverSeas, mCategoryCode, placeName, imageUrl//
+            , stayBookingDay.getCheckInDay(DailyCalendar.ISO_8601_FORMAT), stayBookingDay.getCheckOutDay(DailyCalendar.ISO_8601_FORMAT)//
+            , roomType, stayThankYouAnalyticsParam);
+
+        //        Intent intent = HotelPaymentThankyouActivity.newInstance(this, imageUrl, placeName, roomType//
+        //            , ((StayPaymentInformation) paymentInformation).isOverSeas, userName, stayBookingDay//
+        //            , paymentInformation.paymentType.getName(), discountType, params);
 
         startActivityForResult(intent, REQUEST_CODE_PAYMETRESULT_ACTIVITY);
     }
@@ -2070,6 +2079,16 @@ public class HotelPaymentActivity extends PlacePaymentActivity
         public void onVisitType(boolean isWalking)
         {
             ((StayPaymentInformation) mPaymentInformation).isVisitWalking = isWalking;
+        }
+
+        @Override
+        public void onAgreementCheckClick(boolean isChecked)
+        {
+            if (isChecked == true)
+            {
+                AnalyticsManager.getInstance(HotelPaymentActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS//
+                    , AnalyticsManager.Action.THIRD_PARTY_PROVIDER_CHECK, AnalyticsManager.Label.STAY, null);
+            }
         }
 
         @Override

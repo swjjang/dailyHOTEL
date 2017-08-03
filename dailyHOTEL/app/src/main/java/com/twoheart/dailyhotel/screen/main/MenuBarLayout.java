@@ -129,7 +129,7 @@ public class MenuBarLayout implements View.OnClickListener
         {
             if (mSelectedMenuIndex >= 0)
             {
-                hideMenuText(mMenuView[mSelectedMenuIndex]);
+                mMenuView[mSelectedMenuIndex].setSelected(false);
 
                 if (mOnMenuBarSelectedListener != null)
                 {
@@ -137,7 +137,7 @@ public class MenuBarLayout implements View.OnClickListener
                 }
             }
 
-            showMenuText(mMenuView[index]);
+            mMenuView[index].setSelected(true);
 
             if (mOnMenuBarSelectedListener != null && mSelectedMenuIndex >= 0)
             {
@@ -146,211 +146,6 @@ public class MenuBarLayout implements View.OnClickListener
 
             mSelectedMenuIndex = index;
         }
-    }
-
-    void showMenuText(final View view)
-    {
-        if (view == null)
-        {
-            return;
-        }
-
-        Object animator = view.getTag();
-
-        if (animator != null && animator instanceof AnimatorSet)
-        {
-            ((AnimatorSet) animator).cancel();
-        }
-
-        final View textView = getMenuTextView(view);
-
-        if (textView == null)
-        {
-            return;
-        }
-
-        final int DP_4 = ScreenUtils.dpToPx(view.getContext(), 4);
-        final ValueAnimator showValueAnimator1 = ValueAnimator.ofInt(view.getPaddingTop(), DP_4);
-        showValueAnimator1.setDuration(200);
-        showValueAnimator1.addUpdateListener(new ValueAnimator.AnimatorUpdateListener()
-        {
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation)
-            {
-                if (animation == null)
-                {
-                    return;
-                }
-
-                int value = (int) animation.getAnimatedValue();
-
-                view.setPadding(0, value, 0, 0);
-            }
-        });
-
-        final ValueAnimator showValueAnimator2 = ValueAnimator.ofInt(textView.getPaddingTop(), ScreenUtils.dpToPx(view.getContext(), 29));
-        showValueAnimator2.setDuration(400);
-        showValueAnimator2.setInterpolator(PathInterpolatorCompat.create(0.0f, 0.74f, 0.22f, 1.28f));
-        showValueAnimator2.addUpdateListener(new ValueAnimator.AnimatorUpdateListener()
-        {
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation)
-            {
-                if (animation == null)
-                {
-                    return;
-                }
-
-                int value = (int) animation.getAnimatedValue();
-
-                textView.setPadding(0, value, 0, 0);
-            }
-        });
-
-        final AnimatorSet animatorSet = new AnimatorSet();
-        animatorSet.playTogether(showValueAnimator1, showValueAnimator2);
-        animatorSet.addListener(new Animator.AnimatorListener()
-        {
-            @Override
-            public void onAnimationStart(Animator animation)
-            {
-
-            }
-
-            @Override
-            public void onAnimationEnd(Animator animation)
-            {
-                showValueAnimator1.removeAllUpdateListeners();
-                showValueAnimator2.removeAllUpdateListeners();
-                animatorSet.removeAllListeners();
-
-                int paddingTop = view.getPaddingTop();
-
-                if (paddingTop == DP_4)
-                {
-                    view.setSelected(true);
-                }
-
-                view.setTag(null);
-            }
-
-            @Override
-            public void onAnimationCancel(Animator animation)
-            {
-
-            }
-
-            @Override
-            public void onAnimationRepeat(Animator animation)
-            {
-
-            }
-        });
-
-        view.setTag(animatorSet);
-        animatorSet.start();
-    }
-
-    void hideMenuText(final View view)
-    {
-        if (view == null)
-        {
-            return;
-        }
-
-        Object animator = view.getTag();
-
-        if (animator != null && animator instanceof AnimatorSet)
-        {
-            ((AnimatorSet) animator).cancel();
-        }
-
-        final View textView = getMenuTextView(view);
-
-        if (textView == null)
-        {
-            return;
-        }
-
-        final int DP_10 = ScreenUtils.dpToPx(view.getContext(), 10);
-        final ValueAnimator hideValueAnimator1 = ValueAnimator.ofInt(view.getPaddingTop(), DP_10);
-        hideValueAnimator1.addUpdateListener(new ValueAnimator.AnimatorUpdateListener()
-        {
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation)
-            {
-                if (animation == null)
-                {
-                    return;
-                }
-
-                int value = (int) animation.getAnimatedValue();
-
-                view.setPadding(0, value, 0, 0);
-            }
-        });
-
-        final ValueAnimator hideValueAnimator2 = ValueAnimator.ofInt(textView.getPaddingTop(), ScreenUtils.dpToPx(view.getContext(), 50));
-        hideValueAnimator2.addUpdateListener(new ValueAnimator.AnimatorUpdateListener()
-        {
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation)
-            {
-                if (animation == null)
-                {
-                    return;
-                }
-
-                int value = (int) animation.getAnimatedValue();
-
-                textView.setPadding(0, value, 0, 0);
-            }
-        });
-
-        final AnimatorSet animatorSet = new AnimatorSet();
-        animatorSet.setDuration(200);
-        animatorSet.setInterpolator(new AccelerateDecelerateInterpolator());
-        animatorSet.playTogether(hideValueAnimator1, hideValueAnimator2);
-        animatorSet.addListener(new Animator.AnimatorListener()
-        {
-            @Override
-            public void onAnimationStart(Animator animation)
-            {
-
-            }
-
-            @Override
-            public void onAnimationEnd(Animator animation)
-            {
-                hideValueAnimator1.removeAllUpdateListeners();
-                hideValueAnimator2.removeAllUpdateListeners();
-                animatorSet.removeAllListeners();
-
-                int paddingTop = view.getPaddingTop();
-
-                if (paddingTop == DP_10)
-                {
-                    view.setSelected(false);
-                }
-
-                view.setTag(null);
-            }
-
-            @Override
-            public void onAnimationCancel(Animator animation)
-            {
-
-            }
-
-            @Override
-            public void onAnimationRepeat(Animator animation)
-            {
-
-            }
-        });
-
-        view.setTag(animatorSet);
-        animatorSet.start();
     }
 
     public void setEnabled(boolean enabled)
@@ -413,33 +208,6 @@ public class MenuBarLayout implements View.OnClickListener
 
             case MENU_INFORMATION_INDEX:
                 return mBaseActivity.getString(R.string.menu_item_title_information);
-
-            default:
-                return null;
-        }
-    }
-
-    private View getMenuTextView(View view)
-    {
-        if (view == null)
-        {
-            return null;
-
-        }
-
-        switch (view.getId())
-        {
-            case R.id.homeLayout:
-                return view.findViewById(R.id.homeView);
-
-            case R.id.bookingLayout:
-                return view.findViewById(R.id.bookingView);
-
-            case R.id.myDailyLayout:
-                return view.findViewById(R.id.myDailyView);
-
-            case R.id.informationLayout:
-                return view.findViewById(R.id.informationView);
 
             default:
                 return null;

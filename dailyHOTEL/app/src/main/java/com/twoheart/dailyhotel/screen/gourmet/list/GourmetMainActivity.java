@@ -597,6 +597,18 @@ public class GourmetMainActivity extends PlaceMainActivity
         }
 
         @Override
+        public void onPageScroll()
+        {
+
+        }
+
+        @Override
+        public void onPageSelected(int changedPosition, int prevPosition)
+        {
+
+        }
+
+        @Override
         public void finish()
         {
             GourmetMainActivity.this.finish();

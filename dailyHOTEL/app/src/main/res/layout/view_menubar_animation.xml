@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+       xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <RelativeLayout
+        android:id="@+id/bottomNavigationLayout"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/bottom_navigation_height_over21"
+        android:layout_alignParentBottom="true">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/gradient_1dp_line_height_under_21"
+            android:layout_above="@+id/bottomMenuBarLayout"
+            android:background="@color/default_line_ce7e7e7"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/gradient_2dp_line_height_over_21"
+            android:layout_above="@+id/bottomMenuBarLayout"
+            android:background="@drawable/shape_gradient_bottom_up"/>
+
+        <LinearLayout
+            android:id="@+id/bottomMenuBarLayout"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_alignParentBottom="true"
+            android:background="@color/white"
+            android:baselineAligned="false">
+
+            <RelativeLayout
+                android:id="@+id/homeLayout"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:paddingTop="10dp">
+
+                <ImageView
+                    android:id="@+id/homeImageView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:scaleType="centerInside"
+                    app:srcCompat="@drawable/tabbar_ic_01_home_off"/>
+
+                <com.daily.base.widget.DailyTextView
+                    android:id="@+id/homeView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="top|center_horizontal"
+                    android:paddingTop="50dp"
+                    android:text="@string/menu_item_title_home"
+                    android:textColor="@drawable/selector_menu_textcolor"
+                    android:textSize="9dp"/>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/bookingLayout"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:paddingTop="10dp">
+
+                <ImageView
+                    android:id="@+id/bookingImageView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:scaleType="centerInside"
+                    app:srcCompat="@drawable/tabbar_ic_02_reservation_off"/>
+
+                <com.daily.base.widget.DailyTextView
+                    android:id="@+id/bookingView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="top|center_horizontal"
+                    android:paddingTop="50dp"
+                    android:text="@string/menu_item_title_bookings"
+                    android:textColor="@drawable/selector_menu_textcolor"
+                    android:textSize="9dp"/>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/myDailyLayout"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:paddingTop="10dp">
+
+                <ImageView
+                    android:id="@+id/myDailyImageView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:scaleType="centerInside"
+                    app:srcCompat="@drawable/tabbar_ic_03_mydaily_off"/>
+
+                <com.daily.base.widget.DailyTextView
+                    android:id="@+id/myDailyView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="top|center_horizontal"
+                    android:paddingTop="50dp"
+                    android:text="@string/menu_item_title_mydaily"
+                    android:textColor="@drawable/selector_menu_textcolor"
+                    android:textSize="9dp"/>
+
+                <ImageView
+                    android:id="@+id/myDailyNewIconView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignLeft="@+id/myDailyImageView"
+                    android:layout_alignTop="@+id/myDailyImageView"
+                    android:layout_marginLeft="23dp"
+                    android:visibility="invisible"
+                    app:srcCompat="@drawable/tabbar_ic_n"/>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/informationLayout"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:paddingTop="10dp">
+
+                <ImageView
+                    android:id="@+id/informationImageView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:scaleType="centerInside"
+                    app:srcCompat="@drawable/tabbar_ic_04_more_off"/>
+
+                <com.daily.base.widget.DailyTextView
+                    android:id="@+id/informationView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="top|center_horizontal"
+                    android:paddingTop="50dp"
+                    android:text="@string/menu_item_title_information"
+                    android:textColor="@drawable/selector_menu_textcolor"
+                    android:textSize="9dp"/>
+
+                <ImageView
+                    android:id="@+id/informationNewIconView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignLeft="@+id/informationImageView"
+                    android:layout_alignTop="@+id/informationImageView"
+                    android:layout_marginLeft="26dp"
+                    android:visibility="invisible"
+                    app:srcCompat="@drawable/tabbar_ic_n"/>
+            </RelativeLayout>
+        </LinearLayout>
+    </RelativeLayout>
+</merge>

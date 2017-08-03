@@ -963,54 +963,61 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
         params.put(AnalyticsManager.KeyType.COUNTRY, stayBookingDetail.isOverseas == false ? "domestic" : "overseas");
         params.put(AnalyticsManager.KeyType.PLACE_INDEX, Integer.toString(stayBookingDetail.placeIndex));
 
-        switch (mBookingState)
+        if (stayBookingDetail.readyForRefund == true)
         {
-            case Booking.BOOKING_STATE_WAITING_REFUND:
-                AnalyticsManager.getInstance(StayReservationDetailActivity.this).recordScreen(StayReservationDetailActivity.this//
-                    , AnalyticsManager.Screen.BOOKINGDETAIL_MYBOOKINGINFO_CANCELLATION_PROGRESS, null);
-                break;
+            AnalyticsManager.getInstance(StayReservationDetailActivity.this).recordScreen(StayReservationDetailActivity.this//
+                , AnalyticsManager.Screen.BOOKINGDETAIL_MYBOOKINGINFO_CANCELLATION_PROGRESS, null);
+        } else
+        {
+            switch (mBookingState)
+            {
+                case Booking.BOOKING_STATE_WAITING_REFUND:
+                    AnalyticsManager.getInstance(StayReservationDetailActivity.this).recordScreen(StayReservationDetailActivity.this//
+                        , AnalyticsManager.Screen.BOOKINGDETAIL_MYBOOKINGINFO_CANCELLATION_PROGRESS, null);
+                    break;
 
-            case Booking.BOOKING_STATE_BEFORE_USE:
-                if (DailyTextUtils.isTextEmpty(refundPolicy) == false)
-                {
-                    switch (refundPolicy)
+                case Booking.BOOKING_STATE_BEFORE_USE:
+                    if (DailyTextUtils.isTextEmpty(refundPolicy) == false)
                     {
-                        case StayBookingDetail.STATUS_NO_CHARGE_REFUND:
-                            AnalyticsManager.getInstance(StayReservationDetailActivity.this).recordScreen(StayReservationDetailActivity.this//
-                                , AnalyticsManager.Screen.BOOKINGDETAIL_MYBOOKINGINFO_CANCELABLE, null, params);
-                            break;
+                        switch (refundPolicy)
+                        {
+                            case StayBookingDetail.STATUS_NO_CHARGE_REFUND:
+                                AnalyticsManager.getInstance(StayReservationDetailActivity.this).recordScreen(StayReservationDetailActivity.this//
+                                    , AnalyticsManager.Screen.BOOKINGDETAIL_MYBOOKINGINFO_CANCELABLE, null, params);
+                                break;
 
-                        case StayBookingDetail.STATUS_SURCHARGE_REFUND:
-                            AnalyticsManager.getInstance(StayReservationDetailActivity.this).recordScreen(StayReservationDetailActivity.this//
-                                , AnalyticsManager.Screen.BOOKINGDETAIL_MYBOOKINGINFO_CANCELLATIONFEE, null, params);
-                            break;
+                            case StayBookingDetail.STATUS_SURCHARGE_REFUND:
+                                AnalyticsManager.getInstance(StayReservationDetailActivity.this).recordScreen(StayReservationDetailActivity.this//
+                                    , AnalyticsManager.Screen.BOOKINGDETAIL_MYBOOKINGINFO_CANCELLATIONFEE, null, params);
+                                break;
 
-                        case StayBookingDetail.STATUS_NRD:
-                            AnalyticsManager.getInstance(StayReservationDetailActivity.this).recordScreen(StayReservationDetailActivity.this//
-                                , AnalyticsManager.Screen.BOOKINGDETAIL_MYBOOKINGINFO_NOREFUNDS, null, params);
-                            break;
+                            case StayBookingDetail.STATUS_NRD:
+                                AnalyticsManager.getInstance(StayReservationDetailActivity.this).recordScreen(StayReservationDetailActivity.this//
+                                    , AnalyticsManager.Screen.BOOKINGDETAIL_MYBOOKINGINFO_NOREFUNDS, null, params);
+                                break;
 
-                        default:
-                            AnalyticsManager.getInstance(StayReservationDetailActivity.this).recordScreen(StayReservationDetailActivity.this//
-                                , AnalyticsManager.Screen.BOOKINGDETAIL_MYBOOKINGINFO, null, params);
-                            break;
+                            default:
+                                AnalyticsManager.getInstance(StayReservationDetailActivity.this).recordScreen(StayReservationDetailActivity.this//
+                                    , AnalyticsManager.Screen.BOOKINGDETAIL_MYBOOKINGINFO, null, params);
+                                break;
+                        }
+                    } else
+                    {
+                        AnalyticsManager.getInstance(StayReservationDetailActivity.this).recordScreen(StayReservationDetailActivity.this//
+                            , AnalyticsManager.Screen.BOOKINGDETAIL_MYBOOKINGINFO, null, params);
                     }
-                } else
-                {
+                    break;
+
+                case Booking.BOOKING_STATE_AFTER_USE:
+                    AnalyticsManager.getInstance(StayReservationDetailActivity.this).recordScreen(StayReservationDetailActivity.this//
+                        , AnalyticsManager.Screen.BOOKINGDETAIL_MYBOOKINGINFO_POST_VISIT, null, params);
+                    break;
+
+                default:
                     AnalyticsManager.getInstance(StayReservationDetailActivity.this).recordScreen(StayReservationDetailActivity.this//
                         , AnalyticsManager.Screen.BOOKINGDETAIL_MYBOOKINGINFO, null, params);
-                }
-                break;
-
-            case Booking.BOOKING_STATE_AFTER_USE:
-                AnalyticsManager.getInstance(StayReservationDetailActivity.this).recordScreen(StayReservationDetailActivity.this//
-                    , AnalyticsManager.Screen.BOOKINGDETAIL_MYBOOKINGINFO_POST_VISIT, null, params);
-                break;
-
-            default:
-                AnalyticsManager.getInstance(StayReservationDetailActivity.this).recordScreen(StayReservationDetailActivity.this//
-                    , AnalyticsManager.Screen.BOOKINGDETAIL_MYBOOKINGINFO, null, params);
-                break;
+                    break;
+            }
         }
     }
 

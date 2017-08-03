@@ -18,6 +18,7 @@ import com.twoheart.dailyhotel.model.StaySearchParams;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.screen.hotel.filter.StayCurationActivity;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.DailyRemoteConfigPreference;
 
 import retrofit2.Call;
 import retrofit2.Response;
@@ -168,7 +169,9 @@ public class StaySearchResultCurationActivity extends StayCurationActivity
             return;
         }
 
-        ((StaySearchResultCurationNetworkController) mNetworkController).requestStaySearchList(mLastParams);
+        String abTestType = DailyRemoteConfigPreference.getInstance(this).getKeyRemoteConfigStayRankTestType();
+
+        ((StaySearchResultCurationNetworkController) mNetworkController).requestStaySearchList(mLastParams, abTestType);
     }
 
     @Override

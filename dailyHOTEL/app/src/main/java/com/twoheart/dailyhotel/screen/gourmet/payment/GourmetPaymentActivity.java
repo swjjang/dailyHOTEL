@@ -27,7 +27,9 @@ import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.widget.DailyScrollView;
 import com.daily.base.widget.DailyToast;
+import com.daily.dailyhotel.parcel.analytics.GourmetThankYouAnalyticsParam;
 import com.daily.dailyhotel.repository.local.model.AnalyticsParam;
+import com.daily.dailyhotel.screen.home.gourmet.thankyou.GourmetThankYouActivity;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Coupon;
 import com.twoheart.dailyhotel.model.CreditCard;
@@ -469,14 +471,14 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
         }
 
         String placeName = gourmetPaymentInformation.placeName;
-        String placeType = gourmetProduct.ticketName;
+        String productType = gourmetProduct.ticketName;
         int productCount = gourmetPaymentInformation.ticketCount;
 
         //        String date = gourmetBookingDay.getVisitDay("yyyy.MM.dd (EEE)");
         String visitTime = DailyCalendar.format(gourmetPaymentInformation.ticketTime, "HH:mm", TimeZone.getTimeZone("GMT+09:00"));
 
-        String userName = gourmetPaymentInformation.getCustomer() == null ? "" : gourmetPaymentInformation.getCustomer().getName();
-        String userIndex = gourmetPaymentInformation.getCustomer() == null ? "" : gourmetPaymentInformation.getCustomer().getUserIdx();
+        //        String userName = gourmetPaymentInformation.getCustomer() == null ? "" : gourmetPaymentInformation.getCustomer().getName();
+        //        String userIndex = gourmetPaymentInformation.getCustomer() == null ? "" : gourmetPaymentInformation.getCustomer().getUserIdx();
 
         //        if (com.daily.base.util.TextUtils.isTextEmpty(userName) == true)
         //        {
@@ -493,8 +495,14 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
 
         Map<String, String> params = getMapPaymentInformation(gourmetPaymentInformation, placeBookingDay);
 
-        Intent intent = GourmetPaymentThankyouActivity.newInstance(this, imageUrl, placeName, placeType, //
-            userName, gourmetBookingDay, visitTime, productCount, paymentInformation.paymentType.getName(), discountType, params);
+        GourmetThankYouAnalyticsParam gourmetThankYouAnalyticsParam = new GourmetThankYouAnalyticsParam();
+        gourmetThankYouAnalyticsParam.params = params;
+
+        Intent intent = GourmetThankYouActivity.newInstance(this, placeName, imageUrl//
+            , gourmetBookingDay.getVisitDay(DailyCalendar.ISO_8601_FORMAT), visitTime, productType, productCount, gourmetThankYouAnalyticsParam);
+
+        //        Intent intent = GourmetPaymentThankyouActivity.newInstance(this, imageUrl, placeName, placeType, //
+        //            userName, gourmetBookingDay, visitTime, productCount, paymentInformation.paymentType.getName(), discountType, params);
 
         startActivityForResult(intent, REQUEST_CODE_PAYMETRESULT_ACTIVITY);
     }
@@ -1643,6 +1651,16 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
                     startCouponPopup((GourmetPaymentInformation) mPaymentInformation);
                     break;
                 }
+            }
+        }
+
+        @Override
+        public void onAgreementCheckClick(boolean isChecked)
+        {
+            if (isChecked == true)
+            {
+                AnalyticsManager.getInstance(GourmetPaymentActivity.this).recordEvent(AnalyticsManager.Category.GOURMET_BOOKINGS//
+                    , AnalyticsManager.Action.THIRD_PARTY_PROVIDER_CHECK, AnalyticsManager.Label.GOURMET, null);
             }
         }
 

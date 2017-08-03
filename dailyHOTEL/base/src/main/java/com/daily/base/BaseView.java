@@ -87,12 +87,24 @@ public abstract class BaseView<T1 extends OnBaseEventListener, T2 extends ViewDa
 
     protected int getColor(int resId)
     {
-        return mActivity.getResources().getColor(resId);
+        if (VersionUtils.isOverAPI23() == true)
+        {
+            return mActivity.getColor(resId);
+        } else
+        {
+            return mActivity.getResources().getColor(resId);
+        }
     }
 
     protected ColorStateList getColorStateList(int resId)
     {
-        return mActivity.getResources().getColorStateList(resId);
+        if (VersionUtils.isOverAPI23() == true)
+        {
+            return mActivity.getColorStateList(resId);
+        } else
+        {
+            return mActivity.getResources().getColorStateList(resId);
+        }
     }
 
     protected String getString(int resId)
@@ -130,5 +142,26 @@ public abstract class BaseView<T1 extends OnBaseEventListener, T2 extends ViewDa
     protected Fragment findFragmentById(int id)
     {
         return mActivity.getSupportFragmentManager().findFragmentById(id);
+    }
+
+    interface VersionApi23
+    {
+        int getColor(int resId);
+
+        ColorStateList getColorStateList(int resId);
+    }
+
+    interface VersionApi21
+    {
+        Drawable getDrawable(int id);
+    }
+
+    interface VersionApi15
+    {
+        int getColor(int resId);
+
+        ColorStateList getColorStateList(int resId);
+
+        Drawable getDrawable(int id);
     }
 }
