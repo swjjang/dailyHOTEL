@@ -127,7 +127,7 @@ public interface DailyMobileService
         , @QueryMap Map<String, Object> queryMap//
         , @Query("bedType") List<String> bedTypeList//
         , @Query("luxury") List<String> luxuryList//
-        , @Query("type") String type);
+        , @Query("abtest") String abtest);
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET("{mobileAPI}")
@@ -692,7 +692,7 @@ public interface DailyMobileService
         , @QueryMap Map<String, Object> queryMap//
         , @Query("bedType") List<String> bedTypeList//
         , @Query("luxury") List<String> luxuryList//
-        , @Query("type") String type);
+        , @Query("abtest") String abtest);
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET("{mobileAPI}")
