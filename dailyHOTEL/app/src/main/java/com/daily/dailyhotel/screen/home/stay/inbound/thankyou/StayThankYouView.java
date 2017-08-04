@@ -4,7 +4,6 @@ import android.animation.Animator;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.UnderlineSpan;
-import android.util.Pair;
 import android.view.View;
 
 import com.daily.base.BaseActivity;
@@ -17,9 +16,6 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ActivityStayPaymentThankYouDataBinding;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.CustomFontTypefaceSpan;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class StayThankYouView extends BaseDialogView<StayThankYouView.OnEventListener, ActivityStayPaymentThankYouDataBinding> implements StayThankYouInterface, View.OnClickListener
 {
@@ -104,12 +100,9 @@ public class StayThankYouView extends BaseDialogView<StayThankYouView.OnEventLis
         getViewDataBinding().thankYouInformationView.setCenterNightsVisible(true);
         getViewDataBinding().thankYouInformationView.setCenterNightsText(getString(R.string.label_nights, nights));
 
-        List<Pair<CharSequence, CharSequence>> reservationInformationList = new ArrayList<>();
-
-        reservationInformationList.add(new Pair(getString(R.string.label_booking_place_name), stayName));
-        reservationInformationList.add(new Pair(getString(R.string.label_booking_room_type), roomType));
-
-        getViewDataBinding().thankYouInformationView.setReservationInformation(reservationInformationList);
+        getViewDataBinding().thankYouInformationView.removeAllReservationInformation();
+        getViewDataBinding().thankYouInformationView.addReservationInformation(getString(R.string.label_booking_place_name), stayName);
+        getViewDataBinding().thankYouInformationView.addReservationInformation(getString(R.string.label_booking_room_type), roomType);
     }
 
     @Override

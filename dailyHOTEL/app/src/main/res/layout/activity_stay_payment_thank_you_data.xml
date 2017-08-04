@@ -52,7 +52,7 @@
                 android:paddingBottom="15dp"
                 android:paddingTop="52dp">
 
-                <com.daily.dailyhotel.view.DailyThankYouInformationView
+                <com.daily.dailyhotel.view.DailyThankYouInformationsView
                     android:id="@+id/thankYouInformationView"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"

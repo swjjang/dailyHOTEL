@@ -73,23 +73,17 @@ public class DailyInternalDeepLink extends DailyDeepLink
 
     public boolean isBookingDetailView()
     {
-        String view = getView();
-
-        return VIEW_BOOKING_DETAIL.equalsIgnoreCase(view);
+        return VIEW_BOOKING_DETAIL.equalsIgnoreCase(getView());
     }
 
     public boolean isStampView()
     {
-        String view = getView();
-
-        return VIEW_STAMP.equalsIgnoreCase(view);
+        return VIEW_STAMP.equalsIgnoreCase(getView());
     }
 
     public boolean isHomeView()
     {
-        String view = getView();
-
-        return VIEW_HOME.equalsIgnoreCase(view);
+        return VIEW_HOME.equalsIgnoreCase(getView());
     }
 
     public String getPlaceType()

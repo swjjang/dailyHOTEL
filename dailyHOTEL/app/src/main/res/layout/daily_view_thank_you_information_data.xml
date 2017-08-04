@@ -82,7 +82,7 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/dateInformationView"/>
 
-        <com.daily.dailyhotel.view.DailyBookingInformationView
+        <com.daily.dailyhotel.view.DailyBookingInformationsView
             android:id="@+id/reservationInformationView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

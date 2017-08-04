@@ -70,75 +70,57 @@ public abstract class PlaceCalendarPresenter<T1 extends BaseActivity, T2 extends
         return arrayList;
     }
 
-    private PlaceCalendarPresenter.Day[] getMonthCalendar(final Calendar calendar, final Date startDate, final Date endDate, SparseIntArray holidaySparseIntArray)
+    private PlaceCalendarPresenter.Day[] getMonthCalendar(final Calendar todayCalendar, final Date startDate, final Date endDate, SparseIntArray holidaySparseIntArray)
     {
-        int todayDayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
-        int maxDayOfMonth = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
-        int todayValue = calendar.get(Calendar.DAY_OF_MONTH);
-        int todayMonthValue = calendar.get(Calendar.MONTH);
+        Calendar startCalendar = Calendar.getInstance();
+        startCalendar.setTime(startDate);
 
-        boolean isStart = false;
+        Calendar endCalendar = Calendar.getInstance();
+        endCalendar.setTime(endDate);
+
+        long startTimeInMillis = startCalendar.getTimeInMillis();
+        long endTimeInMillis = endCalendar.getTimeInMillis();
+
+        int endDayValue = endCalendar.get(Calendar.DAY_OF_MONTH);
+        int endMonthValue = endCalendar.get(Calendar.MONTH);
+
+        int todayMaxDayOfMonth = todayCalendar.getActualMaximum(Calendar.DAY_OF_MONTH);
+        int todayMonth = todayCalendar.get(Calendar.MONTH);
+        int todayDayOfWeek = todayCalendar.get(Calendar.DAY_OF_WEEK);
+
         boolean isLast = false;
-
-        Calendar startDateCalendar = Calendar.getInstance();
-        startDateCalendar.setTime(startDate);
-
-        Calendar endDateCalendar = Calendar.getInstance();
-        endDateCalendar.setTime(endDate);
-
-        int endDayValue = endDateCalendar.get(Calendar.DAY_OF_MONTH);
-        int endMonthValue = endDateCalendar.get(Calendar.MONTH);
+        if (todayMonth == endMonthValue)
+        {
+            isLast = true;
+            todayMaxDayOfMonth = endDayValue;
+        }
 
         int startGap = 0;
-
-        if (calendar.get(Calendar.MONTH) == startDateCalendar.get(Calendar.MONTH))
+        if (todayMonth == startCalendar.get(Calendar.MONTH))
         {
-            isStart = true;
-
             startGap = Calendar.SUNDAY - todayDayOfWeek;
         }
 
-        if (calendar.get(Calendar.MONTH) == endDateCalendar.get(Calendar.MONTH))
-        {
-            isLast = true;
-
-            maxDayOfMonth = endDayValue;
-        }
-
-        Calendar cloneCalendar = (Calendar) calendar.clone();
-
+        Calendar cloneCalendar = (Calendar) todayCalendar.clone();
+        // 처음 달인 경우만 스타트 데이의 갭을 설정해 준다.
         if (startGap != 0)
         {
             cloneCalendar.add(Calendar.DAY_OF_MONTH, startGap);
         }
 
-        int startDayValue = cloneCalendar.get(Calendar.DAY_OF_MONTH);
-        int startDayOfWeek = cloneCalendar.get(Calendar.DAY_OF_WEEK);
-        int startMonthValue = cloneCalendar.get(Calendar.MONTH);
-        int startMaxDayOfMonth = cloneCalendar.getActualMaximum(Calendar.DAY_OF_MONTH);
+        int currentDayOfWeek = cloneCalendar.get(Calendar.DAY_OF_WEEK);
 
-        final int LENGTH_OF_WEEK = 7;
-        int length = startMaxDayOfMonth - startDayValue + startDayOfWeek;
-
-        // 처음 진입시 startgap 으로 인하여 달력이 전달로 이동되었을때 처리를 위한 코드
-        if (startMonthValue < todayMonthValue)
-        {
-            length += maxDayOfMonth;
-        }
-
-        if (length % LENGTH_OF_WEEK != 0)
-        {
-            length += (LENGTH_OF_WEEK - (length % LENGTH_OF_WEEK));
-        }
+        int length = getMonthCalendarLength(todayCalendar, startCalendar, endCalendar);
 
         PlaceCalendarPresenter.Day[] days = new PlaceCalendarPresenter.Day[length];
 
         final boolean hasHolidays = holidaySparseIntArray != null && holidaySparseIntArray.size() > 0;
 
-        for (int i = startDayOfWeek - 1; i < length; i++)
+        for (int i = currentDayOfWeek - 1; i < length; i++)
         {
             int dayValue = cloneCalendar.get(Calendar.DAY_OF_MONTH);
             int monthValue = cloneCalendar.get(Calendar.MONTH);
+            long currentTimeMillis = cloneCalendar.getTimeInMillis();
 
             days[i] = new PlaceCalendarPresenter.Day();
             days[i].dateTime = DailyCalendar.format(cloneCalendar.getTime(), DailyCalendar.ISO_8601_FORMAT);
@@ -150,15 +132,10 @@ public abstract class PlaceCalendarPresenter<T1 extends BaseActivity, T2 extends
                 days[i].isHoliday = holidaySparseIntArray.get(Integer.parseInt(DailyCalendar.format(cloneCalendar.getTime(), "yyyyMMdd")), -1) != -1;
             }
 
-            days[i].isDefaultDimmed = (isStart == true && (dayValue < todayValue || monthValue < todayMonthValue)) //
-                || (isLast == true && (dayValue > endDayValue || monthValue > endMonthValue));
+            // 현재 날짜의 시간이 시작 날짜보다 작거나 종료 날짜보다 클 경우
+            days[i].isDefaultDimmed = currentTimeMillis < startTimeInMillis || currentTimeMillis > endTimeInMillis;
 
-            if (isStart == true && todayMonthValue == monthValue && dayValue == maxDayOfMonth)
-            {
-                break;
-            }
-
-            if (isLast == false && dayValue == maxDayOfMonth && todayMonthValue == monthValue)
+            if (isLast == false && monthValue == todayMonth && dayValue == todayMaxDayOfMonth)
             {
                 break;
             }
@@ -187,6 +164,35 @@ public abstract class PlaceCalendarPresenter<T1 extends BaseActivity, T2 extends
         {
             return endMonth - startMonth;
         }
+    }
+
+    private int getMonthCalendarLength(final Calendar todayCalendar, final Calendar startCalendar, final Calendar endCalendar)
+    {
+        if (startCalendar == null || endCalendar == null || todayCalendar == null)
+        {
+            return 0;
+        }
+
+        int todayMonth = todayCalendar.get(Calendar.MONTH);
+        int endMonth = endCalendar.get(Calendar.MONTH);
+
+        int today = todayCalendar.get(Calendar.DAY_OF_MONTH);
+        int endDay = endCalendar.get(Calendar.DAY_OF_MONTH);
+
+        int availableLastDay = todayMonth == endMonth ? endDay : todayCalendar.getActualMaximum(Calendar.DAY_OF_MONTH);
+        int monthDay = availableLastDay - today + 1; // 이달이 31일 일경우 오늘이 최소 1일임으로 31 - 1 하면 30일이 되어 버린다 채워야 하는 칸은 31개 이므로 1일을 보정한다.
+        int todayDayOfWeek = todayCalendar.get(Calendar.DAY_OF_WEEK); // 요일은 1부터 시작하지만 배열은 0부터
+        // 시작함으로 1 빼고 계산 해야 함
+        int endDayOfWeek = (((todayDayOfWeek - 1) + monthDay) % 7); // monthDay 에 오늘이 포함 되었음으로 1일을 빼고 이전 날을 계산 해야 함
+        if (endDayOfWeek == 0)
+        {
+            endDayOfWeek = Calendar.SATURDAY;
+        }
+
+        int length = (todayDayOfWeek - 1) + monthDay + (7 - endDayOfWeek);
+
+        ExLog.d("length : " + length + " , availableLastDay : " + availableLastDay + " , today : " + today + " , todayweek : " + todayDayOfWeek + " , endDay Week : " + endDayOfWeek);
+        return length;
     }
 
     protected static class Day

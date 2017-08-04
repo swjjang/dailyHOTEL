@@ -1014,6 +1014,7 @@ public class AnalyticsManager
 
         // AB Test
         public static final String HOME_MENU_BUTTON = "home_menu_button";
+        public static final String RANKING = "ranking";
 
         // Review
         public static final String TRUE_REVIEW_CLICK = "true_review_click";

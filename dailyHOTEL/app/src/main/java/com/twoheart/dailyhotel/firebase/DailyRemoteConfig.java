@@ -627,10 +627,26 @@ public class DailyRemoteConfig
             {
                 JSONObject jsonObject = new JSONObject(jsonString);
 
-                String test = jsonObject.getString("name");
-                String type = jsonObject.getString("type");
+                String name;
+                String type;
+                boolean enabled = jsonObject.getBoolean("enabled");
 
-                DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigStayRankTestName(test);
+                if (enabled == true)
+                {
+                    name = jsonObject.getString("name");
+                    type = jsonObject.getString("type");
+                } else
+                {
+                    name = null;
+                    type = null;
+                }
+
+                if (Constants.DEBUG == true)
+                {
+                    ExLog.d("pinkred - name " + name + ", " + type);
+                }
+
+                DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigStayRankTestName(name);
                 DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigStayRankTestType(type);
             } catch (Exception e)
             {

@@ -3,7 +3,6 @@ package com.daily.dailyhotel.screen.home.gourmet.thankyou;
 import android.animation.Animator;
 import android.text.Spannable;
 import android.text.SpannableString;
-import android.util.Pair;
 import android.view.View;
 
 import com.daily.base.BaseActivity;
@@ -16,9 +15,6 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ActivityStayOutboundPaymentThankYouDataBinding;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.CustomFontTypefaceSpan;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class GourmetThankYouView extends BaseDialogView<GourmetThankYouView.OnEventListener, ActivityStayOutboundPaymentThankYouDataBinding> implements GourmetThankYouInterface, View.OnClickListener
 {
@@ -98,17 +94,16 @@ public class GourmetThankYouView extends BaseDialogView<GourmetThankYouView.OnEv
         getViewDataBinding().thankYouInformationView.setDate2Text(getString(R.string.label_booking_select_ticket_time), visitTime);
         getViewDataBinding().thankYouInformationView.setCenterNightsVisible(false);
 
-        List<Pair<CharSequence, CharSequence>> reservationInformationList = new ArrayList<>();
-
-        reservationInformationList.add(new Pair(getString(R.string.label_booking_place_name), gourmetName));
-        reservationInformationList.add(new Pair(getString(R.string.frag_booking_tab_ticket_type), productType));
+        getViewDataBinding().thankYouInformationView.removeAllReservationInformation();
+        getViewDataBinding().thankYouInformationView.addReservationInformation(getString(R.string.label_booking_place_name), gourmetName);
+        getViewDataBinding().thankYouInformationView.addReservationInformation(getString(R.string.frag_booking_tab_ticket_type), productType);
 
         if (productCount > 0)
         {
-            reservationInformationList.add(new Pair(getString(R.string.label_product_count), getString(R.string.label_booking_count, productCount)));
+            getViewDataBinding().thankYouInformationView.addReservationInformation(getString(R.string.label_product_count), getString(R.string.label_booking_count, productCount));
         }
 
-        getViewDataBinding().thankYouInformationView.setReservationInformation(reservationInformationList);
+
     }
 
     @Override

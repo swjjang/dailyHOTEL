@@ -503,10 +503,16 @@ public class HomeFragment extends BaseMenuNavigationFragment
                 {
                     ExLog.e(e.toString());
                 }
-            } else if (externalDeepLink.isHotelView() == true)
+            } else if (externalDeepLink.isHotelListView() == true//
+                || externalDeepLink.isHotelDetailView() == true//
+                || externalDeepLink.isHotelSearchView() == true//
+                || externalDeepLink.isHotelSearchResultView() == true)
             {
                 onStayClick(true, externalDeepLink);
-            } else if (externalDeepLink.isGourmetView() == true)
+            } else if (externalDeepLink.isGourmetListView() == true//
+                || externalDeepLink.isGourmetDetailView() == true//
+                || externalDeepLink.isGourmetSearchView() == true//
+                || externalDeepLink.isGourmetSearchResultView() == true)
             {
                 onGourmetClick(true, externalDeepLink);
             } else if (externalDeepLink.isRecentlyWatchHotelView() == true)

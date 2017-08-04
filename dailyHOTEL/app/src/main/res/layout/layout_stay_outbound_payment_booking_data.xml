@@ -39,7 +39,7 @@
             android:background="@color/default_line_cdcdcdd"/>
 
         <!-- 객실 정보 -->
-        <com.daily.dailyhotel.view.DailyBookingInformationView
+        <com.daily.dailyhotel.view.DailyBookingInformationsView
             android:id="@+id/roomInformationView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -64,248 +64,49 @@
             android:orientation="vertical"
             android:paddingBottom="20dp">
 
-            <LinearLayout
+            <com.daily.dailyhotel.view.DailyBookingGuestInformationsView
+                android:id="@+id/guestInformationView"
                 android:layout_width="match_parent"
-                android:layout_height="36dp"
-                android:orientation="horizontal"
+                android:layout_height="wrap_content"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp"/>
+
+            <android.support.constraint.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="36dp"
                 android:paddingLeft="15dp"
                 android:paddingRight="15dp">
 
                 <com.daily.base.widget.DailyTextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:gravity="center_vertical"
-                    android:text="@string/act_booking_reserver_info"
-                    android:textColor="@color/default_text_c666666"
-                    android:textSize="13dp"
-                    dailyFont:style="Medium"/>
-
-                <com.daily.base.widget.DailyTextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_marginLeft="5dp"
-                    android:gravity="center_vertical"
-                    android:text="@string/label_booking_required_fileds"
-                    android:textColor="@color/default_text_cc5c5c5"
-                    android:textSize="12dp"/>
-            </LinearLayout>
-
-            <com.daily.base.widget.DailyTextView
-                android:id="@+id/guideNameMemoView"
-                android:layout_width="match_parent"
-                android:layout_height="36dp"
-                android:drawablePadding="6dp"
-                android:gravity="center_vertical"
-                android:paddingLeft="15dp"
-                android:paddingRight="15dp"
-                android:text="@string/message_guide_name_memo"
-                android:textColor="@color/default_text_c929292"
-                android:textSize="11dp"
-                app:drawableCompatLeft="@drawable/ic_payment_notice"/>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="36dp"
-                android:gravity="center_vertical"
-                android:paddingLeft="15dp"
-                android:paddingRight="15dp">
-
-                <com.daily.base.widget.DailyTextView
+                    android:id="@+id/guestPeopleTextView"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="0.3"
-                    android:text="@string/label_stay_outbound_payment_last_name"
-                    android:textColor="@color/default_text_c929292"
-                    android:textSize="13dp"/>
-
-                <FrameLayout
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="0.7">
-
-                    <com.daily.base.widget.DailyEditText
-                        android:id="@+id/guestLastNameEditText"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="right|center_vertical"
-                        android:inputType="textUri"
-                        android:lines="1"
-                        android:maxLength="25"
-                        android:maxLines="1"
-                        android:singleLine="true"
-                        android:textColor="@color/default_text_c323232"
-                        android:textSize="13dp"
-                        android:theme="@style/EditTextTheme"/>
-
-                    <com.daily.base.widget.DailyTextView
-                        android:id="@+id/guestLastNameHintEditText"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:background="@null"
-                        android:gravity="right|center_vertical"
-                        android:lines="1"
-                        android:maxLines="1"
-                        android:paddingRight="5dp"
-                        android:singleLine="true"
-                        android:text="@string/label_stay_outbound_payment_last_name_hint"
-                        android:textColor="@color/default_text_cc5c5c5"
-                        android:textSize="13dp"/>
-                </FrameLayout>
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="36dp"
-                android:gravity="center_vertical"
-                android:paddingLeft="15dp"
-                android:paddingRight="15dp">
-
-                <com.daily.base.widget.DailyTextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.3"
-                    android:text="@string/label_stay_outbound_payment_first_name"
-                    android:textColor="@color/default_text_c929292"
-                    android:textSize="13dp"/>
-
-                <FrameLayout
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="0.7">
-
-                    <com.daily.base.widget.DailyEditText
-                        android:id="@+id/guestFirstNameEditText"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="right|center_vertical"
-                        android:inputType="textUri"
-                        android:lines="1"
-                        android:maxLength="40"
-                        android:maxLines="1"
-                        android:singleLine="true"
-                        android:textColor="@color/default_text_c323232"
-                        android:textSize="13dp"
-                        android:theme="@style/EditTextTheme"/>
-
-                    <com.daily.base.widget.DailyTextView
-                        android:id="@+id/guestFirstNameHintEditText"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:background="@null"
-                        android:gravity="right|center_vertical"
-                        android:lines="1"
-                        android:maxLines="1"
-                        android:paddingRight="5dp"
-                        android:singleLine="true"
-                        android:text="@string/label_stay_outbound_payment_first_name_hint"
-                        android:textColor="@color/default_text_cc5c5c5"
-                        android:textSize="13dp"/>
-                </FrameLayout>
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="36dp"
-                android:gravity="center_vertical"
-                android:paddingLeft="15dp"
-                android:paddingRight="15dp">
-
-                <com.daily.base.widget.DailyTextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.3"
-                    android:text="@string/act_booking_mobile"
-                    android:textColor="@color/default_text_c929292"
-                    android:textSize="13dp"/>
-
-                <FrameLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.7">
-
-                    <com.daily.base.widget.DailyEditText
-                        android:id="@+id/guestPhoneEditText"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="right|center_vertical"
-                        android:inputType="phone"
-                        android:maxLength="20"
-                        android:maxLines="1"
-                        android:singleLine="true"
-                        android:textColor="@color/default_text_c323232"
-                        android:textColorHint="@color/default_text_cc5c5c5"
-                        android:textSize="13dp"
-                        android:theme="@style/EditTextTheme"/>
-
-                    <View
-                        android:id="@+id/fakeMobileEditView"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"/>
-                </FrameLayout>
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="36dp"
-                android:gravity="center_vertical"
-                android:paddingLeft="15dp"
-                android:paddingRight="15dp">
-
-                <com.daily.base.widget.DailyTextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.3"
-                    android:text="@string/act_booking_email"
-                    android:textColor="@color/default_text_c929292"
-                    android:textSize="13dp"/>
-
-                <com.daily.base.widget.DailyEditText
-                    android:id="@+id/guestEmailEditText"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.7"
-                    android:gravity="right|center_vertical"
-                    android:inputType="textEmailAddress"
-                    android:lines="1"
-                    android:maxLength="50"
-                    android:maxLines="1"
-                    android:singleLine="true"
-                    android:textColor="@color/default_text_c323232"
-                    android:textColorHint="@color/default_text_cc5c5c5"
-                    android:textSize="13dp"
-                    android:theme="@style/EditTextTheme"/>
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="36dp"
-                android:gravity="center_vertical"
-                android:paddingLeft="15dp"
-                android:paddingRight="15dp">
-
-                <com.daily.base.widget.DailyTextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.3"
+                    android:layout_marginTop="11dp"
+                    android:gravity="left"
                     android:text="@string/label_stay_outbound_payment_people"
                     android:textColor="@color/default_text_c929292"
-                    android:textSize="13dp"/>
+                    android:textSize="13dp"
+                    app:layout_constraintHorizontal_weight="0.3"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toLeftOf="@+id/guestPeopleEditText"
+                    app:layout_constraintTop_toTopOf="parent"/>
 
                 <com.daily.base.widget.DailyTextView
                     android:id="@+id/guestPeopleEditText"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="0.7"
-                    android:gravity="right|center_vertical"
-                    android:inputType="textEmailAddress"
-                    android:lines="1"
-                    android:maxLength="50"
-                    android:maxLines="1"
-                    android:singleLine="true"
+                    android:layout_marginBottom="11dp"
+                    android:layout_marginTop="11dp"
+                    android:gravity="right"
                     android:textColor="@color/default_text_c323232"
                     android:textSize="13dp"
-                    android:theme="@style/EditTextTheme"/>
-            </LinearLayout>
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintHorizontal_weight="0.7"
+                    app:layout_constraintLeft_toRightOf="@+id/guestPeopleTextView"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"/>
+            </android.support.constraint.ConstraintLayout>
         </LinearLayout>
 
         <View

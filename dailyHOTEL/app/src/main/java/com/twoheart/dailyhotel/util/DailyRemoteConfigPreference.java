@@ -11,7 +11,7 @@ import com.daily.base.util.DailyTextUtils;
  */
 public class DailyRemoteConfigPreference
 {
-    public static final String PREFERENCE_REMOTE_CONFIG = "DH_RemoteConfig";
+    private static final String PREFERENCE_REMOTE_CONFIG = "DH_RemoteConfig";
 
     /////////////////////////////////////////////////////////////////////////////////////////
     // Remote Config Preference
