@@ -1,4 +1,4 @@
-package com.daily.dailyhotel.screen.search.campaintag;
+package com.daily.dailyhotel.screen.home.campaintag;
 
 import com.daily.base.BaseActivity;
 import com.daily.base.BaseDialogView;
