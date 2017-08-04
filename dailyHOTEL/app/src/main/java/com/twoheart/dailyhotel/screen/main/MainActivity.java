@@ -972,6 +972,23 @@ public class MainActivity extends BaseActivity implements Constants, BaseMenuNav
         mDistance = 0;
     }
 
+    private void analyticsRankABTest()
+    {
+        try
+        {
+            String rankTestName = DailyRemoteConfigPreference.getInstance(this).getKeyRemoteConfigStayRankTestName();
+
+            if (DailyTextUtils.isTextEmpty(rankTestName) == false)
+            {
+                AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.EXPERIMENT//
+                    , AnalyticsManager.Action.RANKING, rankTestName, null);
+            }
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+        }
+    }
+
     private MenuBarLayout.OnMenuBarSelectedListener onMenuBarSelectedListener = new MenuBarLayout.OnMenuBarSelectedListener()
     {
         @Override
@@ -1203,6 +1220,8 @@ public class MainActivity extends BaseActivity implements Constants, BaseMenuNav
                         {
                             checkAppVersion(currentVersion, forceVersion);
                         }
+
+                        analyticsRankABTest();
                     }
                 });
             } else
