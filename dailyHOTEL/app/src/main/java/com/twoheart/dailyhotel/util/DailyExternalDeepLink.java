@@ -19,56 +19,12 @@ public class DailyExternalDeepLink extends DailyDeepLink
     // DAILYHOTEL EXTERNAL DEEP LINK
     ///////////////////////////////////////////////////////////////////////////////////
 
-
-    private static final String PARAM_V2_VIEW = "view"; // view
-    private static final String PARAM_V2_INDEX = "idx"; // index
-    private static final String PARAM_V2_DATE = "date"; // date
-    private static final String PARAM_V2_NIGHTS = "nights"; // nights
+    // View
 
     private static final String HOTEL_V2_LIST = "hotel"; // hotel
-    private static final String GOURMET_V2_LIST = "gourmet"; // gourmet
-    private static final String BOOKING_V2_LIST = "bookings"; // bookings
-    private static final String EVENT_V2_LIST = "event"; // event
-
-    private static final String PARAM_V3_VIEW = "v"; // view
-    private static final String PARAM_V3_VERSION_CODE = "vc"; // version code
-    private static final String PARAM_V3_DATE = "d"; // date
-    private static final String PARAM_V3_NIGHTS = "n"; // nights
-    private static final String PARAM_V3_URL = "url"; // url
-    private static final String PARAM_V3_PROVINCE_INDEX = "pi"; // province index
-    private static final String PARAM_V3_AREA_INDEX = "ai"; // area index
-    private static final String PARAM_V3_INDEX = "i"; // hotel/gourmet index
-    private static final String PARAM_V3_REGION_ISOVERSEA = "ios"; // isOverSea
-    private static final String PARAM_V3_CATEGORY_CODE = "cc"; // category Code
-
-    private static final String PARAM_V4_RECOMMENDER_CODE = "rc"; // 추천인 코드
-    private static final String PARAM_V4_DATE_PLUS = "dp"; // 오늘 날짜에 더해줄 일
-    private static final String PARAM_V4_SORTING = "s"; // lp (낮은 가격). hp (높은 가격), r (만족도)
-
-    //    private static final String PARAM_V5_EVENT_NAME = "en"; // 이벤트 이름 --> "t" 로 통일 하도록 한다.
-    private static final String PARAM_V5_CALENDAR_FLAG = "cal"; // 0: 달력을 띄우지 않는다.(디폴트), 1 : 달력 띄운다.
-
-    private static final String PARAM_V6_WORD = "w"; // 검색어
-    private static final String PARAM_V6_LATITUDE = "lat"; //
-    private static final String PARAM_V6_LONGITUDE = "lng";
-    private static final String PARAM_V6_RADIUS = "rd"; // km
-
-    private static final String PARAM_V7_TITLE = "t"; // 타이틀
-    private static final String PARAM_V7_RESERVATION_INDEX = "ri"; // 예약 인덱스
-    private static final String PARAM_V7_PLACE_TYPE = "pt"; // stay, gourmet, all
-    private static final String PARAM_V7_NOTICE_INDEX = "ni"; // 공지사항 인덱스
-
-    //    private static final String PARAM_V9_QUERY = "qr"; // 검색 쿼리
-    private static final String PARAM_V9_OPEN_TICKET_INDEX = "oti"; // 스테이/고메 메뉴 오픈시에 해당 인덱스
-    private static final String PARAM_V9_QUERY_TYPE = "qt"; // 쿼리 방식
-    //    private static final String PARAM_V9_TITLE_IMAGE_URL = "tiu"; // 타이틀 이미지 URL
-
-    //    private static final String PARAM_V10_START_DATE = "sd"; // 캘린더 시작 날짜
-    //    private static final String PARAM_V10_END_DATE = "ed"; // 캘린더 끝날짜
-
-    private static final String VALUE_V4_SORTING_LOW_TO_HIGH = "lp";
-    private static final String VALUE_V4_SORTING_HIGH_TO_LOW = "hp";
-    private static final String VALUE_V4_SORTING_SATISFACTION = "r";
+    //    private static final String GOURMET_V2_LIST = "gourmet"; // gourmet
+    //    private static final String BOOKING_V2_LIST = "bookings"; // bookings
+    //    private static final String EVENT_V2_LIST = "event"; // event
 
     private static final String HOTEL_V3_LIST = "hl"; // 호텔리스트
     private static final String HOTEL_V3_DETAIL = "hd"; // 호텔 상세
@@ -110,24 +66,74 @@ public class DailyExternalDeepLink extends DailyDeepLink
     private static final String WISHLIST_GOURMET_V9 = "wlg"; // 위시리스트 고메
     //    private static final String COLECTION_VIWE_V9 = "cv"; // 모아보기 화면
 
-    private static final String PARAM_V10_BASE_URL = "baseUrl"; // 서버 BASE URL 변경
-    private static final String PARAM_V10_BASE_OUTBOUND_URL = "baseOutBoundUrl"; // 서버 BASE URL 변경
-
     private static final String MYDAILY_V12 = "md"; // 마이 데일리 화면
     private static final String HOME_V12_EVENT_DETAIL = "hed"; // 홈의 이벤트 상세화면
     private static final String HOME_V12_RECOMMENDATION_PLACE_LIST = "hrpl"; // 홈의 데일리 추천 -> 상세 리스트
 
+    private static final String STAMP_V14 = "stamp"; // 스탬프.
+    private static final String STAY_V16_SHORTCUT_LIST = "scl"; // 스테이 숏컷 리스트
+    private static final String STAY_OUTBOUND_V19_SEARCH_RESULT_LIST = "sosrl"; // 해외 호텔 검색 결과 목록
+
+    // Param
+
+    //    private static final String PARAM_V2_VIEW = "view"; // view
+    //    private static final String PARAM_V2_INDEX = "idx"; // index
+    //    private static final String PARAM_V2_DATE = "date"; // date
+    //    private static final String PARAM_V2_NIGHTS = "nights"; // nights
+
+    private static final String PARAM_V3_VIEW = "v"; // view
+    private static final String PARAM_V3_VERSION_CODE = "vc"; // version code
+    private static final String PARAM_V3_DATE = "d"; // date
+    private static final String PARAM_V3_NIGHTS = "n"; // nights
+    private static final String PARAM_V3_URL = "url"; // url
+    private static final String PARAM_V3_PROVINCE_INDEX = "pi"; // province index
+    private static final String PARAM_V3_AREA_INDEX = "ai"; // area index
+    private static final String PARAM_V3_INDEX = "i"; // hotel/gourmet index
+    private static final String PARAM_V3_REGION_ISOVERSEA = "ios"; // isOverSea
+    private static final String PARAM_V3_CATEGORY_CODE = "cc"; // category Code
+
+    private static final String PARAM_V4_RECOMMENDER_CODE = "rc"; // 추천인 코드
+    private static final String PARAM_V4_DATE_PLUS = "dp"; // 오늘 날짜에 더해줄 일
+    private static final String PARAM_V4_SORTING = "s"; // lp (낮은 가격). hp (높은 가격), r (만족도)
+
+    //    private static final String PARAM_V5_EVENT_NAME = "en"; // 이벤트 이름 --> "t" 로 통일 하도록 한다.
+    private static final String PARAM_V5_CALENDAR_FLAG = "cal"; // 0: 달력을 띄우지 않는다.(디폴트), 1 : 달력 띄운다.
+
+    private static final String PARAM_V6_WORD = "w"; // 검색어
+    private static final String PARAM_V6_LATITUDE = "lat"; //
+    private static final String PARAM_V6_LONGITUDE = "lng";
+    private static final String PARAM_V6_RADIUS = "rd"; // km
+
+    private static final String PARAM_V7_TITLE = "t"; // 타이틀
+    private static final String PARAM_V7_RESERVATION_INDEX = "ri"; // 예약 인덱스
+    private static final String PARAM_V7_PLACE_TYPE = "pt"; // stay, gourmet, all
+    private static final String PARAM_V7_NOTICE_INDEX = "ni"; // 공지사항 인덱스
+
+    //    private static final String PARAM_V9_QUERY = "qr"; // 검색 쿼리
+    private static final String PARAM_V9_OPEN_TICKET_INDEX = "oti"; // 스테이/고메 메뉴 오픈시에 해당 인덱스
+    private static final String PARAM_V9_QUERY_TYPE = "qt"; // 쿼리 방식
+    //    private static final String PARAM_V9_TITLE_IMAGE_URL = "tiu"; // 타이틀 이미지 URL
+
+    //    private static final String PARAM_V10_START_DATE = "sd"; // 캘린더 시작 날짜
+    //    private static final String PARAM_V10_END_DATE = "ed"; // 캘린더 끝날짜
+
+    private static final String VALUE_V4_SORTING_LOW_TO_HIGH = "lp";
+    private static final String VALUE_V4_SORTING_HIGH_TO_LOW = "hp";
+    private static final String VALUE_V4_SORTING_SATISFACTION = "r";
+
+    private static final String PARAM_V10_BASE_URL = "baseUrl"; // 서버 BASE URL 변경
+    private static final String PARAM_V10_BASE_OUTBOUND_URL = "baseOutBoundUrl"; // 서버 BASE URL 변경
 
     //    private static final String PARAM_V13_PRODUCT_INDEX = "pdi"; // 상품 인덱스.
 
-    private static final String STAMP_V14 = "stamp"; // 스탬프.
-
     private static final String PARAM_V15_VR = "vr"; // vr
 
-    private static final String PARAM_V16_STAY_SHORTCUT_LIST = "scl"; // 스테이 숏컷 리스트
+    private static final String PARAM_V19_CATEGORY_KEY = "ck"; // 해외 호텔 검색에서 사용되는 키값
 
-    private static final int MINIMUM_VERSION_CODE = 2;
-    private static final int MAXIMUM_VERSION_CODE = 18;
+    // Version
+
+    private static final int MINIMUM_VERSION_CODE = 3;
+    private static final int MAXIMUM_VERSION_CODE = 19;
 
     private int mVersionCode;
 
@@ -166,21 +172,96 @@ public class DailyExternalDeepLink extends DailyDeepLink
         mVersionCode = 0;
     }
 
+
+    private boolean equalsView(int version, String viewName)
+    {
+        if (DailyTextUtils.isTextEmpty(viewName) == false || mVersionCode < version)
+        {
+            return false;
+        }
+
+        return viewName.equalsIgnoreCase(getView());
+    }
+
+    private String getStringValue(int version, String valueName)
+    {
+        if (DailyTextUtils.isTextEmpty(valueName) == false || mVersionCode < version)
+        {
+            return null;
+        }
+
+        return mParamsMap.get(PARAM_V19_CATEGORY_KEY);
+    }
+
+    private int getIntValue(int version, String valueName)
+    {
+        if (DailyTextUtils.isTextEmpty(valueName) == false || mVersionCode < version)
+        {
+            return 0;
+        }
+
+        int value = 0;
+
+        String stringValue = mParamsMap.get(valueName);
+
+        if (DailyTextUtils.isTextEmpty(stringValue) == false)
+        {
+            try
+            {
+                value = Integer.parseInt(stringValue);
+            } catch (NumberFormatException e)
+            {
+            }
+        }
+
+        return value;
+    }
+
+    private double getDoubleValue(int version, String valueName)
+    {
+        if (DailyTextUtils.isTextEmpty(valueName) == false || mVersionCode < version)
+        {
+            return 0;
+        }
+
+        double value = 0;
+
+        String stringValue = mParamsMap.get(valueName);
+
+        if (DailyTextUtils.isTextEmpty(stringValue) == false)
+        {
+            try
+            {
+                value = Double.parseDouble(stringValue);
+            } catch (NumberFormatException e)
+            {
+            }
+        }
+
+        return value;
+    }
+
+    ///////////////////////////////////////////////////////////////////////////////////
+    // Version 19
+    ///////////////////////////////////////////////////////////////////////////////////
+
+    public boolean isStayOutboundSearchResultList()
+    {
+        return equalsView(19, STAY_OUTBOUND_V19_SEARCH_RESULT_LIST);
+    }
+
+    public String getCategoryKey()
+    {
+        return getStringValue(19, PARAM_V19_CATEGORY_KEY);
+    }
+
     ///////////////////////////////////////////////////////////////////////////////////
     // Version 16
     ///////////////////////////////////////////////////////////////////////////////////
 
     public boolean isShortcutList()
     {
-        String view = getView();
-
-        if (mVersionCode >= 16)
-        {
-            return PARAM_V16_STAY_SHORTCUT_LIST.equalsIgnoreCase(view);
-        } else
-        {
-            return false;
-        }
+        return equalsView(16, STAY_V16_SHORTCUT_LIST);
     }
 
     ///////////////////////////////////////////////////////////////////////////////////
@@ -189,23 +270,7 @@ public class DailyExternalDeepLink extends DailyDeepLink
 
     public boolean isShowVR()
     {
-        if (mVersionCode >= 15)
-        {
-            String value = mParamsMap.get(PARAM_V15_VR);
-
-            if (DailyTextUtils.isTextEmpty(value) == false)
-            {
-                try
-                {
-                    return Integer.parseInt(value) == 1;
-                } catch (NumberFormatException e)
-                {
-                    return false;
-                }
-            }
-        }
-
-        return false;
+        return getIntValue(15, PARAM_V15_VR) == 1;
     }
 
     ///////////////////////////////////////////////////////////////////////////////////
@@ -214,15 +279,7 @@ public class DailyExternalDeepLink extends DailyDeepLink
 
     public boolean isStampView()
     {
-        String view = getView();
-
-        if (mVersionCode >= 14)
-        {
-            return STAMP_V14.equalsIgnoreCase(view);
-        } else
-        {
-            return false;
-        }
+        return equalsView(14, STAMP_V14);
     }
 
     ///////////////////////////////////////////////////////////////////////////////////
@@ -257,41 +314,17 @@ public class DailyExternalDeepLink extends DailyDeepLink
 
     public boolean isMyDailyView()
     {
-        String view = getView();
-
-        if (mVersionCode >= 12)
-        {
-            return MYDAILY_V12.equalsIgnoreCase(view);
-        } else
-        {
-            return false;
-        }
+        return equalsView(12, MYDAILY_V12);
     }
 
     public boolean isHomeEventDetailView()
     {
-        String view = getView();
-
-        if (mVersionCode >= 12)
-        {
-            return HOME_V12_EVENT_DETAIL.equalsIgnoreCase(view);
-        } else
-        {
-            return false;
-        }
+        return equalsView(12, HOME_V12_EVENT_DETAIL);
     }
 
     public boolean isHomeRecommendationPlaceListView()
     {
-        String view = getView();
-
-        if (mVersionCode >= 12)
-        {
-            return HOME_V12_RECOMMENDATION_PLACE_LIST.equalsIgnoreCase(view);
-        } else
-        {
-            return false;
-        }
+        return equalsView(12, HOME_V12_RECOMMENDATION_PLACE_LIST);
     }
 
     ///////////////////////////////////////////////////////////////////////////////////
@@ -300,32 +333,12 @@ public class DailyExternalDeepLink extends DailyDeepLink
 
     public String getBaseUrl()
     {
-        String value;
-
-        if (mVersionCode >= 11)
-        {
-            value = mParamsMap.get(PARAM_V10_BASE_URL);
-        } else
-        {
-            value = null;
-        }
-
-        return value;
+        return getStringValue(11, PARAM_V10_BASE_URL);
     }
 
     public String getBaseOutBoundUrl()
     {
-        String value;
-
-        if (mVersionCode >= 11)
-        {
-            value = mParamsMap.get(PARAM_V10_BASE_OUTBOUND_URL);
-        } else
-        {
-            value = null;
-        }
-
-        return value;
+        return getStringValue(11, PARAM_V10_BASE_OUTBOUND_URL);
     }
 
     ///////////////////////////////////////////////////////////////////////////////////
@@ -369,66 +382,33 @@ public class DailyExternalDeepLink extends DailyDeepLink
 
     public boolean isWishListHotelView()
     {
-        String view = getView();
-
-        if (mVersionCode >= 9)
-        {
-            return WISHLIST_HOTEL_V9.equalsIgnoreCase(view);
-        } else
-        {
-            return false;
-        }
+        return equalsView(9, WISHLIST_HOTEL_V9);
     }
 
     public boolean isWishListGourmetView()
     {
-        String view = getView();
-
-        if (mVersionCode >= 9)
-        {
-            return WISHLIST_GOURMET_V9.equalsIgnoreCase(view);
-        } else
-        {
-            return false;
-        }
+        return equalsView(9, WISHLIST_GOURMET_V9);
     }
 
     public int getOpenTicketIndex()
     {
-        int index = 0;
-
-        if (mVersionCode >= 9)
-        {
-            String value = mParamsMap.get(PARAM_V9_OPEN_TICKET_INDEX);
-
-            if (DailyTextUtils.isTextEmpty(value) == false)
-            {
-                try
-                {
-                    index = Integer.parseInt(value);
-                } catch (NumberFormatException e)
-                {
-                }
-            }
-        }
-
-        return index;
+        return getIntValue(9, PARAM_V9_OPEN_TICKET_INDEX);
     }
 
-    public String getQueryType()
-    {
-        String value;
-
-        if (mVersionCode >= 9)
-        {
-            value = mParamsMap.get(PARAM_V9_QUERY_TYPE);
-        } else
-        {
-            value = null;
-        }
-
-        return value;
-    }
+    //    public String getQueryType()
+    //    {
+    //        String value;
+    //
+    //        if (mVersionCode >= 9)
+    //        {
+    //            value = mParamsMap.get(PARAM_V9_QUERY_TYPE);
+    //        } else
+    //        {
+    //            value = null;
+    //        }
+    //
+    //        return value;
+    //    }
 
     ///////////////////////////////////////////////////////////////////////////////////
     // Version 8
@@ -436,80 +416,32 @@ public class DailyExternalDeepLink extends DailyDeepLink
 
     public boolean isRecentlyWatchHotelView()
     {
-        String view = getView();
-
-        if (mVersionCode >= 8)
-        {
-            return RECENTLY_WATCH_HOTEL_V8.equalsIgnoreCase(view);
-        } else
-        {
-            return false;
-        }
+        return equalsView(8, RECENTLY_WATCH_HOTEL_V8);
     }
 
     public boolean isRecentlyWatchGourmetView()
     {
-        String view = getView();
-
-        if (mVersionCode >= 8)
-        {
-            return RECENTLY_WATCH_GOURMET_V8.equalsIgnoreCase(view);
-        } else
-        {
-            return false;
-        }
+        return equalsView(8, RECENTLY_WATCH_GOURMET_V8);
     }
 
     public boolean isFAQView()
     {
-        String view = getView();
-
-        if (mVersionCode >= 8)
-        {
-            return FAQ_V8.equalsIgnoreCase(view);
-        } else
-        {
-            return false;
-        }
+        return equalsView(8, FAQ_V8);
     }
 
     public boolean isTermsNPolicyView()
     {
-        String view = getView();
-
-        if (mVersionCode >= 8)
-        {
-            return TERMS_N_POLICY_V8.equalsIgnoreCase(view);
-        } else
-        {
-            return false;
-        }
+        return equalsView(8, TERMS_N_POLICY_V8);
     }
 
     public boolean isProfileView()
     {
-        String view = getView();
-
-        if (mVersionCode >= 8)
-        {
-            return PROFILE_V8.equalsIgnoreCase(view);
-        } else
-        {
-            return false;
-        }
+        return equalsView(8, PROFILE_V8);
     }
 
     public boolean isProfileBirthdayView()
     {
-        String view = getView();
-
-        if (mVersionCode >= 8)
-        {
-            return PROFILE_BIRTHDAY_V8.equalsIgnoreCase(view);
-        } else
-        {
-            return false;
-        }
+        return equalsView(8, PROFILE_BIRTHDAY_V8);
     }
 
     ///////////////////////////////////////////////////////////////////////////////////
@@ -518,115 +450,37 @@ public class DailyExternalDeepLink extends DailyDeepLink
 
     public boolean isRegisterCouponView()
     {
-        String view = getView();
-
-        if (mVersionCode >= 7)
-        {
-            return REGISTER_COUPON_V7.equalsIgnoreCase(view);
-        } else
-        {
-            return false;
-        }
+        return equalsView(7, REGISTER_COUPON_V7);
     }
 
     public boolean isBookingDetailView()
     {
-        String view = getView();
-
-        if (mVersionCode >= 7)
-        {
-            return BOOKING_DETAIL_V7.equalsIgnoreCase(view);
-        } else
-        {
-            return false;
-        }
+        return equalsView(7, BOOKING_DETAIL_V7);
     }
 
     public boolean isNoticeDetailView()
     {
-        String view = getView();
-
-        if (mVersionCode >= 7)
-        {
-            return NOTICE_DETAIL_V7.equalsIgnoreCase(view);
-        } else
-        {
-            return false;
-        }
+        return equalsView(7, NOTICE_DETAIL_V7);
     }
 
     public String getTitle()
     {
-        String value;
-
-        if (mVersionCode >= 7)
-        {
-            value = mParamsMap.get(PARAM_V7_TITLE);
-        } else
-        {
-            value = null;
-        }
-
-        return value;
+        return getStringValue(7, PARAM_V7_TITLE);
     }
 
     public int getReservationIndex()
     {
-        int reservationIndex = 0;
-
-        if (mVersionCode >= 7)
-        {
-            String value = mParamsMap.get(PARAM_V7_RESERVATION_INDEX);
-
-            if (DailyTextUtils.isTextEmpty(value) == false)
-            {
-                try
-                {
-                    reservationIndex = Integer.parseInt(value);
-                } catch (NumberFormatException e)
-                {
-                }
-            }
-        }
-
-        return reservationIndex;
+        return getIntValue(7, PARAM_V7_RESERVATION_INDEX);
     }
 
     public String getPlaceType()
     {
-        String value;
-
-        if (mVersionCode >= 7)
-        {
-            value = mParamsMap.get(PARAM_V7_PLACE_TYPE);
-        } else
-        {
-            value = null;
-        }
-
-        return value;
+        return getStringValue(7, PARAM_V7_PLACE_TYPE);
     }
 
     public int getNoticeIndex()
     {
-        int noticeIndex = 0;
-
-        if (mVersionCode >= 7)
-        {
-            String value = mParamsMap.get(PARAM_V7_NOTICE_INDEX);
-
-            if (DailyTextUtils.isTextEmpty(value) == false)
-            {
-                try
-                {
-                    noticeIndex = Integer.parseInt(value);
-                } catch (NumberFormatException e)
-                {
-                }
-            }
-        }
-
-        return noticeIndex;
+        return getIntValue(7, PARAM_V7_NOTICE_INDEX);
     }
 
     ///////////////////////////////////////////////////////////////////////////////////
@@ -635,69 +489,27 @@ public class DailyExternalDeepLink extends DailyDeepLink
 
     public boolean isHotelSearchView()
     {
-        String view = getView();
-
-        if (mVersionCode >= 6)
-        {
-            return HOTEL_V6_SEARCH.equalsIgnoreCase(view);
-        } else
-        {
-            return false;
-        }
+        return equalsView(6, HOTEL_V6_SEARCH);
     }
 
     public boolean isHotelSearchResultView()
     {
-        String view = getView();
-
-        if (mVersionCode >= 6)
-        {
-            return HOTEL_V6_SEARCH_RESULT.equalsIgnoreCase(view);
-        } else
-        {
-            return false;
-        }
+        return equalsView(6, HOTEL_V6_SEARCH_RESULT);
     }
 
     public boolean isGourmetSearchView()
     {
-        String view = getView();
-
-        if (mVersionCode >= 6)
-        {
-            return GOURMET_V6_SEARCH.equalsIgnoreCase(view);
-        } else
-        {
-            return false;
-        }
+        return equalsView(6, GOURMET_V6_SEARCH);
     }
 
     public boolean isGourmetSearchResultView()
     {
-        String view = getView();
-
-        if (mVersionCode >= 6)
-        {
-            return GOURMET_V6_SEARCH_RESULT.equalsIgnoreCase(view);
-        } else
-        {
-            return false;
-        }
+        return equalsView(6, GOURMET_V6_SEARCH_RESULT);
     }
 
     public String getSearchWord()
     {
-        String value;
-
-        if (mVersionCode >= 6)
-        {
-            value = mParamsMap.get(PARAM_V6_WORD);
-        } else
-        {
-            value = null;
-        }
-
-        return value;
+        return getStringValue(6, PARAM_V6_WORD);
     }
 
     public SearchType getSearchLocationType()
@@ -738,25 +550,7 @@ public class DailyExternalDeepLink extends DailyDeepLink
 
     public double getRadius()
     {
-        // 기본값 10.0km
-        double radius = 10.0d;
-
-        if (mVersionCode >= 6)
-        {
-            String value = mParamsMap.get(PARAM_V6_RADIUS);
-
-            if (DailyTextUtils.isTextEmpty(value) == false)
-            {
-                try
-                {
-                    radius = Double.parseDouble(value);
-                } catch (NumberFormatException e)
-                {
-                }
-            }
-        }
-
-        return radius;
+        return getDoubleValue(6, PARAM_V6_RADIUS);
     }
 
     ///////////////////////////////////////////////////////////////////////////////////
@@ -765,75 +559,27 @@ public class DailyExternalDeepLink extends DailyDeepLink
 
     public boolean isCouponView()
     {
-        String view = getView();
-
-        if (mVersionCode >= 5)
-        {
-            return COUPON_V5_LIST.equalsIgnoreCase(view);
-        } else
-        {
-            return false;
-        }
+        return equalsView(5, COUPON_V5_LIST);
     }
 
     public boolean isEventDetailView()
     {
-        String view = getView();
-
-        if (mVersionCode >= 5)
-        {
-            return EVENT_V5_DETAIL.equalsIgnoreCase(view);
-        } else
-        {
-            return false;
-        }
+        return equalsView(5, EVENT_V5_DETAIL);
     }
 
     public boolean isInformationView()
     {
-        String view = getView();
-
-        if (mVersionCode >= 5)
-        {
-            return INFORMATION_V5.equalsIgnoreCase(view);
-        } else
-        {
-            return false;
-        }
+        return equalsView(5, INFORMATION_V5);
     }
 
     public boolean isRecommendFriendView()
     {
-        String view = getView();
-
-        if (mVersionCode >= 5)
-        {
-            return RECOMMEND_FRIEND_V5.equalsIgnoreCase(view);
-        } else
-        {
-            return false;
-        }
+        return equalsView(5, RECOMMEND_FRIEND_V5);
     }
 
     public boolean isShowCalendar()
     {
-        if (mVersionCode >= 5)
-        {
-            String value = mParamsMap.get(PARAM_V5_CALENDAR_FLAG);
-
-            if (DailyTextUtils.isTextEmpty(value) == false)
-            {
-                try
-                {
-                    return Integer.parseInt(value) == 1;
-                } catch (NumberFormatException e)
-                {
-                    return false;
-                }
-            }
-        }
-
-        return false;
+        return getIntValue(5, PARAM_V5_CALENDAR_FLAG) == 1;
     }
 
     ///////////////////////////////////////////////////////////////////////////////////
@@ -842,53 +588,17 @@ public class DailyExternalDeepLink extends DailyDeepLink
 
     public boolean isSingUpView()
     {
-        String view = getView();
-
-        if (mVersionCode >= 4)
-        {
-            return SINGUP_V4.equalsIgnoreCase(view);
-        } else
-        {
-            return false;
-        }
+        return equalsView(4, SINGUP_V4);
     }
 
     public String getRecommenderCode()
     {
-        String value;
-
-        if (mVersionCode >= 4)
-        {
-            value = mParamsMap.get(PARAM_V4_RECOMMENDER_CODE);
-        } else
-        {
-            value = null;
-        }
-
-        return value;
+        return getStringValue(4, PARAM_V4_RECOMMENDER_CODE);
     }
 
     public int getDatePlus()
     {
-        String value;
-
-        if (mVersionCode >= 4)
-        {
-            value = mParamsMap.get(PARAM_V4_DATE_PLUS);
-
-            if (DailyTextUtils.isTextEmpty(value) == false)
-            {
-                try
-                {
-                    return Integer.parseInt(value);
-                } catch (NumberFormatException e)
-                {
-                    return -1;
-                }
-            }
-        }
-
-        return -1;
+        return getIntValue(4, PARAM_V4_DATE_PLUS);
     }
 
     public Constants.SortType getSorting()
@@ -923,276 +633,82 @@ public class DailyExternalDeepLink extends DailyDeepLink
 
     private String getView()
     {
-        String value;
-
-        if (mVersionCode >= 3)
-        {
-            value = mParamsMap.get(PARAM_V3_VIEW);
-        } else
-        {
-            value = mParamsMap.get(PARAM_V2_VIEW);
-        }
-
-        return value;
-    }
-
-    public boolean isHotelView()
-    {
-        String view = getView();
-
-        if (mVersionCode >= 3)
-        {
-            return HOTEL_V3_LIST.equalsIgnoreCase(view)//
-                || HOTEL_V3_DETAIL.equalsIgnoreCase(view)//
-                //                || HOTEL_V3_REGION_LIST.equalsIgnoreCase(view)//
-                //                || HOTEL_V3_EVENT_BANNER_WEB.equalsIgnoreCase(view)//
-                || HOTEL_V6_SEARCH.equalsIgnoreCase(view) //
-                || HOTEL_V6_SEARCH_RESULT.equalsIgnoreCase(view);
-        } else
-        {
-            return HOTEL_V2_LIST.equalsIgnoreCase(view);
-        }
+        return mParamsMap.get(PARAM_V3_VIEW);
     }
 
     public boolean isHotelListView()
     {
-        String view = getView();
-
-        if (mVersionCode >= 3)
-        {
-            return HOTEL_V3_LIST.equalsIgnoreCase(view);
-        } else
-        {
-            return false;
-        }
+        return equalsView(3, HOTEL_V3_LIST);
     }
 
     public boolean isHotelDetailView()
     {
-        String view = getView();
-
-        if (mVersionCode >= 3)
-        {
-            return HOTEL_V3_DETAIL.equalsIgnoreCase(view);
-        } else
-        {
-            return HOTEL_V2_LIST.equalsIgnoreCase(view)//
-                && DailyTextUtils.isTextEmpty(mParamsMap.get(PARAM_V2_INDEX)) == false//
-                && DailyTextUtils.isTextEmpty(mParamsMap.get(PARAM_V2_DATE)) == false//
-                && DailyTextUtils.isTextEmpty(mParamsMap.get(PARAM_V2_NIGHTS)) == false;
-        }
-    }
-
-    public boolean isGourmetView()
-    {
-        String view = getView();
-
-        if (mVersionCode >= 3)
-        {
-            return GOURMET_V3_LIST.equalsIgnoreCase(view) //
-                || GOURMET_V3_DETAIL.equalsIgnoreCase(view) //
-                //                || GOURMET_V3_REGION_LIST.equalsIgnoreCase(view) //
-                //                || GOURMET_V3_EVENT_BANNER_WEB.equalsIgnoreCase(view) //
-                || GOURMET_V6_SEARCH.equalsIgnoreCase(view) //
-                || GOURMET_V6_SEARCH_RESULT.equalsIgnoreCase(view);
-        } else
-        {
-            return GOURMET_V2_LIST.equalsIgnoreCase(view);
-        }
+        return equalsView(3, HOTEL_V3_DETAIL);
     }
 
     public boolean isGourmetListView()
     {
-        String view = getView();
-
-        if (mVersionCode >= 3)
-        {
-            return GOURMET_V3_LIST.equalsIgnoreCase(view);
-        } else
-        {
-            return false;
-        }
+        return equalsView(3, GOURMET_V3_LIST);
     }
 
     public boolean isGourmetDetailView()
     {
-        String view = getView();
-
-        if (mVersionCode >= 3)
-        {
-            return GOURMET_V3_DETAIL.equalsIgnoreCase(view);
-        } else
-        {
-            return GOURMET_V2_LIST.equalsIgnoreCase(view)//
-                && DailyTextUtils.isTextEmpty(mParamsMap.get(PARAM_V2_INDEX)) == false//
-                && DailyTextUtils.isTextEmpty(mParamsMap.get(PARAM_V2_DATE)) == false;
-        }
+        return equalsView(3, GOURMET_V3_DETAIL);
     }
 
     public boolean isBookingView()
     {
-        String view = getView();
-
-        if (mVersionCode >= 3)
-        {
-            return BOOKING_V3_LIST.equalsIgnoreCase(view);
-        } else
-        {
-            return BOOKING_V2_LIST.equalsIgnoreCase(view);
-        }
+        return equalsView(3, BOOKING_V3_LIST);
     }
 
     public boolean isBonusView()
     {
-        String view = getView();
-
-        if (mVersionCode >= 3)
-        {
-            return BONUS_V3.equalsIgnoreCase(view);
-        } else
-        {
-            return false;
-        }
+        return equalsView(3, BONUS_V3);
     }
 
     public boolean isEventView()
     {
-        String view = getView();
-
-        if (mVersionCode >= 3)
-        {
-            return EVENT_V3_LIST.equalsIgnoreCase(view);
-        } else
-        {
-            return EVENT_V2_LIST.equalsIgnoreCase(view);
-        }
+        return equalsView(3, EVENT_V3_LIST);
     }
 
     public String getIndex()
     {
-        String value;
-
-        if (mVersionCode >= 3)
-        {
-            value = mParamsMap.get(PARAM_V3_INDEX);
-        } else
-        {
-            value = mParamsMap.get(PARAM_V2_INDEX);
-        }
-
-        return value;
+        return getStringValue(3, PARAM_V3_INDEX);
     }
 
     public String getNights()
     {
-        String value;
-
-        if (mVersionCode >= 3)
-        {
-            value = mParamsMap.get(PARAM_V3_NIGHTS);
-        } else
-        {
-            value = mParamsMap.get(PARAM_V2_NIGHTS);
-        }
-
-        return value;
+        return getStringValue(3, PARAM_V3_NIGHTS);
     }
 
     public String getDate()
     {
-        String value;
-
-        if (mVersionCode >= 3)
-        {
-            value = mParamsMap.get(PARAM_V3_DATE);
-        } else
-        {
-            value = mParamsMap.get(PARAM_V2_DATE);
-        }
-
-        return value;
+        return getStringValue(3, PARAM_V3_DATE);
     }
 
     public String getUrl()
     {
-        String value;
-
-        if (mVersionCode >= 3)
-        {
-            value = mParamsMap.get(PARAM_V3_URL);
-        } else
-        {
-            value = null;
-        }
-
-        return value;
+        return getStringValue(3, PARAM_V3_URL);
     }
 
     public String getProvinceIndex()
     {
-        String value;
-
-        if (mVersionCode >= 3)
-        {
-            value = mParamsMap.get(PARAM_V3_PROVINCE_INDEX);
-        } else
-        {
-            value = null;
-        }
-
-        return value;
+        return getStringValue(3, PARAM_V3_PROVINCE_INDEX);
     }
 
     public String getAreaIndex()
     {
-        String value;
-
-        if (mVersionCode >= 3)
-        {
-            value = mParamsMap.get(PARAM_V3_AREA_INDEX);
-        } else
-        {
-            value = null;
-        }
-
-        return value;
+        return getStringValue(3, PARAM_V3_AREA_INDEX);
     }
 
     public boolean getIsOverseas()
     {
-        boolean value = false;
-
-        if (mVersionCode >= 3)
-        {
-            String isOverseas = mParamsMap.get(PARAM_V3_REGION_ISOVERSEA);
-            if ("0".equalsIgnoreCase(isOverseas) == true)
-            {
-                value = false;
-            } else if ("1".equalsIgnoreCase(isOverseas) == true)
-            {
-                value = true;
-            }
-        } else
-        {
-            value = false;
-        }
-
-        return value;
+        return "1".equalsIgnoreCase(getStringValue(3, PARAM_V3_REGION_ISOVERSEA));
     }
 
     public String getCategoryCode()
     {
-        String value;
-
-        if (mVersionCode >= 3)
-        {
-            value = mParamsMap.get(PARAM_V3_CATEGORY_CODE);
-        } else
-        {
-            value = null;
-        }
-
-        return value;
+        return getStringValue(3, PARAM_V3_CATEGORY_CODE);
     }
 
     ///////////////////////////////////////////////////////////////////////////////////

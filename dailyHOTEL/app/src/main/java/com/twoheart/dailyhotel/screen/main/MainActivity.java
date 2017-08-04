@@ -1280,8 +1280,14 @@ public class MainActivity extends BaseActivity implements Constants, BaseMenuNav
 
                     if (externalDeepLink.isHomeEventDetailView() == true//
                         || externalDeepLink.isHomeRecommendationPlaceListView() == true//
-                        || externalDeepLink.isHotelView() == true//
-                        || externalDeepLink.isGourmetView() == true//
+                        || externalDeepLink.isHotelListView() == true//
+                        || externalDeepLink.isHotelDetailView() == true//
+                        || externalDeepLink.isHotelSearchView() == true//
+                        || externalDeepLink.isHotelSearchResultView() == true//
+                        || externalDeepLink.isGourmetListView() == true//
+                        || externalDeepLink.isGourmetDetailView() == true//
+                        || externalDeepLink.isGourmetSearchView() == true//
+                        || externalDeepLink.isGourmetSearchResultView() == true
                         || externalDeepLink.isRecentlyWatchHotelView() == true//
                         || externalDeepLink.isRecentlyWatchGourmetView() == true//
                         || externalDeepLink.isWishListHotelView() == true//
