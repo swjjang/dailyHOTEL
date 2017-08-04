@@ -218,9 +218,6 @@ public class StayListFragment extends PlaceListFragment
             return placeViewItemList;
         }
 
-        String previousRegion = null;
-        boolean hasDailyChoice = false;
-
         int entryPosition = 1;
 
         if (mPlaceListLayout != null)
@@ -251,11 +248,14 @@ public class StayListFragment extends PlaceListFragment
         String abTest = DailyRemoteConfigPreference.getInstance(getContext()).getKeyRemoteConfigStayRankTestName();
         String abTestType = DailyRemoteConfigPreference.getInstance(getContext()).getKeyRemoteConfigStayRankTestType();
 
+        // 기존 방식 그대로
         if (DailyTextUtils.isTextEmpty(abTest, abTestType) == true)
         {
-            // 기존 그대로
             if (hasSection == true)
             {
+                String previousRegion = null;
+                boolean hasDailyChoice = false;
+
                 for (Place place : placeList)
                 {
                     // 지역순에만 section 존재함
@@ -304,8 +304,12 @@ public class StayListFragment extends PlaceListFragment
             }
         } else
         {
-            if (hasSection == true)
+            // AB Test 시에는 첫번째 스테이가 데초면 섹션을 만들고 첫번째 스테이가 데초가 아니면 섹션이 없는 것으로 간주한다
+            if (hasSection == true && placeList.get(0).isDailyChoice == true)
             {
+                String previousRegion = null;
+                boolean hasDailyChoice = false;
+
                 for (Place place : placeList)
                 {
                     // 지역순에만 section 존재함
