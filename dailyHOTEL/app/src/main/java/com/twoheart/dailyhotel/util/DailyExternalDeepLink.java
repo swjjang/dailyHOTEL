@@ -21,7 +21,7 @@ public class DailyExternalDeepLink extends DailyDeepLink
 
     // View
 
-    private static final String HOTEL_V2_LIST = "hotel"; // hotel
+    //    private static final String HOTEL_V2_LIST = "hotel"; // hotel
     //    private static final String GOURMET_V2_LIST = "gourmet"; // gourmet
     //    private static final String BOOKING_V2_LIST = "bookings"; // bookings
     //    private static final String EVENT_V2_LIST = "event"; // event
