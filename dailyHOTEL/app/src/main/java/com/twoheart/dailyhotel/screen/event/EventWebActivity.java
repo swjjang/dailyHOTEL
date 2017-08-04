@@ -16,6 +16,10 @@ import android.webkit.WebView;
 import com.crashlytics.android.Crashlytics;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
+import com.daily.dailyhotel.entity.People;
+import com.daily.dailyhotel.entity.Suggest;
+import com.daily.dailyhotel.parcel.analytics.StayOutboundListAnalyticsParam;
+import com.daily.dailyhotel.screen.home.stay.outbound.list.StayOutboundListActivity;
 import com.google.android.gms.maps.model.LatLng;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.LauncherActivity;
@@ -761,6 +765,80 @@ public class EventWebActivity extends WebViewActivity implements Constants
         return true;
     }
 
+    boolean moveDeepLinkStayOutboundSearchResult(TodayDateTime todayDateTime, DailyDeepLink dailyDeepLink)
+    {
+        if (dailyDeepLink == null)
+        {
+            return false;
+        }
+
+        try
+        {
+            if (dailyDeepLink.isExternalDeepLink() == true)
+            {
+                DailyExternalDeepLink externalDeepLink = (DailyExternalDeepLink) dailyDeepLink;
+
+                Suggest suggest = new Suggest();
+                suggest.id = Long.parseLong(externalDeepLink.getIndex());
+                suggest.categoryKey = externalDeepLink.getCategoryKey();
+                suggest.display = externalDeepLink.getTitle();
+
+                String date = externalDeepLink.getDate();
+                int datePlus = externalDeepLink.getDatePlus();
+                int nights = 1;
+
+                try
+                {
+                    nights = Integer.parseInt(externalDeepLink.getNights());
+                } catch (Exception e)
+                {
+                    ExLog.d(e.toString());
+                } finally
+                {
+                    if (nights <= 0)
+                    {
+                        nights = 1;
+                    }
+                }
+
+                StayBookingDay stayBookingDay = new StayBookingDay();
+
+                if (DailyTextUtils.isTextEmpty(date) == false)
+                {
+                    Date checkInDate = DailyCalendar.convertDate(date, "yyyyMMdd", TimeZone.getTimeZone("GMT+09:00"));
+                    stayBookingDay.setCheckInDay(DailyCalendar.format(checkInDate, DailyCalendar.ISO_8601_FORMAT));
+                } else if (datePlus >= 0)
+                {
+                    stayBookingDay.setCheckInDay(todayDateTime.currentDateTime, datePlus);
+                } else
+                {
+                    stayBookingDay.setCheckInDay(todayDateTime.currentDateTime);
+                }
+
+                stayBookingDay.setCheckOutDay(stayBookingDay.getCheckInDay(DailyCalendar.ISO_8601_FORMAT), nights);
+
+                People people = new People(People.DEFAULT_ADULTS, null);
+
+                startActivity(StayOutboundListActivity.newInstance(EventWebActivity.this, suggest//
+                    , stayBookingDay.getCheckInDay(DailyCalendar.ISO_8601_FORMAT)//
+                    , stayBookingDay.getCheckOutDay(DailyCalendar.ISO_8601_FORMAT)//
+                    , people.numberOfAdults, people.getChildAgeList(), new StayOutboundListAnalyticsParam()));
+            } else
+            {
+
+            }
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+            return false;
+        } finally
+        {
+            dailyDeepLink.clear();
+        }
+
+        return true;
+    }
+
     void startLogin()
     {
         showSimpleDialog(null, getString(R.string.message_eventweb_do_login_download_coupon), getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no), new View.OnClickListener()
@@ -981,6 +1059,12 @@ public class EventWebActivity extends WebViewActivity implements Constants
                             } else if (externalDeepLink.isStampView() == true)
                             {
                                 if (moveDeepLinkStamp(EventWebActivity.this, externalDeepLink) == true)
+                                {
+                                    return;
+                                }
+                            } else if (externalDeepLink.isStayOutboundSearchResultView() == true)
+                            {
+                                if (moveDeepLinkStayOutboundSearchResult(mTodayDateTime, externalDeepLink) == true)
                                 {
                                     return;
                                 }

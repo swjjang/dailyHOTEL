@@ -3,6 +3,7 @@ package com.daily.dailyhotel.screen.home.stay.outbound.search;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 
@@ -24,12 +25,16 @@ import com.daily.dailyhotel.screen.home.stay.outbound.list.StayOutboundListActiv
 import com.daily.dailyhotel.screen.home.stay.outbound.people.SelectPeopleActivity;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.DailyCalendar;
+import com.twoheart.dailyhotel.util.DailyDeepLink;
+import com.twoheart.dailyhotel.util.DailyExternalDeepLink;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
+import java.util.TimeZone;
 
 /**
  * Created by sheldon
@@ -49,6 +54,8 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
     private Suggest mSuggest;
     private String mKeyword;
     private People mPeople;
+
+    private DailyDeepLink mDailyDeepLink;
 
     public interface StayOutboundSearchAnalyticsInterface extends BaseAnalyticsInterface
     {
@@ -105,6 +112,13 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
 
         if (intent.hasExtra(BaseActivity.INTENT_EXTRA_DATA_DEEPLINK) == true)
         {
+            try
+            {
+                mDailyDeepLink = DailyDeepLink.getNewInstance(Uri.parse(intent.getStringExtra(BaseActivity.INTENT_EXTRA_DATA_DEEPLINK)));
+            } catch (Exception e)
+            {
+                mDailyDeepLink = null;
+            }
         }
 
         return true;
@@ -274,6 +288,16 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
             {
                 setCommonDateTime(commonDateTime);
                 setStayBookDefaultDateTime(commonDateTime);
+
+                if (mDailyDeepLink != null && processDeepLink(mDailyDeepLink, commonDateTime) == true)
+                {
+                    notifySuggestsChanged();
+                    onSearchKeyword();
+                } else
+                {
+
+                }
+
                 notifyStayBookDateTimeChanged();
 
                 screenUnLock();
@@ -514,5 +538,91 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
         }
 
         getViewInterface().setPeopleText(mPeople.toString(getActivity()));
+    }
+
+    private boolean processDeepLink(DailyDeepLink dailyDeepLink, CommonDateTime commonDateTime)
+    {
+        if (dailyDeepLink == null || commonDateTime == null)
+        {
+            return false;
+        }
+
+        if (dailyDeepLink.isValidateLink() == false)
+        {
+            dailyDeepLink.clear();
+
+            return false;
+        }
+
+        try
+        {
+            if (dailyDeepLink.isExternalDeepLink() == true)
+            {
+                DailyExternalDeepLink externalDeepLink = (DailyExternalDeepLink) dailyDeepLink;
+
+                if (externalDeepLink.isStayOutboundSearchResultView() == true)
+                {
+                    Suggest suggest = new Suggest();
+                    suggest.id = Long.parseLong(externalDeepLink.getIndex());
+                    suggest.categoryKey = externalDeepLink.getCategoryKey();
+                    suggest.display = externalDeepLink.getTitle();
+
+                    setSuggest(suggest);
+
+                    String date = externalDeepLink.getDate();
+                    int datePlus = externalDeepLink.getDatePlus();
+                    int nights = 1;
+
+                    try
+                    {
+                        nights = Integer.parseInt(externalDeepLink.getNights());
+                    } catch (Exception e)
+                    {
+                        ExLog.d(e.toString());
+                    } finally
+                    {
+                        if (nights <= 0)
+                        {
+                            nights = 1;
+                        }
+                    }
+
+                    Date currentDate = DailyCalendar.convertDate(commonDateTime.currentDateTime, DailyCalendar.ISO_8601_FORMAT);
+
+                    if (DailyTextUtils.isTextEmpty(date) == false)
+                    {
+                        Date checkInDate = DailyCalendar.convertDate(date, "yyyyMMdd", TimeZone.getTimeZone("GMT+09:00"));
+
+                        int checkInDateInt = Integer.parseInt(DailyCalendar.format(checkInDate, "yyyyMMdd"));
+                        int currentDateInt = Integer.parseInt(DailyCalendar.format(currentDate, "yyyyMMdd"));
+
+                        if (checkInDateInt < currentDateInt)
+                        {
+                            checkInDate = currentDate;
+                        }
+
+                        String checkInDateString = DailyCalendar.format(checkInDate, DailyCalendar.ISO_8601_FORMAT);
+                        setStayBookDateTime(checkInDateString, 0, checkInDateString, nights);
+                    } else //if (datePlus >= 0)
+                    {
+                        String checkInDateString = DailyCalendar.format(currentDate, DailyCalendar.ISO_8601_FORMAT);
+                        setStayBookDateTime(checkInDateString, datePlus, checkInDateString, datePlus + nights);
+                    }
+
+                    return true;
+                }
+            } else
+            {
+
+            }
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+        } finally
+        {
+            dailyDeepLink.clear();
+        }
+
+        return false;
     }
 }

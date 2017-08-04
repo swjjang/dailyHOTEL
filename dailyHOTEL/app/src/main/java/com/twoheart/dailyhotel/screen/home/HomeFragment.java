@@ -514,7 +514,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
                 {
                     mBaseActivity.showSimpleDialog(null, getString(R.string.message_stamp_finish_stamp), getString(R.string.dialog_btn_text_confirm), null);
                 }
-            } else if (externalDeepLink.isShortcutList() == true)
+            } else if (externalDeepLink.isShortcutView() == true)
             {
                 String categoryCode = externalDeepLink.getCategoryCode();
                 if (DailyTextUtils.isTextEmpty(categoryCode) == false)
@@ -546,6 +546,16 @@ public class HomeFragment extends BaseMenuNavigationFragment
                             ExLog.e(e.toString());
                         }
                     }
+                }
+            } else if(externalDeepLink.isStayOutboundSearchResultView() == true)
+            {
+                try
+                {
+                    Intent intent = StayOutboundSearchActivity.newInstance(mBaseActivity, dailyDeepLink.getDeepLink());
+                    startActivityForResult(intent, Constants.CODE_RESULT_ACTIVITY_STAY_OUTBOUND_SEARCH);
+                } catch (Exception e)
+                {
+                    ExLog.e(e.toString());
                 }
             }
         } else

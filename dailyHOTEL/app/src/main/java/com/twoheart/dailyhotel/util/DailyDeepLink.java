@@ -20,12 +20,7 @@ public abstract class DailyDeepLink
     protected Uri mDeepLinkUri;
     protected Map<String, String> mParamsMap;
 
-    public DailyDeepLink()
-    {
-        mParamsMap = new HashMap<>();
-    }
-
-    public DailyDeepLink(Uri uri)
+    protected DailyDeepLink(Uri uri)
     {
         mParamsMap = new HashMap<>();
 

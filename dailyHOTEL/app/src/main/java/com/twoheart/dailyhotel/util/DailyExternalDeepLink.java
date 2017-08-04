@@ -175,7 +175,7 @@ public class DailyExternalDeepLink extends DailyDeepLink
 
     private boolean equalsView(int version, String viewName)
     {
-        if (DailyTextUtils.isTextEmpty(viewName) == false || mVersionCode < version)
+        if (DailyTextUtils.isTextEmpty(viewName) == true || mVersionCode < version)
         {
             return false;
         }
@@ -185,17 +185,17 @@ public class DailyExternalDeepLink extends DailyDeepLink
 
     private String getStringValue(int version, String valueName)
     {
-        if (DailyTextUtils.isTextEmpty(valueName) == false || mVersionCode < version)
+        if (DailyTextUtils.isTextEmpty(valueName) == true || mVersionCode < version)
         {
             return null;
         }
 
-        return mParamsMap.get(PARAM_V19_CATEGORY_KEY);
+        return mParamsMap.get(valueName);
     }
 
     private int getIntValue(int version, String valueName)
     {
-        if (DailyTextUtils.isTextEmpty(valueName) == false || mVersionCode < version)
+        if (DailyTextUtils.isTextEmpty(valueName) == true || mVersionCode < version)
         {
             return 0;
         }
@@ -219,7 +219,7 @@ public class DailyExternalDeepLink extends DailyDeepLink
 
     private double getDoubleValue(int version, String valueName)
     {
-        if (DailyTextUtils.isTextEmpty(valueName) == false || mVersionCode < version)
+        if (DailyTextUtils.isTextEmpty(valueName) == true || mVersionCode < version)
         {
             return 0;
         }
@@ -245,7 +245,7 @@ public class DailyExternalDeepLink extends DailyDeepLink
     // Version 19
     ///////////////////////////////////////////////////////////////////////////////////
 
-    public boolean isStayOutboundSearchResultList()
+    public boolean isStayOutboundSearchResultView()
     {
         return equalsView(19, STAY_OUTBOUND_V19_SEARCH_RESULT_LIST);
     }
@@ -259,7 +259,7 @@ public class DailyExternalDeepLink extends DailyDeepLink
     // Version 16
     ///////////////////////////////////////////////////////////////////////////////////
 
-    public boolean isShortcutList()
+    public boolean isShortcutView()
     {
         return equalsView(16, STAY_V16_SHORTCUT_LIST);
     }

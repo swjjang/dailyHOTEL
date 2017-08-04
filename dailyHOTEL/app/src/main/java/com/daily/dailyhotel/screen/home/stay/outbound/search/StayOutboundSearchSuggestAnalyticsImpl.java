@@ -9,18 +9,6 @@ import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 public class StayOutboundSearchSuggestAnalyticsImpl implements StayOutboundSearchSuggestPresenter.StayOutboundSearchSuggestAnalyticsInterface
 {
     @Override
-    public void onEventSuggestClick(Activity activity, String keyword, Suggest suggest)
-    {
-        if (DailyTextUtils.isTextEmpty(keyword) == true || suggest == null)
-        {
-            return;
-        }
-
-        AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.AUTOSEARCH_OUTBOUND//
-            , suggest.display, keyword, null);
-    }
-
-    @Override
     public void onEventSuggestEmpty(Activity activity, String keyword)
     {
         if (DailyTextUtils.isTextEmpty(keyword) == true)

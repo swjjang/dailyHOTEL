@@ -120,7 +120,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
 
         void onEventDestroy(Activity activity);
 
-        void onEventEmptyList(Activity activity, String suggest);
+        void onEventList(Activity activity, String suggest, int size);
 
         StayOutboundDetailAnalyticsParam getDetailAnalyticsParam(StayOutbound stayOutbound, String grade, int rankingPosition, int listSize);
     }
@@ -562,10 +562,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
             {
                 mFirstRequest = true;
 
-                if (stayOutbounds.getStayOutbound().size() == 0)
-                {
-                    mAnalytics.onEventEmptyList(getActivity(), mSuggest.display);
-                }
+                mAnalytics.onEventList(getActivity(), mSuggest.display, stayOutbounds.getStayOutbound().size());
             }
 
             onStayOutbounds(stayOutbounds);

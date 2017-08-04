@@ -999,7 +999,7 @@ public class StayCategoryTabActivity extends PlaceMainActivity
             {
                 DailyExternalDeepLink externalDeepLink = (DailyExternalDeepLink) dailyDeepLink;
 
-                if (externalDeepLink.isShortcutList() == true)
+                if (externalDeepLink.isShortcutView() == true)
                 {
                     unLockUI();
 
