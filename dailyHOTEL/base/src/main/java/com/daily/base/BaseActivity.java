@@ -137,21 +137,28 @@ public abstract class BaseActivity<T1 extends BasePresenter> extends AppCompatAc
     @Override
     public void onBackPressed()
     {
+        // 이미 종료했는데 onBacPressed()가 연속으로 호출 되는 경우가 있다.
         if (isFinishing() == true || (VersionUtils.isOverAPI17() == true && isDestroyed() == true))
         {
             Crashlytics.logException(new IllegalStateException("activity : " + getLocalClassName()));
             return;
         }
 
-        if (mPresenter != null)
+        try
         {
-            if (mPresenter.onBackPressed() == false)
+            if (mPresenter != null)
+            {
+                if (mPresenter.onBackPressed() == false)
+                {
+                    super.onBackPressed();
+                }
+            } else
             {
                 super.onBackPressed();
             }
-        } else
+        } catch (Exception e)
         {
-            super.onBackPressed();
+            finish();
         }
     }
 
