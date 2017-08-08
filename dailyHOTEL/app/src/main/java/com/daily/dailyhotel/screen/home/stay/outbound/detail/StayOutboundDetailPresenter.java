@@ -332,7 +332,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
     }
 
     @Override
-    public boolean onBackPressed()
+    public synchronized boolean onBackPressed()
     {
         switch (mStatus)
         {

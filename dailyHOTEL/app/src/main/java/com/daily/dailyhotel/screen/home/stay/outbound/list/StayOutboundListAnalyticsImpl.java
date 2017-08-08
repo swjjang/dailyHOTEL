@@ -8,6 +8,9 @@ import com.daily.dailyhotel.parcel.analytics.StayOutboundDetailAnalyticsParam;
 import com.daily.dailyhotel.parcel.analytics.StayOutboundListAnalyticsParam;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class StayOutboundListAnalyticsImpl implements StayOutboundListPresenter.StayOutboundListAnalyticsInterface
 {
     private StayOutboundListAnalyticsParam mAnalyticsParam;
@@ -26,7 +29,12 @@ public class StayOutboundListAnalyticsImpl implements StayOutboundListPresenter.
             return;
         }
 
-        AnalyticsManager.getInstance(activity).recordScreen(activity, AnalyticsManager.Screen.DAILYHOTEL_HOTELLIST_OUTBOUND, null);
+        Map<String, String> params = new HashMap<>();
+
+        params.put(AnalyticsManager.KeyType.PLACE_TYPE, "stay");
+        params.put(AnalyticsManager.KeyType.COUNTRY, "overseas");
+
+        AnalyticsManager.getInstance(activity).recordScreen(activity, AnalyticsManager.Screen.DAILYHOTEL_HOTELLIST_OUTBOUND, null, params);
     }
 
     @Override
@@ -54,15 +62,17 @@ public class StayOutboundListAnalyticsImpl implements StayOutboundListPresenter.
     }
 
     @Override
-    public void onEventEmptyList(Activity activity, String suggest)
+    public void onEventList(Activity activity, String suggest, int size)
     {
         if (activity == null || DailyTextUtils.isTextEmpty(suggest) == true || mAnalyticsParam == null)
         {
             return;
         }
 
-        AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.AUTOSEARCHNOTFOUND_OUTBOUND//
-            , suggest, mAnalyticsParam.keyword, null);
+        String label = DailyTextUtils.isTextEmpty(mAnalyticsParam.keyword) ? AnalyticsManager.ValueType.EMPTY : mAnalyticsParam.keyword;
+
+        AnalyticsManager.getInstance(activity).recordEvent(size == 0 ? AnalyticsManager.Category.AUTOSEARCHNOTFOUND_OUTBOUND : AnalyticsManager.Category.AUTOSEARCH_OUTBOUND//
+            , suggest, label, null);
     }
 
     @Override

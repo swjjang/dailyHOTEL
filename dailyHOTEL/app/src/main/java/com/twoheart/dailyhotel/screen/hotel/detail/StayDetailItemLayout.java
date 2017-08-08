@@ -719,7 +719,7 @@ public class StayDetailItemLayout extends LinearLayout
                 TextView textView = (TextView) textLayout.findViewById(R.id.textView);
                 textView.setText(contentText);
 
-                if (i == size - 1)
+                if (i == size - 1 && isRefundPolicy == false)
                 {
                     LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) textView.getLayoutParams();
                     layoutParams.bottomMargin = 0;
@@ -737,6 +737,10 @@ public class StayDetailItemLayout extends LinearLayout
             textView.setText(R.string.message_stay_detail_nrd);
             textView.setTypeface(FontManager.getInstance(mContext).getMediumTypeface());
             textView.setTextColor(mContext.getResources().getColor(R.color.default_text_cb70038));
+
+            LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) textView.getLayoutParams();
+            layoutParams.bottomMargin = 0;
+            textView.setLayoutParams(layoutParams);
 
             contentsLayout.addView(textLayout);
         }
