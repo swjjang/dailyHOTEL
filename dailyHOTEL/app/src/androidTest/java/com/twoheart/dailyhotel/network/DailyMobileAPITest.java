@@ -7,6 +7,7 @@ import android.support.test.filters.RequiresDevice;
 import android.support.test.runner.AndroidJUnit4;
 
 import com.daily.base.util.DailyTextUtils;
+import com.daily.base.util.ExLog;
 import com.twoheart.dailyhotel.Const;
 import com.twoheart.dailyhotel.Setting;
 import com.twoheart.dailyhotel.model.Area;
@@ -16,9 +17,7 @@ import com.twoheart.dailyhotel.model.Coupon;
 import com.twoheart.dailyhotel.model.CouponHistory;
 import com.twoheart.dailyhotel.model.CreditCard;
 import com.twoheart.dailyhotel.model.DetailInformation;
-import com.twoheart.dailyhotel.model.EventBanner;
 import com.twoheart.dailyhotel.model.GourmetBookingDetail;
-import com.twoheart.dailyhotel.model.Keyword;
 import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.Review;
 import com.twoheart.dailyhotel.model.Stay;
@@ -29,13 +28,11 @@ import com.twoheart.dailyhotel.network.model.ImageInformation;
 import com.twoheart.dailyhotel.network.model.StayDetailParams;
 import com.twoheart.dailyhotel.network.model.StayProduct;
 import com.twoheart.dailyhotel.network.model.TodayDateTime;
-import com.twoheart.dailyhotel.place.layout.PlaceSearchLayout;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.CouponUtil;
 import com.twoheart.dailyhotel.util.Crypto;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyPreference;
-import com.daily.base.util.ExLog;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -1437,58 +1434,58 @@ public class DailyMobileAPITest
         mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
     }
 
-//    @Test
-//    public void requestStaySearchAutoCompleteList() throws Exception
-//    {
-//        mLock = new CountDownLatch(1);
-//
-//        retrofit2.Callback networkCallback = new retrofit2.Callback<JSONObject>()
-//        {
-//            @Override
-//            public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
-//            {
-//                try
-//                {
-//                    assertThat(response, notNullValue());
-//                    assertThat(response.isSuccessful(), is(true));
-//                    assertThat(response.body(), allOf(notNullValue(), isA(JSONObject.class)));
-//
-//                    JSONObject responseJSONObject = response.body();
-//
-//                    int msgCode = responseJSONObject.getInt("msgCode");
-//                    assertThat(msgCode, is(100));
-//
-//                    JSONArray dataJSONArray = responseJSONObject.getJSONArray("data");
-//
-//                    int length = dataJSONArray.length();
-//                    for (int i = 0; i < length; i++)
-//                    {
-//                        Keyword keyword = new Keyword(dataJSONArray.getJSONObject(i), PlaceSearchLayout.HOTEL_ICON);
-//                        assertThat(keyword, notNullValue());
-//                        assertThat(keyword.name, isNotEmpty());
-//                    }
-//                } catch (Throwable t)
-//                {
-//                    addException(call, response, t);
-//                } finally
-//                {
-//                    mLock.countDown();
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Call<JSONObject> call, Throwable t)
-//            {
-//                addException(call, null, t);
-//                mLock.countDown();
-//            }
-//        };
-//
-//        DailyMobileAPI.getInstance(mContext).requestStaySearchAutoCompleteList(mNetworkTag//
-//            , DailyCalendar.convertDateFormatString(mTodayDateTime.dailyDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyy-MM-dd")//
-//            , TEST_NIGHTS, Const.TEST_STAY_AUTO_SEARCH_TEXT, networkCallback);
-//        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
-//    }
+    //    @Test
+    //    public void requestStaySearchAutoCompleteList() throws Exception
+    //    {
+    //        mLock = new CountDownLatch(1);
+    //
+    //        retrofit2.Callback networkCallback = new retrofit2.Callback<JSONObject>()
+    //        {
+    //            @Override
+    //            public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
+    //            {
+    //                try
+    //                {
+    //                    assertThat(response, notNullValue());
+    //                    assertThat(response.isSuccessful(), is(true));
+    //                    assertThat(response.body(), allOf(notNullValue(), isA(JSONObject.class)));
+    //
+    //                    JSONObject responseJSONObject = response.body();
+    //
+    //                    int msgCode = responseJSONObject.getInt("msgCode");
+    //                    assertThat(msgCode, is(100));
+    //
+    //                    JSONArray dataJSONArray = responseJSONObject.getJSONArray("data");
+    //
+    //                    int length = dataJSONArray.length();
+    //                    for (int i = 0; i < length; i++)
+    //                    {
+    //                        Keyword keyword = new Keyword(dataJSONArray.getJSONObject(i), PlaceSearchLayout.HOTEL_ICON);
+    //                        assertThat(keyword, notNullValue());
+    //                        assertThat(keyword.name, isNotEmpty());
+    //                    }
+    //                } catch (Throwable t)
+    //                {
+    //                    addException(call, response, t);
+    //                } finally
+    //                {
+    //                    mLock.countDown();
+    //                }
+    //            }
+    //
+    //            @Override
+    //            public void onFailure(Call<JSONObject> call, Throwable t)
+    //            {
+    //                addException(call, null, t);
+    //                mLock.countDown();
+    //            }
+    //        };
+    //
+    //        DailyMobileAPI.getInstance(mContext).requestStaySearchAutoCompleteList(mNetworkTag//
+    //            , DailyCalendar.convertDateFormatString(mTodayDateTime.dailyDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyy-MM-dd")//
+    //            , TEST_NIGHTS, Const.TEST_STAY_AUTO_SEARCH_TEXT, networkCallback);
+    //        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
+    //    }
 
     @Test
     public void requestStayRegionList() throws Exception
@@ -3452,63 +3449,63 @@ public class DailyMobileAPITest
     }
 
     // eventIndex 의 경우 고정이 아니기 때문에 requestEventList 이후에 진행하도록 한다.
-//    @Ignore
-//    public void requestEventPageUrl(int eventIndex) throws Exception
-//    {
-//        mLock = new CountDownLatch(1);
-//
-//        final retrofit2.Callback networkCallback = new retrofit2.Callback<JSONObject>()
-//        {
-//            @Override
-//            public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
-//            {
-//                try
-//                {
-//                    assertThat(response, notNullValue());
-//                    assertThat(response.isSuccessful(), is(true));
-//                    assertThat(response.body(), allOf(notNullValue(), isA(JSONObject.class)));
-//
-//                    JSONObject responseJSONObject = response.body();
-//
-//                    int msgCode = responseJSONObject.getInt("msg_code");
-//                    String message = responseJSONObject.getString("msg");
-//                    assertThat(message, isNotEmpty());
-//                    assertThat(message, msgCode, is(0));
-//
-//                    JSONObject eventJsonObject = responseJSONObject.getJSONObject("data");
-//                    assertThat(eventJsonObject, notNullValue());
-//
-//                    String eventUrl = eventJsonObject.getString("url");
-//                    assertThat(eventUrl, isNotEmpty());
-//                } catch (Throwable t)
-//                {
-//                    addException(call, response, t);
-//                } finally
-//                {
-//                    mLock.countDown();
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Call<JSONObject> call, Throwable t)
-//            {
-//                addException(call, null, t);
-//                mLock.countDown();
-//            }
-//        };
-//
-//        String store;
-//        if (Setting.getStore() == Setting.Stores.PLAY_STORE)
-//        {
-//            store = "google";
-//        } else
-//        {
-//            store = "skt";
-//        }
-//
-//        DailyMobileAPI.getInstance(mContext).requestEventPageUrl(mNetworkTag, eventIndex, store, networkCallback);
-//        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
-//    }
+    //    @Ignore
+    //    public void requestEventPageUrl(int eventIndex) throws Exception
+    //    {
+    //        mLock = new CountDownLatch(1);
+    //
+    //        final retrofit2.Callback networkCallback = new retrofit2.Callback<JSONObject>()
+    //        {
+    //            @Override
+    //            public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
+    //            {
+    //                try
+    //                {
+    //                    assertThat(response, notNullValue());
+    //                    assertThat(response.isSuccessful(), is(true));
+    //                    assertThat(response.body(), allOf(notNullValue(), isA(JSONObject.class)));
+    //
+    //                    JSONObject responseJSONObject = response.body();
+    //
+    //                    int msgCode = responseJSONObject.getInt("msg_code");
+    //                    String message = responseJSONObject.getString("msg");
+    //                    assertThat(message, isNotEmpty());
+    //                    assertThat(message, msgCode, is(0));
+    //
+    //                    JSONObject eventJsonObject = responseJSONObject.getJSONObject("data");
+    //                    assertThat(eventJsonObject, notNullValue());
+    //
+    //                    String eventUrl = eventJsonObject.getString("url");
+    //                    assertThat(eventUrl, isNotEmpty());
+    //                } catch (Throwable t)
+    //                {
+    //                    addException(call, response, t);
+    //                } finally
+    //                {
+    //                    mLock.countDown();
+    //                }
+    //            }
+    //
+    //            @Override
+    //            public void onFailure(Call<JSONObject> call, Throwable t)
+    //            {
+    //                addException(call, null, t);
+    //                mLock.countDown();
+    //            }
+    //        };
+    //
+    //        String store;
+    //        if (Setting.getStore() == Setting.Stores.PLAY_STORE)
+    //        {
+    //            store = "google";
+    //        } else
+    //        {
+    //            store = "skt";
+    //        }
+    //
+    //        DailyMobileAPI.getInstance(mContext).requestEventPageUrl(mNetworkTag, eventIndex, store, networkCallback);
+    //        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
+    //    }
 
     @Test
     public void requestDailyUserVerification() throws Exception
@@ -5014,9 +5011,9 @@ public class DailyMobileAPITest
             }
         };
 
-//        DailyMobileAPI.getInstance(mContext).
-//            requestWishList(mNetworkTag, "gourmet", gourmetWishListCallback);
-//        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
+        //        DailyMobileAPI.getInstance(mContext).
+        //            requestWishList(mNetworkTag, "gourmet", gourmetWishListCallback);
+        //        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
 
         mLock = new CountDownLatch(1);
 
@@ -5134,8 +5131,8 @@ public class DailyMobileAPITest
             }
         };
 
-//        DailyMobileAPI.getInstance(mContext).requestWishList(mNetworkTag, "hotel", stayWishListCallback);
-//        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
+        //        DailyMobileAPI.getInstance(mContext).requestWishList(mNetworkTag, "hotel", stayWishListCallback);
+        //        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
     }
 
     @Test

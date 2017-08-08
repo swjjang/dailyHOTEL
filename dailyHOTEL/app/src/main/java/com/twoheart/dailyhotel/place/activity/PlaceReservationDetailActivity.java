@@ -50,8 +50,6 @@ public abstract class PlaceReservationDetailActivity extends BaseActivity
 
     protected PlaceReservationDetailLayout mPlaceReservationDetailLayout;
 
-    private CompositeDisposable mCompositeDisposable = new CompositeDisposable();
-
     protected abstract void requestPlaceReservationDetail(int reservationIndex);
 
     protected abstract void showCallDialog();
@@ -477,67 +475,4 @@ public abstract class PlaceReservationDetailActivity extends BaseActivity
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-    ///////////////////////////////////////////////////////////////////////////////////////////////
-    //
-    // 기존의 BaseActivity에 있는 정보 가져오기
-    ///////////////////////////////////////////////////////////////////////////////////////////////
-
-    protected void addCompositeDisposable(Disposable disposable)
-    {
-        if (disposable == null)
-        {
-            return;
-        }
-
-        mCompositeDisposable.add(disposable);
-    }
-
-    private void clearCompositeDisposable()
-    {
-        mCompositeDisposable.clear();
-    }
-
-    protected void onHandleError(Throwable throwable)
-    {
-        unLockUI();
-
-        BaseActivity baseActivity = this;
-
-        if (baseActivity == null || baseActivity.isFinishing() == true)
-        {
-            return;
-        }
-
-        if (throwable instanceof BaseException)
-        {
-            // 팝업 에러 보여주기
-            BaseException baseException = (BaseException) throwable;
-
-            baseActivity.showSimpleDialog(null, baseException.getMessage()//
-                , getString(R.string.dialog_btn_text_confirm), null, null, null, null, dialogInterface -> this.onBackPressed(), true);
-        } else if (throwable instanceof HttpException)
-        {
-            retrofit2.HttpException httpException = (HttpException) throwable;
-
-            if (httpException.code() == BaseException.CODE_UNAUTHORIZED)
-            {
-                addCompositeDisposable(new ConfigLocalImpl(this).clear().subscribe(object ->
-                {
-                    new FacebookRemoteImpl().logOut();
-                    new KakaoRemoteImpl().logOut();
-
-                    baseActivity.restartExpiredSession();
-                }));
-            } else
-            {
-                DailyToast.showToast(this, getString(R.string.act_base_network_connect), DailyToast.LENGTH_LONG);
-
-                Crashlytics.log(httpException.response().raw().request().url().toString());
-                Crashlytics.logException(throwable);
-            }
-        } else
-        {
-            DailyToast.showToast(this, getString(R.string.act_base_network_connect), DailyToast.LENGTH_LONG);
-        }
-    }
 }

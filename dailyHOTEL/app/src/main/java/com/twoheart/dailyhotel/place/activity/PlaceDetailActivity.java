@@ -14,18 +14,12 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
 
-import com.crashlytics.android.Crashlytics;
-import com.daily.base.exception.BaseException;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
 import com.daily.base.widget.DailyTextView;
-import com.daily.base.widget.DailyToast;
-import com.daily.dailyhotel.repository.local.ConfigLocalImpl;
 import com.daily.dailyhotel.repository.local.model.AnalyticsParam;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
-import com.daily.dailyhotel.repository.remote.FacebookRemoteImpl;
-import com.daily.dailyhotel.repository.remote.KakaoRemoteImpl;
 import com.daily.dailyhotel.repository.remote.PlaceDetailCalendarImpl;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Customer;
@@ -50,10 +44,6 @@ import com.twoheart.dailyhotel.widget.DailyDetailToolbarLayout;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
-import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.disposables.Disposable;
-import retrofit2.HttpException;
-
 public abstract class PlaceDetailActivity extends BaseActivity
 {
     //    protected static final String INTENT_EXTRA_DATA_START_SALETIME = "startSaleTime";
@@ -70,7 +60,6 @@ public abstract class PlaceDetailActivity extends BaseActivity
     protected PlaceDetail mPlaceDetail;
     protected PlaceDetailNetworkController mPlaceDetailNetworkController;
 
-    private CompositeDisposable mCompositeDisposable = new CompositeDisposable();
     protected CommonRemoteImpl mCommonRemoteImpl;
     protected PlaceDetailCalendarImpl mPlaceDetailCalendarImpl;
 
@@ -856,71 +845,4 @@ public abstract class PlaceDetailActivity extends BaseActivity
             }
         }
     };
-
-    ///////////////////////////////////////////////////////////////////////////////////////////////
-    // 기존의 BaseActivity에 있는 정보 가져오기
-    ///////////////////////////////////////////////////////////////////////////////////////////////
-
-    protected void addCompositeDisposable(Disposable disposable)
-    {
-        if (disposable == null)
-        {
-            return;
-        }
-
-        mCompositeDisposable.add(disposable);
-    }
-
-    protected void clearCompositeDisposable()
-    {
-        mCompositeDisposable.clear();
-    }
-
-    protected void onHandleError(Throwable throwable)
-    {
-        unLockUI();
-
-        BaseActivity baseActivity = PlaceDetailActivity.this;
-
-        if (baseActivity == null || baseActivity.isFinishing() == true)
-        {
-            return;
-        }
-
-        if (throwable instanceof BaseException)
-        {
-            // 팝업 에러 보여주기
-            BaseException baseException = (BaseException) throwable;
-
-            baseActivity.showSimpleDialog(null, baseException.getMessage()//
-                , getString(R.string.dialog_btn_text_confirm), null, null, null, null, dialogInterface -> baseActivity.onBackPressed(), true);
-        } else if (throwable instanceof HttpException)
-        {
-            retrofit2.HttpException httpException = (HttpException) throwable;
-
-            if (httpException.code() == BaseException.CODE_UNAUTHORIZED)
-            {
-                addCompositeDisposable(new ConfigLocalImpl(baseActivity).clear().subscribe(object ->
-                {
-                    new FacebookRemoteImpl().logOut();
-                    new KakaoRemoteImpl().logOut();
-
-                    baseActivity.restartExpiredSession();
-                }));
-            } else
-            {
-                DailyToast.showToast(baseActivity, getString(R.string.act_base_network_connect), DailyToast.LENGTH_LONG);
-
-                Crashlytics.log(httpException.response().raw().request().url().toString());
-                Crashlytics.logException(throwable);
-
-                baseActivity.finish();
-            }
-        } else
-        {
-            DailyToast.showToast(baseActivity, getString(R.string.act_base_network_connect), DailyToast.LENGTH_LONG);
-
-            baseActivity.finish();
-        }
-    }
 }
