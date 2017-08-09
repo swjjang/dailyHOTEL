@@ -7,13 +7,8 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.crashlytics.android.Crashlytics;
-import com.daily.base.exception.BaseException;
 import com.daily.base.util.ExLog;
 import com.daily.base.widget.DailyToast;
-import com.daily.dailyhotel.repository.local.ConfigLocalImpl;
-import com.daily.dailyhotel.repository.remote.FacebookRemoteImpl;
-import com.daily.dailyhotel.repository.remote.KakaoRemoteImpl;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.PlaceBookingDetail;
@@ -30,10 +25,7 @@ import com.twoheart.dailyhotel.util.Util;
 
 import org.json.JSONObject;
 
-import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.disposables.Disposable;
 import retrofit2.Call;
-import retrofit2.HttpException;
 import retrofit2.Response;
 
 public abstract class PlaceReservationDetailActivity extends BaseActivity

@@ -54,7 +54,8 @@ public class StaySearchCalendarActivity extends StayCalendarActivity
     protected void onCreate(Bundle savedInstanceState)
     {
         Intent intent = getIntent();
-        try {
+        try
+        {
             String searchType = intent.getStringExtra(INTENT_EXTRA_DATA_SEARCH_TYPE);
             if (DailyTextUtils.isTextEmpty(searchType) == false)
             {
@@ -88,8 +89,8 @@ public class StaySearchCalendarActivity extends StayCalendarActivity
     protected String getConfirmText(int nights)
     {
         return getString(mSearchType == null //
-            ? R.string.label_calendar_stay_search_selected_date //
-            : R.string.label_calendar_stay_search_selected_date_after_search //
+                ? R.string.label_calendar_stay_search_selected_date //
+                : R.string.label_calendar_stay_search_selected_date_after_search //
             , nights);
     }
 }

@@ -301,10 +301,7 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
                 notifyStayBookDateTimeChanged();
 
                 screenUnLock();
-            }, throwable ->
-            {
-                onHandleErrorAndFinish(throwable);
-            }));
+            }, throwable -> onHandleErrorAndFinish(throwable)));
     }
 
     @Override

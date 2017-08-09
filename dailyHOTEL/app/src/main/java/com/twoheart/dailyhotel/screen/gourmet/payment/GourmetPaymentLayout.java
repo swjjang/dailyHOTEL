@@ -327,7 +327,7 @@ public class GourmetPaymentLayout extends BaseLayout implements View.OnClickList
         mVendorBusinessNameTextView = (TextView) view.findViewById(R.id.vendorNameTextView);
         mThirdPartTermsLayout = view.findViewById(R.id.thirdPartyTermsLayout);
         mAgreeThirdPartyCheckBox = (CheckBox) view.findViewById(R.id.agreePersonalInformationCheckBox);
-        View agreePersonalInformationTextView = (View) view.findViewById(R.id.agreePersonalInformationTextView);
+        View agreePersonalInformationTextView = view.findViewById(R.id.agreePersonalInformationTextView);
 
         mArrowImageView.setOnClickListener(this);
 

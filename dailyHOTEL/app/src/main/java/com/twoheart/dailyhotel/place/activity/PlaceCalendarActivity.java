@@ -21,18 +21,12 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.crashlytics.android.Crashlytics;
-import com.daily.base.exception.BaseException;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.util.FontManager;
 import com.daily.base.util.ScreenUtils;
 import com.daily.base.util.VersionUtils;
 import com.daily.base.widget.DailyTextView;
-import com.daily.base.widget.DailyToast;
-import com.daily.dailyhotel.repository.local.ConfigLocalImpl;
-import com.daily.dailyhotel.repository.remote.FacebookRemoteImpl;
-import com.daily.dailyhotel.repository.remote.KakaoRemoteImpl;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.time.PlaceBookingDay;
 import com.twoheart.dailyhotel.network.model.TodayDateTime;
@@ -47,10 +41,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-
-import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.disposables.Disposable;
-import retrofit2.HttpException;
 
 public abstract class PlaceCalendarActivity extends BaseActivity implements View.OnClickListener
 {

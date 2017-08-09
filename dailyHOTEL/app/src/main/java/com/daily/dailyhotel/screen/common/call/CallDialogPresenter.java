@@ -155,10 +155,7 @@ public class CallDialogPresenter extends BaseExceptionPresenter<CallDialogActivi
                 onCommonDateTime(commonDateTime);
 
                 screenUnLock();
-            }, throwable ->
-            {
-                onHandleErrorAndFinish(throwable);
-            }));
+            }, throwable -> onHandleErrorAndFinish(throwable)));
     }
 
     @Override

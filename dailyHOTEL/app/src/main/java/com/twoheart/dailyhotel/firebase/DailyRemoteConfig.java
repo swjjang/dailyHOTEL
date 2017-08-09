@@ -27,27 +27,15 @@ import java.util.Locale;
 
 public class DailyRemoteConfig
 {
-    private static DailyRemoteConfig mInstance = null;
-
-    Context mContext;
-    FirebaseRemoteConfig mFirebaseRemoteConfig;
+    private Context mContext;
+    private FirebaseRemoteConfig mFirebaseRemoteConfig;
 
     public interface OnCompleteListener
     {
         void onComplete(String currentVersion, String forceVersion);
     }
 
-    public synchronized static DailyRemoteConfig getInstance(Context context)
-    {
-        if (mInstance == null)
-        {
-            mInstance = new DailyRemoteConfig(context);
-        }
-
-        return mInstance;
-    }
-
-    private DailyRemoteConfig(Context context)
+    public DailyRemoteConfig(Context context)
     {
         mContext = context;
         FirebaseApp.initializeApp(context);

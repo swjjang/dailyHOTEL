@@ -1208,7 +1208,7 @@ public class MainActivity extends BaseActivity implements Constants, BaseMenuNav
 
             if (DailyTextUtils.isTextEmpty(title, message) == true)
             {
-                DailyRemoteConfig.getInstance(MainActivity.this).requestRemoteConfig(new DailyRemoteConfig.OnCompleteListener()
+                new DailyRemoteConfig(MainActivity.this).requestRemoteConfig(new DailyRemoteConfig.OnCompleteListener()
                 {
                     @Override
                     public void onComplete(String currentVersion, String forceVersion)
@@ -1287,7 +1287,7 @@ public class MainActivity extends BaseActivity implements Constants, BaseMenuNav
                         || externalDeepLink.isGourmetListView() == true//
                         || externalDeepLink.isGourmetDetailView() == true//
                         || externalDeepLink.isGourmetSearchView() == true//
-                        || externalDeepLink.isGourmetSearchResultView() == true
+                        || externalDeepLink.isGourmetSearchResultView() == true//
                         || externalDeepLink.isRecentlyWatchHotelView() == true//
                         || externalDeepLink.isRecentlyWatchGourmetView() == true//
                         || externalDeepLink.isWishListHotelView() == true//

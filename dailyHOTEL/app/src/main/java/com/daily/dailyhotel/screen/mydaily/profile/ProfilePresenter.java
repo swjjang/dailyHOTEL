@@ -277,7 +277,7 @@ public class ProfilePresenter extends BaseExceptionPresenter<ProfileActivity, Pr
                     @Override
                     public void accept(Boolean verify) throws Exception
                     {
-                        if (verify.booleanValue() == true)
+                        if (verify == true)
                         {
                             getViewInterface().showSimpleDialog(null, getString(R.string.message_invalid_verification), getString(R.string.dialog_btn_text_confirm), null);
                         }
