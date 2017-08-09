@@ -1,9 +1,8 @@
-package com.daily.dailyhotel.screen.home.campaigntag.stay;
+package com.daily.dailyhotel.screen.home.campaigntag.gourmet;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
-import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,8 +18,8 @@ import com.facebook.imagepipeline.nativecode.NativeBlurFilter;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ActivityPlaceCampaignTagListDataBinding;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
+import com.twoheart.dailyhotel.model.time.GourmetBookingDay;
 import com.twoheart.dailyhotel.model.time.StayBookingDay;
-import com.twoheart.dailyhotel.screen.home.collection.CollectionStayAdapter;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.Util;
@@ -37,15 +36,15 @@ import io.reactivex.schedulers.Schedulers;
  * Created by iseung-won on 2017. 8. 4..
  */
 
-public class StayCampaignTagListView //
-    extends BaseDialogView<StayCampaignTagListView.OnEventListener, ActivityPlaceCampaignTagListDataBinding> //
-    implements StayCampaignTagListInterface
+public class GourmetCampaignTagListView //
+    extends BaseDialogView<GourmetCampaignTagListView.OnEventListener, ActivityPlaceCampaignTagListDataBinding> //
+    implements GourmetCampaignTagListInterface
 {
     private ImageView mBlurImageView;
 
-    private StayCampaignListAdapter mRecyclerAdapter;
+    private GourmetCampaignListAdapter mRecyclerAdapter;
 
-    public StayCampaignTagListView(BaseActivity activity, OnEventListener listener)
+    public GourmetCampaignTagListView(BaseActivity activity, OnEventListener listener)
     {
         super(activity, listener);
     }
@@ -88,13 +87,13 @@ public class StayCampaignTagListView //
 
         if (mRecyclerAdapter == null)
         {
-            mRecyclerAdapter = new StayCampaignListAdapter(getContext(), new ArrayList<>(), mOnClickListener);
+            mRecyclerAdapter = new GourmetCampaignListAdapter(getContext(), new ArrayList<>(), mOnClickListener);
         }
 
-        if (DailyPreference.getInstance(getContext()).getTrueVRSupport() > 0)
-        {
-            mRecyclerAdapter.setTrueVREnabled(true);
-        }
+//        if (DailyPreference.getInstance(getContext()).getTrueVRSupport() > 0)
+//        {
+//            mRecyclerAdapter.setTrueVREnabled(true);
+//        }
 
         if (Util.supportPreview(getContext()) == true)
         {
@@ -127,7 +126,7 @@ public class StayCampaignTagListView //
     //    }
 
     @Override
-    public void setData(ArrayList<PlaceViewItem> placeViewItemList, StayBookingDay stayBookingDay)
+    public void setData(ArrayList<PlaceViewItem> placeViewItemList, GourmetBookingDay gourmetBookingDay)
     {
         if (mRecyclerAdapter == null)
         {
@@ -148,7 +147,7 @@ public class StayCampaignTagListView //
             getViewDataBinding().campaignTitleLayout.setResultCount(resultCount);
         }
 
-        mRecyclerAdapter.setPlaceBookingDay(stayBookingDay);
+        mRecyclerAdapter.setPlaceBookingDay(gourmetBookingDay);
         mRecyclerAdapter.setAll(placeViewItemList);
         mRecyclerAdapter.notifyDataSetChanged();
     }
