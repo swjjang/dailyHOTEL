@@ -147,6 +147,23 @@
                 android:background="@color/default_line_ce7e7e7"/>
         </RelativeLayout>
 
+        <com.daily.dailyhotel.view.DailySearchCircleIndicator
+            android:id="@+id/searchCircleIndicator"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/searchAroundLayout"/>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/searchRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="7dp"
+            android:layout_marginTop="4dp"
+            android:layout_alignParentBottom="true"
+            android:layout_below="@id/searchCircleIndicator"/>
+
         <!--<RelativeLayout-->
             <!--android:id="@+id/recentSearchLayout"-->
             <!--android:layout_width="match_parent"-->
