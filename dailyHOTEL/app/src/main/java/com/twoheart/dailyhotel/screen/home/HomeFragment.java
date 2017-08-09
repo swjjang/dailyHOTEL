@@ -14,8 +14,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.crashlytics.android.Crashlytics;
-import com.daily.base.exception.BaseException;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
@@ -103,7 +101,6 @@ import io.reactivex.functions.Function;
 import io.reactivex.functions.Function3;
 import io.realm.Realm;
 import retrofit2.Call;
-import retrofit2.HttpException;
 import retrofit2.Response;
 
 /**
@@ -141,8 +138,6 @@ public class HomeFragment extends BaseMenuNavigationFragment
     private RecentlyRemoteImpl mRecentlyRemoteImpl;
 
     private CommonRemoteImpl mCommonRemoteImpl;
-
-    private CompositeDisposable mCompositeDisposable = new CompositeDisposable();
 
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -566,7 +561,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
                         }
                     }
                 }
-            } else if(externalDeepLink.isStayOutboundSearchResultView() == true)
+            } else if (externalDeepLink.isStayOutboundSearchResultView() == true)
             {
                 try
                 {
@@ -2089,68 +2084,4 @@ public class HomeFragment extends BaseMenuNavigationFragment
             HomeFragment.this.onErrorResponse(call, response);
         }
     };
-
-    ///////////////////////////////////////////////////////////////////////////////////////////////
-    //
-    // 기존의 BaseActivity에 있는 정보 가져오기
-    ///////////////////////////////////////////////////////////////////////////////////////////////
-
-    private void addCompositeDisposable(Disposable disposable)
-    {
-        if (disposable == null)
-        {
-            return;
-        }
-
-        mCompositeDisposable.add(disposable);
-    }
-
-    private void clearCompositeDisposable()
-    {
-        mCompositeDisposable.clear();
-    }
-
-    protected void onHandleError(Throwable throwable)
-    {
-        unLockUI();
-
-        BaseActivity baseActivity = (BaseActivity) getActivity();
-
-        if (baseActivity == null || baseActivity.isFinishing() == true)
-        {
-            return;
-        }
-
-        if (throwable instanceof BaseException)
-        {
-            // 팝업 에러 보여주기
-            BaseException baseException = (BaseException) throwable;
-
-            baseActivity.showSimpleDialog(null, baseException.getMessage()//
-                , getString(R.string.dialog_btn_text_confirm), null, null, null, null, dialogInterface -> getActivity().onBackPressed(), true);
-        } else if (throwable instanceof HttpException)
-        {
-            retrofit2.HttpException httpException = (HttpException) throwable;
-
-            if (httpException.code() == BaseException.CODE_UNAUTHORIZED)
-            {
-                addCompositeDisposable(new ConfigLocalImpl(getActivity()).clear().subscribe(object ->
-                {
-                    new FacebookRemoteImpl().logOut();
-                    new KakaoRemoteImpl().logOut();
-
-                    baseActivity.restartExpiredSession();
-                }));
-            } else
-            {
-                DailyToast.showToast(getActivity(), getString(R.string.act_base_network_connect), DailyToast.LENGTH_LONG);
-
-                Crashlytics.log(httpException.response().raw().request().url().toString());
-                Crashlytics.logException(throwable);
-            }
-        } else
-        {
-            DailyToast.showToast(getActivity(), getString(R.string.act_base_network_connect), DailyToast.LENGTH_LONG);
-        }
-    }
 }

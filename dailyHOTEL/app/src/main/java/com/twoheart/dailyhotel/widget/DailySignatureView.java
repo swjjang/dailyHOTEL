@@ -10,7 +10,6 @@ import android.graphics.Path;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.support.v4.view.MotionEventCompat;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -185,13 +184,7 @@ public class DailySignatureView extends View
                     mRectF.bottom = y;
                 }
 
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
-                {
-                    new BCurveTask().executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, mArrayList);
-                } else
-                {
-                    new BCurveTask().execute(mArrayList);
-                }
+                new BCurveTask().executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, mArrayList);
                 break;
             }
 

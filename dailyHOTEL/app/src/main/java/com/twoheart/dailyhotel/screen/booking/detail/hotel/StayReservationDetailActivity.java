@@ -1468,14 +1468,13 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
                 long currentDateTime = DailyCalendar.convertStringToDate(mTodayDateTime.currentDateTime).getTime();
                 long checkInDateTime = DailyCalendar.convertStringToDate(stayBookingDetail.checkInDate).getTime();
 
-                if (currentDateTime > checkInDateTime)
+                if (currentDateTime > checkInDateTime || (stayBookingDetail.latitude == 0.0d && stayBookingDetail.longitude == 0.0d))
                 {
                     // 고메 추천 Hidden - 현재 시간이 체크인 시간보다 큰 경우
                     ((StayReservationDetailLayout) mPlaceReservationDetailLayout).setRecommendGourmetLayoutVisible(false);
                 } else
                 {
                     // 고메 추천 Show
-
                     GourmetBookingDay gourmetBookingDay = new GourmetBookingDay();
 
                     Date checkInDate = DailyCalendar.convertStringToDate(stayBookingDetail.checkInDate);

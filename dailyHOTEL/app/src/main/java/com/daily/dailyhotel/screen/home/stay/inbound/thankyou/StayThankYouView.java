@@ -12,6 +12,7 @@ import com.daily.base.OnBaseEventListener;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.FontManager;
 import com.daily.dailyhotel.animation.StayThankYouScreenAnimator;
+import com.daily.dailyhotel.view.DailyToolbarView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ActivityStayPaymentThankYouDataBinding;
 import com.twoheart.dailyhotel.util.Util;
@@ -39,8 +40,9 @@ public class StayThankYouView extends BaseDialogView<StayThankYouView.OnEventLis
             return;
         }
 
+        initToolbar(viewDataBinding);
+
         viewDataBinding.thankYouInformationView.setReservationTitle(R.string.label_booking_room_info);
-        viewDataBinding.closeView.setOnClickListener(this);
         viewDataBinding.confirmView.setOnClickListener(this);
 
         viewDataBinding.thankYouInformationView.setVisibility(View.INVISIBLE);
@@ -51,6 +53,12 @@ public class StayThankYouView extends BaseDialogView<StayThankYouView.OnEventLis
     @Override
     public void setToolbarTitle(String title)
     {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        getViewDataBinding().toolbarView.setTitleText(title);
     }
 
     @Override
@@ -185,10 +193,6 @@ public class StayThankYouView extends BaseDialogView<StayThankYouView.OnEventLis
     {
         switch (v.getId())
         {
-            case R.id.closeView:
-                getEventListener().onBackClick();
-                break;
-
             case R.id.confirmView:
                 getEventListener().onConfirmClick();
                 break;
@@ -197,5 +201,24 @@ public class StayThankYouView extends BaseDialogView<StayThankYouView.OnEventLis
                 getEventListener().onStampClick();
                 break;
         }
+    }
+
+    private void initToolbar(ActivityStayPaymentThankYouDataBinding viewDataBinding)
+    {
+        if (viewDataBinding == null)
+        {
+            return;
+        }
+
+        viewDataBinding.toolbarView.setBackVisible(false);
+        viewDataBinding.toolbarView.clearMenuItem();
+        viewDataBinding.toolbarView.addMenuItem(DailyToolbarView.MenuItem.CLOSE_WHITE, null, new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                getEventListener().onBackClick();
+            }
+        });
     }
 }

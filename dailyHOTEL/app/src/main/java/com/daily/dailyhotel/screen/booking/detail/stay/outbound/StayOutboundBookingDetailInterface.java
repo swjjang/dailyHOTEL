@@ -34,4 +34,8 @@ public interface StayOutboundBookingDetailInterface extends BaseDialogViewInterf
     boolean isExpandedMap();
 
     Observable<Long> getLocationAnimation();
+
+    void setBookingDetailToolbar();
+
+    void setBookingDetailMapToolbar();
 }

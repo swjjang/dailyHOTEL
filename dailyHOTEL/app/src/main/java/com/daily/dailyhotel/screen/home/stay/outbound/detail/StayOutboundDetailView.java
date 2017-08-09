@@ -49,6 +49,7 @@ import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayOutboundDetail;
 import com.daily.dailyhotel.entity.StayOutboundDetailImage;
 import com.daily.dailyhotel.entity.StayOutboundRoom;
+import com.daily.dailyhotel.view.DailyToolbarView;
 import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.drawee.view.DraweeTransition;
 import com.twoheart.dailyhotel.R;
@@ -68,7 +69,6 @@ import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.DailyRemoteConfigPreference;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.widget.AlphaTransition;
-import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 import com.twoheart.dailyhotel.widget.TextTransition;
 
 import java.util.ArrayList;
@@ -85,8 +85,6 @@ public class StayOutboundDetailView extends BaseDialogView<StayOutboundDetailVie
     implements StayOutboundDetailViewInterface, View.OnClickListener, ViewPager.OnPageChangeListener, RadioGroup.OnCheckedChangeListener
 {
     private static final int ANIMATION_DELAY = 250;
-
-    private DailyToolbarLayout mDailyToolbarLayout;
 
     private StayOutboundDetailEmptyView mStayOutboundDetailEmptyView;
 
@@ -160,7 +158,7 @@ public class StayOutboundDetailView extends BaseDialogView<StayOutboundDetailVie
             {
                 if (getViewDataBinding().scrollLayout.getChildCount() < 2)
                 {
-                    mDailyToolbarLayout.setToolbarVisibility(false, false);
+                    getViewDataBinding().toolbarView.setVisibility(View.GONE);
                     return;
                 }
 
@@ -169,10 +167,10 @@ public class StayOutboundDetailView extends BaseDialogView<StayOutboundDetailVie
 
                 if (titleLayout.getY() - TOOLBAR_HEIGHT > scrollY)
                 {
-                    mDailyToolbarLayout.setToolbarVisibility(false, true);
+                    getViewDataBinding().toolbarView.hideAnimation();
                 } else
                 {
-                    mDailyToolbarLayout.setToolbarVisibility(true, true);
+                    getViewDataBinding().toolbarView.showAnimation();
                 }
             }
         });
@@ -202,12 +200,12 @@ public class StayOutboundDetailView extends BaseDialogView<StayOutboundDetailVie
     @Override
     public void setToolbarTitle(String title)
     {
-        if (mDailyToolbarLayout == null)
+        if (getViewDataBinding() == null)
         {
             return;
         }
 
-        mDailyToolbarLayout.setToolbarTitle(title);
+        getViewDataBinding().toolbarView.setTitleText(title);
     }
 
 
@@ -926,20 +924,31 @@ public class StayOutboundDetailView extends BaseDialogView<StayOutboundDetailVie
 
     private void initToolbar(ActivityStayOutboundDetailDataBinding viewDataBinding)
     {
-        mDailyToolbarLayout = new DailyToolbarLayout(getContext(), viewDataBinding.toolbar.findViewById(R.id.toolbar));
-        mDailyToolbarLayout.initToolbar(null, new View.OnClickListener()
+        if (viewDataBinding == null)
+        {
+            return;
+        }
+
+        viewDataBinding.toolbarView.setOnBackClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
             {
                 getEventListener().onBackClick();
             }
-        }, false);
+        });
 
-        mDailyToolbarLayout.setToolbarMenu(R.drawable.navibar_ic_share_01_black, -1);
-        mDailyToolbarLayout.setToolbarMenuClickListener(this);
-        mDailyToolbarLayout.setToolbarVisibility(false, false);
+        viewDataBinding.toolbarView.clearMenuItem();
+        viewDataBinding.toolbarView.addMenuItem(DailyToolbarView.MenuItem.SHARE, null, new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                getEventListener().onShareClick();
+            }
+        });
 
+        viewDataBinding.toolbarView.setVisibility(View.INVISIBLE);
         viewDataBinding.backView.setOnClickListener(this);
         viewDataBinding.shareView.setOnClickListener(this);
     }

@@ -127,7 +127,7 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
     @Override
     public void onPostCreate()
     {
-
+        getViewInterface().setToolbarTitle(getString(R.string.label_stay_outbound_search));
     }
 
     @Override
@@ -301,10 +301,7 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
                 notifyStayBookDateTimeChanged();
 
                 screenUnLock();
-            }, throwable ->
-            {
-                onHandleErrorAndFinish(throwable);
-            }));
+            }, throwable -> onHandleErrorAndFinish(throwable)));
     }
 
     @Override

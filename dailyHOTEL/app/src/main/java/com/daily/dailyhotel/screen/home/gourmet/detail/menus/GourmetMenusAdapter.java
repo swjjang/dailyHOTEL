@@ -140,6 +140,13 @@ public class GourmetMenusAdapter extends RecyclerView.Adapter<GourmetMenusAdapte
             return;
         }
 
+        GourmetMenu gourmetMenu = getItem(position);
+
+        if (gourmetMenu == null)
+        {
+            return;
+        }
+
         final float with = getMenuMargin();
 
         if (position == 0)
@@ -155,8 +162,6 @@ public class GourmetMenusAdapter extends RecyclerView.Adapter<GourmetMenusAdapte
             ((RecyclerView.LayoutParams) holder.dataBinding.getRoot().getLayoutParams()).leftMargin = 0;
             ((RecyclerView.LayoutParams) holder.dataBinding.getRoot().getLayoutParams()).rightMargin = 0;
         }
-
-        GourmetMenu gourmetMenu = getItem(position);
 
         EdgeEffectColor.setEdgeGlowColor(holder.dataBinding.nestedScrollView, mContext.getResources().getColor(R.color.default_over_scroll_edge));
 

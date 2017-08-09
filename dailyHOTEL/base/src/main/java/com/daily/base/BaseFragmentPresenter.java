@@ -33,8 +33,6 @@ public abstract class BaseFragmentPresenter<T1 extends Fragment, T2 extends Base
 
     public abstract void setAnalytics(BaseAnalyticsInterface analytics);
 
-    protected abstract void onHandleError(Throwable throwable);
-
     public BaseActivity getActivity()
     {
         return (BaseActivity) mFragment.getActivity();
@@ -137,6 +135,11 @@ public abstract class BaseFragmentPresenter<T1 extends Fragment, T2 extends Base
     protected void clearCompositeDisposable()
     {
         mCompositeDisposable.clear();
+    }
+
+    protected void onHandleError(Throwable throwable)
+    {
+        getActivityPresenter().onHandleError(throwable);
     }
 
     protected boolean isLock()

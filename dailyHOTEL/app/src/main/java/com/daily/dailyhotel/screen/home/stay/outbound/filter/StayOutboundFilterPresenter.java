@@ -91,6 +91,7 @@ public class StayOutboundFilterPresenter extends BaseExceptionPresenter<StayOutb
     @Override
     public void onPostCreate()
     {
+        getViewInterface().setToolbarTitle(getString(R.string.activity_curation_title));
         getViewInterface().setSort(mStayOutboundFilters.sortType);
         getViewInterface().setRating(mStayOutboundFilters.rating);
         getViewInterface().setEnabledLines(mEnabledLines);

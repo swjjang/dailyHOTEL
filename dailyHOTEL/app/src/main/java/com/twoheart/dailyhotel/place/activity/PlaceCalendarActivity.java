@@ -21,18 +21,12 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.crashlytics.android.Crashlytics;
-import com.daily.base.exception.BaseException;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.util.FontManager;
 import com.daily.base.util.ScreenUtils;
 import com.daily.base.util.VersionUtils;
 import com.daily.base.widget.DailyTextView;
-import com.daily.base.widget.DailyToast;
-import com.daily.dailyhotel.repository.local.ConfigLocalImpl;
-import com.daily.dailyhotel.repository.remote.FacebookRemoteImpl;
-import com.daily.dailyhotel.repository.remote.KakaoRemoteImpl;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.time.PlaceBookingDay;
 import com.twoheart.dailyhotel.network.model.TodayDateTime;
@@ -48,10 +42,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.disposables.Disposable;
-import retrofit2.HttpException;
-
 public abstract class PlaceCalendarActivity extends BaseActivity implements View.OnClickListener
 {
     protected static final String INTENT_EXTRA_DATA_SCREEN = "screen";
@@ -64,8 +54,6 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
     protected static final String INTENT_EXTRA_DATA_DAY_OF_MAXCOUNT = "dayOfMaxCount";
 
     private static final int ANIMATION_DELAY = 200;
-
-    private CompositeDisposable mCompositeDisposable = new CompositeDisposable();
 
     protected List<View> mDayViewList;
 
@@ -923,72 +911,5 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
         public boolean isHoliday;
         public boolean isSoldOut;
         public boolean isDefaultDimmed;
-    }
-
-    ///////////////////////////////////////////////////////////////////////////////////////////////
-    // 기존의 BaseActivity에 있는 정보 가져오기
-    ///////////////////////////////////////////////////////////////////////////////////////////////
-
-    protected void addCompositeDisposable(Disposable disposable)
-    {
-        if (disposable == null)
-        {
-            return;
-        }
-
-        mCompositeDisposable.add(disposable);
-    }
-
-    protected void clearCompositeDisposable()
-    {
-        mCompositeDisposable.clear();
-    }
-
-    protected void onHandleError(Throwable throwable)
-    {
-        unLockUI();
-
-        BaseActivity baseActivity = PlaceCalendarActivity.this;
-
-        if (baseActivity == null || baseActivity.isFinishing() == true)
-        {
-            return;
-        }
-
-        if (throwable instanceof BaseException)
-        {
-            // 팝업 에러 보여주기
-            BaseException baseException = (BaseException) throwable;
-
-            baseActivity.showSimpleDialog(null, baseException.getMessage()//
-                , getString(R.string.dialog_btn_text_confirm), null, null, null, null, dialogInterface -> PlaceCalendarActivity.this.onBackPressed(), true);
-        } else if (throwable instanceof HttpException)
-        {
-            retrofit2.HttpException httpException = (HttpException) throwable;
-
-            if (httpException.code() == BaseException.CODE_UNAUTHORIZED)
-            {
-                addCompositeDisposable(new ConfigLocalImpl(PlaceCalendarActivity.this).clear().subscribe(object ->
-                {
-                    new FacebookRemoteImpl().logOut();
-                    new KakaoRemoteImpl().logOut();
-
-                    baseActivity.restartExpiredSession();
-                }));
-            } else
-            {
-                DailyToast.showToast(PlaceCalendarActivity.this, getString(R.string.act_base_network_connect), DailyToast.LENGTH_LONG);
-
-                Crashlytics.log(httpException.response().raw().request().url().toString());
-                Crashlytics.logException(throwable);
-
-                PlaceCalendarActivity.this.finish();
-            }
-        } else
-        {
-            DailyToast.showToast(PlaceCalendarActivity.this, getString(R.string.act_base_network_connect), DailyToast.LENGTH_LONG);
-
-            PlaceCalendarActivity.this.finish();
-        }
     }
 }

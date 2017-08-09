@@ -129,7 +129,8 @@ public class StayOutboundBookingDetailPresenter extends BaseExceptionPresenter<S
     @Override
     public void onPostCreate()
     {
-
+        getViewInterface().setToolbarTitle(getString(R.string.actionbar_title_booking_list_frag));
+        getViewInterface().setBookingDetailToolbar();
     }
 
     @Override
@@ -325,6 +326,8 @@ public class StayOutboundBookingDetailPresenter extends BaseExceptionPresenter<S
             return;
         }
 
+        getViewInterface().setBookingDetailMapToolbar();
+
         addCompositeDisposable(getViewInterface().expandMap(mStayOutboundBookingDetail.latitude, mStayOutboundBookingDetail.longitude)//
             .subscribeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
             {
@@ -348,6 +351,8 @@ public class StayOutboundBookingDetailPresenter extends BaseExceptionPresenter<S
         }
 
         clearCompositeDisposable();
+
+        getViewInterface().setBookingDetailToolbar();
 
         addCompositeDisposable(getViewInterface().collapseMap()//
             .subscribeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()

@@ -25,8 +25,6 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
-import com.crashlytics.android.Crashlytics;
-import com.daily.base.exception.BaseException;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.widget.DailyToast;
@@ -34,11 +32,8 @@ import com.daily.dailyhotel.entity.Booking;
 import com.daily.dailyhotel.entity.CommonDateTime;
 import com.daily.dailyhotel.entity.ListItem;
 import com.daily.dailyhotel.entity.User;
-import com.daily.dailyhotel.repository.local.ConfigLocalImpl;
 import com.daily.dailyhotel.repository.remote.BookingRemoteImpl;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
-import com.daily.dailyhotel.repository.remote.FacebookRemoteImpl;
-import com.daily.dailyhotel.repository.remote.KakaoRemoteImpl;
 import com.daily.dailyhotel.repository.remote.ProfileRemoteImpl;
 import com.daily.dailyhotel.screen.booking.detail.stay.outbound.StayOutboundBookingDetailActivity;
 import com.twoheart.dailyhotel.DailyHotel;
@@ -74,12 +69,9 @@ import java.util.Map;
 
 import io.reactivex.Observable;
 import io.reactivex.annotations.NonNull;
-import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function3;
 import retrofit2.Call;
-import retrofit2.HttpException;
 import retrofit2.Response;
 
 /**
@@ -103,8 +95,6 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
     private CommonRemoteImpl mCommonRemoteImpl;
     private BookingRemoteImpl mBookingRemoteImpl;
     private ProfileRemoteImpl mProfileRemoteImpl;
-
-    private CompositeDisposable mCompositeDisposable = new CompositeDisposable();
 
     public interface OnUserActionListener
     {
@@ -1351,68 +1341,4 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
             baseActivity.onError(t);
         }
     };
-
-    ///////////////////////////////////////////////////////////////////////////////////////////////
-    //
-    // 기존의 BaseActivity에 있는 정보 가져오기
-    ///////////////////////////////////////////////////////////////////////////////////////////////
-
-    private void addCompositeDisposable(Disposable disposable)
-    {
-        if (disposable == null)
-        {
-            return;
-        }
-
-        mCompositeDisposable.add(disposable);
-    }
-
-    private void clearCompositeDisposable()
-    {
-        mCompositeDisposable.clear();
-    }
-
-    protected void onHandleError(Throwable throwable)
-    {
-        unLockUI();
-
-        BaseActivity baseActivity = (BaseActivity) getActivity();
-
-        if (baseActivity == null || baseActivity.isFinishing() == true)
-        {
-            return;
-        }
-
-        if (throwable instanceof BaseException)
-        {
-            // 팝업 에러 보여주기
-            BaseException baseException = (BaseException) throwable;
-
-            baseActivity.showSimpleDialog(null, baseException.getMessage()//
-                , getString(R.string.dialog_btn_text_confirm), null, null, null, null, dialogInterface -> getActivity().onBackPressed(), true);
-        } else if (throwable instanceof HttpException)
-        {
-            retrofit2.HttpException httpException = (HttpException) throwable;
-
-            if (httpException.code() == BaseException.CODE_UNAUTHORIZED)
-            {
-                addCompositeDisposable(new ConfigLocalImpl(getActivity()).clear().subscribe(object ->
-                {
-                    new FacebookRemoteImpl().logOut();
-                    new KakaoRemoteImpl().logOut();
-
-                    baseActivity.restartExpiredSession();
-                }));
-            } else
-            {
-                DailyToast.showToast(getActivity(), getString(R.string.act_base_network_connect), DailyToast.LENGTH_LONG);
-
-                Crashlytics.log(httpException.response().raw().request().url().toString());
-                Crashlytics.logException(throwable);
-            }
-        } else
-        {
-            DailyToast.showToast(getActivity(), getString(R.string.act_base_network_connect), DailyToast.LENGTH_LONG);
-        }
-    }
 }

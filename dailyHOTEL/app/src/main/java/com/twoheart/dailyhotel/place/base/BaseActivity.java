@@ -27,11 +27,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
+import com.daily.base.exception.BaseException;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
 import com.daily.base.util.VersionUtils;
 import com.daily.base.widget.DailyToast;
+import com.daily.dailyhotel.repository.local.ConfigLocalImpl;
+import com.daily.dailyhotel.repository.remote.FacebookRemoteImpl;
+import com.daily.dailyhotel.repository.remote.KakaoRemoteImpl;
 import com.facebook.login.LoginManager;
 import com.kakao.usermgmt.UserManagement;
 import com.twoheart.dailyhotel.R;
@@ -51,8 +55,11 @@ import com.twoheart.dailyhotel.util.Util;
 
 import java.util.Calendar;
 
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
 import retrofit2.Call;
 import retrofit2.Response;
+import retrofit2.adapter.rxjava2.HttpException;
 
 public abstract class BaseActivity extends AppCompatActivity implements Constants
 {
@@ -68,6 +75,8 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
 
         void onDismissDialog();
     }
+
+    private CompositeDisposable mCompositeDisposable = new CompositeDisposable();
 
     // showCallDialog 용 interface
     private interface OnOperatingTimeListener
@@ -374,6 +383,8 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
         //            }
         //        }
 
+        clearCompositeDisposable();
+
         super.onDestroy();
     }
 
@@ -505,6 +516,65 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
                     DailyToast.showToast(BaseActivity.this, message, Toast.LENGTH_LONG);
                 }
             });
+        }
+    }
+
+    protected void addCompositeDisposable(Disposable disposable)
+    {
+        if (disposable == null)
+        {
+            return;
+        }
+
+        mCompositeDisposable.add(disposable);
+    }
+
+    protected void clearCompositeDisposable()
+    {
+        mCompositeDisposable.clear();
+    }
+
+    protected void onHandleError(Throwable throwable)
+    {
+        unLockUI();
+
+        BaseActivity baseActivity = this;
+
+        if (baseActivity == null || baseActivity.isFinishing() == true)
+        {
+            return;
+        }
+
+        if (throwable instanceof BaseException)
+        {
+            // 팝업 에러 보여주기
+            BaseException baseException = (BaseException) throwable;
+
+            baseActivity.showSimpleDialog(null, baseException.getMessage()//
+                , getString(R.string.dialog_btn_text_confirm), null, null, null, null, dialogInterface -> this.onBackPressed(), true);
+        } else if (throwable instanceof HttpException)
+        {
+            retrofit2.HttpException httpException = (HttpException) throwable;
+
+            if (httpException.code() == BaseException.CODE_UNAUTHORIZED)
+            {
+                addCompositeDisposable(new ConfigLocalImpl(this).clear().subscribe(object ->
+                {
+                    new FacebookRemoteImpl().logOut();
+                    new KakaoRemoteImpl().logOut();
+
+                    baseActivity.restartExpiredSession();
+                }));
+            } else
+            {
+                DailyToast.showToast(this, getString(R.string.act_base_network_connect), DailyToast.LENGTH_LONG);
+
+                Crashlytics.log(httpException.response().raw().request().url().toString());
+                Crashlytics.logException(throwable);
+            }
+        } else
+        {
+            DailyToast.showToast(this, getString(R.string.act_base_network_connect), DailyToast.LENGTH_LONG);
         }
     }
 

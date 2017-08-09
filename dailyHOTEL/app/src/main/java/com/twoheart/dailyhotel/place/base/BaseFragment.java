@@ -10,12 +10,15 @@ import com.twoheart.dailyhotel.util.Constants;
 
 import org.json.JSONObject;
 
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
 import retrofit2.Call;
 import retrofit2.Response;
 
 public abstract class BaseFragment extends Fragment implements Constants
 {
     protected String mNetworkTag;
+    private CompositeDisposable mCompositeDisposable = new CompositeDisposable();
 
     public BaseFragment()
     {
@@ -45,6 +48,8 @@ public abstract class BaseFragment extends Fragment implements Constants
         }
 
         DailyMobileAPI.getInstance(baseActivity).cancelAll(baseActivity, mNetworkTag);
+
+        clearCompositeDisposable();
 
         super.onDestroy();
     }
@@ -242,5 +247,32 @@ public abstract class BaseFragment extends Fragment implements Constants
 
         return (isAdded() == false || activity == null//
             || activity.isFinishing() == true);
+    }
+
+    protected void addCompositeDisposable(Disposable disposable)
+    {
+        if (disposable == null)
+        {
+            return;
+        }
+
+        mCompositeDisposable.add(disposable);
+    }
+
+    protected void clearCompositeDisposable()
+    {
+        mCompositeDisposable.clear();
+    }
+
+    protected void onHandleError(Throwable throwable)
+    {
+        BaseActivity baseActivity = (BaseActivity) getActivity();
+
+        if (baseActivity == null)
+        {
+            return;
+        }
+
+        baseActivity.onHandleError(throwable);
     }
 }

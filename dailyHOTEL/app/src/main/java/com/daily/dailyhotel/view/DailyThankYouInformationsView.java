@@ -5,13 +5,10 @@ import android.databinding.DataBindingUtil;
 import android.support.annotation.StringRes;
 import android.support.constraint.ConstraintLayout;
 import android.util.AttributeSet;
-import android.util.Pair;
 import android.view.LayoutInflater;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.DailyViewThankYouInformationDataBinding;
-
-import java.util.List;
 
 public class DailyThankYouInformationsView extends ConstraintLayout
 {

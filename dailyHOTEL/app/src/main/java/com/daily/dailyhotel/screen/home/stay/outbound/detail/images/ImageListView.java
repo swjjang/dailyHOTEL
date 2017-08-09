@@ -11,7 +11,6 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.daily.base.BaseActivity;
 import com.daily.base.BaseDialogView;
@@ -20,6 +19,7 @@ import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ScreenUtils;
 import com.daily.dailyhotel.entity.ImageMap;
 import com.daily.dailyhotel.entity.StayOutboundDetailImage;
+import com.daily.dailyhotel.view.DailyToolbarView;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.controller.BaseControllerListener;
 import com.facebook.drawee.controller.ControllerListener;
@@ -40,7 +40,6 @@ public class ImageListView extends BaseDialogView<ImageListView.OnEventListener,
     private float mY;
     private boolean mIsMoved, mIsTop, mIsBottom;
     private VelocityTracker mVelocityTracker;
-    private View mToolbarView;
 
     private ImageDetailListAdapter mImageDetailListAdapter;
 
@@ -79,8 +78,7 @@ public class ImageListView extends BaseDialogView<ImageListView.OnEventListener,
             return;
         }
 
-        TextView titleTextView = (TextView) mToolbarView.findViewById(R.id.titleTextView);
-        titleTextView.setText(title);
+        getViewDataBinding().toolbarView.setTitleText(title);
     }
 
     @Override
@@ -193,8 +191,8 @@ public class ImageListView extends BaseDialogView<ImageListView.OnEventListener,
 
                 listView.setTranslationY(0);
                 getViewDataBinding().alphaView.setAlpha(1.0f);
-                mToolbarView.setTranslationY(0);
-                mToolbarView.setAlpha(1.0f);
+                getViewDataBinding().toolbarView.setTranslationY(0);
+                getViewDataBinding().toolbarView.setAlpha(1.0f);
 
                 if (mVelocityTracker != null)
                 {
@@ -245,10 +243,9 @@ public class ImageListView extends BaseDialogView<ImageListView.OnEventListener,
             return;
         }
 
-        mToolbarView = viewDataBinding.toolbar.findViewById(R.id.toolbar);
-
-        View closeView = mToolbarView.findViewById(R.id.closeImageView);
-        closeView.setOnClickListener(new View.OnClickListener()
+        viewDataBinding.toolbarView.setBackVisible(false);
+        viewDataBinding.toolbarView.clearMenuItem();
+        viewDataBinding.toolbarView.addMenuItem(DailyToolbarView.MenuItem.CLOSE_BLACK, null, new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
@@ -266,7 +263,7 @@ public class ImageListView extends BaseDialogView<ImageListView.OnEventListener,
         }
 
         getViewDataBinding().listView.setTranslationY(y);
-        mToolbarView.setTranslationY(y);
+        getViewDataBinding().toolbarView.setTranslationY(y);
 
         getViewDataBinding().alphaView.setBackgroundResource(R.color.black);
         getViewDataBinding().alphaView.setAlpha(1.0f - Math.abs(y * 1.5f) / ScreenUtils.getScreenHeight(getContext()));

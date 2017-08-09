@@ -33,7 +33,6 @@ import com.twoheart.dailyhotel.databinding.LayoutStayOutboundRefund02DataBinding
 import com.twoheart.dailyhotel.databinding.LayoutStayOutboundRefund03DataBinding;
 import com.twoheart.dailyhotel.databinding.LayoutStayOutboundRefundCancelReasonEtcDataBinding;
 import com.twoheart.dailyhotel.util.DailyCalendar;
-import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
 import java.util.List;
 import java.util.Locale;
@@ -41,8 +40,6 @@ import java.util.Locale;
 public class StayOutboundRefundView extends BaseDialogView<StayOutboundRefundView.OnEventListener, ActivityStayOutboundRefundDataBinding> //
     implements StayOutboundRefundInterface, View.OnClickListener
 {
-    private DailyToolbarLayout mDailyToolbarLayout;
-
     private LayoutStayOutboundRefund01DataBinding mRefund01DataBinding;
     private LayoutStayOutboundRefund02DataBinding mRefund02DataBinding;
     private LayoutStayOutboundRefund03DataBinding mRefund03DataBinding;
@@ -87,12 +84,12 @@ public class StayOutboundRefundView extends BaseDialogView<StayOutboundRefundVie
     @Override
     public void setToolbarTitle(String title)
     {
-        if (mDailyToolbarLayout == null)
+        if (getViewDataBinding() == null)
         {
             return;
         }
 
-        mDailyToolbarLayout.setToolbarTitle(title);
+        getViewDataBinding().toolbarView.setTitleText(title);
     }
 
     @Override
@@ -416,8 +413,14 @@ public class StayOutboundRefundView extends BaseDialogView<StayOutboundRefundVie
             return;
         }
 
-        mDailyToolbarLayout = new DailyToolbarLayout(getContext(), viewDataBinding.toolbar.findViewById(R.id.toolbar));
-        mDailyToolbarLayout.initToolbar(null, v -> getEventListener().onBackClick());
+        viewDataBinding.toolbarView.setOnBackClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                getEventListener().onBackClick();
+            }
+        });
     }
 
     private void setBookingInformation(Context context, LayoutStayOutboundRefund01DataBinding dataBinding, StayOutboundRefundDetail stayOutboundRefundDetail)
