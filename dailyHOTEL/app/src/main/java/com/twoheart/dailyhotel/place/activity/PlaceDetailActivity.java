@@ -149,7 +149,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
             }
         }, false);
 
-        mDailyToolbarLayout.setToolbarMenu(R.drawable.navibar_ic_share_01_black, -1, R.drawable.ic_lp_01_wishlist_off, null);
+        mDailyToolbarLayout.setToolbarMenu(R.drawable.navibar_ic_share_01_black, -1, R.drawable.vector_navibar_ic_heart_off_black, null);
         mDailyToolbarLayout.setToolbarMenuClickListener(mToolbarOptionsItemSelectedListener);
 
         mTrueViewView = findViewById(R.id.trueVRView);
