@@ -4,21 +4,30 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:dailyFont="http://schemas.android.com/apk/res-auto">
 
-    <RelativeLayout
+    <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <include
-            android:id="@+id/toolbar"
-            layout="@layout/toolbar_default_menu"/>
+        <com.daily.dailyhotel.view.DailyToolbarView
+            android:id="@+id/toolbarView"
+            android:layout_width="0dp"
+            android:layout_height="52dp"
+            android:background="@color/white"
+            android:elevation="2dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
 
         <ScrollView
             android:id="@+id/scrollView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@+id/toolbar"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
             android:background="@color/white"
-            android:fadingEdge="none">
+            android:fadingEdge="none"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/toolbarView">
 
             <LinearLayout
                 android:id="@+id/scrollLayout"
@@ -153,8 +162,8 @@
                 <com.daily.dailyhotel.view.DailyBookingDiscountNPaymentInformationView
                     android:id="@+id/informationView"
                     android:layout_width="match_parent"
-                    android:layout_marginTop="10dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
                     android:paddingBottom="15dp"/>
 
                 <com.daily.base.widget.DailyTextView
@@ -235,9 +244,9 @@
                     android:id="@+id/paymentTypeView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="15dp"
                     android:layout_marginLeft="15dp"
-                    android:layout_marginRight="15dp"
-                    android:layout_marginBottom="15dp"/>
+                    android:layout_marginRight="15dp"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -296,7 +305,7 @@
 
                     <View
                         android:layout_width="0dp"
-                        android:layout_height="1px"
+                        android:layout_height="1dp"
                         android:background="@color/default_line_ce7e7e7"
                         app:layout_constraintLeft_toLeftOf="parent"
                         app:layout_constraintRight_toRightOf="parent"
@@ -320,5 +329,5 @@
                 </android.support.constraint.ConstraintLayout>
             </LinearLayout>
         </ScrollView>
-    </RelativeLayout>
+    </android.support.constraint.ConstraintLayout>
 </layout>

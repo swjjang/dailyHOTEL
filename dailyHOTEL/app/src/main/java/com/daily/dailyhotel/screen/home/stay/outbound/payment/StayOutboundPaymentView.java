@@ -27,13 +27,13 @@ import com.daily.dailyhotel.entity.People;
 import com.daily.dailyhotel.view.DailyBookingAgreementThirdPartyView;
 import com.daily.dailyhotel.view.DailyBookingGuestInformationsView;
 import com.daily.dailyhotel.view.DailyBookingPaymentTypeView;
+import com.daily.dailyhotel.view.DailyToolbarView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ActivityStayOutboundPaymentDataBinding;
 import com.twoheart.dailyhotel.screen.common.FinalCheckLayout;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.DailySignatureView;
-import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
 import java.util.List;
 import java.util.Locale;
@@ -41,8 +41,6 @@ import java.util.Locale;
 public class StayOutboundPaymentView extends BaseDialogView<StayOutboundPaymentView.OnEventListener, ActivityStayOutboundPaymentDataBinding>//
     implements StayOutboundPaymentInterface, View.OnClickListener
 {
-    private DailyToolbarLayout mDailyToolbarLayout;
-
     public interface OnEventListener extends OnBaseEventListener
     {
         void onCallClick();
@@ -89,12 +87,12 @@ public class StayOutboundPaymentView extends BaseDialogView<StayOutboundPaymentV
     @Override
     public void setToolbarTitle(String title)
     {
-        if (mDailyToolbarLayout == null)
+        if (getViewDataBinding() == null)
         {
             return;
         }
 
-        mDailyToolbarLayout.setToolbarTitle(title);
+        getViewDataBinding().toolbarView.setTitleText(title);
     }
 
     @Override
@@ -400,8 +398,12 @@ public class StayOutboundPaymentView extends BaseDialogView<StayOutboundPaymentV
 
     private void initToolbar(ActivityStayOutboundPaymentDataBinding viewDataBinding)
     {
-        mDailyToolbarLayout = new DailyToolbarLayout(getContext(), viewDataBinding.toolbar.findViewById(R.id.toolbar));
-        mDailyToolbarLayout.initToolbar(null, new View.OnClickListener()
+        if (viewDataBinding == null)
+        {
+            return;
+        }
+
+        viewDataBinding.toolbarView.setOnBackClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
@@ -410,8 +412,8 @@ public class StayOutboundPaymentView extends BaseDialogView<StayOutboundPaymentV
             }
         });
 
-        mDailyToolbarLayout.setToolbarMenu(R.drawable.navibar_ic_call, -1);
-        mDailyToolbarLayout.setToolbarMenuClickListener(new View.OnClickListener()
+        viewDataBinding.toolbarView.clearMenuItem();
+        viewDataBinding.toolbarView.addMenuItem(DailyToolbarView.MenuItem.CALL, null, new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
