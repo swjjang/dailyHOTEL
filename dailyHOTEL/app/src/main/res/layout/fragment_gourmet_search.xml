@@ -214,9 +214,9 @@
         <FrameLayout
             android:id="@+id/autoCompleteScrollLayout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/searchAroundLayout"
-            android:layout_marginTop="10dp"
+            android:layout_height="match_parent"
+            android:background="@color/white"
+            android:layout_below="@+id/searchLayout"
             android:visibility="gone">
 
             <com.daily.base.widget.DailyScrollView

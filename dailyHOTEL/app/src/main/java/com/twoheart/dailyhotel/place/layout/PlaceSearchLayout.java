@@ -9,6 +9,7 @@ import android.text.SpannableString;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
@@ -18,6 +19,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.daily.base.util.DailyTextUtils;
+import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
 import com.daily.base.widget.DailyScrollView;
 import com.twoheart.dailyhotel.R;
@@ -592,18 +594,18 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
                 view.setOnClickListener(onClickListener);
                 viewGroup.addView(view);
 
-                View topLineView = view.findViewById(R.id.topLineView);
-
-                if (topLineView != null)
-                {
-                    if (i == 0)
-                    {
-                        topLineView.setVisibility(View.VISIBLE);
-                    } else
-                    {
-                        topLineView.setVisibility(View.GONE);
-                    }
-                }
+//                View topLineView = view.findViewById(R.id.topLineView);
+//
+//                if (topLineView != null)
+//                {
+//                    if (i == 0)
+//                    {
+//                        topLineView.setVisibility(View.VISIBLE);
+//                    } else
+//                    {
+//                        topLineView.setVisibility(View.GONE);
+//                    }
+//                }
 
                 keyword = keywordList.get(i);
                 view.setTag(keyword);
