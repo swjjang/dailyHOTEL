@@ -1,6 +1,8 @@
 package com.twoheart.dailyhotel.network;
 
+import android.annotation.TargetApi;
 import android.content.Context;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.filters.RequiresDevice;
@@ -204,6 +206,7 @@ public class DailyMobileAPITest
         return builder.toString();
     }
 
+    @TargetApi(Build.VERSION_CODES.KITKAT)
     @Ignore
     private void addException(Call call, Response response, Throwable t)
     {

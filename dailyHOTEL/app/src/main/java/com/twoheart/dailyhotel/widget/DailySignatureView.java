@@ -1,5 +1,6 @@
 package com.twoheart.dailyhotel.widget;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -10,6 +11,7 @@ import android.graphics.Path;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.support.v4.view.MotionEventCompat;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -59,6 +61,7 @@ public class DailySignatureView extends View
         initLayout(context);
     }
 
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public DailySignatureView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes)
     {
         super(context, attrs, defStyleAttr, defStyleRes);
