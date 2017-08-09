@@ -34,7 +34,6 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ActivityStayOutboundSearchResultDataBinding;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.widget.DailyOverScrollViewPager;
-import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
 import java.util.List;
 
@@ -49,7 +48,6 @@ public class StayOutboundListView extends BaseDialogView<StayOutboundListView.On
     private static final int VIEWPAGER_LEFT_N_RIGHT_PADDING_DP = 15;
     private static final int VIEWPAGER_PAGE_MARGIN_DP = 5;
 
-    private DailyToolbarLayout mDailyToolbarLayout;
     private StayOutboundListAdapter mStayOutboundListAdapter;
 
     private StayOutboundMapFragment mStayOutboundMapFragment;
@@ -186,12 +184,12 @@ public class StayOutboundListView extends BaseDialogView<StayOutboundListView.On
     @Override
     public void setToolbarTitle(String title)
     {
-        if (mDailyToolbarLayout == null)
+        if (getViewDataBinding() == null)
         {
             return;
         }
 
-        mDailyToolbarLayout.setToolbarTitle(title);
+        getViewDataBinding().toolbarView.setTitleText(title);
     }
 
     @Override
@@ -903,9 +901,14 @@ public class StayOutboundListView extends BaseDialogView<StayOutboundListView.On
             return;
         }
 
-        mDailyToolbarLayout = new DailyToolbarLayout(getContext(), viewDataBinding.toolbar);
-        mDailyToolbarLayout.initToolbar(null//
-            , v -> getEventListener().onBackClick());
+        viewDataBinding.toolbarView.setOnBackClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                getEventListener().onBackClick();
+            }
+        });
     }
 
     public void setMenuBarLayoutTranslationY(float dy)

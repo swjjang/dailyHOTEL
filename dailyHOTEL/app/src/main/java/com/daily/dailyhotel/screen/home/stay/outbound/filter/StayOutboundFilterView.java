@@ -9,6 +9,7 @@ import com.daily.base.BaseActivity;
 import com.daily.base.BaseDialogView;
 import com.daily.base.OnBaseEventListener;
 import com.daily.dailyhotel.entity.StayOutboundFilters;
+import com.daily.dailyhotel.view.DailyToolbarView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ActivityStayOutboundFilterDataBinding;
 
@@ -39,7 +40,8 @@ public class StayOutboundFilterView extends BaseDialogView<StayOutboundFilterVie
             return;
         }
 
-        viewDataBinding.closeView.setOnClickListener(this);
+        initToolbar(viewDataBinding);
+
         viewDataBinding.resetFilterView.setOnClickListener(this);
         viewDataBinding.confirmView.setOnClickListener(this);
 
@@ -55,6 +57,12 @@ public class StayOutboundFilterView extends BaseDialogView<StayOutboundFilterVie
     @Override
     public void setToolbarTitle(String title)
     {
+        if(getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        getViewDataBinding().toolbarView.setTitleText(title);
     }
 
     @Override
@@ -238,6 +246,24 @@ public class StayOutboundFilterView extends BaseDialogView<StayOutboundFilterVie
                 getViewDataBinding().rating5TextView.setEnabled(enabledLines[i]);
             }
         }
+    }
+
+    private void initToolbar(ActivityStayOutboundFilterDataBinding viewDataBinding)
+    {
+        if (viewDataBinding == null)
+        {
+            return;
+        }
+
+        viewDataBinding.toolbarView.setBackVisible(false);
+        viewDataBinding.toolbarView.addMenuItem(DailyToolbarView.MenuItem.CLOSE, null, new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                getEventListener().onBackClick();
+            }
+        });
     }
 
     private void setRatingChecked(View view, int rating)

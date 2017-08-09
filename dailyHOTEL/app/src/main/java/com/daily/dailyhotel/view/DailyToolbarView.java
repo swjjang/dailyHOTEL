@@ -3,6 +3,7 @@ package com.daily.dailyhotel.view;
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.databinding.DataBindingUtil;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.StringRes;
@@ -62,25 +63,30 @@ public class DailyToolbarView extends ConstraintLayout
     {
         super(context);
 
-        initLayout(context);
+        initLayout(context, null);
     }
 
     public DailyToolbarView(Context context, AttributeSet attrs)
     {
         super(context, attrs);
 
-        initLayout(context);
+        initLayout(context, attrs);
     }
 
     public DailyToolbarView(Context context, AttributeSet attrs, int defStyleAttr)
     {
         super(context, attrs, defStyleAttr);
 
-        initLayout(context);
+        initLayout(context, attrs);
     }
 
-    private void initLayout(Context context)
+    private void initLayout(Context context, AttributeSet attrs)
     {
+        if (context == null)
+        {
+            return;
+        }
+
         mViewDataBinding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.daily_view_toolbar_data, this, true);
 
         if (ScreenUtils.getScreenWidth(context) <= 480)
@@ -89,6 +95,17 @@ public class DailyToolbarView extends ConstraintLayout
         }
 
         mMenuItemList = new ArrayList<>();
+
+        if (attrs != null)
+        {
+            TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.dailyToolbar);
+
+            if (typedArray.hasValue(R.styleable.dailyToolbar_underLineHeight) == true)
+            {
+                float underLineHeight = typedArray.getDimension(R.styleable.dailyToolbar_underLineHeight, ScreenUtils.dpToPx(context, 1));
+                setUnderLineHeight((int) underLineHeight);
+            }
+        }
     }
 
     public void setTitleText(CharSequence text)
@@ -293,6 +310,27 @@ public class DailyToolbarView extends ConstraintLayout
         });
 
         mHideAnimator.start();
+    }
+
+    public void setUnderLineVisible(boolean visible)
+    {
+        if (mViewDataBinding == null)
+        {
+            return;
+        }
+
+        mViewDataBinding.toolbarUnderline.setVisibility(visible ? VISIBLE : GONE);
+    }
+
+    private void setUnderLineHeight(int height)
+    {
+        if (mViewDataBinding == null)
+        {
+            return;
+        }
+
+        mViewDataBinding.toolbarUnderline.getLayoutParams().height = height;
+        mViewDataBinding.toolbarUnderline.requestLayout();
     }
 
     private void addMenuItemView(MenuItem menuItem, String text, OnClickListener listener)

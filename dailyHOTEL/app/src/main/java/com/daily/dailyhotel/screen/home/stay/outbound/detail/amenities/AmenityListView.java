@@ -12,6 +12,7 @@ import com.daily.base.BaseActivity;
 import com.daily.base.BaseDialogView;
 import com.daily.base.OnBaseEventListener;
 import com.daily.base.util.ScreenUtils;
+import com.daily.dailyhotel.view.DailyToolbarView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ActivityAmenityListDataBinding;
 import com.twoheart.dailyhotel.databinding.ListRowAmenityDataBinding;
@@ -21,7 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AmenityListView extends BaseDialogView<AmenityListView.OnEventListener, ActivityAmenityListDataBinding>//
-    implements AmenityListInterface, View.OnClickListener
+    implements AmenityListInterface
 {
     private AmenityListAdapter mAmenityListAdapter;
 
@@ -42,7 +43,7 @@ public class AmenityListView extends BaseDialogView<AmenityListView.OnEventListe
             return;
         }
 
-        viewDataBinding.closeView.setOnClickListener(this);
+        initToolbar(viewDataBinding);
 
         viewDataBinding.recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
         EdgeEffectColor.setEdgeGlowColor(viewDataBinding.recyclerView, getColor(R.color.default_over_scroll_edge));
@@ -51,17 +52,12 @@ public class AmenityListView extends BaseDialogView<AmenityListView.OnEventListe
     @Override
     public void setToolbarTitle(String title)
     {
-    }
-
-    @Override
-    public void onClick(View v)
-    {
-        switch (v.getId())
+        if (getViewDataBinding() == null)
         {
-            case R.id.closeView:
-                getEventListener().onBackClick();
-                break;
+            return;
         }
+
+        getViewDataBinding().toolbarView.setTitleText(title);
     }
 
     @Override
@@ -80,6 +76,24 @@ public class AmenityListView extends BaseDialogView<AmenityListView.OnEventListe
 
         mAmenityListAdapter.setAll(amenityList);
         mAmenityListAdapter.notifyDataSetChanged();
+    }
+
+    private void initToolbar(ActivityAmenityListDataBinding viewDataBinding)
+    {
+        if (viewDataBinding == null)
+        {
+            return;
+        }
+
+        viewDataBinding.toolbarView.setBackVisible(false);
+        viewDataBinding.toolbarView.addMenuItem(DailyToolbarView.MenuItem.CLOSE, null, new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                getEventListener().onBackClick();
+            }
+        });
     }
 
     class AmenityListAdapter extends RecyclerView.Adapter<AmenityListAdapter.AmenityViewHolder>

@@ -69,4 +69,8 @@
         <attr name="indicatorBackgroundColor" format="color" />
     </declare-styleable>
 
+    <declare-styleable name="dailyToolbar">
+        <attr name="underLineHeight" format="dimension" />
+    </declare-styleable>
+
 </resources>

@@ -1,55 +1,32 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:dailyFont="http://schemas.android.com/apk/res-auto">
+        xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
+        xmlns:dailyToolbar="http://schemas.android.com/apk/res-auto">
 
-    <RelativeLayout
+    <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <RelativeLayout
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
+        <com.daily.dailyhotel.view.DailyToolbarView
+            android:id="@+id/toolbarView"
+            android:layout_width="0dp"
             android:layout_height="@dimen/toolbar_height"
-            android:background="@color/white">
-
-            <com.daily.base.widget.DailyImageView
-                android:id="@+id/backImageView"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:paddingLeft="15dp"
-                android:paddingRight="15dp"
-                app:srcCompat="@drawable/navibar_ic_back_01_black"/>
-
-            <com.daily.base.widget.DailyTextView
-                android:id="@+id/titleTextView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="false"
-                android:layout_centerVertical="true"
-                android:layout_marginRight="15dp"
-                android:ellipsize="end"
-                android:gravity="center_vertical"
-                android:maxLines="1"
-                android:paddingLeft="72dp"
-                android:singleLine="true"
-                android:textColor="@color/actionbar_title"
-                android:textSize="18dp"/>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1px"
-                android:layout_alignParentBottom="true"
-                android:background="@color/default_line_ce7e7e7"/>
-        </RelativeLayout>
+            android:background="@color/white"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            dailyToolbar:underLineHeight="1px"/>
 
         <LinearLayout
-            android:id="@+id/linearLayout"
-            android:layout_width="match_parent"
+            android:id="@+id/subToolbarLayout"
+            android:layout_width="0dp"
             android:layout_height="52dp"
-            android:layout_below="@+id/toolbar"
             android:background="@color/white"
             android:gravity="center_vertical"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/toolbarView">
 
             <com.daily.base.widget.DailyTextView
                 android:id="@+id/calendarTextView"
@@ -94,17 +71,22 @@
 
         <View
             android:id="@+id/underLineView"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="1dp"
-            android:layout_below="@+id/linearLayout"
-            android:background="@color/default_line_ce7e7e7"/>
+            android:background="@color/default_line_ce7e7e7"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/subToolbarLayout"/>
 
         <FrameLayout
             android:id="@+id/resultLayout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@+id/underLineView"
-            android:visibility="invisible">
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/underLineView">
 
             <android.support.v4.widget.SwipeRefreshLayout
                 android:id="@+id/swipeRefreshLayout"
@@ -127,18 +109,21 @@
 
         <RelativeLayout
             android:id="@+id/searchLocationLayout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@+id/underLineView"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
             android:background="@color/default_background"
-            android:visibility="gone">
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/underLineView">
 
             <ProgressBar
                 android:id="@+id/progressBar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
                 android:layout_above="@+id/progressBarTextView"
+                android:layout_centerHorizontal="true"
                 android:indeterminate="true"
                 android:indeterminateOnly="true"/>
 
@@ -155,11 +140,14 @@
 
         <ScrollView
             android:id="@+id/emptyLayout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@+id/underLineView"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
             android:fillViewport="true"
-            android:visibility="gone">
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/underLineView">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -265,13 +253,15 @@
 
         <LinearLayout
             android:id="@+id/bottomOptionLayout"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
             android:layout_marginBottom="12dp"
             android:gravity="center_horizontal"
             android:orientation="horizontal"
-            android:visibility="invisible">
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent">
 
             <ImageView
                 android:id="@+id/viewTypeOptionImageView"
@@ -289,10 +279,13 @@
 
         <RelativeLayout
             android:id="@+id/errorLayout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@+id/underLineView"
-            android:visibility="gone">
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/underLineView">
 
             <LinearLayout
                 android:id="@+id/errorTextLayout"
@@ -345,5 +338,5 @@
                 android:textSize="14dp"
                 dailyFont:style="Medium"/>
         </RelativeLayout>
-    </RelativeLayout>
+    </android.support.constraint.ConstraintLayout>
 </layout>

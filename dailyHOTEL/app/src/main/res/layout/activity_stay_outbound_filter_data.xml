@@ -1,53 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:dailyFont="http://schemas.android.com/apk/res-auto">
+        xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
+        xmlns:dailyToolbar="http://schemas.android.com/apk/res-auto">
 
-    <RelativeLayout
+    <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/black_a67">
 
-        <FrameLayout
-            android:id="@+id/titleLayout"
-            android:layout_width="match_parent"
-            android:layout_height="52dp"
-            android:background="@color/white">
-
-            <com.daily.base.widget.DailyTextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="15dp"
-                android:layout_marginRight="100dp"
-                android:gravity="left|center_vertical"
-                android:text="@string/activity_curation_title"
-                android:textColor="@color/default_text_c323232"
-                android:textSize="18dp"/>
-
-            <ImageView
-                android:id="@+id/closeView"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_gravity="right"
-                android:paddingLeft="15dp"
-                android:paddingRight="15dp"
-                app:srcCompat="@drawable/navibar_ic_x"/>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1px"
-                android:layout_gravity="bottom"
-                android:background="@color/default_line_ce7e7e7"/>
-        </FrameLayout>
+        <com.daily.dailyhotel.view.DailyToolbarView
+            android:id="@+id/toolbarView"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/toolbar_height"
+            android:background="@color/white"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            dailyToolbar:underLineHeight="1px"/>
 
         <ScrollView
             android:id="@+id/contentScrollView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_above="@+id/bottomLayout"
-            android:layout_below="@+id/titleLayout"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
             android:background="@color/white"
-            android:fadingEdge="none">
+            android:fadingEdge="none"
+            app:layout_constraintBottom_toTopOf="@+id/bottomLayout"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/toolbarView">
 
             <LinearLayout
                 android:id="@+id/contentLayout"
@@ -55,110 +36,110 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                    <RelativeLayout
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="25dp">
+
+                    <com.daily.base.widget.DailyTextView
                         android:layout_width="match_parent"
-                        android:layout_height="25dp">
+                        android:layout_height="25dp"
+                        android:background="@color/default_background_section_cf2f2f3"
+                        android:gravity="center"
+                        android:text="@string/label_sort_by"
+                        android:textColor="@color/default_text_c929292"
+                        android:textSize="13dp"/>
 
-                        <com.daily.base.widget.DailyTextView
-                            android:layout_width="match_parent"
-                            android:layout_height="25dp"
-                            android:background="@color/default_background_section_cf2f2f3"
-                            android:gravity="center"
-                            android:text="@string/label_sort_by"
-                            android:textColor="@color/default_text_c929292"
-                            android:textSize="13dp"/>
-
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="1px"
-                            android:layout_alignParentTop="true"
-                            android:background="@color/default_line_ce7e7e7"/>
-
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="1px"
-                            android:layout_alignParentBottom="true"
-                            android:background="@color/default_line_ce7e7e7"/>
-                    </RelativeLayout>
-
-                    <RadioGroup
-                        android:id="@+id/sortRadioGroup"
+                    <View
                         android:layout_width="match_parent"
-                        android:layout_height="74dp"
-                        android:orientation="horizontal"
-                        android:paddingLeft="10dp"
-                        android:paddingRight="10dp">
+                        android:layout_height="1px"
+                        android:layout_alignParentTop="true"
+                        android:background="@color/default_line_ce7e7e7"/>
 
-                        <com.daily.base.widget.DailyRadioButton
-                            android:id="@+id/rankRadioButton"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1"
-                            android:background="@null"
-                            android:button="@null"
-                            android:gravity="center_horizontal"
-                            android:paddingTop="12dp"
-                            android:text="@string/label_sort_by_rank"
-                            android:textColor="@color/selector_curation_textcolor"
-                            android:textSize="11dp"
-                            app:drawableCompatTop="@drawable/f_ic_sort_06"/>
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1px"
+                        android:layout_alignParentBottom="true"
+                        android:background="@color/default_line_ce7e7e7"/>
+                </RelativeLayout>
 
-                        <com.daily.base.widget.DailyRadioButton
-                            android:id="@+id/distanceRadioButton"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1"
-                            android:background="@null"
-                            android:button="@null"
-                            android:gravity="center_horizontal"
-                            android:paddingTop="12dp"
-                            android:text="@string/label_sort_by_distance"
-                            android:textColor="@color/selector_curation_textcolor"
-                            android:textSize="11dp"
-                            app:drawableCompatTop="@drawable/f_ic_sort_02"/>
+                <RadioGroup
+                    android:id="@+id/sortRadioGroup"
+                    android:layout_width="match_parent"
+                    android:layout_height="74dp"
+                    android:orientation="horizontal"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp">
 
-                        <com.daily.base.widget.DailyRadioButton
-                            android:id="@+id/lowPriceRadioButton"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1"
-                            android:background="@null"
-                            android:button="@null"
-                            android:gravity="center_horizontal"
-                            android:paddingTop="12dp"
-                            android:text="@string/label_sort_by_low_price"
-                            android:textColor="@color/selector_curation_textcolor"
-                            android:textSize="11dp"
-                            app:drawableCompatTop="@drawable/f_ic_sort_03"/>
+                    <com.daily.base.widget.DailyRadioButton
+                        android:id="@+id/rankRadioButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@null"
+                        android:button="@null"
+                        android:gravity="center_horizontal"
+                        android:paddingTop="12dp"
+                        android:text="@string/label_sort_by_rank"
+                        android:textColor="@color/selector_curation_textcolor"
+                        android:textSize="11dp"
+                        app:drawableCompatTop="@drawable/f_ic_sort_06"/>
 
-                        <com.daily.base.widget.DailyRadioButton
-                            android:id="@+id/highPriceRadioButton"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1"
-                            android:background="@null"
-                            android:button="@null"
-                            android:gravity="center_horizontal"
-                            android:paddingTop="12dp"
-                            android:text="@string/label_sort_by_high_price"
-                            android:textColor="@color/selector_curation_textcolor"
-                            android:textSize="11dp"
-                            app:drawableCompatTop="@drawable/f_ic_sort_04"/>
+                    <com.daily.base.widget.DailyRadioButton
+                        android:id="@+id/distanceRadioButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@null"
+                        android:button="@null"
+                        android:gravity="center_horizontal"
+                        android:paddingTop="12dp"
+                        android:text="@string/label_sort_by_distance"
+                        android:textColor="@color/selector_curation_textcolor"
+                        android:textSize="11dp"
+                        app:drawableCompatTop="@drawable/f_ic_sort_02"/>
 
-                        <com.daily.base.widget.DailyRadioButton
-                            android:id="@+id/satisfactionRadioButton"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1"
-                            android:background="@null"
-                            android:button="@null"
-                            android:gravity="center_horizontal"
-                            android:paddingTop="12dp"
-                            android:text="@string/label_sort_by_satisfaction"
-                            android:textColor="@color/selector_curation_textcolor"
-                            android:textSize="11dp"
-                            app:drawableCompatTop="@drawable/f_ic_sort_05"/>
-                    </RadioGroup>
+                    <com.daily.base.widget.DailyRadioButton
+                        android:id="@+id/lowPriceRadioButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@null"
+                        android:button="@null"
+                        android:gravity="center_horizontal"
+                        android:paddingTop="12dp"
+                        android:text="@string/label_sort_by_low_price"
+                        android:textColor="@color/selector_curation_textcolor"
+                        android:textSize="11dp"
+                        app:drawableCompatTop="@drawable/f_ic_sort_03"/>
+
+                    <com.daily.base.widget.DailyRadioButton
+                        android:id="@+id/highPriceRadioButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@null"
+                        android:button="@null"
+                        android:gravity="center_horizontal"
+                        android:paddingTop="12dp"
+                        android:text="@string/label_sort_by_high_price"
+                        android:textColor="@color/selector_curation_textcolor"
+                        android:textSize="11dp"
+                        app:drawableCompatTop="@drawable/f_ic_sort_04"/>
+
+                    <com.daily.base.widget.DailyRadioButton
+                        android:id="@+id/satisfactionRadioButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@null"
+                        android:button="@null"
+                        android:gravity="center_horizontal"
+                        android:paddingTop="12dp"
+                        android:text="@string/label_sort_by_satisfaction"
+                        android:textColor="@color/selector_curation_textcolor"
+                        android:textSize="11dp"
+                        app:drawableCompatTop="@drawable/f_ic_sort_05"/>
+                </RadioGroup>
 
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -266,25 +247,28 @@
             </LinearLayout>
         </ScrollView>
 
-        <RelativeLayout
+        <android.support.constraint.ConstraintLayout
             android:id="@+id/bottomLayout"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="64dp"
-            android:layout_alignParentBottom="true"
-            android:background="@color/white">
+            android:background="@color/white"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent">
 
             <View
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="1px"
-                android:layout_alignParentTop="true"
-                android:background="@color/default_line_ce7e7e7"/>
+                android:background="@color/default_line_ce7e7e7"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
 
             <com.daily.base.widget.DailyTextView
                 android:id="@+id/resetFilterView"
                 android:layout_width="48dp"
                 android:layout_height="44dp"
                 android:layout_marginLeft="10dp"
-                android:layout_marginTop="10dp"
                 android:background="@drawable/shape_fillrect_le8e8e9_bfafafb"
                 android:drawablePadding="4dp"
                 android:gravity="center_horizontal"
@@ -292,20 +276,26 @@
                 android:text="@string/label_reset"
                 android:textColor="@color/default_text_c454545"
                 android:textSize="9dp"
-                app:drawableCompatTop="@drawable/ic_refresh"/>
+                app:drawableCompatTop="@drawable/ic_refresh"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
 
             <com.daily.base.widget.DailyTextView
                 android:id="@+id/confirmView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
                 android:layout_margin="10dp"
-                android:layout_toRightOf="@+id/resetFilterView"
                 android:background="@drawable/selector_button_default_background"
                 android:gravity="center"
                 android:text="@string/label_view_result"
                 android:textColor="@drawable/selector_button_default_text_color"
                 android:textSize="17dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toRightOf="@+id/resetFilterView"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
                 dailyFont:style="Medium"/>
-        </RelativeLayout>
-    </RelativeLayout>
+        </android.support.constraint.ConstraintLayout>
+    </android.support.constraint.ConstraintLayout>
 </layout>
