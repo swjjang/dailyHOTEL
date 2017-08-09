@@ -11,7 +11,7 @@
         <com.daily.dailyhotel.view.DailyToolbarView
             android:id="@+id/toolbarView"
             android:layout_width="0dp"
-            android:layout_height="52dp"
+            android:layout_height="@dimen/toolbar_height"
             android:background="@color/white"
             android:elevation="2dp"
             app:layout_constraintLeft_toLeftOf="parent"

@@ -938,6 +938,7 @@ public class StayOutboundDetailView extends BaseDialogView<StayOutboundDetailVie
             }
         });
 
+        viewDataBinding.toolbarView.clearMenuItem();
         viewDataBinding.toolbarView.addMenuItem(DailyToolbarView.MenuItem.SHARE, null, new View.OnClickListener()
         {
             @Override

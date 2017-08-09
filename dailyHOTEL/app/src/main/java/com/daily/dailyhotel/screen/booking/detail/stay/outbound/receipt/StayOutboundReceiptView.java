@@ -22,12 +22,9 @@ import com.twoheart.dailyhotel.databinding.DialogStayOutboundReceiptEmailDataBin
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyRemoteConfigPreference;
 import com.twoheart.dailyhotel.util.Util;
-import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
 public class StayOutboundReceiptView extends BaseDialogView<StayOutboundReceiptView.OnEventListener, ActivityStayOutboundReceiptDataBinding> implements StayOutboundReceiptInterface
 {
-    private DailyToolbarLayout mDailyToolbarLayout;
-
     public interface OnEventListener extends OnBaseEventListener
     {
         void onEmailClick();
@@ -65,12 +62,12 @@ public class StayOutboundReceiptView extends BaseDialogView<StayOutboundReceiptV
     @Override
     public void setToolbarTitle(String title)
     {
-        if (mDailyToolbarLayout == null)
+        if (getViewDataBinding() == null)
         {
             return;
         }
 
-        mDailyToolbarLayout.setToolbarTitle(title);
+        getViewDataBinding().toolbarView.setTitleText(title);
     }
 
     @Override
@@ -200,7 +197,7 @@ public class StayOutboundReceiptView extends BaseDialogView<StayOutboundReceiptV
     {
         if (enabled)
         {
-            mDailyToolbarLayout.setToolbarVisibility(false, false);
+            getViewDataBinding().toolbarView.setVisibility(View.GONE);
 
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
             getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
@@ -208,7 +205,7 @@ public class StayOutboundReceiptView extends BaseDialogView<StayOutboundReceiptV
             getViewDataBinding().bottomLayout.setVisibility(View.GONE);
         } else
         {
-            mDailyToolbarLayout.setToolbarVisibility(true, false);
+            getViewDataBinding().toolbarView.setVisibility(View.VISIBLE);
 
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
             getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -292,7 +289,13 @@ public class StayOutboundReceiptView extends BaseDialogView<StayOutboundReceiptV
             return;
         }
 
-        mDailyToolbarLayout = new DailyToolbarLayout(getContext(), viewDataBinding.toolbar.findViewById(R.id.toolbar));
-        mDailyToolbarLayout.initToolbar(null, v -> getEventListener().onBackClick());
+        viewDataBinding.toolbarView.setOnBackClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                getEventListener().onBackClick();
+            }
+        });
     }
 }

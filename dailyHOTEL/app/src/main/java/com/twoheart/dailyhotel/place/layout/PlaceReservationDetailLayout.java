@@ -19,6 +19,7 @@ import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ScreenUtils;
 import com.daily.base.widget.DailyScrollView;
 import com.daily.base.widget.DailyTextView;
+import com.daily.dailyhotel.view.DailyToolbarView;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -43,7 +44,6 @@ import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Crypto;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.Util;
-import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
 import java.util.Locale;
 
@@ -54,7 +54,7 @@ public abstract class PlaceReservationDetailLayout extends BaseBlurLayout implem
 
     View mInputReviewVerticalLine, mMapExpandedView;
     private DailyTextView mInputReviewView;
-    private DailyToolbarLayout mDailyToolbarLayout;
+    private DailyToolbarView mDailyToolbarView;
 
     // Map
     boolean mIsReadyMap;
@@ -159,8 +159,7 @@ public abstract class PlaceReservationDetailLayout extends BaseBlurLayout implem
 
     private void initToolbar(View view)
     {
-        View toolbar = view.findViewById(R.id.toolbar);
-        mDailyToolbarLayout = new DailyToolbarLayout(mContext, toolbar);
+        mDailyToolbarView = (DailyToolbarView) view.findViewById(R.id.toolbarView);
 
         setReservationDetailToolbar();
     }
@@ -177,12 +176,13 @@ public abstract class PlaceReservationDetailLayout extends BaseBlurLayout implem
 
     private void setReservationDetailToolbar()
     {
-        if (mDailyToolbarLayout == null)
+        if (mDailyToolbarView == null)
         {
             return;
         }
 
-        mDailyToolbarLayout.initToolbar(mContext.getString(R.string.actionbar_title_booking_list_frag), new View.OnClickListener()
+        mDailyToolbarView.setTitleText(mContext.getString(R.string.actionbar_title_booking_list_frag));
+        mDailyToolbarView.setOnBackClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
@@ -191,44 +191,35 @@ public abstract class PlaceReservationDetailLayout extends BaseBlurLayout implem
             }
         });
 
-        mDailyToolbarLayout.setToolbarMenu(R.drawable.navibar_ic_help, R.drawable.navibar_ic_share_01_black);
-        mDailyToolbarLayout.setToolbarMenuClickListener(new View.OnClickListener()
+        mDailyToolbarView.clearMenuItem();
+        mDailyToolbarView.addMenuItem(DailyToolbarView.MenuItem.HELP, null, new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
             {
-                switch (v.getId())
-                {
-                    case R.id.menu1View:
-                        ((OnEventListener) mOnEventListener).showCallDialog();
-                        break;
+                ((OnEventListener) mOnEventListener).showCallDialog();
+            }
+        });
 
-                    case R.id.menu2View:
-                        ((OnEventListener) mOnEventListener).showShareDialog();
-                        break;
-                }
+        mDailyToolbarView.addMenuItem(DailyToolbarView.MenuItem.SHARE, null, new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                ((OnEventListener) mOnEventListener).showShareDialog();
             }
         });
     }
 
     private void setReservationMapToolbar()
     {
-        if (mDailyToolbarLayout == null)
+        if (mDailyToolbarView == null)
         {
             return;
         }
 
-        mDailyToolbarLayout.initToolbar(mContext.getString(R.string.frag_tab_map_title), new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                mOnEventListener.finish();
-            }
-        });
-
-        mDailyToolbarLayout.setToolbarMenu(-1, -1);
-        mDailyToolbarLayout.setToolbarMenuClickListener(null);
+        mDailyToolbarView.setTitleText(mContext.getString(R.string.frag_tab_map_title));
+        mDailyToolbarView.clearMenuItem();
     }
 
     private void initHeaderInformationLayout(Context context, View view, PlaceBookingDetail placeBookingDetail)

@@ -86,6 +86,7 @@ public class AmenityListView extends BaseDialogView<AmenityListView.OnEventListe
         }
 
         viewDataBinding.toolbarView.setBackVisible(false);
+        viewDataBinding.toolbarView.clearMenuItem();
         viewDataBinding.toolbarView.addMenuItem(DailyToolbarView.MenuItem.CLOSE_BLACK, null, new View.OnClickListener()
         {
             @Override

@@ -30,6 +30,7 @@ import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
 import com.daily.base.widget.DailyScrollView;
 import com.daily.dailyhotel.entity.StayOutboundBookingDetail;
+import com.daily.dailyhotel.view.DailyToolbarView;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -58,7 +59,6 @@ import com.twoheart.dailyhotel.util.Crypto;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.Util;
-import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
 import java.util.List;
 import java.util.Locale;
@@ -74,7 +74,6 @@ import io.reactivex.functions.Consumer;
 public class StayOutboundBookingDetailView extends BaseDialogView<StayOutboundBookingDetailView.OnEventListener, ActivityStayOutboundBookingDetailDataBinding>//
     implements StayOutboundBookingDetailInterface, View.OnClickListener
 {
-    private DailyToolbarLayout mDailyToolbarLayout;
     private ImageView mMyLocationView;
     private Drawable mMyLocationDrawable;
     private View mZoomControl;
@@ -83,7 +82,6 @@ public class StayOutboundBookingDetailView extends BaseDialogView<StayOutboundBo
     private GoogleMap mGoogleMap;
     private LatLng mCenterLatLng;
     private boolean mMapLoaded;
-
 
     private LayoutStayOutboundBookingDetail01DataBinding mBookingDetail01DataBinding;
     private LayoutStayOutboundBookingDetail02DataBinding mBookingDetail02DataBinding;
@@ -184,6 +182,12 @@ public class StayOutboundBookingDetailView extends BaseDialogView<StayOutboundBo
     @Override
     public void setToolbarTitle(String title)
     {
+        if(getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        getViewDataBinding().toolbarView.setTitleText(title);
     }
 
     @Override
@@ -211,8 +215,6 @@ public class StayOutboundBookingDetailView extends BaseDialogView<StayOutboundBo
             @Override
             protected void subscribeActual(Observer<? super Boolean> observer)
             {
-                setMapToolbar();
-
                 getViewDataBinding().scrollView.setScrollingEnabled(false);
                 getViewDataBinding().scrollView.scrollTo(0, 0);
 
@@ -316,8 +318,6 @@ public class StayOutboundBookingDetailView extends BaseDialogView<StayOutboundBo
             @Override
             protected void subscribeActual(Observer<? super Boolean> observer)
             {
-                setBookingDetailToolbar();
-
                 final ValueAnimator valueAnimator = ValueAnimator.ofFloat(0, 1.0f);
 
                 valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener()
@@ -681,6 +681,65 @@ public class StayOutboundBookingDetailView extends BaseDialogView<StayOutboundBo
     }
 
     @Override
+    public void setBookingDetailToolbar()
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        getViewDataBinding().toolbarView.setTitleText(R.string.actionbar_title_booking_list_frag);
+        getViewDataBinding().toolbarView.setOnBackClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                getEventListener().onBackClick();
+            }
+        });
+
+        getViewDataBinding().toolbarView.clearMenuItem();
+        getViewDataBinding().toolbarView.addMenuItem(DailyToolbarView.MenuItem.HELP, null, new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                getEventListener().onConciergeClick();
+            }
+        });
+
+        getViewDataBinding().toolbarView.addMenuItem(DailyToolbarView.MenuItem.SHARE, null, new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                getEventListener().onShareClick();
+            }
+        });
+    }
+
+    @Override
+    public void setBookingDetailMapToolbar()
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        getViewDataBinding().toolbarView.setTitleText(R.string.frag_tab_map_title);
+        getViewDataBinding().toolbarView.setOnBackClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                getEventListener().onCollapseMapClick();
+            }
+        });
+
+        getViewDataBinding().toolbarView.clearMenuItem();
+    }
+
+    @Override
     public void showRefundCallDialog(Dialog.OnDismissListener listener)
     {
         DialogConciergeDataBinding dataBinding = DataBindingUtil.inflate(LayoutInflater.from(getContext()), R.layout.dialog_concierge_data, null, false);
@@ -782,65 +841,7 @@ public class StayOutboundBookingDetailView extends BaseDialogView<StayOutboundBo
 
     private void initToolbar(ActivityStayOutboundBookingDetailDataBinding viewDataBinding)
     {
-        mDailyToolbarLayout = new DailyToolbarLayout(getContext(), viewDataBinding.toolbar.findViewById(R.id.toolbar));
-
         setBookingDetailToolbar();
-    }
-
-    private void setBookingDetailToolbar()
-    {
-        if (mDailyToolbarLayout == null)
-        {
-            return;
-        }
-
-        mDailyToolbarLayout.initToolbar(getString(R.string.actionbar_title_booking_list_frag), new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                getEventListener().onBackClick();
-            }
-        });
-
-        mDailyToolbarLayout.setToolbarMenu(R.drawable.navibar_ic_help, R.drawable.navibar_ic_share_01_black);
-        mDailyToolbarLayout.setToolbarMenuClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                switch (v.getId())
-                {
-                    case R.id.menu1View:
-                        getEventListener().onConciergeClick();
-                        break;
-
-                    case R.id.menu2View:
-                        getEventListener().onShareClick();
-                        break;
-                }
-            }
-        });
-    }
-
-    private void setMapToolbar()
-    {
-        if (mDailyToolbarLayout == null)
-        {
-            return;
-        }
-
-        mDailyToolbarLayout.initToolbar(getString(R.string.frag_tab_map_title), new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                getEventListener().onCollapseMapClick();
-            }
-        });
-
-        mDailyToolbarLayout.setToolbarMenu(-1, -1);
-        mDailyToolbarLayout.setToolbarMenuClickListener(null);
     }
 
     private void setHeaderLayout(Context context, StayOutboundBookingDetail stayOutboundBookingDetail)

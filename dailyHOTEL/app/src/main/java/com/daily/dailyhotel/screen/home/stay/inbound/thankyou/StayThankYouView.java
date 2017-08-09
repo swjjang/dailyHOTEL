@@ -211,6 +211,7 @@ public class StayThankYouView extends BaseDialogView<StayThankYouView.OnEventLis
         }
 
         viewDataBinding.toolbarView.setBackVisible(false);
+        viewDataBinding.toolbarView.clearMenuItem();
         viewDataBinding.toolbarView.addMenuItem(DailyToolbarView.MenuItem.CLOSE_WHITE, null, new View.OnClickListener()
         {
             @Override
