@@ -102,7 +102,7 @@ public abstract class PlaceSearchFragment extends BaseFragment
     {
         mDailyRecentSearches = new DailyRecentSearches(getRecentSearches());
 
-        mPlaceSearchLayout.updateRecentSearchesLayout(mDailyRecentSearches.getList());
+//        mPlaceSearchLayout.updateRecentSearchesLayout(mDailyRecentSearches.getList());
     }
 
     public void setOnSearchFragmentListener(OnSearchFragmentListener listener)
@@ -223,7 +223,7 @@ public abstract class PlaceSearchFragment extends BaseFragment
                         mDailyRecentSearches.addString(new Keyword(keyword.icon, keyword.name));
 
                         writeRecentSearches(mDailyRecentSearches.toString());
-                        mPlaceSearchLayout.updateRecentSearchesLayout(mDailyRecentSearches.getList());
+//                        mPlaceSearchLayout.updateRecentSearchesLayout(mDailyRecentSearches.getList());
                     }
                 }
 

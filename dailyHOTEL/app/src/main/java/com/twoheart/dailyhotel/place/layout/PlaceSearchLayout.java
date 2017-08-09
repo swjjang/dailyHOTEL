@@ -50,9 +50,9 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
     ViewGroup mAutoCompleteLayout;
     private DailyScrollView mAutoCompleteScrollView;
     private View mAutoCompleteScrollLayout;
-    private View mRecentSearchLayout;
-    private ViewGroup mRecentContentsLayout;
-    private View mDeleteAllRecentSearchesView;
+//    private View mRecentSearchLayout;
+//    private ViewGroup mRecentContentsLayout;
+//    private View mDeleteAllRecentSearchesView;
 
     EditText mSearchEditText;
     private TextView mDateTextView;
@@ -153,7 +153,7 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
 
                     updateAutoCompleteLayout(mAutoCompleteLayout, null, null);
 
-                    showRecentSearchesView();
+//                    showRecentSearchesView();
                 } else
                 {
                     if (length == 1 && s.charAt(0) == ' ')
@@ -221,7 +221,7 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
 
     private void initSearchKeywordLayout(View view)
     {
-        initRecentSearchesLayout(view);
+//        initRecentSearchesLayout(view);
         initAutoCompleteLayout(view);
     }
 
@@ -327,151 +327,151 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
         updateTermsOfLocationLayout(mTermsOfLocationView);
     }
 
-    private void initRecentSearchesLayout(View view)
-    {
-        DailyScrollView recentSearchesScrollLayout = (DailyScrollView) view.findViewById(R.id.recentSearchesScrollLayout);
-        recentSearchesScrollLayout.setOnScrollChangedListener(new DailyScrollView.OnScrollChangedListener()
-        {
-            private int mDistance;
-            boolean mIsHide;
-
-            @Override
-            public void onScrollChanged(ScrollView scrollView, int l, int t, int oldl, int oldt)
-            {
-                if (mIsHide == true)
-                {
-
-                } else
-                {
-                    if (scrollView.getHeight() < ScreenUtils.getScreenHeight(mContext) / 2)
-                    {
-                        mDistance += (t - oldt);
-
-                        if (mDistance > ScreenUtils.dpToPx(mContext, 41) == true)
-                        {
-                            mDistance = 0;
-                            mIsHide = true;
-
-                            InputMethodManager inputMethodManager = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
-                            inputMethodManager.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
-
-                            mHandler.postDelayed(new Runnable()
-                            {
-                                @Override
-                                public void run()
-                                {
-                                    mIsHide = false;
-                                }
-                            }, 1000);
-                        }
-                    }
-                }
-            }
-        });
-
-        EdgeEffectColor.setEdgeGlowColor(recentSearchesScrollLayout, mContext.getResources().getColor(R.color.default_over_scroll_edge));
-
-        // 최근 검색어
-        // 전체 삭제
-        mDeleteAllRecentSearchesView = view.findViewById(R.id.deleteAllView);
-        mDeleteAllRecentSearchesView.setOnClickListener(this);
-
-        mRecentSearchLayout = view.findViewById(R.id.recentSearchLayout);
-        mRecentSearchLayout.setVisibility(View.VISIBLE);
-
-        // 목록
-        mRecentContentsLayout = (ViewGroup) view.findViewById(R.id.contentsLayout);
-
-        View.OnClickListener onClickListener = new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                Object tag = v.getTag();
-
-                if (tag != null && tag instanceof Keyword == true)
-                {
-                    validateKeyword((Keyword) tag);
-                }
-            }
-        };
-
-        for (int i = 0; i < DailyRecentSearches.MAX_KEYWORD; i++)
-        {
-            View keywordView = LayoutInflater.from(mContext).inflate(R.layout.list_row_search_recently, mRecentContentsLayout, false);
-            keywordView.setOnClickListener(onClickListener);
-
-            mRecentContentsLayout.addView(keywordView);
-        }
-    }
-
-    public void updateRecentSearchesLayout(List<Keyword> keywordList)
-    {
-        updateRecentSearchesLayout(mRecentContentsLayout, keywordList);
-    }
-
-    private void updateRecentSearchesLayout(ViewGroup viewGroup, List<Keyword> keywordList)
-    {
-        if (viewGroup == null)
-        {
-            return;
-        }
-
-        if (keywordList == null || keywordList.size() == 0)
-        {
-            mDeleteAllRecentSearchesView.setEnabled(false);
-
-            View view = viewGroup.getChildAt(0);
-            view.setVisibility(View.VISIBLE);
-            view.setTag(null);
-
-            TextView textView = (TextView) view.findViewById(R.id.textView);
-            textView.setTextColor(mContext.getResources().getColor(R.color.search_hint_text));
-            textView.setCompoundDrawablesWithIntrinsicBounds(getRecentSearchesIcon(DEFAULT_ICON), 0, 0, 0);
-            textView.setText(R.string.label_search_recentsearches_none);
-
-            int childCount = viewGroup.getChildCount();
-
-            for (int i = 1; i < childCount; i++)
-            {
-                viewGroup.getChildAt(i).setVisibility(View.GONE);
-            }
-        } else
-        {
-            mDeleteAllRecentSearchesView.setEnabled(true);
-
-            int size = keywordList.size();
-            Keyword recentKeyword;
-            TextView textView;
-            View view;
-
-            int childCount = viewGroup.getChildCount();
-
-            for (int i = 0; i < childCount; i++)
-            {
-                view = viewGroup.getChildAt(i);
-
-                if (i < size)
-                {
-                    view.setVisibility(View.VISIBLE);
-                } else
-                {
-                    view.setVisibility(View.GONE);
-                    view.setTag(null);
-                    continue;
-                }
-
-                recentKeyword = keywordList.get(i);
-
-                view.setTag(recentKeyword);
-
-                textView = (TextView) view.findViewById(R.id.textView);
-                textView.setTextColor(mContext.getResources().getColor(R.color.search_text));
-                textView.setCompoundDrawablesWithIntrinsicBounds(getRecentSearchesIcon(recentKeyword.icon), 0, 0, 0);
-                textView.setText(recentKeyword.name);
-            }
-        }
-    }
+//    private void initRecentSearchesLayout(View view)
+//    {
+//        DailyScrollView recentSearchesScrollLayout = (DailyScrollView) view.findViewById(R.id.recentSearchesScrollLayout);
+//        recentSearchesScrollLayout.setOnScrollChangedListener(new DailyScrollView.OnScrollChangedListener()
+//        {
+//            private int mDistance;
+//            boolean mIsHide;
+//
+//            @Override
+//            public void onScrollChanged(ScrollView scrollView, int l, int t, int oldl, int oldt)
+//            {
+//                if (mIsHide == true)
+//                {
+//
+//                } else
+//                {
+//                    if (scrollView.getHeight() < ScreenUtils.getScreenHeight(mContext) / 2)
+//                    {
+//                        mDistance += (t - oldt);
+//
+//                        if (mDistance > ScreenUtils.dpToPx(mContext, 41) == true)
+//                        {
+//                            mDistance = 0;
+//                            mIsHide = true;
+//
+//                            InputMethodManager inputMethodManager = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
+//                            inputMethodManager.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
+//
+//                            mHandler.postDelayed(new Runnable()
+//                            {
+//                                @Override
+//                                public void run()
+//                                {
+//                                    mIsHide = false;
+//                                }
+//                            }, 1000);
+//                        }
+//                    }
+//                }
+//            }
+//        });
+//
+//        EdgeEffectColor.setEdgeGlowColor(recentSearchesScrollLayout, mContext.getResources().getColor(R.color.default_over_scroll_edge));
+//
+//        // 최근 검색어
+//        // 전체 삭제
+//        mDeleteAllRecentSearchesView = view.findViewById(R.id.deleteAllView);
+//        mDeleteAllRecentSearchesView.setOnClickListener(this);
+//
+//        mRecentSearchLayout = view.findViewById(R.id.recentSearchLayout);
+//        mRecentSearchLayout.setVisibility(View.VISIBLE);
+//
+//        // 목록
+//        mRecentContentsLayout = (ViewGroup) view.findViewById(R.id.contentsLayout);
+//
+//        View.OnClickListener onClickListener = new View.OnClickListener()
+//        {
+//            @Override
+//            public void onClick(View v)
+//            {
+//                Object tag = v.getTag();
+//
+//                if (tag != null && tag instanceof Keyword == true)
+//                {
+//                    validateKeyword((Keyword) tag);
+//                }
+//            }
+//        };
+//
+//        for (int i = 0; i < DailyRecentSearches.MAX_KEYWORD; i++)
+//        {
+//            View keywordView = LayoutInflater.from(mContext).inflate(R.layout.list_row_search_recently, mRecentContentsLayout, false);
+//            keywordView.setOnClickListener(onClickListener);
+//
+//            mRecentContentsLayout.addView(keywordView);
+//        }
+//    }
+//
+//    public void updateRecentSearchesLayout(List<Keyword> keywordList)
+//    {
+////        updateRecentSearchesLayout(mRecentContentsLayout, keywordList);
+//    }
+//
+//    private void updateRecentSearchesLayout(ViewGroup viewGroup, List<Keyword> keywordList)
+//    {
+//        if (viewGroup == null)
+//        {
+//            return;
+//        }
+//
+//        if (keywordList == null || keywordList.size() == 0)
+//        {
+//            mDeleteAllRecentSearchesView.setEnabled(false);
+//
+//            View view = viewGroup.getChildAt(0);
+//            view.setVisibility(View.VISIBLE);
+//            view.setTag(null);
+//
+//            TextView textView = (TextView) view.findViewById(R.id.textView);
+//            textView.setTextColor(mContext.getResources().getColor(R.color.search_hint_text));
+//            textView.setCompoundDrawablesWithIntrinsicBounds(getRecentSearchesIcon(DEFAULT_ICON), 0, 0, 0);
+//            textView.setText(R.string.label_search_recentsearches_none);
+//
+//            int childCount = viewGroup.getChildCount();
+//
+//            for (int i = 1; i < childCount; i++)
+//            {
+//                viewGroup.getChildAt(i).setVisibility(View.GONE);
+//            }
+//        } else
+//        {
+//            mDeleteAllRecentSearchesView.setEnabled(true);
+//
+//            int size = keywordList.size();
+//            Keyword recentKeyword;
+//            TextView textView;
+//            View view;
+//
+//            int childCount = viewGroup.getChildCount();
+//
+//            for (int i = 0; i < childCount; i++)
+//            {
+//                view = viewGroup.getChildAt(i);
+//
+//                if (i < size)
+//                {
+//                    view.setVisibility(View.VISIBLE);
+//                } else
+//                {
+//                    view.setVisibility(View.GONE);
+//                    view.setTag(null);
+//                    continue;
+//                }
+//
+//                recentKeyword = keywordList.get(i);
+//
+//                view.setTag(recentKeyword);
+//
+//                textView = (TextView) view.findViewById(R.id.textView);
+//                textView.setTextColor(mContext.getResources().getColor(R.color.search_text));
+//                textView.setCompoundDrawablesWithIntrinsicBounds(getRecentSearchesIcon(recentKeyword.icon), 0, 0, 0);
+//                textView.setText(recentKeyword.name);
+//            }
+//        }
+//    }
 
     private void initAutoCompleteLayout(View view)
     {
@@ -620,16 +620,16 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
         }
     }
 
-    void showRecentSearchesView()
-    {
-        mAutoCompleteScrollLayout.setVisibility(View.GONE);
-        mRecentSearchLayout.setVisibility(View.VISIBLE);
-    }
+//    void showRecentSearchesView()
+//    {
+//        mAutoCompleteScrollLayout.setVisibility(View.GONE);
+//        mRecentSearchLayout.setVisibility(View.VISIBLE);
+//    }
 
     private void showAutoCompleteView()
     {
         mAutoCompleteScrollLayout.setVisibility(View.VISIBLE);
-        mRecentSearchLayout.setVisibility(View.GONE);
+//        mRecentSearchLayout.setVisibility(View.GONE);
     }
 
     void hideAutoCompleteView()
@@ -693,11 +693,11 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
                 break;
             }
 
-            case R.id.deleteAllView:
-            {
-                ((OnEventListener) mOnEventListener).onDeleteRecentSearches();
-                break;
-            }
+//            case R.id.deleteAllView:
+//            {
+//                ((OnEventListener) mOnEventListener).onDeleteRecentSearches();
+//                break;
+//            }
 
             case R.id.deleteView:
             {

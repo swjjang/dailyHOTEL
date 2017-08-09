@@ -337,7 +337,7 @@ public class GourmetSearchFragment extends PlaceSearchFragment
             mDailyRecentSearches.clear();
             DailyPreference.getInstance(mBaseActivity).setGourmetRecentSearches("");
 
-            mPlaceSearchLayout.updateRecentSearchesLayout(null);
+//            mPlaceSearchLayout.updateRecentSearchesLayout(null);
 
             AnalyticsManager.getInstance(mBaseActivity).recordEvent(AnalyticsManager.Category.SEARCH_//
                 , AnalyticsManager.Action.SEARCH_SCREEN, AnalyticsManager.Label.DELETE_ALL_KEYWORDS, null);
