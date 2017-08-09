@@ -3,6 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
+    xmlns:dailyToolbar="http://schemas.android.com/apk/res-auto"
     xmlns:fresco="http://schemas.android.com/apk/res-auto">
 
     <android.support.constraint.ConstraintLayout
@@ -49,8 +50,8 @@
             <android.support.constraint.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingTop="52dp"
-                android:paddingBottom="30dp">
+                android:paddingBottom="30dp"
+                android:paddingTop="52dp">
 
                 <com.daily.dailyhotel.view.DailyThankYouInformationsView
                     android:id="@+id/thankYouInformationView"
@@ -77,37 +78,15 @@
             </android.support.constraint.ConstraintLayout>
         </ScrollView>
 
-        <android.support.constraint.ConstraintLayout
-            android:id="@+id/toolbarLayout"
+        <com.daily.dailyhotel.view.DailyToolbarView
+            android:id="@+id/toolbarView"
             android:layout_width="0dp"
-            android:layout_height="52dp"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
+            android:layout_height="@dimen/toolbar_height"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent">
-
-            <com.daily.base.widget.DailyTextView
-                android:id="@+id/titleTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/label_completed_payment"
-                android:textColor="@color/white"
-                android:textSize="18dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toTopOf="parent"/>
-
-            <ImageView
-                android:id="@+id/closeView"
-                android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                android:scaleType="center"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/navibar_ic_x_white"/>
-
-        </android.support.constraint.ConstraintLayout>
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            dailyToolbar:titleTextColor="@color/white"
+            dailyToolbar:underLineVisible="false"/>
 
         <android.support.constraint.ConstraintLayout
             android:id="@+id/confirmLayout"

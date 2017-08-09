@@ -41,7 +41,8 @@ public class DailyToolbarView extends ConstraintLayout
         HELP(R.drawable.navibar_ic_help),
         SHARE(R.drawable.navibar_ic_share_01_black),
         CALL(R.drawable.navibar_ic_call),
-        CLOSE(R.drawable.navibar_ic_x),
+        CLOSE_BLACK(R.drawable.navibar_ic_x),
+        CLOSE_WHITE(R.drawable.navibar_ic_x_white),
         TRUE_VR(R.drawable.vector_navibar_ic_treuvr),
         WISH_OFF(R.drawable.vector_navibar_ic_heart_off_black),
         WISH_ON(R.drawable.vector_navibar_ic_heart_on);
@@ -104,6 +105,18 @@ public class DailyToolbarView extends ConstraintLayout
             {
                 float underLineHeight = typedArray.getDimension(R.styleable.dailyToolbar_underLineHeight, ScreenUtils.dpToPx(context, 1));
                 setUnderLineHeight((int) underLineHeight);
+            }
+
+            if (typedArray.hasValue(R.styleable.dailyToolbar_underLineVisible) == true)
+            {
+                boolean underLineVisible = typedArray.getBoolean(R.styleable.dailyToolbar_underLineVisible, true);
+                setUnderLineVisible(underLineVisible);
+            }
+
+            if (typedArray.hasValue(R.styleable.dailyToolbar_titleTextColor) == true)
+            {
+                int titleTextColor = typedArray.getColor(R.styleable.dailyToolbar_titleTextColor, getResources().getColor(R.color.default_text_c323232));
+                setTitleTextColor(titleTextColor);
             }
         }
     }
@@ -312,7 +325,17 @@ public class DailyToolbarView extends ConstraintLayout
         mHideAnimator.start();
     }
 
-    public void setUnderLineVisible(boolean visible)
+    private void setTitleTextColor(int color)
+    {
+        if (mViewDataBinding == null)
+        {
+            return;
+        }
+
+        mViewDataBinding.titleTextView.setTextColor(color);
+    }
+
+    private void setUnderLineVisible(boolean visible)
     {
         if (mViewDataBinding == null)
         {

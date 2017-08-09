@@ -8,12 +8,9 @@ import com.daily.base.OnBaseEventListener;
 import com.daily.base.util.DailyTextUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ActivityStayOutboundSearchDataBinding;
-import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
 public class StayOutboundSearchView extends BaseDialogView<StayOutboundSearchView.OnEventListener, ActivityStayOutboundSearchDataBinding> implements StayOutboundSearchViewInterface, View.OnClickListener
 {
-    private DailyToolbarLayout mDailyToolbarLayout;
-
     public interface OnEventListener extends OnBaseEventListener
     {
         void onSuggestClick();
@@ -49,12 +46,12 @@ public class StayOutboundSearchView extends BaseDialogView<StayOutboundSearchVie
     @Override
     public void setToolbarTitle(String title)
     {
-        if (mDailyToolbarLayout == null)
+        if (getViewDataBinding() == null)
         {
             return;
         }
 
-        mDailyToolbarLayout.setToolbarTitle(title);
+        getViewDataBinding().toolbarView.setTitleText(title);
     }
 
     @Override
@@ -132,8 +129,14 @@ public class StayOutboundSearchView extends BaseDialogView<StayOutboundSearchVie
             return;
         }
 
-        mDailyToolbarLayout = new DailyToolbarLayout(getContext(), viewDataBinding.toolbar);
-        mDailyToolbarLayout.initToolbar(getString(R.string.label_stay_outbound_search), R.drawable.navibar_ic_x//
-            , v -> getEventListener().onBackClick(), false);
+        viewDataBinding.toolbarView.setBackImageResource(R.drawable.navibar_ic_x);
+        viewDataBinding.toolbarView.setOnBackClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                getEventListener().onBackClick();
+            }
+        });
     }
 }

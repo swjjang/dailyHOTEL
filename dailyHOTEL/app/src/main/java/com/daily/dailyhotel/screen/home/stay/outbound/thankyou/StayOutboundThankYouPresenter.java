@@ -108,6 +108,7 @@ public class StayOutboundThankYouPresenter extends BaseExceptionPresenter<StayOu
     @Override
     public void onPostCreate()
     {
+        getViewInterface().setToolbarTitle(getString(R.string.label_completed_payment));
         getViewInterface().setImageUrl(mImageUrl);
 
         String name = DailyUserPreference.getInstance(getActivity()).getName();

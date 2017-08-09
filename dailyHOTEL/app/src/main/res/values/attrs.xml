@@ -71,6 +71,8 @@
 
     <declare-styleable name="dailyToolbar">
         <attr name="underLineHeight" format="dimension" />
+        <attr name="underLineVisible" format="boolean" />
+        <attr name="titleTextColor" format="color" />
     </declare-styleable>
 
 </resources>
