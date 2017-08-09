@@ -2,10 +2,13 @@ package com.twoheart.dailyhotel.network;
 
 import com.daily.dailyhotel.repository.remote.model.BookingData;
 import com.daily.dailyhotel.repository.remote.model.BookingHideData;
+import com.daily.dailyhotel.repository.remote.model.CampaignTagData;
 import com.daily.dailyhotel.repository.remote.model.CardData;
 import com.daily.dailyhotel.repository.remote.model.CommonDateTimeData;
+import com.daily.dailyhotel.repository.remote.model.GourmetCampaignTagsData;
 import com.daily.dailyhotel.repository.remote.model.GourmetListData;
 import com.daily.dailyhotel.repository.remote.model.PaymentResultData;
+import com.daily.dailyhotel.repository.remote.model.StayCampaignTagsData;
 import com.daily.dailyhotel.repository.remote.model.StayListData;
 import com.daily.dailyhotel.repository.remote.model.StayOutboundBookingDetailData;
 import com.daily.dailyhotel.repository.remote.model.StayOutboundDetailData;
@@ -719,4 +722,19 @@ public interface DailyMobileService
     Observable<BaseListDto<String>> getGourmetUnavailableDates(@Path(value = "mobileAPI", encoded = true) String mobileAPI, //
                                                                @Query("dateRange") int dateRange, //
                                                                @Query("reverse") boolean isReverse);
+
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
+    @GET("{mobileAPI}")
+    Observable<BaseListDto<CampaignTagData>> getCampaignTagList(@Path(value = "mobileAPI", encoded = true) String mobileAPI);
+
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
+    @GET("{mobileAPI}")
+    Observable<BaseDto<StayCampaignTagsData>> getStayCampaignTags(@Path(value = "mobileAPI", encoded = true) String mobileAPI, //
+                                                                  @Query("salesDate") String checkInDate, //
+                                                                  @Query("period") int nights);
+
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
+    @GET("{mobileAPI}")
+    Observable<BaseDto<GourmetCampaignTagsData>> getGourmetCampaignTags(@Path(value = "mobileAPI", encoded = true) String mobileAPI, //
+                                                                        @Query("salesDate") String visitDate);
 }

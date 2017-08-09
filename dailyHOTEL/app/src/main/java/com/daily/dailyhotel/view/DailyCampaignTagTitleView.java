@@ -2,56 +2,49 @@ package com.daily.dailyhotel.view;
 
 import android.content.Context;
 import android.databinding.DataBindingUtil;
+import android.graphics.Canvas;
 import android.support.constraint.ConstraintLayout;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 
 import com.daily.base.OnBaseEventListener;
-import com.daily.base.util.DailyTextUtils;
-import com.daily.base.util.ExLog;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.DailyViewCampaignTagTitleDataBinding;
-import com.twoheart.dailyhotel.model.time.GourmetBookingDay;
-import com.twoheart.dailyhotel.model.time.PlaceBookingDay;
-import com.twoheart.dailyhotel.model.time.StayBookingDay;
-import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
-
-import java.util.Locale;
 
 /**
  * Created by iseung-won on 2017. 8. 4..
  */
 
-public class DailyCampainTagTitleView extends ConstraintLayout
+public class DailyCampaignTagTitleView extends ConstraintLayout
 {
     private DailyViewCampaignTagTitleDataBinding mViewDataBinding;
     private Context mContext;
 
 //    private PlaceBookingDay mPlaceBookingDay;
 
-    private DailyCampainTagTitleView.OnEventListener mEventListener;
+    private DailyCampaignTagTitleView.OnEventListener mEventListener;
 
     public interface OnEventListener extends OnBaseEventListener
     {
         void onCalendarClick();
     }
 
-    public DailyCampainTagTitleView(Context context)
+    public DailyCampaignTagTitleView(Context context)
     {
         super(context);
 
         initLayout(context);
     }
 
-    public DailyCampainTagTitleView(Context context, AttributeSet attrs)
+    public DailyCampaignTagTitleView(Context context, AttributeSet attrs)
     {
         super(context, attrs);
 
         initLayout(context);
     }
 
-    public DailyCampainTagTitleView(Context context, AttributeSet attrs, int defStyleAttr)
+    public DailyCampaignTagTitleView(Context context, AttributeSet attrs, int defStyleAttr)
     {
         super(context, attrs, defStyleAttr);
 
@@ -156,7 +149,7 @@ public class DailyCampainTagTitleView extends ConstraintLayout
         mViewDataBinding.calendarTextView.setText(text);
     }
 
-//    private void setCalendarText(final PlaceBookingDay placeBookingDay)
+    //    private void setCalendarText(final PlaceBookingDay placeBookingDay)
 //    {
 //        if (mViewDataBinding == null)
 //        {

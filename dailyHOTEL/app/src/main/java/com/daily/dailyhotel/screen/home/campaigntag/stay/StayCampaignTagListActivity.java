@@ -63,7 +63,7 @@ public class StayCampaignTagListActivity extends BaseActivity<StayCampaignTagLis
         return intent;
     }
 
-    public static Intent newInstance(Context context, int index, String hashTag, StayBookingDay stayBookingDay, boolean isUsedMultiTransition)
+    public static Intent newInstance(Context context, int index, String hashTag, StayBookingDay stayBookingDay)
     {
         Intent intent = new Intent(context, StayCampaignTagListActivity.class);
 
@@ -71,12 +71,9 @@ public class StayCampaignTagListActivity extends BaseActivity<StayCampaignTagLis
         intent.putExtra(INTENT_EXTRA_DATA_INDEX, index);
         intent.putExtra(INTENT_EXTRA_DATA_TITLE, hashTag);
         intent.putExtra(INTENT_EXTRA_DATA_PLACEBOOKINGDAY, stayBookingDay);
-        intent.putExtra(Constants.NAME_INTENT_EXTRA_DATA_IS_USED_MULTITRANSITIOIN, isUsedMultiTransition);
 
         return intent;
     }
-
-//    protected abstract StayCampaignTagListPresenter getPlaceCampaignTagListPresenter();
 
     @NonNull
     @Override

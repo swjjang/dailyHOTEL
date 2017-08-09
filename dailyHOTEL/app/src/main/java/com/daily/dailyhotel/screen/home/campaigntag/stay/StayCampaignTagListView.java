@@ -1,29 +1,48 @@
 package com.daily.dailyhotel.screen.home.campaigntag.stay;
 
+import android.app.Activity;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import com.daily.base.BaseActivity;
 import com.daily.base.BaseDialogView;
 import com.daily.base.OnBaseEventListener;
-import com.daily.dailyhotel.view.DailyCampainTagTitleView;
+import com.daily.base.util.ExLog;
+import com.daily.base.util.ScreenUtils;
+import com.daily.dailyhotel.view.DailyCampaignTagTitleView;
+import com.facebook.imagepipeline.nativecode.NativeBlurFilter;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ActivityPlaceCampaignTagListDataBinding;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
-import com.twoheart.dailyhotel.model.time.PlaceBookingDay;
 import com.twoheart.dailyhotel.model.time.StayBookingDay;
+import com.twoheart.dailyhotel.screen.home.collection.CollectionStayAdapter;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.Util;
 
 import java.util.ArrayList;
 
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
+import io.reactivex.schedulers.Schedulers;
+
 /**
  * Created by iseung-won on 2017. 8. 4..
  */
 
-public class StayCampaignTagListView extends BaseDialogView<StayCampaignTagListView.OnEventListener, ActivityPlaceCampaignTagListDataBinding> implements StayCampaignTagListInterface
+public class StayCampaignTagListView //
+    extends BaseDialogView<StayCampaignTagListView.OnEventListener, ActivityPlaceCampaignTagListDataBinding> //
+    implements StayCampaignTagListInterface
 {
+    private ImageView mBlurImageView;
+
     private StayCampaignListAdapter mRecyclerAdapter;
 
     public StayCampaignTagListView(BaseActivity activity, OnEventListener listener)
@@ -49,7 +68,7 @@ public class StayCampaignTagListView extends BaseDialogView<StayCampaignTagListV
             return;
         }
 
-       viewDataBinding.campaignTitleLayout.setOnEventListener(new DailyCampainTagTitleView.OnEventListener()
+        viewDataBinding.campaignTitleLayout.setOnEventListener(new DailyCampaignTagTitleView.OnEventListener()
         {
             @Override
             public void onCalendarClick()
@@ -96,16 +115,16 @@ public class StayCampaignTagListView extends BaseDialogView<StayCampaignTagListV
         getViewDataBinding().campaignTitleLayout.setTitleText(title);
     }
 
-//    @Override
-//    public void setResultCount(int resultCount)
-//    {
-//        if (getViewDataBinding() == null)
-//        {
-//            return;
-//        }
-//
-//        getViewDataBinding().campaignTitleLayout.setResultCount(resultCount);
-//    }
+    //    @Override
+    //    public void setResultCount(int resultCount)
+    //    {
+    //        if (getViewDataBinding() == null)
+    //        {
+    //            return;
+    //        }
+    //
+    //        getViewDataBinding().campaignTitleLayout.setResultCount(resultCount);
+    //    }
 
     @Override
     public void setData(ArrayList<PlaceViewItem> placeViewItemList, StayBookingDay stayBookingDay)
@@ -143,6 +162,93 @@ public class StayCampaignTagListView extends BaseDialogView<StayCampaignTagListV
         }
 
         getViewDataBinding().campaignTitleLayout.setCalendarText(text);
+    }
+
+    @Override
+    public boolean getBlurVisibility()
+    {
+        if (mBlurImageView == null)
+        {
+            return false;
+        }
+
+        return mBlurImageView.getVisibility() == View.VISIBLE;
+    }
+
+    @Override
+    public void setBlurVisibility(Activity activity, boolean visible)
+    {
+        if (activity == null)
+        {
+            return;
+        }
+
+        if (visible == true)
+        {
+            if (mBlurImageView == null)
+            {
+                mBlurImageView = new ImageView(activity);
+                activity.getWindow().addContentView(mBlurImageView//
+                    , new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+
+                mBlurImageView.setImageResource(R.color.black_a40);
+                mBlurImageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            }
+
+            mBlurImageView.setVisibility(View.VISIBLE);
+
+            Bitmap bitmap = ScreenUtils.takeScreenShot(activity);
+
+            if (bitmap == null)
+            {
+                if (mBlurImageView != null)
+                {
+                    mBlurImageView.setBackgroundDrawable(null);
+                    mBlurImageView.setVisibility(View.GONE);
+                }
+            } else
+            {
+                Observable.just(ScreenUtils.takeScreenShot(activity)).subscribeOn(Schedulers.io()).map(new Function<Bitmap, Bitmap>()
+                {
+                    @Override
+                    public Bitmap apply(@io.reactivex.annotations.NonNull Bitmap bitmap) throws Exception
+                    {
+                        try
+                        {
+                            NativeBlurFilter.iterativeBoxBlur(bitmap, 2, 60);
+                        } catch (Exception e)
+                        {
+                            ExLog.d(e.toString());
+                        }
+
+                        return bitmap;
+                    }
+                }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Bitmap>()
+                {
+                    @Override
+                    public void accept(@io.reactivex.annotations.NonNull Bitmap bitmap) throws Exception
+                    {
+                        mBlurImageView.setBackgroundDrawable(new BitmapDrawable(getContext().getResources(), bitmap));
+                    }
+                });
+            }
+        } else
+        {
+            if (mBlurImageView != null)
+            {
+                mBlurImageView.setBackgroundDrawable(null);
+                mBlurImageView.setVisibility(View.GONE);
+            }
+        }
+    }
+
+    @Override
+    public void setUsedMultiTransition(boolean isUsedMultiTransition)
+    {
+        if (mRecyclerAdapter != null)
+        {
+            mRecyclerAdapter.setUsedMultiTransition(isUsedMultiTransition);
+        }
     }
 
     public interface OnEventListener extends OnBaseEventListener
