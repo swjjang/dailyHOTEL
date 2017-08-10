@@ -4,12 +4,21 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v4.util.Pair;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
+import com.daily.dailyhotel.entity.CampaignTag;
+import com.daily.dailyhotel.entity.CommonDateTime;
 import com.daily.dailyhotel.screen.home.stay.outbound.search.StayOutboundSearchActivity;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Keyword;
+import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.model.time.StayBookingDay;
 import com.twoheart.dailyhotel.network.model.StayKeyword;
 import com.twoheart.dailyhotel.network.model.TodayDateTime;
@@ -26,14 +35,19 @@ import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
 import retrofit2.Call;
 import retrofit2.Response;
 
@@ -41,6 +55,8 @@ public class StaySearchFragment extends PlaceSearchFragment
 {
     StayBookingDay mStayBookingDay;
     Disposable mAnalyticsDisposable;
+
+    private List<Stay> mRecentlyStayList;
 
     @Override
     protected void initContents()
@@ -311,6 +327,41 @@ public class StaySearchFragment extends PlaceSearchFragment
         return ServiceType.HOTEL;
     }
 
+    @Override
+    public void setTodayDateTime(TodayDateTime todayDateTime)
+    {
+        setDateChanged(todayDateTime, mStayBookingDay);
+
+        addCompositeDisposable(Observable.zip(mRecentlyRemoteImpl.getStayInboundRecentlyList(mStayBookingDay, false) //
+            , mCampaignTagRemoteImpl.getCampaignTagList(getServiceType().name()) //
+            , new BiFunction<List<Stay>, ArrayList<CampaignTag>, List<Keyword>>()
+            {
+                @Override
+                public List<Keyword> apply(@NonNull List<Stay> stayList, @NonNull ArrayList<CampaignTag> tagList) throws Exception
+                {
+                    mRecentlyStayList = stayList;
+                    mCampaignTagList = tagList;
+
+                    return mDailyRecentSearches.getList();
+                }
+            }).subscribeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<List<Keyword>>()
+        {
+            @Override
+            public void accept(@NonNull List<Keyword> keywordList) throws Exception
+            {
+                unLockUI();
+                mPlaceSearchLayout.setRecyclerViewData(mRecentlyStayList, mCampaignTagList, keywordList);
+            }
+        }, new Consumer<Throwable>()
+        {
+            @Override
+            public void accept(@NonNull Throwable throwable) throws Exception
+            {
+                onHandleError(throwable);
+            }
+        }));
+    }
+
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // OnEventListener
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -376,7 +427,7 @@ public class StaySearchFragment extends PlaceSearchFragment
             mDailyRecentSearches.clear();
             DailyPreference.getInstance(mBaseActivity).setHotelRecentSearches("");
 
-//            mPlaceSearchLayout.updateRecentSearchesLayout(null);
+            //            mPlaceSearchLayout.updateRecentSearchesLayout(null);
 
             AnalyticsManager.getInstance(mBaseActivity).recordEvent(AnalyticsManager.Category.SEARCH_//
                 , AnalyticsManager.Action.SEARCH_SCREEN, AnalyticsManager.Label.DELETE_ALL_KEYWORDS, null);

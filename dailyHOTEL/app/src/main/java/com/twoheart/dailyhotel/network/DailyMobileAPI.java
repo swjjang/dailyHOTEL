@@ -1535,18 +1535,15 @@ public class DailyMobileAPI
     public Observable<BaseListDto<CampaignTagData>> getCampainTagList(String serviceType)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/v5/campaign/hashtag" //
-            : "";
+            : "ODckMjIkODgkNTUkMzQkMyQzNyQyNyQ0JDY5JDcyJDAkNTMkODMkNTQkMjAk$QNEUTTxNjlCNDRCQTg1RHDBDRDCc0QW0Y5Qzg5NYDEJCM0ZCQkEwMTLKQ0NEM4MUYNGRTBDNTZVFZRjMzRkQ5JRDAyNEI1RDcwRA=JP=$";
 
-        Map<String, String> urlParams = new HashMap<>();
-        urlParams.put("{serviceType}", serviceType);
-
-        return mDailyMobileService.getCampaignTagList(Crypto.getUrlDecoderEx(URL, urlParams)).subscribeOn(Schedulers.io());
+        return mDailyMobileService.getCampaignTagList(Crypto.getUrlDecoderEx(URL), serviceType).subscribeOn(Schedulers.io());
     }
 
     public Observable<BaseDto<StayCampaignTagsData>> getStayCampaignTags(int tagIndex, String checkInDate, int nights)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/v5/campaign/hashtag" //
-            : "";
+            : "NTAkOCQ4MSQyNiQxNyQ4NSQ5JDczJDYkMTkkNzQkNTckODIkNTkkNTgkODAk$OUVCMjUFFWVNkZGN0JCHIMEQ4QTNCRJTQ5N0EzMUFGNkJDNjIwQjVCMERULREBNzM2RDNENTQzQjIL5GJNkYwVMkNGNDhGDXRUVBNg==$";
 
         Map<String, String> urlParams = new HashMap<>();
         urlParams.put("{idx}", Integer.toString(tagIndex));
@@ -1557,7 +1554,7 @@ public class DailyMobileAPI
     public Observable<BaseDto<GourmetCampaignTagsData>> getGourmetCampaignTags(int tagIndex, String visitDate)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/v5/campaign/hashtag" //
-            : "";
+            : "NTAkOCQ4MSQyNiQxNyQ4NSQ5JDczJDYkMTkkNzQkNTckODIkNTkkNTgkODAk$OUVCMjUFFWVNkZGN0JCHIMEQ4QTNCRJTQ5N0EzMUFGNkJDNjIwQjVCMERULREBNzM2RDNENTQzQjIL5GJNkYwVMkNGNDhGDXRUVBNg==$";
 
         Map<String, String> urlParams = new HashMap<>();
         urlParams.put("{idx}", Integer.toString(tagIndex));

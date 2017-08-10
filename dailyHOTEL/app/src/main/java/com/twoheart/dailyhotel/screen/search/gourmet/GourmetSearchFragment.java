@@ -4,12 +4,20 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v4.util.Pair;
 
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
+import com.daily.dailyhotel.entity.CampaignTag;
+import com.daily.dailyhotel.entity.CommonDateTime;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.model.Gourmet;
 import com.twoheart.dailyhotel.model.Keyword;
+import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.model.time.GourmetBookingDay;
+import com.twoheart.dailyhotel.model.time.StayBookingDay;
 import com.twoheart.dailyhotel.network.model.GourmetKeyword;
 import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.place.fragment.PlaceSearchFragment;
@@ -24,13 +32,17 @@ import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
 import retrofit2.Call;
 import retrofit2.Response;
 
@@ -38,6 +50,8 @@ public class GourmetSearchFragment extends PlaceSearchFragment
 {
     GourmetBookingDay mGourmetBookingDay;
     Disposable mAnalyticsDisposable;
+
+    private List<Gourmet> mRecentlyGourmetList;
 
     @Override
     protected void initContents()
@@ -293,6 +307,41 @@ public class GourmetSearchFragment extends PlaceSearchFragment
         return ServiceType.GOURMET;
     }
 
+    @Override
+    public void setTodayDateTime(TodayDateTime todayDateTime)
+    {
+        setDateChanged(todayDateTime, mGourmetBookingDay);
+
+        addCompositeDisposable(Observable.zip(mRecentlyRemoteImpl.getGourmetRecentlyList(mGourmetBookingDay, false) //
+            , mCampaignTagRemoteImpl.getCampaignTagList(getServiceType().name()) //
+            , new BiFunction<List<Gourmet>, ArrayList<CampaignTag>, List<Keyword>>()
+            {
+                @Override
+                public List<Keyword> apply(@NonNull List<Gourmet> gourmetList, @NonNull ArrayList<CampaignTag> tagList) throws Exception
+                {
+                    mRecentlyGourmetList = gourmetList;
+                    mCampaignTagList = tagList;
+
+                    return mDailyRecentSearches.getList();
+                }
+            }).subscribeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<List<Keyword>>()
+        {
+            @Override
+            public void accept(@NonNull List<Keyword> keywordList) throws Exception
+            {
+                unLockUI();
+                mPlaceSearchLayout.setRecyclerViewData(mRecentlyGourmetList, mCampaignTagList, keywordList);
+            }
+        }, new Consumer<Throwable>()
+        {
+            @Override
+            public void accept(@NonNull Throwable throwable) throws Exception
+            {
+                onHandleError(throwable);
+            }
+        }));
+    }
+
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // OnEventListener
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -343,7 +392,7 @@ public class GourmetSearchFragment extends PlaceSearchFragment
             mDailyRecentSearches.clear();
             DailyPreference.getInstance(mBaseActivity).setGourmetRecentSearches("");
 
-//            mPlaceSearchLayout.updateRecentSearchesLayout(null);
+            //            mPlaceSearchLayout.updateRecentSearchesLayout(null);
 
             AnalyticsManager.getInstance(mBaseActivity).recordEvent(AnalyticsManager.Category.SEARCH_//
                 , AnalyticsManager.Action.SEARCH_SCREEN, AnalyticsManager.Label.DELETE_ALL_KEYWORDS, null);

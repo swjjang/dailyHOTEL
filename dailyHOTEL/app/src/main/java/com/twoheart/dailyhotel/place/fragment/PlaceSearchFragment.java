@@ -5,12 +5,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.daily.base.widget.DailyToast;
+import com.daily.dailyhotel.entity.Booking;
+import com.daily.dailyhotel.entity.CampaignTag;
 import com.daily.dailyhotel.entity.CommonDateTime;
 import com.daily.dailyhotel.repository.remote.CampaignTagRemoteImpl;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
@@ -18,6 +21,7 @@ import com.daily.dailyhotel.repository.remote.RecentlyRemoteImpl;
 import com.daily.dailyhotel.util.RecentlyPlaceUtil;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Keyword;
+import com.twoheart.dailyhotel.model.time.StayBookingDay;
 import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.place.activity.PlaceSearchResultActivity;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
@@ -30,7 +34,17 @@ import com.twoheart.dailyhotel.util.DailyLocationFactory;
 import com.twoheart.dailyhotel.util.DailyRecentSearches;
 import com.twoheart.dailyhotel.util.Util;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+
 import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.functions.BiFunction;
+import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
+import io.reactivex.functions.Predicate;
 
 public abstract class PlaceSearchFragment extends BaseFragment
 {
@@ -51,6 +65,7 @@ public abstract class PlaceSearchFragment extends BaseFragment
     protected CampaignTagRemoteImpl mCampaignTagRemoteImpl;
 
     protected TodayDateTime mTodayDateTime;
+    protected ArrayList<CampaignTag> mCampaignTagList;
 
     private boolean mIsDateChanged;
     private DailyLocationFactory mDailyLocationFactory;
@@ -73,6 +88,8 @@ public abstract class PlaceSearchFragment extends BaseFragment
 
     public abstract Constants.ServiceType getServiceType();
 
+    public abstract void setTodayDateTime(TodayDateTime todayDateTime);
+
     public interface OnSearchFragmentListener
     {
         void finish();
@@ -89,16 +106,45 @@ public abstract class PlaceSearchFragment extends BaseFragment
 
         mPlaceSearchLayout = getPlaceSearchLayout(mBaseActivity);
         mPlaceSearchNetworkController = getPlaceSearchNetworkController(mBaseActivity);
+        mCommonRemoteImpl = new CommonRemoteImpl(mBaseActivity);
+        mRecentlyRemoteImpl = new RecentlyRemoteImpl(mBaseActivity);
+        mCampaignTagRemoteImpl = new CampaignTagRemoteImpl(mBaseActivity);
 
         View view = mPlaceSearchLayout.onCreateView(getLayoutResourceId(), container);
 
         initContents();
 
-        lockUI();
-        mPlaceSearchNetworkController.requestCommonDateTime();
+        //        lockUI();
+        //        mPlaceSearchNetworkController.requestCommonDateTime();
 
-//        addCompositeDisposable(Observable.zip(mCommonRemoteImpl.getCommonDateTime(),
-//            mCampaignTagRemoteImpl.getCampaignTagList(getServiceType().name())));
+        lockUI();
+        addCompositeDisposable(mCommonRemoteImpl.getCommonDateTime().map(new Function<CommonDateTime, TodayDateTime>()
+        {
+            @Override
+            public TodayDateTime apply(@NonNull CommonDateTime commonDateTime) throws Exception
+            {
+                TodayDateTime todayDateTime = new TodayDateTime(commonDateTime.openDateTime //
+                    , commonDateTime.closeDateTime, commonDateTime.currentDateTime //
+                    , commonDateTime.dailyDateTime);
+
+                return todayDateTime;
+            }
+        }).subscribeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<TodayDateTime>()
+        {
+            @Override
+            public void accept(@NonNull TodayDateTime todayDateTime) throws Exception
+            {
+                mTodayDateTime = todayDateTime;
+                setTodayDateTime(todayDateTime);
+            }
+        }, new Consumer<Throwable>()
+        {
+            @Override
+            public void accept(@NonNull Throwable throwable) throws Exception
+            {
+                onHandleError(throwable);
+            }
+        }));
 
         return view;
     }
@@ -118,7 +164,7 @@ public abstract class PlaceSearchFragment extends BaseFragment
     {
         mDailyRecentSearches = new DailyRecentSearches(getRecentSearches());
 
-//        mPlaceSearchLayout.updateRecentSearchesLayout(mDailyRecentSearches.getList());
+        //        mPlaceSearchLayout.updateRecentSearchesLayout(mDailyRecentSearches.getList());
     }
 
     public void setOnSearchFragmentListener(OnSearchFragmentListener listener)
@@ -239,7 +285,7 @@ public abstract class PlaceSearchFragment extends BaseFragment
                         mDailyRecentSearches.addString(new Keyword(keyword.icon, keyword.name));
 
                         writeRecentSearches(mDailyRecentSearches.toString());
-//                        mPlaceSearchLayout.updateRecentSearchesLayout(mDailyRecentSearches.getList());
+                        //                        mPlaceSearchLayout.updateRecentSearchesLayout(mDailyRecentSearches.getList());
                     }
                 }
 

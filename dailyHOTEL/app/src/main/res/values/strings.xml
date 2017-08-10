@@ -104,6 +104,9 @@
 
     <string name="label_count_stay">%1$d개 스테이</string>
     <string name="label_count_gourmet">%1$d개 고메</string>
+    <string name="label_recently_stay">최근 확인한 스테이</string>
+    <string name="label_recently_gourmet">최근 확인한 고메</string>
+    <string name="label_popular_tag">인기 태그</string>
 
     <string name="label_visit_walk">도보</string>
     <string name="label_visit_car">차량</string>

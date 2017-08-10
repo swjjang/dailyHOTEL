@@ -11,10 +11,19 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.daily.base.util.DailyTextUtils;
+import com.daily.dailyhotel.entity.CampaignTag;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Keyword;
+import com.twoheart.dailyhotel.model.Place;
+import com.twoheart.dailyhotel.model.SearchOptionItem;
+import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.network.model.StayKeyword;
 import com.twoheart.dailyhotel.place.layout.PlaceSearchLayout;
+import com.twoheart.dailyhotel.screen.search.PlaceSearchRecyclerAdapter;
+import com.twoheart.dailyhotel.screen.search.SearchOptionItemListAdapter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class StaySearchLayout extends PlaceSearchLayout
 {
@@ -137,5 +146,48 @@ public class StaySearchLayout extends PlaceSearchLayout
             titleTextView.setText(stayKeyword.name);
             priceTextView.setVisibility(View.INVISIBLE);
         }
+    }
+
+    @Override
+    public void setRecyclerViewData(List<? extends Place> recentlyList, ArrayList<CampaignTag> campaignTagList, List<Keyword> recentSearchList)
+    {
+        ArrayList<SearchOptionItem> recentlyPlaceDataList = new ArrayList<>();
+        ArrayList<SearchOptionItem> campaignTagDataList = new ArrayList<>();
+        ArrayList<SearchOptionItem> recentSearchDataList = new ArrayList<>();
+
+        for (Place place : recentlyList)
+        {
+            Stay stay = (Stay) place;
+
+            SearchOptionItem item = new SearchOptionItem();
+            item.iconResId = R.drawable.vector_ob_search_ic_02_hotel;
+            item.itemText = stay.name;
+            item.object = stay;
+            recentlyPlaceDataList.add(item);
+        }
+
+        for (CampaignTag campaignTag : campaignTagList)
+        {
+            SearchOptionItem item = new SearchOptionItem();
+            item.iconResId = R.drawable.vector_search_ic_04_tag;
+            item.itemText = campaignTag.campaignTag;
+            item.object = campaignTag;
+            campaignTagDataList.add(item);
+        }
+
+        for (Keyword keyword : recentSearchList)
+        {
+            SearchOptionItem item = new SearchOptionItem();
+            item.iconResId = keyword.icon;
+            item.itemText = keyword.name;
+            item.object = keyword;
+            recentSearchDataList.add(item);
+        }
+
+        mRecyclerAdapter = new PlaceSearchRecyclerAdapter(mContext //
+            , PlaceSearchRecyclerAdapter.TYPE_STAY, recentlyPlaceDataList //
+            , campaignTagDataList, recentSearchDataList);
+
+        mRecyclerView.setAdapter(mRecyclerAdapter);
     }
 }

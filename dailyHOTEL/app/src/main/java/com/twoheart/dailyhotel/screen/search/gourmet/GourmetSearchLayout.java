@@ -9,10 +9,19 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.daily.base.util.DailyTextUtils;
+import com.daily.dailyhotel.entity.CampaignTag;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.model.Gourmet;
 import com.twoheart.dailyhotel.model.Keyword;
+import com.twoheart.dailyhotel.model.Place;
+import com.twoheart.dailyhotel.model.SearchOptionItem;
+import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.network.model.GourmetKeyword;
 import com.twoheart.dailyhotel.place.layout.PlaceSearchLayout;
+import com.twoheart.dailyhotel.screen.search.PlaceSearchRecyclerAdapter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class GourmetSearchLayout extends PlaceSearchLayout
 {
@@ -104,5 +113,48 @@ public class GourmetSearchLayout extends PlaceSearchLayout
             titleTextView.setText(gourmetKeyword.name);
             priceTextView.setVisibility(View.INVISIBLE);
         }
+    }
+
+    @Override
+    public void setRecyclerViewData(List<? extends Place> recentlyList, ArrayList<CampaignTag> campaignTagList, List<Keyword> recentSearchList)
+    {
+        ArrayList<SearchOptionItem> recentlyPlaceDataList = new ArrayList<>();
+        ArrayList<SearchOptionItem> campaignTagDataList = new ArrayList<>();
+        ArrayList<SearchOptionItem> recentSearchDataList = new ArrayList<>();
+
+        for (Place place : recentlyList)
+        {
+            Gourmet gourmet = (Gourmet) place;
+
+            SearchOptionItem item = new SearchOptionItem();
+            item.iconResId = R.drawable.vector_ob_search_ic_02_hotel;
+            item.itemText = gourmet.name;
+            item.object = gourmet;
+            recentlyPlaceDataList.add(item);
+        }
+
+        for (CampaignTag campaignTag : campaignTagList)
+        {
+            SearchOptionItem item = new SearchOptionItem();
+            item.iconResId = R.drawable.vector_search_ic_04_tag;
+            item.itemText = campaignTag.campaignTag;
+            item.object = campaignTag;
+            campaignTagDataList.add(item);
+        }
+
+        for (Keyword keyword : recentSearchList)
+        {
+            SearchOptionItem item = new SearchOptionItem();
+            item.iconResId = keyword.icon;
+            item.itemText = keyword.name;
+            item.object = keyword;
+            recentSearchDataList.add(item);
+        }
+
+        mRecyclerAdapter = new PlaceSearchRecyclerAdapter(mContext //
+            , PlaceSearchRecyclerAdapter.TYPE_GOURMET, recentlyPlaceDataList //
+            , campaignTagDataList, recentSearchDataList);
+
+        mRecyclerView.setAdapter(mRecyclerAdapter);
     }
 }

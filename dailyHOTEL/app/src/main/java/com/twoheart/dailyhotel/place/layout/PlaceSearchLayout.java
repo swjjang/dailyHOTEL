@@ -23,11 +23,14 @@ import android.widget.TextView;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ScreenUtils;
 import com.daily.base.widget.DailyScrollView;
+import com.daily.dailyhotel.entity.CampaignTag;
 import com.daily.dailyhotel.view.DailySearchCircleIndicator;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Keyword;
+import com.twoheart.dailyhotel.model.Place;
 import com.twoheart.dailyhotel.place.base.BaseLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
+import com.twoheart.dailyhotel.screen.search.PlaceSearchRecyclerAdapter;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
@@ -35,6 +38,8 @@ import com.twoheart.dailyhotel.util.StringFilter;
 import com.twoheart.dailyhotel.util.Util;
 
 import java.lang.ref.WeakReference;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.List;
 
 public abstract class PlaceSearchLayout extends BaseLayout implements View.OnClickListener
@@ -58,7 +63,8 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
     //    private View mDeleteAllRecentSearchesView;
 
     private DailySearchCircleIndicator mCircleIndicator;
-    private RecyclerView mRecyclerView;
+    protected RecyclerView mRecyclerView;
+    protected PlaceSearchRecyclerAdapter mRecyclerAdapter;
 
     EditText mSearchEditText;
     private TextView mDateTextView;
@@ -93,6 +99,9 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
     protected abstract int getRecentSearchesIcon(int type);
 
     protected abstract void updateSuggestLayout(TextView titleTextView, TextView priceTextView, Keyword keyword, String text);
+
+    public abstract void setRecyclerViewData(List<? extends Place> recentlyList,
+                                             ArrayList<CampaignTag> campaignTagList, List<Keyword> recentSearchList);
 
     public PlaceSearchLayout(Context context, OnBaseEventListener listener)
     {
@@ -248,8 +257,23 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
 
         PagerSnapHelper snapHelper = new PagerSnapHelper();
         snapHelper.attachToRecyclerView(mRecyclerView);
-    }
 
+        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener()
+        {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState)
+            {
+                super.onScrollStateChanged(recyclerView, newState);
+
+                if (newState == RecyclerView.SCROLL_STATE_IDLE)
+                {
+                    View view = snapHelper.findSnapView(mRecyclerView.getLayoutManager());
+                    int position = mRecyclerView.getChildAdapterPosition(view);
+                    mCircleIndicator.setPosition(position);
+                }
+            }
+        });
+    }
 
     public void resetSearchKeyword()
     {
