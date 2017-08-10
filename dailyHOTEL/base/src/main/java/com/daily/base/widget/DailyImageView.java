@@ -27,8 +27,6 @@ public class DailyImageView extends AppCompatImageView
 
     public void setVectorImageResource(@DrawableRes int resId)
     {
-        super.setImageResource(resId);
-
         if (VersionUtils.isOverAPI21() == true)
         {
             super.setImageResource(resId);

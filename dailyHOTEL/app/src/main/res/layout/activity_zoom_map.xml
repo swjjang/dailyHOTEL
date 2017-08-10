@@ -1,25 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
+    xmlns:dailyToolbar="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-    <include layout="@layout/toolbar_default"/>
+    <com.daily.dailyhotel.view.DailyToolbarView
+        android:id="@+id/toolbarView"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/toolbar_height"
+        android:background="@color/white"
+        android:elevation="2dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        dailyToolbar:underLineHeight="@dimen/gradient_1dp_line_height_under_21"/>
 
     <FrameLayout
         android:id="@+id/mapLayout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@+id/addressLayout"
-        android:layout_below="@+id/toolbar"/>
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/addressLayout"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbarView"/>
 
     <RelativeLayout
         android:id="@+id/addressLayout"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="74dp"
-        android:layout_above="@+id/bottomLayout"
-        android:background="@color/white">
+        android:background="@color/white"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/bottomLayout">
 
         <com.daily.base.widget.DailyTextView
             android:id="@+id/copyAddressView"
@@ -54,10 +70,12 @@
 
     <RelativeLayout
         android:id="@+id/bottomLayout"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="64dp"
-        android:layout_alignParentBottom="true"
-        android:background="@color/white">
+        android:background="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent">
 
         <View
             android:layout_width="match_parent"
@@ -76,4 +94,4 @@
             android:textSize="17dp"
             dailyFont:style="Medium"/>
     </RelativeLayout>
-</RelativeLayout>
+</android.support.constraint.ConstraintLayout>
