@@ -214,15 +214,6 @@ public class StayOutboundDetailView extends BaseDialogView<StayOutboundDetailVie
     {
         switch (v.getId())
         {
-            case R.id.backView:
-                getEventListener().onBackClick();
-                break;
-
-            case R.id.menu1View:
-            case R.id.shareView:
-                getEventListener().onShareClick();
-                break;
-
             case R.id.closeView:
             case R.id.productTypeBackgroundView:
                 getEventListener().onHideRoomListClick(true);
@@ -949,8 +940,25 @@ public class StayOutboundDetailView extends BaseDialogView<StayOutboundDetailVie
         });
 
         viewDataBinding.toolbarView.setVisibility(View.INVISIBLE);
-        viewDataBinding.backView.setOnClickListener(this);
-        viewDataBinding.shareView.setOnClickListener(this);
+
+        viewDataBinding.fakeToolbarView.setOnBackClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                getEventListener().onBackClick();
+            }
+        });
+
+        viewDataBinding.fakeToolbarView.clearMenuItem();
+        viewDataBinding.fakeToolbarView.addMenuItem(DailyToolbarView.MenuItem.SHARE, null, new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                getEventListener().onShareClick();
+            }
+        });
     }
 
     private void setImageList(List<StayOutboundDetailImage> imageList)

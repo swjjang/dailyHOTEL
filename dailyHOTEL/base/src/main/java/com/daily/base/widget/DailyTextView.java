@@ -220,7 +220,7 @@ public class DailyTextView extends AppCompatTextView
         }
     }
 
-    public void setDrawableVectorTint(int id)
+    public void setDrawableVectorTint(int colorResId)
     {
         Drawable[] drawables = getCompoundDrawables();
 
@@ -238,12 +238,12 @@ public class DailyTextView extends AppCompatTextView
 
             if (drawable instanceof VectorDrawableCompat)
             {
-                ((VectorDrawableCompat) drawable).setTint(getResources().getColor(id));
+                ((VectorDrawableCompat) drawable).setTint(getResources().getColor(colorResId));
             } else
             {
                 if (VersionUtils.isOverAPI21() == true)
                 {
-                    drawable.setTint(getResources().getColor(id));
+                    drawable.setTint(getResources().getColor(colorResId));
                 }
             }
         }

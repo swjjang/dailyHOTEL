@@ -4,6 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
     xmlns:dailyLineIndicator="http://schemas.android.com/apk/res-auto"
+    xmlns:dailyToolbar="http://schemas.android.com/apk/res-auto"
     xmlns:fresco="http://schemas.android.com/apk/res-auto">
 
     <android.support.constraint.ConstraintLayout
@@ -185,34 +186,14 @@
 
         </com.daily.base.widget.DailyNestedScrollView>
 
-        <RelativeLayout
+        <com.daily.dailyhotel.view.DailyToolbarView
+            android:id="@+id/fakeToolbarView"
             android:layout_width="0dp"
             android:layout_height="@dimen/toolbar_height"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-
-            <ImageView
-                android:id="@+id/backView"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:paddingLeft="15dp"
-                android:paddingRight="15dp"
-                android:tint="@color/white"
-                app:srcCompat="@drawable/navibar_ic_back_01_black"/>
-
-            <ImageView
-                android:id="@+id/shareView"
-                android:layout_width="30dp"
-                android:layout_height="@dimen/toolbar_height"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="15dp"
-                android:scaleType="center"
-                android:tint="@color/white"
-                app:srcCompat="@drawable/navibar_ic_share_01_black"/>
-        </RelativeLayout>
+            app:layout_constraintTop_toTopOf="parent"
+            dailyToolbar:themeColor="white"/>
 
         <com.daily.dailyhotel.view.DailyToolbarView
             android:id="@+id/toolbarView"
@@ -222,7 +203,8 @@
             android:elevation="2dp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+            app:layout_constraintTop_toTopOf="parent"
+            dailyToolbar:underLineHeight="@dimen/gradient_1dp_line_height_under_21"/>
 
         <View
             android:id="@+id/productTypeBackgroundView"
