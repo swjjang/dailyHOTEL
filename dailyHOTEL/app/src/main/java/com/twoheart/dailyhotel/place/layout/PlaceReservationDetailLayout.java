@@ -192,21 +192,21 @@ public abstract class PlaceReservationDetailLayout extends BaseBlurLayout implem
         });
 
         mDailyToolbarView.clearMenuItem();
-        mDailyToolbarView.addMenuItem(DailyToolbarView.MenuItem.HELP, null, new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                ((OnEventListener) mOnEventListener).showCallDialog();
-            }
-        });
-
         mDailyToolbarView.addMenuItem(DailyToolbarView.MenuItem.SHARE, null, new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
             {
                 ((OnEventListener) mOnEventListener).showShareDialog();
+            }
+        });
+
+        mDailyToolbarView.addMenuItem(DailyToolbarView.MenuItem.HELP, null, new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                ((OnEventListener) mOnEventListener).showCallDialog();
             }
         });
     }

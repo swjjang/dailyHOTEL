@@ -200,14 +200,7 @@ public class StayOutboundDetailView extends BaseDialogView<StayOutboundDetailVie
     @Override
     public void setToolbarTitle(String title)
     {
-        if (getViewDataBinding() == null)
-        {
-            return;
-        }
-
-        getViewDataBinding().toolbarView.setTitleText(title);
     }
-
 
     @Override
     public void onClick(View v)

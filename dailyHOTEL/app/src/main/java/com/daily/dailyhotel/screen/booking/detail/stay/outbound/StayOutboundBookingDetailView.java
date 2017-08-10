@@ -699,21 +699,21 @@ public class StayOutboundBookingDetailView extends BaseDialogView<StayOutboundBo
         });
 
         getViewDataBinding().toolbarView.clearMenuItem();
-        getViewDataBinding().toolbarView.addMenuItem(DailyToolbarView.MenuItem.HELP, null, new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                getEventListener().onConciergeClick();
-            }
-        });
-
         getViewDataBinding().toolbarView.addMenuItem(DailyToolbarView.MenuItem.SHARE, null, new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
             {
                 getEventListener().onShareClick();
+            }
+        });
+
+        getViewDataBinding().toolbarView.addMenuItem(DailyToolbarView.MenuItem.HELP, null, new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                getEventListener().onConciergeClick();
             }
         });
     }

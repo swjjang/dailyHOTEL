@@ -12,6 +12,7 @@ import android.util.AttributeSet;
 import android.util.Pair;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.ViewGroup;
 
 import com.daily.base.util.DailyTextUtils;
@@ -259,6 +260,7 @@ public class DailyToolbarView extends ConstraintLayout
 
     /**
      * 중복 MenuItem 불가
+     * 넣을때 왼쪽에서 부터 넣도록 한다.
      *
      * @param menuItem
      * @param listener
@@ -292,7 +294,24 @@ public class DailyToolbarView extends ConstraintLayout
             return;
         }
 
-        updateMenuItemView(menuItem, text, listener);
+        updateMenuItemView(mMenuItemList.get(index).second, menuItem, text, listener);
+    }
+
+    public void replaceMenuItem(MenuItem srcMenuItem, MenuItem menuItem, String text, OnClickListener listener)
+    {
+        if (mViewDataBinding == null || hasMenuItem(srcMenuItem) == false)
+        {
+            return;
+        }
+
+        int index = getMenuItemIndex(srcMenuItem);
+
+        if (index < 0)
+        {
+            return;
+        }
+
+        updateMenuItemView(mMenuItemList.get(index).second, menuItem, text, listener);
     }
 
     public void removeMenuItem(MenuItem menuItem)
@@ -312,6 +331,23 @@ public class DailyToolbarView extends ConstraintLayout
         mMenuItemList.remove(index);
 
         removeMenuItemView(menuItem);
+    }
+
+    public void setMenuItemVisible(MenuItem menuItem, boolean visible)
+    {
+        if (mViewDataBinding == null || hasMenuItem(menuItem) == false)
+        {
+            return;
+        }
+
+        int index = getMenuItemIndex(menuItem);
+
+        if (index < 0)
+        {
+            return;
+        }
+
+        mMenuItemList.get(index).second.getRoot().setVisibility(visible ? VISIBLE : GONE);
     }
 
     public void clearMenuItem()
@@ -481,22 +517,22 @@ public class DailyToolbarView extends ConstraintLayout
         mViewDataBinding.menuLayout.removeViewAt(mMenuItemList.size() - index - 1);
     }
 
-    private void updateMenuItemView(MenuItem menuItem, String text, OnClickListener listener)
-    {
-        if (mViewDataBinding == null || hasMenuItem(menuItem) == true)
-        {
-            return;
-        }
-
-        int index = getMenuItemIndex(menuItem);
-
-        if (index < 0)
-        {
-            return;
-        }
-
-        updateMenuItemView(mMenuItemList.get(index).second, menuItem, text, listener);
-    }
+//    private void updateMenuItemView(MenuItem menuItem, String text, OnClickListener listener)
+//    {
+//        if (mViewDataBinding == null || hasMenuItem(menuItem) == true)
+//        {
+//            return;
+//        }
+//
+//        int index = getMenuItemIndex(menuItem);
+//
+//        if (index < 0)
+//        {
+//            return;
+//        }
+//
+//        updateMenuItemView(mMenuItemList.get(index).second, menuItem, text, listener);
+//    }
 
     private void clearMenuItemView()
     {
@@ -508,7 +544,7 @@ public class DailyToolbarView extends ConstraintLayout
         mViewDataBinding.menuLayout.removeAllViews();
     }
 
-    private boolean hasMenuItem(MenuItem menuItem)
+    public boolean hasMenuItem(MenuItem menuItem)
     {
         for (Pair pair : mMenuItemList)
         {
@@ -578,6 +614,9 @@ public class DailyToolbarView extends ConstraintLayout
                 if (menuItem.supportChangedColor() == true)
                 {
                     viewDataBinding.imageView.setColorFilter(getResources().getColor(mThemeColor.getIconColorResourceId()));
+                } else
+                {
+                    viewDataBinding.imageView.clearColorFilter();
                 }
 
                 if (viewDataBinding.textView.getVisibility() != GONE)

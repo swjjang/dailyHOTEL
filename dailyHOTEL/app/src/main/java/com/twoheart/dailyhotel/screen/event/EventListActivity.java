@@ -9,6 +9,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.daily.base.util.DailyTextUtils;
+import com.daily.dailyhotel.view.DailyToolbarView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.network.model.Event;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
@@ -19,7 +20,6 @@ import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Screen;
-import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -96,10 +96,9 @@ public class EventListActivity extends BaseActivity implements AdapterView.OnIte
 
     private void initToolbar()
     {
-        View toolbar = findViewById(R.id.toolbar);
-
-        DailyToolbarLayout dailyToolbarLayout = new DailyToolbarLayout(this, toolbar);
-        dailyToolbarLayout.initToolbar(getString(R.string.actionbar_title_event_list_frag), new View.OnClickListener()
+        DailyToolbarView dailyToolbarView = (DailyToolbarView) findViewById(R.id.toolbarView);
+        dailyToolbarView.setTitleText(R.string.actionbar_title_event_list_frag);
+        dailyToolbarView.setOnBackClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)

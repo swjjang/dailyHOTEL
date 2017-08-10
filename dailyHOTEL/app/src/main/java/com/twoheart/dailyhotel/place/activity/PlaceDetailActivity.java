@@ -12,7 +12,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.TextView;
 
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
@@ -21,6 +20,7 @@ import com.daily.base.widget.DailyTextView;
 import com.daily.dailyhotel.repository.local.model.AnalyticsParam;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
 import com.daily.dailyhotel.repository.remote.PlaceDetailCalendarImpl;
+import com.daily.dailyhotel.view.DailyToolbarView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Customer;
 import com.twoheart.dailyhotel.model.PlaceDetail;
@@ -39,7 +39,6 @@ import com.twoheart.dailyhotel.screen.mydaily.member.EditProfilePhoneActivity;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
-import com.twoheart.dailyhotel.widget.DailyDetailToolbarLayout;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -71,7 +70,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
     protected boolean mIsShowCalendar;
     protected boolean mIsShowVR;
     protected String mDefaultImageUrl;
-    protected DailyDetailToolbarLayout mDailyToolbarLayout;
+    protected DailyToolbarView mToolbarView, mFakeToolbarView;
     protected boolean mDontReloadAtOnResume;
     protected boolean mIsTransitionEnd;
     protected int mInitializeStatus;
@@ -92,9 +91,6 @@ public abstract class PlaceDetailActivity extends BaseActivity
     protected Runnable mTransitionEndRunnable; // 트렌지션 중에 에러가 난경우 팝업을 띄워야 하는데 트렌지션으로 이슈가 발생하여 트레진션 끝나고 동작.
 
     protected AnalyticsParam mAnalyticsParam;
-
-    private View mTrueViewView;
-    private TextView mWishTextView;
 
     protected abstract PlaceDetailLayout getDetailLayout(Context context);
 
@@ -138,37 +134,38 @@ public abstract class PlaceDetailActivity extends BaseActivity
 
     protected void initToolbar(String title)
     {
-        View toolbar = findViewById(R.id.toolbar);
-        mDailyToolbarLayout = new DailyDetailToolbarLayout(this, toolbar);
-        mDailyToolbarLayout.initToolbar(null, new View.OnClickListener()
+        mToolbarView = (DailyToolbarView) findViewById(R.id.toolbarView);
+        mFakeToolbarView = (DailyToolbarView) findViewById(R.id.fakeToolbarView);
+
+        mToolbarView.setOnBackClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
             {
                 finish();
             }
-        }, false);
+        });
 
-        mDailyToolbarLayout.setToolbarMenu(R.drawable.navibar_ic_share_01_black, -1, R.drawable.vector_navibar_ic_heart_off_black, null);
-        mDailyToolbarLayout.setToolbarMenuClickListener(mToolbarOptionsItemSelectedListener);
-
-        mTrueViewView = findViewById(R.id.trueVRView);
-        mTrueViewView.setVisibility(View.GONE);
-
-        View backImage = findViewById(R.id.backView);
-        View shareView = findViewById(R.id.shareView);
-        mWishTextView = (TextView) findViewById(R.id.wishTextView);
-
-        backImage.setOnClickListener(new View.OnClickListener()
+        mToolbarView.clearMenuItem();
+        mToolbarView.addMenuItem(DailyToolbarView.MenuItem.WISH_OFF, null, new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
             {
-                onBackPressed();
+                onWishClick();
             }
         });
 
-        shareView.setOnClickListener(new View.OnClickListener()
+        mToolbarView.addMenuItem(DailyToolbarView.MenuItem.TRUE_VR, null, new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                onTrueViewClick();
+            }
+        });
+
+        mToolbarView.addMenuItem(DailyToolbarView.MenuItem.SHARE, null, new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
@@ -177,7 +174,19 @@ public abstract class PlaceDetailActivity extends BaseActivity
             }
         });
 
-        mWishTextView.setOnClickListener(new View.OnClickListener()
+        mToolbarView.setMenuItemVisible(DailyToolbarView.MenuItem.TRUE_VR, false);
+
+        mFakeToolbarView.setOnBackClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                finish();
+            }
+        });
+
+        mFakeToolbarView.clearMenuItem();
+        mFakeToolbarView.addMenuItem(DailyToolbarView.MenuItem.WISH_OFF, null, new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
@@ -185,6 +194,26 @@ public abstract class PlaceDetailActivity extends BaseActivity
                 onWishClick();
             }
         });
+
+        mFakeToolbarView.addMenuItem(DailyToolbarView.MenuItem.TRUE_VR, null, new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                onTrueViewClick();
+            }
+        });
+
+        mFakeToolbarView.addMenuItem(DailyToolbarView.MenuItem.SHARE, null, new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                onShareClick();
+            }
+        });
+
+        mFakeToolbarView.setMenuItemVisible(DailyToolbarView.MenuItem.TRUE_VR, false);
     }
 
     @Override
@@ -626,23 +655,13 @@ public abstract class PlaceDetailActivity extends BaseActivity
 
     protected void showTrueViewMenu()
     {
-        if (mDailyToolbarLayout != null)
+        if (mToolbarView == null || mFakeToolbarView == null)
         {
-            mDailyToolbarLayout.setToolbarMenu(R.drawable.navibar_ic_share_01_black, R.drawable.vector_navibar_ic_treuvr, 0, null);
+            return;
         }
 
-        if (mTrueViewView != null)
-        {
-            mTrueViewView.setVisibility(View.VISIBLE);
-            mTrueViewView.setOnClickListener(new View.OnClickListener()
-            {
-                @Override
-                public void onClick(View v)
-                {
-                    onTrueViewClick();
-                }
-            });
-        }
+        mToolbarView.setMenuItemVisible(DailyToolbarView.MenuItem.TRUE_VR, true);
+        mFakeToolbarView.setMenuItemVisible(DailyToolbarView.MenuItem.TRUE_VR, true);
 
         if (DailyPreference.getInstance(this).isWishTooltip() == true)
         {
@@ -665,16 +684,13 @@ public abstract class PlaceDetailActivity extends BaseActivity
 
     protected void hideTrueViewMenu()
     {
-        if (mDailyToolbarLayout != null)
+        if (mToolbarView == null || mFakeToolbarView == null)
         {
-            mDailyToolbarLayout.setToolbarMenu(R.drawable.navibar_ic_share_01_black, -1, 0, null);
+            return;
         }
 
-        if (mTrueViewView != null)
-        {
-            mTrueViewView.setVisibility(View.GONE);
-            mTrueViewView.setOnClickListener(null);
-        }
+        mToolbarView.setMenuItemVisible(DailyToolbarView.MenuItem.TRUE_VR, false);
+        mFakeToolbarView.setMenuItemVisible(DailyToolbarView.MenuItem.TRUE_VR, false);
 
         if (DailyPreference.getInstance(this).isWishTooltip() == true)
         {
@@ -697,9 +713,10 @@ public abstract class PlaceDetailActivity extends BaseActivity
 
     protected void setWishTextView(boolean selected, int count)
     {
-        int imageResId = selected == true ? R.drawable.vector_navibar_ic_heart_on : R.drawable.vector_navibar_ic_heart_off_white;
-        mWishTextView.setCompoundDrawablesWithIntrinsicBounds(0, 0, imageResId, 0);
-        mWishTextView.setTag(selected);
+        if (mToolbarView == null || mFakeToolbarView == null)
+        {
+            return;
+        }
 
         String wishCountText;
 
@@ -723,12 +740,100 @@ public abstract class PlaceDetailActivity extends BaseActivity
             wishCountText = decimalFormat.format(count);
         }
 
-        mWishTextView.setText(wishCountText);
-
-        if (mDailyToolbarLayout != null)
+        if (mToolbarView.hasMenuItem(DailyToolbarView.MenuItem.WISH_OFF) == true)
         {
-            imageResId = selected == true ? R.drawable.vector_navibar_ic_heart_on : R.drawable.vector_navibar_ic_heart_off_black;
-            mDailyToolbarLayout.setToolbarMenu(R.drawable.navibar_ic_share_01_black, 0, imageResId, wishCountText);
+            if (selected == true)
+            {
+                mToolbarView.replaceMenuItem(DailyToolbarView.MenuItem.WISH_OFF, DailyToolbarView.MenuItem.WISH_ON, wishCountText, new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        onWishClick();
+                    }
+                });
+            } else
+            {
+                mToolbarView.updateMenuItem(DailyToolbarView.MenuItem.WISH_OFF, wishCountText, new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        onWishClick();
+                    }
+                });
+            }
+        } else if (mToolbarView.hasMenuItem(DailyToolbarView.MenuItem.WISH_ON) == true)
+        {
+            if (selected == true)
+            {
+                mToolbarView.updateMenuItem(DailyToolbarView.MenuItem.WISH_ON, wishCountText, new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        onWishClick();
+                    }
+                });
+            } else
+            {
+                mToolbarView.replaceMenuItem(DailyToolbarView.MenuItem.WISH_ON, DailyToolbarView.MenuItem.WISH_OFF, wishCountText, new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        onWishClick();
+                    }
+                });
+            }
+        }
+
+        if (mFakeToolbarView.hasMenuItem(DailyToolbarView.MenuItem.WISH_OFF) == true)
+        {
+            if (selected == true)
+            {
+                mFakeToolbarView.replaceMenuItem(DailyToolbarView.MenuItem.WISH_OFF, DailyToolbarView.MenuItem.WISH_ON, wishCountText, new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        onWishClick();
+                    }
+                });
+            } else
+            {
+                mFakeToolbarView.updateMenuItem(DailyToolbarView.MenuItem.WISH_OFF, wishCountText, new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        onWishClick();
+                    }
+                });
+            }
+        } else if (mFakeToolbarView.hasMenuItem(DailyToolbarView.MenuItem.WISH_ON) == true)
+        {
+            if (selected == true)
+            {
+                mFakeToolbarView.updateMenuItem(DailyToolbarView.MenuItem.WISH_ON, wishCountText, new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        onWishClick();
+                    }
+                });
+            } else
+            {
+                mFakeToolbarView.replaceMenuItem(DailyToolbarView.MenuItem.WISH_ON, DailyToolbarView.MenuItem.WISH_OFF, wishCountText, new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        onWishClick();
+                    }
+                });
+            }
         }
     }
 
@@ -819,30 +924,4 @@ public abstract class PlaceDetailActivity extends BaseActivity
 
         recordAnalyticsShareClicked();
     }
-
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // UserActionListener
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    View.OnClickListener mToolbarOptionsItemSelectedListener = new View.OnClickListener()
-    {
-        @Override
-        public void onClick(View v)
-        {
-            switch (v.getId())
-            {
-                case R.id.menu1View:
-                    onShareClick();
-                    break;
-
-                case R.id.menu2View:
-                    onTrueViewClick();
-                    break;
-
-                case R.id.menu3TextView:
-                    onWishClick();
-                    break;
-            }
-        }
-    };
 }

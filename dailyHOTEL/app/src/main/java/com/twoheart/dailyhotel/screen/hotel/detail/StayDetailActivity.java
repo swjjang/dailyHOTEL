@@ -907,17 +907,6 @@ public class StayDetailActivity extends PlaceDetailActivity
 
         StayDetailParams stayDetailParams = stayDetail.getStayDetailParams();
 
-        if (mIsDeepLink == true)
-        {
-            // 딥링크로 진입한 경우에는 카테고리 코드를 알수가 없다. - 2017.04.28 알 수 없음으로 안보내기로 함 아이폰도 안보내고 있음.
-            //            if (DailyTextUtils.isTextEmpty(stayDetailParams.category) == true)
-            //            {
-            //                stayDetailParams.category = stayDetailParams.getGrade().name();
-            //            }
-
-            mDailyToolbarLayout.setToolbarTitle(stayDetailParams.name);
-        }
-
         RecentlyPlaceUtil.addRecentlyItemAsync(RecentlyPlaceUtil.ServiceType.IB_STAY //
             , stayDetail.index, stayDetailParams.name, null, stayDetailParams.imgUrl, false);
 
@@ -1289,13 +1278,25 @@ public class StayDetailActivity extends PlaceDetailActivity
         @Override
         public void showActionBar(boolean isAnimation)
         {
-            mDailyToolbarLayout.setToolbarVisibility(true, isAnimation);
+            if (isAnimation == true)
+            {
+                mToolbarView.showAnimation();
+            } else
+            {
+                mToolbarView.setVisibility(View.VISIBLE);
+            }
         }
 
         @Override
         public void hideActionBar(boolean isAnimation)
         {
-            mDailyToolbarLayout.setToolbarVisibility(false, isAnimation);
+            if (isAnimation == true)
+            {
+                mToolbarView.hideAnimation();
+            } else
+            {
+                mToolbarView.setVisibility(View.GONE);
+            }
         }
 
         @Override
