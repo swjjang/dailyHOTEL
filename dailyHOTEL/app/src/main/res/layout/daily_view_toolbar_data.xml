@@ -12,7 +12,7 @@
         tools:parentTag="android.support.constraint.ConstraintLayout">
 
         <com.daily.base.widget.DailyImageView
-            android:id="@+id/backImageView"
+            android:id="@+id/daily_titleImageView"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:paddingLeft="15dp"
@@ -22,7 +22,7 @@
             app:layout_constraintTop_toTopOf="parent"/>
 
         <LinearLayout
-            android:id="@+id/menuLayout"
+            android:id="@+id/daily_menuItemLayout"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:layout_marginRight="15dp"
@@ -32,7 +32,7 @@
             app:layout_constraintTop_toTopOf="parent"/>
 
         <com.daily.base.widget.DailyTextView
-            android:id="@+id/titleTextView"
+            android:id="@+id/daily_titleTextView"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginLeft="12dp"
@@ -49,7 +49,7 @@
             app:layout_goneMarginLeft="15dp"/>
 
         <View
-            android:id="@+id/toolbarUnderline"
+            android:id="@+id/daily_toolbarUnderline"
             android:layout_width="0dp"
             android:layout_height="@dimen/gradient_1dp_line_height_under_21"
             android:background="@color/default_line_ce7e7e7"

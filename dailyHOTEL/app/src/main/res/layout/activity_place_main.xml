@@ -3,6 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
+    xmlns:dailyToolbar="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -14,46 +15,12 @@
         android:orientation="vertical"
         app:elevation="0dp">
 
-        <RelativeLayout
-            android:id="@+id/toolbarLayout"
+        <com.daily.dailyhotel.view.DailyToolbarView
+            android:id="@+id/toolbarView"
             android:layout_width="match_parent"
-            android:layout_height="52dp"
-            app:layout_scrollFlags="scroll|snap|enterAlways">
-
-            <com.daily.base.widget.DailyImageView
-                android:id="@+id/backImageView"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:paddingLeft="15dp"
-                android:paddingRight="15dp"
-                app:srcCompat="@drawable/navibar_ic_back_01_black"/>
-
-            <com.daily.base.widget.DailyTextView
-                android:id="@+id/titleTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="72dp"
-                android:gravity="center_vertical"
-                android:text="@string/label_daily_hotel"
-                android:textColor="@color/default_text_c323232"
-                android:textSize="18dp"/>
-
-            <ImageView
-                android:id="@+id/searchImageView"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_alignParentRight="true"
-                android:paddingLeft="15dp"
-                android:paddingRight="15dp"
-                app:srcCompat="@drawable/navibar_ic_search"/>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1px"
-                android:layout_alignParentBottom="true"
-                android:background="@color/default_line_ce7e7e7"/>
-        </RelativeLayout>
+            android:layout_height="@dimen/toolbar_height"
+            dailyToolbar:underLineHeight="1px"
+            app:layout_scrollFlags="scroll|snap|enterAlways"/>
 
         <LinearLayout
             android:id="@+id/informationBarLayout"
@@ -119,7 +86,7 @@
         </LinearLayout>
 
         <View
-            android:id="@+id/toolbarUnderline"
+            android:id="@+id/appBarUnderline"
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="@color/default_line_ce7e7e7"/>
