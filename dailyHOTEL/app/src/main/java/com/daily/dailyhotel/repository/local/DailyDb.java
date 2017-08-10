@@ -15,6 +15,7 @@ import com.daily.dailyhotel.repository.local.model.RecentlyList;
 import com.daily.dailyhotel.repository.local.model.RecentlyRealmObject;
 import com.daily.dailyhotel.util.RecentlyPlaceUtil;
 import com.twoheart.dailyhotel.network.model.HomePlace;
+import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 
 import java.util.ArrayList;
@@ -168,7 +169,7 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
         db.execSQL(sql);
     }
 
-    public Cursor getRecentlyPlaces(int limit, RecentlyPlaceUtil.ServiceType... serviceTypes)
+    public Cursor getRecentlyPlaces(int limit, Constants.ServiceType... serviceTypes)
     {
         SQLiteDatabase db = getDb();
         if (db == null)
@@ -206,7 +207,7 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
         return cursor;
     }
 
-    public Cursor getRecentlyPlace(RecentlyPlaceUtil.ServiceType serviceType, int index)
+    public Cursor getRecentlyPlace(Constants.ServiceType serviceType, int index)
     {
         if (index <= 0)
         {
@@ -237,7 +238,7 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
         return cursor;
     }
 
-    public long checkExistRecentPlace(RecentlyPlaceUtil.ServiceType serviceType, int index)
+    public long checkExistRecentPlace(Constants.ServiceType serviceType, int index)
     {
         if (index <= 0)
         {
@@ -275,7 +276,7 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
         return -1;
     }
 
-    public long getOldestSavingTime(RecentlyPlaceUtil.ServiceType... serviceTypes)
+    public long getOldestSavingTime(Constants.ServiceType... serviceTypes)
     {
         SQLiteDatabase db = getDb();
         if (db == null)
@@ -340,14 +341,14 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
         if (homePlaceList == null || homePlaceList.size() == 0)
         {
             // realm db 에도 결과가 없으면  migration 되었다고 판단함
-            RealmResults<RecentlyRealmObject> realmResultList = RecentlyPlaceUtil.getRealmRecentlyTypeList((RecentlyPlaceUtil.ServiceType[]) null);
+            RealmResults<RecentlyRealmObject> realmResultList = RecentlyPlaceUtil.getRealmRecentlyTypeList((Constants.ServiceType[]) null);
             return realmResultList == null || realmResultList.size() == 0;
         }
 
         long oldestSavingTime = -1;
 
-        long oldestRealmSavingTime = RecentlyPlaceUtil.getOldestSavingTime((RecentlyPlaceUtil.ServiceType[]) null);
-        long oldestDbSavingTime = getOldestSavingTime((RecentlyPlaceUtil.ServiceType[]) null);
+        long oldestRealmSavingTime = RecentlyPlaceUtil.getOldestSavingTime((Constants.ServiceType[]) null);
+        long oldestDbSavingTime = getOldestSavingTime((Constants.ServiceType[]) null);
 
         if (oldestRealmSavingTime >= 0)
         {
@@ -381,7 +382,7 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
 
             for (HomePlace homePlace : homePlaceList)
             {
-                RecentlyPlaceUtil.ServiceType serviceType = RecentlyPlaceUtil.getServiceType(homePlace.serviceType);
+                Constants.ServiceType serviceType = RecentlyPlaceUtil.getServiceType(homePlace.serviceType);
                 long oldDbSavingTime = checkExistRecentPlace(serviceType, homePlace.index);
 
                 if (oldDbSavingTime > 0)
@@ -428,7 +429,7 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
         return isSuccess;
     }
 
-    public void addRecentlyPlace(final RecentlyPlaceUtil.ServiceType serviceType, int index, String name //
+    public void addRecentlyPlace(final Constants.ServiceType serviceType, int index, String name //
         , String englishName, String imageUrl, boolean isUpdateDate)
     {
         SQLiteDatabase db = getDb();
@@ -484,7 +485,7 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
         mContext.getContentResolver().notifyChange(RecentlyList.NOTIFICATION_URI, null);
     }
 
-    public void maintainMaxRecentlyItem(RecentlyPlaceUtil.ServiceType serviceType)
+    public void maintainMaxRecentlyItem(Constants.ServiceType serviceType)
     {
         Cursor cursor = null;
 
@@ -542,7 +543,7 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
         }
     }
 
-    public void deleteRecentlyItem(RecentlyPlaceUtil.ServiceType serviceType, int index)
+    public void deleteRecentlyItem(Constants.ServiceType serviceType, int index)
     {
         if (serviceType == null || index <= 0)
         {

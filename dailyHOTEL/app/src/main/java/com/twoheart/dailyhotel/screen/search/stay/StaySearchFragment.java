@@ -305,6 +305,12 @@ public class StaySearchFragment extends PlaceSearchFragment
         startActivityForResult(intent, REQUEST_ACTIVITY_CALENDAR);
     }
 
+    @Override
+    public ServiceType getServiceType()
+    {
+        return ServiceType.HOTEL;
+    }
+
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // OnEventListener
     ////////////////////////////////////////////////////////////////////////////////////////////////

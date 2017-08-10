@@ -1,7 +1,9 @@
 package com.daily.dailyhotel.util;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.database.Cursor;
+import android.os.Build;
 import android.support.annotation.Nullable;
 
 import com.daily.base.util.DailyTextUtils;
@@ -52,13 +54,6 @@ public class RecentlyPlaceUtil
     public static final String SERVICE_TYPE_OB_STAY_NAME = "OB_STAY";
     public static final String SERVICE_TYPE_GOURMET_NAME = "GOURMET";
 
-    public enum ServiceType
-    {
-        HOTEL,
-        GOURMET,
-        OB_STAY
-    }
-
     public static void migrateRecentlyPlaces(Context context)
     {
         RecentPlaces recentPlaces = new RecentPlaces(context);
@@ -108,7 +103,7 @@ public class RecentlyPlaceUtil
 
                 for (RecentlyRealmObject realmObject : results)
                 {
-                    realmObject.serviceType = ServiceType.HOTEL.name();
+                    realmObject.serviceType = Constants.ServiceType.HOTEL.name();
                     list.add(realmObject);
                 }
 
@@ -184,13 +179,13 @@ public class RecentlyPlaceUtil
 
             if (SERVICE_TYPE_IB_STAY_NAME.equalsIgnoreCase(param.serviceType) == true)
             {
-                recentlyRealmObject.serviceType = ServiceType.HOTEL.name();
+                recentlyRealmObject.serviceType = Constants.ServiceType.HOTEL.name();
             } else if (SERVICE_TYPE_GOURMET_NAME.equalsIgnoreCase(param.serviceType) == true)
             {
-                recentlyRealmObject.serviceType = ServiceType.GOURMET.name();
+                recentlyRealmObject.serviceType = Constants.ServiceType.GOURMET.name();
             } else if (SERVICE_TYPE_OB_STAY_NAME.equalsIgnoreCase(param.serviceType) == true)
             {
-                recentlyRealmObject.serviceType = ServiceType.OB_STAY.name();
+                recentlyRealmObject.serviceType = Constants.ServiceType.OB_STAY.name();
             } else
             {
                 // 지정 되지 않은 타입
@@ -250,8 +245,8 @@ public class RecentlyPlaceUtil
             {
                 String serviceTypeString = recentlyPlace.serviceType.name();
 
-                if (ServiceType.HOTEL.name().equalsIgnoreCase(serviceTypeString) == true //
-                    || ServiceType.GOURMET.name().equalsIgnoreCase(serviceTypeString) == true)
+                if (Constants.ServiceType.HOTEL.name().equalsIgnoreCase(serviceTypeString) == true //
+                    || Constants.ServiceType.GOURMET.name().equalsIgnoreCase(serviceTypeString) == true)
                 {
                     int index = recentlyPlace.index;
 
@@ -269,7 +264,7 @@ public class RecentlyPlaceUtil
         return jsonArray;
     }
 
-    public static ArrayList<RecentlyPlace> getDbRecentlyTypeList(Context context, ServiceType... serviceTypes)
+    public static ArrayList<RecentlyPlace> getDbRecentlyTypeList(Context context, Constants.ServiceType... serviceTypes)
     {
         if (context == null)
         {
@@ -303,11 +298,11 @@ public class RecentlyPlaceUtil
                     recentlyPlace.englishName = cursor.getString(cursor.getColumnIndex(RecentlyList.ENGLISH_NAME));
                     recentlyPlace.savingTime = cursor.getLong(cursor.getColumnIndex(RecentlyList.SAVING_TIME));
 
-                    RecentlyPlaceUtil.ServiceType serviceType;
+                    Constants.ServiceType serviceType;
 
                     try
                     {
-                        serviceType = ServiceType.valueOf(cursor.getString(cursor.getColumnIndex(RecentlyList.SERVICE_TYPE)));
+                        serviceType = Constants.ServiceType.valueOf(cursor.getString(cursor.getColumnIndex(RecentlyList.SERVICE_TYPE)));
                     } catch (Exception e)
                     {
                         serviceType = null;
@@ -342,7 +337,7 @@ public class RecentlyPlaceUtil
     }
 
     @Nullable
-    public static RealmResults<RecentlyRealmObject> getRealmRecentlyTypeList(ServiceType... serviceTypes)
+    public static RealmResults<RecentlyRealmObject> getRealmRecentlyTypeList(Constants.ServiceType... serviceTypes)
     {
         Realm realm = Realm.getDefaultInstance();
         RealmQuery query = realm.where(RecentlyRealmObject.class);
@@ -376,7 +371,7 @@ public class RecentlyPlaceUtil
         return realmResults;
     }
 
-    public static long getOldestSavingTime(ServiceType... serviceTypes)
+    public static long getOldestSavingTime(Constants.ServiceType... serviceTypes)
     {
         Realm realm = Realm.getDefaultInstance();
         RealmQuery query = realm.where(RecentlyRealmObject.class);
@@ -416,7 +411,7 @@ public class RecentlyPlaceUtil
         return realmResults.get(0).savingTime;
     }
 
-    public static RecentlyRealmObject getRecentlyPlace(ServiceType serviceType, int index)
+    public static RecentlyRealmObject getRecentlyPlace(Constants.ServiceType serviceType, int index)
     {
         Realm realm = Realm.getDefaultInstance();
 
@@ -437,7 +432,7 @@ public class RecentlyPlaceUtil
         return null;
     }
 
-    public static String getDbTargetIndices(Context context, ServiceType serviceType, int maxSize)
+    public static String getDbTargetIndices(Context context, Constants.ServiceType serviceType, int maxSize)
     {
         if (context == null || serviceType == null || maxSize <= 0)
         {
@@ -496,7 +491,7 @@ public class RecentlyPlaceUtil
         return builder.toString();
     }
 
-    public static String getRealmTargetIndices(ServiceType serviceType, int maxSize)
+    public static String getRealmTargetIndices(Constants.ServiceType serviceType, int maxSize)
     {
         RealmResults<RecentlyRealmObject> recentlyList = RecentlyPlaceUtil.getRealmRecentlyTypeList(serviceType);
 
@@ -527,7 +522,7 @@ public class RecentlyPlaceUtil
         return builder.toString();
     }
 
-    public static ArrayList<Integer> getDbRecentlyIndexList(Context context, ServiceType... serviceTypes)
+    public static ArrayList<Integer> getDbRecentlyIndexList(Context context, Constants.ServiceType... serviceTypes)
     {
         if (context == null || serviceTypes == null || serviceTypes.length == 0)
         {
@@ -581,7 +576,7 @@ public class RecentlyPlaceUtil
         return indexList;
     }
 
-    public static ArrayList<Integer> getRealmRecentlyIndexList(ServiceType... serviceTypes)
+    public static ArrayList<Integer> getRealmRecentlyIndexList(Constants.ServiceType... serviceTypes)
     {
         RealmResults<RecentlyRealmObject> recentlyList = RecentlyPlaceUtil.getRealmRecentlyTypeList(serviceTypes);
 
@@ -599,7 +594,7 @@ public class RecentlyPlaceUtil
         return indexList;
     }
 
-    public static void addRecentlyItem(Context context, final ServiceType serviceType, int index, String name //
+    public static void addRecentlyItem(Context context, final Constants.ServiceType serviceType, int index, String name //
         , String englishName, String imageUrl, boolean isUpdateDate)
     {
         if (serviceType == null || index <= 0 || context == null)
@@ -613,7 +608,7 @@ public class RecentlyPlaceUtil
         DailyDbHelper.getInstance().close();
     }
 
-    public static void deleteRecentlyItem(Context context, ServiceType serviceType, int index)
+    public static void deleteRecentlyItem(Context context, Constants.ServiceType serviceType, int index)
     {
         if (serviceType == null || index <= 0 || context == null)
         {
@@ -660,7 +655,7 @@ public class RecentlyPlaceUtil
             }
         }
 
-        sortHomePlaceList(context, homePlaceList, (RecentlyPlaceUtil.ServiceType[]) null);
+        sortHomePlaceList(context, homePlaceList, (Constants.ServiceType[]) null);
 
         return homePlaceList;
     }
@@ -685,7 +680,7 @@ public class RecentlyPlaceUtil
         }
 
         // sort list
-        RecentlyPlaceUtil.sortHomePlaceList(context, resultList, (RecentlyPlaceUtil.ServiceType[]) null);
+        RecentlyPlaceUtil.sortHomePlaceList(context, resultList, (Constants.ServiceType[]) null);
 
         return resultList;
     }
@@ -804,7 +799,7 @@ public class RecentlyPlaceUtil
         return homePlace;
     }
 
-    public static void sortHomePlaceList(Context context, ArrayList<HomePlace> actualList, RecentlyPlaceUtil.ServiceType... serviceTypes)
+    public static void sortHomePlaceList(Context context, ArrayList<HomePlace> actualList, Constants.ServiceType... serviceTypes)
     {
         if (context == null || actualList == null || actualList.size() == 0)
         {
@@ -826,7 +821,7 @@ public class RecentlyPlaceUtil
                 recentlyPlace.index = object.index;
                 recentlyPlace.name = object.name;
                 recentlyPlace.englishName = object.englishName;
-                recentlyPlace.serviceType = object.serviceType == null ? null : ServiceType.valueOf(object.serviceType);
+                recentlyPlace.serviceType = object.serviceType == null ? null : Constants.ServiceType.valueOf(object.serviceType);
                 recentlyPlace.savingTime = object.savingTime;
                 recentlyPlace.imageUrl = object.imageUrl;
                 recentlyTypeList.add(recentlyPlace);
@@ -835,6 +830,7 @@ public class RecentlyPlaceUtil
 
         Collections.sort(recentlyTypeList, new Comparator<RecentlyPlace>()
         {
+            @TargetApi(Build.VERSION_CODES.KITKAT)
             @Override
             public int compare(RecentlyPlace o1, RecentlyPlace o2)
             {
@@ -865,27 +861,27 @@ public class RecentlyPlaceUtil
         });
     }
 
-    public static ServiceType getServiceType(String serviceTypeString)
+    public static Constants.ServiceType getServiceType(String serviceTypeString)
     {
         if (DailyTextUtils.isTextEmpty(serviceTypeString) == true)
         {
             return null;
         }
 
-        ServiceType serviceType = null;
+        Constants.ServiceType serviceType = null;
 
         if (SERVICE_TYPE_OB_STAY_NAME.equalsIgnoreCase(serviceTypeString) //
-            || ServiceType.OB_STAY.name().equalsIgnoreCase(serviceTypeString))
+            || Constants.ServiceType.OB_STAY.name().equalsIgnoreCase(serviceTypeString))
         {
-            serviceType = ServiceType.OB_STAY;
+            serviceType = Constants.ServiceType.OB_STAY;
         } else if (SERVICE_TYPE_IB_STAY_NAME.equalsIgnoreCase(serviceTypeString) //
-            || ServiceType.HOTEL.name().equalsIgnoreCase(serviceTypeString))
+            || Constants.ServiceType.HOTEL.name().equalsIgnoreCase(serviceTypeString))
         {
-            serviceType = ServiceType.HOTEL;
+            serviceType = Constants.ServiceType.HOTEL;
         } else if (SERVICE_TYPE_GOURMET_NAME.equalsIgnoreCase(serviceTypeString) //
-            || ServiceType.GOURMET.name().equalsIgnoreCase(serviceTypeString))
+            || Constants.ServiceType.GOURMET.name().equalsIgnoreCase(serviceTypeString))
         {
-            serviceType = ServiceType.GOURMET;
+            serviceType = Constants.ServiceType.GOURMET;
         }
 
         return serviceType;

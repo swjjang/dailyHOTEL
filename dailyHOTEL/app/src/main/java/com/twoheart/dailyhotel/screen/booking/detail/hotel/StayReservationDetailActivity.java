@@ -827,7 +827,7 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
                 HomePlace homePlace = new HomePlace();
                 homePlace.index = gourmet.index;
                 homePlace.title = gourmet.name;
-                homePlace.serviceType = RecentlyPlaceUtil.ServiceType.GOURMET.name();
+                homePlace.serviceType = Constants.ServiceType.GOURMET.name();
                 homePlace.regionName = gourmet.regionName;
 
                 Prices prices = new Prices();

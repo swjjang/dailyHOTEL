@@ -310,14 +310,14 @@ public class RecentPlacesTabActivity extends BaseActivity
     private boolean isEmptyRecentStayPlace()
     {
         ArrayList<RecentlyPlace> resultList = RecentlyPlaceUtil.getDbRecentlyTypeList( //
-            RecentPlacesTabActivity.this, RecentlyPlaceUtil.ServiceType.HOTEL, RecentlyPlaceUtil.ServiceType.OB_STAY);
+            RecentPlacesTabActivity.this, Constants.ServiceType.HOTEL, Constants.ServiceType.OB_STAY);
         return resultList == null || resultList.size() == 0;
     }
 
     private boolean isEmptyRecentGourmetPlace()
     {
         ArrayList<RecentlyPlace> resultList = RecentlyPlaceUtil.getDbRecentlyTypeList( //
-            RecentPlacesTabActivity.this, RecentlyPlaceUtil.ServiceType.GOURMET);
+            RecentPlacesTabActivity.this, Constants.ServiceType.GOURMET);
         return resultList == null || resultList.size() == 0;
     }
 
@@ -394,7 +394,7 @@ public class RecentPlacesTabActivity extends BaseActivity
         @Override
         public void onDeleteItemClickAnalytics()
         {
-            ArrayList<RecentlyPlace> resultList = RecentlyPlaceUtil.getDbRecentlyTypeList(RecentPlacesTabActivity.this, (RecentlyPlaceUtil.ServiceType[]) null);
+            ArrayList<RecentlyPlace> resultList = RecentlyPlaceUtil.getDbRecentlyTypeList(RecentPlacesTabActivity.this, (Constants.ServiceType[]) null);
 
             if (resultList == null || resultList.size() == 0)
             {

@@ -69,6 +69,13 @@ public interface Constants
         ETC
     }
 
+    enum ServiceType
+    {
+        HOTEL,
+        GOURMET,
+        OB_STAY
+    }
+
     String DAILY_USER = "normal";
     String KAKAO_USER = "kakao_talk";
     String FACEBOOK_USER = "facebook";

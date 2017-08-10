@@ -23,6 +23,7 @@ import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.network.dto.BaseDto;
 import com.twoheart.dailyhotel.network.model.HomePlace;
 import com.twoheart.dailyhotel.network.model.HomePlaces;
+import com.twoheart.dailyhotel.util.Constants;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -51,11 +52,11 @@ public class RecentlyRemoteImpl implements RecentlyInterface
     @Override
     public Observable<StayOutbounds> getStayOutboundRecentlyList(int numberOfResults, boolean useRealm)
     {
-        String hotelIds = RecentlyPlaceUtil.getDbTargetIndices(mContext, RecentlyPlaceUtil.ServiceType.OB_STAY, RecentlyPlaceUtil.MAX_RECENT_PLACE_COUNT);
+        String hotelIds = RecentlyPlaceUtil.getDbTargetIndices(mContext, Constants.ServiceType.OB_STAY, RecentlyPlaceUtil.MAX_RECENT_PLACE_COUNT);
 
         if (useRealm == true)
         {
-            String oldHotelIds = RecentlyPlaceUtil.getRealmTargetIndices(RecentlyPlaceUtil.ServiceType.OB_STAY, RecentlyPlaceUtil.MAX_RECENT_PLACE_COUNT);
+            String oldHotelIds = RecentlyPlaceUtil.getRealmTargetIndices(Constants.ServiceType.OB_STAY, RecentlyPlaceUtil.MAX_RECENT_PLACE_COUNT);
             if (DailyTextUtils.isTextEmpty(oldHotelIds) == false)
             {
                 if (DailyTextUtils.isTextEmpty(hotelIds) == false)
@@ -106,7 +107,7 @@ public class RecentlyRemoteImpl implements RecentlyInterface
         try
         {
             ArrayList<RecentlyPlace> list = RecentlyPlaceUtil.getDbRecentlyTypeList(mContext //
-                , RecentlyPlaceUtil.ServiceType.HOTEL, RecentlyPlaceUtil.ServiceType.GOURMET);
+                , Constants.ServiceType.HOTEL, Constants.ServiceType.GOURMET);
             JSONArray recentJsonArray = RecentlyPlaceUtil.getDbRecentlyJsonArray(list, maxSize);
             recentJsonObject.put("keys", recentJsonArray);
 
@@ -149,11 +150,11 @@ public class RecentlyRemoteImpl implements RecentlyInterface
     @Override
     public Observable<List<Stay>> getStayInboundRecentlyList(StayBookingDay stayBookingDay, boolean useRealm)
     {
-        String targetIndices = RecentlyPlaceUtil.getDbTargetIndices(mContext, RecentlyPlaceUtil.ServiceType.HOTEL, RecentlyPlaceUtil.MAX_RECENT_PLACE_COUNT);
+        String targetIndices = RecentlyPlaceUtil.getDbTargetIndices(mContext, Constants.ServiceType.HOTEL, RecentlyPlaceUtil.MAX_RECENT_PLACE_COUNT);
 
         if (useRealm == true)
         {
-            String oldTargetIndices = RecentlyPlaceUtil.getRealmTargetIndices(RecentlyPlaceUtil.ServiceType.HOTEL, RecentlyPlaceUtil.MAX_RECENT_PLACE_COUNT);
+            String oldTargetIndices = RecentlyPlaceUtil.getRealmTargetIndices(Constants.ServiceType.HOTEL, RecentlyPlaceUtil.MAX_RECENT_PLACE_COUNT);
             if (DailyTextUtils.isTextEmpty(oldTargetIndices) == false)
             {
                 if (DailyTextUtils.isTextEmpty(targetIndices) == false)
@@ -209,11 +210,12 @@ public class RecentlyRemoteImpl implements RecentlyInterface
     @Override
     public Observable<List<Gourmet>> getGourmetRecentlyList(GourmetBookingDay gourmetBookingDay, boolean useRealm)
     {
-        String targetIndices = RecentlyPlaceUtil.getDbTargetIndices(mContext, RecentlyPlaceUtil.ServiceType.GOURMET, RecentlyPlaceUtil.MAX_RECENT_PLACE_COUNT);
+        String targetIndices = RecentlyPlaceUtil.getDbTargetIndices(mContext, Constants.ServiceType
+            .GOURMET, RecentlyPlaceUtil.MAX_RECENT_PLACE_COUNT);
 
         if (useRealm == true)
         {
-            String oldTargetIndices = RecentlyPlaceUtil.getRealmTargetIndices(RecentlyPlaceUtil.ServiceType.GOURMET, RecentlyPlaceUtil.MAX_RECENT_PLACE_COUNT);
+            String oldTargetIndices = RecentlyPlaceUtil.getRealmTargetIndices(Constants.ServiceType.GOURMET, RecentlyPlaceUtil.MAX_RECENT_PLACE_COUNT);
             if (DailyTextUtils.isTextEmpty(oldTargetIndices) == false)
             {
                 if (DailyTextUtils.isTextEmpty(targetIndices) == false)

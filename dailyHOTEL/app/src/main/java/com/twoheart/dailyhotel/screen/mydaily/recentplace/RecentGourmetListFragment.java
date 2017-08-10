@@ -171,7 +171,7 @@ public class RecentGourmetListFragment extends RecentPlacesListFragment
             return;
         }
 
-        ArrayList<Integer> expectedList = RecentlyPlaceUtil.getDbRecentlyIndexList(getActivity(), RecentlyPlaceUtil.ServiceType.GOURMET);
+        ArrayList<Integer> expectedList = RecentlyPlaceUtil.getDbRecentlyIndexList(getActivity(), Constants.ServiceType.GOURMET);
         if (expectedList == null || expectedList.size() == 0)
         {
             return;
@@ -311,7 +311,7 @@ public class RecentGourmetListFragment extends RecentPlacesListFragment
                 return;
             }
 
-            RecentlyPlaceUtil.deleteRecentlyItem(getActivity(), RecentlyPlaceUtil.ServiceType.GOURMET, place.index);
+            RecentlyPlaceUtil.deleteRecentlyItem(getActivity(), Constants.ServiceType.GOURMET, place.index);
 
             mListLayout.setData(mListLayout.getList(), mPlaceBookingDay);
             mRecentPlaceListFragmentListener.onDeleteItemClickAnalytics();

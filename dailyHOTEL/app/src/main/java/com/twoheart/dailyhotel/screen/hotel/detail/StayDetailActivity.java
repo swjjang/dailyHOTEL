@@ -197,7 +197,7 @@ public class StayDetailActivity extends PlaceDetailActivity
             mDefaultImageUrl = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_IMAGEURL);
         }
 
-        RecentlyPlaceUtil.addRecentlyItem(this, RecentlyPlaceUtil.ServiceType.HOTEL //
+        RecentlyPlaceUtil.addRecentlyItem(this, Constants.ServiceType.HOTEL //
             , mPlaceDetail.index, placeName, null, mDefaultImageUrl, true);
 
         if (intent.hasExtra(NAME_INTENT_EXTRA_DATA_ANALYTICS_PARAM) == true)
@@ -918,7 +918,7 @@ public class StayDetailActivity extends PlaceDetailActivity
             mDailyToolbarLayout.setToolbarTitle(stayDetailParams.name);
         }
 
-        RecentlyPlaceUtil.addRecentlyItem(this, RecentlyPlaceUtil.ServiceType.HOTEL //
+        RecentlyPlaceUtil.addRecentlyItem(this, Constants.ServiceType.HOTEL //
             , stayDetail.index, stayDetailParams.name, null, stayDetailParams.imgUrl, false);
 
         if (mPlaceDetailLayout != null)

@@ -11,6 +11,11 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.daily.base.widget.DailyToast;
+import com.daily.dailyhotel.entity.CommonDateTime;
+import com.daily.dailyhotel.repository.remote.CampaignTagRemoteImpl;
+import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
+import com.daily.dailyhotel.repository.remote.RecentlyRemoteImpl;
+import com.daily.dailyhotel.util.RecentlyPlaceUtil;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Keyword;
 import com.twoheart.dailyhotel.network.model.TodayDateTime;
@@ -25,6 +30,8 @@ import com.twoheart.dailyhotel.util.DailyLocationFactory;
 import com.twoheart.dailyhotel.util.DailyRecentSearches;
 import com.twoheart.dailyhotel.util.Util;
 
+import io.reactivex.Observable;
+
 public abstract class PlaceSearchFragment extends BaseFragment
 {
     protected boolean mShowSearchKeyboard;
@@ -38,6 +45,10 @@ public abstract class PlaceSearchFragment extends BaseFragment
     protected PlaceSearchLayout mPlaceSearchLayout;
     protected PlaceSearchNetworkController mPlaceSearchNetworkController;
     protected OnSearchFragmentListener mOnSearchFragmentListener;
+
+    protected CommonRemoteImpl mCommonRemoteImpl;
+    protected RecentlyRemoteImpl mRecentlyRemoteImpl;
+    protected CampaignTagRemoteImpl mCampaignTagRemoteImpl;
 
     protected TodayDateTime mTodayDateTime;
 
@@ -59,6 +70,8 @@ public abstract class PlaceSearchFragment extends BaseFragment
     public abstract void startSearchResultActivity();
 
     public abstract void startCalendar(boolean isAnimation, Constants.SearchType searchType, String inputText, Keyword keyword);
+
+    public abstract Constants.ServiceType getServiceType();
 
     public interface OnSearchFragmentListener
     {
@@ -83,6 +96,9 @@ public abstract class PlaceSearchFragment extends BaseFragment
 
         lockUI();
         mPlaceSearchNetworkController.requestCommonDateTime();
+
+//        addCompositeDisposable(Observable.zip(mCommonRemoteImpl.getCommonDateTime(),
+//            mCampaignTagRemoteImpl.getCampaignTagList(getServiceType().name())));
 
         return view;
     }

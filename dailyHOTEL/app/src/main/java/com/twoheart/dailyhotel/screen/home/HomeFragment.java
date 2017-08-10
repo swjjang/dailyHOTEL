@@ -1312,7 +1312,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
             mNetworkController.requestRecommendationList();
             requestWishList();
 
-            ArrayList<Integer> indexList = RecentlyPlaceUtil.getRealmRecentlyIndexList((RecentlyPlaceUtil.ServiceType[]) null);
+            ArrayList<Integer> indexList = RecentlyPlaceUtil.getRealmRecentlyIndexList((Constants.ServiceType[]) null);
             if (indexList == null || indexList.size() == 0)
             {
                 mIsMigrationComplete = true;

@@ -3,6 +3,9 @@ package com.twoheart.dailyhotel.place.layout;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.PagerSnapHelper;
+import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.SpannableString;
@@ -54,6 +57,9 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
     //    private ViewGroup mRecentContentsLayout;
     //    private View mDeleteAllRecentSearchesView;
 
+    private DailySearchCircleIndicator mCircleIndicator;
+    private RecyclerView mRecyclerView;
+
     EditText mSearchEditText;
     private TextView mDateTextView;
 
@@ -102,12 +108,7 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
         initCalendarLayout(view);
         initAroundLayout(view);
         initSearchKeywordLayout(view);
-
-        DailySearchCircleIndicator circleIndicator = (DailySearchCircleIndicator) view.findViewById(R.id.searchCircleIndicator);
-
-        circleIndicator.setTotalCount(3);
-        circleIndicator.setPosition(2);
-
+        initRecyclerView(view);
     }
 
     private void initSearchLayout(View view)
@@ -230,6 +231,25 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
         //        initRecentSearchesLayout(view);
         initAutoCompleteLayout(view);
     }
+
+    private void initRecyclerView(View view)
+    {
+        mCircleIndicator = (DailySearchCircleIndicator) view.findViewById(R.id.searchCircleIndicator);
+        mRecyclerView = (RecyclerView) view.findViewById(R.id.searchRecyclerView);
+
+        EdgeEffectColor.setEdgeGlowColor(mRecyclerView, mContext.getResources().getColor(R.color.default_over_scroll_edge));
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(mContext);
+        layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        layoutManager.setAutoMeasureEnabled(true);
+        layoutManager.setReverseLayout(false);
+
+        mRecyclerView.setLayoutManager(layoutManager);
+
+        PagerSnapHelper snapHelper = new PagerSnapHelper();
+        snapHelper.attachToRecyclerView(mRecyclerView);
+    }
+
 
     public void resetSearchKeyword()
     {
