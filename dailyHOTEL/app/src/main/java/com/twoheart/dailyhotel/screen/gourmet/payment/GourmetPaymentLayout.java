@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ScreenUtils;
+import com.daily.dailyhotel.view.DailyToolbarView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.CreditCard;
 import com.twoheart.dailyhotel.model.Customer;
@@ -33,7 +34,6 @@ import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
-import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
 import java.util.TimeZone;
 
@@ -55,7 +55,7 @@ public class GourmetPaymentLayout extends BaseLayout implements View.OnClickList
 
     private View mTicketCountMinusButton, mTicketCountPlusButton;
 
-    private DailyToolbarLayout mDailyToolbarLayout;
+    private DailyToolbarView mToolbarView;
 
     // 할인 정보
     private ImageView mCouponRadioButton;
@@ -149,9 +149,8 @@ public class GourmetPaymentLayout extends BaseLayout implements View.OnClickList
 
     private void initToolbar(View view)
     {
-        View toolbar = view.findViewById(R.id.toolbar);
-        mDailyToolbarLayout = new DailyToolbarLayout(mContext, toolbar);
-        mDailyToolbarLayout.initToolbar(null, new View.OnClickListener()
+        mToolbarView = (DailyToolbarView) view.findViewById(R.id.toolbarView);
+        mToolbarView.setOnBackClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
@@ -160,8 +159,8 @@ public class GourmetPaymentLayout extends BaseLayout implements View.OnClickList
             }
         });
 
-        mDailyToolbarLayout.setToolbarMenu(R.drawable.navibar_ic_call, -1);
-        mDailyToolbarLayout.setToolbarMenuClickListener(new View.OnClickListener()
+        mToolbarView.clearMenuItem();
+        mToolbarView.addMenuItem(DailyToolbarView.MenuItem.CALL, null, new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
@@ -173,7 +172,12 @@ public class GourmetPaymentLayout extends BaseLayout implements View.OnClickList
 
     public void setToolbarTitle(String title)
     {
-        mDailyToolbarLayout.setToolbarTitle(title);
+        if (mToolbarView == null)
+        {
+            return;
+        }
+
+        mToolbarView.setTitleText(title);
     }
 
     private void initReservationInformation(View view)
