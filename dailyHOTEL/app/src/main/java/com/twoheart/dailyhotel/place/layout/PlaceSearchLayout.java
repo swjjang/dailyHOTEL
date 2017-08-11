@@ -30,7 +30,7 @@ import com.twoheart.dailyhotel.model.Keyword;
 import com.twoheart.dailyhotel.model.Place;
 import com.twoheart.dailyhotel.place.base.BaseLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
-import com.twoheart.dailyhotel.screen.search.PlaceSearchRecyclerAdapter;
+import com.twoheart.dailyhotel.screen.search.SearchCardViewAdapter;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
@@ -38,7 +38,6 @@ import com.twoheart.dailyhotel.util.StringFilter;
 import com.twoheart.dailyhotel.util.Util;
 
 import java.lang.ref.WeakReference;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -58,13 +57,10 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
     ViewGroup mAutoCompleteLayout;
     private DailyScrollView mAutoCompleteScrollView;
     private View mAutoCompleteScrollLayout;
-    //    private View mRecentSearchLayout;
-    //    private ViewGroup mRecentContentsLayout;
-    //    private View mDeleteAllRecentSearchesView;
 
     private DailySearchCircleIndicator mCircleIndicator;
     protected RecyclerView mRecyclerView;
-    protected PlaceSearchRecyclerAdapter mRecyclerAdapter;
+    protected SearchCardViewAdapter mRecyclerAdapter;
 
     EditText mSearchEditText;
     private TextView mDateTextView;
@@ -257,6 +253,8 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
 
         PagerSnapHelper snapHelper = new PagerSnapHelper();
         snapHelper.attachToRecyclerView(mRecyclerView);
+
+        mCircleIndicator.setTotalCount(3);
 
         mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener()
         {

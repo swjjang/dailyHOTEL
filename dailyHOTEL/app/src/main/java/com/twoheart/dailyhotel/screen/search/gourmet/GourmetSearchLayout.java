@@ -14,11 +14,10 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Gourmet;
 import com.twoheart.dailyhotel.model.Keyword;
 import com.twoheart.dailyhotel.model.Place;
-import com.twoheart.dailyhotel.model.SearchOptionItem;
-import com.twoheart.dailyhotel.model.Stay;
+import com.twoheart.dailyhotel.model.SearchCardItem;
 import com.twoheart.dailyhotel.network.model.GourmetKeyword;
 import com.twoheart.dailyhotel.place.layout.PlaceSearchLayout;
-import com.twoheart.dailyhotel.screen.search.PlaceSearchRecyclerAdapter;
+import com.twoheart.dailyhotel.screen.search.SearchCardViewAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -118,15 +117,15 @@ public class GourmetSearchLayout extends PlaceSearchLayout
     @Override
     public void setRecyclerViewData(List<? extends Place> recentlyList, ArrayList<CampaignTag> campaignTagList, List<Keyword> recentSearchList)
     {
-        ArrayList<SearchOptionItem> recentlyPlaceDataList = new ArrayList<>();
-        ArrayList<SearchOptionItem> campaignTagDataList = new ArrayList<>();
-        ArrayList<SearchOptionItem> recentSearchDataList = new ArrayList<>();
+        ArrayList<SearchCardItem> recentlyPlaceDataList = new ArrayList<>();
+        ArrayList<SearchCardItem> campaignTagDataList = new ArrayList<>();
+        ArrayList<SearchCardItem> recentSearchDataList = new ArrayList<>();
 
         for (Place place : recentlyList)
         {
             Gourmet gourmet = (Gourmet) place;
 
-            SearchOptionItem item = new SearchOptionItem();
+            SearchCardItem item = new SearchCardItem();
             item.iconResId = R.drawable.vector_ob_search_ic_02_hotel;
             item.itemText = gourmet.name;
             item.object = gourmet;
@@ -135,7 +134,7 @@ public class GourmetSearchLayout extends PlaceSearchLayout
 
         for (CampaignTag campaignTag : campaignTagList)
         {
-            SearchOptionItem item = new SearchOptionItem();
+            SearchCardItem item = new SearchCardItem();
             item.iconResId = R.drawable.vector_search_ic_04_tag;
             item.itemText = campaignTag.campaignTag;
             item.object = campaignTag;
@@ -144,15 +143,15 @@ public class GourmetSearchLayout extends PlaceSearchLayout
 
         for (Keyword keyword : recentSearchList)
         {
-            SearchOptionItem item = new SearchOptionItem();
+            SearchCardItem item = new SearchCardItem();
             item.iconResId = keyword.icon;
             item.itemText = keyword.name;
             item.object = keyword;
             recentSearchDataList.add(item);
         }
 
-        mRecyclerAdapter = new PlaceSearchRecyclerAdapter(mContext //
-            , PlaceSearchRecyclerAdapter.TYPE_GOURMET, recentlyPlaceDataList //
+        mRecyclerAdapter = new SearchCardViewAdapter(mContext //
+            , SearchCardViewAdapter.TYPE_GOURMET, recentlyPlaceDataList //
             , campaignTagDataList, recentSearchDataList);
 
         mRecyclerView.setAdapter(mRecyclerAdapter);

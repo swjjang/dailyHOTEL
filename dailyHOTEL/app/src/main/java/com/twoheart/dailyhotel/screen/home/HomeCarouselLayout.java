@@ -2,8 +2,10 @@ package com.twoheart.dailyhotel.screen.home;
 
 import android.animation.Animator;
 import android.animation.ValueAnimator;
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
+import android.os.Build;
 import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PagerSnapHelper;
@@ -76,6 +78,7 @@ public class HomeCarouselLayout extends LinearLayout
         initLayout();
     }
 
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public HomeCarouselLayout(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes)
     {
         super(context, attrs, defStyleAttr, defStyleRes);

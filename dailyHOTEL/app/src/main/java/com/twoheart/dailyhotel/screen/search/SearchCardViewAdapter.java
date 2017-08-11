@@ -1,44 +1,39 @@
 package com.twoheart.dailyhotel.screen.search;
 
 import android.content.Context;
-import android.databinding.DataBindingUtil;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.daily.base.util.ScreenUtils;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.databinding.LayoutSearchOptionItemListBinding;
-import com.twoheart.dailyhotel.model.SearchOptionItem;
+import com.twoheart.dailyhotel.model.SearchCardItem;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by iseung-won on 2017. 8. 10..
  */
 
-public class PlaceSearchRecyclerAdapter extends RecyclerView.Adapter<PlaceSearchRecyclerAdapter.OptionViewHolder>
+public class SearchCardViewAdapter extends RecyclerView.Adapter<SearchCardViewAdapter.CardViewHolder>
 {
     public static final int TYPE_STAY = 1;
     public static final int TYPE_GOURMET = 2;
 
-    private Context mContext;
-    //    private ArrayList<Stay> mRecentlyPlaceList;
-    //    private ArrayList<CampaignTag> mCampaignTagList;
-    //    private ArrayList<Keyword> mRecentKeywordList;
+    private static final float CARD_WIDTH_RATIO = 0.772f; // 270/360 = 0.772222222222222;
 
-    private ArrayList<SearchOptionItem> mRecentlyPlaceList;
-    private ArrayList<SearchOptionItem> mCampaignTagList;
-    private ArrayList<SearchOptionItem> mRecentKeywordList;
+    private Context mContext;
+
+    private ArrayList<SearchCardItem> mRecentlyPlaceList;
+    private ArrayList<SearchCardItem> mCampaignTagList;
+    private ArrayList<SearchCardItem> mRecentKeywordList;
 
     private int mType;
 
 
-    public PlaceSearchRecyclerAdapter(Context context, int type //
-        , ArrayList<SearchOptionItem> placeList, ArrayList<SearchOptionItem> campaignTagList //
-        , ArrayList<SearchOptionItem> keywordList)
+    public SearchCardViewAdapter(Context context, int type //
+        , ArrayList<SearchCardItem> placeList, ArrayList<SearchCardItem> campaignTagList //
+        , ArrayList<SearchCardItem> keywordList)
     {
         mContext = context;
 
@@ -65,26 +60,32 @@ public class PlaceSearchRecyclerAdapter extends RecyclerView.Adapter<PlaceSearch
     }
 
     @Override
-    public OptionViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
+    public CardViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
     {
-        SearchOptionItemListLayout layout = new SearchOptionItemListLayout(mContext);
-        RecyclerView.LayoutParams params = new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-        layout.setLayoutParams(params);
+        RecyclerView.LayoutParams params = new RecyclerView.LayoutParams((int) getCardWidth(),
+            ViewGroup.LayoutParams.MATCH_PARENT);
+
+        SearchCardItemLayout layout = new SearchCardItemLayout(mContext);
+
         int horizontalPadding = ScreenUtils.dpToPx(mContext, 6);
         int verticalPadding = ScreenUtils.dpToPx(mContext, 8);
+
         layout.setPadding(horizontalPadding, verticalPadding, horizontalPadding, verticalPadding);
         layout.setBackgroundResource(R.drawable.search_card);
+        layout.setLayoutParams(params);
 
-        return new OptionViewHolder(layout);
+        return new CardViewHolder(layout);
     }
 
     @Override
-    public void onBindViewHolder(OptionViewHolder holder, int position)
+    public void onBindViewHolder(CardViewHolder holder, int position)
     {
         if (holder == null)
         {
             return;
         }
+
+        setCardMargin(holder, position);
 
         switch (position)
         {
@@ -102,21 +103,37 @@ public class PlaceSearchRecyclerAdapter extends RecyclerView.Adapter<PlaceSearch
         }
     }
 
-    private void onCampaignTagBindViewHolder(OptionViewHolder holder, ArrayList<SearchOptionItem> list)
+    public void setCardMargin(CardViewHolder holder, int position)
     {
         if (holder == null)
         {
             return;
         }
 
-        SearchOptionItemListLayout layout = (SearchOptionItemListLayout) holder.itemView;
+        int inSide = (int) getCardInSideMargin();
+        int outSide = (int) getCardOutSideMargin();
+
+        RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) holder.itemView.getLayoutParams();
+        params.leftMargin = position == 0 ? outSide : inSide;
+        params.rightMargin = position == getItemCount() -1 ? outSide : inSide;
+        holder.itemView.setLayoutParams(params);
+    }
+
+    private void onCampaignTagBindViewHolder(CardViewHolder holder, ArrayList<SearchCardItem> list)
+    {
+        if (holder == null)
+        {
+            return;
+        }
+
+        SearchCardItemLayout layout = (SearchCardItemLayout) holder.itemView;
 
         layout.setTitleText(R.string.label_popular_tag);
         layout.setDeleteButtonVisible(false);
 
         layout.setData(list);
 
-        layout.setOnEventListener(new SearchOptionItemListLayout.OnEventListener()
+        layout.setOnEventListener(new SearchCardItemLayout.OnEventListener()
         {
             @Override
             public void onDeleteAllClick()
@@ -138,21 +155,21 @@ public class PlaceSearchRecyclerAdapter extends RecyclerView.Adapter<PlaceSearch
         });
     }
 
-    private void onRecentKeywordBindViewHolder(OptionViewHolder holder, ArrayList<SearchOptionItem> list)
+    private void onRecentKeywordBindViewHolder(CardViewHolder holder, ArrayList<SearchCardItem> list)
     {
         if (holder == null)
         {
             return;
         }
 
-        SearchOptionItemListLayout layout = (SearchOptionItemListLayout) holder.itemView;
+        SearchCardItemLayout layout = (SearchCardItemLayout) holder.itemView;
 
         layout.setTitleText(R.string.label_search_recentsearches);
         layout.setDeleteButtonVisible(true);
 
         layout.setData(list);
 
-        layout.setOnEventListener(new SearchOptionItemListLayout.OnEventListener()
+        layout.setOnEventListener(new SearchCardItemLayout.OnEventListener()
         {
             @Override
             public void onDeleteAllClick()
@@ -174,14 +191,14 @@ public class PlaceSearchRecyclerAdapter extends RecyclerView.Adapter<PlaceSearch
         });
     }
 
-    private void onRecentlyPlaceBindViewHolder(OptionViewHolder holder, ArrayList<SearchOptionItem> list)
+    private void onRecentlyPlaceBindViewHolder(CardViewHolder holder, ArrayList<SearchCardItem> list)
     {
         if (holder == null)
         {
             return;
         }
 
-        SearchOptionItemListLayout layout = (SearchOptionItemListLayout) holder.itemView;
+        SearchCardItemLayout layout = (SearchCardItemLayout) holder.itemView;
 
         int titleResId = 0;
         if (TYPE_STAY == mType)
@@ -204,7 +221,7 @@ public class PlaceSearchRecyclerAdapter extends RecyclerView.Adapter<PlaceSearch
 
         layout.setData(list);
 
-        layout.setOnEventListener(new SearchOptionItemListLayout.OnEventListener()
+        layout.setOnEventListener(new SearchCardItemLayout.OnEventListener()
         {
             @Override
             public void onDeleteAllClick()
@@ -239,9 +256,24 @@ public class PlaceSearchRecyclerAdapter extends RecyclerView.Adapter<PlaceSearch
         return 1;
     }
 
-    public class OptionViewHolder extends RecyclerView.ViewHolder
+    private float getCardWidth()
     {
-        public OptionViewHolder(View view)
+        return ScreenUtils.getScreenWidth(mContext) * CARD_WIDTH_RATIO;
+    }
+
+    private float getCardOutSideMargin()
+    {
+        return ScreenUtils.getScreenWidth(mContext) * (1.0f - CARD_WIDTH_RATIO) / 2.0f;
+    }
+
+    private float getCardInSideMargin()
+    {
+        return 0.0f - ScreenUtils.dpToPx(mContext, 1d); // -2dp 만큼 곂침으로 양쪽에 1만큼씩 여백 줄이면 됨
+    }
+
+    public class CardViewHolder extends RecyclerView.ViewHolder
+    {
+        public CardViewHolder(View view)
         {
             super(view);
         }

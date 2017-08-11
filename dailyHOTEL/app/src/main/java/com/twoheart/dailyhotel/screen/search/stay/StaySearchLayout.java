@@ -15,12 +15,11 @@ import com.daily.dailyhotel.entity.CampaignTag;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Keyword;
 import com.twoheart.dailyhotel.model.Place;
-import com.twoheart.dailyhotel.model.SearchOptionItem;
+import com.twoheart.dailyhotel.model.SearchCardItem;
 import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.network.model.StayKeyword;
 import com.twoheart.dailyhotel.place.layout.PlaceSearchLayout;
-import com.twoheart.dailyhotel.screen.search.PlaceSearchRecyclerAdapter;
-import com.twoheart.dailyhotel.screen.search.SearchOptionItemListAdapter;
+import com.twoheart.dailyhotel.screen.search.SearchCardViewAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -151,15 +150,15 @@ public class StaySearchLayout extends PlaceSearchLayout
     @Override
     public void setRecyclerViewData(List<? extends Place> recentlyList, ArrayList<CampaignTag> campaignTagList, List<Keyword> recentSearchList)
     {
-        ArrayList<SearchOptionItem> recentlyPlaceDataList = new ArrayList<>();
-        ArrayList<SearchOptionItem> campaignTagDataList = new ArrayList<>();
-        ArrayList<SearchOptionItem> recentSearchDataList = new ArrayList<>();
+        ArrayList<SearchCardItem> recentlyPlaceDataList = new ArrayList<>();
+        ArrayList<SearchCardItem> campaignTagDataList = new ArrayList<>();
+        ArrayList<SearchCardItem> recentSearchDataList = new ArrayList<>();
 
         for (Place place : recentlyList)
         {
             Stay stay = (Stay) place;
 
-            SearchOptionItem item = new SearchOptionItem();
+            SearchCardItem item = new SearchCardItem();
             item.iconResId = R.drawable.vector_ob_search_ic_02_hotel;
             item.itemText = stay.name;
             item.object = stay;
@@ -168,7 +167,7 @@ public class StaySearchLayout extends PlaceSearchLayout
 
         for (CampaignTag campaignTag : campaignTagList)
         {
-            SearchOptionItem item = new SearchOptionItem();
+            SearchCardItem item = new SearchCardItem();
             item.iconResId = R.drawable.vector_search_ic_04_tag;
             item.itemText = campaignTag.campaignTag;
             item.object = campaignTag;
@@ -177,15 +176,15 @@ public class StaySearchLayout extends PlaceSearchLayout
 
         for (Keyword keyword : recentSearchList)
         {
-            SearchOptionItem item = new SearchOptionItem();
+            SearchCardItem item = new SearchCardItem();
             item.iconResId = keyword.icon;
             item.itemText = keyword.name;
             item.object = keyword;
             recentSearchDataList.add(item);
         }
 
-        mRecyclerAdapter = new PlaceSearchRecyclerAdapter(mContext //
-            , PlaceSearchRecyclerAdapter.TYPE_STAY, recentlyPlaceDataList //
+        mRecyclerAdapter = new SearchCardViewAdapter(mContext //
+            , SearchCardViewAdapter.TYPE_STAY, recentlyPlaceDataList //
             , campaignTagDataList, recentSearchDataList);
 
         mRecyclerView.setAdapter(mRecyclerAdapter);

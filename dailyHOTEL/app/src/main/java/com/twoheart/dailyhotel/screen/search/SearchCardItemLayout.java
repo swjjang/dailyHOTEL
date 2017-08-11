@@ -4,17 +4,14 @@ import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.LinearLayoutManager;
-import android.text.Layout;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 
 import com.daily.base.OnBaseEventListener;
-import com.daily.dailyhotel.screen.booking.detail.map.PlaceBookingDetailMapView;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.databinding.LayoutSearchOptionItemListBinding;
-import com.twoheart.dailyhotel.databinding.ListRowSearchOptionItemBinding;
-import com.twoheart.dailyhotel.model.SearchOptionItem;
+import com.twoheart.dailyhotel.databinding.LayoutSearchCardItemBinding;
+import com.twoheart.dailyhotel.model.SearchCardItem;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
 
 import java.util.ArrayList;
@@ -23,12 +20,12 @@ import java.util.ArrayList;
  * Created by iseung-won on 2017. 8. 10..
  */
 
-public class SearchOptionItemListLayout extends ConstraintLayout
+public class SearchCardItemLayout extends ConstraintLayout
 {
     private Context mContext;
-    private LayoutSearchOptionItemListBinding mViewDataBinding;
+    private LayoutSearchCardItemBinding mViewDataBinding;
     private OnEventListener mOnEventListener;
-    private SearchOptionItemListAdapter mRecyclerAdapter;
+    private SearchCardItemListAdapter mRecyclerAdapter;
 
     public interface OnEventListener extends OnBaseEventListener
     {
@@ -37,7 +34,7 @@ public class SearchOptionItemListLayout extends ConstraintLayout
         void onItemClick(View view);
     }
 
-    public SearchOptionItemListLayout(Context context)
+    public SearchCardItemLayout(Context context)
     {
         super(context);
 
@@ -45,7 +42,7 @@ public class SearchOptionItemListLayout extends ConstraintLayout
         initLayout();
     }
 
-    public SearchOptionItemListLayout(Context context, AttributeSet attrs)
+    public SearchCardItemLayout(Context context, AttributeSet attrs)
     {
         super(context, attrs);
 
@@ -53,7 +50,7 @@ public class SearchOptionItemListLayout extends ConstraintLayout
         initLayout();
     }
 
-    public SearchOptionItemListLayout(Context context, AttributeSet attrs, int defStyleAttr)
+    public SearchCardItemLayout(Context context, AttributeSet attrs, int defStyleAttr)
     {
         super(context, attrs, defStyleAttr);
 
@@ -64,7 +61,7 @@ public class SearchOptionItemListLayout extends ConstraintLayout
     private void initLayout()
     {
         LayoutInflater layoutInflater = LayoutInflater.from(mContext);
-        mViewDataBinding = DataBindingUtil.inflate(layoutInflater, R.layout.layout_search_option_item_list, this, true);
+        mViewDataBinding = DataBindingUtil.inflate(layoutInflater, R.layout.layout_search_card_item, this, true);
 
         EdgeEffectColor.setEdgeGlowColor(mViewDataBinding.recyclerView, mContext.getResources().getColor(R.color.default_over_scroll_edge));
 
@@ -86,7 +83,7 @@ public class SearchOptionItemListLayout extends ConstraintLayout
             }
         });
 
-        mRecyclerAdapter = new SearchOptionItemListAdapter(mContext, null, new OnClickListener()
+        mRecyclerAdapter = new SearchCardItemListAdapter(mContext, null, new OnClickListener()
         {
             @Override
             public void onClick(View v)
@@ -139,7 +136,7 @@ public class SearchOptionItemListLayout extends ConstraintLayout
         mViewDataBinding.titleTextView.setText(textResId);
     }
 
-    public void setData(ArrayList<SearchOptionItem> list)
+    public void setData(ArrayList<SearchCardItem> list)
     {
         if (mRecyclerAdapter == null)
         {
