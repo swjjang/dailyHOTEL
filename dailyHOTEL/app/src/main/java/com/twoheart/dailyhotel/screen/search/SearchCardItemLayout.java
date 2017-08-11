@@ -160,6 +160,22 @@ public class SearchCardItemLayout extends ConstraintLayout
         mViewDataBinding.titleTextView.setText(textResId);
     }
 
+    public void setEmptyViewData(int imageResId, int titleResId)
+    {
+        if (mViewDataBinding == null || mContext == null)
+        {
+            return;
+        }
+
+        mViewDataBinding.emptyImageView.setImageResource(imageResId);
+
+        if (titleResId != 0)
+        {
+            mViewDataBinding.emptyTextView.setText( //
+                mContext.getString(R.string.message_empty_search_card_format, mContext.getString(titleResId)));
+        }
+    }
+
     public void setData(ArrayList<SearchCardItem> list)
     {
         if (mRecyclerAdapter == null)
