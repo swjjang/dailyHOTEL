@@ -22,6 +22,9 @@ import com.twoheart.dailyhotel.screen.search.SearchCardViewAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+
 public class GourmetSearchLayout extends PlaceSearchLayout
 {
     public GourmetSearchLayout(Context context, OnEventListener mOnEventListener)

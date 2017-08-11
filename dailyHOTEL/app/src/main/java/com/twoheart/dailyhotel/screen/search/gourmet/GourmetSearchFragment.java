@@ -324,7 +324,7 @@ public class GourmetSearchFragment extends PlaceSearchFragment
 
                     return mDailyRecentSearches.getList();
                 }
-            }).subscribeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<List<Keyword>>()
+            }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<List<Keyword>>()
         {
             @Override
             public void accept(@NonNull List<Keyword> keywordList) throws Exception

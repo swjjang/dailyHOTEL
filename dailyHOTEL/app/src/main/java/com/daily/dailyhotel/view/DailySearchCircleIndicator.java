@@ -17,7 +17,7 @@ import com.twoheart.dailyhotel.R;
 public class DailySearchCircleIndicator extends View
 {
     private static final int SELECTED_FACTOR = 2;
-    private static final int SPACING_FACTOR = 4;
+    private static final int SPACING_FACTOR = 8;
 
     private int mTotalCount;
     private Paint mPaint;
@@ -47,7 +47,7 @@ public class DailySearchCircleIndicator extends View
 
     private void initLayout()
     {
-        mRadius = ScreenUtils.dpToPx(getContext(), 3);
+        mRadius = ScreenUtils.dpToPx(getContext(), 1.5d);
 
         mPaint = new Paint();
         mPaint.setAntiAlias(true);
