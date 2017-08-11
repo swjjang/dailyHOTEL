@@ -26,6 +26,7 @@ public class SearchCardItemLayout extends ConstraintLayout
     private LayoutSearchCardItemBinding mViewDataBinding;
     private OnEventListener mOnEventListener;
     private SearchCardItemListAdapter mRecyclerAdapter;
+    private boolean mIsDeleteVisible;
 
     public interface OnEventListener extends OnBaseEventListener
     {
@@ -112,8 +113,31 @@ public class SearchCardItemLayout extends ConstraintLayout
             return;
         }
 
+        mIsDeleteVisible = isVisible;
+
         mViewDataBinding.deleteLayout.setVisibility(isVisible == true ? View.VISIBLE : View.GONE);
         mViewDataBinding.deleteLayout.setClickable(isVisible);
+    }
+
+    public void setEmptyViewVisible(boolean isVisible)
+    {
+        if (mViewDataBinding == null)
+        {
+            return;
+        }
+
+        if (isVisible == true)
+        {
+            mViewDataBinding.recyclerView.setVisibility(View.GONE);
+            mViewDataBinding.deleteLayout.setVisibility(View.GONE);
+            mViewDataBinding.emptyView.setVisibility(View.VISIBLE);
+        } else
+        {
+            mViewDataBinding.recyclerView.setVisibility(View.VISIBLE);
+            mViewDataBinding.deleteLayout.setVisibility( //
+                mIsDeleteVisible == true ? View.VISIBLE : View.GONE);
+            mViewDataBinding.emptyView.setVisibility(View.GONE);
+        }
     }
 
     public void setTitleText(String text)
@@ -143,6 +167,7 @@ public class SearchCardItemLayout extends ConstraintLayout
             return;
         }
 
+        setEmptyViewVisible(list == null || list.size() == 0);
         mRecyclerAdapter.setData(list);
         mRecyclerAdapter.notifyDataSetChanged();
     }
