@@ -36,6 +36,7 @@ import com.daily.base.util.ExLog;
 import com.daily.base.util.FontManager;
 import com.daily.base.util.ScreenUtils;
 import com.daily.base.widget.DailyTextView;
+import com.daily.dailyhotel.view.DailyToolbarView;
 import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.twoheart.dailyhotel.DailyHotel;
@@ -234,8 +235,18 @@ public class HomeLayout extends BaseBlurLayout
             return;
         }
 
-        View searchView = view.findViewById(R.id.searchImageView);
-        searchView.setOnClickListener(v -> ((OnEventListener) mOnEventListener).onSearchImageClick());
+        DailyToolbarView dailyToolbarView = (DailyToolbarView) view.findViewById(R.id.toolbarView);
+        dailyToolbarView.setBackImageResource(R.drawable.img_gnb_logo);
+
+        dailyToolbarView.clearMenuItem();
+        dailyToolbarView.addMenuItem(DailyToolbarView.MenuItem.SEARCH, null, new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                ((OnEventListener) mOnEventListener).onSearchImageClick();
+            }
+        });
     }
 
     // 홈의 상단 고정 버튼 레이아웃

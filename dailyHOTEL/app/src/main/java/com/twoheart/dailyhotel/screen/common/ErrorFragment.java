@@ -21,13 +21,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.daily.base.widget.DailyToast;
+import com.daily.dailyhotel.view.DailyToolbarView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.base.BaseFragment;
 import com.twoheart.dailyhotel.screen.main.MainFragmentManager;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
-import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
 public class ErrorFragment extends BaseFragment implements OnClickListener
 {
@@ -47,7 +47,7 @@ public class ErrorFragment extends BaseFragment implements OnClickListener
 
         View view = inflater.inflate(R.layout.fragment_error, container, false);
 
-        initToolbar(baseActivity, view, getString(R.string.actionbar_title_error_frag));
+        initToolbar(baseActivity, view);
 
         TextView retryTextView = (TextView) view.findViewById(R.id.btn_error);
         retryTextView.setOnClickListener(this);
@@ -68,39 +68,41 @@ public class ErrorFragment extends BaseFragment implements OnClickListener
         mMainFragmentManager = mainFragmentManager;
     }
 
-    private void initToolbar(final BaseActivity baseActivity, View view, String title)
+    private void initToolbar(final BaseActivity baseActivity, View view)
     {
-        View toolbar = view.findViewById(R.id.toolbar);
-        DailyToolbarLayout dailyToolbarLayout = new DailyToolbarLayout(baseActivity, toolbar);
+        DailyToolbarView dailyToolbarView = (DailyToolbarView) view.findViewById(R.id.toolbarView);
 
         if (mMainFragmentManager == null)
         {
-            dailyToolbarLayout.initToolbar(title, null, false);
+            dailyToolbarView.setTitleText(R.string.actionbar_title_error_frag);
+            dailyToolbarView.setBackVisible(false);
         } else
         {
             switch (mMainFragmentManager.getLastIndexFragment())
             {
                 case MainFragmentManager.INDEX_HOME_FRAGMENT:
-                    dailyToolbarLayout.initToolbar(R.drawable.img_gnb_logo, false);
+                    dailyToolbarView.setBackImageResource(R.drawable.img_gnb_logo);
+                    dailyToolbarView.setTitleText(null);
                     break;
 
                 case MainFragmentManager.INDEX_BOOKING_FRAGMENT:
-                    title = getString(R.string.menu_item_title_bookings);
-                    dailyToolbarLayout.initToolbar(title, null, false);
+                    dailyToolbarView.setTitleText(R.string.menu_item_title_bookings);
+                    dailyToolbarView.setBackVisible(false);
                     break;
 
                 case MainFragmentManager.INDEX_MYDAILY_FRAGMENT:
-                    title = getString(R.string.menu_item_title_mydaily);
-                    dailyToolbarLayout.initToolbar(title, null, false);
+                    dailyToolbarView.setTitleText(R.string.menu_item_title_mydaily);
+                    dailyToolbarView.setBackVisible(false);
                     break;
 
                 case MainFragmentManager.INDEX_INFORMATION_FRAGMENT:
-                    title = getString(R.string.menu_item_title_information);
-                    dailyToolbarLayout.initToolbar(title, null, false);
+                    dailyToolbarView.setTitleText(R.string.menu_item_title_information);
+                    dailyToolbarView.setBackVisible(false);
                     break;
 
                 default:
-                    dailyToolbarLayout.initToolbar(title, null, false);
+                    dailyToolbarView.setTitleText(R.string.actionbar_title_error_frag);
+                    dailyToolbarView.setBackVisible(false);
                     break;
             }
         }

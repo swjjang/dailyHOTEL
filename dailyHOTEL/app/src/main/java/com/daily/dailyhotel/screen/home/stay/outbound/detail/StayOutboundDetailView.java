@@ -17,7 +17,6 @@ import android.graphics.drawable.shapes.RectShape;
 import android.net.Uri;
 import android.os.Build;
 import android.support.annotation.IdRes;
-import android.support.constraint.ConstraintLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
@@ -200,29 +199,13 @@ public class StayOutboundDetailView extends BaseDialogView<StayOutboundDetailVie
     @Override
     public void setToolbarTitle(String title)
     {
-        if (getViewDataBinding() == null)
-        {
-            return;
-        }
-
-        getViewDataBinding().toolbarView.setTitleText(title);
     }
-
 
     @Override
     public void onClick(View v)
     {
         switch (v.getId())
         {
-            case R.id.backView:
-                getEventListener().onBackClick();
-                break;
-
-            case R.id.menu1View:
-            case R.id.shareView:
-                getEventListener().onShareClick();
-                break;
-
             case R.id.closeView:
             case R.id.productTypeBackgroundView:
                 getEventListener().onHideRoomListClick(true);
@@ -296,8 +279,7 @@ public class StayOutboundDetailView extends BaseDialogView<StayOutboundDetailVie
 
                     // 리스트 높이 + 아이콘 높이(실제 화면에 들어나지 않기 때문에 높이가 정확하지 않아서 내부 높이를 더함)
                     int height = getViewDataBinding().productTypeLayout.getHeight();
-                    int toolbarHeight = getDimensionPixelSize(R.dimen.toolbar_height);
-                    int maxHeight = getViewDataBinding().getRoot().getHeight() - getViewDataBinding().bottomLayout.getHeight() - toolbarHeight;
+                    int maxHeight = getViewDataBinding().getRoot().getHeight() - getViewDataBinding().bottomLayout.getHeight();
 
                     float toAnimationY = fromAnimationY - Math.min(height, maxHeight);
 
@@ -363,7 +345,6 @@ public class StayOutboundDetailView extends BaseDialogView<StayOutboundDetailVie
                     observer.onComplete();
                 }
             };
-
         }
 
         return observable;
@@ -949,8 +930,25 @@ public class StayOutboundDetailView extends BaseDialogView<StayOutboundDetailVie
         });
 
         viewDataBinding.toolbarView.setVisibility(View.INVISIBLE);
-        viewDataBinding.backView.setOnClickListener(this);
-        viewDataBinding.shareView.setOnClickListener(this);
+
+        viewDataBinding.fakeToolbarView.setOnBackClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                getEventListener().onBackClick();
+            }
+        });
+
+        viewDataBinding.fakeToolbarView.clearMenuItem();
+        viewDataBinding.fakeToolbarView.addMenuItem(DailyToolbarView.MenuItem.SHARE, null, new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                getEventListener().onShareClick();
+            }
+        });
     }
 
     private void setImageList(List<StayOutboundDetailImage> imageList)
@@ -1492,37 +1490,26 @@ public class StayOutboundDetailView extends BaseDialogView<StayOutboundDetailVie
             mRoomTypeListAdapter.setSelected(0);
         }
 
-        ViewGroup.LayoutParams layoutParams = getViewDataBinding().productTypeRecyclerView.getLayoutParams();
-        layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT;
-        getViewDataBinding().productTypeRecyclerView.setLayoutParams(layoutParams);
+        getViewDataBinding().productTypeRecyclerView.getLayoutParams().height = ViewGroup.LayoutParams.WRAP_CONTENT;
+        getViewDataBinding().productTypeRecyclerView.requestLayout();
         getViewDataBinding().productTypeRecyclerView.setAdapter(mRoomTypeListAdapter);
+        getViewDataBinding().bookingTextView.setOnClickListener(this);
 
-        // 객실 개수로 높이를 재지정해준다.
         getViewDataBinding().productTypeRecyclerView.postDelayed(new Runnable()
         {
             @Override
             public void run()
             {
-                final int DEFAULT_TOP_MARGIN = getDimensionPixelSize(R.dimen.toolbar_height);
+                int maxHeight = getViewDataBinding().getRoot().getHeight()//
+                    - getDimensionPixelSize(R.dimen.toolbar_height)//
+                    - ScreenUtils.dpToPx(getContext(), 116) - 1// - (객실 타이틀바 + 하단 하단 버튼) - 라인
+                    - (getViewDataBinding().priceOptionLayout.getVisibility() == View.VISIBLE ? getViewDataBinding().priceOptionLayout.getHeight() : 0);
 
-                // 화면 높이 - 상단 타이틀 - 하단 버튼
-                final int maxHeight = getViewDataBinding().getRoot().getHeight() - DEFAULT_TOP_MARGIN;
-
-                int topMargin = 0;
-
-                if (getViewDataBinding().productTypeLayout.getHeight() > maxHeight)
-                {
-                    topMargin = DEFAULT_TOP_MARGIN;
-                }
-
-                ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) getViewDataBinding().productTypeLayout.getLayoutParams();
-                layoutParams.topMargin = DEFAULT_TOP_MARGIN;
-
-                getViewDataBinding().productTypeLayout.setLayoutParams(layoutParams);
+                int height = Math.min(maxHeight, getViewDataBinding().productTypeRecyclerView.getHeight());
+                getViewDataBinding().productTypeRecyclerView.getLayoutParams().height = height;
+                getViewDataBinding().productTypeRecyclerView.requestLayout();
             }
         }, 100);
-
-        getViewDataBinding().bookingTextView.setOnClickListener(this);
     }
 
     /**

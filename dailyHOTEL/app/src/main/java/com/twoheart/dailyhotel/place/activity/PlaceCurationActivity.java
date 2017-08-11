@@ -19,6 +19,7 @@ import android.widget.TextView;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ScreenUtils;
 import com.daily.base.widget.DailyTextView;
+import com.daily.dailyhotel.view.DailyToolbarView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.PlaceCuration;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
@@ -73,6 +74,8 @@ public abstract class PlaceCurationActivity extends BaseActivity implements View
 
         mHandler = new UpdateHandler(this);
 
+        initToolbar();
+
         mConfirmView = (TextView) findViewById(R.id.confirmView);
         setConfirmOnClickListener(this);
 
@@ -82,12 +85,23 @@ public abstract class PlaceCurationActivity extends BaseActivity implements View
         View resetCurationView = findViewById(R.id.resetCurationView);
         resetCurationView.setOnClickListener(this);
 
-        View closeView = findViewById(R.id.closeView);
-        closeView.setOnClickListener(this);
-
         ViewGroup contentLayout = (ViewGroup) findViewById(R.id.contentLayout);
 
         initContentLayout(contentLayout);
+    }
+
+    private void initToolbar()
+    {
+        DailyToolbarView dailyToolbarView = (DailyToolbarView)findViewById(R.id.toolbarView);
+        dailyToolbarView.setTitleText(R.string.activity_curation_title);
+        dailyToolbarView.setOnBackClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                onCancel();
+            }
+        });
     }
 
     protected void setResultMessage(String text)

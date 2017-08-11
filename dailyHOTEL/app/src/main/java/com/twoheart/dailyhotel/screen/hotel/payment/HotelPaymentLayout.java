@@ -28,6 +28,7 @@ import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.util.FontManager;
 import com.daily.base.util.ScreenUtils;
+import com.daily.dailyhotel.view.DailyToolbarView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.CreditCard;
 import com.twoheart.dailyhotel.model.Customer;
@@ -44,7 +45,6 @@ import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Action;
 import com.twoheart.dailyhotel.widget.CustomFontTypefaceSpan;
-import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
 public class HotelPaymentLayout extends BaseLayout implements View.OnClickListener, View.OnFocusChangeListener, CompoundButton.OnCheckedChangeListener
 {
@@ -82,7 +82,7 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
     private View mUsedCouponLayout;
     private TextView mUsedCouponTextView;
 
-    private DailyToolbarLayout mDailyToolbarLayout;
+    private DailyToolbarView mToolbarView;
 
     // 결제 수단 선택
     private View mFreePaymentView;
@@ -169,9 +169,8 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
 
     private void initToolbar(View view)
     {
-        View toolbar = view.findViewById(R.id.toolbar);
-        mDailyToolbarLayout = new DailyToolbarLayout(mContext, toolbar);
-        mDailyToolbarLayout.initToolbar(null, new OnClickListener()
+        mToolbarView = (DailyToolbarView) view.findViewById(R.id.toolbarView);
+        mToolbarView.setOnBackClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
@@ -180,8 +179,8 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
             }
         });
 
-        mDailyToolbarLayout.setToolbarMenu(R.drawable.navibar_ic_call, -1);
-        mDailyToolbarLayout.setToolbarMenuClickListener(new OnClickListener()
+        mToolbarView.clearMenuItem();
+        mToolbarView.addMenuItem(DailyToolbarView.MenuItem.CALL, null, new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
@@ -193,7 +192,12 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
 
     public void setToolbarTitle(String title)
     {
-        mDailyToolbarLayout.setToolbarTitle(title);
+        if (mToolbarView == null)
+        {
+            return;
+        }
+
+        mToolbarView.setTitleText(title);
     }
 
     private void initReservationInformation(View view)

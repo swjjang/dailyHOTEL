@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.daily.base.util.ExLog;
+import com.daily.dailyhotel.view.DailyToolbarView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.fragment.PlaceRegionListFragment;
@@ -21,7 +22,7 @@ public abstract class PlaceRegionListActivity extends BaseActivity
 
     protected abstract void initIntent(Intent intent);
 
-    protected abstract void initToolbar(View toolbar);
+    protected abstract void initToolbar(DailyToolbarView dailyToolbarView);
 
     protected abstract void initViewPager();
 
@@ -65,9 +66,7 @@ public abstract class PlaceRegionListActivity extends BaseActivity
 
     private void initToolbar()
     {
-        View toolbar = findViewById(R.id.toolbar);
-
-        initToolbar(toolbar);
+        initToolbar((DailyToolbarView)findViewById(R.id.toolbarView));
     }
 
     @Override

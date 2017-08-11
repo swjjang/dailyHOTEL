@@ -12,18 +12,17 @@
         tools:parentTag="android.support.constraint.ConstraintLayout">
 
         <com.daily.base.widget.DailyImageView
-            android:id="@+id/backImageView"
+            android:id="@+id/daily_titleImageView"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:paddingLeft="15dp"
             android:paddingRight="15dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/navibar_ic_back_01_black"/>
+            app:layout_constraintTop_toTopOf="parent"/>
 
         <LinearLayout
-            android:id="@+id/menuLayout"
+            android:id="@+id/daily_menuItemLayout"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:layout_marginRight="15dp"
@@ -33,7 +32,7 @@
             app:layout_constraintTop_toTopOf="parent"/>
 
         <com.daily.base.widget.DailyTextView
-            android:id="@+id/titleTextView"
+            android:id="@+id/daily_titleTextView"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginLeft="12dp"
@@ -44,13 +43,13 @@
             android:textColor="@color/default_text_c323232"
             android:textSize="18dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toRightOf="@+id/backImageView"
-            app:layout_constraintRight_toLeftOf="@+id/menuLayout"
+            app:layout_constraintLeft_toRightOf="@+id/daily_titleImageView"
+            app:layout_constraintRight_toLeftOf="@+id/daily_menuItemLayout"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_goneMarginLeft="15dp"/>
 
         <View
-            android:id="@+id/toolbarUnderline"
+            android:id="@+id/daily_toolbarUnderline"
             android:layout_width="0dp"
             android:layout_height="@dimen/gradient_1dp_line_height_under_21"
             android:background="@color/default_line_ce7e7e7"

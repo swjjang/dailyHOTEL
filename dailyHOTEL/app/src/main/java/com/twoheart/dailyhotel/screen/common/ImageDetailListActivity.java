@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ScreenUtils;
+import com.daily.dailyhotel.view.DailyToolbarView;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.controller.BaseControllerListener;
 import com.facebook.drawee.interfaces.DraweeController;
@@ -46,7 +47,7 @@ public class ImageDetailListActivity extends BaseActivity implements Constants
     float mY;
     boolean mIsMoved, mIsTop, mIsBottom;
     VelocityTracker mVelocityTracker;
-    View mToolbarView;
+    DailyToolbarView mToolbarView;
 
     PlaceType mPlaceType;
 
@@ -124,13 +125,12 @@ public class ImageDetailListActivity extends BaseActivity implements Constants
 
     private void initToolbar(String title)
     {
-        mToolbarView = findViewById(R.id.toolbar);
+        mToolbarView = (DailyToolbarView) findViewById(R.id.toolbarView);
+        mToolbarView.setTitleText(title);
+        mToolbarView.setBackVisible(false);
 
-        TextView titleTextView = (TextView) mToolbarView.findViewById(R.id.titleTextView);
-        titleTextView.setText(title);
-
-        View closeImageView = mToolbarView.findViewById(R.id.closeImageView);
-        closeImageView.setOnClickListener(new View.OnClickListener()
+        mToolbarView.clearMenuItem();
+        mToolbarView.addMenuItem(DailyToolbarView.MenuItem.CLOSE, null, new View.OnClickListener()
         {
             @Override
             public void onClick(View v)

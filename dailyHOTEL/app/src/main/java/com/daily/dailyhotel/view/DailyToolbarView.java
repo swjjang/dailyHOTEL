@@ -9,16 +9,17 @@ import android.support.annotation.DrawableRes;
 import android.support.annotation.StringRes;
 import android.support.constraint.ConstraintLayout;
 import android.util.AttributeSet;
+import android.util.Pair;
 import android.util.TypedValue;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 
+import com.daily.base.util.DailyTextUtils;
+import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
-import com.daily.base.widget.DailyTextView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.DailyViewToolbarDataBinding;
+import com.twoheart.dailyhotel.databinding.DailyViewToolbarMenuItemDataBinding;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,34 +30,69 @@ public class DailyToolbarView extends ConstraintLayout
 
     private DailyViewToolbarDataBinding mViewDataBinding;
 
-    private List<MenuItem> mMenuItemList;
+    private List<Pair<MenuItem, DailyViewToolbarMenuItemDataBinding>> mMenuItemList;
 
     private ObjectAnimator mShowAnimator;
     private ObjectAnimator mHideAnimator;
 
+    private ThemeColor mThemeColor;
+
     // 중복 불가
     public enum MenuItem
     {
-        NONE(-1),
-        HELP(R.drawable.navibar_ic_help),
-        SHARE(R.drawable.navibar_ic_share_01_black),
-        CALL(R.drawable.navibar_ic_call),
-        CLOSE_BLACK(R.drawable.navibar_ic_x),
-        CLOSE_WHITE(R.drawable.navibar_ic_x_white),
-        TRUE_VR(R.drawable.vector_navibar_ic_treuvr),
-        WISH_OFF(R.drawable.vector_navibar_ic_heart_off_black),
-        WISH_ON(R.drawable.vector_navibar_ic_heart_on);
+        NONE(-1, true),
+        HELP(R.drawable.navibar_ic_help, true),
+        SHARE(R.drawable.navibar_ic_share_01_black, true),
+        CALL(R.drawable.navibar_ic_call, true),
+        CLOSE(R.drawable.navibar_ic_x, true),
+        TRUE_VR(R.drawable.vector_navibar_ic_treuvr, true),
+        WISH_OFF(R.drawable.vector_navibar_ic_heart_off_black, true),
+        WISH_ON(R.drawable.vector_navibar_ic_heart_on, false),
+        SEARCH(R.drawable.navibar_ic_search, true);
 
         private int mResId;
+        private boolean mSupportChangedColor;
 
-        MenuItem(int resId)
+        MenuItem(int resId, boolean supportChangedColor)
         {
             mResId = resId;
+            mSupportChangedColor = supportChangedColor;
         }
 
         public int getResourceId()
         {
             return mResId;
+        }
+
+        public boolean supportChangedColor()
+        {
+            return mSupportChangedColor;
+        }
+    }
+
+    // xml에서만 가능
+    public enum ThemeColor
+    {
+        DEFAULT(R.color.default_text_c323232, R.color.default_background_c454545),
+        WHITE(R.color.white, R.color.white);
+
+        private int mTextColorResId;
+        private int mIconColorResId;
+
+        ThemeColor(int textColorResId, int iconColorResId)
+        {
+            mTextColorResId = textColorResId;
+            mIconColorResId = iconColorResId;
+        }
+
+        public int getTextColorResourceId()
+        {
+            return mTextColorResId;
+        }
+
+        public int getIconColorResourceId()
+        {
+            return mIconColorResId;
         }
     }
 
@@ -88,11 +124,13 @@ public class DailyToolbarView extends ConstraintLayout
             return;
         }
 
+        mThemeColor = ThemeColor.DEFAULT;
+
         mViewDataBinding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.daily_view_toolbar_data, this, true);
 
         if (ScreenUtils.getScreenWidth(context) <= 480)
         {
-            mViewDataBinding.titleTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 16);
+            mViewDataBinding.dailyTitleTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 16);
         }
 
         mMenuItemList = new ArrayList<>();
@@ -113,12 +151,31 @@ public class DailyToolbarView extends ConstraintLayout
                 setUnderLineVisible(underLineVisible);
             }
 
-            if (typedArray.hasValue(R.styleable.dailyToolbar_titleTextColor) == true)
+            if (typedArray.hasValue(R.styleable.dailyToolbar_themeColor) == true)
             {
-                int titleTextColor = typedArray.getColor(R.styleable.dailyToolbar_titleTextColor, getResources().getColor(R.color.default_text_c323232));
-                setTitleTextColor(titleTextColor);
+                try
+                {
+                    int themeColor = typedArray.getInt(R.styleable.dailyToolbar_themeColor, 0);
+
+                    switch (themeColor)
+                    {
+                        case 1:
+                            mThemeColor = ThemeColor.WHITE;
+                            break;
+
+                        default:
+                            mThemeColor = ThemeColor.DEFAULT;
+                            break;
+                    }
+                } catch (Exception e)
+                {
+                    ExLog.e(e.toString());
+                    mThemeColor = ThemeColor.DEFAULT;
+                }
             }
         }
+
+        setBackImageResource(R.drawable.navibar_ic_back_01_black);
     }
 
     public void setTitleText(CharSequence text)
@@ -128,7 +185,17 @@ public class DailyToolbarView extends ConstraintLayout
             return;
         }
 
-        mViewDataBinding.titleTextView.setText(text);
+        switch (mThemeColor)
+        {
+            case DEFAULT:
+                break;
+
+            case WHITE:
+                setTitleTextColor(getResources().getColor(mThemeColor.getTextColorResourceId()));
+                break;
+        }
+
+        mViewDataBinding.dailyTitleTextView.setText(text);
     }
 
     public void setTitleText(@StringRes int resId)
@@ -138,7 +205,17 @@ public class DailyToolbarView extends ConstraintLayout
             return;
         }
 
-        mViewDataBinding.titleTextView.setText(resId);
+        switch (mThemeColor)
+        {
+            case DEFAULT:
+                break;
+
+            case WHITE:
+                setTitleTextColor(getResources().getColor(mThemeColor.getTextColorResourceId()));
+                break;
+        }
+
+        mViewDataBinding.dailyTitleTextView.setText(resId);
     }
 
     public void setBackVisible(boolean visible)
@@ -148,7 +225,7 @@ public class DailyToolbarView extends ConstraintLayout
             return;
         }
 
-        mViewDataBinding.backImageView.setVisibility(visible ? VISIBLE : GONE);
+        mViewDataBinding.dailyTitleImageView.setVisibility(visible ? VISIBLE : GONE);
     }
 
     public void setOnBackClickListener(OnClickListener listener)
@@ -158,7 +235,7 @@ public class DailyToolbarView extends ConstraintLayout
             return;
         }
 
-        mViewDataBinding.backImageView.setOnClickListener(listener);
+        mViewDataBinding.dailyTitleImageView.setOnClickListener(listener);
     }
 
     public void setBackImageResource(@DrawableRes int resId)
@@ -168,11 +245,22 @@ public class DailyToolbarView extends ConstraintLayout
             return;
         }
 
-        mViewDataBinding.backImageView.setVectorImageResource(resId);
+        mViewDataBinding.dailyTitleImageView.setVectorImageResource(resId);
+
+        switch (mThemeColor)
+        {
+            case DEFAULT:
+                break;
+
+            case WHITE:
+                mViewDataBinding.dailyTitleImageView.setColorFilter(getResources().getColor(mThemeColor.getIconColorResourceId()));
+                break;
+        }
     }
 
     /**
      * 중복 MenuItem 불가
+     * 넣을때 왼쪽에서 부터 넣도록 한다.
      *
      * @param menuItem
      * @param listener
@@ -184,38 +272,82 @@ public class DailyToolbarView extends ConstraintLayout
             return;
         }
 
-        mMenuItemList.add(menuItem);
+        DailyViewToolbarMenuItemDataBinding viewDataBinding = addMenuItemView(menuItem, text, listener);
 
-        addMenuItemView(menuItem, text, listener);
-    }
-
-    public void replaceMenuItem(MenuItem srcMenuItem, MenuItem dstMenuItem, String dstText, OnClickListener listener)
-    {
-        if (mViewDataBinding == null || hasMenuItem(srcMenuItem) == false || hasMenuItem(dstMenuItem) == true)
+        if (viewDataBinding != null)
         {
-            return;
+            mMenuItemList.add(new Pair(menuItem, viewDataBinding));
         }
-
-        int index = getMenuItemIndex(srcMenuItem);
-
-        mMenuItemList.remove(index);
-        mMenuItemList.add(index, dstMenuItem);
-
-        replaceMenuItemView(srcMenuItem, dstMenuItem, dstText, listener);
     }
 
-    public void removeMenuItem(MenuItem menuItem)
+    public void updateMenuItem(MenuItem menuItem, String text, OnClickListener listener)
     {
-        if (mViewDataBinding == null)
+        if (mViewDataBinding == null || hasMenuItem(menuItem) == false)
         {
             return;
         }
 
         int index = getMenuItemIndex(menuItem);
 
+        if (index < 0)
+        {
+            return;
+        }
+
+        updateMenuItemView(mMenuItemList.get(index).second, menuItem, text, listener);
+    }
+
+    public void replaceMenuItem(MenuItem srcMenuItem, MenuItem menuItem, String text, OnClickListener listener)
+    {
+        if (mViewDataBinding == null || hasMenuItem(srcMenuItem) == false)
+        {
+            return;
+        }
+
+        int index = getMenuItemIndex(srcMenuItem);
+
+        if (index < 0)
+        {
+            return;
+        }
+
+        updateMenuItemView(mMenuItemList.get(index).second, menuItem, text, listener);
+    }
+
+    public void removeMenuItem(MenuItem menuItem)
+    {
+        if (mViewDataBinding == null || hasMenuItem(menuItem) == false)
+        {
+            return;
+        }
+
+        int index = getMenuItemIndex(menuItem);
+
+        if (index < 0)
+        {
+            return;
+        }
+
         mMenuItemList.remove(index);
 
         removeMenuItemView(menuItem);
+    }
+
+    public void setMenuItemVisible(MenuItem menuItem, boolean visible)
+    {
+        if (mViewDataBinding == null || hasMenuItem(menuItem) == false)
+        {
+            return;
+        }
+
+        int index = getMenuItemIndex(menuItem);
+
+        if (index < 0)
+        {
+            return;
+        }
+
+        mMenuItemList.get(index).second.getRoot().setVisibility(visible ? VISIBLE : GONE);
     }
 
     public void clearMenuItem()
@@ -332,7 +464,7 @@ public class DailyToolbarView extends ConstraintLayout
             return;
         }
 
-        mViewDataBinding.titleTextView.setTextColor(color);
+        mViewDataBinding.dailyTitleTextView.setTextColor(color);
     }
 
     private void setUnderLineVisible(boolean visible)
@@ -342,7 +474,7 @@ public class DailyToolbarView extends ConstraintLayout
             return;
         }
 
-        mViewDataBinding.toolbarUnderline.setVisibility(visible ? VISIBLE : GONE);
+        mViewDataBinding.dailyToolbarUnderline.setVisibility(visible ? VISIBLE : GONE);
     }
 
     private void setUnderLineHeight(int height)
@@ -352,29 +484,20 @@ public class DailyToolbarView extends ConstraintLayout
             return;
         }
 
-        mViewDataBinding.toolbarUnderline.getLayoutParams().height = height;
-        mViewDataBinding.toolbarUnderline.requestLayout();
+        mViewDataBinding.dailyToolbarUnderline.getLayoutParams().height = height;
+        mViewDataBinding.dailyToolbarUnderline.requestLayout();
     }
 
-    private void addMenuItemView(MenuItem menuItem, String text, OnClickListener listener)
+    private DailyViewToolbarMenuItemDataBinding addMenuItemView(MenuItem menuItem, String text, OnClickListener listener)
     {
         if (mViewDataBinding == null || menuItem == null)
         {
-            return;
+            return null;
         }
 
-        DailyTextView dailyTextView = new DailyTextView(getContext());
-        dailyTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 13);
-        dailyTextView.setTextColor(getContext().getResources().getColor(R.color.default_text_c323232));
-        dailyTextView.setGravity(Gravity.CENTER);
-        dailyTextView.setText(text);
-        dailyTextView.setCompoundDrawablesWithIntrinsicBounds(0, 0, menuItem.getResourceId(), 0);
-        dailyTextView.setOnClickListener(listener);
-        dailyTextView.setMinWidth(ScreenUtils.dpToPx(getContext(), 30));
+        DailyViewToolbarMenuItemDataBinding viewDataBinding = getMenuItemView(mViewDataBinding.dailyMenuItemLayout, menuItem, text, listener);
 
-        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT);
-        layoutParams.setMargins(ScreenUtils.dpToPx(getContext(), 10), 0, 0, 0);
-        mViewDataBinding.menuLayout.addView(dailyTextView, 0, layoutParams);
+        return viewDataBinding;
     }
 
     private void removeMenuItemView(MenuItem menuItem)
@@ -386,21 +509,12 @@ public class DailyToolbarView extends ConstraintLayout
 
         int index = getMenuItemIndex(menuItem);
 
-        mViewDataBinding.menuLayout.removeViewAt(mMenuItemList.size() - index - 1);
-    }
-
-    private void replaceMenuItemView(MenuItem srcMenuItem, MenuItem dstMenuItem, String dstText, OnClickListener listener)
-    {
-        if (mViewDataBinding == null || hasMenuItem(srcMenuItem) == false || hasMenuItem(dstMenuItem) == true)
+        if (index < 0)
         {
             return;
         }
 
-        int index = getMenuItemIndex(srcMenuItem);
-
-        DailyTextView dailyTextView = (DailyTextView) mViewDataBinding.menuLayout.getChildAt(mMenuItemList.size() - index - 1);
-        dailyTextView.setText(dstText);
-        dailyTextView.setCompoundDrawablesWithIntrinsicBounds(0, 0, dstMenuItem.getResourceId(), 0);
+        mViewDataBinding.dailyMenuItemLayout.removeViewAt(mMenuItemList.size() - index - 1);
     }
 
     private void clearMenuItemView()
@@ -410,14 +524,14 @@ public class DailyToolbarView extends ConstraintLayout
             return;
         }
 
-        mViewDataBinding.menuLayout.removeAllViews();
+        mViewDataBinding.dailyMenuItemLayout.removeAllViews();
     }
 
-    private boolean hasMenuItem(MenuItem searchMenuItem)
+    public boolean hasMenuItem(MenuItem menuItem)
     {
-        for (MenuItem menuItem : mMenuItemList)
+        for (Pair pair : mMenuItemList)
         {
-            if (searchMenuItem == menuItem)
+            if (menuItem == pair.first)
             {
                 return true;
             }
@@ -432,12 +546,69 @@ public class DailyToolbarView extends ConstraintLayout
 
         for (int i = 0; i < size; i++)
         {
-            if (mMenuItemList.get(i) == menuItem)
+            if (mMenuItemList.get(i).first == menuItem)
             {
                 return i;
             }
         }
 
         return -1;
+    }
+
+    private DailyViewToolbarMenuItemDataBinding getMenuItemView(ViewGroup viewGroup, MenuItem menuItem, String text, OnClickListener listener)
+    {
+        if (viewGroup == null || menuItem == null)
+        {
+            return null;
+        }
+
+        DailyViewToolbarMenuItemDataBinding viewDataBinding = DataBindingUtil.inflate(LayoutInflater.from(getContext())//
+            , R.layout.daily_view_toolbar_menu_item_data, viewGroup, true);
+
+        updateMenuItemView(viewDataBinding, menuItem, text, listener);
+
+        return viewDataBinding;
+    }
+
+    private void updateMenuItemView(DailyViewToolbarMenuItemDataBinding viewDataBinding, MenuItem menuItem, String text, OnClickListener listener)
+    {
+        if (viewDataBinding == null || menuItem == null)
+        {
+            return;
+        }
+
+        viewDataBinding.dailyImageView.setVectorImageResource(menuItem.getResourceId());
+
+        if (DailyTextUtils.isTextEmpty(text) == true)
+        {
+            viewDataBinding.dailyTextView.setVisibility(GONE);
+        } else
+        {
+            viewDataBinding.dailyTextView.setVisibility(VISIBLE);
+            viewDataBinding.dailyTextView.setText(text);
+        }
+
+        switch (mThemeColor)
+        {
+            case DEFAULT:
+                break;
+
+            case WHITE:
+                if (menuItem.supportChangedColor() == true)
+                {
+                    viewDataBinding.dailyImageView.setColorFilter(getResources().getColor(mThemeColor.getIconColorResourceId()));
+                } else
+                {
+                    viewDataBinding.dailyImageView.clearColorFilter();
+                }
+
+                if (viewDataBinding.dailyTextView.getVisibility() != GONE)
+                {
+                    viewDataBinding.dailyTextView.setTextColor(getResources().getColor(mThemeColor.getTextColorResourceId()));
+                }
+                break;
+        }
+
+        viewDataBinding.getRoot().setOnClickListener(listener);
     }
 }

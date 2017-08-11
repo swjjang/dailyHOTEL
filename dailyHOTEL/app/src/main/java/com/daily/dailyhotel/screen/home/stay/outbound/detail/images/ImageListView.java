@@ -245,7 +245,7 @@ public class ImageListView extends BaseDialogView<ImageListView.OnEventListener,
 
         viewDataBinding.toolbarView.setBackVisible(false);
         viewDataBinding.toolbarView.clearMenuItem();
-        viewDataBinding.toolbarView.addMenuItem(DailyToolbarView.MenuItem.CLOSE_BLACK, null, new View.OnClickListener()
+        viewDataBinding.toolbarView.addMenuItem(DailyToolbarView.MenuItem.CLOSE, null, new View.OnClickListener()
         {
             @Override
             public void onClick(View v)

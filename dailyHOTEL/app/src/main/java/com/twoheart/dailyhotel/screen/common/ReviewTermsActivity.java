@@ -6,10 +6,10 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.daily.base.widget.DailyWebView;
+import com.daily.dailyhotel.view.DailyToolbarView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.DailyInternalDeepLink;
 import com.twoheart.dailyhotel.util.DailyRemoteConfigPreference;
-import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
 public class ReviewTermsActivity extends WebViewActivity
 {
@@ -33,9 +33,9 @@ public class ReviewTermsActivity extends WebViewActivity
 
     private void initToolbar()
     {
-        View toolbar = findViewById(R.id.toolbar);
-        DailyToolbarLayout dailyToolbarLayout = new DailyToolbarLayout(this, toolbar);
-        dailyToolbarLayout.initToolbar(getString(R.string.actionbar_title_review_terms_activity), new View.OnClickListener()
+        DailyToolbarView dailyToolbarView = (DailyToolbarView) findViewById(R.id.toolbarView);
+        dailyToolbarView.setTitleText(R.string.actionbar_title_review_terms_activity);
+        dailyToolbarView.setOnBackClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)

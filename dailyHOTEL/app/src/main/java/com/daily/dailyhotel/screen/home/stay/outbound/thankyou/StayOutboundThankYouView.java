@@ -143,7 +143,7 @@ public class StayOutboundThankYouView extends BaseDialogView<StayOutboundThankYo
 
         viewDataBinding.toolbarView.setBackVisible(false);
         viewDataBinding.toolbarView.clearMenuItem();
-        viewDataBinding.toolbarView.addMenuItem(DailyToolbarView.MenuItem.CLOSE_WHITE, null, new View.OnClickListener()
+        viewDataBinding.toolbarView.addMenuItem(DailyToolbarView.MenuItem.CLOSE, null, new View.OnClickListener()
         {
             @Override
             public void onClick(View v)

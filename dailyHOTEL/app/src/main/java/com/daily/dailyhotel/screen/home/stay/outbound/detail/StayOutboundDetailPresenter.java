@@ -230,8 +230,6 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
             getViewInterface().setInitializedImage(mImageUrl);
         }
 
-        getViewInterface().setToolbarTitle(mStayName);
-
         RecentlyPlaceUtil.addRecentlyItem(getActivity(), Constants.ServiceType.OB_STAY, mStayIndex, mStayName, null, mImageUrl, true);
 
         if (mIsUsedMultiTransition == true)

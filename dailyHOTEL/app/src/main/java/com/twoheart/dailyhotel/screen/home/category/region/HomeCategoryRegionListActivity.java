@@ -9,6 +9,7 @@ import android.view.View;
 
 import com.daily.base.util.ExLog;
 import com.daily.base.widget.DailyViewPager;
+import com.daily.dailyhotel.view.DailyToolbarView;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.DailyCategoryType;
@@ -24,7 +25,6 @@ import com.twoheart.dailyhotel.util.DailyLocationFactory;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
-import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -85,20 +85,13 @@ public class HomeCategoryRegionListActivity extends BaseActivity
         initViewPager();
     }
 
-    private void initToolbar()
-    {
-        View toolbar = findViewById(R.id.toolbar);
-
-        initToolbar(toolbar);
-    }
-
     private void initIntent(Intent intent)
     {
         mDailyCategoryType = intent.getParcelableExtra(Constants.NAME_INTENT_EXTRA_DATA_DAILY_CATEGORY_TYPE);
         mStayBookingDay = intent.getParcelableExtra(Constants.NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY);
     }
 
-    private void initToolbar(View toolbar)
+    private void initToolbar()
     {
         if (mDailyCategoryType == null)
         {
@@ -106,13 +99,16 @@ public class HomeCategoryRegionListActivity extends BaseActivity
             return;
         }
 
+        DailyToolbarView dailyToolbarView = (DailyToolbarView) findViewById(R.id.toolbarView);
+
         String categoryName = getResources().getString(mDailyCategoryType.getNameResId());
 
-
-        DailyToolbarLayout dailyToolbarLayout = new DailyToolbarLayout(this, toolbar);
-        dailyToolbarLayout.initToolbar( //
-            getResources().getString(R.string.label_select_area_daily_category_format, categoryName) //
-            , R.drawable.navibar_ic_x, v ->
+        dailyToolbarView.setTitleText(getResources().getString(R.string.label_select_area_daily_category_format, categoryName));
+        dailyToolbarView.setBackImageResource(R.drawable.navibar_ic_x);
+        dailyToolbarView.setOnBackClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
             {
                 String label = HomeCategoryRegionListActivity.this.getResources().getString(mDailyCategoryType.getCodeResId());
 
@@ -120,10 +116,18 @@ public class HomeCategoryRegionListActivity extends BaseActivity
 
                 AnalyticsManager.getInstance(HomeCategoryRegionListActivity.this).recordEvent( //
                     AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.LOCATION_LIST_CLOSE, label, null);
-            }, false);
+            }
+        });
 
-        dailyToolbarLayout.setToolbarMenu(R.drawable.navibar_ic_search, -1);
-        dailyToolbarLayout.setToolbarMenuClickListener(v -> showSearch());
+        dailyToolbarView.clearMenuItem();
+        dailyToolbarView.addMenuItem(DailyToolbarView.MenuItem.SEARCH, null, new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                showSearch();
+            }
+        });
     }
 
     private void initViewPager()

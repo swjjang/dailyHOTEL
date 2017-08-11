@@ -74,7 +74,6 @@
             android:id="@+id/dateBottomLineView"
             android:layout_width="0dp"
             android:layout_height="1px"
-            android:layout_below="@id/dateInformationLayout"
             android:layout_marginLeft="2dp"
             android:layout_marginRight="2dp"
             android:background="@color/default_line_cdcdcdd"

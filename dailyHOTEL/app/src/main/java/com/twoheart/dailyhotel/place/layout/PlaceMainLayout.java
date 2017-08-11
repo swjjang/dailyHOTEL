@@ -17,6 +17,7 @@ import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.util.FontManager;
 import com.daily.base.util.ScreenUtils;
+import com.daily.dailyhotel.view.DailyToolbarView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Category;
 import com.twoheart.dailyhotel.place.adapter.PlaceListFragmentPagerAdapter;
@@ -35,13 +36,13 @@ public abstract class PlaceMainLayout extends BaseBlurLayout implements View.OnC
     private TextView mDateTextView;
 
     protected AppBarLayout mAppBarLayout;
-    protected View mToolbarLayout;
+    protected DailyToolbarView mToolbarView;
     protected View mBottomOptionLayout;
     private View mViewTypeOptionImageView;
     private View mFilterOptionImageView;
 
     TabLayout mCategoryTabLayout;
-    private View mToolbarUnderlineView;
+    private View mAppBarUnderlineView;
     ViewPager mViewPager;
     private PlaceListFragmentPagerAdapter mFragmentPagerAdapter;
 
@@ -96,7 +97,7 @@ public abstract class PlaceMainLayout extends BaseBlurLayout implements View.OnC
 
         mAppBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener()
         {
-            final int dp52Height = ScreenUtils.dpToPx(mContext, 52);
+            final int dp52Height = mContext.getResources().getDimensionPixelSize(R.dimen.toolbar_height);
 
             @Override
             public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset)
@@ -126,9 +127,9 @@ public abstract class PlaceMainLayout extends BaseBlurLayout implements View.OnC
             }
         });
 
-        mToolbarLayout = mAppBarLayout.findViewById(R.id.toolbarLayout);
-        View backImageView = mToolbarLayout.findViewById(R.id.backImageView);
-        backImageView.setOnClickListener(new View.OnClickListener()
+        mToolbarView = (DailyToolbarView) mAppBarLayout.findViewById(R.id.toolbarView);
+        mToolbarView.setTitleText(getAppBarTitle());
+        mToolbarView.setOnBackClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
@@ -137,21 +138,24 @@ public abstract class PlaceMainLayout extends BaseBlurLayout implements View.OnC
             }
         });
 
-        TextView titleTextView = (TextView) mToolbarLayout.findViewById(R.id.titleTextView);
-        titleTextView.setText(getAppBarTitle());
+        mToolbarView.clearMenuItem();
+        mToolbarView.addMenuItem(DailyToolbarView.MenuItem.SEARCH, null, new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                ((PlaceMainLayout.OnEventListener) mOnEventListener).onSearchClick();
+            }
+        });
 
-        // 검색
         // 지역 이름
         // 날짜
-        View searchTextView = view.findViewById(R.id.searchImageView);
-
         View regionTextLayout = view.findViewById(R.id.regionTextLayout);
         mRegionTextView = (TextView) view.findViewById(R.id.regionTextView);
 
         View dateTextLayout = view.findViewById(R.id.dateTextLayout);
         mDateTextView = (TextView) view.findViewById(R.id.dateTextView);
 
-        searchTextView.setOnClickListener(this);
         regionTextLayout.setOnClickListener(this);
         dateTextLayout.setOnClickListener(this);
     }
@@ -178,7 +182,7 @@ public abstract class PlaceMainLayout extends BaseBlurLayout implements View.OnC
     private void initCategoryTabLayout(View view)
     {
         mCategoryTabLayout = (TabLayout) view.findViewById(R.id.categoryTabLayout);
-        mToolbarUnderlineView = view.findViewById(R.id.toolbarUnderline);
+        mAppBarUnderlineView = view.findViewById(R.id.appBarUnderline);
         mViewPager = (ViewPager) view.findViewById(R.id.viewPager);
     }
 
@@ -241,7 +245,7 @@ public abstract class PlaceMainLayout extends BaseBlurLayout implements View.OnC
     {
         ((View) mCategoryTabLayout.getParent()).setVisibility(visibility);
 
-        ViewGroup.LayoutParams layoutParams = mToolbarUnderlineView.getLayoutParams();
+        ViewGroup.LayoutParams layoutParams = mAppBarUnderlineView.getLayoutParams();
 
         if (layoutParams != null)
         {
@@ -253,7 +257,7 @@ public abstract class PlaceMainLayout extends BaseBlurLayout implements View.OnC
                 layoutParams.height = ScreenUtils.dpToPx(mContext, 1);
             }
 
-            mToolbarUnderlineView.setLayoutParams(layoutParams);
+            mAppBarUnderlineView.setLayoutParams(layoutParams);
         }
     }
 
@@ -432,10 +436,6 @@ public abstract class PlaceMainLayout extends BaseBlurLayout implements View.OnC
     {
         switch (v.getId())
         {
-            case R.id.searchImageView:
-                ((PlaceMainLayout.OnEventListener) mOnEventListener).onSearchClick();
-                break;
-
             case R.id.regionTextLayout:
                 ((PlaceMainLayout.OnEventListener) mOnEventListener).onRegionClick();
                 break;

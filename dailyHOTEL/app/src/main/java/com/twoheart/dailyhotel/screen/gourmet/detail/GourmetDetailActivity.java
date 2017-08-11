@@ -1419,13 +1419,25 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         @Override
         public void showActionBar(boolean isAnimation)
         {
-            mDailyToolbarLayout.setToolbarVisibility(true, isAnimation);
+            if (isAnimation == true)
+            {
+                mToolbarView.showAnimation();
+            } else
+            {
+                mToolbarView.setVisibility(View.VISIBLE);
+            }
         }
 
         @Override
         public void hideActionBar(boolean isAnimation)
         {
-            mDailyToolbarLayout.setToolbarVisibility(false, isAnimation);
+            if (isAnimation == true)
+            {
+                mToolbarView.hideAnimation();
+            } else
+            {
+                mToolbarView.setVisibility(View.GONE);
+            }
         }
 
         @Override

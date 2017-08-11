@@ -65,14 +65,16 @@
 
     <!-- DailyLineIndicator -->
     <declare-styleable name="dailyLineIndicator">
-        <attr name="indicatorColor" format="color" />
-        <attr name="indicatorBackgroundColor" format="color" />
+        <attr name="indicatorColor" format="color"/>
+        <attr name="indicatorBackgroundColor" format="color"/>
     </declare-styleable>
 
     <declare-styleable name="dailyToolbar">
-        <attr name="underLineHeight" format="dimension" />
-        <attr name="underLineVisible" format="boolean" />
-        <attr name="titleTextColor" format="color" />
+        <attr name="underLineHeight" format="dimension"/>
+        <attr name="underLineVisible" format="boolean"/>
+        <attr name="themeColor" format="enum">
+            <enum name="white" value="1"/>
+        </attr>
     </declare-styleable>
 
 </resources>
