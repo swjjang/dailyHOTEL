@@ -67,9 +67,6 @@ public class PlaceSearchRecyclerAdapter extends RecyclerView.Adapter<PlaceSearch
     @Override
     public OptionViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
     {
-        //        LayoutSearchOptionItemListBinding dataBinding = DataBindingUtil.inflate( //
-        //            LayoutInflater.from(mContext), R.layout.layout_search_option_item_list, parent, false);
-
         SearchOptionItemListLayout layout = new SearchOptionItemListLayout(mContext);
         RecyclerView.LayoutParams params = new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         layout.setLayoutParams(params);
