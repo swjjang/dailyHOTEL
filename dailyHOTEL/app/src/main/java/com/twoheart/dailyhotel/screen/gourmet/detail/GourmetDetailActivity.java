@@ -925,6 +925,12 @@ public class GourmetDetailActivity extends PlaceDetailActivity
             }
         }
 
+        if (gourmetDetail.getProductList().size() > 5)
+        {
+            AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.GOURMET_BOOKINGS//
+                , AnalyticsManager.Action.VIEW_HIDDEN_MENU, AnalyticsManager.ValueType.EMPTY, null);
+        }
+
         mIsDeepLink = false;
         mInitializeStatus = STATUS_INITIALIZE_COMPLETE;
     }
