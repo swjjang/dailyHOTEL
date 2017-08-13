@@ -147,6 +147,11 @@ public class GourmetProduct implements Parcelable
         return menuDetail;
     }
 
+    public int getPrimaryIndex()
+    {
+        return mDefaultImageIndex;
+    }
+
     @Override
     public void writeToParcel(Parcel dest, int flags)
     {

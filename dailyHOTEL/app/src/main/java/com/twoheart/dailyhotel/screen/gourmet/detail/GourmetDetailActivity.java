@@ -1314,6 +1314,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
                         gourmetMenu.lastOrderTime = gourmetProduct.lastOrderTime;
                         gourmetMenu.menuSummary = gourmetProduct.menuSummary;
                         gourmetMenu.reserveCondition = gourmetProduct.reserveCondition;
+                        gourmetMenu.setPrimaryImageIndex(gourmetProduct.getPrimaryIndex());
 
                         List<GourmetMenuImage> gourmetMenuImageList = new ArrayList<>();
                         for (ProductImageInformation productImageInformation : gourmetProduct.getImageList())
