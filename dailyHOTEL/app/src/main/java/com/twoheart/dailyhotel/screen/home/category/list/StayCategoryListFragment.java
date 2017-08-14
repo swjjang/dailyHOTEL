@@ -250,9 +250,6 @@ public class StayCategoryListFragment extends StayListFragment
 
         mPlaceCount += placeList.size();
 
-        String previousRegion = null;
-        boolean hasDailyChoice = false;
-
         if (mPlaceListLayout != null)
         {
             ArrayList<PlaceViewItem> oldList = new ArrayList<>(mPlaceListLayout.getList());
@@ -283,6 +280,9 @@ public class StayCategoryListFragment extends StayListFragment
 
         if (DailyTextUtils.isTextEmpty(abTest, abTestType) == true)
         {
+            String previousRegion = null;
+            boolean hasDailyChoice = false;
+
             // 기존 그대로
             if (hasSection == true)
             {
@@ -356,8 +356,12 @@ public class StayCategoryListFragment extends StayListFragment
             }
         } else
         {
-            if (hasSection == true)
+            // AB Test 시에는 첫번째 스테이가 데초면 섹션을 만들고 첫번째 스테이가 데초가 아니면 섹션이 없는 것으로 간주한다
+            if (hasSection == true && placeList.get(0).isDailyChoice == true)
             {
+                String previousRegion = null;
+                boolean hasDailyChoice = false;
+
                 for (Place place : placeList)
                 {
                     // 지역순에만 section 존재함
@@ -426,11 +430,6 @@ public class StayCategoryListFragment extends StayListFragment
                 }
             } else
             {
-                if (page <= 1 && placeViewItemList.size() > 0)
-                {
-
-                }
-
                 for (Place place : placeList)
                 {
                     place.entryPosition = entryPosition;

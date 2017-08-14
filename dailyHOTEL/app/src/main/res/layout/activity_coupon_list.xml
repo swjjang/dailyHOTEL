@@ -3,55 +3,33 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
+    xmlns:dailyToolbar="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <RelativeLayout
-        android:id="@+id/toolbar"
+    <com.daily.dailyhotel.view.DailyToolbarView
+        android:id="@+id/toolbarView"
         android:layout_width="match_parent"
-        android:layout_height="52dp"
-        android:background="@color/white">
+        android:layout_height="@dimen/toolbar_height"
+        android:background="@color/white"
+        dailyToolbar:underLineVisible="false"/>
 
-        <com.daily.base.widget.DailyImageView
-            android:id="@+id/backImageView"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:paddingLeft="15dp"
-            android:paddingRight="15dp"
-            app:srcCompat="@drawable/navibar_ic_back_01_black"/>
-
-        <com.daily.base.widget.DailyTextView
-            android:id="@+id/registerCouponView"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_alignParentRight="true"
-            android:gravity="center"
-            android:paddingLeft="15dp"
-            android:paddingRight="15dp"
-            android:text="@string/coupon_toolbar_button_text"
-            android:textColor="@color/default_text_cb70038"
-            android:textSize="18dp"/>
-
-        <com.daily.base.widget.DailyTextView
-            android:id="@+id/titleTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_toLeftOf="@id/registerCouponView"
-            android:layout_toRightOf="@+id/backImageView"
-            android:ellipsize="end"
-            android:gravity="left|center_vertical"
-            android:maxLines="1"
-            android:singleLine="true"
-            android:textColor="@color/actionbar_title"
-            android:textSize="18dp"/>
-    </RelativeLayout>
+    <com.daily.base.widget.DailyTextView
+        android:id="@+id/registerCouponView"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/toolbar_height"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="15dp"
+        android:gravity="center"
+        android:text="@string/coupon_toolbar_button_text"
+        android:textColor="@color/default_text_cb70038"
+        android:textSize="18dp"/>
 
     <RelativeLayout
         android:id="@+id/couponLayout"
         android:layout_width="match_parent"
         android:layout_height="45dp"
-        android:layout_below="@id/toolbar"
+        android:layout_below="@id/toolbarView"
         android:background="@color/white"
         android:visibility="invisible">
 
@@ -116,8 +94,8 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:drawablePadding="20dp"
-            android:paddingBottom="70dp"
             android:gravity="center"
+            android:paddingBottom="70dp"
             android:text="@string/coupon_list_empty_message"
             android:textColor="@color/information_title"
             android:textSize="18dp"
@@ -127,9 +105,9 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
             android:layout_alignParentBottom="true"
-            android:layout_margin="10dp">
+            android:layout_margin="10dp"
+            android:orientation="horizontal">
 
             <com.daily.base.widget.DailyTextView
                 android:id="@+id/couponUseNoticeTextView"

@@ -140,6 +140,11 @@ public class GourmetMenusAdapter extends RecyclerView.Adapter<GourmetMenusAdapte
             return;
         }
 
+        if (holder.dataBinding.nestedScrollView.getScrollY() != 0)
+        {
+            holder.dataBinding.nestedScrollView.scrollTo(0, 0);
+        }
+
         GourmetMenu gourmetMenu = getItem(position);
 
         if (gourmetMenu == null)
