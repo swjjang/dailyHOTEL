@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.daily.base.util.ExLog;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ListRowSearchCardItemBinding;
 import com.twoheart.dailyhotel.model.SearchCardItem;
@@ -48,8 +47,6 @@ public class SearchCardItemListAdapter extends RecyclerView.Adapter<SearchCardIt
         SearchCardItem item = getItem(position);
 
         holder.itemView.setTag(item);
-
-        ExLog.d(item.itemText + " : " + item.iconType + " : " + item.object.toString());
 
         holder.dataBinding.iconImageView.setImageResource(getSearchIcon(item.iconType));
         holder.dataBinding.itemTextView.setText(item.itemText);
