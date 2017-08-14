@@ -4,28 +4,26 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
-import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.util.Pair;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.entity.CampaignTag;
-import com.daily.dailyhotel.entity.CommonDateTime;
+import com.daily.dailyhotel.repository.local.model.AnalyticsParam;
+import com.daily.dailyhotel.screen.home.campaigntag.stay.StayCampaignTagListActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.search.StayOutboundSearchActivity;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Keyword;
+import com.twoheart.dailyhotel.model.Place;
 import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.model.time.StayBookingDay;
 import com.twoheart.dailyhotel.network.model.StayKeyword;
 import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.place.fragment.PlaceSearchFragment;
+import com.twoheart.dailyhotel.place.layout.PlaceDetailLayout;
 import com.twoheart.dailyhotel.place.layout.PlaceSearchLayout;
 import com.twoheart.dailyhotel.place.networkcontroller.PlaceSearchNetworkController;
 import com.twoheart.dailyhotel.screen.gourmet.filter.GourmetSearchCalendarActivity;
+import com.twoheart.dailyhotel.screen.hotel.detail.StayDetailActivity;
 import com.twoheart.dailyhotel.screen.hotel.filter.StayCalendarActivity;
 import com.twoheart.dailyhotel.screen.hotel.filter.StaySearchCalendarActivity;
 import com.twoheart.dailyhotel.screen.search.stay.result.StaySearchResultActivity;
@@ -41,13 +39,11 @@ import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
-import io.reactivex.ObservableSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Consumer;
-import io.reactivex.functions.Function;
 import retrofit2.Call;
 import retrofit2.Response;
 
@@ -519,6 +515,50 @@ public class StaySearchFragment extends PlaceSearchFragment
             }
 
             mOnSearchFragmentListener.onSearchEnabled(enabled);
+        }
+
+        @Override
+        public void onSearchCampaignTag(CampaignTag campaignTag)
+        {
+            Intent intent = StayCampaignTagListActivity.newInstance(getActivity() //
+                , campaignTag.index, campaignTag.campaignTag, mStayBookingDay);
+
+            startActivityForResult(intent, REQUEST_CODE_STAY_CAMPAIGN_TAG_LIST);
+        }
+
+        @Override
+        public void onSearchRecentlyPlace(Place place)
+        {
+            if (place == null)
+            {
+                return;
+            }
+
+            Stay stay = (Stay) place;
+
+
+            AnalyticsParam analyticsParam = new AnalyticsParam();
+            analyticsParam.setParam(getActivity(), stay);
+            analyticsParam.setProvince(null);
+            analyticsParam.setTotalListCount(0);
+
+            Intent intent = StayDetailActivity.newInstance(getActivity() //
+                , mStayBookingDay, stay.index, stay.name, stay.imageUrl //
+                , analyticsParam, false, PlaceDetailLayout.TRANS_GRADIENT_BOTTOM_TYPE_NONE);
+
+            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL);
+
+            getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
+
+            if (stay.truevr == true)
+            {
+                AnalyticsManager.getInstance(getActivity()).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                    , AnalyticsManager.Action.STAY_ITEM_CLICK_TRUE_VR, Integer.toString(stay.index), null);
+            }
+
+            AnalyticsManager.getInstance(getActivity()).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                , AnalyticsManager.Action.STAY_ITEM_CLICK, Integer.toString(stay.index), null);
+
         }
 
         @Override

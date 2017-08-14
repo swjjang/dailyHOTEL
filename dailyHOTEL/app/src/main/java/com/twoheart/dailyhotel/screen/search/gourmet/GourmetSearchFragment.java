@@ -4,25 +4,24 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
-import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.util.Pair;
 
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.entity.CampaignTag;
-import com.daily.dailyhotel.entity.CommonDateTime;
+import com.daily.dailyhotel.repository.local.model.AnalyticsParam;
+import com.daily.dailyhotel.screen.home.campaigntag.gourmet.GourmetCampaignTagListActivity;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Gourmet;
 import com.twoheart.dailyhotel.model.Keyword;
-import com.twoheart.dailyhotel.model.Stay;
+import com.twoheart.dailyhotel.model.Place;
 import com.twoheart.dailyhotel.model.time.GourmetBookingDay;
-import com.twoheart.dailyhotel.model.time.StayBookingDay;
 import com.twoheart.dailyhotel.network.model.GourmetKeyword;
 import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.place.fragment.PlaceSearchFragment;
+import com.twoheart.dailyhotel.place.layout.PlaceDetailLayout;
 import com.twoheart.dailyhotel.place.layout.PlaceSearchLayout;
 import com.twoheart.dailyhotel.place.networkcontroller.PlaceSearchNetworkController;
+import com.twoheart.dailyhotel.screen.gourmet.detail.GourmetDetailActivity;
 import com.twoheart.dailyhotel.screen.gourmet.filter.GourmetCalendarActivity;
 import com.twoheart.dailyhotel.screen.gourmet.filter.GourmetSearchCalendarActivity;
 import com.twoheart.dailyhotel.screen.search.gourmet.result.GourmetSearchResultActivity;
@@ -42,7 +41,6 @@ import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Consumer;
-import io.reactivex.functions.Function;
 import retrofit2.Call;
 import retrofit2.Response;
 
@@ -484,6 +482,42 @@ public class GourmetSearchFragment extends PlaceSearchFragment
             }
 
             mOnSearchFragmentListener.onSearchEnabled(enabled);
+        }
+
+        @Override
+        public void onSearchCampaignTag(CampaignTag campaignTag)
+        {
+            Intent intent = GourmetCampaignTagListActivity.newInstance(getActivity() //
+                , campaignTag.index, campaignTag.campaignTag, mGourmetBookingDay);
+
+            startActivityForResult(intent, REQUEST_CODE_GOURMET_CAMPAIGN_TAG_LIST);
+        }
+
+        @Override
+        public void onSearchRecentlyPlace(Place place)
+        {
+            if (place == null)
+            {
+                return;
+            }
+
+            Gourmet gourmet = (Gourmet) place;
+
+            AnalyticsParam analyticsParam = new AnalyticsParam();
+            analyticsParam.setParam(getActivity(), gourmet);
+            analyticsParam.setProvince(null);
+            analyticsParam.setTotalListCount(0);
+
+            Intent intent = GourmetDetailActivity.newInstance(getActivity() //
+                , mGourmetBookingDay, gourmet.index, gourmet.name //
+                , gourmet.imageUrl, gourmet.category, gourmet.isSoldOut, analyticsParam, false, PlaceDetailLayout.TRANS_GRADIENT_BOTTOM_TYPE_NONE);
+
+            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMET_DETAIL);
+
+            getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
+
+            AnalyticsManager.getInstance(getActivity()).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                , AnalyticsManager.Action.GOURMET_ITEM_CLICK, Integer.toString(gourmet.index), null);
         }
 
         @Override

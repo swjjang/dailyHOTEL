@@ -7,8 +7,6 @@ import android.support.annotation.NonNull;
 
 import com.daily.base.BaseActivity;
 import com.twoheart.dailyhotel.model.time.GourmetBookingDay;
-import com.twoheart.dailyhotel.model.time.StayBookingDay;
-import com.twoheart.dailyhotel.util.Constants;
 
 /**
  * Created by iseung-won on 2017. 8. 4..
@@ -52,7 +50,7 @@ public class GourmetCampaignTagListActivity extends BaseActivity<GourmetCampaign
         return intent;
     }
 
-    public static Intent newInstance(Context context, int index, String hashTag, GourmetBookingDay gourmetBookingDay, boolean isUsedMultiTransition)
+    public static Intent newInstance(Context context, int index, String hashTag, GourmetBookingDay gourmetBookingDay)
     {
         Intent intent = new Intent(context, GourmetCampaignTagListActivity.class);
 
@@ -60,7 +58,6 @@ public class GourmetCampaignTagListActivity extends BaseActivity<GourmetCampaign
         intent.putExtra(INTENT_EXTRA_DATA_INDEX, index);
         intent.putExtra(INTENT_EXTRA_DATA_TITLE, hashTag);
         intent.putExtra(INTENT_EXTRA_DATA_PLACEBOOKINGDAY, gourmetBookingDay);
-        intent.putExtra(Constants.NAME_INTENT_EXTRA_DATA_IS_USED_MULTITRANSITIOIN, isUsedMultiTransition);
 
         return intent;
     }

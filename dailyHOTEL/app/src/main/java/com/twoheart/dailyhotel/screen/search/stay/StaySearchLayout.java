@@ -187,6 +187,48 @@ public class StaySearchLayout extends PlaceSearchLayout
             , SearchCardViewAdapter.TYPE_STAY, recentlyPlaceDataList //
             , campaignTagDataList, recentSearchDataList);
 
+        mRecyclerAdapter.setOnEventListener(mAdapterEventListener);
+
         mRecyclerView.setAdapter(mRecyclerAdapter);
     }
+
+    private SearchCardViewAdapter.OnEventListener mAdapterEventListener = new SearchCardViewAdapter.OnEventListener()
+    {
+        @Override
+        public void onKeywordDeleteAllClick(int type)
+        {
+            ((OnEventListener) mOnEventListener).onDeleteRecentSearches();
+        }
+
+        @Override
+        public void onItemClick(View view)
+        {
+            if (view == null)
+            {
+                return;
+            }
+
+            SearchCardItem searchCardItem = (SearchCardItem) view.getTag();
+
+            if (searchCardItem == null || searchCardItem.object == null)
+            {
+                return;
+            }
+
+            if (searchCardItem.object instanceof Stay)
+            {
+                // 최근 본 업장
+                ((OnEventListener) mOnEventListener).onSearchRecentlyPlace((Stay) searchCardItem.object);
+            } else if (searchCardItem.object instanceof Keyword)
+            {
+                // 최근 검색어
+                Keyword keyword = (Keyword) searchCardItem.object;
+                ((OnEventListener) mOnEventListener).onSearch(keyword.name, keyword);
+            } else if (searchCardItem.object instanceof CampaignTag)
+            {
+                // 캠페인 태그
+                ((OnEventListener) mOnEventListener).onSearchCampaignTag((CampaignTag) searchCardItem.object);
+            }
+        }
+    };
 }

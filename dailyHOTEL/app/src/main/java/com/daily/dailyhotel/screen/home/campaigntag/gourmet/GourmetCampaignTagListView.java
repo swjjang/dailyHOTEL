@@ -19,8 +19,6 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ActivityPlaceCampaignTagListDataBinding;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.time.GourmetBookingDay;
-import com.twoheart.dailyhotel.model.time.StayBookingDay;
-import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.Util;
 
@@ -241,14 +239,14 @@ public class GourmetCampaignTagListView //
         }
     }
 
-    @Override
-    public void setUsedMultiTransition(boolean isUsedMultiTransition)
-    {
-        if (mRecyclerAdapter != null)
-        {
-            mRecyclerAdapter.setUsedMultiTransition(isUsedMultiTransition);
-        }
-    }
+//    @Override
+//    public void setUsedMultiTransition(boolean isUsedMultiTransition)
+//    {
+//        if (mRecyclerAdapter != null)
+//        {
+//            mRecyclerAdapter.setUsedMultiTransition(isUsedMultiTransition);
+//        }
+//    }
 
     @Override
     public void setListScrollTop()

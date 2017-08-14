@@ -5,23 +5,19 @@ import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.daily.base.widget.DailyToast;
-import com.daily.dailyhotel.entity.Booking;
 import com.daily.dailyhotel.entity.CampaignTag;
 import com.daily.dailyhotel.entity.CommonDateTime;
 import com.daily.dailyhotel.repository.remote.CampaignTagRemoteImpl;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
 import com.daily.dailyhotel.repository.remote.RecentlyRemoteImpl;
-import com.daily.dailyhotel.util.RecentlyPlaceUtil;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Keyword;
-import com.twoheart.dailyhotel.model.time.StayBookingDay;
 import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.place.activity.PlaceSearchResultActivity;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
@@ -34,17 +30,12 @@ import com.twoheart.dailyhotel.util.DailyLocationFactory;
 import com.twoheart.dailyhotel.util.DailyRecentSearches;
 import com.twoheart.dailyhotel.util.Util;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
-import io.reactivex.Observable;
-import io.reactivex.ObservableSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
-import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
-import io.reactivex.functions.Predicate;
 
 public abstract class PlaceSearchFragment extends BaseFragment
 {
@@ -54,6 +45,9 @@ public abstract class PlaceSearchFragment extends BaseFragment
 
     protected static final int REQUEST_ACTIVITY_SEARCHRESULT = 10000;
     protected static final int REQUEST_ACTIVITY_CALENDAR = 10001;
+
+    protected static final int REQUEST_CODE_STAY_CAMPAIGN_TAG_LIST = 10002;
+    protected static final int REQUEST_CODE_GOURMET_CAMPAIGN_TAG_LIST = 10003;
 
     protected DailyRecentSearches mDailyRecentSearches;
     protected PlaceSearchLayout mPlaceSearchLayout;

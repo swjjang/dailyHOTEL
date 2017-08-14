@@ -19,7 +19,6 @@ import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.model.time.PlaceBookingDay;
 import com.twoheart.dailyhotel.model.time.StayBookingDay;
-import com.twoheart.dailyhotel.network.model.RecommendationStay;
 import com.twoheart.dailyhotel.place.adapter.PlaceListAdapter;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
@@ -32,7 +31,6 @@ import java.util.ArrayList;
 
 public class StayCampaignListAdapter extends PlaceListAdapter
 {
-    private boolean mIsUsedMultiTransition;
     private int mNights;
 
     View.OnClickListener mOnClickListener;
@@ -44,11 +42,6 @@ public class StayCampaignListAdapter extends PlaceListAdapter
         mOnClickListener = listener;
 
         setSortType(Constants.SortType.DEFAULT);
-    }
-
-    public void setUsedMultiTransition(boolean isUsedMultiTransition)
-    {
-        mIsUsedMultiTransition = isUsedMultiTransition;
     }
 
     @Override
@@ -213,7 +206,7 @@ public class StayCampaignListAdapter extends PlaceListAdapter
         holder.dataBinding.gradeTextView.setText(grade.getName(mContext));
         holder.dataBinding.gradeTextView.setBackgroundResource(grade.getColorResId());
 
-        if (mIsUsedMultiTransition == true && VersionUtils.isOverAPI21() == true)
+        if (Util.isUsedMultiTransition() == true && VersionUtils.isOverAPI21() == true)
         {
             holder.dataBinding.imageView.setTransitionName(null);
         }

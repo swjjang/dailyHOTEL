@@ -22,9 +22,6 @@ import com.twoheart.dailyhotel.screen.search.SearchCardViewAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.reactivex.Observable;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-
 public class GourmetSearchLayout extends PlaceSearchLayout
 {
     public GourmetSearchLayout(Context context, OnEventListener mOnEventListener)
@@ -157,6 +154,48 @@ public class GourmetSearchLayout extends PlaceSearchLayout
             , SearchCardViewAdapter.TYPE_GOURMET, recentlyPlaceDataList //
             , campaignTagDataList, recentSearchDataList);
 
+        mRecyclerAdapter.setOnEventListener(mAdapterEventListener);
+
         mRecyclerView.setAdapter(mRecyclerAdapter);
     }
+
+    private SearchCardViewAdapter.OnEventListener mAdapterEventListener = new SearchCardViewAdapter.OnEventListener()
+    {
+        @Override
+        public void onKeywordDeleteAllClick(int type)
+        {
+            ((GourmetSearchLayout.OnEventListener) mOnEventListener).onDeleteRecentSearches();
+        }
+
+        @Override
+        public void onItemClick(View view)
+        {
+            if (view == null)
+            {
+                return;
+            }
+
+            SearchCardItem searchCardItem = (SearchCardItem) view.getTag();
+
+            if (searchCardItem == null || searchCardItem.object == null)
+            {
+                return;
+            }
+
+            if (searchCardItem.object instanceof Gourmet)
+            {
+                // 최근 본 업장
+                ((GourmetSearchLayout.OnEventListener) mOnEventListener).onSearchRecentlyPlace((Gourmet) searchCardItem.object);
+            } else if (searchCardItem.object instanceof Keyword)
+            {
+                // 최근 검색어
+                Keyword keyword = (Keyword) searchCardItem.object;
+                ((GourmetSearchLayout.OnEventListener) mOnEventListener).onSearch(keyword.name, keyword);
+            } else if (searchCardItem.object instanceof CampaignTag)
+            {
+                // 캠페인 태그
+                ((GourmetSearchLayout.OnEventListener) mOnEventListener).onSearchCampaignTag((CampaignTag) searchCardItem.object);
+            }
+        }
+    };
 }

@@ -5,7 +5,6 @@ import android.app.Activity;
 import com.daily.base.BaseDialogViewInterface;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.time.GourmetBookingDay;
-import com.twoheart.dailyhotel.model.time.StayBookingDay;
 
 import java.util.ArrayList;
 
@@ -23,7 +22,7 @@ public interface GourmetCampaignTagListInterface extends BaseDialogViewInterface
 
     void setBlurVisibility(Activity activity, boolean visible);
 
-    void setUsedMultiTransition(boolean isUsedMultiTransition);
+//    void setUsedMultiTransition(boolean isUsedMultiTransition);
 
     void setListScrollTop();
 }

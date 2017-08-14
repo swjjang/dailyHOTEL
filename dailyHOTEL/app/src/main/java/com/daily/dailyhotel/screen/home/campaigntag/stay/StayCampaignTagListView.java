@@ -3,7 +3,6 @@ package com.daily.dailyhotel.screen.home.campaigntag.stay;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
-import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +19,6 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ActivityPlaceCampaignTagListDataBinding;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.time.StayBookingDay;
-import com.twoheart.dailyhotel.screen.home.collection.CollectionStayAdapter;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.Util;
@@ -239,15 +237,6 @@ public class StayCampaignTagListView //
                 mBlurImageView.setBackgroundDrawable(null);
                 mBlurImageView.setVisibility(View.GONE);
             }
-        }
-    }
-
-    @Override
-    public void setUsedMultiTransition(boolean isUsedMultiTransition)
-    {
-        if (mRecyclerAdapter != null)
-        {
-            mRecyclerAdapter.setUsedMultiTransition(isUsedMultiTransition);
         }
     }
 

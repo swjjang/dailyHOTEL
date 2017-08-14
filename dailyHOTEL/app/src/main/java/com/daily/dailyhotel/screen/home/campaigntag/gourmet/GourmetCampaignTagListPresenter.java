@@ -9,8 +9,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.SharedElementCallback;
-import android.transition.Transition;
-import android.transition.TransitionSet;
 import android.view.View;
 
 import com.daily.base.BaseAnalyticsInterface;
@@ -20,28 +18,20 @@ import com.daily.dailyhotel.base.BaseExceptionPresenter;
 import com.daily.dailyhotel.entity.CampaignTag;
 import com.daily.dailyhotel.entity.CommonDateTime;
 import com.daily.dailyhotel.entity.GourmetCampaignTags;
-import com.daily.dailyhotel.entity.StayCampaignTags;
 import com.daily.dailyhotel.repository.local.model.AnalyticsParam;
 import com.daily.dailyhotel.repository.remote.CampaignTagRemoteImpl;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
-import com.facebook.drawee.drawable.ScalingUtils;
-import com.facebook.drawee.view.DraweeTransition;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Gourmet;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
-import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.model.time.GourmetBookingDay;
-import com.twoheart.dailyhotel.network.model.RecommendationStay;
 import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.place.layout.PlaceDetailLayout;
 import com.twoheart.dailyhotel.screen.gourmet.detail.GourmetDetailActivity;
 import com.twoheart.dailyhotel.screen.gourmet.filter.GourmetCalendarActivity;
 import com.twoheart.dailyhotel.screen.gourmet.preview.GourmetPreviewActivity;
-import com.twoheart.dailyhotel.screen.home.collection.CollectionGourmetActivity;
-import com.twoheart.dailyhotel.screen.hotel.detail.StayDetailActivity;
 import com.twoheart.dailyhotel.screen.hotel.filter.StayCalendarActivity;
-import com.twoheart.dailyhotel.screen.hotel.preview.StayPreviewActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.Util;
@@ -49,14 +39,11 @@ import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
-import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
@@ -70,7 +57,7 @@ public class GourmetCampaignTagListPresenter //
     implements GourmetCampaignTagListView.OnEventListener
 {
     private int mTagIndex;
-    private boolean mIsUsedMultiTransition;
+//    private boolean mIsUsedMultiTransition;
     private int mType;
     private int mAfterDay;
     private String mTitle;
@@ -127,7 +114,7 @@ public class GourmetCampaignTagListPresenter //
         }
 
         mTagIndex = intent.getIntExtra(GourmetCampaignTagListActivity.INTENT_EXTRA_DATA_INDEX, -1);
-        mIsUsedMultiTransition = intent.getBooleanExtra(Constants.NAME_INTENT_EXTRA_DATA_IS_USED_MULTITRANSITIOIN, false);
+//        mIsUsedMultiTransition = intent.getBooleanExtra(Constants.NAME_INTENT_EXTRA_DATA_IS_USED_MULTITRANSITIOIN, false);
 
         //        if (mTagIndex == -1)
         //        {
@@ -177,17 +164,17 @@ public class GourmetCampaignTagListPresenter //
     @Override
     public void onPostCreate()
     {
-        getViewInterface().setUsedMultiTransition(mIsUsedMultiTransition);
+//        getViewInterface().setUsedMultiTransition(mIsUsedMultiTransition);
 
         getViewInterface().setToolbarTitle(mTitle);
 
-        if (GourmetCampaignTagListActivity.TYPE_DEFAULT == mType && mIsUsedMultiTransition == true)
-        {
-            initTransition();
-        } else
-        {
+//        if (GourmetCampaignTagListActivity.TYPE_DEFAULT == mType && mIsUsedMultiTransition == true)
+//        {
+//            initTransition();
+//        } else
+//        {
             onRefresh(true);
-        }
+//        }
     }
 
     @Override
@@ -235,10 +222,10 @@ public class GourmetCampaignTagListPresenter //
     {
         super.onFinish();
 
-        if (mIsUsedMultiTransition == false)
-        {
+//        if (mIsUsedMultiTransition == false)
+//        {
             getActivity().overridePendingTransition(R.anim.hold, R.anim.slide_out_right);
-        }
+//        }
     }
 
     @Override
@@ -258,33 +245,33 @@ public class GourmetCampaignTagListPresenter //
     @Override
     public boolean onBackPressed()
     {
-        if (mIsUsedMultiTransition == true)
-        {
-            screenLock(false);
-
-            getViewInterface().setListScrollTop();
-
-            Observable.just(getActivity()).delaySubscription(300, TimeUnit.MILLISECONDS) //
-                .subscribeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<GourmetCampaignTagListActivity>()
-            {
-                @Override
-                public void accept(@io.reactivex.annotations.NonNull GourmetCampaignTagListActivity gourmetCampaignTagListActivity) throws Exception
-                {
-                    gourmetCampaignTagListActivity.onBackPressed();
-                }
-            });
-
-            //            mHandler.postDelayed(new Runnable()
-            //            {
-            //                @Override
-            //                public void run()
-            //                {
-            //                    getActivity().onBackPressed();
-            //                }
-            //            }, 300);
-
-            return true;
-        }
+//        if (mIsUsedMultiTransition == true)
+//        {
+//            screenLock(false);
+//
+//            getViewInterface().setListScrollTop();
+//
+//            Observable.just(getActivity()).delaySubscription(300, TimeUnit.MILLISECONDS) //
+//                .subscribeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<GourmetCampaignTagListActivity>()
+//            {
+//                @Override
+//                public void accept(@io.reactivex.annotations.NonNull GourmetCampaignTagListActivity gourmetCampaignTagListActivity) throws Exception
+//                {
+//                    gourmetCampaignTagListActivity.onBackPressed();
+//                }
+//            });
+//
+//            //            mHandler.postDelayed(new Runnable()
+//            //            {
+//            //                @Override
+//            //                public void run()
+//            //                {
+//            //                    getActivity().onBackPressed();
+//            //                }
+//            //            }, 300);
+//
+//            return true;
+//        }
 
         return super.onBackPressed();
     }
@@ -377,7 +364,8 @@ public class GourmetCampaignTagListPresenter //
 
                 return gourmetBookingDay;
             }
-        }).subscribeOn(Schedulers.io()).flatMap(new Function<GourmetBookingDay, Observable<GourmetCampaignTags>>()
+        }).observeOn(Schedulers.io()).flatMap(new Function<GourmetBookingDay,
+            Observable<GourmetCampaignTags>>()
         {
             @Override
             public Observable<GourmetCampaignTags> apply(@io.reactivex.annotations.NonNull GourmetBookingDay gourmetBookingDay) throws Exception
@@ -402,7 +390,7 @@ public class GourmetCampaignTagListPresenter //
 
                 return makePlaceList(mGourmetCampaignTags.getGourmetList());
             }
-        }).subscribe(new Consumer<ArrayList<PlaceViewItem>>()
+        }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<ArrayList<PlaceViewItem>>()
         {
             @Override
             public void accept(@io.reactivex.annotations.NonNull ArrayList<PlaceViewItem> placeViewItemList) throws Exception
@@ -630,7 +618,7 @@ public class GourmetCampaignTagListPresenter //
 
         Gourmet gourmet = placeViewItem.getItem();
 
-        if (mIsUsedMultiTransition == true)
+        if (Util.isUsedMultiTransition() == true)
         {
             getActivity().setExitSharedElementCallback(new SharedElementCallback()
             {
@@ -795,51 +783,51 @@ public class GourmetCampaignTagListPresenter //
         return gourmetBookingDay;
     }
 
-    @TargetApi(value = 21)
-    void initTransition()
-    {
-        if (mIsUsedMultiTransition == true)
-        {
-            TransitionSet inTransitionSet = DraweeTransition.createTransitionSet(ScalingUtils.ScaleType.CENTER_CROP, ScalingUtils.ScaleType.CENTER_CROP);
-
-            getActivity().getWindow().setSharedElementEnterTransition(inTransitionSet);
-
-            TransitionSet outTransitionSet = DraweeTransition.createTransitionSet(ScalingUtils.ScaleType.CENTER_CROP, ScalingUtils.ScaleType.CENTER_CROP);
-            outTransitionSet.setDuration(200);
-
-            getActivity().getWindow().setSharedElementReturnTransition(outTransitionSet);
-            inTransitionSet.addListener(new Transition.TransitionListener()
-            {
-                @Override
-                public void onTransitionStart(Transition transition)
-                {
-
-                }
-
-                @Override
-                public void onTransitionEnd(Transition transition)
-                {
-                    onRefresh(true);
-                }
-
-                @Override
-                public void onTransitionCancel(Transition transition)
-                {
-
-                }
-
-                @Override
-                public void onTransitionPause(Transition transition)
-                {
-
-                }
-
-                @Override
-                public void onTransitionResume(Transition transition)
-                {
-
-                }
-            });
-        }
-    }
+//    @TargetApi(value = 21)
+//    void initTransition()
+//    {
+//        if (mIsUsedMultiTransition == true)
+//        {
+//            TransitionSet inTransitionSet = DraweeTransition.createTransitionSet(ScalingUtils.ScaleType.CENTER_CROP, ScalingUtils.ScaleType.CENTER_CROP);
+//
+//            getActivity().getWindow().setSharedElementEnterTransition(inTransitionSet);
+//
+//            TransitionSet outTransitionSet = DraweeTransition.createTransitionSet(ScalingUtils.ScaleType.CENTER_CROP, ScalingUtils.ScaleType.CENTER_CROP);
+//            outTransitionSet.setDuration(200);
+//
+//            getActivity().getWindow().setSharedElementReturnTransition(outTransitionSet);
+//            inTransitionSet.addListener(new Transition.TransitionListener()
+//            {
+//                @Override
+//                public void onTransitionStart(Transition transition)
+//                {
+//
+//                }
+//
+//                @Override
+//                public void onTransitionEnd(Transition transition)
+//                {
+//                    onRefresh(true);
+//                }
+//
+//                @Override
+//                public void onTransitionCancel(Transition transition)
+//                {
+//
+//                }
+//
+//                @Override
+//                public void onTransitionPause(Transition transition)
+//                {
+//
+//                }
+//
+//                @Override
+//                public void onTransitionResume(Transition transition)
+//                {
+//
+//                }
+//            });
+//        }
+//    }
 }

@@ -23,6 +23,7 @@ public class SearchCardViewAdapter extends RecyclerView.Adapter<SearchCardViewAd
     private static final float CARD_WIDTH_RATIO = 0.772f; // 270/360 = 0.772222222222222;
 
     private Context mContext;
+    private OnEventListener mOnEventListener;
 
     private ArrayList<SearchCardItem> mRecentlyPlaceList;
     private ArrayList<SearchCardItem> mCampaignTagList;
@@ -30,6 +31,10 @@ public class SearchCardViewAdapter extends RecyclerView.Adapter<SearchCardViewAd
 
     private int mType;
 
+    public interface OnEventListener {
+        void onKeywordDeleteAllClick(int type);
+        void onItemClick(View view);
+    }
 
     public SearchCardViewAdapter(Context context, int type //
         , ArrayList<SearchCardItem> placeList, ArrayList<SearchCardItem> campaignTagList //
@@ -57,6 +62,11 @@ public class SearchCardViewAdapter extends RecyclerView.Adapter<SearchCardViewAd
         {
             mRecentKeywordList.addAll(keywordList);
         }
+    }
+
+    public void setOnEventListener(OnEventListener onEventListener)
+    {
+        mOnEventListener = onEventListener;
     }
 
     @Override
@@ -140,19 +150,22 @@ public class SearchCardViewAdapter extends RecyclerView.Adapter<SearchCardViewAd
             @Override
             public void onDeleteAllClick()
             {
-
             }
 
             @Override
             public void onItemClick(View view)
             {
+                if (mOnEventListener == null)
+                {
+                    return;
+                }
 
+                mOnEventListener.onItemClick(view);
             }
 
             @Override
             public void onBackClick()
             {
-
             }
         });
     }
@@ -179,19 +192,28 @@ public class SearchCardViewAdapter extends RecyclerView.Adapter<SearchCardViewAd
             @Override
             public void onDeleteAllClick()
             {
+                if (mOnEventListener == null)
+                {
+                    return;
+                }
 
+                mOnEventListener.onKeywordDeleteAllClick(mType);
             }
 
             @Override
             public void onItemClick(View view)
             {
+                if (mOnEventListener == null)
+                {
+                    return;
+                }
 
+                mOnEventListener.onItemClick(view);
             }
 
             @Override
             public void onBackClick()
             {
-
             }
         });
     }
@@ -235,19 +257,22 @@ public class SearchCardViewAdapter extends RecyclerView.Adapter<SearchCardViewAd
             @Override
             public void onDeleteAllClick()
             {
-
             }
 
             @Override
             public void onItemClick(View view)
             {
+                if (mOnEventListener == null)
+                {
+                    return;
+                }
 
+                mOnEventListener.onItemClick(view);
             }
 
             @Override
             public void onBackClick()
             {
-
             }
         });
     }

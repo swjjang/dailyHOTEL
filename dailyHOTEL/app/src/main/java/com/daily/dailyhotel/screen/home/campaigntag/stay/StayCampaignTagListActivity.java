@@ -4,13 +4,9 @@ package com.daily.dailyhotel.screen.home.campaigntag.stay;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
-import android.view.View;
 
 import com.daily.base.BaseActivity;
-import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.time.StayBookingDay;
-import com.twoheart.dailyhotel.screen.home.collection.CollectionStayActivity;
-import com.twoheart.dailyhotel.util.Constants;
 
 /**
  * Created by iseung-won on 2017. 8. 4..
@@ -58,7 +54,7 @@ public class StayCampaignTagListActivity extends BaseActivity<StayCampaignTagLis
         return intent;
     }
 
-    public static Intent newInstance(Context context, int index, String hashTag, StayBookingDay stayBookingDay, boolean isUsedMultiTransition)
+    public static Intent newInstance(Context context, int index, String hashTag, StayBookingDay stayBookingDay)
     {
         Intent intent = new Intent(context, StayCampaignTagListActivity.class);
 
@@ -66,7 +62,7 @@ public class StayCampaignTagListActivity extends BaseActivity<StayCampaignTagLis
         intent.putExtra(INTENT_EXTRA_DATA_INDEX, index);
         intent.putExtra(INTENT_EXTRA_DATA_TITLE, hashTag);
         intent.putExtra(INTENT_EXTRA_DATA_PLACEBOOKINGDAY, stayBookingDay);
-        intent.putExtra(Constants.NAME_INTENT_EXTRA_DATA_IS_USED_MULTITRANSITIOIN, isUsedMultiTransition);
+//        intent.putExtra(Constants.NAME_INTENT_EXTRA_DATA_IS_USED_MULTITRANSITIOIN, isUsedMultiTransition);
 
         return intent;
     }

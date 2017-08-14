@@ -84,6 +84,10 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
         void onCalendarClick(boolean isAnimation, Constants.SearchType searchType, String inputText, Keyword keyword);
 
         void onSearchEnabled(boolean enabled);
+
+        void onSearchCampaignTag(CampaignTag campaignTag);
+
+        void onSearchRecentlyPlace(Place place);
     }
 
     protected abstract String getAroundPlaceText();
