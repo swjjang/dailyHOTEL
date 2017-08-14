@@ -18,6 +18,8 @@ import android.widget.TextView;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.widget.DailyAutoCompleteEditText;
 import com.daily.base.widget.DailyEditText;
+import com.daily.base.widget.DailyTextView;
+import com.daily.dailyhotel.view.DailyToolbarView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.base.BaseLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
@@ -79,9 +81,9 @@ public class AddProfileSocialLayout extends BaseLayout implements OnClickListene
 
     private void initToolbar(View view)
     {
-        View toolbar = view.findViewById(R.id.toolbar);
-        DailyToolbarLayout dailyToolbarLayout = new DailyToolbarLayout(mContext, toolbar);
-        dailyToolbarLayout.initToolbar(mContext.getString(R.string.actionbar_title_userinfo_update_activity), new OnClickListener()
+        DailyToolbarView dailyToolbarView = (DailyToolbarView)view.findViewById(R.id.toolbarView);
+        dailyToolbarView.setTitleText(R.string.actionbar_title_userinfo_update_activity);
+        dailyToolbarView.setOnBackClickListener(new OnClickListener()
         {
             @Override
             public void onClick(View v)

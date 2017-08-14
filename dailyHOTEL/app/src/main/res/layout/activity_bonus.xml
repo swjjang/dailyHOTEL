@@ -1,19 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
+    xmlns:dailyToolbar="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-    <include layout="@layout/toolbar_default"/>
+    <com.daily.dailyhotel.view.DailyToolbarView
+        android:id="@+id/toolbarView"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/toolbar_height"
+        android:background="@color/white"
+        android:elevation="2dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        dailyToolbar:underLineHeight="@dimen/gradient_1dp_line_height_under_21"/>
 
     <RelativeLayout
         android:id="@+id/bonusLayout"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="76dp"
-        android:layout_below="@+id/toolbar"
-        android:layout_marginBottom="10dp"
         android:layout_marginTop="10dp"
-        android:background="@color/white">
+        android:background="@color/white"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbarView">
 
         <View
             android:layout_width="match_parent"
@@ -54,36 +67,52 @@
             android:background="@color/default_line_cf0f0f0"/>
     </RelativeLayout>
 
+    <View
+        android:id="@+id/listTopLine"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:layout_marginTop="10dp"
+        android:background="@color/default_line_cf0f0f0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/bonusLayout"/>
+
     <ListView
         android:id="@+id/listView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@+id/bottomLayout"
-        android:layout_below="@+id/bonusLayout"
-        android:divider="@null"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:cacheColorHint="@android:color/transparent"
+        android:divider="@null"
         android:fadingEdge="none"
         android:listSelector="@android:color/transparent"
         android:scrollbarStyle="outsideOverlay"
-        android:scrollbars="vertical"/>
+        android:scrollbars="vertical"
+        app:layout_constraintBottom_toTopOf="@+id/bottomLayout"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/listTopLine"/>
 
     <View
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="3dp"
         android:background="@drawable/tapbar_gradation"
-        android:layout_above="@+id/bottomLayout"/>
+        app:layout_constraintBottom_toTopOf="@+id/bottomLayout"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"/>
 
     <LinearLayout
         android:id="@+id/bottomLayout"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="111dp"
-        android:layout_alignParentBottom="true"
         android:background="@color/white"
         android:orientation="vertical"
         android:paddingBottom="10dp"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
-        android:paddingTop="12dp">
+        android:paddingTop="12dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent">
 
         <com.daily.base.widget.DailyTextView
             android:layout_width="match_parent"
@@ -106,4 +135,4 @@
             android:textSize="17dp"
             dailyFont:style="Medium"/>
     </LinearLayout>
-</RelativeLayout>
+</android.support.constraint.ConstraintLayout>

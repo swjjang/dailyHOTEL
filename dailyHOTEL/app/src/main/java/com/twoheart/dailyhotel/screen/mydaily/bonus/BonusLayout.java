@@ -8,12 +8,12 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.daily.base.util.DailyTextUtils;
+import com.daily.dailyhotel.view.DailyToolbarView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Bonus;
 import com.twoheart.dailyhotel.place.base.BaseLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
-import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +21,7 @@ import java.util.List;
 public class BonusLayout extends BaseLayout implements View.OnClickListener
 {
     private TextView mBonusTextView;
+    private View mListTopLine;
     private ListView mListView;
     private View mFooterView;
     private View mBottomLayout;
@@ -48,6 +49,10 @@ public class BonusLayout extends BaseLayout implements View.OnClickListener
         inviteFriend.setOnClickListener(this);
 
         mBonusTextView = (TextView) view.findViewById(R.id.bonusTextView);
+
+        mListTopLine = view.findViewById(R.id.listTopLine);
+        mListTopLine.setVisibility(View.INVISIBLE);
+
         mListView = (ListView) view.findViewById(R.id.listView);
 
         View header = LayoutInflater.from(mContext).inflate(R.layout.list_row_bonus_header, mListView, false);
@@ -72,10 +77,9 @@ public class BonusLayout extends BaseLayout implements View.OnClickListener
 
     private void initToolbar(View view)
     {
-        View toolbar = view.findViewById(R.id.toolbar);
-
-        DailyToolbarLayout dailyToolbarLayout = new DailyToolbarLayout(mContext, toolbar);
-        dailyToolbarLayout.initToolbar(mContext.getString(R.string.actionbar_title_credit_frag), new View.OnClickListener()
+        DailyToolbarView dailyToolbarView = (DailyToolbarView) view.findViewById(R.id.toolbarView);
+        dailyToolbarView.setTitleText(R.string.actionbar_title_credit_frag);
+        dailyToolbarView.setOnBackClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
@@ -133,6 +137,7 @@ public class BonusLayout extends BaseLayout implements View.OnClickListener
             mBonusListAdapter.addAll(list);
         }
 
+        mListTopLine.setVisibility(View.VISIBLE);
         mListView.setAdapter(mBonusListAdapter);
     }
 }

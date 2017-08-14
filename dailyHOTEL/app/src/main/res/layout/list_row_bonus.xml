@@ -36,7 +36,6 @@
             android:textSize="11dp"/>
     </LinearLayout>
 
-
     <com.daily.base.widget.DailyTextView
         android:id="@+id/bonusTextView"
         android:layout_width="wrap_content"

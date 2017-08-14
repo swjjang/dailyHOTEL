@@ -16,10 +16,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
+import com.daily.dailyhotel.view.DailyToolbarView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.CountryCodeNumber;
-import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
 public class CountryCodeListActivity extends BaseActivity
 {
@@ -73,9 +73,9 @@ public class CountryCodeListActivity extends BaseActivity
 
     private void initToolbar()
     {
-        View toolbar = findViewById(R.id.toolbar);
-        DailyToolbarLayout dailyToolbarLayout = new DailyToolbarLayout(this, toolbar);
-        dailyToolbarLayout.initToolbar(getString(R.string.label_select_country), new View.OnClickListener()
+        DailyToolbarView dailyToolbarView = (DailyToolbarView) findViewById(R.id.toolbarView);
+        dailyToolbarView.setTitleText(R.string.label_select_country);
+        dailyToolbarView.setOnBackClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)

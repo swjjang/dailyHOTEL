@@ -5,12 +5,12 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
+import com.daily.dailyhotel.view.DailyToolbarView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.CouponHistory;
 import com.twoheart.dailyhotel.place.base.BaseLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
-import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +21,7 @@ import java.util.List;
 public class CouponHistoryLayout extends BaseLayout
 {
     private RecyclerView mRecyclerView;
+    private View mTopLine;
     private View mEmptyView;
     private CouponHistoryListAdapter mListAdapter;
 
@@ -43,10 +44,9 @@ public class CouponHistoryLayout extends BaseLayout
 
     private void initToolbar(View view)
     {
-        View toolbar = view.findViewById(R.id.toolbar);
-
-        DailyToolbarLayout dailyToolbarLayout = new DailyToolbarLayout(mContext, toolbar);
-        dailyToolbarLayout.initToolbar(mContext.getString(R.string.actionbar_title_coupon_history), new View.OnClickListener()
+        DailyToolbarView dailyToolbarView = (DailyToolbarView) view.findViewById(R.id.toolbarView);
+        dailyToolbarView.setTitleText(R.string.actionbar_title_coupon_history);
+        dailyToolbarView.setOnBackClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
@@ -58,6 +58,9 @@ public class CouponHistoryLayout extends BaseLayout
 
     private void initListView(View view)
     {
+        mTopLine = view.findViewById(R.id.listTopLine);
+        mTopLine.setVisibility(View.GONE);
+
         mRecyclerView = (RecyclerView) view.findViewById(R.id.couponHistoryRecyclerView);
 
         mEmptyView = view.findViewById(R.id.emptyView);
@@ -84,12 +87,14 @@ public class CouponHistoryLayout extends BaseLayout
     {
         if (list != null && list.size() != 0)
         {
+            mTopLine.setVisibility(View.VISIBLE);
             mListAdapter = new CouponHistoryListAdapter(mContext, list);
             mEmptyView.setVisibility(View.GONE);
         } else
         {
             mListAdapter = new CouponHistoryListAdapter(mContext, new ArrayList<CouponHistory>());
             mEmptyView.setVisibility(View.VISIBLE);
+
         }
 
         mRecyclerView.setAdapter(mListAdapter);
