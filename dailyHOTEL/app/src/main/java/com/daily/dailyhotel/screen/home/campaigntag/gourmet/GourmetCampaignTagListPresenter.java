@@ -562,7 +562,7 @@ public class GourmetCampaignTagListPresenter //
         ArrayList<PlaceViewItem> placeViewItemList = new ArrayList<>();
 
         // 빈공간
-        placeViewItemList.add(new PlaceViewItem(PlaceViewItem.TYPE_HEADER_VIEW, null));
+//        placeViewItemList.add(new PlaceViewItem(PlaceViewItem.TYPE_HEADER_VIEW, null));
 
         if (gourmetList == null || gourmetList.size() == 0)
         {

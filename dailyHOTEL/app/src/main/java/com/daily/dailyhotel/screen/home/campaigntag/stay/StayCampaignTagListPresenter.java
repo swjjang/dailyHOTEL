@@ -569,7 +569,7 @@ public class StayCampaignTagListPresenter extends BaseExceptionPresenter<StayCam
         ArrayList<PlaceViewItem> placeViewItemList = new ArrayList<>();
 
         // 빈공간
-        placeViewItemList.add(new PlaceViewItem(PlaceViewItem.TYPE_HEADER_VIEW, null));
+//        placeViewItemList.add(new PlaceViewItem(PlaceViewItem.TYPE_HEADER_VIEW, null));
 
         if (stayList == null || stayList.size() == 0)
         {
