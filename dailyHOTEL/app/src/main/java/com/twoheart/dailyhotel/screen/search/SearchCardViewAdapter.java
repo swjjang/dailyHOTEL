@@ -7,9 +7,11 @@ import android.view.ViewGroup;
 
 import com.daily.base.util.ScreenUtils;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.model.Keyword;
 import com.twoheart.dailyhotel.model.SearchCardItem;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by iseung-won on 2017. 8. 10..
@@ -31,8 +33,10 @@ public class SearchCardViewAdapter extends RecyclerView.Adapter<SearchCardViewAd
 
     private int mType;
 
-    public interface OnEventListener {
+    public interface OnEventListener
+    {
         void onKeywordDeleteAllClick(int type);
+
         void onItemClick(View view);
     }
 
@@ -67,6 +71,25 @@ public class SearchCardViewAdapter extends RecyclerView.Adapter<SearchCardViewAd
     public void setOnEventListener(OnEventListener onEventListener)
     {
         mOnEventListener = onEventListener;
+    }
+
+    public void setKeywordListData(List<Keyword> keywordList)
+    {
+        mRecentKeywordList = new ArrayList<>();
+
+        if (keywordList == null)
+        {
+            return;
+        }
+
+        for (Keyword keyword : keywordList)
+        {
+            SearchCardItem item = new SearchCardItem();
+            item.iconType = keyword.icon;
+            item.itemText = keyword.name;
+            item.object = keyword;
+            mRecentKeywordList.add(item);
+        }
     }
 
     @Override

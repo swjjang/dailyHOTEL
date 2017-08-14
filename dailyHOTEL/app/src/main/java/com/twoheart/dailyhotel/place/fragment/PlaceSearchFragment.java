@@ -279,6 +279,7 @@ public abstract class PlaceSearchFragment extends BaseFragment
                         mDailyRecentSearches.addString(new Keyword(keyword.icon, keyword.name));
 
                         writeRecentSearches(mDailyRecentSearches.toString());
+                        mPlaceSearchLayout.setKeywordListData(mDailyRecentSearches.getList());
                         //                        mPlaceSearchLayout.updateRecentSearchesLayout(mDailyRecentSearches.getList());
                     }
                 }

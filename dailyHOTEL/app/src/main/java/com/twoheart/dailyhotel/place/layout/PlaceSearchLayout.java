@@ -275,6 +275,17 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
         });
     }
 
+    public void setKeywordListData(List<Keyword> keywordList)
+    {
+        if (mRecyclerAdapter == null)
+        {
+            return;
+        }
+
+        mRecyclerAdapter.setKeywordListData(keywordList);
+        mRecyclerAdapter.notifyDataSetChanged();
+    }
+
     public void resetSearchKeyword()
     {
         if (mSearchEditText == null)
@@ -375,24 +386,6 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
     public void updateTermsOfLocationLayout()
     {
         updateTermsOfLocationLayout(mTermsOfLocationView);
-    }
-
-    protected int getSearchIcon(int type)
-    {
-        switch (type)
-        {
-            case TAG_ICON:
-                return R.drawable.vector_search_ic_04_tag;
-
-            case HOTEL_ICON:
-                return R.drawable.vector_ob_search_ic_02_hotel;
-
-            case GOURMET_ICON:
-                return R.drawable.search_ic_02_gourmet;
-
-            default:
-                return R.drawable.search_ic_03_recent;
-        }
     }
 
     //    private void initRecentSearchesLayout(View view)
