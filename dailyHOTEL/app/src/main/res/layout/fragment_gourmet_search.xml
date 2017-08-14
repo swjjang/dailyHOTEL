@@ -1,7 +1,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -39,7 +39,7 @@
                     android:textColorHint="@color/default_text_cc5c5c5"
                     android:textSize="13dp"
                     android:theme="@style/EditTextTheme"
-                    app:drawableCompatLeft="@drawable/search_ic_01_search"/>
+                    app:drawableCompatLeft="@drawable/search_ic_01_search" />
 
                 <ImageView
                     android:id="@+id/deleteView"
@@ -49,7 +49,7 @@
                     android:layout_marginTop="8dp"
                     android:paddingLeft="8dp"
                     android:paddingRight="14dp"
-                    app:srcCompat="@drawable/search_ic_01_delete"/>
+                    app:srcCompat="@drawable/search_ic_01_delete" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -64,7 +64,7 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="6dp"
-                    app:srcCompat="@drawable/search_ic_01_date"/>
+                    app:srcCompat="@drawable/search_ic_01_date" />
 
                 <ImageView
                     android:id="@+id/calendarDownArrowView"
@@ -73,7 +73,7 @@
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="9dp"
-                    app:srcCompat="@drawable/navibar_m_ic_v"/>
+                    app:srcCompat="@drawable/navibar_m_ic_v" />
 
                 <com.daily.base.widget.DailyTextView
                     android:id="@+id/calendarTextView"
@@ -86,23 +86,23 @@
                     android:gravity="center_vertical"
                     android:paddingRight="8dp"
                     android:textColor="@color/default_text_c323232"
-                    android:textSize="13dp"/>
+                    android:textSize="13dp" />
 
             </RelativeLayout>
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1px"
-                android:background="@color/default_line_ce7e7e7"/>
+                android:background="@color/default_line_ce7e7e7" />
         </LinearLayout>
 
         <RelativeLayout
             android:id="@+id/searchAroundLayout"
             android:layout_width="match_parent"
             android:layout_height="57dp"
-            android:elevation="2dp"
             android:layout_below="@+id/searchLayout"
-            android:background="@color/white">
+            android:background="@color/white"
+            android:elevation="2dp">
 
             <ImageView
                 android:id="@+id/aroundIconView"
@@ -111,7 +111,7 @@
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="10dp"
-                app:srcCompat="@drawable/search_ic_01_surrounding"/>
+                app:srcCompat="@drawable/search_ic_01_surrounding" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -126,7 +126,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textColor="@color/default_text_c323232"
-                    android:textSize="13dp"/>
+                    android:textSize="13dp" />
 
                 <com.daily.base.widget.DailyTextView
                     android:id="@+id/text02View"
@@ -137,116 +137,118 @@
                     android:text="@string/label_search_need_to_agree_termsoflocation"
                     android:textColor="@color/search_hint_text"
                     android:textSize="11dp"
-                    android:visibility="visible"/>
+                    android:visibility="visible" />
             </LinearLayout>
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/gradient_1dp_line_height_under_21"
                 android:layout_alignParentBottom="true"
-                android:background="@color/default_line_ce7e7e7"/>
+                android:background="@color/default_line_ce7e7e7" />
         </RelativeLayout>
 
         <com.daily.dailyhotel.view.DailySearchCircleIndicator
             android:id="@+id/searchCircleIndicator"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_below="@+id/searchAroundLayout"
             android:layout_centerHorizontal="true"
-            android:layout_below="@+id/searchAroundLayout"/>
+            android:layout_marginTop="10dp" />
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/searchRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginBottom="7dp"
-            android:layout_marginTop="4dp"
             android:layout_alignParentBottom="true"
-            android:layout_below="@id/searchCircleIndicator"/>
+            android:layout_below="@id/searchCircleIndicator"
+            android:layout_marginBottom="7dp"
+            android:layout_marginTop="4dp" />
 
         <!--<RelativeLayout-->
-            <!--android:id="@+id/recentSearchLayout"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_below="@+id/searchAroundLayout"-->
-            <!--android:layout_marginTop="10dp"-->
-            <!--android:background="@color/white"-->
-            <!--android:visibility="visible">-->
+        <!--android:id="@+id/recentSearchLayout"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_below="@+id/searchAroundLayout"-->
+        <!--android:layout_marginTop="10dp"-->
+        <!--android:background="@color/white"-->
+        <!--android:visibility="visible">-->
 
-            <!--<com.daily.base.widget.DailyTextView-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="36dp"-->
-                <!--android:gravity="center_vertical"-->
-                <!--android:paddingLeft="15dp"-->
-                <!--android:text="@string/label_search_recentsearches"-->
-                <!--android:textColor="@color/search_hint_text"/>-->
+        <!--<com.daily.base.widget.DailyTextView-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="36dp"-->
+        <!--android:gravity="center_vertical"-->
+        <!--android:paddingLeft="15dp"-->
+        <!--android:text="@string/label_search_recentsearches"-->
+        <!--android:textColor="@color/search_hint_text"/>-->
 
-            <!--<com.daily.base.widget.DailyTextView-->
-                <!--android:id="@+id/deleteAllView"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="36dp"-->
-                <!--android:layout_alignParentRight="true"-->
-                <!--android:gravity="center_vertical"-->
-                <!--android:paddingRight="15dp"-->
-                <!--android:text="@string/label_search_deleteall"-->
-                <!--android:textColor="@drawable/selector_search_deleteall_textcolor"/>-->
+        <!--<com.daily.base.widget.DailyTextView-->
+        <!--android:id="@+id/deleteAllView"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="36dp"-->
+        <!--android:layout_alignParentRight="true"-->
+        <!--android:gravity="center_vertical"-->
+        <!--android:paddingRight="15dp"-->
+        <!--android:text="@string/label_search_deleteall"-->
+        <!--android:textColor="@drawable/selector_search_deleteall_textcolor"/>-->
 
-            <!--<View-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="1px"-->
-                <!--android:layout_below="@+id/deleteAllView"-->
-                <!--android:layout_marginLeft="15dp"-->
-                <!--android:layout_marginRight="15dp"-->
-                <!--android:background="@color/default_line_cdcdcdd"/>-->
+        <!--<View-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="1px"-->
+        <!--android:layout_below="@+id/deleteAllView"-->
+        <!--android:layout_marginLeft="15dp"-->
+        <!--android:layout_marginRight="15dp"-->
+        <!--android:background="@color/default_line_cdcdcdd"/>-->
 
-            <!--<com.daily.base.widget.DailyScrollView-->
-                <!--android:id="@+id/recentSearchesScrollLayout"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_below="@+id/deleteAllView"-->
-                <!--android:fadingEdge="none">-->
+        <!--<com.daily.base.widget.DailyScrollView-->
+        <!--android:id="@+id/recentSearchesScrollLayout"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_below="@+id/deleteAllView"-->
+        <!--android:fadingEdge="none">-->
 
-                <!--<LinearLayout-->
-                    <!--android:id="@+id/contentsLayout"-->
-                    <!--android:layout_width="match_parent"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:layout_marginLeft="15dp"-->
-                    <!--android:layout_marginRight="15dp"-->
-                    <!--android:orientation="vertical"/>-->
-            <!--</com.daily.base.widget.DailyScrollView>-->
+        <!--<LinearLayout-->
+        <!--android:id="@+id/contentsLayout"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginLeft="15dp"-->
+        <!--android:layout_marginRight="15dp"-->
+        <!--android:orientation="vertical"/>-->
+        <!--</com.daily.base.widget.DailyScrollView>-->
 
-            <!--<View-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="1dp"-->
-                <!--android:background="@color/default_line_cf0f0f0"/>-->
+        <!--<View-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="1dp"-->
+        <!--android:background="@color/default_line_cf0f0f0"/>-->
 
-            <!--<View-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="1dp"-->
-                <!--android:layout_alignParentBottom="false"-->
-                <!--android:layout_below="@+id/recentSearchesScrollLayout"-->
-                <!--android:background="@color/default_line_cf0f0f0"/>-->
+        <!--<View-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="1dp"-->
+        <!--android:layout_alignParentBottom="false"-->
+        <!--android:layout_below="@+id/recentSearchesScrollLayout"-->
+        <!--android:background="@color/default_line_cf0f0f0"/>-->
         <!--</RelativeLayout>-->
 
         <FrameLayout
             android:id="@+id/autoCompleteScrollLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/white"
             android:layout_below="@+id/searchLayout"
+            android:background="@color/white"
+            android:elevation="2dp"
             android:visibility="gone">
 
             <com.daily.base.widget.DailyScrollView
                 android:id="@+id/autoCompleteScrollView"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
+                android:fillViewport="true"
                 android:fadingEdge="none">
 
                 <LinearLayout
                     android:id="@+id/autoCompleteLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"/>
+                    android:orientation="vertical" />
             </com.daily.base.widget.DailyScrollView>
         </FrameLayout>
     </RelativeLayout>
