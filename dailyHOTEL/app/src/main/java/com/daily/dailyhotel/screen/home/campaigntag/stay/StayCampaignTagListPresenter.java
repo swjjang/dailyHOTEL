@@ -2,18 +2,22 @@ package com.daily.dailyhotel.screen.home.campaigntag.stay;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.SharedElementCallback;
 import android.view.View;
+import android.widget.Toast;
 
 import com.daily.base.BaseAnalyticsInterface;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
+import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
 import com.daily.dailyhotel.entity.CampaignTag;
 import com.daily.dailyhotel.entity.CommonDateTime;
@@ -26,6 +30,8 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.model.time.StayBookingDay;
+import com.twoheart.dailyhotel.network.DailyMobileAPI;
+import com.twoheart.dailyhotel.network.dto.BaseDto;
 import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.place.layout.PlaceDetailLayout;
 import com.twoheart.dailyhotel.screen.hotel.detail.StayDetailActivity;
@@ -33,10 +39,13 @@ import com.twoheart.dailyhotel.screen.hotel.filter.StayCalendarActivity;
 import com.twoheart.dailyhotel.screen.hotel.preview.StayPreviewActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
+import com.twoheart.dailyhotel.util.DailyPreference;
+import com.twoheart.dailyhotel.util.DailyRemoteConfigPreference;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
@@ -47,6 +56,8 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
+import retrofit2.Call;
+import retrofit2.Response;
 
 /**
  * Created by iseung-won on 2017. 8. 4..
@@ -72,6 +83,22 @@ public class StayCampaignTagListPresenter extends BaseExceptionPresenter<StayCam
     private int mListCountByLongPress;
     private View mViewByLongPress;
 
+    protected interface OnCallDialogListener
+    {
+        void onShowDialog();
+
+        void onPositiveButtonClick(View v);
+
+        void onNativeButtonClick(View v);
+
+        void onDismissDialog();
+    }
+
+    // showCallDialog 용 interface
+    private interface OnOperatingTimeListener
+    {
+        void onInValidOperatingTime(boolean isInValidOperatingTime);
+    }
 
     public StayCampaignTagListPresenter(@NonNull StayCampaignTagListActivity activity)
     {
@@ -599,7 +626,7 @@ public class StayCampaignTagListPresenter extends BaseExceptionPresenter<StayCam
     @Override
     public void onBackClick()
     {
-        onFinish();
+        finish();
     }
 
     @Override
@@ -613,6 +640,18 @@ public class StayCampaignTagListPresenter extends BaseExceptionPresenter<StayCam
             , mStayBookingDay, StayCalendarActivity.DEFAULT_DOMESTIC_CALENDAR_DAY_OF_MAX_COUNT //
             , AnalyticsManager.ValueType.SEARCH, true, true);
         startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_CALENDAR);
+    }
+
+    @Override
+    public void onResearchClick()
+    {
+        onBackClick();
+    }
+
+    @Override
+    public void onCallClick()
+    {
+        showDailyCallDialog(null);
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
@@ -797,6 +836,226 @@ public class StayCampaignTagListPresenter extends BaseExceptionPresenter<StayCam
         }
 
         return stayBookingDay;
+    }
+
+    private void checkInValidOperatingTime(OnOperatingTimeListener operatingTimeListener)
+    {
+        if (operatingTimeListener == null)
+        {
+            return;
+        }
+
+        retrofit2.Callback dateTimeCallback = new retrofit2.Callback<BaseDto<TodayDateTime>>()
+        {
+            @Override
+            public void onResponse(Call<BaseDto<TodayDateTime>> call, Response<BaseDto<TodayDateTime>> response)
+            {
+                boolean isInValidOperatingTime = false;
+
+                if (response != null && response.isSuccessful() && response.body() != null)
+                {
+                    try
+                    {
+                        BaseDto<TodayDateTime> baseDto = response.body();
+
+                        if (baseDto.msgCode == 100)
+                        {
+                            TodayDateTime todayDateTime = baseDto.data;
+
+                            Calendar todayCalendar = DailyCalendar.getInstance(todayDateTime.currentDateTime, false);
+                            int hour = todayCalendar.get(Calendar.HOUR_OF_DAY);
+                            int minute = todayCalendar.get(Calendar.MINUTE);
+
+                            String startHourString = DailyCalendar.convertDateFormatString(todayDateTime.openDateTime, DailyCalendar.ISO_8601_FORMAT, "H");
+                            String endHourString = DailyCalendar.convertDateFormatString(todayDateTime.closeDateTime, DailyCalendar.ISO_8601_FORMAT, "H");
+
+                            int startHour = Integer.parseInt(startHourString);
+                            int endHour = Integer.parseInt(endHourString);
+
+                            String[] lunchTimes = DailyRemoteConfigPreference.getInstance(getActivity()).getRemoteConfigOperationLunchTime().split("\\,");
+                            String[] startLunchTime = lunchTimes[0].split(":");
+                            String[] endLunchTime = lunchTimes[1].split(":");
+
+                            int startLunchHour = Integer.parseInt(startLunchTime[0]);
+                            int startLunchMinute = Integer.parseInt(startLunchTime[1]);
+                            int endLunchHour = Integer.parseInt(endLunchTime[0]);
+
+                            boolean isOverStartTime = hour > startLunchHour || (hour == startLunchHour && minute >= startLunchMinute);
+                            boolean isOverEndTime = hour >= endLunchHour;
+
+                            if (hour < startHour && hour > endHour)
+                            {
+                                // 운영 안하는 시간 03:00:01 ~ 08:59:59 - 팝업 발생
+                                isInValidOperatingTime = true;
+                            } else if (isOverStartTime == true && isOverEndTime == false)
+                            {
+                                // 점심시간 11:50:01~12:59:59 - 해피톡의 경우 팝업 발생 안함
+                                isInValidOperatingTime = true;
+                            }
+                        } else
+                        {
+                            isInValidOperatingTime = false;
+                        }
+                    } catch (Exception e)
+                    {
+                        isInValidOperatingTime = false;
+                    }
+                } else
+                {
+                    isInValidOperatingTime = false;
+                }
+
+                operatingTimeListener.onInValidOperatingTime(isInValidOperatingTime);
+            }
+
+            @Override
+            public void onFailure(Call<BaseDto<TodayDateTime>> call, Throwable t)
+            {
+                operatingTimeListener.onInValidOperatingTime(false);
+            }
+        };
+
+        DailyMobileAPI.getInstance(getActivity()).requestCommonDateTime(getClass().getName(), dateTimeCallback);
+    }
+
+    public void showDailyCallDialog(final OnCallDialogListener listener)
+    {
+        OnOperatingTimeListener operatingTimeListener = new OnOperatingTimeListener()
+        {
+            @Override
+            public void onInValidOperatingTime(boolean isInValidOperatingTime)
+            {
+                if (isInValidOperatingTime == true)
+                {
+                    showNonOperatingTimeDialog(listener);
+                } else
+                {
+                    View.OnClickListener positiveListener = new View.OnClickListener()
+                    {
+                        @Override
+                        public void onClick(View v)
+                        {
+                            unLockAll();
+
+                            if (listener != null)
+                            {
+                                listener.onPositiveButtonClick(v);
+                            }
+
+                            String remoteConfigPhoneNumber = DailyRemoteConfigPreference.getInstance(getActivity()).getRemoteConfigCompanyPhoneNumber();
+                            String phoneNumber = DailyTextUtils.isTextEmpty(remoteConfigPhoneNumber) == false //
+                                ? remoteConfigPhoneNumber : Constants.PHONE_NUMBER_DAILYHOTEL;
+
+                            String noCallMessage = getActivity().getResources().getString(R.string.toast_msg_no_call_format, phoneNumber);
+
+                            if (Util.isTelephonyEnabled(getActivity()) == true)
+                            {
+                                try
+                                {
+                                    startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + phoneNumber)));
+                                } catch (ActivityNotFoundException e)
+                                {
+                                    DailyToast.showToast(getActivity(), noCallMessage, Toast.LENGTH_LONG);
+                                }
+                            } else
+                            {
+                                DailyToast.showToast(getActivity(), noCallMessage, Toast.LENGTH_LONG);
+                            }
+                        }
+                    };
+
+                    View.OnClickListener nativeListener = new View.OnClickListener()
+                    {
+                        @Override
+                        public void onClick(View v)
+                        {
+                            if (listener != null)
+                            {
+                                listener.onNativeButtonClick(v);
+                            }
+                        }
+                    };
+
+                    DialogInterface.OnDismissListener dismissListener = new DialogInterface.OnDismissListener()
+                    {
+                        @Override
+                        public void onDismiss(DialogInterface dialog)
+                        {
+                            unLockAll();
+
+                            if (listener != null)
+                            {
+                                listener.onDismissDialog();
+                            }
+                        }
+                    };
+
+                    String[] hour = DailyPreference.getInstance(getActivity()).getOperationTime().split("\\,");
+                    String startHour = hour[0];
+                    String endHour = hour[1];
+
+                    String[] lunchTimes = DailyRemoteConfigPreference.getInstance(getActivity()).getRemoteConfigOperationLunchTime().split("\\,");
+                    String startLunchTime = lunchTimes[0];
+                    String endLunchTime = lunchTimes[1];
+
+                    String operatingTimeMessage = getString(R.string.dialog_msg_call) //
+                        + "\n" + getActivity().getResources().getString(R.string.message_consult02, startHour, endHour, startLunchTime, endLunchTime);
+
+                    getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2), operatingTimeMessage, //
+                        getString(R.string.dialog_btn_call), getString(R.string.dialog_btn_text_cancel) //
+                        , positiveListener, nativeListener, null, dismissListener, true);
+
+                    if (listener != null)
+                    {
+                        listener.onShowDialog();
+                    }
+                }
+            }
+        };
+
+        checkInValidOperatingTime(operatingTimeListener);
+    }
+
+    public void showNonOperatingTimeDialog(final OnCallDialogListener listener)
+    {
+        View.OnClickListener positiveListener = v ->
+        {
+            unLockAll();
+
+            if (listener != null)
+            {
+                listener.onPositiveButtonClick(v);
+            }
+        };
+
+        DialogInterface.OnDismissListener dismissListener = dialog ->
+        {
+            unLockAll();
+            if (listener != null)
+            {
+                listener.onDismissDialog();
+            }
+        };
+
+        String[] hour = DailyPreference.getInstance(getActivity()).getOperationTime().split("\\,");
+        String startHour = hour[0];
+        String endHour = hour[1];
+
+        String[] lunchTimes = DailyRemoteConfigPreference.getInstance(getActivity()).getRemoteConfigOperationLunchTime().split("\\,");
+        String startLunchTime = lunchTimes[0];
+        String endLunchTime = lunchTimes[1];
+
+        // 우선 점심시간의 경우 로컬에서 시간 픽스
+        String noneOperatingTimeMessage = getActivity().getResources().getString( //
+            R.string.dialog_message_none_operating_time, startHour, endHour, startLunchTime, endLunchTime);
+
+        getViewInterface().showSimpleDialog(getString(R.string.dialog_information), noneOperatingTimeMessage, //
+            getString(R.string.dialog_btn_text_confirm), positiveListener, dismissListener);
+
+        if (listener != null)
+        {
+            listener.onShowDialog();
+        }
     }
 
     //    @TargetApi(value = 21)

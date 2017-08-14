@@ -2,7 +2,6 @@ package com.daily.dailyhotel.view;
 
 import android.content.Context;
 import android.databinding.DataBindingUtil;
-import android.graphics.Canvas;
 import android.support.constraint.ConstraintLayout;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -21,7 +20,7 @@ public class DailyCampaignTagTitleView extends ConstraintLayout
     private DailyViewCampaignTagTitleDataBinding mViewDataBinding;
     private Context mContext;
 
-//    private PlaceBookingDay mPlaceBookingDay;
+    //    private PlaceBookingDay mPlaceBookingDay;
 
     private DailyCampaignTagTitleView.OnEventListener mEventListener;
 
@@ -150,59 +149,59 @@ public class DailyCampaignTagTitleView extends ConstraintLayout
     }
 
     //    private void setCalendarText(final PlaceBookingDay placeBookingDay)
-//    {
-//        if (mViewDataBinding == null)
-//        {
-//            return;
-//        }
-//
-//        if (placeBookingDay == null)
-//        {
-//            return;
-//        }
-//
-//        String calendarDate = null;
-//        if (placeBookingDay instanceof StayBookingDay)
-//        {
-//            calendarDate = getStayCalendarDate((StayBookingDay) placeBookingDay);
-//        } else if (placeBookingDay instanceof GourmetBookingDay)
-//        {
-//            calendarDate = getGourmetCalendarDate((GourmetBookingDay) placeBookingDay);
-//        }
-//
-//        mViewDataBinding.calendarTextView.setText(calendarDate);
-//    }
-//
-//    private String getStayCalendarDate(StayBookingDay stayBookingDay)
-//    {
-//        if (stayBookingDay == null)
-//        {
-//            return null;
-//        }
-//
-//        try
-//        {
-//            String checkInDate = stayBookingDay.getCheckInDay("yyyy.MM.dd(EEE)");
-//            String checkOutDate = stayBookingDay.getCheckOutDay("yyyy.MM.dd(EEE)");
-//
-//            int nights = stayBookingDay.getNights();
-//
-//            return String.format(Locale.KOREA, "%s - %s, %d박", checkInDate, checkOutDate, nights);
-//        } catch (Exception e)
-//        {
-//            ExLog.e(e.toString());
-//        }
-//
-//        return null;
-//    }
-//
-//    protected String getGourmetCalendarDate(GourmetBookingDay gourmetBookingDay)
-//    {
-//        if (gourmetBookingDay == null)
-//        {
-//            return null;
-//        }
-//
-//        return gourmetBookingDay.getVisitDay("yyyy.MM.dd(EEE)");
-//    }
+    //    {
+    //        if (mViewDataBinding == null)
+    //        {
+    //            return;
+    //        }
+    //
+    //        if (placeBookingDay == null)
+    //        {
+    //            return;
+    //        }
+    //
+    //        String calendarDate = null;
+    //        if (placeBookingDay instanceof StayBookingDay)
+    //        {
+    //            calendarDate = getStayCalendarDate((StayBookingDay) placeBookingDay);
+    //        } else if (placeBookingDay instanceof GourmetBookingDay)
+    //        {
+    //            calendarDate = getGourmetCalendarDate((GourmetBookingDay) placeBookingDay);
+    //        }
+    //
+    //        mViewDataBinding.calendarTextView.setText(calendarDate);
+    //    }
+    //
+    //    private String getStayCalendarDate(StayBookingDay stayBookingDay)
+    //    {
+    //        if (stayBookingDay == null)
+    //        {
+    //            return null;
+    //        }
+    //
+    //        try
+    //        {
+    //            String checkInDate = stayBookingDay.getCheckInDay("yyyy.MM.dd(EEE)");
+    //            String checkOutDate = stayBookingDay.getCheckOutDay("yyyy.MM.dd(EEE)");
+    //
+    //            int nights = stayBookingDay.getNights();
+    //
+    //            return String.format(Locale.KOREA, "%s - %s, %d박", checkInDate, checkOutDate, nights);
+    //        } catch (Exception e)
+    //        {
+    //            ExLog.e(e.toString());
+    //        }
+    //
+    //        return null;
+    //    }
+    //
+    //    protected String getGourmetCalendarDate(GourmetBookingDay gourmetBookingDay)
+    //    {
+    //        if (gourmetBookingDay == null)
+    //        {
+    //            return null;
+    //        }
+    //
+    //        return gourmetBookingDay.getVisitDay("yyyy.MM.dd(EEE)");
+    //    }
 }

@@ -348,16 +348,6 @@
             android:theme="@style/AppBaseTheme"
             android:windowSoftInputMode="stateAlwaysHidden"/>
         <activity
-            android:name=".screen.hotel.payment.HotelPaymentThankyouActivity"
-            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait"/>
-        <activity
-            android:name=".screen.gourmet.payment.GourmetPaymentThankyouActivity"
-            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait"/>
-        <activity
             android:name=".screen.event.EventWebActivity"
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
             android:launchMode="singleTop"
@@ -605,7 +595,7 @@
             android:name=".screen.search.SearchActivity"
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
             android:launchMode="singleTop"
-            android:windowSoftInputMode="adjustPan"
+            android:windowSoftInputMode="stateVisible|adjustPan"
             android:screenOrientation="portrait"/>
         <activity
             android:name=".screen.search.stay.result.StaySearchResultActivity"

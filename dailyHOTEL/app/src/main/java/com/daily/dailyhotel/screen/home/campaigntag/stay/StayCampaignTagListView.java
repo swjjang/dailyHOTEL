@@ -86,7 +86,7 @@ public class StayCampaignTagListView //
 
         if (mRecyclerAdapter == null)
         {
-            mRecyclerAdapter = new StayCampaignListAdapter(getContext(), new ArrayList<>(), mOnClickListener);
+            mRecyclerAdapter = new StayCampaignListAdapter(getContext(), new ArrayList<>(), mOnEventListener);
         }
 
         if (DailyPreference.getInstance(getContext()).getTrueVRSupport() > 0)
@@ -132,7 +132,7 @@ public class StayCampaignTagListView //
             return;
         }
 
-        if (getViewDataBinding() != null)
+        if (getViewDataBinding() != null && placeViewItemList != null && placeViewItemList.size() > 0)
         {
             int resultCount = 0;
             for (PlaceViewItem placeViewItem : placeViewItemList)
@@ -255,22 +255,26 @@ public class StayCampaignTagListView //
     {
         void onCalendarClick();
 
+        void onResearchClick();
+
+        void onCallClick();
+
         void onPlaceClick(View view, PlaceViewItem placeViewItem, int count);
 
         void onPlaceLongClick(View view, PlaceViewItem placeViewItem, int count);
     }
 
-    private View.OnClickListener mOnClickListener = new View.OnClickListener()
+    private StayCampaignListAdapter.OnEventListener mOnEventListener = new StayCampaignListAdapter.OnEventListener()
     {
         @Override
-        public void onClick(View v)
+        public void onItemClick(View view)
         {
             if (getViewDataBinding() == null)
             {
                 return;
             }
 
-            int position = getViewDataBinding().recyclerView.getChildAdapterPosition(v);
+            int position = getViewDataBinding().recyclerView.getChildAdapterPosition(view);
             if (position < 0)
             {
                 return;
@@ -285,8 +289,26 @@ public class StayCampaignTagListView //
                     return;
                 }
 
-                getEventListener().onPlaceClick(v, placeViewItem, mRecyclerAdapter.getItemCount());
+                getEventListener().onPlaceClick(view, placeViewItem, mRecyclerAdapter.getItemCount());
             }
+        }
+
+        @Override
+        public void onEmptyChangeDateClick()
+        {
+            getEventListener().onCalendarClick();
+        }
+
+        @Override
+        public void onEmptyResearchClick()
+        {
+            getEventListener().onResearchClick();
+        }
+
+        @Override
+        public void onEmptyCallClick()
+        {
+            getEventListener().onCallClick();
         }
     };
 

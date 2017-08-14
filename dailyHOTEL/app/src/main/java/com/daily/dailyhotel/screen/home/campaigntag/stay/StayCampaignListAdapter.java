@@ -15,6 +15,7 @@ import com.daily.base.util.ScreenUtils;
 import com.daily.base.util.VersionUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ListRowStayDataBinding;
+import com.twoheart.dailyhotel.databinding.ViewEmptyCampaignTagListBinding;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.model.time.PlaceBookingDay;
@@ -33,13 +34,26 @@ public class StayCampaignListAdapter extends PlaceListAdapter
 {
     private int mNights;
 
-    View.OnClickListener mOnClickListener;
+//    View.OnClickListener mOnClickListener;
 
-    public StayCampaignListAdapter(Context context, ArrayList<PlaceViewItem> arrayList, View.OnClickListener listener)
+    private OnEventListener mOnEventListener;
+
+    public interface OnEventListener
+    {
+        void onItemClick(View view);
+
+        void onEmptyChangeDateClick();
+
+        void onEmptyResearchClick();
+
+        void onEmptyCallClick();
+    }
+
+    public StayCampaignListAdapter(Context context, ArrayList<PlaceViewItem> arrayList, OnEventListener listener)
     {
         super(context, arrayList);
 
-        mOnClickListener = listener;
+        mOnEventListener = listener;
 
         setSortType(Constants.SortType.DEFAULT);
     }
@@ -93,17 +107,9 @@ public class StayCampaignListAdapter extends PlaceListAdapter
 
             case PlaceViewItem.TYPE_FOOTER_VIEW:
             {
-                View view = mInflater.inflate(R.layout.view_empty_stay_collection, parent, false);
+                ViewEmptyCampaignTagListBinding dataBinding = DataBindingUtil.inflate(mInflater, R.layout.view_empty_campaign_tag_list, parent, false);
 
-                int height = ScreenUtils.getScreenHeight(mContext) - ScreenUtils.dpToPx(mContext, 97) //
-                    - ScreenUtils.getRatioHeightType16x9(ScreenUtils.getScreenWidth(mContext)) //
-                    + ScreenUtils.dpToPx(mContext, 81) - ScreenUtils.dpToPx(mContext, 97); //
-
-                ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT//
-                    , height);
-                view.setLayoutParams(layoutParams);
-
-                return new FooterViewHolder(view);
+                return new EmptyViewHolder(dataBinding);
             }
 
             case PlaceViewItem.TYPE_FOOTER_GUIDE_VIEW:
@@ -134,6 +140,10 @@ public class StayCampaignListAdapter extends PlaceListAdapter
 
             case PlaceViewItem.TYPE_SECTION:
                 onBindViewHolder((SectionViewHolder) holder, item);
+                break;
+
+            case PlaceViewItem.TYPE_FOOTER_VIEW:
+                onBindViewHolder((EmptyViewHolder) holder, item);
                 break;
         }
     }
@@ -260,6 +270,52 @@ public class StayCampaignListAdapter extends PlaceListAdapter
         }
     }
 
+    private void onBindViewHolder(StayCampaignListAdapter.EmptyViewHolder holder, PlaceViewItem placeViewItem)
+    {
+        holder.dataBinding.changeDateView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                if (mOnEventListener == null)
+                {
+                    return;
+                }
+
+                mOnEventListener.onEmptyChangeDateClick();
+            }
+        });
+
+        holder.dataBinding.researchView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                if (mOnEventListener == null)
+                {
+                    return;
+                }
+
+                mOnEventListener.onEmptyResearchClick();
+            }
+        });
+
+        holder.dataBinding.callTextView.setPaintFlags(holder.dataBinding.callTextView.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+        holder.dataBinding.callTextView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                if (mOnEventListener == null)
+                {
+                    return;
+                }
+
+                mOnEventListener.onEmptyCallClick();
+            }
+        });
+    }
+
     private class HeaderViewHolder extends RecyclerView.ViewHolder
     {
         public HeaderViewHolder(View itemView)
@@ -276,6 +332,17 @@ public class StayCampaignListAdapter extends PlaceListAdapter
         }
     }
 
+    private class EmptyViewHolder extends RecyclerView.ViewHolder
+    {
+        ViewEmptyCampaignTagListBinding dataBinding;
+
+        public EmptyViewHolder(ViewEmptyCampaignTagListBinding dataBinding)
+        {
+            super(dataBinding.getRoot());
+
+            this.dataBinding = dataBinding;
+        }
+    }
 
     private class StayViewHolder extends RecyclerView.ViewHolder
     {
@@ -287,7 +354,19 @@ public class StayCampaignListAdapter extends PlaceListAdapter
 
             this.dataBinding = dataBinding;
 
-            itemView.setOnClickListener(mOnClickListener);
+            itemView.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    if (mOnEventListener == null)
+                    {
+                        return;
+                    }
+
+                    mOnEventListener.onItemClick(v);
+                }
+            });
 
             if (Util.supportPreview(mContext) == true)
             {
