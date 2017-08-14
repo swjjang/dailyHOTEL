@@ -680,9 +680,9 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
                 updateSuggestLayout(textView01, textView02, keyword, text);
             }
 
-            View lineView = new View(mContext);
-            lineView.setBackgroundResource(R.color.default_line_cf0f0f0);
-            viewGroup.addView(lineView, ViewGroup.LayoutParams.MATCH_PARENT, ScreenUtils.dpToPx(mContext, 1));
+//            View lineView = new View(mContext);
+//            lineView.setBackgroundResource(R.color.default_line_cf0f0f0);
+//            viewGroup.addView(lineView, ViewGroup.LayoutParams.MATCH_PARENT, ScreenUtils.dpToPx(mContext, 1));
         }
     }
 
