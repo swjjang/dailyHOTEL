@@ -21,6 +21,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.daily.base.util.DailyTextUtils;
+import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
 import com.daily.base.widget.DailyScrollView;
 import com.daily.dailyhotel.entity.CampaignTag;
@@ -303,6 +304,8 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
             return;
         }
 
+        ExLog.d("call");
+
         mSearchEditText.setFocusable(false);
         mSearchEditText.setFocusableInTouchMode(false);
         mSearchEditText.clearFocus();
@@ -329,6 +332,8 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
         {
             return;
         }
+
+        ExLog.d("call");
 
         mSearchEditText.setFocusable(true);
         mSearchEditText.setFocusableInTouchMode(true);
