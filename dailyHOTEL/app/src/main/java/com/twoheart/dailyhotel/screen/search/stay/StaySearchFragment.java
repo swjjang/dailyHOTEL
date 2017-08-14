@@ -318,6 +318,15 @@ public class StaySearchFragment extends PlaceSearchFragment
     }
 
     @Override
+    public void startCampaignTagList(int index, String title)
+    {
+        Intent intent = StayCampaignTagListActivity.newInstance(getActivity() //
+            , index, title, mStayBookingDay);
+
+        startActivityForResult(intent, REQUEST_CODE_STAY_CAMPAIGN_TAG_LIST);
+    }
+
+    @Override
     public ServiceType getServiceType()
     {
         return ServiceType.HOTEL;
@@ -521,10 +530,7 @@ public class StaySearchFragment extends PlaceSearchFragment
         @Override
         public void onSearchCampaignTag(CampaignTag campaignTag)
         {
-            Intent intent = StayCampaignTagListActivity.newInstance(getActivity() //
-                , campaignTag.index, campaignTag.campaignTag, mStayBookingDay);
-
-            startActivityForResult(intent, REQUEST_CODE_STAY_CAMPAIGN_TAG_LIST);
+            startCampaignTagList(campaignTag.index, campaignTag.campaignTag);
         }
 
         @Override

@@ -778,7 +778,8 @@ public class GourmetMainActivity extends PlaceMainActivity
                     unLockUI();
 
                     return moveDeepLinkDetail(baseActivity, todayDateTime, externalDeepLink);
-                } else if (externalDeepLink.isGourmetSearchView() == true)
+                } else if (externalDeepLink.isGourmetSearchView() == true //
+                    || externalDeepLink.isCampaignTagListView() == true)
                 {
                     unLockUI();
 
@@ -1352,7 +1353,6 @@ public class GourmetMainActivity extends PlaceMainActivity
 
                 String date = externalDeepLink.getDate();
                 int datePlus = externalDeepLink.getDatePlus();
-                String word = externalDeepLink.getSearchWord();
 
                 GourmetBookingDay gourmetBookingDay = new GourmetBookingDay();
 
@@ -1370,8 +1370,29 @@ public class GourmetMainActivity extends PlaceMainActivity
 
                 mGourmetCuration.setGourmetBookingDay(gourmetBookingDay);
 
-                Intent intent = SearchActivity.newInstance(baseActivity, PlaceType.FNB, gourmetBookingDay, word);
-                baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SEARCH);
+                if (externalDeepLink.isCampaignTagListView())
+                {
+                    int index;
+                    try
+                    {
+                        index = Integer.parseInt(externalDeepLink.getIndex());
+                    } catch (Exception e)
+                    {
+                        index = -1;
+                    }
+
+                    if (index != -1)
+                    {
+                        Intent intent = SearchActivity.newInstance(baseActivity, PlaceType.FNB, gourmetBookingDay, index);
+                        baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SEARCH);
+                    }
+                } else
+                {
+                    String word = externalDeepLink.getSearchWord();
+
+                    Intent intent = SearchActivity.newInstance(baseActivity, PlaceType.FNB, gourmetBookingDay, word);
+                    baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SEARCH);
+                }
 
                 mIsDeepLink = true;
             } else

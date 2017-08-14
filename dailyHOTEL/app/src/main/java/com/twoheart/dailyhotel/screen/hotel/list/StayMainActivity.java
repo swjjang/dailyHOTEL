@@ -901,7 +901,8 @@ public class StayMainActivity extends PlaceMainActivity
                     unLockUI();
 
                     return moveDeepLinkDetail(baseActivity, todayDateTime, dailyDeepLink);
-                } else if (externalDeepLink.isHotelSearchView() == true)
+                } else if (externalDeepLink.isHotelSearchView() == true //
+                    || externalDeepLink.isCampaignTagListView() == true)
                 {
                     unLockUI();
 
@@ -1497,7 +1498,6 @@ public class StayMainActivity extends PlaceMainActivity
 
                 String date = externalDeepLink.getDate();
                 int datePlus = externalDeepLink.getDatePlus();
-                String word = externalDeepLink.getSearchWord();
 
                 int nights = 1;
 
@@ -1533,8 +1533,28 @@ public class StayMainActivity extends PlaceMainActivity
 
                 mStayCuration.setStayBookingDay(stayBookingDay);
 
-                Intent intent = SearchActivity.newInstance(baseActivity, PlaceType.HOTEL, stayBookingDay, word);
-                baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SEARCH);
+                if (externalDeepLink.isCampaignTagListView() == true)
+                {
+                    int index;
+                    try
+                    {
+                        index = Integer.parseInt(externalDeepLink.getIndex());
+                    } catch (Exception e)
+                    {
+                        index = -1;
+                    }
+
+                    if (index != -1)
+                    {
+                        Intent intent = SearchActivity.newInstance(baseActivity, PlaceType.HOTEL, stayBookingDay, index);
+                        baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SEARCH);
+                    }
+                } else
+                {
+                    String word = externalDeepLink.getSearchWord();
+                    Intent intent = SearchActivity.newInstance(baseActivity, PlaceType.HOTEL, stayBookingDay, word);
+                    baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SEARCH);
+                }
 
                 mIsDeepLink = true;
             } else

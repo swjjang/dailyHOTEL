@@ -80,6 +80,8 @@ public abstract class PlaceSearchFragment extends BaseFragment
 
     public abstract void startCalendar(boolean isAnimation, Constants.SearchType searchType, String inputText, Keyword keyword);
 
+    public abstract void startCampaignTagList(int index, String title);
+
     public abstract Constants.ServiceType getServiceType();
 
     public abstract void setTodayDateTime(TodayDateTime todayDateTime);

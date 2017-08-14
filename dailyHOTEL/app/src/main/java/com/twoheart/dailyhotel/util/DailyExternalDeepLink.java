@@ -73,6 +73,7 @@ public class DailyExternalDeepLink extends DailyDeepLink
     private static final String STAMP_V14 = "stamp"; // 스탬프.
     private static final String STAY_V16_SHORTCUT_LIST = "scl"; // 스테이 숏컷 리스트
     private static final String STAY_OUTBOUND_V19_SEARCH_RESULT_LIST = "sosrl"; // 해외 호텔 검색 결과 목록
+    private static final String CAMPAIGN_TAG_LIST = "ctl"; // 캠패인 태그
 
     // Param
 
@@ -244,6 +245,11 @@ public class DailyExternalDeepLink extends DailyDeepLink
     ///////////////////////////////////////////////////////////////////////////////////
     // Version 19
     ///////////////////////////////////////////////////////////////////////////////////
+
+    public boolean isCampaignTagListView()
+    {
+        return equalsView(19, CAMPAIGN_TAG_LIST);
+    }
 
     public boolean isStayOutboundSearchResultView()
     {

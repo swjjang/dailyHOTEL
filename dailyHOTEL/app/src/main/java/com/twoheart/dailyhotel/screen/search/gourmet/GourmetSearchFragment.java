@@ -300,6 +300,15 @@ public class GourmetSearchFragment extends PlaceSearchFragment
     }
 
     @Override
+    public void startCampaignTagList(int index, String title)
+    {
+        Intent intent = GourmetCampaignTagListActivity.newInstance(getActivity() //
+            , index, title, mGourmetBookingDay);
+
+        startActivityForResult(intent, REQUEST_CODE_GOURMET_CAMPAIGN_TAG_LIST);
+    }
+
+    @Override
     public ServiceType getServiceType()
     {
         return ServiceType.GOURMET;
@@ -488,10 +497,7 @@ public class GourmetSearchFragment extends PlaceSearchFragment
         @Override
         public void onSearchCampaignTag(CampaignTag campaignTag)
         {
-            Intent intent = GourmetCampaignTagListActivity.newInstance(getActivity() //
-                , campaignTag.index, campaignTag.campaignTag, mGourmetBookingDay);
-
-            startActivityForResult(intent, REQUEST_CODE_GOURMET_CAMPAIGN_TAG_LIST);
+            startCampaignTagList(campaignTag.index, campaignTag.campaignTag);
         }
 
         @Override
