@@ -7,9 +7,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.daily.base.util.ExLog;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ListRowSearchCardItemBinding;
 import com.twoheart.dailyhotel.model.SearchCardItem;
+import com.twoheart.dailyhotel.place.layout.PlaceSearchLayout;
 
 import java.util.ArrayList;
 
@@ -47,8 +49,27 @@ public class SearchCardItemListAdapter extends RecyclerView.Adapter<SearchCardIt
 
         holder.itemView.setTag(item);
 
-        holder.dataBinding.iconImageView.setImageResource(item.iconResId);
+        ExLog.d(item.itemText + " : " + item.iconType + " : " + item.object.toString());
+
+        holder.dataBinding.iconImageView.setImageResource(getSearchIcon(item.iconType));
         holder.dataBinding.itemTextView.setText(item.itemText);
+    }
+
+    private int getSearchIcon(int type)
+    {
+        switch (type)
+        {
+            case PlaceSearchLayout.TAG_ICON:
+                return R.drawable.vector_search_ic_04_tag;
+
+            case PlaceSearchLayout.HOTEL_ICON:
+                return R.drawable.vector_ob_search_ic_02_hotel;
+
+            case PlaceSearchLayout.GOURMET_ICON:
+                return R.drawable.search_ic_02_gourmet;
+        }
+
+        return R.drawable.search_ic_03_recent;
     }
 
     public void setData(ArrayList<SearchCardItem> list)

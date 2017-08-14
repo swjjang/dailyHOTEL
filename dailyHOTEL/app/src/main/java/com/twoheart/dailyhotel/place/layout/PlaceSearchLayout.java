@@ -46,9 +46,10 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
     private static final int DELAY_AUTO_COMPLETE_MILLIS = 100;
     private static final int DELAY_HIDE_AUTO_COMPLETE_MILLIS = 500;
 
-    protected static final int DEFAULT_ICON = 0;
+    public static final int DEFAULT_ICON = 0;
     public static final int HOTEL_ICON = 1;
     public static final int GOURMET_ICON = 2;
+    public static final int TAG_ICON = 3;
 
     private static final int HANDLER_MESSAGE_REQUEST_AUTOCOMPLETE = 0;
     private static final int HANDLER_MESSAGE_HIDE_AUTOCOMPLETE = 1;
@@ -96,12 +97,9 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
 
     protected abstract String getSearchHintText();
 
-    protected abstract int getRecentSearchesIcon(int type);
-
     protected abstract void updateSuggestLayout(TextView titleTextView, TextView priceTextView, Keyword keyword, String text);
 
-    public abstract void setRecyclerViewData(List<? extends Place> recentlyList,
-                                             ArrayList<CampaignTag> campaignTagList, List<Keyword> recentSearchList);
+    public abstract void setRecyclerViewData(List<? extends Place> recentlyList, ArrayList<CampaignTag> campaignTagList, List<Keyword> recentSearchList);
 
     public PlaceSearchLayout(Context context, OnBaseEventListener listener)
     {
@@ -377,6 +375,24 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
     public void updateTermsOfLocationLayout()
     {
         updateTermsOfLocationLayout(mTermsOfLocationView);
+    }
+
+    protected int getSearchIcon(int type)
+    {
+        switch (type)
+        {
+            case TAG_ICON:
+                return R.drawable.vector_search_ic_04_tag;
+
+            case HOTEL_ICON:
+                return R.drawable.vector_ob_search_ic_02_hotel;
+
+            case GOURMET_ICON:
+                return R.drawable.search_ic_02_gourmet;
+
+            default:
+                return R.drawable.search_ic_03_recent;
+        }
     }
 
     //    private void initRecentSearchesLayout(View view)

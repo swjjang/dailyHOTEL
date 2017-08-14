@@ -82,19 +82,6 @@ public class StaySearchLayout extends PlaceSearchLayout
     }
 
     @Override
-    protected int getRecentSearchesIcon(int type)
-    {
-        switch (type)
-        {
-            case HOTEL_ICON:
-                return R.drawable.search_ic_02_hotel;
-
-            default:
-                return R.drawable.search_ic_03_recent;
-        }
-    }
-
-    @Override
     protected void updateSuggestLayout(TextView titleTextView, TextView priceTextView, Keyword keyword, String text)
     {
         if (keyword == null || titleTextView == null || priceTextView == null)
@@ -159,7 +146,7 @@ public class StaySearchLayout extends PlaceSearchLayout
             Stay stay = (Stay) place;
 
             SearchCardItem item = new SearchCardItem();
-            item.iconResId = R.drawable.vector_ob_search_ic_02_hotel;
+            item.iconType = HOTEL_ICON;
             item.itemText = stay.name;
             item.object = stay;
             recentlyPlaceDataList.add(item);
@@ -168,7 +155,7 @@ public class StaySearchLayout extends PlaceSearchLayout
         for (CampaignTag campaignTag : campaignTagList)
         {
             SearchCardItem item = new SearchCardItem();
-            item.iconResId = R.drawable.vector_search_ic_04_tag;
+            item.iconType = TAG_ICON;
             item.itemText = campaignTag.campaignTag;
             item.object = campaignTag;
             campaignTagDataList.add(item);
@@ -177,7 +164,7 @@ public class StaySearchLayout extends PlaceSearchLayout
         for (Keyword keyword : recentSearchList)
         {
             SearchCardItem item = new SearchCardItem();
-            item.iconResId = keyword.icon;
+            item.iconType = keyword.icon;
             item.itemText = keyword.name;
             item.object = keyword;
             recentSearchDataList.add(item);

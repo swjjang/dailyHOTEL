@@ -49,19 +49,6 @@ public class GourmetSearchLayout extends PlaceSearchLayout
     }
 
     @Override
-    protected int getRecentSearchesIcon(int type)
-    {
-        switch (type)
-        {
-            case GOURMET_ICON:
-                return R.drawable.search_ic_02_gourmet;
-
-            default:
-                return R.drawable.search_ic_03_recent;
-        }
-    }
-
-    @Override
     protected void updateSuggestLayout(TextView titleTextView, TextView priceTextView, Keyword keyword, String text)
     {
         if (keyword == null || titleTextView == null || priceTextView == null)
@@ -126,7 +113,7 @@ public class GourmetSearchLayout extends PlaceSearchLayout
             Gourmet gourmet = (Gourmet) place;
 
             SearchCardItem item = new SearchCardItem();
-            item.iconResId = R.drawable.vector_ob_search_ic_02_hotel;
+            item.iconType = GOURMET_ICON;
             item.itemText = gourmet.name;
             item.object = gourmet;
             recentlyPlaceDataList.add(item);
@@ -135,7 +122,7 @@ public class GourmetSearchLayout extends PlaceSearchLayout
         for (CampaignTag campaignTag : campaignTagList)
         {
             SearchCardItem item = new SearchCardItem();
-            item.iconResId = R.drawable.vector_search_ic_04_tag;
+            item.iconType = TAG_ICON;
             item.itemText = campaignTag.campaignTag;
             item.object = campaignTag;
             campaignTagDataList.add(item);
@@ -144,7 +131,7 @@ public class GourmetSearchLayout extends PlaceSearchLayout
         for (Keyword keyword : recentSearchList)
         {
             SearchCardItem item = new SearchCardItem();
-            item.iconResId = keyword.icon;
+            item.iconType = keyword.icon;
             item.itemText = keyword.name;
             item.object = keyword;
             recentSearchDataList.add(item);
