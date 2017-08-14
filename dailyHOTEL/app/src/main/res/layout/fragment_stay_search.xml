@@ -279,7 +279,7 @@
             android:layout_height="wrap_content"
             android:background="@color/white"
             android:layout_below="@+id/searchLayout"
-            android:visibility="visible">
+            android:visibility="gone">
 
             <com.daily.base.widget.DailyScrollView
                 android:id="@+id/autoCompleteScrollView"
