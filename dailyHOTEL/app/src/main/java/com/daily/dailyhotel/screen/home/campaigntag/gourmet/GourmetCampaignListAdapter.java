@@ -21,14 +21,9 @@ import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.imagepipeline.image.ImageInfo;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ListRowGourmetDataBinding;
-import com.twoheart.dailyhotel.databinding.ListRowStayDataBinding;
 import com.twoheart.dailyhotel.model.Gourmet;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
-import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.model.time.PlaceBookingDay;
-import com.twoheart.dailyhotel.model.time.StayBookingDay;
-import com.twoheart.dailyhotel.network.model.RecommendationGourmet;
-import com.twoheart.dailyhotel.network.model.RecommendationStay;
 import com.twoheart.dailyhotel.network.model.Sticker;
 import com.twoheart.dailyhotel.place.adapter.PlaceListAdapter;
 import com.twoheart.dailyhotel.util.Constants;
@@ -42,7 +37,6 @@ import java.util.ArrayList;
 
 public class GourmetCampaignListAdapter extends PlaceListAdapter
 {
-    private boolean mIsUsedMultiTransition;
 
     View.OnClickListener mOnClickListener;
 
@@ -55,18 +49,13 @@ public class GourmetCampaignListAdapter extends PlaceListAdapter
         setSortType(Constants.SortType.DEFAULT);
     }
 
-    public void setUsedMultiTransition(boolean isUsedMultiTransition)
-    {
-        mIsUsedMultiTransition = isUsedMultiTransition;
-    }
-
     @Override
     public void setPlaceBookingDay(PlaceBookingDay placeBookingDay)
     {
-//        if (placeBookingDay == null)
-//        {
-//            return;
-//        }
+        //        if (placeBookingDay == null)
+        //        {
+        //            return;
+        //        }
     }
 
     @Override
@@ -231,11 +220,6 @@ public class GourmetCampaignListAdapter extends PlaceListAdapter
             holder.dataBinding.gradeTextView.setText(displayCategory);
         }
 
-        if (mIsUsedMultiTransition == true && VersionUtils.isOverAPI21() == true)
-        {
-            holder.dataBinding.imageView.setTransitionName(null);
-        }
-
         // 스티커
         if (DailyTextUtils.isTextEmpty(gourmet.stickerUrl) == false)
         {
@@ -272,12 +256,14 @@ public class GourmetCampaignListAdapter extends PlaceListAdapter
         Util.requestImageResize(mContext, holder.dataBinding.imageView, gourmet.imageUrl);
 
         // SOLD OUT 표시
-        if (gourmet.isSoldOut)
+        holder.dataBinding.soldoutView.setVisibility(View.GONE);
+
+        if (gourmet.availableTicketNumbers == 0 || gourmet.availableTicketNumbers < gourmet.minimumOrderQuantity || gourmet.expired == true)
         {
-            holder.dataBinding.soldoutView.setVisibility(View.VISIBLE);
-        } else
-        {
-            holder.dataBinding.soldoutView.setVisibility(View.GONE);
+            holder.dataBinding.personsTextView.setVisibility(View.GONE);
+            holder.dataBinding.priceTextView.setVisibility(View.INVISIBLE);
+            holder.dataBinding.priceTextView.setText(null);
+            holder.dataBinding.discountPriceTextView.setText(mContext.getString(R.string.act_hotel_soldout));
         }
 
         if (DailyTextUtils.isTextEmpty(gourmet.dBenefitText) == false)
