@@ -17,12 +17,10 @@ import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
-import com.daily.base.util.ScreenUtils;
 import com.daily.base.widget.DailyScrollView;
 import com.daily.dailyhotel.entity.CampaignTag;
 import com.daily.dailyhotel.view.DailySearchCircleIndicator;
@@ -546,44 +544,44 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
         mAutoCompleteLayout = (ViewGroup) mAutoCompleteScrollView.findViewById(R.id.autoCompleteLayout);
 
         mAutoCompleteScrollLayout.setVisibility(View.GONE);
-        mAutoCompleteScrollView.setOnScrollChangedListener(new DailyScrollView.OnScrollChangedListener()
-        {
-            private int mDistance;
-            boolean mIsHide;
-
-            @Override
-            public void onScrollChanged(ScrollView scrollView, int l, int t, int oldl, int oldt)
-            {
-                if (mIsHide == true)
-                {
-
-                } else
-                {
-                    if (scrollView.getHeight() < ScreenUtils.getScreenHeight(mContext) / 2)
-                    {
-                        mDistance += (t - oldt);
-
-                        if (mDistance > ScreenUtils.dpToPx(mContext, 41) == true)
-                        {
-                            mDistance = 0;
-                            mIsHide = true;
-
-                            InputMethodManager inputMethodManager = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
-                            inputMethodManager.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
-
-                            mHandler.postDelayed(new Runnable()
-                            {
-                                @Override
-                                public void run()
-                                {
-                                    mIsHide = false;
-                                }
-                            }, 1000);
-                        }
-                    }
-                }
-            }
-        });
+        //        mAutoCompleteScrollView.setOnScrollChangedListener(new DailyScrollView.OnScrollChangedListener()
+        //        {
+        //            private int mDistance;
+        //            boolean mIsHide;
+        //
+        //            @Override
+        //            public void onScrollChanged(ScrollView scrollView, int l, int t, int oldl, int oldt)
+        //            {
+        //                if (mIsHide == true)
+        //                {
+        //
+        //                } else
+        //                {
+        //                    if (scrollView.getHeight() < ScreenUtils.getScreenHeight(mContext) / 2)
+        //                    {
+        //                        mDistance += (t - oldt);
+        //
+        //                        if (mDistance > ScreenUtils.dpToPx(mContext, 41) == true)
+        //                        {
+        //                            mDistance = 0;
+        //                            mIsHide = true;
+        //
+        //                            InputMethodManager inputMethodManager = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
+        //                            inputMethodManager.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
+        //
+        //                            mHandler.postDelayed(new Runnable()
+        //                            {
+        //                                @Override
+        //                                public void run()
+        //                                {
+        //                                    mIsHide = false;
+        //                                }
+        //                            }, 1000);
+        //                        }
+        //                    }
+        //                }
+        //            }
+        //        });
 
         EdgeEffectColor.setEdgeGlowColor(mAutoCompleteScrollView, mContext.getResources().getColor(R.color.default_over_scroll_edge));
     }
@@ -680,9 +678,9 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
                 updateSuggestLayout(textView01, textView02, keyword, text);
             }
 
-//            View lineView = new View(mContext);
-//            lineView.setBackgroundResource(R.color.default_line_cf0f0f0);
-//            viewGroup.addView(lineView, ViewGroup.LayoutParams.MATCH_PARENT, ScreenUtils.dpToPx(mContext, 1));
+            //            View lineView = new View(mContext);
+            //            lineView.setBackgroundResource(R.color.default_line_cf0f0f0);
+            //            viewGroup.addView(lineView, ViewGroup.LayoutParams.MATCH_PARENT, ScreenUtils.dpToPx(mContext, 1));
         }
     }
 

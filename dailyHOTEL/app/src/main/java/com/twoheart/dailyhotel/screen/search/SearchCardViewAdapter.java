@@ -122,14 +122,31 @@ public class SearchCardViewAdapter extends RecyclerView.Adapter<SearchCardViewAd
         switch (position)
         {
             case 0:
-                onCampaignTagBindViewHolder(holder, mCampaignTagList);
+                if (getItemCount() == 2)
+                {
+                    onRecentKeywordBindViewHolder(holder, mRecentKeywordList);
+                } else
+                {
+                    onCampaignTagBindViewHolder(holder, mCampaignTagList);
+                }
                 break;
 
             case 1:
-                onRecentKeywordBindViewHolder(holder, mRecentKeywordList);
+                if (getItemCount() == 2)
+                {
+                    onRecentlyPlaceBindViewHolder(holder, mRecentlyPlaceList);
+                } else
+                {
+                    onRecentKeywordBindViewHolder(holder, mRecentKeywordList);
+                }
                 break;
 
             case 2:
+                if (getItemCount() == 2)
+                {
+                    break;
+                }
+
                 onRecentlyPlaceBindViewHolder(holder, mRecentlyPlaceList);
                 break;
         }
@@ -303,7 +320,12 @@ public class SearchCardViewAdapter extends RecyclerView.Adapter<SearchCardViewAd
     @Override
     public int getItemCount()
     {
-        // 항상 3개입니다 리스트(뷰) 가 항상 3개(최근 본, 최근 검색, 캠페인 태그)
+        // 항상 3개가 아니고 최대 3개 입니다 리스트(뷰) 가 최대 3개(최근 본, 최근 검색, 캠페인 태그)
+        if (mCampaignTagList == null || mCampaignTagList.size() == 0)
+        {
+            return 2;
+        }
+
         return 3;
     }
 

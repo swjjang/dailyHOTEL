@@ -141,33 +141,42 @@ public class StaySearchLayout extends PlaceSearchLayout
         ArrayList<SearchCardItem> campaignTagDataList = new ArrayList<>();
         ArrayList<SearchCardItem> recentSearchDataList = new ArrayList<>();
 
-        for (Place place : recentlyList)
+        if (recentlyList != null)
         {
-            Stay stay = (Stay) place;
+            for (Place place : recentlyList)
+            {
+                Stay stay = (Stay) place;
 
-            SearchCardItem item = new SearchCardItem();
-            item.iconType = HOTEL_ICON;
-            item.itemText = stay.name;
-            item.object = stay;
-            recentlyPlaceDataList.add(item);
+                SearchCardItem item = new SearchCardItem();
+                item.iconType = HOTEL_ICON;
+                item.itemText = stay.name;
+                item.object = stay;
+                recentlyPlaceDataList.add(item);
+            }
         }
 
-        for (CampaignTag campaignTag : campaignTagList)
+        if (campaignTagList != null)
         {
-            SearchCardItem item = new SearchCardItem();
-            item.iconType = TAG_ICON;
-            item.itemText = campaignTag.campaignTag;
-            item.object = campaignTag;
-            campaignTagDataList.add(item);
+            for (CampaignTag campaignTag : campaignTagList)
+            {
+                SearchCardItem item = new SearchCardItem();
+                item.iconType = TAG_ICON;
+                item.itemText = campaignTag.campaignTag;
+                item.object = campaignTag;
+                campaignTagDataList.add(item);
+            }
         }
 
-        for (Keyword keyword : recentSearchList)
+        if (recentSearchList != null)
         {
-            SearchCardItem item = new SearchCardItem();
-            item.iconType = keyword.icon;
-            item.itemText = keyword.name;
-            item.object = keyword;
-            recentSearchDataList.add(item);
+            for (Keyword keyword : recentSearchList)
+            {
+                SearchCardItem item = new SearchCardItem();
+                item.iconType = keyword.icon;
+                item.itemText = keyword.name;
+                item.object = keyword;
+                recentSearchDataList.add(item);
+            }
         }
 
         mRecyclerAdapter = new SearchCardViewAdapter(mContext //
