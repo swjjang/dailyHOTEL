@@ -143,8 +143,6 @@ public class RecentPlacesTabActivity extends BaseActivity
     @Override
     protected void onDestroy()
     {
-        clearCompositeDisposable();
-
         super.onDestroy();
 
         switch (mSourceType)

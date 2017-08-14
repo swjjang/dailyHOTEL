@@ -133,14 +133,6 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
         Util.restartApp(this);
     }
 
-    @Override
-    protected void onDestroy()
-    {
-        clearCompositeDisposable();
-
-        super.onDestroy();
-    }
-
     protected void initLayout(int layoutResID, final int dayCountOfMax)
     {
         setContentView(layoutResID);

@@ -273,14 +273,6 @@ public abstract class PlaceDetailActivity extends BaseActivity
     }
 
     @Override
-    protected void onDestroy()
-    {
-        clearCompositeDisposable();
-
-        super.onDestroy();
-    }
-
-    @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState)
     {
         super.onRestoreInstanceState(savedInstanceState);

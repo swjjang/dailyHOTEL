@@ -1079,6 +1079,7 @@ public class AnalyticsManager
         public static final String LIST_CLICK = "list_click";
 
         public static final String THIRD_PARTY_PROVIDER_CHECK = "third_party_provider_check";
+        public static final String VIEW_HIDDEN_MENU = "view_hidden_menu";
 
     }
 

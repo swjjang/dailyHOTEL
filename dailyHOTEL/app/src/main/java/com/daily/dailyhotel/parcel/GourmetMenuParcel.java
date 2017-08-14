@@ -49,6 +49,7 @@ public class GourmetMenuParcel implements Parcelable
         dest.writeString(mGourmetMenu.closeTime);
         dest.writeString(mGourmetMenu.lastOrderTime);
         dest.writeString(mGourmetMenu.menuSummary);
+        dest.writeInt(mGourmetMenu.getPrimaryImageIndex());
 
         List<GourmetMenuImage> gourmetMenuImageList = mGourmetMenu.getImageList();
         List<GourmetMenuImageParcel> gourmetMenuImageParcelList = new ArrayList<>();
@@ -82,6 +83,7 @@ public class GourmetMenuParcel implements Parcelable
         mGourmetMenu.closeTime = in.readString();
         mGourmetMenu.lastOrderTime = in.readString();
         mGourmetMenu.menuSummary = in.readString();
+        mGourmetMenu.setPrimaryImageIndex(in.readInt());
 
         List<GourmetMenuImageParcel> gourmetMenuImageParcelList = in.createTypedArrayList(GourmetMenuImageParcel.CREATOR);
         List<GourmetMenuImage> gourmetMenuImageList = new ArrayList<>();

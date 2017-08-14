@@ -45,6 +45,16 @@ public class GourmetMenu
         return mGourmetMenuImageList.get(mPrimaryImageIndex);
     }
 
+    public void setPrimaryImageIndex(int index)
+    {
+        mPrimaryImageIndex = index;
+    }
+
+    public int getPrimaryImageIndex()
+    {
+        return mPrimaryImageIndex;
+    }
+
     public List<String> getMenuDetailList()
     {
         return mMenuDetailList;
