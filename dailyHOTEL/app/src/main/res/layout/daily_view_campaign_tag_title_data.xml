@@ -87,7 +87,7 @@
                 <com.daily.base.widget.DailyTextView
                     android:id="@+id/calendarTextView"
                     android:layout_width="0dp"
-                    android:layout_height="0dp"
+                    android:layout_height="match_parent"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="8dp"
                     android:layout_toLeftOf="@id/calendarDownArrowView"
