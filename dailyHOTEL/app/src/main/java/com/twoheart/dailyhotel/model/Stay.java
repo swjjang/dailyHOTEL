@@ -28,6 +28,12 @@ public class Stay extends Place
 
     protected Grade mGrade;
 
+    public String displayText;
+    public int roomIndex;
+    public String regionName;
+    public String sday;
+    public boolean isOverseas;
+
     public Stay()
     {
         super();
@@ -54,6 +60,11 @@ public class Stay extends Place
         dest.writeString(categoryCode);
         //        dest.writeString(sday);
         dest.writeInt(isLocalPlus == true ? 1 : 0);
+        dest.writeString(displayText);
+        dest.writeInt(roomIndex);
+        dest.writeString(regionName);
+        dest.writeString(sday);
+        dest.writeInt(isOverseas == true ? 1: 0);
     }
 
     protected void readFromParcel(Parcel in)
@@ -65,6 +76,11 @@ public class Stay extends Place
         categoryCode = in.readString();
         //        sday = in.readString();
         isLocalPlus = in.readInt() == 1 ? true : false;
+        displayText = in.readString();
+        roomIndex = in.readInt();
+        regionName = in.readString();
+        sday = in.readString();
+        isOverseas = in.readInt() == 1 ? true : false;
     }
 
     public Grade getGrade()
