@@ -25,6 +25,8 @@ import com.daily.dailyhotel.entity.StayCampaignTags;
 import com.daily.dailyhotel.repository.local.model.AnalyticsParam;
 import com.daily.dailyhotel.repository.remote.CampaignTagRemoteImpl;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
+import com.daily.dailyhotel.screen.home.campaigntag.CampaignTagListAnalyticsImpl;
+import com.daily.dailyhotel.screen.home.campaigntag.CampaignTagListAnalyticsInterface;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
@@ -83,6 +85,8 @@ public class StayCampaignTagListPresenter extends BaseExceptionPresenter<StayCam
     private int mListCountByLongPress;
     private View mViewByLongPress;
 
+    private CampaignTagListAnalyticsInterface mAnalytics;
+
     protected interface OnCallDialogListener
     {
         void onShowDialog();
@@ -117,7 +121,7 @@ public class StayCampaignTagListPresenter extends BaseExceptionPresenter<StayCam
     {
         setContentView(R.layout.activity_place_campaign_tag_list_data);
 
-        //        setAnalytics(new StayCampaignTagListAnalyticsImpl());
+        setAnalytics(new CampaignTagListAnalyticsImpl());
 
         mCommonRemoteImpl = new CommonRemoteImpl(activity);
         mCampaignTagRemoteImpl = new CampaignTagRemoteImpl(activity);
@@ -128,7 +132,7 @@ public class StayCampaignTagListPresenter extends BaseExceptionPresenter<StayCam
     @Override
     public void setAnalytics(BaseAnalyticsInterface analytics)
     {
-
+        mAnalytics = (CampaignTagListAnalyticsInterface) analytics;
     }
 
     @Override
@@ -427,6 +431,16 @@ public class StayCampaignTagListPresenter extends BaseExceptionPresenter<StayCam
                 setCampaignTagLayout(mTitle, mCommonDateTime, mStayBookingDay, mStayCampaignTags, placeViewItemList);
 
                 unLockAll();
+
+                try
+                {
+                    mAnalytics.onCampaignTagEvent(getActivity() //
+                        , mStayCampaignTags.getCampaignTag().index //
+                        , mStayCampaignTags.getStayList().size());
+                } catch (Exception e)
+                {
+                    ExLog.w(e.toString());
+                }
             }
         }, new Consumer<Throwable>()
         {
