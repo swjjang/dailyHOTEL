@@ -54,9 +54,6 @@ public class GourmetSalesData
     @JsonField(name = "imgPathMain")
     public Map<String, Object> imgPathMain;
 
-    @JsonField(name = "isAvailableTicket")
-    public int isAvailableTicket;
-
     @JsonField(name = "isDailychoice")
     public boolean isDailychoice;
 
@@ -164,6 +161,20 @@ public class GourmetSalesData
         gourmet.imageUrl = getImageUrl(imgPathMain);
         gourmet.dBenefitText = benefit;
         gourmet.regionName = regionName;
+        gourmet.availableTicketNumbers = availableTicketNumbers;
+        gourmet.closeTime = closeTime;
+        gourmet.endEatingTime = endEatingTime;
+        gourmet.lastOrderTime = lastOrderTime;
+        gourmet.menuBenefit = menuBenefit;
+        gourmet.setMenuDetail(menuDetail);
+        gourmet.menuSummary = menuSummary;
+        gourmet.needToKnow = needToKnow;
+        gourmet.openTime = openTime;
+        gourmet.pricePerPerson = pricePerPerson;
+        gourmet.primaryTicketImageDescription = primaryTicketImageDescription;
+        gourmet.primaryTicketImageUrl = primaryTicketImageUrl;
+        gourmet.startEatingTime = startEatingTime;
+        gourmet.ticketIdx = ticketIdx;
 
         return gourmet;
     }
