@@ -72,13 +72,16 @@ public class StaySalesData
     public int distance;
 
     @JsonField(name = "overseas")
-    public int isOverseas;
+    public boolean isOverseas;
 
     @JsonField(name = "isSoldOut")
     public boolean isSoldOut;
 
     @JsonField(name = "category")
     public String categoryCode;
+
+    @JsonField(name = "availableRooms")
+    public int availableRooms;
 
 
     public Stay getStay()
@@ -108,6 +111,13 @@ public class StaySalesData
         //        stay.isLocalPlus;
 
         stay.setGrade(getStayGrade(grade));
+        stay.displayText = displayText;
+        stay.roomIndex = roomIndex;
+        stay.regionName = regionName;
+        stay.sday = sday;
+        stay.isOverseas = isOverseas;
+        stay.availableRooms = availableRooms;
+
         return stay;
     }
 

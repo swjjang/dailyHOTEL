@@ -17,6 +17,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Iterator;
+import java.util.List;
 
 public class Gourmet extends Place
 {
@@ -33,6 +34,19 @@ public class Gourmet extends Place
     public String regionName;
 
     public Grade grade;
+    public String closeTime;
+    public String endEatingTime;
+    public String lastOrderTime;
+    public String menuBenefit;
+    private List<String> menuDetail;
+    public String menuSummary;
+    public String needToKnow;
+    public String openTime;
+    public int pricePerPerson;
+    public String primaryTicketImageDescription;
+    public String primaryTicketImageUrl;
+    public String startEatingTime;
+    public int ticketIdx;
 
     public Gourmet()
     {
@@ -42,6 +56,16 @@ public class Gourmet extends Place
     public Gourmet(Parcel in)
     {
         readFromParcel(in);
+    }
+
+    public void setMenuDetail(List<String> menuDetail)
+    {
+        this.menuDetail = menuDetail;
+    }
+
+    public List<String> getMenuDetail()
+    {
+        return this.menuDetail;
     }
 
     @Override
@@ -67,6 +91,19 @@ public class Gourmet extends Place
         dest.writeInt(expired ? 1 : 0);
         dest.writeString(regionName);
         dest.writeSerializable(grade);
+        dest.writeString(closeTime);
+        dest.writeString(endEatingTime);
+        dest.writeString(lastOrderTime);
+        dest.writeString(menuBenefit);
+        dest.writeStringList(menuDetail);
+        dest.writeString(menuSummary);
+        dest.writeString(needToKnow);
+        dest.writeString(openTime);
+        dest.writeInt(pricePerPerson);
+        dest.writeString(primaryTicketImageDescription);
+        dest.writeString(primaryTicketImageUrl);
+        dest.writeString(startEatingTime);
+        dest.writeInt(ticketIdx);
     }
 
     protected void readFromParcel(Parcel in)
@@ -85,6 +122,19 @@ public class Gourmet extends Place
         expired = in.readInt() == 1;
         regionName = in.readString();
         grade = (Grade) in.readSerializable();
+        closeTime = in.readString();
+        endEatingTime = in.readString();
+        lastOrderTime = in.readString();
+        menuBenefit = in.readString();
+        in.readStringList(menuDetail);
+        menuSummary = in.readString();
+        needToKnow = in.readString();
+        openTime = in.readString();
+        pricePerPerson = in.readInt();
+        primaryTicketImageDescription = in.readString();
+        primaryTicketImageUrl = in.readString();
+        startEatingTime = in.readString();
+        ticketIdx = in.readInt();
     }
 
     public boolean setData(JSONObject jsonObject, String imageUrl, SparseArray<String> stringSparseArray)
