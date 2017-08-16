@@ -357,6 +357,8 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
 
                 if (isChecked == true)
                 {
+                    mViewPager.setCurrentItem(1, false);
+
                     mPlaceType = PlaceType.FNB;
 
                     if (mStaySearchFragment != null)
@@ -372,6 +374,8 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
                     }
                 } else
                 {
+                    mViewPager.setCurrentItem(0, false);
+
                     mPlaceType = PlaceType.HOTEL;
 
                     if (mGourmetSearchFragment != null)
