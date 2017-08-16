@@ -68,7 +68,6 @@ import retrofit2.Response;
 public class StayCampaignTagListPresenter extends BaseExceptionPresenter<StayCampaignTagListActivity, StayCampaignTagListInterface> implements StayCampaignTagListView.OnEventListener
 {
     private int mTagIndex;
-    //    private boolean mIsUsedMultiTransition;
     private int mType;
     private int mAfterDay;
     private int mNights;
@@ -144,12 +143,6 @@ public class StayCampaignTagListPresenter extends BaseExceptionPresenter<StayCam
         }
 
         mTagIndex = intent.getIntExtra(StayCampaignTagListActivity.INTENT_EXTRA_DATA_INDEX, -1);
-        //        mIsUsedMultiTransition = intent.getBooleanExtra(Constants.NAME_INTENT_EXTRA_DATA_IS_USED_MULTITRANSITIOIN, false);
-
-        //        if (mTagIndex == -1)
-        //        {
-        //            return false;
-        //        }
 
         mType = intent.getIntExtra(StayCampaignTagListActivity.INTENT_EXTRA_DATA_TYPE, StayCampaignTagListActivity.TYPE_DEFAULT);
 
@@ -197,17 +190,8 @@ public class StayCampaignTagListPresenter extends BaseExceptionPresenter<StayCam
     @Override
     public void onPostCreate()
     {
-        //        getViewInterface().setUsedMultiTransition(mIsUsedMultiTransition);
-
         getViewInterface().setToolbarTitle(mTitle);
-
-        //        if (StayCampaignTagListActivity.TYPE_DEFAULT == mType && mIsUsedMultiTransition == true)
-        //        {
-        //            initTransition();
-        //        } else
-        //        {
         onRefresh(true);
-        //        }
     }
 
     @Override
@@ -255,10 +239,7 @@ public class StayCampaignTagListPresenter extends BaseExceptionPresenter<StayCam
     {
         super.onFinish();
 
-        //        if (mIsUsedMultiTransition == false)
-        //        {
         getActivity().overridePendingTransition(R.anim.hold, R.anim.slide_out_right);
-        //        }
     }
 
     @Override
@@ -278,34 +259,6 @@ public class StayCampaignTagListPresenter extends BaseExceptionPresenter<StayCam
     @Override
     public boolean onBackPressed()
     {
-        //        if (mIsUsedMultiTransition == true)
-        //        {
-        //            screenLock(false);
-        //
-        //            getViewInterface().setListScrollTop();
-        //
-        //            Observable.just(getActivity()).delaySubscription(300, TimeUnit.MILLISECONDS) //
-        //                .subscribeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<StayCampaignTagListActivity>()
-        //            {
-        //                @Override
-        //                public void accept(@io.reactivex.annotations.NonNull StayCampaignTagListActivity stayCampaignTagListActivity) throws Exception
-        //                {
-        //                    stayCampaignTagListActivity.onBackPressed();
-        //                }
-        //            });
-        //
-        //            //            mHandler.postDelayed(new Runnable()
-        //            //            {
-        //            //                @Override
-        //            //                public void run()
-        //            //                {
-        //            //                    getActivity().onBackPressed();
-        //            //                }
-        //            //            }, 300);
-        //
-        //            return true;
-        //        }
-
         return super.onBackPressed();
     }
 
@@ -383,8 +336,6 @@ public class StayCampaignTagListPresenter extends BaseExceptionPresenter<StayCam
         setRefresh(false);
         screenLock(showProgress);
 
-        //        if (mStayBookingDay == null)
-        //        {
         // commonDateTime after campainTagList;
         addCompositeDisposable(mCommonRemoteImpl.getCommonDateTime().map(new Function<CommonDateTime, StayBookingDay>()
         {
@@ -450,47 +401,6 @@ public class StayCampaignTagListPresenter extends BaseExceptionPresenter<StayCam
                 onHandleError(throwable);
             }
         }));
-        //        } else
-        //        {
-        //            addCompositeDisposable(Observable.zip(mCommonRemoteImpl.getCommonDateTime() //
-        //                , mCampaignTagRemoteImpl.getStayCampaignTags(mTagIndex, mStayBookingDay) //
-        //                , new BiFunction<CommonDateTime, StayCampaignTags, ArrayList<PlaceViewItem>>()
-        //                {
-        //                    @Override
-        //                    public ArrayList<PlaceViewItem> apply(@io.reactivex.annotations.NonNull CommonDateTime commonDateTime //
-        //                        , @io.reactivex.annotations.NonNull StayCampaignTags stayCampaignTags) throws Exception
-        //                    {
-        //                        mCommonDateTime = commonDateTime;
-        //
-        //                        mStayCampaignTags = stayCampaignTags;
-        //
-        //                        mTitle = getTitleText(mStayCampaignTags);
-        //
-        //                        if (mStayCampaignTags == null)
-        //                        {
-        //                            mStayCampaignTags = new StayCampaignTags();
-        //                        }
-        //
-        //                        return makePlaceList(stayCampaignTags.getStayList());
-        //                    }
-        //                }).subscribe(new Consumer<ArrayList<PlaceViewItem>>()
-        //            {
-        //                @Override
-        //                public void accept(@io.reactivex.annotations.NonNull ArrayList<PlaceViewItem> placeViewItemList) throws Exception
-        //                {
-        //                    setCampaignTagLayout(mTitle, mCommonDateTime, mStayBookingDay, mStayCampaignTags, placeViewItemList);
-        //
-        //                    unLockAll();
-        //                }
-        //            }, new Consumer<Throwable>()
-        //            {
-        //                @Override
-        //                public void accept(@io.reactivex.annotations.NonNull Throwable throwable) throws Exception
-        //                {
-        //                    onHandleError(throwable);
-        //                }
-        //            }));
-        //        }
     }
 
     public void setCampaignTagLayout(String title, CommonDateTime commonDateTime //
@@ -610,17 +520,11 @@ public class StayCampaignTagListPresenter extends BaseExceptionPresenter<StayCam
     {
         ArrayList<PlaceViewItem> placeViewItemList = new ArrayList<>();
 
-        // 빈공간
-        //        placeViewItemList.add(new PlaceViewItem(PlaceViewItem.TYPE_HEADER_VIEW, null));
-
         if (stayList == null || stayList.size() == 0)
         {
             placeViewItemList.add(new PlaceViewItem(PlaceViewItem.TYPE_FOOTER_VIEW, null));
         } else
         {
-            // 개수 넣기
-            //            placeViewItemList.add(new PlaceViewItem(PlaceViewItem.TYPE_SECTION, getSectionTitle(placeList.size())));
-
             int entryPosition = 0;
 
             for (Stay stay : stayList)
@@ -748,11 +652,6 @@ public class StayCampaignTagListPresenter extends BaseExceptionPresenter<StayCam
 
             getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
         }
-
-        //        AnalyticsManager.getInstance(getActivity()).recordEvent(//
-        //            AnalyticsManager.Category.HOME_RECOMMEND, Integer.toString(mRecommendationIndex),//
-        //            Integer.toString(recommendationStay.index), null);
-
 
         if (stay.truevr == true)
         {
@@ -1071,52 +970,4 @@ public class StayCampaignTagListPresenter extends BaseExceptionPresenter<StayCam
             listener.onShowDialog();
         }
     }
-
-    //    @TargetApi(value = 21)
-    //    void initTransition()
-    //    {
-    //        if (mIsUsedMultiTransition == true)
-    //        {
-    //            TransitionSet inTransitionSet = DraweeTransition.createTransitionSet(ScalingUtils.ScaleType.CENTER_CROP, ScalingUtils.ScaleType.CENTER_CROP);
-    //
-    //            getActivity().getWindow().setSharedElementEnterTransition(inTransitionSet);
-    //
-    //            TransitionSet outTransitionSet = DraweeTransition.createTransitionSet(ScalingUtils.ScaleType.CENTER_CROP, ScalingUtils.ScaleType.CENTER_CROP);
-    //            outTransitionSet.setDuration(200);
-    //
-    //            getActivity().getWindow().setSharedElementReturnTransition(outTransitionSet);
-    //            inTransitionSet.addListener(new Transition.TransitionListener()
-    //            {
-    //                @Override
-    //                public void onTransitionStart(Transition transition)
-    //                {
-    //
-    //                }
-    //
-    //                @Override
-    //                public void onTransitionEnd(Transition transition)
-    //                {
-    //                    onRefresh(true);
-    //                }
-    //
-    //                @Override
-    //                public void onTransitionCancel(Transition transition)
-    //                {
-    //
-    //                }
-    //
-    //                @Override
-    //                public void onTransitionPause(Transition transition)
-    //                {
-    //
-    //                }
-    //
-    //                @Override
-    //                public void onTransitionResume(Transition transition)
-    //                {
-    //
-    //                }
-    //            });
-    //        }
-    //    }
 }

@@ -112,17 +112,6 @@ public class GourmetCampaignTagListView //
         getViewDataBinding().campaignTitleLayout.setTitleText(title);
     }
 
-    //    @Override
-    //    public void setResultCount(int resultCount)
-    //    {
-    //        if (getViewDataBinding() == null)
-    //        {
-    //            return;
-    //        }
-    //
-    //        getViewDataBinding().campaignTitleLayout.setResultCount(resultCount);
-    //    }
-
     @Override
     public void setData(ArrayList<PlaceViewItem> placeViewItemList, GourmetBookingDay gourmetBookingDay)
     {
@@ -238,15 +227,6 @@ public class GourmetCampaignTagListView //
             }
         }
     }
-
-    //    @Override
-    //    public void setUsedMultiTransition(boolean isUsedMultiTransition)
-    //    {
-    //        if (mRecyclerAdapter != null)
-    //        {
-    //            mRecyclerAdapter.setUsedMultiTransition(isUsedMultiTransition);
-    //        }
-    //    }
 
     @Override
     public void setListScrollTop()

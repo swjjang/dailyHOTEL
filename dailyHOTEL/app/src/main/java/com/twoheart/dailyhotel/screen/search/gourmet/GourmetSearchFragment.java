@@ -195,7 +195,7 @@ public class GourmetSearchFragment extends PlaceSearchFragment
         lockUI();
 
         Intent intent = GourmetSearchResultActivity.newInstance(mBaseActivity, mTodayDateTime, mGourmetBookingDay, location, AnalyticsManager.Screen.SEARCH_MAIN);
-        startActivityForResult(intent, REQUEST_ACTIVITY_SEARCHRESULT);
+        startActivityForResult(intent, REQUEST_ACTIVITY_SEARCH_RESULT);
     }
 
     @Override
@@ -220,7 +220,7 @@ public class GourmetSearchFragment extends PlaceSearchFragment
         }
 
         Intent intent = GourmetSearchResultActivity.newInstance(mBaseActivity, mTodayDateTime, mGourmetBookingDay, text);
-        startActivityForResult(intent, REQUEST_ACTIVITY_SEARCHRESULT);
+        startActivityForResult(intent, REQUEST_ACTIVITY_SEARCH_RESULT);
     }
 
     public void setGourmetBookingDay(GourmetBookingDay gourmetBookingDay)
@@ -443,7 +443,7 @@ public class GourmetSearchFragment extends PlaceSearchFragment
             }
 
             Intent intent = GourmetSearchResultActivity.newInstance(mBaseActivity, mTodayDateTime, mGourmetBookingDay, text);
-            startActivityForResult(intent, REQUEST_ACTIVITY_SEARCHRESULT);
+            startActivityForResult(intent, REQUEST_ACTIVITY_SEARCH_RESULT);
         }
 
         @Override
@@ -469,11 +469,11 @@ public class GourmetSearchFragment extends PlaceSearchFragment
             if (keyword instanceof GourmetKeyword)
             {
                 Intent intent = GourmetSearchResultActivity.newInstance(mBaseActivity, mTodayDateTime, mGourmetBookingDay, text, keyword, Constants.SearchType.AUTOCOMPLETE);
-                startActivityForResult(intent, REQUEST_ACTIVITY_SEARCHRESULT);
+                startActivityForResult(intent, REQUEST_ACTIVITY_SEARCH_RESULT);
             } else
             {
                 Intent intent = GourmetSearchResultActivity.newInstance(mBaseActivity, mTodayDateTime, mGourmetBookingDay, keyword, Constants.SearchType.RECENT);
-                startActivityForResult(intent, REQUEST_ACTIVITY_SEARCHRESULT);
+                startActivityForResult(intent, REQUEST_ACTIVITY_SEARCH_RESULT);
             }
         }
 

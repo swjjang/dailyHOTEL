@@ -22,7 +22,5 @@ public interface StayCampaignTagListInterface extends BaseDialogViewInterface
 
     void setBlurVisibility(Activity activity, boolean visible);
 
-//    void setUsedMultiTransition(boolean isUsedMultiTransition);
-
     void setListScrollTop();
 }

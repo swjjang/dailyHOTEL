@@ -198,7 +198,7 @@ public class StaySearchFragment extends PlaceSearchFragment
         lockUI();
 
         Intent intent = StaySearchResultActivity.newInstance(mBaseActivity, mTodayDateTime, mStayBookingDay, location, AnalyticsManager.Screen.SEARCH_MAIN);
-        startActivityForResult(intent, REQUEST_ACTIVITY_SEARCHRESULT);
+        startActivityForResult(intent, REQUEST_ACTIVITY_SEARCH_RESULT);
     }
 
     @Override
@@ -223,7 +223,7 @@ public class StaySearchFragment extends PlaceSearchFragment
         }
 
         Intent intent = StaySearchResultActivity.newInstance(mBaseActivity, mTodayDateTime, mStayBookingDay, text);
-        startActivityForResult(intent, REQUEST_ACTIVITY_SEARCHRESULT);
+        startActivityForResult(intent, REQUEST_ACTIVITY_SEARCH_RESULT);
     }
 
     public void setStayBookingDay(StayBookingDay stayBookingDay)
@@ -432,7 +432,6 @@ public class StaySearchFragment extends PlaceSearchFragment
             mDailyRecentSearches.clear();
             DailyPreference.getInstance(mBaseActivity).setHotelRecentSearches("");
 
-            //            mPlaceSearchLayout.updateRecentSearchesLayout(null);
             mPlaceSearchLayout.setKeywordListData(null);
 
             AnalyticsManager.getInstance(mBaseActivity).recordEvent(AnalyticsManager.Category.SEARCH_//
@@ -476,7 +475,7 @@ public class StaySearchFragment extends PlaceSearchFragment
             }
 
             Intent intent = StaySearchResultActivity.newInstance(mBaseActivity, mTodayDateTime, mStayBookingDay, text);
-            startActivityForResult(intent, REQUEST_ACTIVITY_SEARCHRESULT);
+            startActivityForResult(intent, REQUEST_ACTIVITY_SEARCH_RESULT);
         }
 
         @Override
@@ -502,11 +501,11 @@ public class StaySearchFragment extends PlaceSearchFragment
             if (keyword instanceof StayKeyword)
             {
                 Intent intent = StaySearchResultActivity.newInstance(mBaseActivity, mTodayDateTime, mStayBookingDay, text, keyword, Constants.SearchType.AUTOCOMPLETE);
-                startActivityForResult(intent, REQUEST_ACTIVITY_SEARCHRESULT);
+                startActivityForResult(intent, REQUEST_ACTIVITY_SEARCH_RESULT);
             } else
             {
                 Intent intent = StaySearchResultActivity.newInstance(mBaseActivity, mTodayDateTime, mStayBookingDay, keyword, Constants.SearchType.RECENT);
-                startActivityForResult(intent, REQUEST_ACTIVITY_SEARCHRESULT);
+                startActivityForResult(intent, REQUEST_ACTIVITY_SEARCH_RESULT);
             }
         }
 

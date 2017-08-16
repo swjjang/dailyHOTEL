@@ -113,17 +113,6 @@ public class StayCampaignTagListView //
         getViewDataBinding().campaignTitleLayout.setTitleText(title);
     }
 
-    //    @Override
-    //    public void setResultCount(int resultCount)
-    //    {
-    //        if (getViewDataBinding() == null)
-    //        {
-    //            return;
-    //        }
-    //
-    //        getViewDataBinding().campaignTitleLayout.setResultCount(resultCount);
-    //    }
-
     @Override
     public void setData(ArrayList<PlaceViewItem> placeViewItemList, StayBookingDay stayBookingDay)
     {
@@ -343,5 +332,4 @@ public class StayCampaignTagListView //
             return true;
         }
     };
-
 }

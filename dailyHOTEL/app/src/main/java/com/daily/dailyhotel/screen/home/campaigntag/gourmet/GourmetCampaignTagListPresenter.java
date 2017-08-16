@@ -70,7 +70,6 @@ public class GourmetCampaignTagListPresenter //
     implements GourmetCampaignTagListView.OnEventListener
 {
     private int mTagIndex;
-    //    private boolean mIsUsedMultiTransition;
     private int mType;
     private int mAfterDay;
     private String mTitle;
@@ -145,12 +144,6 @@ public class GourmetCampaignTagListPresenter //
         }
 
         mTagIndex = intent.getIntExtra(GourmetCampaignTagListActivity.INTENT_EXTRA_DATA_INDEX, -1);
-        //        mIsUsedMultiTransition = intent.getBooleanExtra(Constants.NAME_INTENT_EXTRA_DATA_IS_USED_MULTITRANSITIOIN, false);
-
-        //        if (mTagIndex == -1)
-        //        {
-        //            return false;
-        //        }
 
         mType = intent.getIntExtra(GourmetCampaignTagListActivity.INTENT_EXTRA_DATA_TYPE, GourmetCampaignTagListActivity.TYPE_DEFAULT);
 
@@ -195,17 +188,8 @@ public class GourmetCampaignTagListPresenter //
     @Override
     public void onPostCreate()
     {
-        //        getViewInterface().setUsedMultiTransition(mIsUsedMultiTransition);
-
         getViewInterface().setToolbarTitle(mTitle);
-
-        //        if (GourmetCampaignTagListActivity.TYPE_DEFAULT == mType && mIsUsedMultiTransition == true)
-        //        {
-        //            initTransition();
-        //        } else
-        //        {
         onRefresh(true);
-        //        }
     }
 
     @Override
@@ -253,10 +237,7 @@ public class GourmetCampaignTagListPresenter //
     {
         super.onFinish();
 
-        //        if (mIsUsedMultiTransition == false)
-        //        {
         getActivity().overridePendingTransition(R.anim.hold, R.anim.slide_out_right);
-        //        }
     }
 
     @Override
@@ -276,34 +257,6 @@ public class GourmetCampaignTagListPresenter //
     @Override
     public boolean onBackPressed()
     {
-        //        if (mIsUsedMultiTransition == true)
-        //        {
-        //            screenLock(false);
-        //
-        //            getViewInterface().setListScrollTop();
-        //
-        //            Observable.just(getActivity()).delaySubscription(300, TimeUnit.MILLISECONDS) //
-        //                .subscribeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<GourmetCampaignTagListActivity>()
-        //            {
-        //                @Override
-        //                public void accept(@io.reactivex.annotations.NonNull GourmetCampaignTagListActivity gourmetCampaignTagListActivity) throws Exception
-        //                {
-        //                    gourmetCampaignTagListActivity.onBackPressed();
-        //                }
-        //            });
-        //
-        //            //            mHandler.postDelayed(new Runnable()
-        //            //            {
-        //            //                @Override
-        //            //                public void run()
-        //            //                {
-        //            //                    getActivity().onBackPressed();
-        //            //                }
-        //            //            }, 300);
-        //
-        //            return true;
-        //        }
-
         return super.onBackPressed();
     }
 
@@ -381,8 +334,6 @@ public class GourmetCampaignTagListPresenter //
         setRefresh(false);
         screenLock(showProgress);
 
-        //        if (mGourmetBookingDay == null)
-        //        {
         // commonDateTime after campainTagList;
         addCompositeDisposable(mCommonRemoteImpl.getCommonDateTime().map(new Function<CommonDateTime, GourmetBookingDay>()
         {
@@ -448,47 +399,6 @@ public class GourmetCampaignTagListPresenter //
                 onHandleError(throwable);
             }
         }));
-        //        } else
-        //        {
-        //            addCompositeDisposable(Observable.zip(mCommonRemoteImpl.getCommonDateTime() //
-        //                , mCampaignTagRemoteImpl.getGourmetCampaignTags(mTagIndex, mGourmetBookingDay) //
-        //                , new BiFunction<CommonDateTime, GourmetCampaignTags, ArrayList<PlaceViewItem>>()
-        //                {
-        //                    @Override
-        //                    public ArrayList<PlaceViewItem> apply(@io.reactivex.annotations.NonNull CommonDateTime commonDateTime //
-        //                        , @io.reactivex.annotations.NonNull GourmetCampaignTags gourmetCampaignTags) throws Exception
-        //                    {
-        //                        mCommonDateTime = commonDateTime;
-        //
-        //                        mGourmetCampaignTags = gourmetCampaignTags;
-        //
-        //                        mTitle = getTitleText(mGourmetCampaignTags);
-        //
-        //                        if (mGourmetCampaignTags == null)
-        //                        {
-        //                            mGourmetCampaignTags = new GourmetCampaignTags();
-        //                        }
-        //
-        //                        return makePlaceList(gourmetCampaignTags.getGourmetList());
-        //                    }
-        //                }).subscribe(new Consumer<ArrayList<PlaceViewItem>>()
-        //            {
-        //                @Override
-        //                public void accept(@io.reactivex.annotations.NonNull ArrayList<PlaceViewItem> placeViewItemList) throws Exception
-        //                {
-        //                    setCampaignTagLayout(mTitle, mCommonDateTime, mGourmetBookingDay, mGourmetCampaignTags, placeViewItemList);
-        //
-        //                    unLockAll();
-        //                }
-        //            }, new Consumer<Throwable>()
-        //            {
-        //                @Override
-        //                public void accept(@io.reactivex.annotations.NonNull Throwable throwable) throws Exception
-        //                {
-        //                    onHandleError(throwable);
-        //                }
-        //            }));
-        //        }
     }
 
     public void setCampaignTagLayout(String title, CommonDateTime commonDateTime //
@@ -602,17 +512,11 @@ public class GourmetCampaignTagListPresenter //
     {
         ArrayList<PlaceViewItem> placeViewItemList = new ArrayList<>();
 
-        // 빈공간
-        //        placeViewItemList.add(new PlaceViewItem(PlaceViewItem.TYPE_HEADER_VIEW, null));
-
         if (gourmetList == null || gourmetList.size() == 0)
         {
             placeViewItemList.add(new PlaceViewItem(PlaceViewItem.TYPE_FOOTER_VIEW, null));
         } else
         {
-            // 개수 넣기
-            //            placeViewItemList.add(new PlaceViewItem(PlaceViewItem.TYPE_SECTION, getSectionTitle(placeList.size())));
-
             int entryPosition = 0;
 
             for (Gourmet gourmet : gourmetList)
@@ -741,10 +645,6 @@ public class GourmetCampaignTagListPresenter //
 
             getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
         }
-
-        //        AnalyticsManager.getInstance(getActivity()).recordEvent(//
-        //            AnalyticsManager.Category.HOME_RECOMMEND, Integer.toString(mRecommendationIndex),//
-        //            Integer.toString(gourmet.index), null);
     }
 
     @Override
@@ -1055,52 +955,4 @@ public class GourmetCampaignTagListPresenter //
             listener.onShowDialog();
         }
     }
-
-    //    @TargetApi(value = 21)
-    //    void initTransition()
-    //    {
-    //        if (mIsUsedMultiTransition == true)
-    //        {
-    //            TransitionSet inTransitionSet = DraweeTransition.createTransitionSet(ScalingUtils.ScaleType.CENTER_CROP, ScalingUtils.ScaleType.CENTER_CROP);
-    //
-    //            getActivity().getWindow().setSharedElementEnterTransition(inTransitionSet);
-    //
-    //            TransitionSet outTransitionSet = DraweeTransition.createTransitionSet(ScalingUtils.ScaleType.CENTER_CROP, ScalingUtils.ScaleType.CENTER_CROP);
-    //            outTransitionSet.setDuration(200);
-    //
-    //            getActivity().getWindow().setSharedElementReturnTransition(outTransitionSet);
-    //            inTransitionSet.addListener(new Transition.TransitionListener()
-    //            {
-    //                @Override
-    //                public void onTransitionStart(Transition transition)
-    //                {
-    //
-    //                }
-    //
-    //                @Override
-    //                public void onTransitionEnd(Transition transition)
-    //                {
-    //                    onRefresh(true);
-    //                }
-    //
-    //                @Override
-    //                public void onTransitionCancel(Transition transition)
-    //                {
-    //
-    //                }
-    //
-    //                @Override
-    //                public void onTransitionPause(Transition transition)
-    //                {
-    //
-    //                }
-    //
-    //                @Override
-    //                public void onTransitionResume(Transition transition)
-    //                {
-    //
-    //                }
-    //            });
-    //        }
-    //    }
 }
