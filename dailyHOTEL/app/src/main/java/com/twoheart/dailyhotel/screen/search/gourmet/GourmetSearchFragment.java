@@ -139,8 +139,6 @@ public class GourmetSearchFragment extends PlaceSearchFragment
                         }
                     }
                 }
-
-                mShowSearchKeyboard = true;
                 break;
             }
         }
@@ -364,6 +362,7 @@ public class GourmetSearchFragment extends PlaceSearchFragment
             }
 
             mPlaceSearchLayout.resetSearchKeyword();
+            mPlaceSearchLayout.hideSearchKeyboard();
         }
 
         @Override

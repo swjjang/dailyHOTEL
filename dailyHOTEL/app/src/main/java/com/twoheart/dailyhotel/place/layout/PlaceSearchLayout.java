@@ -12,6 +12,7 @@ import android.text.SpannableString;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
@@ -20,7 +21,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.daily.base.util.DailyTextUtils;
-import com.daily.base.util.ExLog;
+import com.daily.base.widget.DailyEditText;
 import com.daily.base.widget.DailyScrollView;
 import com.daily.dailyhotel.entity.CampaignTag;
 import com.daily.dailyhotel.view.DailySearchCircleIndicator;
@@ -43,7 +44,6 @@ import java.util.List;
 public abstract class PlaceSearchLayout extends BaseLayout implements View.OnClickListener
 {
     private static final int DELAY_AUTO_COMPLETE_MILLIS = 100;
-    private static final int DELAY_HIDE_AUTO_COMPLETE_MILLIS = 500;
 
     public static final int DEFAULT_ICON = 0;
     public static final int HOTEL_ICON = 1;
@@ -51,7 +51,6 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
     public static final int TAG_ICON = 3;
 
     private static final int HANDLER_MESSAGE_REQUEST_AUTOCOMPLETE = 0;
-    private static final int HANDLER_MESSAGE_HIDE_AUTOCOMPLETE = 1;
 
     private TextView mTermsOfLocationView;
     ViewGroup mAutoCompleteLayout;
@@ -134,6 +133,44 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
         deleteView.setOnClickListener(this);
         deleteView.setVisibility(View.GONE);
 
+        mSearchEditText.setOnTouchListener(new View.OnTouchListener()
+        {
+            @Override
+            public boolean onTouch(View v, MotionEvent event)
+            {
+                if (MotionEvent.ACTION_UP == event.getAction())
+                {
+                    showSearchKeyboard();
+                }
+
+                return false;
+            }
+        });
+
+        ((DailyEditText) mSearchEditText).setOnKeyImeListener(new DailyEditText.OnKeyImeListener()
+        {
+            @Override
+            public void onKeyPreIme(int keyCode, KeyEvent event)
+            {
+                // keybord hide 시 이벤트 처리 - keyCode 가 back key 이면서 action up 이면서
+                // editText 의 글자가 0개 일때 hide
+                if (keyCode != KeyEvent.KEYCODE_BACK)
+                {
+                    return;
+                }
+
+                if (event == null || event.getAction() != KeyEvent.ACTION_UP)
+                {
+                    return;
+                }
+
+                if (mSearchEditText.getText().length() == 0)
+                {
+                    hideSearchKeyboard();
+                }
+            }
+        });
+
         mSearchEditText.addTextChangedListener(new TextWatcher()
         {
             @Override
@@ -155,7 +192,6 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
                 }
 
                 mHandler.removeMessages(HANDLER_MESSAGE_REQUEST_AUTOCOMPLETE);
-                mHandler.removeMessages(HANDLER_MESSAGE_HIDE_AUTOCOMPLETE);
 
                 int length = s.length();
 
@@ -163,6 +199,8 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
                 {
                     deleteView.setVisibility(View.GONE);
                     ((OnEventListener) mOnEventListener).onSearchEnabled(false);
+
+                    hideAutoCompleteScrollView();
 
                     updateAutoCompleteLayout(mAutoCompleteLayout, null, null);
                 } else
@@ -184,6 +222,8 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
 
                     deleteView.setVisibility(View.VISIBLE);
                     ((OnEventListener) mOnEventListener).onSearchEnabled(true);
+
+                    showAutoCompleteScrollView();
 
                     Message message = mHandler.obtainMessage(HANDLER_MESSAGE_REQUEST_AUTOCOMPLETE, s.toString());
                     mHandler.sendMessageDelayed(message, DELAY_AUTO_COMPLETE_MILLIS);
@@ -292,20 +332,6 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
         mSearchEditText.setText(null);
     }
 
-    public void clearSearchKeywordFocus()
-    {
-        if (mSearchEditText == null)
-        {
-            return;
-        }
-
-        ExLog.d("call");
-
-        mSearchEditText.setFocusable(false);
-        mSearchEditText.setFocusableInTouchMode(false);
-        mSearchEditText.clearFocus();
-    }
-
     public String getSearchKeyWord()
     {
         return mSearchEditText.getText().toString();
@@ -328,11 +354,7 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
             return;
         }
 
-        ExLog.d("call");
-
-        mSearchEditText.setFocusable(true);
-        mSearchEditText.setFocusableInTouchMode(true);
-        mSearchEditText.requestFocus();
+        showAutoCompleteLayout();
 
         mSearchEditText.postDelayed(new Runnable()
         {
@@ -347,8 +369,10 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
 
     public void hideSearchKeyboard()
     {
+        hideAutoCompleteLayout();
+
         InputMethodManager inputMethodManager = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
-        inputMethodManager.hideSoftInputFromWindow(mSearchEditText.getWindowToken(), InputMethodManager.HIDE_IMPLICIT_ONLY);
+        inputMethodManager.hideSoftInputFromWindow(mSearchEditText.getWindowToken(), 0);
     }
 
     public void setDataText(String date)
@@ -395,6 +419,21 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
         mAutoCompleteLayout = (ViewGroup) mAutoCompleteScrollView.findViewById(R.id.autoCompleteLayout);
 
         mAutoCompleteScrollLayout.setVisibility(View.GONE);
+        mAutoCompleteScrollView.setVisibility(View.GONE);
+
+        mAutoCompleteScrollLayout.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                if (mOnEventListener == null)
+                {
+                    return;
+                }
+
+                hideSearchKeyboard();
+            }
+        });
 
         EdgeEffectColor.setEdgeGlowColor(mAutoCompleteScrollView, mContext.getResources().getColor(R.color.default_over_scroll_edge));
     }
@@ -406,7 +445,7 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
             return;
         }
 
-        showAutoCompleteView();
+        showAutoCompleteScrollView();
 
         updateAutoCompleteLayout(mAutoCompleteLayout, text, keywordList);
     }
@@ -436,11 +475,9 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
             return;
         }
 
-        mHandler.removeMessages(HANDLER_MESSAGE_HIDE_AUTOCOMPLETE);
-
         if (keywordList == null || keywordList.size() == 0)
         {
-            mHandler.sendEmptyMessageDelayed(HANDLER_MESSAGE_HIDE_AUTOCOMPLETE, DELAY_HIDE_AUTO_COMPLETE_MILLIS);
+            resetAutoCompleteLayout(viewGroup);
         } else
         {
             View.OnClickListener onClickListener = new View.OnClickListener()
@@ -480,14 +517,25 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
         }
     }
 
-    private void showAutoCompleteView()
+    public void showAutoCompleteLayout()
     {
         mAutoCompleteScrollLayout.setVisibility(View.VISIBLE);
     }
 
-    void hideAutoCompleteView()
+    public void hideAutoCompleteLayout()
     {
         mAutoCompleteScrollLayout.setVisibility(View.GONE);
+        hideAutoCompleteScrollView();
+    }
+
+    private void showAutoCompleteScrollView()
+    {
+        mAutoCompleteScrollView.setVisibility(View.VISIBLE);
+    }
+
+    void hideAutoCompleteScrollView()
+    {
+        mAutoCompleteScrollView.setVisibility(View.GONE);
         resetAutoCompleteLayout(mAutoCompleteLayout);
     }
 
@@ -577,10 +625,6 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
             {
                 case HANDLER_MESSAGE_REQUEST_AUTOCOMPLETE:
                     ((OnEventListener) placeSearchLayout.mOnEventListener).onAutoCompleteKeyword((String) msg.obj);
-                    break;
-
-                case HANDLER_MESSAGE_HIDE_AUTOCOMPLETE:
-                    placeSearchLayout.hideAutoCompleteView();
                     break;
             }
         }

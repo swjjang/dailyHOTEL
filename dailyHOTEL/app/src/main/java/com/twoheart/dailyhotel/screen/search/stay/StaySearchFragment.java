@@ -142,8 +142,6 @@ public class StaySearchFragment extends PlaceSearchFragment
                         }
                     }
                 }
-
-                mShowSearchKeyboard = true;
                 break;
             }
         }
@@ -397,6 +395,7 @@ public class StaySearchFragment extends PlaceSearchFragment
             }
 
             mPlaceSearchLayout.resetSearchKeyword();
+            mPlaceSearchLayout.hideSearchKeyboard();
         }
 
         @Override

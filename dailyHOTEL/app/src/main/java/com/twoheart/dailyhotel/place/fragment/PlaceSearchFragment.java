@@ -39,7 +39,6 @@ import io.reactivex.functions.Function;
 
 public abstract class PlaceSearchFragment extends BaseFragment
 {
-    protected boolean mShowSearchKeyboard;
     protected BaseActivity mBaseActivity;
     protected boolean mIsScrolling;
 
@@ -173,16 +172,6 @@ public abstract class PlaceSearchFragment extends BaseFragment
         mPlaceSearchLayout.resetSearchKeyword();
     }
 
-    public void clearSearchKeywordFocus()
-    {
-        if (mPlaceSearchLayout == null)
-        {
-            return;
-        }
-
-        mPlaceSearchLayout.clearSearchKeywordFocus();
-    }
-
     public void showSearchKeyboard()
     {
         if (mPlaceSearchLayout == null)
@@ -242,12 +231,6 @@ public abstract class PlaceSearchFragment extends BaseFragment
     public void onResume()
     {
         super.onResume();
-
-        if (mShowSearchKeyboard == true)
-        {
-            mShowSearchKeyboard = false;
-            mPlaceSearchLayout.showSearchKeyboard();
-        }
     }
 
     @Override
@@ -291,7 +274,6 @@ public abstract class PlaceSearchFragment extends BaseFragment
                     mOnSearchFragmentListener.finish(resultCode);
                 } else
                 {
-                    mShowSearchKeyboard = true;
                 }
                 break;
             }
