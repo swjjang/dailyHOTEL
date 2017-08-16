@@ -43,7 +43,7 @@ public abstract class PlaceSearchFragment extends BaseFragment
     protected BaseActivity mBaseActivity;
     protected boolean mIsScrolling;
 
-    protected static final int REQUEST_ACTIVITY_SEARCHRESULT = 10000;
+    protected static final int REQUEST_ACTIVITY_SEARCH_RESULT = 10000;
     protected static final int REQUEST_ACTIVITY_CALENDAR = 10001;
 
     protected static final int REQUEST_CODE_STAY_CAMPAIGN_TAG_LIST = 10002;
@@ -80,6 +80,8 @@ public abstract class PlaceSearchFragment extends BaseFragment
 
     public abstract void startCalendar(boolean isAnimation, Constants.SearchType searchType, String inputText, Keyword keyword);
 
+    public abstract void startCampaignTagList(int index, String title);
+
     public abstract Constants.ServiceType getServiceType();
 
     public abstract void setTodayDateTime(TodayDateTime todayDateTime);
@@ -107,9 +109,6 @@ public abstract class PlaceSearchFragment extends BaseFragment
         View view = mPlaceSearchLayout.onCreateView(getLayoutResourceId(), container);
 
         initContents();
-
-        //        lockUI();
-        //        mPlaceSearchNetworkController.requestCommonDateTime();
 
         lockUI();
         addCompositeDisposable(mCommonRemoteImpl.getCommonDateTime().map(new Function<CommonDateTime, TodayDateTime>()
@@ -157,8 +156,6 @@ public abstract class PlaceSearchFragment extends BaseFragment
     protected void initContents()
     {
         mDailyRecentSearches = new DailyRecentSearches(getRecentSearches());
-
-        //        mPlaceSearchLayout.updateRecentSearchesLayout(mDailyRecentSearches.getList());
     }
 
     public void setOnSearchFragmentListener(OnSearchFragmentListener listener)
@@ -262,7 +259,7 @@ public abstract class PlaceSearchFragment extends BaseFragment
 
         switch (requestCode)
         {
-            case REQUEST_ACTIVITY_SEARCHRESULT:
+            case REQUEST_ACTIVITY_SEARCH_RESULT:
             {
                 if (mOnSearchFragmentListener == null)
                 {
@@ -279,7 +276,7 @@ public abstract class PlaceSearchFragment extends BaseFragment
                         mDailyRecentSearches.addString(new Keyword(keyword.icon, keyword.name));
 
                         writeRecentSearches(mDailyRecentSearches.toString());
-                        //                        mPlaceSearchLayout.updateRecentSearchesLayout(mDailyRecentSearches.getList());
+                        mPlaceSearchLayout.setKeywordListData(mDailyRecentSearches.getList());
                     }
                 }
 

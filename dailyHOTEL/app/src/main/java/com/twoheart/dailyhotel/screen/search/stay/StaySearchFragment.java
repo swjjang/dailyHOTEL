@@ -198,7 +198,7 @@ public class StaySearchFragment extends PlaceSearchFragment
         lockUI();
 
         Intent intent = StaySearchResultActivity.newInstance(mBaseActivity, mTodayDateTime, mStayBookingDay, location, AnalyticsManager.Screen.SEARCH_MAIN);
-        startActivityForResult(intent, REQUEST_ACTIVITY_SEARCHRESULT);
+        startActivityForResult(intent, REQUEST_ACTIVITY_SEARCH_RESULT);
     }
 
     @Override
@@ -223,7 +223,7 @@ public class StaySearchFragment extends PlaceSearchFragment
         }
 
         Intent intent = StaySearchResultActivity.newInstance(mBaseActivity, mTodayDateTime, mStayBookingDay, text);
-        startActivityForResult(intent, REQUEST_ACTIVITY_SEARCHRESULT);
+        startActivityForResult(intent, REQUEST_ACTIVITY_SEARCH_RESULT);
     }
 
     public void setStayBookingDay(StayBookingDay stayBookingDay)
@@ -315,6 +315,15 @@ public class StaySearchFragment extends PlaceSearchFragment
         }
 
         startActivityForResult(intent, REQUEST_ACTIVITY_CALENDAR);
+    }
+
+    @Override
+    public void startCampaignTagList(int index, String title)
+    {
+        Intent intent = StayCampaignTagListActivity.newInstance(getActivity() //
+            , index, title, mStayBookingDay);
+
+        startActivityForResult(intent, REQUEST_CODE_STAY_CAMPAIGN_TAG_LIST);
     }
 
     @Override
@@ -423,7 +432,7 @@ public class StaySearchFragment extends PlaceSearchFragment
             mDailyRecentSearches.clear();
             DailyPreference.getInstance(mBaseActivity).setHotelRecentSearches("");
 
-            //            mPlaceSearchLayout.updateRecentSearchesLayout(null);
+            mPlaceSearchLayout.setKeywordListData(null);
 
             AnalyticsManager.getInstance(mBaseActivity).recordEvent(AnalyticsManager.Category.SEARCH_//
                 , AnalyticsManager.Action.SEARCH_SCREEN, AnalyticsManager.Label.DELETE_ALL_KEYWORDS, null);
@@ -466,7 +475,7 @@ public class StaySearchFragment extends PlaceSearchFragment
             }
 
             Intent intent = StaySearchResultActivity.newInstance(mBaseActivity, mTodayDateTime, mStayBookingDay, text);
-            startActivityForResult(intent, REQUEST_ACTIVITY_SEARCHRESULT);
+            startActivityForResult(intent, REQUEST_ACTIVITY_SEARCH_RESULT);
         }
 
         @Override
@@ -492,11 +501,11 @@ public class StaySearchFragment extends PlaceSearchFragment
             if (keyword instanceof StayKeyword)
             {
                 Intent intent = StaySearchResultActivity.newInstance(mBaseActivity, mTodayDateTime, mStayBookingDay, text, keyword, Constants.SearchType.AUTOCOMPLETE);
-                startActivityForResult(intent, REQUEST_ACTIVITY_SEARCHRESULT);
+                startActivityForResult(intent, REQUEST_ACTIVITY_SEARCH_RESULT);
             } else
             {
                 Intent intent = StaySearchResultActivity.newInstance(mBaseActivity, mTodayDateTime, mStayBookingDay, keyword, Constants.SearchType.RECENT);
-                startActivityForResult(intent, REQUEST_ACTIVITY_SEARCHRESULT);
+                startActivityForResult(intent, REQUEST_ACTIVITY_SEARCH_RESULT);
             }
         }
 
@@ -520,10 +529,7 @@ public class StaySearchFragment extends PlaceSearchFragment
         @Override
         public void onSearchCampaignTag(CampaignTag campaignTag)
         {
-            Intent intent = StayCampaignTagListActivity.newInstance(getActivity() //
-                , campaignTag.index, campaignTag.campaignTag, mStayBookingDay);
-
-            startActivityForResult(intent, REQUEST_CODE_STAY_CAMPAIGN_TAG_LIST);
+            startCampaignTagList(campaignTag.index, campaignTag.campaignTag);
         }
 
         @Override

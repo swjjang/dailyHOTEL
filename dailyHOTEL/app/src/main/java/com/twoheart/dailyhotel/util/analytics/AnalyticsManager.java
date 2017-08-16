@@ -1081,6 +1081,9 @@ public class AnalyticsManager
         public static final String THIRD_PARTY_PROVIDER_CHECK = "third_party_provider_check";
         public static final String VIEW_HIDDEN_MENU = "view_hidden_menu";
 
+        // campaign tag
+        public static final String TAG_SEARCH = "tag_search";
+        public static final String TAG_SEARCH_NOT_FOUND = "tag_search_not_found";
     }
 
     public static class Category

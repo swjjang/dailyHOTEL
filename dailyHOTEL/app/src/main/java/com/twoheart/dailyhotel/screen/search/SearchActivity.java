@@ -34,6 +34,7 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
 {
     private static final int SEARCH_TAB_COUNT = 2;
     private static final String INTENT_EXTRA_DATA_WORD = "word";
+    private static final String INTENT_EXTRA_DATA_INDEX = "index";
 
     private SearchFragmentPagerAdapter mSearchFragmentPagerAdapter;
     DailyViewPager mViewPager;
@@ -42,6 +43,17 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
 
     StaySearchFragment mStaySearchFragment;
     GourmetSearchFragment mGourmetSearchFragment;
+
+    public static Intent newInstance(Context context, PlaceType placeType, PlaceBookingDay
+        placeBookingDay, int campaignTagIndex)
+    {
+        Intent intent = new Intent(context, SearchActivity.class);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACETYPE, placeType.name());
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, placeBookingDay);
+        intent.putExtra(INTENT_EXTRA_DATA_INDEX, campaignTagIndex);
+
+        return intent;
+    }
 
     public static Intent newInstance(Context context, PlaceType placeType, PlaceBookingDay placeBookingDay)
     {
@@ -101,12 +113,15 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
             word = intent.getStringExtra(INTENT_EXTRA_DATA_WORD);
         }
 
-        initLayout(placeBookingDay, mPlaceType, word);
+        int index = intent.getIntExtra(INTENT_EXTRA_DATA_INDEX, -1);
+
+        initLayout(placeBookingDay, mPlaceType, word, index);
 
         recordAnalyticsSearch(placeBookingDay, mPlaceType);
     }
 
-    private void initLayout(PlaceBookingDay placeBookingDay, PlaceType placeType, final String word)
+    private void initLayout(PlaceBookingDay placeBookingDay, PlaceType placeType, final String
+        word, int index)
     {
         initToolbar(placeType);
 
@@ -246,6 +261,17 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
                                 mStaySearchFragment.setSearchWord(word);
                             }
                         }, 500);
+                    } else if (index > 0)
+                    {
+                        // Fragment 가 생성되기 전이라서 지연시간 추가
+                        mViewPager.postDelayed(new Runnable()
+                        {
+                            @Override
+                            public void run()
+                            {
+                                mStaySearchFragment.startCampaignTagList(index, null);
+                            }
+                        }, 500);
                     }
                     break;
 
@@ -260,6 +286,16 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
                             public void run()
                             {
                                 mGourmetSearchFragment.setSearchWord(word);
+                            }
+                        }, 500);
+                    } else if (index > 0)
+                    {
+                        mViewPager.postDelayed(new Runnable()
+                        {
+                            @Override
+                            public void run()
+                            {
+                                mGourmetSearchFragment.startCampaignTagList(index, null);
                             }
                         }, 500);
                     }
@@ -321,6 +357,8 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
 
                 if (isChecked == true)
                 {
+                    mViewPager.setCurrentItem(1, false);
+
                     mPlaceType = PlaceType.FNB;
 
                     if (mStaySearchFragment != null)
@@ -336,6 +374,8 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
                     }
                 } else
                 {
+                    mViewPager.setCurrentItem(0, false);
+
                     mPlaceType = PlaceType.HOTEL;
 
                     if (mGourmetSearchFragment != null)

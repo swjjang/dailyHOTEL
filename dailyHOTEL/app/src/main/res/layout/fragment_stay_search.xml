@@ -197,18 +197,18 @@
             android:id="@+id/searchCircleIndicator"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_below="@+id/relativeLayout"
             android:layout_centerHorizontal="true"
-            android:layout_below="@+id/relativeLayout"/>
+            android:layout_marginTop="8dp" />
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/searchRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginBottom="7dp"
-            android:layout_marginTop="4dp"
             android:layout_alignParentBottom="true"
-            android:layout_below="@id/searchCircleIndicator"/>
+            android:layout_below="@id/searchCircleIndicator"
+            android:layout_marginBottom="7dp"
+            android:layout_marginTop="4dp" />
 
         <!--<RelativeLayout-->
         <!--android:id="@+id/recentSearchLayout"-->
@@ -276,15 +276,17 @@
         <FrameLayout
             android:id="@+id/autoCompleteScrollLayout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/white"
+            android:layout_height="match_parent"
             android:layout_below="@+id/searchLayout"
-            android:visibility="visible">
+            android:background="@color/white"
+            android:elevation="2dp"
+            android:visibility="gone">
 
             <com.daily.base.widget.DailyScrollView
                 android:id="@+id/autoCompleteScrollView"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
+                android:fillViewport="true"
                 android:fadingEdge="none">
 
                 <LinearLayout

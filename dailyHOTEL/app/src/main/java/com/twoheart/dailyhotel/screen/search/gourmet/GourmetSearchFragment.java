@@ -195,7 +195,7 @@ public class GourmetSearchFragment extends PlaceSearchFragment
         lockUI();
 
         Intent intent = GourmetSearchResultActivity.newInstance(mBaseActivity, mTodayDateTime, mGourmetBookingDay, location, AnalyticsManager.Screen.SEARCH_MAIN);
-        startActivityForResult(intent, REQUEST_ACTIVITY_SEARCHRESULT);
+        startActivityForResult(intent, REQUEST_ACTIVITY_SEARCH_RESULT);
     }
 
     @Override
@@ -220,7 +220,7 @@ public class GourmetSearchFragment extends PlaceSearchFragment
         }
 
         Intent intent = GourmetSearchResultActivity.newInstance(mBaseActivity, mTodayDateTime, mGourmetBookingDay, text);
-        startActivityForResult(intent, REQUEST_ACTIVITY_SEARCHRESULT);
+        startActivityForResult(intent, REQUEST_ACTIVITY_SEARCH_RESULT);
     }
 
     public void setGourmetBookingDay(GourmetBookingDay gourmetBookingDay)
@@ -297,6 +297,15 @@ public class GourmetSearchFragment extends PlaceSearchFragment
         }
 
         startActivityForResult(intent, REQUEST_ACTIVITY_CALENDAR);
+    }
+
+    @Override
+    public void startCampaignTagList(int index, String title)
+    {
+        Intent intent = GourmetCampaignTagListActivity.newInstance(getActivity() //
+            , index, title, mGourmetBookingDay);
+
+        startActivityForResult(intent, REQUEST_CODE_GOURMET_CAMPAIGN_TAG_LIST);
     }
 
     @Override
@@ -391,6 +400,7 @@ public class GourmetSearchFragment extends PlaceSearchFragment
             DailyPreference.getInstance(mBaseActivity).setGourmetRecentSearches("");
 
             //            mPlaceSearchLayout.updateRecentSearchesLayout(null);
+            mPlaceSearchLayout.setKeywordListData(null);
 
             AnalyticsManager.getInstance(mBaseActivity).recordEvent(AnalyticsManager.Category.SEARCH_//
                 , AnalyticsManager.Action.SEARCH_SCREEN, AnalyticsManager.Label.DELETE_ALL_KEYWORDS, null);
@@ -433,7 +443,7 @@ public class GourmetSearchFragment extends PlaceSearchFragment
             }
 
             Intent intent = GourmetSearchResultActivity.newInstance(mBaseActivity, mTodayDateTime, mGourmetBookingDay, text);
-            startActivityForResult(intent, REQUEST_ACTIVITY_SEARCHRESULT);
+            startActivityForResult(intent, REQUEST_ACTIVITY_SEARCH_RESULT);
         }
 
         @Override
@@ -459,11 +469,11 @@ public class GourmetSearchFragment extends PlaceSearchFragment
             if (keyword instanceof GourmetKeyword)
             {
                 Intent intent = GourmetSearchResultActivity.newInstance(mBaseActivity, mTodayDateTime, mGourmetBookingDay, text, keyword, Constants.SearchType.AUTOCOMPLETE);
-                startActivityForResult(intent, REQUEST_ACTIVITY_SEARCHRESULT);
+                startActivityForResult(intent, REQUEST_ACTIVITY_SEARCH_RESULT);
             } else
             {
                 Intent intent = GourmetSearchResultActivity.newInstance(mBaseActivity, mTodayDateTime, mGourmetBookingDay, keyword, Constants.SearchType.RECENT);
-                startActivityForResult(intent, REQUEST_ACTIVITY_SEARCHRESULT);
+                startActivityForResult(intent, REQUEST_ACTIVITY_SEARCH_RESULT);
             }
         }
 
@@ -487,10 +497,7 @@ public class GourmetSearchFragment extends PlaceSearchFragment
         @Override
         public void onSearchCampaignTag(CampaignTag campaignTag)
         {
-            Intent intent = GourmetCampaignTagListActivity.newInstance(getActivity() //
-                , campaignTag.index, campaignTag.campaignTag, mGourmetBookingDay);
-
-            startActivityForResult(intent, REQUEST_CODE_GOURMET_CAMPAIGN_TAG_LIST);
+            startCampaignTagList(campaignTag.index, campaignTag.campaignTag);
         }
 
         @Override

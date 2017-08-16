@@ -17,11 +17,10 @@ import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.daily.base.util.DailyTextUtils;
-import com.daily.base.util.ScreenUtils;
+import com.daily.base.util.ExLog;
 import com.daily.base.widget.DailyScrollView;
 import com.daily.dailyhotel.entity.CampaignTag;
 import com.daily.dailyhotel.view.DailySearchCircleIndicator;
@@ -46,9 +45,10 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
     private static final int DELAY_AUTO_COMPLETE_MILLIS = 100;
     private static final int DELAY_HIDE_AUTO_COMPLETE_MILLIS = 500;
 
-    protected static final int DEFAULT_ICON = 0;
+    public static final int DEFAULT_ICON = 0;
     public static final int HOTEL_ICON = 1;
     public static final int GOURMET_ICON = 2;
+    public static final int TAG_ICON = 3;
 
     private static final int HANDLER_MESSAGE_REQUEST_AUTOCOMPLETE = 0;
     private static final int HANDLER_MESSAGE_HIDE_AUTOCOMPLETE = 1;
@@ -96,12 +96,9 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
 
     protected abstract String getSearchHintText();
 
-    protected abstract int getRecentSearchesIcon(int type);
-
     protected abstract void updateSuggestLayout(TextView titleTextView, TextView priceTextView, Keyword keyword, String text);
 
-    public abstract void setRecyclerViewData(List<? extends Place> recentlyList,
-                                             ArrayList<CampaignTag> campaignTagList, List<Keyword> recentSearchList);
+    public abstract void setRecyclerViewData(List<? extends Place> recentlyList, ArrayList<CampaignTag> campaignTagList, List<Keyword> recentSearchList);
 
     public PlaceSearchLayout(Context context, OnBaseEventListener listener)
     {
@@ -168,8 +165,6 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
                     ((OnEventListener) mOnEventListener).onSearchEnabled(false);
 
                     updateAutoCompleteLayout(mAutoCompleteLayout, null, null);
-
-                    //                    showRecentSearchesView();
                 } else
                 {
                     if (length == 1 && s.charAt(0) == ' ')
@@ -237,7 +232,6 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
 
     private void initSearchKeywordLayout(View view)
     {
-        //        initRecentSearchesLayout(view);
         initAutoCompleteLayout(view);
     }
 
@@ -277,6 +271,17 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
         });
     }
 
+    public void setKeywordListData(List<Keyword> keywordList)
+    {
+        if (mRecyclerAdapter == null)
+        {
+            return;
+        }
+
+        mRecyclerAdapter.setKeywordListData(keywordList);
+        mRecyclerAdapter.notifyDataSetChanged();
+    }
+
     public void resetSearchKeyword()
     {
         if (mSearchEditText == null)
@@ -293,6 +298,8 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
         {
             return;
         }
+
+        ExLog.d("call");
 
         mSearchEditText.setFocusable(false);
         mSearchEditText.setFocusableInTouchMode(false);
@@ -320,6 +327,8 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
         {
             return;
         }
+
+        ExLog.d("call");
 
         mSearchEditText.setFocusable(true);
         mSearchEditText.setFocusableInTouchMode(true);
@@ -379,152 +388,6 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
         updateTermsOfLocationLayout(mTermsOfLocationView);
     }
 
-    //    private void initRecentSearchesLayout(View view)
-    //    {
-    //        DailyScrollView recentSearchesScrollLayout = (DailyScrollView) view.findViewById(R.id.recentSearchesScrollLayout);
-    //        recentSearchesScrollLayout.setOnScrollChangedListener(new DailyScrollView.OnScrollChangedListener()
-    //        {
-    //            private int mDistance;
-    //            boolean mIsHide;
-    //
-    //            @Override
-    //            public void onScrollChanged(ScrollView scrollView, int l, int t, int oldl, int oldt)
-    //            {
-    //                if (mIsHide == true)
-    //                {
-    //
-    //                } else
-    //                {
-    //                    if (scrollView.getHeight() < ScreenUtils.getScreenHeight(mContext) / 2)
-    //                    {
-    //                        mDistance += (t - oldt);
-    //
-    //                        if (mDistance > ScreenUtils.dpToPx(mContext, 41) == true)
-    //                        {
-    //                            mDistance = 0;
-    //                            mIsHide = true;
-    //
-    //                            InputMethodManager inputMethodManager = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
-    //                            inputMethodManager.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
-    //
-    //                            mHandler.postDelayed(new Runnable()
-    //                            {
-    //                                @Override
-    //                                public void run()
-    //                                {
-    //                                    mIsHide = false;
-    //                                }
-    //                            }, 1000);
-    //                        }
-    //                    }
-    //                }
-    //            }
-    //        });
-    //
-    //        EdgeEffectColor.setEdgeGlowColor(recentSearchesScrollLayout, mContext.getResources().getColor(R.color.default_over_scroll_edge));
-    //
-    //        // 최근 검색어
-    //        // 전체 삭제
-    //        mDeleteAllRecentSearchesView = view.findViewById(R.id.deleteAllView);
-    //        mDeleteAllRecentSearchesView.setOnClickListener(this);
-    //
-    //        mRecentSearchLayout = view.findViewById(R.id.recentSearchLayout);
-    //        mRecentSearchLayout.setVisibility(View.VISIBLE);
-    //
-    //        // 목록
-    //        mRecentContentsLayout = (ViewGroup) view.findViewById(R.id.contentsLayout);
-    //
-    //        View.OnClickListener onClickListener = new View.OnClickListener()
-    //        {
-    //            @Override
-    //            public void onClick(View v)
-    //            {
-    //                Object tag = v.getTag();
-    //
-    //                if (tag != null && tag instanceof Keyword == true)
-    //                {
-    //                    validateKeyword((Keyword) tag);
-    //                }
-    //            }
-    //        };
-    //
-    //        for (int i = 0; i < DailyRecentSearches.MAX_KEYWORD; i++)
-    //        {
-    //            View keywordView = LayoutInflater.from(mContext).inflate(R.layout.list_row_search_recently, mRecentContentsLayout, false);
-    //            keywordView.setOnClickListener(onClickListener);
-    //
-    //            mRecentContentsLayout.addView(keywordView);
-    //        }
-    //    }
-    //
-    //    public void updateRecentSearchesLayout(List<Keyword> keywordList)
-    //    {
-    ////        updateRecentSearchesLayout(mRecentContentsLayout, keywordList);
-    //    }
-    //
-    //    private void updateRecentSearchesLayout(ViewGroup viewGroup, List<Keyword> keywordList)
-    //    {
-    //        if (viewGroup == null)
-    //        {
-    //            return;
-    //        }
-    //
-    //        if (keywordList == null || keywordList.size() == 0)
-    //        {
-    //            mDeleteAllRecentSearchesView.setEnabled(false);
-    //
-    //            View view = viewGroup.getChildAt(0);
-    //            view.setVisibility(View.VISIBLE);
-    //            view.setTag(null);
-    //
-    //            TextView textView = (TextView) view.findViewById(R.id.textView);
-    //            textView.setTextColor(mContext.getResources().getColor(R.color.search_hint_text));
-    //            textView.setCompoundDrawablesWithIntrinsicBounds(getRecentSearchesIcon(DEFAULT_ICON), 0, 0, 0);
-    //            textView.setText(R.string.label_search_recentsearches_none);
-    //
-    //            int childCount = viewGroup.getChildCount();
-    //
-    //            for (int i = 1; i < childCount; i++)
-    //            {
-    //                viewGroup.getChildAt(i).setVisibility(View.GONE);
-    //            }
-    //        } else
-    //        {
-    //            mDeleteAllRecentSearchesView.setEnabled(true);
-    //
-    //            int size = keywordList.size();
-    //            Keyword recentKeyword;
-    //            TextView textView;
-    //            View view;
-    //
-    //            int childCount = viewGroup.getChildCount();
-    //
-    //            for (int i = 0; i < childCount; i++)
-    //            {
-    //                view = viewGroup.getChildAt(i);
-    //
-    //                if (i < size)
-    //                {
-    //                    view.setVisibility(View.VISIBLE);
-    //                } else
-    //                {
-    //                    view.setVisibility(View.GONE);
-    //                    view.setTag(null);
-    //                    continue;
-    //                }
-    //
-    //                recentKeyword = keywordList.get(i);
-    //
-    //                view.setTag(recentKeyword);
-    //
-    //                textView = (TextView) view.findViewById(R.id.textView);
-    //                textView.setTextColor(mContext.getResources().getColor(R.color.search_text));
-    //                textView.setCompoundDrawablesWithIntrinsicBounds(getRecentSearchesIcon(recentKeyword.icon), 0, 0, 0);
-    //                textView.setText(recentKeyword.name);
-    //            }
-    //        }
-    //    }
-
     private void initAutoCompleteLayout(View view)
     {
         mAutoCompleteScrollLayout = view.findViewById(R.id.autoCompleteScrollLayout);
@@ -532,44 +395,6 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
         mAutoCompleteLayout = (ViewGroup) mAutoCompleteScrollView.findViewById(R.id.autoCompleteLayout);
 
         mAutoCompleteScrollLayout.setVisibility(View.GONE);
-        mAutoCompleteScrollView.setOnScrollChangedListener(new DailyScrollView.OnScrollChangedListener()
-        {
-            private int mDistance;
-            boolean mIsHide;
-
-            @Override
-            public void onScrollChanged(ScrollView scrollView, int l, int t, int oldl, int oldt)
-            {
-                if (mIsHide == true)
-                {
-
-                } else
-                {
-                    if (scrollView.getHeight() < ScreenUtils.getScreenHeight(mContext) / 2)
-                    {
-                        mDistance += (t - oldt);
-
-                        if (mDistance > ScreenUtils.dpToPx(mContext, 41) == true)
-                        {
-                            mDistance = 0;
-                            mIsHide = true;
-
-                            InputMethodManager inputMethodManager = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
-                            inputMethodManager.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
-
-                            mHandler.postDelayed(new Runnable()
-                            {
-                                @Override
-                                public void run()
-                                {
-                                    mIsHide = false;
-                                }
-                            }, 1000);
-                        }
-                    }
-                }
-            }
-        });
 
         EdgeEffectColor.setEdgeGlowColor(mAutoCompleteScrollView, mContext.getResources().getColor(R.color.default_over_scroll_edge));
     }
@@ -644,19 +469,6 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
                 view.setOnClickListener(onClickListener);
                 viewGroup.addView(view);
 
-                //                View topLineView = view.findViewById(R.id.topLineView);
-                //
-                //                if (topLineView != null)
-                //                {
-                //                    if (i == 0)
-                //                    {
-                //                        topLineView.setVisibility(View.VISIBLE);
-                //                    } else
-                //                    {
-                //                        topLineView.setVisibility(View.GONE);
-                //                    }
-                //                }
-
                 keyword = keywordList.get(i);
                 view.setTag(keyword);
 
@@ -665,23 +477,12 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
 
                 updateSuggestLayout(textView01, textView02, keyword, text);
             }
-
-            View lineView = new View(mContext);
-            lineView.setBackgroundResource(R.color.default_line_cf0f0f0);
-            viewGroup.addView(lineView, ViewGroup.LayoutParams.MATCH_PARENT, ScreenUtils.dpToPx(mContext, 1));
         }
     }
-
-    //    void showRecentSearchesView()
-    //    {
-    //        mAutoCompleteScrollLayout.setVisibility(View.GONE);
-    //        mRecentSearchLayout.setVisibility(View.VISIBLE);
-    //    }
 
     private void showAutoCompleteView()
     {
         mAutoCompleteScrollLayout.setVisibility(View.VISIBLE);
-        //        mRecentSearchLayout.setVisibility(View.GONE);
     }
 
     void hideAutoCompleteView()
@@ -744,12 +545,6 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
                 validateKeyword(mSearchEditText.getText().toString());
                 break;
             }
-
-            //            case R.id.deleteAllView:
-            //            {
-            //                ((OnEventListener) mOnEventListener).onDeleteRecentSearches();
-            //                break;
-            //            }
 
             case R.id.deleteView:
             {

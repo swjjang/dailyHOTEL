@@ -7,9 +7,11 @@ import android.view.ViewGroup;
 
 import com.daily.base.util.ScreenUtils;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.model.Keyword;
 import com.twoheart.dailyhotel.model.SearchCardItem;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by iseung-won on 2017. 8. 10..
@@ -31,8 +33,10 @@ public class SearchCardViewAdapter extends RecyclerView.Adapter<SearchCardViewAd
 
     private int mType;
 
-    public interface OnEventListener {
+    public interface OnEventListener
+    {
         void onKeywordDeleteAllClick(int type);
+
         void onItemClick(View view);
     }
 
@@ -69,6 +73,25 @@ public class SearchCardViewAdapter extends RecyclerView.Adapter<SearchCardViewAd
         mOnEventListener = onEventListener;
     }
 
+    public void setKeywordListData(List<Keyword> keywordList)
+    {
+        mRecentKeywordList = new ArrayList<>();
+
+        if (keywordList == null)
+        {
+            return;
+        }
+
+        for (Keyword keyword : keywordList)
+        {
+            SearchCardItem item = new SearchCardItem();
+            item.iconType = keyword.icon;
+            item.itemText = keyword.name;
+            item.object = keyword;
+            mRecentKeywordList.add(item);
+        }
+    }
+
     @Override
     public CardViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
     {
@@ -99,14 +122,31 @@ public class SearchCardViewAdapter extends RecyclerView.Adapter<SearchCardViewAd
         switch (position)
         {
             case 0:
-                onCampaignTagBindViewHolder(holder, mCampaignTagList);
+                if (getItemCount() == 2)
+                {
+                    onRecentKeywordBindViewHolder(holder, mRecentKeywordList);
+                } else
+                {
+                    onCampaignTagBindViewHolder(holder, mCampaignTagList);
+                }
                 break;
 
             case 1:
-                onRecentKeywordBindViewHolder(holder, mRecentKeywordList);
+                if (getItemCount() == 2)
+                {
+                    onRecentlyPlaceBindViewHolder(holder, mRecentlyPlaceList);
+                } else
+                {
+                    onRecentKeywordBindViewHolder(holder, mRecentKeywordList);
+                }
                 break;
 
             case 2:
+                if (getItemCount() == 2)
+                {
+                    break;
+                }
+
                 onRecentlyPlaceBindViewHolder(holder, mRecentlyPlaceList);
                 break;
         }
@@ -280,7 +320,12 @@ public class SearchCardViewAdapter extends RecyclerView.Adapter<SearchCardViewAd
     @Override
     public int getItemCount()
     {
-        // 항상 3개입니다 리스트(뷰) 가 항상 3개(최근 본, 최근 검색, 캠페인 태그)
+        // 항상 3개가 아니고 최대 3개 입니다 리스트(뷰) 가 최대 3개(최근 본, 최근 검색, 캠페인 태그)
+        if (mCampaignTagList == null || mCampaignTagList.size() == 0)
+        {
+            return 2;
+        }
+
         return 3;
     }
 

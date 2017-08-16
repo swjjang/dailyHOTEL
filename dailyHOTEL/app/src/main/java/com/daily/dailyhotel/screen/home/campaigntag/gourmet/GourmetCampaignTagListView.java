@@ -85,13 +85,13 @@ public class GourmetCampaignTagListView //
 
         if (mRecyclerAdapter == null)
         {
-            mRecyclerAdapter = new GourmetCampaignListAdapter(getContext(), new ArrayList<>(), mOnClickListener);
+            mRecyclerAdapter = new GourmetCampaignListAdapter(getContext(), new ArrayList<>(), mOnEventListener);
         }
 
-//        if (DailyPreference.getInstance(getContext()).getTrueVRSupport() > 0)
-//        {
-//            mRecyclerAdapter.setTrueVREnabled(true);
-//        }
+        //        if (DailyPreference.getInstance(getContext()).getTrueVRSupport() > 0)
+        //        {
+        //            mRecyclerAdapter.setTrueVREnabled(true);
+        //        }
 
         if (Util.supportPreview(getContext()) == true)
         {
@@ -111,17 +111,6 @@ public class GourmetCampaignTagListView //
 
         getViewDataBinding().campaignTitleLayout.setTitleText(title);
     }
-
-    //    @Override
-    //    public void setResultCount(int resultCount)
-    //    {
-    //        if (getViewDataBinding() == null)
-    //        {
-    //            return;
-    //        }
-    //
-    //        getViewDataBinding().campaignTitleLayout.setResultCount(resultCount);
-    //    }
 
     @Override
     public void setData(ArrayList<PlaceViewItem> placeViewItemList, GourmetBookingDay gourmetBookingDay)
@@ -239,15 +228,6 @@ public class GourmetCampaignTagListView //
         }
     }
 
-//    @Override
-//    public void setUsedMultiTransition(boolean isUsedMultiTransition)
-//    {
-//        if (mRecyclerAdapter != null)
-//        {
-//            mRecyclerAdapter.setUsedMultiTransition(isUsedMultiTransition);
-//        }
-//    }
-
     @Override
     public void setListScrollTop()
     {
@@ -263,22 +243,26 @@ public class GourmetCampaignTagListView //
     {
         void onCalendarClick();
 
+        void onResearchClick();
+
+        void onCallClick();
+
         void onPlaceClick(View view, PlaceViewItem placeViewItem, int count);
 
         void onPlaceLongClick(View view, PlaceViewItem placeViewItem, int count);
     }
 
-    private View.OnClickListener mOnClickListener = new View.OnClickListener()
+    private GourmetCampaignListAdapter.OnEventListener mOnEventListener = new GourmetCampaignListAdapter.OnEventListener()
     {
         @Override
-        public void onClick(View v)
+        public void onItemClick(View view)
         {
             if (getViewDataBinding() == null)
             {
                 return;
             }
 
-            int position = getViewDataBinding().recyclerView.getChildAdapterPosition(v);
+            int position = getViewDataBinding().recyclerView.getChildAdapterPosition(view);
             if (position < 0)
             {
                 return;
@@ -293,8 +277,26 @@ public class GourmetCampaignTagListView //
                     return;
                 }
 
-                getEventListener().onPlaceClick(v, placeViewItem, mRecyclerAdapter.getItemCount());
+                getEventListener().onPlaceClick(view, placeViewItem, mRecyclerAdapter.getItemCount());
             }
+        }
+
+        @Override
+        public void onEmptyChangeDateClick()
+        {
+            getEventListener().onCalendarClick();
+        }
+
+        @Override
+        public void onEmptyResearchClick()
+        {
+            getEventListener().onResearchClick();
+        }
+
+        @Override
+        public void onEmptyCallClick()
+        {
+            getEventListener().onCallClick();
         }
     };
 
