@@ -568,14 +568,18 @@ public class HomeFragment extends BaseMenuNavigationFragment
                 }
             } else if (externalDeepLink.isCampaignTagListView() == true)
             {
-                switch (externalDeepLink.getPlaceType())
+                String placeType = externalDeepLink.getPlaceType();
+                if (DailyTextUtils.isTextEmpty(placeType) == false)
                 {
-                    case DailyDeepLink.GOURMET:
-                        onGourmetClick(true, externalDeepLink);
+                    switch (externalDeepLink.getPlaceType())
+                    {
+                        case DailyDeepLink.GOURMET:
+                            onGourmetClick(true, externalDeepLink);
 
-                        break;
-                    case DailyDeepLink.STAY:
-                        onStayClick(true, externalDeepLink);
+                            break;
+                        case DailyDeepLink.STAY:
+                            onStayClick(true, externalDeepLink);
+                    }
                 }
             }
         } else
