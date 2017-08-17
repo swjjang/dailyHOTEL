@@ -227,6 +227,16 @@ public abstract class PlaceSearchFragment extends BaseFragment
         return mIsDateChanged;
     }
 
+    public void setRecyclerViewPosition(int position)
+    {
+        if (mPlaceSearchLayout == null)
+        {
+            return;
+        }
+
+        mPlaceSearchLayout.setRecyclerViewPosition(position);
+    }
+
     @Override
     public void onResume()
     {

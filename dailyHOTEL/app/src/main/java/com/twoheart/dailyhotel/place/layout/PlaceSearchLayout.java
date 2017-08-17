@@ -57,7 +57,7 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
     private DailyScrollView mAutoCompleteScrollView;
     private View mAutoCompleteScrollLayout;
 
-    private DailySearchCircleIndicator mCircleIndicator;
+    protected DailySearchCircleIndicator mCircleIndicator;
     protected RecyclerView mRecyclerView;
     protected SearchCardViewAdapter mRecyclerAdapter;
 
@@ -292,7 +292,7 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
         PagerSnapHelper snapHelper = new PagerSnapHelper();
         snapHelper.attachToRecyclerView(mRecyclerView);
 
-        mCircleIndicator.setTotalCount(3);
+        mCircleIndicator.setTotalCount(mRecyclerAdapter == null ? 3 : mRecyclerAdapter.getItemCount());
 
         mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener()
         {
@@ -560,6 +560,22 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
         }
 
         ((OnEventListener) mOnEventListener).onSearch(mSearchEditText.getText().toString().trim(), keyword);
+    }
+
+    public void setRecyclerViewPosition(int position)
+    {
+        if (mRecyclerView == null || mCircleIndicator == null || mRecyclerAdapter == null)
+        {
+            return;
+        }
+
+        if (position < 0 || position > mRecyclerAdapter.getItemCount() - 1)
+        {
+            return;
+        }
+
+        mCircleIndicator.setPosition(position);
+        mRecyclerView.scrollToPosition(position);
     }
 
     @Override

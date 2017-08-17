@@ -7,7 +7,6 @@ import com.daily.base.exception.BaseException;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.domain.RecentlyInterface;
-import com.daily.dailyhotel.entity.StayOutbound;
 import com.daily.dailyhotel.entity.StayOutbounds;
 import com.daily.dailyhotel.repository.local.model.RecentlyPlace;
 import com.daily.dailyhotel.repository.remote.model.GourmetListData;
@@ -30,8 +29,6 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import io.reactivex.Observable;
@@ -71,8 +68,6 @@ public class RecentlyRemoteImpl implements RecentlyInterface
             }
         }
 
-        ArrayList<Integer> targetIndicesList = getTargetIndicesList(hotelIds);
-
         return DailyMobileAPI.getInstance(mContext).getStayOutboundRecentlyList(hotelIds, numberOfResults).map(new Function<BaseDto<StayOutboundsData>, StayOutbounds>()
         {
             @Override
@@ -89,21 +84,6 @@ public class RecentlyRemoteImpl implements RecentlyInterface
                         if (stayOutbounds == null)
                         {
                             stayOutbounds = new StayOutbounds();
-                        } else {
-                            List<StayOutbound> list = stayOutbounds.getStayOutbound();
-                            Collections.sort(list, new Comparator<StayOutbound>()
-                            {
-                                @Override
-                                public int compare(StayOutbound o1, StayOutbound o2)
-                                {
-                                    Integer position1 = targetIndicesList.indexOf((Integer) o1.index);
-                                    Integer position2 = targetIndicesList.indexOf((Integer) o2.index);
-
-                                    return position1.compareTo(position2);
-                                }
-                            });
-
-                            stayOutbounds.setStayOutbound(list);
                         }
                     } else
                     {
@@ -152,18 +132,6 @@ public class RecentlyRemoteImpl implements RecentlyInterface
                         if (list != null && list.size() > 0)
                         {
                             homePlaceList.addAll(list);
-
-                            Collections.sort(homePlaceList, new Comparator<HomePlace>()
-                            {
-                                @Override
-                                public int compare(HomePlace o1, HomePlace o2)
-                                {
-                                    Integer position1 = list.indexOf(o1);
-                                    Integer position2 = list.indexOf(o2);
-
-                                    return position1.compareTo(position2);
-                                }
-                            });
                         }
                     } else
                     {
@@ -207,8 +175,6 @@ public class RecentlyRemoteImpl implements RecentlyInterface
         recentStayParams.setStayBookingDay(stayBookingDay);
         recentStayParams.setTargetIndices(targetIndices);
 
-        ArrayList<Integer> targetIndicesList = getTargetIndicesList(targetIndices);
-
         return DailyMobileAPI.getInstance(mContext) //
             .getStayList(recentStayParams.toParamsMap(), recentStayParams.getBedTypeList(), recentStayParams.getLuxuryList(), null) //
             .map(new Function<BaseDto<StayListData>, List<Stay>>()
@@ -226,19 +192,6 @@ public class RecentlyRemoteImpl implements RecentlyInterface
                             if (stayList == null || stayList.size() == 0)
                             {
                                 stayList = new ArrayList<>();
-                            } else
-                            {
-                                Collections.sort(stayList, new Comparator<Stay>()
-                                {
-                                    @Override
-                                    public int compare(Stay o1, Stay o2)
-                                    {
-                                        Integer position1 = targetIndicesList.indexOf((Integer) o1.index);
-                                        Integer position2 = targetIndicesList.indexOf((Integer) o2.index);
-
-                                        return position1.compareTo(position2);
-                                    }
-                                });
                             }
                         } else
                         {
@@ -278,8 +231,6 @@ public class RecentlyRemoteImpl implements RecentlyInterface
             targetIndices = "0";
         }
 
-        ArrayList<Integer> targetIndicesList = getTargetIndicesList(targetIndices);
-
         RecentGourmetParams params = new RecentGourmetParams();
         params.setGourmetBookingDay(gourmetBookingDay);
         params.setTargetIndices(targetIndices);
@@ -301,19 +252,6 @@ public class RecentlyRemoteImpl implements RecentlyInterface
                             if (gourmetList == null || gourmetList.size() == 0)
                             {
                                 gourmetList = new ArrayList<>();
-                            } else
-                            {
-                                Collections.sort(gourmetList, new Comparator<Gourmet>()
-                                {
-                                    @Override
-                                    public int compare(Gourmet o1, Gourmet o2)
-                                    {
-                                        Integer position1 = targetIndicesList.indexOf((Integer) o1.index);
-                                        Integer position2 = targetIndicesList.indexOf((Integer) o2.index);
-
-                                        return position1.compareTo(position2);
-                                    }
-                                });
                             }
                         } else
                         {

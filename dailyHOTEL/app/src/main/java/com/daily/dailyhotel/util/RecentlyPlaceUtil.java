@@ -838,6 +838,8 @@ public class RecentlyPlaceUtil
             }
         });
 
+        Collections.reverse(recentlyTypeList);
+
         if (recentlyTypeList == null || recentlyTypeList.size() == 0)
         {
             return;
