@@ -104,7 +104,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/searchLayout"
-            android:background="@color/default_background"
+            android:background="@color/white"
             android:elevation="2dp"
             android:orientation="vertical">
 
@@ -117,8 +117,7 @@
                     android:id="@+id/searchAroundLayout"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:background="@color/white">
+                    android:layout_weight="1">
 
                     <ImageView
                         android:id="@+id/aroundIconView"
@@ -166,8 +165,7 @@
                     android:id="@+id/stayOutboundLayout"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:background="@color/white">
+                    android:layout_weight="1">
 
                     <ImageView
                         android:id="@+id/stayOutboundIconView"
@@ -176,7 +174,7 @@
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="15dp"
                         android:layout_marginRight="5dp"
-                        app:srcCompat="@drawable/vector_search_ic_04_ob_hotel" />
+                        app:srcCompat="@drawable/search_ic_04_ob_hotel" />
 
                     <com.daily.base.widget.DailyTextView
                         android:layout_width="match_parent"
