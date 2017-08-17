@@ -217,7 +217,8 @@ public class StaySearchResultCurationActivity extends StayCurationActivity
             }
 
             String lastParams = mLastParams.toParamsString();
-            if (lastParams.equalsIgnoreCase(requestParams) == false)
+            if (requestParams != null && requestParams.contains(lastParams) == false) // ab 테스트로 인해서 데이터가 다름.
+//            if (lastParams.equalsIgnoreCase(requestParams) == false)
             {
                 // already running another request!
                 return;
