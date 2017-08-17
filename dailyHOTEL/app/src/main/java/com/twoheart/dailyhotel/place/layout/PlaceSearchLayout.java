@@ -292,7 +292,7 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
         PagerSnapHelper snapHelper = new PagerSnapHelper();
         snapHelper.attachToRecyclerView(mRecyclerView);
 
-        mCircleIndicator.setTotalCount(mRecyclerAdapter == null ? 3 : mRecyclerAdapter.getItemCount());
+        mCircleIndicator.setTotalCount(1);
 
         mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener()
         {
@@ -370,6 +370,7 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
     public void hideSearchKeyboard()
     {
         hideAutoCompleteLayout();
+        mSearchEditText.clearFocus();
 
         InputMethodManager inputMethodManager = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
         inputMethodManager.hideSoftInputFromWindow(mSearchEditText.getWindowToken(), 0);

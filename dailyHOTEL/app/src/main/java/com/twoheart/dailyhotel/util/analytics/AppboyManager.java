@@ -493,6 +493,25 @@ public class AppboyManager extends BaseAnalyticsManager
             {
                 ExLog.d(TAG + " : " + EventName.HOME_RECOMMEND_ITEM_CLICKED + ", " + appboyProperties.forJsonPut().toString());
             }
+        } else if (AnalyticsManager.Action.TAG_SEARCH_NOT_FOUND.equalsIgnoreCase(action) == true || AnalyticsManager.Action.TAG_SEARCH.equalsIgnoreCase(action) == true)
+        {
+            AppboyProperties appboyProperties = new AppboyProperties();
+
+            String tagIndex = params.get(AnalyticsManager.KeyType.TAG);
+            String count = params.get(AnalyticsManager.KeyType.NUM_OF_SEARCH_RESULTS_RETURNED);
+            String categoryType = params.get(AnalyticsManager.KeyType.CATEGORY);
+
+            appboyProperties.addProperty(AnalyticsManager.KeyType.USER_IDX, getUserIndex());
+            appboyProperties.addProperty(AnalyticsManager.KeyType.TAG, tagIndex);
+            appboyProperties.addProperty(AnalyticsManager.KeyType.NUM_OF_SEARCH_RESULTS_RETURNED, count);
+            appboyProperties.addProperty(AnalyticsManager.KeyType.CATEGORY, categoryType);
+
+            mAppboy.logCustomEvent(EventName.TAG_SEARCH_TERM, appboyProperties);
+
+            if (DEBUG == true)
+            {
+                ExLog.d(TAG + " : " + EventName.TAG_SEARCH_TERM + ", " + appboyProperties.forJsonPut().toString());
+            }
         }
     }
 
@@ -1154,6 +1173,7 @@ public class AppboyManager extends BaseAnalyticsManager
         public static final String HOME_BANNER_CLICKED = "home_banner_clicked";
         public static final String HOME_RECOMMEND_CLICKED = "home_recommend_clicked";
         public static final String HOME_RECOMMEND_ITEM_CLICKED = "home_recommend_item_clicked";
+        public static final String TAG_SEARCH_TERM = "tag_search_term";
     }
 
     private static final class ValueName
