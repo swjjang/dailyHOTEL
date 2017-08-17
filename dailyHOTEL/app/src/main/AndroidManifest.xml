@@ -595,7 +595,7 @@
             android:name=".screen.search.SearchActivity"
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
             android:launchMode="singleTop"
-            android:windowSoftInputMode="stateVisible|adjustPan"
+            android:windowSoftInputMode="stateHidden|adjustPan"
             android:screenOrientation="portrait"/>
         <activity
             android:name=".screen.search.stay.result.StaySearchResultActivity"

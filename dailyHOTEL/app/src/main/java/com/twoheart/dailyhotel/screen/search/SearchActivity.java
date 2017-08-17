@@ -5,6 +5,7 @@ import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.animation.LinearInterpolator;
 import android.widget.CompoundButton;
@@ -363,13 +364,12 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
 
                     if (mStaySearchFragment != null)
                     {
-                        mStaySearchFragment.clearSearchKeywordFocus();
+                        mStaySearchFragment.hideSearchKeyboard();
                     }
 
                     if (mGourmetSearchFragment != null)
                     {
                         mGourmetSearchFragment.resetSearchKeyword();
-                        mGourmetSearchFragment.showSearchKeyboard();
                         mGourmetSearchFragment.updateTermsOfLocationLayout();
                     }
                 } else
@@ -380,13 +380,12 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
 
                     if (mGourmetSearchFragment != null)
                     {
-                        mGourmetSearchFragment.clearSearchKeywordFocus();
+                        mGourmetSearchFragment.hideSearchKeyboard();
                     }
 
                     if (mStaySearchFragment != null)
                     {
                         mStaySearchFragment.resetSearchKeyword();
-                        mStaySearchFragment.showSearchKeyboard();
                         mStaySearchFragment.updateTermsOfLocationLayout();
                     }
                 }
