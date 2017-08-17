@@ -156,6 +156,7 @@ public class GourmetSearchLayout extends PlaceSearchLayout
 
         mCircleIndicator.setTotalCount(mRecyclerAdapter.getItemCount());
         mCircleIndicator.invalidate();
+        mCircleIndicator.requestLayout();
     }
 
     private SearchCardViewAdapter.OnEventListener mAdapterEventListener = new SearchCardViewAdapter.OnEventListener()
