@@ -188,6 +188,8 @@ public class StaySearchLayout extends PlaceSearchLayout
         mRecyclerView.setAdapter(mRecyclerAdapter);
 
         mCircleIndicator.setTotalCount(mRecyclerAdapter.getItemCount());
+        mCircleIndicator.postInvalidate();
+        mCircleIndicator.requestLayout();
     }
 
     private SearchCardViewAdapter.OnEventListener mAdapterEventListener = new SearchCardViewAdapter.OnEventListener()
