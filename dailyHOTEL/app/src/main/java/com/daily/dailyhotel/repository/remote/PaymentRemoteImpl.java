@@ -7,14 +7,20 @@ import com.daily.base.exception.BaseException;
 import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.domain.PaymentInterface;
 import com.daily.dailyhotel.entity.Card;
-import com.daily.dailyhotel.entity.Guest;
+import com.daily.dailyhotel.entity.DomesticGuest;
+import com.daily.dailyhotel.entity.OverseasGuest;
 import com.daily.dailyhotel.entity.PaymentResult;
 import com.daily.dailyhotel.entity.People;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayOutboundPayment;
+import com.daily.dailyhotel.entity.StayPayment;
+import com.daily.dailyhotel.entity.StayRefundPolicy;
 import com.daily.dailyhotel.repository.remote.model.CardData;
+import com.daily.dailyhotel.repository.remote.model.StayRefundPolicyData;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
+import com.twoheart.dailyhotel.network.dto.BaseDto;
 import com.twoheart.dailyhotel.network.dto.BaseListDto;
+import com.twoheart.dailyhotel.util.DailyCalendar;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -82,6 +88,42 @@ public class PaymentRemoteImpl implements PaymentInterface
     }
 
     @Override
+    public Observable<StayPayment> getStayPayment(StayBookDateTime stayBookDateTime, int index)
+    {
+        int nights = 1;
+
+        try
+        {
+            nights = stayBookDateTime.getNights();
+        } catch (Exception e)
+        {
+            nights = 1;
+        }
+
+        return DailyMobileAPI.getInstance(mContext).getStayPayment(index, stayBookDateTime.getCheckInDateTime("yyyyMMdd")//
+            , nights).map(stayPaymentDataBaseDto ->
+        {
+            StayPayment stayPayment = null;
+
+            if (stayPaymentDataBaseDto != null)
+            {
+                if (stayPaymentDataBaseDto.msgCode == 0 && stayPaymentDataBaseDto.data != null)
+                {
+                    stayPayment = stayPaymentDataBaseDto.data.getStayPayment();
+                } else
+                {
+                    throw new BaseException(stayPaymentDataBaseDto.msgCode, stayPaymentDataBaseDto.msg);
+                }
+            } else
+            {
+                throw new BaseException(-1, null);
+            }
+
+            return stayPayment;
+        }).observeOn(AndroidSchedulers.mainThread());
+    }
+
+    @Override
     public Observable<List<Card>> getEasyCardList()
     {
         return DailyMobileAPI.getInstance(mContext).getEasyCardList().map(new Function<BaseListDto<CardData>, List<Card>>()
@@ -116,9 +158,9 @@ public class PaymentRemoteImpl implements PaymentInterface
     }
 
     @Override
-    public Observable<PaymentResult> getPaymentTypeEasy(StayBookDateTime stayBookDateTime, int index//
+    public Observable<PaymentResult> getStayOutboundPaymentTypeEasy(StayBookDateTime stayBookDateTime, int index//
         , String rateCode, String rateKey, String roomTypeCode, int roomBedTypeId, People people//
-        , boolean usedBonus, Guest guest, int totalPrice, String billingKey)
+        , boolean usedBonus, OverseasGuest guest, int totalPrice, String billingKey)
     {
         JSONObject jsonObject = new JSONObject();
 
@@ -154,7 +196,7 @@ public class PaymentRemoteImpl implements PaymentInterface
             jsonObject = null;
         }
 
-        return DailyMobileAPI.getInstance(mContext).getPaymentTypeEasy(index, jsonObject).map(paymentResultDataBaseDto ->
+        return DailyMobileAPI.getInstance(mContext).getOutboundPaymentTypeEasy(index, jsonObject).map(paymentResultDataBaseDto ->
         {
             PaymentResult paymentResult = null;
 
@@ -177,9 +219,9 @@ public class PaymentRemoteImpl implements PaymentInterface
     }
 
     @Override
-    public Observable<PaymentResult> getPaymentTypeBonus(StayBookDateTime stayBookDateTime, int index//
+    public Observable<PaymentResult> getStayOutboundPaymentTypeBonus(StayBookDateTime stayBookDateTime, int index//
         , String rateCode, String rateKey, String roomTypeCode, int roomBedTypeId, People people//
-        , boolean usedBonus, Guest guest, int totalPrice)
+        , boolean usedBonus, OverseasGuest guest, int totalPrice)
     {
         JSONObject jsonObject = new JSONObject();
 
@@ -216,7 +258,7 @@ public class PaymentRemoteImpl implements PaymentInterface
             jsonObject = null;
         }
 
-        return DailyMobileAPI.getInstance(mContext).getPaymentTypeBonus(index, jsonObject).map(paymentResultDataBaseDto ->
+        return DailyMobileAPI.getInstance(mContext).getOutboundPaymentTypeBonus(index, jsonObject).map(paymentResultDataBaseDto ->
         {
             PaymentResult paymentResult = null;
 
@@ -237,6 +279,141 @@ public class PaymentRemoteImpl implements PaymentInterface
             return paymentResult;
         }).observeOn(AndroidSchedulers.mainThread());
     }
+
+    @Override
+    public Observable<PaymentResult> getStayPaymentTypeEasy(StayBookDateTime stayBookDateTime, int roomIndex//
+        , int bonusAmount, String couponCode, DomesticGuest guest, String transportation, String billingKey)
+    {
+        JSONObject jsonObject = new JSONObject();
+
+        try
+        {
+            jsonObject.put("billingKey", billingKey);
+            jsonObject.put("bonusAmount", bonusAmount);
+            jsonObject.put("checkInDate", stayBookDateTime.getCheckInDateTime("yyyy-MM-dd"));
+            jsonObject.put("days", stayBookDateTime.getNights());
+            jsonObject.put("couponCode", couponCode);
+            jsonObject.put("roomIdx", roomIndex);
+
+            JSONObject bookingGuestJSONObject = new JSONObject();
+            bookingGuestJSONObject.put("arrivalDateTime", stayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT));
+            bookingGuestJSONObject.put("arrivalType", transportation);
+            bookingGuestJSONObject.put("email", guest.email);
+            bookingGuestJSONObject.put("name", guest.name);
+            bookingGuestJSONObject.put("phone", guest.phone);
+
+            jsonObject.put("bookingGuest", bookingGuestJSONObject);
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+
+            jsonObject = null;
+        }
+
+        return DailyMobileAPI.getInstance(mContext).getPaymentTypeEasy(jsonObject).map(paymentResultDataBaseDto ->
+        {
+            PaymentResult paymentResult = null;
+
+            if (paymentResultDataBaseDto != null)
+            {
+                if (paymentResultDataBaseDto.msgCode == 100 && paymentResultDataBaseDto.data != null)
+                {
+                    paymentResult = paymentResultDataBaseDto.data.getPaymentTypeEasy();
+                } else
+                {
+                    throw new BaseException(paymentResultDataBaseDto.msgCode, paymentResultDataBaseDto.msg);
+                }
+            } else
+            {
+                throw new BaseException(-1, null);
+            }
+
+            return paymentResult;
+        }).observeOn(AndroidSchedulers.mainThread());
+    }
+
+    @Override
+    public Observable<PaymentResult> getStayPaymentTypeBonus(StayBookDateTime stayBookDateTime, int roomIndex//
+        , int bonusAmount, String couponCode, DomesticGuest guest, String transportation)
+    {
+        JSONObject jsonObject = new JSONObject();
+
+        try
+        {
+            jsonObject.put("bonusAmount", bonusAmount);
+            jsonObject.put("checkInDate", stayBookDateTime.getCheckInDateTime("yyyy-MM-dd"));
+            jsonObject.put("days", stayBookDateTime.getNights());
+            jsonObject.put("couponCode", couponCode);
+            jsonObject.put("roomIdx", roomIndex);
+
+            JSONObject bookingGuestJSONObject = new JSONObject();
+            bookingGuestJSONObject.put("arrivalDateTime", stayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT));
+            bookingGuestJSONObject.put("arrivalType", transportation);
+            bookingGuestJSONObject.put("email", guest.email);
+            bookingGuestJSONObject.put("name", guest.name);
+            bookingGuestJSONObject.put("phone", guest.phone);
+
+            jsonObject.put("bookingGuest", bookingGuestJSONObject);
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+
+            jsonObject = null;
+        }
+
+        return DailyMobileAPI.getInstance(mContext).getPaymentTypeBonus(jsonObject).map(paymentResultDataBaseDto ->
+        {
+            PaymentResult paymentResult = null;
+
+            if (paymentResultDataBaseDto != null)
+            {
+                if (paymentResultDataBaseDto.msgCode == 100 && paymentResultDataBaseDto.data != null)
+                {
+                    paymentResult = paymentResultDataBaseDto.data.getPaymentTypeEasy();
+                } else
+                {
+                    throw new BaseException(paymentResultDataBaseDto.msgCode, paymentResultDataBaseDto.msg);
+                }
+            } else
+            {
+                throw new BaseException(-1, null);
+            }
+
+            return paymentResult;
+        }).observeOn(AndroidSchedulers.mainThread());
+    }
+
+    @Override
+    public Observable<StayRefundPolicy> getStayRefundPolicy(StayBookDateTime stayBookDateTime, int stayIndex, int roomIndex)
+    {
+        return DailyMobileAPI.getInstance(mContext).getStayRefundPolicy(stayIndex, roomIndex
+        , stayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)
+        , stayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)).map(new Function<BaseDto<StayRefundPolicyData>, StayRefundPolicy>()
+        {
+            @Override
+            public StayRefundPolicy apply(@io.reactivex.annotations.NonNull BaseDto<StayRefundPolicyData> stayRefundPolicyDataBaseDto) throws Exception
+            {
+                StayRefundPolicy stayRefundPolicy = null;
+
+                if (stayRefundPolicyDataBaseDto != null)
+                {
+                    if (stayRefundPolicyDataBaseDto.msgCode == 100 && stayRefundPolicyDataBaseDto.data != null)
+                    {
+                        stayRefundPolicy = stayRefundPolicyDataBaseDto.data.getStayRefundPolicy();
+                    } else
+                    {
+                        throw new BaseException(stayRefundPolicyDataBaseDto.msgCode, stayRefundPolicyDataBaseDto.msg);
+                    }
+                } else
+                {
+                    throw new BaseException(-1, null);
+                }
+
+                return stayRefundPolicy;
+            }
+        }).observeOn(AndroidSchedulers.mainThread());
+    }
+
 
     private JSONArray getRooms(People[] peoples, int[] roomBedTypeIds)
     {

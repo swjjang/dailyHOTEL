@@ -1060,60 +1060,27 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
                             throw new NullPointerException("Booking.PlaceType placeType = null");
                     }
 
-                    if (placeType == Booking.PlaceType.STAY_OUTBOUND)
+                    int bookingIndex = internalDeepLink.getBookingIndex();
+                    int size = bookingList.size();
+                    ListItem listItem;
+                    Booking booking;
+
+                    for (int i = 0; i < size; i++)
                     {
-                        int bookingIndex = internalDeepLink.getBookingIndex();
-                        int size = bookingList.size();
-                        ListItem listItem;
-                        Booking booking;
+                        listItem = bookingList.get(i);
 
-                        for (int i = 0; i < size; i++)
+                        if (listItem.mType != ListItem.TYPE_ENTRY)
                         {
-                            listItem = bookingList.get(i);
-
-                            if (listItem.mType != ListItem.TYPE_ENTRY)
-                            {
-                                continue;
-                            }
-
-                            booking = bookingList.get(i).getItem();
-
-                            if (booking.index == bookingIndex)
-                            {
-                                unLockUI();
-                                mOnUserActionListener.onBookingClick(booking);
-                                break;
-                            }
-                        }
-                    } else
-                    {
-                        PlacePaymentInformation.PaymentType paymentType = PlacePaymentInformation.PaymentType.valueOf(internalDeepLink.getPaymentType());
-                        String placeName = internalDeepLink.getPlaceName();
-
-                        int index = -1;
-
-                        switch (placeType)
-                        {
-                            case STAY:
-                                String checkInTime = internalDeepLink.getCheckInTime();
-                                String checkOutTime = internalDeepLink.getCheckOutTime();
-
-                                index = searchStayFromPaymentInformation(baseActivity//
-                                    , placeName, paymentType, checkInTime, checkOutTime, bookingList);
-                                break;
-
-                            case GOURMET:
-                                String visitTime = internalDeepLink.getVisitTime();
-
-                                index = searchGourmetFromPaymentInformation(baseActivity//
-                                    , placeName, paymentType, visitTime, bookingList);
-                                break;
+                            continue;
                         }
 
-                        if (index >= 0)
+                        booking = bookingList.get(i).getItem();
+
+                        if (booking.index == bookingIndex && placeType == booking.placeType)
                         {
                             unLockUI();
-                            mOnUserActionListener.onBookingClick(bookingList.get(index).getItem());
+                            mOnUserActionListener.onBookingClick(booking);
+                            break;
                         }
                     }
                 }

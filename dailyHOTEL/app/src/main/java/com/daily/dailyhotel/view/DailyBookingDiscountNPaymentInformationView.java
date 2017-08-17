@@ -58,7 +58,7 @@ public class DailyBookingDiscountNPaymentInformationView extends ConstraintLayou
         {
             setDiscountInformationVisible(true);
 
-            mViewDataBinding.bonusGuideView.setVisibility(VISIBLE);
+            mViewDataBinding.bonusGuideTextView.setVisibility(VISIBLE);
 
             mViewDataBinding.bonusLayout.setVisibility(VISIBLE);
             mViewDataBinding.couponLayout.setVisibility(VISIBLE);
@@ -66,11 +66,21 @@ public class DailyBookingDiscountNPaymentInformationView extends ConstraintLayou
         {
             setDiscountInformationVisible(true);
 
-            mViewDataBinding.bonusGuideView.setVisibility(GONE);
+            mViewDataBinding.bonusGuideTextView.setVisibility(GONE);
 
             mViewDataBinding.bonusLayout.setVisibility(bonusVisible ? VISIBLE : GONE);
             mViewDataBinding.couponLayout.setVisibility(couponVisible ? VISIBLE : GONE);
         }
+    }
+
+    public void setBonusGuideText(CharSequence text)
+    {
+        if (mViewDataBinding == null)
+        {
+            return;
+        }
+
+        mViewDataBinding.bonusGuideTextView.setText(text);
     }
 
     public void setBonusEnabled(boolean enabled)

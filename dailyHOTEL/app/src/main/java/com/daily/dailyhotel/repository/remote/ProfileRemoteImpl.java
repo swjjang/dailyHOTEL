@@ -7,7 +7,7 @@ import com.daily.base.exception.BaseException;
 import com.daily.dailyhotel.domain.ProfileInterface;
 import com.daily.dailyhotel.entity.User;
 import com.daily.dailyhotel.entity.UserBenefit;
-import com.daily.dailyhotel.entity.UserInformation;
+import com.daily.dailyhotel.entity.UserSimpleInformation;
 import com.daily.dailyhotel.entity.UserTracking;
 import com.daily.dailyhotel.repository.remote.model.UserTrackingData;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
@@ -76,17 +76,17 @@ public class ProfileRemoteImpl implements ProfileInterface
     }
 
     @Override
-    public Observable<UserInformation> getUserInformation()
+    public Observable<UserSimpleInformation> getUserSimpleInformation()
     {
-        return DailyMobileAPI.getInstance(mContext).getUserInformationForPayment().map(userInformationDataBaseDto ->
+        return DailyMobileAPI.getInstance(mContext).getUserSimpleInformation().map(userInformationDataBaseDto ->
         {
-            UserInformation userInformation = null;
+            UserSimpleInformation userSimpleInformation = null;
 
             if (userInformationDataBaseDto != null)
             {
-                if (userInformationDataBaseDto.msgCode == 0 && userInformationDataBaseDto.data != null)
+                if (userInformationDataBaseDto.msgCode == 100 && userInformationDataBaseDto.data != null)
                 {
-                    userInformation = userInformationDataBaseDto.data.getUserInformation();
+                    userSimpleInformation = userInformationDataBaseDto.data.getUserInformation();
                 } else
                 {
                     throw new BaseException(userInformationDataBaseDto.msgCode, userInformationDataBaseDto.msg);
@@ -96,7 +96,7 @@ public class ProfileRemoteImpl implements ProfileInterface
                 throw new BaseException(-1, null);
             }
 
-            return userInformation;
+            return userSimpleInformation;
         }).observeOn(AndroidSchedulers.mainThread());
     }
 

@@ -197,6 +197,30 @@ public class DailyInternalDeepLink extends DailyDeepLink
         return getIntent(context, Uri.parse(stringBuilder.toString()));
     }
 
+    public static Intent getStayBookingDetailScreenLink(Context context, int bookingIndex)
+    {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("dailyhotel://");
+        stringBuilder.append(HOST_INTERNAL_DAILYHOTEL);
+        stringBuilder.append("?" + PARAM_VIEW + "=" + VIEW_BOOKING_DETAIL);
+        stringBuilder.append("&" + PARAM_PLACE_TYPE + "=" + STAY);
+        stringBuilder.append("&" + PARAM_BOOKING_INDEX + "=" + bookingIndex);
+
+        return getIntent(context, Uri.parse(stringBuilder.toString()));
+    }
+
+    public static Intent getGourmetBookingDetailScreenLink(Context context, int bookingIndex)
+    {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("dailyhotel://");
+        stringBuilder.append(HOST_INTERNAL_DAILYHOTEL);
+        stringBuilder.append("?" + PARAM_VIEW + "=" + VIEW_BOOKING_DETAIL);
+        stringBuilder.append("&" + PARAM_PLACE_TYPE + "=" + GOURMET);
+        stringBuilder.append("&" + PARAM_BOOKING_INDEX + "=" + bookingIndex);
+
+        return getIntent(context, Uri.parse(stringBuilder.toString()));
+    }
+
     public static Intent getGourmetBookingDetailScreenLink(Context context, String placeName//
         , PlacePaymentInformation.PaymentType paymentType, String visitTime)
     {

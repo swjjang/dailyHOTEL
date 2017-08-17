@@ -21,6 +21,8 @@ import com.daily.dailyhotel.repository.remote.model.StayOutboundReceiptData;
 import com.daily.dailyhotel.repository.remote.model.StayOutboundRefundData;
 import com.daily.dailyhotel.repository.remote.model.StayOutboundRefundDetailData;
 import com.daily.dailyhotel.repository.remote.model.StayOutboundsData;
+import com.daily.dailyhotel.repository.remote.model.StayPaymentData;
+import com.daily.dailyhotel.repository.remote.model.StayRefundPolicyData;
 import com.daily.dailyhotel.repository.remote.model.SuggestsData;
 import com.daily.dailyhotel.repository.remote.model.UserBenefitData;
 import com.daily.dailyhotel.repository.remote.model.UserData;
@@ -1239,12 +1241,12 @@ public class DailyMobileAPI
         return mDailyMobileService.getUserBenefit(Crypto.getUrlDecoderEx(API)).subscribeOn(Schedulers.io());
     }
 
-    public Observable<BaseDto<UserInformationData>> getUserInformationForPayment()
+    public Observable<BaseDto<UserInformationData>> getUserSimpleInformation()
     {
-        final String API = Constants.UNENCRYPTED_URL ? "api/user/information"//
-            : "NTQkNTMkNzckMTgkODIkODEkMTgkNjYkMzQkNTYkODIkNzYkNzQkMzckNTQkMjMk$ODAzNUVCRjAyNDIwMzPClCNATc5ODc2OEEzIN0JU1MjVCMUQwNEMzOTTY2NEMUSIzRDA5MjWAyNkRTBNQDE1NUZVPFNBUEMzQTFDMg==$";
+        final String API = Constants.UNENCRYPTED_URL ? "api/v5/users/profile/simple"//
+            : "MjkkMzQkNzMkNzAkNDEkNzMkMTIkNjMkNDUkOTAkMzYkODIkOTkkNDMkMTAkMTYk$MDE0NTQ0OTYZFVRkZM1OTMyQzgxRDY0MPTM1QSVjlCNDcRMzNAEVBM0Q5QjcyRjY0NUFJCNjRFQ0U0ONNTFVDEMUE1RUMwOLTBCNQ=Z=$";
 
-        return mDailyMobileService.getUserInformationForPayment(Crypto.getUrlDecoderEx(API)).subscribeOn(Schedulers.io());
+        return mDailyMobileService.getUserSimpleInformation(Crypto.getUrlDecoderEx(API)).subscribeOn(Schedulers.io());
     }
 
     public Observable<BaseDto<UserTrackingData>> getUserTracking()
@@ -1317,6 +1319,14 @@ public class DailyMobileAPI
             , jsonObject).subscribeOn(Schedulers.io());
     }
 
+    public Observable<BaseDto<StayPaymentData>> getStayPayment(int roomIndex, String date, int nights)
+    {
+        final String API = Constants.UNENCRYPTED_URL ? "api/hotel/v1/payment/detail"//
+            : "NzckMjIkMTIkNzkkMjYkODEkNTAkNTEkNjUkMzUkOCQ4MyQzMSQyNSQxNCQ5NCQ=$NTZEMEQ4EQ0EyIRMzY0N0IwQzOMYxZMjICwNTQzQMEI5QTVFOEE3RDEIB1MjRFQzZBNzgxVM0ExQzFGODc0NUER4OKNFThOGMzJBNA==$";
+
+        return mDailyMobileService.getStayPayment(Crypto.getUrlDecoderEx(API), roomIndex, date, nights).subscribeOn(Schedulers.io());
+    }
+
     public Observable<BaseListDto<CardData>> getEasyCardList()
     {
         final String API = Constants.UNENCRYPTED_URL ? "api/user/session/billing/card/info"//
@@ -1325,7 +1335,7 @@ public class DailyMobileAPI
         return mDailyMobileService.getEasyCardList(Crypto.getUrlDecoderEx(API)).subscribeOn(Schedulers.io());
     }
 
-    public Observable<BaseDto<PaymentResultData>> getPaymentTypeEasy(int index, JSONObject jsonObject)
+    public Observable<BaseDto<PaymentResultData>> getOutboundPaymentTypeEasy(int index, JSONObject jsonObject)
     {
         final String URL = Constants.DEBUG ? DailyPreference.getInstance(mContext).getBaseOutBoundUrl() : Setting.getOutboundServerUrl();
 
@@ -1339,7 +1349,15 @@ public class DailyMobileAPI
             , jsonObject).subscribeOn(Schedulers.io());
     }
 
-    public Observable<BaseDto<PaymentResultData>> getPaymentTypeBonus(int index, JSONObject jsonObject)
+    public Observable<BaseDto<PaymentResultData>> getPaymentTypeEasy(JSONObject jsonObject)
+    {
+        final String API = Constants.UNENCRYPTED_URL ? "api/v4/booking/hotel/oneclick"//
+            : "NDQkNzMkNDUkNjAkMzEkMzkkNyQxNSQ0OSQ4OSQxJDM0JDIyJDM2JDc5JDgxJA==$OADFGREUJ1NkUwMjXExMTYZyQjk0MzMzQTgXPO1Q0ZDNTBBGM0VBZQSM0RDRUQwMDAwNDWk0QUEzNUIO2JRjQ1YMjM3M0VEXQ0I3RA==$";
+
+        return mDailyMobileService.getPaymentTypeEasy(Crypto.getUrlDecoderEx(API), jsonObject).subscribeOn(Schedulers.io());
+    }
+
+    public Observable<BaseDto<PaymentResultData>> getOutboundPaymentTypeBonus(int index, JSONObject jsonObject)
     {
         final String URL = Constants.DEBUG ? DailyPreference.getInstance(mContext).getBaseOutBoundUrl() : Setting.getOutboundServerUrl();
 
@@ -1351,6 +1369,23 @@ public class DailyMobileAPI
 
         return mDailyMobileService.getPaymentTypeBonus(Crypto.getUrlDecoderEx(URL) + Crypto.getUrlDecoderEx(API, urlParams)//
             , jsonObject).subscribeOn(Schedulers.io());
+    }
+
+    public Observable<BaseDto<PaymentResultData>> getPaymentTypeBonus(JSONObject jsonObject)
+    {
+        final String API = Constants.UNENCRYPTED_URL ? "api/v4/booking/hotel/daily/only"//
+            : "MzgkNDUkMyQyOSQ2MiQyNCQxNiQ0OSQ0OSQxNCQxMSQ3NyQ2MSQyMCQ0MSQxMyQ=$RTAU0NEFCRjFRQDQQzgAzIOTE0NjAJxMDAxSMEU3NTRU4RUIM0RkE0KXDNjRDMThEEOTQxNzPdBN0VGRkJVCNTgyMzMyN0ZGQzYzOA==$";
+
+        return mDailyMobileService.getPaymentTypeBonus(Crypto.getUrlDecoderEx(API), jsonObject).subscribeOn(Schedulers.io());
+    }
+
+    public Observable<BaseDto<StayRefundPolicyData>> getStayRefundPolicy(int stayIndex, int roomIndex, String checkInDate, String checkOutDate)
+    {
+        final String API = Constants.UNENCRYPTED_URL ? "api/v2/payment/policy_refund"//
+            : "NjYkMzYkMzIkNTgkMjEkMjQkNDEkODgkNTQkNTgkNzckNDEkNTAkMzUkNzUkMzEk$RjFBOTM0MjJFODlCNkJFRTTlVCRTIxQBTE3RYMUZCCOGCUJDQTYwQNTdEMPkE4JRDUyRNkYyOTU1ZNUYYxNMjM2RTlBMDQxNOTI0Qg==$";
+
+        return mDailyMobileService.getStayRefundPolicy(Crypto.getUrlDecoderEx(API), stayIndex//
+            , roomIndex, checkInDate, checkOutDate).subscribeOn(Schedulers.io());
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////////////

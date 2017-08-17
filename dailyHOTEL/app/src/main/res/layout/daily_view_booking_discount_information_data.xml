@@ -31,7 +31,7 @@
                 dailyFont:style="Medium"/>
 
             <com.daily.base.widget.DailyTextView
-                android:id="@+id/bonusGuideView"
+                android:id="@+id/bonusGuideTextView"
                 android:layout_width="match_parent"
                 android:layout_height="36dp"
                 android:drawablePadding="6dp"

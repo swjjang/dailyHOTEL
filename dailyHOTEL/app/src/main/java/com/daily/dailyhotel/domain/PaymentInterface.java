@@ -1,11 +1,14 @@
 package com.daily.dailyhotel.domain;
 
 import com.daily.dailyhotel.entity.Card;
-import com.daily.dailyhotel.entity.Guest;
+import com.daily.dailyhotel.entity.DomesticGuest;
+import com.daily.dailyhotel.entity.OverseasGuest;
 import com.daily.dailyhotel.entity.PaymentResult;
 import com.daily.dailyhotel.entity.People;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayOutboundPayment;
+import com.daily.dailyhotel.entity.StayPayment;
+import com.daily.dailyhotel.entity.StayRefundPolicy;
 
 import java.util.List;
 
@@ -17,14 +20,24 @@ public interface PaymentInterface
     Observable<StayOutboundPayment> getStayOutboundPayment(StayBookDateTime stayBookDateTime, int index//
         , String rateCode, String rateKey, String roomTypeCode, int roomBedTypeId, People people);
 
+    Observable<StayPayment> getStayPayment(StayBookDateTime stayBookDateTime, int roomIndex);
+
     // 간편 결제 카드 리스트를 얻어온다.
     Observable<List<Card>> getEasyCardList();
 
-    Observable<PaymentResult> getPaymentTypeEasy(StayBookDateTime stayBookDateTime, int index//
+    Observable<PaymentResult> getStayOutboundPaymentTypeEasy(StayBookDateTime stayBookDateTime, int index//
         , String rateCode, String rateKey, String roomTypeCode, int roomBedTypeId, People people//
-        , boolean usedBonus, Guest guest, int totalPrice, String billingKey);
+        , boolean usedBonus, OverseasGuest guest, int totalPrice, String billingKey);
 
-    Observable<PaymentResult> getPaymentTypeBonus(StayBookDateTime stayBookDateTime, int index//
+    Observable<PaymentResult> getStayOutboundPaymentTypeBonus(StayBookDateTime stayBookDateTime, int index//
         , String rateCode, String rateKey, String roomTypeCode, int roomBedTypeId, People people//
-        , boolean usedBonus, Guest guest, int totalPrice);
+        , boolean usedBonus, OverseasGuest guest, int totalPrice);
+
+    Observable<PaymentResult> getStayPaymentTypeEasy(StayBookDateTime stayBookDateTime, int roomIndex//
+        , int bonusAmount, String couponCode, DomesticGuest guest, String transportation, String billingKey);
+
+    Observable<PaymentResult> getStayPaymentTypeBonus(StayBookDateTime stayBookDateTime, int roomIndex//
+        , int bonusAmount, String couponCode, DomesticGuest guest, String transportation);
+
+    Observable<StayRefundPolicy> getStayRefundPolicy(StayBookDateTime stayBookDateTime, int stayIndex, int roomIndex);
 }

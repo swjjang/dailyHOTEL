@@ -85,57 +85,156 @@
                     android:layout_marginTop="10dp"
                     android:background="@color/default_line_cdcdcdd"/>
 
-                <!-- 투숙자 정보 -->
-                <LinearLayout
-                    android:id="@+id/guestLinearLayout"
+                <!-- 예약자 정보 -->
+                <com.daily.dailyhotel.view.DailyBookingInformationsView
+                    android:id="@+id/userInformationView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:layout_marginTop="10dp"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@color/default_line_cdcdcdd"/>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="55dp">
+
+                    <com.daily.base.widget.DailyCheckBox
+                        android:id="@+id/guestCheckBox"
+                        android:layout_width="wrap_content"
+                        android:layout_height="55dp"
+                        android:layout_marginLeft="10dp"
+                        android:gravity="center_vertical"
+                        android:theme="@style/CheckBoxTheme"/>
+
+                    <com.daily.base.widget.DailyTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="55dp"
+                        android:layout_marginRight="15dp"
+                        android:layout_toRightOf="@+id/guestCheckBox"
+                        android:gravity="center_vertical"
+                        android:text="@string/message_stay_check_other_user"
+                        android:textColor="@color/default_text_c929292"
+                        android:textSize="12dp"/>
+                </RelativeLayout>
+
+                <!-- 투숙자 정보 -->
+                <com.daily.dailyhotel.view.DailyBookingGuestInformationsView
+                    android:id="@+id/guestInformationView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="20dp"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp"/>
+
+                <LinearLayout
+                    android:id="@+id/transportationLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
                     android:orientation="vertical"
-                    android:paddingBottom="20dp">
+                    android:visibility="gone">
 
-                    <com.daily.dailyhotel.view.DailyBookingGuestInformationsView
-                        android:id="@+id/guestInformationView"
+                    <View
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:paddingLeft="15dp"
-                        android:paddingRight="15dp"/>
+                        android:layout_height="1px"
+                        android:background="@color/default_line_cdcdcdd"/>
 
-                    <android.support.constraint.ConstraintLayout
+                    <RelativeLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:minHeight="36dp"
-                        android:paddingLeft="15dp"
-                        android:paddingRight="15dp">
+                        android:layout_height="56dp">
 
                         <com.daily.base.widget.DailyTextView
-                            android:id="@+id/guestPeopleTextView"
-                            android:layout_width="0dp"
+                            android:id="@+id/howToVisitTextView"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="11dp"
-                            android:gravity="left"
-                            android:text="@string/label_stay_outbound_payment_people"
+                            android:layout_centerVertical="true"
+                            android:text="@string/label_how_to_visit"
                             android:textColor="@color/default_text_c929292"
-                            android:textSize="13dp"
-                            app:layout_constraintHorizontal_weight="0.3"
-                            app:layout_constraintLeft_toLeftOf="parent"
-                            app:layout_constraintRight_toLeftOf="@+id/guestPeopleEditText"
-                            app:layout_constraintTop_toTopOf="parent"/>
+                            android:textSize="13dp"/>
+
+                        <FrameLayout
+                            android:id="@+id/visitWalkView"
+                            android:layout_width="100dp"
+                            android:layout_height="32dp"
+                            android:layout_centerVertical="true"
+                            android:layout_toLeftOf="@+id/visitCarView"
+                            android:background="@drawable/selector_select_visittype_background">
+
+                            <com.daily.base.widget.DailyTextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:duplicateParentState="true"
+                                android:gravity="center_vertical"
+                                android:text="@string/label_visit_walk"
+                                android:textColor="@drawable/selector_text_color_c323232_cb70038"
+                                android:textSize="13dp"
+                                app:drawableCompatLeft="@drawable/payment_ic_walk"/>
+                        </FrameLayout>
+
+                        <FrameLayout
+                            android:id="@+id/visitCarView"
+                            android:layout_width="100dp"
+                            android:layout_height="32dp"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="8dp"
+                            android:background="@drawable/selector_select_visittype_background">
+
+                            <com.daily.base.widget.DailyTextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:drawablePadding="4dp"
+                                android:duplicateParentState="true"
+                                android:gravity="center_vertical"
+                                android:text="@string/label_visit_car"
+                                android:textColor="@drawable/selector_text_color_c323232_cb70038"
+                                android:textSize="13dp"
+                                app:drawableCompatLeft="@drawable/payment_ic_parking"/>
+                        </FrameLayout>
 
                         <com.daily.base.widget.DailyTextView
-                            android:id="@+id/guestPeopleEditText"
-                            android:layout_width="0dp"
+                            android:id="@+id/noParkingView"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginBottom="11dp"
-                            android:layout_marginTop="11dp"
-                            android:gravity="right"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:text="@string/label_no_parking"
                             android:textColor="@color/default_text_c323232"
-                            android:textSize="13dp"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintHorizontal_weight="0.7"
-                            app:layout_constraintLeft_toRightOf="@+id/guestPeopleTextView"
-                            app:layout_constraintRight_toRightOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"/>
-                    </android.support.constraint.ConstraintLayout>
+                            android:textSize="13dp"/>
+                    </RelativeLayout>
+
+                    <LinearLayout
+                        android:id="@+id/guideTransportationLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="10dp">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:srcCompat="@drawable/ic_payment_notice"/>
+
+                        <com.daily.base.widget.DailyTextView
+                            android:id="@+id/guideTransportationTextView"
+                            android:layout_width="match_parent"
+                            android:layout_height="34dp"
+                            android:layout_marginLeft="5dp"
+                            android:text="@string/message_visit_car_memo"
+                            android:textColor="@color/default_text_c929292"
+                            android:textSize="11dp"/>
+                    </LinearLayout>
                 </LinearLayout>
 
                 <View
@@ -151,7 +250,7 @@
                     android:paddingLeft="15dp"
                     android:paddingRight="15dp"
                     android:paddingTop="25dp"
-                    android:text="@string/label_stay_outbound_payment_booking_step2"
+                    android:text="@string/label_booking_step2"
                     android:textColor="@color/default_text_c323232"
                     android:textSize="14dp"
                     dailyFont:style="Medium"/>
@@ -167,57 +266,6 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:paddingBottom="15dp"/>
-
-                <com.daily.base.widget.DailyTextView
-                    android:id="@+id/additionalTaxMemoTextView"
-                    android:layout_width="match_parent"
-                    android:layout_height="36dp"
-                    android:drawablePadding="6dp"
-                    android:gravity="center_vertical"
-                    android:paddingLeft="15dp"
-                    android:paddingRight="15dp"
-                    android:text="@string/message_stay_outbound_payment_additional_tax"
-                    android:textColor="@color/default_text_c929292"
-                    android:textSize="11dp"
-                    app:drawableCompatLeft="@drawable/ic_payment_notice"/>
-
-                <LinearLayout
-                    android:id="@+id/additionalTaxLayout"
-                    android:layout_width="match_parent"
-                    android:layout_height="55dp"
-                    android:layout_marginBottom="15dp"
-                    android:layout_marginLeft="15dp"
-                    android:layout_marginRight="15dp"
-                    android:layout_marginTop="5dp"
-                    android:background="@drawable/shape_fillrect_le8e8e9_bfafafb"
-                    android:orientation="vertical"
-                    android:paddingLeft="10dp"
-                    android:paddingRight="10dp">
-
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="36dp"
-                        android:layout_marginTop="10dp"
-                        android:gravity="center_vertical">
-
-                        <com.daily.base.widget.DailyTextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:duplicateParentState="true"
-                            android:text="@string/label_stay_outbound_payment_additional_tax"
-                            android:textColor="@color/default_text_c929292"
-                            android:textSize="13dp"/>
-
-                        <com.daily.base.widget.DailyTextView
-                            android:id="@+id/taxPriceTextView"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentRight="true"
-                            android:duplicateParentState="true"
-                            android:textColor="@color/default_text_c323232"
-                            android:textSize="13dp"/>
-                    </RelativeLayout>
-                </LinearLayout>
 
                 <View
                     android:layout_width="match_parent"

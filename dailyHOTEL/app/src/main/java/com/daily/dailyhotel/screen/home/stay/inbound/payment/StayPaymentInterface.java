@@ -1,4 +1,4 @@
-package com.daily.dailyhotel.screen.home.stay.outbound.payment;
+package com.daily.dailyhotel.screen.home.stay.inbound.payment;
 
 import android.content.DialogInterface;
 import android.text.SpannableString;
@@ -11,21 +11,23 @@ import com.daily.dailyhotel.view.DailyBookingPaymentTypeView;
 
 import java.util.List;
 
-public interface StayOutboundPaymentInterface extends BaseDialogViewInterface
+public interface StayPaymentInterface extends BaseDialogViewInterface
 {
-    void setBooking(SpannableString checkInDate, SpannableString checkOutDate, int nights, String stayName, String roomType);
+    void setBooking(SpannableString checkInDate, SpannableString checkOutDate, int nights, String stayName, String roomName);
 
-    void setGuestInformation(String firstName, String lastName, String mobile, String email);
+    void setUserInformationVisible(boolean visible);
+
+    void setUserInformation(String name, String mobile, String email);
+
+    void setGuestInformation(String name, String mobile, String email, boolean overseas);
 
     void setGuestMobileInformation(String mobile);
 
-    void setPeople(People people);
-
-    void setStayOutboundPayment(int bonus, int nights, int totalPrice, int discountPrice, double taxPrice);
+    void setStayPayment(int bonus, int nights, int totalPrice, int discountPrice);
 
     void setEasyCard(Card card);
 
-    void setRefundPolicyList(List<String> refundPolicyList);
+    void setRefundPolicy(String refundPolicy);
 
     void setVendorName(String vendorName);
 
@@ -40,6 +42,10 @@ public interface StayOutboundPaymentInterface extends BaseDialogViewInterface
     void setBonusEnabled(boolean enabled);
 
     void setBonusSelected(boolean selected);
+
+    void setTransportation(String type);
+
+    void setTransportationType(StayPaymentPresenter.Transportation type);
 
     void showAgreeTermDialog(DailyBookingPaymentTypeView.PaymentType paymentType//
         , View.OnClickListener onClickListener, DialogInterface.OnCancelListener cancelListener);

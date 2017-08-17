@@ -614,15 +614,15 @@ public class HotelPaymentActivity extends PlacePaymentActivity
         StayThankYouAnalyticsParam stayThankYouAnalyticsParam = new StayThankYouAnalyticsParam();
         stayThankYouAnalyticsParam.params = params;
 
-        Intent intent = StayThankYouActivity.newInstance(this, ((StayPaymentInformation) paymentInformation).isOverSeas, mCategoryCode, placeName, imageUrl//
-            , stayBookingDay.getCheckInDay(DailyCalendar.ISO_8601_FORMAT), stayBookingDay.getCheckOutDay(DailyCalendar.ISO_8601_FORMAT)//
-            , roomType, stayThankYouAnalyticsParam);
+//        Intent intent = StayThankYouActivity.newInstance(this, ((StayPaymentInformation) paymentInformation).isOverSeas, mCategoryCode, placeName, imageUrl//
+//            , stayBookingDay.getCheckInDay(DailyCalendar.ISO_8601_FORMAT), stayBookingDay.getCheckOutDay(DailyCalendar.ISO_8601_FORMAT)//
+//            , roomType, stayThankYouAnalyticsParam);
 
         //        Intent intent = HotelPaymentThankyouActivity.newInstance(this, imageUrl, placeName, roomType//
         //            , ((StayPaymentInformation) paymentInformation).isOverSeas, userName, stayBookingDay//
         //            , paymentInformation.paymentType.getName(), discountType, params);
 
-        startActivityForResult(intent, REQUEST_CODE_PAYMETRESULT_ACTIVITY);
+//        startActivityForResult(intent, REQUEST_CODE_PAYMETRESULT_ACTIVITY);
     }
 
     @Override

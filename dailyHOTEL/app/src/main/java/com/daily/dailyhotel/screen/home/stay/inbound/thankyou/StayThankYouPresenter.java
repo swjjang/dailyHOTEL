@@ -38,10 +38,11 @@ public class StayThankYouPresenter extends BaseExceptionPresenter<StayThankYouAc
 
     private ProfileRemoteImpl mProfileRemoteImpl;
 
+    private int mReservationId;
     private String mStayName;
     private String mImageUrl;
     private StayBookDateTime mStayBookDateTime;
-    private String mRoomType;
+    private String mRoomName;
     private String mCategory;
     private boolean mOverseas;
 
@@ -114,7 +115,8 @@ public class StayThankYouPresenter extends BaseExceptionPresenter<StayThankYouAc
 
         setStayBookDateTime(checkInDateTime, checkOutDateTime);
 
-        mRoomType = intent.getStringExtra(StayThankYouActivity.INTENT_EXTRA_DATA_ROOM_TYPE);
+        mRoomName = intent.getStringExtra(StayThankYouActivity.INTENT_EXTRA_DATA_ROOM_NAME);
+        mReservationId = intent.getIntExtra(StayThankYouActivity.INTENT_EXTRA_DATA_RESERVATION_ID, -1);
 
         mAnalytics.setAnalyticsParam(intent.getParcelableExtra(BaseActivity.INTENT_EXTRA_DATA_ANALYTICS));
 
@@ -150,7 +152,7 @@ public class StayThankYouPresenter extends BaseExceptionPresenter<StayThankYouAc
                 checkOutDate.length() - 3, checkOutDate.length(),//
                 Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
-            getViewInterface().setBooking(checkInSpannableString, checkOutSpannableString, mStayBookDateTime.getNights(), mStayName, mRoomType);
+            getViewInterface().setBooking(checkInSpannableString, checkOutSpannableString, mStayBookDateTime.getNights(), mStayName, mRoomName);
 
             // 펜션인 경우 예약 대기 표시
             if (AnalyticsManager.ValueType.PENSION.equalsIgnoreCase(mCategory) == true)
@@ -246,9 +248,9 @@ public class StayThankYouPresenter extends BaseExceptionPresenter<StayThankYouAc
             return true;
         }
 
-        setResult(Activity.RESULT_OK);
-
         mAnalytics.onEventBackClick(getActivity());
+
+        startActivity(DailyInternalDeepLink.getStayBookingDetailScreenLink(getActivity(), mReservationId));
 
         return super.onBackPressed();
     }
@@ -306,9 +308,15 @@ public class StayThankYouPresenter extends BaseExceptionPresenter<StayThankYouAc
     @Override
     public void onConfirmClick()
     {
+        if (isLock() == true)
+        {
+            return;
+        }
+
         mAnalytics.onEventConfirmClick(getActivity());
 
-        setResult(Activity.RESULT_OK);
+        startActivity(DailyInternalDeepLink.getStayBookingDetailScreenLink(getActivity(), mReservationId));
+
         finish();
     }
 

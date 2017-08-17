@@ -1,14 +1,14 @@
-package com.daily.dailyhotel.screen.home.stay.outbound.payment;
+package com.daily.dailyhotel.screen.home.stay.inbound.payment;
 
 import android.app.Activity;
 
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.entity.StayBookDateTime;
-import com.daily.dailyhotel.entity.StayOutboundPayment;
+import com.daily.dailyhotel.entity.StayPayment;
 import com.daily.dailyhotel.entity.UserSimpleInformation;
-import com.daily.dailyhotel.parcel.analytics.StayOutboundPaymentAnalyticsParam;
-import com.daily.dailyhotel.parcel.analytics.StayOutboundThankYouAnalyticsParam;
+import com.daily.dailyhotel.parcel.analytics.StayPaymentAnalyticsParam;
+import com.daily.dailyhotel.parcel.analytics.StayThankYouAnalyticsParam;
 import com.daily.dailyhotel.view.DailyBookingPaymentTypeView;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
@@ -17,19 +17,19 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-public class StayOutboundPaymentAnalyticsImpl implements StayOutboundPaymentPresenter.StayOutboundPaymentAnalyticsInterface
+public class StayPaymentAnalyticsImpl implements StayPaymentPresenter.StayPaymentAnalyticsInterface
 {
-    private StayOutboundPaymentAnalyticsParam mAnalyticsParam;
+    private StayPaymentAnalyticsParam mAnalyticsParam;
     private String mStartPaymentType;
 
     @Override
-    public void setAnalyticsParam(StayOutboundPaymentAnalyticsParam analyticsParam)
+    public void setAnalyticsParam(StayPaymentAnalyticsParam analyticsParam)
     {
         mAnalyticsParam = analyticsParam;
     }
 
     @Override
-    public StayOutboundPaymentAnalyticsParam getAnalyticsParam()
+    public StayPaymentAnalyticsParam getAnalyticsParam()
     {
         return mAnalyticsParam;
     }
@@ -64,8 +64,8 @@ public class StayOutboundPaymentAnalyticsImpl implements StayOutboundPaymentPres
     }
 
     @Override
-    public void onScreenPaymentCompleted(Activity activity, StayOutboundPayment stayOutboundPayment, StayBookDateTime stayBookDateTime//
-        , String stayName, DailyBookingPaymentTypeView.PaymentType paymentType, boolean fullBonus, boolean registerEasyCard, UserSimpleInformation userSimpleInformation)
+    public void onScreenPaymentCompleted(Activity activity, StayPayment stayPayment, StayBookDateTime stayBookDateTime//
+        , int stayIndex, String stayName, DailyBookingPaymentTypeView.PaymentType paymentType, boolean fullBonus, boolean registerEasyCard, UserSimpleInformation userSimpleInformation)
     {
         if (activity == null || mAnalyticsParam == null || paymentType == null)
         {
@@ -109,10 +109,10 @@ public class StayOutboundPaymentAnalyticsImpl implements StayOutboundPaymentPres
             // event
             params.put(AnalyticsManager.KeyType.PROVINCE, AnalyticsManager.ValueType.EMPTY);
             params.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.EMPTY);
-            params.put(AnalyticsManager.KeyType.PAYMENT_PRICE, Integer.toString(stayOutboundPayment.discountPrice));
+            params.put(AnalyticsManager.KeyType.PAYMENT_PRICE, Integer.toString(stayPayment.discountPrice));
             params.put(AnalyticsManager.KeyType.CATEGORY, AnalyticsManager.ValueType.EMPTY);
             params.put(AnalyticsManager.KeyType.GRADE, mAnalyticsParam.grade);
-            params.put(AnalyticsManager.KeyType.PLACE_INDEX, Integer.toString(stayOutboundPayment.stayIndex));
+            params.put(AnalyticsManager.KeyType.PLACE_INDEX, Integer.toString(stayIndex));
             params.put(AnalyticsManager.KeyType.NAME, stayName);
             params.put(AnalyticsManager.KeyType.IS_SHOW_ORIGINAL_PRICE, mAnalyticsParam.showOriginalPrice ? "y" : "n");
             params.put(AnalyticsManager.KeyType.LIST_INDEX, Integer.toString(mAnalyticsParam.rankingPosition));
@@ -125,7 +125,7 @@ public class StayOutboundPaymentAnalyticsImpl implements StayOutboundPaymentPres
             params.put(AnalyticsManager.KeyType.RATING, mAnalyticsParam.rating);
             params.put(AnalyticsManager.KeyType.DAILYCHOICE, "n");
             params.put(AnalyticsManager.KeyType.COUPON_CODE, AnalyticsManager.ValueType.EMPTY);
-            params.put(AnalyticsManager.KeyType.USED_BOUNS, stayOutboundPayment.totalPrice != stayOutboundPayment.discountPrice ? "y" : "n");
+            params.put(AnalyticsManager.KeyType.USED_BOUNS, stayPayment.totalPrice != stayPayment.discountPrice ? "y" : "n");
 
             String strDate = DailyCalendar.format(new Date(), "yyyyMMddHHmmss");
             String transId = strDate + '_' + userSimpleInformation.index;
@@ -135,6 +135,19 @@ public class StayOutboundPaymentAnalyticsImpl implements StayOutboundPaymentPres
         {
             ExLog.e(e.toString());
         }
+    }
+
+    @Override
+    public void onEventTransportationVisible(Activity activity, boolean visible)
+    {
+        if (activity == null)
+        {
+            return;
+        }
+
+        AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.BOOKING//
+            , visible ? AnalyticsManager.Action.WAYTOVISIT_OPEN : AnalyticsManager.Action.WAYTOVISIT_CLOSE//
+            , AnalyticsManager.ValueType.EMPTY, null);
     }
 
     @Override
@@ -164,15 +177,15 @@ public class StayOutboundPaymentAnalyticsImpl implements StayOutboundPaymentPres
     }
 
     @Override
-    public StayOutboundThankYouAnalyticsParam getThankYouAnalyticsParam(DailyBookingPaymentTypeView.PaymentType paymentType//
+    public StayThankYouAnalyticsParam getThankYouAnalyticsParam(DailyBookingPaymentTypeView.PaymentType paymentType//
         , boolean fullBonus, boolean usedBonus, boolean registerEasyCard)
     {
-        StayOutboundThankYouAnalyticsParam analyticsParam = new StayOutboundThankYouAnalyticsParam();
+        StayThankYouAnalyticsParam analyticsParam = new StayThankYouAnalyticsParam();
 
-        analyticsParam.paymentType = paymentType;
-        analyticsParam.fullBonus = fullBonus;
-        analyticsParam.usedBonus = usedBonus;
-        analyticsParam.registerEasyCard = registerEasyCard;
+        //        analyticsParam.paymentType = paymentType;
+        //        analyticsParam.fullBonus = fullBonus;
+        //        analyticsParam.usedBonus = usedBonus;
+        //        analyticsParam.registerEasyCard = registerEasyCard;
 
         return analyticsParam;
     }

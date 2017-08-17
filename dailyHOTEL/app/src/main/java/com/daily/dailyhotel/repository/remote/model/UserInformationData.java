@@ -2,44 +2,40 @@ package com.daily.dailyhotel.repository.remote.model;
 
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
-import com.daily.dailyhotel.entity.UserInformation;
+import com.daily.dailyhotel.entity.UserSimpleInformation;
 
 @JsonObject
 public class UserInformationData
 {
-    @JsonField(name = "user_idx")
+    @JsonField(name = "userIdx")
     public int userIdx;
 
-    @JsonField(name = "user_email")
+    @JsonField(name = "email")
     public String email;
 
-    @JsonField(name = "user_name")
+    @JsonField(name = "name")
     public String name;
 
-    @JsonField(name = "user_phone")
+    @JsonField(name = "phone")
     public String phone;
 
-    @JsonField(name = "user_bonus")
+    @JsonField(name = "bonus")
     public int bonus;
-
-    @JsonField(name = "on_session")
-    public boolean session;
 
     public UserInformationData()
     {
 
     }
 
-    public UserInformation getUserInformation()
+    public UserSimpleInformation getUserInformation()
     {
-        UserInformation userInformation = new UserInformation();
-        userInformation.index = userIdx;
-        userInformation.email = email;
-        userInformation.name = name;
-        userInformation.phone = phone;
-        userInformation.bonus = bonus;
-        userInformation.session = session;
+        UserSimpleInformation userSimpleInformation = new UserSimpleInformation();
+        userSimpleInformation.index = userIdx;
+        userSimpleInformation.email = email;
+        userSimpleInformation.name = name;
+        userSimpleInformation.phone = phone;
+        userSimpleInformation.bonus = bonus;
 
-        return userInformation;
+        return userSimpleInformation;
     }
 }

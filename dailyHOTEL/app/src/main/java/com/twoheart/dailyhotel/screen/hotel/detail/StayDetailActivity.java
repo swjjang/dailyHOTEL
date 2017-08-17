@@ -23,7 +23,9 @@ import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
 import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.entity.CommonDateTime;
+import com.daily.dailyhotel.parcel.analytics.StayPaymentAnalyticsParam;
 import com.daily.dailyhotel.repository.local.model.AnalyticsParam;
+import com.daily.dailyhotel.screen.home.stay.inbound.payment.StayPaymentActivity;
 import com.daily.dailyhotel.util.RecentlyPlaceUtil;
 import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.drawee.view.DraweeTransition;
@@ -754,6 +756,7 @@ public class StayDetailActivity extends PlaceDetailActivity
         }
 
         StayDetailParams stayDetailParams = stayDetail.getStayDetailParams();
+
         if (stayDetailParams == null)
         {
             return;
@@ -771,10 +774,25 @@ public class StayDetailActivity extends PlaceDetailActivity
         boolean isBenefit = DailyTextUtils.isTextEmpty(stayDetailParams.benefit) == false;
         //        stayProduct.nights = stayDetailParams.nights;
 
-        Intent intent = HotelPaymentActivity.newInstance(StayDetailActivity.this, stayProduct//
-            , stayBookingDay, imageUrl, stayDetail.index, isBenefit, stayDetailParams.ratingValue //
-            , stayDetailParams.getGrade().name(), stayDetailParams.address, stayDetailParams.isOverseas//
-            , stayDetailParams.name, stayDetailParams.category, mAnalyticsParam);
+
+        StayPaymentAnalyticsParam stayPaymentAnalyticsParam = new StayPaymentAnalyticsParam();
+
+        Intent intent = StayPaymentActivity.newInstance(StayDetailActivity.this, stayDetailParams.index//
+            , stayDetailParams.name, imageUrl, stayProduct.roomIndex, stayProduct.totalDiscount, stayProduct.roomName//
+            , stayBookingDay.getCheckInDay(DailyCalendar.ISO_8601_FORMAT)
+            , stayBookingDay.getCheckOutDay(DailyCalendar.ISO_8601_FORMAT)
+            , stayDetailParams.isOverseas, stayDetailParams.category, stayPaymentAnalyticsParam);
+
+//            imageUrl, stayDetail.index, isBenefit, stayDetailParams.ratingValue //
+//            , stayDetailParams.getGrade().name(), stayDetailParams.address, stayDetailParams.isOverseas//
+//            , stayDetailParams.name, stayDetailParams.category, mAnalyticsParam);
+//
+//
+//
+//        Intent intent = HotelPaymentActivity.newInstance(StayDetailActivity.this, stayProduct//
+//            , stayBookingDay, imageUrl, stayDetail.index, isBenefit, stayDetailParams.ratingValue //
+//            , stayDetailParams.getGrade().name(), stayDetailParams.address, stayDetailParams.isOverseas//
+//            , stayDetailParams.name, stayDetailParams.category, mAnalyticsParam);
 
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_BOOKING);
     }
