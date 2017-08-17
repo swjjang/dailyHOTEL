@@ -95,15 +95,16 @@
                     android:layout_marginTop="10dp"/>
 
                 <View
+                    android:id="@+id/userInformationUnderLineView"
                     android:layout_width="match_parent"
                     android:layout_height="1px"
-                    android:layout_marginBottom="10dp"
                     android:layout_marginLeft="15dp"
                     android:layout_marginRight="15dp"
                     android:layout_marginTop="10dp"
                     android:background="@color/default_line_cdcdcdd"/>
 
                 <RelativeLayout
+                    android:id="@+id/guestCheckLayout"
                     android:layout_width="match_parent"
                     android:layout_height="55dp">
 

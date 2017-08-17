@@ -160,7 +160,7 @@ public class PaymentRemoteImpl implements PaymentInterface
     @Override
     public Observable<PaymentResult> getStayOutboundPaymentTypeEasy(StayBookDateTime stayBookDateTime, int index//
         , String rateCode, String rateKey, String roomTypeCode, int roomBedTypeId, People people//
-        , boolean usedBonus, OverseasGuest guest, int totalPrice, String billingKey)
+        , boolean usedBonus, int bonus, OverseasGuest guest, int totalPrice, String billingKey)
     {
         JSONObject jsonObject = new JSONObject();
 
@@ -179,7 +179,7 @@ public class PaymentRemoteImpl implements PaymentInterface
 
             if (usedBonus == true)
             {
-                jsonObject.put("bonusAmount", guest.bonus);
+                jsonObject.put("bonusAmount", bonus);
             }
 
             jsonObject.put("firstName", guest.firstName);
@@ -221,7 +221,7 @@ public class PaymentRemoteImpl implements PaymentInterface
     @Override
     public Observable<PaymentResult> getStayOutboundPaymentTypeBonus(StayBookDateTime stayBookDateTime, int index//
         , String rateCode, String rateKey, String roomTypeCode, int roomBedTypeId, People people//
-        , boolean usedBonus, OverseasGuest guest, int totalPrice)
+        , boolean usedBonus, int bonus, OverseasGuest guest, int totalPrice)
     {
         JSONObject jsonObject = new JSONObject();
 
@@ -240,9 +240,7 @@ public class PaymentRemoteImpl implements PaymentInterface
 
             if (usedBonus == true)
             {
-                int bonus = guest.bonus > totalPrice ? totalPrice : guest.bonus;
-
-                jsonObject.put("bonusAmount", bonus);
+                jsonObject.put("bonusAmount", bonus > totalPrice ? totalPrice : bonus);
             }
 
             jsonObject.put("firstName", guest.firstName);
@@ -282,17 +280,28 @@ public class PaymentRemoteImpl implements PaymentInterface
 
     @Override
     public Observable<PaymentResult> getStayPaymentTypeEasy(StayBookDateTime stayBookDateTime, int roomIndex//
-        , int bonusAmount, String couponCode, DomesticGuest guest, String transportation, String billingKey)
+        , boolean usedBonus, int bonus, boolean usedCoupon, String couponCode, DomesticGuest guest//
+        , String transportation, String billingKey)
     {
         JSONObject jsonObject = new JSONObject();
 
         try
         {
             jsonObject.put("billingKey", billingKey);
-            jsonObject.put("bonusAmount", bonusAmount);
+
+            if(usedBonus == true)
+            {
+                jsonObject.put("bonusAmount", bonus);
+            }
+
             jsonObject.put("checkInDate", stayBookDateTime.getCheckInDateTime("yyyy-MM-dd"));
             jsonObject.put("days", stayBookDateTime.getNights());
-            jsonObject.put("couponCode", couponCode);
+
+            if(usedCoupon == true)
+            {
+                jsonObject.put("couponCode", couponCode);
+            }
+
             jsonObject.put("roomIdx", roomIndex);
 
             JSONObject bookingGuestJSONObject = new JSONObject();
@@ -334,16 +343,25 @@ public class PaymentRemoteImpl implements PaymentInterface
 
     @Override
     public Observable<PaymentResult> getStayPaymentTypeBonus(StayBookDateTime stayBookDateTime, int roomIndex//
-        , int bonusAmount, String couponCode, DomesticGuest guest, String transportation)
+        , boolean usedBonus, int bonus, boolean usedCoupon, String couponCode, DomesticGuest guest, String transportation)
     {
         JSONObject jsonObject = new JSONObject();
 
         try
         {
-            jsonObject.put("bonusAmount", bonusAmount);
+            if(usedBonus == true)
+            {
+                jsonObject.put("bonusAmount", bonus);
+            }
+
             jsonObject.put("checkInDate", stayBookDateTime.getCheckInDateTime("yyyy-MM-dd"));
             jsonObject.put("days", stayBookDateTime.getNights());
-            jsonObject.put("couponCode", couponCode);
+
+            if(usedCoupon == true)
+            {
+                jsonObject.put("couponCode", couponCode);
+            }
+
             jsonObject.put("roomIdx", roomIndex);
 
             JSONObject bookingGuestJSONObject = new JSONObject();

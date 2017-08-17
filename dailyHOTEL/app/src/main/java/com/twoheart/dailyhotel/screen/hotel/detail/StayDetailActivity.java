@@ -896,7 +896,9 @@ public class StayDetailActivity extends PlaceDetailActivity
         } else
         {
             Intent intent = SelectStayCouponDialogActivity.newInstance(this, mPlaceDetail.index//
-                , stayBookingDay, stayDetailParams.category, stayDetailParams.name);
+                , stayBookingDay.getCheckInDay(DailyCalendar.ISO_8601_FORMAT)//
+                , stayBookingDay.getCheckOutDay(DailyCalendar.ISO_8601_FORMAT)//
+                , stayDetailParams.category, stayDetailParams.name);
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_DOWNLOAD_COUPON);
         }
     }

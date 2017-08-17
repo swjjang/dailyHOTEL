@@ -151,6 +151,17 @@ public class StayPaymentAnalyticsImpl implements StayPaymentPresenter.StayPaymen
     }
 
     @Override
+    public void onEventCouponClick(Activity activity, boolean enable)
+    {
+        if(enable == true)
+        {
+            AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS, //
+                AnalyticsManager.Action.HOTEL_USING_COUPON_CLICKED, AnalyticsManager.Label.HOTEL_USING_COUPON_CLICKED, null);
+        }
+
+    }
+
+    @Override
     public void onEventStartPayment(Activity activity, String label)
     {
         if (activity == null || DailyTextUtils.isTextEmpty(label) == true)

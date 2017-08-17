@@ -362,9 +362,8 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
             case StayOutboundPaymentActivity.REQUEST_CODE_REGISTER_PHONE_NUMBER:
                 if (resultCode == Activity.RESULT_OK && data != null)
                 {
-                    String phoneMobile = data.getStringExtra(InputMobileNumberDialogActivity.INTENT_EXTRA_MOBILE_NUMBER);
-                    setUserPhoneNumber(phoneMobile);
-                    notifyGuestMobileInformationChanged();
+                    String mobile = data.getStringExtra(InputMobileNumberDialogActivity.INTENT_EXTRA_MOBILE_NUMBER);
+                    notifyGuestMobileInformationChanged(mobile);
                 }
                 break;
 
@@ -401,7 +400,6 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
                     setStayOutboundPayment(stayOutboundPayment);
                     setSelectCard(getSelectedCard(cardList));
                     setUserInformation(userSimpleInformation);
-                    setGuestInformation(userSimpleInformation);
 
                     return true;
                 }
@@ -412,7 +410,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
             {
                 onBookingInformation(mStayOutboundPayment, mStayBookDateTime);
 
-                notifyGuestInformationChanged();
+                notifyGuestInformationChanged(getGuestInformation(mUserSimpleInformation));
                 notifyBonusEnabledChanged();
                 notifyPaymentTypeChanged();
                 notifyEasyCardChanged();
@@ -478,14 +476,14 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
     @Override
     public void onBonusClick(boolean enabled)
     {
-        if (mGuest == null || mStayBookDateTime == null || lock() == true)
+        if (mStayBookDateTime == null || lock() == true)
         {
             return;
         }
 
         if (enabled == true)
         {
-            int discountPrice = mGuest.bonus;
+            int discountPrice = mUserSimpleInformation.bonus;
 
             if (discountPrice <= 0)
             {
@@ -564,9 +562,14 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
     @Override
     public synchronized void onPaymentClick(String firstName, String lastName, String phone, String email)
     {
-        if (mGuest == null || lock() == true)
+        if (lock() == true)
         {
             return;
+        }
+
+        if (mGuest == null)
+        {
+            mGuest = new OverseasGuest();
         }
 
         mGuest.firstName = firstName;
@@ -704,7 +707,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
         {
             addCompositeDisposable(mPaymentRemoteImpl.getStayOutboundPaymentTypeBonus(mStayBookDateTime, mStayIndex//
                 , mRateCode, mRateKey, mRoomTypeCode, mRoomBedTypeId, mPeople//
-                , mBonusSelected, mGuest, mStayOutboundPayment.totalPrice).subscribe(new Consumer<PaymentResult>()
+                , mBonusSelected, mUserSimpleInformation.bonus, mGuest, mStayOutboundPayment.totalPrice).subscribe(new Consumer<PaymentResult>()
             {
                 @Override
                 public void accept(@io.reactivex.annotations.NonNull PaymentResult paymentResult) throws Exception
@@ -753,7 +756,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
 
                     addCompositeDisposable(mPaymentRemoteImpl.getStayOutboundPaymentTypeEasy(mStayBookDateTime, mStayIndex//
                         , mRateCode, mRateKey, mRoomTypeCode, mRoomBedTypeId, mPeople//
-                        , mBonusSelected, mGuest, mStayOutboundPayment.totalPrice, mSelectedCard.billKey).subscribe(new Consumer<PaymentResult>()
+                        , mBonusSelected, mUserSimpleInformation.bonus, mGuest, mStayOutboundPayment.totalPrice, mSelectedCard.billKey).subscribe(new Consumer<PaymentResult>()
                     {
                         @Override
                         public void accept(@io.reactivex.annotations.NonNull PaymentResult paymentResult) throws Exception
@@ -791,7 +794,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
 
                     JSONObject jsonObject = getPaymentJSONObject(PAYMENT_TYPE, mStayBookDateTime, mStayIndex//
                         , mRateCode, mRateKey, mRoomTypeCode, mRoomBedTypeId, mPeople//
-                        , mBonusSelected, mGuest, mStayOutboundPayment.totalPrice);
+                        , mBonusSelected, mUserSimpleInformation.bonus, mGuest, mStayOutboundPayment.totalPrice);
 
                     startActivityForResult(StayOutboundPaymentWebActivity.newInstance(getActivity(), mStayIndex, "card", jsonObject.toString())//
                         , StayOutboundPaymentActivity.REQUEST_CODE_PAYMENT_WEB_CARD);
@@ -806,7 +809,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
 
                     JSONObject jsonObject = getPaymentJSONObject(PAYMENT_TYPE, mStayBookDateTime, mStayIndex//
                         , mRateCode, mRateKey, mRoomTypeCode, mRoomBedTypeId, mPeople//
-                        , mBonusSelected, mGuest, mStayOutboundPayment.totalPrice);
+                        , mBonusSelected, mUserSimpleInformation.bonus, mGuest, mStayOutboundPayment.totalPrice);
 
                     startActivityForResult(StayOutboundPaymentWebActivity.newInstance(getActivity(), mStayIndex, "mobile", jsonObject.toString())//
                         , StayOutboundPaymentActivity.REQUEST_CODE_PAYMENT_WEB_PHONE);
@@ -833,7 +836,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
 
     private JSONObject getPaymentJSONObject(String paymentType, StayBookDateTime stayBookDateTime, int index//
         , String rateCode, String rateKey, String roomTypeCode, int roomBedTypeId, People people//
-        , boolean usedBonus, OverseasGuest guest, int totalPrice)
+        , boolean usedBonus, int bonus, OverseasGuest guest, int totalPrice)
     {
         JSONObject jsonObject = new JSONObject();
 
@@ -851,9 +854,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
 
             if (usedBonus == true)
             {
-                int bonus = guest.bonus > totalPrice ? totalPrice : guest.bonus;
-
-                jsonObject.put("bonusAmount", bonus);
+                jsonObject.put("bonusAmount", bonus > totalPrice ? totalPrice : bonus);
             }
 
             jsonObject.put("firstName", guest.firstName);
@@ -966,19 +967,19 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
 
     private void notifyStayOutboundPaymentChanged()
     {
-        if (mGuest == null || mStayOutboundPayment == null || mStayBookDateTime == null)
+        if (mUserSimpleInformation == null || mStayOutboundPayment == null || mStayBookDateTime == null)
         {
             return;
         }
 
         try
         {
-            getViewInterface().setStayOutboundPayment(mGuest.bonus, mStayBookDateTime.getNights()//
+            getViewInterface().setStayOutboundPayment(mUserSimpleInformation.bonus, mStayBookDateTime.getNights()//
                 , mStayOutboundPayment.totalPrice, mStayOutboundPayment.discountPrice//
                 , mStayOutboundPayment.feeTotalAmountUsd);
 
             // 1000원 미만 결제시에 간편/일반 결제 불가 - 쿠폰 또는 적립금 전체 사용이 아닌경우 조건 추가
-            int paymentPrice = mStayOutboundPayment.totalPrice - (mBonusSelected == true ? mGuest.bonus : 0);
+            int paymentPrice = mStayOutboundPayment.totalPrice - (mBonusSelected == true ? mUserSimpleInformation.bonus : 0);
 
             final int CARD_MIN_PRICE = 1000;
             final int PHONE_MAX_PRICE = 500000;
@@ -1021,7 +1022,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
                 {
                     getViewInterface().setPaymentTypeEnabled(DailyBookingPaymentTypeView.PaymentType.PHONE, true);
                 }
-            } else if (paymentPrice == 0)
+            } else
             {
                 getViewInterface().setPaymentType(DailyBookingPaymentTypeView.PaymentType.FREE);
             }
@@ -1054,32 +1055,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
         mUserSimpleInformation = userSimpleInformation;
     }
 
-    private void setGuestInformation(UserSimpleInformation userSimpleInformation)
-    {
-        if (userSimpleInformation == null)
-        {
-            return;
-        }
-
-        if (mGuest == null)
-        {
-            mGuest = getGustInformation();
-        }
-
-        mGuest.bonus = userSimpleInformation.bonus;
-
-        if (DailyTextUtils.isTextEmpty(mGuest.phone) == true)
-        {
-            mGuest.phone = userSimpleInformation.phone;
-        }
-
-        if (DailyTextUtils.isTextEmpty(mGuest.email) == true)
-        {
-            mGuest.email = userSimpleInformation.email;
-        }
-    }
-
-    private OverseasGuest getGustInformation()
+    private OverseasGuest getGuestInformation(UserSimpleInformation userSimpleInformation)
     {
         OverseasGuest guest = new OverseasGuest();
 
@@ -1088,19 +1064,21 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
         guest.phone = DailyUserPreference.getInstance(getActivity()).getOverseasPhone();
         guest.email = DailyUserPreference.getInstance(getActivity()).getOverseasEmail();
 
-        return guest;
-    }
-
-    private void setUserPhoneNumber(String phoneNumber)
-    {
-        if (mGuest == null)
+        if (userSimpleInformation != null)
         {
-            return;
+            if (DailyTextUtils.isTextEmpty(mGuest.phone) == true)
+            {
+                mGuest.phone = userSimpleInformation.phone;
+            }
+
+            if (DailyTextUtils.isTextEmpty(mGuest.email) == true)
+            {
+                mGuest.email = userSimpleInformation.email;
+            }
         }
 
-        mGuest.phone = phoneNumber;
+        return guest;
     }
-
 
     private void setStayBookDateTime(String checkInDateTime, String checkOutDateTime)
     {
@@ -1175,27 +1153,20 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
         DailyPreference.getInstance(getActivity()).setFavoriteCard(mSelectedCard.number, mSelectedCard.billKey);
     }
 
-    private void notifyGuestInformationChanged()
+    private void notifyGuestInformationChanged(OverseasGuest guest)
     {
-        if (mGuest == null || mPeople == null)
+        if (guest == null || mPeople == null)
         {
             return;
         }
 
-        getViewInterface().setGuestInformation(mGuest.lastName, mGuest.firstName, mGuest.phone, mGuest.email);
+        getViewInterface().setGuestInformation(guest.lastName, guest.firstName, guest.phone, guest.email);
         getViewInterface().setPeople(mPeople);
     }
 
-    private void notifyGuestMobileInformationChanged()
+    private void notifyGuestMobileInformationChanged(String mobile)
     {
-        if (mGuest == null)
-        {
-            return;
-        }
-
-        String phone = DailyUserPreference.getInstance(getActivity()).getOverseasPhone();
-
-        getViewInterface().setGuestMobileInformation(mGuest.phone);
+        getViewInterface().setGuestMobileInformation(mobile);
     }
 
     private void notifyPaymentTypeChanged()
@@ -1210,7 +1181,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
 
     private void notifyBonusEnabledChanged()
     {
-        if (mGuest == null)
+        if (mUserSimpleInformation == null)
         {
             getViewInterface().setBonusEnabled(false);
         } else
@@ -1222,7 +1193,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
                 getViewInterface().setBonusEnabled(false);
             } else
             {
-                getViewInterface().setBonusEnabled(mGuest.bonus > 0);
+                getViewInterface().setBonusEnabled(mUserSimpleInformation.bonus > 0);
             }
         }
     }

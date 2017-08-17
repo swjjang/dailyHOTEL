@@ -34,7 +34,7 @@ public class UserInformationData
         userSimpleInformation.email = email;
         userSimpleInformation.name = name;
         userSimpleInformation.phone = phone;
-        userSimpleInformation.bonus = bonus;
+        userSimpleInformation.bonus = bonus < 0 ? 0 : bonus;
 
         return userSimpleInformation;
     }

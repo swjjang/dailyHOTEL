@@ -1720,10 +1720,9 @@ public class HotelPaymentActivity extends PlacePaymentActivity
 
         String categoryCode = mCategoryCode;
         String hotelName = mPlaceName;
-        String roomPrice = Integer.toString(stayProduct.averageDiscount);
 
         Intent intent = SelectStayCouponDialogActivity.newInstance(HotelPaymentActivity.this, hotelIdx, //
-            roomIdx, stayBookingDay, categoryCode, hotelName, roomPrice);
+            roomIdx, stayBookingDay, categoryCode, hotelName, stayProduct.averageDiscount);
         startActivityForResult(intent, REQUEST_CODE_COUPONPOPUP_ACTIVITY);
 
         AnalyticsManager.getInstance(HotelPaymentActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS, //

@@ -4,5 +4,4 @@ public abstract class Guest
 {
     public String email;
     public String phone;
-    public int bonus;
 }

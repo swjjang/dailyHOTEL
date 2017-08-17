@@ -27,17 +27,17 @@ public interface PaymentInterface
 
     Observable<PaymentResult> getStayOutboundPaymentTypeEasy(StayBookDateTime stayBookDateTime, int index//
         , String rateCode, String rateKey, String roomTypeCode, int roomBedTypeId, People people//
-        , boolean usedBonus, OverseasGuest guest, int totalPrice, String billingKey);
+        , boolean usedBonus, int bonus, OverseasGuest guest, int totalPrice, String billingKey);
 
     Observable<PaymentResult> getStayOutboundPaymentTypeBonus(StayBookDateTime stayBookDateTime, int index//
         , String rateCode, String rateKey, String roomTypeCode, int roomBedTypeId, People people//
-        , boolean usedBonus, OverseasGuest guest, int totalPrice);
+        , boolean usedBonus, int bonus, OverseasGuest guest, int totalPrice);
 
     Observable<PaymentResult> getStayPaymentTypeEasy(StayBookDateTime stayBookDateTime, int roomIndex//
-        , int bonusAmount, String couponCode, DomesticGuest guest, String transportation, String billingKey);
+        , boolean usedBonus, int bonus, boolean usedCoupon, String couponCode, DomesticGuest guest, String transportation, String billingKey);
 
     Observable<PaymentResult> getStayPaymentTypeBonus(StayBookDateTime stayBookDateTime, int roomIndex//
-        , int bonusAmount, String couponCode, DomesticGuest guest, String transportation);
+        , boolean usedBonus, int bonus, boolean usedCoupon, String couponCode, DomesticGuest guest, String transportation);
 
     Observable<StayRefundPolicy> getStayRefundPolicy(StayBookDateTime stayBookDateTime, int stayIndex, int roomIndex);
 }

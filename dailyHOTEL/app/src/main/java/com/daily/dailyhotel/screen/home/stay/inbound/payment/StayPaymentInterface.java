@@ -15,15 +15,13 @@ public interface StayPaymentInterface extends BaseDialogViewInterface
 {
     void setBooking(SpannableString checkInDate, SpannableString checkOutDate, int nights, String stayName, String roomName);
 
-    void setUserInformationVisible(boolean visible);
-
     void setUserInformation(String name, String mobile, String email);
 
-    void setGuestInformation(String name, String mobile, String email, boolean overseas);
+    void setGuestInformation(String name, String mobile, String email);
 
     void setGuestMobileInformation(String mobile);
 
-    void setStayPayment(int bonus, int nights, int totalPrice, int discountPrice);
+    void setStayPayment(boolean usedBonus, int bonus, boolean usedCoupon, int coupon, int nights, int totalPrice, int discountPrice);
 
     void setEasyCard(Card card);
 
@@ -43,9 +41,17 @@ public interface StayPaymentInterface extends BaseDialogViewInterface
 
     void setBonusSelected(boolean selected);
 
+    void setCouponSelected(boolean selected);
+
     void setTransportation(String type);
 
     void setTransportationType(StayPaymentPresenter.Transportation type);
+
+    void showGuestInformation();
+
+    void hideGuestInformation();
+
+    void setOverseas(boolean overseas);
 
     void showAgreeTermDialog(DailyBookingPaymentTypeView.PaymentType paymentType//
         , View.OnClickListener onClickListener, DialogInterface.OnCancelListener cancelListener);

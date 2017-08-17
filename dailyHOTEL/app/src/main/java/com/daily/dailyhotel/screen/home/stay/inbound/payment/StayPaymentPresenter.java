@@ -33,6 +33,8 @@ import com.daily.dailyhotel.screen.common.call.CallDialogActivity;
 import com.daily.dailyhotel.screen.home.stay.inbound.thankyou.StayThankYouActivity;
 import com.daily.dailyhotel.view.DailyBookingPaymentTypeView;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.model.Coupon;
+import com.twoheart.dailyhotel.screen.mydaily.coupon.SelectStayCouponDialogActivity;
 import com.twoheart.dailyhotel.screen.mydaily.creditcard.CreditCardListActivity;
 import com.twoheart.dailyhotel.screen.mydaily.creditcard.RegisterCreditCardActivity;
 import com.twoheart.dailyhotel.screen.mydaily.member.InputMobileNumberDialogActivity;
@@ -72,10 +74,11 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
     private StayRefundPolicy mStayRefundPolicy;
     private Card mSelectedCard;
     private DomesticGuest mGuest;
-    private String mCouponCode;
+    private Coupon mSelectedCoupon;
     private Transportation mTransportationType;
     private DailyBookingPaymentTypeView.PaymentType mPaymentType;
     private boolean mOverseas, mBonusSelected, mCouponSelected, mAgreedThirdPartyTerms;
+    private boolean mShowGuestInformation;
     private UserSimpleInformation mUserSimpleInformation;
 
     // 서버로 해당 문자열 그대로 보냄.(수정 금지)
@@ -99,6 +102,8 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
             , boolean registerEasyCard, UserSimpleInformation userSimpleInformation);
 
         void onEventTransportationVisible(Activity activity, boolean visible);
+
+        void onEventCouponClick(Activity activity, boolean enable);
 
         void onEventStartPayment(Activity activity, String label);
 
@@ -182,9 +187,14 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
         checkAvailablePaymentType();
 
         setBonusSelected(false);
+        setCouponSelected(false, null);
 
         notifyBonusSelectedChanged();
         notifyBonusEnabledChanged();
+
+        notifyCouponSelectedChanged();
+
+        getViewInterface().setOverseas(mOverseas);
     }
 
     @Override
@@ -363,17 +373,86 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
             case StayPaymentActivity.REQUEST_CODE_REGISTER_PHONE_NUMBER:
                 if (resultCode == Activity.RESULT_OK && data != null)
                 {
-                    String phoneMobile = data.getStringExtra(InputMobileNumberDialogActivity.INTENT_EXTRA_MOBILE_NUMBER);
-                    setUserPhoneNumber(phoneMobile);
-                    notifyGuestMobileInformationChanged();
+                    String mobile = data.getStringExtra(InputMobileNumberDialogActivity.INTENT_EXTRA_MOBILE_NUMBER);
+                    notifyGuestMobileInformationChanged(mobile);
                 }
                 break;
 
             case StayPaymentActivity.REQUEST_CODE_PAYMENT_WEB_CARD:
             case StayPaymentActivity.REQUEST_CODE_PAYMENT_WEB_PHONE:
+            case StayPaymentActivity.REQUEST_CODE_PAYMENT_WEB_VBANK:
                 if (data != null)
                 {
                     onPaymentWebResult(resultCode, data.getStringExtra(Constants.NAME_INTENT_EXTRA_DATA_PAYMENT_RESULT));
+                }
+                break;
+
+            case StayPaymentActivity.REQUEST_CODE_COUPON_LIST:
+                if (resultCode == Activity.RESULT_OK && data != null)
+                {
+                    Coupon coupon = data.getParcelableExtra(SelectStayCouponDialogActivity.INTENT_EXTRA_SELECT_COUPON);
+
+                    if (coupon.amount > mStayPayment.totalPrice)
+                    {
+                        String difference = DailyTextUtils.getPriceFormat(getActivity(), (coupon.amount - mStayPayment.totalPrice), false);
+
+                        getViewInterface().showSimpleDialog(null, getString(R.string.message_over_coupon_price, difference)//
+                            , getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no), new View.OnClickListener()
+                            {
+                                @Override
+                                public void onClick(View v)
+                                {
+                                    setCouponSelected(true, coupon);
+
+                                    int discountPrice = coupon.amount;
+
+                                    if (discountPrice >= mStayPayment.totalPrice)
+                                    {
+                                        discountPrice = mStayPayment.totalPrice;
+                                    }
+
+                                    setStayPaymentDiscountPrice(discountPrice);
+
+                                    notifyCouponSelectedChanged();
+                                    notifyStayOutboundPaymentChanged();
+                                }
+                            }, new View.OnClickListener()
+                            {
+                                @Override
+                                public void onClick(View v)
+                                {
+                                    setCouponSelected(false, null);
+                                }
+                            }, new DialogInterface.OnCancelListener()
+                            {
+
+                                @Override
+                                public void onCancel(DialogInterface dialog)
+                                {
+                                    setCouponSelected(false, null);
+                                }
+                            }, null, true);
+
+                    } else
+                    {
+                        // 호텔 결제 정보에 쿠폰 가격 넣고 텍스트 업데이트 필요
+                        setCouponSelected(true, coupon);
+
+                        int discountPrice = coupon.amount;
+
+                        if (discountPrice >= mStayPayment.totalPrice)
+                        {
+                            discountPrice = mStayPayment.totalPrice;
+                        }
+
+                        setStayPaymentDiscountPrice(discountPrice);
+
+                        notifyCouponSelectedChanged();
+                        notifyStayOutboundPaymentChanged();
+                    }
+                } else
+                {
+                    setCouponSelected(false, null);
                 }
                 break;
         }
@@ -402,9 +481,9 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
                     , @io.reactivex.annotations.NonNull StayRefundPolicy stayRefundPolicy) throws Exception
                 {
                     setStayPayment(stayPayment);
+                    setStayBookDateTime(stayPayment.checkInDate, stayPayment.checkOutDate);
                     setSelectCard(getSelectedCard(cardList));
                     setUserInformation(userSimpleInformation);
-                    setGuestInformation(userSimpleInformation);
                     setStayRefundPolicy(stayRefundPolicy);
 
                     return true;
@@ -417,7 +496,12 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
                 onBookingInformation(mStayPayment, mStayBookDateTime);
 
                 notifyUserInformationChanged();
-                notifyGuestInformationChanged();
+
+                if (mOverseas == true)
+                {
+                    notifyGuestInformationChanged(getOverseasGustInformation(mUserSimpleInformation));
+                }
+
                 notifyBonusEnabledChanged();
                 notifyPaymentTypeChanged();
                 notifyEasyCardChanged();
@@ -486,59 +570,116 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
     @Override
     public void onTransportationClick(Transportation transportation)
     {
+        if (lock() == true)
+        {
+            return;
+        }
 
+        mTransportationType = transportation;
+
+        getViewInterface().setTransportationType(transportation);
+
+        unLockAll();
     }
 
     @Override
     public void onBonusClick(boolean enabled)
     {
-        if (mGuest == null || mStayBookDateTime == null || lock() == true)
+        if (mStayBookDateTime == null || lock() == true)
         {
             return;
         }
 
-        if (enabled == true)
+        if (mCouponSelected == true)
         {
-            //호텔 가격이 xx 이하인 이벤트 호텔에서는 적립금 사용을 못하게 막음.
-            if (mStayPayment.totalPrice <= MIN_AMOUNT_FOR_BONUS_USAGE)
-            {
-                setBonusSelected(false);
-                setStayPaymentDiscountPrice(0);
+            getViewInterface().showSimpleDialog(null, getString(R.string.message_booking_cancel_coupon), getString(R.string.dialog_btn_text_yes), //
+                getString(R.string.dialog_btn_text_no), new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        setCouponSelected(false, null);
+                        setStayPaymentDiscountPrice(0);
 
-                notifyBonusSelectedChanged();
-                notifyStayOutboundPaymentChanged();
+                        notifyCouponSelectedChanged();
+                        notifyStayOutboundPaymentChanged();
 
-                String msg = getString(R.string.dialog_btn_payment_no_reserve, DailyTextUtils.getPriceFormat(getActivity(), MIN_AMOUNT_FOR_BONUS_USAGE, false));
-
-                getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2), msg, getString(R.string.dialog_btn_text_confirm), null);
-
-                unLockAll();
-                return;
-            }
-
-            int discountPrice = mGuest.bonus;
-
-            if (discountPrice <= 0)
-            {
-                unLockAll();
-                return;
-            }
-
-            setBonusSelected(true);
-            notifyBonusSelectedChanged();
-
-            if (discountPrice >= mStayPayment.totalPrice)
-            {
-                discountPrice = mStayPayment.totalPrice;
-            }
-
-            setStayPaymentDiscountPrice(mStayPayment.discountPrice);
-
-            notifyStayOutboundPaymentChanged();
+                        onBonusClick(true);
+                    }
+                }, null);
         } else
         {
-            // 적립금 삭제
-            getViewInterface().showSimpleDialog(null, getString(R.string.message_booking_cancel_bonus), getString(R.string.dialog_btn_text_yes), //
+            if (enabled == true)
+            {
+                //호텔 가격이 xx 이하인 이벤트 호텔에서는 적립금 사용을 못하게 막음.
+                if (mStayPayment.totalPrice <= MIN_AMOUNT_FOR_BONUS_USAGE)
+                {
+                    setBonusSelected(false);
+                    setStayPaymentDiscountPrice(0);
+
+                    notifyBonusSelectedChanged();
+                    notifyStayOutboundPaymentChanged();
+
+                    String msg = getString(R.string.dialog_btn_payment_no_reserve, DailyTextUtils.getPriceFormat(getActivity(), MIN_AMOUNT_FOR_BONUS_USAGE, false));
+
+                    getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2), msg, getString(R.string.dialog_btn_text_confirm), null);
+
+                    unLockAll();
+                    return;
+                }
+
+                int discountPrice = mUserSimpleInformation.bonus;
+
+                if (discountPrice <= 0)
+                {
+                    unLockAll();
+                    return;
+                }
+
+                setBonusSelected(true);
+                notifyBonusSelectedChanged();
+
+                if (discountPrice >= mStayPayment.totalPrice)
+                {
+                    discountPrice = mStayPayment.totalPrice;
+                }
+
+                setStayPaymentDiscountPrice(discountPrice);
+
+                notifyStayOutboundPaymentChanged();
+            } else
+            {
+                // 적립금 삭제
+                getViewInterface().showSimpleDialog(null, getString(R.string.message_booking_cancel_bonus), getString(R.string.dialog_btn_text_yes), //
+                    getString(R.string.dialog_btn_text_no), new View.OnClickListener()
+                    {
+                        @Override
+                        public void onClick(View v)
+                        {
+                            setBonusSelected(false);
+                            setStayPaymentDiscountPrice(0);
+
+                            notifyBonusSelectedChanged();
+                            notifyStayOutboundPaymentChanged();
+                        }
+                    }, null);
+            }
+        }
+
+        unLockAll();
+    }
+
+    @Override
+    public void onCouponClick(boolean enabled)
+    {
+        if (mStayBookDateTime == null || lock() == true)
+        {
+            return;
+        }
+
+        if (mBonusSelected == true)
+        {
+            getViewInterface().showSimpleDialog(null, getString(R.string.message_booking_cancel_coupon), getString(R.string.dialog_btn_text_yes), //
                 getString(R.string.dialog_btn_text_no), new View.OnClickListener()
                 {
                     @Override
@@ -549,11 +690,46 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
 
                         notifyBonusSelectedChanged();
                         notifyStayOutboundPaymentChanged();
+
+                        onCouponClick(true);
                     }
                 }, null);
+        } else
+        {
+            if (enabled == true)
+            {
+                Intent intent = SelectStayCouponDialogActivity.newInstance(getActivity(), mStayIndex, //
+                    mRoomIndex, mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
+                    , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
+                    , mCategory, mStayName, mRoomPrice);
+                startActivityForResult(intent, StayPaymentActivity.REQUEST_CODE_COUPON_LIST);
+
+                mAnalytics.onEventCouponClick(getActivity(), true);
+            } else
+            {
+                setCouponSelected(false, null);
+                setStayPaymentDiscountPrice(0);
+
+                notifyCouponSelectedChanged();
+                notifyStayOutboundPaymentChanged();
+            }
         }
 
         unLockAll();
+    }
+
+    @Override
+    public void onChangedGuestClick(boolean show)
+    {
+        mShowGuestInformation = show;
+
+        if (show == true)
+        {
+            getViewInterface().showGuestInformation();
+        } else
+        {
+            getViewInterface().hideGuestInformation();
+        }
     }
 
     @Override
@@ -595,14 +771,28 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
     @Override
     public synchronized void onPaymentClick(String name, String phone, String email)
     {
-        if (mGuest == null || lock() == true)
+        if (lock() == true)
         {
             return;
         }
 
-        mGuest.name = name;
-        mGuest.phone = phone;
-        mGuest.email = email;
+        if (mGuest == null)
+        {
+            mGuest = new DomesticGuest();
+        }
+
+        // 투숙자와 예약자가 정보가 다른 경우
+        if (mShowGuestInformation == true)
+        {
+            mGuest.name = name;
+            mGuest.phone = phone;
+            mGuest.email = email;
+        } else
+        {
+            mGuest.name = mUserSimpleInformation.name;
+            mGuest.phone = mUserSimpleInformation.phone;
+            mGuest.email = mUserSimpleInformation.email;
+        }
 
         if (DailyTextUtils.isTextEmpty(name) == true)
         {
@@ -740,11 +930,13 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
         }
 
         String transportationType = mTransportationType == null ? null : mTransportationType.name();
+        String couponCode = mSelectedCoupon != null ? mSelectedCoupon.couponCode : null;
 
         if (mBonusSelected == true && mStayPayment.totalPrice == mStayPayment.discountPrice)
         {
             addCompositeDisposable(mPaymentRemoteImpl.getStayPaymentTypeBonus(mStayBookDateTime, mRoomIndex//
-                , mStayPayment.discountPrice, mCouponCode, mGuest, transportationType).subscribe(new Consumer<PaymentResult>()
+                , mBonusSelected, mUserSimpleInformation.bonus, mCouponSelected, couponCode, mGuest//
+                , transportationType).subscribe(new Consumer<PaymentResult>()
             {
                 @Override
                 public void accept(@io.reactivex.annotations.NonNull PaymentResult paymentResult) throws Exception
@@ -792,7 +984,8 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
                     }
 
                     addCompositeDisposable(mPaymentRemoteImpl.getStayPaymentTypeEasy(mStayBookDateTime, mRoomIndex//
-                        , mStayPayment.discountPrice, mCouponCode, mGuest, transportationType, mSelectedCard.billKey).subscribe(new Consumer<PaymentResult>()
+                        , mBonusSelected, mUserSimpleInformation.bonus, mCouponSelected, couponCode, mGuest, transportationType//
+                        , mSelectedCard.billKey).subscribe(new Consumer<PaymentResult>()
                     {
                         @Override
                         public void accept(@io.reactivex.annotations.NonNull PaymentResult paymentResult) throws Exception
@@ -829,7 +1022,7 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
                     final String PAYMENT_TYPE = "credit";
 
                     JSONObject jsonObject = getPaymentJSONObject(mStayBookDateTime, mRoomIndex//
-                        , mStayPayment.discountPrice, mCouponCode, mGuest, transportationType);
+                        , mBonusSelected, mUserSimpleInformation.bonus, mCouponSelected, couponCode, mGuest, transportationType);
 
                     startActivityForResult(StayPaymentWebActivity.newInstance(getActivity(), mStayIndex, PAYMENT_TYPE, jsonObject.toString())//
                         , StayPaymentActivity.REQUEST_CODE_PAYMENT_WEB_CARD);
@@ -843,7 +1036,7 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
                     final String PAYMENT_TYPE = "mobile";
 
                     JSONObject jsonObject = getPaymentJSONObject(mStayBookDateTime, mRoomIndex//
-                        , mStayPayment.discountPrice, mCouponCode, mGuest, transportationType);
+                        , mBonusSelected, mUserSimpleInformation.bonus, mCouponSelected, couponCode, mGuest, transportationType);
 
                     startActivityForResult(StayPaymentWebActivity.newInstance(getActivity(), mStayIndex, PAYMENT_TYPE, jsonObject.toString())//
                         , StayPaymentActivity.REQUEST_CODE_PAYMENT_WEB_PHONE);
@@ -857,7 +1050,7 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
                     final String PAYMENT_TYPE = "vbank";
 
                     JSONObject jsonObject = getPaymentJSONObject(mStayBookDateTime, mRoomIndex//
-                        , mStayPayment.discountPrice, mCouponCode, mGuest, transportationType);
+                        , mBonusSelected, mUserSimpleInformation.bonus, mCouponSelected, couponCode, mGuest, transportationType);
 
                     startActivityForResult(StayPaymentWebActivity.newInstance(getActivity(), mStayIndex, PAYMENT_TYPE, jsonObject.toString())//
                         , StayPaymentActivity.REQUEST_CODE_PAYMENT_WEB_VBANK);
@@ -883,16 +1076,25 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
     }
 
     private JSONObject getPaymentJSONObject(StayBookDateTime stayBookDateTime, int roomIndex//
-        , int bonusAmount, String couponCode, DomesticGuest guest, String transportation)
+        , boolean usedBonus, int bonus, boolean usedCoupon, String couponCode, DomesticGuest guest, String transportation)
     {
         JSONObject jsonObject = new JSONObject();
 
         try
         {
-            jsonObject.put("bonusAmount", bonusAmount);
+            if (usedBonus == true)
+            {
+                jsonObject.put("bonusAmount", bonus);
+            }
+
             jsonObject.put("checkInDate", stayBookDateTime.getCheckInDateTime("yyyy-MM-dd"));
             jsonObject.put("days", stayBookDateTime.getNights());
-            jsonObject.put("couponCode", couponCode);
+
+            if (usedCoupon == true)
+            {
+                jsonObject.put("couponCode", couponCode);
+            }
+
             jsonObject.put("roomIdx", roomIndex);
 
             JSONObject bookingGuestJSONObject = new JSONObject();
@@ -946,6 +1148,11 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
             getViewInterface().setBooking(checkInDateSpannableString, checkOutDateSpannableString, mStayBookDateTime.getNights(), mStayName, mRoomName);
             getViewInterface().setVendorName(stayPayment.businessName);
             getViewInterface().setTransportation(stayPayment.transportation);
+
+            if (mTransportationType == null)
+            {
+                onTransportationClick(Transportation.WALKING);
+            }
         } catch (Exception e)
         {
             ExLog.d(e.toString());
@@ -959,19 +1166,32 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
 
     private void notifyStayOutboundPaymentChanged()
     {
-        if (mGuest == null || mStayPayment == null || mStayBookDateTime == null)
+        if (mUserSimpleInformation == null || mStayPayment == null || mStayBookDateTime == null)
         {
             return;
         }
 
         try
         {
-            getViewInterface().setStayPayment(mGuest.bonus, mStayBookDateTime.getNights()//
-                , mStayPayment.totalPrice, mStayPayment.discountPrice);
+            int coupon = mSelectedCoupon == null ? 0 : mSelectedCoupon.amount;
+
+            getViewInterface().setStayPayment(mBonusSelected, mUserSimpleInformation.bonus//
+                , mCouponSelected, coupon, mStayBookDateTime.getNights(), mStayPayment.totalPrice, mStayPayment.discountPrice);
+
+            int paymentPrice;
+
+            if (mBonusSelected == true)
+            {
+                paymentPrice = mStayPayment.totalPrice - mUserSimpleInformation.bonus;
+            } else if (mCouponSelected == true)
+            {
+                paymentPrice = mStayPayment.totalPrice - mSelectedCoupon.amount;
+            } else
+            {
+                paymentPrice = mStayPayment.totalPrice;
+            }
 
             // 1000원 미만 결제시에 간편/일반 결제 불가 - 쿠폰 또는 적립금 전체 사용이 아닌경우 조건 추가
-            int paymentPrice = mStayPayment.totalPrice - (mBonusSelected == true ? mGuest.bonus : 0);
-
             final int CARD_MIN_PRICE = 1000;
             final int PHONE_MAX_PRICE = 500000;
 
@@ -1013,7 +1233,7 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
                 {
                     getViewInterface().setPaymentTypeEnabled(DailyBookingPaymentTypeView.PaymentType.PHONE, true);
                 }
-            } else if (paymentPrice == 0)
+            } else
             {
                 getViewInterface().setPaymentType(DailyBookingPaymentTypeView.PaymentType.FREE);
             }
@@ -1044,50 +1264,12 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
         mUserSimpleInformation = userSimpleInformation;
     }
 
-    private void setGuestInformation(UserSimpleInformation userSimpleInformation)
-    {
-        if (userSimpleInformation == null)
-        {
-            return;
-        }
-
-        if (mOverseas == true)
-        {
-            if (mGuest == null)
-            {
-                mGuest = getOverseasGustInformation();
-
-                if (DailyTextUtils.isTextEmpty(mGuest.phone) == true)
-                {
-                    mGuest.phone = userSimpleInformation.phone;
-                }
-
-                if (DailyTextUtils.isTextEmpty(mGuest.email) == true)
-                {
-                    mGuest.email = userSimpleInformation.email;
-                }
-            }
-        } else
-        {
-            if (mGuest == null)
-            {
-                mGuest = new DomesticGuest();
-
-                mGuest.name = userSimpleInformation.name;
-                mGuest.phone = userSimpleInformation.phone;
-                mGuest.email = userSimpleInformation.email;
-            }
-        }
-
-        mGuest.bonus = userSimpleInformation.bonus;
-    }
-
     private void setStayRefundPolicy(StayRefundPolicy stayRefundPolicy)
     {
         mStayRefundPolicy = stayRefundPolicy;
     }
 
-    private DomesticGuest getOverseasGustInformation()
+    private DomesticGuest getOverseasGustInformation(UserSimpleInformation userSimpleInformation)
     {
         DomesticGuest guest = new DomesticGuest();
 
@@ -1095,19 +1277,21 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
         guest.phone = DailyUserPreference.getInstance(getActivity()).getOverseasPhone();
         guest.email = DailyUserPreference.getInstance(getActivity()).getOverseasEmail();
 
-        return guest;
-    }
-
-    private void setUserPhoneNumber(String phoneNumber)
-    {
-        if (mGuest == null)
+        if (userSimpleInformation != null)
         {
-            return;
+            if (DailyTextUtils.isTextEmpty(guest.phone) == true)
+            {
+                guest.phone = userSimpleInformation.phone;
+            }
+
+            if (DailyTextUtils.isTextEmpty(guest.email) == true)
+            {
+                guest.phone = userSimpleInformation.email;
+            }
         }
 
-        mGuest.phone = phoneNumber;
+        return guest;
     }
-
 
     private void setStayBookDateTime(String checkInDateTime, String checkOutDateTime)
     {
@@ -1151,9 +1335,10 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
         mBonusSelected = selected;
     }
 
-    private void setCouponSelected(boolean selected)
+    private void setCouponSelected(boolean selected, Coupon coupon)
     {
         mCouponSelected = selected;
+        mSelectedCoupon = coupon;
     }
 
     private void setSelectCard(String cardName, String cardNumber, String cardBillingKey, String cardCd)
@@ -1183,36 +1368,22 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
             return;
         }
 
-        if (mOverseas == true)
-        {
-            getViewInterface().setUserInformationVisible(false);
-        } else
-        {
-            getViewInterface().setUserInformationVisible(true);
-            getViewInterface().setUserInformation(mUserSimpleInformation.name, mUserSimpleInformation.phone, mUserSimpleInformation.email);
-        }
+        getViewInterface().setUserInformation(mUserSimpleInformation.name, mUserSimpleInformation.phone, mUserSimpleInformation.email);
     }
 
-    private void notifyGuestInformationChanged()
+    private void notifyGuestInformationChanged(DomesticGuest guest)
     {
-        if (mGuest == null)
+        if (guest == null)
         {
             return;
         }
 
-        getViewInterface().setGuestInformation(mGuest.name, mGuest.phone, mGuest.email, mOverseas);
+        getViewInterface().setGuestInformation(guest.name, guest.phone, guest.email);
     }
 
-    private void notifyGuestMobileInformationChanged()
+    private void notifyGuestMobileInformationChanged(String mobile)
     {
-        if (mGuest == null)
-        {
-            return;
-        }
-
-        String phone = DailyUserPreference.getInstance(getActivity()).getOverseasPhone();
-
-        getViewInterface().setGuestMobileInformation(mGuest.phone);
+        getViewInterface().setGuestMobileInformation(mobile);
     }
 
     private void notifyPaymentTypeChanged()
@@ -1227,25 +1398,19 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
 
     private void notifyBonusEnabledChanged()
     {
-        if (mGuest == null)
+        if (mUserSimpleInformation == null)
         {
             getViewInterface().setBonusEnabled(false);
         } else
         {
-            if (mGuest == null)
+            if (mStayPayment.totalPrice <= MIN_AMOUNT_FOR_BONUS_USAGE)
             {
+                getViewInterface().setBonusGuideText(getString(R.string.dialog_btn_payment_no_reserve//
+                    , DailyTextUtils.getPriceFormat(getActivity(), MIN_AMOUNT_FOR_BONUS_USAGE, false)));
                 getViewInterface().setBonusEnabled(false);
             } else
             {
-                if (mStayPayment.totalPrice <= MIN_AMOUNT_FOR_BONUS_USAGE)
-                {
-                    getViewInterface().setBonusGuideText(getString(R.string.dialog_btn_payment_no_reserve//
-                        , DailyTextUtils.getPriceFormat(getActivity(), MIN_AMOUNT_FOR_BONUS_USAGE, false)));
-                    getViewInterface().setBonusEnabled(false);
-                } else
-                {
-                    getViewInterface().setBonusEnabled(mGuest.bonus > 0);
-                }
+                getViewInterface().setBonusEnabled(mUserSimpleInformation.bonus > 0);
             }
         }
     }
@@ -1253,6 +1418,11 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
     private void notifyBonusSelectedChanged()
     {
         getViewInterface().setBonusSelected(mBonusSelected);
+    }
+
+    private void notifyCouponSelectedChanged()
+    {
+        getViewInterface().setCouponSelected(mCouponSelected);
     }
 
     private void notifyRefundPolicyChanged()
