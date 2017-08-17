@@ -1531,6 +1531,11 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         {
             GourmetDetailParams gourmetDetailParams = ((GourmetDetail) mPlaceDetail).getGourmetDetailParams();
 
+            if (DailyTextUtils.isTextEmpty(address) == true)
+            {
+                address = gourmetDetailParams.address;
+            }
+
             DailyTextUtils.clipText(GourmetDetailActivity.this, address);
 
             DailyToast.showToast(GourmetDetailActivity.this, R.string.message_detail_copy_address, Toast.LENGTH_SHORT);
