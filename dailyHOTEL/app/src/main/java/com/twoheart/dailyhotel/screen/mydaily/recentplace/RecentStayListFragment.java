@@ -26,6 +26,7 @@ import com.daily.dailyhotel.screen.home.stay.outbound.detail.StayOutboundDetailA
 import com.daily.dailyhotel.util.RecentlyPlaceUtil;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.model.Gourmet;
 import com.twoheart.dailyhotel.model.Place;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.Stay;
@@ -240,6 +241,9 @@ public class RecentStayListFragment extends RecentPlacesListFragment
         } else if (object instanceof StayOutbound)
         {
             index = ((StayOutbound) object).index;
+        } else if (object instanceof Gourmet)
+        {
+            index = ((Gourmet) object).index;
         } else
         {
             index = -1;

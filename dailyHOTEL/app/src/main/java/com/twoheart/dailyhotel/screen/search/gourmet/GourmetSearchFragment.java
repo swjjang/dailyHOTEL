@@ -10,6 +10,7 @@ import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.entity.CampaignTag;
 import com.daily.dailyhotel.repository.local.model.AnalyticsParam;
 import com.daily.dailyhotel.screen.home.campaigntag.gourmet.GourmetCampaignTagListActivity;
+import com.daily.dailyhotel.util.RecentlyPlaceUtil;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Gourmet;
 import com.twoheart.dailyhotel.model.Keyword;
@@ -32,6 +33,8 @@ import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -324,6 +327,22 @@ public class GourmetSearchFragment extends PlaceSearchFragment
                 @Override
                 public List<Keyword> apply(@NonNull List<Gourmet> gourmetList, @NonNull ArrayList<CampaignTag> tagList) throws Exception
                 {
+                    ArrayList<Integer> expectedList = RecentlyPlaceUtil.getDbRecentlyIndexList(mBaseActivity, ServiceType.GOURMET);
+                    if (expectedList != null && expectedList.size() > 0)
+                    {
+                        Collections.sort(gourmetList, new Comparator<Gourmet>()
+                        {
+                            @Override
+                            public int compare(Gourmet o1, Gourmet o2)
+                            {
+                                Integer position1 = expectedList.indexOf(o1.index);
+                                Integer position2 = expectedList.indexOf(o2.index);
+
+                                return position1.compareTo(position2);
+                            }
+                        });
+                    }
+
                     mRecentlyGourmetList = gourmetList;
                     mCampaignTagList = tagList;
 
