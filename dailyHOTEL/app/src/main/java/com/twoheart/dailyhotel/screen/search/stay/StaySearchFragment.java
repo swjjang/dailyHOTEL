@@ -11,6 +11,7 @@ import com.daily.dailyhotel.entity.CampaignTag;
 import com.daily.dailyhotel.repository.local.model.AnalyticsParam;
 import com.daily.dailyhotel.screen.home.campaigntag.stay.StayCampaignTagListActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.search.StayOutboundSearchActivity;
+import com.daily.dailyhotel.util.RecentlyPlaceUtil;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Keyword;
 import com.twoheart.dailyhotel.model.Place;
@@ -34,6 +35,8 @@ import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
@@ -342,6 +345,22 @@ public class StaySearchFragment extends PlaceSearchFragment
                 @Override
                 public List<Keyword> apply(@NonNull List<Stay> stayList, @NonNull ArrayList<CampaignTag> tagList) throws Exception
                 {
+                    ArrayList<Integer> expectedList = RecentlyPlaceUtil.getDbRecentlyIndexList(mBaseActivity, ServiceType.HOTEL);
+                    if (expectedList != null && expectedList.size() > 0)
+                    {
+                        Collections.sort(stayList, new Comparator<Stay>()
+                        {
+                            @Override
+                            public int compare(Stay o1, Stay o2)
+                            {
+                                Integer position1 = expectedList.indexOf(o1.index);
+                                Integer position2 = expectedList.indexOf(o2.index);
+
+                                return position1.compareTo(position2);
+                            }
+                        });
+                    }
+
                     mRecentlyStayList = stayList;
                     mCampaignTagList = tagList;
 
