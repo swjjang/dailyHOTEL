@@ -8,6 +8,7 @@ import android.graphics.drawable.Drawable;
 import android.support.v7.widget.AppCompatDrawableManager;
 import android.support.v7.widget.AppCompatEditText;
 import android.util.AttributeSet;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputConnection;
@@ -31,9 +32,16 @@ public class DailyEditText extends AppCompatEditText
 
     private OnDeleteTextClickListener mOnDeleteTextClickListener;
 
+    private OnKeyImeListener mOnKeyImeListener;
+
     public interface OnDeleteTextClickListener
     {
         void onDelete(DailyEditText dailyEditText);
+    }
+
+    public interface OnKeyImeListener
+    {
+        void onKeyPreIme(int keyCode, KeyEvent event);
     }
 
     public DailyEditText(Context context)
@@ -358,5 +366,21 @@ public class DailyEditText extends AppCompatEditText
 
             super.setCompoundDrawablesWithIntrinsicBounds(leftDrawable, topDrawable, rightDrawable, bottomDrawable);
         }
+    }
+
+    public void setOnKeyImeListener(OnKeyImeListener listener)
+    {
+        mOnKeyImeListener = listener;
+    }
+
+    @Override
+    public boolean onKeyPreIme(int keyCode, KeyEvent event)
+    {
+        if (mOnKeyImeListener != null)
+        {
+            mOnKeyImeListener.onKeyPreIme(keyCode, event);
+        }
+
+        return super.onKeyPreIme(keyCode, event);
     }
 }
