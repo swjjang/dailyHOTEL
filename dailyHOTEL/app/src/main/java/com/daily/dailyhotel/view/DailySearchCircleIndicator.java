@@ -17,7 +17,7 @@ import com.twoheart.dailyhotel.R;
 public class DailySearchCircleIndicator extends View
 {
     private static final int SELECTED_FACTOR = 2;
-    private static final int SPACING_FACTOR = 8;
+    private static final int SPACING_FACTOR = 7;
 
     private int mTotalCount;
     private Paint mPaint;
