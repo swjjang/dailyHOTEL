@@ -6,17 +6,21 @@ buildscript {
     repositories {
         maven { url 'https://maven.fabric.io/public' }
         mavenCentral()
+        jcenter()
     }
 
     dependencies {
         classpath 'io.fabric.tools:gradle:1.+'
         classpath 'me.tatarka:gradle-retrolambda:3.7.0'
+        classpath "io.realm:realm-gradle-plugin:3.3.2"
+        classpath 'com.google.firebase:firebase-plugins:1.1.1'
     }
 }
 
 apply plugin: 'io.fabric'
 apply plugin: 'me.tatarka.retrolambda'
 apply plugin: 'realm-android'
+apply plugin: 'com.google.firebase.firebase-perf'
 
 repositories {
     jcenter()
@@ -260,6 +264,7 @@ dependencies {
     compile 'com.google.android.gms:play-services-analytics:11.0.4'
     compile 'com.google.firebase:firebase-core:11.0.4'
     compile 'com.google.firebase:firebase-config:11.0.4'
+    compile 'com.google.firebase:firebase-perf:11.0.4'
 
     compile 'com.bluelinelabs:logansquare:1.3.7'
     annotationProcessor 'com.bluelinelabs:logansquare-compiler:1.3.7'
