@@ -102,6 +102,10 @@ public class CampaignTagRemoteImpl implements CampaignTagInterface
                         {
                             stayCampaignTags = new StayCampaignTags();
                         }
+                    } else if (stayCampaignTagsDataBaseDto.msgCode == -101)
+                    {
+                        // 조회된 데이터가 없을때 - KRQA-1630 요청으로 emptyView 생성
+                        stayCampaignTags = new StayCampaignTags();
                     } else
                     {
                         throw new BaseException(stayCampaignTagsDataBaseDto.msgCode, stayCampaignTagsDataBaseDto.msg);
@@ -138,6 +142,10 @@ public class CampaignTagRemoteImpl implements CampaignTagInterface
                         {
                             gourmetCampaignTags = new GourmetCampaignTags();
                         }
+                    } else if (gourmetCampaignTagsDataBaseDto.msgCode == -101)
+                    {
+                        // 조회된 데이터가 없을때 - KRQA-1630 요청으로 emptyView 생성
+                        gourmetCampaignTags = new GourmetCampaignTags();
                     } else
                     {
                         throw new BaseException(gourmetCampaignTagsDataBaseDto.msgCode, gourmetCampaignTagsDataBaseDto.msg);
