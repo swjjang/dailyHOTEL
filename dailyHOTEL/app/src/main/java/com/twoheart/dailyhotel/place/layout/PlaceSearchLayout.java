@@ -370,6 +370,7 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
     public void hideSearchKeyboard()
     {
         hideAutoCompleteLayout();
+        mSearchEditText.clearFocus();
 
         InputMethodManager inputMethodManager = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
         inputMethodManager.hideSoftInputFromWindow(mSearchEditText.getWindowToken(), 0);
