@@ -292,7 +292,7 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
         PagerSnapHelper snapHelper = new PagerSnapHelper();
         snapHelper.attachToRecyclerView(mRecyclerView);
 
-        mCircleIndicator.setTotalCount(mRecyclerAdapter == null ? 3 : mRecyclerAdapter.getItemCount());
+        mCircleIndicator.setTotalCount(1);
 
         mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener()
         {
