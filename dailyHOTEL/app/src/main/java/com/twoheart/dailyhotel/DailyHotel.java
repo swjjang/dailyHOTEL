@@ -11,6 +11,7 @@ import com.daily.base.util.FontManager;
 import com.daily.base.util.VersionUtils;
 import com.daily.dailyhotel.util.RecentlyPlaceUtil;
 import com.facebook.FacebookSdk;
+import com.google.firebase.FirebaseApp;
 import com.kakao.auth.ApprovalType;
 import com.kakao.auth.AuthType;
 import com.kakao.auth.IApplicationConfig;
@@ -76,6 +77,8 @@ public class DailyHotel extends android.support.multidex.MultiDexApplication imp
         Realm.init(this);
 
         Fabric.with(this, new Crashlytics());
+
+        FirebaseApp.initializeApp(this);
 
         mInstance = this;
 
