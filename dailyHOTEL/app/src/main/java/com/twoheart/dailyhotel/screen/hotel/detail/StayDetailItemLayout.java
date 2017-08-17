@@ -152,14 +152,6 @@ public class StayDetailItemLayout extends LinearLayout
         if (benefitView != null)
         {
             addView(benefitView);
-        } else
-        {
-            // 베네핏이 없으면 상단 라인으로 대체
-            View view = new View(mContext);
-            ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ScreenUtils.dpToPx(mContext, 1));
-            view.setLayoutParams(layoutParams);
-            view.setBackgroundResource(R.color.default_line_cf0f0f0);
-            addView(view);
         }
 
         // 정보 영역
@@ -735,7 +727,6 @@ public class StayDetailItemLayout extends LinearLayout
             View textLayout = layoutInflater.inflate(R.layout.list_row_detail_text, contentsLayout, false);
             TextView textView = (TextView) textLayout.findViewById(R.id.textView);
             textView.setText(R.string.message_stay_detail_nrd);
-            textView.setTypeface(FontManager.getInstance(mContext).getMediumTypeface());
             textView.setTextColor(mContext.getResources().getColor(R.color.default_text_cb70038));
 
             LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) textView.getLayoutParams();
