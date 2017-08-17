@@ -384,7 +384,7 @@ public class GourmetCampaignTagListPresenter //
                 try
                 {
                     mAnalytics.onCampaignTagEvent(getActivity() //
-                        , mGourmetCampaignTags.getCampaignTag().index //
+                        , mGourmetCampaignTags.getCampaignTag() //
                         , mGourmetCampaignTags.getGourmetList().size());
                 } catch (Exception e)
                 {

@@ -386,7 +386,7 @@ public class StayCampaignTagListPresenter extends BaseExceptionPresenter<StayCam
                 try
                 {
                     mAnalytics.onCampaignTagEvent(getActivity() //
-                        , mStayCampaignTags.getCampaignTag().index //
+                        , mStayCampaignTags.getCampaignTag() //
                         , mStayCampaignTags.getStayList().size());
                 } catch (Exception e)
                 {
