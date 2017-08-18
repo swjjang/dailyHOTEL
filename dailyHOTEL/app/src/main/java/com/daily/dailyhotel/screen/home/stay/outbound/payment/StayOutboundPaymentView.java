@@ -430,7 +430,7 @@ public class StayOutboundPaymentView extends BaseDialogView<StayOutboundPaymentV
             return;
         }
 
-        getViewDataBinding().informationView.setDiscountTypeVisible(false, false);
+        getViewDataBinding().informationView.setDiscountTypeVisible(true, false);
 
         setBonusSelected(false);
     }
