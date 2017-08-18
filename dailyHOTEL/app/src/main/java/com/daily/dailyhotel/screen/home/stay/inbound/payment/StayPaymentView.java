@@ -247,11 +247,6 @@ public class StayPaymentView extends BaseDialogView<StayPaymentView.OnEventListe
             return;
         }
 
-        if (discountPrice < 0)
-        {
-            discountPrice = 0;
-        }
-
         getViewDataBinding().informationView.setReservationPrice(nights, totalPrice);
         getViewDataBinding().informationView.setDiscountPrice(discountPrice);
 
@@ -594,7 +589,7 @@ public class StayPaymentView extends BaseDialogView<StayPaymentView.OnEventListe
         getViewDataBinding().paymentTypeView.setPaymentTypeVisible(DailyBookingPaymentTypeView.PaymentType.EASY_CARD, true);
         getViewDataBinding().paymentTypeView.setPaymentTypeVisible(DailyBookingPaymentTypeView.PaymentType.CARD, true);
         getViewDataBinding().paymentTypeView.setPaymentTypeVisible(DailyBookingPaymentTypeView.PaymentType.PHONE, true);
-        getViewDataBinding().paymentTypeView.setPaymentTypeVisible(DailyBookingPaymentTypeView.PaymentType.VBANK, false);
+        getViewDataBinding().paymentTypeView.setPaymentTypeVisible(DailyBookingPaymentTypeView.PaymentType.VBANK, true);
 
         getViewDataBinding().paymentTypeView.setOnPaymentTypeClickListener(new DailyBookingPaymentTypeView.OnPaymentTypeClickListener()
         {

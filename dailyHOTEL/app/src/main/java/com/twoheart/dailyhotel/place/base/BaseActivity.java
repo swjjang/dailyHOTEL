@@ -38,6 +38,7 @@ import com.daily.dailyhotel.repository.remote.FacebookRemoteImpl;
 import com.daily.dailyhotel.repository.remote.KakaoRemoteImpl;
 import com.facebook.login.LoginManager;
 import com.kakao.usermgmt.UserManagement;
+import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.network.dto.BaseDto;
@@ -391,6 +392,11 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
     public void onExpiredSessionError()
     {
         unLockUI();
+
+        if (DEBUG == true)
+        {
+            ExLog.e("pinkred - onExpiredSessionError : " + DailyHotel.AUTHORIZATION);
+        }
 
         DailyPreference.getInstance(this).clear();
         DailyUserPreference.getInstance(this).clear();
