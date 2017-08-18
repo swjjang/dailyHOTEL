@@ -1,11 +1,7 @@
 package com.daily.dailyhotel.entity;
 
-import com.bluelinelabs.logansquare.annotation.JsonField;
-import com.daily.dailyhotel.repository.remote.model.CampaignTagData;
-import com.daily.dailyhotel.repository.remote.model.StaySalesData;
 import com.twoheart.dailyhotel.model.Stay;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 /**
@@ -14,10 +10,9 @@ import java.util.ArrayList;
 
 public class StayCampaignTags
 {
+    public int msgCode;
     private CampaignTag mCampaignTag;
-
     public String imageUrl;
-
     private ArrayList<Stay> mStayList;
 
     public void setCampaignTag(CampaignTag campaignTag)

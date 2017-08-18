@@ -17,7 +17,6 @@ import com.twoheart.dailyhotel.model.time.StayBookingDay;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.network.dto.BaseDto;
 import com.twoheart.dailyhotel.network.dto.BaseListDto;
-import com.twoheart.dailyhotel.util.DailyCalendar;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -103,6 +102,8 @@ public class CampaignTagRemoteImpl implements CampaignTagInterface
                         {
                             stayCampaignTags = new StayCampaignTags();
                         }
+
+                        stayCampaignTags.msgCode = stayCampaignTagsDataBaseDto.msgCode;
                     } else if (stayCampaignTagsDataBaseDto.msgCode == -101)
                     {
                         if (stayCampaignTagsDataBaseDto.data != null)
@@ -114,17 +115,14 @@ public class CampaignTagRemoteImpl implements CampaignTagInterface
                         if (stayCampaignTags == null)
                         {
                             stayCampaignTags = new StayCampaignTags();
-
-                            // 서버 데이터가 없음으로 임의로 지정 - 지정안할때 종료된 태그
-                            CampaignTag campaignTag = new CampaignTag();
-                            campaignTag.endDate = stayBookingDay.getCheckOutDay(DailyCalendar.ISO_8601_FORMAT);
-
-                            stayCampaignTags.setCampaignTag(campaignTag);
                         }
+
+                        stayCampaignTags.msgCode = stayCampaignTagsDataBaseDto.msgCode;
                     } else if (stayCampaignTagsDataBaseDto.msgCode == 200)
                     {
                         // 종료된 캠페인 태그
                         stayCampaignTags = new StayCampaignTags();
+                        stayCampaignTags.msgCode = stayCampaignTagsDataBaseDto.msgCode;
                     } else
                     {
                         throw new BaseException(stayCampaignTagsDataBaseDto.msgCode, stayCampaignTagsDataBaseDto.msg);
@@ -161,6 +159,8 @@ public class CampaignTagRemoteImpl implements CampaignTagInterface
                         {
                             gourmetCampaignTags = new GourmetCampaignTags();
                         }
+
+                        gourmetCampaignTags.msgCode = gourmetCampaignTagsDataBaseDto.msgCode;
                     } else if (gourmetCampaignTagsDataBaseDto.msgCode == -101)
                     {
                         if (gourmetCampaignTagsDataBaseDto.data != null)
@@ -172,17 +172,14 @@ public class CampaignTagRemoteImpl implements CampaignTagInterface
                         {
                             // 조회된 데이터가 없을때 - KRQA-1630 요청으로 emptyView 생성
                             gourmetCampaignTags = new GourmetCampaignTags();
-
-                            // 서버 데이터가 없음으로 임의로 지정 - 지정안할때 종료된 태그
-                            CampaignTag campaignTag = new CampaignTag();
-                            campaignTag.endDate = gourmetBookingDay.getVisitDay(DailyCalendar.ISO_8601_FORMAT);
-
-                            gourmetCampaignTags.setCampaignTag(campaignTag);
                         }
+
+                        gourmetCampaignTags.msgCode = gourmetCampaignTagsDataBaseDto.msgCode;
                     } else if (gourmetCampaignTagsDataBaseDto.msgCode == 200)
                     {
                         // 종료된 캠페인 태그
                         gourmetCampaignTags = new GourmetCampaignTags();
+                        gourmetCampaignTags.msgCode = gourmetCampaignTagsDataBaseDto.msgCode;
                     } else
                     {
                         throw new BaseException(gourmetCampaignTagsDataBaseDto.msgCode, gourmetCampaignTagsDataBaseDto.msg);

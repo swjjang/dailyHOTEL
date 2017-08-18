@@ -153,7 +153,7 @@ public class StaySearchResultListFragment extends StayListFragment
                                     //                                        , ((StaySearchCuration) mStayCuration).getKeyword().name, integer.toString(), soldOutCount, null);
                                     break;
 
-                                case RECENT:
+                                case RECENTLY_KEYWORD:
                                     AnalyticsManager.getInstance(getContext()).recordEvent(AnalyticsManager.Category.RECENT_SEARCH_RESULT//
                                         , ((StaySearchCuration) mStayCuration).getKeyword().name, integer.toString(), soldOutCount, null);
                                     break;

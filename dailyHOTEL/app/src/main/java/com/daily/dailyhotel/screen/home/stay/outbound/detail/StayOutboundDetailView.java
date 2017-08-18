@@ -194,6 +194,15 @@ public class StayOutboundDetailView extends BaseDialogView<StayOutboundDetailVie
 
         viewDataBinding.productTypeBackgroundView.setOnClickListener(this);
         viewDataBinding.closeView.setOnClickListener(this);
+
+        viewDataBinding.bottomLayout.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                // do nothing - 판매 완료 버튼이 뚤리는 이슈 수정
+            }
+        });
     }
 
     @Override

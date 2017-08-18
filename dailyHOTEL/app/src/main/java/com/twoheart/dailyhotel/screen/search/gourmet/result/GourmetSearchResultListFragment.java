@@ -145,7 +145,7 @@ public class GourmetSearchResultListFragment extends GourmetListFragment
                                         , ((GourmetSearchCuration) mGourmetCuration).getKeyword().name, integer.toString(), soldOutCount, null);
                                     break;
 
-                                case RECENT:
+                                case RECENTLY_KEYWORD:
                                     AnalyticsManager.getInstance(getContext()).recordEvent(AnalyticsManager.Category.RECENT_SEARCH_RESULT//
                                         , ((GourmetSearchCuration) mGourmetCuration).getKeyword().name, integer.toString(), soldOutCount, null);
                                     break;

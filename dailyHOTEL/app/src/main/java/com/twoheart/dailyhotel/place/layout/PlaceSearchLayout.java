@@ -24,6 +24,7 @@ import com.daily.base.util.DailyTextUtils;
 import com.daily.base.widget.DailyEditText;
 import com.daily.base.widget.DailyScrollView;
 import com.daily.dailyhotel.entity.CampaignTag;
+import com.daily.dailyhotel.entity.SearchCalendarReturnData;
 import com.daily.dailyhotel.view.DailySearchCircleIndicator;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Keyword;
@@ -31,7 +32,6 @@ import com.twoheart.dailyhotel.model.Place;
 import com.twoheart.dailyhotel.place.base.BaseLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
 import com.twoheart.dailyhotel.screen.search.SearchCardViewAdapter;
-import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.StringFilter;
@@ -80,7 +80,7 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
 
         void onSearch(String text, Keyword keyword);
 
-        void onCalendarClick(boolean isAnimation, Constants.SearchType searchType, String inputText, Keyword keyword);
+        void onCalendarClick(boolean isAnimation, SearchCalendarReturnData returnData);
 
         void onSearchEnabled(boolean enabled);
 
@@ -593,7 +593,7 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
                     @Override
                     public void run()
                     {
-                        ((OnEventListener) mOnEventListener).onCalendarClick(true, null, null, null);
+                        ((OnEventListener) mOnEventListener).onCalendarClick(true, null);
                     }
                 }, 100);
                 break;

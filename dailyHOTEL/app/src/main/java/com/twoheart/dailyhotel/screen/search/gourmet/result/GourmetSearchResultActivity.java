@@ -944,7 +944,7 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
                             , AnalyticsManager.Action.NEARBY, Integer.toString(gourmet.index), null);
                         break;
 
-                    case RECENT:
+                    case RECENTLY_KEYWORD:
                         AnalyticsManager.getInstance(GourmetSearchResultActivity.this).recordEvent(AnalyticsManager.Category.SOLDOUT_GOURMET_ITEM_CLICK//
                             , AnalyticsManager.Action.RECENT, Integer.toString(gourmet.index), null);
                         break;
@@ -1182,7 +1182,7 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
                         mReceiveDataFlag = 2;
                     }
                 }
-            } else if (mSearchType == SearchType.RECENT)
+            } else if (mSearchType == SearchType.RECENTLY_KEYWORD)
             {
                 recordEventSearchResultByRecentKeyword(keyword, isShow, params);
             } else if (mSearchType == SearchType.AUTOCOMPLETE)

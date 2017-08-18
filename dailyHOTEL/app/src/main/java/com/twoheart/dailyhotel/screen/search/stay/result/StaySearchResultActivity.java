@@ -1049,7 +1049,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
                             , AnalyticsManager.Action.NEARBY, Integer.toString(stay.index), null);
                         break;
 
-                    case RECENT:
+                    case RECENTLY_KEYWORD:
                         AnalyticsManager.getInstance(StaySearchResultActivity.this).recordEvent(AnalyticsManager.Category.SOLDOUT_STAY_ITEM_CLICK//
                             , AnalyticsManager.Action.RECENT, Integer.toString(stay.index), null);
                         break;
@@ -1295,7 +1295,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
                         mReceiveDataFlag = 2;
                     }
                 }
-            } else if (mSearchType == SearchType.RECENT)
+            } else if (mSearchType == SearchType.RECENTLY_KEYWORD)
             {
                 recordEventSearchResultByRecentKeyword(keyword, isShow, params);
             } else if (mSearchType == SearchType.AUTOCOMPLETE)

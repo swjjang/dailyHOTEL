@@ -154,7 +154,7 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
         mDayViewList = new ArrayList<>();
     }
 
-    protected ArrayList<Pair<String, Day[]>> makeCalendarList(Calendar startCalendar, Calendar endCalendar)
+    protected ArrayList<Pair<String, Day[]>> makeCalendarList(Calendar startCalendar, Calendar endCalendar, boolean isLastSoldOutCheck)
     {
         ArrayList<Pair<String, Day[]>> arrayList = new ArrayList<>();
         if (startCalendar == null || endCalendar == null)
@@ -176,7 +176,10 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
             int endDateValue = Integer.parseInt(DailyCalendar.format(endCalendar.getTime(), "yyyyMMdd"));
             for (int soldOutDayValue : mSoldOutDayList)
             {
-                if (soldOutDayValue < endDateValue)
+                // 고메의 경우 단 1일만 선택 가능하기에 마지막 날짜도 SoldOut 체크를 해야 함 - 스테이는 마직막 전날까지 계산
+                boolean isSoldOut = isLastSoldOutCheck == true //
+                    ? soldOutDayValue <= endDateValue : soldOutDayValue < endDateValue;
+                if (isSoldOut == true)
                 {
                     soldOutDayList.add(soldOutDayValue);
                 }
@@ -267,7 +270,7 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
         return days;
     }
 
-    protected void makeCalendar(TodayDateTime todayDateTime, int dayCountOfMax)
+    protected void makeCalendar(TodayDateTime todayDateTime, int dayCountOfMax, boolean isLastSoldOutCheck)
     {
         Date todayDate;
 
@@ -287,7 +290,7 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
         // 마지막 날짜는 start day 를 1로 잡음으로 하루를 빼고 계산 해야 함
         endCalendar.add(Calendar.DAY_OF_MONTH, dayCountOfMax - 1);
 
-        ArrayList<Pair<String, Day[]>> calendarList = makeCalendarList(startCalendar, endCalendar);
+        ArrayList<Pair<String, Day[]>> calendarList = makeCalendarList(startCalendar, endCalendar, isLastSoldOutCheck);
 
         if (calendarList == null)
         {

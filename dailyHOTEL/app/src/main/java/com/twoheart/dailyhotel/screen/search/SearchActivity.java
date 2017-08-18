@@ -10,6 +10,7 @@ import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.widget.DailySwitchCompat;
 import com.daily.base.widget.DailyViewPager;
+import com.daily.dailyhotel.entity.SearchCalendarReturnData;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.time.GourmetBookingDay;
 import com.twoheart.dailyhotel.model.time.PlaceBookingDay;
@@ -433,7 +434,10 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
                     case HOTEL:
                         if (mStaySearchFragment.isDateChanged() == false)
                         {
-                            mStaySearchFragment.startCalendar(true, SearchType.SEARCHES, null, null);
+                            SearchCalendarReturnData returnData = new SearchCalendarReturnData();
+                            returnData.searchType = SearchType.SEARCHES;
+
+                            mStaySearchFragment.startCalendar(true, returnData);
                             return;
                         }
 
@@ -443,7 +447,10 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
                     case FNB:
                         if (mGourmetSearchFragment.isDateChanged() == false)
                         {
-                            mGourmetSearchFragment.startCalendar(true, SearchType.SEARCHES, null, null);
+                            SearchCalendarReturnData returnData = new SearchCalendarReturnData();
+                            returnData.searchType = SearchType.SEARCHES;
+
+                            mGourmetSearchFragment.startCalendar(true, returnData);
                             return;
                         }
 
