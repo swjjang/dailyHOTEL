@@ -57,7 +57,7 @@ public class StayOutboundPaymentView extends BaseDialogView<StayOutboundPaymentV
 
         void onPhoneNumberClick(String phoneNumber);
 
-        void onAgreedTermClick(boolean checked);
+        void onAgreedThirdPartyTermsClick(boolean checked);
     }
 
     public StayOutboundPaymentView(BaseActivity baseActivity, StayOutboundPaymentView.OnEventListener listener)
@@ -501,7 +501,7 @@ public class StayOutboundPaymentView extends BaseDialogView<StayOutboundPaymentV
             @Override
             public void onAgreementClick(boolean isChecked)
             {
-                getEventListener().onAgreedTermClick(isChecked);
+                getEventListener().onAgreedThirdPartyTermsClick(isChecked);
             }
         });
     }

@@ -1,6 +1,7 @@
 package com.daily.dailyhotel.screen.common.call;
 
 
+import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -178,6 +179,8 @@ public class CallDialogPresenter extends BaseExceptionPresenter<CallDialogActivi
             try
             {
                 startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + phoneNumber)));
+
+                setResult(Activity.RESULT_OK);
             } catch (ActivityNotFoundException e)
             {
                 DailyToast.showToast(getActivity(), noCallMessage, DailyToast.LENGTH_LONG);
@@ -263,6 +266,8 @@ public class CallDialogPresenter extends BaseExceptionPresenter<CallDialogActivi
             @Override
             public void onCancel(DialogInterface dialog)
             {
+                setResult(Activity.RESULT_CANCELED);
+
                 onBackClick();
             }
         });

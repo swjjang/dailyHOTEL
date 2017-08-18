@@ -13,6 +13,7 @@ public class StayPaymentAnalyticsParam implements Parcelable
     public boolean nrd;
     public String showOriginalPrice;
     public int rankingPosition;
+    public int totalListCount;
     public int ratingValue;
     public boolean benefit;
     public int averageDiscount; // 평균 가격
@@ -74,6 +75,7 @@ public class StayPaymentAnalyticsParam implements Parcelable
         dest.writeInt(nrd ? 1 : 0);
         dest.writeString(showOriginalPrice);
         dest.writeInt(rankingPosition);
+        dest.writeInt(totalListCount);
         dest.writeInt(ratingValue);
         dest.writeInt(benefit ? 1 : 0);
         dest.writeInt(averageDiscount);
@@ -88,6 +90,7 @@ public class StayPaymentAnalyticsParam implements Parcelable
         nrd = in.readInt() == 1 ? true : false;
         showOriginalPrice = in.readString();
         rankingPosition = in.readInt();
+        totalListCount = in.readInt();
         ratingValue = in.readInt();
         benefit = in.readInt() == 1 ? true : false;
         averageDiscount = in.readInt();

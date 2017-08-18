@@ -666,7 +666,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
     }
 
     @Override
-    public void onAgreedTermClick(boolean checked)
+    public void onAgreedThirdPartyTermsClick(boolean checked)
     {
         mAgreedThirdPartyTerms = checked;
     }

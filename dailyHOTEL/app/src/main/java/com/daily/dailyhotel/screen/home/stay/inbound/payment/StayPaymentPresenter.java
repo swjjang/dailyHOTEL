@@ -51,6 +51,7 @@ import com.twoheart.dailyhotel.widget.CustomFontTypefaceSpan;
 
 import org.json.JSONObject;
 
+import java.util.Date;
 import java.util.List;
 
 import io.reactivex.Observable;
@@ -107,12 +108,12 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
         void onScreen(Activity activity, String refundPolicy, StayBookDateTime stayBookDateTime, int stayIndex, String stayName//
             , int roomIndex, String roomName, String category, String grade, StayPayment stayPayment, boolean registerEasyCard);
 
-        void onScreenAgreeTermDialog(Activity activity, String refundPolicy, StayBookDateTime stayBookDateTime, int stayIndex, String stayName//
-            , int roomIndex, String roomName, String category, String grade, StayPayment stayPayment, boolean registerEasyCard);
+        void onScreenAgreeTermDialog(Activity activity, StayBookDateTime stayBookDateTime//
+            , int stayIndex, String stayName, int roomIndex, String roomName, String category, String grade//
+            , StayPayment stayPayment, boolean registerEasyCard, boolean usedBonus, boolean usedCoupon, Coupon coupon//
+            , DailyBookingPaymentTypeView.PaymentType paymentType, UserSimpleInformation userSimpleInformation);
 
-        void onScreenPaymentCompleted(Activity activity, StayPayment stayPayment, StayBookDateTime stayBookDateTime//
-            , int stayIndex, String stayName, DailyBookingPaymentTypeView.PaymentType paymentType, boolean fullBonus//
-            , boolean registerEasyCard, UserSimpleInformation userSimpleInformation);
+        void onScreenPaymentCompleted(Activity activity, String transId);
 
         void onEventTransportationVisible(Activity activity, boolean visible);
 
@@ -124,13 +125,21 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
 
         void onEventCouponClick(Activity activity, boolean selected);
 
+        void onEventCallClick(Activity activity);
+
+        void onEventCall(Activity activity, boolean call);
+
+        void onEventAgreedThirdPartyClick(Activity activity);
+
         void onEventTransportationType(Activity activity, String transportation, String type);
 
         void onEventEasyCardManagerClick(Activity activity, boolean hasEasyCard);
 
+        void onEventAgreedTermCancelClick(Activity activity);
+
         void onEventStartPayment(Activity activity, DailyBookingPaymentTypeView.PaymentType paymentType);
 
-        void onEventEndPayment(Activity activity);
+        void onEventAgreedTermClick(Activity activity, String stayName, String roomName);
 
         StayThankYouAnalyticsParam getThankYouAnalyticsParam(DailyBookingPaymentTypeView.PaymentType paymentType//
             , boolean fullBonus, boolean usedBonus, boolean registerEasyCard);
@@ -423,6 +432,10 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
                     setCoupon(null);
                 }
                 break;
+
+            case StayPaymentActivity.REQUEST_CODE_CALL:
+                mAnalytics.onEventCall(getActivity(), resultCode == Activity.RESULT_OK);
+                break;
         }
     }
 
@@ -506,7 +519,7 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
                 }
 
                 mAnalytics.onScreen(getActivity(), mStayRefundPolicy.refundPolicy, mStayBookDateTime//
-                    , mStayIndex, mStayName, mRoomIndex, mRoomName, mCategory, mGrade.name()//
+                    , mStayIndex, mStayName, mRoomIndex, mRoomName, mCategory, mGrade.getName(getActivity())//
                     , mStayPayment, mSelectedCard != null);
 
                 mAnalytics.onEventTransportationVisible(getActivity(), StayPayment.VISIT_TYPE_NONE.equalsIgnoreCase(mStayPayment.transportation) == false);
@@ -548,6 +561,8 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
         }
 
         startActivityForResult(CallDialogActivity.newInstance(getActivity()), StayPaymentActivity.REQUEST_CODE_CALL);
+
+        mAnalytics.onEventCallClick(getActivity());
     }
 
     @Override
@@ -813,6 +828,8 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
                     public void onCancel(DialogInterface dialog)
                     {
                         unLockAll();
+
+                        mAnalytics.onEventAgreedTermCancelClick(getActivity());
                     }
                 });
 
@@ -844,12 +861,16 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
                     public void onCancel(DialogInterface dialog)
                     {
                         unLockAll();
+
+                        mAnalytics.onEventAgreedTermCancelClick(getActivity());
                     }
                 });
 
                 mAnalytics.onEventStartPayment(getActivity(), mPaymentType);
             }
         }
+
+        mAnalytics.onEventAgreedTermClick(getActivity(), mStayName, mRoomName);
     }
 
     @Override
@@ -865,9 +886,14 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
     }
 
     @Override
-    public void onAgreedTermClick(boolean checked)
+    public void onAgreedThirdPartyTermsClick(boolean checked)
     {
         mAgreedThirdPartyTerms = checked;
+
+        if (checked == true)
+        {
+            mAnalytics.onEventAgreedThirdPartyClick(getActivity());
+        }
     }
 
     private synchronized void onAgreedPaymentClick()
@@ -1009,6 +1035,10 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
                 }
             }
         }
+
+        mAnalytics.onScreenAgreeTermDialog(getActivity(), mStayBookDateTime, mStayIndex, mStayName, mRoomIndex, mRoomName//
+            , mCategory, mGrade.getName(getActivity()), mStayPayment, mSelectedCard != null, mBonusSelected, mCouponSelected, mSelectedCoupon//
+            , mPaymentType, mUserSimpleInformation);
     }
 
     private void startThankYou(int bookingIndex, boolean fullBonus)
@@ -1021,9 +1051,14 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
 
         mAnalytics.onEventTransportationType(getActivity(), mStayPayment.transportation, mTransportationType);
 
-        mAnalytics.onScreenPaymentCompleted(getActivity(), mStayPayment, mStayBookDateTime//
-            , mStayIndex, mStayName, mPaymentType, fullBonus, mSelectedCard != null, mUserSimpleInformation);
-        mAnalytics.onEventEndPayment(getActivity());
+        try
+        {
+            mAnalytics.onScreenPaymentCompleted(getActivity()//
+                , DailyCalendar.format(new Date(), "yyyyMMddHHmmss") + '_' + mUserSimpleInformation.index);
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+        }
     }
 
     private JSONObject getPaymentJSONObject(StayBookDateTime stayBookDateTime, int roomIndex//

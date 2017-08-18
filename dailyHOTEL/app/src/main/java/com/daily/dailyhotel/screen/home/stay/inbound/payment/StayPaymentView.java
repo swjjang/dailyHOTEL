@@ -31,7 +31,6 @@ import com.daily.dailyhotel.view.DailyBookingPaymentTypeView;
 import com.daily.dailyhotel.view.DailyToolbarView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ActivityStayPaymentDataBinding;
-import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.screen.common.FinalCheckLayout;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.Util;
@@ -68,7 +67,7 @@ public class StayPaymentView extends BaseDialogView<StayPaymentView.OnEventListe
 
         void onPhoneNumberClick(String phoneNumber);
 
-        void onAgreedTermClick(boolean checked);
+        void onAgreedThirdPartyTermsClick(boolean checked);
     }
 
     public StayPaymentView(BaseActivity baseActivity, StayPaymentView.OnEventListener listener)
@@ -647,7 +646,7 @@ public class StayPaymentView extends BaseDialogView<StayPaymentView.OnEventListe
             @Override
             public void onAgreementClick(boolean isChecked)
             {
-                getEventListener().onAgreedTermClick(isChecked);
+                getEventListener().onAgreedThirdPartyTermsClick(isChecked);
             }
         });
     }

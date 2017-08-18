@@ -774,6 +774,7 @@ public class StayDetailActivity extends PlaceDetailActivity
         stayPaymentAnalyticsParam.nrd = stayProduct.isNRD;
         stayPaymentAnalyticsParam.showOriginalPrice = mAnalyticsParam.showOriginalPriceYn;
         stayPaymentAnalyticsParam.rankingPosition = mAnalyticsParam.entryPosition;
+        stayPaymentAnalyticsParam.totalListCount = mAnalyticsParam.totalListCount;
         stayPaymentAnalyticsParam.ratingValue = stayDetailParams.ratingValue;
         stayPaymentAnalyticsParam.benefit = DailyTextUtils.isTextEmpty(stayDetailParams.benefit) == false;
         stayPaymentAnalyticsParam.averageDiscount = stayProduct.averageDiscount;
