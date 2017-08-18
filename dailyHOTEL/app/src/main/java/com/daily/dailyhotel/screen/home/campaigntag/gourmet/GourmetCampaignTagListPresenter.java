@@ -407,6 +407,30 @@ public class GourmetCampaignTagListPresenter //
         setTitleText(title);
         setCalendarText(gourmetBookingDay);
 
+        if (gourmetCampaignTags != null && gourmetCampaignTags.getCampaignTag() != null)
+        {
+            if (Constants.ServiceType.GOURMET.name().equalsIgnoreCase(gourmetCampaignTags.getCampaignTag().serviceType) == false)
+            {
+                setData(null, gourmetBookingDay);
+
+                getViewInterface().showSimpleDialog(null //
+                    , getString(R.string.message_campaign_tag_recheck_connection) //
+                    , getString(R.string.dialog_btn_text_confirm) //
+                    , null, new DialogInterface.OnDismissListener()
+                    {
+                        @Override
+                        public void onDismiss(DialogInterface dialog)
+                        {
+//                            setResult(Constants.CODE_RESULT_ACTIVITY_REFRESH);
+                            finish();
+                        }
+                    });
+
+                mIsFirstUiUpdateCheck = true;
+                return;
+            }
+        }
+
         long currentTime;
         long endTime;
 
@@ -434,6 +458,7 @@ public class GourmetCampaignTagListPresenter //
                     @Override
                     public void onDismiss(DialogInterface dialog)
                     {
+                        setResult(Constants.CODE_RESULT_ACTIVITY_REFRESH);
                         finish();
                     }
                 });

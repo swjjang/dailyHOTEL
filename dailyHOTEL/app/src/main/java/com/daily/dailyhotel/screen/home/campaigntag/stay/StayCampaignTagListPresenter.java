@@ -409,6 +409,29 @@ public class StayCampaignTagListPresenter extends BaseExceptionPresenter<StayCam
         setTitleText(title);
         setCalendarText(stayBookingDay);
 
+        if (stayCampaignTags != null && stayCampaignTags.getCampaignTag() != null)
+        {
+            if (Constants.ServiceType.HOTEL.name().equalsIgnoreCase(stayCampaignTags.getCampaignTag().serviceType) == false)
+            {
+                setData(null, stayBookingDay);
+
+                getViewInterface().showSimpleDialog(null //
+                    , getString(R.string.message_campaign_tag_recheck_connection) //
+                    , getString(R.string.dialog_btn_text_confirm) //
+                    , null, new DialogInterface.OnDismissListener()
+                    {
+                        @Override
+                        public void onDismiss(DialogInterface dialog)
+                        {
+//                            setResult(Constants.CODE_RESULT_ACTIVITY_REFRESH);
+                            finish();
+                        }
+                    });
+
+                mIsFirstUiUpdateCheck = true;
+                return;
+            }
+        }
 
         long currentTime;
         long endTime;
@@ -437,6 +460,7 @@ public class StayCampaignTagListPresenter extends BaseExceptionPresenter<StayCam
                     @Override
                     public void onDismiss(DialogInterface dialog)
                     {
+                        setResult(Constants.CODE_RESULT_ACTIVITY_REFRESH);
                         finish();
                     }
                 });
@@ -463,7 +487,6 @@ public class StayCampaignTagListPresenter extends BaseExceptionPresenter<StayCam
         }
 
         mIsFirstUiUpdateCheck = true;
-
     }
 
     public void setTitleText(String title)

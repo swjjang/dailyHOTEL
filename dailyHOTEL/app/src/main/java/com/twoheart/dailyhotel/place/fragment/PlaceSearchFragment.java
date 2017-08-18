@@ -31,6 +31,7 @@ import com.twoheart.dailyhotel.util.DailyRecentSearches;
 import com.twoheart.dailyhotel.util.Util;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
@@ -59,6 +60,7 @@ public abstract class PlaceSearchFragment extends BaseFragment
 
     protected TodayDateTime mTodayDateTime;
     protected ArrayList<CampaignTag> mCampaignTagList;
+    protected List<Keyword> mKeywordList;
 
     private boolean mIsDateChanged;
     private DailyLocationFactory mDailyLocationFactory;
@@ -84,6 +86,8 @@ public abstract class PlaceSearchFragment extends BaseFragment
     public abstract Constants.ServiceType getServiceType();
 
     public abstract void setTodayDateTime(TodayDateTime todayDateTime);
+
+    public abstract void requestCampaignTagList();
 
     public interface OnSearchFragmentListener
     {
@@ -307,6 +311,16 @@ public abstract class PlaceSearchFragment extends BaseFragment
                 {
                     mBaseActivity.setResult(resultCode);
                     mBaseActivity.finish();
+                }
+                break;
+            }
+
+            case REQUEST_CODE_STAY_CAMPAIGN_TAG_LIST:
+            case REQUEST_CODE_GOURMET_CAMPAIGN_TAG_LIST:
+            {
+                if (resultCode == Constants.CODE_RESULT_ACTIVITY_REFRESH)
+                {
+                    requestCampaignTagList();
                 }
                 break;
             }

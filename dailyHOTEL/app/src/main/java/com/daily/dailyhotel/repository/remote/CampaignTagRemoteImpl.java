@@ -121,6 +121,10 @@ public class CampaignTagRemoteImpl implements CampaignTagInterface
 
                             stayCampaignTags.setCampaignTag(campaignTag);
                         }
+                    } else if (stayCampaignTagsDataBaseDto.msgCode == 200)
+                    {
+                        // 종료된 캠페인 태그
+                        stayCampaignTags = new StayCampaignTags();
                     } else
                     {
                         throw new BaseException(stayCampaignTagsDataBaseDto.msgCode, stayCampaignTagsDataBaseDto.msg);
@@ -175,6 +179,10 @@ public class CampaignTagRemoteImpl implements CampaignTagInterface
 
                             gourmetCampaignTags.setCampaignTag(campaignTag);
                         }
+                    } else if (gourmetCampaignTagsDataBaseDto.msgCode == 200)
+                    {
+                        // 종료된 캠페인 태그
+                        gourmetCampaignTags = new GourmetCampaignTags();
                     } else
                     {
                         throw new BaseException(gourmetCampaignTagsDataBaseDto.msgCode, gourmetCampaignTagsDataBaseDto.msg);
