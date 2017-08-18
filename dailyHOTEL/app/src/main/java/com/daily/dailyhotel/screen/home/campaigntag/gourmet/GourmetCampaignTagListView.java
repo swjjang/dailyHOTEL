@@ -123,11 +123,14 @@ public class GourmetCampaignTagListView //
         if (getViewDataBinding() != null)
         {
             int resultCount = 0;
-            for (PlaceViewItem placeViewItem : placeViewItemList)
+            if ( placeViewItemList != null && placeViewItemList.size() > 0)
             {
-                if (PlaceViewItem.TYPE_ENTRY == placeViewItem.mType)
+                for (PlaceViewItem placeViewItem : placeViewItemList)
                 {
-                    resultCount++;
+                    if (PlaceViewItem.TYPE_ENTRY == placeViewItem.mType)
+                    {
+                        resultCount++;
+                    }
                 }
             }
 
