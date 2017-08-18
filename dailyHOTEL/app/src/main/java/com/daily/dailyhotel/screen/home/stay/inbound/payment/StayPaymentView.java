@@ -31,6 +31,7 @@ import com.daily.dailyhotel.view.DailyBookingPaymentTypeView;
 import com.daily.dailyhotel.view.DailyToolbarView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ActivityStayPaymentDataBinding;
+import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.screen.common.FinalCheckLayout;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.Util;
@@ -446,20 +447,21 @@ public class StayPaymentView extends BaseDialogView<StayPaymentView.OnEventListe
 
     @Override
     public void showAgreeTermDialog(DailyBookingPaymentTypeView.PaymentType paymentType//
-        , View.OnClickListener onClickListener, DialogInterface.OnCancelListener cancelListener)
+        , int[] messages, View.OnClickListener onClickListener, DialogInterface.OnCancelListener cancelListener)
     {
         hideSimpleDialog();
 
         switch (paymentType)
         {
             case EASY_CARD:
-                showSimpleDialog(getEasyPaymentAgreeLayout(onClickListener), cancelListener, null, true);
+                showSimpleDialog(getEasyPaymentAgreeLayout(messages, onClickListener), cancelListener, null, true);
                 break;
 
             case CARD:
             case PHONE:
             case VBANK:
-                showSimpleDialog(getPaymentAgreeLayout(onClickListener), cancelListener, null, true);
+            case FREE:
+                showSimpleDialog(getPaymentAgreeLayout(messages, onClickListener), cancelListener, null, true);
                 break;
 
             default:
@@ -776,16 +778,10 @@ public class StayPaymentView extends BaseDialogView<StayPaymentView.OnEventListe
         }
     }
 
-    protected ViewGroup getEasyPaymentAgreeLayout(View.OnClickListener onClickListener)
+    protected ViewGroup getEasyPaymentAgreeLayout(int[] messages, View.OnClickListener onClickListener)
     {
-        int[] messageResIds = new int[]{R.string.dialog_msg_hotel_payment_message01//
-            , R.string.message_stay_outbound_payment_agree_01//
-            , R.string.message_stay_outbound_payment_agree_02//
-            , R.string.message_stay_outbound_payment_agree_03//
-            , R.string.message_stay_outbound_payment_agree_04};
-
         final FinalCheckLayout finalCheckLayout = new FinalCheckLayout(getContext());
-        finalCheckLayout.setMessages(messageResIds);
+        finalCheckLayout.setMessages(messages);
 
         final TextView agreeSignatureTextView = (TextView) finalCheckLayout.findViewById(R.id.agreeSignatureTextView);
         final View confirmTextView = finalCheckLayout.findViewById(R.id.confirmTextView);
@@ -862,18 +858,12 @@ public class StayPaymentView extends BaseDialogView<StayPaymentView.OnEventListe
         return finalCheckLayout;
     }
 
-    private View getPaymentAgreeLayout(View.OnClickListener onClickListener)
+    private View getPaymentAgreeLayout(int[] messages, View.OnClickListener onClickListener)
     {
-        int[] messageResIds = new int[]{R.string.dialog_msg_hotel_payment_message01//
-            , R.string.message_stay_outbound_payment_agree_01//
-            , R.string.message_stay_outbound_payment_agree_02//
-            , R.string.message_stay_outbound_payment_agree_03//
-            , R.string.message_stay_outbound_payment_agree_04};
-
         View view = LayoutInflater.from(getContext()).inflate(R.layout.fragment_dialog_confirm_payment, null);
         ViewGroup messageLayout = (ViewGroup) view.findViewById(R.id.messageLayout);
 
-        makeMessagesLayout(messageLayout, messageResIds);
+        makeMessagesLayout(messageLayout, messages);
 
         View confirmTextView = view.findViewById(R.id.confirmTextView);
 

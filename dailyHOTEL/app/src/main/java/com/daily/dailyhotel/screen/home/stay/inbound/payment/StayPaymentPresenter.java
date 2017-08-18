@@ -20,6 +20,7 @@ import com.daily.base.util.FontManager;
 import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
 import com.daily.dailyhotel.entity.Card;
+import com.daily.dailyhotel.entity.CommonDateTime;
 import com.daily.dailyhotel.entity.DomesticGuest;
 import com.daily.dailyhotel.entity.PaymentResult;
 import com.daily.dailyhotel.entity.StayBookDateTime;
@@ -28,6 +29,7 @@ import com.daily.dailyhotel.entity.StayRefundPolicy;
 import com.daily.dailyhotel.entity.UserSimpleInformation;
 import com.daily.dailyhotel.parcel.analytics.StayPaymentAnalyticsParam;
 import com.daily.dailyhotel.parcel.analytics.StayThankYouAnalyticsParam;
+import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
 import com.daily.dailyhotel.repository.remote.PaymentRemoteImpl;
 import com.daily.dailyhotel.repository.remote.ProfileRemoteImpl;
 import com.daily.dailyhotel.screen.common.call.CallDialogActivity;
@@ -35,6 +37,7 @@ import com.daily.dailyhotel.screen.home.stay.inbound.thankyou.StayThankYouActivi
 import com.daily.dailyhotel.view.DailyBookingPaymentTypeView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Coupon;
+import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.screen.mydaily.coupon.SelectStayCouponDialogActivity;
 import com.twoheart.dailyhotel.screen.mydaily.creditcard.CreditCardListActivity;
 import com.twoheart.dailyhotel.screen.mydaily.creditcard.RegisterCreditCardActivity;
@@ -44,7 +47,6 @@ import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.DailyRemoteConfigPreference;
 import com.twoheart.dailyhotel.util.DailyUserPreference;
-import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.CustomFontTypefaceSpan;
 
 import org.json.JSONObject;
@@ -53,7 +55,7 @@ import java.util.List;
 
 import io.reactivex.Observable;
 import io.reactivex.functions.Consumer;
-import io.reactivex.functions.Function4;
+import io.reactivex.functions.Function5;
 
 /**
  * Created by sheldon
@@ -78,12 +80,14 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
 
     private PaymentRemoteImpl mPaymentRemoteImpl;
     private ProfileRemoteImpl mProfileRemoteImpl;
+    private CommonRemoteImpl mCommonRemoteImpl;
 
     private StayBookDateTime mStayBookDateTime;
     private int mStayIndex, mRoomPrice, mRoomIndex;
     private String mStayName, mImageUrl, mCategory, mRoomName;
     private StayPayment mStayPayment;
     private StayRefundPolicy mStayRefundPolicy;
+    private Stay.Grade mGrade;
     private Card mSelectedCard;
     private DomesticGuest mGuest;
     private Coupon mSelectedCoupon;
@@ -92,6 +96,7 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
     private boolean mOverseas, mBonusSelected, mCouponSelected, mAgreedThirdPartyTerms;
     private boolean mGuestInformationVisible;
     private UserSimpleInformation mUserSimpleInformation;
+    private int mPensionPopupMessageType;
 
     public interface StayPaymentAnalyticsInterface extends BaseAnalyticsInterface
     {
@@ -99,7 +104,11 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
 
         StayPaymentAnalyticsParam getAnalyticsParam();
 
-        void onScreen(Activity activity, StayBookDateTime stayBookDateTime);
+        void onScreen(Activity activity, String refundPolicy, StayBookDateTime stayBookDateTime, int stayIndex, String stayName//
+            , int roomIndex, String roomName, String category, String grade, StayPayment stayPayment, boolean registerEasyCard);
+
+        void onScreenAgreeTermDialog(Activity activity, String refundPolicy, StayBookDateTime stayBookDateTime, int stayIndex, String stayName//
+            , int roomIndex, String roomName, String category, String grade, StayPayment stayPayment, boolean registerEasyCard);
 
         void onScreenPaymentCompleted(Activity activity, StayPayment stayPayment, StayBookDateTime stayBookDateTime//
             , int stayIndex, String stayName, DailyBookingPaymentTypeView.PaymentType paymentType, boolean fullBonus//
@@ -107,9 +116,19 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
 
         void onEventTransportationVisible(Activity activity, boolean visible);
 
-        void onEventCouponClick(Activity activity, boolean enable);
+        void onEventChangedPrice(Activity activity, String stayName);
 
-        void onEventStartPayment(Activity activity, String label);
+        void onEventSoldOut(Activity activity, String stayName);
+
+        void onEventBonusClick(Activity activity, boolean selected, int bonus);
+
+        void onEventCouponClick(Activity activity, boolean selected);
+
+        void onEventTransportationType(Activity activity, String transportation, String type);
+
+        void onEventEasyCardManagerClick(Activity activity, boolean hasEasyCard);
+
+        void onEventStartPayment(Activity activity, DailyBookingPaymentTypeView.PaymentType paymentType);
 
         void onEventEndPayment(Activity activity);
 
@@ -138,6 +157,7 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
 
         mPaymentRemoteImpl = new PaymentRemoteImpl(activity);
         mProfileRemoteImpl = new ProfileRemoteImpl(activity);
+        mCommonRemoteImpl = new CommonRemoteImpl(activity);
 
         setRefresh(true);
     }
@@ -177,6 +197,14 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
         mCategory = intent.getStringExtra(StayPaymentActivity.INTENT_EXTRA_DATA_CATEGORY);
         mRoomName = intent.getStringExtra(StayPaymentActivity.INTENT_EXTRA_DATA_ROOM_NAME);
 
+        try
+        {
+            mGrade = Stay.Grade.valueOf(intent.getStringExtra(StayPaymentActivity.INTENT_EXTRA_DATA_GRADE));
+        } catch (Exception e)
+        {
+            mGrade = Stay.Grade.etc;
+        }
+
         mAnalytics.setAnalyticsParam(intent.getParcelableExtra(BaseActivity.INTENT_EXTRA_DATA_ANALYTICS));
 
         return true;
@@ -200,8 +228,6 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
     public void onStart()
     {
         super.onStart();
-
-        mAnalytics.onScreen(getActivity(), mStayBookDateTime);
 
         if (isRefresh() == true)
         {
@@ -414,19 +440,26 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
         addCompositeDisposable(Observable.zip(mPaymentRemoteImpl.getStayPayment(mStayBookDateTime, mRoomIndex)//
             , mPaymentRemoteImpl.getEasyCardList(), mProfileRemoteImpl.getUserSimpleInformation()//
             , mPaymentRemoteImpl.getStayRefundPolicy(mStayBookDateTime, mStayIndex, mRoomIndex) //
-            , new Function4<StayPayment, List<Card>, UserSimpleInformation, StayRefundPolicy, Boolean>()
+            , mCommonRemoteImpl.getCommonDateTime()//
+            , new Function5<StayPayment, List<Card>, UserSimpleInformation, StayRefundPolicy, CommonDateTime, Boolean>()
             {
                 @Override
                 public Boolean apply(@io.reactivex.annotations.NonNull StayPayment stayPayment//
                     , @io.reactivex.annotations.NonNull List<Card> cardList//
                     , @io.reactivex.annotations.NonNull UserSimpleInformation userSimpleInformation//
-                    , @io.reactivex.annotations.NonNull StayRefundPolicy stayRefundPolicy) throws Exception
+                    , @io.reactivex.annotations.NonNull StayRefundPolicy stayRefundPolicy//
+                    , @io.reactivex.annotations.NonNull CommonDateTime commonDateTime) throws Exception
                 {
                     setStayPayment(stayPayment);
                     setStayBookDateTime(stayPayment.checkInDate, stayPayment.checkOutDate);
                     setSelectCard(getSelectedCard(cardList));
                     setUserInformation(userSimpleInformation);
                     setStayRefundPolicy(stayRefundPolicy);
+
+                    if (Stay.Grade.pension == mGrade || Stay.Grade.fullvilla == mGrade)
+                    {
+                        setPensionPopupMessageType(commonDateTime, mStayBookDateTime);
+                    }
 
                     return true;
                 }
@@ -455,6 +488,8 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
                 {
                     getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.message_stay_payment_changed_price)//
                         , getString(R.string.dialog_btn_text_confirm), null);
+
+                    mAnalytics.onEventChangedPrice(getActivity(), mStayName);
                 } else if (mStayPayment.soldOut == true) // 솔드 아웃인 경우
                 {
                     getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.dialog_msg_stay_stop_onsale)//
@@ -466,7 +501,13 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
                                 onBackClick();
                             }
                         });
+
+                    mAnalytics.onEventSoldOut(getActivity(), mStayName);
                 }
+
+                mAnalytics.onScreen(getActivity(), mStayRefundPolicy.refundPolicy, mStayBookDateTime//
+                    , mStayIndex, mStayName, mRoomIndex, mRoomName, mCategory, mGrade.name()//
+                    , mStayPayment, mSelectedCard != null);
 
                 mAnalytics.onEventTransportationVisible(getActivity(), StayPayment.VISIT_TYPE_NONE.equalsIgnoreCase(mStayPayment.transportation) == false);
 
@@ -554,6 +595,8 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
                 setBonusSelected(true);
 
                 notifyStayPaymentChanged();
+
+                mAnalytics.onEventBonusClick(getActivity(), true, mUserSimpleInformation.bonus);
             } else
             {
                 // 적립금 삭제
@@ -566,6 +609,8 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
                             setBonusSelected(false);
 
                             notifyStayPaymentChanged();
+
+                            mAnalytics.onEventBonusClick(getActivity(), false, mUserSimpleInformation.bonus);
                         }
                     }, null);
             }
@@ -646,6 +691,8 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
         startActivityForResult(CreditCardListActivity.newInstance(getActivity()//
             , mSelectedCard.name, mSelectedCard.number, mSelectedCard.billKey, mSelectedCard.cd)//
             , StayPaymentActivity.REQUEST_CODE_CARD_MANAGER);
+
+        mAnalytics.onEventEasyCardManagerClick(getActivity(), mSelectedCard != null);
     }
 
     @Override
@@ -748,36 +795,8 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
             || (mCouponSelected == true && mStayPayment.totalPrice <= mSelectedCoupon.amount))
         {
             // 보너스로만 결제할 경우에는 팝업이 기존의 카드 타입과 동일한다.
-            getViewInterface().showAgreeTermDialog(DailyBookingPaymentTypeView.PaymentType.CARD, new View.OnClickListener()
-            {
-                @Override
-                public void onClick(View v)
-                {
-                    getViewInterface().hideSimpleDialog();
-
-                    unLockAll();
-
-                    onAgreedPaymentClick();
-                }
-            }, new DialogInterface.OnCancelListener()
-            {
-                @Override
-                public void onCancel(DialogInterface dialog)
-                {
-                    unLockAll();
-                }
-            });
-        } else
-        {
-            if (mPaymentType == DailyBookingPaymentTypeView.PaymentType.EASY_CARD && mSelectedCard == null)
-            {
-                startActivityForResult(RegisterCreditCardActivity.newInstance(getActivity())//
-                    , StayPaymentActivity.REQUEST_CODE_REGISTER_CARD_PAYMENT);
-
-                mAnalytics.onEventStartPayment(getActivity(), AnalyticsManager.Label.EASYCARDPAY);
-            } else
-            {
-                getViewInterface().showAgreeTermDialog(mPaymentType, new View.OnClickListener()
+            getViewInterface().showAgreeTermDialog(DailyBookingPaymentTypeView.PaymentType.FREE//
+                , getAgreedTermMessages(DailyBookingPaymentTypeView.PaymentType.FREE), new View.OnClickListener()
                 {
                     @Override
                     public void onClick(View v)
@@ -796,6 +815,39 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
                         unLockAll();
                     }
                 });
+
+            mAnalytics.onEventStartPayment(getActivity(), DailyBookingPaymentTypeView.PaymentType.FREE);
+        } else
+        {
+            if (mPaymentType == DailyBookingPaymentTypeView.PaymentType.EASY_CARD && mSelectedCard == null)
+            {
+                startActivityForResult(RegisterCreditCardActivity.newInstance(getActivity())//
+                    , StayPaymentActivity.REQUEST_CODE_REGISTER_CARD_PAYMENT);
+
+                mAnalytics.onEventStartPayment(getActivity(), DailyBookingPaymentTypeView.PaymentType.EASY_CARD);
+            } else
+            {
+                getViewInterface().showAgreeTermDialog(mPaymentType, getAgreedTermMessages(mPaymentType), new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        getViewInterface().hideSimpleDialog();
+
+                        unLockAll();
+
+                        onAgreedPaymentClick();
+                    }
+                }, new DialogInterface.OnCancelListener()
+                {
+                    @Override
+                    public void onCancel(DialogInterface dialog)
+                    {
+                        unLockAll();
+                    }
+                });
+
+                mAnalytics.onEventStartPayment(getActivity(), mPaymentType);
             }
         }
     }
@@ -872,8 +924,6 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
                     }
                 }
             }));
-
-            mAnalytics.onEventStartPayment(getActivity(), AnalyticsManager.Label.FULLBONUS);
         } else
         {
             switch (mPaymentType)
@@ -916,8 +966,6 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
                                 });
                         }
                     }));
-
-                    mAnalytics.onEventStartPayment(getActivity(), "EasyCardPay");
                     break;
                 }
 
@@ -931,8 +979,6 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
 
                     startActivityForResult(StayPaymentWebActivity.newInstance(getActivity(), mStayIndex, PAYMENT_TYPE, jsonObject.toString())//
                         , StayPaymentActivity.REQUEST_CODE_PAYMENT_WEB_CARD);
-
-                    mAnalytics.onEventStartPayment(getActivity(), "CardPay");
                     break;
                 }
 
@@ -946,8 +992,6 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
 
                     startActivityForResult(StayPaymentWebActivity.newInstance(getActivity(), mStayIndex, PAYMENT_TYPE, jsonObject.toString())//
                         , StayPaymentActivity.REQUEST_CODE_PAYMENT_WEB_PHONE);
-
-                    mAnalytics.onEventStartPayment(getActivity(), "PhoneBillPay");
                     break;
                 }
 
@@ -961,8 +1005,6 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
 
                     startActivityForResult(StayPaymentWebActivity.newInstance(getActivity(), mStayIndex, PAYMENT_TYPE, jsonObject.toString())//
                         , StayPaymentActivity.REQUEST_CODE_PAYMENT_WEB_VBANK);
-
-                    mAnalytics.onEventStartPayment(getActivity(), "VirtualAccountPay");
                     break;
                 }
             }
@@ -976,6 +1018,8 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
             , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
             , mRoomName, bookingIndex, mAnalytics.getThankYouAnalyticsParam(mPaymentType, true, mBonusSelected, mSelectedCard != null))//
             , StayPaymentActivity.REQUEST_CODE_THANK_YOU);
+
+        mAnalytics.onEventTransportationType(getActivity(), mStayPayment.transportation, mTransportationType);
 
         mAnalytics.onScreenPaymentCompleted(getActivity(), mStayPayment, mStayBookDateTime//
             , mStayIndex, mStayName, mPaymentType, fullBonus, mSelectedCard != null, mUserSimpleInformation);
@@ -1660,6 +1704,175 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
         {
             setPaymentType(DailyBookingPaymentTypeView.PaymentType.VBANK);
         }
+    }
+
+    private void setPensionPopupMessageType(CommonDateTime commonDateTime, StayBookDateTime stayBookDateTime) throws Exception
+    {
+        if (commonDateTime == null)
+        {
+            return;
+        }
+
+        int openHour = Integer.parseInt(DailyCalendar.convertDateFormatString(commonDateTime.openDateTime, DailyCalendar.ISO_8601_FORMAT, "HH"));
+        int closeHour = Integer.parseInt(DailyCalendar.convertDateFormatString(commonDateTime.closeDateTime, DailyCalendar.ISO_8601_FORMAT, "HH"));
+        int currentHour = Integer.parseInt(DailyCalendar.convertDateFormatString(commonDateTime.currentDateTime, DailyCalendar.ISO_8601_FORMAT, "HH"));
+
+        String todayDate = DailyCalendar.convertDateFormatString(commonDateTime.dailyDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyy-MM-dd");
+        String bookingDate = stayBookDateTime.getCheckInDateTime("yyyy-MM-dd");
+
+        if (todayDate.equalsIgnoreCase(bookingDate) == true)
+        {
+            // 서버시간과 같은 날
+            if (currentHour < openHour)
+            {
+                // 당일이고 영업시간 전일때 (서버에서 새벽 3시 부터 당일로 주기 때문에 새벽 3시 체크 안함)
+                mPensionPopupMessageType = 2;
+            } else
+            {
+                // 당일이고 영엽시간 이후 일때 (서버에서 다음날 새벽 3시까지 당일로 주기 때문에 새벽 3시 체크 안함)
+                mPensionPopupMessageType = 1;
+            }
+        } else
+        {
+            // 사전 예약 일때
+            if (openHour <= currentHour && currentHour < 22)
+            {
+                // 사전예약 이고 9시 부터 22시 전까지
+                mPensionPopupMessageType = 3;
+            } else
+            {
+                mPensionPopupMessageType = 4;
+                // 사전예약 이고 9시 이전이거나 22시 이후 일때
+            }
+        }
+    }
+
+    private int[] getAgreedTermMessages(DailyBookingPaymentTypeView.PaymentType paymentType)
+    {
+        if (paymentType == null)
+        {
+            return null;
+        }
+
+        int[] messages;
+
+        if (Stay.Grade.pension == mGrade || Stay.Grade.fullvilla == mGrade)
+        {
+            messages = getPensionAgreedTermMessages(mPensionPopupMessageType, paymentType);
+        } else
+        {
+            switch (paymentType)
+            {
+                case EASY_CARD:
+                    messages = new int[]{R.string.dialog_msg_hotel_payment_message01//
+                        , R.string.dialog_msg_hotel_payment_message14//
+                        , R.string.dialog_msg_hotel_payment_message02//
+                        , R.string.dialog_msg_hotel_payment_message03//
+                        , R.string.dialog_msg_hotel_payment_message07};
+                    break;
+
+                case CARD:
+                    messages = new int[]{R.string.dialog_msg_hotel_payment_message01//
+                        , R.string.dialog_msg_hotel_payment_message14//
+                        , R.string.dialog_msg_hotel_payment_message02//
+                        , R.string.dialog_msg_hotel_payment_message03//
+                        , R.string.dialog_msg_hotel_payment_message06};
+                    break;
+
+                case PHONE:
+                    messages = new int[]{R.string.dialog_msg_hotel_payment_message01//
+                        , R.string.dialog_msg_hotel_payment_message14//
+                        , R.string.dialog_msg_hotel_payment_message02//
+                        , R.string.dialog_msg_hotel_payment_message03//
+                        , R.string.dialog_msg_hotel_payment_message06};
+                    break;
+
+                case VBANK:
+                    messages = new int[]{R.string.dialog_msg_hotel_payment_message01//
+                        , R.string.dialog_msg_hotel_payment_message14//
+                        , R.string.dialog_msg_hotel_payment_message02//
+                        , R.string.dialog_msg_hotel_payment_message03//
+                        , R.string.dialog_msg_hotel_payment_message05//
+                        , R.string.dialog_msg_hotel_payment_message06};
+                    break;
+
+                case FREE:
+                    messages = new int[]{R.string.dialog_msg_hotel_payment_message01//
+                        , R.string.dialog_msg_hotel_payment_message14//
+                        , R.string.dialog_msg_hotel_payment_message02//
+                        , R.string.dialog_msg_hotel_payment_message03//
+                        , R.string.dialog_msg_hotel_payment_message06};
+                    break;
+
+                default:
+                    return null;
+            }
+        }
+
+        return messages;
+    }
+
+    private int[] getPensionAgreedTermMessages(int pensionMessageType, DailyBookingPaymentTypeView.PaymentType paymentType)
+    {
+        if (paymentType == null)
+        {
+            return null;
+        }
+
+        int[] messageList;
+
+        if (DailyBookingPaymentTypeView.PaymentType.VBANK == paymentType)
+        {
+            messageList = new int[6];
+        } else
+        {
+            messageList = new int[5];
+        }
+
+        messageList[0] = R.string.dialog_msg_hotel_payment_message01;
+        messageList[1] = R.string.dialog_msg_hotel_payment_message14;
+
+        switch (pensionMessageType)
+        {
+            case 1:
+                messageList[2] = R.string.dialog_msg_hotel_payment_message_pension_1; // 당일 9시 부터 다음날 새벽 3시
+                break;
+
+            case 2:
+                messageList[2] = R.string.dialog_msg_hotel_payment_message_pension_2; // 당일 새벽 3시 부터 다음날 9시까지
+                break;
+
+            case 3:
+                messageList[2] = R.string.dialog_msg_hotel_payment_message_pension_3; // 다음날 9시부터 22시 전까지
+                break;
+
+            case 4:
+                messageList[2] = R.string.dialog_msg_hotel_payment_message_pension_4; // 다음날 새벽 3시 부터 9시 이전 다음날 22시 부터
+                break;
+
+            default:
+                break;
+        }
+
+        messageList[3] = R.string.dialog_msg_hotel_payment_message03;
+
+        switch (paymentType)
+        {
+            case EASY_CARD:
+                messageList[4] = R.string.dialog_msg_hotel_payment_message07;
+                break;
+
+            case VBANK:
+                messageList[4] = R.string.dialog_msg_hotel_payment_message05;
+                messageList[5] = R.string.dialog_msg_hotel_payment_message06;
+                break;
+
+            default:
+                messageList[4] = R.string.dialog_msg_hotel_payment_message06;
+                break;
+        }
+
+        return messageList;
     }
 
     private void onPaymentWebResult(int resultCode, String result)

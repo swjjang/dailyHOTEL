@@ -51,6 +51,6 @@ public interface StayPaymentInterface extends BaseDialogViewInterface
 
     void setOverseas(boolean overseas);
 
-    void showAgreeTermDialog(DailyBookingPaymentTypeView.PaymentType paymentType//
+    void showAgreeTermDialog(DailyBookingPaymentTypeView.PaymentType paymentType, int[] messages//
         , View.OnClickListener onClickListener, DialogInterface.OnCancelListener cancelListener);
 }

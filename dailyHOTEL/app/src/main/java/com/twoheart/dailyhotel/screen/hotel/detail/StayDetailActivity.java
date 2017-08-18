@@ -52,7 +52,6 @@ import com.twoheart.dailyhotel.screen.common.TrueVRActivity;
 import com.twoheart.dailyhotel.screen.common.ZoomMapActivity;
 import com.twoheart.dailyhotel.screen.hotel.filter.StayCalendarActivity;
 import com.twoheart.dailyhotel.screen.hotel.filter.StayDetailCalendarActivity;
-import com.twoheart.dailyhotel.screen.hotel.payment.HotelPaymentActivity;
 import com.twoheart.dailyhotel.screen.mydaily.coupon.SelectStayCouponDialogActivity;
 import com.twoheart.dailyhotel.screen.mydaily.member.EditProfilePhoneActivity;
 import com.twoheart.dailyhotel.screen.mydaily.member.LoginActivity;
@@ -770,29 +769,24 @@ public class StayDetailActivity extends PlaceDetailActivity
             imageUrl = imageInformationList.get(0).getImageUrl();
         }
 
-        //        stayProduct.categoryCode = stayDetailParams.categoryCode;
-        boolean isBenefit = DailyTextUtils.isTextEmpty(stayDetailParams.benefit) == false;
-        //        stayProduct.nights = stayDetailParams.nights;
-
-
         StayPaymentAnalyticsParam stayPaymentAnalyticsParam = new StayPaymentAnalyticsParam();
+
+        stayPaymentAnalyticsParam.nrd = stayProduct.isNRD;
+        stayPaymentAnalyticsParam.showOriginalPrice = mAnalyticsParam.showOriginalPriceYn;
+        stayPaymentAnalyticsParam.rankingPosition = mAnalyticsParam.entryPosition;
+        stayPaymentAnalyticsParam.ratingValue = stayDetailParams.ratingValue;
+        stayPaymentAnalyticsParam.benefit = DailyTextUtils.isTextEmpty(stayDetailParams.benefit) == false;
+        stayPaymentAnalyticsParam.averageDiscount = stayProduct.averageDiscount;
+        stayPaymentAnalyticsParam.address = stayDetailParams.address;
+        stayPaymentAnalyticsParam.dailyChoice = mAnalyticsParam.isDailyChoice;
+        stayPaymentAnalyticsParam.province = mAnalyticsParam.getProvince();
+        stayPaymentAnalyticsParam.addressAreaName = mAnalyticsParam.getAddressAreaName();
 
         Intent intent = StayPaymentActivity.newInstance(StayDetailActivity.this, stayDetailParams.index//
             , stayDetailParams.name, imageUrl, stayProduct.roomIndex, stayProduct.totalDiscount, stayProduct.roomName//
-            , stayBookingDay.getCheckInDay(DailyCalendar.ISO_8601_FORMAT)
-            , stayBookingDay.getCheckOutDay(DailyCalendar.ISO_8601_FORMAT)
-            , stayDetailParams.isOverseas, stayDetailParams.category, stayPaymentAnalyticsParam);
-
-//            imageUrl, stayDetail.index, isBenefit, stayDetailParams.ratingValue //
-//            , stayDetailParams.getGrade().name(), stayDetailParams.address, stayDetailParams.isOverseas//
-//            , stayDetailParams.name, stayDetailParams.category, mAnalyticsParam);
-//
-//
-//
-//        Intent intent = HotelPaymentActivity.newInstance(StayDetailActivity.this, stayProduct//
-//            , stayBookingDay, imageUrl, stayDetail.index, isBenefit, stayDetailParams.ratingValue //
-//            , stayDetailParams.getGrade().name(), stayDetailParams.address, stayDetailParams.isOverseas//
-//            , stayDetailParams.name, stayDetailParams.category, mAnalyticsParam);
+            , stayBookingDay.getCheckInDay(DailyCalendar.ISO_8601_FORMAT)//
+            , stayBookingDay.getCheckOutDay(DailyCalendar.ISO_8601_FORMAT)//
+            , stayDetailParams.isOverseas, stayDetailParams.category, stayDetailParams.getGrade(), stayPaymentAnalyticsParam);
 
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_BOOKING);
     }

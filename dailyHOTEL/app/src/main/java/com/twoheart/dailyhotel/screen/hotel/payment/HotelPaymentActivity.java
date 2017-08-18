@@ -1833,7 +1833,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
 
             if (isRegister == true)
             {
-                AnalyticsManager.getInstance(HotelPaymentActivity.this).recordEvent(AnalyticsManager.Category.GOURMET_BOOKINGS//
+                AnalyticsManager.getInstance(HotelPaymentActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS//
                     , AnalyticsManager.Action.EDIT_BUTTON_CLICKED, AnalyticsManager.Label.PAYMENT_CARD_REGISTRATION, null);
 
                 startActivityForResult(RegisterCreditCardActivity.newInstance(HotelPaymentActivity.this), CODE_REQUEST_ACTIVITY_REGISTERCREDITCARD);

@@ -1255,6 +1255,7 @@ public class AnalyticsManager
         public static final String OFF = "Off";
         public static final String REFERRAL_CODE_COPIED = "ReferralCodeCopied";
         public static final String HOTEL_USING_COUPON_CLICKED = "HotelUsingCouponClicked";
+        public static final String HOTEL_USING_COUPON_CANCEL_CLICKED = "HotelUsingCouponCancelClicked";
         public static final String HOTEL_USING_COUPON_CANCEL = "HotelUsingCouponCancel";
         public static final String GOURMET_USING_COUPON_CLICKED = "GourmetUsingCouponClicked";
         public static final String GOURMET_USING_COUPON_CANCEL = "GourmetUsingCouponCancel";
@@ -1357,6 +1358,7 @@ public class AnalyticsManager
         public static final String CARDPAY = "CardPay";
         public static final String PHONEBILLPAY = "PhoneBillPay";
         public static final String FULLBONUS = "FullBonus";
+        public static final String VIRTUALACCOUNTPAY = "VirtualAccountPay";
 
         // Booking List
         public static final String POST_VISIT = "post_visit";
