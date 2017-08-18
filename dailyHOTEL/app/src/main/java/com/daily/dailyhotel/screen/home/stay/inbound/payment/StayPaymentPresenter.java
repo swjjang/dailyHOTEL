@@ -889,8 +889,7 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
                     }
 
                     addCompositeDisposable(mPaymentRemoteImpl.getStayPaymentTypeEasy(mStayBookDateTime, mRoomIndex//
-                        , mBonusSelected, mUserSimpleInformation.bonus, mCouponSelected, couponCode, mGuest, mTransportationType//
-                        , mSelectedCard.billKey).subscribe(new Consumer<PaymentResult>()
+                        , mBonusSelected, mUserSimpleInformation.bonus, mCouponSelected, couponCode, mGuest, mStayPayment.totalPrice, mTransportationType, mSelectedCard.billKey).subscribe(new Consumer<PaymentResult>()
                     {
                         @Override
                         public void accept(@io.reactivex.annotations.NonNull PaymentResult paymentResult) throws Exception
@@ -993,6 +992,9 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
             if (usedBonus == true)
             {
                 jsonObject.put("bonusAmount", bonus > totalPrice ? totalPrice : bonus);
+            } else
+            {
+                jsonObject.put("bonusAmount", 0);
             }
 
             jsonObject.put("checkInDate", stayBookDateTime.getCheckInDateTime("yyyy-MM-dd"));
@@ -1007,7 +1009,12 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
 
             JSONObject bookingGuestJSONObject = new JSONObject();
             bookingGuestJSONObject.put("arrivalDateTime", stayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT));
-            bookingGuestJSONObject.put("arrivalType", transportation);
+
+            if (DailyTextUtils.isTextEmpty(transportation) == false)
+            {
+                bookingGuestJSONObject.put("arrivalType", transportation);
+            }
+
             bookingGuestJSONObject.put("email", guest.email);
             bookingGuestJSONObject.put("name", guest.name);
             bookingGuestJSONObject.put("phone", guest.phone);
@@ -1057,7 +1064,7 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
             getViewInterface().setVendorName(stayPayment.businessName);
             getViewInterface().setTransportation(stayPayment.transportation);
 
-            if (mTransportationType == null)
+            if (stayPayment.transportation != StayPayment.VISIT_TYPE_NONE && mTransportationType == null)
             {
                 onTransportationClick(WALKING);
             }

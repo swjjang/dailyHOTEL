@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 
 import com.daily.base.exception.BaseException;
+import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.domain.PaymentInterface;
 import com.daily.dailyhotel.entity.Card;
@@ -281,7 +282,7 @@ public class PaymentRemoteImpl implements PaymentInterface
     @Override
     public Observable<PaymentResult> getStayPaymentTypeEasy(StayBookDateTime stayBookDateTime, int roomIndex//
         , boolean usedBonus, int bonus, boolean usedCoupon, String couponCode, DomesticGuest guest//
-        , String transportation, String billingKey)
+        , int totalPrice, String transportation, String billingKey)
     {
         JSONObject jsonObject = new JSONObject();
 
@@ -289,15 +290,18 @@ public class PaymentRemoteImpl implements PaymentInterface
         {
             jsonObject.put("billingKey", billingKey);
 
-            if(usedBonus == true)
+            if (usedBonus == true)
             {
-                jsonObject.put("bonusAmount", bonus);
+                jsonObject.put("bonusAmount", bonus > totalPrice ? totalPrice : bonus);
+            } else
+            {
+                jsonObject.put("bonusAmount", 0);
             }
 
             jsonObject.put("checkInDate", stayBookDateTime.getCheckInDateTime("yyyy-MM-dd"));
             jsonObject.put("days", stayBookDateTime.getNights());
 
-            if(usedCoupon == true)
+            if (usedCoupon == true)
             {
                 jsonObject.put("couponCode", couponCode);
             }
@@ -306,7 +310,12 @@ public class PaymentRemoteImpl implements PaymentInterface
 
             JSONObject bookingGuestJSONObject = new JSONObject();
             bookingGuestJSONObject.put("arrivalDateTime", stayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT));
-            bookingGuestJSONObject.put("arrivalType", transportation);
+
+            if (DailyTextUtils.isTextEmpty(transportation) == false)
+            {
+                bookingGuestJSONObject.put("arrivalType", transportation);
+            }
+
             bookingGuestJSONObject.put("email", guest.email);
             bookingGuestJSONObject.put("name", guest.name);
             bookingGuestJSONObject.put("phone", guest.phone);
@@ -349,15 +358,18 @@ public class PaymentRemoteImpl implements PaymentInterface
 
         try
         {
-            if(usedBonus == true)
+            if (usedBonus == true)
             {
                 jsonObject.put("bonusAmount", bonus > totalPrice ? totalPrice : bonus);
+            } else
+            {
+                jsonObject.put("bonusAmount", 0);
             }
 
             jsonObject.put("checkInDate", stayBookDateTime.getCheckInDateTime("yyyy-MM-dd"));
             jsonObject.put("days", stayBookDateTime.getNights());
 
-            if(usedCoupon == true)
+            if (usedCoupon == true)
             {
                 jsonObject.put("couponCode", couponCode);
             }
@@ -366,7 +378,12 @@ public class PaymentRemoteImpl implements PaymentInterface
 
             JSONObject bookingGuestJSONObject = new JSONObject();
             bookingGuestJSONObject.put("arrivalDateTime", stayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT));
-            bookingGuestJSONObject.put("arrivalType", transportation);
+
+            if (DailyTextUtils.isTextEmpty(transportation) == false)
+            {
+                bookingGuestJSONObject.put("arrivalType", transportation);
+            }
+
             bookingGuestJSONObject.put("email", guest.email);
             bookingGuestJSONObject.put("name", guest.name);
             bookingGuestJSONObject.put("phone", guest.phone);
@@ -404,9 +421,7 @@ public class PaymentRemoteImpl implements PaymentInterface
     @Override
     public Observable<StayRefundPolicy> getStayRefundPolicy(StayBookDateTime stayBookDateTime, int stayIndex, int roomIndex)
     {
-        return DailyMobileAPI.getInstance(mContext).getStayRefundPolicy(stayIndex, roomIndex
-        , stayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)
-        , stayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)).map(new Function<BaseDto<StayRefundPolicyData>, StayRefundPolicy>()
+        return DailyMobileAPI.getInstance(mContext).getStayRefundPolicy(stayIndex, roomIndex, stayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT), stayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)).map(new Function<BaseDto<StayRefundPolicyData>, StayRefundPolicy>()
         {
             @Override
             public StayRefundPolicy apply(@io.reactivex.annotations.NonNull BaseDto<StayRefundPolicyData> stayRefundPolicyDataBaseDto) throws Exception

@@ -17,8 +17,6 @@ public class StayPayment
     public int totalPrice; // 결재할 총금액
     public String businessName;
     public String transportation;
-    public boolean parking;
-    public boolean noParking;
 
     public StayPayment()
     {
