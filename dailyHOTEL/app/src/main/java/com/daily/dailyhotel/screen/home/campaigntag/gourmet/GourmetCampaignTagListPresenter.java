@@ -407,28 +407,50 @@ public class GourmetCampaignTagListPresenter //
         setTitleText(title);
         setCalendarText(gourmetBookingDay);
 
-        if (gourmetCampaignTags != null && gourmetCampaignTags.getCampaignTag() != null)
+        // 서버에서 전달된 데이터가 없을때 종료된 태그로 설정!
+        if (gourmetCampaignTags == null)
         {
-            if (Constants.ServiceType.GOURMET.name().equalsIgnoreCase(gourmetCampaignTags.getCampaignTag().serviceType) == false)
+            setData(null, gourmetBookingDay);
+            showFinishedCampaignTagDialog();
+            mIsFirstUiUpdateCheck = true;
+            return;
+        }
+
+        CampaignTag campaignTag = gourmetCampaignTags.getCampaignTag();
+        if (campaignTag != null)
+        {
+            // 진입한 화면과 서버에서 내려받은 서비스 타입이 다른 경우 연결 체크 팝업 후 종료!
+            if (Constants.ServiceType.GOURMET.name().equalsIgnoreCase(campaignTag.serviceType) == false)
             {
                 setData(null, gourmetBookingDay);
-
-                getViewInterface().showSimpleDialog(null //
-                    , getString(R.string.message_campaign_tag_recheck_connection) //
-                    , getString(R.string.dialog_btn_text_confirm) //
-                    , null, new DialogInterface.OnDismissListener()
-                    {
-                        @Override
-                        public void onDismiss(DialogInterface dialog)
-                        {
-//                            setResult(Constants.CODE_RESULT_ACTIVITY_REFRESH);
-                            finish();
-                        }
-                    });
-
+                showReCheckConnectionDialog();
                 mIsFirstUiUpdateCheck = true;
                 return;
             }
+        }
+
+        int msgCode = gourmetCampaignTags.msgCode;
+        // 메세지코드로 종료된 팝업일때
+        if (msgCode == 200)
+        {
+            setData(null, gourmetBookingDay);
+            showFinishedCampaignTagDialog();
+            mIsFirstUiUpdateCheck = true;
+            return;
+        }
+
+        // 메세지 코드로 조회된 데이터가 없을때
+        if (msgCode == -101)
+        {
+            setData(placeViewItemList, gourmetBookingDay);
+
+            if (mIsFirstUiUpdateCheck == false)
+            {
+                showFirstEmptyListPopup();
+            }
+
+            mIsFirstUiUpdateCheck = true;
+            return;
         }
 
         long currentTime;
@@ -448,44 +470,71 @@ public class GourmetCampaignTagListPresenter //
 
         if (endTime < currentTime)
         {
+            // 시간 체크시 종료 된 캠페인 태그 일때
             setData(null, gourmetBookingDay);
-
-            getViewInterface().showSimpleDialog(null //
-                , getString(R.string.message_campaign_tag_finished) //
-                , getString(R.string.dialog_btn_text_confirm) //
-                , null, new DialogInterface.OnDismissListener()
-                {
-                    @Override
-                    public void onDismiss(DialogInterface dialog)
-                    {
-                        setResult(Constants.CODE_RESULT_ACTIVITY_REFRESH);
-                        finish();
-                    }
-                });
+            showFinishedCampaignTagDialog();
         } else
         {
+            // 일반적인 상황
             setData(placeViewItemList, gourmetBookingDay);
 
             ArrayList<Gourmet> list = gourmetCampaignTags.getGourmetList();
             if ((list == null || list.size() == 0) && mIsFirstUiUpdateCheck == false)
             {
-                getViewInterface().showSimpleDialog(null //
-                    , getString(R.string.message_campaign_empty_popup_message)//
-                    , getString(R.string.dialog_btn_text_yes)//
-                    , getString(R.string.dialog_btn_text_no)//
-                    , new View.OnClickListener()
-                    {
-                        @Override
-                        public void onClick(View v)
-                        {
-                            onCalendarClick();
-                        }
-                    }, null);
+                // 처음 진입이고 일반적인 상황에서 리스트가 비었을때
+                showFirstEmptyListPopup();
             }
         }
 
         mIsFirstUiUpdateCheck = true;
+    }
 
+    private void showFinishedCampaignTagDialog()
+    {
+        getViewInterface().showSimpleDialog(null //
+            , getString(R.string.message_campaign_tag_finished) //
+            , getString(R.string.dialog_btn_text_confirm) //
+            , null, new DialogInterface.OnDismissListener()
+            {
+                @Override
+                public void onDismiss(DialogInterface dialog)
+                {
+                    setResult(Constants.CODE_RESULT_ACTIVITY_REFRESH);
+                    finish();
+                }
+            });
+    }
+
+    private void showReCheckConnectionDialog()
+    {
+        getViewInterface().showSimpleDialog(null //
+            , getString(R.string.message_campaign_tag_recheck_connection) //
+            , getString(R.string.dialog_btn_text_confirm) //
+            , null, new DialogInterface.OnDismissListener()
+            {
+                @Override
+                public void onDismiss(DialogInterface dialog)
+                {
+                    //                            setResult(Constants.CODE_RESULT_ACTIVITY_REFRESH);
+                    finish();
+                }
+            });
+    }
+
+    private void showFirstEmptyListPopup()
+    {
+        getViewInterface().showSimpleDialog(null //
+            , getString(R.string.message_campaign_empty_popup_message)//
+            , getString(R.string.dialog_btn_text_yes)//
+            , getString(R.string.dialog_btn_text_no)//
+            , new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    onCalendarClick();
+                }
+            }, null);
     }
 
     public void setTitleText(String title)
