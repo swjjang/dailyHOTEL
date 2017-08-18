@@ -1151,14 +1151,14 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
 
         if (userSimpleInformation != null)
         {
-            if (DailyTextUtils.isTextEmpty(mGuest.phone) == true)
+            if (DailyTextUtils.isTextEmpty(guest.phone) == true)
             {
-                mGuest.phone = userSimpleInformation.phone;
+                guest.phone = userSimpleInformation.phone;
             }
 
-            if (DailyTextUtils.isTextEmpty(mGuest.email) == true)
+            if (DailyTextUtils.isTextEmpty(guest.email) == true)
             {
-                mGuest.email = userSimpleInformation.email;
+                guest.email = userSimpleInformation.email;
             }
         }
 
