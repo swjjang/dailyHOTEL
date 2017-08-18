@@ -138,7 +138,7 @@
                     android:letterSpacing="-0.02"
                     android:text="@string/label_search_need_to_agree_termsoflocation"
                     android:textColor="@color/search_hint_text"
-                    android:textSize="11dp"
+                    android:textSize="10dp"
                     android:visibility="visible" />
             </LinearLayout>
 

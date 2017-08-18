@@ -353,6 +353,8 @@ public class GourmetSearchFragment extends PlaceSearchFragment
             @Override
             public void accept(@NonNull List<Keyword> keywordList) throws Exception
             {
+                mKeywordList = keywordList;
+
                 unLockUI();
                 mPlaceSearchLayout.setRecyclerViewData(mRecentlyGourmetList, mCampaignTagList, keywordList);
             }
@@ -364,6 +366,30 @@ public class GourmetSearchFragment extends PlaceSearchFragment
                 onHandleError(throwable);
             }
         }));
+    }
+
+    @Override
+    public void requestCampaignTagList()
+    {
+        lockUI();
+
+        addCompositeDisposable(mCampaignTagRemoteImpl.getCampaignTagList(getServiceType().name())
+            .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<ArrayList<CampaignTag>>()
+            {
+                @Override
+                public void accept(@NonNull ArrayList<CampaignTag> campaignTags) throws Exception
+                {
+                    unLockUI();
+                    mPlaceSearchLayout.setRecyclerViewData(mRecentlyGourmetList, mCampaignTagList, mKeywordList);
+                }
+            }, new Consumer<Throwable>()
+            {
+                @Override
+                public void accept(@NonNull Throwable throwable) throws Exception
+                {
+                    onHandleError(throwable);
+                }
+            }));
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////

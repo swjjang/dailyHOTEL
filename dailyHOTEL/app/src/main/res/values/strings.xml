@@ -1464,6 +1464,7 @@
 
     <!-- Campaign Tag -->
     <string name="message_campaign_tag_finished">종료된 #태그입니다.</string>
+    <string name="message_campaign_tag_recheck_connection">연결 화면을 다시 확인해주세요.</string>
     <string name="message_campaign_empty_popup_message">현재 모든 예약이 완료되었습니다.\n다른 날짜로 확인해보겠어요?</string>
     <string name="message_empty_search_card_format">%1$s가 없습니다.</string>
 

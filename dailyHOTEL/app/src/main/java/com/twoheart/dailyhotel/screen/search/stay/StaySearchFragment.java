@@ -371,6 +371,8 @@ public class StaySearchFragment extends PlaceSearchFragment
             @Override
             public void accept(@NonNull List<Keyword> keywordList) throws Exception
             {
+                mKeywordList = keywordList;
+
                 unLockUI();
                 mPlaceSearchLayout.setRecyclerViewData(mRecentlyStayList, mCampaignTagList, keywordList);
             }
@@ -382,6 +384,31 @@ public class StaySearchFragment extends PlaceSearchFragment
                 onHandleError(throwable);
             }
         }));
+    }
+
+    @Override
+    public void requestCampaignTagList()
+    {
+        lockUI();
+
+        addCompositeDisposable(mCampaignTagRemoteImpl.getCampaignTagList(getServiceType().name())
+                .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<ArrayList<CampaignTag>>()
+                {
+                    @Override
+                    public void accept(@NonNull ArrayList<CampaignTag> campaignTags) throws Exception
+                    {
+                        unLockUI();
+                        mPlaceSearchLayout.setRecyclerViewData(mRecentlyStayList, mCampaignTagList, mKeywordList);
+                    }
+                }, new Consumer<Throwable>()
+                {
+                    @Override
+                    public void accept(@NonNull Throwable throwable) throws Exception
+                    {
+                        onHandleError(throwable);
+                    }
+                })
+            );
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////

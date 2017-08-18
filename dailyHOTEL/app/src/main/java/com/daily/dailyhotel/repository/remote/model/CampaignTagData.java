@@ -32,6 +32,7 @@ public class CampaignTagData
         campaignTag.campaignTag = this.campaignTag;
         campaignTag.startDate = startDate;
         campaignTag.endDate = endDate;
+        campaignTag.serviceType = serviceType;
 
         return campaignTag;
     }

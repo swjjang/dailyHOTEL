@@ -407,6 +407,30 @@ public class GourmetCampaignTagListPresenter //
         setTitleText(title);
         setCalendarText(gourmetBookingDay);
 
+        if (gourmetCampaignTags != null && gourmetCampaignTags.getCampaignTag() != null)
+        {
+            if (Constants.ServiceType.GOURMET.name().equalsIgnoreCase(gourmetCampaignTags.getCampaignTag().serviceType) == false)
+            {
+                setData(null, gourmetBookingDay);
+
+                getViewInterface().showSimpleDialog(null //
+                    , getString(R.string.message_campaign_tag_recheck_connection) //
+                    , getString(R.string.dialog_btn_text_confirm) //
+                    , null, new DialogInterface.OnDismissListener()
+                    {
+                        @Override
+                        public void onDismiss(DialogInterface dialog)
+                        {
+//                            setResult(Constants.CODE_RESULT_ACTIVITY_REFRESH);
+                            finish();
+                        }
+                    });
+
+                mIsFirstUiUpdateCheck = true;
+                return;
+            }
+        }
+
         long currentTime;
         long endTime;
 
@@ -434,6 +458,7 @@ public class GourmetCampaignTagListPresenter //
                     @Override
                     public void onDismiss(DialogInterface dialog)
                     {
+                        setResult(Constants.CODE_RESULT_ACTIVITY_REFRESH);
                         finish();
                     }
                 });
@@ -476,8 +501,9 @@ public class GourmetCampaignTagListPresenter //
         }
 
         CampaignTag campaignTag = gourmetCampaignTags.getCampaignTag();
+        String campaignTagName = campaignTag == null ? null : campaignTag.campaignTag;
 
-        return campaignTag == null ? mTitle : campaignTag.campaignTag;
+        return DailyTextUtils.isTextEmpty(campaignTagName) == true ? mTitle : campaignTag.campaignTag;
     }
 
     public void setCalendarText(GourmetBookingDay stayBookingDay)
