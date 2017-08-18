@@ -191,6 +191,14 @@ public abstract class PlaceDetailLayout extends BaseLayout
 
         mBookingTextView = (TextView) mBottomLayout.findViewById(R.id.bookingTextView);
         mSoldoutTextView = (TextView) mBottomLayout.findViewById(R.id.soldoutTextView);
+        mBottomLayout.setOnClickListener(new OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                // do nothing - 판매 완료 버튼이 뚤리는 이슈 수정
+            }
+        });
 
         mWishPopupScrollView = view.findViewById(R.id.wishListPopupScrollView);
         mWishPopupTextView = (DailyTextView) view.findViewById(R.id.wishListPopupView);
