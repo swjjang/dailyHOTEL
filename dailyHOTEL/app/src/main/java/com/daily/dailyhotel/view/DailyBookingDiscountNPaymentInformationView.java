@@ -190,7 +190,7 @@ public class DailyBookingDiscountNPaymentInformationView extends ConstraintLayou
         }
     }
 
-    public void setUsedBonus(int bonus)
+    public void setBonus(int bonus)
     {
         if (mViewDataBinding == null)
         {
@@ -246,19 +246,19 @@ public class DailyBookingDiscountNPaymentInformationView extends ConstraintLayou
         return mViewDataBinding.couponLayout.isSelected();
     }
 
-    public void setUsedCoupon(int coupon)
+    public void setCoupon(int couponPrice)
     {
         if (mViewDataBinding == null)
         {
             return;
         }
 
-        if (coupon == 0)
+        if (couponPrice == 0)
         {
             mViewDataBinding.couponTabTextView.setText(R.string.label_booking_select_coupon);
         } else
         {
-            mViewDataBinding.couponTabTextView.setText(DailyTextUtils.getPriceFormat(getContext(), coupon, false));
+            mViewDataBinding.couponTabTextView.setText(DailyTextUtils.getPriceFormat(getContext(), couponPrice, false));
         }
     }
 

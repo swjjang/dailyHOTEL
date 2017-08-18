@@ -65,7 +65,8 @@ public class StayPaymentAnalyticsImpl implements StayPaymentPresenter.StayPaymen
 
     @Override
     public void onScreenPaymentCompleted(Activity activity, StayPayment stayPayment, StayBookDateTime stayBookDateTime//
-        , int stayIndex, String stayName, DailyBookingPaymentTypeView.PaymentType paymentType, boolean fullBonus, boolean registerEasyCard, UserSimpleInformation userSimpleInformation)
+        , int stayIndex, String stayName, DailyBookingPaymentTypeView.PaymentType paymentType, boolean usedBonus
+        , boolean registerEasyCard, UserSimpleInformation userSimpleInformation)
     {
         if (activity == null || mAnalyticsParam == null || paymentType == null)
         {
@@ -76,7 +77,7 @@ public class StayPaymentAnalyticsImpl implements StayPaymentPresenter.StayPaymen
         {
             Map<String, String> params = new HashMap<>();
 
-            if (fullBonus == true)
+            if (usedBonus == true && stayPayment.totalPrice <= userSimpleInformation.bonus)
             {
                 params.put(AnalyticsManager.KeyType.PAYMENT_TYPE, AnalyticsManager.Label.FULLBONUS);
             } else
@@ -101,6 +102,7 @@ public class StayPaymentAnalyticsImpl implements StayPaymentPresenter.StayPaymen
 
             AnalyticsManager.getInstance(activity).recordScreen(activity, AnalyticsManager.Screen.DAILYHOTEL_PAYMENTCOMPLETE_OUTBOUND, null, params);
 
+            int paymentPrice = stayPayment.totalPrice - userSimpleInformation.bonus;
 
             // Adjust
             // Session
@@ -109,7 +111,7 @@ public class StayPaymentAnalyticsImpl implements StayPaymentPresenter.StayPaymen
             // event
             params.put(AnalyticsManager.KeyType.PROVINCE, AnalyticsManager.ValueType.EMPTY);
             params.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.EMPTY);
-            params.put(AnalyticsManager.KeyType.PAYMENT_PRICE, Integer.toString(stayPayment.discountPrice));
+            params.put(AnalyticsManager.KeyType.PAYMENT_PRICE, Integer.toString(paymentPrice < 0 ? 0 : paymentPrice));
             params.put(AnalyticsManager.KeyType.CATEGORY, AnalyticsManager.ValueType.EMPTY);
             params.put(AnalyticsManager.KeyType.GRADE, mAnalyticsParam.grade);
             params.put(AnalyticsManager.KeyType.PLACE_INDEX, Integer.toString(stayIndex));
@@ -125,7 +127,7 @@ public class StayPaymentAnalyticsImpl implements StayPaymentPresenter.StayPaymen
             params.put(AnalyticsManager.KeyType.RATING, mAnalyticsParam.rating);
             params.put(AnalyticsManager.KeyType.DAILYCHOICE, "n");
             params.put(AnalyticsManager.KeyType.COUPON_CODE, AnalyticsManager.ValueType.EMPTY);
-            params.put(AnalyticsManager.KeyType.USED_BOUNS, stayPayment.totalPrice != stayPayment.discountPrice ? "y" : "n");
+            params.put(AnalyticsManager.KeyType.USED_BOUNS, usedBonus ? "y" : "n");
 
             String strDate = DailyCalendar.format(new Date(), "yyyyMMddHHmmss");
             String transId = strDate + '_' + userSimpleInformation.index;

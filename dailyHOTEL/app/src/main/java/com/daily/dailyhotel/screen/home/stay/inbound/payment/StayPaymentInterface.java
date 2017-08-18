@@ -21,7 +21,11 @@ public interface StayPaymentInterface extends BaseDialogViewInterface
 
     void setGuestMobileInformation(String mobile);
 
-    void setStayPayment(boolean usedBonus, int bonus, boolean usedCoupon, int coupon, int nights, int totalPrice, int discountPrice);
+    void setBonus(boolean selected, int bonus, int discountPrice);
+
+    void setCoupon(boolean selected, int couponPrice);
+
+    void setStayPayment(int nights, int totalPrice, int discountPrice);
 
     void setEasyCard(Card card);
 
@@ -39,17 +43,11 @@ public interface StayPaymentInterface extends BaseDialogViewInterface
 
     void setBonusEnabled(boolean enabled);
 
-    void setBonusSelected(boolean selected);
-
-    void setCouponSelected(boolean selected);
-
     void setTransportation(String type);
 
-    void setTransportationType(StayPaymentPresenter.Transportation type);
+    void setTransportationType(@StayPaymentPresenter.Transportation String type);
 
-    void showGuestInformation();
-
-    void hideGuestInformation();
+    void setGuestInformationVisible(boolean visible);
 
     void setOverseas(boolean overseas);
 

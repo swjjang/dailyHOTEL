@@ -343,7 +343,7 @@ public class PaymentRemoteImpl implements PaymentInterface
 
     @Override
     public Observable<PaymentResult> getStayPaymentTypeBonus(StayBookDateTime stayBookDateTime, int roomIndex//
-        , boolean usedBonus, int bonus, boolean usedCoupon, String couponCode, DomesticGuest guest, String transportation)
+        , boolean usedBonus, int bonus, boolean usedCoupon, String couponCode, DomesticGuest guest, int totalPrice, String transportation)
     {
         JSONObject jsonObject = new JSONObject();
 
@@ -351,7 +351,7 @@ public class PaymentRemoteImpl implements PaymentInterface
         {
             if(usedBonus == true)
             {
-                jsonObject.put("bonusAmount", bonus);
+                jsonObject.put("bonusAmount", bonus > totalPrice ? totalPrice : bonus);
             }
 
             jsonObject.put("checkInDate", stayBookDateTime.getCheckInDateTime("yyyy-MM-dd"));

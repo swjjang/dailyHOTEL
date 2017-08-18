@@ -13,7 +13,6 @@ public class StayOutboundPayment
     public boolean nonRefundable;
     private List<String> mRefundPolicyList;
     public int totalPrice; // 결재할 총금액
-    public int discountPrice; // 할인 총금액(보너스, 쿠폰)
     public double feeTotalAmountUsd;
     public String rateKey;
     public String roomTypeCode;

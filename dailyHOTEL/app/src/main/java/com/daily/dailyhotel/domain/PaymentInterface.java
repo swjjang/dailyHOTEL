@@ -37,7 +37,7 @@ public interface PaymentInterface
         , boolean usedBonus, int bonus, boolean usedCoupon, String couponCode, DomesticGuest guest, String transportation, String billingKey);
 
     Observable<PaymentResult> getStayPaymentTypeBonus(StayBookDateTime stayBookDateTime, int roomIndex//
-        , boolean usedBonus, int bonus, boolean usedCoupon, String couponCode, DomesticGuest guest, String transportation);
+        , boolean usedBonus, int bonus, boolean usedCoupon, String couponCode, DomesticGuest guest, int totalPrice, String transportation);
 
     Observable<StayRefundPolicy> getStayRefundPolicy(StayBookDateTime stayBookDateTime, int stayIndex, int roomIndex);
 }

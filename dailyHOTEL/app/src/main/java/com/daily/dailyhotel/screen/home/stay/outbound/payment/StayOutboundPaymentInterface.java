@@ -21,7 +21,9 @@ public interface StayOutboundPaymentInterface extends BaseDialogViewInterface
 
     void setPeople(People people);
 
-    void setStayOutboundPayment(int bonus, int nights, int totalPrice, int discountPrice, double taxPrice);
+    void setBonus(boolean selected, int bonus, int discountPrice);
+
+    void setStayOutboundPayment(int nights, int totalPrice, int discountPrice, double taxPrice);
 
     void setEasyCard(Card card);
 
@@ -38,8 +40,6 @@ public interface StayOutboundPaymentInterface extends BaseDialogViewInterface
     void setBonusGuideText(String text);
 
     void setBonusEnabled(boolean enabled);
-
-    void setBonusSelected(boolean selected);
 
     void showAgreeTermDialog(DailyBookingPaymentTypeView.PaymentType paymentType//
         , View.OnClickListener onClickListener, DialogInterface.OnCancelListener cancelListener);

@@ -15,7 +15,6 @@ public class StayPayment
     public String checkOutDate;
     public String refundType;
     public int totalPrice; // 결재할 총금액
-    public int discountPrice; // 할인 총금액(보너스, 쿠폰)
     public String businessName;
     public String transportation;
     public boolean parking;

@@ -45,7 +45,7 @@ public class StayOutboundPaymentView extends BaseDialogView<StayOutboundPaymentV
     {
         void onCallClick();
 
-        void onBonusClick(boolean enabled);
+        void onBonusClick(boolean selected);
 
         void onEasyCardManagerClick();
 
@@ -77,11 +77,11 @@ public class StayOutboundPaymentView extends BaseDialogView<StayOutboundPaymentV
 
         EdgeEffectColor.setEdgeGlowColor(viewDataBinding.scrollView, getColor(R.color.default_over_scroll_edge));
 
-        setBookingLayout();
-        setDiscountLayout();
-        setPaymentLayout();
-        setRefundLayout();
-        setPayButtonLayout();
+        initBookingLayout();
+        initDiscountLayout();
+        initPaymentLayout();
+        initRefundLayout();
+        initPayButtonLayout();
     }
 
     @Override
@@ -168,7 +168,20 @@ public class StayOutboundPaymentView extends BaseDialogView<StayOutboundPaymentV
     }
 
     @Override
-    public void setStayOutboundPayment(int bonus, int nights, int totalPrice, int discountPrice, double taxPrice)
+    public void setBonus(boolean selected, int bonus, int discountPrice)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        setBonusSelected(selected);
+        getViewDataBinding().informationView.setTotalBonus(bonus);
+        getViewDataBinding().informationView.setBonus(selected ? discountPrice : 0);
+    }
+
+    @Override
+    public void setStayOutboundPayment(int nights, int totalPrice, int discountPrice, double taxPrice)
     {
         if (getViewDataBinding() == null || nights == 0)
         {
@@ -179,8 +192,6 @@ public class StayOutboundPaymentView extends BaseDialogView<StayOutboundPaymentV
         {
             discountPrice = 0;
         }
-
-        setBonus(bonus, discountPrice);
 
         getViewDataBinding().informationView.setReservationPrice(nights, totalPrice);
         getViewDataBinding().informationView.setDiscountPrice(discountPrice);
@@ -304,65 +315,6 @@ public class StayOutboundPaymentView extends BaseDialogView<StayOutboundPaymentV
     }
 
     @Override
-    public void setBonusSelected(boolean selected)
-    {
-        if (getViewDataBinding() == null)
-        {
-            return;
-        }
-
-        //selected가 true enabled가 false일수는 없다.
-        if (getViewDataBinding().informationView.isBonusEnabled() == false)
-        {
-            return;
-        }
-
-        if (selected == true)
-        {
-            getViewDataBinding().informationView.setBonusSelected(true);
-            getViewDataBinding().informationView.setOnBonusClickListener(null);
-            getViewDataBinding().informationView.setOnBonusTabClickListener(new View.OnClickListener()
-            {
-                @Override
-                public void onClick(View v)
-                {
-                    if (getViewDataBinding() == null)
-                    {
-                        return;
-                    }
-
-                    getEventListener().onBonusClick(getViewDataBinding().informationView.isBonusSelected() == false);
-                }
-            });
-        } else
-        {
-            getViewDataBinding().informationView.setBonusSelected(false);
-            getViewDataBinding().informationView.setOnBonusClickListener(new View.OnClickListener()
-            {
-                @Override
-                public void onClick(View v)
-                {
-                    getEventListener().onBonusClick(true);
-                }
-            });
-
-            getViewDataBinding().informationView.setOnBonusTabClickListener(new View.OnClickListener()
-            {
-                @Override
-                public void onClick(View v)
-                {
-                    if (getViewDataBinding() == null)
-                    {
-                        return;
-                    }
-
-                    getEventListener().onBonusClick(getViewDataBinding().informationView.isBonusSelected() == false);
-                }
-            });
-        }
-    }
-
-    @Override
     public void showAgreeTermDialog(DailyBookingPaymentTypeView.PaymentType paymentType//
         , View.OnClickListener onClickListener, DialogInterface.OnCancelListener cancelListener)
     {
@@ -434,7 +386,7 @@ public class StayOutboundPaymentView extends BaseDialogView<StayOutboundPaymentV
         });
     }
 
-    private void setBookingLayout()
+    private void initBookingLayout()
     {
         if (getViewDataBinding() == null)
         {
@@ -471,7 +423,7 @@ public class StayOutboundPaymentView extends BaseDialogView<StayOutboundPaymentV
             , null, getString(R.string.label_booking_input_email));
     }
 
-    private void setDiscountLayout()
+    private void initDiscountLayout()
     {
         if (getViewDataBinding() == null)
         {
@@ -479,9 +431,11 @@ public class StayOutboundPaymentView extends BaseDialogView<StayOutboundPaymentV
         }
 
         getViewDataBinding().informationView.setDiscountTypeVisible(false, false);
+
+        setBonusSelected(false);
     }
 
-    private void setPaymentLayout()
+    private void initPaymentLayout()
     {
         if (getViewDataBinding() == null)
         {
@@ -515,7 +469,7 @@ public class StayOutboundPaymentView extends BaseDialogView<StayOutboundPaymentV
         });
     }
 
-    private void setRefundLayout()
+    private void initRefundLayout()
     {
         if (getViewDataBinding() == null)
         {
@@ -552,7 +506,7 @@ public class StayOutboundPaymentView extends BaseDialogView<StayOutboundPaymentV
         });
     }
 
-    private void setPayButtonLayout()
+    private void initPayButtonLayout()
     {
         if (getViewDataBinding() == null)
         {
@@ -562,15 +516,62 @@ public class StayOutboundPaymentView extends BaseDialogView<StayOutboundPaymentV
         getViewDataBinding().doPaymentView.setOnClickListener(this);
     }
 
-    private void setBonus(int bonus, int discountPrice)
+    private void setBonusSelected(boolean selected)
     {
         if (getViewDataBinding() == null)
         {
             return;
         }
 
-        getViewDataBinding().informationView.setTotalBonus(bonus);
-        getViewDataBinding().informationView.setUsedBonus(discountPrice);
+        //selected가 true enabled가 false일수는 없다.
+        if (getViewDataBinding().informationView.isBonusEnabled() == false)
+        {
+            return;
+        }
+
+        if (selected == true)
+        {
+            getViewDataBinding().informationView.setBonusSelected(true);
+            getViewDataBinding().informationView.setOnBonusClickListener(null);
+            getViewDataBinding().informationView.setOnBonusTabClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    if (getViewDataBinding() == null)
+                    {
+                        return;
+                    }
+
+                    getEventListener().onBonusClick(getViewDataBinding().informationView.isBonusSelected() == false);
+                }
+            });
+        } else
+        {
+            getViewDataBinding().informationView.setBonusSelected(false);
+            getViewDataBinding().informationView.setOnBonusClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    getEventListener().onBonusClick(true);
+                }
+            });
+
+            getViewDataBinding().informationView.setOnBonusTabClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    if (getViewDataBinding() == null)
+                    {
+                        return;
+                    }
+
+                    getEventListener().onBonusClick(getViewDataBinding().informationView.isBonusSelected() == false);
+                }
+            });
+        }
     }
 
     protected ViewGroup getEasyPaymentAgreeLayout(View.OnClickListener onClickListener)
