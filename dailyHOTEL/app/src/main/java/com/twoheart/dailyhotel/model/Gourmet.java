@@ -16,6 +16,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -126,7 +127,7 @@ public class Gourmet extends Place
         endEatingTime = in.readString();
         lastOrderTime = in.readString();
         menuBenefit = in.readString();
-        in.readStringList(menuDetail);
+        in.readStringList(menuDetail == null ? new ArrayList<String>() : menuDetail);
         menuSummary = in.readString();
         needToKnow = in.readString();
         openTime = in.readString();

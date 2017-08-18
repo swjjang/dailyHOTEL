@@ -58,8 +58,10 @@ public interface Constants
     {
         SEARCHES,
         AUTOCOMPLETE,
-        RECENT,
-        LOCATION
+        RECENTLY_KEYWORD,
+        LOCATION,
+        CAMPAIGN_TAG,
+        RECENTLY_PLACE
     }
 
     enum PgType
