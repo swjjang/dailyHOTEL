@@ -105,14 +105,22 @@ public class CampaignTagRemoteImpl implements CampaignTagInterface
                         }
                     } else if (stayCampaignTagsDataBaseDto.msgCode == -101)
                     {
+                        if (stayCampaignTagsDataBaseDto.data != null)
+                        {
+                            stayCampaignTags = stayCampaignTagsDataBaseDto.data.getStayCampaigns();
+                        }
+
                         // 조회된 데이터가 없을때 - KRQA-1630 요청으로 emptyView 생성
-                        stayCampaignTags = new StayCampaignTags();
+                        if (stayCampaignTags == null)
+                        {
+                            stayCampaignTags = new StayCampaignTags();
 
-                        // 서버 데이터가 없음으로 임의로 지정 - 지정안할때 종료된 태그
-                        CampaignTag campaignTag = new CampaignTag();
-                        campaignTag.endDate = stayBookingDay.getCheckOutDay(DailyCalendar.ISO_8601_FORMAT);
+                            // 서버 데이터가 없음으로 임의로 지정 - 지정안할때 종료된 태그
+                            CampaignTag campaignTag = new CampaignTag();
+                            campaignTag.endDate = stayBookingDay.getCheckOutDay(DailyCalendar.ISO_8601_FORMAT);
 
-                        stayCampaignTags.setCampaignTag(campaignTag);
+                            stayCampaignTags.setCampaignTag(campaignTag);
+                        }
                     } else
                     {
                         throw new BaseException(stayCampaignTagsDataBaseDto.msgCode, stayCampaignTagsDataBaseDto.msg);
@@ -151,14 +159,22 @@ public class CampaignTagRemoteImpl implements CampaignTagInterface
                         }
                     } else if (gourmetCampaignTagsDataBaseDto.msgCode == -101)
                     {
-                        // 조회된 데이터가 없을때 - KRQA-1630 요청으로 emptyView 생성
-                        gourmetCampaignTags = new GourmetCampaignTags();
+                        if (gourmetCampaignTagsDataBaseDto.data != null)
+                        {
+                            gourmetCampaignTagsDataBaseDto.data.getGourmetCampaignTags(mContext);
+                        }
 
-                        // 서버 데이터가 없음으로 임의로 지정 - 지정안할때 종료된 태그
-                        CampaignTag campaignTag = new CampaignTag();
-                        campaignTag.endDate = gourmetBookingDay.getVisitDay(DailyCalendar.ISO_8601_FORMAT);
+                        if (gourmetCampaignTags == null)
+                        {
+                            // 조회된 데이터가 없을때 - KRQA-1630 요청으로 emptyView 생성
+                            gourmetCampaignTags = new GourmetCampaignTags();
 
-                        gourmetCampaignTags.setCampaignTag(campaignTag);
+                            // 서버 데이터가 없음으로 임의로 지정 - 지정안할때 종료된 태그
+                            CampaignTag campaignTag = new CampaignTag();
+                            campaignTag.endDate = gourmetBookingDay.getVisitDay(DailyCalendar.ISO_8601_FORMAT);
+
+                            gourmetCampaignTags.setCampaignTag(campaignTag);
+                        }
                     } else
                     {
                         throw new BaseException(gourmetCampaignTagsDataBaseDto.msgCode, gourmetCampaignTagsDataBaseDto.msg);

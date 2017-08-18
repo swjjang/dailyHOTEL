@@ -479,8 +479,9 @@ public class StayCampaignTagListPresenter extends BaseExceptionPresenter<StayCam
         }
 
         CampaignTag campaignTag = stayCampaignTags.getCampaignTag();
+        String campaignTagName = campaignTag == null ? null : campaignTag.campaignTag;
 
-        return campaignTag == null ? mTitle : campaignTag.campaignTag;
+        return DailyTextUtils.isTextEmpty(campaignTagName) == true ? mTitle : campaignTagName;
     }
 
     public void setCalendarText(StayBookingDay stayBookingDay)

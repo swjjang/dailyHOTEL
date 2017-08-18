@@ -476,8 +476,9 @@ public class GourmetCampaignTagListPresenter //
         }
 
         CampaignTag campaignTag = gourmetCampaignTags.getCampaignTag();
+        String campaignTagName = campaignTag == null ? null : campaignTag.campaignTag;
 
-        return campaignTag == null ? mTitle : campaignTag.campaignTag;
+        return DailyTextUtils.isTextEmpty(campaignTagName) == true ? mTitle : campaignTag.campaignTag;
     }
 
     public void setCalendarText(GourmetBookingDay stayBookingDay)
