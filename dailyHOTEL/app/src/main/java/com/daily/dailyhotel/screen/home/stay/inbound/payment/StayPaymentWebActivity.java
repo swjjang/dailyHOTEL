@@ -141,11 +141,11 @@ public class StayPaymentWebActivity extends PlacePaymentWebActivity
 
             if (Constants.DEBUG == true)
             {
-                url = DailyPreference.getInstance(this).getBaseOutBoundUrl()//
+                url = DailyPreference.getInstance(this).getBaseUrl()//
                     + Crypto.getUrlDecoderEx(URL_WEBAPI_PAYMENT, urlParams);
             } else
             {
-                url = Crypto.getUrlDecoderEx(Setting.getOutboundServerUrl())//
+                url = Crypto.getUrlDecoderEx(Setting.getServerUrl())//
                     + Crypto.getUrlDecoderEx(URL_WEBAPI_PAYMENT, urlParams);
             }
 
