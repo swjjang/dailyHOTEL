@@ -1,16 +1,9 @@
 package com.daily.dailyhotel.entity;
 
-import android.content.Context;
-
-import com.bluelinelabs.logansquare.annotation.JsonField;
-import com.daily.base.util.ScreenUtils;
-import com.daily.dailyhotel.repository.remote.model.CampaignTagData;
-import com.daily.dailyhotel.repository.remote.model.GourmetSalesData;
 import com.twoheart.dailyhotel.model.Gourmet;
 import com.twoheart.dailyhotel.network.model.Sticker;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by iseung-won on 2017. 8. 8..
@@ -18,6 +11,7 @@ import java.util.List;
 
 public class GourmetCampaignTags
 {
+    public int msgCode;
     private CampaignTag mCampaignTag;
     public String imageUrl;
     private ArrayList<Gourmet> mGourmetList;

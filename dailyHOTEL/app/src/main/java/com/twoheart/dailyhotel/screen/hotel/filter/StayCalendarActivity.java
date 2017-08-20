@@ -105,7 +105,7 @@ public class StayCalendarActivity extends PlaceCalendarActivity
                 @Override
                 public void run()
                 {
-                    makeCalendar(mTodayDateTime, getDayOfMaxCount());
+                    makeCalendar(mTodayDateTime, getDayOfMaxCount(), false);
 
                     reset();
 
@@ -124,7 +124,7 @@ public class StayCalendarActivity extends PlaceCalendarActivity
         {
             setTouchEnabled(true);
 
-            makeCalendar(mTodayDateTime, getDayOfMaxCount());
+            makeCalendar(mTodayDateTime, getDayOfMaxCount(), false);
 
             reset();
 
