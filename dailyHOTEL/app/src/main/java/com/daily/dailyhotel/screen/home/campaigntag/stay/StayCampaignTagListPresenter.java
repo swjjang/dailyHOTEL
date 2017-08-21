@@ -75,7 +75,7 @@ public class StayCampaignTagListPresenter extends BaseExceptionPresenter<StayCam
     private StayBookingDay mStayBookingDay;
     private CommonDateTime mCommonDateTime;
     private StayCampaignTags mStayCampaignTags;
-    private boolean mIsFirstUiUpdateCheck;
+//    private boolean mIsFirstUiUpdateCheck;
 
     private CommonRemoteImpl mCommonRemoteImpl;
     private CampaignTagRemoteImpl mCampaignTagRemoteImpl;
@@ -414,7 +414,7 @@ public class StayCampaignTagListPresenter extends BaseExceptionPresenter<StayCam
         {
             setData(null, stayBookingDay);
             showFinishedCampaignTagDialog();
-            mIsFirstUiUpdateCheck = true;
+//            mIsFirstUiUpdateCheck = true;
             return;
         }
 
@@ -425,7 +425,7 @@ public class StayCampaignTagListPresenter extends BaseExceptionPresenter<StayCam
             {
                 setData(null, stayBookingDay);
                 showReCheckConnectionDialog();
-                mIsFirstUiUpdateCheck = true;
+//                mIsFirstUiUpdateCheck = true;
                 return;
             }
         }
@@ -436,7 +436,7 @@ public class StayCampaignTagListPresenter extends BaseExceptionPresenter<StayCam
         {
             setData(null, stayBookingDay);
             showFinishedCampaignTagDialog();
-            mIsFirstUiUpdateCheck = true;
+//            mIsFirstUiUpdateCheck = true;
             return;
         }
 
@@ -445,12 +445,12 @@ public class StayCampaignTagListPresenter extends BaseExceptionPresenter<StayCam
         {
             setData(placeViewItemList, stayBookingDay);
 
-            if (mIsFirstUiUpdateCheck == false)
-            {
-                showFirstEmptyListPopup();
-            }
-
-            mIsFirstUiUpdateCheck = true;
+//            if (mIsFirstUiUpdateCheck == false)
+//            {
+//                showFirstEmptyListPopup();
+//            }
+//
+//            mIsFirstUiUpdateCheck = true;
             return;
         }
 
@@ -479,15 +479,15 @@ public class StayCampaignTagListPresenter extends BaseExceptionPresenter<StayCam
             // 일반적인 상황
             setData(placeViewItemList, stayBookingDay);
 
-            ArrayList<Stay> list = stayCampaignTags.getStayList();
-            if ((list == null || list.size() == 0) && mIsFirstUiUpdateCheck == false)
-            {
-                // 처음 진입이고 일반적인 상황에서 리스트가 비었을때
-                showFirstEmptyListPopup();
-            }
+//            ArrayList<Stay> list = stayCampaignTags.getStayList();
+//            if ((list == null || list.size() == 0) && mIsFirstUiUpdateCheck == false)
+//            {
+//                // 처음 진입이고 일반적인 상황에서 리스트가 비었을때
+//                showFirstEmptyListPopup();
+//            }
         }
 
-        mIsFirstUiUpdateCheck = true;
+//        mIsFirstUiUpdateCheck = true;
     }
 
     private void showFinishedCampaignTagDialog()
@@ -522,21 +522,21 @@ public class StayCampaignTagListPresenter extends BaseExceptionPresenter<StayCam
             });
     }
 
-    private void showFirstEmptyListPopup()
-    {
-        getViewInterface().showSimpleDialog(null //
-            , getString(R.string.message_campaign_empty_popup_message)//
-            , getString(R.string.dialog_btn_text_yes)//
-            , getString(R.string.dialog_btn_text_no)//
-            , new View.OnClickListener()
-            {
-                @Override
-                public void onClick(View v)
-                {
-                    onCalendarClick();
-                }
-            }, null);
-    }
+//    private void showFirstEmptyListPopup()
+//    {
+//        getViewInterface().showSimpleDialog(null //
+//            , getString(R.string.message_campaign_empty_popup_message)//
+//            , getString(R.string.dialog_btn_text_yes)//
+//            , getString(R.string.dialog_btn_text_no)//
+//            , new View.OnClickListener()
+//            {
+//                @Override
+//                public void onClick(View v)
+//                {
+//                    onCalendarClick();
+//                }
+//            }, null);
+//    }
 
     public void setTitleText(String title)
     {
