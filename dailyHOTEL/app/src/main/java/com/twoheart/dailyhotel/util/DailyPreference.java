@@ -83,7 +83,7 @@ public class DailyPreference
     private static final String KEY_PREVIEW_GUIDE = "215";
     private static final String KEY_APP_PERMISSIONS_GUIDE = "216";
 
-    private static final String KEY_STAY_OUTBOUND_SEARCH_CALENDAR = "216"; // 최초에 1회 캘린더 띄우기
+    private static final String KEY_STAY_OUTBOUND_SEARCH_CALENDAR = "217"; // 최초에 1회 캘린더 띄우기
     private static final String KEY_GOURMET_PRODUCT_DETAIL_GUIDE = "220"; // 최초에 1회 고메 상세 가이드 띄우기
 
     // ----> DailyPreference 로 이동
