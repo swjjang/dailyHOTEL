@@ -162,13 +162,14 @@ public class SnsActivity extends BaseActivity implements View.OnClickListener
 
         try
         {
-            intent.setData(Uri.parse("naversearchapp://inappbrowser?url=http%3A%2F%2Fblog.naver.com%2Fdailyhotel&target=new&version=6"));
+            intent.setData(Uri.parse("naversearchapp://inappbrowser?url=http%3A%2F%2Fpost.naver" +
+                ".com%2Fdailyhotel&target=new&version=6"));
             startActivity(intent);
         } catch (Exception e)
         {
             try
             {
-                intent.setData(Uri.parse("http://blog.naver.com/dailyhotel"));
+                intent.setData(Uri.parse("http://post.naver.com/dailyhotel"));
                 startActivity(intent);
             } catch (ActivityNotFoundException e1)
             {
