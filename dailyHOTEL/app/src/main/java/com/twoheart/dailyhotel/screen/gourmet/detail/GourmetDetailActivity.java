@@ -19,8 +19,10 @@ import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.entity.CommonDateTime;
 import com.daily.dailyhotel.entity.GourmetMenu;
 import com.daily.dailyhotel.entity.GourmetMenuImage;
+import com.daily.dailyhotel.parcel.analytics.GourmetPaymentAnalyticsParam;
 import com.daily.dailyhotel.repository.local.model.AnalyticsParam;
 import com.daily.dailyhotel.screen.home.gourmet.detail.menus.GourmetMenusActivity;
+import com.daily.dailyhotel.screen.home.gourmet.payment.GourmetPaymentActivity;
 import com.daily.dailyhotel.util.RecentlyPlaceUtil;
 import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.drawee.view.DraweeTransition;
@@ -47,7 +49,6 @@ import com.twoheart.dailyhotel.screen.common.TrueVRActivity;
 import com.twoheart.dailyhotel.screen.common.ZoomMapActivity;
 import com.twoheart.dailyhotel.screen.gourmet.filter.GourmetCalendarActivity;
 import com.twoheart.dailyhotel.screen.gourmet.filter.GourmetDetailCalendarActivity;
-import com.twoheart.dailyhotel.screen.gourmet.payment.GourmetPaymentActivity;
 import com.twoheart.dailyhotel.screen.mydaily.coupon.SelectGourmetCouponDialogActivity;
 import com.twoheart.dailyhotel.screen.mydaily.member.EditProfilePhoneActivity;
 import com.twoheart.dailyhotel.screen.mydaily.member.LoginActivity;
@@ -742,11 +743,23 @@ public class GourmetDetailActivity extends PlaceDetailActivity
             imageUrl = imageInformationList.get(0).getImageUrl();
         }
 
-        boolean isBenefit = DailyTextUtils.isTextEmpty(gourmetDetailParams.benefit) == false;
+        GourmetPaymentAnalyticsParam analyticsParam = new GourmetPaymentAnalyticsParam();
 
-        Intent intent = GourmetPaymentActivity.newInstance(GourmetDetailActivity.this, gourmetDetailParams.name, gourmetProduct//
-            , gourmetBookingDay, imageUrl, gourmetDetailParams.category, gourmetDetail.index, isBenefit //
-            , gourmetDetailParams.ratingValue, mAnalyticsParam);
+        analyticsParam.showOriginalPrice = mAnalyticsParam.showOriginalPriceYn;
+        analyticsParam.rankingPosition = mAnalyticsParam.entryPosition;
+        analyticsParam.totalListCount = mAnalyticsParam.totalListCount;
+        analyticsParam.ratingValue = gourmetDetailParams.ratingValue;
+        analyticsParam.benefit = DailyTextUtils.isTextEmpty(gourmetDetailParams.benefit) == false;
+        analyticsParam.averageDiscount = gourmetProduct.discountPrice;
+        analyticsParam.address = gourmetDetailParams.address;
+        analyticsParam.dailyChoice = mAnalyticsParam.isDailyChoice;
+        analyticsParam.province = mAnalyticsParam.getProvince();
+        analyticsParam.addressAreaName = mAnalyticsParam.getAddressAreaName();
+        analyticsParam.categorySub = gourmetDetailParams.categorySub;
+
+        Intent intent = GourmetPaymentActivity.newInstance(GourmetDetailActivity.this, gourmetDetailParams.index//
+            , gourmetDetailParams.name, imageUrl, gourmetProduct.index, gourmetProduct.discountPrice, gourmetProduct.ticketName//
+            , gourmetBookingDay.getVisitDay(DailyCalendar.ISO_8601_FORMAT), false, gourmetDetailParams.category, analyticsParam);
 
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_BOOKING);
     }

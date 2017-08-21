@@ -54,21 +54,6 @@ public class SelectStayCouponDialogActivity extends BaseActivity
     String mCallByScreen;
     StayBookingDay mStayBookingDay;
 
-    public static Intent newInstance(Context context, int hotelIdx, int roomIdx, StayBookingDay stayBookingDay//
-        , String categoryCode, String hotelName, int roomPrice)
-    {
-        Intent intent = new Intent(context, SelectStayCouponDialogActivity.class);
-        intent.putExtra(INTENT_EXTRA_HOTEL_IDX, hotelIdx);
-        intent.putExtra(INTENT_EXTRA_ROOM_IDX, roomIdx);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, stayBookingDay);
-        intent.putExtra(INTENT_EXTRA_CATEGORY_CODE, categoryCode);
-        intent.putExtra(INTENT_EXTRA_HOTEL_NAME, hotelName);
-        intent.putExtra(INTENT_EXTRA_ROOM_PRICE, roomPrice);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_CALL_BY_SCREEN, AnalyticsManager.Screen.DAILYHOTEL_BOOKINGINITIALISE);
-
-        return intent;
-    }
-
     public static Intent newInstance(Context context, int hotelIdx, int roomIdx, String checkInDate, String checkOutDate//
         , String categoryCode, String hotelName, int roomPrice)
     {

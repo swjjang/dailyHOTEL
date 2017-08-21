@@ -33,7 +33,7 @@ public class GourmetPaymentAnalyticsImpl implements GourmetPaymentPresenter.Gour
 
     @Override
     public void onScreen(Activity activity, GourmetBookDateTime gourmetBookDateTime, int gourmetIndex//
-        , String gourmetName, int menuIndex, String menuName, String category, String grade//
+        , String gourmetName, int menuIndex, String menuName, String category//
         , GourmetPayment gourmetPayment, boolean registerEasyCard)
     {
         //        if (activity == null || mAnalyticsParam == null)
@@ -103,7 +103,7 @@ public class GourmetPaymentAnalyticsImpl implements GourmetPaymentPresenter.Gour
 
     @Override
     public void onScreenAgreeTermDialog(Activity activity, GourmetBookDateTime gourmetBookDateTime, int gourmetIndex//
-        , String gourmetName, int menuIndex, String menuName, String category, String grade//
+        , String gourmetName, int menuIndex, String menuName, String category//
         , GourmetPayment gourmetPayment, boolean registerEasyCard, boolean usedBonus, boolean usedCoupon//
         , Coupon coupon, DailyBookingPaymentTypeView.PaymentType paymentType, UserSimpleInformation userSimpleInformation)
     {

@@ -69,7 +69,6 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
     private int mGourmetIndex, mMenuPrice, mMenuIndex;
     private String mGourmetName, mImageUrl, mCategory, mMenuName;
     private GourmetPayment mGourmetPayment;
-    private String mGrade;
     private Card mSelectedCard;
     private DomesticGuest mGuest;
     private Coupon mSelectedCoupon;
@@ -87,10 +86,10 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
         GourmetPaymentAnalyticsParam getAnalyticsParam();
 
         void onScreen(Activity activity, GourmetBookDateTime gourmetBookDateTime, int gourmetIndex, String gourmetName//
-            , int menuIndex, String menuName, String category, String grade, GourmetPayment gourmetPayment, boolean registerEasyCard);
+            , int menuIndex, String menuName, String category, GourmetPayment gourmetPayment, boolean registerEasyCard);
 
         void onScreenAgreeTermDialog(Activity activity, GourmetBookDateTime gourmetBookDateTime//
-            , int gourmetIndex, String gourmetName, int menuIndex, String menuName, String category, String grade//
+            , int gourmetIndex, String gourmetName, int menuIndex, String menuName, String category//
             , GourmetPayment gourmetPayment, boolean registerEasyCard, boolean usedBonus, boolean usedCoupon, Coupon coupon//
             , DailyBookingPaymentTypeView.PaymentType paymentType, UserSimpleInformation userSimpleInformation);
 
@@ -174,14 +173,13 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
         mImageUrl = intent.getStringExtra(GourmetPaymentActivity.INTENT_EXTRA_DATA_IMAGE_URL);
         mMenuPrice = intent.getIntExtra(GourmetPaymentActivity.INTENT_EXTRA_DATA_MENU_PRICE, -1);
 
-        String visitDateTime = intent.getStringExtra(GourmetPaymentActivity.INTENT_EXTRA_DATA_VISIT);
+        String visitDate = intent.getStringExtra(GourmetPaymentActivity.INTENT_EXTRA_DATA_VISIT_DATE);
 
-        setGourmetBookDateTime(visitDateTime);
+        setGourmetBookDateTime(visitDate);
 
         mOverseas = intent.getBooleanExtra(GourmetPaymentActivity.INTENT_EXTRA_DATA_OVERSEAS, false);
         mCategory = intent.getStringExtra(GourmetPaymentActivity.INTENT_EXTRA_DATA_CATEGORY);
         mMenuName = intent.getStringExtra(GourmetPaymentActivity.INTENT_EXTRA_DATA_MENU_NAME);
-        mGrade = intent.getStringExtra(GourmetPaymentActivity.INTENT_EXTRA_DATA_GRADE);
 
         mAnalytics.setAnalyticsParam(intent.getParcelableExtra(BaseActivity.INTENT_EXTRA_DATA_ANALYTICS));
 
@@ -430,7 +428,6 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
                     , @io.reactivex.annotations.NonNull UserSimpleInformation userSimpleInformation//
                     , @io.reactivex.annotations.NonNull CommonDateTime commonDateTime) throws Exception
                 {
-
                     setGourmetPayment(gourmetPayment);
                     setGourmetBookDateTime(gourmetPayment.visitDate);
                     setSelectCard(getSelectedCard(cardList));
@@ -480,7 +477,7 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
                 }
 
                 mAnalytics.onScreen(getActivity(), mGourmetBookDateTime//
-                    , mGourmetIndex, mGourmetName, mMenuIndex, mMenuName, mCategory, mGrade//
+                    , mGourmetIndex, mGourmetName, mMenuIndex, mMenuName, mCategory//
                     , mGourmetPayment, mSelectedCard != null);
 
                 unLockAll();
@@ -492,15 +489,29 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
             {
                 unLockAll();
 
-                getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.act_base_network_connect)//
-                    , getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
-                    {
-                        @Override
-                        public void onDismiss(DialogInterface dialog)
+                if (throwable instanceof BaseException)
+                {
+                    getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2), throwable.getMessage()//
+                        , getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
                         {
-                            onBackClick();
-                        }
-                    });
+                            @Override
+                            public void onDismiss(DialogInterface dialog)
+                            {
+                                onBackClick();
+                            }
+                        });
+                } else
+                {
+                    getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.act_base_network_connect)//
+                        , getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
+                        {
+                            @Override
+                            public void onDismiss(DialogInterface dialog)
+                            {
+                                onBackClick();
+                            }
+                        });
+                }
             }
         }));
     }
@@ -1085,7 +1096,7 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
         }
 
         mAnalytics.onScreenAgreeTermDialog(getActivity(), mGourmetBookDateTime, mGourmetIndex, mGourmetName, mMenuIndex, mMenuName//
-            , mCategory, mGrade, mGourmetPayment, mSelectedCard != null, mBonusSelected, mCouponSelected, mSelectedCoupon//
+            , mCategory, mGourmetPayment, mSelectedCard != null, mBonusSelected, mCouponSelected, mSelectedCoupon//
             , mPaymentType, mUserSimpleInformation);
     }
 

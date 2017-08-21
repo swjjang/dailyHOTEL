@@ -20,6 +20,7 @@ public class GourmetPaymentAnalyticsParam implements Parcelable
     public boolean dailyChoice;
     public Province province;
     public String addressAreaName;
+    public String categorySub;
 
     public GourmetPaymentAnalyticsParam()
     {
@@ -81,6 +82,7 @@ public class GourmetPaymentAnalyticsParam implements Parcelable
         dest.writeInt(dailyChoice ? 1 : 0);
         dest.writeParcelable(province, flags);
         dest.writeString(addressAreaName);
+        dest.writeString(categorySub);
     }
 
     void readFromParcel(Parcel in)
@@ -95,6 +97,7 @@ public class GourmetPaymentAnalyticsParam implements Parcelable
         dailyChoice = in.readInt() == 1 ? true : false;
         province = in.readParcelable(Province.class.getClassLoader());
         addressAreaName = in.readString();
+        categorySub = in.readString();
     }
 
     @Override

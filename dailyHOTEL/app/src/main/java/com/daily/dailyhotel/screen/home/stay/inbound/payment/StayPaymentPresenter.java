@@ -19,6 +19,7 @@ import com.daily.base.util.ExLog;
 import com.daily.base.util.FontManager;
 import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
+import com.daily.dailyhotel.entity.Booking;
 import com.daily.dailyhotel.entity.Card;
 import com.daily.dailyhotel.entity.CommonDateTime;
 import com.daily.dailyhotel.entity.DomesticGuest;
@@ -29,6 +30,7 @@ import com.daily.dailyhotel.entity.StayRefundPolicy;
 import com.daily.dailyhotel.entity.UserSimpleInformation;
 import com.daily.dailyhotel.parcel.analytics.StayPaymentAnalyticsParam;
 import com.daily.dailyhotel.parcel.analytics.StayThankYouAnalyticsParam;
+import com.daily.dailyhotel.repository.remote.BookingRemoteImpl;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
 import com.daily.dailyhotel.repository.remote.PaymentRemoteImpl;
 import com.daily.dailyhotel.repository.remote.ProfileRemoteImpl;
@@ -53,10 +55,12 @@ import org.json.JSONObject;
 
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 import io.reactivex.Observable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function5;
+import io.reactivex.functions.Function6;
 
 /**
  * Created by sheldon
@@ -82,6 +86,7 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
     private PaymentRemoteImpl mPaymentRemoteImpl;
     private ProfileRemoteImpl mProfileRemoteImpl;
     private CommonRemoteImpl mCommonRemoteImpl;
+    private BookingRemoteImpl mBookingRemoteImpl;
 
     private StayBookDateTime mStayBookDateTime;
     private int mStayIndex, mRoomPrice, mRoomIndex;
@@ -166,6 +171,7 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
         mPaymentRemoteImpl = new PaymentRemoteImpl(activity);
         mProfileRemoteImpl = new ProfileRemoteImpl(activity);
         mCommonRemoteImpl = new CommonRemoteImpl(activity);
+        mBookingRemoteImpl = new BookingRemoteImpl(activity);
 
         setRefresh(true);
     }
@@ -452,15 +458,16 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
         addCompositeDisposable(Observable.zip(mPaymentRemoteImpl.getStayPayment(mStayBookDateTime, mRoomIndex)//
             , mPaymentRemoteImpl.getEasyCardList(), mProfileRemoteImpl.getUserSimpleInformation()//
             , mPaymentRemoteImpl.getStayRefundPolicy(mStayBookDateTime, mStayIndex, mRoomIndex) //
-            , mCommonRemoteImpl.getCommonDateTime()//
-            , new Function5<StayPayment, List<Card>, UserSimpleInformation, StayRefundPolicy, CommonDateTime, Boolean>()
+            , mCommonRemoteImpl.getCommonDateTime(), mBookingRemoteImpl.getBookingList()//
+            , new Function6<StayPayment, List<Card>, UserSimpleInformation, StayRefundPolicy, CommonDateTime, List<Booking>, Boolean>()
             {
                 @Override
                 public Boolean apply(@io.reactivex.annotations.NonNull StayPayment stayPayment//
                     , @io.reactivex.annotations.NonNull List<Card> cardList//
                     , @io.reactivex.annotations.NonNull UserSimpleInformation userSimpleInformation//
                     , @io.reactivex.annotations.NonNull StayRefundPolicy stayRefundPolicy//
-                    , @io.reactivex.annotations.NonNull CommonDateTime commonDateTime) throws Exception
+                    , @io.reactivex.annotations.NonNull CommonDateTime commonDateTime//
+                    , @io.reactivex.annotations.NonNull List<Booking> bookings) throws Exception
                 {
                     setStayPayment(stayPayment);
                     setStayBookDateTime(stayPayment.checkInDate, stayPayment.checkOutDate);
@@ -473,12 +480,12 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
                         setPensionPopupMessageType(commonDateTime, mStayBookDateTime);
                     }
 
-                    return true;
+                    return hasOverlapBookingList(commonDateTime, mStayBookDateTime, mStayName, bookings);
                 }
             }).subscribe(new Consumer<Boolean>()
         {
             @Override
-            public void accept(@io.reactivex.annotations.NonNull Boolean aBoolean) throws Exception
+            public void accept(@io.reactivex.annotations.NonNull Boolean overlapBooking) throws Exception
             {
                 onBookingInformation(mStayPayment, mStayBookDateTime);
 
@@ -495,9 +502,21 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
                 notifyStayPaymentChanged();
                 notifyRefundPolicyChanged();
 
-                // 가격이 변동된 경우
-                if (mRoomPrice != mStayPayment.totalPrice)
+                if(overlapBooking == true)
                 {
+                    getViewInterface().showSimpleDialog(null, getString(R.string.dialog_msg_hotel_payment_overlap)//
+                        , getString(R.string.label_do_booking), getString(R.string.dialog_btn_text_no)//
+                        , null, new View.OnClickListener()
+                        {
+                            @Override
+                            public void onClick(View v)
+                            {
+                                onBackClick();
+                            }
+                        }, false);
+                } else if (mRoomPrice != mStayPayment.totalPrice)
+                {
+                    // 가격이 변동된 경우
                     getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.message_stay_payment_changed_price)//
                         , getString(R.string.dialog_btn_text_confirm), null);
 
@@ -532,15 +551,29 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
             {
                 unLockAll();
 
-                getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.act_base_network_connect)//
-                    , getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
-                    {
-                        @Override
-                        public void onDismiss(DialogInterface dialog)
+                if (throwable instanceof BaseException)
+                {
+                    getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2), throwable.getMessage()//
+                        , getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
                         {
-                            onBackClick();
-                        }
-                    });
+                            @Override
+                            public void onDismiss(DialogInterface dialog)
+                            {
+                                onBackClick();
+                            }
+                        });
+                } else
+                {
+                    getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.act_base_network_connect)//
+                        , getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
+                        {
+                            @Override
+                            public void onDismiss(DialogInterface dialog)
+                            {
+                                onBackClick();
+                            }
+                        });
+                }
             }
         }));
     }
@@ -1907,6 +1940,47 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
         }
 
         return messageList;
+    }
+
+    private boolean hasOverlapBookingList(CommonDateTime commonDateTime, StayBookDateTime stayBookDateTime//
+        , String stayName, List<Booking> bookingList) throws Exception
+    {
+        if (commonDateTime == null || bookingList == null || bookingList.size() == 0)
+        {
+            return false;
+        }
+
+        String checkInDateTime = stayBookDateTime.getCheckInDateTime("yyyy-MM-dd");
+
+        for (Booking booking : bookingList)
+        {
+            if (booking.readyForRefund == false)
+            {
+                switch (booking.statePayment)
+                {
+                    case Booking.PAYMENT_COMPLETED:
+                    case Booking.PAYMENT_WAITING:
+                        // 이미 이용한 Stay인 경우
+                        if(DailyCalendar.compareDateDay(DailyCalendar.convertDateFormatString(booking.checkOutDateTime, "yyyy-MM-dd", DailyCalendar.ISO_8601_FORMAT)//
+                            , commonDateTime.currentDateTime) < 0)
+                        {
+                            continue;
+                        }
+
+                        String bookingCheckInDateTime = DailyCalendar.convertDateFormatString(booking.checkInDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyy-MM-dd");
+                        String bookingCheckOutDateTime = DailyCalendar.convertDateFormatString(booking.checkOutDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyy-MM-dd");
+
+                        if (checkInDateTime.equalsIgnoreCase(bookingCheckInDateTime) == true//
+                            && booking.placeName.equalsIgnoreCase(stayName) == true)
+                        {
+                            return true;
+                        }
+                        break;
+                }
+            }
+        }
+
+        return false;
     }
 
     private void onPaymentWebResult(int resultCode, String result)
