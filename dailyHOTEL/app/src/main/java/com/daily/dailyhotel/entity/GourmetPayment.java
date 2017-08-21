@@ -6,7 +6,6 @@ public class GourmetPayment
 {
     public boolean soldOut;
     public String visitDate;
-    public int visitTime;
     public int totalPrice; // 결재할 총금액
     public String businessName;
     public int minMenuCount;

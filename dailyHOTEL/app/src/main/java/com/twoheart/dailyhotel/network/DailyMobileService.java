@@ -28,6 +28,7 @@ import com.daily.dailyhotel.repository.remote.model.UserInformationData;
 import com.daily.dailyhotel.repository.remote.model.UserTrackingData;
 import com.twoheart.dailyhotel.network.dto.BaseDto;
 import com.twoheart.dailyhotel.network.dto.BaseListDto;
+import com.twoheart.dailyhotel.network.dto.Base_Dto;
 import com.twoheart.dailyhotel.network.model.Event;
 import com.twoheart.dailyhotel.network.model.GourmetDetailParams;
 import com.twoheart.dailyhotel.network.model.GourmetKeyword;
@@ -675,7 +676,7 @@ public interface DailyMobileService
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET("{mobileAPI}")
-    Observable<BaseDto<GourmetPaymentData>> getGourmetPayment(@Path(value = "mobileAPI", encoded = true) String mobileAPI//
+    Observable<Base_Dto<GourmetPaymentData>> getGourmetPayment(@Path(value = "mobileAPI", encoded = true) String mobileAPI//
         , @Query("sale_reco_idx") int index);
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})

@@ -88,10 +88,10 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
         void onScreen(Activity activity, GourmetBookDateTime gourmetBookDateTime, int gourmetIndex, String gourmetName//
             , int menuIndex, String menuName, String category, GourmetPayment gourmetPayment, boolean registerEasyCard);
 
-        void onScreenAgreeTermDialog(Activity activity, GourmetBookDateTime gourmetBookDateTime//
-            , int gourmetIndex, String gourmetName, int menuIndex, String menuName, String category//
-            , GourmetPayment gourmetPayment, boolean registerEasyCard, boolean usedBonus, boolean usedCoupon, Coupon coupon//
-            , DailyBookingPaymentTypeView.PaymentType paymentType, UserSimpleInformation userSimpleInformation);
+        void onScreenAgreeTermDialog(Activity activity, String visitDateTime, int gourmetIndex//
+            , String gourmetName, int menuIndex, String menuName, int menuCount, String category//
+            , GourmetPayment gourmetPayment, boolean registerEasyCard, boolean usedBonus, boolean usedCoupon//
+            , Coupon coupon, DailyBookingPaymentTypeView.PaymentType paymentType, UserSimpleInformation userSimpleInformation);
 
         void onScreenPaymentCompleted(Activity activity, String transId);
 
@@ -586,7 +586,7 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
             return;
         }
 
-        if (mMenuCount >= mGourmetPayment.maxMenuCount)
+        if (mMenuCount + 1 > mGourmetPayment.maxMenuCount)
         {
             getViewInterface().setMenuPlusEnabled(false);
             DailyToast.showToast(getActivity(), getString(R.string.toast_msg_maxcount_ticket, mGourmetPayment.maxMenuCount), DailyToast.LENGTH_LONG);
@@ -610,7 +610,7 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
             return;
         }
 
-        if (mMenuCount <= mGourmetPayment.minMenuCount)
+        if (mMenuCount - 1 < mGourmetPayment.minMenuCount)
         {
             getViewInterface().setMenuMinusEnabled(false);
         } else
@@ -623,7 +623,7 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
                         @Override
                         public void onClick(View v)
                         {
-                            onCouponClick(false);
+                            setCouponSelected(false, null);
 
                             getViewInterface().setMenuCount(--mMenuCount);
                             getViewInterface().setMenuPlusEnabled(true);
@@ -728,7 +728,7 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
             {
                 Intent intent = SelectGourmetCouponDialogActivity.newInstance(getActivity(), mGourmetIndex, //
                     mMenuIndex, mGourmetBookDateTime.getVisitDateTime("yyyy.MM.dd (EEE)")//
-                    , mGourmetName, mMenuPrice);
+                    , mGourmetName, mMenuCount);
                 startActivityForResult(intent, GourmetPaymentActivity.REQUEST_CODE_COUPON_LIST);
 
                 mAnalytics.onEventCouponClick(getActivity(), true);
@@ -1095,8 +1095,8 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
             }
         }
 
-        mAnalytics.onScreenAgreeTermDialog(getActivity(), mGourmetBookDateTime, mGourmetIndex, mGourmetName, mMenuIndex, mMenuName//
-            , mCategory, mGourmetPayment, mSelectedCard != null, mBonusSelected, mCouponSelected, mSelectedCoupon//
+        mAnalytics.onScreenAgreeTermDialog(getActivity(), mVisitDateTime, mGourmetIndex, mGourmetName, mMenuIndex, mMenuName//
+            , mMenuCount, mCategory, mGourmetPayment, mSelectedCard != null, mBonusSelected, mCouponSelected, mSelectedCoupon//
             , mPaymentType, mUserSimpleInformation);
     }
 
@@ -1167,11 +1167,19 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
 
         final String DATE_FORMAT = "yyyy.MM.dd(EEE)";
 
+        if (mMenuCount < gourmetPayment.minMenuCount)
+        {
+            mMenuCount = gourmetPayment.minMenuCount;
+            getViewInterface().setMenuMinusEnabled(false);
+        }
+
         try
         {
             String visitDate = gourmetBookDateTime.getVisitDateTime(DATE_FORMAT);
 
             getViewInterface().setBooking(visitDate, mGourmetName, mMenuName);
+            getViewInterface().setVisitTime(mVisitDateTime);
+            getViewInterface().setMenuCount(mMenuCount);
             getViewInterface().setVendorName(gourmetPayment.businessName);
         } catch (Exception e)
         {

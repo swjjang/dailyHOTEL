@@ -117,9 +117,6 @@ public class GourmetPaymentView extends BaseDialogView<GourmetPaymentView.OnEven
         }
 
         getViewDataBinding().dateInformationView.setDate1Text(getString(R.string.label_visit_day), visitDate);
-        getViewDataBinding().dateInformationView.setDate2DescriptionTextColor(getColor(R.color.default_text_cb70038));
-        getViewDataBinding().dateInformationView.setDate2DescriptionTextDrawable(0, 0, R.drawable.navibar_m_burg_ic_v, 0);
-
         getViewDataBinding().dateInformationView.setCenterNightsVisible(false);
 
         getViewDataBinding().menuInformationView.setTitle(R.string.label_booking_ticket_info);
@@ -152,6 +149,9 @@ public class GourmetPaymentView extends BaseDialogView<GourmetPaymentView.OnEven
         {
             getViewDataBinding().dateInformationView.setDate2Text(getString(R.string.label_booking_select_ticket_time), time);
         }
+
+        getViewDataBinding().dateInformationView.setDate2DescriptionTextColor(getColor(R.color.default_text_cb70038));
+        getViewDataBinding().dateInformationView.setDate2DescriptionTextDrawable(0, 0, R.drawable.navibar_m_burg_ic_v, 0);
     }
 
     @Override

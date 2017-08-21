@@ -758,7 +758,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         analyticsParam.categorySub = gourmetDetailParams.categorySub;
 
         Intent intent = GourmetPaymentActivity.newInstance(GourmetDetailActivity.this, gourmetDetailParams.index//
-            , gourmetDetailParams.name, imageUrl, gourmetProduct.index, gourmetProduct.discountPrice, gourmetProduct.ticketName//
+            , gourmetDetailParams.name, imageUrl, gourmetProduct.saleIdx, gourmetProduct.discountPrice, gourmetProduct.ticketName//
             , gourmetBookingDay.getVisitDay(DailyCalendar.ISO_8601_FORMAT), false, gourmetDetailParams.category, analyticsParam);
 
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_BOOKING);

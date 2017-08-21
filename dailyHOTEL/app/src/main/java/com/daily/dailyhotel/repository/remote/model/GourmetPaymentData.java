@@ -49,8 +49,10 @@ public class GourmetPaymentData
 
         for(long time : eating_time_list)
         {
-            timeList.add(DailyCalendar.format(time, DailyCalendar.ISO_8601_FORMAT, TimeZone.getTimeZone("GMT+09:00")));
+            timeList.add(DailyCalendar.format(time - DailyCalendar.NINE_HOUR_MILLISECOND, DailyCalendar.ISO_8601_FORMAT, TimeZone.getTimeZone("GMT+09:00")));
         }
+
+        gourmetPayment.setVisitTimeList(timeList);
 
         return gourmetPayment;
     }

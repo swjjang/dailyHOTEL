@@ -32,6 +32,7 @@ import com.daily.dailyhotel.repository.remote.model.UserTrackingData;
 import com.twoheart.dailyhotel.Setting;
 import com.twoheart.dailyhotel.network.dto.BaseDto;
 import com.twoheart.dailyhotel.network.dto.BaseListDto;
+import com.twoheart.dailyhotel.network.dto.Base_Dto;
 import com.twoheart.dailyhotel.network.factory.TagCancellableCallAdapterFactory.ExecutorCallbackCall;
 import com.twoheart.dailyhotel.network.model.Event;
 import com.twoheart.dailyhotel.network.model.GourmetDetailParams;
@@ -1328,7 +1329,7 @@ public class DailyMobileAPI
         return mDailyMobileService.getStayPayment(Crypto.getUrlDecoderEx(API), roomIndex, date, nights).subscribeOn(Schedulers.io());
     }
 
-    public Observable<BaseDto<GourmetPaymentData>> getGourmetPayment(int menuIndex)
+    public Observable<Base_Dto<GourmetPaymentData>> getGourmetPayment(int menuIndex)
     {
         final String API = Constants.UNENCRYPTED_URL ? "api/fnb/sale/ticket/payment/info"//
             : "MzkkOTYkOTIkMTI5JDEwOSQzNyQxMjgkMTA3JDQ3JDY0JDMxJDEzMyQxNiQwJDk0JDEzOCQ=$KMzM4MzgyRkFFOTFBINUZCRkQxRjA5MjIEyRkFEOODYDwMkMwMKjk1RjkxRjNDMDM1MJTc1QjZCMjJCREFEQzk3NDdGMkUCzMDgVzNDZEGRkE1QThWDNkQM1MzNBRjEyMjQwQUUYH1DNkIQw$";

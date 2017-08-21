@@ -2,6 +2,7 @@ package com.daily.dailyhotel.screen.home.gourmet.payment;
 
 import android.app.Activity;
 
+import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.entity.GourmetBookDateTime;
 import com.daily.dailyhotel.entity.GourmetPayment;
 import com.daily.dailyhotel.entity.UserSimpleInformation;
@@ -9,8 +10,10 @@ import com.daily.dailyhotel.parcel.analytics.GourmetPaymentAnalyticsParam;
 import com.daily.dailyhotel.parcel.analytics.GourmetThankYouAnalyticsParam;
 import com.daily.dailyhotel.view.DailyBookingPaymentTypeView;
 import com.twoheart.dailyhotel.model.Coupon;
+import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
@@ -36,155 +39,112 @@ public class GourmetPaymentAnalyticsImpl implements GourmetPaymentPresenter.Gour
         , String gourmetName, int menuIndex, String menuName, String category//
         , GourmetPayment gourmetPayment, boolean registerEasyCard)
     {
-        //        if (activity == null || mAnalyticsParam == null)
-        //        {
-        //            return;
-        //        }
-        //
-        //        String screenName;
-        //
-        //        // Analytics
-        //        if (DailyTextUtils.isTextEmpty(refundPolicy) == false)
-        //        {
-        //            switch (refundPolicy)
-        //            {
-        //                case StayRefundPolicy.STATUS_NO_CHARGE_REFUND:
-        //                    screenName = AnalyticsManager.Screen.DAILYHOTEL_BOOKINGINITIALISE_CANCELABLE;
-        //                    break;
-        //
-        //                case StayRefundPolicy.STATUS_SURCHARGE_REFUND:
-        //                    screenName = AnalyticsManager.Screen.DAILYHOTEL_BOOKINGINITIALISE_CANCELLATIONFEE;
-        //                    break;
-        //
-        //                default:
-        //                    screenName = AnalyticsManager.Screen.DAILYHOTEL_BOOKINGINITIALISE_NOREFUNDS;
-        //                    break;
-        //            }
-        //        } else
-        //        {
-        //            screenName = AnalyticsManager.Screen.DAILYHOTEL_BOOKINGINITIALISE;
-        //        }
-        //
-        //        try
-        //        {
-        //            int nights = stayBookDateTime.getNights();
-        //            Map<String, String> params = new HashMap<>();
-        //
-        //            params.put(AnalyticsManager.KeyType.PLACE_INDEX, Integer.toString(stayIndex));
-        //            params.put(AnalyticsManager.KeyType.NAME, stayName);
-        //            params.put(AnalyticsManager.KeyType.PRICE, Integer.toString(mAnalyticsParam.averageDiscount));
-        //            params.put(AnalyticsManager.KeyType.TOTAL_PRICE, Integer.toString(stayPayment.totalPrice));
-        //            params.put(AnalyticsManager.KeyType.QUANTITY, Integer.toString(nights));
-        //            params.put(AnalyticsManager.KeyType.LENGTH_OF_STAY, Integer.toString(nights));
-        //            params.put(AnalyticsManager.KeyType.CHECK_IN, stayBookDateTime.getCheckInDateTime("yyyy-MM-dd"));
-        //            params.put(AnalyticsManager.KeyType.CHECK_OUT, stayBookDateTime.getCheckOutDateTime("yyyy-MM-dd"));
-        //            params.put(AnalyticsManager.KeyType.TICKET_NAME, roomName);
-        //            params.put(AnalyticsManager.KeyType.TICKET_INDEX, Integer.toString(roomIndex));
-        //            params.put(AnalyticsManager.KeyType.GRADE, grade);
-        //            params.put(AnalyticsManager.KeyType.DBENEFIT, mAnalyticsParam.benefit ? "yes" : "no");
-        //            params.put(AnalyticsManager.KeyType.ADDRESS, mAnalyticsParam.address);
-        //            params.put(AnalyticsManager.KeyType.CATEGORY, category);
-        //            params.put(AnalyticsManager.KeyType.REGISTERED_SIMPLE_CARD, registerEasyCard ? "y" : "n");
-        //            params.put(AnalyticsManager.KeyType.NRD, mAnalyticsParam.nrd ? "y" : "n");
-        //            params.put(AnalyticsManager.KeyType.RATING, Integer.toString(mAnalyticsParam.ratingValue));
-        //            params.put(AnalyticsManager.KeyType.IS_SHOW_ORIGINAL_PRICE, mAnalyticsParam.showOriginalPrice);
-        //            params.put(AnalyticsManager.KeyType.LIST_INDEX, Integer.toString(mAnalyticsParam.rankingPosition));
-        //            params.put(AnalyticsManager.KeyType.DAILYCHOICE, mAnalyticsParam.dailyChoice ? "y" : "n");
-        //            params.put(AnalyticsManager.KeyType.PROVINCE, mAnalyticsParam.getAnalyticsProvinceName());
-        //            params.put(AnalyticsManager.KeyType.DISTRICT, mAnalyticsParam.getAnalyticsDistrictName());
-        //            params.put(AnalyticsManager.KeyType.AREA, mAnalyticsParam.getAnalyticsAddressAreaName());
-        //
-        //            AnalyticsManager.getInstance(activity).recordScreen(activity, screenName, null, params);
-        //        } catch (Exception e)
-        //        {
-        //            ExLog.d(e.toString());
-        //        }
+        if (activity == null || mAnalyticsParam == null)
+        {
+            return;
+        }
+
+        try
+        {
+            Map<String, String> params = new HashMap<>();
+
+            params.put(AnalyticsManager.KeyType.NAME, gourmetName);
+            params.put(AnalyticsManager.KeyType.PRICE, Integer.toString(gourmetPayment.totalPrice));
+            params.put(AnalyticsManager.KeyType.PLACE_INDEX, Integer.toString(gourmetIndex));
+            params.put(AnalyticsManager.KeyType.DATE, gourmetBookDateTime.getVisitDateTime("yyyy-MM-dd"));
+            params.put(AnalyticsManager.KeyType.TICKET_NAME, menuName);
+            params.put(AnalyticsManager.KeyType.TICKET_INDEX, Integer.toString(menuIndex));
+            params.put(AnalyticsManager.KeyType.CATEGORY, category);
+            params.put(AnalyticsManager.KeyType.DBENEFIT, mAnalyticsParam.benefit ? "yes" : "no");
+            params.put(AnalyticsManager.KeyType.REGISTERED_SIMPLE_CARD, registerEasyCard ? "y" : "n");
+            params.put(AnalyticsManager.KeyType.RATING, Integer.toString(mAnalyticsParam.ratingValue));
+            params.put(AnalyticsManager.KeyType.IS_SHOW_ORIGINAL_PRICE, mAnalyticsParam.showOriginalPrice);
+            params.put(AnalyticsManager.KeyType.LIST_INDEX, Integer.toString(mAnalyticsParam.rankingPosition));
+            params.put(AnalyticsManager.KeyType.DAILYCHOICE, mAnalyticsParam.dailyChoice ? "y" : "n");
+
+            params.put(AnalyticsManager.KeyType.PROVINCE, mAnalyticsParam.getAnalyticsProvinceName());
+            params.put(AnalyticsManager.KeyType.DISTRICT, mAnalyticsParam.getAnalyticsDistrictName());
+            params.put(AnalyticsManager.KeyType.AREA, mAnalyticsParam.getAnalyticsAddressAreaName());
+
+            AnalyticsManager.getInstance(activity).recordScreen(activity, AnalyticsManager.Screen.DAILYGOURMET_BOOKINGINITIALISE, null, params);
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+        }
     }
 
     @Override
-    public void onScreenAgreeTermDialog(Activity activity, GourmetBookDateTime gourmetBookDateTime, int gourmetIndex//
-        , String gourmetName, int menuIndex, String menuName, String category//
+    public void onScreenAgreeTermDialog(Activity activity, String visitDateTime, int gourmetIndex//
+        , String gourmetName, int menuIndex, String menuName, int menuCount, String category//
         , GourmetPayment gourmetPayment, boolean registerEasyCard, boolean usedBonus, boolean usedCoupon//
         , Coupon coupon, DailyBookingPaymentTypeView.PaymentType paymentType, UserSimpleInformation userSimpleInformation)
     {
-        //        if (activity == null || mAnalyticsParam == null)
-        //        {
-        //            return;
-        //        }
-        //
-        //        try
-        //        {
-        //            int nights = stayBookDateTime.getNights();
-        //            mPaymentParamMap = new HashMap<>();
-        //
-        //            mPaymentParamMap.put(AnalyticsManager.KeyType.PLACE_INDEX, Integer.toString(stayIndex));
-        //            mPaymentParamMap.put(AnalyticsManager.KeyType.NAME, stayName);
-        //            mPaymentParamMap.put(AnalyticsManager.KeyType.PRICE, Integer.toString(mAnalyticsParam.averageDiscount));
-        //            mPaymentParamMap.put(AnalyticsManager.KeyType.TOTAL_PRICE, Integer.toString(stayPayment.totalPrice));
-        //            mPaymentParamMap.put(AnalyticsManager.KeyType.QUANTITY, Integer.toString(nights));
-        //            mPaymentParamMap.put(AnalyticsManager.KeyType.LENGTH_OF_STAY, Integer.toString(nights));
-        //            mPaymentParamMap.put(AnalyticsManager.KeyType.CHECK_IN, stayBookDateTime.getCheckInDateTime("yyyy-MM-dd"));
-        //            mPaymentParamMap.put(AnalyticsManager.KeyType.CHECK_OUT, stayBookDateTime.getCheckOutDateTime("yyyy-MM-dd"));
-        //            mPaymentParamMap.put(AnalyticsManager.KeyType.TICKET_NAME, roomName);
-        //            mPaymentParamMap.put(AnalyticsManager.KeyType.TICKET_INDEX, Integer.toString(roomIndex));
-        //            mPaymentParamMap.put(AnalyticsManager.KeyType.GRADE, grade);
-        //            mPaymentParamMap.put(AnalyticsManager.KeyType.DBENEFIT, mAnalyticsParam.benefit ? "yes" : "no");
-        //            mPaymentParamMap.put(AnalyticsManager.KeyType.ADDRESS, mAnalyticsParam.address);
-        //            mPaymentParamMap.put(AnalyticsManager.KeyType.CATEGORY, category);
-        //            mPaymentParamMap.put(AnalyticsManager.KeyType.REGISTERED_SIMPLE_CARD, registerEasyCard ? "y" : "n");
-        //            mPaymentParamMap.put(AnalyticsManager.KeyType.NRD, mAnalyticsParam.nrd ? "y" : "n");
-        //            mPaymentParamMap.put(AnalyticsManager.KeyType.RATING, Integer.toString(mAnalyticsParam.ratingValue));
-        //            mPaymentParamMap.put(AnalyticsManager.KeyType.IS_SHOW_ORIGINAL_PRICE, mAnalyticsParam.showOriginalPrice);
-        //            mPaymentParamMap.put(AnalyticsManager.KeyType.LIST_INDEX, Integer.toString(mAnalyticsParam.rankingPosition));
-        //            mPaymentParamMap.put(AnalyticsManager.KeyType.DAILYCHOICE, mAnalyticsParam.dailyChoice ? "y" : "n");
-        //            mPaymentParamMap.put(AnalyticsManager.KeyType.PROVINCE, mAnalyticsParam.getAnalyticsProvinceName());
-        //            mPaymentParamMap.put(AnalyticsManager.KeyType.DISTRICT, mAnalyticsParam.getAnalyticsDistrictName());
-        //            mPaymentParamMap.put(AnalyticsManager.KeyType.AREA, mAnalyticsParam.getAnalyticsAddressAreaName());
-        //
-        //            // 여기까지 onScreen과 다름.
-        //            mPaymentParamMap.put(AnalyticsManager.KeyType.PLACE_COUNT, Integer.toString(mAnalyticsParam.totalListCount));
-        //
-        //            if (usedBonus == true)
-        //            {
-        //                int paymentPrice = stayPayment.totalPrice - userSimpleInformation.bonus;
-        //                int discountPrice = paymentPrice < 0 ? stayPayment.totalPrice : userSimpleInformation.bonus;
-        //
-        //                mPaymentParamMap.put(AnalyticsManager.KeyType.USED_BOUNS, Integer.toString(discountPrice));
-        //                mPaymentParamMap.put(AnalyticsManager.KeyType.COUPON_REDEEM, "false");
-        //                mPaymentParamMap.put(AnalyticsManager.KeyType.COUPON_NAME, "");
-        //                mPaymentParamMap.put(AnalyticsManager.KeyType.COUPON_CODE, "");
-        //                mPaymentParamMap.put(AnalyticsManager.KeyType.PAYMENT_PRICE, Integer.toString(paymentPrice < 0 ? 0 : paymentPrice));
-        //            } else if (usedCoupon == true)
-        //            {
-        //                int paymentPrice = stayPayment.totalPrice - coupon.amount;
-        //
-        //                mPaymentParamMap.put(AnalyticsManager.KeyType.USED_BOUNS, "0");
-        //                mPaymentParamMap.put(AnalyticsManager.KeyType.COUPON_REDEEM, "true");
-        //                mPaymentParamMap.put(AnalyticsManager.KeyType.PAYMENT_PRICE, Integer.toString(paymentPrice < 0 ? 0 : paymentPrice));
-        //                mPaymentParamMap.put(AnalyticsManager.KeyType.COUPON_NAME, coupon.title);
-        //                mPaymentParamMap.put(AnalyticsManager.KeyType.COUPON_CODE, coupon.couponCode);
-        //                mPaymentParamMap.put(AnalyticsManager.KeyType.COUPON_AVAILABLE_ITEM, coupon.availableItem);
-        //                mPaymentParamMap.put(AnalyticsManager.KeyType.PRICE_OFF, Integer.toString(coupon.amount));
-        //
-        //                String expireDate = DailyCalendar.convertDateFormatString(coupon.validTo, DailyCalendar.ISO_8601_FORMAT, "yyyyMMddHHmm");
-        //                mPaymentParamMap.put(AnalyticsManager.KeyType.EXPIRATION_DATE, expireDate);
-        //            } else
-        //            {
-        //                mPaymentParamMap.put(AnalyticsManager.KeyType.USED_BOUNS, "0");
-        //                mPaymentParamMap.put(AnalyticsManager.KeyType.COUPON_REDEEM, "false");
-        //                mPaymentParamMap.put(AnalyticsManager.KeyType.COUPON_NAME, "");
-        //                mPaymentParamMap.put(AnalyticsManager.KeyType.COUPON_CODE, "");
-        //                mPaymentParamMap.put(AnalyticsManager.KeyType.PAYMENT_PRICE, Integer.toString(stayPayment.totalPrice));
-        //            }
-        //
-        //            mPaymentParamMap.put(AnalyticsManager.KeyType.PAYMENT_TYPE, getPaymentType(paymentType));
-        //
-        //            AnalyticsManager.getInstance(activity).recordScreen(activity, AnalyticsManager.Screen.DAILYHOTEL_PAYMENT_AGREEMENT_POPUP//
-        //                , null, mPaymentParamMap);
-        //        } catch (Exception e)
-        //        {
-        //            ExLog.e(e.toString());
-        //        }
+        if (activity == null || mAnalyticsParam == null)
+        {
+            return;
+        }
+
+        try
+        {
+            mPaymentParamMap = new HashMap<>();
+
+            mPaymentParamMap.put(AnalyticsManager.KeyType.NAME, gourmetName);
+            mPaymentParamMap.put(AnalyticsManager.KeyType.PRICE, Integer.toString(gourmetPayment.totalPrice));
+            mPaymentParamMap.put(AnalyticsManager.KeyType.QUANTITY, Integer.toString(menuCount));
+            mPaymentParamMap.put(AnalyticsManager.KeyType.TOTAL_PRICE, Integer.toString(gourmetPayment.totalPrice * menuCount));
+            mPaymentParamMap.put(AnalyticsManager.KeyType.PLACE_INDEX, Integer.toString(gourmetIndex));
+            mPaymentParamMap.put(AnalyticsManager.KeyType.TICKET_NAME, menuName);
+            mPaymentParamMap.put(AnalyticsManager.KeyType.TICKET_INDEX, Integer.toString(menuIndex));
+            mPaymentParamMap.put(AnalyticsManager.KeyType.DATE, DailyCalendar.convertDateFormatString(visitDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyy-MM-dd"));
+            mPaymentParamMap.put(AnalyticsManager.KeyType.CATEGORY, category);
+            mPaymentParamMap.put(AnalyticsManager.KeyType.DBENEFIT, mAnalyticsParam.benefit ? "yes" : "no");
+            mPaymentParamMap.put(AnalyticsManager.KeyType.PAYMENT_TYPE, getPaymentType(paymentType));
+            mPaymentParamMap.put(AnalyticsManager.KeyType.RESERVATION_TIME, DailyCalendar.convertDateFormatString(visitDateTime, DailyCalendar.ISO_8601_FORMAT, "HH:mm"));
+            mPaymentParamMap.put(AnalyticsManager.KeyType.VISIT_HOUR, DailyCalendar.convertDateFormatString(visitDateTime, DailyCalendar.ISO_8601_FORMAT, "HH:mm"));
+            mPaymentParamMap.put(AnalyticsManager.KeyType.REGISTERED_SIMPLE_CARD, registerEasyCard ? "y" : "n");
+            mPaymentParamMap.put(AnalyticsManager.KeyType.RATING, Integer.toString(mAnalyticsParam.ratingValue));
+            mPaymentParamMap.put(AnalyticsManager.KeyType.IS_SHOW_ORIGINAL_PRICE, mAnalyticsParam.showOriginalPrice);
+            mPaymentParamMap.put(AnalyticsManager.KeyType.LIST_INDEX, Integer.toString(mAnalyticsParam.rankingPosition));
+            mPaymentParamMap.put(AnalyticsManager.KeyType.DAILYCHOICE, mAnalyticsParam.dailyChoice ? "y" : "n");
+            mPaymentParamMap.put(AnalyticsManager.KeyType.PLACE_COUNT, Integer.toString(menuCount));
+            mPaymentParamMap.put(AnalyticsManager.KeyType.PROVINCE, mAnalyticsParam.getAnalyticsProvinceName());
+            mPaymentParamMap.put(AnalyticsManager.KeyType.DISTRICT, mAnalyticsParam.getAnalyticsDistrictName());
+            mPaymentParamMap.put(AnalyticsManager.KeyType.AREA, mAnalyticsParam.getAnalyticsAddressAreaName());
+
+            if(usedBonus == true)
+            {
+
+            } else if(usedCoupon == true)
+            {
+                int paymentPrice = gourmetPayment.totalPrice - coupon.amount;
+
+                mPaymentParamMap.put(AnalyticsManager.KeyType.USED_BOUNS, "0");
+                mPaymentParamMap.put(AnalyticsManager.KeyType.COUPON_REDEEM, "true");
+                mPaymentParamMap.put(AnalyticsManager.KeyType.PAYMENT_PRICE, Integer.toString(paymentPrice < 0 ? 0 : paymentPrice));
+                mPaymentParamMap.put(AnalyticsManager.KeyType.COUPON_NAME, coupon.title);
+                mPaymentParamMap.put(AnalyticsManager.KeyType.COUPON_CODE, coupon.couponCode);
+                mPaymentParamMap.put(AnalyticsManager.KeyType.COUPON_AVAILABLE_ITEM, coupon.availableItem);
+                mPaymentParamMap.put(AnalyticsManager.KeyType.PRICE_OFF, Integer.toString(coupon.amount));
+
+                String expireDate = DailyCalendar.convertDateFormatString(coupon.validTo, DailyCalendar.ISO_8601_FORMAT, "yyyyMMddHHmm");
+                mPaymentParamMap.put(AnalyticsManager.KeyType.EXPIRATION_DATE, expireDate);
+            } else
+            {
+                mPaymentParamMap.put(AnalyticsManager.KeyType.USED_BOUNS, "0");
+                mPaymentParamMap.put(AnalyticsManager.KeyType.COUPON_REDEEM, "false");
+                mPaymentParamMap.put(AnalyticsManager.KeyType.COUPON_NAME, "");
+                mPaymentParamMap.put(AnalyticsManager.KeyType.COUPON_CODE, "");
+                mPaymentParamMap.put(AnalyticsManager.KeyType.PAYMENT_PRICE, Integer.toString(gourmetPayment.totalPrice));
+            }
+
+            mPaymentParamMap.put(AnalyticsManager.KeyType.VISIT_DATE, DailyCalendar.convertDateFormatString(visitDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyyMMdd"));
+
+            AnalyticsManager.getInstance(activity).recordScreen(activity, AnalyticsManager.Screen.DAILYGOURMET_PAYMENT_AGREEMENT_POPUP//
+                , null, mPaymentParamMap);
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+        }
     }
 
     @Override
