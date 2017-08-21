@@ -72,7 +72,7 @@ public class GourmetCampaignTagListPresenter //
     private GourmetBookingDay mGourmetBookingDay;
     private CommonDateTime mCommonDateTime;
     private GourmetCampaignTags mGourmetCampaignTags;
-//    private boolean mIsFirstUiUpdateCheck;
+    //    private boolean mIsFirstUiUpdateCheck;
 
     private CommonRemoteImpl mCommonRemoteImpl;
     private CampaignTagRemoteImpl mCampaignTagRemoteImpl;
@@ -362,9 +362,11 @@ public class GourmetCampaignTagListPresenter //
 
                 try
                 {
+                    int size = mGourmetCampaignTags.getGourmetList() == null ? 0 : mGourmetCampaignTags.getGourmetList().size();
+
                     mAnalytics.onCampaignTagEvent(getActivity() //
                         , mGourmetCampaignTags.getCampaignTag() //
-                        , mGourmetCampaignTags.getGourmetList().size());
+                        , size);
                 } catch (Exception e)
                 {
                     ExLog.w(e.toString());
@@ -391,7 +393,7 @@ public class GourmetCampaignTagListPresenter //
         {
             setData(null, gourmetBookingDay);
             showFinishedCampaignTagDialog();
-//            mIsFirstUiUpdateCheck = true;
+            //            mIsFirstUiUpdateCheck = true;
             return;
         }
 
@@ -403,7 +405,7 @@ public class GourmetCampaignTagListPresenter //
             {
                 setData(null, gourmetBookingDay);
                 showReCheckConnectionDialog();
-//                mIsFirstUiUpdateCheck = true;
+                //                mIsFirstUiUpdateCheck = true;
                 return;
             }
         }
@@ -414,7 +416,7 @@ public class GourmetCampaignTagListPresenter //
         {
             setData(null, gourmetBookingDay);
             showFinishedCampaignTagDialog();
-//            mIsFirstUiUpdateCheck = true;
+            //            mIsFirstUiUpdateCheck = true;
             return;
         }
 
@@ -422,13 +424,13 @@ public class GourmetCampaignTagListPresenter //
         if (msgCode == -101)
         {
             setData(placeViewItemList, gourmetBookingDay);
-//
-//            if (mIsFirstUiUpdateCheck == false)
-//            {
-//                showFirstEmptyListPopup();
-//            }
-//
-//            mIsFirstUiUpdateCheck = true;
+            //
+            //            if (mIsFirstUiUpdateCheck == false)
+            //            {
+            //                showFirstEmptyListPopup();
+            //            }
+            //
+            //            mIsFirstUiUpdateCheck = true;
             return;
         }
 
@@ -457,15 +459,15 @@ public class GourmetCampaignTagListPresenter //
             // 일반적인 상황
             setData(placeViewItemList, gourmetBookingDay);
 
-//            ArrayList<Gourmet> list = gourmetCampaignTags.getGourmetList();
-//            if ((list == null || list.size() == 0) && mIsFirstUiUpdateCheck == false)
-//            {
-//                // 처음 진입이고 일반적인 상황에서 리스트가 비었을때
-//                showFirstEmptyListPopup();
-//            }
+            //            ArrayList<Gourmet> list = gourmetCampaignTags.getGourmetList();
+            //            if ((list == null || list.size() == 0) && mIsFirstUiUpdateCheck == false)
+            //            {
+            //                // 처음 진입이고 일반적인 상황에서 리스트가 비었을때
+            //                showFirstEmptyListPopup();
+            //            }
         }
 
-//        mIsFirstUiUpdateCheck = true;
+        //        mIsFirstUiUpdateCheck = true;
     }
 
     private void showFinishedCampaignTagDialog()
@@ -500,21 +502,21 @@ public class GourmetCampaignTagListPresenter //
             });
     }
 
-//    private void showFirstEmptyListPopup()
-//    {
-//        getViewInterface().showSimpleDialog(null //
-//            , getString(R.string.message_campaign_empty_popup_message)//
-//            , getString(R.string.dialog_btn_text_yes)//
-//            , getString(R.string.dialog_btn_text_no)//
-//            , new View.OnClickListener()
-//            {
-//                @Override
-//                public void onClick(View v)
-//                {
-//                    onCalendarClick();
-//                }
-//            }, null);
-//    }
+    //    private void showFirstEmptyListPopup()
+    //    {
+    //        getViewInterface().showSimpleDialog(null //
+    //            , getString(R.string.message_campaign_empty_popup_message)//
+    //            , getString(R.string.dialog_btn_text_yes)//
+    //            , getString(R.string.dialog_btn_text_no)//
+    //            , new View.OnClickListener()
+    //            {
+    //                @Override
+    //                public void onClick(View v)
+    //                {
+    //                    onCalendarClick();
+    //                }
+    //            }, null);
+    //    }
 
     public void setTitleText(String title)
     {
