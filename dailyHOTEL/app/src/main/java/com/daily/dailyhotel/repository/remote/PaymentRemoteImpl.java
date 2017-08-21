@@ -9,6 +9,7 @@ import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.domain.PaymentInterface;
 import com.daily.dailyhotel.entity.Card;
 import com.daily.dailyhotel.entity.DomesticGuest;
+import com.daily.dailyhotel.entity.GourmetPayment;
 import com.daily.dailyhotel.entity.OverseasGuest;
 import com.daily.dailyhotel.entity.PaymentResult;
 import com.daily.dailyhotel.entity.People;
@@ -121,6 +122,31 @@ public class PaymentRemoteImpl implements PaymentInterface
             }
 
             return stayPayment;
+        }).observeOn(AndroidSchedulers.mainThread());
+    }
+
+    @Override
+    public Observable<GourmetPayment> getGourmetPayment(int menuIndex)
+    {
+        return DailyMobileAPI.getInstance(mContext).getGourmetPayment(menuIndex).map(gourmetPaymentDataBaseDto ->
+        {
+            GourmetPayment gourmetPayment = null;
+
+            if (gourmetPaymentDataBaseDto != null)
+            {
+                if (gourmetPaymentDataBaseDto.msgCode == 0 && gourmetPaymentDataBaseDto.data != null)
+                {
+                    gourmetPayment = gourmetPaymentDataBaseDto.data.getGourmetPayment();
+                } else
+                {
+                    throw new BaseException(gourmetPaymentDataBaseDto.msgCode, gourmetPaymentDataBaseDto.msg);
+                }
+            } else
+            {
+                throw new BaseException(-1, null);
+            }
+
+            return gourmetPayment;
         }).observeOn(AndroidSchedulers.mainThread());
     }
 
@@ -328,7 +354,7 @@ public class PaymentRemoteImpl implements PaymentInterface
             jsonObject = null;
         }
 
-        return DailyMobileAPI.getInstance(mContext).getPaymentTypeEasy(jsonObject).map(paymentResultDataBaseDto ->
+        return DailyMobileAPI.getInstance(mContext).getStayPaymentTypeEasy(jsonObject).map(paymentResultDataBaseDto ->
         {
             PaymentResult paymentResult = null;
 
@@ -396,7 +422,7 @@ public class PaymentRemoteImpl implements PaymentInterface
             jsonObject = null;
         }
 
-        return DailyMobileAPI.getInstance(mContext).getPaymentTypeBonus(jsonObject).map(paymentResultDataBaseDto ->
+        return DailyMobileAPI.getInstance(mContext).getStayPaymentTypeBonus(jsonObject).map(paymentResultDataBaseDto ->
         {
             PaymentResult paymentResult = null;
 
@@ -447,6 +473,158 @@ public class PaymentRemoteImpl implements PaymentInterface
         }).observeOn(AndroidSchedulers.mainThread());
     }
 
+    /**
+     *
+     * @param arrivalDateTime ISO-8601  "yyyy-MM-dd'T'HH:mm:ssZZZZZ"
+     * @param menuIndex
+     * @param menuCount
+     * @param usedBonus
+     * @param bonus
+     * @param usedCoupon
+     * @param couponCode
+     * @param guest
+     * @param totalPrice
+     * @param billingKey
+     * @return
+     */
+    @Override
+    public Observable<PaymentResult> getGourmetPaymentTypeEasy(String arrivalDateTime, int menuIndex//
+        , int menuCount, boolean usedBonus, int bonus, boolean usedCoupon, String couponCode, DomesticGuest guest//
+        , int totalPrice, String billingKey)
+    {
+        JSONObject jsonObject = new JSONObject();
+
+        try
+        {
+            jsonObject.put("billingKey", billingKey);
+
+            if (usedBonus == true)
+            {
+                jsonObject.put("bonusAmount", bonus > totalPrice ? totalPrice : bonus);
+            } else
+            {
+                jsonObject.put("bonusAmount", 0);
+            }
+
+            if (usedCoupon == true)
+            {
+                jsonObject.put("couponCode", couponCode);
+            }
+
+            jsonObject.put("saleRecoIdx", menuIndex);
+            jsonObject.put("ticketCount", menuCount);
+
+            JSONObject bookingGuestJSONObject = new JSONObject();
+            bookingGuestJSONObject.put("arrivalDateTime", arrivalDateTime);
+
+            bookingGuestJSONObject.put("email", guest.email);
+            bookingGuestJSONObject.put("name", guest.name);
+            bookingGuestJSONObject.put("phone", guest.phone);
+
+            jsonObject.put("bookingGuest", bookingGuestJSONObject);
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+
+            jsonObject = null;
+        }
+
+        return DailyMobileAPI.getInstance(mContext).getGourmetPaymentTypeEasy(jsonObject).map(paymentResultDataBaseDto ->
+        {
+            PaymentResult paymentResult = null;
+
+            if (paymentResultDataBaseDto != null)
+            {
+                if (paymentResultDataBaseDto.msgCode == 100 && paymentResultDataBaseDto.data != null)
+                {
+                    paymentResult = paymentResultDataBaseDto.data.getPaymentTypeEasy();
+                } else
+                {
+                    throw new BaseException(paymentResultDataBaseDto.msgCode, paymentResultDataBaseDto.msg);
+                }
+            } else
+            {
+                throw new BaseException(-1, null);
+            }
+
+            return paymentResult;
+        }).observeOn(AndroidSchedulers.mainThread());
+    }
+
+    /**
+     *
+     * @param arrivalDateTime ISO-8601  "yyyy-MM-dd'T'HH:mm:ssZZZZZ"
+     * @param menuIndex
+     * @param menuCount
+     * @param usedBonus
+     * @param bonus
+     * @param usedCoupon
+     * @param couponCode
+     * @param guest
+     * @param totalPrice
+     * @return
+     */
+    @Override
+    public Observable<PaymentResult> getGourmetPaymentTypeBonus(String arrivalDateTime, int menuIndex//
+        , int menuCount, boolean usedBonus, int bonus, boolean usedCoupon, String couponCode//
+        , DomesticGuest guest, int totalPrice)
+    {
+        JSONObject jsonObject = new JSONObject();
+
+        try
+        {
+            if (usedBonus == true)
+            {
+                jsonObject.put("bonusAmount", bonus > totalPrice ? totalPrice : bonus);
+            } else
+            {
+                jsonObject.put("bonusAmount", 0);
+            }
+
+            if (usedCoupon == true)
+            {
+                jsonObject.put("couponCode", couponCode);
+            }
+
+            jsonObject.put("saleRecoIdx", menuIndex);
+            jsonObject.put("ticketCount", menuCount);
+
+            JSONObject bookingGuestJSONObject = new JSONObject();
+            bookingGuestJSONObject.put("arrivalDateTime", arrivalDateTime);
+
+            bookingGuestJSONObject.put("email", guest.email);
+            bookingGuestJSONObject.put("name", guest.name);
+            bookingGuestJSONObject.put("phone", guest.phone);
+
+            jsonObject.put("bookingGuest", bookingGuestJSONObject);
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+
+            jsonObject = null;
+        }
+
+        return DailyMobileAPI.getInstance(mContext).getGourmetPaymentTypeBonus(jsonObject).map(paymentResultDataBaseDto ->
+        {
+            PaymentResult paymentResult = null;
+
+            if (paymentResultDataBaseDto != null)
+            {
+                if (paymentResultDataBaseDto.msgCode == 100 && paymentResultDataBaseDto.data != null)
+                {
+                    paymentResult = paymentResultDataBaseDto.data.getPaymentTypeEasy();
+                } else
+                {
+                    throw new BaseException(paymentResultDataBaseDto.msgCode, paymentResultDataBaseDto.msg);
+                }
+            } else
+            {
+                throw new BaseException(-1, null);
+            }
+
+            return paymentResult;
+        }).observeOn(AndroidSchedulers.mainThread());
+    }
 
     private JSONArray getRooms(People[] peoples, int[] roomBedTypeIds)
     {

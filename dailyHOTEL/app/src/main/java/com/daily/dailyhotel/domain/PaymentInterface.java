@@ -2,6 +2,7 @@ package com.daily.dailyhotel.domain;
 
 import com.daily.dailyhotel.entity.Card;
 import com.daily.dailyhotel.entity.DomesticGuest;
+import com.daily.dailyhotel.entity.GourmetPayment;
 import com.daily.dailyhotel.entity.OverseasGuest;
 import com.daily.dailyhotel.entity.PaymentResult;
 import com.daily.dailyhotel.entity.People;
@@ -22,6 +23,8 @@ public interface PaymentInterface
 
     Observable<StayPayment> getStayPayment(StayBookDateTime stayBookDateTime, int roomIndex);
 
+    Observable<GourmetPayment> getGourmetPayment(int menuIndex);
+
     // 간편 결제 카드 리스트를 얻어온다.
     Observable<List<Card>> getEasyCardList();
 
@@ -34,10 +37,20 @@ public interface PaymentInterface
         , boolean usedBonus, int bonus, OverseasGuest guest, int totalPrice);
 
     Observable<PaymentResult> getStayPaymentTypeEasy(StayBookDateTime stayBookDateTime, int roomIndex//
-        , boolean usedBonus, int bonus, boolean usedCoupon, String couponCode, DomesticGuest guest, int totalPrice, String transportation, String billingKey);
+        , boolean usedBonus, int bonus, boolean usedCoupon, String couponCode, DomesticGuest guest//
+        , int totalPrice, String transportation, String billingKey);
 
     Observable<PaymentResult> getStayPaymentTypeBonus(StayBookDateTime stayBookDateTime, int roomIndex//
-        , boolean usedBonus, int bonus, boolean usedCoupon, String couponCode, DomesticGuest guest, int totalPrice, String transportation);
+        , boolean usedBonus, int bonus, boolean usedCoupon, String couponCode, DomesticGuest guest//
+        , int totalPrice, String transportation);
 
     Observable<StayRefundPolicy> getStayRefundPolicy(StayBookDateTime stayBookDateTime, int stayIndex, int roomIndex);
+
+    Observable<PaymentResult> getGourmetPaymentTypeEasy(String arrivalDateTime, int menuIndex//
+        , int menuCount, boolean usedBonus, int bonus, boolean usedCoupon, String couponCode, DomesticGuest guest//
+        , int totalPrice, String billingKey);
+
+    Observable<PaymentResult> getGourmetPaymentTypeBonus(String arrivalDateTime, int menuIndex//
+        , int menuCount, boolean usedBonus, int bonus, boolean usedCoupon, String couponCode//
+        , DomesticGuest guest, int totalPrice);
 }

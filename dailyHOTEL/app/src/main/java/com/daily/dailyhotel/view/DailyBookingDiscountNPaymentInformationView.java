@@ -263,20 +263,20 @@ public class DailyBookingDiscountNPaymentInformationView extends ConstraintLayou
     }
 
     /**
-     * @param nights 1박 이상인 경우 표시
+     * @param description
      * @param price
      */
-    public void setReservationPrice(int nights, int price)
+    public void setReservationPrice(String description, int price)
     {
         if (mViewDataBinding == null)
         {
             return;
         }
 
-        if (nights > 1)
+        if (DailyTextUtils.isTextEmpty(description) == false)
         {
             mViewDataBinding.nightsTextView.setVisibility(VISIBLE);
-            mViewDataBinding.nightsTextView.setText(getContext().getString(R.string.label_booking_hotel_nights, nights));
+            mViewDataBinding.nightsTextView.setText(description);
         } else
         {
             mViewDataBinding.nightsTextView.setVisibility(GONE);

@@ -193,7 +193,7 @@ public class StayOutboundPaymentView extends BaseDialogView<StayOutboundPaymentV
             discountPrice = 0;
         }
 
-        getViewDataBinding().informationView.setReservationPrice(nights, totalPrice);
+        getViewDataBinding().informationView.setReservationPrice(nights > 1 ? getString(R.string.label_booking_hotel_nights, nights) : null, totalPrice);
         getViewDataBinding().informationView.setDiscountPrice(discountPrice);
 
         int paymentPrice = totalPrice - discountPrice;

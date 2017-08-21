@@ -391,15 +391,10 @@ public class StayPaymentAnalyticsImpl implements StayPaymentPresenter.StayPaymen
     }
 
     @Override
-    public StayThankYouAnalyticsParam getThankYouAnalyticsParam(DailyBookingPaymentTypeView.PaymentType paymentType//
-        , boolean fullBonus, boolean usedBonus, boolean registerEasyCard)
+    public StayThankYouAnalyticsParam getThankYouAnalyticsParam()
     {
         StayThankYouAnalyticsParam analyticsParam = new StayThankYouAnalyticsParam();
-
-        //        analyticsParam.paymentType = paymentType;
-        //        analyticsParam.fullBonus = fullBonus;
-        //        analyticsParam.usedBonus = usedBonus;
-        //        analyticsParam.registerEasyCard = registerEasyCard;
+        analyticsParam.params = mPaymentParamMap;
 
         return analyticsParam;
     }

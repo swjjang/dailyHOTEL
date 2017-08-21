@@ -10,6 +10,7 @@ import com.daily.dailyhotel.repository.remote.model.CardData;
 import com.daily.dailyhotel.repository.remote.model.CommonDateTimeData;
 import com.daily.dailyhotel.repository.remote.model.GourmetCampaignTagsData;
 import com.daily.dailyhotel.repository.remote.model.GourmetListData;
+import com.daily.dailyhotel.repository.remote.model.GourmetPaymentData;
 import com.daily.dailyhotel.repository.remote.model.PaymentResultData;
 import com.daily.dailyhotel.repository.remote.model.StayCampaignTagsData;
 import com.daily.dailyhotel.repository.remote.model.StayListData;
@@ -1327,6 +1328,14 @@ public class DailyMobileAPI
         return mDailyMobileService.getStayPayment(Crypto.getUrlDecoderEx(API), roomIndex, date, nights).subscribeOn(Schedulers.io());
     }
 
+    public Observable<BaseDto<GourmetPaymentData>> getGourmetPayment(int menuIndex)
+    {
+        final String API = Constants.UNENCRYPTED_URL ? "api/fnb/sale/ticket/payment/info"//
+            : "MzkkOTYkOTIkMTI5JDEwOSQzNyQxMjgkMTA3JDQ3JDY0JDMxJDEzMyQxNiQwJDk0JDEzOCQ=$KMzM4MzgyRkFFOTFBINUZCRkQxRjA5MjIEyRkFEOODYDwMkMwMKjk1RjkxRjNDMDM1MJTc1QjZCMjJCREFEQzk3NDdGMkUCzMDgVzNDZEGRkE1QThWDNkQM1MzNBRjEyMjQwQUUYH1DNkIQw$";
+
+        return mDailyMobileService.getGourmetPayment(Crypto.getUrlDecoderEx(API), menuIndex).subscribeOn(Schedulers.io());
+    }
+
     public Observable<BaseListDto<CardData>> getEasyCardList()
     {
         final String API = Constants.UNENCRYPTED_URL ? "api/user/session/billing/card/info"//
@@ -1349,10 +1358,18 @@ public class DailyMobileAPI
             , jsonObject).subscribeOn(Schedulers.io());
     }
 
-    public Observable<BaseDto<PaymentResultData>> getPaymentTypeEasy(JSONObject jsonObject)
+    public Observable<BaseDto<PaymentResultData>> getStayPaymentTypeEasy(JSONObject jsonObject)
     {
         final String API = Constants.UNENCRYPTED_URL ? "api/v4/booking/hotel/oneclick"//
             : "NDQkNzMkNDUkNjAkMzEkMzkkNyQxNSQ0OSQ4OSQxJDM0JDIyJDM2JDc5JDgxJA==$OADFGREUJ1NkUwMjXExMTYZyQjk0MzMzQTgXPO1Q0ZDNTBBGM0VBZQSM0RDRUQwMDAwNDWk0QUEzNUIO2JRjQ1YMjM3M0VEXQ0I3RA==$";
+
+        return mDailyMobileService.getPaymentTypeEasy(Crypto.getUrlDecoderEx(API), jsonObject).subscribeOn(Schedulers.io());
+    }
+
+    public Observable<BaseDto<PaymentResultData>> getGourmetPaymentTypeEasy(JSONObject jsonObject)
+    {
+        final String API = Constants.UNENCRYPTED_URL ? "api/v4/booking/gourmet/oneclick"//
+            : "MjMkODIkMzYkMTkkODkkODckMTMkNTQkMzYkMTckNTckNSQ3MiQ0OSQ3NyQzNSQ=$NzUxOUURCRjAzMIjdBKRDQQ0ODYB0NzZEODDhBMW0MX3MDYxMzCAzMEUwNDQQY5QzRBQTY0QTURyQzEVGQUMwM0NENzM2MY0IXzNMw==$";
 
         return mDailyMobileService.getPaymentTypeEasy(Crypto.getUrlDecoderEx(API), jsonObject).subscribeOn(Schedulers.io());
     }
@@ -1371,10 +1388,18 @@ public class DailyMobileAPI
             , jsonObject).subscribeOn(Schedulers.io());
     }
 
-    public Observable<BaseDto<PaymentResultData>> getPaymentTypeBonus(JSONObject jsonObject)
+    public Observable<BaseDto<PaymentResultData>> getStayPaymentTypeBonus(JSONObject jsonObject)
     {
         final String API = Constants.UNENCRYPTED_URL ? "api/v4/booking/hotel/daily/only"//
             : "MzgkNDUkMyQyOSQ2MiQyNCQxNiQ0OSQ0OSQxNCQxMSQ3NyQ2MSQyMCQ0MSQxMyQ=$RTAU0NEFCRjFRQDQQzgAzIOTE0NjAJxMDAxSMEU3NTRU4RUIM0RkE0KXDNjRDMThEEOTQxNzPdBN0VGRkJVCNTgyMzMyN0ZGQzYzOA==$";
+
+        return mDailyMobileService.getPaymentTypeBonus(Crypto.getUrlDecoderEx(API), jsonObject).subscribeOn(Schedulers.io());
+    }
+
+    public Observable<BaseDto<PaymentResultData>> getGourmetPaymentTypeBonus(JSONObject jsonObject)
+    {
+        final String API = Constants.UNENCRYPTED_URL ? "api/v4/booking/gourmet/daily/only"//
+            : "MTI0JDMkNDMkODUkNDMkNjYkMzQkOTAkNjIkMTIkMTckOTgkOTckMTIzJDE0MSQzNyQ=$Q0IY4NjM0OEMBwMTITxRjlCMzM4NzA3QTJBONNUIxRUFEQTFFQzN0I1NUEwRDhGRTIM1ODET2NURENzIwQjhDMDdCM0UJ3ZQTMX1OMzNENUIxOEMxQTU3MUU4RERIBMkQyMDA3MkM4BNEQZ1$";
 
         return mDailyMobileService.getPaymentTypeBonus(Crypto.getUrlDecoderEx(API), jsonObject).subscribeOn(Schedulers.io());
     }

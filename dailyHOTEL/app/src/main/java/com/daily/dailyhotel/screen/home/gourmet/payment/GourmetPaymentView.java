@@ -1,9 +1,8 @@
-package com.daily.dailyhotel.screen.home.stay.inbound.payment;
+package com.daily.dailyhotel.screen.home.gourmet.payment;
 
 import android.content.DialogInterface;
 import android.support.v4.view.MotionEventCompat;
 import android.text.Spannable;
-import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
@@ -21,35 +20,39 @@ import com.daily.base.BaseActivity;
 import com.daily.base.BaseDialogView;
 import com.daily.base.OnBaseEventListener;
 import com.daily.base.util.DailyTextUtils;
+import com.daily.base.util.ExLog;
+import com.daily.base.util.FontManager;
 import com.daily.base.util.ScreenUtils;
 import com.daily.base.widget.DailyScrollView;
 import com.daily.dailyhotel.entity.Card;
-import com.daily.dailyhotel.entity.StayPayment;
 import com.daily.dailyhotel.view.DailyBookingAgreementThirdPartyView;
 import com.daily.dailyhotel.view.DailyBookingGuestInformationsView;
 import com.daily.dailyhotel.view.DailyBookingPaymentTypeView;
 import com.daily.dailyhotel.view.DailyToolbarView;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.databinding.ActivityStayPaymentDataBinding;
+import com.twoheart.dailyhotel.databinding.ActivityGourmetPaymentDataBinding;
 import com.twoheart.dailyhotel.screen.common.FinalCheckLayout;
+import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.DailySignatureView;
 
-import java.util.ArrayList;
+import net.simonvt.numberpicker.NumberPicker;
+
 import java.util.List;
 
-import static com.daily.dailyhotel.screen.home.stay.inbound.payment.StayPaymentPresenter.CAR;
-import static com.daily.dailyhotel.screen.home.stay.inbound.payment.StayPaymentPresenter.WALKING;
-
-public class StayPaymentView extends BaseDialogView<StayPaymentView.OnEventListener, ActivityStayPaymentDataBinding>//
-    implements StayPaymentInterface, View.OnClickListener
+public class GourmetPaymentView extends BaseDialogView<GourmetPaymentView.OnEventListener, ActivityGourmetPaymentDataBinding>//
+    implements GourmetPaymentInterface, View.OnClickListener
 {
     public interface OnEventListener extends OnBaseEventListener
     {
         void onCallClick();
 
-        void onTransportationClick(@StayPaymentPresenter.Transportation String transportation);
+        void onVisitTimeClick();
+
+        void onMenuCountPlusClick();
+
+        void onMenuCountMinusClick();
 
         void onBonusClick(boolean selected);
 
@@ -70,13 +73,13 @@ public class StayPaymentView extends BaseDialogView<StayPaymentView.OnEventListe
         void onAgreedThirdPartyTermsClick(boolean checked);
     }
 
-    public StayPaymentView(BaseActivity baseActivity, StayPaymentView.OnEventListener listener)
+    public GourmetPaymentView(BaseActivity baseActivity, GourmetPaymentView.OnEventListener listener)
     {
         super(baseActivity, listener);
     }
 
     @Override
-    protected void setContentView(final ActivityStayPaymentDataBinding viewDataBinding)
+    protected void setContentView(final ActivityGourmetPaymentDataBinding viewDataBinding)
     {
         if (viewDataBinding == null)
         {
@@ -106,22 +109,23 @@ public class StayPaymentView extends BaseDialogView<StayPaymentView.OnEventListe
     }
 
     @Override
-    public void setBooking(SpannableString checkInDate, SpannableString checkOutDate, int nights, String stayName, String roomName)
+    public void setBooking(String visitDate, String gourmetName, String menuName)
     {
         if (getViewDataBinding() == null)
         {
             return;
         }
 
-        getViewDataBinding().dateInformationView.setDate1Text(getString(R.string.act_booking_chkin), checkInDate);
-        getViewDataBinding().dateInformationView.setDate2Text(getString(R.string.act_booking_chkout), checkOutDate);
-        getViewDataBinding().dateInformationView.setCenterNightsVisible(true);
-        getViewDataBinding().dateInformationView.setCenterNightsText(getString(R.string.label_nights, nights));
+        getViewDataBinding().dateInformationView.setDate1Text(getString(R.string.label_visit_day), visitDate);
+        getViewDataBinding().dateInformationView.setDate2DescriptionTextColor(getColor(R.color.default_text_cb70038));
+        getViewDataBinding().dateInformationView.setDate2DescriptionTextDrawable(0, 0, R.drawable.navibar_m_burg_ic_v, 0);
 
-        getViewDataBinding().roomInformationView.setTitle(R.string.label_booking_room_info);
-        getViewDataBinding().roomInformationView.removeAllInformation();
-        getViewDataBinding().roomInformationView.addInformation(getString(R.string.label_booking_place_name), stayName);
-        getViewDataBinding().roomInformationView.addInformation(getString(R.string.label_booking_room_type), roomName);
+        getViewDataBinding().dateInformationView.setCenterNightsVisible(false);
+
+        getViewDataBinding().menuInformationView.setTitle(R.string.label_booking_ticket_info);
+        getViewDataBinding().menuInformationView.removeAllInformation();
+        getViewDataBinding().menuInformationView.addInformation(getString(R.string.label_booking_place_name), gourmetName);
+        getViewDataBinding().menuInformationView.addInformation(getString(R.string.label_booking_ticket_type), menuName);
 
         getViewDataBinding().guestCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener()
         {
@@ -131,6 +135,34 @@ public class StayPaymentView extends BaseDialogView<StayPaymentView.OnEventListe
                 getEventListener().onChangedGuestClick(isChecked);
             }
         });
+    }
+
+    @Override
+    public void setVisitTime(String time)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        if (time == null)
+        {
+            getViewDataBinding().dateInformationView.setDate2Text(getString(R.string.label_booking_select_ticket_time), getString(R.string.message_booking_selected_time));
+        } else
+        {
+            getViewDataBinding().dateInformationView.setDate2Text(getString(R.string.label_booking_select_ticket_time), time);
+        }
+    }
+
+    @Override
+    public void setMenuCount(int menuCount)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        getViewDataBinding().menuCountTextView.setText(getString(R.string.label_booking_count, menuCount));
     }
 
     public void setOverseas(boolean overseas)
@@ -157,6 +189,28 @@ public class StayPaymentView extends BaseDialogView<StayPaymentView.OnEventListe
             getViewDataBinding().guestInformationView.setGuideTextVisible(false);
             getViewDataBinding().guestInformationView.setVisibility(View.GONE);
         }
+    }
+
+    @Override
+    public void setMenuMinusEnabled(boolean enabled)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        getViewDataBinding().menuCountMinus.setEnabled(enabled);
+    }
+
+    @Override
+    public void setMenuPlusEnabled(boolean enabled)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        getViewDataBinding().menuCountPlus.setEnabled(enabled);
     }
 
     @Override
@@ -240,14 +294,16 @@ public class StayPaymentView extends BaseDialogView<StayPaymentView.OnEventListe
     }
 
     @Override
-    public void setStayPayment(int nights, int totalPrice, int discountPrice)
+    public void setGourmetPayment(int menuCount, int totalPrice, int discountPrice)
     {
-        if (getViewDataBinding() == null || nights == 0)
+        if (getViewDataBinding() == null)
         {
             return;
         }
 
-        getViewDataBinding().informationView.setReservationPrice(nights > 1 ? getString(R.string.label_booking_hotel_nights, nights) : null, totalPrice);
+        getViewDataBinding().informationView.setReservationPrice(menuCount > 1 ? getString(R.string.label_booking_gourmet_count, menuCount) : null//
+            , totalPrice);
+
         getViewDataBinding().informationView.setDiscountPrice(discountPrice);
 
         int paymentPrice = totalPrice - discountPrice;
@@ -270,28 +326,6 @@ public class StayPaymentView extends BaseDialogView<StayPaymentView.OnEventListe
         {
             getViewDataBinding().paymentTypeView.setEasyCard(card.name, card.number);
         }
-    }
-
-    @Override
-    public void setRefundPolicy(String refundPolicy)
-    {
-        if (getViewDataBinding() == null)
-        {
-            return;
-        }
-
-        List<String> refundPolicyList;
-
-        if (DailyTextUtils.isTextEmpty(refundPolicy) == false)
-        {
-            refundPolicyList = new ArrayList<>();
-            refundPolicyList.add(refundPolicy);
-        } else
-        {
-            refundPolicyList = null;
-        }
-
-        getViewDataBinding().refundPolicyView.setRefundPolicyList(refundPolicyList);
     }
 
     @Override
@@ -369,71 +403,6 @@ public class StayPaymentView extends BaseDialogView<StayPaymentView.OnEventListe
     }
 
     @Override
-    public void setTransportation(String type)
-    {
-        if (getViewDataBinding() == null)
-        {
-            return;
-        }
-
-        switch (type)
-        {
-            case StayPayment.VISIT_TYPE_PARKING:
-                getViewDataBinding().transportationLayout.setVisibility(View.VISIBLE);
-
-                getViewDataBinding().howToVisitTextView.setText(R.string.label_how_to_visit);
-                getViewDataBinding().visitCarView.setVisibility(View.VISIBLE);
-                getViewDataBinding().visitWalkView.setVisibility(View.VISIBLE);
-                getViewDataBinding().noParkingView.setVisibility(View.GONE);
-                getViewDataBinding().guideTransportationTextView.setText(R.string.message_visit_car_memo);
-                break;
-
-            case StayPayment.VISIT_TYPE_NO_PARKING:
-                getViewDataBinding().transportationLayout.setVisibility(View.VISIBLE);
-
-                getViewDataBinding().howToVisitTextView.setText(R.string.label_parking_information);
-                getViewDataBinding().visitCarView.setVisibility(View.GONE);
-                getViewDataBinding().visitWalkView.setVisibility(View.GONE);
-                getViewDataBinding().noParkingView.setVisibility(View.VISIBLE);
-                getViewDataBinding().guideTransportationTextView.setText(R.string.message_visit_no_parking_memo);
-                break;
-
-            default:
-                getViewDataBinding().transportationLayout.setVisibility(View.GONE);
-                break;
-        }
-    }
-
-    @Override
-    public void setTransportationType(@StayPaymentPresenter.Transportation String type)
-    {
-        if (getViewDataBinding() == null)
-        {
-            return;
-        }
-
-        switch (type)
-        {
-            case WALKING:
-                getViewDataBinding().guideTransportationLayout.setVisibility(View.GONE);
-
-                getViewDataBinding().visitWalkView.setSelected(true);
-                getViewDataBinding().visitCarView.setSelected(false);
-                break;
-
-            case CAR:
-                getViewDataBinding().guideTransportationLayout.setVisibility(View.VISIBLE);
-
-                getViewDataBinding().visitWalkView.setSelected(false);
-                getViewDataBinding().visitCarView.setSelected(true);
-                break;
-
-            default:
-                break;
-        }
-    }
-
-    @Override
     public void setGuestInformationVisible(boolean visible)
     {
         if (getViewDataBinding() == null)
@@ -469,16 +438,94 @@ public class StayPaymentView extends BaseDialogView<StayPaymentView.OnEventListe
     }
 
     @Override
+    public void showDatePickerDialog(String titleText, List<String> visitDateTimeList, String selectedVisitDateTime////
+        , View.OnClickListener onClickListener, DialogInterface.OnDismissListener dismissListener)
+    {
+        if (visitDateTimeList == null || visitDateTimeList.size() == 0)
+        {
+            return;
+        }
+
+        hideSimpleDialog();
+
+        try
+        {
+            View view = LayoutInflater.from(getContext()).inflate(R.layout.view_pickerdialog_layout, null);
+
+            // 상단
+            TextView titleTextView = (TextView) view.findViewById(R.id.titleTextView);
+            titleTextView.setVisibility(View.VISIBLE);
+
+            if (DailyTextUtils.isTextEmpty(titleText) == true)
+            {
+                titleTextView.setText(getString(R.string.dialog_notice2));
+            } else
+            {
+                titleTextView.setText(titleText);
+            }
+
+            int size = visitDateTimeList.size();
+            String[] visitTime = new String[size];
+            int equalsTime = -1;
+
+            for (int i = 0; i < size; i++)
+            {
+                visitTime[i] = DailyCalendar.convertDateFormatString(visitDateTimeList.get(i), DailyCalendar.ISO_8601_FORMAT, "HH:mm");
+
+                if (visitDateTimeList.get(i).equalsIgnoreCase(selectedVisitDateTime) == true)
+                {
+                    equalsTime = i;
+                }
+            }
+
+            // 메시지
+            final NumberPicker numberPicker = (NumberPicker) view.findViewById(R.id.numberPicker);
+            numberPicker.setMinValue(0);
+            numberPicker.setMaxValue(size - 1);
+            numberPicker.setFocusable(true);
+            numberPicker.setFocusableInTouchMode(true);
+            numberPicker.setDisplayedValues(visitTime);
+            numberPicker.setTextTypeface(FontManager.getInstance(getContext()).getRegularTypeface());
+
+            if (equalsTime >= 0)
+            {
+                numberPicker.setValue(equalsTime);
+            }
+
+            TextView confirmTextView = (TextView) view.findViewById(R.id.confirmTextView);
+
+            confirmTextView.setText(R.string.dialog_btn_text_confirm);
+            confirmTextView.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    if (onClickListener != null)
+                    {
+                        v.setTag(numberPicker.getValue());
+                        onClickListener.onClick(v);
+                    }
+                }
+            });
+
+            showSimpleDialog(view, null, dismissListener, true);
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+        }
+    }
+
+    @Override
     public void onClick(View v)
     {
         switch (v.getId())
         {
-            case R.id.visitWalkView:
-                getEventListener().onTransportationClick(StayPaymentPresenter.WALKING);
+            case R.id.menuCountMinus:
+                getEventListener().onMenuCountMinusClick();
                 break;
 
-            case R.id.visitCarView:
-                getEventListener().onTransportationClick(StayPaymentPresenter.CAR);
+            case R.id.menuCountPlus:
+                getEventListener().onMenuCountPlusClick();
                 break;
 
             case R.id.doPaymentView:
@@ -504,7 +551,7 @@ public class StayPaymentView extends BaseDialogView<StayPaymentView.OnEventListe
         }
     }
 
-    private void initToolbar(ActivityStayPaymentDataBinding viewDataBinding)
+    private void initToolbar(ActivityGourmetPaymentDataBinding viewDataBinding)
     {
         if (viewDataBinding == null)
         {
@@ -538,6 +585,18 @@ public class StayPaymentView extends BaseDialogView<StayPaymentView.OnEventListe
             return;
         }
 
+        getViewDataBinding().dateInformationView.setOnDateClickListener(null, new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                getEventListener().onVisitTimeClick();
+            }
+        });
+
+        getViewDataBinding().menuCountMinus.setOnClickListener(this);
+        getViewDataBinding().menuCountPlus.setOnClickListener(this);
+
         getViewDataBinding().guestInformationView.setOnGuestInformationsClickListener(new DailyBookingGuestInformationsView.OnGuestInformationsClickListener()
         {
             @Override
@@ -547,12 +606,11 @@ public class StayPaymentView extends BaseDialogView<StayPaymentView.OnEventListe
             }
         });
 
-        getViewDataBinding().guestInformationView.setTitle(R.string.act_booking_reserver_info, R.string.label_booking_required_fileds);
+        getViewDataBinding().guestInformationView.setTitle(R.string.label_booking_visitor_info, R.string.label_booking_required_fileds);
         getViewDataBinding().guestInformationView.setGuideTextVisible(false);
-        getViewDataBinding().guestInformationView.setGuideText(R.string.message_guide_name_memo);
 
         getViewDataBinding().guestInformationView.addInformation(DailyBookingGuestInformationsView.InformationType.NAME//
-            , getString(R.string.frag_booking_tab_name)//
+            , getString(R.string.label_booking_visitor_name)//
             , null, getString(R.string.label_booking_input_name));
 
         getViewDataBinding().guestInformationView.addInformation(DailyBookingGuestInformationsView.InformationType.MOBILE//
@@ -562,9 +620,6 @@ public class StayPaymentView extends BaseDialogView<StayPaymentView.OnEventListe
         getViewDataBinding().guestInformationView.addInformation(DailyBookingGuestInformationsView.InformationType.EMAIL//
             , getString(R.string.act_booking_email)//
             , null, getString(R.string.label_booking_input_email));
-
-        getViewDataBinding().visitWalkView.setOnClickListener(this);
-        getViewDataBinding().visitCarView.setOnClickListener(this);
     }
 
     private void initDiscountLayout()
@@ -574,7 +629,7 @@ public class StayPaymentView extends BaseDialogView<StayPaymentView.OnEventListe
             return;
         }
 
-        getViewDataBinding().informationView.setDiscountTypeVisible(true, true);
+        getViewDataBinding().informationView.setDiscountTypeVisible(false, true);
 
         setBonusSelected(false);
         setCouponSelected(false);

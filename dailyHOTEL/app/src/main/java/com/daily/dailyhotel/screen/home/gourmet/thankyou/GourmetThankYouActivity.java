@@ -18,22 +18,23 @@ public class GourmetThankYouActivity extends BaseActivity<GourmetThankYouPresent
 {
     static final String INTENT_EXTRA_DATA_IMAGE_URL = "imageUrl";
     static final String INTENT_EXTRA_DATA_GOURMET_NAME = "gourmetName";
-    static final String INTENT_EXTRA_DATA_VISIT_DATE = "visitDate";
-    static final String INTENT_EXTRA_DATA_VISIT_TIME = "visitTime";
-    static final String INTENT_EXTRA_DATA_PRODUCT_TYPE = "productType";
-    static final String INTENT_EXTRA_DATA_PRODUCT_COUNT = "productCount";
+    static final String INTENT_EXTRA_DATA_VISIT_DATE_TIME = "visitDateTime";
+    static final String INTENT_EXTRA_DATA_MENU_NAME = "menuName";
+    static final String INTENT_EXTRA_DATA_MENU_COUNT = "menuCount";
+    static final String INTENT_EXTRA_DATA_RESERVATION_ID = "reservationId";
 
     public static Intent newInstance(Context context, String gourmetName, String imageUrl//
-        , String visitDate, String visitTime, String productType, int productCount, GourmetThankYouAnalyticsParam analyticsParam)
+        , String visitDateTime, String menuName, int menuCount
+        , int reservationId, GourmetThankYouAnalyticsParam analyticsParam)
     {
         Intent intent = new Intent(context, GourmetThankYouActivity.class);
 
         intent.putExtra(INTENT_EXTRA_DATA_GOURMET_NAME, gourmetName);
         intent.putExtra(INTENT_EXTRA_DATA_IMAGE_URL, imageUrl);
-        intent.putExtra(INTENT_EXTRA_DATA_VISIT_DATE, visitDate);
-        intent.putExtra(INTENT_EXTRA_DATA_VISIT_TIME, visitTime);
-        intent.putExtra(INTENT_EXTRA_DATA_PRODUCT_TYPE, productType);
-        intent.putExtra(INTENT_EXTRA_DATA_PRODUCT_COUNT, productCount);
+        intent.putExtra(INTENT_EXTRA_DATA_VISIT_DATE_TIME, visitDateTime);
+        intent.putExtra(INTENT_EXTRA_DATA_MENU_NAME, menuName);
+        intent.putExtra(INTENT_EXTRA_DATA_MENU_COUNT, menuCount);
+        intent.putExtra(INTENT_EXTRA_DATA_RESERVATION_ID, reservationId);
         intent.putExtra(INTENT_EXTRA_DATA_ANALYTICS, analyticsParam);
 
         return intent;

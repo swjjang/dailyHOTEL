@@ -498,13 +498,13 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
         GourmetThankYouAnalyticsParam gourmetThankYouAnalyticsParam = new GourmetThankYouAnalyticsParam();
         gourmetThankYouAnalyticsParam.params = params;
 
-        Intent intent = GourmetThankYouActivity.newInstance(this, placeName, imageUrl//
-            , gourmetBookingDay.getVisitDay(DailyCalendar.ISO_8601_FORMAT), visitTime, productType, productCount, gourmetThankYouAnalyticsParam);
+//        Intent intent = GourmetThankYouActivity.newInstance(this, placeName, imageUrl//
+//            , gourmetBookingDay.getVisitDay(DailyCalendar.ISO_8601_FORMAT), visitTime, productType, productCount, gourmetThankYouAnalyticsParam);
 
         //        Intent intent = GourmetPaymentThankyouActivity.newInstance(this, imageUrl, placeName, placeType, //
         //            userName, gourmetBookingDay, visitTime, productCount, paymentInformation.paymentType.getName(), discountType, params);
 
-        startActivityForResult(intent, REQUEST_CODE_PAYMETRESULT_ACTIVITY);
+//        startActivityForResult(intent, REQUEST_CODE_PAYMETRESULT_ACTIVITY);
     }
 
     @Override

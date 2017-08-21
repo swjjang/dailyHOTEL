@@ -1259,6 +1259,7 @@ public class AnalyticsManager
         public static final String HOTEL_USING_COUPON_CANCEL = "HotelUsingCouponCancel";
         public static final String GOURMET_USING_COUPON_CLICKED = "GourmetUsingCouponClicked";
         public static final String GOURMET_USING_COUPON_CANCEL = "GourmetUsingCouponCancel";
+        public static final String GOURMET_USING_COUPON_CANCEL_CLICKED = "GourmetUsingCouponCancelClicked";
         public static final String COUPON_BOX_CLICKED = "CouponBoxClicked";
         //
         public static final String SWITCHING_HOTEL = "SwitchingHotel";

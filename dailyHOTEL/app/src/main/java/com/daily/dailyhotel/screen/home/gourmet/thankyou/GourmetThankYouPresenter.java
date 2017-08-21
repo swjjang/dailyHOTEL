@@ -34,9 +34,8 @@ public class GourmetThankYouPresenter extends BaseExceptionPresenter<GourmetThan
     private String mGourmetName;
     private String mImageUrl;
     private GourmetBookDateTime mGourmetBookDateTime;
-    private String mVisitTime;
-    private String mProductType;
-    private int mProductCount;
+    private String mMenuName;
+    private int mMenuCount;
 
     public interface GourmetThankYouAnalyticsInterface extends BaseAnalyticsInterface
     {
@@ -98,13 +97,12 @@ public class GourmetThankYouPresenter extends BaseExceptionPresenter<GourmetThan
         mGourmetName = intent.getStringExtra(GourmetThankYouActivity.INTENT_EXTRA_DATA_GOURMET_NAME);
         mImageUrl = intent.getStringExtra(GourmetThankYouActivity.INTENT_EXTRA_DATA_IMAGE_URL);
 
-        String visitDate = intent.getStringExtra(GourmetThankYouActivity.INTENT_EXTRA_DATA_VISIT_DATE);
-        mVisitTime = intent.getStringExtra(GourmetThankYouActivity.INTENT_EXTRA_DATA_VISIT_TIME);
+        String visitDateTime = intent.getStringExtra(GourmetThankYouActivity.INTENT_EXTRA_DATA_VISIT_DATE_TIME);
 
-        setGourmetBookDateTime(visitDate);
+        setGourmetBookDateTime(visitDateTime);
 
-        mProductType = intent.getStringExtra(GourmetThankYouActivity.INTENT_EXTRA_DATA_PRODUCT_TYPE);
-        mProductCount = intent.getIntExtra(GourmetThankYouActivity.INTENT_EXTRA_DATA_PRODUCT_COUNT, 0);
+        mMenuName = intent.getStringExtra(GourmetThankYouActivity.INTENT_EXTRA_DATA_MENU_NAME);
+        mMenuCount = intent.getIntExtra(GourmetThankYouActivity.INTENT_EXTRA_DATA_MENU_COUNT, 0);
 
         mAnalytics.setAnalyticsParam(intent.getParcelableExtra(BaseActivity.INTENT_EXTRA_DATA_ANALYTICS));
 
@@ -123,12 +121,14 @@ public class GourmetThankYouPresenter extends BaseExceptionPresenter<GourmetThan
         getViewInterface().setUserName(name);
 
         final String DATE_FORMAT = "yyyy.MM.dd(EEE)";
+        final String TIME_FORMAT = "HH:mm";
 
         try
         {
             String visitDate = mGourmetBookDateTime.getVisitDateTime(DATE_FORMAT);
+            String visitTime = mGourmetBookDateTime.getVisitDateTime(TIME_FORMAT);
 
-            getViewInterface().setBooking(visitDate, mVisitTime, mGourmetName, mProductType, mProductCount);
+            getViewInterface().setBooking(visitDate, visitTime, mGourmetName, mMenuName, mMenuCount);
         } catch (Exception e)
         {
             ExLog.d(e.toString());
