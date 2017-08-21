@@ -20,12 +20,13 @@ public class StayThankYouActivity extends BaseActivity<StayThankYouPresenter>
     static final String INTENT_EXTRA_DATA_STAY_NAME = "stayName";
     static final String INTENT_EXTRA_DATA_CHECK_IN = "checkIn";
     static final String INTENT_EXTRA_DATA_CHECK_OUT = "checkOut";
-    static final String INTENT_EXTRA_DATA_ROOM_TYPE = "roomType";
+    static final String INTENT_EXTRA_DATA_ROOM_NAME = "roomName";
     static final String INTENT_EXTRA_DATA_OVERSEAS = "overseas";
     static final String INTENT_EXTRA_DATA_CATEGORY = "category";
+    static final String INTENT_EXTRA_DATA_RESERVATION_ID = "reservationId";
 
     public static Intent newInstance(Context context, boolean overseas, String category, String stayName, String imageUrl//
-        , String checkInDateTime, String checkOutDateTime, String roomType, StayThankYouAnalyticsParam analyticsParam)
+        , String checkInDateTime, String checkOutDateTime, String roomName, int reservationId, StayThankYouAnalyticsParam analyticsParam)
     {
         Intent intent = new Intent(context, StayThankYouActivity.class);
 
@@ -34,8 +35,9 @@ public class StayThankYouActivity extends BaseActivity<StayThankYouPresenter>
         intent.putExtra(INTENT_EXTRA_DATA_IMAGE_URL, imageUrl);
         intent.putExtra(INTENT_EXTRA_DATA_CHECK_IN, checkInDateTime);
         intent.putExtra(INTENT_EXTRA_DATA_CHECK_OUT, checkOutDateTime);
-        intent.putExtra(INTENT_EXTRA_DATA_ROOM_TYPE, roomType);
+        intent.putExtra(INTENT_EXTRA_DATA_ROOM_NAME, roomName);
         intent.putExtra(INTENT_EXTRA_DATA_OVERSEAS, overseas);
+        intent.putExtra(INTENT_EXTRA_DATA_RESERVATION_ID, reservationId);
         intent.putExtra(INTENT_EXTRA_DATA_ANALYTICS, analyticsParam);
 
         return intent;

@@ -256,7 +256,7 @@ public class DailyBookingGuestInformationsView extends ConstraintLayout
 
             case MOBILE:
             {
-                mInformationTypeList.add(new Pair<>(informationType, createMobileTypeView(name, value)));
+                mInformationTypeList.add(new Pair<>(informationType, createMobileTypeView(name, value, hint)));
                 break;
             }
         }
@@ -294,12 +294,41 @@ public class DailyBookingGuestInformationsView extends ConstraintLayout
         }
     }
 
-    private ViewDataBinding createMobileTypeView(String name, String value)
+    private ViewDataBinding createMobileTypeView(String name, String value, String hint)
     {
         DailyViewLeftNameRightEditMobileDataBinding dataBinding = DataBindingUtil.inflate(LayoutInflater.from(getContext())//
             , R.layout.daily_view_left_name_right_edit_mobile_data, mViewDataBinding.informationLayout, true);
 
         dataBinding.nameTextView.setText(name);
+
+        dataBinding.mobileEditText.addTextChangedListener(new TextWatcher()
+        {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after)
+            {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count)
+            {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s)
+            {
+                if (s == null || s.length() == 0)
+                {
+                    dataBinding.valueHintTextView.setVisibility(View.VISIBLE);
+                } else
+                {
+                    dataBinding.valueHintTextView.setVisibility(View.GONE);
+                }
+            }
+        });
+
+        dataBinding.valueHintTextView.setText(hint);
         dataBinding.mobileEditText.setText(value);
         dataBinding.mobileEditText.setInputType(InformationType.MOBILE.getInputType());
 

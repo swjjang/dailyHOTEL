@@ -58,7 +58,7 @@ public class DailyBookingDiscountNPaymentInformationView extends ConstraintLayou
         {
             setDiscountInformationVisible(true);
 
-            mViewDataBinding.bonusGuideView.setVisibility(VISIBLE);
+            mViewDataBinding.bonusGuideTextView.setVisibility(VISIBLE);
 
             mViewDataBinding.bonusLayout.setVisibility(VISIBLE);
             mViewDataBinding.couponLayout.setVisibility(VISIBLE);
@@ -66,11 +66,21 @@ public class DailyBookingDiscountNPaymentInformationView extends ConstraintLayou
         {
             setDiscountInformationVisible(true);
 
-            mViewDataBinding.bonusGuideView.setVisibility(GONE);
+            mViewDataBinding.bonusGuideTextView.setVisibility(GONE);
 
             mViewDataBinding.bonusLayout.setVisibility(bonusVisible ? VISIBLE : GONE);
             mViewDataBinding.couponLayout.setVisibility(couponVisible ? VISIBLE : GONE);
         }
+    }
+
+    public void setBonusGuideText(CharSequence text)
+    {
+        if (mViewDataBinding == null)
+        {
+            return;
+        }
+
+        mViewDataBinding.bonusGuideTextView.setText(text);
     }
 
     public void setBonusEnabled(boolean enabled)
@@ -180,7 +190,7 @@ public class DailyBookingDiscountNPaymentInformationView extends ConstraintLayou
         }
     }
 
-    public void setUsedBonus(int bonus)
+    public void setBonus(int bonus)
     {
         if (mViewDataBinding == null)
         {
@@ -236,37 +246,37 @@ public class DailyBookingDiscountNPaymentInformationView extends ConstraintLayou
         return mViewDataBinding.couponLayout.isSelected();
     }
 
-    public void setUsedCoupon(int coupon)
+    public void setCoupon(int couponPrice)
     {
         if (mViewDataBinding == null)
         {
             return;
         }
 
-        if (coupon == 0)
+        if (couponPrice == 0)
         {
             mViewDataBinding.couponTabTextView.setText(R.string.label_booking_select_coupon);
         } else
         {
-            mViewDataBinding.couponTabTextView.setText(DailyTextUtils.getPriceFormat(getContext(), coupon, false));
+            mViewDataBinding.couponTabTextView.setText(DailyTextUtils.getPriceFormat(getContext(), couponPrice, false));
         }
     }
 
     /**
-     * @param nights 1박 이상인 경우 표시
+     * @param description
      * @param price
      */
-    public void setReservationPrice(int nights, int price)
+    public void setReservationPrice(String description, int price)
     {
         if (mViewDataBinding == null)
         {
             return;
         }
 
-        if (nights > 1)
+        if (DailyTextUtils.isTextEmpty(description) == false)
         {
             mViewDataBinding.nightsTextView.setVisibility(VISIBLE);
-            mViewDataBinding.nightsTextView.setText(getContext().getString(R.string.label_booking_hotel_nights, nights));
+            mViewDataBinding.nightsTextView.setText(description);
         } else
         {
             mViewDataBinding.nightsTextView.setVisibility(GONE);

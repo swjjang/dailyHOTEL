@@ -48,8 +48,8 @@ public class SelectGourmetCouponDialogActivity extends BaseActivity
     private String mGourmetName;
     String mCallByScreen;
 
-    public static Intent newInstance(Context context, int gourmetIdx, int ticketIdx, String date, //
-                                     String gourmetName, int ticketCount)
+    public static Intent newInstance(Context context, int gourmetIdx, int ticketIdx, String date//
+        , String gourmetName, int ticketCount)
     {
         Intent intent = new Intent(context, SelectGourmetCouponDialogActivity.class);
         intent.putExtra(INTENT_EXTRA_GOURMET_IDX, gourmetIdx);

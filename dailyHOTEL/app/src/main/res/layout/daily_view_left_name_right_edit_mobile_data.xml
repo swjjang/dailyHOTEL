@@ -44,6 +44,19 @@
                 android:textSize="13dp"
                 android:theme="@style/EditTextTheme"/>
 
+            <com.daily.base.widget.DailyTextView
+                android:id="@+id/valueHintTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="right"
+                android:layout_gravity="center_vertical"
+                android:lines="1"
+                android:maxLines="1"
+                android:paddingRight="5dp"
+                android:singleLine="true"
+                android:textColor="@color/default_text_cc5c5c5"
+                android:textSize="13dp"/>
+
             <View
                 android:id="@+id/fakeMobileView"
                 android:layout_width="match_parent"

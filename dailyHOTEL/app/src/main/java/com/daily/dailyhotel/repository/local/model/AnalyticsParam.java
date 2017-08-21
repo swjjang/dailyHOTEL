@@ -233,11 +233,6 @@ public class AnalyticsParam implements Parcelable
 
     public String getAddressAreaName()
     {
-        if (this.province == null)
-        {
-            return AnalyticsManager.ValueType.EMPTY;
-        }
-
         return addressAreaName;
     }
 

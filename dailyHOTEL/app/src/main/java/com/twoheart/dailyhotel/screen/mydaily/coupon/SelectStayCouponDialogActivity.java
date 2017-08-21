@@ -37,6 +37,8 @@ public class SelectStayCouponDialogActivity extends BaseActivity
     public static final String INTENT_EXTRA_CATEGORY_CODE = "categoryCode";
     public static final String INTENT_EXTRA_HOTEL_NAME = "hotelName";
     public static final String INTENT_EXTRA_ROOM_PRICE = "roomPrice";
+    public static final String INTENT_EXTRA_CHECK_IN_DATE = "checkInDate";
+    public static final String INTENT_EXTRA_CHECK_OUT_DATE = "checkOutDate";
 
     SelectCouponDialogLayout mLayout;
     SelectStayCouponNetworkController mNetworkController;
@@ -46,19 +48,20 @@ public class SelectStayCouponDialogActivity extends BaseActivity
     int mHotelIdx;
     int mRoomIdx;
 
-    private String mRoomPrice;
+    private int mRoomPrice;
     private String mCategoryCode;
     private String mHotelName;
     String mCallByScreen;
     StayBookingDay mStayBookingDay;
 
-    public static Intent newInstance(Context context, int hotelIdx, int roomIdx, StayBookingDay stayBookingDay//
-        , String categoryCode, String hotelName, String roomPrice)
+    public static Intent newInstance(Context context, int hotelIdx, int roomIdx, String checkInDate, String checkOutDate//
+        , String categoryCode, String hotelName, int roomPrice)
     {
         Intent intent = new Intent(context, SelectStayCouponDialogActivity.class);
         intent.putExtra(INTENT_EXTRA_HOTEL_IDX, hotelIdx);
         intent.putExtra(INTENT_EXTRA_ROOM_IDX, roomIdx);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, stayBookingDay);
+        intent.putExtra(INTENT_EXTRA_CHECK_IN_DATE, checkInDate);
+        intent.putExtra(INTENT_EXTRA_CHECK_OUT_DATE, checkOutDate);
         intent.putExtra(INTENT_EXTRA_CATEGORY_CODE, categoryCode);
         intent.putExtra(INTENT_EXTRA_HOTEL_NAME, hotelName);
         intent.putExtra(INTENT_EXTRA_ROOM_PRICE, roomPrice);
@@ -67,12 +70,13 @@ public class SelectStayCouponDialogActivity extends BaseActivity
         return intent;
     }
 
-    public static Intent newInstance(Context context, int hotelIdx, StayBookingDay stayBookingDay //
+    public static Intent newInstance(Context context, int hotelIdx, String checkInDate, String checkOutDate //
         , String categoryCode, String hotelName)
     {
         Intent intent = new Intent(context, SelectStayCouponDialogActivity.class);
         intent.putExtra(INTENT_EXTRA_HOTEL_IDX, hotelIdx);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, stayBookingDay);
+        intent.putExtra(INTENT_EXTRA_CHECK_IN_DATE, checkInDate);
+        intent.putExtra(INTENT_EXTRA_CHECK_OUT_DATE, checkOutDate);
         intent.putExtra(INTENT_EXTRA_CATEGORY_CODE, categoryCode);
         intent.putExtra(INTENT_EXTRA_HOTEL_NAME, hotelName);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_CALL_BY_SCREEN, AnalyticsManager.Screen.DAILYHOTEL_DETAIL);
@@ -94,9 +98,26 @@ public class SelectStayCouponDialogActivity extends BaseActivity
         }
 
         mCallByScreen = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_CALL_BY_SCREEN);
-        mStayBookingDay = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY);
 
-        if (DailyTextUtils.isTextEmpty(mCallByScreen) == true || mStayBookingDay == null)
+        String checkInDate = intent.getStringExtra(INTENT_EXTRA_CHECK_IN_DATE);
+        String checkOutDate = intent.getStringExtra(INTENT_EXTRA_CHECK_OUT_DATE);
+
+        mStayBookingDay = new StayBookingDay();
+
+        try
+        {
+            mStayBookingDay.setCheckInDay(checkInDate);
+            mStayBookingDay.setCheckOutDay(checkOutDate);
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+
+            Util.restartApp(this);
+            return;
+        }
+
+
+        if (DailyTextUtils.isTextEmpty(mCallByScreen) == true)
         {
             Util.restartApp(this);
             return;
@@ -110,7 +131,7 @@ public class SelectStayCouponDialogActivity extends BaseActivity
                 mRoomIdx = intent.getIntExtra(INTENT_EXTRA_ROOM_IDX, -1);
                 mCategoryCode = intent.getStringExtra(INTENT_EXTRA_CATEGORY_CODE);
                 mHotelName = intent.getStringExtra(INTENT_EXTRA_HOTEL_NAME);
-                mRoomPrice = intent.getStringExtra(INTENT_EXTRA_ROOM_PRICE);
+                mRoomPrice = intent.getIntExtra(INTENT_EXTRA_ROOM_PRICE, 0);
                 break;
             }
 

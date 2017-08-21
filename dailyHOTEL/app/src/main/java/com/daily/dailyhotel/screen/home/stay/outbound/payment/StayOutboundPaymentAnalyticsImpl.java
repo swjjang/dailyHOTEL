@@ -6,7 +6,7 @@ import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayOutboundPayment;
-import com.daily.dailyhotel.entity.UserInformation;
+import com.daily.dailyhotel.entity.UserSimpleInformation;
 import com.daily.dailyhotel.parcel.analytics.StayOutboundPaymentAnalyticsParam;
 import com.daily.dailyhotel.parcel.analytics.StayOutboundThankYouAnalyticsParam;
 import com.daily.dailyhotel.view.DailyBookingPaymentTypeView;
@@ -65,7 +65,8 @@ public class StayOutboundPaymentAnalyticsImpl implements StayOutboundPaymentPres
 
     @Override
     public void onScreenPaymentCompleted(Activity activity, StayOutboundPayment stayOutboundPayment, StayBookDateTime stayBookDateTime//
-        , String stayName, DailyBookingPaymentTypeView.PaymentType paymentType, boolean fullBonus, boolean registerEasyCard, UserInformation userInformation)
+        , String stayName, DailyBookingPaymentTypeView.PaymentType paymentType, boolean usedBonus//
+        , boolean registerEasyCard, UserSimpleInformation userSimpleInformation)
     {
         if (activity == null || mAnalyticsParam == null || paymentType == null)
         {
@@ -76,7 +77,7 @@ public class StayOutboundPaymentAnalyticsImpl implements StayOutboundPaymentPres
         {
             Map<String, String> params = new HashMap<>();
 
-            if (fullBonus == true)
+            if (usedBonus == true && stayOutboundPayment.totalPrice <= userSimpleInformation.bonus)
             {
                 params.put(AnalyticsManager.KeyType.PAYMENT_TYPE, AnalyticsManager.Label.FULLBONUS);
             } else
@@ -101,6 +102,7 @@ public class StayOutboundPaymentAnalyticsImpl implements StayOutboundPaymentPres
 
             AnalyticsManager.getInstance(activity).recordScreen(activity, AnalyticsManager.Screen.DAILYHOTEL_PAYMENTCOMPLETE_OUTBOUND, null, params);
 
+            int paymentPrice = stayOutboundPayment.totalPrice - userSimpleInformation.bonus;
 
             // Adjust
             // Session
@@ -109,7 +111,7 @@ public class StayOutboundPaymentAnalyticsImpl implements StayOutboundPaymentPres
             // event
             params.put(AnalyticsManager.KeyType.PROVINCE, AnalyticsManager.ValueType.EMPTY);
             params.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.EMPTY);
-            params.put(AnalyticsManager.KeyType.PAYMENT_PRICE, Integer.toString(stayOutboundPayment.discountPrice));
+            params.put(AnalyticsManager.KeyType.PAYMENT_PRICE, Integer.toString(paymentPrice < 0 ? 0 : paymentPrice));
             params.put(AnalyticsManager.KeyType.CATEGORY, AnalyticsManager.ValueType.EMPTY);
             params.put(AnalyticsManager.KeyType.GRADE, mAnalyticsParam.grade);
             params.put(AnalyticsManager.KeyType.PLACE_INDEX, Integer.toString(stayOutboundPayment.stayIndex));
@@ -125,10 +127,10 @@ public class StayOutboundPaymentAnalyticsImpl implements StayOutboundPaymentPres
             params.put(AnalyticsManager.KeyType.RATING, mAnalyticsParam.rating);
             params.put(AnalyticsManager.KeyType.DAILYCHOICE, "n");
             params.put(AnalyticsManager.KeyType.COUPON_CODE, AnalyticsManager.ValueType.EMPTY);
-            params.put(AnalyticsManager.KeyType.USED_BOUNS, stayOutboundPayment.totalPrice != stayOutboundPayment.discountPrice ? "y" : "n");
+            params.put(AnalyticsManager.KeyType.USED_BOUNS, usedBonus ? "y" : "n");
 
             String strDate = DailyCalendar.format(new Date(), "yyyyMMddHHmmss");
-            String transId = strDate + '_' + userInformation.index;
+            String transId = strDate + '_' + userSimpleInformation.index;
 
             AnalyticsManager.getInstance(activity).purchaseCompleteStayOutbound(transId, params);
         } catch (Exception e)

@@ -1,4 +1,4 @@
-package com.twoheart.dailyhotel.screen.common;
+package com.daily.dailyhotel.screen.home.stay.inbound.payment;
 
 import android.content.Context;
 import android.content.Intent;
@@ -34,10 +34,10 @@ import okhttp3.Response;
  * Created by android_sam on 2017. 3. 17..
  */
 
-public class StayOutboundPaymentWebActivity extends PlacePaymentWebActivity
+public class StayPaymentWebActivity extends PlacePaymentWebActivity
 {
-    private String URL_WEBAPI_PAYMENT = Constants.UNENCRYPTED_URL ? "outbound/hotels/{hotelId}/room-reservation-payments/{type}/pay"//
-        : "MTAwJDUzJDY0JDE1NyQzNSQ0MSQ5NyQxNDUkODEkNTUkMjMkMTIkMTI5JDc2JDkwJDE2NiQ=$Qjc0RkY3QzJEUNkQ2NTkzMENYBMjI5OEUwNUVQGMEI2CMDAzMDFCMzNBOHEUVGMjQzQjAUwNDlGONTMyNjVFMUjg5RGUE4NzU5NDBCRXUI5REFEPMUZGN0QyQUY4NDhDOUIRwRjI0RUFCMDVDRUVCNEVZCRTFBNEUyQkZDIODTZDRkQ0NUY4Q0MzQkQ=$";
+    private String URL_WEBAPI_PAYMENT = Constants.UNENCRYPTED_URL ? "api/v4/booking/hotel/{type}"//
+        : "NTYkNjIkMzIkNTIkMjIkOTEkMTQkNTYkNDYkNzUkNDUkMTckNzEkNzgkMzMkMzQk$NTYyRTI2QTA0MDLFDUMkE2RjQk0OUVGNURWE3PMkUxMUExNDTYD5QTM4NTVKGLQkY5FMzI4RIPDAxRDROSFOTM0RTk3MURBNTUxQwQ==$";
 
     private static final String INTENT_EXTRA_DATA_PLACE_INDEX = "placeIndex";
     private static final String INTENT_EXTRA_DATA_PAY_TYPE = "payType";
@@ -49,7 +49,7 @@ public class StayOutboundPaymentWebActivity extends PlacePaymentWebActivity
 
     public static Intent newInstance(Context context, int placeIndex, String payType, String jsonString)
     {
-        Intent intent = new Intent(context, StayOutboundPaymentWebActivity.class);
+        Intent intent = new Intent(context, StayPaymentWebActivity.class);
 
         intent.putExtra(INTENT_EXTRA_DATA_PLACE_INDEX, placeIndex);
         intent.putExtra(INTENT_EXTRA_DATA_PAY_TYPE, payType);
@@ -133,7 +133,6 @@ public class StayOutboundPaymentWebActivity extends PlacePaymentWebActivity
         }
 
         Map<String, String> urlParams = new HashMap<>();
-        urlParams.put("{hotelId}", Integer.toString(mPlaceIndex));
         urlParams.put("{type}", payType);
 
         try
@@ -142,11 +141,11 @@ public class StayOutboundPaymentWebActivity extends PlacePaymentWebActivity
 
             if (Constants.DEBUG == true)
             {
-                url = DailyPreference.getInstance(this).getBaseOutBoundUrl()//
+                url = DailyPreference.getInstance(this).getBaseUrl()//
                     + Crypto.getUrlDecoderEx(URL_WEBAPI_PAYMENT, urlParams);
             } else
             {
-                url = Crypto.getUrlDecoderEx(Setting.getOutboundServerUrl())//
+                url = Crypto.getUrlDecoderEx(Setting.getServerUrl())//
                     + Crypto.getUrlDecoderEx(URL_WEBAPI_PAYMENT, urlParams);
             }
 
@@ -156,7 +155,7 @@ public class StayOutboundPaymentWebActivity extends PlacePaymentWebActivity
         {
             ExLog.e(e.toString());
 
-            DailyToast.showToast(StayOutboundPaymentWebActivity.this, R.string.toast_msg_failed_to_get_payment_info, Toast.LENGTH_SHORT);
+            DailyToast.showToast(StayPaymentWebActivity.this, R.string.toast_msg_failed_to_get_payment_info, Toast.LENGTH_SHORT);
             finish();
             return;
         }

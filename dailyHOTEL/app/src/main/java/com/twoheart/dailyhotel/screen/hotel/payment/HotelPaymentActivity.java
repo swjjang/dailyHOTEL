@@ -614,15 +614,15 @@ public class HotelPaymentActivity extends PlacePaymentActivity
         StayThankYouAnalyticsParam stayThankYouAnalyticsParam = new StayThankYouAnalyticsParam();
         stayThankYouAnalyticsParam.params = params;
 
-        Intent intent = StayThankYouActivity.newInstance(this, ((StayPaymentInformation) paymentInformation).isOverSeas, mCategoryCode, placeName, imageUrl//
-            , stayBookingDay.getCheckInDay(DailyCalendar.ISO_8601_FORMAT), stayBookingDay.getCheckOutDay(DailyCalendar.ISO_8601_FORMAT)//
-            , roomType, stayThankYouAnalyticsParam);
+//        Intent intent = StayThankYouActivity.newInstance(this, ((StayPaymentInformation) paymentInformation).isOverSeas, mCategoryCode, placeName, imageUrl//
+//            , stayBookingDay.getCheckInDay(DailyCalendar.ISO_8601_FORMAT), stayBookingDay.getCheckOutDay(DailyCalendar.ISO_8601_FORMAT)//
+//            , roomType, stayThankYouAnalyticsParam);
 
         //        Intent intent = HotelPaymentThankyouActivity.newInstance(this, imageUrl, placeName, roomType//
         //            , ((StayPaymentInformation) paymentInformation).isOverSeas, userName, stayBookingDay//
         //            , paymentInformation.paymentType.getName(), discountType, params);
 
-        startActivityForResult(intent, REQUEST_CODE_PAYMETRESULT_ACTIVITY);
+//        startActivityForResult(intent, REQUEST_CODE_PAYMETRESULT_ACTIVITY);
     }
 
     @Override
@@ -1720,11 +1720,10 @@ public class HotelPaymentActivity extends PlacePaymentActivity
 
         String categoryCode = mCategoryCode;
         String hotelName = mPlaceName;
-        String roomPrice = Integer.toString(stayProduct.averageDiscount);
 
-        Intent intent = SelectStayCouponDialogActivity.newInstance(HotelPaymentActivity.this, hotelIdx, //
-            roomIdx, stayBookingDay, categoryCode, hotelName, roomPrice);
-        startActivityForResult(intent, REQUEST_CODE_COUPONPOPUP_ACTIVITY);
+//        Intent intent = SelectStayCouponDialogActivity.newInstance(HotelPaymentActivity.this, hotelIdx, //
+//            roomIdx, stayBookingDay, categoryCode, hotelName, stayProduct.averageDiscount);
+//        startActivityForResult(intent, REQUEST_CODE_COUPONPOPUP_ACTIVITY);
 
         AnalyticsManager.getInstance(HotelPaymentActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS, //
             Action.HOTEL_USING_COUPON_CLICKED, Label.HOTEL_USING_COUPON_CLICKED, null);
@@ -1834,7 +1833,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
 
             if (isRegister == true)
             {
-                AnalyticsManager.getInstance(HotelPaymentActivity.this).recordEvent(AnalyticsManager.Category.GOURMET_BOOKINGS//
+                AnalyticsManager.getInstance(HotelPaymentActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS//
                     , AnalyticsManager.Action.EDIT_BUTTON_CLICKED, AnalyticsManager.Label.PAYMENT_CARD_REGISTRATION, null);
 
                 startActivityForResult(RegisterCreditCardActivity.newInstance(HotelPaymentActivity.this), CODE_REQUEST_ACTIVITY_REGISTERCREDITCARD);

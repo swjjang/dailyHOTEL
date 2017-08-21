@@ -17,6 +17,7 @@ import com.daily.dailyhotel.entity.UserTracking;
 import com.daily.dailyhotel.parcel.analytics.GourmetThankYouAnalyticsParam;
 import com.daily.dailyhotel.repository.remote.ProfileRemoteImpl;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.util.DailyInternalDeepLink;
 import com.twoheart.dailyhotel.util.DailyUserPreference;
 
 import io.reactivex.functions.Consumer;
@@ -31,12 +32,12 @@ public class GourmetThankYouPresenter extends BaseExceptionPresenter<GourmetThan
 
     private ProfileRemoteImpl mProfileRemoteImpl;
 
+    private int mReservationId;
     private String mGourmetName;
     private String mImageUrl;
     private GourmetBookDateTime mGourmetBookDateTime;
-    private String mVisitTime;
-    private String mProductType;
-    private int mProductCount;
+    private String mMenuName;
+    private int mMenuCount;
 
     public interface GourmetThankYouAnalyticsInterface extends BaseAnalyticsInterface
     {
@@ -98,13 +99,13 @@ public class GourmetThankYouPresenter extends BaseExceptionPresenter<GourmetThan
         mGourmetName = intent.getStringExtra(GourmetThankYouActivity.INTENT_EXTRA_DATA_GOURMET_NAME);
         mImageUrl = intent.getStringExtra(GourmetThankYouActivity.INTENT_EXTRA_DATA_IMAGE_URL);
 
-        String visitDate = intent.getStringExtra(GourmetThankYouActivity.INTENT_EXTRA_DATA_VISIT_DATE);
-        mVisitTime = intent.getStringExtra(GourmetThankYouActivity.INTENT_EXTRA_DATA_VISIT_TIME);
+        String visitDateTime = intent.getStringExtra(GourmetThankYouActivity.INTENT_EXTRA_DATA_VISIT_DATE_TIME);
 
-        setGourmetBookDateTime(visitDate);
+        setGourmetBookDateTime(visitDateTime);
 
-        mProductType = intent.getStringExtra(GourmetThankYouActivity.INTENT_EXTRA_DATA_PRODUCT_TYPE);
-        mProductCount = intent.getIntExtra(GourmetThankYouActivity.INTENT_EXTRA_DATA_PRODUCT_COUNT, 0);
+        mMenuName = intent.getStringExtra(GourmetThankYouActivity.INTENT_EXTRA_DATA_MENU_NAME);
+        mMenuCount = intent.getIntExtra(GourmetThankYouActivity.INTENT_EXTRA_DATA_MENU_COUNT, 0);
+        mReservationId = intent.getIntExtra(GourmetThankYouActivity.INTENT_EXTRA_DATA_RESERVATION_ID, -1);
 
         mAnalytics.setAnalyticsParam(intent.getParcelableExtra(BaseActivity.INTENT_EXTRA_DATA_ANALYTICS));
 
@@ -123,12 +124,14 @@ public class GourmetThankYouPresenter extends BaseExceptionPresenter<GourmetThan
         getViewInterface().setUserName(name);
 
         final String DATE_FORMAT = "yyyy.MM.dd(EEE)";
+        final String TIME_FORMAT = "HH:mm";
 
         try
         {
             String visitDate = mGourmetBookDateTime.getVisitDateTime(DATE_FORMAT);
+            String visitTime = mGourmetBookDateTime.getVisitDateTime(TIME_FORMAT);
 
-            getViewInterface().setBooking(visitDate, mVisitTime, mGourmetName, mProductType, mProductCount);
+            getViewInterface().setBooking(visitDate, visitTime, mGourmetName, mMenuName, mMenuCount);
         } catch (Exception e)
         {
             ExLog.d(e.toString());
@@ -203,9 +206,9 @@ public class GourmetThankYouPresenter extends BaseExceptionPresenter<GourmetThan
             return true;
         }
 
-        setResult(Activity.RESULT_OK);
-
         mAnalytics.onEventBackClick(getActivity());
+
+        startActivity(DailyInternalDeepLink.getGourmetBookingDetailScreenLink(getActivity(), mReservationId));
 
         return super.onBackPressed();
     }
@@ -263,9 +266,15 @@ public class GourmetThankYouPresenter extends BaseExceptionPresenter<GourmetThan
     @Override
     public void onConfirmClick()
     {
+        if (isLock() == true)
+        {
+            return;
+        }
+
         mAnalytics.onEventConfirmClick(getActivity());
 
-        setResult(Activity.RESULT_OK);
+        startActivity(DailyInternalDeepLink.getGourmetBookingDetailScreenLink(getActivity(), mReservationId));
+
         finish();
     }
 

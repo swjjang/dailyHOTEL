@@ -154,6 +154,8 @@ public class DailyBookingPaymentTypeView extends ConstraintLayout implements Vie
                 mViewDataBinding.cardLayout.setSelected(false);
                 mViewDataBinding.phoneLayout.setSelected(false);
                 mViewDataBinding.transferLayout.setSelected(false);
+
+                setPaymentTypeVisible(PaymentType.FREE, false);
                 break;
             }
 
@@ -163,6 +165,8 @@ public class DailyBookingPaymentTypeView extends ConstraintLayout implements Vie
                 mViewDataBinding.cardLayout.setSelected(true);
                 mViewDataBinding.phoneLayout.setSelected(false);
                 mViewDataBinding.transferLayout.setSelected(false);
+
+                setPaymentTypeVisible(PaymentType.FREE, false);
                 break;
             }
 
@@ -172,6 +176,8 @@ public class DailyBookingPaymentTypeView extends ConstraintLayout implements Vie
                 mViewDataBinding.cardLayout.setSelected(false);
                 mViewDataBinding.phoneLayout.setSelected(true);
                 mViewDataBinding.transferLayout.setSelected(false);
+
+                setPaymentTypeVisible(PaymentType.FREE, false);
                 break;
             }
 
@@ -181,6 +187,8 @@ public class DailyBookingPaymentTypeView extends ConstraintLayout implements Vie
                 mViewDataBinding.cardLayout.setSelected(false);
                 mViewDataBinding.phoneLayout.setSelected(false);
                 mViewDataBinding.transferLayout.setSelected(true);
+
+                setPaymentTypeVisible(PaymentType.FREE, false);
                 break;
             }
 

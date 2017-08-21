@@ -7,6 +7,7 @@ import com.daily.dailyhotel.repository.remote.model.CardData;
 import com.daily.dailyhotel.repository.remote.model.CommonDateTimeData;
 import com.daily.dailyhotel.repository.remote.model.GourmetCampaignTagsData;
 import com.daily.dailyhotel.repository.remote.model.GourmetListData;
+import com.daily.dailyhotel.repository.remote.model.GourmetPaymentData;
 import com.daily.dailyhotel.repository.remote.model.PaymentResultData;
 import com.daily.dailyhotel.repository.remote.model.StayCampaignTagsData;
 import com.daily.dailyhotel.repository.remote.model.StayListData;
@@ -18,6 +19,8 @@ import com.daily.dailyhotel.repository.remote.model.StayOutboundReceiptData;
 import com.daily.dailyhotel.repository.remote.model.StayOutboundRefundData;
 import com.daily.dailyhotel.repository.remote.model.StayOutboundRefundDetailData;
 import com.daily.dailyhotel.repository.remote.model.StayOutboundsData;
+import com.daily.dailyhotel.repository.remote.model.StayPaymentData;
+import com.daily.dailyhotel.repository.remote.model.StayRefundPolicyData;
 import com.daily.dailyhotel.repository.remote.model.SuggestsData;
 import com.daily.dailyhotel.repository.remote.model.UserBenefitData;
 import com.daily.dailyhotel.repository.remote.model.UserData;
@@ -25,6 +28,7 @@ import com.daily.dailyhotel.repository.remote.model.UserInformationData;
 import com.daily.dailyhotel.repository.remote.model.UserTrackingData;
 import com.twoheart.dailyhotel.network.dto.BaseDto;
 import com.twoheart.dailyhotel.network.dto.BaseListDto;
+import com.twoheart.dailyhotel.network.dto.Base_Dto;
 import com.twoheart.dailyhotel.network.model.Event;
 import com.twoheart.dailyhotel.network.model.GourmetDetailParams;
 import com.twoheart.dailyhotel.network.model.GourmetKeyword;
@@ -499,6 +503,9 @@ public interface DailyMobileService
     @GET("{mobileAPI}")
     Observable<BaseDto<UserTrackingData>> getUserTracking(@Path(value = "mobileAPI", encoded = true) String mobileAPI);
 
+    @GET("{mobileAPI}")
+    Observable<BaseDto<UserInformationData>> getUserSimpleInformation(@Path(value = "mobileAPI", encoded = true) String mobileAPI);
+
     /////////////////////////////////////////////////////////////////////////////////////////////////
     // SuggestRemoteImpl
     /////////////////////////////////////////////////////////////////////////////////////////////////
@@ -607,25 +614,6 @@ public interface DailyMobileService
     Observable<BaseDto<StayOutboundDetailData>> getStayOutboundDetail(@Url String mobileAPI, @Body JSONObject jsonObject);
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
-    @POST()
-    Observable<BaseDto<StayOutboundPaymentData>> getStayOutboundPayment(@Url String mobileAPI, @Body JSONObject jsonObject);
-
-    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
-    @POST("{mobileAPI}")
-    Observable<BaseListDto<CardData>> getEasyCardList(@Path(value = "mobileAPI", encoded = true) String mobileAPI);
-
-    @GET("{mobileAPI}")
-    Observable<BaseDto<UserInformationData>> getUserInformationForPayment(@Path(value = "mobileAPI", encoded = true) String mobileAPI);
-
-    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
-    @POST()
-    Observable<BaseDto<PaymentResultData>> getPaymentTypeEasy(@Url String mobileAPI, @Body JSONObject jsonObject);
-
-    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
-    @POST()
-    Observable<BaseDto<PaymentResultData>> getPaymentTypeBonus(@Url String mobileAPI, @Body JSONObject jsonObject);
-
-    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET()
     Observable<BaseListDto<BookingData>> getStayOutboundBookingList(@Url String mobileAPI);
 
@@ -660,6 +648,44 @@ public interface DailyMobileService
     @GET()
     Observable<BaseDto<StayOutboundEmailReceiptData>> getStayOutboundEmailReceipt(@Url String mobileAPI//
         , @Query("receiverEmail") String receiverEmail);
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+    // PaymentRemoteImpl
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
+    @POST()
+    Observable<BaseDto<StayOutboundPaymentData>> getStayOutboundPayment(@Url String mobileAPI, @Body JSONObject jsonObject);
+
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
+    @GET("{mobileAPI}")
+    Observable<BaseDto<StayPaymentData>> getStayPayment(@Path(value = "mobileAPI", encoded = true) String mobileAPI
+                                                        , @Query("room_idx") int roomIndex//
+                                                        , @Query("checkin_date") String date//
+                                                        , @Query("nights") int nights);
+
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
+    @GET("{mobileAPI}")
+    Observable<Base_Dto<GourmetPaymentData>> getGourmetPayment(@Path(value = "mobileAPI", encoded = true) String mobileAPI//
+        , @Query("sale_reco_idx") int index);
+
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
+    @POST("{mobileAPI}")
+    Observable<BaseListDto<CardData>> getEasyCardList(@Path(value = "mobileAPI", encoded = true) String mobileAPI);
+
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
+    @POST()
+    Observable<BaseDto<PaymentResultData>> getPaymentTypeEasy(@Url String mobileAPI, @Body JSONObject jsonObject);
+
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
+    @POST()
+    Observable<BaseDto<PaymentResultData>> getPaymentTypeBonus(@Url String mobileAPI, @Body JSONObject jsonObject);
+
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
+    @GET("{mobileAPI}")
+    Observable<BaseDto<StayRefundPolicyData>> getStayRefundPolicy(@Path(value = "mobileAPI", encoded = true) String mobileAPI//
+        , @Query("hotelIdx") int stayIndex, @Query("roomIdx") int roomIndex//
+        , @Query("dateCheckIn") String checkInDate, @Query("dateCheckOut") String checkOutDate);
 
     /////////////////////////////////////////////////////////////////////////////////////////////////
     // RecentlyRemoteImpl

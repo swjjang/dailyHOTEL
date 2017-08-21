@@ -334,20 +334,6 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".screen.hotel.payment.HotelPaymentActivity"
-            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppBaseTheme"
-            android:windowSoftInputMode="stateAlwaysHidden"/>
-        <activity
-            android:name=".screen.gourmet.payment.GourmetPaymentActivity"
-            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppBaseTheme"
-            android:windowSoftInputMode="stateAlwaysHidden"/>
-        <activity
             android:name=".screen.event.EventWebActivity"
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
             android:launchMode="singleTop"
@@ -753,6 +739,18 @@
             android:screenOrientation="portrait"/>
 
         <activity
+            android:name="com.daily.dailyhotel.screen.home.stay.inbound.payment.StayPaymentActivity"
+            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"/>
+
+        <activity
+            android:name="com.daily.dailyhotel.screen.home.gourmet.payment.GourmetPaymentActivity"
+            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"/>
+
+        <activity
             android:name="com.daily.dailyhotel.screen.home.stay.outbound.thankyou.StayOutboundThankYouActivity"
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
             android:launchMode="singleTop"
@@ -777,7 +775,23 @@
             android:screenOrientation="portrait"/>
 
         <activity
-            android:name=".screen.common.StayOutboundPaymentWebActivity"
+            android:name="com.daily.dailyhotel.screen.home.stay.outbound.payment.StayOutboundPaymentWebActivity"
+            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppBaseTheme"
+            android:windowSoftInputMode="stateAlwaysHidden"/>
+
+        <activity
+            android:name="com.daily.dailyhotel.screen.home.stay.inbound.payment.StayPaymentWebActivity"
+            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppBaseTheme"
+            android:windowSoftInputMode="stateAlwaysHidden"/>
+
+        <activity
+            android:name="com.daily.dailyhotel.screen.home.gourmet.payment.GourmetPaymentWebActivity"
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
