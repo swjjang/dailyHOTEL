@@ -32,8 +32,6 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.model.time.StayBookingDay;
-import com.twoheart.dailyhotel.network.DailyMobileAPI;
-import com.twoheart.dailyhotel.network.dto.BaseDto;
 import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.place.layout.PlaceDetailLayout;
 import com.twoheart.dailyhotel.screen.hotel.detail.StayDetailActivity;
@@ -58,8 +56,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
-import retrofit2.Call;
-import retrofit2.Response;
 
 /**
  * Created by iseung-won on 2017. 8. 4..
@@ -75,7 +71,7 @@ public class StayCampaignTagListPresenter extends BaseExceptionPresenter<StayCam
     private StayBookingDay mStayBookingDay;
     private CommonDateTime mCommonDateTime;
     private StayCampaignTags mStayCampaignTags;
-//    private boolean mIsFirstUiUpdateCheck;
+    //    private boolean mIsFirstUiUpdateCheck;
 
     private CommonRemoteImpl mCommonRemoteImpl;
     private CampaignTagRemoteImpl mCampaignTagRemoteImpl;
@@ -85,23 +81,6 @@ public class StayCampaignTagListPresenter extends BaseExceptionPresenter<StayCam
     private View mViewByLongPress;
 
     private CampaignTagListAnalyticsInterface mAnalytics;
-
-    protected interface OnCallDialogListener
-    {
-        void onShowDialog();
-
-        void onPositiveButtonClick(View v);
-
-        void onNativeButtonClick(View v);
-
-        void onDismissDialog();
-    }
-
-    // showCallDialog 용 interface
-    private interface OnOperatingTimeListener
-    {
-        void onInValidOperatingTime(boolean isInValidOperatingTime);
-    }
 
     public StayCampaignTagListPresenter(@NonNull StayCampaignTagListActivity activity)
     {
@@ -414,7 +393,7 @@ public class StayCampaignTagListPresenter extends BaseExceptionPresenter<StayCam
         {
             setData(null, stayBookingDay);
             showFinishedCampaignTagDialog();
-//            mIsFirstUiUpdateCheck = true;
+            //            mIsFirstUiUpdateCheck = true;
             return;
         }
 
@@ -425,7 +404,7 @@ public class StayCampaignTagListPresenter extends BaseExceptionPresenter<StayCam
             {
                 setData(null, stayBookingDay);
                 showReCheckConnectionDialog();
-//                mIsFirstUiUpdateCheck = true;
+                //                mIsFirstUiUpdateCheck = true;
                 return;
             }
         }
@@ -436,7 +415,7 @@ public class StayCampaignTagListPresenter extends BaseExceptionPresenter<StayCam
         {
             setData(null, stayBookingDay);
             showFinishedCampaignTagDialog();
-//            mIsFirstUiUpdateCheck = true;
+            //            mIsFirstUiUpdateCheck = true;
             return;
         }
 
@@ -445,12 +424,12 @@ public class StayCampaignTagListPresenter extends BaseExceptionPresenter<StayCam
         {
             setData(placeViewItemList, stayBookingDay);
 
-//            if (mIsFirstUiUpdateCheck == false)
-//            {
-//                showFirstEmptyListPopup();
-//            }
-//
-//            mIsFirstUiUpdateCheck = true;
+            //            if (mIsFirstUiUpdateCheck == false)
+            //            {
+            //                showFirstEmptyListPopup();
+            //            }
+            //
+            //            mIsFirstUiUpdateCheck = true;
             return;
         }
 
@@ -479,15 +458,15 @@ public class StayCampaignTagListPresenter extends BaseExceptionPresenter<StayCam
             // 일반적인 상황
             setData(placeViewItemList, stayBookingDay);
 
-//            ArrayList<Stay> list = stayCampaignTags.getStayList();
-//            if ((list == null || list.size() == 0) && mIsFirstUiUpdateCheck == false)
-//            {
-//                // 처음 진입이고 일반적인 상황에서 리스트가 비었을때
-//                showFirstEmptyListPopup();
-//            }
+            //            ArrayList<Stay> list = stayCampaignTags.getStayList();
+            //            if ((list == null || list.size() == 0) && mIsFirstUiUpdateCheck == false)
+            //            {
+            //                // 처음 진입이고 일반적인 상황에서 리스트가 비었을때
+            //                showFirstEmptyListPopup();
+            //            }
         }
 
-//        mIsFirstUiUpdateCheck = true;
+        //        mIsFirstUiUpdateCheck = true;
     }
 
     private void showFinishedCampaignTagDialog()
@@ -522,21 +501,21 @@ public class StayCampaignTagListPresenter extends BaseExceptionPresenter<StayCam
             });
     }
 
-//    private void showFirstEmptyListPopup()
-//    {
-//        getViewInterface().showSimpleDialog(null //
-//            , getString(R.string.message_campaign_empty_popup_message)//
-//            , getString(R.string.dialog_btn_text_yes)//
-//            , getString(R.string.dialog_btn_text_no)//
-//            , new View.OnClickListener()
-//            {
-//                @Override
-//                public void onClick(View v)
-//                {
-//                    onCalendarClick();
-//                }
-//            }, null);
-//    }
+    //    private void showFirstEmptyListPopup()
+    //    {
+    //        getViewInterface().showSimpleDialog(null //
+    //            , getString(R.string.message_campaign_empty_popup_message)//
+    //            , getString(R.string.dialog_btn_text_yes)//
+    //            , getString(R.string.dialog_btn_text_no)//
+    //            , new View.OnClickListener()
+    //            {
+    //                @Override
+    //                public void onClick(View v)
+    //                {
+    //                    onCalendarClick();
+    //                }
+    //            }, null);
+    //    }
 
     public void setTitleText(String title)
     {
@@ -642,7 +621,7 @@ public class StayCampaignTagListPresenter extends BaseExceptionPresenter<StayCam
     @Override
     public void onCallClick()
     {
-        showDailyCallDialog(null);
+        showDailyCallDialog();
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
@@ -824,205 +803,126 @@ public class StayCampaignTagListPresenter extends BaseExceptionPresenter<StayCam
         return stayBookingDay;
     }
 
-    private void checkInValidOperatingTime(OnOperatingTimeListener operatingTimeListener)
+    public void showDailyCallDialog()
     {
-        if (operatingTimeListener == null)
-        {
-            return;
-        }
-
-        retrofit2.Callback dateTimeCallback = new retrofit2.Callback<BaseDto<TodayDateTime>>()
+        addCompositeDisposable(mCommonRemoteImpl.getCommonDateTime().map(new Function<CommonDateTime, Boolean>()
         {
             @Override
-            public void onResponse(Call<BaseDto<TodayDateTime>> call, Response<BaseDto<TodayDateTime>> response)
+            public Boolean apply(@io.reactivex.annotations.NonNull CommonDateTime commonDateTime) throws Exception
             {
                 boolean isInValidOperatingTime = false;
 
-                if (response != null && response.isSuccessful() && response.body() != null)
+                try
                 {
-                    try
+                    Calendar todayCalendar = DailyCalendar.getInstance(commonDateTime.currentDateTime, false);
+                    int hour = todayCalendar.get(Calendar.HOUR_OF_DAY);
+                    int minute = todayCalendar.get(Calendar.MINUTE);
+
+                    String startHourString = DailyCalendar.convertDateFormatString(commonDateTime.openDateTime, DailyCalendar.ISO_8601_FORMAT, "H");
+                    String endHourString = DailyCalendar.convertDateFormatString(commonDateTime.closeDateTime, DailyCalendar.ISO_8601_FORMAT, "H");
+
+                    int startHour = Integer.parseInt(startHourString);
+                    int endHour = Integer.parseInt(endHourString);
+
+                    String[] lunchTimes = DailyRemoteConfigPreference.getInstance(getActivity()).getRemoteConfigOperationLunchTime().split("\\,");
+                    String[] startLunchTime = lunchTimes[0].split(":");
+                    String[] endLunchTime = lunchTimes[1].split(":");
+
+                    int startLunchHour = Integer.parseInt(startLunchTime[0]);
+                    int startLunchMinute = Integer.parseInt(startLunchTime[1]);
+                    int endLunchHour = Integer.parseInt(endLunchTime[0]);
+
+                    boolean isOverStartTime = hour > startLunchHour || (hour == startLunchHour && minute >= startLunchMinute);
+                    boolean isOverEndTime = hour >= endLunchHour;
+
+                    if (hour < startHour && hour > endHour)
                     {
-                        BaseDto<TodayDateTime> baseDto = response.body();
-
-                        if (baseDto.msgCode == 100)
-                        {
-                            TodayDateTime todayDateTime = baseDto.data;
-
-                            Calendar todayCalendar = DailyCalendar.getInstance(todayDateTime.currentDateTime, false);
-                            int hour = todayCalendar.get(Calendar.HOUR_OF_DAY);
-                            int minute = todayCalendar.get(Calendar.MINUTE);
-
-                            String startHourString = DailyCalendar.convertDateFormatString(todayDateTime.openDateTime, DailyCalendar.ISO_8601_FORMAT, "H");
-                            String endHourString = DailyCalendar.convertDateFormatString(todayDateTime.closeDateTime, DailyCalendar.ISO_8601_FORMAT, "H");
-
-                            int startHour = Integer.parseInt(startHourString);
-                            int endHour = Integer.parseInt(endHourString);
-
-                            String[] lunchTimes = DailyRemoteConfigPreference.getInstance(getActivity()).getRemoteConfigOperationLunchTime().split("\\,");
-                            String[] startLunchTime = lunchTimes[0].split(":");
-                            String[] endLunchTime = lunchTimes[1].split(":");
-
-                            int startLunchHour = Integer.parseInt(startLunchTime[0]);
-                            int startLunchMinute = Integer.parseInt(startLunchTime[1]);
-                            int endLunchHour = Integer.parseInt(endLunchTime[0]);
-
-                            boolean isOverStartTime = hour > startLunchHour || (hour == startLunchHour && minute >= startLunchMinute);
-                            boolean isOverEndTime = hour >= endLunchHour;
-
-                            if (hour < startHour && hour > endHour)
-                            {
-                                // 운영 안하는 시간 03:00:01 ~ 08:59:59 - 팝업 발생
-                                isInValidOperatingTime = true;
-                            } else if (isOverStartTime == true && isOverEndTime == false)
-                            {
-                                // 점심시간 11:50:01~12:59:59 - 해피톡의 경우 팝업 발생 안함
-                                isInValidOperatingTime = true;
-                            }
-                        } else
-                        {
-                            isInValidOperatingTime = false;
-                        }
-                    } catch (Exception e)
+                        // 운영 안하는 시간 03:00:01 ~ 08:59:59 - 팝업 발생
+                        isInValidOperatingTime = true;
+                    } else if (isOverStartTime == true && isOverEndTime == false)
                     {
-                        isInValidOperatingTime = false;
+                        // 점심시간 11:50:01~12:59:59 - 해피톡의 경우 팝업 발생 안함
+                        isInValidOperatingTime = true;
                     }
-                } else
+                } catch (Exception e)
                 {
                     isInValidOperatingTime = false;
                 }
 
-                operatingTimeListener.onInValidOperatingTime(isInValidOperatingTime);
+                return isInValidOperatingTime;
             }
-
-            @Override
-            public void onFailure(Call<BaseDto<TodayDateTime>> call, Throwable t)
-            {
-                operatingTimeListener.onInValidOperatingTime(false);
-            }
-        };
-
-        DailyMobileAPI.getInstance(getActivity()).requestCommonDateTime(getClass().getName(), dateTimeCallback);
-    }
-
-    public void showDailyCallDialog(final OnCallDialogListener listener)
-    {
-        OnOperatingTimeListener operatingTimeListener = new OnOperatingTimeListener()
+        }).subscribe(new Consumer<Boolean>()
         {
             @Override
-            public void onInValidOperatingTime(boolean isInValidOperatingTime)
+            public void accept(@io.reactivex.annotations.NonNull Boolean isInValidOperatingTime) throws Exception
             {
                 if (isInValidOperatingTime == true)
                 {
-                    showNonOperatingTimeDialog(listener);
+                    showNonOperatingTimeDialog();
                 } else
                 {
-                    View.OnClickListener positiveListener = new View.OnClickListener()
+                    showCallCustomerServiceDialog();
+                }
+            }
+        }, new Consumer<Throwable>()
+        {
+            @Override
+            public void accept(@io.reactivex.annotations.NonNull Throwable throwable) throws Exception
+            {
+                ExLog.e(throwable.toString());
+
+                showCallCustomerServiceDialog();
+            }
+        }));
+    }
+
+    public void showCallCustomerServiceDialog()
+    {
+        View.OnClickListener positiveListener = new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                String remoteConfigPhoneNumber = DailyRemoteConfigPreference.getInstance(getActivity()).getRemoteConfigCompanyPhoneNumber();
+                String phoneNumber = DailyTextUtils.isTextEmpty(remoteConfigPhoneNumber) == false //
+                    ? remoteConfigPhoneNumber : Constants.PHONE_NUMBER_DAILYHOTEL;
+
+                String noCallMessage = getActivity().getResources().getString(R.string.toast_msg_no_call_format, phoneNumber);
+
+                if (Util.isTelephonyEnabled(getActivity()) == true)
+                {
+                    try
                     {
-                        @Override
-                        public void onClick(View v)
-                        {
-                            unLockAll();
-
-                            if (listener != null)
-                            {
-                                listener.onPositiveButtonClick(v);
-                            }
-
-                            String remoteConfigPhoneNumber = DailyRemoteConfigPreference.getInstance(getActivity()).getRemoteConfigCompanyPhoneNumber();
-                            String phoneNumber = DailyTextUtils.isTextEmpty(remoteConfigPhoneNumber) == false //
-                                ? remoteConfigPhoneNumber : Constants.PHONE_NUMBER_DAILYHOTEL;
-
-                            String noCallMessage = getActivity().getResources().getString(R.string.toast_msg_no_call_format, phoneNumber);
-
-                            if (Util.isTelephonyEnabled(getActivity()) == true)
-                            {
-                                try
-                                {
-                                    startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + phoneNumber)));
-                                } catch (ActivityNotFoundException e)
-                                {
-                                    DailyToast.showToast(getActivity(), noCallMessage, Toast.LENGTH_LONG);
-                                }
-                            } else
-                            {
-                                DailyToast.showToast(getActivity(), noCallMessage, Toast.LENGTH_LONG);
-                            }
-                        }
-                    };
-
-                    View.OnClickListener nativeListener = new View.OnClickListener()
+                        startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + phoneNumber)));
+                    } catch (ActivityNotFoundException e)
                     {
-                        @Override
-                        public void onClick(View v)
-                        {
-                            if (listener != null)
-                            {
-                                listener.onNativeButtonClick(v);
-                            }
-                        }
-                    };
-
-                    DialogInterface.OnDismissListener dismissListener = new DialogInterface.OnDismissListener()
-                    {
-                        @Override
-                        public void onDismiss(DialogInterface dialog)
-                        {
-                            unLockAll();
-
-                            if (listener != null)
-                            {
-                                listener.onDismissDialog();
-                            }
-                        }
-                    };
-
-                    String[] hour = DailyPreference.getInstance(getActivity()).getOperationTime().split("\\,");
-                    String startHour = hour[0];
-                    String endHour = hour[1];
-
-                    String[] lunchTimes = DailyRemoteConfigPreference.getInstance(getActivity()).getRemoteConfigOperationLunchTime().split("\\,");
-                    String startLunchTime = lunchTimes[0];
-                    String endLunchTime = lunchTimes[1];
-
-                    String operatingTimeMessage = getString(R.string.dialog_msg_call) //
-                        + "\n" + getActivity().getResources().getString(R.string.message_consult02, startHour, endHour, startLunchTime, endLunchTime);
-
-                    getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2), operatingTimeMessage, //
-                        getString(R.string.dialog_btn_call), getString(R.string.dialog_btn_text_cancel) //
-                        , positiveListener, nativeListener, null, dismissListener, true);
-
-                    if (listener != null)
-                    {
-                        listener.onShowDialog();
+                        DailyToast.showToast(getActivity(), noCallMessage, Toast.LENGTH_LONG);
                     }
+                } else
+                {
+                    DailyToast.showToast(getActivity(), noCallMessage, Toast.LENGTH_LONG);
                 }
             }
         };
 
-        checkInValidOperatingTime(operatingTimeListener);
+        String[] hour = DailyPreference.getInstance(getActivity()).getOperationTime().split("\\,");
+        String startHour = hour[0];
+        String endHour = hour[1];
+
+        String[] lunchTimes = DailyRemoteConfigPreference.getInstance(getActivity()).getRemoteConfigOperationLunchTime().split("\\,");
+        String startLunchTime = lunchTimes[0];
+        String endLunchTime = lunchTimes[1];
+
+        String operatingTimeMessage = getString(R.string.dialog_msg_call) //
+            + "\n" + getActivity().getResources().getString(R.string.message_consult02, startHour, endHour, startLunchTime, endLunchTime);
+
+        getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2), operatingTimeMessage, //
+            getString(R.string.dialog_btn_call), getString(R.string.dialog_btn_text_cancel) //
+            , positiveListener, null, true);
     }
 
-    public void showNonOperatingTimeDialog(final OnCallDialogListener listener)
+    public void showNonOperatingTimeDialog()
     {
-        View.OnClickListener positiveListener = v ->
-        {
-            unLockAll();
-
-            if (listener != null)
-            {
-                listener.onPositiveButtonClick(v);
-            }
-        };
-
-        DialogInterface.OnDismissListener dismissListener = dialog ->
-        {
-            unLockAll();
-            if (listener != null)
-            {
-                listener.onDismissDialog();
-            }
-        };
-
         String[] hour = DailyPreference.getInstance(getActivity()).getOperationTime().split("\\,");
         String startHour = hour[0];
         String endHour = hour[1];
@@ -1036,11 +936,6 @@ public class StayCampaignTagListPresenter extends BaseExceptionPresenter<StayCam
             R.string.dialog_message_none_operating_time, startHour, endHour, startLunchTime, endLunchTime);
 
         getViewInterface().showSimpleDialog(getString(R.string.dialog_information), noneOperatingTimeMessage, //
-            getString(R.string.dialog_btn_text_confirm), positiveListener, dismissListener);
-
-        if (listener != null)
-        {
-            listener.onShowDialog();
-        }
+            getString(R.string.dialog_btn_text_confirm), null);
     }
 }
