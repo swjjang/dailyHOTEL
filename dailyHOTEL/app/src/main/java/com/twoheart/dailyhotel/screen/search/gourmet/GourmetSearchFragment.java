@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
+import android.support.v4.util.Pair;
 
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
@@ -22,7 +23,6 @@ import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.place.fragment.PlaceSearchFragment;
 import com.twoheart.dailyhotel.place.layout.PlaceDetailLayout;
 import com.twoheart.dailyhotel.place.layout.PlaceSearchLayout;
-import com.twoheart.dailyhotel.place.networkcontroller.PlaceSearchNetworkController;
 import com.twoheart.dailyhotel.screen.gourmet.detail.GourmetDetailActivity;
 import com.twoheart.dailyhotel.screen.gourmet.filter.GourmetCalendarActivity;
 import com.twoheart.dailyhotel.screen.gourmet.filter.GourmetSearchCalendarActivity;
@@ -45,8 +45,6 @@ import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Consumer;
-import retrofit2.Call;
-import retrofit2.Response;
 
 public class GourmetSearchFragment extends PlaceSearchFragment
 {
@@ -159,12 +157,6 @@ public class GourmetSearchFragment extends PlaceSearchFragment
     protected PlaceSearchLayout getPlaceSearchLayout(Context context)
     {
         return new GourmetSearchLayout(context, mOnEventListener);
-    }
-
-    @Override
-    protected PlaceSearchNetworkController getPlaceSearchNetworkController(Context context)
-    {
-        return new GourmetSearchNetworkController(context, mNetworkTag, mOnNetworkControllerListener);
     }
 
     @Override
@@ -377,21 +369,75 @@ public class GourmetSearchFragment extends PlaceSearchFragment
 
         addCompositeDisposable(mCampaignTagRemoteImpl.getCampaignTagList(getServiceType().name()) //
             .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<ArrayList<CampaignTag>>()
-        {
-            @Override
-            public void accept(@NonNull ArrayList<CampaignTag> campaignTags) throws Exception
             {
-                unLockUI();
-                mPlaceSearchLayout.setRecyclerViewData(mRecentlyGourmetList, mCampaignTagList, mKeywordList);
-            }
-        }, new Consumer<Throwable>()
-        {
-            @Override
-            public void accept(@NonNull Throwable throwable) throws Exception
+                @Override
+                public void accept(@NonNull ArrayList<CampaignTag> campaignTags) throws Exception
+                {
+                    unLockUI();
+                    mPlaceSearchLayout.setRecyclerViewData(mRecentlyGourmetList, mCampaignTagList, mKeywordList);
+                }
+            }, new Consumer<Throwable>()
             {
-                onHandleError(throwable);
-            }
-        }));
+                @Override
+                public void accept(@NonNull Throwable throwable) throws Exception
+                {
+                    onHandleError(throwable);
+                }
+            }));
+    }
+
+    @Override
+    public void setSuggestsList(String keyword, ArrayList<? extends Keyword> list)
+    {
+        if (mAnalyticsDisposable != null)
+        {
+            mAnalyticsDisposable.dispose();
+        }
+
+        mAnalyticsDisposable = null;
+
+        if (isFinishing() == true)
+        {
+            return;
+        }
+
+        mPlaceSearchLayout.updateAutoCompleteLayout(keyword, list);
+
+        if (keyword != null)
+        {
+            mAnalyticsDisposable = Observable.just(keyword).delaySubscription(2, TimeUnit.SECONDS).subscribe(new Consumer<String>()
+            {
+                @Override
+                public void accept(@NonNull String keyword) throws Exception
+                {
+                    int soldOutCount = 0;
+
+                    for (Keyword item : list)
+                    {
+                        GourmetKeyword gourmetKeyword = (GourmetKeyword) item;
+
+                        if (gourmetKeyword != null && gourmetKeyword.index > 0 //
+                            && (gourmetKeyword.availableTickets == 0//
+                            || gourmetKeyword.availableTickets < gourmetKeyword.minimumOrderQuantity//
+                            || gourmetKeyword.isExpired == true))
+                        {
+                            soldOutCount++;
+                        }
+                    }
+
+                    AnalyticsManager.getInstance(getContext()).recordEvent(AnalyticsManager.Category.AUTO_SEARCH_LIST//
+                        , keyword, Integer.toString(list.size()), soldOutCount, null);
+                }
+            }, new Consumer<Throwable>()
+            {
+                @Override
+                public void accept(@NonNull Throwable throwable) throws Exception
+                {
+                    AnalyticsManager.getInstance(getContext()).recordEvent(AnalyticsManager.Category.AUTO_SEARCH_LIST//
+                        , keyword, "0", 0, null);
+                }
+            });
+        }
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -469,7 +515,29 @@ public class GourmetSearchFragment extends PlaceSearchFragment
                 return;
             }
 
-            ((GourmetSearchNetworkController) mPlaceSearchNetworkController).requestAutoComplete(mGourmetBookingDay, keyword);
+            if (DailyTextUtils.isTextEmpty(keyword) == true)
+            {
+                return;
+            }
+
+            mSuggestRemoteImpl.getSuggestsByGourmet(mGourmetBookingDay.getVisitDay("yyyy-MM-dd"), keyword) //
+                .subscribe(new Consumer<Pair<String, ArrayList<GourmetKeyword>>>()
+                {
+                    @Override
+                    public void accept(@NonNull Pair<String, ArrayList<GourmetKeyword>> stringArrayListPair) throws Exception
+                    {
+                        setSuggestsList(stringArrayListPair.first, stringArrayListPair.second);
+                    }
+                }, new Consumer<Throwable>()
+                {
+                    @Override
+                    public void accept(@NonNull Throwable throwable) throws Exception
+                    {
+                        ExLog.w(throwable.toString());
+
+                        setSuggestsList(null, null);
+                    }
+                });
         }
 
         @Override
@@ -608,105 +676,6 @@ public class GourmetSearchFragment extends PlaceSearchFragment
         public void finish()
         {
             mBaseActivity.finish();
-        }
-    };
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    // OnNetworkControllerListener
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-
-    private GourmetSearchNetworkController.OnNetworkControllerListener mOnNetworkControllerListener = new GourmetSearchNetworkController.OnNetworkControllerListener()
-    {
-        @Override
-        public void onResponseAutoComplete(String keyword, List<GourmetKeyword> list)
-        {
-            if (mAnalyticsDisposable != null)
-            {
-                mAnalyticsDisposable.dispose();
-            }
-
-            mAnalyticsDisposable = null;
-
-            if (isFinishing() == true)
-            {
-                return;
-            }
-
-            mPlaceSearchLayout.updateAutoCompleteLayout(keyword, list);
-
-            if (keyword != null)
-            {
-                mAnalyticsDisposable = Observable.just(keyword).delaySubscription(2, TimeUnit.SECONDS).subscribe(new Consumer<String>()
-                {
-                    @Override
-                    public void accept(@NonNull String keyword) throws Exception
-                    {
-                        int soldOutCount = 0;
-
-                        for (GourmetKeyword gourmetKeyword : list)
-                        {
-                            if (gourmetKeyword.index > 0 //
-                                && (gourmetKeyword.availableTickets == 0//
-                                || gourmetKeyword.availableTickets < gourmetKeyword.minimumOrderQuantity//
-                                || gourmetKeyword.isExpired == true))
-                            {
-                                soldOutCount++;
-                            }
-                        }
-
-                        AnalyticsManager.getInstance(getContext()).recordEvent(AnalyticsManager.Category.AUTO_SEARCH_LIST//
-                            , keyword, Integer.toString(list.size()), soldOutCount, null);
-                    }
-                }, new Consumer<Throwable>()
-                {
-                    @Override
-                    public void accept(@NonNull Throwable throwable) throws Exception
-                    {
-                        AnalyticsManager.getInstance(getContext()).recordEvent(AnalyticsManager.Category.AUTO_SEARCH_LIST//
-                            , keyword, "0", 0, null);
-                    }
-                });
-            }
-        }
-
-        @Override
-        public void onDateTime(TodayDateTime todayDateTime)
-        {
-            unLockUI();
-
-            mTodayDateTime = todayDateTime;
-
-            setDateChanged(mTodayDateTime, mGourmetBookingDay);
-        }
-
-        @Override
-        public void onError(Call call, Throwable e, boolean onlyReport)
-        {
-            GourmetSearchFragment.this.onError(call, e, onlyReport);
-        }
-
-        @Override
-        public void onError(Throwable e)
-        {
-            GourmetSearchFragment.this.onError(e);
-        }
-
-        @Override
-        public void onErrorPopupMessage(int msgCode, String message)
-        {
-            GourmetSearchFragment.this.onErrorPopupMessage(msgCode, message);
-        }
-
-        @Override
-        public void onErrorToastMessage(String message)
-        {
-            GourmetSearchFragment.this.onErrorToastMessage(message);
-        }
-
-        @Override
-        public void onErrorResponse(Call call, Response response)
-        {
-            GourmetSearchFragment.this.onErrorResponse(call, response);
         }
     };
 }

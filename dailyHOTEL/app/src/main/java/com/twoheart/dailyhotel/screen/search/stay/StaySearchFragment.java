@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
+import android.support.v4.util.Pair;
 
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
@@ -23,7 +24,6 @@ import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.place.fragment.PlaceSearchFragment;
 import com.twoheart.dailyhotel.place.layout.PlaceDetailLayout;
 import com.twoheart.dailyhotel.place.layout.PlaceSearchLayout;
-import com.twoheart.dailyhotel.place.networkcontroller.PlaceSearchNetworkController;
 import com.twoheart.dailyhotel.screen.gourmet.filter.GourmetSearchCalendarActivity;
 import com.twoheart.dailyhotel.screen.hotel.detail.StayDetailActivity;
 import com.twoheart.dailyhotel.screen.hotel.filter.StayCalendarActivity;
@@ -48,8 +48,6 @@ import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Consumer;
-import retrofit2.Call;
-import retrofit2.Response;
 
 public class StaySearchFragment extends PlaceSearchFragment
 {
@@ -162,12 +160,6 @@ public class StaySearchFragment extends PlaceSearchFragment
     protected PlaceSearchLayout getPlaceSearchLayout(Context context)
     {
         return new StaySearchLayout(context, mOnEventListener);
-    }
-
-    @Override
-    protected PlaceSearchNetworkController getPlaceSearchNetworkController(Context context)
-    {
-        return new StaySearchNetworkController(context, mNetworkTag, mOnNetworkControllerListener);
     }
 
     @Override
@@ -395,21 +387,73 @@ public class StaySearchFragment extends PlaceSearchFragment
 
         addCompositeDisposable(mCampaignTagRemoteImpl.getCampaignTagList(getServiceType().name()) //
             .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<ArrayList<CampaignTag>>()
-        {
-            @Override
-            public void accept(@NonNull ArrayList<CampaignTag> campaignTags) throws Exception
             {
-                unLockUI();
-                mPlaceSearchLayout.setRecyclerViewData(mRecentlyStayList, mCampaignTagList, mKeywordList);
-            }
-        }, new Consumer<Throwable>()
-        {
-            @Override
-            public void accept(@NonNull Throwable throwable) throws Exception
+                @Override
+                public void accept(@NonNull ArrayList<CampaignTag> campaignTags) throws Exception
+                {
+                    unLockUI();
+                    mPlaceSearchLayout.setRecyclerViewData(mRecentlyStayList, mCampaignTagList, mKeywordList);
+                }
+            }, new Consumer<Throwable>()
             {
-                onHandleError(throwable);
-            }
-        }));
+                @Override
+                public void accept(@NonNull Throwable throwable) throws Exception
+                {
+                    onHandleError(throwable);
+                }
+            }));
+    }
+
+    @Override
+    public void setSuggestsList(String keyword, ArrayList<? extends Keyword> list)
+    {
+        if (mAnalyticsDisposable != null)
+        {
+            mAnalyticsDisposable.dispose();
+        }
+
+        mAnalyticsDisposable = null;
+
+        if (isFinishing() == true)
+        {
+            return;
+        }
+
+        mPlaceSearchLayout.updateAutoCompleteLayout(keyword, list);
+
+        if (keyword != null)
+        {
+            mAnalyticsDisposable = Observable.just(keyword).delaySubscription(2, TimeUnit.SECONDS).subscribe(new Consumer<String>()
+            {
+                @Override
+                public void accept(@NonNull String keyword) throws Exception
+                {
+                    int soldOutCount = 0;
+
+                    for (Keyword item : list)
+                    {
+                        StayKeyword stayKeyword = (StayKeyword) item;
+
+                        if (stayKeyword != null && stayKeyword.index > 0 //
+                            && stayKeyword.availableRooms == 0)
+                        {
+                            soldOutCount++;
+                        }
+                    }
+
+                    AnalyticsManager.getInstance(getContext()).recordEvent(AnalyticsManager.Category.AUTO_SEARCH_LIST//
+                        , keyword, Integer.toString(list.size()), soldOutCount, null);
+                }
+            }, new Consumer<Throwable>()
+            {
+                @Override
+                public void accept(@NonNull Throwable throwable) throws Exception
+                {
+                    AnalyticsManager.getInstance(getContext()).recordEvent(AnalyticsManager.Category.AUTO_SEARCH_LIST//
+                        , keyword, "0", 0, null);
+                }
+            });
+        }
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -501,7 +545,42 @@ public class StaySearchFragment extends PlaceSearchFragment
                 return;
             }
 
-            ((StaySearchNetworkController) mPlaceSearchNetworkController).requestAutoComplete(mStayBookingDay, keyword);
+            if (DailyTextUtils.isTextEmpty(keyword) == true)
+            {
+                return;
+            }
+
+            String checkInDate;
+            int nights;
+
+            try
+            {
+                checkInDate = mStayBookingDay.getCheckInDay("yyyy-MM-dd");
+                nights = mStayBookingDay.getNights();
+            } catch (Exception e)
+            {
+                ExLog.e(e.toString());
+                return;
+            }
+
+            mSuggestRemoteImpl.getSuggestsByStayInbound(checkInDate, nights, keyword) //
+                .subscribe(new Consumer<Pair<String, ArrayList<StayKeyword>>>()
+                {
+                    @Override
+                    public void accept(@NonNull Pair<String, ArrayList<StayKeyword>> stringArrayListPair) throws Exception
+                    {
+                        setSuggestsList(stringArrayListPair.first, stringArrayListPair.second);
+                    }
+                }, new Consumer<Throwable>()
+                {
+                    @Override
+                    public void accept(@NonNull Throwable throwable) throws Exception
+                    {
+                        ExLog.w(throwable.toString());
+
+                        setSuggestsList(null, null);
+                    }
+                });
         }
 
         @Override
@@ -652,102 +731,6 @@ public class StaySearchFragment extends PlaceSearchFragment
         public void finish()
         {
             mBaseActivity.finish();
-        }
-    };
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    // OnNetworkControllerListener
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-
-    private StaySearchNetworkController.OnNetworkControllerListener mOnNetworkControllerListener = new StaySearchNetworkController.OnNetworkControllerListener()
-    {
-        @Override
-        public void onResponseAutoComplete(String keyword, List<StayKeyword> list)
-        {
-            if (mAnalyticsDisposable != null)
-            {
-                mAnalyticsDisposable.dispose();
-            }
-
-            mAnalyticsDisposable = null;
-
-            if (isFinishing() == true)
-            {
-                return;
-            }
-
-            mPlaceSearchLayout.updateAutoCompleteLayout(keyword, list);
-
-            if (keyword != null)
-            {
-                mAnalyticsDisposable = Observable.just(keyword).delaySubscription(2, TimeUnit.SECONDS).subscribe(new Consumer<String>()
-                {
-                    @Override
-                    public void accept(@NonNull String keyword) throws Exception
-                    {
-                        int soldOutCount = 0;
-
-                        for (StayKeyword stayKeyword : list)
-                        {
-                            if (stayKeyword.index > 0 && stayKeyword.availableRooms == 0)
-                            {
-                                soldOutCount++;
-                            }
-                        }
-
-                        AnalyticsManager.getInstance(getContext()).recordEvent(AnalyticsManager.Category.AUTO_SEARCH_LIST//
-                            , keyword, Integer.toString(list.size()), soldOutCount, null);
-                    }
-                }, new Consumer<Throwable>()
-                {
-                    @Override
-                    public void accept(@NonNull Throwable throwable) throws Exception
-                    {
-                        AnalyticsManager.getInstance(getContext()).recordEvent(AnalyticsManager.Category.AUTO_SEARCH_LIST//
-                            , keyword, "0", 0, null);
-                    }
-                });
-            }
-        }
-
-        @Override
-        public void onDateTime(TodayDateTime todayDateTime)
-        {
-            unLockUI();
-
-            mTodayDateTime = todayDateTime;
-
-            setDateChanged(mTodayDateTime, mStayBookingDay);
-        }
-
-        @Override
-        public void onError(Call call, Throwable e, boolean onlyReport)
-        {
-            StaySearchFragment.this.onError(call, e, onlyReport);
-        }
-
-        @Override
-        public void onError(Throwable e)
-        {
-            StaySearchFragment.this.onError(e);
-        }
-
-        @Override
-        public void onErrorPopupMessage(int msgCode, String message)
-        {
-            StaySearchFragment.this.onErrorPopupMessage(msgCode, message);
-        }
-
-        @Override
-        public void onErrorToastMessage(String message)
-        {
-            StaySearchFragment.this.onErrorToastMessage(message);
-        }
-
-        @Override
-        public void onErrorResponse(Call call, Response response)
-        {
-            StaySearchFragment.this.onErrorResponse(call, response);
         }
     };
 }

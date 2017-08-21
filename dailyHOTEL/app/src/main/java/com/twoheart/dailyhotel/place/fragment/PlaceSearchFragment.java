@@ -17,6 +17,7 @@ import com.daily.dailyhotel.entity.SearchCalendarReturnData;
 import com.daily.dailyhotel.repository.remote.CampaignTagRemoteImpl;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
 import com.daily.dailyhotel.repository.remote.RecentlyRemoteImpl;
+import com.daily.dailyhotel.repository.remote.SuggestRemoteImpl;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Keyword;
 import com.twoheart.dailyhotel.network.model.TodayDateTime;
@@ -24,7 +25,6 @@ import com.twoheart.dailyhotel.place.activity.PlaceSearchResultActivity;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.base.BaseFragment;
 import com.twoheart.dailyhotel.place.layout.PlaceSearchLayout;
-import com.twoheart.dailyhotel.place.networkcontroller.PlaceSearchNetworkController;
 import com.twoheart.dailyhotel.screen.common.PermissionManagerActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyLocationFactory;
@@ -52,12 +52,12 @@ public abstract class PlaceSearchFragment extends BaseFragment
 
     protected DailyRecentSearches mDailyRecentSearches;
     protected PlaceSearchLayout mPlaceSearchLayout;
-    protected PlaceSearchNetworkController mPlaceSearchNetworkController;
     protected OnSearchFragmentListener mOnSearchFragmentListener;
 
     protected CommonRemoteImpl mCommonRemoteImpl;
     protected RecentlyRemoteImpl mRecentlyRemoteImpl;
     protected CampaignTagRemoteImpl mCampaignTagRemoteImpl;
+    protected SuggestRemoteImpl mSuggestRemoteImpl;
 
     protected TodayDateTime mTodayDateTime;
     protected ArrayList<CampaignTag> mCampaignTagList;
@@ -69,8 +69,6 @@ public abstract class PlaceSearchFragment extends BaseFragment
     protected abstract int getLayoutResourceId();
 
     protected abstract PlaceSearchLayout getPlaceSearchLayout(Context context);
-
-    protected abstract PlaceSearchNetworkController getPlaceSearchNetworkController(Context context);
 
     protected abstract String getRecentSearches();
 
@@ -87,6 +85,8 @@ public abstract class PlaceSearchFragment extends BaseFragment
     public abstract Constants.ServiceType getServiceType();
 
     public abstract void setTodayDateTime(TodayDateTime todayDateTime);
+
+    public abstract void setSuggestsList(String keyword, ArrayList<? extends Keyword> list);
 
     public abstract void requestCampaignTagList();
 
@@ -105,10 +105,10 @@ public abstract class PlaceSearchFragment extends BaseFragment
         mBaseActivity = (BaseActivity) getActivity();
 
         mPlaceSearchLayout = getPlaceSearchLayout(mBaseActivity);
-        mPlaceSearchNetworkController = getPlaceSearchNetworkController(mBaseActivity);
         mCommonRemoteImpl = new CommonRemoteImpl(mBaseActivity);
         mRecentlyRemoteImpl = new RecentlyRemoteImpl(mBaseActivity);
         mCampaignTagRemoteImpl = new CampaignTagRemoteImpl(mBaseActivity);
+        mSuggestRemoteImpl = new SuggestRemoteImpl(mBaseActivity);
 
         View view = mPlaceSearchLayout.onCreateView(getLayoutResourceId(), container);
 

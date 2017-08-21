@@ -266,16 +266,6 @@ public class DailyMobileAPI
         executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
     }
 
-    public void requestStaySearchAutoCompleteList(String tag, String date, int stays, String term, Object listener)
-    {
-        final String URL = Constants.UNENCRYPTED_URL ? "api/v4/hotels/sales/search/suggest"//
-            : "NDYkNDUkMjIkMTkkMTE3JDEzMCQxMiQ4MiQxMTMkMTA5JDEwOSQ0OSQ3MyQ4MiQyMSQzMSQ=$Nzc1NkI5NTdDHNzQzNUYLIzRkLE5NkUD0NjM4RjVCRTZCMzA3MLLTFNBRUM0RjE0MkVERUQyMDNSCOENENjYGzNM0VGREZDMjdFMkU4RUJEMzI0ODkJAxNzZCFNUU0NTUYxMEVDMDgwQDTlE$";
-
-        ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestStaySearchAutoCompleteList(Crypto.getUrlDecoderEx(URL), date, stays, term);
-        executorCallbackCall.setTag(tag);
-        executorCallbackCall.enqueue((retrofit2.Callback<BaseListDto<StayKeyword>>) listener);
-    }
-
     public void requestStayRegionList(String tag, Object listener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/v3/hotel/region"//
@@ -393,16 +383,6 @@ public class DailyMobileAPI
         ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestGourmetList(Crypto.getUrlDecoderEx(URL), queryMap, categoryList, timeList, luxuryList);
         executorCallbackCall.setTag(tag);
         executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
-    }
-
-    public void requestGourmetSearchAutoCompleteList(String tag, String date, String term, Object listener)
-    {
-        final String URL = Constants.UNENCRYPTED_URL ? "api/v4/gourmet/sales/search/suggest"//
-            : "NjMkNzkkMTE3JDQwJDQxJDUzJDk0JDc0JDU2JDE5JDQ0JDYzJDExJDM4JDQ3JDEyJA==$OUYzQkNBN0ZOVFMDc2QjAIzMEU4OTBBODhENkI3OQTc4GNMXKEZBNDQ5MUIA1MFzIwOGTZERTZWDRUIxMTTA3QkQyQUTZGOUYzRjhBROTJGNTc4OTNFOTUzNDQwN0M3OUQVzQkFFMTlBNUM2$";
-
-        ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestGourmetSearchAutoCompleteList(Crypto.getUrlDecoderEx(URL), date, term);
-        executorCallbackCall.setTag(tag);
-        executorCallbackCall.enqueue((retrofit2.Callback<BaseListDto<GourmetKeyword>>) listener);
     }
 
     public void requestGourmetDetailInformation(String tag, int index, String date, Object listener)
@@ -1560,5 +1540,22 @@ public class DailyMobileAPI
         urlParams.put("{idx}", Integer.toString(tagIndex));
 
         return mDailyMobileService.getGourmetCampaignTags(Crypto.getUrlDecoderEx(URL, urlParams), visitDate).subscribeOn(Schedulers.io());
+    }
+
+    public Observable<BaseListDto<StayKeyword>> getSuggestsByStayInbound(String date, int stays, String term)
+    {
+        final String URL = Constants.UNENCRYPTED_URL ? "api/v4/hotels/sales/search/suggest"//
+            : "NDYkNDUkMjIkMTkkMTE3JDEzMCQxMiQ4MiQxMTMkMTA5JDEwOSQ0OSQ3MyQ4MiQyMSQzMSQ=$Nzc1NkI5NTdDHNzQzNUYLIzRkLE5NkUD0NjM4RjVCRTZCMzA3MLLTFNBRUM0RjE0MkVERUQyMDNSCOENENjYGzNM0VGREZDMjdFMkU4RUJEMzI0ODkJAxNzZCFNUU0NTUYxMEVDMDgwQDTlE$";
+
+
+        return mDailyMobileService.getSuggestsByStayInbound(Crypto.getUrlDecoderEx(URL), date, stays, term).subscribeOn(Schedulers.io());
+    }
+
+    public Observable<BaseListDto<GourmetKeyword>> getSuggestsByGourmet(String date, String term)
+    {
+        final String URL = Constants.UNENCRYPTED_URL ? "api/v4/gourmet/sales/search/suggest"//
+            : "NjMkNzkkMTE3JDQwJDQxJDUzJDk0JDc0JDU2JDE5JDQ0JDYzJDExJDM4JDQ3JDEyJA==$OUYzQkNBN0ZOVFMDc2QjAIzMEU4OTBBODhENkI3OQTc4GNMXKEZBNDQ5MUIA1MFzIwOGTZERTZWDRUIxMTTA3QkQyQUTZGOUYzRjhBROTJGNTc4OTNFOTUzNDQwN0M3OUQVzQkFFMTlBNUM2$";
+
+        return mDailyMobileService.getSuggestsByGourmet(Crypto.getUrlDecoderEx(URL), date, term).subscribeOn(Schedulers.io());
     }
 }

@@ -134,13 +134,6 @@ public interface DailyMobileService
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET("{mobileAPI}")
-    Call<BaseListDto<StayKeyword>> requestStaySearchAutoCompleteList(@Path(value = "mobileAPI", encoded = true) String mobileAPI, //
-                                                                     @Query("dateCheckIn") String date, //
-                                                                     @Query("stays") int stays, //
-                                                                     @Query("term") String term);
-
-    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
-    @GET("{mobileAPI}")
     Call<JSONObject> requestStayRegionList(@Path(value = "mobileAPI", encoded = true) String mobileAPI);
 
     @GET("{mobileAPI}")
@@ -186,9 +179,6 @@ public interface DailyMobileService
                                         @Query("category") List<String> categoryList,//
                                         @Query("timeFrame") List<String> timeList,//
                                         @Query("luxury") List<String> luxuryList);
-
-    @GET("{mobileAPI}")
-    Call<BaseListDto<GourmetKeyword>> requestGourmetSearchAutoCompleteList(@Path(value = "mobileAPI", encoded = true) String mobileAPI, @Query("reservationDate") String date, @Query("term") String term);
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET("{mobileAPI}")
@@ -738,4 +728,18 @@ public interface DailyMobileService
     @GET("{mobileAPI}")
     Observable<BaseDto<GourmetCampaignTagsData>> getGourmetCampaignTags(@Path(value = "mobileAPI", encoded = true) String mobileAPI, //
                                                                         @Query("salesDate") String visitDate);
+
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
+    @GET("{mobileAPI}")
+    Observable<BaseListDto<StayKeyword>> getSuggestsByStayInbound(@Path(value = "mobileAPI", encoded = true) String mobileAPI, //
+                                                                  @Query("dateCheckIn") String date, //
+                                                                  @Query("stays") int stays, //
+                                                                  @Query("term") String term);
+
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
+    @GET("{mobileAPI}")
+    Observable<BaseListDto<GourmetKeyword>> getSuggestsByGourmet(@Path(value = "mobileAPI", encoded = true) String mobileAPI, //
+                                                                 @Query("reservationDate") String date, //
+                                                                 @Query("term") String term);
+
 }
