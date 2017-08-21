@@ -449,7 +449,7 @@
 
     <string name="label_link_facebook">데일리 페이스북</string>
     <string name="label_link_instagram">데일리 인스타그램</string>
-    <string name="label_link_naver">데일리 블로그</string>
+    <string name="label_link_naver">데일리 포스트</string>
     <string name="label_link_youtube">데일리 유튜브</string>
 
     <string name="message_empty_notice">공지사항이 없습니다.</string>
