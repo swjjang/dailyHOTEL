@@ -117,8 +117,7 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
 
         void onEventAgreedTermClick(Activity activity, String gourmetName, String menuName);
 
-        GourmetThankYouAnalyticsParam getThankYouAnalyticsParam(DailyBookingPaymentTypeView.PaymentType paymentType//
-            , boolean fullBonus, boolean usedBonus, boolean registerEasyCard);
+        GourmetThankYouAnalyticsParam getThankYouAnalyticsParam();
     }
 
     public GourmetPaymentPresenter(@NonNull GourmetPaymentActivity activity)
@@ -1104,7 +1103,7 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
     {
         startActivityForResult(GourmetThankYouActivity.newInstance(getActivity(), mGourmetName, mImageUrl//
             , mVisitDateTime, mMenuName, mMenuCount, bookingIndex//
-            , mAnalytics.getThankYouAnalyticsParam(mPaymentType, true, mBonusSelected, mSelectedCard != null))//
+            , mAnalytics.getThankYouAnalyticsParam())//
             , GourmetPaymentActivity.REQUEST_CODE_THANK_YOU);
 
         try

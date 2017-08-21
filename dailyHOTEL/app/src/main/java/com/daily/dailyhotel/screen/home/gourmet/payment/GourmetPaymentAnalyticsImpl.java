@@ -315,15 +315,10 @@ public class GourmetPaymentAnalyticsImpl implements GourmetPaymentPresenter.Gour
     }
 
     @Override
-    public GourmetThankYouAnalyticsParam getThankYouAnalyticsParam(DailyBookingPaymentTypeView.PaymentType paymentType//
-        , boolean fullBonus, boolean usedBonus, boolean registerEasyCard)
+    public GourmetThankYouAnalyticsParam getThankYouAnalyticsParam()
     {
         GourmetThankYouAnalyticsParam analyticsParam = new GourmetThankYouAnalyticsParam();
-
-        //        analyticsParam.paymentType = paymentType;
-        //        analyticsParam.fullBonus = fullBonus;
-        //        analyticsParam.usedBonus = usedBonus;
-        //        analyticsParam.registerEasyCard = registerEasyCard;
+        analyticsParam.params = mPaymentParamMap;
 
         return analyticsParam;
     }

@@ -17,6 +17,7 @@ import com.daily.dailyhotel.entity.UserTracking;
 import com.daily.dailyhotel.parcel.analytics.GourmetThankYouAnalyticsParam;
 import com.daily.dailyhotel.repository.remote.ProfileRemoteImpl;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.util.DailyInternalDeepLink;
 import com.twoheart.dailyhotel.util.DailyUserPreference;
 
 import io.reactivex.functions.Consumer;
@@ -31,6 +32,7 @@ public class GourmetThankYouPresenter extends BaseExceptionPresenter<GourmetThan
 
     private ProfileRemoteImpl mProfileRemoteImpl;
 
+    private int mReservationId;
     private String mGourmetName;
     private String mImageUrl;
     private GourmetBookDateTime mGourmetBookDateTime;
@@ -103,6 +105,7 @@ public class GourmetThankYouPresenter extends BaseExceptionPresenter<GourmetThan
 
         mMenuName = intent.getStringExtra(GourmetThankYouActivity.INTENT_EXTRA_DATA_MENU_NAME);
         mMenuCount = intent.getIntExtra(GourmetThankYouActivity.INTENT_EXTRA_DATA_MENU_COUNT, 0);
+        mReservationId = intent.getIntExtra(GourmetThankYouActivity.INTENT_EXTRA_DATA_RESERVATION_ID, -1);
 
         mAnalytics.setAnalyticsParam(intent.getParcelableExtra(BaseActivity.INTENT_EXTRA_DATA_ANALYTICS));
 
@@ -203,9 +206,9 @@ public class GourmetThankYouPresenter extends BaseExceptionPresenter<GourmetThan
             return true;
         }
 
-        setResult(Activity.RESULT_OK);
-
         mAnalytics.onEventBackClick(getActivity());
+
+        startActivity(DailyInternalDeepLink.getGourmetBookingDetailScreenLink(getActivity(), mReservationId));
 
         return super.onBackPressed();
     }
@@ -263,9 +266,15 @@ public class GourmetThankYouPresenter extends BaseExceptionPresenter<GourmetThan
     @Override
     public void onConfirmClick()
     {
+        if (isLock() == true)
+        {
+            return;
+        }
+
         mAnalytics.onEventConfirmClick(getActivity());
 
-        setResult(Activity.RESULT_OK);
+        startActivity(DailyInternalDeepLink.getGourmetBookingDetailScreenLink(getActivity(), mReservationId));
+
         finish();
     }
 
