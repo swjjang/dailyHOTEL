@@ -1997,10 +1997,7 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
                             continue;
                         }
 
-                        String bookingCheckInDateTime = DailyCalendar.convertDateFormatString(booking.checkInDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyy-MM-dd");
-                        String bookingCheckOutDateTime = DailyCalendar.convertDateFormatString(booking.checkOutDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyy-MM-dd");
-
-                        if (checkInDateTime.equalsIgnoreCase(bookingCheckInDateTime) == true//
+                        if (checkInDateTime.equalsIgnoreCase(booking.checkInDateTime) == true//
                             && booking.placeName.equalsIgnoreCase(stayName) == true)
                         {
                             return true;
