@@ -212,6 +212,9 @@ public class DailyPreference
         boolean isProductDetailGuide = getGourmetProductDetailGuide();
         boolean isStayOutboundNew = isHomeShortCutStayOutboundNew();
 
+        String stayRecentSearches = getHotelRecentSearches();
+        String gourmetRecentSearches = getGourmetRecentSearches();
+
         if (mEditor != null)
         {
             mEditor.clear();
@@ -230,6 +233,8 @@ public class DailyPreference
         setShowAppPermissionsGuide(isShowAppPermissionsGuide);
         setGourmetProductDetailGuide(isProductDetailGuide);
         setHomeShortCutStayOutboundNew(isStayOutboundNew);
+        setHotelRecentSearches(stayRecentSearches);
+        setGourmetRecentSearches(gourmetRecentSearches);
 
         DailyHotel.AUTHORIZATION = null;
     }
