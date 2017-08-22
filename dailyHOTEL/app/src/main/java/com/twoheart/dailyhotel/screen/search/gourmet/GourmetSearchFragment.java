@@ -454,8 +454,9 @@ public class GourmetSearchFragment extends PlaceSearchFragment
                 return;
             }
 
-            mPlaceSearchLayout.resetSearchKeyword();
-            mPlaceSearchLayout.hideSearchKeyboard();
+            hideSearchKeyboard();
+            resetSearchKeyword();
+            hideAutoCompleteLayout();
         }
 
         @Override

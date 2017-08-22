@@ -112,7 +112,7 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
         initSearchLayout(view);
         initCalendarLayout(view);
         initAroundLayout(view);
-        initSearchKeywordLayout(view);
+        initAutoCompleteLayout(view);
         initRecyclerView(view);
     }
 
@@ -167,6 +167,7 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
                 if (mSearchEditText.getText().length() == 0)
                 {
                     hideSearchKeyboard();
+                    hideAutoCompleteLayout();
                 }
             }
         });
@@ -270,11 +271,6 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
         updateTermsOfLocationLayout(mTermsOfLocationView);
     }
 
-    private void initSearchKeywordLayout(View view)
-    {
-        initAutoCompleteLayout(view);
-    }
-
     private void initRecyclerView(View view)
     {
         mCircleIndicator = (DailySearchCircleIndicator) view.findViewById(R.id.searchCircleIndicator);
@@ -369,7 +365,7 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
 
     public void hideSearchKeyboard()
     {
-        hideAutoCompleteLayout();
+//        hideAutoCompleteLayout();
         mSearchEditText.clearFocus();
 
         InputMethodManager inputMethodManager = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -433,6 +429,7 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
                 }
 
                 hideSearchKeyboard();
+                hideAutoCompleteLayout();
             }
         });
 
@@ -587,6 +584,11 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
             case R.id.calendarTextView:
             {
                 hideSearchKeyboard();
+
+                if (mSearchEditText.getText().length() == 0)
+                {
+                    hideAutoCompleteLayout();
+                }
 
                 mSearchEditText.postDelayed(new Runnable()
                 {
