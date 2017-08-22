@@ -358,10 +358,7 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
         mRoomName = savedInstanceState.getString("roomName");
         mTransportationType = savedInstanceState.getString("transportationType");
 
-        String checkInDateTime = savedInstanceState.getString("checkInDateTime");
-        String checkOutDateTime = savedInstanceState.getString("checkOutDateTime");
-
-        setStayBookDateTime(checkInDateTime, checkOutDateTime);
+        setStayBookDateTime(savedInstanceState.getString("checkInDateTime"), savedInstanceState.getString("checkOutDateTime"));
 
         try
         {
