@@ -811,19 +811,30 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
         }
     }
 
-    private ArrayList<HomePlace> convertHomePlaceList(List<Gourmet> gourmetList)
+    private ArrayList<HomePlace> convertHomePlaceList(List<Gourmet> list)
     {
+        ArrayList<Gourmet> gourmetList = new ArrayList<>();
         ArrayList<HomePlace> homePlaceList = new ArrayList<HomePlace>();
 
-        if (gourmetList == null || gourmetList.size() == 0)
+        if (list == null || list.size() == 0)
         {
+            mRecommendGourmetList = gourmetList;
             return homePlaceList;
         }
 
-        for (Gourmet gourmet : gourmetList)
+        for (Gourmet gourmet : list)
         {
             try
             {
+                if (gourmet.isSoldOut == true)
+                {
+                    // sold out 업장 제외하기로 함
+                    ExLog.d(gourmet.name + " , " + gourmet.isSoldOut + " : " + gourmet.availableTicketNumbers);
+                    continue;
+                }
+
+                gourmetList.add(gourmet);
+
                 HomePlace homePlace = new HomePlace();
                 homePlace.index = gourmet.index;
                 homePlace.title = gourmet.name;
@@ -850,9 +861,14 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
                 homePlaceList.add(homePlace);
             } catch (Exception e)
             {
-                ExLog.w(gourmet.index + " | " + gourmet.name + " :: " + e.getMessage());
+                if (gourmet != null)
+                {
+                    ExLog.w(gourmet.index + " | " + gourmet.name + " :: " + e.getMessage());
+                }
             }
         }
+
+        mRecommendGourmetList = gourmetList;
 
         return homePlaceList;
     }
@@ -1501,7 +1517,7 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
                             @Override
                             public ArrayList<HomePlace> apply(@NonNull List<Gourmet> gourmets) throws Exception
                             {
-                                mRecommendGourmetList = gourmets;
+//                                mRecommendGourmetList = gourmets;
                                 return convertHomePlaceList(gourmets);
                             }
                         }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<ArrayList<HomePlace>>()
