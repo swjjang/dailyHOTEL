@@ -14,6 +14,7 @@ package com.twoheart.dailyhotel.screen.booking.list;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.databinding.DataBindingUtil;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -22,7 +23,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.daily.base.util.DailyTextUtils;
@@ -36,9 +36,9 @@ import com.daily.dailyhotel.repository.remote.BookingRemoteImpl;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
 import com.daily.dailyhotel.repository.remote.ProfileRemoteImpl;
 import com.daily.dailyhotel.screen.booking.detail.stay.outbound.StayOutboundBookingDetailActivity;
-import com.daily.dailyhotel.view.DailyToolbarView;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.databinding.FragmentBookingListDataBinding;
 import com.twoheart.dailyhotel.model.PlacePaymentInformation;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
@@ -56,7 +56,6 @@ import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Screen;
-import com.twoheart.dailyhotel.widget.PinnedSectionRecyclerView;
 
 import org.json.JSONObject;
 
@@ -82,9 +81,7 @@ import retrofit2.Response;
 public class BookingListFragment extends BaseMenuNavigationFragment implements View.OnClickListener
 {
     private BookingListAdapter mAdapter;
-    private RelativeLayout mEmptyLayout;
-    private PinnedSectionRecyclerView mRecyclerView;
-    private View mLoginView;
+    private FragmentBookingListDataBinding mViewDataBinding;
     boolean mDontReload;
 
     private CommonDateTime mCommonDateTime;
@@ -118,12 +115,12 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
     {
         BaseActivity baseActivity = (BaseActivity) getActivity();
 
-        View view = inflater.inflate(R.layout.fragment_booking_list, container, false);
+        mViewDataBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_booking_list_data, container, false);
 
-        initToolbar(baseActivity, view);
-        initLayout(view);
+        initToolbar(baseActivity, mViewDataBinding);
+        initLayout(mViewDataBinding);
 
-        return view;
+        return mViewDataBinding.getRoot();
     }
 
     @Override
@@ -146,19 +143,27 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
         }
     }
 
-    private void initToolbar(BaseActivity baseActivity, View view)
+    private void initToolbar(BaseActivity baseActivity, FragmentBookingListDataBinding dataBinding)
     {
-        DailyToolbarView dailyToolbarView = (DailyToolbarView) view.findViewById(R.id.toolbarView);
-        dailyToolbarView.setTitleText(R.string.actionbar_title_booking_list_frag);
-        dailyToolbarView.setBackVisible(false);
+        if (dataBinding == null)
+        {
+            return;
+        }
+
+        dataBinding.toolbarView.setTitleText(R.string.actionbar_title_booking_list_frag);
+        dataBinding.toolbarView.setBackVisible(false);
     }
 
-    private void initLayout(View view)
+    private void initLayout(FragmentBookingListDataBinding dataBinding)
     {
-        mRecyclerView = (PinnedSectionRecyclerView) view.findViewById(R.id.bookingRecyclerView);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        EdgeEffectColor.setEdgeGlowColor(mRecyclerView, getContext().getResources().getColor(R.color.default_over_scroll_edge));
-        mRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener()
+        if (dataBinding == null)
+        {
+            return;
+        }
+
+        dataBinding.bookingRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        EdgeEffectColor.setEdgeGlowColor(dataBinding.bookingRecyclerView, getContext().getResources().getColor(R.color.default_over_scroll_edge));
+        dataBinding.bookingRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener()
         {
             int mOldY;
 
@@ -183,14 +188,16 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
             }
         });
 
-        mEmptyLayout = (RelativeLayout) view.findViewById(R.id.emptyLayout);
-        mLoginView = view.findViewById(R.id.loginView);
-
-        mLoginView.setOnClickListener(this);
+        dataBinding.loginTextView.setOnClickListener(this);
     }
 
     void updateLayout(boolean isSignin, List<ListItem> listItemList)
     {
+        if (mViewDataBinding == null)
+        {
+            return;
+        }
+
         BaseActivity baseActivity = (BaseActivity) getActivity();
 
         if (baseActivity == null || baseActivity.isFinishing() == true)
@@ -200,8 +207,8 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
 
         if (isSignin == false)
         {
-            mRecyclerView.setVisibility(View.GONE);
-            mEmptyLayout.setVisibility(View.VISIBLE);
+            mViewDataBinding.bookingRecyclerView.setVisibility(View.GONE);
+            mViewDataBinding.emptyLayout.setVisibility(View.GONE);
         } else
         {
             if (listItemList == null || listItemList.size() == 0)
@@ -212,16 +219,16 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
                 }
 
                 //예약한 호텔이 없는 경우
-                mRecyclerView.setVisibility(View.GONE);
-                mEmptyLayout.setVisibility(View.VISIBLE);
-                mLoginView.setVisibility(View.INVISIBLE);
+                mViewDataBinding.bookingRecyclerView.setVisibility(View.GONE);
+                mViewDataBinding.emptyLayout.setVisibility(View.VISIBLE);
+                mViewDataBinding.loginTextView.setVisibility(View.INVISIBLE);
             } else
             {
                 if (mAdapter == null)
                 {
                     mAdapter = new BookingListAdapter(baseActivity, new ArrayList<>());
                     mAdapter.setOnUserActionListener(mOnUserActionListener);
-                    mRecyclerView.setAdapter(mAdapter);
+                    mViewDataBinding.bookingRecyclerView.setAdapter(mAdapter);
                 } else
                 {
                     mAdapter.clear();
@@ -230,8 +237,8 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
                 mAdapter.addAll(listItemList);
                 mAdapter.notifyDataSetChanged();
 
-                mRecyclerView.setVisibility(View.VISIBLE);
-                mEmptyLayout.setVisibility(View.GONE);
+                mViewDataBinding.bookingRecyclerView.setVisibility(View.VISIBLE);
+                mViewDataBinding.emptyLayout.setVisibility(View.GONE);
             }
         }
     }
@@ -292,19 +299,21 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
     @Override
     public void onClick(View v)
     {
-        if (v.getId() == mLoginView.getId())
+        switch (v.getId())
         {
-            BaseActivity baseActivity = (BaseActivity) getActivity();
+            case R.id.loginTextView:
+                BaseActivity baseActivity = (BaseActivity) getActivity();
 
-            if (baseActivity == null)
-            {
-                return;
-            }
+                if (baseActivity == null)
+                {
+                    return;
+                }
 
-            Intent intent = LoginActivity.newInstance(baseActivity);
-            startActivity(intent);
+                Intent intent = LoginActivity.newInstance(baseActivity);
+                startActivity(intent);
 
-            //            AnalyticsManager.getInstance(getActivity()).recordEvent(Screen.BOOKING_LIST, Action.CLICK, Label.LOGIN_, 0L);
+                //            AnalyticsManager.getInstance(getActivity()).recordEvent(Screen.BOOKING_LIST, Action.CLICK, Label.LOGIN_, 0L);
+                break;
         }
     }
 
@@ -644,10 +653,12 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
     @Override
     public void scrollTop()
     {
-        if (mRecyclerView != null)
+        if (mViewDataBinding == null)
         {
-            mRecyclerView.smoothScrollToPosition(0);
+            return;
         }
+
+        mViewDataBinding.bookingRecyclerView.smoothScrollToPosition(0);
     }
 
     private List<ListItem> getBookingSortList(List<Booking> bookingList) throws Exception

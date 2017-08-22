@@ -433,11 +433,11 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
     @Override
     protected void showPaymentWeb(PlacePaymentInformation paymentInformation, PlaceBookingDay placeBookingDay)
     {
-        Intent intent = new Intent(this, GourmetPaymentWebActivity.class);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_PAYMENTINFORMATION, paymentInformation);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, placeBookingDay);
-
-        startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PAYMENT);
+//        Intent intent = new Intent(this, GourmetPaymentWebActivity.class);
+//        intent.putExtra(NAME_INTENT_EXTRA_DATA_PAYMENTINFORMATION, paymentInformation);
+//        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, placeBookingDay);
+//
+//        startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PAYMENT);
     }
 
     @Override
