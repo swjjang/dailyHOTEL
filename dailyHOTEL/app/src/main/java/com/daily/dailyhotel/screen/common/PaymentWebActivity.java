@@ -1,4 +1,4 @@
-package com.daily.dailyhotel.screen.home.stay.inbound.payment;
+package com.daily.dailyhotel.screen.common;
 
 import android.content.Context;
 import android.content.Intent;
@@ -12,17 +12,10 @@ import com.daily.base.util.ExLog;
 import com.daily.base.widget.DailyToast;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.Setting;
-import com.twoheart.dailyhotel.place.activity.PlacePaymentWebActivity;
+import com.twoheart.dailyhotel.place.activity.BasePaymentWebActivity;
 import com.twoheart.dailyhotel.util.Constants;
-import com.twoheart.dailyhotel.util.Crypto;
-import com.twoheart.dailyhotel.util.DailyPreference;
-import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import org.json.JSONObject;
-
-import java.util.HashMap;
-import java.util.Map;
 
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
@@ -34,65 +27,47 @@ import okhttp3.Response;
  * Created by android_sam on 2017. 3. 17..
  */
 
-public class StayPaymentWebActivity extends PlacePaymentWebActivity
+public class PaymentWebActivity extends BasePaymentWebActivity
 {
-    private String URL_WEBAPI_PAYMENT = Constants.UNENCRYPTED_URL ? "api/v4/booking/hotel/{type}"//
-        : "NTYkNjIkMzIkNTIkMjIkOTEkMTQkNTYkNDYkNzUkNDUkMTckNzEkNzgkMzMkMzQk$NTYyRTI2QTA0MDLFDUMkE2RjQk0OUVGNURWE3PMkUxMUExNDTYD5QTM4NTVKGLQkY5FMzI4RIPDAxRDROSFOTM0RTk3MURBNTUxQwQ==$";
-
-    private static final String INTENT_EXTRA_DATA_PLACE_INDEX = "placeIndex";
-    private static final String INTENT_EXTRA_DATA_PAY_TYPE = "payType";
     private static final String INTENT_EXTRA_DATA_JSON_STRING = "jsonString";
+    private static final String INTENT_EXTRA_DATA_URL = "url";
+    private static final String INTENT_EXTRA_DATA_CALL_SCREEN = "callScreen";
 
-    private int mPlaceIndex;
-    private String mPayType;
     private String mJSONString;
+    private String mUrl;
+    private String mCallScreen;
 
-    public static Intent newInstance(Context context, int placeIndex, String payType, String jsonString)
+    public static Intent newInstance(Context context, String url, String jsonString, String callScreen)
     {
-        Intent intent = new Intent(context, StayPaymentWebActivity.class);
+        Intent intent = new Intent(context, PaymentWebActivity.class);
 
-        intent.putExtra(INTENT_EXTRA_DATA_PLACE_INDEX, placeIndex);
-        intent.putExtra(INTENT_EXTRA_DATA_PAY_TYPE, payType);
         intent.putExtra(INTENT_EXTRA_DATA_JSON_STRING, jsonString);
+        intent.putExtra(INTENT_EXTRA_DATA_URL, jsonString);
+        intent.putExtra(INTENT_EXTRA_DATA_CALL_SCREEN, callScreen);
 
         return intent;
     }
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
 
-        requestPostPaymentWebView(mWebView, mPlaceIndex, mPayType, mJSONString);
+        requestPostPaymentWebView(mWebView, mUrl, mJSONString);
     }
 
     @Override
-    public void initIntentData(Intent intent)
+    public void onIntent(Intent intent)
     {
-        super.initIntentData(intent);
-
-        mPlaceIndex = intent.getIntExtra(INTENT_EXTRA_DATA_PLACE_INDEX, -1);
-        mPayType = intent.getStringExtra(INTENT_EXTRA_DATA_PAY_TYPE);
         mJSONString = intent.getStringExtra(INTENT_EXTRA_DATA_JSON_STRING);
-    }
-
-    @Override
-    protected boolean hasProductList()
-    {
-        return true;
-    }
-
-    @Override
-    protected int getProductIndex()
-    {
-        return mPlaceIndex;
+        mUrl = intent.getStringExtra(INTENT_EXTRA_DATA_URL);
+        mCallScreen = intent.getStringExtra(INTENT_EXTRA_DATA_CALL_SCREEN);
     }
 
     @Override
     protected String getScreenName()
     {
-        return AnalyticsManager.Screen.DAILYHOTEL_PAYMENT_PROCESS;
+        return mCallScreen;
     }
 
     @Override
@@ -125,52 +100,17 @@ public class StayPaymentWebActivity extends PlacePaymentWebActivity
         finish();
     }
 
-    protected void requestPostPaymentWebView(WebView webView, int placeIndex, String payType, String jsonString)
+    protected void requestPostPaymentWebView(WebView webView, String url, String jsonString)
     {
         if (DailyTextUtils.isTextEmpty(jsonString) == true)
         {
-            return;
-        }
-
-        Map<String, String> urlParams = new HashMap<>();
-        urlParams.put("{type}", payType);
-
-        try
-        {
-            String url;
-
-            if (Constants.DEBUG == true)
-            {
-                url = DailyPreference.getInstance(this).getBaseUrl()//
-                    + Crypto.getUrlDecoderEx(URL_WEBAPI_PAYMENT, urlParams);
-            } else
-            {
-                url = Crypto.getUrlDecoderEx(Setting.getServerUrl())//
-                    + Crypto.getUrlDecoderEx(URL_WEBAPI_PAYMENT, urlParams);
-            }
-
-            WebViewPostAsyncTask webViewPostAsyncTask = new WebViewPostAsyncTask(webView, jsonString);
-            webViewPostAsyncTask.execute(url);
-        } catch (Exception e)
-        {
-            ExLog.e(e.toString());
-
-            DailyToast.showToast(StayPaymentWebActivity.this, R.string.toast_msg_failed_to_get_payment_info, Toast.LENGTH_SHORT);
+            DailyToast.showToast(this, R.string.toast_msg_failed_to_get_payment_info, Toast.LENGTH_SHORT);
             finish();
             return;
         }
-    }
 
-    @Override
-    public void onFeed(String msg)
-    {
-        // do nothing
-    }
-
-    @Override
-    public void onPaymentFeed(String result)
-    {
-        // do nothing
+        WebViewPostAsyncTask webViewPostAsyncTask = new WebViewPostAsyncTask(webView, jsonString);
+        webViewPostAsyncTask.execute(url);
     }
 
     protected class WebViewPostAsyncTask extends AsyncTask<String, Void, String>
@@ -232,17 +172,14 @@ public class StayPaymentWebActivity extends PlacePaymentWebActivity
         @Override
         protected void onPostExecute(String data)
         {
-            Intent intent = new Intent();
-            intent.putExtra(NAME_INTENT_EXTRA_DATA_PAYMENTINFORMATION, mPlacePaymentInformation);
-
             if (DailyTextUtils.isTextEmpty(data) == true)
             {
-                setResult(CODE_RESULT_ACTIVITY_PAYMENT_FAIL, intent);
+                setResult(CODE_RESULT_ACTIVITY_PAYMENT_FAIL);
                 finish();
                 return;
             } else if ("401".equalsIgnoreCase(data) == true)
             {
-                setResult(CODE_RESULT_ACTIVITY_PAYMENT_INVALID_SESSION, intent);
+                setResult(CODE_RESULT_ACTIVITY_PAYMENT_INVALID_SESSION);
                 finish();
                 return;
             }
@@ -263,7 +200,7 @@ public class StayPaymentWebActivity extends PlacePaymentWebActivity
                 mWebView.loadDataWithBaseURL(mUrl, data, "text/html", "utf-8", null);
             } catch (Exception e)
             {
-                setResult(CODE_RESULT_ACTIVITY_PAYMENT_FAIL, intent);
+                setResult(CODE_RESULT_ACTIVITY_PAYMENT_FAIL);
                 finish();
             }
         }

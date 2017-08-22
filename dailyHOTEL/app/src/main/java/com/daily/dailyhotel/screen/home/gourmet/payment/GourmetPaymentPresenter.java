@@ -27,25 +27,31 @@ import com.daily.dailyhotel.parcel.analytics.GourmetThankYouAnalyticsParam;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
 import com.daily.dailyhotel.repository.remote.PaymentRemoteImpl;
 import com.daily.dailyhotel.repository.remote.ProfileRemoteImpl;
+import com.daily.dailyhotel.screen.common.PaymentWebActivity;
 import com.daily.dailyhotel.screen.common.call.CallDialogActivity;
 import com.daily.dailyhotel.screen.home.gourmet.thankyou.GourmetThankYouActivity;
 import com.daily.dailyhotel.view.DailyBookingPaymentTypeView;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.Setting;
 import com.twoheart.dailyhotel.model.Coupon;
 import com.twoheart.dailyhotel.screen.mydaily.coupon.SelectGourmetCouponDialogActivity;
 import com.twoheart.dailyhotel.screen.mydaily.creditcard.CreditCardListActivity;
 import com.twoheart.dailyhotel.screen.mydaily.creditcard.RegisterCreditCardActivity;
 import com.twoheart.dailyhotel.screen.mydaily.member.InputMobileNumberDialogActivity;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.Crypto;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.DailyRemoteConfigPreference;
 import com.twoheart.dailyhotel.util.DailyUserPreference;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import org.json.JSONObject;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import io.reactivex.Observable;
 import io.reactivex.functions.Consumer;
@@ -1061,7 +1067,8 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
                         , mBonusSelected, mUserSimpleInformation.bonus, mCouponSelected, couponCode, mGuest//
                         , mGourmetPayment.totalPrice);
 
-                    startActivityForResult(GourmetPaymentWebActivity.newInstance(getActivity(), mGourmetIndex, PAYMENT_TYPE, jsonObject.toString())//
+                    startActivityForResult(PaymentWebActivity.newInstance(getActivity()//
+                        , getWebPaymentUrl(PAYMENT_TYPE), jsonObject.toString(), AnalyticsManager.Screen.DAILYGOURMET_PAYMENT_PROCESS)//
                         , GourmetPaymentActivity.REQUEST_CODE_PAYMENT_WEB_CARD);
                     break;
                 }
@@ -1074,7 +1081,8 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
                         , mBonusSelected, mUserSimpleInformation.bonus, mCouponSelected, couponCode, mGuest//
                         , mGourmetPayment.totalPrice);
 
-                    startActivityForResult(GourmetPaymentWebActivity.newInstance(getActivity(), mGourmetIndex, PAYMENT_TYPE, jsonObject.toString())//
+                    startActivityForResult(PaymentWebActivity.newInstance(getActivity()//
+                        , getWebPaymentUrl(PAYMENT_TYPE), jsonObject.toString(), AnalyticsManager.Screen.DAILYGOURMET_PAYMENT_PROCESS)//
                         , GourmetPaymentActivity.REQUEST_CODE_PAYMENT_WEB_PHONE);
                     break;
                 }
@@ -1087,7 +1095,8 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
                         , mBonusSelected, mUserSimpleInformation.bonus, mCouponSelected, couponCode, mGuest//
                         , mGourmetPayment.totalPrice);
 
-                    startActivityForResult(GourmetPaymentWebActivity.newInstance(getActivity(), mGourmetIndex, PAYMENT_TYPE, jsonObject.toString())//
+                    startActivityForResult(PaymentWebActivity.newInstance(getActivity()//
+                        , getWebPaymentUrl(PAYMENT_TYPE), jsonObject.toString(), AnalyticsManager.Screen.DAILYGOURMET_PAYMENT_PROCESS)//
                         , GourmetPaymentActivity.REQUEST_CODE_PAYMENT_WEB_VBANK);
                     break;
                 }
@@ -1156,6 +1165,30 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
 
         return jsonObject;
     }
+
+    private String getWebPaymentUrl(String paymentType)
+    {
+        final String API = Constants.UNENCRYPTED_URL ? "api/v4/booking/gourmet/{type}"//
+            : "NDYkMzEkODckNjMkMTMkMzYkMTckODckMzUkODIkNDEkMzIkOTkkNDIkOTckOTIk$NTM1NTg2NUY4MQTk0KQTkxNzI4MDU4NTVUG4FMkRYyGDREU4MDFCOTKY5M0IzNjlBODIyNLzcxREJFMkIzQTQO2QkUwNIRTg5RTWA=V=$";
+
+        Map<String, String> urlParams = new HashMap<>();
+        urlParams.put("{type}", paymentType);
+
+        String url;
+
+        if (Constants.DEBUG == true)
+        {
+            url = DailyPreference.getInstance(getActivity()).getBaseUrl()//
+                + Crypto.getUrlDecoderEx(API, urlParams);
+        } else
+        {
+            url = Crypto.getUrlDecoderEx(Setting.getServerUrl())//
+                + Crypto.getUrlDecoderEx(API, urlParams);
+        }
+
+        return url;
+    }
+
 
     private void onBookingInformation(GourmetPayment gourmetPayment, GourmetBookDateTime gourmetBookDateTime)
     {

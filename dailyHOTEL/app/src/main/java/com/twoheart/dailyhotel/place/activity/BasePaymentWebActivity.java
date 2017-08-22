@@ -31,7 +31,6 @@ import com.daily.base.util.VersionUtils;
 import com.daily.base.widget.DailyToast;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.PlacePaymentInformation;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
@@ -52,7 +51,7 @@ import okhttp3.Response;
  * KCP - AcntPayDemoActivity(계좌 이체)의 경우 사용안함으로 인한 제거
  */
 
-public abstract class PlacePaymentWebActivity extends BaseActivity implements Constants
+public abstract class BasePaymentWebActivity extends BaseActivity implements Constants
 {
     // KCP - PayDemoActivity
     public static final int PROGRESS_STAT_NOT_START = 1; // KCP
@@ -66,10 +65,12 @@ public abstract class PlacePaymentWebActivity extends BaseActivity implements Co
     protected WebView mWebView;
     final Handler handler = new Handler(); // KCP Bridge 용 Handler
 
-    protected PlacePaymentInformation mPlacePaymentInformation;
-
     // Inicis Kcp 를 분리하는 코드
     protected PgType mPgType = PgType.ETC;
+
+    protected abstract String getScreenName();
+
+    protected abstract void onIntent(Intent intent);
 
     @SuppressLint("AddJavascriptInterface")
     @Override
@@ -87,22 +88,7 @@ public abstract class PlacePaymentWebActivity extends BaseActivity implements Co
             return;
         }
 
-        initIntentData(intent);
-
-        if (hasProductList() == false)
-        {
-            DailyToast.showToast(PlacePaymentWebActivity.this //
-                , R.string.toast_msg_failed_to_get_payment_info, Toast.LENGTH_SHORT);
-            finish();
-            return;
-        }
-
-        if (getProductIndex() <= 0)
-        {
-            // 세션이 만료되어 재시작 요청.
-            restartExpiredSession();
-            return;
-        }
+        onIntent(intent);
 
         ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams( //
             ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
@@ -196,22 +182,6 @@ public abstract class PlacePaymentWebActivity extends BaseActivity implements Co
             }
         }); // 롱클릭 에러 방지.
     }
-
-    public void initIntentData(Intent intent)
-    {
-        if (intent == null)
-        {
-            return;
-        }
-
-        mPlacePaymentInformation = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PAYMENTINFORMATION);
-    }
-
-    protected abstract boolean hasProductList();
-
-    protected abstract int getProductIndex();
-
-    protected abstract String getScreenName();
 
     @Override
     protected void onStart()
@@ -517,21 +487,12 @@ public abstract class PlacePaymentWebActivity extends BaseActivity implements Co
         // PlacePaymentWebActivity 의 처리
         int resultCode = CODE_RESULT_ACTIVITY_PAYMENT_FAIL;
 
-        if (p_strFinishMsg != null)
+        if (p_strFinishMsg != null && p_strFinishMsg.contains(getString(R.string.act_payment_chk_contain)) == true)
         {
-            if (p_strFinishMsg.equals("NOT_AVAILABLE"))
-            {
-                resultCode = CODE_RESULT_ACTIVITY_PAYMENT_NOT_AVAILABLE;
-            } else if (p_strFinishMsg.contains(getString(R.string.act_payment_chk_contain)))
-            {
-                resultCode = CODE_RESULT_ACTIVITY_PAYMENT_CANCELED;// RESULT_CANCELED
-            }
+            resultCode = CODE_RESULT_ACTIVITY_PAYMENT_CANCELED;// RESULT_CANCELED
         }
 
-        Intent intent = new Intent();
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_PAYMENTINFORMATION, mPlacePaymentInformation);
-
-        setResult(resultCode, intent);
+        setResult(resultCode);
         finish();
     }
 
@@ -629,15 +590,12 @@ public abstract class PlacePaymentWebActivity extends BaseActivity implements Co
 
             mWebView.loadUrl("about:blank");
 
-            Intent intent = new Intent();
-            intent.putExtra(NAME_INTENT_EXTRA_DATA_PAYMENTINFORMATION, mPlacePaymentInformation);
-
-            if (Util.isAvailableNetwork(PlacePaymentWebActivity.this) == true)
+            if (Util.isAvailableNetwork(BasePaymentWebActivity.this) == true)
             {
-                setResult(CODE_RESULT_ACTIVITY_PAYMENT_FAIL, intent);
+                setResult(CODE_RESULT_ACTIVITY_PAYMENT_FAIL);
             } else
             {
-                setResult(CODE_RESULT_ACTIVITY_PAYMENT_NETWORK_ERROR, intent);
+                setResult(CODE_RESULT_ACTIVITY_PAYMENT_NETWORK_ERROR);
             }
 
             finish();
@@ -711,19 +669,19 @@ public abstract class PlacePaymentWebActivity extends BaseActivity implements Co
             {
                 String noCallMessage = getResources().getString(R.string.toast_msg_no_call_web);
 
-                if (Util.isTelephonyEnabled(PlacePaymentWebActivity.this) == true)
+                if (Util.isTelephonyEnabled(BasePaymentWebActivity.this) == true)
                 {
                     try
                     {
                         startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse(url)));
                     } catch (ActivityNotFoundException e)
                     {
-                        DailyToast.showToast(PlacePaymentWebActivity.this, noCallMessage, Toast.LENGTH_LONG);
+                        DailyToast.showToast(BasePaymentWebActivity.this, noCallMessage, Toast.LENGTH_LONG);
                         return false;
                     }
                 } else
                 {
-                    DailyToast.showToast(PlacePaymentWebActivity.this, noCallMessage, Toast.LENGTH_LONG);
+                    DailyToast.showToast(BasePaymentWebActivity.this, noCallMessage, Toast.LENGTH_LONG);
                     return false;
                 }
             } else
@@ -759,19 +717,19 @@ public abstract class PlacePaymentWebActivity extends BaseActivity implements Co
 
                 String noCallMessage = getResources().getString(R.string.toast_msg_no_call_web);
 
-                if (Util.isTelephonyEnabled(PlacePaymentWebActivity.this) == true)
+                if (Util.isTelephonyEnabled(BasePaymentWebActivity.this) == true)
                 {
                     try
                     {
                         startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse(url)));
                     } catch (ActivityNotFoundException e)
                     {
-                        DailyToast.showToast(PlacePaymentWebActivity.this, noCallMessage, Toast.LENGTH_LONG);
+                        DailyToast.showToast(BasePaymentWebActivity.this, noCallMessage, Toast.LENGTH_LONG);
                         return false;
                     }
                 } else
                 {
-                    DailyToast.showToast(PlacePaymentWebActivity.this, noCallMessage, Toast.LENGTH_LONG);
+                    DailyToast.showToast(BasePaymentWebActivity.this, noCallMessage, Toast.LENGTH_LONG);
                     return false;
                 }
             } else if (url.startsWith("http://") || url.startsWith("https://") || url.startsWith("javascript:"))
@@ -895,10 +853,7 @@ public abstract class PlacePaymentWebActivity extends BaseActivity implements Co
                             view.goBack();
                         } else
                         {
-                            Intent closeIntent = new Intent();
-                            closeIntent.putExtra(NAME_INTENT_EXTRA_DATA_PAYMENTINFORMATION, mPlacePaymentInformation);
-
-                            setResult(CODE_RESULT_ACTIVITY_PAYMENT_CANCELED, intent);
+                            setResult(CODE_RESULT_ACTIVITY_PAYMENT_CANCELED);
                             finish();
                         }
                         return true;
@@ -921,10 +876,7 @@ public abstract class PlacePaymentWebActivity extends BaseActivity implements Co
                                 view.goBack();
                             } else
                             {
-                                Intent closeIntent = new Intent();
-                                closeIntent.putExtra(NAME_INTENT_EXTRA_DATA_PAYMENTINFORMATION, mPlacePaymentInformation);
-
-                                setResult(CODE_RESULT_ACTIVITY_PAYMENT_CANCELED, intent);
+                                setResult(CODE_RESULT_ACTIVITY_PAYMENT_CANCELED);
                                 finish();
                             }
                         } catch (ActivityNotFoundException e)
@@ -944,7 +896,7 @@ public abstract class PlacePaymentWebActivity extends BaseActivity implements Co
                         DailyToast.showToast(this, R.string.toast_msg_retry_payment_after_install_app, Toast.LENGTH_LONG);
 
                         // "market://details?id=com.hyundaicard.appcard"
-                        Util.installPackage(PlacePaymentWebActivity.this, "com.hyundaicard.appcard");
+                        Util.installPackage(BasePaymentWebActivity.this, "com.hyundaicard.appcard");
                         return true;
                     }
                 } else if (intent.getDataString().startsWith("shinhan-sr-ansimclick://"))
@@ -957,7 +909,7 @@ public abstract class PlacePaymentWebActivity extends BaseActivity implements Co
                         DailyToast.showToast(this, R.string.toast_msg_retry_payment_after_install_app, Toast.LENGTH_LONG);
 
                         // "market://details?id=com.shcard.smartpay"
-                        Util.installPackage(PlacePaymentWebActivity.this, "com.shcard.smartpay");
+                        Util.installPackage(BasePaymentWebActivity.this, "com.shcard.smartpay");
                         return true;
                     }
                 } else if (intent.getDataString().startsWith("mpocket.online.ansimclick://"))
@@ -970,7 +922,7 @@ public abstract class PlacePaymentWebActivity extends BaseActivity implements Co
                         DailyToast.showToast(this, R.string.toast_msg_retry_payment_after_install_app, Toast.LENGTH_LONG);
 
                         // "market://details?id=kr.co.samsungcard.mpocket"
-                        Util.installPackage(PlacePaymentWebActivity.this, "kr.co.samsungcard.mpocket");
+                        Util.installPackage(BasePaymentWebActivity.this, "kr.co.samsungcard.mpocket");
                         return true;
                     }
                 } else if (intent.getDataString().startsWith("lottesmartpay://"))
@@ -983,7 +935,7 @@ public abstract class PlacePaymentWebActivity extends BaseActivity implements Co
                         DailyToast.showToast(this, R.string.toast_msg_retry_payment_after_install_app, Toast.LENGTH_LONG);
 
                         // "market://details?id=com.lotte.lottesmartpay"
-                        Util.installPackage(PlacePaymentWebActivity.this, "com.lotte.lottesmartpay");
+                        Util.installPackage(BasePaymentWebActivity.this, "com.lotte.lottesmartpay");
                         return true;
                     }
                 } else if (intent.getDataString().startsWith("lotteappcard://"))
@@ -996,7 +948,7 @@ public abstract class PlacePaymentWebActivity extends BaseActivity implements Co
                         DailyToast.showToast(this, R.string.toast_msg_retry_payment_after_install_app, Toast.LENGTH_LONG);
 
                         // "market://details?id=com.lcacApp"
-                        Util.installPackage(PlacePaymentWebActivity.this, "com.lcacApp");
+                        Util.installPackage(BasePaymentWebActivity.this, "com.lcacApp");
                         return true;
                     }
                 } else if (intent.getDataString().startsWith("kb-acp://"))
@@ -1009,7 +961,7 @@ public abstract class PlacePaymentWebActivity extends BaseActivity implements Co
                         DailyToast.showToast(this, R.string.toast_msg_retry_payment_after_install_app, Toast.LENGTH_LONG);
 
                         // "market://details?id=com.kbcard.cxh.appcard"
-                        Util.installPackage(PlacePaymentWebActivity.this, "com.kbcard.cxh.appcard");
+                        Util.installPackage(BasePaymentWebActivity.this, "com.kbcard.cxh.appcard");
                         return true;
                     }
                 } else if (intent.getDataString().startsWith("hanaansim://"))
@@ -1022,7 +974,7 @@ public abstract class PlacePaymentWebActivity extends BaseActivity implements Co
                         DailyToast.showToast(this, R.string.toast_msg_retry_payment_after_install_app, Toast.LENGTH_LONG);
 
                         // "market://details?id=com.ilk.visa3d"
-                        Util.installPackage(PlacePaymentWebActivity.this, "com.ilk.visa3d");
+                        Util.installPackage(BasePaymentWebActivity.this, "com.ilk.visa3d");
                         return true;
                     }
                 } else if (intent.getDataString().startsWith("smshinhanansimclick://"))
@@ -1035,7 +987,7 @@ public abstract class PlacePaymentWebActivity extends BaseActivity implements Co
                         DailyToast.showToast(this, R.string.toast_msg_retry_payment_after_install_app, Toast.LENGTH_LONG);
 
                         // "market://details?id=com.shcard.smartpay"
-                        Util.installPackage(PlacePaymentWebActivity.this, "com.shcard.smartpay");
+                        Util.installPackage(BasePaymentWebActivity.this, "com.shcard.smartpay");
                         return true;
                     }
                 } else if (intent.getDataString().startsWith("droidxantivirusweb"))
@@ -1059,7 +1011,7 @@ public abstract class PlacePaymentWebActivity extends BaseActivity implements Co
                         DailyToast.showToast(this, R.string.toast_msg_retry_payment_after_install_app, Toast.LENGTH_LONG);
 
                         // "market://search?q=net.nshc.droidxantivirus""
-                        Util.installPackage(PlacePaymentWebActivity.this, "net.nshc.droidxantivirus");
+                        Util.installPackage(BasePaymentWebActivity.this, "net.nshc.droidxantivirus");
                         return true;
                     }
                 }
@@ -1106,7 +1058,7 @@ public abstract class PlacePaymentWebActivity extends BaseActivity implements Co
                     String strUrl;
                     String argUrl;
 
-                    PackageState ps = new PackageState(PlacePaymentWebActivity.this);
+                    PackageState ps = new PackageState(BasePaymentWebActivity.this);
 
                     argUrl = arg;
 
@@ -1130,7 +1082,7 @@ public abstract class PlacePaymentWebActivity extends BaseActivity implements Co
                         startActivity(intent);
                     } catch (Exception e)
                     {
-                        Util.installPackage(PlacePaymentWebActivity.this, "kvp.jjy.MispAndroid320");
+                        Util.installPackage(BasePaymentWebActivity.this, "kvp.jjy.MispAndroid320");
                     }
                 }
             });
@@ -1154,7 +1106,7 @@ public abstract class PlacePaymentWebActivity extends BaseActivity implements Co
                     CARD_CD = card_cd;
                     QUOTA = quota;
 
-                    PackageState ps = new PackageState(PlacePaymentWebActivity.this);
+                    PackageState ps = new PackageState(BasePaymentWebActivity.this);
 
                     if (!ps.getPackageDownloadInstallState("com.skt.at"))
                     {
@@ -1206,7 +1158,7 @@ public abstract class PlacePaymentWebActivity extends BaseActivity implements Co
                 public void run()
                 {
                     //                    ExLog.d("KCPPayPinInfoBridge=[getPaypinInfo]");
-                    PackageState ps = new PackageState(PlacePaymentWebActivity.this);
+                    PackageState ps = new PackageState(BasePaymentWebActivity.this);
 
                     if (!ps.getPackageAllInstallState("com.skp.android.paypin"))
                     {
@@ -1244,7 +1196,7 @@ public abstract class PlacePaymentWebActivity extends BaseActivity implements Co
                 @Override
                 public void onClick(View view)
                 {
-                    DailyToast.showToast(PlacePaymentWebActivity.this, R.string.toast_msg_cancel_payment, Toast.LENGTH_SHORT);
+                    DailyToast.showToast(BasePaymentWebActivity.this, R.string.toast_msg_cancel_payment, Toast.LENGTH_SHORT);
                 }
             };
 
@@ -1295,10 +1247,7 @@ public abstract class PlacePaymentWebActivity extends BaseActivity implements Co
         @JavascriptInterface
         public void Result(final String val)
         {
-            Intent intent = new Intent();
-            intent.putExtra(NAME_INTENT_EXTRA_DATA_PAYMENTINFORMATION, mPlacePaymentInformation);
-
-            setResult(CODE_RESULT_ACTIVITY_PAYMENT_COMPLETE, intent);
+            setResult(CODE_RESULT_ACTIVITY_PAYMENT_COMPLETE);
             finish();
         }
 
@@ -1333,33 +1282,9 @@ public abstract class PlacePaymentWebActivity extends BaseActivity implements Co
         {
             onPaymentResult(jsonString);
         }
-
-        /**
-         * 서버로부터 받은 결제 결과 메시지를 처리함.
-         * 각각의 경우에 맞는 resultCode를 넣어 BookingActivity로 finish시킴.
-         */
-        @JavascriptInterface
-        public void feed(final String msg)
-        {
-            onFeed(msg);
-        }
-
-        /**
-         * 서버로부터 받은 결제 결과 메시지를 처리함.
-         * 각각의 경우에 맞는 resultCode를 넣어 BookingActivity로 finish시킴.
-         */
-        @JavascriptInterface
-        public void paymentFeed(String result)
-        {
-            onPaymentFeed(result);
-        }
     }
 
     public abstract void onPaymentResult(String jsonString);
-
-    public abstract void onFeed(String msg);
-
-    public abstract void onPaymentFeed(String result);
 
     protected class WebViewPostAsyncTask extends AsyncTask<String, Void, String>
     {
@@ -1410,17 +1335,14 @@ public abstract class PlacePaymentWebActivity extends BaseActivity implements Co
         @Override
         protected void onPostExecute(String data)
         {
-            Intent intent = new Intent();
-            intent.putExtra(NAME_INTENT_EXTRA_DATA_PAYMENTINFORMATION, mPlacePaymentInformation);
-
             if (DailyTextUtils.isTextEmpty(data) == true)
             {
-                setResult(CODE_RESULT_ACTIVITY_PAYMENT_FAIL, intent);
+                setResult(CODE_RESULT_ACTIVITY_PAYMENT_FAIL);
                 finish();
                 return;
             } else if ("401".equalsIgnoreCase(data) == true)
             {
-                setResult(CODE_RESULT_ACTIVITY_PAYMENT_INVALID_SESSION, intent);
+                setResult(CODE_RESULT_ACTIVITY_PAYMENT_INVALID_SESSION);
                 finish();
                 return;
             }
@@ -1441,7 +1363,7 @@ public abstract class PlacePaymentWebActivity extends BaseActivity implements Co
                 mWebView.loadDataWithBaseURL(mUrl, data, "text/html", "utf-8", null);
             } catch (Exception e)
             {
-                setResult(CODE_RESULT_ACTIVITY_PAYMENT_FAIL, intent);
+                setResult(CODE_RESULT_ACTIVITY_PAYMENT_FAIL);
                 finish();
             }
         }

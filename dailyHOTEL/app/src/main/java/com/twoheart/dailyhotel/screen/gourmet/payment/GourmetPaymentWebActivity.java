@@ -13,7 +13,7 @@ import com.twoheart.dailyhotel.model.PlacePaymentInformation;
 import com.twoheart.dailyhotel.model.time.PlaceBookingDay;
 import com.twoheart.dailyhotel.network.IDailyNetwork;
 import com.twoheart.dailyhotel.network.model.GourmetProduct;
-import com.twoheart.dailyhotel.place.activity.PlacePaymentWebActivity;
+import com.twoheart.dailyhotel.place.activity.BasePaymentWebActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Crypto;
 import com.twoheart.dailyhotel.util.DailyCalendar;
@@ -22,7 +22,7 @@ import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import okhttp3.FormBody;
 
-public class GourmetPaymentWebActivity extends PlacePaymentWebActivity
+public class GourmetPaymentWebActivity extends BasePaymentWebActivity
 {
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -33,9 +33,9 @@ public class GourmetPaymentWebActivity extends PlacePaymentWebActivity
     }
 
     @Override
-    public void initIntentData(Intent intent)
+    public void onIntent(Intent intent)
     {
-        super.initIntentData(intent);
+        super.onIntent(intent);
     }
 
     @Override

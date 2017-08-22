@@ -29,14 +29,17 @@ import com.daily.dailyhotel.parcel.analytics.StayOutboundPaymentAnalyticsParam;
 import com.daily.dailyhotel.parcel.analytics.StayOutboundThankYouAnalyticsParam;
 import com.daily.dailyhotel.repository.remote.PaymentRemoteImpl;
 import com.daily.dailyhotel.repository.remote.ProfileRemoteImpl;
+import com.daily.dailyhotel.screen.common.PaymentWebActivity;
 import com.daily.dailyhotel.screen.common.call.CallDialogActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.thankyou.StayOutboundThankYouActivity;
 import com.daily.dailyhotel.view.DailyBookingPaymentTypeView;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.Setting;
 import com.twoheart.dailyhotel.screen.mydaily.creditcard.CreditCardListActivity;
 import com.twoheart.dailyhotel.screen.mydaily.creditcard.RegisterCreditCardActivity;
 import com.twoheart.dailyhotel.screen.mydaily.member.InputMobileNumberDialogActivity;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.Crypto;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.DailyRemoteConfigPreference;
@@ -48,7 +51,9 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import io.reactivex.Observable;
 import io.reactivex.functions.Consumer;
@@ -776,7 +781,8 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
                         , mRateCode, mRateKey, mRoomTypeCode, mRoomBedTypeId, mPeople//
                         , mBonusSelected, mUserSimpleInformation.bonus, mGuest, mStayOutboundPayment.totalPrice);
 
-                    startActivityForResult(StayOutboundPaymentWebActivity.newInstance(getActivity(), mStayIndex, "card", jsonObject.toString())//
+                    startActivityForResult(PaymentWebActivity.newInstance(getActivity()//
+                        , getWebPaymentUrl(mStayIndex, "card"), jsonObject.toString(), AnalyticsManager.Screen.DAILYHOTEL_PAYMENT_PROCESS)//
                         , StayOutboundPaymentActivity.REQUEST_CODE_PAYMENT_WEB_CARD);
 
                     mAnalytics.onEventStartPayment(getActivity(), AnalyticsManager.Label.CARDPAY);
@@ -791,7 +797,8 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
                         , mRateCode, mRateKey, mRoomTypeCode, mRoomBedTypeId, mPeople//
                         , mBonusSelected, mUserSimpleInformation.bonus, mGuest, mStayOutboundPayment.totalPrice);
 
-                    startActivityForResult(StayOutboundPaymentWebActivity.newInstance(getActivity(), mStayIndex, "mobile", jsonObject.toString())//
+                    startActivityForResult(PaymentWebActivity.newInstance(getActivity()//
+                        , getWebPaymentUrl(mStayIndex, "mobile"), jsonObject.toString(), AnalyticsManager.Screen.DAILYHOTEL_PAYMENT_PROCESS)//
                         , StayOutboundPaymentActivity.REQUEST_CODE_PAYMENT_WEB_PHONE);
 
                     mAnalytics.onEventStartPayment(getActivity(), AnalyticsManager.Label.PHONEBILLPAY);
@@ -851,6 +858,30 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
         }
 
         return jsonObject;
+    }
+
+    private String getWebPaymentUrl(int stayIndex, String paymentType)
+    {
+        final String API = Constants.UNENCRYPTED_URL ? "outbound/hotels/{hotelId}/room-reservation-payments/{type}/pay"//
+            : "MTAwJDUzJDY0JDE1NyQzNSQ0MSQ5NyQxNDUkODEkNTUkMjMkMTIkMTI5JDc2JDkwJDE2NiQ=$Qjc0RkY3QzJEUNkQ2NTkzMENYBMjI5OEUwNUVQGMEI2CMDAzMDFCMzNBOHEUVGMjQzQjAUwNDlGONTMyNjVFMUjg5RGUE4NzU5NDBCRXUI5REFEPMUZGN0QyQUY4NDhDOUIRwRjI0RUFCMDVDRUVCNEVZCRTFBNEUyQkZDIODTZDRkQ0NUY4Q0MzQkQ=$";
+
+        Map<String, String> urlParams = new HashMap<>();
+        urlParams.put("{hotelId}", Integer.toString(stayIndex));
+        urlParams.put("{type}", paymentType);
+
+        String url;
+
+        if (Constants.DEBUG == true)
+        {
+            url = DailyPreference.getInstance(getActivity()).getBaseOutBoundUrl()//
+                + Crypto.getUrlDecoderEx(API, urlParams);
+        } else
+        {
+            url = Crypto.getUrlDecoderEx(Setting.getOutboundServerUrl())//
+                + Crypto.getUrlDecoderEx(API, urlParams);
+        }
+
+        return url;
     }
 
     private JSONArray getRooms(People[] peoples, int[] roomBedTypeIds)

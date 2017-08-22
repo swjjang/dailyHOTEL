@@ -18,7 +18,7 @@ import com.twoheart.dailyhotel.model.time.PlaceBookingDay;
 import com.twoheart.dailyhotel.model.time.StayBookingDay;
 import com.twoheart.dailyhotel.network.IDailyNetwork;
 import com.twoheart.dailyhotel.network.model.StayProduct;
-import com.twoheart.dailyhotel.place.activity.PlacePaymentWebActivity;
+import com.twoheart.dailyhotel.place.activity.BasePaymentWebActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Crypto;
 import com.twoheart.dailyhotel.util.DailyPreference;
@@ -30,7 +30,7 @@ import okhttp3.FormBody;
  * Created by android_sam on 2017. 3. 17..
  */
 
-public class StayPaymentWebActivity extends PlacePaymentWebActivity
+public class StayPaymentWebActivity extends BasePaymentWebActivity
 {
     //    private SaleTime mSaleTime;
     //    private int mNights;
@@ -45,9 +45,9 @@ public class StayPaymentWebActivity extends PlacePaymentWebActivity
     }
 
     @Override
-    public void initIntentData(Intent intent)
+    public void onIntent(Intent intent)
     {
-        super.initIntentData(intent);
+        super.onIntent(intent);
 
         mStayBookingDay = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY);
         //        mSaleTime = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_SALETIME);

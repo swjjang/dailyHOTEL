@@ -34,10 +34,12 @@ import com.daily.dailyhotel.repository.remote.BookingRemoteImpl;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
 import com.daily.dailyhotel.repository.remote.PaymentRemoteImpl;
 import com.daily.dailyhotel.repository.remote.ProfileRemoteImpl;
+import com.daily.dailyhotel.screen.common.PaymentWebActivity;
 import com.daily.dailyhotel.screen.common.call.CallDialogActivity;
 import com.daily.dailyhotel.screen.home.stay.inbound.thankyou.StayThankYouActivity;
 import com.daily.dailyhotel.view.DailyBookingPaymentTypeView;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.Setting;
 import com.twoheart.dailyhotel.model.Coupon;
 import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.screen.mydaily.coupon.SelectStayCouponDialogActivity;
@@ -45,21 +47,23 @@ import com.twoheart.dailyhotel.screen.mydaily.creditcard.CreditCardListActivity;
 import com.twoheart.dailyhotel.screen.mydaily.creditcard.RegisterCreditCardActivity;
 import com.twoheart.dailyhotel.screen.mydaily.member.InputMobileNumberDialogActivity;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.Crypto;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.DailyRemoteConfigPreference;
 import com.twoheart.dailyhotel.util.DailyUserPreference;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.CustomFontTypefaceSpan;
 
 import org.json.JSONObject;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
-import java.util.TimeZone;
+import java.util.Map;
 
 import io.reactivex.Observable;
 import io.reactivex.functions.Consumer;
-import io.reactivex.functions.Function5;
 import io.reactivex.functions.Function6;
 
 /**
@@ -502,7 +506,7 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
                 notifyStayPaymentChanged();
                 notifyRefundPolicyChanged();
 
-                if(overlapBooking == true)
+                if (overlapBooking == true)
                 {
                     getViewInterface().showSimpleDialog(null, getString(R.string.dialog_msg_hotel_payment_overlap)//
                         , getString(R.string.label_do_booking), getString(R.string.dialog_btn_text_no)//
@@ -1035,7 +1039,8 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
                         , mBonusSelected, mUserSimpleInformation.bonus, mCouponSelected, couponCode, mGuest//
                         , mStayPayment.totalPrice, mTransportationType);
 
-                    startActivityForResult(StayPaymentWebActivity.newInstance(getActivity(), mStayIndex, PAYMENT_TYPE, jsonObject.toString())//
+                    startActivityForResult(PaymentWebActivity.newInstance(getActivity()//
+                        , getWebPaymentUrl(PAYMENT_TYPE), jsonObject.toString(), AnalyticsManager.Screen.DAILYHOTEL_PAYMENT_PROCESS)//
                         , StayPaymentActivity.REQUEST_CODE_PAYMENT_WEB_CARD);
                     break;
                 }
@@ -1048,7 +1053,8 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
                         , mBonusSelected, mUserSimpleInformation.bonus, mCouponSelected, couponCode, mGuest//
                         , mStayPayment.totalPrice, mTransportationType);
 
-                    startActivityForResult(StayPaymentWebActivity.newInstance(getActivity(), mStayIndex, PAYMENT_TYPE, jsonObject.toString())//
+                    startActivityForResult(PaymentWebActivity.newInstance(getActivity()//
+                        , getWebPaymentUrl(PAYMENT_TYPE), jsonObject.toString(), AnalyticsManager.Screen.DAILYHOTEL_PAYMENT_PROCESS)//
                         , StayPaymentActivity.REQUEST_CODE_PAYMENT_WEB_PHONE);
                     break;
                 }
@@ -1061,7 +1067,8 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
                         , mBonusSelected, mUserSimpleInformation.bonus, mCouponSelected, couponCode, mGuest//
                         , mStayPayment.totalPrice, mTransportationType);
 
-                    startActivityForResult(StayPaymentWebActivity.newInstance(getActivity(), mStayIndex, PAYMENT_TYPE, jsonObject.toString())//
+                    startActivityForResult(PaymentWebActivity.newInstance(getActivity()//
+                        , getWebPaymentUrl(PAYMENT_TYPE), jsonObject.toString(), AnalyticsManager.Screen.DAILYHOTEL_PAYMENT_PROCESS)//
                         , StayPaymentActivity.REQUEST_CODE_PAYMENT_WEB_VBANK);
                     break;
                 }
@@ -1139,6 +1146,29 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
         }
 
         return jsonObject;
+    }
+
+    private String getWebPaymentUrl(String paymentType)
+    {
+        final String API = Constants.UNENCRYPTED_URL ? "api/v4/booking/hotel/{type}"//
+            : "NTYkNjIkMzIkNTIkMjIkOTEkMTQkNTYkNDYkNzUkNDUkMTckNzEkNzgkMzMkMzQk$NTYyRTI2QTA0MDLFDUMkE2RjQk0OUVGNURWE3PMkUxMUExNDTYD5QTM4NTVKGLQkY5FMzI4RIPDAxRDROSFOTM0RTk3MURBNTUxQwQ==$";
+
+        Map<String, String> urlParams = new HashMap<>();
+        urlParams.put("{type}", paymentType);
+
+        String url;
+
+        if (Constants.DEBUG == true)
+        {
+            url = DailyPreference.getInstance(getActivity()).getBaseUrl()//
+                + Crypto.getUrlDecoderEx(API, urlParams);
+        } else
+        {
+            url = Crypto.getUrlDecoderEx(Setting.getServerUrl())//
+                + Crypto.getUrlDecoderEx(API, urlParams);
+        }
+
+        return url;
     }
 
     private void onBookingInformation(StayPayment stayPayment, StayBookDateTime stayBookDateTime)
@@ -1961,7 +1991,7 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
                     case Booking.PAYMENT_COMPLETED:
                     case Booking.PAYMENT_WAITING:
                         // 이미 이용한 Stay인 경우
-                        if(DailyCalendar.compareDateDay(DailyCalendar.convertDateFormatString(booking.checkOutDateTime, "yyyy-MM-dd", DailyCalendar.ISO_8601_FORMAT)//
+                        if (DailyCalendar.compareDateDay(DailyCalendar.convertDateFormatString(booking.checkOutDateTime, "yyyy-MM-dd", DailyCalendar.ISO_8601_FORMAT)//
                             , commonDateTime.currentDateTime) < 0)
                         {
                             continue;

@@ -775,7 +775,7 @@
             android:screenOrientation="portrait"/>
 
         <activity
-            android:name="com.daily.dailyhotel.screen.home.stay.outbound.payment.StayOutboundPaymentWebActivity"
+            android:name="com.daily.dailyhotel.screen.common.PaymentWebActivity"
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
