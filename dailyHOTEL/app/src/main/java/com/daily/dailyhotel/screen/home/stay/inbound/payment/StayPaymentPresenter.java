@@ -52,6 +52,7 @@ import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.DailyRemoteConfigPreference;
 import com.twoheart.dailyhotel.util.DailyUserPreference;
+import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.CustomFontTypefaceSpan;
 
@@ -151,6 +152,10 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
         void onEventAgreedTermClick(Activity activity, String stayName, String roomName);
 
         StayThankYouAnalyticsParam getThankYouAnalyticsParam();
+
+        void setPaymentParam(HashMap<String, String> param);
+
+        HashMap<String, String> getPaymentParam();
     }
 
     public StayPaymentPresenter(@NonNull StayPaymentActivity activity)
@@ -282,12 +287,120 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
     public void onSaveInstanceState(Bundle outState)
     {
         super.onSaveInstanceState(outState);
+
+        outState.putInt("stayIndex", mStayIndex);
+        outState.putInt("roomPrice", mRoomPrice);
+        outState.putInt("roomIndex", mRoomIndex);
+        outState.putInt("pensionPopupMessageType", mPensionPopupMessageType);
+
+        outState.putString("stayName", mStayName);
+        outState.putString("imageUrl", mImageUrl);
+        outState.putString("category", mCategory);
+        outState.putString("roomName", mRoomName);
+        outState.putString("transportationType", mTransportationType);
+
+        if (mStayBookDateTime != null)
+        {
+            outState.putString("checkInDateTime", mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT));
+            outState.putString("checkOutDateTime", mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT));
+        }
+
+        if (mGrade != null)
+        {
+            outState.putString("grade", mGrade.name());
+        }
+
+        if (mPaymentType != null)
+        {
+            outState.putString("paymentType", mPaymentType.name());
+        }
+
+        outState.putBoolean("overseas", mOverseas);
+        outState.putBoolean("bonusSelected", mBonusSelected);
+        outState.putBoolean("couponSelected", mCouponSelected);
+        outState.putBoolean("agreedThirdPartyTerms", mAgreedThirdPartyTerms);
+        outState.putBoolean("guestInformationVisible", mGuestInformationVisible);
+
+        outState.putParcelable("selectedCoupon", mSelectedCoupon);
+
+        if (mAnalytics != null)
+        {
+            outState.putParcelable("analytics", mAnalytics.getAnalyticsParam());
+            outState.putSerializable("analyticsPaymentParam", mAnalytics.getPaymentParam());
+        }
+
+        try
+        {
+            outState.putBundle("stayPayment", Util.getClassPublicFieldsBundle(StayPayment.class, mStayPayment));
+            outState.putBundle("stayRefundPolicy", Util.getClassPublicFieldsBundle(StayRefundPolicy.class, mStayRefundPolicy));
+            outState.putBundle("selectedCard", Util.getClassPublicFieldsBundle(Card.class, mSelectedCard));
+            outState.putBundle("guest", Util.getClassPublicFieldsBundle(DomesticGuest.class, mGuest));
+            outState.putBundle("userSimpleInformation", Util.getClassPublicFieldsBundle(UserSimpleInformation.class, mUserSimpleInformation));
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+        }
     }
 
     @Override
     public void onRestoreInstanceState(Bundle savedInstanceState)
     {
         super.onRestoreInstanceState(savedInstanceState);
+
+        mStayIndex = savedInstanceState.getInt("stayIndex");
+        mRoomPrice = savedInstanceState.getInt("roomPrice");
+        mRoomIndex = savedInstanceState.getInt("roomIndex");
+        mPensionPopupMessageType = savedInstanceState.getInt("pensionPopupMessageType");
+
+        mStayName = savedInstanceState.getString("stayName");
+        mImageUrl = savedInstanceState.getString("imageUrl");
+        mCategory = savedInstanceState.getString("category");
+        mRoomName = savedInstanceState.getString("roomName");
+        mTransportationType = savedInstanceState.getString("transportationType");
+
+        setStayBookDateTime(savedInstanceState.getString("checkInDateTime"), savedInstanceState.getString("checkOutDateTime"));
+
+        try
+        {
+            mGrade = Stay.Grade.valueOf(savedInstanceState.getString("grade"));
+        } catch (Exception e)
+        {
+            mGrade = Stay.Grade.etc;
+        }
+
+        try
+        {
+            mPaymentType = DailyBookingPaymentTypeView.PaymentType.valueOf(savedInstanceState.getString("paymentType"));
+        } catch (Exception e)
+        {
+            mPaymentType = DailyBookingPaymentTypeView.PaymentType.CARD;
+        }
+
+        mOverseas = savedInstanceState.getBoolean("overseas");
+        mBonusSelected = savedInstanceState.getBoolean("bonusSelected");
+        mCouponSelected = savedInstanceState.getBoolean("couponSelected");
+        mAgreedThirdPartyTerms = savedInstanceState.getBoolean("agreedThirdPartyTerms");
+        mGuestInformationVisible = savedInstanceState.getBoolean("guestInformationVisible");
+
+        mSelectedCoupon = savedInstanceState.getParcelable("selectedCoupon");
+
+        if (mAnalytics != null)
+        {
+            mAnalytics.setAnalyticsParam(savedInstanceState.getParcelable("analytics"));
+            mAnalytics.setPaymentParam((HashMap<String, String>) savedInstanceState.getSerializable("analyticsPaymentParam"));
+        }
+
+        try
+        {
+            mStayPayment = (StayPayment) Util.setClassPublicFieldsBundle(StayPayment.class, savedInstanceState.getBundle("stayPayment"));
+            mStayRefundPolicy = (StayRefundPolicy) Util.setClassPublicFieldsBundle(StayRefundPolicy.class, savedInstanceState.getBundle("stayRefundPolicy"));
+            mSelectedCard = (Card) Util.setClassPublicFieldsBundle(Card.class, savedInstanceState.getBundle("selectedCard"));
+            mGuest = (DomesticGuest) Util.setClassPublicFieldsBundle(DomesticGuest.class, savedInstanceState.getBundle("guest"));
+            mUserSimpleInformation = (UserSimpleInformation) Util.setClassPublicFieldsBundle(UserSimpleInformation.class, savedInstanceState.getBundle("userSimpleInformation"));
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+        }
     }
 
     @Override
@@ -1997,10 +2110,7 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
                             continue;
                         }
 
-                        String bookingCheckInDateTime = DailyCalendar.convertDateFormatString(booking.checkInDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyy-MM-dd");
-                        String bookingCheckOutDateTime = DailyCalendar.convertDateFormatString(booking.checkOutDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyy-MM-dd");
-
-                        if (checkInDateTime.equalsIgnoreCase(bookingCheckInDateTime) == true//
+                        if (checkInDateTime.equalsIgnoreCase(booking.checkInDateTime) == true//
                             && booking.placeName.equalsIgnoreCase(stayName) == true)
                         {
                             return true;

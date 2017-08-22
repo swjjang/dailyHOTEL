@@ -20,6 +20,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.provider.Telephony;
 import android.telephony.PhoneNumberFormattingTextWatcher;
 import android.telephony.TelephonyManager;
@@ -66,6 +67,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.lang.ref.SoftReference;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Locale;
@@ -1674,5 +1677,71 @@ public class Util implements Constants
         }
 
         return false;
+    }
+
+    public static Bundle getClassPublicFieldsBundle(Class bundleClass, Object objectClass) throws Exception
+    {
+        if (bundleClass == null || objectClass == null)
+        {
+            return null;
+        }
+
+        Bundle bundle = new Bundle();
+        String name;
+        Object filedObject;
+        int modifier;
+
+        for (Field field : bundleClass.getFields())
+        {
+            modifier = field.getModifiers();
+
+            if (Modifier.isStatic(modifier) == true || Modifier.isFinal(modifier) == true || Modifier.isPublic(modifier) == false)
+            {
+                continue;
+            }
+
+            name = field.getName();
+            filedObject = field.get(objectClass);
+
+            if (filedObject instanceof String)
+            {
+                bundle.putString(name, (String) filedObject);
+            } else if (filedObject instanceof Integer)
+            {
+                bundle.putInt(name, (Integer) filedObject);
+            } else if (filedObject instanceof Boolean)
+            {
+                bundle.putBoolean(name, (Boolean) filedObject);
+            }
+        }
+
+        return bundle;
+    }
+
+    public static Object setClassPublicFieldsBundle(Class bundleClass, Bundle bundle) throws Exception
+    {
+        if (bundle == null || bundleClass == null)
+        {
+            return null;
+        }
+
+        Object objectClass = bundleClass.newInstance();
+        Object filedObject;
+        int modifier;
+
+        for (Field field : bundleClass.getFields())
+        {
+            modifier = field.getModifiers();
+
+            if (Modifier.isStatic(modifier) == true || Modifier.isFinal(modifier) == true || Modifier.isPublic(modifier) == false)
+            {
+                continue;
+            }
+
+            field.setAccessible(true);
+            field.set(objectClass, bundle.get(field.getName()));
+        }
+
+        return objectClass;
     }
 }

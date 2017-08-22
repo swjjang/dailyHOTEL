@@ -44,6 +44,7 @@ import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.DailyRemoteConfigPreference;
 import com.twoheart.dailyhotel.util.DailyUserPreference;
+import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import org.json.JSONObject;
@@ -124,6 +125,10 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
         void onEventAgreedTermClick(Activity activity, String gourmetName, String menuName);
 
         GourmetThankYouAnalyticsParam getThankYouAnalyticsParam();
+
+        void setPaymentParam(HashMap<String, String> param);
+
+        HashMap<String, String> getPaymentParam();
     }
 
     public GourmetPaymentPresenter(@NonNull GourmetPaymentActivity activity)
@@ -245,12 +250,104 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
     public void onSaveInstanceState(Bundle outState)
     {
         super.onSaveInstanceState(outState);
+
+        outState.putInt("gourmetIndex", mGourmetIndex);
+        outState.putInt("menuPrice", mMenuPrice);
+        outState.putInt("menuIndex", mMenuIndex);
+        outState.putInt("menuCount", mMenuCount);
+
+        outState.putString("gourmetName", mGourmetName);
+        outState.putString("imageUrl", mImageUrl);
+        outState.putString("category", mCategory);
+        outState.putString("menuName", mMenuName);
+        outState.putString("visitDateTime", mVisitDateTime);
+
+        if (mGourmetBookDateTime != null)
+        {
+            outState.putString("gourmetBookDateTime", mGourmetBookDateTime.getVisitDateTime(DailyCalendar.ISO_8601_FORMAT));
+        }
+
+        if (mPaymentType != null)
+        {
+            outState.putString("paymentType", mPaymentType.name());
+        }
+
+        outState.putBoolean("overseas", mOverseas);
+        outState.putBoolean("bonusSelected", mBonusSelected);
+        outState.putBoolean("couponSelected", mCouponSelected);
+        outState.putBoolean("agreedThirdPartyTerms", mAgreedThirdPartyTerms);
+        outState.putBoolean("guestInformationVisible", mGuestInformationVisible);
+
+        outState.putParcelable("selectedCoupon", mSelectedCoupon);
+
+        if (mAnalytics != null)
+        {
+            outState.putParcelable("analytics", mAnalytics.getAnalyticsParam());
+            outState.putSerializable("analyticsPaymentParam", mAnalytics.getPaymentParam());
+        }
+
+        try
+        {
+            outState.putBundle("gourmetPayment", Util.getClassPublicFieldsBundle(GourmetPayment.class, mGourmetPayment));
+            outState.putBundle("selectedCard", Util.getClassPublicFieldsBundle(Card.class, mSelectedCard));
+            outState.putBundle("guest", Util.getClassPublicFieldsBundle(DomesticGuest.class, mGuest));
+            outState.putBundle("userSimpleInformation", Util.getClassPublicFieldsBundle(UserSimpleInformation.class, mUserSimpleInformation));
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+        }
     }
 
     @Override
     public void onRestoreInstanceState(Bundle savedInstanceState)
     {
         super.onRestoreInstanceState(savedInstanceState);
+
+        mGourmetIndex = savedInstanceState.getInt("gourmetIndex");
+        mMenuPrice = savedInstanceState.getInt("menuPrice");
+        mMenuIndex = savedInstanceState.getInt("menuIndex");
+        mMenuCount = savedInstanceState.getInt("menuCount");
+
+        mGourmetName = savedInstanceState.getString("gourmetName");
+        mImageUrl = savedInstanceState.getString("imageUrl");
+        mCategory = savedInstanceState.getString("category");
+        mMenuName = savedInstanceState.getString("menuName");
+        mVisitDateTime = savedInstanceState.getString("visitDateTime");
+
+        setGourmetBookDateTime(savedInstanceState.getString("gourmetBookDateTime"));
+
+        try
+        {
+            mPaymentType = DailyBookingPaymentTypeView.PaymentType.valueOf(savedInstanceState.getString("paymentType"));
+        } catch (Exception e)
+        {
+            mPaymentType = DailyBookingPaymentTypeView.PaymentType.CARD;
+        }
+
+        mOverseas = savedInstanceState.getBoolean("overseas");
+        mBonusSelected = savedInstanceState.getBoolean("bonusSelected");
+        mCouponSelected = savedInstanceState.getBoolean("couponSelected");
+        mAgreedThirdPartyTerms = savedInstanceState.getBoolean("agreedThirdPartyTerms");
+        mGuestInformationVisible = savedInstanceState.getBoolean("guestInformationVisible");
+
+        mSelectedCoupon = savedInstanceState.getParcelable("selectedCoupon");
+
+        if (mAnalytics != null)
+        {
+            mAnalytics.setAnalyticsParam(savedInstanceState.getParcelable("analytics"));
+            mAnalytics.setPaymentParam((HashMap<String, String>) savedInstanceState.getSerializable("analyticsPaymentParam"));
+        }
+
+        try
+        {
+            mGourmetPayment = (GourmetPayment) Util.setClassPublicFieldsBundle(GourmetPayment.class, savedInstanceState.getBundle("gourmetPayment"));
+            mSelectedCard = (Card) Util.setClassPublicFieldsBundle(Card.class, savedInstanceState.getBundle("selectedCard"));
+            mGuest = (DomesticGuest) Util.setClassPublicFieldsBundle(DomesticGuest.class, savedInstanceState.getBundle("guest"));
+            mUserSimpleInformation = (UserSimpleInformation) Util.setClassPublicFieldsBundle(UserSimpleInformation.class, savedInstanceState.getBundle("userSimpleInformation"));
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+        }
     }
 
     @Override
