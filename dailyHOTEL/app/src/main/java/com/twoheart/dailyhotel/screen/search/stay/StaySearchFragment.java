@@ -441,8 +441,9 @@ public class StaySearchFragment extends PlaceSearchFragment
                 return;
             }
 
-            mPlaceSearchLayout.resetSearchKeyword();
-            mPlaceSearchLayout.hideSearchKeyboard();
+            hideSearchKeyboard();
+            resetSearchKeyword();
+            hideAutoCompleteLayout();
         }
 
         @Override
