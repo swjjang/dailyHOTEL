@@ -165,7 +165,7 @@ public class CampaignTagRemoteImpl implements CampaignTagInterface
                     {
                         if (gourmetCampaignTagsDataBaseDto.data != null)
                         {
-                            gourmetCampaignTagsDataBaseDto.data.getGourmetCampaignTags(mContext);
+                            gourmetCampaignTags = gourmetCampaignTagsDataBaseDto.data.getGourmetCampaignTags(mContext);
                         }
 
                         if (gourmetCampaignTags == null)
