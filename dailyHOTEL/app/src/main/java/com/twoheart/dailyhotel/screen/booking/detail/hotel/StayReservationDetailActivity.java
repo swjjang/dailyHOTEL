@@ -829,7 +829,7 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
                 if (gourmet.isSoldOut == true)
                 {
                     // sold out 업장 제외하기로 함
-                    ExLog.d(gourmet.name + " , " + gourmet.isSoldOut + " : " + gourmet.availableTicketNumbers);
+//                    ExLog.d(gourmet.name + " , " + gourmet.isSoldOut + " : " + gourmet.availableTicketNumbers);
                     continue;
                 }
 
