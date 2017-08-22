@@ -197,6 +197,16 @@ public abstract class PlaceSearchFragment extends BaseFragment
         mPlaceSearchLayout.hideSearchKeyboard();
     }
 
+    public void hideAutoCompleteLayout()
+    {
+        if (mPlaceSearchLayout == null)
+        {
+            return;
+        }
+
+        mPlaceSearchLayout.hideAutoCompleteLayout();
+    }
+
     public void setSearchWord(String word)
     {
         if (mPlaceSearchLayout == null)

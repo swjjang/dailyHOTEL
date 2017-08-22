@@ -20,7 +20,7 @@ import java.util.Map;
 public class GourmetPaymentAnalyticsImpl implements GourmetPaymentPresenter.GourmetPaymentAnalyticsInterface
 {
     private GourmetPaymentAnalyticsParam mAnalyticsParam;
-    private Map<String, String> mPaymentParamMap;
+    private HashMap<String, String> mPaymentParamMap;
 
     @Override
     public void setAnalyticsParam(GourmetPaymentAnalyticsParam analyticsParam)
@@ -321,6 +321,18 @@ public class GourmetPaymentAnalyticsImpl implements GourmetPaymentPresenter.Gour
         analyticsParam.params = mPaymentParamMap;
 
         return analyticsParam;
+    }
+
+    @Override
+    public void setPaymentParam(HashMap<String, String> param)
+    {
+        mPaymentParamMap = param;
+    }
+
+    @Override
+    public HashMap<String, String> getPaymentParam()
+    {
+        return mPaymentParamMap;
     }
 
     private String getPaymentType(DailyBookingPaymentTypeView.PaymentType paymentType)

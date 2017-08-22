@@ -329,6 +329,7 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
                     if (mStaySearchFragment != null)
                     {
                         mStaySearchFragment.hideSearchKeyboard();
+                        mStaySearchFragment.hideAutoCompleteLayout();
                         mStaySearchFragment.setRecyclerViewPosition(0);
                     }
 
@@ -347,6 +348,7 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
                     if (mGourmetSearchFragment != null)
                     {
                         mGourmetSearchFragment.hideSearchKeyboard();
+                        mGourmetSearchFragment.hideAutoCompleteLayout();
                         mGourmetSearchFragment.setRecyclerViewPosition(0);
                     }
 

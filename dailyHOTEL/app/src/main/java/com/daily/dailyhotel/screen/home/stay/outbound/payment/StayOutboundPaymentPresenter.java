@@ -44,6 +44,7 @@ import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.DailyRemoteConfigPreference;
 import com.twoheart.dailyhotel.util.DailyUserPreference;
+import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.CustomFontTypefaceSpan;
 
@@ -96,11 +97,15 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
             , String stayName, DailyBookingPaymentTypeView.PaymentType paymentType, boolean usedBonus//
             , boolean registerEasyCard, UserSimpleInformation userSimpleInformation);
 
-        void onEventStartPayment(Activity activity, String label);
+        void onEventStartPayment(Activity activity, DailyBookingPaymentTypeView.PaymentType paymentType);
 
-        void onEventEndPayment(Activity activity);
+        void onEventEndPayment(Activity activity, DailyBookingPaymentTypeView.PaymentType paymentType);
 
         StayOutboundThankYouAnalyticsParam getThankYouAnalyticsParam(DailyBookingPaymentTypeView.PaymentType paymentType, boolean fullBonus, boolean usedBonus, boolean registerEasyCard);
+
+        void setPaymentParam(HashMap<String, String> param);
+
+        HashMap<String, String> getPaymentParam();
     }
 
     public StayOutboundPaymentPresenter(@NonNull StayOutboundPaymentActivity activity)
@@ -231,12 +236,103 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
     public void onSaveInstanceState(Bundle outState)
     {
         super.onSaveInstanceState(outState);
+
+        outState.putInt("stayIndex", mStayIndex);
+        outState.putInt("roomPrice", mRoomPrice);
+        outState.putInt("mRoomBedTypeId", mRoomBedTypeId);
+
+        outState.putString("stayName", mStayName);
+        outState.putString("imageUrl", mImageUrl);
+        outState.putString("roomType", mRoomType);
+        outState.putString("rateCode", mRateCode);
+        outState.putString("rateKey", mRateKey);
+        outState.putString("roomTypeCode", mRoomTypeCode);
+
+        if (mStayBookDateTime != null)
+        {
+            outState.putString("checkInDateTime", mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT));
+            outState.putString("checkOutDateTime", mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT));
+        }
+
+        if (mPaymentType != null)
+        {
+            outState.putString("paymentType", mPaymentType.name());
+        }
+
+        outState.putBoolean("bonusSelected", mBonusSelected);
+        outState.putBoolean("agreedThirdPartyTerms", mAgreedThirdPartyTerms);
+
+        if (mAnalytics != null)
+        {
+            outState.putParcelable("analytics", mAnalytics.getAnalyticsParam());
+            outState.putSerializable("analyticsPaymentParam", mAnalytics.getPaymentParam());
+        }
+
+        if (mPeople != null)
+        {
+            outState.putInt("people_numberOfAdults", mPeople.numberOfAdults);
+            outState.putIntegerArrayList("people_childAgeList", mPeople.getChildAgeList());
+        }
+
+        try
+        {
+            outState.putBundle("stayOutboundPayment", Util.getClassPublicFieldsBundle(StayOutboundPayment.class, mStayOutboundPayment));
+            outState.putBundle("selectedCard", Util.getClassPublicFieldsBundle(Card.class, mSelectedCard));
+            outState.putBundle("guest", Util.getClassPublicFieldsBundle(OverseasGuest.class, mGuest));
+            outState.putBundle("userSimpleInformation", Util.getClassPublicFieldsBundle(UserSimpleInformation.class, mUserSimpleInformation));
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+        }
     }
 
     @Override
     public void onRestoreInstanceState(Bundle savedInstanceState)
     {
         super.onRestoreInstanceState(savedInstanceState);
+
+        mStayIndex = savedInstanceState.getInt("stayIndex");
+        mRoomPrice = savedInstanceState.getInt("roomPrice");
+        mRoomBedTypeId = savedInstanceState.getInt("mRoomBedTypeId");
+
+        mStayName = savedInstanceState.getString("stayName");
+        mImageUrl = savedInstanceState.getString("imageUrl");
+        mRoomType = savedInstanceState.getString("roomType");
+        mRateCode = savedInstanceState.getString("rateCode");
+        mRateKey = savedInstanceState.getString("rateKey");
+        mRoomTypeCode = savedInstanceState.getString("roomTypeCode");
+
+        setStayBookDateTime(savedInstanceState.getString("checkInDateTime"), savedInstanceState.getString("checkOutDateTime"));
+
+        try
+        {
+            mPaymentType = DailyBookingPaymentTypeView.PaymentType.valueOf(savedInstanceState.getString("paymentType"));
+        } catch (Exception e)
+        {
+            mPaymentType = DailyBookingPaymentTypeView.PaymentType.CARD;
+        }
+
+        mBonusSelected = savedInstanceState.getBoolean("bonusSelected");
+        mAgreedThirdPartyTerms = savedInstanceState.getBoolean("agreedThirdPartyTerms");
+
+        if (mAnalytics != null)
+        {
+            mAnalytics.setAnalyticsParam(savedInstanceState.getParcelable("analytics"));
+            mAnalytics.setPaymentParam((HashMap<String, String>) savedInstanceState.getSerializable("analyticsPaymentParam"));
+        }
+
+        setPeople(savedInstanceState.getInt("people_numberOfAdults"), savedInstanceState.getIntegerArrayList("people_childAgeList"));
+
+        try
+        {
+            mStayOutboundPayment = (StayOutboundPayment) Util.setClassPublicFieldsBundle(StayOutboundPayment.class, savedInstanceState.getBundle("stayOutboundPayment"));
+            mSelectedCard = (Card) Util.setClassPublicFieldsBundle(Card.class, savedInstanceState.getBundle("selectedCard"));
+            mGuest = (OverseasGuest) Util.setClassPublicFieldsBundle(OverseasGuest.class, savedInstanceState.getBundle("guest"));
+            mUserSimpleInformation = (UserSimpleInformation) Util.setClassPublicFieldsBundle(UserSimpleInformation.class, savedInstanceState.getBundle("userSimpleInformation"));
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+        }
     }
 
     @Override
@@ -632,7 +728,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
                 startActivityForResult(RegisterCreditCardActivity.newInstance(getActivity())//
                     , StayOutboundPaymentActivity.REQUEST_CODE_REGISTER_CARD_PAYMENT);
 
-                mAnalytics.onEventStartPayment(getActivity(), AnalyticsManager.Label.EASYCARDPAY);
+                mAnalytics.onEventStartPayment(getActivity(), DailyBookingPaymentTypeView.PaymentType.EASY_CARD);
             } else
             {
                 getViewInterface().showAgreeTermDialog(mPaymentType, new View.OnClickListener()
@@ -724,7 +820,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
                 }
             }));
 
-            mAnalytics.onEventStartPayment(getActivity(), AnalyticsManager.Label.FULLBONUS);
+            mAnalytics.onEventStartPayment(getActivity(), DailyBookingPaymentTypeView.PaymentType.FREE);
         } else
         {
             switch (mPaymentType)
@@ -769,7 +865,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
                         }
                     }));
 
-                    mAnalytics.onEventStartPayment(getActivity(), AnalyticsManager.Label.EASYCARDPAY);
+                    mAnalytics.onEventStartPayment(getActivity(), DailyBookingPaymentTypeView.PaymentType.EASY_CARD);
                     break;
                 }
 
@@ -785,7 +881,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
                         , getWebPaymentUrl(mStayIndex, "card"), jsonObject.toString(), AnalyticsManager.Screen.DAILYHOTEL_PAYMENT_PROCESS)//
                         , StayOutboundPaymentActivity.REQUEST_CODE_PAYMENT_WEB_CARD);
 
-                    mAnalytics.onEventStartPayment(getActivity(), AnalyticsManager.Label.CARDPAY);
+                    mAnalytics.onEventStartPayment(getActivity(), DailyBookingPaymentTypeView.PaymentType.CARD);
                     break;
                 }
 
@@ -801,7 +897,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
                         , getWebPaymentUrl(mStayIndex, "mobile"), jsonObject.toString(), AnalyticsManager.Screen.DAILYHOTEL_PAYMENT_PROCESS)//
                         , StayOutboundPaymentActivity.REQUEST_CODE_PAYMENT_WEB_PHONE);
 
-                    mAnalytics.onEventStartPayment(getActivity(), AnalyticsManager.Label.PHONEBILLPAY);
+                    mAnalytics.onEventStartPayment(getActivity(), DailyBookingPaymentTypeView.PaymentType.PHONE);
                     break;
                 }
             }
@@ -818,7 +914,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
 
         mAnalytics.onScreenPaymentCompleted(getActivity(), mStayOutboundPayment, mStayBookDateTime, mStayName//
             , mPaymentType, mBonusSelected, mSelectedCard != null, mUserSimpleInformation);
-        mAnalytics.onEventEndPayment(getActivity());
+        mAnalytics.onEventEndPayment(getActivity(), mPaymentType);
     }
 
     private JSONObject getPaymentJSONObject(String paymentType, StayBookDateTime stayBookDateTime, int index//

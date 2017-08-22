@@ -20,7 +20,6 @@ import java.util.Map;
 public class StayOutboundPaymentAnalyticsImpl implements StayOutboundPaymentPresenter.StayOutboundPaymentAnalyticsInterface
 {
     private StayOutboundPaymentAnalyticsParam mAnalyticsParam;
-    private String mStartPaymentType;
 
     @Override
     public void setAnalyticsParam(StayOutboundPaymentAnalyticsParam analyticsParam)
@@ -140,29 +139,27 @@ public class StayOutboundPaymentAnalyticsImpl implements StayOutboundPaymentPres
     }
 
     @Override
-    public void onEventStartPayment(Activity activity, String label)
+    public void onEventStartPayment(Activity activity, DailyBookingPaymentTypeView.PaymentType paymentType)
     {
-        if (activity == null || DailyTextUtils.isTextEmpty(label) == true)
+        if (activity == null || paymentType == null)
         {
             return;
         }
 
-        mStartPaymentType = label;
-
         AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS//
-            , AnalyticsManager.Action.STARTPAYMENT_OUTBOUND, label, null);
+            , AnalyticsManager.Action.STARTPAYMENT_OUTBOUND, getPaymentType(paymentType), null);
     }
 
     @Override
-    public void onEventEndPayment(Activity activity)
+    public void onEventEndPayment(Activity activity, DailyBookingPaymentTypeView.PaymentType paymentType)
     {
-        if (activity == null)
+        if (activity == null || paymentType == null)
         {
             return;
         }
 
         AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS//
-            , AnalyticsManager.Action.ENDPAYMENT_OUTBOUND, mStartPaymentType, null);
+            , AnalyticsManager.Action.ENDPAYMENT_OUTBOUND, getPaymentType(paymentType), null);
     }
 
     @Override
@@ -177,5 +174,45 @@ public class StayOutboundPaymentAnalyticsImpl implements StayOutboundPaymentPres
         analyticsParam.registerEasyCard = registerEasyCard;
 
         return analyticsParam;
+    }
+
+    @Override
+    public void setPaymentParam(HashMap<String, String> param)
+    {
+
+    }
+
+    @Override
+    public HashMap<String, String> getPaymentParam()
+    {
+        return null;
+    }
+
+    private String getPaymentType(DailyBookingPaymentTypeView.PaymentType paymentType)
+    {
+        if (paymentType == null)
+        {
+            return null;
+        }
+
+        switch (paymentType)
+        {
+            case EASY_CARD:
+                return AnalyticsManager.Label.EASYCARDPAY;
+
+            case CARD:
+                return AnalyticsManager.Label.CARDPAY;
+
+            case PHONE:
+                return AnalyticsManager.Label.PHONEBILLPAY;
+
+            case VBANK:
+                return AnalyticsManager.Label.VIRTUALACCOUNTPAY;
+
+            case FREE:
+                return AnalyticsManager.Label.FULLBONUS;
+        }
+
+        return null;
     }
 }
