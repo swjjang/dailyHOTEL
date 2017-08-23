@@ -97,6 +97,8 @@ public abstract class PlaceSearchFragment extends BaseFragment
         void finish(int resultCode);
 
         void onSearchEnabled(boolean enabled);
+
+        void onChangeAutoCompleteScrollView(boolean isShow);
     }
 
     @Override
@@ -250,6 +252,16 @@ public abstract class PlaceSearchFragment extends BaseFragment
         }
 
         mPlaceSearchLayout.setRecyclerViewPosition(position);
+    }
+
+    public boolean isShowAutoCompleteScrollView()
+    {
+        if (mPlaceSearchLayout == null)
+        {
+            return false;
+        }
+
+        return mPlaceSearchLayout.isShowAutoCompleteScrollView();
     }
 
     @Override

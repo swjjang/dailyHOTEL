@@ -729,6 +729,17 @@ public class StaySearchFragment extends PlaceSearchFragment
         }
 
         @Override
+        public void onChangeAutoCompleteScrollView(boolean isShow)
+        {
+            if (mOnSearchFragmentListener == null)
+            {
+                return;
+            }
+
+            mOnSearchFragmentListener.onChangeAutoCompleteScrollView(isShow);
+        }
+
+        @Override
         public void finish()
         {
             mBaseActivity.finish();
