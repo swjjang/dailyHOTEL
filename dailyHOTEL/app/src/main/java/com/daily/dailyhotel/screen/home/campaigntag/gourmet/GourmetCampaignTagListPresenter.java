@@ -2,22 +2,18 @@ package com.daily.dailyhotel.screen.home.campaigntag.gourmet;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
-import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.SharedElementCallback;
 import android.view.View;
-import android.widget.Toast;
 
 import com.daily.base.BaseAnalyticsInterface;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
-import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
 import com.daily.dailyhotel.entity.CampaignTag;
 import com.daily.dailyhotel.entity.CommonDateTime;
@@ -25,6 +21,7 @@ import com.daily.dailyhotel.entity.GourmetCampaignTags;
 import com.daily.dailyhotel.repository.local.model.AnalyticsParam;
 import com.daily.dailyhotel.repository.remote.CampaignTagRemoteImpl;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
+import com.daily.dailyhotel.screen.common.call.CallDialogActivity;
 import com.daily.dailyhotel.screen.home.campaigntag.CampaignTagListAnalyticsImpl;
 import com.daily.dailyhotel.screen.home.campaigntag.CampaignTagListAnalyticsInterface;
 import com.facebook.drawee.view.SimpleDraweeView;
@@ -39,13 +36,10 @@ import com.twoheart.dailyhotel.screen.gourmet.filter.GourmetCalendarActivity;
 import com.twoheart.dailyhotel.screen.gourmet.preview.GourmetPreviewActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
-import com.twoheart.dailyhotel.util.DailyPreference;
-import com.twoheart.dailyhotel.util.DailyRemoteConfigPreference;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 import io.reactivex.Observable;
@@ -64,23 +58,19 @@ public class GourmetCampaignTagListPresenter //
     extends BaseExceptionPresenter<GourmetCampaignTagListActivity, GourmetCampaignTagListInterface> //
     implements GourmetCampaignTagListView.OnEventListener
 {
-    private int mTagIndex;
-    private int mType;
-    private int mAfterDay;
-    private String mTitle;
-    private GourmetBookingDay mGourmetBookingDay;
-    private CommonDateTime mCommonDateTime;
-    private GourmetCampaignTags mGourmetCampaignTags;
-    //    private boolean mIsFirstUiUpdateCheck;
+    private CampaignTagListAnalyticsInterface mAnalytics;
 
     private CommonRemoteImpl mCommonRemoteImpl;
     private CampaignTagRemoteImpl mCampaignTagRemoteImpl;
 
-    private PlaceViewItem mPlaceViewItemByLongPress;
+    private int mTagIndex;
     private int mListCountByLongPress;
+    private String mTitle;
+    private GourmetBookingDay mGourmetBookingDay;
+    private CommonDateTime mCommonDateTime;
+    private GourmetCampaignTags mGourmetCampaignTags;
+    private PlaceViewItem mPlaceViewItemByLongPress;
     private View mViewByLongPress;
-
-    private CampaignTagListAnalyticsInterface mAnalytics;
 
     public GourmetCampaignTagListPresenter(@NonNull GourmetCampaignTagListActivity activity)
     {
@@ -122,43 +112,8 @@ public class GourmetCampaignTagListPresenter //
         }
 
         mTagIndex = intent.getIntExtra(GourmetCampaignTagListActivity.INTENT_EXTRA_DATA_INDEX, -1);
-
-        mType = intent.getIntExtra(GourmetCampaignTagListActivity.INTENT_EXTRA_DATA_TYPE, GourmetCampaignTagListActivity.TYPE_DEFAULT);
-
         mTitle = intent.getStringExtra(GourmetCampaignTagListActivity.INTENT_EXTRA_DATA_TITLE);
-
-        switch (mType)
-        {
-            case GourmetCampaignTagListActivity.TYPE_DEFAULT:
-            {
-                mGourmetBookingDay = intent.getParcelableExtra(GourmetCampaignTagListActivity.INTENT_EXTRA_DATA_PLACEBOOKINGDAY);
-                break;
-            }
-
-            case GourmetCampaignTagListActivity.TYPE_DATE:
-            {
-                String visitDateTime = intent.getStringExtra(GourmetCampaignTagListActivity.INTENT_EXTRA_DATA_VISIT_DATE);
-
-                if (DailyTextUtils.isTextEmpty(visitDateTime) == false)
-                {
-                    try
-                    {
-                        mGourmetBookingDay = new GourmetBookingDay();
-                        mGourmetBookingDay.setVisitDay(visitDateTime);
-                    } catch (Exception e)
-                    {
-                        mGourmetBookingDay = null;
-                    }
-                }
-                break;
-            }
-
-            case GourmetCampaignTagListActivity.TYPE_AFTER_DAY:
-            {
-                mAfterDay = intent.getIntExtra(GourmetCampaignTagListActivity.INTENT_EXTRA_DATA_AFTER_DAY, 0);
-                break;
-            }
-        }
+        mGourmetBookingDay = intent.getParcelableExtra(GourmetCampaignTagListActivity.INTENT_EXTRA_DATA_PLACEBOOKINGDAY);
 
         return true;
     }
@@ -208,14 +163,6 @@ public class GourmetCampaignTagListPresenter //
     {
         // 꼭 호출해 주세요.
         super.onDestroy();
-    }
-
-    @Override
-    public void onFinish()
-    {
-        super.onFinish();
-
-        getActivity().overridePendingTransition(R.anim.hold, R.anim.slide_out_right);
     }
 
     @Override
@@ -616,7 +563,7 @@ public class GourmetCampaignTagListPresenter //
     @Override
     public void onCallClick()
     {
-        showDailyCallDialog();
+        startActivityForResult(CallDialogActivity.newInstance(getActivity()), GourmetCampaignTagListActivity.REQUEST_CODE_CALL);
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
@@ -736,194 +683,11 @@ public class GourmetCampaignTagListPresenter //
         try
         {
             gourmetBookingDay.setVisitDay(commonDateTime.dailyDateTime);
-
-            switch (mType)
-            {
-                case GourmetCampaignTagListActivity.TYPE_DEFAULT:
-                    break;
-
-                case GourmetCampaignTagListActivity.TYPE_DATE:
-                    if (mGourmetBookingDay != null)
-                    {
-                        try
-                        {
-                            int startVisitDay = Integer.parseInt(mGourmetBookingDay.getVisitDay("yyyyMMdd"));
-                            int dailyVisitDay = Integer.parseInt(gourmetBookingDay.getVisitDay("yyyyMMdd"));
-
-                            // 데일리타임 이후 날짜인 경우에는
-                            if (startVisitDay >= dailyVisitDay)
-                            {
-                                gourmetBookingDay.setVisitDay(mGourmetBookingDay.getVisitDay(DailyCalendar.ISO_8601_FORMAT));
-                            }
-                        } catch (Exception e)
-                        {
-                            ExLog.e(e.toString());
-                        }
-                    }
-
-                    mType = GourmetCampaignTagListActivity.TYPE_DEFAULT;
-                    break;
-
-                case GourmetCampaignTagListActivity.TYPE_AFTER_DAY:
-                    if (mAfterDay >= 0)
-                    {
-                        try
-                        {
-                            gourmetBookingDay.setVisitDay(commonDateTime.dailyDateTime, mAfterDay);
-                        } catch (Exception e)
-                        {
-                            ExLog.e(e.toString());
-                        }
-
-                        mAfterDay = -1;
-                    }
-
-                    mType = GourmetCampaignTagListActivity.TYPE_DEFAULT;
-                    break;
-            }
-
-
         } catch (Exception e)
         {
             ExLog.e(e.toString());
         }
 
         return gourmetBookingDay;
-    }
-
-    public void showDailyCallDialog()
-    {
-        addCompositeDisposable(mCommonRemoteImpl.getCommonDateTime().map(new Function<CommonDateTime, Boolean>()
-        {
-            @Override
-            public Boolean apply(@io.reactivex.annotations.NonNull CommonDateTime commonDateTime) throws Exception
-            {
-                boolean isInValidOperatingTime = false;
-
-                try
-                {
-                    Calendar todayCalendar = DailyCalendar.getInstance(commonDateTime.currentDateTime, false);
-                    int hour = todayCalendar.get(Calendar.HOUR_OF_DAY);
-                    int minute = todayCalendar.get(Calendar.MINUTE);
-
-                    String startHourString = DailyCalendar.convertDateFormatString(commonDateTime.openDateTime, DailyCalendar.ISO_8601_FORMAT, "H");
-                    String endHourString = DailyCalendar.convertDateFormatString(commonDateTime.closeDateTime, DailyCalendar.ISO_8601_FORMAT, "H");
-
-                    int startHour = Integer.parseInt(startHourString);
-                    int endHour = Integer.parseInt(endHourString);
-
-                    String[] lunchTimes = DailyRemoteConfigPreference.getInstance(getActivity()).getRemoteConfigOperationLunchTime().split("\\,");
-                    String[] startLunchTime = lunchTimes[0].split(":");
-                    String[] endLunchTime = lunchTimes[1].split(":");
-
-                    int startLunchHour = Integer.parseInt(startLunchTime[0]);
-                    int startLunchMinute = Integer.parseInt(startLunchTime[1]);
-                    int endLunchHour = Integer.parseInt(endLunchTime[0]);
-
-                    boolean isOverStartTime = hour > startLunchHour || (hour == startLunchHour && minute >= startLunchMinute);
-                    boolean isOverEndTime = hour >= endLunchHour;
-
-                    if (hour < startHour && hour > endHour)
-                    {
-                        // 운영 안하는 시간 03:00:01 ~ 08:59:59 - 팝업 발생
-                        isInValidOperatingTime = true;
-                    } else if (isOverStartTime == true && isOverEndTime == false)
-                    {
-                        // 점심시간 11:50:01~12:59:59 - 해피톡의 경우 팝업 발생 안함
-                        isInValidOperatingTime = true;
-                    }
-                } catch (Exception e)
-                {
-                    isInValidOperatingTime = false;
-                }
-
-                return isInValidOperatingTime;
-            }
-        }).subscribe(new Consumer<Boolean>()
-        {
-            @Override
-            public void accept(@io.reactivex.annotations.NonNull Boolean isInValidOperatingTime) throws Exception
-            {
-                if (isInValidOperatingTime == true)
-                {
-                    showNonOperatingTimeDialog();
-                } else
-                {
-                    showCallCustomerServiceDialog();
-                }
-            }
-        }, new Consumer<Throwable>()
-        {
-            @Override
-            public void accept(@io.reactivex.annotations.NonNull Throwable throwable) throws Exception
-            {
-                ExLog.e(throwable.toString());
-
-                showCallCustomerServiceDialog();
-            }
-        }));
-    }
-
-    public void showCallCustomerServiceDialog()
-    {
-        View.OnClickListener positiveListener = new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                String remoteConfigPhoneNumber = DailyRemoteConfigPreference.getInstance(getActivity()).getRemoteConfigCompanyPhoneNumber();
-                String phoneNumber = DailyTextUtils.isTextEmpty(remoteConfigPhoneNumber) == false //
-                    ? remoteConfigPhoneNumber : Constants.PHONE_NUMBER_DAILYHOTEL;
-
-                String noCallMessage = getActivity().getResources().getString(R.string.toast_msg_no_call_format, phoneNumber);
-
-                if (Util.isTelephonyEnabled(getActivity()) == true)
-                {
-                    try
-                    {
-                        startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + phoneNumber)));
-                    } catch (ActivityNotFoundException e)
-                    {
-                        DailyToast.showToast(getActivity(), noCallMessage, Toast.LENGTH_LONG);
-                    }
-                } else
-                {
-                    DailyToast.showToast(getActivity(), noCallMessage, Toast.LENGTH_LONG);
-                }
-            }
-        };
-
-        String[] hour = DailyPreference.getInstance(getActivity()).getOperationTime().split("\\,");
-        String startHour = hour[0];
-        String endHour = hour[1];
-
-        String[] lunchTimes = DailyRemoteConfigPreference.getInstance(getActivity()).getRemoteConfigOperationLunchTime().split("\\,");
-        String startLunchTime = lunchTimes[0];
-        String endLunchTime = lunchTimes[1];
-
-        String operatingTimeMessage = getString(R.string.dialog_msg_call) //
-            + "\n" + getActivity().getResources().getString(R.string.message_consult02, startHour, endHour, startLunchTime, endLunchTime);
-
-        getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2), operatingTimeMessage, //
-            getString(R.string.dialog_btn_call), getString(R.string.dialog_btn_text_cancel) //
-            , positiveListener, null, true);
-    }
-
-    public void showNonOperatingTimeDialog()
-    {
-        String[] hour = DailyPreference.getInstance(getActivity()).getOperationTime().split("\\,");
-        String startHour = hour[0];
-        String endHour = hour[1];
-
-        String[] lunchTimes = DailyRemoteConfigPreference.getInstance(getActivity()).getRemoteConfigOperationLunchTime().split("\\,");
-        String startLunchTime = lunchTimes[0];
-        String endLunchTime = lunchTimes[1];
-
-        // 우선 점심시간의 경우 로컬에서 시간 픽스
-        String noneOperatingTimeMessage = getActivity().getResources().getString( //
-            R.string.dialog_message_none_operating_time, startHour, endHour, startLunchTime, endLunchTime);
-
-        getViewInterface().showSimpleDialog(getString(R.string.dialog_information), noneOperatingTimeMessage, //
-            getString(R.string.dialog_btn_text_confirm), null);
     }
 }
