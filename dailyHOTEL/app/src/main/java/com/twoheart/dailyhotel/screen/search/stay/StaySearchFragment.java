@@ -395,21 +395,21 @@ public class StaySearchFragment extends PlaceSearchFragment
 
         addCompositeDisposable(mCampaignTagRemoteImpl.getCampaignTagList(getServiceType().name()) //
             .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<ArrayList<CampaignTag>>()
-        {
-            @Override
-            public void accept(@NonNull ArrayList<CampaignTag> campaignTags) throws Exception
             {
-                unLockUI();
-                mPlaceSearchLayout.setRecyclerViewData(mRecentlyStayList, mCampaignTagList, mKeywordList);
-            }
-        }, new Consumer<Throwable>()
-        {
-            @Override
-            public void accept(@NonNull Throwable throwable) throws Exception
+                @Override
+                public void accept(@NonNull ArrayList<CampaignTag> campaignTags) throws Exception
+                {
+                    unLockUI();
+                    mPlaceSearchLayout.setRecyclerViewData(mRecentlyStayList, mCampaignTagList, mKeywordList);
+                }
+            }, new Consumer<Throwable>()
             {
-                onHandleError(throwable);
-            }
-        }));
+                @Override
+                public void accept(@NonNull Throwable throwable) throws Exception
+                {
+                    onHandleError(throwable);
+                }
+            }));
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -647,6 +647,17 @@ public class StaySearchFragment extends PlaceSearchFragment
             AnalyticsManager.getInstance(getActivity()).recordEvent(AnalyticsManager.Category.NAVIGATION//
                 , AnalyticsManager.Action.STAY_ITEM_CLICK, Integer.toString(stay.index), null);
 
+        }
+
+        @Override
+        public void onChangeAutoCompleteScrollView(boolean isShow)
+        {
+            if (mOnSearchFragmentListener == null)
+            {
+                return;
+            }
+
+            mOnSearchFragmentListener.onChangeAutoCompleteScrollView(isShow);
         }
 
         @Override

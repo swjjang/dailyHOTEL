@@ -18,9 +18,11 @@ import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.daily.base.util.DailyTextUtils;
+import com.daily.base.util.ScreenUtils;
 import com.daily.base.widget.DailyEditText;
 import com.daily.base.widget.DailyScrollView;
 import com.daily.dailyhotel.entity.CampaignTag;
@@ -87,6 +89,8 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
         void onSearchCampaignTag(CampaignTag campaignTag);
 
         void onSearchRecentlyPlace(Place place);
+
+        void onChangeAutoCompleteScrollView(boolean isShow);
     }
 
     protected abstract String getAroundPlaceText();
@@ -365,7 +369,7 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
 
     public void hideSearchKeyboard()
     {
-//        hideAutoCompleteLayout();
+        //        hideAutoCompleteLayout();
         mSearchEditText.clearFocus();
 
         InputMethodManager inputMethodManager = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -415,8 +419,7 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
         mAutoCompleteScrollView = (DailyScrollView) mAutoCompleteScrollLayout.findViewById(R.id.autoCompleteScrollView);
         mAutoCompleteLayout = (ViewGroup) mAutoCompleteScrollView.findViewById(R.id.autoCompleteLayout);
 
-        mAutoCompleteScrollLayout.setVisibility(View.GONE);
-        mAutoCompleteScrollView.setVisibility(View.GONE);
+        hideAutoCompleteLayout();
 
         mAutoCompleteScrollLayout.setOnClickListener(new View.OnClickListener()
         {
@@ -430,6 +433,45 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
 
                 hideSearchKeyboard();
                 hideAutoCompleteLayout();
+            }
+        });
+
+        mAutoCompleteScrollView.setOnScrollChangedListener(new DailyScrollView.OnScrollChangedListener()
+        {
+            private int mDistance;
+            boolean mIsHide;
+
+            @Override
+            public void onScrollChanged(ScrollView scrollView, int l, int t, int oldl, int oldt)
+            {
+                if (scrollView == null || scrollView.getVisibility() != View.VISIBLE)
+                {
+                    return;
+                }
+
+                if (mIsHide == true)
+                {
+                    return;
+                }
+
+                mDistance += (t - oldt);
+
+                if (mDistance > ScreenUtils.dpToPx(mContext, 41) == true)
+                {
+                    mDistance = 0;
+                    mIsHide = true;
+
+                    hideSearchKeyboard();
+
+                    mHandler.postDelayed(new Runnable()
+                    {
+                        @Override
+                        public void run()
+                        {
+                            mIsHide = false;
+                        }
+                    }, 1000);
+                }
             }
         });
 
@@ -528,13 +570,27 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
 
     private void showAutoCompleteScrollView()
     {
+        ((OnEventListener) mOnEventListener).onChangeAutoCompleteScrollView(true);
+
         mAutoCompleteScrollView.setVisibility(View.VISIBLE);
     }
 
     void hideAutoCompleteScrollView()
     {
+        ((OnEventListener) mOnEventListener).onChangeAutoCompleteScrollView(false);
+
         mAutoCompleteScrollView.setVisibility(View.GONE);
         resetAutoCompleteLayout(mAutoCompleteLayout);
+    }
+
+    public boolean isShowAutoCompleteScrollView()
+    {
+        if (mAutoCompleteScrollView == null)
+        {
+            return false;
+        }
+
+        return mAutoCompleteScrollView.getVisibility() == View.VISIBLE;
     }
 
     void validateKeyword(String keyword)

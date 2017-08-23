@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.CompoundButton;
 
 import com.daily.base.util.DailyTextUtils;
@@ -40,9 +41,9 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
 
     StaySearchFragment mStaySearchFragment;
     GourmetSearchFragment mGourmetSearchFragment;
+    private boolean mIsResizeMode;
 
-    public static Intent newInstance(Context context, PlaceType placeType, PlaceBookingDay
-        placeBookingDay, int campaignTagIndex)
+    public static Intent newInstance(Context context, PlaceType placeType, PlaceBookingDay placeBookingDay, int campaignTagIndex)
     {
         Intent intent = new Intent(context, SearchActivity.class);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACETYPE, placeType.name());
@@ -117,8 +118,25 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
         recordAnalyticsSearch(placeBookingDay, mPlaceType);
     }
 
-    private void initLayout(PlaceBookingDay placeBookingDay, PlaceType placeType, final String
-        word, int index)
+    private void setSoftInputMode(boolean isResizeMode)
+    {
+        if (mIsResizeMode == isResizeMode)
+        {
+            return;
+        }
+
+        mIsResizeMode = isResizeMode;
+
+        if (isResizeMode == true)
+        {
+            getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+        } else
+        {
+            getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
+        }
+    }
+
+    private void initLayout(PlaceBookingDay placeBookingDay, PlaceType placeType, final String word, int index)
     {
         initToolbar(placeType);
 
@@ -173,6 +191,12 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
                 {
                     mSearchView.setEnabled(enabled);
                 }
+
+                @Override
+                public void onChangeAutoCompleteScrollView(boolean isShow)
+                {
+                    setSoftInputMode(isShow);
+                }
             });
 
             fragmentList.add(mStaySearchFragment);
@@ -198,6 +222,12 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
                 public void onSearchEnabled(boolean enabled)
                 {
                     mSearchView.setEnabled(enabled);
+                }
+
+                @Override
+                public void onChangeAutoCompleteScrollView(boolean isShow)
+                {
+                    setSoftInputMode(isShow);
                 }
             });
 
@@ -317,50 +347,59 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
             {
+                setSoftInputMode(false);
+
                 mStaySearchFragment.onScrollingFragment(false);
                 mGourmetSearchFragment.onScrollingFragment(false);
 
-                if (isChecked == true)
+                mViewPager.postDelayed(new Runnable()
                 {
-                    mViewPager.setCurrentItem(1, false);
-
-                    mPlaceType = PlaceType.FNB;
-
-                    if (mStaySearchFragment != null)
+                    @Override
+                    public void run()
                     {
-                        mStaySearchFragment.hideSearchKeyboard();
-                        mStaySearchFragment.hideAutoCompleteLayout();
-                        mStaySearchFragment.setRecyclerViewPosition(0);
+                        if (isChecked == true)
+                        {
+                            mViewPager.setCurrentItem(1, false);
+
+                            mPlaceType = PlaceType.FNB;
+
+                            if (mStaySearchFragment != null)
+                            {
+                                mStaySearchFragment.hideSearchKeyboard();
+                                mStaySearchFragment.hideAutoCompleteLayout();
+                                mStaySearchFragment.setRecyclerViewPosition(0);
+                            }
+
+                            if (mGourmetSearchFragment != null)
+                            {
+                                mGourmetSearchFragment.resetSearchKeyword();
+                                mGourmetSearchFragment.updateTermsOfLocationLayout();
+                                //                        mGourmetSearchFragment.setRecyclerViewPosition(0);
+                            }
+                        } else
+                        {
+                            mViewPager.setCurrentItem(0, false);
+
+                            mPlaceType = PlaceType.HOTEL;
+
+                            if (mGourmetSearchFragment != null)
+                            {
+                                mGourmetSearchFragment.hideSearchKeyboard();
+                                mGourmetSearchFragment.hideAutoCompleteLayout();
+                                mGourmetSearchFragment.setRecyclerViewPosition(0);
+                            }
+
+                            if (mStaySearchFragment != null)
+                            {
+                                mStaySearchFragment.resetSearchKeyword();
+                                mStaySearchFragment.updateTermsOfLocationLayout();
+                                //                        mGourmetSearchFragment.setRecyclerViewPosition(0);
+                            }
+                        }
+
+                        analyticsSwitchChanged(mPlaceType);
                     }
-
-                    if (mGourmetSearchFragment != null)
-                    {
-                        mGourmetSearchFragment.resetSearchKeyword();
-                        mGourmetSearchFragment.updateTermsOfLocationLayout();
-//                        mGourmetSearchFragment.setRecyclerViewPosition(0);
-                    }
-                } else
-                {
-                    mViewPager.setCurrentItem(0, false);
-
-                    mPlaceType = PlaceType.HOTEL;
-
-                    if (mGourmetSearchFragment != null)
-                    {
-                        mGourmetSearchFragment.hideSearchKeyboard();
-                        mGourmetSearchFragment.hideAutoCompleteLayout();
-                        mGourmetSearchFragment.setRecyclerViewPosition(0);
-                    }
-
-                    if (mStaySearchFragment != null)
-                    {
-                        mStaySearchFragment.resetSearchKeyword();
-                        mStaySearchFragment.updateTermsOfLocationLayout();
-//                        mGourmetSearchFragment.setRecyclerViewPosition(0);
-                    }
-                }
-
-                analyticsSwitchChanged(mPlaceType);
+                }, 100);
             }
         });
 
