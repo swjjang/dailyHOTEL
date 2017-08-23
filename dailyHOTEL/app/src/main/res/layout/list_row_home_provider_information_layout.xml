@@ -99,7 +99,7 @@
             dailyFont:style="Medium"/>
 
         <com.daily.base.widget.DailyTextView
-            android:id="@+id/vericalLineTextView1"
+            android:id="@+id/verticalLineTextView1"
             android:layout_width="9dp"
             android:layout_height="18dp"
             android:gravity="center"
@@ -119,7 +119,7 @@
             dailyFont:style="Bold"/>
 
         <com.daily.base.widget.DailyTextView
-            android:id="@+id/vericalLineTextView2"
+            android:id="@+id/verticalLineTextView2"
             android:layout_width="9dp"
             android:layout_height="18dp"
             android:gravity="center"
@@ -139,7 +139,7 @@
             dailyFont:style="Medium"/>
 
         <com.daily.base.widget.DailyTextView
-            android:id="@+id/vericalLineTextView3"
+            android:id="@+id/verticalLineTextView3"
             android:layout_width="9dp"
             android:layout_height="18dp"
             android:gravity="center"

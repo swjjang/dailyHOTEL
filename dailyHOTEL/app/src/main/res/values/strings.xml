@@ -1403,7 +1403,8 @@
     <string name="message_stay_outbound_payment_empty_name">해외 호텔 예약 시에는 투숙자를 영문 성함으로 입력해주세요.</string>
 
 
-    <!-- New Booking -->
+    <!-- New Booking 예약 목록 -->
+    <string name="message_booking_do_login">로그인하여 예약내역을 확인하세요.</string>
     <string name="message_booking_delete_booking">삭제 되었습니다.</string>
     <string name="message_booking_failed_delete_booking">삭제에 실패했습니다.\n잠시 후에 다시 시도해주십시요.</string>
 

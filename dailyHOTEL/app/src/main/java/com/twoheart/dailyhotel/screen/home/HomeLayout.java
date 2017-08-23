@@ -556,9 +556,9 @@ public class HomeLayout extends BaseBlurLayout
         mProviderInfoView = (LinearLayout) mProviderLayout.findViewById(R.id.providerInfoLayout);
 
         LinearLayout policyLayout = (LinearLayout) mProviderLayout.findViewById(R.id.policyLayout);
-        View verticalLine1 = mProviderLayout.findViewById(R.id.vericalLineTextView1);
-        View verticalLine2 = mProviderLayout.findViewById(R.id.vericalLineTextView2);
-        View verticalLine3 = mProviderLayout.findViewById(R.id.vericalLineTextView3);
+        View verticalLine1 = mProviderLayout.findViewById(R.id.verticalLineTextView1);
+        View verticalLine2 = mProviderLayout.findViewById(R.id.verticalLineTextView2);
+        View verticalLine3 = mProviderLayout.findViewById(R.id.verticalLineTextView3);
 
         mProviderInfoView.setVisibility(View.GONE);
 
