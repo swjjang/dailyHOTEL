@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.daily.base.widget.DailyWebView;
+import com.daily.dailyhotel.view.DailyToolbarView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.screen.common.WebViewActivity;
 import com.twoheart.dailyhotel.util.Constants;
@@ -34,9 +35,9 @@ public class CollectPersonInformationActivity extends WebViewActivity
 
     private void initToolbar()
     {
-        View toolbar = findViewById(R.id.toolbar);
-        DailyToolbarLayout dailyToolbarLayout = new DailyToolbarLayout(this, toolbar);
-        dailyToolbarLayout.initToolbar(getString(R.string.actionbar_title_collect_person_information_activity), new View.OnClickListener()
+        DailyToolbarView dailyToolbarView = (DailyToolbarView) findViewById(R.id.toolbarView);
+        dailyToolbarView.setTitleText(R.string.actionbar_title_collect_person_information_activity);
+        dailyToolbarView.setOnBackClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
