@@ -62,7 +62,8 @@ import java.util.Locale;
 import retrofit2.Call;
 import retrofit2.Response;
 
-public class MainActivity extends BaseActivity implements Constants, BaseMenuNavigationFragment.OnScreenScrollChangeListener
+public class MainActivity extends BaseActivity implements Constants, BaseMenuNavigationFragment.OnScreenScrollChangeListener//
+    , BaseMenuNavigationFragment.OnMenuChangeListener
 {
     public static final String BROADCAST_EVENT_UPDATE = " com.twoheart.dailyhotel.broadcastreceiver.EVENT_UPDATE";
 
@@ -959,6 +960,43 @@ public class MainActivity extends BaseActivity implements Constants, BaseMenuNav
         if (disabled == true)
         {
             showMenuBar();
+        }
+    }
+
+    /**
+     *
+     *
+     *
+     * @param changeMenu
+     * @param changeScreen ActivityResult 결과로 사용했는데 따로 정의할지 애매함..
+     */
+    @Override
+    public void onMenu(int changeMenu, int changeScreen)
+    {
+        switch (changeMenu)
+        {
+            case MainFragmentManager.INDEX_HOME_FRAGMENT:
+            case MainFragmentManager.INDEX_BOOKING_FRAGMENT:
+            case MainFragmentManager.INDEX_MYDAILY_FRAGMENT:
+            case MainFragmentManager.INDEX_INFORMATION_FRAGMENT:
+            case MainFragmentManager.INDEX_ERROR_FRAGMENT:
+                mMainFragmentManager.select(false, changeMenu, false, null);
+                break;
+
+            default:
+                mMainFragmentManager.select(false, MainFragmentManager.INDEX_HOME_FRAGMENT, false, null);
+                break;
+        }
+
+        switch (changeScreen)
+        {
+            case Constants.CODE_RESULT_ACTIVITY_STAY_LIST:
+                startActivityForResult(StayMainActivity.newInstance(this, null), Constants.CODE_REQUEST_ACTIVITY_STAY);
+                break;
+
+            case Constants.CODE_RESULT_ACTIVITY_GOURMET_LIST:
+                startActivityForResult(GourmetMainActivity.newInstance(this, null), Constants.CODE_REQUEST_ACTIVITY_GOURMET);
+                break;
         }
     }
 

@@ -648,6 +648,12 @@ public class MyDailyFragment extends BaseMenuNavigationFragment implements Const
     }
 
     @Override
+    public void setOnMenuChangeListener(OnMenuChangeListener listener)
+    {
+
+    }
+
+    @Override
     public void scrollTop()
     {
         if (mMyDailyLayout == null)

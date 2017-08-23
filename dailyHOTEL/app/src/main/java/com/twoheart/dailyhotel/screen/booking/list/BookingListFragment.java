@@ -46,6 +46,7 @@ import com.twoheart.dailyhotel.place.base.BaseMenuNavigationFragment;
 import com.twoheart.dailyhotel.screen.booking.detail.PaymentWaitActivity;
 import com.twoheart.dailyhotel.screen.booking.detail.gourmet.GourmetReservationDetailActivity;
 import com.twoheart.dailyhotel.screen.booking.detail.hotel.StayReservationDetailActivity;
+import com.twoheart.dailyhotel.screen.main.MainFragmentManager;
 import com.twoheart.dailyhotel.screen.mydaily.member.LoginActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
@@ -189,6 +190,8 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
         });
 
         dataBinding.loginTextView.setOnClickListener(this);
+        dataBinding.viewStayLayout.setOnClickListener(this);
+        dataBinding.viewGourmetLayout.setOnClickListener(this);
     }
 
     private void logoutLayout()
@@ -301,6 +304,7 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
         switch (v.getId())
         {
             case R.id.loginTextView:
+            {
                 BaseActivity baseActivity = (BaseActivity) getActivity();
 
                 if (baseActivity == null)
@@ -312,6 +316,21 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
                 startActivity(intent);
 
                 //            AnalyticsManager.getInstance(getActivity()).recordEvent(Screen.BOOKING_LIST, Action.CLICK, Label.LOGIN_, 0L);
+                break;
+            }
+
+            case R.id.viewStayLayout:
+                if (mOnMenuChangeListener != null && lockUiComponentAndIsLockUiComponent() == false)
+                {
+                    mOnMenuChangeListener.onMenu(MainFragmentManager.INDEX_HOME_FRAGMENT, Constants.CODE_RESULT_ACTIVITY_STAY_LIST);
+                }
+                break;
+
+            case R.id.viewGourmetLayout:
+                if (mOnMenuChangeListener != null && lockUiComponentAndIsLockUiComponent() == false)
+                {
+                    mOnMenuChangeListener.onMenu(MainFragmentManager.INDEX_HOME_FRAGMENT, Constants.CODE_RESULT_ACTIVITY_GOURMET_LIST);
+                }
                 break;
         }
     }
@@ -405,6 +424,8 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
                 onHandleError(throwable);
 
                 setBookingList(null);
+
+                unLockUI();
             }
         }));
     }
@@ -647,6 +668,12 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
     public void setOnScrollChangedListener(BaseMenuNavigationFragment.OnScreenScrollChangeListener listener)
     {
         mOnScreenScrollChangeListener = listener;
+    }
+
+    @Override
+    public void setOnMenuChangeListener(OnMenuChangeListener listener)
+    {
+        mOnMenuChangeListener = listener;
     }
 
     @Override

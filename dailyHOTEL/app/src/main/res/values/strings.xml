@@ -1404,6 +1404,8 @@
 
 
     <!-- New Booking 예약 목록 -->
+    <string name="message_booking_do_booking">지금 예약해보세요!</string>
+    <string name="message_booking_no_booking_list">예약내역이 없습니다.</string>
     <string name="message_booking_do_login">로그인하여 예약내역을 확인하세요.</string>
     <string name="message_booking_delete_booking">삭제 되었습니다.</string>
     <string name="message_booking_failed_delete_booking">삭제에 실패했습니다.\n잠시 후에 다시 시도해주십시요.</string>

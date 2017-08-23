@@ -188,6 +188,7 @@ public class MainFragmentManager
             if (fragment instanceof BaseMenuNavigationFragment == true)
             {
                 ((BaseMenuNavigationFragment) fragment).setOnScrollChangedListener(mMainActivity);
+                ((BaseMenuNavigationFragment) fragment).setOnMenuChangeListener(mMainActivity);
             }
 
             if (bundle != null)

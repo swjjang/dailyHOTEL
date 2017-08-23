@@ -16,7 +16,16 @@ public abstract class BaseMenuNavigationFragment extends BaseFragment
 
     protected OnScreenScrollChangeListener mOnScreenScrollChangeListener;
 
+    public interface OnMenuChangeListener
+    {
+        void onMenu(int changeMenu, int changeScreen);
+    }
+
+    protected OnMenuChangeListener mOnMenuChangeListener;
+
     public abstract void setOnScrollChangedListener(BaseMenuNavigationFragment.OnScreenScrollChangeListener listener);
+
+    public abstract void setOnMenuChangeListener(BaseMenuNavigationFragment.OnMenuChangeListener listener);
 
     public abstract void scrollTop();
 

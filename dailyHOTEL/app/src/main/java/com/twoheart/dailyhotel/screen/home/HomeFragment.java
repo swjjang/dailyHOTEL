@@ -1518,6 +1518,12 @@ public class HomeFragment extends BaseMenuNavigationFragment
     }
 
     @Override
+    public void setOnMenuChangeListener(OnMenuChangeListener listener)
+    {
+
+    }
+
+    @Override
     public void scrollTop()
     {
         if (mHomeLayout != null)

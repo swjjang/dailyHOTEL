@@ -352,6 +352,12 @@ public class InformationFragment extends BaseMenuNavigationFragment implements C
     }
 
     @Override
+    public void setOnMenuChangeListener(OnMenuChangeListener listener)
+    {
+
+    }
+
+    @Override
     public void scrollTop()
     {
         if (mInformationLayout == null)
