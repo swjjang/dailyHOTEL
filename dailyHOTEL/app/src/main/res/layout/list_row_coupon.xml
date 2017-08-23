@@ -21,7 +21,7 @@
         android:background="@drawable/more_coupon_bg">
 
         <View
-            android:id="@+id/vericalLine"
+            android:id="@+id/verticalLine"
             android:layout_width="0px"
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
@@ -34,7 +34,7 @@
             android:layout_marginLeft="16dp"
             android:layout_marginRight="15dp"
             android:layout_marginTop="12dp"
-            android:layout_toLeftOf="@id/vericalLine"
+            android:layout_toLeftOf="@id/verticalLine"
             android:gravity="center_vertical"
             android:textColor="@color/black"
             android:textSize="16dp"
@@ -48,7 +48,7 @@
             android:layout_below="@id/couponPriceTextView"
             android:layout_marginRight="15dp"
             android:layout_marginTop="2dp"
-            android:layout_toLeftOf="@id/vericalLine"
+            android:layout_toLeftOf="@id/verticalLine"
             android:ellipsize="end"
             android:gravity="center_vertical"
             android:singleLine="true"
@@ -62,7 +62,7 @@
             android:layout_alignLeft="@id/couponPriceTextView"
             android:layout_below="@id/descriptionTextView"
             android:layout_marginRight="15dp"
-            android:layout_toLeftOf="@id/vericalLine"
+            android:layout_toLeftOf="@id/verticalLine"
             android:gravity="center_vertical"
             android:layout_marginTop="4dp"
             android:lineSpacingExtra="3dp"
@@ -77,7 +77,7 @@
             android:layout_alignLeft="@id/couponPriceTextView"
             android:layout_below="@id/minPriceTextView"
             android:layout_marginRight="16dp"
-            android:layout_toLeftOf="@id/vericalLine"
+            android:layout_toLeftOf="@id/verticalLine"
             android:gravity="center_vertical"
             android:layout_marginTop="6dp"
             android:textColor="@color/coupon_description_text"
@@ -91,7 +91,7 @@
             android:layout_marginBottom="13dp"
             android:layout_marginRight="16dp"
             android:layout_marginTop="1dp"
-            android:layout_toLeftOf="@id/vericalLine"
+            android:layout_toLeftOf="@id/verticalLine"
             android:gravity="top"
             android:orientation="horizontal">
 

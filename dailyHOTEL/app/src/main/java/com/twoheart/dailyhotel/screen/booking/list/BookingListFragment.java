@@ -191,55 +191,54 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
         dataBinding.loginTextView.setOnClickListener(this);
     }
 
-    void updateLayout(boolean isSignin, List<ListItem> listItemList)
+    private void logoutLayout()
     {
         if (mViewDataBinding == null)
         {
             return;
         }
 
-        BaseActivity baseActivity = (BaseActivity) getActivity();
+        mViewDataBinding.logoutLayout.setVisibility(View.VISIBLE);
+        mViewDataBinding.bookingRecyclerView.setVisibility(View.GONE);
+        mViewDataBinding.emptyListLayout.setVisibility(View.GONE);
+    }
 
-        if (baseActivity == null || baseActivity.isFinishing() == true)
+    private void setBookingList(List<ListItem> listItemList)
+    {
+        if (mViewDataBinding == null)
         {
             return;
         }
 
-        if (isSignin == false)
+        if (listItemList == null || listItemList.size() == 0)
         {
+            if (mAdapter != null)
+            {
+                mAdapter.clear();
+            }
+
+            //예약한 호텔이 없는 경우
             mViewDataBinding.bookingRecyclerView.setVisibility(View.GONE);
-            mViewDataBinding.emptyLayout.setVisibility(View.GONE);
+            mViewDataBinding.emptyListLayout.setVisibility(View.VISIBLE);
+            mViewDataBinding.loginTextView.setVisibility(View.GONE);
         } else
         {
-            if (listItemList == null || listItemList.size() == 0)
+            if (mAdapter == null)
             {
-                if (mAdapter != null)
-                {
-                    mAdapter.clear();
-                }
-
-                //예약한 호텔이 없는 경우
-                mViewDataBinding.bookingRecyclerView.setVisibility(View.GONE);
-                mViewDataBinding.emptyLayout.setVisibility(View.VISIBLE);
-                mViewDataBinding.loginTextView.setVisibility(View.INVISIBLE);
+                mAdapter = new BookingListAdapter(getActivity(), new ArrayList<>());
+                mAdapter.setOnUserActionListener(mOnUserActionListener);
+                mViewDataBinding.bookingRecyclerView.setAdapter(mAdapter);
             } else
             {
-                if (mAdapter == null)
-                {
-                    mAdapter = new BookingListAdapter(baseActivity, new ArrayList<>());
-                    mAdapter.setOnUserActionListener(mOnUserActionListener);
-                    mViewDataBinding.bookingRecyclerView.setAdapter(mAdapter);
-                } else
-                {
-                    mAdapter.clear();
-                }
-
-                mAdapter.addAll(listItemList);
-                mAdapter.notifyDataSetChanged();
-
-                mViewDataBinding.bookingRecyclerView.setVisibility(View.VISIBLE);
-                mViewDataBinding.emptyLayout.setVisibility(View.GONE);
+                mAdapter.clear();
             }
+
+            mAdapter.addAll(listItemList);
+            mAdapter.notifyDataSetChanged();
+
+            mViewDataBinding.bookingRecyclerView.setVisibility(View.VISIBLE);
+            mViewDataBinding.emptyListLayout.setVisibility(View.GONE);
+            mViewDataBinding.loginTextView.setVisibility(View.GONE);
         }
     }
 
@@ -275,7 +274,7 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
 
         if (DailyHotel.isLogin() == false)
         {
-            updateLayout(false, null);
+            logoutLayout();
         } else
         {
             if (mDontReload == true)
@@ -405,7 +404,7 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
             {
                 onHandleError(throwable);
 
-                updateLayout(true, null);
+                setBookingList(null);
             }
         }));
     }
@@ -414,12 +413,12 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
     {
         if (listItemList == null || listItemList.size() == 0)
         {
-            updateLayout(true, null);
+            setBookingList(null);
 
             AnalyticsManager.getInstance(getActivity()).recordScreen(getActivity(), Screen.BOOKING_LIST_EMPTY, null);
         } else
         {
-            updateLayout(true, listItemList);
+            setBookingList(listItemList);
 
             Map<String, String> analyticsParams = new HashMap<>();
             analyticsParams.put(AnalyticsManager.KeyType.NUM_OF_BOOKING, Integer.toString(listItemList.size()));
