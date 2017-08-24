@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import com.daily.base.exception.BaseException;
 import com.daily.dailyhotel.domain.CommonInterface;
 import com.daily.dailyhotel.entity.CommonDateTime;
+import com.daily.dailyhotel.entity.Review;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
 
 import io.reactivex.Observable;
@@ -42,6 +43,31 @@ public class CommonRemoteImpl implements CommonInterface
             }
 
             return commonDateTime;
+        }).observeOn(AndroidSchedulers.mainThread());
+    }
+
+    @Override
+    public Observable<Review> getReview(String placeType, int reservationIndex)
+    {
+        return DailyMobileAPI.getInstance(mContext).getReview(placeType, reservationIndex).map((reviewDataBaseDto) ->
+        {
+            Review review = null;
+
+            if (reviewDataBaseDto != null)
+            {
+                if (reviewDataBaseDto.msgCode == 100 && reviewDataBaseDto.data != null)
+                {
+                    review = reviewDataBaseDto.data.getReview();
+                } else
+                {
+                    throw new BaseException(reviewDataBaseDto.msgCode, reviewDataBaseDto.msg);
+                }
+            } else
+            {
+                throw new BaseException(-1, null);
+            }
+
+            return review;
         }).observeOn(AndroidSchedulers.mainThread());
     }
 }

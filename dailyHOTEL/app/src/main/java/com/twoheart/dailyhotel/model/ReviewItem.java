@@ -22,6 +22,11 @@ public class ReviewItem implements Parcelable
     public String useEndDate;
     public String useStartDate;
 
+    public ReviewItem()
+    {
+
+    }
+
     public ReviewItem(Parcel in)
     {
         readFromParcel(in);

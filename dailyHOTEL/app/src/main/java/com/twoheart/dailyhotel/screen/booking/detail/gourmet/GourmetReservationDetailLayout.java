@@ -52,7 +52,7 @@ public class GourmetReservationDetailLayout extends PlaceReservationDetailLayout
             } else if (dayOfDays > 0)
             {
                 // 하루이상 남음
-                remainedDayText = context.getString(R.string.frag_booking_duedate_formet, dayOfDays);
+                remainedDayText = context.getString(R.string.frag_booking_duedate_formet_gourmet, dayOfDays);
             } else
             {
                 // 당일

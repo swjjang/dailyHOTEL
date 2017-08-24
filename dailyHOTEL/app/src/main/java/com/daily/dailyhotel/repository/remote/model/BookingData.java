@@ -37,6 +37,12 @@ public class BookingData
     @JsonField(name = "readyForRefund")
     public boolean readyForRefund;
 
+    @JsonField(name = "reviewStatusType")
+    public String reviewStatusType;
+
+    @JsonField(name = "itemIdex")
+    public int placeIndex;
+
     @JsonField(name = "images")
     public List<LinkedHashMap<String, String>> images;
 
@@ -49,10 +55,11 @@ public class BookingData
     {
         final String PAYMENT_COMPLETED = "10";
         final String PAYMENT_WAITING = "20";
+        final String REVIEW_ABLE = "ADDABLE";
 
         Booking booking = new Booking();
         booking.placeName = name;
-        booking.index = reservationIdx;
+        booking.reservationIndex = reservationIdx;
 
         if (images != null && images.size() != 0)
         {
@@ -87,6 +94,8 @@ public class BookingData
         booking.readyForRefund = readyForRefund;
         booking.comment = comment;
         booking.tid = tid;
+        booking.placeIndex = placeIndex;
+        booking.hasReview = REVIEW_ABLE.equalsIgnoreCase(reviewStatusType) == false;
 
         return booking;
     }

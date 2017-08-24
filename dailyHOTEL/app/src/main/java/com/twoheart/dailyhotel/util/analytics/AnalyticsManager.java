@@ -761,6 +761,7 @@ public class AnalyticsManager
         public static final String DAILYHOTEL_BOOKINGINITIALISE_NOREFUNDS_OUTBOUND = "DailyHotel_BookingInitialise_NoRefunds_outbound";
         public static final String DAILYHOTEL_PAYMENTCOMPLETE_OUTBOUND = "DailyHotel_PaymentComplete_outbound";
         public static final String DAILYHOTEL_THANKYOU_OUTBOUND = "DailyHotel_Thankyou_outbound";
+        public static final String DAILYHOTEL_PAYMENT_PROCESS_OUTBOUND = "DailyHotel_PaymentGateway_outbound";
     }
 
     public static class Action

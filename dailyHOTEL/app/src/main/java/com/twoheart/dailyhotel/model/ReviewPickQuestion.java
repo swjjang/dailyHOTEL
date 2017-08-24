@@ -16,6 +16,11 @@ public class ReviewPickQuestion extends ReviewQuestion
 {
     private ArrayList<ReviewAnswerValue> mAnswerValueList;
 
+    public ReviewPickQuestion()
+    {
+        super();
+    }
+
     public ReviewPickQuestion(Parcel in)
     {
         readFromParcel(in);

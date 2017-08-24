@@ -16,6 +16,11 @@ public abstract class ReviewQuestion implements Parcelable
     public String description;
     public String answerCode;
 
+    public ReviewQuestion()
+    {
+
+    }
+
     protected abstract JSONObject toReviewAnswerJSONObject(int value) throws JSONException;
 
     @Override

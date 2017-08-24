@@ -11,6 +11,11 @@ import org.json.JSONObject;
 
 public class ReviewScoreQuestion extends ReviewQuestion
 {
+    public ReviewScoreQuestion()
+    {
+
+    }
+
     public ReviewScoreQuestion(Parcel in)
     {
         readFromParcel(in);

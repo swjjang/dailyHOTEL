@@ -33,7 +33,7 @@ public class BookingParcel implements Parcelable
     @Override
     public void writeToParcel(Parcel dest, int flags)
     {
-        dest.writeInt(mBooking.index);
+        dest.writeInt(mBooking.reservationIndex);
         dest.writeString(mBooking.imageUrl);
         dest.writeInt(mBooking.statePayment);
         dest.writeString(mBooking.placeName);
@@ -44,14 +44,13 @@ public class BookingParcel implements Parcelable
         dest.writeInt(mBooking.remainingDays);
         dest.writeString(mBooking.tid);
         dest.writeInt(mBooking.readyForRefund == true ? 1 : 0);
-        dest.writeInt(mBooking.isUsed == true ? 1 : 0);
     }
 
     private void readFromParcel(Parcel in)
     {
         mBooking = new Booking();
 
-        mBooking.index = in.readInt();
+        mBooking.reservationIndex = in.readInt();
         mBooking.imageUrl = in.readString();
         mBooking.statePayment = in.readInt();
         mBooking.placeName = in.readString();
@@ -62,7 +61,6 @@ public class BookingParcel implements Parcelable
         mBooking.remainingDays = in.readInt();
         mBooking.tid = in.readString();
         mBooking.readyForRefund = in.readInt() == 1 ? true : false;
-        mBooking.isUsed = in.readInt() == 1 ? true : false;
     }
 
     @Override

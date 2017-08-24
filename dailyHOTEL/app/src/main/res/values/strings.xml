@@ -499,19 +499,6 @@
     <!-- Credit List Activity -->
     <string name="act_history_no_details">적립금 내역이 없습니다.</string>
 
-    <!-- Booking List Fragment -->
-    <string name="frag_booking_no_hotels">예약된 내역이 없습니다.</string>
-    <string name="frag_booking_line">당신의 파라다이스가 기다리고 있어요.</string>
-    <string name="frag_booking_btn_login">로그인 또는 회원가입</string>
-    <string name="frag_booking_wait_account">입금 대기</string>
-    <string name="frag_booking_wait_refund">무료취소 대기</string>
-    <string name="frag_booking_complete_payment">결제 완료</string>
-    <string name="frag_booking_use">이용 완료</string>
-    <string name="frag_booking_duedate_formet">%d일 남았습니다.</string>
-    <string name="frag_booking_today_type_stay">오늘이 체크인일 입니다.</string>
-    <string name="frag_booking_today_type_gourmet">오늘이 방문일입니다.</string>
-    <string name="frag_issuing_receipt">영수증 확인하기</string>
-
     <!-- Profile Activity -->
     <string name="act_profile_login_acc">로그인 계정</string>
     <string name="act_profile_email">이메일</string>
@@ -1404,6 +1391,25 @@
 
 
     <!-- New Booking 예약 목록 -->
+    <string name="frag_booking_no_hotels">예약된 내역이 없습니다.</string>
+    <string name="frag_booking_btn_login">로그인 또는 회원가입</string>
+    <string name="frag_booking_wait_account">입금 대기</string>
+    <string name="frag_booking_wait_refund">무료취소 대기</string>
+    <string name="frag_booking_duedate_formet_stay">체크인 날짜까지 %1$d일 남았습니다.</string>
+    <string name="frag_booking_duedate_formet_gourmet">방문일까지 %1$d일 남았습니다.</string>
+    <string name="frag_booking_today_type_stay">오늘이 체크인 날짜 입니다.</string>
+    <string name="frag_booking_today_type_gourmet">오늘이 방문일입니다.</string>
+    <string name="frag_issuing_receipt">영수증 확인하기</string>
+
+    <string name="label_booking_today">당일</string>
+    <string name="label_booking_before_day">%1$d일 전</string>
+    <string name="label_booking_go_to_gourmet">고메 보러가기</string>
+    <string name="label_booking_before_use">이용 예정</string>
+    <string name="label_booking_after_use">이용 완료</string>
+    <string name="label_booking_book_again">다시 예약하기</string>
+    <string name="message_booking_add_review">리뷰를 남기실 수 있어요!</string>
+    <string name="message_booking_free_cancel_waiting">무료취소 대기 상태입니다.</string>
+    <string name="message_booking_please_deposit_completed">10분 안에 입금을 완료해주세요!</string>
     <string name="message_booking_do_booking">지금 예약해보세요!</string>
     <string name="message_booking_no_booking_list">예약내역이 없습니다.</string>
     <string name="message_booking_do_login">로그인하여 예약내역을 확인하세요.</string>

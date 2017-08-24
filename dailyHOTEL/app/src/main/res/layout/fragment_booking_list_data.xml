@@ -21,7 +21,7 @@
             app:layout_constraintTop_toTopOf="parent"
             dailyToolbar:underLineHeight="@dimen/gradient_1dp_line_height_under_21"/>
 
-        <com.twoheart.dailyhotel.widget.PinnedSectionRecyclerView
+        <android.support.v7.widget.RecyclerView
             android:id="@+id/bookingRecyclerView"
             android:layout_width="0dp"
             android:layout_height="0dp"
@@ -185,7 +185,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="2px"
-                        android:text="@string/recent_gourmet_list_empty_button_message"
+                        android:text="@string/label_booking_go_to_gourmet"
                         android:textColor="@color/default_text_c323232"
                         android:textSize="13dp"
                         dailyFont:style="Medium"/>
