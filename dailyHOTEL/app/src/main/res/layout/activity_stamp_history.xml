@@ -1,17 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<android.support.constraint.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:dailyToolbar="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <include layout="@layout/toolbar_default"/>
+    <com.daily.dailyhotel.view.DailyToolbarView
+        android:id="@+id/toolbarView"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/toolbar_height"
+        android:background="@color/white"
+        android:elevation="2dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        dailyToolbar:underLineHeight="@dimen/gradient_1dp_line_height_under_21"/>
 
     <android.support.v4.widget.NestedScrollView
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/toolbar">
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbarView">
 
         <LinearLayout
             android:id="@+id/linearLayout"
@@ -92,9 +105,9 @@
                 android:gravity="center_vertical"
                 android:paddingLeft="15dp"
                 android:paddingRight="15dp"
+                android:text="@string/message_stamp_history_guide"
                 android:textColor="@color/default_text_cc5c5c5"
-                android:textSize="14dp"
-                android:text="@string/message_stamp_history_guide"/>
+                android:textSize="14dp"/>
 
             <LinearLayout
                 android:id="@+id/stampHistoryLayout"
@@ -118,10 +131,10 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
         android:gravity="right|bottom"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent">
 
         <ImageView
             android:id="@+id/topButtonView"
@@ -140,4 +153,4 @@
             android:paddingRight="10dp"
             android:src="@drawable/btn_back_to_home"/>
     </LinearLayout>
-</RelativeLayout>
+</android.support.constraint.ConstraintLayout>

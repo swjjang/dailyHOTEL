@@ -5,15 +5,15 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
 
+import com.daily.dailyhotel.view.DailyToolbarView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
-import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
 public abstract class PlaceReceiptActivity extends BaseActivity
 {
     protected boolean mIsFullscreen;
     private int mBookingIndex;
-    private DailyToolbarLayout mDailyToolbarLayout;
+    private DailyToolbarView mDailyToolbarView;
     protected View mBottomLayout;
 
     protected abstract void requestReceiptDetail(int index);
@@ -48,9 +48,9 @@ public abstract class PlaceReceiptActivity extends BaseActivity
 
     private void initToolbar()
     {
-        View toolbar = findViewById(R.id.toolbar);
-        mDailyToolbarLayout = new DailyToolbarLayout(this, toolbar);
-        mDailyToolbarLayout.initToolbar(getString(R.string.frag_issuing_receipt), new View.OnClickListener()
+        mDailyToolbarView = (DailyToolbarView) findViewById(R.id.toolbarView);
+        mDailyToolbarView.setTitleText(R.string.frag_issuing_receipt);
+        mDailyToolbarView.setOnBackClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
@@ -87,7 +87,7 @@ public abstract class PlaceReceiptActivity extends BaseActivity
     {
         if (bUseFullscreen)
         {
-            mDailyToolbarLayout.setToolbarVisibility(false, false);
+            mDailyToolbarView.setVisibility(View.GONE);
 
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
             getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
@@ -95,7 +95,7 @@ public abstract class PlaceReceiptActivity extends BaseActivity
             mBottomLayout.setVisibility(View.GONE);
         } else
         {
-            mDailyToolbarLayout.setToolbarVisibility(true, false);
+            mDailyToolbarView.setVisibility(View.VISIBLE);
 
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
             getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);

@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ScreenUtils;
 import com.daily.base.widget.DailyScrollView;
+import com.daily.dailyhotel.view.DailyToolbarView;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.base.BaseLayout;
@@ -25,7 +26,6 @@ import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyRemoteConfigPreference;
 import com.twoheart.dailyhotel.util.DailyUserPreference;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
-import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
 import java.text.DecimalFormat;
 
@@ -163,9 +163,9 @@ public class MyDailyLayout extends BaseLayout implements View.OnClickListener
 
     private void initToolbar(Context context, View view)
     {
-        View toolbar = view.findViewById(R.id.toolbar);
-        DailyToolbarLayout dailyToolbarLayout = new DailyToolbarLayout(context, toolbar);
-        dailyToolbarLayout.initToolbar(mContext.getResources().getString(R.string.menu_item_title_mydaily), null, false);
+        DailyToolbarView dailyToolbarView = (DailyToolbarView) view.findViewById(R.id.toolbarView);
+        dailyToolbarView.setTitleText(R.string.menu_item_title_mydaily);
+        dailyToolbarView.setBackVisible(false);
     }
 
     private void initProfileLayout(Context context, View view)

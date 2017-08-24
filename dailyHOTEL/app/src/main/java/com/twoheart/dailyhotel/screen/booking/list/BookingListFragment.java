@@ -236,6 +236,7 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
             mViewDataBinding.bookingRecyclerView.setVisibility(View.GONE);
             mViewDataBinding.emptyListLayout.setVisibility(View.VISIBLE);
             mViewDataBinding.loginTextView.setVisibility(View.GONE);
+            mViewDataBinding.logoutLayout.setVisibility(View.GONE);
         } else
         {
             if (mAdapter == null)
@@ -254,6 +255,7 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
             mViewDataBinding.bookingRecyclerView.setVisibility(View.VISIBLE);
             mViewDataBinding.emptyListLayout.setVisibility(View.GONE);
             mViewDataBinding.loginTextView.setVisibility(View.GONE);
+            mViewDataBinding.logoutLayout.setVisibility(View.GONE);
         }
     }
 

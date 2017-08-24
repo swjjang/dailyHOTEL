@@ -61,7 +61,7 @@ public class MyDailyFragment extends BaseMenuNavigationFragment implements Const
         mMyDailyLayout.setOnScrollChangedListener(mOnScreenScrollChangeListener);
         mNetworkController = new MyDailyNetworkController(getActivity(), mNetworkTag, mNetworkControllerListener);
 
-        return mMyDailyLayout.onCreateView(R.layout.fragment_mydaily);
+        return mMyDailyLayout.onCreateView(R.layout.fragment_mydaily, container);
     }
 
     @Override

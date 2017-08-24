@@ -14,6 +14,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import com.daily.base.util.DailyTextUtils;
+import com.daily.dailyhotel.view.DailyToolbarView;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.Setting;
@@ -24,7 +25,6 @@ import com.twoheart.dailyhotel.util.Crypto;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
-import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -101,9 +101,9 @@ public class RegisterCreditCardActivity extends BaseActivity implements Constant
 
     private void initToolbar()
     {
-        View toolbar = findViewById(R.id.toolbar);
-        DailyToolbarLayout dailyToolbarLayout = new DailyToolbarLayout(this, toolbar);
-        dailyToolbarLayout.initToolbar(getString(R.string.actionbar_title_reg_creditcard), new View.OnClickListener()
+        DailyToolbarView dailyToolbarView = (DailyToolbarView) findViewById(R.id.toolbarView);
+        dailyToolbarView.setTitleText(R.string.actionbar_title_reg_creditcard);
+        dailyToolbarView.setOnBackClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)

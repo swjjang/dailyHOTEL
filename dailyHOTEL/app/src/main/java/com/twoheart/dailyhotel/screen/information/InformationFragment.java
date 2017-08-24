@@ -38,7 +38,7 @@ public class InformationFragment extends BaseMenuNavigationFragment implements C
         mInformationLayout = new InformationLayout(getActivity(), mOnEventListener);
         mInformationLayout.setOnScrollChangedListener(mOnScreenScrollChangeListener);
 
-        return mInformationLayout.onCreateView(R.layout.fragment_information);
+        return mInformationLayout.onCreateView(R.layout.fragment_information, container);
     }
 
     @Override

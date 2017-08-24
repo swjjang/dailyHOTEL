@@ -10,11 +10,11 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.daily.base.widget.DailyEditText;
+import com.daily.dailyhotel.view.DailyToolbarView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.base.BaseLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
 import com.twoheart.dailyhotel.util.StringFilter;
-import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
 /**
  * Created by android_sam on 2016. 9. 19..
@@ -75,9 +75,9 @@ public class RegisterCouponLayout extends BaseLayout implements View.OnClickList
 
     private void initToolbar(View view)
     {
-        View toolbar = view.findViewById(R.id.toolbar);
-        DailyToolbarLayout dailyToolbarLayout = new DailyToolbarLayout(mContext, toolbar);
-        dailyToolbarLayout.initToolbar(mContext.getString(R.string.actionbar_title_register_coupon), new View.OnClickListener()
+        DailyToolbarView dailyToolbarView = (DailyToolbarView) view.findViewById(R.id.toolbarView);
+        dailyToolbarView.setTitleText(R.string.actionbar_title_register_coupon);
+        dailyToolbarView.setOnBackClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
