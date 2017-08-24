@@ -42,12 +42,12 @@ public class GourmetPaymentData
         gourmetPayment.visitDate = DailyCalendar.format(sday - DailyCalendar.NINE_HOUR_MILLISECOND, DailyCalendar.ISO_8601_FORMAT, TimeZone.getTimeZone("GMT+09:00"));
         gourmetPayment.totalPrice = discount;
         gourmetPayment.businessName = business_name;
-        gourmetPayment.minMenuCount= minimum_order_quantity;
-        gourmetPayment.maxMenuCount= max_sale_count;
+        gourmetPayment.minMenuCount = minimum_order_quantity;
+        gourmetPayment.maxMenuCount = max_sale_count;
 
         List<String> timeList = new ArrayList<>();
 
-        for(long time : eating_time_list)
+        for (long time : eating_time_list)
         {
             timeList.add(DailyCalendar.format(time - DailyCalendar.NINE_HOUR_MILLISECOND, DailyCalendar.ISO_8601_FORMAT, TimeZone.getTimeZone("GMT+09:00")));
         }

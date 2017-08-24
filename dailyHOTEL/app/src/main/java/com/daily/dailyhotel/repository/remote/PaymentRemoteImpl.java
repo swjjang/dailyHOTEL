@@ -474,7 +474,6 @@ public class PaymentRemoteImpl implements PaymentInterface
     }
 
     /**
-     *
      * @param arrivalDateTime ISO-8601  "yyyy-MM-dd'T'HH:mm:ssZZZZZ"
      * @param menuIndex
      * @param menuCount
@@ -552,7 +551,6 @@ public class PaymentRemoteImpl implements PaymentInterface
     }
 
     /**
-     *
      * @param arrivalDateTime ISO-8601  "yyyy-MM-dd'T'HH:mm:ssZZZZZ"
      * @param menuIndex
      * @param menuCount

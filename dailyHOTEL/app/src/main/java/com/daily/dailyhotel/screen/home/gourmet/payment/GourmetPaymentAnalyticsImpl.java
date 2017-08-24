@@ -111,10 +111,10 @@ public class GourmetPaymentAnalyticsImpl implements GourmetPaymentPresenter.Gour
             mPaymentParamMap.put(AnalyticsManager.KeyType.DISTRICT, mAnalyticsParam.getAnalyticsDistrictName());
             mPaymentParamMap.put(AnalyticsManager.KeyType.AREA, mAnalyticsParam.getAnalyticsAddressAreaName());
 
-            if(usedBonus == true)
+            if (usedBonus == true)
             {
 
-            } else if(usedCoupon == true)
+            } else if (usedCoupon == true)
             {
                 int paymentPrice = gourmetPayment.totalPrice - coupon.amount;
 

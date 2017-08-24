@@ -361,7 +361,7 @@ public class GourmetCampaignListAdapter extends PlaceListAdapter
                     return;
                 }
 
-               mOnEventListener.onEmptyCallClick();
+                mOnEventListener.onEmptyCallClick();
             }
         });
     }

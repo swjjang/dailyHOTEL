@@ -2,7 +2,6 @@ package com.daily.dailyhotel.screen.home.stay.outbound.payment;
 
 import android.app.Activity;
 
-import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayOutboundPayment;

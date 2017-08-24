@@ -13,7 +13,6 @@ import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyRemoteConfigPreference;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Screen;
-import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
 public class AboutActivity extends WebViewActivity
 {
@@ -37,7 +36,7 @@ public class AboutActivity extends WebViewActivity
 
     private void initToolbar()
     {
-        DailyToolbarView dailyToolbarView = (DailyToolbarView)findViewById(R.id.toolbarView);
+        DailyToolbarView dailyToolbarView = (DailyToolbarView) findViewById(R.id.toolbarView);
         dailyToolbarView.setTitleText(R.string.label_dailyhotel_guide);
         dailyToolbarView.setOnBackClickListener(new View.OnClickListener()
         {

@@ -24,8 +24,7 @@ public class GourmetThankYouActivity extends BaseActivity<GourmetThankYouPresent
     static final String INTENT_EXTRA_DATA_RESERVATION_ID = "reservationId";
 
     public static Intent newInstance(Context context, String gourmetName, String imageUrl//
-        , String visitDateTime, String menuName, int menuCount
-        , int reservationId, GourmetThankYouAnalyticsParam analyticsParam)
+        , String visitDateTime, String menuName, int menuCount, int reservationId, GourmetThankYouAnalyticsParam analyticsParam)
     {
         Intent intent = new Intent(context, GourmetThankYouActivity.class);
 

@@ -3,8 +3,6 @@ package com.daily.dailyhotel.domain;
 import com.daily.dailyhotel.entity.CampaignTag;
 import com.daily.dailyhotel.entity.GourmetCampaignTags;
 import com.daily.dailyhotel.entity.StayCampaignTags;
-import com.daily.dailyhotel.repository.remote.model.GourmetCampaignTagsData;
-import com.daily.dailyhotel.repository.remote.model.StayCampaignTagsData;
 import com.twoheart.dailyhotel.model.time.GourmetBookingDay;
 import com.twoheart.dailyhotel.model.time.StayBookingDay;
 

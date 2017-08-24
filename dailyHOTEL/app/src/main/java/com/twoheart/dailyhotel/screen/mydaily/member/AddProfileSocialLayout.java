@@ -18,7 +18,6 @@ import android.widget.TextView;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.widget.DailyAutoCompleteEditText;
 import com.daily.base.widget.DailyEditText;
-import com.daily.base.widget.DailyTextView;
 import com.daily.dailyhotel.view.DailyToolbarView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.base.BaseLayout;
@@ -29,7 +28,6 @@ import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.PhoneNumberKoreaFormattingTextWatcher;
 import com.twoheart.dailyhotel.util.StringFilter;
 import com.twoheart.dailyhotel.util.Util;
-import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
 import java.util.Arrays;
 import java.util.Calendar;
@@ -81,7 +79,7 @@ public class AddProfileSocialLayout extends BaseLayout implements OnClickListene
 
     private void initToolbar(View view)
     {
-        DailyToolbarView dailyToolbarView = (DailyToolbarView)view.findViewById(R.id.toolbarView);
+        DailyToolbarView dailyToolbarView = (DailyToolbarView) view.findViewById(R.id.toolbarView);
         dailyToolbarView.setTitleText(R.string.actionbar_title_userinfo_update_activity);
         dailyToolbarView.setOnBackClickListener(new OnClickListener()
         {

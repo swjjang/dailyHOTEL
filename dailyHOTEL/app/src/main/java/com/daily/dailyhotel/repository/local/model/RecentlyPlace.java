@@ -1,6 +1,5 @@
 package com.daily.dailyhotel.repository.local.model;
 
-import com.daily.dailyhotel.util.RecentlyPlaceUtil;
 import com.twoheart.dailyhotel.util.Constants;
 
 /**

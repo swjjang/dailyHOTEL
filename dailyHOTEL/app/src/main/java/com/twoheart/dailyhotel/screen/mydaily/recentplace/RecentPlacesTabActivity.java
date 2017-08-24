@@ -14,8 +14,6 @@ import com.daily.base.util.ExLog;
 import com.daily.base.util.FontManager;
 import com.daily.base.util.ScreenUtils;
 import com.daily.base.widget.DailyViewPager;
-import com.daily.dailyhotel.repository.local.model.RecentlyRealmObject;
-import com.daily.dailyhotel.repository.local.ConfigLocalImpl;
 import com.daily.dailyhotel.repository.local.model.RecentlyPlace;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
 import com.daily.dailyhotel.util.RecentlyPlaceUtil;
@@ -28,11 +26,6 @@ import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
-
-import io.realm.RealmResults;
-import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.disposables.Disposable;
-import retrofit2.HttpException;
 
 /**
  * Created by android_sam on 2016. 10. 10..

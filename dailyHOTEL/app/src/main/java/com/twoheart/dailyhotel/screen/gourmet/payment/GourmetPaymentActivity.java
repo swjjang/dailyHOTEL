@@ -29,7 +29,6 @@ import com.daily.base.widget.DailyScrollView;
 import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.parcel.analytics.GourmetThankYouAnalyticsParam;
 import com.daily.dailyhotel.repository.local.model.AnalyticsParam;
-import com.daily.dailyhotel.screen.home.gourmet.thankyou.GourmetThankYouActivity;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Coupon;
 import com.twoheart.dailyhotel.model.CreditCard;
@@ -433,11 +432,11 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
     @Override
     protected void showPaymentWeb(PlacePaymentInformation paymentInformation, PlaceBookingDay placeBookingDay)
     {
-//        Intent intent = new Intent(this, GourmetPaymentWebActivity.class);
-//        intent.putExtra(NAME_INTENT_EXTRA_DATA_PAYMENTINFORMATION, paymentInformation);
-//        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, placeBookingDay);
-//
-//        startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PAYMENT);
+        //        Intent intent = new Intent(this, GourmetPaymentWebActivity.class);
+        //        intent.putExtra(NAME_INTENT_EXTRA_DATA_PAYMENTINFORMATION, paymentInformation);
+        //        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, placeBookingDay);
+        //
+        //        startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PAYMENT);
     }
 
     @Override
@@ -498,13 +497,13 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
         GourmetThankYouAnalyticsParam gourmetThankYouAnalyticsParam = new GourmetThankYouAnalyticsParam();
         gourmetThankYouAnalyticsParam.params = params;
 
-//        Intent intent = GourmetThankYouActivity.newInstance(this, placeName, imageUrl//
-//            , gourmetBookingDay.getVisitDay(DailyCalendar.ISO_8601_FORMAT), visitTime, productType, productCount, gourmetThankYouAnalyticsParam);
+        //        Intent intent = GourmetThankYouActivity.newInstance(this, placeName, imageUrl//
+        //            , gourmetBookingDay.getVisitDay(DailyCalendar.ISO_8601_FORMAT), visitTime, productType, productCount, gourmetThankYouAnalyticsParam);
 
         //        Intent intent = GourmetPaymentThankyouActivity.newInstance(this, imageUrl, placeName, placeType, //
         //            userName, gourmetBookingDay, visitTime, productCount, paymentInformation.paymentType.getName(), discountType, params);
 
-//        startActivityForResult(intent, REQUEST_CODE_PAYMETRESULT_ACTIVITY);
+        //        startActivityForResult(intent, REQUEST_CODE_PAYMETRESULT_ACTIVITY);
     }
 
     @Override

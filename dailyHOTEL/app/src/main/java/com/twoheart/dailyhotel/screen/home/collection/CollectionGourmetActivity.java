@@ -202,14 +202,14 @@ public class CollectionGourmetActivity extends CollectionBaseActivity
 
     @Override
     protected String getCalendarDate(PlaceBookingDay placeBookingDay)
-{
-    if (placeBookingDay == null)
     {
-        return null;
-    }
+        if (placeBookingDay == null)
+        {
+            return null;
+        }
 
-    return ((GourmetBookingDay) placeBookingDay).getVisitDay("yyyy.MM.dd(EEE)");
-}
+        return ((GourmetBookingDay) placeBookingDay).getVisitDay("yyyy.MM.dd(EEE)");
+    }
 
     @Override
     protected void setPlaceBookingDay(TodayDateTime todayDateTime)
