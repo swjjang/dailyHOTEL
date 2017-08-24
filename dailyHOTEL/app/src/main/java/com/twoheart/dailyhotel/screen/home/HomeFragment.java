@@ -1142,6 +1142,8 @@ public class HomeFragment extends BaseMenuNavigationFragment
             @Override
             public void accept(@NonNull Throwable throwable) throws Exception
             {
+                mHomeLayout.setRefreshing(false);
+
                 onHandleError(throwable);
             }
         }));
