@@ -14,14 +14,14 @@ import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.util.FontManager;
 import com.daily.base.util.ScreenUtils;
+import com.daily.dailyhotel.entity.CarouselListItem;
+import com.daily.dailyhotel.view.carousel.DailyCarouselLayout;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.PlaceBookingDetail;
 import com.twoheart.dailyhotel.model.StayBookingDetail;
-import com.twoheart.dailyhotel.network.model.HomePlace;
 import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
 import com.twoheart.dailyhotel.place.layout.PlaceReservationDetailLayout;
-import com.twoheart.dailyhotel.screen.home.HomeCarouselLayout;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.CustomFontTypefaceSpan;
@@ -35,16 +35,16 @@ public class StayReservationDetailLayout extends PlaceReservationDetailLayout
     private View mDefaultRefundPolicyLayout, mWaitRefundPolicyLayout;
     private View mRecommendGourmetButtonView;
     private View mRecommendGourmetItemLayout;
-    private HomeCarouselLayout mRecommendGourmetCarouselLayout;
+    private DailyCarouselLayout mRecommendGourmetCarouselLayout;
     private ObjectAnimator mRecommendGourmetButtonAnimator;
 
     public interface OnEventListener extends PlaceReservationDetailLayout.OnEventListener
     {
         void onRecommendListItemViewAllClick();
 
-        void onRecommendListItemClick(View view, int position);
+        void onRecommendListItemClick(View view);
 
-        void onRecommendListItemLongClick(View view, int position);
+        void onRecommendListItemLongClick(View view);
     }
 
     public StayReservationDetailLayout(Context context, OnBaseEventListener listener)
@@ -70,11 +70,12 @@ public class StayReservationDetailLayout extends PlaceReservationDetailLayout
 
         mRecommendGourmetItemLayout = view.findViewById(R.id.recommendGourmetLayout);
 
-        mRecommendGourmetCarouselLayout = (HomeCarouselLayout) view.findViewById(R.id.recommendGourmetCarouselLayout);
+        mRecommendGourmetCarouselLayout = (DailyCarouselLayout) view.findViewById(R.id
+            .recommendGourmetCarouselLayout);
 
         mRecommendGourmetCarouselLayout.setTitleText(R.string.label_booking_reservation_recommend_gourmet_title);
 
-        mRecommendGourmetCarouselLayout.setCarouselListener(new HomeCarouselLayout.OnCarouselListener()
+        mRecommendGourmetCarouselLayout.setCarouselListener(new DailyCarouselLayout.OnCarouselListener()
         {
             @Override
             public void onViewAllClick()
@@ -83,15 +84,15 @@ public class StayReservationDetailLayout extends PlaceReservationDetailLayout
             }
 
             @Override
-            public void onItemClick(View view, int position)
+            public void onItemClick(View view)
             {
-                ((StayReservationDetailLayout.OnEventListener) mOnEventListener).onRecommendListItemClick(view, position);
+                ((StayReservationDetailLayout.OnEventListener) mOnEventListener).onRecommendListItemClick(view);
             }
 
             @Override
-            public void onItemLongClick(View view, int position)
+            public void onItemLongClick(View view)
             {
-                ((StayReservationDetailLayout.OnEventListener) mOnEventListener).onRecommendListItemLongClick(view, position);
+                ((StayReservationDetailLayout.OnEventListener) mOnEventListener).onRecommendListItemLongClick(view);
             }
         });
     }
@@ -490,7 +491,7 @@ public class StayReservationDetailLayout extends PlaceReservationDetailLayout
         setRecommendGourmetButtonAnimation(isVisible);
     }
 
-    public ArrayList<HomePlace> getRecommendGourmetData()
+    public ArrayList<CarouselListItem> getRecommendGourmetData()
     {
         if (mRecommendGourmetCarouselLayout == null)
         {
@@ -500,7 +501,7 @@ public class StayReservationDetailLayout extends PlaceReservationDetailLayout
         return mRecommendGourmetCarouselLayout.getData();
     }
 
-    public void setRecommendGourmetData(ArrayList<HomePlace> list)
+    public void setRecommendGourmetData(ArrayList<CarouselListItem> list)
     {
         if (mRecommendGourmetCarouselLayout == null)
         {
@@ -545,16 +546,6 @@ public class StayReservationDetailLayout extends PlaceReservationDetailLayout
         {
             mRecommendGourmetButtonView.setVisibility(View.GONE);
         }
-    }
-
-    public HomePlace getRecommendGourmetItem(int position)
-    {
-        if (mRecommendGourmetCarouselLayout == null)
-        {
-            return null;
-        }
-
-        return mRecommendGourmetCarouselLayout.getItem(position);
     }
 
     @Override
