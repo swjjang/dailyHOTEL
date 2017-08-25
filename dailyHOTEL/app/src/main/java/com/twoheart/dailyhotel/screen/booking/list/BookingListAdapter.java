@@ -317,11 +317,10 @@ public class BookingListAdapter extends RecyclerView.Adapter<BookingListAdapter.
                 case STAY_OUTBOUND:
                 {
                     String period = String.format(Locale.KOREA, "%s - %s"//
-                        , DailyCalendar.convertDateFormatString(booking.checkInDateTime, "yyyy-MM-dd", BOOKING_DATE_FORMAT)//
-                        , DailyCalendar.convertDateFormatString(booking.checkOutDateTime, "yyyy-MM-dd", BOOKING_DATE_FORMAT));
+                        , DailyCalendar.convertDateFormatString(booking.checkInDateTime, DailyCalendar.ISO_8601_FORMAT, BOOKING_DATE_FORMAT)//
+                        , DailyCalendar.convertDateFormatString(booking.checkOutDateTime, DailyCalendar.ISO_8601_FORMAT, BOOKING_DATE_FORMAT));
 
-                    int nights = DailyCalendar.compareDateDay(DailyCalendar.convertDateFormatString(booking.checkOutDateTime, "yyyy-MM-dd", DailyCalendar.ISO_8601_FORMAT)//
-                        , DailyCalendar.convertDateFormatString(booking.checkInDateTime, "yyyy-MM-dd", DailyCalendar.ISO_8601_FORMAT));
+                    int nights = DailyCalendar.compareDateDay(booking.checkOutDateTime, booking.checkInDateTime);
 
                     holder.dataBinding.bookingDateTextView.setText(period + "·" + mContext.getString(R.string.label_nights, nights));
                     break;
@@ -329,7 +328,7 @@ public class BookingListAdapter extends RecyclerView.Adapter<BookingListAdapter.
 
                 case GOURMET:
                 {
-                    String period = DailyCalendar.convertDateFormatString(booking.checkInDateTime, "yyyy-MM-dd", BOOKING_DATE_FORMAT);
+                    String period = DailyCalendar.convertDateFormatString(booking.checkInDateTime, DailyCalendar.ISO_8601_FORMAT, BOOKING_DATE_FORMAT);
 
                     holder.dataBinding.bookingDateTextView.setText(period);
                     break;

@@ -573,8 +573,7 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
 
         for (Booking booking : bookingList)
         {
-            booking.remainingDays = DailyCalendar.compareDateDay(DailyCalendar.convertDateFormatString(booking.checkInDateTime, "yyyy-MM-dd", DailyCalendar.ISO_8601_FORMAT)//
-                , mCommonDateTime.currentDateTime);
+            booking.remainingDays = DailyCalendar.compareDateDay(booking.checkInDateTime, mCommonDateTime.currentDateTime);
 
             if (booking.readyForRefund == true)
             {
@@ -584,8 +583,7 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
                 switch (booking.statePayment)
                 {
                     case Booking.PAYMENT_COMPLETED:
-                        boolean used = DailyCalendar.compareDateDay(DailyCalendar.convertDateFormatString(booking.checkOutDateTime, "yyyy-MM-dd", DailyCalendar.ISO_8601_FORMAT)//
-                            , mCommonDateTime.currentDateTime) < 0;
+                        boolean used = DailyCalendar.compareDateDay(booking.checkOutDateTime, mCommonDateTime.currentDateTime) < 0;
 
                         if (used)
                         {
@@ -611,8 +609,7 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
 
                 try
                 {
-                    compareDay = DailyCalendar.compareDateDay(DailyCalendar.convertDateFormatString(booking1.checkInDateTime, "yyyy-MM-dd", DailyCalendar.ISO_8601_FORMAT)//
-                        , DailyCalendar.convertDateFormatString(booking2.checkInDateTime, "yyyy-MM-dd", DailyCalendar.ISO_8601_FORMAT));
+                    compareDay = DailyCalendar.compareDateDay(booking1.checkInDateTime, booking2.checkInDateTime);
                 } catch (Exception e)
                 {
                     ExLog.e(e.toString());
@@ -647,8 +644,7 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
 
                 try
                 {
-                    compareDay = DailyCalendar.compareDateDay(DailyCalendar.convertDateFormatString(booking1.checkInDateTime, "yyyy-MM-dd", DailyCalendar.ISO_8601_FORMAT)//
-                        , DailyCalendar.convertDateFormatString(booking2.checkInDateTime, "yyyy-MM-dd", DailyCalendar.ISO_8601_FORMAT));
+                    compareDay = DailyCalendar.compareDateDay(booking1.checkInDateTime, booking2.checkInDateTime);
                 } catch (Exception e)
                 {
                     ExLog.e(e.toString());
