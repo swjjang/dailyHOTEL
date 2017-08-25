@@ -1224,6 +1224,18 @@ public class StayCategoryTabActivity extends PlaceMainActivity
         }
 
         @Override
+        public void onRegionClick()
+        {
+            mOnEventListener.onRegionClick();
+        }
+
+        @Override
+        public void onCalendarClick()
+        {
+            mOnEventListener.onDateClick();
+        }
+
+        @Override
         public void onActivityCreated(PlaceListFragment placeListFragment)
         {
             if (mPlaceMainLayout == null || placeListFragment == null)

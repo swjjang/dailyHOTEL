@@ -989,6 +989,17 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
             }
         }
 
+        @Override
+        public void onRegionClick()
+        {
+        }
+
+        @Override
+        public void onCalendarClick()
+        {
+            mOnEventListener.onDateClick();
+        }
+
         //        @Override
         //        public void onEventBannerClick(EventBanner eventBanner)
         //        {
