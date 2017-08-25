@@ -390,6 +390,10 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
             case CODE_REQUEST_ACTIVITY_SATISFACTION_GOURMET:
                 mDontReload = false;
                 break;
+
+            default:
+                mDontReload = true;
+                break;
         }
     }
 

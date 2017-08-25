@@ -7,11 +7,11 @@ import android.view.View;
 
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.widget.DailyWebView;
+import com.daily.dailyhotel.view.DailyToolbarView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.screen.common.WebViewActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
-import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
 public class NoticeWebActivity extends WebViewActivity
 {
@@ -67,9 +67,9 @@ public class NoticeWebActivity extends WebViewActivity
 
     private void initToolbar(String title)
     {
-        View toolbar = findViewById(R.id.toolbar);
-        DailyToolbarLayout dailyToolbarLayout = new DailyToolbarLayout(this, toolbar);
-        dailyToolbarLayout.initToolbar(title, new View.OnClickListener()
+        DailyToolbarView dailyToolbarView = (DailyToolbarView) findViewById(R.id.toolbarView);
+        dailyToolbarView.setTitleText(title);
+        dailyToolbarView.setOnBackClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
