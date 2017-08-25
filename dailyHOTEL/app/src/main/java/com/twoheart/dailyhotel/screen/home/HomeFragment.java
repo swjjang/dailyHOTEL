@@ -80,6 +80,7 @@ import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -645,13 +646,52 @@ public class HomeFragment extends BaseMenuNavigationFragment
         if (mHomeLayout != null)
         {
             mHomeLayout.setCategoryEnabled(isEnabled);
+        }
+    }
 
-            // 해외 호텔 new 표시
-            if (DailyPreference.getInstance(mBaseActivity).isHomeShortCutStayOutboundNew() == true)
+    private void checkStayOutboundCutNewVisible(TodayDateTime todayDateTime)
+    {
+        if (todayDateTime == null)
+        {
+            return;
+        }
+
+        final String OVER_TIME = "overTime";
+        final int VIEW_TIME = 14; // 14일
+
+        String visibleDate = DailyPreference.getInstance(mBaseActivity).getHomeShortCutStayOutboundNewDate();
+
+        // 해외 호텔 new 표시
+        if (DailyTextUtils.isTextEmpty(visibleDate) == true)
+        {
+            DailyPreference.getInstance(mBaseActivity).setHomeShortCutStayOutboundNewDate(todayDateTime.currentDateTime);
+
+            mHomeLayout.setCategoryStayOutboundNewVisible(true);
+        } else if (OVER_TIME.equalsIgnoreCase(visibleDate) == true)
+        {
+            mHomeLayout.setCategoryStayOutboundNewVisible(false);
+        } else
+        {
+            try
             {
-                DailyPreference.getInstance(mBaseActivity).setHomeShortCutStayOutboundNew(false);
+                Calendar currentCalendar = DailyCalendar.getInstance();
+                currentCalendar.setTime(DailyCalendar.convertDate(todayDateTime.currentDateTime, DailyCalendar.ISO_8601_FORMAT));
 
-                mHomeLayout.setCategoryStayOutboundNewVisible(true);
+                Calendar visibleCalendar = DailyCalendar.getInstance();
+                visibleCalendar.setTime(DailyCalendar.convertDate(visibleDate, DailyCalendar.ISO_8601_FORMAT));
+                visibleCalendar.add(Calendar.DAY_OF_MONTH, VIEW_TIME);
+
+                if (currentCalendar.before(visibleCalendar) == true)
+                {
+                    mHomeLayout.setCategoryStayOutboundNewVisible(true);
+                } else
+                {
+                    mHomeLayout.setCategoryStayOutboundNewVisible(false);
+                    DailyPreference.getInstance(mBaseActivity).setHomeShortCutStayOutboundNewDate(OVER_TIME);
+                }
+            } catch (Exception e)
+            {
+                ExLog.d(e.toString());
             }
         }
     }
@@ -1136,6 +1176,8 @@ public class HomeFragment extends BaseMenuNavigationFragment
             {
                 unLockUI();
                 setCommonDateTime(todayDateTime);
+
+                checkStayOutboundCutNewVisible(todayDateTime);
             }
         }, new Consumer<Throwable>()
         {
