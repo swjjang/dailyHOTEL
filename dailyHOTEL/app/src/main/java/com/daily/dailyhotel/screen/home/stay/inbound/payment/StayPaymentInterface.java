@@ -6,10 +6,7 @@ import android.view.View;
 
 import com.daily.base.BaseDialogViewInterface;
 import com.daily.dailyhotel.entity.Card;
-import com.daily.dailyhotel.entity.People;
 import com.daily.dailyhotel.view.DailyBookingPaymentTypeView;
-
-import java.util.List;
 
 public interface StayPaymentInterface extends BaseDialogViewInterface
 {

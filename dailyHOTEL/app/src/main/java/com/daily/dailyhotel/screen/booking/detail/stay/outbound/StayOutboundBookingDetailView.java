@@ -182,7 +182,7 @@ public class StayOutboundBookingDetailView extends BaseDialogView<StayOutboundBo
     @Override
     public void setToolbarTitle(String title)
     {
-        if(getViewDataBinding() == null)
+        if (getViewDataBinding() == null)
         {
             return;
         }

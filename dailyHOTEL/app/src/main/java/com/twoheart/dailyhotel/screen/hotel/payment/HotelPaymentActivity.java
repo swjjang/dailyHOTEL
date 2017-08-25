@@ -31,7 +31,6 @@ import com.daily.base.widget.DailyScrollView;
 import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.parcel.analytics.StayThankYouAnalyticsParam;
 import com.daily.dailyhotel.repository.local.model.AnalyticsParam;
-import com.daily.dailyhotel.screen.home.stay.inbound.thankyou.StayThankYouActivity;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Booking;
 import com.twoheart.dailyhotel.model.Coupon;
@@ -50,7 +49,6 @@ import com.twoheart.dailyhotel.network.model.StayProduct;
 import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.place.activity.PlacePaymentActivity;
 import com.twoheart.dailyhotel.screen.common.FinalCheckLayout;
-import com.twoheart.dailyhotel.screen.mydaily.coupon.SelectStayCouponDialogActivity;
 import com.twoheart.dailyhotel.screen.mydaily.creditcard.RegisterCreditCardActivity;
 import com.twoheart.dailyhotel.screen.mydaily.member.InputMobileNumberDialogActivity;
 import com.twoheart.dailyhotel.util.Constants;
@@ -537,11 +535,11 @@ public class HotelPaymentActivity extends PlacePaymentActivity
     @Override
     protected void showPaymentWeb(PlacePaymentInformation paymentInformation, PlaceBookingDay placeBookingDay)
     {
-//        Intent intent = new Intent(this, StayPaymentWebActivity.class);
-//        intent.putExtra(NAME_INTENT_EXTRA_DATA_PAYMENTINFORMATION, paymentInformation);
-//        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, placeBookingDay);
-//
-//        startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PAYMENT);
+        //        Intent intent = new Intent(this, StayPaymentWebActivity.class);
+        //        intent.putExtra(NAME_INTENT_EXTRA_DATA_PAYMENTINFORMATION, paymentInformation);
+        //        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, placeBookingDay);
+        //
+        //        startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PAYMENT);
     }
 
     @Override
@@ -614,15 +612,15 @@ public class HotelPaymentActivity extends PlacePaymentActivity
         StayThankYouAnalyticsParam stayThankYouAnalyticsParam = new StayThankYouAnalyticsParam();
         stayThankYouAnalyticsParam.params = params;
 
-//        Intent intent = StayThankYouActivity.newInstance(this, ((StayPaymentInformation) paymentInformation).isOverSeas, mCategoryCode, placeName, imageUrl//
-//            , stayBookingDay.getCheckInDay(DailyCalendar.ISO_8601_FORMAT), stayBookingDay.getCheckOutDay(DailyCalendar.ISO_8601_FORMAT)//
-//            , roomType, stayThankYouAnalyticsParam);
+        //        Intent intent = StayThankYouActivity.newInstance(this, ((StayPaymentInformation) paymentInformation).isOverSeas, mCategoryCode, placeName, imageUrl//
+        //            , stayBookingDay.getCheckInDay(DailyCalendar.ISO_8601_FORMAT), stayBookingDay.getCheckOutDay(DailyCalendar.ISO_8601_FORMAT)//
+        //            , roomType, stayThankYouAnalyticsParam);
 
         //        Intent intent = HotelPaymentThankyouActivity.newInstance(this, imageUrl, placeName, roomType//
         //            , ((StayPaymentInformation) paymentInformation).isOverSeas, userName, stayBookingDay//
         //            , paymentInformation.paymentType.getName(), discountType, params);
 
-//        startActivityForResult(intent, REQUEST_CODE_PAYMETRESULT_ACTIVITY);
+        //        startActivityForResult(intent, REQUEST_CODE_PAYMETRESULT_ACTIVITY);
     }
 
     @Override
@@ -1721,9 +1719,9 @@ public class HotelPaymentActivity extends PlacePaymentActivity
         String categoryCode = mCategoryCode;
         String hotelName = mPlaceName;
 
-//        Intent intent = SelectStayCouponDialogActivity.newInstance(HotelPaymentActivity.this, hotelIdx, //
-//            roomIdx, stayBookingDay, categoryCode, hotelName, stayProduct.averageDiscount);
-//        startActivityForResult(intent, REQUEST_CODE_COUPONPOPUP_ACTIVITY);
+        //        Intent intent = SelectStayCouponDialogActivity.newInstance(HotelPaymentActivity.this, hotelIdx, //
+        //            roomIdx, stayBookingDay, categoryCode, hotelName, stayProduct.averageDiscount);
+        //        startActivityForResult(intent, REQUEST_CODE_COUPONPOPUP_ACTIVITY);
 
         AnalyticsManager.getInstance(HotelPaymentActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS, //
             Action.HOTEL_USING_COUPON_CLICKED, Label.HOTEL_USING_COUPON_CLICKED, null);

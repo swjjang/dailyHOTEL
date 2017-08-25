@@ -264,6 +264,7 @@
     <color name="default_text_cb8b8b8">#b8b8b8</color>
     <color name="default_text_c4a4a4a">#4a4a4a</color>
     <color name="default_text_cb4b4b4">#b4b4b4</color>
+    <color name="default_text_cda2853">#da2853</color>
 
     <color name="default_over_scroll_edge">#dcdcdc</color>
     <color name="default_text_kakao">#3c1e1e</color>
@@ -293,6 +294,7 @@
     <color name="default_background_cababab">#ABABAB</color>
     <color name="default_background_cefeff0">#efeff0</color>
     <color name="default_background_ce6e6e7">#e6e6e7</color>
+    <color name="default_background_ce0e0e0">#e0e0e0</color>
     <color name="default_background_ce4e4e9">#e4e4e9</color>
     <color name="default_background_ccfad80">#cfad80</color>
     <color name="default_background_cf9f9fb">#f9f9fb</color>

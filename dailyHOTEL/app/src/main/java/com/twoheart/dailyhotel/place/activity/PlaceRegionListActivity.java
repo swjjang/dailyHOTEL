@@ -66,7 +66,7 @@ public abstract class PlaceRegionListActivity extends BaseActivity
 
     private void initToolbar()
     {
-        initToolbar((DailyToolbarView)findViewById(R.id.toolbarView));
+        initToolbar((DailyToolbarView) findViewById(R.id.toolbarView));
     }
 
     @Override

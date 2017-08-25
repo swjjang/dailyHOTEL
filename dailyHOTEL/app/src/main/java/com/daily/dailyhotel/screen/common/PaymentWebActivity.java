@@ -42,7 +42,7 @@ public class PaymentWebActivity extends BasePaymentWebActivity
         Intent intent = new Intent(context, PaymentWebActivity.class);
 
         intent.putExtra(INTENT_EXTRA_DATA_JSON_STRING, jsonString);
-        intent.putExtra(INTENT_EXTRA_DATA_URL, jsonString);
+        intent.putExtra(INTENT_EXTRA_DATA_URL, url);
         intent.putExtra(INTENT_EXTRA_DATA_CALL_SCREEN, callScreen);
 
         return intent;

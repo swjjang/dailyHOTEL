@@ -2,38 +2,33 @@ package com.twoheart.dailyhotel.screen.booking.list;
 
 import android.content.Context;
 import android.databinding.DataBindingUtil;
-import android.graphics.ColorMatrix;
-import android.graphics.ColorMatrixColorFilter;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
+import com.daily.base.util.ScreenUtils;
 import com.daily.dailyhotel.entity.Booking;
-import com.daily.dailyhotel.entity.ListItem;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ListRowBookingDataBinding;
-import com.twoheart.dailyhotel.databinding.ListRowDefaultSectionDataBinding;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.Util;
-import com.twoheart.dailyhotel.widget.PinnedSectionRecyclerView;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
 
-public class BookingListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements PinnedSectionRecyclerView.PinnedSectionListAdapter
+public class BookingListAdapter extends RecyclerView.Adapter<BookingListAdapter.BookingViewHolder>
 {
-    private List<ListItem> mList;
+    private List<Booking> mList;
     private Context mContext;
     BookingListFragment.OnUserActionListener mOnUserActionListener;
 
-    public BookingListAdapter(Context context, ArrayList<ListItem> arrayList)
+    public BookingListAdapter(Context context, ArrayList<Booking> arrayList)
     {
         mList = new ArrayList<>();
 
@@ -52,7 +47,7 @@ public class BookingListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         mList.clear();
     }
 
-    public ListItem getItem(int position)
+    public Booking getItem(int position)
     {
         if (mList == null)
         {
@@ -62,7 +57,7 @@ public class BookingListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         return mList.get(position);
     }
 
-    public void addAll(Collection<? extends ListItem> collection)
+    public void addAll(Collection<Booking> collection)
     {
         if (collection == null)
         {
@@ -73,94 +68,239 @@ public class BookingListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     }
 
     @Override
-    public boolean isItemViewTypePinned(int viewType)
+    public BookingListAdapter.BookingViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
     {
-        return viewType == ListItem.TYPE_SECTION;
+        ListRowBookingDataBinding dataBinding = DataBindingUtil.inflate(LayoutInflater.from(mContext), R.layout.list_row_booking_data, parent, false);
+
+        return new BookingViewHolder(dataBinding);
     }
 
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
+    public void onBindViewHolder(BookingListAdapter.BookingViewHolder holder, int position)
     {
-        switch (viewType)
-        {
-            case ListItem.TYPE_ENTRY:
-            {
-                ListRowBookingDataBinding dataBinding = DataBindingUtil.inflate(LayoutInflater.from(mContext), R.layout.list_row_booking_data, parent, false);
+        Booking booking = getItem(position);
 
-                return new BookingViewHolder(dataBinding);
-            }
-
-            case ListItem.TYPE_SECTION:
-            {
-                ListRowDefaultSectionDataBinding dataBinding = DataBindingUtil.inflate(LayoutInflater.from(mContext), R.layout.list_row_default_section_data, parent, false);
-
-                return new SectionViewHolder(dataBinding);
-            }
-        }
-
-        return null;
-    }
-
-    @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position)
-    {
-        ListItem item = getItem(position);
-
-        if (item == null)
+        if (booking == null)
         {
             return;
         }
 
-        switch (item.mType)
-        {
-            case ListItem.TYPE_ENTRY:
-                onBindViewHolder((BookingViewHolder) holder, item, position);
-                break;
-
-            case ListItem.TYPE_SECTION:
-                onBindViewHolder((SectionViewHolder) holder, item, position);
-                break;
-        }
-    }
-
-    @Override
-    public int getItemViewType(int position)
-    {
-        return getItem(position).mType;
-    }
-
-    @Override
-    public int getItemCount()
-    {
-        if (mList == null)
-        {
-            return 0;
-        }
-
-        return mList.size();
-    }
-
-    private void onBindViewHolder(BookingViewHolder holder, ListItem listItem, int position)
-    {
-        if (holder == null || listItem == null)
-        {
-            return;
-        }
-
-        Booking booking = listItem.getItem();
+        boolean isFirstPosition = position == 0;
         boolean isLastPosition = getItemCount() - 1 == position;
 
-        LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) holder.dataBinding.listItemLayout.getLayoutParams();
-
-        if (isLastPosition == true)
+        if (isFirstPosition == true)
         {
-            layoutParams.bottomMargin = mContext.getResources().getDimensionPixelSize(R.dimen.bottom_navigation_height_over21);
+            holder.dataBinding.topVerticalLineView.setVisibility(View.VISIBLE);
         } else
         {
-            layoutParams.bottomMargin = 0;
+            holder.dataBinding.topVerticalLineView.setVisibility(View.GONE);
         }
 
-        holder.dataBinding.listItemLayout.setLayoutParams(layoutParams);
+        Booking previousPositionBooking = null;
+
+        if (position > 0)
+        {
+            previousPositionBooking = getItem(position - 1);
+        }
+
+        int bookingState = previousPositionBooking == null ? booking.bookingState : previousPositionBooking.bookingState;
+
+        // 큰 원의 약간 윗점.
+        switch (bookingState)
+        {
+            case Booking.BOOKING_STATE_DEPOSIT_WAITING:
+            case Booking.BOOKING_STATE_WAITING_REFUND:
+            {
+                ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) holder.dataBinding.verticalLineView01.getLayoutParams();
+                layoutParams.topMargin = ScreenUtils.dpToPx(mContext, 1);
+                //                holder.dataBinding.verticalLineView01.requestLayout();
+
+                holder.dataBinding.verticalLineView01.setBackgroundResource(R.color.default_line_cd9d9d9);
+                break;
+            }
+
+            case Booking.BOOKING_STATE_BEFORE_USE:
+            {
+                ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) holder.dataBinding.verticalLineView01.getLayoutParams();
+                layoutParams.topMargin = 0;
+                //                holder.dataBinding.verticalLineView01.requestLayout();
+
+                holder.dataBinding.verticalLineView01.setBackgroundResource(R.color.default_background_ccfad80);
+                break;
+            }
+
+            case Booking.BOOKING_STATE_AFTER_USE:
+            {
+                ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) holder.dataBinding.verticalLineView01.getLayoutParams();
+                layoutParams.topMargin = 0;
+                //                holder.dataBinding.verticalLineView01.requestLayout();
+
+                holder.dataBinding.verticalLineView01.setBackgroundResource(R.color.default_background_ce0e0e0);
+                break;
+            }
+        }
+
+        // 왼쪽 선그리기
+        switch (booking.bookingState)
+        {
+            case Booking.BOOKING_STATE_DEPOSIT_WAITING:
+            case Booking.BOOKING_STATE_WAITING_REFUND:
+            {
+                holder.dataBinding.topVerticalLineView.setBackgroundResource(R.drawable.bitmap_timeline_dark_tile);
+                holder.dataBinding.circleView.setBackgroundResource(R.drawable.shape_circle_bd9d9d9);
+
+                ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) holder.dataBinding.verticalLineView02.getLayoutParams();
+                layoutParams.topMargin = 0;
+
+                holder.dataBinding.verticalLineView02.setBackgroundResource(R.drawable.bitmap_timeline_dark_tile);
+
+                break;
+            }
+
+            case Booking.BOOKING_STATE_BEFORE_USE:
+            {
+                holder.dataBinding.topVerticalLineView.setBackgroundResource(R.color.default_background_ccfad80);
+                holder.dataBinding.circleView.setBackgroundResource(R.drawable.shape_circle_bcfad80);
+
+                ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) holder.dataBinding.verticalLineView02.getLayoutParams();
+                layoutParams.topMargin = ScreenUtils.dpToPx(mContext, 4);
+
+                holder.dataBinding.verticalLineView02.setBackgroundResource(R.color.default_background_ccfad80);
+                break;
+            }
+
+            case Booking.BOOKING_STATE_AFTER_USE:
+            {
+                holder.dataBinding.topVerticalLineView.setBackgroundResource(R.color.default_background_ce0e0e0);
+                holder.dataBinding.circleView.setBackgroundResource(R.drawable.shape_circle_bd9d9d9);
+
+                ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) holder.dataBinding.verticalLineView02.getLayoutParams();
+                layoutParams.topMargin = ScreenUtils.dpToPx(mContext, 4);
+
+                holder.dataBinding.verticalLineView02.setBackgroundResource(R.color.default_background_ce0e0e0);
+                break;
+            }
+        }
+
+        switch (booking.bookingState)
+        {
+            case Booking.BOOKING_STATE_WAITING_REFUND:
+                holder.dataBinding.bookingStatusTextView.setText(R.string.frag_booking_wait_refund);
+                holder.dataBinding.bookingStatusTextView.setTextColor(mContext.getResources().getColor(R.color.default_text_cda2853));
+                holder.dataBinding.bookingDayTextView.setVisibility(View.GONE);
+                holder.dataBinding.bookingStatusDescriptionTextView.setText(R.string.message_booking_free_cancel_waiting);
+                holder.dataBinding.buttonLayout.setVisibility(View.GONE);
+                break;
+
+            case Booking.BOOKING_STATE_BEFORE_USE:
+                holder.dataBinding.bookingStatusTextView.setText(R.string.label_booking_before_use);
+                holder.dataBinding.bookingStatusTextView.setTextColor(mContext.getResources().getColor(R.color.default_text_cbe945b));
+
+                String description;
+                String dayText;
+
+                if (booking.placeType == Booking.PlaceType.STAY_OUTBOUND)
+                {
+                    description = null;
+                    dayText = null;
+                } else
+                {
+                    if (booking.remainingDays == 0)
+                    {
+                        // 당일
+                        switch (booking.placeType)
+                        {
+                            case STAY:
+                            {
+                                description = mContext.getString(R.string.frag_booking_today_type_stay);
+                                break;
+                            }
+
+                            case GOURMET:
+                            {
+                                description = mContext.getString(R.string.frag_booking_today_type_gourmet);
+                                break;
+                            }
+
+                            default:
+                                description = null;
+                                break;
+                        }
+
+                        dayText = mContext.getString(R.string.label_booking_today);
+
+                    } else if (booking.remainingDays > 0 && booking.remainingDays <= 3)
+                    {
+                        // 하루이상 남음
+                        switch (booking.placeType)
+                        {
+                            case STAY:
+                            {
+                                description = mContext.getString(R.string.frag_booking_duedate_formet_stay, booking.remainingDays);
+                                break;
+                            }
+
+                            case GOURMET:
+                            {
+                                description = mContext.getString(R.string.frag_booking_duedate_formet_gourmet, booking.remainingDays);
+                                break;
+                            }
+
+                            default:
+                                description = null;
+                                break;
+                        }
+
+                        dayText = mContext.getString(R.string.label_booking_before_day, booking.remainingDays);
+                    } else
+                    {
+                        description = null;
+                        dayText = null;
+                    }
+                }
+
+                holder.dataBinding.bookingStatusDescriptionTextView.setText(description);
+
+                if (DailyTextUtils.isTextEmpty(dayText) == false)
+                {
+                    holder.dataBinding.bookingDayTextView.setVisibility(View.VISIBLE);
+                    holder.dataBinding.bookingDayTextView.setText(dayText);
+                } else
+                {
+                    holder.dataBinding.bookingDayTextView.setVisibility(View.GONE);
+                }
+
+                holder.dataBinding.buttonLayout.setVisibility(View.GONE);
+                break;
+
+            case Booking.BOOKING_STATE_AFTER_USE:
+                holder.dataBinding.bookingStatusTextView.setText(R.string.label_booking_after_use);
+                holder.dataBinding.bookingStatusTextView.setTextColor(mContext.getResources().getColor(R.color.default_text_c666666));
+                holder.dataBinding.bookingDayTextView.setVisibility(View.GONE);
+                holder.dataBinding.buttonLayout.setVisibility(View.VISIBLE);
+                if (booking.hasReview)
+                {
+                    holder.dataBinding.bookingStatusDescriptionTextView.setText(null);
+
+                    holder.dataBinding.buttonVerticalLine.setVisibility(View.GONE);
+                    holder.dataBinding.reviewTextView.setVisibility(View.GONE);
+                } else
+                {
+                    holder.dataBinding.bookingStatusDescriptionTextView.setText(R.string.message_booking_add_review);
+
+                    holder.dataBinding.buttonVerticalLine.setVisibility(View.VISIBLE);
+                    holder.dataBinding.reviewTextView.setVisibility(View.VISIBLE);
+                }
+                break;
+
+            case Booking.BOOKING_STATE_DEPOSIT_WAITING:
+                holder.dataBinding.bookingStatusTextView.setText(R.string.frag_booking_wait_account);
+                holder.dataBinding.bookingStatusTextView.setTextColor(mContext.getResources().getColor(R.color.default_text_cda2853));
+                holder.dataBinding.bookingDayTextView.setVisibility(View.GONE);
+                holder.dataBinding.bookingStatusDescriptionTextView.setText(R.string.message_booking_please_deposit_completed);
+                holder.dataBinding.buttonLayout.setVisibility(View.GONE);
+                break;
+        }
 
         // 호텔 이미지
         Util.requestImageResize(mContext, holder.dataBinding.simpleDraweeView, booking.imageUrl);
@@ -174,18 +314,16 @@ public class BookingListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             switch (booking.placeType)
             {
                 case STAY:
+                case STAY_OUTBOUND:
                 {
                     String period = String.format(Locale.KOREA, "%s - %s"//
                         , DailyCalendar.convertDateFormatString(booking.checkInDateTime, "yyyy-MM-dd", BOOKING_DATE_FORMAT)//
                         , DailyCalendar.convertDateFormatString(booking.checkOutDateTime, "yyyy-MM-dd", BOOKING_DATE_FORMAT));
 
-                    holder.dataBinding.bookingDateTextView.setText(period);
-
                     int nights = DailyCalendar.compareDateDay(DailyCalendar.convertDateFormatString(booking.checkOutDateTime, "yyyy-MM-dd", DailyCalendar.ISO_8601_FORMAT)//
                         , DailyCalendar.convertDateFormatString(booking.checkInDateTime, "yyyy-MM-dd", DailyCalendar.ISO_8601_FORMAT));
 
-                    holder.dataBinding.bookingNightsTextView.setVisibility(View.VISIBLE);
-                    holder.dataBinding.bookingNightsTextView.setText(mContext.getString(R.string.label_nights, nights));
+                    holder.dataBinding.bookingDateTextView.setText(period + "·" + mContext.getString(R.string.label_nights, nights));
                     break;
                 }
 
@@ -194,23 +332,6 @@ public class BookingListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                     String period = DailyCalendar.convertDateFormatString(booking.checkInDateTime, "yyyy-MM-dd", BOOKING_DATE_FORMAT);
 
                     holder.dataBinding.bookingDateTextView.setText(period);
-                    holder.dataBinding.bookingNightsTextView.setVisibility(View.GONE);
-                    break;
-                }
-
-                case STAY_OUTBOUND:
-                {
-                    String period = String.format(Locale.KOREA, "%s - %s"//
-                        , DailyCalendar.convertDateFormatString(booking.checkInDateTime, "yyyy-MM-dd", BOOKING_DATE_FORMAT)//
-                        , DailyCalendar.convertDateFormatString(booking.checkOutDateTime, "yyyy-MM-dd", BOOKING_DATE_FORMAT));
-
-                    holder.dataBinding.bookingDateTextView.setText(period);
-
-                    int nights = DailyCalendar.compareDateDay(DailyCalendar.convertDateFormatString(booking.checkOutDateTime, "yyyy-MM-dd", DailyCalendar.ISO_8601_FORMAT)//
-                        , DailyCalendar.convertDateFormatString(booking.checkInDateTime, "yyyy-MM-dd", DailyCalendar.ISO_8601_FORMAT));
-
-                    holder.dataBinding.bookingNightsTextView.setVisibility(View.VISIBLE);
-                    holder.dataBinding.bookingNightsTextView.setText(mContext.getString(R.string.label_nights, nights));
                     break;
                 }
             }
@@ -219,97 +340,14 @@ public class BookingListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             ExLog.e(e.toString());
         }
 
-        if (booking.isUsed == true)
+        // 하단 높이 조절
+        if (isLastPosition == true)
         {
-            setGrayScale(holder.dataBinding.simpleDraweeView);
-
-            holder.dataBinding.waitAccountTextView.setVisibility(View.GONE);
-
-            holder.dataBinding.deleteView.setVisibility(View.VISIBLE);
-
-            // 삭제 버튼을 누를 경우;
-            holder.dataBinding.deleteView.setOnClickListener(new View.OnClickListener()
-            {
-                @Override
-                public void onClick(View v)
-                {
-                    if (mOnUserActionListener != null)
-                    {
-                        mOnUserActionListener.onDeleteClick(booking);
-                    }
-                }
-            });
+            holder.dataBinding.bottomEmptyView.getLayoutParams().height = ScreenUtils.dpToPx(mContext, 49)//
+                + mContext.getResources().getDimensionPixelSize(R.dimen.bottom_navigation_height_over21);
         } else
         {
-            holder.dataBinding.simpleDraweeView.clearColorFilter();
-
-            if (booking.statePayment == Booking.PAYMENT_WAITING)
-            {
-                holder.dataBinding.waitAccountTextView.setVisibility(View.VISIBLE);
-                holder.dataBinding.waitAccountTextView.setText(booking.comment);
-            } else
-            {
-                if (booking.placeType == Booking.PlaceType.STAY_OUTBOUND)
-                {
-                    holder.dataBinding.waitAccountTextView.setVisibility(View.GONE);
-                } else
-                {
-                    if (booking.readyForRefund == true)
-                    {
-                        holder.dataBinding.waitAccountTextView.setVisibility(View.GONE);
-                    } else
-                    {
-                        String text;
-
-                        if (booking.placeType == Booking.PlaceType.STAY_OUTBOUND)
-                        {
-                            text = null;
-                        } else
-                        {
-                            if (booking.remainingDays == 0)
-                            {
-                                // 당일
-                                switch (booking.placeType)
-                                {
-                                    case STAY:
-                                    {
-                                        text = mContext.getString(R.string.frag_booking_today_type_stay);
-                                        break;
-                                    }
-
-                                    case GOURMET:
-                                    {
-                                        text = mContext.getString(R.string.frag_booking_today_type_gourmet);
-                                        break;
-                                    }
-
-                                    default:
-                                        text = null;
-                                        break;
-                                }
-                            } else if (booking.remainingDays > 0 && booking.remainingDays <= 3)
-                            {
-                                // 하루이상 남음
-                                text = mContext.getString(R.string.frag_booking_duedate_formet, booking.remainingDays);
-                            } else
-                            {
-                                text = null;
-                            }
-                        }
-
-                        if (DailyTextUtils.isTextEmpty(text) == true)
-                        {
-                            holder.dataBinding.waitAccountTextView.setVisibility(View.GONE);
-                        } else
-                        {
-                            holder.dataBinding.waitAccountTextView.setVisibility(View.VISIBLE);
-                            holder.dataBinding.waitAccountTextView.setText(text);
-                        }
-                    }
-                }
-            }
-
-            holder.dataBinding.deleteView.setVisibility(View.GONE);
+            holder.dataBinding.bottomEmptyView.getLayoutParams().height = ScreenUtils.dpToPx(mContext, 49);
         }
 
         holder.dataBinding.getRoot().setOnClickListener(new View.OnClickListener()
@@ -323,46 +361,78 @@ public class BookingListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 }
             }
         });
+
+        holder.dataBinding.againBookingTextView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                if (mOnUserActionListener != null)
+                {
+                    mOnUserActionListener.onAgainBookingClick(booking);
+                }
+            }
+        });
+
+        holder.dataBinding.reviewTextView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                if (mOnUserActionListener != null)
+                {
+                    mOnUserActionListener.onReviewClick(booking);
+                }
+            }
+        });
+
+        if (isLastPosition == false)
+        {
+            switch (bookingState)
+            {
+                case Booking.BOOKING_STATE_DEPOSIT_WAITING:
+                case Booking.BOOKING_STATE_WAITING_REFUND:
+                    holder.dataBinding.getRoot().post(new Runnable()
+                    {
+                        @Override
+                        public void run()
+                        {
+                            final int height = holder.dataBinding.getRoot().getHeight() - ScreenUtils.dpToPx(mContext, 13) - (isFirstPosition ? ScreenUtils.dpToPx(mContext, 51) : 0);
+                            final int remainder = height % ScreenUtils.dpToPx(mContext, 6);
+                            final int plusHeight = ScreenUtils.dpToPx(mContext, 3);
+
+                            if (remainder == 0)
+                            {
+                                holder.dataBinding.bottomEmptyView.getLayoutParams().height = ScreenUtils.dpToPx(mContext, 49) + plusHeight;
+                            } else
+                            {
+                                holder.dataBinding.bottomEmptyView.getLayoutParams().height = ScreenUtils.dpToPx(mContext, 49) - remainder + plusHeight;
+                            }
+
+                            holder.dataBinding.bottomEmptyView.requestLayout();
+                        }
+                    });
+                    break;
+            }
+        }
     }
 
-    private void onBindViewHolder(SectionViewHolder holder, ListItem listItem, int position)
+    @Override
+    public int getItemCount()
     {
-        if (holder == null || listItem == null)
+        if (mList == null)
         {
-            return;
+            return 0;
         }
 
-        holder.dataBinding.sectionTextView.setText(listItem.getItem());
+        return mList.size();
     }
 
-    private void setGrayScale(ImageView imageView)
-    {
-        ColorMatrix matrix = new ColorMatrix();
-        matrix.setSaturation(0);
-        matrix.getArray()[18] = 0.8f;
-
-        ColorMatrixColorFilter colorFilter = new ColorMatrixColorFilter(matrix);
-        imageView.setColorFilter(colorFilter);
-    }
-
-
-    private class BookingViewHolder extends RecyclerView.ViewHolder
+    static class BookingViewHolder extends RecyclerView.ViewHolder
     {
         ListRowBookingDataBinding dataBinding;
 
         public BookingViewHolder(ListRowBookingDataBinding dataBinding)
-        {
-            super(dataBinding.getRoot());
-
-            this.dataBinding = dataBinding;
-        }
-    }
-
-    private class SectionViewHolder extends RecyclerView.ViewHolder
-    {
-        ListRowDefaultSectionDataBinding dataBinding;
-
-        public SectionViewHolder(ListRowDefaultSectionDataBinding dataBinding)
         {
             super(dataBinding.getRoot());
 

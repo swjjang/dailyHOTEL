@@ -554,13 +554,13 @@ public class PaymentWaitActivity extends BaseActivity
                 case STAY:
                     startActivityForResult(HappyTalkCategoryDialog.newInstance(this//
                         , HappyTalkCategoryDialog.CallScreen.SCREEN_STAY_PAYMENT_WAIT, 0//
-                        , mBooking.index, mBooking.placeName), Constants.CODE_REQUEST_ACTIVITY_HAPPY_TALK);
+                        , mBooking.reservationIndex, mBooking.placeName), Constants.CODE_REQUEST_ACTIVITY_HAPPY_TALK);
                     break;
 
                 case GOURMET:
                     startActivityForResult(HappyTalkCategoryDialog.newInstance(this//
                         , HappyTalkCategoryDialog.CallScreen.SCREEN_GOURMET_PAYMENT_WAIT, 0//
-                        , mBooking.index, mBooking.placeName), Constants.CODE_REQUEST_ACTIVITY_HAPPY_TALK);
+                        , mBooking.reservationIndex, mBooking.placeName), Constants.CODE_REQUEST_ACTIVITY_HAPPY_TALK);
                     break;
             }
         } catch (Exception e)

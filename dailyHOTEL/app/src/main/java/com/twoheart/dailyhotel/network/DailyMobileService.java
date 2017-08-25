@@ -9,6 +9,7 @@ import com.daily.dailyhotel.repository.remote.model.GourmetCampaignTagsData;
 import com.daily.dailyhotel.repository.remote.model.GourmetListData;
 import com.daily.dailyhotel.repository.remote.model.GourmetPaymentData;
 import com.daily.dailyhotel.repository.remote.model.PaymentResultData;
+import com.daily.dailyhotel.repository.remote.model.ReviewData;
 import com.daily.dailyhotel.repository.remote.model.StayCampaignTagsData;
 import com.daily.dailyhotel.repository.remote.model.StayListData;
 import com.daily.dailyhotel.repository.remote.model.StayOutboundBookingDetailData;
@@ -487,6 +488,10 @@ public interface DailyMobileService
     @GET("{mobileAPI}")
     Observable<BaseDto<CommonDateTimeData>> getCommonDateTime(@Path(value = "mobileAPI", encoded = true) String mobileAPI);
 
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
+    @GET("{mobileAPI}")
+    Observable<BaseDto<ReviewData>> getReview(@Path(value = "mobileAPI", encoded = true) String mobileAPI);
+
     /////////////////////////////////////////////////////////////////////////////////////////////////
     // ProfileRemoteImpl
     /////////////////////////////////////////////////////////////////////////////////////////////////
@@ -659,10 +664,9 @@ public interface DailyMobileService
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET("{mobileAPI}")
-    Observable<BaseDto<StayPaymentData>> getStayPayment(@Path(value = "mobileAPI", encoded = true) String mobileAPI
-                                                        , @Query("room_idx") int roomIndex//
-                                                        , @Query("checkin_date") String date//
-                                                        , @Query("nights") int nights);
+    Observable<BaseDto<StayPaymentData>> getStayPayment(@Path(value = "mobileAPI", encoded = true) String mobileAPI, @Query("room_idx") int roomIndex//
+        , @Query("checkin_date") String date//
+        , @Query("nights") int nights);
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET("{mobileAPI}")

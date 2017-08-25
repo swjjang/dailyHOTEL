@@ -14,25 +14,18 @@ import com.daily.base.util.ExLog;
 import com.daily.base.util.FontManager;
 import com.daily.base.util.ScreenUtils;
 import com.daily.base.widget.DailyViewPager;
-import com.daily.dailyhotel.repository.local.model.RecentlyRealmObject;
-import com.daily.dailyhotel.repository.local.ConfigLocalImpl;
 import com.daily.dailyhotel.repository.local.model.RecentlyPlace;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
 import com.daily.dailyhotel.util.RecentlyPlaceUtil;
+import com.daily.dailyhotel.view.DailyToolbarView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
-import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
-
-import io.realm.RealmResults;
-import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.disposables.Disposable;
-import retrofit2.HttpException;
 
 /**
  * Created by android_sam on 2016. 10. 10..
@@ -51,7 +44,6 @@ public class RecentPlacesTabActivity extends BaseActivity
 
     DailyViewPager mViewPager;
     private TabLayout mTabLayout;
-    private View mEmptyView;
 
     private SourceType mSourceType;
     private PlaceType mPlaceType;
@@ -202,7 +194,6 @@ public class RecentPlacesTabActivity extends BaseActivity
         initToolbar();
         initTabLayout();
 
-        mEmptyView = findViewById(R.id.emptyLayout);
         mViewPager = (DailyViewPager) findViewById(R.id.viewPager);
 
         mFragmentList = new ArrayList<>();
@@ -222,9 +213,9 @@ public class RecentPlacesTabActivity extends BaseActivity
 
     private void initToolbar()
     {
-        View toolbar = findViewById(R.id.toolbar);
-        DailyToolbarLayout dailyToolbarLayout = new DailyToolbarLayout(this, toolbar);
-        dailyToolbarLayout.initToolbar(getString(R.string.frag_recent_places), new View.OnClickListener()
+        DailyToolbarView dailyToolbarView = (DailyToolbarView) findViewById(R.id.toolbarView);
+        dailyToolbarView.setTitleText(R.string.frag_recent_places);
+        dailyToolbarView.setOnBackClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)

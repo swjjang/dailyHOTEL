@@ -55,7 +55,7 @@ public class DailyPreference
     //    private static final String KEY_IS_VIEW_RECENT_PLACE_TOOLTIP = "28"; // 삭제! - 30 으로 대체 됨
     private static final String KEY_INFORMATION_CS_OPERATION_TIME = "29"; // 운영시간 H,H (앞은 시작 뒤는 끝나는 시간)
     //    private static final String KEY_IS_VIEW_WISHLIST_TOOLTIP = "30";
-//    private static final String KEY_IS_VIEW_SEARCH_TOOLTIP = "31";
+    //    private static final String KEY_IS_VIEW_SEARCH_TOOLTIP = "31";
 
     private static final String KEY_IS_REQUEST_REVIEW = "32";
 
@@ -199,7 +199,7 @@ public class DailyPreference
     {
         // 해택 알림 내용은 유지 하도록 한다. 단 로그인시에는 서버에서 다시 가져와서 세팅한다.
         boolean isShowBenefitAlarm = isShowBenefitAlarm();
-//        boolean isShowSearchTooltip = isViewSearchTooltip();
+        //        boolean isShowSearchTooltip = isViewSearchTooltip();
         boolean isShowTrueVRTooltip = isWishTooltip();
         int supportTrueVR = getTrueVRSupport();
 
@@ -222,7 +222,7 @@ public class DailyPreference
         }
 
         setShowBenefitAlarm(isShowBenefitAlarm);
-//        setViewSearchTooltip(isShowSearchTooltip);
+        //        setViewSearchTooltip(isShowSearchTooltip);
         setWishTooltip(isShowTrueVRTooltip);
         setTrueVRSupport(supportTrueVR);
         setAllRecentPlaces(allRecentPlaces);
@@ -672,15 +672,15 @@ public class DailyPreference
         return getValue(mPreferences, KEY_FIRST_APP_VERSION, null);
     }
 
-//    public void setViewSearchTooltip(boolean value)
-//    {
-//        setValue(mEditor, KEY_IS_VIEW_SEARCH_TOOLTIP, value);
-//    }
-//
-//    public boolean isViewSearchTooltip()
-//    {
-//        return getValue(mPreferences, KEY_IS_VIEW_SEARCH_TOOLTIP, false);
-//    }
+    //    public void setViewSearchTooltip(boolean value)
+    //    {
+    //        setValue(mEditor, KEY_IS_VIEW_SEARCH_TOOLTIP, value);
+    //    }
+    //
+    //    public boolean isViewSearchTooltip()
+    //    {
+    //        return getValue(mPreferences, KEY_IS_VIEW_SEARCH_TOOLTIP, false);
+    //    }
 
     public void setWishTooltip(boolean value)
     {

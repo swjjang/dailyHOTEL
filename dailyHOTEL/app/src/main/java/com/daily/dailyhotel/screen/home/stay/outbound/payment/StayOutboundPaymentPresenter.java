@@ -878,7 +878,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
                         , mBonusSelected, mUserSimpleInformation.bonus, mGuest, mStayOutboundPayment.totalPrice);
 
                     startActivityForResult(PaymentWebActivity.newInstance(getActivity()//
-                        , getWebPaymentUrl(mStayIndex, "card"), jsonObject.toString(), AnalyticsManager.Screen.DAILYHOTEL_PAYMENT_PROCESS)//
+                        , getWebPaymentUrl(mStayIndex, "card"), jsonObject.toString(), AnalyticsManager.Screen.DAILYHOTEL_PAYMENT_PROCESS_OUTBOUND)//
                         , StayOutboundPaymentActivity.REQUEST_CODE_PAYMENT_WEB_CARD);
 
                     mAnalytics.onEventStartPayment(getActivity(), DailyBookingPaymentTypeView.PaymentType.CARD);
@@ -894,7 +894,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
                         , mBonusSelected, mUserSimpleInformation.bonus, mGuest, mStayOutboundPayment.totalPrice);
 
                     startActivityForResult(PaymentWebActivity.newInstance(getActivity()//
-                        , getWebPaymentUrl(mStayIndex, "mobile"), jsonObject.toString(), AnalyticsManager.Screen.DAILYHOTEL_PAYMENT_PROCESS)//
+                        , getWebPaymentUrl(mStayIndex, "mobile"), jsonObject.toString(), AnalyticsManager.Screen.DAILYHOTEL_PAYMENT_PROCESS_OUTBOUND)//
                         , StayOutboundPaymentActivity.REQUEST_CODE_PAYMENT_WEB_PHONE);
 
                     mAnalytics.onEventStartPayment(getActivity(), DailyBookingPaymentTypeView.PaymentType.PHONE);

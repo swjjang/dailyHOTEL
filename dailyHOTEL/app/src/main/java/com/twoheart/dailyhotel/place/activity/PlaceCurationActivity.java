@@ -92,7 +92,7 @@ public abstract class PlaceCurationActivity extends BaseActivity implements View
 
     private void initToolbar()
     {
-        DailyToolbarView dailyToolbarView = (DailyToolbarView)findViewById(R.id.toolbarView);
+        DailyToolbarView dailyToolbarView = (DailyToolbarView) findViewById(R.id.toolbarView);
         dailyToolbarView.setTitleText(R.string.activity_curation_title);
         dailyToolbarView.setOnBackClickListener(new View.OnClickListener()
         {

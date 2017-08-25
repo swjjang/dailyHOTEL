@@ -5,7 +5,6 @@ import android.content.Context;
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 import com.daily.base.util.ScreenUtils;
-import com.daily.dailyhotel.entity.CampaignTag;
 import com.daily.dailyhotel.entity.GourmetCampaignTags;
 import com.twoheart.dailyhotel.model.Gourmet;
 import com.twoheart.dailyhotel.network.model.Sticker;

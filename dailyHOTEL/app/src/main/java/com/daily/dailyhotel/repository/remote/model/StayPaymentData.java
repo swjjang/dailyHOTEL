@@ -2,11 +2,9 @@ package com.daily.dailyhotel.repository.remote.model;
 
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
-import com.daily.dailyhotel.entity.StayOutboundPayment;
 import com.daily.dailyhotel.entity.StayPayment;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 
-import java.util.List;
 import java.util.TimeZone;
 
 @JsonObject

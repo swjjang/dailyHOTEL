@@ -8,11 +8,11 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.daily.base.util.ExLog;
+import com.daily.dailyhotel.view.DailyToolbarView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
-import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
 public class SnsActivity extends BaseActivity implements View.OnClickListener
 {
@@ -37,9 +37,9 @@ public class SnsActivity extends BaseActivity implements View.OnClickListener
 
     private void initToolbar()
     {
-        View toolbar = findViewById(R.id.toolbar);
-        DailyToolbarLayout dailyToolbarLayout = new DailyToolbarLayout(this, toolbar);
-        dailyToolbarLayout.initToolbar(getString(R.string.label_dailyh_sns), new View.OnClickListener()
+        DailyToolbarView dailyToolbarView = (DailyToolbarView) findViewById(R.id.toolbarView);
+        dailyToolbarView.setTitleText(R.string.label_dailyh_sns);
+        dailyToolbarView.setOnBackClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
@@ -162,8 +162,7 @@ public class SnsActivity extends BaseActivity implements View.OnClickListener
 
         try
         {
-            intent.setData(Uri.parse("naversearchapp://inappbrowser?url=http%3A%2F%2Fpost.naver" +
-                ".com%2Fdailyhotel&target=new&version=6"));
+            intent.setData(Uri.parse("naversearchapp://inappbrowser?url=http%3A%2F%2Fpost.naver" + ".com%2Fdailyhotel&target=new&version=6"));
             startActivity(intent);
         } catch (Exception e)
         {

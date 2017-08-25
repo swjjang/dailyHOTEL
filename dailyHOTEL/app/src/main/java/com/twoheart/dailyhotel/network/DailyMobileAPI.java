@@ -12,6 +12,7 @@ import com.daily.dailyhotel.repository.remote.model.GourmetCampaignTagsData;
 import com.daily.dailyhotel.repository.remote.model.GourmetListData;
 import com.daily.dailyhotel.repository.remote.model.GourmetPaymentData;
 import com.daily.dailyhotel.repository.remote.model.PaymentResultData;
+import com.daily.dailyhotel.repository.remote.model.ReviewData;
 import com.daily.dailyhotel.repository.remote.model.StayCampaignTagsData;
 import com.daily.dailyhotel.repository.remote.model.StayListData;
 import com.daily.dailyhotel.repository.remote.model.StayOutboundBookingDetailData;
@@ -1202,6 +1203,18 @@ public class DailyMobileAPI
             .subscribeOn(Schedulers.io());
     }
 
+    public Observable<BaseDto<ReviewData>> getReview(String placeType, int reservationIndex)
+    {
+        final String API = Constants.UNENCRYPTED_URL ? "api/v4/review/{type}/{reserveIdx}/question"//
+            : "NjEkMTI2JDE2JDkyJDgzJDEyNyQ2MCQxMTQkNzMkOTkkMzEkMTkkMTEzJDY2JDI2JDgzJA==$OThEOEU5OTFDOUExRNTJA0NEYyJNkE4MkZMzQkRFRTcwNEQ3MEUyNTM4MjhFRkFOCNAXkYwMzM3OUGYxRDcGxQURDQSkZEMTA4OUXM4QQjRGOUUyMjc5MRDREMVENDMjQ1NEFFMTJCCRMkQx$";
+
+        Map<String, String> urlParams = new HashMap<>();
+        urlParams.put("{type}", placeType);
+        urlParams.put("{reserveIdx}", Integer.toString(reservationIndex));
+
+        return mDailyMobileService.getReview(Crypto.getUrlDecoderEx(API, urlParams))//
+            .subscribeOn(Schedulers.io());
+    }
 
     /////////////////////////////////////////////////////////////////////////////////////////////////
     // ProfileRemoteImpl

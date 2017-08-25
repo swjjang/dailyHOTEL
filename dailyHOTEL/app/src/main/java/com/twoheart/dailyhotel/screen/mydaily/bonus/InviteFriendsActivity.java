@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.widget.DailyToast;
+import com.daily.dailyhotel.view.DailyToolbarView;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
@@ -20,7 +21,6 @@ import com.twoheart.dailyhotel.util.KakaoLinkManager;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Action;
-import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
 public class InviteFriendsActivity extends BaseActivity implements View.OnClickListener
 {
@@ -82,10 +82,9 @@ public class InviteFriendsActivity extends BaseActivity implements View.OnClickL
 
     private void initToolbar()
     {
-        View toolbar = findViewById(R.id.toolbar);
-
-        DailyToolbarLayout dailyToolbarLayout = new DailyToolbarLayout(this, toolbar);
-        dailyToolbarLayout.initToolbar(getString(R.string.actionbar_title_invite_friends), new View.OnClickListener()
+        DailyToolbarView dailyToolbarView = (DailyToolbarView) findViewById(R.id.toolbarView);
+        dailyToolbarView.setTitleText(R.string.actionbar_title_invite_friends);
+        dailyToolbarView.setOnBackClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)

@@ -29,6 +29,11 @@ public class Review implements Parcelable
     private ArrayList<ReviewPickQuestion> mReviewPickQuestionList;
     private ArrayList<ReviewScoreQuestion> mReviewScoreQuestionList;
 
+    public Review()
+    {
+
+    }
+
     public Review(Parcel in)
     {
         readFromParcel(in);
@@ -91,14 +96,29 @@ public class Review implements Parcelable
         }
     }
 
+    public void setReviewItem(ReviewItem reviewItem)
+    {
+        mReviewItem = reviewItem;
+    }
+
     public ReviewItem getReviewItem()
     {
         return mReviewItem;
     }
 
+    public void setReviewPickQuestionList(ArrayList<ReviewPickQuestion> reviewPickQuestionList)
+    {
+        mReviewPickQuestionList = reviewPickQuestionList;
+    }
+
     public ArrayList<ReviewPickQuestion> getReviewPickQuestionList()
     {
         return mReviewPickQuestionList;
+    }
+
+    public void setReviewScoreQuestionList(ArrayList<ReviewScoreQuestion> reviewScoreQuestionList)
+    {
+        mReviewScoreQuestionList = reviewScoreQuestionList;
     }
 
     public ArrayList<ReviewScoreQuestion> getReviewScoreQuestionList()

@@ -15,6 +15,11 @@ public class ReviewAnswerValue implements Parcelable
     public String code;
     public String description;
 
+    public ReviewAnswerValue()
+    {
+
+    }
+
     public ReviewAnswerValue(Parcel in)
     {
         readFromParcel(in);

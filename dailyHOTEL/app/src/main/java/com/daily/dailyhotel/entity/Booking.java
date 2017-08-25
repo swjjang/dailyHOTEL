@@ -9,8 +9,9 @@ public class Booking
     public static final int BOOKING_STATE_WAITING_REFUND = 1;
     public static final int BOOKING_STATE_BEFORE_USE = 2;
     public static final int BOOKING_STATE_AFTER_USE = 3;
+    public static final int BOOKING_STATE_DEPOSIT_WAITING = 4;
 
-    public int index;
+    public int reservationIndex;
     public String imageUrl;
     public int statePayment;
     public String placeName;
@@ -20,10 +21,11 @@ public class Booking
     public boolean readyForRefund;
     public String comment;
     public String tid;
+    public boolean hasReview;
+    public int placeIndex;
 
     // 내부 사용 변수
     public int remainingDays;
-    public boolean isUsed;
     public int bookingState;
 
     public enum PlaceType

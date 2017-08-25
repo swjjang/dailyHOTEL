@@ -57,7 +57,7 @@ public class StayOutboundFilterView extends BaseDialogView<StayOutboundFilterVie
     @Override
     public void setToolbarTitle(String title)
     {
-        if(getViewDataBinding() == null)
+        if (getViewDataBinding() == null)
         {
             return;
         }

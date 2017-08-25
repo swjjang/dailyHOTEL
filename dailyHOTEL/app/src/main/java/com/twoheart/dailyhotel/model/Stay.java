@@ -64,7 +64,7 @@ public class Stay extends Place
         dest.writeInt(roomIndex);
         dest.writeString(regionName);
         dest.writeString(sday);
-        dest.writeInt(isOverseas == true ? 1: 0);
+        dest.writeInt(isOverseas == true ? 1 : 0);
     }
 
     protected void readFromParcel(Parcel in)

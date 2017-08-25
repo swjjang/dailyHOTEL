@@ -12,7 +12,6 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ActivityProfileDataBinding;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
-import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
 public class ProfileView extends BaseDialogView<ProfileView.OnEventListener, ActivityProfileDataBinding> implements ProfileViewInterface
 {
@@ -86,9 +85,8 @@ public class ProfileView extends BaseDialogView<ProfileView.OnEventListener, Act
             return;
         }
 
-        DailyToolbarLayout dailyToolbarLayout = new DailyToolbarLayout(getContext(), viewDataBinding.toolbar);
-        dailyToolbarLayout.initToolbar(getString(R.string.actionbar_title_profile_activity)//
-            , v -> getEventListener().onBackClick());
+        viewDataBinding.toolbarView.setTitleText(R.string.actionbar_title_profile_activity);
+        viewDataBinding.toolbarView.setOnBackClickListener(v -> getEventListener().onBackClick());
     }
 
     @Override

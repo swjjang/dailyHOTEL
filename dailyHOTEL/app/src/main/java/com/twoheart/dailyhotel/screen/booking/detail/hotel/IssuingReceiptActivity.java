@@ -22,6 +22,7 @@ import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
 import com.daily.base.widget.DailyEditText;
 import com.daily.base.widget.DailyToast;
+import com.daily.dailyhotel.view.DailyToolbarView;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
@@ -30,7 +31,6 @@ import com.twoheart.dailyhotel.util.DailyRemoteConfigPreference;
 import com.twoheart.dailyhotel.util.DailyUserPreference;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
-import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
 import org.json.JSONObject;
 
@@ -42,8 +42,8 @@ public class IssuingReceiptActivity extends BaseActivity
     private int mBookingIdx;
     String mReservationIndex;
     boolean mIsFullscreen;
-    private DailyToolbarLayout mDailyToolbarLayout;
     private View mBottomLayout;
+    private DailyToolbarView mDailyToolbarView;
 
     public static Intent newInstance(Context context, int bookingIndex)
     {
@@ -84,9 +84,9 @@ public class IssuingReceiptActivity extends BaseActivity
 
     private void initToolbar()
     {
-        View toolbar = findViewById(R.id.toolbar);
-        mDailyToolbarLayout = new DailyToolbarLayout(this, toolbar);
-        mDailyToolbarLayout.initToolbar(getString(R.string.frag_issuing_receipt), new View.OnClickListener()
+        mDailyToolbarView = (DailyToolbarView) findViewById(R.id.toolbarView);
+        mDailyToolbarView.setTitleText(R.string.frag_issuing_receipt);
+        mDailyToolbarView.setOnBackClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
@@ -451,7 +451,7 @@ public class IssuingReceiptActivity extends BaseActivity
     {
         if (bUseFullscreen)
         {
-            mDailyToolbarLayout.setToolbarVisibility(false, false);
+            mDailyToolbarView.setVisibility(View.GONE);
 
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
             getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
@@ -459,7 +459,7 @@ public class IssuingReceiptActivity extends BaseActivity
             mBottomLayout.setVisibility(View.GONE);
         } else
         {
-            mDailyToolbarLayout.setToolbarVisibility(true, false);
+            mDailyToolbarView.setVisibility(View.VISIBLE);
 
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
             getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);

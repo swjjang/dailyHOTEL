@@ -964,9 +964,6 @@ public class MainActivity extends BaseActivity implements Constants, BaseMenuNav
     }
 
     /**
-     *
-     *
-     *
      * @param changeMenu
      * @param changeScreen ActivityResult 결과로 사용했는데 따로 정의할지 애매함..
      */

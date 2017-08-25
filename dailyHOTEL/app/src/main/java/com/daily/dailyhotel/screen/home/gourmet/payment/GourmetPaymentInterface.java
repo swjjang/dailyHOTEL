@@ -1,7 +1,6 @@
 package com.daily.dailyhotel.screen.home.gourmet.payment;
 
 import android.content.DialogInterface;
-import android.text.SpannableString;
 import android.view.View;
 
 import com.daily.base.BaseDialogViewInterface;
