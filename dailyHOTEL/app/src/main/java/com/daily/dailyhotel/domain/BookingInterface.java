@@ -20,4 +20,6 @@ public interface BookingInterface
 
     // 예약 상세
     Observable<StayOutboundBookingDetail> getStayOutboundBookingDetail(int reservationIndex);
+
+
 }

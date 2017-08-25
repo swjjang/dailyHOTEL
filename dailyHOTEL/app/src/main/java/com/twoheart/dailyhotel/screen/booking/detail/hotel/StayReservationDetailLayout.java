@@ -31,7 +31,7 @@ import java.util.Date;
 
 public class StayReservationDetailLayout extends PlaceReservationDetailLayout
 {
-    private View mRefundPolicyLayout, mButtonBottomMarginView;
+    private View mRefundPolicyLayout;
     private View mDefaultRefundPolicyLayout, mWaitRefundPolicyLayout;
     private View mRecommendGourmetButtonView;
     private View mRecommendGourmetItemLayout;
@@ -336,9 +336,6 @@ public class StayReservationDetailLayout extends PlaceReservationDetailLayout
 
         // 영수증 발급
         View confirmView = view.findViewById(R.id.buttonLayout);
-        mButtonBottomMarginView = confirmView.findViewById(R.id.buttonBottomMarginView);
-
-
         confirmView.setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -462,11 +459,9 @@ public class StayReservationDetailLayout extends PlaceReservationDetailLayout
         if (visible == true)
         {
             mRefundPolicyLayout.setVisibility(View.VISIBLE);
-            mButtonBottomMarginView.setVisibility(View.GONE);
         } else
         {
             mRefundPolicyLayout.setVisibility(View.GONE);
-            mButtonBottomMarginView.setVisibility(View.VISIBLE);
         }
     }
 

@@ -703,6 +703,42 @@ public class GourmetReservationDetailActivity extends PlaceReservationDetailActi
         {
             DailyToast.showToast(GourmetReservationDetailActivity.this, R.string.message_loading_map, Toast.LENGTH_SHORT);
         }
+
+        @Override
+        public void onDeleteReservationClick()
+        {
+            if (isFinishing() == true || lockUiComponentAndIsLockUiComponent() == true)
+            {
+                return;
+            }
+
+            showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.dialog_msg_delete_booking)//
+                , getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no)//
+                , new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        lockUI();
+
+                        mNetworkController.requestHiddenReservation(mPlaceBookingDetail.reservationIndex);
+                    }
+                }, new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        unLockUI();
+                    }
+                }, new DialogInterface.OnCancelListener()
+                {
+                    @Override
+                    public void onCancel(DialogInterface dialog)
+                    {
+                        unLockUI();
+                    }
+                }, null, true);
+        }
     };
 
     private GourmetReservationDetailNetworkController.OnNetworkControllerListener //
@@ -759,6 +795,8 @@ public class GourmetReservationDetailActivity extends PlaceReservationDetailActi
                             , AnalyticsManager.Screen.BOOKINGDETAIL_MYBOOKINGINFO, null, params);
                         break;
                 }
+
+                mPlaceReservationDetailLayout.setDeleteReservationVisible(mBookingState == Booking.BOOKING_STATE_AFTER_USE);
             } catch (Exception e)
             {
                 Crashlytics.logException(e);
@@ -791,6 +829,30 @@ public class GourmetReservationDetailActivity extends PlaceReservationDetailActi
         {
             onError(throwable);
             finish();
+        }
+
+        @Override
+        public void onHiddenReservation(boolean success, String message)
+        {
+            unLockUI();
+
+            if (success == true)
+            {
+                showSimpleDialog(getString(R.string.dialog_notice2), message, getString(R.string.dialog_btn_text_confirm), new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        finish();
+                    }
+                });
+
+                AnalyticsManager.getInstance(GourmetReservationDetailActivity.this).recordEvent(AnalyticsManager.Category.BOOKING_STATUS//
+                    , AnalyticsManager.Action.BOOKING_HISTORY_DELETE, AnalyticsManager.ValueType.EMPTY, null);
+            } else
+            {
+                showSimpleDialog(getString(R.string.dialog_notice2), message, getString(R.string.dialog_btn_text_confirm), null);
+            }
         }
 
         @Override

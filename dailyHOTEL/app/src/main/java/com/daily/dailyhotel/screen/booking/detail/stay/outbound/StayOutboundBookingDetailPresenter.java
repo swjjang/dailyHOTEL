@@ -131,6 +131,8 @@ public class StayOutboundBookingDetailPresenter extends BaseExceptionPresenter<S
     {
         getViewInterface().setToolbarTitle(getString(R.string.actionbar_title_booking_list_frag));
         getViewInterface().setBookingDetailToolbar();
+
+        getViewInterface().setDeleteBookingVisible(mBookingState == Booking.BOOKING_STATE_AFTER_USE);
     }
 
     @Override
@@ -663,6 +665,83 @@ public class StayOutboundBookingDetailPresenter extends BaseExceptionPresenter<S
         {
             ExLog.d(e.toString());
         }
+    }
+
+    @Override
+    public void onHiddenReservationClick()
+    {
+        if (mStayOutboundBookingDetail == null || lock() == true)
+        {
+            return;
+        }
+
+        getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.dialog_msg_delete_booking)//
+            , getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no), new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    screenLock(true);
+
+                    addCompositeDisposable(mBookingRemoteImpl.getStayOutboundHideBooking(mBookingIndex).subscribe(new Consumer<Boolean>()
+                    {
+                        @Override
+                        public void accept(@NonNull Boolean result) throws Exception
+                        {
+                            unLockAll();
+
+                            if (result == true)
+                            {
+                                getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2)//
+                                    , getString(R.string.message_booking_delete_booking)//
+                                    , getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
+                                    {
+                                        @Override
+                                        public void onDismiss(DialogInterface dialog)
+                                        {
+                                            finish();
+                                        }
+                                    });
+                            } else
+                            {
+                                getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2)//
+                                    , getString(R.string.message_booking_failed_delete_booking)//
+                                    , getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
+                                    {
+                                        @Override
+                                        public void onDismiss(DialogInterface dialog)
+                                        {
+                                        }
+                                    });
+                            }
+                        }
+                    }, new Consumer<Throwable>()
+                    {
+                        @Override
+                        public void accept(@NonNull Throwable throwable) throws Exception
+                        {
+                            unLockAll();
+
+                            getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2)//
+                                , getString(R.string.message_booking_failed_delete_booking)//
+                                , getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
+                                {
+                                    @Override
+                                    public void onDismiss(DialogInterface dialog)
+                                    {
+                                    }
+                                });
+                        }
+                    }));
+                }
+            }, null, null, new DialogInterface.OnDismissListener()
+            {
+                @Override
+                public void onDismiss(DialogInterface dialog)
+                {
+                    unLock();
+                }
+            }, true);
     }
 
     private void setCommonDateTime(@NonNull CommonDateTime commonDateTime)

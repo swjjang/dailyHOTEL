@@ -283,10 +283,17 @@
                     android:visibility="visible"/>
             </LinearLayout>
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="24dp"
-                android:background="@color/default_background"/>
+            <com.daily.base.widget.DailyTextView
+                android:id="@+id/deleteReservationTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:paddingBottom="37dp"
+                android:layout_marginTop="37dp"
+                android:gravity="center_horizontal"
+                android:text="@string/label_booking_detail_delete_reservation"
+                android:textColor="@color/default_text_c929292"
+                android:textSize="13dp"/>
         </LinearLayout>
     </com.daily.base.widget.DailyScrollView>
 </android.support.constraint.ConstraintLayout>

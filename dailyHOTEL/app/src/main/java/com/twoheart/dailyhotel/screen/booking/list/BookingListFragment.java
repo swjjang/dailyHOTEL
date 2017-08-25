@@ -375,24 +375,13 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
             }
 
             case CODE_REQUEST_ACTIVITY_BOOKING_DETAIL:
-            {
-                if (resultCode == CODE_RESULT_ACTIVITY_REFRESH)
-                {
-                    mDontReload = false;
-                } else
-                {
-                    mDontReload = true;
-                }
-                break;
-            }
-
-            case CODE_REQUEST_ACTIVITY_SATISFACTION_HOTEL:
-            case CODE_REQUEST_ACTIVITY_SATISFACTION_GOURMET:
                 mDontReload = false;
                 break;
 
+            case CODE_REQUEST_ACTIVITY_SATISFACTION_HOTEL:
+            case CODE_REQUEST_ACTIVITY_SATISFACTION_GOURMET:
             default:
-                mDontReload = true;
+                mDontReload = false;
                 break;
         }
     }
@@ -1153,159 +1142,4 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
 
         return reviewParcelable;
     }
-
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // Listener
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    retrofit2.Callback mReservationHiddenCallback = new retrofit2.Callback<JSONObject>()
-    {
-        @Override
-        public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
-        {
-            BaseActivity baseActivity = (BaseActivity) getActivity();
-
-            if (baseActivity == null || baseActivity.isFinishing() == true)
-            {
-                return;
-            }
-
-            if (response != null && response.isSuccessful() && response.body() != null)
-            {
-                try
-                {
-                    JSONObject responseJSONObject = response.body();
-
-                    // 해당 화면은 메시지를 넣지 않는다.
-                    int msgCode = responseJSONObject.getInt("msg_code");
-
-                    JSONObject datJSONObject = responseJSONObject.getJSONObject("data");
-                    String message;
-                    boolean result = false;
-
-                    if (datJSONObject != null)
-                    {
-                        if (datJSONObject.has("isSuccess") == true)
-                        {
-                            result = datJSONObject.getInt("isSuccess") == 1;
-                        } else if (datJSONObject.has("is_success") == true)
-                        {
-                            result = datJSONObject.getBoolean("is_success");
-                        }
-                    }
-
-                    // 성공 실패 여부는 팝업에서 리스너를 다르게 등록한다.
-                    View.OnClickListener onClickListener;
-
-                    if (result == true)
-                    {
-                        onClickListener = new View.OnClickListener()
-                        {
-                            @Override
-                            public void onClick(View view)
-                            {
-                                BaseActivity baseActivity = (BaseActivity) getActivity();
-
-                                if (baseActivity == null)
-                                {
-                                    return;
-                                }
-
-                                onRefresh();
-                            }
-                        };
-
-                        AnalyticsManager.getInstance(baseActivity).recordEvent(AnalyticsManager.Category.BOOKING_STATUS//
-                            , AnalyticsManager.Action.BOOKING_HISTORY_DELETE, AnalyticsManager.ValueType.EMPTY, null);
-                    } else
-                    {
-                        onClickListener = new View.OnClickListener()
-                        {
-                            @Override
-                            public void onClick(View view)
-                            {
-                                BaseActivity baseActivity = (BaseActivity) getActivity();
-
-                                if (baseActivity == null)
-                                {
-                                    return;
-                                }
-
-                                onRefresh();
-                            }
-                        };
-                    }
-
-                    switch (msgCode)
-                    {
-                        case 0:
-                        {
-                            message = responseJSONObject.getString("msg");
-                            DailyToast.showToast(baseActivity, message, Toast.LENGTH_SHORT);
-
-                            onRefresh();
-                            break;
-                        }
-
-                        // Toast
-                        case 100:
-                        {
-                            message = responseJSONObject.getString("msg");
-
-                            if (DailyTextUtils.isTextEmpty(message) == false)
-                            {
-                                DailyToast.showToast(baseActivity, message, Toast.LENGTH_SHORT);
-                            }
-
-                            onRefresh();
-                            break;
-                        }
-
-                        // Popup
-                        case 200:
-                        {
-                            message = responseJSONObject.getString("msg");
-
-                            if (DailyTextUtils.isTextEmpty(message) == false)
-                            {
-                                unLockUI();
-
-                                if (baseActivity.isFinishing() == true)
-                                {
-                                    return;
-                                }
-
-                                baseActivity.showSimpleDialog(getString(R.string.dialog_notice2), message, getString(R.string.dialog_btn_text_confirm), onClickListener);
-                            } else
-                            {
-                                onRefresh();
-                            }
-                            break;
-                        }
-                    }
-                } catch (Exception e)
-                {
-                    onError(e);
-
-                    onRefresh();
-                }
-            } else
-            {
-                baseActivity.onErrorResponse(call, response);
-            }
-        }
-
-        @Override
-        public void onFailure(Call<JSONObject> call, Throwable t)
-        {
-            BaseActivity baseActivity = (BaseActivity) getActivity();
-
-            if (baseActivity == null || baseActivity.isFinishing() == true)
-            {
-                return;
-            }
-
-            baseActivity.onError(t);
-        }
-    };
 }

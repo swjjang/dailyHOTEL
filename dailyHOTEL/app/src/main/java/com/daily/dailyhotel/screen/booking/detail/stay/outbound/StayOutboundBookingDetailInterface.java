@@ -38,4 +38,6 @@ public interface StayOutboundBookingDetailInterface extends BaseDialogViewInterf
     void setBookingDetailToolbar();
 
     void setBookingDetailMapToolbar();
+
+    void setDeleteBookingVisible(boolean visible);
 }

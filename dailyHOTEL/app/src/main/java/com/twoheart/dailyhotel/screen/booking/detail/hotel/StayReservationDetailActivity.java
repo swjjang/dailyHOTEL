@@ -1218,6 +1218,42 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
         }
 
         @Override
+        public void onDeleteReservationClick()
+        {
+            if (isFinishing() == true || lockUiComponentAndIsLockUiComponent() == true)
+            {
+                return;
+            }
+
+            showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.dialog_msg_delete_booking)//
+                , getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no)//
+                , new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        lockUI();
+
+                        mNetworkController.requestHiddenReservation(mPlaceBookingDetail.reservationIndex);
+                    }
+                }, new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        unLockUI();
+                    }
+                }, new DialogInterface.OnCancelListener()
+                {
+                    @Override
+                    public void onCancel(DialogInterface dialog)
+                    {
+                        unLockUI();
+                    }
+                }, null, true);
+        }
+
+        @Override
         public void onRecommendListItemViewAllClick()
         {
             if (isFinishing() == true || lockUiComponentAndIsLockUiComponent() == true)
@@ -1448,6 +1484,8 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
                     }
                 }
 
+                mPlaceReservationDetailLayout.setDeleteReservationVisible(mBookingState == Booking.BOOKING_STATE_AFTER_USE);
+
                 long currentDateTime = DailyCalendar.convertStringToDate(mTodayDateTime.currentDateTime).getTime();
                 long checkInDateTime = DailyCalendar.convertStringToDate(stayBookingDetail.checkInDate).getTime();
 
@@ -1544,6 +1582,30 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
         {
             onError(throwable);
             finish();
+        }
+
+        @Override
+        public void onHiddenReservation(boolean success, String message)
+        {
+            unLockUI();
+
+            if (success == true)
+            {
+                showSimpleDialog(getString(R.string.dialog_notice2), message, getString(R.string.dialog_btn_text_confirm), new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        finish();
+                    }
+                });
+
+                AnalyticsManager.getInstance(StayReservationDetailActivity.this).recordEvent(AnalyticsManager.Category.BOOKING_STATUS//
+                    , AnalyticsManager.Action.BOOKING_HISTORY_DELETE, AnalyticsManager.ValueType.EMPTY, null);
+            } else
+            {
+                showSimpleDialog(getString(R.string.dialog_notice2), message, getString(R.string.dialog_btn_text_confirm), null);
+            }
         }
 
         @Override
