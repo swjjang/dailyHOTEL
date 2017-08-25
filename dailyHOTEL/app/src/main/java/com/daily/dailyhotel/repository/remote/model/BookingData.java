@@ -40,7 +40,7 @@ public class BookingData
     @JsonField(name = "reviewStatusType")
     public String reviewStatusType;
 
-    @JsonField(name = "itemIdex")
+    @JsonField(name = "itemIdx")
     public int placeIndex;
 
     @JsonField(name = "images")
