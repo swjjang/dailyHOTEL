@@ -31,6 +31,7 @@ import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.entity.Booking;
 import com.daily.dailyhotel.entity.CarouselListItem;
 import com.daily.dailyhotel.repository.local.model.AnalyticsParam;
+import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
 import com.daily.dailyhotel.repository.remote.GourmetListRemoteImpl;
 import com.daily.dailyhotel.screen.booking.detail.map.GourmetBookingDetailMapActivity;
 import com.facebook.drawee.view.SimpleDraweeView;
@@ -475,20 +476,56 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
                     shareDialog.dismiss();
                 }
 
+                lockUI();
+
                 try
                 {
                     StayBookingDetail stayBookingDetail = (StayBookingDetail) mPlaceBookingDetail;
 
-                    String message = getString(R.string.message_booking_stay_share_sms, //
+                    String[] checkInDates = stayBookingDetail.checkInDate.split("T");
+                    String[] checkOutDates = stayBookingDetail.checkOutDate.split("T");
+
+                    Date checkInDate = DailyCalendar.convertDate(checkInDates[0] + "T00:00:00+09:00", DailyCalendar.ISO_8601_FORMAT);
+                    Date checkOutDate = DailyCalendar.convertDate(checkOutDates[0] + "T00:00:00+09:00", DailyCalendar.ISO_8601_FORMAT);
+
+                    int nights = (int) ((DailyCalendar.clearTField(checkOutDate.getTime()) - DailyCalendar.clearTField(checkInDate.getTime())) / DailyCalendar.DAY_MILLISECOND);
+
+                    String longUrl = String.format(Locale.KOREA, "https://mobile.dailyhotel.co.kr/stay/%d?dateCheckIn=%s&stays=%d"//
+                        , mPlaceBookingDetail.placeIndex, DailyCalendar.convertDateFormatString(stayBookingDetail.checkInDate, DailyCalendar.ISO_8601_FORMAT, "yyyy-MM-dd")//
+                        , nights);
+
+                    final String message = getString(R.string.message_booking_stay_share_sms, //
                         stayBookingDetail.userName, stayBookingDetail.placeName, stayBookingDetail.guestName,//
                         DailyTextUtils.getPriceFormat(StayReservationDetailActivity.this, stayBookingDetail.paymentPrice, false), //
                         stayBookingDetail.roomName, DailyCalendar.convertDateFormatString(stayBookingDetail.checkInDate, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd(EEE) HH시"),//
                         DailyCalendar.convertDateFormatString(stayBookingDetail.checkOutDate, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd(EEE) HH시"), //
                         stayBookingDetail.address);
 
-                    Util.sendSms(StayReservationDetailActivity.this, message);
+                    CommonRemoteImpl commonRemote = new CommonRemoteImpl(StayReservationDetailActivity.this);
+
+                    addCompositeDisposable(commonRemote.getShortUrl(longUrl).subscribe(new Consumer<String>()
+                    {
+                        @Override
+                        public void accept(@NonNull String shortUrl) throws Exception
+                        {
+                            unLockUI();
+
+                            Util.sendSms(StayReservationDetailActivity.this, message + shortUrl);
+                        }
+                    }, new Consumer<Throwable>()
+                    {
+                        @Override
+                        public void accept(@NonNull Throwable throwable) throws Exception
+                        {
+                            unLockUI();
+
+                            Util.sendSms(StayReservationDetailActivity.this, message + "https://mobile.dailyhotel.co.kr/stay/" + stayBookingDetail.placeIndex);
+                        }
+                    }));
                 } catch (Exception e)
                 {
+                    unLockUI();
+
                     ExLog.d(e.toString());
                 }
 

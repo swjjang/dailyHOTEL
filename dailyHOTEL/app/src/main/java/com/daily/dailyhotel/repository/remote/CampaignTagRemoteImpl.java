@@ -40,7 +40,7 @@ public class CampaignTagRemoteImpl implements CampaignTagInterface
     @Override
     public Observable<ArrayList<CampaignTag>> getCampaignTagList(String serviceType)
     {
-        return DailyMobileAPI.getInstance(mContext).getCampainTagList(serviceType).map(new Function<BaseListDto<CampaignTagData>, ArrayList<CampaignTag>>()
+        return DailyMobileAPI.getInstance(mContext).getCampaignTagList(serviceType).map(new Function<BaseListDto<CampaignTagData>, ArrayList<CampaignTag>>()
         {
             @Override
             public ArrayList<CampaignTag> apply(@io.reactivex.annotations.NonNull BaseListDto<CampaignTagData> campaignTagDataBaseListDto) throws Exception

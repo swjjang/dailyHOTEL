@@ -22,6 +22,7 @@ import com.daily.base.util.ScreenUtils;
 import com.daily.base.widget.DailyTextView;
 import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.entity.Booking;
+import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.GourmetBookingDetail;
 import com.twoheart.dailyhotel.model.PlaceBookingDetail;
@@ -43,7 +44,10 @@ import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import org.json.JSONObject;
 
 import java.util.HashMap;
+import java.util.Locale;
 
+import io.reactivex.annotations.NonNull;
+import io.reactivex.functions.Consumer;
 import retrofit2.Call;
 import retrofit2.Response;
 
@@ -372,11 +376,16 @@ public class GourmetReservationDetailActivity extends PlaceReservationDetailActi
                     shareDialog.dismiss();
                 }
 
+                lockUI();
+
                 try
                 {
                     GourmetBookingDetail gourmetBookingDetail = ((GourmetBookingDetail) mPlaceBookingDetail);
 
-                    String message = getString(R.string.message_booking_gourmet_share_sms, //
+                    String longUrl = String.format(Locale.KOREA, "https://mobile.dailyhotel.co.kr/gourmet/%d?reserveDate=%s"//
+                        , gourmetBookingDetail.placeIndex, DailyCalendar.convertDateFormatString(gourmetBookingDetail.reservationTime, DailyCalendar.ISO_8601_FORMAT, "yyyy-MM-dd"));
+
+                    final String message = getString(R.string.message_booking_gourmet_share_sms, //
                         gourmetBookingDetail.userName, gourmetBookingDetail.placeName, gourmetBookingDetail.guestName,//
                         DailyTextUtils.getPriceFormat(GourmetReservationDetailActivity.this, gourmetBookingDetail.paymentPrice, false), //
                         DailyCalendar.convertDateFormatString(gourmetBookingDetail.reservationTime, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd(EEE)"),//
@@ -384,9 +393,31 @@ public class GourmetReservationDetailActivity extends PlaceReservationDetailActi
                         gourmetBookingDetail.ticketName, getString(R.string.label_booking_count, gourmetBookingDetail.ticketCount), //
                         gourmetBookingDetail.address);
 
-                    Util.sendSms(GourmetReservationDetailActivity.this, message);
+                    CommonRemoteImpl commonRemote = new CommonRemoteImpl(GourmetReservationDetailActivity.this);
+
+                    addCompositeDisposable(commonRemote.getShortUrl(longUrl).subscribe(new Consumer<String>()
+                    {
+                        @Override
+                        public void accept(@NonNull String shortUrl) throws Exception
+                        {
+                            unLockUI();
+
+                            Util.sendSms(GourmetReservationDetailActivity.this, message + shortUrl);
+                        }
+                    }, new Consumer<Throwable>()
+                    {
+                        @Override
+                        public void accept(@NonNull Throwable throwable) throws Exception
+                        {
+                            unLockUI();
+
+                            Util.sendSms(GourmetReservationDetailActivity.this, message + "https://mobile.dailyhotel.co.kr/gourmet/" + gourmetBookingDetail.placeIndex);
+                        }
+                    }));
                 } catch (Exception e)
                 {
+                    unLockUI();
+
                     ExLog.d(e.toString());
                 }
 
