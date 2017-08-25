@@ -25,6 +25,12 @@ public class BookingData
     @JsonField(name = "checkoutDate")
     public String checkoutDate;
 
+    @JsonField(name = "checkinTime")
+    public String checkinTime;
+
+    @JsonField(name = "checkoutTime")
+    public String checkoutTime;
+
     @JsonField(name = "comment")
     public String comment;
 
@@ -89,8 +95,8 @@ public class BookingData
                 break;
         }
 
-        booking.checkInDateTime = checkinDate;
-        booking.checkOutDateTime = checkoutDate;
+        booking.checkInDateTime = checkinDate + "T" + checkinTime + "+09:00";
+        booking.checkOutDateTime = checkoutDate + "T" + checkoutTime + "+09:00";
         booking.readyForRefund = readyForRefund;
         booking.comment = comment;
         booking.tid = tid;

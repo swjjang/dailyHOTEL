@@ -20,11 +20,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
-import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
-import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.entity.Booking;
 import com.daily.dailyhotel.entity.CommonDateTime;
 import com.daily.dailyhotel.entity.Review;
@@ -65,8 +62,6 @@ import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Screen;
 
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -81,8 +76,6 @@ import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.functions.Function3;
 import io.reactivex.schedulers.Schedulers;
-import retrofit2.Call;
-import retrofit2.Response;
 
 /**
  * 예약한 호텔의 리스트들을 출력.
@@ -573,8 +566,7 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
 
         for (Booking booking : bookingList)
         {
-            booking.remainingDays = DailyCalendar.compareDateDay(DailyCalendar.convertDateFormatString(booking.checkInDateTime, "yyyy-MM-dd", DailyCalendar.ISO_8601_FORMAT)//
-                , mCommonDateTime.currentDateTime);
+            booking.remainingDays = DailyCalendar.compareDateDay(booking.checkInDateTime, mCommonDateTime.currentDateTime);
 
             if (booking.readyForRefund == true)
             {
@@ -584,8 +576,16 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
                 switch (booking.statePayment)
                 {
                     case Booking.PAYMENT_COMPLETED:
-                        boolean used = DailyCalendar.compareDateDay(DailyCalendar.convertDateFormatString(booking.checkOutDateTime, "yyyy-MM-dd", DailyCalendar.ISO_8601_FORMAT)//
-                            , mCommonDateTime.currentDateTime) < 0;
+                    {
+                        boolean used;
+
+                        if (booking.placeType == Booking.PlaceType.STAY_OUTBOUND)
+                        {
+                            used = DailyCalendar.compareDateDay(booking.checkOutDateTime, mCommonDateTime.currentDateTime) < 0;
+                        } else
+                        {
+                            used = DailyCalendar.compareDateTime(booking.checkOutDateTime, mCommonDateTime.currentDateTime) < 0;
+                        }
 
                         if (used)
                         {
@@ -595,6 +595,7 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
                             beforeUseList.add(booking);
                         }
                         break;
+                    }
 
                     case Booking.PAYMENT_WAITING:
                         depositWaitingList.add(booking);
@@ -611,8 +612,7 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
 
                 try
                 {
-                    compareDay = DailyCalendar.compareDateDay(DailyCalendar.convertDateFormatString(booking1.checkInDateTime, "yyyy-MM-dd", DailyCalendar.ISO_8601_FORMAT)//
-                        , DailyCalendar.convertDateFormatString(booking2.checkInDateTime, "yyyy-MM-dd", DailyCalendar.ISO_8601_FORMAT));
+                    compareDay = DailyCalendar.compareDateDay(booking1.checkInDateTime, booking2.checkInDateTime);
                 } catch (Exception e)
                 {
                     ExLog.e(e.toString());
@@ -647,8 +647,7 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
 
                 try
                 {
-                    compareDay = DailyCalendar.compareDateDay(DailyCalendar.convertDateFormatString(booking1.checkInDateTime, "yyyy-MM-dd", DailyCalendar.ISO_8601_FORMAT)//
-                        , DailyCalendar.convertDateFormatString(booking2.checkInDateTime, "yyyy-MM-dd", DailyCalendar.ISO_8601_FORMAT));
+                    compareDay = DailyCalendar.compareDateDay(booking1.checkInDateTime, booking2.checkInDateTime);
                 } catch (Exception e)
                 {
                     ExLog.e(e.toString());

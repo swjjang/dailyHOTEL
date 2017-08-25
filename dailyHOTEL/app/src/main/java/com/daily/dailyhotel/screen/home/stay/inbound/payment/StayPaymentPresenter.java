@@ -2105,13 +2105,12 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
                     case Booking.PAYMENT_COMPLETED:
                     case Booking.PAYMENT_WAITING:
                         // 이미 이용한 Stay인 경우
-                        if (DailyCalendar.compareDateDay(DailyCalendar.convertDateFormatString(booking.checkOutDateTime, "yyyy-MM-dd", DailyCalendar.ISO_8601_FORMAT)//
-                            , commonDateTime.currentDateTime) < 0)
+                        if (DailyCalendar.compareDateDay(booking.checkOutDateTime, commonDateTime.currentDateTime) < 0)
                         {
                             continue;
                         }
 
-                        if (checkInDateTime.equalsIgnoreCase(booking.checkInDateTime) == true//
+                        if (checkInDateTime.equalsIgnoreCase(DailyCalendar.convertDateFormatString(booking.checkInDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyy-MM-dd")) == true//
                             && booking.placeName.equalsIgnoreCase(stayName) == true)
                         {
                             return true;
