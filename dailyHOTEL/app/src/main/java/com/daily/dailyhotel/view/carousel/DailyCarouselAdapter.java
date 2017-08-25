@@ -21,15 +21,24 @@ import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ScreenUtils;
 import com.daily.base.util.VersionUtils;
 import com.daily.dailyhotel.entity.CarouselListItem;
+import com.daily.dailyhotel.entity.ImageMap;
+import com.daily.dailyhotel.entity.StayOutbound;
+import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.drawee.controller.BaseControllerListener;
+import com.facebook.drawee.controller.ControllerListener;
 import com.facebook.drawee.drawable.ScalingUtils;
+import com.facebook.drawee.interfaces.DraweeController;
+import com.facebook.imagepipeline.image.ImageInfo;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ListRowCarouselItemDataBinding;
 import com.twoheart.dailyhotel.model.Gourmet;
+import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.network.model.HomePlace;
 import com.twoheart.dailyhotel.network.model.Prices;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -39,6 +48,7 @@ import java.util.ArrayList;
 public class DailyCarouselAdapter extends RecyclerView.Adapter<DailyCarouselAdapter.PlaceViewHolder>
 {
     private Context mContext;
+    private boolean mIsUsePriceLayout;
     private ArrayList<CarouselListItem> mList;
     protected PaintDrawable mPaintDrawable;
     protected ItemClickListener mItemClickListener;
@@ -82,9 +92,21 @@ public class DailyCarouselAdapter extends RecyclerView.Adapter<DailyCarouselAdap
 
         switch (item.mType)
         {
-            case CarouselListItem.TYPE_HOMEPLACE:
+            case CarouselListItem.TYPE_HOME_PLACE:
             {
                 onBindViewHolderByHomePlace(holder, item);
+                break;
+            }
+
+            case CarouselListItem.TYPE_IN_STAY:
+            {
+                onBindViewHolderByStay(holder, item);
+                break;
+            }
+
+            case CarouselListItem.TYPE_OB_STAY:
+            {
+                onBindViewHolderByStayOutbound(holder, item);
                 break;
             }
 
@@ -125,9 +147,9 @@ public class DailyCarouselAdapter extends RecyclerView.Adapter<DailyCarouselAdap
 
         Prices prices = place.prices;
 
-        if (prices == null || prices.discountPrice == 0)
+        if (prices == null || prices.discountPrice == 0 || mIsUsePriceLayout == false)
         {
-            holder.dataBinding.priceLayout.setVisibility(View.GONE);
+            holder.dataBinding.priceLayout.setVisibility(mIsUsePriceLayout == false ? View.GONE : View.INVISIBLE);
             holder.dataBinding.contentOriginPriceView.setText("");
             holder.dataBinding.contentDiscountPriceView.setText("");
             holder.dataBinding.contentPersonView.setText("");
@@ -196,6 +218,164 @@ public class DailyCarouselAdapter extends RecyclerView.Adapter<DailyCarouselAdap
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+    private void onBindViewHolderByStay(PlaceViewHolder holder, CarouselListItem item)
+    {
+        final Stay stay = item.getItem();
+
+        holder.dataBinding.contentImageView.setTag(holder.dataBinding.contentImageView.getId(), item);
+        Util.requestImageResize(mContext, holder.dataBinding.contentImageView, stay.imageUrl);
+
+        if (VersionUtils.isOverAPI16() == true)
+        {
+            holder.dataBinding.gradientBottomView.setBackground(mPaintDrawable);
+        } else
+        {
+            holder.dataBinding.gradientBottomView.setBackgroundDrawable(mPaintDrawable);
+        }
+
+        //        // SOLD OUT 표시
+        //        if (stay.isSoldOut == true)
+        //        {
+        //            holder.dataBinding.soldOutView.setVisibility(View.VISIBLE);
+        //        } else
+        //        {
+        //            holder.dataBinding.soldOutView.setVisibility(View.GONE);
+        //        }
+
+        holder.dataBinding.contentTextView.setText(stay.name);
+
+        int originPrice = stay.price;
+        int discountPrice = stay.discountPrice;
+
+        if (originPrice == 0 || discountPrice == 0 || mIsUsePriceLayout == false)
+        {
+            holder.dataBinding.priceLayout.setVisibility(mIsUsePriceLayout == false ? View.GONE : View.INVISIBLE);
+            holder.dataBinding.contentOriginPriceView.setText("");
+            holder.dataBinding.contentDiscountPriceView.setText("");
+            holder.dataBinding.contentPersonView.setText("");
+        } else
+        {
+            holder.dataBinding.priceLayout.setVisibility(View.VISIBLE);
+
+            String strPrice = DailyTextUtils.getPriceFormat(mContext, originPrice, false);
+            String strDiscount = DailyTextUtils.getPriceFormat(mContext, discountPrice, false);
+
+            holder.dataBinding.contentDiscountPriceView.setText(strDiscount);
+
+            if (originPrice <= 0 || originPrice <= discountPrice)
+            {
+                holder.dataBinding.contentOriginPriceView.setText("");
+            } else
+            {
+                holder.dataBinding.contentOriginPriceView.setText(strPrice);
+                holder.dataBinding.contentOriginPriceView.setPaintFlags(holder.dataBinding.contentOriginPriceView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+            }
+        }
+
+        holder.dataBinding.contentProvinceView.setText(stay.regionName);
+
+        holder.dataBinding.contentGradeView.setText(stay.getGrade().getName(mContext));
+        holder.dataBinding.contentDotImageView.setVisibility(View.VISIBLE);
+
+        holder.dataBinding.contentPersonView.setText("");
+        holder.dataBinding.contentPersonView.setVisibility(View.GONE);
+    }
+
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+    private void onBindViewHolderByStayOutbound(PlaceViewHolder holder, CarouselListItem item)
+    {
+        final StayOutbound stayOutbound = item.getItem();
+
+        holder.dataBinding.contentImageView.setTag(holder.dataBinding.contentImageView.getId(), item);
+        ImageMap imageMap = stayOutbound.getImageMap();
+        String url;
+
+        if (ScreenUtils.getScreenWidth(mContext) >= ScreenUtils.DEFAULT_STAYOUTBOUND_XXHDPI_WIDTH)
+        {
+            if (DailyTextUtils.isTextEmpty(imageMap.bigUrl) == true)
+            {
+                url = imageMap.smallUrl;
+            } else
+            {
+                url = imageMap.bigUrl;
+            }
+        } else
+        {
+            if (DailyTextUtils.isTextEmpty(imageMap.mediumUrl) == true)
+            {
+                url = imageMap.smallUrl;
+            } else
+            {
+                url = imageMap.mediumUrl;
+            }
+        }
+
+        ControllerListener controllerListener = new BaseControllerListener<ImageInfo>()
+        {
+            @Override
+            public void onFailure(String id, Throwable throwable)
+            {
+                if (throwable instanceof IOException == true)
+                {
+                    if (url.equalsIgnoreCase(imageMap.bigUrl) == true)
+                    {
+                        imageMap.bigUrl = null;
+                    } else if (url.equalsIgnoreCase(imageMap.mediumUrl) == true)
+                    {
+                        imageMap.mediumUrl = null;
+                    } else
+                    {
+                        // 작은 이미지를 로딩했지만 실패하는 경우.
+                        return;
+                    }
+
+                    holder.dataBinding.contentImageView.setImageURI(imageMap.smallUrl);
+                }
+            }
+        };
+
+        DraweeController draweeController = Fresco.newDraweeControllerBuilder()//
+            .setControllerListener(controllerListener).setUri(url).build();
+
+        holder.dataBinding.contentImageView.setController(draweeController);
+
+        if (VersionUtils.isOverAPI16() == true)
+        {
+            holder.dataBinding.gradientBottomView.setBackground(mPaintDrawable);
+        } else
+        {
+            holder.dataBinding.gradientBottomView.setBackgroundDrawable(mPaintDrawable);
+        }
+
+        //        // SOLD OUT 표시
+        //        if (place.isSoldOut == true)
+        //        {
+        //            holder.dataBinding.soldOutView.setVisibility(View.VISIBLE);
+        //        } else
+        //        {
+        //            holder.dataBinding.soldOutView.setVisibility(View.GONE);
+        //        }
+
+        holder.dataBinding.priceLayout.setVisibility(mIsUsePriceLayout == false ? View.GONE : View.INVISIBLE);
+        holder.dataBinding.contentOriginPriceView.setText("");
+        holder.dataBinding.contentDiscountPriceView.setText("");
+        holder.dataBinding.contentPersonView.setText("");
+
+        holder.dataBinding.contentTextView.setText(stayOutbound.name);
+        //        holder.dataBinding.nameEngTextView.setText("(" + stayOutbound.nameEng + ")");
+
+        holder.dataBinding.contentProvinceView.setText(stayOutbound.city);
+
+        // Stay Outbound 의 경우 PlaceType 이 없음
+        holder.dataBinding.contentGradeView.setText("");
+        holder.dataBinding.contentDotImageView.setVisibility(View.GONE);
+
+        holder.dataBinding.contentPersonView.setText("");
+        holder.dataBinding.contentPersonView.setVisibility(View.GONE);
+
+    }
+
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     private void onBindViewHolderByGourmet(PlaceViewHolder holder, CarouselListItem item)
     {
         final Gourmet gourmet = item.getItem();
@@ -225,9 +405,9 @@ public class DailyCarouselAdapter extends RecyclerView.Adapter<DailyCarouselAdap
         int originPrice = gourmet.price;
         int discountPrice = gourmet.discountPrice;
 
-        if (originPrice == 0 || discountPrice == 0)
+        if (originPrice == 0 || discountPrice == 0 || mIsUsePriceLayout == false)
         {
-            holder.dataBinding.priceLayout.setVisibility(View.GONE);
+            holder.dataBinding.priceLayout.setVisibility(mIsUsePriceLayout == false ? View.GONE : View.INVISIBLE);
             holder.dataBinding.contentOriginPriceView.setText("");
             holder.dataBinding.contentDiscountPriceView.setText("");
             holder.dataBinding.contentPersonView.setText("");
@@ -303,6 +483,11 @@ public class DailyCarouselAdapter extends RecyclerView.Adapter<DailyCarouselAdap
         return mList == null ? 0 : mList.size();
     }
 
+    public void setUsePriceLayout(boolean isUse)
+    {
+        mIsUsePriceLayout = isUse;
+    }
+
     private void setLayoutMargin(PlaceViewHolder holder, int position)
     {
         if (holder == null)
@@ -311,7 +496,7 @@ public class DailyCarouselAdapter extends RecyclerView.Adapter<DailyCarouselAdap
         }
 
         int outSide = ScreenUtils.dpToPx(mContext, 15d);
-        int inSide = ScreenUtils.dpToPx(mContext, 12d);
+        int inSide = ScreenUtils.dpToPx(mContext, 12d) / 2;
 
         RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) holder.itemView.getLayoutParams();
         params.leftMargin = position == 0 ? outSide : inSide;

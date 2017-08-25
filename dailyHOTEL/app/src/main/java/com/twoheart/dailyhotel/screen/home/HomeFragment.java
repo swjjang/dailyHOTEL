@@ -18,6 +18,7 @@ import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
 import com.daily.base.widget.DailyToast;
+import com.daily.dailyhotel.entity.CarouselListItem;
 import com.daily.dailyhotel.entity.CommonDateTime;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayOutbounds;
@@ -1075,19 +1076,19 @@ public class HomeFragment extends BaseMenuNavigationFragment
     {
         addCompositeDisposable(Observable.zip(mRecentlyRemoteImpl.getHomeRecentlyList(MAX_REQUEST_SIZE) //
             , mRecentlyRemoteImpl.getStayOutboundRecentlyList(MAX_REQUEST_SIZE, false) //
-            , new BiFunction<ArrayList<HomePlace>, StayOutbounds, ArrayList<HomePlace>>()
+            , new BiFunction<ArrayList<HomePlace>, StayOutbounds, ArrayList<CarouselListItem>>()
             {
                 @Override
-                public ArrayList<HomePlace> apply(@NonNull ArrayList<HomePlace> homePlacesList, @NonNull StayOutbounds stayOutbounds) throws Exception
+                public ArrayList<CarouselListItem> apply(@NonNull ArrayList<HomePlace> homePlacesList, @NonNull StayOutbounds stayOutbounds) throws Exception
                 {
-                    return RecentlyPlaceUtil.mergeHomePlaceList(mBaseActivity, homePlacesList, stayOutbounds);
+                    return RecentlyPlaceUtil.mergeCarouselListItemList(mBaseActivity, homePlacesList, stayOutbounds);
                 }
-            }).subscribe(new Consumer<ArrayList<HomePlace>>()
+            }).subscribe(new Consumer<ArrayList<CarouselListItem>>()
         {
             @Override
-            public void accept(@NonNull ArrayList<HomePlace> homePlacesList) throws Exception
+            public void accept(@NonNull ArrayList<CarouselListItem> carouselListItemList) throws Exception
             {
-                HomeFragment.this.setRecentlyList(homePlacesList, false);
+                HomeFragment.this.setRecentlyList(carouselListItemList, false);
             }
         }, throwable ->
         {
@@ -1095,18 +1096,18 @@ public class HomeFragment extends BaseMenuNavigationFragment
         }));
     }
 
-    private void setRecentlyList(ArrayList<HomePlace> homePlacesList, boolean isError)
+    private void setRecentlyList(ArrayList<CarouselListItem> carouselListItemList, boolean isError)
     {
-        ArrayList<HomePlace> list = new ArrayList<>();
+        ArrayList<CarouselListItem> list = new ArrayList<>();
 
-        if (homePlacesList != null)
+        if (carouselListItemList != null)
         {
-            if (homePlacesList.size() > MAX_RESPONSE_SIZE)
+            if (carouselListItemList.size() > MAX_RESPONSE_SIZE)
             {
-                list.addAll(homePlacesList.subList(0, MAX_RESPONSE_SIZE));
+                list.addAll(carouselListItemList.subList(0, MAX_RESPONSE_SIZE));
             } else
             {
-                list.addAll(homePlacesList);
+                list.addAll(carouselListItemList);
             }
         }
 
@@ -1196,17 +1197,19 @@ public class HomeFragment extends BaseMenuNavigationFragment
                 addCompositeDisposable(Observable.zip(mRecentlyRemoteImpl.getStayInboundRecentlyList(stayBookingDay, true) //
                     , mRecentlyRemoteImpl.getGourmetRecentlyList(gourmetBookingDay, true) //
                     , mRecentlyRemoteImpl.getStayOutboundRecentlyList(RecentlyPlaceUtil.MAX_RECENT_PLACE_COUNT, true) //
-                    , new Function3<List<Stay>, List<Gourmet>, StayOutbounds, ArrayList<HomePlace>>()
+                    , new Function3<List<Stay>, List<Gourmet>, StayOutbounds, ArrayList<CarouselListItem>>()
                     {
                         @Override
-                        public ArrayList<HomePlace> apply(@NonNull List<Stay> stays, @NonNull List<Gourmet> gourmets //
+                        public ArrayList<CarouselListItem> apply(@NonNull List<Stay> stays, @NonNull List<Gourmet> gourmets //
                             , @NonNull StayOutbounds stayOutbounds) throws Exception
                         {
-                            ArrayList<HomePlace> homePlaceList = RecentlyPlaceUtil.mergeHomePlaceList(getActivity(), stays, gourmets, stayOutbounds);
+                            //                            ArrayList<HomePlace> homePlaceList = RecentlyPlaceUtil.mergeHomePlaceList(getActivity(), stays, gourmets, stayOutbounds);
+
+                            ArrayList<CarouselListItem> carouselListItemList = RecentlyPlaceUtil.mergeCarouselListItemList(getActivity(), stays, gourmets, stayOutbounds);
 
                             DailyDb dailyDb = DailyDbHelper.getInstance().open(getActivity());
 
-                            mIsMigrationComplete = dailyDb.migrateAllRecentlyPlace(homePlaceList);
+                            mIsMigrationComplete = dailyDb.migrateAllRecentlyPlace(carouselListItemList);
 
                             DailyDbHelper.getInstance().close();
 
@@ -1229,12 +1232,12 @@ public class HomeFragment extends BaseMenuNavigationFragment
                                 }
                             }
 
-                            return homePlaceList;
+                            return carouselListItemList;
                         }
-                    }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<ArrayList<HomePlace>>()
+                    }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<ArrayList<CarouselListItem>>()
                 {
                     @Override
-                    public void accept(@NonNull ArrayList<HomePlace> homePlaceList) throws Exception
+                    public void accept(@NonNull ArrayList<CarouselListItem> carouselListItemList) throws Exception
                     {
                         if (isFinishing() == true)
                         {
@@ -1243,7 +1246,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
 
                         unLockUI();
 
-                        setRecentlyList(homePlaceList, false);
+                        setRecentlyList(carouselListItemList, false);
                     }
                 }, new Consumer<Throwable>()
                 {
@@ -1707,20 +1710,20 @@ public class HomeFragment extends BaseMenuNavigationFragment
         }
 
         @Override
-        public void onWishListItemClick(View view, int position)
+        public void onWishListItemClick(View view)
         {
             if (isFinishing() == true || view == null || mHomeLayout == null || lockUiComponentAndIsLockUiComponent() == true)
             {
                 return;
             }
 
-            HomePlace wishItem = (HomePlace) view.getTag();
-
-            if (wishItem == null)
+            CarouselListItem item = (CarouselListItem) view.getTag();
+            if (item == null)
             {
-                wishItem = mHomeLayout.getWishItem(position);
+                return;
             }
 
+            HomePlace wishItem = item.getItem();
             if (wishItem != null)
             {
                 startPlaceDetail(view, wishItem, mTodayDateTime);
@@ -1732,28 +1735,26 @@ public class HomeFragment extends BaseMenuNavigationFragment
         }
 
         @Override
-        public void onWishListItemLongClick(View view, int position)
+        public void onWishListItemLongClick(View view)
         {
             if (isFinishing() == true || view == null || mHomeLayout == null || lockUiComponentAndIsLockUiComponent() == true)
             {
                 return;
             }
 
-            HomePlace wishItem = (HomePlace) view.getTag();
-
-            if (wishItem == null)
+            CarouselListItem item = (CarouselListItem) view.getTag();
+            if (item == null)
             {
-                wishItem = mHomeLayout.getWishItem(position);
+                return;
             }
 
+            HomePlace wishItem = item.getItem();
             if (wishItem != null)
             {
                 try
                 {
                     mViewByLongPress = view;
                     mHomePlaceByLongPress = wishItem;
-
-                    wishItem = mHomeLayout.getWishItem(position);
 
                     mHomeLayout.setBlurVisibility(mBaseActivity, true);
 
@@ -1793,20 +1794,20 @@ public class HomeFragment extends BaseMenuNavigationFragment
         }
 
         @Override
-        public void onRecentListItemClick(View view, int position)
+        public void onRecentListItemClick(View view)
         {
             if (isFinishing() == true || view == null || mHomeLayout == null || lockUiComponentAndIsLockUiComponent() == true)
             {
                 return;
             }
 
-            HomePlace recentItem = (HomePlace) view.getTag();
-
-            if (recentItem == null)
+            CarouselListItem item = (CarouselListItem) view.getTag();
+            if (item == null)
             {
-                recentItem = mHomeLayout.getRecentItem(position);
+                return;
             }
 
+            HomePlace recentItem = item.getItem();
             if (recentItem != null)
             {
                 if (RecentlyPlaceUtil.SERVICE_TYPE_OB_STAY_NAME.equalsIgnoreCase(recentItem.serviceType) == true)
@@ -1825,20 +1826,20 @@ public class HomeFragment extends BaseMenuNavigationFragment
         }
 
         @Override
-        public void onRecentListItemLongClick(View view, int position)
+        public void onRecentListItemLongClick(View view)
         {
             if (isFinishing() == true || view == null || mHomeLayout == null || lockUiComponentAndIsLockUiComponent() == true)
             {
                 return;
             }
 
-            HomePlace recentItem = (HomePlace) view.getTag();
-
-            if (recentItem == null)
+            CarouselListItem item = (CarouselListItem) view.getTag();
+            if (item == null)
             {
-                recentItem = mHomeLayout.getRecentItem(position);
+                return;
             }
 
+            HomePlace recentItem = item.getItem();
             if (recentItem != null)
             {
                 try
@@ -2042,7 +2043,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
         }
 
         @Override
-        public void onWishList(ArrayList<HomePlace> list, boolean isError)
+        public void onWishList(ArrayList<CarouselListItem> list, boolean isError)
         {
             if (mHomeLayout != null)
             {

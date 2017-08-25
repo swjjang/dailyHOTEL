@@ -11,9 +11,14 @@ import android.provider.BaseColumns;
 
 import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.domain.RecentlyColumns;
+import com.daily.dailyhotel.entity.CarouselListItem;
+import com.daily.dailyhotel.entity.ImageMap;
+import com.daily.dailyhotel.entity.StayOutbound;
 import com.daily.dailyhotel.repository.local.model.RecentlyList;
 import com.daily.dailyhotel.repository.local.model.RecentlyRealmObject;
 import com.daily.dailyhotel.util.RecentlyPlaceUtil;
+import com.twoheart.dailyhotel.model.Gourmet;
+import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.network.model.HomePlace;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
@@ -336,9 +341,9 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
     }
 
     // main Activity 에서 진행
-    public boolean migrateAllRecentlyPlace(ArrayList<HomePlace> homePlaceList)
+    public boolean migrateAllRecentlyPlace(ArrayList<CarouselListItem> list)
     {
-        if (homePlaceList == null || homePlaceList.size() == 0)
+        if (list == null || list.size() == 0)
         {
             // realm db 에도 결과가 없으면  migration 되었다고 판단함
             RealmResults<RecentlyRealmObject> realmResultList = RecentlyPlaceUtil.getRealmRecentlyTypeList((Constants.ServiceType[]) null);
@@ -380,17 +385,19 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
         {
             db.beginTransaction();
 
-            for (HomePlace homePlace : homePlaceList)
+            for (CarouselListItem carouselListItem : list)
             {
-                Constants.ServiceType serviceType = RecentlyPlaceUtil.getServiceType(homePlace.serviceType);
-                long oldDbSavingTime = checkExistRecentPlace(serviceType, homePlace.index);
+                Constants.ServiceType serviceType = RecentlyPlaceUtil.getServiceType(carouselListItem);
+                int index = RecentlyPlaceUtil.getCarouselListItemIndex(carouselListItem);
+
+                long oldDbSavingTime = checkExistRecentPlace(serviceType, index);
 
                 if (oldDbSavingTime > 0)
                 {
                     continue;
                 }
 
-                RecentlyRealmObject oldRecentlyPlace = RecentlyPlaceUtil.getRecentlyPlace(serviceType, homePlace.index);
+                RecentlyRealmObject oldRecentlyPlace = RecentlyPlaceUtil.getRecentlyPlace(serviceType, index);
 
                 long oldSavingTime = -1;
                 if (oldRecentlyPlace != null)
@@ -403,7 +410,34 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
                     oldSavingTime = --oldestSavingTime;
                 }
 
-                ContentValues contentValues = convertContentValues(homePlace, oldSavingTime);
+                ContentValues contentValues = null;
+                switch (carouselListItem.mType)
+                {
+                    case CarouselListItem.TYPE_HOME_PLACE:
+                    {
+                        contentValues = convertContentValues((HomePlace) carouselListItem.getItem(), oldSavingTime);
+                        break;
+                    }
+
+                    case CarouselListItem.TYPE_IN_STAY:
+                    {
+                        contentValues = convertContentValues((Stay) carouselListItem.getItem(), oldSavingTime);
+                        break;
+                    }
+
+                    case CarouselListItem.TYPE_OB_STAY:
+                    {
+                        contentValues = convertContentValues((StayOutbound) carouselListItem.getItem(), oldSavingTime);
+                        break;
+                    }
+
+                    case CarouselListItem.TYPE_GOURMET:
+                    {
+                        contentValues = convertContentValues((Gourmet) carouselListItem.getItem(), oldSavingTime);
+                        break;
+                    }
+                }
+
                 insertOrUpdate(T_RECENTLY, RecentlyColumns.PLACE_INDEX, contentValues);
             }
 
@@ -601,6 +635,81 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
         contentValues.put(RecentlyColumns.SERVICE_TYPE, homePlace.serviceType);
         contentValues.put(RecentlyColumns.SAVING_TIME, savingTime);
         contentValues.put(RecentlyColumns.IMAGE_URL, homePlace.imageUrl);
+
+        return contentValues;
+    }
+
+    private ContentValues convertContentValues(Stay stay, long savingTime)
+    {
+        if (stay == null)
+        {
+            return null;
+        }
+
+        if (savingTime <= 0)
+        {
+            Calendar calendar = DailyCalendar.getInstance();
+            savingTime = calendar.getTimeInMillis();
+        }
+
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(RecentlyColumns.PLACE_INDEX, stay.index);
+        contentValues.put(RecentlyColumns.NAME, stay.name);
+        contentValues.put(RecentlyColumns.ENGLISH_NAME, "");
+        contentValues.put(RecentlyColumns.SERVICE_TYPE, Constants.ServiceType.HOTEL.name());
+        contentValues.put(RecentlyColumns.SAVING_TIME, savingTime);
+        contentValues.put(RecentlyColumns.IMAGE_URL, stay.imageUrl);
+
+        return contentValues;
+    }
+
+    private ContentValues convertContentValues(Gourmet gourmet, long savingTime)
+    {
+        if (gourmet == null)
+        {
+            return null;
+        }
+
+        if (savingTime <= 0)
+        {
+            Calendar calendar = DailyCalendar.getInstance();
+            savingTime = calendar.getTimeInMillis();
+        }
+
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(RecentlyColumns.PLACE_INDEX, gourmet.index);
+        contentValues.put(RecentlyColumns.NAME, gourmet.name);
+        contentValues.put(RecentlyColumns.ENGLISH_NAME, "");
+        contentValues.put(RecentlyColumns.SERVICE_TYPE, Constants.ServiceType.GOURMET.name());
+        contentValues.put(RecentlyColumns.SAVING_TIME, savingTime);
+        contentValues.put(RecentlyColumns.IMAGE_URL, gourmet.imageUrl);
+
+        return contentValues;
+    }
+
+    private ContentValues convertContentValues(StayOutbound stayOutbound, long savingTime)
+    {
+        if (stayOutbound == null)
+        {
+            return null;
+        }
+
+        if (savingTime <= 0)
+        {
+            Calendar calendar = DailyCalendar.getInstance();
+            savingTime = calendar.getTimeInMillis();
+        }
+
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(RecentlyColumns.PLACE_INDEX, stayOutbound.index);
+        contentValues.put(RecentlyColumns.NAME, stayOutbound.name);
+        contentValues.put(RecentlyColumns.ENGLISH_NAME, stayOutbound.nameEng);
+        contentValues.put(RecentlyColumns.SERVICE_TYPE, Constants.ServiceType.OB_STAY.name());
+        contentValues.put(RecentlyColumns.SAVING_TIME, savingTime);
+
+        ImageMap imageMap = stayOutbound.getImageMap();
+        String imageUrl = imageMap == null ? "" : imageMap.smallUrl;
+        contentValues.put(RecentlyColumns.IMAGE_URL, imageUrl);
 
         return contentValues;
     }

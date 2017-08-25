@@ -8,7 +8,7 @@ import android.support.annotation.Nullable;
 
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
-import com.daily.dailyhotel.entity.ImageMap;
+import com.daily.dailyhotel.entity.CarouselListItem;
 import com.daily.dailyhotel.entity.StayOutbound;
 import com.daily.dailyhotel.entity.StayOutbounds;
 import com.daily.dailyhotel.repository.local.DailyDb;
@@ -20,9 +20,7 @@ import com.twoheart.dailyhotel.model.Gourmet;
 import com.twoheart.dailyhotel.model.HomeRecentParam;
 import com.twoheart.dailyhotel.model.RecentPlaces;
 import com.twoheart.dailyhotel.model.Stay;
-import com.twoheart.dailyhotel.network.model.HomeDetails;
 import com.twoheart.dailyhotel.network.model.HomePlace;
-import com.twoheart.dailyhotel.network.model.Prices;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 
@@ -621,20 +619,51 @@ public class RecentlyPlaceUtil
         DailyDbHelper.getInstance().close();
     }
 
-    public static ArrayList<HomePlace> mergeHomePlaceList(Context context, List<Stay> stayList, List<Gourmet> gourmetList, StayOutbounds stayOutbounds)
+    public static ArrayList<CarouselListItem> mergeCarouselListItemList(Context context, ArrayList<HomePlace> homePlacesList, StayOutbounds stayOutbounds)
+    {
+
+        ArrayList<CarouselListItem> carouselListItemList = new ArrayList<>();
+        if (homePlacesList != null)
+        {
+            for (HomePlace homePlace : homePlacesList)
+            {
+                CarouselListItem item = new CarouselListItem(CarouselListItem.TYPE_HOME_PLACE, homePlace);
+                carouselListItemList.add(item);
+            }
+        }
+
+        List<StayOutbound> stayOutboundList = stayOutbounds.getStayOutbound();
+        if (stayOutboundList != null)
+        {
+            for (StayOutbound stayOutbound : stayOutboundList)
+            {
+                CarouselListItem item = new CarouselListItem(CarouselListItem.TYPE_HOME_PLACE, stayOutbound);
+                carouselListItemList.add(item);
+            }
+        }
+
+        // sort list
+        RecentlyPlaceUtil.sortCarouselListItemList(context, carouselListItemList, (Constants.ServiceType[]) null);
+
+        return carouselListItemList;
+    }
+
+    public static ArrayList<CarouselListItem> mergeCarouselListItemList(Context context //
+        , List<Stay> stayList, List<Gourmet> gourmetList, StayOutbounds stayOutbounds)
     {
         if (context == null)
         {
-            return null;
+            return new ArrayList<>();
         }
 
-        ArrayList<HomePlace> homePlaceList = new ArrayList<>();
+        ArrayList<CarouselListItem> carouselListItemList = new ArrayList<>();
 
         if (stayList != null && stayList.size() > 0)
         {
             for (Stay stay : stayList)
             {
-                homePlaceList.add(convertHomePlace(context, stay));
+                CarouselListItem carouselListItem = new CarouselListItem(CarouselListItem.TYPE_IN_STAY, stay);
+                carouselListItemList.add(carouselListItem);
             }
         }
 
@@ -642,7 +671,8 @@ public class RecentlyPlaceUtil
         {
             for (Gourmet gourmet : gourmetList)
             {
-                homePlaceList.add(convertHomePlace(context, gourmet));
+                CarouselListItem carouselListItem = new CarouselListItem(CarouselListItem.TYPE_GOURMET, gourmet);
+                carouselListItemList.add(carouselListItem);
             }
         }
 
@@ -651,155 +681,17 @@ public class RecentlyPlaceUtil
         {
             for (StayOutbound stayOutbound : stayOutboundList)
             {
-                homePlaceList.add(convertHomePlace(context, stayOutbound));
+                CarouselListItem carouselListItem = new CarouselListItem(CarouselListItem.TYPE_OB_STAY, stayOutbound);
+                carouselListItemList.add(carouselListItem);
             }
         }
 
-        sortHomePlaceList(context, homePlaceList, (Constants.ServiceType[]) null);
+        sortCarouselListItemList(context, carouselListItemList, (Constants.ServiceType[]) null);
 
-        return homePlaceList;
+        return carouselListItemList;
     }
 
-    public static ArrayList<HomePlace> mergeHomePlaceList(Context context, ArrayList<HomePlace> homePlacesList, StayOutbounds stayOutbounds)
-    {
-        List<StayOutbound> stayOutboundList = stayOutbounds.getStayOutbound();
-        if (stayOutboundList == null || stayOutboundList.size() == 0)
-        {
-            return homePlacesList;
-        }
-
-        ArrayList<HomePlace> resultList = new ArrayList<HomePlace>();
-        if (homePlacesList != null)
-        {
-            resultList.addAll(homePlacesList);
-        }
-
-        for (StayOutbound stayOutbound : stayOutboundList)
-        {
-            resultList.add(convertHomePlace(context, stayOutbound));
-        }
-
-        // sort list
-        RecentlyPlaceUtil.sortHomePlaceList(context, resultList, (Constants.ServiceType[]) null);
-
-        return resultList;
-    }
-
-    private static HomePlace convertHomePlace(Context context, Stay stay)
-    {
-        if (context == null || stay == null)
-        {
-            return null;
-        }
-
-        HomePlace homePlace = null;
-
-        try
-        {
-            homePlace = new HomePlace();
-            homePlace.index = stay.index;
-            homePlace.title = stay.name;
-            homePlace.serviceType = RecentlyPlaceUtil.SERVICE_TYPE_IB_STAY_NAME;
-            homePlace.regionName = stay.districtName;
-
-            Prices prices = new Prices();
-            prices.discountPrice = stay.discountPrice;
-            prices.normalPrice = stay.price;
-
-            homePlace.prices = prices;
-            homePlace.imageUrl = stay.imageUrl;
-            homePlace.placeType = Constants.PlaceType.HOTEL;
-            homePlace.isSoldOut = stay.isSoldOut;
-            homePlace.distance = stay.distance;
-
-            HomeDetails details = new HomeDetails();
-            details.category = stay.categoryCode;
-            details.stayGrade = stay.getGrade();
-
-            homePlace.details = details;
-
-        } catch (Exception e)
-        {
-            ExLog.d(stay.index + " , " + stay.name + " , " + e.toString());
-        }
-
-        return homePlace;
-    }
-
-    private static HomePlace convertHomePlace(Context context, Gourmet gourmet)
-    {
-        if (context == null || gourmet == null)
-        {
-            return null;
-        }
-
-        HomePlace homePlace = null;
-
-        try
-        {
-            homePlace = new HomePlace();
-            homePlace.index = gourmet.index;
-            homePlace.title = gourmet.name;
-            homePlace.serviceType = RecentlyPlaceUtil.SERVICE_TYPE_GOURMET_NAME;
-            homePlace.regionName = gourmet.districtName;
-
-            Prices prices = new Prices();
-            prices.discountPrice = gourmet.discountPrice;
-            prices.normalPrice = gourmet.price;
-
-            homePlace.prices = prices;
-            homePlace.imageUrl = gourmet.imageUrl;
-            homePlace.placeType = Constants.PlaceType.FNB;
-            homePlace.isSoldOut = gourmet.isSoldOut;
-            homePlace.distance = gourmet.distance;
-
-            HomeDetails details = new HomeDetails();
-            details.category = gourmet.category;
-            details.grade = gourmet.grade.getName(context);
-            details.persons = gourmet.persons;
-
-            homePlace.details = details;
-        } catch (Exception e)
-        {
-            ExLog.w(gourmet.index + " | " + gourmet.name + " :: " + e.getMessage());
-        }
-
-        return homePlace;
-    }
-
-    private static HomePlace convertHomePlace(Context context, StayOutbound stayOutbound)
-    {
-        if (context == null || stayOutbound == null)
-        {
-            return null;
-        }
-
-        HomePlace homePlace = null;
-
-        try
-        {
-            homePlace = new HomePlace();
-            homePlace.index = stayOutbound.index;
-            homePlace.title = stayOutbound.name;
-            homePlace.serviceType = RecentlyPlaceUtil.SERVICE_TYPE_OB_STAY_NAME;
-            homePlace.regionName = stayOutbound.city;
-            homePlace.prices = null;
-            homePlace.imgPathMain = null;
-            homePlace.details = null;
-            homePlace.placeType = null;
-            homePlace.isSoldOut = false;
-
-            ImageMap imageMap = stayOutbound.getImageMap();
-            homePlace.imageUrl = imageMap.smallUrl;
-        } catch (Exception e)
-        {
-            ExLog.d(stayOutbound.index + " , " + stayOutbound.name + " , " + e.toString());
-        }
-
-        return homePlace;
-    }
-
-    public static void sortHomePlaceList(Context context, ArrayList<HomePlace> actualList, Constants.ServiceType... serviceTypes)
+    public static void sortCarouselListItemList(Context context, ArrayList<CarouselListItem> actualList, Constants.ServiceType... serviceTypes)
     {
         if (context == null || actualList == null || actualList.size() == 0)
         {
@@ -851,13 +743,13 @@ public class RecentlyPlaceUtil
             expectedList.add(recentlyPlace.index);
         }
 
-        Collections.sort(actualList, new Comparator<HomePlace>()
+        Collections.sort(actualList, new Comparator<CarouselListItem>()
         {
             @Override
-            public int compare(HomePlace place1, HomePlace place2)
+            public int compare(CarouselListItem item1, CarouselListItem item2)
             {
-                Integer position1 = expectedList.indexOf(place1.index);
-                Integer position2 = expectedList.indexOf(place2.index);
+                Integer position1 = expectedList.indexOf(getCarouselListItemIndex(item1));
+                Integer position2 = expectedList.indexOf(getCarouselListItemIndex(item2));
                 return position1.compareTo(position2);
             }
         });
@@ -884,6 +776,77 @@ public class RecentlyPlaceUtil
             || Constants.ServiceType.GOURMET.name().equalsIgnoreCase(serviceTypeString))
         {
             serviceType = Constants.ServiceType.GOURMET;
+        }
+
+        return serviceType;
+    }
+
+    public static int getCarouselListItemIndex(CarouselListItem carouselListItem)
+    {
+        int index = -1;
+        switch (carouselListItem.mType)
+        {
+            case CarouselListItem.TYPE_HOME_PLACE:
+            {
+                HomePlace item = carouselListItem.getItem();
+                index = item.index;
+                break;
+            }
+
+            case CarouselListItem.TYPE_IN_STAY:
+            {
+                Stay item = carouselListItem.getItem();
+                index = item.index;
+                break;
+            }
+
+            case CarouselListItem.TYPE_OB_STAY:
+            {
+                StayOutbound item = carouselListItem.getItem();
+                index = item.index;
+                break;
+            }
+
+            case CarouselListItem.TYPE_GOURMET:
+            {
+                Gourmet item = carouselListItem.getItem();
+                index = item.index;
+                break;
+            }
+        }
+
+        return index;
+    }
+
+    public static Constants.ServiceType getServiceType(CarouselListItem carouselListItem)
+    {
+        Constants.ServiceType serviceType = null;
+        switch (carouselListItem.mType)
+        {
+            case CarouselListItem.TYPE_HOME_PLACE:
+            {
+                HomePlace place = carouselListItem.getItem();
+                serviceType = RecentlyPlaceUtil.getServiceType(place.serviceType);
+                break;
+            }
+
+            case CarouselListItem.TYPE_IN_STAY:
+            {
+                serviceType = Constants.ServiceType.HOTEL;
+                break;
+            }
+
+            case CarouselListItem.TYPE_OB_STAY:
+            {
+                serviceType = Constants.ServiceType.OB_STAY;
+                break;
+            }
+
+            case CarouselListItem.TYPE_GOURMET:
+            {
+                serviceType = Constants.ServiceType.GOURMET;
+                break;
+            }
         }
 
         return serviceType;

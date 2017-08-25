@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
+import com.daily.dailyhotel.entity.CarouselListItem;
 import com.twoheart.dailyhotel.Setting;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.network.dto.BaseDto;
@@ -36,7 +37,7 @@ public class HomeNetworkController extends BaseNetworkController
     {
         void onEventList(ArrayList<Event> list);
 
-        void onWishList(ArrayList<HomePlace> list, boolean isError);
+        void onWishList(ArrayList<CarouselListItem> list, boolean isError);
 
         void onRecommendationList(ArrayList<Recommendation> list, boolean isError);
 
@@ -164,20 +165,21 @@ public class HomeNetworkController extends BaseNetworkController
 
                     if (baseDto.msgCode == 100)
                     {
-                        ArrayList<HomePlace> homePlaceList = new ArrayList<>();
-                        homePlaceList.addAll(baseDto.data.items);
-
                         String imageBaseUrl = baseDto.data.imageBaseUrl;
+                        ArrayList<CarouselListItem> carouselListItemList = new ArrayList<>();
 
-                        for (HomePlace wishItem : homePlaceList)
+                        for (HomePlace homePlace : baseDto.data.items)
                         {
-                            if (DailyTextUtils.isTextEmpty(wishItem.imageUrl) == false)
+                            if (DailyTextUtils.isTextEmpty(homePlace.imageUrl) == false)
                             {
-                                wishItem.imageUrl = imageBaseUrl + wishItem.imageUrl;
+                                homePlace.imageUrl = imageBaseUrl + homePlace.imageUrl;
                             }
+
+                            CarouselListItem carouselListItem = new CarouselListItem(CarouselListItem.TYPE_HOME_PLACE, homePlace);
+                            carouselListItemList.add(carouselListItem);
                         }
 
-                        ((HomeNetworkController.OnNetworkControllerListener) mOnNetworkControllerListener).onWishList(homePlaceList, false);
+                        ((HomeNetworkController.OnNetworkControllerListener) mOnNetworkControllerListener).onWishList(carouselListItemList, false);
                     } else
                     {
                         ((HomeNetworkController.OnNetworkControllerListener) mOnNetworkControllerListener).onWishList(null, true);

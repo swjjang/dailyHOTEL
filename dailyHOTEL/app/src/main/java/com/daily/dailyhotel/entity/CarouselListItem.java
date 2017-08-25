@@ -6,9 +6,10 @@ package com.daily.dailyhotel.entity;
 
 public class CarouselListItem
 {
-    public static final int TYPE_HOMEPLACE = 0;
-    public static final int TYPE_STAY = 1;
-    public static final int TYPE_GOURMET = 2;
+    public static final int TYPE_HOME_PLACE = 0;
+    public static final int TYPE_IN_STAY = 1;
+    public static final int TYPE_OB_STAY = 2;
+    public static final int TYPE_GOURMET = 3;
 
     public int mType;
     private Object mItem;

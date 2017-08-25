@@ -36,7 +36,10 @@ import com.daily.base.util.ExLog;
 import com.daily.base.util.FontManager;
 import com.daily.base.util.ScreenUtils;
 import com.daily.base.widget.DailyTextView;
+import com.daily.dailyhotel.entity.CarouselListItem;
 import com.daily.dailyhotel.view.DailyToolbarView;
+import com.daily.dailyhotel.view.carousel.DailyCarouselAnimationLayout;
+import com.daily.dailyhotel.view.carousel.DailyCarouselLayout;
 import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.twoheart.dailyhotel.DailyHotel;
@@ -44,7 +47,6 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ListRowHomeStampDataBinding;
 import com.twoheart.dailyhotel.model.DailyCategoryType;
 import com.twoheart.dailyhotel.network.model.Event;
-import com.twoheart.dailyhotel.network.model.HomePlace;
 import com.twoheart.dailyhotel.network.model.Recommendation;
 import com.twoheart.dailyhotel.place.base.BaseBlurLayout;
 import com.twoheart.dailyhotel.place.base.BaseMenuNavigationFragment;
@@ -97,8 +99,8 @@ public class HomeLayout extends BaseBlurLayout
     View mTextMessageLayout;
     View mTopButtonLayout, mProviderLayout;
     private ListRowHomeStampDataBinding mListRowHomeStampDataBinding;
-    HomeCarouselLayout mRecentListLayout;
-    HomeCarouselLayout mWishListLayout;
+    DailyCarouselAnimationLayout mRecentListLayout;
+    DailyCarouselAnimationLayout mWishListLayout;
     HomeRecommendationLayout mHomeRecommendationLayout;
 
     ObjectAnimator mErrorPopupAnimator;
@@ -132,13 +134,13 @@ public class HomeLayout extends BaseBlurLayout
 
         void onRecentListViewAllClick();
 
-        void onWishListItemClick(View view, int position);
+        void onWishListItemClick(View view);
 
-        void onWishListItemLongClick(View view, int position);
+        void onWishListItemLongClick(View view);
 
-        void onRecentListItemClick(View view, int position);
+        void onRecentListItemClick(View view);
 
-        void onRecentListItemLongClick(View view, int position);
+        void onRecentListItemLongClick(View view);
 
         void onTermsClick();
 
@@ -445,12 +447,13 @@ public class HomeLayout extends BaseBlurLayout
             return;
         }
 
-        mWishListLayout = new HomeCarouselLayout(mContext);
+        mWishListLayout = new DailyCarouselAnimationLayout(mContext);
+        mRecentListLayout.setUsePriceLayout(false);
         layout.addView(mWishListLayout);
 
         mWishListLayout.setTitleText(R.string.label_wishlist);
 
-        mWishListLayout.setCarouselListener(new HomeCarouselLayout.OnCarouselListener()
+        mWishListLayout.setCarouselListener(new DailyCarouselLayout.OnCarouselListener()
         {
             @Override
             public void onViewAllClick()
@@ -459,15 +462,15 @@ public class HomeLayout extends BaseBlurLayout
             }
 
             @Override
-            public void onItemClick(View view, int position)
+            public void onItemClick(View view)
             {
-                ((HomeLayout.OnEventListener) mOnEventListener).onWishListItemClick(view, position);
+                ((HomeLayout.OnEventListener) mOnEventListener).onWishListItemClick(view);
             }
 
             @Override
-            public void onItemLongClick(View view, int position)
+            public void onItemLongClick(View view)
             {
-                ((HomeLayout.OnEventListener) mOnEventListener).onWishListItemLongClick(view, position);
+                ((HomeLayout.OnEventListener) mOnEventListener).onWishListItemLongClick(view);
             }
         });
     }
@@ -479,13 +482,14 @@ public class HomeLayout extends BaseBlurLayout
             return;
         }
 
-        mRecentListLayout = new HomeCarouselLayout(mContext);
+        mRecentListLayout = new DailyCarouselAnimationLayout(mContext);
+        mRecentListLayout.setUsePriceLayout(false);
         //        mRecentListLayout.setVisibility(View.GONE);
         layout.addView(mRecentListLayout);
 
         mRecentListLayout.setTitleText(R.string.frag_recent_places);
 
-        mRecentListLayout.setCarouselListener(new HomeCarouselLayout.OnCarouselListener()
+        mRecentListLayout.setCarouselListener(new DailyCarouselLayout.OnCarouselListener()
         {
             @Override
             public void onViewAllClick()
@@ -494,15 +498,15 @@ public class HomeLayout extends BaseBlurLayout
             }
 
             @Override
-            public void onItemClick(View view, int position)
+            public void onItemClick(View view)
             {
-                ((HomeLayout.OnEventListener) mOnEventListener).onRecentListItemClick(view, position);
+                ((HomeLayout.OnEventListener) mOnEventListener).onRecentListItemClick(view);
             }
 
             @Override
-            public void onItemLongClick(View view, int position)
+            public void onItemLongClick(View view)
             {
-                ((HomeLayout.OnEventListener) mOnEventListener).onRecentListItemLongClick(view, position);
+                ((HomeLayout.OnEventListener) mOnEventListener).onRecentListItemLongClick(view);
             }
         });
     }
@@ -937,7 +941,7 @@ public class HomeLayout extends BaseBlurLayout
         mCategoryLayout.setStayOutBoundNewVisible(visible);
     }
 
-    public void setWishListData(ArrayList<HomePlace> list, boolean isError)
+    public void setWishListData(ArrayList<CarouselListItem> list, boolean isError)
     {
         mWishListLayout.setData(list);
 
@@ -947,7 +951,7 @@ public class HomeLayout extends BaseBlurLayout
         }
     }
 
-    public void setRecentListData(ArrayList<HomePlace> list, boolean isError)
+    public void setRecentListData(ArrayList<CarouselListItem> list, boolean isError)
     {
         mRecentListLayout.setData(list);
 
@@ -1052,26 +1056,6 @@ public class HomeLayout extends BaseBlurLayout
     public boolean hasRecentListData()
     {
         return mRecentListLayout.hasData();
-    }
-
-    public HomePlace getWishItem(int position)
-    {
-        if (mWishListLayout == null)
-        {
-            return null;
-        }
-
-        return mWishListLayout.getItem(position);
-    }
-
-    public HomePlace getRecentItem(int position)
-    {
-        if (mRecentListLayout == null)
-        {
-            return null;
-        }
-
-        return mRecentListLayout.getItem(position);
     }
 
     void setErrorPopupLayout(final boolean isShow)

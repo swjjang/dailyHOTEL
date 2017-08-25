@@ -2,6 +2,7 @@ package com.daily.dailyhotel.view.carousel;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.databinding.DataBindingUtil;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -46,7 +47,7 @@ public class DailyCarouselLayout extends ConstraintLayout
         super(context);
 
         mContext = context;
-        initLayout();
+        initLayout(null);
     }
 
     public DailyCarouselLayout(Context context, AttributeSet attrs)
@@ -54,7 +55,7 @@ public class DailyCarouselLayout extends ConstraintLayout
         super(context, attrs);
 
         mContext = context;
-        initLayout();
+        initLayout(attrs);
     }
 
     public DailyCarouselLayout(Context context, AttributeSet attrs, int defStyleAttr)
@@ -62,10 +63,10 @@ public class DailyCarouselLayout extends ConstraintLayout
         super(context, attrs, defStyleAttr);
 
         mContext = context;
-        initLayout();
+        initLayout(attrs);
     }
 
-    private void initLayout()
+    private void initLayout(AttributeSet attrs)
     {
         mDataBinding = DataBindingUtil.inflate(LayoutInflater.from(mContext), R.layout.layout_carousel_data, this, true);
 
@@ -102,6 +103,13 @@ public class DailyCarouselLayout extends ConstraintLayout
         {
             SnapHelper snapHelper = new PagerSnapHelper();
             snapHelper.attachToRecyclerView(mDataBinding.recyclerView);
+        }
+
+        if (attrs != null)
+        {
+            TypedArray typedArray = mContext.obtainStyledAttributes(attrs, R.styleable.dailyCarousel);
+            boolean isUsePrice = typedArray.getBoolean(R.styleable.dailyCarousel_use_price_layout, true);
+            setUsePriceLayout(isUsePrice);
         }
     }
 
@@ -163,6 +171,16 @@ public class DailyCarouselLayout extends ConstraintLayout
         }
 
         return mAdapter.getItem(position);
+    }
+
+    public void setUsePriceLayout(boolean isUse)
+    {
+        if (mAdapter == null)
+        {
+            return;
+        }
+
+        mAdapter.setUsePriceLayout(isUse);
     }
 
     private DailyCarouselAdapter.ItemClickListener mItemClickListener = new DailyCarouselAdapter.ItemClickListener()
