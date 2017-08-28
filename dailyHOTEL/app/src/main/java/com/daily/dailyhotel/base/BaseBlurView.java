@@ -66,7 +66,10 @@ public abstract class BaseBlurView<T1 extends OnBaseEventListener, T2 extends Vi
 
             Bitmap bitmap = ScreenUtils.takeScreenShot(activity);
 
-            if (bitmap != null)
+            if (bitmap == null)
+            {
+                mBlurImageView.setImageResource(R.color.black_a75);
+            } else
             {
                 Observable.just(ScreenUtils.takeScreenShot(activity)).subscribeOn(Schedulers.io()).map(new Function<Bitmap, Bitmap>()
                 {

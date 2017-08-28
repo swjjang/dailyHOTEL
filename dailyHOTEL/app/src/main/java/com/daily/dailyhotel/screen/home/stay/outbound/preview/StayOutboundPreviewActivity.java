@@ -51,6 +51,8 @@ public class StayOutboundPreviewActivity extends BaseActivity<StayOutboundPrevie
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
+        overridePendingTransition(R.anim.hold, R.anim.hold);
+
         super.onCreate(savedInstanceState);
     }
 
@@ -64,6 +66,8 @@ public class StayOutboundPreviewActivity extends BaseActivity<StayOutboundPrevie
     @Override
     public void finish()
     {
+        overridePendingTransition(R.anim.hold, R.anim.hold);
+
         super.finish();
     }
 }
