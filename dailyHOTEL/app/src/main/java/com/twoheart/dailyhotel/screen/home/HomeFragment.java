@@ -1994,11 +1994,6 @@ public class HomeFragment extends BaseMenuNavigationFragment
 
                 case STAY_OUTBOUND_HOTEL:
                 {
-                    if (mHomeLayout != null)
-                    {
-                        mHomeLayout.setCategoryStayOutboundNewVisible(false);
-                    }
-
                     Intent intent = StayOutboundSearchActivity.newInstance(mBaseActivity);
                     startActivityForResult(intent, Constants.CODE_RESULT_ACTIVITY_STAY_OUTBOUND_SEARCH);
 
