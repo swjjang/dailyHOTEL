@@ -6,6 +6,8 @@ import android.view.ViewGroup;
 
 public interface BaseDialogViewInterface extends BaseViewInterface
 {
+    boolean isTabletDevice();
+
     void hideSimpleDialog();
 
     void showSimpleDialog(String title, String msg, String positive//

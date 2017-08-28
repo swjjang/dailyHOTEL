@@ -5,6 +5,7 @@ import android.location.Location;
 import android.support.v4.app.FragmentManager;
 
 import com.daily.base.BaseDialogViewInterface;
+import com.daily.dailyhotel.base.BaseBlurViewInterface;
 import com.daily.dailyhotel.entity.ListItem;
 import com.daily.dailyhotel.entity.StayOutbound;
 
@@ -12,7 +13,7 @@ import java.util.List;
 
 import io.reactivex.Observable;
 
-public interface StayOutboundListViewInterface extends BaseDialogViewInterface
+public interface StayOutboundListViewInterface extends BaseBlurViewInterface
 {
     enum EmptyScreenType
     {
@@ -68,4 +69,6 @@ public interface StayOutboundListViewInterface extends BaseDialogViewInterface
     void setBottomLayoutVisible(boolean visible);
 
     Observable<Long> getLocationAnimation();
+
+    void showPreviewGuide();
 }
