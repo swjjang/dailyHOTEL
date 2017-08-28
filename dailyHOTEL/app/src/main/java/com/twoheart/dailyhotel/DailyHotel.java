@@ -14,6 +14,7 @@ import com.daily.dailyhotel.screen.home.gourmet.thankyou.GourmetThankYouActivity
 import com.daily.dailyhotel.screen.home.stay.inbound.payment.StayPaymentActivity;
 import com.daily.dailyhotel.screen.home.stay.inbound.thankyou.StayThankYouActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.detail.StayOutboundDetailActivity;
+import com.daily.dailyhotel.screen.home.stay.outbound.list.StayOutboundListActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.payment.StayOutboundPaymentActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.search.StayOutboundSearchActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.search.StayOutboundSearchSuggestActivity;
@@ -299,6 +300,7 @@ public class DailyHotel extends android.support.multidex.MultiDexApplication imp
                 mAppResearch.onResume("고메", -1);
             } else if (activity instanceof StayOutboundSearchActivity//
                 || activity instanceof StayOutboundSearchSuggestActivity//
+                || activity instanceof StayOutboundListActivity//
                 || activity instanceof StayOutboundPaymentActivity)
             {
                 mAppResearch.onResume("outbound_스테이", -1);
