@@ -23,7 +23,8 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_weight="1"
                 android:minHeight="110dp"
-                android:scaleType="fitEnd"/>
+                android:scaleType="fitEnd"
+                app:srcCompat="@drawable/no_hotel_ic"/>
 
             <LinearLayout
                 android:id="@+id/textLayout"

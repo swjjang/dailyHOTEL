@@ -1313,6 +1313,17 @@ public class StayCategoryTabActivity extends PlaceMainActivity
         }
 
         @Override
+        public void onBottomOptionVisible(boolean visible)
+        {
+            if (mPlaceMainLayout == null)
+            {
+                return;
+            }
+
+            mPlaceMainLayout.setBottomOptionVisible(visible);
+        }
+
+        @Override
         public void onUpdateFilterEnabled(boolean isShowFilterEnabled)
         {
             if (mPlaceMainLayout == null)

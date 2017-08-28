@@ -55,6 +55,8 @@ public abstract class PlaceListFragment extends BaseFragment implements Constant
 
         void onShowMenuBar();
 
+        void onBottomOptionVisible(boolean visible);
+
         void onUpdateFilterEnabled(boolean isShowFilterEnabled);
 
         void onUpdateViewTypeEnabled(boolean isShowViewTypeEnabled);

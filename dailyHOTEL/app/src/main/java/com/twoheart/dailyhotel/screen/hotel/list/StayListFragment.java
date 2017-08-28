@@ -422,6 +422,12 @@ public class StayListFragment extends PlaceListFragment
         }
 
         @Override
+        public void onBottomOptionVisible(boolean visible)
+        {
+            mOnPlaceListFragmentListener.onBottomOptionVisible(visible);
+        }
+
+        @Override
         public void onUpdateViewTypeEnabled(boolean isEnabled)
         {
             mOnPlaceListFragmentListener.onUpdateViewTypeEnabled(isEnabled);

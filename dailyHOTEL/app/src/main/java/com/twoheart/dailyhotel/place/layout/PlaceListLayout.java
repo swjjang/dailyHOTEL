@@ -80,6 +80,8 @@ public abstract class PlaceListLayout extends BaseLayout
 
         void onUpdateFilterEnabled(boolean isEnabled);
 
+        void onBottomOptionVisible(boolean visible);
+
         void onShowActivityEmptyView(boolean isShow);
 
         void onRecordAnalytics(Constants.ViewType viewType);

@@ -1428,6 +1428,11 @@ public class StayCategoryNearByActivity extends BaseActivity
         }
 
         @Override
+        public void onBottomOptionVisible(boolean visible)
+        {
+        }
+
+        @Override
         public void onFilterClick()
         {
             if (isFinishing() == true || lockUiComponentAndIsLockUiComponent() == true)

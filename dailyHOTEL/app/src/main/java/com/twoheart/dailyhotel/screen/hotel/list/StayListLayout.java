@@ -128,6 +128,7 @@ public class StayListLayout extends PlaceListLayout
                     mPlaceListMapFragment = null;
                 }
 
+                ((StayListLayout.OnEventListener) mOnEventListener).onBottomOptionVisible(true);
                 ((StayListLayout.OnEventListener) mOnEventListener).onUpdateFilterEnabled(true);
                 ((StayListLayout.OnEventListener) mOnEventListener).onUpdateViewTypeEnabled(true);
                 break;
@@ -149,6 +150,7 @@ public class StayListLayout extends PlaceListLayout
                     }
                 }
 
+                ((StayListLayout.OnEventListener) mOnEventListener).onBottomOptionVisible(true);
                 ((StayListLayout.OnEventListener) mOnEventListener).onUpdateFilterEnabled(true);
                 ((StayListLayout.OnEventListener) mOnEventListener).onUpdateViewTypeEnabled(true);
                 break;
@@ -161,14 +163,14 @@ public class StayListLayout extends PlaceListLayout
                 if (stayCurationOption.isDefaultFilter() == true)
                 {
                     setScreenVisible(ScreenType.EMPTY);
-                    ((StayListLayout.OnEventListener) mOnEventListener).onUpdateFilterEnabled(false);
+                    ((StayListLayout.OnEventListener) mOnEventListener).onBottomOptionVisible(false);
                 } else
                 {
                     setScreenVisible(ScreenType.FILTER_EMPTY);
+                    ((StayListLayout.OnEventListener) mOnEventListener).onBottomOptionVisible(true);
                     ((StayListLayout.OnEventListener) mOnEventListener).onUpdateFilterEnabled(true);
+                    ((StayListLayout.OnEventListener) mOnEventListener).onUpdateViewTypeEnabled(false);
                 }
-
-                ((StayListLayout.OnEventListener) mOnEventListener).onUpdateViewTypeEnabled(false);
 
                 if (mContext instanceof Activity)
                 {
