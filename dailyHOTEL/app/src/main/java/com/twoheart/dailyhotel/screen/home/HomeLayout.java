@@ -448,7 +448,14 @@ public class HomeLayout extends BaseBlurLayout
         }
 
         mWishListLayout = new DailyCarouselAnimationLayout(mContext);
-        mRecentListLayout.setUsePriceLayout(false);
+        mWishListLayout.setUsePriceLayout(false);
+        mWishListLayout.setBackgroundResource(R.color.default_background);
+        mWishListLayout.setTopMarginView(ScreenUtils.dpToPx(mContext, 15d) //
+            , mContext.getResources().getColor(R.color.default_background));
+        mWishListLayout.setTopLineView(ScreenUtils.dpToPx(mContext, 1d) //
+            , mContext.getResources().getColor(R.color.default_line_cf0f0f0));
+        mWishListLayout.setBottomLineView(ScreenUtils.dpToPx(mContext, 1d) //
+            , mContext.getResources().getColor(R.color.default_line_cf0f0f0));
         layout.addView(mWishListLayout);
 
         mWishListLayout.setTitleText(R.string.label_wishlist);
@@ -484,7 +491,13 @@ public class HomeLayout extends BaseBlurLayout
 
         mRecentListLayout = new DailyCarouselAnimationLayout(mContext);
         mRecentListLayout.setUsePriceLayout(false);
-        //        mRecentListLayout.setVisibility(View.GONE);
+        mRecentListLayout.setBackgroundResource(R.color.default_background);
+        mRecentListLayout.setTopMarginView(ScreenUtils.dpToPx(mContext, 15d) //
+            , mContext.getResources().getColor(R.color.default_background));
+        mRecentListLayout.setTopLineView(ScreenUtils.dpToPx(mContext, 1d) //
+            , mContext.getResources().getColor(R.color.default_line_cf0f0f0));
+        mRecentListLayout.setBottomLineView(ScreenUtils.dpToPx(mContext, 1d) //
+            , mContext.getResources().getColor(R.color.default_line_cf0f0f0));
         layout.addView(mRecentListLayout);
 
         mRecentListLayout.setTitleText(R.string.frag_recent_places);

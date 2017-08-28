@@ -30,6 +30,7 @@ public class DailyCarouselLayout extends ConstraintLayout
     private Context mContext;
     private LayoutCarouselDataBinding mDataBinding;
     private DailyCarouselAdapter mAdapter;
+    private boolean mIsUsePriceLayout;
 
     protected OnCarouselListener mCarouselListener;
 
@@ -47,7 +48,7 @@ public class DailyCarouselLayout extends ConstraintLayout
         super(context);
 
         mContext = context;
-        initLayout(null);
+        initLayout(context, null);
     }
 
     public DailyCarouselLayout(Context context, AttributeSet attrs)
@@ -55,7 +56,7 @@ public class DailyCarouselLayout extends ConstraintLayout
         super(context, attrs);
 
         mContext = context;
-        initLayout(attrs);
+        initLayout(context, attrs);
     }
 
     public DailyCarouselLayout(Context context, AttributeSet attrs, int defStyleAttr)
@@ -63,12 +64,12 @@ public class DailyCarouselLayout extends ConstraintLayout
         super(context, attrs, defStyleAttr);
 
         mContext = context;
-        initLayout(attrs);
+        initLayout(context, attrs);
     }
 
-    private void initLayout(AttributeSet attrs)
+    private void initLayout(Context context, AttributeSet attrs)
     {
-        mDataBinding = DataBindingUtil.inflate(LayoutInflater.from(mContext), R.layout.layout_carousel_data, this, true);
+        mDataBinding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.layout_carousel_data, this, true);
 
         setBackgroundResource(R.color.white);
 
@@ -86,14 +87,14 @@ public class DailyCarouselLayout extends ConstraintLayout
             }
         });
 
-        LinearLayoutManager layoutManager = new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false);
-        //        layoutManager.setAutoMeasureEnabled(true);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
+//                layoutManager.setAutoMeasureEnabled(true);
 
         mDataBinding.recyclerView.setLayoutManager(layoutManager);
-        EdgeEffectColor.setEdgeGlowColor(mDataBinding.recyclerView, mContext.getResources().getColor(R.color.default_over_scroll_edge));
+        EdgeEffectColor.setEdgeGlowColor(mDataBinding.recyclerView, context.getResources().getColor(R.color.default_over_scroll_edge));
 
-        //        mDataBinding.recyclerView.setNestedScrollingEnabled(false);
-        //        mDataBinding.recyclerView.setHasFixedSize(true);
+//                mDataBinding.recyclerView.setNestedScrollingEnabled(false);
+//                mDataBinding.recyclerView.setHasFixedSize(true);
 
         if (ScreenUtils.isTabletDevice((Activity) mContext) == true)
         {
@@ -108,8 +109,8 @@ public class DailyCarouselLayout extends ConstraintLayout
         if (attrs != null)
         {
             TypedArray typedArray = mContext.obtainStyledAttributes(attrs, R.styleable.dailyCarousel);
-            boolean isUsePrice = typedArray.getBoolean(R.styleable.dailyCarousel_use_price_layout, true);
-            setUsePriceLayout(isUsePrice);
+            boolean isUse = typedArray.getBoolean(R.styleable.dailyCarousel_use_price_layout, true);
+            setUsePriceLayout(isUse);
         }
     }
 
@@ -155,9 +156,11 @@ public class DailyCarouselLayout extends ConstraintLayout
         if (mAdapter == null)
         {
             mAdapter = new DailyCarouselAdapter(mContext, list, mItemClickListener);
+            mAdapter.setUsePriceLayout(mIsUsePriceLayout);
             mDataBinding.recyclerView.setAdapter(mAdapter);
         } else
         {
+            mAdapter.setUsePriceLayout(mIsUsePriceLayout);
             mAdapter.setData(list);
             mAdapter.notifyDataSetChanged();
         }
@@ -175,12 +178,7 @@ public class DailyCarouselLayout extends ConstraintLayout
 
     public void setUsePriceLayout(boolean isUse)
     {
-        if (mAdapter == null)
-        {
-            return;
-        }
-
-        mAdapter.setUsePriceLayout(isUse);
+        mIsUsePriceLayout = isUse;
     }
 
     private DailyCarouselAdapter.ItemClickListener mItemClickListener = new DailyCarouselAdapter.ItemClickListener()

@@ -22,6 +22,8 @@ import java.util.ArrayList;
 
 public class DailyCarouselAnimationLayout extends ConstraintLayout
 {
+    private static final int LAYOUT_ANIMATION_DURATION = 15000;
+
     private Context mContext;
     private LayoutCarouselAnimationDataBinding mDataBinding;
     private ValueAnimator mValueAnimator;
@@ -105,11 +107,9 @@ public class DailyCarouselAnimationLayout extends ConstraintLayout
             boolean isUsePrice = typedArray.getBoolean(R.styleable.dailyCarousel_use_price_layout, true);
             setUsePriceLayout(isUsePrice);
         }
-
-        ExLog.d(getMeasuredWidth() + " : " + getMeasuredHeight() + " : " + getTop() + " : " + getBottom());
     }
 
-    private void setTopMarginView(int height, int color)
+    public void setTopMarginView(int height, int color)
     {
         if (mDataBinding == null)
         {
@@ -119,7 +119,7 @@ public class DailyCarouselAnimationLayout extends ConstraintLayout
         setLayoutParams(mDataBinding.topMarginView, height, color);
     }
 
-    private void setTopLineView(int height, int color)
+    public void setTopLineView(int height, int color)
     {
         if (mDataBinding == null)
         {
@@ -129,7 +129,7 @@ public class DailyCarouselAnimationLayout extends ConstraintLayout
         setLayoutParams(mDataBinding.topLine, height, color);
     }
 
-    private void setBottomMarginView(int height, int color)
+    public void setBottomMarginView(int height, int color)
     {
         if (mDataBinding == null)
         {
@@ -139,7 +139,7 @@ public class DailyCarouselAnimationLayout extends ConstraintLayout
         setLayoutParams(mDataBinding.bottomMarginView, height, color);
     }
 
-    private void setBottomLineView(int height, int color)
+    public void setBottomLineView(int height, int color)
     {
         if (mDataBinding == null)
         {
@@ -214,6 +214,60 @@ public class DailyCarouselAnimationLayout extends ConstraintLayout
         }
 
         mDataBinding.contentLayout.setData(list);
+
+        if (list == null || list.size() == 0)
+        {
+            setVisibility(View.GONE);
+            return;
+        }
+
+//        getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener()
+//        {
+//            @Override
+//            public void onGlobalLayout()
+//            {
+//
+//                if (VersionUtils.isOverAPI16() == true)
+//                {
+//                    getViewTreeObserver().removeOnGlobalLayoutListener(this);
+//                } else
+//                {
+//                    getViewTreeObserver().removeGlobalOnLayoutListener(this);
+//                }
+//                int height = getHeight();
+//                int top = getTop();
+//                int bottom = getBottom();
+//
+//                ValueAnimator animator = ValueAnimator.ofInt(0, height);
+//                animator.setDuration(LAYOUT_ANIMATION_DURATION);
+//                animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener()
+//                {
+//                    @Override
+//                    public void onAnimationUpdate(ValueAnimator animation)
+//                    {
+//                        Integer value = (Integer) animation.getAnimatedValue();
+//                        ExLog.d("value : " + value + " / " + (top + value.intValue()));
+//
+//
+//                        setTop(top);
+//                        setBottom(top + value.intValue());
+//                        mDataBinding.animationLayout.setTop(top);
+//                        mDataBinding.animationLayout.setBottom(top + value.intValue());
+//
+//                        ViewGroup.LayoutParams params = getLayoutParams();
+//                        params.height = value;
+//                        setLayoutParams(params);
+////                        ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) mDataBinding.animationLayout.getLayoutParams();
+////                        layoutParams.height = value;
+////                        mDataBinding.animationLayout.setLayoutParams(layoutParams);
+////                        requestLayout();
+////                        refreshDrawableState();
+////                        getParent().requestLayout();
+//                    }
+//                });
+//                animator.start();
+//            }
+//        });
     }
 
     public CarouselListItem getItem(int position)
@@ -244,5 +298,15 @@ public class DailyCarouselAnimationLayout extends ConstraintLayout
         }
 
         mDataBinding.contentLayout.setCarouselListener(listener);
+    }
+
+    private void checkLayoutHeight()
+    {
+        if (mDataBinding == null)
+        {
+            ExLog.d("mDataBinding is null");
+            return;
+        }
+
     }
 }
