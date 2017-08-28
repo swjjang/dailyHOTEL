@@ -15,14 +15,15 @@ import android.view.ViewGroup;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
-import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.entity.CommonDateTime;
+import com.daily.dailyhotel.entity.People;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayOutbound;
 import com.daily.dailyhotel.entity.StayOutbounds;
 import com.daily.dailyhotel.parcel.analytics.StayOutboundDetailAnalyticsParam;
 import com.daily.dailyhotel.repository.local.model.AnalyticsParam;
 import com.daily.dailyhotel.screen.home.stay.outbound.detail.StayOutboundDetailActivity;
+import com.daily.dailyhotel.screen.home.stay.outbound.preview.StayOutboundPreviewActivity;
 import com.daily.dailyhotel.util.RecentlyPlaceUtil;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.twoheart.dailyhotel.R;
@@ -472,11 +473,14 @@ public class RecentStayListFragment extends RecentPlacesListFragment
             stayOutbound.name, null);
     }
 
-    private void onStayItemLongClick(View view, int position, PlaceViewItem placeViewItem)
+    private void onStayItemLongClick(View view, int position, Stay stay)
     {
-        mListLayout.setBlurVisibility(mBaseActivity, true);
+        if (view == null || stay == null)
+        {
+            return;
+        }
 
-        Stay stay = placeViewItem.getItem();
+        mListLayout.setBlurVisibility(mBaseActivity, true);
 
         mViewByLongPress = view;
         mPositionByLongPress = position;
@@ -486,9 +490,24 @@ public class RecentStayListFragment extends RecentPlacesListFragment
         mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PREVIEW);
     }
 
-    private void onStayOutboundItemLongClick()
+    private void onStayOutboundItemLongClick(View view, int position, StayOutbound stayOutbound)
     {
-        DailyToast.showToast(getActivity(), getString(R.string.label_stay_outbound_preparing_preview), DailyToast.LENGTH_SHORT);
+        if (view == null || stayOutbound == null)
+        {
+            return;
+        }
+
+        mListLayout.setBlurVisibility(mBaseActivity, true);
+
+        mViewByLongPress = view;
+        mPositionByLongPress = position;
+
+        mBaseActivity.startActivityForResult(StayOutboundPreviewActivity.newInstance(getActivity(), stayOutbound.index//
+            , stayOutbound.name//
+            , ((StayBookingDay) mPlaceBookingDay).getCheckInDay(DailyCalendar.ISO_8601_FORMAT)//
+            , ((StayBookingDay) mPlaceBookingDay).getCheckOutDay(DailyCalendar.ISO_8601_FORMAT)//
+            , People.DEFAULT_ADULTS, null)//
+            , CODE_REQUEST_ACTIVITY_PREVIEW);
     }
 
     private void onStayItemDeleteClick(PlaceViewItem placeViewItem)
@@ -596,10 +615,10 @@ public class RecentStayListFragment extends RecentPlacesListFragment
 
             if (object instanceof Stay)
             {
-                onStayItemLongClick(view, position, placeViewItem);
+                onStayItemLongClick(view, position, (Stay) object);
             } else if (object instanceof StayOutbound)
             {
-                onStayOutboundItemLongClick();
+                onStayOutboundItemLongClick(view, position, (StayOutbound) object);
             }
         }
 

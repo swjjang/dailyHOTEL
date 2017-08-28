@@ -1352,7 +1352,6 @@
     <string name="label_stay_outbound_list_adult_count">성인 %1$d</string>
     <string name="label_stay_outbound_list_child_count">아동 %1$d</string>
     <string name="label_stay_outbound_tripadvisor_rating">(평점 %1$s)</string>
-    <string name="label_stay_outbound_preparing_preview">해외호텔의 미리보기 기능은 준비 중입니다.</string>
     <string name="label_stay_outbound_research_filter_on">조건을 변경하여 검색해보세요.</string>
 
     <string name="message_stay_outbound_search_empty">찾으시는 해외 호텔이 없으신가요?\n데일리 고객센터로 알려주세요!</string>
@@ -1442,6 +1441,7 @@
     <string name="label_preview_remove_wish">위시리스트\n삭제하기</string>
     <string name="label_preview_kakao">카카오톡\n공유하기</string>
     <string name="label_preview_map">네이버 지도\n길찾기</string>
+    <string name="label_preview_google_map">구글 지도\n길찾기</string>
     <string name="label_preview_booking">지금 예약하기</string>
     <string name="label_preview_review_count">지금 예약하기</string>
     <string name="label_preview_wish_count">지금 예약하기</string>

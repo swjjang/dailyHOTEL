@@ -41,11 +41,13 @@ import com.daily.dailyhotel.screen.common.call.CallDialogActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.detail.StayOutboundDetailActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.filter.StayOutboundFilterActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.people.SelectPeopleActivity;
+import com.daily.dailyhotel.screen.home.stay.outbound.preview.StayOutboundPreviewActivity;
 import com.daily.dailyhotel.util.DailyLocationExFactory;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.screen.common.PermissionManagerActivity;
 import com.twoheart.dailyhotel.util.DailyCalendar;
+import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
@@ -57,6 +59,8 @@ import java.util.List;
 import java.util.Locale;
 
 import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
@@ -94,6 +98,9 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
 
     private ViewState mViewState = ViewState.LIST;
     private boolean mFirstRequest;
+
+    private StayOutbound mStayOutboundByLongPress;
+    private android.support.v4.util.Pair[] mPairsByLongPress;
 
     enum ViewState
     {
@@ -238,6 +245,31 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
         if (isRefresh() == true)
         {
             retryClick();
+        }
+
+        if (Util.supportPreview(getActivity()) == true)
+        {
+            if (getViewInterface().isBlurVisible() == true)
+            {
+                getViewInterface().setBlurVisible(getActivity(), false);
+            } else
+            {
+                // View 타입이 리스트일때만
+                if (mViewState == ViewState.LIST)
+                {
+                    int count = DailyPreference.getInstance(getActivity()).getCountPreviewGuide() + 1;
+
+                    if (count == 2)
+                    {
+                        getViewInterface().showPreviewGuide();
+                    } else if (count > 2)
+                    {
+                        return;
+                    }
+
+                    DailyPreference.getInstance(getActivity()).setCountPreviewGuide(count);
+                }
+            }
         }
     }
 
@@ -533,6 +565,22 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
             case StayOutboundListActivity.REQUEST_CODE_SETTING_LOCATION:
                 onMyLocationClick();
                 break;
+
+            case StayOutboundListActivity.REQUEST_CODE_PREVIEW:
+                switch (resultCode)
+                {
+                    case Activity.RESULT_OK:
+                        addCompositeDisposable(Observable.create(new ObservableOnSubscribe<Object>()
+                        {
+                            @Override
+                            public void subscribe(ObservableEmitter<Object> e) throws Exception
+                            {
+                                onStayClick(mPairsByLongPress, mStayOutboundByLongPress);
+                            }
+                        }).subscribeOn(AndroidSchedulers.mainThread()).subscribe());
+                        break;
+                }
+                break;
         }
     }
 
@@ -807,9 +855,19 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
     }
 
     @Override
-    public void onStayLongClick()
+    public void onStayLongClick(android.support.v4.util.Pair[] pair, StayOutbound stayOutbound)
     {
-        DailyToast.showToast(getActivity(), getString(R.string.label_stay_outbound_preparing_preview), DailyToast.LENGTH_SHORT);
+        mPairsByLongPress = pair;
+        mStayOutboundByLongPress = stayOutbound;
+
+        getViewInterface().setBlurVisible(getActivity(), true);
+
+        startActivityForResult(StayOutboundPreviewActivity.newInstance(getActivity(), stayOutbound.index//
+            , stayOutbound.name//
+            , mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
+            , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
+            , mPeople.numberOfAdults, mPeople.getChildAgeList())//
+            , StayOutboundListActivity.REQUEST_CODE_PREVIEW);
     }
 
     @Override

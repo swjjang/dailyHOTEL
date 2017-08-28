@@ -1,14 +1,16 @@
-package com.twoheart.dailyhotel.place.base;
+package com.daily.dailyhotel.base;
 
 import android.app.Activity;
-import android.content.Context;
+import android.databinding.ViewDataBinding;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
-import android.support.annotation.NonNull;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.daily.base.BaseActivity;
+import com.daily.base.BaseDialogView;
+import com.daily.base.OnBaseEventListener;
 import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
 import com.facebook.imagepipeline.nativecode.NativeBlurFilter;
@@ -20,16 +22,17 @@ import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
-public abstract class BaseBlurLayout extends BaseLayout
+public abstract class BaseBlurView<T1 extends OnBaseEventListener, T2 extends ViewDataBinding> extends BaseDialogView<T1, T2> implements BaseBlurViewInterface
 {
-    protected ImageView mBlurImageView;
+    private ImageView mBlurImageView;
 
-    public BaseBlurLayout(Context context, @NonNull OnBaseEventListener listener)
+    public BaseBlurView(BaseActivity activity, T1 listener)
     {
-        super(context, listener);
+        super(activity, listener);
     }
 
-    public boolean getBlurVisibility()
+    @Override
+    public boolean isBlurVisible()
     {
         if (mBlurImageView == null)
         {
@@ -39,7 +42,8 @@ public abstract class BaseBlurLayout extends BaseLayout
         return mBlurImageView.getVisibility() == View.VISIBLE;
     }
 
-    public void setBlurVisibility(Activity activity, boolean visible)
+    @Override
+    public void setBlurVisible(Activity activity, boolean visible)
     {
         if (activity == null)
         {
@@ -87,7 +91,7 @@ public abstract class BaseBlurLayout extends BaseLayout
                     @Override
                     public void accept(@io.reactivex.annotations.NonNull Bitmap bitmap) throws Exception
                     {
-                        mBlurImageView.setBackgroundDrawable(new BitmapDrawable(mContext.getResources(), bitmap));
+                        mBlurImageView.setBackgroundDrawable(new BitmapDrawable(getContext().getResources(), bitmap));
                     }
                 });
             }
