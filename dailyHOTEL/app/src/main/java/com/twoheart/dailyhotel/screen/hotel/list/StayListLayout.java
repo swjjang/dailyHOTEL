@@ -2,10 +2,13 @@ package com.twoheart.dailyhotel.screen.hotel.list;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Paint;
 import android.support.v4.app.FragmentManager;
 import android.view.View;
+import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
+import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Place;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.StayCuration;
@@ -61,6 +64,55 @@ public class StayListLayout extends PlaceListLayout
     }
 
     @Override
+    protected void initEmptyView(View view)
+    {
+        if (view == null)
+        {
+            return;
+        }
+
+        TextView messageTextView01 = (TextView) mEmptyView.findViewById(R.id.messageTextView01);
+        TextView messageTextView02 = (TextView) mEmptyView.findViewById(R.id.messageTextView02);
+
+        messageTextView01.setText(R.string.message_stay_empty_message01);
+        messageTextView02.setText(R.string.message_stay_empty_message02);
+
+        View changeRegionView = mEmptyView.findViewById(R.id.changeRegionView);
+        View changeDateView = mEmptyView.findViewById(R.id.changeDateView);
+
+        changeRegionView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                ((StayListLayout.OnEventListener) mOnEventListener).onRegionClick();
+            }
+        });
+
+        changeDateView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                ((StayListLayout.OnEventListener) mOnEventListener).onCalendarClick();
+            }
+        });
+
+
+        TextView callTextView = (TextView) mEmptyView.findViewById(R.id.callTextView);
+        callTextView.setPaintFlags(callTextView.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+
+        callTextView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                ((StayListLayout.OnEventListener) mOnEventListener).onShowCallDialog();
+            }
+        });
+    }
+
+    @Override
     public void setVisibility(FragmentManager fragmentManager, Constants.ViewType viewType, boolean isCurrentPage)
     {
         switch (viewType)
@@ -76,6 +128,7 @@ public class StayListLayout extends PlaceListLayout
                     mPlaceListMapFragment = null;
                 }
 
+                ((StayListLayout.OnEventListener) mOnEventListener).onBottomOptionVisible(true);
                 ((StayListLayout.OnEventListener) mOnEventListener).onUpdateFilterEnabled(true);
                 ((StayListLayout.OnEventListener) mOnEventListener).onUpdateViewTypeEnabled(true);
                 break;
@@ -97,6 +150,7 @@ public class StayListLayout extends PlaceListLayout
                     }
                 }
 
+                ((StayListLayout.OnEventListener) mOnEventListener).onBottomOptionVisible(true);
                 ((StayListLayout.OnEventListener) mOnEventListener).onUpdateFilterEnabled(true);
                 ((StayListLayout.OnEventListener) mOnEventListener).onUpdateViewTypeEnabled(true);
                 break;
@@ -109,14 +163,14 @@ public class StayListLayout extends PlaceListLayout
                 if (stayCurationOption.isDefaultFilter() == true)
                 {
                     setScreenVisible(ScreenType.EMPTY);
-                    ((StayListLayout.OnEventListener) mOnEventListener).onUpdateFilterEnabled(false);
+                    ((StayListLayout.OnEventListener) mOnEventListener).onBottomOptionVisible(false);
                 } else
                 {
                     setScreenVisible(ScreenType.FILTER_EMPTY);
+                    ((StayListLayout.OnEventListener) mOnEventListener).onBottomOptionVisible(true);
                     ((StayListLayout.OnEventListener) mOnEventListener).onUpdateFilterEnabled(true);
+                    ((StayListLayout.OnEventListener) mOnEventListener).onUpdateViewTypeEnabled(false);
                 }
-
-                ((StayListLayout.OnEventListener) mOnEventListener).onUpdateViewTypeEnabled(false);
 
                 if (mContext instanceof Activity)
                 {

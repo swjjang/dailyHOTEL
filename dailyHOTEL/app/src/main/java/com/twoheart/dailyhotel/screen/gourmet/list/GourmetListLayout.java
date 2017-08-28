@@ -2,10 +2,13 @@ package com.twoheart.dailyhotel.screen.gourmet.list;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Paint;
 import android.support.v4.app.FragmentManager;
 import android.view.View;
+import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
+import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.GourmetCuration;
 import com.twoheart.dailyhotel.model.GourmetCurationOption;
 import com.twoheart.dailyhotel.model.Place;
@@ -59,6 +62,55 @@ public class GourmetListLayout extends PlaceListLayout
 
         AnalyticsManager.getInstance(mContext).recordEvent(AnalyticsManager.Category.NAVIGATION_//
             , AnalyticsManager.Action.GOURMET_MAP_DETAIL_VIEW_CLICKED, placeViewItem.<Place>getItem().name, null);
+    }
+
+    @Override
+    protected void initEmptyView(View view)
+    {
+        if (view == null)
+        {
+            return;
+        }
+
+        TextView messageTextView01 = (TextView) mEmptyView.findViewById(R.id.messageTextView01);
+        TextView messageTextView02 = (TextView) mEmptyView.findViewById(R.id.messageTextView02);
+
+        messageTextView01.setText(R.string.message_gourmet_empty_message01);
+        messageTextView02.setText(R.string.message_gourmet_empty_message02);
+
+        View changeRegionView = mEmptyView.findViewById(R.id.changeRegionView);
+        View changeDateView = mEmptyView.findViewById(R.id.changeDateView);
+
+        changeRegionView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                ((GourmetListLayout.OnEventListener) mOnEventListener).onRegionClick();
+            }
+        });
+
+        changeDateView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                ((GourmetListLayout.OnEventListener) mOnEventListener).onCalendarClick();
+            }
+        });
+
+
+        TextView callTextView = (TextView) mEmptyView.findViewById(R.id.callTextView);
+        callTextView.setPaintFlags(callTextView.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+
+        callTextView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                ((GourmetListLayout.OnEventListener) mOnEventListener).onShowCallDialog();
+            }
+        });
     }
 
     @Override

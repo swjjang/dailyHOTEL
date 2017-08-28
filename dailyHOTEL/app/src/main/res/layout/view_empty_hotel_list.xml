@@ -3,49 +3,114 @@
        xmlns:app="http://schemas.android.com/apk/res-auto"
        xmlns:dailyFont="http://schemas.android.com/apk/res-auto">
 
-    <RelativeLayout
+    <ScrollView
         android:id="@+id/emptyLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@+id/calendarAndDistanceLayout"
+        android:fillViewport="true"
         android:visibility="gone">
 
         <LinearLayout
-            android:id="@+id/textLayout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginTop="20dp"
-            android:gravity="center"
+            android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <com.daily.base.widget.DailyTextView
-                android:id="@+id/messageTextView01"
+            <ImageView
+                android:id="@+id/emptyIconImageView"
                 android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_weight="1"
+                android:minHeight="110dp"
+                android:scaleType="fitEnd"
+                app:srcCompat="@drawable/no_hotel_ic"/>
+
+            <LinearLayout
+                android:id="@+id/textLayout"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/frag_hotel_list_no_hotels"
-                android:textColor="@color/default_text_c323232"
-                android:textSize="18dp"
+                android:layout_marginTop="20dp"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <com.daily.base.widget.DailyTextView
+                    android:id="@+id/messageTextView01"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/label_searchresult_empty"
+                    android:textColor="@color/default_text_c323232"
+                    android:textSize="18dp"
+                    dailyFont:style="Medium"/>
+
+                <com.daily.base.widget.DailyTextView
+                    android:id="@+id/messageTextView02"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="13dp"
+                    android:gravity="center"
+                    android:text="@string/label_searchresult_text01"
+                    android:textColor="@color/default_text_c929292"
+                    android:textSize="14dp"/>
+            </LinearLayout>
+
+            <com.daily.base.widget.DailyTextView
+                android:id="@+id/changeRegionView"
+                android:layout_width="180dp"
+                android:layout_height="38dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/shape_button_common_background"
+                android:gravity="center"
+                android:text="@string/label_stay_category_change_region"
+                android:textColor="@color/white"
+                android:textSize="14dp"
                 dailyFont:style="Medium"/>
 
             <com.daily.base.widget.DailyTextView
-                android:id="@+id/messageTextView02"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="13dp"
+                android:id="@+id/changeDateView"
+                android:layout_width="180dp"
+                android:layout_height="38dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/shape_button_common_background"
                 android:gravity="center"
-                android:text="@string/frag_hotel_list_no_line"
-                android:textColor="@color/default_text_c929292"
-                android:textSize="14dp"/>
-        </LinearLayout>
+                android:text="@string/label_stay_category_change_date"
+                android:textColor="@color/white"
+                android:textSize="14dp"
+                dailyFont:style="Medium"/>
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_above="@id/textLayout"
-            android:layout_centerHorizontal="true"
-            android:gravity="center"
-            app:srcCompat="@drawable/no_hotel_ic"/>
-    </RelativeLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginTop="25dp"
+                android:layout_weight="1"
+                android:gravity="bottom"
+                android:minHeight="60dp"
+                android:orientation="vertical">
+
+                <com.daily.base.widget.DailyTextView
+                    android:id="@+id/callUnderTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:text="@string/label_searchresult_text02"
+                    android:textColor="@color/default_text_cc5c5c5"
+                    android:textSize="12dp"/>
+
+                <com.daily.base.widget.DailyTextView
+                    android:id="@+id/callTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="1dp"
+                    android:gravity="center_horizontal"
+                    android:paddingBottom="15dp"
+                    android:text="@string/label_searchresult_call_customercenter"
+                    android:textColor="@color/default_text_c323232"
+                    android:textSize="12dp"/>
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
 
     <ScrollView
         android:id="@+id/filterEmptyLayout"

@@ -31,7 +31,6 @@ public abstract class PlaceListLayout extends BaseLayout
 {
     public static final int LOAD_MORE_POSITION_GAP = Constants.PAGENATION_LIST_SIZE / 3;
 
-    private boolean mBannerVisibility;
     protected boolean mIsLoading;
 
     protected View mEmptyView;
@@ -81,9 +80,17 @@ public abstract class PlaceListLayout extends BaseLayout
 
         void onUpdateFilterEnabled(boolean isEnabled);
 
+        void onBottomOptionVisible(boolean visible);
+
         void onShowActivityEmptyView(boolean isShow);
 
         void onRecordAnalytics(Constants.ViewType viewType);
+
+        void onShowCallDialog();
+
+        void onRegionClick();
+
+        void onCalendarClick();
     }
 
     protected abstract PlaceListAdapter getPlaceListAdapter(Context context, ArrayList<PlaceViewItem> arrayList);
@@ -95,6 +102,8 @@ public abstract class PlaceListLayout extends BaseLayout
     //    protected abstract PlaceViewItem getEventBannerViewItem();
 
     protected abstract void onInformationClick(View view, PlaceViewItem placeViewItem);
+
+    protected abstract void initEmptyView(View view);
 
     public PlaceListLayout(Context context, OnEventListener mOnEventListener)
     {
@@ -187,6 +196,8 @@ public abstract class PlaceListLayout extends BaseLayout
         });
 
         mEmptyView = view.findViewById(R.id.emptyLayout);
+        initEmptyView(mEmptyView);
+
         mFilterEmptyView = view.findViewById(R.id.filterEmptyLayout);
 
         View buttonView = mFilterEmptyView.findViewById(R.id.buttonView);
@@ -496,7 +507,7 @@ public abstract class PlaceListLayout extends BaseLayout
 
     public void setEmptyScreenVisible(boolean visible)
     {
-        if (mEmptyView == null)
+        if (mEmptyView == null || mBottomOptionLayout == null)
         {
             return;
         }
