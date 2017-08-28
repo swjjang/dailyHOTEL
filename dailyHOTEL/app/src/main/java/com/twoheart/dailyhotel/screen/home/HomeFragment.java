@@ -17,8 +17,8 @@ import android.view.ViewGroup;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
-import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.entity.CommonDateTime;
+import com.daily.dailyhotel.entity.People;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayOutbounds;
 import com.daily.dailyhotel.parcel.analytics.StayOutboundDetailAnalyticsParam;
@@ -28,6 +28,7 @@ import com.daily.dailyhotel.repository.local.model.AnalyticsParam;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
 import com.daily.dailyhotel.repository.remote.RecentlyRemoteImpl;
 import com.daily.dailyhotel.screen.home.stay.outbound.detail.StayOutboundDetailActivity;
+import com.daily.dailyhotel.screen.home.stay.outbound.preview.StayOutboundPreviewActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.search.StayOutboundSearchActivity;
 import com.daily.dailyhotel.util.RecentlyPlaceUtil;
 import com.facebook.drawee.view.SimpleDraweeView;
@@ -408,7 +409,14 @@ public class HomeFragment extends BaseMenuNavigationFragment
                         @Override
                         public void subscribe(ObservableEmitter<Object> e) throws Exception
                         {
-                            startPlaceDetail(mViewByLongPress, mHomePlaceByLongPress, mTodayDateTime);
+                            if (RecentlyPlaceUtil.SERVICE_TYPE_OB_STAY_NAME.equalsIgnoreCase(mHomePlaceByLongPress.serviceType) == true)
+                            {
+                                // stayOutbound
+                                startStayOutboundDetail(mViewByLongPress, mHomePlaceByLongPress, mTodayDateTime);
+                            } else
+                            {
+                                startPlaceDetail(mViewByLongPress, mHomePlaceByLongPress, mTodayDateTime);
+                            }
                         }
                     }).subscribeOn(AndroidSchedulers.mainThread()).subscribe();
                 }
@@ -1887,8 +1895,22 @@ public class HomeFragment extends BaseMenuNavigationFragment
                 {
                     if (RecentlyPlaceUtil.SERVICE_TYPE_OB_STAY_NAME.equalsIgnoreCase(recentItem.serviceType) == true)
                     {
-                        // stayOutbound
-                        DailyToast.showToast(getActivity(), getString(R.string.label_stay_outbound_preparing_preview), DailyToast.LENGTH_SHORT);
+                        mViewByLongPress = view;
+                        mHomePlaceByLongPress = recentItem;
+
+                        mHomeLayout.setBlurVisibility(mBaseActivity, true);
+
+                        StayBookingDay stayBookingDay = new StayBookingDay();
+                        stayBookingDay.setCheckInDay(mTodayDateTime.dailyDateTime);
+                        stayBookingDay.setCheckOutDay(mTodayDateTime.dailyDateTime, 1);
+
+                        startActivityForResult(StayOutboundPreviewActivity.newInstance(getActivity(), recentItem.index//
+                            , recentItem.title//
+                            , stayBookingDay.getCheckInDay(DailyCalendar.ISO_8601_FORMAT)//
+                            , stayBookingDay.getCheckOutDay(DailyCalendar.ISO_8601_FORMAT)//
+                            , People.DEFAULT_ADULTS, null)//
+                            , CODE_REQUEST_ACTIVITY_PREVIEW);
+
                         unLockUI();
                     } else
                     {

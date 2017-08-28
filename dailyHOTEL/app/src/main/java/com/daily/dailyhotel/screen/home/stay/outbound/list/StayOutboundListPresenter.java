@@ -868,8 +868,6 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
             , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
             , mPeople.numberOfAdults, mPeople.getChildAgeList())//
             , StayOutboundListActivity.REQUEST_CODE_PREVIEW);
-
-        //        DailyToast.showToast(getActivity(), getString(R.string.label_stay_outbound_preparing_preview), DailyToast.LENGTH_SHORT);
     }
 
     @Override
