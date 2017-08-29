@@ -8,8 +8,11 @@ import android.support.constraint.ConstraintLayout;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 
 import com.daily.base.util.ExLog;
+import com.daily.base.util.VersionUtils;
 import com.daily.dailyhotel.entity.CarouselListItem;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.LayoutCarouselAnimationDataBinding;
@@ -221,53 +224,53 @@ public class DailyCarouselAnimationLayout extends ConstraintLayout
             return;
         }
 
-//        getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener()
-//        {
-//            @Override
-//            public void onGlobalLayout()
-//            {
-//
-//                if (VersionUtils.isOverAPI16() == true)
-//                {
-//                    getViewTreeObserver().removeOnGlobalLayoutListener(this);
-//                } else
-//                {
-//                    getViewTreeObserver().removeGlobalOnLayoutListener(this);
-//                }
-//                int height = getHeight();
-//                int top = getTop();
-//                int bottom = getBottom();
-//
-//                ValueAnimator animator = ValueAnimator.ofInt(0, height);
-//                animator.setDuration(LAYOUT_ANIMATION_DURATION);
-//                animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener()
-//                {
-//                    @Override
-//                    public void onAnimationUpdate(ValueAnimator animation)
-//                    {
-//                        Integer value = (Integer) animation.getAnimatedValue();
-//                        ExLog.d("value : " + value + " / " + (top + value.intValue()));
-//
-//
+        getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener()
+        {
+            @Override
+            public void onGlobalLayout()
+            {
+
+                if (VersionUtils.isOverAPI16() == true)
+                {
+                    getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                } else
+                {
+                    getViewTreeObserver().removeGlobalOnLayoutListener(this);
+                }
+                int height = getHeight();
+                int top = getTop();
+                int bottom = getBottom();
+
+                ValueAnimator animator = ValueAnimator.ofInt(0, height);
+                animator.setDuration(LAYOUT_ANIMATION_DURATION);
+                animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener()
+                {
+                    @Override
+                    public void onAnimationUpdate(ValueAnimator animation)
+                    {
+                        Integer value = (Integer) animation.getAnimatedValue();
+                        ExLog.d("value : " + value + " / " + (top + value.intValue()));
+
+
 //                        setTop(top);
 //                        setBottom(top + value.intValue());
-//                        mDataBinding.animationLayout.setTop(top);
-//                        mDataBinding.animationLayout.setBottom(top + value.intValue());
-//
-//                        ViewGroup.LayoutParams params = getLayoutParams();
-//                        params.height = value;
-//                        setLayoutParams(params);
-////                        ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) mDataBinding.animationLayout.getLayoutParams();
-////                        layoutParams.height = value;
-////                        mDataBinding.animationLayout.setLayoutParams(layoutParams);
-////                        requestLayout();
-////                        refreshDrawableState();
-////                        getParent().requestLayout();
-//                    }
-//                });
-//                animator.start();
-//            }
-//        });
+
+                        ViewGroup.LayoutParams params = getLayoutParams();
+                        params.height = value;
+                        setLayoutParams(params);
+                        postInvalidate();
+                        refreshDrawableState();
+//                        ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) mDataBinding.animationLayout.getLayoutParams();
+//                        layoutParams.height = value;
+//                        mDataBinding.animationLayout.setLayoutParams(layoutParams);
+//                        requestLayout();
+//                        refreshDrawableState();
+//                        getParent().requestLayout();
+                    }
+                });
+                animator.start();
+            }
+        });
     }
 
     public CarouselListItem getItem(int position)
@@ -298,15 +301,5 @@ public class DailyCarouselAnimationLayout extends ConstraintLayout
         }
 
         mDataBinding.contentLayout.setCarouselListener(listener);
-    }
-
-    private void checkLayoutHeight()
-    {
-        if (mDataBinding == null)
-        {
-            ExLog.d("mDataBinding is null");
-            return;
-        }
-
     }
 }
