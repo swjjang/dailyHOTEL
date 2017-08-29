@@ -66,6 +66,10 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
 {
     private static final int MIN_AMOUNT_FOR_BONUS_USAGE = 20000; // 보너스를 사용하기 위한 최소 주문 가격
 
+    // 1000원 미만 결제시에 간편/일반 결제 불가 - 쿠폰 또는 적립금 전체 사용이 아닌경우 조건 추가
+    private static final int CARD_MIN_PRICE = 1000;
+    private static final int PHONE_MAX_PRICE = 500000;
+
     private GourmetPaymentAnalyticsInterface mAnalytics;
 
     private PaymentRemoteImpl mPaymentRemoteImpl;
@@ -486,7 +490,7 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
             case GourmetPaymentActivity.REQUEST_CODE_PAYMENT_WEB_VBANK:
                 if (data != null)
                 {
-                    onPaymentWebResult(resultCode, data.getStringExtra(Constants.NAME_INTENT_EXTRA_DATA_PAYMENT_RESULT));
+                    onPaymentWebResult(mPaymentType, resultCode, data.getStringExtra(Constants.NAME_INTENT_EXTRA_DATA_PAYMENT_RESULT));
                 }
                 break;
 
@@ -1359,9 +1363,6 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
             getViewInterface().setGourmetPayment(mMenuCount, totalPrice, discountPrice);
 
             // 1000원 미만 결제시에 간편/일반 결제 불가 - 쿠폰 또는 적립금 전체 사용이 아닌경우 조건 추가
-            final int CARD_MIN_PRICE = 1000;
-            final int PHONE_MAX_PRICE = 500000;
-
             DailyBookingPaymentTypeView.PaymentType paymentType = null;
 
             if (paymentPrice > 0 && paymentPrice < CARD_MIN_PRICE)
@@ -1937,7 +1938,7 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
         return messages;
     }
 
-    private void onPaymentWebResult(int resultCode, String result)
+    private void onPaymentWebResult(DailyBookingPaymentTypeView.PaymentType paymentType, int resultCode, String result)
     {
         if (resultCode == Activity.RESULT_OK)
         {
@@ -1954,8 +1955,23 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
                 {
                     JSONObject dataJSONObject = jsonObject.getJSONObject("data");
 
-                    paymentResult.bookingIndex = dataJSONObject.getInt("reservationIdx");
-                    paymentResult.result = dataJSONObject.getString("result");
+                    switch (paymentType)
+                    {
+                        case CARD:
+                        case PHONE:
+                            if (dataJSONObject.has("reservationIdx") == true)
+                            {
+                                paymentResult.bookingIndex = dataJSONObject.getInt("reservationIdx");
+                            }
+                            break;
+
+                        case VBANK:
+                            if (dataJSONObject.has("tid") == true)
+                            {
+                                paymentResult.bookingIndex = dataJSONObject.getInt("tid");
+                            }
+                            break;
+                    }
                 } else
                 {
                     throw new BaseException(msgCode, msg);
@@ -1967,7 +1983,28 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
                 @Override
                 public void accept(@io.reactivex.annotations.NonNull PaymentResult paymentResult) throws Exception
                 {
-                    startThankYou(paymentResult.bookingIndex, false);
+                    String message;
+
+                    switch (paymentType)
+                    {
+                        case VBANK:
+                            message = getString(R.string.dialog_msg_issuing_account);
+                            break;
+
+                        default:
+                            message = getString(R.string.message_completed_payment_default);
+                            break;
+                    }
+
+                    getViewInterface().showSimpleDialog(getString(R.string.dialog_title_payment), message//
+                        , getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
+                        {
+                            @Override
+                            public void onDismiss(DialogInterface dialog)
+                            {
+                                startThankYou(paymentResult.bookingIndex, false);
+                            }
+                        });
                 }
             }, throwable ->
             {

@@ -124,8 +124,8 @@ public class StayCategoryTabLayout extends PlaceMainLayout
     }
 
     @Override
-    protected PlaceListFragmentPagerAdapter getPlaceListFragmentPagerAdapter( //
-                                                                              FragmentManager fragmentManager, int count, View bottomOptionLayout //
+    protected PlaceListFragmentPagerAdapter getPlaceListFragmentPagerAdapter(FragmentManager fragmentManager//
+        , int count, View bottomOptionLayout //
         , PlaceListFragment.OnPlaceListFragmentListener listener)
     {
         PlaceListFragmentPagerAdapter placeListFragmentPagerAdapter = new PlaceListFragmentPagerAdapter(fragmentManager);

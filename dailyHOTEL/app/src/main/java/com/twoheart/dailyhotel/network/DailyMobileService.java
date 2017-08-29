@@ -10,6 +10,7 @@ import com.daily.dailyhotel.repository.remote.model.GourmetListData;
 import com.daily.dailyhotel.repository.remote.model.GourmetPaymentData;
 import com.daily.dailyhotel.repository.remote.model.PaymentResultData;
 import com.daily.dailyhotel.repository.remote.model.ReviewData;
+import com.daily.dailyhotel.repository.remote.model.ShortUrlData;
 import com.daily.dailyhotel.repository.remote.model.StayCampaignTagsData;
 import com.daily.dailyhotel.repository.remote.model.StayListData;
 import com.daily.dailyhotel.repository.remote.model.StayOutboundBookingDetailData;
@@ -491,6 +492,10 @@ public interface DailyMobileService
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET("{mobileAPI}")
     Observable<BaseDto<ReviewData>> getReview(@Path(value = "mobileAPI", encoded = true) String mobileAPI);
+
+    @Headers({"Content-type: application/json"})
+    @POST()
+    Observable<ShortUrlData> getShortUrl(@Url String mobileAPI, @Body JSONObject jsonObject);
 
     /////////////////////////////////////////////////////////////////////////////////////////////////
     // ProfileRemoteImpl

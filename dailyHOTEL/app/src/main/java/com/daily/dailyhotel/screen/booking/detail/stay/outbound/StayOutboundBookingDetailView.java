@@ -5,6 +5,7 @@ import android.animation.ValueAnimator;
 import android.app.Dialog;
 import android.content.Context;
 import android.databinding.DataBindingUtil;
+import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.PointF;
 import android.graphics.PorterDuff;
@@ -124,6 +125,8 @@ public class StayOutboundBookingDetailView extends BaseDialogView<StayOutboundBo
         void onShareKakaoClick();
 
         void onShareSmsClick();
+
+        void onHiddenReservationClick();
     }
 
     public StayOutboundBookingDetailView(BaseActivity baseActivity, StayOutboundBookingDetailView.OnEventListener listener)
@@ -177,6 +180,8 @@ public class StayOutboundBookingDetailView extends BaseDialogView<StayOutboundBo
 
         mBookingDetail03DataBinding = DataBindingUtil.inflate(LayoutInflater.from(getContext())//
             , R.layout.layout_stay_outbound_booking_detail_03_data, viewDataBinding.detailsLayout, true);
+
+        viewDataBinding.deleteReservationTextView.setPaintFlags(viewDataBinding.deleteReservationTextView.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
     }
 
     @Override
@@ -740,6 +745,25 @@ public class StayOutboundBookingDetailView extends BaseDialogView<StayOutboundBo
     }
 
     @Override
+    public void setDeleteBookingVisible(boolean visible)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        if (visible == true)
+        {
+            getViewDataBinding().deleteReservationTextView.setVisibility(View.VISIBLE);
+            getViewDataBinding().deleteReservationTextView.setOnClickListener(this);
+        } else
+        {
+            getViewDataBinding().deleteReservationTextView.setVisibility(View.INVISIBLE);
+            getViewDataBinding().deleteReservationTextView.setOnClickListener(null);
+        }
+    }
+
+    @Override
     public void showRefundCallDialog(Dialog.OnDismissListener listener)
     {
         DialogConciergeDataBinding dataBinding = DataBindingUtil.inflate(LayoutInflater.from(getContext()), R.layout.dialog_concierge_data, null, false);
@@ -835,6 +859,10 @@ public class StayOutboundBookingDetailView extends BaseDialogView<StayOutboundBo
 
             case R.id.searchMapView:
                 getEventListener().onNavigatorClick();
+                break;
+
+            case R.id.deleteReservationTextView:
+                getEventListener().onHiddenReservationClick();
                 break;
         }
     }

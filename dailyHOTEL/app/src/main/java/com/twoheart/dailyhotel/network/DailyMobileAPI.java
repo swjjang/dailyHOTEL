@@ -3,6 +3,7 @@ package com.twoheart.dailyhotel.network;
 import android.content.Context;
 
 import com.daily.base.util.DailyTextUtils;
+import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.repository.remote.model.BookingData;
 import com.daily.dailyhotel.repository.remote.model.BookingHideData;
 import com.daily.dailyhotel.repository.remote.model.CampaignTagData;
@@ -13,6 +14,7 @@ import com.daily.dailyhotel.repository.remote.model.GourmetListData;
 import com.daily.dailyhotel.repository.remote.model.GourmetPaymentData;
 import com.daily.dailyhotel.repository.remote.model.PaymentResultData;
 import com.daily.dailyhotel.repository.remote.model.ReviewData;
+import com.daily.dailyhotel.repository.remote.model.ShortUrlData;
 import com.daily.dailyhotel.repository.remote.model.StayCampaignTagsData;
 import com.daily.dailyhotel.repository.remote.model.StayListData;
 import com.daily.dailyhotel.repository.remote.model.StayOutboundBookingDetailData;
@@ -1216,6 +1218,34 @@ public class DailyMobileAPI
             .subscribeOn(Schedulers.io());
     }
 
+    public Observable<ShortUrlData> getShortUrl(String longUrl)
+    {
+        final String URL;
+
+        if (Constants.UNENCRYPTED_URL == true)
+        {
+            URL = Constants.DEBUG ? "https://www.googleapis.com/urlshortener/v1/url?key=AIzaSyAYwC5Y-1h3inzttzRF7JN-aJhwR1fFCtU"//
+                : "https://www.googleapis.com/urlshortener/v1/url?key=AIzaSyDjhmWw3dUuqYB9E9bbykjh53RFFdKiSuQ";
+        } else
+        {
+            URL = Constants.DEBUG ? "NDYkMTY1JDExJDUxJDg0JDE5OSQxOCQxOSQ4NCQyNjAkMjYkMTU3JDY4JDE3MSQyMCQzNyQ=$MDlEQkI0REQSwMTVBNLFEzlFRDVPCMTUxQTM5BRkE0OUMxMzlENzAFCRUjY1REQzQUJBMDKA3MjczOUFERDBDMDQD1RXTRDMkQzQkUzRjY2NEJFMkU0MzlDQzZBMzZFRTMwNDQ0MzdCN0U4QTE0MTIzMkZENTIyOXTkzRUMxOTY5QOzY3JNjU4RkZCMDRBMEMyQzU1RkFGRkYzNDNIzQzdDMDZGRkNERDAxQTQyQjNGRjBBQzU1NjlDQTgyMjVBOUFEMUVGODUK5NUJG$"//
+                : "NTEkMTE0JDI0OCQyNTAkMjM3JDE5NSQxNDckODgkODQkMTIyJDIyJDEyMyQxNTYkMjQ2JDEzMyQyNTAk$RDFFNjcwRDUyRENGREQ3QjNA4REE3M0M5QjBDQzQ2QTczQzUyRUEB3QThDM0VBNzA5NzE0NkZERDM5NTgwQUML4M0ZJCRjM0MTUyNjg1RjYwMTc2MkY1NG0VBMjYFJGMzI1ODQQwN0NERUY5RkYwRUFCNPkI1QQUE0RkQxMkZGMzY5NENBMDgwQkY1MjA2RDAzMDkxQjJDRYUFCOTYwOTc1QzkwMURCNzE0NjFGQzA0OUNGQTcxMTMWExQRkY2NTIzQ0FQJ2Q0RENkUy$";
+        }
+
+        JSONObject jsonObject = new JSONObject();
+
+        try
+        {
+            jsonObject.put("longUrl", longUrl);
+        }catch (Exception e)
+        {
+            ExLog.e(e.toString());
+        }
+
+        return mDailyMobileService.getShortUrl(Crypto.getUrlDecoderEx(URL), jsonObject)//
+            .subscribeOn(Schedulers.io());
+    }
+
     /////////////////////////////////////////////////////////////////////////////////////////////////
     // ProfileRemoteImpl
     /////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1586,7 +1616,7 @@ public class DailyMobileAPI
         return mDailyMobileService.getGourmetUnavailableDates(Crypto.getUrlDecoderEx(URL, urlParams), dateRange, isReverse).subscribeOn(Schedulers.io());
     }
 
-    public Observable<BaseListDto<CampaignTagData>> getCampainTagList(String serviceType)
+    public Observable<BaseListDto<CampaignTagData>> getCampaignTagList(String serviceType)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/v5/campaign/hashtag" //
             : "ODckMjIkODgkNTUkMzQkMyQzNyQyNyQ0JDY5JDcyJDAkNTMkODMkNTQkMjAk$QNEUTTxNjlCNDRCQTg1RHDBDRDCc0QW0Y5Qzg5NYDEJCM0ZCQkEwMTLKQ0NEM4MUYNGRTBDNTZVFZRjMzRkQ5JRDAyNEI1RDcwRA=JP=$";

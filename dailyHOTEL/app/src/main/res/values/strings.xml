@@ -726,10 +726,10 @@
     <string name="message_booking_click_process_payment">예약을 계속 진행하시려면 필수사항 동의 후 [결제하기] 버튼을 눌러주세요.</string>
     <string name="message_booking_detail_do_login">로그인 후 예약 내역을 확인할 수 있습니다.\n로그인 할까요?</string>
     <string name="message_booking_already_input_review">리뷰를 이미 입력하셨습니다.\n입력하신 리뷰를 확인하실 수 있도록 준비 중입니다.</string>
-    <string name="message_booking_stay_share_sms">[데일리호텔] %1$s님이 예약하신 스테이\n\n%2$s\n예약자명: %3$s\n결제금액: %4$s\n객실: %5$s\n체크인: %6$s\n체크아웃: %7$s\n주소: %8$s\n\n데일리호텔 앱 다운로드\nmobile.dailyhotel.co.kr</string>
+    <string name="message_booking_stay_share_sms">[데일리호텔] %1$s님이 예약하신 스테이\n\n%2$s\n예약자명: %3$s\n결제금액: %4$s\n객실: %5$s\n체크인: %6$s\n체크아웃: %7$s\n주소: %8$s\n\n예약 스테이 확인\n</string>
     <string name="message_booking_stay_share_kakao">%1$s님이 예약하신 스테이\n\n%2$s\n예약자명: %3$s\n결제금액: %4$s\n객실: %5$s\n체크인: %6$s\n체크아웃: %7$s\n주소: %8$s\n\n지금 데일리호텔에서 스테이 정보를 확인할 수 있어요!</string>
     <string name="message_booking_stay_outbound_share_kakao">%1$s님이 예약하신 호텔\n\n%2$s\n예약자명: %3$s\n결제금액: %4$s\n객실: %5$s\n체크인: %6$s\n체크아웃: %7$s\n주소: %8$s\n\n지금 데일리호텔에서 호텔 정보를 확인할 수 있어요!</string>
-    <string name="message_booking_gourmet_share_sms">[데일리호텔] %1$s님이 예약하신 레스토랑\n\n%2$s\n예약자명: %3$s\n결제금액: %4$s\n방문일: %5$s\n방문시간: %6$s\n상품: %7$s\n수량: %8$s\n주소: %9$s\n\n데일리호텔 앱 다운로드\nmobile.dailyhotel.co.kr</string>
+    <string name="message_booking_gourmet_share_sms">[데일리호텔] %1$s님이 예약하신 레스토랑\n\n%2$s\n예약자명: %3$s\n결제금액: %4$s\n방문일: %5$s\n방문시간: %6$s\n상품: %7$s\n수량: %8$s\n주소: %9$s\n\n예약 레스토랑 확인\n</string>
     <string name="message_booking_gourmet_share_kakao">%1$s님이 예약하신 레스토랑\n\n%2$s\n예약자명: %3$s\n결제금액: %4$s\n방문일: %5$s\n방문시간: %6$s\n상품: %7$s\n수량: %8$s\n주소: %9$s\n\n지금 데일리호텔에서 레스토랑 정보를 확인할 수 있어요!</string>
 
     <!-- TabInfo/TabMap Fragment -->
@@ -746,8 +746,8 @@
     <string name="kakao_btn_share_fnb">%1$s 추천하는 근사한 레스토랑\n\n%2$s\n날짜 : %3$s\n주소 : %4$s\n\n지금 데일리호텔에서 메뉴와\n이용시간을 확인할 수 있어요!</string>
     <string name="kakao_btn_share_stay_outbound">%1$s 추천하는 근사한 호텔!\n\n%2$s\n체크인 : %3$s\n체크아웃 : %4$s (%5$d박 %6$d일)\n주소 : %7$s\n\n지금 데일리호텔에서 맘에 드는 객실을 확인할 수 있어요!</string>
 
-    <string name="message_detail_stay_share_sms">[데일리호텔] %1$s 추천하는 근사한 스테이\n\n%2$s\n체크인: %3$s\n체크아웃: %4$s (%5$d박 %6$d일)\n주소: %7$s\n\n지금 데일리호텔에서 맘에 드는 객실을 확인할 수 있어요!\n\n데일리호텔 앱 다운로드\nmobile.dailyhotel.co.kr</string>
-    <string name="message_detail_gourmet_share_sms">[데일리호텔] %1$s 추천하는 근사한 레스토랑\n\n%2$s\n날짜: %3$s\n주소: %4$s\n\n지금 데일리호텔에서 메뉴와 이용시간을 확인할 수 있어요!\n\n데일리호텔 앱 다운로드\nmobile.dailyhotel.co.kr</string>
+    <string name="message_detail_stay_share_sms">[데일리호텔] %1$s 추천하는 근사한 스테이\n\n%2$s\n체크인: %3$s\n체크아웃: %4$s (%5$d박 %6$d일)\n주소: %7$s\n\n지금 데일리호텔에서 맘에 드는 객실을 확인할 수 있어요!\n\n추천 스테이 확인\n</string>
+    <string name="message_detail_gourmet_share_sms">[데일리호텔] %1$s 추천하는 근사한 레스토랑\n\n%2$s\n날짜: %3$s\n주소: %4$s\n\n지금 데일리호텔에서 메뉴와 이용시간을 확인할 수 있어요!\n\n추천 레스토랑 확인\n</string>
     <string name="message_detail_stay_outbound_share_sms">[데일리호텔] %1$s 추천하는 근사한 호텔\n\n%2$s\n체크인: %3$s\n체크아웃: %4$s (%5$d박 %6$d일)\n주소: %7$s\n\n지금 데일리호텔에서 맘에 드는 객실을 확인할 수 있어요!\n\n데일리호텔 앱 다운로드\nmobile.dailyhotel.co.kr</string>
 
     <!-- Base Activity -->
@@ -771,6 +771,8 @@
     <string name="frag_error_btn">연결 재시도</string>
 
     <!-- HotelList Fragment -->
+    <string name="label_stay_category_change_region">지역 변경하여 확인하기</string>
+    <string name="label_stay_category_change_date">날짜 변경하여 확인하기</string>
     <string name="frag_hotel_list_no_hotels">원하시는 곳을 준비 중입니다.</string>
     <string name="frag_hotel_list_no_line">다른 카테고리에도 멋진 곳이 많아요!\n한 번 둘러보시겠어요?</string>
     <string name="frag_hotel_list_check">CHEC</string>
@@ -781,6 +783,10 @@
     <string name="label_hotel_list_changing_filter">필터 다시 적용하기</string>
     <string name="message_not_exist_filters">해당 조건에 일치하는 업체가 없습니다.</string>
     <string name="message_changing_filter_option">필터링 설정 조건을 변경하여 검색해보세요!</string>
+    <string name="message_stay_empty_message01">조건에 맞는 스테이가 없습니다.</string>
+    <string name="message_stay_empty_message02">지역이나 날짜를 변경해보세요.</string>
+    <string name="message_gourmet_empty_message01">조건에 맞는 레스토랑이 없습니다.</string>
+    <string name="message_gourmet_empty_message02">지역이나 날짜를 변경해보세요.</string>
 
     <!-- Wait Payment Activity -->
     <string name="act_wait_payment_payinfo">결제 정보 (가상계좌)</string>
@@ -1346,7 +1352,6 @@
     <string name="label_stay_outbound_list_adult_count">성인 %1$d</string>
     <string name="label_stay_outbound_list_child_count">아동 %1$d</string>
     <string name="label_stay_outbound_tripadvisor_rating">(평점 %1$s)</string>
-    <string name="label_stay_outbound_preparing_preview">해외호텔의 미리보기 기능은 준비 중입니다.</string>
     <string name="label_stay_outbound_research_filter_on">조건을 변경하여 검색해보세요.</string>
 
     <string name="message_stay_outbound_search_empty">찾으시는 해외 호텔이 없으신가요?\n데일리 고객센터로 알려주세요!</string>
@@ -1404,7 +1409,7 @@
     <string name="label_booking_today">당일</string>
     <string name="label_booking_before_day">%1$d일 전</string>
     <string name="label_booking_go_to_gourmet">고메 보러가기</string>
-    <string name="label_booking_before_use">이용 예정</string>
+    <string name="label_booking_before_use">예약 완료</string>
     <string name="label_booking_after_use">이용 완료</string>
     <string name="label_booking_book_again">다시 예약하기</string>
     <string name="message_booking_add_review">리뷰를 남기실 수 있어요!</string>
@@ -1418,6 +1423,8 @@
 
 
     <!-- Stay Out Bound Booking Detail -->
+    <!-- Booking Detail -->
+    <string name="label_booking_detail_delete_reservation">예약내역 삭제하기</string>
     <string name="message_stay_outbound_booking_detail_current_time">날짜는 현지시간 기준입니다.</string>
 
     <!-- Stay Out Bound Booking Refund -->
@@ -1434,6 +1441,7 @@
     <string name="label_preview_remove_wish">위시리스트\n삭제하기</string>
     <string name="label_preview_kakao">카카오톡\n공유하기</string>
     <string name="label_preview_map">네이버 지도\n길찾기</string>
+    <string name="label_preview_google_map">구글 지도\n길찾기</string>
     <string name="label_preview_booking">지금 예약하기</string>
     <string name="label_preview_review_count">지금 예약하기</string>
     <string name="label_preview_wish_count">지금 예약하기</string>

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 
 import com.daily.base.exception.BaseException;
+import com.daily.base.util.DailyTextUtils;
 import com.daily.dailyhotel.domain.CommonInterface;
 import com.daily.dailyhotel.entity.CommonDateTime;
 import com.daily.dailyhotel.entity.Review;
@@ -68,6 +69,25 @@ public class CommonRemoteImpl implements CommonInterface
             }
 
             return review;
+        }).observeOn(AndroidSchedulers.mainThread());
+    }
+
+    @Override
+    public Observable<String> getShortUrl(String longUrl)
+    {
+        return DailyMobileAPI.getInstance(mContext).getShortUrl(longUrl).map((shortUrlData) ->
+        {
+            String shortUrl = null;
+
+            if (shortUrlData != null && DailyTextUtils.isTextEmpty(shortUrlData.id) == false)
+            {
+               shortUrl = shortUrlData.id;
+            } else
+            {
+                throw new BaseException(-1, null);
+            }
+
+            return shortUrl;
         }).observeOn(AndroidSchedulers.mainThread());
     }
 }

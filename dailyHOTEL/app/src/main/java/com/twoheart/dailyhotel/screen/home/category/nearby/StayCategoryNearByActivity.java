@@ -1328,6 +1328,17 @@ public class StayCategoryNearByActivity extends BaseActivity
         }
 
         @Override
+        public void onRegionClick()
+        {
+        }
+
+        @Override
+        public void onCalendarClick()
+        {
+            mOnEventListener.onDateClick();
+        }
+
+        @Override
         public void onCategoryList(List<Category> categoryList)
         {
             if (categoryList != null && categoryList.size() > 0)
@@ -1414,6 +1425,11 @@ public class StayCategoryNearByActivity extends BaseActivity
         public void onShowMenuBar()
         {
 
+        }
+
+        @Override
+        public void onBottomOptionVisible(boolean visible)
+        {
         }
 
         @Override

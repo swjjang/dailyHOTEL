@@ -104,7 +104,8 @@ public class DailyPreference
 
     private static final String KEY_BACKGROUND_APP_TIME = "2000";
 
-    private static final String KEY_HOME_SHORT_CUT_STAY_OUTBOUND_NEW = "10001";
+    //    private static final String KEY_HOME_SHORT_CUT_STAY_OUTBOUND_NEW = "10001";
+    private static final String KEY_HOME_SHORT_CUT_STAY_OUTBOUND_NEW_DATE = "10002";
 
     /////////////////////////////////////////////////////////////////////////////////////////
     // New Key old --> v1
@@ -210,7 +211,7 @@ public class DailyPreference
         int countPreviewGuide = getCountPreviewGuide();
         boolean isShowAppPermissionsGuide = isShowAppPermissionsGuide();
         boolean isProductDetailGuide = getGourmetProductDetailGuide();
-        boolean isStayOutboundNew = isHomeShortCutStayOutboundNew();
+        String stayOutboundNewDate = getHomeShortCutStayOutboundNewDate();
 
         String stayRecentSearches = getHotelRecentSearches();
         String gourmetRecentSearches = getGourmetRecentSearches();
@@ -232,7 +233,7 @@ public class DailyPreference
         setCountPreviewGuide(countPreviewGuide);
         setShowAppPermissionsGuide(isShowAppPermissionsGuide);
         setGourmetProductDetailGuide(isProductDetailGuide);
-        setHomeShortCutStayOutboundNew(isStayOutboundNew);
+        setHomeShortCutStayOutboundNewDate(stayOutboundNewDate);
         setHotelRecentSearches(stayRecentSearches);
         setGourmetRecentSearches(gourmetRecentSearches);
 
@@ -966,14 +967,18 @@ public class DailyPreference
         }
     }
 
-    public void setHomeShortCutStayOutboundNew(boolean value)
+    /**
+     *
+     * @param value 보여주는 기간 동안에는 ISO-8601 타입으로 값을 넣어주지만, 2 주후에는 "NONE"으로 바꾼다.
+     */
+    public void setHomeShortCutStayOutboundNewDate(String value)
     {
-        setValue(mEditor, KEY_HOME_SHORT_CUT_STAY_OUTBOUND_NEW, value);
+        setValue(mEditor, KEY_HOME_SHORT_CUT_STAY_OUTBOUND_NEW_DATE, value);
     }
 
-    public boolean isHomeShortCutStayOutboundNew()
+    public String getHomeShortCutStayOutboundNewDate()
     {
-        return getValue(mPreferences, KEY_HOME_SHORT_CUT_STAY_OUTBOUND_NEW, true);
+        return getValue(mPreferences, KEY_HOME_SHORT_CUT_STAY_OUTBOUND_NEW_DATE, null);
     }
 
     // version - 2.0.4 로 강업 이후 삭제 필요 부분

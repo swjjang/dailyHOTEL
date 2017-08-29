@@ -18,7 +18,7 @@ public class PaymentResultData
 
     }
 
-    public PaymentResult getPaymentTypeEasy()
+    public PaymentResult getPaymentResult()
     {
         PaymentResult paymentResult = new PaymentResult();
         paymentResult.bookingIndex = reservationIdx;

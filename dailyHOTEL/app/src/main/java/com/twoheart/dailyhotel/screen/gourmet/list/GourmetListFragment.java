@@ -3,6 +3,7 @@ package com.twoheart.dailyhotel.screen.gourmet.list;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
+import com.daily.dailyhotel.screen.common.call.CallDialogActivity;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Gourmet;
 import com.twoheart.dailyhotel.model.GourmetCuration;
@@ -35,6 +36,10 @@ public class GourmetListFragment extends PlaceListFragment
         void onGourmetLongClick(View view, PlaceViewItem placeViewItem, int listCount);
 
         void onGourmetCategoryFilter(int page, HashMap<String, Integer> categoryCodeMap, HashMap<String, Integer> categorySequenceMap);
+
+        void onRegionClick();
+
+        void onCalendarClick();
     }
 
     @Override
@@ -254,6 +259,12 @@ public class GourmetListFragment extends PlaceListFragment
         }
 
         @Override
+        public void onBottomOptionVisible(boolean visible)
+        {
+            mOnPlaceListFragmentListener.onBottomOptionVisible(visible);
+        }
+
+        @Override
         public void onUpdateViewTypeEnabled(boolean isEnabled)
         {
             mOnPlaceListFragmentListener.onUpdateViewTypeEnabled(isEnabled);
@@ -269,6 +280,24 @@ public class GourmetListFragment extends PlaceListFragment
         public void onRecordAnalytics(ViewType viewType)
         {
             mOnPlaceListFragmentListener.onRecordAnalytics(viewType);
+        }
+
+        @Override
+        public void onShowCallDialog()
+        {
+            startActivity(CallDialogActivity.newInstance(getActivity()));
+        }
+
+        @Override
+        public void onRegionClick()
+        {
+            ((OnGourmetListFragmentListener) mOnPlaceListFragmentListener).onRegionClick();
+        }
+
+        @Override
+        public void onCalendarClick()
+        {
+            ((OnGourmetListFragmentListener) mOnPlaceListFragmentListener).onCalendarClick();
         }
 
         @Override

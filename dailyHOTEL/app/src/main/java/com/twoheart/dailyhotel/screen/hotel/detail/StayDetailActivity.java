@@ -25,6 +25,7 @@ import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.entity.CommonDateTime;
 import com.daily.dailyhotel.parcel.analytics.StayPaymentAnalyticsParam;
 import com.daily.dailyhotel.repository.local.model.AnalyticsParam;
+import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
 import com.daily.dailyhotel.screen.home.stay.inbound.payment.StayPaymentActivity;
 import com.daily.dailyhotel.util.RecentlyPlaceUtil;
 import com.facebook.drawee.drawable.ScalingUtils;
@@ -603,16 +604,23 @@ public class StayDetailActivity extends PlaceDetailActivity
     @Override
     protected void shareSMS(PlaceBookingDay placeBookingDay, PlaceDetail placeDetail)
     {
-        if (placeBookingDay == null || placeDetail == null)
+        if (placeBookingDay == null || placeDetail == null || isLockUiComponent() == true)
         {
             return;
         }
 
-        StayBookingDay stayBookingDay = (StayBookingDay) placeBookingDay;
-        StayDetail stayDetail = (StayDetail) placeDetail;
+        lockUI();
 
         try
         {
+            StayBookingDay stayBookingDay = (StayBookingDay) placeBookingDay;
+            int nights = stayBookingDay.getNights();
+
+            String longUrl = String.format(Locale.KOREA, "https://mobile.dailyhotel.co.kr/stay/%d?dateCheckIn=%s&stays=%d"//
+                , placeDetail.index, stayBookingDay.getCheckInDay("yyyy-MM-dd"), nights);
+
+            StayDetail stayDetail = (StayDetail) placeDetail;
+
             StayDetailParams stayDetailParams = stayDetail.getStayDetailParams();
 
             String name = DailyUserPreference.getInstance(StayDetailActivity.this).getName();
@@ -625,22 +633,42 @@ public class StayDetailActivity extends PlaceDetailActivity
                 name += "님이";
             }
 
-            int nights = stayBookingDay.getNights();
-
-            String message = getString(R.string.message_detail_stay_share_sms//
+            final String message = getString(R.string.message_detail_stay_share_sms//
                 , name, stayDetailParams.name//
                 , stayBookingDay.getCheckInDay("yyyy.MM.dd(EEE)")//
                 , stayBookingDay.getCheckOutDay("yyyy.MM.dd(EEE)")//
                 , nights, nights + 1 //
                 , stayDetailParams.address);
 
-            Util.sendSms(this, message);
+            CommonRemoteImpl commonRemote = new CommonRemoteImpl(StayDetailActivity.this);
+
+            addCompositeDisposable(commonRemote.getShortUrl(longUrl).subscribe(new Consumer<String>()
+            {
+                @Override
+                public void accept(@NonNull String shortUrl) throws Exception
+                {
+                    unLockUI();
+
+                    Util.sendSms(StayDetailActivity.this, message + shortUrl);
+                }
+            }, new Consumer<Throwable>()
+            {
+                @Override
+                public void accept(@NonNull Throwable throwable) throws Exception
+                {
+                    unLockUI();
+
+                    Util.sendSms(StayDetailActivity.this, message + "https://mobile.dailyhotel.co.kr/stay/" + placeDetail.index);
+                }
+            }));
         } catch (Exception e)
         {
+            unLockUI();
+
             ExLog.d(e.toString());
         }
 
-        recordAnalyticsShared(stayDetail, AnalyticsManager.ValueType.MESSAGE);
+        recordAnalyticsShared((StayDetail) placeDetail, AnalyticsManager.ValueType.MESSAGE);
     }
 
     private void recordAnalyticsShared(StayDetail stayDetail, String label)

@@ -50,6 +50,7 @@ import com.twoheart.dailyhotel.screen.information.FAQActivity;
 import com.twoheart.dailyhotel.screen.mydaily.member.AddProfileSocialActivity;
 import com.twoheart.dailyhotel.screen.mydaily.member.EditProfilePhoneActivity;
 import com.twoheart.dailyhotel.screen.mydaily.member.LoginActivity;
+import com.twoheart.dailyhotel.util.AppResearch;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyUserPreference;
@@ -116,6 +117,8 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
     private boolean mCheckChangedPrice;
     private int mGradientType;
 
+    private AppResearch mAppResearch;
+
     public interface StayOutboundDetailAnalyticsInterface extends BaseAnalyticsInterface
     {
         void setAnalyticsParam(StayOutboundDetailAnalyticsParam analyticsParam);
@@ -146,6 +149,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
     {
         setContentView(R.layout.activity_stay_outbound_detail_data);
 
+        mAppResearch = new AppResearch(activity);
         setAnalytics(new StayOutboundDetailAnalyticsImpl());
 
         mStayOutboundRemoteImpl = new StayOutboundRemoteImpl(activity);
@@ -303,12 +307,16 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
         {
             onRefresh(true);
         }
+
+        mAppResearch.onResume("outbound_스테이", mStayIndex);
     }
 
     @Override
     public void onPause()
     {
         super.onPause();
+
+        mAppResearch.onPause("outbound_스테이", mStayIndex);
     }
 
     @Override

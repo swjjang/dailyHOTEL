@@ -68,6 +68,10 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
 {
     private static final int MIN_AMOUNT_FOR_BONUS_USAGE = 20000; // 보너스를 사용하기 위한 최소 주문 가격
 
+    // 1000원 미만 결제시에 간편/일반 결제 불가 - 쿠폰 또는 적립금 전체 사용이 아닌경우 조건 추가
+    private static final int CARD_MIN_PRICE = 1000;
+    private static final int PHONE_MAX_PRICE = 500000;
+
     private StayOutboundPaymentAnalyticsInterface mAnalytics;
 
     private PaymentRemoteImpl mPaymentRemoteImpl;
@@ -1101,9 +1105,6 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
                 , discountPrice, mStayOutboundPayment.feeTotalAmountUsd);
 
             // 1000원 미만 결제시에 간편/일반 결제 불가 - 쿠폰 또는 적립금 전체 사용이 아닌경우 조건 추가
-            final int CARD_MIN_PRICE = 1000;
-            final int PHONE_MAX_PRICE = 500000;
-
             DailyBookingPaymentTypeView.PaymentType paymentType = null;
 
             if (paymentPrice > 0 && paymentPrice < CARD_MIN_PRICE)

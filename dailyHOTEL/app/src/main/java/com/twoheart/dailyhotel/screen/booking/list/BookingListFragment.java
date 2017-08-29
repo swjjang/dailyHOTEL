@@ -20,11 +20,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
-import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
-import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.entity.Booking;
 import com.daily.dailyhotel.entity.CommonDateTime;
 import com.daily.dailyhotel.entity.Review;
@@ -65,8 +62,6 @@ import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Screen;
 
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -81,8 +76,6 @@ import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.functions.Function3;
 import io.reactivex.schedulers.Schedulers;
-import retrofit2.Call;
-import retrofit2.Response;
 
 /**
  * 예약한 호텔의 리스트들을 출력.
@@ -375,19 +368,12 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
             }
 
             case CODE_REQUEST_ACTIVITY_BOOKING_DETAIL:
-            {
-                if (resultCode == CODE_RESULT_ACTIVITY_REFRESH)
-                {
-                    mDontReload = false;
-                } else
-                {
-                    mDontReload = true;
-                }
+                mDontReload = false;
                 break;
-            }
 
             case CODE_REQUEST_ACTIVITY_SATISFACTION_HOTEL:
             case CODE_REQUEST_ACTIVITY_SATISFACTION_GOURMET:
+            default:
                 mDontReload = false;
                 break;
         }
@@ -580,8 +566,7 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
 
         for (Booking booking : bookingList)
         {
-            booking.remainingDays = DailyCalendar.compareDateDay(DailyCalendar.convertDateFormatString(booking.checkInDateTime, "yyyy-MM-dd", DailyCalendar.ISO_8601_FORMAT)//
-                , mCommonDateTime.currentDateTime);
+            booking.remainingDays = DailyCalendar.compareDateDay(booking.checkInDateTime, mCommonDateTime.currentDateTime);
 
             if (booking.readyForRefund == true)
             {
@@ -591,8 +576,16 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
                 switch (booking.statePayment)
                 {
                     case Booking.PAYMENT_COMPLETED:
-                        boolean used = DailyCalendar.compareDateDay(DailyCalendar.convertDateFormatString(booking.checkOutDateTime, "yyyy-MM-dd", DailyCalendar.ISO_8601_FORMAT)//
-                            , mCommonDateTime.currentDateTime) < 0;
+                    {
+                        boolean used;
+
+                        if (booking.placeType == Booking.PlaceType.STAY_OUTBOUND)
+                        {
+                            used = DailyCalendar.compareDateDay(booking.checkOutDateTime, mCommonDateTime.currentDateTime) < 0;
+                        } else
+                        {
+                            used = DailyCalendar.compareDateTime(booking.checkOutDateTime, mCommonDateTime.currentDateTime) < 0;
+                        }
 
                         if (used)
                         {
@@ -602,6 +595,7 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
                             beforeUseList.add(booking);
                         }
                         break;
+                    }
 
                     case Booking.PAYMENT_WAITING:
                         depositWaitingList.add(booking);
@@ -618,8 +612,7 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
 
                 try
                 {
-                    compareDay = DailyCalendar.compareDateDay(DailyCalendar.convertDateFormatString(booking1.checkInDateTime, "yyyy-MM-dd", DailyCalendar.ISO_8601_FORMAT)//
-                        , DailyCalendar.convertDateFormatString(booking2.checkInDateTime, "yyyy-MM-dd", DailyCalendar.ISO_8601_FORMAT));
+                    compareDay = DailyCalendar.compareDateDay(booking1.checkInDateTime, booking2.checkInDateTime);
                 } catch (Exception e)
                 {
                     ExLog.e(e.toString());
@@ -654,8 +647,7 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
 
                 try
                 {
-                    compareDay = DailyCalendar.compareDateDay(DailyCalendar.convertDateFormatString(booking1.checkInDateTime, "yyyy-MM-dd", DailyCalendar.ISO_8601_FORMAT)//
-                        , DailyCalendar.convertDateFormatString(booking2.checkInDateTime, "yyyy-MM-dd", DailyCalendar.ISO_8601_FORMAT));
+                    compareDay = DailyCalendar.compareDateDay(booking1.checkInDateTime, booking2.checkInDateTime);
                 } catch (Exception e)
                 {
                     ExLog.e(e.toString());
@@ -1149,159 +1141,4 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
 
         return reviewParcelable;
     }
-
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // Listener
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    retrofit2.Callback mReservationHiddenCallback = new retrofit2.Callback<JSONObject>()
-    {
-        @Override
-        public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
-        {
-            BaseActivity baseActivity = (BaseActivity) getActivity();
-
-            if (baseActivity == null || baseActivity.isFinishing() == true)
-            {
-                return;
-            }
-
-            if (response != null && response.isSuccessful() && response.body() != null)
-            {
-                try
-                {
-                    JSONObject responseJSONObject = response.body();
-
-                    // 해당 화면은 메시지를 넣지 않는다.
-                    int msgCode = responseJSONObject.getInt("msg_code");
-
-                    JSONObject datJSONObject = responseJSONObject.getJSONObject("data");
-                    String message;
-                    boolean result = false;
-
-                    if (datJSONObject != null)
-                    {
-                        if (datJSONObject.has("isSuccess") == true)
-                        {
-                            result = datJSONObject.getInt("isSuccess") == 1;
-                        } else if (datJSONObject.has("is_success") == true)
-                        {
-                            result = datJSONObject.getBoolean("is_success");
-                        }
-                    }
-
-                    // 성공 실패 여부는 팝업에서 리스너를 다르게 등록한다.
-                    View.OnClickListener onClickListener;
-
-                    if (result == true)
-                    {
-                        onClickListener = new View.OnClickListener()
-                        {
-                            @Override
-                            public void onClick(View view)
-                            {
-                                BaseActivity baseActivity = (BaseActivity) getActivity();
-
-                                if (baseActivity == null)
-                                {
-                                    return;
-                                }
-
-                                onRefresh();
-                            }
-                        };
-
-                        AnalyticsManager.getInstance(baseActivity).recordEvent(AnalyticsManager.Category.BOOKING_STATUS//
-                            , AnalyticsManager.Action.BOOKING_HISTORY_DELETE, AnalyticsManager.ValueType.EMPTY, null);
-                    } else
-                    {
-                        onClickListener = new View.OnClickListener()
-                        {
-                            @Override
-                            public void onClick(View view)
-                            {
-                                BaseActivity baseActivity = (BaseActivity) getActivity();
-
-                                if (baseActivity == null)
-                                {
-                                    return;
-                                }
-
-                                onRefresh();
-                            }
-                        };
-                    }
-
-                    switch (msgCode)
-                    {
-                        case 0:
-                        {
-                            message = responseJSONObject.getString("msg");
-                            DailyToast.showToast(baseActivity, message, Toast.LENGTH_SHORT);
-
-                            onRefresh();
-                            break;
-                        }
-
-                        // Toast
-                        case 100:
-                        {
-                            message = responseJSONObject.getString("msg");
-
-                            if (DailyTextUtils.isTextEmpty(message) == false)
-                            {
-                                DailyToast.showToast(baseActivity, message, Toast.LENGTH_SHORT);
-                            }
-
-                            onRefresh();
-                            break;
-                        }
-
-                        // Popup
-                        case 200:
-                        {
-                            message = responseJSONObject.getString("msg");
-
-                            if (DailyTextUtils.isTextEmpty(message) == false)
-                            {
-                                unLockUI();
-
-                                if (baseActivity.isFinishing() == true)
-                                {
-                                    return;
-                                }
-
-                                baseActivity.showSimpleDialog(getString(R.string.dialog_notice2), message, getString(R.string.dialog_btn_text_confirm), onClickListener);
-                            } else
-                            {
-                                onRefresh();
-                            }
-                            break;
-                        }
-                    }
-                } catch (Exception e)
-                {
-                    onError(e);
-
-                    onRefresh();
-                }
-            } else
-            {
-                baseActivity.onErrorResponse(call, response);
-            }
-        }
-
-        @Override
-        public void onFailure(Call<JSONObject> call, Throwable t)
-        {
-            BaseActivity baseActivity = (BaseActivity) getActivity();
-
-            if (baseActivity == null || baseActivity.isFinishing() == true)
-            {
-                return;
-            }
-
-            baseActivity.onError(t);
-        }
-    };
 }

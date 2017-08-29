@@ -96,17 +96,23 @@ public class RetrofitHttpClient implements Constants
         {
             Request request = chain.request();
 
-            Request.Builder builder = request.newBuilder().addHeader("Os-Type", "android")//
-                .addHeader("App-Version", DailyHotel.VERSION)//
-                .addHeader("User-Agent", System.getProperty("http.agent"))//
-                .addHeader("ga-id", DailyHotel.GOOGLE_ANALYTICS_CLIENT_ID);
-
-            if (DailyHotel.isLogin() == true)
+            if (request.url().host().contains("dailyhotel") == true)
             {
-                builder.addHeader("Authorization", DailyHotel.AUTHORIZATION);
-            }
+                Request.Builder builder = request.newBuilder().addHeader("Os-Type", "android")//
+                    .addHeader("App-Version", DailyHotel.VERSION)//
+                    .addHeader("User-Agent", System.getProperty("http.agent"))//
+                    .addHeader("ga-id", DailyHotel.GOOGLE_ANALYTICS_CLIENT_ID);
 
-            return chain.proceed(builder.build());
+                if (DailyHotel.isLogin() == true)
+                {
+                    builder.addHeader("Authorization", DailyHotel.AUTHORIZATION);
+                }
+
+                return chain.proceed(builder.build());
+            } else
+            {
+                return chain.proceed(request.newBuilder().build());
+            }
         }
     }
 }

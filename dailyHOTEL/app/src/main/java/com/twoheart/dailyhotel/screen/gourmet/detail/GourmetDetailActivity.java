@@ -21,6 +21,7 @@ import com.daily.dailyhotel.entity.GourmetMenu;
 import com.daily.dailyhotel.entity.GourmetMenuImage;
 import com.daily.dailyhotel.parcel.analytics.GourmetPaymentAnalyticsParam;
 import com.daily.dailyhotel.repository.local.model.AnalyticsParam;
+import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
 import com.daily.dailyhotel.screen.home.gourmet.detail.menus.GourmetMenusActivity;
 import com.daily.dailyhotel.screen.home.gourmet.payment.GourmetPaymentActivity;
 import com.daily.dailyhotel.util.RecentlyPlaceUtil;
@@ -589,16 +590,21 @@ public class GourmetDetailActivity extends PlaceDetailActivity
     @Override
     protected void shareSMS(PlaceBookingDay placeBookingDay, PlaceDetail placeDetail)
     {
-        if (placeBookingDay == null || placeDetail == null)
+        if (placeBookingDay == null || placeDetail == null || isLockUiComponent() == true)
         {
             return;
         }
 
-        GourmetBookingDay gourmetBookingDay = (GourmetBookingDay) placeBookingDay;
-        GourmetDetailParams gourmetDetailParams = ((GourmetDetail) placeDetail).getGourmetDetailParams();
+        lockUI();
 
         try
         {
+            GourmetBookingDay gourmetBookingDay = (GourmetBookingDay) placeBookingDay;
+            GourmetDetailParams gourmetDetailParams = ((GourmetDetail) placeDetail).getGourmetDetailParams();
+
+            String longUrl = String.format(Locale.KOREA, "https://mobile.dailyhotel.co.kr/gourmet/%d?reserveDate=%s"//
+                , placeDetail.index, gourmetBookingDay.getVisitDay("yyyy-MM-dd"));
+
             String name = DailyUserPreference.getInstance(GourmetDetailActivity.this).getName();
 
             if (DailyTextUtils.isTextEmpty(name) == true)
@@ -609,13 +615,36 @@ public class GourmetDetailActivity extends PlaceDetailActivity
                 name += "님이";
             }
 
-            String message = getString(R.string.message_detail_gourmet_share_sms, //
-                name, gourmetDetailParams.name, gourmetBookingDay.getVisitDay("yyyy.MM.dd (EEE)"),//
-                gourmetDetailParams.address);
+            final String message = getString(R.string.message_detail_gourmet_share_sms//
+                , name, gourmetDetailParams.name//
+                , gourmetBookingDay.getVisitDay("yyyy.MM.dd (EEE)")//
+                , gourmetDetailParams.address);
 
-            Util.sendSms(this, message);
+            CommonRemoteImpl commonRemote = new CommonRemoteImpl(GourmetDetailActivity.this);
+
+            addCompositeDisposable(commonRemote.getShortUrl(longUrl).subscribe(new Consumer<String>()
+            {
+                @Override
+                public void accept(@NonNull String shortUrl) throws Exception
+                {
+                    unLockUI();
+
+                    Util.sendSms(GourmetDetailActivity.this, message + shortUrl);
+                }
+            }, new Consumer<Throwable>()
+            {
+                @Override
+                public void accept(@NonNull Throwable throwable) throws Exception
+                {
+                    unLockUI();
+
+                    Util.sendSms(GourmetDetailActivity.this, message + "https://mobile.dailyhotel.co.kr/gourmet/" + placeDetail.index);
+                }
+            }));
         } catch (Exception e)
         {
+            unLockUI();
+
             ExLog.d(e.toString());
         }
 

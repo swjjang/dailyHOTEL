@@ -16,15 +16,16 @@ import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.ScaleXSpan;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
 import com.daily.base.BaseActivity;
-import com.daily.base.BaseDialogView;
 import com.daily.base.OnBaseEventListener;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ScreenUtils;
+import com.daily.dailyhotel.base.BaseBlurView;
 import com.daily.dailyhotel.entity.ListItem;
 import com.daily.dailyhotel.entity.StayOutbound;
 import com.daily.dailyhotel.screen.home.stay.outbound.list.map.StayOutboundMapFragment;
@@ -39,7 +40,7 @@ import java.util.List;
 
 import io.reactivex.Observable;
 
-public class StayOutboundListView extends BaseDialogView<StayOutboundListView.OnEventListener, ActivityStayOutboundSearchResultDataBinding>//
+public class StayOutboundListView extends BaseBlurView<StayOutboundListView.OnEventListener, ActivityStayOutboundSearchResultDataBinding>//
     implements StayOutboundListViewInterface, ViewPager.OnPageChangeListener, View.OnClickListener, StayOutboundMapFragment.OnEventListener
 {
     private static final int ANIMATION_DELAY = 200;
@@ -70,7 +71,7 @@ public class StayOutboundListView extends BaseDialogView<StayOutboundListView.On
 
         void onStayClick(android.support.v4.util.Pair[] pairs, StayOutbound stayOutbound);
 
-        void onStayLongClick();
+        void onStayLongClick(android.support.v4.util.Pair[] pairs, StayOutbound stayOutbound);
 
         void onScrollList(int listSize, int lastVisibleItemPosition);
 
@@ -303,9 +304,32 @@ public class StayOutboundListView extends BaseDialogView<StayOutboundListView.On
             }, new View.OnLongClickListener()
             {
                 @Override
-                public boolean onLongClick(View v)
+                public boolean onLongClick(View view)
                 {
-                    getEventListener().onStayLongClick();
+                    int position = getViewDataBinding().recyclerView.getChildAdapterPosition(view);
+                    if (position < 0)
+                    {
+                        return false;
+                    }
+
+                    ListItem listItem = mStayOutboundListAdapter.getItem(position);
+
+                    if (listItem.mType == listItem.TYPE_ENTRY)
+                    {
+                        View simpleDraweeView = view.findViewById(R.id.imageView);
+                        View nameTextView = view.findViewById(R.id.nameTextView);
+                        View gradientTopView = view.findViewById(R.id.gradientTopView);
+                        View gradientBottomView = view.findViewById(R.id.gradientView);
+
+                        android.support.v4.util.Pair[] pairs = new Pair[4];
+                        pairs[0] = android.support.v4.util.Pair.create(simpleDraweeView, getString(R.string.transition_place_image));
+                        pairs[1] = android.support.v4.util.Pair.create(nameTextView, getString(R.string.transition_place_name));
+                        pairs[2] = android.support.v4.util.Pair.create(gradientTopView, getString(R.string.transition_gradient_top_view));
+                        pairs[3] = android.support.v4.util.Pair.create(gradientBottomView, getString(R.string.transition_gradient_bottom_view));
+
+                        getEventListener().onStayLongClick(pairs, listItem.getItem());
+                    }
+
                     return true;
                 }
             });
@@ -770,6 +794,14 @@ public class StayOutboundListView extends BaseDialogView<StayOutboundListView.On
     public void onMyLocationClick()
     {
         getEventListener().onMyLocationClick();
+    }
+
+    @Override
+    public void showPreviewGuide()
+    {
+        View dialogView = LayoutInflater.from(getContext()).inflate(R.layout.view_dialog_preview_layout, null, false);
+
+        showSimpleDialog(dialogView, null, null, false);
     }
 
     private void showViewPagerAnimation()

@@ -3,6 +3,7 @@ package com.twoheart.dailyhotel.place.layout;
 import android.animation.Animator;
 import android.animation.ValueAnimator;
 import android.content.Context;
+import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.PointF;
 import android.location.Location;
@@ -53,6 +54,7 @@ public abstract class PlaceReservationDetailLayout extends BaseBlurLayout implem
     private View mPlaceInformationLayout;
 
     View mInputReviewVerticalLine, mMapExpandedView;
+    private TextView mDeleteReservationView;
     private DailyTextView mInputReviewView;
     private DailyToolbarView mDailyToolbarView;
 
@@ -109,6 +111,8 @@ public abstract class PlaceReservationDetailLayout extends BaseBlurLayout implem
         void onReleaseUiComponent();
 
         void onLoadingMap();
+
+        void onDeleteReservationClick();
     }
 
     public PlaceReservationDetailLayout(Context context, OnBaseEventListener listener)
@@ -155,6 +159,9 @@ public abstract class PlaceReservationDetailLayout extends BaseBlurLayout implem
         mPlaceInformationLayout.setLayoutParams(placeInformationLayoutParams);
 
         mPlaceInformationLayout.setVisibility(View.VISIBLE);
+
+        mDeleteReservationView = (TextView) view.findViewById(R.id.deleteReservationTextView);
+        mDeleteReservationView.setPaintFlags(mDeleteReservationView.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
     }
 
     private void initToolbar(View view)
@@ -172,6 +179,19 @@ public abstract class PlaceReservationDetailLayout extends BaseBlurLayout implem
         initGuestInformationLayout(mContext, mScrollLayout, placeBookingDetail);
         initPaymentInformationLayout(mContext, mScrollLayout, placeBookingDetail);
         initRefundPolicyLayout(mContext, mScrollLayout, placeBookingDetail);
+    }
+
+    public void setDeleteReservationVisible(boolean visible)
+    {
+        if (visible == true)
+        {
+            mDeleteReservationView.setVisibility(View.VISIBLE);
+            mDeleteReservationView.setOnClickListener(this);
+        } else
+        {
+            mDeleteReservationView.setVisibility(View.INVISIBLE);
+            mDeleteReservationView.setOnClickListener(null);
+        }
     }
 
     private void setReservationDetailToolbar()
@@ -479,6 +499,10 @@ public abstract class PlaceReservationDetailLayout extends BaseBlurLayout implem
                 ((OnEventListener) mOnEventListener).onReviewClick(reviewStatus);
                 break;
             }
+
+            case R.id.deleteReservationTextView:
+                ((OnEventListener) mOnEventListener).onDeleteReservationClick();
+                break;
         }
     }
 

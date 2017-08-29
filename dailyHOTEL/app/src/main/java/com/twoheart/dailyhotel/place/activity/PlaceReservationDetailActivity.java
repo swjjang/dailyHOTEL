@@ -51,6 +51,8 @@ public abstract class PlaceReservationDetailActivity extends BaseActivity
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
+        overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
+
         super.onCreate(savedInstanceState);
 
         Bundle bundle = getIntent().getExtras();
@@ -235,6 +237,14 @@ public abstract class PlaceReservationDetailActivity extends BaseActivity
         {
             mDailyLocationFactory.stopLocationMeasure();
         }
+    }
+
+    @Override
+    public void finish()
+    {
+        super.finish();
+
+        overridePendingTransition(R.anim.hold, R.anim.slide_out_right);
     }
 
     protected void requestCommonDatetime()

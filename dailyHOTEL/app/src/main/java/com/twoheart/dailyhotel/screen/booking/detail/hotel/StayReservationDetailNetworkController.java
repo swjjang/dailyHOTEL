@@ -32,6 +32,8 @@ public class StayReservationDetailNetworkController extends BaseNetworkControlle
         void onExpiredSessionError();
 
         void onReservationDetailError(Throwable throwable);
+
+        void onHiddenReservation(boolean success, String message);
     }
 
     public StayReservationDetailNetworkController(Context context, String networkTag, OnBaseNetworkControllerListener listener)
@@ -52,6 +54,11 @@ public class StayReservationDetailNetworkController extends BaseNetworkControlle
     public void requestStayReservationDetail(int reservationIndex)
     {
         DailyMobileAPI.getInstance(mContext).requestStayReservationDetail(mNetworkTag, reservationIndex, mReservationBookingDetailCallback);
+    }
+
+    public void requestHiddenReservation(int reservationIndex)
+    {
+        DailyMobileAPI.getInstance(mContext).requestStayHiddenBooking(mNetworkTag, reservationIndex, mReservationHiddenCallback);
     }
 
     private retrofit2.Callback mStayReviewInformationCallback = new retrofit2.Callback<JSONObject>()
@@ -199,6 +206,54 @@ public class StayReservationDetailNetworkController extends BaseNetworkControlle
         {
             mOnNetworkControllerListener.onError(call, t, true);
             ((OnNetworkControllerListener) mOnNetworkControllerListener).onReservationDetailError(t);
+        }
+    };
+
+    private retrofit2.Callback mReservationHiddenCallback = new retrofit2.Callback<JSONObject>()
+    {
+        @Override
+        public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
+        {
+            if (response != null && response.isSuccessful() && response.body() != null)
+            {
+                try
+                {
+                    JSONObject responseJSONObject = response.body();
+
+                    // 해당 화면은 메시지를 넣지 않는다.
+                    int msgCode = responseJSONObject.getInt("msg_code");
+                    String message = responseJSONObject.getString("msg");
+
+                    JSONObject datJSONObject = responseJSONObject.getJSONObject("data");
+
+                    boolean result = false;
+
+                    if (datJSONObject != null)
+                    {
+                        if (datJSONObject.has("isSuccess") == true)
+                        {
+                            result = datJSONObject.getInt("isSuccess") == 1;
+                        } else if (datJSONObject.has("is_success") == true)
+                        {
+                            result = datJSONObject.getBoolean("is_success");
+                        }
+                    }
+
+                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onHiddenReservation(result, message);
+                } catch (Exception e)
+                {
+                    mOnNetworkControllerListener.onError(e);
+                }
+            } else
+            {
+                mOnNetworkControllerListener.onErrorResponse(call, response);
+            }
+        }
+
+        @Override
+        public void onFailure(Call<JSONObject> call, Throwable t)
+        {
+            mOnNetworkControllerListener.onError(call, t, false);
         }
     };
 }

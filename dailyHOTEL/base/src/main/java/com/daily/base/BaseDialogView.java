@@ -26,6 +26,12 @@ public abstract class BaseDialogView<T1 extends OnBaseEventListener, T2 extends 
     }
 
     @Override
+    public boolean isTabletDevice()
+    {
+        return ScreenUtils.isTabletDevice(getActivity());
+    }
+
+    @Override
     public void hideSimpleDialog()
     {
         if (mDialog != null)

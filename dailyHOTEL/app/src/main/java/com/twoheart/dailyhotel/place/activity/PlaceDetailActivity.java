@@ -32,10 +32,13 @@ import com.twoheart.dailyhotel.network.model.TrueVRParams;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.layout.PlaceDetailLayout;
 import com.twoheart.dailyhotel.place.networkcontroller.PlaceDetailNetworkController;
+import com.twoheart.dailyhotel.screen.gourmet.detail.GourmetDetailActivity;
+import com.twoheart.dailyhotel.screen.hotel.detail.StayDetailActivity;
 import com.twoheart.dailyhotel.screen.information.FAQActivity;
 import com.twoheart.dailyhotel.screen.main.MainActivity;
 import com.twoheart.dailyhotel.screen.mydaily.member.AddProfileSocialActivity;
 import com.twoheart.dailyhotel.screen.mydaily.member.EditProfilePhoneActivity;
+import com.twoheart.dailyhotel.util.AppResearch;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
@@ -92,6 +95,8 @@ public abstract class PlaceDetailActivity extends BaseActivity
 
     protected AnalyticsParam mAnalyticsParam;
 
+    private AppResearch mAppResearch;
+
     protected abstract PlaceDetailLayout getDetailLayout(Context context);
 
     protected abstract PlaceDetailNetworkController getNetworkController(Context context);
@@ -124,6 +129,8 @@ public abstract class PlaceDetailActivity extends BaseActivity
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+
+        mAppResearch = new AppResearch(this);
 
         mPlaceDetailLayout = getDetailLayout(this);
         mPlaceDetailNetworkController = getNetworkController(this);
@@ -258,6 +265,18 @@ public abstract class PlaceDetailActivity extends BaseActivity
         }
 
         super.onResume();
+
+        // 앱 조사 관련해서 지원
+        if (mPlaceDetail != null)
+        {
+            if (this instanceof StayDetailActivity)
+            {
+                mAppResearch.onResume("스테이", mPlaceDetail.index);
+            } else if (this instanceof GourmetDetailActivity)
+            {
+                mAppResearch.onResume("고메", mPlaceDetail.index);
+            }
+        }
     }
 
     @Override
@@ -269,6 +288,18 @@ public abstract class PlaceDetailActivity extends BaseActivity
         {
             mPlaceDetailLayout.setWishTooltipVisibility(false, 0);
             DailyPreference.getInstance(this).setWishTooltip(false);
+        }
+
+        // 앱 조사 관련해서 지원
+        if (mPlaceDetail != null)
+        {
+            if (this instanceof StayDetailActivity)
+            {
+                mAppResearch.onPause("스테이", mPlaceDetail.index);
+            } else if (this instanceof GourmetDetailActivity)
+            {
+                mAppResearch.onPause("고메", mPlaceDetail.index);
+            }
         }
     }
 

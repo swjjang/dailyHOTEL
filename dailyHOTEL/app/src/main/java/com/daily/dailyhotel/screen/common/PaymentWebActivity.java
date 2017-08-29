@@ -102,7 +102,7 @@ public class PaymentWebActivity extends BasePaymentWebActivity
 
     protected void requestPostPaymentWebView(WebView webView, String url, String jsonString)
     {
-        if (DailyTextUtils.isTextEmpty(jsonString) == true)
+        if (DailyTextUtils.isTextEmpty(url, jsonString) == true)
         {
             DailyToast.showToast(this, R.string.toast_msg_failed_to_get_payment_info, Toast.LENGTH_SHORT);
             finish();

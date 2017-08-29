@@ -382,8 +382,23 @@ public abstract class PlaceMainLayout extends BaseBlurLayout implements View.OnC
 
                     boolean isViewTypeEnabled = placeListFragment.getViewType() != Constants.ViewType.GONE;
 
-                    setOptionViewTypeEnabled(isViewTypeEnabled);
-                    setOptionFilterEnabled(isViewTypeEnabled || placeListFragment.isDefaultFilter() == false);
+                    if(placeListFragment.getViewType() == Constants.ViewType.GONE)
+                    {
+                        if(placeListFragment.isDefaultFilter() == true)
+                        {
+                            setBottomOptionVisible(false);
+                        } else
+                        {
+                            setBottomOptionVisible(true);
+                            setOptionViewTypeEnabled(false);
+                            setOptionFilterEnabled(true);
+                        }
+                    } else
+                    {
+                        setBottomOptionVisible(true);
+                        setOptionViewTypeEnabled(true);
+                        setOptionFilterEnabled(true);
+                    }
                 }
 
                 @Override
@@ -516,6 +531,24 @@ public abstract class PlaceMainLayout extends BaseBlurLayout implements View.OnC
         }
 
         mBottomOptionLayout.setVisibility(View.GONE);
+    }
+
+    public void setBottomOptionVisible(boolean visible)
+    {
+        if (mBottomOptionLayout == null)
+        {
+            return;
+        }
+
+        if (visible == true)
+        {
+            mViewTypeOptionImageView.setVisibility(View.VISIBLE);
+            mFilterOptionImageView.setVisibility(View.VISIBLE);
+        } else
+        {
+            mViewTypeOptionImageView.setVisibility(View.GONE);
+            mFilterOptionImageView.setVisibility(View.GONE);
+        }
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////

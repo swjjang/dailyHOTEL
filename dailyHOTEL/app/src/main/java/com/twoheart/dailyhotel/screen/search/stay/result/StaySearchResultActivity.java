@@ -1085,6 +1085,18 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
         }
 
         @Override
+        public void onRegionClick()
+        {
+
+        }
+
+        @Override
+        public void onCalendarClick()
+        {
+            mOnEventListener.onDateClick();
+        }
+
+        @Override
         public void onCategoryList(List<Category> categoryList)
         {
             if (categoryList != null && categoryList.size() > 0)
@@ -1183,6 +1195,12 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
 
         @Override
         public void onShowMenuBar()
+        {
+
+        }
+
+        @Override
+        public void onBottomOptionVisible(boolean visible)
         {
 
         }

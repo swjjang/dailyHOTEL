@@ -54,7 +54,7 @@ public class DailyCampaignTagTitleView extends ConstraintLayout
 
         mViewDataBinding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.daily_view_campaign_tag_title_data, this, true);
 
-        mViewDataBinding.backImageView.setOnClickListener(new OnClickListener()
+        mViewDataBinding.toolbarView.setOnBackClickListener(new OnClickListener()
         {
             @Override
             public void onClick(View v)
@@ -123,7 +123,7 @@ public class DailyCampaignTagTitleView extends ConstraintLayout
             return;
         }
 
-        mViewDataBinding.titleTextView.setText(title);
+        mViewDataBinding.toolbarView.setTitleText(title);
     }
 
     public void setTitleText(int titleResId)
@@ -133,7 +133,7 @@ public class DailyCampaignTagTitleView extends ConstraintLayout
             return;
         }
 
-        mViewDataBinding.titleTextView.setText(titleResId);
+        mViewDataBinding.toolbarView.setTitleText(titleResId);
     }
 
     public void setCalendarText(String text)

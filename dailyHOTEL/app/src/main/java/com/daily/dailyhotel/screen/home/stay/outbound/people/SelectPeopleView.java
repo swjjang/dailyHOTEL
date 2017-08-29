@@ -63,7 +63,7 @@ public class SelectPeopleView extends BaseDialogView<SelectPeopleView.OnEventLis
 
         FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 
-        if (ScreenUtils.isTabletDevice((Activity) getContext()) == true)
+        if (isTabletDevice() == true)
         {
             layoutParams.width = ScreenUtils.getScreenWidth(getContext()) * 10 / 15;
         } else

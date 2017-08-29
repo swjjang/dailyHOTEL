@@ -20,6 +20,7 @@ import com.daily.base.util.ScreenUtils;
 import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.entity.CarouselListItem;
 import com.daily.dailyhotel.entity.CommonDateTime;
+import com.daily.dailyhotel.entity.People;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayOutbounds;
 import com.daily.dailyhotel.parcel.analytics.StayOutboundDetailAnalyticsParam;
@@ -29,6 +30,7 @@ import com.daily.dailyhotel.repository.local.model.AnalyticsParam;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
 import com.daily.dailyhotel.repository.remote.RecentlyRemoteImpl;
 import com.daily.dailyhotel.screen.home.stay.outbound.detail.StayOutboundDetailActivity;
+import com.daily.dailyhotel.screen.home.stay.outbound.preview.StayOutboundPreviewActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.search.StayOutboundSearchActivity;
 import com.daily.dailyhotel.util.RecentlyPlaceUtil;
 import com.facebook.drawee.view.SimpleDraweeView;
@@ -81,6 +83,7 @@ import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -408,7 +411,14 @@ public class HomeFragment extends BaseMenuNavigationFragment
                         @Override
                         public void subscribe(ObservableEmitter<Object> e) throws Exception
                         {
-                            startPlaceDetail(mViewByLongPress, mHomePlaceByLongPress, mTodayDateTime);
+                            if (RecentlyPlaceUtil.SERVICE_TYPE_OB_STAY_NAME.equalsIgnoreCase(mHomePlaceByLongPress.serviceType) == true)
+                            {
+                                // stayOutbound
+                                startStayOutboundDetail(mViewByLongPress, mHomePlaceByLongPress, mTodayDateTime);
+                            } else
+                            {
+                                startPlaceDetail(mViewByLongPress, mHomePlaceByLongPress, mTodayDateTime);
+                            }
                         }
                     }).subscribeOn(AndroidSchedulers.mainThread()).subscribe();
                 }
@@ -646,13 +656,52 @@ public class HomeFragment extends BaseMenuNavigationFragment
         if (mHomeLayout != null)
         {
             mHomeLayout.setCategoryEnabled(isEnabled);
+        }
+    }
 
-            // 해외 호텔 new 표시
-            if (DailyPreference.getInstance(mBaseActivity).isHomeShortCutStayOutboundNew() == true)
+    private void checkStayOutboundCutNewVisible(TodayDateTime todayDateTime)
+    {
+        if (todayDateTime == null)
+        {
+            return;
+        }
+
+        final String OVER_TIME = "overTime";
+        final int VIEW_TIME = 14; // 14일
+
+        String visibleDate = DailyPreference.getInstance(mBaseActivity).getHomeShortCutStayOutboundNewDate();
+
+        // 해외 호텔 new 표시
+        if (DailyTextUtils.isTextEmpty(visibleDate) == true)
+        {
+            DailyPreference.getInstance(mBaseActivity).setHomeShortCutStayOutboundNewDate(todayDateTime.currentDateTime);
+
+            mHomeLayout.setCategoryStayOutboundNewVisible(true);
+        } else if (OVER_TIME.equalsIgnoreCase(visibleDate) == true)
+        {
+            mHomeLayout.setCategoryStayOutboundNewVisible(false);
+        } else
+        {
+            try
             {
-                DailyPreference.getInstance(mBaseActivity).setHomeShortCutStayOutboundNew(false);
+                Calendar currentCalendar = DailyCalendar.getInstance();
+                currentCalendar.setTime(DailyCalendar.convertDate(todayDateTime.currentDateTime, DailyCalendar.ISO_8601_FORMAT));
 
-                mHomeLayout.setCategoryStayOutboundNewVisible(true);
+                Calendar visibleCalendar = DailyCalendar.getInstance();
+                visibleCalendar.setTime(DailyCalendar.convertDate(visibleDate, DailyCalendar.ISO_8601_FORMAT));
+                visibleCalendar.add(Calendar.DAY_OF_MONTH, VIEW_TIME);
+
+                if (currentCalendar.before(visibleCalendar) == true)
+                {
+                    mHomeLayout.setCategoryStayOutboundNewVisible(true);
+                } else
+                {
+                    mHomeLayout.setCategoryStayOutboundNewVisible(false);
+                    DailyPreference.getInstance(mBaseActivity).setHomeShortCutStayOutboundNewDate(OVER_TIME);
+                }
+            } catch (Exception e)
+            {
+                ExLog.d(e.toString());
             }
         }
     }
@@ -1137,6 +1186,8 @@ public class HomeFragment extends BaseMenuNavigationFragment
             {
                 unLockUI();
                 setCommonDateTime(todayDateTime);
+
+                checkStayOutboundCutNewVisible(todayDateTime);
             }
         }, new Consumer<Throwable>()
         {
@@ -1846,8 +1897,22 @@ public class HomeFragment extends BaseMenuNavigationFragment
                 {
                     if (RecentlyPlaceUtil.SERVICE_TYPE_OB_STAY_NAME.equalsIgnoreCase(recentItem.serviceType) == true)
                     {
-                        // stayOutbound
-                        DailyToast.showToast(getActivity(), getString(R.string.label_stay_outbound_preparing_preview), DailyToast.LENGTH_SHORT);
+                        mViewByLongPress = view;
+                        mHomePlaceByLongPress = recentItem;
+
+                        mHomeLayout.setBlurVisibility(mBaseActivity, true);
+
+                        StayBookingDay stayBookingDay = new StayBookingDay();
+                        stayBookingDay.setCheckInDay(mTodayDateTime.dailyDateTime);
+                        stayBookingDay.setCheckOutDay(mTodayDateTime.dailyDateTime, 1);
+
+                        startActivityForResult(StayOutboundPreviewActivity.newInstance(getActivity(), recentItem.index//
+                            , recentItem.title//
+                            , stayBookingDay.getCheckInDay(DailyCalendar.ISO_8601_FORMAT)//
+                            , stayBookingDay.getCheckOutDay(DailyCalendar.ISO_8601_FORMAT)//
+                            , People.DEFAULT_ADULTS, null)//
+                            , CODE_REQUEST_ACTIVITY_PREVIEW);
+
                         unLockUI();
                     } else
                     {
@@ -1953,11 +2018,6 @@ public class HomeFragment extends BaseMenuNavigationFragment
 
                 case STAY_OUTBOUND_HOTEL:
                 {
-                    if (mHomeLayout != null)
-                    {
-                        mHomeLayout.setCategoryStayOutboundNewVisible(false);
-                    }
-
                     Intent intent = StayOutboundSearchActivity.newInstance(mBaseActivity);
                     startActivityForResult(intent, Constants.CODE_RESULT_ACTIVITY_STAY_OUTBOUND_SEARCH);
 

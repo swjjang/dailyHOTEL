@@ -20,7 +20,6 @@ import com.twoheart.dailyhotel.databinding.ActivityPlaceBookingDetailMapDataBind
 import com.twoheart.dailyhotel.model.Place;
 import com.twoheart.dailyhotel.model.time.PlaceBookingDay;
 import com.twoheart.dailyhotel.widget.DailyOverScrollViewPager;
-import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
 import java.util.ArrayList;
 
@@ -39,7 +38,6 @@ public abstract class PlaceBookingDetailMapView extends BaseDialogView<PlaceBook
     private static final int VIEWPAGER_LEFT_N_RIGHT_PADDING_DP = 15;
     private static final int VIEWPAGER_PAGE_MARGIN_DP = 5;
 
-    private DailyToolbarLayout mDailyToolbarLayout;
     private PlaceBookingDetailMapFragment mPlaceBookingDetailMapFragment;
     private DailyOverScrollViewPager mViewPager;
     private PlaceBookingDetailMapViewPagerAdapter mViewPagerAdapter;
@@ -87,20 +85,18 @@ public abstract class PlaceBookingDetailMapView extends BaseDialogView<PlaceBook
             return;
         }
 
-        mDailyToolbarLayout = new DailyToolbarLayout(getContext(), viewDataBinding.toolbar);
-        mDailyToolbarLayout.initToolbar(null//
-            , v -> getEventListener().onBackClick());
+        viewDataBinding.toolbarView.setOnBackClickListener(v -> getEventListener().onBackClick());
     }
 
     @Override
     public void setToolbarTitle(String title)
     {
-        if (mDailyToolbarLayout == null)
+        if (getViewDataBinding() == null)
         {
             return;
         }
 
-        mDailyToolbarLayout.setToolbarTitle(title);
+        getViewDataBinding().toolbarView.setTitleText(title);
     }
 
     @Override

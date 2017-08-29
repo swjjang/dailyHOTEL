@@ -4,6 +4,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import com.daily.base.util.DailyTextUtils;
+import com.daily.dailyhotel.screen.common.call.CallDialogActivity;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Category;
 import com.twoheart.dailyhotel.model.Place;
@@ -37,6 +38,10 @@ public class StayListFragment extends PlaceListFragment
         void onStayClick(View view, PlaceViewItem placeViewItem, int listCount);
 
         void onStayLongClick(View view, PlaceViewItem placeViewItem, int listCount);
+
+        void onRegionClick();
+
+        void onCalendarClick();
     }
 
     @Override
@@ -417,6 +422,12 @@ public class StayListFragment extends PlaceListFragment
         }
 
         @Override
+        public void onBottomOptionVisible(boolean visible)
+        {
+            mOnPlaceListFragmentListener.onBottomOptionVisible(visible);
+        }
+
+        @Override
         public void onUpdateViewTypeEnabled(boolean isEnabled)
         {
             mOnPlaceListFragmentListener.onUpdateViewTypeEnabled(isEnabled);
@@ -432,6 +443,24 @@ public class StayListFragment extends PlaceListFragment
         public void onRecordAnalytics(ViewType viewType)
         {
             mOnPlaceListFragmentListener.onRecordAnalytics(viewType);
+        }
+
+        @Override
+        public void onShowCallDialog()
+        {
+            startActivity(CallDialogActivity.newInstance(getActivity()));
+        }
+
+        @Override
+        public void onRegionClick()
+        {
+            ((OnStayListFragmentListener) mOnPlaceListFragmentListener).onRegionClick();
+        }
+
+        @Override
+        public void onCalendarClick()
+        {
+            ((OnStayListFragmentListener) mOnPlaceListFragmentListener).onCalendarClick();
         }
 
         @Override
