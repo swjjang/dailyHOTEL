@@ -1408,7 +1408,7 @@
 
     <string name="label_booking_today">당일</string>
     <string name="label_booking_before_day">%1$d일 전</string>
-    <string name="label_booking_go_to_gourmet">고메 보러가기</string>
+    <string name="label_booking_go_to_gourmet">레스토랑 보러가기</string>
     <string name="label_booking_before_use">예약 완료</string>
     <string name="label_booking_after_use">이용 완료</string>
     <string name="label_booking_book_again">다시 예약하기</string>
