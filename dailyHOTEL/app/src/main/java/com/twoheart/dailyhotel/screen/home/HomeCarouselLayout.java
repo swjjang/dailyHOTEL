@@ -32,7 +32,7 @@ import java.util.ArrayList;
 
 public class HomeCarouselLayout extends LinearLayout
 {
-    private static final int LAYOUT_ANIMATION_DURATION = 15000;
+    private static final int LAYOUT_ANIMATION_DURATION = 200;
 
     private Context mContext;
     private DailyTextView mTitleTextView;
@@ -260,8 +260,6 @@ public class HomeCarouselLayout extends LinearLayout
                 ViewGroup.LayoutParams params = getLayoutParams();
                 params.height = value;
                 setLayoutParams(params);
-
-                mRecyclerView.requestLayout();
 
                 float alpha = (float) ((double) value / (double) gap);
                 setAlpha(alpha);

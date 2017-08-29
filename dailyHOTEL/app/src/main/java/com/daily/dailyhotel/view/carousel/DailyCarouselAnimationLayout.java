@@ -1,18 +1,17 @@
 package com.daily.dailyhotel.view.carousel;
 
+import android.animation.Animator;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.databinding.DataBindingUtil;
 import android.support.constraint.ConstraintLayout;
+import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 
-import com.daily.base.util.ExLog;
-import com.daily.base.util.VersionUtils;
 import com.daily.dailyhotel.entity.CarouselListItem;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.LayoutCarouselAnimationDataBinding;
@@ -25,12 +24,15 @@ import java.util.ArrayList;
 
 public class DailyCarouselAnimationLayout extends ConstraintLayout
 {
-    private static final int LAYOUT_ANIMATION_DURATION = 15000;
+    private static final int LAYOUT_ANIMATION_DURATION = 200;
 
     private Context mContext;
     private LayoutCarouselAnimationDataBinding mDataBinding;
     private ValueAnimator mValueAnimator;
     private boolean mIsUseAnimation;
+
+    int mMinHeight;
+    int mMaxHeight;
 
     public DailyCarouselAnimationLayout(Context context)
     {
@@ -59,6 +61,9 @@ public class DailyCarouselAnimationLayout extends ConstraintLayout
     private void initLayout(AttributeSet attrs)
     {
         mDataBinding = DataBindingUtil.inflate(LayoutInflater.from(mContext), R.layout.layout_carousel_animation_data, this, true);
+
+        mMinHeight = mContext.getResources().getDimensionPixelOffset(R.dimen.home_carousel_min_height);
+        mMaxHeight = mContext.getResources().getDimensionPixelOffset(R.dimen.home_carousel_max_height);
 
         if (attrs != null)
         {
@@ -220,57 +225,23 @@ public class DailyCarouselAnimationLayout extends ConstraintLayout
 
         if (list == null || list.size() == 0)
         {
-            setVisibility(View.GONE);
-            return;
-        }
-
-        getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener()
+            startLayoutCloseAnimation();
+        } else
         {
-            @Override
-            public void onGlobalLayout()
+            if (getHeight() >= mMaxHeight)
             {
-
-                if (VersionUtils.isOverAPI16() == true)
-                {
-                    getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                } else
-                {
-                    getViewTreeObserver().removeGlobalOnLayoutListener(this);
-                }
-                int height = getHeight();
-                int top = getTop();
-                int bottom = getBottom();
-
-                ValueAnimator animator = ValueAnimator.ofInt(0, height);
-                animator.setDuration(LAYOUT_ANIMATION_DURATION);
-                animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener()
-                {
-                    @Override
-                    public void onAnimationUpdate(ValueAnimator animation)
-                    {
-                        Integer value = (Integer) animation.getAnimatedValue();
-                        ExLog.d("value : " + value + " / " + (top + value.intValue()));
-
-
-//                        setTop(top);
-//                        setBottom(top + value.intValue());
-
-                        ViewGroup.LayoutParams params = getLayoutParams();
-                        params.height = value;
-                        setLayoutParams(params);
-                        postInvalidate();
-                        refreshDrawableState();
-//                        ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) mDataBinding.animationLayout.getLayoutParams();
-//                        layoutParams.height = value;
-//                        mDataBinding.animationLayout.setLayoutParams(layoutParams);
-//                        requestLayout();
-//                        refreshDrawableState();
-//                        getParent().requestLayout();
-                    }
-                });
-                animator.start();
+                return;
             }
-        });
+
+            this.postDelayed(new Runnable()
+            {
+                @Override
+                public void run()
+                {
+                    startLayoutShowAnimation();
+                }
+            }, 100);
+        }
     }
 
     public CarouselListItem getItem(int position)
@@ -291,6 +262,146 @@ public class DailyCarouselAnimationLayout extends ConstraintLayout
         }
 
         mDataBinding.contentLayout.setUsePriceLayout(isUse);
+    }
+
+    void setHeight(int height)
+    {
+        ViewGroup.LayoutParams params = getLayoutParams();
+        if (params == null)
+        {
+            params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, height);
+        } else
+        {
+            params.height = height;
+        }
+
+        setLayoutParams(params);
+    }
+
+    void startLayoutShowAnimation()
+    {
+        if (getHeight() >= mMaxHeight)
+        {
+            return;
+        }
+
+        if (mValueAnimator != null && mValueAnimator.isRunning() == true)
+        {
+            mValueAnimator.cancel();
+        }
+
+        final int gap = mMaxHeight - mMinHeight;
+        mValueAnimator = ValueAnimator.ofInt(mMinHeight, mMaxHeight);
+        mValueAnimator.setDuration(LAYOUT_ANIMATION_DURATION);
+        mValueAnimator.setInterpolator(new FastOutSlowInInterpolator());
+        mValueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener()
+        {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation)
+            {
+                int value = (int) animation.getAnimatedValue();
+                ViewGroup.LayoutParams params = getLayoutParams();
+                params.height = value;
+                setLayoutParams(params);
+
+                float alpha = (float) ((double) value / (double) gap);
+                setAlpha(alpha);
+            }
+        });
+
+        mValueAnimator.addListener(new Animator.AnimatorListener()
+        {
+            @Override
+            public void onAnimationStart(Animator animation)
+            {
+                setHeight(mMinHeight);
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation)
+            {
+                mValueAnimator.removeAllUpdateListeners();
+                mValueAnimator.removeAllListeners();
+                mValueAnimator = null;
+
+                setHeight(mMaxHeight);
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation)
+            {
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation)
+            {
+
+            }
+        });
+
+        mValueAnimator.start();
+    }
+
+    void startLayoutCloseAnimation()
+    {
+        if (getHeight() == mMinHeight)
+        {
+            return;
+        }
+
+        if (mValueAnimator != null && mValueAnimator.isRunning() == true)
+        {
+            mValueAnimator.cancel();
+        }
+
+        final int height = getHeight();
+
+        mValueAnimator = ValueAnimator.ofInt(height, mMinHeight);
+        mValueAnimator.setDuration(LAYOUT_ANIMATION_DURATION);
+        mValueAnimator.setInterpolator(new FastOutSlowInInterpolator());
+        mValueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener()
+        {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation)
+            {
+                int value = (int) animation.getAnimatedValue();
+                ViewGroup.LayoutParams params = getLayoutParams();
+                params.height = value;
+                setLayoutParams(params);
+            }
+        });
+
+        mValueAnimator.addListener(new Animator.AnimatorListener()
+        {
+            @Override
+            public void onAnimationStart(Animator animation)
+            {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation)
+            {
+                mValueAnimator.removeAllUpdateListeners();
+                mValueAnimator.removeAllListeners();
+                mValueAnimator = null;
+
+                setHeight(mMinHeight);
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation)
+            {
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation)
+            {
+
+            }
+        });
+
+        mValueAnimator.start();
     }
 
     public void setCarouselListener(DailyCarouselLayout.OnCarouselListener listener)
