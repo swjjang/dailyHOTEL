@@ -1561,8 +1561,8 @@ public class DailyMobileAPI
 
     public Observable<BaseDto<HomePlaces>> getHomeRecentlyList(JSONObject jsonObject)
     {
-        final String URL = Constants.UNENCRYPTED_URL ? "api/v4/home/last-seen"//
-            : "MiQ1NiQ2MSQzOCQyJDExJDU0JDYzJDM2JDgxJDQ3JDU0JDYzJDMyJDEwMSQ0JA==$RTHFLRBRTE2NB0Q1QTU4MDdBNkQ4RkRFOLUIxQLUFCMBEI1QTUdCNjMyLQTZFDQUNEAFMMDUPxNEExQTY1MDVBZOUIxOUVDQzBGNQ=M=$";
+        final String URL = Constants.UNENCRYPTED_URL ? "api/v4/home/recent-view"//
+            : "MTckMzUkNzgkNDUkNzQkNjEkNjkkMzkkMjEkNSQ0MiQzMCQyNiQxMDAkODAkNTEk$QjA2MO0U1NURCMUY2NXjBBJNDUNyRjIH5M0UxNkKIzNJBzM4N0MAIxMDEyOEFEMjc3MTOM3REQ5MTkRCNPDUW5NDBFBQTVBQTg5Rg=L=$";
 
         return mDailyMobileService.getHomeRecentList(Crypto.getUrlDecoderEx(URL), jsonObject).subscribeOn(Schedulers.io());
     }

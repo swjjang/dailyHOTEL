@@ -31,6 +31,12 @@ public class HomePlace
     @JsonField(name = "prices")
     public Prices prices;
 
+    @JsonField(name = "rating")
+    public int rating;
+
+    @JsonField(name = "addrSummary")
+    public String addrSummary;
+
     @JsonField(name = "imgPathMain")
     public Map<String, Object> imgPathMain;
 

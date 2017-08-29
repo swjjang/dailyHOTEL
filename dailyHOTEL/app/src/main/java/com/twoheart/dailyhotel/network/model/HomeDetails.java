@@ -21,6 +21,9 @@ public class HomeDetails
     @JsonField(name = "persons")
     public int persons;
 
+    @JsonField(name = "truevr")
+    public boolean isTrueVr;
+
     @JsonIgnore
     public Stay.Grade stayGrade;
 
