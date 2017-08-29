@@ -655,6 +655,16 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
                         });
 
                     mAnalytics.onEventSoldOut(getActivity(), mStayName);
+                } else if(DailyTextUtils.isTextEmpty(mStayPayment.mWarningMessage) == false)
+                {
+                    getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2), mStayPayment.mWarningMessage//
+                        , getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
+                        {
+                            @Override
+                            public void onDismiss(DialogInterface dialog)
+                            {
+                            }
+                        });
                 }
 
                 mAnalytics.onScreen(getActivity(), mStayRefundPolicy.refundPolicy, mStayBookDateTime//

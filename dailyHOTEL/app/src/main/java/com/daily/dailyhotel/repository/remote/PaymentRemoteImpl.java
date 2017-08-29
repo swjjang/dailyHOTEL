@@ -109,12 +109,30 @@ public class PaymentRemoteImpl implements PaymentInterface
 
             if (stayPaymentDataBaseDto != null)
             {
-                if (stayPaymentDataBaseDto.msgCode == 0 && stayPaymentDataBaseDto.data != null)
+                // 0	성공
+                // 4	데이터가 없을시
+                // 5	판매 마감시
+                // 6	현재 시간부터 날짜 바뀌기 전시간(새벽 3시
+                // 7    3시부터 9시까지
+                switch (stayPaymentDataBaseDto.msgCode)
                 {
-                    stayPayment = stayPaymentDataBaseDto.data.getStayPayment();
-                } else
-                {
-                    throw new BaseException(stayPaymentDataBaseDto.msgCode, stayPaymentDataBaseDto.msg);
+                    case 6:
+                    case 7:
+                        stayPayment.mWarningMessage = stayPaymentDataBaseDto.msg;
+                    case 0:
+                        if(stayPaymentDataBaseDto.data != null)
+                        {
+                            stayPayment = stayPaymentDataBaseDto.data.getStayPayment();
+                        } else
+                        {
+                            throw new BaseException(stayPaymentDataBaseDto.msgCode, stayPaymentDataBaseDto.msg);
+                        }
+                        break;
+
+                    case 4:
+                    case 5:
+                    default:
+                        throw new BaseException(stayPaymentDataBaseDto.msgCode, stayPaymentDataBaseDto.msg);
                 }
             } else
             {
@@ -231,7 +249,7 @@ public class PaymentRemoteImpl implements PaymentInterface
             {
                 if (paymentResultDataBaseDto.msgCode == 100 && paymentResultDataBaseDto.data != null)
                 {
-                    paymentResult = paymentResultDataBaseDto.data.getPaymentTypeEasy();
+                    paymentResult = paymentResultDataBaseDto.data.getPaymentResult();
                 } else
                 {
                     throw new BaseException(paymentResultDataBaseDto.msgCode, paymentResultDataBaseDto.msg);
@@ -291,7 +309,7 @@ public class PaymentRemoteImpl implements PaymentInterface
             {
                 if (paymentResultDataBaseDto.msgCode == 100 && paymentResultDataBaseDto.data != null)
                 {
-                    paymentResult = paymentResultDataBaseDto.data.getPaymentTypeEasy();
+                    paymentResult = paymentResultDataBaseDto.data.getPaymentResult();
                 } else
                 {
                     throw new BaseException(paymentResultDataBaseDto.msgCode, paymentResultDataBaseDto.msg);
@@ -362,7 +380,7 @@ public class PaymentRemoteImpl implements PaymentInterface
             {
                 if (paymentResultDataBaseDto.msgCode == 100 && paymentResultDataBaseDto.data != null)
                 {
-                    paymentResult = paymentResultDataBaseDto.data.getPaymentTypeEasy();
+                    paymentResult = paymentResultDataBaseDto.data.getPaymentResult();
                 } else
                 {
                     throw new BaseException(paymentResultDataBaseDto.msgCode, paymentResultDataBaseDto.msg);
@@ -430,7 +448,7 @@ public class PaymentRemoteImpl implements PaymentInterface
             {
                 if (paymentResultDataBaseDto.msgCode == 100 && paymentResultDataBaseDto.data != null)
                 {
-                    paymentResult = paymentResultDataBaseDto.data.getPaymentTypeEasy();
+                    paymentResult = paymentResultDataBaseDto.data.getPaymentResult();
                 } else
                 {
                     throw new BaseException(paymentResultDataBaseDto.msgCode, paymentResultDataBaseDto.msg);
@@ -536,7 +554,7 @@ public class PaymentRemoteImpl implements PaymentInterface
             {
                 if (paymentResultDataBaseDto.msgCode == 100 && paymentResultDataBaseDto.data != null)
                 {
-                    paymentResult = paymentResultDataBaseDto.data.getPaymentTypeEasy();
+                    paymentResult = paymentResultDataBaseDto.data.getPaymentResult();
                 } else
                 {
                     throw new BaseException(paymentResultDataBaseDto.msgCode, paymentResultDataBaseDto.msg);
@@ -610,7 +628,7 @@ public class PaymentRemoteImpl implements PaymentInterface
             {
                 if (paymentResultDataBaseDto.msgCode == 100 && paymentResultDataBaseDto.data != null)
                 {
-                    paymentResult = paymentResultDataBaseDto.data.getPaymentTypeEasy();
+                    paymentResult = paymentResultDataBaseDto.data.getPaymentResult();
                 } else
                 {
                     throw new BaseException(paymentResultDataBaseDto.msgCode, paymentResultDataBaseDto.msg);

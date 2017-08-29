@@ -14,6 +14,8 @@ public class StayPayment
     public String businessName;
     public String transportation;
 
+    public String mWarningMessage; // 현재 시간부터 날짜 바뀌기 전시간(새벽 3시, 3시부터 9시까지 경고 팝업 메시지
+
     public StayPayment()
     {
 
