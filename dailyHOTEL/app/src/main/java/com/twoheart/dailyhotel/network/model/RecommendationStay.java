@@ -20,11 +20,20 @@ public class RecommendationStay extends RecommendationPlace
     @JsonField(name = "grade")
     public String grade;
 
+    @JsonField(name = "roomIdx")
+    public int roomIndex;
+
+    @JsonField(name = "sday")
+    public String sday;
+
     @JsonField(name = "isDailyChoice")
     public boolean isDailyChoice;
 
     @JsonField(name = "overseas")
     public boolean overseas;
+
+    @JsonField(name = "availableRooms")
+    public int availableRooms;
 
     @OnJsonParseComplete
     void onParseComplete()

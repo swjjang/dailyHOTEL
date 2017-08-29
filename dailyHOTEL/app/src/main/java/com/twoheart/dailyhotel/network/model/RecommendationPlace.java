@@ -12,6 +12,9 @@ public abstract class RecommendationPlace
     @JsonField(name = "name")
     public String name;
 
+    @JsonField(name = "regionName")
+    public String regionName;
+
     @JsonField(name = "addrSummary")
     public String addrSummary;
 
@@ -50,6 +53,9 @@ public abstract class RecommendationPlace
 
     @JsonField(name = "stickerIdx")
     public Integer stickerIdx;
+
+    @JsonField(name = "distance")
+    public int distance;
 
     @JsonIgnore
     public String imageUrl;

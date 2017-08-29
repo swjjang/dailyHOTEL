@@ -122,7 +122,7 @@ public class CollectionGourmetAdapter extends PlaceListAdapter
         }
     }
 
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private void onBindViewHolder(GourmetViewHolder holder, PlaceViewItem placeViewItem)
     {
         final RecommendationGourmet recommendationGourmet = placeViewItem.getItem();
@@ -248,12 +248,15 @@ public class CollectionGourmetAdapter extends PlaceListAdapter
         Util.requestImageResize(mContext, holder.dataBinding.imageView, recommendationGourmet.imageUrl);
 
         // SOLD OUT 표시
-        if (recommendationGourmet.isSoldOut)
+        holder.dataBinding.soldoutView.setVisibility(View.GONE);
+        if (recommendationGourmet.availableTicketNumbers == 0 //
+            || recommendationGourmet.availableTicketNumbers < recommendationGourmet.minimumOrderQuantity //
+            || recommendationGourmet.isExpired == true)
         {
-            holder.dataBinding.soldoutView.setVisibility(View.VISIBLE);
-        } else
-        {
-            holder.dataBinding.soldoutView.setVisibility(View.GONE);
+            holder.dataBinding.personsTextView.setVisibility(View.GONE);
+            holder.dataBinding.priceTextView.setVisibility(View.INVISIBLE);
+            holder.dataBinding.priceTextView.setText(null);
+            holder.dataBinding.discountPriceTextView.setText(mContext.getString(R.string.act_hotel_soldout));
         }
 
         if (DailyTextUtils.isTextEmpty(recommendationGourmet.benefit) == false)
