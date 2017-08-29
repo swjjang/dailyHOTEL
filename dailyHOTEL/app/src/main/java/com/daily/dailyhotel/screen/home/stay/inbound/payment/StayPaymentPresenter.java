@@ -543,7 +543,7 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
             case StayPaymentActivity.REQUEST_CODE_PAYMENT_WEB_VBANK:
                 if (data != null)
                 {
-                    onPaymentWebResult(resultCode, data.getStringExtra(Constants.NAME_INTENT_EXTRA_DATA_PAYMENT_RESULT));
+                    onPaymentWebResult(mPaymentType, resultCode, data.getStringExtra(Constants.NAME_INTENT_EXTRA_DATA_PAYMENT_RESULT));
                 }
                 break;
 
@@ -655,7 +655,7 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
                         });
 
                     mAnalytics.onEventSoldOut(getActivity(), mStayName);
-                } else if(DailyTextUtils.isTextEmpty(mStayPayment.mWarningMessage) == false)
+                } else if (DailyTextUtils.isTextEmpty(mStayPayment.mWarningMessage) == false)
                 {
                     getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2), mStayPayment.mWarningMessage//
                         , getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
@@ -2133,7 +2133,7 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
         return false;
     }
 
-    private void onPaymentWebResult(int resultCode, String result)
+    private void onPaymentWebResult(DailyBookingPaymentTypeView.PaymentType paymentType, int resultCode, String result)
     {
         if (resultCode == Activity.RESULT_OK)
         {
@@ -2150,8 +2150,23 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
                 {
                     JSONObject dataJSONObject = jsonObject.getJSONObject("data");
 
-                    paymentResult.bookingIndex = dataJSONObject.getInt("reservationIdx");
-                    paymentResult.result = dataJSONObject.getString("result");
+                    switch (paymentType)
+                    {
+                        case CARD:
+                        case PHONE:
+                            if (dataJSONObject.has("reservationIdx") == true)
+                            {
+                                paymentResult.bookingIndex = dataJSONObject.getInt("reservationIdx");
+                            }
+                            break;
+
+                        case VBANK:
+                            if (dataJSONObject.has("tid") == true)
+                            {
+                                paymentResult.bookingIndex = dataJSONObject.getInt("tid");
+                            }
+                            break;
+                    }
                 } else
                 {
                     throw new BaseException(msgCode, msg);
@@ -2163,7 +2178,29 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
                 @Override
                 public void accept(@io.reactivex.annotations.NonNull PaymentResult paymentResult) throws Exception
                 {
-                    startThankYou(paymentResult.bookingIndex, false);
+                    String message;
+
+                    switch (paymentType)
+                    {
+                        case VBANK:
+                            message = getString(R.string.dialog_msg_issuing_account);
+                            break;
+
+                        default:
+                            message = getString(R.string.message_completed_payment_default);
+                            break;
+                    }
+
+                    getViewInterface().showSimpleDialog(getString(R.string.dialog_title_payment), message//
+                        , getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
+                        {
+                            @Override
+                            public void onDismiss(DialogInterface dialog)
+                            {
+                                startThankYou(paymentResult.bookingIndex, false);
+                            }
+                        });
+
                 }
             }, throwable ->
             {
