@@ -4,7 +4,6 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.LinearGradient;
-import android.graphics.Paint;
 import android.graphics.Shader;
 import android.graphics.drawable.PaintDrawable;
 import android.graphics.drawable.ShapeDrawable;
@@ -35,7 +34,6 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Gourmet;
 import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.network.model.HomePlace;
-import com.twoheart.dailyhotel.network.model.Prices;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
 
@@ -156,33 +154,6 @@ public class HomeCarouselAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
         holder.contentTextView.setText(place.title);
 
-        Prices prices = place.prices;
-
-        if (prices == null || prices.discountPrice == 0 || mIsUsePriceLayout == false)
-        {
-            holder.priceLayout.setVisibility(mIsUsePriceLayout == false ? View.GONE : View.INVISIBLE);
-            holder.contentOriginPriceView.setText("");
-            holder.contentDiscountPriceView.setText("");
-            holder.contentPersonView.setText("");
-        } else
-        {
-            holder.priceLayout.setVisibility(View.VISIBLE);
-
-            String strPrice = DailyTextUtils.getPriceFormat(mContext, prices.normalPrice, false);
-            String strDiscount = DailyTextUtils.getPriceFormat(mContext, prices.discountPrice, false);
-
-            holder.contentDiscountPriceView.setText(strDiscount);
-
-            if (prices.normalPrice <= 0 || prices.normalPrice <= prices.discountPrice)
-            {
-                holder.contentOriginPriceView.setText("");
-            } else
-            {
-                holder.contentOriginPriceView.setText(strPrice);
-                holder.contentOriginPriceView.setPaintFlags(holder.contentOriginPriceView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-            }
-        }
-
         holder.contentProvinceView.setText(place.regionName);
 
         if (place.placeType == Constants.PlaceType.HOTEL)
@@ -190,8 +161,6 @@ public class HomeCarouselAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             holder.contentGradeView.setText(place.details.stayGrade.getName(mContext));
             holder.contentDotImageView.setVisibility(View.VISIBLE);
 
-            holder.contentPersonView.setText("");
-            holder.contentPersonView.setVisibility(View.GONE);
         } else if (place.placeType == Constants.PlaceType.FNB)
         {
             // grade
@@ -206,25 +175,11 @@ public class HomeCarouselAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 holder.contentDotImageView.setVisibility(View.VISIBLE);
                 holder.contentGradeView.setText(place.details.category);
             }
-
-            if (prices != null && place.details.persons > 1)
-            {
-                holder.contentPersonView.setText(//
-                    mContext.getString(R.string.label_home_person_format, place.details.persons));
-                holder.contentPersonView.setVisibility(View.VISIBLE);
-            } else
-            {
-                holder.contentPersonView.setText("");
-                holder.contentPersonView.setVisibility(View.GONE);
-            }
         } else
         {
             // Stay Outbound 의 경우 PlaceType 이 없음
             holder.contentGradeView.setText("");
             holder.contentDotImageView.setVisibility(View.GONE);
-
-            holder.contentPersonView.setText("");
-            holder.contentPersonView.setVisibility(View.GONE);
         }
     }
 
@@ -255,41 +210,10 @@ public class HomeCarouselAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
         holder.contentTextView.setText(stay.name);
 
-        int originPrice = stay.price;
-        int discountPrice = stay.discountPrice;
-
-        if (originPrice == 0 || discountPrice == 0 || mIsUsePriceLayout == false)
-        {
-            holder.priceLayout.setVisibility(mIsUsePriceLayout == false ? View.GONE : View.INVISIBLE);
-            holder.contentOriginPriceView.setText("");
-            holder.contentDiscountPriceView.setText("");
-            holder.contentPersonView.setText("");
-        } else
-        {
-            holder.priceLayout.setVisibility(View.VISIBLE);
-
-            String strPrice = DailyTextUtils.getPriceFormat(mContext, originPrice, false);
-            String strDiscount = DailyTextUtils.getPriceFormat(mContext, discountPrice, false);
-
-            holder.contentDiscountPriceView.setText(strDiscount);
-
-            if (originPrice <= 0 || originPrice <= discountPrice)
-            {
-                holder.contentOriginPriceView.setText("");
-            } else
-            {
-                holder.contentOriginPriceView.setText(strPrice);
-                holder.contentOriginPriceView.setPaintFlags(holder.contentOriginPriceView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-            }
-        }
-
         holder.contentProvinceView.setText(stay.regionName);
 
         holder.contentGradeView.setText(stay.getGrade().getName(mContext));
         holder.contentDotImageView.setVisibility(View.VISIBLE);
-
-        holder.contentPersonView.setText("");
-        holder.contentPersonView.setVisibility(View.GONE);
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
@@ -367,11 +291,6 @@ public class HomeCarouselAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         //            holder.soldoutView.setVisibility(View.GONE);
         //        }
 
-        holder.priceLayout.setVisibility(mIsUsePriceLayout == false ? View.GONE : View.INVISIBLE);
-        holder.contentOriginPriceView.setText("");
-        holder.contentDiscountPriceView.setText("");
-        holder.contentPersonView.setText("");
-
         holder.contentTextView.setText(stayOutbound.name);
         //        holder.nameEngTextView.setText("(" + stayOutbound.nameEng + ")");
 
@@ -380,10 +299,6 @@ public class HomeCarouselAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         // Stay Outbound 의 경우 PlaceType 이 없음
         holder.contentGradeView.setText("");
         holder.contentDotImageView.setVisibility(View.GONE);
-
-        holder.contentPersonView.setText("");
-        holder.contentPersonView.setVisibility(View.GONE);
-
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
@@ -413,34 +328,6 @@ public class HomeCarouselAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
         holder.contentTextView.setText(gourmet.name);
 
-        int originPrice = gourmet.price;
-        int discountPrice = gourmet.discountPrice;
-
-        if (originPrice == 0 || discountPrice == 0 || mIsUsePriceLayout == false)
-        {
-            holder.priceLayout.setVisibility(mIsUsePriceLayout == false ? View.GONE : View.INVISIBLE);
-            holder.contentOriginPriceView.setText("");
-            holder.contentDiscountPriceView.setText("");
-            holder.contentPersonView.setText("");
-        } else
-        {
-            holder.priceLayout.setVisibility(View.VISIBLE);
-
-            String strPrice = DailyTextUtils.getPriceFormat(mContext, originPrice, false);
-            String strDiscount = DailyTextUtils.getPriceFormat(mContext, discountPrice, false);
-
-            holder.contentDiscountPriceView.setText(strDiscount);
-
-            if (originPrice <= 0 || originPrice <= discountPrice)
-            {
-                holder.contentOriginPriceView.setText("");
-            } else
-            {
-                holder.contentOriginPriceView.setText(strPrice);
-                holder.contentOriginPriceView.setPaintFlags(holder.contentOriginPriceView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-            }
-        }
-
         holder.contentProvinceView.setText(gourmet.regionName);
 
         // grade
@@ -454,17 +341,6 @@ public class HomeCarouselAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             holder.contentGradeView.setVisibility(View.VISIBLE);
             holder.contentDotImageView.setVisibility(View.VISIBLE);
             holder.contentGradeView.setText(gourmet.category);
-        }
-
-        if (gourmet.persons > 1)
-        {
-            holder.contentPersonView.setText(//
-                mContext.getString(R.string.label_home_person_format, gourmet.persons));
-            holder.contentPersonView.setVisibility(View.VISIBLE);
-        } else
-        {
-            holder.contentPersonView.setText("");
-            holder.contentPersonView.setVisibility(View.GONE);
         }
     }
 
@@ -683,16 +559,10 @@ public class HomeCarouselAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         SimpleDraweeView contentImageView;
         ImageView soldoutView;
         DailyTextView contentTextView;
-        DailyTextView contentDiscountPriceView;
-        DailyTextView contentOriginPriceView;
-        DailyTextView contentPersonView;
         DailyTextView contentProvinceView;
         DailyTextView contentGradeView;
         View contentDotImageView;
         View gradientBottomView;
-        View priceLayout;
-        View leftLayout;
-        View rightLayout;
 
         public PlaceViewHolder(View view)
         {
@@ -701,16 +571,10 @@ public class HomeCarouselAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             contentImageView = (SimpleDraweeView) view.findViewById(R.id.contentImageView);
             soldoutView = (ImageView) view.findViewById(R.id.soldoutView);
             contentTextView = (DailyTextView) view.findViewById(R.id.contentTextView);
-            contentDiscountPriceView = (DailyTextView) view.findViewById(R.id.contentDiscountPriceView);
-            contentOriginPriceView = (DailyTextView) view.findViewById(R.id.contentOriginPriceView);
-            contentPersonView = (DailyTextView) view.findViewById(R.id.contentPersonView);
             contentProvinceView = (DailyTextView) view.findViewById(R.id.contentProvinceView);
             contentGradeView = (DailyTextView) view.findViewById(R.id.contentGradeView);
             contentDotImageView = view.findViewById(R.id.contentDotImageView);
             gradientBottomView = view.findViewById(R.id.gradientBottomView);
-            priceLayout = view.findViewById(R.id.priceLayout);
-            leftLayout = view.findViewById(R.id.leftLayout);
-            rightLayout = view.findViewById(R.id.rightLayout);
 
             int width = contentImageView.getWidth() == 0 ? ScreenUtils.dpToPx(mContext, 239) : contentImageView.getWidth();
             int height = ScreenUtils.getRatioHeightType16x9(width);
