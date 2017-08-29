@@ -90,8 +90,8 @@ public class DailyCarouselLayout extends ConstraintLayout
         LinearLayoutManager layoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
 //                layoutManager.setAutoMeasureEnabled(true);
 
-        mDataBinding.recyclerView.setLayoutManager(layoutManager);
-        EdgeEffectColor.setEdgeGlowColor(mDataBinding.recyclerView, context.getResources().getColor(R.color.default_over_scroll_edge));
+        mDataBinding.horizontalRecyclerView.setLayoutManager(layoutManager);
+        EdgeEffectColor.setEdgeGlowColor(mDataBinding.horizontalRecyclerView, context.getResources().getColor(R.color.default_over_scroll_edge));
 
 //                mDataBinding.recyclerView.setNestedScrollingEnabled(false);
 //                mDataBinding.recyclerView.setHasFixedSize(true);
@@ -99,11 +99,11 @@ public class DailyCarouselLayout extends ConstraintLayout
         if (ScreenUtils.isTabletDevice((Activity) mContext) == true)
         {
             SnapHelper snapHelper = new DailyPagerSnapHelper();
-            snapHelper.attachToRecyclerView(mDataBinding.recyclerView);
+            snapHelper.attachToRecyclerView(mDataBinding.horizontalRecyclerView);
         } else
         {
             SnapHelper snapHelper = new PagerSnapHelper();
-            snapHelper.attachToRecyclerView(mDataBinding.recyclerView);
+            snapHelper.attachToRecyclerView(mDataBinding.horizontalRecyclerView);
         }
 
         if (attrs != null)
@@ -151,13 +151,13 @@ public class DailyCarouselLayout extends ConstraintLayout
 
     public void setData(ArrayList<CarouselListItem> list)
     {
-        mDataBinding.recyclerView.scrollToPosition(0);
+        mDataBinding.horizontalRecyclerView.scrollToPosition(0);
 
         if (mAdapter == null)
         {
             mAdapter = new DailyCarouselAdapter(mContext, list, mItemClickListener);
             mAdapter.setUsePriceLayout(mIsUsePriceLayout);
-            mDataBinding.recyclerView.setAdapter(mAdapter);
+            mDataBinding.horizontalRecyclerView.setAdapter(mAdapter);
         } else
         {
             mAdapter.setUsePriceLayout(mIsUsePriceLayout);

@@ -19,8 +19,8 @@ import android.widget.LinearLayout;
 
 import com.daily.base.util.ScreenUtils;
 import com.daily.base.widget.DailyTextView;
+import com.daily.dailyhotel.entity.CarouselListItem;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.network.model.HomePlace;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.widget.DailyPagerSnapHelper;
 
@@ -32,7 +32,7 @@ import java.util.ArrayList;
 
 public class HomeCarouselLayout extends LinearLayout
 {
-    private static final int LAYOUT_ANIMATION_DURATION = 200;
+    private static final int LAYOUT_ANIMATION_DURATION = 15000;
 
     private Context mContext;
     private DailyTextView mTitleTextView;
@@ -49,9 +49,9 @@ public class HomeCarouselLayout extends LinearLayout
     {
         void onViewAllClick();
 
-        void onItemClick(View view, int position);
+        void onItemClick(View view);
 
-        void onItemLongClick(View view, int position);
+        void onItemLongClick(View view);
     }
 
     public HomeCarouselLayout(Context context)
@@ -146,7 +146,7 @@ public class HomeCarouselLayout extends LinearLayout
         }
     }
 
-    public ArrayList<HomePlace> getData()
+    public ArrayList<CarouselListItem> getData()
     {
         if (mRecyclerAdapter == null)
         {
@@ -156,7 +156,7 @@ public class HomeCarouselLayout extends LinearLayout
         return mRecyclerAdapter.getData();
     }
 
-    public void setData(ArrayList<HomePlace> list)
+    public void setData(ArrayList<CarouselListItem> list)
     {
         mRecyclerView.scrollToPosition(0);
 
@@ -183,7 +183,7 @@ public class HomeCarouselLayout extends LinearLayout
         }
     }
 
-    private void setRecyclerAdapter(ArrayList<HomePlace> list)
+    private void setRecyclerAdapter(ArrayList<CarouselListItem> list)
     {
         if (mRecyclerAdapter == null)
         {
@@ -211,7 +211,7 @@ public class HomeCarouselLayout extends LinearLayout
         return mRecyclerAdapter.getItemCount() > 0;
     }
 
-    public HomePlace getItem(int position)
+    public CarouselListItem getItem(int position)
     {
         if (mRecyclerAdapter == null)
         {
@@ -260,6 +260,8 @@ public class HomeCarouselLayout extends LinearLayout
                 ViewGroup.LayoutParams params = getLayoutParams();
                 params.height = value;
                 setLayoutParams(params);
+
+                mRecyclerView.requestLayout();
 
                 float alpha = (float) ((double) value / (double) gap);
                 setAlpha(alpha);
@@ -369,20 +371,20 @@ public class HomeCarouselLayout extends LinearLayout
     private HomeCarouselAdapter.ItemClickListener mRecyclerItemClickListener = new HomeCarouselAdapter.ItemClickListener()
     {
         @Override
-        public void onItemClick(View view, int position)
+        public void onItemClick(View view)
         {
             if (mCarouselListener != null)
             {
-                mCarouselListener.onItemClick(view, position);
+                mCarouselListener.onItemClick(view);
             }
         }
 
         @Override
-        public void onItemLongClick(View view, int position)
+        public void onItemLongClick(View view)
         {
             if (mCarouselListener != null)
             {
-                mCarouselListener.onItemLongClick(view, position);
+                mCarouselListener.onItemLongClick(view);
             }
         }
     };

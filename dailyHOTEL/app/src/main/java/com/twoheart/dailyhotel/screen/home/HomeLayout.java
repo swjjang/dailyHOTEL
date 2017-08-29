@@ -99,7 +99,7 @@ public class HomeLayout extends BaseBlurLayout
     View mTextMessageLayout;
     View mTopButtonLayout, mProviderLayout;
     private ListRowHomeStampDataBinding mListRowHomeStampDataBinding;
-    DailyCarouselAnimationLayout mRecentListLayout;
+    HomeCarouselLayout mRecentListLayout;
     DailyCarouselAnimationLayout mWishListLayout;
     HomeRecommendationLayout mHomeRecommendationLayout;
 
@@ -489,20 +489,20 @@ public class HomeLayout extends BaseBlurLayout
             return;
         }
 
-        mRecentListLayout = new DailyCarouselAnimationLayout(mContext);
-        mRecentListLayout.setUsePriceLayout(false);
-        mRecentListLayout.setBackgroundResource(R.color.default_background);
-        mRecentListLayout.setTopMarginView(ScreenUtils.dpToPx(mContext, 15d) //
-            , mContext.getResources().getColor(R.color.default_background));
-        mRecentListLayout.setTopLineView(ScreenUtils.dpToPx(mContext, 1d) //
-            , mContext.getResources().getColor(R.color.default_line_cf0f0f0));
-        mRecentListLayout.setBottomLineView(ScreenUtils.dpToPx(mContext, 1d) //
-            , mContext.getResources().getColor(R.color.default_line_cf0f0f0));
+        mRecentListLayout = new HomeCarouselLayout(mContext);
+//        mRecentListLayout.setUsePriceLayout(false);
+//        mRecentListLayout.setBackgroundResource(R.color.default_background);
+//        mRecentListLayout.setTopMarginView(ScreenUtils.dpToPx(mContext, 15d) //
+//            , mContext.getResources().getColor(R.color.default_background));
+//        mRecentListLayout.setTopLineView(ScreenUtils.dpToPx(mContext, 1d) //
+//            , mContext.getResources().getColor(R.color.default_line_cf0f0f0));
+//        mRecentListLayout.setBottomLineView(ScreenUtils.dpToPx(mContext, 1d) //
+//            , mContext.getResources().getColor(R.color.default_line_cf0f0f0));
         layout.addView(mRecentListLayout);
 
         mRecentListLayout.setTitleText(R.string.frag_recent_places);
 
-        mRecentListLayout.setCarouselListener(new DailyCarouselLayout.OnCarouselListener()
+        mRecentListLayout.setCarouselListener(new HomeCarouselLayout.OnCarouselListener()
         {
             @Override
             public void onViewAllClick()
@@ -1724,7 +1724,7 @@ public class HomeLayout extends BaseBlurLayout
             if (mHomeEventList == null || mHomeEventList.size() == 0 || position < 0)
             {
                 holder.simpleDraweeView.getHierarchy().setActualImageScaleType(ScalingUtils.ScaleType.CENTER_CROP);
-                //            imageView.setTag(imageView.getId(), position);
+                //            contentImageView.setTag(contentImageView.getId(), position);
                 holder.simpleDraweeView.setTag(null);
                 holder.simpleDraweeView.getHierarchy().setPlaceholderImage(R.drawable.layerlist_placeholder);
 
@@ -1736,7 +1736,7 @@ public class HomeLayout extends BaseBlurLayout
                 Event homeEvent = mHomeEventList.get(position % getRealCount());
 
                 holder.simpleDraweeView.getHierarchy().setActualImageScaleType(ScalingUtils.ScaleType.CENTER_CROP);
-                //            imageView.setTag(imageView.getId(), position);
+                //            contentImageView.setTag(contentImageView.getId(), position);
                 holder.simpleDraweeView.setTag(homeEvent);
                 holder.simpleDraweeView.getHierarchy().setPlaceholderImage(R.drawable.layerlist_placeholder);
 
