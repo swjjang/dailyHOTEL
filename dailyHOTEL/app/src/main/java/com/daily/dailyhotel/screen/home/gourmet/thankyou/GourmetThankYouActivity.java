@@ -21,10 +21,10 @@ public class GourmetThankYouActivity extends BaseActivity<GourmetThankYouPresent
     static final String INTENT_EXTRA_DATA_VISIT_DATE_TIME = "visitDateTime";
     static final String INTENT_EXTRA_DATA_MENU_NAME = "menuName";
     static final String INTENT_EXTRA_DATA_MENU_COUNT = "menuCount";
-    static final String INTENT_EXTRA_DATA_RESERVATION_ID = "reservationId";
+    static final String INTENT_EXTRA_DATA_AGGREGATION_ID = "aggregationId";
 
     public static Intent newInstance(Context context, String gourmetName, String imageUrl//
-        , String visitDateTime, String menuName, int menuCount, int reservationId, GourmetThankYouAnalyticsParam analyticsParam)
+        , String visitDateTime, String menuName, int menuCount, String aggregationId, GourmetThankYouAnalyticsParam analyticsParam)
     {
         Intent intent = new Intent(context, GourmetThankYouActivity.class);
 
@@ -33,7 +33,7 @@ public class GourmetThankYouActivity extends BaseActivity<GourmetThankYouPresent
         intent.putExtra(INTENT_EXTRA_DATA_VISIT_DATE_TIME, visitDateTime);
         intent.putExtra(INTENT_EXTRA_DATA_MENU_NAME, menuName);
         intent.putExtra(INTENT_EXTRA_DATA_MENU_COUNT, menuCount);
-        intent.putExtra(INTENT_EXTRA_DATA_RESERVATION_ID, reservationId);
+        intent.putExtra(INTENT_EXTRA_DATA_AGGREGATION_ID, aggregationId);
         intent.putExtra(INTENT_EXTRA_DATA_ANALYTICS, analyticsParam);
 
         return intent;

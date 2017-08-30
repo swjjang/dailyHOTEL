@@ -163,13 +163,14 @@ public class HomeFragment extends BaseMenuNavigationFragment
                     return;
                 }
 
-                if (mHomeLayout.getErrorPopupVisible() == true)
-                {
-                    return;
-                }
-
                 if (mOnScreenScrollChangeListener != null)
                 {
+                    if (mHomeLayout.getErrorPopupVisible() == true)
+                    {
+                        mOnScreenScrollChangeListener.onScrollState(true);
+                        return;
+                    }
+
                     mOnScreenScrollChangeListener.onScrollChange(scrollView, scrollX, scrollY, oldScrollX, oldScrollY);
                 }
             }

@@ -213,6 +213,11 @@ public class MenuBarLayout implements View.OnClickListener
 
     public void showMenuBar()
     {
+        if (getTranslationY() == 0)
+        {
+            return;
+        }
+
         setTranslationY(0);
     }
 

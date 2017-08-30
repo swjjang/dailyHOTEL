@@ -27,6 +27,8 @@ import com.daily.base.util.ScreenUtils;
 import com.daily.base.util.VersionUtils;
 import com.daily.base.widget.DailyEditText;
 import com.daily.base.widget.DailyTextView;
+import com.daily.dailyhotel.entity.Refund;
+import com.daily.dailyhotel.repository.remote.RefundRemoteImpl;
 import com.daily.dailyhotel.view.DailyToolbarView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Bank;
@@ -40,18 +42,24 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import io.reactivex.annotations.NonNull;
+import io.reactivex.functions.Consumer;
 import retrofit2.Call;
 import retrofit2.Response;
 
 public class StayAutoRefundActivity extends BaseActivity
 {
     private static final String INTENT_EXTRA_DATA_BOOKING_DETAIL = "bookingDetail";
+    private static final String INTENT_EXTRA_DATA_AGGREGATION_ID = "aggregationId";
 
     private static final String PAYMENT_TYPE_VBANK = "VBANK_INICIS";
+
+    private RefundRemoteImpl mRefundRemoteImpl;
 
     protected StayAutoRefundLayout mStayAutoRefundLayout;
     protected StayAutoRefundNetworkController mStayAutoRefundNetworkController;
     StayBookingDetail mStayBookingDetail;
+    private String mAggregationId;
     Dialog mDialog;
 
     int mSelectedCancelReason;
@@ -59,10 +67,11 @@ public class StayAutoRefundActivity extends BaseActivity
     Bank mSelectedBank;
     List<Bank> mBankList;
 
-    public static Intent newInstance(Context context, StayBookingDetail stayBookingDetail)
+    public static Intent newInstance(Context context, StayBookingDetail stayBookingDetail, String aggregationId)
     {
         Intent intent = new Intent(context, StayAutoRefundActivity.class);
         intent.putExtra(INTENT_EXTRA_DATA_BOOKING_DETAIL, stayBookingDetail);
+        intent.putExtra(INTENT_EXTRA_DATA_AGGREGATION_ID, aggregationId);
 
         return intent;
     }
@@ -73,6 +82,8 @@ public class StayAutoRefundActivity extends BaseActivity
         overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
 
         super.onCreate(savedInstanceState);
+
+        mRefundRemoteImpl = new RefundRemoteImpl(this);
 
         mStayAutoRefundLayout = new StayAutoRefundLayout(this, mOnEventListener);
         mStayAutoRefundNetworkController = new StayAutoRefundNetworkController(this, mNetworkTag, mOnNetworkControllerListener);
@@ -88,6 +99,7 @@ public class StayAutoRefundActivity extends BaseActivity
         }
 
         mStayBookingDetail = intent.getParcelableExtra(INTENT_EXTRA_DATA_BOOKING_DETAIL);
+        mAggregationId = intent.getStringExtra(INTENT_EXTRA_DATA_AGGREGATION_ID);
 
         if (mStayBookingDetail == null)
         {
@@ -676,6 +688,47 @@ public class StayAutoRefundActivity extends BaseActivity
         return true;
     }
 
+    private void onRefundResult(int msgCode, String message, boolean readyForRefund)
+    {
+        if (readyForRefund == true)
+        {
+            setResult(CODE_RESULT_ACTIVITY_REFRESH);
+            finish();
+        } else
+        {
+            switch (msgCode)
+            {
+                case 1013:
+                    showSimpleDialog(null, message, getString(R.string.dialog_btn_text_confirm), null);
+                    break;
+
+                case 1015:
+                    showSimpleDialog(null, message, getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
+                    {
+                        @Override
+                        public void onDismiss(DialogInterface dialog)
+                        {
+                            setResult(CODE_RESULT_ACTIVITY_REFRESH);
+                            finish();
+                        }
+                    });
+                    break;
+
+                default:
+                    showSimpleDialog(null, message, getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
+                    {
+                        @Override
+                        public void onDismiss(DialogInterface dialog)
+                        {
+                            setResult(RESULT_OK);
+                            finish();
+                        }
+                    });
+                    break;
+            }
+        }
+    }
+
     private StayAutoRefundLayout.OnEventListener mOnEventListener = new StayAutoRefundLayout.OnEventListener()
     {
         @Override
@@ -729,19 +782,54 @@ public class StayAutoRefundActivity extends BaseActivity
 
                         lockUI();
 
-                        if (PAYMENT_TYPE_VBANK.equalsIgnoreCase(mStayBookingDetail.transactionType) == true && mStayBookingDetail.bonus == 0)
+                        if (DailyTextUtils.isTextEmpty(mAggregationId) == true)
                         {
-                            String accountNumber = mStayAutoRefundLayout.getAccountNumber();
-                            String accountName = mStayAutoRefundLayout.getAccountName();
+                            if (PAYMENT_TYPE_VBANK.equalsIgnoreCase(mStayBookingDetail.transactionType) == true && mStayBookingDetail.bonus == 0)
+                            {
+                                String accountNumber = mStayAutoRefundLayout.getAccountNumber();
+                                String accountName = mStayAutoRefundLayout.getAccountName();
 
-                            mStayAutoRefundNetworkController.requestRefund(mStayBookingDetail.placeIndex, mStayBookingDetail.checkInDate//
-                                , mStayBookingDetail.transactionType, mStayBookingDetail.reservationIndex, mCancelReasonMessage//
-                                , accountName, accountNumber, mSelectedBank.code);
+                                mStayAutoRefundNetworkController.requestRefund(mStayBookingDetail.placeIndex, mStayBookingDetail.checkInDate//
+                                    , mStayBookingDetail.transactionType, mStayBookingDetail.reservationIndex, mCancelReasonMessage//
+                                    , accountName, accountNumber, mSelectedBank.code);
 
+                            } else
+                            {
+                                mStayAutoRefundNetworkController.requestRefund(mStayBookingDetail.placeIndex, mStayBookingDetail.checkInDate//
+                                    , mStayBookingDetail.transactionType, mStayBookingDetail.reservationIndex, mCancelReasonMessage);
+                            }
                         } else
                         {
-                            mStayAutoRefundNetworkController.requestRefund(mStayBookingDetail.placeIndex, mStayBookingDetail.checkInDate//
-                                , mStayBookingDetail.transactionType, mStayBookingDetail.reservationIndex, mCancelReasonMessage);
+                            String accountNumber;
+                            String accountName;
+
+                            if (PAYMENT_TYPE_VBANK.equalsIgnoreCase(mStayBookingDetail.transactionType) == true && mStayBookingDetail.bonus == 0)
+                            {
+                                accountNumber = mStayAutoRefundLayout.getAccountNumber();
+                                accountName = mStayAutoRefundLayout.getAccountName();
+                            } else
+                            {
+                                accountNumber = null;
+                                accountName = null;
+                            }
+
+                            addCompositeDisposable(mRefundRemoteImpl.getRefund(mAggregationId, accountNumber, accountName).subscribe(new Consumer<Refund>()
+                            {
+                                @Override
+                                public void accept(@NonNull Refund refund) throws Exception
+                                {
+                                    unLockUI();
+
+                                    onRefundResult(refund.msgCode, refund.message, refund.readyForRefund);
+                                }
+                            }, new Consumer<Throwable>()
+                            {
+                                @Override
+                                public void accept(@NonNull Throwable throwable) throws Exception
+                                {
+                                    onHandleError(throwable);
+                                }
+                            }));
                         }
 
                         Map<String, String> params = new HashMap<>();
@@ -792,43 +880,7 @@ public class StayAutoRefundActivity extends BaseActivity
         {
             unLockUI();
 
-            if (readyForRefund == true)
-            {
-                setResult(CODE_RESULT_ACTIVITY_REFRESH);
-                finish();
-            } else
-            {
-                switch (msgCode)
-                {
-                    case 1013:
-                        showSimpleDialog(null, message, getString(R.string.dialog_btn_text_confirm), null);
-                        break;
-
-                    case 1015:
-                        showSimpleDialog(null, message, getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
-                        {
-                            @Override
-                            public void onDismiss(DialogInterface dialog)
-                            {
-                                setResult(CODE_RESULT_ACTIVITY_REFRESH);
-                                finish();
-                            }
-                        });
-                        break;
-
-                    default:
-                        showSimpleDialog(null, message, getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
-                        {
-                            @Override
-                            public void onDismiss(DialogInterface dialog)
-                            {
-                                setResult(RESULT_OK);
-                                finish();
-                            }
-                        });
-                        break;
-                }
-            }
+            StayAutoRefundActivity.this.onRefundResult(msgCode, message, readyForRefund);
         }
 
         @Override

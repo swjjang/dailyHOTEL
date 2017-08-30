@@ -12,6 +12,7 @@ public class Booking
     public static final int BOOKING_STATE_DEPOSIT_WAITING = 4;
 
     public int reservationIndex;
+    public String aggregationId;
     public String imageUrl;
     public int statePayment;
     public String placeName;

@@ -145,6 +145,7 @@ public interface Constants
     String NAME_INTENT_EXTRA_DATA_HOTELGRADE = "hotelGrade";
     String NAME_INTENT_EXTRA_DATA_BOOKING = "booking";
     String NAME_INTENT_EXTRA_DATA_BOOKINGIDX = "bookingIndex";
+    String NAME_INTENT_EXTRA_DATA_AGGREGATION_ID = "aggregationId";
     String NAME_INTENT_EXTRA_DATA_PAY = "pay";
     String NAME_INTENT_EXTRA_DATA_TICKETPAYMENT = "ticketPayment";
     String NAME_INTENT_EXTRA_DATA_SELECTED_IMAGE_URL = "sel_image_url";

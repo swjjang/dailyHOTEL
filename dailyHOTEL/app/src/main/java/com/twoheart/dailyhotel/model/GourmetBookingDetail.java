@@ -3,6 +3,8 @@ package com.twoheart.dailyhotel.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.daily.base.util.DailyTextUtils;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -47,6 +49,54 @@ public class GourmetBookingDetail extends PlaceBookingDetail
         reservationTime = in.readString();
         category = in.readString();
         subCategory = in.readString();
+    }
+
+    public void setData(com.daily.dailyhotel.entity.GourmetBookingDetail gourmetBookingDetail)
+    {
+        if (gourmetBookingDetail == null)
+        {
+            return;
+        }
+
+        address = gourmetBookingDetail.gourmetAddress;
+        latitude = gourmetBookingDetail.latitude;
+        longitude = gourmetBookingDetail.longitude;
+        placeName = gourmetBookingDetail.gourmetName;
+        grade = Gourmet.Grade.gourmet;
+        category = gourmetBookingDetail.category;
+        guestName = gourmetBookingDetail.guestName;
+        guestPhone = gourmetBookingDetail.guestPhone;
+        guestEmail = gourmetBookingDetail.guestEmail;
+        addressSummary = gourmetBookingDetail.addressSummary;
+        subCategory = gourmetBookingDetail.categorySub;
+        setSpecification(gourmetBookingDetail.getDescriptionMap());
+        ticketCount = gourmetBookingDetail.ticketCount;
+        ticketName = gourmetBookingDetail.ticketName;
+        reservationTime = gourmetBookingDetail.arrivalDateTime;
+
+        // phone1은 프론트
+        phone1 = gourmetBookingDetail.phone1;
+
+        // phone2는 예약실
+        phone2 = gourmetBookingDetail.phone2;
+
+        // phone3은 사용하지 않음
+        phone3 = gourmetBookingDetail.phone3;
+
+        coupon = gourmetBookingDetail.couponAmount;
+        price = gourmetBookingDetail.discountTotal;
+        paymentPrice = gourmetBookingDetail.priceTotal;
+        paymentDate = gourmetBookingDetail.pamentDateTime;
+        placeIndex = gourmetBookingDetail.gourmetIndex;
+        reservationIndex = gourmetBookingDetail.reservationIndex;
+
+        if (DailyTextUtils.isTextEmpty(gourmetBookingDetail.reviewStatusType) == false)
+        {
+            reviewStatusType = gourmetBookingDetail.reviewStatusType;
+        } else
+        {
+            reviewStatusType = ReviewStatusType.NONE;
+        }
     }
 
     public void setData(JSONObject jsonObject) throws Exception

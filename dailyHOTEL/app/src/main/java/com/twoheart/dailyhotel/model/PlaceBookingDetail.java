@@ -107,6 +107,11 @@ public abstract class PlaceBookingDetail implements Parcelable
         return mSpecification;
     }
 
+    public void setSpecification(Map<String, List<String>> specificationMap)
+    {
+        mSpecification = specificationMap;
+    }
+
     protected void setSpecification(JSONArray jsonArray) throws Exception
     {
         if (jsonArray == null)

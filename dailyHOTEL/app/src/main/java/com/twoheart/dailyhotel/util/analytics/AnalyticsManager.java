@@ -1091,6 +1091,7 @@ public class AnalyticsManager
         public static final String NO_RESULT_MOVE = "no_result_move";
         public static final String RE_RESERVATION = "re_reservation";
         public static final String LEAVE_REVIEW = "leave_review";
+        public static final String BUTTONS_AVAILABLE = "Buttons_Available";
     }
 
     public static class Category

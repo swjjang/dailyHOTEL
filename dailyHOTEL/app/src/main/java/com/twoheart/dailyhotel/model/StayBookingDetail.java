@@ -43,6 +43,90 @@ public class StayBookingDetail extends PlaceBookingDetail
     {
     }
 
+    public void setData(com.daily.dailyhotel.entity.StayBookingDetail stayBookingDetail)
+    {
+        if (stayBookingDetail == null)
+        {
+            return;
+        }
+
+        placeName = stayBookingDetail.stayName;
+
+        try
+        {
+            grade = stayBookingDetail.stayGrade;
+        } catch (Exception e)
+        {
+            grade = Grade.etc;
+        }
+
+        address = stayBookingDetail.stayAddress;
+        setSpecification(stayBookingDetail.getSpecificationMap());
+        isOverseas = stayBookingDetail.overseas;
+        latitude = stayBookingDetail.latitude;
+        longitude = stayBookingDetail.longitude;
+        roomName = stayBookingDetail.roomName;
+        guestPhone = stayBookingDetail.guestPhone;
+        guestName = stayBookingDetail.guestName;
+        guestEmail = stayBookingDetail.guestEmail;
+        checkInDate = stayBookingDetail.checkInDateTime;
+        checkOutDate = stayBookingDetail.checkOutDateTime;
+        roomIndex = stayBookingDetail.roomIndex;
+
+        // phone1은 프론트
+        phone1 = stayBookingDetail.phone1;
+
+        // phone2는 예약실
+        phone2 = stayBookingDetail.phone2;
+
+        // phone3은 사용하지 않음
+        phone3 = stayBookingDetail.phone3;
+
+        price = stayBookingDetail.discountTotal;
+        bonus = stayBookingDetail.bonusAmount;
+        coupon = stayBookingDetail.couponAmount;
+        paymentPrice = stayBookingDetail.priceTotal;
+        paymentDate = stayBookingDetail.paymentDateTime;
+        isNRD = StayProduct.NRD.equalsIgnoreCase(stayBookingDetail.refundType) == true;
+        placeIndex = stayBookingDetail.stayIndex;
+        readyForRefund = stayBookingDetail.readyForRefund;
+        transactionType = stayBookingDetail.transactionType;
+        reservationIndex = stayBookingDetail.reservationIndex;
+
+        if (DailyTextUtils.isTextEmpty(stayBookingDetail.reviewStatusType) == false)
+        {
+            reviewStatusType = stayBookingDetail.reviewStatusType;
+        } else
+        {
+            reviewStatusType = ReviewStatusType.NONE;
+        }
+
+        if (DailyTextUtils.isTextEmpty(stayBookingDetail.guestTransportation) == false)
+        {
+            switch (stayBookingDetail.guestTransportation)
+            {
+                case "CAR":
+                    visitType = VISIT_TYPE_CAR;
+                    break;
+
+                case "NO_PARKING":
+                    visitType = VISIT_TYPE_NO_PARKING;
+                    break;
+
+                case "WALKING":
+                    visitType = VISIT_TYPE_WALKING;
+                    break;
+
+                default:
+                    visitType = VISIT_TYPE_NONE;
+                    break;
+            }
+        } else
+        {
+            visitType = VISIT_TYPE_NONE;
+        }
+    }
+
     public void setData(JSONObject jsonObject) throws Exception
     {
         placeName = jsonObject.getString("hotelName");

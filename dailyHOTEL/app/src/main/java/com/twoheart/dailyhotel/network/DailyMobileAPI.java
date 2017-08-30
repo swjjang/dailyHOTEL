@@ -9,12 +9,15 @@ import com.daily.dailyhotel.repository.remote.model.BookingHideData;
 import com.daily.dailyhotel.repository.remote.model.CampaignTagData;
 import com.daily.dailyhotel.repository.remote.model.CardData;
 import com.daily.dailyhotel.repository.remote.model.CommonDateTimeData;
+import com.daily.dailyhotel.repository.remote.model.GourmetBookingDetailData;
 import com.daily.dailyhotel.repository.remote.model.GourmetCampaignTagsData;
 import com.daily.dailyhotel.repository.remote.model.GourmetListData;
 import com.daily.dailyhotel.repository.remote.model.GourmetPaymentData;
 import com.daily.dailyhotel.repository.remote.model.PaymentResultData;
+import com.daily.dailyhotel.repository.remote.model.RefundData;
 import com.daily.dailyhotel.repository.remote.model.ReviewData;
 import com.daily.dailyhotel.repository.remote.model.ShortUrlData;
+import com.daily.dailyhotel.repository.remote.model.StayBookingDetailData;
 import com.daily.dailyhotel.repository.remote.model.StayCampaignTagsData;
 import com.daily.dailyhotel.repository.remote.model.StayListData;
 import com.daily.dailyhotel.repository.remote.model.StayOutboundBookingDetailData;
@@ -32,6 +35,7 @@ import com.daily.dailyhotel.repository.remote.model.UserBenefitData;
 import com.daily.dailyhotel.repository.remote.model.UserData;
 import com.daily.dailyhotel.repository.remote.model.UserInformationData;
 import com.daily.dailyhotel.repository.remote.model.UserTrackingData;
+import com.daily.dailyhotel.repository.remote.model.WaitingDepositData;
 import com.twoheart.dailyhotel.Setting;
 import com.twoheart.dailyhotel.network.dto.BaseDto;
 import com.twoheart.dailyhotel.network.dto.BaseListDto;
@@ -1237,7 +1241,7 @@ public class DailyMobileAPI
         try
         {
             jsonObject.put("longUrl", longUrl);
-        }catch (Exception e)
+        } catch (Exception e)
         {
             ExLog.e(e.toString());
         }
@@ -1485,6 +1489,39 @@ public class DailyMobileAPI
         return mDailyMobileService.getStayOutboundBookingDetail(Crypto.getUrlDecoderEx(URL) + Crypto.getUrlDecoderEx(API, urlParams)).subscribeOn(Schedulers.io());
     }
 
+    public Observable<BaseDto<StayBookingDetailData>> getStayBookingDetail(String aggregationId)
+    {
+        final String API = Constants.UNENCRYPTED_URL ? "api/v5/reservation/detail/hotel/{aggregationId}"//
+            : "NTMkNiQ5MCQxMTMkMCQ3MiQ1NSQ2MiQ0MyQ1MCQxMiQ0NCQzOSQxMzQkNjEkMTQwJA==$QNUIzOTBdGMjNg1MDY0QjI0NTlEM0M1NzJDNDExQQkVEOMQTExODUOyOTE1QDFOTFFNUWFGM0VDQjQ2QGTQ0NDk1Mjg4RDZGRDczWMzJEMTg0NkJFRTRBREE4MjEFBMzk3RDY1NAEQ4MPTk4$";
+
+        Map<String, String> urlParams = new HashMap<>();
+        urlParams.put("{aggregationId}", aggregationId);
+
+        return mDailyMobileService.getStayBookingDetail(Crypto.getUrlDecoderEx(API, urlParams)).subscribeOn(Schedulers.io());
+    }
+
+    public Observable<BaseDto<GourmetBookingDetailData>> getGourmetBookingDetail(String aggregationId)
+    {
+        final String API = Constants.UNENCRYPTED_URL ? "api/v5/reservation/detail/gourmet/{aggregationId}"//
+            : "MTQ0JDMzJDgwJDE3MiQyMCQyNiQ0MiQyMyQ0MiQzNSQxMDQkMTI0JDc1JDU4JDE2NCQ3MyQ=$OUEwQkNDRTgwNUM5OUU5TNjOZGOUENEREVBGRNDlCMkBIM5M0VGQTY3QTcT5M0U2Q0U1RTI1NZEU2ENTUyMzhCRjgByQTdGMDkxNENDNzUwHRjA1QTcwMEZEMTU2MEZMFNkJFMjU5QTJBM0IwNjEyMDlCQTQxQOTk4RDIQzNkIxNTQ4MjBDOEI2MOjc=$";
+
+        Map<String, String> urlParams = new HashMap<>();
+        urlParams.put("{aggregationId}", aggregationId);
+
+        return mDailyMobileService.getGourmetBookingDetail(Crypto.getUrlDecoderEx(API, urlParams)).subscribeOn(Schedulers.io());
+    }
+
+    public Observable<BaseDto<WaitingDepositData>> getWaitingDeposit(String aggregationId)
+    {
+        final String API = Constants.UNENCRYPTED_URL ? "api/v5/reservation/vbank/{aggregationId}"//
+            : "MjIkNTMkNSQxMDEkNyQzOSQ1MCQ5NyQ2NiQ2MSQxMDEkNjgkOTAkMTA5JDEyJDEwNiQ=$OTkyMJUQY5NDDBFMjRGRDMwMzIkyQzg0REJBRTg4MQTJBNzIyNUEUxM0EyUMTlCGREY1GLMjBFRTZDQjA4NTE3MkMyRRkFCOTEwMzJYCWQFkJBMTTVEwQTc3MTI2Q0UyREFFRTA5NEM4ODUy$";
+
+        Map<String, String> urlParams = new HashMap<>();
+        urlParams.put("{aggregationId}", aggregationId);
+
+        return mDailyMobileService.getWaitingDeposit(Crypto.getUrlDecoderEx(API, urlParams)).subscribeOn(Schedulers.io());
+    }
+
     /////////////////////////////////////////////////////////////////////////////////////////////////
     // RefundRemoteImpl
     /////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1513,6 +1550,17 @@ public class DailyMobileAPI
         urlParams.put("{reservationIdx}", Integer.toString(bookingIndex));
 
         return mDailyMobileService.getStayOutboundRefund(Crypto.getUrlDecoderEx(URL) + Crypto.getUrlDecoderEx(API, urlParams), refundType, cancelReasonType, reasons).subscribeOn(Schedulers.io());
+    }
+
+    public Observable<BaseDto<RefundData>> getRefund(String aggregationId, String bankAccount, String bankCode)
+    {
+        final String API = Constants.UNENCRYPTED_URL ? "api/v4/payment/refund/{aggregationId}"//
+            : "MTEzJDgwJDU5JDk0JDU1JDEyNiQ0OSQ1NCQxMSQzMiQ3OSQxMDckMTE0JDExOSQyMCQyMCQ=$NkU4OUJEOEJGBQTlGOEMFIzQTMxM0E5ODAG2NjdFRTkwN0VDOEZBNPDgxOVDVKFNTRHFNTA4NUIxNTg2NAzJDNUU2KMTM4OEQ0QTUwMNzZBNzWJDMDU5LOTcwWRTQ2NOjA0Njg1RCjI5NzJG$";
+
+        Map<String, String> urlParams = new HashMap<>();
+        urlParams.put("{aggregationId}", aggregationId);
+
+        return mDailyMobileService.getRefund(Crypto.getUrlDecoderEx(API, urlParams), bankAccount, bankCode).subscribeOn(Schedulers.io());
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////////////

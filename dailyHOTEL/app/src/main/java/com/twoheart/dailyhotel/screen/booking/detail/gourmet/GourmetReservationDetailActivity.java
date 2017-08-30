@@ -22,6 +22,7 @@ import com.daily.base.util.ScreenUtils;
 import com.daily.base.widget.DailyTextView;
 import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.entity.Booking;
+import com.daily.dailyhotel.repository.remote.BookingRemoteImpl;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.GourmetBookingDetail;
@@ -53,13 +54,15 @@ import retrofit2.Response;
 
 public class GourmetReservationDetailActivity extends PlaceReservationDetailActivity
 {
+    private BookingRemoteImpl mBookingRemoteImpl;
     GourmetReservationDetailNetworkController mNetworkController;
 
-    public static Intent newInstance(Context context, int reservationIndex, String imageUrl, boolean isDeepLink, int bookingState)
+    public static Intent newInstance(Context context, int reservationIndex, String aggregationId, String imageUrl, boolean isDeepLink, int bookingState)
     {
         Intent intent = new Intent(context, GourmetReservationDetailActivity.class);
 
         intent.putExtra(NAME_INTENT_EXTRA_DATA_BOOKINGIDX, reservationIndex);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_AGGREGATION_ID, aggregationId);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_URL, imageUrl);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_DEEPLINK, isDeepLink);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_BOOKING_STATE, bookingState);
@@ -71,6 +74,8 @@ public class GourmetReservationDetailActivity extends PlaceReservationDetailActi
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+
+        mBookingRemoteImpl = new BookingRemoteImpl(this);
 
         // GourmetBookingDetail Class는 원래 처음부터 생성하면 안되는데
         // 내부에 시간값을 미리 받아서 진행되는 부분이 있어서 어쩔수 없이 미리 생성.
@@ -467,9 +472,32 @@ public class GourmetReservationDetailActivity extends PlaceReservationDetailActi
     }
 
     @Override
-    protected void requestPlaceReservationDetail(final int reservationIndex)
+    protected void requestPlaceReservationDetail(int reservationIndex, String aggregationId)
     {
-        mNetworkController.requestGourmetReservationDetail(reservationIndex);
+        if (DailyTextUtils.isTextEmpty(aggregationId) == true)
+        {
+            mNetworkController.requestGourmetReservationDetail(reservationIndex);
+        } else
+        {
+            addCompositeDisposable(mBookingRemoteImpl.getGourmetBookingDetail(aggregationId).subscribe(new Consumer<com.daily.dailyhotel.entity.GourmetBookingDetail>()
+            {
+                @Override
+                public void accept(@NonNull com.daily.dailyhotel.entity.GourmetBookingDetail gourmetBookingDetail) throws Exception
+                {
+                    unLockUI();
+
+                    ((GourmetBookingDetail) mPlaceBookingDetail).setData(gourmetBookingDetail);
+                    onReservationDetail((GourmetBookingDetail) mPlaceBookingDetail);
+                }
+            }, new Consumer<Throwable>()
+            {
+                @Override
+                public void accept(@NonNull Throwable throwable) throws Exception
+                {
+                    onHandleError(throwable);
+                }
+            }));
+        }
     }
 
     void startFAQ()
@@ -554,6 +582,54 @@ public class GourmetReservationDetailActivity extends PlaceReservationDetailActi
                         Util.installPackage(GourmetReservationDetailActivity.this, "com.kakao.talk");
                     }
                 }, null);
+        }
+    }
+
+    private void onReservationDetail(GourmetBookingDetail gourmetBookingDetail)
+    {
+        if (gourmetBookingDetail == null)
+        {
+            return;
+        }
+
+        try
+        {
+            mPlaceReservationDetailLayout.initLayout(mTodayDateTime, gourmetBookingDetail);
+
+            HashMap<String, String> params = new HashMap();
+            params.put(AnalyticsManager.KeyType.PLACE_TYPE, "gourmet");
+            params.put(AnalyticsManager.KeyType.COUNTRY, "domestic");
+            params.put(AnalyticsManager.KeyType.PLACE_INDEX, Integer.toString(gourmetBookingDetail.placeIndex));
+
+            switch (mBookingState)
+            {
+                case Booking.BOOKING_STATE_WAITING_REFUND:
+                    AnalyticsManager.getInstance(GourmetReservationDetailActivity.this).recordScreen(GourmetReservationDetailActivity.this//
+                        , AnalyticsManager.Screen.BOOKINGDETAIL_MYBOOKINGINFO_CANCELLATION_PROGRESS, null, params);
+                    break;
+
+                case Booking.BOOKING_STATE_BEFORE_USE:
+                    AnalyticsManager.getInstance(GourmetReservationDetailActivity.this).recordScreen(GourmetReservationDetailActivity.this//
+                        , AnalyticsManager.Screen.BOOKINGDETAIL_MYBOOKINGINFO, null, params);
+                    break;
+
+                case Booking.BOOKING_STATE_AFTER_USE:
+                    AnalyticsManager.getInstance(GourmetReservationDetailActivity.this).recordScreen(GourmetReservationDetailActivity.this//
+                        , AnalyticsManager.Screen.BOOKINGDETAIL_MYBOOKINGINFO_POST_VISIT, null, params);
+                    break;
+
+                default:
+                    AnalyticsManager.getInstance(GourmetReservationDetailActivity.this).recordScreen(GourmetReservationDetailActivity.this//
+                        , AnalyticsManager.Screen.BOOKINGDETAIL_MYBOOKINGINFO, null, params);
+                    break;
+            }
+
+            mPlaceReservationDetailLayout.setDeleteReservationVisible(mBookingState == Booking.BOOKING_STATE_AFTER_USE);
+        } catch (Exception e)
+        {
+            Crashlytics.logException(e);
+            finish();
+            return;
         }
     }
 
@@ -801,37 +877,8 @@ public class GourmetReservationDetailActivity extends PlaceReservationDetailActi
             {
                 GourmetBookingDetail gourmetBookingDetail = (GourmetBookingDetail) mPlaceBookingDetail;
                 gourmetBookingDetail.setData(jsonObject);
-                mPlaceReservationDetailLayout.initLayout(mTodayDateTime, gourmetBookingDetail);
 
-                HashMap<String, String> params = new HashMap();
-                params.put(AnalyticsManager.KeyType.PLACE_TYPE, "gourmet");
-                params.put(AnalyticsManager.KeyType.COUNTRY, "domestic");
-                params.put(AnalyticsManager.KeyType.PLACE_INDEX, Integer.toString(gourmetBookingDetail.placeIndex));
-
-                switch (mBookingState)
-                {
-                    case Booking.BOOKING_STATE_WAITING_REFUND:
-                        AnalyticsManager.getInstance(GourmetReservationDetailActivity.this).recordScreen(GourmetReservationDetailActivity.this//
-                            , AnalyticsManager.Screen.BOOKINGDETAIL_MYBOOKINGINFO_CANCELLATION_PROGRESS, null, params);
-                        break;
-
-                    case Booking.BOOKING_STATE_BEFORE_USE:
-                        AnalyticsManager.getInstance(GourmetReservationDetailActivity.this).recordScreen(GourmetReservationDetailActivity.this//
-                            , AnalyticsManager.Screen.BOOKINGDETAIL_MYBOOKINGINFO, null, params);
-                        break;
-
-                    case Booking.BOOKING_STATE_AFTER_USE:
-                        AnalyticsManager.getInstance(GourmetReservationDetailActivity.this).recordScreen(GourmetReservationDetailActivity.this//
-                            , AnalyticsManager.Screen.BOOKINGDETAIL_MYBOOKINGINFO_POST_VISIT, null, params);
-                        break;
-
-                    default:
-                        AnalyticsManager.getInstance(GourmetReservationDetailActivity.this).recordScreen(GourmetReservationDetailActivity.this//
-                            , AnalyticsManager.Screen.BOOKINGDETAIL_MYBOOKINGINFO, null, params);
-                        break;
-                }
-
-                mPlaceReservationDetailLayout.setDeleteReservationVisible(mBookingState == Booking.BOOKING_STATE_AFTER_USE);
+                GourmetReservationDetailActivity.this.onReservationDetail(gourmetBookingDetail);
             } catch (Exception e)
             {
                 Crashlytics.logException(e);

@@ -1613,6 +1613,7 @@ public class Util implements Constants
             intent.addFlags(intent.getFlags() | Intent.FLAG_ACTIVITY_NEW_TASK);
             intent.setType("text/plain");
             intent.putExtra(Intent.EXTRA_TEXT, message);
+            intent.putExtra("subject", activity.getString(R.string.label_daily_hotel));
 
             if (defaultSmsPackageName != null)
             {
@@ -1625,6 +1626,7 @@ public class Util implements Constants
             try
             {
                 Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.putExtra("subject", activity.getString(R.string.label_daily_hotel));
                 intent.putExtra("sms_body", message);
                 intent.addFlags(intent.getFlags() | Intent.FLAG_ACTIVITY_NEW_TASK);
                 intent.setType("vnd.android-dir/mms-sms");
@@ -1632,6 +1634,7 @@ public class Util implements Constants
             } catch (ActivityNotFoundException e)
             {
                 Intent intent = new Intent(Intent.ACTION_SENDTO);
+                intent.putExtra("subject", activity.getString(R.string.label_daily_hotel));
                 intent.putExtra("sms_body", message);
                 intent.addFlags(intent.getFlags() | Intent.FLAG_ACTIVITY_NEW_TASK);
                 intent.setType("vnd.android-dir/mms-sms");
