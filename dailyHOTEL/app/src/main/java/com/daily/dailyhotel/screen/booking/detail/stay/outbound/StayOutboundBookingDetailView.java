@@ -756,10 +756,34 @@ public class StayOutboundBookingDetailView extends BaseDialogView<StayOutboundBo
         {
             getViewDataBinding().deleteReservationTextView.setVisibility(View.VISIBLE);
             getViewDataBinding().deleteReservationTextView.setOnClickListener(this);
+
+            LinearLayout.LayoutParams layoutParams = ((LinearLayout.LayoutParams) getViewDataBinding().deleteReservationTextView.getLayoutParams());
+
+            if (layoutParams.height != LinearLayout.LayoutParams.WRAP_CONTENT)
+            {
+                layoutParams.height = LinearLayout.LayoutParams.WRAP_CONTENT;
+
+                final int DP_37 = ScreenUtils.dpToPx(getContext(), 37);
+
+                layoutParams.setMargins(0, DP_37, 0, 0);
+                getViewDataBinding().deleteReservationTextView.setPadding(0, 0, 0, DP_37);
+                getViewDataBinding().deleteReservationTextView.requestLayout();
+            }
         } else
         {
             getViewDataBinding().deleteReservationTextView.setVisibility(View.INVISIBLE);
             getViewDataBinding().deleteReservationTextView.setOnClickListener(null);
+
+            LinearLayout.LayoutParams layoutParams = ((LinearLayout.LayoutParams) getViewDataBinding().deleteReservationTextView.getLayoutParams());
+
+            final int DP_24 = ScreenUtils.dpToPx(getContext(), 24);
+            if (layoutParams.height != DP_24)
+            {
+                layoutParams.setMargins(0, 0, 0, 0);
+                layoutParams.height = DP_24;
+                getViewDataBinding().deleteReservationTextView.setPadding(0, 0, 0, 0);
+                getViewDataBinding().deleteReservationTextView.requestLayout();
+            }
         }
     }
 

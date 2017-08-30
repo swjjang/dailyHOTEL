@@ -1137,6 +1137,16 @@ public class HomeLayout extends BaseBlurLayout
         mErrorPopupAnimator.start();
     }
 
+    boolean getErrorPopupVisible()
+    {
+        if (mErrorPopupLayout == null)
+        {
+            return false;
+        }
+
+        return mErrorPopupLayout.getVisibility() == View.VISIBLE;
+    }
+
     void startTextLayoutShowAnimation()
     {
         if (mTextMessageLayout == null)

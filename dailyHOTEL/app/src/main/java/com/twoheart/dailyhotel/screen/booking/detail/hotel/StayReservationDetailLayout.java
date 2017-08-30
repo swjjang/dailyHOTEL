@@ -33,6 +33,7 @@ public class StayReservationDetailLayout extends PlaceReservationDetailLayout
 {
     private View mRefundPolicyLayout;
     private View mDefaultRefundPolicyLayout, mWaitRefundPolicyLayout;
+    private View mDefaultRefundPolicyUnderLine;
     private View mRecommendGourmetButtonView;
     private View mRecommendGourmetItemLayout;
     private DailyCarouselLayout mRecommendGourmetCarouselLayout;
@@ -357,6 +358,7 @@ public class StayReservationDetailLayout extends PlaceReservationDetailLayout
 
         mRefundPolicyLayout = view.findViewById(R.id.refundPolicyLayout);
         mDefaultRefundPolicyLayout = view.findViewById(R.id.defaultRefundPolicyLayout);
+        mDefaultRefundPolicyUnderLine = view.findViewById(R.id.defaultRefundPolicyUnderLine);
         mWaitRefundPolicyLayout = view.findViewById(R.id.waitRefundPolicyLayout);
 
         updateRefundPolicyLayout(stayBookingDetail);
@@ -388,6 +390,8 @@ public class StayReservationDetailLayout extends PlaceReservationDetailLayout
                 case StayBookingDetail.STATUS_NO_CHARGE_REFUND:
                 {
                     mDefaultRefundPolicyLayout.setVisibility(View.VISIBLE);
+                    mDefaultRefundPolicyUnderLine.setVisibility(View.GONE);
+
                     mWaitRefundPolicyLayout.setVisibility(View.GONE);
 
                     refundButtonLayout.setOnClickListener(this);
@@ -398,6 +402,7 @@ public class StayReservationDetailLayout extends PlaceReservationDetailLayout
                 case StayBookingDetail.STATUS_WAIT_REFUND:
                 {
                     mDefaultRefundPolicyLayout.setVisibility(View.GONE);
+                    mDefaultRefundPolicyUnderLine.setVisibility(View.GONE);
                     mWaitRefundPolicyLayout.setVisibility(View.VISIBLE);
 
                     TextView waitRefundPolicyTextView = (TextView) mWaitRefundPolicyLayout.findViewById(R.id.waitRefundPolicyTextView);
@@ -411,6 +416,7 @@ public class StayReservationDetailLayout extends PlaceReservationDetailLayout
                 case StayBookingDetail.STATUS_SURCHARGE_REFUND:
                 {
                     mDefaultRefundPolicyLayout.setVisibility(View.VISIBLE);
+                    mDefaultRefundPolicyUnderLine.setVisibility(View.GONE);
                     mWaitRefundPolicyLayout.setVisibility(View.GONE);
 
                     refundButtonLayout.setOnClickListener(this);
@@ -421,6 +427,7 @@ public class StayReservationDetailLayout extends PlaceReservationDetailLayout
                 default:
                 {
                     mDefaultRefundPolicyLayout.setVisibility(View.VISIBLE);
+                    mDefaultRefundPolicyUnderLine.setVisibility(View.VISIBLE);
                     mWaitRefundPolicyLayout.setVisibility(View.GONE);
                     refundButtonLayout.setOnClickListener(null);
                     refundButtonLayout.setVisibility(View.GONE);

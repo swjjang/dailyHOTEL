@@ -17,7 +17,6 @@ import android.view.ViewGroup;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
-import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.entity.CarouselListItem;
 import com.daily.dailyhotel.entity.CommonDateTime;
 import com.daily.dailyhotel.entity.People;
@@ -154,7 +153,36 @@ public class HomeFragment extends BaseMenuNavigationFragment
 
         mIsLogin = DailyHotel.isLogin();
         mHomeLayout = new HomeLayout(mBaseActivity, mOnEventListener);
-        mHomeLayout.setOnScrollChangedListener(mOnScreenScrollChangeListener);
+        mHomeLayout.setOnScrollChangedListener(new OnScreenScrollChangeListener()
+        {
+            @Override
+            public void onScrollChange(ViewGroup scrollView, int scrollX, int scrollY, int oldScrollX, int oldScrollY)
+            {
+                if (mHomeLayout == null)
+                {
+                    return;
+                }
+
+                if (mHomeLayout.getErrorPopupVisible() == true)
+                {
+                    return;
+                }
+
+                if (mOnScreenScrollChangeListener != null)
+                {
+                    mOnScreenScrollChangeListener.onScrollChange(scrollView, scrollX, scrollY, oldScrollX, oldScrollY);
+                }
+            }
+
+            @Override
+            public void onScrollState(boolean disabled)
+            {
+                if (mOnScreenScrollChangeListener != null)
+                {
+                    mOnScreenScrollChangeListener.onScrollState(disabled);
+                }
+            }
+        });
 
         mNetworkController = new HomeNetworkController(mBaseActivity, mNetworkTag, mNetworkControllerListener);
 

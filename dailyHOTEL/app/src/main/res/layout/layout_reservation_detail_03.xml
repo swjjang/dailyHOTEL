@@ -30,8 +30,8 @@
         android:id="@+id/defaultRefundPolicyLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="19dp"
         android:layout_marginBottom="19dp"
+        android:layout_marginTop="19dp"
         android:visibility="gone">
 
         <ImageView
@@ -52,13 +52,20 @@
             android:textSize="13dp"/>
     </LinearLayout>
 
+    <View
+        android:id="@+id/defaultRefundPolicyUnderLine"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/default_line_cf0f0f0"
+        android:visibility="gone"/>
+
     <LinearLayout
         android:id="@+id/waitRefundPolicyLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_marginTop="19dp"
         android:layout_marginBottom="19dp"
+        android:layout_marginTop="19dp"
+        android:orientation="vertical"
         android:visibility="gone">
 
         <LinearLayout
@@ -127,10 +134,10 @@
             android:layout_gravity="center"
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"
+            android:drawablePadding="4dp"
             android:gravity="center"
             android:textColor="@color/default_text_c323232"
             android:textSize="13dp"
-            android:drawablePadding="4dp"
             app:drawableCompatLeft="@drawable/reservation_ic_refund"/>
 
         <View
