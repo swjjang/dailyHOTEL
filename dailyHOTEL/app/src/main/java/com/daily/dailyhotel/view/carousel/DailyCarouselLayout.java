@@ -30,7 +30,7 @@ public class DailyCarouselLayout extends ConstraintLayout
     private Context mContext;
     private LayoutCarouselDataBinding mDataBinding;
     private DailyCarouselAdapter mAdapter;
-    private boolean mIsUsePriceLayout;
+    private boolean mIsUsePriceLayout = true; // default true!
 
     protected OnCarouselListener mCarouselListener;
 
@@ -88,13 +88,9 @@ public class DailyCarouselLayout extends ConstraintLayout
         });
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
-//                layoutManager.setAutoMeasureEnabled(true);
 
         mDataBinding.horizontalRecyclerView.setLayoutManager(layoutManager);
         EdgeEffectColor.setEdgeGlowColor(mDataBinding.horizontalRecyclerView, context.getResources().getColor(R.color.default_over_scroll_edge));
-
-//                mDataBinding.recyclerView.setNestedScrollingEnabled(false);
-//                mDataBinding.recyclerView.setHasFixedSize(true);
 
         if (ScreenUtils.isTabletDevice((Activity) mContext) == true)
         {
@@ -111,6 +107,9 @@ public class DailyCarouselLayout extends ConstraintLayout
             TypedArray typedArray = mContext.obtainStyledAttributes(attrs, R.styleable.dailyCarousel);
             boolean isUse = typedArray.getBoolean(R.styleable.dailyCarousel_use_price_layout, true);
             setUsePriceLayout(isUse);
+        } else
+        {
+            setUsePriceLayout(true);
         }
     }
 
@@ -179,6 +178,32 @@ public class DailyCarouselLayout extends ConstraintLayout
     public void setUsePriceLayout(boolean isUse)
     {
         mIsUsePriceLayout = isUse;
+
+        int height;
+        if (mIsUsePriceLayout == false)
+        {
+            height = mContext.getResources().getDimensionPixelOffset(R.dimen.daily_carousel_hide_price_recycler_height);
+        } else
+        {
+            height = mContext.getResources().getDimensionPixelOffset(R.dimen.daily_carousel_show_price_recycler_height);
+        }
+
+        LayoutParams params = (LayoutParams) mDataBinding.horizontalRecyclerView.getLayoutParams();
+        if (params == null)
+        {
+            params = new LayoutParams(LayoutParams.MATCH_CONSTRAINT, height);
+            params.leftToLeft = LayoutParams.PARENT_ID;
+            params.rightToRight = LayoutParams.PARENT_ID;
+            params.bottomToBottom = LayoutParams.PARENT_ID;
+            params.topToBottom = mDataBinding.titleTextView.getId();
+            params.topMargin = ScreenUtils.dpToPx(mContext, 15d);
+            params.bottomMargin = ScreenUtils.dpToPx(mContext, 15d);
+        } else
+        {
+            params.height = height;
+        }
+
+        mDataBinding.horizontalRecyclerView.setLayoutParams(params);
     }
 
     private DailyCarouselAdapter.ItemClickListener mItemClickListener = new DailyCarouselAdapter.ItemClickListener()
