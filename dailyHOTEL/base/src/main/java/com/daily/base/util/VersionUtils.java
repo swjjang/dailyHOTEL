@@ -37,6 +37,11 @@ public class VersionUtils
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1;
     }
 
+    public static boolean isOverAPI18()
+    {
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2;
+    }
+
     public static boolean isOverAPI19()
     {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;

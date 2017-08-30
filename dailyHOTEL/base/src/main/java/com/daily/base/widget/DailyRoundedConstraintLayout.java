@@ -7,6 +7,8 @@ import android.graphics.RectF;
 import android.support.constraint.ConstraintLayout;
 import android.util.AttributeSet;
 
+import com.daily.base.util.VersionUtils;
+
 public class DailyRoundedConstraintLayout extends ConstraintLayout
 {
     private Path mRoundPath;
@@ -15,16 +17,30 @@ public class DailyRoundedConstraintLayout extends ConstraintLayout
     public DailyRoundedConstraintLayout(Context context)
     {
         super(context);
+
+        initLayout();
     }
 
     public DailyRoundedConstraintLayout(Context context, AttributeSet attrs)
     {
         super(context, attrs);
+
+        initLayout();
     }
 
     public DailyRoundedConstraintLayout(Context context, AttributeSet attrs, int defStyle)
     {
         super(context, attrs, defStyle);
+
+        initLayout();
+    }
+
+    private void initLayout()
+    {
+        if (VersionUtils.isOverAPI18() == false)
+        {
+            setLayerType(LAYER_TYPE_SOFTWARE, null);
+        }
     }
 
     public void setRound(float radius)
