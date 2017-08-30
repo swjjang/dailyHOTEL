@@ -110,6 +110,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
 
     enum ScreenType
     {
+        DEFAULT, // 마지막 스크린 상태 유지
         NONE,
         EMPTY,
         ERROR,
@@ -594,7 +595,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
 
         setRefresh(false);
         screenLock(showProgress);
-        setScreenVisible(ScreenType.NONE, mStayOutboundFilters);
+        setScreenVisible(ScreenType.DEFAULT, mStayOutboundFilters);
 
         addCompositeDisposable(Observable.zip(mCommonRemoteImpl.getCommonDateTime()//
             , mStayOutboundRemoteImpl.getStayOutboundList(mStayBookDateTime, mSuggest.id, mSuggest.categoryKey//
@@ -1328,6 +1329,9 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
 
         switch (screenType)
         {
+            case DEFAULT:
+                break;
+
             case NONE:
                 getViewInterface().setEmptyScreenVisible(false);
                 getViewInterface().setErrorScreenVisible(false);
