@@ -41,6 +41,7 @@ import com.twoheart.dailyhotel.screen.mydaily.member.InputMobileNumberDialogActi
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Crypto;
 import com.twoheart.dailyhotel.util.DailyCalendar;
+import com.twoheart.dailyhotel.util.DailyInternalDeepLink;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.DailyRemoteConfigPreference;
 import com.twoheart.dailyhotel.util.DailyUserPreference;
@@ -1088,7 +1089,7 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
                 @Override
                 public void accept(@io.reactivex.annotations.NonNull PaymentResult paymentResult) throws Exception
                 {
-                    startThankYou(paymentResult.bookingIndex, true);
+                    startThankYou(paymentResult.aggregationId, true);
                 }
             }, new Consumer<Throwable>()
             {
@@ -1135,7 +1136,7 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
                         @Override
                         public void accept(@io.reactivex.annotations.NonNull PaymentResult paymentResult) throws Exception
                         {
-                            startThankYou(paymentResult.bookingIndex, false);
+                            startThankYou(paymentResult.aggregationId, false);
                         }
                     }, throwable ->
                     {
@@ -1209,10 +1210,10 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
             , mPaymentType, mUserSimpleInformation);
     }
 
-    private void startThankYou(int bookingIndex, boolean fullBonus)
+    private void startThankYou(String aggregationId, boolean fullBonus)
     {
         startActivityForResult(GourmetThankYouActivity.newInstance(getActivity(), mGourmetName, mImageUrl//
-            , mVisitDateTime, mMenuName, mMenuCount, bookingIndex//
+            , mVisitDateTime, mMenuName, mMenuCount, aggregationId//
             , mAnalytics.getThankYouAnalyticsParam())//
             , GourmetPaymentActivity.REQUEST_CODE_THANK_YOU);
 
@@ -1955,22 +1956,9 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
                 {
                     JSONObject dataJSONObject = jsonObject.getJSONObject("data");
 
-                    switch (paymentType)
+                    if (dataJSONObject != null && dataJSONObject.has("aggregationId") == true)
                     {
-                        case CARD:
-                        case PHONE:
-                            if (dataJSONObject.has("reservationIdx") == true)
-                            {
-                                paymentResult.bookingIndex = dataJSONObject.getInt("reservationIdx");
-                            }
-                            break;
-
-                        case VBANK:
-                            if (dataJSONObject.has("tid") == true)
-                            {
-                                paymentResult.bookingIndex = dataJSONObject.getInt("tid");
-                            }
-                            break;
+                        paymentResult.aggregationId = dataJSONObject.getString("aggregationId");
                     }
                 } else
                 {
@@ -1983,28 +1971,38 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
                 @Override
                 public void accept(@io.reactivex.annotations.NonNull PaymentResult paymentResult) throws Exception
                 {
-                    String message;
-
                     switch (paymentType)
                     {
                         case VBANK:
-                            message = getString(R.string.dialog_msg_issuing_account);
+                        {
+                            getViewInterface().showSimpleDialog(getString(R.string.dialog_title_payment), getString(R.string.dialog_msg_issuing_account)//
+                                , getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
+                                {
+                                    @Override
+                                    public void onDismiss(DialogInterface dialog)
+                                    {
+                                        startActivity(DailyInternalDeepLink.getGourmetBookingDetailScreenLink(getActivity(), paymentResult.aggregationId));
+                                    }
+                                });
                             break;
+                        }
 
                         default:
-                            message = getString(R.string.message_completed_payment_default);
+                        {
+                            getViewInterface().showSimpleDialog(getString(R.string.dialog_title_payment), getString(R.string.message_completed_payment_default)//
+                                , getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
+                                {
+                                    @Override
+                                    public void onDismiss(DialogInterface dialog)
+                                    {
+                                        startThankYou(paymentResult.aggregationId, false);
+                                    }
+                                });
                             break;
+                        }
                     }
 
-                    getViewInterface().showSimpleDialog(getString(R.string.dialog_title_payment), message//
-                        , getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
-                        {
-                            @Override
-                            public void onDismiss(DialogInterface dialog)
-                            {
-                                startThankYou(paymentResult.bookingIndex, false);
-                            }
-                        });
+
                 }
             }, throwable ->
             {

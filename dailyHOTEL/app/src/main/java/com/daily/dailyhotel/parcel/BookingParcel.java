@@ -34,6 +34,7 @@ public class BookingParcel implements Parcelable
     public void writeToParcel(Parcel dest, int flags)
     {
         dest.writeInt(mBooking.reservationIndex);
+        dest.writeString(mBooking.aggregationId);
         dest.writeString(mBooking.imageUrl);
         dest.writeInt(mBooking.statePayment);
         dest.writeString(mBooking.placeName);
@@ -51,6 +52,7 @@ public class BookingParcel implements Parcelable
         mBooking = new Booking();
 
         mBooking.reservationIndex = in.readInt();
+        mBooking.aggregationId = in.readString();
         mBooking.imageUrl = in.readString();
         mBooking.statePayment = in.readInt();
         mBooking.placeName = in.readString();

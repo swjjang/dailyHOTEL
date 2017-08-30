@@ -30,7 +30,9 @@ import com.daily.base.util.ScreenUtils;
 import com.daily.base.widget.DailyTextView;
 import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.entity.Booking;
+import com.daily.dailyhotel.entity.WaitingDeposit;
 import com.daily.dailyhotel.parcel.BookingParcel;
+import com.daily.dailyhotel.repository.remote.BookingRemoteImpl;
 import com.daily.dailyhotel.view.DailyToolbarView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
@@ -50,11 +52,15 @@ import java.text.ParseException;
 import java.util.HashMap;
 import java.util.Locale;
 
+import io.reactivex.annotations.NonNull;
+import io.reactivex.functions.Consumer;
 import retrofit2.Call;
 import retrofit2.Response;
 
 public class PaymentWaitActivity extends BaseActivity
 {
+    private BookingRemoteImpl mBookingRemoteImpl;
+
     TextView mAccountTextView;
     private TextView mDailyTextView;
     private TextView mPriceTextView, mBonusTextView, mCouponTextView, mTotalPriceTextView;
@@ -75,6 +81,8 @@ public class PaymentWaitActivity extends BaseActivity
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
+        overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
+
         super.onCreate(savedInstanceState);
 
         Intent intent = getIntent();
@@ -86,6 +94,8 @@ public class PaymentWaitActivity extends BaseActivity
             Util.restartApp(this);
             return;
         }
+
+        mBookingRemoteImpl = new BookingRemoteImpl(this);
 
         mBooking = bookingParcel.getBooking();
 
@@ -141,6 +151,14 @@ public class PaymentWaitActivity extends BaseActivity
         }
     }
 
+    @Override
+    public void finish()
+    {
+        super.finish();
+
+        overridePendingTransition(R.anim.hold, R.anim.slide_out_right);
+    }
+
     private void initToolbar()
     {
         DailyToolbarView dailyToolbarView = (DailyToolbarView) findViewById(R.id.toolbarView);
@@ -153,6 +171,8 @@ public class PaymentWaitActivity extends BaseActivity
             {
                 finish();
             }
+
+            ;
         });
 
         dailyToolbarView.addMenuItem(DailyToolbarView.MenuItem.HELP, null, new View.OnClickListener()
@@ -222,19 +242,37 @@ public class PaymentWaitActivity extends BaseActivity
 
         lockUI();
 
-        switch (booking.placeType)
+        if (DailyTextUtils.isTextEmpty(booking.aggregationId) == true)
         {
-            case STAY:
+            switch (booking.placeType)
             {
-                DailyMobileAPI.getInstance(this).requestDepositWaitDetailInformation(mNetworkTag, booking.tid, mHotelReservationCallback);
-                break;
-            }
+                case STAY:
+                    DailyMobileAPI.getInstance(this).requestDepositWaitDetailInformation(mNetworkTag, booking.tid, mHotelReservationCallback);
+                    break;
 
-            case GOURMET:
-            {
-                DailyMobileAPI.getInstance(this).requestGourmetAccountInformation(mNetworkTag, booking.tid, mFnBReservationCallback);
-                break;
+                case GOURMET:
+                    DailyMobileAPI.getInstance(this).requestGourmetAccountInformation(mNetworkTag, booking.tid, mFnBReservationCallback);
+                    break;
             }
+        } else
+        {
+            addCompositeDisposable(mBookingRemoteImpl.getWaitingDeposit(booking.aggregationId).subscribe(new Consumer<WaitingDeposit>()
+            {
+                @Override
+                public void accept(@NonNull WaitingDeposit waitingDeposit) throws Exception
+                {
+                    unLockUI();
+
+                    setWaitingDeposit(waitingDeposit);
+                }
+            }, new Consumer<Throwable>()
+            {
+                @Override
+                public void accept(@NonNull Throwable throwable) throws Exception
+                {
+                    onHandleError(throwable);
+                }
+            }));
         }
     }
 
@@ -456,6 +494,59 @@ public class PaymentWaitActivity extends BaseActivity
         setGuideText(mGuide1Layout, msg2.split("\\."), true);
     }
 
+    private void setWaitingDeposit(WaitingDeposit waitingDeposit) throws Exception
+    {
+        if (waitingDeposit == null)
+        {
+            return;
+        }
+
+        mAccountTextView.setText(waitingDeposit.bankName + ", " + waitingDeposit.accountNumber);
+        mAccountTextView.setTag(waitingDeposit.accountNumber);
+
+        mDailyTextView.setText(waitingDeposit.accountHolder);
+
+        // 입금기한
+        String validToDate = DailyCalendar.convertDateFormatString(waitingDeposit.expiredAt, DailyCalendar.ISO_8601_FORMAT, "yyyy년 MM월 dd일 HH시 mm분 까지");
+        mDeadlineTextView.setText(validToDate);
+
+        // 결재 금액 정보
+        mPriceTextView.setText(DailyTextUtils.getPriceFormat(this, waitingDeposit.totalPrice, false));
+
+        if (waitingDeposit.bonusAmount > 0)
+        {
+            mBonusLayout.setVisibility(View.VISIBLE);
+            mBonusTextView.setText("- " + DailyTextUtils.getPriceFormat(this, waitingDeposit.bonusAmount, false));
+        } else
+        {
+            mBonusLayout.setVisibility(View.GONE);
+        }
+
+        if (waitingDeposit.couponAmount > 0)
+        {
+            mCouponLayout.setVisibility(View.VISIBLE);
+            mCouponTextView.setText("- " + DailyTextUtils.getPriceFormat(this, waitingDeposit.couponAmount, false));
+        } else
+        {
+            mCouponLayout.setVisibility(View.GONE);
+        }
+
+        mTotalPriceTextView.setText(DailyTextUtils.getPriceFormat(this, waitingDeposit.depositWaitingAmount, false));
+
+        // 확인 사항
+        if (waitingDeposit.getMessageList() != null)
+        {
+            String[] messages1 = waitingDeposit.getMessageList().toArray(new String[waitingDeposit.getMessageList().size()]);
+            setGuideText(mGuide1Layout, messages1, false);
+        }
+
+        if (DailyTextUtils.isTextEmpty(waitingDeposit.message2) == false)
+        {
+            String[] messages2 = new String[]{waitingDeposit.message2};
+            setGuideText(mGuide1Layout, messages2, true);
+        }
+    }
+
     void setGourmetReservationData(JSONObject jsonObject) throws JSONException
     {
         String accountNumber = jsonObject.getString("account_num");
@@ -576,33 +667,6 @@ public class PaymentWaitActivity extends BaseActivity
                     }
                 }, null);
         }
-
-
-        //        try
-        //        {
-        //            switch (mBooking.placeType)
-        //            {
-        //                case HOTEL:
-        //
-        //                    startActivity(new Intent(Intent.ACTION_SEND, Uri.parse("kakaolink://friend/@%EB%8D%B0%EC%9D%BC%EB%A6%AC%ED%98%B8%ED%85%94")));
-        //                    break;
-        //
-        //                case FNB:
-        //                    startActivity(new Intent(Intent.ACTION_SEND, Uri.parse("kakaolink://friend/%40%EB%8D%B0%EC%9D%BC%EB%A6%AC%EA%B3%A0%EB%A9%94")));
-        //                    break;
-        //            }
-        //        } catch (ActivityNotFoundException e)
-        //        {
-        //            try
-        //            {
-        //                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(URL_STORE_GOOGLE_KAKAOTALK)));
-        //            } catch (ActivityNotFoundException e1)
-        //            {
-        //                Intent marketLaunch = new Intent(Intent.ACTION_VIEW);
-        //                marketLaunch.setData(Uri.parse(URL_STORE_GOOGLE_KAKAOTALK_WEB));
-        //                startActivity(marketLaunch);
-        //            }
-        //        }
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -446,6 +446,23 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
             analyticsParams.put(AnalyticsManager.KeyType.NUM_OF_BOOKING, Integer.toString(bookingList.size()));
 
             AnalyticsManager.getInstance(getActivity()).recordScreen(getActivity(), Screen.BOOKING_LIST, null, analyticsParams);
+
+            addCompositeDisposable(Observable.just(bookingList).subscribe(new Consumer<List<Booking>>()
+            {
+                @Override
+                public void accept(@NonNull List<Booking> bookingList) throws Exception
+                {
+                    for (Booking booking : bookingList)
+                    {
+                        if (booking.bookingState == Booking.BOOKING_STATE_AFTER_USE || booking.hasReview == false)
+                        {
+                            AnalyticsManager.getInstance(getActivity()).recordEvent(AnalyticsManager.Category.BOOKING_STATUS//
+                                , AnalyticsManager.Action.BUTTONS_AVAILABLE, null, null);
+                            break;
+                        }
+                    }
+                }
+            }));
         }
 
         if (mDailyDeepLink != null && mDailyDeepLink.isValidateLink() == true)
@@ -489,18 +506,18 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
     }
 
     boolean startBookingDetail(BaseActivity baseActivity, Booking.PlaceType placeType,//
-                               int reservationIndex, String imageUrl, boolean isDeepLink, int bookingState)
+                               int reservationIndex, String aggregationId, String imageUrl, boolean isDeepLink, int bookingState)
     {
         Intent intent;
 
         switch (placeType)
         {
             case STAY:
-                intent = StayReservationDetailActivity.newInstance(baseActivity, reservationIndex, imageUrl, isDeepLink, bookingState);
+                intent = StayReservationDetailActivity.newInstance(baseActivity, reservationIndex, aggregationId, imageUrl, isDeepLink, bookingState);
                 break;
 
             case GOURMET:
-                intent = GourmetReservationDetailActivity.newInstance(baseActivity, reservationIndex, imageUrl, isDeepLink, bookingState);
+                intent = GourmetReservationDetailActivity.newInstance(baseActivity, reservationIndex, aggregationId, imageUrl, isDeepLink, bookingState);
                 break;
 
             case STAY_OUTBOUND:
@@ -840,7 +857,7 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
             switch (booking.statePayment)
             {
                 case Booking.PAYMENT_COMPLETED:
-                    if (startBookingDetail(baseActivity, booking.placeType, booking.reservationIndex, booking.imageUrl, false, booking.bookingState) == false)
+                    if (startBookingDetail(baseActivity, booking.placeType, booking.reservationIndex, booking.aggregationId, booking.imageUrl, false, booking.bookingState) == false)
                     {
                         releaseUiComponent();
                     }
@@ -984,9 +1001,13 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
                     }
 
                     int bookingIndex = internalDeepLink.getBookingIndex();
+                    String aggregationId = internalDeepLink.getAggregationId();
+
                     for (Booking booking : bookingList)
                     {
-                        if (booking.reservationIndex == bookingIndex && placeType == booking.placeType)
+                        if (((aggregationId != null && aggregationId.equalsIgnoreCase(booking.aggregationId))//
+                            || booking.reservationIndex == bookingIndex)//
+                            && placeType == booking.placeType)
                         {
                             unLockUI();
                             mOnUserActionListener.onBookingClick(booking);
@@ -1025,17 +1046,19 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
                     if (placeType != null)
                     {
                         String imageUrl = null;
+                        String aggregationId = null;
 
                         for (Booking booking : bookingList)
                         {
                             if (booking.reservationIndex == reservationIndex)
                             {
                                 imageUrl = booking.imageUrl;
+                                aggregationId = booking.aggregationId;
                                 break;
                             }
                         }
 
-                        startBookingDetail(baseActivity, placeType, reservationIndex, imageUrl, true, Booking.BOOKING_STATE_NONE);
+                        startBookingDetail(baseActivity, placeType, reservationIndex, aggregationId, imageUrl, true, Booking.BOOKING_STATE_NONE);
                     }
                 }
             }

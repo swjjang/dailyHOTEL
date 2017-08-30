@@ -38,7 +38,7 @@ public class StayThankYouPresenter extends BaseExceptionPresenter<StayThankYouAc
 
     private ProfileRemoteImpl mProfileRemoteImpl;
 
-    private int mReservationId;
+    private String mAggregationId;
     private String mStayName;
     private String mImageUrl;
     private StayBookDateTime mStayBookDateTime;
@@ -116,7 +116,7 @@ public class StayThankYouPresenter extends BaseExceptionPresenter<StayThankYouAc
         setStayBookDateTime(checkInDateTime, checkOutDateTime);
 
         mRoomName = intent.getStringExtra(StayThankYouActivity.INTENT_EXTRA_DATA_ROOM_NAME);
-        mReservationId = intent.getIntExtra(StayThankYouActivity.INTENT_EXTRA_DATA_RESERVATION_ID, -1);
+        mAggregationId = intent.getStringExtra(StayThankYouActivity.INTENT_EXTRA_DATA_AGGREGATION_ID);
 
         mAnalytics.setAnalyticsParam(intent.getParcelableExtra(BaseActivity.INTENT_EXTRA_DATA_ANALYTICS));
 
@@ -250,7 +250,7 @@ public class StayThankYouPresenter extends BaseExceptionPresenter<StayThankYouAc
 
         mAnalytics.onEventBackClick(getActivity());
 
-        startActivity(DailyInternalDeepLink.getStayBookingDetailScreenLink(getActivity(), mReservationId));
+        startActivity(DailyInternalDeepLink.getStayBookingDetailScreenLink(getActivity(), mAggregationId));
 
         return super.onBackPressed();
     }
@@ -315,7 +315,7 @@ public class StayThankYouPresenter extends BaseExceptionPresenter<StayThankYouAc
 
         mAnalytics.onEventConfirmClick(getActivity());
 
-        startActivity(DailyInternalDeepLink.getStayBookingDetailScreenLink(getActivity(), mReservationId));
+        startActivity(DailyInternalDeepLink.getStayBookingDetailScreenLink(getActivity(), mAggregationId));
 
         finish();
     }

@@ -7,6 +7,10 @@ import com.daily.dailyhotel.entity.PaymentResult;
 @JsonObject
 public class PaymentResultData
 {
+    // 국내 결제 결과.
+    @JsonField(name = "aggregationId")
+    public String aggregationId;
+
     @JsonField(name = "reservationIdx")
     public int reservationIdx;
 
@@ -22,6 +26,7 @@ public class PaymentResultData
     {
         PaymentResult paymentResult = new PaymentResult();
         paymentResult.bookingIndex = reservationIdx;
+        paymentResult.aggregationId = aggregationId;
         paymentResult.result = result;
         return paymentResult;
     }

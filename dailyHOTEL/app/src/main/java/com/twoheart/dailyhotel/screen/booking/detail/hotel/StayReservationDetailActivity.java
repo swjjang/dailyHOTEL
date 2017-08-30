@@ -31,6 +31,7 @@ import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.entity.Booking;
 import com.daily.dailyhotel.entity.CarouselListItem;
 import com.daily.dailyhotel.repository.local.model.AnalyticsParam;
+import com.daily.dailyhotel.repository.remote.BookingRemoteImpl;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
 import com.daily.dailyhotel.repository.remote.GourmetListRemoteImpl;
 import com.daily.dailyhotel.screen.booking.detail.map.GourmetBookingDetailMapActivity;
@@ -88,6 +89,7 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
 
     StayReservationDetailNetworkController mNetworkController;
 
+    private BookingRemoteImpl mBookingRemoteImpl;
     private GourmetListRemoteImpl mGourmetListRemoteImpl;
 
     private View mViewByLongPress;
@@ -95,11 +97,12 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
 
     private List<Gourmet> mRecommendGourmetList;
 
-    public static Intent newInstance(Context context, int reservationIndex, String imageUrl, boolean isDeepLink, int bookingState)
+    public static Intent newInstance(Context context, int reservationIndex, String aggregationId, String imageUrl, boolean isDeepLink, int bookingState)
     {
         Intent intent = new Intent(context, StayReservationDetailActivity.class);
 
         intent.putExtra(NAME_INTENT_EXTRA_DATA_BOOKINGIDX, reservationIndex);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_AGGREGATION_ID, aggregationId);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_URL, imageUrl);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_DEEPLINK, isDeepLink);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_BOOKING_STATE, bookingState);
@@ -118,6 +121,7 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
         mPlaceReservationDetailLayout = new StayReservationDetailLayout(this, mOnEventListener);
         mNetworkController = new StayReservationDetailNetworkController(this, mNetworkTag, mNetworkControllerListener);
 
+        mBookingRemoteImpl = new BookingRemoteImpl(this);
         mGourmetListRemoteImpl = new GourmetListRemoteImpl(this);
 
         setContentView(mPlaceReservationDetailLayout.onCreateView(R.layout.activity_stay_reservation_detail));
@@ -670,9 +674,30 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
     }
 
     @Override
-    protected void requestPlaceReservationDetail(int reservationIndex)
+    protected void requestPlaceReservationDetail(int reservationIndex, String aggregationId)
     {
-        mNetworkController.requestStayReservationDetail(reservationIndex);
+        if (DailyTextUtils.isTextEmpty(aggregationId) == true)
+        {
+            mNetworkController.requestStayReservationDetail(reservationIndex);
+        } else
+        {
+            addCompositeDisposable(mBookingRemoteImpl.getStayBookingDetail(aggregationId).subscribe(new Consumer<com.daily.dailyhotel.entity.StayBookingDetail>()
+            {
+                @Override
+                public void accept(@NonNull com.daily.dailyhotel.entity.StayBookingDetail stayBookingDetail) throws Exception
+                {
+                    ((StayBookingDetail) mPlaceBookingDetail).setData(stayBookingDetail);
+                    onReservationDetail(((StayBookingDetail) mPlaceBookingDetail));
+                }
+            }, new Consumer<Throwable>()
+            {
+                @Override
+                public void accept(@NonNull Throwable throwable) throws Exception
+                {
+                    onHandleError(throwable);
+                }
+            }));
+        }
     }
 
     void startFAQ()
@@ -981,6 +1006,118 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
         }
     }
 
+    private void onReservationDetail(StayBookingDetail stayBookingDetail)
+    {
+        if (stayBookingDetail == null)
+        {
+            finish();
+            return;
+        }
+
+        try
+        {
+            if (stayBookingDetail.readyForRefund == true)
+            {
+                stayBookingDetail.isVisibleRefundPolicy = true;
+
+                // 환불 대기 인 상태에서는 문구가 고정이다.
+                mPlaceReservationDetailLayout.initLayout(mTodayDateTime, stayBookingDetail);
+
+                analyticsOnScreen(stayBookingDetail, null);
+            } else
+            {
+                long checkOutDateTime = DailyCalendar.convertStringToDate(stayBookingDetail.checkOutDate).getTime();
+                long currentDateTime = DailyCalendar.convertStringToDate(mTodayDateTime.currentDateTime).getTime();
+
+                if (currentDateTime < checkOutDateTime)
+                {
+                    stayBookingDetail.isVisibleRefundPolicy = true;
+
+                    mNetworkController.requestPolicyRefund(stayBookingDetail.reservationIndex, stayBookingDetail.transactionType);
+                } else
+                {
+                    stayBookingDetail.isVisibleRefundPolicy = false;
+
+                    mPlaceReservationDetailLayout.initLayout(mTodayDateTime, stayBookingDetail);
+
+                    analyticsOnScreen(stayBookingDetail, null);
+                }
+            }
+
+            mPlaceReservationDetailLayout.setDeleteReservationVisible(mBookingState == Booking.BOOKING_STATE_AFTER_USE);
+
+            long currentDateTime = DailyCalendar.convertStringToDate(mTodayDateTime.currentDateTime).getTime();
+            long checkInDateTime = DailyCalendar.convertStringToDate(stayBookingDetail.checkInDate).getTime();
+
+            if (currentDateTime > checkInDateTime || (stayBookingDetail.latitude == 0.0d && stayBookingDetail.longitude == 0.0d))
+            {
+                // 고메 추천 Hidden - 현재 시간이 체크인 시간보다 큰 경우
+                ((StayReservationDetailLayout) mPlaceReservationDetailLayout).setRecommendGourmetLayoutVisible(false);
+            } else
+            {
+                // 고메 추천 Show
+                GourmetBookingDay gourmetBookingDay = new GourmetBookingDay();
+
+                Date checkInDate = DailyCalendar.convertStringToDate(stayBookingDetail.checkInDate);
+                gourmetBookingDay.setVisitDay(DailyCalendar.format(checkInDate, DailyCalendar.ISO_8601_FORMAT));
+
+                Location location = new Location((String) null);
+                location.setLatitude(stayBookingDetail.latitude);
+                location.setLongitude(stayBookingDetail.longitude);
+
+                GourmetSearchCuration gourmetCuration = new GourmetSearchCuration();
+                GourmetCurationOption gourmetCurationOption = (GourmetCurationOption) gourmetCuration.getCurationOption();
+                gourmetCurationOption.setSortType(SortType.DISTANCE);
+
+                gourmetCuration.setGourmetBookingDay(gourmetBookingDay);
+                gourmetCuration.setLocation(location);
+                gourmetCuration.setCurationOption(gourmetCurationOption);
+                gourmetCuration.setRadius(10d);
+
+                GourmetSearchParams gourmetParams = (GourmetSearchParams) gourmetCuration.toPlaceParams(1, 10, true);
+
+                addCompositeDisposable(mGourmetListRemoteImpl.getGourmetList(gourmetParams) //
+                    .observeOn(Schedulers.io()).map(new Function<List<Gourmet>, ArrayList<CarouselListItem>>()
+                    {
+                        @Override
+                        public ArrayList<CarouselListItem> apply(@NonNull List<Gourmet> gourmets) throws Exception
+                        {
+                            //                                mRecommendGourmetList = gourmets;
+                            return convertCarouselListItemList(gourmets);
+                        }
+                    }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<ArrayList<CarouselListItem>>()
+                    {
+                        @Override
+                        public void accept(@NonNull ArrayList<CarouselListItem> carouselListItemList) throws Exception
+                        {
+                            ((StayReservationDetailLayout) mPlaceReservationDetailLayout).setRecommendGourmetData(carouselListItemList);
+
+                            boolean hasData = !(carouselListItemList == null || carouselListItemList.size() == 0);
+
+                            AnalyticsManager.getInstance(StayReservationDetailActivity.this).recordEvent(AnalyticsManager.Category.BOOKING_DETAIL//
+                                , AnalyticsManager.Action.GOURMET_RECOMMEND, hasData ? AnalyticsManager.Label.Y : AnalyticsManager.Label.N, null);
+                        }
+                    }, new Consumer<Throwable>()
+                    {
+                        @Override
+                        public void accept(@NonNull Throwable throwable) throws Exception
+                        {
+                            ((StayReservationDetailLayout) mPlaceReservationDetailLayout).setRecommendGourmetData(null);
+
+                            AnalyticsManager.getInstance(StayReservationDetailActivity.this).recordEvent(AnalyticsManager.Category.BOOKING_DETAIL//
+                                , AnalyticsManager.Action.GOURMET_RECOMMEND, AnalyticsManager.Label.N, null);
+                        }
+                    }));
+            }
+
+        } catch (Exception e)
+        {
+            Crashlytics.logException(e);
+            finish();
+            return;
+        }
+    }
+
     private void analyticsOnScreen(StayBookingDetail stayBookingDetail, String refundPolicy)
     {
         if (stayBookingDetail == null)
@@ -1156,7 +1293,7 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
             {
                 case StayBookingDetail.STATUS_NO_CHARGE_REFUND:
                 {
-                    Intent intent = StayAutoRefundActivity.newInstance(StayReservationDetailActivity.this, stayBookingDetail);
+                    Intent intent = StayAutoRefundActivity.newInstance(StayReservationDetailActivity.this, stayBookingDetail, mAggregationId);
                     startActivityForResult(intent, CODE_RESULT_ACTIVITY_STAY_AUTOREFUND);
 
                     AnalyticsManager.getInstance(StayReservationDetailActivity.this).recordEvent(AnalyticsManager.Category.BOOKING_STATUS//
@@ -1496,100 +1633,7 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
 
                 stayBookingDetail.setData(jsonObject);
 
-                if (stayBookingDetail.readyForRefund == true)
-                {
-                    stayBookingDetail.isVisibleRefundPolicy = true;
-
-                    // 환불 대기 인 상태에서는 문구가 고정이다.
-                    mPlaceReservationDetailLayout.initLayout(mTodayDateTime, stayBookingDetail);
-
-                    analyticsOnScreen(stayBookingDetail, null);
-                } else
-                {
-                    long checkOutDateTime = DailyCalendar.convertStringToDate(stayBookingDetail.checkOutDate).getTime();
-                    long currentDateTime = DailyCalendar.convertStringToDate(mTodayDateTime.currentDateTime).getTime();
-
-                    if (currentDateTime < checkOutDateTime)
-                    {
-                        stayBookingDetail.isVisibleRefundPolicy = true;
-
-                        mNetworkController.requestPolicyRefund(stayBookingDetail.reservationIndex, stayBookingDetail.transactionType);
-                    } else
-                    {
-                        stayBookingDetail.isVisibleRefundPolicy = false;
-
-                        mPlaceReservationDetailLayout.initLayout(mTodayDateTime, stayBookingDetail);
-
-                        analyticsOnScreen(stayBookingDetail, null);
-                    }
-                }
-
-                mPlaceReservationDetailLayout.setDeleteReservationVisible(mBookingState == Booking.BOOKING_STATE_AFTER_USE);
-
-                long currentDateTime = DailyCalendar.convertStringToDate(mTodayDateTime.currentDateTime).getTime();
-                long checkInDateTime = DailyCalendar.convertStringToDate(stayBookingDetail.checkInDate).getTime();
-
-                if (currentDateTime > checkInDateTime || (stayBookingDetail.latitude == 0.0d && stayBookingDetail.longitude == 0.0d))
-                {
-                    // 고메 추천 Hidden - 현재 시간이 체크인 시간보다 큰 경우
-                    ((StayReservationDetailLayout) mPlaceReservationDetailLayout).setRecommendGourmetLayoutVisible(false);
-                } else
-                {
-                    // 고메 추천 Show
-                    GourmetBookingDay gourmetBookingDay = new GourmetBookingDay();
-
-                    Date checkInDate = DailyCalendar.convertStringToDate(stayBookingDetail.checkInDate);
-                    gourmetBookingDay.setVisitDay(DailyCalendar.format(checkInDate, DailyCalendar.ISO_8601_FORMAT));
-
-                    Location location = new Location((String) null);
-                    location.setLatitude(stayBookingDetail.latitude);
-                    location.setLongitude(stayBookingDetail.longitude);
-
-                    GourmetSearchCuration gourmetCuration = new GourmetSearchCuration();
-                    GourmetCurationOption gourmetCurationOption = (GourmetCurationOption) gourmetCuration.getCurationOption();
-                    gourmetCurationOption.setSortType(SortType.DISTANCE);
-
-                    gourmetCuration.setGourmetBookingDay(gourmetBookingDay);
-                    gourmetCuration.setLocation(location);
-                    gourmetCuration.setCurationOption(gourmetCurationOption);
-                    gourmetCuration.setRadius(10d);
-
-                    GourmetSearchParams gourmetParams = (GourmetSearchParams) gourmetCuration.toPlaceParams(1, 10, true);
-
-                    addCompositeDisposable(mGourmetListRemoteImpl.getGourmetList(gourmetParams) //
-                        .observeOn(Schedulers.io()).map(new Function<List<Gourmet>, ArrayList<CarouselListItem>>()
-                        {
-                            @Override
-                            public ArrayList<CarouselListItem> apply(@NonNull List<Gourmet> gourmets) throws Exception
-                            {
-                                //                                mRecommendGourmetList = gourmets;
-                                return convertCarouselListItemList(gourmets);
-                            }
-                        }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<ArrayList<CarouselListItem>>()
-                        {
-                            @Override
-                            public void accept(@NonNull ArrayList<CarouselListItem> carouselListItemList) throws Exception
-                            {
-                                ((StayReservationDetailLayout) mPlaceReservationDetailLayout).setRecommendGourmetData(carouselListItemList);
-
-                                boolean hasData = !(carouselListItemList == null || carouselListItemList.size() == 0);
-
-                                AnalyticsManager.getInstance(StayReservationDetailActivity.this).recordEvent(AnalyticsManager.Category.BOOKING_DETAIL//
-                                    , AnalyticsManager.Action.GOURMET_RECOMMEND, hasData ? AnalyticsManager.Label.Y : AnalyticsManager.Label.N, null);
-                            }
-                        }, new Consumer<Throwable>()
-                        {
-                            @Override
-                            public void accept(@NonNull Throwable throwable) throws Exception
-                            {
-                                ((StayReservationDetailLayout) mPlaceReservationDetailLayout).setRecommendGourmetData(null);
-
-                                AnalyticsManager.getInstance(StayReservationDetailActivity.this).recordEvent(AnalyticsManager.Category.BOOKING_DETAIL//
-                                    , AnalyticsManager.Action.GOURMET_RECOMMEND, AnalyticsManager.Label.N, null);
-                            }
-                        }));
-                }
-
+                StayReservationDetailActivity.this.onReservationDetail(stayBookingDetail);
             } catch (Exception e)
             {
                 Crashlytics.logException(e);

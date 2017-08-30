@@ -32,7 +32,7 @@ public class GourmetThankYouPresenter extends BaseExceptionPresenter<GourmetThan
 
     private ProfileRemoteImpl mProfileRemoteImpl;
 
-    private int mReservationId;
+    private String mAggregationId;
     private String mGourmetName;
     private String mImageUrl;
     private GourmetBookDateTime mGourmetBookDateTime;
@@ -105,7 +105,7 @@ public class GourmetThankYouPresenter extends BaseExceptionPresenter<GourmetThan
 
         mMenuName = intent.getStringExtra(GourmetThankYouActivity.INTENT_EXTRA_DATA_MENU_NAME);
         mMenuCount = intent.getIntExtra(GourmetThankYouActivity.INTENT_EXTRA_DATA_MENU_COUNT, 0);
-        mReservationId = intent.getIntExtra(GourmetThankYouActivity.INTENT_EXTRA_DATA_RESERVATION_ID, -1);
+        mAggregationId = intent.getStringExtra(GourmetThankYouActivity.INTENT_EXTRA_DATA_AGGREGATION_ID);
 
         mAnalytics.setAnalyticsParam(intent.getParcelableExtra(BaseActivity.INTENT_EXTRA_DATA_ANALYTICS));
 
@@ -208,7 +208,7 @@ public class GourmetThankYouPresenter extends BaseExceptionPresenter<GourmetThan
 
         mAnalytics.onEventBackClick(getActivity());
 
-        startActivity(DailyInternalDeepLink.getGourmetBookingDetailScreenLink(getActivity(), mReservationId));
+        startActivity(DailyInternalDeepLink.getGourmetBookingDetailScreenLink(getActivity(), mAggregationId));
 
         return super.onBackPressed();
     }
@@ -273,7 +273,7 @@ public class GourmetThankYouPresenter extends BaseExceptionPresenter<GourmetThan
 
         mAnalytics.onEventConfirmClick(getActivity());
 
-        startActivity(DailyInternalDeepLink.getGourmetBookingDetailScreenLink(getActivity(), mReservationId));
+        startActivity(DailyInternalDeepLink.getGourmetBookingDetailScreenLink(getActivity(), mAggregationId));
 
         finish();
     }

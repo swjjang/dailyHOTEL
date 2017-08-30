@@ -27,6 +27,7 @@ public class DailyInternalDeepLink extends DailyDeepLink
     private static final String PARAM_CHECK_OUT_TIME = "co";
     private static final String PARAM_VISIT_TIME = "vt";
     private static final String PARAM_BOOKING_INDEX = "bid";
+    private static final String PARAM_AGGREGATION_ID = "aid";
 
     private static final String VIEW_BOOKING_DETAIL = "bd"; // 예약 상세화면
     private static final String VIEW_STAMP = "stamp"; // 스탬프.
@@ -127,6 +128,11 @@ public class DailyInternalDeepLink extends DailyDeepLink
         }
     }
 
+    public String getAggregationId()
+    {
+        return mParamsMap.get(PARAM_AGGREGATION_ID);
+    }
+
     private boolean decodingLink(Uri uri)
     {
         mParamsMap.clear();
@@ -197,26 +203,26 @@ public class DailyInternalDeepLink extends DailyDeepLink
         return getIntent(context, Uri.parse(stringBuilder.toString()));
     }
 
-    public static Intent getStayBookingDetailScreenLink(Context context, int bookingIndex)
+    public static Intent getStayBookingDetailScreenLink(Context context, String aggregationId)
     {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("dailyhotel://");
         stringBuilder.append(HOST_INTERNAL_DAILYHOTEL);
         stringBuilder.append("?" + PARAM_VIEW + "=" + VIEW_BOOKING_DETAIL);
         stringBuilder.append("&" + PARAM_PLACE_TYPE + "=" + STAY);
-        stringBuilder.append("&" + PARAM_BOOKING_INDEX + "=" + bookingIndex);
+        stringBuilder.append("&" + PARAM_AGGREGATION_ID + "=" + aggregationId);
 
         return getIntent(context, Uri.parse(stringBuilder.toString()));
     }
 
-    public static Intent getGourmetBookingDetailScreenLink(Context context, int bookingIndex)
+    public static Intent getGourmetBookingDetailScreenLink(Context context, String aggregationId)
     {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("dailyhotel://");
         stringBuilder.append(HOST_INTERNAL_DAILYHOTEL);
         stringBuilder.append("?" + PARAM_VIEW + "=" + VIEW_BOOKING_DETAIL);
         stringBuilder.append("&" + PARAM_PLACE_TYPE + "=" + GOURMET);
-        stringBuilder.append("&" + PARAM_BOOKING_INDEX + "=" + bookingIndex);
+        stringBuilder.append("&" + PARAM_AGGREGATION_ID + "=" + aggregationId);
 
         return getIntent(context, Uri.parse(stringBuilder.toString()));
     }

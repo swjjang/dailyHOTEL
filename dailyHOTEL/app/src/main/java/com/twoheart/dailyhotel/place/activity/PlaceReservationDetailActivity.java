@@ -32,6 +32,7 @@ public abstract class PlaceReservationDetailActivity extends BaseActivity
 {
     private boolean mDontReload;
     protected int mReservationIndex;
+    protected String mAggregationId;
     protected String mImageUrl;
     protected boolean mIsDeepLink;
     protected int mBookingState;
@@ -42,7 +43,7 @@ public abstract class PlaceReservationDetailActivity extends BaseActivity
 
     protected PlaceReservationDetailLayout mPlaceReservationDetailLayout;
 
-    protected abstract void requestPlaceReservationDetail(int reservationIndex);
+    protected abstract void requestPlaceReservationDetail(int reservationIndex, String aggregationId);
 
     protected abstract void showCallDialog();
 
@@ -60,6 +61,7 @@ public abstract class PlaceReservationDetailActivity extends BaseActivity
         if (bundle != null)
         {
             mReservationIndex = bundle.getInt(NAME_INTENT_EXTRA_DATA_BOOKINGIDX);
+            mAggregationId = bundle.getString(NAME_INTENT_EXTRA_DATA_AGGREGATION_ID);
             mImageUrl = bundle.getString(NAME_INTENT_EXTRA_DATA_URL);
             mIsDeepLink = bundle.getBoolean(NAME_INTENT_EXTRA_DATA_DEEPLINK, false);
             mBookingState = bundle.getInt(NAME_INTENT_EXTRA_DATA_BOOKING_STATE);
@@ -312,7 +314,7 @@ public abstract class PlaceReservationDetailActivity extends BaseActivity
 
                             setUserName(jsonObject.getString("name"));
 
-                            requestPlaceReservationDetail(mReservationIndex);
+                            requestPlaceReservationDetail(mReservationIndex, mAggregationId);
                         } else
                         {
                             String msg = responseJSONObject.getString("msg");

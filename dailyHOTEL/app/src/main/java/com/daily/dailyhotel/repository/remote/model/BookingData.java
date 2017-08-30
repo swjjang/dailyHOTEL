@@ -13,6 +13,9 @@ public class BookingData
     @JsonField(name = "reservationIdx")
     public int reservationIdx;
 
+    @JsonField(name = "aggregationId")
+    public String aggregationId;
+
     @JsonField(name = "tid")
     public String tid;
 
@@ -66,6 +69,7 @@ public class BookingData
         Booking booking = new Booking();
         booking.placeName = name;
         booking.reservationIndex = reservationIdx;
+        booking.aggregationId = aggregationId;
 
         if (images != null && images.size() != 0)
         {

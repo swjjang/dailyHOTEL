@@ -6,10 +6,16 @@ import android.support.annotation.NonNull;
 import com.daily.base.exception.BaseException;
 import com.daily.dailyhotel.domain.BookingInterface;
 import com.daily.dailyhotel.entity.Booking;
+import com.daily.dailyhotel.entity.GourmetBookingDetail;
+import com.daily.dailyhotel.entity.StayBookingDetail;
 import com.daily.dailyhotel.entity.StayOutboundBookingDetail;
+import com.daily.dailyhotel.entity.WaitingDeposit;
 import com.daily.dailyhotel.repository.remote.model.BookingData;
 import com.daily.dailyhotel.repository.remote.model.BookingHideData;
+import com.daily.dailyhotel.repository.remote.model.GourmetBookingDetailData;
+import com.daily.dailyhotel.repository.remote.model.StayBookingDetailData;
 import com.daily.dailyhotel.repository.remote.model.StayOutboundBookingDetailData;
+import com.daily.dailyhotel.repository.remote.model.WaitingDepositData;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.network.dto.BaseDto;
 import com.twoheart.dailyhotel.network.dto.BaseListDto;
@@ -148,6 +154,93 @@ public class BookingRemoteImpl implements BookingInterface
                 }
 
                 return stayOutboundBookingDetail;
+            }
+        }).observeOn(AndroidSchedulers.mainThread());
+    }
+
+    @Override
+    public Observable<StayBookingDetail> getStayBookingDetail(String aggregationId)
+    {
+        return DailyMobileAPI.getInstance(mContext).getStayBookingDetail(aggregationId).map(new Function<BaseDto<StayBookingDetailData>, StayBookingDetail>()
+        {
+            @Override
+            public StayBookingDetail apply(@io.reactivex.annotations.NonNull BaseDto<StayBookingDetailData> stayBookingDetailDataBaseDto) throws Exception
+            {
+                StayBookingDetail stayBookingDetail = null;
+
+                if (stayBookingDetailDataBaseDto != null)
+                {
+                    if (stayBookingDetailDataBaseDto.msgCode == 100 && stayBookingDetailDataBaseDto.data != null)
+                    {
+                        stayBookingDetail = stayBookingDetailDataBaseDto.data.getStayBookingDetail();
+                    } else
+                    {
+                        throw new BaseException(stayBookingDetailDataBaseDto.msgCode, stayBookingDetailDataBaseDto.msg);
+                    }
+                } else
+                {
+                    throw new BaseException(-1, null);
+                }
+
+                return stayBookingDetail;
+            }
+        }).observeOn(AndroidSchedulers.mainThread());
+    }
+
+    @Override
+    public Observable<GourmetBookingDetail> getGourmetBookingDetail(String aggregationId)
+    {
+        return DailyMobileAPI.getInstance(mContext).getGourmetBookingDetail(aggregationId).map(new Function<BaseDto<GourmetBookingDetailData>, GourmetBookingDetail>()
+        {
+            @Override
+            public GourmetBookingDetail apply(@io.reactivex.annotations.NonNull BaseDto<GourmetBookingDetailData> gourmetBookingDetailDataBaseDto) throws Exception
+            {
+                GourmetBookingDetail gourmetBookingDetail = null;
+
+                if (gourmetBookingDetailDataBaseDto != null)
+                {
+                    if (gourmetBookingDetailDataBaseDto.msgCode == 100 && gourmetBookingDetailDataBaseDto.data != null)
+                    {
+                        gourmetBookingDetail = gourmetBookingDetailDataBaseDto.data.getGourmetBookingDetail();
+                    } else
+                    {
+                        throw new BaseException(gourmetBookingDetailDataBaseDto.msgCode, gourmetBookingDetailDataBaseDto.msg);
+                    }
+                } else
+                {
+                    throw new BaseException(-1, null);
+                }
+
+                return gourmetBookingDetail;
+            }
+        }).observeOn(AndroidSchedulers.mainThread());
+    }
+
+    @Override
+    public Observable<WaitingDeposit> getWaitingDeposit(String aggregationId)
+    {
+        return DailyMobileAPI.getInstance(mContext).getWaitingDeposit(aggregationId).map(new Function<BaseDto<WaitingDepositData>, WaitingDeposit>()
+        {
+            @Override
+            public WaitingDeposit apply(@io.reactivex.annotations.NonNull BaseDto<WaitingDepositData> waitingDepositDataBaseDto) throws Exception
+            {
+                WaitingDeposit waitingDeposit = null;
+
+                if (waitingDepositDataBaseDto != null)
+                {
+                    if (waitingDepositDataBaseDto.msgCode == 100 && waitingDepositDataBaseDto.data != null)
+                    {
+                        waitingDeposit = waitingDepositDataBaseDto.data.getWaitingDeposit();
+                    } else
+                    {
+                        throw new BaseException(waitingDepositDataBaseDto.msgCode, waitingDepositDataBaseDto.msg);
+                    }
+                } else
+                {
+                    throw new BaseException(-1, null);
+                }
+
+                return waitingDeposit;
             }
         }).observeOn(AndroidSchedulers.mainThread());
     }
