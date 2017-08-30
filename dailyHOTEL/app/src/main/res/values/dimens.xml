@@ -34,6 +34,8 @@
     
     <dimen name="home_carousel_min_height">0dp</dimen>
     <dimen name="home_carousel_max_height">285.5dp</dimen>
+    <dimen name="daily_carousel_hide_price_recycler_height">205dp</dimen>
+    <dimen name="daily_carousel_show_price_recycler_height">219dp</dimen>
 
     <dimen name="stay_detail_room_type_default_height">122dp</dimen>
     <dimen name="stay_detail_room_type_expand_height">142dp</dimen>
