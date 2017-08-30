@@ -490,14 +490,14 @@ public class HomeLayout extends BaseBlurLayout
         }
 
         mRecentListLayout = new HomeCarouselLayout(mContext);
-//        mRecentListLayout.setUsePriceLayout(false);
-//        mRecentListLayout.setBackgroundResource(R.color.default_background);
-//        mRecentListLayout.setTopMarginView(ScreenUtils.dpToPx(mContext, 15d) //
-//            , mContext.getResources().getColor(R.color.default_background));
-//        mRecentListLayout.setTopLineView(ScreenUtils.dpToPx(mContext, 1d) //
-//            , mContext.getResources().getColor(R.color.default_line_cf0f0f0));
-//        mRecentListLayout.setBottomLineView(ScreenUtils.dpToPx(mContext, 1d) //
-//            , mContext.getResources().getColor(R.color.default_line_cf0f0f0));
+        //        mRecentListLayout.setUsePriceLayout(false);
+        //        mRecentListLayout.setBackgroundResource(R.color.default_background);
+        //        mRecentListLayout.setTopMarginView(ScreenUtils.dpToPx(mContext, 15d) //
+        //            , mContext.getResources().getColor(R.color.default_background));
+        //        mRecentListLayout.setTopLineView(ScreenUtils.dpToPx(mContext, 1d) //
+        //            , mContext.getResources().getColor(R.color.default_line_cf0f0f0));
+        //        mRecentListLayout.setBottomLineView(ScreenUtils.dpToPx(mContext, 1d) //
+        //            , mContext.getResources().getColor(R.color.default_line_cf0f0f0));
         layout.addView(mRecentListLayout);
 
         mRecentListLayout.setTitleText(R.string.frag_recent_places);
@@ -1144,6 +1144,16 @@ public class HomeLayout extends BaseBlurLayout
         });
 
         mErrorPopupAnimator.start();
+    }
+
+    boolean getErrorPopupVisible()
+    {
+        if (mErrorPopupLayout == null)
+        {
+            return false;
+        }
+
+        return mErrorPopupLayout.getVisibility() == View.VISIBLE;
     }
 
     void startTextLayoutShowAnimation()
