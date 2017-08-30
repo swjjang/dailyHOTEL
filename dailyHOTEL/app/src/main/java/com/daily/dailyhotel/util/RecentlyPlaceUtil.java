@@ -637,7 +637,7 @@ public class RecentlyPlaceUtil
         {
             for (StayOutbound stayOutbound : stayOutboundList)
             {
-                CarouselListItem item = new CarouselListItem(CarouselListItem.TYPE_HOME_PLACE, stayOutbound);
+                CarouselListItem item = new CarouselListItem(CarouselListItem.TYPE_OB_STAY, stayOutbound);
                 carouselListItemList.add(item);
             }
         }
