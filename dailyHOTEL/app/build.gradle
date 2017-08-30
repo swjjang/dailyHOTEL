@@ -234,8 +234,8 @@ dependencies {
     compile 'com.facebook.fresco:drawee:1.4.0'
     compile 'com.facebook.fresco:imagepipeline-okhttp3:1.4.0'
 
-    compile 'com.kakao.sdk:usermgmt:1.4.1'
-    compile 'com.kakao.sdk:kakaolink:1.4.1'
+    compile 'com.kakao.sdk:usermgmt:1.5.1'
+    compile 'com.kakao.sdk:kakaolink:1.5.1'
 
     compile 'com.appboy:android-sdk-ui:2.0.+'
 
