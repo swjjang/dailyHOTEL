@@ -7,6 +7,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
 import android.net.Uri;
@@ -99,7 +100,7 @@ public class HomeLayout extends BaseBlurLayout
     View mTextMessageLayout;
     View mTopButtonLayout, mProviderLayout;
     private ListRowHomeStampDataBinding mListRowHomeStampDataBinding;
-    HomeCarouselLayout mRecentListLayout;
+    DailyCarouselAnimationLayout mRecentListLayout;
     DailyCarouselAnimationLayout mWishListLayout;
     HomeRecommendationLayout mHomeRecommendationLayout;
 
@@ -449,15 +450,8 @@ public class HomeLayout extends BaseBlurLayout
 
         mWishListLayout = new DailyCarouselAnimationLayout(mContext);
         mWishListLayout.setUsePriceLayout(false);
-        mWishListLayout.setBackgroundResource(R.color.default_background);
-        mWishListLayout.setTopMarginView(ScreenUtils.dpToPx(mContext, 15d) //
-            , mContext.getResources().getColor(R.color.default_background));
-        mWishListLayout.setTopLineView(ScreenUtils.dpToPx(mContext, 1d) //
-            , mContext.getResources().getColor(R.color.default_line_cf0f0f0));
-        mWishListLayout.setBottomLineView(ScreenUtils.dpToPx(mContext, 1d) //
-            , mContext.getResources().getColor(R.color.default_line_cf0f0f0));
-        mWishListLayout.setBottomMarginView(ScreenUtils.dpToPx(mContext, 15d) //
-         , mContext.getResources().getColor(R.color.default_background));
+        mWishListLayout.setUseAnimation(true);
+        mWishListLayout.setBottomMarginView(0, Color.TRANSPARENT);
         layout.addView(mWishListLayout);
 
         mWishListLayout.setTitleText(R.string.label_wishlist);
@@ -491,20 +485,15 @@ public class HomeLayout extends BaseBlurLayout
             return;
         }
 
-        mRecentListLayout = new HomeCarouselLayout(mContext);
-//        mRecentListLayout.setUsePriceLayout(false);
-//        mRecentListLayout.setBackgroundResource(R.color.default_background);
-//        mRecentListLayout.setTopMarginView(ScreenUtils.dpToPx(mContext, 15d) //
-//            , mContext.getResources().getColor(R.color.default_background));
-//        mRecentListLayout.setTopLineView(ScreenUtils.dpToPx(mContext, 1d) //
-//            , mContext.getResources().getColor(R.color.default_line_cf0f0f0));
-//        mRecentListLayout.setBottomLineView(ScreenUtils.dpToPx(mContext, 1d) //
-//            , mContext.getResources().getColor(R.color.default_line_cf0f0f0));
+        mRecentListLayout = new DailyCarouselAnimationLayout(mContext);
+        mRecentListLayout.setUsePriceLayout(false);
+        mRecentListLayout.setUseAnimation(true);
+        mRecentListLayout.setBottomMarginView(0, Color.TRANSPARENT);
         layout.addView(mRecentListLayout);
 
         mRecentListLayout.setTitleText(R.string.frag_recent_places);
 
-        mRecentListLayout.setCarouselListener(new HomeCarouselLayout.OnCarouselListener()
+        mRecentListLayout.setCarouselListener(new DailyCarouselLayout.OnCarouselListener()
         {
             @Override
             public void onViewAllClick()

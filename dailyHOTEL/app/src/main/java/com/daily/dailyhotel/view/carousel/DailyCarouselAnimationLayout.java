@@ -2,16 +2,20 @@ package com.daily.dailyhotel.view.carousel;
 
 import android.animation.Animator;
 import android.animation.ValueAnimator;
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.databinding.DataBindingUtil;
+import android.os.Build;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 
+import com.daily.base.util.VersionUtils;
 import com.daily.dailyhotel.entity.CarouselListItem;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.LayoutCarouselAnimationDataBinding;
@@ -30,9 +34,6 @@ public class DailyCarouselAnimationLayout extends ConstraintLayout
     private LayoutCarouselAnimationDataBinding mDataBinding;
     private ValueAnimator mValueAnimator;
     private boolean mIsUseAnimation;
-
-    int mMinHeight;
-    int mMaxHeight;
 
     public DailyCarouselAnimationLayout(Context context)
     {
@@ -62,8 +63,7 @@ public class DailyCarouselAnimationLayout extends ConstraintLayout
     {
         mDataBinding = DataBindingUtil.inflate(LayoutInflater.from(mContext), R.layout.layout_carousel_animation_data, this, true);
 
-        mMinHeight = mContext.getResources().getDimensionPixelOffset(R.dimen.home_carousel_min_height);
-        mMaxHeight = mContext.getResources().getDimensionPixelOffset(R.dimen.home_carousel_max_height);
+        setVisibility(View.GONE);
 
         if (attrs != null)
         {
@@ -76,9 +76,6 @@ public class DailyCarouselAnimationLayout extends ConstraintLayout
                 float height = typedArray.getDimension(R.styleable.dailyCarousel_topMarginHeight, wrapContentValue);
                 int color = typedArray.getColor(R.styleable.dailyCarousel_topMarginBackgroundColor, getResources().getColor(R.color.default_background));
                 setTopMarginView((int) height, color);
-            } else
-            {
-                setTopMarginView(LayoutParams.WRAP_CONTENT, getResources().getColor(R.color.transparent));
             }
 
             if (typedArray.hasValue(R.styleable.dailyCarousel_topLineHeight) == true)
@@ -86,9 +83,6 @@ public class DailyCarouselAnimationLayout extends ConstraintLayout
                 float height = typedArray.getDimension(R.styleable.dailyCarousel_topLineHeight, wrapContentValue);
                 int color = typedArray.getColor(R.styleable.dailyCarousel_topLineBackgroundColor, getResources().getColor(R.color.default_line_cf0f0f0));
                 setTopLineView((int) height, color);
-            } else
-            {
-                setTopLineView(LayoutParams.WRAP_CONTENT, getResources().getColor(R.color.transparent));
             }
 
             if (typedArray.hasValue(R.styleable.dailyCarousel_bottomMarginHeight) == true)
@@ -96,9 +90,6 @@ public class DailyCarouselAnimationLayout extends ConstraintLayout
                 float height = typedArray.getDimension(R.styleable.dailyCarousel_bottomMarginHeight, wrapContentValue);
                 int color = typedArray.getColor(R.styleable.dailyCarousel_bottomMarginBackgroundColor, getResources().getColor(R.color.default_background));
                 setBottomMarginView((int) height, color);
-            } else
-            {
-                setBottomMarginView(LayoutParams.WRAP_CONTENT, getResources().getColor(R.color.transparent));
             }
 
             if (typedArray.hasValue(R.styleable.dailyCarousel_bottomLineHeight) == true)
@@ -106,19 +97,13 @@ public class DailyCarouselAnimationLayout extends ConstraintLayout
                 float height = typedArray.getDimension(R.styleable.dailyCarousel_bottomLineHeight, wrapContentValue);
                 int color = typedArray.getColor(R.styleable.dailyCarousel_bottomLineBackgroundColor, getResources().getColor(R.color.default_line_cf0f0f0));
                 setBottomLineView((int) height, color);
-            } else
-            {
-                setBottomLineView(LayoutParams.WRAP_CONTENT, getResources().getColor(R.color.transparent));
             }
 
             mIsUseAnimation = typedArray.getBoolean(R.styleable.dailyCarousel_use_animation, false);
             boolean isUsePrice = typedArray.getBoolean(R.styleable.dailyCarousel_use_price_layout, true);
             setUsePriceLayout(isUsePrice);
-        } else {
-            setTopMarginView(LayoutParams.WRAP_CONTENT, getResources().getColor(R.color.transparent));
-            setTopLineView(LayoutParams.WRAP_CONTENT, getResources().getColor(R.color.transparent));
-            setBottomMarginView(LayoutParams.WRAP_CONTENT, getResources().getColor(R.color.transparent));
-            setBottomLineView(LayoutParams.WRAP_CONTENT, getResources().getColor(R.color.transparent));
+        } else
+        {
             setUsePriceLayout(true);
         }
     }
@@ -190,6 +175,11 @@ public class DailyCarouselAnimationLayout extends ConstraintLayout
         view.setBackgroundColor(color);
     }
 
+    public void setUseAnimation(boolean isUse)
+    {
+        mIsUseAnimation = isUse;
+    }
+
     public void setTitleText(int resId)
     {
         if (mDataBinding == null)
@@ -229,24 +219,70 @@ public class DailyCarouselAnimationLayout extends ConstraintLayout
 
         mDataBinding.contentLayout.setData(list);
 
-        if (list == null || list.size() == 0)
+        boolean hasData = list != null && list.size() > 0;
+
+        if (hasData == false)
         {
-            startLayoutCloseAnimation();
-        } else
-        {
-            if (getHeight() >= mMaxHeight)
+            if (getVisibility() == View.GONE)
             {
                 return;
             }
 
-            this.postDelayed(new Runnable()
+            if (mIsUseAnimation == false)
             {
-                @Override
-                public void run()
+                setVisibility(View.GONE);
+            } else
+            {
+                // start close Animation
+                mDataBinding.contentLayout.post(new Runnable()
                 {
-                    startLayoutShowAnimation();
+                    @Override
+                    public void run()
+                    {
+                        startAnimation(false);
+                    }
+                });
+            }
+        } else
+        {
+            if (getVisibility() == View.VISIBLE)
+            {
+                return;
+            }
+
+            if (mIsUseAnimation == false)
+            {
+                setVisibility(View.VISIBLE);
+                return;
+            }
+
+            // start show Animation
+            getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener()
+            {
+                @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+                @Override
+                public void onGlobalLayout()
+                {
+                    mDataBinding.contentLayout.post(new Runnable()
+                    {
+                        @Override
+                        public void run()
+                        {
+                            startAnimation(true);
+                        }
+                    });
+
+                    if (VersionUtils.isOverAPI16() == true)
+                    {
+                        getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                    } else
+                    {
+                        getViewTreeObserver().removeGlobalOnLayoutListener(this);
+                    }
                 }
-            }, 100);
+            });
+
+            setVisibility(View.VISIBLE);
         }
     }
 
@@ -284,20 +320,18 @@ public class DailyCarouselAnimationLayout extends ConstraintLayout
         setLayoutParams(params);
     }
 
-    void startLayoutShowAnimation()
+    void startAnimation(boolean isShow)
     {
-//        if (getHeight() >= mMaxHeight)
-//        {
-//            return;
-//        }
-
         if (mValueAnimator != null && mValueAnimator.isRunning() == true)
         {
             mValueAnimator.cancel();
         }
 
-        final int gap = mMaxHeight - mMinHeight;
-        mValueAnimator = ValueAnimator.ofInt(mMinHeight, mMaxHeight);
+        int height = getHeight();
+        int start = isShow == false ? height : 0;
+        int end = isShow == false ? 0 : height;
+
+        mValueAnimator = ValueAnimator.ofInt(start, end);
         mValueAnimator.setDuration(LAYOUT_ANIMATION_DURATION);
         mValueAnimator.setInterpolator(new FastOutSlowInInterpolator());
         mValueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener()
@@ -310,8 +344,11 @@ public class DailyCarouselAnimationLayout extends ConstraintLayout
                 params.height = value;
                 setLayoutParams(params);
 
-                float alpha = (float) ((double) value / (double) gap);
-                setAlpha(alpha);
+                if (isShow == true)
+                {
+                    float alpha = (float) ((double) value / (double) height);
+                    setAlpha(alpha);
+                }
             }
         });
 
@@ -320,7 +357,7 @@ public class DailyCarouselAnimationLayout extends ConstraintLayout
             @Override
             public void onAnimationStart(Animator animation)
             {
-                setHeight(mMinHeight);
+                setHeight(start);
             }
 
             @Override
@@ -330,74 +367,21 @@ public class DailyCarouselAnimationLayout extends ConstraintLayout
                 mValueAnimator.removeAllListeners();
                 mValueAnimator = null;
 
-                setHeight(mMaxHeight);
+                setHeight(end);
+
+                if (isShow == true)
+                {
+                    setVisibility(View.VISIBLE);
+                } else
+                {
+                    setVisibility(View.GONE);
+                }
             }
 
             @Override
             public void onAnimationCancel(Animator animation)
             {
-            }
 
-            @Override
-            public void onAnimationRepeat(Animator animation)
-            {
-
-            }
-        });
-
-        mValueAnimator.start();
-    }
-
-    void startLayoutCloseAnimation()
-    {
-        if (getHeight() == mMinHeight)
-        {
-            return;
-        }
-
-        if (mValueAnimator != null && mValueAnimator.isRunning() == true)
-        {
-            mValueAnimator.cancel();
-        }
-
-        final int height = getHeight();
-
-        mValueAnimator = ValueAnimator.ofInt(height, mMinHeight);
-        mValueAnimator.setDuration(LAYOUT_ANIMATION_DURATION);
-        mValueAnimator.setInterpolator(new FastOutSlowInInterpolator());
-        mValueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener()
-        {
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation)
-            {
-                int value = (int) animation.getAnimatedValue();
-                ViewGroup.LayoutParams params = getLayoutParams();
-                params.height = value;
-                setLayoutParams(params);
-            }
-        });
-
-        mValueAnimator.addListener(new Animator.AnimatorListener()
-        {
-            @Override
-            public void onAnimationStart(Animator animation)
-            {
-
-            }
-
-            @Override
-            public void onAnimationEnd(Animator animation)
-            {
-                mValueAnimator.removeAllUpdateListeners();
-                mValueAnimator.removeAllListeners();
-                mValueAnimator = null;
-
-                setHeight(mMinHeight);
-            }
-
-            @Override
-            public void onAnimationCancel(Animator animation)
-            {
             }
 
             @Override
