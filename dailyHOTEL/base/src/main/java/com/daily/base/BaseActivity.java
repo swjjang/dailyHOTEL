@@ -140,7 +140,6 @@ public abstract class BaseActivity<T1 extends BasePresenter> extends AppCompatAc
         // 이미 종료했는데 onBacPressed()가 연속으로 호출 되는 경우가 있다.
         if (isFinishing() == true || (VersionUtils.isOverAPI17() == true && isDestroyed() == true))
         {
-            Crashlytics.logException(new IllegalStateException("activity : " + getLocalClassName()));
             return;
         }
 
@@ -189,6 +188,12 @@ public abstract class BaseActivity<T1 extends BasePresenter> extends AppCompatAc
      */
     public void onLockProgressBackPressed()
     {
+        // 이미 종료했는데 onBacPressed()가 연속으로 호출 되는 경우가 있다.
+        if (isFinishing() == true || (VersionUtils.isOverAPI17() == true && isDestroyed() == true))
+        {
+            return;
+        }
+        
         onBackPressed();
 
         //        if (this instanceof PlaceDetailActivity == true)
