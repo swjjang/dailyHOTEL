@@ -114,6 +114,12 @@ public class DailyCarouselAnimationLayout extends ConstraintLayout
             mIsUseAnimation = typedArray.getBoolean(R.styleable.dailyCarousel_use_animation, false);
             boolean isUsePrice = typedArray.getBoolean(R.styleable.dailyCarousel_use_price_layout, true);
             setUsePriceLayout(isUsePrice);
+        } else {
+            setTopMarginView(LayoutParams.WRAP_CONTENT, getResources().getColor(R.color.transparent));
+            setTopLineView(LayoutParams.WRAP_CONTENT, getResources().getColor(R.color.transparent));
+            setBottomMarginView(LayoutParams.WRAP_CONTENT, getResources().getColor(R.color.transparent));
+            setBottomLineView(LayoutParams.WRAP_CONTENT, getResources().getColor(R.color.transparent));
+            setUsePriceLayout(true);
         }
     }
 
@@ -280,10 +286,10 @@ public class DailyCarouselAnimationLayout extends ConstraintLayout
 
     void startLayoutShowAnimation()
     {
-        if (getHeight() >= mMaxHeight)
-        {
-            return;
-        }
+//        if (getHeight() >= mMaxHeight)
+//        {
+//            return;
+//        }
 
         if (mValueAnimator != null && mValueAnimator.isRunning() == true)
         {

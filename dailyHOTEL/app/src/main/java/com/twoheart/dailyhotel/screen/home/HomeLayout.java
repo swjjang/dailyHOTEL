@@ -456,6 +456,8 @@ public class HomeLayout extends BaseBlurLayout
             , mContext.getResources().getColor(R.color.default_line_cf0f0f0));
         mWishListLayout.setBottomLineView(ScreenUtils.dpToPx(mContext, 1d) //
             , mContext.getResources().getColor(R.color.default_line_cf0f0f0));
+        mWishListLayout.setBottomMarginView(ScreenUtils.dpToPx(mContext, 15d) //
+         , mContext.getResources().getColor(R.color.default_background));
         layout.addView(mWishListLayout);
 
         mWishListLayout.setTitleText(R.string.label_wishlist);
