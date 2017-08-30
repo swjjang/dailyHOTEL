@@ -1120,9 +1120,14 @@ public class StayDetailActivity extends PlaceDetailActivity
             return;
         }
 
-        lockUiComponent();
-
         StayDetailParams stayDetailParams = stayDetail.getStayDetailParams();
+
+        if (stayDetailParams == null)
+        {
+            return;
+        }
+
+        lockUiComponent();
 
         boolean isExpectSelected = !stayDetailParams.myWish;
         int wishCount = isExpectSelected == true ? stayDetailParams.wishCount + 1 : stayDetailParams.wishCount - 1;

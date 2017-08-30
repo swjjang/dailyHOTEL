@@ -1081,9 +1081,14 @@ public class GourmetDetailActivity extends PlaceDetailActivity
             return;
         }
 
-        lockUiComponent();
-
         GourmetDetailParams gourmetDetailParams = gourmetDetail.getGourmetDetailParams();
+
+        if (gourmetDetailParams == null)
+        {
+            return;
+        }
+
+        lockUiComponent();
 
         boolean isExpectSelected = !gourmetDetailParams.myWish;
         int wishCount = isExpectSelected == true ? gourmetDetailParams.wishCount + 1 : gourmetDetailParams.wishCount - 1;
