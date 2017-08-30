@@ -193,7 +193,7 @@ public abstract class BaseActivity<T1 extends BasePresenter> extends AppCompatAc
         {
             return;
         }
-        
+
         onBackPressed();
 
         //        if (this instanceof PlaceDetailActivity == true)
