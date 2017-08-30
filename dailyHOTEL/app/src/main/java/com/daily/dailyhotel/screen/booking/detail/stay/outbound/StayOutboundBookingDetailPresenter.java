@@ -121,7 +121,7 @@ public class StayOutboundBookingDetailPresenter extends BaseExceptionPresenter<S
 
         mBookingIndex = intent.getIntExtra(StayOutboundBookingDetailActivity.INTENT_EXTRA_DATA_BOOKING_INDEX, -1);
         mImageUrl = intent.getStringExtra(StayOutboundBookingDetailActivity.INTENT_EXTRA_DATA_IMAGE_URL);
-        mBookingState = intent.getIntExtra(StayOutboundBookingDetailActivity.INTENT_EXTRA_DATA_IMAGE_URL, Booking.BOOKING_STATE_NONE);
+        mBookingState = intent.getIntExtra(StayOutboundBookingDetailActivity.INTENT_EXTRA_DATA_BOOKING_STATE, Booking.BOOKING_STATE_NONE);
 
         return true;
     }
@@ -702,6 +702,9 @@ public class StayOutboundBookingDetailPresenter extends BaseExceptionPresenter<S
                                             finish();
                                         }
                                     });
+
+                                AnalyticsManager.getInstance(getActivity()).recordEvent(AnalyticsManager.Category.BOOKING_STATUS//
+                                    , AnalyticsManager.Action.BOOKING_HISTORY_DELETE, "ob_" + mStayOutboundBookingDetail.stayIndex, null);
                             } else
                             {
                                 getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2)//
@@ -742,6 +745,10 @@ public class StayOutboundBookingDetailPresenter extends BaseExceptionPresenter<S
                     unLock();
                 }
             }, true);
+
+
+        AnalyticsManager.getInstance(getActivity()).recordEvent(AnalyticsManager.Category.BOOKING_STATUS//
+            , AnalyticsManager.Action.BOOKING_HISTORY_DELETE_TRY, "ob_" + mStayOutboundBookingDetail.stayIndex, null);
     }
 
     private void setCommonDateTime(@NonNull CommonDateTime commonDateTime)

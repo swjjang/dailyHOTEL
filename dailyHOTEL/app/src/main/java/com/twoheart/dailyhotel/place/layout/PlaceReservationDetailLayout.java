@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -183,14 +184,43 @@ public abstract class PlaceReservationDetailLayout extends BaseBlurLayout implem
 
     public void setDeleteReservationVisible(boolean visible)
     {
+        if (mDeleteReservationView == null)
+        {
+            return;
+        }
+
         if (visible == true)
         {
             mDeleteReservationView.setVisibility(View.VISIBLE);
             mDeleteReservationView.setOnClickListener(this);
+
+            LinearLayout.LayoutParams layoutParams = ((LinearLayout.LayoutParams) mDeleteReservationView.getLayoutParams());
+
+            if (layoutParams.height != LinearLayout.LayoutParams.WRAP_CONTENT)
+            {
+                layoutParams.height = LinearLayout.LayoutParams.WRAP_CONTENT;
+
+                final int DP_37 = ScreenUtils.dpToPx(mContext, 37);
+
+                layoutParams.setMargins(0, DP_37, 0, 0);
+                mDeleteReservationView.setPadding(0, 0, 0, DP_37);
+                mDeleteReservationView.requestLayout();
+            }
         } else
         {
             mDeleteReservationView.setVisibility(View.INVISIBLE);
             mDeleteReservationView.setOnClickListener(null);
+
+            LinearLayout.LayoutParams layoutParams = ((LinearLayout.LayoutParams) mDeleteReservationView.getLayoutParams());
+
+            final int DP_24 = ScreenUtils.dpToPx(mContext, 24);
+            if (layoutParams.height != DP_24)
+            {
+                layoutParams.setMargins(0, 0, 0, 0);
+                layoutParams.height = DP_24;
+                mDeleteReservationView.setPadding(0, 0, 0, 0);
+                mDeleteReservationView.requestLayout();
+            }
         }
     }
 
