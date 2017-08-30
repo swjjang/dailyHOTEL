@@ -1288,6 +1288,9 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
                         unLockUI();
                     }
                 }, null, true);
+
+            AnalyticsManager.getInstance(StayReservationDetailActivity.this).recordEvent(AnalyticsManager.Category.BOOKING_STATUS//
+                , AnalyticsManager.Action.BOOKING_HISTORY_DELETE_TRY, "stay_" + mPlaceBookingDetail.placeIndex, null);
         }
 
         @Override
@@ -1638,7 +1641,7 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
                 });
 
                 AnalyticsManager.getInstance(StayReservationDetailActivity.this).recordEvent(AnalyticsManager.Category.BOOKING_STATUS//
-                    , AnalyticsManager.Action.BOOKING_HISTORY_DELETE, AnalyticsManager.ValueType.EMPTY, null);
+                    , AnalyticsManager.Action.BOOKING_HISTORY_DELETE, "stay_" + mPlaceBookingDetail.placeIndex, null);
             } else
             {
                 showSimpleDialog(getString(R.string.dialog_notice2), message, getString(R.string.dialog_btn_text_confirm), null);

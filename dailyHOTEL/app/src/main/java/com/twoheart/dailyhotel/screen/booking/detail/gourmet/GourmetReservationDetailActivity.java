@@ -769,6 +769,10 @@ public class GourmetReservationDetailActivity extends PlaceReservationDetailActi
                         unLockUI();
                     }
                 }, null, true);
+
+
+            AnalyticsManager.getInstance(GourmetReservationDetailActivity.this).recordEvent(AnalyticsManager.Category.BOOKING_STATUS//
+                , AnalyticsManager.Action.BOOKING_HISTORY_DELETE_TRY, "gourmet_" + mPlaceBookingDetail.placeIndex, null);
         }
     };
 
@@ -879,7 +883,7 @@ public class GourmetReservationDetailActivity extends PlaceReservationDetailActi
                 });
 
                 AnalyticsManager.getInstance(GourmetReservationDetailActivity.this).recordEvent(AnalyticsManager.Category.BOOKING_STATUS//
-                    , AnalyticsManager.Action.BOOKING_HISTORY_DELETE, AnalyticsManager.ValueType.EMPTY, null);
+                    , AnalyticsManager.Action.BOOKING_HISTORY_DELETE, "gourmet_" + mPlaceBookingDetail.placeIndex, null);
             } else
             {
                 showSimpleDialog(getString(R.string.dialog_notice2), message, getString(R.string.dialog_btn_text_confirm), null);

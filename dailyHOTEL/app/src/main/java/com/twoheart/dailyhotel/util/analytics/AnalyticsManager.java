@@ -1068,6 +1068,7 @@ public class AnalyticsManager
 
         //
         public static final String BOOKING_HISTORY_DELETE = "booking_history_delete";
+        public static final String BOOKING_HISTORY_DELETE_TRY = "booking_history_delete_try";
         public static final String BOOKING_ITEM_DETAIL_CLICK = "booking_item_detail_click";
         public static final String WRITE_REVIEW = "write_review";
         public static final String MAP_CLICK = "map_click";
@@ -1085,6 +1086,11 @@ public class AnalyticsManager
         // campaign tag
         public static final String TAG_SEARCH = "tag_search";
         public static final String TAG_SEARCH_NOT_FOUND = "tag_search_not_found";
+
+        // 예약내역
+        public static final String NO_RESULT_MOVE = "no_result_move";
+        public static final String RE_RESERVATION = "re_reservation";
+        public static final String LEAVE_REVIEW = "leave_review";
     }
 
     public static class Category

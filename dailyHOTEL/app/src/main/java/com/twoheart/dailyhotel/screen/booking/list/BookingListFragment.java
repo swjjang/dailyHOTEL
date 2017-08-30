@@ -331,6 +331,9 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
                 {
                     mOnMenuChangeListener.onMenu(MainFragmentManager.INDEX_HOME_FRAGMENT, Constants.CODE_RESULT_ACTIVITY_STAY_LIST);
                 }
+
+                AnalyticsManager.getInstance(getContext()).recordEvent(AnalyticsManager.Category.BOOKING_STATUS//
+                    , AnalyticsManager.Action.NO_RESULT_MOVE, AnalyticsManager.Label.STAY, null);
                 break;
 
             case R.id.viewGourmetLayout:
@@ -338,6 +341,9 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
                 {
                     mOnMenuChangeListener.onMenu(MainFragmentManager.INDEX_HOME_FRAGMENT, Constants.CODE_RESULT_ACTIVITY_GOURMET_LIST);
                 }
+
+                AnalyticsManager.getInstance(getContext()).recordEvent(AnalyticsManager.Category.BOOKING_STATUS//
+                    , AnalyticsManager.Action.NO_RESULT_MOVE, AnalyticsManager.Label.GOURMET, null);
                 break;
         }
     }
@@ -771,6 +777,9 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
                         Intent intent = StayDetailActivity.newInstance(getActivity(), stayBookingDay//
                             , false, booking.placeIndex, 0, false, false, false);
                         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL);
+
+                        AnalyticsManager.getInstance(getContext()).recordEvent(AnalyticsManager.Category.BOOKING_STATUS//
+                            , AnalyticsManager.Action.RE_RESERVATION, "stay_" + booking.placeIndex, null);
                         break;
                     }
 
@@ -782,6 +791,9 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
                         Intent intent = GourmetDetailActivity.newInstance(getActivity(), gourmetBookingDay//
                             , booking.placeIndex, false, false, false);
                         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMET_DETAIL);
+
+                        AnalyticsManager.getInstance(getContext()).recordEvent(AnalyticsManager.Category.BOOKING_STATUS//
+                            , AnalyticsManager.Action.RE_RESERVATION, "gourmet_" + booking.placeIndex, null);
                         break;
                     }
 
@@ -796,6 +808,9 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
                             , stayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
                             , stayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
                             , 2, null, false, StayOutboundDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_NONE, null), CODE_REQUEST_ACTIVITY_STAY_OB_DETAIL);
+
+                        AnalyticsManager.getInstance(getContext()).recordEvent(AnalyticsManager.Category.BOOKING_STATUS//
+                            , AnalyticsManager.Action.RE_RESERVATION, "ob_" + booking.placeIndex, null);
                         break;
                     }
                 }
@@ -881,6 +896,9 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
                             onHandleError(throwable);
                         }
                     }));
+
+                    AnalyticsManager.getInstance(getContext()).recordEvent(AnalyticsManager.Category.BOOKING_STATUS//
+                        , AnalyticsManager.Action.LEAVE_REVIEW, "stay_" + booking.placeIndex, null);
                     break;
                 }
 
@@ -909,6 +927,9 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
                             onHandleError(throwable);
                         }
                     }));
+
+                    AnalyticsManager.getInstance(getContext()).recordEvent(AnalyticsManager.Category.BOOKING_STATUS//
+                        , AnalyticsManager.Action.LEAVE_REVIEW, "gourmet_" + booking.placeIndex, null);
                     break;
                 }
 
