@@ -32,8 +32,6 @@
     <dimen name="detail_button_min_left_margin">10dp</dimen>
     <dimen name="detail_button_max_left_margin">68dp</dimen>
 
-    <dimen name="home_carousel_min_height">0dp</dimen>
-    <dimen name="home_carousel_max_height">285.5dp</dimen>
     <dimen name="daily_carousel_hide_price_recycler_height">205dp</dimen>
     <dimen name="daily_carousel_show_price_recycler_height">219dp</dimen>
 
