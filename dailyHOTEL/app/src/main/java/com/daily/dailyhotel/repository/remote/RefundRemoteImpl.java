@@ -85,16 +85,16 @@ public class RefundRemoteImpl implements RefundInterface
     @Override
     public Observable<String> getRefund(String aggregationId, int reservationIndex, String reason, String serviceType)
     {
-        return DailyMobileAPI.getInstance(mContext).getRefund(aggregationId, reservationIndex, reason, serviceType).map(new Function<BaseDto, String>()
+        return DailyMobileAPI.getInstance(mContext).getRefund(aggregationId, reservationIndex, reason, serviceType).map(new Function<BaseDto<Object>, String>()
         {
             @Override
-            public String apply(@io.reactivex.annotations.NonNull BaseDto baseDto) throws Exception
+            public String apply(@io.reactivex.annotations.NonNull BaseDto<Object> baseDto) throws Exception
             {
                 String message = new String();
 
                 if (baseDto != null)
                 {
-                    if (baseDto.msgCode == 100 && baseDto.data != null)
+                    if (baseDto.msgCode == 100)
                     {
                         message = baseDto.msg;
                     } else
@@ -115,17 +115,16 @@ public class RefundRemoteImpl implements RefundInterface
     public Observable<String> getRefund(String aggregationId, int reservationIndex, String reason, String serviceType//
         , String accountHolder, String accountNumber, String bankCode)
     {
-        return DailyMobileAPI.getInstance(mContext).getRefund(aggregationId, reservationIndex, reason, serviceType//
-            , accountHolder, accountNumber, bankCode).map(new Function<BaseDto, String>()
+        return DailyMobileAPI.getInstance(mContext).getRefund(aggregationId, reservationIndex, reason, serviceType, accountHolder, accountNumber, bankCode).map(new Function<BaseDto<Object>, String>()
         {
             @Override
-            public String apply(@io.reactivex.annotations.NonNull BaseDto baseDto) throws Exception
+            public String apply(@io.reactivex.annotations.NonNull BaseDto<Object> baseDto) throws Exception
             {
                 String message = new String();
 
                 if (baseDto != null)
                 {
-                    if (baseDto.msgCode == 100 && baseDto.data != null)
+                    if (baseDto.msgCode == 100)
                     {
                         message = baseDto.msg;
                     } else

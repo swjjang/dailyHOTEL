@@ -657,16 +657,16 @@ public interface DailyMobileService
     Observable<BaseDto<StayOutboundBookingDetailData>> getStayOutboundBookingDetail(@Url String mobileAPI);
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
-    @GET()
-    Observable<BaseDto<StayBookingDetailData>> getStayBookingDetail(@Url String mobileAPI);
+    @GET("{mobileAPI}")
+    Observable<BaseDto<StayBookingDetailData>> getStayBookingDetail(@Path(value = "mobileAPI", encoded = true)  String mobileAPI);
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
-    @GET()
-    Observable<BaseDto<GourmetBookingDetailData>> getGourmetBookingDetail(@Url String mobileAPI);
+    @GET("{mobileAPI}")
+    Observable<BaseDto<GourmetBookingDetailData>> getGourmetBookingDetail(@Path(value = "mobileAPI", encoded = true)  String mobileAPI);
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
-    @GET()
-    Observable<BaseDto<WaitingDepositData>> getWaitingDeposit(@Url String mobileAPI);
+    @GET("{mobileAPI}")
+    Observable<BaseDto<WaitingDepositData>> getWaitingDeposit(@Path(value = "mobileAPI", encoded = true)  String mobileAPI);
 
 
     /////////////////////////////////////////////////////////////////////////////////////////////////
@@ -685,13 +685,15 @@ public interface DailyMobileService
         , @Query("reasons") String reasons);
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
-    @POST()
-    Observable<BaseDto> getRefund(@Url String mobileAPI, @Field("aggregationId") String aggregationId//
-        , @Field("reservationIdx") int reservationIndex, @Field("reason") String reason, @Field("serviceType") String serviceType);
+    @FormUrlEncoded
+    @POST("{mobileAPI}")
+    Observable<BaseDto<Object>> getRefund(@Path(value = "mobileAPI", encoded = true) String mobileAPI, @Field("aggregationId") String aggregationId//
+        , @Field("reservationIdx") int reservationIndex, @Field("reason") String reason, @Field("serviceType") String serviceType, @Field("userIdx") int userIdx);
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
-    @POST()
-    Observable<BaseDto> getRefundVBank(@Url String mobileAPI, @Field("aggregationId") String aggregationId//
+    @FormUrlEncoded
+    @POST("{mobileAPI}")
+    Observable<BaseDto<Object>> getRefund(@Path(value = "mobileAPI", encoded = true) String mobileAPI, @Field("aggregationId") String aggregationId//
         , @Field("reservationIdx") int reservationIndex, @Field("reason") String reason, @Field("serviceType") String serviceType//
     , @Field("accountHolder") String accountHolder, @Field("accountNumber") String accountNumber, @Field("bankCode") String bankCode);
 
@@ -720,11 +722,19 @@ public interface DailyMobileService
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @POST()
-    Observable<BaseDto<PaymentResultData>> getPaymentTypeEasy(@Url String mobileAPI, @Body JSONObject jsonObject);
+    Observable<BaseDto<PaymentResultData>> getStayOutboundPaymentTypeEasy(@Url String mobileAPI, @Body JSONObject jsonObject);
+
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
+    @POST("{mobileAPI}")
+    Observable<BaseDto<PaymentResultData>> getPaymentTypeEasy(@Path(value = "mobileAPI", encoded = true) String mobileAPI, @Body JSONObject jsonObject);
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @POST()
-    Observable<BaseDto<PaymentResultData>> getPaymentTypeBonus(@Url String mobileAPI, @Body JSONObject jsonObject);
+    Observable<BaseDto<PaymentResultData>> getStayOutboundPaymentTypeBonus(@Url String mobileAPI, @Body JSONObject jsonObject);
+
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
+    @POST("{mobileAPI}")
+    Observable<BaseDto<PaymentResultData>> getPaymentTypeBonus(@Path(value = "mobileAPI", encoded = true) String mobileAPI, @Body JSONObject jsonObject);
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET("{mobileAPI}")
@@ -737,7 +747,7 @@ public interface DailyMobileService
     /////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
-    @GET
+    @GET()
     Observable<BaseDto<StayOutboundsData>> getStayOutboundRecentlyList(@Url String mobileAPI//
         , @Query(value = "filter.includeSurrounding") boolean includeSurrounding//
         , @Query(value = "hotelIds") String hotelIds//

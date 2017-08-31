@@ -241,7 +241,7 @@ public class PaymentRemoteImpl implements PaymentInterface
             jsonObject = null;
         }
 
-        return DailyMobileAPI.getInstance(mContext).getOutboundPaymentTypeEasy(index, jsonObject).map(paymentResultDataBaseDto ->
+        return DailyMobileAPI.getInstance(mContext).getStayOutboundPaymentTypeEasy(index, jsonObject).map(paymentResultDataBaseDto ->
         {
             PaymentResult paymentResult = null;
 
@@ -301,7 +301,7 @@ public class PaymentRemoteImpl implements PaymentInterface
             jsonObject = null;
         }
 
-        return DailyMobileAPI.getInstance(mContext).getOutboundPaymentTypeBonus(index, jsonObject).map(paymentResultDataBaseDto ->
+        return DailyMobileAPI.getInstance(mContext).getStayOutboundPaymentTypeBonus(index, jsonObject).map(paymentResultDataBaseDto ->
         {
             PaymentResult paymentResult = null;
 
