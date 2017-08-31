@@ -2,8 +2,10 @@ package com.twoheart.dailyhotel.screen.home;
 
 import android.animation.Animator;
 import android.animation.ValueAnimator;
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Typeface;
+import android.os.Build;
 import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.support.v7.widget.GridLayout;
 import android.util.AttributeSet;
@@ -47,6 +49,7 @@ public class HomeCategoryLayout extends RelativeLayout
     private Context mContext;
     private android.support.v7.widget.GridLayout mItemGridLayout;
     private ImageView mStayOutBoundNewView;
+    private boolean mIsUseAnimation;
 
     private OnItemClickListener mOnItemClickListener;
 
@@ -75,6 +78,7 @@ public class HomeCategoryLayout extends RelativeLayout
         initLayout();
     }
 
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public HomeCategoryLayout(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes)
     {
         super(context, attrs, defStyleAttr, defStyleRes);
@@ -203,13 +207,30 @@ public class HomeCategoryLayout extends RelativeLayout
         //        ExLog.d("getMeasuredWidth : " + getMeasuredWidth() + " , getMeasuredHeight : " + getMeasuredHeight());
     }
 
+    public void setUseAnimation(boolean isUse)
+    {
+        mIsUseAnimation = isUse;
+    }
+
     public void setCategoryEnabled(boolean isEnabled)
     {
         if (isEnabled == true)
         {
+            if (mIsUseAnimation == false)
+            {
+                setVisibility(View.VISIBLE);
+                return;
+            }
+
             startShowAnimation(this);
         } else
         {
+            if (mIsUseAnimation == false)
+            {
+                setVisibility(View.GONE);
+                return;
+            }
+
             startCloseAnimation(this);
         }
     }
