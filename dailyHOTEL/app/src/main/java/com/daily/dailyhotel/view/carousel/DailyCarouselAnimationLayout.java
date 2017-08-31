@@ -223,6 +223,7 @@ public class DailyCarouselAnimationLayout extends ConstraintLayout
 
         if (hasData == false)
         {
+
             if (getVisibility() == View.GONE)
             {
                 return;
