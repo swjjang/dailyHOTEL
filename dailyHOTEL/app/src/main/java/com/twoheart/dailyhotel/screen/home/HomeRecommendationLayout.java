@@ -2,16 +2,20 @@ package com.twoheart.dailyhotel.screen.home;
 
 import android.animation.Animator;
 import android.animation.ValueAnimator;
+import android.annotation.TargetApi;
 import android.content.Context;
+import android.os.Build;
 import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import com.daily.base.util.ScreenUtils;
+import com.daily.base.util.VersionUtils;
 import com.daily.base.widget.DailyTextView;
 import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.drawee.view.SimpleDraweeView;
@@ -35,6 +39,7 @@ public class HomeRecommendationLayout extends LinearLayout
     HomeRecommendationListener mListener;
     ValueAnimator mValueAnimator;
 
+    private boolean mIsUseAnimation;
     private int mImageWidth = ViewGroup.LayoutParams.MATCH_PARENT;
     private int mImageHeight = ViewGroup.LayoutParams.WRAP_CONTENT;
     private int mExpectedItemHeight = ViewGroup.LayoutParams.WRAP_CONTENT;
@@ -71,6 +76,7 @@ public class HomeRecommendationLayout extends LinearLayout
         initLayout();
     }
 
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public HomeRecommendationLayout(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes)
     {
         super(context, attrs, defStyleAttr, defStyleRes);
@@ -89,7 +95,6 @@ public class HomeRecommendationLayout extends LinearLayout
         LinearLayout view = (LinearLayout) LayoutInflater.from(mContext).inflate(R.layout.list_row_home_recommendation_layout, this);
         view.setOrientation(LinearLayout.VERTICAL);
         view.setBackgroundResource(R.color.white);
-        setVisibility(View.VISIBLE);
 
         mTitleLayoutHeight = ScreenUtils.dpToPx(mContext, (21 + 15 + 15 + 1)); // title height(반올림) + title top margin + title + bottom margin + bottom divider height
         mImageWidth = ScreenUtils.getScreenWidth(mContext) - ScreenUtils.dpToPx(mContext, 30);
@@ -98,7 +103,7 @@ public class HomeRecommendationLayout extends LinearLayout
 
         mContentLayout = (LinearLayout) view.findViewById(R.id.contentLayout);
 
-        setHeight(0);
+        setVisibility(View.GONE);
 
         clearAll();
     }
@@ -114,29 +119,56 @@ public class HomeRecommendationLayout extends LinearLayout
             return;
         }
 
-        if (mRecommendationList != null)
-        {
-            int size = mRecommendationList.size();
-            if (size > 0)
-            {
-                setVisibility(View.VISIBLE);
-
-                int itemCount = Math.min(size, MAX_RECOMMENDATION_SIZE);
-                for (int i = 0; i < itemCount; i++)
-                {
-                    Recommendation recommendation = mRecommendationList.get(i);
-                    addRecommendationItemView(recommendation, i);
-                }
-
-                startLayoutHeightAnimation(itemCount);
-            } else
-            {
-                setVisibility(View.GONE);
-            }
-        } else
+        boolean hasData = list != null && list.size() > 0;
+        // 데이터가 없는 경우
+        if (hasData == false)
         {
             setVisibility(View.GONE);
+            return;
         }
+
+        int size = list.size();
+        int itemCount = Math.min(size, MAX_RECOMMENDATION_SIZE);
+        for (int i = 0; i < itemCount; i++)
+        {
+            Recommendation recommendation = mRecommendationList.get(i);
+            addRecommendationItemView(recommendation, i);
+        }
+
+        // 에니메이션을 사용하지 않는 경우
+        if (mIsUseAnimation == false)
+        {
+            setVisibility(View.VISIBLE);
+            return;
+        }
+
+        // 에니메이션을 사용하는 경우
+        getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener()
+        {
+            @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+            @Override
+            public void onGlobalLayout()
+            {
+                mContentLayout.post(new Runnable()
+                {
+                    @Override
+                    public void run()
+                    {
+                        startAnimation(true);
+                    }
+                });
+
+                if (VersionUtils.isOverAPI16() == true)
+                {
+                    getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                } else
+                {
+                    getViewTreeObserver().removeGlobalOnLayoutListener(this);
+                }
+            }
+        });
+
+        setVisibility(View.VISIBLE);
     }
 
     public void clearAll()
@@ -147,6 +179,11 @@ public class HomeRecommendationLayout extends LinearLayout
         {
             mContentLayout.removeAllViews();
         }
+    }
+
+    public void setUseAnimation(boolean isUse)
+    {
+        mIsUseAnimation = isUse;
     }
 
     private void addRecommendationItemView(final Recommendation recommendation, final int position)
@@ -222,34 +259,18 @@ public class HomeRecommendationLayout extends LinearLayout
         setLayoutParams(params);
     }
 
-    private int getExpectedHeight(int itemCount)
+    private void startAnimation(boolean isShow)
     {
-        if (itemCount < 1)
-        {
-            return 0;
-        }
-
-        return mTitleLayoutHeight + (mExpectedItemHeight * itemCount) - 1;
-    }
-
-    private void startLayoutHeightAnimation(int itemCount)
-    {
-        int height = getHeight();
-        final int expectedHeight = getExpectedHeight(itemCount);
-
-        if (height == expectedHeight)
-        {
-            return;
-        }
-
         if (mValueAnimator != null && mValueAnimator.isRunning() == true)
         {
             mValueAnimator.cancel();
         }
 
-        final int alphaGap = height != 0 && expectedHeight != 0 ? 0 : Math.abs(expectedHeight - height);
+        int height = getHeight();
+        int start = isShow == false ? height : 0;
+        int end = isShow == false ? 0 : height;
 
-        mValueAnimator = ValueAnimator.ofInt(height, expectedHeight);
+        mValueAnimator = ValueAnimator.ofInt(start, end);
         mValueAnimator.setDuration(LAYOUT_ANIMATION_DURATION);
         mValueAnimator.setInterpolator(new FastOutSlowInInterpolator());
         mValueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener()
@@ -262,9 +283,9 @@ public class HomeRecommendationLayout extends LinearLayout
                 params.height = value;
                 setLayoutParams(params);
 
-                if (alphaGap != 0)
+                if (isShow == true)
                 {
-                    float alpha = (float) ((double) value / (double) alphaGap);
+                    float alpha = (float) ((double) value / (double) height);
                     setAlpha(alpha);
                 }
             }
@@ -275,7 +296,7 @@ public class HomeRecommendationLayout extends LinearLayout
             @Override
             public void onAnimationStart(Animator animation)
             {
-
+                setHeight(start);
             }
 
             @Override
@@ -285,7 +306,15 @@ public class HomeRecommendationLayout extends LinearLayout
                 mValueAnimator.removeAllListeners();
                 mValueAnimator = null;
 
-                setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
+                setHeight(end);
+
+                if (isShow == true)
+                {
+                    setVisibility(View.VISIBLE);
+                } else
+                {
+                    setVisibility(View.GONE);
+                }
             }
 
             @Override
