@@ -4,12 +4,15 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 
 import com.daily.base.exception.BaseException;
+import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.domain.RefundInterface;
 import com.daily.dailyhotel.entity.StayOutboundRefundDetail;
 import com.daily.dailyhotel.repository.remote.model.StayOutboundRefundData;
 import com.daily.dailyhotel.repository.remote.model.StayOutboundRefundDetailData;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.network.dto.BaseDto;
+
+import org.json.JSONObject;
 
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -85,7 +88,20 @@ public class RefundRemoteImpl implements RefundInterface
     @Override
     public Observable<String> getRefund(String aggregationId, int reservationIndex, String reason, String serviceType)
     {
-        return DailyMobileAPI.getInstance(mContext).getRefund(aggregationId, reservationIndex, reason, serviceType).map(new Function<BaseDto<Object>, String>()
+        JSONObject jsonObject = new JSONObject();
+
+        try
+        {
+            jsonObject.put("aggregationId", aggregationId);
+            jsonObject.put("reason", reason);
+            jsonObject.put("reservationIdx", reservationIndex);
+            jsonObject.put("serviceType", serviceType);
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+        }
+
+        return DailyMobileAPI.getInstance(mContext).getRefund(jsonObject).map(new Function<BaseDto<Object>, String>()
         {
             @Override
             public String apply(@io.reactivex.annotations.NonNull BaseDto<Object> baseDto) throws Exception
@@ -115,7 +131,23 @@ public class RefundRemoteImpl implements RefundInterface
     public Observable<String> getRefund(String aggregationId, int reservationIndex, String reason, String serviceType//
         , String accountHolder, String accountNumber, String bankCode)
     {
-        return DailyMobileAPI.getInstance(mContext).getRefund(aggregationId, reservationIndex, reason, serviceType, accountHolder, accountNumber, bankCode).map(new Function<BaseDto<Object>, String>()
+        JSONObject jsonObject = new JSONObject();
+
+        try
+        {
+            jsonObject.put("aggregationId", aggregationId);
+            jsonObject.put("reason", reason);
+            jsonObject.put("reservationIdx", reservationIndex);
+            jsonObject.put("serviceType", serviceType);
+            jsonObject.put("accountHolder", accountHolder);
+            jsonObject.put("accountNumber", accountNumber);
+            jsonObject.put("bankCode", bankCode);
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+        }
+
+        return DailyMobileAPI.getInstance(mContext).getRefundVBank(jsonObject).map(new Function<BaseDto<Object>, String>()
         {
             @Override
             public String apply(@io.reactivex.annotations.NonNull BaseDto<Object> baseDto) throws Exception
