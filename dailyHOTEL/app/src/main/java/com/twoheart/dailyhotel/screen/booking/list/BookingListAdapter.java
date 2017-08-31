@@ -278,18 +278,19 @@ public class BookingListAdapter extends RecyclerView.Adapter<BookingListAdapter.
                 holder.dataBinding.bookingStatusTextView.setTextColor(mContext.getResources().getColor(R.color.default_text_c666666));
                 holder.dataBinding.bookingDayTextView.setVisibility(View.GONE);
                 holder.dataBinding.buttonLayout.setVisibility(View.VISIBLE);
-                if (booking.hasReview)
-                {
-                    holder.dataBinding.bookingStatusDescriptionTextView.setText(null);
 
-                    holder.dataBinding.buttonVerticalLine.setVisibility(View.GONE);
-                    holder.dataBinding.reviewTextView.setVisibility(View.GONE);
-                } else
+                if (booking.availableReview)
                 {
                     holder.dataBinding.bookingStatusDescriptionTextView.setText(R.string.message_booking_add_review);
 
                     holder.dataBinding.buttonVerticalLine.setVisibility(View.VISIBLE);
                     holder.dataBinding.reviewTextView.setVisibility(View.VISIBLE);
+                } else
+                {
+                    holder.dataBinding.bookingStatusDescriptionTextView.setText(null);
+
+                    holder.dataBinding.buttonVerticalLine.setVisibility(View.GONE);
+                    holder.dataBinding.reviewTextView.setVisibility(View.GONE);
                 }
                 break;
 
