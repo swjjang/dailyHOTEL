@@ -450,7 +450,8 @@ public class HomeLayout extends BaseBlurLayout
 
         mWishListLayout = new DailyCarouselAnimationLayout(mContext);
         mWishListLayout.setUsePriceLayout(false);
-        mWishListLayout.setUseAnimation(true);
+        // 생성 에니매이션 제거로 인한 주석처리 V2.1.1 sunny 요청
+//        mWishListLayout.setUseAnimation(true);
         mWishListLayout.setBottomMarginView(0, Color.TRANSPARENT);
         layout.addView(mWishListLayout);
 
@@ -487,7 +488,8 @@ public class HomeLayout extends BaseBlurLayout
 
         mRecentListLayout = new DailyCarouselAnimationLayout(mContext);
         mRecentListLayout.setUsePriceLayout(false);
-        mRecentListLayout.setUseAnimation(true);
+        // 생성 에니매이션 제거로 인한 주석처리 V2.1.1 sunny 요청
+//        mRecentListLayout.setUseAnimation(true);
         mRecentListLayout.setBottomMarginView(0, Color.TRANSPARENT);
         layout.addView(mRecentListLayout);
 
@@ -546,6 +548,8 @@ public class HomeLayout extends BaseBlurLayout
         }
 
         mHomeRecommendationLayout = new HomeRecommendationLayout(mContext);
+        // 생성 에니매이션 제거로 인한 주석처리 V2.1.1 sunny 요청
+//        mHomeRecommendationLayout.setUseAnimation(true);
         mHomeRecommendationLayout.setListener((view, recommendation, position) -> ((OnEventListener) mOnEventListener).onRecommendationClick(view, recommendation));
 
         layout.addView(mHomeRecommendationLayout, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -929,9 +933,12 @@ public class HomeLayout extends BaseBlurLayout
             return;
         }
 
-        setMessageLayoutVisibility(View.INVISIBLE);
+        setMessageLayoutVisibility(View.VISIBLE);
 
-        mTextMessageLayout.post(() -> startTextLayoutShowAnimation());
+        // 생성 에니매이션 제거로 인한 주석처리 V2.1.1 sunny 요청
+//        setMessageLayoutVisibility(View.INVISIBLE);
+//
+//        mTextMessageLayout.post(() -> startTextLayoutShowAnimation());
     }
 
     public void setCategoryStayOutboundNewVisible(boolean visible)
@@ -1147,6 +1154,7 @@ public class HomeLayout extends BaseBlurLayout
         return mErrorPopupLayout.getVisibility() == View.VISIBLE;
     }
 
+    @Deprecated
     void startTextLayoutShowAnimation()
     {
         if (mTextMessageLayout == null)
