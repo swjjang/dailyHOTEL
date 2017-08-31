@@ -105,7 +105,7 @@ public class BookingData
         booking.comment = comment;
         booking.tid = tid;
         booking.placeIndex = placeIndex;
-        booking.hasReview = REVIEW_ABLE.equalsIgnoreCase(reviewStatusType) == false;
+        booking.availableReview = REVIEW_ABLE.equalsIgnoreCase(reviewStatusType) == true;
 
         return booking;
     }

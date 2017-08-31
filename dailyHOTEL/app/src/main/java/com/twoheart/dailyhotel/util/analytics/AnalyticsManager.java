@@ -1377,6 +1377,10 @@ public class AnalyticsManager
 
         public static final String Y = "y";
         public static final String N = "n";
+
+        public static final String RESERVATION = "reservation";
+        public static final String REVIEW = "review";
+        public static final String BOTH = "both";
     }
 
     public static class UserType

@@ -452,14 +452,34 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
                 @Override
                 public void accept(@NonNull List<Booking> bookingList) throws Exception
                 {
+                    boolean hasAfterUse = false;
+                    boolean availableReview = false;
+
                     for (Booking booking : bookingList)
                     {
-                        if (booking.bookingState == Booking.BOOKING_STATE_AFTER_USE || booking.hasReview == false)
+                        if (booking.bookingState == Booking.BOOKING_STATE_AFTER_USE)
                         {
-                            AnalyticsManager.getInstance(getActivity()).recordEvent(AnalyticsManager.Category.BOOKING_STATUS//
-                                , AnalyticsManager.Action.BUTTONS_AVAILABLE, null, null);
-                            break;
+                            hasAfterUse = true;
+
+                            if (booking.availableReview == true)
+                            {
+                                availableReview = true;
+                            }
                         }
+                    }
+
+                    if (hasAfterUse == true && availableReview == true)
+                    {
+                        AnalyticsManager.getInstance(getContext()).recordEvent(AnalyticsManager.Category.BOOKING_STATUS//
+                            , AnalyticsManager.Action.BUTTONS_AVAILABLE, AnalyticsManager.Label.BOTH, null);
+                    } else if (hasAfterUse == true)
+                    {
+                        AnalyticsManager.getInstance(getContext()).recordEvent(AnalyticsManager.Category.BOOKING_STATUS//
+                            , AnalyticsManager.Action.BUTTONS_AVAILABLE, AnalyticsManager.Label.RESERVATION, null);
+                    } else if (availableReview == true)
+                    {
+                        AnalyticsManager.getInstance(getContext()).recordEvent(AnalyticsManager.Category.BOOKING_STATUS//
+                            , AnalyticsManager.Action.BUTTONS_AVAILABLE, AnalyticsManager.Label.REVIEW, null);
                     }
                 }
             }));
