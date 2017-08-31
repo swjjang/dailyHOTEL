@@ -65,7 +65,7 @@ public class DailyHotel extends android.support.multidex.MultiDexApplication imp
         super.onCreate();
 
         // URL 만들때 사용
-//        com.twoheart.dailyhotel.util.Crypto.getUrlEncoder("");
+        //        com.twoheart.dailyhotel.util.Crypto.getUrlEncoder("");
 
         final Thread.UncaughtExceptionHandler uncaughtExceptionHandler = Thread.getDefaultUncaughtExceptionHandler();
 

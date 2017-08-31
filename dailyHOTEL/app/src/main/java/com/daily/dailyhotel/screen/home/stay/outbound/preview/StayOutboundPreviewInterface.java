@@ -1,7 +1,6 @@
 package com.daily.dailyhotel.screen.home.stay.outbound.preview;
 
 import com.daily.base.BaseDialogViewInterface;
-import com.daily.dailyhotel.entity.ImageMap;
 import com.daily.dailyhotel.entity.StayOutboundDetailImage;
 
 import java.util.List;

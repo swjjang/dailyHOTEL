@@ -1371,7 +1371,7 @@ public class DailyMobileAPI
         return mDailyMobileService.getEasyCardList(Crypto.getUrlDecoderEx(API)).subscribeOn(Schedulers.io());
     }
 
-    public Observable<BaseDto<PaymentResultData>> getOutboundPaymentTypeEasy(int index, JSONObject jsonObject)
+    public Observable<BaseDto<PaymentResultData>> getStayOutboundPaymentTypeEasy(int index, JSONObject jsonObject)
     {
         final String URL = Constants.DEBUG ? DailyPreference.getInstance(mContext).getBaseOutBoundUrl() : Setting.getOutboundServerUrl();
 
@@ -1381,7 +1381,7 @@ public class DailyMobileAPI
         Map<String, String> urlParams = new HashMap<>();
         urlParams.put("{hotelId}", Integer.toString(index));
 
-        return mDailyMobileService.getPaymentTypeEasy(Crypto.getUrlDecoderEx(URL) + Crypto.getUrlDecoderEx(API, urlParams)//
+        return mDailyMobileService.getStayOutboundPaymentTypeEasy(Crypto.getUrlDecoderEx(URL) + Crypto.getUrlDecoderEx(API, urlParams)//
             , jsonObject).subscribeOn(Schedulers.io());
     }
 
@@ -1401,7 +1401,7 @@ public class DailyMobileAPI
         return mDailyMobileService.getPaymentTypeEasy(Crypto.getUrlDecoderEx(API), jsonObject).subscribeOn(Schedulers.io());
     }
 
-    public Observable<BaseDto<PaymentResultData>> getOutboundPaymentTypeBonus(int index, JSONObject jsonObject)
+    public Observable<BaseDto<PaymentResultData>> getStayOutboundPaymentTypeBonus(int index, JSONObject jsonObject)
     {
         final String URL = Constants.DEBUG ? DailyPreference.getInstance(mContext).getBaseOutBoundUrl() : Setting.getOutboundServerUrl();
 
@@ -1411,7 +1411,7 @@ public class DailyMobileAPI
         Map<String, String> urlParams = new HashMap<>();
         urlParams.put("{hotelId}", Integer.toString(index));
 
-        return mDailyMobileService.getPaymentTypeBonus(Crypto.getUrlDecoderEx(URL) + Crypto.getUrlDecoderEx(API, urlParams)//
+        return mDailyMobileService.getStayOutboundPaymentTypeBonus(Crypto.getUrlDecoderEx(URL) + Crypto.getUrlDecoderEx(API, urlParams)//
             , jsonObject).subscribeOn(Schedulers.io());
     }
 
@@ -1551,21 +1551,21 @@ public class DailyMobileAPI
         return mDailyMobileService.getStayOutboundRefund(Crypto.getUrlDecoderEx(URL) + Crypto.getUrlDecoderEx(API, urlParams), refundType, cancelReasonType, reasons).subscribeOn(Schedulers.io());
     }
 
-    public Observable<BaseDto> getRefund(String aggregationId, int reservationIndex, String reason, String serviceType)
+    public Observable<BaseDto<Object>> getRefund(String aggregationId, int reservationIndex, String reason, String serviceType)
     {
         final String API = Constants.UNENCRYPTED_URL ? "api/v3/payment/refund"//
             : "ODIkNzIkOCQ0NSQ2MiQ0OCQ1OSQyMCQ3NyQ5MyQ1NiQ4MyQ2OCQ4NCQyMyQxJA==$OXTlDMEM0TNjdDMEIxQjVGDRJjk4NTMxQUZDQzU1RDhGQzdDFMDJI0NzUyJMTM2OMTA4CQITk5OEJFOEUL5BOTRMc1MjIxMEGVBOQg==$";
 
-        return mDailyMobileService.getRefund(Crypto.getUrlDecoderEx(API), aggregationId, reservationIndex, reason, serviceType).subscribeOn(Schedulers.io());
+        return mDailyMobileService.getRefund(Crypto.getUrlDecoderEx(API), aggregationId, reservationIndex, reason, serviceType, 1).subscribeOn(Schedulers.io());
     }
 
-    public Observable<BaseDto> getRefund(String aggregationId, int reservationIndex, String reason, String serviceType//
+    public Observable<BaseDto<Object>> getRefund(String aggregationId, int reservationIndex, String reason, String serviceType//
         , String accountHolder, String accountNumber, String bankCode)
     {
         final String API = Constants.UNENCRYPTED_URL ? "api/v3/payment/refund/vbank"//
             : "ODUkNDAkNjIkODUkMjEkMjAkMSQ4JDQ4JDUkMzQkMTUkMTEkMTQkNjAkNTIk$NUkUyBQTcN0WQUKI4SQUEwNThBSONTdFMDU4NTkU5OTgxODdGLQ0UUQ2NDcwMW0QzQzI5NkYzRRkFGNDg4Qjc5NjE5MTU3NjhPDRKQ==$";
 
-        return mDailyMobileService.getRefundVBank(Crypto.getUrlDecoderEx(API), aggregationId, reservationIndex//
+        return mDailyMobileService.getRefund(Crypto.getUrlDecoderEx(API), aggregationId, reservationIndex//
             , reason, serviceType, accountHolder, accountNumber, bankCode).subscribeOn(Schedulers.io());
     }
 
