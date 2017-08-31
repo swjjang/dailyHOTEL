@@ -1349,7 +1349,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
             @Override
             public void accept(@NonNull Throwable throwable) throws Exception
             {
-                setRecentlyList(null, false);
+                setRecentlyList(null, true);
                 onHandleError(throwable);
             }
         }));
