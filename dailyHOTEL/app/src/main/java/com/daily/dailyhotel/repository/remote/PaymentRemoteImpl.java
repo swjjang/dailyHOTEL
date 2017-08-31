@@ -120,7 +120,7 @@ public class PaymentRemoteImpl implements PaymentInterface
                     case 7:
                         stayPayment.mWarningMessage = stayPaymentDataBaseDto.msg;
                     case 0:
-                        if(stayPaymentDataBaseDto.data != null)
+                        if (stayPaymentDataBaseDto.data != null)
                         {
                             stayPayment = stayPaymentDataBaseDto.data.getStayPayment();
                         } else

@@ -658,15 +658,15 @@ public interface DailyMobileService
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET("{mobileAPI}")
-    Observable<BaseDto<StayBookingDetailData>> getStayBookingDetail(@Path(value = "mobileAPI", encoded = true)  String mobileAPI);
+    Observable<BaseDto<StayBookingDetailData>> getStayBookingDetail(@Path(value = "mobileAPI", encoded = true) String mobileAPI);
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET("{mobileAPI}")
-    Observable<BaseDto<GourmetBookingDetailData>> getGourmetBookingDetail(@Path(value = "mobileAPI", encoded = true)  String mobileAPI);
+    Observable<BaseDto<GourmetBookingDetailData>> getGourmetBookingDetail(@Path(value = "mobileAPI", encoded = true) String mobileAPI);
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET("{mobileAPI}")
-    Observable<BaseDto<WaitingDepositData>> getWaitingDeposit(@Path(value = "mobileAPI", encoded = true)  String mobileAPI);
+    Observable<BaseDto<WaitingDepositData>> getWaitingDeposit(@Path(value = "mobileAPI", encoded = true) String mobileAPI);
 
 
     /////////////////////////////////////////////////////////////////////////////////////////////////
@@ -695,7 +695,7 @@ public interface DailyMobileService
     @POST("{mobileAPI}")
     Observable<BaseDto<Object>> getRefund(@Path(value = "mobileAPI", encoded = true) String mobileAPI, @Field("aggregationId") String aggregationId//
         , @Field("reservationIdx") int reservationIndex, @Field("reason") String reason, @Field("serviceType") String serviceType//
-    , @Field("accountHolder") String accountHolder, @Field("accountNumber") String accountNumber, @Field("bankCode") String bankCode);
+        , @Field("accountHolder") String accountHolder, @Field("accountNumber") String accountNumber, @Field("bankCode") String bankCode);
 
     /////////////////////////////////////////////////////////////////////////////////////////////////
     // PaymentRemoteImpl

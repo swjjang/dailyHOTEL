@@ -382,9 +382,9 @@ public abstract class PlaceMainLayout extends BaseBlurLayout implements View.OnC
 
                     boolean isViewTypeEnabled = placeListFragment.getViewType() != Constants.ViewType.GONE;
 
-                    if(placeListFragment.getViewType() == Constants.ViewType.GONE)
+                    if (placeListFragment.getViewType() == Constants.ViewType.GONE)
                     {
-                        if(placeListFragment.isDefaultFilter() == true)
+                        if (placeListFragment.isDefaultFilter() == true)
                         {
                             setBottomOptionVisible(false);
                         } else
