@@ -685,17 +685,8 @@ public interface DailyMobileService
         , @Query("reasons") String reasons);
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
-    @FormUrlEncoded
     @POST("{mobileAPI}")
-    Observable<BaseDto<Object>> getRefund(@Path(value = "mobileAPI", encoded = true) String mobileAPI, @Field("aggregationId") String aggregationId//
-        , @Field("reservationIdx") int reservationIndex, @Field("reason") String reason, @Field("serviceType") String serviceType, @Field("userIdx") int userIdx);
-
-    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
-    @FormUrlEncoded
-    @POST("{mobileAPI}")
-    Observable<BaseDto<Object>> getRefund(@Path(value = "mobileAPI", encoded = true) String mobileAPI, @Field("aggregationId") String aggregationId//
-        , @Field("reservationIdx") int reservationIndex, @Field("reason") String reason, @Field("serviceType") String serviceType//
-        , @Field("accountHolder") String accountHolder, @Field("accountNumber") String accountNumber, @Field("bankCode") String bankCode);
+    Observable<BaseDto<Object>> getRefund(@Path(value = "mobileAPI", encoded = true) String mobileAPI, @Body JSONObject jsonObject);
 
     /////////////////////////////////////////////////////////////////////////////////////////////////
     // PaymentRemoteImpl
