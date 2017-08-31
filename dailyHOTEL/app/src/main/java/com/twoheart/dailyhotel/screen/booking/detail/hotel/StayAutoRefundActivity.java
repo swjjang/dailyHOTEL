@@ -27,7 +27,6 @@ import com.daily.base.util.ScreenUtils;
 import com.daily.base.util.VersionUtils;
 import com.daily.base.widget.DailyEditText;
 import com.daily.base.widget.DailyTextView;
-import com.daily.dailyhotel.entity.Refund;
 import com.daily.dailyhotel.repository.remote.RefundRemoteImpl;
 import com.daily.dailyhotel.view.DailyToolbarView;
 import com.twoheart.dailyhotel.R;
@@ -800,36 +799,50 @@ public class StayAutoRefundActivity extends BaseActivity
                             }
                         } else
                         {
-                            String accountNumber;
-                            String accountName;
-
                             if (PAYMENT_TYPE_VBANK.equalsIgnoreCase(mStayBookingDetail.transactionType) == true && mStayBookingDetail.bonus == 0)
                             {
-                                accountNumber = mStayAutoRefundLayout.getAccountNumber();
-                                accountName = mStayAutoRefundLayout.getAccountName();
+                                String accountNumber = mStayAutoRefundLayout.getAccountNumber();
+                                String accountName = mStayAutoRefundLayout.getAccountName();
+
+                                addCompositeDisposable(mRefundRemoteImpl.getRefund(mAggregationId, mStayBookingDetail.reservationIndex//
+                                    , mCancelReasonMessage, "HOTEL", accountName, accountNumber, mSelectedBank.code).subscribe(new Consumer<String>()
+                                {
+                                    @Override
+                                    public void accept(@NonNull String message) throws Exception
+                                    {
+                                        unLockUI();
+
+                                        onRefundResult(100, message, false);
+                                    }
+                                }, new Consumer<Throwable>()
+                                {
+                                    @Override
+                                    public void accept(@NonNull Throwable throwable) throws Exception
+                                    {
+                                        onHandleError(throwable);
+                                    }
+                                }));
                             } else
                             {
-                                accountNumber = null;
-                                accountName = null;
+                                addCompositeDisposable(mRefundRemoteImpl.getRefund(mAggregationId, mStayBookingDetail.reservationIndex//
+                                    , mCancelReasonMessage, "HOTEL").subscribe(new Consumer<String>()
+                                {
+                                    @Override
+                                    public void accept(@NonNull String message) throws Exception
+                                    {
+                                        unLockUI();
+
+                                        onRefundResult(100, message, false);
+                                    }
+                                }, new Consumer<Throwable>()
+                                {
+                                    @Override
+                                    public void accept(@NonNull Throwable throwable) throws Exception
+                                    {
+                                        onHandleError(throwable);
+                                    }
+                                }));
                             }
-
-                            addCompositeDisposable(mRefundRemoteImpl.getRefund(mAggregationId, accountNumber, accountName).subscribe(new Consumer<Refund>()
-                            {
-                                @Override
-                                public void accept(@NonNull Refund refund) throws Exception
-                                {
-                                    unLockUI();
-
-                                    onRefundResult(refund.msgCode, refund.message, refund.readyForRefund);
-                                }
-                            }, new Consumer<Throwable>()
-                            {
-                                @Override
-                                public void accept(@NonNull Throwable throwable) throws Exception
-                                {
-                                    onHandleError(throwable);
-                                }
-                            }));
                         }
 
                         Map<String, String> params = new HashMap<>();
