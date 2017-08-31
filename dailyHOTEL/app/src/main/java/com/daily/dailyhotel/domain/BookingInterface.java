@@ -2,7 +2,6 @@ package com.daily.dailyhotel.domain;
 
 import com.daily.dailyhotel.entity.Booking;
 import com.daily.dailyhotel.entity.GourmetBookingDetail;
-import com.daily.dailyhotel.entity.Refund;
 import com.daily.dailyhotel.entity.StayBookingDetail;
 import com.daily.dailyhotel.entity.StayOutboundBookingDetail;
 import com.daily.dailyhotel.entity.WaitingDeposit;

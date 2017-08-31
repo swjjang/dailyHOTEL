@@ -14,7 +14,6 @@ import com.daily.dailyhotel.repository.remote.model.GourmetCampaignTagsData;
 import com.daily.dailyhotel.repository.remote.model.GourmetListData;
 import com.daily.dailyhotel.repository.remote.model.GourmetPaymentData;
 import com.daily.dailyhotel.repository.remote.model.PaymentResultData;
-import com.daily.dailyhotel.repository.remote.model.RefundData;
 import com.daily.dailyhotel.repository.remote.model.ReviewData;
 import com.daily.dailyhotel.repository.remote.model.ShortUrlData;
 import com.daily.dailyhotel.repository.remote.model.StayBookingDetailData;
@@ -1552,15 +1551,22 @@ public class DailyMobileAPI
         return mDailyMobileService.getStayOutboundRefund(Crypto.getUrlDecoderEx(URL) + Crypto.getUrlDecoderEx(API, urlParams), refundType, cancelReasonType, reasons).subscribeOn(Schedulers.io());
     }
 
-    public Observable<BaseDto<RefundData>> getRefund(String aggregationId, String bankAccount, String bankCode)
+    public Observable<BaseDto> getRefund(String aggregationId, int reservationIndex, String reason, String serviceType)
     {
-        final String API = Constants.UNENCRYPTED_URL ? "api/v4/payment/refund/{aggregationId}"//
-            : "MTEzJDgwJDU5JDk0JDU1JDEyNiQ0OSQ1NCQxMSQzMiQ3OSQxMDckMTE0JDExOSQyMCQyMCQ=$NkU4OUJEOEJGBQTlGOEMFIzQTMxM0E5ODAG2NjdFRTkwN0VDOEZBNPDgxOVDVKFNTRHFNTA4NUIxNTg2NAzJDNUU2KMTM4OEQ0QTUwMNzZBNzWJDMDU5LOTcwWRTQ2NOjA0Njg1RCjI5NzJG$";
+        final String API = Constants.UNENCRYPTED_URL ? "api/v3/payment/refund"//
+            : "ODIkNzIkOCQ0NSQ2MiQ0OCQ1OSQyMCQ3NyQ5MyQ1NiQ4MyQ2OCQ4NCQyMyQxJA==$OXTlDMEM0TNjdDMEIxQjVGDRJjk4NTMxQUZDQzU1RDhGQzdDFMDJI0NzUyJMTM2OMTA4CQITk5OEJFOEUL5BOTRMc1MjIxMEGVBOQg==$";
 
-        Map<String, String> urlParams = new HashMap<>();
-        urlParams.put("{aggregationId}", aggregationId);
+        return mDailyMobileService.getRefund(Crypto.getUrlDecoderEx(API), aggregationId, reservationIndex, reason, serviceType).subscribeOn(Schedulers.io());
+    }
 
-        return mDailyMobileService.getRefund(Crypto.getUrlDecoderEx(API, urlParams), bankAccount, bankCode).subscribeOn(Schedulers.io());
+    public Observable<BaseDto> getRefund(String aggregationId, int reservationIndex, String reason, String serviceType//
+        , String accountHolder, String accountNumber, String bankCode)
+    {
+        final String API = Constants.UNENCRYPTED_URL ? "api/v3/payment/refund/vbank"//
+            : "ODUkNDAkNjIkODUkMjEkMjAkMSQ4JDQ4JDUkMzQkMTUkMTEkMTQkNjAkNTIk$NUkUyBQTcN0WQUKI4SQUEwNThBSONTdFMDU4NTkU5OTgxODdGLQ0UUQ2NDcwMW0QzQzI5NkYzRRkFGNDg4Qjc5NjE5MTU3NjhPDRKQ==$";
+
+        return mDailyMobileService.getRefundVBank(Crypto.getUrlDecoderEx(API), aggregationId, reservationIndex//
+            , reason, serviceType, accountHolder, accountNumber, bankCode).subscribeOn(Schedulers.io());
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////////////

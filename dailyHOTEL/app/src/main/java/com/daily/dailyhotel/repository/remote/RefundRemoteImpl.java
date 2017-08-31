@@ -4,11 +4,8 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 
 import com.daily.base.exception.BaseException;
-import com.daily.base.util.DailyTextUtils;
 import com.daily.dailyhotel.domain.RefundInterface;
-import com.daily.dailyhotel.entity.Refund;
 import com.daily.dailyhotel.entity.StayOutboundRefundDetail;
-import com.daily.dailyhotel.repository.remote.model.RefundData;
 import com.daily.dailyhotel.repository.remote.model.StayOutboundRefundData;
 import com.daily.dailyhotel.repository.remote.model.StayOutboundRefundDetailData;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
@@ -86,49 +83,61 @@ public class RefundRemoteImpl implements RefundInterface
     }
 
     @Override
-    public Observable<Refund> getRefund(String aggregationId, String bankAccount, String bankCode)
+    public Observable<String> getRefund(String aggregationId, int reservationIndex, String reason, String serviceType)
     {
-        return DailyMobileAPI.getInstance(mContext).getRefund(aggregationId, bankAccount, bankCode).map(new Function<BaseDto<RefundData>, Refund>()
+        return DailyMobileAPI.getInstance(mContext).getRefund(aggregationId, reservationIndex, reason, serviceType).map(new Function<BaseDto, String>()
         {
             @Override
-            public Refund apply(@io.reactivex.annotations.NonNull BaseDto<RefundData> refundDataBaseDto) throws Exception
+            public String apply(@io.reactivex.annotations.NonNull BaseDto baseDto) throws Exception
             {
-                Refund refund = new Refund();
+                String message = new String();
 
-                if (refundDataBaseDto != null)
+                if (baseDto != null)
                 {
-                    refund.msgCode = refundDataBaseDto.msgCode;
-
-                    // msgCode 1013: 환불 요청 중 실패한 것으로 messageFromPg를 사용자에게 노출함.
-                    // msgCode 1014: 무료 취소 횟수를 초과한 것으로 msg 내용을 사용자에게 노출함.
-                    // msgCode 1015: 환불 수동 스위치 ON일 경우
-                    switch (refundDataBaseDto.msgCode)
+                    if (baseDto.msgCode == 100 && baseDto.data != null)
                     {
-                        case 1014:
-                            refund.message = refundDataBaseDto.msg;
-                            break;
-
-                        case 1013:
-                        case 1015:
-                        default:
-                            if (refundDataBaseDto.data != null)
-                            {
-                                refund.message = refundDataBaseDto.data.messageFromPg;
-                                refund.readyForRefund = refundDataBaseDto.data.readyForRefund;
-                            }
-
-                            if (DailyTextUtils.isTextEmpty(refund.message) == true)
-                            {
-                                refund.message = refundDataBaseDto.msg;
-                            }
-                            break;
+                        message = baseDto.msg;
+                    } else
+                    {
+                        throw new BaseException(baseDto.msgCode, baseDto.msg);
                     }
                 } else
                 {
                     throw new BaseException(-1, null);
                 }
 
-                return refund;
+                return message;
+            }
+        }).observeOn(AndroidSchedulers.mainThread());
+    }
+
+    @Override
+    public Observable<String> getRefund(String aggregationId, int reservationIndex, String reason, String serviceType//
+        , String accountHolder, String accountNumber, String bankCode)
+    {
+        return DailyMobileAPI.getInstance(mContext).getRefund(aggregationId, reservationIndex, reason, serviceType//
+            , accountHolder, accountNumber, bankCode).map(new Function<BaseDto, String>()
+        {
+            @Override
+            public String apply(@io.reactivex.annotations.NonNull BaseDto baseDto) throws Exception
+            {
+                String message = new String();
+
+                if (baseDto != null)
+                {
+                    if (baseDto.msgCode == 100 && baseDto.data != null)
+                    {
+                        message = baseDto.msg;
+                    } else
+                    {
+                        throw new BaseException(baseDto.msgCode, baseDto.msg);
+                    }
+                } else
+                {
+                    throw new BaseException(-1, null);
+                }
+
+                return message;
             }
         }).observeOn(AndroidSchedulers.mainThread());
     }

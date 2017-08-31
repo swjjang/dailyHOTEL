@@ -10,7 +10,6 @@ import com.daily.dailyhotel.repository.remote.model.GourmetCampaignTagsData;
 import com.daily.dailyhotel.repository.remote.model.GourmetListData;
 import com.daily.dailyhotel.repository.remote.model.GourmetPaymentData;
 import com.daily.dailyhotel.repository.remote.model.PaymentResultData;
-import com.daily.dailyhotel.repository.remote.model.RefundData;
 import com.daily.dailyhotel.repository.remote.model.ReviewData;
 import com.daily.dailyhotel.repository.remote.model.ShortUrlData;
 import com.daily.dailyhotel.repository.remote.model.StayBookingDetailData;
@@ -670,7 +669,6 @@ public interface DailyMobileService
     Observable<BaseDto<WaitingDepositData>> getWaitingDeposit(@Url String mobileAPI);
 
 
-
     /////////////////////////////////////////////////////////////////////////////////////////////////
     // RefundRemoteImpl
     /////////////////////////////////////////////////////////////////////////////////////////////////
@@ -688,8 +686,14 @@ public interface DailyMobileService
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @POST()
-    Observable<BaseDto<RefundData>> getRefund(@Url String mobileAPI//
-        , @Field("bankAccount") String bankAccount, @Field("bankCode") String bankCode);
+    Observable<BaseDto> getRefund(@Url String mobileAPI, @Field("aggregationId") String aggregationId//
+        , @Field("reservationIdx") int reservationIndex, @Field("reason") String reason, @Field("serviceType") String serviceType);
+
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
+    @POST()
+    Observable<BaseDto> getRefundVBank(@Url String mobileAPI, @Field("aggregationId") String aggregationId//
+        , @Field("reservationIdx") int reservationIndex, @Field("reason") String reason, @Field("serviceType") String serviceType//
+    , @Field("accountHolder") String accountHolder, @Field("accountNumber") String accountNumber, @Field("bankCode") String bankCode);
 
     /////////////////////////////////////////////////////////////////////////////////////////////////
     // PaymentRemoteImpl
