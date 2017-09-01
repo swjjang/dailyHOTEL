@@ -36,6 +36,10 @@ public interface PaymentInterface
         , String rateCode, String rateKey, String roomTypeCode, int roomBedTypeId, People people//
         , boolean usedBonus, int bonus, OverseasGuest guest, int totalPrice);
 
+    Observable<String> getStayOutboundHasDuplicatePayment(StayBookDateTime stayBookDateTime, int index//
+        , String rateCode, String rateKey, String roomTypeCode, int roomBedTypeId, People people//
+        , boolean usedBonus, int bonus, OverseasGuest guest, int totalPrice);
+
     Observable<PaymentResult> getStayPaymentTypeEasy(StayBookDateTime stayBookDateTime, int roomIndex//
         , boolean usedBonus, int bonus, boolean usedCoupon, String couponCode, DomesticGuest guest//
         , int totalPrice, String transportation, String billingKey);
