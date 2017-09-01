@@ -93,7 +93,7 @@ public class StayCategoryNearByListFragment extends StayListFragment
     }
 
     @Override
-    protected void onStayList(ArrayList<Stay> list, int page, boolean hasSection)
+    protected void onStayList(List<Stay> list, int page, boolean hasSection)
     {
         if (isFinishing() == true)
         {

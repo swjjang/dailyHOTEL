@@ -32,6 +32,7 @@ public class StayListFragment extends PlaceListFragment
 {
     protected StayCuration mStayCuration;
     protected StayListLayout mStayListLayout;
+    protected List<Stay> mStayList = new ArrayList<>();
 
     public interface OnStayListFragmentListener extends OnPlaceListFragmentListener
     {
@@ -119,7 +120,7 @@ public class StayListFragment extends PlaceListFragment
         ((StayListNetworkController) mNetworkController).requestStayList(params, abTestType);
     }
 
-    protected void onStayList(ArrayList<Stay> list, int page, boolean hasSection)
+    protected void onStayList(List<Stay> list, int page, boolean hasSection)
     {
         if (isFinishing() == true)
         {
@@ -132,6 +133,8 @@ public class StayListFragment extends PlaceListFragment
         {
             mPlaceCount = 0;
             mPlaceListLayout.clearList();
+
+            mStayList.clear();
         }
 
         int listSize = list == null ? 0 : list.size();
@@ -145,6 +148,8 @@ public class StayListFragment extends PlaceListFragment
         }
 
         mPlaceCount += listSize;
+
+        mStayList.addAll(list);
 
         SortType sortType = mStayCuration.getCurationOption().getSortType();
 

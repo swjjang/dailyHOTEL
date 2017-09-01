@@ -458,7 +458,7 @@ public abstract class PlaceListLayout extends BaseLayout
         return hasPlace;
     }
 
-    public void setList(FragmentManager fragmentManager, Constants.ViewType viewType, ArrayList<PlaceViewItem> list, Constants.SortType sortType, PlaceBookingDay placeBookingDay)
+    public void setList(FragmentManager fragmentManager, Constants.ViewType viewType, List<PlaceViewItem> list, Constants.SortType sortType, PlaceBookingDay placeBookingDay)
     {
         mIsLoading = false;
 

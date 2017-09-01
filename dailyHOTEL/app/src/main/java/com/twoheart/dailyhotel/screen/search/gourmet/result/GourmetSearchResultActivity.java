@@ -125,8 +125,6 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
 
         if (mSearchType == SearchType.LOCATION)
         {
-            mPlaceSearchResultLayout.setViewTypeVisibility(true);
-
             try
             {
                 if (mGourmetSearchCuration.getCurationOption().getSortType() == SortType.DISTANCE && mGourmetSearchCuration.getLocation() == null)
@@ -149,8 +147,6 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
             }
         } else
         {
-            mPlaceSearchResultLayout.setViewTypeVisibility(false);
-
             mPlaceSearchResultLayout.setCategoryTabLayoutVisibility(View.GONE);
             mPlaceSearchResultLayout.setScreenVisible(ScreenType.NONE);
             mPlaceSearchResultLayout.setCategoryTabLayout(getSupportFragmentManager(), new ArrayList<Category>(), null, mOnGourmetListFragmentListener);

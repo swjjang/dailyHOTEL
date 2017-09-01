@@ -292,8 +292,6 @@ public abstract class PlaceSearchResultLayout extends BaseBlurLayout implements 
         mViewTypeOptionImageView = view.findViewById(R.id.viewTypeOptionImageView);
         mFilterOptionImageView = view.findViewById(R.id.filterOptionImageView);
 
-        setViewTypeVisibility(false);
-
         mViewTypeOptionImageView.setOnClickListener(this);
         mFilterOptionImageView.setOnClickListener(this);
 
@@ -1008,11 +1006,6 @@ public abstract class PlaceSearchResultLayout extends BaseBlurLayout implements 
 
             setMenuBarLayoutEnabled(false);
         }
-    }
-
-    public void setViewTypeVisibility(boolean isShow)
-    {
-        mViewTypeOptionImageView.setVisibility(isShow ? View.VISIBLE : View.GONE);
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////

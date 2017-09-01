@@ -301,8 +301,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="4dp"
-                android:background="@drawable/fab_01_map"
-                android:visibility="gone"/>
+                android:background="@drawable/fab_01_map"/>
 
             <ImageView
                 android:id="@+id/filterOptionImageView"

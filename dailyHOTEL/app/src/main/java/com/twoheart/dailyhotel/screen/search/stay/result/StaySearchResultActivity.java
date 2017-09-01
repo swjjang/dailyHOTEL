@@ -126,8 +126,6 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
 
         if (mSearchType == SearchType.LOCATION)
         {
-            mPlaceSearchResultLayout.setViewTypeVisibility(true);
-
             try
             {
                 if (mStaySearchCuration.getCurationOption().getSortType() == SortType.DISTANCE && mStaySearchCuration.getLocation() == null)
@@ -150,8 +148,6 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
             }
         } else
         {
-            mPlaceSearchResultLayout.setViewTypeVisibility(false);
-
             // 기본적으로 시작시에 전체 카테고리를 넣는다.
             mPlaceSearchResultLayout.setCategoryTabLayoutVisibility(View.INVISIBLE);
             mPlaceSearchResultLayout.setScreenVisible(ScreenType.NONE);
