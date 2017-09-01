@@ -746,6 +746,46 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
         mAgreedThirdPartyTerms = checked;
     }
 
+    private void checkDuplicatePayment()
+    {
+        screenLock(true);
+
+        addCompositeDisposable(mPaymentRemoteImpl.getStayOutboundHasDuplicatePayment(mStayBookDateTime, mStayIndex//
+            , mRateCode, mRateKey, mRoomTypeCode, mRoomBedTypeId, mPeople//
+            , mBonusSelected, mUserSimpleInformation.bonus, mGuest, mStayOutboundPayment.totalPrice).subscribe(new Consumer<String>()
+        {
+            @Override
+            public void accept(@io.reactivex.annotations.NonNull String message) throws Exception
+            {
+                unLockAll();
+
+                if (DailyTextUtils.isTextEmpty(message) == true)
+                {
+                    showAgreementPopup();
+                } else
+                {
+                    getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2), message//
+                        , getString(R.string.label_do_booking), getString(R.string.dialog_btn_text_no)//
+                        , new View.OnClickListener()
+                        {
+                            @Override
+                            public void onClick(View v)
+                            {
+                                showAgreementPopup();
+                            }
+                        }, null, null, null, false);
+                }
+            }
+        }, new Consumer<Throwable>()
+        {
+            @Override
+            public void accept(@io.reactivex.annotations.NonNull Throwable throwable) throws Exception
+            {
+                onHandleError(throwable);
+            }
+        }));
+    }
+
     private void showAgreementPopup()
     {
         // 보너스로만 결제하는 경우
@@ -802,46 +842,6 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
                 });
             }
         }
-    }
-
-    private void checkDuplicatePayment()
-    {
-        screenLock(true);
-
-        addCompositeDisposable(mPaymentRemoteImpl.getStayOutboundHasDuplicatePayment(mStayBookDateTime, mStayIndex//
-            , mRateCode, mRateKey, mRoomTypeCode, mRoomBedTypeId, mPeople//
-            , mBonusSelected, mUserSimpleInformation.bonus, mGuest, mStayOutboundPayment.totalPrice).subscribe(new Consumer<String>()
-        {
-            @Override
-            public void accept(@io.reactivex.annotations.NonNull String message) throws Exception
-            {
-                unLockAll();
-
-                if (DailyTextUtils.isTextEmpty(message) == true)
-                {
-                    showAgreementPopup();
-                } else
-                {
-                    getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2), message//
-                        , getString(R.string.label_do_booking), getString(R.string.dialog_btn_text_no)//
-                        , new View.OnClickListener()
-                        {
-                            @Override
-                            public void onClick(View v)
-                            {
-                                showAgreementPopup();
-                            }
-                        }, null, null, null, false);
-                }
-            }
-        }, new Consumer<Throwable>()
-        {
-            @Override
-            public void accept(@io.reactivex.annotations.NonNull Throwable throwable) throws Exception
-            {
-                onHandleError(throwable);
-            }
-        }));
     }
 
     private synchronized void onAgreedPaymentClick()
