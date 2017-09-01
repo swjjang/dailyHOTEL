@@ -480,15 +480,13 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
                         }
                     }
 
-                    if (hasAfterUse == true && availableReview == true)
-                    {
-                        AnalyticsManager.getInstance(getContext()).recordEvent(AnalyticsManager.Category.BOOKING_STATUS//
-                            , AnalyticsManager.Action.BUTTONS_AVAILABLE, AnalyticsManager.Label.BOTH, null);
-                    } else if (hasAfterUse == true)
+                    if (hasAfterUse == true)
                     {
                         AnalyticsManager.getInstance(getContext()).recordEvent(AnalyticsManager.Category.BOOKING_STATUS//
                             , AnalyticsManager.Action.BUTTONS_AVAILABLE, AnalyticsManager.Label.RESERVATION, null);
-                    } else if (availableReview == true)
+                    }
+
+                    if (availableReview == true)
                     {
                         AnalyticsManager.getInstance(getContext()).recordEvent(AnalyticsManager.Category.BOOKING_STATUS//
                             , AnalyticsManager.Action.BUTTONS_AVAILABLE, AnalyticsManager.Label.REVIEW, null);
