@@ -20,6 +20,7 @@ import com.twoheart.dailyhotel.util.Util;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Response;
@@ -28,6 +29,8 @@ public class GourmetListFragment extends PlaceListFragment
 {
     protected GourmetCuration mGourmetCuration;
     private GourmetListLayout mGourmetListLayout;
+    protected List<Gourmet> mGourmetList = new ArrayList<>();
+
 
     public interface OnGourmetListFragmentListener extends OnPlaceListFragmentListener
     {
@@ -109,7 +112,7 @@ public class GourmetListFragment extends PlaceListFragment
         ((GourmetListNetworkController) mNetworkController).requestGourmetList(params);
     }
 
-    protected void onGourmetList(ArrayList<Gourmet> list, int page, int totalCount, int maxCount, //
+    protected void onGourmetList(List<Gourmet> list, int page, int totalCount, int maxCount, //
                                  HashMap<String, Integer> categoryCodeMap, HashMap<String, Integer> categorySequenceMap, boolean hasSection)
     {
         if (isFinishing() == true)
@@ -123,6 +126,8 @@ public class GourmetListFragment extends PlaceListFragment
         {
             mPlaceCount = 0;
             mPlaceListLayout.clearList();
+
+            mGourmetList.clear();
 
             if (mGourmetCuration.getCurationOption().isDefaultFilter() == true)
             {
@@ -141,6 +146,8 @@ public class GourmetListFragment extends PlaceListFragment
         }
 
         mPlaceCount += listSize;
+
+        mGourmetList.addAll(list);
 
         SortType sortType = mGourmetCuration.getCurationOption().getSortType();
 
