@@ -15,6 +15,7 @@ import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -167,6 +168,16 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
             return;
         }
 
+        dataBinding.bookingSwipeRefreshLayout.setColorSchemeResources(R.color.dh_theme_color);
+        dataBinding.bookingSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener()
+        {
+            @Override
+            public void onRefresh()
+            {
+                BookingListFragment.this.onRefresh(false);
+            }
+        });
+
         dataBinding.bookingRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         EdgeEffectColor.setEdgeGlowColor(dataBinding.bookingRecyclerView, getContext().getResources().getColor(R.color.default_over_scroll_edge));
         dataBinding.bookingRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener()
@@ -292,7 +303,7 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
                 mDontReload = false;
             } else
             {
-                onRefresh();
+                onRefresh(true);
             }
         }
     }
@@ -385,9 +396,9 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
         }
     }
 
-    private void onRefresh()
+    private void onRefresh(boolean showProgress)
     {
-        lockUIImmediately();
+        lockUI(showProgress);
 
         addCompositeDisposable(Observable.zip(mCommonRemoteImpl.getCommonDateTime()//
             , mBookingRemoteImpl.getBookingList(), mBookingRemoteImpl.getStayOutboundBookingList()//
@@ -415,6 +426,7 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
             {
                 onBookingList(bookingList);
 
+                mViewDataBinding.bookingSwipeRefreshLayout.setRefreshing(false);
                 unLockUI();
             }
         }, new Consumer<Throwable>()
