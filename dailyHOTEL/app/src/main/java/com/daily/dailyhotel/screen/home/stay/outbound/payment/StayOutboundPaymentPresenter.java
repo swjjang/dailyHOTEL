@@ -472,6 +472,29 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
 
             case StayOutboundPaymentActivity.REQUEST_CODE_PAYMENT_WEB_CARD:
             case StayOutboundPaymentActivity.REQUEST_CODE_PAYMENT_WEB_PHONE:
+                // 결제 진행후 취소시에 적립금과 쿠폰을 돌려주어야 한다.
+                if (resultCode != Activity.RESULT_OK)
+                {
+                    addCompositeDisposable(mProfileRemoteImpl.getUserSimpleInformation().subscribe(new Consumer<UserSimpleInformation>()
+                    {
+                        @Override
+                        public void accept(@io.reactivex.annotations.NonNull UserSimpleInformation userSimpleInformation) throws Exception
+                        {
+                            setUserInformation(userSimpleInformation);
+
+                            notifyBonusEnabledChanged();
+                            notifyStayOutboundPaymentChanged();
+                        }
+                    }, new Consumer<Throwable>()
+                    {
+                        @Override
+                        public void accept(@io.reactivex.annotations.NonNull Throwable throwable) throws Exception
+                        {
+
+                        }
+                    }));
+                }
+
                 if (data != null)
                 {
                     onPaymentWebResult(resultCode, data.getStringExtra(Constants.NAME_INTENT_EXTRA_DATA_PAYMENT_RESULT));
