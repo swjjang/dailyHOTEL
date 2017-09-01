@@ -725,6 +725,29 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
             return;
         }
 
+        checkDuplicatePayment();
+    }
+
+    @Override
+    public void onPhoneNumberClick(String phoneNumber)
+    {
+        if (lock() == true)
+        {
+            return;
+        }
+
+        startActivityForResult(InputMobileNumberDialogActivity.newInstance(getActivity(), phoneNumber)//
+            , StayOutboundPaymentActivity.REQUEST_CODE_REGISTER_PHONE_NUMBER);
+    }
+
+    @Override
+    public void onAgreedThirdPartyTermsClick(boolean checked)
+    {
+        mAgreedThirdPartyTerms = checked;
+    }
+
+    private void showAgreementPopup()
+    {
         // 보너스로만 결제하는 경우
         if (mBonusSelected == true && mStayOutboundPayment.totalPrice <= mUserSimpleInformation.bonus)
         {
@@ -781,22 +804,44 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
         }
     }
 
-    @Override
-    public void onPhoneNumberClick(String phoneNumber)
+    private void checkDuplicatePayment()
     {
-        if (lock() == true)
+        screenLock(true);
+
+        addCompositeDisposable(mPaymentRemoteImpl.getStayOutboundHasDuplicatePayment(mStayBookDateTime, mStayIndex//
+            , mRateCode, mRateKey, mRoomTypeCode, mRoomBedTypeId, mPeople//
+            , mBonusSelected, mUserSimpleInformation.bonus, mGuest, mStayOutboundPayment.totalPrice).subscribe(new Consumer<String>()
         {
-            return;
-        }
+            @Override
+            public void accept(@io.reactivex.annotations.NonNull String message) throws Exception
+            {
+                unLockAll();
 
-        startActivityForResult(InputMobileNumberDialogActivity.newInstance(getActivity(), phoneNumber)//
-            , StayOutboundPaymentActivity.REQUEST_CODE_REGISTER_PHONE_NUMBER);
-    }
-
-    @Override
-    public void onAgreedThirdPartyTermsClick(boolean checked)
-    {
-        mAgreedThirdPartyTerms = checked;
+                if (DailyTextUtils.isTextEmpty(message) == true)
+                {
+                    showAgreementPopup();
+                } else
+                {
+                    getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2), message//
+                        , getString(R.string.label_do_booking), getString(R.string.dialog_btn_text_no)//
+                        , new View.OnClickListener()
+                        {
+                            @Override
+                            public void onClick(View v)
+                            {
+                                showAgreementPopup();
+                            }
+                        }, null, null, null, false);
+                }
+            }
+        }, new Consumer<Throwable>()
+        {
+            @Override
+            public void accept(@io.reactivex.annotations.NonNull Throwable throwable) throws Exception
+            {
+                onHandleError(throwable);
+            }
+        }));
     }
 
     private synchronized void onAgreedPaymentClick()

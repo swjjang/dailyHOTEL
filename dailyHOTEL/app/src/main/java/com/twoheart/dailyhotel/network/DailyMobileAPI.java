@@ -1415,6 +1415,20 @@ public class DailyMobileAPI
             , jsonObject).subscribeOn(Schedulers.io());
     }
 
+    public Observable<BaseDto<String>> getStayOutboundHasDuplicatePayment(int index, JSONObject jsonObject)
+    {
+        final String URL = Constants.DEBUG ? DailyPreference.getInstance(mContext).getBaseOutBoundUrl() : Setting.getOutboundServerUrl();
+
+        final String API = Constants.UNENCRYPTED_URL ? "api/v1/outbound/hotels/{hotelId}/valid-reservations"//
+            : "NTEkMTI2JDckMTAwJDE3MyQ5MiQ3OSQ1MCQ3OCQ2OCQzMiQxNTEkNTckMTEkMTI3JDQ0JA==$M0VGMDVDEODJYzQ0NFNzI5MUUwMDRGOEVFBMUQzNDMzNBUE0OTdCQYkFLBRWkE3NkQyOThFOZEI5QzkyQkMI4MCjdBMThCMEZFQzLZFQ0Y3MjIcxNjZENDAzMkVGNDQyENjUyRDkzMCUE2NUQxNDhCNURGRQTcyOTFDQjI1QzlGQTc3Q0UxODFENJUU=$";
+
+        Map<String, String> urlParams = new HashMap<>();
+        urlParams.put("{hotelId}", Integer.toString(index));
+
+        return mDailyMobileService.getStayOutboundHasDuplicatePayment(Crypto.getUrlDecoderEx(URL) + Crypto.getUrlDecoderEx(API, urlParams)//
+            , jsonObject).subscribeOn(Schedulers.io());
+    }
+
     public Observable<BaseDto<PaymentResultData>> getStayPaymentTypeBonus(JSONObject jsonObject)
     {
         final String API = Constants.UNENCRYPTED_URL ? "api/v4/booking/hotel/daily/only"//
