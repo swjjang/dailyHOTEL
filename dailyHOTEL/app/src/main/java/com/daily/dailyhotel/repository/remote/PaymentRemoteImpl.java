@@ -120,7 +120,7 @@ public class PaymentRemoteImpl implements PaymentInterface
                     case 7:
                         stayPayment.mWarningMessage = stayPaymentDataBaseDto.msg;
                     case 0:
-                        if(stayPaymentDataBaseDto.data != null)
+                        if (stayPaymentDataBaseDto.data != null)
                         {
                             stayPayment = stayPaymentDataBaseDto.data.getStayPayment();
                         } else
@@ -241,7 +241,7 @@ public class PaymentRemoteImpl implements PaymentInterface
             jsonObject = null;
         }
 
-        return DailyMobileAPI.getInstance(mContext).getOutboundPaymentTypeEasy(index, jsonObject).map(paymentResultDataBaseDto ->
+        return DailyMobileAPI.getInstance(mContext).getStayOutboundPaymentTypeEasy(index, jsonObject).map(paymentResultDataBaseDto ->
         {
             PaymentResult paymentResult = null;
 
@@ -301,7 +301,7 @@ public class PaymentRemoteImpl implements PaymentInterface
             jsonObject = null;
         }
 
-        return DailyMobileAPI.getInstance(mContext).getOutboundPaymentTypeBonus(index, jsonObject).map(paymentResultDataBaseDto ->
+        return DailyMobileAPI.getInstance(mContext).getStayOutboundPaymentTypeBonus(index, jsonObject).map(paymentResultDataBaseDto ->
         {
             PaymentResult paymentResult = null;
 
@@ -320,6 +320,66 @@ public class PaymentRemoteImpl implements PaymentInterface
             }
 
             return paymentResult;
+        }).observeOn(AndroidSchedulers.mainThread());
+    }
+
+    @Override
+    public Observable<String> getStayOutboundHasDuplicatePayment(StayBookDateTime stayBookDateTime, int index, String rateCode, String rateKey, String roomTypeCode, int roomBedTypeId, People people, boolean usedBonus, int bonus, OverseasGuest guest, int totalPrice)
+    {
+        JSONObject jsonObject = new JSONObject();
+
+        final int NUMBER_OF_ROOMS = 1;
+
+        try
+        {
+            jsonObject.put("arrivalDate", stayBookDateTime.getCheckInDateTime("yyyy-MM-dd"));
+            jsonObject.put("departureDate", stayBookDateTime.getCheckOutDateTime("yyyy-MM-dd"));
+            jsonObject.put("numberOfRooms", NUMBER_OF_ROOMS);
+            jsonObject.put("rooms", getRooms(new People[]{people}, new int[]{roomBedTypeId}));
+            jsonObject.put("rateCode", rateCode);
+            jsonObject.put("rateKey", rateKey);
+            jsonObject.put("roomTypeCode", roomTypeCode);
+
+            if (usedBonus == true)
+            {
+                jsonObject.put("bonusAmount", bonus > totalPrice ? totalPrice : bonus);
+            }
+
+            jsonObject.put("firstName", guest.firstName);
+            jsonObject.put("lastName", guest.lastName);
+            jsonObject.put("email", guest.email);
+            jsonObject.put("phoneNumber", guest.phone.replace("-", ""));
+            jsonObject.put("total", totalPrice);
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+
+            jsonObject = null;
+        }
+
+        return DailyMobileAPI.getInstance(mContext).getStayOutboundHasDuplicatePayment(index, jsonObject).map(new Function<BaseDto<String>, String>()
+        {
+            @Override
+            public String apply(@io.reactivex.annotations.NonNull BaseDto<String> baseDto) throws Exception
+            {
+                String message;
+
+                if (baseDto != null)
+                {
+                    if (baseDto.msgCode == 100)
+                    {
+                        message = "";
+                    } else
+                    {
+                        message = baseDto.msg;
+                    }
+                } else
+                {
+                    throw new BaseException(-1, null);
+                }
+
+                return message;
+            }
         }).observeOn(AndroidSchedulers.mainThread());
     }
 

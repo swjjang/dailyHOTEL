@@ -278,18 +278,19 @@ public class BookingListAdapter extends RecyclerView.Adapter<BookingListAdapter.
                 holder.dataBinding.bookingStatusTextView.setTextColor(mContext.getResources().getColor(R.color.default_text_c666666));
                 holder.dataBinding.bookingDayTextView.setVisibility(View.GONE);
                 holder.dataBinding.buttonLayout.setVisibility(View.VISIBLE);
-                if (booking.hasReview)
-                {
-                    holder.dataBinding.bookingStatusDescriptionTextView.setText(null);
 
-                    holder.dataBinding.buttonVerticalLine.setVisibility(View.GONE);
-                    holder.dataBinding.reviewTextView.setVisibility(View.GONE);
-                } else
+                if (booking.availableReview)
                 {
                     holder.dataBinding.bookingStatusDescriptionTextView.setText(R.string.message_booking_add_review);
 
                     holder.dataBinding.buttonVerticalLine.setVisibility(View.VISIBLE);
                     holder.dataBinding.reviewTextView.setVisibility(View.VISIBLE);
+                } else
+                {
+                    holder.dataBinding.bookingStatusDescriptionTextView.setText(null);
+
+                    holder.dataBinding.buttonVerticalLine.setVisibility(View.GONE);
+                    holder.dataBinding.reviewTextView.setVisibility(View.GONE);
                 }
                 break;
 
@@ -342,7 +343,7 @@ public class BookingListAdapter extends RecyclerView.Adapter<BookingListAdapter.
         // 하단 높이 조절
         if (isLastPosition == true)
         {
-            holder.dataBinding.bottomEmptyView.getLayoutParams().height = ScreenUtils.dpToPx(mContext, 49)//
+            holder.dataBinding.bottomEmptyView.getLayoutParams().height = ScreenUtils.dpToPx(mContext, 78)//
                 + mContext.getResources().getDimensionPixelSize(R.dimen.bottom_navigation_height_over21);
         } else
         {
@@ -358,6 +359,16 @@ public class BookingListAdapter extends RecyclerView.Adapter<BookingListAdapter.
                 {
                     mOnUserActionListener.onBookingClick(booking);
                 }
+            }
+        });
+
+        // 해당 영역은 빈영역이므로 클릭할수 없도록 수정
+        holder.dataBinding.bottomEmptyView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+
             }
         });
 
@@ -413,6 +424,20 @@ public class BookingListAdapter extends RecyclerView.Adapter<BookingListAdapter.
                     });
                     break;
             }
+        } else
+        {
+            holder.dataBinding.getRoot().post(new Runnable()
+            {
+                @Override
+                public void run()
+                {
+                    if(holder.dataBinding.getRoot().getBottom() < ((RecyclerView)holder.dataBinding.getRoot().getParent()).getBottom())
+                    {
+                        holder.dataBinding.bottomEmptyView.getLayoutParams().height += ((RecyclerView)holder.dataBinding.getRoot().getParent()).getBottom() - holder.dataBinding.getRoot().getBottom();
+                        holder.dataBinding.bottomEmptyView.requestLayout();
+                    }
+                }
+            });
         }
     }
 

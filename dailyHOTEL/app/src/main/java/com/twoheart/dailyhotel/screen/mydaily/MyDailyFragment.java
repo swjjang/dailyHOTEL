@@ -17,6 +17,8 @@ import android.view.ViewGroup;
 
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.VersionUtils;
+import com.daily.dailyhotel.entity.UserSimpleInformation;
+import com.daily.dailyhotel.repository.remote.ProfileRemoteImpl;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
@@ -42,6 +44,8 @@ import com.twoheart.dailyhotel.util.DailyUserPreference;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Action;
 
+import io.reactivex.annotations.NonNull;
+import io.reactivex.functions.Consumer;
 import retrofit2.Call;
 import retrofit2.Response;
 
@@ -54,9 +58,13 @@ public class MyDailyFragment extends BaseMenuNavigationFragment implements Const
     private boolean mDontReload;
     private DailyDeepLink mDailyDeepLink;
 
+    private ProfileRemoteImpl mProfileRemoteImpl;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
+        mProfileRemoteImpl = new ProfileRemoteImpl(getContext());
+
         mMyDailyLayout = new MyDailyLayout(getActivity(), mOnEventListener);
         mMyDailyLayout.setOnScrollChangedListener(mOnScreenScrollChangeListener);
         mNetworkController = new MyDailyNetworkController(getActivity(), mNetworkTag, mNetworkControllerListener);
@@ -211,7 +219,21 @@ public class MyDailyFragment extends BaseMenuNavigationFragment implements Const
                 // 적립금 및 쿠폰 개수 가져와야 함
                 lockUI();
 
-                mNetworkController.requestUserProfile();
+                addCompositeDisposable(mProfileRemoteImpl.getUserSimpleInformation().subscribe(new Consumer<UserSimpleInformation>()
+                {
+                    @Override
+                    public void accept(@NonNull UserSimpleInformation userSimpleInformation) throws Exception
+                    {
+                        mNetworkController.requestUserProfile();
+                    }
+                }, new Consumer<Throwable>()
+                {
+                    @Override
+                    public void accept(@NonNull Throwable throwable) throws Exception
+                    {
+                        onHandleError(throwable);
+                    }
+                }));
             } else
             {
                 // 비로그인 상태

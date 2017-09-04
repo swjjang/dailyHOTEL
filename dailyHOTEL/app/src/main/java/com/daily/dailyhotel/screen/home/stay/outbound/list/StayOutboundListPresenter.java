@@ -110,7 +110,8 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
 
     enum ScreenType
     {
-        DEFAULT, // 마지막 스크린 상태 유지
+        DEFAULT,
+        // 마지막 스크린 상태 유지
         NONE,
         EMPTY,
         ERROR,

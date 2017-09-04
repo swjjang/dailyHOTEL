@@ -1091,7 +1091,7 @@ public class AnalyticsManager
         public static final String NO_RESULT_MOVE = "no_result_move";
         public static final String RE_RESERVATION = "re_reservation";
         public static final String LEAVE_REVIEW = "leave_review";
-        public static final String BUTTONS_AVAILABLE = "Buttons_Available";
+        public static final String BUTTONS_AVAILABLE = "buttons_available";
     }
 
     public static class Category
@@ -1377,6 +1377,10 @@ public class AnalyticsManager
 
         public static final String Y = "y";
         public static final String N = "n";
+
+        public static final String RESERVATION = "reservation";
+        public static final String REVIEW = "review";
+        public static final String BOTH = "both";
     }
 
     public static class UserType

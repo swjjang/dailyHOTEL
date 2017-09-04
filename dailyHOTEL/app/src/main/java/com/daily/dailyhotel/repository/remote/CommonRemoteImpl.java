@@ -81,7 +81,7 @@ public class CommonRemoteImpl implements CommonInterface
 
             if (shortUrlData != null && DailyTextUtils.isTextEmpty(shortUrlData.id) == false)
             {
-               shortUrl = shortUrlData.id;
+                shortUrl = shortUrlData.id;
             } else
             {
                 throw new BaseException(-1, null);

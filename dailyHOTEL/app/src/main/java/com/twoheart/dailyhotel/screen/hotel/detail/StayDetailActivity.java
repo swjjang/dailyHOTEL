@@ -78,9 +78,11 @@ import java.util.Locale;
 import java.util.Map;
 
 import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 import retrofit2.Call;
 import retrofit2.Response;
 
@@ -433,8 +435,8 @@ public class StayDetailActivity extends PlaceDetailActivity
     {
         int dayCount = StayDetailCalendarActivity.DEFAULT_OVERSEAS_CALENDAR_DAY_OF_MAX_COUNT;
 
-        addCompositeDisposable(Observable.zip(mCommonRemoteImpl.getCommonDateTime() //
-            , mPlaceDetailCalendarImpl.getStayUnavailableCheckInDates(mPlaceDetail.index, dayCount, false) //
+        addCompositeDisposable(Observable.zip(mCommonRemoteImpl.getCommonDateTime().observeOn(Schedulers.io()) //
+            , mPlaceDetailCalendarImpl.getStayUnavailableCheckInDates(mPlaceDetail.index, dayCount, false).observeOn(Schedulers.io()) //
             , new BiFunction<CommonDateTime, List<String>, TodayDateTime>()
             {
                 @Override
@@ -459,7 +461,7 @@ public class StayDetailActivity extends PlaceDetailActivity
 
                     return todayDateTime;
                 }
-            }).subscribe(new Consumer<TodayDateTime>()
+            }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<TodayDateTime>()
         {
             @Override
             public void accept(@NonNull TodayDateTime todayDateTime) throws Exception

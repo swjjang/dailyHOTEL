@@ -22,7 +22,7 @@ public class Booking
     public boolean readyForRefund;
     public String comment;
     public String tid;
-    public boolean hasReview;
+    public boolean availableReview;
     public int placeIndex;
 
     // 내부 사용 변수

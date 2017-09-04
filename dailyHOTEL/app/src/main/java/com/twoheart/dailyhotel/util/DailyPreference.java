@@ -968,7 +968,6 @@ public class DailyPreference
     }
 
     /**
-     *
      * @param value 보여주는 기간 동안에는 ISO-8601 타입으로 값을 넣어주지만, 2 주후에는 "NONE"으로 바꾼다.
      */
     public void setHomeShortCutStayOutboundNewDate(String value)

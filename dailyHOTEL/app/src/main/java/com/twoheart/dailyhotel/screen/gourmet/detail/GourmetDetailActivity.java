@@ -442,8 +442,8 @@ public class GourmetDetailActivity extends PlaceDetailActivity
     @Override
     protected void requestCommonDateTimeNSoldOutList(int placeIndex)
     {
-        addCompositeDisposable(Observable.zip(mCommonRemoteImpl.getCommonDateTime() //
-            , mPlaceDetailCalendarImpl.getGourmetUnavailableDates(placeIndex, GourmetCalendarActivity.DEFAULT_CALENDAR_DAY_OF_MAX_COUNT, false) //
+        addCompositeDisposable(Observable.zip(mCommonRemoteImpl.getCommonDateTime().observeOn(Schedulers.io()) //
+            , mPlaceDetailCalendarImpl.getGourmetUnavailableDates(placeIndex, GourmetCalendarActivity.DEFAULT_CALENDAR_DAY_OF_MAX_COUNT, false).observeOn(Schedulers.io()) //
             , new BiFunction<CommonDateTime, List<String>, TodayDateTime>()
             {
                 @Override
@@ -468,7 +468,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
 
                     return todayDateTime;
                 }
-            }).subscribe(new Consumer<TodayDateTime>()
+            }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<TodayDateTime>()
         {
             @Override
             public void accept(@NonNull TodayDateTime todayDateTime) throws Exception
