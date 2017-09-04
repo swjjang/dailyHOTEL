@@ -107,6 +107,7 @@ public class GourmetDetailCalendarActivity extends GourmetCalendarActivity
 
             Intent intent = new Intent();
             intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, gourmetBookingDay);
+            intent.putExtra(NAME_INTENT_EXTRA_DATA_VISIT_DATE, gourmetBookingDay.getVisitDay(DailyCalendar.ISO_8601_FORMAT));
 
             setResult(RESULT_OK, intent);
             hideAnimation();

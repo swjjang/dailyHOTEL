@@ -93,7 +93,7 @@ public class StayCampaignTagListPresenter extends BaseExceptionPresenter<StayCam
         mCommonRemoteImpl = new CommonRemoteImpl(activity);
         mCampaignTagRemoteImpl = new CampaignTagRemoteImpl(activity);
 
-        setRefresh(false);
+        setRefresh(true);
     }
 
     @Override
@@ -121,7 +121,6 @@ public class StayCampaignTagListPresenter extends BaseExceptionPresenter<StayCam
     public void onPostCreate()
     {
         getViewInterface().setToolbarTitle(mTitle);
-        onRefresh(true);
     }
 
     @Override
@@ -248,9 +247,9 @@ public class StayCampaignTagListPresenter extends BaseExceptionPresenter<StayCam
     }
 
     @Override
-    protected void onRefresh(boolean showProgress)
+    protected synchronized void onRefresh(boolean showProgress)
     {
-        if (getActivity().isFinishing() == true)
+        if (getActivity().isFinishing() == true || isRefresh() == false)
         {
             return;
         }

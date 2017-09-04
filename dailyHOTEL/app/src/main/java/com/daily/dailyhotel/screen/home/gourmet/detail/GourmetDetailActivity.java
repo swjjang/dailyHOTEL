@@ -19,15 +19,14 @@ public class GourmetDetailActivity extends BaseActivity<GourmetDetailPresenter>
     public static final int NONE_PRICE = -1;
 
     static final int REQUEST_CODE_CALENDAR = 10000;
-    static final int REQUEST_CODE_PEOPLE = 10001;
     static final int REQUEST_CODE_HAPPYTALK = 10002;
-    static final int REQUEST_CODE_AMENITY = 10003;
     static final int REQUEST_CODE_MAP = 10004;
     static final int REQUEST_CODE_IMAGE_LIST = 10005;
     static final int REQUEST_CODE_CALL = 10006;
     static final int REQUEST_CODE_PAYMENT = 10007;
     static final int REQUEST_CODE_LOGIN = 10008;
     static final int REQUEST_CODE_PROFILE_UPDATE = 10009;
+    static final int REQUEST_CODE_DOWNLOAD_COUPON = 10010;
 
     static final String INTENT_EXTRA_DATA_GOURMET_INDEX = "gourmetIndex";
     static final String INTENT_EXTRA_DATA_GOURMET_NAME = "gourmetName";

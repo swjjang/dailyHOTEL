@@ -37,9 +37,25 @@ public class GourmetRemoteImpl implements GourmetInterface
 
                 if (gourmetDetailDataBaseDto != null)
                 {
-                    if (gourmetDetailDataBaseDto.msgCode == 100 && gourmetDetailDataBaseDto.data != null)
+                    if(gourmetDetailDataBaseDto.data != null)
                     {
-                        gourmetDetail = gourmetDetailDataBaseDto.data.getGourmetDetail();
+                        // 100	성공
+                        // 4	데이터가 없을시
+                        // 5	판매 마감시
+                        switch(gourmetDetailDataBaseDto.msgCode)
+                        {
+                            case 5:
+                                gourmetDetail = gourmetDetailDataBaseDto.data.getGourmetDetail();
+                                gourmetDetail.setGourmetMenuList(null);
+                                break;
+
+                            case 100:
+                                gourmetDetail = gourmetDetailDataBaseDto.data.getGourmetDetail();
+                                break;
+
+                            default:
+                                throw new BaseException(gourmetDetailDataBaseDto.msgCode, gourmetDetailDataBaseDto.msg);
+                        }
                     } else
                     {
                         throw new BaseException(gourmetDetailDataBaseDto.msgCode, gourmetDetailDataBaseDto.msg);

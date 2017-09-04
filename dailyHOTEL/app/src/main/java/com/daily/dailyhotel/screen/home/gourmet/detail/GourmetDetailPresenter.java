@@ -26,19 +26,16 @@ import com.daily.dailyhotel.entity.GourmetBookDateTime;
 import com.daily.dailyhotel.entity.GourmetDetail;
 import com.daily.dailyhotel.entity.ImageMap;
 import com.daily.dailyhotel.entity.People;
-import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayOutboundDetail;
 import com.daily.dailyhotel.entity.StayOutboundDetailImage;
 import com.daily.dailyhotel.entity.StayOutboundRoom;
 import com.daily.dailyhotel.entity.User;
 import com.daily.dailyhotel.parcel.analytics.GourmetDetailAnalyticsParam;
-import com.daily.dailyhotel.parcel.analytics.StayOutboundDetailAnalyticsParam;
 import com.daily.dailyhotel.parcel.analytics.StayOutboundPaymentAnalyticsParam;
 import com.daily.dailyhotel.repository.remote.CalendarImpl;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
 import com.daily.dailyhotel.repository.remote.GourmetRemoteImpl;
 import com.daily.dailyhotel.repository.remote.ProfileRemoteImpl;
-import com.daily.dailyhotel.repository.remote.StayOutboundRemoteImpl;
 import com.daily.dailyhotel.screen.common.calendar.StayCalendarActivity;
 import com.daily.dailyhotel.screen.common.call.CallDialogActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.detail.StayOutboundDetailActivity;
@@ -53,6 +50,7 @@ import com.twoheart.dailyhotel.model.Customer;
 import com.twoheart.dailyhotel.screen.common.HappyTalkCategoryDialog;
 import com.twoheart.dailyhotel.screen.common.ZoomMapActivity;
 import com.twoheart.dailyhotel.screen.gourmet.filter.GourmetCalendarActivity;
+import com.twoheart.dailyhotel.screen.gourmet.filter.GourmetDetailCalendarActivity;
 import com.twoheart.dailyhotel.screen.information.FAQActivity;
 import com.twoheart.dailyhotel.screen.mydaily.member.AddProfileSocialActivity;
 import com.twoheart.dailyhotel.screen.mydaily.member.EditProfilePhoneActivity;
@@ -78,10 +76,8 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Consumer;
-import io.reactivex.functions.Function3;
 import io.reactivex.functions.Function4;
 import io.reactivex.functions.Function5;
-import io.reactivex.functions.Function6;
 import io.reactivex.schedulers.Schedulers;
 import retrofit2.HttpException;
 
@@ -151,9 +147,9 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
     }
 
     @Override
-    public void constructorInitialize(StayOutboundDetailActivity activity)
+    public void constructorInitialize(GourmetDetailActivity activity)
     {
-        setContentView(R.layout.activity_stay_outbound_detail_data);
+        setContentView(R.layout.activity_gourmet_detail_data);
 
         mAppResearch = new AppResearch(activity);
         setAnalytics(new GourmetDetailAnalyticsImpl());
@@ -249,6 +245,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
 
         if (mIsUsedMultiTransition == true)
         {
+            setRefresh(false);
             screenLock(false);
 
             Disposable disposable = Observable.timer(2, TimeUnit.SECONDS).subscribeOn(Schedulers.newThread())//
@@ -256,56 +253,51 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
 
             addCompositeDisposable(disposable);
 
-
             addCompositeDisposable(Observable.zip(getViewInterface().getSharedElementTransition()//
-            , mGourmetRemoteImpl.getGourmetDetail(mGourmetIndex, mGourmetBookDateTime)//
+                , mGourmetRemoteImpl.getGourmetDetail(mGourmetIndex, mGourmetBookDateTime)//
                 , mCalendarImpl.getGourmetUnavailableDates(mGourmetIndex, GourmetCalendarActivity.DEFAULT_CALENDAR_DAY_OF_MAX_COUNT, false)//
                 , mGourmetRemoteImpl.getGourmetHasCoupon(mGourmetIndex, mGourmetBookDateTime)//
+                , mCommonRemoteImpl.getCommonDateTime()//
+                , new Function5<Boolean, GourmetDetail, List<Integer>, Boolean, CommonDateTime, GourmetDetail>()
+                {
 
+                    @Override
+                    public GourmetDetail apply(@io.reactivex.annotations.NonNull Boolean aBoolean//
+                        , @io.reactivex.annotations.NonNull GourmetDetail gourmetDetail//
+                        , @io.reactivex.annotations.NonNull List<Integer> unavailableDates//
+                        , @io.reactivex.annotations.NonNull Boolean hasCoupon//
+                        , @io.reactivex.annotations.NonNull CommonDateTime commonDateTime) throws Exception
+                    {
+                        setCommonDateTime(commonDateTime);
+                        setSoldOutDateList(unavailableDates);
 
-//            addCompositeDisposable(Observable.zip(getViewInterface().getSharedElementTransition()//
-//                , mCommonRemoteImpl.getCommonDateTime(), mGourmetRemoteImpl.getGourmetDetail(mGourmetIndex, mGourmetBookDateTime)//
-//                , mCalendarImpl.getGourmetUnavailableDates(mGourmetIndex, GourmetCalendarActivity.DEFAULT_CALENDAR_DAY_OF_MAX_COUNT, false)//
-//                , mGourmetRemoteImpl.getGourmetHasCoupon(mGourmetIndex, mGourmetBookDateTime)//
-//                , new Function6<Boolean, CommonDateTime, GourmetDetail, List<Integer>, Boolean, GourmetDetail>()
-//                {
-//                    @Override
-//                    public GourmetDetail apply(@io.reactivex.annotations.NonNull Boolean aBoolean//
-//                        , @io.reactivex.annotations.NonNull CommonDateTime commonDateTime//
-//                        , @io.reactivex.annotations.NonNull GourmetDetail gourmetDetail//
-//                        , @io.reactivex.annotations.NonNull List<Integer> unavailableDates)//
-//                        , @io.reactivex.annotations.NonNull Boolean hasCoupon) throws Exception
-//                    {
-//                        setCommonDateTime(commonDateTime);
-//                        setSoldOutDateList(unavailableDates);
-//
-//                        return gourmetDetail;
-//                    }
-//                }).subscribe(new Consumer<GourmetDetail>()
-//            {
-//                @Override
-//                public void accept(@io.reactivex.annotations.NonNull GourmetDetail gourmetDetail) throws Exception
-//                {
-//                    onGourmetDetail(gourmetDetail);
-//
-//                    if (disposable != null)
-//                    {
-//                        disposable.dispose();
-//                    }
-//
-//                    unLockAll();
-//                }
-//            }, new Consumer<Throwable>()
-//            {
-//                @Override
-//                public void accept(@io.reactivex.annotations.NonNull Throwable throwable) throws Exception
-//                {
-//                    onHandleError(throwable);
-//                }
-//            }));
+                        return gourmetDetail;
+                    }
+                }).subscribe(new Consumer<GourmetDetail>()
+            {
+                @Override
+                public void accept(@io.reactivex.annotations.NonNull GourmetDetail gourmetDetail) throws Exception
+                {
+                    onGourmetDetail(gourmetDetail);
+
+                    if (disposable != null)
+                    {
+                        disposable.dispose();
+                    }
+
+                    unLockAll();
+                }
+            }, new Consumer<Throwable>()
+            {
+                @Override
+                public void accept(@io.reactivex.annotations.NonNull Throwable throwable) throws Exception
+                {
+                    onHandleError(throwable);
+                }
+            }));
         } else
         {
-            onRefresh(true);
+            setRefresh(true);
         }
     }
 
@@ -334,7 +326,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
             onRefresh(true);
         }
 
-        mAppResearch.onResume("outbound_스테이", mStayIndex);
+        mAppResearch.onResume("고메", mGourmetIndex);
     }
 
     @Override
@@ -342,7 +334,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
     {
         super.onPause();
 
-        mAppResearch.onPause("outbound_스테이", mStayIndex);
+        mAppResearch.onPause("고메", mGourmetIndex);
     }
 
     @Override
@@ -368,10 +360,6 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
     {
         switch (mStatus)
         {
-            case STATUS_BOOKING:
-                onHideRoomListClick(true);
-                return true;
-
             case STATUS_FINISH:
                 break;
 
@@ -419,76 +407,58 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
 
         switch (requestCode)
         {
-            case StayOutboundDetailActivity.REQUEST_CODE_CALENDAR:
+            case GourmetDetailActivity.REQUEST_CODE_CALENDAR:
             {
                 if (resultCode == Activity.RESULT_OK && data != null)
                 {
-                    if (data.hasExtra(StayCalendarActivity.INTENT_EXTRA_DATA_CHECKIN_DATETIME) == true//
-                        && data.hasExtra(StayCalendarActivity.INTENT_EXTRA_DATA_CHECKOUT_DATETIME) == true)
+                    if (data.hasExtra(GourmetDetailCalendarActivity.NAME_INTENT_EXTRA_DATA_VISIT_DATE) == true)
                     {
-                        String checkInDateTime = data.getStringExtra(StayCalendarActivity.INTENT_EXTRA_DATA_CHECKIN_DATETIME);
-                        String checkOutDateTime = data.getStringExtra(StayCalendarActivity.INTENT_EXTRA_DATA_CHECKOUT_DATETIME);
+                        String visitDateTime = data.getStringExtra(GourmetDetailCalendarActivity.NAME_INTENT_EXTRA_DATA_VISIT_DATE);
 
-                        if (DailyTextUtils.isTextEmpty(checkInDateTime, checkOutDateTime) == true)
+                        if (DailyTextUtils.isTextEmpty(visitDateTime) == true)
                         {
                             return;
                         }
 
-                        setStayBookDateTime(checkInDateTime, checkOutDateTime);
-                        notifyStayBookDateTimeChanged();
+                        setGourmetBookDateTime(visitDateTime);
                         setRefresh(true);
                     }
                 }
                 break;
             }
 
-            case StayOutboundDetailActivity.REQUEST_CODE_PEOPLE:
-            {
-                if (resultCode == Activity.RESULT_OK && data != null)
-                {
-                    if (data.hasExtra(SelectPeopleActivity.INTENT_EXTRA_DATA_NUMBER_OF_ADULTS) == true && data.hasExtra(SelectPeopleActivity.INTENT_EXTRA_DATA_CHILD_LIST) == true)
-                    {
-                        int numberOfAdults = data.getIntExtra(SelectPeopleActivity.INTENT_EXTRA_DATA_NUMBER_OF_ADULTS, People.DEFAULT_ADULTS);
-                        ArrayList<Integer> childAgeList = data.getIntegerArrayListExtra(SelectPeopleActivity.INTENT_EXTRA_DATA_CHILD_LIST);
-
-                        setPeople(numberOfAdults, childAgeList);
-                        notifyPeopleChanged();
-                        setRefresh(true);
-                    }
-                }
-                break;
-            }
-
-            case StayOutboundDetailActivity.REQUEST_CODE_HAPPYTALK:
+            case GourmetDetailActivity.REQUEST_CODE_HAPPYTALK:
                 break;
 
-            case StayOutboundDetailActivity.REQUEST_CODE_CALL:
+            case GourmetDetailActivity.REQUEST_CODE_CALL:
                 break;
 
-            case StayOutboundDetailActivity.REQUEST_CODE_PAYMENT:
+            case GourmetDetailActivity.REQUEST_CODE_PAYMENT:
                 if (resultCode == BaseActivity.RESULT_CODE_REFRESH)
                 {
                     setRefresh(true);
                 }
                 break;
 
-            case StayOutboundDetailActivity.REQUEST_CODE_PROFILE_UPDATE:
-            case StayOutboundDetailActivity.REQUEST_CODE_LOGIN:
+            case GourmetDetailActivity.REQUEST_CODE_PROFILE_UPDATE:
+            case GourmetDetailActivity.REQUEST_CODE_LOGIN:
                 if (resultCode == Activity.RESULT_OK)
                 {
                     onActionButtonClick();
                 } else
                 {
-                    onHideRoomListClick(false);
                 }
+                break;
+
+            case GourmetDetailActivity.REQUEST_CODE_DOWNLOAD_COUPON:
                 break;
         }
     }
 
     @Override
-    protected void onRefresh(boolean showProgress)
+    protected synchronized void onRefresh(boolean showProgress)
     {
-        if (getActivity().isFinishing() == true)
+        if (getActivity().isFinishing() == true || isRefresh() == false)
         {
             return;
         }
@@ -496,22 +466,30 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
         setRefresh(false);
         screenLock(showProgress);
 
-        mSelectedRoom = null;
+        addCompositeDisposable(Observable.zip(mGourmetRemoteImpl.getGourmetDetail(mGourmetIndex, mGourmetBookDateTime)//
+            , mCalendarImpl.getGourmetUnavailableDates(mGourmetIndex, GourmetCalendarActivity.DEFAULT_CALENDAR_DAY_OF_MAX_COUNT, false)//
+            , mGourmetRemoteImpl.getGourmetHasCoupon(mGourmetIndex, mGourmetBookDateTime)//
+            , mCommonRemoteImpl.getCommonDateTime()//
+            , new Function4<GourmetDetail, List<Integer>, Boolean, CommonDateTime, GourmetDetail>()
+            {
 
-        addCompositeDisposable(Observable.zip(mCommonRemoteImpl.getCommonDateTime(), mStayOutboundRemoteImpl.getStayOutboundDetail(mStayIndex, mStayBookDateTime, mPeople), new BiFunction<CommonDateTime, StayOutboundDetail, StayOutboundDetail>()
+                @Override
+                public GourmetDetail apply(@io.reactivex.annotations.NonNull GourmetDetail gourmetDetail//
+                    , @io.reactivex.annotations.NonNull List<Integer> unavailableDates//
+                    , @io.reactivex.annotations.NonNull Boolean hasCoupon//
+                    , @io.reactivex.annotations.NonNull CommonDateTime commonDateTime) throws Exception
+                {
+                    setCommonDateTime(commonDateTime);
+                    setSoldOutDateList(unavailableDates);
+
+                    return gourmetDetail;
+                }
+            }).subscribe(new Consumer<GourmetDetail>()
         {
             @Override
-            public StayOutboundDetail apply(@io.reactivex.annotations.NonNull CommonDateTime commonDateTime, @io.reactivex.annotations.NonNull StayOutboundDetail stayOutboundDetail) throws Exception
+            public void accept(@io.reactivex.annotations.NonNull GourmetDetail gourmetDetail) throws Exception
             {
-                setCommonDateTime(commonDateTime);
-                return stayOutboundDetail;
-            }
-        }).subscribe(new Consumer<StayOutboundDetail>()
-        {
-            @Override
-            public void accept(@io.reactivex.annotations.NonNull StayOutboundDetail stayOutboundDetail) throws Exception
-            {
-                onStayOutboundDetail(stayOutboundDetail);
+                onGourmetDetail(gourmetDetail);
 
                 unLockAll();
             }
@@ -620,7 +598,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
     @Override
     public void onShareKakaoClick()
     {
-        if (mStayOutboundDetail == null || mStayBookDateTime == null)
+        if (mGourmetDetail == null || mGourmetBookDateTime == null || lock() == true)
         {
             return;
         }
@@ -640,36 +618,11 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
                 name += "님이";
             }
 
-            String imageUrl;
+            KakaoLinkManager.newInstance(getActivity()).shareGourmet(name, mGourmetDetail..name, mGourmetDetail.address//
+                , mGourmetDetail.index //
+                , mGourmetDetail.getImageInformationList().get(0).url //
+                , mGourmetBookDateTime);
 
-            ImageMap imageMap = mStayOutboundDetail.getImageList().get(0).getImageMap();
-
-            if (ScreenUtils.getScreenWidth(getActivity()) >= ScreenUtils.DEFAULT_STAYOUTBOUND_XXHDPI_WIDTH)
-            {
-                if (DailyTextUtils.isTextEmpty(imageMap.bigUrl) == true)
-                {
-                    imageUrl = imageMap.smallUrl;
-                } else
-                {
-                    imageUrl = imageMap.bigUrl;
-                }
-            } else
-            {
-                if (DailyTextUtils.isTextEmpty(imageMap.mediumUrl) == true)
-                {
-                    imageUrl = imageMap.smallUrl;
-                } else
-                {
-                    imageUrl = imageMap.mediumUrl;
-                }
-            }
-
-            KakaoLinkManager.newInstance(getActivity()).shareStayOutbound(name//
-                , mStayOutboundDetail.name//
-                , mStayOutboundDetail.address//
-                , mStayOutboundDetail.index//
-                , imageUrl//
-                , mStayBookDateTime);
         } catch (Exception e)
         {
             getViewInterface().showSimpleDialog(null, getString(R.string.dialog_msg_not_installed_kakaotalk)//
@@ -683,18 +636,23 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
                     }
                 }, null);
         }
+
+        unLockAll();
     }
 
     @Override
     public void onShareSmsClick()
     {
-        if (mStayOutboundDetail == null || mStayBookDateTime == null)
+        if (mGourmetDetail == null || mGourmetBookDateTime == null || lock() == true)
         {
             return;
         }
 
         try
         {
+            String longUrl = String.format(Locale.KOREA, "https://mobile.dailyhotel.co.kr/gourmet/%d?reserveDate=%s"//
+                , mGourmetDetail.index, mGourmetBookDateTime.getVisitDateTime("yyyy-MM-dd"));
+
             String name = DailyUserPreference.getInstance(getActivity()).getName();
 
             if (DailyTextUtils.isTextEmpty(name) == true)
@@ -705,18 +663,34 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
                 name += "님이";
             }
 
-            int nights = mStayBookDateTime.getNights();
+            final String message = getString(R.string.message_detail_gourmet_share_sms//
+                , name, mGourmetDetail.name//
+                , mGourmetBookDateTime.getVisitDateTime("yyyy.MM.dd (EEE)")//
+                , mGourmetDetail.address);
 
-            String message = getString(R.string.message_detail_stay_outbound_share_sms//
-                , name, mStayOutboundDetail.name//
-                , mStayBookDateTime.getCheckInDateTime("yyyy.MM.dd(EEE)")//
-                , mStayBookDateTime.getCheckOutDateTime("yyyy.MM.dd(EEE)")//
-                , nights, nights + 1 //
-                , mStayOutboundDetail.address);
+            addCompositeDisposable(mCommonRemoteImpl.getShortUrl(longUrl).subscribe(new Consumer<String>()
+            {
+                @Override
+                public void accept(@NonNull String shortUrl) throws Exception
+                {
+                    unLockAll();
 
-            Util.sendSms(getActivity(), message);
+                    Util.sendSms(getActivity(), message + shortUrl);
+                }
+            }, new Consumer<Throwable>()
+            {
+                @Override
+                public void accept(@NonNull Throwable throwable) throws Exception
+                {
+                    unLockAll();
+
+                    Util.sendSms(getActivity(), message + "https://mobile.dailyhotel.co.kr/gourmet/" + mGourmetDetail.index);
+                }
+            }));
         } catch (Exception e)
         {
+            unLockAll();
+
             ExLog.d(e.toString());
         }
     }
@@ -737,18 +711,18 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
     @Override
     public void onImageSelected(int position)
     {
-        if (mStayOutboundDetail == null)
+        if (mGourmetDetail == null)
         {
             return;
         }
 
-        getViewInterface().setDetailImageCaption(mStayOutboundDetail.getImageList().get(position).caption);
+        getViewInterface().setDetailImageCaption(mGourmetDetail.getImageInformationList().get(position).caption);
     }
 
     @Override
     public void onCalendarClick()
     {
-        if (mStayBookDateTime == null || lock() == true)
+        if (mGourmetBookDateTime == null || lock() == true)
         {
             return;
         }
@@ -777,27 +751,6 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
 
             unLock();
         }
-    }
-
-    @Override
-    public void onPeopleClick()
-    {
-        if (lock() == true)
-        {
-            return;
-        }
-
-        Intent intent;
-
-        if (mPeople == null)
-        {
-            intent = SelectPeopleActivity.newInstance(getActivity(), People.DEFAULT_ADULTS, null);
-        } else
-        {
-            intent = SelectPeopleActivity.newInstance(getActivity(), mPeople.numberOfAdults, mPeople.getChildAgeList());
-        }
-
-        startActivityForResult(intent, StayOutboundDetailActivity.REQUEST_CODE_PEOPLE);
     }
 
     @Override
@@ -890,28 +843,6 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
     }
 
     @Override
-    public void onHideRoomListClick(boolean animation)
-    {
-        Observable<Boolean> observable = getViewInterface().hideRoomList(animation);
-
-        if (observable != null)
-        {
-            screenLock(false);
-
-            addCompositeDisposable(observable.subscribe(new Consumer<Boolean>()
-            {
-                @Override
-                public void accept(@io.reactivex.annotations.NonNull Boolean aBoolean) throws Exception
-                {
-                    unLockAll();
-
-                    setStatus(STATUS_ROOM_LIST);
-                }
-            }));
-        }
-    }
-
-    @Override
     public void onActionButtonClick()
     {
         switch (mStatus)
@@ -1000,57 +931,9 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
                 }
                 break;
 
-            case STATUS_ROOM_LIST:
-                screenLock(false);
-
-                Observable<Boolean> observable = getViewInterface().showRoomList(true);
-
-                if (observable != null)
-                {
-                    addCompositeDisposable(observable.subscribe(new Consumer<Boolean>()
-                    {
-                        @Override
-                        public void accept(@io.reactivex.annotations.NonNull Boolean aBoolean) throws Exception
-                        {
-                            unLockAll();
-
-                            setStatus(STATUS_BOOKING);
-                        }
-                    }));
-                }
-
-                mAnalytics.onScreenRoomList(getActivity());
-                break;
-
             default:
                 break;
         }
-    }
-
-    @Override
-    public void onAmenityMoreClick()
-    {
-        if (mStayOutboundDetail == null || mStayOutboundDetail.getAmenityList() == null//
-            || mStayOutboundDetail.getAmenityList().size() == 0 || lock() == true)
-        {
-            return;
-        }
-
-        SparseArray<String> amenitySparseArray = mStayOutboundDetail.getAmenityList();
-        int size = amenitySparseArray.size();
-        ArrayList<String> amenityList = new ArrayList<>(size);
-
-        for (int i = 0; i < size; i++)
-        {
-            String amenity = amenitySparseArray.get(amenitySparseArray.keyAt(i));
-
-            if (DailyTextUtils.isTextEmpty(amenity) == false)
-            {
-                amenityList.add(amenitySparseArray.get(amenitySparseArray.keyAt(i)));
-            }
-        }
-
-        startActivityForResult(AmenityListActivity.newInstance(getActivity(), amenityList), StayOutboundDetailActivity.REQUEST_CODE_AMENITY);
     }
 
     @Override
@@ -1107,12 +990,6 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
         Util.shareGoogleMap(getActivity(), mStayOutboundDetail.name, Double.toString(mStayOutboundDetail.latitude), Double.toString(mStayOutboundDetail.longitude));
     }
 
-    @Override
-    public void onRoomClick(StayOutboundRoom stayOutboundRoom)
-    {
-        mSelectedRoom = stayOutboundRoom;
-    }
-
     private void setStatus(int status)
     {
         mStatus = status;
@@ -1132,23 +1009,17 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
 
     private void setSoldOutDateList(List<Integer> soldOutList)
     {
-        if (mSoldOutList == null)
-        {
-            mSoldOutList = new ArrayList<>();
-        }
-
-        mSoldOutList.clear();
-        mSoldOutList.addAll(soldOutList);
+        mSoldOutDateList = soldOutList;
     }
 
     private void onGourmetDetail(GourmetDetail gourmetDetail)
     {
-        if (stayOutboundDetail == null)
+        if (gourmetDetail == null)
         {
             return;
         }
 
-        mStayOutboundDetail = stayOutboundDetail;
+        mGourmetDetail = gourmetDetail;
 
         // 리스트에서 이미지가 큰사이즈가 없는 경우 상세에서도 해당 사이즈가 없기 때문에 고려해준다.
         try
@@ -1162,8 +1033,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
                 imageMap.mediumUrl = null;
             }
 
-            // 땡큐 페이지에서 이미지를 못읽는 경우가 생겨서 작은 이미지로 수정
-            mImageUrl = imageMap.smallUrl;
+            mImageUrl = gourmetDetail.getImageInformationList();
         } catch (Exception e)
         {
             ExLog.e(e.toString());
@@ -1177,7 +1047,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
         getViewInterface().setStayDetail(mStayBookDateTime, mPeople, stayOutboundDetail);
 
         // 리스트 가격 변동은 진입시 한번 만 한다.
-        checkChangedPrice(mIsDeepLink, stayOutboundDetail, mListPrice, mCheckChangedPrice == false);
+        checkChangedPrice(mIsDeepLink, gourmetDetail, mListPrice, mCheckChangedPrice == false);
         mCheckChangedPrice = true;
 
         // 선택된 방이 없으면 처음 방으로 한다.
@@ -1198,7 +1068,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
     }
 
     /**
-     * @param visitDateTime  ISO-8601
+     * @param visitDateTime ISO-8601
      */
     private void setGourmetBookDateTime(String visitDateTime)
     {

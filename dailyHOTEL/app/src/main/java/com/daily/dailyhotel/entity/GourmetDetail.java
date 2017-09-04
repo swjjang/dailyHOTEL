@@ -62,6 +62,11 @@ public class GourmetDetail
         mGourmetMenuList = gourmetMenuList;
     }
 
+    public List<ImageInformation> getImageInformationList()
+    {
+        return mImageInformationList;
+    }
+
     public void setImageInformationList(List<ImageInformation> imageInformationList)
     {
         mImageInformationList = imageInformationList;

@@ -45,6 +45,7 @@ import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.List;
 
 public abstract class PlaceDetailActivity extends BaseActivity
 {
@@ -84,7 +85,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
     protected int mProductDetailIndex; // 딥링크로 시작시에 객실/티켓 정보 오픈후에 선택되어있는 인덱스
     protected PlaceReviewScores mPlaceReviewScores;
     protected ArrayList<TrueVRParams> mTrueVRParamsList;
-    protected ArrayList<Integer> mSoldOutList;
+    protected List<Integer> mSoldOutList;
 
     protected Handler mHandler = new Handler();
 

@@ -139,8 +139,12 @@ public class StayOutboundSearchSuggestPresenter extends BaseExceptionPresenter<S
     }
 
     @Override
-    protected void onRefresh(boolean showProgress)
+    protected synchronized void onRefresh(boolean showProgress)
     {
+        if (getActivity().isFinishing() == true || isRefresh() == false)
+        {
+            return;
+        }
     }
 
     @Override

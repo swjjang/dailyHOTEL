@@ -443,10 +443,10 @@ public class GourmetDetailActivity extends PlaceDetailActivity
     {
         addCompositeDisposable(Observable.zip(mCommonRemoteImpl.getCommonDateTime().observeOn(Schedulers.io()) //
             , mPlaceDetailCalendarImpl.getGourmetUnavailableDates(placeIndex, GourmetCalendarActivity.DEFAULT_CALENDAR_DAY_OF_MAX_COUNT, false).observeOn(Schedulers.io()) //
-            , new BiFunction<CommonDateTime, List<String>, TodayDateTime>()
+            , new BiFunction<CommonDateTime, List<Integer>, TodayDateTime>()
             {
                 @Override
-                public TodayDateTime apply(@NonNull CommonDateTime commonDateTime, @NonNull List<String> soldOutList) throws Exception
+                public TodayDateTime apply(@NonNull CommonDateTime commonDateTime, @NonNull List<Integer> soldOutList) throws Exception
                 {
                     if (mSoldOutList == null)
                     {
@@ -454,12 +454,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
                     }
 
                     mSoldOutList.clear();
-
-                    for (String dayString : soldOutList)
-                    {
-                        int soldOutDay = Integer.parseInt(DailyCalendar.convertDateFormatString(dayString, "yyyy-MM-dd", "yyyyMMdd"));
-                        mSoldOutList.add(soldOutDay);
-                    }
+                    mSoldOutList.addAll(soldOutList);
 
                     TodayDateTime todayDateTime = new TodayDateTime();
                     todayDateTime.setToday(commonDateTime.openDateTime, commonDateTime.closeDateTime //
@@ -1048,7 +1043,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         }
     }
 
-    void startCalendar(TodayDateTime todayDateTime, GourmetBookingDay gourmetBookingDay, int placeIndex, ArrayList<Integer> soldOutList, boolean isAnimation)
+    void startCalendar(TodayDateTime todayDateTime, GourmetBookingDay gourmetBookingDay, int placeIndex, List<Integer> soldOutList, boolean isAnimation)
     {
         if (isFinishing() == true || lockUiComponentAndIsLockUiComponent() == true)
         {
@@ -1066,7 +1061,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
 
         Intent intent = GourmetDetailCalendarActivity.newInstance(GourmetDetailActivity.this, //
             todayDateTime, gourmetBookingDay, placeIndex, GourmetCalendarActivity.DEFAULT_CALENDAR_DAY_OF_MAX_COUNT //
-            , callByScreen, soldOutList, true, isAnimation);
+            , callByScreen, (ArrayList)soldOutList, true, isAnimation);
         startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_CALENDAR);
 
         AnalyticsManager.getInstance(GourmetDetailActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_//
@@ -1360,7 +1355,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
                         gourmetMenu.lastOrderTime = gourmetProduct.lastOrderTime;
                         gourmetMenu.menuSummary = gourmetProduct.menuSummary;
                         gourmetMenu.reserveCondition = gourmetProduct.reserveCondition;
-                        gourmetMenu.setPrimaryImageIndex(gourmetProduct.getPrimaryIndex());
+//                        gourmetMenu.setPrimaryImageIndex(gourmetProduct.getPrimaryIndex());
 
                         List<ImageInformation> imageInformationList = new ArrayList<>();
                         for (ProductImageInformation productImageInformation : gourmetProduct.getImageList())
