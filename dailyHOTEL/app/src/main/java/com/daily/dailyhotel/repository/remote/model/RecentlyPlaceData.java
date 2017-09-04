@@ -1,20 +1,19 @@
-package com.twoheart.dailyhotel.network.model;
+package com.daily.dailyhotel.repository.remote.model;
 
 import com.bluelinelabs.logansquare.annotation.JsonField;
-import com.bluelinelabs.logansquare.annotation.JsonIgnore;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
-import com.bluelinelabs.logansquare.annotation.OnJsonParseComplete;
-import com.twoheart.dailyhotel.util.Constants;
+import com.daily.dailyhotel.entity.RecentlyPlace;
+import com.twoheart.dailyhotel.network.model.Prices;
 
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 /**
- * Created by android_sam on 2017. 2. 7..
+ * Created by iseung-won on 2017. 9. 4..
  */
 @JsonObject
-public class HomePlace
+public class RecentlyPlaceData
 {
     @JsonField(name = "idx")
     public int index;
@@ -41,36 +40,44 @@ public class HomePlace
     public Map<String, Object> imgPathMain;
 
     @JsonField(name = "details")
-    public HomeDetails details;
-
-    @JsonIgnore
-    public String imageUrl;
-
-    @JsonIgnore
-    public Constants.PlaceType placeType;
+    public RecentlyPlaceDetailData details;
 
     @JsonField(name = "soldOut")
     public boolean isSoldOut;
 
-    @JsonIgnore
-    public double distance; // 고메 추천 영역을 위해 삽입
-
-    @OnJsonParseComplete
-    void onParseComplete()
+    public RecentlyPlace getRecentlyPlace()
     {
-        placeType = "GOURMET".equalsIgnoreCase(serviceType) == true ? Constants.PlaceType.FNB : Constants.PlaceType.HOTEL;
+        RecentlyPlace place = new RecentlyPlace();
+        place.index = index;
+        place.title = title;
+        place.serviceType = serviceType;
+        place.regionName = regionName;
+        place.prices = prices;
+        place.rating = rating;
+        place.addrSummary = addrSummary;
+        place.imgPathMain = imgPathMain;
+        place.details = details.getDetail();
+        place.isSoldOut = isSoldOut;
+        place.imageUrl = getImageUrl();
 
+        return place;
+    }
+
+    public String getImageUrl()
+    {
         if (imgPathMain == null || imgPathMain.size() == 0)
         {
-            return;
+            return null;
         }
 
         Iterator<Map.Entry<String, Object>> iterator = imgPathMain.entrySet().iterator();
 
         if (iterator == null)
         {
-            return;
+            return null;
         }
+
+        String imageUrl = null;
 
         while (iterator.hasNext())
         {
@@ -89,5 +96,7 @@ public class HomePlace
                 }
             }
         }
+
+        return imageUrl;
     }
 }

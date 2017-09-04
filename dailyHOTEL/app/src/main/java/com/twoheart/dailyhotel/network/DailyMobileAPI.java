@@ -14,6 +14,7 @@ import com.daily.dailyhotel.repository.remote.model.GourmetCampaignTagsData;
 import com.daily.dailyhotel.repository.remote.model.GourmetListData;
 import com.daily.dailyhotel.repository.remote.model.GourmetPaymentData;
 import com.daily.dailyhotel.repository.remote.model.PaymentResultData;
+import com.daily.dailyhotel.repository.remote.model.RecentlyPlacesData;
 import com.daily.dailyhotel.repository.remote.model.ReviewData;
 import com.daily.dailyhotel.repository.remote.model.ShortUrlData;
 import com.daily.dailyhotel.repository.remote.model.StayBookingDetailData;
@@ -45,7 +46,6 @@ import com.twoheart.dailyhotel.network.model.GourmetDetailParams;
 import com.twoheart.dailyhotel.network.model.GourmetKeyword;
 import com.twoheart.dailyhotel.network.model.GourmetWishItem;
 import com.twoheart.dailyhotel.network.model.Holiday;
-import com.twoheart.dailyhotel.network.model.HomePlaces;
 import com.twoheart.dailyhotel.network.model.PlaceReviewScores;
 import com.twoheart.dailyhotel.network.model.PlaceReviews;
 import com.twoheart.dailyhotel.network.model.PlaceWishItems;
@@ -1091,17 +1091,7 @@ public class DailyMobileAPI
 
         ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestHomeWishList(Crypto.getUrlDecoderEx(URL));
         executorCallbackCall.setTag(tag);
-        executorCallbackCall.enqueue((retrofit2.Callback<BaseDto<HomePlaces>>) listener);
-    }
-
-    public void requestHomeRecentList(String tag, JSONObject jsonObject, Object listener)
-    {
-        final String URL = Constants.UNENCRYPTED_URL ? "api/v4/home/last-seen"//
-            : "MiQ1NiQ2MSQzOCQyJDExJDU0JDYzJDM2JDgxJDQ3JDU0JDYzJDMyJDEwMSQ0JA==$RTHFLRBRTE2NB0Q1QTU4MDdBNkQ4RkRFOLUIxQLUFCMBEI1QTUdCNjMyLQTZFDQUNEAFMMDUPxNEExQTY1MDVBZOUIxOUVDQzBGNQ=M=$";
-
-        ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestHomeRecentList(Crypto.getUrlDecoderEx(URL), jsonObject);
-        executorCallbackCall.setTag(tag);
-        executorCallbackCall.enqueue((retrofit2.Callback<BaseDto<HomePlaces>>) listener);
+        executorCallbackCall.enqueue((retrofit2.Callback<BaseDto<RecentlyPlacesData>>) listener);
     }
 
     public void requestUserStamps(String tag, boolean details, Object listener)
@@ -1625,7 +1615,7 @@ public class DailyMobileAPI
         return mDailyMobileService.getStayOutboundRecentlyList(Crypto.getUrlDecoderEx(URL) + Crypto.getUrlDecoderEx(API), false, hotelIds, numberOfResults, "NO_SORT").subscribeOn(Schedulers.io());
     }
 
-    public Observable<BaseDto<HomePlaces>> getInboundRecentlyList(JSONObject jsonObject)
+    public Observable<BaseDto<RecentlyPlacesData>> getInboundRecentlyList(JSONObject jsonObject)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/v4/home/recent-view"//
             : "MTckMzUkNzgkNDUkNzQkNjEkNjkkMzkkMjEkNSQ0MiQzMCQyNiQxMDAkODAkNTEk$QjA2MO0U1NURCMUY2NXjBBJNDUNyRjIH5M0UxNkKIzNJBzM4N0MAIxMDEyOEFEMjc3MTOM3REQ5MTkRCNPDUW5NDBFBQTVBQTg5Rg=L=$";

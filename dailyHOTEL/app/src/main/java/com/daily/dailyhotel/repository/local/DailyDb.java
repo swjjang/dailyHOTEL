@@ -13,13 +13,13 @@ import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.domain.RecentlyColumns;
 import com.daily.dailyhotel.entity.CarouselListItem;
 import com.daily.dailyhotel.entity.ImageMap;
+import com.daily.dailyhotel.entity.RecentlyPlace;
 import com.daily.dailyhotel.entity.StayOutbound;
 import com.daily.dailyhotel.repository.local.model.RecentlyList;
 import com.daily.dailyhotel.repository.local.model.RecentlyRealmObject;
 import com.daily.dailyhotel.util.RecentlyPlaceUtil;
 import com.twoheart.dailyhotel.model.Gourmet;
 import com.twoheart.dailyhotel.model.Stay;
-import com.twoheart.dailyhotel.network.model.HomePlace;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 
@@ -413,9 +413,9 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
                 ContentValues contentValues = null;
                 switch (carouselListItem.mType)
                 {
-                    case CarouselListItem.TYPE_HOME_PLACE:
+                    case CarouselListItem.TYPE_RECENTLY_PLACE:
                     {
-                        contentValues = convertContentValues((HomePlace) carouselListItem.getItem(), oldSavingTime);
+                        contentValues = convertContentValues((RecentlyPlace) carouselListItem.getItem(), oldSavingTime);
                         break;
                     }
 
@@ -615,9 +615,9 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
         mContext.getContentResolver().notifyChange(RecentlyList.NOTIFICATION_URI, null);
     }
 
-    private ContentValues convertContentValues(HomePlace homePlace, long savingTime)
+    private ContentValues convertContentValues(RecentlyPlace recentlyPlace, long savingTime)
     {
-        if (homePlace == null)
+        if (recentlyPlace == null)
         {
             return null;
         }
@@ -629,12 +629,12 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
         }
 
         ContentValues contentValues = new ContentValues();
-        contentValues.put(RecentlyColumns.PLACE_INDEX, homePlace.index);
-        contentValues.put(RecentlyColumns.NAME, homePlace.title);
+        contentValues.put(RecentlyColumns.PLACE_INDEX, recentlyPlace.index);
+        contentValues.put(RecentlyColumns.NAME, recentlyPlace.title);
         contentValues.put(RecentlyColumns.ENGLISH_NAME, "");
-        contentValues.put(RecentlyColumns.SERVICE_TYPE, homePlace.serviceType);
+        contentValues.put(RecentlyColumns.SERVICE_TYPE, recentlyPlace.serviceType);
         contentValues.put(RecentlyColumns.SAVING_TIME, savingTime);
-        contentValues.put(RecentlyColumns.IMAGE_URL, homePlace.imageUrl);
+        contentValues.put(RecentlyColumns.IMAGE_URL, recentlyPlace.imageUrl);
 
         return contentValues;
     }

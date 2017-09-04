@@ -20,6 +20,7 @@ import com.daily.base.util.ScreenUtils;
 import com.daily.dailyhotel.entity.CarouselListItem;
 import com.daily.dailyhotel.entity.CommonDateTime;
 import com.daily.dailyhotel.entity.People;
+import com.daily.dailyhotel.entity.RecentlyPlace;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayOutbounds;
 import com.daily.dailyhotel.parcel.analytics.StayOutboundDetailAnalyticsParam;
@@ -42,7 +43,6 @@ import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.model.time.GourmetBookingDay;
 import com.twoheart.dailyhotel.model.time.StayBookingDay;
 import com.twoheart.dailyhotel.network.model.Event;
-import com.twoheart.dailyhotel.network.model.HomePlace;
 import com.twoheart.dailyhotel.network.model.Recommendation;
 import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.place.activity.PlaceRegionListActivity;
@@ -130,7 +130,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
     private DailyDeepLink mDailyDeepLink;
 
     private View mViewByLongPress;
-    private HomePlace mHomePlaceByLongPress;
+    private RecentlyPlace mRecentlyPlaceByLongPress;
     private DailyLocationFactory mDailyLocationFactory;
 
     private RecentlyRemoteImpl mRecentlyRemoteImpl;
@@ -440,13 +440,13 @@ public class HomeFragment extends BaseMenuNavigationFragment
                         @Override
                         public void subscribe(ObservableEmitter<Object> e) throws Exception
                         {
-                            if (RecentlyPlaceUtil.SERVICE_TYPE_OB_STAY_NAME.equalsIgnoreCase(mHomePlaceByLongPress.serviceType) == true)
+                            if (RecentlyPlaceUtil.SERVICE_TYPE_OB_STAY_NAME.equalsIgnoreCase(mRecentlyPlaceByLongPress.serviceType) == true)
                             {
                                 // stayOutbound
-                                startStayOutboundDetail(mViewByLongPress, mHomePlaceByLongPress, mTodayDateTime);
+                                startStayOutboundDetail(mViewByLongPress, mRecentlyPlaceByLongPress, mTodayDateTime);
                             } else
                             {
-                                startPlaceDetail(mViewByLongPress, mHomePlaceByLongPress, mTodayDateTime);
+                                startPlaceDetail(mViewByLongPress, mRecentlyPlaceByLongPress, mTodayDateTime);
                             }
                         }
                     }).subscribeOn(AndroidSchedulers.mainThread()).subscribe();
@@ -835,16 +835,27 @@ public class HomeFragment extends BaseMenuNavigationFragment
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-    public void startPlaceDetail(View view, HomePlace place, TodayDateTime todayDateTime)
+    public void startPlaceDetail(View view, RecentlyPlace place, TodayDateTime todayDateTime)
     {
         if (place == null || todayDateTime == null)
         {
             return;
         }
 
+        ServiceType serviceType;
         try
         {
-            switch (place.placeType)
+            serviceType = ServiceType.valueOf(place.serviceType);
+        } catch (Exception e)
+        {
+            serviceType = null;
+            ExLog.e(e.toString());
+            return;
+        }
+
+        try
+        {
+            switch (serviceType)
             {
                 case HOTEL:
                 {
@@ -919,7 +930,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
                     break;
                 }
 
-                case FNB:
+                case GOURMET:
                 {
                     GourmetBookingDay gourmetBookingDay = new GourmetBookingDay();
                     gourmetBookingDay.setVisitDay(mTodayDateTime.dailyDateTime);
@@ -998,7 +1009,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-    private void startStayOutboundDetail(View view, HomePlace place, TodayDateTime todayDateTime)
+    private void startStayOutboundDetail(View view, RecentlyPlace place, TodayDateTime todayDateTime)
     {
         if (place == null)
         {
@@ -1154,12 +1165,12 @@ public class HomeFragment extends BaseMenuNavigationFragment
     {
         addCompositeDisposable(Observable.zip(mRecentlyRemoteImpl.getInboundRecentlyList(MAX_REQUEST_SIZE) //
             , mRecentlyRemoteImpl.getStayOutboundRecentlyList(MAX_REQUEST_SIZE, false) //
-            , new BiFunction<ArrayList<HomePlace>, StayOutbounds, ArrayList<CarouselListItem>>()
+            , new BiFunction<ArrayList<RecentlyPlace>, StayOutbounds, ArrayList<CarouselListItem>>()
             {
                 @Override
-                public ArrayList<CarouselListItem> apply(@NonNull ArrayList<HomePlace> homePlacesList, @NonNull StayOutbounds stayOutbounds) throws Exception
+                public ArrayList<CarouselListItem> apply(@NonNull ArrayList<RecentlyPlace> recentlyPlaceList, @NonNull StayOutbounds stayOutbounds) throws Exception
                 {
-                    return RecentlyPlaceUtil.mergeCarouselListItemList(mBaseActivity, homePlacesList, stayOutbounds);
+                    return RecentlyPlaceUtil.mergeCarouselListItemList(mBaseActivity, recentlyPlaceList, stayOutbounds);
                 }
             }).subscribe(new Consumer<ArrayList<CarouselListItem>>()
         {
@@ -1283,8 +1294,6 @@ public class HomeFragment extends BaseMenuNavigationFragment
                         public ArrayList<CarouselListItem> apply(@NonNull List<Stay> stays, @NonNull List<Gourmet> gourmets //
                             , @NonNull StayOutbounds stayOutbounds) throws Exception
                         {
-                            //                            ArrayList<HomePlace> homePlaceList = RecentlyPlaceUtil.mergeHomePlaceList(getActivity(), stays, gourmets, stayOutbounds);
-
                             ArrayList<CarouselListItem> carouselListItemList = RecentlyPlaceUtil.mergeCarouselListItemList(getActivity(), stays, gourmets, stayOutbounds);
 
                             DailyDb dailyDb = DailyDbHelper.getInstance().open(getActivity());
@@ -1803,7 +1812,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
                 return;
             }
 
-            HomePlace wishItem = item.getItem();
+            RecentlyPlace wishItem = item.getItem();
             if (wishItem != null)
             {
                 startPlaceDetail(view, wishItem, mTodayDateTime);
@@ -1828,17 +1837,19 @@ public class HomeFragment extends BaseMenuNavigationFragment
                 return;
             }
 
-            HomePlace wishItem = item.getItem();
+            RecentlyPlace wishItem = item.getItem();
             if (wishItem != null)
             {
                 try
                 {
                     mViewByLongPress = view;
-                    mHomePlaceByLongPress = wishItem;
+                    mRecentlyPlaceByLongPress = wishItem;
 
                     mHomeLayout.setBlurVisibility(mBaseActivity, true);
 
-                    switch (wishItem.placeType)
+                    ServiceType serviceType = ServiceType.valueOf(wishItem.serviceType);
+
+                    switch (serviceType)
                     {
                         case HOTEL:
                         {
@@ -1852,7 +1863,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
                             break;
                         }
 
-                        case FNB:
+                        case GOURMET:
                         {
                             GourmetBookingDay gourmetBookingDay = new GourmetBookingDay();
                             gourmetBookingDay.setVisitDay(mTodayDateTime.dailyDateTime);
@@ -1887,7 +1898,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
                 return;
             }
 
-            HomePlace recentItem = item.getItem();
+            RecentlyPlace recentItem = item.getItem();
             if (recentItem != null)
             {
                 if (RecentlyPlaceUtil.SERVICE_TYPE_OB_STAY_NAME.equalsIgnoreCase(recentItem.serviceType) == true)
@@ -1919,7 +1930,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
                 return;
             }
 
-            HomePlace recentItem = item.getItem();
+            RecentlyPlace recentItem = item.getItem();
             if (recentItem != null)
             {
                 try
@@ -1927,7 +1938,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
                     if (RecentlyPlaceUtil.SERVICE_TYPE_OB_STAY_NAME.equalsIgnoreCase(recentItem.serviceType) == true)
                     {
                         mViewByLongPress = view;
-                        mHomePlaceByLongPress = recentItem;
+                        mRecentlyPlaceByLongPress = recentItem;
 
                         mHomeLayout.setBlurVisibility(mBaseActivity, true);
 
@@ -1946,11 +1957,12 @@ public class HomeFragment extends BaseMenuNavigationFragment
                     } else
                     {
                         mViewByLongPress = view;
-                        mHomePlaceByLongPress = recentItem;
+                        mRecentlyPlaceByLongPress = recentItem;
 
                         mHomeLayout.setBlurVisibility(mBaseActivity, true);
 
-                        switch (recentItem.placeType)
+                        ServiceType serviceType = ServiceType.valueOf(recentItem.serviceType);
+                        switch (serviceType)
                         {
                             case HOTEL:
                             {
@@ -1964,7 +1976,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
                                 break;
                             }
 
-                            case FNB:
+                            case GOURMET:
                             {
                                 GourmetBookingDay gourmetBookingDay = new GourmetBookingDay();
                                 gourmetBookingDay.setVisitDay(mTodayDateTime.dailyDateTime);

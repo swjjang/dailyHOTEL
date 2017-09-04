@@ -1,11 +1,11 @@
 package com.daily.dailyhotel.domain;
 
+import com.daily.dailyhotel.entity.RecentlyPlace;
 import com.daily.dailyhotel.entity.StayOutbounds;
 import com.twoheart.dailyhotel.model.Gourmet;
 import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.model.time.GourmetBookingDay;
 import com.twoheart.dailyhotel.model.time.StayBookingDay;
-import com.twoheart.dailyhotel.network.model.HomePlace;
 import com.twoheart.dailyhotel.util.Constants;
 
 import java.util.ArrayList;
@@ -21,9 +21,9 @@ public interface RecentlyInterface
 {
     Observable<StayOutbounds> getStayOutboundRecentlyList(int numberOfResults, boolean useRealm);
 
-    Observable<ArrayList<HomePlace>> getInboundRecentlyList(int maxSize);
+    Observable<ArrayList<RecentlyPlace>> getInboundRecentlyList(int maxSize);
 
-    Observable<ArrayList<HomePlace>> getInboundRecentlyList(int maxSize, boolean useRealm, Constants.ServiceType... serviceTypes);
+    Observable<ArrayList<RecentlyPlace>> getInboundRecentlyList(int maxSize, boolean useRealm, Constants.ServiceType... serviceTypes);
 
     Observable<List<Stay>> getStayInboundRecentlyList(StayBookingDay stayBookingDay, boolean useRealm);
 

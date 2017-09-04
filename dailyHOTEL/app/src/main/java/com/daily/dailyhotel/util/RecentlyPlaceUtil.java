@@ -9,18 +9,18 @@ import android.support.annotation.Nullable;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.entity.CarouselListItem;
+import com.daily.dailyhotel.entity.RecentlyPlace;
 import com.daily.dailyhotel.entity.StayOutbound;
 import com.daily.dailyhotel.entity.StayOutbounds;
 import com.daily.dailyhotel.repository.local.DailyDb;
 import com.daily.dailyhotel.repository.local.DailyDbHelper;
-import com.daily.dailyhotel.repository.local.model.RecentlyList;
 import com.daily.dailyhotel.repository.local.model.RecentlyDbPlace;
+import com.daily.dailyhotel.repository.local.model.RecentlyList;
 import com.daily.dailyhotel.repository.local.model.RecentlyRealmObject;
 import com.twoheart.dailyhotel.model.Gourmet;
 import com.twoheart.dailyhotel.model.HomeRecentParam;
 import com.twoheart.dailyhotel.model.RecentPlaces;
 import com.twoheart.dailyhotel.model.Stay;
-import com.twoheart.dailyhotel.network.model.HomePlace;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 
@@ -619,15 +619,15 @@ public class RecentlyPlaceUtil
         DailyDbHelper.getInstance().close();
     }
 
-    public static ArrayList<CarouselListItem> mergeCarouselListItemList(Context context, ArrayList<HomePlace> homePlacesList, StayOutbounds stayOutbounds)
+    public static ArrayList<CarouselListItem> mergeCarouselListItemList(Context context, ArrayList<RecentlyPlace> recentlyPlaceList, StayOutbounds stayOutbounds)
     {
 
         ArrayList<CarouselListItem> carouselListItemList = new ArrayList<>();
-        if (homePlacesList != null)
+        if (recentlyPlaceList != null)
         {
-            for (HomePlace homePlace : homePlacesList)
+            for (RecentlyPlace recentlyPlace : recentlyPlaceList)
             {
-                CarouselListItem item = new CarouselListItem(CarouselListItem.TYPE_HOME_PLACE, homePlace);
+                CarouselListItem item = new CarouselListItem(CarouselListItem.TYPE_RECENTLY_PLACE, recentlyPlace);
                 carouselListItemList.add(item);
             }
         }
@@ -786,9 +786,9 @@ public class RecentlyPlaceUtil
         int index = -1;
         switch (carouselListItem.mType)
         {
-            case CarouselListItem.TYPE_HOME_PLACE:
+            case CarouselListItem.TYPE_RECENTLY_PLACE:
             {
-                HomePlace item = carouselListItem.getItem();
+                RecentlyPlace item = carouselListItem.getItem();
                 index = item.index;
                 break;
             }
@@ -823,9 +823,9 @@ public class RecentlyPlaceUtil
         Constants.ServiceType serviceType = null;
         switch (carouselListItem.mType)
         {
-            case CarouselListItem.TYPE_HOME_PLACE:
+            case CarouselListItem.TYPE_RECENTLY_PLACE:
             {
-                HomePlace place = carouselListItem.getItem();
+                RecentlyPlace place = carouselListItem.getItem();
                 serviceType = RecentlyPlaceUtil.getServiceType(place.serviceType);
                 break;
             }

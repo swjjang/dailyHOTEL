@@ -10,6 +10,7 @@ import android.view.View;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.widget.DailyToast;
+import com.daily.dailyhotel.entity.RecentlyPlace;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Gourmet;
@@ -17,7 +18,6 @@ import com.twoheart.dailyhotel.model.GourmetDetail;
 import com.twoheart.dailyhotel.model.time.GourmetBookingDay;
 import com.twoheart.dailyhotel.network.model.GourmetDetailParams;
 import com.twoheart.dailyhotel.network.model.GourmetProduct;
-import com.twoheart.dailyhotel.network.model.HomePlace;
 import com.twoheart.dailyhotel.network.model.PlaceReviewScores;
 import com.twoheart.dailyhotel.network.model.RecommendationGourmet;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
@@ -74,12 +74,12 @@ public class GourmetPreviewActivity extends BaseActivity
      *
      * @param context
      * @param gourmetBookingDay
-     * @param homePlace
+     * @param recentlyPlace
      * @return
      */
-    public static Intent newInstance(Context context, GourmetBookingDay gourmetBookingDay, HomePlace homePlace)
+    public static Intent newInstance(Context context, GourmetBookingDay gourmetBookingDay, RecentlyPlace recentlyPlace)
     {
-        if (gourmetBookingDay == null || homePlace == null)
+        if (gourmetBookingDay == null || recentlyPlace == null)
         {
             return null;
         }
@@ -87,13 +87,13 @@ public class GourmetPreviewActivity extends BaseActivity
         Intent intent = new Intent(context, GourmetPreviewActivity.class);
 
         intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, gourmetBookingDay);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEIDX, homePlace.index);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACENAME, homePlace.title);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_CATEGORY, homePlace.details.category);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEIDX, recentlyPlace.index);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACENAME, recentlyPlace.title);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_CATEGORY, recentlyPlace.details.category);
 
-        if (homePlace.prices != null && homePlace.prices.discountPrice > 0)
+        if (recentlyPlace.prices != null && recentlyPlace.prices.discountPrice > 0)
         {
-            intent.putExtra(NAME_INTENT_EXTRA_DATA_DISCOUNTPRICE, homePlace.prices.discountPrice);
+            intent.putExtra(NAME_INTENT_EXTRA_DATA_DISCOUNTPRICE, recentlyPlace.prices.discountPrice);
         } else
         {
             intent.putExtra(NAME_INTENT_EXTRA_DATA_DISCOUNTPRICE, SKIP_CHECK_DISCOUNT_PRICE_VALUE);

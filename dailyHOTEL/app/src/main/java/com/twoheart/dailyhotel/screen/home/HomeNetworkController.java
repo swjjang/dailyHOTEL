@@ -5,13 +5,14 @@ import android.content.Context;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.entity.CarouselListItem;
+import com.daily.dailyhotel.entity.RecentlyPlace;
+import com.daily.dailyhotel.repository.remote.model.RecentlyPlaceData;
+import com.daily.dailyhotel.repository.remote.model.RecentlyPlacesData;
 import com.twoheart.dailyhotel.Setting;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.network.dto.BaseDto;
 import com.twoheart.dailyhotel.network.dto.BaseListDto;
 import com.twoheart.dailyhotel.network.model.Event;
-import com.twoheart.dailyhotel.network.model.HomePlace;
-import com.twoheart.dailyhotel.network.model.HomePlaces;
 import com.twoheart.dailyhotel.network.model.Recommendation;
 import com.twoheart.dailyhotel.network.model.Stamp;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
@@ -152,30 +153,32 @@ public class HomeNetworkController extends BaseNetworkController
         }
     };
 
-    private retrofit2.Callback mWishListCallBack = new retrofit2.Callback<BaseDto<HomePlaces>>()
+    private retrofit2.Callback mWishListCallBack = new retrofit2.Callback<BaseDto<RecentlyPlacesData>>()
     {
         @Override
-        public void onResponse(Call<BaseDto<HomePlaces>> call, Response<BaseDto<HomePlaces>> response)
+        public void onResponse(Call<BaseDto<RecentlyPlacesData>> call, Response<BaseDto<RecentlyPlacesData>> response)
         {
             if (response != null && response.isSuccessful() && response.body() != null)
             {
                 try
                 {
-                    BaseDto<HomePlaces> baseDto = response.body();
+                    BaseDto<RecentlyPlacesData> baseDto = response.body();
 
                     if (baseDto.msgCode == 100)
                     {
                         String imageBaseUrl = baseDto.data.imageBaseUrl;
                         ArrayList<CarouselListItem> carouselListItemList = new ArrayList<>();
 
-                        for (HomePlace homePlace : baseDto.data.items)
+                        for (RecentlyPlaceData placeData : baseDto.data.items)
                         {
-                            if (DailyTextUtils.isTextEmpty(homePlace.imageUrl) == false)
+                            RecentlyPlace recentlyPlace = placeData.getRecentlyPlace();
+
+                            if (DailyTextUtils.isTextEmpty(recentlyPlace.imageUrl) == false)
                             {
-                                homePlace.imageUrl = imageBaseUrl + homePlace.imageUrl;
+                                recentlyPlace.imageUrl = imageBaseUrl + recentlyPlace.imageUrl;
                             }
 
-                            CarouselListItem carouselListItem = new CarouselListItem(CarouselListItem.TYPE_HOME_PLACE, homePlace);
+                            CarouselListItem carouselListItem = new CarouselListItem(CarouselListItem.TYPE_RECENTLY_PLACE, recentlyPlace);
                             carouselListItemList.add(carouselListItem);
                         }
 
