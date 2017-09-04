@@ -298,6 +298,7 @@
     <color name="default_background_ce4e4e9">#e4e4e9</color>
     <color name="default_background_ccfad80">#cfad80</color>
     <color name="default_background_cf9f9fb">#f9f9fb</color>
+    <color name="default_background_c99cfad80">#99cfad80</color>
     <color name="default_placeholder">#dfdfe0</color>
     <color name="default_background_cdb2353_alpha_92">#eadb2353</color>
 
