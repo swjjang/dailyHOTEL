@@ -1,0 +1,103 @@
+package com.daily.dailyhotel.entity;
+
+import android.content.Context;
+
+import com.twoheart.dailyhotel.R;
+
+import java.util.LinkedHashMap;
+import java.util.List;
+
+public class GourmetDetail
+{
+    public int index;
+    public String name;
+    public double latitude;
+    public double longitude;
+    public String address;
+    public String category;
+    public String categorySub;
+    public int price;
+    public int discount;
+    public int ratingPersons;
+    public int ratingValue;
+    public boolean ratingShow;
+    public String benefit;
+    public String benefitContents;
+    public int wishCount;
+    public boolean myWish;
+    public String sticker;
+
+    private List<ImageInformation> mImageInformationList;
+    private List<LinkedHashMap<String, List<String>>> mDescriptionMap;
+    private List<GourmetMenu> mGourmetMenuList;
+    private List<Pictogram> mPictogramList;
+
+    public GourmetDetail()
+    {
+
+    }
+
+    public List<LinkedHashMap<String, List<String>>> getDescriptionMap()
+    {
+        return mDescriptionMap;
+    }
+
+    public void setDescriptionMap(List<LinkedHashMap<String, List<String>>> specificationMap)
+    {
+        mDescriptionMap = specificationMap;
+    }
+
+    public List<Pictogram> getPictogramList()
+    {
+        return mPictogramList;
+    }
+
+    public void setPictogramList(List<Pictogram> pictogramList)
+    {
+        mPictogramList = pictogramList;
+    }
+
+    public void setGourmetMenuList(List<GourmetMenu> gourmetMenuList)
+    {
+        mGourmetMenuList = gourmetMenuList;
+    }
+
+    public void setImageInformationList(List<ImageInformation> imageInformationList)
+    {
+        mImageInformationList = imageInformationList;
+    }
+
+    public enum Pictogram
+    {
+        parking(R.string.label_parking, R.drawable.f_ic_facilities_05),
+        valet(R.string.label_valet_available, R.drawable.f_ic_facilities_10),
+        privateRoom(R.string.label_private_room, R.drawable.f_ic_facilities_11),
+        groupBooking(R.string.label_group_booking, R.drawable.f_ic_facilities_12),
+        babySeat(R.string.label_baby_seat, R.drawable.f_ic_facilities_13),
+        corkage(R.string.label_corkage, R.drawable.f_ic_facilities_14),
+        none(0, 0);
+
+        private int mNameResId;
+        private int mImageResId;
+
+        Pictogram(int nameResId, int imageResId)
+        {
+            this.mNameResId = nameResId;
+            this.mImageResId = imageResId;
+        }
+
+        public String getName(Context context)
+        {
+            if (mNameResId <= 0)
+            {
+                return "";
+            }
+            return context.getString(mNameResId);
+        }
+
+        public int getImageResId()
+        {
+            return mImageResId;
+        }
+    }
+}

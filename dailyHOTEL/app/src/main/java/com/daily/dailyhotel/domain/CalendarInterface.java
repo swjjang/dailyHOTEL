@@ -8,9 +8,9 @@ import io.reactivex.Observable;
  * Created by android_sam on 2017. 7. 12..
  */
 
-public interface PlaceDetailCalendarInterface
+public interface CalendarInterface
 {
-    Observable<List<String>> getGourmetUnavailableDates(int placeIndex, int dateRange, boolean reverse);
+    Observable<List<Integer>> getGourmetUnavailableDates(int placeIndex, int dateRange, boolean reverse);
 
     Observable<List<String>> getStayUnavailableCheckInDates(int placeIndex, int dateRange, boolean reverse);
 

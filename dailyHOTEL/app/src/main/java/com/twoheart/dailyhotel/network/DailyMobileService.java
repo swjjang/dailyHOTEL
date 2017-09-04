@@ -5,8 +5,10 @@ import com.daily.dailyhotel.repository.remote.model.BookingHideData;
 import com.daily.dailyhotel.repository.remote.model.CampaignTagData;
 import com.daily.dailyhotel.repository.remote.model.CardData;
 import com.daily.dailyhotel.repository.remote.model.CommonDateTimeData;
+import com.daily.dailyhotel.repository.remote.model.ExistCouponsData;
 import com.daily.dailyhotel.repository.remote.model.GourmetBookingDetailData;
 import com.daily.dailyhotel.repository.remote.model.GourmetCampaignTagsData;
+import com.daily.dailyhotel.repository.remote.model.GourmetDetailData;
 import com.daily.dailyhotel.repository.remote.model.GourmetListData;
 import com.daily.dailyhotel.repository.remote.model.GourmetPaymentData;
 import com.daily.dailyhotel.repository.remote.model.PaymentResultData;
@@ -528,7 +530,7 @@ public interface DailyMobileService
     Observable<BaseDto<SuggestsData>> getSuggestsByStayOutbound(@Url String mobileAPI, @Query(value = "keyword") String keyword);
 
     /////////////////////////////////////////////////////////////////////////////////////////////////
-    // SuggestRemoteImpl
+    // StayOutboundRemoteImpl
     /////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
@@ -635,6 +637,27 @@ public interface DailyMobileService
     Observable<BaseDto<StayOutboundEmailReceiptData>> getStayOutboundEmailReceipt(@Url String mobileAPI//
         , @Query("receiverEmail") String receiverEmail);
 
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+    // GourmetRemoteImpl
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
+    @GET("{mobileAPI}")
+    Observable<BaseDto<GourmetDetailData>> getGourmetDetail(@Path(value = "mobileAPI", encoded = true) String mobileAPI//
+        , @Query("dateSale") String visitDate);
+
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
+    @GET("{mobileAPI}")
+    Observable<BaseDto<ExistCouponsData>> getGourmetHasCoupon(@Path(value = "mobileAPI", encoded = true) String mobileAPI//
+        , @Query("dateSale") String visitDate);
+
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
+    @GET("{mobileAPI}")
+    Observable<BaseDto<String>> addGourmetWish(@Path(value = "mobileAPI", encoded = true) String mobileAPI);
+
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
+    @GET("{mobileAPI}")
+    Observable<BaseDto<String>> removeGourmetWish(@Path(value = "mobileAPI", encoded = true) String mobileAPI);
 
     /////////////////////////////////////////////////////////////////////////////////////////////////
     // BookingRemoteImpl

@@ -19,7 +19,7 @@ import com.daily.base.util.ScreenUtils;
 import com.daily.base.widget.DailyTextView;
 import com.daily.dailyhotel.repository.local.model.AnalyticsParam;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
-import com.daily.dailyhotel.repository.remote.PlaceDetailCalendarImpl;
+import com.daily.dailyhotel.repository.remote.CalendarImpl;
 import com.daily.dailyhotel.view.DailyToolbarView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Customer;
@@ -63,7 +63,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
     protected PlaceDetailNetworkController mPlaceDetailNetworkController;
 
     protected CommonRemoteImpl mCommonRemoteImpl;
-    protected PlaceDetailCalendarImpl mPlaceDetailCalendarImpl;
+    protected CalendarImpl mPlaceDetailCalendarImpl;
 
     protected PlaceBookingDay mPlaceBookingDay;
     protected TodayDateTime mTodayDateTime;
@@ -136,7 +136,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
         mPlaceDetailNetworkController = getNetworkController(this);
 
         mCommonRemoteImpl = new CommonRemoteImpl(this);
-        mPlaceDetailCalendarImpl = new PlaceDetailCalendarImpl(this);
+        mPlaceDetailCalendarImpl = new CalendarImpl(this);
     }
 
     protected void initToolbar(String title)

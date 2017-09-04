@@ -18,7 +18,7 @@ import com.daily.base.util.ExLog;
 import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.entity.CommonDateTime;
 import com.daily.dailyhotel.entity.GourmetMenu;
-import com.daily.dailyhotel.entity.GourmetMenuImage;
+import com.daily.dailyhotel.entity.ImageInformation;
 import com.daily.dailyhotel.parcel.analytics.GourmetPaymentAnalyticsParam;
 import com.daily.dailyhotel.repository.local.model.AnalyticsParam;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
@@ -36,7 +36,6 @@ import com.twoheart.dailyhotel.model.time.GourmetBookingDay;
 import com.twoheart.dailyhotel.model.time.PlaceBookingDay;
 import com.twoheart.dailyhotel.network.model.GourmetDetailParams;
 import com.twoheart.dailyhotel.network.model.GourmetProduct;
-import com.twoheart.dailyhotel.network.model.ImageInformation;
 import com.twoheart.dailyhotel.network.model.PlaceReviewScores;
 import com.twoheart.dailyhotel.network.model.ProductImageInformation;
 import com.twoheart.dailyhotel.network.model.TodayDateTime;
@@ -765,7 +764,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         }
 
         String imageUrl = null;
-        List<ImageInformation> imageInformationList = gourmetDetail.getImageList();
+        List<com.twoheart.dailyhotel.network.model.ImageInformation> imageInformationList = gourmetDetail.getImageList();
 
         if (imageInformationList != null && imageInformationList.size() > 0)
         {
@@ -1350,8 +1349,8 @@ public class GourmetDetailActivity extends PlaceDetailActivity
                     {
                         GourmetMenu gourmetMenu = new GourmetMenu();
                         gourmetMenu.index = gourmetProduct.index;
-                        gourmetMenu.saleIdx = gourmetProduct.saleIdx;
-                        gourmetMenu.ticketName = gourmetProduct.ticketName;
+                        gourmetMenu.saleIndex = gourmetProduct.saleIdx;
+                        gourmetMenu.name = gourmetProduct.ticketName;
                         gourmetMenu.price = gourmetProduct.price;
                         gourmetMenu.discountPrice = gourmetProduct.discountPrice;
                         gourmetMenu.menuBenefit = gourmetProduct.menuBenefit;
@@ -1363,17 +1362,17 @@ public class GourmetDetailActivity extends PlaceDetailActivity
                         gourmetMenu.reserveCondition = gourmetProduct.reserveCondition;
                         gourmetMenu.setPrimaryImageIndex(gourmetProduct.getPrimaryIndex());
 
-                        List<GourmetMenuImage> gourmetMenuImageList = new ArrayList<>();
+                        List<ImageInformation> imageInformationList = new ArrayList<>();
                         for (ProductImageInformation productImageInformation : gourmetProduct.getImageList())
                         {
-                            GourmetMenuImage gourmetMenuImage = new GourmetMenuImage();
-                            gourmetMenuImage.url = productImageInformation.imageUrl;
-                            gourmetMenuImage.caption = productImageInformation.imageDescription;
+                            ImageInformation imageInformation = new ImageInformation();
+                            imageInformation.url = productImageInformation.imageUrl;
+                            imageInformation.caption = productImageInformation.imageDescription;
 
-                            gourmetMenuImageList.add(gourmetMenuImage);
+                            imageInformationList.add(imageInformation);
                         }
 
-                        gourmetMenu.setImageList(gourmetMenuImageList);
+                        gourmetMenu.setImageList(imageInformationList);
                         gourmetMenu.setMenuDetailList(gourmetProduct.getMenuDetailList());
 
                         gourmetMenuList.add(gourmetMenu);
@@ -1502,7 +1501,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
                 return;
             }
 
-            List<ImageInformation> imageInformationList = placeDetail.getImageList();
+            List<com.twoheart.dailyhotel.network.model.ImageInformation> imageInformationList = placeDetail.getImageList();
             if (imageInformationList.size() == 0)
             {
                 return;

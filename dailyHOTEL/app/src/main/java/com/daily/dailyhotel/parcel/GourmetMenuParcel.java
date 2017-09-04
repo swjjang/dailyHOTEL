@@ -5,7 +5,7 @@ import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
 import com.daily.dailyhotel.entity.GourmetMenu;
-import com.daily.dailyhotel.entity.GourmetMenuImage;
+import com.daily.dailyhotel.entity.ImageInformation;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,8 +38,8 @@ public class GourmetMenuParcel implements Parcelable
     public void writeToParcel(Parcel dest, int flags)
     {
         dest.writeInt(mGourmetMenu.index);
-        dest.writeInt(mGourmetMenu.saleIdx);
-        dest.writeString(mGourmetMenu.ticketName);
+        dest.writeInt(mGourmetMenu.saleIndex);
+        dest.writeString(mGourmetMenu.name);
         dest.writeInt(mGourmetMenu.price);
         dest.writeInt(mGourmetMenu.discountPrice);
         dest.writeString(mGourmetMenu.menuBenefit);
@@ -51,18 +51,18 @@ public class GourmetMenuParcel implements Parcelable
         dest.writeString(mGourmetMenu.menuSummary);
         dest.writeInt(mGourmetMenu.getPrimaryImageIndex());
 
-        List<GourmetMenuImage> gourmetMenuImageList = mGourmetMenu.getImageList();
-        List<GourmetMenuImageParcel> gourmetMenuImageParcelList = new ArrayList<>();
+        List<ImageInformation> imageInformationList = mGourmetMenu.getImageList();
+        List<ImageInformationParcel> imageInformationParcelList = new ArrayList<>();
 
-        if (gourmetMenuImageList != null && gourmetMenuImageList.size() > 0)
+        if (imageInformationList != null && imageInformationList.size() > 0)
         {
-            for (GourmetMenuImage gourmetMenuImage : gourmetMenuImageList)
+            for (ImageInformation imageInformation : imageInformationList)
             {
-                gourmetMenuImageParcelList.add(new GourmetMenuImageParcel(gourmetMenuImage));
+                imageInformationParcelList.add(new ImageInformationParcel(imageInformation));
             }
         }
 
-        dest.writeTypedList(gourmetMenuImageParcelList);
+        dest.writeTypedList(imageInformationParcelList);
         dest.writeStringList(mGourmetMenu.getMenuDetailList());
 
     }
@@ -72,8 +72,8 @@ public class GourmetMenuParcel implements Parcelable
         mGourmetMenu = new GourmetMenu();
 
         mGourmetMenu.index = in.readInt();
-        mGourmetMenu.saleIdx = in.readInt();
-        mGourmetMenu.ticketName = in.readString();
+        mGourmetMenu.saleIndex = in.readInt();
+        mGourmetMenu.name = in.readString();
         mGourmetMenu.price = in.readInt();
         mGourmetMenu.discountPrice = in.readInt();
         mGourmetMenu.menuBenefit = in.readString();
@@ -85,15 +85,15 @@ public class GourmetMenuParcel implements Parcelable
         mGourmetMenu.menuSummary = in.readString();
         mGourmetMenu.setPrimaryImageIndex(in.readInt());
 
-        List<GourmetMenuImageParcel> gourmetMenuImageParcelList = in.createTypedArrayList(GourmetMenuImageParcel.CREATOR);
-        List<GourmetMenuImage> gourmetMenuImageList = new ArrayList<>();
+        List<ImageInformationParcel> imageInformationParcelList = in.createTypedArrayList(ImageInformationParcel.CREATOR);
+        List<ImageInformation> imageInformationList = new ArrayList<>();
 
-        for (GourmetMenuImageParcel gourmetMenuImageParcel : gourmetMenuImageParcelList)
+        for (ImageInformationParcel imageInformationParcel : imageInformationParcelList)
         {
-            gourmetMenuImageList.add(gourmetMenuImageParcel.getGourmetMenuImage());
+            imageInformationList.add(imageInformationParcel.getGourmetMenuImage());
         }
 
-        mGourmetMenu.setImageList(gourmetMenuImageList);
+        mGourmetMenu.setImageList(imageInformationList);
         mGourmetMenu.setMenuDetailList(in.createStringArrayList());
     }
 

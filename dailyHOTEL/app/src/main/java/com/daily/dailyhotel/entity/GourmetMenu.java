@@ -5,8 +5,8 @@ import java.util.List;
 public class GourmetMenu
 {
     public int index;
-    public int saleIdx;
-    public String ticketName;
+    public int saleIndex;
+    public String name;
     public int price;
     public int discountPrice;
     public String menuBenefit;
@@ -16,43 +16,41 @@ public class GourmetMenu
     public String closeTime;
     public String lastOrderTime;
     public String menuSummary;
-    private List<GourmetMenuImage> mGourmetMenuImageList;
-    private List<String> mMenuDetailList;
 
-    private int mPrimaryImageIndex;
+    public int minimumOrderQuantity;
+    public int maximumOrderQuantity;
+    public String startEatingTime;
+    public String endEatingTime;
+    public String readyTime;
+    public String expiryTime;
+    public int timeInterval;
+
+
+    private List<ImageInformation> mImageInformationList;
+    private List<String> mMenuDetailList;
 
     public GourmetMenu()
     {
     }
 
-    public List<GourmetMenuImage> getImageList()
+    public List<ImageInformation> getImageList()
     {
-        return mGourmetMenuImageList;
+        return mImageInformationList;
     }
 
-    public void setImageList(List<GourmetMenuImage> gourmetMenuImageList)
+    public void setImageList(List<ImageInformation> imageInformationList)
     {
-        mGourmetMenuImageList = gourmetMenuImageList;
+        mImageInformationList = imageInformationList;
     }
 
-    public GourmetMenuImage getPrimaryImage()
+    public ImageInformation getPrimaryImage()
     {
-        if (mGourmetMenuImageList == null || mGourmetMenuImageList.size() == 0)
+        if (mImageInformationList == null || mImageInformationList.size() == 0)
         {
             return null;
         }
 
-        return mGourmetMenuImageList.get(mPrimaryImageIndex);
-    }
-
-    public void setPrimaryImageIndex(int index)
-    {
-        mPrimaryImageIndex = index;
-    }
-
-    public int getPrimaryImageIndex()
-    {
-        return mPrimaryImageIndex;
+        return mImageInformationList.get(0);
     }
 
     public List<String> getMenuDetailList()
