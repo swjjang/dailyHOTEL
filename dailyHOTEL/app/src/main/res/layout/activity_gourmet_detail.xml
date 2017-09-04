@@ -14,9 +14,9 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintDimensionRatio="H,4:3"
-        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         fresco:actualImageScaleType="centerCrop"/>
 
     <com.twoheart.dailyhotel.widget.DailyLoopViewPager
@@ -24,35 +24,35 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintDimensionRatio="H,4:3"
-        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"/>
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
 
     <View
         android:id="@+id/transGradientBottomView"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintDimensionRatio="H,4:3"
-        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"/>
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/transGradientTopView"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintDimensionRatio="H,4:3"
-        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent">
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <View
             android:layout_width="0dp"
             android:layout_height="112dp"
             android:background="@drawable/img_detail_gradient"
-            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"/>
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
 
         <View
             android:layout_width="0dp"
@@ -183,6 +183,15 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
 
+    <ImageView
+        android:id="@+id/vrImageView"
+        android:layout_width="60dp"
+        android:layout_height="50dp"
+        android:scaleType="center"
+        android:src="@drawable/detail_ic_vr_img"
+        app:layout_constraintBottom_toTopOf="@id/viewpagerIndicator"
+        app:layout_constraintLeft_toLeftOf="parent"/>
+
     <com.daily.dailyhotel.view.DailyToolbarView
         android:id="@+id/fakeToolbarView"
         android:layout_width="0dp"
@@ -190,8 +199,8 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        dailyToolbar:underLineVisible="false"
-        dailyToolbar:themeColor="white"/>
+        dailyToolbar:themeColor="white"
+        dailyToolbar:underLineVisible="false"/>
 
     <com.daily.dailyhotel.view.DailyToolbarView
         android:id="@+id/toolbarView"

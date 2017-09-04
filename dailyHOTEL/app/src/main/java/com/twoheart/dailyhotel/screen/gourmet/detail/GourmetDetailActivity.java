@@ -1629,6 +1629,12 @@ public class GourmetDetailActivity extends PlaceDetailActivity
                 DailyPreference.getInstance(GourmetDetailActivity.this).setWishTooltip(false);
             }
         }
+
+        @Override
+        public void onTrueVRClick()
+        {
+
+        }
     };
 
     private GourmetDetailNetworkController.OnNetworkControllerListener mOnNetworkControllerListener = new GourmetDetailNetworkController.OnNetworkControllerListener()

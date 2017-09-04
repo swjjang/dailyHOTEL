@@ -163,15 +163,6 @@ public abstract class PlaceDetailActivity extends BaseActivity
             }
         });
 
-        mToolbarView.addMenuItem(DailyToolbarView.MenuItem.TRUE_VR, null, new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                onTrueViewClick();
-            }
-        });
-
         mToolbarView.addMenuItem(DailyToolbarView.MenuItem.SHARE, null, new View.OnClickListener()
         {
             @Override
@@ -180,8 +171,6 @@ public abstract class PlaceDetailActivity extends BaseActivity
                 onShareClick();
             }
         });
-
-        mToolbarView.setMenuItemVisible(DailyToolbarView.MenuItem.TRUE_VR, false);
 
         mFakeToolbarView.setOnBackClickListener(new View.OnClickListener()
         {
@@ -202,15 +191,6 @@ public abstract class PlaceDetailActivity extends BaseActivity
             }
         });
 
-        mFakeToolbarView.addMenuItem(DailyToolbarView.MenuItem.TRUE_VR, null, new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                onTrueViewClick();
-            }
-        });
-
         mFakeToolbarView.addMenuItem(DailyToolbarView.MenuItem.SHARE, null, new View.OnClickListener()
         {
             @Override
@@ -219,8 +199,6 @@ public abstract class PlaceDetailActivity extends BaseActivity
                 onShareClick();
             }
         });
-
-        mFakeToolbarView.setMenuItemVisible(DailyToolbarView.MenuItem.TRUE_VR, false);
     }
 
     @Override
@@ -683,8 +661,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
             return;
         }
 
-        mToolbarView.setMenuItemVisible(DailyToolbarView.MenuItem.TRUE_VR, true);
-        mFakeToolbarView.setMenuItemVisible(DailyToolbarView.MenuItem.TRUE_VR, true);
+        mPlaceDetailLayout.setVRIconVisible(true);
 
         if (DailyPreference.getInstance(this).isWishTooltip() == true)
         {
@@ -712,8 +689,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
             return;
         }
 
-        mToolbarView.setMenuItemVisible(DailyToolbarView.MenuItem.TRUE_VR, false);
-        mFakeToolbarView.setMenuItemVisible(DailyToolbarView.MenuItem.TRUE_VR, false);
+        mPlaceDetailLayout.setVRIconVisible(false);
 
         if (DailyPreference.getInstance(this).isWishTooltip() == true)
         {

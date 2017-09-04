@@ -58,7 +58,7 @@ public abstract class PlaceDetailLayout extends BaseLayout
     protected PlaceDetail mPlaceDetail;
     protected DailyLoopViewPager mViewPager;
     protected DailyLineIndicator mDailyLineIndicator;
-    protected View mMoreIconView;
+    protected View mVRIconView, mMoreIconView;
 
     protected DailyPlaceDetailScrollView mScrollView;
 
@@ -118,6 +118,8 @@ public abstract class PlaceDetailLayout extends BaseLayout
         void releaseUiComponent();
 
         void onWishTooltipClick();
+
+        void onTrueVRClick();
     }
 
     protected abstract String getProductTypeTitle();
@@ -185,6 +187,18 @@ public abstract class PlaceDetailLayout extends BaseLayout
         //        ViewGroup.LayoutParams layoutParams = mViewPager.getLayoutParams();
         //        layoutParams.height = getImageLayoutHeight(mContext);
         //        mViewPager.setLayoutParams(layoutParams);
+
+        mVRIconView = view.findViewById(R.id.vrImageView);
+        setVRIconVisible(false);
+
+        mVRIconView.setOnClickListener(new OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                ((OnEventListener) mOnEventListener).onTrueVRClick();
+            }
+        });
 
         mMoreIconView = view.findViewById(R.id.moreIconView);
         mBottomLayout = view.findViewById(R.id.bottomLayout);
@@ -508,6 +522,16 @@ public abstract class PlaceDetailLayout extends BaseLayout
         {
             mDescriptionTextView.setVisibility(View.INVISIBLE);
         }
+    }
+
+    public void setVRIconVisible(boolean visible)
+    {
+        if (mVRIconView == null)
+        {
+            return;
+        }
+
+        mVRIconView.setVisibility(visible ? View.VISIBLE : View.GONE);
     }
 
     public void setLineIndicatorVisible(boolean isShow)

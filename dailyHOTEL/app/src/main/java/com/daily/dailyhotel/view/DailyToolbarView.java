@@ -45,7 +45,7 @@ public class DailyToolbarView extends ConstraintLayout
         SHARE(R.drawable.navibar_ic_share_01_black, true),
         CALL(R.drawable.navibar_ic_call, true),
         CLOSE(R.drawable.navibar_ic_x, true),
-        TRUE_VR(R.drawable.vector_navibar_ic_treuvr, true),
+//        TRUE_VR(R.drawable.vector_navibar_ic_treuvr, true),
         WISH_OFF(R.drawable.vector_navibar_ic_heart_off_black, true),
         WISH_ON(R.drawable.vector_navibar_ic_heart_on, false),
         SEARCH(R.drawable.navibar_ic_search, true);

@@ -1665,6 +1665,12 @@ public class StayDetailActivity extends PlaceDetailActivity
                 DailyPreference.getInstance(StayDetailActivity.this).setWishTooltip(false);
             }
         }
+
+        @Override
+        public void onTrueVRClick()
+        {
+            StayDetailActivity.this.onTrueViewClick();
+        }
     };
 
 
