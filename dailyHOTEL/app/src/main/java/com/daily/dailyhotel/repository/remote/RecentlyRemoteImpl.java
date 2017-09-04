@@ -8,7 +8,7 @@ import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.domain.RecentlyInterface;
 import com.daily.dailyhotel.entity.StayOutbounds;
-import com.daily.dailyhotel.repository.local.model.RecentlyPlace;
+import com.daily.dailyhotel.repository.local.model.RecentlyDbPlace;
 import com.daily.dailyhotel.repository.local.model.RecentlyRealmObject;
 import com.daily.dailyhotel.repository.remote.model.GourmetListData;
 import com.daily.dailyhotel.repository.remote.model.StayListData;
@@ -108,7 +108,7 @@ public class RecentlyRemoteImpl implements RecentlyInterface
 
         try
         {
-            ArrayList<RecentlyPlace> list = RecentlyPlaceUtil.getDbRecentlyTypeList(mContext //
+            ArrayList<RecentlyDbPlace> list = RecentlyPlaceUtil.getDbRecentlyTypeList(mContext //
                 , Constants.ServiceType.HOTEL, Constants.ServiceType.GOURMET);
             JSONArray recentJsonArray = RecentlyPlaceUtil.getDbRecentlyJsonArray(list, maxSize);
             recentJsonObject.put("keys", recentJsonArray);
@@ -156,7 +156,7 @@ public class RecentlyRemoteImpl implements RecentlyInterface
 
         try
         {
-            ArrayList<RecentlyPlace> list = RecentlyPlaceUtil.getDbRecentlyTypeList(mContext //
+            ArrayList<RecentlyDbPlace> list = RecentlyPlaceUtil.getDbRecentlyTypeList(mContext //
                 , serviceTypes);
 
             if (useRealm == true)
@@ -166,7 +166,7 @@ public class RecentlyRemoteImpl implements RecentlyInterface
                 {
                     for (RecentlyRealmObject realmObject : realmList)
                     {
-                        RecentlyPlace place = new RecentlyPlace();
+                        RecentlyDbPlace place = new RecentlyDbPlace();
                         place.savingTime = realmObject.savingTime;
                         place.englishName = realmObject.englishName;
                         place.imageUrl = realmObject.imageUrl;

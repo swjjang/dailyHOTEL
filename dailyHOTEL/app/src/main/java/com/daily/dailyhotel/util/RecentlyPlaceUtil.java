@@ -14,7 +14,7 @@ import com.daily.dailyhotel.entity.StayOutbounds;
 import com.daily.dailyhotel.repository.local.DailyDb;
 import com.daily.dailyhotel.repository.local.DailyDbHelper;
 import com.daily.dailyhotel.repository.local.model.RecentlyList;
-import com.daily.dailyhotel.repository.local.model.RecentlyPlace;
+import com.daily.dailyhotel.repository.local.model.RecentlyDbPlace;
 import com.daily.dailyhotel.repository.local.model.RecentlyRealmObject;
 import com.twoheart.dailyhotel.model.Gourmet;
 import com.twoheart.dailyhotel.model.HomeRecentParam;
@@ -204,7 +204,7 @@ public class RecentlyPlaceUtil
         return recentlyRealmObject;
     }
 
-    public static JSONArray getDbRecentlyJsonArray(ArrayList<RecentlyPlace> list, int maxSize)
+    public static JSONArray getDbRecentlyJsonArray(ArrayList<RecentlyDbPlace> list, int maxSize)
     {
         JSONArray jsonArray = new JSONArray();
 
@@ -237,16 +237,16 @@ public class RecentlyPlaceUtil
         {
             JSONObject jsonObject = new JSONObject();
 
-            RecentlyPlace recentlyPlace = list.get(i);
+            RecentlyDbPlace recentlyDbPlace = list.get(i);
 
             try
             {
-                String serviceTypeString = recentlyPlace.serviceType.name();
+                String serviceTypeString = recentlyDbPlace.serviceType.name();
 
                 if (Constants.ServiceType.HOTEL.name().equalsIgnoreCase(serviceTypeString) == true //
                     || Constants.ServiceType.GOURMET.name().equalsIgnoreCase(serviceTypeString) == true)
                 {
-                    int index = recentlyPlace.index;
+                    int index = recentlyDbPlace.index;
 
                     jsonObject.put("serviceType", serviceTypeString);
                     jsonObject.put("idx", index);
@@ -262,7 +262,7 @@ public class RecentlyPlaceUtil
         return jsonArray;
     }
 
-    public static ArrayList<RecentlyPlace> getDbRecentlyTypeList(Context context, Constants.ServiceType... serviceTypes)
+    public static ArrayList<RecentlyDbPlace> getDbRecentlyTypeList(Context context, Constants.ServiceType... serviceTypes)
     {
         if (context == null)
         {
@@ -273,7 +273,7 @@ public class RecentlyPlaceUtil
 
         Cursor cursor = null;
 
-        ArrayList<RecentlyPlace> recentlyList = new ArrayList<>();
+        ArrayList<RecentlyDbPlace> recentlyList = new ArrayList<>();
 
         try
         {
@@ -290,11 +290,11 @@ public class RecentlyPlaceUtil
 
                 try
                 {
-                    RecentlyPlace recentlyPlace = new RecentlyPlace();
-                    recentlyPlace.index = cursor.getInt(cursor.getColumnIndex(RecentlyList.PLACE_INDEX));
-                    recentlyPlace.name = cursor.getString(cursor.getColumnIndex(RecentlyList.NAME));
-                    recentlyPlace.englishName = cursor.getString(cursor.getColumnIndex(RecentlyList.ENGLISH_NAME));
-                    recentlyPlace.savingTime = cursor.getLong(cursor.getColumnIndex(RecentlyList.SAVING_TIME));
+                    RecentlyDbPlace recentlyDbPlace = new RecentlyDbPlace();
+                    recentlyDbPlace.index = cursor.getInt(cursor.getColumnIndex(RecentlyList.PLACE_INDEX));
+                    recentlyDbPlace.name = cursor.getString(cursor.getColumnIndex(RecentlyList.NAME));
+                    recentlyDbPlace.englishName = cursor.getString(cursor.getColumnIndex(RecentlyList.ENGLISH_NAME));
+                    recentlyDbPlace.savingTime = cursor.getLong(cursor.getColumnIndex(RecentlyList.SAVING_TIME));
 
                     Constants.ServiceType serviceType;
 
@@ -306,10 +306,10 @@ public class RecentlyPlaceUtil
                         serviceType = null;
                     }
 
-                    recentlyPlace.serviceType = serviceType;
-                    recentlyPlace.imageUrl = cursor.getString(cursor.getColumnIndex(RecentlyList.IMAGE_URL));
+                    recentlyDbPlace.serviceType = serviceType;
+                    recentlyDbPlace.imageUrl = cursor.getString(cursor.getColumnIndex(RecentlyList.IMAGE_URL));
 
-                    recentlyList.add(recentlyPlace);
+                    recentlyList.add(recentlyDbPlace);
                 } catch (Exception e)
                 {
                     ExLog.w("index : " + i + " , e : " + e.toString());
@@ -698,7 +698,7 @@ public class RecentlyPlaceUtil
             return;
         }
 
-        ArrayList<RecentlyPlace> recentlyTypeList = RecentlyPlaceUtil.getDbRecentlyTypeList(context, serviceTypes);
+        ArrayList<RecentlyDbPlace> recentlyTypeList = RecentlyPlaceUtil.getDbRecentlyTypeList(context, serviceTypes);
         RealmResults<RecentlyRealmObject> results = RecentlyPlaceUtil.getRealmRecentlyTypeList(serviceTypes);
         if (results != null && results.size() > 0)
         {
@@ -709,22 +709,22 @@ public class RecentlyPlaceUtil
 
             for (RecentlyRealmObject object : results)
             {
-                RecentlyPlace recentlyPlace = new RecentlyPlace();
-                recentlyPlace.index = object.index;
-                recentlyPlace.name = object.name;
-                recentlyPlace.englishName = object.englishName;
-                recentlyPlace.serviceType = object.serviceType == null ? null : Constants.ServiceType.valueOf(object.serviceType);
-                recentlyPlace.savingTime = object.savingTime;
-                recentlyPlace.imageUrl = object.imageUrl;
-                recentlyTypeList.add(recentlyPlace);
+                RecentlyDbPlace recentlyDbPlace = new RecentlyDbPlace();
+                recentlyDbPlace.index = object.index;
+                recentlyDbPlace.name = object.name;
+                recentlyDbPlace.englishName = object.englishName;
+                recentlyDbPlace.serviceType = object.serviceType == null ? null : Constants.ServiceType.valueOf(object.serviceType);
+                recentlyDbPlace.savingTime = object.savingTime;
+                recentlyDbPlace.imageUrl = object.imageUrl;
+                recentlyTypeList.add(recentlyDbPlace);
             }
         }
 
-        Collections.sort(recentlyTypeList, new Comparator<RecentlyPlace>()
+        Collections.sort(recentlyTypeList, new Comparator<RecentlyDbPlace>()
         {
             @TargetApi(Build.VERSION_CODES.KITKAT)
             @Override
-            public int compare(RecentlyPlace o1, RecentlyPlace o2)
+            public int compare(RecentlyDbPlace o1, RecentlyDbPlace o2)
             {
                 return Long.compare(o1.savingTime, o2.savingTime);
             }
@@ -738,9 +738,9 @@ public class RecentlyPlaceUtil
         }
 
         ArrayList<Integer> expectedList = new ArrayList<>();
-        for (RecentlyPlace recentlyPlace : recentlyTypeList)
+        for (RecentlyDbPlace recentlyDbPlace : recentlyTypeList)
         {
-            expectedList.add(recentlyPlace.index);
+            expectedList.add(recentlyDbPlace.index);
         }
 
         Collections.sort(actualList, new Comparator<CarouselListItem>()
