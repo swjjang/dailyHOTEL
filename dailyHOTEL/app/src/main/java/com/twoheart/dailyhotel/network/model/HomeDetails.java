@@ -18,6 +18,12 @@ public class HomeDetails
     @JsonField(name = "category")
     public String category;
 
+    @JsonField(name = "categorySub")
+    public String subCategory;
+
+    @JsonField(name = "sticker")
+    public Sticker sticker;
+
     @JsonField(name = "persons")
     public int persons;
 

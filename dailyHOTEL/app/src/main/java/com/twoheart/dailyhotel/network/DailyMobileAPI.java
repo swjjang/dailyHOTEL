@@ -1613,12 +1613,12 @@ public class DailyMobileAPI
         return mDailyMobileService.getStayOutboundRecentlyList(Crypto.getUrlDecoderEx(URL) + Crypto.getUrlDecoderEx(API), false, hotelIds, numberOfResults, "NO_SORT").subscribeOn(Schedulers.io());
     }
 
-    public Observable<BaseDto<HomePlaces>> getHomeRecentlyList(JSONObject jsonObject)
+    public Observable<BaseDto<HomePlaces>> getInboundRecentlyList(JSONObject jsonObject)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/v4/home/recent-view"//
             : "MTckMzUkNzgkNDUkNzQkNjEkNjkkMzkkMjEkNSQ0MiQzMCQyNiQxMDAkODAkNTEk$QjA2MO0U1NURCMUY2NXjBBJNDUNyRjIH5M0UxNkKIzNJBzM4N0MAIxMDEyOEFEMjc3MTOM3REQ5MTkRCNPDUW5NDBFBQTVBQTg5Rg=L=$";
 
-        return mDailyMobileService.getHomeRecentList(Crypto.getUrlDecoderEx(URL), jsonObject).subscribeOn(Schedulers.io());
+        return mDailyMobileService.getInboundRecentlyList(Crypto.getUrlDecoderEx(URL), jsonObject).subscribeOn(Schedulers.io());
     }
 
     public Observable<BaseDto<StayListData>> getStayList(Map<String, Object> queryMap, List<String> bedTypeList, List<String> luxuryList, String abTestType)

@@ -1152,7 +1152,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
 
     private void requestRecentList()
     {
-        addCompositeDisposable(Observable.zip(mRecentlyRemoteImpl.getHomeRecentlyList(MAX_REQUEST_SIZE) //
+        addCompositeDisposable(Observable.zip(mRecentlyRemoteImpl.getInboundRecentlyList(MAX_REQUEST_SIZE) //
             , mRecentlyRemoteImpl.getStayOutboundRecentlyList(MAX_REQUEST_SIZE, false) //
             , new BiFunction<ArrayList<HomePlace>, StayOutbounds, ArrayList<CarouselListItem>>()
             {

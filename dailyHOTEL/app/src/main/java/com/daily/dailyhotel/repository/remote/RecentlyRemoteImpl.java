@@ -9,6 +9,7 @@ import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.domain.RecentlyInterface;
 import com.daily.dailyhotel.entity.StayOutbounds;
 import com.daily.dailyhotel.repository.local.model.RecentlyPlace;
+import com.daily.dailyhotel.repository.local.model.RecentlyRealmObject;
 import com.daily.dailyhotel.repository.remote.model.GourmetListData;
 import com.daily.dailyhotel.repository.remote.model.StayListData;
 import com.daily.dailyhotel.repository.remote.model.StayOutboundsData;
@@ -35,6 +36,7 @@ import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Function;
+import io.realm.RealmResults;
 
 /**
  * Created by android_sam on 2017. 6. 14..
@@ -100,7 +102,7 @@ public class RecentlyRemoteImpl implements RecentlyInterface
     }
 
     @Override
-    public Observable<ArrayList<HomePlace>> getHomeRecentlyList(int maxSize)
+    public Observable<ArrayList<HomePlace>> getInboundRecentlyList(int maxSize)
     {
         JSONObject recentJsonObject = new JSONObject();
 
@@ -116,7 +118,83 @@ public class RecentlyRemoteImpl implements RecentlyInterface
             ExLog.d(e.toString());
         }
 
-        return DailyMobileAPI.getInstance(mContext).getHomeRecentlyList(recentJsonObject).map(new Function<BaseDto<HomePlaces>, ArrayList<HomePlace>>()
+        return DailyMobileAPI.getInstance(mContext).getInboundRecentlyList(recentJsonObject).map(new Function<BaseDto<HomePlaces>, ArrayList<HomePlace>>()
+        {
+            @Override
+            public ArrayList<HomePlace> apply(@NonNull BaseDto<HomePlaces> homePlacesBaseDto) throws Exception
+            {
+                ArrayList<HomePlace> homePlaceList = new ArrayList<>();
+
+                if (homePlacesBaseDto != null)
+                {
+                    if (homePlacesBaseDto.msgCode == 100 && homePlacesBaseDto.data != null)
+                    {
+                        List<HomePlace> list = homePlacesBaseDto.data.getHomePlaceList();
+
+                        if (list != null && list.size() > 0)
+                        {
+                            homePlaceList.addAll(list);
+                        }
+                    } else
+                    {
+                        throw new BaseException(homePlacesBaseDto.msgCode, homePlacesBaseDto.msg);
+                    }
+                } else
+                {
+                    throw new BaseException(-1, null);
+                }
+
+                return homePlaceList;
+            }
+        }).observeOn(AndroidSchedulers.mainThread());
+    }
+
+    @Override
+    public Observable<ArrayList<HomePlace>> getInboundRecentlyList(int maxSize, boolean useRealm, @NonNull Constants.ServiceType... serviceTypes)
+    {
+        JSONObject recentJsonObject = new JSONObject();
+
+        try
+        {
+            ArrayList<RecentlyPlace> list = RecentlyPlaceUtil.getDbRecentlyTypeList(mContext //
+                , serviceTypes);
+
+            if (useRealm == true)
+            {
+                RealmResults<RecentlyRealmObject> realmList = RecentlyPlaceUtil.getRealmRecentlyTypeList(serviceTypes);
+                if (realmList != null)
+                {
+                    for (RecentlyRealmObject realmObject : realmList)
+                    {
+                        RecentlyPlace place = new RecentlyPlace();
+                        place.savingTime = realmObject.savingTime;
+                        place.englishName = realmObject.englishName;
+                        place.imageUrl = realmObject.imageUrl;
+                        place.index = realmObject.index;
+                        place.name = realmObject.name;
+
+                        try
+                        {
+                            place.serviceType = Constants.ServiceType.valueOf(realmObject.serviceType);
+                        } catch (Exception e)
+                        {
+                            continue;
+                        }
+
+                        list.add(place);
+                    }
+                }
+            }
+
+            JSONArray recentJsonArray = RecentlyPlaceUtil.getDbRecentlyJsonArray(list, maxSize);
+            recentJsonObject.put("keys", recentJsonArray);
+
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+        }
+
+        return DailyMobileAPI.getInstance(mContext).getInboundRecentlyList(recentJsonObject).map(new Function<BaseDto<HomePlaces>, ArrayList<HomePlace>>()
         {
             @Override
             public ArrayList<HomePlace> apply(@NonNull BaseDto<HomePlaces> homePlacesBaseDto) throws Exception
