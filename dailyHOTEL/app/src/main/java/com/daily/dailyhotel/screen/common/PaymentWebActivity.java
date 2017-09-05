@@ -149,6 +149,7 @@ public class PaymentWebActivity extends BasePaymentWebActivity
                     .addHeader("App-Version", DailyHotel.VERSION)//
                     .addHeader("App-VersionCode", DailyHotel.VERSION_CODE)//
                     .addHeader("Authorization", DailyHotel.AUTHORIZATION)//
+                    .addHeader("User-Agent", System.getProperty("http.agent"))//
                     .addHeader("ga-id", DailyHotel.GOOGLE_ANALYTICS_CLIENT_ID)//
                     .post(RequestBody.create(MediaType.parse("application/json; charset=utf-8"), mJSONString)).build();
 

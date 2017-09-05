@@ -285,7 +285,7 @@
                 android:id="@+id/loginLayout"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:layout_marginLeft="46dp"
+                android:layout_marginLeft="39dp"
                 android:layout_marginRight="24dp"
                 android:layout_marginTop="9dp"
                 android:background="@drawable/reservation_empty"
