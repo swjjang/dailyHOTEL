@@ -83,6 +83,8 @@
     <color name="black_a5">#0d000000</color>
     <color name="black_a0">#00000000</color>
 
+    <color name="black_c0c000000">#0c000000</color>
+
     <color name="statusbar_background">#323232</color>
     <color name="tab_text">#929292</color>
     <color name="tab_selected">#B70038</color>
