@@ -1581,7 +1581,14 @@ public class StayDetailActivity extends PlaceDetailActivity
                 , stayDetailParams.latitude, stayDetailParams.longitude, stayDetailParams.isOverseas//
                 , AnalyticsManager.Category.HOTEL_BOOKINGS//
                 , AnalyticsManager.Action.HOTEL_DETAIL_NAVIGATION_APP_CLICKED//
-                , null);
+                , null, new DialogInterface.OnDismissListener()
+                {
+                    @Override
+                    public void onDismiss(DialogInterface dialog)
+                    {
+                        unLockUI();
+                    }
+                });
         }
 
         @Override

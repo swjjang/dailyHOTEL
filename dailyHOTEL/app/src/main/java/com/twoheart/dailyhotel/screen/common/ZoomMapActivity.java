@@ -1,6 +1,7 @@
 package com.twoheart.dailyhotel.screen.common;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
@@ -230,7 +231,14 @@ public class ZoomMapActivity extends BaseActivity
                         Util.showShareMapDialog(ZoomMapActivity.this, placeName, latitude, longitude, isOverseas//
                             , AnalyticsManager.Category.HOTEL_BOOKINGS//
                             , AnalyticsManager.Action.HOTEL_DETAIL_NAVIGATION_APP_CLICKED//
-                            , null);
+                            , null, new DialogInterface.OnDismissListener()
+                            {
+                                @Override
+                                public void onDismiss(DialogInterface dialog)
+                                {
+                                    unLockUI();
+                                }
+                            });
                         break;
 
                     case GOURMET:
@@ -238,7 +246,14 @@ public class ZoomMapActivity extends BaseActivity
                         Util.showShareMapDialog(ZoomMapActivity.this, placeName, latitude, longitude, isOverseas//
                             , AnalyticsManager.Category.GOURMET_BOOKINGS//
                             , AnalyticsManager.Action.GOURMET_DETAIL_NAVIGATION_APP_CLICKED//
-                            , null);
+                            , null, new DialogInterface.OnDismissListener()
+                            {
+                                @Override
+                                public void onDismiss(DialogInterface dialog)
+                                {
+                                    unLockUI();
+                                }
+                            });
                         break;
                 }
             }

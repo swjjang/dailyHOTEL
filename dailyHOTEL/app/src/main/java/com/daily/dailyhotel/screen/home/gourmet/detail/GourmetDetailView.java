@@ -42,6 +42,7 @@ import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
 import com.daily.base.widget.DailyTextView;
+import com.daily.dailyhotel.entity.ImageInformation;
 import com.daily.dailyhotel.entity.ImageMap;
 import com.daily.dailyhotel.entity.People;
 import com.daily.dailyhotel.entity.StayBookDateTime;
@@ -49,10 +50,12 @@ import com.daily.dailyhotel.entity.StayOutboundDetail;
 import com.daily.dailyhotel.entity.StayOutboundDetailImage;
 import com.daily.dailyhotel.entity.StayOutboundRoom;
 import com.daily.dailyhotel.screen.home.stay.outbound.detail.StayOutboundDetailActivity;
+import com.daily.dailyhotel.screen.home.stay.outbound.detail.StayOutboundDetailRoomListAdapter;
 import com.daily.dailyhotel.view.DailyToolbarView;
 import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.drawee.view.DraweeTransition;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.databinding.ActivityGourmetDetailDataBinding;
 import com.twoheart.dailyhotel.databinding.ActivityStayOutboundDetailDataBinding;
 import com.twoheart.dailyhotel.databinding.DialogConciergeDataBinding;
 import com.twoheart.dailyhotel.databinding.DialogShareDataBinding;
@@ -81,7 +84,7 @@ import java.util.Map;
 import io.reactivex.Observable;
 import io.reactivex.Observer;
 
-public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventListener, ActivityStayOutboundDetailDataBinding>//
+public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventListener, ActivityGourmetDetailDataBinding>//
     implements GourmetDetailViewInterface, View.OnClickListener, ViewPager.OnPageChangeListener, RadioGroup.OnCheckedChangeListener
 {
     private static final int ANIMATION_DELAY = 250;
@@ -89,9 +92,6 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
     private GourmetDetailEmptyView mGourmetDetailEmptyView;
 
     private GourmetDetailImageViewPagerAdapter mImageViewPagerAdapter;
-    private StayOutboundDetailRoomListAdapter mRoomTypeListAdapter;
-
-    private AnimatorSet mRoomAnimatorSet;
 
     public interface OnEventListener extends OnBaseEventListener
     {
@@ -107,8 +107,6 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
 
         void onCalendarClick();
 
-        void onPeopleClick();
-
         void onMapClick();
 
         void onClipAddressClick(String address);
@@ -117,13 +115,7 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
 
         void onConciergeClick();
 
-        void onHideRoomListClick(boolean animation);
-
         void onActionButtonClick();
-
-        void onAmenityMoreClick();
-
-        void onPriceTypeClick(GourmetDetailPresenter.PriceType priceType);
 
         void onConciergeFaqClick();
 
@@ -132,8 +124,6 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
         void onConciergeCallClick();
 
         void onShareMapClick();
-
-        void onRoomClick(StayOutboundRoom stayOutboundRoom);
     }
 
     public GourmetDetailView(BaseActivity baseActivity, GourmetDetailView.OnEventListener listener)
@@ -142,7 +132,7 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
     }
 
     @Override
-    protected void setContentView(final ActivityStayOutboundDetailDataBinding viewDataBinding)
+    protected void setContentView(final ActivityGourmetDetailDataBinding viewDataBinding)
     {
         if (viewDataBinding == null)
         {
@@ -724,15 +714,6 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
                 break;
             }
 
-            case GourmetDetailPresenter.STATUS_ROOM_LIST:
-            {
-                getViewDataBinding().bookingTextView.setVisibility(View.VISIBLE);
-                getViewDataBinding().soldoutTextView.setVisibility(View.GONE);
-
-                getViewDataBinding().bookingTextView.setText(R.string.act_hotel_search_room);
-                break;
-            }
-
             case GourmetDetailPresenter.STATUS_BOOKING:
             {
                 getViewDataBinding().bookingTextView.setVisibility(View.VISIBLE);
@@ -762,24 +743,6 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
         {
             getViewDataBinding().descriptionTextView.setVisibility(View.INVISIBLE);
         }
-    }
-
-    @Override
-    public void setPriceType(GourmetDetailPresenter.PriceType priceType)
-    {
-        if (mRoomTypeListAdapter == null)
-        {
-            return;
-        }
-
-        mRoomTypeListAdapter.setPriceType(priceType);
-        mRoomTypeListAdapter.notifyDataSetChanged();
-    }
-
-    @Override
-    public void setPeopleText(String peopleText)
-    {
-
     }
 
     @Override
@@ -913,7 +876,7 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
         getViewDataBinding().nestedScrollView.fullScroll(View.FOCUS_UP);
     }
 
-    private void initToolbar(ActivityStayOutboundDetailDataBinding viewDataBinding)
+    private void initToolbar(ActivityGourmetDetailDataBinding viewDataBinding)
     {
         if (viewDataBinding == null)
         {
@@ -961,7 +924,7 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
         });
     }
 
-    private void setImageList(List<StayOutboundDetailImage> imageList)
+    private void setImageList(List<ImageInformation> imageList)
     {
         if (getViewDataBinding() == null || imageList == null)
         {

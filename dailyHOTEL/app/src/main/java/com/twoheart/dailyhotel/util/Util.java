@@ -1022,9 +1022,10 @@ public class Util implements Constants
         }
     }
 
-    public static void showShareMapDialog(final BaseActivity baseActivity, final String placeName//
+    public static void showShareMapDialog(final Activity baseActivity, final String placeName//
         , final double latitude, final double longitude, boolean isOverseas//
-        , final String gaCategory, final String gaAction, final String gaLabel)
+        , final String gaCategory, final String gaAction, final String gaLabel//
+        , DialogInterface.OnDismissListener onDismissListener)
     {
         if (baseActivity == null || baseActivity.isFinishing() == true)
         {
@@ -1217,14 +1218,7 @@ public class Util implements Constants
             });
         }
 
-        dialog.setOnDismissListener(new DialogInterface.OnDismissListener()
-        {
-            @Override
-            public void onDismiss(DialogInterface dialog)
-            {
-                baseActivity.unLockUI();
-            }
-        });
+        dialog.setOnDismissListener(onDismissListener);
 
         try
         {

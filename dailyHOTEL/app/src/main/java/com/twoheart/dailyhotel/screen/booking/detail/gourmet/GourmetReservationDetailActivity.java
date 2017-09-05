@@ -721,7 +721,14 @@ public class GourmetReservationDetailActivity extends PlaceReservationDetailActi
                 , mPlaceBookingDetail.latitude, mPlaceBookingDetail.longitude, mPlaceBookingDetail.isOverseas//
                 , AnalyticsManager.Category.GOURMET_BOOKINGS//
                 , AnalyticsManager.Action.GOURMET_DETAIL_NAVIGATION_APP_CLICKED//
-                , null);
+                , null, new DialogInterface.OnDismissListener()
+                {
+                    @Override
+                    public void onDismiss(DialogInterface dialog)
+                    {
+                        unLockUI();
+                    }
+                });
         }
 
         @Override

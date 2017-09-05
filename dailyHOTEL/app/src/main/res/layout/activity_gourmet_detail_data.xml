@@ -15,14 +15,14 @@
             android:id="@+id/transImageView"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            app:layout_constraintDimensionRatio="H,4:3"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="@+id/imageLoopViewPager"
+            app:layout_constraintLeft_toLeftOf="@+id/imageLoopViewPager"
+            app:layout_constraintRight_toRightOf="@+id/imageLoopViewPager"
+            app:layout_constraintTop_toTopOf="@+id/imageLoopViewPager"
             fresco:actualImageScaleType="centerCrop"/>
 
         <com.twoheart.dailyhotel.widget.DailyLoopViewPager
-            android:id="@+id/defaultLoopViewPager"
+            android:id="@+id/imageLoopViewPager"
             android:layout_width="0dp"
             android:layout_height="0dp"
             app:layout_constraintDimensionRatio="H,4:3"
@@ -34,19 +34,19 @@
             android:id="@+id/transGradientBottomView"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            app:layout_constraintDimensionRatio="H,4:3"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+            app:layout_constraintBottom_toBottomOf="@+id/imageLoopViewPager"
+            app:layout_constraintLeft_toLeftOf="@+id/imageLoopViewPager"
+            app:layout_constraintRight_toRightOf="@+id/imageLoopViewPager"
+            app:layout_constraintTop_toTopOf="@+id/imageLoopViewPager"/>
 
         <android.support.constraint.ConstraintLayout
             android:id="@+id/transGradientTopView"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            app:layout_constraintDimensionRatio="H,4:3"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintBottom_toBottomOf="@+id/imageLoopViewPager"
+            app:layout_constraintLeft_toLeftOf="@+id/imageLoopViewPager"
+            app:layout_constraintRight_toRightOf="@+id/imageLoopViewPager"
+            app:layout_constraintTop_toTopOf="@+id/imageLoopViewPager">
 
             <View
                 android:layout_width="0dp"
@@ -86,45 +86,39 @@
             dailyLineIndicator:indicatorBackgroundColor="@color/white_a40"
             dailyLineIndicator:indicatorColor="@color/white"/>
 
-        <RelativeLayout
-            android:layout_width="0dp"
+        <View
+            android:id="@+id/moreIconView"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginRight="15dp"
+            android:background="@drawable/detail_ic_more_img"
+            app:layout_constraintBottom_toTopOf="@id/viewpagerIndicator"
+            app:layout_constraintRight_toRightOf="parent"/>
+
+        <com.daily.base.widget.DailyTextView
+            android:id="@+id/descriptionTextView"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="10dp"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
+            android:layout_marginLeft="72dp"
+            android:layout_marginRight="72dp"
+            android:background="@drawable/background_image_information_detail"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:maxLines="2"
+            android:paddingBottom="7dp"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:paddingTop="7dp"
+            android:textColor="@color/white"
+            android:textSize="12dp"
+            android:visibility="invisible"
             app:layout_constraintBottom_toTopOf="@id/viewpagerIndicator"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent">
-
-            <View
-                android:id="@+id/moreIconView"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentRight="true"
-                android:background="@drawable/detail_ic_more_img"/>
-
-            <com.daily.base.widget.DailyTextView
-                android:id="@+id/descriptionTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_centerHorizontal="true"
-                android:layout_marginLeft="72dp"
-                android:layout_marginRight="72dp"
-                android:background="@drawable/background_image_information_detail"
-                android:ellipsize="end"
-                android:gravity="center"
-                android:maxLines="2"
-                android:paddingBottom="7dp"
-                android:paddingLeft="8dp"
-                android:paddingRight="8dp"
-                android:paddingTop="7dp"
-                android:textColor="@color/white"
-                android:textSize="12dp"
-                android:visibility="invisible"/>
-        </RelativeLayout>
+            app:layout_constraintRight_toRightOf="parent"/>
 
         <com.facebook.drawee.view.SimpleDraweeView
             android:id="@+id/stickerSimpleDraweeView"
@@ -175,15 +169,26 @@
                 dailyFont:style="Medium"/>
         </LinearLayout>
 
-        <com.twoheart.dailyhotel.widget.DailyPlaceDetailScrollView
-            android:id="@+id/placeScrollView"
+        <com.daily.base.widget.DailyNestedScrollView
+            android:id="@+id/nestedScrollView"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:cacheColorHint="#00000000"
+            android:fadingEdge="none"
+            android:fadingEdgeLength="0dp"
             android:overScrollMode="never"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+            app:layout_constraintTop_toTopOf="parent">
+
+            <LinearLayout
+                android:id="@+id/scrollLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"/>
+
+        </com.daily.base.widget.DailyNestedScrollView>
 
         <ImageView
             android:id="@+id/vrImageView"

@@ -57,6 +57,11 @@ public class GourmetDetail
         mPictogramList = pictogramList;
     }
 
+    public List<GourmetMenu> getGourmetMenuList()
+    {
+        return mGourmetMenuList;
+    }
+
     public void setGourmetMenuList(List<GourmetMenu> gourmetMenuList)
     {
         mGourmetMenuList = gourmetMenuList;

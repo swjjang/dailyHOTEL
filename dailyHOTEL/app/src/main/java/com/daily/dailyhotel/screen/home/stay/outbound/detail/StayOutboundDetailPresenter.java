@@ -1238,15 +1238,15 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
 
         if (roomList == null || roomList.size() == 0)
         {
+            setResult(BaseActivity.RESULT_CODE_REFRESH);
+
             getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.message_stay_outbound_detail_sold_out)//
                 , getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
                 {
                     @Override
                     public void onDismiss(DialogInterface dialog)
                     {
-                        Intent intent = new Intent();
-                        intent.putExtra(StayOutboundDetailActivity.INTENT_EXTRA_DATA_REFRESH, true);
-                        setResult(BaseActivity.RESULT_CODE_REFRESH, intent);
+
                     }
                 });
         } else
@@ -1272,9 +1272,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
 
                 if (hasPrice == false)
                 {
-                    Intent intent = new Intent();
-                    intent.putExtra(StayOutboundDetailActivity.INTENT_EXTRA_DATA_REFRESH, true);
-                    setResult(BaseActivity.RESULT_CODE_REFRESH, intent);
+                    setResult(BaseActivity.RESULT_CODE_REFRESH);
 
                     getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.message_stay_outbound_detail_changed_price)//
                         , getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()

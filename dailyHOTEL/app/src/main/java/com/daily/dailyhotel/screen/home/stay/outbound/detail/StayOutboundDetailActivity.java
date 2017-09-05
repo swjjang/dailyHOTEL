@@ -40,7 +40,6 @@ public class StayOutboundDetailActivity extends BaseActivity<StayOutboundDetailP
     static final String INTENT_EXTRA_DATA_CHILD_LIST = "childList";
     static final String INTENT_EXTRA_DATA_MULTITRANSITION = "multiTransition";
     static final String INTENT_EXTRA_DATA_CALL_GRADIENT_TYPE = "gradientType";
-    static final String INTENT_EXTRA_DATA_REFRESH = "refresh";
     static final String INTENT_EXTRA_DATA_LIST_PRICE = "listPrice";
 
     public static final int TRANS_GRADIENT_BOTTOM_TYPE_NONE = -1;

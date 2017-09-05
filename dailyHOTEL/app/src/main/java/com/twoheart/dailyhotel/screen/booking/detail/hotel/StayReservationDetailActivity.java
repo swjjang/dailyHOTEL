@@ -1276,7 +1276,14 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
                 , mPlaceBookingDetail.latitude, mPlaceBookingDetail.longitude, mPlaceBookingDetail.isOverseas//
                 , AnalyticsManager.Category.HOTEL_BOOKINGS//
                 , AnalyticsManager.Action.HOTEL_DETAIL_NAVIGATION_APP_CLICKED//
-                , null);
+                , null, new DialogInterface.OnDismissListener()
+                {
+                    @Override
+                    public void onDismiss(DialogInterface dialog)
+                    {
+                        unLockUI();
+                    }
+                });
         }
 
         @Override
