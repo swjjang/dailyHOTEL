@@ -83,6 +83,8 @@
     <color name="black_a5">#0d000000</color>
     <color name="black_a0">#00000000</color>
 
+    <color name="black_c0c000000">#0c000000</color>
+
     <color name="statusbar_background">#323232</color>
     <color name="tab_text">#929292</color>
     <color name="tab_selected">#B70038</color>
@@ -298,6 +300,7 @@
     <color name="default_background_ce4e4e9">#e4e4e9</color>
     <color name="default_background_ccfad80">#cfad80</color>
     <color name="default_background_cf9f9fb">#f9f9fb</color>
+    <color name="default_background_c99cfad80">#99cfad80</color>
     <color name="default_placeholder">#dfdfe0</color>
     <color name="default_background_cdb2353_alpha_92">#eadb2353</color>
 

@@ -125,7 +125,7 @@ public class BookingListAdapter extends RecyclerView.Adapter<BookingListAdapter.
                 layoutParams.topMargin = 0;
                 //                holder.dataBinding.verticalLineView01.requestLayout();
 
-                holder.dataBinding.verticalLineView01.setBackgroundResource(R.color.default_background_ccfad80);
+                holder.dataBinding.verticalLineView01.setBackgroundResource(R.color.default_background_c99cfad80);
                 break;
             }
 
@@ -159,13 +159,13 @@ public class BookingListAdapter extends RecyclerView.Adapter<BookingListAdapter.
 
             case Booking.BOOKING_STATE_BEFORE_USE:
             {
-                holder.dataBinding.topVerticalLineView.setBackgroundResource(R.color.default_background_ccfad80);
+                holder.dataBinding.topVerticalLineView.setBackgroundResource(R.color.default_background_c99cfad80);
                 holder.dataBinding.circleView.setBackgroundResource(R.drawable.shape_circle_bcfad80);
 
                 ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) holder.dataBinding.verticalLineView02.getLayoutParams();
                 layoutParams.topMargin = ScreenUtils.dpToPx(mContext, 4);
 
-                holder.dataBinding.verticalLineView02.setBackgroundResource(R.color.default_background_ccfad80);
+                holder.dataBinding.verticalLineView02.setBackgroundResource(R.color.default_background_c99cfad80);
                 break;
             }
 
