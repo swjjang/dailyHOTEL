@@ -409,7 +409,6 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
                         }
 
                         setStayBookDateTime(checkInDateTime, checkOutDateTime);
-                        notifyStayBookDateTimeChanged();
                         setRefresh(true);
                     }
                 }
@@ -426,7 +425,6 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
                         ArrayList<Integer> childAgeList = data.getIntegerArrayListExtra(SelectPeopleActivity.INTENT_EXTRA_DATA_CHILD_LIST);
 
                         setPeople(numberOfAdults, childAgeList);
-                        notifyPeopleChanged();
                         setRefresh(true);
                     }
                 }
@@ -1191,35 +1189,6 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
         {
             mStayBookDateTime.setCheckInDateTime(checkInDateTime);
             mStayBookDateTime.setCheckOutDateTime(checkOutDateTime);
-        } catch (Exception e)
-        {
-            ExLog.e(e.toString());
-        }
-    }
-
-    private void notifyPeopleChanged()
-    {
-        if (mPeople == null)
-        {
-            return;
-        }
-
-        getViewInterface().setPeopleText(mPeople.toShortString(getActivity()));
-    }
-
-    private void notifyStayBookDateTimeChanged()
-    {
-        if (mStayBookDateTime == null)
-        {
-            return;
-        }
-
-        try
-        {
-            String dateFormat = String.format(Locale.KOREA, "%s - %s, %s", mStayBookDateTime.getCheckInDateTime("M.d(EEE)")//
-                , mStayBookDateTime.getCheckOutDateTime("M.d(EEE)"), getString(R.string.label_nights, mStayBookDateTime.getNights()));
-
-            getViewInterface().setCalendarText(dateFormat);
         } catch (Exception e)
         {
             ExLog.e(e.toString());

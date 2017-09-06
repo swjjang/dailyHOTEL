@@ -776,18 +776,6 @@ public class StayOutboundDetailView extends BaseDialogView<StayOutboundDetailVie
     }
 
     @Override
-    public void setPeopleText(String peopleText)
-    {
-
-    }
-
-    @Override
-    public void setCalendarText(String peopleText)
-    {
-
-    }
-
-    @Override
     public void showConciergeDialog(Dialog.OnDismissListener listener)
     {
         DialogConciergeDataBinding dataBinding = DataBindingUtil.inflate(LayoutInflater.from(getContext()), R.layout.dialog_concierge_data, null, false);

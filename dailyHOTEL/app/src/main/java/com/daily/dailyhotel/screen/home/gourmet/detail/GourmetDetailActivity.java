@@ -29,7 +29,9 @@ public class GourmetDetailActivity extends BaseActivity<GourmetDetailPresenter>
     static final int REQUEST_CODE_DOWNLOAD_COUPON = 10010;
     static final int REQUEST_CODE_LOGIN_IN_BY_WISH = 10011;
     static final int REQUEST_CODE_LOGIN_IN_BY_COUPON = 10012;
-    static final int REQUEST_CODE_TRUE_VIEW = 10013;
+    static final int REQUEST_CODE_LOGIN_IN_BY_ORDER = 10013;
+    static final int REQUEST_CODE_TRUE_VIEW = 10014;
+    static final int REQUEST_CODE_MENU = 10015;
 
     static final String INTENT_EXTRA_DATA_GOURMET_INDEX = "gourmetIndex";
     static final String INTENT_EXTRA_DATA_GOURMET_NAME = "gourmetName";
@@ -39,7 +41,6 @@ public class GourmetDetailActivity extends BaseActivity<GourmetDetailPresenter>
     static final String INTENT_EXTRA_DATA_SOLDOUT = "soldOut";
     static final String INTENT_EXTRA_DATA_MULTITRANSITION = "multiTransition";
     static final String INTENT_EXTRA_DATA_CALL_GRADIENT_TYPE = "gradientType";
-    static final String INTENT_EXTRA_DATA_REFRESH = "refresh";
     static final String INTENT_EXTRA_DATA_LIST_PRICE = "listPrice";
 
     public static final int TRANS_GRADIENT_BOTTOM_TYPE_NONE = -1;

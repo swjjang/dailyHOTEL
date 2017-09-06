@@ -28,8 +28,6 @@ public interface GourmetDetailViewInterface extends BaseDialogViewInterface
 
     void setDetailImageCaption(String caption);
 
-    void setCalendarText(String peopleText);
-
     void showConciergeDialog(Dialog.OnDismissListener listener);
 
     void showNavigatorDialog(Dialog.OnDismissListener listener);

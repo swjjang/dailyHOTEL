@@ -31,10 +31,6 @@ public interface StayOutboundDetailViewInterface extends BaseDialogViewInterface
 
     void setPriceType(StayOutboundDetailPresenter.PriceType priceType);
 
-    void setPeopleText(String peopleText);
-
-    void setCalendarText(String peopleText);
-
     void showConciergeDialog(Dialog.OnDismissListener listener);
 
     void showNavigatorDialog(Dialog.OnDismissListener listener);

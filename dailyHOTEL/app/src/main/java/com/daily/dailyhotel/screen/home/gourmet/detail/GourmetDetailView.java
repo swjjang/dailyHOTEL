@@ -531,12 +531,6 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
     }
 
     @Override
-    public void setCalendarText(String peopleText)
-    {
-
-    }
-
-    @Override
     public void showConciergeDialog(Dialog.OnDismissListener listener)
     {
         DialogConciergeDataBinding dataBinding = DataBindingUtil.inflate(LayoutInflater.from(getContext()), R.layout.dialog_concierge_data, null, false);
