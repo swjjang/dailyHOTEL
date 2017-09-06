@@ -967,7 +967,11 @@ public class StayOutboundDetailView extends BaseDialogView<StayOutboundDetailVie
             return;
         }
 
-        if (imageList.size() == 1)
+        if (imageList == null || imageList.size() == 0)
+        {
+            setViewPagerLineIndicatorVisible(false);
+            return;
+        } else if (imageList.size() == 1)
         {
             setViewPagerLineIndicatorVisible(false);
         } else
@@ -1450,8 +1454,15 @@ public class StayOutboundDetailView extends BaseDialogView<StayOutboundDetailVie
             return;
         }
 
-        getViewDataBinding().moreIconView.setVisibility(visible ? View.VISIBLE : View.INVISIBLE);
-        getViewDataBinding().viewpagerIndicator.setVisibility(visible ? View.VISIBLE : View.INVISIBLE);
+        if (visible == true)
+        {
+            getViewDataBinding().moreIconView.setVisibility(View.VISIBLE);
+            getViewDataBinding().viewpagerIndicator.setVisibility(View.VISIBLE);
+        } else
+        {
+            getViewDataBinding().moreIconView.setVisibility(View.INVISIBLE);
+            getViewDataBinding().viewpagerIndicator.setVisibility(View.INVISIBLE);
+        }
     }
 
     private void setRoomList(StayBookDateTime stayBookDateTime, List<StayOutboundRoom> roomList)

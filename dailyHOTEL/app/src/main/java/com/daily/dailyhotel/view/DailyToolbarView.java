@@ -314,6 +314,23 @@ public class DailyToolbarView extends ConstraintLayout
         updateMenuItemView(mMenuItemList.get(index).second, menuItem, text, listener);
     }
 
+    public void replaceMenuItem(MenuItem srcMenuItem, MenuItem menuItem, OnClickListener listener)
+    {
+        if (mViewDataBinding == null || hasMenuItem(srcMenuItem) == false)
+        {
+            return;
+        }
+
+        int index = getMenuItemIndex(srcMenuItem);
+
+        if (index < 0)
+        {
+            return;
+        }
+
+        updateMenuItemView(mMenuItemList.get(index).second, menuItem, listener);
+    }
+
     public void removeMenuItem(MenuItem menuItem)
     {
         if (mViewDataBinding == null || hasMenuItem(menuItem) == false)
@@ -587,6 +604,39 @@ public class DailyToolbarView extends ConstraintLayout
             viewDataBinding.dailyTextView.setVisibility(VISIBLE);
             viewDataBinding.dailyTextView.setText(text);
         }
+
+        switch (mThemeColor)
+        {
+            case DEFAULT:
+                break;
+
+            case WHITE:
+                if (menuItem.supportChangedColor() == true)
+                {
+                    viewDataBinding.dailyImageView.setColorFilter(getResources().getColor(mThemeColor.getIconColorResourceId()));
+                } else
+                {
+                    viewDataBinding.dailyImageView.clearColorFilter();
+                }
+
+                if (viewDataBinding.dailyTextView.getVisibility() != GONE)
+                {
+                    viewDataBinding.dailyTextView.setTextColor(getResources().getColor(mThemeColor.getTextColorResourceId()));
+                }
+                break;
+        }
+
+        viewDataBinding.getRoot().setOnClickListener(listener);
+    }
+
+    private void updateMenuItemView(DailyViewToolbarMenuItemDataBinding viewDataBinding, MenuItem menuItem, OnClickListener listener)
+    {
+        if (viewDataBinding == null || menuItem == null)
+        {
+            return;
+        }
+
+        viewDataBinding.dailyImageView.setVectorImageResource(menuItem.getResourceId());
 
         switch (mThemeColor)
         {

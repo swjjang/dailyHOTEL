@@ -22,27 +22,38 @@ public class GourmetDetail
     public int ratingValue;
     public boolean ratingShow;
     public String benefit;
-    public String benefitContents;
     public int wishCount;
     public boolean myWish;
-    public String sticker;
+    public boolean hasCoupon;
 
+    private Sticker mSticker;
     private List<DetailImageInformation> mDetailImageInformationList;
     private List<LinkedHashMap<String, List<String>>> mDescriptionMap;
     private List<GourmetMenu> mGourmetMenuList;
     private List<Pictogram> mPictogramList;
+    private List<String> mBenefitContentList;
 
     public GourmetDetail()
     {
 
     }
 
-    public List<LinkedHashMap<String, List<String>>> getDescriptionMap()
+    public Sticker getSticker()
+    {
+        return mSticker;
+    }
+
+    public void setSticker(Sticker sticker)
+    {
+        mSticker = sticker;
+    }
+
+    public List<LinkedHashMap<String, List<String>>> getDescriptionList()
     {
         return mDescriptionMap;
     }
 
-    public void setDescriptionMap(List<LinkedHashMap<String, List<String>>> specificationMap)
+    public void setDescriptionList(List<LinkedHashMap<String, List<String>>> specificationMap)
     {
         mDescriptionMap = specificationMap;
     }
@@ -75,6 +86,16 @@ public class GourmetDetail
     public void setImageInformationList(List<DetailImageInformation> detailImageInformationList)
     {
         mDetailImageInformationList = detailImageInformationList;
+    }
+
+    public List<String> getBenefitContentList()
+    {
+        return mBenefitContentList;
+    }
+
+    public void setBenefitContentList(List<String> benefitContentList)
+    {
+        mBenefitContentList = benefitContentList;
     }
 
     public enum Pictogram

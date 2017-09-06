@@ -1,13 +1,18 @@
 package com.daily.dailyhotel.screen.home.gourmet.detail;
 
+import android.animation.Animator;
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.annotation.TargetApi;
 import android.app.Dialog;
 import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.graphics.Color;
 import android.graphics.LinearGradient;
+import android.graphics.Paint;
 import android.graphics.Shader;
 import android.graphics.Typeface;
+import android.graphics.drawable.Animatable;
 import android.graphics.drawable.PaintDrawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.RectShape;
@@ -18,51 +23,51 @@ import android.support.v4.widget.NestedScrollView;
 import android.text.Html;
 import android.transition.Transition;
 import android.transition.TransitionSet;
-import android.util.SparseArray;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.LinearInterpolator;
 import android.widget.LinearLayout;
-import android.widget.RadioGroup;
 
 import com.daily.base.BaseActivity;
 import com.daily.base.BaseDialogView;
 import com.daily.base.OnBaseEventListener;
 import com.daily.base.util.DailyTextUtils;
-import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
 import com.daily.base.widget.DailyTextView;
 import com.daily.dailyhotel.entity.DetailImageInformation;
 import com.daily.dailyhotel.entity.GourmetBookDateTime;
 import com.daily.dailyhotel.entity.GourmetDetail;
-import com.daily.dailyhotel.entity.ImageMap;
-import com.daily.dailyhotel.entity.StayBookDateTime;
-import com.daily.dailyhotel.entity.StayOutboundDetail;
-import com.daily.dailyhotel.entity.StayOutboundDetailImage;
-import com.daily.dailyhotel.entity.StayOutboundRoom;
+import com.daily.dailyhotel.entity.GourmetMenu;
+import com.daily.dailyhotel.entity.Sticker;
 import com.daily.dailyhotel.screen.home.stay.outbound.detail.StayOutboundDetailActivity;
-import com.daily.dailyhotel.screen.home.stay.outbound.detail.StayOutboundDetailRoomListAdapter;
 import com.daily.dailyhotel.view.DailyToolbarView;
+import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.drawee.controller.BaseControllerListener;
 import com.facebook.drawee.drawable.ScalingUtils;
+import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.view.DraweeTransition;
+import com.facebook.imagepipeline.image.ImageInfo;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ActivityGourmetDetailDataBinding;
 import com.twoheart.dailyhotel.databinding.DialogConciergeDataBinding;
 import com.twoheart.dailyhotel.databinding.DialogShareDataBinding;
 import com.twoheart.dailyhotel.databinding.DialogStayOutboundMapDataBinding;
+import com.twoheart.dailyhotel.databinding.LayoutGourmetDetailAmenitiesDataBinding;
+import com.twoheart.dailyhotel.databinding.LayoutGourmetDetailBenefitContentBinding;
+import com.twoheart.dailyhotel.databinding.LayoutGourmetDetailBenefitDataBinding;
+import com.twoheart.dailyhotel.databinding.LayoutGourmetDetailConciergeDataBinding;
 import com.twoheart.dailyhotel.databinding.LayoutGourmetDetailCouponDataBinding;
+import com.twoheart.dailyhotel.databinding.LayoutGourmetDetailMapDataBinding;
+import com.twoheart.dailyhotel.databinding.LayoutGourmetDetailMoreMenuDataBinding;
 import com.twoheart.dailyhotel.databinding.LayoutGourmetDetailTitleDataBinding;
-import com.twoheart.dailyhotel.databinding.LayoutStayOutboundDetail03DataBinding;
-import com.twoheart.dailyhotel.databinding.LayoutStayOutboundDetail04DataBinding;
 import com.twoheart.dailyhotel.databinding.LayoutStayOutboundDetail05DataBinding;
-import com.twoheart.dailyhotel.databinding.LayoutStayOutboundDetailAmenityDataBinding;
-import com.twoheart.dailyhotel.databinding.LayoutStayOutboundDetailAmenityMoreDataBinding;
-import com.twoheart.dailyhotel.databinding.LayoutStayOutboundDetailConciergeDataBinding;
 import com.twoheart.dailyhotel.databinding.LayoutStayOutboundDetailInformationDataBinding;
+import com.twoheart.dailyhotel.databinding.ListRowDetailProductDataBinding;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.DailyRemoteConfigPreference;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
@@ -74,23 +79,28 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import io.reactivex.Observable;
 import io.reactivex.Observer;
 
 public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventListener, ActivityGourmetDetailDataBinding>//
-    implements GourmetDetailViewInterface, View.OnClickListener, ViewPager.OnPageChangeListener, RadioGroup.OnCheckedChangeListener
+    implements GourmetDetailViewInterface, View.OnClickListener, ViewPager.OnPageChangeListener
 {
-    private static final int ANIMATION_DELAY = 250;
-
-    private DetailEmptyView mDetailEmptyView;
-
     private GourmetDetailImageViewPagerAdapter mImageViewPagerAdapter;
+
+    private LinearLayout mMoreMenuLayout;
+    private LayoutGourmetDetailMoreMenuDataBinding mLayoutGourmetDetailMoreMenuDataBinding;
+
+    private ObjectAnimator mShowBottomAnimator;
+    private ObjectAnimator mHideBottomAnimator;
 
     public interface OnEventListener extends OnBaseEventListener
     {
         void onShareClick();
+
+        void onWishClick();
 
         void onShareKakaoClick();
 
@@ -123,6 +133,10 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
         void onReviewClick();
 
         void onDownloadCouponClick();
+
+        void onMoreMenuClick();
+
+        void onMenuClick(int index);
     }
 
     public GourmetDetailView(BaseActivity baseActivity, GourmetDetailView.OnEventListener listener)
@@ -140,6 +154,7 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
 
         initToolbar(viewDataBinding);
 
+        viewDataBinding.nestedScrollView.setVisibility(View.INVISIBLE);
         viewDataBinding.nestedScrollView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener()
         {
             @Override
@@ -160,6 +175,17 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
                 } else
                 {
                     getViewDataBinding().toolbarView.showAnimation();
+                }
+
+                // 겹치지 않은 경우
+                if (nestedScrollView.getScrollY() == 0//
+                    || nestedScrollView.getScrollY() + TOOLBAR_HEIGHT > getViewDataBinding().menuLayout.getBottom()//
+                    || scrollY + nestedScrollView.getHeight() < getViewDataBinding().dateInformationView.getTop())
+                {
+                    showBottomLayout(true);
+                } else
+                {
+                    hideBottomLayout(true);
                 }
             }
         });
@@ -222,76 +248,51 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
     }
 
     @Override
-    public void setGourmetDetail(GourmetBookDateTime gourmetBookDateTime, GourmetDetail gourmetDetail)
+    public void setGourmetDetail(GourmetBookDateTime gourmetBookDateTime, GourmetDetail gourmetDetail, int trueReviewCount)
     {
         if (getViewDataBinding() == null || gourmetBookDateTime == null || gourmetDetail == null)
         {
             return;
         }
 
+        getViewDataBinding().nestedScrollView.setVisibility(View.VISIBLE);
         getViewDataBinding().bottomLayout.setVisibility(View.VISIBLE);
 
-        setImageList(gourmetDetail.getImageList());
-
-        getViewDataBinding().scrollLayout.removeAllViews();
-
-        mDetailEmptyView = null;
-
-        LayoutInflater layoutInflater = LayoutInflater.from(getContext());
+        setImageList(gourmetDetail.getImageInformationList());
 
         // 이미지 상단에 빈화면 넣기
-        addEmptyView(getContext(), getViewDataBinding().scrollLayout);
+        setEmptyView();
 
-        // 등급과 이름 / 체크인 체크아웃
-        setTitleView(layoutInflater, getViewDataBinding().scrollLayout, gourmetBookDateTime, gourmetDetail);
+        // Sticker
+        setStickerView(gourmetDetail.getSticker());
+
+        // 타이틀
+        setTitleView(gourmetDetail.category, gourmetDetail.categorySub, gourmetDetail.name, gourmetDetail.ratingShow//
+            , gourmetDetail.ratingValue, gourmetDetail.ratingPersons, trueReviewCount);
+
+        // 쿠폰
+        setCouponView(gourmetDetail.hasCoupon);
+
+        // 메뉴 리스트
+        setMenuListLayout(gourmetDetail.getGourmetMenuList());
+
+        // 방문일
+        setVisitDateView(gourmetBookDateTime.getVisitDateTime("yyyy.MM.dd(EEE)"));
 
         // 주소 및 맵
-        setAddressView(layoutInflater, getViewDataBinding().scrollLayout, gourmetBookDateTime, gourmetDetail);
+        setAddressView(gourmetDetail.address);
 
         // Amenity
-        SparseArray<String> stringSparseArray = stayOutboundDetail.getAmenityList();
+        setAmenitiesView(gourmetDetail.getPictogramList());
 
-        if (stringSparseArray != null && stringSparseArray.size() > 0)
-        {
-            setAmenitiesView(layoutInflater, getViewDataBinding().scrollLayout, stringSparseArray);
-        }
-
-        // 베네핏이 없으면 정보화면의 상단 라인으로 대체한다.
-        View view = new View(getContext());
-        ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ScreenUtils.dpToPx(getContext(), 1));
-        view.setLayoutParams(layoutParams);
-        view.setBackgroundResource(R.color.default_line_cf0f0f0);
-        getViewDataBinding().scrollLayout.addView(view);
+        // Benefit
+        setBenefitView(gourmetDetail.benefit, gourmetDetail.getBenefitContentList());
 
         // 정보 화면
-        setInformationView(layoutInflater, getViewDataBinding().scrollLayout, stayOutboundDetail.getInformationMap());
+        setDescriptionsView(gourmetDetail.getDescriptionList());
 
-        // 카카오톡 문의
-        setConciergeView(layoutInflater, getViewDataBinding().scrollLayout);
-
-        // 객실
-        try
-        {
-            if (stayBookDateTime.getNights() > 1)
-            {
-                getViewDataBinding().priceRadioGroup.check(R.id.averageRadioButton);
-                getViewDataBinding().priceOptionLayout.setVisibility(View.VISIBLE);
-                getViewDataBinding().priceRadioGroup.setOnCheckedChangeListener(this);
-            } else
-            {
-                getViewDataBinding().priceOptionLayout.setVisibility(View.GONE);
-                getViewDataBinding().priceRadioGroup.setOnCheckedChangeListener(null);
-            }
-        } catch (Exception e)
-        {
-            ExLog.e(e.toString());
-
-            getViewDataBinding().priceOptionLayout.setVisibility(View.GONE);
-            getViewDataBinding().priceRadioGroup.setOnCheckedChangeListener(null);
-        }
-
-        // 객실 세팅
-        setRoomList(stayBookDateTime, stayOutboundDetail.getRoomList());
+        // 문의
+        setConciergeView();
     }
 
 
@@ -300,10 +301,10 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
     public Observable<Boolean> getSharedElementTransition()
     {
         TransitionSet inTransitionSet = DraweeTransition.createTransitionSet(ScalingUtils.ScaleType.CENTER_CROP, ScalingUtils.ScaleType.CENTER_CROP);
-        Transition inTextTransition = new TextTransition(getColor(R.color.white), getColor(R.color.default_text_c323232)//
+        Transition inNameTextTransition = new TextTransition(getColor(R.color.white), getColor(R.color.default_text_c323232)//
             , 17, 18, new LinearInterpolator());
-        inTextTransition.addTarget(getString(R.string.transition_place_name));
-        inTransitionSet.addTransition(inTextTransition);
+        inNameTextTransition.addTarget(getString(R.string.transition_place_name));
+        inTransitionSet.addTransition(inNameTextTransition);
 
         Transition inBottomAlphaTransition = new AlphaTransition(1.0f, 0.0f, new LinearInterpolator());
         inBottomAlphaTransition.addTarget(getString(R.string.transition_gradient_bottom_view));
@@ -316,10 +317,10 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
         getWindow().setSharedElementEnterTransition(inTransitionSet);
 
         TransitionSet outTransitionSet = DraweeTransition.createTransitionSet(ScalingUtils.ScaleType.CENTER_CROP, ScalingUtils.ScaleType.CENTER_CROP);
-        Transition outTextTransition = new TextTransition(getColor(R.color.default_text_c323232), getColor(R.color.white)//
+        Transition outNameTextTransition = new TextTransition(getColor(R.color.default_text_c323232), getColor(R.color.white)//
             , 18, 17, new LinearInterpolator());
-        outTextTransition.addTarget(getString(R.string.transition_place_name));
-        outTransitionSet.addTransition(outTextTransition);
+        outNameTextTransition.addTarget(getString(R.string.transition_place_name));
+        outTransitionSet.addTransition(outNameTextTransition);
 
         Transition outBottomAlphaTransition = new AlphaTransition(0.0f, 1.0f, new LinearInterpolator());
         outBottomAlphaTransition.addTarget(getString(R.string.transition_gradient_bottom_view));
@@ -394,14 +395,10 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
             mImageViewPagerAdapter = new GourmetDetailImageViewPagerAdapter(getContext());
         }
 
-        StayOutboundDetailImage detailImage = new StayOutboundDetailImage();
-        ImageMap imageMap = new ImageMap();
-        imageMap.smallUrl = url;
-        imageMap.mediumUrl = url;
-        imageMap.bigUrl = url;
-        detailImage.setImageMap(imageMap);
+        DetailImageInformation detailImage = new DetailImageInformation();
+        detailImage.url = url;
 
-        List<StayOutboundDetailImage> imageList = new ArrayList<>();
+        List<DetailImageInformation> imageList = new ArrayList<>();
         imageList.add(detailImage);
 
         mImageViewPagerAdapter.setData(imageList);
@@ -428,14 +425,10 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
             mImageViewPagerAdapter = new GourmetDetailImageViewPagerAdapter(getContext());
         }
 
-        StayOutboundDetailImage detailImage = new StayOutboundDetailImage();
-        ImageMap imageMap = new ImageMap();
-        imageMap.smallUrl = url;
-        imageMap.mediumUrl = url;
-        imageMap.bigUrl = url;
-        detailImage.setImageMap(imageMap);
+        DetailImageInformation detailImage = new DetailImageInformation();
+        detailImage.url = url;
 
-        List<StayOutboundDetailImage> imageList = new ArrayList<>();
+        List<DetailImageInformation> imageList = new ArrayList<>();
         imageList.add(detailImage);
 
         mImageViewPagerAdapter.setData(imageList);
@@ -496,27 +489,28 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
         switch (status)
         {
             case GourmetDetailPresenter.STATUS_NONE:
-            {
                 getViewDataBinding().bookingTextView.setVisibility(View.VISIBLE);
                 getViewDataBinding().soldoutTextView.setVisibility(View.GONE);
                 break;
-            }
+
+            case GourmetDetailPresenter.STATUS_SELECT_MENU:
+                getViewDataBinding().bookingTextView.setVisibility(View.VISIBLE);
+                getViewDataBinding().soldoutTextView.setVisibility(View.GONE);
+
+                getViewDataBinding().bookingTextView.setText(R.string.act_hotel_search_ticket);
+                break;
 
             case GourmetDetailPresenter.STATUS_BOOKING:
-            {
                 getViewDataBinding().bookingTextView.setVisibility(View.VISIBLE);
                 getViewDataBinding().soldoutTextView.setVisibility(View.GONE);
 
                 getViewDataBinding().bookingTextView.setText(R.string.act_hotel_booking);
                 break;
-            }
 
             case GourmetDetailPresenter.STATUS_SOLD_OUT:
-            {
                 getViewDataBinding().bookingTextView.setVisibility(View.GONE);
                 getViewDataBinding().soldoutTextView.setVisibility(View.VISIBLE);
                 break;
-            }
         }
     }
 
@@ -654,6 +648,142 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
     }
 
     @Override
+    public void setWishCount(int count)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        String wishCountText;
+
+        if (count <= 0)
+        {
+            wishCountText = null;
+        } else if (count > 9999)
+        {
+            int wishCount = count / 1000;
+
+            if (wishCount % 10 == 0)
+            {
+                wishCountText = getString(R.string.wishlist_count_over_10_thousand, Integer.toString(wishCount / 10));
+            } else
+            {
+                wishCountText = getString(R.string.wishlist_count_over_10_thousand, Float.toString((float) wishCount / 10.0f));
+            }
+        } else
+        {
+            DecimalFormat decimalFormat = new DecimalFormat("###,##0");
+            wishCountText = decimalFormat.format(count);
+        }
+
+        if (getViewDataBinding().toolbarView.hasMenuItem(DailyToolbarView.MenuItem.WISH_OFF) == true)
+        {
+            getViewDataBinding().toolbarView.updateMenuItem(DailyToolbarView.MenuItem.WISH_OFF, wishCountText, new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    getEventListener().onWishClick();
+                }
+            });
+        } else if (getViewDataBinding().toolbarView.hasMenuItem(DailyToolbarView.MenuItem.WISH_ON) == true)
+        {
+            getViewDataBinding().toolbarView.updateMenuItem(DailyToolbarView.MenuItem.WISH_ON, wishCountText, new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    getEventListener().onWishClick();
+                }
+            });
+        }
+
+        if (getViewDataBinding().fakeToolbarView.hasMenuItem(DailyToolbarView.MenuItem.WISH_OFF) == true)
+        {
+            getViewDataBinding().fakeToolbarView.updateMenuItem(DailyToolbarView.MenuItem.WISH_OFF, wishCountText, new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    getEventListener().onWishClick();
+                }
+            });
+        } else if (getViewDataBinding().fakeToolbarView.hasMenuItem(DailyToolbarView.MenuItem.WISH_ON) == true)
+        {
+            getViewDataBinding().fakeToolbarView.updateMenuItem(DailyToolbarView.MenuItem.WISH_ON, wishCountText, new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    getEventListener().onWishClick();
+                }
+            });
+        }
+    }
+
+    @Override
+    public void setWishSelected(boolean selected)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        if (selected == true)
+        {
+            if (getViewDataBinding().toolbarView.hasMenuItem(DailyToolbarView.MenuItem.WISH_OFF) == true)
+            {
+                getViewDataBinding().toolbarView.replaceMenuItem(DailyToolbarView.MenuItem.WISH_OFF, DailyToolbarView.MenuItem.WISH_ON, new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        getEventListener().onWishClick();
+                    }
+                });
+            }
+
+            if (getViewDataBinding().fakeToolbarView.hasMenuItem(DailyToolbarView.MenuItem.WISH_OFF) == true)
+            {
+                getViewDataBinding().fakeToolbarView.replaceMenuItem(DailyToolbarView.MenuItem.WISH_OFF, DailyToolbarView.MenuItem.WISH_ON, new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        getEventListener().onWishClick();
+                    }
+                });
+            }
+        } else
+        {
+            if (getViewDataBinding().toolbarView.hasMenuItem(DailyToolbarView.MenuItem.WISH_ON) == true)
+            {
+                getViewDataBinding().toolbarView.replaceMenuItem(DailyToolbarView.MenuItem.WISH_ON, DailyToolbarView.MenuItem.WISH_OFF, new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        getEventListener().onWishClick();
+                    }
+                });
+            }
+
+            if (getViewDataBinding().toolbarView.hasMenuItem(DailyToolbarView.MenuItem.WISH_OFF) == true)
+            {
+                getViewDataBinding().toolbarView.replaceMenuItem(DailyToolbarView.MenuItem.WISH_ON, DailyToolbarView.MenuItem.WISH_OFF, new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        getEventListener().onWishClick();
+                    }
+                });
+            }
+        }
+    }
+
+    @Override
     public void scrollTop()
     {
         if (getViewDataBinding() == null)
@@ -662,6 +792,181 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
         }
 
         getViewDataBinding().nestedScrollView.fullScroll(View.FOCUS_UP);
+    }
+
+    @Override
+    public void scrollFirstMenu()
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        getViewDataBinding().nestedScrollView.smoothScrollTo(0, (int) getViewDataBinding().dateInformationView.getY()//
+            - getDimensionPixelSize(R.dimen.toolbar_height) - ScreenUtils.dpToPx(getContext(), 12));
+    }
+
+    @Override
+    public void openMoreMenuList()
+    {
+        if (getViewDataBinding() == null || mMoreMenuLayout == null)
+        {
+            return;
+        }
+
+        Integer height = (Integer) mMoreMenuLayout.getTag();
+
+        if (height == null)
+        {
+            return;
+        }
+
+        if (isOpenedMoreMenuList() == true)
+        {
+            return;
+        }
+
+        ValueAnimator valueAnimator = ValueAnimator.ofInt(0, height);
+        valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener()
+        {
+            @Override
+            public void onAnimationUpdate(ValueAnimator valueAnimator)
+            {
+                if (valueAnimator == null)
+                {
+                    return;
+                }
+
+                int val = (int) valueAnimator.getAnimatedValue();
+                ViewGroup.LayoutParams layoutParams = mMoreMenuLayout.getLayoutParams();
+                layoutParams.height = val;
+                mMoreMenuLayout.requestLayout();
+            }
+        });
+        valueAnimator.setDuration(200);
+        valueAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
+        valueAnimator.addListener(new Animator.AnimatorListener()
+        {
+            @Override
+            public void onAnimationStart(Animator animation)
+            {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation)
+            {
+                valueAnimator.removeAllUpdateListeners();
+                valueAnimator.removeAllListeners();
+
+                if (mLayoutGourmetDetailMoreMenuDataBinding != null)
+                {
+                    mLayoutGourmetDetailMoreMenuDataBinding.moreImageView.setRotation(180);
+                    mLayoutGourmetDetailMoreMenuDataBinding.moreTextView.setText(R.string.label_collapse);
+                }
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation)
+            {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation)
+            {
+
+            }
+        });
+
+        valueAnimator.start();
+    }
+
+    @Override
+    public boolean isOpenedMoreMenuList()
+    {
+        if (getViewDataBinding() == null || mMoreMenuLayout == null)
+        {
+            return false;
+        }
+
+        return mMoreMenuLayout.getHeight() > 0;
+    }
+
+    @Override
+    public void closeMoreMenuList()
+    {
+        if (getViewDataBinding() == null || mMoreMenuLayout == null)
+        {
+            return;
+        }
+
+        Integer height = (Integer) mMoreMenuLayout.getTag();
+
+        if (height == null)
+        {
+            return;
+        }
+
+        if (isOpenedMoreMenuList() == false)
+        {
+            return;
+        }
+
+        ValueAnimator valueAnimator = ValueAnimator.ofInt(height, 0);
+        valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener()
+        {
+            @Override
+            public void onAnimationUpdate(ValueAnimator valueAnimator)
+            {
+                if (valueAnimator == null)
+                {
+                    return;
+                }
+
+                int val = (int) valueAnimator.getAnimatedValue();
+                ViewGroup.LayoutParams layoutParams = mMoreMenuLayout.getLayoutParams();
+                layoutParams.height = val;
+                mMoreMenuLayout.requestLayout();
+            }
+        });
+        valueAnimator.setDuration(200);
+        valueAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
+        valueAnimator.addListener(new Animator.AnimatorListener()
+        {
+            @Override
+            public void onAnimationStart(Animator animation)
+            {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation)
+            {
+                valueAnimator.removeAllUpdateListeners();
+                valueAnimator.removeAllListeners();
+
+                if (mLayoutGourmetDetailMoreMenuDataBinding != null)
+                {
+                    mLayoutGourmetDetailMoreMenuDataBinding.moreImageView.setRotation(0);
+                    mLayoutGourmetDetailMoreMenuDataBinding.moreTextView.setText(getString(R.string.label_gourmet_detail_view_more, (int) mLayoutGourmetDetailMoreMenuDataBinding.moreTextView.getTag()));
+                }
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation)
+            {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation)
+            {
+
+            }
+        });
+
+        valueAnimator.start();
     }
 
     private void initToolbar(ActivityGourmetDetailDataBinding viewDataBinding)
@@ -681,6 +986,15 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
         });
 
         viewDataBinding.toolbarView.clearMenuItem();
+        viewDataBinding.toolbarView.addMenuItem(DailyToolbarView.MenuItem.WISH_OFF, null, new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                getEventListener().onWishClick();
+            }
+        });
+
         viewDataBinding.toolbarView.addMenuItem(DailyToolbarView.MenuItem.SHARE, null, new View.OnClickListener()
         {
             @Override
@@ -702,6 +1016,15 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
         });
 
         viewDataBinding.fakeToolbarView.clearMenuItem();
+        viewDataBinding.fakeToolbarView.addMenuItem(DailyToolbarView.MenuItem.WISH_OFF, null, new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                getEventListener().onWishClick();
+            }
+        });
+
         viewDataBinding.fakeToolbarView.addMenuItem(DailyToolbarView.MenuItem.SHARE, null, new View.OnClickListener()
         {
             @Override
@@ -714,12 +1037,16 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
 
     private void setImageList(List<DetailImageInformation> imageList)
     {
-        if (getViewDataBinding() == null || imageList == null)
+        if (getViewDataBinding() == null)
         {
             return;
         }
 
-        if (imageList.size() == 1)
+        if (imageList == null || imageList.size() == 0)
+        {
+            setViewPagerLineIndicatorVisible(false);
+            return;
+        } else if (imageList.size() == 1)
         {
             setViewPagerLineIndicatorVisible(false);
         } else
@@ -741,17 +1068,16 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
     }
 
     /**
-     * @param context
-     * @param viewGroup
+     * 빈화면
      */
-    private void addEmptyView(Context context, ViewGroup viewGroup)
+    private void setEmptyView()
     {
-        if (context == null || viewGroup == null)
+        if (getViewDataBinding() == null)
         {
             return;
         }
 
-        mDetailEmptyView = new DetailEmptyView(context, new DetailEmptyView.OnEventListener()
+        getViewDataBinding().detailEmptyView.setOnEventListener(new DetailEmptyView.OnEventListener()
         {
             @Override
             public void onStopMove(MotionEvent event)
@@ -808,8 +1134,66 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
                 getEventListener().onImageClick(getViewDataBinding().imageLoopViewPager.getCurrentItem());
             }
         });
+    }
 
-        mDetailEmptyView.setContentView(R.layout.layout_stay_outbound_detail_01_data, viewGroup, true);
+    /**
+     * 스티커
+     *
+     * @param sticker
+     */
+    private void setStickerView(Sticker sticker)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        if (sticker == null)
+        {
+            getViewDataBinding().stickerSimpleDraweeView.setVisibility(View.GONE);
+            return;
+        }
+
+        String url;
+        if (ScreenUtils.getScreenWidth(getContext()) <= Sticker.DEFAULT_SCREEN_WIDTH)
+        {
+            url = sticker.lowResolutionImageUrl;
+        } else
+        {
+            url = sticker.defaultImageUrl;
+        }
+
+        if (DailyTextUtils.isTextEmpty(url) == true)
+        {
+            getViewDataBinding().stickerSimpleDraweeView.setVisibility(View.GONE);
+        } else
+        {
+            getViewDataBinding().stickerSimpleDraweeView.setVisibility(View.VISIBLE);
+        }
+
+        DraweeController controller = Fresco.newDraweeControllerBuilder().setControllerListener(new BaseControllerListener<ImageInfo>()
+        {
+            @Override
+            public void onFinalImageSet(String id, ImageInfo imageInfo, Animatable animatable)
+            {
+                ViewGroup.LayoutParams layoutParams = getViewDataBinding().stickerSimpleDraweeView.getLayoutParams();
+
+                int screenWidth = ScreenUtils.getScreenWidth(getContext());
+                if (screenWidth > Sticker.DEFAULT_SCREEN_WIDTH && screenWidth < Sticker.LARGE_SCREEN_WIDTH)
+                {
+                    layoutParams.width = (int) (Sticker.MEDIUM_RATE * imageInfo.getWidth());
+                    layoutParams.height = (int) (Sticker.MEDIUM_RATE * imageInfo.getHeight());
+                } else
+                {
+                    layoutParams.width = imageInfo.getWidth();
+                    layoutParams.height = imageInfo.getHeight();
+                }
+
+                getViewDataBinding().stickerSimpleDraweeView.setLayoutParams(layoutParams);
+            }
+        }).setUri(Uri.parse(url)).build();
+
+        getViewDataBinding().stickerSimpleDraweeView.setController(controller);
     }
 
     /**
@@ -817,9 +1201,10 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
      *
      * @return
      */
-    private void setTitleView(GourmetDetail gourmetDetail, int trueReviewCount)
+    private void setTitleView(String category, String categorySub, String name, boolean ratingShow//
+        , int ratingValue, int ratingPersons, int trueReviewCount)
     {
-        if (getViewDataBinding() == null || gourmetDetail == null)
+        if (getViewDataBinding() == null)
         {
             return;
         }
@@ -827,30 +1212,30 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
         LayoutGourmetDetailTitleDataBinding viewDataBinding = getViewDataBinding().titleViewDataBinding;
 
         // 카테고리
-        if (DailyTextUtils.isTextEmpty(gourmetDetail.category) == true)
+        if (DailyTextUtils.isTextEmpty(category) == true)
         {
             viewDataBinding.categoryTextView.setVisibility(View.GONE);
         } else
         {
             viewDataBinding.categoryTextView.setVisibility(View.VISIBLE);
-            viewDataBinding.categoryTextView.setText(gourmetDetail.category);
+            viewDataBinding.categoryTextView.setText(category);
         }
 
         // 서브 카테고리
-        if (DailyTextUtils.isTextEmpty(gourmetDetail.categorySub) == true)
+        if (DailyTextUtils.isTextEmpty(categorySub) == true)
         {
             viewDataBinding.categorySubTextView.setVisibility(View.GONE);
         } else
         {
             viewDataBinding.categorySubTextView.setVisibility(View.VISIBLE);
-            viewDataBinding.categorySubTextView.setText(gourmetDetail.categorySub);
+            viewDataBinding.categorySubTextView.setText(categorySub);
         }
 
         // 레스토랑명
-        viewDataBinding.nameTextView.setText(gourmetDetail.name);
+        viewDataBinding.nameTextView.setText(name);
 
         // 만족도
-        if (gourmetDetail.ratingShow == false)
+        if (ratingShow == false)
         {
             viewDataBinding.satisfactionTextView.setVisibility(View.GONE);
         } else
@@ -858,8 +1243,8 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
             viewDataBinding.satisfactionTextView.setVisibility(View.VISIBLE);
 
             DecimalFormat decimalFormat = new DecimalFormat("###,##0");
-            viewDataBinding.satisfactionTextView.setText(mContext.getString(R.string.label_gourmet_detail_satisfaction, //
-                gourmetDetailParams.ratingValue, decimalFormat.format(gourmetDetailParams.ratingPersons)));
+            viewDataBinding.satisfactionTextView.setText(getString(R.string.label_gourmet_detail_satisfaction, //
+                ratingValue, decimalFormat.format(ratingPersons)));
         }
 
         // 리뷰
@@ -881,6 +1266,9 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
         }
     }
 
+    /**
+     * @param hasCoupon
+     */
     private void setCouponView(boolean hasCoupon)
     {
         if (getViewDataBinding() == null)
@@ -907,6 +1295,9 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
         }
     }
 
+    /**
+     * @param visitDate
+     */
     private void setVisitDateView(String visitDate)
     {
         if (getViewDataBinding() == null)
@@ -919,6 +1310,7 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
         getViewDataBinding().dateInformationView.setCenterNightsVisible(false);
         getViewDataBinding().dateInformationView.setDate1DescriptionTextColor(getColor(R.color.default_text_cb70038));
         getViewDataBinding().dateInformationView.setDate1DescriptionTextDrawable(0, 0, R.drawable.navibar_m_burg_ic_v, 0);
+        getViewDataBinding().dateInformationView.setData1TextSize(13.0f, 15.0f);
 
         getViewDataBinding().dateInformationView.setOnDateClickListener(new View.OnClickListener()
         {
@@ -930,40 +1322,202 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
         }, null);
     }
 
-    /**
-     * 호텔 주소 및 맵
-     *
-     * @param layoutInflater
-     * @param viewGroup
-     * @param stayBookDateTime
-     * @param stayOutboundDetail
-     */
-    private void setAddressView(LayoutInflater layoutInflater, ViewGroup viewGroup//
-        , StayBookDateTime stayBookDateTime, StayOutboundDetail stayOutboundDetail)
+    private void setMenuListLayout(List<GourmetMenu> gourmetMenuList)
     {
-        if (layoutInflater == null || viewGroup == null || stayBookDateTime == null || stayOutboundDetail == null)
+        if (getViewDataBinding() == null || gourmetMenuList == null)
         {
             return;
         }
 
-        LayoutStayOutboundDetail03DataBinding viewDataBinding = DataBindingUtil.inflate(layoutInflater//
-            , R.layout.layout_stay_outbound_detail_03_data, getViewDataBinding().scrollLayout, true);
+        if (mMoreMenuLayout != null)
+        {
+            mMoreMenuLayout.removeAllViews();
+            mMoreMenuLayout = null;
+        }
 
-        // 주소지
-        viewDataBinding.addressTextView.setText(stayOutboundDetail.address);
+        getViewDataBinding().menuLayout.removeAllViews();
 
-        // 주소 복사
-        viewDataBinding.copyAddressView.setOnClickListener(new View.OnClickListener()
+        LayoutInflater layoutInflater = LayoutInflater.from(getContext());
+
+        final int DEFAULT_SHOW_PRODUCT_COUNT = 5;
+        int size = gourmetMenuList.size();
+
+        if (size > DEFAULT_SHOW_PRODUCT_COUNT)
+        {
+            mMoreMenuLayout = new LinearLayout(getContext());
+            mMoreMenuLayout.setOrientation(LinearLayout.VERTICAL);
+
+            for (int i = 0; i < size; i++)
+            {
+                if (i < DEFAULT_SHOW_PRODUCT_COUNT)
+                {
+                    setMenuLayout(layoutInflater, getViewDataBinding().menuLayout, i, gourmetMenuList.get(i));
+                } else if (i == DEFAULT_SHOW_PRODUCT_COUNT)
+                {
+                    getViewDataBinding().menuLayout.addView(mMoreMenuLayout, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+
+                    mLayoutGourmetDetailMoreMenuDataBinding = DataBindingUtil.inflate(layoutInflater, R.layout.layout_gourmet_detail_more_menu_data, getViewDataBinding().menuLayout, true);
+                    mLayoutGourmetDetailMoreMenuDataBinding.moreTextView.setText(getString(R.string.label_gourmet_detail_view_more, size));
+                    mLayoutGourmetDetailMoreMenuDataBinding.moreTextView.setTag(size);
+                    mLayoutGourmetDetailMoreMenuDataBinding.getRoot().setOnClickListener(new View.OnClickListener()
+                    {
+                        @Override
+                        public void onClick(View v)
+                        {
+                            getEventListener().onMoreMenuClick();
+                        }
+                    });
+
+                    setMenuLayout(layoutInflater, mMoreMenuLayout, i, gourmetMenuList.get(i));
+                } else
+                {
+                    setMenuLayout(layoutInflater, mMoreMenuLayout, i, gourmetMenuList.get(i));
+                }
+            }
+
+            mMoreMenuLayout.post(new Runnable()
+            {
+                @Override
+                public void run()
+                {
+                    mMoreMenuLayout.setTag(mMoreMenuLayout.getHeight());
+
+                    LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) mMoreMenuLayout.getLayoutParams();
+                    layoutParams.height = 0;
+                    mMoreMenuLayout.requestLayout();
+                }
+            });
+        } else
+        {
+            for (int i = 0; i < size; i++)
+            {
+                setMenuLayout(layoutInflater, getViewDataBinding().menuLayout, i, gourmetMenuList.get(i));
+            }
+        }
+    }
+
+    private void setMenuLayout(LayoutInflater layoutInflater, ViewGroup parent, int index, GourmetMenu gourmetMenu)
+    {
+        if (layoutInflater == null || parent == null || gourmetMenu == null)
+        {
+            return;
+        }
+
+        ListRowDetailProductDataBinding viewDataBinding = DataBindingUtil.inflate(layoutInflater, R.layout.list_row_detail_product_data, parent, true);
+
+        viewDataBinding.getRoot().setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
             {
-                getEventListener().onClipAddressClick(stayOutboundDetail.address);
+                getEventListener().onMenuClick(index);
             }
         });
 
-        // 길찾기
-        viewDataBinding.navigatorView.setOnClickListener(new View.OnClickListener()
+        if (gourmetMenu.getPrimaryImage() == null)
+        {
+            viewDataBinding.simpleDraweeView.getHierarchy().setPlaceholderImage(R.drawable.layerlist_failure_image);
+        } else
+        {
+            int dpi = getDpi();
+            String url;
+
+            if (dpi <= 240)
+            {
+                url = "android_gourmet_product_hdpi";
+            } else if (dpi <= 480)
+            {
+                url = "android_gourmet_product_xhdpi";
+            } else
+            {
+                url = "android_gourmet_product_xxxhdpi";
+            }
+
+            viewDataBinding.simpleDraweeView.setImageURI(Uri.parse(gourmetMenu.getPrimaryImage().url + "?impolicy=" + url));
+            viewDataBinding.simpleDraweeView.getHierarchy().setPlaceholderImage(R.drawable.layerlist_placeholder_s);
+            viewDataBinding.simpleDraweeView.getHierarchy().setFailureImage(R.drawable.layerlist_failure_image);
+        }
+
+        // 메뉴 이름
+        viewDataBinding.productNameTextView.setText(gourmetMenu.name);
+
+        // 메뉴 가격
+        String price = DailyTextUtils.getPriceFormat(getContext(), gourmetMenu.price, false);
+        String discountPrice = DailyTextUtils.getPriceFormat(getContext(), gourmetMenu.discountPrice, false);
+
+        if (gourmetMenu.price <= 0 || gourmetMenu.price <= gourmetMenu.discountPrice)
+        {
+            viewDataBinding.priceTextView.setVisibility(View.GONE);
+            viewDataBinding.priceTextView.setText(null);
+        } else
+        {
+            viewDataBinding.priceTextView.setText(price);
+            viewDataBinding.priceTextView.setPaintFlags(viewDataBinding.priceTextView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+            viewDataBinding.priceTextView.setVisibility(View.VISIBLE);
+        }
+
+        viewDataBinding.discountPriceTextView.setText(discountPrice);
+
+        // 이용시간
+        if (DailyTextUtils.isTextEmpty(gourmetMenu.openTime, gourmetMenu.closeTime) == true)
+        {
+            viewDataBinding.timeTextView.setVisibility(View.GONE);
+        } else
+        {
+            String timeFormat = getString(R.string.label_office_hours) + " " + String.format(Locale.KOREA, "%s ~ %s", gourmetMenu.openTime, gourmetMenu.closeTime);
+            viewDataBinding.timeTextView.setText(timeFormat);
+            viewDataBinding.timeTextView.setVisibility(View.VISIBLE);
+        }
+
+        // 베네핏
+        if (DailyTextUtils.isTextEmpty(gourmetMenu.menuBenefit) == true)
+        {
+            viewDataBinding.benefitTextView.setVisibility(View.GONE);
+        } else
+        {
+            viewDataBinding.benefitTextView.setText(gourmetMenu.menuBenefit);
+            viewDataBinding.benefitTextView.setVisibility(View.VISIBLE);
+        }
+
+        // 마지막 라인 넣기
+        final int DP_15 = ScreenUtils.dpToPx(getContext(), 15);
+        View underLineView = new View(getContext());
+        underLineView.setBackgroundResource(R.color.default_line_cdcdcdd);
+
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 1);
+        layoutParams.setMargins(DP_15, 0, DP_15, 0);
+        parent.addView(underLineView, layoutParams);
+    }
+
+    /**
+     * 주소 및 맵
+     *
+     * @return
+     */
+    private void setAddressView(String address)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        LayoutGourmetDetailMapDataBinding viewDataBinding = getViewDataBinding().mapViewDataBinding;
+
+        // 주소지
+        viewDataBinding.detailAddressTextView.setText(address);
+
+        // 주소지 COPY
+        viewDataBinding.copyAddressLayout.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                getEventListener().onClipAddressClick(address);
+            }
+        });
+
+        //길찾기
+        viewDataBinding.navigatorLayout.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
@@ -972,6 +1526,7 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
             }
         });
 
+        // 맵보기
         viewDataBinding.mapImageView.setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -985,94 +1540,56 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
     /**
      * 편의시설
      *
-     * @param layoutInflater
-     * @param viewGroup
-     * @param stringSparseArray
      * @return
      */
-    private void setAmenitiesView(LayoutInflater layoutInflater, ViewGroup viewGroup, SparseArray<String> stringSparseArray)
+    private void setAmenitiesView(List<GourmetDetail.Pictogram> pictogramList)
     {
-        if (layoutInflater == null || viewGroup == null || stringSparseArray == null)
+        if (getViewDataBinding() == null)
         {
+            return;
+        }
+
+        LayoutGourmetDetailAmenitiesDataBinding viewDataBinding = getViewDataBinding().amenitiesViewDataBinding;
+        viewDataBinding.amenitiesGridLayout.removeAllViews();
+
+        if (pictogramList == null || pictogramList.size() == 0)
+        {
+            viewDataBinding.amenitiesLayout.setVisibility(View.GONE);
             return;
         }
 
         final int GRID_COLUMN_COUNT = 5;
 
-        LayoutStayOutboundDetailAmenityDataBinding viewDataBinding = DataBindingUtil.inflate(layoutInflater//
-            , R.layout.layout_stay_outbound_detail_amenity_data, getViewDataBinding().scrollLayout, true);
+        viewDataBinding.amenitiesLayout.setVisibility(View.VISIBLE);
 
-        viewDataBinding.amenitiesGridLayout.removeAllViews();
+        boolean isSingleLine = pictogramList.size() <= GRID_COLUMN_COUNT;
 
-        if (stringSparseArray.size() == 0)
+        for (GourmetDetail.Pictogram pictogram : pictogramList)
         {
-            viewDataBinding.amenitiesGridLayout.setVisibility(View.GONE);
-        } else
-        {
-            viewDataBinding.amenitiesGridLayout.setVisibility(View.VISIBLE);
+            viewDataBinding.amenitiesGridLayout.addView(getGridLayoutItemView(getContext(), pictogram, isSingleLine));
         }
 
-        // 화면에서 정한 5개를 미리 보여주고 그외는 더보기로 보여준다.
-        final StayOutboundDetail.Amenity[] DEFAULT_AMENITIES = {StayOutboundDetail.Amenity.POOL//
-            , StayOutboundDetail.Amenity.FITNESS, StayOutboundDetail.Amenity.FRONT24//
-            , StayOutboundDetail.Amenity.SAUNA, StayOutboundDetail.Amenity.KIDS_PLAY_ROOM};
-        boolean hasNextLine = true;
-
-        // 줄수가 2개 이상인지 검사
-        for (StayOutboundDetail.Amenity amenity : DEFAULT_AMENITIES)
-        {
-            if (stringSparseArray.get(amenity.getIndex(), null) == null)
-            {
-                hasNextLine = false;
-                break;
-            }
-        }
-
-        // Amenity 추가
-        for (StayOutboundDetail.Amenity amenity : DEFAULT_AMENITIES)
-        {
-            if (stringSparseArray.get(amenity.getIndex(), null) != null)
-            {
-                viewDataBinding.amenitiesGridLayout.addView(getAmenityView(getContext(), amenity, stringSparseArray.get(amenity.getIndex()), hasNextLine));
-            }
-        }
-
-        // 더보기가 존재하는 경우
-        if (viewDataBinding.amenitiesGridLayout.getChildCount() < stringSparseArray.size())
-        {
-            View moreView = getAmenityMoreView(getContext(), layoutInflater, stringSparseArray.size() - viewDataBinding.amenitiesGridLayout.getChildCount(), false);
-            viewDataBinding.amenitiesGridLayout.addView(moreView);
-            moreView.setOnClickListener(new View.OnClickListener()
-            {
-                @Override
-                public void onClick(View v)
-                {
-                    getEventListener().onAmenityMoreClick();
-                }
-            });
-        }
-
-        int columnCount = viewDataBinding.amenitiesGridLayout.getChildCount() % GRID_COLUMN_COUNT;
+        int columnCount = pictogramList.size() % GRID_COLUMN_COUNT;
 
         if (columnCount != 0)
         {
             int addEmptyViewCount = GRID_COLUMN_COUNT - columnCount;
             for (int i = 0; i < addEmptyViewCount; i++)
             {
-                viewDataBinding.amenitiesGridLayout.addView(getAmenityView(getContext(), StayOutboundDetail.Amenity.NONE, null, false));
+                viewDataBinding.amenitiesGridLayout.addView(getGridLayoutItemView(getContext(), GourmetDetail.Pictogram.none, isSingleLine));
             }
         }
     }
 
-    private DailyTextView getAmenityView(Context context, StayOutboundDetail.Amenity amenity, String amenityName, boolean hasNextLine)
+    private DailyTextView getGridLayoutItemView(Context context, GourmetDetail.Pictogram pictogram, boolean isSingleLine)
     {
         DailyTextView dailyTextView = new DailyTextView(context);
         dailyTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 11);
         dailyTextView.setGravity(Gravity.CENTER_HORIZONTAL);
         dailyTextView.setTypeface(dailyTextView.getTypeface(), Typeface.NORMAL);
         dailyTextView.setTextColor(getColorStateList(R.color.default_text_c323232));
-        dailyTextView.setText(amenityName);
-        dailyTextView.setCompoundDrawablesWithIntrinsicBounds(0, amenity.getImageResId(), 0, 0);
+        dailyTextView.setText(pictogram.getName(context));
+        dailyTextView.setCompoundDrawablesWithIntrinsicBounds(0, pictogram.getImageResId(), 0, 0);
         dailyTextView.setDrawableVectorTint(R.color.default_background_c454545);
 
         android.support.v7.widget.GridLayout.LayoutParams layoutParams = new android.support.v7.widget.GridLayout.LayoutParams();
@@ -1080,7 +1597,7 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
         layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT;
         layoutParams.columnSpec = android.support.v7.widget.GridLayout.spec(Integer.MIN_VALUE, 1, 1.0f);
 
-        if (hasNextLine == true)
+        if (isSingleLine == true)
         {
             dailyTextView.setPadding(0, ScreenUtils.dpToPx(context, 10), 0, ScreenUtils.dpToPx(context, 15));
         } else
@@ -1093,65 +1610,75 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
         return dailyTextView;
     }
 
-    private View getAmenityMoreView(Context context, LayoutInflater layoutInflater, int amenityCount, boolean hasNextLine)
-    {
-        LayoutStayOutboundDetailAmenityMoreDataBinding viewDataBinding = DataBindingUtil.inflate(layoutInflater//
-            , R.layout.layout_stay_outbound_detail_amenity_more_data, null, false);
-
-        viewDataBinding.moreTextView.setText("+" + amenityCount);
-
-        android.support.v7.widget.GridLayout.LayoutParams layoutParams = new android.support.v7.widget.GridLayout.LayoutParams();
-        layoutParams.width = 0;
-        layoutParams.height = ScreenUtils.dpToPx(context, 60);
-        layoutParams.setGravity(Gravity.CENTER_HORIZONTAL);
-        layoutParams.columnSpec = android.support.v7.widget.GridLayout.spec(Integer.MIN_VALUE, 1, 1.0f);
-
-        if (hasNextLine == true)
-        {
-            viewDataBinding.getRoot().setPadding(0, ScreenUtils.dpToPx(context, 10), 0, ScreenUtils.dpToPx(context, 15));
-        } else
-        {
-            viewDataBinding.getRoot().setPadding(0, ScreenUtils.dpToPx(context, 10), 0, ScreenUtils.dpToPx(context, 2));
-        }
-
-        viewDataBinding.getRoot().setLayoutParams(layoutParams);
-
-        return viewDataBinding.getRoot();
-    }
-
     /**
-     * 상세 스테이 정보
-     *
-     * @param layoutInflater
-     * @param viewGroup
-     * @param informationMap
+     * 고메 Benefit
      */
-    private void setInformationView(LayoutInflater layoutInflater, ViewGroup viewGroup, LinkedHashMap<String, List<String>> informationMap)
+    private void setBenefitView(String benefit, List<String> benefitContentList)
     {
-        if (layoutInflater == null || viewGroup == null || informationMap == null)
+        if (getViewDataBinding() == null)
         {
             return;
         }
 
-        LayoutStayOutboundDetail04DataBinding viewDataBinding = DataBindingUtil.inflate(layoutInflater//
-            , R.layout.layout_stay_outbound_detail_04_data, viewGroup, true);
+        LayoutGourmetDetailBenefitDataBinding viewDataBinding = getViewDataBinding().benefitViewDataBinding;
 
-        Iterator<Map.Entry<String, List<String>>> iterator = informationMap.entrySet().iterator();
-
-        while (iterator.hasNext() == true)
+        if (DailyTextUtils.isTextEmpty(benefit) == true)
         {
-            Map.Entry<String, List<String>> entry = iterator.next();
+            // benefit 이 없으면 상단 라인으로 대체 하기때문에 비어있으면 리턴
+            viewDataBinding.benefitLayout.setVisibility(View.GONE);
+            return;
+        }
 
-            if (entry == null)
+        viewDataBinding.benefitLayout.setVisibility(View.VISIBLE);
+        viewDataBinding.benefitTitleTextView.setText(benefit);
+
+        viewDataBinding.benefitContentsLayout.removeAllViews();
+
+        if (benefitContentList != null && benefitContentList.size() > 0)
+        {
+            LayoutInflater layoutInflater = LayoutInflater.from(getContext());
+
+            for (String content : benefitContentList)
             {
-                continue;
+                LayoutGourmetDetailBenefitContentBinding contentViewDataBinding = DataBindingUtil.inflate(layoutInflater, R.layout.layout_gourmet_detail_benefit_content, viewDataBinding.benefitContentsLayout, true);
+                contentViewDataBinding.textView.setText(content);
             }
-
-            setInformationView(layoutInflater, viewDataBinding.informationLayout, entry, iterator.hasNext() == false);
         }
     }
 
-    private void setInformationView(LayoutInflater layoutInflater, ViewGroup viewGroup, Map.Entry<String, List<String>> information, boolean lastView)
+    /**
+     * 정보
+     *
+     * @return
+     */
+    private void setDescriptionsView(List<LinkedHashMap<String, List<String>>> descriptionList)
+    {
+        if (getViewDataBinding() == null || descriptionList == null)
+        {
+            return;
+        }
+
+        LayoutInflater layoutInflater = LayoutInflater.from(getContext());
+
+        for (LinkedHashMap<String, List<String>> descriptionMap : descriptionList)
+        {
+            Iterator<Map.Entry<String, List<String>>> iterator = descriptionMap.entrySet().iterator();
+
+            while (iterator.hasNext() == true)
+            {
+                Map.Entry<String, List<String>> entry = iterator.next();
+
+                if (entry == null)
+                {
+                    continue;
+                }
+
+                setDescriptionView(layoutInflater, getViewDataBinding().descriptionsLayout, entry, iterator.hasNext() == false);
+            }
+        }
+    }
+
+    private void setDescriptionView(LayoutInflater layoutInflater, ViewGroup viewGroup, Map.Entry<String, List<String>> information, boolean lastView)
     {
         if (layoutInflater == null || viewGroup == null || information == null)
         {
@@ -1201,23 +1728,18 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
     }
 
     /**
-     * 문의하기
-     *
-     * @param layoutInflater
-     * @param viewGroup
+     * 문의 상담
      */
-    private void setConciergeView(LayoutInflater layoutInflater, ViewGroup viewGroup)
+    private void setConciergeView()
     {
-        if (layoutInflater == null || viewGroup == null)
+        if (getViewDataBinding() == null)
         {
             return;
         }
 
-        LayoutStayOutboundDetailConciergeDataBinding viewDataBinding = DataBindingUtil.inflate(layoutInflater//
-            , R.layout.layout_stay_outbound_detail_concierge_data, viewGroup, true);
+        LayoutGourmetDetailConciergeDataBinding viewDataBinding = getViewDataBinding().conciergeViewDataBinding;
 
         String[] hour = DailyPreference.getInstance(getContext()).getOperationTime().split("\\,");
-
         String startHour = hour[0];
         String endHour = hour[1];
 
@@ -1243,75 +1765,140 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
             return;
         }
 
-        getViewDataBinding().moreIconView.setVisibility(visible ? View.VISIBLE : View.INVISIBLE);
-        getViewDataBinding().viewpagerIndicator.setVisibility(visible ? View.VISIBLE : View.INVISIBLE);
-    }
-
-    private void setRoomList(StayBookDateTime stayBookDateTime, List<StayOutboundRoom> roomList)
-    {
-        if (getViewDataBinding() == null || stayBookDateTime == null || roomList == null || roomList.size() == 0)
+        if (visible == true)
         {
-            return;
-        }
-
-        final int nights;
-
-        try
-        {
-            nights = stayBookDateTime.getNights();
-        } catch (Exception e)
-        {
-            ExLog.e(e.toString());
-            return;
-        }
-
-        // 처음 세팅하는 경우 객실 타입 세팅
-        if (mRoomTypeListAdapter == null)
-        {
-            mRoomTypeListAdapter = new StayOutboundDetailRoomListAdapter(getContext(), roomList, new View.OnClickListener()
-            {
-                @Override
-                public void onClick(View v)
-                {
-                    int position = getViewDataBinding().productTypeRecyclerView.getChildAdapterPosition(v);
-
-                    if (position < 0)
-                    {
-                        return;
-                    }
-
-                    getEventListener().onRoomClick(mRoomTypeListAdapter.getItem(position));
-                    mRoomTypeListAdapter.setSelected(position);
-                    mRoomTypeListAdapter.notifyDataSetChanged();
-                }
-            });
+            getViewDataBinding().moreIconView.setVisibility(View.VISIBLE);
+            getViewDataBinding().viewpagerIndicator.setVisibility(View.VISIBLE);
         } else
         {
-            // 재세팅 하는 경우
-            mRoomTypeListAdapter.addAll(roomList);
-            mRoomTypeListAdapter.setSelected(0);
+            getViewDataBinding().moreIconView.setVisibility(View.INVISIBLE);
+            getViewDataBinding().viewpagerIndicator.setVisibility(View.INVISIBLE);
+        }
+    }
+
+
+    private void showBottomLayout(boolean animation)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
         }
 
-        getViewDataBinding().productTypeRecyclerView.getLayoutParams().height = ViewGroup.LayoutParams.WRAP_CONTENT;
-        getViewDataBinding().productTypeRecyclerView.requestLayout();
-        getViewDataBinding().productTypeRecyclerView.setAdapter(mRoomTypeListAdapter);
-        getViewDataBinding().bookingTextView.setOnClickListener(this);
-
-        getViewDataBinding().productTypeRecyclerView.postDelayed(new Runnable()
+        if (mShowBottomAnimator != null)
         {
-            @Override
-            public void run()
-            {
-                int maxHeight = getViewDataBinding().getRoot().getHeight()//
-                    - getDimensionPixelSize(R.dimen.toolbar_height)//
-                    - ScreenUtils.dpToPx(getContext(), 116) - 1// - (객실 타이틀바 + 하단 하단 버튼) - 라인
-                    - (getViewDataBinding().priceOptionLayout.getVisibility() == View.VISIBLE ? getViewDataBinding().priceOptionLayout.getHeight() : 0);
+            return;
+        }
 
-                int height = Math.min(maxHeight, getViewDataBinding().productTypeRecyclerView.getHeight());
-                getViewDataBinding().productTypeRecyclerView.getLayoutParams().height = height;
-                getViewDataBinding().productTypeRecyclerView.requestLayout();
-            }
-        }, 100);
+        if (mHideBottomAnimator != null && mHideBottomAnimator.isRunning() == true)
+        {
+            mHideBottomAnimator.cancel();
+            mHideBottomAnimator = null;
+        }
+
+        if (animation == true)
+        {
+            mShowBottomAnimator = ObjectAnimator.ofFloat(getViewDataBinding().bottomLayout, View.ALPHA//
+                , getViewDataBinding().bottomLayout.getAlpha(), 1.0f);
+            mShowBottomAnimator.setDuration(300);
+            mShowBottomAnimator.addListener(new Animator.AnimatorListener()
+            {
+                @Override
+                public void onAnimationStart(Animator animation)
+                {
+                    getViewDataBinding().bottomLayout.setVisibility(View.VISIBLE);
+                }
+
+                @Override
+                public void onAnimationEnd(Animator animation)
+                {
+                    mShowBottomAnimator.removeAllListeners();
+                    mShowBottomAnimator = null;
+
+                    getViewDataBinding().bottomLayout.setVisibility(View.VISIBLE);
+                }
+
+                @Override
+                public void onAnimationCancel(Animator animation)
+                {
+
+                }
+
+                @Override
+                public void onAnimationRepeat(Animator animation)
+                {
+
+                }
+            });
+            mShowBottomAnimator.start();
+        } else
+        {
+            getViewDataBinding().bottomLayout.setVisibility(View.VISIBLE);
+            getViewDataBinding().bottomLayout.setAlpha(1.0f);
+        }
+    }
+
+    private void hideBottomLayout(boolean animation)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        if (mHideBottomAnimator != null)
+        {
+            return;
+        }
+
+        if (mShowBottomAnimator != null && mShowBottomAnimator.isRunning() == true)
+        {
+            mShowBottomAnimator.cancel();
+            mShowBottomAnimator = null;
+        }
+
+        if (animation == true)
+        {
+            mHideBottomAnimator = ObjectAnimator.ofFloat(getViewDataBinding().bottomLayout, View.ALPHA//
+                , getViewDataBinding().bottomLayout.getAlpha(), 0.0f);
+            mHideBottomAnimator.setDuration(300);
+            mHideBottomAnimator.addListener(new Animator.AnimatorListener()
+            {
+                boolean mCanceled;
+
+                @Override
+                public void onAnimationStart(Animator animation)
+                {
+                }
+
+                @Override
+                public void onAnimationEnd(Animator animation)
+                {
+                    mHideBottomAnimator.removeAllListeners();
+                    mHideBottomAnimator = null;
+
+                    if (mCanceled == false)
+                    {
+                        getViewDataBinding().bottomLayout.setVisibility(View.INVISIBLE);
+                    }
+                }
+
+                @Override
+                public void onAnimationCancel(Animator animation)
+                {
+                    mCanceled = true;
+                }
+
+                @Override
+                public void onAnimationRepeat(Animator animation)
+                {
+
+                }
+            });
+            mHideBottomAnimator.start();
+        } else
+        {
+            getViewDataBinding().bottomLayout.setVisibility(View.INVISIBLE);
+            getViewDataBinding().bottomLayout.setAlpha(0.0f);
+        }
     }
 
     /**

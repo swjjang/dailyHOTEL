@@ -36,5 +36,17 @@ public interface GourmetDetailViewInterface extends BaseDialogViewInterface
 
     void showShareDialog(Dialog.OnDismissListener listener);
 
+    void setWishCount(int count);
+
+    void setWishSelected(boolean selected);
+
     void scrollTop();
+
+    void scrollFirstMenu();
+
+    void openMoreMenuList();
+
+    boolean isOpenedMoreMenuList();
+
+    void closeMoreMenuList();
 }

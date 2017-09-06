@@ -132,6 +132,17 @@ public class DailyDateInformationView extends ConstraintLayout
         mViewDataBinding.date1TextView.setCompoundDrawablesWithIntrinsicBounds(left, top, right, bottom);
     }
 
+    public void setData1TextSize(float titleSize, float dateSize)
+    {
+        if (mViewDataBinding == null)
+        {
+            return;
+        }
+
+        mViewDataBinding.date1TitleTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, titleSize);
+        mViewDataBinding.date1TextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, dateSize);
+    }
+
     public void setDate2Text(CharSequence title, CharSequence dateString)
     {
         if (mViewDataBinding == null)
@@ -191,6 +202,17 @@ public class DailyDateInformationView extends ConstraintLayout
         }
 
         mViewDataBinding.date2TextView.setCompoundDrawablesWithIntrinsicBounds(left, top, right, bottom);
+    }
+
+    public void setData2TextSize(float titleSize, float dateSize)
+    {
+        if (mViewDataBinding == null)
+        {
+            return;
+        }
+
+        mViewDataBinding.date2TitleTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, titleSize);
+        mViewDataBinding.date2TextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, dateSize);
     }
 
     public void setCenterNightsVisible(boolean visible)

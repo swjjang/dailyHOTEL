@@ -29,9 +29,9 @@ public class CalendarImpl implements CalendarInterface
     }
 
     @Override
-    public Observable<List<Integer>> getGourmetUnavailableDates(int placeIndex, int dateRange, boolean reverse)
+    public Observable<List<Integer>> getGourmetUnavailableDates(int gourmetIndex, int dateRange, boolean reverse)
     {
-        return DailyMobileAPI.getInstance(mContext).getGourmetUnavailableDates(placeIndex, dateRange, reverse) //
+        return DailyMobileAPI.getInstance(mContext).getGourmetUnavailableDates(gourmetIndex, dateRange, reverse) //
             .map(new Function<BaseListDto<String>, List<Integer>>()
             {
                 @Override

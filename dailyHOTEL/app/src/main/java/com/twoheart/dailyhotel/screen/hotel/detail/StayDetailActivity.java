@@ -1095,7 +1095,8 @@ public class StayDetailActivity extends PlaceDetailActivity
         }
     }
 
-    void startCalendar(TodayDateTime todayDateTime, StayBookingDay stayBookingDay, boolean overseas, int placeIndex, ArrayList<Integer> soldOutList, boolean isAnimation, boolean isSingleDay)
+    void startCalendar(TodayDateTime todayDateTime, StayBookingDay stayBookingDay, boolean overseas, int placeIndex//
+        , List<Integer> soldOutList, boolean isAnimation, boolean isSingleDay)
     {
         if (isFinishing() == true || lockUiComponentAndIsLockUiComponent() == true)
         {
@@ -1108,7 +1109,7 @@ public class StayDetailActivity extends PlaceDetailActivity
 
         Intent intent = StayDetailCalendarActivity.newInstance(StayDetailActivity.this, todayDateTime //
             , stayBookingDay, dayCount, placeIndex, AnalyticsManager.ValueType.DETAIL //
-            , soldOutList, true, isAnimation, isSingleDay);
+            , (ArrayList)soldOutList, true, isAnimation, isSingleDay);
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_CALENDAR);
 
         AnalyticsManager.getInstance(StayDetailActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_//

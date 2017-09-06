@@ -2,9 +2,10 @@ package com.daily.dailyhotel.repository.remote.model;
 
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
+import com.daily.dailyhotel.entity.DetailImageInformation;
 import com.daily.dailyhotel.entity.GourmetDetail;
 import com.daily.dailyhotel.entity.GourmetMenu;
-import com.daily.dailyhotel.entity.DetailImageInformation;
+import com.daily.dailyhotel.entity.Sticker;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -84,7 +85,7 @@ public class GourmetDetailData
     public String benefit;
 
     @JsonField(name = "benefitContents")
-    public String benefitContents;
+    public List<String> benefitContents;
 
     @JsonField(name = "wishCount")
     public int wishCount;
@@ -93,7 +94,7 @@ public class GourmetDetailData
     public boolean myWish;
 
     @JsonField(name = "sticker")
-    public String sticker;
+    public StickerData sticker;
 
 
     public GourmetDetailData()
@@ -118,10 +119,14 @@ public class GourmetDetailData
         gourmetDetail.ratingValue = ratingValue;
         gourmetDetail.ratingShow = ratingShow;
         gourmetDetail.benefit = benefit;
-        gourmetDetail.benefitContents = benefitContents;
+        gourmetDetail.setBenefitContentList(benefitContents);
         gourmetDetail.wishCount = wishCount;
         gourmetDetail.myWish = myWish;
-        gourmetDetail.sticker = sticker;
+
+        if (sticker != null)
+        {
+            gourmetDetail.setSticker(sticker.getSticker());
+        }
 
         // 픽토그램
         List<GourmetDetail.Pictogram> pictogramList = new ArrayList<>();
@@ -162,7 +167,7 @@ public class GourmetDetailData
         // 이미지
         List<DetailImageInformation> detailImageInformationList = new ArrayList<>();
 
-        if(imgPath != null && imgPath.size() > 0)
+        if (imgPath != null && imgPath.size() > 0)
         {
             Iterator<String> keyList = imgPath.keySet().iterator();
 
@@ -186,7 +191,7 @@ public class GourmetDetailData
         // 메뉴
         List<GourmetMenu> gourmetMenuList = new ArrayList<>();
 
-        for(MenuData menuData : tickets)
+        for (MenuData menuData : tickets)
         {
             gourmetMenuList.add(menuData.getMenu());
         }
@@ -194,9 +199,9 @@ public class GourmetDetailData
         gourmetDetail.setGourmetMenuList(gourmetMenuList);
 
         // 상세
-        gourmetDetail.setDescriptionMap(details);
+        gourmetDetail.setDescriptionList(details);
 
-        return null;
+        return gourmetDetail;
     }
 
     @JsonObject
@@ -316,12 +321,12 @@ public class GourmetDetailData
 
             List<DetailImageInformation> detailImageInformationList = new ArrayList<>();
 
-            for(MenuImageData menuImageData : images)
+            for (MenuImageData menuImageData : images)
             {
                 DetailImageInformation detailImageInformation = new DetailImageInformation();
                 detailImageInformation.url = menuImageData.imageUrl;
 
-                if(menuImageData.isPrimary == true)
+                if (menuImageData.isPrimary == true)
                 {
                     detailImageInformationList.add(0, detailImageInformation);
                 } else
@@ -358,4 +363,33 @@ public class GourmetDetailData
             public int seq;
         }
     }
+
+    @JsonObject
+    static class StickerData
+    {
+        @JsonField(name = "idx")
+        public int index;
+
+        @JsonField(name = "defaultImageUrl")
+        public String defaultImageUrl;
+
+        @JsonField(name = "lowResolutionImageUrl")
+        public String lowResolutionImageUrl;
+
+        public StickerData()
+        {
+
+        }
+
+        public Sticker getSticker()
+        {
+            Sticker sticker = new Sticker();
+            sticker.index = index;
+            sticker.defaultImageUrl = defaultImageUrl;
+            sticker.lowResolutionImageUrl = lowResolutionImageUrl;
+
+            return sticker;
+        }
+    }
+
 }

@@ -208,7 +208,7 @@ public class GourmetDetailItemLayout extends LinearLayout
 
                 if (mLayoutGourmetDetailMoreMenuDataBinding != null)
                 {
-                    mLayoutGourmetDetailMoreMenuDataBinding.arrorImageView.setRotation(180);
+                    mLayoutGourmetDetailMoreMenuDataBinding.moreImageView.setRotation(180);
                     mLayoutGourmetDetailMoreMenuDataBinding.moreTextView.setText(R.string.label_collapse);
                 }
             }
@@ -293,7 +293,7 @@ public class GourmetDetailItemLayout extends LinearLayout
 
                 if (mLayoutGourmetDetailMoreMenuDataBinding != null)
                 {
-                    mLayoutGourmetDetailMoreMenuDataBinding.arrorImageView.setRotation(0);
+                    mLayoutGourmetDetailMoreMenuDataBinding.moreImageView.setRotation(0);
                     mLayoutGourmetDetailMoreMenuDataBinding.moreTextView.setText(mContext.getString(R.string.label_gourmet_detail_view_more, (int) mLayoutGourmetDetailMoreMenuDataBinding.moreTextView.getTag()));
                 }
             }

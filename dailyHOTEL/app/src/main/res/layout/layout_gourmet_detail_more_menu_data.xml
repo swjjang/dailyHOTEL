@@ -16,7 +16,7 @@
             android:textColor="@color/default_text_cb70038"/>
 
         <ImageView
-            android:id="@+id/arrorImageView"
+            android:id="@+id/moreImageView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="3dp"

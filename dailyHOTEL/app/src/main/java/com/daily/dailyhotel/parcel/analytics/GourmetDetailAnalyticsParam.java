@@ -23,8 +23,6 @@ public class GourmetDetailAnalyticsParam implements Parcelable
 {
     public static final int SKIP_CHECK_DISCOUNT_PRICE_VALUE = Integer.MIN_VALUE;
 
-    public int placeIndex;
-    public String placeName;
     private String addressAreaName; // addressSummary 의 split 이름 stay.addressSummary.split("\\||l|ㅣ|I")  index : 0;
     public int price; // 정가
     public int discountPrice; // 표시가
@@ -32,8 +30,6 @@ public class GourmetDetailAnalyticsParam implements Parcelable
     public int entryPosition = -1;
     public int totalListCount = -1;
     public boolean isDailyChoice;
-    public String gradeCode;
-    public String gradeName;
 
     private Province province;
 
@@ -45,141 +41,6 @@ public class GourmetDetailAnalyticsParam implements Parcelable
     public GourmetDetailAnalyticsParam(Parcel in)
     {
         readFromParcel(in);
-    }
-
-    public void setParam(Context context, Stay stay)
-    {
-        placeIndex = stay.index;
-        placeName = stay.name;
-
-        addressAreaName = getAddressAreaName(stay.addressSummary);
-        price = stay.price;
-
-        if (stay.discountPrice > 0)
-        {
-            discountPrice = stay.discountPrice;
-        } else
-        {
-            discountPrice = SKIP_CHECK_DISCOUNT_PRICE_VALUE;
-        }
-
-        showOriginalPriceYn = getShowOriginalPriceYn(stay.price, stay.discountPrice);
-        entryPosition = stay.entryPosition;
-        gradeCode = stay.getGrade().name();
-        gradeName = stay.getGrade().getName(context);
-        isDailyChoice = stay.isDailyChoice;
-    }
-
-    public void setParam(Context context, Gourmet gourmet)
-    {
-        placeIndex = gourmet.index;
-        placeName = gourmet.name;
-
-        addressAreaName = getAddressAreaName(gourmet.addressSummary);
-        price = gourmet.price;
-
-        if (gourmet.discountPrice > 0)
-        {
-            discountPrice = gourmet.discountPrice;
-        } else
-        {
-            discountPrice = SKIP_CHECK_DISCOUNT_PRICE_VALUE;
-        }
-
-        discountPrice = gourmet.discountPrice;
-        showOriginalPriceYn = getShowOriginalPriceYn(gourmet.price, gourmet.discountPrice);
-        entryPosition = gourmet.entryPosition;
-
-        gradeCode = Gourmet.Grade.gourmet.name();
-        gradeName = Gourmet.Grade.gourmet.getName(context);
-
-        isDailyChoice = gourmet.isDailyChoice;
-    }
-
-    public void setParam(Context context, HomePlace place)
-    {
-        placeIndex = place.index;
-        placeName = place.title;
-
-        Prices prices = place.prices;
-        if (prices != null)
-        {
-            price = prices.normalPrice;
-
-            if (prices.discountPrice > 0)
-            {
-                discountPrice = prices.discountPrice;
-            }
-        } else
-        {
-            price = 0;
-            discountPrice = SKIP_CHECK_DISCOUNT_PRICE_VALUE;
-        }
-
-        showOriginalPriceYn = getShowOriginalPriceYn(price, discountPrice);
-        entryPosition = -1;
-
-        if ("GOURMET".equalsIgnoreCase(place.serviceType) == true)
-        {
-            gradeCode = Gourmet.Grade.gourmet.name();
-            gradeName = Gourmet.Grade.gourmet.getName(context);
-        } else
-        {
-            Stay.Grade grade;
-            try
-            {
-                grade = place.details.stayGrade;
-            } catch (Exception e)
-            {
-                grade = Stay.Grade.etc;
-            }
-
-            gradeCode = grade.name();
-            gradeName = grade.getName(context);
-        }
-
-        isDailyChoice = false;
-    }
-
-    public void setParam(Context context, RecommendationStay recommendationStay)
-    {
-        placeIndex = recommendationStay.index;
-        placeName = recommendationStay.name;
-
-        price = recommendationStay.price;
-        discountPrice = recommendationStay.discount;
-        showOriginalPriceYn = getShowOriginalPriceYn(recommendationStay.price, recommendationStay.discount);
-        entryPosition = recommendationStay.entryPosition;
-
-        Stay.Grade grade;
-        try
-        {
-            grade = Stay.Grade.valueOf(recommendationStay.grade);
-        } catch (Exception e)
-        {
-            grade = Stay.Grade.etc;
-        }
-
-        gradeCode = grade.name();
-        gradeName = grade.getName(context);
-
-        isDailyChoice = recommendationStay.isDailyChoice;
-    }
-
-    public void setParam(Context context, RecommendationGourmet recommendationGourmet)
-    {
-        placeIndex = recommendationGourmet.index;
-        placeName = recommendationGourmet.name;
-
-        price = recommendationGourmet.price;
-        discountPrice = recommendationGourmet.discount;
-        showOriginalPriceYn = getShowOriginalPriceYn(recommendationGourmet.price, recommendationGourmet.discount);
-        entryPosition = recommendationGourmet.entryPosition;
-
-        gradeCode = Gourmet.Grade.gourmet.name();
-        gradeName = Gourmet.Grade.gourmet.getName(context);
-
-        isDailyChoice = recommendationGourmet.isDailyChoice;
     }
 
     public void setProvince(Province province)
@@ -266,8 +127,6 @@ public class GourmetDetailAnalyticsParam implements Parcelable
     @Override
     public void writeToParcel(Parcel dest, int flags)
     {
-        dest.writeInt(placeIndex);
-        dest.writeString(placeName);
         dest.writeString(addressAreaName);
         dest.writeInt(price);
         dest.writeInt(discountPrice);
@@ -275,14 +134,10 @@ public class GourmetDetailAnalyticsParam implements Parcelable
         dest.writeInt(entryPosition);
         dest.writeInt(totalListCount);
         dest.writeInt(isDailyChoice == true ? 1 : 0);
-        dest.writeString(gradeCode);
-        dest.writeString(gradeName);
     }
 
     protected void readFromParcel(Parcel in)
     {
-        placeIndex = in.readInt();
-        placeName = in.readString();
         addressAreaName = in.readString();
         price = in.readInt();
         discountPrice = in.readInt();
@@ -290,8 +145,6 @@ public class GourmetDetailAnalyticsParam implements Parcelable
         entryPosition = in.readInt();
         totalListCount = in.readInt();
         isDailyChoice = in.readInt() == 1 ? true : false;
-        gradeCode = in.readString();
-        gradeName = in.readString();
     }
 
     public static final Creator CREATOR = new Creator()

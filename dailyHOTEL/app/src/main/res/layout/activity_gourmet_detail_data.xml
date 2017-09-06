@@ -71,7 +71,7 @@
             android:layout_height="1dp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/defaultLoopViewPager"/>
+            app:layout_constraintTop_toBottomOf="@id/imageLoopViewPager"/>
 
         <com.twoheart.dailyhotel.widget.DailyLineIndicator
             android:id="@+id/viewpagerIndicator"
@@ -127,8 +127,8 @@
             android:layout_marginLeft="15dp"
             android:layout_marginTop="52dp"
             android:visibility="gone"
-            app:layout_constraintLeft_toLeftOf="@+id/defaultLoopViewPager"
-            app:layout_constraintTop_toTopOf="@+id/defaultLoopViewPager"/>
+            app:layout_constraintLeft_toLeftOf="@+id/imageLoopViewPager"
+            app:layout_constraintTop_toTopOf="@+id/imageLoopViewPager"/>
 
         <LinearLayout
             android:id="@+id/transTitleLayout"
@@ -140,7 +140,7 @@
             android:paddingTop="19dp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/defaultLoopViewPager">
+            app:layout_constraintTop_toBottomOf="@+id/imageLoopViewPager">
 
             <com.daily.base.widget.DailyTextView
                 android:id="@+id/transGradeTextView"
@@ -177,6 +177,7 @@
             android:fadingEdge="none"
             android:fadingEdgeLength="0dp"
             android:overScrollMode="never"
+            android:visibility="invisible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
@@ -218,6 +219,7 @@
                 <com.daily.dailyhotel.view.DailyDateInformationView
                     android:id="@+id/dateInformationView"
                     android:layout_width="match_parent"
+                    android:background="@color/white"
                     android:layout_height="78dp"/>
 
                 <View
@@ -250,7 +252,7 @@
                     layout="@layout/layout_gourmet_detail_benefit_data"/>
 
                 <LinearLayout
-                    android:id="@+id/informationLayout"
+                    android:id="@+id/descriptionsLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@color/white"

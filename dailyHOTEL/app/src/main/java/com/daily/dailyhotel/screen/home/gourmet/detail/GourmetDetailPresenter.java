@@ -11,10 +11,8 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.View;
 
-import com.crashlytics.android.Crashlytics;
 import com.daily.base.BaseActivity;
 import com.daily.base.BaseAnalyticsInterface;
-import com.daily.base.exception.BaseException;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.widget.DailyToast;
@@ -57,11 +55,9 @@ import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
-import io.reactivex.functions.Function4;
 import io.reactivex.functions.Function5;
 import io.reactivex.functions.Function6;
 import io.reactivex.schedulers.Schedulers;
-import retrofit2.HttpException;
 
 /**
  * Created by sheldon
@@ -75,8 +71,9 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
 
     public static final int STATUS_NONE = 0;
     public static final int STATUS_BOOKING = 1;
-    public static final int STATUS_SOLD_OUT = 2;
-    public static final int STATUS_FINISH = 3;
+    public static final int STATUS_SELECT_MENU = 2;
+    public static final int STATUS_SOLD_OUT = 3;
+    public static final int STATUS_FINISH = 4;
 
     private GourmetDetailAnalyticsInterface mAnalytics;
 
@@ -111,10 +108,6 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
         GourmetDetailAnalyticsParam getAnalyticsParam();
 
         void onScreen(Activity activity);
-
-        void onScreenRoomList(Activity activity);
-
-        GourmetDetailAnalyticsParam getPaymentAnalyticsParam(String grade, boolean nrd, boolean showOriginalPrice);
     }
 
     public GourmetDetailPresenter(@NonNull GourmetDetailActivity activity)
@@ -140,6 +133,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
         mGourmetRemoteImpl = new GourmetRemoteImpl(activity);
         mCommonRemoteImpl = new CommonRemoteImpl(activity);
         mProfileRemoteImpl = new ProfileRemoteImpl(activity);
+        mCalendarImpl = new CalendarImpl(activity);
 
         setStatus(STATUS_NONE);
 
@@ -250,14 +244,19 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
                         setReviewScores(reviewScores);
                         setSoldOutDateList(unavailableDates);
 
+                        gourmetDetail.hasCoupon = hasCoupon;
+
+                        setGourmetDetail(gourmetDetail);
+
                         return gourmetDetail;
                     }
-                }).subscribe(new Consumer<GourmetDetail>()
+                }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<GourmetDetail>()
             {
                 @Override
                 public void accept(@io.reactivex.annotations.NonNull GourmetDetail gourmetDetail) throws Exception
                 {
-                    onGourmetDetail(gourmetDetail);
+                    notifyGourmetDetailChanged();
+                    notifyWishChanged();
 
                     if (disposable != null)
                     {
@@ -461,6 +460,10 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
                     setReviewScores(reviewScores);
                     setSoldOutDateList(unavailableDates);
 
+                    gourmetDetail.hasCoupon = hasCoupon;
+
+                    setGourmetDetail(gourmetDetail);
+
                     return gourmetDetail;
                 }
             }).subscribe(new Consumer<GourmetDetail>()
@@ -468,7 +471,8 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
             @Override
             public void accept(@io.reactivex.annotations.NonNull GourmetDetail gourmetDetail) throws Exception
             {
-                onGourmetDetail(gourmetDetail);
+                notifyGourmetDetailChanged();
+                notifyWishChanged();
 
                 unLockAll();
             }
@@ -489,74 +493,6 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
     }
 
     @Override
-    protected void onHandleError(Throwable throwable)
-    {
-        unLockAll();
-
-        // 에러가 나는 경우 리스트로 복귀
-        if (throwable instanceof BaseException)
-        {
-            // 팝업 에러 보여주기
-            BaseException baseException = (BaseException) throwable;
-
-            getViewInterface().showSimpleDialog(null, baseException.getMessage()//
-                , getString(R.string.frag_error_btn), new View.OnClickListener()
-                {
-                    @Override
-                    public void onClick(View v)
-                    {
-                        onRefresh(true);
-                    }
-                }, new DialogInterface.OnCancelListener()
-                {
-                    @Override
-                    public void onCancel(DialogInterface dialog)
-                    {
-                        if (getActivity().isFinishing() == true)
-                        {
-                            return;
-                        }
-
-                        getActivity().onBackPressed();
-                    }
-                });
-        } else if (throwable instanceof HttpException && ((HttpException) throwable).code() != BaseException.CODE_UNAUTHORIZED)
-        {
-            HttpException httpException = (HttpException) throwable;
-
-            getViewInterface().showSimpleDialog(null, getString(R.string.act_base_network_connect)//
-                , getString(R.string.frag_error_btn), new View.OnClickListener()
-                {
-                    @Override
-                    public void onClick(View v)
-                    {
-                        onRefresh(true);
-                    }
-                }, new DialogInterface.OnCancelListener()
-                {
-                    @Override
-                    public void onCancel(DialogInterface dialog)
-                    {
-                        if (getActivity().isFinishing() == true)
-                        {
-                            return;
-                        }
-
-                        getActivity().onBackPressed();
-                    }
-                });
-
-            DailyToast.showToast(getActivity(), getString(R.string.act_base_network_connect), DailyToast.LENGTH_LONG);
-
-            Crashlytics.log(httpException.response().raw().request().url().toString());
-            Crashlytics.logException(throwable);
-        } else
-        {
-            super.onHandleError(throwable);
-        }
-    }
-
-    @Override
     public void onShareClick()
     {
         if (lock() == true)
@@ -572,6 +508,12 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
                 unLockAll();
             }
         });
+    }
+
+    @Override
+    public void onWishClick()
+    {
+
     }
 
     @Override
@@ -963,6 +905,30 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
             });
     }
 
+    @Override
+    public void onReviewClick()
+    {
+
+    }
+
+    @Override
+    public void onDownloadCouponClick()
+    {
+
+    }
+
+    @Override
+    public void onMoreMenuClick()
+    {
+
+    }
+
+    @Override
+    public void onMenuClick(int index)
+    {
+
+    }
+
     private void setStatus(int status)
     {
         mStatus = status;
@@ -990,21 +956,24 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
         mSoldOutDateList = soldOutList;
     }
 
-    private void onGourmetDetail(GourmetDetail gourmetDetail)
+    private void setGourmetDetail(GourmetDetail gourmetDetail)
     {
-        if (gourmetDetail == null)
+        mGourmetDetail = gourmetDetail;
+    }
+
+    private void notifyGourmetDetailChanged()
+    {
+        if (mGourmetDetail == null)
         {
             return;
         }
 
-        mGourmetDetail = gourmetDetail;
-
         // 리스트에서 이미지가 큰사이즈가 없는 경우 상세에서도 해당 사이즈가 없기 때문에 고려해준다.
         try
         {
-            if (gourmetDetail.getImageInformationList() != null && gourmetDetail.getImageInformationList().size() > 0)
+            if (mGourmetDetail.getImageInformationList() != null && mGourmetDetail.getImageInformationList().size() > 0)
             {
-                mImageUrl = gourmetDetail.getImageInformationList().get(0).url;
+                mImageUrl = mGourmetDetail.getImageInformationList().get(0).url;
             }
         } catch (Exception e)
         {
@@ -1013,13 +982,13 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
 
         if (mIsDeepLink == true)
         {
-            getViewInterface().setToolbarTitle(gourmetDetail.name);
+            getViewInterface().setToolbarTitle(mGourmetDetail.name);
         }
 
-        getViewInterface().setGourmetDetail(mGourmetBookDateTime, gourmetDetail, mReviewScores != null ? mReviewScores.reviewScoreTotalCount : 0);
+        getViewInterface().setGourmetDetail(mGourmetBookDateTime, mGourmetDetail, mReviewScores != null ? mReviewScores.reviewScoreTotalCount : 0);
 
         // 리스트 가격 변동은 진입시 한번 만 한다.
-        checkChangedPrice(mIsDeepLink, gourmetDetail, mListPrice, mCheckChangedPrice == false);
+        checkChangedPrice(mIsDeepLink, mGourmetDetail, mListPrice, mCheckChangedPrice == false);
         mCheckChangedPrice = true;
 
         // 선택된 방이 없으면 처음 방으로 한다.
@@ -1028,7 +997,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
             setStatus(STATUS_SOLD_OUT);
         } else
         {
-            setStatus(STATUS_BOOKING);
+            setStatus(STATUS_SELECT_MENU);
         }
 
         mIsDeepLink = false;
@@ -1072,6 +1041,17 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
         {
             ExLog.e(e.toString());
         }
+    }
+
+    private void notifyWishChanged()
+    {
+        if (mGourmetDetail == null)
+        {
+            return;
+        }
+
+        getViewInterface().setWishCount(mGourmetDetail.wishCount);
+        getViewInterface().setWishSelected(mGourmetDetail.myWish);
     }
 
     private void startCalendar(CommonDateTime commonDateTime, GourmetBookDateTime gourmetBookDateTime//

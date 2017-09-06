@@ -125,13 +125,7 @@ public class GourmetRemoteImpl implements GourmetInterface
                     if (existCouponsDataBaseDto.msgCode == 100 && existCouponsDataBaseDto.data != null)
                     {
                         hasCoupon = existCouponsDataBaseDto.data.existCoupons;
-                    } else
-                    {
-                        throw new BaseException(existCouponsDataBaseDto.msgCode, existCouponsDataBaseDto.msg);
                     }
-                } else
-                {
-                    throw new BaseException(-1, null);
                 }
 
                 return hasCoupon;
@@ -195,7 +189,7 @@ public class GourmetRemoteImpl implements GourmetInterface
             @Override
             public ReviewScores apply(@io.reactivex.annotations.NonNull BaseDto<ReviewScoresData> reviewScoresDataBaseDto) throws Exception
             {
-                ReviewScores reviewScores = null;
+                ReviewScores reviewScores;
 
                 if (reviewScoresDataBaseDto != null)
                 {
@@ -204,11 +198,11 @@ public class GourmetRemoteImpl implements GourmetInterface
                         reviewScores = reviewScoresDataBaseDto.data.getReviewScores();
                     } else
                     {
-                        throw new BaseException(reviewScoresDataBaseDto.msgCode, reviewScoresDataBaseDto.msg);
+                        reviewScores = new ReviewScores();
                     }
                 } else
                 {
-                    throw new BaseException(-1, null);
+                    reviewScores = new ReviewScores();
                 }
 
                 return reviewScores;
