@@ -13,6 +13,8 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.facebook.imagepipeline.image.ImageInfo;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 public class StayOutboundDetailImage extends BaseDetailImage
 {
@@ -21,6 +23,21 @@ public class StayOutboundDetailImage extends BaseDetailImage
     public StayOutboundDetailImage()
     {
 
+    }
+
+    public StayOutboundDetailImage(Map<String, String> map)
+    {
+        if (map == null)
+        {
+            return;
+        }
+
+        caption = map.get("caption");
+
+        mImageMap = new ImageMap();
+        mImageMap.smallUrl = map.get("smallUrl");
+        mImageMap.mediumUrl = map.get("mediumUrl");
+        mImageMap.bigUrl = map.get("bigUrl");
     }
 
     @Override
@@ -92,6 +109,23 @@ public class StayOutboundDetailImage extends BaseDetailImage
             .setControllerListener(controllerListener).setUri(url).build();
 
         simpleDraweeView.setController(draweeController);
+    }
+
+    @Override
+    public Map<String, String> getDataMap()
+    {
+        Map<String, String> map = new HashMap<>();
+
+        map.put("caption", caption);
+
+        if (mImageMap != null)
+        {
+            map.put("smallUrl", mImageMap.smallUrl);
+            map.put("mediumUrl", mImageMap.mediumUrl);
+            map.put("bigUrl", mImageMap.bigUrl);
+        }
+
+        return map;
     }
 
     public void setImageMap(ImageMap imageMap)

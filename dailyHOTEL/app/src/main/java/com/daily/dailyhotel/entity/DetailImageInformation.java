@@ -14,6 +14,9 @@ import com.facebook.imagepipeline.image.ImageInfo;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class DetailImageInformation extends BaseDetailImage
 {
     public String url;
@@ -21,6 +24,17 @@ public class DetailImageInformation extends BaseDetailImage
     public DetailImageInformation()
     {
 
+    }
+
+    public DetailImageInformation(Map<String, String> map)
+    {
+        if (map == null)
+        {
+            return;
+        }
+
+        caption = map.get("caption");
+        url = map.get("url");
     }
 
     @Override
@@ -61,5 +75,16 @@ public class DetailImageInformation extends BaseDetailImage
         }
 
         simpleDraweeView.setController(controller);
+    }
+
+    @Override
+    public Map getDataMap()
+    {
+        Map<String, String> map = new HashMap<>();
+
+        map.put("caption", caption);
+        map.put("url", url);
+
+        return map;
     }
 }

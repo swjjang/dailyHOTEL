@@ -8,11 +8,15 @@ import android.support.annotation.NonNull;
 import com.daily.base.BaseAnalyticsInterface;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
 import com.daily.dailyhotel.entity.BaseDetailImage;
-import com.daily.dailyhotel.parcel.StayOutboundDetailImageParcel;
+import com.daily.dailyhotel.entity.DetailImageInformation;
+import com.daily.dailyhotel.entity.StayOutboundDetailImage;
+import com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity;
+import com.daily.dailyhotel.screen.home.stay.outbound.detail.StayOutboundDetailActivity;
 import com.twoheart.dailyhotel.R;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by sheldon
@@ -68,18 +72,26 @@ public class ImageListPresenter extends BaseExceptionPresenter<ImageListActivity
         }
 
         mTitle = intent.getStringExtra(ImageListActivity.INTENT_EXTRA_DATA_TITLE);
-        ArrayList<StayOutboundDetailImageParcel> imageList = intent.getParcelableArrayListExtra(ImageListActivity.INTENT_EXTRA_DATA_IMAGE_LIST);
 
-        if (imageList == null || imageList.size() == 0)
+        List<Map<String, String>> imageMapList = (List<Map<String, String>>) intent.getSerializableExtra(ImageListActivity.INTENT_EXTRA_DATA_IMAGE_LIST);
+
+        if (imageMapList != null)
         {
-            return false;
-        }
+            mImageList = new ArrayList<>();
 
-        mImageList = new ArrayList<>();
-
-        for (StayOutboundDetailImageParcel stayOutboundDetailImageParcel : imageList)
-        {
-            mImageList.add(stayOutboundDetailImageParcel.getStayOutboundDetailImage());
+            if (equalsCallingActivity(GourmetDetailActivity.class) == true)
+            {
+                for (Map<String, String> imageMap : imageMapList)
+                {
+                    mImageList.add(new DetailImageInformation(imageMap));
+                }
+            } else if (equalsCallingActivity(StayOutboundDetailActivity.class) == true)
+            {
+                for (Map<String, String> imageMap : imageMapList)
+                {
+                    mImageList.add(new StayOutboundDetailImage(imageMap));
+                }
+            }
         }
 
         mIndex = intent.getIntExtra(ImageListActivity.INTENT_EXTRA_DATA_INDEX, 0);

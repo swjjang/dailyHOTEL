@@ -1,18 +1,32 @@
 package com.daily.dailyhotel.entity;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
-import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.daily.base.util.ScreenUtils;
 import com.facebook.drawee.view.SimpleDraweeView;
+
+import java.util.Map;
 
 public abstract class BaseDetailImage
 {
     public String caption;
 
     public abstract void setImage(Context context, SimpleDraweeView simpleDraweeView);
+
+    public abstract Map getDataMap();
+
+    public BaseDetailImage()
+    {
+
+    }
+
+    public BaseDetailImage(Map<String, String> map)
+    {
+
+    }
 
     void setImageViewHeight(Context context, ImageView imageView, int width, int height)
     {
