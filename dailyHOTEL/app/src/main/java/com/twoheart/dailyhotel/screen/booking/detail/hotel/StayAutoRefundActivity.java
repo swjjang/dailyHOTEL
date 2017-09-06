@@ -799,7 +799,7 @@ public class StayAutoRefundActivity extends BaseActivity
                             }
                         } else
                         {
-                            if (PAYMENT_TYPE_VBANK.equalsIgnoreCase(mStayBookingDetail.transactionType) == true && mStayBookingDetail.bonus == 0)
+                            if (PAYMENT_TYPE_VBANK.equalsIgnoreCase(mStayBookingDetail.transactionType) == true)
                             {
                                 String accountNumber = mStayAutoRefundLayout.getAccountNumber();
                                 String accountName = mStayAutoRefundLayout.getAccountName();
