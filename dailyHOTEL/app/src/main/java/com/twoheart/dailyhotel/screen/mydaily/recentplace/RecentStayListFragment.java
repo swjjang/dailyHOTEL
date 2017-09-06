@@ -17,6 +17,7 @@ import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
 import com.daily.dailyhotel.entity.CommonDateTime;
 import com.daily.dailyhotel.entity.People;
+import com.daily.dailyhotel.entity.RecentlyPlace;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayOutbound;
 import com.daily.dailyhotel.entity.StayOutbounds;
@@ -31,7 +32,6 @@ import com.twoheart.dailyhotel.model.Gourmet;
 import com.twoheart.dailyhotel.model.Place;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.Stay;
-import com.twoheart.dailyhotel.model.time.PlaceBookingDay;
 import com.twoheart.dailyhotel.model.time.StayBookingDay;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.layout.PlaceDetailLayout;
@@ -126,18 +126,18 @@ public class RecentStayListFragment extends RecentPlacesListFragment
     }
 
     @Override
-    protected void requestRecentPlacesList(PlaceBookingDay placeBookingDay)
+    protected void requestRecentPlacesList()
     {
         lockUI();
 
-        addCompositeDisposable(Observable.zip(mRecentlyRemoteImpl.getStayInboundRecentlyList((StayBookingDay) placeBookingDay, false).observeOn(Schedulers.io()) //
-            , mRecentlyRemoteImpl.getStayOutboundRecentlyList(10000, false).observeOn(Schedulers.io()) //
-            , new BiFunction<List<Stay>, StayOutbounds, ArrayList<PlaceViewItem>>()
+        addCompositeDisposable(Observable.zip(mRecentlyRemoteImpl.getInboundRecentlyList(RecentlyPlaceUtil.MAX_RECENT_PLACE_COUNT, false, ServiceType.HOTEL).observeOn(Schedulers.io()) //
+            , mRecentlyRemoteImpl.getStayOutboundRecentlyList(RecentlyPlaceUtil.MAX_RECENT_PLACE_COUNT, false).observeOn(Schedulers.io()) //
+            , new BiFunction<ArrayList<RecentlyPlace>, StayOutbounds, ArrayList<PlaceViewItem>>()
             {
                 @Override
-                public ArrayList<PlaceViewItem> apply(@NonNull List<Stay> stays, @NonNull StayOutbounds stayOutbounds) throws Exception
+                public ArrayList<PlaceViewItem> apply(@NonNull ArrayList<RecentlyPlace> recentlyPlaceList, @NonNull StayOutbounds stayOutbounds) throws Exception
                 {
-                    return RecentStayListFragment.this.makePlaceViewItemList(stays, stayOutbounds);
+                    return RecentStayListFragment.this.makePlaceViewItemList(recentlyPlaceList, stayOutbounds);
                 }
             }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<ArrayList<PlaceViewItem>>()
         {
@@ -163,15 +163,15 @@ public class RecentStayListFragment extends RecentPlacesListFragment
         }));
     }
 
-    private ArrayList<PlaceViewItem> makePlaceViewItemList(List<Stay> stayList, StayOutbounds stayOutbounds)
+    private ArrayList<PlaceViewItem> makePlaceViewItemList(ArrayList<RecentlyPlace> stayList, StayOutbounds stayOutbounds)
     {
         ArrayList<PlaceViewItem> list = new ArrayList<>();
 
         if (stayList != null)
         {
-            for (Stay stay : stayList)
+            for (RecentlyPlace recentlyPlace : stayList)
             {
-                list.add(new PlaceViewItem(PlaceViewItem.TYPE_ENTRY, stay));
+                list.add(new PlaceViewItem(PlaceViewItem.TYPE_ENTRY, recentlyPlace));
             }
         }
 

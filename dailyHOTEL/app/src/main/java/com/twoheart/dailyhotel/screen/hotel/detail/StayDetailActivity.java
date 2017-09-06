@@ -195,8 +195,9 @@ public class StayDetailActivity extends PlaceDetailActivity
             mDefaultImageUrl = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_IMAGEURL);
         }
 
-        RecentlyPlaceUtil.addRecentlyItem(this, Constants.ServiceType.HOTEL //
-            , mPlaceDetail.index, placeName, null, mDefaultImageUrl, true);
+//        RecentlyPlaceUtil.addRecentlyItem(this, Constants.ServiceType.HOTEL //
+//            , mPlaceDetail.index, placeName, null, mDefaultImageUrl, true);
+        RecentlyPlaceUtil.addRecentlyItemAsync(ServiceType.HOTEL, mPlaceDetail.index, placeName, null, mDefaultImageUrl, true);
 
         if (intent.hasExtra(NAME_INTENT_EXTRA_DATA_ANALYTICS_PARAM) == true)
         {

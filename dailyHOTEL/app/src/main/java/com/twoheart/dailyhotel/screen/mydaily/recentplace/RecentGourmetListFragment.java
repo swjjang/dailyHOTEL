@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 
 import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.entity.CommonDateTime;
+import com.daily.dailyhotel.entity.RecentlyPlace;
 import com.daily.dailyhotel.repository.local.model.AnalyticsParam;
 import com.daily.dailyhotel.util.RecentlyPlaceUtil;
 import com.facebook.drawee.view.SimpleDraweeView;
@@ -21,7 +22,6 @@ import com.twoheart.dailyhotel.model.Gourmet;
 import com.twoheart.dailyhotel.model.Place;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.time.GourmetBookingDay;
-import com.twoheart.dailyhotel.model.time.PlaceBookingDay;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.layout.PlaceDetailLayout;
 import com.twoheart.dailyhotel.screen.gourmet.detail.GourmetDetailActivity;
@@ -107,17 +107,17 @@ public class RecentGourmetListFragment extends RecentPlacesListFragment
     }
 
     @Override
-    protected void requestRecentPlacesList(PlaceBookingDay placeBookingDay)
+    protected void requestRecentPlacesList()
     {
         lockUI();
 
-        addCompositeDisposable(mRecentlyRemoteImpl.getGourmetRecentlyList((GourmetBookingDay) placeBookingDay, false) //
-            .observeOn(Schedulers.io()).map(new Function<List<Gourmet>, ArrayList<PlaceViewItem>>()
+        addCompositeDisposable(mRecentlyRemoteImpl.getInboundRecentlyList(RecentlyPlaceUtil.MAX_RECENT_PLACE_COUNT, false, ServiceType.GOURMET) //
+            .observeOn(Schedulers.io()).map(new Function<ArrayList<RecentlyPlace>, ArrayList<PlaceViewItem>>()
             {
                 @Override
-                public ArrayList<PlaceViewItem> apply(@NonNull List<Gourmet> gourmets) throws Exception
+                public ArrayList<PlaceViewItem> apply(@NonNull ArrayList<RecentlyPlace> recentlyPlaceList) throws Exception
                 {
-                    return makePlaceViewItemList(gourmets);
+                    return makePlaceViewItemList(recentlyPlaceList);
                 }
             }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<ArrayList<PlaceViewItem>>()
             {
@@ -144,7 +144,7 @@ public class RecentGourmetListFragment extends RecentPlacesListFragment
 
     }
 
-    private ArrayList<PlaceViewItem> makePlaceViewItemList(List<Gourmet> gourmetList)
+    private ArrayList<PlaceViewItem> makePlaceViewItemList(ArrayList<RecentlyPlace> gourmetList)
     {
         if (gourmetList == null || gourmetList.size() == 0)
         {
@@ -154,9 +154,9 @@ public class RecentGourmetListFragment extends RecentPlacesListFragment
         sortList(gourmetList);
 
         ArrayList<PlaceViewItem> list = new ArrayList<>();
-        for (Gourmet gourmet : gourmetList)
+        for (RecentlyPlace recentlyPlace : gourmetList)
         {
-            list.add(new PlaceViewItem(PlaceViewItem.TYPE_ENTRY, gourmet));
+            list.add(new PlaceViewItem(PlaceViewItem.TYPE_ENTRY, recentlyPlace));
         }
 
         list.add(new PlaceViewItem(PlaceViewItem.TYPE_FOOTER_VIEW, null));
@@ -164,7 +164,7 @@ public class RecentGourmetListFragment extends RecentPlacesListFragment
         return list;
     }
 
-    private void sortList(List<Gourmet> actualList)
+    private void sortList(ArrayList<RecentlyPlace> actualList)
     {
         if (actualList == null || actualList.size() == 0)
         {
@@ -177,10 +177,10 @@ public class RecentGourmetListFragment extends RecentPlacesListFragment
             return;
         }
 
-        Collections.sort(actualList, new Comparator<Gourmet>()
+        Collections.sort(actualList, new Comparator<RecentlyPlace>()
         {
             @Override
-            public int compare(Gourmet place1, Gourmet place2)
+            public int compare(RecentlyPlace place1, RecentlyPlace place2)
             {
                 Integer position1 = expectedList.indexOf(place1.index);
                 Integer position2 = expectedList.indexOf(place2.index);

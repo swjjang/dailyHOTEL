@@ -335,99 +335,138 @@ public class RecentlyPlaceUtil
     }
 
     @Nullable
-    public static RealmResults<RecentlyRealmObject> getRealmRecentlyTypeList(Constants.ServiceType... serviceTypes)
+    public static ArrayList<RecentlyRealmObject> getRealmRecentlyTypeList(Constants.ServiceType... serviceTypes)
     {
         Realm realm = Realm.getDefaultInstance();
-        RealmQuery query = realm.where(RecentlyRealmObject.class);
 
-        if (serviceTypes != null)
+        ArrayList<RecentlyRealmObject> result = new ArrayList<>();
+
+        try
         {
-            if (serviceTypes.length > 1)
-            {
-                query.beginGroup();
+            RealmQuery query = realm.where(RecentlyRealmObject.class);
 
-                for (int i = 0; i < serviceTypes.length; i++)
+            if (serviceTypes != null)
+            {
+                if (serviceTypes.length > 1)
                 {
-                    if (i > 0)
+                    query.beginGroup();
+
+                    for (int i = 0; i < serviceTypes.length; i++)
                     {
-                        query.or();
+                        if (i > 0)
+                        {
+                            query.or();
+                        }
+
+                        query.equalTo("serviceType", serviceTypes[i].name());
                     }
 
-                    query.equalTo("serviceType", serviceTypes[i].name());
+                    query.endGroup();
+                } else
+                {
+                    query.equalTo("serviceType", serviceTypes[0].name());
                 }
-
-                query.endGroup();
-            } else
-            {
-                query.equalTo("serviceType", serviceTypes[0].name());
             }
+
+            RealmResults<RecentlyRealmObject> realmResults = query.findAllSorted("savingTime", Sort.DESCENDING);
+
+            if (realmResults != null && realmResults.size() > 0)
+            {
+                result.addAll(realmResults);
+            }
+
+        } catch (Exception e)
+        {
+            ExLog.w(e.toString());
+        } finally
+        {
+            ExLog.d("realm close");
+            realm.close();
         }
 
-        RealmResults<RecentlyRealmObject> realmResults = query.findAllSorted("savingTime", Sort.DESCENDING);
-
-        realm.close();
-        return realmResults;
+        return result;
     }
 
     public static long getOldestSavingTime(Constants.ServiceType... serviceTypes)
     {
         Realm realm = Realm.getDefaultInstance();
-        RealmQuery query = realm.where(RecentlyRealmObject.class);
+        long savingTime = -1;
 
-        if (serviceTypes != null)
+        try
         {
-            if (serviceTypes.length > 1)
-            {
-                query.beginGroup();
+            RealmQuery query = realm.where(RecentlyRealmObject.class);
 
-                for (int i = 0; i < serviceTypes.length; i++)
+            if (serviceTypes != null)
+            {
+                if (serviceTypes.length > 1)
                 {
-                    if (i > 0)
+                    query.beginGroup();
+
+                    for (int i = 0; i < serviceTypes.length; i++)
                     {
-                        query.or();
+                        if (i > 0)
+                        {
+                            query.or();
+                        }
+
+                        query.equalTo("serviceType", serviceTypes[i].name());
                     }
 
-                    query.equalTo("serviceType", serviceTypes[i].name());
+                    query.endGroup();
+                } else
+                {
+                    query.equalTo("serviceType", serviceTypes[0].name());
                 }
-
-                query.endGroup();
-            } else
-            {
-                query.equalTo("serviceType", serviceTypes[0].name());
             }
-        }
 
-        RealmResults<RecentlyRealmObject> realmResults = query.findAllSorted("savingTime", Sort.ASCENDING);
+            RealmResults<RecentlyRealmObject> realmResults = query.findAllSorted("savingTime", Sort.ASCENDING);
 
-        realm.close();
-
-        if (realmResults == null || realmResults.size() == 0)
+            if (realmResults != null && realmResults.size() > 0)
+            {
+                savingTime = realmResults.get(0).savingTime;
+            }
+        } catch (Exception e)
         {
-            return -1;
+            ExLog.w(e.toString());
+        } finally
+        {
+            ExLog.d("realm close");
+            realm.close();
         }
 
-        return realmResults.get(0).savingTime;
+        return savingTime;
     }
 
     public static RecentlyRealmObject getRecentlyPlace(Constants.ServiceType serviceType, int index)
     {
         Realm realm = Realm.getDefaultInstance();
+        RecentlyRealmObject realmObject = null;
 
-        RealmQuery query = realm.where(RecentlyRealmObject.class);
-
-        query.equalTo("serviceType", serviceType.name());
-        query.equalTo("index", index);
-
-        RealmResults<RecentlyRealmObject> realmResults = query.findAllSorted("savingTime", Sort.DESCENDING);
-
-        realm.close();
-
-        if (realmResults != null && realmResults.size() > 0)
+        try
         {
-            return realmResults.get(0);
+            RealmQuery query = realm.where(RecentlyRealmObject.class);
+
+            query.equalTo("serviceType", serviceType.name());
+            query.equalTo("index", index);
+
+            RealmResults<RecentlyRealmObject> realmResults = query.findAllSorted("savingTime", Sort.DESCENDING);
+
+            if (realmResults == null || realmResults.size() == 0)
+            {
+                return null;
+            }
+
+            realmObject = realmResults.get(0);
+        } catch (Exception e)
+        {
+            ExLog.w(e.toString());
+        } finally
+        {
+            ExLog.d("realm close");
+            realm.close();
         }
 
-        return null;
+        return realmObject;
     }
 
     public static String getDbTargetIndices(Context context, Constants.ServiceType serviceType, int maxSize)
@@ -491,7 +530,7 @@ public class RecentlyPlaceUtil
 
     public static String getRealmTargetIndices(Constants.ServiceType serviceType, int maxSize)
     {
-        RealmResults<RecentlyRealmObject> recentlyList = RecentlyPlaceUtil.getRealmRecentlyTypeList(serviceType);
+        ArrayList<RecentlyRealmObject> recentlyList = RecentlyPlaceUtil.getRealmRecentlyTypeList(serviceType);
 
         if (recentlyList == null || recentlyList.size() == 0 || maxSize <= 0)
         {
@@ -576,7 +615,7 @@ public class RecentlyPlaceUtil
 
     public static ArrayList<Integer> getRealmRecentlyIndexList(Constants.ServiceType... serviceTypes)
     {
-        RealmResults<RecentlyRealmObject> recentlyList = RecentlyPlaceUtil.getRealmRecentlyTypeList(serviceTypes);
+        ArrayList<RecentlyRealmObject> recentlyList = RecentlyPlaceUtil.getRealmRecentlyTypeList(serviceTypes);
 
         if (recentlyList == null || recentlyList.size() == 0)
         {
@@ -606,6 +645,69 @@ public class RecentlyPlaceUtil
         DailyDbHelper.getInstance().close();
     }
 
+    public static void addRecentlyItemAsync(final Constants.ServiceType serviceType, int index, String name //
+        , String englishName, String imageUrl, boolean isUpdateDate)
+    {
+        if (serviceType == null || index <= 0)
+        {
+            return;
+        }
+
+        RecentlyRealmObject realmObject = new RecentlyRealmObject();
+        realmObject.index = index;
+        realmObject.serviceType = serviceType.name();
+
+        if (DailyTextUtils.isTextEmpty(name) == false)
+        {
+            realmObject.name = name;
+        }
+
+        if (DailyTextUtils.isTextEmpty(englishName) == false)
+        {
+            realmObject.englishName = englishName;
+        }
+
+        if (DailyTextUtils.isTextEmpty(imageUrl) == false)
+        {
+            realmObject.imageUrl = imageUrl;
+        }
+
+        if (isUpdateDate == true)
+        {
+            Calendar calendar = DailyCalendar.getInstance();
+            realmObject.savingTime = calendar.getTimeInMillis();
+        }
+
+        Realm realm = Realm.getDefaultInstance();
+        realm.executeTransactionAsync(new Realm.Transaction()
+        {
+            @Override
+            public void execute(Realm realm)
+            {
+                if (isUpdateDate == false)
+                {
+                    RecentlyRealmObject firstResultObject = realm.where(RecentlyRealmObject.class) //
+                        .beginGroup().equalTo("serviceType", serviceType.name()).equalTo("index", index).endGroup() //
+                        .findFirst();
+
+                    if (firstResultObject != null)
+                    {
+                        realmObject.savingTime = firstResultObject.savingTime;
+                    }
+                }
+
+                realm.copyToRealmOrUpdate(realmObject);
+            }
+        }, new Realm.Transaction.OnSuccess()
+        {
+            @Override
+            public void onSuccess()
+            {
+                //                maintainMaxRecentlyItem(serviceType);
+            }
+        });
+    }
+
     public static void deleteRecentlyItem(Context context, Constants.ServiceType serviceType, int index)
     {
         if (serviceType == null || index <= 0 || context == null)
@@ -619,9 +721,8 @@ public class RecentlyPlaceUtil
         DailyDbHelper.getInstance().close();
     }
 
-    public static ArrayList<CarouselListItem> mergeCarouselListItemList(Context context, ArrayList<RecentlyPlace> recentlyPlaceList, StayOutbounds stayOutbounds)
+    public static ArrayList<CarouselListItem> mergeCarouselListItemList(Context context, ArrayList<RecentlyPlace> recentlyPlaceList, StayOutbounds stayOutbounds, boolean useRealm)
     {
-
         ArrayList<CarouselListItem> carouselListItemList = new ArrayList<>();
         if (recentlyPlaceList != null)
         {
@@ -643,55 +744,12 @@ public class RecentlyPlaceUtil
         }
 
         // sort list
-        RecentlyPlaceUtil.sortCarouselListItemList(context, carouselListItemList, (Constants.ServiceType[]) null);
+        sortCarouselListItemList(context, carouselListItemList, useRealm, (Constants.ServiceType[]) null);
 
         return carouselListItemList;
     }
 
-    public static ArrayList<CarouselListItem> mergeCarouselListItemList(Context context //
-        , List<Stay> stayList, List<Gourmet> gourmetList, StayOutbounds stayOutbounds)
-    {
-        if (context == null)
-        {
-            return new ArrayList<>();
-        }
-
-        ArrayList<CarouselListItem> carouselListItemList = new ArrayList<>();
-
-        if (stayList != null && stayList.size() > 0)
-        {
-            for (Stay stay : stayList)
-            {
-                CarouselListItem carouselListItem = new CarouselListItem(CarouselListItem.TYPE_IN_STAY, stay);
-                carouselListItemList.add(carouselListItem);
-            }
-        }
-
-        if (gourmetList != null && gourmetList.size() > 0)
-        {
-            for (Gourmet gourmet : gourmetList)
-            {
-                CarouselListItem carouselListItem = new CarouselListItem(CarouselListItem.TYPE_GOURMET, gourmet);
-                carouselListItemList.add(carouselListItem);
-            }
-        }
-
-        List<StayOutbound> stayOutboundList = stayOutbounds.getStayOutbound();
-        if (stayOutboundList != null && stayOutboundList.size() > 0)
-        {
-            for (StayOutbound stayOutbound : stayOutboundList)
-            {
-                CarouselListItem carouselListItem = new CarouselListItem(CarouselListItem.TYPE_OB_STAY, stayOutbound);
-                carouselListItemList.add(carouselListItem);
-            }
-        }
-
-        sortCarouselListItemList(context, carouselListItemList, (Constants.ServiceType[]) null);
-
-        return carouselListItemList;
-    }
-
-    public static void sortCarouselListItemList(Context context, ArrayList<CarouselListItem> actualList, Constants.ServiceType... serviceTypes)
+    public static void sortCarouselListItemList(Context context, ArrayList<CarouselListItem> actualList, boolean useRealm, Constants.ServiceType... serviceTypes)
     {
         if (context == null || actualList == null || actualList.size() == 0)
         {
@@ -699,24 +757,28 @@ public class RecentlyPlaceUtil
         }
 
         ArrayList<RecentlyDbPlace> recentlyTypeList = RecentlyPlaceUtil.getDbRecentlyTypeList(context, serviceTypes);
-        RealmResults<RecentlyRealmObject> results = RecentlyPlaceUtil.getRealmRecentlyTypeList(serviceTypes);
-        if (results != null && results.size() > 0)
-        {
-            if (recentlyTypeList == null)
-            {
-                recentlyTypeList = new ArrayList<>();
-            }
 
-            for (RecentlyRealmObject object : results)
+        if (useRealm == true)
+        {
+            ArrayList<RecentlyRealmObject> results = RecentlyPlaceUtil.getRealmRecentlyTypeList(serviceTypes);
+            if (results != null && results.size() > 0)
             {
-                RecentlyDbPlace recentlyDbPlace = new RecentlyDbPlace();
-                recentlyDbPlace.index = object.index;
-                recentlyDbPlace.name = object.name;
-                recentlyDbPlace.englishName = object.englishName;
-                recentlyDbPlace.serviceType = object.serviceType == null ? null : Constants.ServiceType.valueOf(object.serviceType);
-                recentlyDbPlace.savingTime = object.savingTime;
-                recentlyDbPlace.imageUrl = object.imageUrl;
-                recentlyTypeList.add(recentlyDbPlace);
+                if (recentlyTypeList == null)
+                {
+                    recentlyTypeList = new ArrayList<>();
+                }
+
+                for (RecentlyRealmObject object : results)
+                {
+                    RecentlyDbPlace recentlyDbPlace = new RecentlyDbPlace();
+                    recentlyDbPlace.index = object.index;
+                    recentlyDbPlace.name = object.name;
+                    recentlyDbPlace.englishName = object.englishName;
+                    recentlyDbPlace.serviceType = object.serviceType == null ? null : Constants.ServiceType.valueOf(object.serviceType);
+                    recentlyDbPlace.savingTime = object.savingTime;
+                    recentlyDbPlace.imageUrl = object.imageUrl;
+                    recentlyTypeList.add(recentlyDbPlace);
+                }
             }
         }
 
@@ -781,6 +843,40 @@ public class RecentlyPlaceUtil
         return serviceType;
     }
 
+    public static Constants.ServiceType getServiceType(CarouselListItem carouselListItem)
+    {
+        Constants.ServiceType serviceType = null;
+        switch (carouselListItem.mType)
+        {
+            case CarouselListItem.TYPE_RECENTLY_PLACE:
+            {
+                RecentlyPlace place = carouselListItem.getItem();
+                serviceType = RecentlyPlaceUtil.getServiceType(place.serviceType);
+                break;
+            }
+
+            case CarouselListItem.TYPE_IN_STAY:
+            {
+                serviceType = Constants.ServiceType.HOTEL;
+                break;
+            }
+
+            case CarouselListItem.TYPE_OB_STAY:
+            {
+                serviceType = Constants.ServiceType.OB_STAY;
+                break;
+            }
+
+            case CarouselListItem.TYPE_GOURMET:
+            {
+                serviceType = Constants.ServiceType.GOURMET;
+                break;
+            }
+        }
+
+        return serviceType;
+    }
+
     public static int getCarouselListItemIndex(CarouselListItem carouselListItem)
     {
         int index = -1;
@@ -816,39 +912,5 @@ public class RecentlyPlaceUtil
         }
 
         return index;
-    }
-
-    public static Constants.ServiceType getServiceType(CarouselListItem carouselListItem)
-    {
-        Constants.ServiceType serviceType = null;
-        switch (carouselListItem.mType)
-        {
-            case CarouselListItem.TYPE_RECENTLY_PLACE:
-            {
-                RecentlyPlace place = carouselListItem.getItem();
-                serviceType = RecentlyPlaceUtil.getServiceType(place.serviceType);
-                break;
-            }
-
-            case CarouselListItem.TYPE_IN_STAY:
-            {
-                serviceType = Constants.ServiceType.HOTEL;
-                break;
-            }
-
-            case CarouselListItem.TYPE_OB_STAY:
-            {
-                serviceType = Constants.ServiceType.OB_STAY;
-                break;
-            }
-
-            case CarouselListItem.TYPE_GOURMET:
-            {
-                serviceType = Constants.ServiceType.GOURMET;
-                break;
-            }
-        }
-
-        return serviceType;
     }
 }

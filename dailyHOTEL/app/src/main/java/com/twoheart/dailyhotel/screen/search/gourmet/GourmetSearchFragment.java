@@ -9,6 +9,7 @@ import android.support.v4.util.Pair;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.entity.CampaignTag;
+import com.daily.dailyhotel.entity.RecentlyPlace;
 import com.daily.dailyhotel.entity.SearchCalendarReturnData;
 import com.daily.dailyhotel.repository.local.model.AnalyticsParam;
 import com.daily.dailyhotel.screen.home.campaigntag.gourmet.GourmetCampaignTagListActivity;
@@ -51,7 +52,7 @@ public class GourmetSearchFragment extends PlaceSearchFragment
     GourmetBookingDay mGourmetBookingDay;
     Disposable mAnalyticsDisposable;
 
-    private List<Gourmet> mRecentlyGourmetList;
+    private ArrayList<RecentlyPlace> mRecentlyGourmetList;
 
     @Override
     protected void initContents()
@@ -314,20 +315,20 @@ public class GourmetSearchFragment extends PlaceSearchFragment
     {
         setDateChanged(todayDateTime, mGourmetBookingDay);
 
-        addCompositeDisposable(Observable.zip(mRecentlyRemoteImpl.getGourmetRecentlyList(mGourmetBookingDay, false) //
+        addCompositeDisposable(Observable.zip(mRecentlyRemoteImpl.getInboundRecentlyList(RecentlyPlaceUtil.MAX_RECENT_PLACE_COUNT, false, ServiceType.GOURMET) //
             , mCampaignTagRemoteImpl.getCampaignTagList(getServiceType().name()) //
-            , new BiFunction<List<Gourmet>, ArrayList<CampaignTag>, List<Keyword>>()
+            , new BiFunction<ArrayList<RecentlyPlace>, ArrayList<CampaignTag>, List<Keyword>>()
             {
                 @Override
-                public List<Keyword> apply(@NonNull List<Gourmet> gourmetList, @NonNull ArrayList<CampaignTag> tagList) throws Exception
+                public List<Keyword> apply(@NonNull ArrayList<RecentlyPlace> gourmetList, @NonNull ArrayList<CampaignTag> tagList) throws Exception
                 {
                     ArrayList<Integer> expectedList = RecentlyPlaceUtil.getDbRecentlyIndexList(mBaseActivity, ServiceType.GOURMET);
                     if (expectedList != null && expectedList.size() > 0)
                     {
-                        Collections.sort(gourmetList, new Comparator<Gourmet>()
+                        Collections.sort(gourmetList, new Comparator<RecentlyPlace>()
                         {
                             @Override
-                            public int compare(Gourmet o1, Gourmet o2)
+                            public int compare(RecentlyPlace o1, RecentlyPlace o2)
                             {
                                 Integer position1 = expectedList.indexOf(o1.index);
                                 Integer position2 = expectedList.indexOf(o2.index);

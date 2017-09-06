@@ -1,7 +1,9 @@
 package com.twoheart.dailyhotel.screen.mydaily.wishlist;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.databinding.DataBindingUtil;
+import android.os.Build;
 import android.os.Vibrator;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -94,6 +96,7 @@ public class StayWishListAdapter extends PlaceWishListAdapter
         }
     }
 
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     private void onBindViewHolder(StayWishListViewHolder holder, PlaceViewItem placeViewItem, int position)
     {
         final Stay stay = placeViewItem.getItem();

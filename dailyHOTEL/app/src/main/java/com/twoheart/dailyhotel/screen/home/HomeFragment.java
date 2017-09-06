@@ -37,9 +37,7 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.DailyCategoryType;
-import com.twoheart.dailyhotel.model.Gourmet;
 import com.twoheart.dailyhotel.model.Province;
-import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.model.time.GourmetBookingDay;
 import com.twoheart.dailyhotel.model.time.StayBookingDay;
 import com.twoheart.dailyhotel.network.model.Event;
@@ -96,7 +94,6 @@ import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
-import io.reactivex.functions.Function3;
 import io.realm.Realm;
 import retrofit2.Call;
 import retrofit2.Response;
@@ -1161,27 +1158,60 @@ public class HomeFragment extends BaseMenuNavigationFragment
         mNetworkController.requestWishList();
     }
 
-    private void requestRecentList()
+    private void requestRecentList(boolean useRealm)
     {
-        addCompositeDisposable(Observable.zip(mRecentlyRemoteImpl.getInboundRecentlyList(MAX_REQUEST_SIZE) //
-            , mRecentlyRemoteImpl.getStayOutboundRecentlyList(MAX_REQUEST_SIZE, false) //
+        int maxCount = useRealm == true ? RecentlyPlaceUtil.MAX_RECENT_PLACE_COUNT : MAX_REQUEST_SIZE;
+
+        addCompositeDisposable(Observable.zip(mRecentlyRemoteImpl.getInboundRecentlyList(maxCount, useRealm, ServiceType.HOTEL, ServiceType.GOURMET).observeOn(AndroidSchedulers.mainThread()) //
+            , mRecentlyRemoteImpl.getStayOutboundRecentlyList(maxCount, useRealm).observeOn(AndroidSchedulers.mainThread()) //
             , new BiFunction<ArrayList<RecentlyPlace>, StayOutbounds, ArrayList<CarouselListItem>>()
             {
                 @Override
                 public ArrayList<CarouselListItem> apply(@NonNull ArrayList<RecentlyPlace> recentlyPlaceList, @NonNull StayOutbounds stayOutbounds) throws Exception
                 {
-                    return RecentlyPlaceUtil.mergeCarouselListItemList(mBaseActivity, recentlyPlaceList, stayOutbounds);
+                    ArrayList<CarouselListItem> carouselListItemList = RecentlyPlaceUtil.mergeCarouselListItemList(mBaseActivity, recentlyPlaceList, stayOutbounds, useRealm);
+
+                    DailyDb dailyDb = DailyDbHelper.getInstance().open(getActivity());
+
+                    mIsMigrationComplete = dailyDb.migrateAllRecentlyPlace(carouselListItemList);
+
+                    DailyDbHelper.getInstance().close();
+
+                    if (mIsMigrationComplete == true)
+                    {
+                        try
+                        {
+                            Realm realm = Realm.getDefaultInstance();
+                            realm.executeTransactionAsync(new Realm.Transaction()
+                            {
+                                @Override
+                                public void execute(Realm realm)
+                                {
+                                    realm.deleteAll();
+                                }
+                            });
+                        } catch (Exception e)
+                        {
+                            ExLog.e(e.toString());
+                        }
+                    }
+
+                    return carouselListItemList;
                 }
-            }).subscribe(new Consumer<ArrayList<CarouselListItem>>()
+            }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<ArrayList<CarouselListItem>>()
         {
             @Override
             public void accept(@NonNull ArrayList<CarouselListItem> carouselListItemList) throws Exception
             {
                 HomeFragment.this.setRecentlyList(carouselListItemList, false);
             }
-        }, throwable ->
+        }, new Consumer<Throwable>()
         {
-            setRecentlyList(null, true);
+            @Override
+            public void accept(@NonNull Throwable throwable) throws Exception
+            {
+                HomeFragment.this.setRecentlyList(null, true);
+            }
         }));
     }
 
@@ -1259,111 +1289,6 @@ public class HomeFragment extends BaseMenuNavigationFragment
         mTodayDateTime = todayDateTime;
     }
 
-    private void requestCommonDateTimeAndRecentList()
-    {
-        addCompositeDisposable(mCommonRemoteImpl.getCommonDateTime().map(new Function<CommonDateTime, TodayDateTime>()
-        {
-            @Override
-            public TodayDateTime apply(@NonNull CommonDateTime commonDateTime) throws Exception
-            {
-                TodayDateTime todayDateTime = new TodayDateTime(commonDateTime.openDateTime //
-                    , commonDateTime.closeDateTime, commonDateTime.currentDateTime, commonDateTime.dailyDateTime);
-
-                return todayDateTime;
-            }
-        }).subscribeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<TodayDateTime>()
-        {
-            @Override
-            public void accept(@NonNull TodayDateTime todayDateTime) throws Exception
-            {
-                setCommonDateTime(todayDateTime);
-
-                StayBookingDay stayBookingDay = new StayBookingDay();
-                stayBookingDay.setCheckInDay(todayDateTime.dailyDateTime);
-                stayBookingDay.setCheckOutDay(todayDateTime.dailyDateTime, 1);
-
-                GourmetBookingDay gourmetBookingDay = new GourmetBookingDay();
-                gourmetBookingDay.setVisitDay(todayDateTime.dailyDateTime);
-
-                addCompositeDisposable(Observable.zip(mRecentlyRemoteImpl.getStayInboundRecentlyList(stayBookingDay, true) //
-                    , mRecentlyRemoteImpl.getGourmetRecentlyList(gourmetBookingDay, true) //
-                    , mRecentlyRemoteImpl.getStayOutboundRecentlyList(RecentlyPlaceUtil.MAX_RECENT_PLACE_COUNT, true) //
-                    , new Function3<List<Stay>, List<Gourmet>, StayOutbounds, ArrayList<CarouselListItem>>()
-                    {
-                        @Override
-                        public ArrayList<CarouselListItem> apply(@NonNull List<Stay> stays, @NonNull List<Gourmet> gourmets //
-                            , @NonNull StayOutbounds stayOutbounds) throws Exception
-                        {
-                            ArrayList<CarouselListItem> carouselListItemList = RecentlyPlaceUtil.mergeCarouselListItemList(getActivity(), stays, gourmets, stayOutbounds);
-
-                            DailyDb dailyDb = DailyDbHelper.getInstance().open(getActivity());
-
-                            mIsMigrationComplete = dailyDb.migrateAllRecentlyPlace(carouselListItemList);
-
-                            DailyDbHelper.getInstance().close();
-
-                            if (mIsMigrationComplete == true)
-                            {
-                                try
-                                {
-                                    Realm realm = Realm.getDefaultInstance();
-                                    realm.executeTransactionAsync(new Realm.Transaction()
-                                    {
-                                        @Override
-                                        public void execute(Realm realm)
-                                        {
-                                            realm.deleteAll();
-                                        }
-                                    });
-                                } catch (Exception e)
-                                {
-                                    ExLog.e(e.toString());
-                                }
-                            }
-
-                            return carouselListItemList;
-                        }
-                    }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<ArrayList<CarouselListItem>>()
-                {
-                    @Override
-                    public void accept(@NonNull ArrayList<CarouselListItem> carouselListItemList) throws Exception
-                    {
-                        if (isFinishing() == true)
-                        {
-                            return;
-                        }
-
-                        unLockUI();
-
-                        setRecentlyList(carouselListItemList, false);
-                    }
-                }, new Consumer<Throwable>()
-                {
-                    @Override
-                    public void accept(@NonNull Throwable throwable) throws Exception
-                    {
-                        if (isFinishing() == true)
-                        {
-                            return;
-                        }
-
-                        unLockUI();
-
-                        setRecentlyList(null, true);
-                    }
-                }));
-            }
-        }, new Consumer<Throwable>()
-        {
-            @Override
-            public void accept(@NonNull Throwable throwable) throws Exception
-            {
-                setRecentlyList(null, true);
-                onHandleError(throwable);
-            }
-        }));
-    }
-
     public void forceRefreshing()
     {
         if (mHomeLayout == null || mHomeLayout.isRefreshing() == false || lockUiComponentAndIsLockUiComponent() == true)
@@ -1422,16 +1347,8 @@ public class HomeFragment extends BaseMenuNavigationFragment
                 mIsMigrationComplete = true;
             }
 
-            if (mIsMigrationComplete == true)
-            {
-                // 기존 홈 요청으로 진행
-                getCommonDateTime();
-                requestRecentList();
-            } else
-            {
-                //////////////
-                requestCommonDateTimeAndRecentList();
-            }
+            getCommonDateTime();
+            requestRecentList(mIsMigrationComplete == false);
 
             if (DailyHotel.isLogin() == true && DailyRemoteConfigPreference.getInstance(mBaseActivity).isRemoteConfigStampEnabled() == true //
                 && DailyRemoteConfigPreference.getInstance(mBaseActivity).isRemoteConfigStampHomeEnabled() == true)

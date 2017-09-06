@@ -9,6 +9,7 @@ import android.support.v4.util.Pair;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.entity.CampaignTag;
+import com.daily.dailyhotel.entity.RecentlyPlace;
 import com.daily.dailyhotel.entity.SearchCalendarReturnData;
 import com.daily.dailyhotel.repository.local.model.AnalyticsParam;
 import com.daily.dailyhotel.screen.home.campaigntag.stay.StayCampaignTagListActivity;
@@ -54,7 +55,7 @@ public class StaySearchFragment extends PlaceSearchFragment
     StayBookingDay mStayBookingDay;
     Disposable mAnalyticsDisposable;
 
-    private List<Stay> mRecentlyStayList;
+    private ArrayList<RecentlyPlace> mRecentlyStayList;
 
     @Override
     protected void initContents()
@@ -332,20 +333,20 @@ public class StaySearchFragment extends PlaceSearchFragment
     {
         setDateChanged(todayDateTime, mStayBookingDay);
 
-        addCompositeDisposable(Observable.zip(mRecentlyRemoteImpl.getStayInboundRecentlyList(mStayBookingDay, false) //
+        addCompositeDisposable(Observable.zip(mRecentlyRemoteImpl.getInboundRecentlyList(RecentlyPlaceUtil.MAX_RECENT_PLACE_COUNT, false, ServiceType.HOTEL) //
             , mCampaignTagRemoteImpl.getCampaignTagList(getServiceType().name()) //
-            , new BiFunction<List<Stay>, ArrayList<CampaignTag>, List<Keyword>>()
+            , new BiFunction<ArrayList<RecentlyPlace>, ArrayList<CampaignTag>, List<Keyword>>()
             {
                 @Override
-                public List<Keyword> apply(@NonNull List<Stay> stayList, @NonNull ArrayList<CampaignTag> tagList) throws Exception
+                public List<Keyword> apply(@NonNull ArrayList<RecentlyPlace> stayList, @NonNull ArrayList<CampaignTag> tagList) throws Exception
                 {
                     ArrayList<Integer> expectedList = RecentlyPlaceUtil.getDbRecentlyIndexList(mBaseActivity, ServiceType.HOTEL);
                     if (expectedList != null && expectedList.size() > 0)
                     {
-                        Collections.sort(stayList, new Comparator<Stay>()
+                        Collections.sort(stayList, new Comparator<RecentlyPlace>()
                         {
                             @Override
-                            public int compare(Stay o1, Stay o2)
+                            public int compare(RecentlyPlace o1, RecentlyPlace o2)
                             {
                                 Integer position1 = expectedList.indexOf(o1.index);
                                 Integer position2 = expectedList.indexOf(o2.index);

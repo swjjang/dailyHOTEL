@@ -26,6 +26,7 @@ import com.daily.base.util.ScreenUtils;
 import com.daily.base.widget.DailyEditText;
 import com.daily.base.widget.DailyScrollView;
 import com.daily.dailyhotel.entity.CampaignTag;
+import com.daily.dailyhotel.entity.RecentlyPlace;
 import com.daily.dailyhotel.entity.SearchCalendarReturnData;
 import com.daily.dailyhotel.view.DailySearchCircleIndicator;
 import com.twoheart.dailyhotel.R;
@@ -101,7 +102,7 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
 
     protected abstract void updateSuggestLayout(TextView titleTextView, TextView priceTextView, Keyword keyword, String text);
 
-    public abstract void setRecyclerViewData(List<? extends Place> recentlyList, ArrayList<CampaignTag> campaignTagList, List<Keyword> recentSearchList);
+    public abstract void setRecyclerViewData(List<RecentlyPlace> recentlyList, ArrayList<CampaignTag> campaignTagList, List<Keyword> recentSearchList);
 
     public PlaceSearchLayout(Context context, OnBaseEventListener listener)
     {

@@ -26,8 +26,6 @@ import com.twoheart.dailyhotel.util.DailyCalendar;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-import io.realm.RealmResults;
-
 /**
  * Created by android_sam on 2017. 7. 26..
  */
@@ -346,7 +344,7 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
         if (list == null || list.size() == 0)
         {
             // realm db 에도 결과가 없으면  migration 되었다고 판단함
-            RealmResults<RecentlyRealmObject> realmResultList = RecentlyPlaceUtil.getRealmRecentlyTypeList((Constants.ServiceType[]) null);
+            ArrayList<RecentlyRealmObject> realmResultList = RecentlyPlaceUtil.getRealmRecentlyTypeList((Constants.ServiceType[]) null);
             return realmResultList == null || realmResultList.size() == 0;
         }
 
