@@ -56,4 +56,6 @@ public interface GourmetPaymentInterface extends BaseDialogViewInterface
 
     void showDatePickerDialog(String titleText, List<String> visitTimeList, String selectedVisitTime//
         , View.OnClickListener onClickListener, DialogInterface.OnDismissListener dismissListener);
+
+    void scrollTop();
 }
