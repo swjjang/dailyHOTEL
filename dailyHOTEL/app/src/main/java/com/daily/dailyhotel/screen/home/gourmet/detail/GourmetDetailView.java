@@ -134,7 +134,7 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
 
         void onShareMapClick();
 
-        void onReviewClick();
+        void onTrueReviewClick();
 
         void onDownloadCouponClick();
 
@@ -208,7 +208,7 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
             @Override
             public void onClick(View v)
             {
-                // do nothing - 판매 완료 버튼이 뚤리는 이슈 수정
+                getEventListener().onActionButtonClick();
             }
         });
 
@@ -227,10 +227,6 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
         {
             case R.id.dateLayout:
                 getEventListener().onCalendarClick();
-                break;
-
-            case R.id.bookingTextView:
-                getEventListener().onActionButtonClick();
                 break;
         }
     }
@@ -801,7 +797,7 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
     }
 
     @Override
-    public void scrollFirstMenu()
+    public void scrollTopMenu()
     {
         if (getViewDataBinding() == null)
         {
@@ -813,23 +809,23 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
     }
 
     @Override
-    public void openMoreMenuList()
+    public Observable<Boolean> openMoreMenuList()
     {
         if (getViewDataBinding() == null || mMoreMenuLayout == null)
         {
-            return;
+            return null;
         }
 
         Integer height = (Integer) mMoreMenuLayout.getTag();
 
         if (height == null)
         {
-            return;
+            return null;
         }
 
         if (isOpenedMoreMenuList() == true)
         {
-            return;
+            return null;
         }
 
         ValueAnimator valueAnimator = ValueAnimator.ofInt(0, height);
@@ -851,41 +847,54 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
         });
         valueAnimator.setDuration(200);
         valueAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
-        valueAnimator.addListener(new Animator.AnimatorListener()
+
+        Observable<Boolean> observable = new Observable<Boolean>()
         {
             @Override
-            public void onAnimationStart(Animator animation)
+            protected void subscribeActual(Observer<? super Boolean> observer)
             {
-
-            }
-
-            @Override
-            public void onAnimationEnd(Animator animation)
-            {
-                valueAnimator.removeAllUpdateListeners();
-                valueAnimator.removeAllListeners();
-
-                if (mLayoutGourmetDetailMoreMenuDataBinding != null)
+                valueAnimator.addListener(new Animator.AnimatorListener()
                 {
-                    mLayoutGourmetDetailMoreMenuDataBinding.moreImageView.setRotation(180);
-                    mLayoutGourmetDetailMoreMenuDataBinding.moreTextView.setText(R.string.label_collapse);
-                }
+                    @Override
+                    public void onAnimationStart(Animator animation)
+                    {
+
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animator animation)
+                    {
+                        valueAnimator.removeAllUpdateListeners();
+                        valueAnimator.removeAllListeners();
+
+                        if (mLayoutGourmetDetailMoreMenuDataBinding != null)
+                        {
+                            mLayoutGourmetDetailMoreMenuDataBinding.moreImageView.setRotation(180);
+                            mLayoutGourmetDetailMoreMenuDataBinding.moreTextView.setText(R.string.label_collapse);
+                        }
+
+                        observer.onNext(true);
+                        observer.onComplete();
+                    }
+
+                    @Override
+                    public void onAnimationCancel(Animator animation)
+                    {
+
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animator animation)
+                    {
+
+                    }
+                });
+
+                valueAnimator.start();
             }
+        };
 
-            @Override
-            public void onAnimationCancel(Animator animation)
-            {
-
-            }
-
-            @Override
-            public void onAnimationRepeat(Animator animation)
-            {
-
-            }
-        });
-
-        valueAnimator.start();
+        return observable;
     }
 
     @Override
@@ -900,23 +909,23 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
     }
 
     @Override
-    public void closeMoreMenuList()
+    public Observable<Boolean> closeMoreMenuList()
     {
         if (getViewDataBinding() == null || mMoreMenuLayout == null)
         {
-            return;
+            return null;
         }
 
         Integer height = (Integer) mMoreMenuLayout.getTag();
 
         if (height == null)
         {
-            return;
+            return null;
         }
 
         if (isOpenedMoreMenuList() == false)
         {
-            return;
+            return null;
         }
 
         ValueAnimator valueAnimator = ValueAnimator.ofInt(height, 0);
@@ -936,43 +945,57 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
                 mMoreMenuLayout.requestLayout();
             }
         });
+
         valueAnimator.setDuration(200);
         valueAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
-        valueAnimator.addListener(new Animator.AnimatorListener()
+
+        Observable<Boolean> observable = new Observable<Boolean>()
         {
             @Override
-            public void onAnimationStart(Animator animation)
+            protected void subscribeActual(Observer<? super Boolean> observer)
             {
-
-            }
-
-            @Override
-            public void onAnimationEnd(Animator animation)
-            {
-                valueAnimator.removeAllUpdateListeners();
-                valueAnimator.removeAllListeners();
-
-                if (mLayoutGourmetDetailMoreMenuDataBinding != null)
+                valueAnimator.addListener(new Animator.AnimatorListener()
                 {
-                    mLayoutGourmetDetailMoreMenuDataBinding.moreImageView.setRotation(0);
-                    mLayoutGourmetDetailMoreMenuDataBinding.moreTextView.setText(getString(R.string.label_gourmet_detail_view_more, (int) mLayoutGourmetDetailMoreMenuDataBinding.moreTextView.getTag()));
-                }
+                    @Override
+                    public void onAnimationStart(Animator animation)
+                    {
+
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animator animation)
+                    {
+                        valueAnimator.removeAllUpdateListeners();
+                        valueAnimator.removeAllListeners();
+
+                        if (mLayoutGourmetDetailMoreMenuDataBinding != null)
+                        {
+                            mLayoutGourmetDetailMoreMenuDataBinding.moreImageView.setRotation(0);
+                            mLayoutGourmetDetailMoreMenuDataBinding.moreTextView.setText(getString(R.string.label_gourmet_detail_view_more, (int) mLayoutGourmetDetailMoreMenuDataBinding.moreTextView.getTag()));
+                        }
+
+                        observer.onNext(true);
+                        observer.onComplete();
+                    }
+
+                    @Override
+                    public void onAnimationCancel(Animator animation)
+                    {
+
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animator animation)
+                    {
+
+                    }
+                });
+
+                valueAnimator.start();
             }
+        };
 
-            @Override
-            public void onAnimationCancel(Animator animation)
-            {
-
-            }
-
-            @Override
-            public void onAnimationRepeat(Animator animation)
-            {
-
-            }
-        });
-
-        valueAnimator.start();
+        return observable;
     }
 
     @Override
@@ -1359,7 +1382,7 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
                 @Override
                 public void onClick(View v)
                 {
-                    getEventListener().onReviewClick();
+                    getEventListener().onTrueReviewClick();
                 }
             });
         } else

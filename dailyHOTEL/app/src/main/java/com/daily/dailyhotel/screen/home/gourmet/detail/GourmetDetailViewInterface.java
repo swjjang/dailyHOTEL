@@ -44,11 +44,11 @@ public interface GourmetDetailViewInterface extends BaseDialogViewInterface
 
     void scrollTop();
 
-    void scrollFirstMenu();
+    void scrollTopMenu();
 
-    void openMoreMenuList();
+    Observable<Boolean> openMoreMenuList();
 
     boolean isOpenedMoreMenuList();
 
-    void closeMoreMenuList();
+    Observable<Boolean> closeMoreMenuList();
 }
