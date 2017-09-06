@@ -516,6 +516,17 @@ public class GourmetPaymentView extends BaseDialogView<GourmetPaymentView.OnEven
     }
 
     @Override
+    public void scrollTop()
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        getViewDataBinding().scrollView.scrollTo(0, 0);
+    }
+
+    @Override
     public void onClick(View v)
     {
         switch (v.getId())

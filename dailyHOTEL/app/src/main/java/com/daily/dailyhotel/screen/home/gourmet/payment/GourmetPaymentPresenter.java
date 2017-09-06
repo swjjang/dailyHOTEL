@@ -953,6 +953,16 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
             mGuest.email = mUserSimpleInformation.email;
         }
 
+        if (DailyTextUtils.isTextEmpty(mVisitDateTime) == true)
+        {
+            getViewInterface().scrollTop();
+
+            DailyToast.showToast(getActivity(), R.string.toast_msg_please_select_reservationtime, DailyToast.LENGTH_SHORT);
+
+            unLockAll();
+            return;
+        }
+
         if (DailyTextUtils.isTextEmpty(mGuest.name) == true)
         {
             DailyToast.showToast(getActivity(), R.string.message_gourmet_please_input_guest, DailyToast.LENGTH_SHORT);
