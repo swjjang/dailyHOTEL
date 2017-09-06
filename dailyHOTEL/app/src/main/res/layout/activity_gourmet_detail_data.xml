@@ -177,7 +177,7 @@
             android:fadingEdge="none"
             android:fadingEdgeLength="0dp"
             android:overScrollMode="never"
-            android:visibility="invisible"
+            android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
@@ -193,7 +193,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
-                    <com.daily.dailyhotel.screen.home.gourmet.detail.DetailEmptyView
+                    <com.twoheart.dailyhotel.widget.DailyDetailEmptyView
                         android:id="@+id/detailEmptyView"
                         android:layout_width="0dp"
                         android:layout_height="0dp"

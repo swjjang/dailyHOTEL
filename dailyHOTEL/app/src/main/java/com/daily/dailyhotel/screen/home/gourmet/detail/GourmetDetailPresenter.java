@@ -43,6 +43,7 @@ import com.twoheart.dailyhotel.screen.gourmet.detail.GourmetReviewActivity;
 import com.twoheart.dailyhotel.screen.gourmet.filter.GourmetCalendarActivity;
 import com.twoheart.dailyhotel.screen.gourmet.filter.GourmetDetailCalendarActivity;
 import com.twoheart.dailyhotel.screen.information.FAQActivity;
+import com.twoheart.dailyhotel.screen.mydaily.coupon.SelectGourmetCouponDialogActivity;
 import com.twoheart.dailyhotel.screen.mydaily.member.LoginActivity;
 import com.twoheart.dailyhotel.screen.mydaily.wishlist.WishListTabActivity;
 import com.twoheart.dailyhotel.util.AppResearch;
@@ -395,6 +396,13 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
                 if (resultCode == Activity.RESULT_OK)
                 {
                     onWishClick();
+                }
+                break;
+
+            case GourmetDetailActivity.REQUEST_CODE_LOGIN_IN_BY_COUPON:
+                if (resultCode == Activity.RESULT_OK)
+                {
+                    onDownloadCouponClick();
                 }
                 break;
         }
@@ -1031,7 +1039,51 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
     @Override
     public void onDownloadCouponClick()
     {
+        if (mGourmetDetail == null || lock() == true)
+        {
+            return;
+        }
 
+        if (DailyHotel.isLogin() == false)
+        {
+            getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.message_detail_please_login), //
+                getString(R.string.dialog_btn_login_for_benefit), getString(R.string.dialog_btn_text_close), //
+                new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        Intent intent = LoginActivity.newInstance(getActivity(), AnalyticsManager.Screen.DAILYGOURMET_DETAIL);
+                        startActivityForResult(intent, GourmetDetailActivity.REQUEST_CODE_LOGIN_IN_BY_COUPON);
+                    }
+                }, new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        //                        AnalyticsManager.getInstance(GourmetDetailActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES, AnalyticsManager.Action.COUPON_LOGIN, AnalyticsManager.Label.CLOSED, null);
+                    }
+                }, new DialogInterface.OnCancelListener()
+                {
+                    @Override
+                    public void onCancel(DialogInterface dialog)
+                    {
+                        //                        AnalyticsManager.getInstance(GourmetDetailActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES, AnalyticsManager.Action.COUPON_LOGIN, AnalyticsManager.Label.CLOSED, null);
+                    }
+                }, new DialogInterface.OnDismissListener()
+                {
+                    @Override
+                    public void onDismiss(DialogInterface dialog)
+                    {
+                        unLockAll();
+                    }
+                }, true);
+        } else
+        {
+            Intent intent = SelectGourmetCouponDialogActivity.newInstance(getActivity(), mGourmetDetail.index, //
+                mGourmetBookDateTime.getVisitDateTime("yyyy-MM-dd"), mGourmetDetail.name);
+            startActivityForResult(intent, GourmetDetailActivity.REQUEST_CODE_DOWNLOAD_COUPON);
+        }
     }
 
     @Override

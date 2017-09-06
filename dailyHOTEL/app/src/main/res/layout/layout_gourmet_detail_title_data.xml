@@ -87,6 +87,7 @@
             android:drawablePadding="4dp"
             android:freezesText="true"
             android:gravity="center_vertical"
+            android:visibility="gone"
             android:textColor="@color/default_text_cb70038"
             android:textSize="13dp"
             app:drawableCompatLeft="@drawable/detail_ic_review"

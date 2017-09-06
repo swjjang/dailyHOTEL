@@ -1,4 +1,4 @@
-package com.daily.dailyhotel.screen.home.gourmet.detail;
+package com.twoheart.dailyhotel.widget;
 
 import android.content.Context;
 import android.support.v4.view.MotionEventCompat;
@@ -7,7 +7,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
 
-public class DetailEmptyView extends View implements View.OnTouchListener
+public class DailyDetailEmptyView extends View implements View.OnTouchListener
 {
     private final int MOVE_STATE_NONE = 0;
     private final int MOVE_STATE_SCROLL = 10;
@@ -33,28 +33,28 @@ public class DetailEmptyView extends View implements View.OnTouchListener
         void onImageClick();
     }
 
-    public DetailEmptyView(Context context)
+    public DailyDetailEmptyView(Context context)
     {
         super(context);
 
         initLayout(context);
     }
 
-    public DetailEmptyView(Context context, AttributeSet attrs)
+    public DailyDetailEmptyView(Context context, AttributeSet attrs)
     {
         super(context, attrs);
 
         initLayout(context);
     }
 
-    public DetailEmptyView(Context context, AttributeSet attrs, int defStyleAttr)
+    public DailyDetailEmptyView(Context context, AttributeSet attrs, int defStyleAttr)
     {
         super(context, attrs, defStyleAttr);
 
         initLayout(context);
     }
 
-    public DetailEmptyView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes)
+    public DailyDetailEmptyView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes)
     {
         super(context, attrs, defStyleAttr, defStyleRes);
 
@@ -170,7 +170,7 @@ public class DetailEmptyView extends View implements View.OnTouchListener
         return false;
     }
 
-    public void setOnEventListener(DetailEmptyView.OnEventListener listener)
+    public void setOnEventListener(DailyDetailEmptyView.OnEventListener listener)
     {
         mOnEventListener = listener;
     }

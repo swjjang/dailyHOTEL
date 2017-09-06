@@ -75,6 +75,7 @@ import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.DailyRemoteConfigPreference;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.widget.AlphaTransition;
+import com.twoheart.dailyhotel.widget.DailyDetailEmptyView;
 import com.twoheart.dailyhotel.widget.TextTransition;
 
 import java.text.DecimalFormat;
@@ -991,6 +992,7 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
                     }
                 });
 
+                scrollTopMenu();
                 valueAnimator.start();
             }
         };
@@ -1202,7 +1204,7 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
             return;
         }
 
-        getViewDataBinding().detailEmptyView.setOnEventListener(new DetailEmptyView.OnEventListener()
+        getViewDataBinding().detailEmptyView.setOnEventListener(new DailyDetailEmptyView.OnEventListener()
         {
             @Override
             public void onStopMove(MotionEvent event)
