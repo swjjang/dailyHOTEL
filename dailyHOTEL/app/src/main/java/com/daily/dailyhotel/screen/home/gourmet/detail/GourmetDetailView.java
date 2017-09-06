@@ -1,7 +1,9 @@
 package com.daily.dailyhotel.screen.home.gourmet.detail;
 
 import android.animation.Animator;
+import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.animation.PropertyValuesHolder;
 import android.animation.ValueAnimator;
 import android.annotation.TargetApi;
 import android.app.Dialog;
@@ -30,6 +32,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.AccelerateInterpolator;
 import android.view.animation.LinearInterpolator;
 import android.widget.LinearLayout;
 
@@ -63,11 +66,11 @@ import com.twoheart.dailyhotel.databinding.LayoutGourmetDetailBenefitDataBinding
 import com.twoheart.dailyhotel.databinding.LayoutGourmetDetailConciergeDataBinding;
 import com.twoheart.dailyhotel.databinding.LayoutGourmetDetailCouponDataBinding;
 import com.twoheart.dailyhotel.databinding.LayoutGourmetDetailMapDataBinding;
+import com.twoheart.dailyhotel.databinding.LayoutGourmetDetailMenuDataBinding;
 import com.twoheart.dailyhotel.databinding.LayoutGourmetDetailMoreMenuDataBinding;
 import com.twoheart.dailyhotel.databinding.LayoutGourmetDetailTitleDataBinding;
 import com.twoheart.dailyhotel.databinding.LayoutStayOutboundDetail05DataBinding;
 import com.twoheart.dailyhotel.databinding.LayoutStayOutboundDetailInformationDataBinding;
-import com.twoheart.dailyhotel.databinding.ListRowDetailProductDataBinding;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.DailyRemoteConfigPreference;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
@@ -95,6 +98,7 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
 
     private ObjectAnimator mShowBottomAnimator;
     private ObjectAnimator mHideBottomAnimator;
+    private AnimatorSet mWishAnimatorSet;
 
     public interface OnEventListener extends OnBaseEventListener
     {
@@ -207,6 +211,8 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
                 // do nothing - 판매 완료 버튼이 뚤리는 이슈 수정
             }
         });
+
+        viewDataBinding.wishScrollView.setVisibility(View.GONE);
     }
 
     @Override
@@ -969,6 +975,102 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
         valueAnimator.start();
     }
 
+    @Override
+    public Observable<Boolean> showWishView(boolean myWish)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return null;
+        }
+
+        if (mWishAnimatorSet != null && mWishAnimatorSet.isRunning() == true)
+        {
+            return null;
+        }
+
+        if (myWish == true)
+        {
+            getViewDataBinding().wishTextView.setText(R.string.wishlist_detail_add_message);
+            getViewDataBinding().wishTextView.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_heart_fill_l, 0, 0);
+            getViewDataBinding().wishTextView.setBackgroundResource(R.drawable.shape_filloval_ccdb2453);
+        } else
+        {
+            getViewDataBinding().wishTextView.setText(R.string.wishlist_detail_delete_message);
+            getViewDataBinding().wishTextView.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_heart_stroke_l, 0, 0);
+            getViewDataBinding().wishTextView.setBackgroundResource(R.drawable.shape_filloval_a5000000);
+        }
+
+        ObjectAnimator objectAnimator1 = ObjectAnimator.ofPropertyValuesHolder(getViewDataBinding().wishTextView //
+            , PropertyValuesHolder.ofFloat("scaleX", 0.8f, 1.2f, 1.0f) //
+            , PropertyValuesHolder.ofFloat("scaleY", 0.8f, 1.2f, 1.0f) //
+            , PropertyValuesHolder.ofFloat("alpha", 0.5f, 1.0f, 1.0f) //
+        );
+        objectAnimator1.setInterpolator(new AccelerateInterpolator());
+        objectAnimator1.setDuration(300);
+
+
+        ObjectAnimator objectAnimator2 = ObjectAnimator.ofPropertyValuesHolder(getViewDataBinding().wishTextView //
+            , PropertyValuesHolder.ofFloat("scaleX", 1.0f, 1.0f) //
+            , PropertyValuesHolder.ofFloat("scaleY", 1.0f, 1.0f) //
+            , PropertyValuesHolder.ofFloat("alpha", 1.0f, 1.0f) //
+        );
+        objectAnimator2.setDuration(600);
+
+
+        ObjectAnimator objectAnimator3 = ObjectAnimator.ofPropertyValuesHolder(getViewDataBinding().wishTextView //
+            , PropertyValuesHolder.ofFloat("scaleX", 1.0f, 0.7f) //
+            , PropertyValuesHolder.ofFloat("scaleY", 1.0f, 0.7f) //
+            , PropertyValuesHolder.ofFloat("alpha", 1.0f, 0.0f) //
+        );
+        objectAnimator3.setDuration(200);
+
+        mWishAnimatorSet = new AnimatorSet();
+        mWishAnimatorSet.playSequentially(objectAnimator1, objectAnimator2, objectAnimator3);
+
+        Observable<Boolean> observable = new Observable<Boolean>()
+        {
+            @Override
+            protected void subscribeActual(Observer<? super Boolean> observer)
+            {
+                mWishAnimatorSet.addListener(new Animator.AnimatorListener()
+                {
+                    @Override
+                    public void onAnimationStart(Animator animation)
+                    {
+                        getViewDataBinding().wishScrollView.setVisibility(View.VISIBLE);
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animator animation)
+                    {
+                        mWishAnimatorSet.removeAllListeners();
+                        mWishAnimatorSet = null;
+
+                        getViewDataBinding().wishScrollView.setVisibility(View.GONE);
+
+                        observer.onNext(true);
+                        observer.onComplete();
+                    }
+
+                    @Override
+                    public void onAnimationCancel(Animator animation)
+                    {
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animator animation)
+                    {
+
+                    }
+                });
+
+                mWishAnimatorSet.start();
+            }
+        };
+
+        return observable;
+    }
+
     private void initToolbar(ActivityGourmetDetailDataBinding viewDataBinding)
     {
         if (viewDataBinding == null)
@@ -1403,7 +1505,7 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
             return;
         }
 
-        ListRowDetailProductDataBinding viewDataBinding = DataBindingUtil.inflate(layoutInflater, R.layout.list_row_detail_product_data, parent, true);
+        LayoutGourmetDetailMenuDataBinding viewDataBinding = DataBindingUtil.inflate(layoutInflater, R.layout.layout_gourmet_detail_menu_data, parent, true);
 
         viewDataBinding.getRoot().setOnClickListener(new View.OnClickListener()
         {
@@ -1779,12 +1881,7 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
 
     private void showBottomLayout(boolean animation)
     {
-        if (getViewDataBinding() == null)
-        {
-            return;
-        }
-
-        if (mShowBottomAnimator != null)
+        if (getViewDataBinding() == null || mShowBottomAnimator != null)
         {
             return;
         }
@@ -1839,12 +1936,7 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
 
     private void hideBottomLayout(boolean animation)
     {
-        if (getViewDataBinding() == null)
-        {
-            return;
-        }
-
-        if (mHideBottomAnimator != null)
+        if (getViewDataBinding() == null || mHideBottomAnimator != null)
         {
             return;
         }

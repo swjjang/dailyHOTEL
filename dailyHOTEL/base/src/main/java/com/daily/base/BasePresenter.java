@@ -230,4 +230,9 @@ public abstract class BasePresenter<T1 extends BaseActivity, T2 extends BaseDial
     {
         mActivity.finish();
     }
+
+    protected boolean equalsCallingActivity(Class className)
+    {
+        return mActivity.equalsCallingActivity(className);
+    }
 }

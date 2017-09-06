@@ -27,6 +27,7 @@ public class GourmetDetailActivity extends BaseActivity<GourmetDetailPresenter>
     static final int REQUEST_CODE_LOGIN = 10008;
     static final int REQUEST_CODE_PROFILE_UPDATE = 10009;
     static final int REQUEST_CODE_DOWNLOAD_COUPON = 10010;
+    static final int REQUEST_CODE_LOGIN_IN_BY_WISH = 10011;
 
     static final String INTENT_EXTRA_DATA_GOURMET_INDEX = "gourmetIndex";
     static final String INTENT_EXTRA_DATA_GOURMET_NAME = "gourmetName";

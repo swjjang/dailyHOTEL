@@ -355,7 +355,7 @@
         </LinearLayout>
 
         <ScrollView
-            android:id="@+id/wishListPopupScrollView"
+            android:id="@+id/wishScrollView"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:background="@color/transparent"
@@ -378,7 +378,7 @@
                     android:layout_weight="1.11"/>
 
                 <com.daily.base.widget.DailyTextView
-                    android:id="@+id/wishListPopupView"
+                    android:id="@+id/wishTextView"
                     android:layout_width="150dp"
                     android:layout_height="150dp"
                     android:background="@drawable/shape_filloval_ccdb2453"

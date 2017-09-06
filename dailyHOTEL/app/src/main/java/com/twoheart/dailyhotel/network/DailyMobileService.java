@@ -653,11 +653,11 @@ public interface DailyMobileService
         , @Query("dateSale") String visitDate);
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
-    @GET("{mobileAPI}")
+    @POST("{mobileAPI}")
     Observable<BaseDto<String>> addGourmetWish(@Path(value = "mobileAPI", encoded = true) String mobileAPI);
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
-    @GET("{mobileAPI}")
+    @POST("{mobileAPI}")
     Observable<BaseDto<String>> removeGourmetWish(@Path(value = "mobileAPI", encoded = true) String mobileAPI);
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})

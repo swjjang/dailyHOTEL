@@ -22,6 +22,7 @@ import com.daily.dailyhotel.entity.GourmetBookDateTime;
 import com.daily.dailyhotel.entity.GourmetDetail;
 import com.daily.dailyhotel.entity.GourmetMenu;
 import com.daily.dailyhotel.entity.ReviewScores;
+import com.daily.dailyhotel.entity.WishResult;
 import com.daily.dailyhotel.parcel.analytics.GourmetDetailAnalyticsParam;
 import com.daily.dailyhotel.repository.remote.CalendarImpl;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
@@ -30,12 +31,15 @@ import com.daily.dailyhotel.repository.remote.ProfileRemoteImpl;
 import com.daily.dailyhotel.screen.common.call.CallDialogActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.detail.StayOutboundDetailActivity;
 import com.daily.dailyhotel.util.RecentlyPlaceUtil;
+import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.screen.common.HappyTalkCategoryDialog;
 import com.twoheart.dailyhotel.screen.common.ZoomMapActivity;
 import com.twoheart.dailyhotel.screen.gourmet.filter.GourmetCalendarActivity;
 import com.twoheart.dailyhotel.screen.gourmet.filter.GourmetDetailCalendarActivity;
 import com.twoheart.dailyhotel.screen.information.FAQActivity;
+import com.twoheart.dailyhotel.screen.mydaily.member.LoginActivity;
+import com.twoheart.dailyhotel.screen.mydaily.wishlist.WishListTabActivity;
 import com.twoheart.dailyhotel.util.AppResearch;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
@@ -428,6 +432,13 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
 
             case GourmetDetailActivity.REQUEST_CODE_DOWNLOAD_COUPON:
                 break;
+
+            case GourmetDetailActivity.REQUEST_CODE_LOGIN_IN_BY_WISH:
+                if (resultCode == Activity.RESULT_OK)
+                {
+                    onWishClick();
+                }
+                break;
         }
     }
 
@@ -513,7 +524,138 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
     @Override
     public void onWishClick()
     {
+        if (mGourmetDetail == null || lock() == true)
+        {
+            return;
+        }
 
+        if (DailyHotel.isLogin() == false)
+        {
+            DailyToast.showToast(getActivity(), R.string.toast_msg_please_login, DailyToast.LENGTH_LONG);
+
+            Intent intent = LoginActivity.newInstance(getActivity(), AnalyticsManager.Screen.DAILYGOURMET_DETAIL);
+            startActivityForResult(intent, GourmetDetailActivity.REQUEST_CODE_LOGIN_IN_BY_WISH);
+        } else
+        {
+            boolean wish = !mGourmetDetail.myWish;
+            int wishCount = wish ? mGourmetDetail.wishCount + 1 : mGourmetDetail.wishCount - 1;
+
+            notifyWishChanged(wishCount, wish);
+
+            if (wish == true)
+            {
+                addCompositeDisposable(mGourmetRemoteImpl.addGourmetWish(mGourmetDetail.index)//
+                    .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<WishResult>()
+                {
+                    @Override
+                    public void accept(@io.reactivex.annotations.NonNull WishResult wishResult) throws Exception
+                    {
+                        if (equalsCallingActivity(WishListTabActivity.class) == true)
+                        {
+                            setResult(BaseActivity.RESULT_CODE_REFRESH);
+                        }
+
+                        if (wishResult.success == true)
+                        {
+                            mGourmetDetail.myWish = true;
+                            mGourmetDetail.wishCount++;
+
+                            notifyWishChanged();
+
+                            Observable<Boolean> observable = getViewInterface().showWishView(mGourmetDetail.myWish);
+
+                            if (observable != null)
+                            {
+                                addCompositeDisposable(observable.observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
+                                {
+                                    @Override
+                                    public void accept(@io.reactivex.annotations.NonNull Boolean aBoolean) throws Exception
+                                    {
+                                        unLockAll();
+                                    }
+                                }));
+                            } else
+                            {
+                                unLockAll();
+                            }
+                        } else
+                        {
+                            notifyWishChanged(mGourmetDetail.wishCount, mGourmetDetail.myWish);
+
+                            getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2), wishResult.message//
+                                , getString(R.string.dialog_btn_text_confirm), null);
+
+                            unLockAll();
+                        }
+                    }
+                }, new Consumer<Throwable>()
+                {
+                    @Override
+                    public void accept(@io.reactivex.annotations.NonNull Throwable throwable) throws Exception
+                    {
+                        onHandleError(throwable);
+
+                        notifyWishChanged(mGourmetDetail.wishCount, mGourmetDetail.myWish);
+                    }
+                }));
+            } else
+            {
+                addCompositeDisposable(mGourmetRemoteImpl.removeGourmetWish(mGourmetDetail.index)//
+                    .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<WishResult>()
+                {
+                    @Override
+                    public void accept(@io.reactivex.annotations.NonNull WishResult wishResult) throws Exception
+                    {
+                        if (equalsCallingActivity(WishListTabActivity.class) == true)
+                        {
+                            setResult(BaseActivity.RESULT_CODE_REFRESH);
+                        }
+
+                        if (wishResult.success == true)
+                        {
+                            mGourmetDetail.myWish = false;
+                            mGourmetDetail.wishCount--;
+
+                            notifyWishChanged();
+
+                            Observable<Boolean> observable = getViewInterface().showWishView(mGourmetDetail.myWish);
+
+                            if (observable != null)
+                            {
+                                addCompositeDisposable(observable.observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
+                                {
+                                    @Override
+                                    public void accept(@io.reactivex.annotations.NonNull Boolean aBoolean) throws Exception
+                                    {
+                                        unLockAll();
+                                    }
+                                }));
+                            } else
+                            {
+                                unLockAll();
+                            }
+                        } else
+                        {
+                            notifyWishChanged(mGourmetDetail.wishCount, mGourmetDetail.myWish);
+
+                            getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2), wishResult.message//
+                                , getString(R.string.dialog_btn_text_confirm), null);
+
+                            unLockAll();
+                        }
+                    }
+                }, new Consumer<Throwable>()
+                {
+                    @Override
+                    public void accept(@io.reactivex.annotations.NonNull Throwable throwable) throws Exception
+                    {
+                        onHandleError(throwable);
+
+                        notifyWishChanged(mGourmetDetail.wishCount, mGourmetDetail.myWish);
+                    }
+                }));
+            }
+        }
     }
 
     @Override
@@ -1052,6 +1194,17 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
 
         getViewInterface().setWishCount(mGourmetDetail.wishCount);
         getViewInterface().setWishSelected(mGourmetDetail.myWish);
+    }
+
+    private void notifyWishChanged(int wishCount, boolean myWish)
+    {
+        if (mGourmetDetail == null)
+        {
+            return;
+        }
+
+        getViewInterface().setWishCount(wishCount);
+        getViewInterface().setWishSelected(myWish);
     }
 
     private void startCalendar(CommonDateTime commonDateTime, GourmetBookDateTime gourmetBookDateTime//
