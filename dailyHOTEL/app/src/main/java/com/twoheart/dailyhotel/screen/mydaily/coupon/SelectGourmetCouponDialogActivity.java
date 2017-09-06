@@ -240,6 +240,13 @@ public class SelectGourmetCouponDialogActivity extends BaseActivity
         @Override
         public void onCouponDownloadClick(Coupon coupon)
         {
+            if (coupon == null || lockUiComponentAndIsLockUiComponent() == true)
+            {
+                return;
+            }
+
+            lockUI();
+
             // 쿠폰 다운로드 시도!
             mNetworkController.requestDownloadCoupon(coupon);
         }
