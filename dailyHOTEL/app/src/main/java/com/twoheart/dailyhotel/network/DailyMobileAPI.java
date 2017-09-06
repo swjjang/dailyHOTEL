@@ -17,6 +17,7 @@ import com.daily.dailyhotel.repository.remote.model.GourmetListData;
 import com.daily.dailyhotel.repository.remote.model.GourmetPaymentData;
 import com.daily.dailyhotel.repository.remote.model.PaymentResultData;
 import com.daily.dailyhotel.repository.remote.model.ReviewData;
+import com.daily.dailyhotel.repository.remote.model.ReviewScoresData;
 import com.daily.dailyhotel.repository.remote.model.ShortUrlData;
 import com.daily.dailyhotel.repository.remote.model.StayBookingDetailData;
 import com.daily.dailyhotel.repository.remote.model.StayCampaignTagsData;
@@ -1380,6 +1381,18 @@ public class DailyMobileAPI
         urlParams.put("{restaurantIdx}", Integer.toString(gourmetIndex));
 
         return mDailyMobileService.removeGourmetWish(Crypto.getUrlDecoderEx(API, urlParams))//
+            .subscribeOn(Schedulers.io());
+    }
+
+    public Observable<BaseDto<ReviewScoresData>> getGourmetReviewScores(int gourmetIndex)
+    {
+        final String API = Constants.UNENCRYPTED_URL ? "api/v4/review/gourmmet/{restaurantIdx}/statistic"//
+            : "";
+
+        Map<String, String> urlParams = new HashMap<>();
+        urlParams.put("{restaurantIdx}", Integer.toString(gourmetIndex));
+
+        return mDailyMobileService.getGourmetReviewScores(Crypto.getUrlDecoderEx(API, urlParams))//
             .subscribeOn(Schedulers.io());
     }
 

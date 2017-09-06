@@ -10,7 +10,7 @@ import android.support.annotation.NonNull;
 import com.daily.base.BaseAnalyticsInterface;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
 import com.daily.dailyhotel.entity.GourmetMenu;
-import com.daily.dailyhotel.entity.ImageInformation;
+import com.daily.dailyhotel.entity.DetailImageInformation;
 import com.daily.dailyhotel.parcel.GourmetMenuParcel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.screen.common.ImageDetailListActivity;
@@ -276,7 +276,7 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
         }
 
         GourmetMenu gourmetMenu = mGourmetMenuList.get(position);
-        List<ImageInformation> gourmetMenuImageList = gourmetMenu.getImageList();
+        List<DetailImageInformation> gourmetMenuImageList = gourmetMenu.getImageList();
 
 
         if (gourmetMenuImageList == null || gourmetMenuImageList.size() == 0)
@@ -285,14 +285,14 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
             return;
         }
 
-        addCompositeDisposable(Observable.just(gourmetMenuImageList).subscribeOn(Schedulers.newThread()).map(new Function<List<ImageInformation>, List<com.twoheart.dailyhotel.network.model.ImageInformation>>()
+        addCompositeDisposable(Observable.just(gourmetMenuImageList).subscribeOn(Schedulers.newThread()).map(new Function<List<DetailImageInformation>, List<com.twoheart.dailyhotel.network.model.ImageInformation>>()
         {
             @Override
-            public List<com.twoheart.dailyhotel.network.model.ImageInformation> apply(@io.reactivex.annotations.NonNull List<ImageInformation> imageInformations) throws Exception
+            public List<com.twoheart.dailyhotel.network.model.ImageInformation> apply(@io.reactivex.annotations.NonNull List<DetailImageInformation> detailImageInformations) throws Exception
             {
                 List<com.twoheart.dailyhotel.network.model.ImageInformation> imageInformationList = new ArrayList<>();
 
-                for (ImageInformation gourmetMenuImage : gourmetMenuImageList)
+                for (DetailImageInformation gourmetMenuImage : gourmetMenuImageList)
                 {
                     com.twoheart.dailyhotel.network.model.ImageInformation imageInformation = new com.twoheart.dailyhotel.network.model.ImageInformation();
                     imageInformation.description = gourmetMenuImage.caption;

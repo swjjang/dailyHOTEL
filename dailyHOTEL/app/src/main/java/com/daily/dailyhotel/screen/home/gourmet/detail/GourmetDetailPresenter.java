@@ -23,8 +23,7 @@ import com.daily.dailyhotel.entity.CommonDateTime;
 import com.daily.dailyhotel.entity.GourmetBookDateTime;
 import com.daily.dailyhotel.entity.GourmetDetail;
 import com.daily.dailyhotel.entity.GourmetMenu;
-import com.daily.dailyhotel.entity.ImageMap;
-import com.daily.dailyhotel.entity.StayOutboundDetailImage;
+import com.daily.dailyhotel.entity.ReviewScores;
 import com.daily.dailyhotel.parcel.analytics.GourmetDetailAnalyticsParam;
 import com.daily.dailyhotel.repository.remote.CalendarImpl;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
@@ -60,6 +59,7 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function4;
 import io.reactivex.functions.Function5;
+import io.reactivex.functions.Function6;
 import io.reactivex.schedulers.Schedulers;
 import retrofit2.HttpException;
 
@@ -91,6 +91,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
     private GourmetBookDateTime mGourmetBookDateTime;
     private CommonDateTime mCommonDateTime;
     private GourmetDetail mGourmetDetail;
+    private ReviewScores mReviewScores;
 
     private int mStatus = STATUS_NONE;
 
@@ -143,13 +144,6 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
         setStatus(STATUS_NONE);
 
         setRefresh(false);
-
-        Observable<Boolean> observable = getViewInterface().hideRoomList(false);
-
-        if (observable != null)
-        {
-            addCompositeDisposable(observable.subscribe());
-        }
     }
 
     @Override
@@ -239,18 +233,21 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
             addCompositeDisposable(Observable.zip(getViewInterface().getSharedElementTransition()//
                 , mGourmetRemoteImpl.getGourmetDetail(mGourmetIndex, mGourmetBookDateTime)//
                 , mCalendarImpl.getGourmetUnavailableDates(mGourmetIndex, GourmetCalendarActivity.DEFAULT_CALENDAR_DAY_OF_MAX_COUNT, false)//
+                , mGourmetRemoteImpl.getGourmetReviewScores(mGourmetIndex)//
                 , mGourmetRemoteImpl.getGourmetHasCoupon(mGourmetIndex, mGourmetBookDateTime)//
                 , mCommonRemoteImpl.getCommonDateTime()//
-                , new Function5<Boolean, GourmetDetail, List<Integer>, Boolean, CommonDateTime, GourmetDetail>()
+                , new Function6<Boolean, GourmetDetail, List<Integer>, ReviewScores, Boolean, CommonDateTime, GourmetDetail>()
                 {
                     @Override
                     public GourmetDetail apply(@io.reactivex.annotations.NonNull Boolean aBoolean//
                         , @io.reactivex.annotations.NonNull GourmetDetail gourmetDetail//
                         , @io.reactivex.annotations.NonNull List<Integer> unavailableDates//
+                        , @io.reactivex.annotations.NonNull ReviewScores reviewScores//
                         , @io.reactivex.annotations.NonNull Boolean hasCoupon//
                         , @io.reactivex.annotations.NonNull CommonDateTime commonDateTime) throws Exception
                     {
                         setCommonDateTime(commonDateTime);
+                        setReviewScores(reviewScores);
                         setSoldOutDateList(unavailableDates);
 
                         return gourmetDetail;
@@ -448,18 +445,20 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
 
         addCompositeDisposable(Observable.zip(mGourmetRemoteImpl.getGourmetDetail(mGourmetIndex, mGourmetBookDateTime)//
             , mCalendarImpl.getGourmetUnavailableDates(mGourmetIndex, GourmetCalendarActivity.DEFAULT_CALENDAR_DAY_OF_MAX_COUNT, false)//
+            , mGourmetRemoteImpl.getGourmetReviewScores(mGourmetIndex)//
             , mGourmetRemoteImpl.getGourmetHasCoupon(mGourmetIndex, mGourmetBookDateTime)//
             , mCommonRemoteImpl.getCommonDateTime()//
-            , new Function4<GourmetDetail, List<Integer>, Boolean, CommonDateTime, GourmetDetail>()
+            , new Function5<GourmetDetail, List<Integer>, ReviewScores, Boolean, CommonDateTime, GourmetDetail>()
             {
-
                 @Override
                 public GourmetDetail apply(@io.reactivex.annotations.NonNull GourmetDetail gourmetDetail//
                     , @io.reactivex.annotations.NonNull List<Integer> unavailableDates//
+                    , @io.reactivex.annotations.NonNull ReviewScores reviewScores//
                     , @io.reactivex.annotations.NonNull Boolean hasCoupon//
                     , @io.reactivex.annotations.NonNull CommonDateTime commonDateTime) throws Exception
                 {
                     setCommonDateTime(commonDateTime);
+                    setReviewScores(reviewScores);
                     setSoldOutDateList(unavailableDates);
 
                     return gourmetDetail;
@@ -981,6 +980,11 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
         mCommonDateTime = commonDateTime;
     }
 
+    private void setReviewScores(ReviewScores reviewScores)
+    {
+        mReviewScores = reviewScores;
+    }
+
     private void setSoldOutDateList(List<Integer> soldOutList)
     {
         mSoldOutDateList = soldOutList;
@@ -998,7 +1002,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
         // 리스트에서 이미지가 큰사이즈가 없는 경우 상세에서도 해당 사이즈가 없기 때문에 고려해준다.
         try
         {
-            if(gourmetDetail.getImageInformationList() != null && gourmetDetail.getImageInformationList().size() > 0)
+            if (gourmetDetail.getImageInformationList() != null && gourmetDetail.getImageInformationList().size() > 0)
             {
                 mImageUrl = gourmetDetail.getImageInformationList().get(0).url;
             }
@@ -1012,7 +1016,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
             getViewInterface().setToolbarTitle(gourmetDetail.name);
         }
 
-        getViewInterface().setGourmetDetail(mGourmetBookDateTime, gourmetDetail);
+        getViewInterface().setGourmetDetail(mGourmetBookDateTime, gourmetDetail, mReviewScores != null ? mReviewScores.reviewScoreTotalCount : 0);
 
         // 리스트 가격 변동은 진입시 한번 만 한다.
         checkChangedPrice(mIsDeepLink, gourmetDetail, mListPrice, mCheckChangedPrice == false);

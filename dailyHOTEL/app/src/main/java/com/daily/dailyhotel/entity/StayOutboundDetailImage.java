@@ -16,7 +16,6 @@ import java.io.IOException;
 
 public class StayOutboundDetailImage extends BaseDetailImage
 {
-    public String caption;
     private ImageMap mImageMap;
 
     public StayOutboundDetailImage()

@@ -18,7 +18,7 @@ import com.daily.base.util.ExLog;
 import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.entity.CommonDateTime;
 import com.daily.dailyhotel.entity.GourmetMenu;
-import com.daily.dailyhotel.entity.ImageInformation;
+import com.daily.dailyhotel.entity.DetailImageInformation;
 import com.daily.dailyhotel.parcel.analytics.GourmetPaymentAnalyticsParam;
 import com.daily.dailyhotel.repository.local.model.AnalyticsParam;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
@@ -1357,17 +1357,17 @@ public class GourmetDetailActivity extends PlaceDetailActivity
                         gourmetMenu.reserveCondition = gourmetProduct.reserveCondition;
 //                        gourmetMenu.setPrimaryImageIndex(gourmetProduct.getPrimaryIndex());
 
-                        List<ImageInformation> imageInformationList = new ArrayList<>();
+                        List<DetailImageInformation> detailImageInformationList = new ArrayList<>();
                         for (ProductImageInformation productImageInformation : gourmetProduct.getImageList())
                         {
-                            ImageInformation imageInformation = new ImageInformation();
-                            imageInformation.url = productImageInformation.imageUrl;
-                            imageInformation.caption = productImageInformation.imageDescription;
+                            DetailImageInformation detailImageInformation = new DetailImageInformation();
+                            detailImageInformation.url = productImageInformation.imageUrl;
+                            detailImageInformation.caption = productImageInformation.imageDescription;
 
-                            imageInformationList.add(imageInformation);
+                            detailImageInformationList.add(detailImageInformation);
                         }
 
-                        gourmetMenu.setImageList(imageInformationList);
+                        gourmetMenu.setImageList(detailImageInformationList);
                         gourmetMenu.setMenuDetailList(gourmetProduct.getMenuDetailList());
 
                         gourmetMenuList.add(gourmetMenu);

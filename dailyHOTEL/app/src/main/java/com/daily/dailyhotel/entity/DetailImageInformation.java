@@ -14,12 +14,11 @@ import com.facebook.imagepipeline.image.ImageInfo;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
 
-public class ImageInformation extends BaseDetailImage
+public class DetailImageInformation extends BaseDetailImage
 {
-    public String caption;
     public String url;
 
-    public ImageInformation()
+    public DetailImageInformation()
     {
 
     }

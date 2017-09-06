@@ -4,7 +4,7 @@ import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 import com.daily.dailyhotel.entity.GourmetDetail;
 import com.daily.dailyhotel.entity.GourmetMenu;
-import com.daily.dailyhotel.entity.ImageInformation;
+import com.daily.dailyhotel.entity.DetailImageInformation;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -160,7 +160,7 @@ public class GourmetDetailData
         gourmetDetail.setPictogramList(pictogramList);
 
         // 이미지
-        List<ImageInformation> imageInformationList = new ArrayList<>();
+        List<DetailImageInformation> detailImageInformationList = new ArrayList<>();
 
         if(imgPath != null && imgPath.size() > 0)
         {
@@ -172,16 +172,16 @@ public class GourmetDetailData
 
                 for (ImageInformationData imageInformationData : imgPath.get(key))
                 {
-                    ImageInformation imageInformation = new ImageInformation();
-                    imageInformation.url = imgUrl + key + imageInformationData.name;
-                    imageInformation.caption = imageInformationData.description;
+                    DetailImageInformation detailImageInformation = new DetailImageInformation();
+                    detailImageInformation.url = imgUrl + key + imageInformationData.name;
+                    detailImageInformation.caption = imageInformationData.description;
 
-                    imageInformationList.add(imageInformation);
+                    detailImageInformationList.add(detailImageInformation);
                 }
             }
         }
 
-        gourmetDetail.setImageInformationList(imageInformationList);
+        gourmetDetail.setImageInformationList(detailImageInformationList);
 
         // 메뉴
         List<GourmetMenu> gourmetMenuList = new ArrayList<>();
@@ -314,23 +314,23 @@ public class GourmetDetailData
             gourmetMenu.expiryTime = expiryTime;
             gourmetMenu.timeInterval = timeInterval;
 
-            List<ImageInformation> imageInformationList = new ArrayList<>();
+            List<DetailImageInformation> detailImageInformationList = new ArrayList<>();
 
             for(MenuImageData menuImageData : images)
             {
-                ImageInformation imageInformation = new ImageInformation();
-                imageInformation.url = menuImageData.imageUrl;
+                DetailImageInformation detailImageInformation = new DetailImageInformation();
+                detailImageInformation.url = menuImageData.imageUrl;
 
                 if(menuImageData.isPrimary == true)
                 {
-                    imageInformationList.add(0, imageInformation);
+                    detailImageInformationList.add(0, detailImageInformation);
                 } else
                 {
-                    imageInformationList.add(imageInformation);
+                    detailImageInformationList.add(detailImageInformation);
                 }
             }
 
-            gourmetMenu.setImageList(imageInformationList);
+            gourmetMenu.setImageList(detailImageInformationList);
             gourmetMenu.setMenuDetailList(menuDetail);
 
             return gourmetMenu;

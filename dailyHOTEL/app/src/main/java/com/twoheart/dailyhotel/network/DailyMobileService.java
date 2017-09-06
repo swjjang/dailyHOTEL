@@ -13,6 +13,7 @@ import com.daily.dailyhotel.repository.remote.model.GourmetListData;
 import com.daily.dailyhotel.repository.remote.model.GourmetPaymentData;
 import com.daily.dailyhotel.repository.remote.model.PaymentResultData;
 import com.daily.dailyhotel.repository.remote.model.ReviewData;
+import com.daily.dailyhotel.repository.remote.model.ReviewScoresData;
 import com.daily.dailyhotel.repository.remote.model.ShortUrlData;
 import com.daily.dailyhotel.repository.remote.model.StayBookingDetailData;
 import com.daily.dailyhotel.repository.remote.model.StayCampaignTagsData;
@@ -658,6 +659,10 @@ public interface DailyMobileService
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET("{mobileAPI}")
     Observable<BaseDto<String>> removeGourmetWish(@Path(value = "mobileAPI", encoded = true) String mobileAPI);
+
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
+    @GET("{mobileAPI}")
+    Observable<BaseDto<ReviewScoresData>> getGourmetReviewScores(@Path(value = "mobileAPI", encoded = true) String mobileAPI);
 
     /////////////////////////////////////////////////////////////////////////////////////////////////
     // BookingRemoteImpl

@@ -2,7 +2,6 @@ package com.daily.dailyhotel.screen.common.images;
 
 import android.content.Context;
 import android.databinding.DataBindingUtil;
-import android.graphics.drawable.Animatable;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
@@ -17,24 +16,17 @@ import com.daily.base.BaseDialogView;
 import com.daily.base.OnBaseEventListener;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ScreenUtils;
-import com.daily.dailyhotel.entity.ImageMap;
-import com.daily.dailyhotel.entity.StayOutboundDetailImage;
+import com.daily.dailyhotel.entity.BaseDetailImage;
 import com.daily.dailyhotel.view.DailyToolbarView;
-import com.facebook.drawee.backends.pipeline.Fresco;
-import com.facebook.drawee.controller.BaseControllerListener;
-import com.facebook.drawee.controller.ControllerListener;
-import com.facebook.drawee.interfaces.DraweeController;
-import com.facebook.imagepipeline.image.ImageInfo;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.databinding.ActivityStayOutboundImageListDataBinding;
+import com.twoheart.dailyhotel.databinding.ActivityImageListDataBinding;
 import com.twoheart.dailyhotel.databinding.ListRowImageDataBinding;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.widget.DailyPlaceDetailListView;
 
-import java.io.IOException;
 import java.util.List;
 
-public class ImageListView extends BaseDialogView<ImageListView.OnEventListener, ActivityStayOutboundImageListDataBinding>//
+public class ImageListView extends BaseDialogView<ImageListView.OnEventListener, ActivityImageListDataBinding>//
     implements ImageListInterface, View.OnTouchListener
 {
     private float mY;
@@ -54,7 +46,7 @@ public class ImageListView extends BaseDialogView<ImageListView.OnEventListener,
     }
 
     @Override
-    protected void setContentView(final ActivityStayOutboundImageListDataBinding viewDataBinding)
+    protected void setContentView(final ActivityImageListDataBinding viewDataBinding)
     {
         if (viewDataBinding == null)
         {
@@ -218,7 +210,7 @@ public class ImageListView extends BaseDialogView<ImageListView.OnEventListener,
     }
 
     @Override
-    public void setImageList(List<StayOutboundDetailImage> imageList, int position)
+    public void setImageList(List<BaseDetailImage> imageList, int position)
     {
         if (getViewDataBinding() == null)
         {
@@ -236,7 +228,7 @@ public class ImageListView extends BaseDialogView<ImageListView.OnEventListener,
         mImageDetailListAdapter.notifyDataSetChanged();
     }
 
-    private void initToolbar(ActivityStayOutboundImageListDataBinding viewDataBinding)
+    private void initToolbar(ActivityImageListDataBinding viewDataBinding)
     {
         if (viewDataBinding == null)
         {
@@ -269,9 +261,9 @@ public class ImageListView extends BaseDialogView<ImageListView.OnEventListener,
         getViewDataBinding().alphaView.setAlpha(1.0f - Math.abs(y * 1.5f) / ScreenUtils.getScreenHeight(getContext()));
     }
 
-    private class ImageDetailListAdapter extends ArrayAdapter<StayOutboundDetailImage>
+    private class ImageDetailListAdapter extends ArrayAdapter<BaseDetailImage>
     {
-        public ImageDetailListAdapter(Context context, int resourceId, List<StayOutboundDetailImage> list)
+        public ImageDetailListAdapter(Context context, int resourceId, List<BaseDetailImage> list)
         {
             super(context, resourceId, list);
         }
@@ -289,81 +281,20 @@ public class ImageListView extends BaseDialogView<ImageListView.OnEventListener,
                 dataBinding = DataBindingUtil.bind(convertView);
             }
 
-            StayOutboundDetailImage stayOutboundDetailImage = getItem(position);
+            BaseDetailImage baseDetailImage = getItem(position);
 
             dataBinding.getRoot().setTag(position);
 
-            if (DailyTextUtils.isTextEmpty(stayOutboundDetailImage.caption) == false)
+            if (DailyTextUtils.isTextEmpty(baseDetailImage.caption) == false)
             {
                 dataBinding.descriptionTextView.setVisibility(View.VISIBLE);
-                dataBinding.descriptionTextView.setText(stayOutboundDetailImage.caption);
+                dataBinding.descriptionTextView.setText(baseDetailImage.caption);
             } else
             {
                 dataBinding.descriptionTextView.setVisibility(View.INVISIBLE);
             }
 
-            ImageMap imageMap = stayOutboundDetailImage.getImageMap();
-            String url;
-
-            if (ScreenUtils.getScreenWidth(getContext()) >= ScreenUtils.DEFAULT_STAYOUTBOUND_XXHDPI_WIDTH)
-            {
-                if (DailyTextUtils.isTextEmpty(imageMap.bigUrl) == true)
-                {
-                    url = imageMap.smallUrl;
-                } else
-                {
-                    url = imageMap.bigUrl;
-                }
-            } else
-            {
-                if (DailyTextUtils.isTextEmpty(imageMap.mediumUrl) == true)
-                {
-                    url = imageMap.smallUrl;
-                } else
-                {
-                    url = imageMap.mediumUrl;
-                }
-            }
-
-            ControllerListener controllerListener = new BaseControllerListener<ImageInfo>()
-            {
-                @Override
-                public void onFinalImageSet(String id, ImageInfo imageInfo, Animatable animatable)
-                {
-                    if (imageInfo == null)
-                    {
-                        return;
-                    }
-
-                    setImageViewHeight(dataBinding.imageView, imageInfo.getWidth(), imageInfo.getHeight());
-                }
-
-                @Override
-                public void onFailure(String id, Throwable throwable)
-                {
-                    if (throwable instanceof IOException == true)
-                    {
-                        if (url.equalsIgnoreCase(imageMap.bigUrl) == true)
-                        {
-                            imageMap.bigUrl = null;
-                        } else if (url.equalsIgnoreCase(imageMap.mediumUrl) == true)
-                        {
-                            imageMap.mediumUrl = null;
-                        } else
-                        {
-                            // 작은 이미지를 로딩했지만 실패하는 경우.
-                            return;
-                        }
-
-                        dataBinding.imageView.setImageURI(imageMap.smallUrl);
-                    }
-                }
-            };
-
-            DraweeController draweeController = Fresco.newDraweeControllerBuilder()//
-                .setControllerListener(controllerListener).setUri(url).build();
-
-            dataBinding.imageView.setController(draweeController);
+            baseDetailImage.setImage(getContext(), dataBinding.imageView);
             dataBinding.imageView.getHierarchy().setPlaceholderImage(R.drawable.layerlist_placeholder);
 
             return dataBinding.getRoot();

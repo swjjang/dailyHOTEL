@@ -27,7 +27,7 @@ public class GourmetDetail
     public boolean myWish;
     public String sticker;
 
-    private List<ImageInformation> mImageInformationList;
+    private List<DetailImageInformation> mDetailImageInformationList;
     private List<LinkedHashMap<String, List<String>>> mDescriptionMap;
     private List<GourmetMenu> mGourmetMenuList;
     private List<Pictogram> mPictogramList;
@@ -67,14 +67,14 @@ public class GourmetDetail
         mGourmetMenuList = gourmetMenuList;
     }
 
-    public List<ImageInformation> getImageInformationList()
+    public List<DetailImageInformation> getImageInformationList()
     {
-        return mImageInformationList;
+        return mDetailImageInformationList;
     }
 
-    public void setImageInformationList(List<ImageInformation> imageInformationList)
+    public void setImageInformationList(List<DetailImageInformation> detailImageInformationList)
     {
-        mImageInformationList = imageInformationList;
+        mDetailImageInformationList = detailImageInformationList;
     }
 
     public enum Pictogram

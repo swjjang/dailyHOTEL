@@ -186,8 +186,85 @@
                 android:id="@+id/scrollLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"/>
+                android:orientation="vertical">
 
+                <android.support.constraint.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <com.daily.dailyhotel.screen.home.gourmet.detail.DetailEmptyView
+                        android:id="@+id/detailEmptyView"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        app:layout_constraintDimensionRatio="H,4:3"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"/>
+                </android.support.constraint.ConstraintLayout>
+
+                <include
+                    android:id="@+id/titleViewDataBinding"
+                    layout="@layout/layout_gourmet_detail_title_data"/>
+
+                <include
+                    android:id="@+id/couponViewDataBinding"
+                    layout="@layout/layout_gourmet_detail_coupon_data"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="12dp"
+                    android:background="@drawable/layerlist_divider"/>
+
+                <com.daily.dailyhotel.view.DailyDateInformationView
+                    android:id="@+id/dateInformationView"
+                    android:layout_width="match_parent"
+                    android:layout_height="78dp"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/default_line_cf0f0f0"/>
+
+                <LinearLayout
+                    android:id="@+id/menuLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:orientation="vertical"/>
+
+                <include
+                    android:id="@+id/mapViewDataBinding"
+                    layout="@layout/layout_gourmet_detail_map_data"/>
+
+                <include
+                    android:id="@+id/amenitiesViewDataBinding"
+                    layout="@layout/layout_gourmet_detail_amenities_data"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="12dp"
+                    android:background="@drawable/layerlist_divider"/>
+
+                <include
+                    android:id="@+id/benefitViewDataBinding"
+                    layout="@layout/layout_gourmet_detail_benefit_data"/>
+
+                <LinearLayout
+                    android:id="@+id/informationLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:orientation="vertical"/>
+
+                <include
+                    android:id="@+id/conciergeViewDataBinding"
+                    layout="@layout/layout_gourmet_detail_concierge_data"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="85dp"
+                    android:background="@drawable/layerlist_divider"/>
+            </LinearLayout>
         </com.daily.base.widget.DailyNestedScrollView>
 
         <ImageView

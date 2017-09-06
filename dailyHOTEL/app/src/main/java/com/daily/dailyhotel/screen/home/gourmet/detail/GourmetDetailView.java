@@ -1,8 +1,5 @@
 package com.daily.dailyhotel.screen.home.gourmet.detail;
 
-import android.animation.Animator;
-import android.animation.AnimatorSet;
-import android.animation.ObjectAnimator;
 import android.annotation.TargetApi;
 import android.app.Dialog;
 import android.content.Context;
@@ -16,10 +13,8 @@ import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.RectShape;
 import android.net.Uri;
 import android.os.Build;
-import android.support.annotation.IdRes;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.NestedScrollView;
-import android.support.v7.widget.LinearLayoutManager;
 import android.text.Html;
 import android.transition.Transition;
 import android.transition.TransitionSet;
@@ -30,7 +25,6 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.LinearInterpolator;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup;
@@ -42,9 +36,10 @@ import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
 import com.daily.base.widget.DailyTextView;
-import com.daily.dailyhotel.entity.ImageInformation;
+import com.daily.dailyhotel.entity.DetailImageInformation;
+import com.daily.dailyhotel.entity.GourmetBookDateTime;
+import com.daily.dailyhotel.entity.GourmetDetail;
 import com.daily.dailyhotel.entity.ImageMap;
-import com.daily.dailyhotel.entity.People;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayOutboundDetail;
 import com.daily.dailyhotel.entity.StayOutboundDetailImage;
@@ -56,11 +51,11 @@ import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.drawee.view.DraweeTransition;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ActivityGourmetDetailDataBinding;
-import com.twoheart.dailyhotel.databinding.ActivityStayOutboundDetailDataBinding;
 import com.twoheart.dailyhotel.databinding.DialogConciergeDataBinding;
 import com.twoheart.dailyhotel.databinding.DialogShareDataBinding;
 import com.twoheart.dailyhotel.databinding.DialogStayOutboundMapDataBinding;
-import com.twoheart.dailyhotel.databinding.LayoutStayOutboundDetail02DataBinding;
+import com.twoheart.dailyhotel.databinding.LayoutGourmetDetailCouponDataBinding;
+import com.twoheart.dailyhotel.databinding.LayoutGourmetDetailTitleDataBinding;
 import com.twoheart.dailyhotel.databinding.LayoutStayOutboundDetail03DataBinding;
 import com.twoheart.dailyhotel.databinding.LayoutStayOutboundDetail04DataBinding;
 import com.twoheart.dailyhotel.databinding.LayoutStayOutboundDetail05DataBinding;
@@ -74,11 +69,11 @@ import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.widget.AlphaTransition;
 import com.twoheart.dailyhotel.widget.TextTransition;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 import io.reactivex.Observable;
@@ -89,7 +84,7 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
 {
     private static final int ANIMATION_DELAY = 250;
 
-    private GourmetDetailEmptyView mGourmetDetailEmptyView;
+    private DetailEmptyView mDetailEmptyView;
 
     private GourmetDetailImageViewPagerAdapter mImageViewPagerAdapter;
 
@@ -124,6 +119,10 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
         void onConciergeCallClick();
 
         void onShareMapClick();
+
+        void onReviewClick();
+
+        void onDownloadCouponClick();
     }
 
     public GourmetDetailView(BaseActivity baseActivity, GourmetDetailView.OnEventListener listener)
@@ -174,18 +173,6 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
         viewDataBinding.imageLoopViewPager.setOnPageChangeListener(this);
         viewDataBinding.viewpagerIndicator.setOnPageChangeListener(this);
 
-        // 객실 초기화
-        viewDataBinding.productTypeTextView.setText(R.string.act_hotel_search_room);
-        viewDataBinding.productTypeTextView.setClickable(true);
-        viewDataBinding.priceOptionLayout.setVisibility(View.GONE);
-
-        viewDataBinding.productTypeRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        EdgeEffectColor.setEdgeGlowColor(viewDataBinding.productTypeRecyclerView, getColor(R.color.default_over_scroll_edge));
-        viewDataBinding.productTypeLayout.setVisibility(View.INVISIBLE);
-
-        viewDataBinding.productTypeBackgroundView.setOnClickListener(this);
-        viewDataBinding.closeView.setOnClickListener(this);
-
         viewDataBinding.bottomLayout.setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -206,17 +193,8 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
     {
         switch (v.getId())
         {
-            case R.id.closeView:
-            case R.id.productTypeBackgroundView:
-                getEventListener().onHideRoomListClick(true);
-                break;
-
             case R.id.dateLayout:
                 getEventListener().onCalendarClick();
-                break;
-
-            case R.id.peopleLayout:
-                getEventListener().onPeopleClick();
                 break;
 
             case R.id.bookingTextView:
@@ -244,221 +222,31 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
     }
 
     @Override
-    public void onCheckedChanged(RadioGroup group, @IdRes int checkedId)
+    public void setGourmetDetail(GourmetBookDateTime gourmetBookDateTime, GourmetDetail gourmetDetail)
     {
-        switch (checkedId)
-        {
-            case R.id.averageRadioButton:
-                getEventListener().onPriceTypeClick(GourmetDetailPresenter.PriceType.AVERAGE);
-                break;
-
-            case R.id.totalRadioButton:
-                getEventListener().onPriceTypeClick(GourmetDetailPresenter.PriceType.TOTAL);
-                break;
-        }
-    }
-
-    @Override
-    public Observable<Boolean> showRoomList(boolean animation)
-    {
-        if (getViewDataBinding() == null && mRoomAnimatorSet != null && mRoomAnimatorSet.isRunning() == true)
-        {
-            return null;
-        }
-
-        Observable<Boolean> observable;
-
-        if (animation == true)
-        {
-            observable = new Observable<Boolean>()
-            {
-                @Override
-                protected void subscribeActual(Observer<? super Boolean> observer)
-                {
-                    final float fromAnimationY = getViewDataBinding().bottomLayout.getTop();
-
-                    // 리스트 높이 + 아이콘 높이(실제 화면에 들어나지 않기 때문에 높이가 정확하지 않아서 내부 높이를 더함)
-                    int height = getViewDataBinding().productTypeLayout.getHeight();
-                    int maxHeight = getViewDataBinding().getRoot().getHeight() - getViewDataBinding().bottomLayout.getHeight();
-
-                    float toAnimationY = fromAnimationY - Math.min(height, maxHeight);
-
-                    int startTransY = ScreenUtils.dpToPx(getContext(), height);
-                    getViewDataBinding().productTypeLayout.setTranslationY(startTransY);
-
-                    ObjectAnimator transObjectAnimator = ObjectAnimator.ofFloat(getViewDataBinding().productTypeLayout, "y", fromAnimationY, toAnimationY);
-                    ObjectAnimator alphaObjectAnimator = ObjectAnimator.ofFloat(getViewDataBinding().productTypeBackgroundView, "alpha", 0.0f, 1.0f);
-
-                    mRoomAnimatorSet = new AnimatorSet();
-                    mRoomAnimatorSet.playTogether(transObjectAnimator, alphaObjectAnimator);
-                    mRoomAnimatorSet.setInterpolator(new AccelerateDecelerateInterpolator());
-                    mRoomAnimatorSet.setDuration(ANIMATION_DELAY);
-
-                    mRoomAnimatorSet.addListener(new Animator.AnimatorListener()
-                    {
-                        @Override
-                        public void onAnimationStart(Animator animation)
-                        {
-                            getViewDataBinding().productTypeBackgroundView.setVisibility(View.VISIBLE);
-                            getViewDataBinding().productTypeLayout.setVisibility(View.VISIBLE);
-                        }
-
-                        @Override
-                        public void onAnimationEnd(Animator animation)
-                        {
-                            if (mRoomAnimatorSet != null)
-                            {
-                                mRoomAnimatorSet.removeAllListeners();
-                                mRoomAnimatorSet = null;
-                            }
-
-                            observer.onNext(true);
-                            observer.onComplete();
-                        }
-
-                        @Override
-                        public void onAnimationCancel(Animator animation)
-                        {
-                        }
-
-                        @Override
-                        public void onAnimationRepeat(Animator animation)
-                        {
-
-                        }
-                    });
-
-                    mRoomAnimatorSet.start();
-                }
-            };
-        } else
-        {
-            observable = new Observable<Boolean>()
-            {
-                @Override
-                protected void subscribeActual(Observer<? super Boolean> observer)
-                {
-                    getViewDataBinding().productTypeBackgroundView.setVisibility(View.VISIBLE);
-                    getViewDataBinding().productTypeLayout.setVisibility(View.VISIBLE);
-
-                    observer.onNext(true);
-                    observer.onComplete();
-                }
-            };
-        }
-
-        return observable;
-    }
-
-    @Override
-    public Observable<Boolean> hideRoomList(boolean animation)
-    {
-        if (getViewDataBinding() == null && mRoomAnimatorSet != null && mRoomAnimatorSet.isRunning() == true)
-        {
-            return null;
-        }
-
-        Observable<Boolean> observable;
-
-        if (animation == true)
-        {
-            observable = new Observable<Boolean>()
-            {
-                @Override
-                protected void subscribeActual(Observer<? super Boolean> observer)
-                {
-                    final float y = getViewDataBinding().productTypeLayout.getY();
-
-                    ObjectAnimator transObjectAnimator = ObjectAnimator.ofFloat(getViewDataBinding().productTypeLayout, "y", y, getViewDataBinding().bottomLayout.getTop());
-                    ObjectAnimator alphaObjectAnimator = ObjectAnimator.ofFloat(getViewDataBinding().productTypeBackgroundView, "alpha", 1.0f, 0.0f);
-
-                    mRoomAnimatorSet = new AnimatorSet();
-                    mRoomAnimatorSet.playTogether(transObjectAnimator, alphaObjectAnimator);
-                    mRoomAnimatorSet.setInterpolator(new AccelerateDecelerateInterpolator());
-                    mRoomAnimatorSet.setDuration(ANIMATION_DELAY);
-
-                    mRoomAnimatorSet.addListener(new Animator.AnimatorListener()
-                    {
-                        @Override
-                        public void onAnimationStart(Animator animation)
-                        {
-                        }
-
-                        @Override
-                        public void onAnimationEnd(Animator animation)
-                        {
-                            if (mRoomAnimatorSet != null)
-                            {
-                                mRoomAnimatorSet.removeAllListeners();
-                                mRoomAnimatorSet = null;
-                            }
-
-                            getViewDataBinding().productTypeBackgroundView.setVisibility(View.GONE);
-                            getViewDataBinding().productTypeLayout.setVisibility(View.INVISIBLE);
-
-                            observer.onNext(true);
-                            observer.onComplete();
-                        }
-
-                        @Override
-                        public void onAnimationCancel(Animator animation)
-                        {
-                        }
-
-                        @Override
-                        public void onAnimationRepeat(Animator animation)
-                        {
-                        }
-                    });
-
-                    mRoomAnimatorSet.start();
-                }
-            };
-        } else
-        {
-            observable = new Observable<Boolean>()
-            {
-                @Override
-                protected void subscribeActual(Observer<? super Boolean> observer)
-                {
-                    getViewDataBinding().productTypeBackgroundView.setVisibility(View.GONE);
-                    getViewDataBinding().productTypeLayout.setVisibility(View.INVISIBLE);
-
-                    observer.onNext(true);
-                    observer.onComplete();
-                }
-            };
-        }
-
-        return observable;
-    }
-
-    @Override
-    public void setStayDetail(StayBookDateTime stayBookDateTime, People people, StayOutboundDetail stayOutboundDetail)
-    {
-        if (getViewDataBinding() == null || stayBookDateTime == null || stayOutboundDetail == null)
+        if (getViewDataBinding() == null || gourmetBookDateTime == null || gourmetDetail == null)
         {
             return;
         }
 
         getViewDataBinding().bottomLayout.setVisibility(View.VISIBLE);
 
-        setImageList(stayOutboundDetail.getImageList());
+        setImageList(gourmetDetail.getImageList());
 
         getViewDataBinding().scrollLayout.removeAllViews();
 
-        mGourmetDetailEmptyView = null;
+        mDetailEmptyView = null;
 
         LayoutInflater layoutInflater = LayoutInflater.from(getContext());
 
         // 이미지 상단에 빈화면 넣기
         addEmptyView(getContext(), getViewDataBinding().scrollLayout);
 
-        // 호텔 등급과 이름 / 체크인 체크아웃
-        setTitleView(layoutInflater, getViewDataBinding().scrollLayout, stayBookDateTime, people, stayOutboundDetail);
+        // 등급과 이름 / 체크인 체크아웃
+        setTitleView(layoutInflater, getViewDataBinding().scrollLayout, gourmetBookDateTime, gourmetDetail);
 
         // 주소 및 맵
-        setAddressView(layoutInflater, getViewDataBinding().scrollLayout, stayBookDateTime, stayOutboundDetail);
+        setAddressView(layoutInflater, getViewDataBinding().scrollLayout, gourmetBookDateTime, gourmetDetail);
 
         // Amenity
         SparseArray<String> stringSparseArray = stayOutboundDetail.getAmenityList();
@@ -924,7 +712,7 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
         });
     }
 
-    private void setImageList(List<ImageInformation> imageList)
+    private void setImageList(List<DetailImageInformation> imageList)
     {
         if (getViewDataBinding() == null || imageList == null)
         {
@@ -963,7 +751,7 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
             return;
         }
 
-        mGourmetDetailEmptyView = new GourmetDetailEmptyView(context, new GourmetDetailEmptyView.OnEventListener()
+        mDetailEmptyView = new DetailEmptyView(context, new DetailEmptyView.OnEventListener()
         {
             @Override
             public void onStopMove(MotionEvent event)
@@ -1021,84 +809,125 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
             }
         });
 
-        mGourmetDetailEmptyView.setContentView(R.layout.layout_stay_outbound_detail_01_data, viewGroup, true);
+        mDetailEmptyView.setContentView(R.layout.layout_stay_outbound_detail_01_data, viewGroup, true);
     }
 
     /**
-     * 호텔 등급 및 이름
+     * 등급 및 이름
      *
-     * @param layoutInflater
-     * @param viewGroup
-     * @param stayBookDateTime
-     * @param stayOutboundDetail
+     * @return
      */
-    private void setTitleView(LayoutInflater layoutInflater, ViewGroup viewGroup//
-        , StayBookDateTime stayBookDateTime, People people, StayOutboundDetail stayOutboundDetail)
+    private void setTitleView(GourmetDetail gourmetDetail, int trueReviewCount)
     {
-        if (layoutInflater == null || viewGroup == null || stayBookDateTime == null || stayOutboundDetail == null)
+        if (getViewDataBinding() == null || gourmetDetail == null)
         {
             return;
         }
 
-        LayoutStayOutboundDetail02DataBinding viewDataBinding = DataBindingUtil.inflate(layoutInflater//
-            , R.layout.layout_stay_outbound_detail_02_data, viewGroup, true);
+        LayoutGourmetDetailTitleDataBinding viewDataBinding = getViewDataBinding().titleViewDataBinding;
 
-        // 등급
-        viewDataBinding.gradeTextView.setVisibility(View.VISIBLE);
-        viewDataBinding.gradeTextView.setText(getString(R.string.label_stay_outbound_detail_grade, (int) stayOutboundDetail.rating));
-        viewDataBinding.ratingBar.setOnTouchListener(new View.OnTouchListener()
+        // 카테고리
+        if (DailyTextUtils.isTextEmpty(gourmetDetail.category) == true)
         {
-            @Override
-            public boolean onTouch(View v, MotionEvent event)
-            {
-                return true;
-            }
-        });
-        viewDataBinding.ratingBar.setRating(stayOutboundDetail.rating);
-
-        // 호텔명
-        viewDataBinding.nameTextView.setText(stayOutboundDetail.name);
-        viewDataBinding.nameEngTextView.setText("(" + stayOutboundDetail.nameEng + ")");
-
-        // tripAdvisor
-        if (stayOutboundDetail.tripAdvisorRating == 0.0f)
-        {
-            viewDataBinding.tripAdvisorLayout.setVisibility(View.GONE);
+            viewDataBinding.categoryTextView.setVisibility(View.GONE);
         } else
         {
-            viewDataBinding.tripAdvisorLayout.setVisibility(View.VISIBLE);
+            viewDataBinding.categoryTextView.setVisibility(View.VISIBLE);
+            viewDataBinding.categoryTextView.setText(gourmetDetail.category);
+        }
 
-            viewDataBinding.tripAdvisorRatingBar.setOnTouchListener(new View.OnTouchListener()
+        // 서브 카테고리
+        if (DailyTextUtils.isTextEmpty(gourmetDetail.categorySub) == true)
+        {
+            viewDataBinding.categorySubTextView.setVisibility(View.GONE);
+        } else
+        {
+            viewDataBinding.categorySubTextView.setVisibility(View.VISIBLE);
+            viewDataBinding.categorySubTextView.setText(gourmetDetail.categorySub);
+        }
+
+        // 레스토랑명
+        viewDataBinding.nameTextView.setText(gourmetDetail.name);
+
+        // 만족도
+        if (gourmetDetail.ratingShow == false)
+        {
+            viewDataBinding.satisfactionTextView.setVisibility(View.GONE);
+        } else
+        {
+            viewDataBinding.satisfactionTextView.setVisibility(View.VISIBLE);
+
+            DecimalFormat decimalFormat = new DecimalFormat("###,##0");
+            viewDataBinding.satisfactionTextView.setText(mContext.getString(R.string.label_gourmet_detail_satisfaction, //
+                gourmetDetailParams.ratingValue, decimalFormat.format(gourmetDetailParams.ratingPersons)));
+        }
+
+        // 리뷰
+        if (trueReviewCount > 0)
+        {
+            viewDataBinding.trueReviewTextView.setVisibility(View.VISIBLE);
+            viewDataBinding.trueReviewTextView.setText(getString(R.string.label_detail_view_review_go, trueReviewCount));
+            viewDataBinding.trueReviewTextView.setOnClickListener(new View.OnClickListener()
             {
                 @Override
-                public boolean onTouch(View v, MotionEvent event)
+                public void onClick(View v)
                 {
-                    return true;
+                    getEventListener().onReviewClick();
                 }
             });
-            viewDataBinding.tripAdvisorRatingBar.setRating(stayOutboundDetail.tripAdvisorRating);
-            viewDataBinding.tripAdvisorRatingTextView.setText(getString(R.string.label_stay_outbound_tripadvisor_rating, Float.toString(stayOutboundDetail.tripAdvisorRating)));
+        } else
+        {
+            viewDataBinding.trueReviewTextView.setVisibility(View.GONE);
+        }
+    }
 
-            // 별등급이 기본이 5개 이기 때문에 빈공간에도 내용이 존재한다.
-            LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) viewDataBinding.tripAdvisorRatingTextView.getLayoutParams();
-            layoutParams.leftMargin = ScreenUtils.dpToPx(getContext(), 3) - ScreenUtils.dpToPx(getContext(), (5 - (int) Math.ceil(stayOutboundDetail.tripAdvisorRating)) * 10);
-            viewDataBinding.tripAdvisorRatingTextView.setLayoutParams(layoutParams);
+    private void setCouponView(boolean hasCoupon)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
         }
 
-        // 날짜, 인원
-        try
-        {
-            String dateFormat = String.format(Locale.KOREA, "%s - %s, %s", stayBookDateTime.getCheckInDateTime("M.d(EEE)"), stayBookDateTime.getCheckOutDateTime("M.d(EEE)"), getString(R.string.label_nights, stayBookDateTime.getNights()));
+        LayoutGourmetDetailCouponDataBinding viewDataBinding = getViewDataBinding().couponViewDataBinding;
 
-            viewDataBinding.dateTextView.setText(dateFormat);
-            viewDataBinding.peopleTextView.setText(people.toShortString(getContext()));
-        } catch (Exception e)
+        if (hasCoupon == true)
         {
-            ExLog.e(e.toString());
+            viewDataBinding.couponLayout.setVisibility(View.VISIBLE);
+            viewDataBinding.downloadCouponLayout.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    getEventListener().onDownloadCouponClick();
+                }
+            });
+        } else
+        {
+            viewDataBinding.couponLayout.setVisibility(View.GONE);
+        }
+    }
+
+    private void setVisitDateView(String visitDate)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
         }
 
-        viewDataBinding.dateLayout.setOnClickListener(this);
-        viewDataBinding.peopleLayout.setOnClickListener(this);
+        getViewDataBinding().dateInformationView.setDateVisible(true, false);
+        getViewDataBinding().dateInformationView.setDate1Text(getString(R.string.label_visit_day), visitDate);
+        getViewDataBinding().dateInformationView.setCenterNightsVisible(false);
+        getViewDataBinding().dateInformationView.setDate1DescriptionTextColor(getColor(R.color.default_text_cb70038));
+        getViewDataBinding().dateInformationView.setDate1DescriptionTextDrawable(0, 0, R.drawable.navibar_m_burg_ic_v, 0);
+
+        getViewDataBinding().dateInformationView.setOnDateClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                getEventListener().onCalendarClick();
+            }
+        }, null);
     }
 
     /**

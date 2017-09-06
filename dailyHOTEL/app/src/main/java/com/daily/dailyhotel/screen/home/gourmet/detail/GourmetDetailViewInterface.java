@@ -6,6 +6,7 @@ import com.daily.base.BaseDialogViewInterface;
 import com.daily.dailyhotel.entity.GourmetBookDateTime;
 import com.daily.dailyhotel.entity.GourmetDetail;
 import com.daily.dailyhotel.entity.People;
+import com.daily.dailyhotel.entity.ReviewScores;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayOutboundDetail;
 
@@ -13,7 +14,7 @@ import io.reactivex.Observable;
 
 public interface GourmetDetailViewInterface extends BaseDialogViewInterface
 {
-    void setGourmetDetail(GourmetBookDateTime gourmetBookDateTime, GourmetDetail gourmetDetail);
+    void setGourmetDetail(GourmetBookDateTime gourmetBookDateTime, GourmetDetail gourmetDetail, int trueReviewCount);
 
     Observable<Boolean> getSharedElementTransition();
 

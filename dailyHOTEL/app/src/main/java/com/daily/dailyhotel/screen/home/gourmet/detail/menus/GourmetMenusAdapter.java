@@ -13,7 +13,7 @@ import com.daily.base.OnBaseEventListener;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ScreenUtils;
 import com.daily.dailyhotel.entity.GourmetMenu;
-import com.daily.dailyhotel.entity.ImageInformation;
+import com.daily.dailyhotel.entity.DetailImageInformation;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.LayoutGourmetMenuDetailInformationDataBinding;
 import com.twoheart.dailyhotel.databinding.ListRowGourmetMenuDataBinding;
@@ -171,9 +171,9 @@ public class GourmetMenusAdapter extends RecyclerView.Adapter<GourmetMenusAdapte
         EdgeEffectColor.setEdgeGlowColor(holder.dataBinding.nestedScrollView, mContext.getResources().getColor(R.color.default_over_scroll_edge));
 
         // 이미지 정보
-        List<ImageInformation> imageInformationList = gourmetMenu.getImageList();
+        List<DetailImageInformation> detailImageInformationList = gourmetMenu.getImageList();
 
-        if (imageInformationList == null || imageInformationList.size() == 0)
+        if (detailImageInformationList == null || detailImageInformationList.size() == 0)
         {
             holder.dataBinding.defaultImageLayout.setVisibility(View.GONE);
             holder.dataBinding.defaultImageLayout.setOnClickListener(null);
@@ -183,7 +183,7 @@ public class GourmetMenusAdapter extends RecyclerView.Adapter<GourmetMenusAdapte
 
             holder.dataBinding.simpleDraweeView.getHierarchy().setPlaceholderImage(R.drawable.layerlist_placeholder);
             Util.requestImageResize(mContext, holder.dataBinding.simpleDraweeView, gourmetMenu.getPrimaryImage().url);
-            setLineIndicatorVisible(holder.dataBinding, imageInformationList.size());
+            setLineIndicatorVisible(holder.dataBinding, detailImageInformationList.size());
 
             holder.dataBinding.defaultImageLayout.setOnClickListener(new View.OnClickListener()
             {

@@ -7,7 +7,7 @@ import android.support.annotation.NonNull;
 
 import com.daily.base.BaseAnalyticsInterface;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
-import com.daily.dailyhotel.entity.StayOutboundDetailImage;
+import com.daily.dailyhotel.entity.BaseDetailImage;
 import com.daily.dailyhotel.parcel.StayOutboundDetailImageParcel;
 import com.twoheart.dailyhotel.R;
 
@@ -23,7 +23,7 @@ public class ImageListPresenter extends BaseExceptionPresenter<ImageListActivity
     private ImageListAnalyticsInterface mAnalytics;
 
     private String mTitle;
-    private List<StayOutboundDetailImage> mImageList;
+    private List<BaseDetailImage> mImageList;
     private int mIndex;
     private boolean mTouchMoving;
 

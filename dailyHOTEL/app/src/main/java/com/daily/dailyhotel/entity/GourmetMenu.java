@@ -26,31 +26,31 @@ public class GourmetMenu
     public int timeInterval;
 
 
-    private List<ImageInformation> mImageInformationList;
+    private List<DetailImageInformation> mDetailImageInformationList;
     private List<String> mMenuDetailList;
 
     public GourmetMenu()
     {
     }
 
-    public List<ImageInformation> getImageList()
+    public List<DetailImageInformation> getImageList()
     {
-        return mImageInformationList;
+        return mDetailImageInformationList;
     }
 
-    public void setImageList(List<ImageInformation> imageInformationList)
+    public void setImageList(List<DetailImageInformation> detailImageInformationList)
     {
-        mImageInformationList = imageInformationList;
+        mDetailImageInformationList = detailImageInformationList;
     }
 
-    public ImageInformation getPrimaryImage()
+    public DetailImageInformation getPrimaryImage()
     {
-        if (mImageInformationList == null || mImageInformationList.size() == 0)
+        if (mDetailImageInformationList == null || mDetailImageInformationList.size() == 0)
         {
             return null;
         }
 
-        return mImageInformationList.get(0);
+        return mDetailImageInformationList.get(0);
     }
 
     public List<String> getMenuDetailList()

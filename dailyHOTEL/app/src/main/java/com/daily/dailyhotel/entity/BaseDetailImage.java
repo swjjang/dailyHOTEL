@@ -4,11 +4,14 @@ import android.content.Context;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
+import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.daily.base.util.ScreenUtils;
 import com.facebook.drawee.view.SimpleDraweeView;
 
 public abstract class BaseDetailImage
 {
+    public String caption;
+
     public abstract void setImage(Context context, SimpleDraweeView simpleDraweeView);
 
     void setImageViewHeight(Context context, ImageView imageView, int width, int height)

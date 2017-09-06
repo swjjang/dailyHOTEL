@@ -2,17 +2,12 @@ package com.daily.dailyhotel.screen.home.gourmet.detail;
 
 import android.content.Context;
 import android.support.v4.view.MotionEventCompat;
+import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
 
-import com.daily.base.BaseSubView;
-import com.daily.base.OnBaseSubEventListener;
-import com.daily.base.util.ScreenUtils;
-import com.twoheart.dailyhotel.databinding.LayoutStayOutboundDetail01DataBinding;
-
-public class GourmetDetailEmptyView extends BaseSubView<GourmetDetailEmptyView.OnEventListener, LayoutStayOutboundDetail01DataBinding>//
-    implements View.OnTouchListener
+public class DetailEmptyView extends View implements View.OnTouchListener
 {
     private final int MOVE_STATE_NONE = 0;
     private final int MOVE_STATE_SCROLL = 10;
@@ -23,7 +18,9 @@ public class GourmetDetailEmptyView extends BaseSubView<GourmetDetailEmptyView.O
     private int mMoveState;
     private float mPrevX, mPrevY;
 
-    public interface OnEventListener extends OnBaseSubEventListener
+    private OnEventListener mOnEventListener;
+
+    public interface OnEventListener
     {
         void onStopMove(MotionEvent event);
 
@@ -36,22 +33,38 @@ public class GourmetDetailEmptyView extends BaseSubView<GourmetDetailEmptyView.O
         void onImageClick();
     }
 
-    public GourmetDetailEmptyView(Context context, GourmetDetailEmptyView.OnEventListener listener)
+    public DetailEmptyView(Context context)
     {
-        super(context, listener);
+        super(context);
+
+        initLayout(context);
     }
 
-    @Override
-    protected void setContentView(final LayoutStayOutboundDetail01DataBinding viewDataBinding)
+    public DetailEmptyView(Context context, AttributeSet attrs)
     {
-        if (viewDataBinding == null)
-        {
-            return;
-        }
+        super(context, attrs);
 
-        viewDataBinding.imageEmptyView.getLayoutParams().height = ScreenUtils.getDetailScreenImageLayoutHeight(getContext());
-        viewDataBinding.imageEmptyView.setClickable(true);
-        viewDataBinding.imageEmptyView.setOnTouchListener(this);
+        initLayout(context);
+    }
+
+    public DetailEmptyView(Context context, AttributeSet attrs, int defStyleAttr)
+    {
+        super(context, attrs, defStyleAttr);
+
+        initLayout(context);
+    }
+
+    public DetailEmptyView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes)
+    {
+        super(context, attrs, defStyleAttr, defStyleRes);
+
+        initLayout(context);
+    }
+
+    private void initLayout(Context context)
+    {
+        setClickable(true);
+        setOnTouchListener(this);
     }
 
     @Override
@@ -66,7 +79,10 @@ public class GourmetDetailEmptyView extends BaseSubView<GourmetDetailEmptyView.O
 
                 mMoveState = MOVE_STATE_NONE;
 
-                getEventListener().onStopMove(event);
+                if (mOnEventListener != null)
+                {
+                    mOnEventListener.onStopMove(event);
+                }
                 break;
             }
 
@@ -81,11 +97,13 @@ public class GourmetDetailEmptyView extends BaseSubView<GourmetDetailEmptyView.O
 
                 if (distance < touchSlop)
                 {
-                    getEventListener().onImageClick();
-
                     mMoveState = MOVE_STATE_NONE;
 
-                    getEventListener().onCancelMove(event);
+                    if (mOnEventListener != null)
+                    {
+                        mOnEventListener.onImageClick();
+                        mOnEventListener.onCancelMove(event);
+                    }
                     break;
                 }
             }
@@ -94,7 +112,10 @@ public class GourmetDetailEmptyView extends BaseSubView<GourmetDetailEmptyView.O
             {
                 mMoveState = MOVE_STATE_NONE;
 
-                getEventListener().onCancelMove(event);
+                if (mOnEventListener != null)
+                {
+                    mOnEventListener.onCancelMove(event);
+                }
                 break;
             }
 
@@ -115,13 +136,19 @@ public class GourmetDetailEmptyView extends BaseSubView<GourmetDetailEmptyView.O
                             // x 축으로 이동한 경우.
                             mMoveState = MOVE_STATE_VIEWPAGER;
 
-                            getEventListener().onHorizontalMove(event);
+                            if (mOnEventListener != null)
+                            {
+                                mOnEventListener.onHorizontalMove(event);
+                            }
                         } else
                         {
                             // y축으로 이동한 경우.
                             mMoveState = MOVE_STATE_SCROLL;
 
-                            getEventListener().onVerticalMove(event);
+                            if (mOnEventListener != null)
+                            {
+                                mOnEventListener.onVerticalMove(event);
+                            }
                             return true;
                         }
                         break;
@@ -129,7 +156,10 @@ public class GourmetDetailEmptyView extends BaseSubView<GourmetDetailEmptyView.O
 
                     case MOVE_STATE_VIEWPAGER:
                     {
-                        getEventListener().onHorizontalMove(event);
+                        if (mOnEventListener != null)
+                        {
+                            mOnEventListener.onHorizontalMove(event);
+                        }
                     }
                     break;
                 }
@@ -138,5 +168,10 @@ public class GourmetDetailEmptyView extends BaseSubView<GourmetDetailEmptyView.O
         }
 
         return false;
+    }
+
+    public void setOnEventListener(DetailEmptyView.OnEventListener listener)
+    {
+        mOnEventListener = listener;
     }
 }
