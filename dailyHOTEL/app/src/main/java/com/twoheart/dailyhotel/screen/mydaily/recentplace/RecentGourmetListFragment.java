@@ -18,8 +18,6 @@ import com.daily.dailyhotel.repository.local.model.AnalyticsParam;
 import com.daily.dailyhotel.util.RecentlyPlaceUtil;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.Gourmet;
-import com.twoheart.dailyhotel.model.Place;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.time.GourmetBookingDay;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
@@ -201,7 +199,7 @@ public class RecentGourmetListFragment extends RecentPlacesListFragment
             }
 
             PlaceViewItem placeViewItem = mListLayout.getItem(position);
-            Gourmet gourmet = placeViewItem.getItem();
+            RecentlyPlace recentlyPlace = placeViewItem.getItem();
 
             if (Util.isUsedMultiTransition() == true)
             {
@@ -224,13 +222,14 @@ public class RecentGourmetListFragment extends RecentPlacesListFragment
                 });
 
                 AnalyticsParam analyticsParam = new AnalyticsParam();
-                analyticsParam.setParam(mBaseActivity, gourmet);
+                analyticsParam.setParam(mBaseActivity, recentlyPlace);
                 analyticsParam.setProvince(null);
                 analyticsParam.setTotalListCount(-1);
 
                 Intent intent = GourmetDetailActivity.newInstance(mBaseActivity //
-                    , (GourmetBookingDay) mPlaceBookingDay, gourmet.index, gourmet.name //
-                    , gourmet.imageUrl, gourmet.category, gourmet.isSoldOut, analyticsParam, true, PlaceDetailLayout.TRANS_GRADIENT_BOTTOM_TYPE_LIST);
+                    , (GourmetBookingDay) mPlaceBookingDay, recentlyPlace.index, recentlyPlace.title //
+                    , recentlyPlace.imageUrl, recentlyPlace.details.category, recentlyPlace.isSoldOut //
+                    , analyticsParam, true, PlaceDetailLayout.TRANS_GRADIENT_BOTTOM_TYPE_LIST);
 
                 View simpleDraweeView = view.findViewById(R.id.imageView);
                 View nameTextView = view.findViewById(R.id.nameTextView);
@@ -247,13 +246,14 @@ public class RecentGourmetListFragment extends RecentPlacesListFragment
             } else
             {
                 AnalyticsParam analyticsParam = new AnalyticsParam();
-                analyticsParam.setParam(mBaseActivity, gourmet);
+                analyticsParam.setParam(mBaseActivity, recentlyPlace);
                 analyticsParam.setProvince(null);
                 analyticsParam.setTotalListCount(-1);
 
                 Intent intent = GourmetDetailActivity.newInstance(mBaseActivity //
-                    , (GourmetBookingDay) mPlaceBookingDay, gourmet.index, gourmet.name //
-                    , gourmet.imageUrl, gourmet.category, gourmet.isSoldOut, analyticsParam, false, PlaceDetailLayout.TRANS_GRADIENT_BOTTOM_TYPE_NONE);
+                    , (GourmetBookingDay) mPlaceBookingDay, recentlyPlace.index, recentlyPlace.title //
+                    , recentlyPlace.imageUrl, recentlyPlace.details.category, recentlyPlace.isSoldOut //
+                    , analyticsParam, false, PlaceDetailLayout.TRANS_GRADIENT_BOTTOM_TYPE_NONE);
 
                 mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMET_DETAIL);
 
@@ -263,7 +263,7 @@ public class RecentGourmetListFragment extends RecentPlacesListFragment
             AnalyticsManager.getInstance(mBaseActivity).recordEvent(//
                 AnalyticsManager.Category.NAVIGATION_, //
                 AnalyticsManager.Action.RECENT_VIEW_CLICKED, //
-                gourmet.name, null);
+                recentlyPlace.title, null);
         }
 
         @Override
@@ -277,12 +277,12 @@ public class RecentGourmetListFragment extends RecentPlacesListFragment
             mListLayout.setBlurVisibility(mBaseActivity, true);
 
             PlaceViewItem placeViewItem = mListLayout.getItem(position);
-            Gourmet gourmet = placeViewItem.getItem();
+            RecentlyPlace recentlyPlace = placeViewItem.getItem();
 
             mViewByLongPress = view;
             mPositionByLongPress = position;
 
-            Intent intent = GourmetPreviewActivity.newInstance(mBaseActivity, (GourmetBookingDay) mPlaceBookingDay, gourmet);
+            Intent intent = GourmetPreviewActivity.newInstance(mBaseActivity, (GourmetBookingDay) mPlaceBookingDay, recentlyPlace);
 
             mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PREVIEW);
         }
@@ -303,15 +303,15 @@ public class RecentGourmetListFragment extends RecentPlacesListFragment
                 return;
             }
 
-            Place place = placeViewItem.getItem();
-            ExLog.d("isRemove : " + (place != null));
+            RecentlyPlace recentlyPlace = placeViewItem.getItem();
+            ExLog.d("isRemove : " + (recentlyPlace != null));
 
-            if (place == null)
+            if (recentlyPlace == null)
             {
                 return;
             }
 
-            RecentlyPlaceUtil.deleteRecentlyItem(getActivity(), Constants.ServiceType.GOURMET, place.index);
+            RecentlyPlaceUtil.deleteRecentlyItem(getActivity(), Constants.ServiceType.GOURMET, recentlyPlace.index);
 
             mListLayout.setData(mListLayout.getList(), mPlaceBookingDay);
             mRecentPlaceListFragmentListener.onDeleteItemClickAnalytics();
@@ -319,10 +319,10 @@ public class RecentGourmetListFragment extends RecentPlacesListFragment
             AnalyticsManager.getInstance(mBaseActivity).recordEvent(//
                 AnalyticsManager.Category.NAVIGATION_, //
                 AnalyticsManager.Action.RECENT_VIEW_DELETE, //
-                place.name, null);
+                recentlyPlace.title, null);
 
             AnalyticsManager.getInstance(mBaseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION, //
-                AnalyticsManager.Action.RECENTVIEW_ITEM_DELETE, Integer.toString(place.index), null);
+                AnalyticsManager.Action.RECENTVIEW_ITEM_DELETE, Integer.toString(recentlyPlace.index), null);
         }
 
         @Override
@@ -355,11 +355,11 @@ public class RecentGourmetListFragment extends RecentPlacesListFragment
                 }
 
                 PlaceViewItem placeViewItem = list.get(i);
-                Place place = placeViewItem.getItem();
+                RecentlyPlace recentlyPlace = placeViewItem.getItem();
 
-                if (place != null)
+                if (recentlyPlace != null)
                 {
-                    stringBuilder.append(place.index);
+                    stringBuilder.append(recentlyPlace.index);
                 }
             }
 

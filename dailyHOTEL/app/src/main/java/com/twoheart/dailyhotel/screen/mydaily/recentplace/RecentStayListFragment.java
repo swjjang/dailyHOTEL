@@ -28,10 +28,7 @@ import com.daily.dailyhotel.screen.home.stay.outbound.preview.StayOutboundPrevie
 import com.daily.dailyhotel.util.RecentlyPlaceUtil;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.Gourmet;
-import com.twoheart.dailyhotel.model.Place;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
-import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.model.time.StayBookingDay;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.layout.PlaceDetailLayout;
@@ -236,15 +233,9 @@ public class RecentStayListFragment extends RecentPlacesListFragment
             return -1;
         }
 
-        if (object instanceof Stay)
+        if (object instanceof RecentlyPlace)
         {
-            index = ((Stay) object).index;
-        } else if (object instanceof StayOutbound)
-        {
-            index = ((StayOutbound) object).index;
-        } else if (object instanceof Gourmet)
-        {
-            index = ((Gourmet) object).index;
+            index = ((RecentlyPlace) object).index;
         } else
         {
             index = -1;
@@ -283,7 +274,7 @@ public class RecentStayListFragment extends RecentPlacesListFragment
             return;
         }
 
-        Stay stay = placeViewItem.getItem();
+        RecentlyPlace recentlyPlace = placeViewItem.getItem();
 
         if (Util.isUsedMultiTransition() == true)
         {
@@ -306,12 +297,12 @@ public class RecentStayListFragment extends RecentPlacesListFragment
             });
 
             AnalyticsParam analyticsParam = new AnalyticsParam();
-            analyticsParam.setParam(mBaseActivity, stay);
+            analyticsParam.setParam(mBaseActivity, recentlyPlace);
             analyticsParam.setProvince(null);
             analyticsParam.setTotalListCount(-1);
 
             Intent intent = StayDetailActivity.newInstance(mBaseActivity //
-                , (StayBookingDay) mPlaceBookingDay, stay.index, stay.name, stay.imageUrl //
+                , (StayBookingDay) mPlaceBookingDay, recentlyPlace.index, recentlyPlace.title, recentlyPlace.imageUrl //
                 , analyticsParam, true, PlaceDetailLayout.TRANS_GRADIENT_BOTTOM_TYPE_LIST);
 
             View simpleDraweeView = view.findViewById(R.id.imageView);
@@ -331,12 +322,12 @@ public class RecentStayListFragment extends RecentPlacesListFragment
         } else
         {
             AnalyticsParam analyticsParam = new AnalyticsParam();
-            analyticsParam.setParam(mBaseActivity, stay);
+            analyticsParam.setParam(mBaseActivity, recentlyPlace);
             analyticsParam.setProvince(null);
             analyticsParam.setTotalListCount(-1);
 
             Intent intent = StayDetailActivity.newInstance(mBaseActivity //
-                , (StayBookingDay) mPlaceBookingDay, stay.index, stay.name, stay.imageUrl //
+                , (StayBookingDay) mPlaceBookingDay, recentlyPlace.index, recentlyPlace.title, recentlyPlace.imageUrl //
                 , analyticsParam, false, PlaceDetailLayout.TRANS_GRADIENT_BOTTOM_TYPE_NONE);
 
             mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL);
@@ -347,12 +338,12 @@ public class RecentStayListFragment extends RecentPlacesListFragment
         AnalyticsManager.getInstance(mBaseActivity).recordEvent(//
             AnalyticsManager.Category.NAVIGATION_, //
             AnalyticsManager.Action.RECENT_VIEW_CLICKED, //
-            stay.name, null);
+            recentlyPlace.title, null);
 
-        if (stay.truevr == true)
+        if (recentlyPlace.details.isTrueVr == true)
         {
             AnalyticsManager.getInstance(mBaseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION//
-                , AnalyticsManager.Action.STAY_ITEM_CLICK_TRUE_VR, Integer.toString(stay.index), null);
+                , AnalyticsManager.Action.STAY_ITEM_CLICK_TRUE_VR, Integer.toString(recentlyPlace.index), null);
         }
     }
 
@@ -473,9 +464,9 @@ public class RecentStayListFragment extends RecentPlacesListFragment
             stayOutbound.name, null);
     }
 
-    private void onStayItemLongClick(View view, int position, Stay stay)
+    private void onStayItemLongClick(View view, int position, RecentlyPlace recentlyPlace)
     {
-        if (view == null || stay == null)
+        if (view == null || recentlyPlace == null)
         {
             return;
         }
@@ -485,7 +476,7 @@ public class RecentStayListFragment extends RecentPlacesListFragment
         mViewByLongPress = view;
         mPositionByLongPress = position;
 
-        Intent intent = StayPreviewActivity.newInstance(mBaseActivity, (StayBookingDay) mPlaceBookingDay, stay);
+        Intent intent = StayPreviewActivity.newInstance(mBaseActivity, (StayBookingDay) mPlaceBookingDay, recentlyPlace);
 
         mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PREVIEW);
     }
@@ -517,15 +508,15 @@ public class RecentStayListFragment extends RecentPlacesListFragment
             return;
         }
 
-        Place place = placeViewItem.getItem();
-        ExLog.d("isRemove : " + (place != null));
+        RecentlyPlace recentlyPlace = placeViewItem.getItem();
+        ExLog.d("isRemove : " + (recentlyPlace != null));
 
-        if (place == null)
+        if (recentlyPlace == null)
         {
             return;
         }
 
-        RecentlyPlaceUtil.deleteRecentlyItem(getActivity(), Constants.ServiceType.HOTEL, place.index);
+        RecentlyPlaceUtil.deleteRecentlyItem(getActivity(), Constants.ServiceType.HOTEL, recentlyPlace.index);
 
         mListLayout.setData(mListLayout.getList(), mPlaceBookingDay);
         mRecentPlaceListFragmentListener.onDeleteItemClickAnalytics();
@@ -533,10 +524,10 @@ public class RecentStayListFragment extends RecentPlacesListFragment
         AnalyticsManager.getInstance(mBaseActivity).recordEvent(//
             AnalyticsManager.Category.NAVIGATION_, //
             AnalyticsManager.Action.RECENT_VIEW_DELETE, //
-            place.name, null);
+            recentlyPlace.title, null);
 
         AnalyticsManager.getInstance(mBaseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION, //
-            AnalyticsManager.Action.RECENTVIEW_ITEM_DELETE, Integer.toString(place.index), null);
+            AnalyticsManager.Action.RECENTVIEW_ITEM_DELETE, Integer.toString(recentlyPlace.index), null);
     }
 
     private void onStayOutboundItemDeleteClick(PlaceViewItem placeViewItem)
@@ -587,7 +578,7 @@ public class RecentStayListFragment extends RecentPlacesListFragment
                 return;
             }
 
-            if (object instanceof Stay)
+            if (object instanceof RecentlyPlace)
             {
                 onStayItemClick(view, placeViewItem);
             } else if (object instanceof StayOutbound)
@@ -613,9 +604,9 @@ public class RecentStayListFragment extends RecentPlacesListFragment
                 return;
             }
 
-            if (object instanceof Stay)
+            if (object instanceof RecentlyPlace)
             {
-                onStayItemLongClick(view, position, (Stay) object);
+                onStayItemLongClick(view, position, (RecentlyPlace) object);
             } else if (object instanceof StayOutbound)
             {
                 onStayOutboundItemLongClick(view, position, (StayOutbound) object);
@@ -639,7 +630,7 @@ public class RecentStayListFragment extends RecentPlacesListFragment
                 return;
             }
 
-            if (object instanceof Stay)
+            if (object instanceof RecentlyPlace)
             {
                 onStayItemDeleteClick(placeViewItem);
             } else if (object instanceof StayOutbound)
