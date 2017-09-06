@@ -9,8 +9,8 @@ import android.support.annotation.NonNull;
 
 import com.daily.base.BaseAnalyticsInterface;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
-import com.daily.dailyhotel.entity.GourmetMenu;
 import com.daily.dailyhotel.entity.DetailImageInformation;
+import com.daily.dailyhotel.entity.GourmetMenu;
 import com.daily.dailyhotel.parcel.GourmetMenuParcel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.screen.common.ImageDetailListActivity;

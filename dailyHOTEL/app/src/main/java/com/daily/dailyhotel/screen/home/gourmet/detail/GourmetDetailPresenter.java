@@ -58,14 +58,17 @@ import com.twoheart.dailyhotel.util.AppResearch;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
+import com.twoheart.dailyhotel.util.DailyExternalDeepLink;
 import com.twoheart.dailyhotel.util.DailyUserPreference;
 import com.twoheart.dailyhotel.util.KakaoLinkManager;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
@@ -117,6 +120,8 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
     private int mGradientType;
     private List<Integer> mSoldOutDateList;
     private int mSelectedMenuIndex;
+    private boolean mShowCalendar;
+    private boolean mShowTrueVR;
 
     private DailyDeepLink mDailyDeepLink;
     private AppResearch mAppResearch;
@@ -188,9 +193,63 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
 
             mIsUsedMultiTransition = false;
             mIsDeepLink = true;
+
+            if (mDailyDeepLink.isExternalDeepLink() == true)
+            {
+                addCompositeDisposable(mCommonRemoteImpl.getCommonDateTime().subscribe(new Consumer<CommonDateTime>()
+                {
+                    @Override
+                    public void accept(CommonDateTime commonDateTime) throws Exception
+                    {
+                        setCommonDateTime(commonDateTime);
+
+                        DailyExternalDeepLink externalDeepLink = (DailyExternalDeepLink) mDailyDeepLink;
+
+                        mGourmetIndex = Integer.parseInt(externalDeepLink.getIndex());
+
+                        String date = externalDeepLink.getDate();
+                        int datePlus = externalDeepLink.getDatePlus();
+                        mShowCalendar = externalDeepLink.isShowCalendar();
+                        mShowTrueVR = externalDeepLink.isShowVR();
+
+                        if (DailyTextUtils.isTextEmpty(date) == false)
+                        {
+                            if (Integer.parseInt(date) > Integer.parseInt(DailyCalendar.convertDateFormatString(commonDateTime.currentDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyyMMdd")))
+                            {
+                                Date visitDate = DailyCalendar.convertDate(date, "yyyyMMdd", TimeZone.getTimeZone("GMT+09:00"));
+                                setGourmetBookDateTime(DailyCalendar.format(visitDate, DailyCalendar.ISO_8601_FORMAT));
+                            } else
+                            {
+                                setGourmetBookDateTime(commonDateTime.dailyDateTime);
+                            }
+                        } else if (datePlus >= 0)
+                        {
+                            setGourmetBookDateTime(commonDateTime.dailyDateTime, datePlus);
+                        } else
+                        {
+                            setGourmetBookDateTime(commonDateTime.dailyDateTime);
+                        }
+
+                        mDailyDeepLink.clear();
+                        mDailyDeepLink = null;
+
+                        setRefresh(true);
+                        onRefresh(true);
+                    }
+                }, new Consumer<Throwable>()
+                {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception
+                    {
+                        onHandleError(throwable);
+                    }
+                }));
+            }
         } else
         {
             mIsUsedMultiTransition = intent.getBooleanExtra(GourmetDetailActivity.INTENT_EXTRA_DATA_MULTITRANSITION, false);
+            mShowCalendar = intent.getBooleanExtra(GourmetDetailActivity.INTENT_EXTRA_DATA_SHOW_CALENDAR, false);
+            mShowTrueVR = intent.getBooleanExtra(GourmetDetailActivity.INTENT_EXTRA_DATA_SHOW_TRUE_VR, false);
             mGradientType = intent.getIntExtra(GourmetDetailActivity.INTENT_EXTRA_DATA_CALL_GRADIENT_TYPE, GourmetDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_NONE);
             mIsDeepLink = false;
 
@@ -247,7 +306,10 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
             onRefresh(getViewInterface().getSharedElementTransition(), disposable);
         } else
         {
-            setRefresh(true);
+            if (mIsDeepLink == false)
+            {
+                setRefresh(true);
+            }
         }
     }
 
@@ -1156,11 +1218,6 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
             ExLog.e(e.toString());
         }
 
-        if (mIsDeepLink == true)
-        {
-            getViewInterface().setToolbarTitle(mGourmetDetail.name);
-        }
-
         getViewInterface().setGourmetDetail(mGourmetBookDateTime, mGourmetDetail, mReviewScores != null ? mReviewScores.reviewScoreTotalCount : 0);
 
         // 리스트 가격 변동은 진입시 한번 만 한다.
@@ -1174,6 +1231,41 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
         } else
         {
             setStatus(STATUS_SELECT_MENU);
+        }
+
+        //        if (DailyPreference.getInstance(getActivity()).getTrueVRSupport() > 0)
+        //        {
+        //            if (mTrueVRParamsList != null && mTrueVRParamsList.size() > 0)
+        //            {
+        //                showTrueViewMenu();
+        //            } else
+        //            {
+        //                hideTrueViewMenu();
+        //            }
+        //        } else
+        //        {
+        //            hideTrueViewMenu();
+        //        }
+
+        if (mShowCalendar == true)
+        {
+            mShowCalendar = false;
+
+            if (mGourmetDetail.getGourmetMenuList() != null && mGourmetDetail.getGourmetMenuList().size() > 0)
+            {
+                onCalendarClick();
+            }
+        } else if (mShowTrueVR == true)
+        {
+            mShowTrueVR = false;
+
+            //            if (DailyPreference.getInstance(getActivity()).getTrueVRSupport() > 0)
+            //            {
+            //                onTrueViewClick();
+            //            } else
+            //            {
+            //                getViewInterface().showSimpleDialog(null, getString(R.string.message_truevr_not_support_hardware), getString(R.string.dialog_btn_text_confirm), null);
+            //            }
         }
 
         mIsDeepLink = false;
@@ -1197,6 +1289,27 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
         try
         {
             mGourmetBookDateTime.setVisitDateTime(visitDateTime);
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+        }
+    }
+
+    private void setGourmetBookDateTime(String visitDateTime, int afterDay)
+    {
+        if (DailyTextUtils.isTextEmpty(visitDateTime) == true)
+        {
+            return;
+        }
+
+        if (mGourmetBookDateTime == null)
+        {
+            mGourmetBookDateTime = new GourmetBookDateTime();
+        }
+
+        try
+        {
+            mGourmetBookDateTime.setVisitDateTime(visitDateTime, afterDay);
         } catch (Exception e)
         {
             ExLog.e(e.toString());

@@ -1109,7 +1109,7 @@ public class StayDetailActivity extends PlaceDetailActivity
 
         Intent intent = StayDetailCalendarActivity.newInstance(StayDetailActivity.this, todayDateTime //
             , stayBookingDay, dayCount, placeIndex, AnalyticsManager.ValueType.DETAIL //
-            , (ArrayList)soldOutList, true, isAnimation, isSingleDay);
+            , (ArrayList) soldOutList, true, isAnimation, isSingleDay);
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_CALENDAR);
 
         AnalyticsManager.getInstance(StayDetailActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_//

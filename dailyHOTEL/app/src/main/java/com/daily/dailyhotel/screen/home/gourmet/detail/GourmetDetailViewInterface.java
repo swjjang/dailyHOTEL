@@ -5,10 +5,6 @@ import android.app.Dialog;
 import com.daily.base.BaseDialogViewInterface;
 import com.daily.dailyhotel.entity.GourmetBookDateTime;
 import com.daily.dailyhotel.entity.GourmetDetail;
-import com.daily.dailyhotel.entity.People;
-import com.daily.dailyhotel.entity.ReviewScores;
-import com.daily.dailyhotel.entity.StayBookDateTime;
-import com.daily.dailyhotel.entity.StayOutboundDetail;
 
 import io.reactivex.Observable;
 

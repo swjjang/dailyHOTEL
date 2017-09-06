@@ -42,28 +42,16 @@ public class GourmetDetailActivity extends BaseActivity<GourmetDetailPresenter>
     static final String INTENT_EXTRA_DATA_MULTITRANSITION = "multiTransition";
     static final String INTENT_EXTRA_DATA_CALL_GRADIENT_TYPE = "gradientType";
     static final String INTENT_EXTRA_DATA_LIST_PRICE = "listPrice";
+    static final String INTENT_EXTRA_DATA_SHOW_CALENDAR = "showCalendar";
+    static final String INTENT_EXTRA_DATA_SHOW_TRUE_VR = "showVR";
 
     public static final int TRANS_GRADIENT_BOTTOM_TYPE_NONE = -1;
     public static final int TRANS_GRADIENT_BOTTOM_TYPE_MAP = 1;
     public static final int TRANS_GRADIENT_BOTTOM_TYPE_LIST = 2;
 
-    /**
-     *
-     * @param context
-     * @param gourmetIndex
-     * @param gourmetName
-     * @param imageUrl
-     * @param listPrice
-     * @param visitDate - ISO-8601
-     * @param category
-     * @param soldOut
-     * @param isUsedMultiTransition
-     * @param gradientType
-     * @param analyticsParam
-     * @return
-     */
     public static Intent newInstance(Context context, int gourmetIndex, String gourmetName, String imageUrl//
         , int listPrice, String visitDate, String category, boolean soldOut //
+        , boolean showCalendar, boolean showVR//
         , boolean isUsedMultiTransition, int gradientType, GourmetDetailAnalyticsParam analyticsParam)
     {
         Intent intent = new Intent(context, GourmetDetailActivity.class);
@@ -75,6 +63,8 @@ public class GourmetDetailActivity extends BaseActivity<GourmetDetailPresenter>
         intent.putExtra(INTENT_EXTRA_DATA_VISIT_DATE, visitDate);
         intent.putExtra(INTENT_EXTRA_DATA_CATEGORY, category);
         intent.putExtra(INTENT_EXTRA_DATA_SOLDOUT, soldOut);
+        intent.putExtra(INTENT_EXTRA_DATA_SHOW_CALENDAR, showCalendar);
+        intent.putExtra(INTENT_EXTRA_DATA_SHOW_TRUE_VR, showVR);
         intent.putExtra(INTENT_EXTRA_DATA_MULTITRANSITION, isUsedMultiTransition);
         intent.putExtra(INTENT_EXTRA_DATA_CALL_GRADIENT_TYPE, gradientType);
         intent.putExtra(INTENT_EXTRA_DATA_ANALYTICS, analyticsParam);

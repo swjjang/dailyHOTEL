@@ -17,8 +17,8 @@ import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.entity.CommonDateTime;
-import com.daily.dailyhotel.entity.GourmetMenu;
 import com.daily.dailyhotel.entity.DetailImageInformation;
+import com.daily.dailyhotel.entity.GourmetMenu;
 import com.daily.dailyhotel.parcel.analytics.GourmetPaymentAnalyticsParam;
 import com.daily.dailyhotel.repository.local.model.AnalyticsParam;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
@@ -1061,7 +1061,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
 
         Intent intent = GourmetDetailCalendarActivity.newInstance(GourmetDetailActivity.this, //
             todayDateTime, gourmetBookingDay, placeIndex, GourmetCalendarActivity.DEFAULT_CALENDAR_DAY_OF_MAX_COUNT //
-            , callByScreen, (ArrayList)soldOutList, true, isAnimation);
+            , callByScreen, (ArrayList) soldOutList, true, isAnimation);
         startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_CALENDAR);
 
         AnalyticsManager.getInstance(GourmetDetailActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_//
@@ -1355,7 +1355,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
                         gourmetMenu.lastOrderTime = gourmetProduct.lastOrderTime;
                         gourmetMenu.menuSummary = gourmetProduct.menuSummary;
                         gourmetMenu.reserveCondition = gourmetProduct.reserveCondition;
-//                        gourmetMenu.setPrimaryImageIndex(gourmetProduct.getPrimaryIndex());
+                        //                        gourmetMenu.setPrimaryImageIndex(gourmetProduct.getPrimaryIndex());
 
                         List<DetailImageInformation> detailImageInformationList = new ArrayList<>();
                         for (ProductImageInformation productImageInformation : gourmetProduct.getImageList())

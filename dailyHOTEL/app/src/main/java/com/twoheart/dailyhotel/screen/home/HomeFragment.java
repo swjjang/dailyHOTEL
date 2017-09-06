@@ -22,6 +22,7 @@ import com.daily.dailyhotel.entity.CommonDateTime;
 import com.daily.dailyhotel.entity.People;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayOutbounds;
+import com.daily.dailyhotel.parcel.analytics.GourmetDetailAnalyticsParam;
 import com.daily.dailyhotel.parcel.analytics.StayOutboundDetailAnalyticsParam;
 import com.daily.dailyhotel.repository.local.DailyDb;
 import com.daily.dailyhotel.repository.local.DailyDbHelper;
@@ -51,7 +52,6 @@ import com.twoheart.dailyhotel.place.base.BaseMenuNavigationFragment;
 import com.twoheart.dailyhotel.place.layout.PlaceDetailLayout;
 import com.twoheart.dailyhotel.screen.common.PermissionManagerActivity;
 import com.twoheart.dailyhotel.screen.event.EventWebActivity;
-import com.twoheart.dailyhotel.screen.gourmet.detail.GourmetDetailActivity;
 import com.twoheart.dailyhotel.screen.gourmet.list.GourmetMainActivity;
 import com.twoheart.dailyhotel.screen.gourmet.preview.GourmetPreviewActivity;
 import com.twoheart.dailyhotel.screen.home.category.list.StayCategoryTabActivity;
@@ -949,9 +949,16 @@ public class HomeFragment extends BaseMenuNavigationFragment
                         analyticsParam.setProvince(null);
                         analyticsParam.setTotalListCount(-1);
 
-                        Intent intent = GourmetDetailActivity.newInstance(mBaseActivity //
-                            , gourmetBookingDay, place.index, place.title, place.imageUrl, place.details.category//
-                            , place.isSoldOut, analyticsParam, true, PlaceDetailLayout.TRANS_GRADIENT_BOTTOM_TYPE_NONE);
+                        //                        Intent intent = GourmetDetailActivity.newInstance(mBaseActivity //
+                        //                            , gourmetBookingDay, place.index, place.title, place.imageUrl, place.details.category//
+                        //                            , place.isSoldOut, analyticsParam, true, PlaceDetailLayout.TRANS_GRADIENT_BOTTOM_TYPE_NONE);
+
+                        Intent intent = com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity.newInstance(mBaseActivity //
+                            , place.index, place.title, place.imageUrl, com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity.NONE_PRICE//
+                            , gourmetBookingDay.getVisitDay(DailyCalendar.ISO_8601_FORMAT)//
+                            , place.details.category, place.isSoldOut, false, false, true//
+                            , com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_NONE//
+                            , new GourmetDetailAnalyticsParam());
 
                         if (intent == null)
                         {
@@ -974,9 +981,16 @@ public class HomeFragment extends BaseMenuNavigationFragment
                         analyticsParam.setProvince(null);
                         analyticsParam.setTotalListCount(-1);
 
-                        Intent intent = GourmetDetailActivity.newInstance(mBaseActivity //
-                            , gourmetBookingDay, place.index, place.title, place.imageUrl, place.details.category//
-                            , place.isSoldOut, analyticsParam, false, PlaceDetailLayout.TRANS_GRADIENT_BOTTOM_TYPE_NONE);
+                        //                        Intent intent = GourmetDetailActivity.newInstance(mBaseActivity //
+                        //                            , gourmetBookingDay, place.index, place.title, place.imageUrl, place.details.category//
+                        //                            , place.isSoldOut, analyticsParam, false, PlaceDetailLayout.TRANS_GRADIENT_BOTTOM_TYPE_NONE);
+
+                        Intent intent = com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity.newInstance(mBaseActivity //
+                            , place.index, place.title, place.imageUrl, com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity.NONE_PRICE//
+                            , gourmetBookingDay.getVisitDay(DailyCalendar.ISO_8601_FORMAT)//
+                            , place.details.category, place.isSoldOut, false, false, false//
+                            , com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_NONE//
+                            , new GourmetDetailAnalyticsParam());
 
                         if (intent == null)
                         {

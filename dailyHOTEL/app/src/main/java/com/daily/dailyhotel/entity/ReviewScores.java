@@ -1,7 +1,5 @@
 package com.daily.dailyhotel.entity;
 
-import com.bluelinelabs.logansquare.annotation.JsonObject;
-
 import java.util.List;
 
 public class ReviewScores

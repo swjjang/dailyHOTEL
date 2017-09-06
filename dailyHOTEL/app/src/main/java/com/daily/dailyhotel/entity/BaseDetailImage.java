@@ -1,7 +1,6 @@
 package com.daily.dailyhotel.entity;
 
 import android.content.Context;
-import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 

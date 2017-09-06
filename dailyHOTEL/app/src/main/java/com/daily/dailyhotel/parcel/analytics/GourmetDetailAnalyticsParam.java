@@ -1,18 +1,11 @@
 package com.daily.dailyhotel.parcel.analytics;
 
-import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.daily.base.util.DailyTextUtils;
 import com.twoheart.dailyhotel.model.Area;
-import com.twoheart.dailyhotel.model.Gourmet;
 import com.twoheart.dailyhotel.model.Province;
-import com.twoheart.dailyhotel.model.Stay;
-import com.twoheart.dailyhotel.network.model.HomePlace;
-import com.twoheart.dailyhotel.network.model.Prices;
-import com.twoheart.dailyhotel.network.model.RecommendationGourmet;
-import com.twoheart.dailyhotel.network.model.RecommendationStay;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 /**

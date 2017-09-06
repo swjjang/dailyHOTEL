@@ -31,6 +31,7 @@ import com.daily.dailyhotel.entity.ReviewItem;
 import com.daily.dailyhotel.entity.ReviewQuestionItem;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.User;
+import com.daily.dailyhotel.parcel.analytics.GourmetDetailAnalyticsParam;
 import com.daily.dailyhotel.repository.remote.BookingRemoteImpl;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
 import com.daily.dailyhotel.repository.remote.ProfileRemoteImpl;
@@ -48,7 +49,6 @@ import com.twoheart.dailyhotel.place.base.BaseMenuNavigationFragment;
 import com.twoheart.dailyhotel.screen.booking.detail.PaymentWaitActivity;
 import com.twoheart.dailyhotel.screen.booking.detail.gourmet.GourmetReservationDetailActivity;
 import com.twoheart.dailyhotel.screen.booking.detail.hotel.StayReservationDetailActivity;
-import com.twoheart.dailyhotel.screen.gourmet.detail.GourmetDetailActivity;
 import com.twoheart.dailyhotel.screen.hotel.detail.StayDetailActivity;
 import com.twoheart.dailyhotel.screen.main.MainFragmentManager;
 import com.twoheart.dailyhotel.screen.mydaily.member.LoginActivity;
@@ -835,8 +835,17 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
                         GourmetBookingDay gourmetBookingDay = new GourmetBookingDay();
                         gourmetBookingDay.setVisitDay(mCommonDateTime.dailyDateTime);
 
-                        Intent intent = GourmetDetailActivity.newInstance(getActivity(), gourmetBookingDay//
-                            , booking.placeIndex, false, false, false);
+                        //                        Intent intent = GourmetDetailActivity.newInstance(getActivity(), gourmetBookingDay//
+                        //                            , booking.placeIndex, false, false, false);
+
+                        Intent intent = com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity.newInstance(getActivity() //
+                            , booking.placeIndex, booking.placeName, null, com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity.NONE_PRICE//
+                            , gourmetBookingDay.getVisitDay(DailyCalendar.ISO_8601_FORMAT)//
+                            , null, false, false, false, false//
+                            , com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_NONE//
+                            , new GourmetDetailAnalyticsParam());
+
+
                         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMET_DETAIL);
 
                         AnalyticsManager.getInstance(getContext()).recordEvent(AnalyticsManager.Category.BOOKING_STATUS//
