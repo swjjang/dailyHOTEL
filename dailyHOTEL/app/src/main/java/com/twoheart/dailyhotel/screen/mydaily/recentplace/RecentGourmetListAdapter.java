@@ -162,7 +162,7 @@ public class RecentGourmetListAdapter extends RecentPlacesListAdapter
 
         boolean isLowResource = false;
 
-        if (ScreenUtils.getScreenWidth(mContext) < Sticker.DEFAULT_SCREEN_WIDTH)
+        if (ScreenUtils.getScreenWidth(mContext) <= Sticker.DEFAULT_SCREEN_WIDTH)
         {
             isLowResource = true;
         }
