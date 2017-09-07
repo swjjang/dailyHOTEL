@@ -16,13 +16,13 @@ public class GourmetDetailAnalyticsParam implements Parcelable
 {
     public int price; // 정가
     public int discountPrice; // 표시가
-    public String showOriginalPriceYn = "N"; // stay.price <= 0 || stay.price <= stay.discountPrice ? "N" : "Y"
     public int entryPosition = -1;
     public int totalListCount = -1;
     public boolean isDailyChoice;
 
-    private String addressAreaName; // addressSummary 의 split 이름 stay.addressSummary.split("\\||l|ㅣ|I")  index : 0;
-    private Province province;
+    private String mAddressAreaName; // addressSummary 의 split 이름 stay.addressSummary.split("\\||l|ㅣ|I")  index : 0;
+    private Province mProvince;
+    private String mShowOriginalPriceYn = "N"; // stay.price <= 0 || stay.price <= stay.discountPrice ? "N" : "Y"
 
     public GourmetDetailAnalyticsParam()
     {
@@ -36,46 +36,40 @@ public class GourmetDetailAnalyticsParam implements Parcelable
 
     public void setProvince(Province province)
     {
-        if (province == null)
-        {
-            this.province = null;
-            return;
-        }
-
-        this.province = province;
+        mProvince = province;
     }
 
     public Province getProvince()
     {
-        return province;
+        return mProvince;
     }
 
     public String getProvinceName()
     {
-        if (this.province == null)
+        if (mProvince == null)
         {
             return AnalyticsManager.ValueType.EMPTY;
         }
 
-        if (this.province instanceof Area)
+        if (mProvince instanceof Area)
         {
-            Area area = (Area) this.province;
+            Area area = (Area) mProvince;
             return area.getProvince().name;
         }
 
-        return this.province.name;
+        return mProvince.name;
     }
 
     public String getDistrictName()
     {
-        if (this.province == null)
+        if (mProvince == null)
         {
             return AnalyticsManager.ValueType.EMPTY;
         }
 
-        if (this.province instanceof Area)
+        if (mProvince instanceof Area)
         {
-            Area area = (Area) this.province;
+            Area area = (Area) mProvince;
             String provinceName = area.getProvince().name;
             return DailyTextUtils.isTextEmpty(provinceName) == false ? area.name : AnalyticsManager.ValueType.EMPTY;
         }
@@ -85,28 +79,28 @@ public class GourmetDetailAnalyticsParam implements Parcelable
 
     public String getAddressAreaName()
     {
-        return addressAreaName;
+        return mAddressAreaName;
     }
 
-    private String getAddressAreaName(String addressSummary)
+    public void setAddressAreaName(String addressSummary)
     {
         if (DailyTextUtils.isTextEmpty(addressSummary) == true)
         {
-            return null;
+            return;
         }
 
         String[] addressArray = addressSummary.split("\\||l|ㅣ|I");
-        return addressArray[0].trim();
+        mAddressAreaName = addressArray[0].trim();
     }
 
-    public void setTotalListCount(int listCount)
+    public String getShowOriginalPriceYn()
     {
-        totalListCount = listCount;
+        return mShowOriginalPriceYn;
     }
 
-    private String getShowOriginalPriceYn(int originPrice, int discountPrice)
+    public void setShowOriginalPriceYn(int originPrice, int discountPrice)
     {
-        return originPrice <= 0 || originPrice <= discountPrice ? "N" : "Y";
+        mShowOriginalPriceYn = originPrice <= 0 || originPrice <= discountPrice ? "N" : "Y";
     }
 
     @Override
@@ -118,24 +112,26 @@ public class GourmetDetailAnalyticsParam implements Parcelable
     @Override
     public void writeToParcel(Parcel dest, int flags)
     {
-        dest.writeString(addressAreaName);
+        dest.writeString(mAddressAreaName);
         dest.writeInt(price);
         dest.writeInt(discountPrice);
-        dest.writeString(showOriginalPriceYn);
+        dest.writeString(mShowOriginalPriceYn);
         dest.writeInt(entryPosition);
         dest.writeInt(totalListCount);
         dest.writeInt(isDailyChoice == true ? 1 : 0);
+        dest.writeParcelable(mProvince, flags);
     }
 
     protected void readFromParcel(Parcel in)
     {
-        addressAreaName = in.readString();
+        mAddressAreaName = in.readString();
         price = in.readInt();
         discountPrice = in.readInt();
-        showOriginalPriceYn = in.readString();
+        mShowOriginalPriceYn = in.readString();
         entryPosition = in.readInt();
         totalListCount = in.readInt();
         isDailyChoice = in.readInt() == 1 ? true : false;
+        mProvince = in.readParcelable(Province.class.getClassLoader());
     }
 
     public static final Creator CREATOR = new Creator()

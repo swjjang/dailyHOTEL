@@ -12,6 +12,7 @@ import com.daily.dailyhotel.entity.CampaignTag;
 import com.daily.dailyhotel.entity.RecentlyPlace;
 import com.daily.dailyhotel.parcel.analytics.GourmetDetailAnalyticsParam;
 import com.daily.dailyhotel.screen.home.campaigntag.gourmet.GourmetCampaignTagListActivity;
+import com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity;
 import com.daily.dailyhotel.util.RecentlyPlaceUtil;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Keyword;
@@ -672,19 +673,23 @@ public class GourmetSearchFragment extends PlaceSearchFragment
                 analyticsParam.discountPrice = 0;
             }
 
-            analyticsParam.showOriginalPriceYn = analyticsParam.price <= 0 || analyticsParam.price <= analyticsParam.discountPrice ? "N" : "Y";
+            analyticsParam.setShowOriginalPriceYn(analyticsParam.price, analyticsParam.discountPrice);
             analyticsParam.setProvince(null);
             analyticsParam.entryPosition = -1;
             analyticsParam.totalListCount = -1;
             analyticsParam.isDailyChoice = false;
+            analyticsParam.setAddressAreaName(null);
+
             // <-- 추후에 정리되면 메소드로 수정
 
-            Intent intent = com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity.newInstance(mBaseActivity //
-                , place.index, place.title, place.imageUrl, place.prices.discountPrice//
+            Intent intent = GourmetDetailActivity.newInstance(mBaseActivity //
+                , place.index, place.title, place.imageUrl//
+                , place.prices != null ? place.prices.discountPrice : GourmetDetailActivity.NONE_PRICE//
                 , mGourmetBookingDay.getVisitDay(DailyCalendar.ISO_8601_FORMAT)//
-                , place.details.category, place.isSoldOut, false, false, false//
-                , com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_NONE//
-                , new GourmetDetailAnalyticsParam());
+                , place.details != null ? place.details.category : null//
+                , place.isSoldOut, false, false, false//
+                , GourmetDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_NONE//
+                , analyticsParam);
 
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMET_DETAIL);
 

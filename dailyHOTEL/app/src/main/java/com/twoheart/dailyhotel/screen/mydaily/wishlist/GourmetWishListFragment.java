@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.parcel.analytics.GourmetDetailAnalyticsParam;
 import com.daily.dailyhotel.repository.local.model.AnalyticsParam;
+import com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Gourmet;
@@ -283,6 +284,19 @@ public class GourmetWishListFragment extends PlaceWishListFragment
             PlaceViewItem placeViewItem = mListLayout.getItem(position);
             Gourmet gourmet = placeViewItem.getItem();
 
+            // --> 추후에 정리되면 메소드로 수정
+            GourmetDetailAnalyticsParam analyticsParam = new GourmetDetailAnalyticsParam();
+            analyticsParam.price = gourmet.price;
+            analyticsParam.discountPrice = gourmet.discountPrice;
+            analyticsParam.setShowOriginalPriceYn(analyticsParam.price, analyticsParam.discountPrice);
+            analyticsParam.setProvince(null);
+            analyticsParam.entryPosition = gourmet.entryPosition;
+            analyticsParam.totalListCount = -1;
+            analyticsParam.isDailyChoice = gourmet.isDailyChoice;
+            analyticsParam.setAddressAreaName(gourmet.addressSummary);
+
+            // <-- 추후에 정리되면 메소드로 수정
+
             if (Util.isUsedMultiTransition() == true)
             {
                 mBaseActivity.setExitSharedElementCallback(new SharedElementCallback()
@@ -303,21 +317,16 @@ public class GourmetWishListFragment extends PlaceWishListFragment
                     }
                 });
 
-                AnalyticsParam analyticsParam = new AnalyticsParam();
-                analyticsParam.setParam(mBaseActivity, gourmet);
-                analyticsParam.setProvince(null);
-                analyticsParam.setTotalListCount(-1);
-
                 //                Intent intent = GourmetDetailActivity.newInstance(mBaseActivity //
                 //                    , (GourmetBookingDay) mPlaceBookingDay, gourmet.index, gourmet.name //
                 //                    , gourmet.imageUrl, gourmet.category, gourmet.isSoldOut, analyticsParam, true, PlaceDetailLayout.TRANS_GRADIENT_BOTTOM_TYPE_LIST);
 
-                Intent intent = com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity.newInstance(mBaseActivity //
+                Intent intent = GourmetDetailActivity.newInstance(mBaseActivity //
                     , gourmet.index, gourmet.name, gourmet.imageUrl, gourmet.discountPrice//
                     , ((GourmetBookingDay) mPlaceBookingDay).getVisitDay(DailyCalendar.ISO_8601_FORMAT)//
                     , gourmet.category, gourmet.isSoldOut, false, false, true//
-                    , com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_LIST//
-                    , new GourmetDetailAnalyticsParam());
+                    , GourmetDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_LIST//
+                    , analyticsParam);
 
                 View simpleDraweeView = view.findViewById(R.id.imageView);
                 View nameTextView = view.findViewById(R.id.nameTextView);
@@ -333,21 +342,16 @@ public class GourmetWishListFragment extends PlaceWishListFragment
                 mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMET_DETAIL, options.toBundle());
             } else
             {
-                AnalyticsParam analyticsParam = new AnalyticsParam();
-                analyticsParam.setParam(mBaseActivity, gourmet);
-                analyticsParam.setProvince(null);
-                analyticsParam.setTotalListCount(-1);
-
                 //                Intent intent = GourmetDetailActivity.newInstance(mBaseActivity //
                 //                    , (GourmetBookingDay) mPlaceBookingDay, gourmet.index, gourmet.name //
                 //                    , gourmet.imageUrl, gourmet.category, gourmet.isSoldOut, analyticsParam, false, PlaceDetailLayout.TRANS_GRADIENT_BOTTOM_TYPE_NONE);
 
-                Intent intent = com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity.newInstance(mBaseActivity //
+                Intent intent = GourmetDetailActivity.newInstance(mBaseActivity //
                     , gourmet.index, gourmet.name, gourmet.imageUrl, gourmet.discountPrice//
                     , ((GourmetBookingDay) mPlaceBookingDay).getVisitDay(DailyCalendar.ISO_8601_FORMAT)//
                     , gourmet.category, gourmet.isSoldOut, false, false, false//
-                    , com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_NONE//
-                    , new GourmetDetailAnalyticsParam());
+                    , GourmetDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_NONE//
+                    , analyticsParam);
 
                 mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMET_DETAIL);
 

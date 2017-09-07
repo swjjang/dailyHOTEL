@@ -80,7 +80,7 @@ public class GourmetDetailAnalyticsImpl implements GourmetDetailPresenter.Gourme
             params.put(AnalyticsManager.KeyType.PLACE_COUNT, placeCount);
 
             params.put(AnalyticsManager.KeyType.RATING, Integer.toString(gourmetDetail.ratingValue));
-            params.put(AnalyticsManager.KeyType.IS_SHOW_ORIGINAL_PRICE, mAnalyticsParam.showOriginalPriceYn);
+            params.put(AnalyticsManager.KeyType.IS_SHOW_ORIGINAL_PRICE, mAnalyticsParam.getShowOriginalPriceYn());
             params.put(AnalyticsManager.KeyType.DAILYCHOICE, mAnalyticsParam.isDailyChoice ? "y" : "n");
             params.put(AnalyticsManager.KeyType.LENGTH_OF_STAY, "1");
             params.put(AnalyticsManager.KeyType.NRD, gourmetDetail.getSticker() != null ? "y" : "n");
@@ -453,7 +453,7 @@ public class GourmetDetailAnalyticsImpl implements GourmetDetailPresenter.Gourme
 
             params.put(AnalyticsManager.KeyType.CHECK_IN, gourmetBookDateTime.getVisitDateTime("yyyy-MM-dd"));
             params.put(AnalyticsManager.KeyType.LENGTH_OF_STAY, "1");
-            params.put(AnalyticsManager.KeyType.IS_SHOW_ORIGINAL_PRICE, mAnalyticsParam.showOriginalPriceYn);
+            params.put(AnalyticsManager.KeyType.IS_SHOW_ORIGINAL_PRICE, mAnalyticsParam.getShowOriginalPriceYn());
 
 
             AnalyticsManager.getInstance(activity).recordEvent(//

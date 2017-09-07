@@ -15,6 +15,7 @@ import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.entity.CommonDateTime;
 import com.daily.dailyhotel.entity.RecentlyPlace;
 import com.daily.dailyhotel.parcel.analytics.GourmetDetailAnalyticsParam;
+import com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity;
 import com.daily.dailyhotel.util.RecentlyPlaceUtil;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.twoheart.dailyhotel.R;
@@ -217,11 +218,13 @@ public class RecentGourmetListFragment extends RecentPlacesListFragment
                 analyticsParam.discountPrice = 0;
             }
 
-            analyticsParam.showOriginalPriceYn = analyticsParam.price <= 0 || analyticsParam.price <= analyticsParam.discountPrice ? "N" : "Y";
+            analyticsParam.setShowOriginalPriceYn(analyticsParam.price, analyticsParam.discountPrice);
             analyticsParam.setProvince(null);
             analyticsParam.entryPosition = position + 1;
             analyticsParam.totalListCount = mListLayout.getItemCount();
             analyticsParam.isDailyChoice = false;
+            analyticsParam.setAddressAreaName(recentlyPlace.addrSummary);
+
             // <-- 추후에 정리되면 메소드로 수정
 
             if (Util.isUsedMultiTransition() == true)
@@ -244,11 +247,13 @@ public class RecentGourmetListFragment extends RecentPlacesListFragment
                     }
                 });
 
-                Intent intent = com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity.newInstance(mBaseActivity //
-                    , recentlyPlace.index, recentlyPlace.title, recentlyPlace.imageUrl, recentlyPlace.prices.discountPrice//
+                Intent intent = GourmetDetailActivity.newInstance(mBaseActivity //
+                    , recentlyPlace.index, recentlyPlace.title, recentlyPlace.imageUrl//
+                    , recentlyPlace.prices != null ? recentlyPlace.prices.discountPrice : GourmetDetailActivity.NONE_PRICE//
                     , ((GourmetBookingDay) mPlaceBookingDay).getVisitDay(DailyCalendar.ISO_8601_FORMAT)//
-                    , recentlyPlace.details.category, recentlyPlace.isSoldOut, false, false, true//
-                    , com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_LIST//
+                    , recentlyPlace.details != null ? recentlyPlace.details.category : null//
+                    , recentlyPlace.isSoldOut, false, false, true//
+                    , GourmetDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_LIST//
                     , analyticsParam);
 
                 View simpleDraweeView = view.findViewById(R.id.imageView);
@@ -265,11 +270,13 @@ public class RecentGourmetListFragment extends RecentPlacesListFragment
                 mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMET_DETAIL, options.toBundle());
             } else
             {
-                Intent intent = com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity.newInstance(mBaseActivity //
-                    , recentlyPlace.index, recentlyPlace.title, recentlyPlace.imageUrl, recentlyPlace.prices.discountPrice//
+                Intent intent = GourmetDetailActivity.newInstance(mBaseActivity //
+                    , recentlyPlace.index, recentlyPlace.title, recentlyPlace.imageUrl
+                    , recentlyPlace.prices != null ? recentlyPlace.prices.discountPrice : GourmetDetailActivity.NONE_PRICE//
                     , ((GourmetBookingDay) mPlaceBookingDay).getVisitDay(DailyCalendar.ISO_8601_FORMAT)//
-                    , recentlyPlace.details.category, recentlyPlace.isSoldOut, false, false, false//
-                    , com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_NONE//
+                    , recentlyPlace.details != null ? recentlyPlace.details.category : null//
+                    , recentlyPlace.isSoldOut, false, false, false//
+                    , GourmetDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_NONE//
                     , analyticsParam);
 
                 mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMET_DETAIL);

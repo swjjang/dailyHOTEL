@@ -27,6 +27,7 @@ import com.daily.dailyhotel.parcel.analytics.NavigatorAnalyticsParam;
 import com.daily.dailyhotel.repository.remote.BookingRemoteImpl;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
 import com.daily.dailyhotel.screen.common.dialog.navigator.NavigatorDialogActivity;
+import com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.GourmetBookingDetail;
 import com.twoheart.dailyhotel.model.PlaceBookingDetail;
@@ -695,16 +696,13 @@ public class GourmetReservationDetailActivity extends PlaceReservationDetailActi
 
             try
             {
-                GourmetBookingDay gourmetBookingDay = new GourmetBookingDay();
-                gourmetBookingDay.setVisitDay(mTodayDateTime.dailyDateTime);
-
                 //                Intent intent = GourmetDetailActivity.newInstance(GourmetReservationDetailActivity.this, gourmetBookingDay, mPlaceBookingDetail.placeIndex, false, false, false);
 
-                Intent intent = com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity.newInstance(GourmetReservationDetailActivity.this //
-                    , mPlaceBookingDetail.placeIndex, mPlaceBookingDetail.placeName, null, com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity.NONE_PRICE//
-                    , gourmetBookingDay.getVisitDay(DailyCalendar.ISO_8601_FORMAT)//
+                Intent intent = GourmetDetailActivity.newInstance(GourmetReservationDetailActivity.this //
+                    , mPlaceBookingDetail.placeIndex, mPlaceBookingDetail.placeName, null, GourmetDetailActivity.NONE_PRICE//
+                    , mTodayDateTime.dailyDateTime//
                     , null, false, false, false, false//
-                    , com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_NONE//
+                    , GourmetDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_NONE//
                     , new GourmetDetailAnalyticsParam());
 
                 startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMET_DETAIL);

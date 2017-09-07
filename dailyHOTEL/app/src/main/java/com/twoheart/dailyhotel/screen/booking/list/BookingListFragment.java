@@ -36,6 +36,7 @@ import com.daily.dailyhotel.repository.remote.BookingRemoteImpl;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
 import com.daily.dailyhotel.repository.remote.ProfileRemoteImpl;
 import com.daily.dailyhotel.screen.booking.detail.stay.outbound.StayOutboundBookingDetailActivity;
+import com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.detail.StayOutboundDetailActivity;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
@@ -832,19 +833,15 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
 
                     case GOURMET:
                     {
-                        GourmetBookingDay gourmetBookingDay = new GourmetBookingDay();
-                        gourmetBookingDay.setVisitDay(mCommonDateTime.dailyDateTime);
-
                         //                        Intent intent = GourmetDetailActivity.newInstance(getActivity(), gourmetBookingDay//
                         //                            , booking.placeIndex, false, false, false);
 
-                        Intent intent = com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity.newInstance(getActivity() //
-                            , booking.placeIndex, booking.placeName, null, com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity.NONE_PRICE//
-                            , gourmetBookingDay.getVisitDay(DailyCalendar.ISO_8601_FORMAT)//
+                        Intent intent = GourmetDetailActivity.newInstance(getActivity() //
+                            , booking.placeIndex, booking.placeName, null, GourmetDetailActivity.NONE_PRICE//
+                            , mCommonDateTime.dailyDateTime//
                             , null, false, false, false, false//
-                            , com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_NONE//
+                            , GourmetDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_NONE//
                             , new GourmetDetailAnalyticsParam());
-
 
                         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMET_DETAIL);
 

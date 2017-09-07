@@ -38,6 +38,7 @@ import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
 import com.daily.dailyhotel.repository.remote.GourmetListRemoteImpl;
 import com.daily.dailyhotel.screen.booking.detail.map.GourmetBookingDetailMapActivity;
 import com.daily.dailyhotel.screen.common.dialog.navigator.NavigatorDialogActivity;
+import com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Gourmet;
@@ -924,14 +925,24 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
             long currentDateTime = DailyCalendar.convertStringToDate(mTodayDateTime.currentDateTime).getTime();
             long checkInDateTime = DailyCalendar.convertStringToDate(stayBookingDetail.checkInDate).getTime();
 
-            String visitDay = stayBookingDetail.checkInDate;
+            String visitDateTime = stayBookingDetail.checkInDate;
             if (currentDateTime > checkInDateTime)
             {
-                visitDay = todayDateTime.dailyDateTime;
+                visitDateTime = todayDateTime.dailyDateTime;
             }
 
-            GourmetBookingDay gourmetBookingDay = new GourmetBookingDay();
-            gourmetBookingDay.setVisitDay(visitDay);
+            // --> 추후에 정리되면 메소드로 수정
+            GourmetDetailAnalyticsParam analyticsParam = new GourmetDetailAnalyticsParam();
+            analyticsParam.price = gourmet.price;
+            analyticsParam.discountPrice = gourmet.discountPrice;
+            analyticsParam.setShowOriginalPriceYn(analyticsParam.price, analyticsParam.discountPrice);
+            analyticsParam.setProvince(null);
+            analyticsParam.entryPosition = gourmet.entryPosition;
+            analyticsParam.totalListCount = -1;
+            analyticsParam.isDailyChoice = gourmet.isDailyChoice;
+            analyticsParam.setAddressAreaName(gourmet.addressSummary);
+
+            // <-- 추후에 정리되면 메소드로 수정
 
             if (Util.isUsedMultiTransition() == true)
             {
@@ -953,23 +964,17 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
                     }
                 });
 
-                AnalyticsParam analyticsParam = new AnalyticsParam();
-                analyticsParam.setParam(StayReservationDetailActivity.this, gourmet);
-                analyticsParam.setProvince(null);
-                analyticsParam.setTotalListCount(-1);
-
                 //                Intent intent = GourmetDetailActivity.newInstance(StayReservationDetailActivity.this //
                 //                    , gourmetBookingDay, gourmet.index, gourmet.name //
                 //                    , gourmet.imageUrl, gourmet.category, gourmet.isSoldOut, analyticsParam, true //
                 //                    , PlaceDetailLayout.TRANS_GRADIENT_BOTTOM_TYPE_NONE);
 
 
-                Intent intent = com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity.newInstance(StayReservationDetailActivity.this //
+                Intent intent = GourmetDetailActivity.newInstance(StayReservationDetailActivity.this //
                     , gourmet.index, gourmet.name, gourmet.imageUrl, gourmet.discountPrice//
-                    , gourmetBookingDay.getVisitDay(DailyCalendar.ISO_8601_FORMAT)//
-                    , gourmet.category, gourmet.isSoldOut, false, false, true//
-                    , com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_NONE//
-                    , new GourmetDetailAnalyticsParam());
+                    , visitDateTime, gourmet.category, gourmet.isSoldOut, false, false, true//
+                    , GourmetDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_NONE//
+                    , analyticsParam);
 
                 if (intent == null)
                 {
@@ -989,22 +994,16 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
                 StayReservationDetailActivity.this.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMET_DETAIL, options.toBundle());
             } else
             {
-                AnalyticsParam analyticsParam = new AnalyticsParam();
-                analyticsParam.setParam(StayReservationDetailActivity.this, gourmet);
-                analyticsParam.setProvince(null);
-                analyticsParam.setTotalListCount(-1);
-
                 //                Intent intent = GourmetDetailActivity.newInstance(StayReservationDetailActivity.this //
                 //                    , gourmetBookingDay, gourmet.index, gourmet.name //
                 //                    , gourmet.imageUrl, gourmet.category, gourmet.isSoldOut, analyticsParam, false //
                 //                    , PlaceDetailLayout.TRANS_GRADIENT_BOTTOM_TYPE_NONE);
 
-                Intent intent = com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity.newInstance(StayReservationDetailActivity.this //
+                Intent intent = GourmetDetailActivity.newInstance(StayReservationDetailActivity.this //
                     , gourmet.index, gourmet.name, gourmet.imageUrl, gourmet.discountPrice//
-                    , gourmetBookingDay.getVisitDay(DailyCalendar.ISO_8601_FORMAT)//
-                    , gourmet.category, gourmet.isSoldOut, false, false, false//
-                    , com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_NONE//
-                    , new GourmetDetailAnalyticsParam());
+                    , visitDateTime, gourmet.category, gourmet.isSoldOut, false, false, false//
+                    ,GourmetDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_NONE//
+                    , analyticsParam);
 
                 if (intent == null)
                 {
