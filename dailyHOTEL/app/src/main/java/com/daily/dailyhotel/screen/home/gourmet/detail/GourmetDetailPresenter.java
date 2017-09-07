@@ -90,9 +90,6 @@ import io.reactivex.schedulers.Schedulers;
 public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetailActivity, GourmetDetailViewInterface>//
     implements GourmetDetailView.OnEventListener
 {
-    private static final int DAYS_OF_MAXCOUNT = 90;
-    private static final int NIGHTS_OF_MAXCOUNT = 28;
-
     public static final int STATUS_NONE = 0;
     public static final int STATUS_BOOKING = 1;
     public static final int STATUS_SELECT_MENU = 2;
@@ -135,6 +132,16 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
         GourmetDetailAnalyticsParam getAnalyticsParam();
 
         void onScreen(Activity activity);
+
+        void onEventShareKakaoClick(Activity activity, boolean login, String userType, boolean benefitAlarm//
+            , int gourmetIndex, String gourmetName);
+
+        void onEventShareSmsClick(Activity activity, boolean login, String userType, boolean benefitAlarm//
+            , int gourmetIndex, String gourmetName);
+
+        void onEventDownloadCoupon(Activity activity, String gourmetName);
+
+        void onEventDownloadCouponByLogin(Activity activity, boolean login);
     }
 
     public GourmetDetailPresenter(@NonNull GourmetDetailActivity activity)
@@ -718,6 +725,9 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
                 , mGourmetDetail.getImageInformationList().get(0).url //
                 , mGourmetBookDateTime);
 
+            mAnalytics.onEventShareKakaoClick(getActivity(), DailyHotel.isLogin()//
+                , DailyUserPreference.getInstance(getActivity()).getType()//
+                , DailyUserPreference.getInstance(getActivity()).isBenefitAlarm(), mGourmetDetail.index, mGourmetDetail.name);
         } catch (Exception e)
         {
             getViewInterface().showSimpleDialog(null, getString(R.string.dialog_msg_not_installed_kakaotalk)//
@@ -782,6 +792,10 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
                     Util.sendSms(getActivity(), message + "https://mobile.dailyhotel.co.kr/gourmet/" + mGourmetDetail.index);
                 }
             }));
+
+            mAnalytics.onEventShareSmsClick(getActivity(), DailyHotel.isLogin()//
+                , DailyUserPreference.getInstance(getActivity()).getType()//
+                , DailyUserPreference.getInstance(getActivity()).isBenefitAlarm(), mGourmetDetail.index, mGourmetDetail.name);
         } catch (Exception e)
         {
             unLockAll();
@@ -1038,6 +1052,8 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
             return;
         }
 
+        mAnalytics.onEventDownloadCoupon(getActivity(), mGourmetDetail.name);
+
         if (DailyHotel.isLogin() == false)
         {
             getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.message_detail_please_login), //
@@ -1049,20 +1065,22 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
                     {
                         Intent intent = LoginActivity.newInstance(getActivity(), AnalyticsManager.Screen.DAILYGOURMET_DETAIL);
                         startActivityForResult(intent, GourmetDetailActivity.REQUEST_CODE_LOGIN_IN_BY_COUPON);
+
+                        mAnalytics.onEventDownloadCouponByLogin(getActivity(), true);
                     }
                 }, new View.OnClickListener()
                 {
                     @Override
                     public void onClick(View v)
                     {
-                        //                        AnalyticsManager.getInstance(GourmetDetailActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES, AnalyticsManager.Action.COUPON_LOGIN, AnalyticsManager.Label.CLOSED, null);
+                        mAnalytics.onEventDownloadCouponByLogin(getActivity(), false);
                     }
                 }, new DialogInterface.OnCancelListener()
                 {
                     @Override
                     public void onCancel(DialogInterface dialog)
                     {
-                        //                        AnalyticsManager.getInstance(GourmetDetailActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES, AnalyticsManager.Action.COUPON_LOGIN, AnalyticsManager.Label.CLOSED, null);
+                        mAnalytics.onEventDownloadCouponByLogin(getActivity(), false);
                     }
                 }, new DialogInterface.OnDismissListener()
                 {
