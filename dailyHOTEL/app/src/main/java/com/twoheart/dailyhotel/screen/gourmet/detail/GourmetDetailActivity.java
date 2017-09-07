@@ -20,8 +20,10 @@ import com.daily.dailyhotel.entity.CommonDateTime;
 import com.daily.dailyhotel.entity.DetailImageInformation;
 import com.daily.dailyhotel.entity.GourmetMenu;
 import com.daily.dailyhotel.parcel.analytics.GourmetPaymentAnalyticsParam;
+import com.daily.dailyhotel.parcel.analytics.NavigatorAnalyticsParam;
 import com.daily.dailyhotel.repository.local.model.AnalyticsParam;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
+import com.daily.dailyhotel.screen.common.dialog.navigator.NavigatorDialogActivity;
 import com.daily.dailyhotel.screen.home.gourmet.detail.menus.GourmetMenusActivity;
 import com.daily.dailyhotel.screen.home.gourmet.payment.GourmetPaymentActivity;
 import com.daily.dailyhotel.util.RecentlyPlaceUtil;
@@ -1595,18 +1597,12 @@ public class GourmetDetailActivity extends PlaceDetailActivity
 
             GourmetDetailParams gourmetDetailParams = ((GourmetDetail) mPlaceDetail).getGourmetDetailParams();
 
-            Util.showShareMapDialog(GourmetDetailActivity.this, gourmetDetailParams.name//
-                , gourmetDetailParams.latitude, gourmetDetailParams.longitude, false//
-                , AnalyticsManager.Category.GOURMET_BOOKINGS//
-                , AnalyticsManager.Action.GOURMET_DETAIL_NAVIGATION_APP_CLICKED//
-                , null, new DialogInterface.OnDismissListener()
-                {
-                    @Override
-                    public void onDismiss(DialogInterface dialog)
-                    {
-                        unLockUI();
-                    }
-                });
+            NavigatorAnalyticsParam analyticsParam = new NavigatorAnalyticsParam();
+            analyticsParam.category = AnalyticsManager.Category.GOURMET_BOOKINGS;
+            analyticsParam.action = AnalyticsManager.Action.GOURMET_DETAIL_NAVIGATION_APP_CLICKED;
+
+            startActivityForResult(NavigatorDialogActivity.newInstance(GourmetDetailActivity.this, gourmetDetailParams.name//
+                , gourmetDetailParams.latitude, gourmetDetailParams.longitude, false, analyticsParam), Constants.CODE_REQUEST_ACTIVITY_NAVIGATOR);
         }
 
         @Override

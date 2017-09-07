@@ -23,9 +23,11 @@ import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
 import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.entity.CommonDateTime;
+import com.daily.dailyhotel.parcel.analytics.NavigatorAnalyticsParam;
 import com.daily.dailyhotel.parcel.analytics.StayPaymentAnalyticsParam;
 import com.daily.dailyhotel.repository.local.model.AnalyticsParam;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
+import com.daily.dailyhotel.screen.common.dialog.navigator.NavigatorDialogActivity;
 import com.daily.dailyhotel.screen.home.stay.inbound.payment.StayPaymentActivity;
 import com.daily.dailyhotel.util.RecentlyPlaceUtil;
 import com.facebook.drawee.drawable.ScalingUtils;
@@ -1578,18 +1580,12 @@ public class StayDetailActivity extends PlaceDetailActivity
             StayDetail stayDetail = (StayDetail) mPlaceDetail;
             StayDetailParams stayDetailParams = stayDetail.getStayDetailParams();
 
-            Util.showShareMapDialog(StayDetailActivity.this, stayDetailParams.name//
-                , stayDetailParams.latitude, stayDetailParams.longitude, stayDetailParams.isOverseas//
-                , AnalyticsManager.Category.HOTEL_BOOKINGS//
-                , AnalyticsManager.Action.HOTEL_DETAIL_NAVIGATION_APP_CLICKED//
-                , null, new DialogInterface.OnDismissListener()
-                {
-                    @Override
-                    public void onDismiss(DialogInterface dialog)
-                    {
-                        unLockUI();
-                    }
-                });
+            NavigatorAnalyticsParam analyticsParam = new NavigatorAnalyticsParam();
+            analyticsParam.category = AnalyticsManager.Category.HOTEL_BOOKINGS;
+            analyticsParam.action = AnalyticsManager.Action.HOTEL_DETAIL_NAVIGATION_APP_CLICKED;
+
+            startActivityForResult(NavigatorDialogActivity.newInstance(StayDetailActivity.this, stayDetailParams.name//
+                , stayDetailParams.latitude, stayDetailParams.longitude, stayDetailParams.isOverseas, analyticsParam), Constants.CODE_REQUEST_ACTIVITY_NAVIGATOR);
         }
 
         @Override

@@ -55,7 +55,6 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ActivityStayOutboundDetailDataBinding;
 import com.twoheart.dailyhotel.databinding.DialogConciergeDataBinding;
 import com.twoheart.dailyhotel.databinding.DialogShareDataBinding;
-import com.twoheart.dailyhotel.databinding.DialogStayOutboundMapDataBinding;
 import com.twoheart.dailyhotel.databinding.LayoutStayOutboundDetail02DataBinding;
 import com.twoheart.dailyhotel.databinding.LayoutStayOutboundDetail03DataBinding;
 import com.twoheart.dailyhotel.databinding.LayoutStayOutboundDetail04DataBinding;

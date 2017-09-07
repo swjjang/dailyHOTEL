@@ -23,8 +23,10 @@ import com.daily.base.widget.DailyTextView;
 import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.entity.Booking;
 import com.daily.dailyhotel.parcel.analytics.GourmetDetailAnalyticsParam;
+import com.daily.dailyhotel.parcel.analytics.NavigatorAnalyticsParam;
 import com.daily.dailyhotel.repository.remote.BookingRemoteImpl;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
+import com.daily.dailyhotel.screen.common.dialog.navigator.NavigatorDialogActivity;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.GourmetBookingDetail;
 import com.twoheart.dailyhotel.model.PlaceBookingDetail;
@@ -725,18 +727,12 @@ public class GourmetReservationDetailActivity extends PlaceReservationDetailActi
                 return;
             }
 
-            Util.showShareMapDialog(GourmetReservationDetailActivity.this, mPlaceBookingDetail.placeName//
-                , mPlaceBookingDetail.latitude, mPlaceBookingDetail.longitude, mPlaceBookingDetail.isOverseas//
-                , AnalyticsManager.Category.GOURMET_BOOKINGS//
-                , AnalyticsManager.Action.GOURMET_DETAIL_NAVIGATION_APP_CLICKED//
-                , null, new DialogInterface.OnDismissListener()
-                {
-                    @Override
-                    public void onDismiss(DialogInterface dialog)
-                    {
-                        unLockUI();
-                    }
-                });
+            NavigatorAnalyticsParam analyticsParam = new NavigatorAnalyticsParam();
+            analyticsParam.category = AnalyticsManager.Category.GOURMET_BOOKINGS;
+            analyticsParam.action = AnalyticsManager.Action.GOURMET_DETAIL_NAVIGATION_APP_CLICKED;
+
+            startActivityForResult(NavigatorDialogActivity.newInstance(GourmetReservationDetailActivity.this, mPlaceBookingDetail.placeName//
+                , mPlaceBookingDetail.latitude, mPlaceBookingDetail.longitude, mPlaceBookingDetail.isOverseas, analyticsParam), Constants.CODE_REQUEST_ACTIVITY_NAVIGATOR);
         }
 
         @Override

@@ -1,7 +1,6 @@
 package com.twoheart.dailyhotel.screen.common;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
@@ -16,6 +15,8 @@ import android.widget.Toast;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ScreenUtils;
 import com.daily.base.widget.DailyToast;
+import com.daily.dailyhotel.parcel.analytics.NavigatorAnalyticsParam;
+import com.daily.dailyhotel.screen.common.dialog.navigator.NavigatorDialogActivity;
 import com.daily.dailyhotel.view.DailyToolbarView;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -228,33 +229,27 @@ public class ZoomMapActivity extends BaseActivity
                 {
                     case HOTEL:
                     case HOTEL_BOOKING:
-                        Util.showShareMapDialog(ZoomMapActivity.this, placeName, latitude, longitude, isOverseas//
-                            , AnalyticsManager.Category.HOTEL_BOOKINGS//
-                            , AnalyticsManager.Action.HOTEL_DETAIL_NAVIGATION_APP_CLICKED//
-                            , null, new DialogInterface.OnDismissListener()
-                            {
-                                @Override
-                                public void onDismiss(DialogInterface dialog)
-                                {
-                                    unLockUI();
-                                }
-                            });
+                    {
+                        NavigatorAnalyticsParam analyticsParam = new NavigatorAnalyticsParam();
+                        analyticsParam.category = AnalyticsManager.Category.HOTEL_BOOKINGS;
+                        analyticsParam.action = AnalyticsManager.Action.HOTEL_DETAIL_NAVIGATION_APP_CLICKED;
+
+                        startActivityForResult(NavigatorDialogActivity.newInstance(ZoomMapActivity.this, placeName//
+                            , latitude, longitude, isOverseas, analyticsParam), Constants.CODE_REQUEST_ACTIVITY_NAVIGATOR);
                         break;
+                    }
 
                     case GOURMET:
                     case GOURMET_BOOKING:
-                        Util.showShareMapDialog(ZoomMapActivity.this, placeName, latitude, longitude, isOverseas//
-                            , AnalyticsManager.Category.GOURMET_BOOKINGS//
-                            , AnalyticsManager.Action.GOURMET_DETAIL_NAVIGATION_APP_CLICKED//
-                            , null, new DialogInterface.OnDismissListener()
-                            {
-                                @Override
-                                public void onDismiss(DialogInterface dialog)
-                                {
-                                    unLockUI();
-                                }
-                            });
+                    {
+                        NavigatorAnalyticsParam analyticsParam = new NavigatorAnalyticsParam();
+                        analyticsParam.category = AnalyticsManager.Category.GOURMET_BOOKINGS;
+                        analyticsParam.action = AnalyticsManager.Action.GOURMET_DETAIL_NAVIGATION_APP_CLICKED;
+
+                        startActivityForResult(NavigatorDialogActivity.newInstance(ZoomMapActivity.this, placeName//
+                            , latitude, longitude, isOverseas, analyticsParam), Constants.CODE_REQUEST_ACTIVITY_NAVIGATOR);
                         break;
+                    }
                 }
             }
         });

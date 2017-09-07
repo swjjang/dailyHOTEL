@@ -68,9 +68,9 @@ public class NavigatorDialogView extends BaseDialogView<NavigatorDialogView.OnEv
             @Override
             public void onClick(View v)
             {
-                hideSimpleDialog();
-
                 getEventListener().onKakaoMapClick();
+
+                hideSimpleDialog();
             }
         });
 
@@ -79,9 +79,9 @@ public class NavigatorDialogView extends BaseDialogView<NavigatorDialogView.OnEv
             @Override
             public void onClick(View v)
             {
-                hideSimpleDialog();
-
                 getEventListener().onNaverMapClick();
+
+                hideSimpleDialog();
             }
         });
 
@@ -90,9 +90,9 @@ public class NavigatorDialogView extends BaseDialogView<NavigatorDialogView.OnEv
             @Override
             public void onClick(View v)
             {
-                hideSimpleDialog();
-
                 getEventListener().onGoogleMapClick();
+
+                hideSimpleDialog();
             }
         });
 
@@ -101,9 +101,9 @@ public class NavigatorDialogView extends BaseDialogView<NavigatorDialogView.OnEv
             @Override
             public void onClick(View v)
             {
-                hideSimpleDialog();
-
                 getEventListener().onTMapMapClick();
+
+                hideSimpleDialog();
             }
         });
 
@@ -112,9 +112,9 @@ public class NavigatorDialogView extends BaseDialogView<NavigatorDialogView.OnEv
             @Override
             public void onClick(View v)
             {
-                hideSimpleDialog();
-
                 getEventListener().onKakaoNaviClick();
+
+                hideSimpleDialog();
             }
         });
 

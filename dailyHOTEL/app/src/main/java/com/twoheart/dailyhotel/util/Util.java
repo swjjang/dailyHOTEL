@@ -6,7 +6,6 @@ import android.app.Dialog;
 import android.app.PendingIntent;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
@@ -14,9 +13,7 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.content.res.Configuration;
 import android.content.res.Resources;
-import android.databinding.DataBindingUtil;
 import android.graphics.Bitmap.Config;
-import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -54,12 +51,10 @@ import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.LauncherActivity;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.Setting;
-import com.twoheart.dailyhotel.databinding.DialogStayOutboundMapDataBinding;
 import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.Notice;
 import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
-import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import net.simonvt.numberpicker.NumberPicker;
 
@@ -1012,219 +1007,6 @@ public class Util implements Constants
             dialog.setContentView(dialogView);
 
             WindowManager.LayoutParams layoutParams = ScreenUtils.getDialogWidthLayoutParams(activity, dialog);
-
-            dialog.show();
-
-            dialog.getWindow().setAttributes(layoutParams);
-        } catch (Exception e)
-        {
-            ExLog.d(e.toString());
-        }
-    }
-
-    public static void showShareMapDialog(final Activity baseActivity, final String placeName//
-        , final double latitude, final double longitude, boolean isOverseas//
-        , final String gaCategory, final String gaAction, final String gaLabel//
-        , DialogInterface.OnDismissListener onDismissListener)
-    {
-        if (baseActivity == null || baseActivity.isFinishing() == true)
-        {
-            return;
-        }
-
-        View dialogView;
-        final Dialog dialog = new Dialog(baseActivity);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        dialog.setCanceledOnTouchOutside(true);
-
-        LayoutInflater layoutInflater = (LayoutInflater) baseActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
-        if (isOverseas == false)
-        {
-            dialogView = layoutInflater.inflate(R.layout.view_searchmap_dialog_layout01, null, false);
-
-            // 버튼
-            View kakaoMapLayoutLayout = dialogView.findViewById(R.id.kakaoMapLayout);
-            View naverMapLayout = dialogView.findViewById(R.id.naverMapLayout);
-            View googleMapLayout = dialogView.findViewById(R.id.googleMapLayout);
-            TextView tmapNaviLayout = (TextView) dialogView.findViewById(R.id.tmapNaviLayout);
-            View kakaoNaviLayout = dialogView.findViewById(R.id.kakaoNaviLayout);
-
-            int tmapIconResId;
-            if (isSktNetwork(baseActivity) == true)
-            {
-                tmapIconResId = R.drawable.ic_tmap_red;
-            } else
-            {
-                tmapIconResId = R.drawable.ic_tmap_green;
-            }
-
-            tmapNaviLayout.setCompoundDrawablesWithIntrinsicBounds(0, tmapIconResId, 0, 0);
-
-            kakaoMapLayoutLayout.setOnClickListener(new View.OnClickListener()
-            {
-                @Override
-                public void onClick(View v)
-                {
-                    if (dialog.isShowing() == true)
-                    {
-                        dialog.dismiss();
-                    }
-
-                    Util.shareDaumMap(baseActivity, Double.toString(latitude), Double.toString(longitude));
-
-                    if (DailyTextUtils.isTextEmpty(gaCategory) == false)
-                    {
-                        if (DailyTextUtils.isTextEmpty(gaLabel) == true)
-                        {
-                            AnalyticsManager.getInstance(baseActivity).recordEvent(gaCategory, gaAction, "Daum", null);
-                        } else
-                        {
-                            AnalyticsManager.getInstance(baseActivity).recordEvent(gaCategory, gaAction, "Daum-" + gaLabel, null);
-                        }
-                    }
-                }
-            });
-
-            naverMapLayout.setOnClickListener(new View.OnClickListener()
-            {
-                @Override
-                public void onClick(View v)
-                {
-                    if (dialog.isShowing() == true)
-                    {
-                        dialog.dismiss();
-                    }
-
-                    Util.shareNaverMap(baseActivity, placeName, Double.toString(latitude), Double.toString(longitude));
-
-                    if (DailyTextUtils.isTextEmpty(gaCategory) == false)
-                    {
-                        if (DailyTextUtils.isTextEmpty(gaLabel) == true)
-                        {
-                            AnalyticsManager.getInstance(baseActivity).recordEvent(gaCategory, gaAction, "Naver", null);
-                        } else
-                        {
-                            AnalyticsManager.getInstance(baseActivity).recordEvent(gaCategory, gaAction, "Naver-" + gaLabel, null);
-                        }
-                    }
-                }
-            });
-
-            googleMapLayout.setOnClickListener(new View.OnClickListener()
-            {
-                @Override
-                public void onClick(View v)
-                {
-                    if (dialog.isShowing() == true)
-                    {
-                        dialog.dismiss();
-                    }
-
-                    Util.shareGoogleMap(baseActivity, placeName, Double.toString(latitude), Double.toString(longitude));
-
-                    if (DailyTextUtils.isTextEmpty(gaCategory) == false)
-                    {
-                        if (DailyTextUtils.isTextEmpty(gaLabel) == true)
-                        {
-                            AnalyticsManager.getInstance(baseActivity).recordEvent(gaCategory, gaAction, "Google", null);
-                        } else
-                        {
-                            AnalyticsManager.getInstance(baseActivity).recordEvent(gaCategory, gaAction, "Google-" + gaLabel, null);
-                        }
-                    }
-                }
-            });
-
-            tmapNaviLayout.setOnClickListener(new View.OnClickListener()
-            {
-                @Override
-                public void onClick(View v)
-                {
-                    if (dialog.isShowing() == true)
-                    {
-                        dialog.dismiss();
-                    }
-
-                    Util.shareTMapNavi(baseActivity, placeName, (float) latitude, (float) longitude);
-
-                    if (DailyTextUtils.isTextEmpty(gaCategory) == false)
-                    {
-                        if (DailyTextUtils.isTextEmpty(gaLabel) == true)
-                        {
-                            AnalyticsManager.getInstance(baseActivity).recordEvent(gaCategory, gaAction, "TmapNavi", null);
-                        } else
-                        {
-                            AnalyticsManager.getInstance(baseActivity).recordEvent(gaCategory, gaAction, "TmapNavi-" + gaLabel, null);
-                        }
-                    }
-                }
-            });
-
-            kakaoNaviLayout.setOnClickListener(new View.OnClickListener()
-            {
-                @Override
-                public void onClick(View v)
-                {
-                    if (dialog.isShowing() == true)
-                    {
-                        dialog.dismiss();
-                    }
-
-                    Util.shareKakaoNavi(baseActivity, placeName, Double.toString(latitude), Double.toString(longitude));
-
-                    if (DailyTextUtils.isTextEmpty(gaCategory) == false)
-                    {
-                        if (DailyTextUtils.isTextEmpty(gaLabel) == true)
-                        {
-                            AnalyticsManager.getInstance(baseActivity).recordEvent(gaCategory, gaAction, "kakaoNavi", null);
-                        } else
-                        {
-                            AnalyticsManager.getInstance(baseActivity).recordEvent(gaCategory, gaAction, "kakaoNavi-" + gaLabel, null);
-                        }
-                    }
-                }
-            });
-        } else
-        {
-            DialogStayOutboundMapDataBinding dataBinding = DataBindingUtil.inflate(layoutInflater, R.layout.dialog_navigator_outbound_data, null, false);
-
-            dialogView = dataBinding.getRoot();
-
-            dataBinding.googleMapTextView.setOnClickListener(new View.OnClickListener()
-            {
-                @Override
-                public void onClick(View v)
-                {
-                    if (dialog.isShowing() == true)
-                    {
-                        dialog.dismiss();
-                    }
-
-                    Util.shareGoogleMap(baseActivity, placeName, Double.toString(latitude), Double.toString(longitude));
-
-                    if (DailyTextUtils.isTextEmpty(gaCategory) == false)
-                    {
-                        if (DailyTextUtils.isTextEmpty(gaLabel) == true)
-                        {
-                            AnalyticsManager.getInstance(baseActivity).recordEvent(gaCategory, gaAction, "Google", null);
-                        } else
-                        {
-                            AnalyticsManager.getInstance(baseActivity).recordEvent(gaCategory, gaAction, "Google-" + gaLabel, null);
-                        }
-                    }
-                }
-            });
-        }
-
-        dialog.setOnDismissListener(onDismissListener);
-
-        try
-        {
-            dialog.setContentView(dialogView);
-
-            WindowManager.LayoutParams layoutParams = ScreenUtils.getDialogWidthLayoutParams(baseActivity, dialog);
 
             dialog.show();
 

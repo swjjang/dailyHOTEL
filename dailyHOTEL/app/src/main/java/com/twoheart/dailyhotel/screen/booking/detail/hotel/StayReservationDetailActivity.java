@@ -31,11 +31,13 @@ import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.entity.Booking;
 import com.daily.dailyhotel.entity.CarouselListItem;
 import com.daily.dailyhotel.parcel.analytics.GourmetDetailAnalyticsParam;
+import com.daily.dailyhotel.parcel.analytics.NavigatorAnalyticsParam;
 import com.daily.dailyhotel.repository.local.model.AnalyticsParam;
 import com.daily.dailyhotel.repository.remote.BookingRemoteImpl;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
 import com.daily.dailyhotel.repository.remote.GourmetListRemoteImpl;
 import com.daily.dailyhotel.screen.booking.detail.map.GourmetBookingDetailMapActivity;
+import com.daily.dailyhotel.screen.common.dialog.navigator.NavigatorDialogActivity;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Gourmet;
@@ -1286,18 +1288,12 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
                 return;
             }
 
-            Util.showShareMapDialog(StayReservationDetailActivity.this, mPlaceBookingDetail.placeName//
-                , mPlaceBookingDetail.latitude, mPlaceBookingDetail.longitude, mPlaceBookingDetail.isOverseas//
-                , AnalyticsManager.Category.HOTEL_BOOKINGS//
-                , AnalyticsManager.Action.HOTEL_DETAIL_NAVIGATION_APP_CLICKED//
-                , null, new DialogInterface.OnDismissListener()
-                {
-                    @Override
-                    public void onDismiss(DialogInterface dialog)
-                    {
-                        unLockUI();
-                    }
-                });
+            NavigatorAnalyticsParam analyticsParam = new NavigatorAnalyticsParam();
+            analyticsParam.category = AnalyticsManager.Category.HOTEL_BOOKINGS;
+            analyticsParam.action = AnalyticsManager.Action.HOTEL_DETAIL_NAVIGATION_APP_CLICKED;
+
+            startActivityForResult(NavigatorDialogActivity.newInstance(StayReservationDetailActivity.this, mPlaceBookingDetail.placeName//
+                , mPlaceBookingDetail.latitude, mPlaceBookingDetail.longitude, mPlaceBookingDetail.isOverseas, analyticsParam), Constants.CODE_REQUEST_ACTIVITY_NAVIGATOR);
         }
 
         @Override
