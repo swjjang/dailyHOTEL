@@ -1188,7 +1188,7 @@ public class Util implements Constants
             });
         } else
         {
-            DialogStayOutboundMapDataBinding dataBinding = DataBindingUtil.inflate(layoutInflater, R.layout.dialog_stay_outbound_map_data, null, false);
+            DialogStayOutboundMapDataBinding dataBinding = DataBindingUtil.inflate(layoutInflater, R.layout.dialog_navigator_outbound_data, null, false);
 
             dialogView = dataBinding.getRoot();
 

@@ -130,8 +130,6 @@ public class StayOutboundDetailView extends BaseDialogView<StayOutboundDetailVie
 
         void onConciergeCallClick();
 
-        void onShareMapClick();
-
         void onRoomClick(StayOutboundRoom stayOutboundRoom);
     }
 
@@ -825,25 +823,6 @@ public class StayOutboundDetailView extends BaseDialogView<StayOutboundDetailVie
             public void onClick(View v)
             {
                 hideSimpleDialog();
-            }
-        });
-
-        showSimpleDialog(dataBinding.getRoot(), null, listener, true);
-    }
-
-    @Override
-    public void showNavigatorDialog(Dialog.OnDismissListener listener)
-    {
-        DialogStayOutboundMapDataBinding dataBinding = DataBindingUtil.inflate(LayoutInflater.from(getContext()), R.layout.dialog_stay_outbound_map_data, null, false);
-
-        dataBinding.googleMapTextView.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                hideSimpleDialog();
-
-                getEventListener().onShareMapClick();
             }
         });
 

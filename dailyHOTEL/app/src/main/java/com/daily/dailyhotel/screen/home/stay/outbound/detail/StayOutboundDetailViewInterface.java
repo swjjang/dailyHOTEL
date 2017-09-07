@@ -33,8 +33,6 @@ public interface StayOutboundDetailViewInterface extends BaseDialogViewInterface
 
     void showConciergeDialog(Dialog.OnDismissListener listener);
 
-    void showNavigatorDialog(Dialog.OnDismissListener listener);
-
     void showShareDialog(Dialog.OnDismissListener listener);
 
     void scrollTop();

@@ -28,11 +28,13 @@ import com.daily.dailyhotel.entity.User;
 import com.daily.dailyhotel.entity.WishResult;
 import com.daily.dailyhotel.parcel.analytics.GourmetDetailAnalyticsParam;
 import com.daily.dailyhotel.parcel.analytics.GourmetPaymentAnalyticsParam;
+import com.daily.dailyhotel.parcel.analytics.NavigatorAnalyticsParam;
 import com.daily.dailyhotel.repository.remote.CalendarImpl;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
 import com.daily.dailyhotel.repository.remote.GourmetRemoteImpl;
 import com.daily.dailyhotel.repository.remote.ProfileRemoteImpl;
-import com.daily.dailyhotel.screen.common.call.CallDialogActivity;
+import com.daily.dailyhotel.screen.common.dialog.call.CallDialogActivity;
+import com.daily.dailyhotel.screen.common.dialog.navigator.NavigatorDialogActivity;
 import com.daily.dailyhotel.screen.common.images.ImageListActivity;
 import com.daily.dailyhotel.screen.home.gourmet.detail.menus.GourmetMenusActivity;
 import com.daily.dailyhotel.screen.home.gourmet.payment.GourmetPaymentActivity;
@@ -891,19 +893,17 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
     @Override
     public void onNavigatorClick()
     {
-        if (getActivity().isFinishing() == true || lock() == true)
+        if (mGourmetDetail == null || lock() == true)
         {
             return;
         }
 
-        getViewInterface().showNavigatorDialog(new DialogInterface.OnDismissListener()
-        {
-            @Override
-            public void onDismiss(DialogInterface dialog)
-            {
-                unLockAll();
-            }
-        });
+        NavigatorAnalyticsParam analyticsParam = new NavigatorAnalyticsParam();
+        analyticsParam.category = AnalyticsManager.Category.GOURMET_BOOKINGS;
+        analyticsParam.action = AnalyticsManager.Action.GOURMET_DETAIL_NAVIGATION_APP_CLICKED;
+
+        startActivityForResult(NavigatorDialogActivity.newInstance(getActivity(), mGourmetDetail.name//
+            , mGourmetDetail.latitude, mGourmetDetail.longitude, false, analyticsParam), GourmetDetailActivity.REQUEST_CODE_NAVIGATOR);
     }
 
     @Override
@@ -976,28 +976,6 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
     public void onConciergeCallClick()
     {
         startActivityForResult(CallDialogActivity.newInstance(getActivity()), GourmetDetailActivity.REQUEST_CODE_CALL);
-    }
-
-    @Override
-    public void onShareMapClick()
-    {
-        if (mGourmetDetail == null || lock() == true)
-        {
-            return;
-        }
-
-        Util.showShareMapDialog(getActivity(), mGourmetDetail.name//
-            , mGourmetDetail.latitude, mGourmetDetail.longitude, false//
-            , AnalyticsManager.Category.GOURMET_BOOKINGS//
-            , AnalyticsManager.Action.GOURMET_DETAIL_NAVIGATION_APP_CLICKED//
-            , null, new DialogInterface.OnDismissListener()
-            {
-                @Override
-                public void onDismiss(DialogInterface dialog)
-                {
-                    unLockAll();
-                }
-            });
     }
 
     @Override

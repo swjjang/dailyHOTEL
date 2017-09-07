@@ -19,8 +19,6 @@ public interface StayOutboundBookingDetailInterface extends BaseDialogViewInterf
 
     void setBookingDate(SpannableString checkInDate, SpannableString checkOutDate, int nights);
 
-    void showNavigatorDialog(Dialog.OnDismissListener listener);
-
     void showConciergeDialog(Dialog.OnDismissListener listener);
 
     void showRefundCallDialog(Dialog.OnDismissListener listener);

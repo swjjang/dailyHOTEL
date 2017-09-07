@@ -59,7 +59,6 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ActivityGourmetDetailDataBinding;
 import com.twoheart.dailyhotel.databinding.DialogConciergeDataBinding;
 import com.twoheart.dailyhotel.databinding.DialogShareDataBinding;
-import com.twoheart.dailyhotel.databinding.DialogStayOutboundMapDataBinding;
 import com.twoheart.dailyhotel.databinding.LayoutGourmetDetailAmenitiesDataBinding;
 import com.twoheart.dailyhotel.databinding.LayoutGourmetDetailBenefitContentBinding;
 import com.twoheart.dailyhotel.databinding.LayoutGourmetDetailBenefitDataBinding;
@@ -132,8 +131,6 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
         void onConciergeHappyTalkClick();
 
         void onConciergeCallClick();
-
-        void onShareMapClick();
 
         void onTrueReviewClick();
 
@@ -580,25 +577,6 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
             public void onClick(View v)
             {
                 hideSimpleDialog();
-            }
-        });
-
-        showSimpleDialog(dataBinding.getRoot(), null, listener, true);
-    }
-
-    @Override
-    public void showNavigatorDialog(Dialog.OnDismissListener listener)
-    {
-        DialogStayOutboundMapDataBinding dataBinding = DataBindingUtil.inflate(LayoutInflater.from(getContext()), R.layout.dialog_stay_outbound_map_data, null, false);
-
-        dataBinding.googleMapTextView.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                hideSimpleDialog();
-
-                getEventListener().onShareMapClick();
             }
         });
 

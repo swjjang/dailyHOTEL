@@ -732,7 +732,14 @@
             android:theme="@style/Theme.AppCompat.Translucent"/>
 
         <activity
-            android:name="com.daily.dailyhotel.screen.common.call.CallDialogActivity"
+            android:name="com.daily.dailyhotel.screen.common.dialog.call.CallDialogActivity"
+            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/TransDialog"/>
+
+        <activity
+            android:name="com.daily.dailyhotel.screen.common.dialog.navigator.NavigatorDialogActivity"
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"

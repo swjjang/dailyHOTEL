@@ -22,7 +22,7 @@ import com.daily.dailyhotel.parcel.analytics.GourmetDetailAnalyticsParam;
 import com.daily.dailyhotel.repository.local.model.AnalyticsParam;
 import com.daily.dailyhotel.repository.remote.CampaignTagRemoteImpl;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
-import com.daily.dailyhotel.screen.common.call.CallDialogActivity;
+import com.daily.dailyhotel.screen.common.dialog.call.CallDialogActivity;
 import com.daily.dailyhotel.screen.home.campaigntag.CampaignTagListAnalyticsImpl;
 import com.daily.dailyhotel.screen.home.campaigntag.CampaignTagListAnalyticsInterface;
 import com.facebook.drawee.view.SimpleDraweeView;
