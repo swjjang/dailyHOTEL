@@ -65,7 +65,7 @@ public class RecentlyRemoteImpl implements RecentlyInterface
             @Override
             public StayOutbounds apply(@NonNull BaseDto<StayOutboundsData> stayOutboundsDataBaseDto) throws Exception
             {
-                StayOutbounds stayOutbounds = null;
+                StayOutbounds stayOutbounds;
 
                 if (stayOutboundsDataBaseDto != null)
                 {

@@ -492,12 +492,11 @@ public class StayCategoryNearByActivity extends BaseActivity
             return;
         }
 
-        Location location = null;
         double radius = DEFAULT_SEARCH_RADIUS;
 
         mStayCategoryNearByCuration = new StayCategoryNearByCuration();
 
-        location = intent.getParcelableExtra(INTENT_EXTRA_DATA_LOCATION);
+        Location location = intent.getParcelableExtra(INTENT_EXTRA_DATA_LOCATION);
 
         if (intent.hasExtra(INTENT_EXTRA_DATA_CALL_BY_SCREEN) == true)
         {

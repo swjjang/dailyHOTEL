@@ -72,7 +72,6 @@ public class AppResearch
                 List<String> findList = new ArrayList<>();
 
                 PackageManager packageManager = mContext.getPackageManager();
-                int size = androidAppProcessList.size();
                 for (AndroidAppProcess androidAppProcess : androidAppProcessList)
                 {
                     for (String packageName : WATCH_LIST)
@@ -155,7 +154,6 @@ public class AppResearch
                 List<String> findList = new ArrayList<>();
 
                 PackageManager packageManager = mContext.getPackageManager();
-                int size = androidAppProcessList.size();
                 for (AndroidAppProcess androidAppProcess : androidAppProcessList)
                 {
                     for (String packageName : WATCH_LIST)

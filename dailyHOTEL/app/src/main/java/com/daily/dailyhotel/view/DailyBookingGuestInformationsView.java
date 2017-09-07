@@ -155,8 +155,6 @@ public class DailyBookingGuestInformationsView extends ConstraintLayout
             return null;
         }
 
-        int size = mInformationTypeList.size();
-
         for (Pair<InformationType, ViewDataBinding> pair : mInformationTypeList)
         {
             if (pair.first == informationType)

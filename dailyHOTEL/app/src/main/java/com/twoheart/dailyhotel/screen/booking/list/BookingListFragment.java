@@ -412,9 +412,7 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
 
                     bookingList.addAll(stayOutboundBookingList);
 
-                    List<Booking> sortBookingList = null;
-
-                    sortBookingList = new ArrayList<>();
+                    List<Booking> sortBookingList = new ArrayList<>();
                     sortBookingList.addAll(getBookingSortList(bookingList));
 
                     return sortBookingList;
@@ -1010,7 +1008,7 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
 
                 if (internalDeepLink.isBookingDetailView() == true)
                 {
-                    Booking.PlaceType placeType = null;
+                    Booking.PlaceType placeType;
 
                     switch (internalDeepLink.getPlaceType())
                     {
@@ -1051,7 +1049,7 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
 
                 if (externalDeepLink.isBookingDetailView() == true)
                 {
-                    Booking.PlaceType placeType = null;
+                    Booking.PlaceType placeType;
 
                     switch (externalDeepLink.getPlaceType())
                     {

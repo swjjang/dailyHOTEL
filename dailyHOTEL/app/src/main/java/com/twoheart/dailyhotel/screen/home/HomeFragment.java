@@ -1846,7 +1846,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
                 return;
             }
 
-            int index = -1;
+            int index;
             if (CarouselListItem.TYPE_OB_STAY == item.mType)
             {
                 // stayOutbound

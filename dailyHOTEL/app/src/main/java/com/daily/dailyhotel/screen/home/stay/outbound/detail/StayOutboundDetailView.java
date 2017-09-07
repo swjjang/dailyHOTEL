@@ -1461,17 +1461,6 @@ public class StayOutboundDetailView extends BaseDialogView<StayOutboundDetailVie
             return;
         }
 
-        final int nights;
-
-        try
-        {
-            nights = stayBookDateTime.getNights();
-        } catch (Exception e)
-        {
-            ExLog.e(e.toString());
-            return;
-        }
-
         // 처음 세팅하는 경우 객실 타입 세팅
         if (mRoomTypeListAdapter == null)
         {

@@ -41,7 +41,7 @@ public class GourmetListRemoteImpl implements GourmetListInterface
                 @Override
                 public List<Gourmet> apply(@NonNull BaseDto<GourmetListData> gourmetListDataBaseDto) throws Exception
                 {
-                    List<Gourmet> gourmetList = null;
+                    List<Gourmet> gourmetList;
 
                     if (gourmetListDataBaseDto != null)
                     {

@@ -245,7 +245,7 @@ public class StayOutboundRefundView extends BaseDialogView<StayOutboundRefundVie
         final String OTH = "OTH";
         DailyTextView dailyTextView;
         DailyTextView selectedDailyTextView = null;
-        LayoutStayOutboundRefundCancelReasonEtcDataBinding othDataBinding = null;
+        LayoutStayOutboundRefundCancelReasonEtcDataBinding othDataBinding;
 
         for (Pair<String, String> reason : cancelList)
         {

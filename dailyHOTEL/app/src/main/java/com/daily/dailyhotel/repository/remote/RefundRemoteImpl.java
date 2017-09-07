@@ -35,7 +35,7 @@ public class RefundRemoteImpl implements RefundInterface
             @Override
             public StayOutboundRefundDetail apply(@io.reactivex.annotations.NonNull BaseDto<StayOutboundRefundDetailData> stayOutboundRefundDetailDataBaseDto) throws Exception
             {
-                StayOutboundRefundDetail stayOutboundRefundDetail = null;
+                StayOutboundRefundDetail stayOutboundRefundDetail;
 
                 if (stayOutboundRefundDetailDataBaseDto != null)
                 {
@@ -64,7 +64,7 @@ public class RefundRemoteImpl implements RefundInterface
             @Override
             public String apply(@io.reactivex.annotations.NonNull BaseDto<StayOutboundRefundData> stayOutboundRefundDataBaseDto) throws Exception
             {
-                String message = null;
+                String message;
 
                 if (stayOutboundRefundDataBaseDto != null)
                 {
@@ -106,7 +106,7 @@ public class RefundRemoteImpl implements RefundInterface
             @Override
             public String apply(@io.reactivex.annotations.NonNull BaseDto<Object> baseDto) throws Exception
             {
-                String message = new String();
+                String message;
 
                 if (baseDto != null)
                 {
@@ -152,7 +152,7 @@ public class RefundRemoteImpl implements RefundInterface
             @Override
             public String apply(@io.reactivex.annotations.NonNull BaseDto<Object> baseDto) throws Exception
             {
-                String message = new String();
+                String message;
 
                 if (baseDto != null)
                 {

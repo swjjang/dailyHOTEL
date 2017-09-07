@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:dailyFont="http://schemas.android.com/apk/res-auto">
+        xmlns:dailyFont="http://schemas.android.com/apk/res-auto">
 
     <ScrollView
         android:id="@+id/emptyLayout"
@@ -21,7 +20,7 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_weight="1"
                 android:minHeight="110dp"
-                android:scaleType="fitEnd" />
+                android:scaleType="fitEnd"/>
 
             <LinearLayout
                 android:id="@+id/textLayout"
@@ -38,7 +37,7 @@
                     android:text="@string/label_searchresult_empty"
                     android:textColor="@color/default_text_c323232"
                     android:textSize="18dp"
-                    dailyFont:style="Medium" />
+                    dailyFont:style="Medium"/>
 
                 <com.daily.base.widget.DailyTextView
                     android:id="@+id/messageTextView02"
@@ -48,7 +47,7 @@
                     android:gravity="center"
                     android:text="@string/label_searchresult_text01"
                     android:textColor="@color/default_text_c929292"
-                    android:textSize="14dp" />
+                    android:textSize="14dp"/>
             </LinearLayout>
 
             <com.daily.base.widget.DailyTextView
@@ -62,7 +61,7 @@
                 android:text="@string/label_searchresult_change_date"
                 android:textColor="@color/white"
                 android:textSize="14dp"
-                dailyFont:style="Medium" />
+                dailyFont:style="Medium"/>
 
             <com.daily.base.widget.DailyTextView
                 android:id="@+id/researchView"
@@ -75,7 +74,7 @@
                 android:text="@string/label_searchresult_research"
                 android:textColor="@color/white"
                 android:textSize="14dp"
-                dailyFont:style="Medium" />
+                dailyFont:style="Medium"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -93,7 +92,7 @@
                     android:gravity="center_horizontal"
                     android:text="@string/label_searchresult_text02"
                     android:textColor="@color/default_text_cc5c5c5"
-                    android:textSize="12dp" />
+                    android:textSize="12dp"/>
 
                 <com.daily.base.widget.DailyTextView
                     android:id="@+id/callTextView"
@@ -104,7 +103,7 @@
                     android:paddingBottom="15dp"
                     android:text="@string/label_searchresult_call_customercenter"
                     android:textColor="@color/default_text_c323232"
-                    android:textSize="12dp" />
+                    android:textSize="12dp"/>
             </LinearLayout>
         </LinearLayout>
     </ScrollView>

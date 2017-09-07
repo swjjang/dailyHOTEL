@@ -619,7 +619,6 @@ public class PlaceReviewLayout extends BaseLayout
 
                     String text = placeReview.comment.substring(lineStartIndex, lineEndIndex);
 
-                    int length = text.length();
                     float moreReadWidth = paint.measureText(expandText);
 
                     int count = paint.breakText(text, true, textViewWidth - moreReadWidth, null);
@@ -694,8 +693,6 @@ public class PlaceReviewLayout extends BaseLayout
                 reviewViewHolder.reviewReplayTextView.setText(reviewReply.reply);
                 reviewViewHolder.reviewReplayTextView.setTag(reviewReply.reply);
 
-                Paint replyPaint = reviewViewHolder.reviewReplayTextView.getPaint();
-
                 if (reviewReply.isMore == true)
                 {
                     reviewViewHolder.reviewReplayTextView.setText((String) reviewViewHolder.reviewReplayTextView.getTag());
@@ -717,13 +714,11 @@ public class PlaceReviewLayout extends BaseLayout
 
                         final String expandText = "...  더 읽어보기";
 
-                        StaticLayout layout = (StaticLayout) reviewViewHolder.reviewReplayTextView.getLayout();
                         int lineStartIndex = reviewViewHolder.reviewReplayTextView.getLayout().getLineStart(MAX_LINE - 1);
                         int lineEndIndex = reviewViewHolder.reviewReplayTextView.getLayout().getLineEnd(MAX_LINE - 1);
 
                         String text = reviewReply.reply.substring(lineStartIndex, lineEndIndex);
 
-                        int length = text.length();
                         float moreReadWidth = paint.measureText(expandText);
 
                         int count = paint.breakText(text, true, textViewWidth - moreReadWidth, null);

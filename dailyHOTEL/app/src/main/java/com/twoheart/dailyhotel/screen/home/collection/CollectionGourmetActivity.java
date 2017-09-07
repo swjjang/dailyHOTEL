@@ -359,8 +359,6 @@ public class CollectionGourmetActivity extends CollectionBaseActivity
                     isLowResource = true;
                 }
 
-                int length = stickerList.size();
-
                 for (Sticker sticker : stickerList)
                 {
                     String url;

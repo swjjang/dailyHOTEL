@@ -766,8 +766,6 @@ public class GourmetDetailItemLayout extends LinearLayout
             mMoreLayout = new LinearLayout(mContext);
             mMoreLayout.setOrientation(LinearLayout.VERTICAL);
 
-            int firstPosition = parent.getChildCount();
-
             for (int i = 0; i < size; i++)
             {
                 if (i < DEFAULT_SHOW_PRODUCT_COUNT)
