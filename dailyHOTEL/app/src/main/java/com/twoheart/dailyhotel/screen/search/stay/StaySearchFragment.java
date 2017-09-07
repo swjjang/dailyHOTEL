@@ -9,15 +9,13 @@ import android.support.v4.util.Pair;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.entity.CampaignTag;
-import com.daily.dailyhotel.entity.SearchCalendarReturnData;
+import com.daily.dailyhotel.entity.RecentlyPlace;
 import com.daily.dailyhotel.repository.local.model.AnalyticsParam;
 import com.daily.dailyhotel.screen.home.campaigntag.stay.StayCampaignTagListActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.search.StayOutboundSearchActivity;
 import com.daily.dailyhotel.util.RecentlyPlaceUtil;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Keyword;
-import com.twoheart.dailyhotel.model.Place;
-import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.model.time.StayBookingDay;
 import com.twoheart.dailyhotel.network.model.StayKeyword;
 import com.twoheart.dailyhotel.network.model.TodayDateTime;
@@ -54,7 +52,10 @@ public class StaySearchFragment extends PlaceSearchFragment
     StayBookingDay mStayBookingDay;
     Disposable mAnalyticsDisposable;
 
-    private List<Stay> mRecentlyStayList;
+    private ArrayList<RecentlyPlace> mRecentlyStayList;
+
+    private String mInputText;
+    private Object mCalenderObject;
 
     @Override
     protected void initContents()
@@ -111,15 +112,24 @@ public class StaySearchFragment extends PlaceSearchFragment
 
                         mPlaceSearchLayout.requestUpdateAutoCompleteLayout();
 
-                        if (data.hasExtra(GourmetSearchCalendarActivity.INTENT_EXTRA_DATA_SEARCH_CALENDAR_DATA) == true)
+                        if (data.hasExtra(GourmetSearchCalendarActivity.INTENT_EXTRA_DATA_SEARCH_TYPE) == true)
                         {
-                            SearchCalendarReturnData returnData = data.getParcelableExtra(GourmetSearchCalendarActivity.INTENT_EXTRA_DATA_SEARCH_CALENDAR_DATA);
-                            if (returnData == null)
+                            String searchTypeString = data.getStringExtra(StaySearchCalendarActivity.INTENT_EXTRA_DATA_SEARCH_TYPE);
+                            if (searchTypeString == null)
                             {
                                 return;
                             }
 
-                            SearchType searchType = returnData.searchType;
+                            SearchType searchType;
+
+                            try
+                            {
+                                searchType = SearchType.valueOf(searchTypeString);
+                            } catch (Exception e)
+                            {
+                                searchType = null;
+                            }
+
                             if (searchType == null)
                             {
                                 // do nothing!
@@ -131,17 +141,20 @@ public class StaySearchFragment extends PlaceSearchFragment
                                 mOnEventListener.onSearchMyLocation();
                             } else if (searchType == SearchType.AUTOCOMPLETE)
                             {
-                                mOnEventListener.onSearch(returnData.inputText, returnData.keyword);
+                                mOnEventListener.onSearch(mInputText, (Keyword) mCalenderObject);
                             } else if (searchType == SearchType.RECENTLY_KEYWORD)
                             {
-                                mOnEventListener.onSearch(returnData.inputText, returnData.keyword);
+                                mOnEventListener.onSearch(mInputText, (Keyword) mCalenderObject);
                             } else if (searchType == SearchType.CAMPAIGN_TAG)
                             {
-                                mOnEventListener.onSearchCampaignTag(returnData.campaignTag);
+                                mOnEventListener.onSearchCampaignTag((CampaignTag) mCalenderObject);
                             } else if (searchType == SearchType.RECENTLY_PLACE)
                             {
-                                mOnEventListener.onSearchRecentlyPlace(returnData.place);
+                                mOnEventListener.onSearchRecentlyPlace((RecentlyPlace) mCalenderObject);
                             }
+
+                            mCalenderObject = null;
+                            mInputText = null;
                         }
                     }
                 }
@@ -280,7 +293,7 @@ public class StaySearchFragment extends PlaceSearchFragment
     }
 
     @Override
-    public void startCalendar(boolean isAnimation, SearchCalendarReturnData returnData)
+    public void startCalendar(boolean isAnimation, SearchType searchType)
     {
         if (mIsScrolling == true || isAdded() == false)
         {
@@ -300,8 +313,8 @@ public class StaySearchFragment extends PlaceSearchFragment
         }
 
         Intent intent = StaySearchCalendarActivity.newInstance(mBaseActivity, mTodayDateTime, mStayBookingDay //
-            , StayCalendarActivity.DEFAULT_DOMESTIC_CALENDAR_DAY_OF_MAX_COUNT //
-            , AnalyticsManager.ValueType.SEARCH, true, isAnimation, returnData);
+            , StayCalendarActivity.DEFAULT_DOMESTIC_CALENDAR_DAY_OF_MAX_COUNT, AnalyticsManager.ValueType.SEARCH //
+            , true, isAnimation, searchType == null ? null : searchType.name());
 
         if (intent == null)
         {
@@ -332,20 +345,20 @@ public class StaySearchFragment extends PlaceSearchFragment
     {
         setDateChanged(todayDateTime, mStayBookingDay);
 
-        addCompositeDisposable(Observable.zip(mRecentlyRemoteImpl.getStayInboundRecentlyList(mStayBookingDay, false) //
+        addCompositeDisposable(Observable.zip(mRecentlyRemoteImpl.getInboundRecentlyList(RecentlyPlaceUtil.MAX_RECENT_PLACE_COUNT, false, ServiceType.HOTEL) //
             , mCampaignTagRemoteImpl.getCampaignTagList(getServiceType().name()) //
-            , new BiFunction<List<Stay>, ArrayList<CampaignTag>, List<Keyword>>()
+            , new BiFunction<ArrayList<RecentlyPlace>, ArrayList<CampaignTag>, List<Keyword>>()
             {
                 @Override
-                public List<Keyword> apply(@NonNull List<Stay> stayList, @NonNull ArrayList<CampaignTag> tagList) throws Exception
+                public List<Keyword> apply(@NonNull ArrayList<RecentlyPlace> stayList, @NonNull ArrayList<CampaignTag> tagList) throws Exception
                 {
                     ArrayList<Integer> expectedList = RecentlyPlaceUtil.getDbRecentlyIndexList(mBaseActivity, ServiceType.HOTEL);
                     if (expectedList != null && expectedList.size() > 0)
                     {
-                        Collections.sort(stayList, new Comparator<Stay>()
+                        Collections.sort(stayList, new Comparator<RecentlyPlace>()
                         {
                             @Override
-                            public int compare(Stay o1, Stay o2)
+                            public int compare(RecentlyPlace o1, RecentlyPlace o2)
                             {
                                 Integer position1 = expectedList.indexOf(o1.index);
                                 Integer position2 = expectedList.indexOf(o2.index);
@@ -505,10 +518,7 @@ public class StaySearchFragment extends PlaceSearchFragment
 
             if (isDateChanged() == false)
             {
-                SearchCalendarReturnData returnData = new SearchCalendarReturnData();
-                returnData.searchType = SearchType.LOCATION;
-
-                onCalendarClick(true, returnData);
+                onCalendarClick(true, SearchType.LOCATION);
                 return;
             }
 
@@ -599,11 +609,9 @@ public class StaySearchFragment extends PlaceSearchFragment
 
             if (isDateChanged() == false)
             {
-                SearchCalendarReturnData returnData = new SearchCalendarReturnData();
-                returnData.searchType = SearchType.SEARCHES;
-                returnData.inputText = text;
+                mInputText = text;
 
-                onCalendarClick(true, returnData);
+                onCalendarClick(true, SearchType.SEARCHES);
                 return;
             }
 
@@ -626,12 +634,11 @@ public class StaySearchFragment extends PlaceSearchFragment
 
             if (isDateChanged() == false)
             {
-                SearchCalendarReturnData returnData = new SearchCalendarReturnData();
-                returnData.searchType = keyword instanceof StayKeyword ? Constants.SearchType.AUTOCOMPLETE : Constants.SearchType.RECENTLY_KEYWORD;
-                returnData.inputText = text;
-                returnData.keyword = keyword;
+                SearchType searchType = keyword instanceof StayKeyword ? Constants.SearchType.AUTOCOMPLETE : Constants.SearchType.RECENTLY_KEYWORD;
+                mInputText = text;
+                mCalenderObject = keyword;
 
-                onCalendarClick(true, returnData);
+                onCalendarClick(true, searchType);
                 return;
             }
 
@@ -647,9 +654,9 @@ public class StaySearchFragment extends PlaceSearchFragment
         }
 
         @Override
-        public void onCalendarClick(boolean isAnimation, SearchCalendarReturnData returnData)
+        public void onCalendarClick(boolean isAnimation, SearchType searchType)
         {
-            startCalendar(isAnimation, returnData);
+            startCalendar(isAnimation, searchType);
         }
 
         @Override
@@ -673,11 +680,9 @@ public class StaySearchFragment extends PlaceSearchFragment
 
             if (isDateChanged() == false)
             {
-                SearchCalendarReturnData returnData = new SearchCalendarReturnData();
-                returnData.searchType = SearchType.CAMPAIGN_TAG;
-                returnData.campaignTag = campaignTag;
+                mCalenderObject = campaignTag;
 
-                onCalendarClick(true, returnData);
+                onCalendarClick(true, SearchType.CAMPAIGN_TAG);
                 return;
             }
 
@@ -685,46 +690,42 @@ public class StaySearchFragment extends PlaceSearchFragment
         }
 
         @Override
-        public void onSearchRecentlyPlace(Place place)
+        public void onSearchRecentlyPlace(RecentlyPlace place)
         {
             if (place == null)
             {
                 return;
             }
 
-            Stay stay = (Stay) place;
-
             if (isDateChanged() == false)
             {
-                SearchCalendarReturnData returnData = new SearchCalendarReturnData();
-                returnData.searchType = SearchType.RECENTLY_PLACE;
-                returnData.place = stay;
+                mCalenderObject = place;
 
-                onCalendarClick(true, returnData);
+                onCalendarClick(true, SearchType.RECENTLY_PLACE);
                 return;
             }
 
             AnalyticsParam analyticsParam = new AnalyticsParam();
-            analyticsParam.setParam(getActivity(), stay);
+            analyticsParam.setParam(getActivity(), place);
             analyticsParam.setProvince(null);
             analyticsParam.setTotalListCount(0);
 
             Intent intent = StayDetailActivity.newInstance(getActivity() //
-                , mStayBookingDay, stay.index, stay.name, stay.imageUrl //
+                , mStayBookingDay, place.index, place.title, place.imageUrl //
                 , analyticsParam, false, PlaceDetailLayout.TRANS_GRADIENT_BOTTOM_TYPE_NONE);
 
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL);
 
             getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
 
-            if (stay.truevr == true)
+            if (place.details.isTrueVr == true)
             {
                 AnalyticsManager.getInstance(getActivity()).recordEvent(AnalyticsManager.Category.NAVIGATION//
-                    , AnalyticsManager.Action.STAY_ITEM_CLICK_TRUE_VR, Integer.toString(stay.index), null);
+                    , AnalyticsManager.Action.STAY_ITEM_CLICK_TRUE_VR, Integer.toString(place.index), null);
             }
 
             AnalyticsManager.getInstance(getActivity()).recordEvent(AnalyticsManager.Category.NAVIGATION//
-                , AnalyticsManager.Action.STAY_ITEM_CLICK, Integer.toString(stay.index), null);
+                , AnalyticsManager.Action.STAY_ITEM_CLICK, Integer.toString(place.index), null);
 
         }
 

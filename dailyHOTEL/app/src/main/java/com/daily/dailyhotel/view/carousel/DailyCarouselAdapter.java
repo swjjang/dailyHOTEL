@@ -22,6 +22,7 @@ import com.daily.base.util.ScreenUtils;
 import com.daily.base.util.VersionUtils;
 import com.daily.dailyhotel.entity.CarouselListItem;
 import com.daily.dailyhotel.entity.ImageMap;
+import com.daily.dailyhotel.entity.RecentlyPlace;
 import com.daily.dailyhotel.entity.StayOutbound;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.controller.BaseControllerListener;
@@ -33,7 +34,6 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ListRowCarouselItemDataBinding;
 import com.twoheart.dailyhotel.model.Gourmet;
 import com.twoheart.dailyhotel.model.Stay;
-import com.twoheart.dailyhotel.network.model.HomePlace;
 import com.twoheart.dailyhotel.network.model.Prices;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
@@ -92,9 +92,9 @@ public class DailyCarouselAdapter extends RecyclerView.Adapter<DailyCarouselAdap
 
         switch (item.mType)
         {
-            case CarouselListItem.TYPE_HOME_PLACE:
+            case CarouselListItem.TYPE_RECENTLY_PLACE:
             {
-                onBindViewHolderByHomePlace(holder, item);
+                onBindViewHolderByRecentlyPlace(holder, item);
                 break;
             }
 
@@ -119,9 +119,9 @@ public class DailyCarouselAdapter extends RecyclerView.Adapter<DailyCarouselAdap
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-    private void onBindViewHolderByHomePlace(PlaceViewHolder holder, CarouselListItem item)
+    private void onBindViewHolderByRecentlyPlace(PlaceViewHolder holder, CarouselListItem item)
     {
-        final HomePlace place = item.getItem();
+        final RecentlyPlace place = item.getItem();
 
         holder.dataBinding.contentImageView.setTag(holder.dataBinding.contentImageView.getId(), item);
         Util.requestImageResize(mContext, holder.dataBinding.contentImageView, place.imageUrl);
@@ -174,14 +174,23 @@ public class DailyCarouselAdapter extends RecyclerView.Adapter<DailyCarouselAdap
 
         holder.dataBinding.contentProvinceView.setText(place.regionName);
 
-        if (place.placeType == Constants.PlaceType.HOTEL)
+        if (Constants.ServiceType.HOTEL.name().equalsIgnoreCase(place.serviceType) == true)
         {
-            holder.dataBinding.contentGradeView.setText(place.details.stayGrade.getName(mContext));
+            Stay.Grade grade;
+            try
+            {
+                grade = Stay.Grade.valueOf(place.details.grade);
+            } catch (Exception e)
+            {
+                grade = Stay.Grade.etc;
+            }
+
+            holder.dataBinding.contentGradeView.setText(grade.getName(mContext));
             holder.dataBinding.contentDotImageView.setVisibility(View.VISIBLE);
 
             holder.dataBinding.contentPersonView.setText("");
             holder.dataBinding.contentPersonView.setVisibility(View.GONE);
-        } else if (place.placeType == Constants.PlaceType.FNB)
+        } else if (Constants.ServiceType.GOURMET.name().equalsIgnoreCase(place.serviceType) == true)
         {
             // grade
             if (DailyTextUtils.isTextEmpty(place.details.category) == true)

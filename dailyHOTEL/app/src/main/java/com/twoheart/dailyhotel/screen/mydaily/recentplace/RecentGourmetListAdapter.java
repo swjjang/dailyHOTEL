@@ -1,10 +1,11 @@
 package com.twoheart.dailyhotel.screen.mydaily.recentplace;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.databinding.DataBindingUtil;
-import android.graphics.Paint;
 import android.graphics.drawable.Animatable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Vibrator;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -13,20 +14,18 @@ import android.view.ViewGroup;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ScreenUtils;
 import com.daily.base.util.VersionUtils;
+import com.daily.dailyhotel.entity.RecentlyPlace;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.controller.BaseControllerListener;
 import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.imagepipeline.image.ImageInfo;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ListRowGourmetDataBinding;
-import com.twoheart.dailyhotel.model.Gourmet;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.time.PlaceBookingDay;
 import com.twoheart.dailyhotel.network.model.Sticker;
-import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 /**
@@ -88,14 +87,12 @@ public class RecentGourmetListAdapter extends RecentPlacesListAdapter
         }
     }
 
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     private void onBindViewHolder(GourmetViewHolder holder, PlaceViewItem placeViewItem, int position)
     {
-        final Gourmet gourmet = placeViewItem.getItem();
+        final RecentlyPlace recentlyPlace = placeViewItem.getItem();
 
-        String strPrice = DailyTextUtils.getPriceFormat(mContext, gourmet.price, false);
-        String strDiscount = DailyTextUtils.getPriceFormat(mContext, gourmet.discountPrice, false);
-
-        String address = gourmet.addressSummary;
+        String address = recentlyPlace.addrSummary;
 
         int barIndex = address.indexOf('|');
         if (barIndex >= 0)
@@ -107,42 +104,33 @@ public class RecentGourmetListAdapter extends RecentPlacesListAdapter
         }
 
         holder.dataBinding.addressTextView.setText(address);
-        holder.dataBinding.nameTextView.setText(gourmet.name);
+        holder.dataBinding.nameTextView.setText(recentlyPlace.title);
 
         // 인원
-        if (gourmet.persons > 1)
-        {
-            holder.dataBinding.personsTextView.setVisibility(View.VISIBLE);
-            holder.dataBinding.personsTextView.setText(mContext.getString(R.string.label_persions, gourmet.persons));
-        } else
-        {
-            holder.dataBinding.personsTextView.setVisibility(View.GONE);
-        }
+        //        if (recentlyPlace.details.persons > 1)
+        //        {
+        //            holder.dataBinding.personsTextView.setVisibility(View.VISIBLE);
+        //            holder.dataBinding.personsTextView.setText(mContext.getString(R.string.label_persions, recentlyPlace.details.persons));
+        //        } else
+        //        {
+        holder.dataBinding.personsTextView.setVisibility(View.GONE);
+        //        }
 
-        if (gourmet.price <= 0 || gourmet.price <= gourmet.discountPrice)
-        {
-            holder.dataBinding.priceTextView.setVisibility(View.INVISIBLE);
-            holder.dataBinding.priceTextView.setText(null);
-        } else
-        {
-            holder.dataBinding.priceTextView.setVisibility(View.VISIBLE);
-
-            holder.dataBinding.priceTextView.setText(strPrice);
-            holder.dataBinding.priceTextView.setPaintFlags(holder.dataBinding.priceTextView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-        }
+        holder.dataBinding.priceTextView.setVisibility(View.INVISIBLE);
+        holder.dataBinding.priceTextView.setText(null);
 
         // 만족도
-        if (gourmet.satisfaction > 0)
+        if (recentlyPlace.rating > 0)
         {
             holder.dataBinding.satisfactionView.setVisibility(View.VISIBLE);
             holder.dataBinding.satisfactionView.setText(//
-                mContext.getResources().getString(R.string.label_list_satisfaction, gourmet.satisfaction));
+                mContext.getResources().getString(R.string.label_list_satisfaction, recentlyPlace.rating));
         } else
         {
             holder.dataBinding.satisfactionView.setVisibility(View.GONE);
         }
 
-        holder.dataBinding.discountPriceTextView.setText(strDiscount);
+        holder.dataBinding.discountPriceTextView.setVisibility(View.GONE);
         holder.dataBinding.nameTextView.setSelected(true); // Android TextView marquee bug
 
         if (VersionUtils.isOverAPI16() == true)
@@ -154,12 +142,12 @@ public class RecentGourmetListAdapter extends RecentPlacesListAdapter
         }
 
         String displayCategory;
-        if (DailyTextUtils.isTextEmpty(gourmet.subCategory) == false)
+        if (DailyTextUtils.isTextEmpty(recentlyPlace.details.subCategory) == false)
         {
-            displayCategory = gourmet.subCategory;
+            displayCategory = recentlyPlace.details.subCategory;
         } else
         {
-            displayCategory = gourmet.category;
+            displayCategory = recentlyPlace.details.category;
         }
 
         // grade
@@ -172,8 +160,22 @@ public class RecentGourmetListAdapter extends RecentPlacesListAdapter
             holder.dataBinding.gradeTextView.setText(displayCategory);
         }
 
+        boolean isLowResource = false;
+
+        if (ScreenUtils.getScreenWidth(mContext) <= Sticker.DEFAULT_SCREEN_WIDTH)
+        {
+            isLowResource = true;
+        }
+
         // 스티커
-        if (DailyTextUtils.isTextEmpty(gourmet.stickerUrl) == false)
+        String stickerUrl = null;
+        Sticker sticker = recentlyPlace.details.sticker != null ? recentlyPlace.details.sticker : null;
+        if (sticker != null)
+        {
+            stickerUrl = isLowResource == false ? sticker.defaultImageUrl : sticker.lowResolutionImageUrl;
+        }
+
+        if (DailyTextUtils.isTextEmpty(stickerUrl) == false)
         {
             holder.dataBinding.stickerSimpleDraweeView.setVisibility(View.VISIBLE);
 
@@ -197,7 +199,7 @@ public class RecentGourmetListAdapter extends RecentPlacesListAdapter
 
                     holder.dataBinding.stickerSimpleDraweeView.setLayoutParams(layoutParams);
                 }
-            }).setUri(Uri.parse(gourmet.stickerUrl)).build();
+            }).setUri(Uri.parse(stickerUrl)).build();
 
             holder.dataBinding.stickerSimpleDraweeView.setController(controller);
         } else
@@ -205,10 +207,10 @@ public class RecentGourmetListAdapter extends RecentPlacesListAdapter
             holder.dataBinding.stickerSimpleDraweeView.setVisibility(View.GONE);
         }
 
-        Util.requestImageResize(mContext, holder.dataBinding.imageView, gourmet.imageUrl);
+        Util.requestImageResize(mContext, holder.dataBinding.imageView, recentlyPlace.imageUrl);
 
         // SOLD OUT 표시
-        if (gourmet.isSoldOut)
+        if (recentlyPlace.isSoldOut)
         {
             holder.dataBinding.soldoutView.setVisibility(View.VISIBLE);
         } else
@@ -216,32 +218,32 @@ public class RecentGourmetListAdapter extends RecentPlacesListAdapter
             holder.dataBinding.soldoutView.setVisibility(View.GONE);
         }
 
-        if (DailyTextUtils.isTextEmpty(gourmet.dBenefitText) == false)
-        {
-            holder.dataBinding.dBenefitTextView.setVisibility(View.VISIBLE);
-            holder.dataBinding.dBenefitTextView.setText(gourmet.dBenefitText);
-        } else
-        {
+//        if (DailyTextUtils.isTextEmpty(recentlyPlace.dBenefitText) == false)
+//        {
+//            holder.dataBinding.dBenefitTextView.setVisibility(View.VISIBLE);
+//            holder.dataBinding.dBenefitTextView.setText(recentlyPlace.dBenefitText);
+//        } else
+//        {
             holder.dataBinding.dBenefitTextView.setVisibility(View.GONE);
-        }
+//        }
 
-        if (mShowDistanceIgnoreSort == true || getSortType() == Constants.SortType.DISTANCE)
-        {
-            if (holder.dataBinding.satisfactionView.getVisibility() == View.VISIBLE || holder.dataBinding.trueVRView.getVisibility() == View.VISIBLE)
-            {
-                holder.dataBinding.dot1View.setVisibility(View.VISIBLE);
-            } else
-            {
-                holder.dataBinding.dot1View.setVisibility(View.GONE);
-            }
-
-            holder.dataBinding.distanceTextView.setVisibility(View.VISIBLE);
-            holder.dataBinding.distanceTextView.setText(mContext.getString(R.string.label_distance_km, new DecimalFormat("#.#").format(gourmet.distance)));
-        } else
-        {
+//        if (mShowDistanceIgnoreSort == true || getSortType() == Constants.SortType.DISTANCE)
+//        {
+//            if (holder.dataBinding.satisfactionView.getVisibility() == View.VISIBLE || holder.dataBinding.trueVRView.getVisibility() == View.VISIBLE)
+//            {
+//                holder.dataBinding.dot1View.setVisibility(View.VISIBLE);
+//            } else
+//            {
+//                holder.dataBinding.dot1View.setVisibility(View.GONE);
+//            }
+//
+//            holder.dataBinding.distanceTextView.setVisibility(View.VISIBLE);
+//            holder.dataBinding.distanceTextView.setText(mContext.getString(R.string.label_distance_km, new DecimalFormat("#.#").format(recentlyPlace.distance)));
+//        } else
+//        {
             holder.dataBinding.dot1View.setVisibility(View.GONE);
             holder.dataBinding.distanceTextView.setVisibility(View.GONE);
-        }
+//        }
 
         // VR 여부
         //        if (gourmet.truevr == true && mTrueVREnabled == true)

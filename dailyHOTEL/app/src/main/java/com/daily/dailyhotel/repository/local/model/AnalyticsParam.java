@@ -5,11 +5,11 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.daily.base.util.DailyTextUtils;
+import com.daily.dailyhotel.entity.RecentlyPlace;
 import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.Gourmet;
 import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.Stay;
-import com.twoheart.dailyhotel.network.model.HomePlace;
 import com.twoheart.dailyhotel.network.model.Prices;
 import com.twoheart.dailyhotel.network.model.RecommendationGourmet;
 import com.twoheart.dailyhotel.network.model.RecommendationStay;
@@ -96,7 +96,7 @@ public class AnalyticsParam implements Parcelable
         isDailyChoice = gourmet.isDailyChoice;
     }
 
-    public void setParam(Context context, HomePlace place)
+    public void setParam(Context context, RecentlyPlace place)
     {
         placeIndex = place.index;
         placeName = place.title;
@@ -128,7 +128,7 @@ public class AnalyticsParam implements Parcelable
             Stay.Grade grade;
             try
             {
-                grade = place.details.stayGrade;
+                grade = Stay.Grade.valueOf(place.details.grade);
             } catch (Exception e)
             {
                 grade = Stay.Grade.etc;

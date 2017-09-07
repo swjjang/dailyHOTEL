@@ -1,9 +1,11 @@
 package com.twoheart.dailyhotel.screen.mydaily.wishlist;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.graphics.drawable.Animatable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Vibrator;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -88,6 +90,7 @@ public class GourmetWishListAdapter extends PlaceWishListAdapter
         }
     }
 
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     private void onBindViewHolder(GourmetWishListViewHolder holder, PlaceViewItem placeViewItem, int position)
     {
         final Gourmet gourmet = placeViewItem.getItem();
