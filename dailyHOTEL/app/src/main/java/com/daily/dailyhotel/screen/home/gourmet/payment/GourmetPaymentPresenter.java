@@ -1803,7 +1803,9 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
             getViewInterface().setBonusEnabled(false);
         } else
         {
-            if (mGourmetPayment != null && mGourmetPayment.totalPrice <= MIN_AMOUNT_FOR_BONUS_USAGE)
+            final int totalPrice = mGourmetPayment.totalPrice * mMenuCount;
+
+            if (mGourmetPayment != null && totalPrice <= MIN_AMOUNT_FOR_BONUS_USAGE)
             {
                 getViewInterface().setBonusGuideText(getString(R.string.dialog_btn_payment_no_reserve//
                     , DailyTextUtils.getPriceFormat(getActivity(), MIN_AMOUNT_FOR_BONUS_USAGE, false)));
