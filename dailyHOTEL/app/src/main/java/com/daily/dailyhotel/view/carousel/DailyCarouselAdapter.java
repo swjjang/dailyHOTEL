@@ -3,13 +3,7 @@ package com.daily.dailyhotel.view.carousel;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.databinding.DataBindingUtil;
-import android.graphics.Color;
-import android.graphics.LinearGradient;
 import android.graphics.Paint;
-import android.graphics.Shader;
-import android.graphics.drawable.PaintDrawable;
-import android.graphics.drawable.ShapeDrawable;
-import android.graphics.drawable.shapes.RectShape;
 import android.os.Build;
 import android.os.Vibrator;
 import android.support.v7.widget.RecyclerView;
@@ -19,7 +13,6 @@ import android.view.ViewGroup;
 
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ScreenUtils;
-import com.daily.base.util.VersionUtils;
 import com.daily.dailyhotel.entity.CarouselListItem;
 import com.daily.dailyhotel.entity.ImageMap;
 import com.daily.dailyhotel.entity.RecentlyPlace;
@@ -50,7 +43,7 @@ public class DailyCarouselAdapter extends RecyclerView.Adapter<DailyCarouselAdap
     private Context mContext;
     private boolean mIsUsePriceLayout;
     private ArrayList<CarouselListItem> mList;
-    protected PaintDrawable mPaintDrawable;
+//    protected PaintDrawable mPaintDrawable;
     protected ItemClickListener mItemClickListener;
 
     public interface ItemClickListener
@@ -66,7 +59,7 @@ public class DailyCarouselAdapter extends RecyclerView.Adapter<DailyCarouselAdap
         mList = list;
         mItemClickListener = listener;
 
-        makeShaderFactory();
+//        makeShaderFactory();
     }
 
     @Override
@@ -126,13 +119,13 @@ public class DailyCarouselAdapter extends RecyclerView.Adapter<DailyCarouselAdap
         holder.dataBinding.contentImageView.setTag(holder.dataBinding.contentImageView.getId(), item);
         Util.requestImageResize(mContext, holder.dataBinding.contentImageView, place.imageUrl);
 
-        if (VersionUtils.isOverAPI16() == true)
-        {
-            holder.dataBinding.gradientBottomView.setBackground(mPaintDrawable);
-        } else
-        {
-            holder.dataBinding.gradientBottomView.setBackgroundDrawable(mPaintDrawable);
-        }
+//        if (VersionUtils.isOverAPI16() == true)
+//        {
+//            holder.dataBinding.gradientBottomView.setBackground(mPaintDrawable);
+//        } else
+//        {
+//            holder.dataBinding.gradientBottomView.setBackgroundDrawable(mPaintDrawable);
+//        }
 
         //        // SOLD OUT 표시
         //        if (place.isSoldOut == true)
@@ -234,13 +227,13 @@ public class DailyCarouselAdapter extends RecyclerView.Adapter<DailyCarouselAdap
         holder.dataBinding.contentImageView.setTag(holder.dataBinding.contentImageView.getId(), item);
         Util.requestImageResize(mContext, holder.dataBinding.contentImageView, stay.imageUrl);
 
-        if (VersionUtils.isOverAPI16() == true)
-        {
-            holder.dataBinding.gradientBottomView.setBackground(mPaintDrawable);
-        } else
-        {
-            holder.dataBinding.gradientBottomView.setBackgroundDrawable(mPaintDrawable);
-        }
+//        if (VersionUtils.isOverAPI16() == true)
+//        {
+//            holder.dataBinding.gradientBottomView.setBackground(mPaintDrawable);
+//        } else
+//        {
+//            holder.dataBinding.gradientBottomView.setBackgroundDrawable(mPaintDrawable);
+//        }
 
         //        // SOLD OUT 표시
         //        if (stay.isSoldOut == true)
@@ -348,13 +341,13 @@ public class DailyCarouselAdapter extends RecyclerView.Adapter<DailyCarouselAdap
 
         holder.dataBinding.contentImageView.setController(draweeController);
 
-        if (VersionUtils.isOverAPI16() == true)
-        {
-            holder.dataBinding.gradientBottomView.setBackground(mPaintDrawable);
-        } else
-        {
-            holder.dataBinding.gradientBottomView.setBackgroundDrawable(mPaintDrawable);
-        }
+//        if (VersionUtils.isOverAPI16() == true)
+//        {
+//            holder.dataBinding.gradientBottomView.setBackground(mPaintDrawable);
+//        } else
+//        {
+//            holder.dataBinding.gradientBottomView.setBackgroundDrawable(mPaintDrawable);
+//        }
 
         //        // SOLD OUT 표시
         //        if (place.isSoldOut == true)
@@ -392,13 +385,13 @@ public class DailyCarouselAdapter extends RecyclerView.Adapter<DailyCarouselAdap
         holder.dataBinding.contentImageView.setTag(holder.dataBinding.contentImageView.getId(), item);
         Util.requestImageResize(mContext, holder.dataBinding.contentImageView, gourmet.imageUrl);
 
-        if (VersionUtils.isOverAPI16() == true)
-        {
-            holder.dataBinding.gradientBottomView.setBackground(mPaintDrawable);
-        } else
-        {
-            holder.dataBinding.gradientBottomView.setBackgroundDrawable(mPaintDrawable);
-        }
+//        if (VersionUtils.isOverAPI16() == true)
+//        {
+//            holder.dataBinding.gradientBottomView.setBackground(mPaintDrawable);
+//        } else
+//        {
+//            holder.dataBinding.gradientBottomView.setBackgroundDrawable(mPaintDrawable);
+//        }
 
         //        // SOLD OUT 표시
         //        if (place.isSoldOut == true)
@@ -513,26 +506,26 @@ public class DailyCarouselAdapter extends RecyclerView.Adapter<DailyCarouselAdap
         holder.itemView.setLayoutParams(params);
     }
 
-    private void makeShaderFactory()
-    {
-        // 그라디에이션 만들기.
-        final int colors[] = {Color.parseColor("#ED000000"), Color.parseColor("#E8000000"), Color.parseColor("#E2000000"), Color.parseColor("#66000000"), Color.parseColor("#00000000")};
-        final float positions[] = {0.0f, 0.01f, 0.02f, 0.17f, 0.38f};
-
-        mPaintDrawable = new PaintDrawable();
-        mPaintDrawable.setShape(new RectShape());
-
-        ShapeDrawable.ShaderFactory sf = new ShapeDrawable.ShaderFactory()
-        {
-            @Override
-            public Shader resize(int width, int height)
-            {
-                return new LinearGradient(0, height, 0, 0, colors, positions, Shader.TileMode.CLAMP);
-            }
-        };
-
-        mPaintDrawable.setShaderFactory(sf);
-    }
+//    private void makeShaderFactory()
+//    {
+//        // 그라디에이션 만들기.
+//        final int colors[] = {Color.parseColor("#ED000000"), Color.parseColor("#E8000000"), Color.parseColor("#E2000000"), Color.parseColor("#66000000"), Color.parseColor("#00000000")};
+//        final float positions[] = {0.0f, 0.01f, 0.02f, 0.17f, 0.38f};
+//
+//        mPaintDrawable = new PaintDrawable();
+//        mPaintDrawable.setShape(new RectShape());
+//
+//        ShapeDrawable.ShaderFactory sf = new ShapeDrawable.ShaderFactory()
+//        {
+//            @Override
+//            public Shader resize(int width, int height)
+//            {
+//                return new LinearGradient(0, height, 0, 0, colors, positions, Shader.TileMode.CLAMP);
+//            }
+//        };
+//
+//        mPaintDrawable.setShaderFactory(sf);
+//    }
 
     protected class PlaceViewHolder extends RecyclerView.ViewHolder
     {
