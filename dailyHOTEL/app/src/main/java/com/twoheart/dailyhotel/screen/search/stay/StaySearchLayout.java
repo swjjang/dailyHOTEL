@@ -16,7 +16,6 @@ import com.daily.dailyhotel.entity.RecentlyPlace;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Keyword;
 import com.twoheart.dailyhotel.model.SearchCardItem;
-import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.network.model.StayKeyword;
 import com.twoheart.dailyhotel.place.layout.PlaceSearchLayout;
 import com.twoheart.dailyhotel.screen.search.SearchCardViewAdapter;
@@ -213,10 +212,10 @@ public class StaySearchLayout extends PlaceSearchLayout
                 return;
             }
 
-            if (searchCardItem.object instanceof Stay)
+            if (searchCardItem.object instanceof RecentlyPlace)
             {
                 // 최근 본 업장
-                ((OnEventListener) mOnEventListener).onSearchRecentlyPlace((Stay) searchCardItem.object);
+                ((OnEventListener) mOnEventListener).onSearchRecentlyPlace((RecentlyPlace) searchCardItem.object);
             } else if (searchCardItem.object instanceof Keyword)
             {
                 // 최근 검색어

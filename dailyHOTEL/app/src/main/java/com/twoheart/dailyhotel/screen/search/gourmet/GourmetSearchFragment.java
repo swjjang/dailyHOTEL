@@ -10,14 +10,11 @@ import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.entity.CampaignTag;
 import com.daily.dailyhotel.entity.RecentlyPlace;
-import com.daily.dailyhotel.entity.SearchCalendarReturnData;
 import com.daily.dailyhotel.repository.local.model.AnalyticsParam;
 import com.daily.dailyhotel.screen.home.campaigntag.gourmet.GourmetCampaignTagListActivity;
 import com.daily.dailyhotel.util.RecentlyPlaceUtil;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.Gourmet;
 import com.twoheart.dailyhotel.model.Keyword;
-import com.twoheart.dailyhotel.model.Place;
 import com.twoheart.dailyhotel.model.time.GourmetBookingDay;
 import com.twoheart.dailyhotel.network.model.GourmetKeyword;
 import com.twoheart.dailyhotel.network.model.TodayDateTime;
@@ -53,6 +50,9 @@ public class GourmetSearchFragment extends PlaceSearchFragment
     Disposable mAnalyticsDisposable;
 
     private ArrayList<RecentlyPlace> mRecentlyGourmetList;
+
+    private String mInputText;
+    private Object mCalenderObject;
 
     @Override
     protected void initContents()
@@ -109,15 +109,24 @@ public class GourmetSearchFragment extends PlaceSearchFragment
 
                         mPlaceSearchLayout.requestUpdateAutoCompleteLayout();
 
-                        if (data.hasExtra(GourmetSearchCalendarActivity.INTENT_EXTRA_DATA_SEARCH_CALENDAR_DATA) == true)
+                        if (data.hasExtra(GourmetSearchCalendarActivity.INTENT_EXTRA_DATA_SEARCH_TYPE) == true)
                         {
-                            SearchCalendarReturnData returnData = data.getParcelableExtra(GourmetSearchCalendarActivity.INTENT_EXTRA_DATA_SEARCH_CALENDAR_DATA);
-                            if (returnData == null)
+                            String searchTypeString = data.getStringExtra(GourmetSearchCalendarActivity.INTENT_EXTRA_DATA_SEARCH_TYPE);
+                            if (searchTypeString == null)
                             {
                                 return;
                             }
 
-                            SearchType searchType = returnData.searchType;
+                            SearchType searchType;
+
+                            try
+                            {
+                                searchType = SearchType.valueOf(searchTypeString);
+                            } catch (Exception e)
+                            {
+                                searchType = null;
+                            }
+
                             if (searchType == null)
                             {
                                 // do nothing!
@@ -129,18 +138,21 @@ public class GourmetSearchFragment extends PlaceSearchFragment
                                 mOnEventListener.onSearchMyLocation();
                             } else if (searchType == SearchType.AUTOCOMPLETE)
                             {
-                                mOnEventListener.onSearch(returnData.inputText, returnData.keyword);
+                                mOnEventListener.onSearch(mInputText, (Keyword) mCalenderObject);
                             } else if (searchType == SearchType.RECENTLY_KEYWORD)
                             {
-                                mOnEventListener.onSearch(returnData.inputText, returnData.keyword);
+                                mOnEventListener.onSearch(mInputText, (Keyword) mCalenderObject);
                             } else if (searchType == SearchType.CAMPAIGN_TAG)
                             {
-                                mOnEventListener.onSearchCampaignTag(returnData.campaignTag);
+                                mOnEventListener.onSearchCampaignTag((CampaignTag) mCalenderObject);
                             } else if (searchType == SearchType.RECENTLY_PLACE)
                             {
-                                mOnEventListener.onSearchRecentlyPlace(returnData.place);
+                                mOnEventListener.onSearchRecentlyPlace((RecentlyPlace) mCalenderObject);
                             }
                         }
+
+                        mCalenderObject = null;
+                        mInputText = null;
                     }
                 }
                 break;
@@ -263,7 +275,7 @@ public class GourmetSearchFragment extends PlaceSearchFragment
     }
 
     @Override
-    public void startCalendar(boolean isAnimation, SearchCalendarReturnData returnData)
+    public void startCalendar(boolean isAnimation, SearchType searchType)
     {
         if (mIsScrolling == true || isAdded() == false)
         {
@@ -284,7 +296,7 @@ public class GourmetSearchFragment extends PlaceSearchFragment
 
         Intent intent = GourmetSearchCalendarActivity.newInstance(mBaseActivity, mTodayDateTime, mGourmetBookingDay //
             , GourmetCalendarActivity.DEFAULT_CALENDAR_DAY_OF_MAX_COUNT, AnalyticsManager.ValueType.SEARCH //
-            , true, isAnimation, returnData);
+            , true, isAnimation, searchType == null ? null : searchType.name());
 
         if (intent == null)
         {
@@ -475,10 +487,7 @@ public class GourmetSearchFragment extends PlaceSearchFragment
 
             if (isDateChanged() == false)
             {
-                SearchCalendarReturnData returnData = new SearchCalendarReturnData();
-                returnData.searchType = SearchType.LOCATION;
-
-                onCalendarClick(true, returnData);
+                onCalendarClick(true, SearchType.LOCATION);
                 return;
             }
 
@@ -557,11 +566,9 @@ public class GourmetSearchFragment extends PlaceSearchFragment
 
             if (isDateChanged() == false)
             {
-                SearchCalendarReturnData returnData = new SearchCalendarReturnData();
-                returnData.searchType = SearchType.SEARCHES;
-                returnData.inputText = text;
+                mInputText = text;
 
-                onCalendarClick(true, returnData);
+                onCalendarClick(true, SearchType.SEARCHES);
                 return;
             }
 
@@ -584,12 +591,11 @@ public class GourmetSearchFragment extends PlaceSearchFragment
 
             if (isDateChanged() == false)
             {
-                SearchCalendarReturnData returnData = new SearchCalendarReturnData();
-                returnData.searchType = keyword instanceof GourmetKeyword ? SearchType.AUTOCOMPLETE : SearchType.RECENTLY_KEYWORD;
-                returnData.inputText = text;
-                returnData.keyword = keyword;
+                mCalenderObject = keyword;
+                mInputText = text;
+                SearchType searchType = keyword instanceof GourmetKeyword ? SearchType.AUTOCOMPLETE : SearchType.RECENTLY_KEYWORD;
 
-                onCalendarClick(true, returnData);
+                onCalendarClick(true, searchType);
                 return;
             }
 
@@ -605,9 +611,9 @@ public class GourmetSearchFragment extends PlaceSearchFragment
         }
 
         @Override
-        public void onCalendarClick(boolean isAnimation, SearchCalendarReturnData returnData)
+        public void onCalendarClick(boolean isAnimation, SearchType searchType)
         {
-            startCalendar(isAnimation, returnData);
+            startCalendar(isAnimation, searchType);
         }
 
         @Override
@@ -626,11 +632,9 @@ public class GourmetSearchFragment extends PlaceSearchFragment
         {
             if (isDateChanged() == false)
             {
-                SearchCalendarReturnData returnData = new SearchCalendarReturnData();
-                returnData.searchType = SearchType.CAMPAIGN_TAG;
-                returnData.campaignTag = campaignTag;
+                mCalenderObject = campaignTag;
 
-                onCalendarClick(true, returnData);
+                onCalendarClick(true, SearchType.CAMPAIGN_TAG);
                 return;
             }
 
@@ -638,40 +642,37 @@ public class GourmetSearchFragment extends PlaceSearchFragment
         }
 
         @Override
-        public void onSearchRecentlyPlace(Place place)
+        public void onSearchRecentlyPlace(RecentlyPlace place)
         {
             if (place == null)
             {
                 return;
             }
 
-            Gourmet gourmet = (Gourmet) place;
-
             if (isDateChanged() == false)
             {
-                SearchCalendarReturnData returnData = new SearchCalendarReturnData();
-                returnData.searchType = SearchType.RECENTLY_PLACE;
-                returnData.place = gourmet;
+                mCalenderObject = place;
 
-                onCalendarClick(true, returnData);
+                onCalendarClick(true, SearchType.RECENTLY_PLACE);
                 return;
             }
 
             AnalyticsParam analyticsParam = new AnalyticsParam();
-            analyticsParam.setParam(getActivity(), gourmet);
+            analyticsParam.setParam(getActivity(), place);
             analyticsParam.setProvince(null);
             analyticsParam.setTotalListCount(0);
 
             Intent intent = GourmetDetailActivity.newInstance(getActivity() //
-                , mGourmetBookingDay, gourmet.index, gourmet.name //
-                , gourmet.imageUrl, gourmet.category, gourmet.isSoldOut, analyticsParam, false, PlaceDetailLayout.TRANS_GRADIENT_BOTTOM_TYPE_NONE);
+                , mGourmetBookingDay, place.index, place.title //
+                , place.imageUrl, place.details.category, place.isSoldOut, analyticsParam, false //
+                , PlaceDetailLayout.TRANS_GRADIENT_BOTTOM_TYPE_NONE);
 
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMET_DETAIL);
 
             getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
 
             AnalyticsManager.getInstance(getActivity()).recordEvent(AnalyticsManager.Category.NAVIGATION//
-                , AnalyticsManager.Action.GOURMET_ITEM_CLICK, Integer.toString(gourmet.index), null);
+                , AnalyticsManager.Action.GOURMET_ITEM_CLICK, Integer.toString(place.index), null);
         }
 
         @Override

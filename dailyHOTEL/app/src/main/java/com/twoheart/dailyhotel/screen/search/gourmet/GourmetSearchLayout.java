@@ -12,7 +12,6 @@ import com.daily.base.util.DailyTextUtils;
 import com.daily.dailyhotel.entity.CampaignTag;
 import com.daily.dailyhotel.entity.RecentlyPlace;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.Gourmet;
 import com.twoheart.dailyhotel.model.Keyword;
 import com.twoheart.dailyhotel.model.SearchCardItem;
 import com.twoheart.dailyhotel.network.model.GourmetKeyword;
@@ -180,10 +179,10 @@ public class GourmetSearchLayout extends PlaceSearchLayout
                 return;
             }
 
-            if (searchCardItem.object instanceof Gourmet)
+            if (searchCardItem.object instanceof RecentlyPlace)
             {
                 // 최근 본 업장
-                ((GourmetSearchLayout.OnEventListener) mOnEventListener).onSearchRecentlyPlace((Gourmet) searchCardItem.object);
+                ((GourmetSearchLayout.OnEventListener) mOnEventListener).onSearchRecentlyPlace((RecentlyPlace) searchCardItem.object);
             } else if (searchCardItem.object instanceof Keyword)
             {
                 // 최근 검색어

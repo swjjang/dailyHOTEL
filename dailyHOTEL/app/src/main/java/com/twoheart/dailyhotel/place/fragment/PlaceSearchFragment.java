@@ -13,7 +13,6 @@ import android.widget.Toast;
 import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.entity.CampaignTag;
 import com.daily.dailyhotel.entity.CommonDateTime;
-import com.daily.dailyhotel.entity.SearchCalendarReturnData;
 import com.daily.dailyhotel.repository.remote.CampaignTagRemoteImpl;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
 import com.daily.dailyhotel.repository.remote.RecentlyRemoteImpl;
@@ -78,7 +77,7 @@ public abstract class PlaceSearchFragment extends BaseFragment
 
     public abstract void startSearchResultActivity();
 
-    public abstract void startCalendar(boolean isAnimation, SearchCalendarReturnData returnData);
+    public abstract void startCalendar(boolean isAnimation, SearchType searchType);
 
     public abstract void startCampaignTagList(int index, String title);
 
