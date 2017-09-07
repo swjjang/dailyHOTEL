@@ -11,12 +11,12 @@ import android.widget.Toast;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.widget.DailyToast;
+import com.daily.dailyhotel.entity.RecentlyPlace;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.model.StayDetail;
 import com.twoheart.dailyhotel.model.time.StayBookingDay;
-import com.twoheart.dailyhotel.network.model.HomePlace;
 import com.twoheart.dailyhotel.network.model.PlaceReviewScores;
 import com.twoheart.dailyhotel.network.model.RecommendationStay;
 import com.twoheart.dailyhotel.network.model.StayDetailParams;
@@ -74,12 +74,12 @@ public class StayPreviewActivity extends BaseActivity
      *
      * @param context
      * @param stayBookingDay
-     * @param homePlace
+     * @param recentlyPlace
      * @return
      */
-    public static Intent newInstance(Context context, StayBookingDay stayBookingDay, HomePlace homePlace)
+    public static Intent newInstance(Context context, StayBookingDay stayBookingDay, RecentlyPlace recentlyPlace)
     {
-        if (stayBookingDay == null || homePlace == null)
+        if (stayBookingDay == null || recentlyPlace == null)
         {
             return null;
         }
@@ -87,18 +87,27 @@ public class StayPreviewActivity extends BaseActivity
         Intent intent = new Intent(context, StayPreviewActivity.class);
 
         intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, stayBookingDay);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEIDX, homePlace.index);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACENAME, homePlace.title);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEIDX, recentlyPlace.index);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACENAME, recentlyPlace.title);
 
-        if (homePlace.prices != null && homePlace.prices.discountPrice > 0)
+        if (recentlyPlace.prices != null && recentlyPlace.prices.discountPrice > 0)
         {
-            intent.putExtra(NAME_INTENT_EXTRA_DATA_DISCOUNTPRICE, homePlace.prices.discountPrice);
+            intent.putExtra(NAME_INTENT_EXTRA_DATA_DISCOUNTPRICE, recentlyPlace.prices.discountPrice);
         } else
         {
             intent.putExtra(NAME_INTENT_EXTRA_DATA_DISCOUNTPRICE, SKIP_CHECK_DISCOUNT_PRICE_VALUE);
         }
 
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_GRADE, homePlace.details.stayGrade.name());
+        Stay.Grade grade;
+        try
+        {
+            grade = Stay.Grade.valueOf(recentlyPlace.details.grade);
+        } catch (Exception e)
+        {
+            grade = Stay.Grade.etc;
+        }
+
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_GRADE, grade.name());
 
         return intent;
     }

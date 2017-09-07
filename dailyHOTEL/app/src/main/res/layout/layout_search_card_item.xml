@@ -98,7 +98,7 @@
                 android:id="@+id/emptyTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="17dp"
+                android:layout_marginTop="8dp"
                 android:gravity="center"
                 android:textColor="@color/default_text_cc5c5c5"
                 android:textSize="13dp"

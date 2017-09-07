@@ -40,7 +40,7 @@ public abstract class RecentPlacesListFragment extends BaseFragment
 
     protected abstract RecentPlacesListLayout getListLayout();
 
-    protected abstract void requestRecentPlacesList(PlaceBookingDay placeBookingDay);
+    protected abstract void requestRecentPlacesList();
 
     public interface OnRecentPlaceListFragmentListener
     {
@@ -85,7 +85,7 @@ public abstract class RecentPlacesListFragment extends BaseFragment
                 mDontReload = false;
             } else
             {
-                requestRecentPlacesList(mPlaceBookingDay);
+                requestRecentPlacesList();
             }
         }
     }

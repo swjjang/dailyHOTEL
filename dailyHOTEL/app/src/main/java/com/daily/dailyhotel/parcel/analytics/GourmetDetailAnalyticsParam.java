@@ -14,9 +14,6 @@ import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 public class GourmetDetailAnalyticsParam implements Parcelable
 {
-    public static final int SKIP_CHECK_DISCOUNT_PRICE_VALUE = Integer.MIN_VALUE;
-
-    private String addressAreaName; // addressSummary 의 split 이름 stay.addressSummary.split("\\||l|ㅣ|I")  index : 0;
     public int price; // 정가
     public int discountPrice; // 표시가
     public String showOriginalPriceYn = "N"; // stay.price <= 0 || stay.price <= stay.discountPrice ? "N" : "Y"
@@ -24,6 +21,7 @@ public class GourmetDetailAnalyticsParam implements Parcelable
     public int totalListCount = -1;
     public boolean isDailyChoice;
 
+    private String addressAreaName; // addressSummary 의 split 이름 stay.addressSummary.split("\\||l|ㅣ|I")  index : 0;
     private Province province;
 
     public GourmetDetailAnalyticsParam()

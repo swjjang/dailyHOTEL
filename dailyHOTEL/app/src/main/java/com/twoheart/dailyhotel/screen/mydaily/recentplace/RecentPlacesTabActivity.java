@@ -14,7 +14,7 @@ import com.daily.base.util.ExLog;
 import com.daily.base.util.FontManager;
 import com.daily.base.util.ScreenUtils;
 import com.daily.base.widget.DailyViewPager;
-import com.daily.dailyhotel.repository.local.model.RecentlyPlace;
+import com.daily.dailyhotel.repository.local.model.RecentlyDbPlace;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
 import com.daily.dailyhotel.util.RecentlyPlaceUtil;
 import com.daily.dailyhotel.view.DailyToolbarView;
@@ -298,14 +298,14 @@ public class RecentPlacesTabActivity extends BaseActivity
 
     private boolean isEmptyRecentStayPlace()
     {
-        ArrayList<RecentlyPlace> resultList = RecentlyPlaceUtil.getDbRecentlyTypeList( //
+        ArrayList<RecentlyDbPlace> resultList = RecentlyPlaceUtil.getDbRecentlyTypeList( //
             RecentPlacesTabActivity.this, Constants.ServiceType.HOTEL, Constants.ServiceType.OB_STAY);
         return resultList == null || resultList.size() == 0;
     }
 
     private boolean isEmptyRecentGourmetPlace()
     {
-        ArrayList<RecentlyPlace> resultList = RecentlyPlaceUtil.getDbRecentlyTypeList( //
+        ArrayList<RecentlyDbPlace> resultList = RecentlyPlaceUtil.getDbRecentlyTypeList( //
             RecentPlacesTabActivity.this, Constants.ServiceType.GOURMET);
         return resultList == null || resultList.size() == 0;
     }
@@ -383,7 +383,7 @@ public class RecentPlacesTabActivity extends BaseActivity
         @Override
         public void onDeleteItemClickAnalytics()
         {
-            ArrayList<RecentlyPlace> resultList = RecentlyPlaceUtil.getDbRecentlyTypeList(RecentPlacesTabActivity.this, (Constants.ServiceType[]) null);
+            ArrayList<RecentlyDbPlace> resultList = RecentlyPlaceUtil.getDbRecentlyTypeList(RecentPlacesTabActivity.this, (Constants.ServiceType[]) null);
 
             if (resultList == null || resultList.size() == 0)
             {

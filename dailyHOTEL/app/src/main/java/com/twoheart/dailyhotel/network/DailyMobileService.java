@@ -12,6 +12,7 @@ import com.daily.dailyhotel.repository.remote.model.GourmetDetailData;
 import com.daily.dailyhotel.repository.remote.model.GourmetListData;
 import com.daily.dailyhotel.repository.remote.model.GourmetPaymentData;
 import com.daily.dailyhotel.repository.remote.model.PaymentResultData;
+import com.daily.dailyhotel.repository.remote.model.RecentlyPlacesData;
 import com.daily.dailyhotel.repository.remote.model.ReviewData;
 import com.daily.dailyhotel.repository.remote.model.ReviewScoresData;
 import com.daily.dailyhotel.repository.remote.model.ShortUrlData;
@@ -42,7 +43,6 @@ import com.twoheart.dailyhotel.network.model.GourmetDetailParams;
 import com.twoheart.dailyhotel.network.model.GourmetKeyword;
 import com.twoheart.dailyhotel.network.model.GourmetWishItem;
 import com.twoheart.dailyhotel.network.model.Holiday;
-import com.twoheart.dailyhotel.network.model.HomePlaces;
 import com.twoheart.dailyhotel.network.model.PlaceReviewScores;
 import com.twoheart.dailyhotel.network.model.PlaceReviews;
 import com.twoheart.dailyhotel.network.model.PlaceWishItems;
@@ -447,12 +447,7 @@ public interface DailyMobileService
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET("{mobileAPI}")
-    Call<BaseDto<HomePlaces>> requestHomeWishList(@Path(value = "mobileAPI", encoded = true) String mobileAPI);
-
-    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
-    @POST("{mobileAPI}")
-    Call<BaseDto<HomePlaces>> requestHomeRecentList(@Path(value = "mobileAPI", encoded = true) String mobileAPI,//
-                                                    @Body JSONObject jsonObject);
+    Call<BaseDto<RecentlyPlacesData>> requestHomeWishList(@Path(value = "mobileAPI", encoded = true) String mobileAPI);
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET("{mobileAPI}")
@@ -780,8 +775,8 @@ public interface DailyMobileService
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @POST("{mobileAPI}")
-    Observable<BaseDto<HomePlaces>> getHomeRecentList(@Path(value = "mobileAPI", encoded = true) String mobileAPI,//
-                                                      @Body JSONObject jsonObject);
+    Observable<BaseDto<RecentlyPlacesData>> getInboundRecentlyList(@Path(value = "mobileAPI", encoded = true) String mobileAPI,//
+                                                                   @Body JSONObject jsonObject);
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET("{mobileAPI}")
