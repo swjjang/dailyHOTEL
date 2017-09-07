@@ -25,12 +25,14 @@ import com.daily.dailyhotel.entity.RecentlyPlace;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayOutbound;
 import com.daily.dailyhotel.entity.StayOutbounds;
+import com.daily.dailyhotel.parcel.analytics.GourmetDetailAnalyticsParam;
 import com.daily.dailyhotel.parcel.analytics.StayOutboundDetailAnalyticsParam;
 import com.daily.dailyhotel.repository.local.DailyDb;
 import com.daily.dailyhotel.repository.local.DailyDbHelper;
 import com.daily.dailyhotel.repository.local.model.AnalyticsParam;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
 import com.daily.dailyhotel.repository.remote.RecentlyRemoteImpl;
+import com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.detail.StayOutboundDetailActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.preview.StayOutboundPreviewActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.search.StayOutboundSearchActivity;
@@ -50,7 +52,6 @@ import com.twoheart.dailyhotel.place.base.BaseMenuNavigationFragment;
 import com.twoheart.dailyhotel.place.layout.PlaceDetailLayout;
 import com.twoheart.dailyhotel.screen.common.PermissionManagerActivity;
 import com.twoheart.dailyhotel.screen.event.EventWebActivity;
-import com.twoheart.dailyhotel.screen.gourmet.detail.GourmetDetailActivity;
 import com.twoheart.dailyhotel.screen.gourmet.list.GourmetMainActivity;
 import com.twoheart.dailyhotel.screen.gourmet.preview.GourmetPreviewActivity;
 import com.twoheart.dailyhotel.screen.home.category.list.StayCategoryTabActivity;
@@ -926,8 +927,30 @@ public class HomeFragment extends BaseMenuNavigationFragment
 
                 case GOURMET:
                 {
-                    GourmetBookingDay gourmetBookingDay = new GourmetBookingDay();
-                    gourmetBookingDay.setVisitDay(mTodayDateTime.dailyDateTime);
+                    // --> 추후에 정리되면 메소드로 수정
+                    GourmetDetailAnalyticsParam analyticsParam = new GourmetDetailAnalyticsParam();
+
+                    if (recentlyPlace.prices != null)
+                    {
+                        analyticsParam.price = recentlyPlace.prices.normalPrice;
+
+                        if (recentlyPlace.prices.discountPrice > 0)
+                        {
+                            analyticsParam.discountPrice = recentlyPlace.prices.discountPrice;
+                        }
+                    } else
+                    {
+                        analyticsParam.price = 0;
+                        analyticsParam.discountPrice = 0;
+                    }
+
+                    analyticsParam.setShowOriginalPriceYn(analyticsParam.price, analyticsParam.discountPrice);
+                    analyticsParam.setProvince(null);
+                    analyticsParam.entryPosition = -1;
+                    analyticsParam.totalListCount = -1;
+                    analyticsParam.isDailyChoice = false;
+                    analyticsParam.setAddressAreaName(recentlyPlace.addrSummary);
+                    // <-- 추후에 정리되면 메소드로 수정
 
                     if (Util.isUsedMultiTransition() == true)
                     {
@@ -949,14 +972,13 @@ public class HomeFragment extends BaseMenuNavigationFragment
                             }
                         });
 
-                        AnalyticsParam analyticsParam = new AnalyticsParam();
-                        analyticsParam.setParam(mBaseActivity, recentlyPlace);
-                        analyticsParam.setProvince(null);
-                        analyticsParam.setTotalListCount(-1);
-
                         Intent intent = GourmetDetailActivity.newInstance(mBaseActivity //
-                            , gourmetBookingDay, recentlyPlace.index, recentlyPlace.title, recentlyPlace.imageUrl, recentlyPlace.details.category//
-                            , recentlyPlace.isSoldOut, analyticsParam, true, PlaceDetailLayout.TRANS_GRADIENT_BOTTOM_TYPE_NONE);
+                            , recentlyPlace.index, recentlyPlace.title, recentlyPlace.imageUrl//
+                            , GourmetDetailActivity.NONE_PRICE, mTodayDateTime.dailyDateTime//
+                            , recentlyPlace.details != null ? recentlyPlace.details.category : null//
+                            , recentlyPlace.isSoldOut, false, false, true//
+                            , GourmetDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_NONE//
+                            , analyticsParam);
 
                         if (intent == null)
                         {
@@ -976,14 +998,13 @@ public class HomeFragment extends BaseMenuNavigationFragment
                         mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMET_DETAIL, options.toBundle());
                     } else
                     {
-                        AnalyticsParam analyticsParam = new AnalyticsParam();
-                        analyticsParam.setParam(mBaseActivity, recentlyPlace);
-                        analyticsParam.setProvince(null);
-                        analyticsParam.setTotalListCount(-1);
-
                         Intent intent = GourmetDetailActivity.newInstance(mBaseActivity //
-                            , gourmetBookingDay, recentlyPlace.index, recentlyPlace.title, recentlyPlace.imageUrl, recentlyPlace.details.category//
-                            , recentlyPlace.isSoldOut, analyticsParam, false, PlaceDetailLayout.TRANS_GRADIENT_BOTTOM_TYPE_NONE);
+                            , recentlyPlace.index, recentlyPlace.title, recentlyPlace.imageUrl//
+                            , GourmetDetailActivity.NONE_PRICE, mTodayDateTime.dailyDateTime//
+                            , recentlyPlace.details != null ? recentlyPlace.details.category : null//
+                            , recentlyPlace.isSoldOut, false, false, false//
+                            , GourmetDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_NONE//
+                            , analyticsParam);
 
                         if (intent == null)
                         {
@@ -992,7 +1013,6 @@ public class HomeFragment extends BaseMenuNavigationFragment
                         }
 
                         mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMET_DETAIL);
-
                         mBaseActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
                     }
                     break;

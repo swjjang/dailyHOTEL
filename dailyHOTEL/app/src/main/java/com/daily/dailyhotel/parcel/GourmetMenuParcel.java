@@ -4,8 +4,8 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
+import com.daily.dailyhotel.entity.DetailImageInformation;
 import com.daily.dailyhotel.entity.GourmetMenu;
-import com.daily.dailyhotel.entity.GourmetMenuImage;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,8 +38,8 @@ public class GourmetMenuParcel implements Parcelable
     public void writeToParcel(Parcel dest, int flags)
     {
         dest.writeInt(mGourmetMenu.index);
-        dest.writeInt(mGourmetMenu.saleIdx);
-        dest.writeString(mGourmetMenu.ticketName);
+        dest.writeInt(mGourmetMenu.saleIndex);
+        dest.writeString(mGourmetMenu.name);
         dest.writeInt(mGourmetMenu.price);
         dest.writeInt(mGourmetMenu.discountPrice);
         dest.writeString(mGourmetMenu.menuBenefit);
@@ -49,20 +49,19 @@ public class GourmetMenuParcel implements Parcelable
         dest.writeString(mGourmetMenu.closeTime);
         dest.writeString(mGourmetMenu.lastOrderTime);
         dest.writeString(mGourmetMenu.menuSummary);
-        dest.writeInt(mGourmetMenu.getPrimaryImageIndex());
 
-        List<GourmetMenuImage> gourmetMenuImageList = mGourmetMenu.getImageList();
-        List<GourmetMenuImageParcel> gourmetMenuImageParcelList = new ArrayList<>();
+        List<DetailImageInformation> detailImageInformationList = mGourmetMenu.getImageList();
+        List<DetailImageInformationParcel> detailImageInformationParcelList = new ArrayList<>();
 
-        if (gourmetMenuImageList != null && gourmetMenuImageList.size() > 0)
+        if (detailImageInformationList != null && detailImageInformationList.size() > 0)
         {
-            for (GourmetMenuImage gourmetMenuImage : gourmetMenuImageList)
+            for (DetailImageInformation detailImageInformation : detailImageInformationList)
             {
-                gourmetMenuImageParcelList.add(new GourmetMenuImageParcel(gourmetMenuImage));
+                detailImageInformationParcelList.add(new DetailImageInformationParcel(detailImageInformation));
             }
         }
 
-        dest.writeTypedList(gourmetMenuImageParcelList);
+        dest.writeTypedList(detailImageInformationParcelList);
         dest.writeStringList(mGourmetMenu.getMenuDetailList());
 
     }
@@ -72,8 +71,8 @@ public class GourmetMenuParcel implements Parcelable
         mGourmetMenu = new GourmetMenu();
 
         mGourmetMenu.index = in.readInt();
-        mGourmetMenu.saleIdx = in.readInt();
-        mGourmetMenu.ticketName = in.readString();
+        mGourmetMenu.saleIndex = in.readInt();
+        mGourmetMenu.name = in.readString();
         mGourmetMenu.price = in.readInt();
         mGourmetMenu.discountPrice = in.readInt();
         mGourmetMenu.menuBenefit = in.readString();
@@ -83,17 +82,16 @@ public class GourmetMenuParcel implements Parcelable
         mGourmetMenu.closeTime = in.readString();
         mGourmetMenu.lastOrderTime = in.readString();
         mGourmetMenu.menuSummary = in.readString();
-        mGourmetMenu.setPrimaryImageIndex(in.readInt());
 
-        List<GourmetMenuImageParcel> gourmetMenuImageParcelList = in.createTypedArrayList(GourmetMenuImageParcel.CREATOR);
-        List<GourmetMenuImage> gourmetMenuImageList = new ArrayList<>();
+        List<DetailImageInformationParcel> detailImageInformationParcelList = in.createTypedArrayList(DetailImageInformationParcel.CREATOR);
+        List<DetailImageInformation> detailImageInformationList = new ArrayList<>();
 
-        for (GourmetMenuImageParcel gourmetMenuImageParcel : gourmetMenuImageParcelList)
+        for (DetailImageInformationParcel detailImageInformationParcel : detailImageInformationParcelList)
         {
-            gourmetMenuImageList.add(gourmetMenuImageParcel.getGourmetMenuImage());
+            detailImageInformationList.add(detailImageInformationParcel.getGourmetMenuImage());
         }
 
-        mGourmetMenu.setImageList(gourmetMenuImageList);
+        mGourmetMenu.setImageList(detailImageInformationList);
         mGourmetMenu.setMenuDetailList(in.createStringArrayList());
     }
 

@@ -22,8 +22,12 @@ import com.daily.base.util.ScreenUtils;
 import com.daily.base.widget.DailyTextView;
 import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.entity.Booking;
+import com.daily.dailyhotel.parcel.analytics.GourmetDetailAnalyticsParam;
+import com.daily.dailyhotel.parcel.analytics.NavigatorAnalyticsParam;
 import com.daily.dailyhotel.repository.remote.BookingRemoteImpl;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
+import com.daily.dailyhotel.screen.common.dialog.navigator.NavigatorDialogActivity;
+import com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.GourmetBookingDetail;
 import com.twoheart.dailyhotel.model.PlaceBookingDetail;
@@ -33,7 +37,6 @@ import com.twoheart.dailyhotel.place.activity.PlaceReservationDetailActivity;
 import com.twoheart.dailyhotel.screen.common.HappyTalkCategoryDialog;
 import com.twoheart.dailyhotel.screen.common.PermissionManagerActivity;
 import com.twoheart.dailyhotel.screen.common.ZoomMapActivity;
-import com.twoheart.dailyhotel.screen.gourmet.detail.GourmetDetailActivity;
 import com.twoheart.dailyhotel.screen.information.FAQActivity;
 import com.twoheart.dailyhotel.screen.review.ReviewActivity;
 import com.twoheart.dailyhotel.util.Constants;
@@ -693,10 +696,15 @@ public class GourmetReservationDetailActivity extends PlaceReservationDetailActi
 
             try
             {
-                GourmetBookingDay gourmetBookingDay = new GourmetBookingDay();
-                gourmetBookingDay.setVisitDay(mTodayDateTime.dailyDateTime);
+                //                Intent intent = GourmetDetailActivity.newInstance(GourmetReservationDetailActivity.this, gourmetBookingDay, mPlaceBookingDetail.placeIndex, false, false, false);
 
-                Intent intent = GourmetDetailActivity.newInstance(GourmetReservationDetailActivity.this, gourmetBookingDay, mPlaceBookingDetail.placeIndex, false, false, false);
+                Intent intent = GourmetDetailActivity.newInstance(GourmetReservationDetailActivity.this //
+                    , mPlaceBookingDetail.placeIndex, mPlaceBookingDetail.placeName, null, GourmetDetailActivity.NONE_PRICE//
+                    , mTodayDateTime.dailyDateTime//
+                    , null, false, false, false, false//
+                    , GourmetDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_NONE//
+                    , new GourmetDetailAnalyticsParam());
+
                 startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMET_DETAIL);
 
                 overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
@@ -717,11 +725,12 @@ public class GourmetReservationDetailActivity extends PlaceReservationDetailActi
                 return;
             }
 
-            Util.showShareMapDialog(GourmetReservationDetailActivity.this, mPlaceBookingDetail.placeName//
-                , mPlaceBookingDetail.latitude, mPlaceBookingDetail.longitude, mPlaceBookingDetail.isOverseas//
-                , AnalyticsManager.Category.GOURMET_BOOKINGS//
-                , AnalyticsManager.Action.GOURMET_DETAIL_NAVIGATION_APP_CLICKED//
-                , null);
+            NavigatorAnalyticsParam analyticsParam = new NavigatorAnalyticsParam();
+            analyticsParam.category = AnalyticsManager.Category.GOURMET_BOOKINGS;
+            analyticsParam.action = AnalyticsManager.Action.GOURMET_DETAIL_NAVIGATION_APP_CLICKED;
+
+            startActivityForResult(NavigatorDialogActivity.newInstance(GourmetReservationDetailActivity.this, mPlaceBookingDetail.placeName//
+                , mPlaceBookingDetail.latitude, mPlaceBookingDetail.longitude, mPlaceBookingDetail.isOverseas, analyticsParam), Constants.CODE_REQUEST_ACTIVITY_NAVIGATOR);
         }
 
         @Override

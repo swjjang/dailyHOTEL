@@ -298,6 +298,7 @@ public abstract class PlaceMainActivity extends BaseActivity
                     {
                         switch (resultCode)
                         {
+                            case com.daily.base.BaseActivity.RESULT_CODE_REFRESH:
                             case CODE_RESULT_ACTIVITY_REFRESH:
                             case CODE_RESULT_ACTIVITY_PAYMENT_TIMEOVER:
                                 mDontReloadAtOnResume = false;

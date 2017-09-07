@@ -7,6 +7,7 @@ import android.databinding.ViewDataBinding;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -131,6 +132,14 @@ public abstract class BaseView<T1 extends OnBaseEventListener, T2 extends ViewDa
     protected int getDimensionPixelSize(int id)
     {
         return mActivity.getResources().getDimensionPixelSize(id);
+    }
+
+    protected int getDpi()
+    {
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        mActivity.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+
+        return displayMetrics.densityDpi;
     }
 
     @NonNull

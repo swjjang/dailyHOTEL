@@ -13,7 +13,9 @@ import android.view.View;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
+import com.daily.dailyhotel.parcel.analytics.GourmetDetailAnalyticsParam;
 import com.daily.dailyhotel.repository.local.model.AnalyticsParam;
+import com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
@@ -26,8 +28,6 @@ import com.twoheart.dailyhotel.network.model.RecommendationPlace;
 import com.twoheart.dailyhotel.network.model.RecommendationPlaceList;
 import com.twoheart.dailyhotel.network.model.Sticker;
 import com.twoheart.dailyhotel.network.model.TodayDateTime;
-import com.twoheart.dailyhotel.place.layout.PlaceDetailLayout;
-import com.twoheart.dailyhotel.screen.gourmet.detail.GourmetDetailActivity;
 import com.twoheart.dailyhotel.screen.gourmet.filter.GourmetCalendarActivity;
 import com.twoheart.dailyhotel.screen.gourmet.preview.GourmetPreviewActivity;
 import com.twoheart.dailyhotel.util.DailyCalendar;
@@ -428,6 +428,19 @@ public class CollectionGourmetActivity extends CollectionBaseActivity
 
             RecommendationGourmet recommendationGourmet = placeViewItem.getItem();
 
+            // --> 추후에 정리되면 메소드로 수정
+            GourmetDetailAnalyticsParam analyticsParam = new GourmetDetailAnalyticsParam();
+            analyticsParam.price = recommendationGourmet.price;
+            analyticsParam.discountPrice = recommendationGourmet.discount;
+            analyticsParam.setShowOriginalPriceYn(analyticsParam.price, analyticsParam.discountPrice);
+            analyticsParam.setProvince(null);
+            analyticsParam.entryPosition = recommendationGourmet.entryPosition;
+            analyticsParam.totalListCount = count;
+            analyticsParam.isDailyChoice = recommendationGourmet.isDailyChoice;
+            analyticsParam.setAddressAreaName(recommendationGourmet.addrSummary);
+
+            // <-- 추후에 정리되면 메소드로 수정
+
             if (mIsUsedMultiTransition == true)
             {
                 setExitSharedElementCallback(new SharedElementCallback()
@@ -448,11 +461,6 @@ public class CollectionGourmetActivity extends CollectionBaseActivity
                     }
                 });
 
-                AnalyticsParam analyticsParam = new AnalyticsParam();
-                analyticsParam.setParam(CollectionGourmetActivity.this, recommendationGourmet);
-                analyticsParam.setProvince(null);
-                analyticsParam.setTotalListCount(count);
-
                 View simpleDraweeView = view.findViewById(R.id.imageView);
                 View nameTextView = view.findViewById(R.id.nameTextView);
                 View gradientTopView = view.findViewById(R.id.gradientTopView);
@@ -463,16 +471,31 @@ public class CollectionGourmetActivity extends CollectionBaseActivity
 
                 if (mapTag != null && "map".equals(mapTag) == true)
                 {
+                    //                    intent = GourmetDetailActivity.newInstance(CollectionGourmetActivity.this //
+                    //                        , (GourmetBookingDay) mPlaceBookingDay, recommendationGourmet.index, recommendationGourmet.name //
+                    //                        , recommendationGourmet.imageUrl, recommendationGourmet.category, recommendationGourmet.isSoldOut//
+                    //                        , analyticsParam, true, PlaceDetailLayout.TRANS_GRADIENT_BOTTOM_TYPE_MAP);
+
+
                     intent = GourmetDetailActivity.newInstance(CollectionGourmetActivity.this //
-                        , (GourmetBookingDay) mPlaceBookingDay, recommendationGourmet.index, recommendationGourmet.name //
-                        , recommendationGourmet.imageUrl, recommendationGourmet.category, recommendationGourmet.isSoldOut//
-                        , analyticsParam, true, PlaceDetailLayout.TRANS_GRADIENT_BOTTOM_TYPE_MAP);
+                        , recommendationGourmet.index, recommendationGourmet.name, recommendationGourmet.imageUrl, recommendationGourmet.discount//
+                        , ((GourmetBookingDay) mPlaceBookingDay).getVisitDay(DailyCalendar.ISO_8601_FORMAT)//
+                        , recommendationGourmet.category, recommendationGourmet.isSoldOut, false, false, true//
+                        , GourmetDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_MAP//
+                        ,analyticsParam);
                 } else
                 {
+                    //                    intent = GourmetDetailActivity.newInstance(CollectionGourmetActivity.this //
+                    //                        , (GourmetBookingDay) mPlaceBookingDay, recommendationGourmet.index, recommendationGourmet.name //
+                    //                        , recommendationGourmet.imageUrl, recommendationGourmet.category, recommendationGourmet.isSoldOut//
+                    //                        , analyticsParam, true, PlaceDetailLayout.TRANS_GRADIENT_BOTTOM_TYPE_LIST);
+
                     intent = GourmetDetailActivity.newInstance(CollectionGourmetActivity.this //
-                        , (GourmetBookingDay) mPlaceBookingDay, recommendationGourmet.index, recommendationGourmet.name //
-                        , recommendationGourmet.imageUrl, recommendationGourmet.category, recommendationGourmet.isSoldOut//
-                        , analyticsParam, true, PlaceDetailLayout.TRANS_GRADIENT_BOTTOM_TYPE_LIST);
+                        , recommendationGourmet.index, recommendationGourmet.name, recommendationGourmet.imageUrl, recommendationGourmet.discount//
+                        , ((GourmetBookingDay) mPlaceBookingDay).getVisitDay(DailyCalendar.ISO_8601_FORMAT)//
+                        , recommendationGourmet.category, recommendationGourmet.isSoldOut, false, false, true//
+                        , GourmetDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_LIST//
+                        , analyticsParam);
                 }
 
                 ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(CollectionGourmetActivity.this,//
@@ -484,15 +507,18 @@ public class CollectionGourmetActivity extends CollectionBaseActivity
                 startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMET_DETAIL, options.toBundle());
             } else
             {
-                AnalyticsParam analyticsParam = new AnalyticsParam();
-                analyticsParam.setParam(CollectionGourmetActivity.this, recommendationGourmet);
-                analyticsParam.setProvince(null);
-                analyticsParam.setTotalListCount(count);
+                //                Intent intent = GourmetDetailActivity.newInstance(CollectionGourmetActivity.this //
+                //                    , (GourmetBookingDay) mPlaceBookingDay, recommendationGourmet.index, recommendationGourmet.name //
+                //                    , recommendationGourmet.imageUrl, recommendationGourmet.category, recommendationGourmet.isSoldOut//
+                //                    , analyticsParam, false, PlaceDetailLayout.TRANS_GRADIENT_BOTTOM_TYPE_NONE);
+
 
                 Intent intent = GourmetDetailActivity.newInstance(CollectionGourmetActivity.this //
-                    , (GourmetBookingDay) mPlaceBookingDay, recommendationGourmet.index, recommendationGourmet.name //
-                    , recommendationGourmet.imageUrl, recommendationGourmet.category, recommendationGourmet.isSoldOut//
-                    , analyticsParam, false, PlaceDetailLayout.TRANS_GRADIENT_BOTTOM_TYPE_NONE);
+                    , recommendationGourmet.index, recommendationGourmet.name, recommendationGourmet.imageUrl, recommendationGourmet.discount//
+                    , ((GourmetBookingDay) mPlaceBookingDay).getVisitDay(DailyCalendar.ISO_8601_FORMAT)//
+                    , recommendationGourmet.category, recommendationGourmet.isSoldOut, false, false, false//
+                    , GourmetDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_NONE//
+                    , analyticsParam);
 
                 startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMET_DETAIL);
 

@@ -5,8 +5,8 @@ import java.util.List;
 public class GourmetMenu
 {
     public int index;
-    public int saleIdx;
-    public String ticketName;
+    public int saleIndex;
+    public String name;
     public int price;
     public int discountPrice;
     public String menuBenefit;
@@ -16,43 +16,41 @@ public class GourmetMenu
     public String closeTime;
     public String lastOrderTime;
     public String menuSummary;
-    private List<GourmetMenuImage> mGourmetMenuImageList;
-    private List<String> mMenuDetailList;
 
-    private int mPrimaryImageIndex;
+    public int minimumOrderQuantity;
+    public int maximumOrderQuantity;
+    public String startEatingTime;
+    public String endEatingTime;
+    public String readyTime;
+    public String expiryTime;
+    public int timeInterval;
+
+
+    private List<DetailImageInformation> mDetailImageInformationList;
+    private List<String> mMenuDetailList;
 
     public GourmetMenu()
     {
     }
 
-    public List<GourmetMenuImage> getImageList()
+    public List<DetailImageInformation> getImageList()
     {
-        return mGourmetMenuImageList;
+        return mDetailImageInformationList;
     }
 
-    public void setImageList(List<GourmetMenuImage> gourmetMenuImageList)
+    public void setImageList(List<DetailImageInformation> detailImageInformationList)
     {
-        mGourmetMenuImageList = gourmetMenuImageList;
+        mDetailImageInformationList = detailImageInformationList;
     }
 
-    public GourmetMenuImage getPrimaryImage()
+    public DetailImageInformation getPrimaryImage()
     {
-        if (mGourmetMenuImageList == null || mGourmetMenuImageList.size() == 0)
+        if (mDetailImageInformationList == null || mDetailImageInformationList.size() == 0)
         {
             return null;
         }
 
-        return mGourmetMenuImageList.get(mPrimaryImageIndex);
-    }
-
-    public void setPrimaryImageIndex(int index)
-    {
-        mPrimaryImageIndex = index;
-    }
-
-    public int getPrimaryImageIndex()
-    {
-        return mPrimaryImageIndex;
+        return mDetailImageInformationList.get(0);
     }
 
     public List<String> getMenuDetailList()

@@ -48,7 +48,6 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ActivityStayOutboundBookingDetailDataBinding;
 import com.twoheart.dailyhotel.databinding.DialogConciergeDataBinding;
 import com.twoheart.dailyhotel.databinding.DialogShareDataBinding;
-import com.twoheart.dailyhotel.databinding.DialogStayOutboundMapDataBinding;
 import com.twoheart.dailyhotel.databinding.LayoutStayOutboundBookingDetail01DataBinding;
 import com.twoheart.dailyhotel.databinding.LayoutStayOutboundBookingDetail02DataBinding;
 import com.twoheart.dailyhotel.databinding.LayoutStayOutboundBookingDetail03DataBinding;
@@ -111,8 +110,6 @@ public class StayOutboundBookingDetailView extends BaseDialogView<StayOutboundBo
         void onMyLocationClick();
 
         void onIssuingReceiptClick();
-
-        void onShareMapClick();
 
         void onConciergeClick();
 
@@ -419,25 +416,6 @@ public class StayOutboundBookingDetailView extends BaseDialogView<StayOutboundBo
         mBookingDetail01DataBinding.checkInDayTextView.setText(checkInDate);
         mBookingDetail01DataBinding.checkOutDayTextView.setText(checkOutDate);
         mBookingDetail01DataBinding.nightsTextView.setText(getString(R.string.label_nights, nights));
-    }
-
-    @Override
-    public void showNavigatorDialog(Dialog.OnDismissListener listener)
-    {
-        DialogStayOutboundMapDataBinding dataBinding = DataBindingUtil.inflate(LayoutInflater.from(getContext()), R.layout.dialog_stay_outbound_map_data, null, false);
-
-        dataBinding.googleMapTextView.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                hideSimpleDialog();
-
-                getEventListener().onShareMapClick();
-            }
-        });
-
-        showSimpleDialog(dataBinding.getRoot(), null, listener, true);
     }
 
     @Override

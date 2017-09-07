@@ -1,4 +1,4 @@
-package com.daily.dailyhotel.screen.common.call;
+package com.daily.dailyhotel.screen.common.dialog.call;
 
 
 import android.content.Context;

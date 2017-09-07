@@ -14,17 +14,17 @@ import android.view.ViewGroup;
 import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.entity.CommonDateTime;
 import com.daily.dailyhotel.entity.RecentlyPlace;
-import com.daily.dailyhotel.repository.local.model.AnalyticsParam;
+import com.daily.dailyhotel.parcel.analytics.GourmetDetailAnalyticsParam;
+import com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity;
 import com.daily.dailyhotel.util.RecentlyPlaceUtil;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.time.GourmetBookingDay;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
-import com.twoheart.dailyhotel.place.layout.PlaceDetailLayout;
-import com.twoheart.dailyhotel.screen.gourmet.detail.GourmetDetailActivity;
 import com.twoheart.dailyhotel.screen.gourmet.preview.GourmetPreviewActivity;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
@@ -201,6 +201,32 @@ public class RecentGourmetListFragment extends RecentPlacesListFragment
             PlaceViewItem placeViewItem = mListLayout.getItem(position);
             RecentlyPlace recentlyPlace = placeViewItem.getItem();
 
+            // --> 추후에 정리되면 메소드로 수정
+            GourmetDetailAnalyticsParam analyticsParam = new GourmetDetailAnalyticsParam();
+
+            if (recentlyPlace.prices != null)
+            {
+                analyticsParam.price = recentlyPlace.prices.normalPrice;
+
+                if (recentlyPlace.prices.discountPrice > 0)
+                {
+                    analyticsParam.discountPrice = recentlyPlace.prices.discountPrice;
+                }
+            } else
+            {
+                analyticsParam.price = 0;
+                analyticsParam.discountPrice = 0;
+            }
+
+            analyticsParam.setShowOriginalPriceYn(analyticsParam.price, analyticsParam.discountPrice);
+            analyticsParam.setProvince(null);
+            analyticsParam.entryPosition = position + 1;
+            analyticsParam.totalListCount = mListLayout.getItemCount();
+            analyticsParam.isDailyChoice = false;
+            analyticsParam.setAddressAreaName(recentlyPlace.addrSummary);
+
+            // <-- 추후에 정리되면 메소드로 수정
+
             if (Util.isUsedMultiTransition() == true)
             {
                 mBaseActivity.setExitSharedElementCallback(new SharedElementCallback()
@@ -221,15 +247,14 @@ public class RecentGourmetListFragment extends RecentPlacesListFragment
                     }
                 });
 
-                AnalyticsParam analyticsParam = new AnalyticsParam();
-                analyticsParam.setParam(mBaseActivity, recentlyPlace);
-                analyticsParam.setProvince(null);
-                analyticsParam.setTotalListCount(-1);
-
                 Intent intent = GourmetDetailActivity.newInstance(mBaseActivity //
-                    , (GourmetBookingDay) mPlaceBookingDay, recentlyPlace.index, recentlyPlace.title //
-                    , recentlyPlace.imageUrl, recentlyPlace.details.category, recentlyPlace.isSoldOut //
-                    , analyticsParam, true, PlaceDetailLayout.TRANS_GRADIENT_BOTTOM_TYPE_LIST);
+                    , recentlyPlace.index, recentlyPlace.title, recentlyPlace.imageUrl//
+                    , recentlyPlace.prices != null ? recentlyPlace.prices.discountPrice : GourmetDetailActivity.NONE_PRICE//
+                    , ((GourmetBookingDay) mPlaceBookingDay).getVisitDay(DailyCalendar.ISO_8601_FORMAT)//
+                    , recentlyPlace.details != null ? recentlyPlace.details.category : null//
+                    , recentlyPlace.isSoldOut, false, false, true//
+                    , GourmetDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_LIST//
+                    , analyticsParam);
 
                 View simpleDraweeView = view.findViewById(R.id.imageView);
                 View nameTextView = view.findViewById(R.id.nameTextView);
@@ -245,18 +270,16 @@ public class RecentGourmetListFragment extends RecentPlacesListFragment
                 mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMET_DETAIL, options.toBundle());
             } else
             {
-                AnalyticsParam analyticsParam = new AnalyticsParam();
-                analyticsParam.setParam(mBaseActivity, recentlyPlace);
-                analyticsParam.setProvince(null);
-                analyticsParam.setTotalListCount(-1);
-
                 Intent intent = GourmetDetailActivity.newInstance(mBaseActivity //
-                    , (GourmetBookingDay) mPlaceBookingDay, recentlyPlace.index, recentlyPlace.title //
-                    , recentlyPlace.imageUrl, recentlyPlace.details.category, recentlyPlace.isSoldOut //
-                    , analyticsParam, false, PlaceDetailLayout.TRANS_GRADIENT_BOTTOM_TYPE_NONE);
+                    , recentlyPlace.index, recentlyPlace.title, recentlyPlace.imageUrl
+                    , recentlyPlace.prices != null ? recentlyPlace.prices.discountPrice : GourmetDetailActivity.NONE_PRICE//
+                    , ((GourmetBookingDay) mPlaceBookingDay).getVisitDay(DailyCalendar.ISO_8601_FORMAT)//
+                    , recentlyPlace.details != null ? recentlyPlace.details.category : null//
+                    , recentlyPlace.isSoldOut, false, false, false//
+                    , GourmetDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_NONE//
+                    , analyticsParam);
 
                 mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMET_DETAIL);
-
                 mBaseActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
             }
 

@@ -2593,65 +2593,65 @@ public class DailyMobileAPITest
         mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
     }
 
-//    @Test
-//    public void requestGourmetSearchAutoCompleteList() throws Exception
-//    {
-//        mLock = new CountDownLatch(1);
-//
-//        retrofit2.Callback networkCallback = new retrofit2.Callback<JSONObject>()
-//        {
-//            @Override
-//            public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
-//            {
-//                try
-//                {
-//                    assertThat(response, notNullValue());
-//                    assertThat(response.isSuccessful(), is(true));
-//                    assertThat(response.body(), allOf(notNullValue(), isA(JSONObject.class)));
-//
-//                    JSONObject responseJSONObject = response.body();
-//
-//                    int msgCode = responseJSONObject.getInt("msgCode");
-//                    String message = responseJSONObject.getString("msg");
-//                    assertThat(message, isNotEmpty());
-//                    assertThat(message, msgCode, is(100));
-//
-//                    JSONArray dataJSONArray = responseJSONObject.getJSONArray("data");
-//                    assertThat(dataJSONArray, notNullValue());
-//
-//                    int length = dataJSONArray.length();
-//                    for (int i = 0; i < length; i++)
-//                    {
-//                        JSONObject keywordJSONObject = dataJSONArray.getJSONObject(i);
-//                        assertThat(keywordJSONObject, notNullValue());
-//                        assertThat(keywordJSONObject.getString("displayText"), isNotEmpty());
-//
-//                        if (keywordJSONObject.has("discount") == true)
-//                        {
-//                            assertThat(keywordJSONObject.getInt("discount"), moreThan(0));
-//                        }
-//                    }
-//                } catch (Throwable t)
-//                {
-//                    addException(call, response, t);
-//                } finally
-//                {
-//                    mLock.countDown();
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Call<JSONObject> call, Throwable t)
-//            {
-//                addException(call, null, t);
-//                mLock.countDown();
-//            }
-//        };
-//
-//        DailyMobileAPI.getInstance(mContext).requestGourmetSearchAutoCompleteList(mNetworkTag//
-//            , DailyCalendar.convertDateFormatString(mTodayDateTime.dailyDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyy-MM-dd"), Const.TEST_GOURMET_AUTO_SEARCH_TEXT, networkCallback);
-//        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
-//    }
+    //    @Test
+    //    public void requestGourmetSearchAutoCompleteList() throws Exception
+    //    {
+    //        mLock = new CountDownLatch(1);
+    //
+    //        retrofit2.Callback networkCallback = new retrofit2.Callback<JSONObject>()
+    //        {
+    //            @Override
+    //            public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
+    //            {
+    //                try
+    //                {
+    //                    assertThat(response, notNullValue());
+    //                    assertThat(response.isSuccessful(), is(true));
+    //                    assertThat(response.body(), allOf(notNullValue(), isA(JSONObject.class)));
+    //
+    //                    JSONObject responseJSONObject = response.body();
+    //
+    //                    int msgCode = responseJSONObject.getInt("msgCode");
+    //                    String message = responseJSONObject.getString("msg");
+    //                    assertThat(message, isNotEmpty());
+    //                    assertThat(message, msgCode, is(100));
+    //
+    //                    JSONArray dataJSONArray = responseJSONObject.getJSONArray("data");
+    //                    assertThat(dataJSONArray, notNullValue());
+    //
+    //                    int length = dataJSONArray.length();
+    //                    for (int i = 0; i < length; i++)
+    //                    {
+    //                        JSONObject keywordJSONObject = dataJSONArray.getJSONObject(i);
+    //                        assertThat(keywordJSONObject, notNullValue());
+    //                        assertThat(keywordJSONObject.getString("displayText"), isNotEmpty());
+    //
+    //                        if (keywordJSONObject.has("discount") == true)
+    //                        {
+    //                            assertThat(keywordJSONObject.getInt("discount"), moreThan(0));
+    //                        }
+    //                    }
+    //                } catch (Throwable t)
+    //                {
+    //                    addException(call, response, t);
+    //                } finally
+    //                {
+    //                    mLock.countDown();
+    //                }
+    //            }
+    //
+    //            @Override
+    //            public void onFailure(Call<JSONObject> call, Throwable t)
+    //            {
+    //                addException(call, null, t);
+    //                mLock.countDown();
+    //            }
+    //        };
+    //
+    //        DailyMobileAPI.getInstance(mContext).requestGourmetSearchAutoCompleteList(mNetworkTag//
+    //            , DailyCalendar.convertDateFormatString(mTodayDateTime.dailyDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyy-MM-dd"), Const.TEST_GOURMET_AUTO_SEARCH_TEXT, networkCallback);
+    //        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
+    //    }
 
     @Test
     public void requestGourmetDetailInformation() throws Exception

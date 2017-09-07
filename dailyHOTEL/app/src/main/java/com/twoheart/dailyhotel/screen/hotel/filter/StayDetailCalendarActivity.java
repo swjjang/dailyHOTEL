@@ -7,7 +7,7 @@ import android.view.View;
 
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
-import com.daily.dailyhotel.repository.remote.PlaceDetailCalendarImpl;
+import com.daily.dailyhotel.repository.remote.CalendarImpl;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.time.StayBookingDay;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
@@ -37,7 +37,7 @@ public class StayDetailCalendarActivity extends StayCalendarActivity
 {
     private int mHotelIndex;
 
-    private PlaceDetailCalendarImpl mPlaceDetailCalendarImpl;
+    private CalendarImpl mPlaceDetailCalendarImpl;
 
     public static Intent newInstance(Context context, TodayDateTime todayDateTime, StayBookingDay stayBookingDay //
         , int dayOfMaxCount, int hotelIndex, String screen, ArrayList<Integer> soldOutList, boolean isSelected//
@@ -60,7 +60,7 @@ public class StayDetailCalendarActivity extends StayCalendarActivity
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
-        mPlaceDetailCalendarImpl = new PlaceDetailCalendarImpl(this);
+        mPlaceDetailCalendarImpl = new CalendarImpl(this);
 
         Intent intent = getIntent();
         mHotelIndex = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_HOTELIDX, -1);

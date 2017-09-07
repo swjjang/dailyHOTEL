@@ -55,7 +55,6 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ActivityStayOutboundDetailDataBinding;
 import com.twoheart.dailyhotel.databinding.DialogConciergeDataBinding;
 import com.twoheart.dailyhotel.databinding.DialogShareDataBinding;
-import com.twoheart.dailyhotel.databinding.DialogStayOutboundMapDataBinding;
 import com.twoheart.dailyhotel.databinding.LayoutStayOutboundDetail02DataBinding;
 import com.twoheart.dailyhotel.databinding.LayoutStayOutboundDetail03DataBinding;
 import com.twoheart.dailyhotel.databinding.LayoutStayOutboundDetail04DataBinding;
@@ -129,8 +128,6 @@ public class StayOutboundDetailView extends BaseDialogView<StayOutboundDetailVie
         void onConciergeHappyTalkClick();
 
         void onConciergeCallClick();
-
-        void onShareMapClick();
 
         void onRoomClick(StayOutboundRoom stayOutboundRoom);
     }
@@ -776,18 +773,6 @@ public class StayOutboundDetailView extends BaseDialogView<StayOutboundDetailVie
     }
 
     @Override
-    public void setPeopleText(String peopleText)
-    {
-
-    }
-
-    @Override
-    public void setCalendarText(String peopleText)
-    {
-
-    }
-
-    @Override
     public void showConciergeDialog(Dialog.OnDismissListener listener)
     {
         DialogConciergeDataBinding dataBinding = DataBindingUtil.inflate(LayoutInflater.from(getContext()), R.layout.dialog_concierge_data, null, false);
@@ -837,25 +822,6 @@ public class StayOutboundDetailView extends BaseDialogView<StayOutboundDetailVie
             public void onClick(View v)
             {
                 hideSimpleDialog();
-            }
-        });
-
-        showSimpleDialog(dataBinding.getRoot(), null, listener, true);
-    }
-
-    @Override
-    public void showNavigatorDialog(Dialog.OnDismissListener listener)
-    {
-        DialogStayOutboundMapDataBinding dataBinding = DataBindingUtil.inflate(LayoutInflater.from(getContext()), R.layout.dialog_stay_outbound_map_data, null, false);
-
-        dataBinding.googleMapTextView.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                hideSimpleDialog();
-
-                getEventListener().onShareMapClick();
             }
         });
 
@@ -967,7 +933,11 @@ public class StayOutboundDetailView extends BaseDialogView<StayOutboundDetailVie
             return;
         }
 
-        if (imageList.size() == 1)
+        if (imageList == null || imageList.size() == 0)
+        {
+            setViewPagerLineIndicatorVisible(false);
+            return;
+        } else if (imageList.size() == 1)
         {
             setViewPagerLineIndicatorVisible(false);
         } else
@@ -1450,8 +1420,15 @@ public class StayOutboundDetailView extends BaseDialogView<StayOutboundDetailVie
             return;
         }
 
-        getViewDataBinding().moreIconView.setVisibility(visible ? View.VISIBLE : View.INVISIBLE);
-        getViewDataBinding().viewpagerIndicator.setVisibility(visible ? View.VISIBLE : View.INVISIBLE);
+        if (visible == true)
+        {
+            getViewDataBinding().moreIconView.setVisibility(View.VISIBLE);
+            getViewDataBinding().viewpagerIndicator.setVisibility(View.VISIBLE);
+        } else
+        {
+            getViewDataBinding().moreIconView.setVisibility(View.INVISIBLE);
+            getViewDataBinding().viewpagerIndicator.setVisibility(View.INVISIBLE);
+        }
     }
 
     private void setRoomList(StayBookDateTime stayBookDateTime, List<StayOutboundRoom> roomList)

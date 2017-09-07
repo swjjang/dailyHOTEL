@@ -18,20 +18,20 @@ import com.daily.dailyhotel.base.BaseExceptionPresenter;
 import com.daily.dailyhotel.entity.CampaignTag;
 import com.daily.dailyhotel.entity.CommonDateTime;
 import com.daily.dailyhotel.entity.GourmetCampaignTags;
+import com.daily.dailyhotel.parcel.analytics.GourmetDetailAnalyticsParam;
 import com.daily.dailyhotel.repository.local.model.AnalyticsParam;
 import com.daily.dailyhotel.repository.remote.CampaignTagRemoteImpl;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
-import com.daily.dailyhotel.screen.common.call.CallDialogActivity;
+import com.daily.dailyhotel.screen.common.dialog.call.CallDialogActivity;
 import com.daily.dailyhotel.screen.home.campaigntag.CampaignTagListAnalyticsImpl;
 import com.daily.dailyhotel.screen.home.campaigntag.CampaignTagListAnalyticsInterface;
+import com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Gourmet;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.time.GourmetBookingDay;
 import com.twoheart.dailyhotel.network.model.TodayDateTime;
-import com.twoheart.dailyhotel.place.layout.PlaceDetailLayout;
-import com.twoheart.dailyhotel.screen.gourmet.detail.GourmetDetailActivity;
 import com.twoheart.dailyhotel.screen.gourmet.filter.GourmetCalendarActivity;
 import com.twoheart.dailyhotel.screen.gourmet.preview.GourmetPreviewActivity;
 import com.twoheart.dailyhotel.util.Constants;
@@ -94,7 +94,7 @@ public class GourmetCampaignTagListPresenter //
         mCommonRemoteImpl = new CommonRemoteImpl(activity);
         mCampaignTagRemoteImpl = new CampaignTagRemoteImpl(activity);
 
-        setRefresh(false);
+        setRefresh(true);
     }
 
     @Override
@@ -122,7 +122,6 @@ public class GourmetCampaignTagListPresenter //
     public void onPostCreate()
     {
         getViewInterface().setToolbarTitle(mTitle);
-        onRefresh(true);
     }
 
     @Override
@@ -249,9 +248,9 @@ public class GourmetCampaignTagListPresenter //
     }
 
     @Override
-    protected void onRefresh(boolean showProgress)
+    protected synchronized void onRefresh(boolean showProgress)
     {
-        if (getActivity().isFinishing() == true)
+        if (getActivity().isFinishing() == true || isRefresh() == false)
         {
             return;
         }
@@ -577,6 +576,19 @@ public class GourmetCampaignTagListPresenter //
 
         Gourmet gourmet = placeViewItem.getItem();
 
+        // --> 추후에 정리되면 메소드로 수정
+        GourmetDetailAnalyticsParam analyticsParam = new GourmetDetailAnalyticsParam();
+        analyticsParam.price = gourmet.price;
+        analyticsParam.discountPrice = gourmet.discountPrice;
+        analyticsParam.setShowOriginalPriceYn(analyticsParam.price, analyticsParam.discountPrice);
+        analyticsParam.setProvince(null);
+        analyticsParam.entryPosition = gourmet.entryPosition;
+        analyticsParam.totalListCount = count;
+        analyticsParam.isDailyChoice = gourmet.isDailyChoice;
+        analyticsParam.setAddressAreaName(gourmet.addressSummary);
+
+        // <-- 추후에 정리되면 메소드로 수정
+
         if (Util.isUsedMultiTransition() == true)
         {
             getActivity().setExitSharedElementCallback(new SharedElementCallback()
@@ -597,11 +609,6 @@ public class GourmetCampaignTagListPresenter //
                 }
             });
 
-            AnalyticsParam analyticsParam = new AnalyticsParam();
-            analyticsParam.setParam(getActivity(), gourmet);
-            analyticsParam.setProvince(null);
-            analyticsParam.setTotalListCount(count);
-
             View simpleDraweeView = view.findViewById(R.id.imageView);
             View nameTextView = view.findViewById(R.id.nameTextView);
             View gradientTopView = view.findViewById(R.id.gradientTopView);
@@ -612,16 +619,30 @@ public class GourmetCampaignTagListPresenter //
 
             if (mapTag != null && "map".equals(mapTag) == true)
             {
+                //                intent = GourmetDetailActivity.newInstance(getActivity() //
+                //                    , mGourmetBookingDay, gourmet.index, gourmet.name //
+                //                    , gourmet.imageUrl, gourmet.category, gourmet.isSoldOut//
+                //                    , analyticsParam, true, PlaceDetailLayout.TRANS_GRADIENT_BOTTOM_TYPE_MAP);
+
                 intent = GourmetDetailActivity.newInstance(getActivity() //
-                    , mGourmetBookingDay, gourmet.index, gourmet.name //
-                    , gourmet.imageUrl, gourmet.category, gourmet.isSoldOut//
-                    , analyticsParam, true, PlaceDetailLayout.TRANS_GRADIENT_BOTTOM_TYPE_MAP);
+                    , gourmet.index, gourmet.name, gourmet.imageUrl, gourmet.discountPrice//
+                    , mGourmetBookingDay.getVisitDay(DailyCalendar.ISO_8601_FORMAT)//
+                    , gourmet.category, gourmet.isSoldOut, false, false, true//
+                    , GourmetDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_MAP//
+                    , analyticsParam);
             } else
             {
-                intent = GourmetDetailActivity.newInstance(getActivity()//
-                    , mGourmetBookingDay, gourmet.index, gourmet.name //
-                    , gourmet.imageUrl, gourmet.category, gourmet.isSoldOut//
-                    , analyticsParam, true, PlaceDetailLayout.TRANS_GRADIENT_BOTTOM_TYPE_LIST);
+                //                intent = GourmetDetailActivity.newInstance(getActivity()//
+                //                    , mGourmetBookingDay, gourmet.index, gourmet.name //
+                //                    , gourmet.imageUrl, gourmet.category, gourmet.isSoldOut//
+                //                    , analyticsParam, true, PlaceDetailLayout.TRANS_GRADIENT_BOTTOM_TYPE_LIST);
+
+                intent = GourmetDetailActivity.newInstance(getActivity() //
+                    , gourmet.index, gourmet.name, gourmet.imageUrl, gourmet.discountPrice//
+                    , mGourmetBookingDay.getVisitDay(DailyCalendar.ISO_8601_FORMAT)//
+                    , gourmet.category, gourmet.isSoldOut, false, false, true//
+                    , GourmetDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_LIST//
+                    , analyticsParam);
             }
 
             ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(),//
@@ -633,15 +654,17 @@ public class GourmetCampaignTagListPresenter //
             startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_GOURMET_DETAIL, options.toBundle());
         } else
         {
-            AnalyticsParam analyticsParam = new AnalyticsParam();
-            analyticsParam.setParam(getActivity(), gourmet);
-            analyticsParam.setProvince(null);
-            analyticsParam.setTotalListCount(count);
+            //            Intent intent = GourmetDetailActivity.newInstance(getActivity() //
+            //                , mGourmetBookingDay, gourmet.index, gourmet.name //
+            //                , gourmet.imageUrl, gourmet.category, gourmet.isSoldOut//
+            //                , analyticsParam, false, PlaceDetailLayout.TRANS_GRADIENT_BOTTOM_TYPE_NONE);
 
             Intent intent = GourmetDetailActivity.newInstance(getActivity() //
-                , mGourmetBookingDay, gourmet.index, gourmet.name //
-                , gourmet.imageUrl, gourmet.category, gourmet.isSoldOut//
-                , analyticsParam, false, PlaceDetailLayout.TRANS_GRADIENT_BOTTOM_TYPE_NONE);
+                , gourmet.index, gourmet.name, gourmet.imageUrl, gourmet.discountPrice//
+                , mGourmetBookingDay.getVisitDay(DailyCalendar.ISO_8601_FORMAT)//
+                , gourmet.category, gourmet.isSoldOut, false, false, false//
+                , GourmetDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_NONE//
+                , analyticsParam);
 
             startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_GOURMET_DETAIL);
 

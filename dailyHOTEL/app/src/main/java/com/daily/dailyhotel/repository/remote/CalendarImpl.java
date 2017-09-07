@@ -3,7 +3,7 @@ package com.daily.dailyhotel.repository.remote;
 import android.content.Context;
 
 import com.daily.base.exception.BaseException;
-import com.daily.dailyhotel.domain.PlaceDetailCalendarInterface;
+import com.daily.dailyhotel.domain.CalendarInterface;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.network.dto.BaseListDto;
 
@@ -19,35 +19,33 @@ import io.reactivex.functions.Function;
  * Created by android_sam on 2017. 7. 12..
  */
 
-public class PlaceDetailCalendarImpl implements PlaceDetailCalendarInterface
+public class CalendarImpl implements CalendarInterface
 {
     private Context mContext;
 
-    public PlaceDetailCalendarImpl(@NonNull Context context)
+    public CalendarImpl(@NonNull Context context)
     {
         mContext = context;
     }
 
     @Override
-    public Observable<List<String>> getGourmetUnavailableDates(int placeIndex, int dateRange, boolean reverse)
+    public Observable<List<Integer>> getGourmetUnavailableDates(int gourmetIndex, int dateRange, boolean reverse)
     {
-        return DailyMobileAPI.getInstance(mContext).getGourmetUnavailableDates(placeIndex, dateRange, reverse) //
-            .map(new Function<BaseListDto<String>, List<String>>()
+        return DailyMobileAPI.getInstance(mContext).getGourmetUnavailableDates(gourmetIndex, dateRange, reverse) //
+            .map(new Function<BaseListDto<String>, List<Integer>>()
             {
                 @Override
-                public List<String> apply(@NonNull BaseListDto<String> stringBaseListDto) throws Exception
+                public List<Integer> apply(@NonNull BaseListDto<String> stringBaseListDto) throws Exception
                 {
-                    List<String> unavailableDateList = null;
+                    List<Integer> unavailableDateList = new ArrayList<>();
 
                     if (stringBaseListDto != null)
                     {
                         if (stringBaseListDto.msgCode == 100 && stringBaseListDto.data != null)
                         {
-                            unavailableDateList = stringBaseListDto.data;
-
-                            if (unavailableDateList == null)
+                            for (String dayString : stringBaseListDto.data)
                             {
-                                unavailableDateList = new ArrayList<String>();
+                                unavailableDateList.add(Integer.parseInt(dayString.replaceAll("-", "")));
                             }
                         } else
                         {

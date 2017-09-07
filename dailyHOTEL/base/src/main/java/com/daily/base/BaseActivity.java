@@ -1,5 +1,6 @@
 package com.daily.base;
 
+import android.content.ComponentName;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
@@ -273,5 +274,17 @@ public abstract class BaseActivity<T1 extends BasePresenter> extends AppCompatAc
         {
 
         }
+    }
+
+    protected boolean equalsCallingActivity(Class className)
+    {
+        ComponentName callingActivity = getCallingActivity();
+
+        if (callingActivity == null || className == null)
+        {
+            return false;
+        }
+
+        return callingActivity.getClassName().equalsIgnoreCase(className.getName());
     }
 }

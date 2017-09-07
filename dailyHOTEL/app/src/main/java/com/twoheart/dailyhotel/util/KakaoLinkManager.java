@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
+import com.daily.dailyhotel.entity.GourmetBookDateTime;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.kakao.kakaolink.AppActionBuilder;
 import com.kakao.kakaolink.AppActionInfoBuilder;
@@ -199,6 +200,39 @@ public class KakaoLinkManager implements Constants
 
             String text = mContext.getString(R.string.kakao_btn_share_fnb, name, placeName//
                 , gourmetBookingDay.getVisitDay("yyyy.MM.dd(EEE)"), address);
+
+            if (DailyTextUtils.isTextEmpty(imageUrl) == false)
+            {
+                int lastSlash = imageUrl.lastIndexOf('/');
+                String fileName = imageUrl.substring(lastSlash + 1);
+                messageBuilder.addImage(imageUrl.substring(0, lastSlash + 1) + URLEncoder.encode(fileName), 300, 200);
+            }
+
+            messageBuilder.addText(text);
+
+            mKakaoLink.sendMessage(messageBuilder, mContext);
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+        }
+    }
+
+    public void shareGourmet(String name, String placeName, String address, int index, String imageUrl, GourmetBookDateTime gourmetBookDateTime)
+    {
+        try
+        {
+            KakaoTalkLinkMessageBuilder messageBuilder = mKakaoLink.createKakaoTalkLinkMessageBuilder();
+
+            String date = gourmetBookDateTime.getVisitDateTime("yyyyMMdd");
+            String schemeParams = String.format(Locale.KOREA, "vc=5&v=gd&i=%d&d=%s", index, date);
+
+            messageBuilder.addAppButton(mContext.getString(R.string.kakao_btn_go_fnb)//
+                , new AppActionBuilder().addActionInfo(AppActionInfoBuilder.createAndroidActionInfoBuilder()//
+                    .setExecuteParam(schemeParams).build())//
+                    .addActionInfo(AppActionInfoBuilder.createiOSActionInfoBuilder().setExecuteParam(schemeParams).build()).build());
+
+            String text = mContext.getString(R.string.kakao_btn_share_fnb, name, placeName//
+                , gourmetBookDateTime.getVisitDateTime("yyyy.MM.dd(EEE)"), address);
 
             if (DailyTextUtils.isTextEmpty(imageUrl) == false)
             {
