@@ -114,17 +114,34 @@ public class StayAutoRefundActivity extends BaseActivity
         // 시작시에 은행 계좌인 경우에는 은행 리스트를 먼저 받아야한다.
         mStayAutoRefundLayout.setPlaceBookingDetail(mStayBookingDetail);
 
-        // 계좌 이체인 경우
-        if (PAYMENT_TYPE_VBANK.equalsIgnoreCase(mStayBookingDetail.transactionType) == true && mStayBookingDetail.bonus == 0)
+        if (DailyTextUtils.isTextEmpty(mAggregationId) == true)
         {
-            mStayAutoRefundLayout.setAccountLayoutVisible(true);
+            // 계좌 이체인 경우
+            if (PAYMENT_TYPE_VBANK.equalsIgnoreCase(mStayBookingDetail.transactionType) == true && mStayBookingDetail.bonus == 0)
+            {
+                mStayAutoRefundLayout.setAccountLayoutVisible(true);
 
-            lockUI();
+                lockUI();
 
-            mStayAutoRefundNetworkController.requestBankList();
+                mStayAutoRefundNetworkController.requestBankList();
+            } else
+            {
+                mStayAutoRefundLayout.setAccountLayoutVisible(false);
+            }
         } else
         {
-            mStayAutoRefundLayout.setAccountLayoutVisible(false);
+            // 계좌 이체인 경우
+            if (PAYMENT_TYPE_VBANK.equalsIgnoreCase(mStayBookingDetail.transactionType) == true)
+            {
+                mStayAutoRefundLayout.setAccountLayoutVisible(true);
+
+                lockUI();
+
+                mStayAutoRefundNetworkController.requestBankList();
+            } else
+            {
+                mStayAutoRefundLayout.setAccountLayoutVisible(false);
+            }
         }
     }
 
@@ -673,14 +690,29 @@ public class StayAutoRefundActivity extends BaseActivity
             return false;
         }
 
-        if (PAYMENT_TYPE_VBANK.equalsIgnoreCase(mStayBookingDetail.transactionType) == true && mStayBookingDetail.bonus == 0)
+        if (DailyTextUtils.isTextEmpty(mAggregationId) == true)
         {
-            String accountNumber = mStayAutoRefundLayout.getAccountNumber();
-            String accountName = mStayAutoRefundLayout.getAccountName();
-
-            if (mSelectedBank == null || DailyTextUtils.isTextEmpty(accountNumber, accountName) == true)
+            if (PAYMENT_TYPE_VBANK.equalsIgnoreCase(mStayBookingDetail.transactionType) == true && mStayBookingDetail.bonus == 0)
             {
-                return false;
+                String accountNumber = mStayAutoRefundLayout.getAccountNumber();
+                String accountName = mStayAutoRefundLayout.getAccountName();
+
+                if (mSelectedBank == null || DailyTextUtils.isTextEmpty(accountNumber, accountName) == true)
+                {
+                    return false;
+                }
+            }
+        } else
+        {
+            if (PAYMENT_TYPE_VBANK.equalsIgnoreCase(mStayBookingDetail.transactionType) == true)
+            {
+                String accountNumber = mStayAutoRefundLayout.getAccountNumber();
+                String accountName = mStayAutoRefundLayout.getAccountName();
+
+                if (mSelectedBank == null || DailyTextUtils.isTextEmpty(accountNumber, accountName) == true)
+                {
+                    return false;
+                }
             }
         }
 
