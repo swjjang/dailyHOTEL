@@ -801,6 +801,16 @@ public class StayOutboundListView extends BaseBlurView<StayOutboundListView.OnEv
     {
         View dialogView = LayoutInflater.from(getContext()).inflate(R.layout.view_dialog_preview_layout, null, false);
 
+        View confirmTextView = dialogView.findViewById(R.id.confirmTextView);
+        confirmTextView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                hideSimpleDialog();
+            }
+        });
+
         showSimpleDialog(dialogView, null, null, false);
     }
 
