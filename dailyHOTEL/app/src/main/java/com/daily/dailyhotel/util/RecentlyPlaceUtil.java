@@ -645,69 +645,6 @@ public class RecentlyPlaceUtil
         DailyDbHelper.getInstance().close();
     }
 
-    public static void addRecentlyItemAsync(final Constants.ServiceType serviceType, int index, String name //
-        , String englishName, String imageUrl, boolean isUpdateDate)
-    {
-        if (serviceType == null || index <= 0)
-        {
-            return;
-        }
-
-        RecentlyRealmObject realmObject = new RecentlyRealmObject();
-        realmObject.index = index;
-        realmObject.serviceType = serviceType.name();
-
-        if (DailyTextUtils.isTextEmpty(name) == false)
-        {
-            realmObject.name = name;
-        }
-
-        if (DailyTextUtils.isTextEmpty(englishName) == false)
-        {
-            realmObject.englishName = englishName;
-        }
-
-        if (DailyTextUtils.isTextEmpty(imageUrl) == false)
-        {
-            realmObject.imageUrl = imageUrl;
-        }
-
-        if (isUpdateDate == true)
-        {
-            Calendar calendar = DailyCalendar.getInstance();
-            realmObject.savingTime = calendar.getTimeInMillis();
-        }
-
-        Realm realm = Realm.getDefaultInstance();
-        realm.executeTransactionAsync(new Realm.Transaction()
-        {
-            @Override
-            public void execute(Realm realm)
-            {
-                if (isUpdateDate == false)
-                {
-                    RecentlyRealmObject firstResultObject = realm.where(RecentlyRealmObject.class) //
-                        .beginGroup().equalTo("serviceType", serviceType.name()).equalTo("index", index).endGroup() //
-                        .findFirst();
-
-                    if (firstResultObject != null)
-                    {
-                        realmObject.savingTime = firstResultObject.savingTime;
-                    }
-                }
-
-                realm.copyToRealmOrUpdate(realmObject);
-            }
-        }, new Realm.Transaction.OnSuccess()
-        {
-            @Override
-            public void onSuccess()
-            {
-                //                maintainMaxRecentlyItem(serviceType);
-            }
-        });
-    }
-
     public static void deleteRecentlyItem(Context context, Constants.ServiceType serviceType, int index)
     {
         if (serviceType == null || index <= 0 || context == null)
