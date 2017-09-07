@@ -1003,9 +1003,11 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
             return;
         }
 
+        final int totalPrice = mGourmetPayment.totalPrice * mMenuCount;
+
         // 보너스 / 쿠폰 (으)로만 결제하는 경우
-        if ((mBonusSelected == true && mGourmetPayment.totalPrice <= mUserSimpleInformation.bonus)//
-            || (mCouponSelected == true && mGourmetPayment.totalPrice <= mSelectedCoupon.amount))
+        if ((mBonusSelected == true && totalPrice <= mUserSimpleInformation.bonus)//
+            || (mCouponSelected == true && totalPrice <= mSelectedCoupon.amount))
         {
             // 보너스로만 결제할 경우에는 팝업이 기존의 카드 타입과 동일한다.
             getViewInterface().showAgreeTermDialog(DailyBookingPaymentTypeView.PaymentType.FREE//
@@ -1111,13 +1113,15 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
 
         String couponCode = mSelectedCoupon != null ? mSelectedCoupon.couponCode : null;
 
+        int totalPrice = mGourmetPayment.totalPrice * mMenuCount;
+
         // 보너스 / 쿠폰 (으)로만 결제하는 경우
-        if ((mBonusSelected == true && mGourmetPayment.totalPrice <= mUserSimpleInformation.bonus)//
-            || (mCouponSelected == true && mGourmetPayment.totalPrice <= mSelectedCoupon.amount))
+        if ((mBonusSelected == true && totalPrice <= mUserSimpleInformation.bonus)//
+            || (mCouponSelected == true && totalPrice <= mSelectedCoupon.amount))
         {
             addCompositeDisposable(mPaymentRemoteImpl.getGourmetPaymentTypeBonus(mVisitDateTime, mMenuIndex//
                 , mMenuCount, mBonusSelected, mUserSimpleInformation.bonus, mCouponSelected, couponCode, mGuest//
-                , mGourmetPayment.totalPrice).subscribe(new Consumer<PaymentResult>()
+                , totalPrice).subscribe(new Consumer<PaymentResult>()
             {
                 @Override
                 public void accept(@io.reactivex.annotations.NonNull PaymentResult paymentResult) throws Exception
@@ -1164,7 +1168,7 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
 
                     addCompositeDisposable(mPaymentRemoteImpl.getGourmetPaymentTypeEasy(mVisitDateTime, mMenuIndex//
                         , mMenuCount, mBonusSelected, mUserSimpleInformation.bonus, mCouponSelected, couponCode//
-                        , mGuest, mGourmetPayment.totalPrice, mSelectedCard.billKey).subscribe(new Consumer<PaymentResult>()
+                        , mGuest, totalPrice, mSelectedCard.billKey).subscribe(new Consumer<PaymentResult>()
                     {
                         @Override
                         public void accept(@io.reactivex.annotations.NonNull PaymentResult paymentResult) throws Exception
@@ -1200,7 +1204,7 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
 
                     JSONObject jsonObject = getPaymentJSONObject(mVisitDateTime, mMenuIndex, mMenuCount//
                         , mBonusSelected, mUserSimpleInformation.bonus, mCouponSelected, couponCode, mGuest//
-                        , mGourmetPayment.totalPrice);
+                        , totalPrice);
 
                     startActivityForResult(PaymentWebActivity.newInstance(getActivity()//
                         , getWebPaymentUrl(PAYMENT_TYPE), jsonObject.toString(), AnalyticsManager.Screen.DAILYGOURMET_PAYMENT_PROCESS)//
@@ -1214,7 +1218,7 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
 
                     JSONObject jsonObject = getPaymentJSONObject(mVisitDateTime, mMenuIndex, mMenuCount//
                         , mBonusSelected, mUserSimpleInformation.bonus, mCouponSelected, couponCode, mGuest//
-                        , mGourmetPayment.totalPrice);
+                        , totalPrice);
 
                     startActivityForResult(PaymentWebActivity.newInstance(getActivity()//
                         , getWebPaymentUrl(PAYMENT_TYPE), jsonObject.toString(), AnalyticsManager.Screen.DAILYGOURMET_PAYMENT_PROCESS)//
@@ -1228,7 +1232,7 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
 
                     JSONObject jsonObject = getPaymentJSONObject(mVisitDateTime, mMenuIndex, mMenuCount//
                         , mBonusSelected, mUserSimpleInformation.bonus, mCouponSelected, couponCode, mGuest//
-                        , mGourmetPayment.totalPrice);
+                        , totalPrice);
 
                     startActivityForResult(PaymentWebActivity.newInstance(getActivity()//
                         , getWebPaymentUrl(PAYMENT_TYPE), jsonObject.toString(), AnalyticsManager.Screen.DAILYGOURMET_PAYMENT_PROCESS)//
@@ -1369,7 +1373,7 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
         try
         {
             int paymentPrice, discountPrice;
-            int totalPrice = mGourmetPayment.totalPrice * mMenuCount;
+            final int totalPrice = mGourmetPayment.totalPrice * mMenuCount;
 
             if (mBonusSelected == true)
             {
@@ -1695,9 +1699,11 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
             return;
         }
 
-        if (coupon.amount > mGourmetPayment.totalPrice)
+        final int totalPrice = mGourmetPayment.totalPrice * mMenuCount;
+
+        if (coupon.amount > totalPrice)
         {
-            String difference = DailyTextUtils.getPriceFormat(getActivity(), (coupon.amount - mGourmetPayment.totalPrice), false);
+            String difference = DailyTextUtils.getPriceFormat(getActivity(), (coupon.amount - totalPrice), false);
 
             getViewInterface().showSimpleDialog(null, getString(R.string.message_over_coupon_price, difference)//
                 , getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no), new View.OnClickListener()
