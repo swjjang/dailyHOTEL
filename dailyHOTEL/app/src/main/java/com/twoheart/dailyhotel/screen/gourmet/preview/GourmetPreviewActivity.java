@@ -265,7 +265,6 @@ public class GourmetPreviewActivity extends BaseActivity
     {
         // 판매 완료 혹은 가격이 변동되었는지 조사한다
         List<GourmetProduct> gourmetProductList = gourmetDetail.getProductList();
-        GourmetDetailParams gourmetDetailParams = gourmetDetail.getGourmetDetailParams();
 
         if (gourmetProductList == null || gourmetProductList.size() == 0)
         {

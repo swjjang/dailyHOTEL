@@ -108,7 +108,7 @@ public class BookingRemoteImpl implements BookingInterface
             @Override
             public Boolean apply(@io.reactivex.annotations.NonNull BaseDto<BookingHideData> bookingHideDataBaseDto) throws Exception
             {
-                boolean result = false;
+                boolean result;
 
                 if (bookingHideDataBaseDto != null)
                 {
@@ -137,7 +137,7 @@ public class BookingRemoteImpl implements BookingInterface
             @Override
             public StayOutboundBookingDetail apply(@io.reactivex.annotations.NonNull BaseDto<StayOutboundBookingDetailData> stayOutboundBookingDetailDataBaseDto) throws Exception
             {
-                StayOutboundBookingDetail stayOutboundBookingDetail = null;
+                StayOutboundBookingDetail stayOutboundBookingDetail;
 
                 if (stayOutboundBookingDetailDataBaseDto != null)
                 {
@@ -166,7 +166,7 @@ public class BookingRemoteImpl implements BookingInterface
             @Override
             public StayBookingDetail apply(@io.reactivex.annotations.NonNull BaseDto<StayBookingDetailData> stayBookingDetailDataBaseDto) throws Exception
             {
-                StayBookingDetail stayBookingDetail = null;
+                StayBookingDetail stayBookingDetail;
 
                 if (stayBookingDetailDataBaseDto != null)
                 {
@@ -195,7 +195,7 @@ public class BookingRemoteImpl implements BookingInterface
             @Override
             public GourmetBookingDetail apply(@io.reactivex.annotations.NonNull BaseDto<GourmetBookingDetailData> gourmetBookingDetailDataBaseDto) throws Exception
             {
-                GourmetBookingDetail gourmetBookingDetail = null;
+                GourmetBookingDetail gourmetBookingDetail;
 
                 if (gourmetBookingDetailDataBaseDto != null)
                 {
@@ -224,7 +224,7 @@ public class BookingRemoteImpl implements BookingInterface
             @Override
             public WaitingDeposit apply(@io.reactivex.annotations.NonNull BaseDto<WaitingDepositData> waitingDepositDataBaseDto) throws Exception
             {
-                WaitingDeposit waitingDeposit = null;
+                WaitingDeposit waitingDeposit;
 
                 if (waitingDepositDataBaseDto != null)
                 {

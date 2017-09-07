@@ -32,7 +32,7 @@ public class StayOutboundReceiptRemoteImpl implements StayOutboundReceiptInterfa
             @Override
             public StayOutboundReceipt apply(@io.reactivex.annotations.NonNull BaseDto<StayOutboundReceiptData> stayOutboundReceiptDataBaseDto) throws Exception
             {
-                StayOutboundReceipt stayOutboundReceipt = null;
+                StayOutboundReceipt stayOutboundReceipt;
 
                 if (stayOutboundReceiptDataBaseDto != null)
                 {
@@ -61,7 +61,7 @@ public class StayOutboundReceiptRemoteImpl implements StayOutboundReceiptInterfa
             @Override
             public String apply(@io.reactivex.annotations.NonNull BaseDto<StayOutboundEmailReceiptData> stayOutboundEmailReceiptDataBaseDto) throws Exception
             {
-                String message = null;
+                String message;
 
                 if (stayOutboundEmailReceiptDataBaseDto != null)
                 {

@@ -1388,7 +1388,7 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
             getViewInterface().setVendorName(stayPayment.businessName);
             getViewInterface().setTransportation(stayPayment.transportation);
 
-            if (stayPayment.transportation != StayPayment.VISIT_TYPE_NONE && mTransportationType == null)
+            if (stayPayment.transportation.equalsIgnoreCase(StayPayment.VISIT_TYPE_NONE) == false && mTransportationType == null)
             {
                 onTransportationClick(WALKING);
             }

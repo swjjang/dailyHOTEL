@@ -1505,7 +1505,6 @@ public class Util implements Constants
         }
 
         Object objectClass = bundleClass.newInstance();
-        Object filedObject;
         int modifier;
 
         for (Field field : bundleClass.getFields())

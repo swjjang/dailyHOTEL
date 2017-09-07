@@ -70,7 +70,7 @@ public class CalendarImpl implements CalendarInterface
                 @Override
                 public List<String> apply(@NonNull BaseListDto<String> stringBaseListDto) throws Exception
                 {
-                    List<String> unavailableDateList = null;
+                    List<String> unavailableDateList;
 
                     if (stringBaseListDto != null)
                     {
@@ -105,7 +105,7 @@ public class CalendarImpl implements CalendarInterface
                 @Override
                 public List<String> apply(@NonNull BaseListDto<String> stringBaseListDto) throws Exception
                 {
-                    List<String> availableDateList = null;
+                    List<String> availableDateList;
 
                     if (stringBaseListDto != null)
                     {

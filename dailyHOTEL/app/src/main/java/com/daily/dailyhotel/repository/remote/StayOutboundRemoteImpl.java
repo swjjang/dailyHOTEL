@@ -90,7 +90,7 @@ public class StayOutboundRemoteImpl implements StayOutboundInterface
             @Override
             public StayOutbounds apply(@io.reactivex.annotations.NonNull BaseDto<StayOutboundsData> stayOutboundDataBaseDto) throws Exception
             {
-                StayOutbounds stayOutbounds = null;
+                StayOutbounds stayOutbounds;
 
                 if (stayOutboundDataBaseDto != null)
                 {

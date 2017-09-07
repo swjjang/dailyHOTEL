@@ -67,7 +67,6 @@ public class GourmetRegionListNetworkController extends PlaceRegionListNetworkCo
                         ArrayList<Area> areaList = makeAreaList(areaJSONArray);
 
                         List<RegionViewItem> domesticRegionViewList = new ArrayList<>();
-                        List<RegionViewItem> globalRegionViewList = new ArrayList<>();
 
                         makeRegionViewItemList(domesticProvinceList, areaList, domesticRegionViewList);
 

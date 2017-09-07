@@ -149,9 +149,6 @@ public class StayListAdapter extends PlaceListAdapter
         holder.dataBinding.addressTextView.setText(address);
         holder.dataBinding.nameTextView.setText(stay.name);
 
-        boolean isVisiblePrice = false;
-        boolean isVisibleSatisfaction = false;
-
         if (stay.price <= 0 || stay.price <= stay.discountPrice)
         {
             holder.dataBinding.priceTextView.setVisibility(View.INVISIBLE);
@@ -161,8 +158,6 @@ public class StayListAdapter extends PlaceListAdapter
             holder.dataBinding.priceTextView.setVisibility(View.VISIBLE);
             holder.dataBinding.priceTextView.setText(strPrice);
             holder.dataBinding.priceTextView.setPaintFlags(holder.dataBinding.priceTextView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-
-            isVisiblePrice = true;
         }
 
         // 만족도
@@ -171,8 +166,6 @@ public class StayListAdapter extends PlaceListAdapter
             holder.dataBinding.satisfactionView.setVisibility(View.VISIBLE);
             holder.dataBinding.satisfactionView.setText(//
                 mContext.getResources().getString(R.string.label_list_satisfaction, stay.satisfaction));
-
-            isVisibleSatisfaction = true;
         } else
         {
             holder.dataBinding.satisfactionView.setVisibility(View.GONE);

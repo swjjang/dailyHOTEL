@@ -58,7 +58,7 @@ public enum DailyCategoryType implements Parcelable
             return "";
         }
 
-        String codeString = "";
+        String codeString;
         try
         {
             codeString = context.getResources().getString(mCodeResId);
