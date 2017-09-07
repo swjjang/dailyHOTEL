@@ -432,7 +432,15 @@ public class PaymentWaitActivity extends BaseActivity
         {
             View textLayout = LayoutInflater.from(this).inflate(R.layout.list_row_detail_text, viewGroups, false);
             TextView textView = (TextView) textLayout.findViewById(R.id.textView);
-            textView.setText(guide.replace("\n", " ").trim() + ".");
+
+            String guideText = guide.replace("\n", " ").trim();
+
+            if (guideText.endsWith(".") == false)
+            {
+                guideText += ".";
+            }
+
+            textView.setText(guideText);
 
             if (isImportant == true)
             {
