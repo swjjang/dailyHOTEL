@@ -32,10 +32,9 @@ import com.daily.dailyhotel.entity.Booking;
 import com.daily.dailyhotel.entity.CarouselListItem;
 import com.daily.dailyhotel.parcel.analytics.GourmetDetailAnalyticsParam;
 import com.daily.dailyhotel.parcel.analytics.NavigatorAnalyticsParam;
-import com.daily.dailyhotel.repository.local.model.AnalyticsParam;
 import com.daily.dailyhotel.repository.remote.BookingRemoteImpl;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
-import com.daily.dailyhotel.repository.remote.GourmetListRemoteImpl;
+import com.daily.dailyhotel.repository.remote.GourmetRemoteImpl;
 import com.daily.dailyhotel.screen.booking.detail.map.GourmetBookingDetailMapActivity;
 import com.daily.dailyhotel.screen.common.dialog.navigator.NavigatorDialogActivity;
 import com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity;
@@ -92,7 +91,7 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
     StayReservationDetailNetworkController mNetworkController;
 
     private BookingRemoteImpl mBookingRemoteImpl;
-    private GourmetListRemoteImpl mGourmetListRemoteImpl;
+    private GourmetRemoteImpl mGourmetRemoteImpl;
 
     private View mViewByLongPress;
     private Gourmet mGourmetByLongPress;
@@ -124,7 +123,7 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
         mNetworkController = new StayReservationDetailNetworkController(this, mNetworkTag, mNetworkControllerListener);
 
         mBookingRemoteImpl = new BookingRemoteImpl(this);
-        mGourmetListRemoteImpl = new GourmetListRemoteImpl(this);
+        mGourmetRemoteImpl = new GourmetRemoteImpl(this);
 
         setContentView(mPlaceReservationDetailLayout.onCreateView(R.layout.activity_stay_reservation_detail));
     }
@@ -1002,7 +1001,7 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
                 Intent intent = GourmetDetailActivity.newInstance(StayReservationDetailActivity.this //
                     , gourmet.index, gourmet.name, gourmet.imageUrl, gourmet.discountPrice//
                     , visitDateTime, gourmet.category, gourmet.isSoldOut, false, false, false//
-                    ,GourmetDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_NONE//
+                    , GourmetDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_NONE//
                     , analyticsParam);
 
                 if (intent == null)
@@ -1091,7 +1090,7 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
 
                 GourmetSearchParams gourmetParams = (GourmetSearchParams) gourmetCuration.toPlaceParams(1, 10, true);
 
-                addCompositeDisposable(mGourmetListRemoteImpl.getGourmetList(gourmetParams) //
+                addCompositeDisposable(mGourmetRemoteImpl.getGourmetList(gourmetParams) //
                     .observeOn(Schedulers.io()).map(new Function<List<Gourmet>, ArrayList<CarouselListItem>>()
                     {
                         @Override
