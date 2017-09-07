@@ -116,7 +116,7 @@ public class GourmetPaymentAnalyticsImpl implements GourmetPaymentPresenter.Gour
 
             } else if (usedCoupon == true)
             {
-                int paymentPrice = gourmetPayment.totalPrice - coupon.amount;
+                int paymentPrice = gourmetPayment.totalPrice * menuCount - coupon.amount;
 
                 mPaymentParamMap.put(AnalyticsManager.KeyType.USED_BOUNS, "0");
                 mPaymentParamMap.put(AnalyticsManager.KeyType.COUPON_REDEEM, "true");
@@ -130,11 +130,13 @@ public class GourmetPaymentAnalyticsImpl implements GourmetPaymentPresenter.Gour
                 mPaymentParamMap.put(AnalyticsManager.KeyType.EXPIRATION_DATE, expireDate);
             } else
             {
+                int paymentPrice = gourmetPayment.totalPrice * menuCount;
+
                 mPaymentParamMap.put(AnalyticsManager.KeyType.USED_BOUNS, "0");
                 mPaymentParamMap.put(AnalyticsManager.KeyType.COUPON_REDEEM, "false");
                 mPaymentParamMap.put(AnalyticsManager.KeyType.COUPON_NAME, "");
                 mPaymentParamMap.put(AnalyticsManager.KeyType.COUPON_CODE, "");
-                mPaymentParamMap.put(AnalyticsManager.KeyType.PAYMENT_PRICE, Integer.toString(gourmetPayment.totalPrice));
+                mPaymentParamMap.put(AnalyticsManager.KeyType.PAYMENT_PRICE, Integer.toString(paymentPrice));
             }
 
             mPaymentParamMap.put(AnalyticsManager.KeyType.VISIT_DATE, DailyCalendar.convertDateFormatString(visitDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyyMMdd"));
