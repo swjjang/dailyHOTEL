@@ -1,8 +1,10 @@
 package com.twoheart.dailyhotel.screen.mydaily.recentplace;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.graphics.Paint;
+import android.os.Build;
 import android.os.Vibrator;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
@@ -14,6 +16,7 @@ import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ScreenUtils;
 import com.daily.base.util.VersionUtils;
 import com.daily.dailyhotel.entity.ImageMap;
+import com.daily.dailyhotel.entity.RecentlyPlace;
 import com.daily.dailyhotel.entity.StayOutbound;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.controller.BaseControllerListener;
@@ -27,11 +30,9 @@ import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.model.time.PlaceBookingDay;
 import com.twoheart.dailyhotel.model.time.StayBookingDay;
-import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
 
 import java.io.IOException;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 /**
@@ -116,14 +117,12 @@ public class RecentStayListAdapter extends RecentPlacesListAdapter
         }
     }
 
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     private void onBindViewHolder(StayInboundViewHolder holder, PlaceViewItem placeViewItem, int position)
     {
-        final Stay stay = placeViewItem.getItem();
+        final RecentlyPlace recentlyPlace = placeViewItem.getItem();
 
-        String strPrice = DailyTextUtils.getPriceFormat(mContext, stay.price, false);
-        String strDiscount = DailyTextUtils.getPriceFormat(mContext, stay.discountPrice, false);
-
-        String address = stay.addressSummary;
+        String address = recentlyPlace.addrSummary;
 
         int barIndex = address.indexOf('|');
         if (barIndex >= 0)
@@ -135,39 +134,24 @@ public class RecentStayListAdapter extends RecentPlacesListAdapter
         }
 
         holder.dataBinding.addressTextView.setText(address);
-        holder.dataBinding.nameTextView.setText(stay.name);
-
-        if (stay.price <= 0 || stay.price <= stay.discountPrice)
-        {
-            holder.dataBinding.priceTextView.setVisibility(View.INVISIBLE);
-            holder.dataBinding.priceTextView.setText(null);
-        } else
-        {
-            holder.dataBinding.priceTextView.setVisibility(View.VISIBLE);
-            holder.dataBinding.priceTextView.setText(strPrice);
-            holder.dataBinding.priceTextView.setPaintFlags(holder.dataBinding.priceTextView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-        }
+        holder.dataBinding.nameTextView.setText(recentlyPlace.title);
+        holder.dataBinding.priceTextView.setVisibility(View.INVISIBLE);
+        holder.dataBinding.priceTextView.setText(null);
 
         // 만족도
-        if (stay.satisfaction > 0)
+        if (recentlyPlace.rating > 0)
         {
             holder.dataBinding.satisfactionView.setVisibility(View.VISIBLE);
             holder.dataBinding.satisfactionView.setText(//
-                mContext.getResources().getString(R.string.label_list_satisfaction, stay.satisfaction));
+                mContext.getResources().getString(R.string.label_list_satisfaction, recentlyPlace.rating));
         } else
         {
             holder.dataBinding.satisfactionView.setVisibility(View.GONE);
         }
 
-        if (mNights > 1)
-        {
-            holder.dataBinding.averageTextView.setVisibility(View.VISIBLE);
-        } else
-        {
-            holder.dataBinding.averageTextView.setVisibility(View.GONE);
-        }
+        holder.dataBinding.averageTextView.setVisibility(View.GONE);
+        holder.dataBinding.discountPriceTextView.setVisibility(View.GONE);
 
-        holder.dataBinding.discountPriceTextView.setText(strDiscount);
         holder.dataBinding.nameTextView.setSelected(true); // Android TextView marquee bug
 
         if (VersionUtils.isOverAPI16() == true)
@@ -178,14 +162,24 @@ public class RecentStayListAdapter extends RecentPlacesListAdapter
             holder.dataBinding.gradientView.setBackgroundDrawable(mPaintDrawable);
         }
 
-        // grade
-        holder.dataBinding.gradeTextView.setText(stay.getGrade().getName(mContext));
-        holder.dataBinding.gradeTextView.setBackgroundResource(stay.getGrade().getColorResId());
+        Stay.Grade grade;
 
-        Util.requestImageResize(mContext, holder.dataBinding.imageView, stay.imageUrl);
+        try
+        {
+            grade = Stay.Grade.valueOf(recentlyPlace.details.grade);
+        } catch (Exception e)
+        {
+            grade = Stay.Grade.etc;
+        }
+
+        // grade
+        holder.dataBinding.gradeTextView.setText(grade.getName(mContext));
+        holder.dataBinding.gradeTextView.setBackgroundResource(grade.getColorResId());
+
+        Util.requestImageResize(mContext, holder.dataBinding.imageView, recentlyPlace.imageUrl);
 
         // SOLD OUT 표시
-        if (stay.isSoldOut == true)
+        if (recentlyPlace.isSoldOut == true)
         {
             holder.dataBinding.soldoutView.setVisibility(View.VISIBLE);
         } else
@@ -193,35 +187,35 @@ public class RecentStayListAdapter extends RecentPlacesListAdapter
             holder.dataBinding.soldoutView.setVisibility(View.GONE);
         }
 
-        if (DailyTextUtils.isTextEmpty(stay.dBenefitText) == false)
-        {
-            holder.dataBinding.dBenefitTextView.setVisibility(View.VISIBLE);
-            holder.dataBinding.dBenefitTextView.setText(stay.dBenefitText);
-        } else
-        {
+//        if (DailyTextUtils.isTextEmpty(recentlyPlace.dBenefitText) == false)
+//        {
+//            holder.dataBinding.dBenefitTextView.setVisibility(View.VISIBLE);
+//            holder.dataBinding.dBenefitTextView.setText(recentlyPlace.dBenefitText);
+//        } else
+//        {
             holder.dataBinding.dBenefitTextView.setVisibility(View.GONE);
-        }
+//        }
 
-        if (mShowDistanceIgnoreSort == true || getSortType() == Constants.SortType.DISTANCE)
-        {
-            if (holder.dataBinding.satisfactionView.getVisibility() == View.VISIBLE || holder.dataBinding.trueVRView.getVisibility() == View.VISIBLE)
-            {
-                holder.dataBinding.dot1View.setVisibility(View.VISIBLE);
-            } else
-            {
-                holder.dataBinding.dot1View.setVisibility(View.GONE);
-            }
-
-            holder.dataBinding.distanceTextView.setVisibility(View.VISIBLE);
-            holder.dataBinding.distanceTextView.setText(mContext.getString(R.string.label_distance_km, new DecimalFormat("#.#").format(stay.distance)));
-        } else
-        {
+//        if (mShowDistanceIgnoreSort == true || getSortType() == Constants.SortType.DISTANCE)
+//        {
+//            if (holder.dataBinding.satisfactionView.getVisibility() == View.VISIBLE || holder.dataBinding.trueVRView.getVisibility() == View.VISIBLE)
+//            {
+//                holder.dataBinding.dot1View.setVisibility(View.VISIBLE);
+//            } else
+//            {
+//                holder.dataBinding.dot1View.setVisibility(View.GONE);
+//            }
+//
+//            holder.dataBinding.distanceTextView.setVisibility(View.VISIBLE);
+//            holder.dataBinding.distanceTextView.setText(mContext.getString(R.string.label_distance_km, new DecimalFormat("#.#").format(recentlyPlace.distance)));
+//        } else
+//        {
             holder.dataBinding.dot1View.setVisibility(View.GONE);
             holder.dataBinding.distanceTextView.setVisibility(View.GONE);
-        }
+//        }
 
         // VR 여부
-        if (stay.truevr == true && mTrueVREnabled == true)
+        if (recentlyPlace.details.isTrueVr == true && mTrueVREnabled == true)
         {
             if (holder.dataBinding.satisfactionView.getVisibility() == View.VISIBLE)
             {
@@ -252,6 +246,7 @@ public class RecentStayListAdapter extends RecentPlacesListAdapter
         }
     }
 
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     private void onBindViewHolder(StayOutboundViewHolder holder, PlaceViewItem placeViewItem, int position)
     {
         if (holder == null || placeViewItem == null)
@@ -379,7 +374,6 @@ public class RecentStayListAdapter extends RecentPlacesListAdapter
             }
         });
     }
-
 
     private class FooterViewHolder extends RecyclerView.ViewHolder
     {

@@ -6,7 +6,7 @@ import com.twoheart.dailyhotel.util.Constants;
  * Created by android_sam on 2017. 8. 3..
  */
 
-public class RecentlyPlace
+public class RecentlyDbPlace
 {
     public int index;
     public Constants.ServiceType serviceType;

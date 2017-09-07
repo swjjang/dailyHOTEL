@@ -176,7 +176,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="4dp"
             android:layout_marginRight="7dp"
-            android:text="3인기중"
+            android:text="2인기준"
             android:textColor="@color/white"
             android:textSize="12dp"
             android:visibility="visible"

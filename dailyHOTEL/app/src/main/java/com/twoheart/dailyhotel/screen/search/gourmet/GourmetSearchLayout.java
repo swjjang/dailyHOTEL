@@ -10,10 +10,9 @@ import android.widget.TextView;
 
 import com.daily.base.util.DailyTextUtils;
 import com.daily.dailyhotel.entity.CampaignTag;
+import com.daily.dailyhotel.entity.RecentlyPlace;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.Gourmet;
 import com.twoheart.dailyhotel.model.Keyword;
-import com.twoheart.dailyhotel.model.Place;
 import com.twoheart.dailyhotel.model.SearchCardItem;
 import com.twoheart.dailyhotel.network.model.GourmetKeyword;
 import com.twoheart.dailyhotel.place.layout.PlaceSearchLayout;
@@ -102,7 +101,7 @@ public class GourmetSearchLayout extends PlaceSearchLayout
     }
 
     @Override
-    public void setRecyclerViewData(List<? extends Place> recentlyList, ArrayList<CampaignTag> campaignTagList, List<Keyword> recentSearchList)
+    public void setRecyclerViewData(List<RecentlyPlace> recentlyList, ArrayList<CampaignTag> campaignTagList, List<Keyword> recentSearchList)
     {
         ArrayList<SearchCardItem> recentlyPlaceDataList = new ArrayList<>();
         ArrayList<SearchCardItem> campaignTagDataList = new ArrayList<>();
@@ -110,14 +109,12 @@ public class GourmetSearchLayout extends PlaceSearchLayout
 
         if (recentlyList != null)
         {
-            for (Place place : recentlyList)
+            for (RecentlyPlace place : recentlyList)
             {
-                Gourmet gourmet = (Gourmet) place;
-
                 SearchCardItem item = new SearchCardItem();
                 item.iconType = GOURMET_ICON;
-                item.itemText = gourmet.name;
-                item.object = gourmet;
+                item.itemText = place.title;
+                item.object = place;
                 recentlyPlaceDataList.add(item);
             }
         }
@@ -182,10 +179,10 @@ public class GourmetSearchLayout extends PlaceSearchLayout
                 return;
             }
 
-            if (searchCardItem.object instanceof Gourmet)
+            if (searchCardItem.object instanceof RecentlyPlace)
             {
                 // 최근 본 업장
-                ((GourmetSearchLayout.OnEventListener) mOnEventListener).onSearchRecentlyPlace((Gourmet) searchCardItem.object);
+                ((GourmetSearchLayout.OnEventListener) mOnEventListener).onSearchRecentlyPlace((RecentlyPlace) searchCardItem.object);
             } else if (searchCardItem.object instanceof Keyword)
             {
                 // 최근 검색어

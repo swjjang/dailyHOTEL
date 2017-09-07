@@ -179,7 +179,7 @@ public class SearchCardViewAdapter extends RecyclerView.Adapter<SearchCardViewAd
 
         layout.setTitleText(R.string.label_popular_tag);
         layout.setEmptyViewData( //
-            TYPE_GOURMET == mType ? R.drawable.no_gourmet_ic : R.drawable.no_hotel_ic //
+            TYPE_GOURMET == mType ? R.drawable.no_gourmet_search_ic : R.drawable.no_hotel_search_ic //
             , R.string.label_popular_tag);
         layout.setDeleteButtonVisible(false);
 
