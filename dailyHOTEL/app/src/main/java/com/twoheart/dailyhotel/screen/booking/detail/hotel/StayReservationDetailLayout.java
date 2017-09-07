@@ -536,7 +536,7 @@ public class StayReservationDetailLayout extends PlaceReservationDetailLayout
         {
             mRecommendGourmetButtonView.setVisibility(View.VISIBLE);
 
-            float transY = ScreenUtils.dpToPx(mContext, 7d);
+            float transY = ScreenUtils.dpToPx(mContext, 6d);
 
             mRecommendGourmetButtonAnimator = ObjectAnimator.ofFloat(mRecommendGourmetButtonView, "translationY", 0.0f, transY, 0.0f);
             mRecommendGourmetButtonAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
