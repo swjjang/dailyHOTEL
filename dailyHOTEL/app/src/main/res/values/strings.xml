@@ -1406,6 +1406,7 @@
     <string name="frag_booking_today_type_gourmet">오늘이 방문일입니다.</string>
     <string name="frag_issuing_receipt">영수증 확인하기</string>
 
+    <string name="label_booking_leave_review">리뷰 남기기</string>
     <string name="label_booking_today">당일</string>
     <string name="label_booking_before_day">%1$d일 전</string>
     <string name="label_booking_go_to_gourmet">레스토랑 보러가기</string>
