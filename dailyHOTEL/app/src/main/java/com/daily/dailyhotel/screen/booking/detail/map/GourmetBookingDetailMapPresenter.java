@@ -11,16 +11,17 @@ import android.support.v4.util.Pair;
 import android.view.View;
 
 import com.daily.base.BaseAnalyticsInterface;
+import com.daily.dailyhotel.parcel.analytics.GourmetDetailAnalyticsParam;
 import com.daily.dailyhotel.repository.local.model.AnalyticsParam;
+import com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Gourmet;
 import com.twoheart.dailyhotel.model.Place;
 import com.twoheart.dailyhotel.model.time.GourmetBookingDay;
 import com.twoheart.dailyhotel.model.time.PlaceBookingDay;
-import com.twoheart.dailyhotel.place.layout.PlaceDetailLayout;
-import com.twoheart.dailyhotel.screen.gourmet.detail.GourmetDetailActivity;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.Util;
 
 import java.util.List;
@@ -76,6 +77,19 @@ public class GourmetBookingDetailMapPresenter extends PlaceBookingDetailMapPrese
         Gourmet gourmet = (Gourmet) place;
         GourmetBookingDay gourmetBookingDay = (GourmetBookingDay) placeBookingDay;
 
+        // --> 추후에 정리되면 메소드로 수정
+        GourmetDetailAnalyticsParam analyticsParam = new GourmetDetailAnalyticsParam();
+        analyticsParam.price = gourmet.price;
+        analyticsParam.discountPrice = gourmet.discountPrice;
+        analyticsParam.setShowOriginalPriceYn(analyticsParam.price, analyticsParam.discountPrice);
+        analyticsParam.setProvince(null);
+        analyticsParam.entryPosition = gourmet.entryPosition;
+        analyticsParam.totalListCount = -1;
+        analyticsParam.isDailyChoice = gourmet.isDailyChoice;
+        analyticsParam.setAddressAreaName(gourmet.addressSummary);
+
+        // <-- 추후에 정리되면 메소드로 수정
+
         if (Util.isUsedMultiTransition() == true)
         {
             getActivity().setExitSharedElementCallback(new SharedElementCallback()
@@ -96,14 +110,12 @@ public class GourmetBookingDetailMapPresenter extends PlaceBookingDetailMapPrese
                 }
             });
 
-            AnalyticsParam analyticsParam = new AnalyticsParam();
-            analyticsParam.setParam(getActivity(), gourmet);
-            analyticsParam.setProvince(null);
-            analyticsParam.setTotalListCount(-1);
-
             Intent intent = GourmetDetailActivity.newInstance(getActivity() //
-                , gourmetBookingDay, gourmet.index, gourmet.name //
-                , gourmet.imageUrl, gourmet.category, gourmet.isSoldOut, analyticsParam, true, PlaceDetailLayout.TRANS_GRADIENT_BOTTOM_TYPE_MAP);
+                , gourmet.index, gourmet.name, gourmet.imageUrl, gourmet.discountPrice//
+                , gourmetBookingDay.getVisitDay(DailyCalendar.ISO_8601_FORMAT)//
+                , gourmet.category, gourmet.isSoldOut, false, false, true//
+                , GourmetDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_MAP//
+                , analyticsParam);
 
             if (intent == null)
             {
@@ -127,14 +139,12 @@ public class GourmetBookingDetailMapPresenter extends PlaceBookingDetailMapPrese
             startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_GOURMET_DETAIL, options.toBundle());
         } else
         {
-            AnalyticsParam analyticsParam = new AnalyticsParam();
-            analyticsParam.setParam(getActivity(), gourmet);
-            analyticsParam.setProvince(null);
-            analyticsParam.setTotalListCount(-1);
-
             Intent intent = GourmetDetailActivity.newInstance(getActivity() //
-                , gourmetBookingDay, gourmet.index, gourmet.name //
-                , gourmet.imageUrl, gourmet.category, gourmet.isSoldOut, analyticsParam, false, PlaceDetailLayout.TRANS_GRADIENT_BOTTOM_TYPE_NONE);
+                , gourmet.index, gourmet.name, gourmet.imageUrl, gourmet.discountPrice//
+                , gourmetBookingDay.getVisitDay(DailyCalendar.ISO_8601_FORMAT)//
+                , gourmet.category, gourmet.isSoldOut, false, false, false//
+                , GourmetDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_NONE//
+                , analyticsParam);
 
             startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_GOURMET_DETAIL);
 

@@ -287,7 +287,6 @@ public class StayPreviewActivity extends BaseActivity
     {
         // 판매 완료 혹은 가격이 변동되었는지 조사한다
         List<StayProduct> stayProductList = stayDetail.getProductList();
-        StayDetailParams stayDetailParams = stayDetail.getStayDetailParams();
 
         if (stayProductList == null || stayProductList.size() == 0)
         {

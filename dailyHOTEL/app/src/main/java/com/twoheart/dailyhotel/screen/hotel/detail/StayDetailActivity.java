@@ -23,9 +23,11 @@ import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
 import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.entity.CommonDateTime;
+import com.daily.dailyhotel.parcel.analytics.NavigatorAnalyticsParam;
 import com.daily.dailyhotel.parcel.analytics.StayPaymentAnalyticsParam;
 import com.daily.dailyhotel.repository.local.model.AnalyticsParam;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
+import com.daily.dailyhotel.screen.common.dialog.navigator.NavigatorDialogActivity;
 import com.daily.dailyhotel.screen.home.stay.inbound.payment.StayPaymentActivity;
 import com.daily.dailyhotel.util.RecentlyPlaceUtil;
 import com.facebook.drawee.drawable.ScalingUtils;
@@ -1095,7 +1097,8 @@ public class StayDetailActivity extends PlaceDetailActivity
         }
     }
 
-    void startCalendar(TodayDateTime todayDateTime, StayBookingDay stayBookingDay, boolean overseas, int placeIndex, ArrayList<Integer> soldOutList, boolean isAnimation, boolean isSingleDay)
+    void startCalendar(TodayDateTime todayDateTime, StayBookingDay stayBookingDay, boolean overseas, int placeIndex//
+        , List<Integer> soldOutList, boolean isAnimation, boolean isSingleDay)
     {
         if (isFinishing() == true || lockUiComponentAndIsLockUiComponent() == true)
         {
@@ -1108,7 +1111,7 @@ public class StayDetailActivity extends PlaceDetailActivity
 
         Intent intent = StayDetailCalendarActivity.newInstance(StayDetailActivity.this, todayDateTime //
             , stayBookingDay, dayCount, placeIndex, AnalyticsManager.ValueType.DETAIL //
-            , soldOutList, true, isAnimation, isSingleDay);
+            , (ArrayList) soldOutList, true, isAnimation, isSingleDay);
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_CALENDAR);
 
         AnalyticsManager.getInstance(StayDetailActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_//
@@ -1577,11 +1580,12 @@ public class StayDetailActivity extends PlaceDetailActivity
             StayDetail stayDetail = (StayDetail) mPlaceDetail;
             StayDetailParams stayDetailParams = stayDetail.getStayDetailParams();
 
-            Util.showShareMapDialog(StayDetailActivity.this, stayDetailParams.name//
-                , stayDetailParams.latitude, stayDetailParams.longitude, stayDetailParams.isOverseas//
-                , AnalyticsManager.Category.HOTEL_BOOKINGS//
-                , AnalyticsManager.Action.HOTEL_DETAIL_NAVIGATION_APP_CLICKED//
-                , null);
+            NavigatorAnalyticsParam analyticsParam = new NavigatorAnalyticsParam();
+            analyticsParam.category = AnalyticsManager.Category.HOTEL_BOOKINGS;
+            analyticsParam.action = AnalyticsManager.Action.HOTEL_DETAIL_NAVIGATION_APP_CLICKED;
+
+            startActivityForResult(NavigatorDialogActivity.newInstance(StayDetailActivity.this, stayDetailParams.name//
+                , stayDetailParams.latitude, stayDetailParams.longitude, stayDetailParams.isOverseas, analyticsParam), Constants.CODE_REQUEST_ACTIVITY_NAVIGATOR);
         }
 
         @Override

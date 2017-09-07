@@ -29,13 +29,15 @@ import com.daily.dailyhotel.entity.StayOutboundDetail;
 import com.daily.dailyhotel.entity.StayOutboundDetailImage;
 import com.daily.dailyhotel.entity.StayOutboundRoom;
 import com.daily.dailyhotel.entity.User;
+import com.daily.dailyhotel.parcel.analytics.NavigatorAnalyticsParam;
 import com.daily.dailyhotel.parcel.analytics.StayOutboundDetailAnalyticsParam;
 import com.daily.dailyhotel.parcel.analytics.StayOutboundPaymentAnalyticsParam;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
 import com.daily.dailyhotel.repository.remote.ProfileRemoteImpl;
 import com.daily.dailyhotel.repository.remote.StayOutboundRemoteImpl;
 import com.daily.dailyhotel.screen.common.calendar.StayCalendarActivity;
-import com.daily.dailyhotel.screen.common.call.CallDialogActivity;
+import com.daily.dailyhotel.screen.common.dialog.call.CallDialogActivity;
+import com.daily.dailyhotel.screen.common.dialog.navigator.NavigatorDialogActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.detail.amenities.AmenityListActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.detail.images.ImageListActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.payment.StayOutboundPaymentActivity;
@@ -61,7 +63,6 @@ import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
@@ -409,7 +410,6 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
                         }
 
                         setStayBookDateTime(checkInDateTime, checkOutDateTime);
-                        notifyStayBookDateTimeChanged();
                         setRefresh(true);
                     }
                 }
@@ -426,7 +426,6 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
                         ArrayList<Integer> childAgeList = data.getIntegerArrayListExtra(SelectPeopleActivity.INTENT_EXTRA_DATA_CHILD_LIST);
 
                         setPeople(numberOfAdults, childAgeList);
-                        notifyPeopleChanged();
                         setRefresh(true);
                     }
                 }
@@ -460,9 +459,9 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
     }
 
     @Override
-    protected void onRefresh(boolean showProgress)
+    protected synchronized void onRefresh(boolean showProgress)
     {
-        if (getActivity().isFinishing() == true)
+        if (getActivity().isFinishing() == true || isRefresh() == false)
         {
             return;
         }
@@ -835,19 +834,15 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
     @Override
     public void onNavigatorClick()
     {
-        if (getActivity().isFinishing() == true || lock() == true)
+        if (mStayOutboundDetail == null || lock() == true)
         {
             return;
         }
 
-        getViewInterface().showNavigatorDialog(new DialogInterface.OnDismissListener()
-        {
-            @Override
-            public void onDismiss(DialogInterface dialog)
-            {
-                unLockAll();
-            }
-        });
+        NavigatorAnalyticsParam analyticsParam = new NavigatorAnalyticsParam();
+
+        startActivityForResult(NavigatorDialogActivity.newInstance(getActivity(), mStayOutboundDetail.name//
+            , mStayOutboundDetail.latitude, mStayOutboundDetail.longitude, true, analyticsParam), StayOutboundDetailActivity.REQUEST_CODE_NAVIGATOR);
     }
 
     @Override
@@ -1076,12 +1071,6 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
     }
 
     @Override
-    public void onShareMapClick()
-    {
-        Util.shareGoogleMap(getActivity(), mStayOutboundDetail.name, Double.toString(mStayOutboundDetail.latitude), Double.toString(mStayOutboundDetail.longitude));
-    }
-
-    @Override
     public void onRoomClick(StayOutboundRoom stayOutboundRoom)
     {
         mSelectedRoom = stayOutboundRoom;
@@ -1197,35 +1186,6 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
         }
     }
 
-    private void notifyPeopleChanged()
-    {
-        if (mPeople == null)
-        {
-            return;
-        }
-
-        getViewInterface().setPeopleText(mPeople.toShortString(getActivity()));
-    }
-
-    private void notifyStayBookDateTimeChanged()
-    {
-        if (mStayBookDateTime == null)
-        {
-            return;
-        }
-
-        try
-        {
-            String dateFormat = String.format(Locale.KOREA, "%s - %s, %s", mStayBookDateTime.getCheckInDateTime("M.d(EEE)")//
-                , mStayBookDateTime.getCheckOutDateTime("M.d(EEE)"), getString(R.string.label_nights, mStayBookDateTime.getNights()));
-
-            getViewInterface().setCalendarText(dateFormat);
-        } catch (Exception e)
-        {
-            ExLog.e(e.toString());
-        }
-    }
-
     private void checkChangedPrice(boolean isDeepLink, StayOutboundDetail stayOutboundDetail, int listViewPrice, boolean compareListPrice)
     {
         if (stayOutboundDetail == null)
@@ -1238,15 +1198,15 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
 
         if (roomList == null || roomList.size() == 0)
         {
+            setResult(BaseActivity.RESULT_CODE_REFRESH);
+
             getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.message_stay_outbound_detail_sold_out)//
                 , getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
                 {
                     @Override
                     public void onDismiss(DialogInterface dialog)
                     {
-                        Intent intent = new Intent();
-                        intent.putExtra(StayOutboundDetailActivity.INTENT_EXTRA_DATA_REFRESH, true);
-                        setResult(BaseActivity.RESULT_CODE_REFRESH, intent);
+
                     }
                 });
         } else
@@ -1272,9 +1232,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
 
                 if (hasPrice == false)
                 {
-                    Intent intent = new Intent();
-                    intent.putExtra(StayOutboundDetailActivity.INTENT_EXTRA_DATA_REFRESH, true);
-                    setResult(BaseActivity.RESULT_CODE_REFRESH, intent);
+                    setResult(BaseActivity.RESULT_CODE_REFRESH);
 
                     getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.message_stay_outbound_detail_changed_price)//
                         , getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()

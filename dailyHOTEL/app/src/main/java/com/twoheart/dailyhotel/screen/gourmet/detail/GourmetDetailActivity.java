@@ -17,11 +17,13 @@ import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.entity.CommonDateTime;
+import com.daily.dailyhotel.entity.DetailImageInformation;
 import com.daily.dailyhotel.entity.GourmetMenu;
-import com.daily.dailyhotel.entity.GourmetMenuImage;
 import com.daily.dailyhotel.parcel.analytics.GourmetPaymentAnalyticsParam;
+import com.daily.dailyhotel.parcel.analytics.NavigatorAnalyticsParam;
 import com.daily.dailyhotel.repository.local.model.AnalyticsParam;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
+import com.daily.dailyhotel.screen.common.dialog.navigator.NavigatorDialogActivity;
 import com.daily.dailyhotel.screen.home.gourmet.detail.menus.GourmetMenusActivity;
 import com.daily.dailyhotel.screen.home.gourmet.payment.GourmetPaymentActivity;
 import com.daily.dailyhotel.util.RecentlyPlaceUtil;
@@ -36,7 +38,6 @@ import com.twoheart.dailyhotel.model.time.GourmetBookingDay;
 import com.twoheart.dailyhotel.model.time.PlaceBookingDay;
 import com.twoheart.dailyhotel.network.model.GourmetDetailParams;
 import com.twoheart.dailyhotel.network.model.GourmetProduct;
-import com.twoheart.dailyhotel.network.model.ImageInformation;
 import com.twoheart.dailyhotel.network.model.PlaceReviewScores;
 import com.twoheart.dailyhotel.network.model.ProductImageInformation;
 import com.twoheart.dailyhotel.network.model.TodayDateTime;
@@ -444,10 +445,10 @@ public class GourmetDetailActivity extends PlaceDetailActivity
     {
         addCompositeDisposable(Observable.zip(mCommonRemoteImpl.getCommonDateTime().observeOn(Schedulers.io()) //
             , mPlaceDetailCalendarImpl.getGourmetUnavailableDates(placeIndex, GourmetCalendarActivity.DEFAULT_CALENDAR_DAY_OF_MAX_COUNT, false).observeOn(Schedulers.io()) //
-            , new BiFunction<CommonDateTime, List<String>, TodayDateTime>()
+            , new BiFunction<CommonDateTime, List<Integer>, TodayDateTime>()
             {
                 @Override
-                public TodayDateTime apply(@NonNull CommonDateTime commonDateTime, @NonNull List<String> soldOutList) throws Exception
+                public TodayDateTime apply(@NonNull CommonDateTime commonDateTime, @NonNull List<Integer> soldOutList) throws Exception
                 {
                     if (mSoldOutList == null)
                     {
@@ -455,12 +456,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
                     }
 
                     mSoldOutList.clear();
-
-                    for (String dayString : soldOutList)
-                    {
-                        int soldOutDay = Integer.parseInt(DailyCalendar.convertDateFormatString(dayString, "yyyy-MM-dd", "yyyyMMdd"));
-                        mSoldOutList.add(soldOutDay);
-                    }
+                    mSoldOutList.addAll(soldOutList);
 
                     TodayDateTime todayDateTime = new TodayDateTime();
                     todayDateTime.setToday(commonDateTime.openDateTime, commonDateTime.closeDateTime //
@@ -765,7 +761,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         }
 
         String imageUrl = null;
-        List<ImageInformation> imageInformationList = gourmetDetail.getImageList();
+        List<com.twoheart.dailyhotel.network.model.ImageInformation> imageInformationList = gourmetDetail.getImageList();
 
         if (imageInformationList != null && imageInformationList.size() > 0)
         {
@@ -1049,7 +1045,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         }
     }
 
-    void startCalendar(TodayDateTime todayDateTime, GourmetBookingDay gourmetBookingDay, int placeIndex, ArrayList<Integer> soldOutList, boolean isAnimation)
+    void startCalendar(TodayDateTime todayDateTime, GourmetBookingDay gourmetBookingDay, int placeIndex, List<Integer> soldOutList, boolean isAnimation)
     {
         if (isFinishing() == true || lockUiComponentAndIsLockUiComponent() == true)
         {
@@ -1067,7 +1063,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
 
         Intent intent = GourmetDetailCalendarActivity.newInstance(GourmetDetailActivity.this, //
             todayDateTime, gourmetBookingDay, placeIndex, GourmetCalendarActivity.DEFAULT_CALENDAR_DAY_OF_MAX_COUNT //
-            , callByScreen, soldOutList, true, isAnimation);
+            , callByScreen, (ArrayList) soldOutList, true, isAnimation);
         startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_CALENDAR);
 
         AnalyticsManager.getInstance(GourmetDetailActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_//
@@ -1350,8 +1346,8 @@ public class GourmetDetailActivity extends PlaceDetailActivity
                     {
                         GourmetMenu gourmetMenu = new GourmetMenu();
                         gourmetMenu.index = gourmetProduct.index;
-                        gourmetMenu.saleIdx = gourmetProduct.saleIdx;
-                        gourmetMenu.ticketName = gourmetProduct.ticketName;
+                        gourmetMenu.saleIndex = gourmetProduct.saleIdx;
+                        gourmetMenu.name = gourmetProduct.ticketName;
                         gourmetMenu.price = gourmetProduct.price;
                         gourmetMenu.discountPrice = gourmetProduct.discountPrice;
                         gourmetMenu.menuBenefit = gourmetProduct.menuBenefit;
@@ -1361,19 +1357,19 @@ public class GourmetDetailActivity extends PlaceDetailActivity
                         gourmetMenu.lastOrderTime = gourmetProduct.lastOrderTime;
                         gourmetMenu.menuSummary = gourmetProduct.menuSummary;
                         gourmetMenu.reserveCondition = gourmetProduct.reserveCondition;
-                        gourmetMenu.setPrimaryImageIndex(gourmetProduct.getPrimaryIndex());
+                        //                        gourmetMenu.setPrimaryImageIndex(gourmetProduct.getPrimaryIndex());
 
-                        List<GourmetMenuImage> gourmetMenuImageList = new ArrayList<>();
+                        List<DetailImageInformation> detailImageInformationList = new ArrayList<>();
                         for (ProductImageInformation productImageInformation : gourmetProduct.getImageList())
                         {
-                            GourmetMenuImage gourmetMenuImage = new GourmetMenuImage();
-                            gourmetMenuImage.url = productImageInformation.imageUrl;
-                            gourmetMenuImage.caption = productImageInformation.imageDescription;
+                            DetailImageInformation detailImageInformation = new DetailImageInformation();
+                            detailImageInformation.url = productImageInformation.imageUrl;
+                            detailImageInformation.caption = productImageInformation.imageDescription;
 
-                            gourmetMenuImageList.add(gourmetMenuImage);
+                            detailImageInformationList.add(detailImageInformation);
                         }
 
-                        gourmetMenu.setImageList(gourmetMenuImageList);
+                        gourmetMenu.setImageList(detailImageInformationList);
                         gourmetMenu.setMenuDetailList(gourmetProduct.getMenuDetailList());
 
                         gourmetMenuList.add(gourmetMenu);
@@ -1502,7 +1498,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
                 return;
             }
 
-            List<ImageInformation> imageInformationList = placeDetail.getImageList();
+            List<com.twoheart.dailyhotel.network.model.ImageInformation> imageInformationList = placeDetail.getImageList();
             if (imageInformationList.size() == 0)
             {
                 return;
@@ -1601,11 +1597,12 @@ public class GourmetDetailActivity extends PlaceDetailActivity
 
             GourmetDetailParams gourmetDetailParams = ((GourmetDetail) mPlaceDetail).getGourmetDetailParams();
 
-            Util.showShareMapDialog(GourmetDetailActivity.this, gourmetDetailParams.name//
-                , gourmetDetailParams.latitude, gourmetDetailParams.longitude, false//
-                , AnalyticsManager.Category.GOURMET_BOOKINGS//
-                , AnalyticsManager.Action.GOURMET_DETAIL_NAVIGATION_APP_CLICKED//
-                , null);
+            NavigatorAnalyticsParam analyticsParam = new NavigatorAnalyticsParam();
+            analyticsParam.category = AnalyticsManager.Category.GOURMET_BOOKINGS;
+            analyticsParam.action = AnalyticsManager.Action.GOURMET_DETAIL_NAVIGATION_APP_CLICKED;
+
+            startActivityForResult(NavigatorDialogActivity.newInstance(GourmetDetailActivity.this, gourmetDetailParams.name//
+                , gourmetDetailParams.latitude, gourmetDetailParams.longitude, false, analyticsParam), Constants.CODE_REQUEST_ACTIVITY_NAVIGATOR);
         }
 
         @Override

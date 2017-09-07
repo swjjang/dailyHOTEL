@@ -342,22 +342,46 @@ public class WishListTabActivity extends BaseActivity
             {
                 mDontReloadAtOnResume = true;
 
-                setResult(resultCode);
+                switch (resultCode)
+                {
+                    case Activity.RESULT_OK:
+                        finish();
+                        break;
 
-                if (resultCode == Activity.RESULT_OK || resultCode == CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY)
-                {
-                    finish();
-                } else if (resultCode == CODE_RESULT_ACTIVITY_REFRESH)
-                {
-                    boolean isChangeWishList = false;
-                    if (data != null)
+                    case CODE_RESULT_ACTIVITY_REFRESH:
                     {
-                        isChangeWishList = data.getBooleanExtra(NAME_INTENT_EXTRA_DATA_IS_CHANGE_WISHLIST, false);
+                        boolean isChangeWishList = false;
+                        if (data != null)
+                        {
+                            isChangeWishList = data.getBooleanExtra(NAME_INTENT_EXTRA_DATA_IS_CHANGE_WISHLIST, false);
+                        }
+
+                        if (isChangeWishList == true)
+                        {
+                            PlaceType placeType;
+                            if (requestCode == CODE_REQUEST_ACTIVITY_GOURMET_DETAIL)
+                            {
+                                placeType = PlaceType.FNB;
+                            } else
+                            {
+                                placeType = PlaceType.HOTEL;
+                            }
+
+                            for (PlaceWishListFragment fragment : mFragmentList)
+                            {
+                                if (placeType.equals(fragment.getPlaceType()) == true)
+                                {
+                                    fragment.forceRefreshList();
+                                }
+                            }
+                        }
+                        break;
                     }
 
-                    if (isChangeWishList == true)
+                    case com.daily.base.BaseActivity.RESULT_CODE_REFRESH:
                     {
                         PlaceType placeType;
+
                         if (requestCode == CODE_REQUEST_ACTIVITY_GOURMET_DETAIL)
                         {
                             placeType = PlaceType.FNB;
@@ -373,6 +397,7 @@ public class WishListTabActivity extends BaseActivity
                                 fragment.forceRefreshList();
                             }
                         }
+                        break;
                     }
                 }
                 break;

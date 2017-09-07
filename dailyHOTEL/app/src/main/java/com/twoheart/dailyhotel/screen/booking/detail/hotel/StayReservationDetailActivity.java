@@ -30,11 +30,14 @@ import com.daily.base.widget.DailyTextView;
 import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.entity.Booking;
 import com.daily.dailyhotel.entity.CarouselListItem;
-import com.daily.dailyhotel.repository.local.model.AnalyticsParam;
+import com.daily.dailyhotel.parcel.analytics.GourmetDetailAnalyticsParam;
+import com.daily.dailyhotel.parcel.analytics.NavigatorAnalyticsParam;
 import com.daily.dailyhotel.repository.remote.BookingRemoteImpl;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
-import com.daily.dailyhotel.repository.remote.GourmetListRemoteImpl;
+import com.daily.dailyhotel.repository.remote.GourmetRemoteImpl;
 import com.daily.dailyhotel.screen.booking.detail.map.GourmetBookingDetailMapActivity;
+import com.daily.dailyhotel.screen.common.dialog.navigator.NavigatorDialogActivity;
+import com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Gourmet;
@@ -48,11 +51,9 @@ import com.twoheart.dailyhotel.model.time.GourmetBookingDay;
 import com.twoheart.dailyhotel.model.time.StayBookingDay;
 import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.place.activity.PlaceReservationDetailActivity;
-import com.twoheart.dailyhotel.place.layout.PlaceDetailLayout;
 import com.twoheart.dailyhotel.screen.common.HappyTalkCategoryDialog;
 import com.twoheart.dailyhotel.screen.common.PermissionManagerActivity;
 import com.twoheart.dailyhotel.screen.common.ZoomMapActivity;
-import com.twoheart.dailyhotel.screen.gourmet.detail.GourmetDetailActivity;
 import com.twoheart.dailyhotel.screen.gourmet.preview.GourmetPreviewActivity;
 import com.twoheart.dailyhotel.screen.hotel.detail.StayDetailActivity;
 import com.twoheart.dailyhotel.screen.information.FAQActivity;
@@ -90,7 +91,7 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
     StayReservationDetailNetworkController mNetworkController;
 
     private BookingRemoteImpl mBookingRemoteImpl;
-    private GourmetListRemoteImpl mGourmetListRemoteImpl;
+    private GourmetRemoteImpl mGourmetRemoteImpl;
 
     private View mViewByLongPress;
     private Gourmet mGourmetByLongPress;
@@ -122,7 +123,7 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
         mNetworkController = new StayReservationDetailNetworkController(this, mNetworkTag, mNetworkControllerListener);
 
         mBookingRemoteImpl = new BookingRemoteImpl(this);
-        mGourmetListRemoteImpl = new GourmetListRemoteImpl(this);
+        mGourmetRemoteImpl = new GourmetRemoteImpl(this);
 
         setContentView(mPlaceReservationDetailLayout.onCreateView(R.layout.activity_stay_reservation_detail));
     }
@@ -923,14 +924,24 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
             long currentDateTime = DailyCalendar.convertStringToDate(mTodayDateTime.currentDateTime).getTime();
             long checkInDateTime = DailyCalendar.convertStringToDate(stayBookingDetail.checkInDate).getTime();
 
-            String visitDay = stayBookingDetail.checkInDate;
+            String visitDateTime = stayBookingDetail.checkInDate;
             if (currentDateTime > checkInDateTime)
             {
-                visitDay = todayDateTime.dailyDateTime;
+                visitDateTime = todayDateTime.dailyDateTime;
             }
 
-            GourmetBookingDay gourmetBookingDay = new GourmetBookingDay();
-            gourmetBookingDay.setVisitDay(visitDay);
+            // --> 추후에 정리되면 메소드로 수정
+            GourmetDetailAnalyticsParam analyticsParam = new GourmetDetailAnalyticsParam();
+            analyticsParam.price = gourmet.price;
+            analyticsParam.discountPrice = gourmet.discountPrice;
+            analyticsParam.setShowOriginalPriceYn(analyticsParam.price, analyticsParam.discountPrice);
+            analyticsParam.setProvince(null);
+            analyticsParam.entryPosition = gourmet.entryPosition;
+            analyticsParam.totalListCount = -1;
+            analyticsParam.isDailyChoice = gourmet.isDailyChoice;
+            analyticsParam.setAddressAreaName(gourmet.addressSummary);
+
+            // <-- 추후에 정리되면 메소드로 수정
 
             if (Util.isUsedMultiTransition() == true)
             {
@@ -952,15 +963,17 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
                     }
                 });
 
-                AnalyticsParam analyticsParam = new AnalyticsParam();
-                analyticsParam.setParam(StayReservationDetailActivity.this, gourmet);
-                analyticsParam.setProvince(null);
-                analyticsParam.setTotalListCount(-1);
+                //                Intent intent = GourmetDetailActivity.newInstance(StayReservationDetailActivity.this //
+                //                    , gourmetBookingDay, gourmet.index, gourmet.name //
+                //                    , gourmet.imageUrl, gourmet.category, gourmet.isSoldOut, analyticsParam, true //
+                //                    , PlaceDetailLayout.TRANS_GRADIENT_BOTTOM_TYPE_NONE);
+
 
                 Intent intent = GourmetDetailActivity.newInstance(StayReservationDetailActivity.this //
-                    , gourmetBookingDay, gourmet.index, gourmet.name //
-                    , gourmet.imageUrl, gourmet.category, gourmet.isSoldOut, analyticsParam, true //
-                    , PlaceDetailLayout.TRANS_GRADIENT_BOTTOM_TYPE_NONE);
+                    , gourmet.index, gourmet.name, gourmet.imageUrl, gourmet.discountPrice//
+                    , visitDateTime, gourmet.category, gourmet.isSoldOut, false, false, true//
+                    , GourmetDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_NONE//
+                    , analyticsParam);
 
                 if (intent == null)
                 {
@@ -980,15 +993,16 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
                 StayReservationDetailActivity.this.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMET_DETAIL, options.toBundle());
             } else
             {
-                AnalyticsParam analyticsParam = new AnalyticsParam();
-                analyticsParam.setParam(StayReservationDetailActivity.this, gourmet);
-                analyticsParam.setProvince(null);
-                analyticsParam.setTotalListCount(-1);
+                //                Intent intent = GourmetDetailActivity.newInstance(StayReservationDetailActivity.this //
+                //                    , gourmetBookingDay, gourmet.index, gourmet.name //
+                //                    , gourmet.imageUrl, gourmet.category, gourmet.isSoldOut, analyticsParam, false //
+                //                    , PlaceDetailLayout.TRANS_GRADIENT_BOTTOM_TYPE_NONE);
 
                 Intent intent = GourmetDetailActivity.newInstance(StayReservationDetailActivity.this //
-                    , gourmetBookingDay, gourmet.index, gourmet.name //
-                    , gourmet.imageUrl, gourmet.category, gourmet.isSoldOut, analyticsParam, false //
-                    , PlaceDetailLayout.TRANS_GRADIENT_BOTTOM_TYPE_NONE);
+                    , gourmet.index, gourmet.name, gourmet.imageUrl, gourmet.discountPrice//
+                    , visitDateTime, gourmet.category, gourmet.isSoldOut, false, false, false//
+                    , GourmetDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_NONE//
+                    , analyticsParam);
 
                 if (intent == null)
                 {
@@ -1076,7 +1090,7 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
 
                 GourmetSearchParams gourmetParams = (GourmetSearchParams) gourmetCuration.toPlaceParams(1, 10, true);
 
-                addCompositeDisposable(mGourmetListRemoteImpl.getGourmetList(gourmetParams) //
+                addCompositeDisposable(mGourmetRemoteImpl.getGourmetList(gourmetParams) //
                     .observeOn(Schedulers.io()).map(new Function<List<Gourmet>, ArrayList<CarouselListItem>>()
                     {
                         @Override
@@ -1272,11 +1286,12 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
                 return;
             }
 
-            Util.showShareMapDialog(StayReservationDetailActivity.this, mPlaceBookingDetail.placeName//
-                , mPlaceBookingDetail.latitude, mPlaceBookingDetail.longitude, mPlaceBookingDetail.isOverseas//
-                , AnalyticsManager.Category.HOTEL_BOOKINGS//
-                , AnalyticsManager.Action.HOTEL_DETAIL_NAVIGATION_APP_CLICKED//
-                , null);
+            NavigatorAnalyticsParam analyticsParam = new NavigatorAnalyticsParam();
+            analyticsParam.category = AnalyticsManager.Category.HOTEL_BOOKINGS;
+            analyticsParam.action = AnalyticsManager.Action.HOTEL_DETAIL_NAVIGATION_APP_CLICKED;
+
+            startActivityForResult(NavigatorDialogActivity.newInstance(StayReservationDetailActivity.this, mPlaceBookingDetail.placeName//
+                , mPlaceBookingDetail.latitude, mPlaceBookingDetail.longitude, mPlaceBookingDetail.isOverseas, analyticsParam), Constants.CODE_REQUEST_ACTIVITY_NAVIGATOR);
         }
 
         @Override

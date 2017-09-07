@@ -42,6 +42,7 @@ public class GourmetListData
     public List<Gourmet> getGourmetList(Context context)
     {
         ArrayList<Gourmet> gourmetList = new ArrayList<>();
+
         if (context == null)
         {
             return gourmetList;

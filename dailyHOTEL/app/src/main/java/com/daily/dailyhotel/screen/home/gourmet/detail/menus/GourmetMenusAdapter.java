@@ -12,8 +12,8 @@ import android.widget.LinearLayout;
 import com.daily.base.OnBaseEventListener;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ScreenUtils;
+import com.daily.dailyhotel.entity.DetailImageInformation;
 import com.daily.dailyhotel.entity.GourmetMenu;
-import com.daily.dailyhotel.entity.GourmetMenuImage;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.LayoutGourmetMenuDetailInformationDataBinding;
 import com.twoheart.dailyhotel.databinding.ListRowGourmetMenuDataBinding;
@@ -171,9 +171,9 @@ public class GourmetMenusAdapter extends RecyclerView.Adapter<GourmetMenusAdapte
         EdgeEffectColor.setEdgeGlowColor(holder.dataBinding.nestedScrollView, mContext.getResources().getColor(R.color.default_over_scroll_edge));
 
         // 이미지 정보
-        List<GourmetMenuImage> gourmetMenuImageList = gourmetMenu.getImageList();
+        List<DetailImageInformation> detailImageInformationList = gourmetMenu.getImageList();
 
-        if (gourmetMenuImageList == null || gourmetMenuImageList.size() == 0)
+        if (detailImageInformationList == null || detailImageInformationList.size() == 0)
         {
             holder.dataBinding.defaultImageLayout.setVisibility(View.GONE);
             holder.dataBinding.defaultImageLayout.setOnClickListener(null);
@@ -183,7 +183,7 @@ public class GourmetMenusAdapter extends RecyclerView.Adapter<GourmetMenusAdapte
 
             holder.dataBinding.simpleDraweeView.getHierarchy().setPlaceholderImage(R.drawable.layerlist_placeholder);
             Util.requestImageResize(mContext, holder.dataBinding.simpleDraweeView, gourmetMenu.getPrimaryImage().url);
-            setLineIndicatorVisible(holder.dataBinding, gourmetMenuImageList.size());
+            setLineIndicatorVisible(holder.dataBinding, detailImageInformationList.size());
 
             holder.dataBinding.defaultImageLayout.setOnClickListener(new View.OnClickListener()
             {
@@ -199,7 +199,7 @@ public class GourmetMenusAdapter extends RecyclerView.Adapter<GourmetMenusAdapte
         }
 
         // 메뉴 제목
-        holder.dataBinding.productNameTextView.setText(gourmetMenu.ticketName);
+        holder.dataBinding.productNameTextView.setText(gourmetMenu.name);
 
         // 베네핏
         if (DailyTextUtils.isTextEmpty(gourmetMenu.menuBenefit) == true)

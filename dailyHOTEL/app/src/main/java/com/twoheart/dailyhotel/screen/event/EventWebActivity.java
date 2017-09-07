@@ -33,7 +33,6 @@ import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.network.dto.BaseDto;
 import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.screen.common.WebViewActivity;
-import com.twoheart.dailyhotel.screen.gourmet.detail.GourmetDetailActivity;
 import com.twoheart.dailyhotel.screen.hotel.detail.StayDetailActivity;
 import com.twoheart.dailyhotel.screen.mydaily.coupon.CouponListActivity;
 import com.twoheart.dailyhotel.screen.mydaily.coupon.RegisterCouponActivity;
@@ -423,42 +422,45 @@ public class EventWebActivity extends WebViewActivity implements Constants
         {
             if (dailyDeepLink.isExternalDeepLink() == true)
             {
-                DailyExternalDeepLink externalDeepLink = (DailyExternalDeepLink) dailyDeepLink;
+                //                DailyExternalDeepLink externalDeepLink = (DailyExternalDeepLink) dailyDeepLink;
+                //
+                //                int gourmetIndex = Integer.parseInt(externalDeepLink.getIndex());
+                //
+                //                String date = externalDeepLink.getDate();
+                //                int datePlus = externalDeepLink.getDatePlus();
+                //                boolean isShowCalendar = externalDeepLink.isShowCalendar();
+                //                boolean isShowVR = externalDeepLink.isShowVR();
+                //                int ticketIndex = externalDeepLink.getOpenTicketIndex();
+                //
+                //                GourmetBookingDay gourmetBookingDay = new GourmetBookingDay();
+                //
+                //                if (DailyTextUtils.isTextEmpty(date) == false)
+                //                {
+                //                    Date checkInDate = DailyCalendar.convertDate(date, "yyyyMMdd", TimeZone.getTimeZone("GMT+09:00"));
+                //                    gourmetBookingDay.setVisitDay(DailyCalendar.format(checkInDate, DailyCalendar.ISO_8601_FORMAT));
+                //                } else if (datePlus >= 0)
+                //                {
+                //                    gourmetBookingDay.setVisitDay(todayDateTime.dailyDateTime, datePlus);
+                //                } else
+                //                {
+                //                    gourmetBookingDay.setVisitDay(todayDateTime.dailyDateTime);
+                //                }
+                //
+                //                Intent intent = GourmetDetailActivity.newInstance(EventWebActivity.this,//
+                //                    gourmetBookingDay, gourmetIndex, isShowCalendar, isShowVR, false);
 
-                int gourmetIndex = Integer.parseInt(externalDeepLink.getIndex());
-
-                String date = externalDeepLink.getDate();
-                int datePlus = externalDeepLink.getDatePlus();
-                boolean isShowCalendar = externalDeepLink.isShowCalendar();
-                boolean isShowVR = externalDeepLink.isShowVR();
-                int ticketIndex = externalDeepLink.getOpenTicketIndex();
-
-                GourmetBookingDay gourmetBookingDay = new GourmetBookingDay();
-
-                if (DailyTextUtils.isTextEmpty(date) == false)
-                {
-                    Date checkInDate = DailyCalendar.convertDate(date, "yyyyMMdd", TimeZone.getTimeZone("GMT+09:00"));
-                    gourmetBookingDay.setVisitDay(DailyCalendar.format(checkInDate, DailyCalendar.ISO_8601_FORMAT));
-                } else if (datePlus >= 0)
-                {
-                    gourmetBookingDay.setVisitDay(todayDateTime.dailyDateTime, datePlus);
-                } else
-                {
-                    gourmetBookingDay.setVisitDay(todayDateTime.dailyDateTime);
-                }
-
-                Intent intent = GourmetDetailActivity.newInstance(EventWebActivity.this,//
-                    gourmetBookingDay, gourmetIndex, isShowCalendar, isShowVR, false);
+                Intent intent = com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity.newInstance(EventWebActivity.this //
+                    , dailyDeepLink.getDeepLink());
 
                 startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMET_DETAIL);
 
                 overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
-
-                if (isShowCalendar == true)
-                {
-                    AnalyticsManager.getInstance(EventWebActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_//
-                        , AnalyticsManager.Action.GOURMET_BOOKING_CALENDAR_CLICKED, AnalyticsManager.Label.EVENT, null);
-                }
+                //
+                //                if (isShowCalendar == true)
+                //                {
+                //                    AnalyticsManager.getInstance(EventWebActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_//
+                //                        , AnalyticsManager.Action.GOURMET_BOOKING_CALENDAR_CLICKED, AnalyticsManager.Label.EVENT, null);
+                //                }
             } else
             {
 

@@ -87,9 +87,6 @@ public class StayThankYouScreenAnimator extends ThankYouScreenAnimator
             return null;
         }
 
-        final float startScaleY = 2.3f;
-        final float endScaleY = 1.0f;
-
         final ObjectAnimator objectAnimator = ObjectAnimator.ofPropertyValuesHolder(mStampView //
             , PropertyValuesHolder.ofFloat("scaleX", 0.9f, 1.0f) //
             , PropertyValuesHolder.ofFloat("scaleY", 0.9f, 1.0f) //

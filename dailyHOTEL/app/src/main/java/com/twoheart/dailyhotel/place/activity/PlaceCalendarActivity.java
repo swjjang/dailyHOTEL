@@ -52,6 +52,7 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
     protected static final String INTENT_EXTRA_DATA_OVERSEAS = "overseas";
     protected static final String INTENT_EXTRA_DATA_SOLDOUT_LIST = "soldoutList";
     protected static final String INTENT_EXTRA_DATA_DAY_OF_MAXCOUNT = "dayOfMaxCount";
+    protected static final String INTENT_EXTRA_DATA_VISIT_DATE_TIME = "visitDateTime";
 
     private static final int ANIMATION_DELAY = 200;
 

@@ -9,11 +9,10 @@ import android.support.annotation.NonNull;
 
 import com.daily.base.BaseAnalyticsInterface;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
+import com.daily.dailyhotel.entity.DetailImageInformation;
 import com.daily.dailyhotel.entity.GourmetMenu;
-import com.daily.dailyhotel.entity.GourmetMenuImage;
 import com.daily.dailyhotel.parcel.GourmetMenuParcel;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.network.model.ImageInformation;
 import com.twoheart.dailyhotel.screen.common.ImageDetailListActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyPreference;
@@ -180,9 +179,9 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
     }
 
     @Override
-    protected void onRefresh(boolean showProgress)
+    protected synchronized void onRefresh(boolean showProgress)
     {
-        if (getActivity().isFinishing() == true)
+        if (getActivity().isFinishing() == true || isRefresh() == false)
         {
             return;
         }
@@ -277,7 +276,7 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
         }
 
         GourmetMenu gourmetMenu = mGourmetMenuList.get(position);
-        List<GourmetMenuImage> gourmetMenuImageList = gourmetMenu.getImageList();
+        List<DetailImageInformation> gourmetMenuImageList = gourmetMenu.getImageList();
 
 
         if (gourmetMenuImageList == null || gourmetMenuImageList.size() == 0)
@@ -286,16 +285,16 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
             return;
         }
 
-        addCompositeDisposable(Observable.just(gourmetMenuImageList).subscribeOn(Schedulers.newThread()).map(new Function<List<GourmetMenuImage>, List<ImageInformation>>()
+        addCompositeDisposable(Observable.just(gourmetMenuImageList).subscribeOn(Schedulers.newThread()).map(new Function<List<DetailImageInformation>, List<com.twoheart.dailyhotel.network.model.ImageInformation>>()
         {
             @Override
-            public List<ImageInformation> apply(@io.reactivex.annotations.NonNull List<GourmetMenuImage> gourmetMenuImages) throws Exception
+            public List<com.twoheart.dailyhotel.network.model.ImageInformation> apply(@io.reactivex.annotations.NonNull List<DetailImageInformation> detailImageInformations) throws Exception
             {
-                List<ImageInformation> imageInformationList = new ArrayList<>();
+                List<com.twoheart.dailyhotel.network.model.ImageInformation> imageInformationList = new ArrayList<>();
 
-                for (GourmetMenuImage gourmetMenuImage : gourmetMenuImageList)
+                for (DetailImageInformation gourmetMenuImage : gourmetMenuImageList)
                 {
-                    ImageInformation imageInformation = new ImageInformation();
+                    com.twoheart.dailyhotel.network.model.ImageInformation imageInformation = new com.twoheart.dailyhotel.network.model.ImageInformation();
                     imageInformation.description = gourmetMenuImage.caption;
                     imageInformation.setImageUrl(gourmetMenuImage.url);
 
@@ -304,13 +303,13 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
 
                 return imageInformationList;
             }
-        }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<List<ImageInformation>>()
+        }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<List<com.twoheart.dailyhotel.network.model.ImageInformation>>()
         {
             @Override
-            public void accept(@io.reactivex.annotations.NonNull List<ImageInformation> imageInformations) throws Exception
+            public void accept(@io.reactivex.annotations.NonNull List<com.twoheart.dailyhotel.network.model.ImageInformation> imageInformations) throws Exception
             {
                 Intent intent = ImageDetailListActivity.newInstance(getActivity(), Constants.PlaceType.FNB//
-                    , gourmetMenu.ticketName, imageInformations, 0);
+                    , gourmetMenu.name, imageInformations, 0);
                 startActivityForResult(intent, GourmetMenusActivity.REQUEST_CODE_IMAGE_LIST);
 
                 mAnalytics.onEventImageClick(getActivity(), Integer.toString(gourmetMenu.index));

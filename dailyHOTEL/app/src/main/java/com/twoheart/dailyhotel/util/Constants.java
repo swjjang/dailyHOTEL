@@ -182,6 +182,7 @@ public interface Constants
     String NAME_INTENT_EXTRA_DATA_RESERVATIONINDEX = "index";
     String NAME_INTENT_EXTRA_DATA_CHECKINDATE = "checkInDate";
     String NAME_INTENT_EXTRA_DATA_CHECKOUTDATE = "checkOutDate";
+    String NAME_INTENT_EXTRA_DATA_VISIT_DATE = "visitDate";
     String NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY = "placeBookingDay";
     String NAME_INTENT_EXTRA_DATA_URL = "url";
     String NAME_INTENT_EXTRA_DATA_PLACEIDX = "placeIdx";
@@ -305,6 +306,7 @@ public interface Constants
     int CODE_REQUEST_ACTIVITY_PREVIEW = 75;
     int CODE_REQUEST_ACTIVITY_STAY_OB_DETAIL = 76;
     int CODE_REQUEST_ACTIVITY_RECEIPT = 77;
+    int CODE_REQUEST_ACTIVITY_NAVIGATOR = 78;
 
     // Android Activity의 Result Code들이다.
     int CODE_RESULT_ACTIVITY_PAYMENT_FAIL = 100;

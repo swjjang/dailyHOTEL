@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.daily.dailyhotel.entity.CommonDateTime;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.time.GourmetBookingDay;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
@@ -44,6 +45,23 @@ public class GourmetDetailCalendarActivity extends GourmetCalendarActivity
         intent.putExtra(INTENT_EXTRA_DATA_DAY_OF_MAXCOUNT, dayOfMaxCount);
 
         return intent;
+    }
+
+    public static Intent newInstance(Context context, CommonDateTime commonDateTime //
+        , String visitDateTime, int gourmetIndex, int dayOfMaxCount, String screen //
+        , ArrayList<Integer> soldOutList, boolean selected, boolean animation) throws Exception
+    {
+        TodayDateTime todayDateTime = new TodayDateTime();
+        todayDateTime.dailyDateTime = commonDateTime.dailyDateTime;
+        todayDateTime.closeDateTime = commonDateTime.closeDateTime;
+        todayDateTime.openDateTime = commonDateTime.openDateTime;
+        todayDateTime.currentDateTime = commonDateTime.currentDateTime;
+
+        GourmetBookingDay gourmetBookingDay = new GourmetBookingDay();
+        gourmetBookingDay.setVisitDay(visitDateTime);
+
+        return newInstance(context, todayDateTime, gourmetBookingDay, gourmetIndex, dayOfMaxCount, screen//
+            , soldOutList, selected, animation);
     }
 
     @Override
@@ -107,6 +125,7 @@ public class GourmetDetailCalendarActivity extends GourmetCalendarActivity
 
             Intent intent = new Intent();
             intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, gourmetBookingDay);
+            intent.putExtra(NAME_INTENT_EXTRA_DATA_VISIT_DATE, gourmetBookingDay.getVisitDay(DailyCalendar.ISO_8601_FORMAT));
 
             setResult(RESULT_OK, intent);
             hideAnimation();

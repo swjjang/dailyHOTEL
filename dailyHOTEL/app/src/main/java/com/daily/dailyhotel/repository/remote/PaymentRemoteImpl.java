@@ -92,7 +92,7 @@ public class PaymentRemoteImpl implements PaymentInterface
     @Override
     public Observable<StayPayment> getStayPayment(StayBookDateTime stayBookDateTime, int index)
     {
-        int nights = 1;
+        int nights;
 
         try
         {
@@ -177,8 +177,6 @@ public class PaymentRemoteImpl implements PaymentInterface
             public List<Card> apply(@io.reactivex.annotations.NonNull BaseListDto<CardData> cardDataBaseListDto) throws Exception
             {
                 List<Card> cardList = new ArrayList<>();
-
-                StayOutboundPayment stayOutboundPayment = null;
 
                 if (cardDataBaseListDto != null)
                 {
@@ -530,7 +528,7 @@ public class PaymentRemoteImpl implements PaymentInterface
             @Override
             public StayRefundPolicy apply(@io.reactivex.annotations.NonNull BaseDto<StayRefundPolicyData> stayRefundPolicyDataBaseDto) throws Exception
             {
-                StayRefundPolicy stayRefundPolicy = null;
+                StayRefundPolicy stayRefundPolicy;
 
                 if (stayRefundPolicyDataBaseDto != null)
                 {

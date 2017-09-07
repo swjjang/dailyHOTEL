@@ -236,9 +236,9 @@ public class StayOutboundThankYouPresenter extends BaseExceptionPresenter<StayOu
     }
 
     @Override
-    protected void onRefresh(boolean showProgress)
+    protected synchronized void onRefresh(boolean showProgress)
     {
-        if (getActivity().isFinishing() == true)
+        if (getActivity().isFinishing() == true || isRefresh() == false)
         {
             return;
         }

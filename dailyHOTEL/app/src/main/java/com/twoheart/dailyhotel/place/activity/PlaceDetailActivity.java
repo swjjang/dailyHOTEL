@@ -18,8 +18,8 @@ import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
 import com.daily.base.widget.DailyTextView;
 import com.daily.dailyhotel.repository.local.model.AnalyticsParam;
+import com.daily.dailyhotel.repository.remote.CalendarImpl;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
-import com.daily.dailyhotel.repository.remote.PlaceDetailCalendarImpl;
 import com.daily.dailyhotel.view.DailyToolbarView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Customer;
@@ -32,7 +32,6 @@ import com.twoheart.dailyhotel.network.model.TrueVRParams;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.layout.PlaceDetailLayout;
 import com.twoheart.dailyhotel.place.networkcontroller.PlaceDetailNetworkController;
-import com.twoheart.dailyhotel.screen.gourmet.detail.GourmetDetailActivity;
 import com.twoheart.dailyhotel.screen.hotel.detail.StayDetailActivity;
 import com.twoheart.dailyhotel.screen.information.FAQActivity;
 import com.twoheart.dailyhotel.screen.main.MainActivity;
@@ -45,6 +44,7 @@ import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.List;
 
 public abstract class PlaceDetailActivity extends BaseActivity
 {
@@ -63,7 +63,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
     protected PlaceDetailNetworkController mPlaceDetailNetworkController;
 
     protected CommonRemoteImpl mCommonRemoteImpl;
-    protected PlaceDetailCalendarImpl mPlaceDetailCalendarImpl;
+    protected CalendarImpl mPlaceDetailCalendarImpl;
 
     protected PlaceBookingDay mPlaceBookingDay;
     protected TodayDateTime mTodayDateTime;
@@ -84,7 +84,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
     protected int mProductDetailIndex; // 딥링크로 시작시에 객실/티켓 정보 오픈후에 선택되어있는 인덱스
     protected PlaceReviewScores mPlaceReviewScores;
     protected ArrayList<TrueVRParams> mTrueVRParamsList;
-    protected ArrayList<Integer> mSoldOutList;
+    protected List<Integer> mSoldOutList;
 
     protected Handler mHandler = new Handler();
 
@@ -136,7 +136,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
         mPlaceDetailNetworkController = getNetworkController(this);
 
         mCommonRemoteImpl = new CommonRemoteImpl(this);
-        mPlaceDetailCalendarImpl = new PlaceDetailCalendarImpl(this);
+        mPlaceDetailCalendarImpl = new CalendarImpl(this);
     }
 
     protected void initToolbar(String title)
@@ -250,9 +250,6 @@ public abstract class PlaceDetailActivity extends BaseActivity
             if (this instanceof StayDetailActivity)
             {
                 mAppResearch.onResume("스테이", mPlaceDetail.index);
-            } else if (this instanceof GourmetDetailActivity)
-            {
-                mAppResearch.onResume("고메", mPlaceDetail.index);
             }
         }
     }
@@ -274,9 +271,6 @@ public abstract class PlaceDetailActivity extends BaseActivity
             if (this instanceof StayDetailActivity)
             {
                 mAppResearch.onPause("스테이", mPlaceDetail.index);
-            } else if (this instanceof GourmetDetailActivity)
-            {
-                mAppResearch.onPause("고메", mPlaceDetail.index);
             }
         }
     }

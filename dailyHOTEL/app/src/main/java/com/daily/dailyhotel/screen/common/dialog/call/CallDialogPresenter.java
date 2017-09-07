@@ -1,4 +1,4 @@
-package com.daily.dailyhotel.screen.common.call;
+package com.daily.dailyhotel.screen.common.dialog.call;
 
 
 import android.app.Activity;
@@ -140,9 +140,9 @@ public class CallDialogPresenter extends BaseExceptionPresenter<CallDialogActivi
     }
 
     @Override
-    protected void onRefresh(boolean showProgress)
+    protected synchronized void onRefresh(boolean showProgress)
     {
-        if (getActivity().isFinishing() == true)
+        if (getActivity().isFinishing() == true || isRefresh() == false)
         {
             return;
         }

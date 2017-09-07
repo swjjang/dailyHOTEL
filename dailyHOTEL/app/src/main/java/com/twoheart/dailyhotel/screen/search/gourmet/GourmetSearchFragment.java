@@ -10,8 +10,9 @@ import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.entity.CampaignTag;
 import com.daily.dailyhotel.entity.RecentlyPlace;
-import com.daily.dailyhotel.repository.local.model.AnalyticsParam;
+import com.daily.dailyhotel.parcel.analytics.GourmetDetailAnalyticsParam;
 import com.daily.dailyhotel.screen.home.campaigntag.gourmet.GourmetCampaignTagListActivity;
+import com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity;
 import com.daily.dailyhotel.util.RecentlyPlaceUtil;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Keyword;
@@ -19,9 +20,7 @@ import com.twoheart.dailyhotel.model.time.GourmetBookingDay;
 import com.twoheart.dailyhotel.network.model.GourmetKeyword;
 import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.place.fragment.PlaceSearchFragment;
-import com.twoheart.dailyhotel.place.layout.PlaceDetailLayout;
 import com.twoheart.dailyhotel.place.layout.PlaceSearchLayout;
-import com.twoheart.dailyhotel.screen.gourmet.detail.GourmetDetailActivity;
 import com.twoheart.dailyhotel.screen.gourmet.filter.GourmetCalendarActivity;
 import com.twoheart.dailyhotel.screen.gourmet.filter.GourmetSearchCalendarActivity;
 import com.twoheart.dailyhotel.screen.search.gourmet.result.GourmetSearchResultActivity;
@@ -657,15 +656,40 @@ public class GourmetSearchFragment extends PlaceSearchFragment
                 return;
             }
 
-            AnalyticsParam analyticsParam = new AnalyticsParam();
-            analyticsParam.setParam(getActivity(), place);
-            analyticsParam.setProvince(null);
-            analyticsParam.setTotalListCount(0);
+            // --> 추후에 정리되면 메소드로 수정
+            GourmetDetailAnalyticsParam analyticsParam = new GourmetDetailAnalyticsParam();
 
-            Intent intent = GourmetDetailActivity.newInstance(getActivity() //
-                , mGourmetBookingDay, place.index, place.title //
-                , place.imageUrl, place.details.category, place.isSoldOut, analyticsParam, false //
-                , PlaceDetailLayout.TRANS_GRADIENT_BOTTOM_TYPE_NONE);
+            if (place.prices != null)
+            {
+                analyticsParam.price = place.prices.normalPrice;
+
+                if (place.prices.discountPrice > 0)
+                {
+                    analyticsParam.discountPrice = place.prices.discountPrice;
+                }
+            } else
+            {
+                analyticsParam.price = 0;
+                analyticsParam.discountPrice = 0;
+            }
+
+            analyticsParam.setShowOriginalPriceYn(analyticsParam.price, analyticsParam.discountPrice);
+            analyticsParam.setProvince(null);
+            analyticsParam.entryPosition = -1;
+            analyticsParam.totalListCount = -1;
+            analyticsParam.isDailyChoice = false;
+            analyticsParam.setAddressAreaName(null);
+
+            // <-- 추후에 정리되면 메소드로 수정
+
+            Intent intent = GourmetDetailActivity.newInstance(mBaseActivity //
+                , place.index, place.title, place.imageUrl//
+                , place.prices != null ? place.prices.discountPrice : GourmetDetailActivity.NONE_PRICE//
+                , mGourmetBookingDay.getVisitDay(DailyCalendar.ISO_8601_FORMAT)//
+                , place.details != null ? place.details.category : null//
+                , place.isSoldOut, false, false, false//
+                , GourmetDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_NONE//
+                , analyticsParam);
 
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMET_DETAIL);
 

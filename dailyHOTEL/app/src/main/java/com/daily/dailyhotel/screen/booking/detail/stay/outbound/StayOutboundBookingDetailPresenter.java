@@ -25,12 +25,14 @@ import com.daily.dailyhotel.entity.Booking;
 import com.daily.dailyhotel.entity.CommonDateTime;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayOutboundBookingDetail;
+import com.daily.dailyhotel.parcel.analytics.NavigatorAnalyticsParam;
 import com.daily.dailyhotel.parcel.analytics.StayOutboundDetailAnalyticsParam;
 import com.daily.dailyhotel.repository.remote.BookingRemoteImpl;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
 import com.daily.dailyhotel.screen.booking.detail.stay.outbound.receipt.StayOutboundReceiptActivity;
 import com.daily.dailyhotel.screen.booking.detail.stay.outbound.refund.StayOutboundRefundActivity;
-import com.daily.dailyhotel.screen.common.call.CallDialogActivity;
+import com.daily.dailyhotel.screen.common.dialog.call.CallDialogActivity;
+import com.daily.dailyhotel.screen.common.dialog.navigator.NavigatorDialogActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.detail.StayOutboundDetailActivity;
 import com.daily.dailyhotel.util.DailyLocationExFactory;
 import com.twoheart.dailyhotel.R;
@@ -231,9 +233,9 @@ public class StayOutboundBookingDetailPresenter extends BaseExceptionPresenter<S
     }
 
     @Override
-    protected void onRefresh(boolean showProgress)
+    protected synchronized void onRefresh(boolean showProgress)
     {
-        if (getActivity().isFinishing() == true)
+        if (getActivity().isFinishing() == true || isRefresh() == false)
         {
             return;
         }
@@ -407,14 +409,10 @@ public class StayOutboundBookingDetailPresenter extends BaseExceptionPresenter<S
             return;
         }
 
-        getViewInterface().showNavigatorDialog(new DialogInterface.OnDismissListener()
-        {
-            @Override
-            public void onDismiss(DialogInterface dialog)
-            {
-                unLockAll();
-            }
-        });
+        NavigatorAnalyticsParam analyticsParam = new NavigatorAnalyticsParam();
+
+        startActivityForResult(NavigatorDialogActivity.newInstance(getActivity(), mStayOutboundBookingDetail.name//
+            , mStayOutboundBookingDetail.latitude, mStayOutboundBookingDetail.longitude, true, analyticsParam), StayOutboundBookingDetailActivity.REQUEST_CODE_NAVIGATOR);
     }
 
     @Override
@@ -512,12 +510,6 @@ public class StayOutboundBookingDetailPresenter extends BaseExceptionPresenter<S
         }
 
         startActivityForResult(StayOutboundReceiptActivity.newInstance(getActivity(), mBookingIndex), StayOutboundBookingDetailActivity.REQUEST_CODE_ISSUING_RECEIPT);
-    }
-
-    @Override
-    public void onShareMapClick()
-    {
-        Util.shareGoogleMap(getActivity(), mStayOutboundBookingDetail.name, Double.toString(mStayOutboundBookingDetail.latitude), Double.toString(mStayOutboundBookingDetail.longitude));
     }
 
     @Override

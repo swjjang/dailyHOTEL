@@ -171,8 +171,6 @@ public class PaymentWaitActivity extends BaseActivity
             {
                 finish();
             }
-
-            ;
         });
 
         dailyToolbarView.addMenuItem(DailyToolbarView.MenuItem.HELP, null, new View.OnClickListener()

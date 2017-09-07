@@ -4,7 +4,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import com.daily.base.util.DailyTextUtils;
-import com.daily.dailyhotel.screen.common.call.CallDialogActivity;
+import com.daily.dailyhotel.screen.common.dialog.call.CallDialogActivity;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Category;
 import com.twoheart.dailyhotel.model.Place;
