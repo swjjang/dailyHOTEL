@@ -32,7 +32,6 @@ import com.twoheart.dailyhotel.network.model.TrueVRParams;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.layout.PlaceDetailLayout;
 import com.twoheart.dailyhotel.place.networkcontroller.PlaceDetailNetworkController;
-import com.twoheart.dailyhotel.screen.gourmet.detail.GourmetDetailActivity;
 import com.twoheart.dailyhotel.screen.hotel.detail.StayDetailActivity;
 import com.twoheart.dailyhotel.screen.information.FAQActivity;
 import com.twoheart.dailyhotel.screen.main.MainActivity;
@@ -251,9 +250,6 @@ public abstract class PlaceDetailActivity extends BaseActivity
             if (this instanceof StayDetailActivity)
             {
                 mAppResearch.onResume("스테이", mPlaceDetail.index);
-            } else if (this instanceof GourmetDetailActivity)
-            {
-                mAppResearch.onResume("고메", mPlaceDetail.index);
             }
         }
     }
@@ -275,9 +271,6 @@ public abstract class PlaceDetailActivity extends BaseActivity
             if (this instanceof StayDetailActivity)
             {
                 mAppResearch.onPause("스테이", mPlaceDetail.index);
-            } else if (this instanceof GourmetDetailActivity)
-            {
-                mAppResearch.onPause("고메", mPlaceDetail.index);
             }
         }
     }
