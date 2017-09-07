@@ -248,7 +248,7 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
     }
 
     @Override
-    public void setGourmetDetail(GourmetBookDateTime gourmetBookDateTime, GourmetDetail gourmetDetail, int trueReviewCount)
+    public void setGourmetDetail(GourmetBookDateTime gourmetBookDateTime, GourmetDetail gourmetDetail, int trueReviewCount, int shownMenuCount)
     {
         if (getViewDataBinding() == null || gourmetBookDateTime == null || gourmetDetail == null)
         {
@@ -274,7 +274,7 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
         setCouponView(gourmetDetail.hasCoupon);
 
         // 메뉴 리스트
-        setMenuListLayout(gourmetDetail.getGourmetMenuList());
+        setMenuListLayout(gourmetDetail.getGourmetMenuList(), shownMenuCount);
 
         // 방문일
         setVisitDateView(gourmetBookDateTime.getVisitDateTime("yyyy.MM.dd(EEE)"));
@@ -1421,7 +1421,7 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
         }, null);
     }
 
-    private void setMenuListLayout(List<GourmetMenu> gourmetMenuList)
+    private void setMenuListLayout(List<GourmetMenu> gourmetMenuList, int shownMenuCount)
     {
         if (getViewDataBinding() == null || gourmetMenuList == null)
         {
@@ -1438,20 +1438,19 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
 
         LayoutInflater layoutInflater = LayoutInflater.from(getContext());
 
-        final int DEFAULT_SHOW_PRODUCT_COUNT = 5;
         int size = gourmetMenuList.size();
 
-        if (size > DEFAULT_SHOW_PRODUCT_COUNT)
+        if (size > shownMenuCount)
         {
             mMoreMenuLayout = new LinearLayout(getContext());
             mMoreMenuLayout.setOrientation(LinearLayout.VERTICAL);
 
             for (int i = 0; i < size; i++)
             {
-                if (i < DEFAULT_SHOW_PRODUCT_COUNT)
+                if (i < shownMenuCount)
                 {
                     setMenuLayout(layoutInflater, getViewDataBinding().menuLayout, i, gourmetMenuList.get(i));
-                } else if (i == DEFAULT_SHOW_PRODUCT_COUNT)
+                } else if (i == shownMenuCount)
                 {
                     getViewDataBinding().menuLayout.addView(mMoreMenuLayout, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 

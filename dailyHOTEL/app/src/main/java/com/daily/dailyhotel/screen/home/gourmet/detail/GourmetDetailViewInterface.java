@@ -10,7 +10,7 @@ import io.reactivex.Observable;
 
 public interface GourmetDetailViewInterface extends BaseDialogViewInterface
 {
-    void setGourmetDetail(GourmetBookDateTime gourmetBookDateTime, GourmetDetail gourmetDetail, int trueReviewCount);
+    void setGourmetDetail(GourmetBookDateTime gourmetBookDateTime, GourmetDetail gourmetDetail, int trueReviewCount, int shownMenuCount);
 
     Observable<Boolean> getSharedElementTransition();
 
