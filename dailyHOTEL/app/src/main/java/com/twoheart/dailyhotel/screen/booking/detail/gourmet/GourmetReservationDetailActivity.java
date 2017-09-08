@@ -32,7 +32,6 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.GourmetBookingDetail;
 import com.twoheart.dailyhotel.model.PlaceBookingDetail;
 import com.twoheart.dailyhotel.model.Review;
-import com.twoheart.dailyhotel.model.time.GourmetBookingDay;
 import com.twoheart.dailyhotel.place.activity.PlaceReservationDetailActivity;
 import com.twoheart.dailyhotel.screen.common.HappyTalkCategoryDialog;
 import com.twoheart.dailyhotel.screen.common.PermissionManagerActivity;

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.style.ForegroundColorSpan;
+import android.text.style.StyleSpan;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -93,26 +94,23 @@ public class FinalCheckLayout extends FrameLayout
 
             String message = context.getString(textResIds[i]);
 
-            int startIndex = message.indexOf("<b>");
+            SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(message);
 
-            if (startIndex >= 0)
+            for (int startIndex = spannableStringBuilder.toString().indexOf("<b>"); startIndex >= 0; startIndex = spannableStringBuilder.toString().indexOf("<b>"))
             {
-                message = message.replaceAll("<b>", "");
+                spannableStringBuilder.delete(startIndex, startIndex + "<b>".length());
 
-                int endIndex = message.indexOf("</b>");
+                int endIndex = spannableStringBuilder.toString().indexOf("</b>");
 
-                message = message.replaceAll("</b>", "");
+                spannableStringBuilder.delete(endIndex, endIndex + "</b>".length());
 
-                SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(message);
-
-                spannableStringBuilder.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.dh_theme_color)), //
+                spannableStringBuilder.setSpan(new ForegroundColorSpan(context.getResources().getColor(R.color.dh_theme_color)), //
                     startIndex, endIndex, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-                messageTextView.setText(spannableStringBuilder);
-            } else
-            {
-                messageTextView.setText(message);
+                spannableStringBuilder.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), //
+                    startIndex, endIndex, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             }
+
+            messageTextView.setText(spannableStringBuilder);
 
             mMessageLayout.addView(messageRow);
         }

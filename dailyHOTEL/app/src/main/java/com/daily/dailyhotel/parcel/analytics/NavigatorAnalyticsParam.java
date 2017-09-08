@@ -3,8 +3,6 @@ package com.daily.dailyhotel.parcel.analytics;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.twoheart.dailyhotel.model.Province;
-
 public class NavigatorAnalyticsParam implements Parcelable
 {
     public String category;

@@ -271,8 +271,7 @@ public class RecentGourmetListFragment extends RecentPlacesListFragment
             } else
             {
                 Intent intent = GourmetDetailActivity.newInstance(mBaseActivity //
-                    , recentlyPlace.index, recentlyPlace.title, recentlyPlace.imageUrl
-                    , recentlyPlace.prices != null ? recentlyPlace.prices.discountPrice : GourmetDetailActivity.NONE_PRICE//
+                    , recentlyPlace.index, recentlyPlace.title, recentlyPlace.imageUrl, recentlyPlace.prices != null ? recentlyPlace.prices.discountPrice : GourmetDetailActivity.NONE_PRICE//
                     , ((GourmetBookingDay) mPlaceBookingDay).getVisitDay(DailyCalendar.ISO_8601_FORMAT)//
                     , recentlyPlace.details != null ? recentlyPlace.details.category : null//
                     , recentlyPlace.isSoldOut, false, false, false//

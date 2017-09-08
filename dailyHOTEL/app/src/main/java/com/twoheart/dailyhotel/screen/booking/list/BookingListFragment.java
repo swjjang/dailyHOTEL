@@ -43,7 +43,6 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.FragmentBookingListDataBinding;
 import com.twoheart.dailyhotel.model.ReviewPickQuestion;
 import com.twoheart.dailyhotel.model.ReviewScoreQuestion;
-import com.twoheart.dailyhotel.model.time.GourmetBookingDay;
 import com.twoheart.dailyhotel.model.time.StayBookingDay;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.base.BaseMenuNavigationFragment;
@@ -611,6 +610,7 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
         }
 
         // 무료취소대기, 입금대기, 결제완료, 이용완료
+        List<Booking> reservationWaitingList = new ArrayList<>();
         List<Booking> waitRefundList = new ArrayList<>();
         List<Booking> depositWaitingList = new ArrayList<>();
         List<Booking> beforeUseList = new ArrayList<>();
@@ -620,7 +620,10 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
         {
             booking.remainingDays = DailyCalendar.compareDateDay(booking.checkInDateTime, mCommonDateTime.currentDateTime);
 
-            if (booking.readyForRefund == true)
+            if (booking.reservationWaiting == true)
+            {
+                reservationWaitingList.add(booking);
+            } else if (booking.readyForRefund == true)
             {
                 waitRefundList.add(booking);
             } else
@@ -727,6 +730,18 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
         };
 
         List<Booking> sortBookingList = new ArrayList<>(bookingList.size());
+
+        // 예약 대기가 있는 경우
+        if(reservationWaitingList.size() > 0)
+        {
+            Collections.sort(reservationWaitingList, ascComparator);
+
+            for (Booking booking : reservationWaitingList)
+            {
+                booking.bookingState = Booking.BOOKING_STATE_RESERVATION_WAITING;
+                sortBookingList.add(booking);
+            }
+        }
 
         // 무료취소대기가 있는 경우
         if (waitRefundList.size() > 0)

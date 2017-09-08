@@ -14,7 +14,6 @@ import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
 import com.daily.dailyhotel.parcel.analytics.GourmetDetailAnalyticsParam;
-import com.daily.dailyhotel.repository.local.model.AnalyticsParam;
 import com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.twoheart.dailyhotel.R;
@@ -480,7 +479,7 @@ public class CollectionGourmetActivity extends CollectionBaseActivity
                         , ((GourmetBookingDay) mPlaceBookingDay).getVisitDay(DailyCalendar.ISO_8601_FORMAT)//
                         , recommendationGourmet.category, recommendationGourmet.isSoldOut, false, false, true//
                         , GourmetDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_MAP//
-                        ,analyticsParam);
+                        , analyticsParam);
                 } else
                 {
                     //                    intent = GourmetDetailActivity.newInstance(CollectionGourmetActivity.this //

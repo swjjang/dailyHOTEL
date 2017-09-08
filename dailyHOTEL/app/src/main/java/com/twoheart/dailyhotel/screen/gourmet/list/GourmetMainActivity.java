@@ -19,7 +19,6 @@ import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.parcel.analytics.GourmetDetailAnalyticsParam;
-import com.daily.dailyhotel.repository.local.model.AnalyticsParam;
 import com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.android.gms.maps.model.LatLng;
@@ -974,7 +973,7 @@ public class GourmetMainActivity extends PlaceMainActivity
                     analyticsParam.setShowOriginalPriceYn(analyticsParam.price, analyticsParam.discountPrice);
                     analyticsParam.setProvince(province);
                     analyticsParam.entryPosition = gourmet.entryPosition;
-                    analyticsParam.totalListCount =listCount;
+                    analyticsParam.totalListCount = listCount;
                     analyticsParam.isDailyChoice = gourmet.isDailyChoice;
                     analyticsParam.setAddressAreaName(gourmet.addressSummary);
 

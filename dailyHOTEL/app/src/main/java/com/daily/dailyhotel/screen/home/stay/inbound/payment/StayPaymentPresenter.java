@@ -41,7 +41,6 @@ import com.daily.dailyhotel.view.DailyBookingPaymentTypeView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.Setting;
 import com.twoheart.dailyhotel.model.Coupon;
-import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.screen.mydaily.coupon.SelectStayCouponDialogActivity;
 import com.twoheart.dailyhotel.screen.mydaily.creditcard.CreditCardListActivity;
 import com.twoheart.dailyhotel.screen.mydaily.creditcard.RegisterCreditCardActivity;
@@ -104,7 +103,6 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
     private String mStayName, mImageUrl, mCategory, mRoomName;
     private StayPayment mStayPayment;
     private StayRefundPolicy mStayRefundPolicy;
-    private Stay.Grade mGrade;
     private Card mSelectedCard;
     private DomesticGuest mGuest;
     private Coupon mSelectedCoupon;
@@ -113,7 +111,7 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
     private boolean mOverseas, mBonusSelected, mCouponSelected, mAgreedThirdPartyTerms;
     private boolean mGuestInformationVisible;
     private UserSimpleInformation mUserSimpleInformation;
-    private int mPensionPopupMessageType;
+    private int mReservationWaitingMessageType;
 
     public interface StayPaymentAnalyticsInterface extends BaseAnalyticsInterface
     {
@@ -122,10 +120,10 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
         StayPaymentAnalyticsParam getAnalyticsParam();
 
         void onScreen(Activity activity, String refundPolicy, StayBookDateTime stayBookDateTime, int stayIndex, String stayName//
-            , int roomIndex, String roomName, String category, String grade, StayPayment stayPayment, boolean registerEasyCard);
+            , int roomIndex, String roomName, String category, StayPayment stayPayment, boolean registerEasyCard);
 
         void onScreenAgreeTermDialog(Activity activity, StayBookDateTime stayBookDateTime//
-            , int stayIndex, String stayName, int roomIndex, String roomName, String category, String grade//
+            , int stayIndex, String stayName, int roomIndex, String roomName, String category//
             , StayPayment stayPayment, boolean registerEasyCard, boolean usedBonus, boolean usedCoupon, Coupon coupon//
             , DailyBookingPaymentTypeView.PaymentType paymentType, UserSimpleInformation userSimpleInformation);
 
@@ -226,14 +224,6 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
         mCategory = intent.getStringExtra(StayPaymentActivity.INTENT_EXTRA_DATA_CATEGORY);
         mRoomName = intent.getStringExtra(StayPaymentActivity.INTENT_EXTRA_DATA_ROOM_NAME);
 
-        try
-        {
-            mGrade = Stay.Grade.valueOf(intent.getStringExtra(StayPaymentActivity.INTENT_EXTRA_DATA_GRADE));
-        } catch (Exception e)
-        {
-            mGrade = Stay.Grade.etc;
-        }
-
         mAnalytics.setAnalyticsParam(intent.getParcelableExtra(BaseActivity.INTENT_EXTRA_DATA_ANALYTICS));
 
         return true;
@@ -297,7 +287,7 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
         outState.putInt("stayIndex", mStayIndex);
         outState.putInt("roomPrice", mRoomPrice);
         outState.putInt("roomIndex", mRoomIndex);
-        outState.putInt("pensionPopupMessageType", mPensionPopupMessageType);
+        outState.putInt("reservationWaitingMessageType", mReservationWaitingMessageType);
 
         outState.putString("stayName", mStayName);
         outState.putString("imageUrl", mImageUrl);
@@ -309,11 +299,6 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
         {
             outState.putString("checkInDateTime", mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT));
             outState.putString("checkOutDateTime", mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT));
-        }
-
-        if (mGrade != null)
-        {
-            outState.putString("grade", mGrade.name());
         }
 
         if (mPaymentType != null)
@@ -356,7 +341,7 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
         mStayIndex = savedInstanceState.getInt("stayIndex");
         mRoomPrice = savedInstanceState.getInt("roomPrice");
         mRoomIndex = savedInstanceState.getInt("roomIndex");
-        mPensionPopupMessageType = savedInstanceState.getInt("pensionPopupMessageType");
+        mReservationWaitingMessageType = savedInstanceState.getInt("reservationWaitingMessageType");
 
         mStayName = savedInstanceState.getString("stayName");
         mImageUrl = savedInstanceState.getString("imageUrl");
@@ -365,14 +350,6 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
         mTransportationType = savedInstanceState.getString("transportationType");
 
         setStayBookDateTime(savedInstanceState.getString("checkInDateTime"), savedInstanceState.getString("checkOutDateTime"));
-
-        try
-        {
-            mGrade = Stay.Grade.valueOf(savedInstanceState.getString("grade"));
-        } catch (Exception e)
-        {
-            mGrade = Stay.Grade.etc;
-        }
 
         try
         {
@@ -620,11 +597,7 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
                     setSelectCard(getSelectedCard(cardList));
                     setUserInformation(userSimpleInformation);
                     setStayRefundPolicy(stayRefundPolicy);
-
-                    if (Stay.Grade.pension == mGrade || Stay.Grade.fullvilla == mGrade)
-                    {
-                        setPensionPopupMessageType(commonDateTime, mStayBookDateTime);
-                    }
+                    setPensionPopupMessageType(commonDateTime, mStayBookDateTime);
 
                     return true;
                 }
@@ -681,7 +654,7 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
                 }
 
                 mAnalytics.onScreen(getActivity(), mStayRefundPolicy.refundPolicy, mStayBookDateTime//
-                    , mStayIndex, mStayName, mRoomIndex, mRoomName, mCategory, mGrade.getName(getActivity())//
+                    , mStayIndex, mStayName, mRoomIndex, mRoomName, mCategory//
                     , mStayPayment, mSelectedCard != null);
 
                 mAnalytics.onEventTransportationVisible(getActivity(), StayPayment.VISIT_TYPE_NONE.equalsIgnoreCase(mStayPayment.transportation) == false);
@@ -1055,7 +1028,7 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
         {
             // 보너스로만 결제할 경우에는 팝업이 기존의 카드 타입과 동일한다.
             getViewInterface().showAgreeTermDialog(DailyBookingPaymentTypeView.PaymentType.FREE//
-                , getAgreedTermMessages(DailyBookingPaymentTypeView.PaymentType.FREE), new View.OnClickListener()
+                , getAgreedTermMessages(DailyBookingPaymentTypeView.PaymentType.FREE, mStayPayment.reservationWaiting), new View.OnClickListener()
                 {
                     @Override
                     public void onClick(View v)
@@ -1088,7 +1061,7 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
                 mAnalytics.onEventStartPayment(getActivity(), DailyBookingPaymentTypeView.PaymentType.EASY_CARD);
             } else
             {
-                getViewInterface().showAgreeTermDialog(mPaymentType, getAgreedTermMessages(mPaymentType), new View.OnClickListener()
+                getViewInterface().showAgreeTermDialog(mPaymentType, getAgreedTermMessages(mPaymentType, mStayPayment.reservationWaiting), new View.OnClickListener()
                 {
                     @Override
                     public void onClick(View v)
@@ -1259,16 +1232,16 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
         }
 
         mAnalytics.onScreenAgreeTermDialog(getActivity(), mStayBookDateTime, mStayIndex, mStayName, mRoomIndex, mRoomName//
-            , mCategory, mGrade.getName(getActivity()), mStayPayment, mSelectedCard != null, mBonusSelected, mCouponSelected, mSelectedCoupon//
+            , mCategory, mStayPayment, mSelectedCard != null, mBonusSelected, mCouponSelected, mSelectedCoupon//
             , mPaymentType, mUserSimpleInformation);
     }
 
     private void startThankYou(String aggregationId, boolean fullBonus)
     {
-        startActivityForResult(StayThankYouActivity.newInstance(getActivity(), mOverseas, mCategory, mStayName, mImageUrl//
+        startActivityForResult(StayThankYouActivity.newInstance(getActivity(), mOverseas, mStayName, mImageUrl//
             , mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
             , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
-            , mRoomName, aggregationId, mAnalytics.getThankYouAnalyticsParam())//
+            , mRoomName, aggregationId, mStayPayment.reservationWaiting, mAnalytics.getThankYouAnalyticsParam())//
             , StayPaymentActivity.REQUEST_CODE_THANK_YOU);
 
         mAnalytics.onEventTransportationType(getActivity(), mStayPayment.transportation, mTransportationType);
@@ -2008,11 +1981,11 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
             if (currentHour < openHour)
             {
                 // 당일이고 영업시간 전일때 (서버에서 새벽 3시 부터 당일로 주기 때문에 새벽 3시 체크 안함)
-                mPensionPopupMessageType = 2;
+                mReservationWaitingMessageType = 2;
             } else
             {
                 // 당일이고 영엽시간 이후 일때 (서버에서 다음날 새벽 3시까지 당일로 주기 때문에 새벽 3시 체크 안함)
-                mPensionPopupMessageType = 1;
+                mReservationWaitingMessageType = 1;
             }
         } else
         {
@@ -2020,16 +1993,16 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
             if (openHour <= currentHour && currentHour < 22)
             {
                 // 사전예약 이고 9시 부터 22시 전까지
-                mPensionPopupMessageType = 3;
+                mReservationWaitingMessageType = 3;
             } else
             {
-                mPensionPopupMessageType = 4;
+                mReservationWaitingMessageType = 4;
                 // 사전예약 이고 9시 이전이거나 22시 이후 일때
             }
         }
     }
 
-    private int[] getAgreedTermMessages(DailyBookingPaymentTypeView.PaymentType paymentType)
+    private int[] getAgreedTermMessages(DailyBookingPaymentTypeView.PaymentType paymentType, boolean reservationWaiting)
     {
         if (paymentType == null)
         {
@@ -2038,9 +2011,9 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
 
         int[] messages;
 
-        if (Stay.Grade.pension == mGrade || Stay.Grade.fullvilla == mGrade)
+        if (reservationWaiting == true)
         {
-            messages = getPensionAgreedTermMessages(mPensionPopupMessageType, paymentType);
+            messages = getPensionAgreedTermMessages(mReservationWaitingMessageType, paymentType);
         } else
         {
             switch (paymentType)

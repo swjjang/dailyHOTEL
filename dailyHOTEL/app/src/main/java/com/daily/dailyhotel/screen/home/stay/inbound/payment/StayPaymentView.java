@@ -899,28 +899,23 @@ public class StayPaymentView extends BaseDialogView<StayPaymentView.OnEventListe
 
             String message = getString(textResIds[i]);
 
-            int startIndex = message.indexOf("<b>");
+            SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(message);
 
-            if (startIndex >= 0)
+            for (int startIndex = spannableStringBuilder.toString().indexOf("<b>"); startIndex >= 0; startIndex = spannableStringBuilder.toString().indexOf("<b>"))
             {
-                message = message.replaceAll("<b>", "");
+                spannableStringBuilder.delete(startIndex, startIndex + "<b>".length());
 
-                int endIndex = message.indexOf("</b>");
+                int endIndex = spannableStringBuilder.toString().indexOf("</b>");
 
-                message = message.replaceAll("</b>", "");
-
-                SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(message);
+                spannableStringBuilder.delete(endIndex, endIndex + "</b>".length());
 
                 spannableStringBuilder.setSpan(new ForegroundColorSpan(getColor(R.color.dh_theme_color)), //
                     startIndex, endIndex, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                 spannableStringBuilder.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), //
                     startIndex, endIndex, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-                messageTextView.setText(spannableStringBuilder);
-            } else
-            {
-                messageTextView.setText(message);
             }
+
+            messageTextView.setText(spannableStringBuilder);
 
             viewGroup.addView(messageRow);
         }
