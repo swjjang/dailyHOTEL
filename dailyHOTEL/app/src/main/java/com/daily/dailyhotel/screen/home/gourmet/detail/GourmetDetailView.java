@@ -272,12 +272,12 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
         // 쿠폰
         setCouponView(gourmetDetail.hasCoupon);
 
-        // 메뉴 리스트
-        setMenuListLayout(gourmetDetail.getGourmetMenuList(), shownMenuCount);
-
         // 방문일
         setVisitDateView(gourmetBookDateTime.getVisitDateTime("yyyy.MM.dd(EEE)"));
 
+        // 메뉴 리스트
+        setMenuListLayout(gourmetDetail.getGourmetMenuList(), shownMenuCount);
+        
         // 주소 및 맵
         setAddressView(gourmetDetail.address);
 
