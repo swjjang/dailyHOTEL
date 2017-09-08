@@ -1431,6 +1431,7 @@
     <!-- Booking Detail -->
     <string name="label_booking_detail_delete_reservation">예약내역 삭제하기</string>
     <string name="message_stay_outbound_booking_detail_current_time">날짜는 현지시간 기준입니다.</string>
+    <string name="message_booking_detail_wait_message">현재 예약대기 상태입니다.\n예약 확정시, 확정 문자를 발송해 드립니다.</string>
 
     <!-- Stay Out Bound Booking Refund -->
     <string name="message_stay_outbound_refund_cancel_free">무료 취소를 진행할까요?</string>

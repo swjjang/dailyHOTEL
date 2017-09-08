@@ -41,6 +41,7 @@ public class StayBookingDetail
     public String refundType;
     public boolean overseas;
     public boolean readyForRefund;
+    public boolean reservationWaiting;
 
     private LinkedHashMap<String, List<String>> mSpecificationMap;
 

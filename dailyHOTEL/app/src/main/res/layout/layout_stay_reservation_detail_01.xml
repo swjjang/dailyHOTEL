@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
        xmlns:app="http://schemas.android.com/apk/res-auto"
-       xmlns:dailyFont="http://schemas.android.com/apk/res-auto">
+       xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
+       xmlns:tools="http://schemas.android.com/tools"
+       android:layout_width="match_parent"
+       android:layout_height="match_parent"
+       android:orientation="vertical"
+       tools:parentTag="LinearLayout">
 
     <!--UI 확인시에만 열어주세요-->
     <!--<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
@@ -357,9 +362,9 @@
         android:id="@+id/guideVisitMemoLayout"
         android:layout_width="match_parent"
         android:layout_height="34dp"
-        android:layout_marginTop="10dp"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
+        android:layout_marginTop="10dp"
         android:visibility="gone">
 
         <ImageView

@@ -38,6 +38,7 @@ public class StayBookingDetail extends PlaceBookingDetail
     public String mRefundComment; // 환분 불가 내용
 
     public String visitType = VISIT_TYPE_NONE; // 방문 타입 "NONE", "WALKING". "CAR", "NO_PARKING"
+    public boolean reservationWaiting;
 
     public StayBookingDetail()
     {
@@ -92,6 +93,7 @@ public class StayBookingDetail extends PlaceBookingDetail
         readyForRefund = stayBookingDetail.readyForRefund;
         transactionType = stayBookingDetail.transactionType;
         reservationIndex = stayBookingDetail.reservationIndex;
+        reservationWaiting = stayBookingDetail.reservationWaiting;
 
         if (DailyTextUtils.isTextEmpty(stayBookingDetail.reviewStatusType) == false)
         {
@@ -213,6 +215,11 @@ public class StayBookingDetail extends PlaceBookingDetail
         } else
         {
             reviewStatusType = ReviewStatusType.NONE;
+        }
+
+        if(jsonObject.has("reservationWaiting") == true)
+        {
+            reservationWaiting = jsonObject.getBoolean("reservationWaiting");
         }
 
         if (jsonObject.has("guestTransportation") == true && jsonObject.isNull("guestTransportation") == false)
