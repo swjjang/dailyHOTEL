@@ -1422,7 +1422,7 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
 
     private void setMenuListLayout(List<GourmetMenu> gourmetMenuList, int shownMenuCount)
     {
-        if (getViewDataBinding() == null || gourmetMenuList == null)
+        if (getViewDataBinding() == null)
         {
             return;
         }
@@ -1437,7 +1437,17 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
 
         LayoutInflater layoutInflater = LayoutInflater.from(getContext());
 
-        int size = gourmetMenuList.size();
+        int size = gourmetMenuList == null ? 0 : gourmetMenuList.size();
+
+        if (size == 0)
+        {
+            getViewDataBinding().menuTopLineView.setVisibility(View.GONE);
+            getViewDataBinding().menuLayout.setVisibility(View.GONE);
+        } else
+        {
+            getViewDataBinding().menuTopLineView.setVisibility(View.VISIBLE);
+            getViewDataBinding().menuLayout.setVisibility(View.VISIBLE);
+        }
 
         if (size > shownMenuCount)
         {
