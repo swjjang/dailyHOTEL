@@ -111,7 +111,7 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
     private boolean mOverseas, mBonusSelected, mCouponSelected, mAgreedThirdPartyTerms;
     private boolean mGuestInformationVisible;
     private UserSimpleInformation mUserSimpleInformation;
-    private int mPensionPopupMessageType;
+    private int mReservationWaitingMessageType;
 
     public interface StayPaymentAnalyticsInterface extends BaseAnalyticsInterface
     {
@@ -287,7 +287,7 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
         outState.putInt("stayIndex", mStayIndex);
         outState.putInt("roomPrice", mRoomPrice);
         outState.putInt("roomIndex", mRoomIndex);
-        outState.putInt("pensionPopupMessageType", mPensionPopupMessageType);
+        outState.putInt("reservationWaitingMessageType", mReservationWaitingMessageType);
 
         outState.putString("stayName", mStayName);
         outState.putString("imageUrl", mImageUrl);
@@ -341,7 +341,7 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
         mStayIndex = savedInstanceState.getInt("stayIndex");
         mRoomPrice = savedInstanceState.getInt("roomPrice");
         mRoomIndex = savedInstanceState.getInt("roomIndex");
-        mPensionPopupMessageType = savedInstanceState.getInt("pensionPopupMessageType");
+        mReservationWaitingMessageType = savedInstanceState.getInt("reservationWaitingMessageType");
 
         mStayName = savedInstanceState.getString("stayName");
         mImageUrl = savedInstanceState.getString("imageUrl");
@@ -597,11 +597,7 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
                     setSelectCard(getSelectedCard(cardList));
                     setUserInformation(userSimpleInformation);
                     setStayRefundPolicy(stayRefundPolicy);
-
-                    if (stayPayment.reservationWaiting)
-                    {
-                        setPensionPopupMessageType(commonDateTime, mStayBookDateTime);
-                    }
+                    setPensionPopupMessageType(commonDateTime, mStayBookDateTime);
 
                     return true;
                 }
@@ -1985,11 +1981,11 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
             if (currentHour < openHour)
             {
                 // 당일이고 영업시간 전일때 (서버에서 새벽 3시 부터 당일로 주기 때문에 새벽 3시 체크 안함)
-                mPensionPopupMessageType = 2;
+                mReservationWaitingMessageType = 2;
             } else
             {
                 // 당일이고 영엽시간 이후 일때 (서버에서 다음날 새벽 3시까지 당일로 주기 때문에 새벽 3시 체크 안함)
-                mPensionPopupMessageType = 1;
+                mReservationWaitingMessageType = 1;
             }
         } else
         {
@@ -1997,10 +1993,10 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
             if (openHour <= currentHour && currentHour < 22)
             {
                 // 사전예약 이고 9시 부터 22시 전까지
-                mPensionPopupMessageType = 3;
+                mReservationWaitingMessageType = 3;
             } else
             {
-                mPensionPopupMessageType = 4;
+                mReservationWaitingMessageType = 4;
                 // 사전예약 이고 9시 이전이거나 22시 이후 일때
             }
         }
@@ -2017,7 +2013,7 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
 
         if (reservationWaiting == true)
         {
-            messages = getPensionAgreedTermMessages(mPensionPopupMessageType, paymentType);
+            messages = getPensionAgreedTermMessages(mReservationWaitingMessageType, paymentType);
         } else
         {
             switch (paymentType)
