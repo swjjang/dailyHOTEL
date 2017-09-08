@@ -23,6 +23,7 @@ import java.util.List;
 
 import io.reactivex.Observable;
 import io.reactivex.functions.Function;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by iseung-won on 2017. 8. 8..
@@ -68,7 +69,7 @@ public class CampaignTagRemoteImpl implements CampaignTagInterface
 
                 return campaignTagList;
             }
-        });
+        }).subscribeOn(Schedulers.io());
     }
 
     @Override

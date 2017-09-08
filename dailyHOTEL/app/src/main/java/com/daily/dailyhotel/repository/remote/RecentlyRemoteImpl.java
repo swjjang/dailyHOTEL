@@ -22,11 +22,13 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Callable;
 
 import io.reactivex.Observable;
-import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.ObservableSource;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Function;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by android_sam on 2017. 6. 14..
@@ -44,133 +46,173 @@ public class RecentlyRemoteImpl implements RecentlyInterface
     @Override
     public Observable<StayOutbounds> getStayOutboundRecentlyList(int numberOfResults, boolean useRealm)
     {
-        String hotelIds = RecentlyPlaceUtil.getDbTargetIndices(mContext, Constants.ServiceType.OB_STAY, RecentlyPlaceUtil.MAX_RECENT_PLACE_COUNT);
-
-        if (useRealm == true)
-        {
-            String oldHotelIds = RecentlyPlaceUtil.getRealmTargetIndices(Constants.ServiceType.OB_STAY, RecentlyPlaceUtil.MAX_RECENT_PLACE_COUNT);
-            if (DailyTextUtils.isTextEmpty(oldHotelIds) == false)
-            {
-                if (DailyTextUtils.isTextEmpty(hotelIds) == false)
-                {
-                    hotelIds += ",";
-                }
-
-                hotelIds += oldHotelIds;
-            }
-        }
-
-        return DailyMobileAPI.getInstance(mContext).getStayOutboundRecentlyList(hotelIds, numberOfResults).map(new Function<BaseDto<StayOutboundsData>, StayOutbounds>()
+        return Observable.defer(new Callable<ObservableSource<StayOutbounds>>()
         {
             @Override
-            public StayOutbounds apply(@NonNull BaseDto<StayOutboundsData> stayOutboundsDataBaseDto) throws Exception
+            public ObservableSource<StayOutbounds> call() throws Exception
             {
-                StayOutbounds stayOutbounds;
+                String hotelIds = RecentlyPlaceUtil.getDbTargetIndices(mContext, Constants.ServiceType.OB_STAY, RecentlyPlaceUtil.MAX_RECENT_PLACE_COUNT);
 
-                if (stayOutboundsDataBaseDto != null)
+                if (useRealm == true)
                 {
-                    if (stayOutboundsDataBaseDto.msgCode == 100 && stayOutboundsDataBaseDto.data != null)
+                    String oldHotelIds = RecentlyPlaceUtil.getRealmTargetIndices(Constants.ServiceType.OB_STAY, RecentlyPlaceUtil.MAX_RECENT_PLACE_COUNT);
+                    if (DailyTextUtils.isTextEmpty(oldHotelIds) == false)
                     {
-                        stayOutbounds = stayOutboundsDataBaseDto.data.getStayOutboundList();
-
-                        if (stayOutbounds == null)
+                        if (DailyTextUtils.isTextEmpty(hotelIds) == false)
                         {
-                            stayOutbounds = new StayOutbounds();
+                            hotelIds += ",";
                         }
-                    } else
-                    {
-                        throw new BaseException(stayOutboundsDataBaseDto.msgCode, stayOutboundsDataBaseDto.msg);
+
+                        hotelIds += oldHotelIds;
                     }
-                } else
-                {
-                    throw new BaseException(-1, null);
                 }
 
-                return stayOutbounds;
+                if (DailyTextUtils.isTextEmpty(hotelIds) == true)
+                {
+                    return Observable.just(new StayOutbounds()).subscribeOn(Schedulers.io());
+                }
+
+                return DailyMobileAPI.getInstance(mContext).getStayOutboundRecentlyList(hotelIds, numberOfResults).map(new Function<BaseDto<StayOutboundsData>, StayOutbounds>()
+                {
+                    @Override
+                    public StayOutbounds apply(@NonNull BaseDto<StayOutboundsData> stayOutboundsDataBaseDto) throws Exception
+                    {
+                        StayOutbounds stayOutbounds;
+
+                        if (stayOutboundsDataBaseDto != null)
+                        {
+                            if (stayOutboundsDataBaseDto.msgCode == 100 && stayOutboundsDataBaseDto.data != null)
+                            {
+                                stayOutbounds = stayOutboundsDataBaseDto.data.getStayOutboundList();
+
+                                if (stayOutbounds == null)
+                                {
+                                    stayOutbounds = new StayOutbounds();
+                                }
+                            } else
+                            {
+                                throw new BaseException(stayOutboundsDataBaseDto.msgCode, stayOutboundsDataBaseDto.msg);
+                            }
+                        } else
+                        {
+                            throw new BaseException(-1, null);
+                        }
+
+                        return stayOutbounds;
+                    }
+                }).subscribeOn(Schedulers.io());
             }
-        }).observeOn(AndroidSchedulers.mainThread());
+        }).subscribeOn(Schedulers.io());
     }
 
     @Override
     public Observable<ArrayList<RecentlyPlace>> getInboundRecentlyList(int maxSize, boolean useRealm, @NonNull Constants.ServiceType... serviceTypes)
     {
-        JSONObject recentJsonObject = new JSONObject();
+        return Observable.defer(new Callable<ObservableSource<ArrayList<RecentlyPlace>>>()
+        {
+            @Override
+            public ObservableSource<ArrayList<RecentlyPlace>> call() throws Exception
+            {
+                ArrayList<RecentlyDbPlace> list = getRecentlyDbPlaceList(useRealm, serviceTypes);
+                if (list == null || list.size() == 0)
+                {
+                    return Observable.just(new ArrayList<RecentlyPlace>()).subscribeOn(Schedulers.io());
+                }
+
+                JSONObject recentJsonObject = getRecentlyJSONObject(list, maxSize);
+
+                return DailyMobileAPI.getInstance(mContext).getInboundRecentlyList(recentJsonObject).map(new Function<BaseDto<RecentlyPlacesData>, ArrayList<RecentlyPlace>>()
+                {
+                    @Override
+                    public ArrayList<RecentlyPlace> apply(@NonNull BaseDto<RecentlyPlacesData> placesBaseDto) throws Exception
+                    {
+                        ArrayList<RecentlyPlace> recentlyPlaceList = new ArrayList<>();
+
+                        if (placesBaseDto != null)
+                        {
+                            if (placesBaseDto.msgCode == 100 && placesBaseDto.data != null)
+                            {
+                                List<RecentlyPlace> list = placesBaseDto.data.getRecentlyPlaceList();
+
+                                if (list != null && list.size() > 0)
+                                {
+                                    recentlyPlaceList.addAll(list);
+                                }
+                            } else
+                            {
+                                throw new BaseException(placesBaseDto.msgCode, placesBaseDto.msg);
+                            }
+                        } else
+                        {
+                            throw new BaseException(-1, null);
+                        }
+
+                        return recentlyPlaceList;
+                    }
+                }).subscribeOn(Schedulers.io());
+            }
+        }).subscribeOn(Schedulers.io());
+    }
+
+    private ArrayList<RecentlyDbPlace> getRecentlyDbPlaceList(boolean useRealm, @NonNull Constants.ServiceType... serviceTypes)
+    {
+        ArrayList<RecentlyDbPlace> list = RecentlyPlaceUtil.getDbRecentlyTypeList(mContext, serviceTypes);
+
+        if (useRealm == false)
+        {
+            return list;
+        }
+
+        ArrayList<RecentlyRealmObject> realmList = RecentlyPlaceUtil.getRealmRecentlyTypeList(serviceTypes);
+        if (realmList == null || realmList.size() == 0)
+        {
+            return list;
+        }
+
+        ArrayList<Integer> indexList = RecentlyPlaceUtil.getDbRecentlyIndexList(mContext, serviceTypes);
+
+        for (RecentlyRealmObject realmObject : realmList)
+        {
+            int index = realmObject.index;
+            if (indexList.contains(index) == true)
+            {
+                continue;
+            }
+
+            RecentlyDbPlace place = new RecentlyDbPlace();
+            place.savingTime = realmObject.savingTime;
+            place.englishName = realmObject.englishName;
+            place.imageUrl = realmObject.imageUrl;
+            place.index = index;
+            place.name = realmObject.name;
+
+            try
+            {
+                place.serviceType = Constants.ServiceType.valueOf(realmObject.serviceType);
+            } catch (Exception e)
+            {
+                continue;
+            }
+
+            list.add(place);
+        }
+
+        return list;
+    }
+
+    private JSONObject getRecentlyJSONObject(ArrayList<RecentlyDbPlace> list, int maxSize)
+    {
+        JSONObject recentlyJsonObject = new JSONObject();
 
         try
         {
-            ArrayList<RecentlyDbPlace> list = RecentlyPlaceUtil.getDbRecentlyTypeList(mContext, serviceTypes);
-
-            ArrayList<Integer> indexList = RecentlyPlaceUtil.getDbRecentlyIndexList(mContext, serviceTypes);
-
-            if (useRealm == true)
-            {
-                ArrayList<RecentlyRealmObject> realmList = RecentlyPlaceUtil.getRealmRecentlyTypeList(serviceTypes);
-                if (realmList != null)
-                {
-                    for (RecentlyRealmObject realmObject : realmList)
-                    {
-                        int index = realmObject.index;
-                        if (indexList.contains(index) == true)
-                        {
-                            continue;
-                        }
-
-                        RecentlyDbPlace place = new RecentlyDbPlace();
-                        place.savingTime = realmObject.savingTime;
-                        place.englishName = realmObject.englishName;
-                        place.imageUrl = realmObject.imageUrl;
-                        place.index = index;
-                        place.name = realmObject.name;
-
-                        try
-                        {
-                            place.serviceType = Constants.ServiceType.valueOf(realmObject.serviceType);
-                        } catch (Exception e)
-                        {
-                            continue;
-                        }
-
-                        list.add(place);
-                    }
-                }
-            }
-
-            JSONArray recentJsonArray = RecentlyPlaceUtil.getDbRecentlyJsonArray(list, maxSize);
-            recentJsonObject.put("keys", recentJsonArray);
-
+            JSONArray recentlyJsonArray = RecentlyPlaceUtil.getDbRecentlyJsonArray(list, maxSize);
+            recentlyJsonObject.put("keys", recentlyJsonArray);
         } catch (Exception e)
         {
             ExLog.d(e.toString());
         }
 
-        return DailyMobileAPI.getInstance(mContext).getInboundRecentlyList(recentJsonObject).map(new Function<BaseDto<RecentlyPlacesData>, ArrayList<RecentlyPlace>>()
-        {
-            @Override
-            public ArrayList<RecentlyPlace> apply(@NonNull BaseDto<RecentlyPlacesData> placesBaseDto) throws Exception
-            {
-                ArrayList<RecentlyPlace> recentlyPlaceList = new ArrayList<>();
-
-                if (placesBaseDto != null)
-                {
-                    if (placesBaseDto.msgCode == 100 && placesBaseDto.data != null)
-                    {
-                        List<RecentlyPlace> list = placesBaseDto.data.getRecentlyPlaceList();
-
-                        if (list != null && list.size() > 0)
-                        {
-                            recentlyPlaceList.addAll(list);
-                        }
-                    } else
-                    {
-                        throw new BaseException(placesBaseDto.msgCode, placesBaseDto.msg);
-                    }
-                } else
-                {
-                    throw new BaseException(-1, null);
-                }
-
-                return recentlyPlaceList;
-            }
-        }).observeOn(AndroidSchedulers.mainThread());
+        return recentlyJsonObject;
     }
 }
