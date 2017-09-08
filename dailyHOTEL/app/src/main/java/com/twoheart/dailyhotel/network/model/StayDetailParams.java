@@ -229,9 +229,6 @@ public class StayDetailParams extends PlaceDetailParams<StayProduct>
                 }
             }
         }
-
-
-        reservationWaiting = true;
     }
 
     public Stay.Grade getGrade()
