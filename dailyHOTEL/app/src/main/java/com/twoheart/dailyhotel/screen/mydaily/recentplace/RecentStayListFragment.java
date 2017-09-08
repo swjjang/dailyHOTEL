@@ -236,6 +236,9 @@ public class RecentStayListFragment extends RecentPlacesListFragment
         if (object instanceof RecentlyPlace)
         {
             index = ((RecentlyPlace) object).index;
+        } else if (object instanceof StayOutbound)
+        {
+            index = ((StayOutbound) object).index;
         } else
         {
             index = -1;
