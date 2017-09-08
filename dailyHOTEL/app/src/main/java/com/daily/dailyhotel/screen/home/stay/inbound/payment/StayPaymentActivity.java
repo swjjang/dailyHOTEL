@@ -9,7 +9,6 @@ import android.support.annotation.NonNull;
 import com.daily.base.BaseActivity;
 import com.daily.dailyhotel.parcel.analytics.StayPaymentAnalyticsParam;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.Stay;
 
 /**
  * Created by sheldon

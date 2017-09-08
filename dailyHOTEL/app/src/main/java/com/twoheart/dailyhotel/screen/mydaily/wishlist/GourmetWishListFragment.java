@@ -13,7 +13,6 @@ import android.view.ViewGroup;
 
 import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.parcel.analytics.GourmetDetailAnalyticsParam;
-import com.daily.dailyhotel.repository.local.model.AnalyticsParam;
 import com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.twoheart.dailyhotel.R;

@@ -105,7 +105,7 @@ public class StayPaymentAnalyticsParam implements Parcelable
         try
         {
             grade = Stay.Grade.valueOf(in.readString());
-        }catch (Exception e)
+        } catch (Exception e)
         {
             grade = Stay.Grade.etc;
         }

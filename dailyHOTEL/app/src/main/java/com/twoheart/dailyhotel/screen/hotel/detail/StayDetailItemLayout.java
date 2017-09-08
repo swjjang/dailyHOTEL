@@ -23,7 +23,6 @@ import com.daily.base.util.ScreenUtils;
 import com.daily.base.widget.DailyTextView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.DetailInformation;
-import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.model.StayDetail;
 import com.twoheart.dailyhotel.model.time.StayBookingDay;
 import com.twoheart.dailyhotel.network.model.PlaceReviewScores;
@@ -721,7 +720,7 @@ public class StayDetailItemLayout extends LinearLayout
                 View textLayout = layoutInflater.inflate(R.layout.list_row_detail_text, contentsLayout, false);
                 TextView textView = (TextView) textLayout.findViewById(R.id.textView);
 
-                if(htmlCode == true)
+                if (htmlCode == true)
                 {
                     textView.setText(Html.fromHtml(contentText));
                 } else

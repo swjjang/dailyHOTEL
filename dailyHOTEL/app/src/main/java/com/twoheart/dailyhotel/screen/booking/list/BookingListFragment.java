@@ -43,7 +43,6 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.FragmentBookingListDataBinding;
 import com.twoheart.dailyhotel.model.ReviewPickQuestion;
 import com.twoheart.dailyhotel.model.ReviewScoreQuestion;
-import com.twoheart.dailyhotel.model.time.GourmetBookingDay;
 import com.twoheart.dailyhotel.model.time.StayBookingDay;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.base.BaseMenuNavigationFragment;

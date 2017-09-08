@@ -22,7 +22,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.NestedScrollView;
-import android.text.Html;
 import android.transition.Transition;
 import android.transition.TransitionSet;
 import android.util.TypedValue;
