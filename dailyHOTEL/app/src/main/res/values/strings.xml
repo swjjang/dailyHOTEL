@@ -1402,6 +1402,7 @@
     <string name="frag_booking_btn_login">로그인 또는 회원가입</string>
     <string name="frag_booking_wait_account">입금 대기</string>
     <string name="frag_booking_wait_refund">무료취소 대기</string>
+    <string name="frag_booking_wait_reservation">예약 대기</string>
     <string name="frag_booking_duedate_formet_stay">체크인 날짜까지 %1$d일 남았습니다.</string>
     <string name="frag_booking_duedate_formet_gourmet">방문일까지 %1$d일 남았습니다.</string>
     <string name="frag_booking_today_type_stay">오늘이 체크인 날짜 입니다.</string>
@@ -1417,6 +1418,7 @@
     <string name="label_booking_book_again">다시 예약하기</string>
     <string name="message_booking_add_review">리뷰를 남기실 수 있어요!</string>
     <string name="message_booking_free_cancel_waiting">무료취소 대기 상태입니다.</string>
+    <string name="message_booking_reservation_waiting">예약 확정 시, 확정 문자를 발송해드립니다.</string>
     <string name="message_booking_please_deposit_completed">10분 안에 입금을 완료해주세요!</string>
     <string name="message_booking_do_booking">지금 예약해보세요!</string>
     <string name="message_booking_no_booking_list">예약내역이 없습니다.</string>
