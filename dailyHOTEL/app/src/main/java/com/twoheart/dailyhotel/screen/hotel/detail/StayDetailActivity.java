@@ -808,12 +808,13 @@ public class StayDetailActivity extends PlaceDetailActivity
         stayPaymentAnalyticsParam.dailyChoice = mAnalyticsParam.isDailyChoice;
         stayPaymentAnalyticsParam.province = mAnalyticsParam.getProvince();
         stayPaymentAnalyticsParam.addressAreaName = mAnalyticsParam.getAddressAreaName();
+        stayPaymentAnalyticsParam.grade = stayDetailParams.getGrade();
 
         Intent intent = StayPaymentActivity.newInstance(StayDetailActivity.this, stayDetailParams.index//
             , stayDetailParams.name, imageUrl, stayProduct.roomIndex, stayProduct.totalDiscount, stayProduct.roomName//
             , stayBookingDay.getCheckInDay(DailyCalendar.ISO_8601_FORMAT)//
             , stayBookingDay.getCheckOutDay(DailyCalendar.ISO_8601_FORMAT)//
-            , stayDetailParams.isOverseas, stayDetailParams.category, stayDetailParams.getGrade(), stayPaymentAnalyticsParam);
+            , stayDetailParams.isOverseas, stayDetailParams.category, stayPaymentAnalyticsParam);
 
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_BOOKING);
     }

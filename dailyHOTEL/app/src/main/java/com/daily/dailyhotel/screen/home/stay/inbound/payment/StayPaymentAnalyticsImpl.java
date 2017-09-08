@@ -38,7 +38,7 @@ public class StayPaymentAnalyticsImpl implements StayPaymentPresenter.StayPaymen
 
     @Override
     public void onScreen(Activity activity, String refundPolicy, StayBookDateTime stayBookDateTime, int stayIndex, String stayName//
-        , int roomIndex, String roomName, String category, String grade, StayPayment stayPayment, boolean registerEasyCard)
+        , int roomIndex, String roomName, String category, StayPayment stayPayment, boolean registerEasyCard)
     {
         if (activity == null || mAnalyticsParam == null)
         {
@@ -84,7 +84,7 @@ public class StayPaymentAnalyticsImpl implements StayPaymentPresenter.StayPaymen
             params.put(AnalyticsManager.KeyType.CHECK_OUT, stayBookDateTime.getCheckOutDateTime("yyyy-MM-dd"));
             params.put(AnalyticsManager.KeyType.TICKET_NAME, roomName);
             params.put(AnalyticsManager.KeyType.TICKET_INDEX, Integer.toString(roomIndex));
-            params.put(AnalyticsManager.KeyType.GRADE, grade);
+            params.put(AnalyticsManager.KeyType.GRADE, mAnalyticsParam.grade.getName(activity));
             params.put(AnalyticsManager.KeyType.DBENEFIT, mAnalyticsParam.benefit ? "yes" : "no");
             params.put(AnalyticsManager.KeyType.ADDRESS, mAnalyticsParam.address);
             params.put(AnalyticsManager.KeyType.CATEGORY, category);
@@ -107,7 +107,7 @@ public class StayPaymentAnalyticsImpl implements StayPaymentPresenter.StayPaymen
 
     @Override
     public void onScreenAgreeTermDialog(Activity activity, StayBookDateTime stayBookDateTime//
-        , int stayIndex, String stayName, int roomIndex, String roomName, String category, String grade//
+        , int stayIndex, String stayName, int roomIndex, String roomName, String category//
         , StayPayment stayPayment, boolean registerEasyCard, boolean usedBonus, boolean usedCoupon, Coupon coupon//
         , DailyBookingPaymentTypeView.PaymentType paymentType, UserSimpleInformation userSimpleInformation)
     {
@@ -131,7 +131,7 @@ public class StayPaymentAnalyticsImpl implements StayPaymentPresenter.StayPaymen
             mPaymentParamMap.put(AnalyticsManager.KeyType.CHECK_OUT, stayBookDateTime.getCheckOutDateTime("yyyy-MM-dd"));
             mPaymentParamMap.put(AnalyticsManager.KeyType.TICKET_NAME, roomName);
             mPaymentParamMap.put(AnalyticsManager.KeyType.TICKET_INDEX, Integer.toString(roomIndex));
-            mPaymentParamMap.put(AnalyticsManager.KeyType.GRADE, grade);
+            mPaymentParamMap.put(AnalyticsManager.KeyType.GRADE, mAnalyticsParam.grade.getName(activity));
             mPaymentParamMap.put(AnalyticsManager.KeyType.DBENEFIT, mAnalyticsParam.benefit ? "yes" : "no");
             mPaymentParamMap.put(AnalyticsManager.KeyType.ADDRESS, mAnalyticsParam.address);
             mPaymentParamMap.put(AnalyticsManager.KeyType.CATEGORY, category);

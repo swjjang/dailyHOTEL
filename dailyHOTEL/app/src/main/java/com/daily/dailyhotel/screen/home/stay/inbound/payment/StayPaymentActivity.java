@@ -38,12 +38,11 @@ public class StayPaymentActivity extends BaseActivity<StayPaymentPresenter>
     static final String INTENT_EXTRA_DATA_OVERSEAS = "overseas";
     static final String INTENT_EXTRA_DATA_CATEGORY = "category";
     static final String INTENT_EXTRA_DATA_ROOM_NAME = "roomName";
-    static final String INTENT_EXTRA_DATA_GRADE = "grade";
 
 
     public static Intent newInstance(Context context, int stayIndex, String stayName, String imageUrl//
         , int roomIndex, int roomPrice, String roomName, String checkInDateTime, String checkOutDateTime, boolean overseas//
-        , String category, Stay.Grade grade, StayPaymentAnalyticsParam analyticsParam)
+        , String category, StayPaymentAnalyticsParam analyticsParam)
     {
         Intent intent = new Intent(context, StayPaymentActivity.class);
 
@@ -57,7 +56,6 @@ public class StayPaymentActivity extends BaseActivity<StayPaymentPresenter>
         intent.putExtra(INTENT_EXTRA_DATA_OVERSEAS, overseas);
         intent.putExtra(INTENT_EXTRA_DATA_CATEGORY, category);
         intent.putExtra(INTENT_EXTRA_DATA_ROOM_NAME, roomName);
-        intent.putExtra(INTENT_EXTRA_DATA_GRADE, grade.name());
         intent.putExtra(INTENT_EXTRA_DATA_ANALYTICS, analyticsParam);
 
         return intent;
