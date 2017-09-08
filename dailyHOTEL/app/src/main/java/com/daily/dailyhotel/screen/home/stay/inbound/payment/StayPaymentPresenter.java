@@ -1238,10 +1238,10 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
 
     private void startThankYou(String aggregationId, boolean fullBonus)
     {
-        startActivityForResult(StayThankYouActivity.newInstance(getActivity(), mOverseas, mCategory, mStayName, mImageUrl//
+        startActivityForResult(StayThankYouActivity.newInstance(getActivity(), mOverseas, mStayName, mImageUrl//
             , mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
             , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
-            , mRoomName, aggregationId, mAnalytics.getThankYouAnalyticsParam())//
+            , mRoomName, aggregationId, mStayPayment.reservationWaiting, mAnalytics.getThankYouAnalyticsParam())//
             , StayPaymentActivity.REQUEST_CODE_THANK_YOU);
 
         mAnalytics.onEventTransportationType(getActivity(), mStayPayment.transportation, mTransportationType);

@@ -610,6 +610,7 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
         }
 
         // 무료취소대기, 입금대기, 결제완료, 이용완료
+        List<Booking> reservationWaiting = new ArrayList<>();
         List<Booking> waitRefundList = new ArrayList<>();
         List<Booking> depositWaitingList = new ArrayList<>();
         List<Booking> beforeUseList = new ArrayList<>();

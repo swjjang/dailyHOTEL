@@ -43,8 +43,8 @@ public class StayThankYouPresenter extends BaseExceptionPresenter<StayThankYouAc
     private String mImageUrl;
     private StayBookDateTime mStayBookDateTime;
     private String mRoomName;
-    private String mCategory;
     private boolean mOverseas;
+    private boolean mReservationWaiting;
 
     public interface StayThankYouAnalyticsInterface extends BaseAnalyticsInterface
     {
@@ -105,7 +105,6 @@ public class StayThankYouPresenter extends BaseExceptionPresenter<StayThankYouAc
             return true;
         }
 
-        mCategory = intent.getStringExtra(StayThankYouActivity.INTENT_EXTRA_DATA_CATEGORY);
         mOverseas = intent.getBooleanExtra(StayThankYouActivity.INTENT_EXTRA_DATA_OVERSEAS, false);
         mStayName = intent.getStringExtra(StayThankYouActivity.INTENT_EXTRA_DATA_STAY_NAME);
         mImageUrl = intent.getStringExtra(StayThankYouActivity.INTENT_EXTRA_DATA_IMAGE_URL);
@@ -117,6 +116,7 @@ public class StayThankYouPresenter extends BaseExceptionPresenter<StayThankYouAc
 
         mRoomName = intent.getStringExtra(StayThankYouActivity.INTENT_EXTRA_DATA_ROOM_NAME);
         mAggregationId = intent.getStringExtra(StayThankYouActivity.INTENT_EXTRA_DATA_AGGREGATION_ID);
+        mReservationWaiting = intent.getBooleanExtra(StayThankYouActivity.INTENT_EXTRA_DATA_RESERVATION_WAITING, false);
 
         mAnalytics.setAnalyticsParam(intent.getParcelableExtra(BaseActivity.INTENT_EXTRA_DATA_ANALYTICS));
 
@@ -154,8 +154,8 @@ public class StayThankYouPresenter extends BaseExceptionPresenter<StayThankYouAc
 
             getViewInterface().setBooking(checkInSpannableString, checkOutSpannableString, mStayBookDateTime.getNights(), mStayName, mRoomName);
 
-            // 펜션인 경우 예약 대기 표시
-            if (AnalyticsManager.ValueType.PENSION.equalsIgnoreCase(mCategory) == true)
+            // 예약 대기 표시
+            if (mReservationWaiting == true)
             {
                 getViewInterface().setNoticeVisible(true);
                 getViewInterface().setNoticeText(getString(R.string.label_reservation_wait_message));
