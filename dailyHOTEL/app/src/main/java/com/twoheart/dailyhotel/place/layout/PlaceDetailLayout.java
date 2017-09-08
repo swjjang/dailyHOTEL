@@ -58,7 +58,7 @@ public abstract class PlaceDetailLayout extends BaseLayout
     protected PlaceDetail mPlaceDetail;
     protected DailyLoopViewPager mViewPager;
     protected DailyLineIndicator mDailyLineIndicator;
-    protected View mVRIconView, mMoreIconView;
+    protected View mVRIconView, mFakeVRIconView, mMoreIconView;
 
     protected DailyPlaceDetailScrollView mScrollView;
 
@@ -189,9 +189,10 @@ public abstract class PlaceDetailLayout extends BaseLayout
         //        mViewPager.setLayoutParams(layoutParams);
 
         mVRIconView = view.findViewById(R.id.vrImageView);
+        mFakeVRIconView = view.findViewById(R.id.fakeVrImageView);
         setVRIconVisible(false);
 
-        mVRIconView.setOnClickListener(new OnClickListener()
+        mFakeVRIconView.setOnClickListener(new OnClickListener()
         {
             @Override
             public void onClick(View v)
@@ -531,7 +532,15 @@ public abstract class PlaceDetailLayout extends BaseLayout
             return;
         }
 
-        mVRIconView.setVisibility(visible ? View.VISIBLE : View.GONE);
+        if(visible == true)
+        {
+            mVRIconView.setVisibility(View.VISIBLE);
+            mFakeVRIconView.setVisibility(View.VISIBLE);
+        } else
+        {
+            mVRIconView.setVisibility(View.GONE);
+            mFakeVRIconView.setVisibility(View.GONE);
+        }
     }
 
     public void setLineIndicatorVisible(boolean isShow)
