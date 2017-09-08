@@ -1807,7 +1807,7 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
             LayoutStayOutboundDetailInformationDataBinding detailInformationDataBinding = DataBindingUtil.inflate(layoutInflater//
                 , R.layout.layout_stay_outbound_detail_information_data, viewDataBinding.informationLayout, true);
 
-            detailInformationDataBinding.textView.setText(Html.fromHtml(informationList.get(i)));
+            detailInformationDataBinding.textView.setText(informationList.get(i));
 
             if (i == size - 1)
             {
