@@ -3,6 +3,7 @@ package com.twoheart.dailyhotel.screen.hotel.detail;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.support.annotation.Nullable;
+import android.text.Html;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.UnderlineSpan;
@@ -33,6 +34,7 @@ import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.DailyRemoteConfigPreference;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -615,7 +617,7 @@ public class StayDetailItemLayout extends LinearLayout
             {
                 childViewGroup = (ViewGroup) layoutInflater.inflate(R.layout.list_row_detail05, viewGroup, false);
 
-                makeInformationLayout(layoutInflater, childViewGroup, information, hasNRD);
+                makeInformationLayout(layoutInflater, childViewGroup, information, hasNRD, false);
 
                 viewGroup.addView(childViewGroup);
 
@@ -632,16 +634,26 @@ public class StayDetailItemLayout extends LinearLayout
 
                 DetailInformation detailInformation = new DetailInformation(mContext.getString(R.string.label_detail_cancellation_refund_policy), null);
 
-                makeInformationLayout(layoutInflater, childViewGroup, detailInformation, hasNRD);
+                makeInformationLayout(layoutInflater, childViewGroup, detailInformation, hasNRD, false);
 
                 viewGroup.addView(childViewGroup);
             }
 
-            String gradeString = stayDetail.getStayDetailParams().getGrade().name();
+            StayDetailParams stayDetailParams = stayDetail.getStayDetailParams();
 
-            if (Stay.Grade.fullvilla.name().equalsIgnoreCase(gradeString) == true //
-                || Stay.Grade.pension.name().equalsIgnoreCase(gradeString) == true)
+            if (stayDetailParams != null && stayDetailParams.reservationWaiting == true)
             {
+                // 대기 예약 안내 추가
+                childViewGroup = (ViewGroup) layoutInflater.inflate(R.layout.list_row_detail05, viewGroup, false);
+
+                List<String> contentList = new ArrayList<>();
+                contentList.add(mContext.getString(R.string.message_stay_waiting_reservation_guide));
+                DetailInformation detailInformation = new DetailInformation(mContext.getString(R.string.label_detail_waiting_reservation_guide), contentList);
+
+                makeInformationLayout(layoutInflater, childViewGroup, detailInformation, hasNRD, true);
+
+                viewGroup.addView(childViewGroup);
+
                 View pensionOnlyLayout = layoutInflater.inflate(R.layout.list_row_detail_pension_only, viewGroup, false);
                 viewGroup.addView(pensionOnlyLayout);
 
@@ -671,7 +683,7 @@ public class StayDetailItemLayout extends LinearLayout
         return viewGroup;
     }
 
-    private void makeInformationLayout(LayoutInflater layoutInflater, ViewGroup viewGroup, DetailInformation information, boolean hasNRD)
+    private void makeInformationLayout(LayoutInflater layoutInflater, ViewGroup viewGroup, DetailInformation information, boolean hasNRD, boolean htmlCode)
     {
         if (layoutInflater == null || viewGroup == null || information == null)
         {
@@ -708,7 +720,14 @@ public class StayDetailItemLayout extends LinearLayout
 
                 View textLayout = layoutInflater.inflate(R.layout.list_row_detail_text, contentsLayout, false);
                 TextView textView = (TextView) textLayout.findViewById(R.id.textView);
-                textView.setText(contentText);
+
+                if(htmlCode == true)
+                {
+                    textView.setText(Html.fromHtml(contentText));
+                } else
+                {
+                    textView.setText(contentText);
+                }
 
                 if (i == size - 1 && isRefundPolicy == false)
                 {
