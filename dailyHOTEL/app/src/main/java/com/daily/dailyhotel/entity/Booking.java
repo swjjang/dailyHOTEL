@@ -10,6 +10,7 @@ public class Booking
     public static final int BOOKING_STATE_BEFORE_USE = 2;
     public static final int BOOKING_STATE_AFTER_USE = 3;
     public static final int BOOKING_STATE_DEPOSIT_WAITING = 4;
+    public static final int BOOKING_STATE_RESERVATION_WAITING = 5;
 
     public int reservationIndex;
     public String aggregationId;
@@ -24,6 +25,7 @@ public class Booking
     public String tid;
     public boolean availableReview;
     public int placeIndex;
+    public boolean reservationWaiting;
 
     // 내부 사용 변수
     public int remainingDays;

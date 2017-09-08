@@ -23,41 +23,6 @@ import java.util.Map;
 @JsonObject
 public class StayDetailParams extends PlaceDetailParams<StayProduct>
 {
-    //    @JsonField(name = "idx")
-    //    public int index;
-    //
-    //    @JsonField
-    //    public String name;
-    //
-    //    @JsonField
-    //    public double latitude;
-    //
-    //    @JsonField
-    //    public double longitude;
-    //
-    //    @JsonField
-    //    public String address;
-    //
-    //    // 직접 접근 금지
-    //    // 주의 : Parcelable 후에 해당 값은 사라집니다.
-    //    @JsonField
-    //    public Map<String, List<ImageInformation>> imgPath;
-    //
-    //    @JsonField
-    //    public String grade;
-    //
-    //    @JsonField
-    //    public int ratingPersons;
-    //
-    //    @JsonField
-    //    public int ratingValue;
-    //
-    //    @JsonField
-    //    public boolean ratingShow;
-    //
-    //    @JsonField
-    //    public String category;
-
     // 직접 접근 금지
     @JsonField(name = "parking")
     public boolean parking;
@@ -93,33 +58,13 @@ public class StayDetailParams extends PlaceDetailParams<StayProduct>
     // 직접 접근 금지
     @JsonField(name = "kidsPlayroom")
     public boolean kidsPlayRoom;
-    //
-    //    @JsonField
-    //    public String benefit;
-    //
-    //    @JsonField
-    //    public List<String> benefitContents;
 
     @JsonField(name = "benefitWarning")
     public String benefitWarning;
-    //
-    //    // 직접 접근 금지
-    //    // 주의 : Parcelable 후에 해당 값은 사라집니다.
-    //    @JsonField
-    //    public List<Map<String, List<String>>> details;
 
     // 직접 접근 금지
     @JsonField(name = "rooms")
     public List<StayProduct> rooms;
-    //
-    //    @JsonField
-    //    public String imgUrl;
-    //
-    //    @JsonField
-    //    public int wishCount; // 위시리스트 카운트
-    //
-    //    @JsonField
-    //    public boolean myWish; // 위시리스트 클릭 상태
 
     @JsonField(name = "singleStay")
     public boolean isSingleStay; // 연박 불가 여부
@@ -127,11 +72,11 @@ public class StayDetailParams extends PlaceDetailParams<StayProduct>
     @JsonField(name = "overseas")
     public boolean isOverseas; // 0 : 국내 , 1 : 해외
 
-    //    protected ArrayList<DetailInformation> mDetailList;
+    @JsonField(name = "reservationWaiting")
+    public boolean reservationWaiting; // 예약 대기
 
     @JsonIgnore
     private ArrayList<StayDetail.Pictogram> mPictogramList;
-    //    private ArrayList<ImageInformation> mImageList;
 
     @JsonIgnore
     private ArrayList<String> mBenefitInformation;

@@ -1674,17 +1674,23 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
 
         GourmetPaymentAnalyticsParam analyticsParam = new GourmetPaymentAnalyticsParam();
 
-        //        analyticsParam.showOriginalPrice = mAnalyticsParam.showOriginalPriceYn;
-        //        analyticsParam.rankingPosition = mAnalyticsParam.entryPosition;
-        //        analyticsParam.totalListCount = mAnalyticsParam.totalListCount;
-        //        analyticsParam.ratingValue = gourmetDetailParams.ratingValue;
-        //        analyticsParam.benefit = DailyTextUtils.isTextEmpty(gourmetDetailParams.benefit) == false;
-        //        analyticsParam.averageDiscount = gourmetProduct.discountPrice;
-        //        analyticsParam.address = gourmetDetailParams.address;
-        //        analyticsParam.dailyChoice = mAnalyticsParam.isDailyChoice;
-        //        analyticsParam.province = mAnalyticsParam.getProvince();
-        //        analyticsParam.addressAreaName = mAnalyticsParam.getAddressAreaName();
-        //        analyticsParam.categorySub = gourmetDetailParams.categorySub;
+        GourmetDetailAnalyticsParam detailAnalyticsParam = mAnalytics.getAnalyticsParam();
+
+        if (detailAnalyticsParam != null)
+        {
+            analyticsParam.showOriginalPrice = detailAnalyticsParam.getShowOriginalPriceYn();
+            analyticsParam.rankingPosition = detailAnalyticsParam.entryPosition;
+            analyticsParam.totalListCount = detailAnalyticsParam.totalListCount;
+            analyticsParam.dailyChoice = detailAnalyticsParam.isDailyChoice;
+            analyticsParam.province = detailAnalyticsParam.getProvince();
+            analyticsParam.addressAreaName = detailAnalyticsParam.getAddressAreaName();
+        }
+
+        analyticsParam.ratingValue = gourmetDetail.ratingValue;
+        analyticsParam.benefit = DailyTextUtils.isTextEmpty(gourmetDetail.benefit) == false;
+        analyticsParam.averageDiscount = gourmetMenu.discountPrice;
+        analyticsParam.address = gourmetDetail.address;
+        analyticsParam.categorySub = gourmetDetail.categorySub;
 
         Intent intent = GourmetPaymentActivity.newInstance(getActivity(), gourmetDetail.index//
             , gourmetDetail.name, imageUrl, gourmetMenu.saleIndex, gourmetMenu.discountPrice, gourmetMenu.name//

@@ -43,6 +43,8 @@ public class StayPaymentData
     @JsonField(name = "available_rooms")
     public int available_rooms;
 
+    @JsonField(name = "reservationWaiting")
+    public boolean reservationWaiting;
 
     public StayPaymentData()
     {
@@ -80,6 +82,7 @@ public class StayPaymentData
         }
 
         stayPayment.businessName = business_name;
+        stayPayment.reservationWaiting = reservationWaiting;
 
         return stayPayment;
     }

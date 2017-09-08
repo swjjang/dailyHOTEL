@@ -187,32 +187,32 @@ public class RecentStayListAdapter extends RecentPlacesListAdapter
             holder.dataBinding.soldoutView.setVisibility(View.GONE);
         }
 
-//        if (DailyTextUtils.isTextEmpty(recentlyPlace.dBenefitText) == false)
-//        {
-//            holder.dataBinding.dBenefitTextView.setVisibility(View.VISIBLE);
-//            holder.dataBinding.dBenefitTextView.setText(recentlyPlace.dBenefitText);
-//        } else
-//        {
-            holder.dataBinding.dBenefitTextView.setVisibility(View.GONE);
-//        }
+        //        if (DailyTextUtils.isTextEmpty(recentlyPlace.dBenefitText) == false)
+        //        {
+        //            holder.dataBinding.dBenefitTextView.setVisibility(View.VISIBLE);
+        //            holder.dataBinding.dBenefitTextView.setText(recentlyPlace.dBenefitText);
+        //        } else
+        //        {
+        holder.dataBinding.dBenefitTextView.setVisibility(View.GONE);
+        //        }
 
-//        if (mShowDistanceIgnoreSort == true || getSortType() == Constants.SortType.DISTANCE)
-//        {
-//            if (holder.dataBinding.satisfactionView.getVisibility() == View.VISIBLE || holder.dataBinding.trueVRView.getVisibility() == View.VISIBLE)
-//            {
-//                holder.dataBinding.dot1View.setVisibility(View.VISIBLE);
-//            } else
-//            {
-//                holder.dataBinding.dot1View.setVisibility(View.GONE);
-//            }
-//
-//            holder.dataBinding.distanceTextView.setVisibility(View.VISIBLE);
-//            holder.dataBinding.distanceTextView.setText(mContext.getString(R.string.label_distance_km, new DecimalFormat("#.#").format(recentlyPlace.distance)));
-//        } else
-//        {
-            holder.dataBinding.dot1View.setVisibility(View.GONE);
-            holder.dataBinding.distanceTextView.setVisibility(View.GONE);
-//        }
+        //        if (mShowDistanceIgnoreSort == true || getSortType() == Constants.SortType.DISTANCE)
+        //        {
+        //            if (holder.dataBinding.satisfactionView.getVisibility() == View.VISIBLE || holder.dataBinding.trueVRView.getVisibility() == View.VISIBLE)
+        //            {
+        //                holder.dataBinding.dot1View.setVisibility(View.VISIBLE);
+        //            } else
+        //            {
+        //                holder.dataBinding.dot1View.setVisibility(View.GONE);
+        //            }
+        //
+        //            holder.dataBinding.distanceTextView.setVisibility(View.VISIBLE);
+        //            holder.dataBinding.distanceTextView.setText(mContext.getString(R.string.label_distance_km, new DecimalFormat("#.#").format(recentlyPlace.distance)));
+        //        } else
+        //        {
+        holder.dataBinding.dot1View.setVisibility(View.GONE);
+        holder.dataBinding.distanceTextView.setVisibility(View.GONE);
+        //        }
 
         // VR 여부
         if (recentlyPlace.details.isTrueVr == true && mTrueVREnabled == true)

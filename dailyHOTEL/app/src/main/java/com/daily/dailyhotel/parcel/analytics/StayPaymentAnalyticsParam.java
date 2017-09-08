@@ -6,6 +6,7 @@ import android.os.Parcelable;
 import com.daily.base.util.DailyTextUtils;
 import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.Province;
+import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 public class StayPaymentAnalyticsParam implements Parcelable
@@ -21,6 +22,7 @@ public class StayPaymentAnalyticsParam implements Parcelable
     public boolean dailyChoice;
     public Province province;
     public String addressAreaName;
+    public Stay.Grade grade;
 
     public StayPaymentAnalyticsParam()
     {
@@ -83,6 +85,7 @@ public class StayPaymentAnalyticsParam implements Parcelable
         dest.writeInt(dailyChoice ? 1 : 0);
         dest.writeParcelable(province, flags);
         dest.writeString(addressAreaName);
+        dest.writeString(grade.name());
     }
 
     void readFromParcel(Parcel in)
@@ -98,6 +101,14 @@ public class StayPaymentAnalyticsParam implements Parcelable
         dailyChoice = in.readInt() == 1 ? true : false;
         province = in.readParcelable(Province.class.getClassLoader());
         addressAreaName = in.readString();
+
+        try
+        {
+            grade = Stay.Grade.valueOf(in.readString());
+        } catch (Exception e)
+        {
+            grade = Stay.Grade.etc;
+        }
     }
 
     @Override

@@ -108,6 +108,7 @@ public class BookingListAdapter extends RecyclerView.Adapter<BookingListAdapter.
         // 큰 원의 약간 윗점.
         switch (bookingState)
         {
+            case Booking.BOOKING_STATE_RESERVATION_WAITING:
             case Booking.BOOKING_STATE_DEPOSIT_WAITING:
             case Booking.BOOKING_STATE_WAITING_REFUND:
             {
@@ -143,6 +144,7 @@ public class BookingListAdapter extends RecyclerView.Adapter<BookingListAdapter.
         // 왼쪽 선그리기
         switch (booking.bookingState)
         {
+            case Booking.BOOKING_STATE_RESERVATION_WAITING:
             case Booking.BOOKING_STATE_DEPOSIT_WAITING:
             case Booking.BOOKING_STATE_WAITING_REFUND:
             {
@@ -299,6 +301,14 @@ public class BookingListAdapter extends RecyclerView.Adapter<BookingListAdapter.
                 holder.dataBinding.bookingStatusTextView.setTextColor(mContext.getResources().getColor(R.color.default_text_cda2853));
                 holder.dataBinding.bookingDayTextView.setVisibility(View.GONE);
                 holder.dataBinding.bookingStatusDescriptionTextView.setText(R.string.message_booking_please_deposit_completed);
+                holder.dataBinding.buttonLayout.setVisibility(View.GONE);
+                break;
+
+            case Booking.BOOKING_STATE_RESERVATION_WAITING:
+                holder.dataBinding.bookingStatusTextView.setText(R.string.frag_booking_wait_reservation);
+                holder.dataBinding.bookingStatusTextView.setTextColor(mContext.getResources().getColor(R.color.default_text_cda2853));
+                holder.dataBinding.bookingDayTextView.setVisibility(View.GONE);
+                holder.dataBinding.bookingStatusDescriptionTextView.setText(R.string.message_booking_reservation_waiting);
                 holder.dataBinding.buttonLayout.setVisibility(View.GONE);
                 break;
         }
