@@ -30,6 +30,8 @@ import com.twoheart.dailyhotel.util.DailyExternalDeepLink;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -87,8 +89,11 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
 
         mCommonRemoteImpl = new CommonRemoteImpl(activity);
 
+        JSONObject suggestJsonObject = DailyPreference.getInstance(getActivity()).getStayOutboundSearchSuggest();
+        setSuggestByJson(suggestJsonObject);
         // 기본 성인 2명, 아동 0명
-        setPeople(People.DEFAULT_ADULTS, null);
+        JSONObject peopleJsonObject = DailyPreference.getInstance(getActivity()).getStayOutboundSearchPeople();
+        setPeopleByJson(peopleJsonObject);
 
         notifyPeopleChanged();
         notifySuggestsChanged();
@@ -287,7 +292,17 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
             .subscribe(commonDateTime ->
             {
                 setCommonDateTime(commonDateTime);
-                setStayBookDefaultDateTime(commonDateTime);
+
+                String checkInDate = DailyPreference.getInstance(getActivity()).getStayOutboundSearchCheckInDate();
+                String checkOutDate = DailyPreference.getInstance(getActivity()).getStayOutboundSearchCheckOutDate();
+
+                if (DailyTextUtils.isTextEmpty(checkInDate, checkOutDate) == true)
+                {
+                    setStayBookDefaultDateTime(commonDateTime);
+                } else
+                {
+                    setStayBookDateTime(checkInDate, 0, checkOutDate, 0);
+                }
 
                 if (mDailyDeepLink != null && processDeepLink(mDailyDeepLink, commonDateTime) == true)
                 {
@@ -463,6 +478,9 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
             {
                 mStayBookDateTime.setCheckOutDateTime(checkOutDateTime, checkOutAfterDay);
             }
+
+            DailyPreference.getInstance(getActivity()).setStayOutboundSearchCheckInDate(mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT));
+            DailyPreference.getInstance(getActivity()).setStayOutboundSearchCheckOutDate(mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT));
         } catch (Exception e)
         {
             ExLog.e(e.toString());
@@ -474,6 +492,14 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
     private void setSuggest(Suggest suggest)
     {
         mSuggest = suggest;
+
+        DailyPreference.getInstance(getActivity()).setStayOutboundSearchSuggest(mSuggest.toJsonString());
+    }
+
+    private void setSuggestByJson(JSONObject jsonObject)
+    {
+        mSuggest = new Suggest(jsonObject);
+        DailyPreference.getInstance(getActivity()).setStayOutboundSearchSuggest(mSuggest.toJsonString());
     }
 
     private void setKeyword(String keyword)
@@ -490,6 +516,14 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
 
         mPeople.numberOfAdults = numberOfAdults;
         mPeople.setChildAgeList(childAgeList);
+
+        DailyPreference.getInstance(getActivity()).setStayOutboundSearchPeople(mPeople.toJsonString());
+    }
+
+    private void setPeopleByJson(JSONObject jsonObject)
+    {
+        mPeople = new People(jsonObject);
+        DailyPreference.getInstance(getActivity()).setStayOutboundSearchPeople(mPeople.toJsonString());
     }
 
     private void notifyStayBookDateTimeChanged()
