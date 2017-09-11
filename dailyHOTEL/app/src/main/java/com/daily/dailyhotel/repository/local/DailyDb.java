@@ -561,7 +561,7 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
         try
         {
             db.beginTransaction();
-            db.delete(T_RECENTLY, RecentlyList.SAVING_TIME + " > " + savingTime, null);
+            db.delete(T_RECENTLY, RecentlyList.SAVING_TIME + " <= " + savingTime, null);
             db.setTransactionSuccessful();
         } catch (Exception e)
         {
