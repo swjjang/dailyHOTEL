@@ -109,7 +109,7 @@ public class ProfileRemoteImpl implements ProfileInterface
 
             if (userTrackingDataBaseDto != null)
             {
-                if (userTrackingDataBaseDto.msgCode == 0 && userTrackingDataBaseDto.data != null)
+                if (userTrackingDataBaseDto.msgCode == 100 && userTrackingDataBaseDto.data != null)
                 {
                     userTracking = userTrackingDataBaseDto.data.getUserTracking();
                 } else
