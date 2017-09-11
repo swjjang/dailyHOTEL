@@ -118,6 +118,9 @@ public class StayBookingDetailData
     @JsonField(name = "readyForRefund")
     public boolean readyForRefund;
 
+    @JsonField(name = "waitingForBooking")
+    public boolean waitingForBooking;
+
     public StayBookingDetailData()
     {
 
@@ -168,6 +171,7 @@ public class StayBookingDetailData
         stayBookingDetail.overseas = overseas;
         stayBookingDetail.readyForRefund = readyForRefund;
         stayBookingDetail.setSpecificationMap(getSpecification(hotelSpec));
+        stayBookingDetail.waitingForBooking = waitingForBooking;
 
         return stayBookingDetail;
     }

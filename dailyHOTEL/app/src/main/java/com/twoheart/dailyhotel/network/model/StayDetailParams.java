@@ -72,8 +72,8 @@ public class StayDetailParams extends PlaceDetailParams<StayProduct>
     @JsonField(name = "overseas")
     public boolean isOverseas; // 0 : 국내 , 1 : 해외
 
-    @JsonField(name = "reservationWaiting")
-    public boolean reservationWaiting; // 예약 대기
+    @JsonField(name = "waitingForBooking")
+    public boolean waitingForBooking; // 예약 대기
 
     @JsonIgnore
     private ArrayList<StayDetail.Pictogram> mPictogramList;

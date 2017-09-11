@@ -275,6 +275,11 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
                 @Override
                 public void accept(@io.reactivex.annotations.NonNull Throwable throwable) throws Exception
                 {
+                    if (disposable != null)
+                    {
+                        disposable.dispose();
+                    }
+                    
                     onHandleError(throwable);
                 }
             }));

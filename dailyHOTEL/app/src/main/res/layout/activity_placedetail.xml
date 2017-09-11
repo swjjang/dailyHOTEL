@@ -95,6 +95,14 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent">
 
+        <ImageView
+            android:id="@+id/vrImageView"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_alignParentBottom="true"
+            android:scaleType="center"
+            android:src="@drawable/detail_ic_vr_img"/>
+
         <View
             android:id="@+id/moreIconView"
             android:layout_width="30dp"
@@ -174,12 +182,10 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
 
-    <ImageView
-        android:id="@+id/vrImageView"
+    <View
+        android:id="@+id/fakeVrImageView"
         android:layout_width="60dp"
         android:layout_height="50dp"
-        android:scaleType="center"
-        android:src="@drawable/detail_ic_vr_img"
         app:layout_constraintBottom_toTopOf="@id/viewpagerIndicator"
         app:layout_constraintLeft_toLeftOf="parent"/>
 

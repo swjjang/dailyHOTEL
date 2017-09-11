@@ -891,6 +891,17 @@ public class StayDetailLayout extends PlaceDetailLayout implements RadioGroup.On
             {
                 ((OnEventListener) mOnEventListener).hideActionBar(true);
             }
+
+            if (mVRIconView != null && mFakeVRIconView != null && mVRIconView.getVisibility() == View.VISIBLE)
+            {
+                if (t > ScreenUtils.dpToPx(mContext, 30))
+                {
+                    mFakeVRIconView.setVisibility(View.GONE);
+                } else
+                {
+                    mFakeVRIconView.setVisibility(View.VISIBLE);
+                }
+            }
         }
     };
 }

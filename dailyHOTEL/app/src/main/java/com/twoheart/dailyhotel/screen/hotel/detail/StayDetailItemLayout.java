@@ -640,7 +640,7 @@ public class StayDetailItemLayout extends LinearLayout
 
             StayDetailParams stayDetailParams = stayDetail.getStayDetailParams();
 
-            if (stayDetailParams != null && stayDetailParams.reservationWaiting == true)
+            if (stayDetailParams != null && stayDetailParams.waitingForBooking == true)
             {
                 // 대기 예약 안내 추가
                 childViewGroup = (ViewGroup) layoutInflater.inflate(R.layout.list_row_detail05, viewGroup, false);

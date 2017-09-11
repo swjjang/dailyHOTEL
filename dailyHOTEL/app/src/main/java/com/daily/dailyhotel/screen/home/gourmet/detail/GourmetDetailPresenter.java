@@ -1554,6 +1554,11 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
             @Override
             public void accept(@io.reactivex.annotations.NonNull Throwable throwable) throws Exception
             {
+                if (disposable != null)
+                {
+                    disposable.dispose();
+                }
+
                 onHandleError(throwable);
             }
         }));

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.text.Html;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
+import android.view.Gravity;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.ScrollView;
@@ -120,21 +121,35 @@ public class StayReservationDetailLayout extends PlaceReservationDetailLayout
             {
                 String remainedDayText;
 
-                Date checkInDate = DailyCalendar.convertStringToDate(stayBookingDetail.checkInDate);
-                Date currentDate = DailyCalendar.convertStringToDate(todayDateTime.currentDateTime);
+                if (stayBookingDetail.waitingForBooking == true)
+                {
+                    remainedDayText = context.getString(R.string.message_booking_detail_wait_message);
 
-                int dayOfDays = (int) ((DailyCalendar.clearTField(checkInDate.getTime()) - DailyCalendar.clearTField(currentDate.getTime())) / DailyCalendar.DAY_MILLISECOND);
-                if (dayOfDays < 0 || dayOfDays > 3)
-                {
-                    remainedDayText = null;
-                } else if (dayOfDays > 0)
-                {
-                    // 하루이상 남음
-                    remainedDayText = context.getString(R.string.frag_booking_duedate_formet_stay, dayOfDays);
+                    remainedDayTextView.getLayoutParams().height = ScreenUtils.dpToPx(context, 54);
+                    remainedDayTextView.setGravity(Gravity.LEFT | Gravity.CENTER_VERTICAL);
+                    remainedDayTextView.setCompoundDrawablePadding(ScreenUtils.dpToPx(context, 10));
                 } else
                 {
-                    // 당일
-                    remainedDayText = context.getString(R.string.frag_booking_today_type_stay);
+                    remainedDayTextView.getLayoutParams().height = ScreenUtils.dpToPx(context, 36);
+                    remainedDayTextView.setGravity(Gravity.CENTER);
+                    remainedDayTextView.setCompoundDrawablePadding(ScreenUtils.dpToPx(context, -30));
+
+                    Date checkInDate = DailyCalendar.convertStringToDate(stayBookingDetail.checkInDate);
+                    Date currentDate = DailyCalendar.convertStringToDate(todayDateTime.currentDateTime);
+
+                    int dayOfDays = (int) ((DailyCalendar.clearTField(checkInDate.getTime()) - DailyCalendar.clearTField(currentDate.getTime())) / DailyCalendar.DAY_MILLISECOND);
+                    if (dayOfDays < 0 || dayOfDays > 3)
+                    {
+                        remainedDayText = null;
+                    } else if (dayOfDays > 0)
+                    {
+                        // 하루이상 남음
+                        remainedDayText = context.getString(R.string.frag_booking_duedate_formet_stay, dayOfDays);
+                    } else
+                    {
+                        // 당일
+                        remainedDayText = context.getString(R.string.frag_booking_today_type_stay);
+                    }
                 }
 
                 if (DailyTextUtils.isTextEmpty(remainedDayText) == true)

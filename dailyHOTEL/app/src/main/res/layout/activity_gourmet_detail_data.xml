@@ -223,6 +223,7 @@
                     android:layout_height="78dp"/>
 
                 <View
+                    android:id="@+id/menuTopLineView"
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:background="@color/default_line_cf0f0f0"/>
