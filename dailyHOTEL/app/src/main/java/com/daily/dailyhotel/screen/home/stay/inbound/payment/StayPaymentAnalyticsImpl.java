@@ -82,6 +82,8 @@ public class StayPaymentAnalyticsImpl implements StayPaymentPresenter.StayPaymen
             params.put(AnalyticsManager.KeyType.LENGTH_OF_STAY, Integer.toString(nights));
             params.put(AnalyticsManager.KeyType.CHECK_IN, stayBookDateTime.getCheckInDateTime("yyyy-MM-dd"));
             params.put(AnalyticsManager.KeyType.CHECK_OUT, stayBookDateTime.getCheckOutDateTime("yyyy-MM-dd"));
+            params.put(AnalyticsManager.KeyType.CHECK_IN_DATE, stayBookDateTime.getCheckInDateTime("yyyyMMdd"));
+            params.put(AnalyticsManager.KeyType.CHECK_OUT_DATE, stayBookDateTime.getCheckOutDateTime("yyyyMMdd"));
             params.put(AnalyticsManager.KeyType.TICKET_NAME, roomName);
             params.put(AnalyticsManager.KeyType.TICKET_INDEX, Integer.toString(roomIndex));
             params.put(AnalyticsManager.KeyType.GRADE, mAnalyticsParam.grade.getName(activity));
@@ -129,6 +131,8 @@ public class StayPaymentAnalyticsImpl implements StayPaymentPresenter.StayPaymen
             mPaymentParamMap.put(AnalyticsManager.KeyType.LENGTH_OF_STAY, Integer.toString(nights));
             mPaymentParamMap.put(AnalyticsManager.KeyType.CHECK_IN, stayBookDateTime.getCheckInDateTime("yyyy-MM-dd"));
             mPaymentParamMap.put(AnalyticsManager.KeyType.CHECK_OUT, stayBookDateTime.getCheckOutDateTime("yyyy-MM-dd"));
+            mPaymentParamMap.put(AnalyticsManager.KeyType.CHECK_IN_DATE, stayBookDateTime.getCheckInDateTime("yyyyMMdd"));
+            mPaymentParamMap.put(AnalyticsManager.KeyType.CHECK_OUT_DATE, stayBookDateTime.getCheckOutDateTime("yyyyMMdd"));
             mPaymentParamMap.put(AnalyticsManager.KeyType.TICKET_NAME, roomName);
             mPaymentParamMap.put(AnalyticsManager.KeyType.TICKET_INDEX, Integer.toString(roomIndex));
             mPaymentParamMap.put(AnalyticsManager.KeyType.GRADE, mAnalyticsParam.grade.getName(activity));
