@@ -29,12 +29,7 @@ public class StayOutboundListAnalyticsImpl implements StayOutboundListPresenter.
             return;
         }
 
-        Map<String, String> params = new HashMap<>();
-
-        params.put(AnalyticsManager.KeyType.PLACE_TYPE, "stay");
-        params.put(AnalyticsManager.KeyType.COUNTRY, "overseas");
-
-        AnalyticsManager.getInstance(activity).recordScreen(activity, AnalyticsManager.Screen.DAILYHOTEL_HOTELLIST_OUTBOUND, null, params);
+        AnalyticsManager.getInstance(activity).recordScreen(activity, AnalyticsManager.Screen.DAILYHOTEL_HOTELLIST_OUTBOUND, null);
     }
 
     @Override
