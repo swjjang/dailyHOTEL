@@ -100,7 +100,7 @@ public class AppboyManager extends BaseAnalyticsManager
             {
                 appboyProperties.addProperty(AnalyticsManager.KeyType.LENGTH_OF_STAY, Integer.parseInt(params.get(AnalyticsManager.KeyType.QUANTITY)));
                 appboyProperties.addProperty(AnalyticsManager.KeyType.UNIT_PRICE, Integer.parseInt(params.get(AnalyticsManager.KeyType.UNIT_PRICE)));
-                appboyProperties.addProperty(AnalyticsManager.KeyType.CHECK_IN_DATE, DailyCalendar.convertDate(params.get(AnalyticsManager.KeyType.CHECK_IN_DATE), "yyyyMMdd"));
+                appboyProperties.addProperty(AnalyticsManager.KeyType.CHECK_IN_DATE, params.get(AnalyticsManager.KeyType.CHECK_IN_DATE));
 
                 mAppboy.logCustomEvent(EventName.STAY_DETAIL_CLICKED, appboyProperties);
 
@@ -127,7 +127,7 @@ public class AppboyManager extends BaseAnalyticsManager
             try
             {
                 appboyProperties.addProperty(AnalyticsManager.KeyType.UNIT_PRICE, Integer.parseInt(params.get(AnalyticsManager.KeyType.UNIT_PRICE)));
-                appboyProperties.addProperty(AnalyticsManager.KeyType.VISIT_DATE, DailyCalendar.convertDate(params.get(AnalyticsManager.KeyType.VISIT_DATE), "yyyyMMdd"));
+                appboyProperties.addProperty(AnalyticsManager.KeyType.VISIT_DATE, params.get(AnalyticsManager.KeyType.VISIT_DATE));
 
                 mAppboy.logCustomEvent(EventName.GOURMET_DETAIL_CLICKED, appboyProperties);
 
@@ -242,8 +242,8 @@ public class AppboyManager extends BaseAnalyticsManager
 
                 try
                 {
-                    appboyProperties.addProperty(AnalyticsManager.KeyType.CHECK_IN_DATE, DailyCalendar.convertDate(params.get(AnalyticsManager.KeyType.CHECK_IN_DATE), "yyyyMMdd"));
-                    appboyProperties.addProperty(AnalyticsManager.KeyType.CHECK_OUT_DATE, DailyCalendar.convertDate(params.get(AnalyticsManager.KeyType.CHECK_OUT_DATE), "yyyyMMdd"));
+                    appboyProperties.addProperty(AnalyticsManager.KeyType.CHECK_IN_DATE, params.get(AnalyticsManager.KeyType.CHECK_IN_DATE));
+                    appboyProperties.addProperty(AnalyticsManager.KeyType.CHECK_OUT_DATE, params.get(AnalyticsManager.KeyType.CHECK_OUT_DATE));
                     appboyProperties.addProperty(AnalyticsManager.KeyType.LENGTH_OF_STAY, Integer.parseInt(params.get(AnalyticsManager.KeyType.LENGTH_OF_STAY)));
 
                     mAppboy.logCustomEvent(EventName.STAY_SELECTED_DATE, appboyProperties);
@@ -266,7 +266,7 @@ public class AppboyManager extends BaseAnalyticsManager
 
                 try
                 {
-                    appboyProperties.addProperty(AnalyticsManager.KeyType.VISIT_DATE, DailyCalendar.convertDate(params.get(AnalyticsManager.KeyType.VISIT_DATE), "yyyyMMdd"));
+                    appboyProperties.addProperty(AnalyticsManager.KeyType.VISIT_DATE, params.get(AnalyticsManager.KeyType.VISIT_DATE));
 
                     mAppboy.logCustomEvent(EventName.GOURMET_SELECTED_DATE, appboyProperties);
 
@@ -375,7 +375,7 @@ public class AppboyManager extends BaseAnalyticsManager
             {
                 appboyProperties.addProperty(AnalyticsManager.KeyType.LENGTH_OF_STAY, Integer.parseInt(params.get(AnalyticsManager.KeyType.QUANTITY)));
                 appboyProperties.addProperty(AnalyticsManager.KeyType.PRICE_OF_SELECTED_ROOM, Integer.parseInt(params.get(AnalyticsManager.KeyType.PRICE_OF_SELECTED_ROOM)));
-                appboyProperties.addProperty(AnalyticsManager.KeyType.CHECK_IN_DATE, DailyCalendar.convertDate(params.get(AnalyticsManager.KeyType.CHECK_IN_DATE), "yyyyMMdd"));
+                appboyProperties.addProperty(AnalyticsManager.KeyType.CHECK_IN_DATE, params.get(AnalyticsManager.KeyType.CHECK_IN_DATE));
 
                 mAppboy.logCustomEvent(EventName.STAY_BOOKING_INITIALISED, appboyProperties);
 
@@ -403,7 +403,7 @@ public class AppboyManager extends BaseAnalyticsManager
             try
             {
                 appboyProperties.addProperty(AnalyticsManager.KeyType.PRICE_OF_SELECTED_TICKET, Integer.parseInt(params.get(AnalyticsManager.KeyType.PRICE_OF_SELECTED_TICKET)));
-                appboyProperties.addProperty(AnalyticsManager.KeyType.VISIT_DATE, DailyCalendar.convertDate(params.get(AnalyticsManager.KeyType.VISIT_DATE), "yyyyMMdd"));
+                appboyProperties.addProperty(AnalyticsManager.KeyType.VISIT_DATE, params.get(AnalyticsManager.KeyType.VISIT_DATE));
 
                 mAppboy.logCustomEvent(EventName.GOURMET_BOOKING_INITIALISED, appboyProperties);
 
@@ -654,8 +654,8 @@ public class AppboyManager extends BaseAnalyticsManager
             appboyProperties.addProperty(AnalyticsManager.KeyType.LENGTH_OF_STAY, Integer.parseInt(params.get(AnalyticsManager.KeyType.QUANTITY)));
             appboyProperties.addProperty(AnalyticsManager.KeyType.PRICE_OF_SELECTED_ROOM, Integer.parseInt(params.get(AnalyticsManager.KeyType.PRICE)));
             appboyProperties.addProperty(AnalyticsManager.KeyType.REVENUE, Integer.parseInt(params.get(AnalyticsManager.KeyType.PAYMENT_PRICE)));
-            appboyProperties.addProperty(AnalyticsManager.KeyType.CHECK_IN_DATE, DailyCalendar.convertDate(params.get(AnalyticsManager.KeyType.CHECK_IN_DATE), "yyyyMMdd"));
-            appboyProperties.addProperty(AnalyticsManager.KeyType.CHECK_OUT_DATE, DailyCalendar.convertDate(params.get(AnalyticsManager.KeyType.CHECK_OUT_DATE), "yyyyMMdd"));
+            appboyProperties.addProperty(AnalyticsManager.KeyType.CHECK_IN_DATE, params.get(AnalyticsManager.KeyType.CHECK_IN_DATE));
+            appboyProperties.addProperty(AnalyticsManager.KeyType.CHECK_OUT_DATE, params.get(AnalyticsManager.KeyType.CHECK_OUT_DATE));
             appboyProperties.addProperty(AnalyticsManager.KeyType.USED_CREDITS, Integer.parseInt(params.get(AnalyticsManager.KeyType.USED_BOUNS)));
             appboyProperties.addProperty(AnalyticsManager.KeyType.COUPON_REDEEM, couponRedeem);
 
@@ -690,7 +690,7 @@ public class AppboyManager extends BaseAnalyticsManager
             appboyProperties.addProperty(AnalyticsManager.KeyType.VISIT_HOUR, params.get(AnalyticsManager.KeyType.VISIT_HOUR));
             appboyProperties.addProperty(AnalyticsManager.KeyType.PRICE_OF_SELECTED_TICKET, Integer.parseInt(params.get(AnalyticsManager.KeyType.PRICE)));
             appboyProperties.addProperty(AnalyticsManager.KeyType.REVENUE, Integer.parseInt(params.get(AnalyticsManager.KeyType.TOTAL_PRICE)));
-            appboyProperties.addProperty(AnalyticsManager.KeyType.VISIT_DATE, DailyCalendar.convertDate(params.get(AnalyticsManager.KeyType.VISIT_DATE), "yyyyMMdd"));
+            appboyProperties.addProperty(AnalyticsManager.KeyType.VISIT_DATE, params.get(AnalyticsManager.KeyType.VISIT_DATE));
             appboyProperties.addProperty(AnalyticsManager.KeyType.NUM_OF_TICKETS, Integer.parseInt(params.get(AnalyticsManager.KeyType.QUANTITY)));
             appboyProperties.addProperty(AnalyticsManager.KeyType.USED_CREDITS, Integer.parseInt(params.get(AnalyticsManager.KeyType.USED_BOUNS)));
 
@@ -946,8 +946,8 @@ public class AppboyManager extends BaseAnalyticsManager
             appboyProperties.addProperty(AnalyticsManager.KeyType.LENGTH_OF_STAY, Integer.parseInt(params.get(AnalyticsManager.KeyType.QUANTITY)));
             appboyProperties.addProperty(AnalyticsManager.KeyType.PRICE_OF_SELECTED_ROOM, Integer.parseInt(params.get(AnalyticsManager.KeyType.PRICE)));
             appboyProperties.addProperty(AnalyticsManager.KeyType.REVENUE, Integer.parseInt(params.get(AnalyticsManager.KeyType.PAYMENT_PRICE)));
-            appboyProperties.addProperty(AnalyticsManager.KeyType.CHECK_IN_DATE, DailyCalendar.convertDate(params.get(AnalyticsManager.KeyType.CHECK_IN_DATE), "yyyyMMdd"));
-            appboyProperties.addProperty(AnalyticsManager.KeyType.CHECK_OUT_DATE, DailyCalendar.convertDate(params.get(AnalyticsManager.KeyType.CHECK_OUT_DATE), "yyyyMMdd"));
+            appboyProperties.addProperty(AnalyticsManager.KeyType.CHECK_IN_DATE, params.get(AnalyticsManager.KeyType.CHECK_IN_DATE));
+            appboyProperties.addProperty(AnalyticsManager.KeyType.CHECK_OUT_DATE, params.get(AnalyticsManager.KeyType.CHECK_OUT_DATE));
             appboyProperties.addProperty(AnalyticsManager.KeyType.USED_CREDITS, Integer.parseInt(params.get(AnalyticsManager.KeyType.USED_BOUNS)));
             appboyProperties.addProperty(AnalyticsManager.KeyType.COUPON_REDEEM, couponRedeem);
 
@@ -1012,7 +1012,7 @@ public class AppboyManager extends BaseAnalyticsManager
             appboyProperties.addProperty(AnalyticsManager.KeyType.VISIT_HOUR, params.get(AnalyticsManager.KeyType.VISIT_HOUR));
             appboyProperties.addProperty(AnalyticsManager.KeyType.PRICE_OF_SELECTED_TICKET, Integer.parseInt(params.get(AnalyticsManager.KeyType.PRICE)));
             appboyProperties.addProperty(AnalyticsManager.KeyType.REVENUE, Integer.parseInt(params.get(AnalyticsManager.KeyType.TOTAL_PRICE)));
-            appboyProperties.addProperty(AnalyticsManager.KeyType.VISIT_DATE, DailyCalendar.convertDate(params.get(AnalyticsManager.KeyType.VISIT_DATE), "yyyyMMdd"));
+            appboyProperties.addProperty(AnalyticsManager.KeyType.VISIT_DATE, params.get(AnalyticsManager.KeyType.VISIT_DATE));
             appboyProperties.addProperty(AnalyticsManager.KeyType.NUM_OF_TICKETS, Integer.parseInt(params.get(AnalyticsManager.KeyType.QUANTITY)));
             appboyProperties.addProperty(AnalyticsManager.KeyType.USED_CREDITS, Integer.parseInt(params.get(AnalyticsManager.KeyType.USED_BOUNS)));
 
