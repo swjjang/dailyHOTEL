@@ -406,7 +406,6 @@ public class AdjustManager extends BaseAnalyticsManager
         }
 
         if (event != null)
-
         {
             Adjust.trackEvent(event);
         }
