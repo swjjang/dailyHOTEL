@@ -121,7 +121,7 @@ public class StayReservationDetailLayout extends PlaceReservationDetailLayout
             {
                 String remainedDayText;
 
-                if (stayBookingDetail.reservationWaiting == true)
+                if (stayBookingDetail.waitingForBooking == true)
                 {
                     remainedDayText = context.getString(R.string.message_booking_detail_wait_message);
 

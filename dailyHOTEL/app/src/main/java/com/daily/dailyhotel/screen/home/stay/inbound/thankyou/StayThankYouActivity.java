@@ -23,11 +23,11 @@ public class StayThankYouActivity extends BaseActivity<StayThankYouPresenter>
     static final String INTENT_EXTRA_DATA_ROOM_NAME = "roomName";
     static final String INTENT_EXTRA_DATA_OVERSEAS = "overseas";
     static final String INTENT_EXTRA_DATA_AGGREGATION_ID = "aggregationId";
-    static final String INTENT_EXTRA_DATA_RESERVATION_WAITING = "reservationWaiting";
+    static final String INTENT_EXTRA_DATA_WAITING_FOR_BOOKING = "waitingForBooking";
 
     public static Intent newInstance(Context context, boolean overseas, String stayName, String imageUrl//
         , String checkInDateTime, String checkOutDateTime, String roomName, String aggregationId//
-        , boolean reservationWaiting, StayThankYouAnalyticsParam analyticsParam)
+        , boolean waitingForBooking, StayThankYouAnalyticsParam analyticsParam)
     {
         Intent intent = new Intent(context, StayThankYouActivity.class);
 
@@ -38,7 +38,7 @@ public class StayThankYouActivity extends BaseActivity<StayThankYouPresenter>
         intent.putExtra(INTENT_EXTRA_DATA_ROOM_NAME, roomName);
         intent.putExtra(INTENT_EXTRA_DATA_OVERSEAS, overseas);
         intent.putExtra(INTENT_EXTRA_DATA_AGGREGATION_ID, aggregationId);
-        intent.putExtra(INTENT_EXTRA_DATA_RESERVATION_WAITING, reservationWaiting);
+        intent.putExtra(INTENT_EXTRA_DATA_WAITING_FOR_BOOKING, waitingForBooking);
         intent.putExtra(INTENT_EXTRA_DATA_ANALYTICS, analyticsParam);
 
         return intent;

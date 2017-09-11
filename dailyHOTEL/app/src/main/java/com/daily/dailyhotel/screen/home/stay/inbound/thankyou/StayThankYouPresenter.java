@@ -44,7 +44,7 @@ public class StayThankYouPresenter extends BaseExceptionPresenter<StayThankYouAc
     private StayBookDateTime mStayBookDateTime;
     private String mRoomName;
     private boolean mOverseas;
-    private boolean mReservationWaiting;
+    private boolean mWaitingForBooking;
 
     public interface StayThankYouAnalyticsInterface extends BaseAnalyticsInterface
     {
@@ -116,7 +116,7 @@ public class StayThankYouPresenter extends BaseExceptionPresenter<StayThankYouAc
 
         mRoomName = intent.getStringExtra(StayThankYouActivity.INTENT_EXTRA_DATA_ROOM_NAME);
         mAggregationId = intent.getStringExtra(StayThankYouActivity.INTENT_EXTRA_DATA_AGGREGATION_ID);
-        mReservationWaiting = intent.getBooleanExtra(StayThankYouActivity.INTENT_EXTRA_DATA_RESERVATION_WAITING, false);
+        mWaitingForBooking = intent.getBooleanExtra(StayThankYouActivity.INTENT_EXTRA_DATA_WAITING_FOR_BOOKING, false);
 
         mAnalytics.setAnalyticsParam(intent.getParcelableExtra(BaseActivity.INTENT_EXTRA_DATA_ANALYTICS));
 
@@ -155,7 +155,7 @@ public class StayThankYouPresenter extends BaseExceptionPresenter<StayThankYouAc
             getViewInterface().setBooking(checkInSpannableString, checkOutSpannableString, mStayBookDateTime.getNights(), mStayName, mRoomName);
 
             // 예약 대기 표시
-            if (mReservationWaiting == true)
+            if (mWaitingForBooking == true)
             {
                 getViewInterface().setNoticeVisible(true);
                 getViewInterface().setNoticeText(getString(R.string.label_reservation_wait_message));

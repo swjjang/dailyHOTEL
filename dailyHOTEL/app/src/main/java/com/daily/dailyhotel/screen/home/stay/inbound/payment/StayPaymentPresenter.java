@@ -111,7 +111,7 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
     private boolean mOverseas, mBonusSelected, mCouponSelected, mAgreedThirdPartyTerms;
     private boolean mGuestInformationVisible;
     private UserSimpleInformation mUserSimpleInformation;
-    private int mReservationWaitingMessageType;
+    private int mWaitingForBookingMessageType;
 
     public interface StayPaymentAnalyticsInterface extends BaseAnalyticsInterface
     {
@@ -287,7 +287,7 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
         outState.putInt("stayIndex", mStayIndex);
         outState.putInt("roomPrice", mRoomPrice);
         outState.putInt("roomIndex", mRoomIndex);
-        outState.putInt("reservationWaitingMessageType", mReservationWaitingMessageType);
+        outState.putInt("waitingForBookingMessageType", mWaitingForBookingMessageType);
 
         outState.putString("stayName", mStayName);
         outState.putString("imageUrl", mImageUrl);
@@ -341,7 +341,7 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
         mStayIndex = savedInstanceState.getInt("stayIndex");
         mRoomPrice = savedInstanceState.getInt("roomPrice");
         mRoomIndex = savedInstanceState.getInt("roomIndex");
-        mReservationWaitingMessageType = savedInstanceState.getInt("reservationWaitingMessageType");
+        mWaitingForBookingMessageType = savedInstanceState.getInt("waitingForBookingMessageType");
 
         mStayName = savedInstanceState.getString("stayName");
         mImageUrl = savedInstanceState.getString("imageUrl");
@@ -1028,7 +1028,7 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
         {
             // 보너스로만 결제할 경우에는 팝업이 기존의 카드 타입과 동일한다.
             getViewInterface().showAgreeTermDialog(DailyBookingPaymentTypeView.PaymentType.FREE//
-                , getAgreedTermMessages(DailyBookingPaymentTypeView.PaymentType.FREE, mStayPayment.reservationWaiting), new View.OnClickListener()
+                , getAgreedTermMessages(DailyBookingPaymentTypeView.PaymentType.FREE, mStayPayment.waitingForBooking), new View.OnClickListener()
                 {
                     @Override
                     public void onClick(View v)
@@ -1061,7 +1061,7 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
                 mAnalytics.onEventStartPayment(getActivity(), DailyBookingPaymentTypeView.PaymentType.EASY_CARD);
             } else
             {
-                getViewInterface().showAgreeTermDialog(mPaymentType, getAgreedTermMessages(mPaymentType, mStayPayment.reservationWaiting), new View.OnClickListener()
+                getViewInterface().showAgreeTermDialog(mPaymentType, getAgreedTermMessages(mPaymentType, mStayPayment.waitingForBooking), new View.OnClickListener()
                 {
                     @Override
                     public void onClick(View v)
@@ -1241,7 +1241,7 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
         startActivityForResult(StayThankYouActivity.newInstance(getActivity(), mOverseas, mStayName, mImageUrl//
             , mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
             , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
-            , mRoomName, aggregationId, mStayPayment.reservationWaiting, mAnalytics.getThankYouAnalyticsParam())//
+            , mRoomName, aggregationId, mStayPayment.waitingForBooking, mAnalytics.getThankYouAnalyticsParam())//
             , StayPaymentActivity.REQUEST_CODE_THANK_YOU);
 
         mAnalytics.onEventTransportationType(getActivity(), mStayPayment.transportation, mTransportationType);
@@ -1981,11 +1981,11 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
             if (currentHour < openHour)
             {
                 // 당일이고 영업시간 전일때 (서버에서 새벽 3시 부터 당일로 주기 때문에 새벽 3시 체크 안함)
-                mReservationWaitingMessageType = 2;
+                mWaitingForBookingMessageType = 2;
             } else
             {
                 // 당일이고 영엽시간 이후 일때 (서버에서 다음날 새벽 3시까지 당일로 주기 때문에 새벽 3시 체크 안함)
-                mReservationWaitingMessageType = 1;
+                mWaitingForBookingMessageType = 1;
             }
         } else
         {
@@ -1993,16 +1993,16 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
             if (openHour <= currentHour && currentHour < 22)
             {
                 // 사전예약 이고 9시 부터 22시 전까지
-                mReservationWaitingMessageType = 3;
+                mWaitingForBookingMessageType = 3;
             } else
             {
-                mReservationWaitingMessageType = 4;
+                mWaitingForBookingMessageType = 4;
                 // 사전예약 이고 9시 이전이거나 22시 이후 일때
             }
         }
     }
 
-    private int[] getAgreedTermMessages(DailyBookingPaymentTypeView.PaymentType paymentType, boolean reservationWaiting)
+    private int[] getAgreedTermMessages(DailyBookingPaymentTypeView.PaymentType paymentType, boolean waitingForBooking)
     {
         if (paymentType == null)
         {
@@ -2011,9 +2011,9 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
 
         int[] messages;
 
-        if (reservationWaiting == true)
+        if (waitingForBooking == true)
         {
-            messages = getPensionAgreedTermMessages(mReservationWaitingMessageType, paymentType);
+            messages = getPensionAgreedTermMessages(mWaitingForBookingMessageType, paymentType);
         } else
         {
             switch (paymentType)

@@ -13,7 +13,7 @@ public class StayPayment
     public int totalPrice; // 결재할 총금액
     public String businessName;
     public String transportation;
-    public boolean reservationWaiting;
+    public boolean waitingForBooking;
 
     public String mWarningMessage; // 현재 시간부터 날짜 바뀌기 전시간(새벽 3시, 3시부터 9시까지 경고 팝업 메시지
 

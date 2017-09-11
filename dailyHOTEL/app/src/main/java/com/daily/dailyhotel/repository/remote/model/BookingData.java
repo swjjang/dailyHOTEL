@@ -52,8 +52,8 @@ public class BookingData
     @JsonField(name = "itemIdx")
     public int placeIndex;
 
-    @JsonField(name = "reservationWaiting")
-    public boolean reservationWaiting;
+    @JsonField(name = "waitingForBooking")
+    public boolean waitingForBooking;
 
     @JsonField(name = "images")
     public List<LinkedHashMap<String, String>> images;
@@ -109,7 +109,7 @@ public class BookingData
         booking.tid = tid;
         booking.placeIndex = placeIndex;
         booking.availableReview = REVIEW_ABLE.equalsIgnoreCase(reviewStatusType) == true;
-        booking.reservationWaiting = reservationWaiting;
+        booking.waitingForBooking = waitingForBooking;
 
         return booking;
     }

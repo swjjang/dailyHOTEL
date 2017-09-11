@@ -25,7 +25,7 @@ public class Booking
     public String tid;
     public boolean availableReview;
     public int placeIndex;
-    public boolean reservationWaiting;
+    public boolean waitingForBooking;
 
     // 내부 사용 변수
     public int remainingDays;
