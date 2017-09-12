@@ -3,6 +3,7 @@ package com.daily.dailyhotel.screen.home.stay.outbound.search;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -13,12 +14,15 @@ import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
+import com.daily.dailyhotel.domain.StayObRecentlySuggestColumns;
 import com.daily.dailyhotel.entity.CommonDateTime;
 import com.daily.dailyhotel.entity.People;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.Suggest;
 import com.daily.dailyhotel.parcel.SuggestParcel;
 import com.daily.dailyhotel.parcel.analytics.StayOutboundListAnalyticsParam;
+import com.daily.dailyhotel.repository.local.DailyDb;
+import com.daily.dailyhotel.repository.local.DailyDbHelper;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
 import com.daily.dailyhotel.screen.common.calendar.StayCalendarActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.list.StayOutboundListActivity;
@@ -89,11 +93,9 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
 
         mCommonRemoteImpl = new CommonRemoteImpl(activity);
 
-        JSONObject suggestJsonObject = DailyPreference.getInstance(getActivity()).getStayOutboundSearchSuggest();
-        setSuggestByJson(suggestJsonObject);
+        setLastSuggestByDb();
         // 기본 성인 2명, 아동 0명
-        JSONObject peopleJsonObject = DailyPreference.getInstance(getActivity()).getStayOutboundSearchPeople();
-        setPeopleByJson(peopleJsonObject);
+        setLastPeopleByPreference();
 
         notifyPeopleChanged();
         notifySuggestsChanged();
@@ -493,13 +495,64 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
     {
         mSuggest = suggest;
 
-        DailyPreference.getInstance(getActivity()).setStayOutboundSearchSuggest(mSuggest.toJsonString());
+        addSuggestDb(suggest);
     }
 
-    private void setSuggestByJson(JSONObject jsonObject)
+    private void setLastSuggestByDb()
     {
-        mSuggest = new Suggest(jsonObject);
-        DailyPreference.getInstance(getActivity()).setStayOutboundSearchSuggest(mSuggest.toJsonString());
+        DailyDb dailyDb = DailyDbHelper.getInstance().open(getActivity());
+
+        Suggest suggest = null;
+        Cursor cursor = null;
+
+        try
+        {
+            cursor = dailyDb.getStayObRecentlySuggestList(1);
+
+            if (cursor != null)
+            {
+                cursor.moveToFirst();
+
+                long id = cursor.getLong(cursor.getColumnIndex(StayObRecentlySuggestColumns._ID));
+                String name = cursor.getString(cursor.getColumnIndex(StayObRecentlySuggestColumns.NAME));
+                String city = cursor.getString(cursor.getColumnIndex(StayObRecentlySuggestColumns.CITY));
+                String country = cursor.getString(cursor.getColumnIndex(StayObRecentlySuggestColumns.COUNTRY));
+                String countryCode = cursor.getString(cursor.getColumnIndex(StayObRecentlySuggestColumns.COUNTRY_CODE));
+                String categoryKey = cursor.getString(cursor.getColumnIndex(StayObRecentlySuggestColumns.CATEGORY_KEY));
+                String display = cursor.getString(cursor.getColumnIndex(StayObRecentlySuggestColumns.DISPLAY));
+                double latitude = cursor.getDouble(cursor.getColumnIndex(StayObRecentlySuggestColumns.LATITUDE));
+                double longitude = cursor.getDouble(cursor.getColumnIndex(StayObRecentlySuggestColumns.LONGITUDE));
+
+                suggest = new Suggest(id, name, city, country, countryCode, categoryKey, display, latitude, longitude);
+            }
+
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+        } finally
+        {
+            try
+            {
+                cursor.close();
+            } catch (Exception e)
+            {
+            }
+        }
+
+        DailyDbHelper.getInstance().close();
+
+        mSuggest = suggest;
+    }
+
+    private void addSuggestDb(Suggest suggest)
+    {
+        DailyDb dailyDb = DailyDbHelper.getInstance().open(getActivity());
+
+        dailyDb.addStayObRecentlySuggest(suggest.id, suggest.name, suggest.city, suggest.country //
+            , suggest.countryCode, suggest.categoryKey, suggest.display, suggest.latitude //
+            , suggest.longitude, true);
+
+        DailyDbHelper.getInstance().close();
     }
 
     private void setKeyword(String keyword)
@@ -520,10 +573,10 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
         DailyPreference.getInstance(getActivity()).setStayOutboundSearchPeople(mPeople.toJsonString());
     }
 
-    private void setPeopleByJson(JSONObject jsonObject)
+    private void setLastPeopleByPreference()
     {
+        JSONObject jsonObject = DailyPreference.getInstance(getActivity()).getStayOutboundSearchPeople();
         mPeople = new People(jsonObject);
-        DailyPreference.getInstance(getActivity()).setStayOutboundSearchPeople(mPeople.toJsonString());
     }
 
     private void notifyStayBookDateTimeChanged()

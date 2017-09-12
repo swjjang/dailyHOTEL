@@ -441,10 +441,6 @@ public class BookingListAdapter extends RecyclerView.Adapter<BookingListAdapter.
                 @Override
                 public void run()
                 {
-<<<<<<< HEAD
-                    if (holder.dataBinding.getRoot().getBottom() < ((RecyclerView) holder.dataBinding.getRoot().getParent()).getBottom())
-                    {
-=======
                     if (holder.dataBinding == null || holder.dataBinding.getRoot() == null || holder.dataBinding.getRoot().getParent() == null)
                     {
                         return;
@@ -452,7 +448,7 @@ public class BookingListAdapter extends RecyclerView.Adapter<BookingListAdapter.
 
                     if (holder.dataBinding.getRoot().getBottom() < ((RecyclerView) holder.dataBinding.getRoot().getParent()).getBottom())
                     {
->>>>>>> release/release_v2010100
+
                         holder.dataBinding.bottomEmptyView.getLayoutParams().height += ((RecyclerView) holder.dataBinding.getRoot().getParent()).getBottom() - holder.dataBinding.getRoot().getBottom();
                         holder.dataBinding.bottomEmptyView.requestLayout();
                     }

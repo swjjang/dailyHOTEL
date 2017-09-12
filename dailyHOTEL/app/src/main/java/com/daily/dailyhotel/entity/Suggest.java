@@ -1,9 +1,6 @@
 package com.daily.dailyhotel.entity;
 
 import com.daily.base.util.DailyTextUtils;
-import com.daily.base.util.ExLog;
-
-import org.json.JSONObject;
 
 public class Suggest
 {
@@ -33,6 +30,20 @@ public class Suggest
         this.id = id;
         this.name = name;
         this.display = name;
+    }
+
+    public Suggest(long id, String name, String city, String country, String countryCode //
+        , String categoryKey, String display, double latitude, double longitude)
+    {
+        this.id = id;
+        this.name = name;
+        this.city = city;
+        this.country = country;
+        this.countryCode = countryCode;
+        this.categoryKey = categoryKey;
+        this.display = display;
+        this.latitude = latitude;
+        this.longitude = longitude;
     }
 
     public Suggest getClone()
@@ -75,60 +86,5 @@ public class Suggest
         suggest.longitude = longitude;
 
         return suggest;
-    }
-
-    public Suggest(JSONObject jsonObject)
-    {
-        if (jsonObject == null)
-        {
-            return;
-        }
-
-        try
-        {
-            this.id = jsonObject.getInt("id");
-            this.name = jsonObject.getString("name");
-            this.city = jsonObject.getString("city");
-            this.country = jsonObject.getString("country");
-            this.countryCode = jsonObject.getString("countryCode");
-            this.categoryKey = jsonObject.getString("categoryKey");
-            this.display = jsonObject.getString("display");
-            this.latitude = jsonObject.getDouble("latitude");
-            this.longitude = jsonObject.getDouble("longitude");
-        } catch (Exception e)
-        {
-            ExLog.e(e.toString());
-        }
-    }
-
-    private JSONObject getJsonObject() throws Exception
-    {
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("id", id);
-        jsonObject.put("name", name);
-        jsonObject.put("city", city);
-        jsonObject.put("country", country);
-        jsonObject.put("countryCode", countryCode);
-        jsonObject.put("categoryKey", categoryKey);
-        jsonObject.put("display", display);
-        jsonObject.put("latitude", latitude);
-        jsonObject.put("longitude", longitude);
-
-        return jsonObject;
-    }
-
-    public String toJsonString()
-    {
-        String jsonString;
-
-        try
-        {
-            jsonString = getJsonObject().toString();
-        } catch (Exception e)
-        {
-            jsonString = null;
-        }
-
-        return jsonString;
     }
 }
