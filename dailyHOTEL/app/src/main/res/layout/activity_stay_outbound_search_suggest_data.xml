@@ -57,7 +57,7 @@
         </RelativeLayout>
 
         <android.support.constraint.ConstraintLayout
-            android:id="@+id/recentlySearchesLayout"
+            android:id="@+id/recentlySuggestLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@id/toolbar"
@@ -66,7 +66,7 @@
             android:visibility="gone">
 
             <com.daily.base.widget.DailyTextView
-                android:id="@+id/recentlySearchesTitleView"
+                android:id="@+id/recentlySuggestTitleView"
                 android:layout_width="0dp"
                 android:layout_height="36dp"
                 android:layout_marginLeft="15dp"
@@ -80,13 +80,13 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <android.support.v7.widget.RecyclerView
-                android:id="@+id/recentlySearchesRecyclerView"
+                android:id="@+id/recentlySuggestRecyclerView"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/recentlySearchesTitleView"/>
+                app:layout_constraintTop_toTopOf="@+id/recentlySuggestTitleView"/>
 
         </android.support.constraint.ConstraintLayout>
 
