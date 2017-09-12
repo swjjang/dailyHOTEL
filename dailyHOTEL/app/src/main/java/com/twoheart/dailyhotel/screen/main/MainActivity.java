@@ -596,6 +596,8 @@ public class MainActivity extends BaseActivity implements Constants, BaseMenuNav
             }
         } else
         {
+            unLockUI();
+            
             mMainFragmentManager.select(false, mMainFragmentManager.getLastMainIndexFragment(), false, null);
         }
     }
