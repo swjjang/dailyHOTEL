@@ -262,7 +262,21 @@ public class StayOutboundRefundPresenter extends BaseExceptionPresenter<StayOutb
                                 }
                             }));
                         }
-                    }, null);
+                    }, new View.OnClickListener()
+                    {
+                        @Override
+                        public void onClick(View v)
+                        {
+                            unLockAll();
+                        }
+                    }, new DialogInterface.OnCancelListener()
+                    {
+                        @Override
+                        public void onCancel(DialogInterface dialog)
+                        {
+                            unLockAll();
+                        }
+                    }, null, true);
                 break;
 
             case PARTIAL:
@@ -317,7 +331,21 @@ public class StayOutboundRefundPresenter extends BaseExceptionPresenter<StayOutb
                                 }
                             }));
                         }
-                    }, null);
+                    }, new View.OnClickListener()
+                    {
+                        @Override
+                        public void onClick(View v)
+                        {
+                            unLockAll();
+                        }
+                    }, new DialogInterface.OnCancelListener()
+                    {
+                        @Override
+                        public void onCancel(DialogInterface dialog)
+                        {
+                            unLockAll();
+                        }
+                    }, null, true);
                 break;
         }
     }
