@@ -21,9 +21,11 @@ import com.twoheart.dailyhotel.R;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
@@ -159,8 +161,20 @@ public class StayOutboundSearchSuggestPresenter extends BaseExceptionPresenter<S
             return;
         }
 
-        Observable.just(getRecentlySuggestList()).subscribeOn(Schedulers.io()) //
-            .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<List<Suggest>>()
+        Observable.defer(new Callable<ObservableSource<List<Suggest>>>()
+        {
+            @Override
+            public ObservableSource<List<Suggest>> call() throws Exception
+            {
+                List<Suggest> list = getRecentlySuggestList();
+                if (list == null)
+                {
+                    list = new ArrayList<>();
+                }
+
+                return Observable.just(list);
+            }
+        }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<List<Suggest>>()
         {
             @Override
             public void accept(List<Suggest> suggests) throws Exception
