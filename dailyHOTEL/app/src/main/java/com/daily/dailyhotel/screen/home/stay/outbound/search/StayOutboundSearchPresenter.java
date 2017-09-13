@@ -60,6 +60,7 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
     private Suggest mSuggest;
     private String mKeyword;
     private People mPeople;
+    private boolean mIsSuggestChanged;
 
     private DailyDeepLink mDailyDeepLink;
 
@@ -241,7 +242,19 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
                                 DailyPreference.getInstance(getActivity()).setShowStayOutboundSearchCalendar(false);
                                 onCalendarClick();
                             }
+                        } else
+                        {
+                            if (isSuggestChanged() == false)
+                            {
+                                onBackClick();
+                            }
                         }
+                    }
+                } else
+                {
+                    if (isSuggestChanged() == false)
+                    {
+                        onBackClick();
                     }
                 }
                 break;
@@ -312,10 +325,14 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
                     onSearchKeyword();
                 } else
                 {
-
+                    if (isSuggestChanged() == false)
+                    {
+                        onSuggestClick();
+                    }
                 }
 
                 notifyStayBookDateTimeChanged();
+
 
                 screenUnLock();
             }, throwable -> onHandleErrorAndFinish(throwable)));
@@ -509,7 +526,7 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
         {
             cursor = dailyDb.getStayObRecentlySuggestList(1);
 
-            if (cursor != null)
+            if (cursor != null && cursor.getColumnCount() > 0)
             {
                 cursor.moveToFirst();
 
@@ -601,6 +618,8 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
     {
         if (mSuggest != null)
         {
+            setSuggestChanged(true);
+
             getViewInterface().setSuggest(mSuggest.display);
 
             if (mSuggest.id != 0)
@@ -708,5 +727,15 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
         }
 
         return false;
+    }
+
+    private boolean isSuggestChanged()
+    {
+        return mIsSuggestChanged;
+    }
+
+    private void setSuggestChanged(boolean isSuggestChanged)
+    {
+        mIsSuggestChanged = isSuggestChanged;
     }
 }
