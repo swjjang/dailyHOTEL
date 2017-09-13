@@ -1607,7 +1607,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
                         // 인증이 되어있지 않던가 기존에 인증이 되었는데 인증이 해지되었다.
                         if (Util.isValidatePhoneNumber(user.phone) == false || (user.verified == true && user.phoneVerified == false))
                         {
-                            startActivityForResult(EditProfilePhoneActivity.newInstance(getActivity(), Integer.toString(user.index)//
+                            startActivityForResult(EditProfilePhoneActivity.newInstance(getActivity()//
                                 , EditProfilePhoneActivity.Type.NEED_VERIFICATION_PHONENUMBER, user.phone)//
                                 , GourmetDetailActivity.REQUEST_CODE_PROFILE_UPDATE);
                         } else
@@ -1629,7 +1629,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
                                 , customer, user.birthday), GourmetDetailActivity.REQUEST_CODE_PROFILE_UPDATE);
                         } else if (Util.isValidatePhoneNumber(user.phone) == false)
                         {
-                            startActivityForResult(EditProfilePhoneActivity.newInstance(getActivity(), Integer.toString(user.index)//
+                            startActivityForResult(EditProfilePhoneActivity.newInstance(getActivity()//
                                 , EditProfilePhoneActivity.Type.WRONG_PHONENUMBER, user.phone)//
                                 , GourmetDetailActivity.REQUEST_CODE_PROFILE_UPDATE);
                         } else

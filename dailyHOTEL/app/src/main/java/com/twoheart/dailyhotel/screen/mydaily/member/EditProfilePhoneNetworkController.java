@@ -45,10 +45,9 @@ public class EditProfilePhoneNetworkController extends BaseNetworkController
         DailyMobileAPI.getInstance(mContext).requestDailyUserUpdatePhoneNumber(mNetworkTag, phoneNumber.replaceAll("-", ""), code, mDailyUserUpdateVerificationPhoneNumberCallback);
     }
 
-    public void requestUpdateSocialUserInformation(String userIndex, String phoneNumber)
+    public void requestUpdateSocialUserInformation(String phoneNumber)
     {
         Map<String, String> params = new HashMap<>();
-        params.put("user_idx", userIndex);
         params.put("user_phone", phoneNumber.replaceAll("-", ""));
 
         DailyMobileAPI.getInstance(mContext).requestUserUpdateInformationForSocial(mNetworkTag, params, mUserUpdateSocialCallback);

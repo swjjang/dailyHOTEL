@@ -36,10 +36,9 @@ public class AddProfileSocialNetworkController extends BaseNetworkController
         DailyMobileAPI.getInstance(mContext).requestUserProfile(mNetworkTag, mUserProfileCallback);
     }
 
-    public void requestUpdateSocialUserInformation(String userIndex, String phoneNumber, String email, String name, String recommender, String birthday, boolean isBenefit)
+    public void requestUpdateSocialUserInformation(String phoneNumber, String email, String name, String recommender, String birthday, boolean isBenefit)
     {
         Map<String, String> params = new HashMap<>();
-        params.put("user_idx", userIndex);
 
         if (DailyTextUtils.isTextEmpty(email) == false)
         {
@@ -67,12 +66,6 @@ public class AddProfileSocialNetworkController extends BaseNetworkController
         }
 
         params.put("isAgreedBenefit", isBenefit == true ? "true" : "false");
-
-        if (DailyTextUtils.isTextEmpty(name) == true)
-        {
-            Crashlytics.log("AddProfileSocialNetworkController::requestUpdateSocialUserInformation :: name="//
-                + name + " , userIndex=" + userIndex + " , user_email=" + email);
-        }
 
         DailyMobileAPI.getInstance(mContext).requestUserUpdateInformationForSocial(mNetworkTag, params, mUserUpdateFacebookCallback);
     }

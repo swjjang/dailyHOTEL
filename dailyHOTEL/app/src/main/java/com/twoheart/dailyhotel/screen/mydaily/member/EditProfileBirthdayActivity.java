@@ -47,17 +47,14 @@ import retrofit2.Response;
 
 public class EditProfileBirthdayActivity extends BaseActivity implements OnClickListener, View.OnFocusChangeListener
 {
-    private static final String INTENT_EXTRA_DATA_USERINDEX = "userIndex";
     private static final String INTENT_EXTRA_DATA_BIRTHDAY = "birthday";
 
     DailyEditText mBirthdayEditText;
     View mConfirmView, mBirthdayView;
-    private String mUserIndex;
 
-    public static Intent newInstance(Context context, String userIndex, String birthday)
+    public static Intent newInstance(Context context, String birthday)
     {
         Intent intent = new Intent(context, EditProfileBirthdayActivity.class);
-        intent.putExtra(INTENT_EXTRA_DATA_USERINDEX, userIndex);
         intent.putExtra(INTENT_EXTRA_DATA_BIRTHDAY, birthday);
 
         return intent;
@@ -73,7 +70,6 @@ public class EditProfileBirthdayActivity extends BaseActivity implements OnClick
         setContentView(R.layout.activity_edit_birthday);
 
         Intent intent = getIntent();
-        mUserIndex = intent.getStringExtra(INTENT_EXTRA_DATA_USERINDEX);
         String birthday = intent.getStringExtra(INTENT_EXTRA_DATA_BIRTHDAY);
 
         initToolbar();
@@ -211,7 +207,6 @@ public class EditProfileBirthdayActivity extends BaseActivity implements OnClick
                 } else
                 {
                     Map<String, String> params = new HashMap<>();
-                    params.put("user_idx", mUserIndex);
                     params.put("birthday", birthday);
 
                     DailyMobileAPI.getInstance(this).requestUserUpdateInformationForSocial(mNetworkTag, params, mSocialUserUpdateCallback);
