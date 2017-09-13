@@ -982,13 +982,8 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
         }
     }
 
-    public void deleteStayObRecentlySuggest(long _id)
+    public void deleteAllStayObRecentlySuggest()
     {
-        if (_id <= 0)
-        {
-            return;
-        }
-
         SQLiteDatabase db = getDb();
         if (db == null)
         {
@@ -999,8 +994,7 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
         try
         {
             db.beginTransaction();
-            db.delete(T_STAY_OB_RECENTLY_SUGGEST, StayObRecentlySuggestColumns._ID + " = " + _id //
-                + "'", null);
+            db.delete(T_STAY_OB_RECENTLY_SUGGEST, null, null);
             db.setTransactionSuccessful();
         } catch (Exception e)
         {

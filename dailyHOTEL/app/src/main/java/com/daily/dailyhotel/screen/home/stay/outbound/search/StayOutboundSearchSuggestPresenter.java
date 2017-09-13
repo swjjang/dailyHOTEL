@@ -287,13 +287,40 @@ public class StayOutboundSearchSuggestPresenter extends BaseExceptionPresenter<S
     @Override
     public void onRecentlySuggestClick(Suggest suggest)
     {
+        if (suggest == null)
+        {
+            return;
+        }
 
+        if (lock() == true)
+        {
+            return;
+        }
+
+        Intent intent = new Intent();
+        intent.putExtra(StayOutboundSearchSuggestActivity.INTENT_EXTRA_DATA_SUGGEST, new SuggestParcel(suggest));
+        intent.putExtra(StayOutboundSearchSuggestActivity.INTENT_EXTRA_DATA_KEYWORD, mKeyword);
+
+        setResult(Activity.RESULT_OK, intent);
+        onBackClick();
     }
 
     @Override
     public void onDeleteAllRecentlySuggest()
     {
+        getViewInterface().setRecentlySuggests(null);
 
+        DailyDb dailyDb = DailyDbHelper.getInstance().open(getActivity());
+
+        try
+        {
+            dailyDb.deleteAllStayObRecentlySuggest();
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+        }
+
+        DailyDbHelper.getInstance().close();
     }
 
     private void onSuggestList(List<Suggest> suggestList)
