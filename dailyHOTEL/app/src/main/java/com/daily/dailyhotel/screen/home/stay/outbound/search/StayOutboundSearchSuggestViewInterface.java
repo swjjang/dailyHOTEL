@@ -20,4 +20,6 @@ public interface StayOutboundSearchSuggestViewInterface extends BaseDialogViewIn
     void setEmptySuggestsVisible(boolean visible);
 
     void setProgressBarVisible(boolean visible);
+
+    void setRecentlySuggests(List<Suggest> suggestList);
 }

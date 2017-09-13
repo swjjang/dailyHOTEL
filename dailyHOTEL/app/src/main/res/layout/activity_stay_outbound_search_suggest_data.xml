@@ -61,8 +61,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@id/toolbar"
-            android:paddingBottom="10dp"
-            android:paddingTop="10dp"
             android:visibility="gone">
 
             <com.daily.base.widget.DailyTextView
@@ -71,6 +69,7 @@
                 android:layout_height="36dp"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
+                android:layout_marginTop="10dp"
                 android:gravity="center_vertical"
                 android:text="@string/label_search_recentsearches"
                 android:textColor="@color/default_text_cc5c5c5"
@@ -83,10 +82,34 @@
                 android:id="@+id/recentlySuggestRecyclerView"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                app:layout_constraintBottom_toBottomOf="parent"
+                android:background="@color/white"
+                app:layout_constraintBottom_toTopOf="@+id/deleteRecentlySuggestLayout"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/recentlySuggestTitleView"/>
+                app:layout_constraintTop_toBottomOf="@+id/recentlySuggestTitleView" />
+
+            <FrameLayout
+                android:id="@+id/deleteRecentlySuggestLayout"
+                android:layout_width="0dp"
+                android:layout_height="41dp"
+                android:background="@color/white"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent">
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:background="@color/default_line_ce7e7e7" />
+
+                <com.daily.base.widget.DailyTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text="@string/label_search_deleteall" />
+            </FrameLayout>
 
         </android.support.constraint.ConstraintLayout>
 
@@ -95,6 +118,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@id/toolbar"
+            android:background="@color/white"
             android:visibility="gone" />
 
         <ScrollView
@@ -102,6 +126,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@+id/toolbar"
+            android:background="@color/white"
             android:fillViewport="true"
             android:visibility="gone">
 
