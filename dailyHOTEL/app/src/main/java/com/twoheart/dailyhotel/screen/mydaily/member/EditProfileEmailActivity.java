@@ -34,16 +34,12 @@ import retrofit2.Response;
 
 public class EditProfileEmailActivity extends BaseActivity implements OnClickListener, View.OnFocusChangeListener
 {
-    private static final String INTENT_EXTRA_DATA_USERINDEX = "userIndex";
-
     DailyAutoCompleteEditText mEmailEditText;
     View mConfirmView, mEmailView;
-    private String mUserIndex;
 
-    public static Intent newInstance(Context context, String userIndex)
+    public static Intent newInstance(Context context)
     {
         Intent intent = new Intent(context, EditProfileEmailActivity.class);
-        intent.putExtra(INTENT_EXTRA_DATA_USERINDEX, userIndex);
 
         return intent;
     }
@@ -56,9 +52,6 @@ public class EditProfileEmailActivity extends BaseActivity implements OnClickLis
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_edit_email);
-
-        Intent intent = getIntent();
-        mUserIndex = intent.getStringExtra(INTENT_EXTRA_DATA_USERINDEX);
 
         initToolbar();
         initLayout();
@@ -177,7 +170,6 @@ public class EditProfileEmailActivity extends BaseActivity implements OnClickLis
                 lockUI();
 
                 Map<String, String> params = new HashMap<>();
-                params.put("user_idx", mUserIndex);
                 params.put("user_email", email);
 
                 DailyMobileAPI.getInstance(this).requestUserUpdateInformationForSocial(mNetworkTag, params, mSocialUserUpdateCallback);

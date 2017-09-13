@@ -28,6 +28,7 @@ import com.daily.base.util.ExLog;
 import com.twoheart.dailyhotel.LauncherActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
+import com.twoheart.dailyhotel.util.DailyRemoteConfigPreference;
 
 import java.util.Iterator;
 import java.util.Map;
@@ -747,6 +748,14 @@ public class AdjustManager extends BaseAnalyticsManager
     void startApplication()
     {
         DailyAdjustEvent event = new DailyAdjustEvent(EventToken.LAUNCH);
+
+        String rankTestName = DailyRemoteConfigPreference.getInstance(mContext).getKeyRemoteConfigStayRankTestName();
+
+        if (DailyTextUtils.isTextEmpty(rankTestName) == false)
+        {
+            event.addPartnerParameter(Key.TEST_TYPE, rankTestName);
+        }
+
         Adjust.trackEvent(event);
     }
 
@@ -1411,6 +1420,7 @@ public class AdjustManager extends BaseAnalyticsManager
         public static final String RECENTVIEW_LIST_PLACE_INDEXES = "recentview_lists"; // 위시리스트내 담은 업장 개수
         public static final String NUMBER_OF_WISH_LISTS = "number_of_wish_lists"; // 위시리스트내 담은 업장(최근 5개)
         public static final String NUMBER_OF_RECENTVIEWS = "number_of_recentviews"; // 최근 본 업장 개수
+        public static final String TEST_TYPE = "test_type"; // 최근 본 업장 개수
     }
 
     private static final class UserType

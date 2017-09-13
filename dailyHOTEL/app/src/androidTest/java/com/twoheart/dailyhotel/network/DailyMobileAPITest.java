@@ -1083,7 +1083,6 @@ public class DailyMobileAPITest
         };
 
         Map<String, String> params = new HashMap<>();
-        params.put("user_idx", Crypto.getUrlDecoderEx(Const.TEST_FACEBOOK_USER_INDEX));
         params.put("user_email", Crypto.getUrlDecoderEx(Const.TEST_FACEBOOK_USER_EMAIL));
         params.put("user_name", Crypto.getUrlDecoderEx(Const.TEST_FACEBOOK_USER_NAME));
         params.put("birthday", Const.TEST_USER_BIRTHDAY);

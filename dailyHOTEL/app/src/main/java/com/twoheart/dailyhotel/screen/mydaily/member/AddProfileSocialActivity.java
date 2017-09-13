@@ -39,7 +39,6 @@ public class AddProfileSocialActivity extends BaseActivity
     private static final int REQUEST_CODE_COUNTRYCODE_LIST_ACTIVITY = 1;
     private static final int REQUEST_CODE_ACTIVITY = 100;
 
-    String mUserIdx;
     String mCountryCode;
 
     Customer mCustomer;
@@ -112,8 +111,6 @@ public class AddProfileSocialActivity extends BaseActivity
         {
             ExLog.d(e.toString());
         }
-
-        mUserIdx = customer.getUserIdx();
 
         if (Util.isValidatePhoneNumber(customer.getPhone()) == false)
         {
@@ -471,7 +468,7 @@ public class AddProfileSocialActivity extends BaseActivity
                 return;
             }
 
-            mAddProfileSocialNetworkController.requestUpdateSocialUserInformation(mUserIdx, phoneNumber, email, name, recommender, birthday, isBenefit);
+            mAddProfileSocialNetworkController.requestUpdateSocialUserInformation(phoneNumber, email, name, recommender, birthday, isBenefit);
         }
 
         @Override

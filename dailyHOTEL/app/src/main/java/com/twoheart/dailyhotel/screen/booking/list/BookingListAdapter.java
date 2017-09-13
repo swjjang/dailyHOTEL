@@ -448,7 +448,6 @@ public class BookingListAdapter extends RecyclerView.Adapter<BookingListAdapter.
 
                     if (holder.dataBinding.getRoot().getBottom() < ((RecyclerView) holder.dataBinding.getRoot().getParent()).getBottom())
                     {
-
                         holder.dataBinding.bottomEmptyView.getLayoutParams().height += ((RecyclerView) holder.dataBinding.getRoot().getParent()).getBottom() - holder.dataBinding.getRoot().getBottom();
                         holder.dataBinding.bottomEmptyView.requestLayout();
                     }

@@ -44,7 +44,7 @@ public class ProfileActivity extends BaseActivity
 
     ProfileLayout mProfileLayout;
     ProfileNetworkController mNetworkController;
-    String mUserIndex, mUserEmail;
+    String mUserEmail;
     private DailyDeepLink mDailyDeepLink;
 
     public static Intent newInstance(Context context, String deepLink)
@@ -258,7 +258,7 @@ public class ProfileActivity extends BaseActivity
                 return;
             }
 
-            Intent intent = EditProfileEmailActivity.newInstance(ProfileActivity.this, mUserIndex);
+            Intent intent = EditProfileEmailActivity.newInstance(ProfileActivity.this);
             startActivityForResult(intent, REQUEST_CODE_EDIT_PROFILE);
         }
 
@@ -270,7 +270,7 @@ public class ProfileActivity extends BaseActivity
                 return;
             }
 
-            Intent intent = EditProfileNameActivity.newInstance(ProfileActivity.this, mUserIndex, name);
+            Intent intent = EditProfileNameActivity.newInstance(ProfileActivity.this, name);
             startActivityForResult(intent, REQUEST_CODE_EDIT_PROFILE);
         }
 
@@ -282,7 +282,7 @@ public class ProfileActivity extends BaseActivity
                 return;
             }
 
-            Intent intent = EditProfilePhoneActivity.newInstance(ProfileActivity.this, mUserIndex, EditProfilePhoneActivity.Type.EDIT_PROFILE, phoneNumber);
+            Intent intent = EditProfilePhoneActivity.newInstance(ProfileActivity.this, EditProfilePhoneActivity.Type.EDIT_PROFILE, phoneNumber);
             startActivityForResult(intent, REQUEST_CODE_EDIT_PROFILE);
         }
 
@@ -306,7 +306,7 @@ public class ProfileActivity extends BaseActivity
                 return;
             }
 
-            Intent intent = EditProfileBirthdayActivity.newInstance(ProfileActivity.this, mUserIndex, birthday);
+            Intent intent = EditProfileBirthdayActivity.newInstance(ProfileActivity.this, birthday);
             startActivityForResult(intent, REQUEST_CODE_EDIT_PROFILE_BIRTHDAY);
         }
 
@@ -398,7 +398,6 @@ public class ProfileActivity extends BaseActivity
         public void onUserProfile(String userIndex, String email, String name, String phoneNumber, String birthday//
             , String referralCode, boolean isVerified, boolean isPhoneVerified, String verifiedDate)
         {
-            mUserIndex = userIndex;
             mUserEmail = email;
             String userType = DailyUserPreference.getInstance(ProfileActivity.this).getType();
 

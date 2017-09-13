@@ -494,7 +494,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
 
     protected void moveToUpdateUserPhoneNumber(Customer user, EditProfilePhoneActivity.Type type, String phoneNumber)
     {
-        Intent intent = EditProfilePhoneActivity.newInstance(this, user.getUserIdx(), type, phoneNumber);
+        Intent intent = EditProfilePhoneActivity.newInstance(this, type, phoneNumber);
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_USERINFO_UPDATE);
     }
 

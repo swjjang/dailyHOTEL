@@ -839,6 +839,8 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
                             , false, booking.placeIndex, 0, false, false, false);
                         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL);
 
+                        getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
+
                         AnalyticsManager.getInstance(getContext()).recordEvent(AnalyticsManager.Category.BOOKING_STATUS//
                             , AnalyticsManager.Action.RE_RESERVATION, "stay_" + booking.placeIndex, null);
                         break;
@@ -858,6 +860,8 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
 
                         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMET_DETAIL);
 
+                        getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
+
                         AnalyticsManager.getInstance(getContext()).recordEvent(AnalyticsManager.Category.BOOKING_STATUS//
                             , AnalyticsManager.Action.RE_RESERVATION, "gourmet_" + booking.placeIndex, null);
                         break;
@@ -874,6 +878,8 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
                             , stayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
                             , stayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
                             , 2, null, false, StayOutboundDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_NONE, null), CODE_REQUEST_ACTIVITY_STAY_OB_DETAIL);
+
+                        getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
 
                         AnalyticsManager.getInstance(getContext()).recordEvent(AnalyticsManager.Category.BOOKING_STATUS//
                             , AnalyticsManager.Action.RE_RESERVATION, "ob_" + booking.placeIndex, null);

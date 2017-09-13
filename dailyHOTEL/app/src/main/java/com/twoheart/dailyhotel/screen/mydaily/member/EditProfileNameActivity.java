@@ -37,17 +37,14 @@ import retrofit2.Response;
 
 public class EditProfileNameActivity extends BaseActivity implements OnClickListener, View.OnFocusChangeListener
 {
-    private static final String INTENT_EXTRA_DATA_USERINDEX = "userIndex";
     private static final String INTENT_EXTRA_DATA_NAME = "name";
 
     DailyEditText mNameEditText;
     View mConfirmView, mNameView;
-    private String mUserIndex;
 
-    public static Intent newInstance(Context context, String userIndex, String name)
+    public static Intent newInstance(Context context, String name)
     {
         Intent intent = new Intent(context, EditProfileNameActivity.class);
-        intent.putExtra(INTENT_EXTRA_DATA_USERINDEX, userIndex);
         intent.putExtra(INTENT_EXTRA_DATA_NAME, name);
 
         return intent;
@@ -63,7 +60,6 @@ public class EditProfileNameActivity extends BaseActivity implements OnClickList
         setContentView(R.layout.activity_edit_name);
 
         Intent intent = getIntent();
-        mUserIndex = intent.getStringExtra(INTENT_EXTRA_DATA_USERINDEX);
         String name = intent.getStringExtra(INTENT_EXTRA_DATA_NAME);
 
         initToolbar();
@@ -195,14 +191,7 @@ public class EditProfileNameActivity extends BaseActivity implements OnClickList
                 } else
                 {
                     Map<String, String> params = new HashMap<>();
-                    params.put("user_idx", mUserIndex);
                     params.put("user_name", name);
-
-                    if (DailyTextUtils.isTextEmpty(name) == true)
-                    {
-                        Crashlytics.log("EditProfileNameActivity :: requestUserUpdateInformationForSocial :: name="//
-                            + name + " , userIndex=" + mUserIndex);
-                    }
 
                     DailyMobileAPI.getInstance(this).requestUserUpdateInformationForSocial(mNetworkTag, params, mSocialUserUpdateCallback);
                 }

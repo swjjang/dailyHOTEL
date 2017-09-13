@@ -24,14 +24,12 @@ public class EditProfilePhoneActivity extends BaseActivity
 {
     private static final int REQUEST_CODE_COUNTRYCODE_LIST_ACTIVITY = 1;
 
-    private static final String INTENT_EXTRA_DATA_USERINDEX = "userIndex";
     private static final String INTENT_EXTRA_DATA_TYPE = "type";
     private static final String INTENT_EXTRA_DATA_PHONENUMBER = "phoneNumber";
 
     EditProfilePhoneLayout mEditProfilePhoneLayout;
     EditProfilePhoneNetworkController mNetworkController;
     String mCountryCode;
-    String mUserIndex; // 소셜 계정인 경우에는 userIndex, 일반 계정인 경우에는 이름이 넘어온다
     int mRequestVerificationCount;
 
     public enum Type
@@ -47,10 +45,9 @@ public class EditProfilePhoneActivity extends BaseActivity
      * @param type
      * @return
      */
-    public static Intent newInstance(Context context, String userIndex, Type type, String phoneNumber)
+    public static Intent newInstance(Context context, Type type, String phoneNumber)
     {
         Intent intent = new Intent(context, EditProfilePhoneActivity.class);
-        intent.putExtra(INTENT_EXTRA_DATA_USERINDEX, userIndex);
         intent.putExtra(INTENT_EXTRA_DATA_TYPE, type.name());
 
         if (DailyTextUtils.isTextEmpty(phoneNumber) == false)
@@ -74,7 +71,6 @@ public class EditProfilePhoneActivity extends BaseActivity
         setContentView(mEditProfilePhoneLayout.onCreateView(R.layout.activity_edit_phone));
 
         Intent intent = getIntent();
-        mUserIndex = intent.getStringExtra(INTENT_EXTRA_DATA_USERINDEX);
 
         Type type;
 
@@ -82,12 +78,6 @@ public class EditProfilePhoneActivity extends BaseActivity
         {
             type = Type.valueOf(intent.getStringExtra(INTENT_EXTRA_DATA_TYPE));
         } catch (Exception e)
-        {
-            Util.restartApp(this);
-            return;
-        }
-
-        if (DailyTextUtils.isTextEmpty(mUserIndex) == true)
         {
             Util.restartApp(this);
             return;
@@ -228,7 +218,7 @@ public class EditProfilePhoneActivity extends BaseActivity
                 finish();
             } else
             {
-                mNetworkController.requestUpdateSocialUserInformation(mUserIndex, phoneNumber);
+                mNetworkController.requestUpdateSocialUserInformation(phoneNumber);
             }
         }
 
