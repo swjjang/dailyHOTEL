@@ -311,6 +311,7 @@ public class StayOutboundSearchSuggestView extends BaseDialogView<StayOutboundSe
             case R.id.deleteImageView:
                 setSuggest(null);
                 setSuggests(null);
+                setSuggestsVisible(false);
                 break;
         }
     }

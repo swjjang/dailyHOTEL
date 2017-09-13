@@ -253,8 +253,6 @@ public class StayOutboundSearchSuggestPresenter extends BaseExceptionPresenter<S
 
         if (DailyTextUtils.isTextEmpty(keyword) == true)
         {
-            getViewInterface().setSuggestsVisible(false);
-
             onSuggestList(null);
         } else
         {
@@ -330,7 +328,9 @@ public class StayOutboundSearchSuggestPresenter extends BaseExceptionPresenter<S
         if (suggestList == null || suggestList.size() == 0)
         {
             getViewInterface().setSuggestsVisible(false);
-            getViewInterface().setEmptySuggestsVisible(true);
+
+            boolean isShowEmpty = DailyTextUtils.isTextEmpty(mKeyword) == false;
+            getViewInterface().setEmptySuggestsVisible(isShowEmpty);
 
             mAnalytics.onEventSuggestEmpty(getActivity(), mKeyword);
         } else
