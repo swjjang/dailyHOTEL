@@ -316,7 +316,28 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
                     setStayBookDefaultDateTime(commonDateTime);
                 } else
                 {
-                    setStayBookDateTime(checkInDate, 0, checkOutDate, 0);
+                    long currentTime;
+                    long checkInTime;
+
+                    try
+                    {
+                        currentTime = DailyCalendar.convertDate(commonDateTime.currentDateTime, DailyCalendar.ISO_8601_FORMAT).getTime();
+                        checkInTime = DailyCalendar.convertDate(checkInDate, DailyCalendar.ISO_8601_FORMAT).getTime();
+                    } catch (Exception e)
+                    {
+                        ExLog.d(e.toString());
+
+                        currentTime = 0;
+                        checkInTime = -1;
+                    }
+
+                    if (currentTime > checkInTime)
+                    {
+                        setStayBookDefaultDateTime(commonDateTime);
+                    } else
+                    {
+                        setStayBookDateTime(checkInDate, 0, checkOutDate, 0);
+                    }
                 }
 
                 if (mDailyDeepLink != null && processDeepLink(mDailyDeepLink, commonDateTime) == true)
