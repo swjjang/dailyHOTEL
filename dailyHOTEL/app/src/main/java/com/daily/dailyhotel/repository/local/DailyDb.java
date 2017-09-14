@@ -15,8 +15,8 @@ import com.daily.dailyhotel.entity.CarouselListItem;
 import com.daily.dailyhotel.entity.ImageMap;
 import com.daily.dailyhotel.entity.RecentlyPlace;
 import com.daily.dailyhotel.entity.StayOutbound;
+import com.daily.dailyhotel.repository.local.model.RecentlyDbPlace;
 import com.daily.dailyhotel.repository.local.model.RecentlyList;
-import com.daily.dailyhotel.repository.local.model.RecentlyRealmObject;
 import com.daily.dailyhotel.util.RecentlyPlaceUtil;
 import com.twoheart.dailyhotel.model.Gourmet;
 import com.twoheart.dailyhotel.model.Stay;
@@ -344,7 +344,7 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
         if (list == null || list.size() == 0)
         {
             // realm db 에도 결과가 없으면  migration 되었다고 판단함
-            ArrayList<RecentlyRealmObject> realmResultList = RecentlyPlaceUtil.getRealmRecentlyTypeList((Constants.ServiceType[]) null);
+            ArrayList<RecentlyDbPlace> realmResultList = RecentlyPlaceUtil.getRealmRecentlyTypeList((Constants.ServiceType[]) null);
             return realmResultList == null || realmResultList.size() == 0;
         }
 
@@ -395,7 +395,7 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
                     continue;
                 }
 
-                RecentlyRealmObject oldRecentlyPlace = RecentlyPlaceUtil.getRecentlyPlace(serviceType, index);
+                RecentlyDbPlace oldRecentlyPlace = RecentlyPlaceUtil.getRecentlyPlace(serviceType, index);
 
                 long oldSavingTime = -1;
                 if (oldRecentlyPlace != null)

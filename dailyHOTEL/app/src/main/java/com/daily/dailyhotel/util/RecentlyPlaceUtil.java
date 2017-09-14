@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.os.Build;
 import android.support.annotation.Nullable;
 
+import com.crashlytics.android.Crashlytics;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.entity.CarouselListItem;
@@ -335,11 +336,11 @@ public class RecentlyPlaceUtil
     }
 
     @Nullable
-    public static ArrayList<RecentlyRealmObject> getRealmRecentlyTypeList(Constants.ServiceType... serviceTypes)
+    public static ArrayList<RecentlyDbPlace> getRealmRecentlyTypeList(Constants.ServiceType... serviceTypes)
     {
         Realm realm = Realm.getDefaultInstance();
 
-        ArrayList<RecentlyRealmObject> result = new ArrayList<>();
+        ArrayList<RecentlyDbPlace> resultList = new ArrayList<>();
 
         try
         {
@@ -372,19 +373,47 @@ public class RecentlyPlaceUtil
 
             if (realmResults != null && realmResults.size() > 0)
             {
-                result.addAll(realmResults);
+                for (RecentlyRealmObject realmObject : realmResults)
+                {
+                    Constants.ServiceType serviceType;
+                    try
+                    {
+                        serviceType = Constants.ServiceType.valueOf(realmObject.serviceType);
+                    } catch (Exception e)
+                    {
+                        continue;
+                    }
+
+                    RecentlyDbPlace dbPlace = new RecentlyDbPlace();
+                    dbPlace.index = realmObject.index;
+                    dbPlace.serviceType = serviceType;
+                    dbPlace.savingTime = realmObject.savingTime;
+                    dbPlace.name = realmObject.name;
+                    dbPlace.englishName = realmObject.englishName;
+                    dbPlace.imageUrl = realmObject.imageUrl;
+
+                    resultList.add(dbPlace);
+                }
             }
 
         } catch (Exception e)
         {
             ExLog.w(e.toString());
+            Crashlytics.logException(new Exception("realm DB parsing fail : change data - list", e));
         } finally
         {
             ExLog.d("realm close");
-            realm.close();
+            try
+            {
+                realm.close();
+            } catch (Exception e)
+            {
+                ExLog.w(e.toString());
+                Crashlytics.logException(new Exception("realm DB closing fail - list", e));
+            }
         }
 
-        return result;
+        return resultList;
     }
 
     public static long getOldestSavingTime(Constants.ServiceType... serviceTypes)
@@ -428,19 +457,28 @@ public class RecentlyPlaceUtil
         } catch (Exception e)
         {
             ExLog.w(e.toString());
+            Crashlytics.logException(new Exception("realm DB parsing fail : change data - time", e));
         } finally
         {
             ExLog.d("realm close");
-            realm.close();
+
+            try
+            {
+                realm.close();
+            } catch (Exception e)
+            {
+                ExLog.w(e.toString());
+                Crashlytics.logException(new Exception("realm DB closing fail - time", e));
+            }
         }
 
         return savingTime;
     }
 
-    public static RecentlyRealmObject getRecentlyPlace(Constants.ServiceType serviceType, int index)
+    public static RecentlyDbPlace getRecentlyPlace(Constants.ServiceType serviceType, int index)
     {
         Realm realm = Realm.getDefaultInstance();
-        RecentlyRealmObject realmObject = null;
+        RecentlyDbPlace dbPlace = null;
 
         try
         {
@@ -456,17 +494,39 @@ public class RecentlyPlaceUtil
                 return null;
             }
 
-            realmObject = realmResults.get(0);
+            RecentlyRealmObject realmObject = realmResults.get(0);
+            if (realmObject == null)
+            {
+                return null;
+            }
+
+            dbPlace = new RecentlyDbPlace();
+            dbPlace.index = realmObject.index;
+            dbPlace.serviceType = serviceType;
+            dbPlace.savingTime = realmObject.savingTime;
+            dbPlace.name = realmObject.name;
+            dbPlace.englishName = realmObject.englishName;
+            dbPlace.imageUrl = realmObject.imageUrl;
+
         } catch (Exception e)
         {
             ExLog.w(e.toString());
+            Crashlytics.logException(new Exception("realm DB parsing fail : change data - place", e));
         } finally
         {
             ExLog.d("realm close");
-            realm.close();
+
+            try
+            {
+                realm.close();
+            } catch (Exception e)
+            {
+                ExLog.w(e.toString());
+                Crashlytics.logException(new Exception("realm DB closing fail - place", e));
+            }
         }
 
-        return realmObject;
+        return dbPlace;
     }
 
     public static String getDbTargetIndices(Context context, Constants.ServiceType serviceType, int maxSize)
@@ -530,7 +590,7 @@ public class RecentlyPlaceUtil
 
     public static String getRealmTargetIndices(Constants.ServiceType serviceType, int maxSize)
     {
-        ArrayList<RecentlyRealmObject> recentlyList = RecentlyPlaceUtil.getRealmRecentlyTypeList(serviceType);
+        ArrayList<RecentlyDbPlace> recentlyList = RecentlyPlaceUtil.getRealmRecentlyTypeList(serviceType);
 
         if (recentlyList == null || recentlyList.size() == 0 || maxSize <= 0)
         {
@@ -546,14 +606,14 @@ public class RecentlyPlaceUtil
 
         for (int i = 0; i < maxSize; i++)
         {
-            RecentlyRealmObject realmObject = recentlyList.get(i);
+            RecentlyDbPlace place = recentlyList.get(i);
 
             if (i != 0)
             {
                 builder.append(RECENT_PLACE_DELIMITER);
             }
 
-            builder.append(realmObject.index);
+            builder.append(place.index);
         }
 
         return builder.toString();
@@ -615,7 +675,7 @@ public class RecentlyPlaceUtil
 
     public static ArrayList<Integer> getRealmRecentlyIndexList(Constants.ServiceType... serviceTypes)
     {
-        ArrayList<RecentlyRealmObject> recentlyList = RecentlyPlaceUtil.getRealmRecentlyTypeList(serviceTypes);
+        ArrayList<RecentlyDbPlace> recentlyList = RecentlyPlaceUtil.getRealmRecentlyTypeList(serviceTypes);
 
         if (recentlyList == null || recentlyList.size() == 0)
         {
@@ -623,9 +683,9 @@ public class RecentlyPlaceUtil
         }
 
         ArrayList<Integer> indexList = new ArrayList<>();
-        for (RecentlyRealmObject realmObject : recentlyList)
+        for (RecentlyDbPlace place : recentlyList)
         {
-            indexList.add(realmObject.index);
+            indexList.add(place.index);
         }
 
         return indexList;
@@ -697,7 +757,7 @@ public class RecentlyPlaceUtil
 
         if (useRealm == true)
         {
-            ArrayList<RecentlyRealmObject> results = RecentlyPlaceUtil.getRealmRecentlyTypeList(serviceTypes);
+            ArrayList<RecentlyDbPlace> results = RecentlyPlaceUtil.getRealmRecentlyTypeList(serviceTypes);
             if (results != null && results.size() > 0)
             {
                 if (recentlyTypeList == null)
@@ -705,16 +765,9 @@ public class RecentlyPlaceUtil
                     recentlyTypeList = new ArrayList<>();
                 }
 
-                for (RecentlyRealmObject object : results)
+                for (RecentlyDbPlace place : results)
                 {
-                    RecentlyDbPlace recentlyDbPlace = new RecentlyDbPlace();
-                    recentlyDbPlace.index = object.index;
-                    recentlyDbPlace.name = object.name;
-                    recentlyDbPlace.englishName = object.englishName;
-                    recentlyDbPlace.serviceType = object.serviceType == null ? null : Constants.ServiceType.valueOf(object.serviceType);
-                    recentlyDbPlace.savingTime = object.savingTime;
-                    recentlyDbPlace.imageUrl = object.imageUrl;
-                    recentlyTypeList.add(recentlyDbPlace);
+                    recentlyTypeList.add(place);
                 }
             }
         }

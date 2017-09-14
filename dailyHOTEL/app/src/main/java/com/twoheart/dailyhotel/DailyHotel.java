@@ -361,6 +361,19 @@ public class DailyHotel extends android.support.multidex.MultiDexApplication imp
         public void onActivityDestroyed(Activity activity)
         {
             AnalyticsManager.getInstance(activity).onActivityDestroyed(activity);
+
+//            try
+//            {
+//                Realm realm = Realm.getDefaultInstance();
+//                while (realm != null && realm.isClosed() == false)
+//                {
+//                    realm.close();
+//                }
+//
+//            } catch (Exception e)
+//            {
+//                ExLog.e(e.toString());
+//            }
         }
     }
 }
