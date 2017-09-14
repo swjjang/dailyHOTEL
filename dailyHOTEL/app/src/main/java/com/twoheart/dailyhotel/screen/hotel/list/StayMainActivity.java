@@ -64,6 +64,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
 
@@ -1155,7 +1156,7 @@ public class StayMainActivity extends PlaceMainActivity
                     if (mViewType == ViewType.LIST)
                     {
                         AnalyticsManager.getInstance(StayMainActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
-                            , AnalyticsManager.Action.STAY_ITEM_CLICK, Integer.toString(stay.index), null);
+                            , AnalyticsManager.Action.STAY_ITEM_CLICK, String.format(Locale.KOREA, "%d_%d", stay.entryPosition, stay.index), null);
 
 
                         if (stay.truevr == true)
