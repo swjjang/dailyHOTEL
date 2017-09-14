@@ -40,12 +40,17 @@ import io.reactivex.Observable;
 public class StayOutboundSearchSuggestView extends BaseDialogView<StayOutboundSearchSuggestView.OnEventListener, ActivityStayOutboundSearchSuggestDataBinding> implements StayOutboundSearchSuggestViewInterface, View.OnClickListener
 {
     private SuggestListAdapter mSuggestListAdapter;
+    private RecentlySuggestListAdapter mRecentlySuggestListAdapter;
 
     public interface OnEventListener extends OnBaseEventListener
     {
         void onSearchSuggest(String keyword);
 
         void onSuggestClick(Suggest suggest);
+
+        void onRecentlySuggestClick(Suggest suggest);
+
+        void onDeleteAllRecentlySuggest();
     }
 
     public StayOutboundSearchSuggestView(BaseActivity baseActivity, StayOutboundSearchSuggestView.OnEventListener listener)
@@ -94,14 +99,13 @@ public class StayOutboundSearchSuggestView extends BaseDialogView<StayOutboundSe
         {
             private int mDistance;
             private boolean mIsHide;
-            private int mOldY;
 
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState)
             {
                 if (newState != RecyclerView.SCROLL_STATE_DRAGGING)
                 {
-                    mOldY = 0;
+                    mDistance = 0;
                 }
             }
 
@@ -110,26 +114,80 @@ public class StayOutboundSearchSuggestView extends BaseDialogView<StayOutboundSe
             {
                 if (mIsHide == true)
                 {
-                    mOldY = 0;
-                } else
-                {
-                    if (recyclerView.getHeight() < ScreenUtils.getScreenHeight(getContext()) / 2)
-                    {
-                        mDistance += (dy - mOldY);
-                        mOldY = dy;
-
-                        if (mDistance > ScreenUtils.dpToPx(getContext(), 41) == true)
-                        {
-                            mDistance = 0;
-                            mIsHide = true;
-
-                            InputMethodManager inputMethodManager = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-                            inputMethodManager.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
-
-                            Observable.just(false).delaySubscription(1, TimeUnit.SECONDS).subscribe(isHide -> mIsHide = isHide);
-                        }
-                    }
+                    mDistance = 0;
+                    return;
                 }
+
+                int defaultValue = ScreenUtils.dpToPx(getContext(), 41);
+
+                mDistance += dy;
+
+                if (mDistance > defaultValue == true)
+                {
+                    mDistance = 0;
+                    mIsHide = true;
+
+                    InputMethodManager inputMethodManager = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    inputMethodManager.hideSoftInputFromWindow(recyclerView.getWindowToken(), 0);
+
+                    Observable.just(false).delaySubscription(1, TimeUnit.SECONDS).subscribe(isHide -> mIsHide = isHide);
+                }
+            }
+        });
+
+        viewDataBinding.recentlySuggestRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+        EdgeEffectColor.setEdgeGlowColor(viewDataBinding.recentlySuggestRecyclerView, getColor(R.color.default_over_scroll_edge));
+        viewDataBinding.recentlySuggestRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener()
+        {
+            private int mDistance;
+            private boolean mIsHide;
+
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState)
+            {
+                if (newState != RecyclerView.SCROLL_STATE_DRAGGING)
+                {
+                    mDistance = 0;
+                }
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy)
+            {
+                if (mIsHide == true)
+                {
+                    mDistance = 0;
+                    return;
+                }
+
+                int defaultValue = ScreenUtils.dpToPx(getContext(), 41);
+
+                mDistance += dy;
+
+                if (mDistance > defaultValue == true)
+                {
+                    mDistance = 0;
+                    mIsHide = true;
+
+                    InputMethodManager inputMethodManager = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    inputMethodManager.hideSoftInputFromWindow(recyclerView.getWindowToken(), 0);
+
+                    Observable.just(false).delaySubscription(1, TimeUnit.SECONDS).subscribe(isHide -> mIsHide = isHide);
+                }
+            }
+        });
+
+        viewDataBinding.deleteRecentlySuggestLayout.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                if (getEventListener() == null)
+                {
+                    return;
+                }
+
+                getEventListener().onDeleteAllRecentlySuggest();
             }
         });
 
@@ -253,6 +311,7 @@ public class StayOutboundSearchSuggestView extends BaseDialogView<StayOutboundSe
             case R.id.deleteImageView:
                 setSuggest(null);
                 setSuggests(null);
+                setSuggestsVisible(false);
                 break;
         }
     }
@@ -323,6 +382,56 @@ public class StayOutboundSearchSuggestView extends BaseDialogView<StayOutboundSe
         {
             getViewDataBinding().progressBarScrollView.setVisibility(View.GONE);
         }
+    }
+
+    @Override
+    public void setRecentlySuggests(List<Suggest> suggestList)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        if (mRecentlySuggestListAdapter == null)
+        {
+            mRecentlySuggestListAdapter = new RecentlySuggestListAdapter(getContext(), new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    Suggest suggest = (Suggest) v.getTag();
+
+                    if (suggest != null)
+                    {
+                        getEventListener().onRecentlySuggestClick(suggest);
+                    }
+                }
+            });
+
+            getViewDataBinding().recentlySuggestRecyclerView.setAdapter(mRecentlySuggestListAdapter);
+        }
+
+        if (suggestList == null || suggestList.size() == 0)
+        {
+            getViewDataBinding().recentlySuggestLayout.setVisibility(View.GONE);
+            mRecentlySuggestListAdapter.setAll(null);
+            mRecentlySuggestListAdapter.notifyDataSetChanged();
+            return;
+        }
+
+        getViewDataBinding().recentlySuggestLayout.setVisibility(View.VISIBLE);
+
+        List<ListItem> listItemList = new ArrayList<>();
+
+        for (Suggest suggest : suggestList)
+        {
+            listItemList.add(new ListItem(ListItem.TYPE_ENTRY, suggest));
+        }
+
+        listItemList.add(new ListItem(ListItem.TYPE_FOOTER_VIEW, null));
+
+        mRecentlySuggestListAdapter.setAll(listItemList);
+        mRecentlySuggestListAdapter.notifyDataSetChanged();
     }
 
     private TextWatcher mTextWatcher = new TextWatcher()
@@ -397,7 +506,9 @@ public class StayOutboundSearchSuggestView extends BaseDialogView<StayOutboundSe
             {
                 case ListItem.TYPE_SECTION:
                 {
-                    ListRowStayOutboundSuggestTitleDataBinding dataBinding = DataBindingUtil.inflate(LayoutInflater.from(mContext), R.layout.list_row_stay_outbound_suggest_title_data, parent, false);
+                    ListRowStayOutboundSuggestTitleDataBinding dataBinding //
+                        = DataBindingUtil.inflate(LayoutInflater.from(mContext) //
+                        , R.layout.list_row_stay_outbound_suggest_title_data, parent, false);
 
                     TitleViewHolder titleViewHolder = new TitleViewHolder(dataBinding);
 
@@ -406,7 +517,9 @@ public class StayOutboundSearchSuggestView extends BaseDialogView<StayOutboundSe
 
                 case ListItem.TYPE_ENTRY:
                 {
-                    ListRowStayOutboundSuggestEntryDataBinding dataBinding = DataBindingUtil.inflate(LayoutInflater.from(mContext), R.layout.list_row_stay_outbound_suggest_entry_data, parent, false);
+                    ListRowStayOutboundSuggestEntryDataBinding dataBinding //
+                        = DataBindingUtil.inflate(LayoutInflater.from(mContext) //
+                        , R.layout.list_row_stay_outbound_suggest_entry_data, parent, false);
 
                     EntryViewHolder entryViewHolder = new EntryViewHolder(dataBinding);
 
@@ -580,6 +693,173 @@ public class StayOutboundSearchSuggestView extends BaseDialogView<StayOutboundSe
                 super(dataBinding.getRoot());
 
                 this.dataBinding = dataBinding;
+            }
+        }
+
+        class EntryViewHolder extends RecyclerView.ViewHolder
+        {
+            ListRowStayOutboundSuggestEntryDataBinding dataBinding;
+
+            public EntryViewHolder(ListRowStayOutboundSuggestEntryDataBinding dataBinding)
+            {
+                super(dataBinding.getRoot());
+
+                this.dataBinding = dataBinding;
+
+                dataBinding.getRoot().setOnClickListener(mOnClickListener);
+            }
+        }
+    }
+
+    private class RecentlySuggestListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
+    {
+        private Context mContext;
+        private View.OnClickListener mOnClickListener;
+
+        private List<ListItem> mSuggestList;
+
+        public RecentlySuggestListAdapter(Context context, View.OnClickListener listener)
+        {
+            mContext = context;
+            mOnClickListener = listener;
+
+            setAll(null);
+        }
+
+        @Override
+        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
+        {
+            switch (viewType)
+            {
+                case ListItem.TYPE_FOOTER_VIEW:
+                {
+                    View view = new View(mContext);
+                    ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ScreenUtils.dpToPx(mContext, 10d));
+                    view.setLayoutParams(params);
+
+                    FooterViewHolder titleViewHolder = new FooterViewHolder(view);
+
+                    return titleViewHolder;
+                }
+
+                case ListItem.TYPE_ENTRY:
+                {
+                    ListRowStayOutboundSuggestEntryDataBinding dataBinding = DataBindingUtil.inflate(LayoutInflater.from(mContext), R.layout.list_row_stay_outbound_suggest_entry_data, parent, false);
+
+                    EntryViewHolder entryViewHolder = new EntryViewHolder(dataBinding);
+
+                    return entryViewHolder;
+                }
+            }
+
+            return null;
+        }
+
+        @Override
+        public void onBindViewHolder(RecyclerView.ViewHolder holder, int position)
+        {
+            ListItem item = getItem(position);
+
+            if (item == null)
+            {
+                return;
+            }
+
+            switch (item.mType)
+            {
+                case ListItem.TYPE_FOOTER_VIEW:
+                    break;
+
+                case ListItem.TYPE_ENTRY:
+                    onBindViewHolder((EntryViewHolder) holder, item, position);
+                    break;
+            }
+        }
+
+        @Override
+        public int getItemCount()
+        {
+            if (mSuggestList == null)
+            {
+                return 0;
+            } else
+            {
+                return mSuggestList.size();
+            }
+        }
+
+        @Override
+        public int getItemViewType(int position)
+        {
+            return mSuggestList.get(position).mType;
+        }
+
+        public void setAll(List<ListItem> list)
+        {
+            if (mSuggestList == null)
+            {
+                mSuggestList = new ArrayList<>();
+            }
+
+            mSuggestList.clear();
+
+            if (list != null && list.size() > 0)
+            {
+                mSuggestList.addAll(list);
+            }
+        }
+
+        public ListItem getItem(int position)
+        {
+            if (position < 0 || mSuggestList.size() <= position)
+            {
+                return null;
+            }
+
+            return mSuggestList.get(position);
+        }
+
+        private void onBindViewHolder(EntryViewHolder holder, ListItem item, int position)
+        {
+            Suggest suggest = item.getItem();
+
+            holder.itemView.getRootView().setTag(suggest);
+
+            holder.dataBinding.textView.setText(suggest.display);
+
+            switch (suggest.categoryKey)
+            {
+                case Suggest.CATEGORY_AIRPORT:
+                    holder.dataBinding.textView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.vector_ob_search_ic_04_airport, 0, 0, 0);
+                    break;
+
+                case Suggest.CATEGORY_HOTEL:
+                    holder.dataBinding.textView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.vector_ob_search_ic_02_hotel, 0, 0, 0);
+                    break;
+
+                case Suggest.CATEGORY_POINT:
+                    holder.dataBinding.textView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.vector_ob_search_ic_03_landmark, 0, 0, 0);
+                    break;
+
+                case Suggest.CATEGORY_REGION:
+                    holder.dataBinding.textView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.vector_ob_search_ic_01_region, 0, 0, 0);
+                    break;
+
+                case Suggest.CATEGORY_STATION:
+                    holder.dataBinding.textView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.vector_ob_search_ic_05_train, 0, 0, 0);
+                    break;
+
+                default:
+                    holder.dataBinding.textView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.vector_ob_search_ic_01_region, 0, 0, 0);
+                    break;
+            }
+        }
+
+        class FooterViewHolder extends RecyclerView.ViewHolder
+        {
+            public FooterViewHolder(View itemView)
+            {
+                super(itemView);
             }
         }
 

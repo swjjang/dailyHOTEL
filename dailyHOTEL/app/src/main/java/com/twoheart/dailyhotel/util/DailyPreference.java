@@ -86,6 +86,11 @@ public class DailyPreference
     private static final String KEY_STAY_OUTBOUND_SEARCH_CALENDAR = "217"; // 최초에 1회 캘린더 띄우기
     private static final String KEY_GOURMET_PRODUCT_DETAIL_GUIDE = "220"; // 최초에 1회 고메 상세 가이드 띄우기
 
+//    private static final String KEY_STAY_OUTBOUND_SEARCH_SUGGEST = "221"; // 아웃바운드 검색 추천
+    private static final String KEY_STAY_OUTBOUND_SEARCH_CHECK_IN_DATE = "222"; // 아웃바운드 검색 Check In Date
+    private static final String KEY_STAY_OUTBOUND_SEARCH_CHECK_OUT_DATE = "223"; // 아웃바운드 검색 Check Out Date
+    private static final String KEY_STAY_OUTBOUND_SEARCH_PEOPLE = "224"; // 아웃바운드 검색 숙박인원
+
     // ----> DailyPreference 로 이동
     private static final String KEY_AUTHORIZATION = "1000";
     // <-----
@@ -216,6 +221,10 @@ public class DailyPreference
         String stayRecentSearches = getHotelRecentSearches();
         String gourmetRecentSearches = getGourmetRecentSearches();
 
+        String stayOutboundSearchCheckInDate = getStayOutboundSearchCheckInDate();
+        String stayOutboundSearchCheckOutDate = getStayOutboundSearchCheckOutDate();
+        JSONObject stayOutboundSearchPeople = getStayOutboundSearchPeople();
+
         if (mEditor != null)
         {
             mEditor.clear();
@@ -236,6 +245,9 @@ public class DailyPreference
         setHomeShortCutStayOutboundNewDate(stayOutboundNewDate);
         setHotelRecentSearches(stayRecentSearches);
         setGourmetRecentSearches(gourmetRecentSearches);
+        setStayOutboundSearchCheckInDate(stayOutboundSearchCheckInDate);
+        setStayOutboundSearchCheckOutDate(stayOutboundSearchCheckOutDate);
+        setStayOutboundSearchPeople(stayOutboundSearchPeople == null ? null : stayOutboundSearchPeople.toString());
 
         DailyHotel.AUTHORIZATION = null;
     }
@@ -853,6 +865,51 @@ public class DailyPreference
     public boolean getGourmetProductDetailGuide()
     {
         return getValue(mPreferences, KEY_GOURMET_PRODUCT_DETAIL_GUIDE, true);
+    }
+
+    public void setStayOutboundSearchCheckInDate(String checkInDate)
+    {
+        setValue(mEditor, KEY_STAY_OUTBOUND_SEARCH_CHECK_IN_DATE, checkInDate);
+    }
+
+    public String getStayOutboundSearchCheckInDate()
+    {
+        return getValue(mPreferences, KEY_STAY_OUTBOUND_SEARCH_CHECK_IN_DATE, null);
+    }
+
+    public void setStayOutboundSearchCheckOutDate(String checkOutDate)
+    {
+        setValue(mEditor, KEY_STAY_OUTBOUND_SEARCH_CHECK_OUT_DATE, checkOutDate);
+    }
+
+    public String getStayOutboundSearchCheckOutDate()
+    {
+        return getValue(mPreferences, KEY_STAY_OUTBOUND_SEARCH_CHECK_OUT_DATE, null);
+    }
+
+    public void setStayOutboundSearchPeople(String people)
+    {
+        setValue(mEditor, KEY_STAY_OUTBOUND_SEARCH_PEOPLE, people);
+    }
+
+    public JSONObject getStayOutboundSearchPeople()
+    {
+        String value =  getValue(mPreferences, KEY_STAY_OUTBOUND_SEARCH_PEOPLE, null);
+        if (DailyTextUtils.isTextEmpty(value) == true)
+        {
+            return null;
+        }
+
+        JSONObject jsonObject = null;
+        try
+        {
+            jsonObject = new JSONObject(value);
+        } catch (Exception e)
+        {
+            com.daily.base.util.ExLog.e(e.toString());
+        }
+
+        return jsonObject;
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////

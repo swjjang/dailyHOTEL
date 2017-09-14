@@ -32,6 +32,20 @@ public class Suggest
         this.display = name;
     }
 
+    public Suggest(long id, String name, String city, String country, String countryCode //
+        , String categoryKey, String display, double latitude, double longitude)
+    {
+        this.id = id;
+        this.name = name;
+        this.city = city;
+        this.country = country;
+        this.countryCode = countryCode;
+        this.categoryKey = categoryKey;
+        this.display = display;
+        this.latitude = latitude;
+        this.longitude = longitude;
+    }
+
     public Suggest getClone()
     {
         Suggest suggest = new Suggest();

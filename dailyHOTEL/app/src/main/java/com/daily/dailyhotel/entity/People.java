@@ -2,7 +2,11 @@ package com.daily.dailyhotel.entity;
 
 import android.content.Context;
 
+import com.daily.base.util.ExLog;
 import com.twoheart.dailyhotel.R;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -24,6 +28,41 @@ public class People
     {
         this.numberOfAdults = numberOfAdults;
         setChildAgeList(childAgeList);
+    }
+
+    public People(JSONObject jsonObject)
+    {
+        if (jsonObject == null)
+        {
+            this.numberOfAdults = DEFAULT_ADULTS;
+            setChildAgeList(null);
+            return;
+        }
+
+        try
+        {
+            numberOfAdults = (int) jsonObject.get("numberOfAdults");
+            JSONArray jsonArray = (JSONArray) jsonObject.get("mChildAgeList");
+
+            int length = jsonArray.length();
+            if (length == 0)
+            {
+                mChildAgeList = null;
+                return;
+            }
+
+            ArrayList subList = new ArrayList();
+
+            for (int i = 0 ; i < length ; i++)
+            {
+                subList.add(jsonArray.get(i));
+            }
+
+            mChildAgeList = subList;
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+        }
     }
 
     public void setChildAgeList(ArrayList<Integer> childAgeList)
@@ -115,5 +154,29 @@ public class People
         stringBuilder.append(context.getString(R.string.label_stay_outbound_list_child_count, childCount));
 
         return stringBuilder.toString();
+    }
+
+    private JSONObject getJsonObject() throws Exception
+    {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("numberOfAdults", numberOfAdults);
+        jsonObject.put("mChildAgeList", new JSONArray(mChildAgeList));
+
+        return jsonObject;
+    }
+
+    public String toJsonString()
+    {
+        String jsonString;
+
+        try
+        {
+            jsonString = getJsonObject().toString();
+        } catch (Exception e)
+        {
+            jsonString = null;
+        }
+
+        return jsonString;
     }
 }

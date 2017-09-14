@@ -11,12 +11,14 @@ import android.provider.BaseColumns;
 
 import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.domain.RecentlyColumns;
+import com.daily.dailyhotel.domain.StayObRecentlySuggestColumns;
 import com.daily.dailyhotel.entity.CarouselListItem;
 import com.daily.dailyhotel.entity.ImageMap;
 import com.daily.dailyhotel.entity.RecentlyPlace;
 import com.daily.dailyhotel.entity.StayOutbound;
 import com.daily.dailyhotel.repository.local.model.RecentlyDbPlace;
 import com.daily.dailyhotel.repository.local.model.RecentlyList;
+import com.daily.dailyhotel.repository.local.model.StayObRecentlySuggestList;
 import com.daily.dailyhotel.util.RecentlyPlaceUtil;
 import com.twoheart.dailyhotel.model.Gourmet;
 import com.twoheart.dailyhotel.model.Stay;
@@ -32,7 +34,7 @@ import java.util.Calendar;
 
 public class DailyDb extends SQLiteOpenHelper implements BaseColumns
 {
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
 
     public static final int MAX_RECENT_PLACE_COUNT = 30;
 
@@ -44,8 +46,9 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
     public static final String DB_NAME = "daily.db";
 
     public static final String T_RECENTLY = "recently";
+    public static final String T_STAY_OB_RECENTLY_SUGGEST = "stay_ob_recently_suggest";
 
-    private static final String CREATE_T_RECENTLY = "CREATE TABLE " + T_RECENTLY + " (" //
+    private static final String CREATE_T_RECENTLY = "CREATE TABLE IF NOT EXISTS " + T_RECENTLY + " (" //
         + RecentlyList._ID + " INTEGER  PRIMARY KEY AUTOINCREMENT NOT NULL, " //
         + RecentlyList.PLACE_INDEX + " INTEGER NOT NULL UNIQUE DEFAULT 0, " //
         + RecentlyList.NAME + " TEXT NULL, " //
@@ -53,6 +56,19 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
         + RecentlyList.SERVICE_TYPE + " TEXT NOT NULL, " // ServiceType.name() 으로 저장 예정 HOTEL, OB_STAY, GOURMET
         + RecentlyList.SAVING_TIME + " LONG NOT NULL DEFAULT 0, " //
         + RecentlyList.IMAGE_URL + " TEXT NULL " + ");";
+
+    // insert ver 2
+    private static final String CREATE_T_STAY_OB_RECENTLY_SUGGEST = "CREATE TABLE IF NOT EXISTS " + T_STAY_OB_RECENTLY_SUGGEST + " (" //
+        + StayObRecentlySuggestList._ID + " INTEGER  PRIMARY KEY NOT NULL, " //
+        + StayObRecentlySuggestList.NAME + " TEXT NULL, " //
+        + StayObRecentlySuggestList.CITY + " TEXT NULL, " //
+        + StayObRecentlySuggestList.COUNTRY + " TEXT NULL, " //
+        + StayObRecentlySuggestList.COUNTRY_CODE + " TEXT NULL, " //
+        + StayObRecentlySuggestList.CATEGORY_KEY + " TEXT NULL, " //
+        + StayObRecentlySuggestList.DISPLAY + " TEXT NULL, " //
+        + StayObRecentlySuggestList.LATITUDE + " DOUBLE NOT NULL DEFAULT 0, " //
+        + StayObRecentlySuggestList.LONGITUDE + " DOUBLE NOT NULL DEFAULT 0, " //
+        + StayObRecentlySuggestList.SAVING_TIME + " LONG NOT NULL DEFAULT 0 " + ");";
 
     public DailyDb(Context context)
     {
@@ -81,16 +97,23 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion)
     {
         ExLog.v("Upgrading database from version " + oldVersion + " to " + newVersion);
+
+        if (oldVersion < DATABASE_VERSION)
+        {
+            createDbObjects(db);
+        }
     }
 
     private void createDbObjects(SQLiteDatabase db)
     {
         db.execSQL(CREATE_T_RECENTLY);
+        db.execSQL(CREATE_T_STAY_OB_RECENTLY_SUGGEST);
     }
 
     private void dropAllDbObjects(SQLiteDatabase db)
     {
         db.execSQL("drop table if exists " + CREATE_T_RECENTLY);
+        db.execSQL("drop table if exists " + CREATE_T_STAY_OB_RECENTLY_SUGGEST);
     }
 
     private SQLiteDatabase getDb()
@@ -710,6 +733,283 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
         contentValues.put(RecentlyColumns.IMAGE_URL, imageUrl);
 
         return contentValues;
+    }
+
+    public Cursor getStayObRecentlySuggestList(int limit)
+    {
+        SQLiteDatabase db = getDb();
+        if (db == null)
+        {
+            return null;
+        }
+
+        StringBuilder sqlBuilder = new StringBuilder("SELECT * FROM ");
+        sqlBuilder.append(T_STAY_OB_RECENTLY_SUGGEST);
+
+        sqlBuilder.append(" ORDER BY ").append(StayObRecentlySuggestColumns.SAVING_TIME).append(" DESC");
+
+        if (limit > 0)
+        {
+            sqlBuilder.append(" limit ").append(limit);
+        }
+
+        Cursor cursor = rawQuery(sqlBuilder.toString());
+
+        return cursor;
+    }
+
+    public Cursor getStayObRecentlySuggest(long _id)
+    {
+        if (_id <= 0)
+        {
+            return null;
+        }
+
+        SQLiteDatabase db = getDb();
+        if (db == null)
+        {
+            return null;
+        }
+
+        StringBuilder sqlBuilder = new StringBuilder("SELECT * FROM ");
+        sqlBuilder.append(T_STAY_OB_RECENTLY_SUGGEST);
+        sqlBuilder.append(" WHERE ").append(StayObRecentlySuggestColumns._ID).append("=").append(_id).append("");
+
+        Cursor cursor = rawQuery(sqlBuilder.toString());
+
+        return cursor;
+    }
+
+    public long checkExistStayObRecentlySuggest(long _id)
+    {
+        if (_id <= 0)
+        {
+            return -1;
+        }
+
+        Cursor cursor = null;
+
+        try
+        {
+            cursor = getStayObRecentlySuggest(_id);
+
+            if (cursor != null)
+            {
+                cursor.moveToFirst();
+
+                int columnIndex = cursor.getColumnIndex(StayObRecentlySuggestColumns.SAVING_TIME);
+                return cursor.getLong(columnIndex);
+            }
+
+        } catch (Exception e)
+        {
+            return -1;
+        } finally
+        {
+            try
+            {
+                cursor.close();
+            } catch (Exception e)
+            {
+                // do nothing!
+            }
+        }
+
+        return -1;
+    }
+
+    public long getOldestStayObRecentlySuggestSavingTime()
+    {
+        SQLiteDatabase db = getDb();
+        if (db == null)
+        {
+            return -1;
+        }
+
+        Cursor cursor = null;
+        long savingTime = -1;
+
+        try
+        {
+            StringBuilder sqlBuilder = new StringBuilder("SELECT * FROM ");
+            sqlBuilder.append(T_STAY_OB_RECENTLY_SUGGEST);
+            sqlBuilder.append(" ORDER BY ").append(StayObRecentlySuggestColumns.SAVING_TIME).append(" ASC");
+            sqlBuilder.append(" LIMIT ").append(1);
+
+            cursor = rawQuery(sqlBuilder.toString());
+            if (cursor != null)
+            {
+                cursor.moveToFirst();
+                int columnIndex = cursor.getColumnIndex(StayObRecentlySuggestColumns.SAVING_TIME);
+                savingTime = cursor.getLong(columnIndex);
+            }
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+            savingTime = -1;
+        } finally
+        {
+            try
+            {
+                cursor.close();
+            } catch (Exception e)
+            {
+                // do nothing!
+            }
+        }
+
+        return savingTime;
+    }
+
+    public void addStayObRecentlySuggest(long _id, String name, String city, String country //
+        , String countryCode, String categoryKey, String display //
+        , double latitude, double longitude, boolean isUpdateDate)
+    {
+        SQLiteDatabase db = getDb();
+        if (db == null)
+        {
+            // db를 사용할 수 없는 상태이므로 migration 실패로 판단
+            return;
+        }
+
+        try
+        {
+            long savingTime;
+
+            if (isUpdateDate == true)
+            {
+                Calendar calendar = DailyCalendar.getInstance();
+                savingTime = calendar.getTimeInMillis();
+            } else
+            {
+                savingTime = checkExistStayObRecentlySuggest(_id);
+            }
+
+            ContentValues contentValues = new ContentValues();
+            contentValues.put(StayObRecentlySuggestColumns._ID, _id);
+            contentValues.put(StayObRecentlySuggestColumns.NAME, name);
+            contentValues.put(StayObRecentlySuggestColumns.CITY, city);
+            contentValues.put(StayObRecentlySuggestColumns.COUNTRY, country);
+            contentValues.put(StayObRecentlySuggestColumns.COUNTRY_CODE, countryCode);
+            contentValues.put(StayObRecentlySuggestColumns.CATEGORY_KEY, categoryKey);
+            contentValues.put(StayObRecentlySuggestColumns.DISPLAY, display);
+            contentValues.put(StayObRecentlySuggestColumns.LATITUDE, latitude);
+            contentValues.put(StayObRecentlySuggestColumns.LONGITUDE, longitude);
+            contentValues.put(StayObRecentlySuggestColumns.SAVING_TIME, savingTime);
+
+            db.beginTransaction();
+
+            insertOrUpdate(T_STAY_OB_RECENTLY_SUGGEST, StayObRecentlySuggestColumns._ID, contentValues);
+
+            db.setTransactionSuccessful();
+
+        } catch (Exception e)
+        {
+            ExLog.w("add fail : " + e.toString());
+        } finally
+        {
+            try
+            {
+                db.endTransaction();
+            } catch (IllegalStateException e)
+            {
+                // ignore
+            }
+        }
+
+        maintainMaxStayObRecentlySuggest();
+
+        mContext.getContentResolver().notifyChange(StayObRecentlySuggestList.NOTIFICATION_URI, null);
+    }
+
+    public void maintainMaxStayObRecentlySuggest()
+    {
+        Cursor cursor = null;
+
+        long savingTime = -1;
+
+        try
+        {
+            cursor = getStayObRecentlySuggestList(-1);
+            if (cursor != null && cursor.getCount() > MAX_RECENT_PLACE_COUNT)
+            {
+                cursor.moveToPosition(MAX_RECENT_PLACE_COUNT);
+                int columnIndex = cursor.getColumnIndex(StayObRecentlySuggestColumns.SAVING_TIME);
+                savingTime = cursor.getLong(columnIndex);
+            }
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+        } finally
+        {
+            try
+            {
+                cursor.close();
+            } catch (Exception e)
+            {
+                // do nothing
+            }
+        }
+
+        if (savingTime <= 0)
+        {
+            return;
+        }
+
+        SQLiteDatabase db = getDb();
+        if (db == null)
+        {
+            // db를 사용할 수 없는 상태이므로 migration 실패로 판단
+            return;
+        }
+
+        try
+        {
+            db.beginTransaction();
+            db.delete(T_STAY_OB_RECENTLY_SUGGEST, StayObRecentlySuggestColumns.SAVING_TIME + " <= " + savingTime, null);
+            db.setTransactionSuccessful();
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+        } finally
+        {
+            try
+            {
+                db.endTransaction();
+            } catch (Exception e)
+            {
+            }
+        }
+    }
+
+    public void deleteAllStayObRecentlySuggest()
+    {
+        SQLiteDatabase db = getDb();
+        if (db == null)
+        {
+            // db를 사용할 수 없는 상태이므로 migration 실패로 판단
+            return;
+        }
+
+        try
+        {
+            db.beginTransaction();
+            db.delete(T_STAY_OB_RECENTLY_SUGGEST, null, null);
+            db.setTransactionSuccessful();
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+        } finally
+        {
+            try
+            {
+                db.endTransaction();
+            } catch (Exception e)
+            {
+            }
+        }
+
+        mContext.getContentResolver().notifyChange(StayObRecentlySuggestList.NOTIFICATION_URI, null);
     }
 
     //    public void exportDatabase(String databaseName)
