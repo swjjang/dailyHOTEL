@@ -51,6 +51,7 @@ import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import retrofit2.Call;
@@ -1033,7 +1034,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
             }
 
             AnalyticsManager.getInstance(StaySearchResultActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
-                , AnalyticsManager.Action.STAY_ITEM_CLICK, Integer.toString(stay.index), null);
+                , AnalyticsManager.Action.STAY_ITEM_CLICK, String.format(Locale.KOREA, "%d_%d", stay.entryPosition, stay.index), null);
 
             if (stay.availableRooms == 0)
             {
