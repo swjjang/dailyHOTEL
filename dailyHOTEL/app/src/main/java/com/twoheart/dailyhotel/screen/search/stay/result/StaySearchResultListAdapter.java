@@ -25,7 +25,6 @@ public class StaySearchResultListAdapter extends StayListAdapter
         super(context, arrayList, listener, eventBannerListener);
     }
 
-    @Override
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     protected void onBindViewHolder(HotelViewHolder holder, PlaceViewItem placeViewItem)
     {

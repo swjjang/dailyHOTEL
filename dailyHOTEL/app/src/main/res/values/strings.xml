@@ -101,6 +101,8 @@
     <string name="label_collapse">접기</string>
     <string name="label_searching_around_location">내 주변 검색 중…</string>
     <string name="label_all">전체</string>
+    <string name="label_truereview_count">트루리뷰 %d개</string>
+    <string name="label_soldout">판매완료</string>
 
     <string name="label_count_stay">%1$d개 스테이</string>
     <string name="label_count_gourmet">%1$d개 고메</string>
@@ -113,6 +115,7 @@
     <string name="label_parking_information">주차 정보 안내</string>
     <string name="label_view_detail">자세히 보기</string>
     <string name="label_truevr">트루VR</string>
+    <string name="label_vr">VR</string>
     <string name="label_distance_km">거리 %1$skm</string>
 
     <string name="label_currency_usd">USD</string>
