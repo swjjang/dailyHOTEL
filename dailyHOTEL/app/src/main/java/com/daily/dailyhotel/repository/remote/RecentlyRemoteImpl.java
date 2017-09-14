@@ -9,7 +9,6 @@ import com.daily.dailyhotel.domain.RecentlyInterface;
 import com.daily.dailyhotel.entity.RecentlyPlace;
 import com.daily.dailyhotel.entity.StayOutbounds;
 import com.daily.dailyhotel.repository.local.model.RecentlyDbPlace;
-import com.daily.dailyhotel.repository.local.model.RecentlyRealmObject;
 import com.daily.dailyhotel.repository.remote.model.RecentlyPlacesData;
 import com.daily.dailyhotel.repository.remote.model.StayOutboundsData;
 import com.daily.dailyhotel.util.RecentlyPlaceUtil;
@@ -163,7 +162,7 @@ public class RecentlyRemoteImpl implements RecentlyInterface
             return list;
         }
 
-        ArrayList<RecentlyRealmObject> realmList = RecentlyPlaceUtil.getRealmRecentlyTypeList(serviceTypes);
+        ArrayList<RecentlyDbPlace> realmList = RecentlyPlaceUtil.getRealmRecentlyTypeList(serviceTypes);
         if (realmList == null || realmList.size() == 0)
         {
             return list;
@@ -171,27 +170,16 @@ public class RecentlyRemoteImpl implements RecentlyInterface
 
         ArrayList<Integer> indexList = RecentlyPlaceUtil.getDbRecentlyIndexList(mContext, serviceTypes);
 
-        for (RecentlyRealmObject realmObject : realmList)
+        for (RecentlyDbPlace place : realmList)
         {
-            int index = realmObject.index;
-            if (indexList.contains(index) == true)
+            if (indexList != null && indexList.contains(place.index) == true)
             {
                 continue;
             }
 
-            RecentlyDbPlace place = new RecentlyDbPlace();
-            place.savingTime = realmObject.savingTime;
-            place.englishName = realmObject.englishName;
-            place.imageUrl = realmObject.imageUrl;
-            place.index = index;
-            place.name = realmObject.name;
-
-            try
+            if (list == null)
             {
-                place.serviceType = Constants.ServiceType.valueOf(realmObject.serviceType);
-            } catch (Exception e)
-            {
-                continue;
+                list = new ArrayList<>();
             }
 
             list.add(place);

@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.crashlytics.android.Crashlytics;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
@@ -1258,6 +1259,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
             public void accept(@NonNull Throwable throwable) throws Exception
             {
                 HomeFragment.this.setRecentlyList(null, true);
+                Crashlytics.logException(new Exception("need check recently remote & realm DB", throwable));
             }
         }));
     }
