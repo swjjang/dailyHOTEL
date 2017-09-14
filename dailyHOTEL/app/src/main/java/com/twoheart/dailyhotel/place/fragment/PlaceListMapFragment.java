@@ -936,8 +936,8 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
                         return;
                     }
 
-                    CameraPosition cp = new CameraPosition.Builder().target(bounds.getCenter()).zoom(14.0f).build();
-                    mGoogleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cp));
+                    CameraPosition cameraPosition = new CameraPosition.Builder().target(bounds.getCenter()).zoom(14.0f).build();
+                    mGoogleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 
                     mClusterManager.cluster();
                 }
@@ -956,8 +956,15 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
                         return;
                     }
 
-                    CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(bounds, ScreenUtils.dpToPx(mBaseActivity, 50));
-                    mGoogleMap.moveCamera(cameraUpdate);
+                    try
+                    {
+                        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(bounds, ScreenUtils.dpToPx(mBaseActivity, 50));
+                        mGoogleMap.moveCamera(cameraUpdate);
+                    } catch (Exception e)
+                    {
+                        CameraPosition cameraPosition = new CameraPosition.Builder().target(bounds.getCenter()).zoom(10.0f).build();
+                        mGoogleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+                    }
 
                     mClusterManager.cluster();
                 }
