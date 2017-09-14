@@ -172,9 +172,14 @@ public class RecentlyRemoteImpl implements RecentlyInterface
 
         for (RecentlyDbPlace place : realmList)
         {
-            if (indexList.contains(place.index) == true)
+            if (indexList != null && indexList.contains(place.index) == true)
             {
                 continue;
+            }
+
+            if (list == null)
+            {
+                list = new ArrayList<>();
             }
 
             list.add(place);
