@@ -41,6 +41,7 @@ import com.twoheart.dailyhotel.screen.mydaily.member.InputMobileNumberDialogActi
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Crypto;
 import com.twoheart.dailyhotel.util.DailyCalendar;
+import com.twoheart.dailyhotel.util.DailyInternalDeepLink;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.DailyRemoteConfigPreference;
 import com.twoheart.dailyhotel.util.DailyUserPreference;
@@ -978,6 +979,9 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
 
     private void startThankYou(int bookingIndex, boolean fullBonus)
     {
+        // ThankYou 페이지를 홈탭에서 띄우기 위한 코드
+        startActivity(DailyInternalDeepLink.getHomeScreenLink(getActivity()));
+
         startActivityForResult(StayOutboundThankYouActivity.newInstance(getActivity(), mStayName, mImageUrl//
             , mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
             , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//

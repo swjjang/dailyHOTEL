@@ -1238,6 +1238,9 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
 
     private void startThankYou(String aggregationId, boolean fullBonus)
     {
+        // ThankYou 페이지를 홈탭에서 띄우기 위한 코드
+        startActivity(DailyInternalDeepLink.getHomeScreenLink(getActivity()));
+
         startActivityForResult(StayThankYouActivity.newInstance(getActivity(), mOverseas, mStayName, mImageUrl//
             , mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
             , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
