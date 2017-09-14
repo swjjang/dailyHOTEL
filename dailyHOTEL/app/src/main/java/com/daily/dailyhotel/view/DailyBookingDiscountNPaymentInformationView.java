@@ -91,6 +91,7 @@ public class DailyBookingDiscountNPaymentInformationView extends ConstraintLayou
         }
 
         mViewDataBinding.bonusLayout.setEnabled(enabled);
+        mViewDataBinding.bonusTabLayout.setEnabled(enabled);
     }
 
     public boolean isBonusEnabled()
