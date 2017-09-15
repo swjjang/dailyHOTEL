@@ -70,9 +70,9 @@ public class StayListAdapter extends PlaceListAdapter
                 //                ListRowStayDataBinding dataBinding = DataBindingUtil.inflate(mInflater, R.layout.list_row_stay_data, parent, false);
 
                 DailyStayCardView dailyStayCardView = new DailyStayCardView(mContext);
-                dailyStayCardView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                dailyStayCardView.setLayoutParams(new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
-                return new StayViewHolder(new DailyStayCardView(mContext));
+                return new StayViewHolder(dailyStayCardView);
             }
 
             case PlaceViewItem.TYPE_EVENT_BANNER:
@@ -131,30 +131,20 @@ public class StayListAdapter extends PlaceListAdapter
     {
         final Stay stay = placeViewItem.getItem();
 
-        String address = stay.addressSummary;
-
-        int barIndex = address.indexOf('|');
-        if (barIndex >= 0)
-        {
-            address = address.replace(" | ", "ㅣ");
-        } else if (address.indexOf('l') >= 0)
-        {
-            address = address.replace(" l ", "ㅣ");
-        }
+        holder.stayCardView.setStickerVisible(false);
+        holder.stayCardView.setDeleteVisible(false);
+        holder.stayCardView.setWishVisible(false);
 
         holder.stayCardView.setBenefitText(stay.dBenefitText);
         holder.stayCardView.setImage(stay.imageUrl);
 
-        holder.stayCardView.setStayNameText(stay.name);
-        holder.stayCardView.setAddressText(address);
-
         holder.stayCardView.setGradeText(stay.getGrade().getName(mContext));
+        holder.stayCardView.setVRVisible(stay.truevr && mTrueVREnabled);
         holder.stayCardView.setReviewText(stay.satisfaction, 0);
 
-        holder.stayCardView.setPriceText(0, stay.isSoldOut ? 0 : stay.discountPrice, stay.price, null, mNights);
+        holder.stayCardView.setNewVisible(false);
 
-        holder.stayCardView.setVRVisible(stay.truevr && mTrueVREnabled);
-
+        holder.stayCardView.setStayNameText(stay.name);
 
         if (mShowDistanceIgnoreSort == true || getSortType() == Constants.SortType.DISTANCE)
         {
@@ -164,6 +154,17 @@ public class StayListAdapter extends PlaceListAdapter
         {
             holder.stayCardView.setDistanceVisible(false);
         }
+
+        holder.stayCardView.setAddressText(stay.addressSummary);
+
+        if(stay.isSoldOut == true)
+        {
+            holder.stayCardView.setPriceText(0, 0, 0, null, 1);
+        } else
+        {
+            holder.stayCardView.setPriceText(0, stay.discountPrice, stay.price, null, mNights);
+        }
+
 
 
         //        final Stay stay = placeViewItem.getItem();

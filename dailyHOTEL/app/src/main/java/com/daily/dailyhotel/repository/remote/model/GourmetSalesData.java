@@ -141,7 +141,21 @@ public class GourmetSalesData
 
         gourmet.price = price;
         gourmet.discountPrice = discount;
+
+        // 인트라넷에서 값을 잘못 넣는 경우가 있다.
+        if(DailyTextUtils.isTextEmpty(addrSummary) == false)
+        {
+            if (addrSummary.indexOf('|') >= 0)
+            {
+                addrSummary = addrSummary.replace(" | ", "ㅣ");
+            } else if (addrSummary.indexOf('l') >= 0)
+            {
+                addrSummary = addrSummary.replace(" l ", "ㅣ");
+            }
+        }
+
         gourmet.addressSummary = addrSummary;
+
         gourmet.grade = Gourmet.Grade.gourmet;
         gourmet.districtName = districtName;
         gourmet.latitude = latitude;

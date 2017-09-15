@@ -73,10 +73,6 @@ public class GourmetCampaignTagsData
         for (GourmetSalesData gourmetSalesData : saleRecords)
         {
             Gourmet gourmet = gourmetSalesData.getGourmet();
-            if (gourmet == null)
-            {
-                continue;
-            }
 
             gourmet.imageUrl = imageUrl + gourmet.imageUrl;
 

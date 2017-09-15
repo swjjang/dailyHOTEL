@@ -3,6 +3,8 @@ package com.twoheart.dailyhotel.network.model;
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonIgnore;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
+import com.bluelinelabs.logansquare.annotation.OnJsonParseComplete;
+import com.daily.base.util.DailyTextUtils;
 
 import java.util.Map;
 
@@ -65,4 +67,20 @@ public abstract class RecommendationPlace
 
     @JsonIgnore
     public int entryPosition;
+
+    @OnJsonParseComplete
+    void onParseComplete()
+    {
+        // 인트라넷에서 값을 잘못 넣는 경우가 있다.
+        if(DailyTextUtils.isTextEmpty(addrSummary) == false)
+        {
+            if (addrSummary.indexOf('|') >= 0)
+            {
+                addrSummary = addrSummary.replace(" | ", "ㅣ");
+            } else if (addrSummary.indexOf('l') >= 0)
+            {
+                addrSummary = addrSummary.replace(" l ", "ㅣ");
+            }
+        }
+    }
 }

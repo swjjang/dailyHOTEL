@@ -80,6 +80,8 @@ public class RecommendationGourmet extends RecommendationPlace
     @OnJsonParseComplete
     void onParseComplete()
     {
+        super.onParseComplete();
+
         if (imgPathMain != null && imgPathMain.size() > 0)
         {
             Iterator<Map.Entry<String, Object>> iterator = imgPathMain.entrySet().iterator();

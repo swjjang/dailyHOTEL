@@ -10,7 +10,6 @@ import com.twoheart.dailyhotel.screen.hotel.list.StayListLayout;
 
 public class StayCategoryListLayout extends StayListLayout
 {
-
     public StayCategoryListLayout(Context context, OnEventListener eventListener)
     {
         super(context, eventListener);

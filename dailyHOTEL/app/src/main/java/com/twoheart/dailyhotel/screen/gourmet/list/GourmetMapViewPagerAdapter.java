@@ -64,17 +64,7 @@ public class GourmetMapViewPagerAdapter extends PlaceMapViewPagerAdapter
         View dBenefitLayout = view.findViewById(R.id.dBenefitLayout);
         TextView dBenefitTextView = (TextView) view.findViewById(R.id.dBenefitTextView);
 
-        String address = gourmet.addressSummary;
-
-        if (address.indexOf('|') >= 0)
-        {
-            address = address.replace(" | ", "ㅣ");
-        } else if (address.indexOf('l') >= 0)
-        {
-            address = address.replace(" l ", "ㅣ");
-        }
-
-        addressTextView.setText(address);
+        addressTextView.setText(gourmet.addressSummary);
         name.setText(gourmet.name);
 
         // D.benefit

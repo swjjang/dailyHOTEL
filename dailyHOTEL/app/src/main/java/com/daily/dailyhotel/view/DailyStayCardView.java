@@ -1,5 +1,6 @@
 package com.daily.dailyhotel.view;
 
+import android.app.Activity;
 import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.graphics.Color;
@@ -10,6 +11,7 @@ import android.graphics.drawable.PaintDrawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.RectShape;
 import android.support.constraint.ConstraintLayout;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -98,6 +100,16 @@ public class DailyStayCardView extends ConstraintLayout
         mViewDataBinding.deleteImageView.setVisibility(visible ? VISIBLE : GONE);
     }
 
+    public void setOnDeleteClickListener(View.OnClickListener onClickListener)
+    {
+        if (mViewDataBinding == null)
+        {
+            return;
+        }
+
+        mViewDataBinding.deleteImageView.setOnClickListener(onClickListener);
+    }
+
     public void setWishVisible(boolean visible)
     {
         if (mViewDataBinding == null)
@@ -106,6 +118,16 @@ public class DailyStayCardView extends ConstraintLayout
         }
 
         mViewDataBinding.wishImageView.setVisibility(visible ? VISIBLE : GONE);
+    }
+
+    public void setOnWishClickListener(View.OnClickListener onClickListener)
+    {
+        if (mViewDataBinding == null)
+        {
+            return;
+        }
+
+        mViewDataBinding.wishImageView.setOnClickListener(onClickListener);
     }
 
     public void setGradeText(String grade)
@@ -250,6 +272,22 @@ public class DailyStayCardView extends ConstraintLayout
         }
 
         mViewDataBinding.averageNightsTextView.setVisibility(nights > 1 ? VISIBLE : GONE);
+    }
+
+    public ActivityOptionsCompat getOptionsCompat(Activity activity)
+    {
+        if (activity == null || mViewDataBinding == null)
+        {
+            return null;
+        }
+
+        ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(activity,//
+            android.support.v4.util.Pair.create(mViewDataBinding.simpleDraweeView, getContext().getString(R.string.transition_place_image)),//
+            android.support.v4.util.Pair.create(mViewDataBinding.gradeTextView, getContext().getString(R.string.transition_place_grade)),//
+            android.support.v4.util.Pair.create(mViewDataBinding.stayNameTextView, getContext().getString(R.string.transition_place_name)),//
+            android.support.v4.util.Pair.create(mViewDataBinding.gradientBottomView, getContext().getString(R.string.transition_gradient_bottom_view)));
+
+        return optionsCompat;
     }
 
     private void setGradientView(View view)
