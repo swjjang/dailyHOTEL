@@ -293,6 +293,16 @@ public class DailyGourmetCardView extends ConstraintLayout
         }
     }
 
+    public void setDividerVisible(boolean visible)
+    {
+        if (mViewDataBinding == null)
+        {
+            return;
+        }
+
+        mViewDataBinding.cardBottomDividerView.setVisibility(visible ? VISIBLE : GONE);
+    }
+
     public android.support.v4.util.Pair[] getOptionsCompat()
     {
         if (mViewDataBinding == null)

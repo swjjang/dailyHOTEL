@@ -8,7 +8,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.daily.base.util.DailyTextUtils;
 import com.daily.dailyhotel.view.DailyStayCardView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ListRowStayDataBinding;
@@ -114,7 +113,7 @@ public class StayListAdapter extends PlaceListAdapter
         switch (item.mType)
         {
             case PlaceViewItem.TYPE_ENTRY:
-                onBindViewHolder((StayViewHolder) holder, item);
+                onBindViewHolder((StayViewHolder) holder, item, position);
                 break;
 
             case PlaceViewItem.TYPE_SECTION:
@@ -128,7 +127,7 @@ public class StayListAdapter extends PlaceListAdapter
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-    protected void onBindViewHolder(StayViewHolder holder, PlaceViewItem placeViewItem)
+    protected void onBindViewHolder(StayViewHolder holder, PlaceViewItem placeViewItem, int position)
     {
         final Stay stay = placeViewItem.getItem();
 
@@ -157,12 +156,12 @@ public class StayListAdapter extends PlaceListAdapter
 
         holder.stayCardView.setAddressText(stay.addressSummary);
 
-        if(stay.isSoldOut == true)
+        if (stay.isSoldOut == true)
         {
             holder.stayCardView.setPriceText(0, 0, 0, null, 1);
         } else
         {
-            if(stay.price > 0 && stay.price > stay.discountPrice)
+            if (stay.price > 0 && stay.price > stay.discountPrice)
             {
                 holder.stayCardView.setPriceText(stay.price > 0 ? 100 * (stay.price - stay.discountPrice) / stay.price : 0, stay.discountPrice, stay.price, null, mNights);
             } else
@@ -173,6 +172,13 @@ public class StayListAdapter extends PlaceListAdapter
 
         holder.stayCardView.setBenefitText(stay.dBenefitText);
 
+        if (position < getItemCount() - 1 && getItem(position + 1).mType == PlaceViewItem.TYPE_SECTION)
+        {
+            holder.stayCardView.setDividerVisible(false);
+        } else
+        {
+            holder.stayCardView.setDividerVisible(true);
+        }
 
 
         //        final Stay stay = placeViewItem.getItem();

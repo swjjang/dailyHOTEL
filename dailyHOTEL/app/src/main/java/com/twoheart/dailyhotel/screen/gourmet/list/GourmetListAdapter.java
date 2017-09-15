@@ -109,7 +109,7 @@ public class GourmetListAdapter extends PlaceListAdapter
         switch (item.mType)
         {
             case PlaceViewItem.TYPE_ENTRY:
-                onBindViewHolder((GourmetCardViewHolder) holder, item);
+                onBindViewHolder((GourmetCardViewHolder) holder, item, position);
                 break;
 
             case PlaceViewItem.TYPE_SECTION:
@@ -123,7 +123,7 @@ public class GourmetListAdapter extends PlaceListAdapter
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-    protected void onBindViewHolder(GourmetCardViewHolder holder, PlaceViewItem placeViewItem)
+    protected void onBindViewHolder(GourmetCardViewHolder holder, PlaceViewItem placeViewItem, int position)
     {
         final Gourmet gourmet = placeViewItem.getItem();
 
@@ -168,7 +168,13 @@ public class GourmetListAdapter extends PlaceListAdapter
 
         holder.gourmetCardView.setBenefitText(gourmet.dBenefitText);
 
-
+        if (position < getItemCount() - 1 && getItem(position + 1).mType == PlaceViewItem.TYPE_SECTION)
+        {
+            holder.gourmetCardView.setDividerVisible(false);
+        } else
+        {
+            holder.gourmetCardView.setDividerVisible(true);
+        }
 
 
 

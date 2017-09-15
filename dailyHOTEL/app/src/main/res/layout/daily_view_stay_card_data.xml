@@ -14,6 +14,14 @@
         <!--android:layout_width="match_parent"-->
         <!--android:layout_height="wrap_content">-->
 
+        <View
+            android:id="@+id/cardTopLineView"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:background="@color/default_line_ce1e1e1"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"/>
+
         <com.facebook.drawee.view.SimpleDraweeView
             android:id="@+id/simpleDraweeView"
             android:layout_width="0dp"
@@ -21,7 +29,7 @@
             app:layout_constraintDimensionRatio="H,21:9"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/cardTopLineView"
             fresco:actualImageScaleType="centerCrop"/>
 
         <ImageView
@@ -294,12 +302,22 @@
         </android.support.constraint.ConstraintLayout>
 
         <View
+            android:id="@+id/cardBottomLineView"
             android:layout_width="0dp"
-            android:layout_height="12dp"
-            android:background="@drawable/layerlist_divider_line_ce1e1e1"
+            android:layout_height="1dp"
+            android:background="@color/default_line_ce1e1e1"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/stayInformationLayout"/>
+
+        <View
+            android:id="@+id/cardBottomDividerView"
+            android:layout_width="0dp"
+            android:layout_height="10dp"
+            android:background="@color/default_background"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/cardBottomLineView"/>
         <!--</android.support.constraint.ConstraintLayout>-->
     </merge>
 </layout>

@@ -286,6 +286,17 @@ public class DailyStayCardView extends ConstraintLayout
         mViewDataBinding.averageNightsTextView.setVisibility(nights > 1 ? VISIBLE : GONE);
     }
 
+    public void setDividerVisible(boolean visible)
+    {
+        if (mViewDataBinding == null)
+        {
+            return;
+        }
+
+        mViewDataBinding.cardBottomDividerView.setVisibility(visible ? VISIBLE : GONE);
+    }
+
+
     public android.support.v4.util.Pair[] getOptionsCompat()
     {
         if (mViewDataBinding == null)
