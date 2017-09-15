@@ -6,39 +6,25 @@ import android.databinding.DataBindingUtil;
 import android.databinding.ViewDataBinding;
 import android.graphics.Color;
 import android.graphics.LinearGradient;
-import android.graphics.Paint;
 import android.graphics.Shader;
 import android.graphics.drawable.PaintDrawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.RectShape;
 import android.os.Build;
 import android.os.Vibrator;
-import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 
-import com.daily.base.util.DailyTextUtils;
-import com.daily.base.util.ScreenUtils;
-import com.daily.base.util.VersionUtils;
-import com.daily.dailyhotel.entity.ImageMap;
 import com.daily.dailyhotel.entity.ListItem;
 import com.daily.dailyhotel.entity.StayOutbound;
-import com.facebook.drawee.backends.pipeline.Fresco;
-import com.facebook.drawee.controller.BaseControllerListener;
-import com.facebook.drawee.controller.ControllerListener;
-import com.facebook.drawee.interfaces.DraweeController;
-import com.facebook.imagepipeline.image.ImageInfo;
+import com.daily.dailyhotel.view.DailyStayOutboundCardView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ListRowFooterDataBinding;
 import com.twoheart.dailyhotel.databinding.ListRowLoadingDataBinding;
 import com.twoheart.dailyhotel.databinding.ListRowStayOutboundDataBinding;
 
-import java.io.IOException;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -182,11 +168,16 @@ public class StayOutboundListAdapter extends RecyclerView.Adapter<RecyclerView.V
         {
             case ListItem.TYPE_ENTRY:
             {
-                ListRowStayOutboundDataBinding dataBinding = DataBindingUtil.inflate(LayoutInflater.from(mContext), R.layout.list_row_stay_outbound_data, parent, false);
+                //                ListRowStayOutboundDataBinding dataBinding = DataBindingUtil.inflate(LayoutInflater.from(mContext), R.layout.list_row_stay_outbound_data, parent, false);
+                //
+                //                StayViewHolder stayViewHolder = new StayViewHolder(dataBinding);
+                //
+                //                return stayViewHolder;
 
-                StayViewHolder stayViewHolder = new StayViewHolder(dataBinding);
+                DailyStayOutboundCardView stayOutboundCardView = new DailyStayOutboundCardView(mContext);
+                stayOutboundCardView.setLayoutParams(new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
-                return stayViewHolder;
+                return new StayCardViewHolder(stayOutboundCardView);
             }
 
             case ListItem.TYPE_FOOTER_VIEW:
@@ -224,13 +215,13 @@ public class StayOutboundListAdapter extends RecyclerView.Adapter<RecyclerView.V
         switch (item.mType)
         {
             case ListItem.TYPE_ENTRY:
-                onBindViewHolder((StayViewHolder) holder, item);
+                onBindViewHolder((StayCardViewHolder) holder, item);
                 break;
         }
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-    private void onBindViewHolder(StayViewHolder holder, ListItem listItem)
+    private void onBindViewHolder(StayCardViewHolder holder, ListItem listItem)
     {
         if (holder == null || listItem == null)
         {
@@ -239,177 +230,245 @@ public class StayOutboundListAdapter extends RecyclerView.Adapter<RecyclerView.V
 
         StayOutbound stayOutbound = listItem.getItem();
 
-        holder.dataBinding.addressTextView.setText(stayOutbound.locationDescription);
-        holder.dataBinding.nameTextView.setText(stayOutbound.name);
-        holder.dataBinding.nameEngTextView.setText("(" + stayOutbound.nameEng + ")");
+        holder.stayOutboundCardView.setStickerVisible(false);
+        holder.stayOutboundCardView.setDeleteVisible(false);
+        holder.stayOutboundCardView.setWishVisible(false);
 
-        // 가격
-        if (stayOutbound.promo == true)
-        {
-            holder.dataBinding.priceTextView.setVisibility(View.VISIBLE);
-            holder.dataBinding.priceTextView.setText(DailyTextUtils.getPriceFormat(mContext, stayOutbound.nightlyBaseRate, false));
-            holder.dataBinding.priceTextView.setPaintFlags(holder.dataBinding.priceTextView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-        } else
-        {
-            holder.dataBinding.priceTextView.setVisibility(View.INVISIBLE);
-            holder.dataBinding.priceTextView.setText(null);
-        }
+        holder.stayOutboundCardView.setImage(stayOutbound.getImageMap());
 
-        holder.dataBinding.discountPriceTextView.setText(DailyTextUtils.getPriceFormat(mContext, stayOutbound.nightlyRate, false));
+        holder.stayOutboundCardView.setGradeText(mContext.getString(R.string.label_stay_outbound_filter_x_star_rate, (int) stayOutbound.rating));
+        holder.stayOutboundCardView.setVRVisible(false);
+        holder.stayOutboundCardView.setRatingText(stayOutbound.rating);
 
-        if (mNightsEnabled == true)
-        {
-            holder.dataBinding.averageTextView.setVisibility(View.VISIBLE);
-        } else
-        {
-            holder.dataBinding.averageTextView.setVisibility(View.GONE);
-        }
+        holder.stayOutboundCardView.setNewVisible(false);
 
-        if (VersionUtils.isOverAPI16() == true)
-        {
-            holder.dataBinding.gradientView.setBackground(mPaintDrawable);
-        } else
-        {
-            holder.dataBinding.gradientView.setBackgroundDrawable(mPaintDrawable);
-        }
-
-        // grade
-        holder.dataBinding.gradeTextView.setText(mContext.getString(R.string.label_stay_outbound_filter_x_star_rate, (int) stayOutbound.rating));
-
-        // 별등급
-        holder.dataBinding.ratingBar.setOnTouchListener(new View.OnTouchListener()
-        {
-            @Override
-            public boolean onTouch(View v, MotionEvent event)
-            {
-                return true;
-            }
-        });
-        holder.dataBinding.ratingBar.setRating(stayOutbound.rating);
-
-        if (stayOutbound.tripAdvisorRating == 0.0f && mDistanceEnabled == false)
-        {
-            holder.dataBinding.tripAdvisorLayout.setVisibility(View.GONE);
-
-            ConstraintLayout.LayoutParams nameEngLayoutParams = (ConstraintLayout.LayoutParams) holder.dataBinding.nameEngTextView.getLayoutParams();
-            nameEngLayoutParams.bottomMargin = ScreenUtils.dpToPx(mContext, 6);
-
-            ConstraintLayout.LayoutParams nameLayoutParams = (ConstraintLayout.LayoutParams) holder.dataBinding.nameTextView.getLayoutParams();
-            nameLayoutParams.bottomMargin = ScreenUtils.dpToPx(mContext, -4);
-        } else
-        {
-            ConstraintLayout.LayoutParams nameEngLayoutParams = (ConstraintLayout.LayoutParams) holder.dataBinding.nameEngTextView.getLayoutParams();
-            nameEngLayoutParams.bottomMargin = ScreenUtils.dpToPx(mContext, 4);
-
-            ConstraintLayout.LayoutParams nameLayoutParams = (ConstraintLayout.LayoutParams) holder.dataBinding.nameTextView.getLayoutParams();
-            nameLayoutParams.bottomMargin = ScreenUtils.dpToPx(mContext, -2);
-
-            holder.dataBinding.tripAdvisorLayout.setVisibility(View.VISIBLE);
-        }
-
-        // tripAdvisor
-        if (stayOutbound.tripAdvisorRating == 0.0f)
-        {
-            holder.dataBinding.tripAdvisorImageView.setVisibility(View.GONE);
-            holder.dataBinding.tripAdvisorRatingBar.setVisibility(View.GONE);
-            holder.dataBinding.tripAdvisorRatingTextView.setVisibility(View.GONE);
-        } else
-        {
-            holder.dataBinding.tripAdvisorImageView.setVisibility(View.VISIBLE);
-            holder.dataBinding.tripAdvisorRatingBar.setVisibility(View.VISIBLE);
-            holder.dataBinding.tripAdvisorRatingTextView.setVisibility(View.VISIBLE);
-
-            holder.dataBinding.tripAdvisorRatingBar.setOnTouchListener(new View.OnTouchListener()
-            {
-                @Override
-                public boolean onTouch(View v, MotionEvent event)
-                {
-                    return true;
-                }
-            });
-            holder.dataBinding.tripAdvisorRatingBar.setRating(stayOutbound.tripAdvisorRating);
-            holder.dataBinding.tripAdvisorRatingTextView.setText(mContext.getString(R.string.label_stay_outbound_tripadvisor_rating, Float.toString(stayOutbound.tripAdvisorRating)));
-
-            // 별등급이 기본이 5개 이기 때문에 빈공간에도 내용이 존재한다.
-            LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) holder.dataBinding.tripAdvisorRatingTextView.getLayoutParams();
-            layoutParams.leftMargin = ScreenUtils.dpToPx(mContext, 3) - ScreenUtils.dpToPx(mContext, (5 - (int) Math.ceil(stayOutbound.tripAdvisorRating)) * 10);
-            holder.dataBinding.tripAdvisorRatingTextView.setLayoutParams(layoutParams);
-        }
-
-        // Image
-        holder.dataBinding.imageView.getHierarchy().setPlaceholderImage(R.drawable.layerlist_placeholder);
-
-        ImageMap imageMap = stayOutbound.getImageMap();
-        String url;
-
-        if (ScreenUtils.getScreenWidth(mContext) >= ScreenUtils.DEFAULT_STAYOUTBOUND_XXHDPI_WIDTH)
-        {
-            if (DailyTextUtils.isTextEmpty(imageMap.bigUrl) == true)
-            {
-                url = imageMap.smallUrl;
-            } else
-            {
-                url = imageMap.bigUrl;
-            }
-        } else
-        {
-            if (DailyTextUtils.isTextEmpty(imageMap.mediumUrl) == true)
-            {
-                url = imageMap.smallUrl;
-            } else
-            {
-                url = imageMap.mediumUrl;
-            }
-        }
-
-        ControllerListener controllerListener = new BaseControllerListener<ImageInfo>()
-        {
-            @Override
-            public void onFailure(String id, Throwable throwable)
-            {
-                if (throwable instanceof IOException == true)
-                {
-                    if (url.equalsIgnoreCase(imageMap.bigUrl) == true)
-                    {
-                        imageMap.bigUrl = null;
-                    } else if (url.equalsIgnoreCase(imageMap.mediumUrl) == true)
-                    {
-                        imageMap.mediumUrl = null;
-                    } else
-                    {
-                        // 작은 이미지를 로딩했지만 실패하는 경우.
-                        return;
-                    }
-
-                    holder.dataBinding.imageView.setImageURI(imageMap.smallUrl);
-                }
-            }
-        };
-
-        DraweeController draweeController = Fresco.newDraweeControllerBuilder()//
-            .setControllerListener(controllerListener).setUri(url).build();
-
-        holder.dataBinding.imageView.setController(draweeController);
-
-        // Promo 설명은 사용하지 않는다.
-        holder.dataBinding.promoTextView.setVisibility(View.GONE);
+        holder.stayOutboundCardView.setStayNameText(stayOutbound.name, stayOutbound.nameEng);
 
         if (mDistanceEnabled == true)
         {
-            if (holder.dataBinding.tripAdvisorImageView.getVisibility() == View.VISIBLE)
-            {
-                holder.dataBinding.dot1View.setVisibility(View.VISIBLE);
-            } else
-            {
-                holder.dataBinding.dot1View.setVisibility(View.GONE);
-            }
-
-            holder.dataBinding.distanceTextView.setVisibility(View.VISIBLE);
-            holder.dataBinding.distanceTextView.setText(mContext.getString(R.string.label_distance_km, new DecimalFormat("#.#").format(stayOutbound.distance)));
+            holder.stayOutboundCardView.setDistanceVisible(true);
+            holder.stayOutboundCardView.setDistanceText(stayOutbound.distance);
         } else
         {
-            holder.dataBinding.dot1View.setVisibility(View.GONE);
-            holder.dataBinding.distanceTextView.setVisibility(View.GONE);
+            holder.stayOutboundCardView.setDistanceVisible(false);
+        }
+
+        holder.stayOutboundCardView.setAddressText(stayOutbound.locationDescription);
+
+
+        if (stayOutbound.promo == true)
+        {
+            holder.stayOutboundCardView.setPriceText(stayOutbound.nightlyBaseRate > 0 ? 100 * stayOutbound.nightlyBaseRate / stayOutbound.nightlyBaseRate : 0, stayOutbound.nightlyRate, stayOutbound.nightlyBaseRate, null, mNightsEnabled);
+        } else
+        {
+            holder.stayOutboundCardView.setPriceText(0, stayOutbound.nightlyBaseRate, stayOutbound.nightlyBaseRate, null, mNightsEnabled);
+        }
+
+        holder.stayOutboundCardView.setBenefitText(null);
+
+
+        //        holder.dataBinding.addressTextView.setText(stayOutbound.locationDescription);
+        //        holder.dataBinding.nameTextView.setText(stayOutbound.name);
+        //        holder.dataBinding.nameEngTextView.setText("(" + stayOutbound.nameEng + ")");
+
+        //        // 가격
+        //        if (stayOutbound.promo == true)
+        //        {
+        //            holder.dataBinding.priceTextView.setVisibility(View.VISIBLE);
+        //            holder.dataBinding.priceTextView.setText(DailyTextUtils.getPriceFormat(mContext, stayOutbound.nightlyBaseRate, false));
+        //            holder.dataBinding.priceTextView.setPaintFlags(holder.dataBinding.priceTextView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+        //        } else
+        //        {
+        //            holder.dataBinding.priceTextView.setVisibility(View.INVISIBLE);
+        //            holder.dataBinding.priceTextView.setText(null);
+        //        }
+        //
+        //        holder.dataBinding.discountPriceTextView.setText(DailyTextUtils.getPriceFormat(mContext, stayOutbound.nightlyRate, false));
+        //
+        //        if (mNightsEnabled == true)
+        //        {
+        //            holder.dataBinding.averageTextView.setVisibility(View.VISIBLE);
+        //        } else
+        //        {
+        //            holder.dataBinding.averageTextView.setVisibility(View.GONE);
+        //        }
+        //
+        //        if (VersionUtils.isOverAPI16() == true)
+        //        {
+        //            holder.dataBinding.gradientView.setBackground(mPaintDrawable);
+        //        } else
+        //        {
+        //            holder.dataBinding.gradientView.setBackgroundDrawable(mPaintDrawable);
+        //        }
+
+        // grade
+        //        holder.dataBinding.gradeTextView.setText(mContext.getString(R.string.label_stay_outbound_filter_x_star_rate, (int) stayOutbound.rating));
+
+        // 별등급
+        //        holder.dataBinding.ratingBar.setOnTouchListener(new View.OnTouchListener()
+        //        {
+        //            @Override
+        //            public boolean onTouch(View v, MotionEvent event)
+        //            {
+        //                return true;
+        //            }
+        //        });
+        //        holder.dataBinding.ratingBar.setRating(stayOutbound.rating);
+
+        //        if (stayOutbound.tripAdvisorRating == 0.0f && mDistanceEnabled == false)
+        //        {
+        //            holder.dataBinding.tripAdvisorLayout.setVisibility(View.GONE);
+        //
+        //            ConstraintLayout.LayoutParams nameEngLayoutParams = (ConstraintLayout.LayoutParams) holder.dataBinding.nameEngTextView.getLayoutParams();
+        //            nameEngLayoutParams.bottomMargin = ScreenUtils.dpToPx(mContext, 6);
+        //
+        //            ConstraintLayout.LayoutParams nameLayoutParams = (ConstraintLayout.LayoutParams) holder.dataBinding.nameTextView.getLayoutParams();
+        //            nameLayoutParams.bottomMargin = ScreenUtils.dpToPx(mContext, -4);
+        //        } else
+        //        {
+        //            ConstraintLayout.LayoutParams nameEngLayoutParams = (ConstraintLayout.LayoutParams) holder.dataBinding.nameEngTextView.getLayoutParams();
+        //            nameEngLayoutParams.bottomMargin = ScreenUtils.dpToPx(mContext, 4);
+        //
+        //            ConstraintLayout.LayoutParams nameLayoutParams = (ConstraintLayout.LayoutParams) holder.dataBinding.nameTextView.getLayoutParams();
+        //            nameLayoutParams.bottomMargin = ScreenUtils.dpToPx(mContext, -2);
+        //
+        //            holder.dataBinding.tripAdvisorLayout.setVisibility(View.VISIBLE);
+        //        }
+
+        //        // tripAdvisor
+        //        if (stayOutbound.tripAdvisorRating == 0.0f)
+        //        {
+        //            holder.dataBinding.tripAdvisorImageView.setVisibility(View.GONE);
+        //            holder.dataBinding.tripAdvisorRatingBar.setVisibility(View.GONE);
+        //            holder.dataBinding.tripAdvisorRatingTextView.setVisibility(View.GONE);
+        //        } else
+        //        {
+        //            holder.dataBinding.tripAdvisorImageView.setVisibility(View.VISIBLE);
+        //            holder.dataBinding.tripAdvisorRatingBar.setVisibility(View.VISIBLE);
+        //            holder.dataBinding.tripAdvisorRatingTextView.setVisibility(View.VISIBLE);
+        //
+        //            holder.dataBinding.tripAdvisorRatingBar.setOnTouchListener(new View.OnTouchListener()
+        //            {
+        //                @Override
+        //                public boolean onTouch(View v, MotionEvent event)
+        //                {
+        //                    return true;
+        //                }
+        //            });
+        //            holder.dataBinding.tripAdvisorRatingBar.setRating(stayOutbound.tripAdvisorRating);
+        //            holder.dataBinding.tripAdvisorRatingTextView.setText(mContext.getString(R.string.label_stay_outbound_tripadvisor_rating, Float.toString(stayOutbound.tripAdvisorRating)));
+        //
+        //            // 별등급이 기본이 5개 이기 때문에 빈공간에도 내용이 존재한다.
+        //            LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) holder.dataBinding.tripAdvisorRatingTextView.getLayoutParams();
+        //            layoutParams.leftMargin = ScreenUtils.dpToPx(mContext, 3) - ScreenUtils.dpToPx(mContext, (5 - (int) Math.ceil(stayOutbound.tripAdvisorRating)) * 10);
+        //            holder.dataBinding.tripAdvisorRatingTextView.setLayoutParams(layoutParams);
+        //        }
+
+        // Image
+        //        holder.dataBinding.imageView.getHierarchy().setPlaceholderImage(R.drawable.layerlist_placeholder);
+        //
+        //        ImageMap imageMap = stayOutbound.getImageMap();
+        //        String url;
+        //
+        //        if (ScreenUtils.getScreenWidth(mContext) >= ScreenUtils.DEFAULT_STAYOUTBOUND_XXHDPI_WIDTH)
+        //        {
+        //            if (DailyTextUtils.isTextEmpty(imageMap.bigUrl) == true)
+        //            {
+        //                url = imageMap.smallUrl;
+        //            } else
+        //            {
+        //                url = imageMap.bigUrl;
+        //            }
+        //        } else
+        //        {
+        //            if (DailyTextUtils.isTextEmpty(imageMap.mediumUrl) == true)
+        //            {
+        //                url = imageMap.smallUrl;
+        //            } else
+        //            {
+        //                url = imageMap.mediumUrl;
+        //            }
+        //        }
+        //
+        //        ControllerListener controllerListener = new BaseControllerListener<ImageInfo>()
+        //        {
+        //            @Override
+        //            public void onFailure(String id, Throwable throwable)
+        //            {
+        //                if (throwable instanceof IOException == true)
+        //                {
+        //                    if (url.equalsIgnoreCase(imageMap.bigUrl) == true)
+        //                    {
+        //                        imageMap.bigUrl = null;
+        //                    } else if (url.equalsIgnoreCase(imageMap.mediumUrl) == true)
+        //                    {
+        //                        imageMap.mediumUrl = null;
+        //                    } else
+        //                    {
+        //                        // 작은 이미지를 로딩했지만 실패하는 경우.
+        //                        return;
+        //                    }
+        //
+        //                    holder.dataBinding.imageView.setImageURI(imageMap.smallUrl);
+        //                }
+        //            }
+        //        };
+        //
+        //        DraweeController draweeController = Fresco.newDraweeControllerBuilder()//
+        //            .setControllerListener(controllerListener).setUri(url).build();
+        //
+        //        holder.dataBinding.imageView.setController(draweeController);
+
+        // Promo 설명은 사용하지 않는다.
+        //        holder.dataBinding.promoTextView.setVisibility(View.GONE);
+        //
+        //        if (mDistanceEnabled == true)
+        //        {
+        //            if (holder.dataBinding.tripAdvisorImageView.getVisibility() == View.VISIBLE)
+        //            {
+        //                holder.dataBinding.dot1View.setVisibility(View.VISIBLE);
+        //            } else
+        //            {
+        //                holder.dataBinding.dot1View.setVisibility(View.GONE);
+        //            }
+        //
+        //            holder.dataBinding.distanceTextView.setVisibility(View.VISIBLE);
+        //            holder.dataBinding.distanceTextView.setText(mContext.getString(R.string.label_distance_km, new DecimalFormat("#.#").format(stayOutbound.distance)));
+        //        } else
+        //        {
+        //            holder.dataBinding.dot1View.setVisibility(View.GONE);
+        //            holder.dataBinding.distanceTextView.setVisibility(View.GONE);
+        //        }
+    }
+
+    private class StayCardViewHolder extends RecyclerView.ViewHolder
+    {
+        DailyStayOutboundCardView stayOutboundCardView;
+
+        public StayCardViewHolder(DailyStayOutboundCardView stayOutboundCardView)
+        {
+            super(stayOutboundCardView);
+
+            this.stayOutboundCardView = stayOutboundCardView;
+
+            itemView.setOnClickListener(mOnClickListener);
+            itemView.setOnLongClickListener(new View.OnLongClickListener()
+            {
+                @Override
+                public boolean onLongClick(View v)
+                {
+                    if (mOnLongClickListener == null)
+                    {
+                        return false;
+                    } else
+                    {
+                        Vibrator vibrator = (Vibrator) mContext.getSystemService(Context.VIBRATOR_SERVICE);
+                        vibrator.vibrate(70);
+
+                        return mOnLongClickListener.onLongClick(v);
+                    }
+                }
+            });
         }
     }
 

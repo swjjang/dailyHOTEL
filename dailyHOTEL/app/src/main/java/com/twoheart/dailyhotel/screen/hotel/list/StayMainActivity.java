@@ -1114,7 +1114,7 @@ public class StayMainActivity extends PlaceMainActivity
 
                         if(view instanceof DailyStayCardView == true)
                         {
-                            optionsCompat = ((DailyStayCardView)view).getOptionsCompat(StayMainActivity.this);
+                            optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(StayMainActivity.this, ((DailyStayCardView)view).getOptionsCompat());
 
                             intent = StayDetailActivity.newInstance(StayMainActivity.this //
                                 , mStayCuration.getStayBookingDay(), stay.index, stay.name, stay.imageUrl //

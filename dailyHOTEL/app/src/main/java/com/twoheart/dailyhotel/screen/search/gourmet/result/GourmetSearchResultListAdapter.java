@@ -34,7 +34,6 @@ public class GourmetSearchResultListAdapter extends GourmetListAdapter
         super(context, arrayList, listener, eventBannerListener);
     }
 
-    @Override
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     protected void onBindViewHolder(GourmetViewHolder holder, PlaceViewItem placeViewItem)
     {

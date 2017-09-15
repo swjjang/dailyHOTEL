@@ -13,35 +13,44 @@ import android.support.constraint.ConstraintLayout;
 import android.support.v4.util.Pair;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
+import android.widget.LinearLayout;
 
 import com.daily.base.util.DailyTextUtils;
+import com.daily.base.util.ScreenUtils;
 import com.daily.base.util.VersionUtils;
+import com.daily.dailyhotel.entity.ImageMap;
+import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.drawee.controller.BaseControllerListener;
+import com.facebook.drawee.controller.ControllerListener;
+import com.facebook.drawee.interfaces.DraweeController;
+import com.facebook.imagepipeline.image.ImageInfo;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.databinding.DailyViewStayCardDataBinding;
-import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.databinding.DailyViewStayOutboundCardDataBinding;
 
+import java.io.IOException;
 import java.text.DecimalFormat;
 
-public class DailyStayCardView extends ConstraintLayout
+public class DailyStayOutboundCardView extends ConstraintLayout
 {
-    private DailyViewStayCardDataBinding mViewDataBinding;
+    private DailyViewStayOutboundCardDataBinding mViewDataBinding;
 
-    public DailyStayCardView(Context context)
+    public DailyStayOutboundCardView(Context context)
     {
         super(context);
 
         initLayout(context);
     }
 
-    public DailyStayCardView(Context context, AttributeSet attrs)
+    public DailyStayOutboundCardView(Context context, AttributeSet attrs)
     {
         super(context, attrs);
 
         initLayout(context);
     }
 
-    public DailyStayCardView(Context context, AttributeSet attrs, int defStyleAttr)
+    public DailyStayOutboundCardView(Context context, AttributeSet attrs, int defStyleAttr)
     {
         super(context, attrs, defStyleAttr);
 
@@ -50,7 +59,7 @@ public class DailyStayCardView extends ConstraintLayout
 
     private void initLayout(Context context)
     {
-        mViewDataBinding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.daily_view_stay_card_data, this, true);
+        mViewDataBinding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.daily_view_stay_outbound_card_data, this, true);
 
         setGradientView(mViewDataBinding.gradientBottomView);
     }
@@ -77,14 +86,66 @@ public class DailyStayCardView extends ConstraintLayout
         }
     }
 
-    public void setImage(String url)
+    public void setImage(ImageMap imageMap)
     {
-        if (mViewDataBinding == null)
+        if (mViewDataBinding == null || imageMap == null)
         {
             return;
         }
 
-        Util.requestImageResize(getContext(), mViewDataBinding.simpleDraweeView, url);
+        // Image
+        mViewDataBinding.simpleDraweeView.getHierarchy().setPlaceholderImage(R.drawable.layerlist_placeholder);
+
+        String url;
+
+        if (ScreenUtils.getScreenWidth(getContext()) >= ScreenUtils.DEFAULT_STAYOUTBOUND_XXHDPI_WIDTH)
+        {
+            if (DailyTextUtils.isTextEmpty(imageMap.bigUrl) == true)
+            {
+                url = imageMap.smallUrl;
+            } else
+            {
+                url = imageMap.bigUrl;
+            }
+        } else
+        {
+            if (DailyTextUtils.isTextEmpty(imageMap.mediumUrl) == true)
+            {
+                url = imageMap.smallUrl;
+            } else
+            {
+                url = imageMap.mediumUrl;
+            }
+        }
+
+        ControllerListener controllerListener = new BaseControllerListener<ImageInfo>()
+        {
+            @Override
+            public void onFailure(String id, Throwable throwable)
+            {
+                if (throwable instanceof IOException == true)
+                {
+                    if (url.equalsIgnoreCase(imageMap.bigUrl) == true)
+                    {
+                        imageMap.bigUrl = null;
+                    } else if (url.equalsIgnoreCase(imageMap.mediumUrl) == true)
+                    {
+                        imageMap.mediumUrl = null;
+                    } else
+                    {
+                        // 작은 이미지를 로딩했지만 실패하는 경우.
+                        return;
+                    }
+
+                    mViewDataBinding.simpleDraweeView.setImageURI(imageMap.smallUrl);
+                }
+            }
+        };
+
+        DraweeController draweeController = Fresco.newDraweeControllerBuilder()//
+            .setControllerListener(controllerListener).setUri(url).build();
+
+        mViewDataBinding.simpleDraweeView.setController(draweeController);
     }
 
     public void setStickerVisible(boolean visible)
@@ -107,7 +168,7 @@ public class DailyStayCardView extends ConstraintLayout
         mViewDataBinding.deleteImageView.setVisibility(visible ? VISIBLE : GONE);
     }
 
-    public void setOnDeleteClickListener(View.OnClickListener onClickListener)
+    public void setOnDeleteClickListener(OnClickListener onClickListener)
     {
         if (mViewDataBinding == null)
         {
@@ -127,7 +188,7 @@ public class DailyStayCardView extends ConstraintLayout
         mViewDataBinding.wishImageView.setVisibility(visible ? VISIBLE : GONE);
     }
 
-    public void setOnWishClickListener(View.OnClickListener onClickListener)
+    public void setOnWishClickListener(OnClickListener onClickListener)
     {
         if (mViewDataBinding == null)
         {
@@ -158,31 +219,35 @@ public class DailyStayCardView extends ConstraintLayout
         mViewDataBinding.vrTextView.setVisibility(visible ? VISIBLE : GONE);
     }
 
-    public void setReviewText(int satisfaction, int trueReviewCount)
+    public void setRatingText(float rating)
     {
         if (mViewDataBinding == null)
         {
             return;
         }
 
-        String reviewText;
-
-        if (satisfaction > 0 && trueReviewCount > 0)
+        if (rating == 0.0f)
         {
-            reviewText = Integer.toString(satisfaction) + "% (" + getContext().getString(R.string.label_truereview_count, trueReviewCount) + ")";
-        } else if (satisfaction > 0)
-        {
-            reviewText = Integer.toString(satisfaction) + "%";
-        } else if (trueReviewCount > 0)
-        {
-            reviewText = getContext().getString(R.string.label_truereview_count, trueReviewCount);
+            mViewDataBinding.tripAdvisorLayout.setVisibility(View.GONE);
         } else
         {
-            reviewText = null;
-        }
+            mViewDataBinding.tripAdvisorLayout.setVisibility(View.VISIBLE);
+            mViewDataBinding.tripAdvisorRatingBar.setOnTouchListener(new View.OnTouchListener()
+            {
+                @Override
+                public boolean onTouch(View v, MotionEvent event)
+                {
+                    return true;
+                }
+            });
+            mViewDataBinding.tripAdvisorRatingBar.setRating(rating);
+            mViewDataBinding.tripAdvisorRatingTextView.setText(getContext().getString(R.string.label_stay_outbound_tripadvisor_rating, Float.toString(rating)));
 
-        mViewDataBinding.trueReviewTextView.setVisibility(DailyTextUtils.isTextEmpty(reviewText) ? GONE : VISIBLE);
-        mViewDataBinding.trueReviewTextView.setText(reviewText);
+            // 별등급이 기본이 5개 이기 때문에 빈공간에도 내용이 존재한다.
+            LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) mViewDataBinding.tripAdvisorRatingTextView.getLayoutParams();
+            layoutParams.leftMargin = ScreenUtils.dpToPx(getContext(), 2) - ScreenUtils.dpToPx(getContext(), (5 - (int) Math.ceil(rating)) * 10);
+            mViewDataBinding.tripAdvisorRatingTextView.setLayoutParams(layoutParams);
+        }
     }
 
     public void setNewVisible(boolean visible)
@@ -195,7 +260,7 @@ public class DailyStayCardView extends ConstraintLayout
         mViewDataBinding.newStayTextView.setVisibility(visible ? VISIBLE : GONE);
     }
 
-    public void setStayNameText(String stayName)
+    public void setStayNameText(String stayName, String stayEnglishName)
     {
         if (mViewDataBinding == null)
         {
@@ -203,6 +268,7 @@ public class DailyStayCardView extends ConstraintLayout
         }
 
         mViewDataBinding.stayNameTextView.setText(stayName);
+        mViewDataBinding.stayEnglishNameTextView.setText(stayEnglishName);
     }
 
     public void setDistanceVisible(boolean visible)
@@ -235,7 +301,7 @@ public class DailyStayCardView extends ConstraintLayout
         mViewDataBinding.addressTextView.setText(address);
     }
 
-    public void setPriceText(int discountPercent, int discountPrice, int price, String couponPrice, int nights)
+    public void setPriceText(int discountPercent, int discountPrice, int price, String couponPrice, boolean nightsEnabled)
     {
         if (mViewDataBinding == null)
         {
@@ -283,7 +349,7 @@ public class DailyStayCardView extends ConstraintLayout
             mViewDataBinding.couponTextView.setText(couponPrice);
         }
 
-        mViewDataBinding.averageNightsTextView.setVisibility(nights > 1 ? VISIBLE : GONE);
+        mViewDataBinding.averageNightsTextView.setVisibility(nightsEnabled ? VISIBLE : GONE);
     }
 
     public android.support.v4.util.Pair[] getOptionsCompat()
@@ -293,11 +359,10 @@ public class DailyStayCardView extends ConstraintLayout
             return null;
         }
 
-        android.support.v4.util.Pair[] pairs = new Pair[4];
+        android.support.v4.util.Pair[] pairs = new Pair[3];
         pairs[0] = android.support.v4.util.Pair.create(mViewDataBinding.simpleDraweeView, getContext().getString(R.string.transition_place_image));
         pairs[1] = android.support.v4.util.Pair.create(mViewDataBinding.stayNameTextView, getContext().getString(R.string.transition_place_name));
-        pairs[2] = android.support.v4.util.Pair.create(mViewDataBinding.gradeTextView, getContext().getString(R.string.transition_place_grade));
-        pairs[3] = android.support.v4.util.Pair.create(mViewDataBinding.gradientBottomView, getContext().getString(R.string.transition_gradient_bottom_view));
+        pairs[2] = android.support.v4.util.Pair.create(mViewDataBinding.gradientBottomView, getContext().getString(R.string.transition_gradient_bottom_view));
 
         return pairs;
     }

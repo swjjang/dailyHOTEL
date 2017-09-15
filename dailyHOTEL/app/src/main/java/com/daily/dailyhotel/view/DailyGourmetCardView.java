@@ -1,6 +1,5 @@
 package com.daily.dailyhotel.view;
 
-import android.app.Activity;
 import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.graphics.Color;
@@ -11,7 +10,7 @@ import android.graphics.drawable.PaintDrawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.RectShape;
 import android.support.constraint.ConstraintLayout;
-import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.util.Pair;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,7 +19,6 @@ import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.VersionUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.DailyViewGourmetCardDataBinding;
-import com.twoheart.dailyhotel.databinding.DailyViewStayCardDataBinding;
 import com.twoheart.dailyhotel.util.Util;
 
 import java.text.DecimalFormat;
@@ -67,8 +65,16 @@ public class DailyGourmetCardView extends ConstraintLayout
             return;
         }
 
-        mViewDataBinding.benefitTextView.setVisibility(DailyTextUtils.isTextEmpty(benefit) ? GONE : VISIBLE);
-        mViewDataBinding.benefitTextView.setText(benefit);
+        if (DailyTextUtils.isTextEmpty(benefit) == true)
+        {
+            mViewDataBinding.benefitTextView.setVisibility(GONE);
+            mViewDataBinding.benefitTopLineView.setBackgroundResource(0);
+        } else
+        {
+            mViewDataBinding.benefitTextView.setVisibility(VISIBLE);
+            mViewDataBinding.benefitTextView.setText(benefit);
+            mViewDataBinding.benefitTopLineView.setBackgroundResource(R.color.default_line_cf0f0f0);
+        }
     }
 
     public void setImage(String url)
@@ -101,7 +107,7 @@ public class DailyGourmetCardView extends ConstraintLayout
         mViewDataBinding.deleteImageView.setVisibility(visible ? VISIBLE : GONE);
     }
 
-    public void setOnDeleteClickListener(OnClickListener onClickListener)
+    public void setOnDeleteClickListener(View.OnClickListener onClickListener)
     {
         if (mViewDataBinding == null)
         {
@@ -121,7 +127,7 @@ public class DailyGourmetCardView extends ConstraintLayout
         mViewDataBinding.wishImageView.setVisibility(visible ? VISIBLE : GONE);
     }
 
-    public void setOnWishClickListener(OnClickListener onClickListener)
+    public void setOnWishClickListener(View.OnClickListener onClickListener)
     {
         if (mViewDataBinding == null)
         {
@@ -239,18 +245,23 @@ public class DailyGourmetCardView extends ConstraintLayout
         if (discountPercent > 0)
         {
             mViewDataBinding.discountPercentTextView.setVisibility(VISIBLE);
-            mViewDataBinding.discountPercentTextView.setText(Integer.toString(discountPercent) + "%");
+            mViewDataBinding.percentImageView.setVisibility(VISIBLE);
+            mViewDataBinding.discountPercentTextView.setText(Integer.toString(discountPercent));
         } else
         {
             mViewDataBinding.discountPercentTextView.setVisibility(GONE);
+            mViewDataBinding.percentImageView.setVisibility(GONE);
         }
 
         if (discountPrice > 0)
         {
-            mViewDataBinding.discountPriceTextView.setText(DailyTextUtils.getPriceFormat(getContext(), discountPrice, false));
+            DecimalFormat decimalFormat = new DecimalFormat("###,##0");
+            mViewDataBinding.discountPriceTextView.setText(decimalFormat.format(discountPrice));
+            mViewDataBinding.discountPriceWonTextView.setVisibility(VISIBLE);
         } else
         {
             mViewDataBinding.discountPriceTextView.setText(R.string.label_soldout);
+            mViewDataBinding.discountPriceWonTextView.setVisibility(GONE);
         }
 
         if (price <= 0 || price <= discountPrice)
@@ -272,23 +283,30 @@ public class DailyGourmetCardView extends ConstraintLayout
             mViewDataBinding.couponTextView.setText(couponPrice);
         }
 
-        mViewDataBinding.personTextView.setVisibility(person > 1 ? VISIBLE : GONE);
+        if (person > 1)
+        {
+            mViewDataBinding.personTextView.setVisibility(VISIBLE);
+            mViewDataBinding.personTextView.setText("/" + getContext().getString(R.string.label_persions, person));
+        } else
+        {
+            mViewDataBinding.personTextView.setVisibility(GONE);
+        }
     }
 
-    public ActivityOptionsCompat getOptionsCompat(Activity activity)
+    public android.support.v4.util.Pair[] getOptionsCompat()
     {
-        if (activity == null || mViewDataBinding == null)
+        if (mViewDataBinding == null)
         {
             return null;
         }
 
-        ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(activity,//
-            android.support.v4.util.Pair.create(mViewDataBinding.simpleDraweeView, getContext().getString(R.string.transition_place_image)),//
-            android.support.v4.util.Pair.create(mViewDataBinding.gradeTextView, getContext().getString(R.string.transition_place_grade)),//
-            android.support.v4.util.Pair.create(mViewDataBinding.gourmetNameTextView, getContext().getString(R.string.transition_place_name)),//
-            android.support.v4.util.Pair.create(mViewDataBinding.gradientBottomView, getContext().getString(R.string.transition_gradient_bottom_view)));
+        android.support.v4.util.Pair[] pairs = new Pair[4];
+        pairs[0] = android.support.v4.util.Pair.create(mViewDataBinding.simpleDraweeView, getContext().getString(R.string.transition_place_image));
+        pairs[1] = android.support.v4.util.Pair.create(mViewDataBinding.gourmetNameTextView, getContext().getString(R.string.transition_place_name));
+        pairs[2] = android.support.v4.util.Pair.create(mViewDataBinding.gradeTextView, getContext().getString(R.string.transition_place_grade));
+        pairs[3] = android.support.v4.util.Pair.create(mViewDataBinding.gradientBottomView, getContext().getString(R.string.transition_gradient_bottom_view));
 
-        return optionsCompat;
+        return pairs;
     }
 
     private void setGradientView(View view)
@@ -299,8 +317,8 @@ public class DailyGourmetCardView extends ConstraintLayout
         }
 
         // 그라디에이션 만들기.
-        final int colors[] = {Color.parseColor("#E6000000"), Color.parseColor("#99000000"), Color.parseColor("#1A000000"), Color.parseColor("#00000000"), Color.parseColor("#00000000")};
-        final float positions[] = {0.0f, 0.24f, 0.66f, 0.8f, 1.0f};
+        final int colors[] = {Color.parseColor("#E5000000"), Color.parseColor("#99000000"), Color.parseColor("#00000000")};
+        final float positions[] = {0.0f, 0.50f, 1.0f};
 
         PaintDrawable paintDrawable = new PaintDrawable();
         paintDrawable.setShape(new RectShape());

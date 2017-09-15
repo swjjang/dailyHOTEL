@@ -70,10 +70,10 @@ public class StayListAdapter extends PlaceListAdapter
             {
                 //                ListRowStayDataBinding dataBinding = DataBindingUtil.inflate(mInflater, R.layout.list_row_stay_data, parent, false);
 
-                DailyStayCardView dailyStayCardView = new DailyStayCardView(mContext);
-                dailyStayCardView.setLayoutParams(new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                DailyStayCardView stayCardView = new DailyStayCardView(mContext);
+                stayCardView.setLayoutParams(new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
-                return new StayViewHolder(dailyStayCardView);
+                return new StayViewHolder(stayCardView);
             }
 
             case PlaceViewItem.TYPE_EVENT_BANNER:
@@ -162,7 +162,13 @@ public class StayListAdapter extends PlaceListAdapter
             holder.stayCardView.setPriceText(0, 0, 0, null, 1);
         } else
         {
-            holder.stayCardView.setPriceText(0, stay.discountPrice, stay.price, null, mNights);
+            if(stay.price > 0 && stay.price > stay.discountPrice)
+            {
+                holder.stayCardView.setPriceText(stay.price > 0 ? 100 * stay.discountPrice / stay.price : 0, stay.discountPrice, stay.price, null, mNights);
+            } else
+            {
+                holder.stayCardView.setPriceText(0, stay.discountPrice, stay.price, null, mNights);
+            }
         }
 
         holder.stayCardView.setBenefitText(stay.dBenefitText);
