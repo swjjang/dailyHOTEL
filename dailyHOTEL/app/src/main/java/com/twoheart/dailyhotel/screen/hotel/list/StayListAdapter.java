@@ -164,7 +164,7 @@ public class StayListAdapter extends PlaceListAdapter
         {
             if(stay.price > 0 && stay.price > stay.discountPrice)
             {
-                holder.stayCardView.setPriceText(stay.price > 0 ? 100 * stay.discountPrice / stay.price : 0, stay.discountPrice, stay.price, null, mNights);
+                holder.stayCardView.setPriceText(stay.price > 0 ? 100 * (stay.price - stay.discountPrice) / stay.price : 0, stay.discountPrice, stay.price, null, mNights);
             } else
             {
                 holder.stayCardView.setPriceText(0, stay.discountPrice, stay.price, null, mNights);

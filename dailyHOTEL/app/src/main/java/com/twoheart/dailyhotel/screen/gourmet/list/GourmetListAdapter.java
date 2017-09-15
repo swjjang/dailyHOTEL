@@ -159,7 +159,7 @@ public class GourmetListAdapter extends PlaceListAdapter
         {
             if(gourmet.price > 0 && gourmet.price > gourmet.discountPrice)
             {
-                holder.gourmetCardView.setPriceText(gourmet.price > 0 ? 100 * gourmet.discountPrice / gourmet.price : 0, gourmet.discountPrice, gourmet.price, null, gourmet.persons);
+                holder.gourmetCardView.setPriceText(gourmet.price > 0 ? 100 * (gourmet.price - gourmet.discountPrice) / gourmet.price : 0, gourmet.discountPrice, gourmet.price, null, gourmet.persons);
             } else
             {
                 holder.gourmetCardView.setPriceText(0, gourmet.discountPrice, gourmet.price, null, gourmet.persons);

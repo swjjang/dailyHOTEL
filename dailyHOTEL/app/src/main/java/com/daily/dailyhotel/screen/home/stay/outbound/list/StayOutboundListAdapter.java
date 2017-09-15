@@ -258,7 +258,7 @@ public class StayOutboundListAdapter extends RecyclerView.Adapter<RecyclerView.V
 
         if (stayOutbound.promo == true)
         {
-            holder.stayOutboundCardView.setPriceText(stayOutbound.nightlyBaseRate > 0 ? 100 * stayOutbound.nightlyBaseRate / stayOutbound.nightlyBaseRate : 0, stayOutbound.nightlyRate, stayOutbound.nightlyBaseRate, null, mNightsEnabled);
+            holder.stayOutboundCardView.setPriceText(stayOutbound.nightlyBaseRate > 0 ? 100 * (stayOutbound.nightlyBaseRate - stayOutbound.nightlyBaseRate) / stayOutbound.nightlyBaseRate : 0, stayOutbound.nightlyRate, stayOutbound.nightlyBaseRate, null, mNightsEnabled);
         } else
         {
             holder.stayOutboundCardView.setPriceText(0, stayOutbound.nightlyBaseRate, stayOutbound.nightlyBaseRate, null, mNightsEnabled);
