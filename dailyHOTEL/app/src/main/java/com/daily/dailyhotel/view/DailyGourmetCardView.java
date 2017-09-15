@@ -19,30 +19,31 @@ import android.view.View;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.VersionUtils;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.databinding.DailyViewGourmetCardDataBinding;
 import com.twoheart.dailyhotel.databinding.DailyViewStayCardDataBinding;
 import com.twoheart.dailyhotel.util.Util;
 
 import java.text.DecimalFormat;
 
-public class DailyStayCardView extends ConstraintLayout
+public class DailyGourmetCardView extends ConstraintLayout
 {
-    private DailyViewStayCardDataBinding mViewDataBinding;
+    private DailyViewGourmetCardDataBinding mViewDataBinding;
 
-    public DailyStayCardView(Context context)
+    public DailyGourmetCardView(Context context)
     {
         super(context);
 
         initLayout(context);
     }
 
-    public DailyStayCardView(Context context, AttributeSet attrs)
+    public DailyGourmetCardView(Context context, AttributeSet attrs)
     {
         super(context, attrs);
 
         initLayout(context);
     }
 
-    public DailyStayCardView(Context context, AttributeSet attrs, int defStyleAttr)
+    public DailyGourmetCardView(Context context, AttributeSet attrs, int defStyleAttr)
     {
         super(context, attrs, defStyleAttr);
 
@@ -51,7 +52,7 @@ public class DailyStayCardView extends ConstraintLayout
 
     private void initLayout(Context context)
     {
-        mViewDataBinding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.daily_view_stay_card_data, this, true);
+        mViewDataBinding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.daily_view_gourmet_card_data, this, true);
 
         setGradientView(mViewDataBinding.gradientBottomView);
     }
@@ -66,16 +67,8 @@ public class DailyStayCardView extends ConstraintLayout
             return;
         }
 
-        if (DailyTextUtils.isTextEmpty(benefit) == true)
-        {
-            mViewDataBinding.benefitTextView.setVisibility(GONE);
-            mViewDataBinding.benefitTopLineView.setBackgroundResource(0);
-        } else
-        {
-            mViewDataBinding.benefitTextView.setVisibility(VISIBLE);
-            mViewDataBinding.benefitTextView.setText(benefit);
-            mViewDataBinding.benefitTopLineView.setBackgroundResource(R.color.default_line_cf0f0f0);
-        }
+        mViewDataBinding.benefitTextView.setVisibility(DailyTextUtils.isTextEmpty(benefit) ? GONE : VISIBLE);
+        mViewDataBinding.benefitTextView.setText(benefit);
     }
 
     public void setImage(String url)
@@ -108,7 +101,7 @@ public class DailyStayCardView extends ConstraintLayout
         mViewDataBinding.deleteImageView.setVisibility(visible ? VISIBLE : GONE);
     }
 
-    public void setOnDeleteClickListener(View.OnClickListener onClickListener)
+    public void setOnDeleteClickListener(OnClickListener onClickListener)
     {
         if (mViewDataBinding == null)
         {
@@ -128,7 +121,7 @@ public class DailyStayCardView extends ConstraintLayout
         mViewDataBinding.wishImageView.setVisibility(visible ? VISIBLE : GONE);
     }
 
-    public void setOnWishClickListener(View.OnClickListener onClickListener)
+    public void setOnWishClickListener(OnClickListener onClickListener)
     {
         if (mViewDataBinding == null)
         {
@@ -193,17 +186,17 @@ public class DailyStayCardView extends ConstraintLayout
             return;
         }
 
-        mViewDataBinding.newStayTextView.setVisibility(visible ? VISIBLE : GONE);
+        mViewDataBinding.newGourmetTextView.setVisibility(visible ? VISIBLE : GONE);
     }
 
-    public void setStayNameText(String stayName)
+    public void setGourmetNameText(String stayName)
     {
         if (mViewDataBinding == null)
         {
             return;
         }
 
-        mViewDataBinding.stayNameTextView.setText(stayName);
+        mViewDataBinding.gourmetNameTextView.setText(stayName);
     }
 
     public void setDistanceVisible(boolean visible)
@@ -236,7 +229,7 @@ public class DailyStayCardView extends ConstraintLayout
         mViewDataBinding.addressTextView.setText(address);
     }
 
-    public void setPriceText(int discountPercent, int discountPrice, int price, String couponPrice, int nights)
+    public void setPriceText(int discountPercent, int discountPrice, int price, String couponPrice, int person)
     {
         if (mViewDataBinding == null)
         {
@@ -279,7 +272,7 @@ public class DailyStayCardView extends ConstraintLayout
             mViewDataBinding.couponTextView.setText(couponPrice);
         }
 
-        mViewDataBinding.averageNightsTextView.setVisibility(nights > 1 ? VISIBLE : GONE);
+        mViewDataBinding.personTextView.setVisibility(person > 1 ? VISIBLE : GONE);
     }
 
     public ActivityOptionsCompat getOptionsCompat(Activity activity)
@@ -292,7 +285,7 @@ public class DailyStayCardView extends ConstraintLayout
         ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(activity,//
             android.support.v4.util.Pair.create(mViewDataBinding.simpleDraweeView, getContext().getString(R.string.transition_place_image)),//
             android.support.v4.util.Pair.create(mViewDataBinding.gradeTextView, getContext().getString(R.string.transition_place_grade)),//
-            android.support.v4.util.Pair.create(mViewDataBinding.stayNameTextView, getContext().getString(R.string.transition_place_name)),//
+            android.support.v4.util.Pair.create(mViewDataBinding.gourmetNameTextView, getContext().getString(R.string.transition_place_name)),//
             android.support.v4.util.Pair.create(mViewDataBinding.gradientBottomView, getContext().getString(R.string.transition_gradient_bottom_view)));
 
         return optionsCompat;

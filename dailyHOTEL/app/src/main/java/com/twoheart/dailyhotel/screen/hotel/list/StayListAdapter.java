@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.daily.base.util.DailyTextUtils;
 import com.daily.dailyhotel.view.DailyStayCardView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ListRowStayDataBinding;
@@ -135,7 +136,6 @@ public class StayListAdapter extends PlaceListAdapter
         holder.stayCardView.setDeleteVisible(false);
         holder.stayCardView.setWishVisible(false);
 
-        holder.stayCardView.setBenefitText(stay.dBenefitText);
         holder.stayCardView.setImage(stay.imageUrl);
 
         holder.stayCardView.setGradeText(stay.getGrade().getName(mContext));
@@ -164,6 +164,8 @@ public class StayListAdapter extends PlaceListAdapter
         {
             holder.stayCardView.setPriceText(0, stay.discountPrice, stay.price, null, mNights);
         }
+
+        holder.stayCardView.setBenefitText(stay.dBenefitText);
 
 
 
