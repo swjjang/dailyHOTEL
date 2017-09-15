@@ -218,7 +218,7 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
         }
 
         mViewDataBinding.logoutLayout.setVisibility(View.VISIBLE);
-        mViewDataBinding.bookingRecyclerView.setVisibility(View.GONE);
+        mViewDataBinding.bookingSwipeRefreshLayout.setVisibility(View.GONE);
         mViewDataBinding.emptyListLayout.setVisibility(View.GONE);
     }
 
@@ -237,7 +237,7 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
             }
 
             //예약한 호텔이 없는 경우
-            mViewDataBinding.bookingRecyclerView.setVisibility(View.GONE);
+            mViewDataBinding.bookingSwipeRefreshLayout.setVisibility(View.GONE);
             mViewDataBinding.emptyListLayout.setVisibility(View.VISIBLE);
             mViewDataBinding.loginTextView.setVisibility(View.GONE);
             mViewDataBinding.logoutLayout.setVisibility(View.GONE);
@@ -256,7 +256,7 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
             mAdapter.addAll(bookingList);
             mAdapter.notifyDataSetChanged();
 
-            mViewDataBinding.bookingRecyclerView.setVisibility(View.VISIBLE);
+            mViewDataBinding.bookingSwipeRefreshLayout.setVisibility(View.VISIBLE);
             mViewDataBinding.emptyListLayout.setVisibility(View.GONE);
             mViewDataBinding.loginTextView.setVisibility(View.GONE);
             mViewDataBinding.logoutLayout.setVisibility(View.GONE);
@@ -732,7 +732,7 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
         List<Booking> sortBookingList = new ArrayList<>(bookingList.size());
 
         // 예약 대기가 있는 경우
-        if(waitingForBookingList.size() > 0)
+        if (waitingForBookingList.size() > 0)
         {
             Collections.sort(waitingForBookingList, ascComparator);
 
