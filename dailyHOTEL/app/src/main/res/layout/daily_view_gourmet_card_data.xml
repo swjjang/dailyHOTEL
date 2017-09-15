@@ -311,7 +311,7 @@
         <View
             android:id="@+id/cardBottomDividerView"
             android:layout_width="0dp"
-            android:layout_height="10dp"
+            android:layout_height="15dp"
             android:background="@color/default_background"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"

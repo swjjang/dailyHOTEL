@@ -334,7 +334,7 @@
 
         <View
             android:layout_width="0dp"
-            android:layout_height="12dp"
+            android:layout_height="17dp"
             android:background="@drawable/layerlist_divider_line_ce1e1e1"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
