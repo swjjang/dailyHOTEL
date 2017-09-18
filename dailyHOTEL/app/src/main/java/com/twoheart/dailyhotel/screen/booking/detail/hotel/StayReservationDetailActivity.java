@@ -1104,6 +1104,8 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
                         @Override
                         public void accept(@NonNull ArrayList<CarouselListItem> carouselListItemList) throws Exception
                         {
+                            unLockUI();
+
                             ((StayReservationDetailLayout) mPlaceReservationDetailLayout).setRecommendGourmetData(carouselListItemList);
 
                             boolean hasData = !(carouselListItemList == null || carouselListItemList.size() == 0);
