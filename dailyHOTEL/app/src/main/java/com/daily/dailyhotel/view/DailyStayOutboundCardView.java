@@ -301,6 +301,25 @@ public class DailyStayOutboundCardView extends ConstraintLayout
         mViewDataBinding.addressTextView.setText(address);
     }
 
+    public void setPriceVisible(boolean visible)
+    {
+        if (mViewDataBinding == null)
+        {
+            return;
+        }
+
+        int flag = visible ? VISIBLE : GONE;
+
+        mViewDataBinding.discountPercentTextView.setVisibility(flag);
+        mViewDataBinding.percentImageView.setVisibility(flag);
+        mViewDataBinding.discountPriceTextView.setVisibility(flag);
+        mViewDataBinding.discountPriceWonTextView.setVisibility(flag);
+        mViewDataBinding.priceTextView.setVisibility(flag);
+        mViewDataBinding.couponTextView.setVisibility(flag);
+        mViewDataBinding.averageNightsTextView.setVisibility(flag);
+    }
+
+
     public void setPriceText(int discountPercent, int discountPrice, int price, String couponPrice, boolean nightsEnabled)
     {
         if (mViewDataBinding == null)

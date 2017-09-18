@@ -67,18 +67,17 @@
         <View
             android:id="@+id/gradientTopView"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:transitionName="@string/transition_gradient_top_view"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="@id/simpleDraweeView"
+            app:layout_constraintLeft_toLeftOf="@id/simpleDraweeView"
+            app:layout_constraintRight_toRightOf="@id/simpleDraweeView"
+            app:layout_constraintTop_toTopOf="@id/simpleDraweeView"/>
 
         <View
             android:id="@+id/gradientBottomView"
             android:layout_width="0dp"
             android:layout_height="63dp"
             android:background="@drawable/shape_gradient_card_bottom"
-            android:transitionName="@string/transition_gradient_bottom_view"
             app:layout_constraintBottom_toBottomOf="@id/simpleDraweeView"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"/>

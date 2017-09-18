@@ -25,6 +25,7 @@ import com.daily.dailyhotel.screen.common.dialog.call.CallDialogActivity;
 import com.daily.dailyhotel.screen.home.campaigntag.CampaignTagListAnalyticsImpl;
 import com.daily.dailyhotel.screen.home.campaigntag.CampaignTagListAnalyticsInterface;
 import com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity;
+import com.daily.dailyhotel.view.DailyGourmetCardView;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Gourmet;
@@ -608,33 +609,12 @@ public class GourmetCampaignTagListPresenter //
                 }
             });
 
-            View simpleDraweeView = view.findViewById(R.id.imageView);
-            View nameTextView = view.findViewById(R.id.nameTextView);
-            View gradientTopView = view.findViewById(R.id.gradientTopView);
-            View gradientBottomView = view.findViewById(R.id.gradientView);
-
-            Object mapTag = gradientBottomView.getTag();
+            ActivityOptionsCompat optionsCompat;
             Intent intent;
 
-            if (mapTag != null && "map".equals(mapTag) == true)
+            if (view instanceof DailyGourmetCardView == true)
             {
-                //                intent = GourmetDetailActivity.newInstance(getActivity() //
-                //                    , mGourmetBookingDay, gourmet.index, gourmet.name //
-                //                    , gourmet.imageUrl, gourmet.category, gourmet.isSoldOut//
-                //                    , analyticsParam, true, PlaceDetailLayout.TRANS_GRADIENT_BOTTOM_TYPE_MAP);
-
-                intent = GourmetDetailActivity.newInstance(getActivity() //
-                    , gourmet.index, gourmet.name, gourmet.imageUrl, gourmet.discountPrice//
-                    , mGourmetBookingDay.getVisitDay(DailyCalendar.ISO_8601_FORMAT)//
-                    , gourmet.category, gourmet.isSoldOut, false, false, true//
-                    , GourmetDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_MAP//
-                    , analyticsParam);
-            } else
-            {
-                //                intent = GourmetDetailActivity.newInstance(getActivity()//
-                //                    , mGourmetBookingDay, gourmet.index, gourmet.name //
-                //                    , gourmet.imageUrl, gourmet.category, gourmet.isSoldOut//
-                //                    , analyticsParam, true, PlaceDetailLayout.TRANS_GRADIENT_BOTTOM_TYPE_LIST);
+                optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(), ((DailyGourmetCardView) view).getOptionsCompat());
 
                 intent = GourmetDetailActivity.newInstance(getActivity() //
                     , gourmet.index, gourmet.name, gourmet.imageUrl, gourmet.discountPrice//
@@ -642,22 +622,43 @@ public class GourmetCampaignTagListPresenter //
                     , gourmet.category, gourmet.isSoldOut, false, false, true//
                     , GourmetDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_LIST//
                     , analyticsParam);
+            } else
+            {
+                View simpleDraweeView = view.findViewById(R.id.imageView);
+                View nameTextView = view.findViewById(R.id.nameTextView);
+                View gradientTopView = view.findViewById(R.id.gradientTopView);
+                View gradientBottomView = view.findViewById(R.id.gradientView);
+
+                Object mapTag = gradientBottomView.getTag();
+
+                if (mapTag != null && "map".equals(mapTag) == true)
+                {
+                    intent = GourmetDetailActivity.newInstance(getActivity() //
+                        , gourmet.index, gourmet.name, gourmet.imageUrl, gourmet.discountPrice//
+                        , mGourmetBookingDay.getVisitDay(DailyCalendar.ISO_8601_FORMAT)//
+                        , gourmet.category, gourmet.isSoldOut, false, false, true//
+                        , GourmetDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_MAP//
+                        , analyticsParam);
+                } else
+                {
+                    intent = GourmetDetailActivity.newInstance(getActivity() //
+                        , gourmet.index, gourmet.name, gourmet.imageUrl, gourmet.discountPrice//
+                        , mGourmetBookingDay.getVisitDay(DailyCalendar.ISO_8601_FORMAT)//
+                        , gourmet.category, gourmet.isSoldOut, false, false, true//
+                        , GourmetDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_LIST//
+                        , analyticsParam);
+                }
+
+                optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(),//
+                    android.support.v4.util.Pair.create(simpleDraweeView, getString(R.string.transition_place_image)),//
+                    android.support.v4.util.Pair.create(nameTextView, getString(R.string.transition_place_name)),//
+                    android.support.v4.util.Pair.create(gradientTopView, getString(R.string.transition_gradient_top_view)),//
+                    android.support.v4.util.Pair.create(gradientBottomView, getString(R.string.transition_gradient_bottom_view)));
             }
 
-            ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(),//
-                android.support.v4.util.Pair.create(simpleDraweeView, getString(R.string.transition_place_image)),//
-                android.support.v4.util.Pair.create(nameTextView, getString(R.string.transition_place_name)),//
-                android.support.v4.util.Pair.create(gradientTopView, getString(R.string.transition_gradient_top_view)),//
-                android.support.v4.util.Pair.create(gradientBottomView, getString(R.string.transition_gradient_bottom_view)));
-
-            startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_GOURMET_DETAIL, options.toBundle());
+            startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_GOURMET_DETAIL, optionsCompat.toBundle());
         } else
         {
-            //            Intent intent = GourmetDetailActivity.newInstance(getActivity() //
-            //                , mGourmetBookingDay, gourmet.index, gourmet.name //
-            //                , gourmet.imageUrl, gourmet.category, gourmet.isSoldOut//
-            //                , analyticsParam, false, PlaceDetailLayout.TRANS_GRADIENT_BOTTOM_TYPE_NONE);
-
             Intent intent = GourmetDetailActivity.newInstance(getActivity() //
                 , gourmet.index, gourmet.name, gourmet.imageUrl, gourmet.discountPrice//
                 , mGourmetBookingDay.getVisitDay(DailyCalendar.ISO_8601_FORMAT)//

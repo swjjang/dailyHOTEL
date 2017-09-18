@@ -26,6 +26,7 @@ import com.daily.dailyhotel.repository.local.model.AnalyticsParam;
 import com.daily.dailyhotel.screen.home.stay.outbound.detail.StayOutboundDetailActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.preview.StayOutboundPreviewActivity;
 import com.daily.dailyhotel.util.RecentlyPlaceUtil;
+import com.daily.dailyhotel.view.DailyStayCardView;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
@@ -304,24 +305,37 @@ public class RecentStayListFragment extends RecentPlacesListFragment
             analyticsParam.setProvince(null);
             analyticsParam.setTotalListCount(-1);
 
-            Intent intent = StayDetailActivity.newInstance(mBaseActivity //
-                , (StayBookingDay) mPlaceBookingDay, recentlyPlace.index, recentlyPlace.title, recentlyPlace.imageUrl //
-                , analyticsParam, true, PlaceDetailLayout.TRANS_GRADIENT_BOTTOM_TYPE_LIST);
+            ActivityOptionsCompat optionsCompat;
+            Intent intent;
 
-            View simpleDraweeView = view.findViewById(R.id.imageView);
-            View gradeTextView = view.findViewById(R.id.gradeTextView);
-            View nameTextView = view.findViewById(R.id.nameTextView);
-            View gradientTopView = view.findViewById(R.id.gradientTopView);
-            View gradientBottomView = view.findViewById(R.id.gradientView);
+            if (view instanceof DailyStayCardView == true)
+            {
+                optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(), ((DailyStayCardView) view).getOptionsCompat());
 
-            ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(mBaseActivity,//
-                android.support.v4.util.Pair.create(simpleDraweeView, getString(R.string.transition_place_image)),//
-                android.support.v4.util.Pair.create(gradeTextView, getString(R.string.transition_place_grade)),//
-                android.support.v4.util.Pair.create(nameTextView, getString(R.string.transition_place_name)),//
-                android.support.v4.util.Pair.create(gradientTopView, getString(R.string.transition_gradient_top_view)),//
-                android.support.v4.util.Pair.create(gradientBottomView, getString(R.string.transition_gradient_bottom_view)));
+                intent = StayDetailActivity.newInstance(mBaseActivity //
+                    , (StayBookingDay) mPlaceBookingDay, recentlyPlace.index, recentlyPlace.title, recentlyPlace.imageUrl //
+                    , analyticsParam, true, PlaceDetailLayout.TRANS_GRADIENT_BOTTOM_TYPE_LIST);
+            } else
+            {
+                intent = StayDetailActivity.newInstance(mBaseActivity //
+                    , (StayBookingDay) mPlaceBookingDay, recentlyPlace.index, recentlyPlace.title, recentlyPlace.imageUrl //
+                    , analyticsParam, true, PlaceDetailLayout.TRANS_GRADIENT_BOTTOM_TYPE_LIST);
 
-            mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL, options.toBundle());
+                View simpleDraweeView = view.findViewById(R.id.imageView);
+                View gradeTextView = view.findViewById(R.id.gradeTextView);
+                View nameTextView = view.findViewById(R.id.nameTextView);
+                View gradientTopView = view.findViewById(R.id.gradientTopView);
+                View gradientBottomView = view.findViewById(R.id.gradientView);
+
+                optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(mBaseActivity,//
+                    android.support.v4.util.Pair.create(simpleDraweeView, getString(R.string.transition_place_image)),//
+                    android.support.v4.util.Pair.create(gradeTextView, getString(R.string.transition_place_grade)),//
+                    android.support.v4.util.Pair.create(nameTextView, getString(R.string.transition_place_name)),//
+                    android.support.v4.util.Pair.create(gradientTopView, getString(R.string.transition_gradient_top_view)),//
+                    android.support.v4.util.Pair.create(gradientBottomView, getString(R.string.transition_gradient_bottom_view)));
+            }
+
+            mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL, optionsCompat.toBundle());
         } else
         {
             AnalyticsParam analyticsParam = new AnalyticsParam();

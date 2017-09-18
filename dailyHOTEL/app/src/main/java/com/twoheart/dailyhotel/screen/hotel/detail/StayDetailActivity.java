@@ -55,7 +55,6 @@ import com.twoheart.dailyhotel.screen.common.TrueVRActivity;
 import com.twoheart.dailyhotel.screen.common.ZoomMapActivity;
 import com.twoheart.dailyhotel.screen.hotel.filter.StayCalendarActivity;
 import com.twoheart.dailyhotel.screen.hotel.filter.StayDetailCalendarActivity;
-import com.twoheart.dailyhotel.screen.main.MainActivity;
 import com.twoheart.dailyhotel.screen.mydaily.coupon.SelectStayCouponDialogActivity;
 import com.twoheart.dailyhotel.screen.mydaily.member.EditProfilePhoneActivity;
 import com.twoheart.dailyhotel.screen.mydaily.member.LoginActivity;
@@ -235,7 +234,7 @@ public class StayDetailActivity extends PlaceDetailActivity
 
             if (mIsUsedMultiTransition == true)
             {
-                initTransition();
+                initTransition(gradientType);
             } else
             {
                 mIsTransitionEnd = true;
@@ -277,13 +276,23 @@ public class StayDetailActivity extends PlaceDetailActivity
     }
 
     @TargetApi(value = 21)
-    private void initTransition()
+    private void initTransition(int gradientType)
     {
         if (mIsUsedMultiTransition == true)
         {
             TransitionSet inTransitionSet = DraweeTransition.createTransitionSet(ScalingUtils.ScaleType.CENTER_CROP, ScalingUtils.ScaleType.CENTER_CROP);
-            Transition inTextTransition = new TextTransition(getResources().getColor(R.color.white), getResources().getColor(R.color.default_text_c323232)//
-                , 17, 18, new LinearInterpolator());
+            Transition inTextTransition;
+
+            if (gradientType == PlaceDetailLayout.TRANS_GRADIENT_BOTTOM_TYPE_MAP)
+            {
+                inTextTransition = new TextTransition(getResources().getColor(R.color.white), getResources().getColor(R.color.default_text_c323232)//
+                    , 17, 18, new LinearInterpolator());
+            } else
+            {
+                inTextTransition = new TextTransition(getResources().getColor(R.color.default_text_c323232), getResources().getColor(R.color.default_text_c323232)//
+                    , 17, 18, new LinearInterpolator());
+            }
+
             inTextTransition.addTarget(getString(R.string.transition_place_name));
             inTransitionSet.addTransition(inTextTransition);
 
@@ -298,8 +307,18 @@ public class StayDetailActivity extends PlaceDetailActivity
             getWindow().setSharedElementEnterTransition(inTransitionSet);
 
             TransitionSet outTransitionSet = DraweeTransition.createTransitionSet(ScalingUtils.ScaleType.CENTER_CROP, ScalingUtils.ScaleType.CENTER_CROP);
-            Transition outTextTransition = new TextTransition(getResources().getColor(R.color.default_text_c323232), getResources().getColor(R.color.white)//
-                , 18, 17, new LinearInterpolator());
+            Transition outTextTransition;
+
+            if (gradientType == PlaceDetailLayout.TRANS_GRADIENT_BOTTOM_TYPE_MAP)
+            {
+                outTextTransition = new TextTransition(getResources().getColor(R.color.white), getResources().getColor(R.color.default_text_c323232)//
+                    , 18, 17, new LinearInterpolator());
+            } else
+            {
+                outTextTransition = new TextTransition(getResources().getColor(R.color.default_text_c323232), getResources().getColor(R.color.default_text_c323232)//
+                    , 18, 17, new LinearInterpolator());
+            }
+
             outTextTransition.addTarget(getString(R.string.transition_place_name));
             outTransitionSet.addTransition(outTextTransition);
 

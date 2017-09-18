@@ -4,12 +4,6 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.databinding.ViewDataBinding;
-import android.graphics.Color;
-import android.graphics.LinearGradient;
-import android.graphics.Shader;
-import android.graphics.drawable.PaintDrawable;
-import android.graphics.drawable.ShapeDrawable;
-import android.graphics.drawable.shapes.RectShape;
 import android.os.Build;
 import android.os.Vibrator;
 import android.support.v7.widget.RecyclerView;
@@ -23,7 +17,6 @@ import com.daily.dailyhotel.view.DailyStayOutboundCardView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ListRowFooterDataBinding;
 import com.twoheart.dailyhotel.databinding.ListRowLoadingDataBinding;
-import com.twoheart.dailyhotel.databinding.ListRowStayOutboundDataBinding;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -33,8 +26,6 @@ public class StayOutboundListAdapter extends RecyclerView.Adapter<RecyclerView.V
 {
     private Context mContext;
     private List<ListItem> mList;
-
-    private PaintDrawable mPaintDrawable;
 
     View.OnClickListener mOnClickListener;
     View.OnLongClickListener mOnLongClickListener;
@@ -49,8 +40,6 @@ public class StayOutboundListAdapter extends RecyclerView.Adapter<RecyclerView.V
         mList = new ArrayList<>();
 
         addAll(arrayList);
-
-        makeShaderFactory();
     }
 
     public void setDistanceEnabled(boolean enabled)
@@ -140,27 +129,6 @@ public class StayOutboundListAdapter extends RecyclerView.Adapter<RecyclerView.V
         return mList.size();
     }
 
-    private void makeShaderFactory()
-    {
-        // 그라디에이션 만들기.
-        final int colors[] = {Color.parseColor("#E6000000"), Color.parseColor("#99000000"), Color.parseColor("#1A000000"), Color.parseColor("#00000000"), Color.parseColor("#00000000")};
-        final float positions[] = {0.0f, 0.24f, 0.66f, 0.8f, 1.0f};
-
-        mPaintDrawable = new PaintDrawable();
-        mPaintDrawable.setShape(new RectShape());
-
-        ShapeDrawable.ShaderFactory sf = new ShapeDrawable.ShaderFactory()
-        {
-            @Override
-            public Shader resize(int width, int height)
-            {
-                return new LinearGradient(0, height, 0, 0, colors, positions, Shader.TileMode.CLAMP);
-            }
-        };
-
-        mPaintDrawable.setShaderFactory(sf);
-    }
-
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
     {
@@ -168,16 +136,10 @@ public class StayOutboundListAdapter extends RecyclerView.Adapter<RecyclerView.V
         {
             case ListItem.TYPE_ENTRY:
             {
-                //                ListRowStayOutboundDataBinding dataBinding = DataBindingUtil.inflate(LayoutInflater.from(mContext), R.layout.list_row_stay_outbound_data, parent, false);
-                //
-                //                StayViewHolder stayViewHolder = new StayViewHolder(dataBinding);
-                //
-                //                return stayViewHolder;
-
                 DailyStayOutboundCardView stayOutboundCardView = new DailyStayOutboundCardView(mContext);
                 stayOutboundCardView.setLayoutParams(new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
-                return new StayCardViewHolder(stayOutboundCardView);
+                return new StayViewHolder(stayOutboundCardView);
             }
 
             case ListItem.TYPE_FOOTER_VIEW:
@@ -215,13 +177,13 @@ public class StayOutboundListAdapter extends RecyclerView.Adapter<RecyclerView.V
         switch (item.mType)
         {
             case ListItem.TYPE_ENTRY:
-                onBindViewHolder((StayCardViewHolder) holder, item);
+                onBindViewHolder((StayViewHolder) holder, item);
                 break;
         }
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-    private void onBindViewHolder(StayCardViewHolder holder, ListItem listItem)
+    private void onBindViewHolder(StayViewHolder holder, ListItem listItem)
     {
         if (holder == null || listItem == null)
         {
@@ -441,46 +403,15 @@ public class StayOutboundListAdapter extends RecyclerView.Adapter<RecyclerView.V
         //        }
     }
 
-    private class StayCardViewHolder extends RecyclerView.ViewHolder
+    private class StayViewHolder extends RecyclerView.ViewHolder
     {
         DailyStayOutboundCardView stayOutboundCardView;
 
-        public StayCardViewHolder(DailyStayOutboundCardView stayOutboundCardView)
+        public StayViewHolder(DailyStayOutboundCardView stayOutboundCardView)
         {
             super(stayOutboundCardView);
 
             this.stayOutboundCardView = stayOutboundCardView;
-
-            itemView.setOnClickListener(mOnClickListener);
-            itemView.setOnLongClickListener(new View.OnLongClickListener()
-            {
-                @Override
-                public boolean onLongClick(View v)
-                {
-                    if (mOnLongClickListener == null)
-                    {
-                        return false;
-                    } else
-                    {
-                        Vibrator vibrator = (Vibrator) mContext.getSystemService(Context.VIBRATOR_SERVICE);
-                        vibrator.vibrate(70);
-
-                        return mOnLongClickListener.onLongClick(v);
-                    }
-                }
-            });
-        }
-    }
-
-    private class StayViewHolder extends RecyclerView.ViewHolder
-    {
-        ListRowStayOutboundDataBinding dataBinding;
-
-        public StayViewHolder(ListRowStayOutboundDataBinding dataBinding)
-        {
-            super(dataBinding.getRoot());
-
-            this.dataBinding = dataBinding;
 
             itemView.setOnClickListener(mOnClickListener);
             itemView.setOnLongClickListener(new View.OnLongClickListener()

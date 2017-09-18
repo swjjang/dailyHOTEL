@@ -24,6 +24,7 @@ import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
 import com.daily.dailyhotel.screen.common.dialog.call.CallDialogActivity;
 import com.daily.dailyhotel.screen.home.campaigntag.CampaignTagListAnalyticsImpl;
 import com.daily.dailyhotel.screen.home.campaigntag.CampaignTagListAnalyticsInterface;
+import com.daily.dailyhotel.view.DailyStayCardView;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
@@ -604,35 +605,48 @@ public class StayCampaignTagListPresenter extends BaseExceptionPresenter<StayCam
             analyticsParam.setProvince(null);
             analyticsParam.setTotalListCount(count);
 
-            View simpleDraweeView = view.findViewById(R.id.imageView);
-            View gradeTextView = view.findViewById(R.id.gradeTextView);
-            View nameTextView = view.findViewById(R.id.nameTextView);
-            View gradientTopView = view.findViewById(R.id.gradientTopView);
-            View gradientBottomView = view.findViewById(R.id.gradientView);
-
-            Object mapTag = gradientBottomView.getTag();
+            ActivityOptionsCompat optionsCompat;
             Intent intent;
 
-            if (mapTag != null && "map".equals(mapTag) == true)
+            if (view instanceof DailyStayCardView == true)
             {
-                intent = StayDetailActivity.newInstance(getActivity(), mStayBookingDay //
-                    , stay.index, stay.name, stay.imageUrl //
-                    , analyticsParam, true, PlaceDetailLayout.TRANS_GRADIENT_BOTTOM_TYPE_MAP);
-            } else
-            {
+                optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(), ((DailyStayCardView) view).getOptionsCompat());
+
                 intent = StayDetailActivity.newInstance(getActivity(), mStayBookingDay //
                     , stay.index, stay.name, stay.imageUrl //
                     , analyticsParam, true, PlaceDetailLayout.TRANS_GRADIENT_BOTTOM_TYPE_LIST);
+            } else
+            {
+                View simpleDraweeView = view.findViewById(R.id.imageView);
+                View gradeTextView = view.findViewById(R.id.gradeTextView);
+                View nameTextView = view.findViewById(R.id.nameTextView);
+                View gradientTopView = view.findViewById(R.id.gradientTopView);
+                View gradientBottomView = view.findViewById(R.id.gradientView);
+
+                Object mapTag = gradientBottomView.getTag();
+
+
+                if (mapTag != null && "map".equals(mapTag) == true)
+                {
+                    intent = StayDetailActivity.newInstance(getActivity(), mStayBookingDay //
+                        , stay.index, stay.name, stay.imageUrl //
+                        , analyticsParam, true, PlaceDetailLayout.TRANS_GRADIENT_BOTTOM_TYPE_MAP);
+                } else
+                {
+                    intent = StayDetailActivity.newInstance(getActivity(), mStayBookingDay //
+                        , stay.index, stay.name, stay.imageUrl //
+                        , analyticsParam, true, PlaceDetailLayout.TRANS_GRADIENT_BOTTOM_TYPE_LIST);
+                }
+
+                optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(),//
+                    android.support.v4.util.Pair.create(simpleDraweeView, getString(R.string.transition_place_image)),//
+                    android.support.v4.util.Pair.create(gradeTextView, getString(R.string.transition_place_grade)),//
+                    android.support.v4.util.Pair.create(nameTextView, getString(R.string.transition_place_name)),//
+                    android.support.v4.util.Pair.create(gradientTopView, getString(R.string.transition_gradient_top_view)),//
+                    android.support.v4.util.Pair.create(gradientBottomView, getString(R.string.transition_gradient_bottom_view)));
             }
 
-            ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(),//
-                android.support.v4.util.Pair.create(simpleDraweeView, getString(R.string.transition_place_image)),//
-                android.support.v4.util.Pair.create(gradeTextView, getString(R.string.transition_place_grade)),//
-                android.support.v4.util.Pair.create(nameTextView, getString(R.string.transition_place_name)),//
-                android.support.v4.util.Pair.create(gradientTopView, getString(R.string.transition_gradient_top_view)),//
-                android.support.v4.util.Pair.create(gradientBottomView, getString(R.string.transition_gradient_bottom_view)));
-
-            startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_STAY_DETAIL, options.toBundle());
+            startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_STAY_DETAIL, optionsCompat.toBundle());
         } else
         {
             AnalyticsParam analyticsParam = new AnalyticsParam();

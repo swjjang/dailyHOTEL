@@ -39,7 +39,7 @@ public abstract class RecentPlacesListAdapter extends RecyclerView.Adapter<Recyc
 
         void onItemLongClick(View view);
 
-        void onDeleteClick(View view, int position);
+        void onDeleteClick(View view);
     }
 
     public abstract void setPlaceBookingDay(PlaceBookingDay placeBookingDay);

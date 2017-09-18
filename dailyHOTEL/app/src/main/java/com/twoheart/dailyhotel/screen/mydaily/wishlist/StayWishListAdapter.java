@@ -149,118 +149,118 @@ public class StayWishListAdapter extends PlaceWishListAdapter
         }
 
 
-//        String address = stay.addressSummary;
-//
-//        int barIndex = address.indexOf('|');
-//        if (barIndex >= 0)
-//        {
-//            address = address.replace(" | ", "ㅣ");
-//        } else if (address.indexOf('l') >= 0)
-//        {
-//            address = address.replace(" l ", "ㅣ");
-//        }
-//
-//        holder.dataBinding.addressTextView.setText(address);
-//        holder.dataBinding.nameTextView.setText(stay.name);
-//        holder.dataBinding.priceTextView.setVisibility(View.INVISIBLE);
-//        holder.dataBinding.priceTextView.setText(null);
+        //        String address = stay.addressSummary;
+        //
+        //        int barIndex = address.indexOf('|');
+        //        if (barIndex >= 0)
+        //        {
+        //            address = address.replace(" | ", "ㅣ");
+        //        } else if (address.indexOf('l') >= 0)
+        //        {
+        //            address = address.replace(" l ", "ㅣ");
+        //        }
+        //
+        //        holder.dataBinding.addressTextView.setText(address);
+        //        holder.dataBinding.nameTextView.setText(stay.name);
+        //        holder.dataBinding.priceTextView.setVisibility(View.INVISIBLE);
+        //        holder.dataBinding.priceTextView.setText(null);
 
         // 만족도
-//        if (stay.satisfaction > 0)
-//        {
-//            holder.dataBinding.satisfactionView.setVisibility(View.VISIBLE);
-//            holder.dataBinding.satisfactionView.setText(//
-//                mContext.getResources().getString(R.string.label_list_satisfaction, stay.satisfaction));
-//        } else
-//        {
-//            holder.dataBinding.satisfactionView.setVisibility(View.GONE);
-//        }
+        //        if (stay.satisfaction > 0)
+        //        {
+        //            holder.dataBinding.satisfactionView.setVisibility(View.VISIBLE);
+        //            holder.dataBinding.satisfactionView.setText(//
+        //                mContext.getResources().getString(R.string.label_list_satisfaction, stay.satisfaction));
+        //        } else
+        //        {
+        //            holder.dataBinding.satisfactionView.setVisibility(View.GONE);
+        //        }
 
-//        holder.dataBinding.averageTextView.setVisibility(View.GONE);
-//        holder.dataBinding.discountPriceTextView.setVisibility(View.GONE);
+        //        holder.dataBinding.averageTextView.setVisibility(View.GONE);
+        //        holder.dataBinding.discountPriceTextView.setVisibility(View.GONE);
 
-//        holder.dataBinding.nameTextView.setSelected(true); // Android TextView marquee bug
+        //        holder.dataBinding.nameTextView.setSelected(true); // Android TextView marquee bug
 
-//        if (VersionUtils.isOverAPI16() == true)
-//        {
-//            holder.dataBinding.gradientView.setBackground(mPaintDrawable);
-//        } else
-//        {
-//            holder.dataBinding.gradientView.setBackgroundDrawable(mPaintDrawable);
-//        }
-//
-//        // grade
-//        holder.dataBinding.gradeTextView.setText(stay.getGrade().getName(mContext));
-//        holder.dataBinding.gradeTextView.setBackgroundResource(stay.getGrade().getColorResId());
-//
-//        Util.requestImageResize(mContext, holder.dataBinding.imageView, stay.imageUrl);
-//
-//        // SOLD OUT 표시
-//        if (stay.isSoldOut == true)
-//        {
-//            holder.dataBinding.soldoutView.setVisibility(View.VISIBLE);
-//        } else
-//        {
-//            holder.dataBinding.soldoutView.setVisibility(View.GONE);
-//        }
-//
-//        if (DailyTextUtils.isTextEmpty(stay.dBenefitText) == false)
-//        {
-//            holder.dataBinding.dBenefitTextView.setVisibility(View.VISIBLE);
-//            holder.dataBinding.dBenefitTextView.setText(stay.dBenefitText);
-//        } else
-//        {
-//            holder.dataBinding.dBenefitTextView.setVisibility(View.GONE);
-//        }
-//
-//        if (mShowDistanceIgnoreSort == true || getSortType() == Constants.SortType.DISTANCE)
-//        {
-//            if (holder.dataBinding.satisfactionView.getVisibility() == View.VISIBLE || holder.dataBinding.trueVRView.getVisibility() == View.VISIBLE)
-//            {
-//                holder.dataBinding.dot1View.setVisibility(View.VISIBLE);
-//            } else
-//            {
-//                holder.dataBinding.dot1View.setVisibility(View.GONE);
-//            }
-//
-//            holder.dataBinding.distanceTextView.setVisibility(View.VISIBLE);
-//            holder.dataBinding.distanceTextView.setText(mContext.getString(R.string.label_distance_km, new DecimalFormat("#.#").format(stay.distance)));
-//        } else
-//        {
-//            holder.dataBinding.dot1View.setVisibility(View.GONE);
-//            holder.dataBinding.distanceTextView.setVisibility(View.GONE);
-//        }
-//
-//        // VR 여부
-//        if (stay.truevr == true && mTrueVREnabled == true)
-//        {
-//            if (holder.dataBinding.satisfactionView.getVisibility() == View.VISIBLE)
-//            {
-//                holder.dataBinding.dot2View.setVisibility(View.VISIBLE);
-//            } else
-//            {
-//                holder.dataBinding.dot2View.setVisibility(View.GONE);
-//            }
-//
-//            holder.dataBinding.trueVRView.setVisibility(View.VISIBLE);
-//        } else
-//        {
-//            holder.dataBinding.dot2View.setVisibility(View.GONE);
-//            holder.dataBinding.trueVRView.setVisibility(View.GONE);
-//        }
-//
-//        holder.dataBinding.deleteView.setVisibility(View.VISIBLE);
-//        holder.dataBinding.deleteView.setTag(position);
-//
-//        if (holder.dataBinding.satisfactionView.getVisibility() == View.GONE//
-//            && holder.dataBinding.trueVRView.getVisibility() == View.GONE//
-//            && holder.dataBinding.distanceTextView.getVisibility() == View.GONE)
-//        {
-//            holder.dataBinding.informationLayout.setVisibility(View.GONE);
-//        } else
-//        {
-//            holder.dataBinding.informationLayout.setVisibility(View.VISIBLE);
-//        }
+        //        if (VersionUtils.isOverAPI16() == true)
+        //        {
+        //            holder.dataBinding.gradientView.setBackground(mPaintDrawable);
+        //        } else
+        //        {
+        //            holder.dataBinding.gradientView.setBackgroundDrawable(mPaintDrawable);
+        //        }
+        //
+        //        // grade
+        //        holder.dataBinding.gradeTextView.setText(stay.getGrade().getName(mContext));
+        //        holder.dataBinding.gradeTextView.setBackgroundResource(stay.getGrade().getColorResId());
+        //
+        //        Util.requestImageResize(mContext, holder.dataBinding.imageView, stay.imageUrl);
+        //
+        //        // SOLD OUT 표시
+        //        if (stay.isSoldOut == true)
+        //        {
+        //            holder.dataBinding.soldoutView.setVisibility(View.VISIBLE);
+        //        } else
+        //        {
+        //            holder.dataBinding.soldoutView.setVisibility(View.GONE);
+        //        }
+        //
+        //        if (DailyTextUtils.isTextEmpty(stay.dBenefitText) == false)
+        //        {
+        //            holder.dataBinding.dBenefitTextView.setVisibility(View.VISIBLE);
+        //            holder.dataBinding.dBenefitTextView.setText(stay.dBenefitText);
+        //        } else
+        //        {
+        //            holder.dataBinding.dBenefitTextView.setVisibility(View.GONE);
+        //        }
+        //
+        //        if (mShowDistanceIgnoreSort == true || getSortType() == Constants.SortType.DISTANCE)
+        //        {
+        //            if (holder.dataBinding.satisfactionView.getVisibility() == View.VISIBLE || holder.dataBinding.trueVRView.getVisibility() == View.VISIBLE)
+        //            {
+        //                holder.dataBinding.dot1View.setVisibility(View.VISIBLE);
+        //            } else
+        //            {
+        //                holder.dataBinding.dot1View.setVisibility(View.GONE);
+        //            }
+        //
+        //            holder.dataBinding.distanceTextView.setVisibility(View.VISIBLE);
+        //            holder.dataBinding.distanceTextView.setText(mContext.getString(R.string.label_distance_km, new DecimalFormat("#.#").format(stay.distance)));
+        //        } else
+        //        {
+        //            holder.dataBinding.dot1View.setVisibility(View.GONE);
+        //            holder.dataBinding.distanceTextView.setVisibility(View.GONE);
+        //        }
+        //
+        //        // VR 여부
+        //        if (stay.truevr == true && mTrueVREnabled == true)
+        //        {
+        //            if (holder.dataBinding.satisfactionView.getVisibility() == View.VISIBLE)
+        //            {
+        //                holder.dataBinding.dot2View.setVisibility(View.VISIBLE);
+        //            } else
+        //            {
+        //                holder.dataBinding.dot2View.setVisibility(View.GONE);
+        //            }
+        //
+        //            holder.dataBinding.trueVRView.setVisibility(View.VISIBLE);
+        //        } else
+        //        {
+        //            holder.dataBinding.dot2View.setVisibility(View.GONE);
+        //            holder.dataBinding.trueVRView.setVisibility(View.GONE);
+        //        }
+        //
+        //        holder.dataBinding.deleteView.setVisibility(View.VISIBLE);
+        //        holder.dataBinding.deleteView.setTag(position);
+        //
+        //        if (holder.dataBinding.satisfactionView.getVisibility() == View.GONE//
+        //            && holder.dataBinding.trueVRView.getVisibility() == View.GONE//
+        //            && holder.dataBinding.distanceTextView.getVisibility() == View.GONE)
+        //        {
+        //            holder.dataBinding.informationLayout.setVisibility(View.GONE);
+        //        } else
+        //        {
+        //            holder.dataBinding.informationLayout.setVisibility(View.VISIBLE);
+        //        }
     }
 
     private class FooterViewHolder extends RecyclerView.ViewHolder
@@ -321,7 +321,7 @@ public class StayWishListAdapter extends PlaceWishListAdapter
                 @Override
                 public void onClick(View v)
                 {
-                    if(mListener != null)
+                    if (mListener != null)
                     {
                         mListener.onItemRemoveClick(stayCardView);
                     }

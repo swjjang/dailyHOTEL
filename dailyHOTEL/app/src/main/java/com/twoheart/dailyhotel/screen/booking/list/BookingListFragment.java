@@ -732,7 +732,7 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
         List<Booking> sortBookingList = new ArrayList<>(bookingList.size());
 
         // 예약 대기가 있는 경우
-        if(waitingForBookingList.size() > 0)
+        if (waitingForBookingList.size() > 0)
         {
             Collections.sort(waitingForBookingList, ascComparator);
 
@@ -848,9 +848,6 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
 
                     case GOURMET:
                     {
-                        //                        Intent intent = GourmetDetailActivity.newInstance(getActivity(), gourmetBookingDay//
-                        //                            , booking.placeIndex, false, false, false);
-
                         Intent intent = GourmetDetailActivity.newInstance(getActivity() //
                             , booking.placeIndex, booking.placeName, null, GourmetDetailActivity.NONE_PRICE//
                             , mCommonDateTime.dailyDateTime//

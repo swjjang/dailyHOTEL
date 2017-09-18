@@ -2,13 +2,7 @@ package com.daily.dailyhotel.view;
 
 import android.content.Context;
 import android.databinding.DataBindingUtil;
-import android.graphics.Color;
-import android.graphics.LinearGradient;
 import android.graphics.Paint;
-import android.graphics.Shader;
-import android.graphics.drawable.PaintDrawable;
-import android.graphics.drawable.ShapeDrawable;
-import android.graphics.drawable.shapes.RectShape;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.util.Pair;
 import android.util.AttributeSet;
@@ -16,7 +10,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 
 import com.daily.base.util.DailyTextUtils;
-import com.daily.base.util.VersionUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.DailyViewStayCardDataBinding;
 import com.twoheart.dailyhotel.util.Util;
@@ -52,7 +45,7 @@ public class DailyStayCardView extends ConstraintLayout
     {
         mViewDataBinding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.daily_view_stay_card_data, this, true);
 
-//        setGradientView(mViewDataBinding.gradientBottomView);
+        //        setGradientView(mViewDataBinding.gradientBottomView);
     }
 
     /**
@@ -245,6 +238,24 @@ public class DailyStayCardView extends ConstraintLayout
         mViewDataBinding.addressTextView.setText(address);
     }
 
+    public void setPriceVisible(boolean visible)
+    {
+        if (mViewDataBinding == null)
+        {
+            return;
+        }
+
+        int flag = visible ? VISIBLE : GONE;
+
+        mViewDataBinding.discountPercentTextView.setVisibility(flag);
+        mViewDataBinding.percentImageView.setVisibility(flag);
+        mViewDataBinding.averageNightsTextView.setVisibility(flag);
+        mViewDataBinding.discountPriceTextView.setVisibility(flag);
+        mViewDataBinding.discountPriceWonTextView.setVisibility(flag);
+        mViewDataBinding.priceTextView.setVisibility(flag);
+        mViewDataBinding.couponTextView.setVisibility(flag);
+    }
+
     public void setPriceText(int discountPercent, int discountPrice, int price, String couponPrice, int nights)
     {
         if (mViewDataBinding == null)
@@ -326,37 +337,37 @@ public class DailyStayCardView extends ConstraintLayout
         return pairs;
     }
 
-//    private void setGradientView(View view)
-//    {
-//        if (view == null)
-//        {
-//            return;
-//        }
-//
-//        // 그라디에이션 만들기.
-//        final int colors[] = {Color.parseColor("#E5000000"), Color.parseColor("#99000000"), Color.parseColor("#00000000")};
-//        final float positions[] = {0.0f, 0.50f, 1.0f};
-//
-//        PaintDrawable paintDrawable = new PaintDrawable();
-//        paintDrawable.setShape(new RectShape());
-//
-//        ShapeDrawable.ShaderFactory shaderFactory = new ShapeDrawable.ShaderFactory()
-//        {
-//            @Override
-//            public Shader resize(int width, int height)
-//            {
-//                return new LinearGradient(0, height, 0, 0, colors, positions, Shader.TileMode.CLAMP);
-//            }
-//        };
-//
-//        paintDrawable.setShaderFactory(shaderFactory);
-//
-//        if (VersionUtils.isOverAPI16() == true)
-//        {
-//            view.setBackground(paintDrawable);
-//        } else
-//        {
-//            view.setBackgroundDrawable(paintDrawable);
-//        }
-//    }
+    //    private void setGradientView(View view)
+    //    {
+    //        if (view == null)
+    //        {
+    //            return;
+    //        }
+    //
+    //        // 그라디에이션 만들기.
+    //        final int colors[] = {Color.parseColor("#E5000000"), Color.parseColor("#99000000"), Color.parseColor("#00000000")};
+    //        final float positions[] = {0.0f, 0.50f, 1.0f};
+    //
+    //        PaintDrawable paintDrawable = new PaintDrawable();
+    //        paintDrawable.setShape(new RectShape());
+    //
+    //        ShapeDrawable.ShaderFactory shaderFactory = new ShapeDrawable.ShaderFactory()
+    //        {
+    //            @Override
+    //            public Shader resize(int width, int height)
+    //            {
+    //                return new LinearGradient(0, height, 0, 0, colors, positions, Shader.TileMode.CLAMP);
+    //            }
+    //        };
+    //
+    //        paintDrawable.setShaderFactory(shaderFactory);
+    //
+    //        if (VersionUtils.isOverAPI16() == true)
+    //        {
+    //            view.setBackground(paintDrawable);
+    //        } else
+    //        {
+    //            view.setBackgroundDrawable(paintDrawable);
+    //        }
+    //    }
 }

@@ -246,7 +246,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
 
             addCompositeDisposable(disposable);
 
-            addCompositeDisposable(Observable.zip(getViewInterface().getSharedElementTransition()//
+            addCompositeDisposable(Observable.zip(getViewInterface().getSharedElementTransition(mGradientType)//
                 , mCommonRemoteImpl.getCommonDateTime(), mStayOutboundRemoteImpl.getStayOutboundDetail(mStayIndex, mStayBookDateTime, mPeople)//
                 , new Function3<Boolean, CommonDateTime, StayOutboundDetail, StayOutboundDetail>()
                 {
@@ -279,7 +279,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
                     {
                         disposable.dispose();
                     }
-                    
+
                     onHandleError(throwable);
                 }
             }));
@@ -362,6 +362,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
                 {
                     lock();
 
+                    getViewInterface().setTransitionVisible(true);
                     getViewInterface().scrollTop();
 
                     Single.just(mIsUsedMultiTransition).delaySubscription(300, TimeUnit.MILLISECONDS, AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()

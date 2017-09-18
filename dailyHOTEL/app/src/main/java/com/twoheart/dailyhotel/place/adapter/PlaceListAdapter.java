@@ -1,12 +1,6 @@
 package com.twoheart.dailyhotel.place.adapter;
 
 import android.content.Context;
-import android.graphics.Color;
-import android.graphics.LinearGradient;
-import android.graphics.Shader;
-import android.graphics.drawable.PaintDrawable;
-import android.graphics.drawable.ShapeDrawable;
-import android.graphics.drawable.shapes.RectShape;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.view.ViewPager;

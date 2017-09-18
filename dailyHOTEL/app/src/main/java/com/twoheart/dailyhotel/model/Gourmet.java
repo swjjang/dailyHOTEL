@@ -158,7 +158,7 @@ public class Gourmet extends Place
             addressSummary = jsonObject.getString("addrSummary");
 
             // 인트라넷에서 값을 잘못 넣는 경우가 있다.
-            if(DailyTextUtils.isTextEmpty(addressSummary) == false)
+            if (DailyTextUtils.isTextEmpty(addressSummary) == false)
             {
                 if (addressSummary.indexOf('|') >= 0)
                 {

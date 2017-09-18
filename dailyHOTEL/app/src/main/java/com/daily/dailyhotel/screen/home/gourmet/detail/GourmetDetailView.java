@@ -9,15 +9,9 @@ import android.annotation.TargetApi;
 import android.app.Dialog;
 import android.content.Context;
 import android.databinding.DataBindingUtil;
-import android.graphics.Color;
-import android.graphics.LinearGradient;
 import android.graphics.Paint;
-import android.graphics.Shader;
 import android.graphics.Typeface;
 import android.graphics.drawable.Animatable;
-import android.graphics.drawable.PaintDrawable;
-import android.graphics.drawable.ShapeDrawable;
-import android.graphics.drawable.shapes.RectShape;
 import android.net.Uri;
 import android.os.Build;
 import android.support.v4.view.ViewPager;
@@ -277,7 +271,7 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
 
         // 메뉴 리스트
         setMenuListLayout(gourmetDetail.getGourmetMenuList(), shownMenuCount);
-        
+
         // 주소 및 맵
         setAddressView(gourmetDetail.address);
 
@@ -297,13 +291,23 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
 
     @TargetApi(value = 21)
     @Override
-    public Observable<Boolean> getSharedElementTransition()
+    public Observable<Boolean> getSharedElementTransition(int gradientType)
     {
         TransitionSet inTransitionSet = DraweeTransition.createTransitionSet(ScalingUtils.ScaleType.CENTER_CROP, ScalingUtils.ScaleType.CENTER_CROP);
-        Transition inNameTextTransition = new TextTransition(getColor(R.color.white), getColor(R.color.default_text_c323232)//
-            , 17, 18, new LinearInterpolator());
-        inNameTextTransition.addTarget(getString(R.string.transition_place_name));
-        inTransitionSet.addTransition(inNameTextTransition);
+        Transition inTextTransition;
+
+        if (gradientType == StayOutboundDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_MAP)
+        {
+            inTextTransition = new TextTransition(getColor(R.color.white), getColor(R.color.default_text_c323232)//
+                , 17, 18, new LinearInterpolator());
+        } else
+        {
+            inTextTransition = new TextTransition(getColor(R.color.default_text_c323232), getColor(R.color.default_text_c323232)//
+                , 17, 18, new LinearInterpolator());
+        }
+
+        inTextTransition.addTarget(getString(R.string.transition_place_name));
+        inTransitionSet.addTransition(inTextTransition);
 
         Transition inBottomAlphaTransition = new AlphaTransition(1.0f, 0.0f, new LinearInterpolator());
         inBottomAlphaTransition.addTarget(getString(R.string.transition_gradient_bottom_view));
@@ -316,10 +320,20 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
         getWindow().setSharedElementEnterTransition(inTransitionSet);
 
         TransitionSet outTransitionSet = DraweeTransition.createTransitionSet(ScalingUtils.ScaleType.CENTER_CROP, ScalingUtils.ScaleType.CENTER_CROP);
-        Transition outNameTextTransition = new TextTransition(getColor(R.color.default_text_c323232), getColor(R.color.white)//
-            , 18, 17, new LinearInterpolator());
-        outNameTextTransition.addTarget(getString(R.string.transition_place_name));
-        outTransitionSet.addTransition(outNameTextTransition);
+        Transition outTextTransition;
+
+        if (gradientType == StayOutboundDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_MAP)
+        {
+            outTextTransition = new TextTransition(getColor(R.color.white), getColor(R.color.default_text_c323232)//
+                , 18, 17, new LinearInterpolator());
+        } else
+        {
+            outTextTransition = new TextTransition(getColor(R.color.default_text_c323232), getColor(R.color.default_text_c323232)//
+                , 18, 17, new LinearInterpolator());
+        }
+
+        outTextTransition.addTarget(getString(R.string.transition_place_name));
+        outTransitionSet.addTransition(outTextTransition);
 
         Transition outBottomAlphaTransition = new AlphaTransition(0.0f, 1.0f, new LinearInterpolator());
         outBottomAlphaTransition.addTarget(getString(R.string.transition_gradient_bottom_view));
@@ -348,6 +362,8 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
                     @Override
                     public void onTransitionEnd(Transition transition)
                     {
+                        setTransitionVisible(false);
+
                         observer.onNext(true);
                         observer.onComplete();
                     }
@@ -435,6 +451,18 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
         getViewDataBinding().viewpagerIndicator.setViewPager(getViewDataBinding().imageLoopViewPager);
     }
 
+    @Override
+    public void setTransitionVisible(boolean visible)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        getViewDataBinding().transImageView.setVisibility(visible ? View.VISIBLE : View.INVISIBLE);
+        getViewDataBinding().transGradientBottomView.setVisibility(visible ? View.VISIBLE : View.INVISIBLE);
+    }
+
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     @Override
     public void setSharedElementTransitionEnabled(boolean enabled, int gradientType)
@@ -457,7 +485,7 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
             switch (gradientType)
             {
                 case StayOutboundDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_LIST:
-                    getViewDataBinding().transGradientBottomView.setBackground(getGradientBottomDrawable());
+                    getViewDataBinding().transGradientBottomView.setBackgroundResource(R.drawable.shape_gradient_card_bottom);
                     break;
 
                 case StayOutboundDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_MAP:
@@ -1996,33 +2024,5 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
             getViewDataBinding().bottomLayout.setVisibility(View.INVISIBLE);
             getViewDataBinding().bottomLayout.setAlpha(0.0f);
         }
-    }
-
-    /**
-     * 리스트에서 사용하는것과 동일한다.
-     *
-     * @return
-     */
-    private PaintDrawable getGradientBottomDrawable()
-    {
-        // 그라디에이션 만들기.
-        final int colors[] = {Color.parseColor("#E6000000"), Color.parseColor("#99000000"), Color.parseColor("#1A000000"), Color.parseColor("#00000000"), Color.parseColor("#00000000")};
-        final float positions[] = {0.0f, 0.24f, 0.66f, 0.8f, 1.0f};
-
-        PaintDrawable paintDrawable = new PaintDrawable();
-        paintDrawable.setShape(new RectShape());
-
-        ShapeDrawable.ShaderFactory sf = new ShapeDrawable.ShaderFactory()
-        {
-            @Override
-            public Shader resize(int width, int height)
-            {
-                return new LinearGradient(0, height, 0, 0, colors, positions, Shader.TileMode.CLAMP);
-            }
-        };
-
-        paintDrawable.setShaderFactory(sf);
-
-        return paintDrawable;
     }
 }

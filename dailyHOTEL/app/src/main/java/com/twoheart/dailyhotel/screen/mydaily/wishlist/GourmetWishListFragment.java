@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.parcel.analytics.GourmetDetailAnalyticsParam;
 import com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity;
+import com.daily.dailyhotel.view.DailyGourmetCardView;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Gourmet;
@@ -316,35 +317,43 @@ public class GourmetWishListFragment extends PlaceWishListFragment
                     }
                 });
 
-                //                Intent intent = GourmetDetailActivity.newInstance(mBaseActivity //
-                //                    , (GourmetBookingDay) mPlaceBookingDay, gourmet.index, gourmet.name //
-                //                    , gourmet.imageUrl, gourmet.category, gourmet.isSoldOut, analyticsParam, true, PlaceDetailLayout.TRANS_GRADIENT_BOTTOM_TYPE_LIST);
+                ActivityOptionsCompat optionsCompat;
+                Intent intent;
 
-                Intent intent = GourmetDetailActivity.newInstance(mBaseActivity //
-                    , gourmet.index, gourmet.name, gourmet.imageUrl, gourmet.discountPrice//
-                    , ((GourmetBookingDay) mPlaceBookingDay).getVisitDay(DailyCalendar.ISO_8601_FORMAT)//
-                    , gourmet.category, gourmet.isSoldOut, false, false, true//
-                    , GourmetDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_LIST//
-                    , analyticsParam);
+                if (view instanceof DailyGourmetCardView == true)
+                {
+                    optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(mBaseActivity, ((DailyGourmetCardView) view).getOptionsCompat());
 
-                View simpleDraweeView = view.findViewById(R.id.imageView);
-                View nameTextView = view.findViewById(R.id.nameTextView);
-                View gradientTopView = view.findViewById(R.id.gradientTopView);
-                View gradientBottomView = view.findViewById(R.id.gradientView);
+                    intent = GourmetDetailActivity.newInstance(mBaseActivity //
+                        , gourmet.index, gourmet.name, gourmet.imageUrl, gourmet.discountPrice//
+                        , ((GourmetBookingDay) mPlaceBookingDay).getVisitDay(DailyCalendar.ISO_8601_FORMAT)//
+                        , gourmet.category, gourmet.isSoldOut, false, false, true//
+                        , GourmetDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_LIST//
+                        , analyticsParam);
+                } else
+                {
+                    intent = GourmetDetailActivity.newInstance(mBaseActivity //
+                        , gourmet.index, gourmet.name, gourmet.imageUrl, gourmet.discountPrice//
+                        , ((GourmetBookingDay) mPlaceBookingDay).getVisitDay(DailyCalendar.ISO_8601_FORMAT)//
+                        , gourmet.category, gourmet.isSoldOut, false, false, true//
+                        , GourmetDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_LIST//
+                        , analyticsParam);
 
-                ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(mBaseActivity,//
-                    android.support.v4.util.Pair.create(simpleDraweeView, getString(R.string.transition_place_image)),//
-                    android.support.v4.util.Pair.create(nameTextView, getString(R.string.transition_place_name)),//
-                    android.support.v4.util.Pair.create(gradientTopView, getString(R.string.transition_gradient_top_view)),//
-                    android.support.v4.util.Pair.create(gradientBottomView, getString(R.string.transition_gradient_bottom_view)));
+                    View simpleDraweeView = view.findViewById(R.id.imageView);
+                    View nameTextView = view.findViewById(R.id.nameTextView);
+                    View gradientTopView = view.findViewById(R.id.gradientTopView);
+                    View gradientBottomView = view.findViewById(R.id.gradientView);
 
-                mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMET_DETAIL, options.toBundle());
+                    optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(mBaseActivity,//
+                        android.support.v4.util.Pair.create(simpleDraweeView, getString(R.string.transition_place_image)),//
+                        android.support.v4.util.Pair.create(nameTextView, getString(R.string.transition_place_name)),//
+                        android.support.v4.util.Pair.create(gradientTopView, getString(R.string.transition_gradient_top_view)),//
+                        android.support.v4.util.Pair.create(gradientBottomView, getString(R.string.transition_gradient_bottom_view)));
+                }
+
+                mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMET_DETAIL, optionsCompat.toBundle());
             } else
             {
-                //                Intent intent = GourmetDetailActivity.newInstance(mBaseActivity //
-                //                    , (GourmetBookingDay) mPlaceBookingDay, gourmet.index, gourmet.name //
-                //                    , gourmet.imageUrl, gourmet.category, gourmet.isSoldOut, analyticsParam, false, PlaceDetailLayout.TRANS_GRADIENT_BOTTOM_TYPE_NONE);
-
                 Intent intent = GourmetDetailActivity.newInstance(mBaseActivity //
                     , gourmet.index, gourmet.name, gourmet.imageUrl, gourmet.discountPrice//
                     , ((GourmetBookingDay) mPlaceBookingDay).getVisitDay(DailyCalendar.ISO_8601_FORMAT)//

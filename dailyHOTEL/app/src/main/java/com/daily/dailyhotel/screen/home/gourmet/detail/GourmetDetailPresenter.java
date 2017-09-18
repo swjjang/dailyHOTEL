@@ -349,7 +349,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
 
             addCompositeDisposable(disposable);
 
-            onRefresh(getViewInterface().getSharedElementTransition(), disposable);
+            onRefresh(getViewInterface().getSharedElementTransition(mGradientType), disposable);
         } else
         {
             if (mIsDeepLink == false)
@@ -424,6 +424,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
                 {
                     lock();
 
+                    getViewInterface().setTransitionVisible(true);
                     getViewInterface().scrollTop();
 
                     Single.just(mIsUsedMultiTransition).delaySubscription(300, TimeUnit.MILLISECONDS, AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()

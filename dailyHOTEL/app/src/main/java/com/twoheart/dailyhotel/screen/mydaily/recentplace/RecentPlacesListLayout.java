@@ -226,8 +226,14 @@ public abstract class RecentPlacesListLayout extends BaseBlurLayout
         }
 
         @Override
-        public void onDeleteClick(View view, int position)
+        public void onDeleteClick(View view)
         {
+            int position = mRecyclerView.getChildAdapterPosition(view);
+            if (position < 0)
+            {
+                return;
+            }
+
             ((OnEventListener) mOnEventListener).onListItemDeleteClick(position);
         }
     };

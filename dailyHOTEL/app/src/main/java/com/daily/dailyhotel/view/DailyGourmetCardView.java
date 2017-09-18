@@ -294,6 +294,25 @@ public class DailyGourmetCardView extends ConstraintLayout
         mViewDataBinding.addressTextView.setText(address);
     }
 
+    public void setPriceVisible(boolean visible)
+    {
+        if (mViewDataBinding == null)
+        {
+            return;
+        }
+
+        int flag = visible ? VISIBLE : GONE;
+
+        mViewDataBinding.discountPercentTextView.setVisibility(flag);
+        mViewDataBinding.percentImageView.setVisibility(flag);
+        mViewDataBinding.discountPriceTextView.setVisibility(flag);
+        mViewDataBinding.discountPriceWonTextView.setVisibility(flag);
+        mViewDataBinding.priceTextView.setVisibility(flag);
+        mViewDataBinding.personTextView.setVisibility(flag);
+        mViewDataBinding.couponTextView.setVisibility(flag);
+    }
+
+
     public void setPriceText(int discountPercent, int discountPrice, int price, String couponPrice, int person)
     {
         if (mViewDataBinding == null)
