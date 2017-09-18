@@ -34,7 +34,6 @@ public abstract class PlaceListAdapter extends RecyclerView.Adapter<RecyclerView
     protected Context mContext;
     protected LayoutInflater mInflater;
     protected List<PlaceViewItem> mPlaceViewItemList;
-    protected PaintDrawable mPaintDrawable;
     protected boolean mShowDistanceIgnoreSort;
     protected View.OnClickListener mOnEventBannerClickListener;
     protected View.OnLongClickListener mOnLongClickListener;
@@ -56,8 +55,6 @@ public abstract class PlaceListAdapter extends RecyclerView.Adapter<RecyclerView
         addAll(arrayList);
 
         mInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
-        makeShaderFactory();
     }
 
     public void setOnLongClickListener(View.OnLongClickListener listener)
@@ -79,27 +76,6 @@ public abstract class PlaceListAdapter extends RecyclerView.Adapter<RecyclerView
         {
             mEventBannerHandler.removeMessages(0);
         }
-    }
-
-    private void makeShaderFactory()
-    {
-        // 그라디에이션 만들기.
-        final int colors[] = {Color.parseColor("#E6000000"), Color.parseColor("#99000000"), Color.parseColor("#1A000000"), Color.parseColor("#00000000"), Color.parseColor("#00000000")};
-        final float positions[] = {0.0f, 0.24f, 0.66f, 0.8f, 1.0f};
-
-        mPaintDrawable = new PaintDrawable();
-        mPaintDrawable.setShape(new RectShape());
-
-        ShapeDrawable.ShaderFactory sf = new ShapeDrawable.ShaderFactory()
-        {
-            @Override
-            public Shader resize(int width, int height)
-            {
-                return new LinearGradient(0, height, 0, 0, colors, positions, Shader.TileMode.CLAMP);
-            }
-        };
-
-        mPaintDrawable.setShaderFactory(sf);
     }
 
     public void clear()

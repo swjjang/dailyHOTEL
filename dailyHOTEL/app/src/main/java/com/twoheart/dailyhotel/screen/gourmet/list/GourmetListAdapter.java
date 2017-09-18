@@ -64,11 +64,7 @@ public class GourmetListAdapter extends PlaceListAdapter
                 DailyGourmetCardView gourmetCardView = new DailyGourmetCardView(mContext);
                 gourmetCardView.setLayoutParams(new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
-                return new GourmetCardViewHolder(gourmetCardView);
-
-//                ListRowGourmetDataBinding dataBinding = DataBindingUtil.inflate(mInflater, R.layout.list_row_gourmet_data, parent, false);
-//
-//                return new GourmetViewHolder(dataBinding);
+                return new GourmetViewHolder(gourmetCardView);
             }
 
             case PlaceViewItem.TYPE_EVENT_BANNER:
@@ -109,7 +105,7 @@ public class GourmetListAdapter extends PlaceListAdapter
         switch (item.mType)
         {
             case PlaceViewItem.TYPE_ENTRY:
-                onBindViewHolder((GourmetCardViewHolder) holder, item, position);
+                onBindViewHolder((GourmetViewHolder) holder, item, position);
                 break;
 
             case PlaceViewItem.TYPE_SECTION:
@@ -123,7 +119,7 @@ public class GourmetListAdapter extends PlaceListAdapter
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-    protected void onBindViewHolder(GourmetCardViewHolder holder, PlaceViewItem placeViewItem, int position)
+    protected void onBindViewHolder(GourmetViewHolder holder, PlaceViewItem placeViewItem, int position)
     {
         final Gourmet gourmet = placeViewItem.getItem();
 
@@ -131,6 +127,7 @@ public class GourmetListAdapter extends PlaceListAdapter
         holder.gourmetCardView.setDeleteVisible(false);
         holder.gourmetCardView.setWishVisible(false);
 
+        holder.gourmetCardView.setTagStickerImage(gourmet.stickerUrl);
         holder.gourmetCardView.setImage(gourmet.imageUrl);
 
         holder.gourmetCardView.setGradeText(DailyTextUtils.isTextEmpty(gourmet.subCategory) == false ? gourmet.subCategory : gourmet.category);
@@ -154,7 +151,7 @@ public class GourmetListAdapter extends PlaceListAdapter
 
         if(gourmet.isSoldOut == true)
         {
-            holder.gourmetCardView.setPriceText(0, 0, 0, null, 1);
+            holder.gourmetCardView.setPriceText(0, 0, 0, null, 0);
         } else
         {
             if(gourmet.price > 0 && gourmet.price > gourmet.discountPrice)
@@ -364,11 +361,11 @@ public class GourmetListAdapter extends PlaceListAdapter
 
     }
 
-    protected class GourmetCardViewHolder extends RecyclerView.ViewHolder
+    protected class GourmetViewHolder extends RecyclerView.ViewHolder
     {
-        DailyGourmetCardView gourmetCardView;
+        public DailyGourmetCardView gourmetCardView;
 
-        public GourmetCardViewHolder(DailyGourmetCardView gourmetCardView)
+        public GourmetViewHolder(DailyGourmetCardView gourmetCardView)
         {
             super(gourmetCardView);
 
@@ -398,39 +395,39 @@ public class GourmetListAdapter extends PlaceListAdapter
             }
         }
     }
-
-    protected class GourmetViewHolder extends RecyclerView.ViewHolder
-    {
-        public ListRowGourmetDataBinding dataBinding;
-
-        public GourmetViewHolder(ListRowGourmetDataBinding dataBinding)
-        {
-            super(dataBinding.getRoot());
-
-            this.dataBinding = dataBinding;
-
-            itemView.setOnClickListener(mOnClickListener);
-
-            if (Util.supportPreview(mContext) == true)
-            {
-                itemView.setOnLongClickListener(new View.OnLongClickListener()
-                {
-                    @Override
-                    public boolean onLongClick(View v)
-                    {
-                        if (mOnLongClickListener == null)
-                        {
-                            return false;
-                        } else
-                        {
-                            Vibrator vibrator = (Vibrator) mContext.getSystemService(Context.VIBRATOR_SERVICE);
-                            vibrator.vibrate(70);
-
-                            return mOnLongClickListener.onLongClick(v);
-                        }
-                    }
-                });
-            }
-        }
-    }
+//
+//    protected class GourmetViewHolder extends RecyclerView.ViewHolder
+//    {
+//        public ListRowGourmetDataBinding dataBinding;
+//
+//        public GourmetViewHolder(ListRowGourmetDataBinding dataBinding)
+//        {
+//            super(dataBinding.getRoot());
+//
+//            this.dataBinding = dataBinding;
+//
+//            itemView.setOnClickListener(mOnClickListener);
+//
+//            if (Util.supportPreview(mContext) == true)
+//            {
+//                itemView.setOnLongClickListener(new View.OnLongClickListener()
+//                {
+//                    @Override
+//                    public boolean onLongClick(View v)
+//                    {
+//                        if (mOnLongClickListener == null)
+//                        {
+//                            return false;
+//                        } else
+//                        {
+//                            Vibrator vibrator = (Vibrator) mContext.getSystemService(Context.VIBRATOR_SERVICE);
+//                            vibrator.vibrate(70);
+//
+//                            return mOnLongClickListener.onLongClick(v);
+//                        }
+//                    }
+//                });
+//            }
+//        }
+//    }
 }

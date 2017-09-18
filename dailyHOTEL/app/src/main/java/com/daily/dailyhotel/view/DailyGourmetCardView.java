@@ -6,17 +6,26 @@ import android.graphics.Color;
 import android.graphics.LinearGradient;
 import android.graphics.Paint;
 import android.graphics.Shader;
+import android.graphics.drawable.Animatable;
 import android.graphics.drawable.PaintDrawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.RectShape;
+import android.net.Uri;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.util.Pair;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 
 import com.daily.base.util.DailyTextUtils;
+import com.daily.base.util.ScreenUtils;
 import com.daily.base.util.VersionUtils;
+import com.daily.dailyhotel.entity.Sticker;
+import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.drawee.controller.BaseControllerListener;
+import com.facebook.drawee.interfaces.DraweeController;
+import com.facebook.imagepipeline.image.ImageInfo;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.DailyViewGourmetCardDataBinding;
 import com.twoheart.dailyhotel.util.Util;
@@ -97,6 +106,46 @@ public class DailyGourmetCardView extends ConstraintLayout
         mViewDataBinding.stickerImageView.setVisibility(visible ? VISIBLE : GONE);
     }
 
+    public void setTagStickerImage(String url)
+    {
+        if (mViewDataBinding == null)
+        {
+            return;
+        }
+
+        if (DailyTextUtils.isTextEmpty(url) == true)
+        {
+            mViewDataBinding.tagStickerSimpleDraweeView.setVisibility(View.GONE);
+        } else
+        {
+            mViewDataBinding.tagStickerSimpleDraweeView.setVisibility(View.VISIBLE);
+
+            DraweeController controller = Fresco.newDraweeControllerBuilder().setControllerListener(new BaseControllerListener<ImageInfo>()
+            {
+                @Override
+                public void onFinalImageSet(String id, ImageInfo imageInfo, Animatable animatable)
+                {
+                    ViewGroup.LayoutParams layoutParams = mViewDataBinding.tagStickerSimpleDraweeView.getLayoutParams();
+
+                    int screenWidth = ScreenUtils.getScreenWidth(getContext());
+                    if (screenWidth > Sticker.DEFAULT_SCREEN_WIDTH && screenWidth < Sticker.LARGE_SCREEN_WIDTH)
+                    {
+                        layoutParams.width = (int) (Sticker.MEDIUM_RATE * imageInfo.getWidth());
+                        layoutParams.height = (int) (Sticker.MEDIUM_RATE * imageInfo.getHeight());
+                    } else
+                    {
+                        layoutParams.width = imageInfo.getWidth();
+                        layoutParams.height = imageInfo.getHeight();
+                    }
+
+                    mViewDataBinding.tagStickerSimpleDraweeView.setLayoutParams(layoutParams);
+                }
+            }).setUri(Uri.parse(url)).build();
+
+            mViewDataBinding.tagStickerSimpleDraweeView.setController(controller);
+        }
+    }
+
     public void setDeleteVisible(boolean visible)
     {
         if (mViewDataBinding == null)
@@ -125,6 +174,16 @@ public class DailyGourmetCardView extends ConstraintLayout
         }
 
         mViewDataBinding.wishImageView.setVisibility(visible ? VISIBLE : GONE);
+    }
+
+    public void setWish(boolean wish)
+    {
+        if (mViewDataBinding == null)
+        {
+            return;
+        }
+
+        mViewDataBinding.wishImageView.setVectorImageResource(wish ? R.drawable.vector_navibar_ic_heart_on : R.drawable.vector_navibar_ic_heart_off_white);
     }
 
     public void setOnWishClickListener(View.OnClickListener onClickListener)
@@ -267,11 +326,18 @@ public class DailyGourmetCardView extends ConstraintLayout
         if (price <= 0 || price <= discountPrice)
         {
             mViewDataBinding.priceTextView.setVisibility(GONE);
+            mViewDataBinding.personTextView.setVisibility(GONE);
         } else
         {
             mViewDataBinding.priceTextView.setPaintFlags(mViewDataBinding.priceTextView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
             mViewDataBinding.priceTextView.setVisibility(VISIBLE);
             mViewDataBinding.priceTextView.setText(DailyTextUtils.getPriceFormat(getContext(), price, false));
+
+            if (person > 1)
+            {
+                mViewDataBinding.personTextView.setVisibility(VISIBLE);
+                mViewDataBinding.personTextView.setText("/" + getContext().getString(R.string.label_persions, person));
+            }
         }
 
         if (DailyTextUtils.isTextEmpty(couponPrice) == true)
@@ -281,15 +347,6 @@ public class DailyGourmetCardView extends ConstraintLayout
         {
             mViewDataBinding.couponTextView.setVisibility(VISIBLE);
             mViewDataBinding.couponTextView.setText(couponPrice);
-        }
-
-        if (person > 1)
-        {
-            mViewDataBinding.personTextView.setVisibility(VISIBLE);
-            mViewDataBinding.personTextView.setText("/" + getContext().getString(R.string.label_persions, person));
-        } else
-        {
-            mViewDataBinding.personTextView.setVisibility(GONE);
         }
     }
 

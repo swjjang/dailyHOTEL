@@ -67,8 +67,6 @@ public class StayListAdapter extends PlaceListAdapter
 
             case PlaceViewItem.TYPE_ENTRY:
             {
-                //                ListRowStayDataBinding dataBinding = DataBindingUtil.inflate(mInflater, R.layout.list_row_stay_data, parent, false);
-
                 DailyStayCardView stayCardView = new DailyStayCardView(mContext);
                 stayCardView.setLayoutParams(new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
@@ -158,7 +156,7 @@ public class StayListAdapter extends PlaceListAdapter
 
         if (stay.isSoldOut == true)
         {
-            holder.stayCardView.setPriceText(0, 0, 0, null, 1);
+            holder.stayCardView.setPriceText(0, 0, 0, null, 0);
         } else
         {
             if (stay.price > 0 && stay.price > stay.discountPrice)
@@ -314,48 +312,13 @@ public class StayListAdapter extends PlaceListAdapter
 
     protected class StayViewHolder extends RecyclerView.ViewHolder
     {
-        DailyStayCardView stayCardView;
+        public DailyStayCardView stayCardView;
 
         public StayViewHolder(DailyStayCardView stayCardView)
         {
             super(stayCardView);
 
             this.stayCardView = stayCardView;
-
-            itemView.setOnClickListener(mOnClickListener);
-
-            if (Util.supportPreview(mContext) == true)
-            {
-                itemView.setOnLongClickListener(new View.OnLongClickListener()
-                {
-                    @Override
-                    public boolean onLongClick(View v)
-                    {
-                        if (mOnLongClickListener == null)
-                        {
-                            return false;
-                        } else
-                        {
-                            Vibrator vibrator = (Vibrator) mContext.getSystemService(Context.VIBRATOR_SERVICE);
-                            vibrator.vibrate(70);
-
-                            return mOnLongClickListener.onLongClick(v);
-                        }
-                    }
-                });
-            }
-        }
-    }
-
-    protected class HotelViewHolder extends RecyclerView.ViewHolder
-    {
-        public ListRowStayDataBinding dataBinding;
-
-        public HotelViewHolder(ListRowStayDataBinding dataBinding)
-        {
-            super(dataBinding.getRoot());
-
-            this.dataBinding = dataBinding;
 
             itemView.setOnClickListener(mOnClickListener);
 
