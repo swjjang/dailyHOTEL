@@ -4,6 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
     xmlns:dailyToolbar="http://schemas.android.com/apk/res-auto"
+    xmlns:dailyCarousel="http://schemas.android.com/apk/res-auto"
     xmlns:fresco="http://schemas.android.com/apk/res-auto">
 
     <android.support.constraint.ConstraintLayout
@@ -74,6 +75,20 @@
                     app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:srcCompat="@drawable/ic_check_confirm_thinx"/>
+                
+                <com.daily.dailyhotel.view.carousel.DailyCarouselAnimationLayout
+                    android:id="@+id/recommendGourmetLayout"
+                    android:visibility="gone"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    dailyCarousel:topMarginHeight="15dp"
+                    dailyCarousel:topMarginBackgroundColor="@color/transparent"
+                    dailyCarousel:bottomMarginHeight="0dp"
+                    dailyCarousel:bottomMarginBackgroundColor="@color/transparent"
+                    dailyCarousel:useAnimation="false"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/thankYouInformationView"/>
 
                 <android.support.constraint.ConstraintLayout
                     android:id="@+id/stampLayout"
@@ -86,7 +101,7 @@
                     android:visibility="gone"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/thankYouInformationView">
+                    app:layout_constraintTop_toBottomOf="@+id/recommendGourmetLayout">
 
                     <ImageView
                         android:id="@+id/stampImageView"

@@ -814,7 +814,9 @@ public class StayDetailActivity extends PlaceDetailActivity
             , stayDetailParams.name, imageUrl, stayProduct.roomIndex, stayProduct.totalDiscount, stayProduct.roomName//
             , stayBookingDay.getCheckInDay(DailyCalendar.ISO_8601_FORMAT)//
             , stayBookingDay.getCheckOutDay(DailyCalendar.ISO_8601_FORMAT)//
-            , stayDetailParams.isOverseas, stayDetailParams.category, stayPaymentAnalyticsParam);
+            , stayDetailParams.isOverseas, stayDetailParams.category //
+            , stayDetailParams.latitude, stayDetailParams.longitude //
+            , stayPaymentAnalyticsParam);
 
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_BOOKING);
     }
