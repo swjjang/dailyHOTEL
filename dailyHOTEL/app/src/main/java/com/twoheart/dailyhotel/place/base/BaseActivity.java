@@ -584,6 +584,37 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
         }
     }
 
+    protected void onReportError(Throwable throwable)
+    {
+        if (throwable == null)
+        {
+            return;
+        }
+
+        if (throwable instanceof BaseException)
+        {
+            BaseException baseException = (BaseException) throwable;
+            Crashlytics.log("msgCode : " + baseException.getCode() + ", message : " + baseException.getMessage());
+            Crashlytics.logException(throwable);
+
+            ExLog.e("msgCode : " + baseException.getCode() + ", message : " + baseException.getMessage());
+            ExLog.e(throwable.toString());
+        } else if (throwable instanceof HttpException)
+        {
+            retrofit2.HttpException httpException = (HttpException) throwable;
+            Crashlytics.log(httpException.response().raw().request().url().toString());
+            Crashlytics.logException(throwable);
+
+            ExLog.e(httpException.response().raw().request().url().toString());
+            ExLog.e(throwable.toString());
+        } else
+        {
+            Crashlytics.logException(throwable);
+
+            ExLog.e(throwable.toString());
+        }
+    }
+
     private void recursiveRecycle(View root)
     {
         if (root == null)

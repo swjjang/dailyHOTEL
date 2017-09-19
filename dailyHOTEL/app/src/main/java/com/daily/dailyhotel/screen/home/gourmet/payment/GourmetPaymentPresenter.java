@@ -619,6 +619,8 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
             {
                 unLockAll();
 
+                onReportError(throwable);
+
                 if (throwable instanceof BaseException)
                 {
                     getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2), throwable.getMessage()//
