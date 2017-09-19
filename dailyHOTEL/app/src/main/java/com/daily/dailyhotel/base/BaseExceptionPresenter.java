@@ -8,6 +8,7 @@ import com.daily.base.BaseActivity;
 import com.daily.base.BaseDialogViewInterface;
 import com.daily.base.BasePresenter;
 import com.daily.base.exception.BaseException;
+import com.daily.base.util.ExLog;
 import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.repository.local.ConfigLocalImpl;
 import com.daily.dailyhotel.repository.remote.FacebookRemoteImpl;
@@ -68,6 +69,37 @@ public abstract class BaseExceptionPresenter<T1 extends BaseActivity, T2 extends
         } else
         {
             DailyToast.showToast(getActivity(), getString(R.string.act_base_network_connect), DailyToast.LENGTH_LONG);
+        }
+    }
+
+    protected void onReportError(Throwable throwable)
+    {
+        if (throwable == null)
+        {
+            return;
+        }
+
+        if (throwable instanceof BaseException)
+        {
+            BaseException baseException = (BaseException) throwable;
+            Crashlytics.log("msgCode : " + baseException.getCode() + ", message : " + baseException.getMessage());
+            Crashlytics.logException(throwable);
+
+            ExLog.e("msgCode : " + baseException.getCode() + ", message : " + baseException.getMessage());
+            ExLog.e(throwable.toString());
+        } else if (throwable instanceof HttpException)
+        {
+            retrofit2.HttpException httpException = (HttpException) throwable;
+            Crashlytics.log(httpException.response().raw().request().url().toString());
+            Crashlytics.logException(throwable);
+
+            ExLog.e(httpException.response().raw().request().url().toString());
+            ExLog.e(throwable.toString());
+        } else
+        {
+            Crashlytics.logException(throwable);
+
+            ExLog.e(throwable.toString());
         }
     }
 
