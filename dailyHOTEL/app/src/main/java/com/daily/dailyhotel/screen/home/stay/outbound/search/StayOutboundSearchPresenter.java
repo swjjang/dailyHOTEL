@@ -61,6 +61,7 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
     private String mKeyword;
     private People mPeople;
     private boolean mIsSuggestChanged;
+    private boolean mIsShowCalendar;
 
     private DailyDeepLink mDailyDeepLink;
 
@@ -74,8 +75,6 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
     public StayOutboundSearchPresenter(@NonNull StayOutboundSearchActivity activity)
     {
         super(activity);
-
-        DailyPreference.getInstance(getActivity()).setShowStayOutboundSearchCalendar(true);
     }
 
     @NonNull
@@ -214,7 +213,7 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
                         }
 
                         // 캘린더를 먼저보는 경우 캘린더를 띄우지 않는다.
-                        DailyPreference.getInstance(getActivity()).setShowStayOutboundSearchCalendar(false);
+                        mIsShowCalendar = false;
 
                         setStayBookDateTime(checkInDateTime, 0, checkOutDateTime, 0);
                         notifyStayBookDateTimeChanged();
@@ -237,9 +236,9 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
                             setSuggest(suggestParcel.getSuggest());
                             notifySuggestsChanged();
 
-                            if (DailyPreference.getInstance(getActivity()).isShowStayOutboundSearchCalendar() == true)
+                            if (mIsShowCalendar == true)
                             {
-                                DailyPreference.getInstance(getActivity()).setShowStayOutboundSearchCalendar(false);
+                                mIsShowCalendar = false;
                                 onCalendarClick();
                             }
                         } else
@@ -547,7 +546,7 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
         {
             cursor = dailyDb.getStayObRecentlySuggestList(1);
 
-            if (cursor != null && cursor.getColumnCount() > 0)
+            if (cursor != null && cursor.getCount() > 0)
             {
                 cursor.moveToFirst();
 
@@ -562,11 +561,18 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
                 double longitude = cursor.getDouble(cursor.getColumnIndex(StayObRecentlySuggestColumns.LONGITUDE));
 
                 suggest = new Suggest(id, name, city, country, countryCode, categoryKey, display, latitude, longitude);
+
+                mIsShowCalendar = false;
+            } else {
+                mIsShowCalendar = true;
             }
 
         } catch (Exception e)
         {
             ExLog.e(e.toString());
+
+            suggest = null;
+            mIsShowCalendar = true;
         } finally
         {
             try
