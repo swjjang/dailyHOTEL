@@ -218,7 +218,7 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
         }
 
         mViewDataBinding.logoutLayout.setVisibility(View.VISIBLE);
-        mViewDataBinding.bookingRecyclerView.setVisibility(View.GONE);
+        mViewDataBinding.bookingSwipeRefreshLayout.setVisibility(View.GONE);
         mViewDataBinding.emptyListLayout.setVisibility(View.GONE);
     }
 
@@ -237,7 +237,7 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
             }
 
             //예약한 호텔이 없는 경우
-            mViewDataBinding.bookingRecyclerView.setVisibility(View.GONE);
+            mViewDataBinding.bookingSwipeRefreshLayout.setVisibility(View.GONE);
             mViewDataBinding.emptyListLayout.setVisibility(View.VISIBLE);
             mViewDataBinding.loginTextView.setVisibility(View.GONE);
             mViewDataBinding.logoutLayout.setVisibility(View.GONE);
@@ -256,7 +256,7 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
             mAdapter.addAll(bookingList);
             mAdapter.notifyDataSetChanged();
 
-            mViewDataBinding.bookingRecyclerView.setVisibility(View.VISIBLE);
+            mViewDataBinding.bookingSwipeRefreshLayout.setVisibility(View.VISIBLE);
             mViewDataBinding.emptyListLayout.setVisibility(View.GONE);
             mViewDataBinding.loginTextView.setVisibility(View.GONE);
             mViewDataBinding.logoutLayout.setVisibility(View.GONE);
@@ -620,10 +620,7 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
         {
             booking.remainingDays = DailyCalendar.compareDateDay(booking.checkInDateTime, mCommonDateTime.currentDateTime);
 
-            if (booking.waitingForBooking == true)
-            {
-                waitingForBookingList.add(booking);
-            } else if (booking.readyForRefund == true)
+            if (booking.readyForRefund == true)
             {
                 waitRefundList.add(booking);
             } else
@@ -632,22 +629,28 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
                 {
                     case Booking.PAYMENT_COMPLETED:
                     {
-                        boolean used;
-
-                        if (booking.placeType == Booking.PlaceType.STAY_OUTBOUND)
+                        if (booking.waitingForBooking == true)
                         {
-                            used = DailyCalendar.compareDateDay(booking.checkOutDateTime, mCommonDateTime.currentDateTime) < 0;
+                            waitingForBookingList.add(booking);
                         } else
                         {
-                            used = DailyCalendar.compareDateTime(booking.checkOutDateTime, mCommonDateTime.currentDateTime) < 0;
-                        }
+                            boolean used;
 
-                        if (used)
-                        {
-                            afterUseList.add(booking);
-                        } else
-                        {
-                            beforeUseList.add(booking);
+                            if (booking.placeType == Booking.PlaceType.STAY_OUTBOUND)
+                            {
+                                used = DailyCalendar.compareDateDay(booking.checkOutDateTime, mCommonDateTime.currentDateTime) < 0;
+                            } else
+                            {
+                                used = DailyCalendar.compareDateTime(booking.checkOutDateTime, mCommonDateTime.currentDateTime) < 0;
+                            }
+
+                            if (used)
+                            {
+                                afterUseList.add(booking);
+                            } else
+                            {
+                                beforeUseList.add(booking);
+                            }
                         }
                         break;
                     }
