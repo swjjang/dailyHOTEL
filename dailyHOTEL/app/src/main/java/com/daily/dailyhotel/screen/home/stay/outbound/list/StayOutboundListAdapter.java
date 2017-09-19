@@ -25,7 +25,7 @@ import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ScreenUtils;
 import com.daily.base.util.VersionUtils;
 import com.daily.dailyhotel.entity.ImageMap;
-import com.daily.dailyhotel.entity.ListItem;
+import com.daily.dailyhotel.entity.ObjectItem;
 import com.daily.dailyhotel.entity.StayOutbound;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.controller.BaseControllerListener;
@@ -46,7 +46,7 @@ import java.util.List;
 public class StayOutboundListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 {
     private Context mContext;
-    private List<ListItem> mList;
+    private List<ObjectItem> mList;
 
     private PaintDrawable mPaintDrawable;
 
@@ -56,7 +56,7 @@ public class StayOutboundListAdapter extends RecyclerView.Adapter<RecyclerView.V
     private boolean mDistanceEnabled;
     private boolean mNightsEnabled; // 연박 여부
 
-    public StayOutboundListAdapter(Context context, ArrayList<ListItem> arrayList)
+    public StayOutboundListAdapter(Context context, ArrayList<ObjectItem> arrayList)
     {
         mContext = context;
 
@@ -88,12 +88,12 @@ public class StayOutboundListAdapter extends RecyclerView.Adapter<RecyclerView.V
         mList.clear();
     }
 
-    public void add(ListItem listItem)
+    public void add(ObjectItem objectItem)
     {
-        mList.add(listItem);
+        mList.add(objectItem);
     }
 
-    public void add(int position, ListItem placeViewItem)
+    public void add(int position, ObjectItem placeViewItem)
     {
         if (position >= 0 && position < mList.size())
         {
@@ -101,7 +101,7 @@ public class StayOutboundListAdapter extends RecyclerView.Adapter<RecyclerView.V
         }
     }
 
-    public void addAll(Collection<? extends ListItem> collection)
+    public void addAll(Collection<? extends ObjectItem> collection)
     {
         if (collection == null)
         {
@@ -111,7 +111,7 @@ public class StayOutboundListAdapter extends RecyclerView.Adapter<RecyclerView.V
         mList.addAll(collection);
     }
 
-    public void setAll(Collection<? extends ListItem> collection)
+    public void setAll(Collection<? extends ObjectItem> collection)
     {
         clear();
         addAll(collection);
@@ -127,7 +127,7 @@ public class StayOutboundListAdapter extends RecyclerView.Adapter<RecyclerView.V
         mList.remove(position);
     }
 
-    public ListItem getItem(int position)
+    public ObjectItem getItem(int position)
     {
         if (position < 0 || mList.size() <= position)
         {
@@ -180,7 +180,7 @@ public class StayOutboundListAdapter extends RecyclerView.Adapter<RecyclerView.V
     {
         switch (viewType)
         {
-            case ListItem.TYPE_ENTRY:
+            case ObjectItem.TYPE_ENTRY:
             {
                 ListRowStayOutboundDataBinding dataBinding = DataBindingUtil.inflate(LayoutInflater.from(mContext), R.layout.list_row_stay_outbound_data, parent, false);
 
@@ -189,7 +189,7 @@ public class StayOutboundListAdapter extends RecyclerView.Adapter<RecyclerView.V
                 return stayViewHolder;
             }
 
-            case ListItem.TYPE_FOOTER_VIEW:
+            case ObjectItem.TYPE_FOOTER_VIEW:
             {
                 ListRowFooterDataBinding dataBinding = DataBindingUtil.inflate(LayoutInflater.from(mContext), R.layout.list_row_footer_data, parent, false);
 
@@ -198,7 +198,7 @@ public class StayOutboundListAdapter extends RecyclerView.Adapter<RecyclerView.V
                 return blankViewHolder;
             }
 
-            case ListItem.TYPE_LOADING_VIEW:
+            case ObjectItem.TYPE_LOADING_VIEW:
             {
                 ListRowLoadingDataBinding dataBinding = DataBindingUtil.inflate(LayoutInflater.from(mContext), R.layout.list_row_loading_data, parent, false);
 
@@ -214,7 +214,7 @@ public class StayOutboundListAdapter extends RecyclerView.Adapter<RecyclerView.V
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position)
     {
-        ListItem item = getItem(position);
+        ObjectItem item = getItem(position);
 
         if (item == null)
         {
@@ -223,21 +223,21 @@ public class StayOutboundListAdapter extends RecyclerView.Adapter<RecyclerView.V
 
         switch (item.mType)
         {
-            case ListItem.TYPE_ENTRY:
+            case ObjectItem.TYPE_ENTRY:
                 onBindViewHolder((StayViewHolder) holder, item);
                 break;
         }
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-    private void onBindViewHolder(StayViewHolder holder, ListItem listItem)
+    private void onBindViewHolder(StayViewHolder holder, ObjectItem objectItem)
     {
-        if (holder == null || listItem == null)
+        if (holder == null || objectItem == null)
         {
             return;
         }
 
-        StayOutbound stayOutbound = listItem.getItem();
+        StayOutbound stayOutbound = objectItem.getItem();
 
         holder.dataBinding.addressTextView.setText(stayOutbound.locationDescription);
         holder.dataBinding.nameTextView.setText(stayOutbound.name);

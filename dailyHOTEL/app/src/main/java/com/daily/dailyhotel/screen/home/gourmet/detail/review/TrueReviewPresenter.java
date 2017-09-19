@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.RecyclerView;
 
 import com.daily.base.BaseActivity;
 import com.daily.base.BaseAnalyticsInterface;
@@ -186,4 +187,27 @@ public class TrueReviewPresenter extends BaseExceptionPresenter<TrueReviewActivi
         getActivity().onBackPressed();
     }
 
+    @Override
+    public void onTermsClick()
+    {
+
+    }
+
+    @Override
+    public void onTopClick()
+    {
+
+    }
+
+    @Override
+    public void onScroll(RecyclerView recyclerView, int dx, int dy)
+    {
+
+    }
+
+    @Override
+    public void onScrollStateChanged(RecyclerView recyclerView, int newState)
+    {
+
+    }
 }

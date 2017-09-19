@@ -5,7 +5,7 @@ import android.location.Location;
 import android.support.v4.app.FragmentManager;
 
 import com.daily.dailyhotel.base.BaseBlurViewInterface;
-import com.daily.dailyhotel.entity.ListItem;
+import com.daily.dailyhotel.entity.ObjectItem;
 import com.daily.dailyhotel.entity.StayOutbound;
 
 import java.util.List;
@@ -26,9 +26,9 @@ public interface StayOutboundListViewInterface extends BaseBlurViewInterface
 
     void setPeopleText(String peopleText);
 
-    void setStayOutboundList(List<ListItem> listItemList, boolean isSortByDistance, boolean isNights);
+    void setStayOutboundList(List<ObjectItem> objectItemList, boolean isSortByDistance, boolean isNights);
 
-    void addStayOutboundList(List<ListItem> listItemList);
+    void addStayOutboundList(List<ObjectItem> objectItemList);
 
     void setStayOutboundMakeMarker(List<StayOutbound> stayOutboundList);
 
