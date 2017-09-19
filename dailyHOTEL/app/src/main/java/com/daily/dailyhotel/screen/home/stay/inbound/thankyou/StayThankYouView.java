@@ -17,6 +17,7 @@ import com.daily.dailyhotel.entity.CarouselListItem;
 import com.daily.dailyhotel.view.DailyToolbarView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ActivityStayPaymentThankYouDataBinding;
+import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.CustomFontTypefaceSpan;
 
@@ -58,6 +59,8 @@ public class StayThankYouView extends BaseDialogView<StayThankYouView.OnEventLis
         viewDataBinding.stampLayout.setVisibility(View.GONE);
         viewDataBinding.recommendGourmetLayout.setTitleText(R.string.label_booking_reservation_recommend_gourmet_title);
         viewDataBinding.recommendGourmetLayout.setVisibility(View.GONE);
+
+        EdgeEffectColor.setEdgeGlowColor(viewDataBinding.scrollLayout, getColor(R.color.transparent));
     }
 
     @Override

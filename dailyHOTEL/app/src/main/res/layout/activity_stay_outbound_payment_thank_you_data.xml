@@ -30,6 +30,7 @@
             app:layout_constraintTop_toBottomOf="@+id/simpleDraweeView"/>
 
         <ScrollView
+            android:id="@+id/scrollLayout"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:fillViewport="true"
