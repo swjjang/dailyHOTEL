@@ -2,7 +2,6 @@ package com.twoheart.dailyhotel.screen.mydaily.member;
 
 import android.content.Context;
 
-import com.crashlytics.android.Crashlytics;
 import com.daily.base.util.DailyTextUtils;
 import com.twoheart.dailyhotel.model.Customer;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;

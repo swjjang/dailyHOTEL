@@ -217,7 +217,7 @@ public class StayBookingDetail extends PlaceBookingDetail
             reviewStatusType = ReviewStatusType.NONE;
         }
 
-        if(jsonObject.has("waitingForBooking") == true)
+        if (jsonObject.has("waitingForBooking") == true)
         {
             waitingForBooking = jsonObject.getBoolean("waitingForBooking");
         }

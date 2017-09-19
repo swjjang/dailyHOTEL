@@ -672,6 +672,8 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
             {
                 unLockAll();
 
+                onReportError(throwable);
+
                 if (throwable instanceof BaseException)
                 {
                     getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2), throwable.getMessage()//

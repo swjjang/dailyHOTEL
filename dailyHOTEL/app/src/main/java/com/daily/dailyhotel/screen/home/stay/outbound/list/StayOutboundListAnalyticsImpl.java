@@ -8,9 +8,6 @@ import com.daily.dailyhotel.parcel.analytics.StayOutboundDetailAnalyticsParam;
 import com.daily.dailyhotel.parcel.analytics.StayOutboundListAnalyticsParam;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public class StayOutboundListAnalyticsImpl implements StayOutboundListPresenter.StayOutboundListAnalyticsInterface
 {
     private StayOutboundListAnalyticsParam mAnalyticsParam;

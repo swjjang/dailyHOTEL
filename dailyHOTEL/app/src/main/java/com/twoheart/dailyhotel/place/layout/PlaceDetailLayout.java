@@ -532,7 +532,7 @@ public abstract class PlaceDetailLayout extends BaseLayout
             return;
         }
 
-        if(visible == true)
+        if (visible == true)
         {
             mVRIconView.setVisibility(View.VISIBLE);
             mFakeVRIconView.setVisibility(View.VISIBLE);
