@@ -116,13 +116,22 @@ public class PaymentRemoteImpl implements PaymentInterface
                 // 7    3시부터 9시까지
                 switch (stayPaymentDataBaseDto.msgCode)
                 {
-                    case 6:
-                    case 7:
-                        stayPayment.mWarningMessage = stayPaymentDataBaseDto.msg;
                     case 0:
                         if (stayPaymentDataBaseDto.data != null)
                         {
                             stayPayment = stayPaymentDataBaseDto.data.getStayPayment();
+                        } else
+                        {
+                            throw new BaseException(stayPaymentDataBaseDto.msgCode, stayPaymentDataBaseDto.msg);
+                        }
+                        break;
+
+                    case 6:
+                    case 7:
+                        if (stayPaymentDataBaseDto.data != null)
+                        {
+                            stayPayment = stayPaymentDataBaseDto.data.getStayPayment();
+                            stayPayment.mWarningMessage = stayPaymentDataBaseDto.msg;
                         } else
                         {
                             throw new BaseException(stayPaymentDataBaseDto.msgCode, stayPaymentDataBaseDto.msg);
