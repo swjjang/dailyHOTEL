@@ -65,7 +65,8 @@ import java.util.Map;
 
 import io.reactivex.Observable;
 import io.reactivex.functions.Consumer;
-import io.reactivex.functions.Function5;
+import io.reactivex.functions.Function;
+import io.reactivex.functions.Function4;
 
 /**
  * Created by sheldon
@@ -584,15 +585,13 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
 
         addCompositeDisposable(Observable.zip(mPaymentRemoteImpl.getStayPayment(mStayBookDateTime, mRoomIndex)//
             , mPaymentRemoteImpl.getEasyCardList(), mProfileRemoteImpl.getUserSimpleInformation()//
-            , mPaymentRemoteImpl.getStayRefundPolicy(mStayBookDateTime, mStayIndex, mRoomIndex) //
             , mCommonRemoteImpl.getCommonDateTime()//
-            , new Function5<StayPayment, List<Card>, UserSimpleInformation, StayRefundPolicy, CommonDateTime, Boolean>()
+            , new Function4<StayPayment, List<Card>, UserSimpleInformation, CommonDateTime, StayBookDateTime>()
             {
                 @Override
-                public Boolean apply(@io.reactivex.annotations.NonNull StayPayment stayPayment//
+                public StayBookDateTime apply(@io.reactivex.annotations.NonNull StayPayment stayPayment//
                     , @io.reactivex.annotations.NonNull List<Card> cardList//
                     , @io.reactivex.annotations.NonNull UserSimpleInformation userSimpleInformation//
-                    , @io.reactivex.annotations.NonNull StayRefundPolicy stayRefundPolicy//
                     , @io.reactivex.annotations.NonNull CommonDateTime commonDateTime) throws Exception
                 {
                     setStayPayment(stayPayment);
@@ -600,16 +599,23 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
                     setStayBookDateTime(stayPayment.checkInDate, stayPayment.checkOutDate);
                     setSelectCard(getSelectedCard(cardList));
                     setUserInformation(userSimpleInformation);
-                    setStayRefundPolicy(stayRefundPolicy);
                     setPensionPopupMessageType(commonDateTime, mStayBookDateTime);
 
-                    return true;
+                    return mStayBookDateTime;
                 }
-            }).subscribe(new Consumer<Boolean>()
+            }).flatMap(new Function<StayBookDateTime, Observable<StayRefundPolicy>>()
+        {
+            public Observable<StayRefundPolicy> apply(@io.reactivex.annotations.NonNull StayBookDateTime stayBookDateTime) throws Exception
+            {
+                return mPaymentRemoteImpl.getStayRefundPolicy(stayBookDateTime, mStayIndex, mRoomIndex);
+            }
+        }).subscribe(new Consumer<StayRefundPolicy>()
         {
             @Override
-            public void accept(@io.reactivex.annotations.NonNull Boolean result) throws Exception
+            public void accept(StayRefundPolicy stayRefundPolicy) throws Exception
             {
+                setStayRefundPolicy(stayRefundPolicy);
+
                 onBookingInformation(mStayPayment, mStayBookDateTime);
 
                 notifyUserInformationChanged();
@@ -719,13 +725,13 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
 
         mAnalytics.onEventCallClick(getActivity());
 
-//        startActivityForResult(StayThankYouActivity.newInstance(getActivity(), mOverseas, mStayName, mImageUrl//
-//            , mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
-//            , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
-//            , mRoomName, "12345678", mStayPayment.waitingForBooking //
-//            , mLatitude, mLongitude //
-//            , mAnalytics.getThankYouAnalyticsParam())//
-//            , StayPaymentActivity.REQUEST_CODE_THANK_YOU);
+        //        startActivityForResult(StayThankYouActivity.newInstance(getActivity(), mOverseas, mStayName, mImageUrl//
+        //            , mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
+        //            , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
+        //            , mRoomName, "12345678", mStayPayment.waitingForBooking //
+        //            , mLatitude, mLongitude //
+        //            , mAnalytics.getThankYouAnalyticsParam())//
+        //            , StayPaymentActivity.REQUEST_CODE_THANK_YOU);
     }
 
     @Override
