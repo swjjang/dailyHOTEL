@@ -1065,6 +1065,10 @@ public class AnalyticsManager
         public static final String ENDPAYMENT_OUTBOUND = "EndPayment_outbound";
         public static final String PAYMENTUSED_OUTBOUND = "PaymentUsed_outbound";
         public static final String KEYWORD_NOT_MATCH_OUTBOUND = "keyword_not_match_outbound";
+        public static final String SEARCH_WINDOW_CLICK = "search_window_click";
+        public static final String MEMBER_SELECT = "member_select";
+        public static final String SEARCH_CANCEL = "search_cancel";
+        public static final String SEARCH_HISTORY_DELETE = "search_history_delete";
 
         //
         public static final String BOOKING_HISTORY_DELETE = "booking_history_delete";
