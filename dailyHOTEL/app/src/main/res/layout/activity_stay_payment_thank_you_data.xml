@@ -45,13 +45,12 @@
             app:layout_constraintBottom_toTopOf="@+id/confirmLayout"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintTop_toBottomOf="@+id/toolbarView">
 
             <android.support.constraint.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingBottom="15dp"
-                android:paddingTop="52dp">
+                android:paddingBottom="15dp">
 
                 <com.daily.dailyhotel.view.DailyThankYouInformationsView
                     android:id="@+id/thankYouInformationView"
