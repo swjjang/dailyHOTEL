@@ -70,6 +70,10 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
         void onScreen(Activity activity);
 
         void onEventDestroy(Activity activity);
+
+        void onEventSuggestClick(Activity activity);
+
+        void onEventPeopleClick(Activity activity);
     }
 
     public StayOutboundSearchPresenter(@NonNull StayOutboundSearchActivity activity)
@@ -347,7 +351,7 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
                 {
                     if (isSuggestChanged() == false)
                     {
-                        onSuggestClick();
+                        onSuggestClick(false);
                     }
                 }
 
@@ -365,7 +369,7 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
     }
 
     @Override
-    public void onSuggestClick()
+    public void onSuggestClick(boolean isUserAction)
     {
         if (lock() == true)
         {
@@ -374,6 +378,11 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
 
         Intent intent = StayOutboundSearchSuggestActivity.newInstance(getActivity());
         startActivityForResult(intent, StayOutboundSearchActivity.REQUEST_CODE_SUGGEST);
+
+        if (isUserAction == true)
+        {
+            mAnalytics.onEventSuggestClick(getActivity());
+        }
     }
 
     @Override
@@ -462,6 +471,8 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
         }
 
         startActivityForResult(intent, StayOutboundSearchActivity.REQUEST_CODE_PEOPLE);
+
+        mAnalytics.onEventPeopleClick(getActivity());
     }
 
     private void setCommonDateTime(CommonDateTime commonDateTime)

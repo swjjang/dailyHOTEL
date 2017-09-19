@@ -13,7 +13,7 @@ public class StayOutboundSearchView extends BaseDialogView<StayOutboundSearchVie
 {
     public interface OnEventListener extends OnBaseEventListener
     {
-        void onSuggestClick();
+        void onSuggestClick(boolean isUserAction);
 
         void onSearchKeyword();
 
@@ -104,7 +104,7 @@ public class StayOutboundSearchView extends BaseDialogView<StayOutboundSearchVie
         switch (v.getId())
         {
             case R.id.suggestTextView:
-                getEventListener().onSuggestClick();
+                getEventListener().onSuggestClick(true);
                 break;
 
             case R.id.calendarTextView:

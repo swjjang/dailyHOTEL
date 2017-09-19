@@ -10,12 +10,36 @@ public class StayOutboundSearchSuggestAnalyticsImpl implements StayOutboundSearc
     @Override
     public void onEventSuggestEmpty(Activity activity, String keyword)
     {
-        if (DailyTextUtils.isTextEmpty(keyword) == true)
+        if (activity == null || DailyTextUtils.isTextEmpty(keyword) == true)
         {
             return;
         }
 
         AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.SEARCH//
             , AnalyticsManager.Action.KEYWORD_NOT_MATCH_OUTBOUND, keyword, null);
+    }
+
+    @Override
+    public void onEventCloseClick(Activity activity)
+    {
+        if (activity == null)
+        {
+            return;
+        }
+
+        AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.SEARCH//
+            , AnalyticsManager.Action.SEARCH_CANCEL, null, null);
+    }
+
+    @Override
+    public void onEventDeleteAllRecentlySuggestClick(Activity activity)
+    {
+        if (activity == null)
+        {
+            return;
+        }
+
+        AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.SEARCH//
+            , AnalyticsManager.Action.SEARCH_HISTORY_DELETE, null, null);
     }
 }
