@@ -1154,9 +1154,6 @@ public class DailyMobileAPITest
                         assertThat("카드 번호", creditCard.number, isNotEmpty());
                         assertThat("카드 키", creditCard.billingkey, isNotEmpty());
                         assertThat("카드 사명", creditCard.cardcd, isNotEmpty());
-
-                        String cardCds = CreditCard.getCardCDName(mContext, creditCard.cardcd);
-                        assertThat("카드사명 찾기 실패", cardCds, isNotEmpty());
                     }
 
                     // requestUserDeleteBillingCard() 용 테스트 코드
