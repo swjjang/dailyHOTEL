@@ -99,8 +99,8 @@ public class DailyCarouselAnimationLayout extends ConstraintLayout
                 setBottomLineView((int) height, color);
             }
 
-            mIsUseAnimation = typedArray.getBoolean(R.styleable.dailyCarousel_use_animation, false);
-            boolean isUsePrice = typedArray.getBoolean(R.styleable.dailyCarousel_use_price_layout, true);
+            mIsUseAnimation = typedArray.getBoolean(R.styleable.dailyCarousel_useAnimation, false);
+            boolean isUsePrice = typedArray.getBoolean(R.styleable.dailyCarousel_usePriceLayout, true);
             setUsePriceLayout(isUsePrice);
         } else
         {

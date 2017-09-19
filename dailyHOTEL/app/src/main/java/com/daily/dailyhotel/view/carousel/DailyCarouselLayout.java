@@ -105,7 +105,7 @@ public class DailyCarouselLayout extends ConstraintLayout
         if (attrs != null)
         {
             TypedArray typedArray = mContext.obtainStyledAttributes(attrs, R.styleable.dailyCarousel);
-            boolean isUse = typedArray.getBoolean(R.styleable.dailyCarousel_use_price_layout, true);
+            boolean isUse = typedArray.getBoolean(R.styleable.dailyCarousel_usePriceLayout, true);
             setUsePriceLayout(isUse);
         } else
         {
