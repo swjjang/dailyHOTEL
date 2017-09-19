@@ -277,7 +277,7 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
 
         // 메뉴 리스트
         setMenuListLayout(gourmetDetail.getGourmetMenuList(), shownMenuCount);
-        
+
         // 주소 및 맵
         setAddressView(gourmetDetail.address);
 

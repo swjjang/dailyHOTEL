@@ -279,7 +279,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
                     {
                         disposable.dispose();
                     }
-                    
+
                     onHandleError(throwable);
                 }
             }));

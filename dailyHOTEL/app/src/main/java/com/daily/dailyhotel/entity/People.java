@@ -53,7 +53,7 @@ public class People
 
             ArrayList subList = new ArrayList();
 
-            for (int i = 0 ; i < length ; i++)
+            for (int i = 0; i < length; i++)
             {
                 subList.add(jsonArray.get(i));
             }
