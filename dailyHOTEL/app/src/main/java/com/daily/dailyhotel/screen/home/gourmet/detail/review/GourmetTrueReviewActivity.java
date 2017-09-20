@@ -16,14 +16,16 @@ import com.twoheart.dailyhotel.R;
  * Created by sheldon
  * Clean Architecture
  */
-public class TrueReviewActivity extends BaseActivity<TrueReviewPresenter>
+public class GourmetTrueReviewActivity extends BaseActivity<GourmetTrueReviewPresenter>
 {
+    static final int REQUEST_CODE_REVIEW_TERMS = 10000;
+
     static final String INTENT_EXTRA_DATA_GOURMET_INDEX = "gourmetIndex";
     static final String INTENT_EXTRA_DATA_REVIEW_SCORES = "reviewScores";
 
     public static Intent newInstance(Context context, int gourmetIndex, ReviewScores reviewScores, GourmetTrueReviewAnalyticsParam analyticsParam)
     {
-        Intent intent = new Intent(context, TrueReviewActivity.class);
+        Intent intent = new Intent(context, GourmetTrueReviewActivity.class);
         intent.putExtra(INTENT_EXTRA_DATA_GOURMET_INDEX, gourmetIndex);
         intent.putExtra(INTENT_EXTRA_DATA_REVIEW_SCORES, new ReviewScoresParcel(reviewScores));
         intent.putExtra(INTENT_EXTRA_DATA_ANALYTICS, analyticsParam);
@@ -40,9 +42,9 @@ public class TrueReviewActivity extends BaseActivity<TrueReviewPresenter>
 
     @NonNull
     @Override
-    protected TrueReviewPresenter createInstancePresenter()
+    protected GourmetTrueReviewPresenter createInstancePresenter()
     {
-        return new TrueReviewPresenter(this);
+        return new GourmetTrueReviewPresenter(this);
     }
 
     @Override

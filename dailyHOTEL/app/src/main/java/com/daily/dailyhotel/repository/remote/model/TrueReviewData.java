@@ -2,6 +2,8 @@ package com.daily.dailyhotel.repository.remote.model;
 
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
+import com.daily.dailyhotel.entity.TrueReview;
+import com.daily.dailyhotel.entity.TrueReviewReply;
 
 @JsonObject
 public class TrueReviewData
@@ -25,6 +27,22 @@ public class TrueReviewData
     {
     }
 
+    public TrueReview getTrueReview()
+    {
+        TrueReview trueReview = new TrueReview();
+
+        trueReview.email = email;
+        trueReview.comment = comment;
+        trueReview.createdAt = createdAt;
+        trueReview.averageScore = avgScore;
+
+        TrueReviewReply trueReviewReply = reviewReply.getTrueReviewReply();
+
+        trueReview.setReply(trueReviewReply);
+
+        return trueReview;
+    }
+
     @JsonObject
     static class TrueReviewReplyData
     {
@@ -36,5 +54,16 @@ public class TrueReviewData
 
         @JsonField(name = "repliedAt")
         public String repliedAt; // ISO-8601
+
+        public TrueReviewReply getTrueReviewReply()
+        {
+            TrueReviewReply trueReviewReply = new TrueReviewReply();
+
+            trueReviewReply.replier = replier;
+            trueReviewReply.comment = reply;
+            trueReviewReply.repliedAt = repliedAt;
+
+            return trueReviewReply;
+        }
     }
 }

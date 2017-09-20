@@ -1390,7 +1390,7 @@ public class DailyMobileAPI
     public Observable<BaseDto<TrueReviewsData>> getGourmetTrueReviews(int gourmetIndex, int page, int limit)
     {
         final String API = Constants.UNENCRYPTED_URL ? "api/v4/review/gourmet/{restaurantIdx}"//
-            : "";
+            : "ODQkOTckMTE0JDQkMTMwJDQ0JDU2JDkyJDczJDcwJDEyOSQxMDUkNTAkMTQkODAkMTgk$NzcyXQkYxOERFRNkUzLOEVFN0JGRkMxMkJCNDhGQ0E2RTgWxRDYxUOTA5Q0QZBMkZENDU3NDYDwQkDMxMB0E5NkY0REE4JQjk1CM0RDN0VBZOXENEQTA0NUYwMzBEOREFBOTgyPRDVEMDXMz$";
 
         Map<String, String> urlParams = new HashMap<>();
         urlParams.put("{restaurantIdx}", Integer.toString(gourmetIndex));

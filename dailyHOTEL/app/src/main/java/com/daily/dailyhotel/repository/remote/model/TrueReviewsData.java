@@ -1,23 +1,11 @@
 package com.daily.dailyhotel.repository.remote.model;
 
 import com.bluelinelabs.logansquare.annotation.JsonField;
-import com.bluelinelabs.logansquare.annotation.JsonIgnore;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
-import com.bluelinelabs.logansquare.annotation.OnJsonParseComplete;
-import com.daily.base.util.ExLog;
-import com.daily.dailyhotel.entity.Review;
-import com.daily.dailyhotel.entity.ReviewAnswerValue;
-import com.daily.dailyhotel.entity.ReviewItem;
-import com.daily.dailyhotel.entity.ReviewQuestionItem;
 import com.daily.dailyhotel.entity.TrueReview;
 import com.daily.dailyhotel.entity.TrueReviews;
-import com.twoheart.dailyhotel.network.model.PlaceReview;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 @JsonObject
@@ -45,6 +33,23 @@ public class TrueReviewsData
     public TrueReviews getTrueReviews()
     {
         TrueReviews trueReviews = new TrueReviews();
+
+        trueReviews.totalElements = totalElements;
+        trueReviews.totalPages = totalPages;
+        trueReviews.numberOfElements = numberOfElements;
+        trueReviews.page = page;
+
+        List<TrueReview> trueReviewList = new ArrayList<>();
+
+        if (content != null)
+        {
+            for (TrueReviewData trueReviewData : content)
+            {
+                trueReviewList.add(trueReviewData.getTrueReview());
+            }
+        }
+
+        trueReviews.setTrueReviewList(trueReviewList);
 
         return trueReviews;
     }

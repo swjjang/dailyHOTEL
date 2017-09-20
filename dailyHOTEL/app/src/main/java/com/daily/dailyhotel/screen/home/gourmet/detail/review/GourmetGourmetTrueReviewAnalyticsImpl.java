@@ -8,7 +8,7 @@ import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import java.util.HashMap;
 import java.util.Map;
 
-public class TrueReviewAnalyticsImpl implements TrueReviewPresenter.TrueReviewAnalyticsInterface
+public class GourmetGourmetTrueReviewAnalyticsImpl implements GourmetTrueReviewPresenter.GourmetTrueReviewAnalyticsInterface
 {
     private GourmetTrueReviewAnalyticsParam mAnalyticsParam;
 

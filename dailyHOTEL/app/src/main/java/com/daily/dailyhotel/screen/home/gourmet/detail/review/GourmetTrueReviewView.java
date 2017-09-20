@@ -4,34 +4,49 @@ import android.animation.Animator;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.databinding.DataBindingUtil;
+import android.databinding.ViewDataBinding;
+import android.graphics.Paint;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
+import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
-import android.widget.LinearLayout;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 
 import com.daily.base.BaseActivity;
 import com.daily.base.BaseDialogView;
 import com.daily.base.OnBaseEventListener;
+import com.daily.base.util.DailyTextUtils;
+import com.daily.base.util.ExLog;
+import com.daily.base.util.ScreenUtils;
 import com.daily.dailyhotel.entity.ObjectItem;
 import com.daily.dailyhotel.entity.ReviewScore;
 import com.daily.dailyhotel.entity.TrueReview;
+import com.daily.dailyhotel.entity.TrueReviewReply;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ActivityTrueReviewDataBinding;
+import com.twoheart.dailyhotel.databinding.LayoutTrueReviewFooterDataBinding;
 import com.twoheart.dailyhotel.databinding.LayoutTrueReviewHeaderDataBinding;
+import com.twoheart.dailyhotel.databinding.LayoutTrueReviewLoadingDataBinding;
 import com.twoheart.dailyhotel.databinding.LayoutTrueReviewProgressbarDataBinding;
+import com.twoheart.dailyhotel.databinding.LayoutTrueReviewReviewDataBinding;
+import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class TrueReviewView extends BaseDialogView<TrueReviewView.OnEventListener, ActivityTrueReviewDataBinding> implements TrueReviewInterface
+import io.reactivex.Observable;
+import io.reactivex.Observer;
+
+public class GourmetTrueReviewView extends BaseDialogView<GourmetTrueReviewView.OnEventListener, ActivityTrueReviewDataBinding>//
+    implements GourmetTrueReviewInterface
 {
     private TrueReviewListAdapter mTrueReviewListAdapter;
+    private boolean mShowProgressbarAnimation;
 
     public interface OnEventListener extends OnBaseEventListener
     {
@@ -44,7 +59,7 @@ public class TrueReviewView extends BaseDialogView<TrueReviewView.OnEventListene
         void onScrollStateChanged(RecyclerView recyclerView, int newState);
     }
 
-    public TrueReviewView(BaseActivity baseActivity, TrueReviewView.OnEventListener listener)
+    public GourmetTrueReviewView(BaseActivity baseActivity, GourmetTrueReviewView.OnEventListener listener)
     {
         super(baseActivity, listener);
     }
@@ -62,7 +77,6 @@ public class TrueReviewView extends BaseDialogView<TrueReviewView.OnEventListene
 
         viewDataBinding.recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener()
         {
-            @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy)
             {
                 if (recyclerView.isComputingLayout() == true)
@@ -98,7 +112,7 @@ public class TrueReviewView extends BaseDialogView<TrueReviewView.OnEventListene
     @Override
     public void setToolbarTitle(String title)
     {
-        if(getViewDataBinding() == null)
+        if (getViewDataBinding() == null)
         {
             return;
         }
@@ -114,11 +128,11 @@ public class TrueReviewView extends BaseDialogView<TrueReviewView.OnEventListene
         });
     }
 
-    public void smoothScrollTop(final Animator.AnimatorListener animatorListener)
+    public Observable<Boolean> smoothScrollTop()
     {
-        if(getViewDataBinding() == null)
+        if (getViewDataBinding() == null)
         {
-            return;
+            return null;
         }
 
         getViewDataBinding().recyclerView.setEnabled(false);
@@ -150,53 +164,52 @@ public class TrueReviewView extends BaseDialogView<TrueReviewView.OnEventListene
 
         valueAnimator.setDuration(duration);
         valueAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
-        valueAnimator.addListener(new Animator.AnimatorListener()
+
+
+        Observable<Boolean> observable = new Observable<Boolean>()
         {
-            @Override
-            public void onAnimationStart(Animator animation)
-            {
-                if (animatorListener != null)
-                {
-                    animatorListener.onAnimationStart(animation);
-                }
-            }
 
             @Override
-            public void onAnimationEnd(Animator animation)
+            protected void subscribeActual(Observer<? super Boolean> observer)
             {
-                valueAnimator.removeAllUpdateListeners();
-                valueAnimator.removeAllListeners();
-
-                getViewDataBinding().recyclerView.setEnabled(true);
-
-                if (animatorListener != null)
+                valueAnimator.addListener(new Animator.AnimatorListener()
                 {
-                    animatorListener.onAnimationEnd(animation);
-                }
-            }
+                    @Override
+                    public void onAnimationStart(Animator animation)
+                    {
+                    }
 
-            @Override
-            public void onAnimationCancel(Animator animation)
-            {
-                if (animatorListener != null)
-                {
-                    animatorListener.onAnimationCancel(animation);
-                }
-            }
+                    @Override
+                    public void onAnimationEnd(Animator animation)
+                    {
+                        valueAnimator.removeAllUpdateListeners();
+                        valueAnimator.removeAllListeners();
 
-            @Override
-            public void onAnimationRepeat(Animator animation)
-            {
-                if (animatorListener != null)
-                {
-                    animatorListener.onAnimationRepeat(animation);
-                }
-            }
-        });
+                        getViewDataBinding().recyclerView.setEnabled(true);
 
-        valueAnimator.start();
+                        observer.onNext(true);
+                        observer.onComplete();
+                    }
+
+                    @Override
+                    public void onAnimationCancel(Animator animation)
+                    {
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animator animation)
+                    {
+                    }
+                });
+
+                valueAnimator.start();
+            }
+        };
+
+        return observable;
     }
 
+    @Override
     public void setTopButtonVisible(boolean visible)
     {
         if (getViewDataBinding() == null)
@@ -207,6 +220,7 @@ public class TrueReviewView extends BaseDialogView<TrueReviewView.OnEventListene
         getViewDataBinding().toolbarView.setVisibility(visible ? View.VISIBLE : View.GONE);
     }
 
+    @Override
     public void setReviewScores(List<ReviewScore> reviewScoreList)
     {
         if (getViewDataBinding() == null || reviewScoreList == null || reviewScoreList.size() == 0)
@@ -228,6 +242,19 @@ public class TrueReviewView extends BaseDialogView<TrueReviewView.OnEventListene
         mTrueReviewListAdapter.notifyDataSetChanged();
     }
 
+    @Override
+    public void showReviewScoresAnimation()
+    {
+        if (getViewDataBinding() == null || mTrueReviewListAdapter == null)
+        {
+            return;
+        }
+
+        mShowProgressbarAnimation = true;
+        mTrueReviewListAdapter.startHeaderAnimation();
+    }
+
+    @Override
     public void addReviewList(List<TrueReview> trueReviewList, int totalCount)
     {
         if (getViewDataBinding() == null || mTrueReviewListAdapter == null || trueReviewList == null || trueReviewList.size() == 0)
@@ -247,7 +274,8 @@ public class TrueReviewView extends BaseDialogView<TrueReviewView.OnEventListene
         mTrueReviewListAdapter.notifyDataSetChanged();
     }
 
-    public void addDailyFooter()
+    @Override
+    public void addLastFooter()
     {
         if (getViewDataBinding() == null || mTrueReviewListAdapter == null)
         {
@@ -268,6 +296,7 @@ public class TrueReviewView extends BaseDialogView<TrueReviewView.OnEventListene
         mTrueReviewListAdapter.notifyDataSetChanged();
     }
 
+    @Override
     public void addLoadingFooter()
     {
         if (getViewDataBinding() == null || mTrueReviewListAdapter == null)
@@ -289,6 +318,7 @@ public class TrueReviewView extends BaseDialogView<TrueReviewView.OnEventListene
         mTrueReviewListAdapter.notifyDataSetChanged();
     }
 
+    @Override
     public void removeLoadingFooter()
     {
         if (getViewDataBinding() == null || mTrueReviewListAdapter == null)
@@ -308,23 +338,11 @@ public class TrueReviewView extends BaseDialogView<TrueReviewView.OnEventListene
 
     class TrueReviewListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     {
-        boolean mShowProgressbarAnimation;
         private Context mContext;
-        private LayoutInflater mInflater;
         private List<ObjectItem> mObjectItemList;
         private int mTotalCount;
         private String mHeaderTitle;
-
-        private Handler mHandler = new Handler()
-        {
-            @Override
-            public void handleMessage(Message msg)
-            {
-                mShowProgressbarAnimation = true;
-
-                startAnimation((ViewGroup) msg.obj);
-            }
-        };
+        private ViewGroup mProgressBarLayout;
 
         public TrueReviewListAdapter(Context context)
         {
@@ -414,23 +432,23 @@ public class TrueReviewView extends BaseDialogView<TrueReviewView.OnEventListene
 
                 case ObjectItem.TYPE_ENTRY:
                 {
-                    View view = mInflater.inflate(R.layout.list_row_place_review, parent, false);
+                    LayoutTrueReviewReviewDataBinding viewDataBinding = DataBindingUtil.inflate(LayoutInflater.from(mContext), R.layout.layout_true_review_review_data, parent, false);
 
-                    return new ReviewViewHolder(view);
+                    return new TrueReviewViewHolder(viewDataBinding);
                 }
 
                 case ObjectItem.TYPE_FOOTER_VIEW:
                 {
-                    View view = mInflater.inflate(R.layout.list_row_product_footer, parent, false);
+                    LayoutTrueReviewFooterDataBinding viewDataBinding = DataBindingUtil.inflate(LayoutInflater.from(mContext), R.layout.layout_true_review_footer_data, parent, false);
 
-                    return new FooterViewHolder(view);
+                    return new ViewHolder(viewDataBinding);
                 }
 
                 case ObjectItem.TYPE_LOADING_VIEW:
                 {
-                    View view = mInflater.inflate(R.layout.list_row_loading, parent, false);
+                    LayoutTrueReviewLoadingDataBinding viewDataBinding = DataBindingUtil.inflate(LayoutInflater.from(mContext), R.layout.layout_true_review_loading_data, parent, false);
 
-                    return new FooterViewHolder(view);
+                    return new ViewHolder(viewDataBinding);
                 }
             }
 
@@ -454,7 +472,7 @@ public class TrueReviewView extends BaseDialogView<TrueReviewView.OnEventListene
                     break;
 
                 case ObjectItem.TYPE_ENTRY:
-                    onBindViewHolder((ReviewViewHolder) holder, position, objectItem);
+                    onBindViewHolder((TrueReviewViewHolder) holder, position, objectItem);
                     break;
 
                 case ObjectItem.TYPE_FOOTER_VIEW:
@@ -463,11 +481,9 @@ public class TrueReviewView extends BaseDialogView<TrueReviewView.OnEventListene
             }
         }
 
-        private void onBindViewHolder(HeaderViewHolder holder, int position, ObjectItem placeViewItem)
+        private void onBindViewHolder(HeaderViewHolder holder, int position, ObjectItem objectItem)
         {
-            mHandler.removeMessages(0);
-
-            List<ReviewScore> reviewScoreList = placeViewItem.getItem();
+            List<ReviewScore> reviewScoreList = objectItem.getItem();
 
             holder.dataBinding.termsView.setOnClickListener(new View.OnClickListener()
             {
@@ -481,6 +497,8 @@ public class TrueReviewView extends BaseDialogView<TrueReviewView.OnEventListene
             holder.dataBinding.trueReviewGuideTextView.setText(mHeaderTitle);
             holder.dataBinding.progressBarLayout.removeAllViews();
 
+            mProgressBarLayout = holder.dataBinding.progressBarLayout;
+
             if (holder.dataBinding.progressBarLayout.getChildCount() == 0)
             {
                 for (ReviewScore reviewScore : reviewScoreList)
@@ -489,7 +507,7 @@ public class TrueReviewView extends BaseDialogView<TrueReviewView.OnEventListene
 
                     progressbarDataBinding.titleTextView.setText(reviewScore.type);
 
-                    int progress = (int) (10.0f * reviewScore.scoreAvg);
+                    int progress = (int) (10.0f * reviewScore.scoreAverage);
 
                     if (mShowProgressbarAnimation == true)
                     {
@@ -500,7 +518,7 @@ public class TrueReviewView extends BaseDialogView<TrueReviewView.OnEventListene
                     }
 
                     progressbarDataBinding.progressBar.setTag(progress);
-                    progressbarDataBinding.valueTextView.setText(Float.toString(reviewScore.scoreAvg));
+                    progressbarDataBinding.valueTextView.setText(Float.toString(reviewScore.scoreAverage));
                 }
             }
 
@@ -513,39 +531,31 @@ public class TrueReviewView extends BaseDialogView<TrueReviewView.OnEventListene
             }
 
             holder.dataBinding.reviewCountTextView.setText(mContext.getString(R.string.label_detail_review_count, mTotalCount));
-
-            if (mShowProgressbarAnimation == false)
-            {
-                Message message = new Message();
-                message.arg1 = 0;
-                message.obj = mProgressBarLayout;
-                mHandler.sendMessageDelayed(message, 300);
-            }
         }
 
-        private void onBindViewHolder(final ReviewViewHolder reviewViewHolder, int position, PlaceReviewItem placeViewItem)
+        private void onBindViewHolder(final TrueReviewViewHolder holder, int position, ObjectItem objectItem)
         {
             final int MAX_LINE = 10;
-            final PlaceReview placeReview = placeViewItem.getItem();
+            final TrueReview trueReview = objectItem.getItem();
 
-            reviewViewHolder.ratingTextView.setText(Float.toString(placeReview.avgScore));
+            holder.dataBinding.ratingTextView.setText(Float.toString(trueReview.averageScore));
 
-            if (DailyTextUtils.isTextEmpty(placeReview.email) == true)
+            if (DailyTextUtils.isTextEmpty(trueReview.email) == true)
             {
-                placeReview.email = mContext.getString(R.string.label_customer);
+                trueReview.email = mContext.getString(R.string.label_customer);
             }
 
             try
             {
                 final String SEPARATOR = "ㅣ";
 
-                SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(placeReview.email + SEPARATOR//
-                    + DailyCalendar.convertDateFormatString(placeReview.createdAt, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd"));
+                SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(trueReview.email + SEPARATOR//
+                    + DailyCalendar.convertDateFormatString(trueReview.createdAt, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd"));
 
                 spannableStringBuilder.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.default_line_ce7e7e7)), //
-                    placeReview.email.length(), placeReview.email.length() + SEPARATOR.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    trueReview.email.length(), trueReview.email.length() + SEPARATOR.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
-                reviewViewHolder.customerTextView.setText(spannableStringBuilder);
+                holder.dataBinding.customerTextView.setText(spannableStringBuilder);
             } catch (Exception e)
             {
                 ExLog.d(e.toString());
@@ -554,178 +564,184 @@ public class TrueReviewView extends BaseDialogView<TrueReviewView.OnEventListene
             // 첫번째 리뷰는 상단 패팅이 20dp이다.
             if (position == 1)
             {
-                reviewViewHolder.itemView.setPadding(ScreenUtils.dpToPx(mContext, 15), ScreenUtils.dpToPx(mContext, 20), ScreenUtils.dpToPx(mContext, 15), 0);
+                holder.dataBinding.getRoot().setPadding(ScreenUtils.dpToPx(mContext, 15), ScreenUtils.dpToPx(mContext, 20), ScreenUtils.dpToPx(mContext, 15), 0);
             } else
             {
-                reviewViewHolder.itemView.setPadding(ScreenUtils.dpToPx(mContext, 15), ScreenUtils.dpToPx(mContext, 24), ScreenUtils.dpToPx(mContext, 15), 0);
+                holder.dataBinding.getRoot().setPadding(ScreenUtils.dpToPx(mContext, 15), ScreenUtils.dpToPx(mContext, 24), ScreenUtils.dpToPx(mContext, 15), 0);
             }
 
-            reviewViewHolder.reviewTextView.setText(placeReview.comment);
-            reviewViewHolder.reviewTextView.setTag(placeReview.comment);
+            holder.dataBinding.reviewTextView.setText(trueReview.comment);
+            holder.dataBinding.reviewTextView.setTag(trueReview.comment);
 
-            Paint paint = reviewViewHolder.reviewTextView.getPaint();
+            Paint paint = holder.dataBinding.reviewTextView.getPaint();
 
-            if (placeReview.isMore == true)
+            if (trueReview.more == true)
             {
-                reviewViewHolder.reviewTextView.setText((String) reviewViewHolder.reviewTextView.getTag());
-                reviewViewHolder.moreReadTextView.setVisibility(View.GONE);
-                reviewViewHolder.moreReadTextView.setOnClickListener(null);
+                holder.dataBinding.reviewTextView.setText((String) holder.dataBinding.reviewTextView.getTag());
+                holder.dataBinding.moreReadTextView.setVisibility(View.GONE);
+                holder.dataBinding.moreReadTextView.setOnClickListener(null);
             } else
             {
                 int textViewWidth = ScreenUtils.getScreenWidth(mContext) - ScreenUtils.dpToPx(mContext, 30);
                 int widthMeasureSpec = View.MeasureSpec.makeMeasureSpec(textViewWidth, View.MeasureSpec.EXACTLY);
                 int heightMeasureSpec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
-                reviewViewHolder.reviewTextView.measure(widthMeasureSpec, heightMeasureSpec);
+                holder.dataBinding.reviewTextView.measure(widthMeasureSpec, heightMeasureSpec);
 
-                int lineCount = reviewViewHolder.reviewTextView.getLineCount();
+                int lineCount = holder.dataBinding.reviewTextView.getLineCount();
 
                 if (lineCount > MAX_LINE)
                 {
-                    reviewViewHolder.reviewTextView.setText(placeReview.comment.substring(0, reviewViewHolder.reviewTextView.getLayout().getLineEnd(MAX_LINE - 1)));
-                    reviewViewHolder.reviewTextView.measure(widthMeasureSpec, heightMeasureSpec);
+                    holder.dataBinding.reviewTextView.setText(trueReview.comment.substring(0, holder.dataBinding.reviewTextView.getLayout().getLineEnd(MAX_LINE - 1)));
+                    holder.dataBinding.reviewTextView.measure(widthMeasureSpec, heightMeasureSpec);
 
                     final String expandText = "…  더 읽어보기";
 
-                    int lineStartIndex = reviewViewHolder.reviewTextView.getLayout().getLineStart(MAX_LINE - 1);
-                    int lineEndIndex = reviewViewHolder.reviewTextView.getLayout().getLineEnd(MAX_LINE - 1);
+                    int lineStartIndex = holder.dataBinding.reviewTextView.getLayout().getLineStart(MAX_LINE - 1);
+                    int lineEndIndex = holder.dataBinding.reviewTextView.getLayout().getLineEnd(MAX_LINE - 1);
 
-                    String text = placeReview.comment.substring(lineStartIndex, lineEndIndex);
+                    String text = trueReview.comment.substring(lineStartIndex, lineEndIndex);
 
                     float moreReadWidth = paint.measureText(expandText);
 
                     int count = paint.breakText(text, true, textViewWidth - moreReadWidth, null);
 
-                    reviewViewHolder.reviewTextView.setText(placeReview.comment.substring(0, lineStartIndex + count) + "…");
-                    reviewViewHolder.moreReadTextView.setVisibility(View.VISIBLE);
-                    reviewViewHolder.moreReadTextView.setOnClickListener(new View.OnClickListener()
+                    holder.dataBinding.reviewTextView.setText(trueReview.comment.substring(0, lineStartIndex + count) + "…");
+                    holder.dataBinding.moreReadTextView.setVisibility(View.VISIBLE);
+                    holder.dataBinding.moreReadTextView.setOnClickListener(new View.OnClickListener()
                     {
                         @Override
                         public void onClick(View view)
                         {
-                            reviewViewHolder.reviewTextView.setText((String) reviewViewHolder.reviewTextView.getTag());
-                            reviewViewHolder.moreReadTextView.setVisibility(View.GONE);
-                            reviewViewHolder.moreReadTextView.setOnClickListener(null);
+                            holder.dataBinding.reviewTextView.setText((String) holder.dataBinding.reviewTextView.getTag());
+                            holder.dataBinding.moreReadTextView.setVisibility(View.GONE);
+                            holder.dataBinding.moreReadTextView.setOnClickListener(null);
 
-                            placeReview.isMore = true;
+                            trueReview.more = true;
                         }
                     });
                 } else
                 {
-                    reviewViewHolder.moreReadTextView.setVisibility(View.GONE);
-                    reviewViewHolder.moreReadTextView.setOnClickListener(null);
+                    holder.dataBinding.moreReadTextView.setVisibility(View.GONE);
+                    holder.dataBinding.moreReadTextView.setOnClickListener(null);
                 }
             }
 
             // 댓글이 있는 경우
-            PlaceReview.ReviewReply reviewReply = placeReview.getReviewReply();
+            TrueReviewReply replay = trueReview.getReply();
 
-            if (reviewReply == null)
+            if (replay == null)
             {
                 if (position == mTotalCount)
                 {
-                    reviewViewHolder.underLineView.setVisibility(View.INVISIBLE);
+                    holder.dataBinding.underLineView.setVisibility(View.INVISIBLE);
                 } else
                 {
-                    reviewViewHolder.underLineView.setVisibility(View.VISIBLE);
+                    holder.dataBinding.underLineView.setVisibility(View.VISIBLE);
                 }
 
-                reviewViewHolder.replayLayout.setVisibility(View.GONE);
-                reviewViewHolder.replierTextView.setVisibility(View.GONE);
-                reviewViewHolder.replierUnderLineView.setVisibility(View.GONE);
+                holder.dataBinding.replayLayout.setVisibility(View.GONE);
+                holder.dataBinding.replierTextView.setVisibility(View.GONE);
+                holder.dataBinding.replierUnderLineView.setVisibility(View.GONE);
             } else
             {
-                reviewViewHolder.underLineView.setVisibility(View.GONE);
-                reviewViewHolder.replayLayout.setVisibility(View.VISIBLE);
-                reviewViewHolder.replierTextView.setVisibility(View.VISIBLE);
+                holder.dataBinding.underLineView.setVisibility(View.GONE);
+                holder.dataBinding.replayLayout.setVisibility(View.VISIBLE);
+                holder.dataBinding.replierTextView.setVisibility(View.VISIBLE);
 
                 if (position == mTotalCount)
                 {
-                    reviewViewHolder.replierUnderLineView.setVisibility(View.INVISIBLE);
+                    holder.dataBinding.replierUnderLineView.setVisibility(View.INVISIBLE);
                 } else
                 {
-                    reviewViewHolder.replierUnderLineView.setVisibility(View.VISIBLE);
+                    holder.dataBinding.replierUnderLineView.setVisibility(View.VISIBLE);
                 }
 
                 try
                 {
                     final String SEPARATOR = "ㅣ";
 
-                    SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(reviewReply.replier + SEPARATOR//
-                        + DailyCalendar.convertDateFormatString(reviewReply.repliedAt, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd"));
+                    SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(replay.replier + SEPARATOR//
+                        + DailyCalendar.convertDateFormatString(replay.repliedAt, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd"));
 
                     spannableStringBuilder.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.default_line_ce7e7e7)), //
-                        reviewReply.replier.length(), reviewReply.replier.length() + SEPARATOR.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        replay.replier.length(), replay.replier.length() + SEPARATOR.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
-                    reviewViewHolder.replierTextView.setText(spannableStringBuilder);
+                    holder.dataBinding.replierTextView.setText(spannableStringBuilder);
                 } catch (Exception e)
                 {
                     ExLog.d(e.toString());
                 }
 
-                reviewViewHolder.reviewReplayTextView.setText(reviewReply.reply);
-                reviewViewHolder.reviewReplayTextView.setTag(reviewReply.reply);
+                holder.dataBinding.reviewReplayTextView.setText(replay.comment);
+                holder.dataBinding.reviewReplayTextView.setTag(replay.comment);
 
-                if (reviewReply.isMore == true)
+                if (replay.more == true)
                 {
-                    reviewViewHolder.reviewReplayTextView.setText((String) reviewViewHolder.reviewReplayTextView.getTag());
-                    reviewViewHolder.reviewReplayMoreReadTextView.setVisibility(View.GONE);
-                    reviewViewHolder.reviewReplayMoreReadTextView.setOnClickListener(null);
+                    holder.dataBinding.reviewReplayTextView.setText((String) holder.dataBinding.reviewReplayTextView.getTag());
+                    holder.dataBinding.reviewReplayMoreReadTextView.setVisibility(View.GONE);
+                    holder.dataBinding.reviewReplayMoreReadTextView.setOnClickListener(null);
                 } else
                 {
                     int textViewWidth = ScreenUtils.getScreenWidth(mContext) - ScreenUtils.dpToPx(mContext, 52);
                     int widthMeasureSpec = View.MeasureSpec.makeMeasureSpec(textViewWidth, View.MeasureSpec.EXACTLY);
                     int heightMeasureSpec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
-                    reviewViewHolder.reviewReplayTextView.measure(widthMeasureSpec, heightMeasureSpec);
+                    holder.dataBinding.reviewReplayTextView.measure(widthMeasureSpec, heightMeasureSpec);
 
-                    int lineCount = reviewViewHolder.reviewReplayTextView.getLineCount();
+                    int lineCount = holder.dataBinding.reviewReplayTextView.getLineCount();
 
                     if (lineCount > MAX_LINE)
                     {
-                        reviewViewHolder.reviewReplayTextView.setText(reviewReply.reply.substring(0, reviewViewHolder.reviewReplayTextView.getLayout().getLineEnd(MAX_LINE - 1)));
-                        reviewViewHolder.reviewReplayTextView.measure(widthMeasureSpec, heightMeasureSpec);
+                        holder.dataBinding.reviewReplayTextView.setText(replay.comment.substring(0, holder.dataBinding.reviewReplayTextView.getLayout().getLineEnd(MAX_LINE - 1)));
+                        holder.dataBinding.reviewReplayTextView.measure(widthMeasureSpec, heightMeasureSpec);
 
                         final String expandText = "...  더 읽어보기";
 
-                        int lineStartIndex = reviewViewHolder.reviewReplayTextView.getLayout().getLineStart(MAX_LINE - 1);
-                        int lineEndIndex = reviewViewHolder.reviewReplayTextView.getLayout().getLineEnd(MAX_LINE - 1);
+                        int lineStartIndex = holder.dataBinding.reviewReplayTextView.getLayout().getLineStart(MAX_LINE - 1);
+                        int lineEndIndex = holder.dataBinding.reviewReplayTextView.getLayout().getLineEnd(MAX_LINE - 1);
 
-                        String text = reviewReply.reply.substring(lineStartIndex, lineEndIndex);
+                        String text = replay.comment.substring(lineStartIndex, lineEndIndex);
 
                         float moreReadWidth = paint.measureText(expandText);
 
                         int count = paint.breakText(text, true, textViewWidth - moreReadWidth, null);
 
-                        reviewViewHolder.reviewReplayTextView.setText(reviewReply.reply.substring(0, lineStartIndex + count) + "...");
-                        reviewViewHolder.reviewReplayMoreReadTextView.setVisibility(View.VISIBLE);
-                        reviewViewHolder.reviewReplayMoreReadTextView.setOnClickListener(new View.OnClickListener()
+                        holder.dataBinding.reviewReplayTextView.setText(replay.comment.substring(0, lineStartIndex + count) + "...");
+                        holder.dataBinding.reviewReplayMoreReadTextView.setVisibility(View.VISIBLE);
+                        holder.dataBinding.reviewReplayMoreReadTextView.setOnClickListener(new View.OnClickListener()
                         {
                             @Override
                             public void onClick(View view)
                             {
-                                reviewViewHolder.reviewReplayTextView.setText((String) reviewViewHolder.reviewReplayTextView.getTag());
-                                reviewViewHolder.reviewReplayMoreReadTextView.setVisibility(View.GONE);
-                                reviewViewHolder.reviewReplayMoreReadTextView.setOnClickListener(null);
+                                holder.dataBinding.reviewReplayTextView.setText((String) holder.dataBinding.reviewReplayTextView.getTag());
+                                holder.dataBinding.reviewReplayMoreReadTextView.setVisibility(View.GONE);
+                                holder.dataBinding.reviewReplayMoreReadTextView.setOnClickListener(null);
 
-                                reviewReply.isMore = true;
+                                replay.more = true;
                             }
                         });
                     } else
                     {
-                        reviewViewHolder.reviewReplayMoreReadTextView.setVisibility(View.GONE);
-                        reviewViewHolder.reviewReplayMoreReadTextView.setOnClickListener(null);
+                        holder.dataBinding.reviewReplayMoreReadTextView.setVisibility(View.GONE);
+                        holder.dataBinding.reviewReplayMoreReadTextView.setOnClickListener(null);
                     }
                 }
             }
         }
 
-        void startAnimation(ViewGroup viewGroup)
+        void startHeaderAnimation()
         {
-            int childCount = viewGroup.getChildCount();
+            if (mProgressBarLayout == null)
+            {
+                return;
+            }
+
+            int childCount = mProgressBarLayout.getChildCount();
 
             for (int i = 0; i < childCount; i++)
             {
-                final ProgressBar progressBar = (ProgressBar) viewGroup.getChildAt(i).findViewById(R.id.progressBar);
-                final int value = (int) progressBar.getTag();
+                LayoutTrueReviewProgressbarDataBinding progressbarDataBinding = DataBindingUtil.getBinding(mProgressBarLayout.getChildAt(i));
+
+                final int value = (int) progressbarDataBinding.progressBar.getTag();
                 final ValueAnimator valueAnimator = ValueAnimator.ofInt(0, value);
                 valueAnimator.setDuration(300 * value / 50);
                 valueAnimator.setStartDelay(200 + i * 100);
@@ -740,7 +756,7 @@ public class TrueReviewView extends BaseDialogView<TrueReviewView.OnEventListene
                             return;
                         }
 
-                        progressBar.setProgress((int) animation.getAnimatedValue());
+                        progressbarDataBinding.progressBar.setProgress((int) animation.getAnimatedValue());
                     }
                 });
 
@@ -755,7 +771,7 @@ public class TrueReviewView extends BaseDialogView<TrueReviewView.OnEventListene
                     @Override
                     public void onAnimationEnd(Animator animation)
                     {
-                        progressBar.setProgress(value);
+                        progressbarDataBinding.progressBar.setProgress(value);
                         valueAnimator.removeAllUpdateListeners();
                         valueAnimator.removeAllListeners();
                     }
@@ -789,43 +805,23 @@ public class TrueReviewView extends BaseDialogView<TrueReviewView.OnEventListene
             }
         }
 
-        private class ReviewViewHolder extends RecyclerView.ViewHolder
+        private class TrueReviewViewHolder extends RecyclerView.ViewHolder
         {
-            TextView ratingTextView;
-            TextView customerTextView;
-            TextView reviewTextView;
-            TextView moreReadTextView;
-            View underLineView;
+            LayoutTrueReviewReviewDataBinding dataBinding;
 
-            View replayLayout;
-            TextView reviewReplayTextView;
-            TextView reviewReplayMoreReadTextView;
-            TextView replierTextView;
-            View replierUnderLineView;
-
-            public ReviewViewHolder(View view)
+            public TrueReviewViewHolder(LayoutTrueReviewReviewDataBinding dataBinding)
             {
-                super(view);
+                super(dataBinding.getRoot());
 
-                customerTextView = (TextView) view.findViewById(R.id.customerTextView);
-                ratingTextView = (TextView) view.findViewById(R.id.ratingTextView);
-                reviewTextView = (TextView) view.findViewById(R.id.reviewTextView);
-                moreReadTextView = (TextView) view.findViewById(R.id.moreReadTextView);
-                underLineView = view.findViewById(R.id.underLineView);
-
-                replayLayout = view.findViewById(R.id.replayLayout);
-                reviewReplayTextView = (TextView) view.findViewById(R.id.reviewReplayTextView);
-                reviewReplayMoreReadTextView = (TextView) view.findViewById(R.id.reviewReplayMoreReadTextView);
-                replierTextView = (TextView) view.findViewById(R.id.replierTextView);
-                replierUnderLineView = view.findViewById(R.id.replierUnderLineView);
+                this.dataBinding = dataBinding;
             }
         }
 
-        private class FooterViewHolder extends RecyclerView.ViewHolder
+        private class ViewHolder extends RecyclerView.ViewHolder
         {
-            public FooterViewHolder(View view)
+            public ViewHolder(ViewDataBinding dataBinding)
             {
-                super(view);
+                super(dataBinding.getRoot());
             }
         }
     }
