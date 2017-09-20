@@ -37,7 +37,7 @@ public class TrueReviewsData
         trueReviews.totalElements = totalElements;
         trueReviews.totalPages = totalPages;
         trueReviews.numberOfElements = numberOfElements;
-        trueReviews.page = page;
+        trueReviews.page = page + 1;
 
         List<TrueReview> trueReviewList = new ArrayList<>();
 

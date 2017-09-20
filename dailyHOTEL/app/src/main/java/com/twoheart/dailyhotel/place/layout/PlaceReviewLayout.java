@@ -517,13 +517,15 @@ public class PlaceReviewLayout extends BaseLayout
                     if (mShowProgressbarAnimation == true)
                     {
                         progressBar.setProgress(progress);
+                        valueTextView.setText(Float.toString(placeReviewScore.scoreAvg));
                     } else
                     {
                         progressBar.setProgress(0);
+                        valueTextView.setText(Float.toString(0.0f));
                     }
 
                     progressBar.setTag(progress);
-                    valueTextView.setText(Float.toString(placeReviewScore.scoreAvg));
+
 
                     mProgressBarLayout.addView(view);
                 }
@@ -752,6 +754,7 @@ public class PlaceReviewLayout extends BaseLayout
             for (int i = 0; i < childCount; i++)
             {
                 final ProgressBar progressBar = (ProgressBar) viewGroup.getChildAt(i).findViewById(R.id.progressBar);
+                final TextView valueTextView = (TextView) viewGroup.getChildAt(i).findViewById(R.id.valueTextView);
                 final int value = (int) progressBar.getTag();
                 final ValueAnimator valueAnimator = ValueAnimator.ofInt(0, value);
                 valueAnimator.setDuration(300 * value / 50);
@@ -767,7 +770,10 @@ public class PlaceReviewLayout extends BaseLayout
                             return;
                         }
 
-                        progressBar.setProgress((int) animation.getAnimatedValue());
+                        int value = (int) animation.getAnimatedValue();
+
+                        progressBar.setProgress(value);
+                        valueTextView.setText(Float.toString((float) value / 10.0f));
                     }
                 });
 

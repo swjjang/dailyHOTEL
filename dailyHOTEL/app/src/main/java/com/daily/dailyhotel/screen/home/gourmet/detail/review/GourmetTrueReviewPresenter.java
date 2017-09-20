@@ -22,9 +22,9 @@ import com.twoheart.dailyhotel.screen.common.ReviewTermsActivity;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
-import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
 
 /**
  * Created by sheldon
@@ -114,23 +114,8 @@ public class GourmetTrueReviewPresenter extends BaseExceptionPresenter<GourmetTr
         mPage = 1;
         mLoadingPage = 1;
 
+        getViewInterface().setToolbarTitle(getString(R.string.label_truereview));
         getViewInterface().setReviewScores(mReviewScores.getReviewScoreList());
-
-        addCompositeDisposable(Observable.timer(300, TimeUnit.MILLISECONDS).subscribe(new Consumer<Long>()
-        {
-            @Override
-            public void accept(Long aLong) throws Exception
-            {
-                getViewInterface().showReviewScoresAnimation();
-            }
-        }, new Consumer<Throwable>()
-        {
-            @Override
-            public void accept(Throwable throwable) throws Exception
-            {
-
-            }
-        }));
     }
 
     @Override
@@ -196,21 +181,59 @@ public class GourmetTrueReviewPresenter extends BaseExceptionPresenter<GourmetTr
             return;
         }
 
-        addCompositeDisposable(mGourmetRemoteImpl.getGourmetTrueReviews(mGourmetIndex, mLoadingPage, TRUE_REVIEW_MAX_COUNT).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<TrueReviews>()
+        setRefresh(false);
+
+        if (mTotalElements == 0)
         {
-            @Override
-            public void accept(TrueReviews trueReviews) throws Exception
-            {
-                addTrueReviews(trueReviews);
-            }
-        }, new Consumer<Throwable>()
+            screenLock(showProgress);
+
+            addCompositeDisposable(mGourmetRemoteImpl.getGourmetTrueReviews(mGourmetIndex, mLoadingPage, TRUE_REVIEW_MAX_COUNT)//
+                .observeOn(AndroidSchedulers.mainThread()).flatMap(new Function<TrueReviews, Observable<Long>>()
+                {
+                    @Override
+                    public Observable<Long> apply(@io.reactivex.annotations.NonNull TrueReviews trueReviews) throws Exception
+                    {
+                        unLockAll();
+
+                        addTrueReviews(trueReviews);
+
+                        return Observable.timer(300, TimeUnit.MILLISECONDS);
+                    }
+                }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Long>()
+                {
+                    @Override
+                    public void accept(Long aLong) throws Exception
+                    {
+                        unLockAll();
+
+                        getViewInterface().showReviewScoresAnimation();
+                    }
+                }, new Consumer<Throwable>()
+                {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception
+                    {
+                        onHandleError(throwable);
+                    }
+                }));
+        } else
         {
-            @Override
-            public void accept(Throwable throwable) throws Exception
+            addCompositeDisposable(mGourmetRemoteImpl.getGourmetTrueReviews(mGourmetIndex, mLoadingPage, TRUE_REVIEW_MAX_COUNT).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<TrueReviews>()
             {
-                onHandleError(throwable);
-            }
-        }));
+                @Override
+                public void accept(TrueReviews trueReviews) throws Exception
+                {
+                    addTrueReviews(trueReviews);
+                }
+            }, new Consumer<Throwable>()
+            {
+                @Override
+                public void accept(Throwable throwable) throws Exception
+                {
+                    onHandleError(throwable);
+                }
+            }));
+        }
     }
 
     @Override
@@ -270,28 +293,25 @@ public class GourmetTrueReviewPresenter extends BaseExceptionPresenter<GourmetTr
             return;
         }
 
-        final int LOAD_MORE_POSITION_GAP = TRUE_REVIEW_MAX_COUNT / 3;
-
         boolean isLoading = false;
 
         int lastVisibleItemPosition = linearLayoutManager.findLastVisibleItemPosition();
         int itemCount = linearLayoutManager.getItemCount();
 
-        int loadMorePosition = itemCount > LOAD_MORE_POSITION_GAP //
-            ? lastVisibleItemPosition + LOAD_MORE_POSITION_GAP //
-            : lastVisibleItemPosition + (itemCount / 3);
-
-        if (itemCount > 0 && (itemCount - 1) <= loadMorePosition)
+        if (itemCount > 0 && itemCount - 1 < mTotalElements)
         {
-            if (mPage <= mTotalPages && mPage + 1 != mLoadingPage)
+            if (lastVisibleItemPosition >= (itemCount - 1) / 3)
             {
-                isLoading = true;
+                if (mPage < mTotalPages && mPage + 1 != mLoadingPage)
+                {
+                    isLoading = true;
 
-                getViewInterface().addLoadingFooter();
-                mLoadingPage = mPage + 1;
+                    getViewInterface().addLoadingFooter();
+                    mLoadingPage = mPage + 1;
 
-                setRefresh(true);
-                onRefresh(false);
+                    setRefresh(true);
+                    onRefresh(false);
+                }
             }
         }
 
@@ -356,12 +376,11 @@ public class GourmetTrueReviewPresenter extends BaseExceptionPresenter<GourmetTr
         mTotalPages = trueReviews.totalPages;
         mNumberOfElements = trueReviews.numberOfElements;
 
-        if (mNumberOfElements == 0)
+        getViewInterface().addReviewList(trueReviews.getTrueReviewList(), mTotalElements);
+
+        if (mPage == mTotalPages)
         {
             getViewInterface().addLastFooter();
-        } else
-        {
-            getViewInterface().addReviewList(trueReviews.getTrueReviewList(), mTotalElements);
         }
     }
 }

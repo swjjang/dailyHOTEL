@@ -1,6 +1,7 @@
 package com.daily.dailyhotel.screen.home.gourmet.detail.review;
 
 import android.animation.Animator;
+import android.animation.AnimatorSet;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.databinding.DataBindingUtil;
@@ -217,7 +218,7 @@ public class GourmetTrueReviewView extends BaseDialogView<GourmetTrueReviewView.
             return;
         }
 
-        getViewDataBinding().toolbarView.setVisibility(visible ? View.VISIBLE : View.GONE);
+        getViewDataBinding().topButtonView.setVisibility(visible ? View.VISIBLE : View.GONE);
     }
 
     @Override
@@ -245,7 +246,7 @@ public class GourmetTrueReviewView extends BaseDialogView<GourmetTrueReviewView.
     @Override
     public void showReviewScoresAnimation()
     {
-        if (getViewDataBinding() == null || mTrueReviewListAdapter == null)
+        if (getViewDataBinding() == null || mTrueReviewListAdapter == null || mShowProgressbarAnimation == true)
         {
             return;
         }
@@ -512,21 +513,24 @@ public class GourmetTrueReviewView extends BaseDialogView<GourmetTrueReviewView.
                     if (mShowProgressbarAnimation == true)
                     {
                         progressbarDataBinding.progressBar.setProgress(progress);
+                        progressbarDataBinding.valueTextView.setText(Float.toString(reviewScore.scoreAverage));
                     } else
                     {
                         progressbarDataBinding.progressBar.setProgress(0);
+                        progressbarDataBinding.valueTextView.setText(Float.toString(0.0f));
                     }
 
                     progressbarDataBinding.progressBar.setTag(progress);
-                    progressbarDataBinding.valueTextView.setText(Float.toString(reviewScore.scoreAverage));
                 }
             }
 
             if (mTotalCount == 0)
             {
+                holder.dataBinding.progressBarUnderLineView.setVisibility(View.GONE);
                 holder.dataBinding.reviewCountTextView.setVisibility(View.GONE);
             } else
             {
+                holder.dataBinding.progressBarUnderLineView.setVisibility(View.VISIBLE);
                 holder.dataBinding.reviewCountTextView.setVisibility(View.VISIBLE);
             }
 
@@ -756,7 +760,10 @@ public class GourmetTrueReviewView extends BaseDialogView<GourmetTrueReviewView.
                             return;
                         }
 
-                        progressbarDataBinding.progressBar.setProgress((int) animation.getAnimatedValue());
+                        int value = (int) animation.getAnimatedValue();
+
+                        progressbarDataBinding.progressBar.setProgress(value);
+                        progressbarDataBinding.valueTextView.setText(Float.toString((float) value / 10.0f));
                     }
                 });
 

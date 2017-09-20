@@ -36,9 +36,12 @@ public class TrueReviewData
         trueReview.createdAt = createdAt;
         trueReview.averageScore = avgScore;
 
-        TrueReviewReply trueReviewReply = reviewReply.getTrueReviewReply();
+        if (reviewReply != null)
+        {
+            TrueReviewReply trueReviewReply = reviewReply.getTrueReviewReply();
 
-        trueReview.setReply(trueReviewReply);
+            trueReview.setReply(trueReviewReply);
+        }
 
         return trueReview;
     }
