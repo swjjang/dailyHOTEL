@@ -138,7 +138,7 @@ public class StayOutboundSearchSuggestPresenter extends BaseExceptionPresenter<S
 
     private void onBackPressed(boolean isUserAction)
     {
-        onBackPressed();
+        getActivity().onBackPressed();
 
         if (isUserAction == true)
         {
