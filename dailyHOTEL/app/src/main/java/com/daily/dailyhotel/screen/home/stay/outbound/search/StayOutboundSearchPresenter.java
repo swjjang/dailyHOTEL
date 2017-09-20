@@ -158,7 +158,6 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
     public void onResume()
     {
         super.onResume();
-
     }
 
     @Override

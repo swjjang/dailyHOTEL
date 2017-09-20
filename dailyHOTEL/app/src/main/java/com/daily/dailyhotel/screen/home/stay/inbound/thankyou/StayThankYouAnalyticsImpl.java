@@ -7,6 +7,8 @@ import com.daily.dailyhotel.entity.UserTracking;
 import com.daily.dailyhotel.parcel.analytics.StayThankYouAnalyticsParam;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
+import java.util.Locale;
+
 public class StayThankYouAnalyticsImpl implements StayThankYouPresenter.StayThankYouAnalyticsInterface
 {
     private StayThankYouAnalyticsParam mAnalyticsParam;
@@ -139,5 +141,46 @@ public class StayThankYouAnalyticsImpl implements StayThankYouPresenter.StayThan
 
         AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS//
             , AnalyticsManager.Action.THANKYOU_SCREEN_BUTTON_CLICKED, AnalyticsManager.Label.CLOSE_BUTTON_CLICKED, null);
+    }
+
+    @Override
+    public void onEventRecommendGourmetVisible(Activity activity, boolean hasData)
+    {
+        if (activity == null)
+        {
+            return;
+        }
+
+        String label = hasData == true ? AnalyticsManager.Label.Y : AnalyticsManager.Label.N;
+
+        AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.STAY_THANK_YOU//
+            , AnalyticsManager.Action.GOURMET_RECOMMEND, label, null);
+    }
+
+    @Override
+    public void onEventRecommendGourmetViewAllClick(Activity activity)
+    {
+        if (activity == null)
+        {
+            return;
+        }
+
+        AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.THANKYOU_GOURMET_RECOMMEND_LIST_CLICK//
+            , AnalyticsManager.Action.LIST_CLICK, null, null);
+    }
+
+    @Override
+    public void onEventRecommendGourmetItemClick(Activity activity, double distance, int placeIndex)
+    {
+        if (activity == null)
+        {
+            return;
+        }
+
+        String distanceString = String.format(Locale.KOREA, "%.1f", distance);
+        String placeIndexString = Integer.toString(placeIndex);
+
+        AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.THANKYOU_GOURMET_RECOMMEND_LIST_CLICK //
+            , distanceString, placeIndexString, null);
     }
 }

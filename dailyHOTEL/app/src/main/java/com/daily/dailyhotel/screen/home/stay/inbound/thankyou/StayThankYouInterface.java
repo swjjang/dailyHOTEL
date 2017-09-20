@@ -3,14 +3,14 @@ package com.daily.dailyhotel.screen.home.stay.inbound.thankyou;
 import android.animation.Animator;
 import android.text.SpannableString;
 
-import com.daily.base.BaseDialogViewInterface;
+import com.daily.dailyhotel.base.BaseBlurViewInterface;
 import com.daily.dailyhotel.entity.CarouselListItem;
 
 import java.util.ArrayList;
 
 import io.reactivex.Observable;
 
-public interface StayThankYouInterface extends BaseDialogViewInterface
+public interface StayThankYouInterface extends BaseBlurViewInterface
 {
     void setUserName(String guestName);
 
@@ -33,4 +33,6 @@ public interface StayThankYouInterface extends BaseDialogViewInterface
     void setRecommendGourmetData(ArrayList<CarouselListItem> carouselListItemList);
 
     Observable<Boolean> getReceiptAnimation();
+
+    ArrayList<CarouselListItem> getRecommendGourmetData();
 }

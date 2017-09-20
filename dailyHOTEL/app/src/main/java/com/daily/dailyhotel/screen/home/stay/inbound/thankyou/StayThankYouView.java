@@ -7,14 +7,15 @@ import android.text.style.UnderlineSpan;
 import android.view.View;
 
 import com.daily.base.BaseActivity;
-import com.daily.base.BaseDialogView;
 import com.daily.base.OnBaseEventListener;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.FontManager;
 import com.daily.dailyhotel.animation.ThankYouScaleAnimator;
 import com.daily.dailyhotel.animation.ThankYouScreenAnimator;
+import com.daily.dailyhotel.base.BaseBlurView;
 import com.daily.dailyhotel.entity.CarouselListItem;
 import com.daily.dailyhotel.view.DailyToolbarView;
+import com.daily.dailyhotel.view.carousel.DailyCarouselLayout;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ActivityStayPaymentThankYouDataBinding;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
@@ -27,13 +28,19 @@ import io.reactivex.Observable;
 import io.reactivex.Observer;
 import io.reactivex.schedulers.Schedulers;
 
-public class StayThankYouView extends BaseDialogView<StayThankYouView.OnEventListener, ActivityStayPaymentThankYouDataBinding> implements StayThankYouInterface, View.OnClickListener
+public class StayThankYouView extends BaseBlurView<StayThankYouView.OnEventListener, ActivityStayPaymentThankYouDataBinding> implements StayThankYouInterface, View.OnClickListener
 {
     public interface OnEventListener extends OnBaseEventListener
     {
         void onConfirmClick();
 
         void onStampClick();
+
+        void onRecommendGourmetViewAllClick();
+
+        void onRecommendGourmetItemClick(View view);
+
+        void onRecommendGourmetItemLongClick(View view);
     }
 
     public StayThankYouView(BaseActivity baseActivity, StayThankYouView.OnEventListener listener)
@@ -59,6 +66,41 @@ public class StayThankYouView extends BaseDialogView<StayThankYouView.OnEventLis
         viewDataBinding.stampLayout.setVisibility(View.GONE);
         viewDataBinding.recommendGourmetLayout.setTitleText(R.string.label_booking_reservation_recommend_gourmet_title);
         viewDataBinding.recommendGourmetLayout.setVisibility(View.GONE);
+        viewDataBinding.recommendGourmetLayout.setCarouselListener(new DailyCarouselLayout.OnCarouselListener()
+        {
+            @Override
+            public void onViewAllClick()
+            {
+                if (getEventListener() == null)
+                {
+                    return;
+                }
+
+                getEventListener().onRecommendGourmetViewAllClick();
+            }
+
+            @Override
+            public void onItemClick(View view)
+            {
+                if (getEventListener() == null)
+                {
+                    return;
+                }
+
+                getEventListener().onRecommendGourmetItemClick(view);
+            }
+
+            @Override
+            public void onItemLongClick(View view)
+            {
+                if (getEventListener() == null)
+                {
+                    return;
+                }
+
+                getEventListener().onRecommendGourmetItemLongClick(view);
+            }
+        });
 
         EdgeEffectColor.setEdgeGlowColor(viewDataBinding.scrollLayout, getColor(R.color.transparent));
     }
@@ -138,21 +180,6 @@ public class StayThankYouView extends BaseDialogView<StayThankYouView.OnEventLis
         animator = new ThankYouScreenAnimator(getContext(), getViewDataBinding().checkImageView, getViewDataBinding().thankYouInformationView);
         animator.setListener(listener);
         animator.start();
-
-//        StayThankYouScreenAnimator animator;
-//
-//        if (stampEnable == true)
-//        {
-//            animator = new StayThankYouScreenAnimator(getContext()//
-//                , getViewDataBinding().checkImageView, getViewDataBinding().thankYouInformationView, getViewDataBinding().stampLayout);
-//        } else
-//        {
-//            animator = new StayThankYouScreenAnimator(getContext()//
-//                , getViewDataBinding().checkImageView, getViewDataBinding().thankYouInformationView, null);
-//        }
-//
-//        animator.setListener(listener);
-//        animator.start();
     }
 
     @Override
@@ -220,6 +247,17 @@ public class StayThankYouView extends BaseDialogView<StayThankYouView.OnEventLis
 
         observable.subscribeOn(Schedulers.io()).observeOn(Schedulers.io());
         return observable;
+    }
+
+    @Override
+    public ArrayList<CarouselListItem> getRecommendGourmetData()
+    {
+        if (getViewDataBinding() == null)
+        {
+            return null;
+        }
+
+        return getViewDataBinding().recommendGourmetLayout.getData();
     }
 
     @Override

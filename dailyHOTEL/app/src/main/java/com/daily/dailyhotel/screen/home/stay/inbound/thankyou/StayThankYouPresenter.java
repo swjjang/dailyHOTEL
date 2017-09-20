@@ -2,13 +2,18 @@ package com.daily.dailyhotel.screen.home.stay.inbound.thankyou;
 
 
 import android.animation.Animator;
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
 import android.location.Location;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.app.SharedElementCallback;
 import android.text.Spannable;
 import android.text.SpannableString;
+import android.view.View;
 
 import com.daily.base.BaseActivity;
 import com.daily.base.BaseAnalyticsInterface;
@@ -17,22 +22,30 @@ import com.daily.base.util.ExLog;
 import com.daily.base.util.FontManager;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
 import com.daily.dailyhotel.entity.CarouselListItem;
+import com.daily.dailyhotel.entity.CommonDateTime;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.UserTracking;
+import com.daily.dailyhotel.parcel.analytics.GourmetDetailAnalyticsParam;
 import com.daily.dailyhotel.parcel.analytics.StayThankYouAnalyticsParam;
+import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
 import com.daily.dailyhotel.repository.remote.GourmetRemoteImpl;
 import com.daily.dailyhotel.repository.remote.ProfileRemoteImpl;
+import com.daily.dailyhotel.screen.booking.detail.map.GourmetBookingDetailMapActivity;
+import com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity;
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Gourmet;
 import com.twoheart.dailyhotel.model.GourmetCurationOption;
 import com.twoheart.dailyhotel.model.GourmetSearchCuration;
 import com.twoheart.dailyhotel.model.GourmetSearchParams;
 import com.twoheart.dailyhotel.model.time.GourmetBookingDay;
+import com.twoheart.dailyhotel.screen.gourmet.preview.GourmetPreviewActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyInternalDeepLink;
 import com.twoheart.dailyhotel.util.DailyRemoteConfigPreference;
 import com.twoheart.dailyhotel.util.DailyUserPreference;
+import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.CustomFontTypefaceSpan;
 
 import java.util.ArrayList;
@@ -40,10 +53,12 @@ import java.util.List;
 import java.util.concurrent.Callable;
 
 import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.ObservableSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function3;
 
 /**
  * Created by sheldon
@@ -55,6 +70,7 @@ public class StayThankYouPresenter extends BaseExceptionPresenter<StayThankYouAc
 
     private ProfileRemoteImpl mProfileRemoteImpl;
     private GourmetRemoteImpl mGourmetRemoteImpl;
+    private CommonRemoteImpl mCommonRemoteImpl;
 
     private String mAggregationId;
     private String mStayName;
@@ -65,6 +81,9 @@ public class StayThankYouPresenter extends BaseExceptionPresenter<StayThankYouAc
     private boolean mWaitingForBooking;
     private double mLatitude;
     private double mLongitude;
+    private CommonDateTime mCommonDateTime;
+    private View mViewByLongPress;
+    private Gourmet mGourmetByLongPress;
 
     public interface StayThankYouAnalyticsInterface extends BaseAnalyticsInterface
     {
@@ -83,6 +102,12 @@ public class StayThankYouPresenter extends BaseExceptionPresenter<StayThankYouAc
         void onEventStampClick(Activity activity);
 
         void onEventBackClick(Activity activity);
+
+        void onEventRecommendGourmetVisible(Activity activity, boolean hasData);
+
+        void onEventRecommendGourmetViewAllClick(Activity activity);
+
+        void onEventRecommendGourmetItemClick(Activity activity, double distance, int placeIndex);
     }
 
     public StayThankYouPresenter(@NonNull StayThankYouActivity activity)
@@ -108,6 +133,7 @@ public class StayThankYouPresenter extends BaseExceptionPresenter<StayThankYouAc
 
         mProfileRemoteImpl = new ProfileRemoteImpl(activity);
         mGourmetRemoteImpl = new GourmetRemoteImpl(activity);
+        mCommonRemoteImpl = new CommonRemoteImpl(activity);
 
         setRefresh(true);
     }
@@ -222,6 +248,14 @@ public class StayThankYouPresenter extends BaseExceptionPresenter<StayThankYouAc
     {
         super.onResume();
 
+        if (Util.supportPreview(getActivity()) == true)
+        {
+            if (getViewInterface().isBlurVisible() == true)
+            {
+                getViewInterface().setBlurVisible(getActivity(), false);
+            }
+        }
+
     }
 
     @Override
@@ -267,6 +301,25 @@ public class StayThankYouPresenter extends BaseExceptionPresenter<StayThankYouAc
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
+        switch (requestCode)
+        {
+            case StayThankYouActivity.REQUEST_CODE_PREVIEW:
+            {
+                if (resultCode == Activity.RESULT_OK)
+                {
+                    Observable.create(new ObservableOnSubscribe<Object>()
+                    {
+                        @Override
+                        public void subscribe(ObservableEmitter<Object> e) throws Exception
+                        {
+                            startGourmetDetail(mViewByLongPress, mGourmetByLongPress, mCommonDateTime, mStayBookDateTime);
+                        }
+                    }).subscribeOn(AndroidSchedulers.mainThread()).subscribe();
+                }
+                break;
+            }
+        }
+
         unLockAll();
     }
 
@@ -325,14 +378,19 @@ public class StayThankYouPresenter extends BaseExceptionPresenter<StayThankYouAc
             }
         });
 
-        addCompositeDisposable(Observable.zip(getViewInterface().getReceiptAnimation(), recommendObservable, new BiFunction<Boolean, List<Gourmet>, ArrayList<CarouselListItem>>()
-        {
-            @Override
-            public ArrayList<CarouselListItem> apply(@io.reactivex.annotations.NonNull Boolean animationComplete, @io.reactivex.annotations.NonNull List<Gourmet> gourmetList) throws Exception
+        addCompositeDisposable(Observable.zip(getViewInterface().getReceiptAnimation() //
+            , mCommonRemoteImpl.getCommonDateTime(), recommendObservable //
+            , new Function3<Boolean, CommonDateTime, List<Gourmet>, ArrayList<CarouselListItem>>()
             {
-                return convertCarouselListItemList(gourmetList);
-            }
-        }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<ArrayList<CarouselListItem>>()
+                @Override
+                public ArrayList<CarouselListItem> apply(@io.reactivex.annotations.NonNull Boolean animationComplete //
+                    , @io.reactivex.annotations.NonNull CommonDateTime commonDateTime //
+                    , @io.reactivex.annotations.NonNull List<Gourmet> gourmetList) throws Exception
+                {
+                    mCommonDateTime = commonDateTime;
+                    return convertCarouselListItemList(gourmetList);
+                }
+            }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<ArrayList<CarouselListItem>>()
         {
             @Override
             public void accept(ArrayList<CarouselListItem> carouselListItemList) throws Exception
@@ -343,10 +401,9 @@ public class StayThankYouPresenter extends BaseExceptionPresenter<StayThankYouAc
 
                 boolean hasData = !(carouselListItemList == null || carouselListItemList.size() == 0);
 
-                //                    AnalyticsManager.getInstance(StayThankYouActivity.this).recordEvent(AnalyticsManager.Category.BOOKING_DETAIL//
-                //                        , AnalyticsManager.Action.GOURMET_RECOMMEND, hasData ? AnalyticsManager.Label.Y : AnalyticsManager.Label.N, null);
-
                 unLockAll();
+
+                mAnalytics.onEventRecommendGourmetVisible(getActivity(), hasData);
             }
         }, new Consumer<Throwable>()
         {
@@ -358,11 +415,9 @@ public class StayThankYouPresenter extends BaseExceptionPresenter<StayThankYouAc
 
                 startInformationAnimation();
 
-
-                //                    AnalyticsManager.getInstance(StayReservationDetailActivity.this).recordEvent(AnalyticsManager.Category.BOOKING_DETAIL//
-                //                        , AnalyticsManager.Action.GOURMET_RECOMMEND, AnalyticsManager.Label.N, null);
-
                 unLockAll();
+
+                mAnalytics.onEventRecommendGourmetVisible(getActivity(), false);
             }
         }));
 
@@ -416,6 +471,248 @@ public class StayThankYouPresenter extends BaseExceptionPresenter<StayThankYouAc
         mAnalytics.onEventStampClick(getActivity());
 
         finish();
+    }
+
+    @Override
+    public void onRecommendGourmetViewAllClick()
+    {
+        if (lock() == true)
+        {
+            return;
+        }
+
+        if (getViewInterface() == null || mStayBookDateTime == null || mCommonDateTime == null)
+        {
+            return;
+        }
+
+        try
+        {
+            String title = getActivity().getResources().getString(R.string.label_home_view_all);
+
+            String visitDay = mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT);
+            long currentDateTime = DailyCalendar.convertStringToDate(mCommonDateTime.currentDateTime).getTime();
+            long checkInDateTime = DailyCalendar.convertStringToDate(visitDay).getTime();
+
+            if (currentDateTime > checkInDateTime)
+            {
+                visitDay = mCommonDateTime.dailyDateTime;
+            }
+
+            GourmetBookingDay gourmetBookingDay = new GourmetBookingDay();
+            gourmetBookingDay.setVisitDay(visitDay);
+
+            ArrayList<Gourmet> gourmetList = new ArrayList<>();
+
+            ArrayList<CarouselListItem> carouselListItemList = getViewInterface().getRecommendGourmetData();
+            if (carouselListItemList != null && carouselListItemList.size() > 0)
+            {
+                for (CarouselListItem item : carouselListItemList)
+                {
+                    Gourmet gourmet = item.getItem();
+                    if (gourmet != null)
+                    {
+                        gourmetList.add(gourmet);
+                    }
+                }
+            }
+
+            Location location = new Location((String) null);
+            location.setLatitude(mLatitude);
+            location.setLongitude(mLongitude);
+
+            Intent intent = GourmetBookingDetailMapActivity.newInstance( //
+                getActivity(), title, gourmetBookingDay, gourmetList, location, mStayName, true);
+
+            getActivity().startActivityForResult(intent, StayThankYouActivity.REQUEST_CODE_RECOMMEND_MAP);
+
+            mAnalytics.onEventRecommendGourmetViewAllClick(getActivity());
+
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+        }
+    }
+
+    @Override
+    public void onRecommendGourmetItemClick(View view)
+    {
+        if (lock() == true)
+        {
+            return;
+        }
+
+        if (view == null)
+        {
+            return;
+        }
+
+        CarouselListItem item = (CarouselListItem) view.getTag();
+        if (item == null)
+        {
+            return;
+        }
+
+        Gourmet gourmet = item.getItem();
+        if (gourmet == null)
+        {
+            return;
+        }
+
+        startGourmetDetail(view, gourmet, mCommonDateTime, mStayBookDateTime);
+
+        mAnalytics.onEventRecommendGourmetItemClick(getActivity(), gourmet.distance, gourmet.index);
+    }
+
+    @Override
+    public void onRecommendGourmetItemLongClick(View view)
+    {
+        if (lock() == true)
+        {
+            return;
+        }
+
+        if (view == null || getViewInterface() == null || mCommonDateTime == null)
+        {
+            return;
+        }
+
+        CarouselListItem item = (CarouselListItem) view.getTag();
+        if (item == null)
+        {
+            return;
+        }
+
+        Gourmet gourmet = item.getItem();
+        if (gourmet == null)
+        {
+            return;
+        }
+
+        try
+        {
+            mViewByLongPress = view;
+            mGourmetByLongPress = gourmet;
+
+            getViewInterface().setBlurVisible(getActivity(), true);
+
+            String visitDay = mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT);
+            long currentDateTime = DailyCalendar.convertStringToDate(mCommonDateTime.currentDateTime).getTime();
+            long checkInDateTime = DailyCalendar.convertStringToDate(visitDay).getTime();
+
+            if (currentDateTime > checkInDateTime)
+            {
+                visitDay = mCommonDateTime.dailyDateTime;
+            }
+
+            GourmetBookingDay gourmetBookingDay = new GourmetBookingDay();
+            gourmetBookingDay.setVisitDay(visitDay);
+
+            Intent intent = GourmetPreviewActivity.newInstance(getActivity(), gourmetBookingDay, gourmet);
+
+            startActivityForResult(intent, StayThankYouActivity.REQUEST_CODE_PREVIEW);
+        } catch (Exception e)
+        {
+            unLockAll();
+        }
+    }
+
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+    private void startGourmetDetail(View view, Gourmet gourmet, CommonDateTime commonDateTime, StayBookDateTime stayBookDateTime)
+    {
+        if (view == null || gourmet == null || stayBookDateTime == null || commonDateTime == null)
+        {
+            return;
+        }
+
+        try
+        {
+            String visitDay = stayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT);
+            long currentDateTime = DailyCalendar.convertStringToDate(commonDateTime.currentDateTime).getTime();
+            long checkInDateTime = DailyCalendar.convertStringToDate(visitDay).getTime();
+
+            if (currentDateTime > checkInDateTime)
+            {
+                visitDay = commonDateTime.dailyDateTime;
+            }
+
+            // --> 추후에 정리되면 메소드로 수정
+            GourmetDetailAnalyticsParam analyticsParam = new GourmetDetailAnalyticsParam();
+            analyticsParam.price = gourmet.price;
+            analyticsParam.discountPrice = gourmet.discountPrice;
+            analyticsParam.setShowOriginalPriceYn(analyticsParam.price, analyticsParam.discountPrice);
+            analyticsParam.setProvince(null);
+            analyticsParam.entryPosition = gourmet.entryPosition;
+            analyticsParam.totalListCount = -1;
+            analyticsParam.isDailyChoice = gourmet.isDailyChoice;
+            analyticsParam.setAddressAreaName(gourmet.addressSummary);
+
+            // <-- 추후에 정리되면 메소드로 수정
+
+            if (Util.isUsedMultiTransition() == true)
+            {
+                getActivity().setExitSharedElementCallback(new SharedElementCallback()
+                {
+                    @Override
+                    public void onSharedElementEnd(List<String> sharedElementNames, List<View> sharedElements, List<View> sharedElementSnapshots)
+                    {
+                        super.onSharedElementEnd(sharedElementNames, sharedElements, sharedElementSnapshots);
+
+                        for (View view : sharedElements)
+                        {
+                            if (view instanceof SimpleDraweeView)
+                            {
+                                view.setVisibility(View.VISIBLE);
+                                break;
+                            }
+                        }
+                    }
+                });
+
+                Intent intent = GourmetDetailActivity.newInstance(getActivity() //
+                    , gourmet.index, gourmet.name, gourmet.imageUrl, gourmet.discountPrice//
+                    , visitDay, gourmet.category, gourmet.isSoldOut, false, false, true//
+                    , GourmetDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_NONE//
+                    , analyticsParam);
+
+                if (intent == null)
+                {
+                    Util.restartApp(getActivity());
+                    return;
+                }
+
+                View simpleDraweeView = view.findViewById(R.id.contentImageView);
+                View gradientTopView = view.findViewById(R.id.gradientTopView);
+                View gradientBottomView = view.findViewById(R.id.gradientBottomView);
+
+                ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity()//
+                    , android.support.v4.util.Pair.create(simpleDraweeView, getString(R.string.transition_place_image)) //
+                    , android.support.v4.util.Pair.create(gradientTopView, getString(R.string.transition_gradient_top_view)) //
+                    , android.support.v4.util.Pair.create(gradientBottomView, getString(R.string.transition_gradient_bottom_view)));
+
+                getActivity().startActivityForResult(intent, StayThankYouActivity.REQUEST_CODE_DETAIL, options.toBundle());
+            } else
+            {
+                Intent intent = GourmetDetailActivity.newInstance(getActivity() //
+                    , gourmet.index, gourmet.name, gourmet.imageUrl, gourmet.discountPrice//
+                    , visitDay, gourmet.category, gourmet.isSoldOut, false, false, false//
+                    , GourmetDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_NONE//
+                    , analyticsParam);
+
+                if (intent == null)
+                {
+                    Util.restartApp(getActivity());
+                    return;
+                }
+
+                getActivity().startActivityForResult(intent, StayThankYouActivity.REQUEST_CODE_DETAIL);
+
+                getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
+            }
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+        }
     }
 
     private void setStayBookDateTime(String checkInDateTime, String checkOutDateTime)

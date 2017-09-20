@@ -35,7 +35,7 @@ public class GourmetBookingDetailMapPresenter extends PlaceBookingDetailMapPrese
 
     public interface GourmetBookingDetailMapAnalyticsInterface extends BaseAnalyticsInterface
     {
-        void onItemClick(Activity activity, Gourmet gourmet);
+        void onItemClick(Activity activity, Gourmet gourmet, boolean isCallByThankYou);
     }
 
     public GourmetBookingDetailMapPresenter(@NonNull PlaceBookingDetailMapActivity activity)
@@ -86,8 +86,6 @@ public class GourmetBookingDetailMapPresenter extends PlaceBookingDetailMapPrese
         analyticsParam.totalListCount = -1;
         analyticsParam.isDailyChoice = gourmet.isDailyChoice;
         analyticsParam.setAddressAreaName(gourmet.addressSummary);
-
-        // <-- 추후에 정리되면 메소드로 수정
 
         if (Util.isUsedMultiTransition() == true)
         {
@@ -150,7 +148,7 @@ public class GourmetBookingDetailMapPresenter extends PlaceBookingDetailMapPrese
             getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
         }
 
-        mAnalytics.onItemClick(getActivity(), gourmet);
+        mAnalytics.onItemClick(getActivity(), gourmet, isCallByThankYou());
     }
 
     @Override

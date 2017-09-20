@@ -725,13 +725,13 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
 
         mAnalytics.onEventCallClick(getActivity());
 
-        //        startActivityForResult(StayThankYouActivity.newInstance(getActivity(), mOverseas, mStayName, mImageUrl//
-        //            , mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
-        //            , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
-        //            , mRoomName, "12345678", mStayPayment.waitingForBooking //
-        //            , mLatitude, mLongitude //
-        //            , mAnalytics.getThankYouAnalyticsParam())//
-        //            , StayPaymentActivity.REQUEST_CODE_THANK_YOU);
+//        startActivityForResult(StayThankYouActivity.newInstance(getActivity(), mOverseas, mStayName, mImageUrl//
+//            , mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
+//            , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
+//            , mRoomName, "12345678", mStayPayment.waitingForBooking //
+//            , mLatitude, mLongitude //
+//            , mAnalytics.getThankYouAnalyticsParam())//
+//            , StayPaymentActivity.REQUEST_CODE_THANK_YOU);
     }
 
     @Override
