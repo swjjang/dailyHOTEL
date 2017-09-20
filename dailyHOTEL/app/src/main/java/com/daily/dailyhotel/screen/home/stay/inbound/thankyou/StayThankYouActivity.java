@@ -16,6 +16,10 @@ import com.twoheart.dailyhotel.R;
  */
 public class StayThankYouActivity extends BaseActivity<StayThankYouPresenter>
 {
+    static final int REQUEST_CODE_RECOMMEND_MAP = 10000;
+    static final int REQUEST_CODE_DETAIL = 10001;
+    static final int REQUEST_CODE_PREVIEW = 10002;
+
     static final String INTENT_EXTRA_DATA_IMAGE_URL = "imageUrl";
     static final String INTENT_EXTRA_DATA_STAY_NAME = "stayName";
     static final String INTENT_EXTRA_DATA_CHECK_IN = "checkIn";

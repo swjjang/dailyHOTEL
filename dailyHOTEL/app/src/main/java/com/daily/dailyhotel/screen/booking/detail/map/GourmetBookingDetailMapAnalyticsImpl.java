@@ -14,7 +14,7 @@ import java.util.Locale;
 public class GourmetBookingDetailMapAnalyticsImpl implements GourmetBookingDetailMapPresenter.GourmetBookingDetailMapAnalyticsInterface
 {
     @Override
-    public void onItemClick(Activity activity, Gourmet gourmet)
+    public void onItemClick(Activity activity, Gourmet gourmet, boolean isCallByThankYou)
     {
         if (activity == null)
         {
@@ -23,8 +23,11 @@ public class GourmetBookingDetailMapAnalyticsImpl implements GourmetBookingDetai
 
         String distanceString = String.format(Locale.KOREA, "%.1f", gourmet.distance);
 
+        String category = isCallByThankYou == true //
+            ? AnalyticsManager.Category.THANKYOU_GOURMET_RECOMMEND_CLICK //
+            : AnalyticsManager.Category.BOOKING_GOURMET_RECOMMEND_CLICK;
+
         AnalyticsManager.getInstance(activity).recordEvent(//
-            AnalyticsManager.Category.BOOKING_GOURMET_RECOMMEND_CLICK, distanceString//
-            , Integer.toString(gourmet.index), null);
+            category, distanceString, Integer.toString(gourmet.index), null);
     }
 }

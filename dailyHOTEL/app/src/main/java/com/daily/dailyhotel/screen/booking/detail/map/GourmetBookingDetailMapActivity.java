@@ -17,7 +17,7 @@ import java.util.ArrayList;
 public class GourmetBookingDetailMapActivity extends PlaceBookingDetailMapActivity
 {
     public static Intent newInstance(Context context, String title, GourmetBookingDay gourmetBookingDay //
-        , ArrayList<Gourmet> gourmetList, Location location, String placeName)
+        , ArrayList<Gourmet> gourmetList, Location location, String placeName, boolean isCallByThankYou)
     {
         Intent intent = new Intent(context, GourmetBookingDetailMapActivity.class);
         intent.putExtra(INTENT_EXTRA_DATA_TITLE, title);
@@ -25,6 +25,8 @@ public class GourmetBookingDetailMapActivity extends PlaceBookingDetailMapActivi
         intent.putExtra(INTENT_EXTRA_DATA_PLACE_LIST, gourmetList);
         intent.putExtra(INTENT_EXTRA_DATA_PLACE_LOCATION, location);
         intent.putExtra(INTENT_EXTRA_DATA_PLACE_NAME, placeName);
+        intent.putExtra(INTENT_EXTRA_DATA_CALL_BY_THANK_YOU, isCallByThankYou);
+
         return intent;
     }
 
