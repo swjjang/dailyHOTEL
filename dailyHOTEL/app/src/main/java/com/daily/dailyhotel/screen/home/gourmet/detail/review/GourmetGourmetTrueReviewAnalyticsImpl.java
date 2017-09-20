@@ -21,7 +21,7 @@ public class GourmetGourmetTrueReviewAnalyticsImpl implements GourmetTrueReviewP
     @Override
     public void onScreen(Activity activity)
     {
-        if(activity == null || mAnalyticsParam == null)
+        if (activity == null || mAnalyticsParam == null)
         {
             return;
         }
@@ -31,5 +31,29 @@ public class GourmetGourmetTrueReviewAnalyticsImpl implements GourmetTrueReviewP
         params.put(AnalyticsManager.KeyType.CATEGORY, mAnalyticsParam.category);
 
         AnalyticsManager.getInstance(activity).recordScreen(activity, AnalyticsManager.Screen.TRUE_REVIEW_LIST, null, params);
+    }
+
+    @Override
+    public void onEventTermsClick(Activity activity)
+    {
+        if (activity == null)
+        {
+            return;
+        }
+
+        AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.NAVIGATION//
+            , AnalyticsManager.Action.TRUE_REVIEW_POLICY_CLICK, AnalyticsManager.Label.GOURMET, null);
+    }
+
+    @Override
+    public void onEventBackClick(Activity activity)
+    {
+        if (activity == null)
+        {
+            return;
+        }
+
+        AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.NAVIGATION//
+            , AnalyticsManager.Action.TRUE_REVIEW_BACK_BUTTON_CLICK, AnalyticsManager.Label.GOURMET, null);
     }
 }

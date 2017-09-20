@@ -54,6 +54,10 @@ public class GourmetTrueReviewPresenter extends BaseExceptionPresenter<GourmetTr
         void setAnalyticsParam(GourmetTrueReviewAnalyticsParam analyticsParam);
 
         void onScreen(Activity activity);
+
+        void onEventTermsClick(Activity activity);
+
+        void onEventBackClick(Activity activity);
     }
 
     public GourmetTrueReviewPresenter(@NonNull GourmetTrueReviewActivity activity)
@@ -123,6 +127,8 @@ public class GourmetTrueReviewPresenter extends BaseExceptionPresenter<GourmetTr
     {
         super.onStart();
 
+        mAnalytics.onScreen(getActivity());
+
         if (isRefresh() == true)
         {
             onRefresh(true);
@@ -152,6 +158,8 @@ public class GourmetTrueReviewPresenter extends BaseExceptionPresenter<GourmetTr
     @Override
     public boolean onBackPressed()
     {
+        mAnalytics.onEventBackClick(getActivity());
+
         return super.onBackPressed();
     }
 
@@ -251,6 +259,8 @@ public class GourmetTrueReviewPresenter extends BaseExceptionPresenter<GourmetTr
         }
 
         startActivityForResult(ReviewTermsActivity.newInstance(getActivity()), GourmetTrueReviewActivity.REQUEST_CODE_REVIEW_TERMS);
+
+        mAnalytics.onEventTermsClick(getActivity());
     }
 
     @Override
