@@ -133,17 +133,9 @@ public class StayOutboundSearchSuggestPresenter extends BaseExceptionPresenter<S
     @Override
     public boolean onBackPressed()
     {
+        mAnalytics.onEventCloseClick(getActivity());
+
         return super.onBackPressed();
-    }
-
-    private void onBackPressed(boolean isUserAction)
-    {
-        getActivity().onBackPressed();
-
-        if (isUserAction == true)
-        {
-            mAnalytics.onEventCloseClick(getActivity());
-        }
     }
 
     @Override
@@ -267,7 +259,7 @@ public class StayOutboundSearchSuggestPresenter extends BaseExceptionPresenter<S
     @Override
     public void onBackClick()
     {
-        onBackPressed(true);
+        getActivity().onBackPressed();
     }
 
     @Override
@@ -308,7 +300,7 @@ public class StayOutboundSearchSuggestPresenter extends BaseExceptionPresenter<S
         intent.putExtra(StayOutboundSearchSuggestActivity.INTENT_EXTRA_DATA_KEYWORD, mKeyword);
 
         setResult(Activity.RESULT_OK, intent);
-        onBackPressed(false);
+        finish();
     }
 
     @Override
@@ -329,7 +321,7 @@ public class StayOutboundSearchSuggestPresenter extends BaseExceptionPresenter<S
         intent.putExtra(StayOutboundSearchSuggestActivity.INTENT_EXTRA_DATA_KEYWORD, mKeyword);
 
         setResult(Activity.RESULT_OK, intent);
-        onBackPressed(false);
+        finish();
     }
 
     @Override
