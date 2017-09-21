@@ -544,6 +544,8 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
     {
         unLockUI();
 
+        onReportError(throwable);
+
         BaseActivity baseActivity = this;
 
         if (baseActivity == null || baseActivity.isFinishing() == true)
@@ -574,9 +576,6 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
             } else
             {
                 DailyToast.showToast(this, getString(R.string.act_base_network_connect), DailyToast.LENGTH_LONG);
-
-                Crashlytics.log(httpException.response().raw().request().url().toString());
-                Crashlytics.logException(throwable);
             }
         } else
         {
@@ -591,27 +590,33 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
             return;
         }
 
-        if (throwable instanceof BaseException)
+        try
         {
-            BaseException baseException = (BaseException) throwable;
-            Crashlytics.log("msgCode : " + baseException.getCode() + ", message : " + baseException.getMessage());
-            Crashlytics.logException(throwable);
+            if (throwable instanceof BaseException)
+            {
+                BaseException baseException = (BaseException) throwable;
+                Crashlytics.log("msgCode : " + baseException.getCode() + ", message : " + baseException.getMessage());
+                Crashlytics.logException(throwable);
 
-            ExLog.e("msgCode : " + baseException.getCode() + ", message : " + baseException.getMessage());
-            ExLog.e(throwable.toString());
-        } else if (throwable instanceof HttpException)
+                ExLog.e("msgCode : " + baseException.getCode() + ", message : " + baseException.getMessage());
+                ExLog.e(throwable.toString());
+            } else if (throwable instanceof HttpException)
+            {
+                retrofit2.HttpException httpException = (HttpException) throwable;
+                Crashlytics.log(httpException.response().raw().request().url().toString());
+                Crashlytics.logException(throwable);
+
+                ExLog.e(httpException.response().raw().request().url().toString());
+                ExLog.e(throwable.toString());
+            } else
+            {
+                Crashlytics.logException(throwable);
+
+                ExLog.e(throwable.toString());
+            }
+        } catch (Exception e)
         {
-            retrofit2.HttpException httpException = (HttpException) throwable;
-            Crashlytics.log(httpException.response().raw().request().url().toString());
-            Crashlytics.logException(throwable);
-
-            ExLog.e(httpException.response().raw().request().url().toString());
-            ExLog.e(throwable.toString());
-        } else
-        {
-            Crashlytics.logException(throwable);
-
-            ExLog.e(throwable.toString());
+            // 리포팅 하다가 죽지는 않겠죠?
         }
     }
 
