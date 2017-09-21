@@ -26,7 +26,7 @@ import com.daily.base.OnBaseEventListener;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ScreenUtils;
 import com.daily.dailyhotel.base.BaseBlurView;
-import com.daily.dailyhotel.entity.ListItem;
+import com.daily.dailyhotel.entity.ObjectItem;
 import com.daily.dailyhotel.entity.StayOutbound;
 import com.daily.dailyhotel.screen.home.stay.outbound.list.map.StayOutboundMapFragment;
 import com.daily.dailyhotel.screen.home.stay.outbound.list.map.StayOutboundMapViewPagerAdapter;
@@ -255,7 +255,7 @@ public class StayOutboundListView extends BaseBlurView<StayOutboundListView.OnEv
     }
 
     @Override
-    public void setStayOutboundList(List<ListItem> listItemList, boolean isSortByDistance, boolean isNights)
+    public void setStayOutboundList(List<ObjectItem> objectItemList, boolean isSortByDistance, boolean isNights)
     {
         if (getViewDataBinding() == null)
         {
@@ -264,7 +264,7 @@ public class StayOutboundListView extends BaseBlurView<StayOutboundListView.OnEv
 
         setRefreshing(false);
 
-        if (listItemList.size() == 0)
+        if (objectItemList.size() == 0)
         {
             return;
         }
@@ -283,9 +283,9 @@ public class StayOutboundListView extends BaseBlurView<StayOutboundListView.OnEv
                         return;
                     }
 
-                    ListItem listItem = mStayOutboundListAdapter.getItem(position);
+                    ObjectItem objectItem = mStayOutboundListAdapter.getItem(position);
 
-                    if (listItem.mType == listItem.TYPE_ENTRY)
+                    if (objectItem.mType == objectItem.TYPE_ENTRY)
                     {
                         View simpleDraweeView = view.findViewById(R.id.imageView);
                         View nameTextView = view.findViewById(R.id.nameTextView);
@@ -298,7 +298,7 @@ public class StayOutboundListView extends BaseBlurView<StayOutboundListView.OnEv
                         pairs[2] = android.support.v4.util.Pair.create(gradientTopView, getString(R.string.transition_gradient_top_view));
                         pairs[3] = android.support.v4.util.Pair.create(gradientBottomView, getString(R.string.transition_gradient_bottom_view));
 
-                        getEventListener().onStayClick(pairs, listItem.getItem());
+                        getEventListener().onStayClick(pairs, objectItem.getItem());
                     }
                 }
             }, new View.OnLongClickListener()
@@ -312,9 +312,9 @@ public class StayOutboundListView extends BaseBlurView<StayOutboundListView.OnEv
                         return false;
                     }
 
-                    ListItem listItem = mStayOutboundListAdapter.getItem(position);
+                    ObjectItem objectItem = mStayOutboundListAdapter.getItem(position);
 
-                    if (listItem.mType == listItem.TYPE_ENTRY)
+                    if (objectItem.mType == objectItem.TYPE_ENTRY)
                     {
                         View simpleDraweeView = view.findViewById(R.id.imageView);
                         View nameTextView = view.findViewById(R.id.nameTextView);
@@ -327,7 +327,7 @@ public class StayOutboundListView extends BaseBlurView<StayOutboundListView.OnEv
                         pairs[2] = android.support.v4.util.Pair.create(gradientTopView, getString(R.string.transition_gradient_top_view));
                         pairs[3] = android.support.v4.util.Pair.create(gradientBottomView, getString(R.string.transition_gradient_bottom_view));
 
-                        getEventListener().onStayLongClick(pairs, listItem.getItem());
+                        getEventListener().onStayLongClick(pairs, objectItem.getItem());
                     }
 
                     return true;
@@ -337,14 +337,14 @@ public class StayOutboundListView extends BaseBlurView<StayOutboundListView.OnEv
 
         getViewDataBinding().recyclerView.setAdapter(mStayOutboundListAdapter);
 
-        mStayOutboundListAdapter.setAll(listItemList);
+        mStayOutboundListAdapter.setAll(objectItemList);
         mStayOutboundListAdapter.setDistanceEnabled(isSortByDistance);
         mStayOutboundListAdapter.setNightsEnabled(isNights);
         mStayOutboundListAdapter.notifyDataSetChanged();
     }
 
     @Override
-    public void addStayOutboundList(List<ListItem> listItemList)
+    public void addStayOutboundList(List<ObjectItem> objectItemList)
     {
         if (getViewDataBinding() == null)
         {
@@ -353,7 +353,7 @@ public class StayOutboundListView extends BaseBlurView<StayOutboundListView.OnEv
 
         setRefreshing(false);
 
-        if (mStayOutboundListAdapter == null || listItemList == null || listItemList.size() == 0)
+        if (mStayOutboundListAdapter == null || objectItemList == null || objectItemList.size() == 0)
         {
             return;
         }
@@ -364,7 +364,7 @@ public class StayOutboundListView extends BaseBlurView<StayOutboundListView.OnEv
         setListScreenVisible(true);
 
         mStayOutboundListAdapter.remove(mStayOutboundListAdapter.getItemCount() - 1);
-        mStayOutboundListAdapter.addAll(listItemList);
+        mStayOutboundListAdapter.addAll(objectItemList);
         mStayOutboundListAdapter.notifyDataSetChanged();
     }
 

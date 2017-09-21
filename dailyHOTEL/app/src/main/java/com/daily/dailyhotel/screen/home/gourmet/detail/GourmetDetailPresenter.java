@@ -22,12 +22,12 @@ import com.daily.dailyhotel.entity.DetailImageInformation;
 import com.daily.dailyhotel.entity.GourmetBookDateTime;
 import com.daily.dailyhotel.entity.GourmetDetail;
 import com.daily.dailyhotel.entity.GourmetMenu;
-import com.daily.dailyhotel.entity.ReviewScore;
 import com.daily.dailyhotel.entity.ReviewScores;
 import com.daily.dailyhotel.entity.User;
 import com.daily.dailyhotel.entity.WishResult;
 import com.daily.dailyhotel.parcel.analytics.GourmetDetailAnalyticsParam;
 import com.daily.dailyhotel.parcel.analytics.GourmetPaymentAnalyticsParam;
+import com.daily.dailyhotel.parcel.analytics.GourmetTrueReviewAnalyticsParam;
 import com.daily.dailyhotel.parcel.analytics.NavigatorAnalyticsParam;
 import com.daily.dailyhotel.repository.remote.CalendarImpl;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
@@ -37,17 +37,15 @@ import com.daily.dailyhotel.screen.common.dialog.call.CallDialogActivity;
 import com.daily.dailyhotel.screen.common.dialog.navigator.NavigatorDialogActivity;
 import com.daily.dailyhotel.screen.common.images.ImageListActivity;
 import com.daily.dailyhotel.screen.home.gourmet.detail.menus.GourmetMenusActivity;
+import com.daily.dailyhotel.screen.home.gourmet.detail.review.GourmetTrueReviewActivity;
 import com.daily.dailyhotel.screen.home.gourmet.payment.GourmetPaymentActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.detail.StayOutboundDetailActivity;
 import com.daily.dailyhotel.util.RecentlyPlaceUtil;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Customer;
-import com.twoheart.dailyhotel.network.model.PlaceReviewScore;
-import com.twoheart.dailyhotel.network.model.PlaceReviewScores;
 import com.twoheart.dailyhotel.screen.common.HappyTalkCategoryDialog;
 import com.twoheart.dailyhotel.screen.common.ZoomMapActivity;
-import com.twoheart.dailyhotel.screen.gourmet.detail.GourmetReviewActivity;
 import com.twoheart.dailyhotel.screen.gourmet.filter.GourmetCalendarActivity;
 import com.twoheart.dailyhotel.screen.gourmet.filter.GourmetDetailCalendarActivity;
 import com.twoheart.dailyhotel.screen.information.FAQActivity;
@@ -79,7 +77,6 @@ import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
-import io.reactivex.functions.Function;
 import io.reactivex.functions.Function6;
 import io.reactivex.schedulers.Schedulers;
 
@@ -1065,48 +1062,54 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
             return;
         }
 
-        addCompositeDisposable(Observable.just(mReviewScores).subscribeOn(Schedulers.io()).map(new Function<ReviewScores, PlaceReviewScores>()
-        {
-            @Override
-            public PlaceReviewScores apply(@io.reactivex.annotations.NonNull ReviewScores reviewScores) throws Exception
-            {
-                PlaceReviewScores placeReviewScores = new PlaceReviewScores();
-                placeReviewScores.reviewScoreTotalCount = mReviewScores.reviewScoreTotalCount;
+        GourmetTrueReviewAnalyticsParam analyticsParam = new GourmetTrueReviewAnalyticsParam();
+        analyticsParam.category = mGourmetDetail.category;
 
-                if (mReviewScores.getReviewScoreList() != null)
-                {
-                    List<PlaceReviewScore> reviewScoreList = new ArrayList<>();
+        startActivityForResult(GourmetTrueReviewActivity.newInstance(getActivity(), mGourmetDetail.index, mReviewScores, analyticsParam), GourmetDetailActivity.REQUEST_CODE_TRUE_VIEW);
 
-                    for (ReviewScore reviewScore : mReviewScores.getReviewScoreList())
-                    {
-                        PlaceReviewScore placeReviewScore = new PlaceReviewScore();
-                        placeReviewScore.type = reviewScore.type;
-                        placeReviewScore.scoreAvg = reviewScore.scoreAverage;
 
-                        reviewScoreList.add(placeReviewScore);
-                    }
-
-                    placeReviewScores.reviewScoreAvgs = reviewScoreList;
-                }
-
-                return placeReviewScores;
-            }
-        }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<PlaceReviewScores>()
-        {
-            @Override
-            public void accept(PlaceReviewScores placeReviewScores) throws Exception
-            {
-                startActivityForResult(GourmetReviewActivity.newInstance(getActivity()//
-                    , mGourmetDetail.index, mGourmetDetail.category, placeReviewScores), GourmetDetailActivity.REQUEST_CODE_TRUE_VIEW);
-            }
-        }, new Consumer<Throwable>()
-        {
-            @Override
-            public void accept(Throwable throwable) throws Exception
-            {
-
-            }
-        }));
+        //        addCompositeDisposable(Observable.just(mReviewScores).subscribeOn(Schedulers.io()).map(new Function<ReviewScores, PlaceReviewScores>()
+        //        {
+        //            @Override
+        //            public PlaceReviewScores apply(@io.reactivex.annotations.NonNull ReviewScores reviewScores) throws Exception
+        //            {
+        //                PlaceReviewScores placeReviewScores = new PlaceReviewScores();
+        //                placeReviewScores.reviewScoreTotalCount = mReviewScores.reviewScoreTotalCount;
+        //
+        //                if (mReviewScores.getReviewScoreList() != null)
+        //                {
+        //                    List<PlaceReviewScore> reviewScoreList = new ArrayList<>();
+        //
+        //                    for (ReviewScore reviewScore : mReviewScores.getReviewScoreList())
+        //                    {
+        //                        PlaceReviewScore placeReviewScore = new PlaceReviewScore();
+        //                        placeReviewScore.type = reviewScore.type;
+        //                        placeReviewScore.scoreAvg = reviewScore.scoreAverage;
+        //
+        //                        reviewScoreList.add(placeReviewScore);
+        //                    }
+        //
+        //                    placeReviewScores.reviewScoreAvgs = reviewScoreList;
+        //                }
+        //
+        //                return placeReviewScores;
+        //            }
+        //        }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<PlaceReviewScores>()
+        //        {
+        //            @Override
+        //            public void accept(PlaceReviewScores placeReviewScores) throws Exception
+        //            {
+        //                startActivityForResult(GourmetReviewActivity.newInstance(getActivity()//
+        //                    , mGourmetDetail.index, mGourmetDetail.category, placeReviewScores), GourmetDetailActivity.REQUEST_CODE_TRUE_VIEW);
+        //            }
+        //        }, new Consumer<Throwable>()
+        //        {
+        //            @Override
+        //            public void accept(Throwable throwable) throws Exception
+        //            {
+        //
+        //            }
+        //        }));
 
         mAnalytics.onEventTrueReviewClick(getActivity());
     }

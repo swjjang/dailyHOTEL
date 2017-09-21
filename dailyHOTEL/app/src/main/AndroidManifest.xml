@@ -634,11 +634,6 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".screen.gourmet.detail.GourmetReviewActivity"
-            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait"/>
-        <activity
             android:name=".screen.common.ReviewTermsActivity"
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
             android:launchMode="singleTop"
@@ -652,6 +647,12 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden"/>
+
+        <activity
+            android:name="com.daily.dailyhotel.screen.home.gourmet.detail.review.GourmetTrueReviewActivity"
+            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"/>
 
         <activity
             android:name="com.daily.dailyhotel.screen.common.images.ImageListActivity"
