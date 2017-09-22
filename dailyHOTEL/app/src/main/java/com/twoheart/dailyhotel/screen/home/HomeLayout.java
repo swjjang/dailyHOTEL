@@ -1127,6 +1127,12 @@ public class HomeLayout extends BaseBlurLayout
                 mErrorPopupAnimator = null;
 
                 mErrorPopupLayout.setTranslationY(end);
+
+                // 마지막으로 한번더 하단 버튼을 노출해 준다.
+                if (mOnScreenScrollChangeListener != null)
+                {
+                    mOnScreenScrollChangeListener.onScrollState(isShow);
+                }
             }
 
             @Override
