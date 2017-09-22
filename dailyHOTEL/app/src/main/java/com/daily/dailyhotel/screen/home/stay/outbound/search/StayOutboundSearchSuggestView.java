@@ -312,6 +312,7 @@ public class StayOutboundSearchSuggestView extends BaseDialogView<StayOutboundSe
                 setSuggest(null);
                 setSuggests(null);
                 setSuggestsVisible(false);
+                setEmptySuggestsVisible(false);
                 break;
         }
     }
