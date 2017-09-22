@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
 import android.support.v4.util.Pair;
+import android.view.View;
 
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
@@ -30,22 +31,28 @@ import com.twoheart.dailyhotel.screen.search.stay.result.StaySearchResultActivit
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyPreference;
+import com.twoheart.dailyhotel.util.DailyRemoteConfigPreference;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
+
+import org.json.JSONArray;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 public class StaySearchFragment extends PlaceSearchFragment
 {
@@ -53,6 +60,7 @@ public class StaySearchFragment extends PlaceSearchFragment
     Disposable mAnalyticsDisposable;
 
     private ArrayList<RecentlyPlace> mRecentlyStayList;
+    private ArrayList<String> mStayOutboundKeywordList;
 
     private String mInputText;
     private Object mCalenderObject;
@@ -69,6 +77,8 @@ public class StaySearchFragment extends PlaceSearchFragment
         {
             setDateText(mStayBookingDay);
         }
+
+        setStayOutboundKeywordList(mBaseActivity);
     }
 
     @Override
@@ -469,6 +479,78 @@ public class StaySearchFragment extends PlaceSearchFragment
         }
     }
 
+    private void setStayOutboundKeywordList(Context context)
+    {
+        if (context == null)
+        {
+            mStayOutboundKeywordList = null;
+            return;
+        }
+
+        Observable.defer(new Callable<ObservableSource<ArrayList<String>>>()
+        {
+            @Override
+            public ObservableSource<ArrayList<String>> call() throws Exception
+            {
+                String prefereceText = DailyRemoteConfigPreference.getInstance(context).getKeyRemoteConfigObSearchKeyword();
+                if (DailyTextUtils.isTextEmpty(prefereceText) == true)
+                {
+                    return Observable.just(new ArrayList<>());
+                }
+
+                ArrayList<String> arrayList = new ArrayList<>();
+                JSONArray jsonArray = new JSONArray(prefereceText);
+                if (jsonArray != null)
+                {
+                    int length = jsonArray.length();
+                    for (int i = 0; i < length; i++)
+                    {
+                        arrayList.add(jsonArray.getString(i));
+                    }
+                }
+
+                return Observable.just(arrayList);
+            }
+        }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<ArrayList<String>>()
+        {
+            @Override
+            public void accept(ArrayList<String> stringList) throws Exception
+            {
+                mStayOutboundKeywordList = stringList;
+            }
+        }, new Consumer<Throwable>()
+        {
+            @Override
+            public void accept(Throwable throwable) throws Exception
+            {
+                ExLog.w(throwable.getMessage());
+
+                mStayOutboundKeywordList = null;
+            }
+        });
+    }
+
+    public boolean hasStayOutboundSearchKeyword()
+    {
+        String keyword = mPlaceSearchLayout.getSearchKeyWord();
+        return hasStayOutboundSearchKeyword(keyword);
+    }
+
+    private boolean hasStayOutboundSearchKeyword(String keyword)
+    {
+        if (DailyTextUtils.isTextEmpty(keyword) == true)
+        {
+            return false;
+        }
+
+        if (mStayOutboundKeywordList == null || mStayOutboundKeywordList.size() == 0)
+        {
+            return false;
+        }
+
+        return mStayOutboundKeywordList.contains(keyword);
+    }
+
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // OnEventListener
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -605,6 +687,36 @@ public class StaySearchFragment extends PlaceSearchFragment
             if (DailyTextUtils.isTextEmpty(text) == true || mStayBookingDay == null)
             {
                 return;
+            }
+
+            if (mBaseActivity != null && mStayOutboundKeywordList != null && mStayOutboundKeywordList.size() > 0)
+            {
+                boolean hasKeyword = mStayOutboundKeywordList.contains(text);
+                if (hasKeyword == true)
+                {
+                    String title = mBaseActivity.getResources().getString(R.string.dialog_notice2);
+                    String message = mBaseActivity.getResources().getString(R.string.dialog_message_check_stayoutbound_search);
+                    String positive = mBaseActivity.getResources().getString(R.string.dialog_btn_text_yes);
+                    String negative = mBaseActivity.getResources().getString(R.string.dialog_btn_text_no);
+
+                    mBaseActivity.showSimpleDialog(title, message, positive, negative, new View.OnClickListener()
+                    {
+                        @Override
+                        public void onClick(View v)
+                        {
+                            // positive
+                        }
+                    }, new View.OnClickListener()
+                    {
+                        @Override
+                        public void onClick(View v)
+                        {
+                            // negative
+                        }
+                    });
+
+                    return;
+                }
             }
 
             if (isDateChanged() == false)

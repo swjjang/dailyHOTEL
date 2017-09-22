@@ -389,6 +389,8 @@
     <string name="dialog_information">안내</string>
     <string name="dialog_message_none_operating_time"> 특별한 하루의 시작, 데일리입니다.\n아쉽게도 현재 상담시간이 아닙니다.\n상담 가능 시간에 다시 문의 부탁드립니다.\n\n상담시간 : 오전 %1$s시 ~ 익일 새벽%2$s시\n점심시간 : %3$s ~ %4$s</string>
 
+    <string name="dialog_message_check_stayoutbound_search">해외 스테이를 검색 중이세요?</string>
+
     <!-- Main Drawer Menu Titles -->
     <string name="menu_item_title_home">홈</string>
     <string name="menu_item_title_bookings">예약내역</string>

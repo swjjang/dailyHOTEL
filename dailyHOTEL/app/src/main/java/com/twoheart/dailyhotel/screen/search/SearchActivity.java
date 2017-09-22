@@ -472,6 +472,33 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
                 switch (mPlaceType)
                 {
                     case HOTEL:
+                        if (mStaySearchFragment.hasStayOutboundSearchKeyword() == true)
+                        {
+                            String title = getResources().getString(R.string.dialog_notice2);
+                            String message = getResources().getString(R.string.dialog_message_check_stayoutbound_search);
+                            String positive = getResources().getString(R.string.dialog_btn_text_yes);
+                            String negative = getResources().getString(R.string.dialog_btn_text_no);
+
+                            showSimpleDialog(title, message, positive, negative, new View.OnClickListener()
+                            {
+                                @Override
+                                public void onClick(View v)
+                                {
+                                    // positive
+                                }
+                            }, new View.OnClickListener()
+                            {
+                                @Override
+                                public void onClick(View v)
+                                {
+                                    // negative
+                                }
+                            });
+
+                            return;
+                        }
+
+
                         if (mStaySearchFragment.isDateChanged() == false)
                         {
                             mStaySearchFragment.startCalendar(true, SearchType.SEARCHES);

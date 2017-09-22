@@ -111,10 +111,11 @@ public class DailyRemoteConfigPreference
     private static final String KEY_REMOTE_CONFIG_STATIC_URL_DAILYSTAMPHOME = "384";
     private static final String KEY_REMOTE_CONFIG_STATIC_URL_COLLECTPERSONAL = "385";
 
+    private static final String KEY_REMOTE_CONFIG_OB_SEARCH_KEYWORD = "390";
+
     // A/B Test
     private static final String KEY_REMOTE_CONFIG_STAY_RANK_TEST_NAME = "1000";
     private static final String KEY_REMOTE_CONFIG_STAY_RANK_TEST_TYPE = "1001";
-
 
     private static DailyRemoteConfigPreference mInstance;
     private SharedPreferences mRemoteConfigPreferences;
@@ -1038,5 +1039,15 @@ public class DailyRemoteConfigPreference
     public String getKeyRemoteConfigStayRankTestType()
     {
         return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_STAY_RANK_TEST_TYPE, null);
+    }
+
+    public void setKeyRemoteConfigObSearchKeyword(String value)
+    {
+        setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_OB_SEARCH_KEYWORD, value);
+    }
+
+    public String getKeyRemoteConfigObSearchKeyword()
+    {
+        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_OB_SEARCH_KEYWORD, null);
     }
 }

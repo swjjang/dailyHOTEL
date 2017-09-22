@@ -110,6 +110,7 @@ public class DailyRemoteConfig
         String androidBoutiqueBM = mFirebaseRemoteConfig.getString("androidBoutiqueBM");
         String androidStaticUrl = mFirebaseRemoteConfig.getString("androidStaticUrl");
         String androidStayRankABTest = mFirebaseRemoteConfig.getString("androidStayRankABTest");
+        String androidOBSearchKeyword = mFirebaseRemoteConfig.getString("androidOBSearchKeyword");
 
         if (Constants.DEBUG == true)
         {
@@ -132,6 +133,14 @@ public class DailyRemoteConfig
                 } else
                 {
                     ExLog.d("androidStayRankABTest : " + new JSONObject(androidStayRankABTest).toString());
+                }
+
+                if (DailyTextUtils.isTextEmpty(androidOBSearchKeyword) == true)
+                {
+                    ExLog.d("androidOBSearchKeyword : ");
+                } else
+                {
+                    ExLog.d("androidOBSearchKeyword : " + new JSONObject(androidOBSearchKeyword).toString());
                 }
             } catch (Exception e)
             {
@@ -194,6 +203,8 @@ public class DailyRemoteConfig
 
         // Android Stay Rank A/B Test
         writeStayRankTest(mContext, androidStayRankABTest);
+
+        writeOBSearchKeyword(mContext, androidOBSearchKeyword);
 
         if (listener != null)
         {
@@ -634,6 +645,49 @@ public class DailyRemoteConfig
 
                 DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigStayRankTestName(name);
                 DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigStayRankTestType(type);
+            } catch (Exception e)
+            {
+                ExLog.e(e.toString());
+            }
+        }
+    }
+
+    void writeOBSearchKeyword(Context context, String jsonString)
+    {
+        if (context == null)
+        {
+            return;
+        }
+
+        if (DailyTextUtils.isTextEmpty(jsonString) == true)
+        {
+            DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigObSearchKeyword(null);
+        } else
+        {
+            try
+            {
+                JSONObject jsonObject = new JSONObject(jsonString);
+
+                if (Constants.DEBUG == true)
+                {
+                    ExLog.d("pinkred - keyword " + jsonObject);
+                }
+
+                if (jsonObject.has("keyword") == false)
+                {
+                    DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigObSearchKeyword(null);
+                    return;
+                }
+
+                JSONArray jsonArray = jsonObject.getJSONArray("keyword");
+                String arrayString = null;
+
+                if (jsonArray != null && jsonArray.length() > 0)
+                {
+                    arrayString = jsonArray.toString();
+                }
+
+                DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigObSearchKeyword(arrayString);
             } catch (Exception e)
             {
                 ExLog.e(e.toString());
