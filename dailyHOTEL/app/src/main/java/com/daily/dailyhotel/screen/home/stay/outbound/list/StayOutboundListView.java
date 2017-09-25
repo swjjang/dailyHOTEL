@@ -88,9 +88,9 @@ public class StayOutboundListView extends BaseBlurView<StayOutboundListView.OnEv
 
         void onMyLocationClick();
 
-        void retryClick();
+        void onRetryClick();
 
-        void researchClick();
+        void onResearchClick();
 
         void onCallClick();
     }
@@ -757,11 +757,11 @@ public class StayOutboundListView extends BaseBlurView<StayOutboundListView.OnEv
                 break;
 
             case R.id.researchView:
-                getEventListener().researchClick();
+                getEventListener().onResearchClick();
                 break;
 
             case R.id.retryTextView:
-                getEventListener().retryClick();
+                getEventListener().onRetryClick();
                 break;
         }
     }
