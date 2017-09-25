@@ -1096,6 +1096,8 @@ public class AnalyticsManager
         public static final String RE_RESERVATION = "re_reservation";
         public static final String LEAVE_REVIEW = "leave_review";
         public static final String BUTTONS_AVAILABLE = "buttons_available";
+
+        public static final String OB_KEYWORDS_IN_DOMESTIC = "ob_keywords_in_domestic";
     }
 
     public static class Category
@@ -1310,8 +1312,10 @@ public class AnalyticsManager
 
         public static final String REVIEW_WRITE_CLICKED = "ReviewWriteClicked";
         public static final String SUBMIT = "Submit";
-        public static final String YES = "Yes";
-        public static final String NO = "No";
+        public static final String _YES = "Yes";
+        public static final String _NO = "No";
+        public static final String YES = "yes";
+        public static final String NO = "no";
         public static final String BACK = "Back";
         public static final String CONFIRM = "Confirm";
         public static final String CLOSE_ = "Close";
@@ -1389,6 +1393,8 @@ public class AnalyticsManager
         public static final String RESERVATION = "reservation";
         public static final String REVIEW = "review";
         public static final String BOTH = "both";
+
+        public static final String POPED_UP = "poped_up";
     }
 
     public static class UserType

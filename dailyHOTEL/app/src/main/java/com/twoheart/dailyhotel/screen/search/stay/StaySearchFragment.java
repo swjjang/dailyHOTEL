@@ -532,27 +532,6 @@ public class StaySearchFragment extends PlaceSearchFragment
         });
     }
 
-    public boolean hasStayOutboundSearchKeyword()
-    {
-        String keyword = mPlaceSearchLayout.getSearchKeyword();
-        return hasStayOutboundSearchKeyword(keyword);
-    }
-
-    private boolean hasStayOutboundSearchKeyword(String keyword)
-    {
-        if (DailyTextUtils.isTextEmpty(keyword) == true)
-        {
-            return false;
-        }
-
-        if (mStayOutboundKeywordList == null || mStayOutboundKeywordList.size() == 0)
-        {
-            return false;
-        }
-
-        return mStayOutboundKeywordList.contains(keyword);
-    }
-
     public String getSearchKeyword()
     {
         if (mPlaceSearchLayout == null)
@@ -571,7 +550,7 @@ public class StaySearchFragment extends PlaceSearchFragment
             DailyDeepLink dailyDeepLink = DailyDeepLink.getNewInstance(intent.getData());
 
             startActivity(StayOutboundSearchActivity.newInstance(getContext(), dailyDeepLink == null ? null : dailyDeepLink.getDeepLink()));
-//            startActivity(DailyInternalDeepLink.getStayOutboundSearchSuggestScreenLink(getActivity(), keyword));
+            //            startActivity(DailyInternalDeepLink.getStayOutboundSearchSuggestScreenLink(getActivity(), keyword));
             return;
         }
 
@@ -614,6 +593,15 @@ public class StaySearchFragment extends PlaceSearchFragment
             {
                 // positive
                 startStayOutboundSearchActivity(getSearchKeyword());
+
+                try
+                {
+                    AnalyticsManager.getInstance(getContext()).recordEvent(AnalyticsManager.Category.SEARCH //
+                        , AnalyticsManager.Action.OB_KEYWORDS_IN_DOMESTIC, AnalyticsManager.Label.YES, null);
+                } catch (Exception e)
+                {
+                    ExLog.w(e.toString());
+                }
             }
         }, new View.OnClickListener()
         {
@@ -621,8 +609,25 @@ public class StaySearchFragment extends PlaceSearchFragment
             public void onClick(View v)
             {
                 // negative
+                try
+                {
+                    AnalyticsManager.getInstance(getContext()).recordEvent(AnalyticsManager.Category.SEARCH //
+                        , AnalyticsManager.Action.OB_KEYWORDS_IN_DOMESTIC, AnalyticsManager.Label.NO, null);
+                } catch (Exception e)
+                {
+                    ExLog.w(e.toString());
+                }
             }
         });
+
+        try
+        {
+            AnalyticsManager.getInstance(getContext()).recordEvent(AnalyticsManager.Category.SEARCH //
+                , AnalyticsManager.Action.OB_KEYWORDS_IN_DOMESTIC, AnalyticsManager.Label.POPED_UP, null);
+        } catch (Exception e)
+        {
+            ExLog.w(e.toString());
+        }
 
         return true;
     }
@@ -819,6 +824,11 @@ public class StaySearchFragment extends PlaceSearchFragment
         @Override
         public void onCalendarClick(boolean isAnimation, SearchType searchType)
         {
+            if (searchType == null && showCheckStayOutboundSearchDialog() == true)
+            {
+                return;
+            }
+
             startCalendar(isAnimation, searchType);
         }
 

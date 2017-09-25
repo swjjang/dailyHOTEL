@@ -235,12 +235,12 @@ public class ReviewActivity extends BaseActivity
                         {
                             case HOTEL:
                                 AnalyticsManager.getInstance(ReviewActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_SATISFACTIONEVALUATION//
-                                    , AnalyticsManager.Action.REVIEW_POPUP, AnalyticsManager.Label.YES, null);
+                                    , AnalyticsManager.Action.REVIEW_POPUP, AnalyticsManager.Label._YES, null);
                                 break;
 
                             case FNB:
                                 AnalyticsManager.getInstance(ReviewActivity.this).recordEvent(AnalyticsManager.Category.GOURMET_SATISFACTIONEVALUATION//
-                                    , AnalyticsManager.Action.REVIEW_POPUP, AnalyticsManager.Label.YES, null);
+                                    , AnalyticsManager.Action.REVIEW_POPUP, AnalyticsManager.Label._YES, null);
                                 break;
                         }
                     } catch (Exception e)
@@ -261,12 +261,12 @@ public class ReviewActivity extends BaseActivity
                         {
                             case HOTEL:
                                 AnalyticsManager.getInstance(ReviewActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_SATISFACTIONEVALUATION//
-                                    , AnalyticsManager.Action.REVIEW_POPUP, AnalyticsManager.Label.NO, null);
+                                    , AnalyticsManager.Action.REVIEW_POPUP, AnalyticsManager.Label._NO, null);
                                 break;
 
                             case FNB:
                                 AnalyticsManager.getInstance(ReviewActivity.this).recordEvent(AnalyticsManager.Category.GOURMET_SATISFACTIONEVALUATION//
-                                    , AnalyticsManager.Action.REVIEW_POPUP, AnalyticsManager.Label.NO, null);
+                                    , AnalyticsManager.Action.REVIEW_POPUP, AnalyticsManager.Label._NO, null);
                                 break;
                         }
                     } catch (Exception e)
