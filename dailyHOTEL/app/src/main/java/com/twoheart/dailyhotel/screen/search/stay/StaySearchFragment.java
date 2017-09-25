@@ -30,6 +30,8 @@ import com.twoheart.dailyhotel.screen.hotel.filter.StaySearchCalendarActivity;
 import com.twoheart.dailyhotel.screen.search.stay.result.StaySearchResultActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
+import com.twoheart.dailyhotel.util.DailyDeepLink;
+import com.twoheart.dailyhotel.util.DailyInternalDeepLink;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.DailyRemoteConfigPreference;
 import com.twoheart.dailyhotel.util.Util;
@@ -227,7 +229,7 @@ public class StaySearchFragment extends PlaceSearchFragment
             return;
         }
 
-        String text = mPlaceSearchLayout.getSearchKeyWord();
+        String text = mPlaceSearchLayout.getSearchKeyword();
 
         if (DailyTextUtils.isTextEmpty(text) == true)
         {
@@ -532,7 +534,7 @@ public class StaySearchFragment extends PlaceSearchFragment
 
     public boolean hasStayOutboundSearchKeyword()
     {
-        String keyword = mPlaceSearchLayout.getSearchKeyWord();
+        String keyword = mPlaceSearchLayout.getSearchKeyword();
         return hasStayOutboundSearchKeyword(keyword);
     }
 
@@ -551,6 +553,80 @@ public class StaySearchFragment extends PlaceSearchFragment
         return mStayOutboundKeywordList.contains(keyword);
     }
 
+    public String getSearchKeyword()
+    {
+        if (mPlaceSearchLayout == null)
+        {
+            return null;
+        }
+
+        return mPlaceSearchLayout.getSearchKeyword();
+    }
+
+    public void startStayOutboundSearchActivity(String keyword)
+    {
+        if (DailyTextUtils.isTextEmpty(keyword) == false)
+        {
+            Intent intent = DailyInternalDeepLink.getStayOutboundSearchSuggestScreenLink(getActivity(), keyword);
+            DailyDeepLink dailyDeepLink = DailyDeepLink.getNewInstance(intent.getData());
+
+            startActivity(StayOutboundSearchActivity.newInstance(getContext(), dailyDeepLink == null ? null : dailyDeepLink.getDeepLink()));
+//            startActivity(DailyInternalDeepLink.getStayOutboundSearchSuggestScreenLink(getActivity(), keyword));
+            return;
+        }
+
+        startActivity(StayOutboundSearchActivity.newInstance(getContext()));
+    }
+
+    public boolean showCheckStayOutboundSearchDialog()
+    {
+        if (mBaseActivity == null)
+        {
+            return false;
+        }
+
+        String keyword = getSearchKeyword();
+        if (DailyTextUtils.isTextEmpty(keyword) == true)
+        {
+            return false;
+        }
+
+        if (mStayOutboundKeywordList == null || mStayOutboundKeywordList.size() == 0)
+        {
+            return false;
+        }
+
+        boolean hasKeyword = mStayOutboundKeywordList.contains(keyword);
+        if (hasKeyword == false)
+        {
+            return false;
+        }
+
+        String title = mBaseActivity.getResources().getString(R.string.dialog_notice2);
+        String message = mBaseActivity.getResources().getString(R.string.dialog_message_check_stayoutbound_search);
+        String positive = mBaseActivity.getResources().getString(R.string.dialog_btn_text_yes);
+        String negative = mBaseActivity.getResources().getString(R.string.dialog_btn_text_no);
+
+        mBaseActivity.showSimpleDialog(title, message, positive, negative, new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                // positive
+                startStayOutboundSearchActivity(getSearchKeyword());
+            }
+        }, new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                // negative
+            }
+        });
+
+        return true;
+    }
+
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // OnEventListener
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -565,7 +641,7 @@ public class StaySearchFragment extends PlaceSearchFragment
                 return;
             }
 
-            startActivity(StayOutboundSearchActivity.newInstance(getContext()));
+            startStayOutboundSearchActivity(null);
 
             AnalyticsManager.getInstance(mBaseActivity).recordEvent(//
                 AnalyticsManager.Category.SEARCH, AnalyticsManager.Action.SEARCH_SCREEN,//
@@ -689,34 +765,9 @@ public class StaySearchFragment extends PlaceSearchFragment
                 return;
             }
 
-            if (mBaseActivity != null && mStayOutboundKeywordList != null && mStayOutboundKeywordList.size() > 0)
+            if (showCheckStayOutboundSearchDialog() == true)
             {
-                boolean hasKeyword = mStayOutboundKeywordList.contains(text);
-                if (hasKeyword == true)
-                {
-                    String title = mBaseActivity.getResources().getString(R.string.dialog_notice2);
-                    String message = mBaseActivity.getResources().getString(R.string.dialog_message_check_stayoutbound_search);
-                    String positive = mBaseActivity.getResources().getString(R.string.dialog_btn_text_yes);
-                    String negative = mBaseActivity.getResources().getString(R.string.dialog_btn_text_no);
-
-                    mBaseActivity.showSimpleDialog(title, message, positive, negative, new View.OnClickListener()
-                    {
-                        @Override
-                        public void onClick(View v)
-                        {
-                            // positive
-                        }
-                    }, new View.OnClickListener()
-                    {
-                        @Override
-                        public void onClick(View v)
-                        {
-                            // negative
-                        }
-                    });
-
-                    return;
-                }
+                return;
             }
 
             if (isDateChanged() == false)

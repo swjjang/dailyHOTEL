@@ -76,6 +76,7 @@ import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
 import com.twoheart.dailyhotel.util.DailyExternalDeepLink;
+import com.twoheart.dailyhotel.util.DailyInternalDeepLink;
 import com.twoheart.dailyhotel.util.DailyLocationFactory;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.DailyRemoteConfigPreference;
@@ -613,7 +614,19 @@ public class HomeFragment extends BaseMenuNavigationFragment
             }
         } else
         {
+            DailyInternalDeepLink internalDeepLink = (DailyInternalDeepLink) mDailyDeepLink;
 
+            if (internalDeepLink.isStayOutboundSearchSuggestView() == true)
+            {
+                try
+                {
+                    Intent intent = StayOutboundSearchActivity.newInstance(mBaseActivity, dailyDeepLink.getDeepLink());
+                    startActivityForResult(intent, Constants.CODE_RESULT_ACTIVITY_STAY_OUTBOUND_SEARCH);
+                } catch (Exception e)
+                {
+                    ExLog.e(e.toString());
+                }
+            }
         }
 
         dailyDeepLink.clear();

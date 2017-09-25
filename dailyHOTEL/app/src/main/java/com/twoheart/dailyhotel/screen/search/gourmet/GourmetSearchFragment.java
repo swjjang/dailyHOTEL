@@ -214,7 +214,7 @@ public class GourmetSearchFragment extends PlaceSearchFragment
             return;
         }
 
-        String text = mPlaceSearchLayout.getSearchKeyWord();
+        String text = mPlaceSearchLayout.getSearchKeyword();
 
         if (DailyTextUtils.isTextEmpty(text) == true)
         {
