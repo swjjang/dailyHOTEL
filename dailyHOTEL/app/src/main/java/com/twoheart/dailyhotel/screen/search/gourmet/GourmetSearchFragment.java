@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.location.Location;
 import android.support.v4.util.Pair;
 
+import com.crashlytics.android.Crashlytics;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.entity.CampaignTag;
@@ -309,6 +310,13 @@ public class GourmetSearchFragment extends PlaceSearchFragment
     @Override
     public void startCampaignTagList(int index, String title)
     {
+        if (getActivity() == null)
+        {
+            NullPointerException exception = new NullPointerException("getActivity is null - index : " + index + ", title : " + title);
+            Crashlytics.logException(exception);
+            return;
+        }
+
         Intent intent = GourmetCampaignTagListActivity.newInstance(getActivity() //
             , index, title, mGourmetBookingDay);
 
@@ -634,6 +642,13 @@ public class GourmetSearchFragment extends PlaceSearchFragment
                 mCalenderObject = campaignTag;
 
                 onCalendarClick(true, SearchType.CAMPAIGN_TAG);
+                return;
+            }
+
+            if (campaignTag == null)
+            {
+                NullPointerException exception = new NullPointerException("campaignTag is null");
+                Crashlytics.logException(exception);
                 return;
             }
 
