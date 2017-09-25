@@ -208,7 +208,6 @@ public class DailyPreference
     {
         // 해택 알림 내용은 유지 하도록 한다. 단 로그인시에는 서버에서 다시 가져와서 세팅한다.
         boolean isShowBenefitAlarm = isShowBenefitAlarm();
-        //        boolean isShowSearchTooltip = isViewSearchTooltip();
         boolean isShowTrueVRTooltip = isWishTooltip();
         int supportTrueVR = getTrueVRSupport();
 
@@ -227,6 +226,7 @@ public class DailyPreference
         String stayOutboundSearchCheckInDate = getStayOutboundSearchCheckInDate();
         String stayOutboundSearchCheckOutDate = getStayOutboundSearchCheckOutDate();
         JSONObject stayOutboundSearchPeople = getStayOutboundSearchPeople();
+        boolean isStaySearchObTooltip = isStaySearchObTooltip();
 
         if (mEditor != null)
         {
@@ -235,7 +235,6 @@ public class DailyPreference
         }
 
         setShowBenefitAlarm(isShowBenefitAlarm);
-        //        setViewSearchTooltip(isShowSearchTooltip);
         setWishTooltip(isShowTrueVRTooltip);
         setTrueVRSupport(supportTrueVR);
         setAllRecentPlaces(allRecentPlaces);
@@ -251,6 +250,7 @@ public class DailyPreference
         setStayOutboundSearchCheckInDate(stayOutboundSearchCheckInDate);
         setStayOutboundSearchCheckOutDate(stayOutboundSearchCheckOutDate);
         setStayOutboundSearchPeople(stayOutboundSearchPeople == null ? null : stayOutboundSearchPeople.toString());
+        setStaySearchObTooltip(isStaySearchObTooltip);
 
         DailyHotel.AUTHORIZATION = null;
     }
