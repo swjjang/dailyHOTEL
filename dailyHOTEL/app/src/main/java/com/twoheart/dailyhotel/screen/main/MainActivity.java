@@ -1332,6 +1332,7 @@ public class MainActivity extends BaseActivity implements Constants, BaseMenuNav
                         || externalDeepLink.isShortcutView() == true//
                         || externalDeepLink.isStayOutboundSearchResultView() == true//
                         || externalDeepLink.isCampaignTagListView() == true //
+                        || externalDeepLink.isPlaceDetailView() == true //
                         )
                     {
                         mMainFragmentManager.select(false, MainFragmentManager.INDEX_HOME_FRAGMENT, true, bundle);

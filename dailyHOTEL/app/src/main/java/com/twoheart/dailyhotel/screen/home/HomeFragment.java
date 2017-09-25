@@ -610,6 +610,19 @@ public class HomeFragment extends BaseMenuNavigationFragment
                             onStayClick(true, externalDeepLink);
                     }
                 }
+            } else if (externalDeepLink.isPlaceDetailView() == true)
+            {
+                if (DailyDeepLink.STAY_OUTBOUND.equalsIgnoreCase(externalDeepLink.getPlaceType()) == true)
+                {
+                    try
+                    {
+                        Intent intent = StayOutboundSearchActivity.newInstance(mBaseActivity, dailyDeepLink.getDeepLink());
+                        startActivityForResult(intent, Constants.CODE_RESULT_ACTIVITY_STAY_OUTBOUND_SEARCH);
+                    } catch (Exception e)
+                    {
+                        ExLog.e(e.toString());
+                    }
+                }
             }
         } else
         {

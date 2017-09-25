@@ -75,6 +75,8 @@ public class DailyExternalDeepLink extends DailyDeepLink
     private static final String STAY_OUTBOUND_V19_SEARCH_RESULT_LIST = "sosrl"; // 해외 호텔 검색 결과 목록
     private static final String CAMPAIGN_TAG_LIST = "ctl"; // 캠패인 태그
 
+    private static final String PLACE_V20_DETAIL = "pd"; // place detail
+
     // Param
 
     //    private static final String PARAM_V2_VIEW = "view"; // view
@@ -131,10 +133,12 @@ public class DailyExternalDeepLink extends DailyDeepLink
 
     private static final String PARAM_V19_CATEGORY_KEY = "ck"; // 해외 호텔 검색에서 사용되는 키값
 
+
+
     // Version
 
     private static final int MINIMUM_VERSION_CODE = 3;
-    private static final int MAXIMUM_VERSION_CODE = 19;
+    private static final int MAXIMUM_VERSION_CODE = 20;
 
     private int mVersionCode;
 
@@ -241,6 +245,17 @@ public class DailyExternalDeepLink extends DailyDeepLink
 
         return value;
     }
+
+    ///////////////////////////////////////////////////////////////////////////////////
+    // Version 19
+    ///////////////////////////////////////////////////////////////////////////////////
+
+    public boolean isPlaceDetailView()
+    {
+        return equalsView(20, PLACE_V20_DETAIL);
+    }
+
+
 
     ///////////////////////////////////////////////////////////////////////////////////
     // Version 19
