@@ -735,7 +735,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
     @Override
     public void onShareKakaoClick()
     {
-        if (mGourmetDetail == null || mGourmetBookDateTime == null || lock() == true)
+        if (mGourmetDetail == null || mGourmetBookDateTime == null)
         {
             return;
         }
@@ -783,7 +783,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
     @Override
     public void onShareSmsClick()
     {
-        if (mGourmetDetail == null || mGourmetBookDateTime == null || lock() == true)
+        if (mGourmetDetail == null || mGourmetBookDateTime == null)
         {
             return;
         }
