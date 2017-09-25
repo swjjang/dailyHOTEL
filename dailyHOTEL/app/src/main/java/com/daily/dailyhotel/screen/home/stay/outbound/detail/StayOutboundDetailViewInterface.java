@@ -17,11 +17,13 @@ public interface StayOutboundDetailViewInterface extends BaseDialogViewInterface
 
     void setStayDetail(StayBookDateTime stayBookDateTime, People people, StayOutboundDetail stayOutboundDetail);
 
-    Observable<Boolean> getSharedElementTransition();
+    Observable<Boolean> getSharedElementTransition(int gradientType);
 
     void setInitializedImage(String url);
 
     void setInitializedTransLayout(String name, String url);
+
+    void setTransitionVisible(boolean visible);
 
     void setSharedElementTransitionEnabled(boolean enabled, int gradientType);
 

@@ -25,6 +25,7 @@ import com.daily.dailyhotel.repository.local.DailyDb;
 import com.daily.dailyhotel.repository.local.DailyDbHelper;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
 import com.daily.dailyhotel.screen.common.calendar.StayCalendarActivity;
+import com.daily.dailyhotel.screen.home.stay.outbound.detail.StayOutboundDetailActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.list.StayOutboundListActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.people.SelectPeopleActivity;
 import com.twoheart.dailyhotel.R;
@@ -342,10 +343,16 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
                     }
                 }
 
-                if (mDailyDeepLink != null && processDeepLink(mDailyDeepLink, commonDateTime) == true)
+                if (mDailyDeepLink != null)
                 {
-                    notifySuggestsChanged();
-                    onSearchKeyword();
+                    if (processDeepLink(mDailyDeepLink, commonDateTime) == true)
+                    {
+                        mDailyDeepLink.clear();
+                        mDailyDeepLink = null;
+                    } else
+                    {
+
+                    }
                 } else
                 {
                     if (isSuggestChanged() == false)
@@ -755,6 +762,17 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
                         setStayBookDateTime(checkInDateString, datePlus, checkInDateString, datePlus + nights);
                     }
 
+                    notifySuggestsChanged();
+                    onSearchKeyword();
+
+                    return true;
+                } else if (externalDeepLink.isPlaceDetailView() == true)
+                {
+                    startActivityForResult(StayOutboundDetailActivity.newInstance(getActivity(), externalDeepLink.getDeepLink())//
+                        , StayOutboundSearchActivity.REQUEST_CODE_DETAIL);
+
+                    getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
+
                     return true;
                 }
             } else
@@ -764,9 +782,6 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
         } catch (Exception e)
         {
             ExLog.d(e.toString());
-        } finally
-        {
-            dailyDeepLink.clear();
         }
 
         return false;

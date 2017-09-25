@@ -77,17 +77,7 @@ public class StayMapViewPagerAdapter extends PlaceMapViewPagerAdapter
         View dBenefitLayout = view.findViewById(R.id.dBenefitLayout);
         TextView dBenefitTextView = (TextView) view.findViewById(R.id.dBenefitTextView);
 
-        String address = stay.addressSummary;
-
-        if (address.indexOf('|') >= 0)
-        {
-            address = address.replace(" | ", "ㅣ");
-        } else if (address.indexOf('l') >= 0)
-        {
-            address = address.replace(" l ", "ㅣ");
-        }
-
-        addressTextView.setText(address);
+        addressTextView.setText(stay.addressSummary);
         name.setText(stay.name);
 
         // D.benefit

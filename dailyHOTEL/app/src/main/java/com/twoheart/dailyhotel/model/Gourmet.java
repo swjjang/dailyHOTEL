@@ -5,6 +5,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.SparseArray;
 
+import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.network.model.GourmetWishDetails;
@@ -155,6 +156,19 @@ public class Gourmet extends Place
             price = jsonObject.getInt("price");
             discountPrice = jsonObject.getInt("discount");
             addressSummary = jsonObject.getString("addrSummary");
+
+            // 인트라넷에서 값을 잘못 넣는 경우가 있다.
+            if (DailyTextUtils.isTextEmpty(addressSummary) == false)
+            {
+                if (addressSummary.indexOf('|') >= 0)
+                {
+                    addressSummary = addressSummary.replace(" | ", "ㅣ");
+                } else if (addressSummary.indexOf('l') >= 0)
+                {
+                    addressSummary = addressSummary.replace(" l ", "ㅣ");
+                }
+            }
+
             grade = Grade.gourmet;
             districtName = jsonObject.getString("districtName");
             latitude = jsonObject.getDouble("latitude");

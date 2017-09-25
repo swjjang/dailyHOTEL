@@ -851,9 +851,6 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
 
                     case GOURMET:
                     {
-                        //                        Intent intent = GourmetDetailActivity.newInstance(getActivity(), gourmetBookingDay//
-                        //                            , booking.placeIndex, false, false, false);
-
                         Intent intent = GourmetDetailActivity.newInstance(getActivity() //
                             , booking.placeIndex, booking.placeName, null, GourmetDetailActivity.NONE_PRICE//
                             , mCommonDateTime.dailyDateTime//

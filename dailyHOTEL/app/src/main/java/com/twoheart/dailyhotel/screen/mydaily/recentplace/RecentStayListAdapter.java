@@ -2,37 +2,23 @@ package com.twoheart.dailyhotel.screen.mydaily.recentplace;
 
 import android.annotation.TargetApi;
 import android.content.Context;
-import android.databinding.DataBindingUtil;
-import android.graphics.Paint;
 import android.os.Build;
 import android.os.Vibrator;
-import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.daily.base.util.DailyTextUtils;
-import com.daily.base.util.ScreenUtils;
-import com.daily.base.util.VersionUtils;
-import com.daily.dailyhotel.entity.ImageMap;
 import com.daily.dailyhotel.entity.RecentlyPlace;
 import com.daily.dailyhotel.entity.StayOutbound;
-import com.facebook.drawee.backends.pipeline.Fresco;
-import com.facebook.drawee.controller.BaseControllerListener;
-import com.facebook.drawee.controller.ControllerListener;
-import com.facebook.drawee.interfaces.DraweeController;
-import com.facebook.imagepipeline.image.ImageInfo;
+import com.daily.dailyhotel.view.DailyStayCardView;
+import com.daily.dailyhotel.view.DailyStayOutboundCardView;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.databinding.ListRowStayDataBinding;
-import com.twoheart.dailyhotel.databinding.ListRowStayOutboundDataBinding;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.model.time.PlaceBookingDay;
 import com.twoheart.dailyhotel.model.time.StayBookingDay;
 import com.twoheart.dailyhotel.util.Util;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -72,15 +58,18 @@ public class RecentStayListAdapter extends RecentPlacesListAdapter
         {
             case PlaceViewItem.TYPE_ENTRY:
             {
-                ListRowStayDataBinding dataBinding = DataBindingUtil.inflate(mInflater, R.layout.list_row_stay_data, parent, false);
+                DailyStayCardView stayCardView = new DailyStayCardView(mContext);
+                stayCardView.setLayoutParams(new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
-                return new StayInboundViewHolder(dataBinding);
+                return new StayInboundViewHolder(stayCardView);
             }
 
             case PlaceViewItem.TYPE_OB_ENTRY:
             {
-                ListRowStayOutboundDataBinding dataBinding = DataBindingUtil.inflate(LayoutInflater.from(mContext), R.layout.list_row_stay_outbound_data, parent, false);
-                return new StayOutboundViewHolder(dataBinding);
+                DailyStayOutboundCardView stayOutboundCardView = new DailyStayOutboundCardView(mContext);
+                stayOutboundCardView.setLayoutParams(new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+
+                return new StayOutboundViewHolder(stayOutboundCardView);
             }
 
             case PlaceViewItem.TYPE_FOOTER_VIEW:
@@ -122,78 +111,112 @@ public class RecentStayListAdapter extends RecentPlacesListAdapter
     {
         final RecentlyPlace recentlyPlace = placeViewItem.getItem();
 
-        String address = recentlyPlace.addrSummary;
+        holder.stayCardView.setStickerVisible(false);
+        holder.stayCardView.setDeleteVisible(true);
+        holder.stayCardView.setWishVisible(false);
 
-        int barIndex = address.indexOf('|');
-        if (barIndex >= 0)
-        {
-            address = address.replace(" | ", "ㅣ");
-        } else if (address.indexOf('l') >= 0)
-        {
-            address = address.replace(" l ", "ㅣ");
-        }
+        holder.stayCardView.setImage(recentlyPlace.imageUrl);
 
-        holder.dataBinding.addressTextView.setText(address);
-        holder.dataBinding.nameTextView.setText(recentlyPlace.title);
-        holder.dataBinding.priceTextView.setVisibility(View.INVISIBLE);
-        holder.dataBinding.priceTextView.setText(null);
+        holder.stayCardView.setGradeText(Stay.Grade.valueOf(recentlyPlace.details.grade).getName(mContext));
+        holder.stayCardView.setVRVisible(recentlyPlace.details.isTrueVr && mTrueVREnabled);
+        holder.stayCardView.setReviewText(recentlyPlace.rating, 0);
 
-        // 만족도
-        if (recentlyPlace.rating > 0)
+        holder.stayCardView.setNewVisible(false);
+
+        holder.stayCardView.setStayNameText(recentlyPlace.title);
+        holder.stayCardView.setDistanceVisible(false);
+
+        holder.stayCardView.setAddressText(recentlyPlace.addrSummary);
+        holder.stayCardView.setPriceVisible(false);
+
+        holder.stayCardView.setBenefitText(null);
+
+        if (position < getItemCount() - 1 && getItem(position + 1).mType == PlaceViewItem.TYPE_SECTION)
         {
-            holder.dataBinding.satisfactionView.setVisibility(View.VISIBLE);
-            holder.dataBinding.satisfactionView.setText(//
-                mContext.getResources().getString(R.string.label_list_satisfaction, recentlyPlace.rating));
+            holder.stayCardView.setDividerVisible(false);
         } else
         {
-            holder.dataBinding.satisfactionView.setVisibility(View.GONE);
+            holder.stayCardView.setDividerVisible(true);
         }
 
-        holder.dataBinding.averageTextView.setVisibility(View.GONE);
-        holder.dataBinding.discountPriceTextView.setVisibility(View.GONE);
-
-        holder.dataBinding.nameTextView.setSelected(true); // Android TextView marquee bug
-
-        if (VersionUtils.isOverAPI16() == true)
-        {
-            holder.dataBinding.gradientView.setBackground(mPaintDrawable);
-        } else
-        {
-            holder.dataBinding.gradientView.setBackgroundDrawable(mPaintDrawable);
-        }
-
-        Stay.Grade grade;
-
-        try
-        {
-            grade = Stay.Grade.valueOf(recentlyPlace.details.grade);
-        } catch (Exception e)
-        {
-            grade = Stay.Grade.etc;
-        }
-
-        // grade
-        holder.dataBinding.gradeTextView.setText(grade.getName(mContext));
-        holder.dataBinding.gradeTextView.setBackgroundResource(grade.getColorResId());
-
-        Util.requestImageResize(mContext, holder.dataBinding.imageView, recentlyPlace.imageUrl);
-
-        // SOLD OUT 표시
-        if (recentlyPlace.isSoldOut == true)
-        {
-            holder.dataBinding.soldoutView.setVisibility(View.VISIBLE);
-        } else
-        {
-            holder.dataBinding.soldoutView.setVisibility(View.GONE);
-        }
-
+        //
+        //
+        //
+        //
+        //
+        //
+        //        String address = recentlyPlace.addrSummary;
+        //
+        //        int barIndex = address.indexOf('|');
+        //        if (barIndex >= 0)
+        //        {
+        //            address = address.replace(" | ", "ㅣ");
+        //        } else if (address.indexOf('l') >= 0)
+        //        {
+        //            address = address.replace(" l ", "ㅣ");
+        //        }
+        //
+        //        holder.dataBinding.addressTextView.setText(address);
+        //        holder.dataBinding.nameTextView.setText(recentlyPlace.title);
+        //        holder.dataBinding.priceTextView.setVisibility(View.INVISIBLE);
+        //        holder.dataBinding.priceTextView.setText(null);
+        //
+        //        // 만족도
+        //        if (recentlyPlace.rating > 0)
+        //        {
+        //            holder.dataBinding.satisfactionView.setVisibility(View.VISIBLE);
+        //            holder.dataBinding.satisfactionView.setText(//
+        //                mContext.getResources().getString(R.string.label_list_satisfaction, recentlyPlace.rating));
+        //        } else
+        //        {
+        //            holder.dataBinding.satisfactionView.setVisibility(View.GONE);
+        //        }
+        //
+        //        holder.dataBinding.averageTextView.setVisibility(View.GONE);
+        //        holder.dataBinding.discountPriceTextView.setVisibility(View.GONE);
+        //
+        //        holder.dataBinding.nameTextView.setSelected(true); // Android TextView marquee bug
+        //
+        //        if (VersionUtils.isOverAPI16() == true)
+        //        {
+        //            holder.dataBinding.gradientView.setBackground(mPaintDrawable);
+        //        } else
+        //        {
+        //            holder.dataBinding.gradientView.setBackgroundDrawable(mPaintDrawable);
+        //        }
+        //
+        //        Stay.Grade grade;
+        //
+        //        try
+        //        {
+        //            grade = Stay.Grade.valueOf(recentlyPlace.details.grade);
+        //        } catch (Exception e)
+        //        {
+        //            grade = Stay.Grade.etc;
+        //        }
+        //
+        //        // grade
+        //        holder.dataBinding.gradeTextView.setText(grade.getName(mContext));
+        //        holder.dataBinding.gradeTextView.setBackgroundResource(grade.getColorResId());
+        //
+        //        Util.requestImageResize(mContext, holder.dataBinding.imageView, recentlyPlace.imageUrl);
+        //
+        //        // SOLD OUT 표시
+        //        if (recentlyPlace.isSoldOut == true)
+        //        {
+        //            holder.dataBinding.soldoutView.setVisibility(View.VISIBLE);
+        //        } else
+        //        {
+        //            holder.dataBinding.soldoutView.setVisibility(View.GONE);
+        //        }
+        //
         //        if (DailyTextUtils.isTextEmpty(recentlyPlace.dBenefitText) == false)
         //        {
         //            holder.dataBinding.dBenefitTextView.setVisibility(View.VISIBLE);
         //            holder.dataBinding.dBenefitTextView.setText(recentlyPlace.dBenefitText);
         //        } else
         //        {
-        holder.dataBinding.dBenefitTextView.setVisibility(View.GONE);
+        //        holder.dataBinding.dBenefitTextView.setVisibility(View.GONE);
         //        }
 
         //        if (mShowDistanceIgnoreSort == true || getSortType() == Constants.SortType.DISTANCE)
@@ -210,40 +233,40 @@ public class RecentStayListAdapter extends RecentPlacesListAdapter
         //            holder.dataBinding.distanceTextView.setText(mContext.getString(R.string.label_distance_km, new DecimalFormat("#.#").format(recentlyPlace.distance)));
         //        } else
         //        {
-        holder.dataBinding.dot1View.setVisibility(View.GONE);
-        holder.dataBinding.distanceTextView.setVisibility(View.GONE);
+        //        holder.dataBinding.dot1View.setVisibility(View.GONE);
+        //        holder.dataBinding.distanceTextView.setVisibility(View.GONE);
         //        }
-
-        // VR 여부
-        if (recentlyPlace.details.isTrueVr == true && mTrueVREnabled == true)
-        {
-            if (holder.dataBinding.satisfactionView.getVisibility() == View.VISIBLE)
-            {
-                holder.dataBinding.dot2View.setVisibility(View.VISIBLE);
-            } else
-            {
-                holder.dataBinding.dot2View.setVisibility(View.GONE);
-            }
-
-            holder.dataBinding.trueVRView.setVisibility(View.VISIBLE);
-        } else
-        {
-            holder.dataBinding.dot2View.setVisibility(View.GONE);
-            holder.dataBinding.trueVRView.setVisibility(View.GONE);
-        }
-
-        holder.dataBinding.deleteView.setVisibility(View.VISIBLE);
-        holder.dataBinding.deleteView.setTag(position);
-
-        if (holder.dataBinding.satisfactionView.getVisibility() == View.GONE//
-            && holder.dataBinding.trueVRView.getVisibility() == View.GONE//
-            && holder.dataBinding.distanceTextView.getVisibility() == View.GONE)
-        {
-            holder.dataBinding.informationLayout.setVisibility(View.GONE);
-        } else
-        {
-            holder.dataBinding.informationLayout.setVisibility(View.VISIBLE);
-        }
+        //
+        //        // VR 여부
+        //        if (recentlyPlace.details.isTrueVr == true && mTrueVREnabled == true)
+        //        {
+        //            if (holder.dataBinding.satisfactionView.getVisibility() == View.VISIBLE)
+        //            {
+        //                holder.dataBinding.dot2View.setVisibility(View.VISIBLE);
+        //            } else
+        //            {
+        //                holder.dataBinding.dot2View.setVisibility(View.GONE);
+        //            }
+        //
+        //            holder.dataBinding.trueVRView.setVisibility(View.VISIBLE);
+        //        } else
+        //        {
+        //            holder.dataBinding.dot2View.setVisibility(View.GONE);
+        //            holder.dataBinding.trueVRView.setVisibility(View.GONE);
+        //        }
+        //
+        //        holder.dataBinding.deleteView.setVisibility(View.VISIBLE);
+        //        holder.dataBinding.deleteView.setTag(position);
+        //
+        //        if (holder.dataBinding.satisfactionView.getVisibility() == View.GONE//
+        //            && holder.dataBinding.trueVRView.getVisibility() == View.GONE//
+        //            && holder.dataBinding.distanceTextView.getVisibility() == View.GONE)
+        //        {
+        //            holder.dataBinding.informationLayout.setVisibility(View.GONE);
+        //        } else
+        //        {
+        //            holder.dataBinding.informationLayout.setVisibility(View.VISIBLE);
+        //        }
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
@@ -256,123 +279,143 @@ public class RecentStayListAdapter extends RecentPlacesListAdapter
 
         StayOutbound stayOutbound = placeViewItem.getItem();
 
-        holder.dataBinding.addressTextView.setText(stayOutbound.locationDescription);
-        holder.dataBinding.nameTextView.setText(stayOutbound.name);
-        holder.dataBinding.nameEngTextView.setText("(" + stayOutbound.nameEng + ")");
+        holder.stayOutboundCardView.setStickerVisible(false);
+        holder.stayOutboundCardView.setDeleteVisible(true);
+        holder.stayOutboundCardView.setWishVisible(false);
 
-        ConstraintLayout.LayoutParams nameEngLayoutParams = (ConstraintLayout.LayoutParams) holder.dataBinding.nameEngTextView.getLayoutParams();
-        nameEngLayoutParams.bottomMargin = ScreenUtils.dpToPx(mContext, 6);
+        holder.stayOutboundCardView.setImage(stayOutbound.getImageMap());
 
-        ConstraintLayout.LayoutParams nameLayoutParams = (ConstraintLayout.LayoutParams) holder.dataBinding.nameTextView.getLayoutParams();
-        nameLayoutParams.bottomMargin = ScreenUtils.dpToPx(mContext, -4);
+        holder.stayOutboundCardView.setGradeText(mContext.getString(R.string.label_stay_outbound_filter_x_star_rate, (int) stayOutbound.rating));
+        holder.stayOutboundCardView.setVRVisible(false);
+        holder.stayOutboundCardView.setRatingText(stayOutbound.rating);
 
-        // 가격
-        if (stayOutbound.promo == true)
-        {
-            holder.dataBinding.priceTextView.setVisibility(View.VISIBLE);
-            holder.dataBinding.priceTextView.setText(DailyTextUtils.getPriceFormat(mContext, stayOutbound.nightlyBaseRate, false));
-            holder.dataBinding.priceTextView.setPaintFlags(holder.dataBinding.priceTextView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-        } else
-        {
-            holder.dataBinding.priceTextView.setVisibility(View.INVISIBLE);
-            holder.dataBinding.priceTextView.setText(null);
-        }
+        holder.stayOutboundCardView.setNewVisible(false);
 
-        holder.dataBinding.discountPriceTextView.setText(null);
-        //        holder.dataBinding.discountPriceTextView.setText(DailyTextUtils.getPriceFormat(mContext, stayOutbound.nightlyRate, false));
+        holder.stayOutboundCardView.setStayNameText(stayOutbound.name, stayOutbound.nameEng);
+        holder.stayOutboundCardView.setDistanceVisible(false);
 
-        holder.dataBinding.averageTextView.setVisibility(View.GONE);
+        holder.stayOutboundCardView.setAddressText(stayOutbound.locationDescription);
+        holder.stayOutboundCardView.setPriceVisible(false);
+        holder.stayOutboundCardView.setBenefitText(null);
 
-        if (VersionUtils.isOverAPI16() == true)
-        {
-            holder.dataBinding.gradientView.setBackground(mPaintDrawable);
-        } else
-        {
-            holder.dataBinding.gradientView.setBackgroundDrawable(mPaintDrawable);
-        }
 
-        // grade
-        holder.dataBinding.gradeTextView.setText(mContext.getString(R.string.label_stay_outbound_filter_x_star_rate, (int) stayOutbound.rating));
-
-        // 별등급
-        holder.dataBinding.ratingBar.setRating(stayOutbound.rating);
-
-        // tripAdvisor - 최근 본 업장의 경우 노출 안함
-        holder.dataBinding.tripAdvisorLayout.setVisibility(View.GONE);
-
-        // Image
-        holder.dataBinding.imageView.getHierarchy().setPlaceholderImage(R.drawable.layerlist_placeholder);
-
-        ImageMap imageMap = stayOutbound.getImageMap();
-        String url;
-
-        if (ScreenUtils.getScreenWidth(mContext) >= ScreenUtils.DEFAULT_STAYOUTBOUND_XXHDPI_WIDTH)
-        {
-            if (DailyTextUtils.isTextEmpty(imageMap.bigUrl) == true)
-            {
-                url = imageMap.smallUrl;
-            } else
-            {
-                url = imageMap.bigUrl;
-            }
-        } else
-        {
-            if (DailyTextUtils.isTextEmpty(imageMap.mediumUrl) == true)
-            {
-                url = imageMap.smallUrl;
-            } else
-            {
-                url = imageMap.mediumUrl;
-            }
-        }
-
-        ControllerListener controllerListener = new BaseControllerListener<ImageInfo>()
-        {
-            @Override
-            public void onFailure(String id, Throwable throwable)
-            {
-                if (throwable instanceof IOException == true)
-                {
-                    if (url.equalsIgnoreCase(imageMap.bigUrl) == true)
-                    {
-                        imageMap.bigUrl = null;
-                    } else if (url.equalsIgnoreCase(imageMap.mediumUrl) == true)
-                    {
-                        imageMap.mediumUrl = null;
-                    } else
-                    {
-                        // 작은 이미지를 로딩했지만 실패하는 경우.
-                        return;
-                    }
-
-                    holder.dataBinding.imageView.setImageURI(imageMap.smallUrl);
-                }
-            }
-        };
-
-        DraweeController draweeController = Fresco.newDraweeControllerBuilder()//
-            .setControllerListener(controllerListener).setUri(url).build();
-
-        holder.dataBinding.imageView.setController(draweeController);
-
-        // Promo 설명은 사용하지 않는다.
-        holder.dataBinding.promoTextView.setVisibility(View.GONE);
-        holder.dataBinding.dot1View.setVisibility(View.GONE);
-        holder.dataBinding.distanceTextView.setVisibility(View.GONE);
-
-        holder.dataBinding.deleteView.setVisibility(View.VISIBLE);
-        holder.dataBinding.deleteView.setTag(position);
-        holder.dataBinding.deleteView.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                if (mListener != null)
-                {
-                    mListener.onDeleteClick(v, (Integer) v.getTag());
-                }
-            }
-        });
+        //        holder.dataBinding.addressTextView.setText(stayOutbound.locationDescription);
+        //        holder.dataBinding.nameTextView.setText(stayOutbound.name);
+        //        holder.dataBinding.nameEngTextView.setText("(" + stayOutbound.nameEng + ")");
+        //
+        //        ConstraintLayout.LayoutParams nameEngLayoutParams = (ConstraintLayout.LayoutParams) holder.dataBinding.nameEngTextView.getLayoutParams();
+        //        nameEngLayoutParams.bottomMargin = ScreenUtils.dpToPx(mContext, 6);
+        //
+        //        ConstraintLayout.LayoutParams nameLayoutParams = (ConstraintLayout.LayoutParams) holder.dataBinding.nameTextView.getLayoutParams();
+        //        nameLayoutParams.bottomMargin = ScreenUtils.dpToPx(mContext, -4);
+        //
+        //        // 가격
+        //        if (stayOutbound.promo == true)
+        //        {
+        //            holder.dataBinding.priceTextView.setVisibility(View.VISIBLE);
+        //            holder.dataBinding.priceTextView.setText(DailyTextUtils.getPriceFormat(mContext, stayOutbound.nightlyBaseRate, false));
+        //            holder.dataBinding.priceTextView.setPaintFlags(holder.dataBinding.priceTextView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+        //        } else
+        //        {
+        //            holder.dataBinding.priceTextView.setVisibility(View.INVISIBLE);
+        //            holder.dataBinding.priceTextView.setText(null);
+        //        }
+        //
+        //        holder.dataBinding.discountPriceTextView.setText(null);
+        //        //        holder.dataBinding.discountPriceTextView.setText(DailyTextUtils.getPriceFormat(mContext, stayOutbound.nightlyRate, false));
+        //
+        //        holder.dataBinding.averageTextView.setVisibility(View.GONE);
+        //
+        //        if (VersionUtils.isOverAPI16() == true)
+        //        {
+        //            holder.dataBinding.gradientView.setBackground(mPaintDrawable);
+        //        } else
+        //        {
+        //            holder.dataBinding.gradientView.setBackgroundDrawable(mPaintDrawable);
+        //        }
+        //
+        //        // grade
+        //        holder.dataBinding.gradeTextView.setText(mContext.getString(R.string.label_stay_outbound_filter_x_star_rate, (int) stayOutbound.rating));
+        //
+        //        // 별등급
+        //        holder.dataBinding.ratingBar.setRating(stayOutbound.rating);
+        //
+        //        // tripAdvisor - 최근 본 업장의 경우 노출 안함
+        //        holder.dataBinding.tripAdvisorLayout.setVisibility(View.GONE);
+        //
+        //        // Image
+        //        holder.dataBinding.imageView.getHierarchy().setPlaceholderImage(R.drawable.layerlist_placeholder);
+        //
+        //        ImageMap imageMap = stayOutbound.getImageMap();
+        //        String url;
+        //
+        //        if (ScreenUtils.getScreenWidth(mContext) >= ScreenUtils.DEFAULT_STAYOUTBOUND_XXHDPI_WIDTH)
+        //        {
+        //            if (DailyTextUtils.isTextEmpty(imageMap.bigUrl) == true)
+        //            {
+        //                url = imageMap.smallUrl;
+        //            } else
+        //            {
+        //                url = imageMap.bigUrl;
+        //            }
+        //        } else
+        //        {
+        //            if (DailyTextUtils.isTextEmpty(imageMap.mediumUrl) == true)
+        //            {
+        //                url = imageMap.smallUrl;
+        //            } else
+        //            {
+        //                url = imageMap.mediumUrl;
+        //            }
+        //        }
+        //
+        //        ControllerListener controllerListener = new BaseControllerListener<ImageInfo>()
+        //        {
+        //            @Override
+        //            public void onFailure(String id, Throwable throwable)
+        //            {
+        //                if (throwable instanceof IOException == true)
+        //                {
+        //                    if (url.equalsIgnoreCase(imageMap.bigUrl) == true)
+        //                    {
+        //                        imageMap.bigUrl = null;
+        //                    } else if (url.equalsIgnoreCase(imageMap.mediumUrl) == true)
+        //                    {
+        //                        imageMap.mediumUrl = null;
+        //                    } else
+        //                    {
+        //                        // 작은 이미지를 로딩했지만 실패하는 경우.
+        //                        return;
+        //                    }
+        //
+        //                    holder.dataBinding.imageView.setImageURI(imageMap.smallUrl);
+        //                }
+        //            }
+        //        };
+        //
+        //        DraweeController draweeController = Fresco.newDraweeControllerBuilder()//
+        //            .setControllerListener(controllerListener).setUri(url).build();
+        //
+        //        holder.dataBinding.imageView.setController(draweeController);
+        //
+        //        // Promo 설명은 사용하지 않는다.
+        //        holder.dataBinding.promoTextView.setVisibility(View.GONE);
+        //        holder.dataBinding.dot1View.setVisibility(View.GONE);
+        //        holder.dataBinding.distanceTextView.setVisibility(View.GONE);
+        //
+        //        holder.dataBinding.deleteView.setVisibility(View.VISIBLE);
+        //        holder.dataBinding.deleteView.setTag(position);
+        //        holder.dataBinding.deleteView.setOnClickListener(new View.OnClickListener()
+        //        {
+        //            @Override
+        //            public void onClick(View v)
+        //            {
+        //                if (mListener != null)
+        //                {
+        //                    mListener.onDeleteClick(v, (Integer) v.getTag());
+        //                }
+        //            }
+        //        });
     }
 
     private class FooterViewHolder extends RecyclerView.ViewHolder
@@ -385,13 +428,13 @@ public class RecentStayListAdapter extends RecentPlacesListAdapter
 
     private class StayInboundViewHolder extends RecyclerView.ViewHolder
     {
-        ListRowStayDataBinding dataBinding;
+        DailyStayCardView stayCardView;
 
-        public StayInboundViewHolder(ListRowStayDataBinding dataBinding)
+        public StayInboundViewHolder(DailyStayCardView stayCardView)
         {
-            super(dataBinding.getRoot());
+            super(stayCardView);
 
-            this.dataBinding = dataBinding;
+            this.stayCardView = stayCardView;
 
             itemView.setOnClickListener(new View.OnClickListener()
             {
@@ -428,14 +471,14 @@ public class RecentStayListAdapter extends RecentPlacesListAdapter
                 });
             }
 
-            this.dataBinding.deleteView.setOnClickListener(new View.OnClickListener()
+            stayCardView.setOnDeleteClickListener(new View.OnClickListener()
             {
                 @Override
                 public void onClick(View v)
                 {
                     if (mListener != null)
                     {
-                        mListener.onDeleteClick(v, (Integer) v.getTag());
+                        mListener.onDeleteClick(stayCardView);
                     }
                 }
             });
@@ -444,13 +487,13 @@ public class RecentStayListAdapter extends RecentPlacesListAdapter
 
     private class StayOutboundViewHolder extends RecyclerView.ViewHolder
     {
-        ListRowStayOutboundDataBinding dataBinding;
+        DailyStayOutboundCardView stayOutboundCardView;
 
-        public StayOutboundViewHolder(ListRowStayOutboundDataBinding dataBinding)
+        public StayOutboundViewHolder(DailyStayOutboundCardView stayOutboundCardView)
         {
-            super(dataBinding.getRoot());
+            super(stayOutboundCardView);
 
-            this.dataBinding = dataBinding;
+            this.stayOutboundCardView = stayOutboundCardView;
 
             itemView.setOnClickListener(new View.OnClickListener()
             {
@@ -486,6 +529,18 @@ public class RecentStayListAdapter extends RecentPlacesListAdapter
                     }
                 });
             }
+
+            stayOutboundCardView.setOnDeleteClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    if (mListener != null)
+                    {
+                        mListener.onDeleteClick(stayOutboundCardView);
+                    }
+                }
+            });
         }
     }
 }

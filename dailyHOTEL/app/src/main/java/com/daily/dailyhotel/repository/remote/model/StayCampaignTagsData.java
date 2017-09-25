@@ -41,11 +41,6 @@ public class StayCampaignTagsData
         {
             Stay stay = staySalesData.getStay();
 
-            if (stay == null)
-            {
-                continue;
-            }
-
             stay.imageUrl = imageUrl + stay.imageUrl;
 
             stayList.add(stay);

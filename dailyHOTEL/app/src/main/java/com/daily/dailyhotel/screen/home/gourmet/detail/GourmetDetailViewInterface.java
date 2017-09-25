@@ -12,11 +12,13 @@ public interface GourmetDetailViewInterface extends BaseDialogViewInterface
 {
     void setGourmetDetail(GourmetBookDateTime gourmetBookDateTime, GourmetDetail gourmetDetail, int trueReviewCount, int shownMenuCount);
 
-    Observable<Boolean> getSharedElementTransition();
+    Observable<Boolean> getSharedElementTransition(int gradientType);
 
     void setInitializedImage(String url);
 
     void setInitializedTransLayout(String name, String url);
+
+    void setTransitionVisible(boolean visible);
 
     void setSharedElementTransitionEnabled(boolean enabled, int gradientType);
 

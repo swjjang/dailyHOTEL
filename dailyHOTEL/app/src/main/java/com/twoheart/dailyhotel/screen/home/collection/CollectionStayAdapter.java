@@ -2,19 +2,15 @@ package com.twoheart.dailyhotel.screen.home.collection;
 
 import android.annotation.TargetApi;
 import android.content.Context;
-import android.databinding.DataBindingUtil;
-import android.graphics.Paint;
 import android.os.Build;
 import android.os.Vibrator;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ScreenUtils;
-import com.daily.base.util.VersionUtils;
+import com.daily.dailyhotel.view.DailyStayCardView;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.databinding.ListRowStayDataBinding;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.model.time.PlaceBookingDay;
@@ -77,9 +73,10 @@ public class CollectionStayAdapter extends PlaceListAdapter
 
             case PlaceViewItem.TYPE_ENTRY:
             {
-                ListRowStayDataBinding dataBinding = DataBindingUtil.inflate(mInflater, R.layout.list_row_stay_data, parent, false);
+                DailyStayCardView stayCardView = new DailyStayCardView(mContext);
+                stayCardView.setLayoutParams(new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
-                return new HotelViewHolder(dataBinding);
+                return new StayViewHolder(stayCardView);
             }
 
             case PlaceViewItem.TYPE_HEADER_VIEW:
@@ -127,7 +124,7 @@ public class CollectionStayAdapter extends PlaceListAdapter
         switch (item.mType)
         {
             case PlaceViewItem.TYPE_ENTRY:
-                onBindViewHolder((HotelViewHolder) holder, item);
+                onBindViewHolder((StayViewHolder) holder, item, position);
                 break;
 
             case PlaceViewItem.TYPE_SECTION:
@@ -137,148 +134,200 @@ public class CollectionStayAdapter extends PlaceListAdapter
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    private void onBindViewHolder(HotelViewHolder holder, PlaceViewItem placeViewItem)
+    private void onBindViewHolder(StayViewHolder holder, PlaceViewItem placeViewItem, int position)
     {
         final RecommendationStay recommendationStay = placeViewItem.getItem();
 
-        String strPrice = DailyTextUtils.getPriceFormat(mContext, recommendationStay.price, false);
-        String strDiscount = DailyTextUtils.getPriceFormat(mContext, recommendationStay.discount, false);
+        holder.stayCardView.setStickerVisible(false);
+        holder.stayCardView.setDeleteVisible(false);
+        holder.stayCardView.setWishVisible(false);
 
-        String address = recommendationStay.addrSummary;
+        holder.stayCardView.setImage(recommendationStay.imageUrl);
 
-        int barIndex = address.indexOf('|');
-        if (barIndex >= 0)
+        holder.stayCardView.setGradeText(Stay.Grade.valueOf(recommendationStay.grade).getName(mContext));
+        holder.stayCardView.setVRVisible(recommendationStay.truevr && mTrueVREnabled);
+        holder.stayCardView.setReviewText(recommendationStay.rating, 0);
+
+        holder.stayCardView.setNewVisible(false);
+
+        holder.stayCardView.setStayNameText(recommendationStay.name);
+
+        if (mShowDistanceIgnoreSort == true || getSortType() == Constants.SortType.DISTANCE)
         {
-            address = address.replace(" | ", "ㅣ");
-        } else if (address.indexOf('l') >= 0)
-        {
-            address = address.replace(" l ", "ㅣ");
-        }
-
-        holder.dataBinding.addressTextView.setText(address);
-        holder.dataBinding.nameTextView.setText(recommendationStay.name);
-
-        if (recommendationStay.price <= 0 || recommendationStay.price <= recommendationStay.discount)
-        {
-            holder.dataBinding.priceTextView.setVisibility(View.INVISIBLE);
-            holder.dataBinding.priceTextView.setText(null);
+            holder.stayCardView.setDistanceVisible(true);
+            holder.stayCardView.setDistanceText(recommendationStay.distance);
         } else
         {
-            holder.dataBinding.priceTextView.setVisibility(View.VISIBLE);
-            holder.dataBinding.priceTextView.setText(strPrice);
-            holder.dataBinding.priceTextView.setPaintFlags(holder.dataBinding.priceTextView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+            holder.stayCardView.setDistanceVisible(false);
         }
 
-        // 만족도
-        if (recommendationStay.rating > 0)
-        {
-            holder.dataBinding.satisfactionView.setVisibility(View.VISIBLE);
-            holder.dataBinding.satisfactionView.setText(//
-                mContext.getResources().getString(R.string.label_list_satisfaction, recommendationStay.rating));
-        } else
-        {
-            holder.dataBinding.satisfactionView.setVisibility(View.GONE);
-        }
+        holder.stayCardView.setAddressText(recommendationStay.addrSummary);
 
-        // 판매 완료인 경우에는 보여주지 않는다.
-        if (mNights > 1 && recommendationStay.availableRooms > 0)
+        if (recommendationStay.availableRooms > 0)
         {
-            holder.dataBinding.averageTextView.setVisibility(View.VISIBLE);
-        } else
-        {
-            holder.dataBinding.averageTextView.setVisibility(View.GONE);
-        }
-
-        holder.dataBinding.discountPriceTextView.setText(strDiscount);
-        holder.dataBinding.nameTextView.setSelected(true); // Android TextView marquee bug
-
-        if (VersionUtils.isOverAPI16() == true)
-        {
-            holder.dataBinding.gradientView.setBackground(mPaintDrawable);
-        } else
-        {
-            holder.dataBinding.gradientView.setBackgroundDrawable(mPaintDrawable);
-        }
-
-        // grade
-        Stay.Grade grade = Stay.Grade.valueOf(recommendationStay.grade);
-        holder.dataBinding.gradeTextView.setText(grade.getName(mContext));
-        holder.dataBinding.gradeTextView.setBackgroundResource(grade.getColorResId());
-
-        if (mIsUsedMultiTransition == true && VersionUtils.isOverAPI21() == true)
-        {
-            holder.dataBinding.imageView.setTransitionName(null);
-        }
-
-        Util.requestImageResize(mContext, holder.dataBinding.imageView, recommendationStay.imageUrl);
-
-        // SOLD OUT 표시
-        holder.dataBinding.soldoutView.setVisibility(View.GONE);
-
-        if (recommendationStay.availableRooms == 0)
-        {
-            holder.dataBinding.priceTextView.setVisibility(View.INVISIBLE);
-            holder.dataBinding.priceTextView.setText(null);
-            holder.dataBinding.discountPriceTextView.setText(mContext.getString(R.string.act_hotel_soldout));
-        }
-
-        if (DailyTextUtils.isTextEmpty(recommendationStay.benefit) == false)
-        {
-            holder.dataBinding.dBenefitTextView.setVisibility(View.VISIBLE);
-            holder.dataBinding.dBenefitTextView.setText(recommendationStay.benefit);
-        } else
-        {
-            holder.dataBinding.dBenefitTextView.setVisibility(View.GONE);
-        }
-
-        //        if (mShowDistanceIgnoreSort == true || getSortType() == Constants.SortType.DISTANCE)
-        //        {
-        //            holder.dataBinding.distanceTextView.setVisibility(View.VISIBLE);
-        //            holder.dataBinding.distanceTextView.setText(mContext.getString(R.string.label_distance_km, new DecimalFormat("#.#").format(stay.distance)));
-        //        } else
-        //        {
-        holder.dataBinding.dot1View.setVisibility(View.GONE);
-        holder.dataBinding.distanceTextView.setVisibility(View.GONE);
-        //        }
-
-        // VR 여부
-        if (recommendationStay.truevr == true && mTrueVREnabled == true)
-        {
-            if (holder.dataBinding.satisfactionView.getVisibility() == View.VISIBLE)
+            if (recommendationStay.price > 0 && recommendationStay.price > recommendationStay.discount)
             {
-                holder.dataBinding.dot2View.setVisibility(View.VISIBLE);
+                holder.stayCardView.setPriceText(recommendationStay.price > 0 ? 100 * (recommendationStay.price - recommendationStay.discount) / recommendationStay.price : 0, recommendationStay.discount, recommendationStay.price, null, mNights);
             } else
             {
-                holder.dataBinding.dot2View.setVisibility(View.GONE);
+                holder.stayCardView.setPriceText(0, recommendationStay.discount, recommendationStay.price, null, mNights);
             }
-
-            holder.dataBinding.trueVRView.setVisibility(View.VISIBLE);
         } else
         {
-            holder.dataBinding.dot2View.setVisibility(View.GONE);
-            holder.dataBinding.trueVRView.setVisibility(View.GONE);
+            holder.stayCardView.setPriceText(0, 0, 0, null, 0);
         }
 
-        if (holder.dataBinding.satisfactionView.getVisibility() == View.GONE//
-            && holder.dataBinding.trueVRView.getVisibility() == View.GONE//
-            && holder.dataBinding.distanceTextView.getVisibility() == View.GONE)
+        holder.stayCardView.setBenefitText(recommendationStay.benefit);
+
+        if (position < getItemCount() - 1 && getItem(position + 1).mType == PlaceViewItem.TYPE_SECTION)
         {
-            holder.dataBinding.informationLayout.setVisibility(View.GONE);
+            holder.stayCardView.setDividerVisible(false);
         } else
         {
-            holder.dataBinding.informationLayout.setVisibility(View.VISIBLE);
+            holder.stayCardView.setDividerVisible(true);
         }
+
+
+        //
+        //
+        //        String strPrice = DailyTextUtils.getPriceFormat(mContext, recommendationStay.price, false);
+        //        String strDiscount = DailyTextUtils.getPriceFormat(mContext, recommendationStay.discount, false);
+        //
+        //        String address = recommendationStay.addrSummary;
+        //
+        //        int barIndex = address.indexOf('|');
+        //        if (barIndex >= 0)
+        //        {
+        //            address = address.replace(" | ", "ㅣ");
+        //        } else if (address.indexOf('l') >= 0)
+        //        {
+        //            address = address.replace(" l ", "ㅣ");
+        //        }
+        //
+        //        holder.dataBinding.addressTextView.setText(address);
+        //        holder.dataBinding.nameTextView.setText(recommendationStay.name);
+        //
+        //        if (recommendationStay.price <= 0 || recommendationStay.price <= recommendationStay.discount)
+        //        {
+        //            holder.dataBinding.priceTextView.setVisibility(View.INVISIBLE);
+        //            holder.dataBinding.priceTextView.setText(null);
+        //        } else
+        //        {
+        //            holder.dataBinding.priceTextView.setVisibility(View.VISIBLE);
+        //            holder.dataBinding.priceTextView.setText(strPrice);
+        //            holder.dataBinding.priceTextView.setPaintFlags(holder.dataBinding.priceTextView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+        //        }
+        //
+        //        // 만족도
+        //        if (recommendationStay.rating > 0)
+        //        {
+        //            holder.dataBinding.satisfactionView.setVisibility(View.VISIBLE);
+        //            holder.dataBinding.satisfactionView.setText(//
+        //                mContext.getResources().getString(R.string.label_list_satisfaction, recommendationStay.rating));
+        //        } else
+        //        {
+        //            holder.dataBinding.satisfactionView.setVisibility(View.GONE);
+        //        }
+        //
+        //        // 판매 완료인 경우에는 보여주지 않는다.
+        //        if (mNights > 1 && recommendationStay.availableRooms > 0)
+        //        {
+        //            holder.dataBinding.averageTextView.setVisibility(View.VISIBLE);
+        //        } else
+        //        {
+        //            holder.dataBinding.averageTextView.setVisibility(View.GONE);
+        //        }
+        //
+        //        holder.dataBinding.discountPriceTextView.setText(strDiscount);
+        //        holder.dataBinding.nameTextView.setSelected(true); // Android TextView marquee bug
+        //
+        //        if (VersionUtils.isOverAPI16() == true)
+        //        {
+        //            holder.dataBinding.gradientView.setBackground(mPaintDrawable);
+        //        } else
+        //        {
+        //            holder.dataBinding.gradientView.setBackgroundDrawable(mPaintDrawable);
+        //        }
+        //
+        //        // grade
+        //        Stay.Grade grade = Stay.Grade.valueOf(recommendationStay.grade);
+        //        holder.dataBinding.gradeTextView.setText(grade.getName(mContext));
+        //        holder.dataBinding.gradeTextView.setBackgroundResource(grade.getColorResId());
+        //
+        //        if (mIsUsedMultiTransition == true && VersionUtils.isOverAPI21() == true)
+        //        {
+        //            holder.dataBinding.imageView.setTransitionName(null);
+        //        }
+        //
+        //        Util.requestImageResize(mContext, holder.dataBinding.imageView, recommendationStay.imageUrl);
+        //
+        //        // SOLD OUT 표시
+        //        holder.dataBinding.soldoutView.setVisibility(View.GONE);
+        //
+        //        if (recommendationStay.availableRooms == 0)
+        //        {
+        //            holder.dataBinding.priceTextView.setVisibility(View.INVISIBLE);
+        //            holder.dataBinding.priceTextView.setText(null);
+        //            holder.dataBinding.discountPriceTextView.setText(mContext.getString(R.string.act_hotel_soldout));
+        //        }
+        //
+        //        if (DailyTextUtils.isTextEmpty(recommendationStay.benefit) == false)
+        //        {
+        //            holder.dataBinding.dBenefitTextView.setVisibility(View.VISIBLE);
+        //            holder.dataBinding.dBenefitTextView.setText(recommendationStay.benefit);
+        //        } else
+        //        {
+        //            holder.dataBinding.dBenefitTextView.setVisibility(View.GONE);
+        //        }
+        //
+        //        //        if (mShowDistanceIgnoreSort == true || getSortType() == Constants.SortType.DISTANCE)
+        //        //        {
+        //        //            holder.dataBinding.distanceTextView.setVisibility(View.VISIBLE);
+        //        //            holder.dataBinding.distanceTextView.setText(mContext.getString(R.string.label_distance_km, new DecimalFormat("#.#").format(stay.distance)));
+        //        //        } else
+        //        //        {
+        //        holder.dataBinding.dot1View.setVisibility(View.GONE);
+        //        holder.dataBinding.distanceTextView.setVisibility(View.GONE);
+        //        //        }
+        //
+        //        // VR 여부
+        //        if (recommendationStay.truevr == true && mTrueVREnabled == true)
+        //        {
+        //            if (holder.dataBinding.satisfactionView.getVisibility() == View.VISIBLE)
+        //            {
+        //                holder.dataBinding.dot2View.setVisibility(View.VISIBLE);
+        //            } else
+        //            {
+        //                holder.dataBinding.dot2View.setVisibility(View.GONE);
+        //            }
+        //
+        //            holder.dataBinding.trueVRView.setVisibility(View.VISIBLE);
+        //        } else
+        //        {
+        //            holder.dataBinding.dot2View.setVisibility(View.GONE);
+        //            holder.dataBinding.trueVRView.setVisibility(View.GONE);
+        //        }
+        //
+        //        if (holder.dataBinding.satisfactionView.getVisibility() == View.GONE//
+        //            && holder.dataBinding.trueVRView.getVisibility() == View.GONE//
+        //            && holder.dataBinding.distanceTextView.getVisibility() == View.GONE)
+        //        {
+        //            holder.dataBinding.informationLayout.setVisibility(View.GONE);
+        //        } else
+        //        {
+        //            holder.dataBinding.informationLayout.setVisibility(View.VISIBLE);
+        //        }
     }
 
-    private class HotelViewHolder extends RecyclerView.ViewHolder
+    private class StayViewHolder extends RecyclerView.ViewHolder
     {
-        ListRowStayDataBinding dataBinding;
+        DailyStayCardView stayCardView;
 
-        public HotelViewHolder(ListRowStayDataBinding dataBinding)
+        public StayViewHolder(DailyStayCardView stayCardView)
         {
-            super(dataBinding.getRoot());
+            super(stayCardView);
 
-            this.dataBinding = dataBinding;
+            this.stayCardView = stayCardView;
 
             itemView.setOnClickListener(mOnClickListener);
 

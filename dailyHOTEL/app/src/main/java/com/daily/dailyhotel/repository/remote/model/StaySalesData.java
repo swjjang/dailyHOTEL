@@ -2,6 +2,7 @@ package com.daily.dailyhotel.repository.remote.model;
 
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
+import com.daily.base.util.DailyTextUtils;
 import com.twoheart.dailyhotel.model.Stay;
 
 import java.util.Iterator;
@@ -93,7 +94,21 @@ public class StaySalesData
         stay.name = name;
         stay.price = price;
         stay.discountPrice = discount;
+
+        // 인트라넷에서 값을 잘못 넣는 경우가 있다.
+        if (DailyTextUtils.isTextEmpty(addrSummary) == false)
+        {
+            if (addrSummary.indexOf('|') >= 0)
+            {
+                addrSummary = addrSummary.replace(" | ", "ㅣ");
+            } else if (addrSummary.indexOf('l') >= 0)
+            {
+                addrSummary = addrSummary.replace(" l ", "ㅣ");
+            }
+        }
+
         stay.addressSummary = addrSummary;
+
         stay.latitude = latitude;
         stay.longitude = longitude;
         stay.isDailyChoice = isDailyChoice;

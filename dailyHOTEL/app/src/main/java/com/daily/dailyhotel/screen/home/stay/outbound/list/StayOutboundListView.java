@@ -30,6 +30,7 @@ import com.daily.dailyhotel.entity.ObjectItem;
 import com.daily.dailyhotel.entity.StayOutbound;
 import com.daily.dailyhotel.screen.home.stay.outbound.list.map.StayOutboundMapFragment;
 import com.daily.dailyhotel.screen.home.stay.outbound.list.map.StayOutboundMapViewPagerAdapter;
+import com.daily.dailyhotel.view.DailyStayOutboundCardView;
 import com.google.android.gms.maps.model.LatLng;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ActivityStayOutboundSearchResultDataBinding;
@@ -287,18 +288,24 @@ public class StayOutboundListView extends BaseBlurView<StayOutboundListView.OnEv
 
                     if (objectItem.mType == objectItem.TYPE_ENTRY)
                     {
-                        View simpleDraweeView = view.findViewById(R.id.imageView);
-                        View nameTextView = view.findViewById(R.id.nameTextView);
-                        View gradientTopView = view.findViewById(R.id.gradientTopView);
-                        View gradientBottomView = view.findViewById(R.id.gradientView);
+                        if (view instanceof DailyStayOutboundCardView == true)
+                        {
+                            getEventListener().onStayClick(((DailyStayOutboundCardView) view).getOptionsCompat(), objectItem.getItem());
+                        } else
+                        {
+                            View simpleDraweeView = view.findViewById(R.id.imageView);
+                            View nameTextView = view.findViewById(R.id.nameTextView);
+                            View gradientTopView = view.findViewById(R.id.gradientTopView);
+                            View gradientBottomView = view.findViewById(R.id.gradientView);
 
-                        android.support.v4.util.Pair[] pairs = new Pair[4];
-                        pairs[0] = android.support.v4.util.Pair.create(simpleDraweeView, getString(R.string.transition_place_image));
-                        pairs[1] = android.support.v4.util.Pair.create(nameTextView, getString(R.string.transition_place_name));
-                        pairs[2] = android.support.v4.util.Pair.create(gradientTopView, getString(R.string.transition_gradient_top_view));
-                        pairs[3] = android.support.v4.util.Pair.create(gradientBottomView, getString(R.string.transition_gradient_bottom_view));
+                            android.support.v4.util.Pair[] pairs = new Pair[4];
+                            pairs[0] = android.support.v4.util.Pair.create(simpleDraweeView, getString(R.string.transition_place_image));
+                            pairs[1] = android.support.v4.util.Pair.create(nameTextView, getString(R.string.transition_place_name));
+                            pairs[2] = android.support.v4.util.Pair.create(gradientTopView, getString(R.string.transition_gradient_top_view));
+                            pairs[3] = android.support.v4.util.Pair.create(gradientBottomView, getString(R.string.transition_gradient_bottom_view));
 
-                        getEventListener().onStayClick(pairs, objectItem.getItem());
+                            getEventListener().onStayClick(pairs, objectItem.getItem());
+                        }
                     }
                 }
             }, new View.OnLongClickListener()
@@ -316,18 +323,24 @@ public class StayOutboundListView extends BaseBlurView<StayOutboundListView.OnEv
 
                     if (objectItem.mType == objectItem.TYPE_ENTRY)
                     {
-                        View simpleDraweeView = view.findViewById(R.id.imageView);
-                        View nameTextView = view.findViewById(R.id.nameTextView);
-                        View gradientTopView = view.findViewById(R.id.gradientTopView);
-                        View gradientBottomView = view.findViewById(R.id.gradientView);
+                        if (view instanceof DailyStayOutboundCardView == true)
+                        {
+                            getEventListener().onStayClick(((DailyStayOutboundCardView) view).getOptionsCompat(), objectItem.getItem());
+                        } else
+                        {
+                            View simpleDraweeView = view.findViewById(R.id.imageView);
+                            View nameTextView = view.findViewById(R.id.nameTextView);
+                            View gradientTopView = view.findViewById(R.id.gradientTopView);
+                            View gradientBottomView = view.findViewById(R.id.gradientView);
 
-                        android.support.v4.util.Pair[] pairs = new Pair[4];
-                        pairs[0] = android.support.v4.util.Pair.create(simpleDraweeView, getString(R.string.transition_place_image));
-                        pairs[1] = android.support.v4.util.Pair.create(nameTextView, getString(R.string.transition_place_name));
-                        pairs[2] = android.support.v4.util.Pair.create(gradientTopView, getString(R.string.transition_gradient_top_view));
-                        pairs[3] = android.support.v4.util.Pair.create(gradientBottomView, getString(R.string.transition_gradient_bottom_view));
+                            android.support.v4.util.Pair[] pairs = new Pair[4];
+                            pairs[0] = android.support.v4.util.Pair.create(simpleDraweeView, getString(R.string.transition_place_image));
+                            pairs[1] = android.support.v4.util.Pair.create(nameTextView, getString(R.string.transition_place_name));
+                            pairs[2] = android.support.v4.util.Pair.create(gradientTopView, getString(R.string.transition_gradient_top_view));
+                            pairs[3] = android.support.v4.util.Pair.create(gradientBottomView, getString(R.string.transition_gradient_bottom_view));
 
-                        getEventListener().onStayLongClick(pairs, objectItem.getItem());
+                            getEventListener().onStayLongClick(pairs, objectItem.getItem());
+                        }
                     }
 
                     return true;

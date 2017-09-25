@@ -2,10 +2,6 @@ package com.twoheart.dailyhotel.screen.home.collection;
 
 import android.annotation.TargetApi;
 import android.content.Context;
-import android.databinding.DataBindingUtil;
-import android.graphics.Paint;
-import android.graphics.drawable.Animatable;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Vibrator;
 import android.support.v7.widget.RecyclerView;
@@ -14,17 +10,11 @@ import android.view.ViewGroup;
 
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ScreenUtils;
-import com.daily.base.util.VersionUtils;
-import com.facebook.drawee.backends.pipeline.Fresco;
-import com.facebook.drawee.controller.BaseControllerListener;
-import com.facebook.drawee.interfaces.DraweeController;
-import com.facebook.imagepipeline.image.ImageInfo;
+import com.daily.dailyhotel.view.DailyGourmetCardView;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.databinding.ListRowGourmetDataBinding;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.time.PlaceBookingDay;
 import com.twoheart.dailyhotel.network.model.RecommendationGourmet;
-import com.twoheart.dailyhotel.network.model.Sticker;
 import com.twoheart.dailyhotel.place.adapter.PlaceListAdapter;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
@@ -64,9 +54,10 @@ public class CollectionGourmetAdapter extends PlaceListAdapter
 
             case PlaceViewItem.TYPE_ENTRY:
             {
-                ListRowGourmetDataBinding dataBinding = DataBindingUtil.inflate(mInflater, R.layout.list_row_gourmet_data, parent, false);
+                DailyGourmetCardView gourmetCardView = new DailyGourmetCardView(mContext);
+                gourmetCardView.setLayoutParams(new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
-                return new GourmetViewHolder(dataBinding);
+                return new GourmetViewHolder(gourmetCardView);
             }
 
             case PlaceViewItem.TYPE_HEADER_VIEW:
@@ -113,7 +104,7 @@ public class CollectionGourmetAdapter extends PlaceListAdapter
         switch (item.mType)
         {
             case PlaceViewItem.TYPE_ENTRY:
-                onBindViewHolder((GourmetViewHolder) holder, item);
+                onBindViewHolder((GourmetViewHolder) holder, item, position);
                 break;
 
             case PlaceViewItem.TYPE_SECTION:
@@ -123,188 +114,241 @@ public class CollectionGourmetAdapter extends PlaceListAdapter
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    private void onBindViewHolder(GourmetViewHolder holder, PlaceViewItem placeViewItem)
+    private void onBindViewHolder(GourmetViewHolder holder, PlaceViewItem placeViewItem, int position)
     {
         final RecommendationGourmet recommendationGourmet = placeViewItem.getItem();
 
-        String strPrice = DailyTextUtils.getPriceFormat(mContext, recommendationGourmet.price, false);
-        String strDiscount = DailyTextUtils.getPriceFormat(mContext, recommendationGourmet.discount, false);
+        holder.gourmetCardView.setStickerVisible(false);
+        holder.gourmetCardView.setDeleteVisible(false);
+        holder.gourmetCardView.setWishVisible(false);
 
-        String address = recommendationGourmet.addrSummary;
+        holder.gourmetCardView.setTagStickerImage(recommendationGourmet.stickerUrl);
+        holder.gourmetCardView.setImage(recommendationGourmet.imageUrl);
 
-        int barIndex = address.indexOf('|');
-        if (barIndex >= 0)
+        holder.gourmetCardView.setGradeText(DailyTextUtils.isTextEmpty(recommendationGourmet.categorySub) == false ? recommendationGourmet.categorySub : recommendationGourmet.category);
+        holder.gourmetCardView.setVRVisible(false);
+        holder.gourmetCardView.setReviewText(recommendationGourmet.rating, 0);
+
+        holder.gourmetCardView.setNewVisible(false);
+
+        holder.gourmetCardView.setGourmetNameText(recommendationGourmet.name);
+
+        if (mShowDistanceIgnoreSort == true || getSortType() == Constants.SortType.DISTANCE)
         {
-            address = address.replace(" | ", "ㅣ");
-        } else if (address.indexOf('l') >= 0)
-        {
-            address = address.replace(" l ", "ㅣ");
-        }
-
-        holder.dataBinding.addressTextView.setText(address);
-        holder.dataBinding.nameTextView.setText(recommendationGourmet.name);
-
-        // 인원
-        if (recommendationGourmet.persons > 1)
-        {
-            holder.dataBinding.personsTextView.setVisibility(View.VISIBLE);
-            holder.dataBinding.personsTextView.setText(mContext.getString(R.string.label_persions, recommendationGourmet.persons));
+            holder.gourmetCardView.setDistanceVisible(true);
+            holder.gourmetCardView.setDistanceText(recommendationGourmet.distance);
         } else
         {
-            holder.dataBinding.personsTextView.setVisibility(View.GONE);
+            holder.gourmetCardView.setDistanceVisible(false);
         }
 
-        if (recommendationGourmet.price <= 0 || recommendationGourmet.price <= recommendationGourmet.discount)
-        {
-            holder.dataBinding.priceTextView.setVisibility(View.INVISIBLE);
-            holder.dataBinding.priceTextView.setText(null);
-        } else
-        {
-            holder.dataBinding.priceTextView.setVisibility(View.VISIBLE);
+        holder.gourmetCardView.setAddressText(recommendationGourmet.addrSummary);
 
-            holder.dataBinding.priceTextView.setText(strPrice);
-            holder.dataBinding.priceTextView.setPaintFlags(holder.dataBinding.priceTextView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-        }
-
-        // 만족도
-        if (recommendationGourmet.rating > 0)
-        {
-            holder.dataBinding.satisfactionView.setVisibility(View.VISIBLE);
-            holder.dataBinding.satisfactionView.setText(//
-                mContext.getResources().getString(R.string.label_list_satisfaction, recommendationGourmet.rating));
-        } else
-        {
-            holder.dataBinding.satisfactionView.setVisibility(View.GONE);
-        }
-
-        holder.dataBinding.discountPriceTextView.setText(strDiscount);
-        holder.dataBinding.nameTextView.setSelected(true); // Android TextView marquee bug
-
-        if (VersionUtils.isOverAPI16() == true)
-        {
-            holder.dataBinding.gradientView.setBackground(mPaintDrawable);
-        } else
-        {
-            holder.dataBinding.gradientView.setBackgroundDrawable(mPaintDrawable);
-        }
-
-        String displayCategory;
-        if (DailyTextUtils.isTextEmpty(recommendationGourmet.categorySub) == false)
-        {
-            displayCategory = recommendationGourmet.categorySub;
-        } else
-        {
-            displayCategory = recommendationGourmet.category;
-        }
-
-        // grade
-        if (DailyTextUtils.isTextEmpty(displayCategory) == true)
-        {
-            holder.dataBinding.gradeTextView.setVisibility(View.GONE);
-        } else
-        {
-            holder.dataBinding.gradeTextView.setVisibility(View.VISIBLE);
-            holder.dataBinding.gradeTextView.setText(displayCategory);
-        }
-
-        if (mIsUsedMultiTransition == true && VersionUtils.isOverAPI21() == true)
-        {
-            holder.dataBinding.imageView.setTransitionName(null);
-        }
-
-        // 스티커
-        if (DailyTextUtils.isTextEmpty(recommendationGourmet.stickerUrl) == false)
-        {
-            holder.dataBinding.stickerSimpleDraweeView.setVisibility(View.VISIBLE);
-
-            DraweeController controller = Fresco.newDraweeControllerBuilder().setControllerListener(new BaseControllerListener<ImageInfo>()
-            {
-                @Override
-                public void onFinalImageSet(String id, ImageInfo imageInfo, Animatable animatable)
-                {
-                    ViewGroup.LayoutParams layoutParams = holder.dataBinding.stickerSimpleDraweeView.getLayoutParams();
-
-                    int screenWidth = ScreenUtils.getScreenWidth(mContext);
-                    if (screenWidth > Sticker.DEFAULT_SCREEN_WIDTH && screenWidth < Sticker.LARGE_SCREEN_WIDTH)
-                    {
-                        layoutParams.width = (int) (Sticker.MEDIUM_RATE * imageInfo.getWidth());
-                        layoutParams.height = (int) (Sticker.MEDIUM_RATE * imageInfo.getHeight());
-                    } else
-                    {
-                        layoutParams.width = imageInfo.getWidth();
-                        layoutParams.height = imageInfo.getHeight();
-                    }
-
-                    holder.dataBinding.stickerSimpleDraweeView.setLayoutParams(layoutParams);
-                }
-            }).setUri(Uri.parse(recommendationGourmet.stickerUrl)).build();
-
-            holder.dataBinding.stickerSimpleDraweeView.setController(controller);
-        } else
-        {
-            holder.dataBinding.stickerSimpleDraweeView.setVisibility(View.GONE);
-        }
-
-        Util.requestImageResize(mContext, holder.dataBinding.imageView, recommendationGourmet.imageUrl);
-
-        // SOLD OUT 표시
-        holder.dataBinding.soldoutView.setVisibility(View.GONE);
         if (recommendationGourmet.availableTicketNumbers == 0 //
             || recommendationGourmet.availableTicketNumbers < recommendationGourmet.minimumOrderQuantity //
             || recommendationGourmet.isExpired == true)
         {
-            holder.dataBinding.personsTextView.setVisibility(View.GONE);
-            holder.dataBinding.priceTextView.setVisibility(View.INVISIBLE);
-            holder.dataBinding.priceTextView.setText(null);
-            holder.dataBinding.discountPriceTextView.setText(mContext.getString(R.string.act_hotel_soldout));
-        }
-
-        if (DailyTextUtils.isTextEmpty(recommendationGourmet.benefit) == false)
-        {
-            holder.dataBinding.dBenefitTextView.setVisibility(View.VISIBLE);
-            holder.dataBinding.dBenefitTextView.setText(recommendationGourmet.benefit);
+            holder.gourmetCardView.setPriceText(0, 0, 0, null, 0);
         } else
         {
-            holder.dataBinding.dBenefitTextView.setVisibility(View.GONE);
+            if (recommendationGourmet.price > 0 && recommendationGourmet.price > recommendationGourmet.discount)
+            {
+                holder.gourmetCardView.setPriceText(recommendationGourmet.price > 0 ? 100 * (recommendationGourmet.price - recommendationGourmet.discount) / recommendationGourmet.price : 0, recommendationGourmet.discount, recommendationGourmet.price, null, recommendationGourmet.persons);
+            } else
+            {
+                holder.gourmetCardView.setPriceText(0, recommendationGourmet.discount, recommendationGourmet.price, null, recommendationGourmet.persons);
+            }
         }
 
-        //        if (mShowDistanceIgnoreSort == true || getSortType() == Constants.SortType.DISTANCE)
-        //        {
-        //            holder.distanceTextView.setVisibility(View.VISIBLE);
-        //            holder.distanceTextView.setText(mContext.getString(R.string.label_distance_km, new DecimalFormat("#.#").format(gourmet.distance)));
-        //        } else
-        //        {
-        holder.dataBinding.dot1View.setVisibility(View.GONE);
-        holder.dataBinding.distanceTextView.setVisibility(View.GONE);
-        //        }
+        holder.gourmetCardView.setBenefitText(recommendationGourmet.benefit);
 
-        // VR 여부, 추후 고메가 VR이 생기면 화면에 보여주도록 한다.
-        //        if (recommendationGourmet.truevr == true && mTrueVREnabled == true)
-        //        {
-        //            if (holder.satisfactionView.getVisibility() == View.VISIBLE)
-        //            {
-        //                holder.dot2View.setVisibility(View.VISIBLE);
-        //            } else
-        //            {
-        //                holder.dot2View.setVisibility(View.GONE);
-        //            }
+        if (position < getItemCount() - 1 && getItem(position + 1).mType == PlaceViewItem.TYPE_SECTION)
+        {
+            holder.gourmetCardView.setDividerVisible(false);
+        } else
+        {
+            holder.gourmetCardView.setDividerVisible(true);
+        }
+
+
+        //        String strPrice = DailyTextUtils.getPriceFormat(mContext, recommendationGourmet.price, false);
+        //        String strDiscount = DailyTextUtils.getPriceFormat(mContext, recommendationGourmet.discount, false);
         //
-        //            holder.trueVRView.setVisibility(View.VISIBLE);
+        //        String address = recommendationGourmet.addrSummary;
+        //
+        //        int barIndex = address.indexOf('|');
+        //        if (barIndex >= 0)
+        //        {
+        //            address = address.replace(" | ", "ㅣ");
+        //        } else if (address.indexOf('l') >= 0)
+        //        {
+        //            address = address.replace(" l ", "ㅣ");
+        //        }
+        //
+        //        holder.dataBinding.addressTextView.setText(address);
+        //        holder.dataBinding.nameTextView.setText(recommendationGourmet.name);
+        //
+        //        // 인원
+        //        if (recommendationGourmet.persons > 1)
+        //        {
+        //            holder.dataBinding.personsTextView.setVisibility(View.VISIBLE);
+        //            holder.dataBinding.personsTextView.setText(mContext.getString(R.string.label_persions, recommendationGourmet.persons));
         //        } else
-        {
-            holder.dataBinding.dot2View.setVisibility(View.GONE);
-            holder.dataBinding.trueVRView.setVisibility(View.GONE);
-        }
-
-        if (holder.dataBinding.satisfactionView.getVisibility() == View.GONE//
-            && holder.dataBinding.trueVRView.getVisibility() == View.GONE//
-            && holder.dataBinding.distanceTextView.getVisibility() == View.GONE)
-        {
-            holder.dataBinding.informationLayout.setVisibility(View.GONE);
-        } else
-        {
-            holder.dataBinding.informationLayout.setVisibility(View.VISIBLE);
-        }
+        //        {
+        //            holder.dataBinding.personsTextView.setVisibility(View.GONE);
+        //        }
+        //
+        //        if (recommendationGourmet.price <= 0 || recommendationGourmet.price <= recommendationGourmet.discount)
+        //        {
+        //            holder.dataBinding.priceTextView.setVisibility(View.INVISIBLE);
+        //            holder.dataBinding.priceTextView.setText(null);
+        //        } else
+        //        {
+        //            holder.dataBinding.priceTextView.setVisibility(View.VISIBLE);
+        //
+        //            holder.dataBinding.priceTextView.setText(strPrice);
+        //            holder.dataBinding.priceTextView.setPaintFlags(holder.dataBinding.priceTextView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+        //        }
+        //
+        //        // 만족도
+        //        if (recommendationGourmet.rating > 0)
+        //        {
+        //            holder.dataBinding.satisfactionView.setVisibility(View.VISIBLE);
+        //            holder.dataBinding.satisfactionView.setText(//
+        //                mContext.getResources().getString(R.string.label_list_satisfaction, recommendationGourmet.rating));
+        //        } else
+        //        {
+        //            holder.dataBinding.satisfactionView.setVisibility(View.GONE);
+        //        }
+        //
+        //        holder.dataBinding.discountPriceTextView.setText(strDiscount);
+        ////        holder.dataBinding.nameTextView.setSelected(true); // Android TextView marquee bug
+        //
+        //        if (VersionUtils.isOverAPI16() == true)
+        //        {
+        //            holder.dataBinding.gradientView.setBackground(mPaintDrawable);
+        //        } else
+        //        {
+        //            holder.dataBinding.gradientView.setBackgroundDrawable(mPaintDrawable);
+        //        }
+        //
+        //        String displayCategory;
+        //        if (DailyTextUtils.isTextEmpty(recommendationGourmet.categorySub) == false)
+        //        {
+        //            displayCategory = recommendationGourmet.categorySub;
+        //        } else
+        //        {
+        //            displayCategory = recommendationGourmet.category;
+        //        }
+        //
+        //        // grade
+        //        if (DailyTextUtils.isTextEmpty(displayCategory) == true)
+        //        {
+        //            holder.dataBinding.gradeTextView.setVisibility(View.GONE);
+        //        } else
+        //        {
+        //            holder.dataBinding.gradeTextView.setVisibility(View.VISIBLE);
+        //            holder.dataBinding.gradeTextView.setText(displayCategory);
+        //        }
+        //
+        //        if (mIsUsedMultiTransition == true && VersionUtils.isOverAPI21() == true)
+        //        {
+        //            holder.dataBinding.imageView.setTransitionName(null);
+        //        }
+        //
+        //        // 스티커
+        //        if (DailyTextUtils.isTextEmpty(recommendationGourmet.stickerUrl) == false)
+        //        {
+        //            holder.dataBinding.stickerSimpleDraweeView.setVisibility(View.VISIBLE);
+        //
+        //            DraweeController controller = Fresco.newDraweeControllerBuilder().setControllerListener(new BaseControllerListener<ImageInfo>()
+        //            {
+        //                @Override
+        //                public void onFinalImageSet(String id, ImageInfo imageInfo, Animatable animatable)
+        //                {
+        //                    ViewGroup.LayoutParams layoutParams = holder.dataBinding.stickerSimpleDraweeView.getLayoutParams();
+        //
+        //                    int screenWidth = ScreenUtils.getScreenWidth(mContext);
+        //                    if (screenWidth > Sticker.DEFAULT_SCREEN_WIDTH && screenWidth < Sticker.LARGE_SCREEN_WIDTH)
+        //                    {
+        //                        layoutParams.width = (int) (Sticker.MEDIUM_RATE * imageInfo.getWidth());
+        //                        layoutParams.height = (int) (Sticker.MEDIUM_RATE * imageInfo.getHeight());
+        //                    } else
+        //                    {
+        //                        layoutParams.width = imageInfo.getWidth();
+        //                        layoutParams.height = imageInfo.getHeight();
+        //                    }
+        //
+        //                    holder.dataBinding.stickerSimpleDraweeView.setLayoutParams(layoutParams);
+        //                }
+        //            }).setUri(Uri.parse(recommendationGourmet.stickerUrl)).build();
+        //
+        //            holder.dataBinding.stickerSimpleDraweeView.setController(controller);
+        //        } else
+        //        {
+        //            holder.dataBinding.stickerSimpleDraweeView.setVisibility(View.GONE);
+        //        }
+        //
+        //        Util.requestImageResize(mContext, holder.dataBinding.imageView, recommendationGourmet.imageUrl);
+        //
+        //        // SOLD OUT 표시
+        //        holder.dataBinding.soldoutView.setVisibility(View.GONE);
+        //        if (recommendationGourmet.availableTicketNumbers == 0 //
+        //            || recommendationGourmet.availableTicketNumbers < recommendationGourmet.minimumOrderQuantity //
+        //            || recommendationGourmet.isExpired == true)
+        //        {
+        //            holder.dataBinding.personsTextView.setVisibility(View.GONE);
+        //            holder.dataBinding.priceTextView.setVisibility(View.INVISIBLE);
+        //            holder.dataBinding.priceTextView.setText(null);
+        //            holder.dataBinding.discountPriceTextView.setText(mContext.getString(R.string.act_hotel_soldout));
+        //        }
+        //
+        //        if (DailyTextUtils.isTextEmpty(recommendationGourmet.benefit) == false)
+        //        {
+        //            holder.dataBinding.dBenefitTextView.setVisibility(View.VISIBLE);
+        //            holder.dataBinding.dBenefitTextView.setText(recommendationGourmet.benefit);
+        //        } else
+        //        {
+        //            holder.dataBinding.dBenefitTextView.setVisibility(View.GONE);
+        //        }
+        //
+        //        //        if (mShowDistanceIgnoreSort == true || getSortType() == Constants.SortType.DISTANCE)
+        //        //        {
+        //        //            holder.distanceTextView.setVisibility(View.VISIBLE);
+        //        //            holder.distanceTextView.setText(mContext.getString(R.string.label_distance_km, new DecimalFormat("#.#").format(gourmet.distance)));
+        //        //        } else
+        //        //        {
+        //        holder.dataBinding.dot1View.setVisibility(View.GONE);
+        //        holder.dataBinding.distanceTextView.setVisibility(View.GONE);
+        //        //        }
+        //
+        //        // VR 여부, 추후 고메가 VR이 생기면 화면에 보여주도록 한다.
+        //        //        if (recommendationGourmet.truevr == true && mTrueVREnabled == true)
+        //        //        {
+        //        //            if (holder.satisfactionView.getVisibility() == View.VISIBLE)
+        //        //            {
+        //        //                holder.dot2View.setVisibility(View.VISIBLE);
+        //        //            } else
+        //        //            {
+        //        //                holder.dot2View.setVisibility(View.GONE);
+        //        //            }
+        //        //
+        //        //            holder.trueVRView.setVisibility(View.VISIBLE);
+        //        //        } else
+        //        {
+        //            holder.dataBinding.dot2View.setVisibility(View.GONE);
+        //            holder.dataBinding.trueVRView.setVisibility(View.GONE);
+        //        }
+        //
+        //        if (holder.dataBinding.satisfactionView.getVisibility() == View.GONE//
+        //            && holder.dataBinding.trueVRView.getVisibility() == View.GONE//
+        //            && holder.dataBinding.distanceTextView.getVisibility() == View.GONE)
+        //        {
+        //            holder.dataBinding.informationLayout.setVisibility(View.GONE);
+        //        } else
+        //        {
+        //            holder.dataBinding.informationLayout.setVisibility(View.VISIBLE);
+        //        }
     }
 
     @Override
@@ -315,13 +359,13 @@ public class CollectionGourmetAdapter extends PlaceListAdapter
 
     private class GourmetViewHolder extends RecyclerView.ViewHolder
     {
-        ListRowGourmetDataBinding dataBinding;
+        DailyGourmetCardView gourmetCardView;
 
-        public GourmetViewHolder(ListRowGourmetDataBinding dataBinding)
+        public GourmetViewHolder(DailyGourmetCardView gourmetCardView)
         {
-            super(dataBinding.getRoot());
+            super(gourmetCardView);
 
-            this.dataBinding = dataBinding;
+            this.gourmetCardView = gourmetCardView;
 
             itemView.setOnClickListener(mOnClickListener);
 

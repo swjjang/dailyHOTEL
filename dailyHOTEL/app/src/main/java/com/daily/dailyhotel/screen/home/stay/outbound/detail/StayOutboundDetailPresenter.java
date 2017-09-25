@@ -55,6 +55,8 @@ import com.twoheart.dailyhotel.screen.mydaily.member.LoginActivity;
 import com.twoheart.dailyhotel.util.AppResearch;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
+import com.twoheart.dailyhotel.util.DailyDeepLink;
+import com.twoheart.dailyhotel.util.DailyExternalDeepLink;
 import com.twoheart.dailyhotel.util.DailyUserPreference;
 import com.twoheart.dailyhotel.util.KakaoLinkManager;
 import com.twoheart.dailyhotel.util.Util;
@@ -62,7 +64,9 @@ import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
@@ -117,7 +121,10 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
     private boolean mIsDeepLink;
     private boolean mCheckChangedPrice;
     private int mGradientType;
+    private boolean mShowCalendar;
+    private boolean mShowTrueVR;
 
+    private DailyDeepLink mDailyDeepLink;
     private AppResearch mAppResearch;
 
     public interface StayOutboundDetailAnalyticsInterface extends BaseAnalyticsInterface
@@ -187,8 +194,87 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
 
         if (intent.hasExtra(BaseActivity.INTENT_EXTRA_DATA_DEEPLINK) == true)
         {
+            try
+            {
+                mDailyDeepLink = DailyDeepLink.getNewInstance(Uri.parse(intent.getStringExtra(BaseActivity.INTENT_EXTRA_DATA_DEEPLINK)));
+            } catch (Exception e)
+            {
+                mDailyDeepLink = null;
+
+                return false;
+            }
+
             mIsUsedMultiTransition = false;
             mIsDeepLink = true;
+
+            if (mDailyDeepLink.isExternalDeepLink() == true)
+            {
+                addCompositeDisposable(mCommonRemoteImpl.getCommonDateTime().subscribe(new Consumer<CommonDateTime>()
+                {
+                    @Override
+                    public void accept(CommonDateTime commonDateTime) throws Exception
+                    {
+                        setCommonDateTime(commonDateTime);
+
+                        DailyExternalDeepLink externalDeepLink = (DailyExternalDeepLink) mDailyDeepLink;
+
+                        mStayIndex = Integer.parseInt(externalDeepLink.getIndex());
+
+                        int nights = 1;
+
+                        try
+                        {
+                            nights = Integer.parseInt(externalDeepLink.getNights());
+                        } catch (Exception e)
+                        {
+                            ExLog.d(e.toString());
+                        } finally
+                        {
+                            if (nights <= 0)
+                            {
+                                nights = 1;
+                            }
+                        }
+
+                        String date = externalDeepLink.getDate();
+                        int datePlus = externalDeepLink.getDatePlus();
+                        mShowCalendar = externalDeepLink.isShowCalendar();
+                        mShowTrueVR = externalDeepLink.isShowVR();
+
+                        if (DailyTextUtils.isTextEmpty(date) == false)
+                        {
+                            if (Integer.parseInt(date) > Integer.parseInt(DailyCalendar.convertDateFormatString(commonDateTime.currentDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyyMMdd")))
+                            {
+                                Date checkInDate = DailyCalendar.convertDate(date, "yyyyMMdd", TimeZone.getTimeZone("GMT+09:00"));
+
+                                setStayBookDateTime(DailyCalendar.format(checkInDate, DailyCalendar.ISO_8601_FORMAT), 0, nights);
+                            } else
+                            {
+                                setStayBookDateTime(commonDateTime.currentDateTime, 0, 1);
+                            }
+                        } else if (datePlus >= 0)
+                        {
+                            setStayBookDateTime(commonDateTime.currentDateTime, datePlus, nights);
+                        } else
+                        {
+                            setStayBookDateTime(commonDateTime.currentDateTime, 0, 1);
+                        }
+
+                        mDailyDeepLink.clear();
+                        mDailyDeepLink = null;
+
+                        setRefresh(true);
+                        onRefresh(true);
+                    }
+                }, new Consumer<Throwable>()
+                {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception
+                    {
+                        onHandleError(throwable);
+                    }
+                }));
+            }
         } else
         {
             mIsUsedMultiTransition = intent.getBooleanExtra(StayOutboundDetailActivity.INTENT_EXTRA_DATA_MULTITRANSITION, false);
@@ -246,7 +332,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
 
             addCompositeDisposable(disposable);
 
-            addCompositeDisposable(Observable.zip(getViewInterface().getSharedElementTransition()//
+            addCompositeDisposable(Observable.zip(getViewInterface().getSharedElementTransition(mGradientType)//
                 , mCommonRemoteImpl.getCommonDateTime(), mStayOutboundRemoteImpl.getStayOutboundDetail(mStayIndex, mStayBookDateTime, mPeople)//
                 , new Function3<Boolean, CommonDateTime, StayOutboundDetail, StayOutboundDetail>()
                 {
@@ -362,6 +448,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
                 {
                     lock();
 
+                    getViewInterface().setTransitionVisible(true);
                     getViewInterface().scrollTop();
 
                     Single.just(mIsUsedMultiTransition).delaySubscription(300, TimeUnit.MILLISECONDS, AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
@@ -1185,6 +1272,28 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
         {
             mStayBookDateTime.setCheckInDateTime(checkInDateTime);
             mStayBookDateTime.setCheckOutDateTime(checkOutDateTime);
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+        }
+    }
+
+    private void setStayBookDateTime(String checkInDateTime, int checkInPlusDay, int nights)
+    {
+        if (DailyTextUtils.isTextEmpty(checkInDateTime) == true)
+        {
+            return;
+        }
+
+        if (mStayBookDateTime == null)
+        {
+            mStayBookDateTime = new StayBookDateTime();
+        }
+
+        try
+        {
+            mStayBookDateTime.setCheckInDateTime(checkInDateTime, checkInPlusDay);
+            mStayBookDateTime.setCheckOutDateTime(mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT), nights);
         } catch (Exception e)
         {
             ExLog.e(e.toString());

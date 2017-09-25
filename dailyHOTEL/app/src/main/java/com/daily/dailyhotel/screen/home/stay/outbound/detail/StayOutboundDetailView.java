@@ -492,11 +492,21 @@ public class StayOutboundDetailView extends BaseDialogView<StayOutboundDetailVie
 
     @TargetApi(value = 21)
     @Override
-    public Observable<Boolean> getSharedElementTransition()
+    public Observable<Boolean> getSharedElementTransition(int gradientType)
     {
         TransitionSet inTransitionSet = DraweeTransition.createTransitionSet(ScalingUtils.ScaleType.CENTER_CROP, ScalingUtils.ScaleType.CENTER_CROP);
-        Transition inTextTransition = new TextTransition(getColor(R.color.white), getColor(R.color.default_text_c323232)//
-            , 17, 18, new LinearInterpolator());
+        Transition inTextTransition;
+
+        if (gradientType == StayOutboundDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_MAP)
+        {
+            inTextTransition = new TextTransition(getColor(R.color.white), getColor(R.color.default_text_c323232)//
+                , 17, 18, new LinearInterpolator());
+        } else
+        {
+            inTextTransition = new TextTransition(getColor(R.color.default_text_c323232), getColor(R.color.default_text_c323232)//
+                , 17, 18, new LinearInterpolator());
+        }
+
         inTextTransition.addTarget(getString(R.string.transition_place_name));
         inTransitionSet.addTransition(inTextTransition);
 
@@ -511,8 +521,18 @@ public class StayOutboundDetailView extends BaseDialogView<StayOutboundDetailVie
         getWindow().setSharedElementEnterTransition(inTransitionSet);
 
         TransitionSet outTransitionSet = DraweeTransition.createTransitionSet(ScalingUtils.ScaleType.CENTER_CROP, ScalingUtils.ScaleType.CENTER_CROP);
-        Transition outTextTransition = new TextTransition(getColor(R.color.default_text_c323232), getColor(R.color.white)//
-            , 18, 17, new LinearInterpolator());
+        Transition outTextTransition;
+
+        if (gradientType == StayOutboundDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_MAP)
+        {
+            outTextTransition = new TextTransition(getColor(R.color.white), getColor(R.color.default_text_c323232)//
+                , 18, 17, new LinearInterpolator());
+        } else
+        {
+            outTextTransition = new TextTransition(getColor(R.color.default_text_c323232), getColor(R.color.default_text_c323232)//
+                , 18, 17, new LinearInterpolator());
+        }
+
         outTextTransition.addTarget(getString(R.string.transition_place_name));
         outTransitionSet.addTransition(outTextTransition);
 
@@ -543,6 +563,8 @@ public class StayOutboundDetailView extends BaseDialogView<StayOutboundDetailVie
                     @Override
                     public void onTransitionEnd(Transition transition)
                     {
+                        setTransitionVisible(false);
+
                         observer.onNext(true);
                         observer.onComplete();
                     }
@@ -638,6 +660,18 @@ public class StayOutboundDetailView extends BaseDialogView<StayOutboundDetailVie
         getViewDataBinding().viewpagerIndicator.setViewPager(getViewDataBinding().imageLoopViewPager);
     }
 
+    @Override
+    public void setTransitionVisible(boolean visible)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        getViewDataBinding().transImageView.setVisibility(visible ? View.VISIBLE : View.INVISIBLE);
+        getViewDataBinding().transGradientBottomView.setVisibility(visible ? View.VISIBLE : View.INVISIBLE);
+    }
+
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     @Override
     public void setSharedElementTransitionEnabled(boolean enabled, int gradientType)
@@ -660,7 +694,7 @@ public class StayOutboundDetailView extends BaseDialogView<StayOutboundDetailVie
             switch (gradientType)
             {
                 case StayOutboundDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_LIST:
-                    getViewDataBinding().transGradientBottomView.setBackground(getGradientBottomDrawable());
+                    getViewDataBinding().transGradientBottomView.setBackgroundResource(R.drawable.shape_gradient_card_bottom);
                     break;
 
                 case StayOutboundDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_MAP:

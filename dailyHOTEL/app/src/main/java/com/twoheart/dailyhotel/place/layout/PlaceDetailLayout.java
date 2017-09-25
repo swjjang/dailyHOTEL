@@ -6,13 +6,7 @@ import android.animation.ObjectAnimator;
 import android.animation.PropertyValuesHolder;
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.Color;
-import android.graphics.LinearGradient;
 import android.graphics.Rect;
-import android.graphics.Shader;
-import android.graphics.drawable.PaintDrawable;
-import android.graphics.drawable.ShapeDrawable;
-import android.graphics.drawable.shapes.RectShape;
 import android.support.v4.view.MotionEventCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
@@ -249,7 +243,7 @@ public abstract class PlaceDetailLayout extends BaseLayout
                 {
 
                     case TRANS_GRADIENT_BOTTOM_TYPE_LIST:
-                        mTransGradientBottomView.setBackground(getGradientBottomDrawable());
+                        mTransGradientBottomView.setBackgroundResource(R.drawable.shape_gradient_card_bottom);
                         break;
 
                     case TRANS_GRADIENT_BOTTOM_TYPE_MAP:
@@ -268,34 +262,6 @@ public abstract class PlaceDetailLayout extends BaseLayout
             setTransVisibility(View.GONE);
             mTransTitleLayout.setVisibility(View.GONE);
         }
-    }
-
-    /**
-     * 리스트에서 사용하는것과 동일한다.
-     *
-     * @return
-     */
-    private PaintDrawable getGradientBottomDrawable()
-    {
-        // 그라디에이션 만들기.
-        final int colors[] = {Color.parseColor("#E6000000"), Color.parseColor("#99000000"), Color.parseColor("#1A000000"), Color.parseColor("#00000000"), Color.parseColor("#00000000")};
-        final float positions[] = {0.0f, 0.24f, 0.66f, 0.8f, 1.0f};
-
-        PaintDrawable paintDrawable = new PaintDrawable();
-        paintDrawable.setShape(new RectShape());
-
-        ShapeDrawable.ShaderFactory sf = new ShapeDrawable.ShaderFactory()
-        {
-            @Override
-            public Shader resize(int width, int height)
-            {
-                return new LinearGradient(0, height, 0, 0, colors, positions, Shader.TileMode.CLAMP);
-            }
-        };
-
-        paintDrawable.setShaderFactory(sf);
-
-        return paintDrawable;
     }
 
     public void setScrollViewTop()

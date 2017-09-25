@@ -10,11 +10,9 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ScreenUtils;
-import com.daily.base.util.VersionUtils;
+import com.daily.dailyhotel.view.DailyStayCardView;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.databinding.ListRowStayDataBinding;
 import com.twoheart.dailyhotel.databinding.ViewEmptyCampaignTagListBinding;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.Stay;
@@ -88,9 +86,10 @@ public class StayCampaignListAdapter extends PlaceListAdapter
 
             case PlaceViewItem.TYPE_ENTRY:
             {
-                ListRowStayDataBinding dataBinding = DataBindingUtil.inflate(mInflater, R.layout.list_row_stay_data, parent, false);
+                DailyStayCardView stayCardView = new DailyStayCardView(mContext);
+                stayCardView.setLayoutParams(new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
-                return new StayCampaignListAdapter.StayViewHolder(dataBinding);
+                return new StayViewHolder(stayCardView);
             }
 
             case PlaceViewItem.TYPE_HEADER_VIEW:
@@ -135,7 +134,7 @@ public class StayCampaignListAdapter extends PlaceListAdapter
         switch (item.mType)
         {
             case PlaceViewItem.TYPE_ENTRY:
-                onBindViewHolder((StayCampaignListAdapter.StayViewHolder) holder, item);
+                onBindViewHolder((StayViewHolder) holder, item, position);
                 break;
 
             case PlaceViewItem.TYPE_SECTION:
@@ -149,125 +148,176 @@ public class StayCampaignListAdapter extends PlaceListAdapter
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    private void onBindViewHolder(StayCampaignListAdapter.StayViewHolder holder, PlaceViewItem placeViewItem)
+    private void onBindViewHolder(StayViewHolder holder, PlaceViewItem placeViewItem, int position)
     {
         final Stay stay = placeViewItem.getItem();
 
-        String strPrice = DailyTextUtils.getPriceFormat(mContext, stay.price, false);
-        String strDiscount = DailyTextUtils.getPriceFormat(mContext, stay.discountPrice, false);
+        holder.stayCardView.setStickerVisible(false);
+        holder.stayCardView.setDeleteVisible(false);
+        holder.stayCardView.setWishVisible(false);
 
-        String address = stay.addressSummary;
+        holder.stayCardView.setImage(stay.imageUrl);
 
-        int barIndex = address.indexOf('|');
-        if (barIndex >= 0)
+        holder.stayCardView.setGradeText(stay.getGrade().getName(mContext));
+        holder.stayCardView.setVRVisible(stay.truevr && mTrueVREnabled);
+        holder.stayCardView.setReviewText(stay.satisfaction, 0);
+
+        holder.stayCardView.setNewVisible(false);
+
+        holder.stayCardView.setStayNameText(stay.name);
+
+        if (mShowDistanceIgnoreSort == true || getSortType() == Constants.SortType.DISTANCE)
         {
-            address = address.replace(" | ", "ㅣ");
-        } else if (address.indexOf('l') >= 0)
-        {
-            address = address.replace(" l ", "ㅣ");
-        }
-
-        holder.dataBinding.addressTextView.setText(address);
-        holder.dataBinding.nameTextView.setText(stay.name);
-
-        if (stay.price <= 0 || stay.price <= stay.discountPrice)
-        {
-            holder.dataBinding.priceTextView.setVisibility(View.INVISIBLE);
-            holder.dataBinding.priceTextView.setText(null);
+            holder.stayCardView.setDistanceVisible(true);
+            holder.stayCardView.setDistanceText(stay.distance);
         } else
         {
-            holder.dataBinding.priceTextView.setVisibility(View.VISIBLE);
-            holder.dataBinding.priceTextView.setText(strPrice);
-            holder.dataBinding.priceTextView.setPaintFlags(holder.dataBinding.priceTextView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+            holder.stayCardView.setDistanceVisible(false);
         }
 
-        // 만족도
-        if (stay.satisfaction > 0)
-        {
-            holder.dataBinding.satisfactionView.setVisibility(View.VISIBLE);
-            holder.dataBinding.satisfactionView.setText(//
-                mContext.getResources().getString(R.string.label_list_satisfaction, stay.satisfaction));
-        } else
-        {
-            holder.dataBinding.satisfactionView.setVisibility(View.GONE);
-        }
+        holder.stayCardView.setAddressText(stay.addressSummary);
 
-        // 판매 완료인 경우에는 보여주지 않는다.
-        if (mNights > 1 && stay.availableRooms > 0)
+        if (stay.availableRooms > 0)
         {
-            holder.dataBinding.averageTextView.setVisibility(View.VISIBLE);
-        } else
-        {
-            holder.dataBinding.averageTextView.setVisibility(View.GONE);
-        }
-
-        holder.dataBinding.discountPriceTextView.setText(strDiscount);
-        holder.dataBinding.nameTextView.setSelected(true); // Android TextView marquee bug
-
-        if (VersionUtils.isOverAPI16() == true)
-        {
-            holder.dataBinding.gradientView.setBackground(mPaintDrawable);
-        } else
-        {
-            holder.dataBinding.gradientView.setBackgroundDrawable(mPaintDrawable);
-        }
-
-        // grade
-        Stay.Grade grade = stay.getGrade();
-        holder.dataBinding.gradeTextView.setText(grade.getName(mContext));
-        holder.dataBinding.gradeTextView.setBackgroundResource(grade.getColorResId());
-
-        Util.requestImageResize(mContext, holder.dataBinding.imageView, stay.imageUrl);
-
-        // SOLD OUT 표시
-        holder.dataBinding.soldoutView.setVisibility(View.GONE);
-
-        if (stay.availableRooms == 0)
-        {
-            holder.dataBinding.priceTextView.setVisibility(View.INVISIBLE);
-            holder.dataBinding.priceTextView.setText(null);
-            holder.dataBinding.discountPriceTextView.setText(mContext.getString(R.string.act_hotel_soldout));
-        }
-
-        if (DailyTextUtils.isTextEmpty(stay.dBenefitText) == false)
-        {
-            holder.dataBinding.dBenefitTextView.setVisibility(View.VISIBLE);
-            holder.dataBinding.dBenefitTextView.setText(stay.dBenefitText);
-        } else
-        {
-            holder.dataBinding.dBenefitTextView.setVisibility(View.GONE);
-        }
-
-        holder.dataBinding.dot1View.setVisibility(View.GONE);
-        holder.dataBinding.distanceTextView.setVisibility(View.GONE);
-
-        // VR 여부
-        if (stay.truevr == true && mTrueVREnabled == true)
-        {
-            if (holder.dataBinding.satisfactionView.getVisibility() == View.VISIBLE)
+            if (stay.price > 0 && stay.price > stay.discountPrice)
             {
-                holder.dataBinding.dot2View.setVisibility(View.VISIBLE);
+                holder.stayCardView.setPriceText(stay.price > 0 ? 100 * (stay.price - stay.discountPrice) / stay.price : 0, stay.discountPrice, stay.price, null, mNights);
             } else
             {
-                holder.dataBinding.dot2View.setVisibility(View.GONE);
+                holder.stayCardView.setPriceText(0, stay.discountPrice, stay.price, null, mNights);
             }
-
-            holder.dataBinding.trueVRView.setVisibility(View.VISIBLE);
         } else
         {
-            holder.dataBinding.dot2View.setVisibility(View.GONE);
-            holder.dataBinding.trueVRView.setVisibility(View.GONE);
+            holder.stayCardView.setPriceText(0, 0, 0, null, 0);
         }
 
-        if (holder.dataBinding.satisfactionView.getVisibility() == View.GONE//
-            && holder.dataBinding.trueVRView.getVisibility() == View.GONE//
-            && holder.dataBinding.distanceTextView.getVisibility() == View.GONE)
+        holder.stayCardView.setBenefitText(stay.dBenefitText);
+
+        if (position < getItemCount() - 1 && getItem(position + 1).mType == PlaceViewItem.TYPE_SECTION)
         {
-            holder.dataBinding.informationLayout.setVisibility(View.GONE);
+            holder.stayCardView.setDividerVisible(false);
         } else
         {
-            holder.dataBinding.informationLayout.setVisibility(View.VISIBLE);
+            holder.stayCardView.setDividerVisible(true);
         }
+
+
+        //
+        //        String strPrice = DailyTextUtils.getPriceFormat(mContext, stay.price, false);
+        //        String strDiscount = DailyTextUtils.getPriceFormat(mContext, stay.discountPrice, false);
+        //
+        //        String address = stay.addressSummary;
+        //
+        //        int barIndex = address.indexOf('|');
+        //        if (barIndex >= 0)
+        //        {
+        //            address = address.replace(" | ", "ㅣ");
+        //        } else if (address.indexOf('l') >= 0)
+        //        {
+        //            address = address.replace(" l ", "ㅣ");
+        //        }
+        //
+        //        holder.dataBinding.addressTextView.setText(address);
+        //        holder.dataBinding.nameTextView.setText(stay.name);
+        //
+        //        if (stay.price <= 0 || stay.price <= stay.discountPrice)
+        //        {
+        //            holder.dataBinding.priceTextView.setVisibility(View.INVISIBLE);
+        //            holder.dataBinding.priceTextView.setText(null);
+        //        } else
+        //        {
+        //            holder.dataBinding.priceTextView.setVisibility(View.VISIBLE);
+        //            holder.dataBinding.priceTextView.setText(strPrice);
+        //            holder.dataBinding.priceTextView.setPaintFlags(holder.dataBinding.priceTextView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+        //        }
+        //
+        //        // 만족도
+        //        if (stay.satisfaction > 0)
+        //        {
+        //            holder.dataBinding.satisfactionView.setVisibility(View.VISIBLE);
+        //            holder.dataBinding.satisfactionView.setText(//
+        //                mContext.getResources().getString(R.string.label_list_satisfaction, stay.satisfaction));
+        //        } else
+        //        {
+        //            holder.dataBinding.satisfactionView.setVisibility(View.GONE);
+        //        }
+        //
+        //        // 판매 완료인 경우에는 보여주지 않는다.
+        //        if (mNights > 1 && stay.availableRooms > 0)
+        //        {
+        //            holder.dataBinding.averageTextView.setVisibility(View.VISIBLE);
+        //        } else
+        //        {
+        //            holder.dataBinding.averageTextView.setVisibility(View.GONE);
+        //        }
+        //
+        //        holder.dataBinding.discountPriceTextView.setText(strDiscount);
+        //        holder.dataBinding.nameTextView.setSelected(true); // Android TextView marquee bug
+        //
+        //        if (VersionUtils.isOverAPI16() == true)
+        //        {
+        //            holder.dataBinding.gradientView.setBackground(mPaintDrawable);
+        //        } else
+        //        {
+        //            holder.dataBinding.gradientView.setBackgroundDrawable(mPaintDrawable);
+        //        }
+        //
+        //        // grade
+        //        Stay.Grade grade = stay.getGrade();
+        //        holder.dataBinding.gradeTextView.setText(grade.getName(mContext));
+        //        holder.dataBinding.gradeTextView.setBackgroundResource(grade.getColorResId());
+        //
+        //        Util.requestImageResize(mContext, holder.dataBinding.imageView, stay.imageUrl);
+        //
+        //        // SOLD OUT 표시
+        //        holder.dataBinding.soldoutView.setVisibility(View.GONE);
+        //
+        //        if (stay.availableRooms == 0)
+        //        {
+        //            holder.dataBinding.priceTextView.setVisibility(View.INVISIBLE);
+        //            holder.dataBinding.priceTextView.setText(null);
+        //            holder.dataBinding.discountPriceTextView.setText(mContext.getString(R.string.act_hotel_soldout));
+        //        }
+        //
+        //        if (DailyTextUtils.isTextEmpty(stay.dBenefitText) == false)
+        //        {
+        //            holder.dataBinding.dBenefitTextView.setVisibility(View.VISIBLE);
+        //            holder.dataBinding.dBenefitTextView.setText(stay.dBenefitText);
+        //        } else
+        //        {
+        //            holder.dataBinding.dBenefitTextView.setVisibility(View.GONE);
+        //        }
+        //
+        //        holder.dataBinding.dot1View.setVisibility(View.GONE);
+        //        holder.dataBinding.distanceTextView.setVisibility(View.GONE);
+        //
+        //        // VR 여부
+        //        if (stay.truevr == true && mTrueVREnabled == true)
+        //        {
+        //            if (holder.dataBinding.satisfactionView.getVisibility() == View.VISIBLE)
+        //            {
+        //                holder.dataBinding.dot2View.setVisibility(View.VISIBLE);
+        //            } else
+        //            {
+        //                holder.dataBinding.dot2View.setVisibility(View.GONE);
+        //            }
+        //
+        //            holder.dataBinding.trueVRView.setVisibility(View.VISIBLE);
+        //        } else
+        //        {
+        //            holder.dataBinding.dot2View.setVisibility(View.GONE);
+        //            holder.dataBinding.trueVRView.setVisibility(View.GONE);
+        //        }
+        //
+        //        if (holder.dataBinding.satisfactionView.getVisibility() == View.GONE//
+        //            && holder.dataBinding.trueVRView.getVisibility() == View.GONE//
+        //            && holder.dataBinding.distanceTextView.getVisibility() == View.GONE)
+        //        {
+        //            holder.dataBinding.informationLayout.setVisibility(View.GONE);
+        //        } else
+        //        {
+        //            holder.dataBinding.informationLayout.setVisibility(View.VISIBLE);
+        //        }
     }
 
     private void onBindViewHolder(StayCampaignListAdapter.EmptyViewHolder holder, PlaceViewItem placeViewItem)
@@ -346,13 +396,13 @@ public class StayCampaignListAdapter extends PlaceListAdapter
 
     private class StayViewHolder extends RecyclerView.ViewHolder
     {
-        ListRowStayDataBinding dataBinding;
+        DailyStayCardView stayCardView;
 
-        public StayViewHolder(ListRowStayDataBinding dataBinding)
+        public StayViewHolder(DailyStayCardView stayCardView)
         {
-            super(dataBinding.getRoot());
+            super(stayCardView);
 
-            this.dataBinding = dataBinding;
+            this.stayCardView = stayCardView;
 
             itemView.setOnClickListener(new View.OnClickListener()
             {

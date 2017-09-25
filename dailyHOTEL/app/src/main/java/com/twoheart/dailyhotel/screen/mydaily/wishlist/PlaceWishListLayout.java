@@ -212,8 +212,15 @@ public abstract class PlaceWishListLayout extends BaseBlurLayout
         }
 
         @Override
-        public void onItemRemoveClick(View view, int position)
+        public void onItemRemoveClick(View view)
         {
+            int position = mRecyclerView.getChildAdapterPosition(view);
+            if (position < 0)
+            {
+                //                ((OnEventListener) mOnEventListener).onListItemClick(view, position); // ????
+                return;
+            }
+
             ((OnEventListener) mOnEventListener).onListItemRemoveClick(position);
         }
     };
