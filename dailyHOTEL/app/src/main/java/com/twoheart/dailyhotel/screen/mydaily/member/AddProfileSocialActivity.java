@@ -91,7 +91,7 @@ public class AddProfileSocialActivity extends BaseActivity
         initUserInformation(mCustomer, birthday);
     }
 
-    private void initUserInformation(Customer customer, String birthday)
+    void initUserInformation(Customer customer, String birthday)
     {
         if (customer == null)
         {

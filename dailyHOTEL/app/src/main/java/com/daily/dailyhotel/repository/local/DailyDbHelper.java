@@ -16,10 +16,10 @@ public class DailyDbHelper
 
     private static final class DailyDbHelperHolder
     {
-        private static final DailyDbHelper sInstance = new DailyDbHelper();
+        static final DailyDbHelper sInstance = new DailyDbHelper();
     }
 
-    private DailyDbHelper()
+    DailyDbHelper()
     {
 
     }

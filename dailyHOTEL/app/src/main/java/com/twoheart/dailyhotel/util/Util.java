@@ -898,10 +898,7 @@ public class Util implements Constants
 
             Crashlytics.log(logMessage);
 
-            if (activity != null)
-            {
-                showFailedTMapNaviDialog(activity);
-            }
+            showFailedTMapNaviDialog(activity);
         }
     }
 

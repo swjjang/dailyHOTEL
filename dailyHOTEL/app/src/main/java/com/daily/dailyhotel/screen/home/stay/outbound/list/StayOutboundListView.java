@@ -50,13 +50,13 @@ public class StayOutboundListView extends BaseBlurView<StayOutboundListView.OnEv
     private static final int VIEWPAGER_LEFT_N_RIGHT_PADDING_DP = 15;
     private static final int VIEWPAGER_PAGE_MARGIN_DP = 5;
 
-    private StayOutboundListAdapter mStayOutboundListAdapter;
+    StayOutboundListAdapter mStayOutboundListAdapter;
 
     private StayOutboundMapFragment mStayOutboundMapFragment;
-    private DailyOverScrollViewPager mViewPager;
+    DailyOverScrollViewPager mViewPager;
     private StayOutboundMapViewPagerAdapter mViewPagerAdapter;
 
-    private ValueAnimator mValueAnimator;
+    ValueAnimator mValueAnimator;
 
     public interface OnEventListener extends OnBaseEventListener
     {

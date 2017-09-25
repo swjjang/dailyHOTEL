@@ -39,9 +39,9 @@ public class StayCampaignTagListView //
     extends BaseDialogView<StayCampaignTagListView.OnEventListener, ActivityPlaceCampaignTagListDataBinding> //
     implements StayCampaignTagListInterface
 {
-    private ImageView mBlurImageView;
+    ImageView mBlurImageView;
 
-    private StayCampaignListAdapter mRecyclerAdapter;
+    StayCampaignListAdapter mRecyclerAdapter;
 
     public StayCampaignTagListView(BaseActivity activity, OnEventListener listener)
     {
@@ -220,6 +220,17 @@ public class StayCampaignTagListView //
                     {
                         mBlurImageView.setBackgroundDrawable(new BitmapDrawable(getContext().getResources(), bitmap));
                     }
+                }, new Consumer<Throwable>()
+                {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception
+                    {
+                        if (mBlurImageView != null)
+                        {
+                            mBlurImageView.setBackgroundDrawable(null);
+                            mBlurImageView.setVisibility(View.GONE);
+                        }
+                    }
                 });
             }
         } else
@@ -276,11 +287,6 @@ public class StayCampaignTagListView //
 
             if (placeViewItem.mType == PlaceViewItem.TYPE_ENTRY)
             {
-                if (getEventListener() == null)
-                {
-                    return;
-                }
-
                 getEventListener().onPlaceClick(view, placeViewItem, mRecyclerAdapter.getItemCount());
             }
         }
@@ -324,11 +330,6 @@ public class StayCampaignTagListView //
 
             if (placeViewItem.mType == PlaceViewItem.TYPE_ENTRY)
             {
-                if (getEventListener() == null)
-                {
-                    return false;
-                }
-
                 getEventListener().onPlaceLongClick(v, placeViewItem, mRecyclerAdapter.getItemCount());
             }
 

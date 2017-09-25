@@ -147,7 +147,10 @@ public class GourmetListFragment extends PlaceListFragment
 
         mPlaceCount += listSize;
 
-        mGourmetList.addAll(list);
+        if (list != null)
+        {
+            mGourmetList.addAll(list);
+        }
 
         SortType sortType = mGourmetCuration.getCurationOption().getSortType();
 

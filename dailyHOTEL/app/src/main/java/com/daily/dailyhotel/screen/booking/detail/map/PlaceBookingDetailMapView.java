@@ -39,10 +39,10 @@ public abstract class PlaceBookingDetailMapView extends BaseDialogView<PlaceBook
     private static final int VIEWPAGER_PAGE_MARGIN_DP = 5;
 
     private PlaceBookingDetailMapFragment mPlaceBookingDetailMapFragment;
-    private DailyOverScrollViewPager mViewPager;
+    DailyOverScrollViewPager mViewPager;
     private PlaceBookingDetailMapViewPagerAdapter mViewPagerAdapter;
 
-    private ValueAnimator mValueAnimator;
+    ValueAnimator mValueAnimator;
 
     public interface OnEventListener extends OnBaseEventListener
     {

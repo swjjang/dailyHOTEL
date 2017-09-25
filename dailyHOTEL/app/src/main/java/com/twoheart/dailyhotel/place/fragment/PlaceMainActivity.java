@@ -46,7 +46,7 @@ public abstract class PlaceMainActivity extends BaseActivity
     protected PlaceMainLayout mPlaceMainLayout;
     protected PlaceMainNetworkController mPlaceMainNetworkController;
 
-    private DailyLocationFactory mDailyLocationFactory;
+    DailyLocationFactory mDailyLocationFactory;
 
     protected abstract PlaceMainLayout getPlaceMainLayout(Context context);
 

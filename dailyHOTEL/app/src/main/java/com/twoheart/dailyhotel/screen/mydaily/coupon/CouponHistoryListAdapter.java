@@ -25,7 +25,7 @@ import java.util.List;
  */
 public class CouponHistoryListAdapter extends RecyclerView.Adapter<CouponHistoryListAdapter.CouponViewHolder>
 {
-    private Context mContext;
+    Context mContext;
     private List<CouponHistory> mCouponList;
 
     public CouponHistoryListAdapter(Context context, List<CouponHistory> list)

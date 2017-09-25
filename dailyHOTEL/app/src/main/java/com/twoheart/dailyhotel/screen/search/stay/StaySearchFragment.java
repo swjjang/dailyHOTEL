@@ -61,11 +61,11 @@ public class StaySearchFragment extends PlaceSearchFragment
     StayBookingDay mStayBookingDay;
     Disposable mAnalyticsDisposable;
 
-    private ArrayList<RecentlyPlace> mRecentlyStayList;
-    private ArrayList<String> mStayOutboundKeywordList;
+    ArrayList<RecentlyPlace> mRecentlyStayList;
+    ArrayList<String> mStayOutboundKeywordList;
 
-    private String mInputText;
-    private Object mCalenderObject;
+    String mInputText;
+    Object mCalenderObject;
 
     @Override
     protected void initContents()
@@ -502,13 +502,10 @@ public class StaySearchFragment extends PlaceSearchFragment
 
                 ArrayList<String> arrayList = new ArrayList<>();
                 JSONArray jsonArray = new JSONArray(prefereceText);
-                if (jsonArray != null)
+                int length = jsonArray.length();
+                for (int i = 0; i < length; i++)
                 {
-                    int length = jsonArray.length();
-                    for (int i = 0; i < length; i++)
-                    {
-                        arrayList.add(jsonArray.getString(i));
-                    }
+                    arrayList.add(jsonArray.getString(i));
                 }
 
                 return Observable.just(arrayList);

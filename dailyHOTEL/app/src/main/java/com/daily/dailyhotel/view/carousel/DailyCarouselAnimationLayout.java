@@ -31,8 +31,8 @@ public class DailyCarouselAnimationLayout extends ConstraintLayout
     private static final int LAYOUT_ANIMATION_DURATION = 200;
 
     private Context mContext;
-    private LayoutCarouselAnimationDataBinding mDataBinding;
-    private ValueAnimator mValueAnimator;
+    LayoutCarouselAnimationDataBinding mDataBinding;
+    ValueAnimator mValueAnimator;
     private boolean mIsUseAnimation;
 
     public DailyCarouselAnimationLayout(Context context)

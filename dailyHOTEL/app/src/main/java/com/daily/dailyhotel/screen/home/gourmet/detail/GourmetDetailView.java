@@ -86,12 +86,12 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
 {
     private GourmetDetailImageViewPagerAdapter mImageViewPagerAdapter;
 
-    private LinearLayout mMoreMenuLayout;
-    private LayoutGourmetDetailMoreMenuDataBinding mLayoutGourmetDetailMoreMenuDataBinding;
+    LinearLayout mMoreMenuLayout;
+    LayoutGourmetDetailMoreMenuDataBinding mLayoutGourmetDetailMoreMenuDataBinding;
 
-    private ObjectAnimator mShowBottomAnimator;
-    private ObjectAnimator mHideBottomAnimator;
-    private AnimatorSet mWishAnimatorSet;
+    ObjectAnimator mShowBottomAnimator;
+    ObjectAnimator mHideBottomAnimator;
+    AnimatorSet mWishAnimatorSet;
 
     public interface OnEventListener extends OnBaseEventListener
     {
@@ -1827,7 +1827,7 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
 
         List<String> informationList = information.getValue();
 
-        if (informationList == null && informationList.size() == 0)
+        if (informationList == null || informationList.size() == 0)
         {
             return;
         }
@@ -1912,7 +1912,7 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
     }
 
 
-    private void showBottomLayout(boolean animation)
+    void showBottomLayout(boolean animation)
     {
         if (getViewDataBinding() == null || mShowBottomAnimator != null)
         {
@@ -1967,7 +1967,7 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
         }
     }
 
-    private void hideBottomLayout(boolean animation)
+    void hideBottomLayout(boolean animation)
     {
         if (getViewDataBinding() == null || mHideBottomAnimator != null)
         {

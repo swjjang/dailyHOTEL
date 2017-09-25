@@ -86,9 +86,9 @@ public class StayOutboundDetailView extends BaseDialogView<StayOutboundDetailVie
     private static final int ANIMATION_DELAY = 250;
 
     private StayOutboundDetailImageViewPagerAdapter mImageViewPagerAdapter;
-    private StayOutboundDetailRoomListAdapter mRoomTypeListAdapter;
+    StayOutboundDetailRoomListAdapter mRoomTypeListAdapter;
 
-    private AnimatorSet mRoomAnimatorSet;
+    AnimatorSet mRoomAnimatorSet;
 
     public interface OnEventListener extends OnBaseEventListener
     {
@@ -939,7 +939,7 @@ public class StayOutboundDetailView extends BaseDialogView<StayOutboundDetailVie
 
     private void setImageList(List<StayOutboundDetailImage> imageList)
     {
-        if (getViewDataBinding() == null || imageList == null)
+        if (getViewDataBinding() == null)
         {
             return;
         }
@@ -1363,7 +1363,7 @@ public class StayOutboundDetailView extends BaseDialogView<StayOutboundDetailVie
 
         List<String> informationList = information.getValue();
 
-        if (informationList == null && informationList.size() == 0)
+        if (informationList == null || informationList.size() == 0)
         {
             return;
         }

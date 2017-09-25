@@ -34,7 +34,7 @@ import java.text.DecimalFormat;
 
 public class DailyGourmetCardView extends ConstraintLayout
 {
-    private DailyViewGourmetCardDataBinding mViewDataBinding;
+    DailyViewGourmetCardDataBinding mViewDataBinding;
 
     public DailyGourmetCardView(Context context)
     {

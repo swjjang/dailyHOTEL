@@ -14,7 +14,7 @@ public class DetailImageInformationParcel implements Parcelable
     {
         if (detailImageInformation == null)
         {
-            throw new NullPointerException("reservation == null");
+            throw new NullPointerException("detailImageInformation == null");
         }
 
         mDetailImageInformation = detailImageInformation;

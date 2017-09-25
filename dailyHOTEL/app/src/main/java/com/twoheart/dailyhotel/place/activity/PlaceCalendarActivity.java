@@ -889,7 +889,7 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    private void setStatusBarColor(int color)
+    void setStatusBarColor(int color)
     {
         if (VersionUtils.isOverAPI21() == true)
         {

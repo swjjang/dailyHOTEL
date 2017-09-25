@@ -20,7 +20,7 @@ public class DailyCampaignTagTitleView extends ConstraintLayout
     private DailyViewCampaignTagTitleDataBinding mViewDataBinding;
     private Context mContext;
 
-    private DailyCampaignTagTitleView.OnEventListener mEventListener;
+    DailyCampaignTagTitleView.OnEventListener mEventListener;
 
     public interface OnEventListener extends OnBaseEventListener
     {

@@ -95,19 +95,19 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
 
     static final int SHOWN_MENU_COUNT = 5;
 
-    private GourmetDetailAnalyticsInterface mAnalytics;
+    GourmetDetailAnalyticsInterface mAnalytics;
 
     private GourmetRemoteImpl mGourmetRemoteImpl;
     private CommonRemoteImpl mCommonRemoteImpl;
     private ProfileRemoteImpl mProfileRemoteImpl;
     private CalendarImpl mCalendarImpl;
 
-    private int mGourmetIndex, mPriceFromList;
+    int mGourmetIndex, mPriceFromList;
     private String mGourmetName, mCategory;
     private String mImageUrl;
-    private GourmetBookDateTime mGourmetBookDateTime;
+    GourmetBookDateTime mGourmetBookDateTime;
     private CommonDateTime mCommonDateTime;
-    private GourmetDetail mGourmetDetail;
+    GourmetDetail mGourmetDetail;
     private ReviewScores mReviewScores;
 
     private int mStatus = STATUS_NONE;
@@ -118,10 +118,10 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
     private int mGradientType;
     private List<Integer> mSoldOutDateList;
     private int mSelectedMenuIndex;
-    private boolean mShowCalendar;
-    private boolean mShowTrueVR;
+    boolean mShowCalendar;
+    boolean mShowTrueVR;
 
-    private DailyDeepLink mDailyDeepLink;
+    DailyDeepLink mDailyDeepLink;
     private AppResearch mAppResearch;
 
     public interface GourmetDetailAnalyticsInterface extends BaseAnalyticsInterface
@@ -1197,7 +1197,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
         getViewInterface().setBottomButtonLayout(status);
     }
 
-    private void setCommonDateTime(@NonNull CommonDateTime commonDateTime)
+    void setCommonDateTime(@NonNull CommonDateTime commonDateTime)
     {
         if (commonDateTime == null)
         {
@@ -1207,24 +1207,24 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
         mCommonDateTime = commonDateTime;
     }
 
-    private void setReviewScores(ReviewScores reviewScores)
+    void setReviewScores(ReviewScores reviewScores)
     {
         mReviewScores = reviewScores;
     }
 
-    private void setSoldOutDateList(List<Integer> soldOutList)
+    void setSoldOutDateList(List<Integer> soldOutList)
     {
         mSoldOutDateList = soldOutList;
     }
 
-    private void setGourmetDetail(GourmetDetail gourmetDetail)
+    void setGourmetDetail(GourmetDetail gourmetDetail)
     {
         mGourmetDetail = gourmetDetail;
 
         mAnalytics.onScreen(getActivity(), mGourmetBookDateTime, gourmetDetail, mPriceFromList);
     }
 
-    private void notifyGourmetDetailChanged()
+    void notifyGourmetDetailChanged()
     {
         if (mGourmetDetail == null)
         {
@@ -1305,7 +1305,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
     /**
      * @param visitDateTime ISO-8601
      */
-    private void setGourmetBookDateTime(String visitDateTime)
+    void setGourmetBookDateTime(String visitDateTime)
     {
         if (DailyTextUtils.isTextEmpty(visitDateTime) == true)
         {
@@ -1326,7 +1326,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
         }
     }
 
-    private void setGourmetBookDateTime(String visitDateTime, int afterDay)
+    void setGourmetBookDateTime(String visitDateTime, int afterDay)
     {
         if (DailyTextUtils.isTextEmpty(visitDateTime) == true)
         {
@@ -1347,7 +1347,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
         }
     }
 
-    private void notifyWishChanged()
+    void notifyWishChanged()
     {
         if (mGourmetDetail == null)
         {
@@ -1358,7 +1358,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
         getViewInterface().setWishSelected(mGourmetDetail.myWish);
     }
 
-    private void notifyWishChanged(int wishCount, boolean myWish)
+    void notifyWishChanged(int wishCount, boolean myWish)
     {
         if (mGourmetDetail == null)
         {

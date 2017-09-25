@@ -34,7 +34,7 @@ import io.reactivex.functions.Consumer;
  */
 public class ProfilePresenter extends BaseExceptionPresenter<ProfileActivity, ProfileViewInterface> implements ProfileView.OnEventListener
 {
-    private ProfileAnalyticsInterface mProfileAnalytics;
+    ProfileAnalyticsInterface mProfileAnalytics;
 
     private ProfileRemoteImpl mProfileRemoteImpl;
     private ConfigLocalImpl mConfigLocalImpl;

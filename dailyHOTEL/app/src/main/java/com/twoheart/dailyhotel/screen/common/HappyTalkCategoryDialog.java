@@ -149,7 +149,7 @@ public class HappyTalkCategoryDialog extends BaseActivity
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    private void initCategory()
+    void initCategory()
     {
         String happyTalkCategory = DailyPreference.getInstance(this).getHappyTalkCategory();
 

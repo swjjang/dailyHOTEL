@@ -101,7 +101,7 @@ public class StayCategoryNearByActivity extends BaseActivity
     StayCategoryNearByCuration mStayCategoryNearByCuration;
 
     private StayCategoryNearByNetworkController mNetworkController;
-    private DailyLocationFactory mDailyLocationFactory;
+    DailyLocationFactory mDailyLocationFactory;
 
     public enum ScreenType
     {
@@ -880,7 +880,7 @@ public class StayCategoryNearByActivity extends BaseActivity
     // mOnEventListener
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private StayCategoryNearByLayout.OnEventListener mOnEventListener = new StayCategoryNearByLayout.OnEventListener()
+    StayCategoryNearByLayout.OnEventListener mOnEventListener = new StayCategoryNearByLayout.OnEventListener()
     {
         @Override
         public void finish()

@@ -182,11 +182,6 @@ public class StayOutboundSearchSuggestView extends BaseDialogView<StayOutboundSe
             @Override
             public void onClick(View v)
             {
-                if (getEventListener() == null)
-                {
-                    return;
-                }
-
                 getEventListener().onDeleteAllRecentlySuggest();
             }
         });
@@ -498,7 +493,7 @@ public class StayOutboundSearchSuggestView extends BaseDialogView<StayOutboundSe
     private class SuggestListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     {
         private Context mContext;
-        private View.OnClickListener mOnClickListener;
+        View.OnClickListener mOnClickListener;
 
         private String mKeyword;
         private List<ObjectItem> mSuggestList;
@@ -726,7 +721,7 @@ public class StayOutboundSearchSuggestView extends BaseDialogView<StayOutboundSe
     private class RecentlySuggestListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     {
         private Context mContext;
-        private View.OnClickListener mOnClickListener;
+        View.OnClickListener mOnClickListener;
 
         private List<ObjectItem> mSuggestList;
 

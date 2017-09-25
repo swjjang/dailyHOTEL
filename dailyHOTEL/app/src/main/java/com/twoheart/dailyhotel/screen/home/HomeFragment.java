@@ -124,15 +124,15 @@ public class HomeFragment extends BaseMenuNavigationFragment
     boolean mDontReload;
     private boolean mIsLogin;
 
-    private boolean mIsMigrationComplete;
+    boolean mIsMigrationComplete;
 
     int mNetworkRunState = IS_RUNNED_NONE; // 0x0000 : 초기 상태, Ox0010 : 위시 완료 , Ox0100 : 최근 본 업장완료!
 
     private DailyDeepLink mDailyDeepLink;
 
-    private View mViewByLongPress;
-    private CarouselListItem mCarouselListItemByLongPress;
-    private DailyLocationFactory mDailyLocationFactory;
+    View mViewByLongPress;
+    CarouselListItem mCarouselListItemByLongPress;
+    DailyLocationFactory mDailyLocationFactory;
 
     private RecentlyRemoteImpl mRecentlyRemoteImpl;
 
@@ -703,7 +703,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
         }
     }
 
-    private void checkStayOutboundCutNewVisible(TodayDateTime todayDateTime)
+    void checkStayOutboundCutNewVisible(TodayDateTime todayDateTime)
     {
         if (todayDateTime == null)
         {
@@ -1052,7 +1052,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-    private void startStayOutboundDetail(View view, CarouselListItem carouselListItem, TodayDateTime todayDateTime)
+    void startStayOutboundDetail(View view, CarouselListItem carouselListItem, TodayDateTime todayDateTime)
     {
         if (carouselListItem == null)
         {
@@ -1290,7 +1290,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
         }));
     }
 
-    private void setRecentlyList(ArrayList<CarouselListItem> carouselListItemList, boolean isError)
+    void setRecentlyList(ArrayList<CarouselListItem> carouselListItemList, boolean isError)
     {
         ArrayList<CarouselListItem> list = new ArrayList<>();
 
@@ -1346,7 +1346,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
         }));
     }
 
-    private void setCommonDateTime(TodayDateTime todayDateTime)
+    void setCommonDateTime(TodayDateTime todayDateTime)
     {
         if (isFinishing() == true)
         {
@@ -1494,7 +1494,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
         });
     }
 
-    private void onSearchLocation()
+    void onSearchLocation()
     {
         if (mTodayDateTime == null)
         {
@@ -1517,7 +1517,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
 
     }
 
-    private void onSearchClick()
+    void onSearchClick()
     {
         if (mBaseActivity == null)
         {
@@ -1546,7 +1546,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
         }
     }
 
-    private void onStayClick(boolean isDeepLink, DailyDeepLink dailyDeepLink)
+    void onStayClick(boolean isDeepLink, DailyDeepLink dailyDeepLink)
     {
         if (mBaseActivity == null)
         {
@@ -1569,7 +1569,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
         }
     }
 
-    private void onGourmetClick(boolean isDeepLink, DailyDeepLink dailyDeepLink)
+    void onGourmetClick(boolean isDeepLink, DailyDeepLink dailyDeepLink)
     {
         if (mBaseActivity == null)
         {

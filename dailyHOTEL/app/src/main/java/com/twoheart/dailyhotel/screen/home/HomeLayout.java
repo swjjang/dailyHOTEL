@@ -85,10 +85,10 @@ public class HomeLayout extends BaseBlurLayout
     private DailyTextView mEventCountTextView;
     EventListAdapter mEventListAdapter;
 
-    private View mActionButtonLayout;
+    View mActionButtonLayout;
     private ValueAnimator mScrollButtonLayoutAnimator;
     private int mActionButtonLayoutVisibility = View.GONE;
-    private int mSkipScrollAnimationGapValue;
+    int mSkipScrollAnimationGapValue;
 
     SwipeRefreshLayout mSwipeRefreshLayout;
     DailyHomeScrollView mDailyHomeScrollView;
@@ -108,7 +108,7 @@ public class HomeLayout extends BaseBlurLayout
 
     LinearLayout mProviderInfoView;
 
-    private BaseMenuNavigationFragment.OnScreenScrollChangeListener mOnScreenScrollChangeListener;
+    BaseMenuNavigationFragment.OnScreenScrollChangeListener mOnScreenScrollChangeListener;
 
 
     public interface OnEventListener extends OnBaseEventListener
@@ -1696,7 +1696,7 @@ public class HomeLayout extends BaseBlurLayout
         private static final String DEFAULT_EVENT_IMAGE_URL = "defaultImageUrl";
 
         private List<Event> mHomeEventList;
-        private View.OnClickListener mOnClickListener;
+        View.OnClickListener mOnClickListener;
 
         public EventListAdapter(Context context, View.OnClickListener listener)
         {

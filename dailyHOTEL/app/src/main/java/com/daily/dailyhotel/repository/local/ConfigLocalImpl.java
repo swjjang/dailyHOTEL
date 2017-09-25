@@ -18,7 +18,7 @@ import io.reactivex.schedulers.Schedulers;
 
 public class ConfigLocalImpl implements ConfigInterface
 {
-    private Context mContext;
+    Context mContext;
 
     public ConfigLocalImpl(@NonNull Context context)
     {

@@ -117,7 +117,7 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
         recordAnalyticsSearch(placeBookingDay, mPlaceType);
     }
 
-    private void setSoftInputMode(boolean isResizeMode)
+    void setSoftInputMode(boolean isResizeMode)
     {
         if (mIsResizeMode == isResizeMode)
         {

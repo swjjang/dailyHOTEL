@@ -35,7 +35,7 @@ import io.reactivex.schedulers.Schedulers;
 
 public class RecentlyRemoteImpl implements RecentlyInterface
 {
-    private Context mContext;
+    Context mContext;
 
     public RecentlyRemoteImpl(@NonNull Context context)
     {
@@ -153,7 +153,7 @@ public class RecentlyRemoteImpl implements RecentlyInterface
         }).subscribeOn(Schedulers.io());
     }
 
-    private ArrayList<RecentlyDbPlace> getRecentlyDbPlaceList(boolean useRealm, @NonNull Constants.ServiceType... serviceTypes)
+    ArrayList<RecentlyDbPlace> getRecentlyDbPlaceList(boolean useRealm, @NonNull Constants.ServiceType... serviceTypes)
     {
         ArrayList<RecentlyDbPlace> list = RecentlyPlaceUtil.getDbRecentlyTypeList(mContext, serviceTypes);
 
@@ -188,7 +188,7 @@ public class RecentlyRemoteImpl implements RecentlyInterface
         return list;
     }
 
-    private JSONObject getRecentlyJSONObject(ArrayList<RecentlyDbPlace> list, int maxSize)
+    JSONObject getRecentlyJSONObject(ArrayList<RecentlyDbPlace> list, int maxSize)
     {
         JSONObject recentlyJsonObject = new JSONObject();
 

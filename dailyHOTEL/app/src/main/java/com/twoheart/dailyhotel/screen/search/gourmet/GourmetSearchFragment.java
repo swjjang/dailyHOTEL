@@ -49,10 +49,10 @@ public class GourmetSearchFragment extends PlaceSearchFragment
     GourmetBookingDay mGourmetBookingDay;
     Disposable mAnalyticsDisposable;
 
-    private ArrayList<RecentlyPlace> mRecentlyGourmetList;
+    ArrayList<RecentlyPlace> mRecentlyGourmetList;
 
-    private String mInputText;
-    private Object mCalenderObject;
+    String mInputText;
+    Object mCalenderObject;
 
     @Override
     protected void initContents()

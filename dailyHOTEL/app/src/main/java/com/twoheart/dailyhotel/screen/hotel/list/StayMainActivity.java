@@ -75,7 +75,7 @@ import retrofit2.Response;
 public class StayMainActivity extends PlaceMainActivity
 {
     StayCuration mStayCuration;
-    private DailyDeepLink mDailyDeepLink;
+    DailyDeepLink mDailyDeepLink;
 
     public static Intent newInstance(Context context, String deepLink)
     {

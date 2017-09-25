@@ -22,7 +22,7 @@ public class SearchCardItemListAdapter extends RecyclerView.Adapter<SearchCardIt
 {
     private Context mContext;
     private LayoutInflater mInflater;
-    private View.OnClickListener mOnClickListener;
+    View.OnClickListener mOnClickListener;
     private ArrayList<SearchCardItem> mItemList;
 
     public SearchCardItemListAdapter(Context context, ArrayList<SearchCardItem> list, View.OnClickListener onClickListener)

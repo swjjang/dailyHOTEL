@@ -132,32 +132,29 @@ public class ImageListView extends BaseDialogView<ImageListView.OnEventListener,
                     }
                 } else
                 {
-                    if (mIsMoved == false)
+                    if ((mIsTop == true && y > 0))
                     {
-                        if ((mIsTop == true && y > 0))
-                        {
-                            if (listView.getGlowTopScaleY() == 0.0f)
-                            {
-                                mIsMoved = true;
-                            }
-                        } else if (mIsBottom == true && y < 0)
+                        if (listView.getGlowTopScaleY() == 0.0f)
                         {
                             mIsMoved = true;
                         }
+                    } else if (mIsBottom == true && y < 0)
+                    {
+                        mIsMoved = true;
+                    }
 
-                        if (mIsMoved == true)
-                        {
-                            event.setAction(MotionEvent.ACTION_UP);
-                            listView.onTouchEvent(event);
+                    if (mIsMoved == true)
+                    {
+                        event.setAction(MotionEvent.ACTION_UP);
+                        listView.onTouchEvent(event);
 
-                            scrollListEffect(y);
-                        } else
+                        scrollListEffect(y);
+                    } else
+                    {
+                        if (y != 0)
                         {
-                            if (y != 0)
-                            {
-                                mIsTop = false;
-                                mIsBottom = false;
-                            }
+                            mIsTop = false;
+                            mIsBottom = false;
                         }
                     }
                 }

@@ -33,7 +33,7 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
     private View mNewEventIconView, mNewNoticeIconView;
 
     private DailyScrollView mScrollView;
-    private BaseMenuNavigationFragment.OnScreenScrollChangeListener mOnScreenScrollChangeListener;
+    BaseMenuNavigationFragment.OnScreenScrollChangeListener mOnScreenScrollChangeListener;
 
     public interface OnEventListener extends OnBaseEventListener
     {

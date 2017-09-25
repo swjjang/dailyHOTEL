@@ -100,20 +100,20 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
         TOTAL
     }
 
-    private StayOutboundDetailAnalyticsInterface mAnalytics;
+    StayOutboundDetailAnalyticsInterface mAnalytics;
 
     private StayOutboundRemoteImpl mStayOutboundRemoteImpl;
     private CommonRemoteImpl mCommonRemoteImpl;
     private ProfileRemoteImpl mProfileRemoteImpl;
 
-    private int mStayIndex, mListPrice;
+    int mStayIndex, mListPrice;
     private String mStayName;
-    private String mImageUrl;
-    private StayBookDateTime mStayBookDateTime;
+    String mImageUrl;
+    StayBookDateTime mStayBookDateTime;
     private CommonDateTime mCommonDateTime;
-    private StayOutboundDetail mStayOutboundDetail;
-    private People mPeople;
-    private StayOutboundRoom mSelectedRoom;
+    StayOutboundDetail mStayOutboundDetail;
+    People mPeople;
+    StayOutboundRoom mSelectedRoom;
 
     private int mStatus = STATUS_NONE;
 
@@ -121,10 +121,10 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
     private boolean mIsDeepLink;
     private boolean mCheckChangedPrice;
     private int mGradientType;
-    private boolean mShowCalendar;
-    private boolean mShowTrueVR;
+    boolean mShowCalendar;
+    boolean mShowTrueVR;
 
-    private DailyDeepLink mDailyDeepLink;
+    DailyDeepLink mDailyDeepLink;
     private AppResearch mAppResearch;
 
     public interface StayOutboundDetailAnalyticsInterface extends BaseAnalyticsInterface
@@ -207,7 +207,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
             mIsUsedMultiTransition = false;
             mIsDeepLink = true;
 
-            if (mDailyDeepLink.isExternalDeepLink() == true)
+            if (mDailyDeepLink != null && mDailyDeepLink.isExternalDeepLink() == true)
             {
                 addCompositeDisposable(mCommonRemoteImpl.getCommonDateTime().subscribe(new Consumer<CommonDateTime>()
                 {
@@ -1168,14 +1168,14 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
         mSelectedRoom = stayOutboundRoom;
     }
 
-    private void setStatus(int status)
+    void setStatus(int status)
     {
         mStatus = status;
 
         getViewInterface().setBottomButtonLayout(status);
     }
 
-    private void setCommonDateTime(@NonNull CommonDateTime commonDateTime)
+    void setCommonDateTime(@NonNull CommonDateTime commonDateTime)
     {
         if (commonDateTime == null)
         {
@@ -1196,7 +1196,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
         mPeople.setChildAgeList(childAgeList);
     }
 
-    private void onStayOutboundDetail(StayOutboundDetail stayOutboundDetail)
+    void onStayOutboundDetail(StayOutboundDetail stayOutboundDetail)
     {
         if (stayOutboundDetail == null)
         {
@@ -1278,7 +1278,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
         }
     }
 
-    private void setStayBookDateTime(String checkInDateTime, int checkInPlusDay, int nights)
+    void setStayBookDateTime(String checkInDateTime, int checkInPlusDay, int nights)
     {
         if (DailyTextUtils.isTextEmpty(checkInDateTime) == true)
         {

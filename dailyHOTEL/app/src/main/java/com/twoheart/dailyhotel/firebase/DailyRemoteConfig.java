@@ -26,8 +26,8 @@ import java.util.Locale;
 
 public class DailyRemoteConfig
 {
-    private Context mContext;
-    private FirebaseRemoteConfig mFirebaseRemoteConfig;
+    Context mContext;
+    FirebaseRemoteConfig mFirebaseRemoteConfig;
 
     public interface OnCompleteListener
     {
@@ -97,7 +97,7 @@ public class DailyRemoteConfig
         });
     }
 
-    private void setConfig(final OnCompleteListener listener)
+    void setConfig(final OnCompleteListener listener)
     {
         String androidUpdateVersion = mFirebaseRemoteConfig.getString("androidUpdateVersion");
         String androidPaymentType = mFirebaseRemoteConfig.getString("androidPaymentType");

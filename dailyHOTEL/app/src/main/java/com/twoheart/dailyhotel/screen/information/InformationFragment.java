@@ -140,7 +140,7 @@ public class InformationFragment extends BaseMenuNavigationFragment implements C
         mInformationLayout.updateNewIconView(hasNewEvent, hasNewNotice);
     }
 
-    private void onStartEvent(DailyDeepLink dailyDeepLink)
+    void onStartEvent(DailyDeepLink dailyDeepLink)
     {
         if (isLockUiComponent() == true || mIsAttach == false)
         {

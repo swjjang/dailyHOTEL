@@ -16,7 +16,7 @@ import com.twoheart.dailyhotel.util.DailyLocationFactory;
 
 public abstract class PlaceRegionListActivity extends BaseActivity
 {
-    private DailyLocationFactory mDailyLocationFactory;
+    DailyLocationFactory mDailyLocationFactory;
 
     protected abstract void initPrepare();
 

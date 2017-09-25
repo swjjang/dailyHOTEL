@@ -46,7 +46,7 @@ public class StayDetailItemLayout extends LinearLayout
 
     private Context mContext;
     private LayoutInflater mLayoutInflater;
-    private StayDetailLayout.OnEventListener mEventListener;
+    StayDetailLayout.OnEventListener mEventListener;
     private View.OnTouchListener mEmptyViewOnTouchListener;
 
     private StayDetail mStayDetail;

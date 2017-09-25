@@ -42,9 +42,9 @@ public class StayPreviewActivity extends BaseActivity
     protected StayPreviewLayout mPreviewLayout;
     protected StayPreviewNetworkController mNetworkController;
 
-    private StayBookingDay mPlaceBookingDay;
-    private StayDetail mPlaceDetail;
-    private PlaceReviewScores mPlaceReviewScores;
+    StayBookingDay mPlaceBookingDay;
+    StayDetail mPlaceDetail;
+    PlaceReviewScores mPlaceReviewScores;
 
     private int mViewPrice;
 

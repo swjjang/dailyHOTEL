@@ -29,7 +29,7 @@ import io.reactivex.functions.Function;
 
 public class GourmetRemoteImpl implements GourmetInterface
 {
-    private Context mContext;
+    Context mContext;
 
     public GourmetRemoteImpl(@NonNull Context context)
     {
@@ -75,7 +75,7 @@ public class GourmetRemoteImpl implements GourmetInterface
             @Override
             public GourmetDetail apply(@io.reactivex.annotations.NonNull BaseDto<GourmetDetailData> gourmetDetailDataBaseDto) throws Exception
             {
-                GourmetDetail gourmetDetail = null;
+                GourmetDetail gourmetDetail;
 
                 if (gourmetDetailDataBaseDto != null)
                 {

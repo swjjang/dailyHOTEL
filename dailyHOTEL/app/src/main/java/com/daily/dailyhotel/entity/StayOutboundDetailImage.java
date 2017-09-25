@@ -18,7 +18,7 @@ import java.util.Map;
 
 public class StayOutboundDetailImage extends BaseDetailImage
 {
-    private ImageMap mImageMap;
+    ImageMap mImageMap;
 
     public StayOutboundDetailImage()
     {

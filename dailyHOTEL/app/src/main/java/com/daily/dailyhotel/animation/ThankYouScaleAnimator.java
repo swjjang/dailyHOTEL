@@ -69,7 +69,7 @@ public class ThankYouScaleAnimator
             animatorList.add(recommendAnimator);
         }
 
-        if (animatorList == null || animatorList.size() == 0)
+        if (animatorList.size() == 0)
         {
             return;
         }

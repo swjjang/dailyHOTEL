@@ -587,7 +587,7 @@ public class GourmetReservationDetailActivity extends PlaceReservationDetailActi
         }
     }
 
-    private void onReservationDetail(GourmetBookingDetail gourmetBookingDetail)
+    void onReservationDetail(GourmetBookingDetail gourmetBookingDetail)
     {
         if (gourmetBookingDetail == null)
         {

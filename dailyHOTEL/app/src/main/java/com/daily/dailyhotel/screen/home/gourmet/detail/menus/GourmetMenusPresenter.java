@@ -33,7 +33,7 @@ import io.reactivex.schedulers.Schedulers;
  */
 public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusActivity, GourmetMenusInterface> implements GourmetMenusView.OnEventListener
 {
-    private GourmetMenusAnalyticsInterface mAnalytics;
+    GourmetMenusAnalyticsInterface mAnalytics;
 
     private List<GourmetMenu> mGourmetMenuList;
     private int mIndex;

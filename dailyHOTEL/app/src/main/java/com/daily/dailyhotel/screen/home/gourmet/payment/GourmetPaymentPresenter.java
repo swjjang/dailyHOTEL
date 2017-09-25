@@ -71,25 +71,25 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
     private static final int CARD_MIN_PRICE = 1000;
     private static final int PHONE_MAX_PRICE = 500000;
 
-    private GourmetPaymentAnalyticsInterface mAnalytics;
+    GourmetPaymentAnalyticsInterface mAnalytics;
 
     private PaymentRemoteImpl mPaymentRemoteImpl;
     private ProfileRemoteImpl mProfileRemoteImpl;
     private CommonRemoteImpl mCommonRemoteImpl;
 
-    private GourmetBookDateTime mGourmetBookDateTime;
-    private int mGourmetIndex, mMenuPrice, mMenuIndex;
-    private String mGourmetName, mImageUrl, mCategory, mMenuName;
-    private GourmetPayment mGourmetPayment;
-    private Card mSelectedCard;
+    GourmetBookDateTime mGourmetBookDateTime;
+    int mGourmetIndex, mMenuPrice, mMenuIndex;
+    String mGourmetName, mImageUrl, mCategory, mMenuName;
+    GourmetPayment mGourmetPayment;
+    Card mSelectedCard;
     private DomesticGuest mGuest;
     private Coupon mSelectedCoupon;
-    private int mMenuCount;
-    private String mVisitDateTime;
+    int mMenuCount;
+    String mVisitDateTime;
     private DailyBookingPaymentTypeView.PaymentType mPaymentType;
-    private boolean mOverseas, mBonusSelected, mCouponSelected, mAgreedThirdPartyTerms;
+    boolean mOverseas, mBonusSelected, mCouponSelected, mAgreedThirdPartyTerms;
     private boolean mGuestInformationVisible;
-    private UserSimpleInformation mUserSimpleInformation;
+    UserSimpleInformation mUserSimpleInformation;
 
     public interface GourmetPaymentAnalyticsInterface extends BaseAnalyticsInterface
     {
@@ -1098,7 +1098,7 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
         }
     }
 
-    private synchronized void onAgreedPaymentClick()
+    synchronized void onAgreedPaymentClick()
     {
         if (lock() == true)
         {
@@ -1249,7 +1249,7 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
             , mPaymentType, mUserSimpleInformation);
     }
 
-    private void startThankYou(String aggregationId, boolean fullBonus)
+    void startThankYou(String aggregationId, boolean fullBonus)
     {
         // ThankYou 페이지를 홈탭에서 띄우기 위한 코드
         startActivity(DailyInternalDeepLink.getHomeScreenLink(getActivity()));
@@ -1334,7 +1334,7 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
     }
 
 
-    private void onBookingInformation(GourmetPayment gourmetPayment, GourmetBookDateTime gourmetBookDateTime)
+    void onBookingInformation(GourmetPayment gourmetPayment, GourmetBookDateTime gourmetBookDateTime)
     {
         if (gourmetPayment == null || gourmetBookDateTime == null)
         {
@@ -1363,12 +1363,12 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
         }
     }
 
-    private void notifyEasyCardChanged()
+    void notifyEasyCardChanged()
     {
         getViewInterface().setEasyCard(mSelectedCard);
     }
 
-    private void notifyGourmetPaymentChanged()
+    void notifyGourmetPaymentChanged()
     {
         if (mUserSimpleInformation == null || mGourmetPayment == null || mGourmetBookDateTime == null)
         {
@@ -1406,7 +1406,7 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
             getViewInterface().setGourmetPayment(mMenuCount, totalPrice, discountPrice);
 
             // 1000원 미만 결제시에 간편/일반 결제 불가 - 쿠폰 또는 적립금 전체 사용이 아닌경우 조건 추가
-            DailyBookingPaymentTypeView.PaymentType paymentType = null;
+            DailyBookingPaymentTypeView.PaymentType paymentType;
 
             if (paymentPrice > 0 && paymentPrice < CARD_MIN_PRICE)
             {
@@ -1613,17 +1613,17 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
         }
     }
 
-    private void setGourmetPayment(GourmetPayment gourmetPayment)
+    void setGourmetPayment(GourmetPayment gourmetPayment)
     {
         mGourmetPayment = gourmetPayment;
     }
 
-    private void setUserInformation(UserSimpleInformation userSimpleInformation)
+    void setUserInformation(UserSimpleInformation userSimpleInformation)
     {
         mUserSimpleInformation = userSimpleInformation;
     }
 
-    private DomesticGuest getOverseasGustInformation(UserSimpleInformation userSimpleInformation)
+    DomesticGuest getOverseasGustInformation(UserSimpleInformation userSimpleInformation)
     {
         DomesticGuest guest = new DomesticGuest();
 
@@ -1647,7 +1647,7 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
         return guest;
     }
 
-    private void setGourmetBookDateTime(String visitDateTime)
+    void setGourmetBookDateTime(String visitDateTime)
     {
         if (DailyTextUtils.isTextEmpty(visitDateTime) == true)
         {
@@ -1673,7 +1673,7 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
         mPaymentType = paymentType;
     }
 
-    private void setSelectCard(Card card)
+    void setSelectCard(Card card)
     {
         mSelectedCard = card;
 
@@ -1683,12 +1683,12 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
         }
     }
 
-    private void setBonusSelected(boolean selected)
+    void setBonusSelected(boolean selected)
     {
         mBonusSelected = selected;
     }
 
-    private void setCouponSelected(boolean selected, Coupon coupon)
+    void setCouponSelected(boolean selected, Coupon coupon)
     {
         mCouponSelected = selected;
         mSelectedCoupon = coupon;
@@ -1766,7 +1766,7 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
         DailyPreference.getInstance(getActivity()).setFavoriteCard(mSelectedCard.number, mSelectedCard.billKey);
     }
 
-    private void notifyUserInformationChanged()
+    void notifyUserInformationChanged()
     {
         if (mUserSimpleInformation == null)
         {
@@ -1776,7 +1776,7 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
         getViewInterface().setUserInformation(mUserSimpleInformation.name, mUserSimpleInformation.phone, mUserSimpleInformation.email);
     }
 
-    private void notifyGuestInformationChanged(DomesticGuest guest)
+    void notifyGuestInformationChanged(DomesticGuest guest)
     {
         if (guest == null)
         {
@@ -1791,7 +1791,7 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
         getViewInterface().setGuestMobileInformation(mobile);
     }
 
-    private void notifyPaymentTypeChanged()
+    void notifyPaymentTypeChanged()
     {
         if (mPaymentType == null)
         {
@@ -1801,7 +1801,7 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
         getViewInterface().setPaymentType(mPaymentType);
     }
 
-    private void notifyBonusEnabledChanged()
+    void notifyBonusEnabledChanged()
     {
         if (mUserSimpleInformation == null)
         {
@@ -1822,7 +1822,7 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
         }
     }
 
-    private Card getSelectedCard(List<Card> cardList)
+    Card getSelectedCard(List<Card> cardList)
     {
         if (cardList == null || cardList.size() == 0)
         {
@@ -2123,7 +2123,7 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
         }
     }
 
-    private void onPaymentError(BaseException baseException)
+    void onPaymentError(BaseException baseException)
     {
         unLockAll();
 

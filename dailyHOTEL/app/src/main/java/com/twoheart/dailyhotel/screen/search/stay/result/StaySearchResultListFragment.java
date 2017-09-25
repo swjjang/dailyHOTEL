@@ -27,7 +27,7 @@ public class StaySearchResultListFragment extends StayListFragment
 {
     boolean mResetCategory = true;
     boolean mIsDeepLink;
-    private SearchType mSearchType;
+    SearchType mSearchType;
 
     public interface OnStaySearchResultListFragmentListener extends OnStayListFragmentListener
     {

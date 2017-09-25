@@ -31,7 +31,7 @@ import io.reactivex.schedulers.Schedulers;
 
 public class CampaignTagRemoteImpl implements CampaignTagInterface
 {
-    private Context mContext;
+    Context mContext;
 
     public CampaignTagRemoteImpl(@NonNull Context context)
     {

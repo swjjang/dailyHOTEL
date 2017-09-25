@@ -61,19 +61,19 @@ import io.reactivex.functions.Consumer;
  */
 public class StayOutboundBookingDetailPresenter extends BaseExceptionPresenter<StayOutboundBookingDetailActivity, StayOutboundBookingDetailInterface> implements StayOutboundBookingDetailView.OnEventListener
 {
-    private StayOutboundBookingAnalyticsInterface mAnalytics;
+    StayOutboundBookingAnalyticsInterface mAnalytics;
 
     private CommonRemoteImpl mCommonRemoteImpl;
-    private BookingRemoteImpl mBookingRemoteImpl;
+    BookingRemoteImpl mBookingRemoteImpl;
 
-    private int mBookingIndex;
+    int mBookingIndex;
     private String mImageUrl;
-    private int mBookingState;
+    int mBookingState;
 
     private CommonDateTime mCommonDateTime;
-    private StayOutboundBookingDetail mStayOutboundBookingDetail;
+    StayOutboundBookingDetail mStayOutboundBookingDetail;
 
-    private DailyLocationExFactory mDailyLocationExFactory;
+    DailyLocationExFactory mDailyLocationExFactory;
 
     public interface StayOutboundBookingAnalyticsInterface extends BaseAnalyticsInterface
     {
@@ -642,8 +642,8 @@ public class StayOutboundBookingDetailPresenter extends BaseExceptionPresenter<S
             String checkOutTime = getString(R.string.label_stay_outbound_payment_hour, mStayOutboundBookingDetail.checkOutTime.split(":")[0]);
             String checkOutDate = DailyCalendar.convertDateFormatString(mStayOutboundBookingDetail.checkOutDate, "yyyy-MM-dd", "yyyy-MM-dd(EEE)");
 
-            int nights = DailyCalendar.compareDateDay(DailyCalendar.convertDateFormatString(mStayOutboundBookingDetail.checkOutDate, "yyyy-MM-dd", DailyCalendar.ISO_8601_FORMAT)//
-                , DailyCalendar.convertDateFormatString(mStayOutboundBookingDetail.checkInDate, "yyyy-MM-dd", DailyCalendar.ISO_8601_FORMAT));
+//            int nights = DailyCalendar.compareDateDay(DailyCalendar.convertDateFormatString(mStayOutboundBookingDetail.checkOutDate, "yyyy-MM-dd", DailyCalendar.ISO_8601_FORMAT)//
+//                , DailyCalendar.convertDateFormatString(mStayOutboundBookingDetail.checkInDate, "yyyy-MM-dd", DailyCalendar.ISO_8601_FORMAT));
 
             String message = getString(R.string.message_booking_stay_share_sms, //
                 userName, mStayOutboundBookingDetail.name, mStayOutboundBookingDetail.guestLastName + " " + mStayOutboundBookingDetail.guestFirstName,//
@@ -743,7 +743,7 @@ public class StayOutboundBookingDetailPresenter extends BaseExceptionPresenter<S
             , AnalyticsManager.Action.BOOKING_HISTORY_DELETE_TRY, "ob_" + mStayOutboundBookingDetail.stayIndex, null);
     }
 
-    private void setCommonDateTime(@NonNull CommonDateTime commonDateTime)
+    void setCommonDateTime(@NonNull CommonDateTime commonDateTime)
     {
         if (commonDateTime == null)
         {
@@ -753,12 +753,12 @@ public class StayOutboundBookingDetailPresenter extends BaseExceptionPresenter<S
         mCommonDateTime = commonDateTime;
     }
 
-    private void setStayOutboundBookingDetail(StayOutboundBookingDetail stayOutboundBookingDetail)
+    void setStayOutboundBookingDetail(StayOutboundBookingDetail stayOutboundBookingDetail)
     {
         mStayOutboundBookingDetail = stayOutboundBookingDetail;
     }
 
-    private void notifyStayOutboundBookingDetailChanged()
+    void notifyStayOutboundBookingDetailChanged()
     {
         if (mStayOutboundBookingDetail == null)
         {

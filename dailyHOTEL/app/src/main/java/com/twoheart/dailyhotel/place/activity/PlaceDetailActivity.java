@@ -830,7 +830,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
         }
     }
 
-    private void onShareClick()
+    void onShareClick()
     {
         LayoutInflater layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View dialogView = layoutInflater.inflate(R.layout.view_sharedialog_layout, null, false);

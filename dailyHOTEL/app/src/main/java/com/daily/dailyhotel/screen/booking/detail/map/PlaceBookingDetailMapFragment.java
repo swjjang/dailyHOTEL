@@ -57,21 +57,21 @@ public class PlaceBookingDetailMapFragment extends com.google.android.gms.maps.S
     implements OnMapReadyCallback, GoogleMap.OnMapClickListener//
     , ClusterManager.OnClusterClickListener<PlaceClusterItem>, ClusterManager.OnClusterItemClickListener<PlaceClusterItem>
 {
-    private GoogleMap mGoogleMap;
+    GoogleMap mGoogleMap;
 
-    private ImageView mMyLocationView;
-    private Drawable mMyLocationDrawable;
+    ImageView mMyLocationView;
+    Drawable mMyLocationDrawable;
 
-    private Marker mMyLocationMarker, mSelectedMarker, mPlaceLocationMarker;
-    private ClusterManager mClusterManager;
-    private PlaceClusterRenderer mClusterRenderer;
+    Marker mMyLocationMarker, mSelectedMarker, mPlaceLocationMarker;
+    ClusterManager mClusterManager;
+    PlaceClusterRenderer mClusterRenderer;
 
     private Handler mHandler = new Handler();
 
     // 특별히 많은 데이터를 관리하기 때문에 넣어주었다.
     private CompositeDisposable mCompositeDisposable = new CompositeDisposable();
 
-    private OnEventListener mOnEventListener;
+    OnEventListener mOnEventListener;
 
     public interface OnEventListener
     {
@@ -658,7 +658,7 @@ public class PlaceBookingDetailMapFragment extends com.google.android.gms.maps.S
      * @param placeList
      * @return
      */
-    private List<Place> reLocationDuplicatePlace(List<Place> placeList)
+    List<Place> reLocationDuplicatePlace(List<Place> placeList)
     {
         List<Place> placeArrangeList = new ArrayList<>();
 
@@ -761,7 +761,7 @@ public class PlaceBookingDetailMapFragment extends com.google.android.gms.maps.S
         }
     }
 
-    private void moveCameraBounds(final LatLngBounds bounds, int placeCount)
+    void moveCameraBounds(final LatLngBounds bounds, int placeCount)
     {
         if (placeCount <= 0)
         {
@@ -812,7 +812,7 @@ public class PlaceBookingDetailMapFragment extends com.google.android.gms.maps.S
         mGoogleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cp));
     }
 
-    private void directCameraSetting(final LatLngBounds bounds, int hotelCount)
+    void directCameraSetting(final LatLngBounds bounds, int hotelCount)
     {
         if (isFinishing() == true)
         {
@@ -834,7 +834,7 @@ public class PlaceBookingDetailMapFragment extends com.google.android.gms.maps.S
         mClusterManager.cluster();
     }
 
-    private boolean isFinishing()
+    boolean isFinishing()
     {
         return (isAdded() == false || getActivity() == null || getActivity().isFinishing() == true);
     }

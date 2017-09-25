@@ -653,7 +653,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
     // mOnEventListener
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private PlaceSearchResultLayout.OnEventListener mOnEventListener = new PlaceSearchResultLayout.OnEventListener()
+    PlaceSearchResultLayout.OnEventListener mOnEventListener = new PlaceSearchResultLayout.OnEventListener()
     {
         @Override
         public void finish()

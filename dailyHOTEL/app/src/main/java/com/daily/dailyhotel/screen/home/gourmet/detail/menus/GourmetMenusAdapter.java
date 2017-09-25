@@ -31,7 +31,7 @@ public class GourmetMenusAdapter extends RecyclerView.Adapter<GourmetMenusAdapte
     private Context mContext;
     private List<GourmetMenu> mList;
 
-    private OnEventListener mOnEventListener;
+    OnEventListener mOnEventListener;
 
     public interface OnEventListener extends OnBaseEventListener
     {

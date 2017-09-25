@@ -593,7 +593,10 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
         {
             try
             {
-                cursor.close();
+                if (cursor != null)
+                {
+                    cursor.close();
+                }
             } catch (Exception e)
             {
             }

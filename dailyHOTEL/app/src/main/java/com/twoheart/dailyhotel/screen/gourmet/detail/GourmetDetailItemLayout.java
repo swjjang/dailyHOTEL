@@ -50,17 +50,17 @@ public class GourmetDetailItemLayout extends LinearLayout
 {
     private static final int GRID_COLUMN_COUNT = 5;
 
-    private Context mContext;
+    Context mContext;
     private LayoutInflater mLayoutInflater;
-    private GourmetDetailLayout.OnEventListener mEventListener;
+    GourmetDetailLayout.OnEventListener mEventListener;
     private View.OnTouchListener mEmptyViewOnTouchListener;
 
     private GourmetDetail mGourmetDetail;
     private GourmetBookingDay mGourmetBookingDay;
     private PlaceReviewScores mPlaceReviewScores;
     protected View mGourmetTitleLayout;
-    private LinearLayout mMoreLayout;
-    private LayoutGourmetDetailMoreMenuDataBinding mLayoutGourmetDetailMoreMenuDataBinding;
+    LinearLayout mMoreLayout;
+    LayoutGourmetDetailMoreMenuDataBinding mLayoutGourmetDetailMoreMenuDataBinding;
 
     private int mDpi;
     private int mFirstProductIndex;

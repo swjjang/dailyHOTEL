@@ -81,9 +81,9 @@ public abstract class CollectionBaseLayout extends BaseBlurLayout
         mSimpleDraweeView.setLayoutParams(layoutParams);
 
         final FrameLayout titleBoxLayout = (FrameLayout) view.findViewById(R.id.titleBoxLayout);
-        final int dp15Height = ScreenUtils.dpToPx(mContext, 15);
-        int titleBoxTopPadding = ScreenUtils.getRatioHeightType16x9(ScreenUtils.getScreenWidth(mContext)) + ScreenUtils.dpToPx(mContext, 81) - dp15Height - ScreenUtils.dpToPx(mContext, 118);
-        titleBoxLayout.setPadding(dp15Height, titleBoxTopPadding + ScreenUtils.dpToPx(mContext, 21), dp15Height, dp15Height);
+        final int DP_15 = ScreenUtils.dpToPx(mContext, 15);
+        int titleBoxTopPadding = ScreenUtils.getRatioHeightType16x9(ScreenUtils.getScreenWidth(mContext)) + ScreenUtils.dpToPx(mContext, 81) - DP_15 - ScreenUtils.dpToPx(mContext, 118);
+        titleBoxLayout.setPadding(DP_15, titleBoxTopPadding + ScreenUtils.dpToPx(mContext, 21), DP_15, DP_15);
 
         final View fakeBackImageView = titleBoxLayout.findViewById(R.id.fakeBackImageView);
         final View subTitleLayout = view.findViewById(R.id.subTitleLayout);

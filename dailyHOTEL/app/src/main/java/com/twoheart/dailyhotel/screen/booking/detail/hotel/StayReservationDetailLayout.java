@@ -36,7 +36,7 @@ public class StayReservationDetailLayout extends PlaceReservationDetailLayout
     private View mDefaultRefundPolicyLayout, mWaitRefundPolicyLayout;
     private View mDefaultRefundPolicyUnderLine;
     private View mRecommendGourmetButtonView;
-    private View mRecommendGourmetItemLayout;
+    View mRecommendGourmetItemLayout;
     private DailyCarouselLayout mRecommendGourmetCarouselLayout;
     private ObjectAnimator mRecommendGourmetButtonAnimator;
 

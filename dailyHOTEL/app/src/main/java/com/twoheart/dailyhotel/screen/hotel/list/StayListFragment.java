@@ -149,7 +149,10 @@ public class StayListFragment extends PlaceListFragment
 
         mPlaceCount += listSize;
 
-        mStayList.addAll(list);
+        if (list != null)
+        {
+            mStayList.addAll(list);
+        }
 
         SortType sortType = mStayCuration.getCurationOption().getSortType();
 

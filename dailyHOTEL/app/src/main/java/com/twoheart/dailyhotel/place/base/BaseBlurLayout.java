@@ -89,6 +89,17 @@ public abstract class BaseBlurLayout extends BaseLayout
                     {
                         mBlurImageView.setBackgroundDrawable(new BitmapDrawable(mContext.getResources(), bitmap));
                     }
+                }, new Consumer<Throwable>()
+                {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception
+                    {
+                        if (mBlurImageView != null)
+                        {
+                            mBlurImageView.setBackgroundDrawable(null);
+                            mBlurImageView.setVisibility(View.GONE);
+                        }
+                    }
                 });
             }
         } else

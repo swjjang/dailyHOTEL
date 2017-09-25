@@ -30,7 +30,7 @@ public class GourmetCalendarActivity extends PlaceCalendarActivity
 {
     public static final int DEFAULT_CALENDAR_DAY_OF_MAX_COUNT = 30;
 
-    private View mDayView;
+    View mDayView;
     private TextView mConfirmTextView;
 
     protected boolean mIsChanged;

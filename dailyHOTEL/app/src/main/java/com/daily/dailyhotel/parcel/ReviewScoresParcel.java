@@ -18,7 +18,7 @@ public class ReviewScoresParcel implements Parcelable
     {
         if (reviewScores == null)
         {
-            throw new NullPointerException("user == null");
+            throw new NullPointerException("reviewScores == null");
         }
 
         mReviewScores = reviewScores;

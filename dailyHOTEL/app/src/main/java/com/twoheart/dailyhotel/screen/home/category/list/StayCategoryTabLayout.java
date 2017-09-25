@@ -28,7 +28,7 @@ public class StayCategoryTabLayout extends PlaceMainLayout
 {
     private String mTitleText;
     private DailyCategoryType mDailyCategoryType;
-    private View mTooltipLayout;
+    View mTooltipLayout;
 
     public StayCategoryTabLayout(Context context, String titleText, DailyCategoryType dailyCategoryType, PlaceMainLayout.OnEventListener onEventListener)
     {

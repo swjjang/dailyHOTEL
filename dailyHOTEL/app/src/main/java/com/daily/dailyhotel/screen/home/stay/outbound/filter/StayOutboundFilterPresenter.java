@@ -246,7 +246,7 @@ public class StayOutboundFilterPresenter extends BaseExceptionPresenter<StayOutb
         onBackClick();
     }
 
-    private void onReverseSort()
+    void onReverseSort()
     {
         mStayOutboundFilters.sortType = mPrevSortType;
         getViewInterface().setSort(mStayOutboundFilters.sortType);
@@ -297,13 +297,13 @@ public class StayOutboundFilterPresenter extends BaseExceptionPresenter<StayOutb
         });
     }
 
-    private void requestLocationPermission()
+    void requestLocationPermission()
     {
         Intent intent = PermissionManagerActivity.newInstance(getActivity(), PermissionManagerActivity.PermissionType.ACCESS_FINE_LOCATION);
         startActivityForResult(intent, StayOutboundFilterActivity.REQUEST_CODE_STAYOUTBOUND_PERMISSION_MANAGER);
     }
 
-    private void requestLocationProvider()
+    void requestLocationProvider()
     {
         getViewInterface().showSimpleDialog(getString(R.string.dialog_title_used_gps)//
             , getString(R.string.dialog_msg_used_gps), //

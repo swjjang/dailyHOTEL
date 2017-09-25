@@ -304,7 +304,7 @@ public class GourmetTrueReviewPresenter extends BaseExceptionPresenter<GourmetTr
         }
     }
 
-    private void addTrueReviews(TrueReviews trueReviews)
+    void addTrueReviews(TrueReviews trueReviews)
     {
         if (getViewInterface() == null || trueReviews == null)
         {

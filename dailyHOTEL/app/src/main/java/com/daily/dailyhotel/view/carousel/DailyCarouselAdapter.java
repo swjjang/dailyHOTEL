@@ -40,7 +40,7 @@ import java.util.ArrayList;
 
 public class DailyCarouselAdapter extends RecyclerView.Adapter<DailyCarouselAdapter.PlaceViewHolder>
 {
-    private Context mContext;
+    Context mContext;
     private boolean mIsUsePriceLayout;
     private ArrayList<CarouselListItem> mList;
     //    protected PaintDrawable mPaintDrawable;

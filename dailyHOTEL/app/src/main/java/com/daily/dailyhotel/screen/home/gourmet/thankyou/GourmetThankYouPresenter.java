@@ -28,7 +28,7 @@ import io.reactivex.functions.Consumer;
  */
 public class GourmetThankYouPresenter extends BaseExceptionPresenter<GourmetThankYouActivity, GourmetThankYouInterface> implements GourmetThankYouView.OnEventListener
 {
-    private GourmetThankYouAnalyticsInterface mAnalytics;
+    GourmetThankYouAnalyticsInterface mAnalytics;
 
     private ProfileRemoteImpl mProfileRemoteImpl;
 

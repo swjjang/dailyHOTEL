@@ -33,14 +33,14 @@ public class StayOutboundRefundPresenter extends BaseExceptionPresenter<StayOutb
 {
     private StayOutboundRefundAnalyticsInterface mAnalytics;
 
-    private RefundRemoteImpl mRefundRemoteImpl;
+    RefundRemoteImpl mRefundRemoteImpl;
 
-    private int mBookingIndex;
+    int mBookingIndex;
     private String mTitle;
-    private StayOutboundRefundDetail mStayOutboundRefundDetail;
+    StayOutboundRefundDetail mStayOutboundRefundDetail;
 
-    private String mCancelKey;
-    private String mCancelMessage;
+    String mCancelKey;
+    String mCancelMessage;
 
     public interface StayOutboundRefundAnalyticsInterface extends BaseAnalyticsInterface
     {
@@ -370,12 +370,12 @@ public class StayOutboundRefundPresenter extends BaseExceptionPresenter<StayOutb
         getViewInterface().setCancelReasonText(reasonText);
     }
 
-    private void setStayOutboundRefundDetail(StayOutboundRefundDetail stayOutboundRefundDetail)
+    void setStayOutboundRefundDetail(StayOutboundRefundDetail stayOutboundRefundDetail)
     {
         mStayOutboundRefundDetail = stayOutboundRefundDetail;
     }
 
-    private void notifyStayOutboundBookingDetailChanged()
+    void notifyStayOutboundBookingDetailChanged()
     {
         if (mStayOutboundRefundDetail == null)
         {
@@ -415,7 +415,7 @@ public class StayOutboundRefundPresenter extends BaseExceptionPresenter<StayOutb
         getViewInterface().setRefundDetail(mStayOutboundRefundDetail);
     }
 
-    private void onRefundError(BaseException baseException)
+    void onRefundError(BaseException baseException)
     {
         unLockAll();
 

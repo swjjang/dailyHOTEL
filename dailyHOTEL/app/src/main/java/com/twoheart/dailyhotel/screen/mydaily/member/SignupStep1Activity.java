@@ -413,33 +413,28 @@ public class SignupStep1Activity extends BaseActivity
         @Override
         public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
         {
-            if (response != null && response.body() != null)
+            if (response != null && response.isSuccessful() && response.body() != null)
             {
                 JSONObject responseJSONObject = response.body();
 
                 try
                 {
-                    if (response.isSuccessful() == true)
+                    int msgCode = responseJSONObject.getInt("msgCode");
+                    String message = responseJSONObject.getString("msg");
+
+                    if (msgCode == 100)
                     {
-                        int msgCode = responseJSONObject.getInt("msgCode");
+                        JSONObject dataJSONObject = responseJSONObject.getJSONObject("data");
+                        String signupKey = dataJSONObject.getString("signup_key");
+                        String serverDate = dataJSONObject.getString("serverDate");
 
-                        if (msgCode == 100)
-                        {
-                            JSONObject dataJSONObject = responseJSONObject.getJSONObject("data");
-                            String signupKey = dataJSONObject.getString("signup_key");
-                            String serverDate = dataJSONObject.getString("serverDate");
-
-                            Intent intent = SignupStep2Activity.newInstance(SignupStep1Activity.this, //
-                                signupKey, mSignupParams.get("email"), mSignupParams.get("pw"), serverDate, //
-                                mSignupParams.get("recommender"), mCallByScreen);
-                            startActivityForResult(intent, CODE_REQEUST_ACTIVITY_SIGNUP);
-                        } else
-                        {
-                            SignupStep1Activity.this.onErrorPopupMessage(msgCode, responseJSONObject.getString("msg"), null);
-                        }
+                        Intent intent = SignupStep2Activity.newInstance(SignupStep1Activity.this, //
+                            signupKey, mSignupParams.get("email"), mSignupParams.get("pw"), serverDate, //
+                            mSignupParams.get("recommender"), mCallByScreen);
+                        startActivityForResult(intent, CODE_REQEUST_ACTIVITY_SIGNUP);
                     } else
                     {
-                        SignupStep1Activity.this.onErrorPopupMessage(responseJSONObject.getInt("msgCode"), responseJSONObject.getString("msg"), null);
+                        SignupStep1Activity.this.onErrorPopupMessage(msgCode, message, null);
                     }
                 } catch (Exception e)
                 {

@@ -41,7 +41,6 @@ public class EditProfilePhoneActivity extends BaseActivity
 
     /**
      * @param context
-     * @param userIndex
      * @param type
      * @return
      */

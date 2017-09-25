@@ -26,7 +26,7 @@ import retrofit2.Response;
 public class StayCategoryListFragment extends StayListFragment
 {
     private boolean mIsShowLocalPlus;
-    private ArrayList<Stay> mLocalPlusList;
+    ArrayList<Stay> mLocalPlusList;
 
     @Override
     protected BaseNetworkController getNetworkController()
@@ -80,7 +80,7 @@ public class StayCategoryListFragment extends StayListFragment
         mIsShowLocalPlus = isShowLocalPlus;
     }
 
-    private void requestStayCategoryList(int page)
+    void requestStayCategoryList(int page)
     {
         if (mStayCuration == null || mStayCuration.getCurationOption() == null//
             || mStayCuration.getCurationOption().getSortType() == null//
@@ -254,11 +254,11 @@ public class StayCategoryListFragment extends StayListFragment
         {
             ArrayList<PlaceViewItem> oldList = new ArrayList<>(mPlaceListLayout.getList());
 
-            int oldListSize = oldList == null ? 0 : oldList.size();
+            int oldListSize = oldList.size();
             if (oldListSize > 0)
             {
-                int start = oldList == null ? 0 : oldList.size() - 1;
-                int end = oldList == null ? 0 : oldListSize - 5;
+                int start = oldList.size() - 1;
+                int end = oldListSize - 5;
                 end = end < 0 ? 0 : end;
 
                 // 5번안에 검사 안끝나면 그냥 종료, 원래는 1번에 검사되어야 함

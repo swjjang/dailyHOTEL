@@ -12,7 +12,7 @@ import com.daily.base.util.VersionUtils;
 
 public class StayThankYouScreenAnimator extends ThankYouScreenAnimator
 {
-    private View mStampView;
+    View mStampView;
 
     public StayThankYouScreenAnimator(Context context, View checkView, View informationView, View stampView)
     {

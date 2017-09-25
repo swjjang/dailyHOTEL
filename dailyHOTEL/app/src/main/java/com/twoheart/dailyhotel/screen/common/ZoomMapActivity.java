@@ -42,13 +42,13 @@ import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 public class ZoomMapActivity extends BaseActivity
 {
     GoogleMap mGoogleMap;
-    private ImageView mMyLocationView;
+    ImageView mMyLocationView;
     MarkerOptions mMyLocationMarkerOptions;
     Marker mMyLocationMarker, mPlaceLocationMarker;
     private Handler mHandler = new Handler();
     SourceType mSourceType;
 
-    private DailyLocationFactory mDailyLocationFactory;
+    DailyLocationFactory mDailyLocationFactory;
 
     public enum SourceType
     {

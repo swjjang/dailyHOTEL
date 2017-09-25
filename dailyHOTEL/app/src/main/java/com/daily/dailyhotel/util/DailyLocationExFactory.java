@@ -29,14 +29,14 @@ public class DailyLocationExFactory
     private static final long FASTEST_UPDATE_INTERVAL = 1000; // Every 30 seconds
     private static final long MAX_WAIT_TIME = UPDATE_INTERVAL * 3; // Every 3 minutes.
 
-    private FusedLocationProviderClient mFusedLocationClient;
-    private LocationRequest mLocationRequest;
+    FusedLocationProviderClient mFusedLocationClient;
+    LocationRequest mLocationRequest;
     private boolean mIsMeasuringLocation = false;
 
     OnLocationListener mLocationListener;
     Context mContext;
 
-    private Handler mHandler = new Handler()
+    Handler mHandler = new Handler()
     {
         public void handleMessage(android.os.Message msg)
         {
@@ -213,7 +213,7 @@ public class DailyLocationExFactory
         mIsMeasuringLocation = false;
     }
 
-    private PendingIntent getPendingIntent(Context context)
+    PendingIntent getPendingIntent(Context context)
     {
         Intent intent = new Intent(context, LocationUpdatesBroadcastReceiver.class);
         intent.setAction(LocationUpdatesBroadcastReceiver.ACTION_PROCESS_UPDATES);
@@ -221,7 +221,7 @@ public class DailyLocationExFactory
         return PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
     }
 
-    private LocationRequest createLocationRequest()
+    LocationRequest createLocationRequest()
     {
         LocationRequest locationRequest = new LocationRequest();
         locationRequest.setInterval(UPDATE_INTERVAL);

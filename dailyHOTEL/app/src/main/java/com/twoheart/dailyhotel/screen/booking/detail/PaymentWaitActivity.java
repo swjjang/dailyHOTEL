@@ -68,7 +68,7 @@ public class PaymentWaitActivity extends BaseActivity
     private ViewGroup mGuide1Layout;
     private View mBonusLayout, mCouponLayout;
 
-    private Booking mBooking;
+    Booking mBooking;
 
     public static Intent newInstance(Context context, Booking booking)
     {
@@ -500,7 +500,7 @@ public class PaymentWaitActivity extends BaseActivity
         setGuideText(mGuide1Layout, msg2.split("\\."), true);
     }
 
-    private void setWaitingDeposit(WaitingDeposit waitingDeposit) throws Exception
+    void setWaitingDeposit(WaitingDeposit waitingDeposit) throws Exception
     {
         if (waitingDeposit == null)
         {

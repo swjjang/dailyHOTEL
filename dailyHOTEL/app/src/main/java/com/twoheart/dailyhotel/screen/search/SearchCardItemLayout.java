@@ -24,7 +24,7 @@ public class SearchCardItemLayout extends ConstraintLayout
 {
     private Context mContext;
     private LayoutSearchCardItemBinding mViewDataBinding;
-    private OnEventListener mOnEventListener;
+    OnEventListener mOnEventListener;
     private SearchCardItemListAdapter mRecyclerAdapter;
     private boolean mIsDeleteVisible;
 

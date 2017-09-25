@@ -568,7 +568,7 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
         hideAutoCompleteScrollView();
     }
 
-    private void showAutoCompleteScrollView()
+    void showAutoCompleteScrollView()
     {
         ((OnEventListener) mOnEventListener).onChangeAutoCompleteScrollView(true);
 

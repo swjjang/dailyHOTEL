@@ -546,9 +546,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
 
         onReportError(throwable);
 
-        BaseActivity baseActivity = this;
-
-        if (baseActivity == null || baseActivity.isFinishing() == true)
+        if (isFinishing() == true)
         {
             return;
         }
@@ -558,7 +556,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
             // 팝업 에러 보여주기
             BaseException baseException = (BaseException) throwable;
 
-            baseActivity.showSimpleDialog(null, baseException.getMessage()//
+            showSimpleDialog(null, baseException.getMessage()//
                 , getString(R.string.dialog_btn_text_confirm), null, null, null, null, dialogInterface -> this.onBackPressed(), true);
         } else if (throwable instanceof HttpException)
         {
@@ -571,7 +569,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
                     new FacebookRemoteImpl().logOut();
                     new KakaoRemoteImpl().logOut();
 
-                    baseActivity.restartExpiredSession();
+                    restartExpiredSession();
                 }));
             } else
             {

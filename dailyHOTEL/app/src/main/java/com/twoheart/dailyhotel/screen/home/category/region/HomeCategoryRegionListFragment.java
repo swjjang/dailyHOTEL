@@ -26,9 +26,9 @@ import java.util.List;
 
 public class HomeCategoryRegionListFragment extends BaseFragment
 {
-    private BaseActivity mBaseActivity;
+    BaseActivity mBaseActivity;
     private HomeCategoryRegionListLayout mLayout;
-    private OnFragmentListener mOnFragmentListener;
+    OnFragmentListener mOnFragmentListener;
 
     private DailyCategoryType mDailyCategoryType;
 

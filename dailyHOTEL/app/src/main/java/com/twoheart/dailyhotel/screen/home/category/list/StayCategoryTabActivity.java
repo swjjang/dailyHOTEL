@@ -79,9 +79,9 @@ import retrofit2.Response;
  */
 public class StayCategoryTabActivity extends PlaceMainActivity
 {
-    private StayCategoryCuration mStayCategoryCuration;
-    private DailyCategoryType mDailyCategoryType;
-    private DailyDeepLink mDailyDeepLink;
+    StayCategoryCuration mStayCategoryCuration;
+    DailyCategoryType mDailyCategoryType;
+    DailyDeepLink mDailyDeepLink;
 
     public static Intent newInstance(Context context, DailyCategoryType categoryType, String deepLink)
     {
@@ -816,19 +816,19 @@ public class StayCategoryTabActivity extends PlaceMainActivity
             Intent intent = StayCategoryCurationActivity.newInstance(StayCategoryTabActivity.this, mViewType, mStayCategoryCuration);
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAYCURATION);
 
-            String viewType = AnalyticsManager.Label.VIEWTYPE_LIST;
-
-            switch (mViewType)
-            {
-                case LIST:
-                    viewType = AnalyticsManager.Label.VIEWTYPE_LIST;
-                    break;
-
-                case MAP:
-                    viewType = AnalyticsManager.Label.VIEWTYPE_MAP;
-                    break;
-            }
-
+//            String viewType = AnalyticsManager.Label.VIEWTYPE_LIST;
+//
+//            switch (mViewType)
+//            {
+//                case LIST:
+//                    viewType = AnalyticsManager.Label.VIEWTYPE_LIST;
+//                    break;
+//
+//                case MAP:
+//                    viewType = AnalyticsManager.Label.VIEWTYPE_MAP;
+//                    break;
+//            }
+//
             //            AnalyticsManager.getInstance(StaySubCategoryActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_//
             //                , AnalyticsManager.Action.HOTEL_SORT_FILTER_BUTTON_CLICKED, viewType, null);
         }

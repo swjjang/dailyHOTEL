@@ -58,19 +58,19 @@ import io.reactivex.schedulers.Schedulers;
 
 public class StayCampaignTagListPresenter extends BaseExceptionPresenter<StayCampaignTagListActivity, StayCampaignTagListInterface> implements StayCampaignTagListView.OnEventListener
 {
-    private CampaignTagListAnalyticsInterface mAnalytics;
+    CampaignTagListAnalyticsInterface mAnalytics;
 
     private CommonRemoteImpl mCommonRemoteImpl;
-    private CampaignTagRemoteImpl mCampaignTagRemoteImpl;
+    CampaignTagRemoteImpl mCampaignTagRemoteImpl;
 
-    private int mTagIndex;
-    private int mListCountByLongPress;
-    private String mTitle;
-    private StayBookingDay mStayBookingDay;
-    private CommonDateTime mCommonDateTime;
-    private StayCampaignTags mStayCampaignTags;
-    private PlaceViewItem mPlaceViewItemByLongPress;
-    private View mViewByLongPress;
+    int mTagIndex;
+    int mListCountByLongPress;
+    String mTitle;
+    StayBookingDay mStayBookingDay;
+    CommonDateTime mCommonDateTime;
+    StayCampaignTags mStayCampaignTags;
+    PlaceViewItem mPlaceViewItemByLongPress;
+    View mViewByLongPress;
 
     public StayCampaignTagListPresenter(@NonNull StayCampaignTagListActivity activity)
     {
@@ -513,7 +513,7 @@ public class StayCampaignTagListPresenter extends BaseExceptionPresenter<StayCam
         getViewInterface().setData(list, stayBookingDay);
     }
 
-    private ArrayList<PlaceViewItem> makePlaceList(ArrayList<Stay> stayList)
+    ArrayList<PlaceViewItem> makePlaceList(ArrayList<Stay> stayList)
     {
         ArrayList<PlaceViewItem> placeViewItemList = new ArrayList<>();
 
@@ -692,7 +692,7 @@ public class StayCampaignTagListPresenter extends BaseExceptionPresenter<StayCam
         startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_PREVIEW);
     }
 
-    private StayBookingDay getStayBookingDay(CommonDateTime commonDateTime)
+    StayBookingDay getStayBookingDay(CommonDateTime commonDateTime)
     {
         if (commonDateTime == null)
         {

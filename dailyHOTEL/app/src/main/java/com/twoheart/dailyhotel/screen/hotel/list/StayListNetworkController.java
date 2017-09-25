@@ -56,7 +56,7 @@ public class StayListNetworkController extends BaseNetworkController
             , params.getBedTypeList(), params.getLuxuryList(), abTestType, mStayListCallback);
     }
 
-    private ArrayList<Stay> makeStayList(JSONArray jsonArray, String imageUrl) throws JSONException
+    ArrayList<Stay> makeStayList(JSONArray jsonArray, String imageUrl) throws JSONException
     {
         if (jsonArray == null)
         {

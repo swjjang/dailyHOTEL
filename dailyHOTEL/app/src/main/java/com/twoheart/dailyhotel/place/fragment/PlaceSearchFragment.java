@@ -63,7 +63,7 @@ public abstract class PlaceSearchFragment extends BaseFragment
     protected List<Keyword> mKeywordList;
 
     private boolean mIsDateChanged;
-    private DailyLocationFactory mDailyLocationFactory;
+    DailyLocationFactory mDailyLocationFactory;
 
     protected abstract int getLayoutResourceId();
 

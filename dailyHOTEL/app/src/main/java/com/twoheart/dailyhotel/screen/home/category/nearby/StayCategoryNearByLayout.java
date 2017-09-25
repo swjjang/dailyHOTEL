@@ -48,7 +48,7 @@ public class StayCategoryNearByLayout extends BaseBlurLayout implements View.OnC
     private static final int ANIMATION_DELAY = 200;
 
     private View mToolbar;
-    private TextView mCalendarTextView;
+    TextView mCalendarTextView;
     private View mEmptyLayout, mSearchLocationLayout;
     private View mResultLayout;
 
@@ -533,7 +533,7 @@ public class StayCategoryNearByLayout extends BaseBlurLayout implements View.OnC
         mDistanceFilterSpinner.setEnabled(isVisible);
     }
 
-    private double getSpinnerRadiusValue(int spinnerPosition)
+    double getSpinnerRadiusValue(int spinnerPosition)
     {
         if (mDistanceFilterSpinner == null)
         {

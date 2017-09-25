@@ -73,9 +73,9 @@ public class MainActivity extends BaseActivity implements Constants, BaseMenuNav
     MainFragmentManager mMainFragmentManager;
     MenuBarLayout mMenuBarLayout;
     private Dialog mSettingNetworkDialog;
-    private Dialog mAppPermissionsGuideDialog;
+    Dialog mAppPermissionsGuideDialog;
     View mSplashLayout;
-    private DailyDeepLink mDailyDeepLink;
+    DailyDeepLink mDailyDeepLink;
 
     boolean mIsInitialization;
     boolean mIsBenefitAlarm;
@@ -241,7 +241,7 @@ public class MainActivity extends BaseActivity implements Constants, BaseMenuNav
         System.gc();
     }
 
-    private void clearDeepLink()
+    void clearDeepLink()
     {
         if (mDailyDeepLink == null)
         {
@@ -1009,7 +1009,7 @@ public class MainActivity extends BaseActivity implements Constants, BaseMenuNav
         mDistance = 0;
     }
 
-    private void analyticsRankABTest()
+    void analyticsRankABTest()
     {
         try
         {

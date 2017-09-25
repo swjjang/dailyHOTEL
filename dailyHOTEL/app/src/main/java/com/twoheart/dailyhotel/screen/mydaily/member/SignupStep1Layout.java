@@ -47,7 +47,7 @@ public class SignupStep1Layout extends BaseLayout implements OnClickListener, Vi
     private CheckBox mTermsOfServiceCheckBox;
     private CheckBox mTermsOfPrivacyCheckBox;
     private CheckBox mBenefitCheckBox;
-    private ScrollView mScrollView;
+    ScrollView mScrollView;
 
     public interface OnEventListener extends OnBaseEventListener
     {

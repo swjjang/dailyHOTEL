@@ -909,7 +909,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
             DisplayMetrics displayMetrics = new DisplayMetrics();
             getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
 
-            if (gourmetBookingDay == null || gourmetDetail == null || gourmetDetail.getGourmetDetailParams() == null)
+            if (gourmetBookingDay == null)
             {
                 setWishTextView(false, 0);
             } else

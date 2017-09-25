@@ -93,10 +93,10 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
     private BookingRemoteImpl mBookingRemoteImpl;
     private GourmetRemoteImpl mGourmetRemoteImpl;
 
-    private View mViewByLongPress;
-    private Gourmet mGourmetByLongPress;
+    View mViewByLongPress;
+    Gourmet mGourmetByLongPress;
 
-    private List<Gourmet> mRecommendGourmetList;
+    List<Gourmet> mRecommendGourmetList;
 
     public static Intent newInstance(Context context, int reservationIndex, String aggregationId, String imageUrl, boolean isDeepLink, int bookingState)
     {
@@ -871,7 +871,7 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
         }
     }
 
-    private ArrayList<CarouselListItem> convertCarouselListItemList(List<Gourmet> list)
+    ArrayList<CarouselListItem> convertCarouselListItemList(List<Gourmet> list)
     {
         ArrayList<Gourmet> gourmetList = new ArrayList<>();
         ArrayList<CarouselListItem> carouselListItemList = new ArrayList<CarouselListItem>();
@@ -912,7 +912,7 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-    private void startGourmetDetail(View view, Gourmet gourmet, TodayDateTime todayDateTime, StayBookingDetail stayBookingDetail)
+    void startGourmetDetail(View view, Gourmet gourmet, TodayDateTime todayDateTime, StayBookingDetail stayBookingDetail)
     {
         if (view == null || gourmet == null || todayDateTime == null || stayBookingDetail == null)
         {
@@ -1020,7 +1020,7 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
         }
     }
 
-    private void onReservationDetail(StayBookingDetail stayBookingDetail)
+    void onReservationDetail(StayBookingDetail stayBookingDetail)
     {
         if (stayBookingDetail == null)
         {
@@ -1136,7 +1136,7 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
         }
     }
 
-    private void analyticsOnScreen(StayBookingDetail stayBookingDetail, String refundPolicy)
+    void analyticsOnScreen(StayBookingDetail stayBookingDetail, String refundPolicy)
     {
         if (stayBookingDetail == null)
         {

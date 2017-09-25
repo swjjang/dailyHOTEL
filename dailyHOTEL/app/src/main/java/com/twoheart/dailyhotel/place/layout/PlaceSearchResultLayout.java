@@ -630,7 +630,7 @@ public abstract class PlaceSearchResultLayout extends BaseBlurLayout implements 
         mDistanceFilterSpinner.setEnabled(isVisible);
     }
 
-    private double getSpinnerRadiusValue(int spinnerPosition)
+    double getSpinnerRadiusValue(int spinnerPosition)
     {
         if (mDistanceFilterSpinner == null)
         {

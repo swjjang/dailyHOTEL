@@ -105,18 +105,13 @@ public class CalendarImpl implements CalendarInterface
                 @Override
                 public List<String> apply(@NonNull BaseListDto<String> stringBaseListDto) throws Exception
                 {
-                    List<String> availableDateList;
+                    List<String> availableDateList = new ArrayList<>();
 
                     if (stringBaseListDto != null)
                     {
                         if (stringBaseListDto.msgCode == 100 && stringBaseListDto.data != null)
                         {
-                            availableDateList = stringBaseListDto.data;
-
-                            if (availableDateList == null)
-                            {
-                                availableDateList = new ArrayList<String>();
-                            }
+                            availableDateList.addAll(stringBaseListDto.data);
                         } else
                         {
                             throw new BaseException(stringBaseListDto.msgCode, stringBaseListDto.msg);

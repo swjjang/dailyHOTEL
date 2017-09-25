@@ -41,9 +41,9 @@ public class GourmetPreviewActivity extends BaseActivity
     protected GourmetPreviewLayout mPreviewLayout;
     protected GourmetPreviewNetworkController mNetworkController;
 
-    private GourmetBookingDay mPlaceBookingDay;
-    private GourmetDetail mPlaceDetail;
-    private PlaceReviewScores mPlaceReviewScores;
+    GourmetBookingDay mPlaceBookingDay;
+    GourmetDetail mPlaceDetail;
+    PlaceReviewScores mPlaceReviewScores;
 
     private int mViewPrice;
 

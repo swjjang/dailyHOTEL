@@ -360,7 +360,7 @@ public class StayOutboundPreviewPresenter extends BaseExceptionPresenter<StayOut
         }
     }
 
-    private void onStayOutboundDetail(StayOutboundDetail stayOutboundDetail)
+    void onStayOutboundDetail(StayOutboundDetail stayOutboundDetail)
     {
         if (stayOutboundDetail == null || mStayBookDateTime == null)
         {

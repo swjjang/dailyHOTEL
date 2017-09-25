@@ -30,7 +30,7 @@ import java.util.ArrayList;
 
 public class GourmetCampaignListAdapter extends PlaceListAdapter
 {
-    private OnEventListener mOnEventListener;
+    OnEventListener mOnEventListener;
 
     public interface OnEventListener
     {

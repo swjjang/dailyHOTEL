@@ -324,7 +324,10 @@ public class RecentlyPlaceUtil
         {
             try
             {
-                cursor.close();
+                if (cursor != null)
+                {
+                    cursor.close();
+                }
             } catch (Exception e)
             {
             }
@@ -577,7 +580,10 @@ public class RecentlyPlaceUtil
         {
             try
             {
-                cursor.close();
+                if (cursor != null)
+                {
+                    cursor.close();
+                }
             } catch (Exception e)
             {
             }
@@ -662,7 +668,10 @@ public class RecentlyPlaceUtil
         {
             try
             {
-                cursor.close();
+                if (cursor != null)
+                {
+                    cursor.close();
+                }
             } catch (Exception e)
             {
             }

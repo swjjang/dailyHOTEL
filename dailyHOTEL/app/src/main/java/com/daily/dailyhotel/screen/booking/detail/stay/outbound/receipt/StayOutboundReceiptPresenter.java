@@ -230,12 +230,12 @@ public class StayOutboundReceiptPresenter extends BaseExceptionPresenter<StayOut
         getViewInterface().setFullScreenEnabled(mFullScreenEnabled);
     }
 
-    private void setStayOutboundReceipt(StayOutboundReceipt stayOutboundReceipt)
+    void setStayOutboundReceipt(StayOutboundReceipt stayOutboundReceipt)
     {
         mStayOutboundReceipt = stayOutboundReceipt;
     }
 
-    private void notifyStayOutboundReceiptChanged()
+    void notifyStayOutboundReceiptChanged()
     {
         if (mStayOutboundReceipt == null)
         {

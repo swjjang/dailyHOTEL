@@ -40,14 +40,14 @@ import retrofit2.Response;
 
 public class HomeCategoryRegionListActivity extends BaseActivity
 {
-    private DailyCategoryType mDailyCategoryType;
+    DailyCategoryType mDailyCategoryType;
     private StayBookingDay mStayBookingDay;
 
-    private DailyViewPager mViewPager;
-    private HomeCategoryRegionFragmentPagerAdapter mFragmentPagerAdapter; // 임시
+    DailyViewPager mViewPager;
+    HomeCategoryRegionFragmentPagerAdapter mFragmentPagerAdapter; // 임시
 
     private HomeCategoryRegionListNetworkController mNetworkController;
-    private DailyLocationFactory mDailyLocationFactory;
+    DailyLocationFactory mDailyLocationFactory;
 
     public static Intent newInstance(Context context //
         , DailyCategoryType categoryType, StayBookingDay stayBookingDay)
@@ -316,7 +316,7 @@ public class HomeCategoryRegionListActivity extends BaseActivity
         });
     }
 
-    private void showSearch()
+    void showSearch()
     {
         // 우선 고메가 없음으로 Stay로 고정
         Intent intent = SearchActivity.newInstance(this, PlaceType.HOTEL, mStayBookingDay);
@@ -343,7 +343,7 @@ public class HomeCategoryRegionListActivity extends BaseActivity
             , AnalyticsManager.Action.SEARCH_BUTTON_CLICK, label, null);
     }
 
-    private void requestRegionList(DailyCategoryType dailyCategoryType)
+    void requestRegionList(DailyCategoryType dailyCategoryType)
     {
         if (mNetworkController == null || dailyCategoryType == null)
         {

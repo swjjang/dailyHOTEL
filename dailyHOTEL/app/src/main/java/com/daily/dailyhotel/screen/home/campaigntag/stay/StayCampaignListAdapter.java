@@ -34,7 +34,7 @@ public class StayCampaignListAdapter extends PlaceListAdapter
 
     //    View.OnClickListener mOnClickListener;
 
-    private OnEventListener mOnEventListener;
+    OnEventListener mOnEventListener;
 
     public interface OnEventListener
     {

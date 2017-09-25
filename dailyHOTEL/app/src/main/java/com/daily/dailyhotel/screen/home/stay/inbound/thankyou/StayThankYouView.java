@@ -71,33 +71,18 @@ public class StayThankYouView extends BaseBlurView<StayThankYouView.OnEventListe
             @Override
             public void onViewAllClick()
             {
-                if (getEventListener() == null)
-                {
-                    return;
-                }
-
                 getEventListener().onRecommendGourmetViewAllClick();
             }
 
             @Override
             public void onItemClick(View view)
             {
-                if (getEventListener() == null)
-                {
-                    return;
-                }
-
                 getEventListener().onRecommendGourmetItemClick(view);
             }
 
             @Override
             public void onItemLongClick(View view)
             {
-                if (getEventListener() == null)
-                {
-                    return;
-                }
-
                 getEventListener().onRecommendGourmetItemLongClick(view);
             }
         });

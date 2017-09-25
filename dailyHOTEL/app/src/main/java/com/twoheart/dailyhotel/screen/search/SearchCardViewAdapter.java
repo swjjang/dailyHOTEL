@@ -25,13 +25,13 @@ public class SearchCardViewAdapter extends RecyclerView.Adapter<SearchCardViewAd
     private static final float CARD_WIDTH_RATIO = 0.772f; // 270/360 = 0.772222222222222;
 
     private Context mContext;
-    private OnEventListener mOnEventListener;
+    OnEventListener mOnEventListener;
 
     private ArrayList<SearchCardItem> mRecentlyPlaceList;
     private ArrayList<SearchCardItem> mCampaignTagList;
     private ArrayList<SearchCardItem> mRecentKeywordList;
 
-    private int mType;
+    int mType;
 
     public interface OnEventListener
     {

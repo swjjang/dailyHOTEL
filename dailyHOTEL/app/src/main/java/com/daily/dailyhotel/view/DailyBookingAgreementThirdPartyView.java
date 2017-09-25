@@ -13,9 +13,9 @@ import com.twoheart.dailyhotel.databinding.DailyViewBookingAgreementThirdPartyDa
 
 public class DailyBookingAgreementThirdPartyView extends LinearLayout
 {
-    private DailyViewBookingAgreementThirdPartyDataBinding mViewDataBinding;
+    DailyViewBookingAgreementThirdPartyDataBinding mViewDataBinding;
 
-    private OnAgreementClickListener mOnAgreementClickListener;
+    OnAgreementClickListener mOnAgreementClickListener;
 
     public interface OnAgreementClickListener
     {

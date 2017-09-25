@@ -84,23 +84,23 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
     private CommonRemoteImpl mCommonRemoteImpl;
 
     private CommonDateTime mCommonDateTime;
-    private StayBookDateTime mStayBookDateTime;
+    StayBookDateTime mStayBookDateTime;
 
     private Suggest mSuggest;
     private People mPeople;
-    private StayOutboundFilters mStayOutboundFilters;
-    private List<StayOutbound> mStayOutboundList;
-    private DailyLocationExFactory mDailyLocationExFactory;
+    StayOutboundFilters mStayOutboundFilters;
+    List<StayOutbound> mStayOutboundList;
+    DailyLocationExFactory mDailyLocationExFactory;
 
     // 리스트 요청시에 다음이 있는지에 대한 인자들
-    private String mCacheKey, mCacheLocation;
-    private boolean mMoreResultsAvailable, mMoreEnabled;
+    String mCacheKey, mCacheLocation;
+    boolean mMoreResultsAvailable, mMoreEnabled;
 
     private ViewState mViewState = ViewState.LIST;
     private boolean mFirstRequest;
 
-    private StayOutbound mStayOutboundByLongPress;
-    private android.support.v4.util.Pair[] mPairsByLongPress;
+    StayOutbound mStayOutboundByLongPress;
+    android.support.v4.util.Pair[] mPairsByLongPress;
 
     enum ViewState
     {
@@ -348,7 +348,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
         switch (requestCode)
         {
             case StayOutboundListActivity.REQUEST_CODE_DETAIL:
-                if (requestCode == BaseActivity.RESULT_CODE_REFRESH)
+                if (resultCode == BaseActivity.RESULT_CODE_REFRESH)
                 {
                     if (mStayOutboundFilters != null && mStayOutboundFilters.sortType == StayOutboundFilters.SortType.DISTANCE)
                     {
@@ -1120,7 +1120,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
         mStayOutboundFilters.rating = rating;
     }
 
-    private void setFilter(StayOutboundFilters.SortType sortType, double latitude, double longitude)
+    void setFilter(StayOutboundFilters.SortType sortType, double latitude, double longitude)
     {
         if (mStayOutboundFilters == null)
         {
@@ -1260,7 +1260,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
         getViewInterface().setPeopleText(mPeople.toShortString(getActivity()));
     }
 
-    private void notifyFilterChanged()
+    void notifyFilterChanged()
     {
         if (mStayOutboundFilters == null)
         {
@@ -1321,7 +1321,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
         }
     }
 
-    private void setScreenVisible(ScreenType screenType, StayOutboundFilters filters)
+    void setScreenVisible(ScreenType screenType, StayOutboundFilters filters)
     {
         if (screenType == null || getViewInterface() == null)
         {

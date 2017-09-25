@@ -37,7 +37,7 @@ public class PlacePreviewLayout extends BaseLayout implements View.OnClickListen
     private View mImageLayout;
     private View mPopupLayout, mBottomBarLayout;
     private View mMoreInformationLayout;
-    private View mWishPopupLayout;
+    View mWishPopupLayout;
     private TextView mWishPopupTextView;
 
     protected TextView mPlaceGradeTextView, mPlaceSubGradeTextView;

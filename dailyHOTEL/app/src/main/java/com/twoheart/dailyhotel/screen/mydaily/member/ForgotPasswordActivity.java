@@ -158,7 +158,7 @@ public class ForgotPasswordActivity extends BaseActivity implements Constants, O
         }
     }
 
-    private void onChangePassword(boolean isSuccess, String message)
+    void onChangePassword(boolean isSuccess, String message)
     {
         unLockUI();
 

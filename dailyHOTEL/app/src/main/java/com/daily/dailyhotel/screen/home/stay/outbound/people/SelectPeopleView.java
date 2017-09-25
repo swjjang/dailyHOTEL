@@ -316,7 +316,7 @@ public class SelectPeopleView extends BaseDialogView<SelectPeopleView.OnEventLis
             mSelectedPosition = -1;
         }
 
-        private void setSelectedPosition(int position)
+        void setSelectedPosition(int position)
         {
             mSelectedPosition = position;
         }

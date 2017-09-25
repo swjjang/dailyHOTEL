@@ -292,7 +292,10 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
         {
             try
             {
-                cursor.close();
+                if (cursor != null)
+                {
+                    cursor.close();
+                }
             } catch (Exception e)
             {
                 // do nothing!
@@ -351,7 +354,10 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
         {
             try
             {
-                cursor.close();
+                if (cursor != null)
+                {
+                    cursor.close();
+                }
             } catch (Exception e)
             {
                 // do nothing!
@@ -562,7 +568,10 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
         {
             try
             {
-                cursor.close();
+                if (cursor != null)
+                {
+                    cursor.close();
+                }
             } catch (Exception e)
             {
                 // do nothing
@@ -808,7 +817,10 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
         {
             try
             {
-                cursor.close();
+                if (cursor != null)
+                {
+                    cursor.close();
+                }
             } catch (Exception e)
             {
                 // do nothing!
@@ -851,7 +863,10 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
         {
             try
             {
-                cursor.close();
+                if (cursor != null)
+                {
+                    cursor.close();
+                }
             } catch (Exception e)
             {
                 // do nothing!
@@ -944,7 +959,10 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
         {
             try
             {
-                cursor.close();
+                if (cursor != null)
+                {
+                    cursor.close();
+                }
             } catch (Exception e)
             {
                 // do nothing

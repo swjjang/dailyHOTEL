@@ -50,7 +50,7 @@ public class MyDailyLayout extends BaseLayout implements View.OnClickListener
     private TextView mPushBenefitTextView;
 
     private DailyScrollView mScrollView;
-    private BaseMenuNavigationFragment.OnScreenScrollChangeListener mOnScreenScrollChangeListener;
+    BaseMenuNavigationFragment.OnScreenScrollChangeListener mOnScreenScrollChangeListener;
 
     public interface OnEventListener extends OnBaseEventListener
     {

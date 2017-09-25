@@ -35,9 +35,9 @@ import java.util.List;
 
 public class GourmetDetailLayout extends PlaceDetailLayout
 {
-    private SimpleDraweeView mStickerSimpleDraweeView;
+    SimpleDraweeView mStickerSimpleDraweeView;
 
-    private GourmetDetailItemLayout mGourmetDetailItemLayout;
+    GourmetDetailItemLayout mGourmetDetailItemLayout;
 
     public interface OnEventListener extends PlaceDetailLayout.OnEventListener
     {
@@ -324,10 +324,10 @@ public class GourmetDetailLayout extends PlaceDetailLayout
         mStickerSimpleDraweeView.setController(controller);
     }
 
-    private ObjectAnimator mShowBottomAnimator;
-    private ObjectAnimator mHideBottomAnimator;
+    ObjectAnimator mShowBottomAnimator;
+    ObjectAnimator mHideBottomAnimator;
 
-    private void showBottomLayout(boolean animation)
+    void showBottomLayout(boolean animation)
     {
         if (mBottomLayout == null)
         {
@@ -386,7 +386,7 @@ public class GourmetDetailLayout extends PlaceDetailLayout
         }
     }
 
-    private void hideBottomLayout(boolean animation)
+    void hideBottomLayout(boolean animation)
     {
         if (mBottomLayout == null)
         {

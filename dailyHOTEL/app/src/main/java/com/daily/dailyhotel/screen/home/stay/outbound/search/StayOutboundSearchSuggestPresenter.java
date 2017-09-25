@@ -100,7 +100,7 @@ public class StayOutboundSearchSuggestPresenter extends BaseExceptionPresenter<S
         if (DailyTextUtils.isTextEmpty(mKeyword) == false)
         {
             getViewInterface().setKeywordEditText(mKeyword);
-//            return;
+            //            return;
         }
 
         getViewInterface().showKeyboard();
@@ -204,7 +204,7 @@ public class StayOutboundSearchSuggestPresenter extends BaseExceptionPresenter<S
         });
     }
 
-    private List<Suggest> getRecentlySuggestList()
+    List<Suggest> getRecentlySuggestList()
     {
         DailyDb dailyDb = DailyDbHelper.getInstance().open(getActivity());
 
@@ -251,7 +251,10 @@ public class StayOutboundSearchSuggestPresenter extends BaseExceptionPresenter<S
         {
             try
             {
-                cursor.close();
+                if (cursor != null)
+                {
+                    cursor.close();
+                }
             } catch (Exception e)
             {
             }

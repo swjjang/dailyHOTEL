@@ -25,7 +25,7 @@ public class GourmetSearchResultListFragment extends GourmetListFragment
 {
     boolean mResetCategory = true;
     boolean mIsDeepLink;
-    private SearchType mSearchType;
+    SearchType mSearchType;
 
     public interface OnGourmetSearchResultListFragmentListener extends OnGourmetListFragmentListener
     {
