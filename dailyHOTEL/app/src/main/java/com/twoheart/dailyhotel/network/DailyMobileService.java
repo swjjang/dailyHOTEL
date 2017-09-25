@@ -662,7 +662,7 @@ public interface DailyMobileService
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET("{mobileAPI}")
-    Observable<BaseDto<TrueReviewsData>> getGourmetTrueReviews(@Path(value = "mobileAPI", encoded = true) String mobileAPI//
+    Observable<BaseDto<TrueReviewsData>> getTrueReviews(@Path(value = "mobileAPI", encoded = true) String mobileAPI//
         , @Query("page") int page, @Query("limit") int limit, @Query("sortProperty") String sortProperty, @Query("sortDirection") String sortDirection);
 
 

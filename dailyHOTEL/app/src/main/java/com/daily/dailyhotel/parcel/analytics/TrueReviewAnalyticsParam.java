@@ -7,16 +7,16 @@ import android.os.Parcelable;
  * Created by android_sam on 2017. 6. 23..
  */
 
-public class GourmetTrueReviewAnalyticsParam implements Parcelable
+public class TrueReviewAnalyticsParam implements Parcelable
 {
     public String category;
 
-    public GourmetTrueReviewAnalyticsParam()
+    public TrueReviewAnalyticsParam()
     {
         super();
     }
 
-    public GourmetTrueReviewAnalyticsParam(Parcel in)
+    public TrueReviewAnalyticsParam(Parcel in)
     {
         readFromParcel(in);
     }
@@ -41,15 +41,15 @@ public class GourmetTrueReviewAnalyticsParam implements Parcelable
     public static final Creator CREATOR = new Creator()
     {
         @Override
-        public GourmetTrueReviewAnalyticsParam createFromParcel(Parcel source)
+        public TrueReviewAnalyticsParam createFromParcel(Parcel source)
         {
-            return new GourmetTrueReviewAnalyticsParam(source);
+            return new TrueReviewAnalyticsParam(source);
         }
 
         @Override
-        public GourmetTrueReviewAnalyticsParam[] newArray(int size)
+        public TrueReviewAnalyticsParam[] newArray(int size)
         {
-            return new GourmetTrueReviewAnalyticsParam[size];
+            return new TrueReviewAnalyticsParam[size];
         }
     };
 }

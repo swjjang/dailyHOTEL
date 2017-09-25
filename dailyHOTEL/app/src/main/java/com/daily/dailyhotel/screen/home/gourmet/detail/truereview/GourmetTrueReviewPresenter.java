@@ -1,12 +1,10 @@
-package com.daily.dailyhotel.screen.home.gourmet.detail.review;
+package com.daily.dailyhotel.screen.home.gourmet.detail.truereview;
 
 
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 
 import com.daily.base.BaseActivity;
 import com.daily.base.BaseAnalyticsInterface;
@@ -14,8 +12,10 @@ import com.daily.dailyhotel.base.BaseExceptionPresenter;
 import com.daily.dailyhotel.entity.ReviewScores;
 import com.daily.dailyhotel.entity.TrueReviews;
 import com.daily.dailyhotel.parcel.ReviewScoresParcel;
-import com.daily.dailyhotel.parcel.analytics.GourmetTrueReviewAnalyticsParam;
+import com.daily.dailyhotel.parcel.analytics.TrueReviewAnalyticsParam;
 import com.daily.dailyhotel.repository.remote.GourmetRemoteImpl;
+import com.daily.dailyhotel.screen.common.truereview.TrueReviewInterface;
+import com.daily.dailyhotel.screen.common.truereview.TrueReviewView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.screen.common.ReviewTermsActivity;
 
@@ -30,7 +30,7 @@ import io.reactivex.functions.Function;
  * Created by sheldon
  * Clean Architecture
  */
-public class GourmetTrueReviewPresenter extends BaseExceptionPresenter<GourmetTrueReviewActivity, GourmetTrueReviewInterface> implements GourmetTrueReviewView.OnEventListener
+public class GourmetTrueReviewPresenter extends BaseExceptionPresenter<GourmetTrueReviewActivity, TrueReviewInterface> implements TrueReviewView.OnEventListener
 {
     private static final int TRUE_REVIEW_MAX_COUNT = 50;
 
@@ -46,12 +46,10 @@ public class GourmetTrueReviewPresenter extends BaseExceptionPresenter<GourmetTr
     private int mTotalPages;
     private int mNumberOfElements;
 
-    private int mScrollDistance;
-    private int mPrevScrollDistance;
 
     public interface GourmetTrueReviewAnalyticsInterface extends BaseAnalyticsInterface
     {
-        void setAnalyticsParam(GourmetTrueReviewAnalyticsParam analyticsParam);
+        void setAnalyticsParam(TrueReviewAnalyticsParam analyticsParam);
 
         void onScreen(Activity activity);
 
@@ -67,9 +65,9 @@ public class GourmetTrueReviewPresenter extends BaseExceptionPresenter<GourmetTr
 
     @NonNull
     @Override
-    protected GourmetTrueReviewInterface createInstanceViewInterface()
+    protected TrueReviewInterface createInstanceViewInterface()
     {
-        return new GourmetTrueReviewView(getActivity(), this);
+        return new TrueReviewView(getActivity(), this);
     }
 
     @Override
@@ -119,7 +117,7 @@ public class GourmetTrueReviewPresenter extends BaseExceptionPresenter<GourmetTr
         mLoadingPage = 1;
 
         getViewInterface().setToolbarTitle(getString(R.string.label_truereview));
-        getViewInterface().setReviewScores(mReviewScores.getReviewScoreList());
+        getViewInterface().setReviewScores(getString(R.string.message_detail_review_gourmet_explain), mReviewScores.getReviewScoreList());
     }
 
     @Override
@@ -289,86 +287,20 @@ public class GourmetTrueReviewPresenter extends BaseExceptionPresenter<GourmetTr
     }
 
     @Override
-    public void onScroll(RecyclerView recyclerView, int dx, int dy)
+    public void onNextPage()
     {
-        if (recyclerView == null || mTotalElements == 0)
+        if (getViewInterface() == null || mTotalElements == 0)
         {
             return;
         }
 
-        LinearLayoutManager linearLayoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
-
-        if (linearLayoutManager == null)
+        if (mPage < mTotalPages && mPage + 1 != mLoadingPage)
         {
-            return;
-        }
+            getViewInterface().addLoadingFooter();
+            mLoadingPage = mPage + 1;
 
-        boolean isLoading = false;
-
-        int lastVisibleItemPosition = linearLayoutManager.findLastVisibleItemPosition();
-        int itemCount = linearLayoutManager.getItemCount();
-
-        if (itemCount > 0 && itemCount - 1 < mTotalElements)
-        {
-            if (lastVisibleItemPosition >= (itemCount - 1) / 3)
-            {
-                if (mPage < mTotalPages && mPage + 1 != mLoadingPage)
-                {
-                    isLoading = true;
-
-                    getViewInterface().addLoadingFooter();
-                    mLoadingPage = mPage + 1;
-
-                    setRefresh(true);
-                    onRefresh(false);
-                }
-            }
-        }
-
-        if (linearLayoutManager.findFirstVisibleItemPosition() == 0 //
-            && recyclerView.getChildAt(0).getTop() == 0)
-        {
-            getViewInterface().setTopButtonVisible(false);
-            return;
-        }
-
-        mScrollDistance += dy;
-
-        if (isLoading == false && lastVisibleItemPosition > mTotalElements)
-        {
-            getViewInterface().setTopButtonVisible(true);
-            return;
-        }
-
-        final int visibleDistance = recyclerView.getHeight() / 6;
-        int moveDistance = mScrollDistance - mPrevScrollDistance;
-
-        if (moveDistance > 0 && moveDistance > visibleDistance)
-        {
-            getViewInterface().setTopButtonVisible(false);
-            mPrevScrollDistance = mScrollDistance;
-        } else if (moveDistance < 0 && -moveDistance > visibleDistance)
-        {
-            getViewInterface().setTopButtonVisible(true);
-            mPrevScrollDistance = mScrollDistance;
-        }
-    }
-
-    @Override
-    public void onScrollStateChanged(RecyclerView recyclerView, int newState)
-    {
-        switch (newState)
-        {
-            case RecyclerView.SCROLL_STATE_DRAGGING:
-                break;
-
-            case RecyclerView.SCROLL_STATE_IDLE:
-                mScrollDistance = 0;
-                mPrevScrollDistance = 0;
-                break;
-
-            case RecyclerView.SCROLL_STATE_SETTLING:
-                break;
+            setRefresh(true);
+            onRefresh(false);
         }
     }
 

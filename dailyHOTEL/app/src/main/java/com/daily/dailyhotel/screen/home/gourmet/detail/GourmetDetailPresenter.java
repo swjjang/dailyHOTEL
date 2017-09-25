@@ -27,7 +27,7 @@ import com.daily.dailyhotel.entity.User;
 import com.daily.dailyhotel.entity.WishResult;
 import com.daily.dailyhotel.parcel.analytics.GourmetDetailAnalyticsParam;
 import com.daily.dailyhotel.parcel.analytics.GourmetPaymentAnalyticsParam;
-import com.daily.dailyhotel.parcel.analytics.GourmetTrueReviewAnalyticsParam;
+import com.daily.dailyhotel.parcel.analytics.TrueReviewAnalyticsParam;
 import com.daily.dailyhotel.parcel.analytics.NavigatorAnalyticsParam;
 import com.daily.dailyhotel.repository.remote.CalendarImpl;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
@@ -37,7 +37,7 @@ import com.daily.dailyhotel.screen.common.dialog.call.CallDialogActivity;
 import com.daily.dailyhotel.screen.common.dialog.navigator.NavigatorDialogActivity;
 import com.daily.dailyhotel.screen.common.images.ImageListActivity;
 import com.daily.dailyhotel.screen.home.gourmet.detail.menus.GourmetMenusActivity;
-import com.daily.dailyhotel.screen.home.gourmet.detail.review.GourmetTrueReviewActivity;
+import com.daily.dailyhotel.screen.home.gourmet.detail.truereview.GourmetTrueReviewActivity;
 import com.daily.dailyhotel.screen.home.gourmet.payment.GourmetPaymentActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.detail.StayOutboundDetailActivity;
 import com.daily.dailyhotel.util.RecentlyPlaceUtil;
@@ -1062,7 +1062,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
             return;
         }
 
-        GourmetTrueReviewAnalyticsParam analyticsParam = new GourmetTrueReviewAnalyticsParam();
+        TrueReviewAnalyticsParam analyticsParam = new TrueReviewAnalyticsParam();
         analyticsParam.category = mGourmetDetail.category;
 
         startActivityForResult(GourmetTrueReviewActivity.newInstance(getActivity(), mGourmetDetail.index, mReviewScores, analyticsParam), GourmetDetailActivity.REQUEST_CODE_TRUE_VIEW);

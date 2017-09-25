@@ -1,4 +1,4 @@
-package com.daily.dailyhotel.screen.home.gourmet.detail.review;
+package com.daily.dailyhotel.screen.common.truereview;
 
 import com.daily.base.BaseDialogViewInterface;
 import com.daily.dailyhotel.entity.ReviewScore;
@@ -8,9 +8,9 @@ import java.util.List;
 
 import io.reactivex.Observable;
 
-public interface GourmetTrueReviewInterface extends BaseDialogViewInterface
+public interface TrueReviewInterface extends BaseDialogViewInterface
 {
-    void setReviewScores(List<ReviewScore> reviewScoreList);
+    void setReviewScores(String title, List<ReviewScore> reviewScoreList);
 
     void showReviewScoresAnimation();
 

@@ -1,4 +1,4 @@
-package com.daily.dailyhotel.screen.home.gourmet.detail.review;
+package com.daily.dailyhotel.screen.home.gourmet.detail.truereview;
 
 
 import android.content.Context;
@@ -9,7 +9,7 @@ import android.support.annotation.NonNull;
 import com.daily.base.BaseActivity;
 import com.daily.dailyhotel.entity.ReviewScores;
 import com.daily.dailyhotel.parcel.ReviewScoresParcel;
-import com.daily.dailyhotel.parcel.analytics.GourmetTrueReviewAnalyticsParam;
+import com.daily.dailyhotel.parcel.analytics.TrueReviewAnalyticsParam;
 import com.twoheart.dailyhotel.R;
 
 /**
@@ -23,7 +23,7 @@ public class GourmetTrueReviewActivity extends BaseActivity<GourmetTrueReviewPre
     static final String INTENT_EXTRA_DATA_GOURMET_INDEX = "gourmetIndex";
     static final String INTENT_EXTRA_DATA_REVIEW_SCORES = "reviewScores";
 
-    public static Intent newInstance(Context context, int gourmetIndex, ReviewScores reviewScores, GourmetTrueReviewAnalyticsParam analyticsParam)
+    public static Intent newInstance(Context context, int gourmetIndex, ReviewScores reviewScores, TrueReviewAnalyticsParam analyticsParam)
     {
         Intent intent = new Intent(context, GourmetTrueReviewActivity.class);
         intent.putExtra(INTENT_EXTRA_DATA_GOURMET_INDEX, gourmetIndex);

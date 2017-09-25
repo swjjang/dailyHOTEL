@@ -1395,7 +1395,19 @@ public class DailyMobileAPI
         Map<String, String> urlParams = new HashMap<>();
         urlParams.put("{restaurantIdx}", Integer.toString(gourmetIndex));
 
-        return mDailyMobileService.getGourmetTrueReviews(Crypto.getUrlDecoderEx(API, urlParams), page, limit, "createdAt", "DESC")//
+        return mDailyMobileService.getTrueReviews(Crypto.getUrlDecoderEx(API, urlParams), page, limit, "createdAt", "DESC")//
+            .subscribeOn(Schedulers.io());
+    }
+
+    public Observable<BaseDto<TrueReviewsData>> getStayTrueReviews(int stayIndex, int page, int limit)
+    {
+        final String API = Constants.UNENCRYPTED_URL ? "api/v4/review/hotel/{stayIndex}"//
+            : "NjUkNDgkNzgkMjgkMyQ2MCQ4MyQ0NiQ1OSQ4OSQxNyQxMyQ3OCQxOSQ5NSQyNyQ=$MzUR1QUNBMzQxON0JBYQM0M1NThRBRUI5YRkQxNTVCMkMwOEZDTMEMzTOUZGOUETzNDkI5MjFGRCDBENB0UzOURDINXzc5YRIjg1RQ==$";
+
+        Map<String, String> urlParams = new HashMap<>();
+        urlParams.put("{stayIndex}", Integer.toString(stayIndex));
+
+        return mDailyMobileService.getTrueReviews(Crypto.getUrlDecoderEx(API, urlParams), page, limit, "createdAt", "DESC")//
             .subscribeOn(Schedulers.io());
     }
 

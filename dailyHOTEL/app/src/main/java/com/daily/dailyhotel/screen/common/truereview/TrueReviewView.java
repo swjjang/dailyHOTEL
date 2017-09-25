@@ -1,7 +1,6 @@
-package com.daily.dailyhotel.screen.home.gourmet.detail.review;
+package com.daily.dailyhotel.screen.common.truereview;
 
 import android.animation.Animator;
-import android.animation.AnimatorSet;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.databinding.DataBindingUtil;
@@ -43,11 +42,11 @@ import java.util.List;
 import io.reactivex.Observable;
 import io.reactivex.Observer;
 
-public class GourmetTrueReviewView extends BaseDialogView<GourmetTrueReviewView.OnEventListener, ActivityTrueReviewDataBinding>//
-    implements GourmetTrueReviewInterface
+public class TrueReviewView extends BaseDialogView<TrueReviewView.OnEventListener, ActivityTrueReviewDataBinding>//
+    implements TrueReviewInterface
 {
     private TrueReviewListAdapter mTrueReviewListAdapter;
-    private boolean mShowProgressbarAnimation;
+    boolean mShowProgressbarAnimation;
 
     public interface OnEventListener extends OnBaseEventListener
     {
@@ -55,12 +54,10 @@ public class GourmetTrueReviewView extends BaseDialogView<GourmetTrueReviewView.
 
         void onTopClick();
 
-        void onScroll(RecyclerView recyclerView, int dx, int dy);
-
-        void onScrollStateChanged(RecyclerView recyclerView, int newState);
+        void onNextPage();
     }
 
-    public GourmetTrueReviewView(BaseActivity baseActivity, GourmetTrueReviewView.OnEventListener listener)
+    public TrueReviewView(BaseActivity baseActivity, TrueReviewView.OnEventListener listener)
     {
         super(baseActivity, listener);
     }
@@ -78,6 +75,9 @@ public class GourmetTrueReviewView extends BaseDialogView<GourmetTrueReviewView.
 
         viewDataBinding.recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener()
         {
+            private int mScrollDistance;
+            private int mPrevScrollDistance;
+
             public void onScrolled(RecyclerView recyclerView, int dx, int dy)
             {
                 if (recyclerView.isComputingLayout() == true)
@@ -85,7 +85,48 @@ public class GourmetTrueReviewView extends BaseDialogView<GourmetTrueReviewView.
                     return;
                 }
 
-                getEventListener().onScroll(recyclerView, dx, dy);
+                LinearLayoutManager linearLayoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
+
+                if (linearLayoutManager == null)
+                {
+                    return;
+                }
+
+                int lastVisibleItemPosition = linearLayoutManager.findLastVisibleItemPosition();
+                int itemCount = linearLayoutManager.getItemCount();
+
+                if (lastVisibleItemPosition >= (itemCount - 1) * 2 / 3)
+                {
+                    getEventListener().onNextPage();
+                }
+
+                if (linearLayoutManager.findFirstVisibleItemPosition() == 0 //
+                    && recyclerView.getChildAt(0).getTop() == 0)
+                {
+                    setTopButtonVisible(false);
+                    return;
+                }
+
+                mScrollDistance += dy;
+
+                if (lastVisibleItemPosition == itemCount - 1)
+                {
+                    setTopButtonVisible(true);
+                    return;
+                }
+
+                final int visibleDistance = recyclerView.getHeight() / 6;
+                int moveDistance = mScrollDistance - mPrevScrollDistance;
+
+                if (moveDistance > 0 && moveDistance > visibleDistance)
+                {
+                    setTopButtonVisible(false);
+                    mPrevScrollDistance = mScrollDistance;
+                } else if (moveDistance < 0 && -moveDistance > visibleDistance)
+                {
+                    setTopButtonVisible(true);
+                    mPrevScrollDistance = mScrollDistance;
+                }
             }
 
             @Override
@@ -96,7 +137,19 @@ public class GourmetTrueReviewView extends BaseDialogView<GourmetTrueReviewView.
                     return;
                 }
 
-                getEventListener().onScrollStateChanged(recyclerView, newState);
+                switch (newState)
+                {
+                    case RecyclerView.SCROLL_STATE_DRAGGING:
+                        break;
+
+                    case RecyclerView.SCROLL_STATE_IDLE:
+                        mScrollDistance = 0;
+                        mPrevScrollDistance = 0;
+                        break;
+
+                    case RecyclerView.SCROLL_STATE_SETTLING:
+                        break;
+                }
             }
         });
 
@@ -129,6 +182,7 @@ public class GourmetTrueReviewView extends BaseDialogView<GourmetTrueReviewView.
         });
     }
 
+    @Override
     public Observable<Boolean> smoothScrollTop()
     {
         if (getViewDataBinding() == null)
@@ -222,7 +276,7 @@ public class GourmetTrueReviewView extends BaseDialogView<GourmetTrueReviewView.
     }
 
     @Override
-    public void setReviewScores(List<ReviewScore> reviewScoreList)
+    public void setReviewScores(String title, List<ReviewScore> reviewScoreList)
     {
         if (getViewDataBinding() == null || reviewScoreList == null || reviewScoreList.size() == 0)
         {
@@ -239,7 +293,7 @@ public class GourmetTrueReviewView extends BaseDialogView<GourmetTrueReviewView.
 
         objectItemList.add(new ObjectItem(ObjectItem.TYPE_HEADER_VIEW, reviewScoreList));
 
-        mTrueReviewListAdapter.setHeader(getString(R.string.message_detail_review_gourmet_explain), objectItemList);
+        mTrueReviewListAdapter.setHeader(title, objectItemList);
         mTrueReviewListAdapter.notifyDataSetChanged();
     }
 

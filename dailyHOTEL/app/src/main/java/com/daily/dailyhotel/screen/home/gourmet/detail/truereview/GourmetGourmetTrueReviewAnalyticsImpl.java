@@ -1,8 +1,8 @@
-package com.daily.dailyhotel.screen.home.gourmet.detail.review;
+package com.daily.dailyhotel.screen.home.gourmet.detail.truereview;
 
 import android.app.Activity;
 
-import com.daily.dailyhotel.parcel.analytics.GourmetTrueReviewAnalyticsParam;
+import com.daily.dailyhotel.parcel.analytics.TrueReviewAnalyticsParam;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import java.util.HashMap;
@@ -10,10 +10,10 @@ import java.util.Map;
 
 public class GourmetGourmetTrueReviewAnalyticsImpl implements GourmetTrueReviewPresenter.GourmetTrueReviewAnalyticsInterface
 {
-    private GourmetTrueReviewAnalyticsParam mAnalyticsParam;
+    private TrueReviewAnalyticsParam mAnalyticsParam;
 
     @Override
-    public void setAnalyticsParam(GourmetTrueReviewAnalyticsParam analyticsParam)
+    public void setAnalyticsParam(TrueReviewAnalyticsParam analyticsParam)
     {
         mAnalyticsParam = analyticsParam;
     }
