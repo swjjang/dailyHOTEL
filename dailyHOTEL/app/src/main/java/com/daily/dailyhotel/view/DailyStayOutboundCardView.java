@@ -60,8 +60,6 @@ public class DailyStayOutboundCardView extends ConstraintLayout
     private void initLayout(Context context)
     {
         mViewDataBinding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.daily_view_stay_outbound_card_data, this, true);
-
-        setGradientView(mViewDataBinding.gradientBottomView);
     }
 
     /**
@@ -378,45 +376,12 @@ public class DailyStayOutboundCardView extends ConstraintLayout
             return null;
         }
 
-        android.support.v4.util.Pair[] pairs = new Pair[3];
+        android.support.v4.util.Pair[] pairs = new Pair[4];
         pairs[0] = android.support.v4.util.Pair.create(mViewDataBinding.simpleDraweeView, getContext().getString(R.string.transition_place_image));
         pairs[1] = android.support.v4.util.Pair.create(mViewDataBinding.stayNameTextView, getContext().getString(R.string.transition_place_name));
-        pairs[2] = android.support.v4.util.Pair.create(mViewDataBinding.gradientBottomView, getContext().getString(R.string.transition_gradient_bottom_view));
+        pairs[2] = android.support.v4.util.Pair.create(mViewDataBinding.gradientTopView, getContext().getString(R.string.transition_gradient_top_view));
+        pairs[3] = android.support.v4.util.Pair.create(mViewDataBinding.gradientBottomView, getContext().getString(R.string.transition_gradient_bottom_view));
 
         return pairs;
-    }
-
-    private void setGradientView(View view)
-    {
-        if (view == null)
-        {
-            return;
-        }
-
-        // 그라디에이션 만들기.
-        final int colors[] = {Color.parseColor("#E5000000"), Color.parseColor("#99000000"), Color.parseColor("#00000000")};
-        final float positions[] = {0.0f, 0.50f, 1.0f};
-
-        PaintDrawable paintDrawable = new PaintDrawable();
-        paintDrawable.setShape(new RectShape());
-
-        ShapeDrawable.ShaderFactory shaderFactory = new ShapeDrawable.ShaderFactory()
-        {
-            @Override
-            public Shader resize(int width, int height)
-            {
-                return new LinearGradient(0, height, 0, 0, colors, positions, Shader.TileMode.CLAMP);
-            }
-        };
-
-        paintDrawable.setShaderFactory(shaderFactory);
-
-        if (VersionUtils.isOverAPI16() == true)
-        {
-            view.setBackground(paintDrawable);
-        } else
-        {
-            view.setBackgroundDrawable(paintDrawable);
-        }
     }
 }

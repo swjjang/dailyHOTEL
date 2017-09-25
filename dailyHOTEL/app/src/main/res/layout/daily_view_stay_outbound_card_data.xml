@@ -57,9 +57,19 @@
             app:srcCompat="@drawable/vector_navibar_ic_heart_off_black"/>
 
         <View
+            android:id="@+id/gradientTopView"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="@id/simpleDraweeView"
+            app:layout_constraintLeft_toLeftOf="@id/simpleDraweeView"
+            app:layout_constraintRight_toRightOf="@id/simpleDraweeView"
+            app:layout_constraintTop_toTopOf="@id/simpleDraweeView"/>
+
+        <View
             android:id="@+id/gradientBottomView"
             android:layout_width="0dp"
             android:layout_height="63dp"
+            android:background="@drawable/shape_gradient_card_bottom"
             app:layout_constraintBottom_toBottomOf="@id/simpleDraweeView"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"/>

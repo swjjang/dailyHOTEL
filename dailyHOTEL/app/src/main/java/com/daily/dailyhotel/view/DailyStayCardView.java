@@ -336,38 +336,4 @@ public class DailyStayCardView extends ConstraintLayout
 
         return pairs;
     }
-
-    //    private void setGradientView(View view)
-    //    {
-    //        if (view == null)
-    //        {
-    //            return;
-    //        }
-    //
-    //        // 그라디에이션 만들기.
-    //        final int colors[] = {Color.parseColor("#E5000000"), Color.parseColor("#99000000"), Color.parseColor("#00000000")};
-    //        final float positions[] = {0.0f, 0.50f, 1.0f};
-    //
-    //        PaintDrawable paintDrawable = new PaintDrawable();
-    //        paintDrawable.setShape(new RectShape());
-    //
-    //        ShapeDrawable.ShaderFactory shaderFactory = new ShapeDrawable.ShaderFactory()
-    //        {
-    //            @Override
-    //            public Shader resize(int width, int height)
-    //            {
-    //                return new LinearGradient(0, height, 0, 0, colors, positions, Shader.TileMode.CLAMP);
-    //            }
-    //        };
-    //
-    //        paintDrawable.setShaderFactory(shaderFactory);
-    //
-    //        if (VersionUtils.isOverAPI16() == true)
-    //        {
-    //            view.setBackground(paintDrawable);
-    //        } else
-    //        {
-    //            view.setBackgroundDrawable(paintDrawable);
-    //        }
-    //    }
 }

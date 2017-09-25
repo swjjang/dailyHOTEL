@@ -1068,50 +1068,6 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
 
         startActivityForResult(GourmetTrueReviewActivity.newInstance(getActivity(), mGourmetDetail.index, mReviewScores, analyticsParam), GourmetDetailActivity.REQUEST_CODE_TRUE_VIEW);
 
-
-        //        addCompositeDisposable(Observable.just(mReviewScores).subscribeOn(Schedulers.io()).map(new Function<ReviewScores, PlaceReviewScores>()
-        //        {
-        //            @Override
-        //            public PlaceReviewScores apply(@io.reactivex.annotations.NonNull ReviewScores reviewScores) throws Exception
-        //            {
-        //                PlaceReviewScores placeReviewScores = new PlaceReviewScores();
-        //                placeReviewScores.reviewScoreTotalCount = mReviewScores.reviewScoreTotalCount;
-        //
-        //                if (mReviewScores.getReviewScoreList() != null)
-        //                {
-        //                    List<PlaceReviewScore> reviewScoreList = new ArrayList<>();
-        //
-        //                    for (ReviewScore reviewScore : mReviewScores.getReviewScoreList())
-        //                    {
-        //                        PlaceReviewScore placeReviewScore = new PlaceReviewScore();
-        //                        placeReviewScore.type = reviewScore.type;
-        //                        placeReviewScore.scoreAvg = reviewScore.scoreAverage;
-        //
-        //                        reviewScoreList.add(placeReviewScore);
-        //                    }
-        //
-        //                    placeReviewScores.reviewScoreAvgs = reviewScoreList;
-        //                }
-        //
-        //                return placeReviewScores;
-        //            }
-        //        }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<PlaceReviewScores>()
-        //        {
-        //            @Override
-        //            public void accept(PlaceReviewScores placeReviewScores) throws Exception
-        //            {
-        //                startActivityForResult(GourmetReviewActivity.newInstance(getActivity()//
-        //                    , mGourmetDetail.index, mGourmetDetail.category, placeReviewScores), GourmetDetailActivity.REQUEST_CODE_TRUE_VIEW);
-        //            }
-        //        }, new Consumer<Throwable>()
-        //        {
-        //            @Override
-        //            public void accept(Throwable throwable) throws Exception
-        //            {
-        //
-        //            }
-        //        }));
-
         mAnalytics.onEventTrueReviewClick(getActivity());
     }
 
