@@ -63,6 +63,8 @@ public class DailyPreference
 
     private static final String KEY_IS_VIEW_STAY_CATEGORY_TOOLTIP = "34";
 
+    private static final String KEY_IS_VIEW_STAY_SEARCH_OB_TOOLTIP = "35";
+
     //    private static final String KEY_STAY_LAST_VIEW_DATE = "108";
     //    private static final String KEY_GOURMET_LAST_VIEW_DATE = "109";
 
