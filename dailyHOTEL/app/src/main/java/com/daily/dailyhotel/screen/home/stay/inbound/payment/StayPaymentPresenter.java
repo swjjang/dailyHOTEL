@@ -599,7 +599,7 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
                     setStayBookDateTime(stayPayment.checkInDate, stayPayment.checkOutDate);
                     setSelectCard(getSelectedCard(cardList));
                     setUserInformation(userSimpleInformation);
-                    setPensionPopupMessageType(commonDateTime, mStayBookDateTime);
+                    setWaitingPopupMessageType(commonDateTime, mStayBookDateTime);
 
                     return mStayBookDateTime;
                 }
@@ -1985,7 +1985,7 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
         }
     }
 
-    private void setPensionPopupMessageType(CommonDateTime commonDateTime, StayBookDateTime stayBookDateTime) throws Exception
+    private void setWaitingPopupMessageType(CommonDateTime commonDateTime, StayBookDateTime stayBookDateTime) throws Exception
     {
         if (commonDateTime == null)
         {
@@ -2037,7 +2037,7 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
 
         if (waitingForBooking == true)
         {
-            messages = getPensionAgreedTermMessages(mWaitingForBookingMessageType, paymentType);
+            messages = getWaitingAgreedTermMessages(mWaitingForBookingMessageType, paymentType);
         } else
         {
             switch (paymentType)
@@ -2091,7 +2091,7 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
         return messages;
     }
 
-    private int[] getPensionAgreedTermMessages(int pensionMessageType, DailyBookingPaymentTypeView.PaymentType paymentType)
+    private int[] getWaitingAgreedTermMessages(int waitingMessageType, DailyBookingPaymentTypeView.PaymentType paymentType)
     {
         if (paymentType == null)
         {
@@ -2111,7 +2111,7 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
         messageList[0] = R.string.dialog_msg_hotel_payment_message01;
         messageList[1] = R.string.dialog_msg_hotel_payment_message14;
 
-        switch (pensionMessageType)
+        switch (waitingMessageType)
         {
             case 1:
                 messageList[2] = R.string.dialog_msg_hotel_payment_message_pension_1; // 당일 9시 부터 다음날 새벽 3시
