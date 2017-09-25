@@ -645,6 +645,13 @@ public class GourmetSearchFragment extends PlaceSearchFragment
                 return;
             }
 
+            if (campaignTag == null)
+            {
+                NullPointerException exception = new NullPointerException("campaignTag is null");
+                Crashlytics.logException(exception);
+                return;
+            }
+
             startCampaignTagList(campaignTag.index, campaignTag.campaignTag);
         }
 
