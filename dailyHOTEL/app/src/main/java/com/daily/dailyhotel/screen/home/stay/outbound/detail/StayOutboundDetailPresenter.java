@@ -262,9 +262,6 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
 
                         mDailyDeepLink.clear();
                         mDailyDeepLink = null;
-
-                        setRefresh(true);
-                        onRefresh(true);
                     }
                 }, new Consumer<Throwable>()
                 {
@@ -371,7 +368,10 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
             }));
         } else
         {
-            onRefresh(true);
+            if (mIsDeepLink == false)
+            {
+                setRefresh(true);
+            }
         }
     }
 
