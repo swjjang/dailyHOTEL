@@ -718,6 +718,16 @@ public class DailyPreference
         return getValue(mPreferences, KEY_IS_VIEW_STAY_CATEGORY_TOOLTIP, false);
     }
 
+    public void setStaySearchObTooltip(boolean value)
+    {
+        setValue(mEditor, KEY_IS_VIEW_STAY_SEARCH_OB_TOOLTIP, value);
+    }
+
+    public boolean isStaySearchObTooltip()
+    {
+        return getValue(mPreferences, KEY_IS_VIEW_STAY_SEARCH_OB_TOOLTIP, true);
+    }
+
     public void setIsRequestReview(boolean value)
     {
         setValue(mEditor, KEY_IS_REQUEST_REVIEW, value);

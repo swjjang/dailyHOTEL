@@ -1,10 +1,13 @@
 package com.twoheart.dailyhotel.screen.search;
 
+import android.animation.Animator;
+import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.animation.LinearInterpolator;
 import android.widget.CompoundButton;
 
 import com.daily.base.util.DailyTextUtils;
@@ -20,6 +23,7 @@ import com.twoheart.dailyhotel.place.fragment.PlaceSearchFragment;
 import com.twoheart.dailyhotel.screen.search.gourmet.GourmetSearchFragment;
 import com.twoheart.dailyhotel.screen.search.stay.StaySearchFragment;
 import com.twoheart.dailyhotel.util.DailyCalendar;
+import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
@@ -36,6 +40,7 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
     private SearchFragmentPagerAdapter mSearchFragmentPagerAdapter;
     DailyViewPager mViewPager;
     View mSearchView;
+    View mTooltipLayout;
     PlaceType mPlaceType;
 
     StaySearchFragment mStaySearchFragment;
@@ -139,6 +144,8 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
     {
         initToolbar(placeType);
 
+        mTooltipLayout = findViewById(R.id.tooltipLayout);
+
         StayBookingDay stayBookingDay = null;
         GourmetBookingDay gourmetBookingDay = null;
 
@@ -148,6 +155,23 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
             {
                 case HOTEL:
                 {
+                    if (DailyPreference.getInstance(this).isStaySearchObTooltip() == true)
+                    {
+                        DailyPreference.getInstance(this).setStaySearchObTooltip(false);
+                        mTooltipLayout.setVisibility(View.VISIBLE);
+                        mTooltipLayout.setOnClickListener(new View.OnClickListener()
+                        {
+                            @Override
+                            public void onClick(View v)
+                            {
+                                hideAnimationTooltip();
+                            }
+                        });
+                    } else
+                    {
+                        mTooltipLayout.setVisibility(View.GONE);
+                    }
+
                     stayBookingDay = (StayBookingDay) placeBookingDay;
 
                     gourmetBookingDay = new GourmetBookingDay();
@@ -157,6 +181,8 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
 
                 case FNB:
                 {
+                    mTooltipLayout.setVisibility(View.GONE);
+
                     gourmetBookingDay = (GourmetBookingDay) placeBookingDay;
 
                     stayBookingDay = new StayBookingDay();
@@ -551,5 +577,52 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
             ExLog.d(e.getMessage());
         }
 
+    }
+
+    void hideAnimationTooltip()
+    {
+        if (mTooltipLayout.getTag() != null)
+        {
+            return;
+        }
+
+        final ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(mTooltipLayout, "alpha", 1.0f, 0.0f);
+
+        mTooltipLayout.setTag(objectAnimator);
+
+        objectAnimator.setInterpolator(new LinearInterpolator());
+        objectAnimator.setDuration(300);
+        objectAnimator.addListener(new Animator.AnimatorListener()
+        {
+            @Override
+            public void onAnimationStart(Animator animator)
+            {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animator)
+            {
+                objectAnimator.removeAllListeners();
+                objectAnimator.removeAllUpdateListeners();
+
+                mTooltipLayout.setTag(null);
+                mTooltipLayout.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animator)
+            {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animator)
+            {
+
+            }
+        });
+
+        objectAnimator.start();
     }
 }
