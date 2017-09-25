@@ -246,7 +246,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
 
         if (isRefresh() == true)
         {
-            retryClick();
+            onRetryClick();
         }
 
         if (Util.supportPreview(getActivity()) == true)
@@ -1012,7 +1012,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
     }
 
     @Override
-    public void retryClick()
+    public void onRetryClick()
     {
         if (lock() == true)
         {
@@ -1024,7 +1024,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
     }
 
     @Override
-    public void researchClick()
+    public void onResearchClick()
     {
         if (lock() == true)
         {
