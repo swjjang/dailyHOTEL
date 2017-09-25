@@ -599,7 +599,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
         setScreenVisible(ScreenType.DEFAULT, mStayOutboundFilters);
 
         addCompositeDisposable(Observable.zip(mCommonRemoteImpl.getCommonDateTime()//
-            , mStayOutboundRemoteImpl.getStayOutboundList(mStayBookDateTime, mSuggest.id, mSuggest.categoryKey//
+            , mStayOutboundRemoteImpl.getList(mStayBookDateTime, mSuggest.id, mSuggest.categoryKey//
                 , mPeople, mStayOutboundFilters, mCacheKey, mCacheLocation)//
             , (commonDateTime, stayOutbounds) ->
             {
@@ -879,7 +879,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
         {
             mMoreEnabled = false;
 
-            addCompositeDisposable(mStayOutboundRemoteImpl.getStayOutboundList(mStayBookDateTime, mSuggest.id, mSuggest.categoryKey//
+            addCompositeDisposable(mStayOutboundRemoteImpl.getList(mStayBookDateTime, mSuggest.id, mSuggest.categoryKey//
                 , mPeople, mStayOutboundFilters, mCacheKey, mCacheLocation).subscribe(stayOutbounds ->
             {
                 onStayOutbounds(stayOutbounds);

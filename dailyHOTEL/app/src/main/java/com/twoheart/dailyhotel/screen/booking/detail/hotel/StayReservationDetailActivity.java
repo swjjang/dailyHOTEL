@@ -1090,7 +1090,7 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
 
                 GourmetSearchParams gourmetParams = (GourmetSearchParams) gourmetCuration.toPlaceParams(1, 10, true);
 
-                addCompositeDisposable(mGourmetRemoteImpl.getGourmetList(gourmetParams) //
+                addCompositeDisposable(mGourmetRemoteImpl.getList(gourmetParams) //
                     .observeOn(Schedulers.io()).map(new Function<List<Gourmet>, ArrayList<CarouselListItem>>()
                     {
                         @Override

@@ -14,17 +14,17 @@ import io.reactivex.Observable;
 
 public interface GourmetInterface
 {
-    Observable<List<Gourmet>> getGourmetList(GourmetParams gourmetParams);
+    Observable<List<Gourmet>> getList(GourmetParams gourmetParams);
 
-    Observable<GourmetDetail> getGourmetDetail(int gourmetIndex, GourmetBookDateTime gourmetBookDateTime);
+    Observable<GourmetDetail> getDetail(int gourmetIndex, GourmetBookDateTime gourmetBookDateTime);
 
-    Observable<Boolean> getGourmetHasCoupon(int gourmetIndex, GourmetBookDateTime gourmetBookDateTime);
+    Observable<Boolean> getHasCoupon(int gourmetIndex, GourmetBookDateTime gourmetBookDateTime);
 
-    Observable<WishResult> addGourmetWish(int gourmetIndex);
+    Observable<WishResult> addWish(int gourmetIndex);
 
-    Observable<WishResult> removeGourmetWish(int gourmetIndex);
+    Observable<WishResult> removeWish(int gourmetIndex);
 
-    Observable<ReviewScores> getGourmetReviewScores(int gourmetIndex);
+    Observable<ReviewScores> getReviewScores(int gourmetIndex);
 
-    Observable<TrueReviews> getGourmetTrueReviews(int gourmetIndex, int page, int limit);
+    Observable<TrueReviews> getTrueReviews(int gourmetIndex, int page, int limit);
 }

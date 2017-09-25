@@ -374,7 +374,7 @@ public class StayThankYouPresenter extends BaseExceptionPresenter<StayThankYouAc
                 gourmetCuration.setRadius(10d);
 
                 GourmetSearchParams gourmetParams = (GourmetSearchParams) gourmetCuration.toPlaceParams(1, 10, true);
-                return mGourmetRemoteImpl.getGourmetList(gourmetParams);
+                return mGourmetRemoteImpl.getList(gourmetParams);
             }
         });
 

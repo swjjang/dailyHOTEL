@@ -184,7 +184,7 @@ public class StayOutboundPreviewPresenter extends BaseExceptionPresenter<StayOut
         setRefresh(false);
         screenLock(showProgress);
 
-        addCompositeDisposable(mStayOutboundRemoteImpl.getStayOutboundDetail(mStayIndex, mStayBookDateTime, mPeople).subscribe(new Consumer<StayOutboundDetail>()
+        addCompositeDisposable(mStayOutboundRemoteImpl.getDetail(mStayIndex, mStayBookDateTime, mPeople).subscribe(new Consumer<StayOutboundDetail>()
         {
             @Override
             public void accept(@io.reactivex.annotations.NonNull StayOutboundDetail stayOutboundDetail) throws Exception

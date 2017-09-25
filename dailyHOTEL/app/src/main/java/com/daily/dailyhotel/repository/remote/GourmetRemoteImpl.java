@@ -37,7 +37,7 @@ public class GourmetRemoteImpl implements GourmetInterface
     }
 
     @Override
-    public Observable<List<Gourmet>> getGourmetList(GourmetParams gourmetParams)
+    public Observable<List<Gourmet>> getList(GourmetParams gourmetParams)
     {
         return DailyMobileAPI.getInstance(mContext) //
             .getGourmetList(gourmetParams.toParamsMap(), gourmetParams.getCategoryList(), gourmetParams.getTimeList(), gourmetParams.getLuxuryList()) //
@@ -68,7 +68,7 @@ public class GourmetRemoteImpl implements GourmetInterface
     }
 
     @Override
-    public Observable<GourmetDetail> getGourmetDetail(int gourmetIndex, GourmetBookDateTime gourmetBookDateTime)
+    public Observable<GourmetDetail> getDetail(int gourmetIndex, GourmetBookDateTime gourmetBookDateTime)
     {
         return DailyMobileAPI.getInstance(mContext).getGourmetDetail(gourmetIndex, gourmetBookDateTime.getVisitDateTime("yyyy-MM-dd")).map(new Function<BaseDto<GourmetDetailData>, GourmetDetail>()
         {
@@ -113,7 +113,7 @@ public class GourmetRemoteImpl implements GourmetInterface
     }
 
     @Override
-    public Observable<Boolean> getGourmetHasCoupon(int gourmetIndex, GourmetBookDateTime gourmetBookDateTime)
+    public Observable<Boolean> getHasCoupon(int gourmetIndex, GourmetBookDateTime gourmetBookDateTime)
     {
         return DailyMobileAPI.getInstance(mContext).getGourmetHasCoupon(gourmetIndex, gourmetBookDateTime.getVisitDateTime("yyyy-MM-dd")).map(new Function<BaseDto<ExistCouponsData>, Boolean>()
         {
@@ -136,7 +136,7 @@ public class GourmetRemoteImpl implements GourmetInterface
     }
 
     @Override
-    public Observable<WishResult> addGourmetWish(int gourmetIndex)
+    public Observable<WishResult> addWish(int gourmetIndex)
     {
         return DailyMobileAPI.getInstance(mContext).addGourmetWish(gourmetIndex).map(new Function<BaseDto<String>, WishResult>()
         {
@@ -160,7 +160,7 @@ public class GourmetRemoteImpl implements GourmetInterface
     }
 
     @Override
-    public Observable<WishResult> removeGourmetWish(int gourmetIndex)
+    public Observable<WishResult> removeWish(int gourmetIndex)
     {
         return DailyMobileAPI.getInstance(mContext).removeGourmetWish(gourmetIndex).map(new Function<BaseDto<String>, WishResult>()
         {
@@ -184,7 +184,7 @@ public class GourmetRemoteImpl implements GourmetInterface
     }
 
     @Override
-    public Observable<ReviewScores> getGourmetReviewScores(int gourmetIndex)
+    public Observable<ReviewScores> getReviewScores(int gourmetIndex)
     {
         return DailyMobileAPI.getInstance(mContext).getGourmetReviewScores(gourmetIndex).map(new Function<BaseDto<ReviewScoresData>, ReviewScores>()
         {
@@ -213,7 +213,7 @@ public class GourmetRemoteImpl implements GourmetInterface
     }
 
     @Override
-    public Observable<TrueReviews> getGourmetTrueReviews(int gourmetIndex, int page, int limit)
+    public Observable<TrueReviews> getTrueReviews(int gourmetIndex, int page, int limit)
     {
         return DailyMobileAPI.getInstance(mContext).getGourmetTrueReviews(gourmetIndex, page, limit).map(new Function<BaseDto<TrueReviewsData>, TrueReviews>()
         {

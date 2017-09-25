@@ -25,7 +25,7 @@ public class StayOutboundReceiptRemoteImpl implements StayOutboundReceiptInterfa
     }
 
     @Override
-    public Observable<StayOutboundReceipt> getStayOutboundReceipt(int bookingIndex)
+    public Observable<StayOutboundReceipt> getReceipt(int bookingIndex)
     {
         return DailyMobileAPI.getInstance(mContext).getStayOutboundReceipt(bookingIndex).map(new Function<BaseDto<StayOutboundReceiptData>, StayOutboundReceipt>()
         {
@@ -54,7 +54,7 @@ public class StayOutboundReceiptRemoteImpl implements StayOutboundReceiptInterfa
     }
 
     @Override
-    public Observable<String> getStayOutboundEmailReceipt(int bookingIndex, String email)
+    public Observable<String> getEmailReceipt(int bookingIndex, String email)
     {
         return DailyMobileAPI.getInstance(mContext).getStayOutboundEmailReceipt(bookingIndex, email).map(new Function<BaseDto<StayOutboundEmailReceiptData>, String>()
         {

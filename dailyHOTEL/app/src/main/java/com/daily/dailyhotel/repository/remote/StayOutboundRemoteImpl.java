@@ -35,7 +35,7 @@ public class StayOutboundRemoteImpl implements StayOutboundInterface
     }
 
     @Override
-    public Observable<StayOutbounds> getStayOutboundList(StayBookDateTime stayBookDateTime, long geographyId//
+    public Observable<StayOutbounds> getList(StayBookDateTime stayBookDateTime, long geographyId//
         , String geographyType, People people, StayOutboundFilters stayOutboundFilters, String cacheKey, String cacheLocation)
     {
         JSONObject jsonObject = new JSONObject();
@@ -112,7 +112,7 @@ public class StayOutboundRemoteImpl implements StayOutboundInterface
     }
 
     @Override
-    public Observable<StayOutboundDetail> getStayOutboundDetail(int index, StayBookDateTime stayBookDateTime, People people)
+    public Observable<StayOutboundDetail> getDetail(int index, StayBookDateTime stayBookDateTime, People people)
     {
         JSONObject jsonObject = new JSONObject();
 

@@ -617,7 +617,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
 
             if (wish == true)
             {
-                addCompositeDisposable(mGourmetRemoteImpl.addGourmetWish(mGourmetDetail.index)//
+                addCompositeDisposable(mGourmetRemoteImpl.addWish(mGourmetDetail.index)//
                     .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<WishResult>()
                     {
                         @Override
@@ -675,7 +675,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
                     }));
             } else
             {
-                addCompositeDisposable(mGourmetRemoteImpl.removeGourmetWish(mGourmetDetail.index)//
+                addCompositeDisposable(mGourmetRemoteImpl.removeWish(mGourmetDetail.index)//
                     .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<WishResult>()
                     {
                         @Override
@@ -1469,10 +1469,10 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
         }
 
         addCompositeDisposable(Observable.zip(observable//
-            , mGourmetRemoteImpl.getGourmetDetail(mGourmetIndex, mGourmetBookDateTime)//
+            , mGourmetRemoteImpl.getDetail(mGourmetIndex, mGourmetBookDateTime)//
             , mCalendarImpl.getGourmetUnavailableDates(mGourmetIndex, GourmetCalendarActivity.DEFAULT_CALENDAR_DAY_OF_MAX_COUNT, false)//
-            , mGourmetRemoteImpl.getGourmetReviewScores(mGourmetIndex)//
-            , mGourmetRemoteImpl.getGourmetHasCoupon(mGourmetIndex, mGourmetBookDateTime)//
+            , mGourmetRemoteImpl.getReviewScores(mGourmetIndex)//
+            , mGourmetRemoteImpl.getHasCoupon(mGourmetIndex, mGourmetBookDateTime)//
             , mCommonRemoteImpl.getCommonDateTime()//
             , new Function6<Boolean, GourmetDetail, List<Integer>, ReviewScores, Boolean, CommonDateTime, GourmetDetail>()
             {
