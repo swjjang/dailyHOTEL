@@ -573,7 +573,8 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
                 suggest = new Suggest(id, name, city, country, countryCode, categoryKey, display, latitude, longitude);
 
                 mIsShowCalendar = false;
-            } else {
+            } else
+            {
                 mIsShowCalendar = true;
             }
 
@@ -600,6 +601,11 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
 
     private void addSuggestDb(Suggest suggest)
     {
+        if (suggest == null)
+        {
+            return;
+        }
+
         DailyDb dailyDb = DailyDbHelper.getInstance().open(getActivity());
 
         dailyDb.addStayObRecentlySuggest(suggest.id, suggest.name, suggest.city, suggest.country //
