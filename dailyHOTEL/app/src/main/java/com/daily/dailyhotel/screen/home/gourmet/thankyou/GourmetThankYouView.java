@@ -14,6 +14,7 @@ import com.daily.dailyhotel.animation.ThankYouScreenAnimator;
 import com.daily.dailyhotel.view.DailyToolbarView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ActivityStayOutboundPaymentThankYouDataBinding;
+import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.CustomFontTypefaceSpan;
 
@@ -44,6 +45,8 @@ public class GourmetThankYouView extends BaseDialogView<GourmetThankYouView.OnEv
 
         viewDataBinding.thankYouInformationView.setVisibility(View.INVISIBLE);
         viewDataBinding.checkImageView.setVisibility(View.INVISIBLE);
+
+        EdgeEffectColor.setEdgeGlowColor(viewDataBinding.scrollLayout, getColor(R.color.transparent));
     }
 
     @Override

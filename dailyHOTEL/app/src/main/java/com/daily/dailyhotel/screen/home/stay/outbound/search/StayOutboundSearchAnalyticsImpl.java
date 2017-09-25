@@ -36,4 +36,28 @@ public class StayOutboundSearchAnalyticsImpl implements StayOutboundSearchPresen
         AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.SEARCH//
             , AnalyticsManager.Action.SEARCHSCREEN_OUTBOUND, AnalyticsManager.Label.CLOSED, null);
     }
+
+    @Override
+    public void onEventSuggestClick(Activity activity)
+    {
+        if (activity == null)
+        {
+            return;
+        }
+
+        AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.SEARCH//
+            , AnalyticsManager.Action.SEARCH_WINDOW_CLICK, null, null);
+    }
+
+    @Override
+    public void onEventPeopleClick(Activity activity)
+    {
+        if (activity == null)
+        {
+            return;
+        }
+
+        AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.SEARCH//
+            , AnalyticsManager.Action.MEMBER_SELECT, null, null);
+    }
 }

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:dailyCarousel="http://schemas.android.com/apk/res-auto"
     xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
     xmlns:dailyToolbar="http://schemas.android.com/apk/res-auto"
     xmlns:fresco="http://schemas.android.com/apk/res-auto">
@@ -18,7 +18,7 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             fresco:actualImageScaleType="centerCrop"
-            fresco:overlayImage="@drawable/img_detail_gradient"/>
+            fresco:overlayImage="@drawable/img_detail_gradient" />
 
         <View
             android:id="@+id/fakeLineView"
@@ -27,30 +27,49 @@
             android:layout_marginTop="5dp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/simpleDraweeView"/>
-
-        <View
-            android:layout_width="0dp"
-            android:layout_height="113dp"
-            android:background="@drawable/img_bottom_white_gradient"
-            app:layout_constraintBottom_toBottomOf="@+id/fakeLineView"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"/>
+            app:layout_constraintTop_toBottomOf="@+id/simpleDraweeView" />
 
         <ScrollView
+            android:id="@+id/scrollLayout"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:fillViewport="true"
             app:layout_constraintBottom_toTopOf="@+id/confirmLayout"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintTop_toBottomOf="@+id/toolbarView">
 
             <android.support.constraint.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingBottom="15dp"
-                android:paddingTop="52dp">
+                android:paddingBottom="15dp">
+
+                <FrameLayout
+                    android:id="@+id/scrollTopBackground"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    app:layout_constraintDimensionRatio="H,4:3"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="113dp"
+                        android:layout_gravity="bottom"
+                        android:background="@drawable/img_bottom_white_gradient" />
+                </FrameLayout>
+
+                <View
+                    android:id="@+id/scrollBottomBackground"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_marginTop="-1dp"
+                    android:background="@color/default_background"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/scrollTopBackground" />
 
                 <com.daily.dailyhotel.view.DailyThankYouInformationsView
                     android:id="@+id/thankYouInformationView"
@@ -62,7 +81,7 @@
                     android:visibility="invisible"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/checkImageView"/>
+                    app:layout_constraintTop_toTopOf="@+id/checkImageView" />
 
                 <ImageView
                     android:id="@+id/checkImageView"
@@ -73,7 +92,21 @@
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/ic_check_confirm_thinx"/>
+                    app:srcCompat="@drawable/ic_check_confirm_thinx" />
+
+                <com.daily.dailyhotel.view.carousel.DailyCarouselAnimationLayout
+                    android:id="@+id/recommendGourmetLayout"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/thankYouInformationView"
+                    dailyCarousel:bottomMarginBackgroundColor="@color/transparent"
+                    dailyCarousel:bottomMarginHeight="0dp"
+                    dailyCarousel:topMarginBackgroundColor="@color/transparent"
+                    dailyCarousel:topMarginHeight="15dp"
+                    dailyCarousel:useAnimation="false" />
 
                 <android.support.constraint.ConstraintLayout
                     android:id="@+id/stampLayout"
@@ -86,7 +119,7 @@
                     android:visibility="gone"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/thankYouInformationView">
+                    app:layout_constraintTop_toBottomOf="@+id/recommendGourmetLayout">
 
                     <ImageView
                         android:id="@+id/stampImageView"
@@ -97,7 +130,7 @@
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintRight_toRightOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintVertical_bias="0.5"/>
+                        app:layout_constraintVertical_bias="0.5" />
 
                     <LinearLayout
                         android:layout_width="0dp"
@@ -119,7 +152,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textColor="@color/default_text_c323232"
-                            android:textSize="13dp"/>
+                            android:textSize="13dp" />
 
                         <com.daily.base.widget.DailyTextView
                             android:id="@+id/message2TextView"
@@ -127,7 +160,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="4dp"
                             android:textColor="@color/default_text_c666666"
-                            android:textSize="12dp"/>
+                            android:textSize="12dp" />
 
                         <com.daily.base.widget.DailyTextView
                             android:id="@+id/message3TextView"
@@ -135,7 +168,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="6dp"
                             android:textColor="@color/default_text_c929292"
-                            android:textSize="12dp"/>
+                            android:textSize="12dp" />
                     </LinearLayout>
                 </android.support.constraint.ConstraintLayout>
             </android.support.constraint.ConstraintLayout>
@@ -149,7 +182,7 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             dailyToolbar:themeColor="white"
-            dailyToolbar:underLineVisible="false"/>
+            dailyToolbar:underLineVisible="false" />
 
         <android.support.constraint.ConstraintLayout
             android:id="@+id/confirmLayout"
@@ -165,7 +198,7 @@
                 android:layout_height="1dp"
                 android:background="@color/default_line_ce7e7e7"
                 app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"/>
+                app:layout_constraintRight_toRightOf="parent" />
 
             <com.daily.base.widget.DailyTextView
                 android:id="@+id/confirmView"
@@ -181,7 +214,7 @@
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                dailyFont:style="Medium"/>
+                dailyFont:style="Medium" />
         </android.support.constraint.ConstraintLayout>
     </android.support.constraint.ConstraintLayout>
 </layout>

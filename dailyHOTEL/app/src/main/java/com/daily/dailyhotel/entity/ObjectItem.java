@@ -1,6 +1,6 @@
 package com.daily.dailyhotel.entity;
 
-public class ListItem
+public class ObjectItem
 {
     public static final int TYPE_ENTRY = 0;
     public static final int TYPE_SECTION = 1;
@@ -13,7 +13,7 @@ public class ListItem
     public int mType;
     private Object mItem;
 
-    public ListItem(int type, Object item)
+    public ObjectItem(int type, Object item)
     {
         mType = type;
         mItem = item;

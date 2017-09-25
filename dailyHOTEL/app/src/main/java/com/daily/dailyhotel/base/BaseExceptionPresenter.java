@@ -33,6 +33,8 @@ public abstract class BaseExceptionPresenter<T1 extends BaseActivity, T2 extends
     {
         unLockAll();
 
+        onReportError(throwable);
+
         if (throwable instanceof BaseException)
         {
             // 팝업 에러 보여주기
@@ -62,9 +64,6 @@ public abstract class BaseExceptionPresenter<T1 extends BaseActivity, T2 extends
             } else
             {
                 DailyToast.showToast(getActivity(), getString(R.string.act_base_network_connect), DailyToast.LENGTH_LONG);
-
-                Crashlytics.log(httpException.response().raw().request().url().toString());
-                Crashlytics.logException(throwable);
             }
         } else
         {

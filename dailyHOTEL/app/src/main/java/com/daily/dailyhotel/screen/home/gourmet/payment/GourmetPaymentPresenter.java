@@ -1251,6 +1251,9 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
 
     private void startThankYou(String aggregationId, boolean fullBonus)
     {
+        // ThankYou 페이지를 홈탭에서 띄우기 위한 코드
+        startActivity(DailyInternalDeepLink.getHomeScreenLink(getActivity()));
+
         startActivityForResult(GourmetThankYouActivity.newInstance(getActivity(), mGourmetName, mImageUrl//
             , mVisitDateTime, mMenuName, mMenuCount, aggregationId//
             , mAnalytics.getThankYouAnalyticsParam())//

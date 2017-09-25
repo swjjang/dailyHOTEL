@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:dailyFont="http://schemas.android.com/apk/res-auto">
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/headerTitleLayout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:padding="15dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent">
+
+            <com.daily.base.widget.DailyTextView
+                android:id="@+id/trueReviewGuideTextView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
+                android:layout_toLeftOf="@+id/termsView"
+                android:text="@string/message_detail_review_stay_explain"
+                android:textColor="@color/default_text_c929292"
+                android:textSize="13dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toLeftOf="@+id/termsView"
+                app:layout_constraintTop_toTopOf="parent"/>
+
+            <com.daily.base.widget.DailyTextView
+                android:id="@+id/termsView"
+                android:layout_width="93dp"
+                android:layout_height="28dp"
+                android:layout_centerVertical="true"
+                android:background="@drawable/shape_fillrect_ldcdcdd_bffffff_r2"
+                android:gravity="center"
+                android:text="@string/label_detail_review_terms_go"
+                android:textColor="@color/default_text_c929292"
+                android:textSize="13dp"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
+        </android.support.constraint.ConstraintLayout>
+
+        <View
+            android:id="@+id/headerTitleUnderLineView"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:background="@color/default_line_cf0f0f0"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/headerTitleLayout"/>
+
+        <LinearLayout
+            android:id="@+id/progressBarLayout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:orientation="vertical"
+            android:paddingBottom="11dp"
+            android:paddingLeft="49dp"
+            android:paddingRight="50dp"
+            android:paddingTop="23dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/headerTitleUnderLineView"/>
+
+        <View
+            android:id="@+id/progressBarUnderLineView"
+            android:layout_width="0dp"
+            android:layout_height="12dp"
+            android:background="@drawable/layerlist_divider"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/progressBarLayout"/>
+
+        <com.daily.base.widget.DailyTextView
+            android:id="@+id/reviewCountTextView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:paddingTop="24dp"
+            android:textColor="@color/default_text_c323232"
+            android:textSize="15dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/progressBarUnderLineView"
+            dailyFont:style="Medium"/>
+    </android.support.constraint.ConstraintLayout>
+</layout>

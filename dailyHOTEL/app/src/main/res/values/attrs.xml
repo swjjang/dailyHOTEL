@@ -86,8 +86,8 @@
         <attr name="bottomMarginBackgroundColor" format="color" />
         <attr name="bottomLineHeight" format="dimension" />
         <attr name="bottomLineBackgroundColor" format="color" />
-        <attr name="use_animation" format="boolean" />
-        <attr name="use_price_layout" format="boolean" />
+        <attr name="useAnimation" format="boolean" />
+        <attr name="usePriceLayout" format="boolean" />
     </declare-styleable>
 
 </resources>

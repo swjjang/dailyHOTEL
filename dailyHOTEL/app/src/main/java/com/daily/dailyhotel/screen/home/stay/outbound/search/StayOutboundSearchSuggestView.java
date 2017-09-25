@@ -23,7 +23,7 @@ import com.daily.base.BaseDialogView;
 import com.daily.base.OnBaseEventListener;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ScreenUtils;
-import com.daily.dailyhotel.entity.ListItem;
+import com.daily.dailyhotel.entity.ObjectItem;
 import com.daily.dailyhotel.entity.Suggest;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ActivityStayOutboundSearchSuggestDataBinding;
@@ -250,23 +250,23 @@ public class StayOutboundSearchSuggestView extends BaseDialogView<StayOutboundSe
             mSuggestListAdapter.notifyDataSetChanged();
         } else
         {
-            List<ListItem> listItemList = new ArrayList<>(suggestList.size());
+            List<ObjectItem> objectItemList = new ArrayList<>(suggestList.size());
 
             for (Suggest suggest : suggestList)
             {
                 if (suggest.id == 0)
                 {
-                    listItemList.add(new ListItem(ListItem.TYPE_SECTION, suggest));
+                    objectItemList.add(new ObjectItem(ObjectItem.TYPE_SECTION, suggest));
                 } else
                 {
-                    listItemList.add(new ListItem(ListItem.TYPE_ENTRY, suggest));
+                    objectItemList.add(new ObjectItem(ObjectItem.TYPE_ENTRY, suggest));
                 }
             }
 
             // 마지막줄
-            listItemList.add(new ListItem(ListItem.TYPE_SECTION, new Suggest(0, null)));
+            objectItemList.add(new ObjectItem(ObjectItem.TYPE_SECTION, new Suggest(0, null)));
 
-            mSuggestListAdapter.setAll(getViewDataBinding().keywordEditText.getText().toString(), listItemList);
+            mSuggestListAdapter.setAll(getViewDataBinding().keywordEditText.getText().toString(), objectItemList);
             mSuggestListAdapter.notifyDataSetChanged();
         }
     }
@@ -312,6 +312,7 @@ public class StayOutboundSearchSuggestView extends BaseDialogView<StayOutboundSe
                 setSuggest(null);
                 setSuggests(null);
                 setSuggestsVisible(false);
+                setEmptySuggestsVisible(false);
                 break;
         }
     }
@@ -421,16 +422,16 @@ public class StayOutboundSearchSuggestView extends BaseDialogView<StayOutboundSe
 
         getViewDataBinding().recentlySuggestLayout.setVisibility(View.VISIBLE);
 
-        List<ListItem> listItemList = new ArrayList<>();
+        List<ObjectItem> objectItemList = new ArrayList<>();
 
         for (Suggest suggest : suggestList)
         {
-            listItemList.add(new ListItem(ListItem.TYPE_ENTRY, suggest));
+            objectItemList.add(new ObjectItem(ObjectItem.TYPE_ENTRY, suggest));
         }
 
-        listItemList.add(new ListItem(ListItem.TYPE_FOOTER_VIEW, null));
+        objectItemList.add(new ObjectItem(ObjectItem.TYPE_FOOTER_VIEW, null));
 
-        mRecentlySuggestListAdapter.setAll(listItemList);
+        mRecentlySuggestListAdapter.setAll(objectItemList);
         mRecentlySuggestListAdapter.notifyDataSetChanged();
     }
 
@@ -489,7 +490,7 @@ public class StayOutboundSearchSuggestView extends BaseDialogView<StayOutboundSe
         private View.OnClickListener mOnClickListener;
 
         private String mKeyword;
-        private List<ListItem> mSuggestList;
+        private List<ObjectItem> mSuggestList;
 
         public SuggestListAdapter(Context context, View.OnClickListener listener)
         {
@@ -504,7 +505,7 @@ public class StayOutboundSearchSuggestView extends BaseDialogView<StayOutboundSe
         {
             switch (viewType)
             {
-                case ListItem.TYPE_SECTION:
+                case ObjectItem.TYPE_SECTION:
                 {
                     ListRowStayOutboundSuggestTitleDataBinding dataBinding //
                         = DataBindingUtil.inflate(LayoutInflater.from(mContext) //
@@ -515,7 +516,7 @@ public class StayOutboundSearchSuggestView extends BaseDialogView<StayOutboundSe
                     return titleViewHolder;
                 }
 
-                case ListItem.TYPE_ENTRY:
+                case ObjectItem.TYPE_ENTRY:
                 {
                     ListRowStayOutboundSuggestEntryDataBinding dataBinding //
                         = DataBindingUtil.inflate(LayoutInflater.from(mContext) //
@@ -533,7 +534,7 @@ public class StayOutboundSearchSuggestView extends BaseDialogView<StayOutboundSe
         @Override
         public void onBindViewHolder(RecyclerView.ViewHolder holder, int position)
         {
-            ListItem item = getItem(position);
+            ObjectItem item = getItem(position);
 
             if (item == null)
             {
@@ -542,11 +543,11 @@ public class StayOutboundSearchSuggestView extends BaseDialogView<StayOutboundSe
 
             switch (item.mType)
             {
-                case ListItem.TYPE_SECTION:
+                case ObjectItem.TYPE_SECTION:
                     onBindViewHolder((TitleViewHolder) holder, item, position);
                     break;
 
-                case ListItem.TYPE_ENTRY:
+                case ObjectItem.TYPE_ENTRY:
                     onBindViewHolder((EntryViewHolder) holder, item, position);
                     break;
             }
@@ -570,7 +571,7 @@ public class StayOutboundSearchSuggestView extends BaseDialogView<StayOutboundSe
             return mSuggestList.get(position).mType;
         }
 
-        public void setAll(String keyword, List<ListItem> list)
+        public void setAll(String keyword, List<ObjectItem> objectItemList)
         {
             mKeyword = keyword;
 
@@ -581,13 +582,13 @@ public class StayOutboundSearchSuggestView extends BaseDialogView<StayOutboundSe
 
             mSuggestList.clear();
 
-            if (list != null && list.size() > 0)
+            if (objectItemList != null && objectItemList.size() > 0)
             {
-                mSuggestList.addAll(list);
+                mSuggestList.addAll(objectItemList);
             }
         }
 
-        public ListItem getItem(int position)
+        public ObjectItem getItem(int position)
         {
             if (position < 0 || mSuggestList.size() <= position)
             {
@@ -597,7 +598,7 @@ public class StayOutboundSearchSuggestView extends BaseDialogView<StayOutboundSe
             return mSuggestList.get(position);
         }
 
-        private void onBindViewHolder(TitleViewHolder holder, ListItem item, int position)
+        private void onBindViewHolder(TitleViewHolder holder, ObjectItem item, int position)
         {
             if (position == 0)
             {
@@ -620,7 +621,7 @@ public class StayOutboundSearchSuggestView extends BaseDialogView<StayOutboundSe
             holder.dataBinding.titleTextView.setText(suggest.display);
         }
 
-        private void onBindViewHolder(EntryViewHolder holder, ListItem item, int position)
+        private void onBindViewHolder(EntryViewHolder holder, ObjectItem item, int position)
         {
             Suggest suggest = item.getItem();
 
@@ -716,7 +717,7 @@ public class StayOutboundSearchSuggestView extends BaseDialogView<StayOutboundSe
         private Context mContext;
         private View.OnClickListener mOnClickListener;
 
-        private List<ListItem> mSuggestList;
+        private List<ObjectItem> mSuggestList;
 
         public RecentlySuggestListAdapter(Context context, View.OnClickListener listener)
         {
@@ -731,7 +732,7 @@ public class StayOutboundSearchSuggestView extends BaseDialogView<StayOutboundSe
         {
             switch (viewType)
             {
-                case ListItem.TYPE_FOOTER_VIEW:
+                case ObjectItem.TYPE_FOOTER_VIEW:
                 {
                     View view = new View(mContext);
                     ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ScreenUtils.dpToPx(mContext, 10d));
@@ -742,7 +743,7 @@ public class StayOutboundSearchSuggestView extends BaseDialogView<StayOutboundSe
                     return titleViewHolder;
                 }
 
-                case ListItem.TYPE_ENTRY:
+                case ObjectItem.TYPE_ENTRY:
                 {
                     ListRowStayOutboundSuggestEntryDataBinding dataBinding = DataBindingUtil.inflate(LayoutInflater.from(mContext), R.layout.list_row_stay_outbound_suggest_entry_data, parent, false);
 
@@ -758,7 +759,7 @@ public class StayOutboundSearchSuggestView extends BaseDialogView<StayOutboundSe
         @Override
         public void onBindViewHolder(RecyclerView.ViewHolder holder, int position)
         {
-            ListItem item = getItem(position);
+            ObjectItem item = getItem(position);
 
             if (item == null)
             {
@@ -767,10 +768,10 @@ public class StayOutboundSearchSuggestView extends BaseDialogView<StayOutboundSe
 
             switch (item.mType)
             {
-                case ListItem.TYPE_FOOTER_VIEW:
+                case ObjectItem.TYPE_FOOTER_VIEW:
                     break;
 
-                case ListItem.TYPE_ENTRY:
+                case ObjectItem.TYPE_ENTRY:
                     onBindViewHolder((EntryViewHolder) holder, item, position);
                     break;
             }
@@ -794,7 +795,7 @@ public class StayOutboundSearchSuggestView extends BaseDialogView<StayOutboundSe
             return mSuggestList.get(position).mType;
         }
 
-        public void setAll(List<ListItem> list)
+        public void setAll(List<ObjectItem> objectItemList)
         {
             if (mSuggestList == null)
             {
@@ -803,13 +804,13 @@ public class StayOutboundSearchSuggestView extends BaseDialogView<StayOutboundSe
 
             mSuggestList.clear();
 
-            if (list != null && list.size() > 0)
+            if (objectItemList != null && objectItemList.size() > 0)
             {
-                mSuggestList.addAll(list);
+                mSuggestList.addAll(objectItemList);
             }
         }
 
-        public ListItem getItem(int position)
+        public ObjectItem getItem(int position)
         {
             if (position < 0 || mSuggestList.size() <= position)
             {
@@ -819,7 +820,7 @@ public class StayOutboundSearchSuggestView extends BaseDialogView<StayOutboundSe
             return mSuggestList.get(position);
         }
 
-        private void onBindViewHolder(EntryViewHolder holder, ListItem item, int position)
+        private void onBindViewHolder(EntryViewHolder holder, ObjectItem item, int position)
         {
             Suggest suggest = item.getItem();
 

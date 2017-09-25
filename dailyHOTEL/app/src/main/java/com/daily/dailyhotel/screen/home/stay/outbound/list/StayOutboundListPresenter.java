@@ -24,7 +24,7 @@ import com.daily.base.util.ScreenUtils;
 import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
 import com.daily.dailyhotel.entity.CommonDateTime;
-import com.daily.dailyhotel.entity.ListItem;
+import com.daily.dailyhotel.entity.ObjectItem;
 import com.daily.dailyhotel.entity.People;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayOutbound;
@@ -246,7 +246,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
 
         if (isRefresh() == true)
         {
-            retryClick();
+            onRetryClick();
         }
 
         if (Util.supportPreview(getActivity()) == true)
@@ -1012,7 +1012,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
     }
 
     @Override
-    public void retryClick()
+    public void onRetryClick()
     {
         if (lock() == true)
         {
@@ -1024,7 +1024,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
     }
 
     @Override
-    public void researchClick()
+    public void onResearchClick()
     {
         if (lock() == true)
         {
@@ -1185,19 +1185,19 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
             }
         }
 
-        addCompositeDisposable(Observable.just(stayOutbounds).subscribeOn(Schedulers.io()).map(new Function<StayOutbounds, List<ListItem>>()
+        addCompositeDisposable(Observable.just(stayOutbounds).subscribeOn(Schedulers.io()).map(new Function<StayOutbounds, List<ObjectItem>>()
         {
             @Override
-            public List<ListItem> apply(StayOutbounds stayOutbounds) throws Exception
+            public List<ObjectItem> apply(StayOutbounds stayOutbounds) throws Exception
             {
-                List<ListItem> listItemList = new ArrayList<>();
+                List<ObjectItem> objectItemList = new ArrayList<>();
 
                 // Android 에서는 forEach를 사용하면 런타임시에 문제가 발생할수 있음.
                 //                stayOutbounds.getStayOutbound().forEach((stayOutbound) -> listItemList.add(new ListItem(ListItem.TYPE_ENTRY, stayOutbound)));
 
                 for (StayOutbound stayOutbound : stayOutbounds.getStayOutbound())
                 {
-                    listItemList.add(new ListItem(ListItem.TYPE_ENTRY, stayOutbound));
+                    objectItemList.add(new ObjectItem(ObjectItem.TYPE_ENTRY, stayOutbound));
                 }
 
                 if (DailyTextUtils.isTextEmpty(stayOutbounds.cacheKey, stayOutbounds.cacheLocation) == true)
@@ -1205,14 +1205,14 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
                     stayOutbounds.moreResultsAvailable = false;
                 }
 
-                if (listItemList.size() > 0)
+                if (objectItemList.size() > 0)
                 {
                     if (stayOutbounds.moreResultsAvailable == true)
                     {
-                        listItemList.add(new ListItem(ListItem.TYPE_LOADING_VIEW, null));
+                        objectItemList.add(new ObjectItem(ObjectItem.TYPE_LOADING_VIEW, null));
                     } else
                     {
-                        listItemList.add(new ListItem(ListItem.TYPE_FOOTER_VIEW, null));
+                        objectItemList.add(new ObjectItem(ObjectItem.TYPE_FOOTER_VIEW, null));
                     }
                 }
 
@@ -1220,18 +1220,18 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
                 mCacheLocation = stayOutbounds.cacheLocation;
                 mMoreEnabled = mMoreResultsAvailable;
 
-                return listItemList;
+                return objectItemList;
             }
-        }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<List<ListItem>>()
+        }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<List<ObjectItem>>()
         {
             @Override
-            public void accept(List<ListItem> listItems) throws Exception
+            public void accept(List<ObjectItem> objectItemList) throws Exception
             {
                 if (isAdded == false)
                 {
                     boolean isSortByDistance = mStayOutboundFilters != null && mStayOutboundFilters.sortType == StayOutboundFilters.SortType.DISTANCE;
 
-                    if (listItems == null || listItems.size() == 0)
+                    if (objectItemList == null || objectItemList.size() == 0)
                     {
                         setScreenVisible(ScreenType.EMPTY, mStayOutboundFilters);
                     } else
@@ -1239,12 +1239,12 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
                         setScreenVisible(ScreenType.LIST, mStayOutboundFilters);
                     }
 
-                    getViewInterface().setStayOutboundList(listItems, isSortByDistance, mStayBookDateTime.getNights() > 1);
+                    getViewInterface().setStayOutboundList(objectItemList, isSortByDistance, mStayBookDateTime.getNights() > 1);
                 } else
                 {
                     setScreenVisible(ScreenType.LIST, mStayOutboundFilters);
 
-                    getViewInterface().addStayOutboundList(listItems);
+                    getViewInterface().addStayOutboundList(objectItemList);
                 }
             }
         }));

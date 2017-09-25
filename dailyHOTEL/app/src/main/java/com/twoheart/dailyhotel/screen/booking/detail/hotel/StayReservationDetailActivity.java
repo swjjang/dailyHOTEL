@@ -1104,6 +1104,8 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
                         @Override
                         public void accept(@NonNull ArrayList<CarouselListItem> carouselListItemList) throws Exception
                         {
+                            unLockUI();
+
                             ((StayReservationDetailLayout) mPlaceReservationDetailLayout).setRecommendGourmetData(carouselListItemList);
 
                             boolean hasData = !(carouselListItemList == null || carouselListItemList.size() == 0);
@@ -1116,6 +1118,8 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
                         @Override
                         public void accept(@NonNull Throwable throwable) throws Exception
                         {
+                            unLockUI();
+                            
                             ((StayReservationDetailLayout) mPlaceReservationDetailLayout).setRecommendGourmetData(null);
 
                             AnalyticsManager.getInstance(StayReservationDetailActivity.this).recordEvent(AnalyticsManager.Category.BOOKING_DETAIL//
@@ -1482,7 +1486,8 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
                 location.setLongitude(stayBookingDetail.longitude);
 
                 Intent intent = GourmetBookingDetailMapActivity.newInstance( //
-                    StayReservationDetailActivity.this, title, gourmetBookingDay, gourmetList, location, stayBookingDetail.placeName);
+                    StayReservationDetailActivity.this, title, gourmetBookingDay, gourmetList //
+                    , location, stayBookingDetail.placeName, false);
 
                 StayReservationDetailActivity.this.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PLACE_BOOKING_DETAIL_MAP);
 

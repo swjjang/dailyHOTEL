@@ -23,11 +23,15 @@ import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
 import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.entity.CommonDateTime;
+import com.daily.dailyhotel.entity.ReviewScore;
+import com.daily.dailyhotel.entity.ReviewScores;
 import com.daily.dailyhotel.parcel.analytics.NavigatorAnalyticsParam;
 import com.daily.dailyhotel.parcel.analytics.StayPaymentAnalyticsParam;
+import com.daily.dailyhotel.parcel.analytics.TrueReviewAnalyticsParam;
 import com.daily.dailyhotel.repository.local.model.AnalyticsParam;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
 import com.daily.dailyhotel.screen.common.dialog.navigator.NavigatorDialogActivity;
+import com.daily.dailyhotel.screen.home.stay.inbound.detail.truereview.StayTrueReviewActivity;
 import com.daily.dailyhotel.screen.home.stay.inbound.payment.StayPaymentActivity;
 import com.daily.dailyhotel.util.RecentlyPlaceUtil;
 import com.facebook.drawee.drawable.ScalingUtils;
@@ -41,6 +45,7 @@ import com.twoheart.dailyhotel.model.StayDetail;
 import com.twoheart.dailyhotel.model.time.PlaceBookingDay;
 import com.twoheart.dailyhotel.model.time.StayBookingDay;
 import com.twoheart.dailyhotel.network.model.ImageInformation;
+import com.twoheart.dailyhotel.network.model.PlaceReviewScore;
 import com.twoheart.dailyhotel.network.model.PlaceReviewScores;
 import com.twoheart.dailyhotel.network.model.StayDetailParams;
 import com.twoheart.dailyhotel.network.model.StayProduct;
@@ -84,6 +89,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 import retrofit2.Call;
 import retrofit2.Response;
@@ -834,7 +840,9 @@ public class StayDetailActivity extends PlaceDetailActivity
             , stayDetailParams.name, imageUrl, stayProduct.roomIndex, stayProduct.totalDiscount, stayProduct.roomName//
             , stayBookingDay.getCheckInDay(DailyCalendar.ISO_8601_FORMAT)//
             , stayBookingDay.getCheckOutDay(DailyCalendar.ISO_8601_FORMAT)//
-            , stayDetailParams.isOverseas, stayDetailParams.category, stayPaymentAnalyticsParam);
+            , stayDetailParams.isOverseas, stayDetailParams.category //
+            , stayDetailParams.latitude, stayDetailParams.longitude //
+            , stayPaymentAnalyticsParam);
 
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_BOOKING);
     }
@@ -1528,10 +1536,55 @@ public class StayDetailActivity extends PlaceDetailActivity
                 return;
             }
 
-            String category = ((StayDetail) mPlaceDetail).getStayDetailParams().category;
+            //            startActivityForResult(StayReviewActivity.newInstance(StayDetailActivity.this//
+            //                , mPlaceDetail.index, category, mPlaceReviewScores), Constants.CODE_REQUEST_ACTIVITY_PLACE_REVIEW);
 
-            startActivityForResult(StayReviewActivity.newInstance(StayDetailActivity.this//
-                , mPlaceDetail.index, category, mPlaceReviewScores), Constants.CODE_REQUEST_ACTIVITY_PLACE_REVIEW);
+            TrueReviewAnalyticsParam analyticsParam = new TrueReviewAnalyticsParam();
+            analyticsParam.category = ((StayDetail) mPlaceDetail).getStayDetailParams().category;
+
+            addCompositeDisposable(Observable.just(mPlaceReviewScores).subscribeOn(Schedulers.io()).map(new Function<PlaceReviewScores, ReviewScores>()
+            {
+                @Override
+                public ReviewScores apply(@io.reactivex.annotations.NonNull PlaceReviewScores placeReviewScores) throws Exception
+                {
+                    ReviewScores reviewScores = new ReviewScores();
+                    reviewScores.reviewScoreTotalCount = placeReviewScores.reviewScoreTotalCount;
+
+                    if (placeReviewScores.reviewScoreAvgs != null)
+                    {
+                        List<ReviewScore> reviewScoreList = new ArrayList<>();
+
+                        for (PlaceReviewScore placeReviewScore : placeReviewScores.reviewScoreAvgs)
+                        {
+                            ReviewScore reviewScore = new ReviewScore();
+                            reviewScore.type = placeReviewScore.type;
+                            reviewScore.scoreAverage = placeReviewScore.scoreAvg;
+
+                            reviewScoreList.add(reviewScore);
+                        }
+
+                        reviewScores.setReviewScoreList(reviewScoreList);
+                    }
+
+                    return reviewScores;
+                }
+            }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<ReviewScores>()
+            {
+                @Override
+                public void accept(ReviewScores reviewScores) throws Exception
+                {
+                    startActivityForResult(StayTrueReviewActivity.newInstance(StayDetailActivity.this//
+                        , mPlaceDetail.index, reviewScores, analyticsParam), Constants.CODE_REQUEST_ACTIVITY_PLACE_REVIEW);
+                }
+            }, new Consumer<Throwable>()
+            {
+                @Override
+                public void accept(Throwable throwable) throws Exception
+                {
+
+                }
+            }));
+
 
             AnalyticsManager.getInstance(StayDetailActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
                 , AnalyticsManager.Action.TRUE_REVIEW_CLICK, AnalyticsManager.Label.STAY, null);

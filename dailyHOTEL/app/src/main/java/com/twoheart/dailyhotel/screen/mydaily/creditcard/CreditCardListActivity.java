@@ -368,10 +368,10 @@ public class CreditCardListActivity extends BaseActivity
 
                             if (cardcds == null)
                             {
-                                cardcds = CreditCard.getCardCDName(CreditCardListActivity.this, creditCard.cardcd);
+                                cardcds = creditCard.name;
                             } else
                             {
-                                cardcds += "," + CreditCard.getCardCDName(CreditCardListActivity.this, creditCard.cardcd);
+                                cardcds += "," + creditCard.name;
                             }
 
                             if (mIsPickMode == true && mSelectedCreditCard != null && mSelectedCreditCard.billingkey.equals(creditCard.billingkey) == true)

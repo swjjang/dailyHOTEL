@@ -44,6 +44,11 @@ public class StayOutboundSearchSuggestPresenter extends BaseExceptionPresenter<S
     public interface StayOutboundSearchSuggestAnalyticsInterface extends BaseAnalyticsInterface
     {
         void onEventSuggestEmpty(Activity activity, String keyword);
+
+        void onEventCloseClick(Activity activity);
+
+        void onEventDeleteAllRecentlySuggestClick(Activity activity);
+
     }
 
     public StayOutboundSearchSuggestPresenter(@NonNull StayOutboundSearchSuggestActivity activity)
@@ -128,6 +133,8 @@ public class StayOutboundSearchSuggestPresenter extends BaseExceptionPresenter<S
     @Override
     public boolean onBackPressed()
     {
+        mAnalytics.onEventCloseClick(getActivity());
+
         return super.onBackPressed();
     }
 
@@ -293,7 +300,7 @@ public class StayOutboundSearchSuggestPresenter extends BaseExceptionPresenter<S
         intent.putExtra(StayOutboundSearchSuggestActivity.INTENT_EXTRA_DATA_KEYWORD, mKeyword);
 
         setResult(Activity.RESULT_OK, intent);
-        onBackClick();
+        finish();
     }
 
     @Override
@@ -314,7 +321,7 @@ public class StayOutboundSearchSuggestPresenter extends BaseExceptionPresenter<S
         intent.putExtra(StayOutboundSearchSuggestActivity.INTENT_EXTRA_DATA_KEYWORD, mKeyword);
 
         setResult(Activity.RESULT_OK, intent);
-        onBackClick();
+        finish();
     }
 
     @Override
@@ -333,6 +340,8 @@ public class StayOutboundSearchSuggestPresenter extends BaseExceptionPresenter<S
         }
 
         DailyDbHelper.getInstance().close();
+
+        mAnalytics.onEventDeleteAllRecentlySuggestClick(getActivity());
     }
 
     private void onSuggestList(List<Suggest> suggestList)

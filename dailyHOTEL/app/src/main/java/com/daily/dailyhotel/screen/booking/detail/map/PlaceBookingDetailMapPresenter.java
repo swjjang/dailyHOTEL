@@ -51,6 +51,8 @@ public abstract class PlaceBookingDetailMapPresenter extends BaseExceptionPresen
     private String mPlaceName;
     private Location mPlaceLocation;
 
+    private boolean mIsCallByThankYou;
+
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     protected abstract void startPlaceDetail(View view, PlaceBookingDay placeBookingDay, Place place);
 
@@ -90,6 +92,7 @@ public abstract class PlaceBookingDetailMapPresenter extends BaseExceptionPresen
             mPlaceList = intent.getParcelableArrayListExtra(PlaceBookingDetailMapActivity.INTENT_EXTRA_DATA_PLACE_LIST);
             mPlaceName = intent.getStringExtra(PlaceBookingDetailMapActivity.INTENT_EXTRA_DATA_PLACE_NAME);
             mPlaceLocation = intent.getParcelableExtra(PlaceBookingDetailMapActivity.INTENT_EXTRA_DATA_PLACE_LOCATION);
+            mIsCallByThankYou = intent.getBooleanExtra(PlaceBookingDetailMapActivity.INTENT_EXTRA_DATA_CALL_BY_THANK_YOU, false);
 
             if (mPlaceList == null || mPlaceList.size() == 0)
             {
@@ -523,5 +526,10 @@ public abstract class PlaceBookingDetailMapPresenter extends BaseExceptionPresen
                 }
             }
         });
+    }
+
+    protected boolean isCallByThankYou()
+    {
+        return mIsCallByThankYou;
     }
 }

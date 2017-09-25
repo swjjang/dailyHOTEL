@@ -8,11 +8,13 @@ import com.daily.dailyhotel.domain.GourmetInterface;
 import com.daily.dailyhotel.entity.GourmetBookDateTime;
 import com.daily.dailyhotel.entity.GourmetDetail;
 import com.daily.dailyhotel.entity.ReviewScores;
+import com.daily.dailyhotel.entity.TrueReviews;
 import com.daily.dailyhotel.entity.WishResult;
 import com.daily.dailyhotel.repository.remote.model.ExistCouponsData;
 import com.daily.dailyhotel.repository.remote.model.GourmetDetailData;
 import com.daily.dailyhotel.repository.remote.model.GourmetListData;
 import com.daily.dailyhotel.repository.remote.model.ReviewScoresData;
+import com.daily.dailyhotel.repository.remote.model.TrueReviewsData;
 import com.twoheart.dailyhotel.model.Gourmet;
 import com.twoheart.dailyhotel.model.GourmetParams;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
@@ -206,6 +208,35 @@ public class GourmetRemoteImpl implements GourmetInterface
                 }
 
                 return reviewScores;
+            }
+        });
+    }
+
+    @Override
+    public Observable<TrueReviews> getGourmetTrueReviews(int gourmetIndex, int page, int limit)
+    {
+        return DailyMobileAPI.getInstance(mContext).getGourmetTrueReviews(gourmetIndex, page, limit).map(new Function<BaseDto<TrueReviewsData>, TrueReviews>()
+        {
+            @Override
+            public TrueReviews apply(@io.reactivex.annotations.NonNull BaseDto<TrueReviewsData> trueReviewsDataBaseDto) throws Exception
+            {
+                TrueReviews trueReviews;
+
+                if (trueReviewsDataBaseDto != null)
+                {
+                    if (trueReviewsDataBaseDto.msgCode == 100 && trueReviewsDataBaseDto.data != null)
+                    {
+                        trueReviews = trueReviewsDataBaseDto.data.getTrueReviews();
+                    } else
+                    {
+                        throw new BaseException(trueReviewsDataBaseDto.msgCode, trueReviewsDataBaseDto.msg);
+                    }
+                } else
+                {
+                    throw new BaseException(-1, null);
+                }
+
+                return trueReviews;
             }
         });
     }
