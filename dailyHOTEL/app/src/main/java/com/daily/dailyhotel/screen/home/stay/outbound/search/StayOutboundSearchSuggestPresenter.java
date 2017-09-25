@@ -89,12 +89,20 @@ public class StayOutboundSearchSuggestPresenter extends BaseExceptionPresenter<S
             return true;
         }
 
+        mKeyword = intent.getStringExtra(StayOutboundSearchSuggestActivity.INTENT_EXTRA_DATA_KEYWORD);
+
         return true;
     }
 
     @Override
     public void onPostCreate()
     {
+        if (DailyTextUtils.isTextEmpty(mKeyword) == false)
+        {
+            getViewInterface().setKeywordEditText(mKeyword);
+//            return;
+        }
+
         getViewInterface().showKeyboard();
     }
 
@@ -113,8 +121,6 @@ public class StayOutboundSearchSuggestPresenter extends BaseExceptionPresenter<S
     public void onResume()
     {
         super.onResume();
-
-
     }
 
     @Override

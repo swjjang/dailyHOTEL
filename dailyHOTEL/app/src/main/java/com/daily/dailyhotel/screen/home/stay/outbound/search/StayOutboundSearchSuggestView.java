@@ -435,6 +435,17 @@ public class StayOutboundSearchSuggestView extends BaseDialogView<StayOutboundSe
         mRecentlySuggestListAdapter.notifyDataSetChanged();
     }
 
+    @Override
+    public void setKeywordEditText(String text)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        getViewDataBinding().keywordEditText.setText(text);
+    }
+
     private TextWatcher mTextWatcher = new TextWatcher()
     {
         @Override

@@ -472,6 +472,11 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
                 switch (mPlaceType)
                 {
                     case HOTEL:
+                        if (mStaySearchFragment.showCheckStayOutboundSearchDialog() == true)
+                        {
+                            return;
+                        }
+
                         if (mStaySearchFragment.isDateChanged() == false)
                         {
                             mStaySearchFragment.startCalendar(true, SearchType.SEARCHES);

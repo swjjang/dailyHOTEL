@@ -332,7 +332,7 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
         mSearchEditText.setText(null);
     }
 
-    public String getSearchKeyWord()
+    public String getSearchKeyword()
     {
         return mSearchEditText.getText().toString();
     }

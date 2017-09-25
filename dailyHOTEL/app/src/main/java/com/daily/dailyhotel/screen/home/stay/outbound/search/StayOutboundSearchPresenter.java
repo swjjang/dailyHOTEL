@@ -32,6 +32,7 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
 import com.twoheart.dailyhotel.util.DailyExternalDeepLink;
+import com.twoheart.dailyhotel.util.DailyInternalDeepLink;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
@@ -349,9 +350,6 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
                     {
                         mDailyDeepLink.clear();
                         mDailyDeepLink = null;
-                    } else
-                    {
-
                     }
                 } else
                 {
@@ -382,7 +380,7 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
             return;
         }
 
-        Intent intent = StayOutboundSearchSuggestActivity.newInstance(getActivity());
+        Intent intent = StayOutboundSearchSuggestActivity.newInstance(getActivity(), "");
         startActivityForResult(intent, StayOutboundSearchActivity.REQUEST_CODE_SUGGEST);
 
         if (isUserAction == true)
@@ -702,8 +700,6 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
 
         if (dailyDeepLink.isValidateLink() == false)
         {
-            dailyDeepLink.clear();
-
             return false;
         }
 
@@ -773,6 +769,16 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
 
                     getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
 
+                    return true;
+                }
+            } else if (dailyDeepLink.isInternalDeepLink() == true)
+            {
+                DailyInternalDeepLink internalDeepLink = (DailyInternalDeepLink) dailyDeepLink;
+                if (internalDeepLink.isStayOutboundSearchSuggestView() == true)
+                {
+                    String keyword = internalDeepLink.getKeyword();
+                    Intent intent = StayOutboundSearchSuggestActivity.newInstance(getActivity(), keyword);
+                    startActivityForResult(intent, StayOutboundSearchActivity.REQUEST_CODE_SUGGEST);
                     return true;
                 }
             } else

@@ -1305,6 +1305,9 @@ public class MainActivity extends BaseActivity implements Constants, BaseMenuNav
                     } else if (internalDeepLink.isStampView() == true)
                     {
                         mMainFragmentManager.select(false, MainFragmentManager.INDEX_MYDAILY_FRAGMENT, true, bundle);
+                    } else if (internalDeepLink.isStayOutboundSearchSuggestView() == true)
+                    {
+                        mMainFragmentManager.select(false, MainFragmentManager.INDEX_HOME_FRAGMENT, true, bundle);
                     } else
                     {
                         mMainFragmentManager.select(false, MainFragmentManager.INDEX_HOME_FRAGMENT, true, null);
