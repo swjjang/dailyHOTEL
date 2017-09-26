@@ -108,6 +108,11 @@ public class Util implements Constants
 
     public static void requestImageResize(Context context, com.facebook.drawee.view.SimpleDraweeView simpleDraweeView, String imageUrl)
     {
+        if (context == null || simpleDraweeView == null)
+        {
+            return;
+        }
+
         simpleDraweeView.getHierarchy().setPlaceholderImage(R.drawable.layerlist_placeholder);
 
         if (DailyTextUtils.isTextEmpty(imageUrl) == true)
