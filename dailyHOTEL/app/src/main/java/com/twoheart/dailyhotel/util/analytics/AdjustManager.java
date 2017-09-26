@@ -1420,7 +1420,7 @@ public class AdjustManager extends BaseAnalyticsManager
         public static final String RECENTVIEW_LIST_PLACE_INDEXES = "recentview_lists"; // 위시리스트내 담은 업장 개수
         public static final String NUMBER_OF_WISH_LISTS = "number_of_wish_lists"; // 위시리스트내 담은 업장(최근 5개)
         public static final String NUMBER_OF_RECENTVIEWS = "number_of_recentviews"; // 최근 본 업장 개수
-        public static final String TEST_TYPE = "test_type"; // 최근 본 업장 개수
+        public static final String TEST_TYPE = "test_type"; // a/b test
     }
 
     private static final class UserType
