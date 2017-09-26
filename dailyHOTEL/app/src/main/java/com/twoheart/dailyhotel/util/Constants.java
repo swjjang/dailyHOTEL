@@ -180,8 +180,8 @@ public interface Constants
     String NAME_INTENT_EXTRA_DATA_ROOMINDEX = "roomIndex";
     String NAME_INTENT_EXTRA_DATA_PRODUCTINDEX = "prouctIndex";
     String NAME_INTENT_EXTRA_DATA_RESERVATIONINDEX = "index";
-    String NAME_INTENT_EXTRA_DATA_CHECKINDATE = "checkInDate";
-    String NAME_INTENT_EXTRA_DATA_CHECKOUTDATE = "checkOutDate";
+    String NAME_INTENT_EXTRA_DATA_CHECK_IN_DATE = "checkInDate";
+    String NAME_INTENT_EXTRA_DATA_CHECK_OUT_DATE = "checkOutDate";
     String NAME_INTENT_EXTRA_DATA_VISIT_DATE = "visitDate";
     String NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY = "placeBookingDay";
     String NAME_INTENT_EXTRA_DATA_URL = "url";

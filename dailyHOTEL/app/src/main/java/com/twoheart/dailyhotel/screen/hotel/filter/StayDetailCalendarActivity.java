@@ -133,6 +133,8 @@ public class StayDetailCalendarActivity extends StayCalendarActivity
 
                 Intent intent = new Intent();
                 intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, stayBookingDay);
+                intent.putExtra(NAME_INTENT_EXTRA_DATA_CHECK_IN_DATE, stayBookingDay.getCheckInDay(DailyCalendar.ISO_8601_FORMAT));
+                intent.putExtra(NAME_INTENT_EXTRA_DATA_CHECK_OUT_DATE, stayBookingDay.getCheckOutDay(DailyCalendar.ISO_8601_FORMAT));
 
                 setResult(RESULT_OK, intent);
                 hideAnimation();
