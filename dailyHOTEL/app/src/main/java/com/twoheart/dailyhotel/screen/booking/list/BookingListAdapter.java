@@ -25,6 +25,7 @@ import java.util.Locale;
 public class BookingListAdapter extends RecyclerView.Adapter<BookingListAdapter.BookingViewHolder>
 {
     private List<Booking> mList;
+    private RecyclerView mRecyclerView;
     Context mContext;
     BookingListFragment.OnUserActionListener mOnUserActionListener;
 
@@ -65,6 +66,14 @@ public class BookingListAdapter extends RecyclerView.Adapter<BookingListAdapter.
         }
 
         mList.addAll(collection);
+    }
+
+    @Override
+    public void onAttachedToRecyclerView(RecyclerView recyclerView)
+    {
+        super.onAttachedToRecyclerView(recyclerView);
+
+        mRecyclerView = recyclerView;
     }
 
     @Override
@@ -412,26 +421,23 @@ public class BookingListAdapter extends RecyclerView.Adapter<BookingListAdapter.
             {
                 case Booking.BOOKING_STATE_DEPOSIT_WAITING:
                 case Booking.BOOKING_STATE_WAITING_REFUND:
-                    holder.dataBinding.getRoot().post(new Runnable()
+
+                    holder.dataBinding.getRoot().measure(View.MeasureSpec.makeMeasureSpec(mRecyclerView.getWidth(), View.MeasureSpec.EXACTLY),
+                        View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+
+                    final int height = holder.dataBinding.getRoot().getMeasuredHeight() - ScreenUtils.dpToPx(mContext, 13) - (isFirstPosition ? ScreenUtils.dpToPx(mContext, 51) : 0);
+                    final int remainder = height % ScreenUtils.dpToPx(mContext, 6);
+                    final int plusHeight = ScreenUtils.dpToPx(mContext, 3);
+
+                    if (remainder == 0)
                     {
-                        @Override
-                        public void run()
-                        {
-                            final int height = holder.dataBinding.getRoot().getHeight() - ScreenUtils.dpToPx(mContext, 13) - (isFirstPosition ? ScreenUtils.dpToPx(mContext, 51) : 0);
-                            final int remainder = height % ScreenUtils.dpToPx(mContext, 6);
-                            final int plusHeight = ScreenUtils.dpToPx(mContext, 3);
+                        holder.dataBinding.bottomEmptyView.getLayoutParams().height = ScreenUtils.dpToPx(mContext, 49) + plusHeight;
+                    } else
+                    {
+                        holder.dataBinding.bottomEmptyView.getLayoutParams().height = ScreenUtils.dpToPx(mContext, 49) - remainder + plusHeight;
+                    }
 
-                            if (remainder == 0)
-                            {
-                                holder.dataBinding.bottomEmptyView.getLayoutParams().height = ScreenUtils.dpToPx(mContext, 49) + plusHeight;
-                            } else
-                            {
-                                holder.dataBinding.bottomEmptyView.getLayoutParams().height = ScreenUtils.dpToPx(mContext, 49) - remainder + plusHeight;
-                            }
-
-                            holder.dataBinding.bottomEmptyView.requestLayout();
-                        }
-                    });
+                    holder.dataBinding.bottomEmptyView.requestLayout();
                     break;
             }
         } else
@@ -441,14 +447,9 @@ public class BookingListAdapter extends RecyclerView.Adapter<BookingListAdapter.
                 @Override
                 public void run()
                 {
-                    if (holder.dataBinding == null || holder.dataBinding.getRoot() == null || holder.dataBinding.getRoot().getParent() == null)
+                    if (holder.dataBinding.getRoot().getBottom() < mRecyclerView.getBottom())
                     {
-                        return;
-                    }
-
-                    if (holder.dataBinding.getRoot().getBottom() < ((RecyclerView) holder.dataBinding.getRoot().getParent()).getBottom())
-                    {
-                        holder.dataBinding.bottomEmptyView.getLayoutParams().height += ((RecyclerView) holder.dataBinding.getRoot().getParent()).getBottom() - holder.dataBinding.getRoot().getBottom();
+                        holder.dataBinding.bottomEmptyView.getLayoutParams().height += mRecyclerView.getBottom() - holder.dataBinding.getRoot().getBottom();
                         holder.dataBinding.bottomEmptyView.requestLayout();
                     }
                 }
