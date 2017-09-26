@@ -1,14 +1,18 @@
 package com.daily.dailyhotel.screen.home.stay.outbound.detail;
 
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.app.SharedElementCallback;
 import android.util.SparseArray;
 import android.view.View;
 
@@ -45,7 +49,9 @@ import com.daily.dailyhotel.screen.home.stay.outbound.detail.amenities.AmenityLi
 import com.daily.dailyhotel.screen.home.stay.outbound.detail.images.ImageListActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.payment.StayOutboundPaymentActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.people.SelectPeopleActivity;
+import com.daily.dailyhotel.screen.home.stay.outbound.preview.StayOutboundPreviewActivity;
 import com.daily.dailyhotel.util.RecentlyPlaceUtil;
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Customer;
@@ -73,6 +79,8 @@ import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
@@ -118,6 +126,8 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
     People mPeople;
     StayOutboundRoom mSelectedRoom;
     private ArrayList<CarouselListItem> mRecommendAroundList;
+    View mViewByLongPress;
+    StayOutbound mStayOutboundByLongPress;
 
     private int mStatus = STATUS_NONE;
 
@@ -136,6 +146,8 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
         void setAnalyticsParam(StayOutboundDetailAnalyticsParam analyticsParam);
 
         StayOutboundDetailAnalyticsParam getAnalyticsParam();
+
+        StayOutboundDetailAnalyticsParam getAnalyticsParam(StayOutbound stayOutbound, String grade);
 
         void onScreen(Activity activity);
 
@@ -403,6 +415,14 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
     {
         super.onResume();
 
+        if (Util.supportPreview(getActivity()) == true)
+        {
+            if (getViewInterface().isBlurVisible() == true)
+            {
+                getViewInterface().setBlurVisible(getActivity(), false);
+            }
+        }
+
         onHideRoomListClick(false);
 
         if (isRefresh() == true)
@@ -555,6 +575,20 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
                 } else
                 {
                     onHideRoomListClick(false);
+                }
+                break;
+
+            case StayOutboundDetailActivity.REQUEST_CODE_PREVIEW:
+                if (resultCode == Activity.RESULT_OK)
+                {
+                    Observable.create(new ObservableOnSubscribe<Object>()
+                    {
+                        @Override
+                        public void subscribe(ObservableEmitter<Object> e) throws Exception
+                        {
+                            startStayOutboundDetail(mViewByLongPress, mStayOutboundByLongPress);
+                        }
+                    }).subscribeOn(AndroidSchedulers.mainThread()).subscribe();
                 }
                 break;
         }
@@ -1183,6 +1217,165 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
     public void onRoomClick(StayOutboundRoom stayOutboundRoom)
     {
         mSelectedRoom = stayOutboundRoom;
+    }
+
+    @Override
+    public void onRecommendAroundItemClick(View view)
+    {
+        if (lock() == true)
+        {
+            return;
+        }
+
+        if (view == null)
+        {
+            return;
+        }
+
+        CarouselListItem item = (CarouselListItem) view.getTag();
+        if (item == null)
+        {
+            return;
+        }
+
+        StayOutbound stayOutbound = item.getItem();
+        if (stayOutbound == null)
+        {
+            return;
+        }
+
+        startStayOutboundDetail(view, stayOutbound);
+    }
+
+    @Override
+    public void onRecommendAroundItemLongClick(View view)
+    {
+        if (lock() == true)
+        {
+            return;
+        }
+
+        if (view == null || getViewInterface() == null || mCommonDateTime == null)
+        {
+            return;
+        }
+
+        CarouselListItem item = (CarouselListItem) view.getTag();
+        if (item == null)
+        {
+            return;
+        }
+
+        StayOutbound stayOutbound = item.getItem();
+        if (stayOutbound == null)
+        {
+            return;
+        }
+
+        try
+        {
+            mViewByLongPress = view;
+            mStayOutboundByLongPress = stayOutbound;
+
+            getViewInterface().setBlurVisible(getActivity(), true);
+
+            startActivityForResult(StayOutboundPreviewActivity.newInstance(getActivity(), stayOutbound.index//
+                , stayOutbound.name//
+                , mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
+                , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
+                , mPeople.numberOfAdults, mPeople.getChildAgeList())//
+                , StayOutboundDetailActivity.REQUEST_CODE_PREVIEW);
+        } catch (Exception e)
+        {
+            unLockAll();
+        }
+    }
+
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+    private void startStayOutboundDetail(View view, StayOutbound stayOutbound)
+    {
+        String imageUrl;
+        if (ScreenUtils.getScreenWidth(getActivity()) >= ScreenUtils.DEFAULT_STAYOUTBOUND_XXHDPI_WIDTH)
+        {
+            if (DailyTextUtils.isTextEmpty(stayOutbound.getImageMap().bigUrl) == false)
+            {
+                imageUrl = stayOutbound.getImageMap().bigUrl;
+            } else
+            {
+                imageUrl = stayOutbound.getImageMap().smallUrl;
+            }
+        } else
+        {
+            if (DailyTextUtils.isTextEmpty(stayOutbound.getImageMap().mediumUrl) == false)
+            {
+                imageUrl = stayOutbound.getImageMap().mediumUrl;
+            } else
+            {
+                imageUrl = stayOutbound.getImageMap().smallUrl;
+            }
+        }
+
+        try
+        {
+            StayOutboundDetailAnalyticsParam analyticsParam = mAnalytics.getAnalyticsParam( //
+                stayOutbound, getString(R.string.label_stay_outbound_filter_x_star_rate, (int) stayOutbound.rating));
+
+            if (Util.isUsedMultiTransition() == true)
+            {
+                getActivity().setExitSharedElementCallback(new SharedElementCallback()
+                {
+                    @Override
+                    public void onSharedElementEnd(List<String> sharedElementNames, List<View> sharedElements, List<View> sharedElementSnapshots)
+                    {
+                        super.onSharedElementEnd(sharedElementNames, sharedElements, sharedElementSnapshots);
+
+                        for (View view : sharedElements)
+                        {
+                            if (view instanceof SimpleDraweeView)
+                            {
+                                view.setVisibility(View.VISIBLE);
+                                break;
+                            }
+                        }
+                    }
+                });
+
+                View simpleDraweeView = view.findViewById(R.id.contentImageView);
+                View gradientTopView = view.findViewById(R.id.gradientTopView);
+                View gradientBottomView = view.findViewById(R.id.gradientBottomView);
+
+                android.support.v4.util.Pair[] pairs = {
+                    android.support.v4.util.Pair.create(simpleDraweeView, getString(R.string.transition_place_image)) //
+                    , android.support.v4.util.Pair.create(gradientTopView, getString(R.string.transition_gradient_top_view)) //
+                    , android.support.v4.util.Pair.create(gradientBottomView, getString(R.string.transition_gradient_bottom_view))
+                };
+
+                ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity()//
+                    , android.support.v4.util.Pair.create(simpleDraweeView, getString(R.string.transition_place_image)) //
+                    , android.support.v4.util.Pair.create(gradientTopView, getString(R.string.transition_gradient_top_view)) //
+                    , android.support.v4.util.Pair.create(gradientBottomView, getString(R.string.transition_gradient_bottom_view)));
+
+                getActivity().startActivityForResult(StayOutboundDetailActivity.newInstance(getActivity(), stayOutbound.index//
+                    , stayOutbound.name, imageUrl, stayOutbound.total//
+                    , mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
+                    , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
+                    , mPeople.numberOfAdults, mPeople.getChildAgeList(), false, StayOutboundDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_NONE, analyticsParam)//
+                    , StayOutboundDetailActivity.REQUEST_CODE_DETAIL, options.toBundle());
+            } else
+            {
+                startActivityForResult(StayOutboundDetailActivity.newInstance(getActivity(), stayOutbound.index//
+                    , stayOutbound.name, imageUrl, stayOutbound.total//
+                    , mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
+                    , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
+                    , mPeople.numberOfAdults, mPeople.getChildAgeList(), false, StayOutboundDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_NONE, analyticsParam)//
+                    , StayOutboundDetailActivity.REQUEST_CODE_DETAIL);
+
+                getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
+            }
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+        }
     }
 
     void setStatus(int status)

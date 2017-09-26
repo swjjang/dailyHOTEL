@@ -2,7 +2,7 @@ package com.daily.dailyhotel.screen.home.stay.outbound.detail;
 
 import android.app.Dialog;
 
-import com.daily.base.BaseDialogViewInterface;
+import com.daily.dailyhotel.base.BaseBlurViewInterface;
 import com.daily.dailyhotel.entity.CarouselListItem;
 import com.daily.dailyhotel.entity.People;
 import com.daily.dailyhotel.entity.StayBookDateTime;
@@ -12,7 +12,7 @@ import java.util.ArrayList;
 
 import io.reactivex.Observable;
 
-public interface StayOutboundDetailViewInterface extends BaseDialogViewInterface
+public interface StayOutboundDetailViewInterface extends BaseBlurViewInterface
 {
     Observable<Boolean> showRoomList(boolean animation);
 

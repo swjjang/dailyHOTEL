@@ -236,7 +236,8 @@
                     dailyCarousel:bottomMarginHeight="0dp"
                     dailyCarousel:topMarginBackgroundColor="@color/default_background"
                     dailyCarousel:topMarginHeight="15dp"
-                    dailyCarousel:useAnimation="false" />
+                    dailyCarousel:useAnimation="false"
+                    dailyCarousel:useViewAllButton="false"/>
 
                 <include
                     android:id="@+id/conciergeViewDataBinding"

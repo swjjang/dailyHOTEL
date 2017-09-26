@@ -37,12 +37,12 @@ import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 
 import com.daily.base.BaseActivity;
-import com.daily.base.BaseDialogView;
 import com.daily.base.OnBaseEventListener;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
 import com.daily.base.widget.DailyTextView;
+import com.daily.dailyhotel.base.BaseBlurView;
 import com.daily.dailyhotel.entity.CarouselListItem;
 import com.daily.dailyhotel.entity.ImageMap;
 import com.daily.dailyhotel.entity.People;
@@ -51,6 +51,7 @@ import com.daily.dailyhotel.entity.StayOutboundDetail;
 import com.daily.dailyhotel.entity.StayOutboundDetailImage;
 import com.daily.dailyhotel.entity.StayOutboundRoom;
 import com.daily.dailyhotel.view.DailyToolbarView;
+import com.daily.dailyhotel.view.carousel.DailyCarouselLayout;
 import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.drawee.view.DraweeTransition;
 import com.twoheart.dailyhotel.R;
@@ -81,7 +82,7 @@ import java.util.Map;
 import io.reactivex.Observable;
 import io.reactivex.Observer;
 
-public class StayOutboundDetailView extends BaseDialogView<StayOutboundDetailView.OnEventListener, ActivityStayOutboundDetailDataBinding>//
+public class StayOutboundDetailView extends BaseBlurView<StayOutboundDetailView.OnEventListener, ActivityStayOutboundDetailDataBinding>//
     implements StayOutboundDetailViewInterface, View.OnClickListener, ViewPager.OnPageChangeListener, RadioGroup.OnCheckedChangeListener
 {
     private static final int ANIMATION_DELAY = 250;
@@ -130,6 +131,10 @@ public class StayOutboundDetailView extends BaseDialogView<StayOutboundDetailVie
         void onConciergeCallClick();
 
         void onRoomClick(StayOutboundRoom stayOutboundRoom);
+
+        void onRecommendAroundItemClick(View view);
+
+        void onRecommendAroundItemLongClick(View view);
     }
 
     public StayOutboundDetailView(BaseActivity baseActivity, StayOutboundDetailView.OnEventListener listener)
@@ -199,6 +204,28 @@ public class StayOutboundDetailView extends BaseDialogView<StayOutboundDetailVie
             public void onClick(View v)
             {
                 // do nothing - 판매 완료 버튼이 뚤리는 이슈 수정
+            }
+        });
+
+        viewDataBinding.recommendAroundListLayout.setTitleText(R.string.label_stay_outbound_recommend_around_title);
+        viewDataBinding.recommendAroundListLayout.setCarouselListener(new DailyCarouselLayout.OnCarouselListener()
+        {
+            @Override
+            public void onViewAllClick()
+            {
+                // do nothing!
+            }
+
+            @Override
+            public void onItemClick(View view)
+            {
+                getEventListener().onRecommendAroundItemClick(view);
+            }
+
+            @Override
+            public void onItemLongClick(View view)
+            {
+                getEventListener().onRecommendAroundItemLongClick(view);
             }
         });
     }

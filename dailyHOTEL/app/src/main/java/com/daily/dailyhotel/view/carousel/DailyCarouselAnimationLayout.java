@@ -102,9 +102,13 @@ public class DailyCarouselAnimationLayout extends ConstraintLayout
             mIsUseAnimation = typedArray.getBoolean(R.styleable.dailyCarousel_useAnimation, false);
             boolean isUsePrice = typedArray.getBoolean(R.styleable.dailyCarousel_usePriceLayout, true);
             setUsePriceLayout(isUsePrice);
+
+            boolean isUseViewAllButton = typedArray.getBoolean(R.styleable.dailyCarousel_useViewAllButton, true);
+            setUseViewAllButtonLayout(isUseViewAllButton);
         } else
         {
             setUsePriceLayout(true);
+            setUseViewAllButtonLayout(true);
         }
     }
 
@@ -305,6 +309,16 @@ public class DailyCarouselAnimationLayout extends ConstraintLayout
         }
 
         mDataBinding.contentLayout.setUsePriceLayout(isUse);
+    }
+
+    public void setUseViewAllButtonLayout(boolean isUse)
+    {
+        if (mDataBinding == null)
+        {
+            return;
+        }
+
+        mDataBinding.contentLayout.setUseViewAllButtonLayout(isUse);
     }
 
     void setHeight(int height)
