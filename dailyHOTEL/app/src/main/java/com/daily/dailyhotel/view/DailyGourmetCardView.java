@@ -377,12 +377,11 @@ public class DailyGourmetCardView extends ConstraintLayout
             return null;
         }
 
-        android.support.v4.util.Pair[] pairs = new Pair[5];
+        android.support.v4.util.Pair[] pairs = new Pair[4];
         pairs[0] = android.support.v4.util.Pair.create(mViewDataBinding.simpleDraweeView, getContext().getString(R.string.transition_place_image));
         pairs[1] = android.support.v4.util.Pair.create(mViewDataBinding.gourmetNameTextView, getContext().getString(R.string.transition_place_name));
-        pairs[2] = android.support.v4.util.Pair.create(mViewDataBinding.gradeTextView, getContext().getString(R.string.transition_place_grade));
-        pairs[3] = android.support.v4.util.Pair.create(mViewDataBinding.gradientTopView, getContext().getString(R.string.transition_gradient_top_view));
-        pairs[4] = android.support.v4.util.Pair.create(mViewDataBinding.gradientBottomView, getContext().getString(R.string.transition_gradient_bottom_view));
+        pairs[2] = android.support.v4.util.Pair.create(mViewDataBinding.gradientTopView, getContext().getString(R.string.transition_gradient_top_view));
+        pairs[3] = android.support.v4.util.Pair.create(mViewDataBinding.gradientBottomView, getContext().getString(R.string.transition_gradient_bottom_view));
 
         return pairs;
     }

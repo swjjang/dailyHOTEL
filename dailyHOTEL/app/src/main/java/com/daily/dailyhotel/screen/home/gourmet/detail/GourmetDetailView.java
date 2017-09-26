@@ -476,7 +476,7 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
         {
             getViewDataBinding().transImageView.setVisibility(View.VISIBLE);
             getViewDataBinding().transGradientBottomView.setVisibility(View.VISIBLE);
-            getViewDataBinding().transTitleLayout.setVisibility(View.VISIBLE);
+            getViewDataBinding().transNameTextView.setVisibility(View.VISIBLE);
             getViewDataBinding().transImageView.setTransitionName(getString(R.string.transition_place_image));
             getViewDataBinding().transGradientBottomView.setTransitionName(getString(R.string.transition_gradient_bottom_view));
             getViewDataBinding().transGradientTopView.setTransitionName(getString(R.string.transition_gradient_top_view));
@@ -501,7 +501,7 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
         {
             getViewDataBinding().transImageView.setVisibility(View.GONE);
             getViewDataBinding().transGradientBottomView.setVisibility(View.GONE);
-            getViewDataBinding().transTitleLayout.setVisibility(View.GONE);
+            getViewDataBinding().transNameTextView.setVisibility(View.GONE);
         }
     }
 

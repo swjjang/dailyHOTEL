@@ -54,7 +54,6 @@
             android:paddingTop="2px"
             android:textColor="@color/white"
             android:textSize="11dp"
-            android:transitionName="@string/transition_place_grade"
             app:layout_constraintBottom_toTopOf="@+id/nameTextView"
             app:layout_constraintLeft_toLeftOf="parent"/>
 

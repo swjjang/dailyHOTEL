@@ -136,19 +136,8 @@ public class StayDetailLayout extends PlaceDetailLayout implements RadioGroup.On
         return mStayDetailItemLayout.getTitleLayout();
     }
 
-    public void setTitleText(Stay.Grade grade, String placeName)
+    public void setTitleText(String placeName)
     {
-        if (grade != null)
-        {
-            mTransTotalGradeTextView.setText(grade.getName(mContext));
-            mTransTotalGradeTextView.setBackgroundResource(grade.getColorResId());
-
-            if (VersionUtils.isOverAPI21() == true)
-            {
-                mTransTotalGradeTextView.setTransitionName(mContext.getString(R.string.transition_place_grade));
-            }
-        }
-
         if (DailyTextUtils.isTextEmpty(placeName) == false)
         {
             mTransPlaceNameTextView.setText(placeName);

@@ -158,7 +158,6 @@
 
     <!-- Transition Name -->
     <string name="transition_place_image">placeImage</string>
-    <string name="transition_place_grade">placeGrade</string>
     <string name="transition_place_name">placeName</string>
     <string name="transition_gradient_bottom_view">gradientBottomView</string>
     <string name="transition_gradient_top_view">gradientTopView</string>

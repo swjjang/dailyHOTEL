@@ -82,8 +82,6 @@ public class GourmetDetailLayout extends PlaceDetailLayout
 
     public void setTitleText(String placeName)
     {
-        mTransTotalGradeTextView.setVisibility(View.INVISIBLE);
-
         if (DailyTextUtils.isTextEmpty(placeName) == false)
         {
             mTransPlaceNameTextView.setText(placeName);

@@ -618,7 +618,6 @@ public class StayCampaignTagListPresenter extends BaseExceptionPresenter<StayCam
             } else
             {
                 View simpleDraweeView = view.findViewById(R.id.imageView);
-                View gradeTextView = view.findViewById(R.id.gradeTextView);
                 View nameTextView = view.findViewById(R.id.nameTextView);
                 View gradientTopView = view.findViewById(R.id.gradientTopView);
                 View gradientBottomView = view.findViewById(R.id.gradientView);
@@ -640,7 +639,6 @@ public class StayCampaignTagListPresenter extends BaseExceptionPresenter<StayCam
 
                 optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(),//
                     android.support.v4.util.Pair.create(simpleDraweeView, getString(R.string.transition_place_image)),//
-                    android.support.v4.util.Pair.create(gradeTextView, getString(R.string.transition_place_grade)),//
                     android.support.v4.util.Pair.create(nameTextView, getString(R.string.transition_place_name)),//
                     android.support.v4.util.Pair.create(gradientTopView, getString(R.string.transition_gradient_top_view)),//
                     android.support.v4.util.Pair.create(gradientBottomView, getString(R.string.transition_gradient_bottom_view)));

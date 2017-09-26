@@ -325,7 +325,7 @@ public class StayOutboundListView extends BaseBlurView<StayOutboundListView.OnEv
                     {
                         if (view instanceof DailyStayOutboundCardView == true)
                         {
-                            getEventListener().onStayClick(((DailyStayOutboundCardView) view).getOptionsCompat(), objectItem.getItem());
+                            getEventListener().onStayLongClick(((DailyStayOutboundCardView) view).getOptionsCompat(), objectItem.getItem());
                         } else
                         {
                             View simpleDraweeView = view.findViewById(R.id.imageView);

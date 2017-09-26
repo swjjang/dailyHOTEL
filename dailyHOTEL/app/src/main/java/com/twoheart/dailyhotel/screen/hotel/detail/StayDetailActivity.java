@@ -220,7 +220,7 @@ public class StayDetailActivity extends PlaceDetailActivity
 
             mProductDetailIndex = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_ROOMINDEX, 0);
 
-            initLayout(null, null, null, PlaceDetailLayout.TRANS_GRADIENT_BOTTOM_TYPE_NONE);
+            initLayout(null, null, PlaceDetailLayout.TRANS_GRADIENT_BOTTOM_TYPE_NONE);
         } else
         {
             mIsDeepLink = false;
@@ -232,7 +232,6 @@ public class StayDetailActivity extends PlaceDetailActivity
             }
 
             mViewPrice = mAnalyticsParam != null ? mAnalyticsParam.discountPrice : 0;
-            Stay.Grade grade = mAnalyticsParam != null ? Stay.Grade.valueOf(mAnalyticsParam.gradeCode) : Stay.Grade.etc;
 
             int gradientType = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_GRADIENT_TYPE, PlaceDetailLayout.TRANS_GRADIENT_BOTTOM_TYPE_NONE);
 
@@ -246,7 +245,7 @@ public class StayDetailActivity extends PlaceDetailActivity
                 mIsTransitionEnd = true;
             }
 
-            initLayout(placeName, mDefaultImageUrl, grade, gradientType);
+            initLayout(placeName, mDefaultImageUrl, gradientType);
         }
 
         // VR 여부 판단
@@ -397,7 +396,7 @@ public class StayDetailActivity extends PlaceDetailActivity
         }
     }
 
-    private void initLayout(String placeName, String imageUrl, Stay.Grade grade, int gradientType)
+    private void initLayout(String placeName, String imageUrl, int gradientType)
     {
         setContentView(mPlaceDetailLayout.onCreateView(R.layout.activity_placedetail));
 
@@ -406,7 +405,7 @@ public class StayDetailActivity extends PlaceDetailActivity
 
         if (mIsDeepLink == false && mIsUsedMultiTransition == true)
         {
-            initTransLayout(placeName, imageUrl, grade);
+            initTransLayout(placeName, imageUrl);
         } else
         {
             mPlaceDetailLayout.setDefaultImage(imageUrl);
@@ -418,7 +417,7 @@ public class StayDetailActivity extends PlaceDetailActivity
         mOnEventListener.hideActionBar(false);
     }
 
-    private void initTransLayout(String placeName, String imageUrl, Stay.Grade grade)
+    private void initTransLayout(String placeName, String imageUrl)
     {
         if (DailyTextUtils.isTextEmpty(placeName, imageUrl) == true)
         {
@@ -426,7 +425,7 @@ public class StayDetailActivity extends PlaceDetailActivity
         }
 
         mPlaceDetailLayout.setTransImageView(imageUrl);
-        ((StayDetailLayout) mPlaceDetailLayout).setTitleText(grade, placeName);
+        ((StayDetailLayout) mPlaceDetailLayout).setTitleText(placeName);
     }
 
     @Override

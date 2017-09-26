@@ -70,7 +70,7 @@ public abstract class PlaceDetailLayout extends BaseLayout
     int mStatusBarHeight;
 
     protected com.facebook.drawee.view.SimpleDraweeView mTransSimpleDraweeView;
-    protected TextView mTransTotalGradeTextView, mTransPlaceNameTextView;
+    protected TextView mTransPlaceNameTextView;
     protected View mTransTitleLayout, mTransGradientBottomView, mTransGradientTopView;
 
     protected DailyTextView mWishPopupTextView;
@@ -144,7 +144,6 @@ public abstract class PlaceDetailLayout extends BaseLayout
         mTransGradientTopView = view.findViewById(R.id.transGradientTopView);
 
         mTransTitleLayout = view.findViewById(R.id.transTitleLayout);
-        mTransTotalGradeTextView = (TextView) mTransTitleLayout.findViewById(R.id.transGradeTextView);
         mTransPlaceNameTextView = (TextView) mTransTitleLayout.findViewById(R.id.transNameTextView);
 
         mScrollView = (DailyPlaceDetailScrollView) view.findViewById(R.id.placeScrollView);
