@@ -85,13 +85,13 @@ public class StayReservationDetailLayout extends PlaceReservationDetailLayout
             }
 
             @Override
-            public void onItemClick(View view)
+            public void onItemClick(View view, android.support.v4.util.Pair[] pairs)
             {
                 ((StayReservationDetailLayout.OnEventListener) mOnEventListener).onRecommendListItemClick(view);
             }
 
             @Override
-            public void onItemLongClick(View view)
+            public void onItemLongClick(View view, android.support.v4.util.Pair[] pairs)
             {
                 ((StayReservationDetailLayout.OnEventListener) mOnEventListener).onRecommendListItemLongClick(view);
             }

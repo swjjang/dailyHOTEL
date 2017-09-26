@@ -127,6 +127,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
     StayOutboundRoom mSelectedRoom;
     private ArrayList<CarouselListItem> mRecommendAroundList;
     View mViewByLongPress;
+    android.support.v4.util.Pair[] mPairsByLongPress;
     StayOutbound mStayOutboundByLongPress;
 
     private int mStatus = STATUS_NONE;
@@ -586,7 +587,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
                         @Override
                         public void subscribe(ObservableEmitter<Object> e) throws Exception
                         {
-                            startStayOutboundDetail(mViewByLongPress, mStayOutboundByLongPress);
+                            startStayOutboundDetail(mViewByLongPress, mStayOutboundByLongPress, mPairsByLongPress);
                         }
                     }).subscribeOn(AndroidSchedulers.mainThread()).subscribe();
                 }
@@ -1220,7 +1221,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
     }
 
     @Override
-    public void onRecommendAroundItemClick(View view)
+    public void onRecommendAroundItemClick(View view, android.support.v4.util.Pair[] pairs)
     {
         if (lock() == true)
         {
@@ -1244,11 +1245,11 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
             return;
         }
 
-        startStayOutboundDetail(view, stayOutbound);
+        startStayOutboundDetail(view, stayOutbound, pairs);
     }
 
     @Override
-    public void onRecommendAroundItemLongClick(View view)
+    public void onRecommendAroundItemLongClick(View view, android.support.v4.util.Pair[] pairs)
     {
         if (lock() == true)
         {
@@ -1276,6 +1277,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
         {
             mViewByLongPress = view;
             mStayOutboundByLongPress = stayOutbound;
+            mPairsByLongPress = pairs;
 
             getViewInterface().setBlurVisible(getActivity(), true);
 
@@ -1292,7 +1294,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-    private void startStayOutboundDetail(View view, StayOutbound stayOutbound)
+    private void startStayOutboundDetail(View view, StayOutbound stayOutbound, android.support.v4.util.Pair[] pairs)
     {
         String imageUrl;
         if (ScreenUtils.getScreenWidth(getActivity()) >= ScreenUtils.DEFAULT_STAYOUTBOUND_XXHDPI_WIDTH)
@@ -1340,20 +1342,16 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
                     }
                 });
 
-                View simpleDraweeView = view.findViewById(R.id.contentImageView);
-                View gradientTopView = view.findViewById(R.id.gradientTopView);
-                View gradientBottomView = view.findViewById(R.id.gradientBottomView);
-
-                android.support.v4.util.Pair[] pairs = {
-                    android.support.v4.util.Pair.create(simpleDraweeView, getString(R.string.transition_place_image)) //
-                    , android.support.v4.util.Pair.create(gradientTopView, getString(R.string.transition_gradient_top_view)) //
-                    , android.support.v4.util.Pair.create(gradientBottomView, getString(R.string.transition_gradient_bottom_view))
-                };
-
-                ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity()//
-                    , android.support.v4.util.Pair.create(simpleDraweeView, getString(R.string.transition_place_image)) //
-                    , android.support.v4.util.Pair.create(gradientTopView, getString(R.string.transition_gradient_top_view)) //
-                    , android.support.v4.util.Pair.create(gradientBottomView, getString(R.string.transition_gradient_bottom_view)));
+                ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(), pairs);
+//
+//                View simpleDraweeView = view.findViewById(R.id.contentImageView);
+//                View gradientTopView = view.findViewById(R.id.gradientTopView);
+//                View gradientBottomView = view.findViewById(R.id.gradientBottomView);
+//
+//                ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity()//
+//                    , android.support.v4.util.Pair.create(simpleDraweeView, getString(R.string.transition_place_image)) //
+//                    , android.support.v4.util.Pair.create(gradientTopView, getString(R.string.transition_gradient_top_view)) //
+//                    , android.support.v4.util.Pair.create(gradientBottomView, getString(R.string.transition_gradient_bottom_view)));
 
                 getActivity().startActivityForResult(StayOutboundDetailActivity.newInstance(getActivity(), stayOutbound.index//
                     , stayOutbound.name, imageUrl, stayOutbound.total//

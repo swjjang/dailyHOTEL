@@ -38,9 +38,9 @@ public class DailyCarouselLayout extends ConstraintLayout
     {
         void onViewAllClick();
 
-        void onItemClick(View view);
+        void onItemClick(View view, android.support.v4.util.Pair[] pairs);
 
-        void onItemLongClick(View view);
+        void onItemLongClick(View view, android.support.v4.util.Pair[] pairs);
     }
 
     public DailyCarouselLayout(Context context)
@@ -224,25 +224,25 @@ public class DailyCarouselLayout extends ConstraintLayout
     private DailyCarouselAdapter.ItemClickListener mItemClickListener = new DailyCarouselAdapter.ItemClickListener()
     {
         @Override
-        public void onItemClick(View view)
+        public void onItemClick(View view, android.support.v4.util.Pair[] pairs)
         {
             if (mCarouselListener == null)
             {
                 return;
             }
 
-            mCarouselListener.onItemClick(view);
+            mCarouselListener.onItemClick(view, pairs);
         }
 
         @Override
-        public void onItemLongClick(View view)
+        public void onItemLongClick(View view, android.support.v4.util.Pair[] pairs)
         {
             if (mCarouselListener == null)
             {
                 return;
             }
 
-            mCarouselListener.onItemLongClick(view);
+            mCarouselListener.onItemLongClick(view, pairs);
         }
     };
 }

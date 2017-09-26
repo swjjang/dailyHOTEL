@@ -132,9 +132,9 @@ public class StayOutboundDetailView extends BaseBlurView<StayOutboundDetailView.
 
         void onRoomClick(StayOutboundRoom stayOutboundRoom);
 
-        void onRecommendAroundItemClick(View view);
+        void onRecommendAroundItemClick(View view, android.support.v4.util.Pair[] pairs);
 
-        void onRecommendAroundItemLongClick(View view);
+        void onRecommendAroundItemLongClick(View view, android.support.v4.util.Pair[] pairs);
     }
 
     public StayOutboundDetailView(BaseActivity baseActivity, StayOutboundDetailView.OnEventListener listener)
@@ -217,15 +217,15 @@ public class StayOutboundDetailView extends BaseBlurView<StayOutboundDetailView.
             }
 
             @Override
-            public void onItemClick(View view)
+            public void onItemClick(View view, android.support.v4.util.Pair[] pairs)
             {
-                getEventListener().onRecommendAroundItemClick(view);
+                getEventListener().onRecommendAroundItemClick(view, pairs);
             }
 
             @Override
-            public void onItemLongClick(View view)
+            public void onItemLongClick(View view, android.support.v4.util.Pair[] pairs)
             {
-                getEventListener().onRecommendAroundItemLongClick(view);
+                getEventListener().onRecommendAroundItemLongClick(view, pairs);
             }
         });
     }
