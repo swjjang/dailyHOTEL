@@ -20,7 +20,8 @@
             android:layout_height="1dp"
             android:background="@color/default_line_ce1e1e1"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"/>
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
 
         <com.facebook.drawee.view.SimpleDraweeView
             android:id="@+id/simpleDraweeView"
@@ -175,20 +176,21 @@
                 android:textSize="17dp"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
                 dailyFont:style="Medium"/>
 
             <com.daily.base.widget.DailyTextView
                 android:id="@+id/distanceTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:drawableLeft="@drawable/vector_popup_ic_access_02_location"
                 android:gravity="center_vertical"
                 android:textColor="@color/default_text_c929292"
                 android:textSize="12dp"
                 android:visibility="gone"
-                app:layout_constraintBottom_toBottomOf="@id/addressTextView"
+                app:drawableCompatLeft="@drawable/vector_popup_ic_access_02_location"
+                app:layout_constraintBottom_toBottomOf="@+id/addressTextView"
                 app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toTopOf="@id/addressTextView"
+                app:layout_constraintTop_toTopOf="@+id/addressTextView"
                 dailyFont:style="DemiLight"/>
 
             <com.daily.base.widget.DailyTextView
@@ -214,7 +216,7 @@
                 android:textSize="17dp"
                 android:visibility="gone"
                 app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toTopOf="@id/discountPriceTextView"
+                app:layout_constraintTop_toTopOf="@+id/discountPriceTextView"
                 dailyFont:style="Medium"/>
 
             <ImageView
