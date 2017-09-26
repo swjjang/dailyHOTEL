@@ -461,7 +461,7 @@ public class DailyCarouselAdapter extends RecyclerView.Adapter<DailyCarouselAdap
 
     public CarouselListItem getItem(int position)
     {
-        if (position < 0 || mList.size() <= position)
+        if (position < 0 || mList == null || mList.size() <= position)
         {
             return null;
         }

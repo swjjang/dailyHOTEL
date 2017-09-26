@@ -2,6 +2,7 @@
 <layout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:dailyCarousel="http://schemas.android.com/apk/res-auto"
     xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
     xmlns:dailyLineIndicator="http://schemas.android.com/apk/res-auto"
     xmlns:dailyToolbar="http://schemas.android.com/apk/res-auto"
@@ -19,7 +20,7 @@
             app:layout_constraintLeft_toLeftOf="@+id/imageLoopViewPager"
             app:layout_constraintRight_toRightOf="@+id/imageLoopViewPager"
             app:layout_constraintTop_toTopOf="@+id/imageLoopViewPager"
-            fresco:actualImageScaleType="centerCrop"/>
+            fresco:actualImageScaleType="centerCrop" />
 
         <com.twoheart.dailyhotel.widget.DailyLoopViewPager
             android:id="@+id/imageLoopViewPager"
@@ -28,7 +29,7 @@
             app:layout_constraintDimensionRatio="H,4:3"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+            app:layout_constraintTop_toTopOf="parent" />
 
         <View
             android:id="@+id/transGradientBottomView"
@@ -37,7 +38,7 @@
             app:layout_constraintBottom_toBottomOf="@+id/imageLoopViewPager"
             app:layout_constraintLeft_toLeftOf="@+id/imageLoopViewPager"
             app:layout_constraintRight_toRightOf="@+id/imageLoopViewPager"
-            app:layout_constraintTop_toTopOf="@+id/imageLoopViewPager"/>
+            app:layout_constraintTop_toTopOf="@+id/imageLoopViewPager" />
 
         <android.support.constraint.ConstraintLayout
             android:id="@+id/transGradientTopView"
@@ -54,7 +55,7 @@
                 android:background="@drawable/img_detail_gradient"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="parent"/>
+                app:layout_constraintTop_toTopOf="parent" />
 
             <View
                 android:layout_width="0dp"
@@ -62,7 +63,7 @@
                 android:background="@drawable/img_detail_bottom_gradient"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"/>
+                app:layout_constraintRight_toRightOf="parent" />
         </android.support.constraint.ConstraintLayout>
 
         <View
@@ -71,7 +72,7 @@
             android:layout_height="1dp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imageLoopViewPager"/>
+            app:layout_constraintTop_toBottomOf="@+id/imageLoopViewPager" />
 
         <com.twoheart.dailyhotel.widget.DailyLineIndicator
             android:id="@+id/viewpagerIndicator"
@@ -84,7 +85,7 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             dailyLineIndicator:indicatorBackgroundColor="@color/white_a40"
-            dailyLineIndicator:indicatorColor="@color/white"/>
+            dailyLineIndicator:indicatorColor="@color/white" />
 
         <View
             android:id="@+id/moreIconView"
@@ -94,7 +95,7 @@
             android:layout_marginRight="15dp"
             android:background="@drawable/detail_ic_more_img"
             app:layout_constraintBottom_toTopOf="@id/viewpagerIndicator"
-            app:layout_constraintRight_toRightOf="parent"/>
+            app:layout_constraintRight_toRightOf="parent" />
 
         <com.daily.base.widget.DailyTextView
             android:id="@+id/descriptionTextView"
@@ -118,7 +119,7 @@
             android:visibility="invisible"
             app:layout_constraintBottom_toTopOf="@id/viewpagerIndicator"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"/>
+            app:layout_constraintRight_toRightOf="parent" />
 
         <LinearLayout
             android:id="@+id/transTitleLayout"
@@ -143,7 +144,7 @@
                 android:paddingRight="5.5dp"
                 android:paddingTop="2px"
                 android:textColor="@android:color/white"
-                android:textSize="11dp"/>
+                android:textSize="11dp" />
 
             <com.daily.base.widget.DailyTextView
                 android:id="@+id/transNameTextView"
@@ -156,7 +157,7 @@
                 android:gravity="center_vertical"
                 android:textColor="@color/hoteldetail_title_text"
                 android:textSize="18dp"
-                dailyFont:style="Medium"/>
+                dailyFont:style="Medium" />
         </LinearLayout>
 
         <com.daily.base.widget.DailyNestedScrollView
@@ -189,52 +190,62 @@
                         app:layout_constraintDimensionRatio="H,4:3"
                         app:layout_constraintLeft_toLeftOf="parent"
                         app:layout_constraintRight_toRightOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"/>
+                        app:layout_constraintTop_toTopOf="parent" />
                 </android.support.constraint.ConstraintLayout>
 
                 <include
                     android:id="@+id/titleViewDataBinding"
-                    layout="@layout/layout_stay_outbound_detail_title_data"/>
+                    layout="@layout/layout_stay_outbound_detail_title_data" />
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="12dp"
-                    android:background="@drawable/layerlist_divider"/>
+                    android:background="@drawable/layerlist_divider" />
 
                 <com.daily.dailyhotel.view.DailyDateInformationView
                     android:id="@+id/dateInformationView"
                     android:layout_width="match_parent"
-                    android:background="@color/white"
-                    android:layout_height="78dp"/>
+                    android:layout_height="78dp"
+                    android:background="@color/white" />
 
                 <include
                     android:id="@+id/mapViewDataBinding"
-                    layout="@layout/layout_gourmet_detail_map_data"/>
+                    layout="@layout/layout_gourmet_detail_map_data" />
 
                 <include
                     android:id="@+id/amenitiesViewDataBinding"
-                    layout="@layout/layout_gourmet_detail_amenities_data"/>
+                    layout="@layout/layout_gourmet_detail_amenities_data" />
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="12dp"
-                    android:background="@drawable/layerlist_divider"/>
+                    android:background="@drawable/layerlist_divider" />
 
                 <LinearLayout
                     android:id="@+id/descriptionsLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@color/white"
-                    android:orientation="vertical"/>
+                    android:orientation="vertical" />
+
+                <com.daily.dailyhotel.view.carousel.DailyCarouselAnimationLayout
+                    android:id="@+id/recommendAroundListLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    dailyCarousel:bottomMarginBackgroundColor="@color/transparent"
+                    dailyCarousel:bottomMarginHeight="0dp"
+                    dailyCarousel:topMarginBackgroundColor="@color/default_background"
+                    dailyCarousel:topMarginHeight="15dp"
+                    dailyCarousel:useAnimation="false" />
 
                 <include
                     android:id="@+id/conciergeViewDataBinding"
-                    layout="@layout/layout_gourmet_detail_concierge_data"/>
+                    layout="@layout/layout_gourmet_detail_concierge_data" />
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="20dp"
-                    android:background="@drawable/layerlist_divider"/>
+                    android:background="@drawable/layerlist_divider" />
             </LinearLayout>
         </com.daily.base.widget.DailyNestedScrollView>
 
@@ -246,7 +257,7 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             dailyToolbar:themeColor="white"
-            dailyToolbar:underLineVisible="false"/>
+            dailyToolbar:underLineVisible="false" />
 
         <com.daily.dailyhotel.view.DailyToolbarView
             android:id="@+id/toolbarView"
@@ -258,7 +269,7 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            dailyToolbar:underLineHeight="@dimen/gradient_1dp_line_height_under_21"/>
+            dailyToolbar:underLineHeight="@dimen/gradient_1dp_line_height_under_21" />
 
         <View
             android:id="@+id/productTypeBackgroundView"
@@ -270,14 +281,14 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+            app:layout_constraintTop_toTopOf="parent" />
 
         <include
             android:id="@+id/roomsViewDataBinding"
             layout="@layout/layout_stay_outbound_detail_rooms_data"
             app:layout_constraintBottom_toTopOf="@+id/bottomLayout"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"/>
+            app:layout_constraintRight_toRightOf="parent" />
 
         <View
             android:layout_width="0dp"
@@ -286,7 +297,7 @@
             android:elevation="2dp"
             app:layout_constraintBottom_toTopOf="@+id/bottomLayout"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"/>
+            app:layout_constraintRight_toRightOf="parent" />
 
         <RelativeLayout
             android:id="@+id/bottomLayout"
@@ -302,7 +313,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/gradient_1dp_line_height_under_21"
-                android:background="@color/default_line_ce7e7e7"/>
+                android:background="@color/default_line_ce7e7e7" />
 
             <com.daily.base.widget.DailyTextView
                 android:id="@+id/bookingTextView"
@@ -317,7 +328,7 @@
                 android:textColor="@color/white"
                 android:textSize="17dp"
                 android:visibility="gone"
-                dailyFont:style="Medium"/>
+                dailyFont:style="Medium" />
 
             <com.daily.base.widget.DailyTextView
                 android:id="@+id/soldoutTextView"
@@ -330,7 +341,7 @@
                 android:textColor="@color/default_text_cc5c5c5"
                 android:textSize="17dp"
                 android:visibility="gone"
-                dailyFont:style="Medium"/>
+                dailyFont:style="Medium" />
         </RelativeLayout>
     </android.support.constraint.ConstraintLayout>
 </layout>

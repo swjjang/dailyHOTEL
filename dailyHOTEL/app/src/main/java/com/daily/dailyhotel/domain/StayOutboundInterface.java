@@ -14,4 +14,6 @@ public interface StayOutboundInterface
         , String geographyType, People people, StayOutboundFilters stayOutboundFilters, String cacheKey, String cacheLocation);
 
     Observable<StayOutboundDetail> getDetail(int index, StayBookDateTime stayBookDateTime, People people);
+
+    Observable<StayOutbounds> getRecommendAroundList(int index, StayBookDateTime stayBookDateTime, People people);
 }

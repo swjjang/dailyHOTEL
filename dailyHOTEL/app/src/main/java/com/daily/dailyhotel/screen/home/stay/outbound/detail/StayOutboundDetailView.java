@@ -43,6 +43,7 @@ import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
 import com.daily.base.widget.DailyTextView;
+import com.daily.dailyhotel.entity.CarouselListItem;
 import com.daily.dailyhotel.entity.ImageMap;
 import com.daily.dailyhotel.entity.People;
 import com.daily.dailyhotel.entity.StayBookDateTime;
@@ -887,6 +888,17 @@ public class StayOutboundDetailView extends BaseDialogView<StayOutboundDetailVie
         }
 
         getViewDataBinding().nestedScrollView.fullScroll(View.FOCUS_UP);
+    }
+
+    @Override
+    public void setRecommendAroundList(ArrayList<CarouselListItem> list)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        getViewDataBinding().recommendAroundListLayout.setData(list);
     }
 
     private void initToolbar(ActivityStayOutboundDetailDataBinding viewDataBinding)
