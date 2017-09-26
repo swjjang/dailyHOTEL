@@ -67,7 +67,7 @@ import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.DailyRemoteConfigPreference;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.widget.AlphaTransition;
-import com.twoheart.dailyhotel.widget.DailyDetailEmptyView;
+import com.daily.dailyhotel.view.DailyDetailEmptyView;
 import com.twoheart.dailyhotel.widget.TextTransition;
 
 import java.text.DecimalFormat;

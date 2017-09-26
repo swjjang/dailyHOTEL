@@ -182,7 +182,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
-                    <com.twoheart.dailyhotel.widget.DailyDetailEmptyView
+                    <com.daily.dailyhotel.view.DailyDetailEmptyView
                         android:id="@+id/detailEmptyView"
                         android:layout_width="0dp"
                         android:layout_height="0dp"

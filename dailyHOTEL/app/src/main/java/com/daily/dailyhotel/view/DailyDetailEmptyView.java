@@ -1,4 +1,4 @@
-package com.twoheart.dailyhotel.widget;
+package com.daily.dailyhotel.view;
 
 import android.content.Context;
 import android.support.v4.view.MotionEventCompat;
@@ -12,7 +12,6 @@ public class DailyDetailEmptyView extends View implements View.OnTouchListener
     private final int MOVE_STATE_NONE = 0;
     private final int MOVE_STATE_SCROLL = 10;
     private final int MOVE_STATE_VIEWPAGER = 100;
-
     private final float MOVE_CALIBRATE_VALUE = 1.25f;
 
     private int mMoveState;
