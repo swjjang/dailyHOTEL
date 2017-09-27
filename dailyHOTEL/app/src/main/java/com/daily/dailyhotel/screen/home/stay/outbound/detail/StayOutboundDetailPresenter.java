@@ -285,7 +285,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
             }));
         } else
         {
-            onRefresh(true);
+            setRefresh(true);
         }
     }
 
