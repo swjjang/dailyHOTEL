@@ -27,8 +27,8 @@ import com.daily.dailyhotel.entity.User;
 import com.daily.dailyhotel.entity.WishResult;
 import com.daily.dailyhotel.parcel.analytics.GourmetDetailAnalyticsParam;
 import com.daily.dailyhotel.parcel.analytics.GourmetPaymentAnalyticsParam;
-import com.daily.dailyhotel.parcel.analytics.TrueReviewAnalyticsParam;
 import com.daily.dailyhotel.parcel.analytics.NavigatorAnalyticsParam;
+import com.daily.dailyhotel.parcel.analytics.TrueReviewAnalyticsParam;
 import com.daily.dailyhotel.repository.remote.CalendarImpl;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
 import com.daily.dailyhotel.repository.remote.GourmetRemoteImpl;
@@ -46,6 +46,7 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Customer;
 import com.twoheart.dailyhotel.screen.common.HappyTalkCategoryDialog;
 import com.twoheart.dailyhotel.screen.common.ZoomMapActivity;
+import com.twoheart.dailyhotel.screen.event.EventWebActivity;
 import com.twoheart.dailyhotel.screen.gourmet.filter.GourmetCalendarActivity;
 import com.twoheart.dailyhotel.screen.gourmet.filter.GourmetDetailCalendarActivity;
 import com.twoheart.dailyhotel.screen.information.FAQActivity;
@@ -1374,7 +1375,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
             return;
         }
 
-        String callByScreen = mIsDeepLink ? AnalyticsManager.Label.EVENT : AnalyticsManager.ValueType.DETAIL;
+        String callByScreen = equalsCallingActivity(EventWebActivity.class) ? AnalyticsManager.Label.EVENT : AnalyticsManager.ValueType.DETAIL;
 
         Intent intent = GourmetDetailCalendarActivity.newInstance(getActivity(), //
             commonDateTime, gourmetBookDateTime.getVisitDateTime(DailyCalendar.ISO_8601_FORMAT), gourmetIndex//

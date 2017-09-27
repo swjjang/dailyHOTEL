@@ -40,7 +40,6 @@ import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Customer;
 import com.twoheart.dailyhotel.model.PlaceDetail;
-import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.model.StayDetail;
 import com.twoheart.dailyhotel.model.time.PlaceBookingDay;
 import com.twoheart.dailyhotel.model.time.StayBookingDay;
@@ -58,6 +57,7 @@ import com.twoheart.dailyhotel.screen.common.HappyTalkCategoryDialog;
 import com.twoheart.dailyhotel.screen.common.ImageDetailListActivity;
 import com.twoheart.dailyhotel.screen.common.TrueVRActivity;
 import com.twoheart.dailyhotel.screen.common.ZoomMapActivity;
+import com.twoheart.dailyhotel.screen.event.EventWebActivity;
 import com.twoheart.dailyhotel.screen.hotel.filter.StayCalendarActivity;
 import com.twoheart.dailyhotel.screen.hotel.filter.StayDetailCalendarActivity;
 import com.twoheart.dailyhotel.screen.mydaily.coupon.SelectStayCouponDialogActivity;
@@ -1137,8 +1137,10 @@ public class StayDetailActivity extends PlaceDetailActivity
             ? StayCalendarActivity.DEFAULT_DOMESTIC_CALENDAR_DAY_OF_MAX_COUNT //
             : StayDetailCalendarActivity.DEFAULT_OVERSEAS_CALENDAR_DAY_OF_MAX_COUNT;
 
+        String callByScreen = isSameCallingActivity(EventWebActivity.class.getName()) ? AnalyticsManager.Label.EVENT : AnalyticsManager.ValueType.DETAIL;
+
         Intent intent = StayDetailCalendarActivity.newInstance(StayDetailActivity.this, todayDateTime //
-            , stayBookingDay, dayCount, placeIndex, AnalyticsManager.ValueType.DETAIL //
+            , stayBookingDay, dayCount, placeIndex, callByScreen //
             , (ArrayList) soldOutList, true, isAnimation, isSingleDay);
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_CALENDAR);
 
