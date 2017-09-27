@@ -9,6 +9,11 @@ public class DailyNestedScrollView extends android.support.v4.widget.NestedScrol
 {
     private boolean mIsScrollingEnabled = true;
 
+    private float mDistanceX;
+    private float mDistanceY;
+    private float mLastX;
+    private float mLastY;
+
     public DailyNestedScrollView(Context context)
     {
         super(context);
@@ -50,6 +55,34 @@ public class DailyNestedScrollView extends android.support.v4.widget.NestedScrol
             return false;
         } else
         {
+            switch (ev.getAction())
+            {
+                case MotionEvent.ACTION_DOWN:
+                {
+                    mDistanceX = mDistanceY = 0f;
+                    mLastX = ev.getX();
+                    mLastY = ev.getY();
+
+                    // This is very important line that fixes
+                    computeScroll();
+                    break;
+                }
+                case MotionEvent.ACTION_MOVE:
+                {
+                    final float curX = ev.getX();
+                    final float curY = ev.getY();
+                    mDistanceX += Math.abs(curX - mLastX);
+                    mDistanceY += Math.abs(curY - mLastY);
+                    mLastX = curX;
+                    mLastY = curY;
+
+                    if (mDistanceX > mDistanceY)
+                    {
+                        return false;
+                    }
+                }
+            }
+
             return super.onInterceptTouchEvent(ev);
         }
     }
