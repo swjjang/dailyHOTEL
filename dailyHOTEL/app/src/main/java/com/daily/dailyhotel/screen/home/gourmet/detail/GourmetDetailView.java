@@ -41,6 +41,7 @@ import com.daily.dailyhotel.entity.GourmetDetail;
 import com.daily.dailyhotel.entity.GourmetMenu;
 import com.daily.dailyhotel.entity.Sticker;
 import com.daily.dailyhotel.screen.home.stay.outbound.detail.StayOutboundDetailActivity;
+import com.daily.dailyhotel.view.DailyDetailEmptyView;
 import com.daily.dailyhotel.view.DailyToolbarView;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.controller.BaseControllerListener;
@@ -67,7 +68,6 @@ import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.DailyRemoteConfigPreference;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.widget.AlphaTransition;
-import com.daily.dailyhotel.view.DailyDetailEmptyView;
 import com.twoheart.dailyhotel.widget.TextTransition;
 
 import java.text.DecimalFormat;
@@ -1486,7 +1486,7 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
             {
                 if (i < shownMenuCount)
                 {
-                    setMenuLayout(layoutInflater, getViewDataBinding().menuLayout, i, gourmetMenuList.get(i));
+                    setMenuLayout(layoutInflater, getViewDataBinding().menuLayout, i, gourmetMenuList.get(i), true);
                 } else if (i == shownMenuCount)
                 {
                     getViewDataBinding().menuLayout.addView(mMoreMenuLayout, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
@@ -1503,10 +1503,10 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
                         }
                     });
 
-                    setMenuLayout(layoutInflater, mMoreMenuLayout, i, gourmetMenuList.get(i));
+                    setMenuLayout(layoutInflater, mMoreMenuLayout, i, gourmetMenuList.get(i), true);
                 } else
                 {
-                    setMenuLayout(layoutInflater, mMoreMenuLayout, i, gourmetMenuList.get(i));
+                    setMenuLayout(layoutInflater, mMoreMenuLayout, i, gourmetMenuList.get(i), true);
                 }
             }
 
@@ -1526,12 +1526,12 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
         {
             for (int i = 0; i < size; i++)
             {
-                setMenuLayout(layoutInflater, getViewDataBinding().menuLayout, i, gourmetMenuList.get(i));
+                setMenuLayout(layoutInflater, getViewDataBinding().menuLayout, i, gourmetMenuList.get(i), i != size - 1);
             }
         }
     }
 
-    private void setMenuLayout(LayoutInflater layoutInflater, ViewGroup parent, int index, GourmetMenu gourmetMenu)
+    private void setMenuLayout(LayoutInflater layoutInflater, ViewGroup parent, int index, GourmetMenu gourmetMenu, boolean insertUnderLine)
     {
         if (layoutInflater == null || parent == null || gourmetMenu == null)
         {
@@ -1614,14 +1614,17 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
             viewDataBinding.benefitTextView.setVisibility(View.VISIBLE);
         }
 
-        // 마지막 라인 넣기
-        final int DP_15 = ScreenUtils.dpToPx(getContext(), 15);
-        View underLineView = new View(getContext());
-        underLineView.setBackgroundResource(R.color.default_line_cdcdcdd);
+        if (insertUnderLine == true)
+        {
+            // 마지막 라인 넣기
+            final int DP_15 = ScreenUtils.dpToPx(getContext(), 15);
+            View underLineView = new View(getContext());
+            underLineView.setBackgroundResource(R.color.default_line_cdcdcdd);
 
-        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 1);
-        layoutParams.setMargins(DP_15, 0, DP_15, 0);
-        parent.addView(underLineView, layoutParams);
+            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 1);
+            layoutParams.setMargins(DP_15, 0, DP_15, 0);
+            parent.addView(underLineView, layoutParams);
+        }
     }
 
     /**
