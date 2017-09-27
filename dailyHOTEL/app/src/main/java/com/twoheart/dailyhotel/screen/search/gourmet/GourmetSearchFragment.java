@@ -27,7 +27,7 @@ import com.twoheart.dailyhotel.screen.gourmet.filter.GourmetSearchCalendarActivi
 import com.twoheart.dailyhotel.screen.search.gourmet.result.GourmetSearchResultActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
-import com.twoheart.dailyhotel.util.DailyPreference;
+import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 

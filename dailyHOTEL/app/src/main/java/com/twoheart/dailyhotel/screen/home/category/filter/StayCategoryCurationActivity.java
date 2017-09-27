@@ -31,7 +31,7 @@ import com.twoheart.dailyhotel.model.StayRoomAmenities;
 import com.twoheart.dailyhotel.place.activity.PlaceCurationActivity;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.util.Constants;
-import com.twoheart.dailyhotel.util.DailyRemoteConfigPreference;
+import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 

@@ -22,7 +22,7 @@ import com.twoheart.dailyhotel.place.activity.PlaceRegionListActivity;
 import com.twoheart.dailyhotel.place.adapter.PlaceRegionAnimatedExpandableListAdapter;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.base.BaseFragment;
-import com.twoheart.dailyhotel.util.DailyPreference;
+import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.DailyAnimatedExpandableListView;
 

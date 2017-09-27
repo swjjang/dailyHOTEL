@@ -19,7 +19,7 @@ import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.parcel.analytics.StayOutboundThankYouAnalyticsParam;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.DailyInternalDeepLink;
-import com.twoheart.dailyhotel.util.DailyUserPreference;
+import com.daily.dailyhotel.storage.preference.DailyUserPreference;
 import com.twoheart.dailyhotel.widget.CustomFontTypefaceSpan;
 
 /**

@@ -13,7 +13,7 @@ import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.RegionViewItem;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.base.BaseFragment;
-import com.twoheart.dailyhotel.util.DailyPreference;
+import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.twoheart.dailyhotel.util.Util;
 
 import org.json.JSONObject;

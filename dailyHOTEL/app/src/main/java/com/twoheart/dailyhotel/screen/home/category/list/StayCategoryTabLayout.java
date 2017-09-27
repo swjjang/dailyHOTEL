@@ -14,8 +14,8 @@ import com.twoheart.dailyhotel.model.time.StayBookingDay;
 import com.twoheart.dailyhotel.place.adapter.PlaceListFragmentPagerAdapter;
 import com.twoheart.dailyhotel.place.fragment.PlaceListFragment;
 import com.twoheart.dailyhotel.place.layout.PlaceMainLayout;
-import com.twoheart.dailyhotel.util.DailyPreference;
-import com.twoheart.dailyhotel.util.DailyRemoteConfigPreference;
+import com.daily.dailyhotel.storage.preference.DailyPreference;
+import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 
 import java.util.ArrayList;
 import java.util.Locale;

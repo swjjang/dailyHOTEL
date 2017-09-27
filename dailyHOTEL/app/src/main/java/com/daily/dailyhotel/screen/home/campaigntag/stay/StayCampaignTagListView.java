@@ -19,7 +19,7 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ActivityPlaceCampaignTagListDataBinding;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.time.StayBookingDay;
-import com.twoheart.dailyhotel.util.DailyPreference;
+import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.Util;
 

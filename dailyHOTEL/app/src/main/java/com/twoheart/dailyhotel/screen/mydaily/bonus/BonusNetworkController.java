@@ -8,7 +8,7 @@ import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
 import com.twoheart.dailyhotel.util.DailyCalendar;
-import com.twoheart.dailyhotel.util.DailyUserPreference;
+import com.daily.dailyhotel.storage.preference.DailyUserPreference;
 
 import org.json.JSONArray;
 import org.json.JSONObject;

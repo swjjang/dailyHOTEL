@@ -14,8 +14,8 @@ import com.daily.dailyhotel.base.BaseExceptionPresenter;
 import com.daily.dailyhotel.domain.StayObRecentlySuggestColumns;
 import com.daily.dailyhotel.entity.Suggest;
 import com.daily.dailyhotel.parcel.SuggestParcel;
-import com.daily.dailyhotel.repository.local.DailyDb;
-import com.daily.dailyhotel.repository.local.DailyDbHelper;
+import com.daily.dailyhotel.storage.database.DailyDb;
+import com.daily.dailyhotel.storage.database.DailyDbHelper;
 import com.daily.dailyhotel.repository.remote.SuggestRemoteImpl;
 import com.twoheart.dailyhotel.R;
 

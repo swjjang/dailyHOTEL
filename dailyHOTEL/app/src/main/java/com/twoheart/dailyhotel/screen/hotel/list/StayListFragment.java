@@ -19,7 +19,7 @@ import com.twoheart.dailyhotel.model.time.StayBookingDay;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.fragment.PlaceListFragment;
 import com.twoheart.dailyhotel.place.layout.PlaceListLayout;
-import com.twoheart.dailyhotel.util.DailyRemoteConfigPreference;
+import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.twoheart.dailyhotel.util.Util;
 
 import java.util.ArrayList;

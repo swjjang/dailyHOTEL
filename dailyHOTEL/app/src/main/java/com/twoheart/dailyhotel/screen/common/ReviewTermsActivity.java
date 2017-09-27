@@ -9,7 +9,7 @@ import com.daily.base.widget.DailyWebView;
 import com.daily.dailyhotel.view.DailyToolbarView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.DailyInternalDeepLink;
-import com.twoheart.dailyhotel.util.DailyRemoteConfigPreference;
+import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 
 public class ReviewTermsActivity extends WebViewActivity
 {
