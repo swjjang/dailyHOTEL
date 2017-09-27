@@ -81,11 +81,11 @@ import java.util.concurrent.TimeUnit;
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.Observer;
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
-import io.reactivex.functions.Function3;
 import io.reactivex.functions.Function4;
 import io.reactivex.schedulers.Schedulers;
 import retrofit2.HttpException;
@@ -279,6 +279,9 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
 
                         mDailyDeepLink.clear();
                         mDailyDeepLink = null;
+
+                        setRefresh(true);
+                        onRefresh(true);
                     }
                 }, new Consumer<Throwable>()
                 {
@@ -346,49 +349,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
 
             addCompositeDisposable(disposable);
 
-            addCompositeDisposable(Observable.zip(getViewInterface().getSharedElementTransition(mGradientType)//
-                , mCommonRemoteImpl.getCommonDateTime(), mStayOutboundRemoteImpl.getDetail(mStayIndex, mStayBookDateTime, mPeople)//
-                , mStayOutboundRemoteImpl.getRecommendAroundList(mStayIndex, mStayBookDateTime, mPeople) //
-                , new Function4<Boolean, CommonDateTime, StayOutboundDetail, StayOutbounds, StayOutboundDetail>()
-                {
-                    @Override
-                    public StayOutboundDetail apply(@io.reactivex.annotations.NonNull Boolean aBoolean //
-                        , @io.reactivex.annotations.NonNull CommonDateTime commonDateTime //
-                        , @io.reactivex.annotations.NonNull StayOutboundDetail stayOutboundDetail //
-                        , @io.reactivex.annotations.NonNull StayOutbounds stayOutbounds) throws Exception
-                    {
-                        setCommonDateTime(commonDateTime);
-                        setRecommendAroundList(stayOutbounds);
-                        return stayOutboundDetail;
-                    }
-                }).subscribe(new Consumer<StayOutboundDetail>()
-            {
-                @Override
-                public void accept(StayOutboundDetail stayOutboundDetail) throws Exception
-                {
-                    onStayOutboundDetail(stayOutboundDetail);
-                    notifyRecommendAroundList();
-
-                    if (disposable != null)
-                    {
-                        disposable.dispose();
-                    }
-
-                    unLockAll();
-                }
-            }, new Consumer<Throwable>()
-            {
-                @Override
-                public void accept(Throwable throwable) throws Exception
-                {
-                    if (disposable != null)
-                    {
-                        disposable.dispose();
-                    }
-
-                    onHandleError(throwable);
-                }
-            }));
+            onRefresh(getViewInterface().getSharedElementTransition(mGradientType), disposable);
         } else
         {
             if (mIsDeepLink == false)
@@ -608,37 +569,15 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
 
         mSelectedRoom = null;
 
-        addCompositeDisposable(Observable.zip(mCommonRemoteImpl.getCommonDateTime() //
-            , mStayOutboundRemoteImpl.getDetail(mStayIndex, mStayBookDateTime, mPeople) //
-            , mStayOutboundRemoteImpl.getRecommendAroundList(mStayIndex, mStayBookDateTime, mPeople) //
-            , new Function3<CommonDateTime, StayOutboundDetail, StayOutbounds, StayOutboundDetail>()
-            {
-                @Override
-                public StayOutboundDetail apply(@io.reactivex.annotations.NonNull CommonDateTime commonDateTime //
-                    , @io.reactivex.annotations.NonNull StayOutboundDetail stayOutboundDetail //
-                    , @io.reactivex.annotations.NonNull StayOutbounds stayOutbounds) throws Exception
-                {
-                    setCommonDateTime(commonDateTime);
-                    setRecommendAroundList(stayOutbounds);
-                    return stayOutboundDetail;
-                }
-            }).subscribe(new Consumer<StayOutboundDetail>()
+        onRefresh(new Observable<Boolean>()
         {
             @Override
-            public void accept(@io.reactivex.annotations.NonNull StayOutboundDetail stayOutboundDetail) throws Exception
+            protected void subscribeActual(Observer<? super Boolean> observer)
             {
-                onStayOutboundDetail(stayOutboundDetail);
-                notifyRecommendAroundList();
-                unLockAll();
+                observer.onNext(true);
+                observer.onComplete();
             }
-        }, new Consumer<Throwable>()
-        {
-            @Override
-            public void accept(@io.reactivex.annotations.NonNull Throwable throwable) throws Exception
-            {
-                onHandleError(throwable);
-            }
-        }));
+        }, null);
     }
 
     @Override
@@ -1343,15 +1282,15 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
                 });
 
                 ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(), pairs);
-//
-//                View simpleDraweeView = view.findViewById(R.id.contentImageView);
-//                View gradientTopView = view.findViewById(R.id.gradientTopView);
-//                View gradientBottomView = view.findViewById(R.id.gradientBottomView);
-//
-//                ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity()//
-//                    , android.support.v4.util.Pair.create(simpleDraweeView, getString(R.string.transition_place_image)) //
-//                    , android.support.v4.util.Pair.create(gradientTopView, getString(R.string.transition_gradient_top_view)) //
-//                    , android.support.v4.util.Pair.create(gradientBottomView, getString(R.string.transition_gradient_bottom_view)));
+                //
+                //                View simpleDraweeView = view.findViewById(R.id.contentImageView);
+                //                View gradientTopView = view.findViewById(R.id.gradientTopView);
+                //                View gradientBottomView = view.findViewById(R.id.gradientBottomView);
+                //
+                //                ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity()//
+                //                    , android.support.v4.util.Pair.create(simpleDraweeView, getString(R.string.transition_place_image)) //
+                //                    , android.support.v4.util.Pair.create(gradientTopView, getString(R.string.transition_gradient_top_view)) //
+                //                    , android.support.v4.util.Pair.create(gradientBottomView, getString(R.string.transition_gradient_bottom_view)));
 
                 getActivity().startActivityForResult(StayOutboundDetailActivity.newInstance(getActivity(), stayOutbound.index//
                     , stayOutbound.name, imageUrl, stayOutbound.total//
@@ -1606,5 +1545,57 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
                 }
             }
         }
+    }
+
+    private void onRefresh(Observable<Boolean> observable, Disposable disposable)
+    {
+        if (observable == null)
+        {
+            return;
+        }
+
+        addCompositeDisposable(Observable.zip(observable, mCommonRemoteImpl.getCommonDateTime() //
+            , mStayOutboundRemoteImpl.getDetail(mStayIndex, mStayBookDateTime, mPeople) //
+            , mStayOutboundRemoteImpl.getRecommendAroundList(mStayIndex, mStayBookDateTime, mPeople) //
+            , new Function4<Boolean, CommonDateTime, StayOutboundDetail, StayOutbounds, StayOutboundDetail>()
+            {
+                @Override
+                public StayOutboundDetail apply(@io.reactivex.annotations.NonNull Boolean aBoolean//
+                    , @io.reactivex.annotations.NonNull CommonDateTime commonDateTime //
+                    , @io.reactivex.annotations.NonNull StayOutboundDetail stayOutboundDetail //
+                    , @io.reactivex.annotations.NonNull StayOutbounds stayOutbounds) throws Exception
+                {
+                    setCommonDateTime(commonDateTime);
+                    setRecommendAroundList(stayOutbounds);
+                    return stayOutboundDetail;
+                }
+            }).subscribe(new Consumer<StayOutboundDetail>()
+        {
+            @Override
+            public void accept(@io.reactivex.annotations.NonNull StayOutboundDetail stayOutboundDetail) throws Exception
+            {
+                onStayOutboundDetail(stayOutboundDetail);
+                notifyRecommendAroundList();
+
+                if (disposable != null)
+                {
+                    disposable.dispose();
+                }
+
+                unLockAll();
+            }
+        }, new Consumer<Throwable>()
+        {
+            @Override
+            public void accept(@io.reactivex.annotations.NonNull Throwable throwable) throws Exception
+            {
+                if (disposable != null)
+                {
+                    disposable.dispose();
+                }
+
+                onHandleError(throwable);
+            }
+        }));
     }
 }

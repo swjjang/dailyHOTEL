@@ -276,6 +276,9 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
 
                         mDailyDeepLink.clear();
                         mDailyDeepLink = null;
+
+                        setRefresh(true);
+                        onRefresh(true);
                     }
                 }, new Consumer<Throwable>()
                 {
