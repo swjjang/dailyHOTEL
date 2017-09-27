@@ -78,7 +78,7 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
 
         void onAutoCompleteKeyword(String keyword);
 
-        void onSearch(String text);
+        void onSearch(String text, boolean isSkipCheck);
 
         void onSearch(String text, Keyword keyword);
 
@@ -602,7 +602,7 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
             return;
         }
 
-        ((OnEventListener) mOnEventListener).onSearch(text);
+        ((OnEventListener) mOnEventListener).onSearch(text, false);
     }
 
     void validateKeyword(Keyword keyword)

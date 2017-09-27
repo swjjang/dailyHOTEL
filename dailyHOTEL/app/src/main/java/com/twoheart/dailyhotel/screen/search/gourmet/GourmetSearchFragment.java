@@ -559,7 +559,7 @@ public class GourmetSearchFragment extends PlaceSearchFragment
         }
 
         @Override
-        public void onSearch(String text)
+        public void onSearch(String text, boolean isSkipCheck)
         {
             if (mIsScrolling == true)
             {

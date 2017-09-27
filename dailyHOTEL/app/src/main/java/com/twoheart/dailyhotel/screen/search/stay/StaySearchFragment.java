@@ -608,6 +608,13 @@ public class StaySearchFragment extends PlaceSearchFragment
                 // negative
                 try
                 {
+                    if (mOnEventListener == null)
+                    {
+                        return;
+                    }
+
+                    mOnEventListener.onSearch(getSearchKeyword(), true);
+
                     AnalyticsManager.getInstance(getContext()).recordEvent(AnalyticsManager.Category.SEARCH //
                         , AnalyticsManager.Action.OB_KEYWORDS_IN_DOMESTIC, AnalyticsManager.Label.NO, null);
                 } catch (Exception e)
@@ -755,7 +762,7 @@ public class StaySearchFragment extends PlaceSearchFragment
         }
 
         @Override
-        public void onSearch(String text)
+        public void onSearch(String text, boolean isSkipCheck)
         {
             if (mIsScrolling == true)
             {
@@ -767,7 +774,7 @@ public class StaySearchFragment extends PlaceSearchFragment
                 return;
             }
 
-            if (showCheckStayOutboundSearchDialog() == true)
+            if (isSkipCheck == false && showCheckStayOutboundSearchDialog() == true)
             {
                 return;
             }
