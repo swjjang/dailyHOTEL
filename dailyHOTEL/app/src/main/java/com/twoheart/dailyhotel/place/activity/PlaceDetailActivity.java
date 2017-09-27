@@ -384,6 +384,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
                             finish();
                             break;
 
+                        case com.daily.base.BaseActivity.RESULT_CODE_REFRESH:
                         case CODE_RESULT_ACTIVITY_REFRESH:
                         case CODE_RESULT_ACTIVITY_PAYMENT_TIMEOVER:
                             mDontReloadAtOnResume = false;
