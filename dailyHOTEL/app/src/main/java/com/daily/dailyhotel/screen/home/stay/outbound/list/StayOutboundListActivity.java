@@ -48,7 +48,8 @@ public class StayOutboundListActivity extends BaseActivity<StayOutboundListPrese
      * @param childAgeList
      * @return
      */
-    public static Intent newInstance(Context context, Suggest suggest, String checkInDateTime, String checkOutDateTime, int numberOfAdults, ArrayList<Integer> childAgeList, StayOutboundListAnalyticsParam analyticsParam)
+    public static Intent newInstance(Context context, Suggest suggest, String checkInDateTime, String checkOutDateTime//
+        , int numberOfAdults, ArrayList<Integer> childAgeList, StayOutboundListAnalyticsParam analyticsParam)
     {
         Intent intent = new Intent(context, StayOutboundListActivity.class);
         intent.putExtra(INTENT_EXTRA_DATA_SUGGEST, new SuggestParcel(suggest));

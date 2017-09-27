@@ -851,6 +851,8 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
                 , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
                 , mPeople.numberOfAdults, mPeople.getChildAgeList(), false, StayOutboundDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_NONE, analyticsParam)//
                 , StayOutboundListActivity.REQUEST_CODE_DETAIL);
+
+            getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
         }
 
         mAnalytics.onEventStayClick(getActivity(), stayOutbound.index);
