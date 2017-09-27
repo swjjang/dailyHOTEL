@@ -960,9 +960,11 @@ public class AnalyticsManager
 
         public static final String STAY_BACK_BUTTON_CLICK = "stay_back_button_click";
         public static final String STAY_ITEM_CLICK = "stay_item_click";
+        public static final String STAY_DAILYCHOICE_CLICK = "stay_dailychoice_click";
 
         public static final String GOURMET_BACK_BUTTON_CLICK = "gourmet_back_button_click";
         public static final String GOURMET_ITEM_CLICK = "gourmet_item_click";
+        public static final String GOURMET_DAILYCHOICE_CLICK = "gourmet_dailychoice_click";
         public static final String WISHLIST_BACK_BUTTON_CLICK = "wishlist_back_button_click";
         public static final String WISHLIST_ITEM_DELETE = "wishlist_item_delete";
         public static final String RECENTVIEW_BACK_BUTTON_CLICK = "recentview_back_button_click";
