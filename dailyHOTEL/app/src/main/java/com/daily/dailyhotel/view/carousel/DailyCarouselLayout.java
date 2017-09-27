@@ -38,9 +38,9 @@ public class DailyCarouselLayout extends ConstraintLayout
     {
         void onViewAllClick();
 
-        void onItemClick(View view);
+        void onItemClick(View view, android.support.v4.util.Pair[] pairs);
 
-        void onItemLongClick(View view);
+        void onItemLongClick(View view, android.support.v4.util.Pair[] pairs);
     }
 
     public DailyCarouselLayout(Context context)
@@ -73,20 +73,6 @@ public class DailyCarouselLayout extends ConstraintLayout
 
         setBackgroundResource(R.color.white);
 
-        mDataBinding.viewAllTextView.setOnClickListener(new OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                if (mCarouselListener == null)
-                {
-                    return;
-                }
-
-                mCarouselListener.onViewAllClick();
-            }
-        });
-
         LinearLayoutManager layoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
 
         mDataBinding.horizontalRecyclerView.setLayoutManager(layoutManager);
@@ -105,11 +91,15 @@ public class DailyCarouselLayout extends ConstraintLayout
         if (attrs != null)
         {
             TypedArray typedArray = mContext.obtainStyledAttributes(attrs, R.styleable.dailyCarousel);
-            boolean isUse = typedArray.getBoolean(R.styleable.dailyCarousel_usePriceLayout, true);
-            setUsePriceLayout(isUse);
+            boolean isUsePrice = typedArray.getBoolean(R.styleable.dailyCarousel_usePriceLayout, true);
+            setUsePriceLayout(isUsePrice);
+
+            boolean isUseViewAllButton = typedArray.getBoolean(R.styleable.dailyCarousel_useViewAllButton, true);
+            setUseViewAllButtonLayout(isUseViewAllButton);
         } else
         {
             setUsePriceLayout(true);
+            setUseViewAllButtonLayout(true);
         }
     }
 
@@ -206,28 +196,53 @@ public class DailyCarouselLayout extends ConstraintLayout
         mDataBinding.horizontalRecyclerView.setLayoutParams(params);
     }
 
+    public void setUseViewAllButtonLayout(boolean isUse)
+    {
+        if (isUse == true)
+        {
+            mDataBinding.viewAllTextView.setVisibility(View.VISIBLE);
+            mDataBinding.viewAllTextView.setOnClickListener(new OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    if (mCarouselListener == null)
+                    {
+                        return;
+                    }
+
+                    mCarouselListener.onViewAllClick();
+                }
+            });
+        } else
+        {
+            mDataBinding.viewAllTextView.setVisibility(View.INVISIBLE);
+            mDataBinding.viewAllTextView.setOnClickListener(null);
+        }
+    }
+
     private DailyCarouselAdapter.ItemClickListener mItemClickListener = new DailyCarouselAdapter.ItemClickListener()
     {
         @Override
-        public void onItemClick(View view)
+        public void onItemClick(View view, android.support.v4.util.Pair[] pairs)
         {
             if (mCarouselListener == null)
             {
                 return;
             }
 
-            mCarouselListener.onItemClick(view);
+            mCarouselListener.onItemClick(view, pairs);
         }
 
         @Override
-        public void onItemLongClick(View view)
+        public void onItemLongClick(View view, android.support.v4.util.Pair[] pairs)
         {
             if (mCarouselListener == null)
             {
                 return;
             }
 
-            mCarouselListener.onItemLongClick(view);
+            mCarouselListener.onItemLongClick(view, pairs);
         }
     };
 }

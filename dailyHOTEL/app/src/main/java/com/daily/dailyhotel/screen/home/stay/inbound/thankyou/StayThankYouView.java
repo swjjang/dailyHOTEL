@@ -75,13 +75,13 @@ public class StayThankYouView extends BaseBlurView<StayThankYouView.OnEventListe
             }
 
             @Override
-            public void onItemClick(View view)
+            public void onItemClick(View view, android.support.v4.util.Pair[] pairs)
             {
                 getEventListener().onRecommendGourmetItemClick(view);
             }
 
             @Override
-            public void onItemLongClick(View view)
+            public void onItemLongClick(View view, android.support.v4.util.Pair[] pairs)
             {
                 getEventListener().onRecommendGourmetItemLongClick(view);
             }

@@ -1353,7 +1353,6 @@
     <string name="label_people_number_of_person">%1$d 명</string>
     <string name="label_people_under_of_1_age">만 1세 미만</string>
 
-
     <!-- Stay Out Bound List -->
     <string name="label_stay_outbound_list_adult_count">성인 %1$d</string>
     <string name="label_stay_outbound_list_child_count">아동 %1$d</string>
@@ -1380,6 +1379,7 @@
     <string name="label_stay_outbound_amenities">편의시설</string>
     <string name="message_stay_outbound_detail_sold_out">마지막 객실이 방금 판매 완료되었습니다.\n날짜를 변경하거나 다른 호텔을 확인해주세요.</string>
     <string name="message_stay_outbound_detail_changed_price">일부 객실의 요금이\n변동되었습니다.\n객실 금액을\n한번 더 확인해주시고\n원하시는 객실이 없으면\n날짜를 변경해보세요.</string>
+    <string name="label_stay_outbound_recommend_around_title">이 호텔 근처의 다른 호텔</string>
 
     <!-- Stay Out Bound Payment -->
     <string name="label_stay_outbound_payment_last_name">영문 성</string>

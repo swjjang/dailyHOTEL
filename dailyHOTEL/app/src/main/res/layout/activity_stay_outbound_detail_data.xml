@@ -2,6 +2,7 @@
 <layout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:dailyCarousel="http://schemas.android.com/apk/res-auto"
     xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
     xmlns:dailyLineIndicator="http://schemas.android.com/apk/res-auto"
     xmlns:dailyToolbar="http://schemas.android.com/apk/res-auto"
@@ -203,6 +204,17 @@
                     android:layout_height="wrap_content"
                     android:background="@color/white"
                     android:orientation="vertical"/>
+
+                <com.daily.dailyhotel.view.carousel.DailyCarouselAnimationLayout
+                    android:id="@+id/recommendAroundListLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    dailyCarousel:bottomMarginBackgroundColor="@color/transparent"
+                    dailyCarousel:bottomMarginHeight="0dp"
+                    dailyCarousel:topMarginBackgroundColor="@color/default_background"
+                    dailyCarousel:topMarginHeight="15dp"
+                    dailyCarousel:useAnimation="false"
+                    dailyCarousel:useViewAllButton="false"/>
 
                 <include
                     android:id="@+id/conciergeViewDataBinding"
