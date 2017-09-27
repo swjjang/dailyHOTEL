@@ -141,6 +141,21 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
     public void onPostCreate()
     {
         getViewInterface().setToolbarTitle(getString(R.string.label_stay_outbound_search));
+
+        if (mDailyDeepLink != null)
+        {
+            if (processDeepLinkBeforeCommonDateTime(mDailyDeepLink) == true)
+            {
+                mDailyDeepLink.clear();
+                mDailyDeepLink = null;
+            }
+        } else
+        {
+            if (isSuggestChanged() == false)
+            {
+                onSuggestClick(false);
+            }
+        }
     }
 
     @Override
@@ -344,19 +359,10 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
                     }
                 }
 
-                if (mDailyDeepLink != null)
+                if (processDeepLinkAfterCommonDateTime(mDailyDeepLink, commonDateTime) == true)
                 {
-                    if (processDeepLink(mDailyDeepLink, commonDateTime) == true)
-                    {
-                        mDailyDeepLink.clear();
-                        mDailyDeepLink = null;
-                    }
-                } else
-                {
-                    if (isSuggestChanged() == false)
-                    {
-                        onSuggestClick(false);
-                    }
+                    mDailyDeepLink.clear();
+                    mDailyDeepLink = null;
                 }
 
                 notifyStayBookDateTimeChanged();
@@ -694,7 +700,7 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
         getViewInterface().setPeopleText(mPeople.toString(getActivity()));
     }
 
-    private boolean processDeepLink(DailyDeepLink dailyDeepLink, CommonDateTime commonDateTime)
+    private boolean processDeepLinkAfterCommonDateTime(DailyDeepLink dailyDeepLink, CommonDateTime commonDateTime)
     {
         if (dailyDeepLink == null || commonDateTime == null)
         {
@@ -765,7 +771,35 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
                     onSearchKeyword();
 
                     return true;
-                } else if (externalDeepLink.isPlaceDetailView() == true)
+                }
+            }
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+        }
+
+        return false;
+    }
+
+    private boolean processDeepLinkBeforeCommonDateTime(DailyDeepLink dailyDeepLink)
+    {
+        if (dailyDeepLink == null)
+        {
+            return false;
+        }
+
+        if (dailyDeepLink.isValidateLink() == false)
+        {
+            return false;
+        }
+
+        try
+        {
+            if (dailyDeepLink.isExternalDeepLink() == true)
+            {
+                DailyExternalDeepLink externalDeepLink = (DailyExternalDeepLink) dailyDeepLink;
+
+                if (externalDeepLink.isPlaceDetailView() == true)
                 {
                     startActivityForResult(StayOutboundDetailActivity.newInstance(getActivity(), externalDeepLink.getDeepLink())//
                         , StayOutboundSearchActivity.REQUEST_CODE_DETAIL);
@@ -784,9 +818,6 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
                     startActivityForResult(intent, StayOutboundSearchActivity.REQUEST_CODE_SUGGEST);
                     return true;
                 }
-            } else
-            {
-
             }
         } catch (Exception e)
         {
