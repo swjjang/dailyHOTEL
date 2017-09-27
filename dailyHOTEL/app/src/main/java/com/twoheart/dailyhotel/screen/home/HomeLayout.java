@@ -466,13 +466,13 @@ public class HomeLayout extends BaseBlurLayout
             }
 
             @Override
-            public void onItemClick(View view)
+            public void onItemClick(View view, android.support.v4.util.Pair[] pairs)
             {
                 ((HomeLayout.OnEventListener) mOnEventListener).onWishListItemClick(view);
             }
 
             @Override
-            public void onItemLongClick(View view)
+            public void onItemLongClick(View view, android.support.v4.util.Pair[] pairs)
             {
                 ((HomeLayout.OnEventListener) mOnEventListener).onWishListItemLongClick(view);
             }
@@ -504,13 +504,13 @@ public class HomeLayout extends BaseBlurLayout
             }
 
             @Override
-            public void onItemClick(View view)
+            public void onItemClick(View view, android.support.v4.util.Pair[] pairs)
             {
                 ((HomeLayout.OnEventListener) mOnEventListener).onRecentListItemClick(view);
             }
 
             @Override
-            public void onItemLongClick(View view)
+            public void onItemLongClick(View view, android.support.v4.util.Pair[] pairs)
             {
                 ((HomeLayout.OnEventListener) mOnEventListener).onRecentListItemLongClick(view);
             }

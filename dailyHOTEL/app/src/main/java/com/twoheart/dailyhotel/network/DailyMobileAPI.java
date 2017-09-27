@@ -1323,6 +1323,20 @@ public class DailyMobileAPI
             , jsonObject).subscribeOn(Schedulers.io());
     }
 
+    public Observable<BaseDto<StayOutboundsData>> getStayOutboundRecomendAroundList(int index, JSONObject jsonObject)
+    {
+        final String URL = Constants.DEBUG ? DailyPreference.getInstance(mContext).getBaseOutBoundUrl() : Setting.getOutboundServerUrl();
+
+        final String API = Constants.UNENCRYPTED_URL ? "api/v1/outbound/hotels/{hotelId}/recommend-around"//
+            : "MTcwJDExMCQ2JDEwNSQxMzAkMTgkMTI5JDEyMyQ1MyQ2OSQ2MiQ0MyQyNiQ1OCQ3MCQ5NyQ=$MzZFOUSI2NkIwNEQwOFDQyNjVDRRjNDRDU1MUQwQjY0RHURDNTQ3RUNHFNAzExOTYCxMDJIEMEXFBQzExNjcyRjdGRDlBNDRCHRDhGNkM1RjIyNDkwDMTdFMjSMwMEMzNTZGBNDc3QA0ZQGMUFCOUZCM0FDOTQ1NkI0NTA0NEJEQzgwRjlDOTRERENU=$";
+
+        Map<String, String> urlParams = new HashMap<>();
+        urlParams.put("{hotelId}", Integer.toString(index));
+
+        return mDailyMobileService.getStayOutboundRecommendAroundList(Crypto.getUrlDecoderEx(URL) + Crypto.getUrlDecoderEx(API, urlParams) //
+            , jsonObject).subscribeOn(Schedulers.io());
+    }
+
     /////////////////////////////////////////////////////////////////////////////////////////////////
     // GourmetRemoteImpl
     /////////////////////////////////////////////////////////////////////////////////////////////////

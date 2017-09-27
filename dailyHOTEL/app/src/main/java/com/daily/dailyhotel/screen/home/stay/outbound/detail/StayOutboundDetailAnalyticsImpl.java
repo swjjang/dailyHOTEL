@@ -3,6 +3,7 @@ package com.daily.dailyhotel.screen.home.stay.outbound.detail;
 import android.app.Activity;
 
 import com.daily.base.util.DailyTextUtils;
+import com.daily.dailyhotel.entity.StayOutbound;
 import com.daily.dailyhotel.parcel.analytics.StayOutboundDetailAnalyticsParam;
 import com.daily.dailyhotel.parcel.analytics.StayOutboundPaymentAnalyticsParam;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
@@ -24,6 +25,25 @@ public class StayOutboundDetailAnalyticsImpl implements StayOutboundDetailPresen
     public StayOutboundDetailAnalyticsParam getAnalyticsParam()
     {
         return mAnalyticsParam;
+    }
+
+    @Override
+    public StayOutboundDetailAnalyticsParam getAnalyticsParam(StayOutbound stayOutbound, String grade)
+    {
+        StayOutboundDetailAnalyticsParam analyticsParam = new StayOutboundDetailAnalyticsParam();
+
+        if (stayOutbound != null)
+        {
+            analyticsParam.index = stayOutbound.index;
+            analyticsParam.benefit = false;
+            analyticsParam.rating = stayOutbound.tripAdvisorRating == 0.0f ? null : Float.toString(stayOutbound.tripAdvisorRating);
+        }
+
+        analyticsParam.grade = grade;
+        analyticsParam.rankingPosition = -1;
+        analyticsParam.listSize = -1;
+
+        return analyticsParam;
     }
 
     @Override

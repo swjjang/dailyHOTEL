@@ -88,6 +88,7 @@
         <attr name="bottomLineBackgroundColor" format="color" />
         <attr name="useAnimation" format="boolean" />
         <attr name="usePriceLayout" format="boolean" />
+        <attr name="useViewAllButton" format="boolean" />
     </declare-styleable>
 
 </resources>

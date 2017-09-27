@@ -1,14 +1,18 @@
 package com.daily.dailyhotel.screen.home.stay.outbound.detail;
 
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.app.SharedElementCallback;
 import android.util.SparseArray;
 import android.view.View;
 
@@ -21,13 +25,16 @@ import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
 import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
+import com.daily.dailyhotel.entity.CarouselListItem;
 import com.daily.dailyhotel.entity.CommonDateTime;
 import com.daily.dailyhotel.entity.ImageMap;
 import com.daily.dailyhotel.entity.People;
 import com.daily.dailyhotel.entity.StayBookDateTime;
+import com.daily.dailyhotel.entity.StayOutbound;
 import com.daily.dailyhotel.entity.StayOutboundDetail;
 import com.daily.dailyhotel.entity.StayOutboundDetailImage;
 import com.daily.dailyhotel.entity.StayOutboundRoom;
+import com.daily.dailyhotel.entity.StayOutbounds;
 import com.daily.dailyhotel.entity.User;
 import com.daily.dailyhotel.parcel.analytics.NavigatorAnalyticsParam;
 import com.daily.dailyhotel.parcel.analytics.StayOutboundDetailAnalyticsParam;
@@ -42,7 +49,9 @@ import com.daily.dailyhotel.screen.home.stay.outbound.detail.amenities.AmenityLi
 import com.daily.dailyhotel.screen.home.stay.outbound.detail.images.ImageListActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.payment.StayOutboundPaymentActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.people.SelectPeopleActivity;
+import com.daily.dailyhotel.screen.home.stay.outbound.preview.StayOutboundPreviewActivity;
 import com.daily.dailyhotel.util.RecentlyPlaceUtil;
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Customer;
@@ -70,12 +79,14 @@ import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function3;
+import io.reactivex.functions.Function4;
 import io.reactivex.schedulers.Schedulers;
 import retrofit2.HttpException;
 
@@ -114,6 +125,10 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
     StayOutboundDetail mStayOutboundDetail;
     People mPeople;
     StayOutboundRoom mSelectedRoom;
+    private ArrayList<CarouselListItem> mRecommendAroundList;
+    View mViewByLongPress;
+    android.support.v4.util.Pair[] mPairsByLongPress;
+    StayOutbound mStayOutboundByLongPress;
 
     private int mStatus = STATUS_NONE;
 
@@ -132,6 +147,8 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
         void setAnalyticsParam(StayOutboundDetailAnalyticsParam analyticsParam);
 
         StayOutboundDetailAnalyticsParam getAnalyticsParam();
+
+        StayOutboundDetailAnalyticsParam getAnalyticsParam(StayOutbound stayOutbound, String grade);
 
         void onScreen(Activity activity);
 
@@ -331,20 +348,26 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
 
             addCompositeDisposable(Observable.zip(getViewInterface().getSharedElementTransition(mGradientType)//
                 , mCommonRemoteImpl.getCommonDateTime(), mStayOutboundRemoteImpl.getDetail(mStayIndex, mStayBookDateTime, mPeople)//
-                , new Function3<Boolean, CommonDateTime, StayOutboundDetail, StayOutboundDetail>()
+                , mStayOutboundRemoteImpl.getRecommendAroundList(mStayIndex, mStayBookDateTime, mPeople) //
+                , new Function4<Boolean, CommonDateTime, StayOutboundDetail, StayOutbounds, StayOutboundDetail>()
                 {
                     @Override
-                    public StayOutboundDetail apply(@io.reactivex.annotations.NonNull Boolean aBoolean, @io.reactivex.annotations.NonNull CommonDateTime commonDateTime, @io.reactivex.annotations.NonNull StayOutboundDetail stayOutboundDetail) throws Exception
+                    public StayOutboundDetail apply(@io.reactivex.annotations.NonNull Boolean aBoolean //
+                        , @io.reactivex.annotations.NonNull CommonDateTime commonDateTime //
+                        , @io.reactivex.annotations.NonNull StayOutboundDetail stayOutboundDetail //
+                        , @io.reactivex.annotations.NonNull StayOutbounds stayOutbounds) throws Exception
                     {
                         setCommonDateTime(commonDateTime);
+                        setRecommendAroundList(stayOutbounds);
                         return stayOutboundDetail;
                     }
                 }).subscribe(new Consumer<StayOutboundDetail>()
             {
                 @Override
-                public void accept(@io.reactivex.annotations.NonNull StayOutboundDetail stayOutboundDetail) throws Exception
+                public void accept(StayOutboundDetail stayOutboundDetail) throws Exception
                 {
                     onStayOutboundDetail(stayOutboundDetail);
+                    notifyRecommendAroundList();
 
                     if (disposable != null)
                     {
@@ -356,7 +379,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
             }, new Consumer<Throwable>()
             {
                 @Override
-                public void accept(@io.reactivex.annotations.NonNull Throwable throwable) throws Exception
+                public void accept(Throwable throwable) throws Exception
                 {
                     if (disposable != null)
                     {
@@ -392,6 +415,14 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
     public void onResume()
     {
         super.onResume();
+
+        if (Util.supportPreview(getActivity()) == true)
+        {
+            if (getViewInterface().isBlurVisible() == true)
+            {
+                getViewInterface().setBlurVisible(getActivity(), false);
+            }
+        }
 
         onHideRoomListClick(false);
 
@@ -547,6 +578,20 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
                     onHideRoomListClick(false);
                 }
                 break;
+
+            case StayOutboundDetailActivity.REQUEST_CODE_PREVIEW:
+                if (resultCode == Activity.RESULT_OK)
+                {
+                    Observable.create(new ObservableOnSubscribe<Object>()
+                    {
+                        @Override
+                        public void subscribe(ObservableEmitter<Object> e) throws Exception
+                        {
+                            startStayOutboundDetail(mViewByLongPress, mStayOutboundByLongPress, mPairsByLongPress);
+                        }
+                    }).subscribeOn(AndroidSchedulers.mainThread()).subscribe();
+                }
+                break;
         }
     }
 
@@ -563,21 +608,27 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
 
         mSelectedRoom = null;
 
-        addCompositeDisposable(Observable.zip(mCommonRemoteImpl.getCommonDateTime(), mStayOutboundRemoteImpl.getDetail(mStayIndex, mStayBookDateTime, mPeople), new BiFunction<CommonDateTime, StayOutboundDetail, StayOutboundDetail>()
-        {
-            @Override
-            public StayOutboundDetail apply(@io.reactivex.annotations.NonNull CommonDateTime commonDateTime, @io.reactivex.annotations.NonNull StayOutboundDetail stayOutboundDetail) throws Exception
+        addCompositeDisposable(Observable.zip(mCommonRemoteImpl.getCommonDateTime() //
+            , mStayOutboundRemoteImpl.getDetail(mStayIndex, mStayBookDateTime, mPeople) //
+            , mStayOutboundRemoteImpl.getRecommendAroundList(mStayIndex, mStayBookDateTime, mPeople) //
+            , new Function3<CommonDateTime, StayOutboundDetail, StayOutbounds, StayOutboundDetail>()
             {
-                setCommonDateTime(commonDateTime);
-                return stayOutboundDetail;
-            }
-        }).subscribe(new Consumer<StayOutboundDetail>()
+                @Override
+                public StayOutboundDetail apply(@io.reactivex.annotations.NonNull CommonDateTime commonDateTime //
+                    , @io.reactivex.annotations.NonNull StayOutboundDetail stayOutboundDetail //
+                    , @io.reactivex.annotations.NonNull StayOutbounds stayOutbounds) throws Exception
+                {
+                    setCommonDateTime(commonDateTime);
+                    setRecommendAroundList(stayOutbounds);
+                    return stayOutboundDetail;
+                }
+            }).subscribe(new Consumer<StayOutboundDetail>()
         {
             @Override
             public void accept(@io.reactivex.annotations.NonNull StayOutboundDetail stayOutboundDetail) throws Exception
             {
                 onStayOutboundDetail(stayOutboundDetail);
-
+                notifyRecommendAroundList();
                 unLockAll();
             }
         }, new Consumer<Throwable>()
@@ -613,6 +664,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
                     @Override
                     public void onClick(View v)
                     {
+                        setRefresh(true);
                         onRefresh(true);
                     }
                 }, new DialogInterface.OnCancelListener()
@@ -1168,6 +1220,162 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
         mSelectedRoom = stayOutboundRoom;
     }
 
+    @Override
+    public void onRecommendAroundItemClick(View view, android.support.v4.util.Pair[] pairs)
+    {
+        if (lock() == true)
+        {
+            return;
+        }
+
+        if (view == null)
+        {
+            return;
+        }
+
+        CarouselListItem item = (CarouselListItem) view.getTag();
+        if (item == null)
+        {
+            return;
+        }
+
+        StayOutbound stayOutbound = item.getItem();
+        if (stayOutbound == null)
+        {
+            return;
+        }
+
+        startStayOutboundDetail(view, stayOutbound, pairs);
+    }
+
+    @Override
+    public void onRecommendAroundItemLongClick(View view, android.support.v4.util.Pair[] pairs)
+    {
+        if (lock() == true)
+        {
+            return;
+        }
+
+        if (view == null || getViewInterface() == null || mCommonDateTime == null)
+        {
+            return;
+        }
+
+        CarouselListItem item = (CarouselListItem) view.getTag();
+        if (item == null)
+        {
+            return;
+        }
+
+        StayOutbound stayOutbound = item.getItem();
+        if (stayOutbound == null)
+        {
+            return;
+        }
+
+        try
+        {
+            mViewByLongPress = view;
+            mStayOutboundByLongPress = stayOutbound;
+            mPairsByLongPress = pairs;
+
+            getViewInterface().setBlurVisible(getActivity(), true);
+
+            startActivityForResult(StayOutboundPreviewActivity.newInstance(getActivity(), stayOutbound.index//
+                , stayOutbound.name//
+                , mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
+                , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
+                , mPeople.numberOfAdults, mPeople.getChildAgeList())//
+                , StayOutboundDetailActivity.REQUEST_CODE_PREVIEW);
+        } catch (Exception e)
+        {
+            unLockAll();
+        }
+    }
+
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+    private void startStayOutboundDetail(View view, StayOutbound stayOutbound, android.support.v4.util.Pair[] pairs)
+    {
+        String imageUrl;
+        if (ScreenUtils.getScreenWidth(getActivity()) >= ScreenUtils.DEFAULT_STAYOUTBOUND_XXHDPI_WIDTH)
+        {
+            if (DailyTextUtils.isTextEmpty(stayOutbound.getImageMap().bigUrl) == false)
+            {
+                imageUrl = stayOutbound.getImageMap().bigUrl;
+            } else
+            {
+                imageUrl = stayOutbound.getImageMap().smallUrl;
+            }
+        } else
+        {
+            if (DailyTextUtils.isTextEmpty(stayOutbound.getImageMap().mediumUrl) == false)
+            {
+                imageUrl = stayOutbound.getImageMap().mediumUrl;
+            } else
+            {
+                imageUrl = stayOutbound.getImageMap().smallUrl;
+            }
+        }
+
+        try
+        {
+            StayOutboundDetailAnalyticsParam analyticsParam = mAnalytics.getAnalyticsParam( //
+                stayOutbound, getString(R.string.label_stay_outbound_filter_x_star_rate, (int) stayOutbound.rating));
+
+            if (Util.isUsedMultiTransition() == true)
+            {
+                getActivity().setExitSharedElementCallback(new SharedElementCallback()
+                {
+                    @Override
+                    public void onSharedElementEnd(List<String> sharedElementNames, List<View> sharedElements, List<View> sharedElementSnapshots)
+                    {
+                        super.onSharedElementEnd(sharedElementNames, sharedElements, sharedElementSnapshots);
+
+                        for (View view : sharedElements)
+                        {
+                            if (view instanceof SimpleDraweeView)
+                            {
+                                view.setVisibility(View.VISIBLE);
+                                break;
+                            }
+                        }
+                    }
+                });
+
+                ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(), pairs);
+//
+//                View simpleDraweeView = view.findViewById(R.id.contentImageView);
+//                View gradientTopView = view.findViewById(R.id.gradientTopView);
+//                View gradientBottomView = view.findViewById(R.id.gradientBottomView);
+//
+//                ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity()//
+//                    , android.support.v4.util.Pair.create(simpleDraweeView, getString(R.string.transition_place_image)) //
+//                    , android.support.v4.util.Pair.create(gradientTopView, getString(R.string.transition_gradient_top_view)) //
+//                    , android.support.v4.util.Pair.create(gradientBottomView, getString(R.string.transition_gradient_bottom_view)));
+
+                getActivity().startActivityForResult(StayOutboundDetailActivity.newInstance(getActivity(), stayOutbound.index//
+                    , stayOutbound.name, imageUrl, stayOutbound.total//
+                    , mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
+                    , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
+                    , mPeople.numberOfAdults, mPeople.getChildAgeList(), false, StayOutboundDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_NONE, analyticsParam)//
+                    , StayOutboundDetailActivity.REQUEST_CODE_DETAIL, options.toBundle());
+            } else
+            {
+                startActivityForResult(StayOutboundDetailActivity.newInstance(getActivity(), stayOutbound.index//
+                    , stayOutbound.name, imageUrl, stayOutbound.total//
+                    , mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
+                    , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
+                    , mPeople.numberOfAdults, mPeople.getChildAgeList(), false, StayOutboundDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_NONE, analyticsParam)//
+                    , StayOutboundDetailActivity.REQUEST_CODE_DETAIL);
+
+                getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
+            }
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+        }
+    }
+
     void setStatus(int status)
     {
         mStatus = status;
@@ -1298,6 +1506,44 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
         {
             ExLog.e(e.toString());
         }
+    }
+
+    private void setRecommendAroundList(StayOutbounds stayOutbounds)
+    {
+        if (stayOutbounds == null)
+        {
+            return;
+        }
+
+        List<StayOutbound> stayOutboundList = stayOutbounds.getStayOutbound();
+        if (stayOutboundList == null || stayOutboundList.size() == 0)
+        {
+            mRecommendAroundList = null;
+            return;
+        }
+
+        if (mRecommendAroundList == null)
+        {
+            mRecommendAroundList = new ArrayList<>();
+        }
+
+        mRecommendAroundList.clear();
+
+        for (StayOutbound stayOutbound : stayOutboundList)
+        {
+            CarouselListItem item = new CarouselListItem(CarouselListItem.TYPE_OB_STAY, stayOutbound);
+            mRecommendAroundList.add(item);
+        }
+    }
+
+    private void notifyRecommendAroundList()
+    {
+        if (getViewInterface() == null)
+        {
+            return;
+        }
+
+        getViewInterface().setRecommendAroundList(mRecommendAroundList);
     }
 
     private void checkChangedPrice(boolean isDeepLink, StayOutboundDetail stayOutboundDetail, int listViewPrice, boolean compareListPrice)
