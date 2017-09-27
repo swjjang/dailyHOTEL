@@ -108,6 +108,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center"
+                    android:textColor="@color/default_text_cc5c5c5"
+                    android:textSize="14dp"
                     android:text="@string/label_search_deleteall" />
             </FrameLayout>
 
