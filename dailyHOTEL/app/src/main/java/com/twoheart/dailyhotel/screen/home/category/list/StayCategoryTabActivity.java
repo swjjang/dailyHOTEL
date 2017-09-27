@@ -1181,6 +1181,8 @@ public class StayCategoryTabActivity extends PlaceMainActivity
                         AnalyticsManager.getInstance(StayCategoryTabActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
                             , AnalyticsManager.Action.STAY_ITEM_CLICK, String.format(Locale.KOREA, "%d_%d", stay.entryPosition, stay.index), null);
 
+                        AnalyticsManager.getInstance(StayCategoryTabActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                            , AnalyticsManager.Action.STAY_DAILYCHOICE_CLICK, stay.isDailyChoice ? AnalyticsManager.Label.Y : AnalyticsManager.Label.N, null);
 
                         if (stay.truevr == true)
                         {

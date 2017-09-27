@@ -1071,6 +1071,9 @@ public class GourmetMainActivity extends PlaceMainActivity
                     {
                         AnalyticsManager.getInstance(GourmetMainActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
                             , AnalyticsManager.Action.GOURMET_ITEM_CLICK, Integer.toString(gourmet.index), null);
+
+                        AnalyticsManager.getInstance(GourmetMainActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                            , AnalyticsManager.Action.GOURMET_DAILYCHOICE_CLICK, gourmet.isDailyChoice ? AnalyticsManager.Label.Y : AnalyticsManager.Label.N, null);
                     }
                     break;
                 }
