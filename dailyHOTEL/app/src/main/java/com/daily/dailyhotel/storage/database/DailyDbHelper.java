@@ -1,4 +1,4 @@
-package com.daily.dailyhotel.repository.local;
+package com.daily.dailyhotel.storage.database;
 
 import android.content.Context;
 

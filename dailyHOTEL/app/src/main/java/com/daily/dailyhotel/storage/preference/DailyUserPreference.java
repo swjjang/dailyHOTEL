@@ -1,4 +1,4 @@
-package com.twoheart.dailyhotel.util;
+package com.daily.dailyhotel.storage.preference;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -6,6 +6,7 @@ import android.content.SharedPreferences.Editor;
 
 import com.daily.base.util.DailyTextUtils;
 import com.twoheart.dailyhotel.DailyHotel;
+import com.twoheart.dailyhotel.util.Crypto;
 
 /**
  */

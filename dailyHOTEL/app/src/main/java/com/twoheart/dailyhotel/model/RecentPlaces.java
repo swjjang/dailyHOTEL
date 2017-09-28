@@ -6,7 +6,7 @@ import android.util.Pair;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.twoheart.dailyhotel.util.Constants;
-import com.twoheart.dailyhotel.util.DailyPreference;
+import com.daily.dailyhotel.storage.preference.DailyPreference;
 
 import java.util.ArrayList;
 import java.util.Iterator;

@@ -1,4 +1,4 @@
-package com.twoheart.dailyhotel.util;
+package com.daily.dailyhotel.storage.preference;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -10,6 +10,9 @@ import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.Setting;
 import com.twoheart.dailyhotel.model.DailyCategoryType;
 import com.twoheart.dailyhotel.model.PlacePaymentInformation;
+import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.Crypto;
+import com.twoheart.dailyhotel.util.Util;
 
 import org.json.JSONObject;
 
