@@ -1482,7 +1482,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
             return;
         }
 
-        getViewInterface().setRecommendAroundList(mRecommendAroundList);
+        getViewInterface().setRecommendAroundList(mRecommendAroundList, mStayBookDateTime);
     }
 
     private void checkChangedPrice(boolean isDeepLink, StayOutboundDetail stayOutboundDetail, int listViewPrice, boolean compareListPrice)

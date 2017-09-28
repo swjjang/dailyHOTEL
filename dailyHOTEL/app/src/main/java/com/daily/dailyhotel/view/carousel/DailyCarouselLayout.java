@@ -138,7 +138,7 @@ public class DailyCarouselLayout extends ConstraintLayout
         return mAdapter.getData();
     }
 
-    public void setData(ArrayList<CarouselListItem> list)
+    public void setData(ArrayList<CarouselListItem> list, boolean nightsEnabled)
     {
         mDataBinding.horizontalRecyclerView.scrollToPosition(0);
 
@@ -146,10 +146,12 @@ public class DailyCarouselLayout extends ConstraintLayout
         {
             mAdapter = new DailyCarouselAdapter(mContext, list, mItemClickListener);
             mAdapter.setUsePriceLayout(mIsUsePriceLayout);
+            mAdapter.setNightsEnabled(nightsEnabled);
             mDataBinding.horizontalRecyclerView.setAdapter(mAdapter);
         } else
         {
             mAdapter.setUsePriceLayout(mIsUsePriceLayout);
+            mAdapter.setNightsEnabled(nightsEnabled);
             mAdapter.setData(list);
             mAdapter.notifyDataSetChanged();
         }

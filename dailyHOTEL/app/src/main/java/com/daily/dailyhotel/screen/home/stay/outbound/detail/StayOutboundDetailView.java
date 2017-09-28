@@ -918,14 +918,26 @@ public class StayOutboundDetailView extends BaseBlurView<StayOutboundDetailView.
     }
 
     @Override
-    public void setRecommendAroundList(ArrayList<CarouselListItem> list)
+    public void setRecommendAroundList(ArrayList<CarouselListItem> list, StayBookDateTime stayBookDateTime)
     {
         if (getViewDataBinding() == null)
         {
             return;
         }
 
-        getViewDataBinding().recommendAroundListLayout.setData(list);
+        boolean nightsEnabled = false;
+        if (stayBookDateTime != null)
+        {
+            try
+            {
+                nightsEnabled = stayBookDateTime.getNights() > 1;
+            } catch (Exception e)
+            {
+
+            }
+        }
+
+        getViewDataBinding().recommendAroundListLayout.setData(list, nightsEnabled);
     }
 
     private void initToolbar(ActivityStayOutboundDetailDataBinding viewDataBinding)

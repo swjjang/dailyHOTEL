@@ -304,7 +304,7 @@ public class StayThankYouView extends BaseBlurView<StayThankYouView.OnEventListe
             return;
         }
 
-        getViewDataBinding().recommendGourmetLayout.setData(carouselListItemList);
+        getViewDataBinding().recommendGourmetLayout.setData(carouselListItemList, false);
     }
 
     @Override

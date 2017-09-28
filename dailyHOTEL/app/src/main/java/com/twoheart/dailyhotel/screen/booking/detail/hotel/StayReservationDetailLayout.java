@@ -524,7 +524,7 @@ public class StayReservationDetailLayout extends PlaceReservationDetailLayout
             return;
         }
 
-        mRecommendGourmetCarouselLayout.setData(list);
+        mRecommendGourmetCarouselLayout.setData(list, false);
         setRecommendGourmetLayoutVisible(list != null && list.size() > 0);
     }
 

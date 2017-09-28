@@ -954,7 +954,7 @@ public class HomeLayout extends BaseBlurLayout
 
     public void setWishListData(ArrayList<CarouselListItem> list, boolean isError)
     {
-        mWishListLayout.setData(list);
+        mWishListLayout.setData(list, false);
 
         if (isError == true)
         {
@@ -964,7 +964,7 @@ public class HomeLayout extends BaseBlurLayout
 
     public void setRecentListData(ArrayList<CarouselListItem> list, boolean isError)
     {
-        mRecentListLayout.setData(list);
+        mRecentListLayout.setData(list, false);
 
         if (isError == true)
         {
