@@ -1,12 +1,5 @@
 package com.daily.dailyhotel.entity;
 
-import android.content.Context;
-
-import com.twoheart.dailyhotel.R;
-
-import java.util.LinkedHashMap;
-import java.util.List;
-
 public class StayRoom
 {
     public int index;
@@ -24,5 +17,5 @@ public class StayRoom
     public String description1;
     public String description2;
     public String refundType;
-    public boolean isNRD;
+    public boolean nrd;
 }

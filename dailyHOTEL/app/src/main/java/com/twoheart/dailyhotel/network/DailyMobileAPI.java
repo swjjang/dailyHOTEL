@@ -22,6 +22,7 @@ import com.daily.dailyhotel.repository.remote.model.ReviewScoresData;
 import com.daily.dailyhotel.repository.remote.model.ShortUrlData;
 import com.daily.dailyhotel.repository.remote.model.StayBookingDetailData;
 import com.daily.dailyhotel.repository.remote.model.StayCampaignTagsData;
+import com.daily.dailyhotel.repository.remote.model.StayDetailData;
 import com.daily.dailyhotel.repository.remote.model.StayListData;
 import com.daily.dailyhotel.repository.remote.model.StayOutboundBookingDetailData;
 import com.daily.dailyhotel.repository.remote.model.StayOutboundDetailData;
@@ -35,6 +36,7 @@ import com.daily.dailyhotel.repository.remote.model.StayPaymentData;
 import com.daily.dailyhotel.repository.remote.model.StayRefundPolicyData;
 import com.daily.dailyhotel.repository.remote.model.SuggestsData;
 import com.daily.dailyhotel.repository.remote.model.TrueReviewsData;
+import com.daily.dailyhotel.repository.remote.model.TrueVRData;
 import com.daily.dailyhotel.repository.remote.model.UserBenefitData;
 import com.daily.dailyhotel.repository.remote.model.UserData;
 import com.daily.dailyhotel.repository.remote.model.UserInformationData;
@@ -1373,7 +1375,7 @@ public class DailyMobileAPI
         Map<String, String> urlParams = new HashMap<>();
         urlParams.put("{restaurantIdx}", Integer.toString(gourmetIndex));
 
-        return mDailyMobileService.addGourmetWish(Crypto.getUrlDecoderEx(API, urlParams))//
+        return mDailyMobileService.addWish(Crypto.getUrlDecoderEx(API, urlParams))//
             .subscribeOn(Schedulers.io());
     }
 
@@ -1385,7 +1387,7 @@ public class DailyMobileAPI
         Map<String, String> urlParams = new HashMap<>();
         urlParams.put("{restaurantIdx}", Integer.toString(gourmetIndex));
 
-        return mDailyMobileService.removeGourmetWish(Crypto.getUrlDecoderEx(API, urlParams))//
+        return mDailyMobileService.removeWish(Crypto.getUrlDecoderEx(API, urlParams))//
             .subscribeOn(Schedulers.io());
     }
 
@@ -1397,7 +1399,7 @@ public class DailyMobileAPI
         Map<String, String> urlParams = new HashMap<>();
         urlParams.put("{restaurantIdx}", Integer.toString(gourmetIndex));
 
-        return mDailyMobileService.getGourmetReviewScores(Crypto.getUrlDecoderEx(API, urlParams))//
+        return mDailyMobileService.getReviewScores(Crypto.getUrlDecoderEx(API, urlParams))//
             .subscribeOn(Schedulers.io());
     }
 
@@ -1413,6 +1415,70 @@ public class DailyMobileAPI
             .subscribeOn(Schedulers.io());
     }
 
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+    //StayRemoteImpl
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public Observable<BaseDto<StayDetailData>> getStayDetail(int stayIndex, String date, int nights)
+    {
+        final String API = Constants.UNENCRYPTED_URL ? "api/v3/hotel/{stayIndex}"//
+            : "";
+
+        Map<String, String> urlParams = new HashMap<>();
+        urlParams.put("{stayIndex}", Integer.toString(stayIndex));
+
+        return mDailyMobileService.getStayDetail(Crypto.getUrlDecoderEx(API, urlParams), date, nights)//
+            .subscribeOn(Schedulers.io());
+    }
+
+    public Observable<BaseDto<ExistCouponsData>> getStayHasCoupon(int stayIndex, String date, int nights)
+    {
+        final String API = Constants.UNENCRYPTED_URL ? "api/v3/hotel/{stayIndex}/coupons/exist"//
+            : "";
+
+        Map<String, String> urlParams = new HashMap<>();
+        urlParams.put("{stayIndex}", Integer.toString(stayIndex));
+
+        return mDailyMobileService.getStayHasCoupon(Crypto.getUrlDecoderEx(API, urlParams), date, nights)//
+            .subscribeOn(Schedulers.io());
+    }
+
+    public Observable<BaseDto<String>> addStayWish(int stayIndex)
+    {
+        final String API = Constants.UNENCRYPTED_URL ? "api/v4/wishes/hotel/add/{stayIndex}"//
+            : "";
+
+        Map<String, String> urlParams = new HashMap<>();
+        urlParams.put("{stayIndex}", Integer.toString(stayIndex));
+
+        return mDailyMobileService.addWish(Crypto.getUrlDecoderEx(API, urlParams))//
+            .subscribeOn(Schedulers.io());
+    }
+
+    public Observable<BaseDto<String>> removeStayWish(int stayIndex)
+    {
+        final String API = Constants.UNENCRYPTED_URL ? "api/v4/wishes/hotel/remove/{stayIndex}"//
+            : "";
+
+        Map<String, String> urlParams = new HashMap<>();
+        urlParams.put("{stayIndex}", Integer.toString(stayIndex));
+
+        return mDailyMobileService.removeWish(Crypto.getUrlDecoderEx(API, urlParams))//
+            .subscribeOn(Schedulers.io());
+    }
+
+    public Observable<BaseDto<ReviewScoresData>> getStayReviewScores(int stayIndex)
+    {
+        final String API = Constants.UNENCRYPTED_URL ? "api/v4/review/hotel/{stayIndex}/statistic"//
+            : "";
+
+        Map<String, String> urlParams = new HashMap<>();
+        urlParams.put("{stayIndex}", Integer.toString(stayIndex));
+
+        return mDailyMobileService.getReviewScores(Crypto.getUrlDecoderEx(API, urlParams))//
+            .subscribeOn(Schedulers.io());
+    }
+
     public Observable<BaseDto<TrueReviewsData>> getStayTrueReviews(int stayIndex, int page, int limit)
     {
         final String API = Constants.UNENCRYPTED_URL ? "api/v4/review/hotel/{stayIndex}"//
@@ -1422,6 +1488,18 @@ public class DailyMobileAPI
         urlParams.put("{stayIndex}", Integer.toString(stayIndex));
 
         return mDailyMobileService.getTrueReviews(Crypto.getUrlDecoderEx(API, urlParams), page, limit, "createdAt", "DESC")//
+            .subscribeOn(Schedulers.io());
+    }
+
+    public Observable<BaseListDto<TrueVRData>> getStayTrueVRList(int stayIndex)
+    {
+        final String API = Constants.UNENCRYPTED_URL ? "api/v3/hotel/{stayIndex}/vr-list"//
+            : "";
+
+        Map<String, String> urlParams = new HashMap<>();
+        urlParams.put("{stayIndex}", Integer.toString(stayIndex));
+
+        return mDailyMobileService.getTrueReviews(Crypto.getUrlDecoderEx(API, urlParams))//
             .subscribeOn(Schedulers.io());
     }
 

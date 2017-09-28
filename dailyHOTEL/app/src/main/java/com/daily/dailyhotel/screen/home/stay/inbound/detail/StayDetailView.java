@@ -49,6 +49,7 @@ import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayDetail;
 import com.daily.dailyhotel.entity.StayOutboundDetailImage;
 import com.daily.dailyhotel.entity.StayOutboundRoom;
+import com.daily.dailyhotel.entity.StayRoom;
 import com.daily.dailyhotel.view.DailyDetailEmptyView;
 import com.daily.dailyhotel.view.DailyToolbarView;
 import com.facebook.drawee.drawable.ScalingUtils;
@@ -95,6 +96,8 @@ public class StayDetailView extends BaseDialogView<StayDetailView.OnEventListene
     {
         void onShareClick();
 
+        void onWishClick();
+
         void onShareKakaoClick();
 
         void onShareSmsClick();
@@ -104,8 +107,6 @@ public class StayDetailView extends BaseDialogView<StayDetailView.OnEventListene
         void onImageSelected(int position);
 
         void onCalendarClick();
-
-        void onPeopleClick();
 
         void onMapClick();
 
@@ -119,8 +120,6 @@ public class StayDetailView extends BaseDialogView<StayDetailView.OnEventListene
 
         void onActionButtonClick();
 
-        void onAmenityMoreClick();
-
         void onPriceTypeClick(StayDetailPresenter.PriceType priceType);
 
         void onConciergeFaqClick();
@@ -129,7 +128,13 @@ public class StayDetailView extends BaseDialogView<StayDetailView.OnEventListene
 
         void onConciergeCallClick();
 
-        void onRoomClick(StayOutboundRoom stayOutboundRoom);
+        void onRoomClick(StayRoom stayRoom);
+
+        void onTrueReviewClick();
+
+        void onTrueVRClick();
+
+        void onDownloadCouponClick();
     }
 
     public StayDetailView(BaseActivity baseActivity, StayDetailView.OnEventListener listener)

@@ -9,54 +9,43 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.util.SparseArray;
 import android.view.View;
 
-import com.crashlytics.android.Crashlytics;
 import com.daily.base.BaseActivity;
 import com.daily.base.BaseAnalyticsInterface;
-import com.daily.base.exception.BaseException;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
-import com.daily.base.util.ScreenUtils;
 import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
 import com.daily.dailyhotel.entity.CommonDateTime;
-import com.daily.dailyhotel.entity.ImageMap;
-import com.daily.dailyhotel.entity.People;
+import com.daily.dailyhotel.entity.DetailImageInformation;
 import com.daily.dailyhotel.entity.ReviewScores;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayDetail;
-import com.daily.dailyhotel.entity.StayOutboundDetailImage;
-import com.daily.dailyhotel.entity.StayOutboundRoom;
 import com.daily.dailyhotel.entity.StayRoom;
+import com.daily.dailyhotel.entity.TrueVR;
 import com.daily.dailyhotel.entity.User;
 import com.daily.dailyhotel.entity.WishResult;
 import com.daily.dailyhotel.parcel.analytics.NavigatorAnalyticsParam;
-import com.daily.dailyhotel.parcel.analytics.StayOutboundDetailAnalyticsParam;
-import com.daily.dailyhotel.parcel.analytics.StayOutboundPaymentAnalyticsParam;
+import com.daily.dailyhotel.parcel.analytics.StayDetailAnalyticsParam;
 import com.daily.dailyhotel.parcel.analytics.StayPaymentAnalyticsParam;
 import com.daily.dailyhotel.parcel.analytics.TrueReviewAnalyticsParam;
+import com.daily.dailyhotel.repository.remote.CalendarImpl;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
 import com.daily.dailyhotel.repository.remote.ProfileRemoteImpl;
-import com.daily.dailyhotel.repository.remote.StayOutboundRemoteImpl;
 import com.daily.dailyhotel.repository.remote.StayRemoteImpl;
-import com.daily.dailyhotel.screen.common.calendar.StayCalendarActivity;
 import com.daily.dailyhotel.screen.common.dialog.call.CallDialogActivity;
 import com.daily.dailyhotel.screen.common.dialog.navigator.NavigatorDialogActivity;
 import com.daily.dailyhotel.screen.common.images.ImageListActivity;
 import com.daily.dailyhotel.screen.home.stay.inbound.detail.truereview.StayTrueReviewActivity;
 import com.daily.dailyhotel.screen.home.stay.inbound.payment.StayPaymentActivity;
-import com.daily.dailyhotel.screen.home.stay.outbound.detail.amenities.AmenityListActivity;
-import com.daily.dailyhotel.screen.home.stay.outbound.payment.StayOutboundPaymentActivity;
-import com.daily.dailyhotel.screen.home.stay.outbound.people.SelectPeopleActivity;
 import com.daily.dailyhotel.util.RecentlyPlaceUtil;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Customer;
-import com.twoheart.dailyhotel.network.model.ImageInformation;
 import com.twoheart.dailyhotel.screen.common.HappyTalkCategoryDialog;
 import com.twoheart.dailyhotel.screen.common.ZoomMapActivity;
+import com.twoheart.dailyhotel.screen.hotel.filter.StayDetailCalendarActivity;
 import com.twoheart.dailyhotel.screen.information.FAQActivity;
 import com.twoheart.dailyhotel.screen.mydaily.coupon.SelectStayCouponDialogActivity;
 import com.twoheart.dailyhotel.screen.mydaily.member.AddProfileSocialActivity;
@@ -68,13 +57,13 @@ import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
 import com.twoheart.dailyhotel.util.DailyExternalDeepLink;
+import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.DailyUserPreference;
 import com.twoheart.dailyhotel.util.KakaoLinkManager;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -86,11 +75,9 @@ import io.reactivex.Observer;
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Consumer;
-import io.reactivex.functions.Function3;
+import io.reactivex.functions.Function7;
 import io.reactivex.schedulers.Schedulers;
-import retrofit2.HttpException;
 
 /**
  * Created by sheldon
@@ -115,6 +102,7 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
     private StayRemoteImpl mStayRemoteImpl;
     private CommonRemoteImpl mCommonRemoteImpl;
     private ProfileRemoteImpl mProfileRemoteImpl;
+    private CalendarImpl mCalendarImpl;
 
     int mStayIndex, mPriceFromList;
     private String mStayName;
@@ -124,6 +112,7 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
     StayDetail mStayDetail;
     StayRoom mSelectedRoom;
     private ReviewScores mReviewScores;
+    private List<TrueVR> mTrueVRList;
 
     private int mStatus = STATUS_NONE;
 
@@ -140,15 +129,58 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
 
     public interface StayDetailAnalyticsInterface extends BaseAnalyticsInterface
     {
-        void setAnalyticsParam(StayOutboundDetailAnalyticsParam analyticsParam);
+        void setAnalyticsParam(StayDetailAnalyticsParam analyticsParam);
 
-        StayOutboundDetailAnalyticsParam getAnalyticsParam();
+        StayDetailAnalyticsParam getAnalyticsParam();
 
-        void onScreen(Activity activity);
+        void onScreen(Activity activity, StayBookDateTime stayBookDateTime, StayDetail stayDetail, int priceFromList);
 
         void onScreenRoomList(Activity activity);
 
-        StayOutboundPaymentAnalyticsParam getPaymentAnalyticsParam(String grade, boolean nrd, boolean showOriginalPrice);
+        void onEventShareKakaoClick(Activity activity, boolean login, String userType, boolean benefitAlarm//
+            , int gourmetIndex, String gourmetName);
+
+        void onEventShareSmsClick(Activity activity, boolean login, String userType, boolean benefitAlarm//
+            , int gourmetIndex, String gourmetName);
+
+        void onEventDownloadCoupon(Activity activity, String stayName);
+
+        void onEventDownloadCouponByLogin(Activity activity, boolean login);
+
+        void onEventShare(Activity activity);
+
+        void onEventHasHiddenMenus(Activity activity);
+
+        void onEventChangedPrice(Activity activity, boolean deepLink, String stayName, boolean soldOut);
+
+        void onEventCalendarClick(Activity activity);
+
+        void onEventOrderClick(Activity activity, StayBookDateTime stayBookDateTime//
+            , String stayName, String menuName, String category, int discountPrice);
+
+        void onEventScrollTopMenuClick(Activity activity, String stayName);
+
+        void onEventMenuClick(Activity activity, int menuIndex, int position);
+
+        void onEventTrueReviewClick(Activity activity);
+
+        void onEventMoreMenuClick(Activity activity, boolean opened, int stayIndex);
+
+        void onEventImageClick(Activity activity, String stayName);
+
+        void onEventConciergeClick(Activity activity);
+
+        void onEventMapClick(Activity activity, String stayName);
+
+        void onEventClipAddressClick(Activity activity, String stayName);
+
+        void onEventWishClick(Activity activity, StayBookDateTime stayBookDateTime, StayDetail stayDetail, int priceFromList, boolean myWish);
+
+        void onEventCallClick(Activity activity);
+
+        void onEventFaqClick(Activity activity);
+
+        void onEventHappyTalkClick(Activity activity);
     }
 
     public StayDetailPresenter(@NonNull StayDetailActivity activity)
@@ -174,6 +206,7 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
         mStayRemoteImpl = new StayRemoteImpl(activity);
         mCommonRemoteImpl = new CommonRemoteImpl(activity);
         mProfileRemoteImpl = new ProfileRemoteImpl(activity);
+        mCalendarImpl = new CalendarImpl(activity);
 
         setStatus(STATUS_NONE);
 
@@ -348,8 +381,6 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
     public void onStart()
     {
         super.onStart();
-
-        mAnalytics.onScreen(getActivity());
 
         if (isRefresh() == true)
         {
@@ -1003,70 +1034,6 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
                 }
 
                 onBookingRoom();
-
-                if (DailyHotel.isLogin() == false)
-                {
-                    DailyToast.showToast(getActivity(), R.string.toast_msg_please_login, DailyToast.LENGTH_LONG);
-
-                    Intent intent = LoginActivity.newInstance(getActivity(), AnalyticsManager.Screen.DAILYGOURMET_DETAIL);
-                    startActivityForResult(intent, GourmetDetailActivity.REQUEST_CODE_LOGIN_IN_BY_ORDER);
-                } else
-                {
-                    addCompositeDisposable(mProfileRemoteImpl.getProfile().subscribe(new Consumer<User>()
-                    {
-                        @Override
-                        public void accept(@io.reactivex.annotations.NonNull User user) throws Exception
-                        {
-                            boolean isDailyUser = Constants.DAILY_USER.equalsIgnoreCase(user.userType);
-
-                            if (isDailyUser == true)
-                            {
-                                // 인증이 되어있지 않던가 기존에 인증이 되었는데 인증이 해지되었다.
-                                if (Util.isValidatePhoneNumber(user.phone) == false || (user.verified == true && user.phoneVerified == false))
-                                {
-                                    startActivityForResult(EditProfilePhoneActivity.newInstance(getActivity()//
-                                        , EditProfilePhoneActivity.Type.NEED_VERIFICATION_PHONENUMBER, user.phone)//
-                                        , GourmetDetailActivity.REQUEST_CODE_PROFILE_UPDATE);
-                                } else
-                                {
-                                    startPayment(mGourmetBookDateTime, mGourmetDetail, index);
-                                }
-                            } else
-                            {
-                                // 입력된 정보가 부족해.
-                                if (DailyTextUtils.isTextEmpty(user.email, user.phone, user.name) == true)
-                                {
-                                    Customer customer = new Customer();
-                                    customer.setEmail(user.email);
-                                    customer.setName(user.name);
-                                    customer.setPhone(user.phone);
-                                    customer.setUserIdx(Integer.toString(user.index));
-
-                                    startActivityForResult(AddProfileSocialActivity.newInstance(getActivity()//
-                                        , customer, user.birthday), GourmetDetailActivity.REQUEST_CODE_PROFILE_UPDATE);
-                                } else if (Util.isValidatePhoneNumber(user.phone) == false)
-                                {
-                                    startActivityForResult(EditProfilePhoneActivity.newInstance(getActivity()//
-                                        , EditProfilePhoneActivity.Type.WRONG_PHONENUMBER, user.phone)//
-                                        , GourmetDetailActivity.REQUEST_CODE_PROFILE_UPDATE);
-                                } else
-                                {
-                                    startPayment(mGourmetBookDateTime, mGourmetDetail, index);
-                                }
-                            }
-                        }
-                    }, new Consumer<Throwable>()
-                    {
-                        @Override
-                        public void accept(@io.reactivex.annotations.NonNull Throwable throwable) throws Exception
-                        {
-                            onHandleError(throwable);
-                        }
-                    }));
-                }
-
-                mAnalytics.onEventOrderClick(getActivity(), mGourmetBookDateTime, mGourmetDetail.name//
-                    , gourmetMenu.name, mGourmetDetail.category, gourmetMenu.discountPrice);
                 break;
 
             case STATUS_ROOM_LIST:
@@ -1161,6 +1128,12 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
     }
 
     @Override
+    public void onTrueVRClick()
+    {
+
+    }
+
+    @Override
     public void onDownloadCouponClick()
     {
         if (mStayDetail == null || lock() == true)
@@ -1209,9 +1182,7 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
         } else
         {
             Intent intent = SelectStayCouponDialogActivity.newInstance(getActivity(), mStayDetail.index //
-                , mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)
-                 , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)
-                , mStayDetail.category, mStayDetail.name);
+                , mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT), mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT), mStayDetail.category, mStayDetail.name);
             startActivityForResult(intent, StayDetailActivity.REQUEST_CODE_DOWNLOAD_COUPON);
         }
     }
@@ -1250,9 +1221,23 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
         mReviewScores = reviewScores;
     }
 
-    void setSoldOutDateList(List<Integer> soldOutList)
+    void setSoldOutDateList(List<String> soldOutList)
     {
-        mSoldOutDateList = soldOutList;
+        if (mSoldOutDateList == null)
+        {
+            mSoldOutDateList = new ArrayList<>();
+        }
+
+        mSoldOutDateList.clear();
+
+        if (soldOutList != null && soldOutList.size() > 0)
+        {
+            for (String dayString : soldOutList)
+            {
+                int soldOutDay = Integer.parseInt(dayString.replaceAll("-", ""));
+                mSoldOutDateList.add(soldOutDay);
+            }
+        }
     }
 
     void setGourmetDetail(StayDetail stayDetail)
@@ -1262,7 +1247,12 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
         mAnalytics.onScreen(getActivity(), mStayBookDateTime, mStayDetail, mPriceFromList);
     }
 
-    void notifyStayDetailChanged()
+    void setTrueVRList(List<TrueVR> trueVRList)
+    {
+        mTrueVRList = trueVRList;
+    }
+
+    void notifyDetailChanged()
     {
         if (mStayDetail == null)
         {
@@ -1281,46 +1271,46 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
             ExLog.e(e.toString());
         }
 
-        getViewInterface().setStayDetail(mGourmetBookDateTime, mGourmetDetail//
-            , mReviewScores != null ? mReviewScores.reviewScoreTotalCount : 0, SHOWN_MENU_COUNT);
+        getViewInterface().setStayDetail(mStayBookDateTime, mStayDetail//
+            , mReviewScores != null ? mReviewScores.reviewScoreTotalCount : 0);
 
         // 리스트 가격 변동은 진입시 한번 만 한다.
-        checkChangedPrice(mIsDeepLink, mGourmetDetail, mPriceFromList, mCheckChangedPrice == false);
+        checkChangedPrice(mIsDeepLink, mStayDetail, mPriceFromList, mCheckChangedPrice == false);
         mCheckChangedPrice = true;
 
         // 선택된 방이 없으면 처음 방으로 한다.
-        if (mGourmetDetail.getGourmetMenuList() == null || mGourmetDetail.getGourmetMenuList().size() == 0)
+        if (mStayDetail.getRoomList() == null || mStayDetail.getRoomList().size() == 0)
         {
             setStatus(STATUS_SOLD_OUT);
         } else
         {
-            setStatus(STATUS_SELECT_MENU);
-
-            if (mGourmetDetail.getGourmetMenuList().size() > SHOWN_MENU_COUNT)
+            if (mSelectedRoom == null)
             {
-                mAnalytics.onEventHasHiddenMenus(getActivity());
+                onRoomClick(mStayDetail.getRoomList().get(0));
             }
+
+            setStatus(STATUS_ROOM_LIST);
         }
 
-                if (DailyPreference.getInstance(getActivity()).getTrueVRSupport() > 0)
-                {
-                    if (mTrueVRParamsList != null && mTrueVRParamsList.size() > 0)
-                    {
-                        showTrueViewMenu();
-                    } else
-                    {
-                        hideTrueViewMenu();
-                    }
-                } else
-                {
-                    hideTrueViewMenu();
-                }
+        if (DailyPreference.getInstance(getActivity()).getTrueVRSupport() > 0)
+        {
+            if (mTrueVRList != null && mTrueVRList.size() > 0)
+            {
+                getViewInterface().setTrueVRVisible(true);
+            } else
+            {
+                getViewInterface().setTrueVRVisible(false);
+            }
+        } else
+        {
+            getViewInterface().setTrueVRVisible(false);
+        }
 
         if (mShowCalendar == true)
         {
             mShowCalendar = false;
 
-            if (mGourmetDetail.getGourmetMenuList() != null && mGourmetDetail.getGourmetMenuList().size() > 0)
+            if (mStayDetail.getRoomList() != null && mStayDetail.getRoomList().size() > 0)
             {
                 onCalendarClick();
             }
@@ -1328,13 +1318,13 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
         {
             mShowTrueVR = false;
 
-                        if (DailyPreference.getInstance(getActivity()).getTrueVRSupport() > 0)
-                        {
-                            onTrueViewClick();
-                        } else
-                        {
-                            getViewInterface().showSimpleDialog(null, getString(R.string.message_truevr_not_support_hardware), getString(R.string.dialog_btn_text_confirm), null);
-                        }
+            if (DailyPreference.getInstance(getActivity()).getTrueVRSupport() > 0)
+            {
+                onTrueVRClick();
+            } else
+            {
+                getViewInterface().showSimpleDialog(null, getString(R.string.message_truevr_not_support_hardware), getString(R.string.dialog_btn_text_confirm), null);
+            }
         }
 
         mIsDeepLink = false;
@@ -1390,18 +1380,18 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
 
     void notifyWishChanged()
     {
-        if (mGourmetDetail == null)
+        if (mStayDetail == null)
         {
             return;
         }
 
-        getViewInterface().setWishCount(mGourmetDetail.wishCount);
-        getViewInterface().setWishSelected(mGourmetDetail.myWish);
+        getViewInterface().setWishCount(mStayDetail.wishCount);
+        getViewInterface().setWishSelected(mStayDetail.myWish);
     }
 
     void notifyWishChanged(int wishCount, boolean myWish)
     {
-        if (mGourmetDetail == null)
+        if (mStayDetail == null)
         {
             return;
         }
@@ -1410,42 +1400,52 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
         getViewInterface().setWishSelected(myWish);
     }
 
-    private void startCalendar(CommonDateTime commonDateTime, GourmetBookDateTime gourmetBookDateTime//
-        , int gourmetIndex, List<Integer> soldOutList, boolean animation) throws Exception
+    private void startCalendar(CommonDateTime commonDateTime, StayBookDateTime stayBookDateTime//
+        , int stayIndex, List<Integer> soldOutList, boolean animation) throws Exception
     {
-        if (commonDateTime == null || gourmetBookDateTime == null)
+        if (commonDateTime == null || stayBookDateTime == null)
         {
             return;
         }
 
-        String callByScreen = mIsDeepLink ? AnalyticsManager.Label.EVENT : AnalyticsManager.ValueType.DETAIL;
+        int dayCount = mStayDetail.overseas == false //
+            ? StayDetailCalendarActivity.DEFAULT_DOMESTIC_CALENDAR_DAY_OF_MAX_COUNT //
+            : StayDetailCalendarActivity.DEFAULT_OVERSEAS_CALENDAR_DAY_OF_MAX_COUNT;
 
-        Intent intent = GourmetDetailCalendarActivity.newInstance(getActivity(), //
-            commonDateTime, gourmetBookDateTime.getVisitDateTime(DailyCalendar.ISO_8601_FORMAT), gourmetIndex//
-            , GourmetCalendarActivity.DEFAULT_CALENDAR_DAY_OF_MAX_COUNT //
-            , callByScreen, (ArrayList) soldOutList, true, animation);
+        Intent intent = StayDetailCalendarActivity.newInstance(getActivity(), commonDateTime //
+            , stayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT), stayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
+            , dayCount, stayIndex, AnalyticsManager.ValueType.DETAIL //
+            , (ArrayList) soldOutList, true, animation, mStayDetail.singleStay);
 
-        startActivityForResult(intent, GourmetDetailActivity.REQUEST_CODE_CALENDAR);
+
+        startActivityForResult(intent, StayDetailActivity.REQUEST_CODE_CALENDAR);
 
         mAnalytics.onEventCalendarClick(getActivity());
     }
 
-    private void checkChangedPrice(boolean isDeepLink, StayDetail stayOutboundDetail, int listViewPrice, boolean compareListPrice)
+    private void checkChangedPrice(boolean isDeepLink, StayDetail stayDetail, int listViewPrice, boolean compareListPrice)
     {
-        if (stayOutboundDetail == null)
+        if (stayDetail == null)
         {
             return;
         }
 
         // 판매 완료 혹은 가격이 변동되었는지 조사한다
-        List<StayOutboundRoom> roomList = stayOutboundDetail.getRoomList();
+        List<StayRoom> roomList = stayDetail.getRoomList();
 
         if (roomList == null || roomList.size() == 0)
         {
             setResult(BaseActivity.RESULT_CODE_REFRESH);
 
-            getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.message_stay_outbound_detail_sold_out)//
-                , getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
+            getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.message_stay_detail_sold_out)//
+                , getString(R.string.label_changing_date), new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        onCalendarClick();
+                    }
+                }, new DialogInterface.OnDismissListener()
                 {
                     @Override
                     public void onDismiss(DialogInterface dialog)
@@ -1464,9 +1464,9 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
                     hasPrice = true;
                 } else
                 {
-                    for (StayOutboundRoom room : roomList)
+                    for (StayRoom room : roomList)
                     {
-                        if (listViewPrice == room.total)
+                        if (listViewPrice == room.discountTotal)
                         {
                             hasPrice = true;
                             break;
@@ -1478,7 +1478,7 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
                 {
                     setResult(BaseActivity.RESULT_CODE_REFRESH);
 
-                    getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.message_stay_outbound_detail_changed_price)//
+                    getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.message_stay_detail_changed_price)//
                         , getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
                         {
                             @Override
@@ -1501,36 +1501,39 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
 
         addCompositeDisposable(Observable.zip(observable//
             , mStayRemoteImpl.getDetail(mStayIndex, mStayBookDateTime)//
-            , mCalendarImpl.getStayUnavailableDates(mStayIndex, StayCalendarActivity.DEFAULT_CALENDAR_DAY_OF_MAX_COUNT, false)//
+            , mCalendarImpl.getStayUnavailableCheckInDates(mStayIndex, StayDetailCalendarActivity.DEFAULT_OVERSEAS_CALENDAR_DAY_OF_MAX_COUNT, false)//
             , mStayRemoteImpl.getReviewScores(mStayIndex)//
             , mStayRemoteImpl.getHasCoupon(mStayIndex, mStayBookDateTime)//
+            , mStayRemoteImpl.getTrueVR(mStayIndex)//
             , mCommonRemoteImpl.getCommonDateTime()//
-            , new Function6<Boolean, StayDetail, List<Integer>, ReviewScores, Boolean, CommonDateTime, StayDetail>()
+            , new Function7<Boolean, StayDetail, List<String>, ReviewScores, Boolean, List<TrueVR>, CommonDateTime, StayDetail>()
             {
                 @Override
-                public GourmetDetail apply(@io.reactivex.annotations.NonNull Boolean aBoolean//
+                public StayDetail apply(@io.reactivex.annotations.NonNull Boolean aBoolean//
                     , @io.reactivex.annotations.NonNull StayDetail stayDetail//
-                    , @io.reactivex.annotations.NonNull List<Integer> unavailableDates//
+                    , @io.reactivex.annotations.NonNull List<String> unavailableDates//
                     , @io.reactivex.annotations.NonNull ReviewScores reviewScores//
                     , @io.reactivex.annotations.NonNull Boolean hasCoupon//
+                    , @io.reactivex.annotations.NonNull List<TrueVR> trueVRList//
                     , @io.reactivex.annotations.NonNull CommonDateTime commonDateTime) throws Exception
                 {
                     setCommonDateTime(commonDateTime);
                     setReviewScores(reviewScores);
                     setSoldOutDateList(unavailableDates);
 
-                    gourmetDetail.hasCoupon = hasCoupon;
+                    stayDetail.hasCoupon = hasCoupon;
 
-                    setGourmetDetail(gourmetDetail);
+                    setTrueVRList(trueVRList);
+                    setGourmetDetail(stayDetail);
 
-                    return gourmetDetail;
+                    return stayDetail;
                 }
-            }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<GourmetDetail>()
+            }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<StayDetail>()
         {
             @Override
-            public void accept(@io.reactivex.annotations.NonNull GourmetDetail gourmetDetail) throws Exception
+            public void accept(@io.reactivex.annotations.NonNull StayDetail stayDetail) throws Exception
             {
-                notifyGourmetDetailChanged();
+                notifyDetailChanged();
                 notifyWishChanged();
 
                 if (disposable != null)
@@ -1555,24 +1558,78 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
         }));
     }
 
-    protected void startPayment(GourmetBookDateTime gourmetBookDateTime, GourmetDetail gourmetDetail, int menuIndex)
+    private void onBookingRoom()
     {
-        if (gourmetBookDateTime == null || gourmetDetail == null || menuIndex < 0)
+        if (DailyHotel.isLogin() == false)
+        {
+            DailyToast.showToast(getActivity(), R.string.toast_msg_please_login, DailyToast.LENGTH_LONG);
+
+            Intent intent = LoginActivity.newInstance(getActivity(), AnalyticsManager.Screen.DAILYHOTEL_DETAIL);
+            startActivityForResult(intent, StayDetailActivity.REQUEST_CODE_LOGIN_IN_BY_ORDER);
+        } else
+        {
+            addCompositeDisposable(mProfileRemoteImpl.getProfile().subscribe(new Consumer<User>()
+            {
+                @Override
+                public void accept(@io.reactivex.annotations.NonNull User user) throws Exception
+                {
+                    boolean isDailyUser = Constants.DAILY_USER.equalsIgnoreCase(user.userType);
+
+                    if (isDailyUser == true)
+                    {
+                        // 인증이 되어있지 않던가 기존에 인증이 되었는데 인증이 해지되었다.
+                        if (Util.isValidatePhoneNumber(user.phone) == false || (user.verified == true && user.phoneVerified == false))
+                        {
+                            startActivityForResult(EditProfilePhoneActivity.newInstance(getActivity()//
+                                , EditProfilePhoneActivity.Type.NEED_VERIFICATION_PHONENUMBER, user.phone)//
+                                , StayDetailActivity.REQUEST_CODE_PROFILE_UPDATE);
+                        } else
+                        {
+                            startPayment(mStayBookDateTime, mStayDetail, mSelectedRoom);
+                        }
+                    } else
+                    {
+                        // 입력된 정보가 부족해.
+                        if (DailyTextUtils.isTextEmpty(user.email, user.phone, user.name) == true)
+                        {
+                            Customer customer = new Customer();
+                            customer.setEmail(user.email);
+                            customer.setName(user.name);
+                            customer.setPhone(user.phone);
+                            customer.setUserIdx(Integer.toString(user.index));
+
+                            startActivityForResult(AddProfileSocialActivity.newInstance(getActivity()//
+                                , customer, user.birthday), StayDetailActivity.REQUEST_CODE_PROFILE_UPDATE);
+                        } else if (Util.isValidatePhoneNumber(user.phone) == false)
+                        {
+                            startActivityForResult(EditProfilePhoneActivity.newInstance(getActivity()//
+                                , EditProfilePhoneActivity.Type.WRONG_PHONENUMBER, user.phone)//
+                                , StayDetailActivity.REQUEST_CODE_PROFILE_UPDATE);
+                        } else
+                        {
+                            startPayment(mStayBookDateTime, mStayDetail, mSelectedRoom);
+                        }
+                    }
+                }
+            }, new Consumer<Throwable>()
+            {
+                @Override
+                public void accept(@io.reactivex.annotations.NonNull Throwable throwable) throws Exception
+                {
+                    onHandleError(throwable);
+                }
+            }));
+        }
+    }
+
+    private void startPayment(StayBookDateTime stayBookDateTime, StayDetail stayDetail, StayRoom stayRoom)
+    {
+        if (stayBookDateTime == null || stayDetail == null || stayRoom == null)
         {
             return;
         }
 
-        List<GourmetMenu> menuList = gourmetDetail.getGourmetMenuList();
-
-        if (menuList == null || menuList.size() - 1 < menuIndex)
-        {
-            setResult(BaseActivity.RESULT_CODE_REFRESH);
-            onBackClick();
-            return;
-        }
-
-        GourmetMenu gourmetMenu = menuList.get(menuIndex);
-        List<DetailImageInformation> imageInformationList = gourmetDetail.getImageInformationList();
+        List<DetailImageInformation> imageInformationList = stayDetail.getImageInformationList();
         String imageUrl = null;
 
         if (imageInformationList != null && imageInformationList.size() > 0)
@@ -1580,9 +1637,9 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
             imageUrl = imageInformationList.get(0).url;
         }
 
-        GourmetPaymentAnalyticsParam analyticsParam = new GourmetPaymentAnalyticsParam();
+        StayPaymentAnalyticsParam analyticsParam = new StayPaymentAnalyticsParam();
+        StayDetailAnalyticsParam detailAnalyticsParam = mAnalytics.getAnalyticsParam();
 
-        GourmetDetailAnalyticsParam detailAnalyticsParam = mAnalytics.getAnalyticsParam();
 
         if (detailAnalyticsParam != null)
         {
@@ -1594,16 +1651,21 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
             analyticsParam.addressAreaName = detailAnalyticsParam.getAddressAreaName();
         }
 
-        analyticsParam.ratingValue = gourmetDetail.ratingValue;
-        analyticsParam.benefit = DailyTextUtils.isTextEmpty(gourmetDetail.benefit) == false;
-        analyticsParam.averageDiscount = gourmetMenu.discountPrice;
-        analyticsParam.address = gourmetDetail.address;
-        analyticsParam.categorySub = gourmetDetail.categorySub;
+        analyticsParam.ratingValue = stayDetail.ratingValue;
+        analyticsParam.benefit = DailyTextUtils.isTextEmpty(stayDetail.benefit) == false;
+        analyticsParam.averageDiscount = stayRoom.discountAverage;
+        analyticsParam.address = stayDetail.address;
+        analyticsParam.nrd = stayRoom.nrd;
+        analyticsParam.grade = stayDetail.grade;
 
-        Intent intent = GourmetPaymentActivity.newInstance(getActivity(), gourmetDetail.index//
-            , gourmetDetail.name, imageUrl, gourmetMenu.saleIndex, gourmetMenu.discountPrice, gourmetMenu.name//
-            , gourmetBookDateTime.getVisitDateTime(DailyCalendar.ISO_8601_FORMAT), false, gourmetDetail.category, analyticsParam);
+        Intent intent = StayPaymentActivity.newInstance(getActivity(), stayDetail.index//
+            , stayDetail.name, imageUrl, stayRoom.index, stayRoom.discountTotal, stayRoom.name//
+            , stayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
+            , stayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
+            , stayDetail.overseas, stayDetail.category //
+            , stayDetail.latitude, stayDetail.longitude //
+            , analyticsParam);
 
-        startActivityForResult(intent, GourmetDetailActivity.REQUEST_CODE_PAYMENT);
+        startActivityForResult(intent, StayDetailActivity.REQUEST_CODE_PAYMENT);
     }
 }

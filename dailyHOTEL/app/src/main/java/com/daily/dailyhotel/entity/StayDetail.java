@@ -3,6 +3,7 @@ package com.daily.dailyhotel.entity;
 import android.content.Context;
 
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.model.Stay;
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -15,19 +16,18 @@ public class StayDetail
     public double longitude;
     public String address;
     public String category;
-    public String grade;
+    public Stay.Grade grade;
     public int price;
     public int discount;
     public int ratingPersons;
     public int ratingValue;
     public boolean ratingShow;
     public String benefit;
-    public String benefitWarning;
     public int wishCount;
     public boolean myWish;
     public boolean hasCoupon;
-    public boolean isSingleStay;
-    public boolean isOverseas;
+    public boolean singleStay;
+    public boolean overseas;
     public boolean waitingForBooking;
 
     private List<DetailImageInformation> mDetailImageInformationList;
@@ -61,12 +61,12 @@ public class StayDetail
         mPictogramList = pictogramList;
     }
 
-    public List<StayRoom> getStayRoomList()
+    public List<StayRoom> getRoomList()
     {
         return mStayRoomList;
     }
 
-    public void setStayRoomList(List<StayRoom> stayRoomList)
+    public void setRoomList(List<StayRoom> stayRoomList)
     {
         mStayRoomList = stayRoomList;
     }

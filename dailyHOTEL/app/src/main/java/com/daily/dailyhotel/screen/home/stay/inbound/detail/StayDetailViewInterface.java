@@ -14,7 +14,7 @@ public interface StayDetailViewInterface extends BaseDialogViewInterface
 
     Observable<Boolean> hideRoomList(boolean animation);
 
-    void setStayDetail(StayBookDateTime stayBookDateTime, StayDetail stayOutboundDetail);
+    void setStayDetail(StayBookDateTime stayBookDateTime, StayDetail stayDetail, int trueReviewCount);
 
     Observable<Boolean> getSharedElementTransition(int gradientType);
 
@@ -37,4 +37,12 @@ public interface StayDetailViewInterface extends BaseDialogViewInterface
     void showShareDialog(Dialog.OnDismissListener listener);
 
     void scrollTop();
+
+    void setWishCount(int count);
+
+    void setWishSelected(boolean selected);
+
+    Observable<Boolean> showWishView(boolean myWish);
+
+    void setTrueVRVisible(boolean visible);
 }

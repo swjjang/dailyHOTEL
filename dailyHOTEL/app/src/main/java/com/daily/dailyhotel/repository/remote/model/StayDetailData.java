@@ -2,12 +2,10 @@ package com.daily.dailyhotel.repository.remote.model;
 
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
+import com.daily.base.util.DailyTextUtils;
 import com.daily.dailyhotel.entity.DetailImageInformation;
-import com.daily.dailyhotel.entity.GourmetDetail;
-import com.daily.dailyhotel.entity.GourmetMenu;
 import com.daily.dailyhotel.entity.StayDetail;
 import com.daily.dailyhotel.entity.StayRoom;
-import com.daily.dailyhotel.entity.Sticker;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -90,10 +88,10 @@ public class StayDetailData
     public List<RoomData> rooms;
 
     @JsonField(name = "singleStay")
-    public boolean isSingleStay; // 연박 불가 여부
+    public boolean singleStay; // 연박 불가 여부
 
     @JsonField(name = "overseas")
-    public boolean isOverseas; // 0 : 국내 , 1 : 해외
+    public boolean overseas; // 0 : 국내 , 1 : 해외
 
     @JsonField(name = "waitingForBooking")
     public boolean waitingForBooking; // 예약 대기
@@ -125,7 +123,31 @@ public class StayDetailData
     {
         StayDetail stayDetail = new StayDetail();
 
+        stayDetail.index = index;
+        stayDetail.name = name;
+        stayDetail.latitude = latitude;
+        stayDetail.longitude = longitude;
+        stayDetail.address = address;
+        stayDetail.category = category;
+        stayDetail.grade = grade;
+        stayDetail.price = price;
+        stayDetail.discount = discount;
+        stayDetail.ratingPersons = ratingPersons;
+        stayDetail.ratingValue = ratingValue;
+        stayDetail.ratingShow = ratingShow;
+        stayDetail.benefit = benefit;
+        stayDetail.wishCount = wishCount;
+        stayDetail.myWish = myWish;
+        stayDetail.singleStay = singleStay;
+        stayDetail.overseas = overseas;
+        stayDetail.waitingForBooking = waitingForBooking;
 
+        if (DailyTextUtils.isTextEmpty(benefitWarning) == false)
+        {
+            benefitContents.add(benefitWarning);
+        }
+
+        stayDetail.setBenefitContentList(benefitContents);
 
         // Pictogram
         List<StayDetail.Pictogram> pictogramList = new ArrayList<>();
@@ -184,6 +206,8 @@ public class StayDetailData
             pictogramList.add(StayDetail.Pictogram.PET);
         }
 
+        stayDetail.setPictogramList(pictogramList);
+
         // 이미지
         List<DetailImageInformation> detailImageInformationList = new ArrayList<>();
 
@@ -205,6 +229,21 @@ public class StayDetailData
                 }
             }
         }
+
+        stayDetail.setImageInformationList(detailImageInformationList);
+
+        // Room
+        List<StayRoom> stayRoomList = new ArrayList<>();
+
+        if (rooms != null && rooms.size() > 0)
+        {
+            for (RoomData roomData : rooms)
+            {
+                stayRoomList.add(roomData.getRoom());
+            }
+        }
+
+        stayDetail.setRoomList(stayRoomList);
 
         // Detail
         stayDetail.setDescriptionList(details);
@@ -283,8 +322,33 @@ public class StayDetailData
 
         public StayRoom getRoom()
         {
+            final String NRD = "nrd";
+
             StayRoom stayRoom = new StayRoom();
 
+            stayRoom.index = roomIndex;
+            stayRoom.name = roomName;
+            stayRoom.price = price;
+            stayRoom.benefit = roomBenefit;
+            stayRoom.hasTV = hasTV;
+            stayRoom.hasPC = hasPC;
+            stayRoom.hasSpaWhirlpool = hasSpaWhirlpool;
+            stayRoom.hasKaraoke = hasKaraoke;
+            stayRoom.hasPartyRoom = hasPartyRoom;
+            stayRoom.hasPrivateBBQ = hasPrivateBBQ;
+            stayRoom.discountAverage = discountAverage;
+            stayRoom.discountTotal = discountTotal;
+            stayRoom.description1 = description1;
+            stayRoom.description2 = description2;
+            stayRoom.refundType = refundType;
+
+            if (DailyTextUtils.isTextEmpty(refundType) == false && NRD.equalsIgnoreCase(refundType) == true)
+            {
+                stayRoom.nrd = true;
+            } else
+            {
+                stayRoom.nrd = false;
+            }
 
             return stayRoom;
         }

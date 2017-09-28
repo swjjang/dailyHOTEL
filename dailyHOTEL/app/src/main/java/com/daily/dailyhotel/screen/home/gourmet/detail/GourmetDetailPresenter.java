@@ -3,6 +3,7 @@ package com.daily.dailyhotel.screen.home.gourmet.detail;
 
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
+import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -1639,7 +1640,6 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
         }
 
         GourmetPaymentAnalyticsParam analyticsParam = new GourmetPaymentAnalyticsParam();
-
         GourmetDetailAnalyticsParam detailAnalyticsParam = mAnalytics.getAnalyticsParam();
 
         if (detailAnalyticsParam != null)
