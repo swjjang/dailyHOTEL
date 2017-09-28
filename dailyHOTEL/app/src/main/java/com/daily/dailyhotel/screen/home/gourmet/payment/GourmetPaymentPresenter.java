@@ -27,7 +27,7 @@ import com.daily.dailyhotel.parcel.analytics.GourmetThankYouAnalyticsParam;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
 import com.daily.dailyhotel.repository.remote.PaymentRemoteImpl;
 import com.daily.dailyhotel.repository.remote.ProfileRemoteImpl;
-import com.daily.dailyhotel.screen.common.PaymentWebActivity;
+import com.daily.dailyhotel.screen.common.payment.PaymentWebActivity;
 import com.daily.dailyhotel.screen.common.dialog.call.CallDialogActivity;
 import com.daily.dailyhotel.screen.home.gourmet.thankyou.GourmetThankYouActivity;
 import com.daily.dailyhotel.view.DailyBookingPaymentTypeView;

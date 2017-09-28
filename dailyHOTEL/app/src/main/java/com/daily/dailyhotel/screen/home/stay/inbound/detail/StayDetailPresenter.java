@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.View;
+import android.widget.CompoundButton;
 
 import com.daily.base.BaseActivity;
 import com.daily.base.BaseAnalyticsInterface;
@@ -39,11 +40,14 @@ import com.daily.dailyhotel.screen.common.dialog.navigator.NavigatorDialogActivi
 import com.daily.dailyhotel.screen.common.images.ImageListActivity;
 import com.daily.dailyhotel.screen.home.stay.inbound.detail.truereview.StayTrueReviewActivity;
 import com.daily.dailyhotel.screen.home.stay.inbound.payment.StayPaymentActivity;
+import com.daily.dailyhotel.storage.preference.DailyPreference;
+import com.daily.dailyhotel.storage.preference.DailyUserPreference;
 import com.daily.dailyhotel.util.RecentlyPlaceUtil;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Customer;
 import com.twoheart.dailyhotel.screen.common.HappyTalkCategoryDialog;
+import com.twoheart.dailyhotel.screen.common.TrueVRActivity;
 import com.twoheart.dailyhotel.screen.common.ZoomMapActivity;
 import com.twoheart.dailyhotel.screen.hotel.filter.StayDetailCalendarActivity;
 import com.twoheart.dailyhotel.screen.information.FAQActivity;
@@ -57,8 +61,6 @@ import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
 import com.twoheart.dailyhotel.util.DailyExternalDeepLink;
-import com.twoheart.dailyhotel.util.DailyPreference;
-import com.twoheart.dailyhotel.util.DailyUserPreference;
 import com.twoheart.dailyhotel.util.KakaoLinkManager;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
@@ -78,6 +80,8 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function7;
 import io.reactivex.schedulers.Schedulers;
+
+import static android.R.attr.checked;
 
 /**
  * Created by sheldon
@@ -1130,7 +1134,64 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
     @Override
     public void onTrueVRClick()
     {
+        if (mStayDetail == null || mTrueVRList == null || mTrueVRList.size() == 0 || lock() == true)
+        {
+            return;
+        }
 
+        if (DailyPreference.getInstance(getActivity()).isTrueVRCheckDataGuide() == false)
+        {
+            getViewInterface().showTrueVRDialog(new CompoundButton.OnCheckedChangeListener()
+            {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
+                {
+                    DailyPreference.getInstance(getActivity()).setTrueVRCheckDataGuide(isChecked);
+                }
+            }, new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    startActivityForResult(TrueVRActivity.newInstance(getActivity(), mStayDetail.index, (ArrayList)mTrueVRList//
+                        , Constants.PlaceType.HOTEL, mStayDetail.category), StayDetailActivity.REQUEST_CODE_TRUE_VR);
+                }
+            }, new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+
+                }
+            }, new DialogInterface.OnCancelListener()
+            {
+                @Override
+                public void onCancel(DialogInterface dialog)
+                {
+
+                }
+            }, new DialogInterface.OnDismissListener()
+            {
+                @Override
+                public void onDismiss(DialogInterface dialog)
+                {
+                    unLockAll();
+                }
+            });
+        } else
+        {
+            startActivityForResult(TrueVRActivity.newInstance(getActivity(), mStayDetail.index, (ArrayList)mTrueVRList//
+                , Constants.PlaceType.HOTEL, mStayDetail.category), StayDetailActivity.REQUEST_CODE_TRUE_VR);
+        }
+
+        try
+        {
+            AnalyticsManager.getInstance(StayDetailActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION,//
+                AnalyticsManager.Action.TRUE_VR_CLICK, Integer.toString(((StayDetail) mPlaceDetail).getStayDetailParams().index), null);
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+        }
     }
 
     @Override

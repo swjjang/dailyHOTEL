@@ -56,7 +56,6 @@ import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.drawee.view.DraweeTransition;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ActivityStayDetailDataBinding;
-import com.twoheart.dailyhotel.databinding.ActivityStayOutboundDetailDataBinding;
 import com.twoheart.dailyhotel.databinding.DialogConciergeDataBinding;
 import com.twoheart.dailyhotel.databinding.DialogShareDataBinding;
 import com.twoheart.dailyhotel.databinding.LayoutGourmetDetailAmenitiesDataBinding;
@@ -66,8 +65,6 @@ import com.twoheart.dailyhotel.databinding.LayoutStayOutboundDetail05DataBinding
 import com.twoheart.dailyhotel.databinding.LayoutStayOutboundDetailAmenityMoreDataBinding;
 import com.twoheart.dailyhotel.databinding.LayoutStayOutboundDetailInformationDataBinding;
 import com.twoheart.dailyhotel.databinding.LayoutStayOutboundDetailTitleDataBinding;
-import com.twoheart.dailyhotel.util.DailyPreference;
-import com.twoheart.dailyhotel.util.DailyRemoteConfigPreference;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.widget.AlphaTransition;
 import com.twoheart.dailyhotel.widget.TextTransition;
@@ -179,7 +176,7 @@ public class StayDetailView extends BaseDialogView<StayDetailView.OnEventListene
 
         EdgeEffectColor.setEdgeGlowColor(viewDataBinding.nestedScrollView, getColor(R.color.default_over_scroll_edge));
 
-        mImageViewPagerAdapter = new StayOutboundDetailImageViewPagerAdapter(getContext());
+        mImageViewPagerAdapter = new StayDetailImageViewPagerAdapter(getContext());
         viewDataBinding.imageLoopViewPager.setAdapter(mImageViewPagerAdapter);
         viewDataBinding.viewpagerIndicator.setViewPager(viewDataBinding.imageLoopViewPager);
 
@@ -614,7 +611,7 @@ public class StayDetailView extends BaseDialogView<StayDetailView.OnEventListene
 
         if (mImageViewPagerAdapter == null)
         {
-            mImageViewPagerAdapter = new StayOutboundDetailImageViewPagerAdapter(getContext());
+            mImageViewPagerAdapter = new StayDetailImageViewPagerAdapter(getContext());
         }
 
         StayOutboundDetailImage detailImage = new StayOutboundDetailImage();
@@ -648,7 +645,7 @@ public class StayDetailView extends BaseDialogView<StayDetailView.OnEventListene
 
         if (mImageViewPagerAdapter == null)
         {
-            mImageViewPagerAdapter = new StayOutboundDetailImageViewPagerAdapter(getContext());
+            mImageViewPagerAdapter = new StayDetailImageViewPagerAdapter(getContext());
         }
 
         StayOutboundDetailImage detailImage = new StayOutboundDetailImage();
