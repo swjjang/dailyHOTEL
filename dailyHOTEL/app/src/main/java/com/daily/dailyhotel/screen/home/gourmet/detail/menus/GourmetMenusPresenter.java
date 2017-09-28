@@ -15,7 +15,7 @@ import com.daily.dailyhotel.parcel.GourmetMenuParcel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.screen.common.ImageDetailListActivity;
 import com.twoheart.dailyhotel.util.Constants;
-import com.twoheart.dailyhotel.util.DailyPreference;
+import com.daily.dailyhotel.storage.preference.DailyPreference;
 
 import java.util.ArrayList;
 import java.util.List;

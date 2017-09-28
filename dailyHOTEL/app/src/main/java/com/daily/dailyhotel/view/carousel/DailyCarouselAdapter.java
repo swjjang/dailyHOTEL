@@ -42,6 +42,7 @@ public class DailyCarouselAdapter extends RecyclerView.Adapter<DailyCarouselAdap
 {
     Context mContext;
     private boolean mIsUsePriceLayout;
+    private boolean mNightsEnabled;
     private ArrayList<CarouselListItem> mList;
     //    protected PaintDrawable mPaintDrawable;
     protected ItemClickListener mItemClickListener;
@@ -358,10 +359,13 @@ public class DailyCarouselAdapter extends RecyclerView.Adapter<DailyCarouselAdap
         //            holder.dataBinding.soldOutView.setVisibility(View.GONE);
         //        }
 
-        holder.dataBinding.priceLayout.setVisibility(mIsUsePriceLayout == false ? View.GONE : View.INVISIBLE);
-        holder.dataBinding.contentOriginPriceView.setText("");
-        holder.dataBinding.contentDiscountPriceView.setText("");
-        holder.dataBinding.contentPersonView.setText("");
+        if (stayOutbound.promo == true)
+        {
+            setOutboundPriceText(holder.dataBinding, stayOutbound.nightlyRate, stayOutbound.nightlyBaseRate, mNightsEnabled);
+        } else
+        {
+            setOutboundPriceText(holder.dataBinding, stayOutbound.nightlyRate, stayOutbound.nightlyBaseRate, mNightsEnabled);
+        }
 
         holder.dataBinding.contentTextView.setText(stayOutbound.name);
         //        holder.dataBinding.nameEngTextView.setText("(" + stayOutbound.nameEng + ")");
@@ -371,10 +375,6 @@ public class DailyCarouselAdapter extends RecyclerView.Adapter<DailyCarouselAdap
         // Stay Outbound 의 경우 PlaceType 이 없음
         holder.dataBinding.contentGradeView.setText("");
         holder.dataBinding.contentDotImageView.setVisibility(View.GONE);
-
-        holder.dataBinding.contentPersonView.setText("");
-        holder.dataBinding.contentPersonView.setVisibility(View.GONE);
-
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
@@ -430,6 +430,17 @@ public class DailyCarouselAdapter extends RecyclerView.Adapter<DailyCarouselAdap
                 holder.dataBinding.contentOriginPriceView.setText(strPrice);
                 holder.dataBinding.contentOriginPriceView.setPaintFlags(holder.dataBinding.contentOriginPriceView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
             }
+
+            if (gourmet.persons > 1)
+            {
+                holder.dataBinding.contentPersonView.setText(//
+                    mContext.getString(R.string.label_home_person_format, gourmet.persons));
+                holder.dataBinding.contentPersonView.setVisibility(View.VISIBLE);
+            } else
+            {
+                holder.dataBinding.contentPersonView.setText("");
+                holder.dataBinding.contentPersonView.setVisibility(View.GONE);
+            }
         }
 
         holder.dataBinding.contentProvinceView.setText(gourmet.regionName);
@@ -445,17 +456,6 @@ public class DailyCarouselAdapter extends RecyclerView.Adapter<DailyCarouselAdap
             holder.dataBinding.contentGradeView.setVisibility(View.VISIBLE);
             holder.dataBinding.contentDotImageView.setVisibility(View.VISIBLE);
             holder.dataBinding.contentGradeView.setText(gourmet.category);
-        }
-
-        if (gourmet.persons > 1)
-        {
-            holder.dataBinding.contentPersonView.setText(//
-                mContext.getString(R.string.label_home_person_format, gourmet.persons));
-            holder.dataBinding.contentPersonView.setVisibility(View.VISIBLE);
-        } else
-        {
-            holder.dataBinding.contentPersonView.setText("");
-            holder.dataBinding.contentPersonView.setVisibility(View.GONE);
         }
     }
 
@@ -488,6 +488,62 @@ public class DailyCarouselAdapter extends RecyclerView.Adapter<DailyCarouselAdap
     public void setUsePriceLayout(boolean isUse)
     {
         mIsUsePriceLayout = isUse;
+    }
+
+    public void setNightsEnabled(boolean nightEnabled)
+    {
+        mNightsEnabled = nightEnabled;
+    }
+
+    private void setOutboundPriceText(ListRowCarouselItemDataBinding dataBinding, int discountPrice, int price, boolean nightsEnabled)
+    {
+        if (dataBinding == null)
+        {
+            return;
+        }
+
+        if (mIsUsePriceLayout == false)
+        {
+            // 가격 표시 안함
+            dataBinding.priceLayout.setVisibility(View.GONE);
+            dataBinding.contentOriginPriceView.setText("");
+            dataBinding.contentDiscountPriceView.setText("");
+            dataBinding.contentPersonView.setText("");
+            return;
+        }
+
+        // 가격 표시 함
+        dataBinding.priceLayout.setVisibility(View.VISIBLE);
+
+        if (discountPrice > 0)
+        {
+            String strDiscount = DailyTextUtils.getPriceFormat(mContext, discountPrice, false);
+            dataBinding.contentDiscountPriceView.setText(strDiscount);
+        } else
+        {
+            dataBinding.contentDiscountPriceView.setText(R.string.label_soldout);
+        }
+
+        if (price <= 0 || price <= discountPrice)
+        {
+            dataBinding.contentOriginPriceView.setText("");
+        } else
+        {
+            String strPrice = DailyTextUtils.getPriceFormat(mContext, price, false);
+            dataBinding.contentOriginPriceView.setText(strPrice);
+            dataBinding.contentOriginPriceView.setPaintFlags(dataBinding.contentOriginPriceView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+        }
+
+        if (nightsEnabled == true)
+        {
+            dataBinding.contentPersonView.setText(R.string.label_hotel_list_extendedstay_average);
+            dataBinding.contentPersonView.setVisibility(View.VISIBLE);
+
+        } else
+        {
+            dataBinding.contentPersonView.setText("");
+            dataBinding.contentPersonView.setVisibility(View.GONE);
+        }
     }
 
     private void setLayoutMargin(PlaceViewHolder holder, int position)
@@ -540,11 +596,10 @@ public class DailyCarouselAdapter extends RecyclerView.Adapter<DailyCarouselAdap
             dataBinding.contentImageView.getHierarchy().setActualImageScaleType(ScalingUtils.ScaleType.CENTER_CROP);
             dataBinding.contentImageView.getHierarchy().setPlaceholderImage(R.drawable.layerlist_placeholder);
 
-            android.support.v4.util.Pair[] pairs = {
+            android.support.v4.util.Pair[] pairs = { //
                 android.support.v4.util.Pair.create(dataBinding.contentImageView, mContext.getResources().getString(R.string.transition_place_image)) //
                 , android.support.v4.util.Pair.create(dataBinding.gradientTopView, mContext.getResources().getString(R.string.transition_gradient_top_view)) //
-                , android.support.v4.util.Pair.create(dataBinding.gradientBottomView, mContext.getResources().getString(R.string.transition_gradient_bottom_view))
-            };
+                , android.support.v4.util.Pair.create(dataBinding.gradientBottomView, mContext.getResources().getString(R.string.transition_gradient_bottom_view))};
 
             itemView.setOnClickListener(new View.OnClickListener()
             {

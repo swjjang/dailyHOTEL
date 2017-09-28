@@ -9,7 +9,7 @@ import com.twoheart.dailyhotel.network.factory.JSONConverterFactory;
 import com.twoheart.dailyhotel.network.factory.TagCancellableCallAdapterFactory;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Crypto;
-import com.twoheart.dailyhotel.util.DailyPreference;
+import com.daily.dailyhotel.storage.preference.DailyPreference;
 
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;

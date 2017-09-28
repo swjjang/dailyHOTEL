@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import com.daily.base.util.VersionUtils;
 import com.daily.base.widget.DailyToast;
+import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;

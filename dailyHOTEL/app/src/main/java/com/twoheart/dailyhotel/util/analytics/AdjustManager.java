@@ -9,7 +9,6 @@ import android.os.Bundle;
 import com.adjust.sdk.Adjust;
 import com.adjust.sdk.AdjustAttribution;
 import com.adjust.sdk.AdjustConfig;
-import com.adjust.sdk.AdjustEvent;
 import com.adjust.sdk.AdjustEventFailure;
 import com.adjust.sdk.AdjustEventSuccess;
 import com.adjust.sdk.AdjustSessionFailure;
@@ -29,9 +28,8 @@ import com.daily.base.util.ExLog;
 import com.twoheart.dailyhotel.LauncherActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
-import com.twoheart.dailyhotel.util.DailyRemoteConfigPreference;
+import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 
-import java.util.Iterator;
 import java.util.Map;
 
 /**

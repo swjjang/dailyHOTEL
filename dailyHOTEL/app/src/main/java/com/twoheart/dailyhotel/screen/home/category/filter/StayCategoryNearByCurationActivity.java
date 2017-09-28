@@ -17,7 +17,7 @@ import com.twoheart.dailyhotel.model.StayCategoryNearByParams;
 import com.twoheart.dailyhotel.model.StayCurationOption;
 import com.twoheart.dailyhotel.model.StayFilter;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
-import com.twoheart.dailyhotel.util.DailyRemoteConfigPreference;
+import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 
 import retrofit2.Call;
 import retrofit2.Response;

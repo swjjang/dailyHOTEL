@@ -65,8 +65,8 @@ import com.twoheart.dailyhotel.databinding.LayoutStayOutboundDetail05DataBinding
 import com.twoheart.dailyhotel.databinding.LayoutStayOutboundDetailAmenityMoreDataBinding;
 import com.twoheart.dailyhotel.databinding.LayoutStayOutboundDetailInformationDataBinding;
 import com.twoheart.dailyhotel.databinding.LayoutStayOutboundDetailTitleDataBinding;
-import com.twoheart.dailyhotel.util.DailyPreference;
-import com.twoheart.dailyhotel.util.DailyRemoteConfigPreference;
+import com.daily.dailyhotel.storage.preference.DailyPreference;
+import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.widget.AlphaTransition;
 import com.daily.dailyhotel.view.DailyDetailEmptyView;
@@ -918,14 +918,26 @@ public class StayOutboundDetailView extends BaseBlurView<StayOutboundDetailView.
     }
 
     @Override
-    public void setRecommendAroundList(ArrayList<CarouselListItem> list)
+    public void setRecommendAroundList(ArrayList<CarouselListItem> list, StayBookDateTime stayBookDateTime)
     {
         if (getViewDataBinding() == null)
         {
             return;
         }
 
-        getViewDataBinding().recommendAroundListLayout.setData(list);
+        boolean nightsEnabled = false;
+        if (stayBookDateTime != null)
+        {
+            try
+            {
+                nightsEnabled = stayBookDateTime.getNights() > 1;
+            } catch (Exception e)
+            {
+
+            }
+        }
+
+        getViewDataBinding().recommendAroundListLayout.setData(list, nightsEnabled);
     }
 
     private void initToolbar(ActivityStayOutboundDetailDataBinding viewDataBinding)

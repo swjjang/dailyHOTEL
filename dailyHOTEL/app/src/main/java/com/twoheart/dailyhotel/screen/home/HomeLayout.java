@@ -52,7 +52,7 @@ import com.twoheart.dailyhotel.network.model.Recommendation;
 import com.twoheart.dailyhotel.place.base.BaseBlurLayout;
 import com.twoheart.dailyhotel.place.base.BaseMenuNavigationFragment;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
-import com.twoheart.dailyhotel.util.DailyRemoteConfigPreference;
+import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.CustomFontTypefaceSpan;
@@ -954,7 +954,7 @@ public class HomeLayout extends BaseBlurLayout
 
     public void setWishListData(ArrayList<CarouselListItem> list, boolean isError)
     {
-        mWishListLayout.setData(list);
+        mWishListLayout.setData(list, false);
 
         if (isError == true)
         {
@@ -964,7 +964,7 @@ public class HomeLayout extends BaseBlurLayout
 
     public void setRecentListData(ArrayList<CarouselListItem> list, boolean isError)
     {
-        mRecentListLayout.setData(list);
+        mRecentListLayout.setData(list, false);
 
         if (isError == true)
         {

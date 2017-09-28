@@ -214,14 +214,14 @@ public class DailyCarouselAnimationLayout extends ConstraintLayout
         return mDataBinding.contentLayout.getData();
     }
 
-    public void setData(ArrayList<CarouselListItem> list)
+    public void setData(ArrayList<CarouselListItem> list, boolean nightsEnabled)
     {
         if (mDataBinding == null)
         {
             return;
         }
 
-        mDataBinding.contentLayout.setData(list);
+        mDataBinding.contentLayout.setData(list, nightsEnabled);
 
         boolean hasData = list != null && list.size() > 0;
 

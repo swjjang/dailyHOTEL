@@ -5,7 +5,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.twoheart.dailyhotel.model.time.StayBookingDay;
-import com.twoheart.dailyhotel.util.DailyPreference;
+import com.daily.dailyhotel.storage.preference.DailyPreference;
 
 public class StayCuration extends PlaceCuration
 {

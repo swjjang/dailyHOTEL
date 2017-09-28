@@ -29,8 +29,8 @@ import com.twoheart.dailyhotel.network.model.PlaceReviewScores;
 import com.twoheart.dailyhotel.network.model.StayDetailParams;
 import com.twoheart.dailyhotel.network.model.StayProduct;
 import com.twoheart.dailyhotel.place.layout.PlaceDetailLayout;
-import com.twoheart.dailyhotel.util.DailyPreference;
-import com.twoheart.dailyhotel.util.DailyRemoteConfigPreference;
+import com.daily.dailyhotel.storage.preference.DailyPreference;
+import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
