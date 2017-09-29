@@ -340,6 +340,8 @@ public class GourmetWishListAdapter extends PlaceWishListAdapter
                 @Override
                 public void onClick(View v)
                 {
+                    gourmetCardView.setWish(false);
+
                     if (mListener != null)
                     {
                         mListener.onItemRemoveClick(gourmetCardView);
