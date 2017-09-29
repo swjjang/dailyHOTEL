@@ -1,15 +1,17 @@
 package com.twoheart.dailyhotel.place.adapter;
 
 import android.content.Context;
+import android.databinding.ViewDataBinding;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.TextView;
 
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.databinding.LayoutFooterDataBinding;
+import com.twoheart.dailyhotel.databinding.LayoutSectionDataBinding;
 import com.twoheart.dailyhotel.model.EventBanner;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.time.PlaceBookingDay;
@@ -48,7 +50,7 @@ public abstract class PlaceListAdapter extends RecyclerView.Adapter<RecyclerView
 
         addAll(arrayList);
 
-        mInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        mInflater = LayoutInflater.from(context);
     }
 
     public void setOnLongClickListener(View.OnLongClickListener listener)
@@ -161,7 +163,12 @@ public abstract class PlaceListAdapter extends RecyclerView.Adapter<RecyclerView
 
     protected void onBindViewHolder(SectionViewHolder holder, PlaceViewItem placeViewItem)
     {
-        holder.regionDetailName.setText(placeViewItem.<String>getItem());
+        if (holder == null || placeViewItem == null)
+        {
+            return;
+        }
+
+        holder.dataBinding.sectionTextView.setText(placeViewItem.<String>getItem());
     }
 
     protected void onBindViewHolder(final EventBannerViewHolder holder, PlaceViewItem placeViewItem)
@@ -216,13 +223,13 @@ public abstract class PlaceListAdapter extends RecyclerView.Adapter<RecyclerView
 
     protected class SectionViewHolder extends RecyclerView.ViewHolder
     {
-        public TextView regionDetailName;
+        public LayoutSectionDataBinding dataBinding;
 
-        public SectionViewHolder(View itemView)
+        public SectionViewHolder(LayoutSectionDataBinding dataBinding)
         {
-            super(itemView);
+            super(dataBinding.getRoot());
 
-            regionDetailName = (TextView) itemView.findViewById(R.id.sectionTextView);
+            this.dataBinding = dataBinding;
         }
     }
 
@@ -242,11 +249,19 @@ public abstract class PlaceListAdapter extends RecyclerView.Adapter<RecyclerView
         }
     }
 
-    protected class FooterViewHolder extends RecyclerView.ViewHolder
+    protected class BaseViewHolder extends RecyclerView.ViewHolder
     {
-        public FooterViewHolder(View itemView)
+        public BaseViewHolder(View view)
         {
-            super(itemView);
+            super(view);
+        }
+    }
+
+    protected class BaseDataBindingViewHolder extends RecyclerView.ViewHolder
+    {
+        public BaseDataBindingViewHolder(ViewDataBinding dataBinding)
+        {
+            super(dataBinding.getRoot());
         }
     }
 

@@ -107,12 +107,12 @@ public class DailyCampaignTagTitleView extends ConstraintLayout
         if (count > 0)
         {
             String resultString = mContext.getString(R.string.label_searchresult_resultcount, count);
-            mViewDataBinding.resultCountView.setText(resultString);
-            mViewDataBinding.resultCountView.setVisibility(View.VISIBLE);
+            mViewDataBinding.resultCountTextView.setText(resultString);
+            mViewDataBinding.resultCountTextView.setVisibility(View.VISIBLE);
         } else
         {
-            mViewDataBinding.resultCountView.setText(null);
-            mViewDataBinding.resultCountView.setVisibility(View.GONE);
+            mViewDataBinding.resultCountTextView.setText(null);
+            mViewDataBinding.resultCountTextView.setVisibility(View.GONE);
         }
     }
 

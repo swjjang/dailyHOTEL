@@ -75,6 +75,7 @@ public class RecentStayListAdapter extends RecentPlacesListAdapter
             case PlaceViewItem.TYPE_FOOTER_VIEW:
             {
                 View view = mInflater.inflate(R.layout.list_row_users_place_footer, parent, false);
+
                 return new FooterViewHolder(view);
             }
         }
@@ -100,9 +101,6 @@ public class RecentStayListAdapter extends RecentPlacesListAdapter
             case PlaceViewItem.TYPE_OB_ENTRY:
                 onBindViewHolder((StayOutboundViewHolder) viewHolder, item, position);
                 break;
-
-            case PlaceViewItem.TYPE_FOOTER_VIEW:
-                break;
         }
     }
 
@@ -112,7 +110,7 @@ public class RecentStayListAdapter extends RecentPlacesListAdapter
         final RecentlyPlace recentlyPlace = placeViewItem.getItem();
 
         holder.stayCardView.setStickerVisible(false);
-        holder.stayCardView.setDeleteVisible(true);
+        holder.stayCardView.setDeleteVisible(false);
         holder.stayCardView.setWishVisible(false);
 
         holder.stayCardView.setImage(recentlyPlace.imageUrl);
@@ -120,24 +118,13 @@ public class RecentStayListAdapter extends RecentPlacesListAdapter
         holder.stayCardView.setGradeText(Stay.Grade.valueOf(recentlyPlace.details.grade).getName(mContext));
         holder.stayCardView.setVRVisible(recentlyPlace.details.isTrueVr && mTrueVREnabled);
         holder.stayCardView.setReviewText(recentlyPlace.rating, 0);
-
         holder.stayCardView.setNewVisible(false);
-
         holder.stayCardView.setStayNameText(recentlyPlace.title);
         holder.stayCardView.setDistanceVisible(false);
-
         holder.stayCardView.setAddressText(recentlyPlace.addrSummary);
         holder.stayCardView.setPriceVisible(false);
-
         holder.stayCardView.setBenefitText(null);
-
-        if (position < getItemCount() - 1 && getItem(position + 1).mType == PlaceViewItem.TYPE_SECTION)
-        {
-            holder.stayCardView.setDividerVisible(false);
-        } else
-        {
-            holder.stayCardView.setDividerVisible(true);
-        }
+        holder.stayCardView.setDividerVisible(true);
 
         //
         //

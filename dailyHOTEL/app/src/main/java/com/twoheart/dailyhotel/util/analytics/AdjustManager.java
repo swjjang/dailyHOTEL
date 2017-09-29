@@ -25,10 +25,10 @@ import com.appboy.Appboy;
 import com.appboy.models.outgoing.AttributionData;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
+import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.twoheart.dailyhotel.LauncherActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
-import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 
 import java.util.Map;
 
@@ -175,7 +175,7 @@ public class AdjustManager extends BaseAnalyticsManager
         {
             Adjust.trackEvent(event);
 
-            if(DEBUG == true)
+            if (DEBUG == true)
             {
                 ExLog.d(TAG + event.toString());
             }
@@ -414,7 +414,7 @@ public class AdjustManager extends BaseAnalyticsManager
         {
             Adjust.trackEvent(event);
 
-            if(DEBUG == true)
+            if (DEBUG == true)
             {
                 ExLog.d(TAG + event.toString());
             }
@@ -562,7 +562,7 @@ public class AdjustManager extends BaseAnalyticsManager
         {
             Adjust.trackEvent(event);
 
-            if(DEBUG == true)
+            if (DEBUG == true)
             {
                 ExLog.d(TAG + event.toString());
             }
@@ -696,7 +696,7 @@ public class AdjustManager extends BaseAnalyticsManager
         DailyAdjustEvent event = new DailyAdjustEvent(EventToken.SOCIAL_SIGNUP);
         Adjust.trackEvent(event);
 
-        if(DEBUG == true)
+        if (DEBUG == true)
         {
             ExLog.d(TAG + event.toString());
         }
@@ -711,7 +711,7 @@ public class AdjustManager extends BaseAnalyticsManager
         DailyAdjustEvent event = new DailyAdjustEvent(EventToken.SIGNUP);
         Adjust.trackEvent(event);
 
-        if(DEBUG == true)
+        if (DEBUG == true)
         {
             ExLog.d(TAG + event.toString());
         }
@@ -731,7 +731,7 @@ public class AdjustManager extends BaseAnalyticsManager
 
         Adjust.trackEvent(event);
 
-        if(DEBUG == true)
+        if (DEBUG == true)
         {
             ExLog.d(TAG + event.toString());
         }
@@ -751,7 +751,7 @@ public class AdjustManager extends BaseAnalyticsManager
 
         Adjust.trackEvent(event);
 
-        if(DEBUG == true)
+        if (DEBUG == true)
         {
             ExLog.d(TAG + event.toString());
         }
@@ -771,7 +771,7 @@ public class AdjustManager extends BaseAnalyticsManager
 
         Adjust.trackEvent(event);
 
-        if(DEBUG == true)
+        if (DEBUG == true)
         {
             ExLog.d(TAG + event.toString());
         }
@@ -792,12 +792,17 @@ public class AdjustManager extends BaseAnalyticsManager
 
         if (DailyTextUtils.isTextEmpty(rankTestName) == false)
         {
-            event.addPartnerParameter(Key.TEST_TYPE, rankTestName);
+            Adjust.addSessionPartnerParameter(Key.TEST_TYPE, rankTestName);
+            Adjust.addSessionCallbackParameter(Key.TEST_TYPE, rankTestName);
+        } else
+        {
+            Adjust.removeSessionPartnerParameter(Key.TEST_TYPE);
+            Adjust.removeSessionCallbackParameter(Key.TEST_TYPE);
         }
 
         Adjust.trackEvent(event);
 
-        if(DEBUG == true)
+        if (DEBUG == true)
         {
             ExLog.d(TAG + event.toString());
         }
@@ -830,7 +835,7 @@ public class AdjustManager extends BaseAnalyticsManager
             event.addPartnerParameter(Key.PUSH_SETTING, pushSettingType);
             Adjust.trackEvent(event);
 
-            if(DEBUG == true)
+            if (DEBUG == true)
             {
                 ExLog.d(TAG + event.toString());
             }
@@ -843,7 +848,7 @@ public class AdjustManager extends BaseAnalyticsManager
         DailyAdjustEvent event = getCouponEvent(EventToken.PURCHASE_WITH_COUPON, param);
         Adjust.trackEvent(event);
 
-        if(DEBUG == true)
+        if (DEBUG == true)
         {
             ExLog.d(TAG + event.toString());
         }

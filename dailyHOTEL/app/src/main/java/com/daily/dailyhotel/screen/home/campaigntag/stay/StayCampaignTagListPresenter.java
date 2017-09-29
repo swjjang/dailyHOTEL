@@ -519,7 +519,7 @@ public class StayCampaignTagListPresenter extends BaseExceptionPresenter<StayCam
 
         if (stayList == null || stayList.size() == 0)
         {
-            placeViewItemList.add(new PlaceViewItem(PlaceViewItem.TYPE_FOOTER_VIEW, null));
+            placeViewItemList.add(new PlaceViewItem(PlaceViewItem.TYPE_EMPTY_VIEW, null));
         } else
         {
             int entryPosition = 0;
@@ -531,7 +531,7 @@ public class StayCampaignTagListPresenter extends BaseExceptionPresenter<StayCam
                 placeViewItemList.add(new PlaceViewItem(PlaceViewItem.TYPE_ENTRY, stay));
             }
 
-            placeViewItemList.add(new PlaceViewItem(PlaceViewItem.TYPE_FOOTER_GUIDE_VIEW, null));
+            placeViewItemList.add(new PlaceViewItem(PlaceViewItem.TYPE_FOOTER_VIEW, null));
         }
 
         return placeViewItemList;

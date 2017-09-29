@@ -2,8 +2,13 @@ package com.daily.dailyhotel.view;
 
 import android.content.Context;
 import android.databinding.DataBindingUtil;
+import android.graphics.LinearGradient;
 import android.graphics.Paint;
+import android.graphics.Shader;
 import android.graphics.drawable.Animatable;
+import android.graphics.drawable.PaintDrawable;
+import android.graphics.drawable.ShapeDrawable;
+import android.graphics.drawable.shapes.RectShape;
 import android.net.Uri;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.util.Pair;
@@ -14,6 +19,7 @@ import android.view.ViewGroup;
 
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ScreenUtils;
+import com.daily.base.util.VersionUtils;
 import com.daily.dailyhotel.entity.Sticker;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.controller.BaseControllerListener;
@@ -53,6 +59,9 @@ public class DailyGourmetCardView extends ConstraintLayout
     private void initLayout(Context context)
     {
         mViewDataBinding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.daily_view_gourmet_card_data, this, true);
+        mViewDataBinding.simpleDraweeView.getHierarchy().setPlaceholderImage(R.drawable.layerlist_placeholder);
+
+        setGradientView(mViewDataBinding.gradientBottomView);
     }
 
     /**
@@ -174,7 +183,7 @@ public class DailyGourmetCardView extends ConstraintLayout
             return;
         }
 
-        mViewDataBinding.wishImageView.setVectorImageResource(wish ? R.drawable.vector_navibar_ic_heart_on : R.drawable.vector_navibar_ic_heart_off_white);
+        mViewDataBinding.wishImageView.setVectorImageResource(wish ? R.drawable.vector_list_ic_heart_on : R.drawable.vector_list_ic_heart_off);
     }
 
     public void setOnWishClickListener(View.OnClickListener onClickListener)
@@ -231,6 +240,15 @@ public class DailyGourmetCardView extends ConstraintLayout
             reviewText = null;
         }
 
+        // 만족도 아이콘 여부
+        if (satisfaction > 0)
+        {
+            mViewDataBinding.trueReviewTextView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.vector_list_ic_satisfaction, 0, 0, 0);
+        } else
+        {
+            mViewDataBinding.trueReviewTextView.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+        }
+
         mViewDataBinding.trueReviewTextView.setVisibility(DailyTextUtils.isTextEmpty(reviewText) ? GONE : VISIBLE);
         mViewDataBinding.trueReviewTextView.setText(reviewText);
     }
@@ -242,7 +260,7 @@ public class DailyGourmetCardView extends ConstraintLayout
             return;
         }
 
-        mViewDataBinding.newGourmetTextView.setVisibility(visible ? VISIBLE : GONE);
+        mViewDataBinding.newGourmetImageView.setVisibility(visible ? VISIBLE : GONE);
     }
 
     public void setGourmetNameText(String stayName)
@@ -262,7 +280,10 @@ public class DailyGourmetCardView extends ConstraintLayout
             return;
         }
 
-        mViewDataBinding.distanceTextView.setVisibility(visible ? VISIBLE : GONE);
+        int visibility = visible ? VISIBLE : GONE;
+
+        mViewDataBinding.distanceTextView.setVisibility(visibility);
+        mViewDataBinding.distanceImageView.setVisibility(visibility);
     }
 
     public void setDistanceText(double distance)
@@ -292,15 +313,14 @@ public class DailyGourmetCardView extends ConstraintLayout
             return;
         }
 
-        int flag = visible ? VISIBLE : GONE;
+        int visibility = visible ? VISIBLE : GONE;
 
-        mViewDataBinding.discountPercentTextView.setVisibility(flag);
-        mViewDataBinding.percentImageView.setVisibility(flag);
-        mViewDataBinding.discountPriceTextView.setVisibility(flag);
-        mViewDataBinding.discountPriceWonTextView.setVisibility(flag);
-        mViewDataBinding.priceTextView.setVisibility(flag);
-        mViewDataBinding.personTextView.setVisibility(flag);
-        mViewDataBinding.couponTextView.setVisibility(flag);
+        mViewDataBinding.discountPercentTextView.setVisibility(visibility);
+        mViewDataBinding.discountPercentImageView.setVisibility(visibility);
+        mViewDataBinding.discountPriceTextView.setVisibility(visibility);
+        mViewDataBinding.discountPriceWonTextView.setVisibility(visibility);
+        mViewDataBinding.priceTextView.setVisibility(visibility);
+        mViewDataBinding.couponTextView.setVisibility(visibility);
     }
 
 
@@ -314,12 +334,12 @@ public class DailyGourmetCardView extends ConstraintLayout
         if (discountPercent > 0)
         {
             mViewDataBinding.discountPercentTextView.setVisibility(VISIBLE);
-            mViewDataBinding.percentImageView.setVisibility(VISIBLE);
+            mViewDataBinding.discountPercentImageView.setVisibility(VISIBLE);
             mViewDataBinding.discountPercentTextView.setText(Integer.toString(discountPercent));
         } else
         {
             mViewDataBinding.discountPercentTextView.setVisibility(GONE);
-            mViewDataBinding.percentImageView.setVisibility(GONE);
+            mViewDataBinding.discountPercentImageView.setVisibility(GONE);
         }
 
         if (discountPrice > 0)
@@ -327,6 +347,8 @@ public class DailyGourmetCardView extends ConstraintLayout
             DecimalFormat decimalFormat = new DecimalFormat("###,##0");
             mViewDataBinding.discountPriceTextView.setText(decimalFormat.format(discountPrice));
             mViewDataBinding.discountPriceWonTextView.setVisibility(VISIBLE);
+            mViewDataBinding.discountPriceWonTextView.setText(person > 1 ?//
+                getContext().getString(R.string.currency) + "/" + getContext().getString(R.string.label_persions, person) : getContext().getString(R.string.currency));
         } else
         {
             mViewDataBinding.discountPriceTextView.setText(R.string.label_soldout);
@@ -336,18 +358,11 @@ public class DailyGourmetCardView extends ConstraintLayout
         if (price <= 0 || price <= discountPrice)
         {
             mViewDataBinding.priceTextView.setVisibility(GONE);
-            mViewDataBinding.personTextView.setVisibility(GONE);
         } else
         {
             mViewDataBinding.priceTextView.setPaintFlags(mViewDataBinding.priceTextView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
             mViewDataBinding.priceTextView.setVisibility(VISIBLE);
             mViewDataBinding.priceTextView.setText(DailyTextUtils.getPriceFormat(getContext(), price, false));
-
-            if (person > 1)
-            {
-                mViewDataBinding.personTextView.setVisibility(VISIBLE);
-                mViewDataBinding.personTextView.setText("/" + getContext().getString(R.string.label_persions, person));
-            }
         }
 
         if (DailyTextUtils.isTextEmpty(couponPrice) == true)
@@ -367,7 +382,7 @@ public class DailyGourmetCardView extends ConstraintLayout
             return;
         }
 
-        mViewDataBinding.cardBottomDividerView.setVisibility(visible ? VISIBLE : GONE);
+        mViewDataBinding.cardTopDividerView.setVisibility(visible ? VISIBLE : GONE);
     }
 
     public android.support.v4.util.Pair[] getOptionsCompat()
@@ -384,5 +399,39 @@ public class DailyGourmetCardView extends ConstraintLayout
         pairs[3] = android.support.v4.util.Pair.create(mViewDataBinding.gradientBottomView, getContext().getString(R.string.transition_gradient_bottom_view));
 
         return pairs;
+    }
+
+    private static void setGradientView(View view)
+    {
+        if (view == null)
+        {
+            return;
+        }
+
+        // 그라디에이션 만들기.
+        final int colors[] = {0x99000000, 0x66000000, 0x19000000, 0x00000000};
+        final float positions[] = {0.0f, 0.42f, 0.8f, 1.0f};
+
+        PaintDrawable paintDrawable = new PaintDrawable();
+        paintDrawable.setShape(new RectShape());
+
+        ShapeDrawable.ShaderFactory shaderFactory = new ShapeDrawable.ShaderFactory()
+        {
+            @Override
+            public Shader resize(int width, int height)
+            {
+                return new LinearGradient(0, height, 0, 0, colors, positions, Shader.TileMode.CLAMP);
+            }
+        };
+
+        paintDrawable.setShaderFactory(shaderFactory);
+
+        if (VersionUtils.isOverAPI16() == true)
+        {
+            view.setBackground(paintDrawable);
+        } else
+        {
+            view.setBackgroundDrawable(paintDrawable);
+        }
     }
 }
