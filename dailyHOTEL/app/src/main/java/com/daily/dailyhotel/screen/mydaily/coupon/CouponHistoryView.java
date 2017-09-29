@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by iseung-won on 2017. 9. 28..
+ * Created by android_sam on 2017. 9. 28..
  */
 
 public class CouponHistoryView extends BaseDialogView<CouponHistoryView.OnEventListener, ActivityCouponHistoryDataBinding> implements CouponHistoryViewInterface

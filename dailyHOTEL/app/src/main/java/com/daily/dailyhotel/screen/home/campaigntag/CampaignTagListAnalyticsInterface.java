@@ -6,7 +6,7 @@ import com.daily.base.BaseAnalyticsInterface;
 import com.daily.dailyhotel.entity.CampaignTag;
 
 /**
- * Created by iseung-won on 2017. 8. 16..
+ * Created by android_sam on 2017. 8. 16..
  */
 
 public interface CampaignTagListAnalyticsInterface extends BaseAnalyticsInterface

@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by iseung-won on 2017. 9. 4..
+ * Created by android_sam on 2017. 9. 4..
  */
 @JsonObject
 public class RecentlyPlacesData

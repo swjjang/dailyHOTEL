@@ -17,7 +17,7 @@ import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import java.util.ArrayList;
 
 /**
- * Created by iseung-won on 2017. 8. 10..
+ * Created by android_sam on 2017. 8. 10..
  */
 
 public class SearchCardItemLayout extends ConstraintLayout

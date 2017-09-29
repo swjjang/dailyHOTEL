@@ -5,7 +5,7 @@ import com.bluelinelabs.logansquare.annotation.JsonObject;
 import com.twoheart.dailyhotel.model.Coupon;
 
 /**
- * Created by iseung-won on 2017. 9. 28..
+ * Created by android_sam on 2017. 9. 28..
  */
 @JsonObject
 public class CouponData

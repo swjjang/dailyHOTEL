@@ -3,7 +3,7 @@ package com.daily.dailyhotel.entity;
 import com.twoheart.dailyhotel.network.model.Sticker;
 
 /**
- * Created by iseung-won on 2017. 9. 4..
+ * Created by android_sam on 2017. 9. 4..
  */
 
 public class RecentlyPlaceDetail

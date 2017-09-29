@@ -6,7 +6,7 @@ import com.twoheart.dailyhotel.network.model.Sticker;
 import java.util.ArrayList;
 
 /**
- * Created by iseung-won on 2017. 8. 8..
+ * Created by android_sam on 2017. 8. 8..
  */
 
 public class GourmetCampaignTags

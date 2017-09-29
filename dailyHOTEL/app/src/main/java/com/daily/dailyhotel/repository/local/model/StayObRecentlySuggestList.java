@@ -5,7 +5,7 @@ import android.net.Uri;
 import com.daily.dailyhotel.domain.StayObRecentlySuggestColumns;
 
 /**
- * Created by iseung-won on 2017. 9. 11..
+ * Created by android_sam on 2017. 9. 11..
  */
 
 public class StayObRecentlySuggestList implements StayObRecentlySuggestColumns

@@ -5,7 +5,7 @@ import android.app.Activity;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 /**
- * Created by iseung-won on 2017. 9. 28..
+ * Created by android_sam on 2017. 9. 28..
  */
 
 public class CouponHistoryAnalyticsImpl implements CouponHistoryPresenter.CouponHistoryAnalyticsInterface
