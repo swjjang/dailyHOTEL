@@ -8,14 +8,11 @@ import android.support.annotation.NonNull;
 
 import com.daily.base.BaseAnalyticsInterface;
 import com.daily.base.util.DailyTextUtils;
-import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
 import com.daily.dailyhotel.entity.Suggest;
 import com.daily.dailyhotel.parcel.SuggestParcel;
 import com.daily.dailyhotel.repository.local.SuggestLocalImpl;
 import com.daily.dailyhotel.repository.remote.SuggestRemoteImpl;
-import com.daily.dailyhotel.storage.database.DailyDb;
-import com.daily.dailyhotel.storage.database.DailyDbHelper;
 import com.twoheart.dailyhotel.R;
 
 import java.util.List;
@@ -268,21 +265,33 @@ public class StayOutboundSearchSuggestPresenter extends BaseExceptionPresenter<S
     @Override
     public void onDeleteAllRecentlySuggest()
     {
-        getViewInterface().setRecentlySuggests(null);
-
-        DailyDb dailyDb = DailyDbHelper.getInstance().open(getActivity());
-
-        try
+        if (lock() == true)
         {
-            dailyDb.deleteAllStayObRecentlySuggest();
-        } catch (Exception e)
-        {
-            ExLog.e(e.toString());
+            return;
         }
 
-        DailyDbHelper.getInstance().close();
+        getViewInterface().setRecentlySuggests(null);
 
-        mAnalytics.onEventDeleteAllRecentlySuggestClick(getActivity());
+        addCompositeDisposable(mSuggestLocalImpl.deleteAllRecentlySuggest() //
+            .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer()
+            {
+                @Override
+                public void accept(Object o) throws Exception
+                {
+                    mAnalytics.onEventDeleteAllRecentlySuggestClick(getActivity());
+
+                    unLockAll();
+                }
+            }, new Consumer<Throwable>()
+            {
+                @Override
+                public void accept(Throwable throwable) throws Exception
+                {
+                    mAnalytics.onEventDeleteAllRecentlySuggestClick(getActivity());
+
+                    unLockAll();
+                }
+            }));
     }
 
     private void onSuggestList(List<Suggest> suggestList)

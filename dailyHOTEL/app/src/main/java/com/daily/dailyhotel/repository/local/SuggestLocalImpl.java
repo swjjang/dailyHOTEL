@@ -17,7 +17,6 @@ import java.util.concurrent.Callable;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
-import io.reactivex.Observer;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -35,16 +34,14 @@ public class SuggestLocalImpl implements SuggestLocalInterface
     @Override
     public Observable addSuggestDb(Suggest suggest)
     {
-        Observable<Boolean> observable = new Observable<Boolean>()
+        return Observable.defer(new Callable<ObservableSource<Boolean>>()
         {
             @Override
-            protected void subscribeActual(Observer<? super Boolean> observer)
+            public ObservableSource<Boolean> call() throws Exception
             {
                 if (suggest == null)
                 {
-                    observer.onNext(true);
-                    observer.onComplete();
-                    return;
+                    return Observable.just(false);
                 }
 
                 DailyDb dailyDb = DailyDbHelper.getInstance().open(mContext);
@@ -55,12 +52,10 @@ public class SuggestLocalImpl implements SuggestLocalInterface
 
                 DailyDbHelper.getInstance().close();
 
-                observer.onNext(true);
-                observer.onComplete();
+                return Observable.just(true);
             }
-        };
+        }).subscribeOn(Schedulers.io());
 
-        return observable.subscribeOn(Schedulers.io());
     }
 
     @Override
@@ -192,6 +187,31 @@ public class SuggestLocalImpl implements SuggestLocalInterface
                 }
 
                 return Observable.just(suggestList);
+            }
+        }).subscribeOn(Schedulers.io());
+    }
+
+    @Override
+    public Observable deleteAllRecentlySuggest()
+    {
+        return Observable.defer(new Callable<ObservableSource<Boolean>>()
+        {
+            @Override
+            public ObservableSource<Boolean> call() throws Exception
+            {
+                DailyDb dailyDb = DailyDbHelper.getInstance().open(mContext);
+
+                try
+                {
+                    dailyDb.deleteAllStayObRecentlySuggest();
+                } catch (Exception e)
+                {
+                    ExLog.e(e.toString());
+                }
+
+                DailyDbHelper.getInstance().close();
+
+                return Observable.just(true);
             }
         }).subscribeOn(Schedulers.io());
     }

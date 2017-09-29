@@ -17,4 +17,6 @@ public interface SuggestLocalInterface
     Observable<Suggest> getRecentlySuggest();
 
     Observable<List<Suggest>> getRecentlySuggestList();
+
+    Observable deleteAllRecentlySuggest();
 }
