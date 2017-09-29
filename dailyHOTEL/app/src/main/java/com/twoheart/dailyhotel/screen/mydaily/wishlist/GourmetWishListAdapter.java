@@ -14,7 +14,6 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Gourmet;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.time.PlaceBookingDay;
-import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
 
 import java.util.ArrayList;
@@ -74,9 +73,6 @@ public class GourmetWishListAdapter extends PlaceWishListAdapter
             case PlaceViewItem.TYPE_ENTRY:
                 onBindViewHolder((GourmetWishViewHolder) viewHolder, item, position);
                 break;
-
-            case PlaceViewItem.TYPE_FOOTER_VIEW:
-                break;
         }
     }
 
@@ -96,45 +92,13 @@ public class GourmetWishListAdapter extends PlaceWishListAdapter
         holder.gourmetCardView.setGradeText(DailyTextUtils.isTextEmpty(gourmet.subCategory) == false ? gourmet.subCategory : gourmet.category);
         holder.gourmetCardView.setVRVisible(false);
         holder.gourmetCardView.setReviewText(gourmet.satisfaction, 0);
-
         holder.gourmetCardView.setNewVisible(false);
-
         holder.gourmetCardView.setGourmetNameText(gourmet.name);
-
-        if (mShowDistanceIgnoreSort == true || getSortType() == Constants.SortType.DISTANCE)
-        {
-            holder.gourmetCardView.setDistanceVisible(true);
-            holder.gourmetCardView.setDistanceText(gourmet.distance);
-        } else
-        {
-            holder.gourmetCardView.setDistanceVisible(false);
-        }
-
+        holder.gourmetCardView.setDistanceVisible(false);
         holder.gourmetCardView.setAddressText(gourmet.addressSummary);
-
-        if (gourmet.isSoldOut == true)
-        {
-            holder.gourmetCardView.setPriceText(0, 0, 0, null, 0);
-        } else
-        {
-            if (gourmet.price > 0 && gourmet.price > gourmet.discountPrice)
-            {
-                holder.gourmetCardView.setPriceText(gourmet.price > 0 ? 100 * (gourmet.price - gourmet.discountPrice) / gourmet.price : 0, gourmet.discountPrice, gourmet.price, null, gourmet.persons);
-            } else
-            {
-                holder.gourmetCardView.setPriceText(0, gourmet.discountPrice, gourmet.price, null, gourmet.persons);
-            }
-        }
-
+        holder.gourmetCardView.setPriceVisible(false);
         holder.gourmetCardView.setBenefitText(gourmet.dBenefitText);
-
-        if (position < getItemCount() - 1 && getItem(position + 1).mType == PlaceViewItem.TYPE_SECTION)
-        {
-            holder.gourmetCardView.setDividerVisible(false);
-        } else
-        {
-            holder.gourmetCardView.setDividerVisible(true);
-        }
+        holder.gourmetCardView.setDividerVisible(true);
 
 
         //        String address = gourmet.addressSummary;
@@ -376,6 +340,8 @@ public class GourmetWishListAdapter extends PlaceWishListAdapter
                 @Override
                 public void onClick(View v)
                 {
+                    gourmetCardView.setWish(false);
+
                     if (mListener != null)
                     {
                         mListener.onItemRemoveClick(gourmetCardView);

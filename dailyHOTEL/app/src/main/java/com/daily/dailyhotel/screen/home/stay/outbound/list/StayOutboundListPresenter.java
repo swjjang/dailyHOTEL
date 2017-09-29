@@ -644,6 +644,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
     public void onRefreshAll(boolean showProgress)
     {
         clearCache();
+        setRefresh(true);
         onRefresh(showProgress);
     }
 

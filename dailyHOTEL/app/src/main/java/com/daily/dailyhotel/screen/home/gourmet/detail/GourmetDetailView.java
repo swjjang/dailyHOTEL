@@ -91,7 +91,6 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
 
     ObjectAnimator mShowBottomAnimator;
     ObjectAnimator mHideBottomAnimator;
-    AnimatorSet mWishAnimatorSet;
 
     public interface OnEventListener extends OnBaseEventListener
     {
@@ -203,7 +202,7 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
             }
         });
 
-        viewDataBinding.wishScrollView.setVisibility(View.GONE);
+        viewDataBinding.wishAnimationView.setVisibility(View.GONE);
     }
 
     @Override
@@ -1007,92 +1006,7 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
             return null;
         }
 
-        if (mWishAnimatorSet != null && mWishAnimatorSet.isRunning() == true)
-        {
-            return null;
-        }
-
-        if (myWish == true)
-        {
-            getViewDataBinding().wishTextView.setText(R.string.wishlist_detail_add_message);
-            getViewDataBinding().wishTextView.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_heart_fill_l, 0, 0);
-            getViewDataBinding().wishTextView.setBackgroundResource(R.drawable.shape_filloval_ccdb2453);
-        } else
-        {
-            getViewDataBinding().wishTextView.setText(R.string.wishlist_detail_delete_message);
-            getViewDataBinding().wishTextView.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_heart_stroke_l, 0, 0);
-            getViewDataBinding().wishTextView.setBackgroundResource(R.drawable.shape_filloval_a5000000);
-        }
-
-        ObjectAnimator objectAnimator1 = ObjectAnimator.ofPropertyValuesHolder(getViewDataBinding().wishTextView //
-            , PropertyValuesHolder.ofFloat("scaleX", 0.8f, 1.2f, 1.0f) //
-            , PropertyValuesHolder.ofFloat("scaleY", 0.8f, 1.2f, 1.0f) //
-            , PropertyValuesHolder.ofFloat("alpha", 0.5f, 1.0f, 1.0f) //
-        );
-        objectAnimator1.setInterpolator(new AccelerateInterpolator());
-        objectAnimator1.setDuration(300);
-
-
-        ObjectAnimator objectAnimator2 = ObjectAnimator.ofPropertyValuesHolder(getViewDataBinding().wishTextView //
-            , PropertyValuesHolder.ofFloat("scaleX", 1.0f, 1.0f) //
-            , PropertyValuesHolder.ofFloat("scaleY", 1.0f, 1.0f) //
-            , PropertyValuesHolder.ofFloat("alpha", 1.0f, 1.0f) //
-        );
-        objectAnimator2.setDuration(600);
-
-
-        ObjectAnimator objectAnimator3 = ObjectAnimator.ofPropertyValuesHolder(getViewDataBinding().wishTextView //
-            , PropertyValuesHolder.ofFloat("scaleX", 1.0f, 0.7f) //
-            , PropertyValuesHolder.ofFloat("scaleY", 1.0f, 0.7f) //
-            , PropertyValuesHolder.ofFloat("alpha", 1.0f, 0.0f) //
-        );
-        objectAnimator3.setDuration(200);
-
-        mWishAnimatorSet = new AnimatorSet();
-        mWishAnimatorSet.playSequentially(objectAnimator1, objectAnimator2, objectAnimator3);
-
-        Observable<Boolean> observable = new Observable<Boolean>()
-        {
-            @Override
-            protected void subscribeActual(Observer<? super Boolean> observer)
-            {
-                mWishAnimatorSet.addListener(new Animator.AnimatorListener()
-                {
-                    @Override
-                    public void onAnimationStart(Animator animation)
-                    {
-                        getViewDataBinding().wishScrollView.setVisibility(View.VISIBLE);
-                    }
-
-                    @Override
-                    public void onAnimationEnd(Animator animation)
-                    {
-                        mWishAnimatorSet.removeAllListeners();
-                        mWishAnimatorSet = null;
-
-                        getViewDataBinding().wishScrollView.setVisibility(View.GONE);
-
-                        observer.onNext(true);
-                        observer.onComplete();
-                    }
-
-                    @Override
-                    public void onAnimationCancel(Animator animation)
-                    {
-                    }
-
-                    @Override
-                    public void onAnimationRepeat(Animator animation)
-                    {
-
-                    }
-                });
-
-                mWishAnimatorSet.start();
-            }
-        };
-
-        return observable;
+        return myWish ? getViewDataBinding().wishAnimationView.addWishAnimation() : getViewDataBinding().wishAnimationView.removeWishAnimation();
     }
 
     private void initToolbar(ActivityGourmetDetailDataBinding viewDataBinding)

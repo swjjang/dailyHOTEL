@@ -2,6 +2,7 @@ package com.twoheart.dailyhotel.screen.home.collection;
 
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.databinding.DataBindingUtil;
 import android.os.Build;
 import android.os.Vibrator;
 import android.support.v7.widget.RecyclerView;
@@ -12,6 +13,7 @@ import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ScreenUtils;
 import com.daily.dailyhotel.view.DailyGourmetCardView;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.databinding.LayoutSectionDataBinding;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.time.PlaceBookingDay;
 import com.twoheart.dailyhotel.network.model.RecommendationGourmet;
@@ -47,9 +49,9 @@ public class CollectionGourmetAdapter extends PlaceListAdapter
         {
             case PlaceViewItem.TYPE_SECTION:
             {
-                View view = mInflater.inflate(R.layout.list_row_default_section, parent, false);
+                LayoutSectionDataBinding viewDataBinding = DataBindingUtil.inflate(mInflater, R.layout.layout_section_data, parent, false);
 
-                return new SectionViewHolder(view);
+                return new SectionViewHolder(viewDataBinding);
             }
 
             case PlaceViewItem.TYPE_ENTRY:
@@ -68,23 +70,25 @@ public class CollectionGourmetAdapter extends PlaceListAdapter
                     , ScreenUtils.getRatioHeightType16x9(ScreenUtils.getScreenWidth(mContext)) + ScreenUtils.dpToPx(mContext, 81) - ScreenUtils.dpToPx(mContext, 97));
                 view.setLayoutParams(layoutParams);
 
-                return new HeaderViewHolder(view);
+                return new BaseViewHolder(view);
             }
 
-            case PlaceViewItem.TYPE_FOOTER_VIEW:
+            case PlaceViewItem.TYPE_EMPTY_VIEW:
             {
                 View view = mInflater.inflate(R.layout.view_empty_gourmet_collection, parent, false);
+
                 ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT//
                     , ScreenUtils.getScreenHeight(mContext) - ScreenUtils.dpToPx(mContext, 97) - ScreenUtils.getRatioHeightType16x9(ScreenUtils.getScreenWidth(mContext)) + ScreenUtils.dpToPx(mContext, 81) - ScreenUtils.dpToPx(mContext, 97));
                 view.setLayoutParams(layoutParams);
 
-                return new FooterViewHolder(view);
+                return new BaseViewHolder(view);
             }
 
-            case PlaceViewItem.TYPE_FOOTER_GUIDE_VIEW:
+            case PlaceViewItem.TYPE_FOOTER_VIEW:
             {
                 View view = mInflater.inflate(R.layout.list_row_users_place_footer, parent, false);
-                return new FooterGuideViewHolder(view);
+
+                return new BaseViewHolder(view);
             }
         }
 
@@ -128,20 +132,9 @@ public class CollectionGourmetAdapter extends PlaceListAdapter
         holder.gourmetCardView.setGradeText(DailyTextUtils.isTextEmpty(recommendationGourmet.categorySub) == false ? recommendationGourmet.categorySub : recommendationGourmet.category);
         holder.gourmetCardView.setVRVisible(false);
         holder.gourmetCardView.setReviewText(recommendationGourmet.rating, 0);
-
         holder.gourmetCardView.setNewVisible(false);
-
         holder.gourmetCardView.setGourmetNameText(recommendationGourmet.name);
-
-        if (mShowDistanceIgnoreSort == true || getSortType() == Constants.SortType.DISTANCE)
-        {
-            holder.gourmetCardView.setDistanceVisible(true);
-            holder.gourmetCardView.setDistanceText(recommendationGourmet.distance);
-        } else
-        {
-            holder.gourmetCardView.setDistanceVisible(false);
-        }
-
+        holder.gourmetCardView.setDistanceVisible(false);
         holder.gourmetCardView.setAddressText(recommendationGourmet.addrSummary);
 
         if (recommendationGourmet.availableTicketNumbers == 0 //
@@ -151,18 +144,13 @@ public class CollectionGourmetAdapter extends PlaceListAdapter
             holder.gourmetCardView.setPriceText(0, 0, 0, null, 0);
         } else
         {
-            if (recommendationGourmet.price > 0 && recommendationGourmet.price > recommendationGourmet.discount)
-            {
-                holder.gourmetCardView.setPriceText(recommendationGourmet.price > 0 ? 100 * (recommendationGourmet.price - recommendationGourmet.discount) / recommendationGourmet.price : 0, recommendationGourmet.discount, recommendationGourmet.price, null, recommendationGourmet.persons);
-            } else
-            {
-                holder.gourmetCardView.setPriceText(0, recommendationGourmet.discount, recommendationGourmet.price, null, recommendationGourmet.persons);
-            }
+            holder.gourmetCardView.setPriceText(0, recommendationGourmet.discount, recommendationGourmet.price, null, recommendationGourmet.persons);
         }
 
         holder.gourmetCardView.setBenefitText(recommendationGourmet.benefit);
 
-        if (position < getItemCount() - 1 && getItem(position + 1).mType == PlaceViewItem.TYPE_SECTION)
+        // 최상위에는 빈뷰이가 1번째가 첫번째다.
+        if (position == 1)
         {
             holder.gourmetCardView.setDividerVisible(false);
         } else
@@ -389,22 +377,6 @@ public class CollectionGourmetAdapter extends PlaceListAdapter
                     }
                 });
             }
-        }
-    }
-
-    private class HeaderViewHolder extends RecyclerView.ViewHolder
-    {
-        public HeaderViewHolder(View itemView)
-        {
-            super(itemView);
-        }
-    }
-
-    private class FooterGuideViewHolder extends RecyclerView.ViewHolder
-    {
-        public FooterGuideViewHolder(View itemView)
-        {
-            super(itemView);
         }
     }
 }

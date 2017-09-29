@@ -52,21 +52,15 @@ public class StaySearchResultListAdapter extends StayListAdapter
 
         if (stay.availableRooms > 0)
         {
-            if (stay.price > 0 && stay.price > stay.discountPrice)
-            {
-                holder.stayCardView.setPriceText(stay.price > 0 ? 100 * (stay.price - stay.discountPrice) / stay.price : 0, stay.discountPrice, stay.price, null, mNights);
-            } else
-            {
-                holder.stayCardView.setPriceText(0, stay.discountPrice, stay.price, null, mNights);
-            }
+            holder.stayCardView.setPriceText(0, stay.discountPrice, stay.price, null, mNights > 1);
         } else
         {
-            holder.stayCardView.setPriceText(0, 0, 0, null, 0);
+            holder.stayCardView.setPriceText(0, 0, 0, null, false);
         }
 
         holder.stayCardView.setBenefitText(stay.dBenefitText);
 
-        if (position < getItemCount() - 1 && getItem(position + 1).mType == PlaceViewItem.TYPE_SECTION)
+        if (position == 0)
         {
             holder.stayCardView.setDividerVisible(false);
         } else

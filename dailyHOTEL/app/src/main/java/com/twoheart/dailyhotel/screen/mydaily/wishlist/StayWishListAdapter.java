@@ -87,9 +87,6 @@ public class StayWishListAdapter extends PlaceWishListAdapter
             case PlaceViewItem.TYPE_ENTRY:
                 onBindViewHolder((StayWishViewHolder) viewHolder, item, position);
                 break;
-
-            case PlaceViewItem.TYPE_FOOTER_VIEW:
-                break;
         }
     }
 
@@ -108,45 +105,13 @@ public class StayWishListAdapter extends PlaceWishListAdapter
         holder.stayCardView.setGradeText(stay.getGrade().getName(mContext));
         holder.stayCardView.setVRVisible(stay.truevr && mTrueVREnabled);
         holder.stayCardView.setReviewText(stay.satisfaction, 0);
-
         holder.stayCardView.setNewVisible(false);
-
         holder.stayCardView.setStayNameText(stay.name);
-
-        if (mShowDistanceIgnoreSort == true || getSortType() == Constants.SortType.DISTANCE)
-        {
-            holder.stayCardView.setDistanceVisible(true);
-            holder.stayCardView.setDistanceText(stay.distance);
-        } else
-        {
-            holder.stayCardView.setDistanceVisible(false);
-        }
-
+        holder.stayCardView.setDistanceVisible(false);
         holder.stayCardView.setAddressText(stay.addressSummary);
-
-        if (stay.isSoldOut == true)
-        {
-            holder.stayCardView.setPriceText(0, 0, 0, null, 0);
-        } else
-        {
-            if (stay.price > 0 && stay.price > stay.discountPrice)
-            {
-                holder.stayCardView.setPriceText(stay.price > 0 ? 100 * (stay.price - stay.discountPrice) / stay.price : 0, stay.discountPrice, stay.price, null, mNights);
-            } else
-            {
-                holder.stayCardView.setPriceText(0, stay.discountPrice, stay.price, null, mNights);
-            }
-        }
-
+        holder.stayCardView.setPriceVisible(false);
         holder.stayCardView.setBenefitText(stay.dBenefitText);
-
-        if (position < getItemCount() - 1 && getItem(position + 1).mType == PlaceViewItem.TYPE_SECTION)
-        {
-            holder.stayCardView.setDividerVisible(false);
-        } else
-        {
-            holder.stayCardView.setDividerVisible(true);
-        }
+        holder.stayCardView.setDividerVisible(true);
 
 
         //        String address = stay.addressSummary;
@@ -321,6 +286,8 @@ public class StayWishListAdapter extends PlaceWishListAdapter
                 @Override
                 public void onClick(View v)
                 {
+                    stayCardView.setWish(false);
+
                     if (mListener != null)
                     {
                         mListener.onItemRemoveClick(stayCardView);

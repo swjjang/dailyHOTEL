@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:dailyToolbar="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:dailyToolbar="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools">
 
     <merge
         android:layout_width="match_parent"
@@ -12,7 +12,7 @@
         <com.daily.dailyhotel.view.DailyToolbarView
             android:id="@+id/toolbarView"
             android:layout_width="0dp"
-            android:layout_height="@dimen/toolbar_height"
+            android:layout_height="52dp"
             android:background="@color/white"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
@@ -24,10 +24,10 @@
             android:layout_width="0dp"
             android:layout_height="44dp"
             android:background="@color/white"
-            app:layout_constraintBottom_toTopOf="@+id/resultCountView"
+            app:layout_constraintBottom_toTopOf="@+id/resultCountTextView"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/toolbarView">
+            app:layout_constraintTop_toBottomOf="@+id/toolbarView">
 
             <RelativeLayout
                 android:id="@+id/calendarLayout"
@@ -46,7 +46,7 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="6dp"
-                    app:srcCompat="@drawable/search_ic_01_date" />
+                    app:srcCompat="@drawable/search_ic_01_date"/>
 
                 <ImageView
                     android:id="@+id/calendarDownArrowView"
@@ -55,7 +55,7 @@
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="9dp"
-                    app:srcCompat="@drawable/navibar_m_ic_v" />
+                    app:srcCompat="@drawable/navibar_m_ic_v"/>
 
                 <com.daily.base.widget.DailyTextView
                     android:id="@+id/calendarTextView"
@@ -68,7 +68,7 @@
                     android:gravity="center_vertical"
                     android:paddingRight="8dp"
                     android:textColor="@color/default_text_c323232"
-                    android:textSize="13dp" />
+                    android:textSize="13dp"/>
 
             </RelativeLayout>
 
@@ -78,23 +78,22 @@
                 android:background="@color/default_line_ce7e7e7"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent" />
+                app:layout_constraintRight_toRightOf="parent"/>
         </android.support.constraint.ConstraintLayout>
 
         <com.daily.base.widget.DailyTextView
-            android:id="@+id/resultCountView"
+            android:id="@+id/resultCountTextView"
             android:layout_width="0dp"
-            android:layout_height="25dp"
-            android:background="@color/default_background_section_c323232"
+            android:layout_height="34dp"
+            android:background="@color/default_background"
             android:gravity="center_vertical"
-            android:paddingLeft="11dp"
-            android:textColor="@android:color/white"
-            android:textSize="12dp"
-            android:visibility="visible"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:textColor="@color/default_text_c666666"
+            android:textSize="13dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/calendarBackgroundLayout" />
-
+            app:layout_constraintTop_toBottomOf="@+id/calendarBackgroundLayout"/>
     </merge>
 </layout>

@@ -53,6 +53,7 @@ public class RecentGourmetListAdapter extends RecentPlacesListAdapter
             case PlaceViewItem.TYPE_FOOTER_VIEW:
             {
                 View view = mInflater.inflate(R.layout.list_row_users_place_footer, parent, false);
+
                 return new FooterViewHolder(view);
             }
         }
@@ -74,9 +75,6 @@ public class RecentGourmetListAdapter extends RecentPlacesListAdapter
             case PlaceViewItem.TYPE_ENTRY:
                 onBindViewHolder((GourmetViewHolder) viewHolder, item, position);
                 break;
-
-            case PlaceViewItem.TYPE_FOOTER_VIEW:
-                break;
         }
     }
 
@@ -86,7 +84,7 @@ public class RecentGourmetListAdapter extends RecentPlacesListAdapter
         final RecentlyPlace recentlyPlace = placeViewItem.getItem();
 
         holder.gourmetCardView.setStickerVisible(false);
-        holder.gourmetCardView.setDeleteVisible(true);
+        holder.gourmetCardView.setDeleteVisible(false);
         holder.gourmetCardView.setWishVisible(false);
 
         // 스티커
@@ -102,27 +100,13 @@ public class RecentGourmetListAdapter extends RecentPlacesListAdapter
         holder.gourmetCardView.setGradeText(DailyTextUtils.isTextEmpty(recentlyPlace.details.subCategory) == false ? recentlyPlace.details.subCategory : recentlyPlace.details.category);
         holder.gourmetCardView.setVRVisible(false);
         holder.gourmetCardView.setReviewText(recentlyPlace.rating, 0);
-
         holder.gourmetCardView.setNewVisible(false);
-
         holder.gourmetCardView.setGourmetNameText(recentlyPlace.title);
-
         holder.gourmetCardView.setDistanceVisible(false);
-
         holder.gourmetCardView.setAddressText(recentlyPlace.addrSummary);
-
         holder.gourmetCardView.setPriceVisible(false);
-
         holder.gourmetCardView.setBenefitText(null);
-
-        if (position < getItemCount() - 1 && getItem(position + 1).mType == PlaceViewItem.TYPE_SECTION)
-        {
-            holder.gourmetCardView.setDividerVisible(false);
-        } else
-        {
-            holder.gourmetCardView.setDividerVisible(true);
-        }
-
+        holder.gourmetCardView.setDividerVisible(true);
 
         //
         //

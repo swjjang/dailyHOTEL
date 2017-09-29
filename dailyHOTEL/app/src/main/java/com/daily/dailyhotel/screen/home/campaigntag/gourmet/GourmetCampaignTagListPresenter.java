@@ -514,7 +514,7 @@ public class GourmetCampaignTagListPresenter //
 
         if (gourmetList == null || gourmetList.size() == 0)
         {
-            placeViewItemList.add(new PlaceViewItem(PlaceViewItem.TYPE_FOOTER_VIEW, null));
+            placeViewItemList.add(new PlaceViewItem(PlaceViewItem.TYPE_EMPTY_VIEW, null));
         } else
         {
             int entryPosition = 0;
@@ -526,7 +526,7 @@ public class GourmetCampaignTagListPresenter //
                 placeViewItemList.add(new PlaceViewItem(PlaceViewItem.TYPE_ENTRY, gourmet));
             }
 
-            placeViewItemList.add(new PlaceViewItem(PlaceViewItem.TYPE_FOOTER_GUIDE_VIEW, null));
+            placeViewItemList.add(new PlaceViewItem(PlaceViewItem.TYPE_FOOTER_VIEW, null));
         }
 
         return placeViewItemList;
