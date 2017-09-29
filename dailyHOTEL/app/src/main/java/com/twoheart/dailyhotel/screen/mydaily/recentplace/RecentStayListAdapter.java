@@ -130,14 +130,7 @@ public class RecentStayListAdapter extends RecentPlacesListAdapter
         holder.stayCardView.setPriceVisible(false);
 
         holder.stayCardView.setBenefitText(null);
-
-        if (position < getItemCount() - 1 && getItem(position + 1).mType == PlaceViewItem.TYPE_SECTION)
-        {
-            holder.stayCardView.setDividerVisible(false);
-        } else
-        {
-            holder.stayCardView.setDividerVisible(true);
-        }
+        holder.stayCardView.setDividerVisible(true);
 
         //
         //

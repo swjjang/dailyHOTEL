@@ -405,12 +405,7 @@ public class StayWishListFragment extends PlaceWishListFragment
         @Override
         public void onListItemRemoveClick(int position)
         {
-            if (position < 0)
-            {
-                return;
-            }
-
-            if (mListLayout == null)
+            if (position < 0 || mListLayout == null)
             {
                 return;
             }

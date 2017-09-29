@@ -2,14 +2,18 @@ package com.twoheart.dailyhotel.screen.hotel.list;
 
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.databinding.DataBindingUtil;
 import android.os.Build;
 import android.os.Vibrator;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.daily.base.util.ScreenUtils;
 import com.daily.dailyhotel.view.DailyStayCardView;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.databinding.LayoutFooterDataBinding;
+import com.twoheart.dailyhotel.databinding.LayoutSectionDataBinding;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.model.time.PlaceBookingDay;
@@ -59,9 +63,9 @@ public class StayListAdapter extends PlaceListAdapter
         {
             case PlaceViewItem.TYPE_SECTION:
             {
-                View view = mInflater.inflate(R.layout.list_row_default_section, parent, false);
+                LayoutSectionDataBinding viewDataBinding = DataBindingUtil.inflate(mInflater, R.layout.layout_section_data, parent, false);
 
-                return new SectionViewHolder(view);
+                return new SectionViewHolder(viewDataBinding);
             }
 
             case PlaceViewItem.TYPE_ENTRY:
@@ -81,16 +85,19 @@ public class StayListAdapter extends PlaceListAdapter
 
             case PlaceViewItem.TYPE_FOOTER_VIEW:
             {
-                View view = mInflater.inflate(R.layout.list_row_footer, parent, false);
+                LayoutFooterDataBinding viewDataBinding = DataBindingUtil.inflate(mInflater, R.layout.layout_footer_data, parent, false);
 
-                return new FooterViewHolder(view);
+                // 원래 높이 175dp + 상단 툴바 높이 52dp
+                viewDataBinding.footerTextView.getLayoutParams().height = ScreenUtils.dpToPx(mContext, 227);
+
+                return new FooterViewHolder(viewDataBinding);
             }
 
             case PlaceViewItem.TYPE_LOADING_VIEW:
             {
                 View view = mInflater.inflate(R.layout.list_row_loading, parent, false);
 
-                return new FooterViewHolder(view);
+                return new BaseViewHolder(view);
             }
         }
 
@@ -158,23 +165,17 @@ public class StayListAdapter extends PlaceListAdapter
             holder.stayCardView.setPriceText(0, 0, 0, null, 0);
         } else
         {
-            if (stay.price > 0 && stay.price > stay.discountPrice)
-            {
-                holder.stayCardView.setPriceText(0, stay.discountPrice, stay.price, null, mNights);
-            } else
-            {
-                holder.stayCardView.setPriceText(0, stay.discountPrice, stay.price, null, mNights);
-            }
+            holder.stayCardView.setPriceText(0, stay.discountPrice, stay.price, null, mNights);
         }
 
         holder.stayCardView.setBenefitText(stay.dBenefitText);
 
-        if (position < getItemCount() - 1 && getItem(position + 1).mType == PlaceViewItem.TYPE_SECTION)
-        {
-            holder.stayCardView.setDividerVisible(false);
-        } else
+        if (position == 0 || getItem(position - 1).mType != PlaceViewItem.TYPE_SECTION)
         {
             holder.stayCardView.setDividerVisible(true);
+        } else
+        {
+            holder.stayCardView.setDividerVisible(false);
         }
 
 

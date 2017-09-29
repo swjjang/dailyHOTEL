@@ -46,8 +46,20 @@
             android:id="@+id/viewPager"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
-
     </LinearLayout>
+
+    <com.daily.dailyhotel.view.DailyWishAnimationView
+        android:id="@+id/wishAnimationView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@color/transparent"
+        android:elevation="2dp"
+        android:fillViewport="true"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
 
     <ScrollView
         android:id="@+id/loginLayout"

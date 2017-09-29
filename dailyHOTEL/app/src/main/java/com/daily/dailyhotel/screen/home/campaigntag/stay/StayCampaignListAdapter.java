@@ -10,9 +10,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.daily.base.util.ScreenUtils;
 import com.daily.dailyhotel.view.DailyStayCardView;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.databinding.LayoutFooterDataBinding;
+import com.twoheart.dailyhotel.databinding.LayoutSectionDataBinding;
 import com.twoheart.dailyhotel.databinding.ViewEmptyCampaignTagListBinding;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.Stay;
@@ -80,8 +81,9 @@ public class StayCampaignListAdapter extends PlaceListAdapter
         {
             case PlaceViewItem.TYPE_SECTION:
             {
-                View view = mInflater.inflate(R.layout.list_row_default_section, parent, false);
-                return new SectionViewHolder(view);
+                LayoutSectionDataBinding viewDataBinding = DataBindingUtil.inflate(mInflater, R.layout.layout_section_data, parent, false);
+
+                return new SectionViewHolder(viewDataBinding);
             }
 
             case PlaceViewItem.TYPE_ENTRY:
@@ -92,29 +94,18 @@ public class StayCampaignListAdapter extends PlaceListAdapter
                 return new StayViewHolder(stayCardView);
             }
 
-            case PlaceViewItem.TYPE_HEADER_VIEW:
-            {
-                View view = mInflater.inflate(R.layout.list_row_collection_header, parent, false);
-
-                ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT//
-                    , ScreenUtils.getRatioHeightType16x9(ScreenUtils.getScreenWidth(mContext)) //
-                    + ScreenUtils.dpToPx(mContext, 81) - ScreenUtils.dpToPx(mContext, 97));
-                view.setLayoutParams(layoutParams);
-
-                return new StayCampaignListAdapter.HeaderViewHolder(view);
-            }
-
-            case PlaceViewItem.TYPE_FOOTER_VIEW:
+            case PlaceViewItem.TYPE_EMPTY_VIEW:
             {
                 ViewEmptyCampaignTagListBinding dataBinding = DataBindingUtil.inflate(mInflater, R.layout.view_empty_campaign_tag_list, parent, false);
 
                 return new EmptyViewHolder(dataBinding);
             }
 
-            case PlaceViewItem.TYPE_FOOTER_GUIDE_VIEW:
+            case PlaceViewItem.TYPE_FOOTER_VIEW:
             {
-                View view = mInflater.inflate(R.layout.list_row_footer, parent, false);
-                return new StayCampaignListAdapter.FooterGuideViewHolder(view);
+                LayoutFooterDataBinding viewDataBinding = DataBindingUtil.inflate(mInflater, R.layout.layout_footer_data, parent, false);
+
+                return new FooterViewHolder(viewDataBinding);
             }
         }
 
@@ -141,7 +132,7 @@ public class StayCampaignListAdapter extends PlaceListAdapter
                 onBindViewHolder((SectionViewHolder) holder, item);
                 break;
 
-            case PlaceViewItem.TYPE_FOOTER_VIEW:
+            case PlaceViewItem.TYPE_EMPTY_VIEW:
                 onBindViewHolder((EmptyViewHolder) holder, item);
                 break;
         }
@@ -179,13 +170,7 @@ public class StayCampaignListAdapter extends PlaceListAdapter
 
         if (stay.availableRooms > 0)
         {
-            if (stay.price > 0 && stay.price > stay.discountPrice)
-            {
-                holder.stayCardView.setPriceText(stay.price > 0 ? 100 * (stay.price - stay.discountPrice) / stay.price : 0, stay.discountPrice, stay.price, null, mNights);
-            } else
-            {
-                holder.stayCardView.setPriceText(0, stay.discountPrice, stay.price, null, mNights);
-            }
+            holder.stayCardView.setPriceText(0, stay.discountPrice, stay.price, null, mNights);
         } else
         {
             holder.stayCardView.setPriceText(0, 0, 0, null, 0);
@@ -193,7 +178,8 @@ public class StayCampaignListAdapter extends PlaceListAdapter
 
         holder.stayCardView.setBenefitText(stay.dBenefitText);
 
-        if (position < getItemCount() - 1 && getItem(position + 1).mType == PlaceViewItem.TYPE_SECTION)
+        // 캠페인 태그는 섹션이 없음
+        if (position == 0)
         {
             holder.stayCardView.setDividerVisible(false);
         } else
@@ -364,22 +350,6 @@ public class StayCampaignListAdapter extends PlaceListAdapter
                 mOnEventListener.onEmptyCallClick();
             }
         });
-    }
-
-    private class HeaderViewHolder extends RecyclerView.ViewHolder
-    {
-        public HeaderViewHolder(View itemView)
-        {
-            super(itemView);
-        }
-    }
-
-    private class FooterGuideViewHolder extends RecyclerView.ViewHolder
-    {
-        public FooterGuideViewHolder(View itemView)
-        {
-            super(itemView);
-        }
     }
 
     private class EmptyViewHolder extends RecyclerView.ViewHolder

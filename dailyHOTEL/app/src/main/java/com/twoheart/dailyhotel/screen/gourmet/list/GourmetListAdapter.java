@@ -2,6 +2,7 @@ package com.twoheart.dailyhotel.screen.gourmet.list;
 
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.databinding.DataBindingUtil;
 import android.os.Build;
 import android.os.Vibrator;
 import android.support.v7.widget.RecyclerView;
@@ -9,8 +10,11 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.daily.base.util.DailyTextUtils;
+import com.daily.base.util.ScreenUtils;
 import com.daily.dailyhotel.view.DailyGourmetCardView;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.databinding.LayoutFooterDataBinding;
+import com.twoheart.dailyhotel.databinding.LayoutSectionDataBinding;
 import com.twoheart.dailyhotel.model.Gourmet;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.time.PlaceBookingDay;
@@ -41,9 +45,9 @@ public class GourmetListAdapter extends PlaceListAdapter
         {
             case PlaceViewItem.TYPE_SECTION:
             {
-                View view = mInflater.inflate(R.layout.list_row_default_section, parent, false);
+                LayoutSectionDataBinding viewDataBinding = DataBindingUtil.inflate(mInflater, R.layout.layout_section_data, parent, false);
 
-                return new SectionViewHolder(view);
+                return new SectionViewHolder(viewDataBinding);
             }
 
             case PlaceViewItem.TYPE_ENTRY:
@@ -63,16 +67,19 @@ public class GourmetListAdapter extends PlaceListAdapter
 
             case PlaceViewItem.TYPE_FOOTER_VIEW:
             {
-                View view = mInflater.inflate(R.layout.list_row_footer, parent, false);
+                LayoutFooterDataBinding viewDataBinding = DataBindingUtil.inflate(mInflater, R.layout.layout_footer_data, parent, false);
 
-                return new FooterViewHolder(view);
+                // 원래 높이 175dp + 상단 툴바 높이 52dp
+                viewDataBinding.footerTextView.setHeight(ScreenUtils.dpToPx(mContext, 227));
+
+                return new FooterViewHolder(viewDataBinding);
             }
 
             case PlaceViewItem.TYPE_LOADING_VIEW:
             {
                 View view = mInflater.inflate(R.layout.list_row_loading, parent, false);
 
-                return new FooterViewHolder(view);
+                return new BaseViewHolder(view);
             }
         }
 

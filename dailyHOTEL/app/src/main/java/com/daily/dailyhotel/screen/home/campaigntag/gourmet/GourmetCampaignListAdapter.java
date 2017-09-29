@@ -14,6 +14,8 @@ import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ScreenUtils;
 import com.daily.dailyhotel.view.DailyGourmetCardView;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.databinding.LayoutFooterDataBinding;
+import com.twoheart.dailyhotel.databinding.LayoutSectionDataBinding;
 import com.twoheart.dailyhotel.databinding.ViewEmptyCampaignTagListBinding;
 import com.twoheart.dailyhotel.model.Gourmet;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
@@ -68,8 +70,9 @@ public class GourmetCampaignListAdapter extends PlaceListAdapter
         {
             case PlaceViewItem.TYPE_SECTION:
             {
-                View view = mInflater.inflate(R.layout.list_row_default_section, parent, false);
-                return new SectionViewHolder(view);
+                LayoutSectionDataBinding viewDataBinding = DataBindingUtil.inflate(mInflater, R.layout.layout_section_data, parent, false);
+
+                return new SectionViewHolder(viewDataBinding);
             }
 
             case PlaceViewItem.TYPE_ENTRY:
@@ -80,28 +83,17 @@ public class GourmetCampaignListAdapter extends PlaceListAdapter
                 return new GourmetViewHolder(gourmetCardView);
             }
 
-            case PlaceViewItem.TYPE_HEADER_VIEW:
-            {
-                View view = mInflater.inflate(R.layout.list_row_collection_header, parent, false);
-
-                ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT//
-                    , ScreenUtils.getRatioHeightType16x9(ScreenUtils.getScreenWidth(mContext)) //
-                    + ScreenUtils.dpToPx(mContext, 81) - ScreenUtils.dpToPx(mContext, 97));
-                view.setLayoutParams(layoutParams);
-
-                return new GourmetCampaignListAdapter.HeaderViewHolder(view);
-            }
-
-            case PlaceViewItem.TYPE_FOOTER_VIEW:
+            case PlaceViewItem.TYPE_EMPTY_VIEW:
             {
                 ViewEmptyCampaignTagListBinding dataBinding = DataBindingUtil.inflate(mInflater, R.layout.view_empty_campaign_tag_list, parent, false);
                 return new EmptyViewHolder(dataBinding);
             }
 
-            case PlaceViewItem.TYPE_FOOTER_GUIDE_VIEW:
+            case PlaceViewItem.TYPE_FOOTER_VIEW:
             {
-                View view = mInflater.inflate(R.layout.list_row_footer, parent, false);
-                return new GourmetCampaignListAdapter.FooterGuideViewHolder(view);
+                LayoutFooterDataBinding viewDataBinding = DataBindingUtil.inflate(mInflater, R.layout.layout_footer_data, parent, false);
+
+                return new FooterViewHolder(viewDataBinding);
             }
         }
 
@@ -128,7 +120,7 @@ public class GourmetCampaignListAdapter extends PlaceListAdapter
                 onBindViewHolder((SectionViewHolder) holder, item);
                 break;
 
-            case PlaceViewItem.TYPE_FOOTER_VIEW:
+            case PlaceViewItem.TYPE_EMPTY_VIEW:
                 onBindViewHolder((EmptyViewHolder) holder, item);
                 break;
         }
@@ -172,7 +164,7 @@ public class GourmetCampaignListAdapter extends PlaceListAdapter
         {
             if (gourmet.price > 0 && gourmet.price > gourmet.discountPrice)
             {
-                holder.gourmetCardView.setPriceText(gourmet.price > 0 ? 100 * (gourmet.price - gourmet.discountPrice) / gourmet.price : 0, gourmet.discountPrice, gourmet.price, null, gourmet.persons);
+                holder.gourmetCardView.setPriceText(0, gourmet.discountPrice, gourmet.price, null, gourmet.persons);
             } else
             {
                 holder.gourmetCardView.setPriceText(0, gourmet.discountPrice, gourmet.price, null, gourmet.persons);
@@ -181,7 +173,8 @@ public class GourmetCampaignListAdapter extends PlaceListAdapter
 
         holder.gourmetCardView.setBenefitText(gourmet.dBenefitText);
 
-        if (position < getItemCount() - 1 && getItem(position + 1).mType == PlaceViewItem.TYPE_SECTION)
+        // 캠페인 태그는 섹션이 없음
+        if (position == 0)
         {
             holder.gourmetCardView.setDividerVisible(false);
         } else
@@ -408,22 +401,6 @@ public class GourmetCampaignListAdapter extends PlaceListAdapter
                 mOnEventListener.onEmptyCallClick();
             }
         });
-    }
-
-    private class HeaderViewHolder extends RecyclerView.ViewHolder
-    {
-        public HeaderViewHolder(View itemView)
-        {
-            super(itemView);
-        }
-    }
-
-    private class FooterGuideViewHolder extends RecyclerView.ViewHolder
-    {
-        public FooterGuideViewHolder(View itemView)
-        {
-            super(itemView);
-        }
     }
 
     private class EmptyViewHolder extends RecyclerView.ViewHolder

@@ -15,6 +15,7 @@ import com.daily.base.util.FontManager;
 import com.daily.base.util.ScreenUtils;
 import com.daily.base.widget.DailyViewPager;
 import com.daily.dailyhotel.view.DailyToolbarView;
+import com.daily.dailyhotel.view.DailyWishAnimationView;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.network.model.TodayDateTime;
@@ -27,6 +28,8 @@ import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
 import retrofit2.Call;
 import retrofit2.Response;
 
@@ -45,6 +48,7 @@ public class WishListTabActivity extends BaseActivity
     private TabLayout mTabLayout;
     private View mLoginView;
     private View mBottomDescriptionView;
+    private DailyWishAnimationView mWishAnimationView;
 
     private SourceType mSourceType;
     private PlaceType mPlaceType;
@@ -184,6 +188,7 @@ public class WishListTabActivity extends BaseActivity
         View mLoginButtonView = findViewById(R.id.loginButtonView);
         mViewPager = (DailyViewPager) findViewById(R.id.viewPager);
         mBottomDescriptionView = findViewById(R.id.bottomMessageTextView);
+        mWishAnimationView = (DailyWishAnimationView)findViewById(R.id.wishAnimationView);
 
         mFragmentList = new ArrayList<>();
 
@@ -469,6 +474,18 @@ public class WishListTabActivity extends BaseActivity
             if (mFragmentList == null)
             {
                 return;
+            }
+
+            if(mWishAnimationView != null)
+            {
+                addCompositeDisposable(mWishAnimationView.removeWishAnimation().subscribeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
+                {
+                    @Override
+                    public void accept(Boolean aBoolean) throws Exception
+                    {
+
+                    }
+                }));
             }
 
             int totalCount = 0;
