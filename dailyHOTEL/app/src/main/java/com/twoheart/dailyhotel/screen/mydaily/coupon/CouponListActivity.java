@@ -11,6 +11,7 @@ import android.view.View;
 import com.crashlytics.android.Crashlytics;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
+import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Coupon;
@@ -20,7 +21,6 @@ import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
 import com.twoheart.dailyhotel.util.DailyExternalDeepLink;
-import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import java.text.ParseException;
@@ -311,7 +311,10 @@ public class CouponListActivity extends BaseActivity
                 return;
             }
 
-            Intent intent = CouponHistoryActivity.newInstance(CouponListActivity.this);
+//            Intent intent = CouponHistoryActivity.newInstance(CouponListActivity.this);
+//            startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_COUPON_HISTORY);
+
+            Intent intent = com.daily.dailyhotel.screen.mydaily.coupon.CouponHistoryActivity.newInstance(CouponListActivity.this);
             startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_COUPON_HISTORY);
         }
 

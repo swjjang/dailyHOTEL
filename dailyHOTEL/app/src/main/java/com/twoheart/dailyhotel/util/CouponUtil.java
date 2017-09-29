@@ -76,7 +76,7 @@ public class CouponUtil
         public static final String DOWNLOADED_AT = "downloadedAt";
 
         // coupon object type
-        public static final String DISABLE_AT = "disableAt";
+        public static final String DISABLE_AT = "disabledAt";
 
         // coupon object type
         public static final String AVAILABLE_IN_DOMESTIC = "availableInDomestic";
@@ -137,7 +137,7 @@ public class CouponUtil
         String stayFrom = null;
         String stayTo = null;
         String downloadedAt = null;
-        //        String disableAt = null;
+        //        String disabledAt = null;
         boolean availableInDomestic = false;
         boolean availableInOverseas = false;
         boolean availableInHotel = false;
@@ -179,7 +179,7 @@ public class CouponUtil
 
         //            if (jsonObject.has(Type.DISABLE_AT))
         //            {
-        //                disableAt = jsonObject.getString(Type.DISABLE_AT);
+        //                disabledAt = jsonObject.getString(Type.DISABLE_AT);
         //            }
 
         if (jsonObject.has(Type.AVAILABLE_IN_DOMESTIC))
@@ -212,11 +212,17 @@ public class CouponUtil
         //                isExpired = jsonObject.getBoolean(Type.IS_EXPIRED);
         //            }
 
+        //        coupon = new Coupon(userCouponCode, amount, title, validFrom, //
+        //            validTo, amountMinimum, isDownloaded, availableItem, //
+        //            serverDate, couponCode, stayFrom, stayTo, //
+        //            downloadedAt, availableInDomestic, availableInOverseas, //
+        //            availableInHotel, availableInGourmet);
+
         coupon = new Coupon(userCouponCode, amount, title, validFrom, //
             validTo, amountMinimum, isDownloaded, availableItem, //
             serverDate, couponCode, stayFrom, stayTo, //
-            downloadedAt, availableInDomestic, availableInOverseas, //
-            availableInHotel, availableInGourmet);
+            downloadedAt, null, availableInDomestic, availableInOverseas, //
+            availableInHotel, availableInGourmet, false, false);
 
         return coupon;
     }
