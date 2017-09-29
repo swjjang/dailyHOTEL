@@ -28,6 +28,7 @@ import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 
+import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
 import retrofit2.Call;
@@ -188,7 +189,7 @@ public class WishListTabActivity extends BaseActivity
         View mLoginButtonView = findViewById(R.id.loginButtonView);
         mViewPager = (DailyViewPager) findViewById(R.id.viewPager);
         mBottomDescriptionView = findViewById(R.id.bottomMessageTextView);
-        mWishAnimationView = (DailyWishAnimationView)findViewById(R.id.wishAnimationView);
+        mWishAnimationView = (DailyWishAnimationView) findViewById(R.id.wishAnimationView);
 
         mFragmentList = new ArrayList<>();
 
@@ -476,16 +477,21 @@ public class WishListTabActivity extends BaseActivity
                 return;
             }
 
-            if(mWishAnimationView != null)
+            if (mWishAnimationView != null)
             {
-                addCompositeDisposable(mWishAnimationView.removeWishAnimation().subscribeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
-                {
-                    @Override
-                    public void accept(Boolean aBoolean) throws Exception
-                    {
+                Observable<Boolean> observable = mWishAnimationView.removeWishAnimation();
 
-                    }
-                }));
+                if (observable != null)
+                {
+                    addCompositeDisposable(observable.subscribeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
+                    {
+                        @Override
+                        public void accept(Boolean aBoolean) throws Exception
+                        {
+
+                        }
+                    }));
+                }
             }
 
             int totalCount = 0;
