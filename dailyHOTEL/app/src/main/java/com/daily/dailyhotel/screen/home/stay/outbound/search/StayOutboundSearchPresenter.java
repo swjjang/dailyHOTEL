@@ -3,7 +3,6 @@ package com.daily.dailyhotel.screen.home.stay.outbound.search;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -14,7 +13,6 @@ import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
-import com.daily.dailyhotel.domain.StayObRecentlySuggestColumns;
 import com.daily.dailyhotel.entity.CommonDateTime;
 import com.daily.dailyhotel.entity.People;
 import com.daily.dailyhotel.entity.StayBookDateTime;
@@ -27,8 +25,6 @@ import com.daily.dailyhotel.screen.common.calendar.StayCalendarActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.detail.StayOutboundDetailActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.list.StayOutboundListActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.people.SelectPeopleActivity;
-import com.daily.dailyhotel.storage.database.DailyDb;
-import com.daily.dailyhotel.storage.database.DailyDbHelper;
 import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.DailyCalendar;
@@ -105,12 +101,40 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
         mCommonRemoteImpl = new CommonRemoteImpl(activity);
         mSuggestLocalImpl = new SuggestLocalImpl(activity);
 
-        setLastSuggestByDb();
+        addCompositeDisposable(mSuggestLocalImpl.getRecentlySuggest().observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Suggest>()
+        {
+            @Override
+            public void accept(Suggest suggest) throws Exception
+            {
+                if (suggest == null)
+                {
+                    mIsShowCalendar = true;
+                } else
+                {
+                    mIsShowCalendar = false;
+                }
+
+                mSuggest = suggest;
+                notifySuggestsChanged();
+
+                onAfterGetRecentlySuggest();
+            }
+        }, new Consumer<Throwable>()
+        {
+            @Override
+            public void accept(Throwable throwable) throws Exception
+            {
+                mIsShowCalendar = true;
+                mSuggest = null;
+                notifySuggestsChanged();
+
+                onAfterGetRecentlySuggest();
+            }
+        }));
+
         // 기본 성인 2명, 아동 0명
         setLastPeopleByPreference();
-
         notifyPeopleChanged();
-        notifySuggestsChanged();
 
         setRefresh(true);
     }
@@ -147,21 +171,6 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
     public void onPostCreate()
     {
         getViewInterface().setToolbarTitle(getString(R.string.label_stay_outbound_search));
-
-        if (mDailyDeepLink != null)
-        {
-            if (processDeepLinkBeforeCommonDateTime(mDailyDeepLink) == true)
-            {
-                mDailyDeepLink.clear();
-                mDailyDeepLink = null;
-            }
-        } else
-        {
-            if (isSuggestChanged() == false)
-            {
-                onSuggestClick(false);
-            }
-        }
     }
 
     @Override
@@ -581,63 +590,6 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
         }));
     }
 
-    private void setLastSuggestByDb()
-    {
-        DailyDb dailyDb = DailyDbHelper.getInstance().open(getActivity());
-
-        Suggest suggest = null;
-        Cursor cursor = null;
-
-        try
-        {
-            cursor = dailyDb.getStayObRecentlySuggestList(1);
-
-            if (cursor != null && cursor.getCount() > 0)
-            {
-                cursor.moveToFirst();
-
-                long id = cursor.getLong(cursor.getColumnIndex(StayObRecentlySuggestColumns._ID));
-                String name = cursor.getString(cursor.getColumnIndex(StayObRecentlySuggestColumns.NAME));
-                String city = cursor.getString(cursor.getColumnIndex(StayObRecentlySuggestColumns.CITY));
-                String country = cursor.getString(cursor.getColumnIndex(StayObRecentlySuggestColumns.COUNTRY));
-                String countryCode = cursor.getString(cursor.getColumnIndex(StayObRecentlySuggestColumns.COUNTRY_CODE));
-                String categoryKey = cursor.getString(cursor.getColumnIndex(StayObRecentlySuggestColumns.CATEGORY_KEY));
-                String display = cursor.getString(cursor.getColumnIndex(StayObRecentlySuggestColumns.DISPLAY));
-                double latitude = cursor.getDouble(cursor.getColumnIndex(StayObRecentlySuggestColumns.LATITUDE));
-                double longitude = cursor.getDouble(cursor.getColumnIndex(StayObRecentlySuggestColumns.LONGITUDE));
-
-                suggest = new Suggest(id, name, city, country, countryCode, categoryKey, display, latitude, longitude);
-
-                mIsShowCalendar = false;
-            } else
-            {
-                mIsShowCalendar = true;
-            }
-
-        } catch (Exception e)
-        {
-            ExLog.e(e.toString());
-
-            suggest = null;
-            mIsShowCalendar = true;
-        } finally
-        {
-            try
-            {
-                if (cursor != null)
-                {
-                    cursor.close();
-                }
-            } catch (Exception e)
-            {
-            }
-        }
-
-        DailyDbHelper.getInstance().close();
-
-        mSuggest = suggest;
-    }
-
     private void setKeyword(String keyword)
     {
         mKeyword = keyword;
@@ -844,5 +796,17 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
     private void setSuggestChanged(boolean isSuggestChanged)
     {
         mIsSuggestChanged = isSuggestChanged;
+    }
+
+    private void onAfterGetRecentlySuggest()
+    {
+        if (processDeepLinkBeforeCommonDateTime(mDailyDeepLink) == true)
+        {
+            mDailyDeepLink.clear();
+            mDailyDeepLink = null;
+        } else if (isSuggestChanged() == false)
+        {
+            onSuggestClick(false);
+        }
     }
 }

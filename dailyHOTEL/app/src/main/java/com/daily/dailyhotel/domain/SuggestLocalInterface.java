@@ -11,4 +11,6 @@ import io.reactivex.Observable;
 public interface SuggestLocalInterface
 {
     Observable addSuggestDb(Suggest suggest);
+
+    Observable<Suggest> getRecentlySuggest();
 }

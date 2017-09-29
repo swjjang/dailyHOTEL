@@ -1,14 +1,20 @@
 package com.daily.dailyhotel.repository.local;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.support.annotation.NonNull;
 
+import com.daily.base.util.ExLog;
+import com.daily.dailyhotel.domain.StayObRecentlySuggestColumns;
 import com.daily.dailyhotel.domain.SuggestLocalInterface;
 import com.daily.dailyhotel.entity.Suggest;
 import com.daily.dailyhotel.storage.database.DailyDb;
 import com.daily.dailyhotel.storage.database.DailyDbHelper;
 
+import java.util.concurrent.Callable;
+
 import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
 import io.reactivex.Observer;
 import io.reactivex.schedulers.Schedulers;
 
@@ -53,5 +59,64 @@ public class SuggestLocalImpl implements SuggestLocalInterface
         };
 
         return observable.subscribeOn(Schedulers.io());
+    }
+
+    @Override
+    public Observable<Suggest> getRecentlySuggest()
+    {
+        return Observable.defer(new Callable<ObservableSource<Suggest>>()
+        {
+            @Override
+            public ObservableSource<Suggest> call() throws Exception
+            {
+                DailyDb dailyDb = DailyDbHelper.getInstance().open(mContext);
+
+                Suggest suggest = null;
+                Cursor cursor = null;
+
+                try
+                {
+                    cursor = dailyDb.getStayObRecentlySuggestList(1);
+
+                    if (cursor != null && cursor.getCount() > 0)
+                    {
+                        cursor.moveToFirst();
+
+                        long id = cursor.getLong(cursor.getColumnIndex(StayObRecentlySuggestColumns._ID));
+                        String name = cursor.getString(cursor.getColumnIndex(StayObRecentlySuggestColumns.NAME));
+                        String city = cursor.getString(cursor.getColumnIndex(StayObRecentlySuggestColumns.CITY));
+                        String country = cursor.getString(cursor.getColumnIndex(StayObRecentlySuggestColumns.COUNTRY));
+                        String countryCode = cursor.getString(cursor.getColumnIndex(StayObRecentlySuggestColumns.COUNTRY_CODE));
+                        String categoryKey = cursor.getString(cursor.getColumnIndex(StayObRecentlySuggestColumns.CATEGORY_KEY));
+                        String display = cursor.getString(cursor.getColumnIndex(StayObRecentlySuggestColumns.DISPLAY));
+                        double latitude = cursor.getDouble(cursor.getColumnIndex(StayObRecentlySuggestColumns.LATITUDE));
+                        double longitude = cursor.getDouble(cursor.getColumnIndex(StayObRecentlySuggestColumns.LONGITUDE));
+
+                        suggest = new Suggest(id, name, city, country, countryCode, categoryKey, display, latitude, longitude);
+                    }
+
+                } catch (Exception e)
+                {
+                    ExLog.e(e.toString());
+
+                    suggest = null;
+                } finally
+                {
+                    try
+                    {
+                        if (cursor != null)
+                        {
+                            cursor.close();
+                        }
+                    } catch (Exception e)
+                    {
+                    }
+                }
+
+                DailyDbHelper.getInstance().close();
+
+                return Observable.just(suggest);
+            }
+        }).subscribeOn(Schedulers.io());
     }
 }
