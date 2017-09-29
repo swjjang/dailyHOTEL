@@ -21,19 +21,20 @@ import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.Suggest;
 import com.daily.dailyhotel.parcel.SuggestParcel;
 import com.daily.dailyhotel.parcel.analytics.StayOutboundListAnalyticsParam;
-import com.daily.dailyhotel.storage.database.DailyDb;
-import com.daily.dailyhotel.storage.database.DailyDbHelper;
+import com.daily.dailyhotel.repository.local.SuggestLocalImpl;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
 import com.daily.dailyhotel.screen.common.calendar.StayCalendarActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.detail.StayOutboundDetailActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.list.StayOutboundListActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.people.SelectPeopleActivity;
+import com.daily.dailyhotel.storage.database.DailyDb;
+import com.daily.dailyhotel.storage.database.DailyDbHelper;
+import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
 import com.twoheart.dailyhotel.util.DailyExternalDeepLink;
 import com.twoheart.dailyhotel.util.DailyInternalDeepLink;
-import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import org.json.JSONObject;
@@ -43,6 +44,9 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
+
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
 
 /**
  * Created by sheldon
@@ -55,6 +59,7 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
 
     private StayOutboundSearchAnalyticsInterface mAnalytics;
     private CommonRemoteImpl mCommonRemoteImpl;
+    private SuggestLocalImpl mSuggestLocalImpl;
 
     private CommonDateTime mCommonDateTime;
     private StayBookDateTime mStayBookDateTime;
@@ -98,6 +103,7 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
         setAnalytics(new StayOutboundSearchAnalyticsImpl());
 
         mCommonRemoteImpl = new CommonRemoteImpl(activity);
+        mSuggestLocalImpl = new SuggestLocalImpl(activity);
 
         setLastSuggestByDb();
         // 기본 성인 2명, 아동 0명
@@ -551,9 +557,28 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
 
     private void setSuggest(Suggest suggest)
     {
+        if (lock() == true)
+        {
+            return;
+        }
+
         mSuggest = suggest;
 
-        addSuggestDb(suggest);
+        addCompositeDisposable(mSuggestLocalImpl.addSuggestDb(suggest).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer()
+        {
+            @Override
+            public void accept(Object o) throws Exception
+            {
+                unLockAll();
+            }
+        }, new Consumer<Throwable>()
+        {
+            @Override
+            public void accept(Throwable throwable) throws Exception
+            {
+                unLockAll();
+            }
+        }));
     }
 
     private void setLastSuggestByDb()
@@ -611,22 +636,6 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
         DailyDbHelper.getInstance().close();
 
         mSuggest = suggest;
-    }
-
-    private void addSuggestDb(Suggest suggest)
-    {
-        if (suggest == null)
-        {
-            return;
-        }
-
-        DailyDb dailyDb = DailyDbHelper.getInstance().open(getActivity());
-
-        dailyDb.addStayObRecentlySuggest(suggest.id, suggest.name, suggest.city, suggest.country //
-            , suggest.countryCode, suggest.categoryKey, suggest.display, suggest.latitude //
-            , suggest.longitude, true);
-
-        DailyDbHelper.getInstance().close();
     }
 
     private void setKeyword(String keyword)
