@@ -311,9 +311,6 @@ public class CouponListActivity extends BaseActivity
                 return;
             }
 
-//            Intent intent = CouponHistoryActivity.newInstance(CouponListActivity.this);
-//            startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_COUPON_HISTORY);
-
             Intent intent = com.daily.dailyhotel.screen.mydaily.coupon.CouponHistoryActivity.newInstance(CouponListActivity.this);
             startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_COUPON_HISTORY);
         }
